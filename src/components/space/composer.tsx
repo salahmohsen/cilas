@@ -4,27 +4,27 @@ import type { NoticePart } from '@/lib/space-consent'
 import { useEffect, useRef, useState } from 'react'
 import { useTranslations } from 'next-intl'
 import { useRouter } from 'next/navigation'
-import { Check, Paperclip, Plus, Send, X } from 'lucide-react'
+import { Check, Paperclip, Send } from 'lucide-react'
 
 import { ActionSwap } from '@/components/arc/action-swap/action-swap'
 import { Alert } from '@/components/arc/alert/alert'
 import { Avatar } from '@/components/arc/avatar/avatar'
 import { BottomSheet } from '@/components/arc/bottom-sheet/bottom-sheet'
 import { Button } from '@/components/arc/button/button'
-import { Checkbox } from '@/components/arc/checkbox/checkbox'
 import { Input } from '@/components/arc/input/input'
 import { RichField } from '@/components/rich-field'
 import type { SessionSuggestion } from '@/components/arc/rich-text-editor/rich-text-editor'
 import SegmentedControl from '@/components/arc/segmented-control/segmented-control'
 import { postCreateAction, type SpacesWriteState } from '@/app/(frontend)/[locale]/spaces/actions'
 import { FILE_LIMITS, SPACE_FILE_ACCEPT, UPLOAD_TOTAL_MAX } from '@/lib/space-file-limits'
-import { EVENT_TITLE_MAX, VOTE_OPTIONS } from '@/lib/space-post-kinds'
+import { EVENT_TITLE_MAX } from '@/lib/space-post-kinds'
 
 import { AttachmentTray } from './attachment-tray'
 import { EventFields, NO_COVER, endsEarly, eventFormData, type EventValue } from './event-fields'
 import { useAttachments } from './use-attachments'
 import { ConsentSheet } from './consent-sheet'
 import styles from './space.module.css'
+import { EMPTY_VOTE, VoteFields, voteFormData, voteReady, type VoteValue } from './vote-fields'
 
 /** `not-member` → `saveError_not_member`: a renamed code fails as a missing key, never as silence. */
 export const saveErrorKey = (code: string) => `saveError_${code.replace(/-/g, '_')}`
@@ -143,12 +143,7 @@ export function Composer({
 }
 
 /** An event's place and Cairo times; a vote's options and whether more than one may be chosen. */
-type Extra = EventValue & {
-  title: string
-  options: string[]
-  multiple: boolean
-  anonymous: boolean
-}
+type Extra = EventValue & { title: string; vote: VoteValue }
 
 const EMPTY_EXTRA: Extra = {
   title: '',
@@ -157,9 +152,7 @@ const EMPTY_EXTRA: Extra = {
   time: '18:00',
   endTime: null,
   cover: NO_COVER,
-  options: ['', ''],
-  multiple: false,
-  anonymous: false,
+  vote: EMPTY_VOTE,
 }
 
 function ComposerForm({
@@ -190,7 +183,6 @@ function ComposerForm({
   const attachments = useAttachments(FILE_LIMITS.post, setError)
   const { files } = attachments
   const set = (patch: Partial<Extra>) => setExtra((current) => ({ ...current, ...patch }))
-  const options = extra.options.map((o) => o.trim()).filter(Boolean)
   const ready =
     !body.empty &&
     (kind !== 'event' ||
@@ -198,7 +190,7 @@ function ComposerForm({
         extra.location.trim() !== '' &&
         extra.day !== undefined &&
         !endsEarly(extra))) &&
-    (kind !== 'vote' || options.length >= VOTE_OPTIONS.min)
+    (kind !== 'vote' || voteReady(extra.vote))
   const today = new Date()
   today.setHours(0, 0, 0, 0)
 
@@ -223,11 +215,7 @@ function ComposerForm({
       eventFormData(extra, data)
       data.set('title', extra.title)
     }
-    if (kind === 'vote') {
-      for (const option of options) data.append('option', option)
-      data.set('multiple', String(extra.multiple))
-      data.set('anonymous', String(extra.anonymous === true))
-    }
+    if (kind === 'vote') voteFormData(extra.vote, data)
     for (const f of files) data.append('file', f)
     const result = await postCreateAction({ status: 'ok' }, data).catch((): SpacesWriteState => ({
       status: 'error',
@@ -281,57 +269,10 @@ function ComposerForm({
         {kind === 'announcement' && <p className={styles.meta}>{t('announcementHint')}</p>}
         {kind === 'event' && <EventFields value={extra} onChange={set} minDate={today} />}
         {kind === 'vote' && (
-          <fieldset className={styles.voteFields}>
-            <legend className={styles.fieldLegend}>{t('voteOptions')}</legend>
-            {extra.options.map((option, index) => (
-              <div key={index} className={styles.optionRow}>
-                <Input
-                  label={t('voteOption', { n: index + 1 })}
-                  value={option}
-                  maxLength={VOTE_OPTIONS.length}
-                  onChange={(e) => {
-                    const next = [...extra.options]
-                    next[index] = e.currentTarget.value
-                    set({ options: next })
-                  }}
-                />
-                {extra.options.length > VOTE_OPTIONS.min && (
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    aria-label={t('voteRemoveOption', { n: index + 1 })}
-                    onClick={() => set({ options: extra.options.filter((_, i) => i !== index) })}
-                  >
-                    <X size={16} aria-hidden="true" />
-                  </Button>
-                )}
-              </div>
-            ))}
-            {extra.options.length < VOTE_OPTIONS.max && (
-              <div>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={() => set({ options: [...extra.options, ''] })}
-                >
-                  <Plus size={16} aria-hidden="true" />
-                  {t('voteAddOption')}
-                </Button>
-              </div>
-            )}
-            <Checkbox
-              label={t('voteMultiple')}
-              description={t('voteMultipleHint')}
-              checked={extra.multiple}
-              onCheckedChange={(v) => set({ multiple: v === true })}
-            />
-            <Checkbox
-              label={t('voteAnonymous')}
-              description={t('voteAnonymousHint')}
-              checked={extra.anonymous}
-              onCheckedChange={(v) => set({ anonymous: v === true })}
-            />
-          </fieldset>
+          <VoteFields
+            value={extra.vote}
+            onChange={(patch) => set({ vote: { ...extra.vote, ...patch } })}
+          />
         )}
         <AttachmentTray files={files} onRemove={attachments.remove} />
         {error && (

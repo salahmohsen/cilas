@@ -6,7 +6,7 @@ import { contentWhere } from '@/lib/spaces'
 /**
  * Discussion, announcement, event and vote posts (spec §3). `question` sits
  * in the enum for step 2; no question UI ships yet. An event adds where and
- * when; a vote adds its options, fixed once the post exists. Bodies are Markdown, written once,
+ * when; a vote adds its options and, if wanted, when voting closes. Bodies are Markdown, written once,
  * not translated.
  *
  * REST refusal (plan decision): members write through the server actions
@@ -127,6 +127,16 @@ export const SpacePosts: CollectionConfig = {
       defaultValue: false,
       access: { update: () => false },
       admin: { condition: (data) => (data as { kind?: string }).kind === 'vote' },
+    },
+    {
+      // After this moment nobody may vote; empty keeps the vote open.
+      name: 'vote_closes_at',
+      label: 'Voting closes',
+      type: 'date',
+      admin: {
+        date: { pickerAppearance: 'dayAndTime' },
+        condition: (data) => (data as { kind?: string }).kind === 'vote',
+      },
     },
     {
       name: 'vote_anonymous',

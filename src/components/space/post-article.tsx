@@ -7,9 +7,8 @@ import type { Space, User } from '@/payload-types'
 import { linkTitles, outsideLinks } from '@/lib/link-preview'
 import { pageAddresses, threadTexts } from '@/lib/link-title'
 import { absoluteUrl } from '@/lib/schema'
-import { NOTICE } from '@/lib/space-consent'
 import { mayComment, membership } from '@/lib/spaces'
-import { memberState, postView, type PostView } from '@/lib/spaces-data'
+import { memberState, postView, spaceNotice, type PostView } from '@/lib/spaces-data'
 
 import { Attachments } from './attachments'
 import { commentsOpen, PostHead, type FeedContext } from './feed-row'
@@ -41,10 +40,12 @@ export async function loadPost(
 ): Promise<{ view: PostView; context: FeedContext; consented: boolean; allowed: boolean } | null> {
   const mem = await membership(payload, user, space)
   if (mem.role === 'none') return null
-  const [view, state, { cards, byId, moderators }] = await Promise.all([
-    postView(payload, user, space, postId, locale === 'ar' ? 'ar' : 'en'),
+  const lang = locale === 'ar' ? 'ar' : 'en'
+  const [view, state, { cards, byId, moderators }, rules] = await Promise.all([
+    postView(payload, user, space, postId, lang),
     memberState(payload, user, space.id),
     spacePeopleCards(payload, user, space, locale),
+    spaceNotice(payload, space.id, lang),
   ])
   if (!view) return null
   const personId = personOf(user)
@@ -67,7 +68,7 @@ export async function loadPost(
       cards,
       mayComment: allowed,
       consented: state.consented,
-      notice: NOTICE[locale === 'ar' ? 'ar' : 'en'],
+      notice: rules.parts,
       now: new Date().toISOString(),
       titles,
       sessions: sessionContextOf(view.sessions),

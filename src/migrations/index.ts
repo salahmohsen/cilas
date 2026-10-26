@@ -43,6 +43,7 @@ import * as migration_20261025_090045_space_post_session from './20261025_090045
 import * as migration_20261025_100131_space_event_replies from './20261025_100131_space_event_replies'
 import * as migration_20261025_223023_space_event_cover_place from './20261025_223023_space_event_cover_place'
 import * as migration_20261026_125844_space_introduction from './20261026_125844_space_introduction'
+import * as migration_20261026_182513_space_vote_close_rules from './20261026_182513_space_vote_close_rules'
 
 export const migrations = [
   {
@@ -269,5 +270,10 @@ export const migrations = [
     up: migration_20261026_125844_space_introduction.up,
     down: migration_20261026_125844_space_introduction.down,
     name: '20261026_125844_space_introduction',
+  },
+  {
+    up: migration_20261026_182513_space_vote_close_rules.up,
+    down: migration_20261026_182513_space_vote_close_rules.down,
+    name: '20261026_182513_space_vote_close_rules',
   },
 ]

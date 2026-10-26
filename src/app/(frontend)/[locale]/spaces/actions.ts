@@ -31,6 +31,7 @@ import {
   STEP_KEYS,
   stepMark,
   visitRecord,
+  voteEdit,
   voteSet,
   type PostFile,
   type PostShape,
@@ -109,6 +110,13 @@ const eventTimesOf = (form: FormData): { startsAt: string; endsAt: string | null
   return endsAt ? { startsAt, endsAt } : null
 }
 
+/** When a vote closes, from its Cairo day and time: null for never, undefined when they name no real moment. */
+const closingOf = (form: FormData): string | null | undefined => {
+  const day = text(form, 'closes_day')
+  if (!day) return null
+  return cairoInstant(day, text(form, 'closes_time') || '23:45') ?? undefined
+}
+
 /**
  * The post's kind and what it adds, read from the composer's fields. An
  * event's day and time are Cairo wall-clock (ADR 0002); null when they do
@@ -127,15 +135,20 @@ const shapeOf = (form: FormData): PostShape | null => {
           }
         : null
     }
-    case 'vote':
-      return {
-        kind: 'vote',
-        vote: {
-          options: form.getAll('option').map((o) => String(o)),
-          multiple: bool(form, 'multiple') ?? false,
-          anonymous: bool(form, 'anonymous') ?? false,
-        },
-      }
+    case 'vote': {
+      const closesAt = closingOf(form)
+      return closesAt === undefined
+        ? null
+        : {
+            kind: 'vote',
+            vote: {
+              options: form.getAll('option').map((o) => String(o)),
+              multiple: bool(form, 'multiple') ?? false,
+              anonymous: bool(form, 'anonymous') ?? false,
+              closesAt,
+            },
+          }
+    }
     default:
       return { kind: 'discussion' }
   }
@@ -182,6 +195,38 @@ export async function postEditAction(
   if (!id) return err('not-found')
   const payload = await getPayload({ config })
   const result = await postEdit({ payload, user, id, body: text(form, 'body') })
+  if (!result.ok) return err(result.error)
+  await revalidate()
+  return { status: 'ok' }
+}
+
+export async function voteEditAction(
+  _prev: SpacesWriteState,
+  form: FormData,
+): Promise<SpacesWriteState> {
+  const user = await currentReader()
+  if (!user || user.collection !== 'users') return err('auth')
+  const id = num(form, 'post')
+  if (!id) return err('not-found')
+  const closesAt = closingOf(form)
+  if (closesAt === undefined) return err('vote')
+  // Each option is sent as "id|label"; a new option has an empty id.
+  const options = form.getAll('option').map((raw) => {
+    const value = String(raw)
+    const bar = value.indexOf('|')
+    return { id: value.slice(0, bar) || null, label: value.slice(bar + 1) }
+  })
+  const payload = await getPayload({ config })
+  const result = await voteEdit({
+    payload,
+    user,
+    id,
+    body: text(form, 'body'),
+    options,
+    multiple: bool(form, 'multiple') ?? false,
+    anonymous: bool(form, 'anonymous') ?? false,
+    closesAt,
+  })
   if (!result.ok) return err(result.error)
   await revalidate()
   return { status: 'ok' }
@@ -466,6 +511,7 @@ export async function spaceSettingsSetAction(
   const events = text(form, 'events')
   const reopen = form.get('reopen')
   const about = form.has('about') ? text(form, 'about') : undefined
+  const rules = form.has('rules') ? text(form, 'rules') : undefined
   const locale = text(form, 'locale') === 'ar' ? 'ar' : 'en'
   const payload = await getPayload({ config })
   const result = await spaceSettingsSet({
@@ -476,6 +522,7 @@ export async function spaceSettingsSetAction(
     events: events === 'members' || events === 'moderators' ? events : undefined,
     reopened: parseBool(reopen),
     about,
+    rules,
     locale,
   })
   if (!result.ok) return err(result.error)

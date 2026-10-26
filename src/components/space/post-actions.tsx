@@ -19,6 +19,7 @@ import {
 
 import { saveErrorKey } from './composer'
 import { EventEditDialog, type EventEditInitial } from './event-edit'
+import { VoteEditDialog, type VoteEditInitial } from './vote-edit'
 import styles from './space.module.css'
 
 /** `intro`: the space's intro post, which a moderator edits but never locks or deletes */
@@ -49,12 +50,15 @@ export function PostActions({
   canModerate,
   canDelete,
   event,
+  vote,
 }: {
   post: Post
   canEdit: boolean
   canModerate: boolean
   canDelete: boolean
   event?: EventEditMenu
+  /** A vote post's edit, for its author: the whole vote, not only its words */
+  vote?: VoteEditInitial
 }) {
   const t = useTranslations('SpacePost')
   const router = useRouter()
@@ -73,7 +77,7 @@ export function PostActions({
     ...(editable
       ? [
           {
-            label: event ? t('eventEdit') : t('edit'),
+            label: event ? t('eventEdit') : vote ? t('voteEdit') : t('edit'),
             icon: <Pencil size={15} />,
             onSelect: () => setEditing(true),
           },
@@ -142,6 +146,8 @@ export function PostActions({
           open={editing}
           onOpenChange={setEditing}
         />
+      ) : vote ? (
+        <VoteEditDialog post={post.id} initial={vote} open={editing} onOpenChange={setEditing} />
       ) : (
         <Dialog open={editing} onOpenChange={setEditing}>
           <DialogContent title={t('edit')}>

@@ -19,6 +19,7 @@ import { LinkPreviews } from './link-card'
 import { PersonHover, type PersonCard } from './person-hover'
 import { Attachments } from './attachments'
 import { PostActions, type EventEditMenu } from './post-actions'
+import type { VoteEditInitial } from './vote-edit'
 import { PostBody } from './post-body'
 import { PostDialog } from './post-dialog-link'
 import { PostFoot } from './post-foot'
@@ -161,6 +162,7 @@ export async function PostHead({
             canModerate={viewer.moderator && !archived}
             canDelete={!intro && (mine || viewer.moderator)}
             event={eventMenu(post, (mine || viewer.moderator) && !archived, context.now)}
+            vote={mine && !archived ? voteMenu(row) : undefined}
           />
         )}
       </span>
@@ -187,6 +189,23 @@ const eventMenu = (post: SpacePost, mayMove: boolean, now: string): EventEditMen
       cover:
         typeof post.event_cover === 'object' && post.event_cover?.url ? post.event_cover.url : null,
     },
+  }
+}
+
+/** What a vote post's Edit opens with: the whole vote, and the rules its choices hold in place. */
+const voteMenu = ({ post, vote }: FeedRowData): VoteEditInitial | undefined => {
+  if (post.kind !== 'vote' || !vote) return undefined
+  const closesAt = post.vote_closes_at ?? null
+  const voted = vote.options.some((o) => o.count > 0)
+  return {
+    body: post.body,
+    options: vote.options.map((o) => ({ id: o.id, label: o.label, votes: o.count })),
+    multiple: vote.multiple,
+    anonymous: vote.anonymous,
+    closes: closesAt
+      ? { day: cairoDay(closesAt) ?? '', time: cairoTime(closesAt) ?? '18:00' }
+      : null,
+    locks: { anonymous: voted && vote.anonymous, multiple: vote.multiple && vote.severalHeld },
   }
 }
 

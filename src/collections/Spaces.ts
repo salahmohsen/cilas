@@ -4,6 +4,7 @@ import { isAdminUser } from '@/access'
 import { readSpaces } from '@/lib/spaces'
 import { addIntroPost } from '@/lib/space-hooks'
 import { ABOUT_MAX } from '@/lib/space-about'
+import { RULES_MAX } from '@/lib/space-consent'
 import type { CommunityAudience, EventPosting, PostingLevel, SpaceKind } from '@/lib/spaces'
 
 /**
@@ -110,6 +111,18 @@ export const Spaces: CollectionConfig = {
       type: 'textarea',
       localized: true,
       maxLength: ABOUT_MAX,
+    },
+    {
+      // Replaces the site's "Privacy and rules" text in this space; empty keeps it.
+      name: 'privacy_rules',
+      label: 'Privacy and rules',
+      type: 'textarea',
+      localized: true,
+      maxLength: RULES_MAX,
+      admin: {
+        description:
+          'Empty uses the text from Community › Privacy and rules. One part per paragraph: a title on the first line, the answer under it.',
+      },
     },
     {
       // Moderators and admins reopen a read-only course space (spec §11).

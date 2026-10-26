@@ -5,3 +5,7 @@ export const EVENT_TITLE_MAX = 100
 export const VOTE_OPTIONS = { min: 2, max: 10, length: 120 } as const
 /** Of the posts linked to a session by the older field, the kinds that show the whole session card; the others show a small chip. */
 export const SESSION_CARD_KINDS: readonly string[] = ['announcement']
+
+/** Whether a vote has stopped taking choices. */
+export const voteClosed = (closesAt: string | null | undefined, now = new Date()) =>
+  !!closesAt && new Date(closesAt).getTime() <= now.getTime()

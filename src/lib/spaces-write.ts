@@ -7,8 +7,14 @@ import { spacesSettings, mode, spaceOpenOn, membership, mayComment, introGates }
 import { FILE_KINDS } from '@/lib/form-files'
 import { FILE_LIMITS } from '@/lib/space-file-limits'
 import { ABOUT_MAX } from '@/lib/space-about'
+import { RULES_MAX } from '@/lib/space-consent'
 import { locationUrl, eventOver, eventName, isRsvpStatus, type RsvpStatus } from '@/lib/space-event'
-import { EVENT_LOCATION_MAX, EVENT_TITLE_MAX, VOTE_OPTIONS } from '@/lib/space-post-kinds'
+import {
+  EVENT_LOCATION_MAX,
+  EVENT_TITLE_MAX,
+  VOTE_OPTIONS,
+  voteClosed,
+} from '@/lib/space-post-kinds'
 import { SPACE_FILE_LIMIT } from '@/collections/SpaceFiles'
 import { coverIssue, prepareCover } from '@/lib/event-cover-image'
 import { placeName } from '@/lib/link-preview'
@@ -38,7 +44,10 @@ export type WriteError =
   | 'event-over'
   | 'rsvp'
   | 'vote'
+  | 'vote-closed'
+  | 'vote-voted'
   | 'about'
+  | 'rules'
   | 'upload'
   | 'session'
   | 'intro'
@@ -316,7 +325,16 @@ export type PostShape =
       /** One photo shown behind the event's details */
       cover?: PostFile | null
     }
-  | { kind: 'vote'; vote: { options: string[]; multiple: boolean; anonymous?: boolean } }
+  | {
+      kind: 'vote'
+      vote: {
+        options: string[]
+        multiple: boolean
+        anonymous?: boolean
+        /** When voting closes; null or left out keeps it open */
+        closesAt?: string | null
+      }
+    }
 
 /**
  * An event's place and times once checked: a place within the limit (an
@@ -349,10 +367,28 @@ const titleOf = (title: string | null | undefined): string | null | undefined =>
   return text.length > EVENT_TITLE_MAX ? undefined : text
 }
 
+/** A vote's option labels once checked: trimmed, two to ten, distinct, none too long; null when they break a rule. */
+const voteLabels = (labels: string[]): string[] | null => {
+  const options = labels.map((o) => o.trim()).filter(Boolean)
+  const distinct = new Set(options.map((o) => o.toLocaleLowerCase()))
+  if (distinct.size !== options.length) return null
+  if (options.length < VOTE_OPTIONS.min || options.length > VOTE_OPTIONS.max) return null
+  if (options.some((o) => o.length > VOTE_OPTIONS.length)) return null
+  return options
+}
+
+/** When a vote closes, once checked: null for never, undefined for a time that is not real or has passed. */
+const closingOf = (raw: string | null | undefined, now: Date): string | null | undefined => {
+  if (!raw) return null
+  const at = new Date(raw)
+  if (Number.isNaN(at.getTime()) || at.getTime() <= now.getTime()) return undefined
+  return at.toISOString()
+}
+
 /**
  * The extra columns an event or a vote stores, or null when they break a
  * rule: an event needs a place, a start that has not passed and, if given, a later end; a vote needs
- * two to ten distinct options.
+ * two to ten distinct options and, if given, a closing time that has not passed.
  */
 export const shapeData = (shape: PostShape, now = new Date()): Record<string, unknown> | null => {
   switch (shape.kind) {
@@ -371,15 +407,14 @@ export const shapeData = (shape: PostShape, now = new Date()): Record<string, un
       }
     }
     case 'vote': {
-      const options = shape.vote.options.map((o) => o.trim()).filter(Boolean)
-      const distinct = new Set(options.map((o) => o.toLocaleLowerCase()))
-      if (distinct.size !== options.length) return null
-      if (options.length < VOTE_OPTIONS.min || options.length > VOTE_OPTIONS.max) return null
-      if (options.some((o) => o.length > VOTE_OPTIONS.length)) return null
+      const options = voteLabels(shape.vote.options)
+      const closesAt = closingOf(shape.vote.closesAt, now)
+      if (!options || closesAt === undefined) return null
       return {
         vote_options: options.map((label) => ({ label })),
         vote_multiple: shape.vote.multiple,
         vote_anonymous: shape.vote.anonymous === true,
+        vote_closes_at: closesAt,
       }
     }
   }
@@ -1072,10 +1107,12 @@ export const reactionToggle = async (
  * Sets the member's whole choice on a vote (spec: events and votes): the
  * options given replace the ones held, so a retry or a double tap lands on
  * the same rows. An empty list withdraws the vote. A single-choice vote takes
- * at most one option; every option must be the post's own.
+ * at most one option; every option must be the post's own. A vote past its
+ * closing time takes no more choices.
  */
 export const voteSet = async (
   i: Input<{ post: number; options: string[] }>,
+  now = new Date(),
 ): Promise<WriteResult<{ options: string[] }>> => {
   const { payload, user, post: postId } = i
   const post = (await payload
@@ -1087,6 +1124,7 @@ export const voteSet = async (
     deleted_at?: string | null
     vote_multiple?: boolean | null
     vote_options?: { id?: string | null }[] | null
+    vote_closes_at?: string | null
   } | null
   if (!post || post.kind !== 'vote' || post.deleted_at) return err('not-found')
   const spaceId = typeof post.space === 'object' ? post.space.id : post.space
@@ -1094,6 +1132,7 @@ export const voteSet = async (
   if (g.stop) return err((g as { error: WriteError }).error)
   if ((await membership(payload, user, g.space)).role === 'none') return err('not-member')
   if (post.locked) return err('locked')
+  if (voteClosed(post.vote_closes_at, now)) return err('vote-closed')
 
   const chosen = [...new Set(i.options)]
   const valid = new Set((post.vote_options ?? []).map((o) => o.id).filter(Boolean))
@@ -1119,6 +1158,107 @@ export const voteSet = async (
         overrideAccess: true,
       })
   return { ok: true, data: { options: chosen } }
+}
+
+// --- voteEdit ---
+
+/** One option as the edit sends it: a kept option carries its id, a new one has none. */
+export type VoteOptionEdit = { id?: string | null; label: string }
+
+/**
+ * The author's edit of a whole vote: the question, the options, the choice
+ * rules and the closing time. Kept options keep their id, so their choices
+ * stay; a removed option takes its choices with it. Once anyone has voted, an
+ * anonymous vote stays anonymous (choices made in secret are never named),
+ * and several choices stay allowed while a member holds more than one.
+ */
+export const voteEdit = async (
+  i: Input<{
+    id: number
+    body: string
+    options: VoteOptionEdit[]
+    multiple: boolean
+    anonymous: boolean
+    closesAt: string | null
+  }>,
+  now = new Date(),
+): Promise<WriteResult<true>> => {
+  const { payload, user, id } = i
+  const post = (await payload
+    .findByID({ collection: 'space-posts', id, depth: 0, overrideAccess: true })
+    .catch(() => null)) as {
+    space: number | { id: number }
+    author: number | { id: number } | null
+    kind?: string
+    locked?: boolean | null
+    deleted_at?: string | null
+    vote_options?: { id?: string | null; label: string }[] | null
+    vote_multiple?: boolean | null
+    vote_anonymous?: boolean | null
+    vote_closes_at?: string | null
+  } | null
+  if (!post || post.kind !== 'vote' || post.deleted_at) return err('not-found')
+  const spaceId = typeof post.space === 'object' ? post.space.id : post.space
+  const g = await gate(payload, user, spaceId, { write: true, post: id })
+  if (g.stop) return err((g as { error: WriteError }).error)
+  const space = g.space
+  if ((await membership(payload, user, space)).role === 'none') return err('not-member')
+  if (idOf(post.author as never) !== personOf(user)) return err('not-yours')
+  if (post.locked) return err('locked')
+
+  const body = await sessionSafeBody(payload, space, i.body)
+  if (!body.trim()) return err('vote')
+  const mentioned = validateMentions(body, await mentionSafelist(payload, spaceId))
+  if (mentioned.invalid.length > 0) return err('mention')
+
+  const labels = voteLabels(i.options.map((o) => o.label))
+  if (!labels || labels.length !== i.options.length) return err('vote')
+  const stored = new Set((post.vote_options ?? []).map((o) => o.id).filter(Boolean))
+  if (i.options.some((o) => o.id && !stored.has(o.id))) return err('vote')
+  // An unchanged closing time may already have passed; a new one must be ahead.
+  const same =
+    (post.vote_closes_at ? new Date(post.vote_closes_at).getTime() : null) ===
+    (i.closesAt ? new Date(i.closesAt).getTime() : null)
+  const closesAt = same ? (post.vote_closes_at ?? null) : closingOf(i.closesAt, now)
+  if (closesAt === undefined) return err('vote')
+
+  const { docs: held } = await payload.find({
+    collection: 'space-votes',
+    where: { post: { equals: id } },
+    overrideAccess: true,
+    pagination: false,
+    depth: 0,
+    select: { account: true, option: true },
+  })
+  const kept = new Set(i.options.map((o) => o.id).filter(Boolean))
+  const staying = held.filter((row) => kept.has(row.option))
+  if (staying.length > 0 && post.vote_anonymous && !i.anonymous) return err('vote-voted')
+  if (!i.multiple) {
+    const perAccount = new Map<number, number>()
+    for (const row of staying) {
+      const account = idOf(row.account as never) ?? -1
+      perAccount.set(account, (perAccount.get(account) ?? 0) + 1)
+    }
+    if ([...perAccount.values()].some((n) => n > 1)) return err('vote-voted')
+  }
+
+  await payload.update({
+    collection: 'space-posts',
+    id,
+    data: {
+      body,
+      vote_options: i.options.map((o, n) => ({ ...(o.id ? { id: o.id } : {}), label: labels[n] })),
+      vote_multiple: i.multiple,
+      vote_anonymous: i.anonymous,
+      vote_closes_at: closesAt,
+      edited_at: now.toISOString(),
+    } as never,
+    overrideAccess: true,
+  })
+  for (const row of held)
+    if (!kept.has(row.option))
+      await payload.delete({ collection: 'space-votes', id: row.id, overrideAccess: true })
+  return { ok: true, data: true }
 }
 
 // --- rsvpSet ---
@@ -1511,10 +1651,12 @@ export const spaceSettingsSet = async (
     reopened?: boolean
     /** The custom About text in `locale`; an empty string goes back to the default. */
     about?: string
+    /** This space's own "Privacy and rules" in `locale`; an empty string goes back to the site's. */
+    rules?: string
     locale?: 'en' | 'ar'
   }>,
 ): Promise<WriteResult<true>> => {
-  const { payload, user, space, posting, events, reopened, about, locale } = i
+  const { payload, user, space, posting, events, reopened, about, rules, locale } = i
   const sp = (await payload.findByID({
     collection: 'spaces',
     id: space,
@@ -1531,6 +1673,11 @@ export const spaceSettingsSet = async (
     const text = about.replace(/\r\n?/g, '\n').trim()
     if (text.length > ABOUT_MAX) return err('about')
     data.about = text
+  }
+  if (typeof rules === 'string') {
+    const text = rules.replace(/\r\n?/g, '\n').trim()
+    if (text.length > RULES_MAX) return err('rules')
+    data.privacy_rules = text
   }
   await payload.update({
     collection: 'spaces',

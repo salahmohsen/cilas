@@ -3,9 +3,10 @@ import type { Payload, Where } from 'payload'
 import { personOf } from '@/access'
 import type { ReactionCounts, ReactionKind } from '@/lib/space-reactions'
 import { archivedNow, courseLastMeeting, readOnly } from '@/lib/space-lifecycle'
-import { NOTICE_VERSION } from '@/lib/space-consent'
+import { NOTICE, NOTICE_VERSION, rulesParts, rulesText, type NoticePart } from '@/lib/space-consent'
 import { spacePeople } from '@/lib/space-members'
 import { mapEmbedUrl } from '@/lib/map-embed'
+import { voteClosed } from '@/lib/space-post-kinds'
 import { isRsvpStatus, type RsvpStatus } from '@/lib/space-event'
 import {
   mode,
@@ -339,6 +340,12 @@ export type VoteView = {
   voters: number
   /** The reader's chosen option ids */
   mine: string[]
+  /** When voting closes, if it does */
+  closesAt: string | null
+  /** Past its closing time: results only */
+  closed: boolean
+  /** Some member holds more than one choice, so the vote must keep allowing several */
+  severalHeld: boolean
 }
 
 /** The people behind some accounts, keyed by account id, as a voter list shows them. */
@@ -432,6 +439,9 @@ const voteViews = async (
       }),
       voters: new Set(rows.map((v) => relId(v.account))).size,
       mine: user ? rows.filter((v) => relId(v.account) === user.id).map((v) => v.option) : [],
+      closesAt: p.vote_closes_at ?? null,
+      closed: voteClosed(p.vote_closes_at),
+      severalHeld: new Set(rows.map((v) => relId(v.account))).size < rows.length,
     })
   }
   return out
@@ -1419,4 +1429,36 @@ export const coursePlace = async (
     mapUrl,
     embed: await mapEmbedUrl({ address, mapUrl }, locale),
   }
+}
+
+/**
+ * A space's "Privacy and rules" in one language: the fellow's own text for
+ * this space, else the site's, else the built-in notice. `custom` is the
+ * space's own text (empty when it has none) and `fallback` what shows without it.
+ */
+export const spaceNotice = async (
+  payload: Payload,
+  spaceId: number,
+  locale: 'en' | 'ar',
+): Promise<{ parts: NoticePart[]; custom: string; fallback: string }> => {
+  const [own, site] = await Promise.all([
+    payload
+      .findByID({
+        collection: 'spaces',
+        id: spaceId,
+        depth: 0,
+        locale,
+        fallbackLocale: false,
+        overrideAccess: true,
+        select: { privacy_rules: true },
+      })
+      .then((row) => row.privacy_rules?.trim() ?? '')
+      .catch(() => ''),
+    payload
+      .findGlobal({ slug: 'space-rules', locale, fallbackLocale: false, overrideAccess: true })
+      .then((g) => g.privacy_rules?.trim() ?? '')
+      .catch(() => ''),
+  ])
+  const fallback = site || rulesText(NOTICE[locale])
+  return { parts: rulesParts(own || fallback), custom: own, fallback }
 }

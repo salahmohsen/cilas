@@ -34,3 +34,28 @@ export const NOTICE: Record<'en' | 'ar', NoticePart[]> = {
     { title: 'اسمك وصورتك', text: 'يبقيان ظاهرين حتى تغيّر ملفك الشخصي.' },
   ],
 }
+
+/** The longest custom "Privacy and rules" text, in characters. */
+export const RULES_MAX = 3000
+
+/** The notice as editable text: one part per paragraph, its title on the first line. */
+export const rulesText = (parts: NoticePart[]): string =>
+  parts.map((p) => `${p.title}\n${p.text}`).join('\n\n')
+
+/**
+ * Edited "Privacy and rules" text read back into parts: each paragraph is a
+ * part, its first line the title and the rest the answer. A one-line
+ * paragraph is an answer with no title.
+ */
+export const rulesParts = (text: string): NoticePart[] =>
+  text
+    .replace(/\r\n?/g, '\n')
+    .split(/\n\s*\n/)
+    .map((block) => block.trim())
+    .filter(Boolean)
+    .map((block) => {
+      const [first = '', ...rest] = block.split('\n')
+      return rest.length
+        ? { title: first.trim(), text: rest.join(' ').replace(/\s+/g, ' ').trim() }
+        : { title: '', text: first.trim() }
+    })

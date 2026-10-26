@@ -15,7 +15,6 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/arc/tabs/
 import type { Course, Programme, Space, User } from '@/payload-types'
 import { linkTitles } from '@/lib/link-preview'
 import { pageAddresses, threadTexts } from '@/lib/link-title'
-import { NOTICE } from '@/lib/space-consent'
 import { introGates, mayComment, membership } from '@/lib/spaces'
 import { CourseSyllabus, directionOf, textOf } from '@/components/course/course-syllabus'
 import { RichTextField } from '@/components/RichTextField'
@@ -32,6 +31,7 @@ import {
   spaceEvents,
   spaceFeed,
   sessionCounts,
+  spaceNotice,
 } from '@/lib/spaces-data'
 import { eventsAllow, postingAllows, visitRecord } from '@/lib/spaces-write'
 
@@ -94,35 +94,48 @@ export async function SpacePage({
   const gatedBy = (await introGates(payload, user)).get(space.id) ?? null
 
   const lang = locale === 'ar' ? 'ar' : 'en'
-  const [t, tp, ts, feed, state, { cards, byId, moderators }, numbers, jar, custom, events, place] =
-    await Promise.all([
-      getTranslations('Spaces'),
-      getTranslations('SpacePost'),
-      getTranslations('Share'),
-      spaceFeed(payload, user, space, lang),
-      memberState(payload, user, space.id),
-      spacePeopleCards(payload, user, space, locale),
-      moderator ? participation(payload, space) : Promise.resolve(null),
-      cookies(),
-      // Each language keeps its own text, so an empty one shows the default, not the other language's.
-      payload
-        .findByID({
-          collection: 'spaces',
-          id: space.id,
-          user,
-          depth: 0,
-          locale: lang,
-          fallbackLocale: false,
-          overrideAccess: false,
-          select: { about: true },
-        })
-        .then((row) => row.about ?? '')
-        .catch(() => ''),
-      tab === 'events'
-        ? spaceEvents(payload, user, space, lang)
-        : Promise.resolve({ upcoming: [], past: [] }),
-      landing.course ? coursePlace(payload, user, landing.course, lang) : Promise.resolve(null),
-    ])
+  const [
+    t,
+    tp,
+    ts,
+    feed,
+    state,
+    { cards, byId, moderators },
+    numbers,
+    jar,
+    custom,
+    events,
+    place,
+    rules,
+  ] = await Promise.all([
+    getTranslations('Spaces'),
+    getTranslations('SpacePost'),
+    getTranslations('Share'),
+    spaceFeed(payload, user, space, lang),
+    memberState(payload, user, space.id),
+    spacePeopleCards(payload, user, space, locale),
+    moderator ? participation(payload, space) : Promise.resolve(null),
+    cookies(),
+    // Each language keeps its own text, so an empty one shows the default, not the other language's.
+    payload
+      .findByID({
+        collection: 'spaces',
+        id: space.id,
+        user,
+        depth: 0,
+        locale: lang,
+        fallbackLocale: false,
+        overrideAccess: false,
+        select: { about: true },
+      })
+      .then((row) => row.about ?? '')
+      .catch(() => ''),
+    tab === 'events'
+      ? spaceEvents(payload, user, space, lang)
+      : Promise.resolve({ upcoming: [], past: [] }),
+    landing.course ? coursePlace(payload, user, landing.course, lang) : Promise.resolve(null),
+    spaceNotice(payload, space.id, lang),
+  ])
   const renderedAt = new Date().toISOString()
 
   const title =
@@ -162,7 +175,7 @@ export async function SpacePage({
   ) : null
   const aboutText = customAbout || descriptionText || defaultAbout
   const about = aboutBody && <AboutClamp text={aboutText}>{aboutBody}</AboutClamp>
-  const notice = NOTICE[locale === 'ar' ? 'ar' : 'en']
+  const notice = rules.parts
   const viewerPerson = personOf(user)
 
   const me = (viewerPerson != null && byId.get(viewerPerson)) || {
@@ -304,6 +317,8 @@ export async function SpacePage({
                       archived: feed.archived,
                       about: custom,
                       aboutDefault: defaultAbout,
+                      rules: rules.custom,
+                      rulesDefault: rules.fallback,
                     }
                   : null
               }

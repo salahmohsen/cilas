@@ -13,12 +13,13 @@ import { Popover, PopoverContent } from '@/components/arc/popover/popover'
 import { RadioGroup } from '@/components/arc/radio-group/radio-group'
 import { Textarea } from '@/components/arc/textarea/textarea'
 import { ABOUT_MAX } from '@/lib/space-about'
+import { RULES_MAX } from '@/lib/space-consent'
 import { spaceSettingsSetAction } from '@/app/(frontend)/[locale]/spaces/actions'
 
 import { saveErrorKey } from './composer'
 import styles from './space.module.css'
 
-/** Moderators only (spec §11): the posting level, who starts events, the About text, and reopening an archived course space. */
+/** Moderators only (spec §11): the posting level, who starts events, the About and Privacy and rules texts, and reopening an archived course space. */
 export function SpaceSettings({
   space,
   posting,
@@ -26,6 +27,8 @@ export function SpaceSettings({
   archived,
   about,
   aboutDefault,
+  rules,
+  rulesDefault,
   open,
   onOpenChange,
   anchor,
@@ -37,6 +40,9 @@ export function SpaceSettings({
   /** The custom About text in this language, empty when the default shows. */
   about: string
   aboutDefault: string
+  /** This space's own "Privacy and rules" in this language, empty when the site's text shows. */
+  rules: string
+  rulesDefault: string
   open: boolean
   onOpenChange: (open: boolean) => void
   /** The space head's button group: its Settings segment opens this, but a segment is not a Radix trigger. */
@@ -49,6 +55,7 @@ export function SpaceSettings({
   const [level, setLevel] = useState(posting)
   const [who, setWho] = useState(events)
   const [text, setText] = useState(about)
+  const [ruleText, setRuleText] = useState(rules)
   const [reopen, setReopen] = useState(false)
   const [error, setError] = useState<string | null>(null)
   return (
@@ -89,6 +96,25 @@ export function SpaceSettings({
               {t('aboutReset')}
             </Button>
           </div>
+          <div className={styles.aboutField}>
+            <Textarea
+              label={t('rulesField')}
+              description={t('rulesFieldHint')}
+              placeholder={rulesDefault}
+              rows={8}
+              maxLength={RULES_MAX}
+              value={ruleText}
+              onChange={(e) => setRuleText(e.target.value)}
+            />
+            <Button
+              variant="ghost"
+              size="sm"
+              disabled={ruleText === ''}
+              onClick={() => setRuleText('')}
+            >
+              {t('rulesReset')}
+            </Button>
+          </div>
           {archived && (
             <Checkbox
               label={t('reopen')}
@@ -111,6 +137,7 @@ export function SpaceSettings({
               form.set('posting', level)
               form.set('events', who)
               form.set('about', text)
+              form.set('rules', ruleText)
               form.set('locale', locale)
               if (archived && reopen) form.set('reopen', 'true')
               const result = await spaceSettingsSetAction({ status: 'ok' }, form)

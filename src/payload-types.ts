@@ -171,12 +171,14 @@ export interface Config {
     'site-settings': SiteSetting;
     'email-settings': EmailSetting;
     'space-introduction': SpaceIntroduction;
+    'space-rules': SpaceRule;
     'llms-txt-settings': LlmsTxtSetting;
   };
   globalsSelect: {
     'site-settings': SiteSettingsSelect<false> | SiteSettingsSelect<true>;
     'email-settings': EmailSettingsSelect<false> | EmailSettingsSelect<true>;
     'space-introduction': SpaceIntroductionSelect<false> | SpaceIntroductionSelect<true>;
+    'space-rules': SpaceRulesSelect<false> | SpaceRulesSelect<true>;
     'llms-txt-settings': LlmsTxtSettingsSelect<false> | LlmsTxtSettingsSelect<true>;
   };
   locale: 'en' | 'ar';
@@ -2063,6 +2065,10 @@ export interface Space {
   events?: ('members' | 'moderators') | null;
   about?: string | null;
   /**
+   * Empty uses the text from Community › Privacy and rules. One part per paragraph: a title on the first line, the answer under it.
+   */
+  privacy_rules?: string | null;
+  /**
    * Reopens a course space archived 2 weeks after its last meeting.
    */
   reopened?: boolean | null;
@@ -2097,6 +2103,7 @@ export interface SpacePost {
       }[]
     | null;
   vote_multiple?: boolean | null;
+  vote_closes_at?: string | null;
   vote_anonymous?: boolean | null;
   course_session?: string | null;
   pinned?: boolean | null;
@@ -3621,6 +3628,7 @@ export interface SpacesSelect<T extends boolean = true> {
   posting?: T;
   events?: T;
   about?: T;
+  privacy_rules?: T;
   reopened?: T;
   introduction_post?: T;
   updatedAt?: T;
@@ -3649,6 +3657,7 @@ export interface SpacePostsSelect<T extends boolean = true> {
         id?: T;
       };
   vote_multiple?: T;
+  vote_closes_at?: T;
   vote_anonymous?: T;
   course_session?: T;
   pinned?: T;
@@ -4296,6 +4305,21 @@ export interface SpaceIntroduction {
   createdAt?: string | null;
 }
 /**
+ * Shown in every space and accepted before a first post. Leave it empty to use the text shown in it. A fellow can replace it for one space in its settings.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "space-rules".
+ */
+export interface SpaceRule {
+  id: number;
+  /**
+   * One part per paragraph: a short title on the first line, the answer under it.
+   */
+  privacy_rules?: string | null;
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
  * Controls the content of /llms.txt and /llms-full.txt.
  *
  * This interface was referenced by `Config`'s JSON-Schema
@@ -4423,6 +4447,16 @@ export interface EmailSettingsSelect<T extends boolean = true> {
 export interface SpaceIntroductionSelect<T extends boolean = true> {
   title?: T;
   body?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "space-rules_select".
+ */
+export interface SpaceRulesSelect<T extends boolean = true> {
+  privacy_rules?: T;
   updatedAt?: T;
   createdAt?: T;
   globalType?: T;
