@@ -4,7 +4,8 @@ import { useTranslations } from 'next-intl'
 import { Lock } from 'lucide-react'
 
 import { Button } from '@/components/arc/button/button'
-import { EmptyState } from '@/components/arc/empty-state/empty-state'
+
+import styles from './space.module.css'
 
 /** Opens a post's comment box; the post's foot listens for its own id. */
 export const COMMENT_EVENT = 'space:comment'
@@ -29,19 +30,43 @@ export const openComments = (post: number) => {
   )
 }
 
-/** In place of the posts a member cannot read yet: why, and the way in. */
-export function IntroLock({ post }: { post: number }) {
+/** Up to three ghost posts: enough to read as a feed, never a measure of how many there are. */
+const GHOSTS = 3
+
+/**
+ * Under the intro post, in place of the posts a member cannot read yet: a
+ * stack of blurred post shapes says there is more here, and the card on it
+ * says how many, why, and the way in. The shapes are drawn, never the posts
+ * themselves, so nothing hidden reaches the page.
+ */
+export function IntroLock({ post, hidden }: { post: number; hidden: number }) {
   const t = useTranslations('Spaces')
   return (
-    <EmptyState
-      icon={<Lock width={24} height={24} strokeWidth={1.5} />}
-      title={t('introLockTitle')}
-      description={t('introLockHint')}
-      action={
-        <Button variant="secondary" size="sm" onClick={() => openComments(post)}>
+    <section className={styles.lock} aria-labelledby={`lock-${post}`}>
+      <div className={styles.lockGhosts} aria-hidden="true">
+        {Array.from({ length: GHOSTS }, (_, i) => (
+          <div key={i} className={styles.lockGhost}>
+            <span className={styles.lockFace} />
+            <span className={styles.lockLines}>
+              <span style={{ width: '38%' }} />
+              <span style={{ width: i === 1 ? '72%' : '88%' }} />
+              <span style={{ width: i === 2 ? '46%' : '64%' }} />
+            </span>
+          </div>
+        ))}
+      </div>
+      <div className={styles.lockCard}>
+        <span className={styles.lockIcon} aria-hidden="true">
+          <Lock size={20} strokeWidth={1.75} />
+        </span>
+        <h2 id={`lock-${post}`} className={styles.lockTitle}>
+          {hidden > 0 ? t('introLockCount', { count: hidden }) : t('introLockTitle')}
+        </h2>
+        <p className={styles.lockText}>{t('introLockHint')}</p>
+        <Button variant="primary" size="sm" onClick={() => openComments(post)}>
           {t('introLockAction')}
         </Button>
-      }
-    />
+      </div>
+    </section>
   )
 }

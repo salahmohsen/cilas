@@ -238,6 +238,24 @@ export async function SpacePage({
   // The intro post has its own step.
   const pinnedPost = feed.rows.find((r) => r.post.pinned && r.post.id !== context.introPost)
 
+  // Behind the gate: how many posts wait, for the lock under the intro post.
+  const hiddenPosts =
+    gatedBy != null
+      ? (
+          await payload.count({
+            collection: 'space-posts',
+            where: {
+              and: [
+                { space: { equals: space.id } },
+                { deleted_at: { exists: false } },
+                { id: { not_equals: gatedBy } },
+              ],
+            },
+            overrideAccess: true,
+          })
+        ).totalDocs
+      : 0
+
   // The profile step edits in a drawer, so its form is read while the checklist shows; ticking
   // the step must not take the open drawer away.
   const profileView =
@@ -446,7 +464,6 @@ export async function SpacePage({
                   </a>
                 </Alert>
               )}
-              {gatedBy != null && <IntroLock post={gatedBy} />}
               {listed.length === 0 ? (
                 <EmptyState
                   title={view === 'announcements' ? t('noAnnouncements') : tp('empty')}
@@ -471,6 +488,7 @@ export async function SpacePage({
                   ))}
                 </div>
               )}
+              {gatedBy != null && <IntroLock post={gatedBy} hidden={hiddenPosts} />}
               {rest.length > visible.length && (
                 <LoadMore
                   href={`${path}?${new URLSearchParams({
