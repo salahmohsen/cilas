@@ -317,17 +317,98 @@
   cursor: pointer;
 }
 
-.postLabel {
+/* One status pill. Every name is in the text; the grid column clips it to nothing at rest. */
+.labelGroup {
   display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  margin: 0;
+  padding: 3px;
+  list-style: none;
+  border: 1px solid var(--border);
   border-radius: var(--radius-pill);
+  background: var(--surface);
+  cursor: default;
 }
 
-/* Room around the icon: the pill is 28px tall and wider than the glyph. */
-.postLabel .labelBadge {
-  min-height: 28px;
-  min-width: 36px;
-  padding-inline: var(--space-3);
-  justify-content: center;
+.labelItem {
+  --label-color: var(--text-secondary);
+  --label-background: var(--surface-muted);
+  display: inline-flex;
+  align-items: center;
+  height: 28px;
+  min-width: 28px;
+  border-radius: var(--radius-pill);
+  background: var(--label-background);
+  color: var(--label-color);
+  font-size: var(--text-xs);
+  font-weight: 500;
+  line-height: 1;
+  white-space: nowrap;
+}
+
+.labelItem[data-tone='info'] {
+  --label-color: var(--accent-strong);
+  --label-background: var(--accent-subtle);
+}
+
+.labelItem[data-tone='warning'] {
+  --label-color: var(--warning);
+  --label-background: color-mix(in oklab, var(--warning) 11%, var(--surface));
+}
+
+.labelIcon {
+  display: grid;
+  flex: none;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+}
+
+.labelText {
+  display: grid;
+  grid-template-columns: 0fr;
+  opacity: 0;
+  transition:
+    grid-template-columns var(--duration-standard) var(--ease-standard),
+    opacity var(--duration-fast) var(--ease-standard);
+}
+
+.labelText > span {
+  min-width: 0;
+  overflow: hidden;
+  padding-inline-end: 0;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .labelGroup:hover .labelText {
+    grid-template-columns: 1fr;
+    opacity: 1;
+  }
+}
+
+.labelGroup:focus-visible .labelText,
+.labelGroup[data-open] .labelText {
+  grid-template-columns: 1fr;
+  opacity: 1;
+}
+
+/* The end padding sits inside the clipped cell, so it closes with the name. */
+.labelGroup:focus-visible .labelText > span,
+.labelGroup[data-open] .labelText > span {
+  padding-inline-end: var(--space-3);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .labelGroup:hover .labelText > span {
+    padding-inline-end: var(--space-3);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .labelText {
+    transition: none;
+  }
 }
 
 .postLabels {

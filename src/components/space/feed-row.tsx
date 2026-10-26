@@ -1,6 +1,6 @@
 import { Suspense } from 'react'
 import { getTranslations } from 'next-intl/server'
-import { CalendarDays, Lock, Megaphone, Pin, Vote } from 'lucide-react'
+import { Lock, Megaphone, Pin, Vote } from 'lucide-react'
 
 import { Avatar } from '@/components/arc/avatar/avatar'
 import { Badge } from '@/components/arc/badge/badge'
@@ -22,7 +22,7 @@ import { PostActions, type EventEditMenu } from './post-actions'
 import { PostBody } from './post-body'
 import { PostDialog } from './post-dialog-link'
 import { PostFoot } from './post-foot'
-import { PostLabel } from './post-label'
+import { PostLabels, type PostLabelItem } from './post-label'
 import { PostSession } from './post-session'
 import type { ThreadViewer } from './space-thread'
 import styles from './space.module.css'
@@ -107,6 +107,25 @@ export async function PostHead({
   const { post } = row
   const { viewer, archived } = context
   const mine = row.authorId != null && row.authorId === viewer.personId
+  // An event shows no label: its card already carries the calendar leaf.
+  const labels = [
+    post.pinned && { id: 'pinned', label: t('pinned'), icon: <Pin size={16} /> },
+    post.kind === 'announcement' && {
+      id: 'announcement',
+      label: t('announcement'),
+      icon: <Megaphone size={16} />,
+      tone: 'info' as const,
+    },
+    post.kind === 'vote' && { id: 'vote', label: t('kind_vote'), icon: <Vote size={16} /> },
+    post.locked && {
+      id: 'locked',
+      label: t('locked'),
+      icon: <Lock size={16} />,
+      tone: 'warning' as const,
+    },
+  ].filter(
+    (item): item is Exclude<typeof item, false | null | undefined> => !!item,
+  ) satisfies PostLabelItem[]
   return (
     <header className={styles.postHead}>
       <Byline
@@ -122,15 +141,7 @@ export async function PostHead({
         }
       />
       <span className={styles.postLabels}>
-        {post.pinned && <PostLabel label={t('pinned')} icon={<Pin size={16} />} />}
-        {post.kind === 'announcement' && (
-          <PostLabel label={t('announcement')} icon={<Megaphone size={16} />} tone="info" />
-        )}
-        {post.kind === 'event' && (
-          <PostLabel label={t('kind_event')} icon={<CalendarDays size={16} />} />
-        )}
-        {post.kind === 'vote' && <PostLabel label={t('kind_vote')} icon={<Vote size={16} />} />}
-        {post.locked && <PostLabel label={t('locked')} icon={<Lock size={16} />} tone="warning" />}
+        <PostLabels items={labels} />
         {!deleted && (
           <PostActions
             post={{ id: post.id, body: post.body, pinned: !!post.pinned, locked: !!post.locked }}
