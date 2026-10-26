@@ -490,12 +490,12 @@
 .sendIcon:active:not(:disabled) {
   transform: scale(0.96);
 }
-/* The paper plane tilts up and points the way the text runs. Its path sits off the viewBox centre, so once turned it is nudged back to the button's optical centre. */
+/* The plane's mass sits in its upper tip, so it moves a little toward the lower start to look centred. It points the way the text runs. */
 .sendIcon svg {
-  transform: translate(2px, -2px) rotate(-45deg);
+  transform: translate(-0.75px, 0.75px);
 }
 .sendIcon:dir(rtl) svg {
-  transform: translate(-2px, -2px) scaleX(-1) rotate(-45deg);
+  transform: translate(0.75px, 0.75px) scaleX(-1);
 }
 .composer[data-compact] .composerActions {
   justify-content: flex-end;

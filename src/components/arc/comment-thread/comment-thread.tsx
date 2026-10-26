@@ -16,15 +16,7 @@ import {
 import type { KeyboardEvent as ReactKeyboardEvent, ReactNode } from 'react'
 import { AnimatePresence, animate, motion, useMotionValue, useReducedMotion } from 'motion/react'
 import type { Transition, Variants } from 'motion/react'
-import {
-  Check,
-  ChevronRight,
-  CornerDownRight,
-  RotateCcw,
-  SendHorizontal,
-  SmilePlus,
-  X,
-} from 'lucide-react'
+import { Check, ChevronRight, CornerDownRight, RotateCcw, Send, SmilePlus, X } from 'lucide-react'
 import { motionTokens } from '../lib/motion-tokens'
 import styles from './comment-thread.module.css'
 
@@ -674,7 +666,7 @@ function Composer({
                 disabled={!text.trim()}
                 onClick={send}
               >
-                <SendHorizontal size={16} strokeWidth={1.75} aria-hidden="true" />
+                <Send size={16} strokeWidth={1.75} aria-hidden="true" />
               </button>
             </div>
           )}
