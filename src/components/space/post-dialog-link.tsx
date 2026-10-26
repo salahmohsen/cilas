@@ -56,7 +56,7 @@ export function PostDialog({
 }: {
   href: string
   postId: number
-  /** The post has photos, so the dialog is wide with the photos beside the text */
+  /** The post has photos, so the dialog fills the screen with the photos beside the post */
   photos: boolean
   /** On the post's own page */
   page?: boolean
@@ -129,12 +129,27 @@ export function PostDialog({
     if (page) router.refresh()
   }
 
+  const status = (
+    <div className={styles.dialogStatus} role="status">
+      {failed ? (
+        <p className={styles.meta}>{t('dialogFailed')}</p>
+      ) : (
+        <TextShimmer as="p" className={styles.meta}>
+          {t('dialogLoading')}
+        </TextShimmer>
+      )}
+    </div>
+  )
+
   return (
     <Api.Provider value={api}>
       {children}
       <Dialog open={open} onOpenChange={change}>
         <DialogContent
           title={t('dialogTitle')}
+          closeLabel={t('dialogClose')}
+          bare
+          aria-modal="true"
           className={photos ? styles.postDialogWide : styles.postDialog}
           onOpenAutoFocus={(event) => {
             if (start == null) return
@@ -151,17 +166,16 @@ export function PostDialog({
         >
           <StartPhoto.Provider value={start}>
             <Refresh.Provider value={load}>
-              {content ?? (
-                <div className={styles.dialogStatus} role="status">
-                  {failed ? (
-                    <p className={styles.meta}>{t('dialogFailed')}</p>
-                  ) : (
-                    <TextShimmer as="p" className={styles.meta}>
-                      {t('dialogLoading')}
-                    </TextShimmer>
-                  )}
-                </div>
-              )}
+              {content ??
+                (photos ? (
+                  // The same split as the loaded post, so nothing moves when it arrives.
+                  <div className={styles.dialogSplit}>
+                    <div className={styles.dialogPhotos} />
+                    {status}
+                  </div>
+                ) : (
+                  status
+                ))}
             </Refresh.Provider>
           </StartPhoto.Provider>
         </DialogContent>

@@ -1019,7 +1019,8 @@
     "placeTeams": "Teams meeting",
     "eventTitle": "Event name",
     "eventDescription": "Description",
-    "eventCoverAdd": "Add a cover photo"
+    "eventCoverAdd": "Add a cover photo",
+    "dialogClose": "Close post"
   },
   "SpaceComment": {
     "write": "Comment",

@@ -1834,32 +1834,55 @@
   outline-offset: 2px;
 }
 
-/* The post dialog: one column, or, when the post has photos, a viewer beside the post that scrolls on its own. */
+/* The post dialog has no title bar; Arc's close button floats in the start corner. Without photos it is a centred card and the post's head makes room for the button. */
 .postDialog.postDialog {
+  --dialog-close-inset: var(--space-4);
   width: min(calc(100vw - var(--space-8)), 640px);
 }
 
-.postDialogWide.postDialogWide {
-  display: flex;
-  flex-direction: column;
-  width: min(calc(100vw - var(--space-8)), 1200px);
-  height: calc(100dvh - var(--space-8));
-  overflow: hidden;
+.postDialog.postDialog > div:last-child {
+  padding-block-start: var(--space-4);
 }
 
-/* Arc's dialog body: it takes the height under the header. */
+.postDialog .dialogPost > header:first-child,
+.postDialog .dialogStatus {
+  padding-inline-start: calc(44px + var(--space-3));
+}
+
+/* With photos it fills the screen like a photo post: a dark viewer at the start, the post in a panel at the end that scrolls on its own.
+   The viewer is dark in both themes, so every photo reads the same; its controls use this one glass palette. */
+.postDialogWide.postDialogWide {
+  --media-backdrop: oklch(14% 0 0);
+  --media-glass: oklch(20% 0 0 / 0.55);
+  --media-glass-hover: oklch(30% 0 0 / 0.7);
+  --media-edge: oklch(100% 0 0 / 0.2);
+  --media-text: oklch(98% 0 0);
+  --media-text-secondary: oklch(100% 0 0 / 0.72);
+  --dialog-close-background: var(--media-glass);
+  --dialog-close-border: var(--media-edge);
+  --dialog-close-color: var(--media-text);
+  --dialog-close-hover: var(--media-glass-hover);
+  --dialog-close-inset: calc(var(--space-3) + env(safe-area-inset-top, 0px));
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100dvh;
+  max-height: 100dvh;
+  overflow: hidden;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+}
+
+/* Arc's dialog body: the whole dialog under the floating close button. */
 .postDialogWide.postDialogWide > div:last-child {
   flex: 1 1 auto;
   min-height: 0;
+  padding: 0;
   overflow-y: auto;
 }
 
-.postDialog.postDialog,
-.postDialogWide.postDialogWide {
-  max-height: calc(100dvh - var(--space-8));
-}
-
-/* While the post loads or fails: the line sits in the middle of the dialog's body. */
+/* While the post loads or fails: the line sits in the middle of the dialog's body, or of the panel. */
 .dialogStatus {
   display: grid;
   place-items: center;
@@ -1873,21 +1896,30 @@
 
 .dialogSplit {
   display: grid;
-  grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr);
-  gap: var(--space-6);
+  grid-template-columns: minmax(0, 1fr) clamp(360px, 30vw, 420px);
   height: 100%;
 }
 
 .dialogPhotos {
   min-width: 0;
   min-height: 0;
+  padding: var(--space-5) var(--space-4) var(--space-4);
+  background: var(--media-backdrop);
+  color-scheme: dark;
 }
 
-.dialogSplit > .dialogPost {
+.dialogSplit > .dialogPost,
+.dialogSplit > .dialogStatus {
   align-content: start;
   min-height: 0;
+  padding: var(--space-6) var(--space-5) calc(var(--space-6) + env(safe-area-inset-bottom, 0px));
   overflow-y: auto;
   overscroll-behavior: contain;
+  border-inline-start: 1px solid var(--border);
+}
+
+.dialogSplit > .dialogStatus {
+  align-content: center;
 }
 
 .dialogPost {
@@ -1898,23 +1930,35 @@
 }
 
 @media (max-width: 720px) {
-  .postDialog.postDialog,
-  .postDialogWide.postDialogWide {
-    width: 100vw;
+  .postDialog.postDialog {
+    --dialog-close-inset: calc(var(--space-4) + env(safe-area-inset-top, 0px));
+    width: 100%;
     height: 100dvh;
     max-height: 100dvh;
     border: 0;
     border-radius: 0;
   }
 
+  .postDialog.postDialog > div:last-child {
+    padding-block-start: calc(var(--space-4) + env(safe-area-inset-top, 0px));
+  }
+
+  /* One scroll: the viewer on top, the post under it. */
   .dialogSplit {
     grid-template-columns: minmax(0, 1fr);
-    gap: var(--space-4);
     height: auto;
   }
 
-  .dialogSplit > .dialogPost {
+  .dialogPhotos {
+    padding: calc(var(--space-3) + 44px + var(--space-2) + env(safe-area-inset-top, 0px))
+      var(--space-3) var(--space-3);
+  }
+
+  .dialogSplit > .dialogPost,
+  .dialogSplit > .dialogStatus {
     overflow-y: visible;
+    border-inline-start: 0;
+    border-block-start: 1px solid var(--border);
   }
 }
 

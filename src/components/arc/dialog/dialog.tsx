@@ -42,6 +42,10 @@ export interface DialogContentProps extends ComponentPropsWithoutRef<
 > {
   title: string
   description?: string
+  /** No title bar: the title and description stay as the dialog's accessible name and description, hidden from view, and the close button floats in the start corner. */
+  bare?: boolean
+  /** The close button's accessible name, for a translated interface. */
+  closeLabel?: string
   children: ReactNode
 }
 
@@ -90,6 +94,8 @@ function SwapText({ text }: { text: string }) {
 export function DialogContent({
   title,
   description,
+  bare = false,
+  closeLabel = 'Close dialog',
   children,
   className,
   onPointerDownOutside,
@@ -112,7 +118,26 @@ export function DialogContent({
       event.preventDefault()
   }
   const classes = [styles.content, className].filter(Boolean).join(' ')
-  const inner = (
+  const close = (
+    <DialogPrimitive.Close
+      className={bare ? styles.floatingClose : styles.close}
+      aria-label={closeLabel}
+    >
+      <X size={bare ? 20 : 16} strokeWidth={1.75} aria-hidden="true" />
+    </DialogPrimitive.Close>
+  )
+  const inner = bare ? (
+    <>
+      {close}
+      <DialogPrimitive.Title className={styles.hidden}>{title}</DialogPrimitive.Title>
+      {description ? (
+        <DialogPrimitive.Description className={styles.hidden}>
+          {description}
+        </DialogPrimitive.Description>
+      ) : null}
+      <div className={styles.body}>{children}</div>
+    </>
+  ) : (
     <>
       <div className={styles.header}>
         <div>
@@ -125,9 +150,7 @@ export function DialogContent({
             </DialogPrimitive.Description>
           ) : null}
         </div>
-        <DialogPrimitive.Close className={styles.close} aria-label="Close dialog">
-          <X size={16} strokeWidth={1.75} aria-hidden="true" />
-        </DialogPrimitive.Close>
+        {close}
       </div>
       <div className={styles.body}>{children}</div>
     </>

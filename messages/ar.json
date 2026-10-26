@@ -1019,7 +1019,8 @@
     "placeTeams": "اجتماع Teams",
     "eventTitle": "اسم الفعالية",
     "eventDescription": "الوصف",
-    "eventCoverAdd": "إضافة صورة غلاف"
+    "eventCoverAdd": "إضافة صورة غلاف",
+    "dialogClose": "إغلاق المنشور"
   },
   "SpaceComment": {
     "write": "علِّق",

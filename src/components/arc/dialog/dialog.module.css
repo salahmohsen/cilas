@@ -111,6 +111,55 @@
     color var(--duration-fast) var(--ease-standard),
     transform var(--duration-instant) var(--ease-standard);
 }
+/* A bare dialog's title: read by screen readers, not shown. */
+.hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+/* A bare dialog's close button: a glass circle over whatever sits in the start corner. The custom properties let a dialog over media darken it. */
+.floatingClose {
+  position: absolute;
+  z-index: 2;
+  inset-block-start: var(--dialog-close-inset, var(--space-3));
+  inset-inline-start: var(--space-3);
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  border: 1px solid var(--dialog-close-border, var(--border));
+  border-radius: var(--radius-pill);
+  background: var(
+    --dialog-close-background,
+    color-mix(in oklab, var(--surface-raised) 72%, transparent)
+  );
+  -webkit-backdrop-filter: blur(12px) saturate(1.4);
+  backdrop-filter: blur(12px) saturate(1.4);
+  color: var(--dialog-close-color, var(--foreground));
+  box-shadow: 0 1px 3px oklch(0% 0 0 / 0.12);
+  cursor: pointer;
+  transition:
+    background-color var(--duration-fast) var(--ease-standard),
+    transform var(--duration-spring) var(--ease-spring);
+}
+@media (hover: hover) and (pointer: fine) {
+  .floatingClose:hover {
+    background: var(--dialog-close-hover, var(--surface-muted));
+  }
+}
+.floatingClose:active {
+  transform: scale(0.96);
+  transition:
+    background-color var(--duration-fast) var(--ease-standard),
+    transform var(--duration-instant) var(--ease-standard);
+}
 .body {
   padding: var(--space-6);
   font-size: var(--text-sm);
@@ -159,10 +208,13 @@
     animation: content-fade-out var(--duration-instant) var(--ease-standard) both;
   }
   .close,
-  .close:active {
+  .close:active,
+  .floatingClose,
+  .floatingClose:active {
     transition: none;
   }
-  .close:active {
+  .close:active,
+  .floatingClose:active {
     transform: none;
   }
 }

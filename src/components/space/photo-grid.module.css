@@ -228,7 +228,7 @@
   }
 }
 
-/* In the post dialog the viewer fills its column; on a phone it is a first row above the post. */
+/* In the post dialog the viewer fills its dark column; on a phone it is a first row above the post. Its controls use the dialog's media palette. */
 .postViewer {
   --photo-frame: 100%;
   display: flex;
@@ -240,8 +240,31 @@
 .postViewer > .viewer {
   flex: 1 1 auto;
 }
+.postViewer .full {
+  border-radius: var(--radius-control);
+  outline: 1px solid oklch(100% 0 0 / 0.1);
+  outline-offset: -1px;
+}
+.postViewer .nav {
+  width: 48px;
+  height: 48px;
+  border-color: var(--media-edge);
+  background: var(--media-glass);
+  -webkit-backdrop-filter: blur(12px) saturate(1.4);
+  backdrop-filter: blur(12px) saturate(1.4);
+  color: var(--media-text);
+}
+@media (hover: hover) and (pointer: fine) {
+  .postViewer .nav:hover {
+    background: var(--media-glass-hover);
+  }
+}
 .postViewer .strip {
+  flex: none;
   margin-top: var(--space-3);
+}
+.postViewer .thumb {
+  background: var(--media-glass);
 }
 .position {
   margin: 0;
@@ -250,10 +273,19 @@
   font-variant-numeric: tabular-nums;
   text-align: center;
 }
+.postViewer .position {
+  color: var(--media-text-secondary);
+}
 @media (max-width: 720px) {
   .postViewer {
-    --photo-frame: 48dvh;
+    --photo-frame: min(56dvh, 520px);
     height: auto;
+  }
+}
+@media (max-width: 600px) {
+  .postViewer .nav {
+    width: 44px;
+    height: 44px;
   }
 }
 
