@@ -666,6 +666,62 @@ describe('spaces write', () => {
     expect((updated as { deleted_at: string | null }).deleted_at).toBeTruthy()
   })
 
+  it('postRemove deletes a post with answers, votes and reactions, and those rows with it', async () => {
+    await consentAccept({ payload, user: fellow })
+    const starts = new Date(Date.now() + 86_400_000).toISOString()
+    const event = await postCreate({
+      payload,
+      user: fellow,
+      space: courseSpace.id,
+      kind: 'event',
+      body: 'Probe answered event',
+      event: { location: 'Room 4', startsAt: starts },
+    })
+    const vote = await postCreate({
+      payload,
+      user: fellow,
+      space: courseSpace.id,
+      kind: 'vote',
+      body: 'Probe chosen vote',
+      vote: { options: ['Yes', 'No'], multiple: false, anonymous: false },
+    })
+    expect(event.ok && vote.ok).toBe(true)
+    if (!event.ok || !vote.ok) return
+    track('space-posts', event.data.id)
+    track('space-posts', vote.data.id)
+    const [yes] = (
+      await payload.findByID({ collection: 'space-posts', id: vote.data.id, overrideAccess: true })
+    ).vote_options!.map((o) => o.id!)
+    expect(
+      (await rsvpSet({ payload, user: student, post: event.data.id, status: 'going' })).ok,
+    ).toBe(true)
+    expect(
+      (await voteSet({ payload, user: student, post: vote.data.id, options: [yes!] })).ok,
+    ).toBe(true)
+    for (const post of [event.data.id, vote.data.id])
+      expect(
+        (await reactionToggle({ payload, user: student, post, reaction: 'agree', on: true })).ok,
+      ).toBe(true)
+
+    for (const post of [event.data.id, vote.data.id])
+      expect(await postRemove({ payload, user: fellow, id: post })).toMatchObject({ ok: true })
+    const left = async (
+      collection: 'space-posts' | 'space-rsvps' | 'space-votes' | 'space-reactions',
+      field: string,
+    ) =>
+      (
+        await payload.count({
+          collection,
+          where: { [field]: { in: [event.data.id, vote.data.id] } },
+          overrideAccess: true,
+        })
+      ).totalDocs
+    expect(await left('space-posts', 'id')).toBe(0)
+    expect(await left('space-rsvps', 'post')).toBe(0)
+    expect(await left('space-votes', 'post')).toBe(0)
+    expect(await left('space-reactions', 'post')).toBe(0)
+  })
+
   it('commentCreate on locked post refuses', async () => {
     const post = await postCreate({
       payload,

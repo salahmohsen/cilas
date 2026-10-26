@@ -690,6 +690,11 @@ export const postRemove = async (i: Input<{ id: number }>): Promise<WriteResult<
         id: (f as { id: number }).id,
         overrideAccess: true,
       })
+    // Their post column is NOT NULL under an ON DELETE SET NULL key, so the
+    // post's delete fails while any answer or vote is left (reactions would
+    // stay behind pointing at nothing).
+    for (const collection of ['space-rsvps', 'space-votes', 'space-reactions'] as const)
+      await payload.delete({ collection, where: { post: { equals: id } }, overrideAccess: true })
     await payload.delete({ collection: 'space-posts', id, overrideAccess: true })
     await removeFile(payload, cover)
   }
@@ -969,6 +974,11 @@ export const commentRemove = async (i: Input<{ id: number }>): Promise<WriteResu
         id: (f as { id: number }).id,
         overrideAccess: true,
       })
+    await payload.delete({
+      collection: 'space-reactions',
+      where: { comment: { equals: id } },
+      overrideAccess: true,
+    })
     await payload.delete({ collection: 'space-comments', id, overrideAccess: true })
   }
   return { ok: true, data: true }
