@@ -6,6 +6,8 @@ import { useTranslations } from 'next-intl'
 import { Dialog, DialogContent } from '@/components/arc/dialog/dialog'
 import { ExpandableText } from '@/components/arc/expandable-text/expandable-text'
 
+import styles from './space.module.css'
+
 const LINES = 6
 
 /** The About text stays six lines tall; the full text opens in a dialog so a long one never pushes the rail. */
@@ -25,6 +27,7 @@ export function AboutClamp({ text, children }: { text: string; children: ReactNo
         {/* The button is not a Radix trigger, so focus would fall to the body on close. */}
         <DialogContent
           title={t('aboutSpace')}
+          className={styles.aboutDialog}
           onCloseAutoFocus={(event) => {
             event.preventDefault()
             root.current?.querySelector('button')?.focus()

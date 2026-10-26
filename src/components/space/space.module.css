@@ -2100,3 +2100,14 @@
   font-size: inherit;
   line-height: inherit;
 }
+
+/* A long About reads at a prose measure, not squeezed into the default dialog width. */
+.aboutDialog[role='dialog'] {
+  width: min(calc(100vw - var(--space-8)), 44rem);
+}
+
+.aboutDialog .prose {
+  max-width: 65ch;
+  font-size: var(--text-base);
+  line-height: var(--leading-body);
+}
