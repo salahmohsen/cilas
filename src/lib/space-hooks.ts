@@ -55,7 +55,7 @@ const createSpace = async (
     overrideAccess: true,
     req,
   })
-  await addIntroPost(payload, space.id, req)
+  // The spaces collection adds the intro post on create (Spaces.ts).
   return space
 }
 

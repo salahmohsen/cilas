@@ -2067,7 +2067,7 @@ export interface Space {
    */
   reopened?: boolean | null;
   /**
-   * Set by the system when the space opens; moderators edit the post itself.
+   * Made by the system from the Space introduction template when the space is created.
    */
   introduction_post?: (number | null) | SpacePost;
   updatedAt: string;

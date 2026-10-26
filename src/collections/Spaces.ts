@@ -2,6 +2,7 @@ import type { CollectionConfig } from 'payload'
 
 import { isAdminUser } from '@/access'
 import { readSpaces } from '@/lib/spaces'
+import { addIntroPost } from '@/lib/space-hooks'
 import { ABOUT_MAX } from '@/lib/space-about'
 import type { CommunityAudience, EventPosting, PostingLevel, SpaceKind } from '@/lib/spaces'
 
@@ -118,17 +119,32 @@ export const Spaces: CollectionConfig = {
       admin: { description: 'Reopens a course space archived 2 weeks after its last meeting.' },
     },
     {
-      // The intro post, created with the space by hook or seed (moderators may edit
-      // only this post — Task 8's `postEdit` covers it).
+      // The intro post, made with every course and cohort space (the hook below);
+      // moderators edit the post itself, never this link.
       name: 'introduction_post',
       type: 'relationship',
       relationTo: 'space-posts',
+      access: { create: () => false, update: () => false },
       admin: {
-        description: 'Set by the system when the space opens; moderators edit the post itself.',
+        readOnly: true,
+        // Nothing to choose on the create form: it appears once the system has set it.
+        condition: (data) => Boolean(data?.introduction_post),
+        description:
+          'Made by the system from the Space introduction template when the space is created.',
       },
     },
   ],
   hooks: {
+    afterChange: [
+      // However the space is made (a course or programme going live, or by hand
+      // here), a course or cohort space opens with its intro post and its gate.
+      async ({ doc, operation, req }) => {
+        if (operation !== 'create') return doc
+        if (doc.kind === 'community' || doc.introduction_post) return doc
+        const intro = await addIntroPost(req.payload, doc.id, req)
+        return { ...doc, introduction_post: intro }
+      },
+    ],
     beforeChange: [
       ({ data, originalDoc }) => {
         // A custom name or audience means nothing outside a community space.

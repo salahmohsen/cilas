@@ -66,6 +66,8 @@ const introOf = (space: Space) => {
   return typeof v === 'object' ? v.id : v
 }
 
+const relSpace = (v: number | { id: number }) => (typeof v === 'object' ? v.id : v)
+
 const tracked = new Map<string, number[]>()
 const track = (collection: string, id: number) => {
   const list = tracked.get(collection) ?? []
@@ -2370,5 +2372,37 @@ describe('spaces write', () => {
       await write('en', { title: saved.en.title ?? null, body: saved.en.body ?? null })
       await write('ar', { title: saved.ar.title ?? null, body: saved.ar.body ?? null })
     }
+  })
+
+  it('a course or cohort space made by hand in the dashboard opens with its intro post too', async () => {
+    const programme = await payload.create({
+      collection: 'programmes',
+      data: { title: 'Probe Draft Bridge', slug: 'probe-draft-bridge', kind: 'bridge' },
+      overrideAccess: true,
+    })
+    track('programmes', programme.id as number)
+    const made = (await payload.create({
+      collection: 'spaces',
+      data: { kind: 'cohort', programme: programme.id },
+      overrideAccess: true,
+    })) as unknown as Space
+    track('spaces', made.id)
+    const intro = introOf(made)
+    track('space-posts', intro)
+    const post = await payload.findByID({
+      collection: 'space-posts',
+      id: intro,
+      overrideAccess: true,
+    })
+    expect(post.pinned).toBe(true)
+    expect(relSpace(post.space)).toBe(made.id)
+
+    const hall = (await payload.create({
+      collection: 'spaces',
+      data: { kind: 'community', name: 'Probe hall' },
+      overrideAccess: true,
+    })) as unknown as Space
+    track('spaces', hall.id)
+    expect(hall.introduction_post ?? null).toBeNull()
   })
 })
