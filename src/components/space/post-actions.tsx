@@ -21,7 +21,8 @@ import { saveErrorKey } from './composer'
 import { EventEditDialog, type EventEditInitial } from './event-edit'
 import styles from './space.module.css'
 
-type Post = { id: number; body: string; pinned: boolean; locked: boolean }
+/** `intro`: the space's intro post, which a moderator edits but never locks or deletes */
+type Post = { id: number; body: string; pinned: boolean; locked: boolean; intro?: boolean }
 
 const run = async (
   action: (prev: SpacesWriteState, form: FormData) => Promise<SpacesWriteState>,
@@ -85,11 +86,15 @@ export function PostActions({
             icon: post.pinned ? <PinOff size={15} /> : <Pin size={15} />,
             onSelect: modify({ pinned: String(!post.pinned) }),
           },
-          {
-            label: post.locked ? t('unlock') : t('lock'),
-            icon: post.locked ? <LockOpen size={15} /> : <Lock size={15} />,
-            onSelect: modify({ locked: String(!post.locked) }),
-          },
+          ...(post.intro
+            ? []
+            : [
+                {
+                  label: post.locked ? t('unlock') : t('lock'),
+                  icon: post.locked ? <LockOpen size={15} /> : <Lock size={15} />,
+                  onSelect: modify({ locked: String(!post.locked) }),
+                },
+              ]),
         ]
       : []),
     ...(canDelete

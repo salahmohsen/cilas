@@ -71,6 +71,10 @@ export async function loadPost(
       now: new Date().toISOString(),
       titles,
       sessions: sessionContextOf(view.sessions),
+      introPost:
+        typeof space.introduction_post === 'object'
+          ? (space.introduction_post?.id ?? null)
+          : (space.introduction_post ?? null),
     },
   }
 }

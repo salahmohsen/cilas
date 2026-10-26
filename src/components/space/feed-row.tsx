@@ -46,6 +46,8 @@ export type FeedContext = {
   titles: Record<string, string>
   /** The course sessions posts and comments may name; absent outside a course space */
   sessions?: SessionContext
+  /** The space's intro post: every member may answer it, and nobody locks or deletes it */
+  introPost: number | null
 }
 
 /** Who wrote a post: the photo, then the name (with its card) above when it was posted. */
@@ -110,6 +112,7 @@ export async function PostHead({
   const { post } = row
   const { viewer, archived } = context
   const mine = row.authorId != null && row.authorId === viewer.personId
+  const intro = post.id === context.introPost
   // An event shows no label: its card already carries the calendar leaf.
   const labels = [
     post.pinned && { id: 'pinned', label: t('pinned'), icon: <Pin size={16} /> },
@@ -147,10 +150,16 @@ export async function PostHead({
         <PostLabels items={labels} />
         {!deleted && (
           <PostActions
-            post={{ id: post.id, body: post.body, pinned: !!post.pinned, locked: !!post.locked }}
-            canEdit={mine && !archived}
+            post={{
+              id: post.id,
+              body: post.body,
+              pinned: !!post.pinned,
+              locked: !!post.locked,
+              intro,
+            }}
+            canEdit={(mine || (intro && viewer.moderator)) && !archived}
             canModerate={viewer.moderator && !archived}
-            canDelete={mine || viewer.moderator}
+            canDelete={!intro && (mine || viewer.moderator)}
             event={eventMenu(post, (mine || viewer.moderator) && !archived, context.now)}
           />
         )}
@@ -183,7 +192,10 @@ const eventMenu = (post: SpacePost, mayMove: boolean, now: string): EventEditMen
 
 /** Whether this member may comment on this post now. */
 export const commentsOpen = (row: FeedRowData, context: FeedContext, deleted = false) =>
-  context.mayComment && !context.archived && !deleted && !row.post.locked
+  (context.mayComment || row.post.id === context.introPost) &&
+  !context.archived &&
+  !deleted &&
+  !row.post.locked
 
 /**
  * One post in the feed (spec §7). An `article` in the page's `feed`, named by
@@ -231,7 +243,13 @@ export async function FeedRow({
         )}
         {text && (
           <div id={`${id}-body`}>
-            <Folded body={text} lines={8} more={t('readMore')} less={t('showLess')}>
+            {/* The intro post holds both languages; folding would hide the second. */}
+            <Folded
+              body={text}
+              lines={post.id === context.introPost ? Infinity : 8}
+              more={t('readMore')}
+              less={t('showLess')}
+            >
               <PostBody
                 body={text}
                 people={context.people}

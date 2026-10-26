@@ -843,7 +843,10 @@
     "place": "Place",
     "openInMaps": "Open in maps",
     "placeMap": "Map of {name}",
-    "spaceActions": "Space actions"
+    "spaceActions": "Space actions",
+    "introLockTitle": "The other posts open after you introduce yourself",
+    "introLockHint": "Comment on the intro post below to read and join the rest of this space.",
+    "introLockAction": "Write your introduction"
   },
   "SpacePost": {
     "newPost": "New post",

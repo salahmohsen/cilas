@@ -15,7 +15,7 @@ import type { Course, Programme, Space, User } from '@/payload-types'
 import { linkTitles } from '@/lib/link-preview'
 import { pageAddresses, threadTexts } from '@/lib/link-title'
 import { NOTICE } from '@/lib/space-consent'
-import { mayComment, membership } from '@/lib/spaces'
+import { introGates, mayComment, membership } from '@/lib/spaces'
 import { CourseSyllabus, directionOf, textOf } from '@/components/course/course-syllabus'
 import { RichTextField } from '@/components/RichTextField'
 import { StudyWithAI } from '@/components/study-with-ai'
@@ -40,6 +40,7 @@ import { EventList } from './event-list'
 import { FeedFilter } from './feed-filter'
 import { FeedRow, type FeedContext } from './feed-row'
 import { FreshPosts } from './fresh-posts'
+import { IntroLock } from './intro-lock'
 import { LoadMore } from './load-more'
 import { MembersPanel } from './members-panel'
 import { NextSession } from './next-session'
@@ -88,6 +89,8 @@ export async function SpacePage({
   const mem = await membership(payload, user, space)
   if (mem.role === 'none') notFound()
   const moderator = mem.role === 'moderator'
+  // The intro post, while this member has not commented on it: the only post they read here.
+  const gatedBy = (await introGates(payload, user)).get(space.id) ?? null
 
   const lang = locale === 'ar' ? 'ar' : 'en'
   const [t, tp, ts, feed, state, { cards, byId, moderators }, numbers, jar, custom, events, place] =
@@ -168,6 +171,7 @@ export async function SpacePage({
   // The same rules postCreate enforces, so the type switch never offers a closed door.
   const kinds = (['discussion', 'event', 'vote', 'announcement'] as const).filter(
     (k): k is PostKind =>
+      gatedBy == null &&
       postingAllows(space.posting ?? 'open', mem.role, k) &&
       (k !== 'event' || eventsAllow(space.events, mem.role)),
   )
@@ -189,6 +193,10 @@ export async function SpacePage({
     now: renderedAt,
     titles,
     sessions: sessionContextOf(feed.sessions),
+    introPost:
+      typeof space.introduction_post === 'object'
+        ? (space.introduction_post?.id ?? null)
+        : (space.introduction_post ?? null),
   }
 
   const course = landing.course
@@ -199,7 +207,7 @@ export async function SpacePage({
   // its thread), from the rows the feed already read.
   const { named, counts: linked } = sessionCounts(feed.rows)
   const bySession = course && session ? session : null
-  const listed = (view === 'announcements' ? announcements : feed.rows).filter(
+  const listed = (view === 'announcements' && gatedBy == null ? announcements : feed.rows).filter(
     (r) => !bySession || named.get(r.post.id)?.has(bySession),
   )
   const pinned = listed.filter((r) => r.post.pinned)
@@ -394,6 +402,7 @@ export async function SpacePage({
                   </a>
                 </Alert>
               )}
+              {gatedBy != null && <IntroLock post={gatedBy} />}
               {listed.length === 0 ? (
                 <EmptyState
                   title={view === 'announcements' ? t('noAnnouncements') : tp('empty')}

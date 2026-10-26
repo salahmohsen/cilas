@@ -843,7 +843,10 @@
     "place": "المكان",
     "openInMaps": "افتح في الخرائط",
     "placeMap": "خريطة {name}",
-    "spaceActions": "إجراءات المساحة"
+    "spaceActions": "إجراءات المساحة",
+    "introLockTitle": "تُفتح بقية المنشورات بعد أن تعرّف بنفسك",
+    "introLockHint": "علّق على منشور التعريف أدناه لتقرأ بقية هذه المساحة وتشارك فيها.",
+    "introLockAction": "اكتب تعريفك"
   },
   "SpacePost": {
     "newPost": "منشور جديد",

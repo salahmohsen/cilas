@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useTranslations } from 'next-intl'
 import { Link2, MessageCircle } from 'lucide-react'
 
@@ -10,6 +10,7 @@ import type { ReactionCounts, ReactionKind } from '@/lib/space-reactions'
 import type { TopComment } from '@/lib/spaces-data'
 
 import { FeedReactions } from './feed-reactions'
+import { COMMENT_EVENT } from './intro-lock'
 import type { PersonCard } from './person-hover'
 import type { SessionLinks } from './session-chip'
 import styles from './space.module.css'
@@ -62,6 +63,13 @@ export function PostFoot({
 }) {
   const t = useTranslations('SpacePost')
   const [focus, setFocus] = useState(0)
+  useEffect(() => {
+    const onComment = (e: Event) => {
+      if ((e as CustomEvent<{ post: number }>).detail?.post === post) setFocus((n) => n + 1)
+    }
+    window.addEventListener(COMMENT_EVENT, onComment)
+    return () => window.removeEventListener(COMMENT_EVENT, onComment)
+  }, [post])
   const open = !preview || comments.length > 0 || focus > 0
   return (
     <>
