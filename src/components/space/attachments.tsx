@@ -32,7 +32,11 @@ export function Attachments({
   const photos = files.filter((f) => f.isImage)
   const others = files.filter((f) => !f.isImage)
   return (
-    <div className={styles.attachments}>
+    <div
+      className={
+        compact ? `${styles.attachments} ${styles.commentAttachments}` : styles.attachments
+      }
+    >
       {photos.length > 0 && <PhotoGrid photos={photos} compact={compact} opensPost={opensPost} />}
       {others.length > 0 && (
         <div className={styles.files} aria-label={label} role="group">
