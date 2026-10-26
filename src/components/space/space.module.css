@@ -1074,12 +1074,20 @@
 .attach {
   width: 32px;
   height: 32px;
-  border-radius: var(--radius-pill);
+  /* Inside the comment field, concentric with its corner. */
+  border-radius: var(--inline-radius, var(--radius-pill));
 }
 
 .attach:hover {
   background: var(--surface-muted);
   color: var(--foreground);
+}
+
+@media (pointer: coarse) {
+  .attach {
+    width: 36px;
+    height: 36px;
+  }
 }
 
 /* A link's preview: the page's image, then its site, title and summary. */

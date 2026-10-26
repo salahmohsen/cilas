@@ -16,7 +16,15 @@ import {
 import type { KeyboardEvent as ReactKeyboardEvent, ReactNode } from 'react'
 import { AnimatePresence, animate, motion, useMotionValue, useReducedMotion } from 'motion/react'
 import type { Transition, Variants } from 'motion/react'
-import { Check, ChevronRight, CornerDownRight, RotateCcw, SmilePlus, X } from 'lucide-react'
+import {
+  Check,
+  ChevronRight,
+  CornerDownRight,
+  RotateCcw,
+  SendHorizontal,
+  SmilePlus,
+  X,
+} from 'lucide-react'
 import { motionTokens } from '../lib/motion-tokens'
 import styles from './comment-thread.module.css'
 
@@ -222,6 +230,8 @@ export interface CommentThreadProps {
   composerAttachments?: ReactNode
   /** Change it to move focus into the composer, such as from a Comment button outside the thread. */
   composerFocusKey?: number
+  /** The new-comment composer's send and extra buttons float inside the field as icons, leaving the text the full width. */
+  inlineActions?: boolean
   className?: string
 }
 
@@ -482,6 +492,8 @@ interface ComposerProps {
   trailing?: ReactNode
   below?: ReactNode
   compact?: boolean
+  /** Send and `trailing` float inside the field as icon buttons; the reply bar's own button cancels. */
+  inline?: boolean
   cancelLabel: string
   mentionsLabel: string
 }
@@ -507,12 +519,23 @@ function Composer({
   trailing,
   below,
   compact,
+  inline,
   cancelLabel,
   mentionsLabel,
 }: ComposerProps) {
   const uid = useId().replace(/[^a-zA-Z0-9_-]/g, '')
   const reduced = useReducedFlag()
   const field = useRef<HTMLTextAreaElement>(null)
+  const floating = useRef<HTMLDivElement>(null)
+  // The text stops short of the floating buttons, whatever `trailing` holds.
+  const [clear, setClear] = useState<number>()
+  useLayoutEffect(() => {
+    const node = floating.current
+    if (!node) return
+    const observer = new ResizeObserver(() => setClear(node.offsetWidth))
+    observer.observe(node)
+    return () => observer.disconnect()
+  }, [])
   const [text, setText] = useState(initial)
   // Picked people, kept in the order their "@Name" appears in the text.
   const [picked, setPicked] = useState<CommentAuthor[]>(initialMentions ?? [])
@@ -610,31 +633,52 @@ function Composer({
   }
 
   return (
-    <div className={styles.composer} data-compact={compact || undefined}>
+    <div
+      className={styles.composer}
+      data-compact={compact || undefined}
+      data-inline={inline || undefined}
+    >
       {leading}
       <div className={styles.fieldWrap}>
-        <textarea
-          ref={field}
-          className={styles.field}
-          value={text}
-          placeholder={placeholder}
-          rows={1}
-          aria-label={placeholder}
-          role="combobox"
-          aria-autocomplete="list"
-          aria-expanded={open}
-          aria-controls={`${uid}-people`}
-          aria-activedescendant={open ? `${uid}-person-${active}` : undefined}
-          onChange={(event) => {
-            setText(event.target.value)
-            readQuery(event.target.value, event.target.selectionStart)
-          }}
-          onSelect={(event) =>
-            readQuery(event.currentTarget.value, event.currentTarget.selectionStart)
-          }
-          onBlur={() => setQuery(null)}
-          onKeyDown={onKeyDown}
-        />
+        <div className={styles.fieldBox}>
+          <textarea
+            ref={field}
+            className={styles.field}
+            style={inline && clear ? { paddingInlineEnd: clear + 8 } : undefined}
+            value={text}
+            placeholder={placeholder}
+            rows={1}
+            aria-label={placeholder}
+            role="combobox"
+            aria-autocomplete="list"
+            aria-expanded={open}
+            aria-controls={`${uid}-people`}
+            aria-activedescendant={open ? `${uid}-person-${active}` : undefined}
+            onChange={(event) => {
+              setText(event.target.value)
+              readQuery(event.target.value, event.target.selectionStart)
+            }}
+            onSelect={(event) =>
+              readQuery(event.currentTarget.value, event.currentTarget.selectionStart)
+            }
+            onBlur={() => setQuery(null)}
+            onKeyDown={onKeyDown}
+          />
+          {inline && (
+            <div ref={floating} className={styles.inlineActions}>
+              {trailing}
+              <button
+                type="button"
+                className={styles.sendIcon}
+                aria-label={submitLabel}
+                disabled={!text.trim()}
+                onClick={send}
+              >
+                <SendHorizontal size={16} strokeWidth={1.75} aria-hidden="true" />
+              </button>
+            </div>
+          )}
+        </div>
         <AnimatePresence>
           {open && (
             <motion.ul
@@ -682,22 +726,24 @@ function Composer({
           )}
         </AnimatePresence>
       </div>
-      <div className={styles.composerActions}>
-        {trailing}
-        {onCancel && (
-          <button type="button" className={styles.ghost} onClick={onCancel}>
-            {cancelLabel}
+      {!inline && (
+        <div className={styles.composerActions}>
+          {trailing}
+          {onCancel && (
+            <button type="button" className={styles.ghost} onClick={onCancel}>
+              {cancelLabel}
+            </button>
+          )}
+          <button
+            type="button"
+            className={styles.send}
+            disabled={!text.trim() || text.trim() === initial.trim()}
+            onClick={send}
+          >
+            {submitLabel}
           </button>
-        )}
-        <button
-          type="button"
-          className={styles.send}
-          disabled={!text.trim() || text.trim() === initial.trim()}
-          onClick={send}
-        >
-          {submitLabel}
-        </button>
-      </div>
+        </div>
+      )}
       {below ? <div className={styles.composerBelow}>{below}</div> : null}
     </div>
   )
@@ -740,6 +786,7 @@ export const CommentThread = forwardRef<HTMLElement, CommentThreadProps>(functio
     composerExtra,
     composerAttachments,
     composerFocusKey,
+    inlineActions,
     className,
   },
   forwardedRef,
@@ -1358,6 +1405,7 @@ export const CommentThread = forwardRef<HTMLElement, CommentThreadProps>(functio
                     leading={<Avatar author={currentUser} />}
                     trailing={composerExtra}
                     below={composerAttachments}
+                    inline={inlineActions}
                   />
                 </div>
               )}

@@ -359,8 +359,12 @@
 
 .empty {
   margin: 0;
-  padding: 8px 18px 16px;
+  /* With the composer area's 4px margin, the text sits as far from the divider below as from the edge above. */
+  padding: 14px 18px 10px;
   color: var(--text-muted);
+}
+.header + .empty {
+  padding-top: 6px;
 }
 
 /* Composer */
@@ -408,6 +412,10 @@
   display: grid;
   min-width: 0;
 }
+.fieldBox {
+  position: relative;
+  display: grid;
+}
 .field {
   width: 100%;
   min-height: 38px;
@@ -436,6 +444,58 @@
 .composerBelow {
   grid-column: 2 / -1;
   min-width: 0;
+}
+.composer[data-inline] {
+  grid-template-columns: auto minmax(0, 1fr);
+}
+/* Tall enough for a button and its inset above and below; the 28px avatar centres on the first line. */
+.composer[data-inline] .field {
+  min-height: 42px;
+  padding-block: 10px;
+}
+.composer[data-inline] > .avatar {
+  margin-top: 7px;
+}
+/* Icon buttons inside the field, at its end and on its last line, so the text keeps the width. */
+/* Its buttons sit 5px in, so their corners are the field's 14px less 5px. */
+.inlineActions {
+  --inline-radius: 9px;
+  position: absolute;
+  inset-block-end: 5px;
+  inset-inline-end: 5px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+.sendIcon {
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border: 0;
+  border-radius: var(--inline-radius);
+  background: var(--foreground);
+  color: var(--background);
+  cursor: pointer;
+  transition:
+    background-color var(--duration-fast) var(--ease-standard),
+    opacity var(--duration-fast) var(--ease-standard),
+    transform var(--duration-instant) var(--ease-standard);
+}
+.sendIcon:disabled {
+  opacity: 0.35;
+  cursor: default;
+}
+.sendIcon:active:not(:disabled) {
+  transform: scale(0.96);
+}
+/* The paper plane tilts up and points the way the text runs. */
+.sendIcon svg {
+  transform: rotate(-45deg);
+}
+.sendIcon:dir(rtl) svg {
+  transform: scaleX(-1) rotate(-45deg);
 }
 .composer[data-compact] .composerActions {
   justify-content: flex-end;
@@ -566,7 +626,8 @@
     border-color: var(--border-strong);
     background: var(--surface-muted);
   }
-  .send:hover:not(:disabled) {
+  .send:hover:not(:disabled),
+  .sendIcon:hover:not(:disabled) {
     background: color-mix(in oklab, var(--foreground) 86%, var(--background));
   }
 }
@@ -578,9 +639,26 @@
   color: var(--foreground);
 }
 
+/* On touch the field and its buttons grow toward a finger's size. */
+@media (pointer: coarse) {
+  .composer[data-inline] .field {
+    min-height: 46px;
+    padding-block: 12px;
+  }
+  .composer[data-inline] > .avatar {
+    margin-top: 9px;
+  }
+  .sendIcon {
+    width: 36px;
+    height: 36px;
+  }
+}
 @media (max-width: 420px) {
   .composer {
     grid-template-columns: minmax(0, 1fr) auto;
+  }
+  .composer[data-inline] {
+    grid-template-columns: minmax(0, 1fr);
   }
   .composer > .avatar {
     display: none;
@@ -604,6 +682,7 @@
   .iconAction,
   .emoji,
   .send,
+  .sendIcon,
   .ghost,
   .resolve,
   .reopen {

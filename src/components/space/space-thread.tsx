@@ -284,6 +284,7 @@ export function SpaceThread({
         placeholder={t('placeholder')}
         nowLabel={t('now')}
         composerFocusKey={focusKey}
+        inlineActions
         renderName={(author) => {
           const person = byId.get(Number(author.id))
           return person ? (
