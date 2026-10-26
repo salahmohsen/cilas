@@ -911,6 +911,14 @@ export interface RichTextEditorProps {
   readOnly?: boolean
   autoFocus?: boolean
   'aria-label'?: string
+  /** Names the editor from a visible label, which wins over `aria-label`. */
+  'aria-labelledby'?: string
+  'aria-describedby'?: string
+  'aria-invalid'?: boolean
+  'aria-required'?: boolean
+  'aria-disabled'?: boolean
+  /** Id of the writing surface, so a label or a test can point at it. */
+  id?: string
   className?: string
   style?: CSSProperties
 }
@@ -1062,6 +1070,12 @@ export const RichTextEditor = forwardRef<RichTextEditorHandle, RichTextEditorPro
       readOnly = false,
       autoFocus = false,
       'aria-label': ariaLabel = 'Editor',
+      'aria-labelledby': ariaLabelledBy,
+      'aria-describedby': ariaDescribedBy,
+      'aria-invalid': ariaInvalid,
+      'aria-required': ariaRequired,
+      'aria-disabled': ariaDisabled,
+      id,
       className,
       style,
     },
@@ -2138,7 +2152,13 @@ export const RichTextEditor = forwardRef<RichTextEditorHandle, RichTextEditorPro
           suppressContentEditableWarning
           role="textbox"
           aria-multiline="true"
-          aria-label={ariaLabel}
+          id={id}
+          aria-label={ariaLabelledBy ? undefined : ariaLabel}
+          aria-labelledby={ariaLabelledBy}
+          aria-describedby={ariaDescribedBy}
+          aria-invalid={ariaInvalid || undefined}
+          aria-required={ariaRequired || undefined}
+          aria-disabled={ariaDisabled || undefined}
           aria-readonly={readOnly || undefined}
           aria-controls={slashT.slashOpen ? `${uid}-slash` : undefined}
           aria-activedescendant={

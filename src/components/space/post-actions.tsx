@@ -9,7 +9,7 @@ import { ActionButton } from '@/components/arc/action-button/action-button'
 import { ConfirmMorph, type ConfirmMorphState } from '@/components/arc/confirm-morph/confirm-morph'
 import { Dialog, DialogContent } from '@/components/arc/dialog/dialog'
 import { DropdownMenu } from '@/components/arc/dropdown-menu/dropdown-menu'
-import { RichTextEditor } from '@/components/arc/rich-text-editor/rich-text-editor'
+import { RichField } from '@/components/rich-field'
 import {
   postEditAction,
   postModifyAction,
@@ -141,8 +141,9 @@ export function PostActions({
         <Dialog open={editing} onOpenChange={setEditing}>
           <DialogContent title={t('edit')}>
             <div className={styles.column}>
-              <RichTextEditor
-                aria-label={t('edit')}
+              <RichField
+                label={t('edit')}
+                hideLabel
                 defaultMarkdown={post.body}
                 onChange={(v) => setDraft(v.markdown)}
               />

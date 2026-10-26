@@ -9,7 +9,7 @@ import { Button } from '@/components/arc/button/button'
 import { Input } from '@/components/arc/input/input'
 import { AvatarUpload } from '@/components/image-upload/avatar-upload'
 import { sendWithProgress } from '@/components/image-upload/send'
-import { RichTextEditor } from '@/components/arc/rich-text-editor/rich-text-editor'
+import { RichField } from '@/components/rich-field'
 import { bioBaseline, bioToSend } from '@/components/profile/bio'
 import type { ProfileMessages } from '@/components/profile/messages'
 import { Select } from '@/components/select'
@@ -116,28 +116,20 @@ export function ProfileForm({ profile, messages: m, action, removePhotoAction }:
         error={fieldError('name-ar')}
       />
 
-      <fieldset className="grid gap-2">
-        <legend className="text-sm font-medium">{m.bioEn}</legend>
-        <div dir="ltr">
-          <RichTextEditor
-            aria-label={m.bioEn}
-            defaultMarkdown={profile.bio.en}
-            onChange={(value) => setBioEn(bioFor('en', value.markdown))}
-          />
-        </div>
-        <input type="hidden" name="bio_en" value={bioEn} />
-      </fieldset>
-      <fieldset className="grid gap-2">
-        <legend className="text-sm font-medium">{m.bioAr}</legend>
-        <div dir="rtl">
-          <RichTextEditor
-            aria-label={m.bioAr}
-            defaultMarkdown={profile.bio.ar}
-            onChange={(value) => setBioAr(bioFor('ar', value.markdown))}
-          />
-        </div>
-        <input type="hidden" name="bio_ar" value={bioAr} />
-      </fieldset>
+      <RichField
+        label={m.bioEn}
+        dir="ltr"
+        defaultMarkdown={profile.bio.en}
+        onChange={(value) => setBioEn(bioFor('en', value.markdown))}
+      />
+      <input type="hidden" name="bio_en" value={bioEn} />
+      <RichField
+        label={m.bioAr}
+        dir="rtl"
+        defaultMarkdown={profile.bio.ar}
+        onChange={(value) => setBioAr(bioFor('ar', value.markdown))}
+      />
+      <input type="hidden" name="bio_ar" value={bioAr} />
 
       <Input
         label={m.website}

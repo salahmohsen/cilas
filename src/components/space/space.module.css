@@ -1633,17 +1633,6 @@
   min-width: 0;
 }
 
-/* A visible name for a field whose control names itself (the editor, the cover group). */
-.fieldLabel {
-  font-size: var(--text-sm);
-  font-weight: 500;
-}
-
-/* The label sits on its editor, not a whole field gap above it. */
-.fieldLabel + * {
-  margin-block-start: calc(var(--space-2) - var(--space-4));
-}
-
 .coverPreview {
   position: relative;
   overflow: hidden;

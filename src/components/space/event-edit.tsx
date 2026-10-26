@@ -7,7 +7,7 @@ import { useRouter } from 'next/navigation'
 import { ActionButton } from '@/components/arc/action-button/action-button'
 import { Dialog, DialogContent } from '@/components/arc/dialog/dialog'
 import { Input } from '@/components/arc/input/input'
-import { RichTextEditor } from '@/components/arc/rich-text-editor/rich-text-editor'
+import { RichField } from '@/components/rich-field'
 import { eventEditAction } from '@/app/(frontend)/[locale]/spaces/actions'
 import { EVENT_TITLE_MAX } from '@/lib/space-post-kinds'
 
@@ -91,11 +91,8 @@ export function EventEditDialog({
                 maxLength={EVENT_TITLE_MAX}
                 onChange={(e) => setTitle(e.currentTarget.value)}
               />
-              <span className={styles.fieldLabel} aria-hidden="true">
-                {t('eventDescription')}
-              </span>
-              <RichTextEditor
-                aria-label={t('eventDescription')}
+              <RichField
+                label={t('eventDescription')}
                 placeholder={t('placeholder_event')}
                 defaultMarkdown={initial.description}
                 onChange={(v) => setDescription(v.empty ? '' : v.markdown)}

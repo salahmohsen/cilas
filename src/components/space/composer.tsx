@@ -13,7 +13,7 @@ import { BottomSheet } from '@/components/arc/bottom-sheet/bottom-sheet'
 import { Button } from '@/components/arc/button/button'
 import { Checkbox } from '@/components/arc/checkbox/checkbox'
 import { Input } from '@/components/arc/input/input'
-import { RichTextEditor } from '@/components/arc/rich-text-editor/rich-text-editor'
+import { RichField } from '@/components/rich-field'
 import { Select } from '@/components/arc/select/select'
 import SegmentedControl from '@/components/arc/segmented-control/segmented-control'
 import { postCreateAction, type SpacesWriteState } from '@/app/(frontend)/[locale]/spaces/actions'
@@ -267,14 +267,10 @@ function ComposerForm({
             onChange={(e) => set({ title: e.currentTarget.value })}
           />
         )}
-        {kind === 'event' && (
-          <span className={styles.fieldLabel} aria-hidden="true">
-            {t('eventDescription')}
-          </span>
-        )}
-        <RichTextEditor
+        <RichField
           autoFocus
-          aria-label={kind === 'event' ? t('eventDescription') : t('newPost')}
+          label={kind === 'event' ? t('eventDescription') : t('newPost')}
+          hideLabel={kind !== 'event'}
           placeholder={t(`placeholder_${kind}`)}
           defaultMarkdown={initial}
           mentionSuggestions={mentions}
