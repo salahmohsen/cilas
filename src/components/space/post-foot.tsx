@@ -27,6 +27,7 @@ export function PostFoot({
   comments,
   commentCount,
   people,
+  known,
   viewer,
   canComment,
   archived,
@@ -46,6 +47,8 @@ export function PostFoot({
   comments: TopComment[]
   commentCount: number
   people: PersonCard[]
+  /** Everyone a comment may be by, members or not (the CILAS team, the reader) */
+  known: PersonCard[]
   viewer: ThreadViewer
   canComment: boolean
   archived: boolean
@@ -107,6 +110,7 @@ export function PostFoot({
           post={post}
           comments={comments}
           people={people}
+          known={known}
           viewer={viewer}
           canComment={canComment}
           consented={consented}

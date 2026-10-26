@@ -166,6 +166,7 @@ export async function PostArticle({
           comments={view.comments}
           commentCount={row.commentCount}
           people={context.cards}
+          known={[...context.people.values()]}
           viewer={context.viewer}
           canComment={commentsOpen(row, context, deleted)}
           archived={archived}

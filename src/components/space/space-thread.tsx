@@ -71,6 +71,7 @@ export function SpaceThread({
   post,
   comments,
   people,
+  known,
   viewer,
   canComment,
   consented,
@@ -87,6 +88,8 @@ export function SpaceThread({
   comments: TopComment[]
   /** Everyone in the space, for names, cards and @mentions */
   people: PersonCard[]
+  /** Everyone a comment may be by, members or not; names and photos come from here */
+  known: PersonCard[]
   viewer: ThreadViewer
   /** Open, unlocked, not archived, and the posting level lets this member comment */
   canComment: boolean
@@ -122,7 +125,7 @@ export function SpaceThread({
   const attachments = useAttachments(FILE_LIMITS.comment, setError)
   const { files } = attachments
 
-  const byId = useMemo(() => new Map(people.map((p) => [p.id, p])), [people])
+  const byId = useMemo(() => new Map(known.map((p) => [p.id, p])), [known])
   const me: CommentAuthor = {
     id: String(viewer.personId ?? 'me'),
     name: viewer.me.name,

@@ -300,6 +300,7 @@ export async function FeedRow({
           comments={row.comments}
           commentCount={row.commentCount}
           people={context.cards}
+          known={[...context.people.values()]}
           viewer={context.viewer}
           canComment={commentsOpen(row, context)}
           archived={context.archived}
