@@ -5,6 +5,7 @@ import type { ReactionCounts, ReactionKind } from '@/lib/space-reactions'
 import { archivedNow, courseLastMeeting, readOnly } from '@/lib/space-lifecycle'
 import { NOTICE_VERSION } from '@/lib/space-consent'
 import { spacePeople } from '@/lib/space-members'
+import { mapEmbedUrl } from '@/lib/map-embed'
 import { isRsvpStatus, type RsvpStatus } from '@/lib/space-event'
 import {
   mode,
@@ -1376,7 +1377,13 @@ export const spaceEvents = async (
 }
 
 /** A course's place for the space rail: the cycle's place, read through the reader's access. */
-export type CoursePlace = { name: string; address: string | null; mapUrl: string | null }
+export type CoursePlace = {
+  name: string
+  address: string | null
+  mapUrl: string | null
+  /** The embedded map's address, centred on the place's pin when its Maps link has one. */
+  embed: string | null
+}
 
 /**
  * The place an in-person course meets at, in one read. Nothing for a course
@@ -1404,9 +1411,12 @@ export const coursePlace = async (
     })
     .catch(() => null)
   if (!place) return null
+  const address = place.address?.trim() || null
+  const mapUrl = place.map_url?.trim() || null
   return {
     name: place.name,
-    address: place.address?.trim() || null,
-    mapUrl: place.map_url?.trim() || null,
+    address,
+    mapUrl,
+    embed: await mapEmbedUrl({ address, mapUrl }, locale),
   }
 }

@@ -1,6 +1,6 @@
 import { MapPin } from 'lucide-react'
 import type { ReactNode } from 'react'
-import { getLocale, getTranslations } from 'next-intl/server'
+import { getTranslations } from 'next-intl/server'
 
 import { Accordion } from '@/components/arc/accordion/accordion'
 import type { NoticePart } from '@/lib/space-consent'
@@ -28,7 +28,7 @@ export async function SpaceRail({
   /** Where an in-person course meets */
   place?: CoursePlace | null
 }) {
-  const [t, locale] = await Promise.all([getTranslations('Spaces'), getLocale()])
+  const t = await getTranslations('Spaces')
   return (
     <>
       <section className={styles.group}>
@@ -59,10 +59,10 @@ export async function SpaceRail({
             <h2 className={styles.sectionTitle}>{t('place')}</h2>
           </div>
           <div className={styles.groupBody}>
-            {place.address && (
+            {place.embed && (
               <iframe
                 className={styles.placeMap}
-                src={`https://www.google.com/maps?${new URLSearchParams({ q: place.address, hl: locale, z: '16', output: 'embed' })}`}
+                src={place.embed}
                 title={t('placeMap', { name: place.name })}
                 loading="lazy"
                 referrerPolicy="no-referrer"
@@ -79,7 +79,7 @@ export async function SpaceRail({
               )}
             </div>
             {/* The embedded map carries its own "Open in Maps" link. */}
-            {!place.address && place.mapUrl && (
+            {!place.embed && place.mapUrl && (
               <a
                 className={styles.placeLink}
                 href={place.mapUrl}
