@@ -13,7 +13,7 @@ import { ProfileForm } from '@/components/profile/profile-form'
 import { readProfile } from '@/lib/profile'
 import { currentReader } from '@/lib/reader'
 
-import { saveProfileAction } from './actions'
+import { removeProfilePhotoAction, saveProfileAction } from './actions'
 
 type Props = { params: Promise<{ locale: string }> }
 
@@ -47,7 +47,12 @@ export default async function ProfilePage({ params }: Props) {
         <p className="text-muted-foreground">{t('intro')}</p>
       </header>
       {profile ? (
-        <ProfileForm profile={profile} messages={messages} action={saveProfileAction} />
+        <ProfileForm
+          profile={profile}
+          messages={messages}
+          action={saveProfileAction}
+          removePhotoAction={removeProfilePhotoAction}
+        />
       ) : (
         <p>{t('noPerson')}</p>
       )}

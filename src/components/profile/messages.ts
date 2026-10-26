@@ -14,8 +14,6 @@ export const PROFILE_MESSAGE_KEYS = [
   'url',
   'addLink',
   'removeLink',
-  'photo',
-  'photoHint',
   'save',
   'saved',
 ] as const

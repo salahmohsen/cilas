@@ -4,7 +4,7 @@ import config from '@payload-config'
 import { refresh } from 'next/cache'
 import { getPayload } from 'payload'
 
-import { saveProfile, type ProfileError, type ProfileInput } from '@/lib/profile'
+import { saveProfile, saveProfilePhoto, type ProfileError, type ProfileInput } from '@/lib/profile'
 import { currentReader } from '@/lib/reader'
 
 export type ProfileState = { status: 'idle' | 'saved' } | { status: 'error'; error: ProfileError }
@@ -48,4 +48,15 @@ export async function saveProfileAction(
   // Bring the stored values and the new photo to the page.
   refresh()
   return { status: 'saved' }
+}
+
+export type PhotoState = { ok: true; url: string | null } | { ok: false; error: ProfileError }
+
+/** The avatar upload's Remove: the member's photo is cleared; the stored file stays in media. */
+export async function removeProfilePhotoAction(): Promise<PhotoState> {
+  const user = await currentReader()
+  if (!user) return { ok: false, error: 'no-person' }
+  const result = await saveProfilePhoto(await getPayload({ config }), user, null)
+  if (result.ok) refresh()
+  return result
 }

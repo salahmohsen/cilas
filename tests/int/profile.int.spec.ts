@@ -3,7 +3,7 @@
 import { getPayload, type Payload } from 'payload'
 import { afterAll, beforeAll, describe, expect, it } from 'vitest'
 
-import { readProfile, saveProfile, type ProfileInput } from '@/lib/profile'
+import { readProfile, saveProfile, saveProfilePhoto, type ProfileInput } from '@/lib/profile'
 import config from '@/payload.config'
 import type { User } from '@/payload-types'
 
@@ -175,6 +175,30 @@ describe('profile', () => {
     const big = Buffer.alloc(6 * 1024 * 1024)
     const lie = { data: big, mimetype: 'image/png', name: 'a.png', size: 10 }
     expect(await saveProfile(payload, me, base(), lie)).toEqual({ ok: false, error: 'photo' })
+  })
+
+  it('refuses a photo alone of the wrong type or size, and removes the photo', async () => {
+    const gif = { data: Buffer.from('GIF89a'), mimetype: 'image/gif', name: 'a.gif', size: 6 }
+    expect(await saveProfilePhoto(payload, me, gif)).toEqual({ ok: false, error: 'photo' })
+    const big = {
+      data: Buffer.alloc(6 * 1024 * 1024),
+      mimetype: 'image/jpeg',
+      name: 'a.jpg',
+      size: 1,
+    }
+    expect(await saveProfilePhoto(payload, me, big)).toEqual({ ok: false, error: 'photo' })
+    expect(await saveProfilePhoto(payload, me, null)).toEqual({ ok: true, url: null })
+    expect((await readProfile(payload, me))?.photo).toBeNull()
+    const stranger = {
+      id: -4,
+      roles: ['member'],
+      person: null,
+      collection: 'users',
+    } as unknown as User
+    expect(await saveProfilePhoto(payload, stranger, null)).toEqual({
+      ok: false,
+      error: 'no-person',
+    })
   })
 
   it('round-trips a Markdown bio with a link, a list and a heading', async () => {

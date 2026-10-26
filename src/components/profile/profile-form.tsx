@@ -1,10 +1,14 @@
 'use client'
 
-import { startTransition, useActionState, useEffect, useRef, useState } from 'react'
+import { startTransition, useActionState, useRef, useState } from 'react'
+import { useLocale } from 'next-intl'
+import { useRouter } from 'next/navigation'
 
-import type { ProfileState } from '@/app/(frontend)/[locale]/profile/actions'
+import type { PhotoState, ProfileState } from '@/app/(frontend)/[locale]/profile/actions'
 import { Button } from '@/components/arc/button/button'
 import { Input } from '@/components/arc/input/input'
+import { AvatarUpload } from '@/components/image-upload/avatar-upload'
+import { sendWithProgress } from '@/components/image-upload/send'
 import { RichTextEditor } from '@/components/arc/rich-text-editor/rich-text-editor'
 import { bioBaseline, bioToSend } from '@/components/profile/bio'
 import type { ProfileMessages } from '@/components/profile/messages'
@@ -12,8 +16,6 @@ import { Select } from '@/components/select'
 import { SOCIAL_PLATFORMS } from '@/fields/social'
 import type { ProfileError, ProfileView } from '@/lib/profile'
 
-const PHOTO_TYPES = ['image/jpeg', 'image/png', 'image/webp']
-const PHOTO_MAX_BYTES = 5 * 1024 * 1024
 const platformLabel = (p: string) => p.charAt(0).toUpperCase() + p.slice(1)
 
 export type { ProfileMessages }
@@ -22,23 +24,20 @@ type Props = {
   profile: ProfileView
   messages: ProfileMessages
   action: (state: ProfileState, form: FormData) => Promise<ProfileState>
+  removePhotoAction: () => Promise<PhotoState>
 }
 
 /**
  * The member's own profile. The bios are edited as Markdown with Arc's rich
  * text editor and sent in hidden fields; the server stores them as Lexical.
  */
-export function ProfileForm({ profile, messages: m, action }: Props) {
+export function ProfileForm({ profile, messages: m, action, removePhotoAction }: Props) {
+  const locale = useLocale()
+  const router = useRouter()
   const [state, submit, pending] = useActionState(action, { status: 'idle' } as ProfileState)
   const [bioEn, setBioEn] = useState(profile.bio.en)
   const [bioAr, setBioAr] = useState(profile.bio.ar)
-  const photoInput = useRef<HTMLInputElement>(null)
-  // A saved photo is not sent again by the next save.
-  useEffect(() => {
-    if (state.status === 'saved' && photoInput.current) photoInput.current.value = ''
-  }, [state])
   const [submits, setSubmits] = useState(0)
-  const [photoTooBig, setPhotoTooBig] = useState(false)
   // The editor's own rendering of each stored bio, found on first use (it needs the
   // browser) and found again when the stored bio changes.
   const baselines = useRef<{ en?: [string, string]; ar?: [string, string] }>({})
@@ -53,7 +52,6 @@ export function ProfileForm({ profile, messages: m, action }: Props) {
   // Errors that belong to one field show under it; the rest show beside the button.
   const fieldError = (error: ProfileError) =>
     state.status === 'error' && state.error === error ? m.errors[error] : undefined
-  const photoError = photoTooBig ? m.errors.photo : fieldError('photo')
   const lineError =
     !pending &&
     state.status === 'error' &&
@@ -69,17 +67,37 @@ export function ProfileForm({ profile, messages: m, action }: Props) {
       onSubmit={(event) => {
         event.preventDefault()
         const data = new FormData(event.currentTarget)
-        const photo = data.get('photo')
-        const bad =
-          photo instanceof File &&
-          photo.size > 0 &&
-          (photo.size > PHOTO_MAX_BYTES || !PHOTO_TYPES.includes(photo.type))
-        setPhotoTooBig(bad)
-        if (bad) return
         setSubmits((n) => n + 1)
         startTransition(() => submit(data))
       }}
     >
+      {/* The photo saves the moment it is cropped, on its own: the form's Save is for the words. */}
+      <AvatarUpload
+        name={(locale === 'ar' && profile.name.ar) || profile.name.en}
+        src={profile.photo?.url}
+        onUpload={async (image, { report, signal, original }) => {
+          const data = new FormData()
+          const type = image.type === 'image/png' ? 'png' : 'jpg'
+          const name = `${original.name.replace(/\.[^.]+$/, '') || 'photo'}.${type}`
+          data.set('photo', new File([image], name, { type: image.type }))
+          const result = await sendWithProgress<PhotoState>('/api/profile-photo', data, {
+            onProgress: report,
+            signal,
+          }).catch((error: unknown) => {
+            if (signal.aborted) throw error
+            return { ok: false, error: 'photo' } as const
+          })
+          if (!result.ok) throw new Error(m.errors[result.error])
+          // The header's avatar and the rest of the page read the new photo.
+          router.refresh()
+          return result.url ?? undefined
+        }}
+        onRemove={async () => {
+          const result = await removePhotoAction()
+          if (!result.ok) throw new Error(m.errors[result.error])
+        }}
+      />
+
       <p className="text-sm text-muted-foreground">{profile.visible ? m.public : m.private}</p>
 
       <Input
@@ -180,26 +198,6 @@ export function ProfileForm({ profile, messages: m, action }: Props) {
         )}
         <input type="hidden" name="socialLinks" value={JSON.stringify(links)} />
       </fieldset>
-
-      <div className="grid gap-2">
-        {profile.photo && (
-          // eslint-disable-next-line @next/next/no-img-element -- a member's own upload, any size
-          <img
-            src={profile.photo.url}
-            alt={profile.photo.alt}
-            className="size-24 rounded-full object-cover"
-          />
-        )}
-        <Input
-          label={m.photo}
-          description={m.photoHint}
-          name="photo"
-          ref={photoInput}
-          type="file"
-          accept="image/jpeg,image/png,image/webp"
-          error={photoError}
-        />
-      </div>
 
       <div className="flex items-center gap-3">
         <Button type="submit" loading={pending}>

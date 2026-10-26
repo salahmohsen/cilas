@@ -50,9 +50,4 @@ export const SpaceFiles: CollectionConfig = {
   ],
 }
 
-/**
- * Spec §6 pins 10 MB for space files (ADR 0008). Applications' 20 MB
- * (`MAX_SIZE_MB` in form-files) is the application forms' own ceiling and
- * does not transfer.
- */
-export const SPACE_FILE_LIMIT = 10 * 1024 * 1024
+export { SPACE_FILE_LIMIT } from '@/lib/space-file-limits'

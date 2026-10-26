@@ -240,3 +240,57 @@ export const saveProfile = async (
   }
   return { ok: true }
 }
+
+/**
+ * Sets or removes the member's own photo, on its own, as the avatar upload
+ * saves it the moment it is cropped. Null removes it. The checks are the
+ * profile form's: kind and size from the bytes, then the media collection's own.
+ */
+export const saveProfilePhoto = async (
+  payload: Payload,
+  user: User,
+  photo: { data: Buffer; mimetype: string; name: string; size: number } | null,
+): Promise<{ ok: true; url: string | null } | { ok: false; error: ProfileError }> => {
+  const id = personOf(user)
+  if (id === null) return { ok: false, error: 'no-person' }
+  if (photo && (!PHOTO_TYPES.includes(photo.mimetype) || photo.data.length > PHOTO_MAX_BYTES)) {
+    return { ok: false, error: 'photo' }
+  }
+  const asMember = { collection: 'people', id, user, overrideAccess: false } as const
+  if (!photo) {
+    await payload.update({ ...asMember, locale: 'en', data: { photo: null } })
+    return { ok: true, url: null }
+  }
+
+  const { person } = await loadOwn(payload, user, id)
+  const req = await createLocalReq({ user }, payload)
+  const started = await initTransaction(req)
+  let media: { id: number; url?: string | null } | undefined
+  try {
+    try {
+      media = await payload.create({
+        collection: 'media',
+        data: { alt: textOf(person.name, 'en') || 'Photo' },
+        file: photo,
+        req,
+        user,
+        overrideAccess: false,
+      })
+    } catch {
+      if (started) await killTransaction(req)
+      return { ok: false, error: 'photo' }
+    }
+    await payload.update({ ...asMember, req, locale: 'en', data: { photo: media.id } })
+    if (started) await commitTransaction(req)
+  } catch (error) {
+    // As in saveProfile: delete with the same req so the stored file goes too.
+    if (media) {
+      await payload
+        .delete({ collection: 'media', id: media.id, req, overrideAccess: true })
+        .catch(() => undefined)
+    }
+    if (started) await killTransaction(req)
+    throw error
+  }
+  return { ok: true, url: media.url ?? null }
+}

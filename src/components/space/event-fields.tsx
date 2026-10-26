@@ -1,16 +1,18 @@
 'use client'
 
-import { useEffect, useId, useRef, useState } from 'react'
 import { useLocale, useTranslations } from 'next-intl'
-import { ImagePlus } from 'lucide-react'
 
-import { Button } from '@/components/arc/button/button'
 import { Checkbox } from '@/components/arc/checkbox/checkbox'
 import { DatePicker } from '@/components/arc/date-picker/date-picker'
 import { Input } from '@/components/arc/input/input'
 import { TimePicker } from '@/components/arc/time-picker/time-picker'
-import { COVER_TYPES } from '@/lib/event-cover'
-import { downscaleImage } from '@/lib/image-downscale'
+import {
+  ImageUploadField,
+  NO_IMAGE,
+  type ImageValue,
+} from '@/components/image-upload/image-upload-field'
+import { COVER_EDGE, COVER_TYPES } from '@/lib/event-cover'
+import { SPACE_FILE_LIMIT } from '@/lib/space-file-limits'
 import { EVENT_LOCATION_MAX } from '@/lib/space-post-kinds'
 
 import styles from './space.module.css'
@@ -25,10 +27,10 @@ export type EventValue = {
   day: Date | undefined
   time: string
   endTime: string | null
-  cover: { file: File | null; url: string | null }
+  cover: ImageValue
 }
 
-export const NO_COVER: EventValue['cover'] = { file: null, url: null }
+export const NO_COVER: EventValue['cover'] = NO_IMAGE
 
 /** The day as the Cairo calendar names it, read from the picker's local midnight. */
 export const dayOf = (date: Date) =>
@@ -109,84 +111,19 @@ export function EventFields({
           onCheckedChange={(on) => onChange({ endTime: on === true ? endAfter(value.time) : null })}
         />
       </div>
-      <CoverField value={value.cover} onChange={(cover) => onChange({ cover })} />
-    </div>
-  )
-}
-
-/**
- * The optional cover: one photo, shrunk in the browser like the post's photos
- * and again on the server. The preview is cut to the card's own ratio, so the
- * member sees the crop the card will show.
- */
-function CoverField({
-  value,
-  onChange,
-}: {
-  value: EventValue['cover']
-  onChange: (cover: EventValue['cover']) => void
-}) {
-  const t = useTranslations('SpacePost')
-  const picker = useRef<HTMLInputElement>(null)
-  const [busy, setBusy] = useState(false)
-  const preview = value.file ? value.url : null
-  useEffect(() => () => void (preview && URL.revokeObjectURL(preview)), [preview])
-  const hint = useId()
-  const label = useId()
-  return (
-    <div className={styles.coverField} role="group" aria-labelledby={label}>
-      <span id={label} className={styles.fieldLabel}>
-        {t('eventCover')}
-      </span>
-      <input
-        ref={picker}
-        type="file"
-        hidden
-        accept={COVER_TYPES.join(',')}
-        onChange={async (e) => {
-          const file = e.currentTarget.files?.[0]
-          e.currentTarget.value = ''
-          if (!file) return
-          setBusy(true)
-          const ready = await downscaleImage(file)
-          setBusy(false)
-          onChange({ file: ready, url: URL.createObjectURL(ready) })
-        }}
-      />
-      {value.url ? (
-        <div className={styles.coverPreview}>
-          {/* A local preview or the stored private file; next/image cannot read either. */}
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src={value.url} alt="" />
-          <div className={styles.coverActions}>
-            <Button
-              size="sm"
-              variant="secondary"
-              disabled={busy}
-              onClick={() => picker.current?.click()}
-            >
-              {t('eventCoverChange')}
-            </Button>
-            <Button size="sm" variant="secondary" onClick={() => onChange(NO_COVER)}>
-              {t('eventCoverRemove')}
-            </Button>
-          </div>
-        </div>
-      ) : (
-        <button
-          type="button"
-          className={styles.coverAdd}
-          aria-describedby={hint}
-          disabled={busy}
-          onClick={() => picker.current?.click()}
-        >
-          <ImagePlus size={18} aria-hidden="true" />
-          {t('eventCoverAdd')}
-        </button>
-      )}
-      <p id={hint} className={styles.meta}>
-        {t('eventCoverHint')}
-      </p>
+      <div className={styles.coverField}>
+        <ImageUploadField
+          label={t('eventCover')}
+          addLabel={t('eventCoverAdd')}
+          description={t('eventCoverHint')}
+          value={value.cover}
+          onChange={(cover) => onChange({ cover })}
+          ratio={16 / 9}
+          accept={[...COVER_TYPES]}
+          maxSize={SPACE_FILE_LIMIT}
+          outputEdge={COVER_EDGE}
+        />
+      </div>
     </div>
   )
 }
