@@ -6,7 +6,6 @@ import type { CSSProperties, HTMLAttributes, ReactNode } from 'react'
 import { AnimatePresence, LayoutGroup, motion, useReducedMotion } from 'motion/react'
 import type { HTMLMotionProps, MotionProps, Transition, Variants } from 'motion/react'
 import { X } from 'lucide-react'
-import NextLink from 'next/link'
 import { motionTokens } from '../lib/motion-tokens'
 import styles from './card.module.css'
 
@@ -31,8 +30,6 @@ export interface CardProps extends HTMLAttributes<HTMLElement> {
   triggerLabel?: string
   /** The close control's accessible name, for other languages. */
   closeLabel?: string
-  /** Where the card leads, when it has no quick look. The title becomes the link and its hit area covers the card. */
-  href?: string
   open?: boolean
   defaultOpen?: boolean
   onOpenChange?: (open: boolean) => void
@@ -138,7 +135,6 @@ export function Card({
   panelTitle,
   triggerLabel,
   closeLabel = 'Close quick look',
-  href,
   open: openProp,
   defaultOpen = false,
   onOpenChange,
@@ -275,10 +271,6 @@ export function Card({
                 {title}
               </button>
             </Dialog.Trigger>
-          ) : href ? (
-            <NextLink href={href} className={styles.trigger}>
-              {title}
-            </NextLink>
           ) : (
             title
           )}

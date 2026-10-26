@@ -22,7 +22,6 @@ import {
 import { isAdminUser, isFellowUser } from '@/access'
 import { Badge } from '@/components/arc/badge/badge'
 import { Breadcrumb } from '@/components/arc/breadcrumb/breadcrumb'
-import { Card } from '@/components/arc/card/card'
 import { EmptyState } from '@/components/arc/empty-state/empty-state'
 import styles from '@/components/space/space.module.css'
 import { currentReader } from '@/lib/reader'
@@ -128,43 +127,40 @@ export default async function MySpacesPage({ params }: Props) {
             <ul className={styles.cards}>
               {s.rows.map((row) => (
                 <li key={row.space.id} className={styles.tileItem}>
-                  <Card
-                    className={styles.spaceCard}
-                    href={row.href}
-                    title={
-                      row.space.kind === 'community' && !row.space.name?.trim()
-                        ? t('community')
-                        : row.title
-                    }
-                    media={
-                      <span className={styles.spaceCardMedia}>
-                        <Image
-                          src={row.cover ?? COMMUNITY_COVER}
-                          alt=""
-                          fill
-                          sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
-                          className={styles.tileImage}
-                        />
+                  {/* The whole card is the link; the cover fills it under a dark tint so the name reads in both themes. */}
+                  <Link href={row.href} className={styles.spaceCard}>
+                    <Image
+                      src={row.cover ?? COMMUNITY_COVER}
+                      alt=""
+                      fill
+                      sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
+                      className={styles.spaceCardImage}
+                    />
+                    <span className={styles.spaceCardTitle}>
+                      <bdi>
+                        {row.space.kind === 'community' && !row.space.name?.trim()
+                          ? t('community')
+                          : row.title}
+                      </bdi>
+                    </span>
+                    <span className={styles.spaceCardFoot}>
+                      <span>
+                        {row.lastActivity
+                          ? t('active', { time: format.relativeTime(new Date(row.lastActivity)) })
+                          : t('noActivity')}
                       </span>
-                    }
-                    meta={
-                      row.lastActivity
-                        ? t('active', { time: format.relativeTime(new Date(row.lastActivity)) })
-                        : t('noActivity')
-                    }
-                    action={
-                      row.archived || row.unread > 0 ? (
+                      {(row.archived || row.unread > 0) && (
                         <span className={styles.spaceCardBadges}>
                           {row.archived && <Badge size="sm">{t('archived')}</Badge>}
                           {row.unread > 0 && (
-                            <Badge size="sm" tone="info">
+                            <Badge size="sm" tone="success">
                               {t('unread')}
                             </Badge>
                           )}
                         </span>
-                      ) : undefined
-                    }
-                  />
+                      )}
+                    </span>
+                  </Link>
                 </li>
               ))}
             </ul>

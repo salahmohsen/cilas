@@ -851,16 +851,94 @@
   object-fit: cover;
 }
 
-/* A space's card: its cover on top, the title and the latest activity under it. */
+/* A space's card: its cover fills it under a dark tint (in both themes, so the white text always reads),
+   the name centred, the latest activity along the foot. Pointing at it lifts the card and slowly
+   zooms the cover, as Arc's card does. */
 .spaceCard {
+  position: relative;
+  isolation: isolate;
+  display: grid;
+  min-height: 12rem;
   height: 100%;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-panel);
+  background: oklch(20% 0 0);
+  color: oklch(98% 0 0);
+  text-decoration: none;
+  transition:
+    transform var(--duration-spring) var(--ease-spring),
+    border-color var(--duration-fast) var(--ease-standard),
+    box-shadow var(--duration-standard) var(--ease-standard);
 }
 
-.spaceCardMedia {
-  position: relative;
-  display: block;
-  width: 100%;
-  aspect-ratio: 16 / 9;
+.spaceCard::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: oklch(12% 0 0 / 0.58);
+  transition: background-color var(--duration-standard) var(--ease-standard);
+}
+
+.spaceCardImage {
+  z-index: -2;
+  object-fit: cover;
+  transform: scale(1);
+  transition: transform var(--duration-considered) var(--ease-standard);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .spaceCard:hover {
+    transform: translateY(-2px);
+    border-color: var(--border-strong);
+    box-shadow: var(--shadow-raised);
+  }
+  .spaceCard:hover .spaceCardImage {
+    transform: scale(1.04);
+    transition-duration: calc(var(--duration-considered) * 2);
+  }
+  .spaceCard:hover::before {
+    background: oklch(12% 0 0 / 0.5);
+  }
+}
+
+.spaceCardTitle {
+  grid-area: 1 / 1;
+  align-self: center;
+  justify-self: center;
+  padding: var(--space-8) var(--space-5);
+  font-size: var(--text-lg);
+  font-weight: 500;
+  line-height: 1.3;
+  text-align: center;
+  text-wrap: balance;
+  text-shadow: 0 1px 2px oklch(0% 0 0 / 0.4);
+}
+
+.spaceCardFoot {
+  grid-area: 1 / 1;
+  align-self: end;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+  /* The badge's height, so a card without one keeps its line where the others have it. */
+  min-height: 3rem;
+  padding: var(--space-3) var(--space-4);
+  font-size: var(--text-xs);
+  color: oklch(98% 0 0 / 0.82);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .spaceCard,
+  .spaceCard:hover {
+    transform: none;
+  }
+  .spaceCard:hover .spaceCardImage {
+    transform: none;
+  }
 }
 
 .spaceCardBadges {
