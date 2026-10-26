@@ -800,11 +800,9 @@
     "emailDigest": "Email digest",
     "members": "Members",
     "membersCount": "{count, plural, one {# member} other {# members}}",
-    "seeAllMembers": "See all members",
     "fellow": "Fellow",
     "member": "Member",
     "participation": "Participation",
-    "viewParticipation": "View participation",
     "newSince": "New since your last visit",
     "newPosts": "{count, plural, one {Show # new post} other {Show # new posts}}",
     "filterLabel": "Show posts",
@@ -842,10 +840,10 @@
     "sessionFilterTitle": "Posts about {name}",
     "sessionFilterClear": "Show all posts",
     "nextSession": "Next session",
-    "contentNote": "Content note",
-    "facilitatorNote": "Note from the facilitator",
     "place": "Place",
-    "openInMaps": "Open in maps"
+    "openInMaps": "Open in maps",
+    "placeMap": "Map of {name}",
+    "spaceActions": "Space actions"
   },
   "SpacePost": {
     "newPost": "New post",

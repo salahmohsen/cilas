@@ -3,16 +3,14 @@ import { getFormatter, getTranslations } from 'next-intl/server'
 import { cookies } from 'next/headers'
 import { notFound } from 'next/navigation'
 import { getPayload } from 'payload'
-import { Info, Users } from 'lucide-react'
 import Image from 'next/image'
 
 import { personOf } from '@/access'
 import { Alert } from '@/components/arc/alert/alert'
 import { Badge } from '@/components/arc/badge/badge'
-import { BottomSheet } from '@/components/arc/bottom-sheet/bottom-sheet'
-import { Button } from '@/components/arc/button/button'
 import { Breadcrumb } from '@/components/arc/breadcrumb/breadcrumb'
 import { EmptyState } from '@/components/arc/empty-state/empty-state'
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/arc/tabs/tabs'
 import type { Course, Programme, Space, User } from '@/payload-types'
 import { linkTitles } from '@/lib/link-preview'
 import { pageAddresses, threadTexts } from '@/lib/link-title'
@@ -42,12 +40,13 @@ import { FeedFilter } from './feed-filter'
 import { FeedRow, type FeedContext } from './feed-row'
 import { FreshPosts } from './fresh-posts'
 import { LoadMore } from './load-more'
+import { MembersPanel } from './members-panel'
 import { NextSession } from './next-session'
-import { OpenCourseButton } from './open-course-button'
 import { CHECKLIST_COOKIE, OnboardingChecklist } from './onboarding-checklist'
+import { SpaceHeadActions } from './space-head-actions'
 import { spacePeopleCards } from './space-people'
 import { SpaceRail } from './space-rail'
-import { SpaceSettings } from './space-settings'
+import { StickyRail } from './sticky-rail'
 import styles from './space.module.css'
 
 export type SpaceTab = 'all' | 'announcements' | 'syllabus' | 'events'
@@ -221,12 +220,6 @@ export async function SpacePage({
       posting={space.posting ?? 'open'}
       notice={notice}
       digest={state.digest}
-      members={cards}
-      viewerId={viewerPerson}
-      now={renderedAt}
-      participation={numbers}
-      warning={landing.course?.content_warning?.trim() || null}
-      facilitator={landing.course?.facilitator_note?.trim() || null}
       place={place}
     />
   )
@@ -234,12 +227,14 @@ export async function SpacePage({
   const next = course
     ? nextSession(course.schedule, course.sessions, cairoDay(new Date()) ?? '')
     : null
-  const nextCard =
-    course && next?.session.id ? (
+  const nextId = next?.session.id
+  const nextCard = (titled: boolean) =>
+    course && nextId ? (
       <NextSession
         course={course}
-        session={next.session.id}
+        session={nextId}
         tentative={Boolean(course.syllabus_tentative)}
+        titled={titled}
       />
     ) : null
 
@@ -275,44 +270,27 @@ export async function SpacePage({
             <Badge tone={feed.archived ? 'neutral' : 'success'}>
               {feed.archived ? t('archived') : t('open')}
             </Badge>
-            <span className={styles.headMeta}>
-              <Users size={16} aria-hidden="true" />
-              {t('membersCount', { count: cards.length })}
-            </span>
+            <MembersPanel members={cards} viewerId={viewerPerson} />
           </div>
           <div className={styles.headActions}>
-            <div className={styles.headButtons}>
-              {course && (
-                <OpenCourseButton
-                  href={`/${locale}/study/${course.slug}`}
-                  label={t('coursePage')}
-                />
-              )}
-              <span className={styles.phoneOnly}>
-                <BottomSheet
-                  title={t('about')}
-                  detents={[0.6, 0.92]}
-                  trigger={
-                    <Button variant="secondary" size="sm">
-                      <Info size={16} aria-hidden="true" />
-                      {t('about')}
-                    </Button>
-                  }
-                >
-                  <div className={styles.column}>{rail}</div>
-                </BottomSheet>
-              </span>
-              {moderator && (
-                <SpaceSettings
-                  space={space.id}
-                  posting={space.posting ?? 'open'}
-                  events={space.events ?? 'members'}
-                  archived={feed.archived}
-                  about={custom}
-                  aboutDefault={defaultAbout}
-                />
-              )}
-            </div>
+            <SpaceHeadActions
+              coursePage={course ? `/${locale}/study/${course.slug}` : null}
+              rail={rail}
+              participation={numbers}
+              now={renderedAt}
+              settings={
+                moderator
+                  ? {
+                      space: space.id,
+                      posting: space.posting ?? 'open',
+                      events: space.events ?? 'members',
+                      archived: feed.archived,
+                      about: custom,
+                      aboutDefault: defaultAbout,
+                    }
+                  : null
+              }
+            />
             {course && (
               <div className={styles.headAi}>
                 <span>{ts('ai')}</span>
@@ -324,7 +302,7 @@ export async function SpacePage({
       </header>
       <div className={styles.layout}>
         <main className={styles.feed} aria-label={title}>
-          {nextCard && <div className={styles.phoneBlock}>{nextCard}</div>}
+          {course && nextId && <div className={styles.phoneBlock}>{nextCard(true)}</div>}
           <OnboardingChecklist
             space={space.id}
             steps={{
@@ -456,10 +434,25 @@ export async function SpacePage({
             </>
           )}
         </main>
-        <aside className={styles.rail} aria-label={t('aboutSpace')}>
-          {nextCard}
-          {rail}
-        </aside>
+        <StickyRail className={styles.rail} label={t('aboutSpace')}>
+          {/* Two tabs keep the rail short enough to stay in view; without a next session there is only the space. */}
+          {course && nextId ? (
+            <Tabs defaultValue="session">
+              <TabsList aria-label={t('aboutSpace')}>
+                <TabsTrigger value="session">{t('nextSession')}</TabsTrigger>
+                <TabsTrigger value="space">{t('about')}</TabsTrigger>
+              </TabsList>
+              <TabsContent value="session" className={styles.railPanel}>
+                {nextCard(false)}
+              </TabsContent>
+              <TabsContent value="space" className={styles.railPanel}>
+                {rail}
+              </TabsContent>
+            </Tabs>
+          ) : (
+            rail
+          )}
+        </StickyRail>
       </div>
     </div>
   )

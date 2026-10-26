@@ -13,19 +13,27 @@ export function NextSession({
   course,
   session,
   tentative,
+  titled = true,
 }: {
   course: SessionCourse
   /** The id of the session's row in the course */
   session: string
   tentative: boolean
+  /** False inside the rail's tab, whose label already names it */
+  titled?: boolean
 }) {
   const t = useTranslations('Spaces')
   const tc = useTranslations('Course')
   return (
-    <section className={styles.nextSession} aria-labelledby="next-session-title">
-      <h2 id="next-session-title" className={styles.sectionTitle}>
-        {t('nextSession')}
-      </h2>
+    <section
+      className={styles.nextSession}
+      aria-labelledby={titled ? 'next-session-title' : undefined}
+    >
+      {titled && (
+        <h2 id="next-session-title" className={styles.sectionTitle}>
+          {t('nextSession')}
+        </h2>
+      )}
       <PostSession session={{ state: 'shown', course, session }} kind="announcement" postHref="" />
       {tentative && <p className={styles.meta}>{tc('tentative')}</p>}
     </section>

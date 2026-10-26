@@ -3,8 +3,7 @@
 import { useFormatter, useTranslations } from 'next-intl'
 
 import { BarChart } from '@/components/arc/bar-chart/bar-chart'
-import { Button } from '@/components/arc/button/button'
-import { Dialog, DialogContent, DialogTrigger } from '@/components/arc/dialog/dialog'
+import { Dialog, DialogContent } from '@/components/arc/dialog/dialog'
 import { DonutChart } from '@/components/arc/donut-chart/donut-chart'
 import { MetricCard } from '@/components/arc/metric-card/metric-card'
 import { SortableDataTable } from '@/components/arc/sortable-data-table/sortable-data-table'
@@ -16,7 +15,17 @@ import styles from './space.module.css'
  * Moderators only (spec §13): members never see each other's numbers. A dialog,
  * not a drawer, so the table has the width its five columns need.
  */
-export function ParticipationDialog({ data, now }: { data: Participation; now: string }) {
+export function ParticipationDialog({
+  data,
+  now,
+  open,
+  onOpenChange,
+}: {
+  data: Participation
+  now: string
+  open: boolean
+  onOpenChange: (open: boolean) => void
+}) {
   const t = useTranslations('Participation')
   const ts = useTranslations('Spaces')
   const format = useFormatter()
@@ -32,12 +41,7 @@ export function ParticipationDialog({ data, now }: { data: Participation; now: s
   const period = first ? t('since', { date: day(first) }) : ''
 
   return (
-    <Dialog>
-      <DialogTrigger asChild>
-        <Button variant="secondary" size="sm">
-          {ts('viewParticipation')}
-        </Button>
-      </DialogTrigger>
+    <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent
         title={t('title')}
         description={t('description')}

@@ -228,6 +228,10 @@
   display: flex;
 }
 
+.wideOnly {
+  display: none;
+}
+
 @media (min-width: 1024px) {
   .layout {
     /* The feed keeps a reading width; the rail takes the rest of the row. */
@@ -239,11 +243,16 @@
     display: grid;
     gap: var(--space-4);
     position: sticky;
-    top: var(--space-24);
+    /* Taller than the screen: it scrolls with the page until its end shows, then stays there. */
+    top: min(var(--space-24), calc(100dvh - var(--rail-height, 0px) - var(--space-4)));
   }
 
   .phoneOnly {
     display: none;
+  }
+
+  .wideOnly {
+    display: flex;
   }
 }
 
@@ -646,6 +655,26 @@
   gap: var(--space-2);
   font-size: var(--text-sm);
   color: var(--text-secondary);
+}
+
+/* The count opens the full list too, since a small space has no "+N" face to press. */
+.membersCount {
+  padding: 0;
+  border: 0;
+  background: none;
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+  text-decoration: underline;
+  text-decoration-color: transparent;
+  text-underline-offset: 4px;
+  transition-property: color, text-decoration-color;
+  transition-duration: 150ms;
+}
+
+.membersCount:hover {
+  color: var(--foreground);
+  text-decoration-color: currentColor;
 }
 
 /* The space's own buttons at the start, the AI group at the end; on a phone the group drops below
@@ -1909,14 +1938,25 @@
   }
 }
 
-.railNotes {
-  display: grid;
-  gap: var(--space-3);
+/* Inset by the body padding, so its radius is the card's minus that padding. */
+.placeMap {
+  display: block;
+  width: 100%;
+  aspect-ratio: 16 / 10;
+  border: 0;
+  border-radius: var(--radius-control);
+  outline: 1px solid oklch(0 0 0 / 0.1);
+  outline-offset: -1px;
+  background: var(--surface-muted);
 }
 
-.noteText {
-  display: block;
-  white-space: pre-line;
+:global([data-theme='dark']) .placeMap {
+  outline-color: oklch(1 0 0 / 0.1);
+}
+
+.placeText {
+  display: grid;
+  gap: var(--space-1);
 }
 
 .placeName {
@@ -1953,8 +1993,11 @@
   text-underline-offset: 0.18em;
 }
 
-/* The face row measures its own width, so the stack and its hover fan stay inside the card padding. */
-.faceRow {
-  min-width: 0;
-  overflow: visible;
+/* Arc's tab panel sets secondary small text; the rail's cards keep their own. */
+.rail .railPanel {
+  display: grid;
+  gap: var(--space-4);
+  color: inherit;
+  font-size: inherit;
+  line-height: inherit;
 }

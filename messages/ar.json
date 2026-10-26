@@ -800,11 +800,9 @@
     "emailDigest": "ملخص البريد",
     "members": "الأعضاء",
     "membersCount": "{count, plural, zero {لا أعضاء} one {عضو واحد} two {عضوان} few {# أعضاء} many {# عضوًا} other {# عضو}}",
-    "seeAllMembers": "اعرض كل الأعضاء",
     "fellow": "أستاذ",
     "member": "عضو",
     "participation": "المشاركة",
-    "viewParticipation": "اعرض المشاركة",
     "newSince": "جديد منذ زيارتك الأخيرة",
     "newPosts": "{count, plural, one {اعرض منشورًا جديدًا} two {اعرض منشورين جديدين} few {اعرض # منشورات جديدة} many {اعرض # منشورًا جديدًا} other {اعرض # منشور جديد}}",
     "filterLabel": "اعرض المنشورات",
@@ -842,10 +840,10 @@
     "sessionFilterTitle": "منشورات عن {name}",
     "sessionFilterClear": "عرض كل المنشورات",
     "nextSession": "الجلسة القادمة",
-    "contentNote": "تنبيه بشأن المحتوى",
-    "facilitatorNote": "ملاحظة من الميسّرة أو الميسّر",
     "place": "المكان",
-    "openInMaps": "افتح في الخرائط"
+    "openInMaps": "افتح في الخرائط",
+    "placeMap": "خريطة {name}",
+    "spaceActions": "إجراءات المساحة"
   },
   "SpacePost": {
     "newPost": "منشور جديد",

@@ -1,14 +1,15 @@
 'use client'
 
 import { useState } from 'react'
+import type { ReactNode } from 'react'
 import { useLocale, useTranslations } from 'next-intl'
 import { useRouter } from 'next/navigation'
-import { Settings } from 'lucide-react'
+import { PopoverAnchor } from '@radix-ui/react-popover'
 
 import { ActionButton } from '@/components/arc/action-button/action-button'
 import { Button } from '@/components/arc/button/button'
 import { Checkbox } from '@/components/arc/checkbox/checkbox'
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/arc/popover/popover'
+import { Popover, PopoverContent } from '@/components/arc/popover/popover'
 import { RadioGroup } from '@/components/arc/radio-group/radio-group'
 import { Textarea } from '@/components/arc/textarea/textarea'
 import { ABOUT_MAX } from '@/lib/space-about'
@@ -25,6 +26,9 @@ export function SpaceSettings({
   archived,
   about,
   aboutDefault,
+  open,
+  onOpenChange,
+  anchor,
 }: {
   space: number
   posting: string
@@ -33,6 +37,10 @@ export function SpaceSettings({
   /** The custom About text in this language, empty when the default shows. */
   about: string
   aboutDefault: string
+  open: boolean
+  onOpenChange: (open: boolean) => void
+  /** The space head's button group: its Settings segment opens this, but a segment is not a Radix trigger. */
+  anchor: ReactNode
 }) {
   const t = useTranslations('Spaces')
   const tp = useTranslations('SpacePost')
@@ -44,14 +52,9 @@ export function SpaceSettings({
   const [reopen, setReopen] = useState(false)
   const [error, setError] = useState<string | null>(null)
   return (
-    <Popover>
-      <PopoverTrigger asChild>
-        <Button variant="secondary" size="sm">
-          <Settings size={16} aria-hidden="true" />
-          {t('settingsForModerator')}
-        </Button>
-      </PopoverTrigger>
-      <PopoverContent>
+    <Popover open={open} onOpenChange={onOpenChange}>
+      <PopoverAnchor asChild>{anchor}</PopoverAnchor>
+      <PopoverContent align="end">
         <div className={styles.settings}>
           <RadioGroup
             label={t('posting')}
