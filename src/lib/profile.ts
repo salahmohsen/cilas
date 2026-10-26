@@ -109,6 +109,9 @@ const loadOwn = async (payload: Payload, user: User, id: number) => {
     id,
     locale: 'all',
     depth: 1,
+    // The profile edits the person only. A joined enrollment's empty localized rich text
+    // breaks Payload's afterRead under `locale: 'all'`, so a student's profile would not open.
+    joins: false,
     user,
     overrideAccess: false,
   })
