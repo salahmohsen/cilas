@@ -29,9 +29,12 @@ const savedLocale = (request: NextRequest) => {
 const loginFor = (request: NextRequest) => {
   const url = request.nextUrl.clone()
   url.pathname = `/${savedLocale(request)}/login`
-  // Payload's own `redirect` names the admin page to return to.
+  // Payload's own `redirect` names the admin page to return to; without one, My spaces.
   url.search = ''
-  url.searchParams.set('next', request.nextUrl.searchParams.get('redirect') ?? '/admin')
+  url.searchParams.set(
+    'next',
+    request.nextUrl.searchParams.get('redirect') ?? `/${savedLocale(request)}/spaces`,
+  )
   return url
 }
 

@@ -126,13 +126,20 @@ export const spacePeople = async (
   payload: Payload,
   spaceId: number,
   locale: 'en' | 'ar' = 'en',
+): Promise<SpacePersonRow[]> =>
+  peopleRows(payload, [...(await mentionSafelist(payload, spaceId))], locale)
+
+/** People by id, as a space shows them: name, photo, a clipped bio and links. */
+export const peopleRows = async (
+  payload: Payload,
+  ids: number[],
+  locale: 'en' | 'ar' = 'en',
 ): Promise<SpacePersonRow[]> => {
-  const memberIds = await mentionSafelist(payload, spaceId)
-  if (memberIds.size === 0) return []
+  if (ids.length === 0) return []
 
   const { docs: people } = await payload.find({
     collection: 'people',
-    where: { id: { in: [...memberIds] } },
+    where: { id: { in: ids } },
     depth: 1,
     locale,
     overrideAccess: true,
@@ -142,6 +149,7 @@ export const spacePeople = async (
 
   const { docs: users } = await payload.find({
     collection: 'users',
+    where: { person: { in: ids } },
     depth: 0,
     overrideAccess: true,
     pagination: false,
@@ -174,5 +182,22 @@ export const spacePeople = async (
       slug: (p as { slug?: string }).slug ?? '',
       visible: (p as { visible?: boolean }).visible ?? false,
     }
+  })
+}
+
+/** The people behind the admin accounts: they act in every space without being members of it. */
+export const staffPersonIds = async (payload: Payload): Promise<number[]> => {
+  const { docs } = await payload.find({
+    collection: 'users',
+    where: { roles: { in: ['admin', 'super_admin'] } },
+    depth: 0,
+    overrideAccess: true,
+    pagination: false,
+    limit: 1000,
+    select: { person: true, roles: true },
+  })
+  return docs.flatMap((u) => {
+    const pid = isAdminUser(u) ? personOf(u) : null
+    return pid ? [pid] : []
   })
 }

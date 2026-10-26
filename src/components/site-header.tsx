@@ -43,24 +43,41 @@ export function CILASSiteHeader({ nav = ALL_SHOWN }: { nav?: Navigation }) {
   }, [])
 
   // The header is cached for everyone, so it asks who is signed in: a
-  // signed-in account gets its account menu instead of "Sign in". Depth 1
-  // brings the linked person's name; an account with no person shows its email.
+  // signed-in account gets its account menu instead of "Sign in". Depth 2
+  // brings the linked person's name and photo; an account with no person shows its email.
   const [account, setAccount] = useState<UserMenuUser | null>(null)
   const [spaces, setSpaces] = useState(false)
   useEffect(() => {
     let live = true
-    fetch('/api/users/me?depth=1', { credentials: 'include' })
+    fetch('/api/users/me?depth=2', { credentials: 'include' })
       .then((res) => (res.ok ? res.json() : null))
       .then(
         (
           body: {
-            user?: { email: string; person?: { name?: string } | number | null } | null
+            user?: {
+              email: string
+              person?:
+                | {
+                    name?: string
+                    photo?:
+                      | { url?: string | null; sizes?: { thumbnail?: { url?: string | null } } }
+                      | number
+                      | null
+                  }
+                | number
+                | null
+            } | null
           } | null,
         ) => {
           const user = body?.user
           if (!live || !user) return
-          const name = typeof user.person === 'object' ? user.person?.name : undefined
-          setAccount({ name: name || user.email, email: user.email })
+          const person = typeof user.person === 'object' ? user.person : null
+          const photo = typeof person?.photo === 'object' ? person.photo : null
+          setAccount({
+            name: person?.name || user.email,
+            email: user.email,
+            avatarSrc: photo?.sizes?.thumbnail?.url || photo?.url || undefined,
+          })
           // Spaces shows only to an account that can read one (see /api/spaces-nav).
           return fetch('/api/spaces-nav', { credentials: 'include' })
             .then((res) => (res.ok ? res.json() : null))

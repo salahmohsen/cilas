@@ -849,7 +849,8 @@
     "introLockAction": "Write your introduction",
     "noActivity": "No posts yet",
     "cohortSpaces": "Cohort spaces",
-    "courseSpaces": "Course spaces"
+    "courseSpaces": "Course spaces",
+    "team": "CILAS team"
   },
   "SpacePost": {
     "newPost": "New post",

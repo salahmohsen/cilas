@@ -8,6 +8,7 @@ import { currentReader } from '@/lib/reader'
 import { safeNext } from '@/lib/safe-next'
 
 type Props = {
+  params: Promise<{ locale: string }>
   searchParams: Promise<{ next?: string; error?: string }>
 }
 
@@ -18,12 +19,12 @@ export async function generateMetadata(): Promise<Metadata> {
 
 /**
  * One login for the site and the admin panel: /admin/login is sent here
- * (src/proxy.ts). `next` is where to go after, e.g. /admin or an article.
+ * (src/proxy.ts). `next` is where to go after, e.g. an admin page or an article.
  */
-export default async function LoginPage({ searchParams }: Props) {
-  const query = await searchParams
-  // No `next` (the header's "Sign in"): the account's dashboard.
-  const next = safeNext(query.next ?? '/admin')
+export default async function LoginPage({ params, searchParams }: Props) {
+  const [{ locale }, query] = await Promise.all([params, searchParams])
+  // No `next` (the header's "Sign in"): My spaces, for every kind of account.
+  const next = safeNext(query.next ?? `/${locale}/spaces`)
   if (await currentReader()) redirect(next)
 
   const t = await getTranslations('Login')
