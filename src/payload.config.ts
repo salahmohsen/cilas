@@ -35,6 +35,7 @@ import { SpacePreferences } from './collections/SpacePreferences'
 import { Publications } from './collections/Publications'
 import { SiteSettings } from './globals/SiteSettings'
 import { EmailSettings } from './globals/EmailSettings'
+import { SpaceIntroduction } from './globals/SpaceIntroduction'
 import { resendAdapter } from '@payloadcms/email-resend'
 import { formBuilderPlugin } from '@payloadcms/plugin-form-builder'
 import { importExportPlugin } from '@payloadcms/plugin-import-export'
@@ -181,7 +182,7 @@ export default buildConfig({
     SpaceVotes,
     SpaceRsvps,
   ],
-  globals: [SiteSettings, EmailSettings],
+  globals: [SiteSettings, EmailSettings, SpaceIntroduction],
   localization: {
     locales: [
       { label: 'English', code: 'en' },

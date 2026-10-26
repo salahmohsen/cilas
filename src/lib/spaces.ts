@@ -4,6 +4,7 @@ import { cache } from 'react'
 
 import { isAdminUser, personOf } from '@/access'
 import { ENROLLED } from '@/lib/list-members'
+import { introGated } from '@/lib/space-intro'
 
 /**
  * ADR 0009. One helper for every rule and page: membership comes from the
@@ -32,6 +33,7 @@ export type SpaceLike = {
   posting?: PostingLevel | null
   reopened?: boolean | null
   audience?: CommunityAudience | null
+  introduction_post?: number | { id: number } | null
 }
 
 export type SpaceFacts = {
@@ -289,22 +291,29 @@ export const membership = async (
 
 type SpaceIds = number[] | true | false
 
+type ReadState = {
+  ids: SpaceIds
+  /** Space id to its intro post, for the spaces this reader has not introduced themselves in yet */
+  gated: Map<number, number>
+}
+
 /**
- * The ids of the spaces this account can read right now, `true` for admin/
- * none, `false` for no user. Everything else builds Where clauses on top.
- * `cache` keeps this to one membership read per render — the rules and the
- * pages all ask.
+ * The spaces this account can read right now (`true` for admin/none, `false`
+ * for no user) and the ones still behind their introduction gate. Everything
+ * else builds Where clauses on top. `cache` keeps this to one membership read
+ * per render — the rules and the pages all ask.
  */
-export const readableSpaceIds = cache(
+const readState = cache(
   async (
     payload: Payload,
     user: null | { roles?: readonly string[]; person?: unknown },
     settings?: SpacesSettings,
-  ): Promise<SpaceIds> => {
-    if (!user) return false
-    if (isAdminUser(user as never)) return true
+  ): Promise<ReadState> => {
+    const gated = new Map<number, number>()
+    if (!user) return { ids: false, gated }
+    if (isAdminUser(user as never)) return { ids: true, gated }
     const stored = settings ?? (await spacesSettings(payload))
-    if (mode(stored) === 'off') return false
+    if (mode(stored) === 'off') return { ids: false, gated }
     const person = personOf(user)
     const { docs } = await payload.find({
       collection: 'spaces',
@@ -317,16 +326,67 @@ export const readableSpaceIds = cache(
     const facts = await factsFor(payload, person, envelope)
     const open = docs.filter((s) => spaceOpenOn(s as SpaceLike, stored))
     const readable: number[] = []
+    const waiting = new Map<number, number>()
     for (const s of open) {
       // A course row deleted since its space was made leaves `course: null`
       // (relations null out on delete). Nobody reads that ghost: skip it
       // instead of findById(null) throwing inside a read rule.
       if (s.kind === 'course' && idOf(s.course as never) == null) continue
-      if (membershipOf(s as SpaceLike, facts).role !== 'none') readable.push(s.id)
+      const { role } = membershipOf(s as SpaceLike, facts)
+      if (role === 'none') continue
+      readable.push(s.id)
+      const intro = idOf(s.introduction_post as never)
+      if (introGated(s.kind, role, intro, false)) waiting.set(s.id, intro!)
     }
-    return readable
+    if (waiting.size && person !== null) {
+      const intros = [...waiting.values()]
+      const [{ docs: live }, { docs: mine }] = await Promise.all([
+        payload.find({
+          collection: 'space-posts',
+          depth: 0,
+          pagination: false,
+          overrideAccess: true,
+          select: { space: true },
+          where: { and: [{ id: { in: intros } }, { deleted_at: { exists: false } }] },
+        }),
+        payload.find({
+          collection: 'space-comments',
+          depth: 0,
+          pagination: false,
+          overrideAccess: true,
+          select: { post: true },
+          where: {
+            and: [
+              { post: { in: intros } },
+              { author: { equals: person } },
+              { deleted_at: { exists: false } },
+            ],
+          },
+        }),
+      ])
+      const liveIds = new Set(live.map((p) => p.id))
+      const introduced = new Set(mine.map((c) => idOf(c.post as never)))
+      for (const [space, intro] of waiting)
+        if (liveIds.has(intro) && !introduced.has(intro)) gated.set(space, intro)
+    }
+    return { ids: readable, gated }
   },
 )
+
+export const readableSpaceIds = async (
+  payload: Payload,
+  user: null | { roles?: readonly string[]; person?: unknown },
+  settings?: SpacesSettings,
+): Promise<SpaceIds> => (await readState(payload, user, settings)).ids
+
+/**
+ * The spaces this reader still has to introduce themselves in, each with its
+ * intro post: the only post they read there until they comment on it.
+ */
+export const introGates = async (
+  payload: Payload,
+  user: null | { roles?: readonly string[]; person?: unknown },
+): Promise<Map<number, number>> => (await readState(payload, user)).gated
 
 /** Access rules assembled once, reused by the collections (spec §1). */
 
@@ -345,6 +405,32 @@ export const readableWhere = async (
   if (ids === true) return true
   if (!ids || !ids.length) return false
   return { [field]: { in: ids } }
+}
+
+/**
+ * Reads a space's content (posts and everything on them) as a Payload Where:
+ * the readable spaces, except that a space behind its introduction gate shows
+ * only its intro post. `post` names the field(s) that point at the post: `id`
+ * for posts themselves, `post` for comments, and `comment.post` too for files
+ * and reactions, which sit on a post or on one of its comments.
+ */
+export const contentWhere = async (
+  payload: Payload,
+  user: null | { roles?: readonly string[]; person?: unknown },
+  post: readonly string[],
+): Promise<Where | boolean> => {
+  const { ids, gated } = await readState(payload, user)
+  if (ids === true) return true
+  if (!ids || !ids.length) return false
+  if (!gated.size) return { space: { in: ids } }
+  const open = ids.filter((id) => !gated.has(id))
+  const intros = [...gated.values()]
+  return {
+    or: [
+      ...(open.length ? [{ space: { in: open } }] : []),
+      ...post.map((field) => ({ [field]: { in: intros } })),
+    ],
+  }
 }
 
 /** The space's access read rule for the `spaces` collection itself. */

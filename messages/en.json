@@ -1022,7 +1022,9 @@
     "sessionList": "Sessions",
     "sessionBlocks": "Blocks and sessions",
     "composeHint": "Type @ to mention someone.",
-    "composeHintCourse": "Type @ to mention someone. Posting about a session? Tag it with # so it stays with that session."
+    "composeHintCourse": "Type @ to mention someone. Posting about a session? Tag it with # so it stays with that session.",
+    "saveError_intro": "Comment on the intro post first. The rest of this space opens after that.",
+    "saveError_intro_post": "The intro post stays open: it cannot be locked or deleted."
   },
   "SpaceComment": {
     "write": "Comment",

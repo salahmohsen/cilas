@@ -4,6 +4,7 @@ import { afterAll, beforeAll, describe, expect, it } from 'vitest'
 
 import { personOf } from '@/access'
 import { membership, readableWhere, writePostWhere } from '@/lib/spaces'
+import { introBody } from '@/lib/space-intro'
 import { mySpaces, participation, spaceFeed, spaceLanding } from '@/lib/spaces-data'
 import config from '@/payload.config'
 import type { Space, User } from '@/payload-types'
@@ -162,6 +163,25 @@ describe('spaces core', () => {
       .introduction_post
     if (_cohortIntro)
       track('space-posts', typeof _cohortIntro === 'object' ? _cohortIntro.id : _cohortIntro)
+    // The student has introduced themselves in both spaces, so these tests
+    // read the whole feed (the introduction gate is tested in spaces-write).
+    for (const [space, intro] of [
+      [courseSpace, _courseIntro],
+      [cohortSpace, _cohortIntro],
+    ] as const) {
+      if (!intro) continue
+      const said = await payload.create({
+        collection: 'space-comments',
+        data: {
+          space: space.id,
+          post: typeof intro === 'object' ? intro.id : intro,
+          author: personOf(student) as number,
+          body: 'Probe hello',
+        },
+        overrideAccess: true,
+      })
+      track('space-comments', said.id)
+    }
     // Settings: everything on.
     await payload.updateGlobal({
       slug: 'site-settings',
@@ -342,7 +362,18 @@ describe('spaces core', () => {
       id: postId,
       overrideAccess: true,
     })
-    expect((post as { body: string }).body).toContain('What question brings you here?')
+    // The introduction template as it reads now, both languages, pinned.
+    const template = (locale: 'en' | 'ar') =>
+      payload.findGlobal({
+        slug: 'space-introduction',
+        locale,
+        fallbackLocale: false,
+        overrideAccess: true,
+      })
+    expect((post as { body: string }).body).toBe(
+      introBody(await template('en'), await template('ar')),
+    )
+    expect((post as { pinned?: boolean }).pinned).toBe(true)
     expect((post as { author: unknown }).author).toBeNull()
   })
 
@@ -536,9 +567,11 @@ describe('spaces core', () => {
     expect(feed.archived).toBe(false)
     // Pinned leads even though the discussed row's activity is newer; then
     // last activity decides.
+    // The intro post is pinned too, so two pinned rows lead.
     expect(feed.rows[0]?.post.id).toBe(pinned.id)
-    expect(idxOf(olderId)).toBe(1)
-    expect(idxOf(newerId)).toBeGreaterThan(1)
+    expect(feed.rows[1]?.post.pinned).toBe(true)
+    expect(idxOf(olderId)).toBe(2)
+    expect(idxOf(newerId)).toBeGreaterThan(2)
     const row = feed.rows[idxOf(olderId)]
     expect(row?.commentCount).toBe(2)
     expect(row?.reactions.counts).toEqual({ agree: 1, insightful: 1 })
@@ -557,7 +590,8 @@ describe('spaces core', () => {
     expect(fellowRow?.reactions).toBe(2)
     expect(fellowRow?.lastVisit).toBeNull()
     expect(studentRow?.posts).toBe(1)
-    expect(studentRow?.comments).toBe(1)
+    // Their reply and their introduction.
+    expect(studentRow?.comments).toBe(2)
     expect(studentRow?.reactions).toBe(1)
     expect(studentRow?.lastVisit).toBeTruthy()
     // Every live post and comment written this run, the CILAS intro post too, lands in the current week.

@@ -1,7 +1,7 @@
 import type { CollectionConfig, Where } from 'payload'
 
 import { isAdminUser } from '@/access'
-import { readableWhere } from '@/lib/spaces'
+import { contentWhere } from '@/lib/spaces'
 import { RSVP_STATUSES } from '@/lib/space-event'
 
 /**
@@ -14,7 +14,7 @@ export const SpaceRsvps: CollectionConfig = {
   slug: 'space-rsvps',
   labels: { singular: 'Event answer', plural: 'Event answers' },
   access: {
-    read: ({ req }) => readableWhere(req.payload, req.user, 'space'),
+    read: ({ req }) => contentWhere(req.payload, req.user, ['post']),
     create: ({ req }) => isAdminUser(req.user),
     update: () => false,
     delete: ({ req }) => {

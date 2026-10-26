@@ -3,7 +3,7 @@ import type { Payload } from 'payload'
 import { personOf } from '@/access'
 import { archivedNow } from '@/lib/space-lifecycle'
 import { mentionSafelist, spacePeople, type PersonLink } from '@/lib/space-members'
-import { spacesSettings, mode, spaceOpenOn, membership, mayComment } from '@/lib/spaces'
+import { spacesSettings, mode, spaceOpenOn, membership, mayComment, introGates } from '@/lib/spaces'
 import { FILE_KINDS } from '@/lib/form-files'
 import { FILE_LIMITS } from '@/lib/space-file-limits'
 import { ABOUT_MAX } from '@/lib/space-about'
@@ -41,6 +41,8 @@ export type WriteError =
   | 'about'
   | 'upload'
   | 'session'
+  | 'intro'
+  | 'intro-post'
 
 export type WriteResult<T> =
   | { ok: true; data: T; notify?: (() => Promise<void>) | null }
@@ -106,7 +108,11 @@ const gate = async (
   payload: Payload,
   user: NonNullable<User>,
   spaceId: number,
-  opts: { write?: boolean } = {},
+  /**
+   * The post the write touches, `null` for a new post. A member behind the
+   * space's introduction gate may touch only its intro post (W20).
+   */
+  opts: { write?: boolean; post?: number | null } = {},
 ) => {
   const settings = await spacesSettings(payload)
   if (mode(settings) === 'off')
@@ -130,6 +136,11 @@ const gate = async (
             .catch(() => null)) as { schedule?: unknown; sessions?: unknown } | null)
     if (archivedNow(space, course))
       return { stop: true as const, error: 'read-only' as WriteError, space: space as SpaceLike }
+  }
+  if (opts.post !== undefined) {
+    const intro = (await introGates(payload, user)).get(spaceId)
+    if (intro != null && opts.post !== intro)
+      return { stop: true as const, error: 'intro' as WriteError, space: space as SpaceLike }
   }
   return { stop: false as const, space: space as SpaceLike, settings }
 }
@@ -417,7 +428,7 @@ export const postCreate = async (
   >,
 ): Promise<WriteResult<{ id: number }>> => {
   const { payload, user, space: spaceId, kind, files } = i
-  const g = await gate(payload, user, spaceId, { write: true })
+  const g = await gate(payload, user, spaceId, { write: true, post: null })
   if (g.stop) return err(g.error)
   const space = g.space
   const mem = await membership(payload, user, space)
@@ -544,7 +555,7 @@ export const postEdit = async (
   } | null
   if (!post) return err('not-found')
   const spaceId = typeof post.space === 'object' ? post.space.id : post.space
-  const g = await gate(payload, user, spaceId, { write: true })
+  const g = await gate(payload, user, spaceId, { write: true, post: id })
   if (g.stop) return err((g as { error: WriteError }).error)
   const space = g.space
   const mem = await membership(payload, user, space)
@@ -606,6 +617,8 @@ export const postRemove = async (i: Input<{ id: number }>): Promise<WriteResult<
     post.author !== null &&
     (typeof post.author === 'object' ? post.author.id : post.author) === personOf(user)
   if (!isAuthor && mem.role !== 'moderator') return err('not-yours')
+  // The intro post opens the space to its members; without it the gate has nothing to open.
+  if (idOf(g.space.introduction_post) === id) return err('intro-post')
   const cover = post.event_cover != null ? idOf(post.event_cover) : null
 
   const { totalDocs: replyCount } = await payload.count({
@@ -666,6 +679,8 @@ export const postModify = async (
   if (g.stop) return err((g as { error: WriteError }).error)
   const mem = await membership(payload, user, g.space)
   if (mem.role !== 'moderator') return err('not-yours')
+  // A locked intro post would keep its space shut to every member who has not commented yet.
+  if (locked && idOf(g.space.introduction_post) === id) return err('intro-post')
   const data: Record<string, unknown> = {}
   if (typeof pinned === 'boolean') data.pinned = pinned
   if (typeof locked === 'boolean') data.locked = locked
@@ -692,12 +707,14 @@ export const commentCreate = async (
   } | null
   if (!postData) return err('not-found')
   const spaceId = typeof postData.space === 'object' ? postData.space.id : postData.space
-  const g = await gate(payload, user, spaceId, { write: true })
+  const g = await gate(payload, user, spaceId, { write: true, post: postId })
   if (g.stop) return err((g as { error: WriteError }).error)
   const space = g.space
   const mem = await membership(payload, user, space)
   if (mem.role === 'none') return err('not-member')
-  if (!mayComment(mem, space.posting ?? 'open')) return err('posting-level')
+  // Every member may answer the intro post, whatever the posting level: it is how they get in.
+  const isIntro = idOf(space.introduction_post) === postId
+  if (!isIntro && !mayComment(mem, space.posting ?? 'open')) return err('posting-level')
   if (postData.deleted_at) return err('not-found')
   if (postData.locked) return err('locked')
 
@@ -839,7 +856,7 @@ export const commentEdit = async (
   } | null
   if (!comment) return err('not-found')
   const spaceId = typeof comment.space === 'object' ? comment.space.id : comment.space
-  const g = await gate(payload, user, spaceId, { write: true })
+  const g = await gate(payload, user, spaceId, { write: true, post: idOf(comment.post) })
   if (g.stop) return err((g as { error: WriteError }).error)
   const mem = await membership(payload, user, g.space)
   if (mem.role === 'none') return err('not-member')
@@ -938,13 +955,18 @@ export const fileAdd = async (
     overrideAccess: true,
   })) as {
     space: number | { id: number }
+    /** On a comment: the post it answers */
+    post?: number | { id: number } | null
     author?: number | { id: number } | null
     deleted_at?: string | null
     locked?: boolean
   } | null
   if (!doc) return err('not-found')
   const spaceId = typeof doc.space === 'object' ? doc.space.id : doc.space
-  const g = await gate(payload, user, spaceId, { write: true })
+  const g = await gate(payload, user, spaceId, {
+    write: true,
+    post: isPost ? targetId! : idOf(doc.post),
+  })
   if (g.stop) return err((g as { error: WriteError }).error)
   const mem = await membership(payload, user, g.space)
   if (mem.role === 'none') return err('not-member')
@@ -991,10 +1013,13 @@ export const reactionToggle = async (
     id: targetId!,
     depth: 0,
     overrideAccess: true,
-  })) as { space: number | { id: number } } | null
+  })) as { space: number | { id: number }; post?: number | { id: number } | null } | null
   if (!doc) return err('not-found')
   const spaceId = typeof doc.space === 'object' ? doc.space.id : doc.space
-  const g = await gate(payload, user, spaceId, { write: true })
+  const g = await gate(payload, user, spaceId, {
+    write: true,
+    post: isPost ? targetId! : idOf(doc.post),
+  })
   if (g.stop) return err((g as { error: WriteError }).error)
   const mem = await membership(payload, user, g.space)
   if (mem.role === 'none') return err('not-member')
@@ -1065,7 +1090,7 @@ export const voteSet = async (
   } | null
   if (!post || post.kind !== 'vote' || post.deleted_at) return err('not-found')
   const spaceId = typeof post.space === 'object' ? post.space.id : post.space
-  const g = await gate(payload, user, spaceId, { write: true })
+  const g = await gate(payload, user, spaceId, { write: true, post: postId })
   if (g.stop) return err((g as { error: WriteError }).error)
   if ((await membership(payload, user, g.space)).role === 'none') return err('not-member')
   if (post.locked) return err('locked')
@@ -1123,7 +1148,7 @@ export const rsvpSet = async (
   if (!post || post.kind !== 'event' || post.deleted_at || !post.event_starts_at)
     return err('not-found')
   const spaceId = typeof post.space === 'object' ? post.space.id : post.space
-  const g = await gate(payload, user, spaceId, { write: true })
+  const g = await gate(payload, user, spaceId, { write: true, post: postId })
   if (g.stop) return err((g as { error: WriteError }).error)
   if ((await membership(payload, user, g.space)).role === 'none') return err('not-member')
   if (post.locked) return err('locked')
@@ -1202,7 +1227,7 @@ export const eventEdit = async (
   if (!post || post.kind !== 'event' || post.deleted_at || !post.event_starts_at)
     return err('not-found')
   const spaceId = typeof post.space === 'object' ? post.space.id : post.space
-  const g = await gate(payload, user, spaceId, { write: true })
+  const g = await gate(payload, user, spaceId, { write: true, post: id })
   if (g.stop) return err((g as { error: WriteError }).error)
   const space = g.space
   const mem = await membership(payload, user, space)

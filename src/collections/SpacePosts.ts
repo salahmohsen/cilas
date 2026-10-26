@@ -1,7 +1,7 @@
 import type { CollectionConfig } from 'payload'
 
 import { isAdminUser } from '@/access'
-import { readableWhere } from '@/lib/spaces'
+import { contentWhere } from '@/lib/spaces'
 
 /**
  * Discussion, announcement, event and vote posts (spec §3). `question` sits
@@ -17,7 +17,7 @@ export const SpacePosts: CollectionConfig = {
   slug: 'space-posts',
   labels: { singular: 'Post', plural: 'Posts' },
   access: {
-    read: async ({ req }) => readableWhere(req.payload, req.user, 'space'),
+    read: async ({ req }) => contentWhere(req.payload, req.user, ['id']),
     create: ({ req }) => isAdminUser(req.user),
     update: ({ req }) => isAdminUser(req.user),
     // Deletes (authors included) go through the actions' postRemove, which

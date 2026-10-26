@@ -1,7 +1,7 @@
 import type { CollectionConfig, Where } from 'payload'
 
 import { isAdminUser } from '@/access'
-import { readableWhere } from '@/lib/spaces'
+import { contentWhere } from '@/lib/spaces'
 
 /**
  * One row per account, vote post and chosen option, unique on all three.
@@ -17,7 +17,7 @@ export const SpaceVotes: CollectionConfig = {
     // read through the API names who chose what. The poll's tally reads them
     // with the server's access (voteViews).
     read: async ({ req }) => {
-      const where = await readableWhere(req.payload, req.user, 'space')
+      const where = await contentWhere(req.payload, req.user, ['post'])
       if (where === true && isAdminUser(req.user)) return true
       if (!where) return false
       const own = { account: { equals: (req.user as { id?: number })?.id ?? null } }

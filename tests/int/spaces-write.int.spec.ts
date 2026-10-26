@@ -59,6 +59,13 @@ vi.mock('@/lib/link-preview', async (original) => ({
   placeName: vi.fn(async (url: string) => (url.includes('example.org') ? 'Example room' : null)),
 }))
 
+const introOf = (space: Space) => {
+  const v = (space as unknown as { introduction_post?: number | { id: number } | null })
+    .introduction_post
+  if (v == null) throw new Error('the space has no intro post')
+  return typeof v === 'object' ? v.id : v
+}
+
 const tracked = new Map<string, number[]>()
 const track = (collection: string, id: number) => {
   const list = tracked.get(collection) ?? []
@@ -236,6 +243,14 @@ describe('spaces write', () => {
         overrideAccess: true,
       })
       for (const r of rows) track('space-consents', r.id)
+    }
+    // The student has introduced themselves in both spaces, so the tests below
+    // meet the whole feed; the introduction gate has its own test.
+    for (const space of [courseSpace, cohortSpace]) {
+      const intro = introOf(space)
+      const said = await commentCreate({ payload, user: student, post: intro, body: 'Probe hello' })
+      expect(said.ok).toBe(true)
+      if (said.ok) track('space-comments', said.data.id)
     }
   })
 
@@ -2173,5 +2188,187 @@ describe('spaces write', () => {
     })
     expect(renamed.name).toBeFalsy()
     expect(renamed.audience).toBe('all')
+  })
+
+  it('a new member reads only the intro post until they comment on it; moderators never wait', async () => {
+    const newcomer = (await mkUser('Probe Newcomer'))!
+    const enrolled = await payload.create({
+      collection: 'enrollments',
+      data: { course: course.id, person: personOf(newcomer), status: 'confirmed' } as never,
+      overrideAccess: true,
+    })
+    track('enrollments', enrolled.id as number)
+    expect((await consentAccept({ payload, user: newcomer })).ok).toBe(true)
+    const { docs: consents } = await payload.find({
+      collection: 'space-consents',
+      where: { account: { equals: newcomer.id } },
+      overrideAccess: true,
+    })
+    for (const r of consents) track('space-consents', r.id)
+
+    const intro = introOf(courseSpace)
+    const introRow = await payload.findByID({
+      collection: 'space-posts',
+      id: intro,
+      overrideAccess: true,
+    })
+    expect(introRow.pinned).toBe(true)
+    expect(introRow.author).toBeFalsy()
+
+    const made = await postCreate({
+      payload,
+      user: fellow,
+      space: courseSpace.id,
+      kind: 'discussion',
+      body: 'Probe behind the gate',
+    })
+    expect(made.ok).toBe(true)
+    if (!made.ok) return
+    track('space-posts', made.data.id)
+    const reply = await commentCreate({
+      payload,
+      user: student,
+      post: made.data.id,
+      body: 'Probe reply',
+    })
+    expect(reply.ok).toBe(true)
+    if (reply.ok) track('space-comments', reply.data.id)
+
+    // The feed, the post page, the dialog and the API show only the intro post.
+    const ids = async (u: User) =>
+      (await spaceFeed(payload, u, courseSpace)).rows.map((r) => r.post.id)
+    expect(await ids(newcomer)).toEqual([intro])
+    expect(await postView(payload, newcomer, courseSpace, made.data.id)).toBeNull()
+    expect(await postSpace(payload, newcomer, made.data.id)).toBeNull()
+    expect((await postSpace(payload, newcomer, intro))?.id).toBe(courseSpace.id)
+    const api = await payload.find({
+      collection: 'space-comments',
+      user: newcomer,
+      overrideAccess: false,
+      where: { post: { equals: made.data.id } },
+    })
+    expect(api.totalDocs).toBe(0)
+    // Counts leave the hidden post and its reply out.
+    const before = (await mySpaces(payload, newcomer, 'en')).courses.find(
+      (c) => c.space.id === courseSpace.id,
+    )
+    expect(before).toBeDefined()
+    // The student who introduced themselves and the fellow read everything.
+    expect(await ids(student)).toContain(made.data.id)
+    expect(await ids(fellow)).toContain(made.data.id)
+
+    // Behind the gate, only the intro post takes writes.
+    const post = await postCreate({
+      payload,
+      user: newcomer,
+      space: courseSpace.id,
+      kind: 'discussion',
+      body: 'Probe too early',
+    })
+    expect(post.ok).toBe(false)
+    if (!post.ok) expect(post.error).toBe('intro')
+    const early = await commentCreate({
+      payload,
+      user: newcomer,
+      post: made.data.id,
+      body: 'Probe early',
+    })
+    expect(early.ok).toBe(false)
+    if (!early.ok) expect(early.error).toBe('intro')
+    const react = await reactionToggle({
+      payload,
+      user: newcomer,
+      post: made.data.id,
+      reaction: 'agree',
+      on: true,
+    })
+    expect(react.ok).toBe(false)
+    if (!react.ok) expect(react.error).toBe('intro')
+
+    // Moderators cannot shut the door: no lock, no delete of the intro post.
+    const lock = await postModify({ payload, user: fellow, id: intro, locked: true })
+    expect(lock.ok).toBe(false)
+    if (!lock.ok) expect(lock.error).toBe('intro-post')
+    const gone = await postRemove({ payload, user: admin, id: intro })
+    expect(gone.ok).toBe(false)
+    if (!gone.ok) expect(gone.error).toBe('intro-post')
+
+    // Even when only fellows write, the newcomer answers the intro post, and the space opens.
+    await payload.update({
+      collection: 'spaces',
+      id: courseSpace.id,
+      data: { posting: 'fellows_only' },
+      overrideAccess: true,
+    })
+    const hello = await commentCreate({
+      payload,
+      user: newcomer,
+      post: intro,
+      body: 'Probe I am new',
+    })
+    await payload.update({
+      collection: 'spaces',
+      id: courseSpace.id,
+      data: { posting: 'open' },
+      overrideAccess: true,
+    })
+    expect(hello.ok).toBe(true)
+    if (hello.ok) track('space-comments', hello.data.id)
+    expect(await ids(newcomer)).toContain(made.data.id)
+    expect(await postView(payload, newcomer, courseSpace, made.data.id)).not.toBeNull()
+
+    // Deleting the introduction closes the space again.
+    if (hello.ok) {
+      expect((await commentRemove({ payload, user: newcomer, id: hello.data.id })).ok).toBe(true)
+      expect(await ids(newcomer)).toEqual([intro])
+    }
+  })
+
+  it('a new space copies the introduction template as it reads then; later edits leave it alone', async () => {
+    const read = async (locale: 'en' | 'ar') =>
+      (await payload.findGlobal({
+        slug: 'space-introduction',
+        locale,
+        fallbackLocale: false,
+        overrideAccess: true,
+      })) as { title?: string | null; body?: string | null }
+    const saved = { en: await read('en'), ar: await read('ar') }
+    const write = (locale: 'en' | 'ar', data: { title?: string | null; body?: string | null }) =>
+      payload.updateGlobal({ slug: 'space-introduction', locale, data, overrideAccess: true })
+    try {
+      await write('en', { title: 'Probe welcome', body: 'Probe say hello.' })
+      await write('ar', { title: 'Probe أهلًا', body: 'Probe عرّف بنفسك.' })
+      const programme = await payload.create({
+        collection: 'programmes',
+        data: {
+          title: 'Probe Bridge Two',
+          slug: 'probe-bridge-two',
+          kind: 'bridge',
+          _status: 'published',
+        },
+        overrideAccess: true,
+      })
+      track('programmes', programme.id as number)
+      const { docs } = await payload.find({
+        collection: 'spaces',
+        where: { programme: { equals: programme.id } },
+        overrideAccess: true,
+      })
+      const space = docs[0] as unknown as Space
+      track('spaces', space.id)
+      const intro = introOf(space)
+      track('space-posts', intro)
+      const body = async () =>
+        (await payload.findByID({ collection: 'space-posts', id: intro, overrideAccess: true }))
+          .body
+      expect(await body()).toBe(
+        '## Probe welcome\n\nProbe say hello.\n\n---\n\n## Probe أهلًا\n\nProbe عرّف بنفسك.',
+      )
+      await write('en', { title: 'Probe changed' })
+      expect(await body()).not.toContain('Probe changed')
+    } finally {
+      await write('en', { title: saved.en.title ?? null, body: saved.en.body ?? null })
+      await write('ar', { title: saved.ar.title ?? null, body: saved.ar.body ?? null })
+    }
   })
 })

@@ -1,7 +1,7 @@
 import type { CollectionConfig } from 'payload'
 
 import { isAdminUser } from '@/access'
-import { readableWhere } from '@/lib/spaces'
+import { contentWhere } from '@/lib/spaces'
 
 /**
  * Comments on a post (spec §4). Plain text with `/people/{id}` mention
@@ -13,7 +13,7 @@ export const SpaceComments: CollectionConfig = {
   slug: 'space-comments',
   labels: { singular: 'Comment', plural: 'Comments' },
   access: {
-    read: ({ req }) => readableWhere(req.payload, req.user, 'space'),
+    read: ({ req }) => contentWhere(req.payload, req.user, ['post']),
     // Actions-only writes, as with posts (REST refusal).
     create: ({ req }) => isAdminUser(req.user),
     update: ({ req }) => isAdminUser(req.user),

@@ -3,7 +3,7 @@ import { randomBytes } from 'node:crypto'
 import type { CollectionConfig } from 'payload'
 
 import { isAdminUser } from '@/access'
-import { readableWhere } from '@/lib/spaces'
+import { contentWhere } from '@/lib/spaces'
 import { FILE_KINDS } from '@/lib/form-files'
 
 /**
@@ -16,8 +16,8 @@ export const SpaceFiles: CollectionConfig = {
   slug: 'space-files',
   labels: { singular: 'Space file', plural: 'Space files' },
   access: {
-    // Equal to the space's read access (spec §6).
-    read: ({ req }) => readableWhere(req.payload, req.user, 'space'),
+    // Equal to the read access of the post it sits on (spec §6).
+    read: ({ req }) => contentWhere(req.payload, req.user, ['post', 'comment.post']),
     // Writes run only in the server actions (counts and limits live in one
     // place); a file otherwise goes away with its post or comment. REST
     // deletes would let any member of a space hard-delete anyone's files.

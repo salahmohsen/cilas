@@ -1,7 +1,7 @@
 import type { CollectionConfig, Where } from 'payload'
 
 import { isAdminUser, personOf } from '@/access'
-import { readableWhere } from '@/lib/spaces'
+import { contentWhere } from '@/lib/spaces'
 
 /**
  * One row per account, target and reaction, unique on all three (spec §4).
@@ -24,7 +24,7 @@ export const SpaceReactions: CollectionConfig = {
   slug: 'space-reactions',
   labels: { singular: 'Reaction', plural: 'Reactions' },
   access: {
-    read: ({ req }) => readableWhere(req.payload, req.user, 'space'),
+    read: ({ req }) => contentWhere(req.payload, req.user, ['post', 'comment.post']),
     // Actions-only writes (REST refusal, as posts and comments).
     create: ({ req }) => isAdminUser(req.user),
     update: () => false,

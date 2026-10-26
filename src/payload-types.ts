@@ -170,11 +170,13 @@ export interface Config {
   globals: {
     'site-settings': SiteSetting;
     'email-settings': EmailSetting;
+    'space-introduction': SpaceIntroduction;
     'llms-txt-settings': LlmsTxtSetting;
   };
   globalsSelect: {
     'site-settings': SiteSettingsSelect<false> | SiteSettingsSelect<true>;
     'email-settings': EmailSettingsSelect<false> | EmailSettingsSelect<true>;
+    'space-introduction': SpaceIntroductionSelect<false> | SpaceIntroductionSelect<true>;
     'llms-txt-settings': LlmsTxtSettingsSelect<false> | LlmsTxtSettingsSelect<true>;
   };
   locale: 'en' | 'ar';
@@ -4278,6 +4280,22 @@ export interface EmailSetting {
   createdAt?: string | null;
 }
 /**
+ * The first post of each new course and cohort space. Edits change only spaces made after them. Leave a field empty to use the text shown in it.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "space-introduction".
+ */
+export interface SpaceIntroduction {
+  id: number;
+  title?: string | null;
+  /**
+   * Markdown: **bold**, *italic*, lists and links.
+   */
+  body?: string | null;
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
  * Controls the content of /llms.txt and /llms-full.txt.
  *
  * This interface was referenced by `Config`'s JSON-Schema
@@ -4394,6 +4412,17 @@ export interface EmailSettingsSelect<T extends boolean = true> {
               unsubscribe?: T;
             };
       };
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "space-introduction_select".
+ */
+export interface SpaceIntroductionSelect<T extends boolean = true> {
+  title?: T;
+  body?: T;
   updatedAt?: T;
   createdAt?: T;
   globalType?: T;

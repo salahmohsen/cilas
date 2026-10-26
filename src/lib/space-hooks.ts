@@ -1,13 +1,11 @@
 import type { Payload } from 'payload'
-import type { CollectionAfterChangeHook } from 'payload'
+import type { CollectionAfterChangeHook, PayloadRequest } from 'payload'
 
+import { introBody, type IntroText } from '@/lib/space-intro'
 import type { Course, Programme } from '@/payload-types'
 
-/** Exported so the seed (Task 16) reuses the same literal — two copies of the intro text never drift. */
-export const INTRO = 'What question brings you here?\nما السؤال الذي جاء بك إلى هنا؟'
-
 /**
- * The space row and its intro post, created once, by hook (spec §1, §11).
+ * The space row and its pinned intro post, created once, by hook (spec §1, §11).
  * Idempotent: it counts first, so a re-publish or an admin's edit of a
  * published course never makes a second space. The community space is the
  * seed's to create (seed/collections/spaces.seed.ts).
@@ -57,18 +55,45 @@ const createSpace = async (
     overrideAccess: true,
     req,
   })
+  await addIntroPost(payload, space.id, req)
+  return space
+}
+
+/**
+ * Copies the introduction template (both languages, as it reads now) into a
+ * pinned post of the space and names it the space's intro post. Later edits
+ * of the template reach only spaces made after them. Also the one call a
+ * backfill of older spaces needs.
+ */
+export const addIntroPost = async (payload: Payload, spaceId: number, req?: PayloadRequest) => {
+  // Without `req`: the local API sets the request's locale, and the two reads would share it.
+  const template = (locale: 'en' | 'ar') =>
+    payload.findGlobal({
+      slug: 'space-introduction',
+      locale,
+      fallbackLocale: false,
+      overrideAccess: true,
+    }) as Promise<IntroText>
+  const [en, ar] = await Promise.all([template('en'), template('ar')])
   const post = await payload.create({
     collection: 'space-posts',
-    data: { space: space.id, author: null, kind: 'discussion', body: INTRO } as never,
+    data: {
+      space: spaceId,
+      author: null,
+      kind: 'discussion',
+      body: introBody(en, ar),
+      pinned: true,
+      last_activity_at: new Date().toISOString(),
+    } as never,
     overrideAccess: true,
     req,
   })
   await payload.update({
     collection: 'spaces',
-    id: space.id,
+    id: spaceId,
     data: { introduction_post: post.id } as never,
     overrideAccess: true,
     req,
   })
-  return space
+  return post.id
 }
