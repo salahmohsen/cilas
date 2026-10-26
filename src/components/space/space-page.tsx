@@ -30,11 +30,12 @@ import {
   participation,
   spaceEvents,
   spaceFeed,
+  sessionCounts,
 } from '@/lib/spaces-data'
 import { eventsAllow, postingAllows, visitRecord } from '@/lib/spaces-write'
 
 import { AboutClamp } from './about-clamp'
-import { Composer, type PostKind } from './composer'
+import { Composer, type PostKind, type SessionChoice } from './composer'
 import { EventList } from './event-list'
 import { FeedFilter } from './feed-filter'
 import { FeedRow, type FeedContext } from './feed-row'
@@ -42,6 +43,7 @@ import { FreshPosts } from './fresh-posts'
 import { LoadMore } from './load-more'
 import { MembersPanel } from './members-panel'
 import { NextSession } from './next-session'
+import { sessionContextOf } from './session-block'
 import { CHECKLIST_COOKIE, OnboardingChecklist } from './onboarding-checklist'
 import { SpaceHeadActions } from './space-head-actions'
 import { spacePeopleCards } from './space-people'
@@ -169,8 +171,8 @@ export async function SpacePage({
       postingAllows(space.posting ?? 'open', mem.role, k) &&
       (k !== 'event' || eventsAllow(space.events, mem.role)),
   )
-  // A member may point a discussion at one of the course's sessions (a
-  // moderator an announcement too), named as the syllabus numbers and dates it.
+  // Any member may name one of the course's sessions with # or place it with /,
+  // named as the syllabus numbers and dates it.
   const sessionChoices = landing.course ? await sessionOptions(landing.course, locale) : []
   const titles = await linkTitles(
     pageAddresses(feed.rows.flatMap((r) => threadTexts([r.post.body], r.comments))),
@@ -186,20 +188,19 @@ export async function SpacePage({
     notice,
     now: renderedAt,
     titles,
+    sessions: sessionContextOf(feed.sessions),
   }
 
   const course = landing.course
   const cover = coverOf(course ?? landing.programme)
   const announcements = feed.rows.filter((r) => r.post.kind === 'announcement')
   const view = tab === 'syllabus' && !course ? 'all' : tab
-  // How many posts point at each session, from the rows the feed already read.
-  const linked = new Map<string, number>()
-  for (const r of feed.rows)
-    if (r.post.course_session)
-      linked.set(r.post.course_session, (linked.get(r.post.course_session) ?? 0) + 1)
+  // How many posts are about each session (linked, or named in the post or
+  // its thread), from the rows the feed already read.
+  const { named, counts: linked } = sessionCounts(feed.rows)
   const bySession = course && session ? session : null
   const listed = (view === 'announcements' ? announcements : feed.rows).filter(
-    (r) => !bySession || r.post.course_session === bySession,
+    (r) => !bySession || named.get(r.post.id)?.has(bySession),
   )
   const pinned = listed.filter((r) => r.post.pinned)
   const rest = listed.filter((r) => !r.post.pinned)
@@ -385,7 +386,7 @@ export async function SpacePage({
                 <Alert
                   tone="info"
                   title={t('sessionFilterTitle', {
-                    name: sessionChoices.find((c) => c.value === bySession)?.label ?? '',
+                    name: sessionChoices.find((c) => c.id === bySession)?.label ?? '',
                   })}
                 >
                   <a className={styles.sessionPosts} href={path}>
@@ -459,10 +460,7 @@ export async function SpacePage({
 }
 
 /** "Session 2: Title · Mon 4 May": one choice per session, in the syllabus's order. */
-async function sessionOptions(
-  course: Course,
-  locale: string,
-): Promise<{ value: string; label: string }[]> {
+async function sessionOptions(course: Course, locale: string): Promise<SessionChoice[]> {
   const [t, format] = await Promise.all([getTranslations('Course'), getFormatter()])
   const meetings = expandSchedule(course.schedule, course.sessions)
   return sessionsInOrder(course.sessions ?? []).flatMap((session, i) => {
@@ -481,9 +479,14 @@ async function sessionOptions(
           numberingSystem: numberingSystemOf(locale),
         })
       : null
-    const label = [session.session_title ? `${unit}: ${session.session_title}` : unit, when]
-      .filter(Boolean)
-      .join(' · ')
-    return [{ value: session.id, label }]
+    const name = session.session_title ? `${unit}: ${session.session_title}` : unit
+    return [
+      {
+        id: session.id,
+        label: name,
+        mention: `#${n}${session.session_title ? ` ${session.session_title}` : ''}`,
+        hint: [when, session.cancelled ? t('cancelled') : null].filter(Boolean).join(' · '),
+      },
+    ]
   })
 }

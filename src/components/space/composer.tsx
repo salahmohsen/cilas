@@ -14,11 +14,11 @@ import { Button } from '@/components/arc/button/button'
 import { Checkbox } from '@/components/arc/checkbox/checkbox'
 import { Input } from '@/components/arc/input/input'
 import { RichField } from '@/components/rich-field'
-import { Select } from '@/components/arc/select/select'
+import type { SessionSuggestion } from '@/components/arc/rich-text-editor/rich-text-editor'
 import SegmentedControl from '@/components/arc/segmented-control/segmented-control'
 import { postCreateAction, type SpacesWriteState } from '@/app/(frontend)/[locale]/spaces/actions'
 import { FILE_LIMITS, SPACE_FILE_ACCEPT, UPLOAD_TOTAL_MAX } from '@/lib/space-file-limits'
-import { EVENT_TITLE_MAX, SESSION_KINDS, VOTE_OPTIONS } from '@/lib/space-post-kinds'
+import { EVENT_TITLE_MAX, VOTE_OPTIONS } from '@/lib/space-post-kinds'
 
 import { AttachmentTray } from './attachment-tray'
 import { EventFields, NO_COVER, endsEarly, eventFormData, type EventValue } from './event-fields'
@@ -38,10 +38,7 @@ const MB = 1024 * 1024
 
 type Me = { name: string; photo: string | null }
 
-export type SessionChoice = { value: string; label: string }
-
-/** The select's "no session" choice: Radix gives an empty value no item. */
-const NO_SESSION = 'none'
+export type SessionChoice = SessionSuggestion
 
 /** The kinds this member may start here, in the order the type switch shows them. */
 export type PostKind = 'discussion' | 'event' | 'vote' | 'announcement'
@@ -69,7 +66,7 @@ export function Composer({
   mentions: { id: number; name: string }[]
   consented: boolean
   notice: NoticePart[]
-  /** The course's sessions a post may point at; empty outside a course space */
+  /** The course's sessions a post may name with # or place with /; empty outside a course space */
   sessions?: SessionChoice[]
 }) {
   const t = useTranslations('SpacePost')
@@ -187,8 +184,6 @@ function ComposerForm({
   const [body, setBody] = useState({ markdown: initial, empty: initial.trim() === '' })
   const [kind, setKind] = useState<PostKind>(kinds[0] ?? 'discussion')
   const [extra, setExtra] = useState<Extra>(EMPTY_EXTRA)
-  const [session, setSession] = useState(NO_SESSION)
-  const sessionShown = sessions.length > 0 && SESSION_KINDS.includes(kind)
   const picker = useRef<HTMLInputElement>(null)
   const tf = useTranslations('SpacePhotos')
   const [error, setError] = useState<string | null>(null)
@@ -233,7 +228,6 @@ function ComposerForm({
       data.set('multiple', String(extra.multiple))
       data.set('anonymous', String(extra.anonymous === true))
     }
-    if (sessionShown && session !== NO_SESSION) data.set('session', session)
     for (const f of files) data.append('file', f)
     const result = await postCreateAction({ status: 'ok' }, data).catch((): SpacesWriteState => ({
       status: 'error',
@@ -273,7 +267,11 @@ function ComposerForm({
           hideLabel={kind !== 'event'}
           placeholder={t(`placeholder_${kind}`)}
           defaultMarkdown={initial}
+          minHeading={2}
           mentionSuggestions={mentions}
+          description={sessions.length ? t('sessionHint') : undefined}
+          sessionSuggestions={sessions.length ? sessions : undefined}
+          sessionLabels={{ list: t('sessionList'), blocks: t('sessionBlocks') }}
           onChange={(v) => {
             setBody({ markdown: v.markdown, empty: v.empty })
             if (v.empty) localStorage.removeItem(draftKey)
@@ -281,15 +279,6 @@ function ComposerForm({
           }}
         />
         {kind === 'announcement' && <p className={styles.meta}>{t('announcementHint')}</p>}
-        {sessionShown && (
-          <Select
-            label={t('sessionPick')}
-            description={t(kind === 'announcement' ? 'sessionPickHint' : 'sessionPickHintOpen')}
-            value={session}
-            onValueChange={setSession}
-            options={[{ value: NO_SESSION, label: t('sessionNone') }, ...sessions]}
-          />
-        )}
         {kind === 'event' && <EventFields value={extra} onChange={set} minDate={today} />}
         {kind === 'vote' && (
           <fieldset className={styles.voteFields}>

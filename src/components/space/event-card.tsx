@@ -9,6 +9,7 @@ import { EventDetails, type EventCover } from './event-details'
 import type { FeedContext } from './feed-row'
 import { Folded } from './folded'
 import { PostBody } from './post-body'
+import { sessionsFor } from './session-block'
 import styles from './space.module.css'
 
 /** The cover a reader may see: the populated file, or nothing when it is gone or out of reach. */
@@ -49,7 +50,14 @@ export async function EventCard({
   const t = await getTranslations('SpacePost')
   const { viewer } = context
   const { title, description } = eventParts(post)
-  const body = <PostBody body={description} people={context.people} titles={context.titles} />
+  const body = (
+    <PostBody
+      body={description}
+      people={context.people}
+      titles={context.titles}
+      sessions={sessionsFor(context.sessions, href)}
+    />
+  )
   return (
     <EventDetails
       post={post.id}

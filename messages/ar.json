@@ -969,13 +969,10 @@
     "voteResults": "نتائج التصويت",
     "saveError_upload": "تعذّر حفظ الملفات. حاول مرة أخرى، أو أرفق ملفات أقل أو أصغر.",
     "saveError_failed": "حدث خطأ ما. حاول مرة أخرى.",
-    "sessionPick": "الجلسة",
-    "sessionPickHint": "يرى الأعضاء مواد الجلسة وسؤال النقاش في الصف تحت المنشور.",
-    "sessionNone": "بلا جلسة",
     "sessionLabel": "جلسة المقرر",
     "sessionGone": "لم تعد هذه الجلسة في منهج المقرر.",
     "sessionHidden": "هذه الجلسة في مقرر لا يمكنك فتحه.",
-    "saveError_session": "يمكن ربط جلسة بإعلان من زميل فقط، وبجلسة من هذا المقرر فقط.",
+    "saveError_session": "اذكر جلسات هذا المقرر فقط، ثم انشر مرة أخرى.",
     "eventEndAdd": "إضافة وقت انتهاء",
     "eventEnd": "ينتهي",
     "eventEndLater": "يجب أن يكون الانتهاء بعد البدء",
@@ -1006,7 +1003,6 @@
     "saveError_event_over": "انتهت هذه الفعالية.",
     "saveError_rsvp": "اختر سأحضر أو ربما أو لن أحضر.",
     "sessionChipLabel": "منشورات عن {name}",
-    "sessionPickHintOpen": "يظهر وسمٌ صغير تحت منشورك يفتح المنشورات عن الجلسة نفسها.",
     "publicEvent": "فعالية عامة",
     "publicEventAria": "فعالية عامة: {title}",
     "eventEdit": "تعديل الفعالية",
@@ -1020,7 +1016,12 @@
     "eventTitle": "اسم الفعالية",
     "eventDescription": "الوصف",
     "eventCoverAdd": "إضافة صورة غلاف",
-    "dialogClose": "إغلاق المنشور"
+    "dialogClose": "إغلاق المنشور",
+    "sessionMention": "جلسة",
+    "sessionRemoved": "حُذفت الجلسة",
+    "sessionList": "الجلسات",
+    "sessionBlocks": "الكتل والجلسات",
+    "sessionHint": "اكتب # لتذكر جلسة داخل الجملة، أو / في أول السطر لتضع بطاقتها."
   },
   "SpaceComment": {
     "write": "علِّق",
@@ -1169,7 +1170,8 @@
     "mentions": "الأعضاء",
     "formerMember": "عضو سابق",
     "showEarlier": "{count, plural, one {اعرض تعليقًا سابقًا} two {اعرض تعليقين سابقين} few {اعرض # تعليقات سابقة} many {اعرض # تعليقًا سابقًا} other {اعرض # تعليق سابق}}",
-    "showMore": "{count, plural, one {اعرض تعليقًا إضافيًا} two {اعرض تعليقين إضافيين} few {اعرض # تعليقات إضافية} many {اعرض # تعليقًا إضافيًا} other {اعرض # تعليق إضافي}}"
+    "showMore": "{count, plural, one {اعرض تعليقًا إضافيًا} two {اعرض تعليقين إضافيين} few {اعرض # تعليقات إضافية} many {اعرض # تعليقًا إضافيًا} other {اعرض # تعليق إضافي}}",
+    "sessions": "الجلسات"
   },
   "SpacePhotos": {
     "photos": "الصور",

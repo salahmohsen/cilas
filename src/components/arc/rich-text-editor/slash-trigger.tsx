@@ -1,13 +1,15 @@
 'use client'
 
 /**
- * The editor's two floating triggers on one machinery: `/` proposes blocks,
- * `@` proposes members. Detection, rows, keyboard and the panel live here;
+ * The editor's floating triggers on one machinery: `/` proposes blocks (and
+ * course sessions to place as blocks), `@` proposes members, `#` proposes
+ * course sessions to name inline. Detection, rows, keyboard and the panel live here;
  * the editor keeps the state (its undo history closes the menu directly) and
  * threads its DOM helpers and history callbacks in.
  */
 import {
   useCallback,
+  useEffect,
   useMemo,
   useRef,
   useLayoutEffect,
@@ -17,6 +19,7 @@ import {
 } from 'react'
 import { animate, motion, useMotionValue, type Transition } from 'motion/react'
 import {
+  CalendarDays,
   Heading1,
   Heading2,
   Heading3,
@@ -28,13 +31,16 @@ import {
   SquareCode,
 } from 'lucide-react'
 import { motionTokens } from '../lib/motion-tokens'
-import type { BlockType, Slash } from './rich-text-editor'
+import type { BlockType, SessionSuggestion, Slash } from './rich-text-editor'
 import styles from './rich-text-editor.module.css'
 
-/** A row of either menu: a block to apply, or a member to mention. */
+/** A row of any menu: a block to apply, a member to mention, or a session to name or place. */
 export type SlashItem = {
   type?: BlockType
   person?: { id: number; name: string }
+  session?: SessionSuggestion
+  /** The session goes in as a block of its own, not inline */
+  block?: boolean
   label: string
   hint?: string
   keywords?: string
@@ -119,7 +125,7 @@ export const SLASH_ITEMS: SlashItem[] = [
   },
 ]
 
-const MARKERS = { slash: '/', mention: '@' } as const
+const MARKERS = { slash: '/', mention: '@', session: '#' } as const
 
 /** `[@Name](/people/{id})` replaces the running `@query` token ending at `caret`; text with no trigger passes through. */
 /**
@@ -139,6 +145,28 @@ export const insertMentionLink = (
   const link = node.ownerDocument.createElement('a')
   link.setAttribute('href', `/people/${person.id}`)
   link.textContent = person.name
+  after.parentNode!.insertBefore(link, after)
+  if (!/^\s/.test(after.data)) after.insertData(0, ' ')
+  return after
+}
+
+/**
+ * Replaces the "#query" before the caret with a link to the session that
+ * shows its short name; the Markdown export writes `[#3 Title](session:{id})`.
+ * Returns the text node after the link, which starts with a space for the caret.
+ */
+export const insertSessionLink = (
+  node: Text,
+  caret: number,
+  session: SessionSuggestion,
+): Text | null => {
+  const at = node.data.lastIndexOf('#', caret - 1)
+  if (at < 0) return null
+  const after = node.splitText(caret)
+  node.deleteData(at, caret - at)
+  const link = node.ownerDocument.createElement('a')
+  link.setAttribute('href', `session:${session.id}`)
+  link.textContent = session.mention
   after.parentNode!.insertBefore(link, after)
   if (!/^\s/.test(after.data)) after.insertData(0, ' ')
   return after
@@ -177,6 +205,11 @@ export type SlashTriggerArgs = {
   announce: (message: string) => void
   /** Members for the @ menu; without them @ stays an ordinary character. */
   members?: { id: number; name: string }[]
+  /** Sessions for the # menu and the / menu; without them # stays an ordinary character. */
+  sessions?: SessionSuggestion[]
+  placeSessionBlock?: (open: Slash, caret: number, session: SessionSuggestion) => void
+  /** At 2 the / menu offers no Heading 1. */
+  minHeading?: 1 | 2
 }
 
 export function useSlashTrigger({
@@ -196,6 +229,9 @@ export function useSlashTrigger({
   ensureFilled,
   announce,
   members,
+  sessions,
+  placeSessionBlock,
+  minHeading = 1,
 }: SlashTriggerArgs) {
   /* The menu opens the moment its marker character lands, word-start only. */
   const openIfTyped = useCallback(
@@ -203,10 +239,13 @@ export function useSlashTrigger({
       const editor = editorRef.current,
         root = rootRef.current
       const selection = window.getSelection()
-      const kind = data === '/' ? 'slash' : data === '@' ? 'mention' : null
+      // `# ` (with a space) stays a heading: the menu closes as soon as the space lands.
+      const kind =
+        data === '/' ? 'slash' : data === '@' ? 'mention' : data === '#' ? 'session' : null
       if (
         !kind ||
         (kind === 'mention' && !members?.length) ||
+        (kind === 'session' && !sessions?.length) ||
         !editor ||
         !root ||
         !selection?.rangeCount
@@ -242,7 +281,11 @@ export function useSlashTrigger({
         node: text,
         offset,
         query: '',
-        x: Math.max(0, Math.min(rect.left - box.left - 8, box.width - 244)),
+        // Session rows carry a name and a date, so their menu is wider.
+        x: Math.max(
+          0,
+          Math.min(rect.left - box.left - 8, box.width - (sessions?.length ? 324 : 244)),
+        ),
         y: above ? rect.top - box.top - 6 : rect.bottom - box.top + 6,
         above,
         max: Math.max(150, room),
@@ -250,16 +293,29 @@ export function useSlashTrigger({
       setSlashActive(0)
       setBar(null)
     },
-    [clipBand, editorRef, rootRef, members, setBar, setSlash, setSlashActive],
+    [clipBand, editorRef, rootRef, members, sessions, setBar, setSlash, setSlashActive],
   )
 
-  /* Rows: the @ menu lists members where / lists blocks; everything else identical. */
+  /* Rows: @ lists members, # sessions, / blocks then sessions to place; everything else identical. */
   const slashResults = useMemo<SlashItem[]>(() => {
     const query = slash?.query.trim().toLowerCase() ?? ''
+    const sessionRow = (session: SessionSuggestion, block: boolean): SlashItem => ({
+      session,
+      block,
+      label: session.label,
+      hint: session.hint,
+      keywords: `${block ? 'session ' : ''}${session.mention.replace(/^#/, '')} ${session.hint ?? ''}`,
+      icon: <CalendarDays {...icon} />,
+    })
     const rows: SlashItem[] =
       slash?.kind === 'mention'
         ? (members ?? []).map((person) => ({ person, label: person.name }))
-        : SLASH_ITEMS
+        : slash?.kind === 'session'
+          ? (sessions ?? []).map((session) => sessionRow(session, false))
+          : [
+              ...SLASH_ITEMS.filter((item) => minHeading === 1 || item.type !== 'h1'),
+              ...(sessions ?? []).map((session) => sessionRow(session, true)),
+            ]
     if (!query) return rows
     return rows.filter(
       (item) =>
@@ -268,7 +324,11 @@ export function useSlashTrigger({
           .split(/\s+/)
           .some((word) => word.startsWith(query)) || item.label.toLowerCase().includes(query),
     )
-  }, [slash?.kind, slash?.query, members])
+  }, [slash?.kind, slash?.query, members, sessions, minHeading])
+  // A query nothing matches closes the menu, so Enter and Escape act on the text again.
+  useEffect(() => {
+    if (slash && !slashResults.length) setSlash(null)
+  }, [setSlash, slash, slashResults.length])
   const slashIndex = Math.min(slashActive, Math.max(0, slashResults.length - 1))
   const slashOpen = !!slash && slashResults.length > 0
 
@@ -289,6 +349,18 @@ export function useSlashTrigger({
         if (after) placeCaret(after, 1)
       })
       announce(`${person.name} mentioned`)
+      return
+    }
+    if (item.session) {
+      const session = item.session
+      const at = Math.min(caret, open.node.data.length)
+      setSlash(null)
+      run(() => {
+        if (item.block) return placeSessionBlock?.(open, at, session)
+        const after = insertSessionLink(open.node, at, session)
+        if (after) placeCaret(after, 1)
+      })
+      announce(`${session.label} added`)
       return
     }
     setSlash(null)
@@ -407,6 +479,7 @@ export function SlashPanel({
       ref={slashPanel}
       className={styles.slash}
       data-above={slash.above || undefined}
+      data-wide={results.some((item) => item.session) || undefined}
       style={{
         left: slash.x,
         top: slash.y,
@@ -447,7 +520,13 @@ export function SlashPanel({
           />
           {results.map((item, i) => (
             <li
-              key={item.person ? `p${item.person.id}` : item.type}
+              key={
+                item.person
+                  ? `p${item.person.id}`
+                  : item.session
+                    ? `${item.block ? 'b' : 's'}${item.session.id}`
+                    : item.type
+              }
               id={optionId(i)}
               role="option"
               aria-selected={i === index}
@@ -462,7 +541,12 @@ export function SlashPanel({
               <span className={styles.slashLabel}>
                 {item.person ? `@${item.label}` : item.label}
               </span>
-              {item.hint && <kbd className={styles.slashHint}>{item.hint}</kbd>}
+              {item.hint &&
+                (item.session ? (
+                  <span className={styles.slashNote}>{item.hint}</span>
+                ) : (
+                  <kbd className={styles.slashHint}>{item.hint}</kbd>
+                ))}
             </li>
           ))}
         </ul>

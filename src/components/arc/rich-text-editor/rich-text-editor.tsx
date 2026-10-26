@@ -34,6 +34,7 @@ import {
   Code,
   Heading1,
   Heading2,
+  Heading3,
   Italic,
   Link,
   Quote,
@@ -61,9 +62,15 @@ export type BlockType = 'p' | 'h1' | 'h2' | 'h3' | 'ul' | 'ol' | 'blockquote' | 
 
 const ZWSP = /\u200b/g
 const MENTION_HREF = /^\/people\/\d+$/
+// A course session named inline with #, and one placed as a block from the / menu.
+const SESSION_HREF = /^session:[A-Za-z0-9_-]{1,64}$/
+const SESSION_BLOCK_HREF = /^session-block:([A-Za-z0-9_-]{1,64})$/
 const escapeHtml = (value: string) =>
   value.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;')
-const safeUrl = (url: string) => /^(https?:|mailto:|tel:|\/|#)/i.test(url.trim())
+const safeUrl = (url: string) =>
+  /^(https?:|mailto:|tel:|\/|#)/i.test(url.trim()) ||
+  SESSION_HREF.test(url) ||
+  SESSION_BLOCK_HREF.test(url)
 
 /** Adds a scheme to bare domains so `example.com/docs` becomes a working link. */
 export function normalizeUrl(input: string) {
@@ -123,9 +130,22 @@ function listMarkdown(lines: string[]) {
   return html
 }
 
-/** Converts Markdown to the editor's HTML: headings (three levels), lists, quotes, fenced code, rules, and inline marks. */
-export function markdownToHtml(markdown: string) {
-  const lines = markdown.replace(/\r\n?/g, '\n').split('\n')
+/**
+ * Converts Markdown to the editor's HTML: headings (three levels), lists, quotes, fenced code, rules, and inline marks.
+ * A session block (`::session[id]`) becomes a link the editor shows by `sessionLabel`.
+ */
+export function markdownToHtml(
+  markdown: string,
+  { sessionLabel }: { sessionLabel?: (id: string) => string } = {},
+) {
+  const lines = markdown
+    .replace(/\r\n?/g, '\n')
+    .replace(
+      /::session\[([A-Za-z0-9_-]{1,64})\]/g,
+      (_, id: string) =>
+        `[${(sessionLabel?.(id) ?? 'Session').replace(/[[\]]/g, '')}](session-block:${id})`,
+    )
+    .split('\n')
   const out: string[] = []
   const paragraph: string[] = []
   const flush = () => {
@@ -223,10 +243,17 @@ function inlineToMarkdown(node: Node): string {
         break
       case 'A': {
         const href = element.getAttribute('href') ?? ''
+        const block = SESSION_BLOCK_HREF.exec(href)
+        if (block) {
+          out += `::session[${block[1]}]`
+          break
+        }
         // A mention shows only the name; it is stored as `[@Name](/people/{id})`.
         const label = MENTION_HREF.test(href)
           ? `@${(element.textContent ?? '').replace(ZWSP, '').replace(/^@/, '').replace(/[[\]]/g, '')}`
-          : inlineToMarkdown(element)
+          : SESSION_HREF.test(href)
+            ? (element.textContent ?? '').replace(ZWSP, '').replace(/[[\]]/g, '')
+            : inlineToMarkdown(element)
         out += `[${label}](${href})`
         break
       }
@@ -764,6 +791,22 @@ function convertBlock(block: HTMLElement, type: Exclude<BlockType, 'hr'>): HTMLE
   return next
 }
 
+/** Every Heading 1 becomes a Heading 2, for an editor whose largest heading is 2. */
+function lowerTopHeadings(root: ParentNode) {
+  root.querySelectorAll('h1').forEach((heading) => {
+    const next = document.createElement('h2')
+    moveChildren(heading, next)
+    replaceNode(heading, next)
+  })
+}
+
+/** A session block reads as one piece: the caret steps over it and Backspace takes it whole. */
+const sealBlock = (link: Element) => link.setAttribute('contenteditable', 'false')
+
+/** The words a session block shows in the editor. */
+export const sessionBlockText = (session: SessionSuggestion) =>
+  session.hint ? `${session.label} · ${session.hint}` : session.label
+
 /** Makes sure a paragraph follows a block the caret cannot type after, such as a rule or a code block at the end. */
 function paragraphAfter(block: Element) {
   const next = block.nextElementSibling
@@ -908,6 +951,12 @@ export interface RichTextEditorProps {
   mentionSuggestions?: { id: number; name: string }[]
   /** The accessible name of the @ menu's listbox. */
   mentionOpenLabel?: string
+  /** Course sessions: # names one inline, the / menu places one as a block of its own. Without them # stays a character. */
+  sessionSuggestions?: SessionSuggestion[]
+  /** Accessible names of the # menu's listbox and of the / menu when it lists sessions too. */
+  sessionLabels?: { list: string; blocks: string }
+  /** The largest heading the writer may make. At 2 there is no Heading 1: `# ` stays text and loaded or pasted ones become Heading 2. */
+  minHeading?: 1 | 2
   readOnly?: boolean
   autoFocus?: boolean
   'aria-label'?: string
@@ -931,8 +980,11 @@ type Formats = {
   link: string | null
   block: string
 }
+/** A course session the editor may name or place: `mention` is the inline text, `label` the menu row and block. */
+export type SessionSuggestion = { id: string; label: string; mention: string; hint?: string }
+
 export type Slash = {
-  kind: 'slash' | 'mention'
+  kind: 'slash' | 'mention' | 'session'
   node: Text
   offset: number
   query: string
@@ -1067,6 +1119,9 @@ export const RichTextEditor = forwardRef<RichTextEditorHandle, RichTextEditorPro
       blockHint = 'Type / for blocks',
       mentionSuggestions,
       mentionOpenLabel,
+      sessionSuggestions,
+      sessionLabels,
+      minHeading = 1,
       readOnly = false,
       autoFocus = false,
       'aria-label': ariaLabel = 'Editor',
@@ -1293,15 +1348,34 @@ export const RichTextEditor = forwardRef<RichTextEditorHandle, RichTextEditorPro
     )
 
     /* Content in and out. */
-    const load = useCallback((html: string) => {
-      const editor = editorRef.current
-      if (!editor) return
-      editor.innerHTML = sanitizeHtml(html) || '<p><br></p>'
-      editor
-        .querySelectorAll('p, h1, h2, h3, li, blockquote, pre')
-        .forEach((block) => ensureFilled(block as HTMLElement))
-      hinted.current = null
-    }, [])
+    const load = useCallback(
+      (html: string) => {
+        const editor = editorRef.current
+        if (!editor) return
+        editor.innerHTML = sanitizeHtml(html) || '<p><br></p>'
+        editor
+          .querySelectorAll('p, h1, h2, h3, li, blockquote, pre')
+          .forEach((block) => ensureFilled(block as HTMLElement))
+        editor.querySelectorAll('a[href^="session-block:"]').forEach(sealBlock)
+        if (minHeading === 2) lowerTopHeadings(editor)
+        hinted.current = null
+      },
+      [minHeading],
+    )
+    const sessionsRef = useRef(sessionSuggestions)
+    useEffect(() => {
+      sessionsRef.current = sessionSuggestions
+    }, [sessionSuggestions])
+    const fromMarkdown = useCallback(
+      (markdown: string) =>
+        markdownToHtml(markdown, {
+          sessionLabel: (id) => {
+            const found = sessionsRef.current?.find((session) => session.id === id)
+            return found ? sessionBlockText(found) : 'Session'
+          },
+        }),
+      [],
+    )
 
     const initial = useRef({ value, defaultValue, defaultMarkdown, autoFocus })
     useLayoutEffect(() => {
@@ -1312,7 +1386,7 @@ export const RichTextEditor = forwardRef<RichTextEditorHandle, RichTextEditorPro
         start.value ??
           start.defaultValue ??
           (start.defaultMarkdown !== undefined
-            ? markdownToHtml(start.defaultMarkdown)
+            ? fromMarkdown(start.defaultMarkdown)
             : '<p><br></p>'),
       )
       history.current = {
@@ -1325,7 +1399,7 @@ export const RichTextEditor = forwardRef<RichTextEditorHandle, RichTextEditorPro
         editor.focus()
         writeOffsets(editor, null)
       }
-    }, [emit, load, reportHistory])
+    }, [emit, fromMarkdown, load, reportHistory])
 
     useEffect(() => {
       if (value === undefined || value === lastEmitted.current) return
@@ -1335,97 +1409,100 @@ export const RichTextEditor = forwardRef<RichTextEditorHandle, RichTextEditorPro
     }, [emit, load, record, value])
 
     /* Markdown shortcuts, applied right after the character that completes them. */
-    const shortcut = useCallback((data: string | null) => {
-      const editor = editorRef.current
-      const selection = window.getSelection()
-      if (!editor || !data || !selection?.rangeCount) return false
-      const range = selection.getRangeAt(0)
-      if (!range.collapsed) return false
-      const block = blockAt(editor, range.startContainer)
-      if (!block || block.nodeName === 'PRE') return false
-      const before = textBefore(block, range)
-      const plainBlock = block.nodeName === 'P' || block.nodeName === 'DIV'
+    const shortcut = useCallback(
+      (data: string | null) => {
+        const editor = editorRef.current
+        const selection = window.getSelection()
+        if (!editor || !data || !selection?.rangeCount) return false
+        const range = selection.getRangeAt(0)
+        if (!range.collapsed) return false
+        const block = blockAt(editor, range.startContainer)
+        if (!block || block.nodeName === 'PRE') return false
+        const before = textBefore(block, range)
+        const plainBlock = block.nodeName === 'P' || block.nodeName === 'DIV'
 
-      if (data === ' ' && plainBlock && block.parentElement === editor) {
-        const rule: [RegExp, Exclude<BlockType, 'hr'>][] = [
-          [/^# $/, 'h1'],
-          [/^## $/, 'h2'],
-          [/^### $/, 'h3'],
-          [/^[-*+] $/, 'ul'],
-          [/^\d+[.)] $/, 'ol'],
-          [/^> $/, 'blockquote'],
-        ]
-        const match = rule.find(([pattern]) => pattern.test(before))
-        if (match) {
-          const prefix = document.createRange()
-          prefix.setStart(block, 0)
-          prefix.setEnd(range.startContainer, range.startOffset)
-          prefix.deleteContents()
-          const next = convertBlock(block, match[1])
+        if (data === ' ' && plainBlock && block.parentElement === editor) {
+          const rule: [RegExp, Exclude<BlockType, 'hr'>][] = [
+            ...(minHeading === 2 ? [] : [[/^# $/, 'h1'] as [RegExp, 'h1']]),
+            [/^## $/, 'h2'],
+            [/^### $/, 'h3'],
+            [/^[-*+] $/, 'ul'],
+            [/^\d+[.)] $/, 'ol'],
+            [/^> $/, 'blockquote'],
+          ]
+          const match = rule.find(([pattern]) => pattern.test(before))
+          if (match) {
+            const prefix = document.createRange()
+            prefix.setStart(block, 0)
+            prefix.setEnd(range.startContainer, range.startOffset)
+            prefix.deleteContents()
+            const next = convertBlock(block, match[1])
+            placeAtStart(next)
+            return true
+          }
+        }
+        if (
+          data === '-' &&
+          plainBlock &&
+          block.parentElement === editor &&
+          before === '---' &&
+          visibleText(block) === '---'
+        ) {
+          const rule = document.createElement('hr')
+          replaceNode(block, rule)
+          placeAtStart(paragraphAfter(rule))
+          return true
+        }
+        if (
+          data === '`' &&
+          plainBlock &&
+          block.parentElement === editor &&
+          before === '```' &&
+          visibleText(block) === '```'
+        ) {
+          block.textContent = ''
+          const next = convertBlock(block, 'pre')
           placeAtStart(next)
           return true
         }
-      }
-      if (
-        data === '-' &&
-        plainBlock &&
-        block.parentElement === editor &&
-        before === '---' &&
-        visibleText(block) === '---'
-      ) {
-        const rule = document.createElement('hr')
-        replaceNode(block, rule)
-        placeAtStart(paragraphAfter(rule))
-        return true
-      }
-      if (
-        data === '`' &&
-        plainBlock &&
-        block.parentElement === editor &&
-        before === '```' &&
-        visibleText(block) === '```'
-      ) {
-        block.textContent = ''
-        const next = convertBlock(block, 'pre')
-        placeAtStart(next)
-        return true
-      }
-      const node = range.startContainer
-      if (!isText(node) || node.parentElement?.closest('code')) return false
-      const text = node.data.slice(0, range.startOffset)
-      const inline: [RegExp, string][] = [
-        [/(\*\*|__)([^*_\s](?:[^*_]*[^*_\s])?)\1$/, 'strong'],
-        [/~~([^~\s](?:[^~]*[^~\s])?)~~$/, 's'],
-        [/`([^`]+)`$/, 'code'],
-        [/(?:^|[^*\w])(\*([^*\s](?:[^*]*[^*\s])?)\*)$/, 'em'],
-        [/(?:^|[^_\w])(_([^_\s](?:[^_]*[^_\s])?)_)$/, 'em'],
-      ]
-      for (const [pattern, tag] of inline) {
-        const match = pattern.exec(text)
-        if (!match) continue
-        const whole = tag === 'em' ? match[1]! : match[0]
-        const inner =
-          tag === 'em'
-            ? match[2]!
-            : tag === 'code'
-              ? match[1]!
-              : tag === 's'
+        const node = range.startContainer
+        if (!isText(node) || node.parentElement?.closest('code')) return false
+        const text = node.data.slice(0, range.startOffset)
+        const inline: [RegExp, string][] = [
+          [/(\*\*|__)([^*_\s](?:[^*_]*[^*_\s])?)\1$/, 'strong'],
+          [/~~([^~\s](?:[^~]*[^~\s])?)~~$/, 's'],
+          [/`([^`]+)`$/, 'code'],
+          [/(?:^|[^*\w])(\*([^*\s](?:[^*]*[^*\s])?)\*)$/, 'em'],
+          [/(?:^|[^_\w])(_([^_\s](?:[^_]*[^_\s])?)_)$/, 'em'],
+        ]
+        for (const [pattern, tag] of inline) {
+          const match = pattern.exec(text)
+          if (!match) continue
+          const whole = tag === 'em' ? match[1]! : match[0]
+          const inner =
+            tag === 'em'
+              ? match[2]!
+              : tag === 'code'
                 ? match[1]!
-                : match[2]!
-        const from = range.startOffset - whole.length
-        node.splitText(range.startOffset)
-        const middle = node.splitText(from)
-        const element = document.createElement(tag)
-        element.textContent = inner
-        replaceNode(middle, element)
-        // A zero width space after the mark keeps the next keystroke outside it; output strips it.
-        const exit = document.createTextNode('\u200b')
-        insertAfter(element, exit)
-        placeCaret(exit, 1)
-        return true
-      }
-      return false
-    }, [])
+                : tag === 's'
+                  ? match[1]!
+                  : match[2]!
+          const from = range.startOffset - whole.length
+          node.splitText(range.startOffset)
+          const middle = node.splitText(from)
+          const element = document.createElement(tag)
+          element.textContent = inner
+          replaceNode(middle, element)
+          // A zero width space after the mark keeps the next keystroke outside it; output strips it.
+          const exit = document.createTextNode('\u200b')
+          insertAfter(element, exit)
+          placeCaret(exit, 1)
+          return true
+        }
+        return false
+      },
+      [minHeading],
+    )
 
     const applyBlock = useCallback((type: BlockType, target?: HTMLElement | null) => {
       const editor = editorRef.current
@@ -1467,6 +1544,28 @@ export const RichTextEditor = forwardRef<RichTextEditorHandle, RichTextEditorPro
       }
     }, [])
 
+    /* A session block takes a paragraph of its own, in place of an empty line or after the caret's block. */
+    const placeSessionBlock = useCallback(
+      (open: Slash, caret: number, session: SessionSuggestion) => {
+        const editor = editorRef.current
+        if (!editor) return
+        open.node.deleteData(open.offset, Math.max(1, caret - open.offset))
+        const block = blockAt(editor, open.node)
+        let top: Node = block ?? open.node
+        while (top.parentNode && top.parentNode !== editor) top = top.parentNode
+        const link = document.createElement('a')
+        link.setAttribute('href', `session-block:${session.id}`)
+        link.textContent = sessionBlockText(session)
+        sealBlock(link)
+        const card = document.createElement('p')
+        card.appendChild(link)
+        if (block?.nodeName === 'P' && !visibleText(block)) replaceNode(block, card)
+        else insertAfter(top, card)
+        placeAtStart(paragraphAfter(card))
+      },
+      [],
+    )
+
     const slashT = useSlashTrigger({
       slash,
       setSlash,
@@ -1484,6 +1583,9 @@ export const RichTextEditor = forwardRef<RichTextEditorHandle, RichTextEditorPro
       ensureFilled,
       announce: setAnnounce,
       members: mentionSuggestions,
+      sessions: sessionSuggestions,
+      minHeading,
+      placeSessionBlock,
     })
 
     /* Inline marks and links. */
@@ -1919,9 +2021,10 @@ export const RichTextEditor = forwardRef<RichTextEditorHandle, RichTextEditorPro
         const source = html
           ? sanitizeHtml(html)
           : markdownish || text.includes('\n\n')
-            ? markdownToHtml(text)
+            ? fromMarkdown(text)
             : ''
         const fragment = source ? parseHtml(source) : null
+        if (fragment && minHeading === 2) lowerTopHeadings(fragment)
         const single =
           fragment && fragment.children.length === 1 && fragment.firstElementChild!.nodeName === 'P'
         // Plain text, code blocks, and list items take the text as it is; everything else keeps its structure.
@@ -2029,7 +2132,7 @@ export const RichTextEditor = forwardRef<RichTextEditorHandle, RichTextEditorPro
           emit()
         },
         setMarkdown: (markdown) => {
-          load(markdownToHtml(markdown))
+          load(fromMarkdown(markdown))
           record('command')
           emit()
         },
@@ -2044,7 +2147,7 @@ export const RichTextEditor = forwardRef<RichTextEditorHandle, RichTextEditorPro
           return editorRef.current
         },
       }),
-      [emit, load, record, redo, undo],
+      [emit, fromMarkdown, load, record, redo, undo],
     )
 
     /* Toolbar geometry: one surface whose size springs between faces and whose position glides with the selection. */
@@ -2265,20 +2368,41 @@ export const RichTextEditor = forwardRef<RichTextEditorHandle, RichTextEditorPro
                       </ToolButton>
                       <span className={styles.blockTools}>
                         <span className={styles.divider} aria-hidden="true" />
-                        <ToolButton
-                          label="Heading 1"
-                          pressed={formats.block === 'h1'}
-                          onPress={() => run(() => applyBlock('h1'))}
-                        >
-                          <Heading1 {...icon} />
-                        </ToolButton>
-                        <ToolButton
-                          label="Heading 2"
-                          pressed={formats.block === 'h2'}
-                          onPress={() => run(() => applyBlock('h2'))}
-                        >
-                          <Heading2 {...icon} />
-                        </ToolButton>
+                        {minHeading === 2 ? (
+                          <>
+                            <ToolButton
+                              label="Heading 2"
+                              pressed={formats.block === 'h2'}
+                              onPress={() => run(() => applyBlock('h2'))}
+                            >
+                              <Heading2 {...icon} />
+                            </ToolButton>
+                            <ToolButton
+                              label="Heading 3"
+                              pressed={formats.block === 'h3'}
+                              onPress={() => run(() => applyBlock('h3'))}
+                            >
+                              <Heading3 {...icon} />
+                            </ToolButton>
+                          </>
+                        ) : (
+                          <>
+                            <ToolButton
+                              label="Heading 1"
+                              pressed={formats.block === 'h1'}
+                              onPress={() => run(() => applyBlock('h1'))}
+                            >
+                              <Heading1 {...icon} />
+                            </ToolButton>
+                            <ToolButton
+                              label="Heading 2"
+                              pressed={formats.block === 'h2'}
+                              onPress={() => run(() => applyBlock('h2'))}
+                            >
+                              <Heading2 {...icon} />
+                            </ToolButton>
+                          </>
+                        )}
                         <ToolButton
                           label="Quote"
                           pressed={formats.block === 'blockquote'}
@@ -2359,7 +2483,15 @@ export const RichTextEditor = forwardRef<RichTextEditorHandle, RichTextEditorPro
               results={slashT.slashResults}
               index={slashT.slashIndex}
               reduced={reduced}
-              label={slashT.slash.kind === 'mention' ? (mentionOpenLabel ?? 'Members') : 'Blocks'}
+              label={
+                slashT.slash.kind === 'mention'
+                  ? (mentionOpenLabel ?? 'Members')
+                  : slashT.slash.kind === 'session'
+                    ? (sessionLabels?.list ?? 'Sessions')
+                    : sessionSuggestions?.length
+                      ? (sessionLabels?.blocks ?? 'Blocks and sessions')
+                      : 'Blocks'
+              }
               setActive={setSlashActive}
               choose={slashT.choose}
             />

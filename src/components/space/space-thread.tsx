@@ -9,8 +9,10 @@ import {
   CommentThread,
   type CommentAuthor,
   type CommentThreadEvent,
+  type CommentTopic,
   type ThreadComment as ArcComment,
   matchMentions,
+  matchTopics,
 } from '@/components/arc/comment-thread/comment-thread'
 import {
   commentCreateAction,
@@ -34,6 +36,7 @@ import { saveErrorKey } from './composer'
 import { ConsentSheet } from './consent-sheet'
 import { PersonHover, type PersonCard } from './person-hover'
 import { useRefreshPost } from './post-dialog-link'
+import { SessionChip, type SessionLinks } from './session-chip'
 import styles from './space.module.css'
 
 const EMOJI: Record<ReactionKind, string> = {
@@ -46,6 +49,8 @@ const EMOJI: Record<ReactionKind, string> = {
 }
 const KIND_OF = new Map(REACTION_KINDS.map((k) => [EMOJI[k], k]))
 const STORED_MENTION = /\[@([^\]]*)\]\(\/people\/(\d+)\)/g
+const STORED_SESSION =
+  /\[#?([^\]\n]*)\]\(session:([A-Za-z0-9_-]{1,64})\)|::session\[([A-Za-z0-9_-]{1,64})\]/g
 
 /** In the feed, a long thread opens on its newest comments. */
 const PREVIEW = 2
@@ -72,6 +77,7 @@ export function SpaceThread({
   notice,
   now,
   titles,
+  sessions,
   preview = false,
   limit,
   step,
@@ -90,6 +96,8 @@ export function SpaceThread({
   now: string
   /** Page titles by address, for the bare links in comment text */
   titles: Record<string, string>
+  /** The course sessions a comment may name with #; absent outside a course space */
+  sessions?: SessionLinks | null
   /** Opens on the newest comments, with a button for the rest */
   preview?: boolean
   /** How many top-level comments show first; defaults to 2 in a preview and all otherwise */
@@ -125,6 +133,27 @@ export function SpaceThread({
     [people],
   )
 
+  // Each session reads "#3 Title" in the text, by its current number and title.
+  const topics: CommentTopic[] = useMemo(
+    () =>
+      Object.entries(sessions?.facts ?? {}).map(([id, fact]) => ({
+        id,
+        name: `${fact.n}${fact.title ? ` ${fact.title}` : ''}`,
+      })),
+    [sessions],
+  )
+  const topicOf = useMemo(() => new Map(topics.map((topic) => [topic.id, topic])), [topics])
+  /** A stored session reads as "#name"; one the course dropped says so, and an unread course keeps the stored words. */
+  const toShown = (body: string) =>
+    body.replace(
+      STORED_SESSION,
+      (_, label: string | undefined, id: string | undefined, block: string | undefined) => {
+        const topic = topicOf.get((id ?? block)!)
+        if (topic) return `#${topic.name}`
+        return sessions?.known ? tp('sessionRemoved') : `#${label || tp('sessionMention')}`
+      },
+    )
+
   const filesOf = new Map<string, SpaceFileRef[]>()
   const toArc = (c: ThreadComment, replies?: ThreadComment[]): ArcComment => {
     if (c.files.length) filesOf.set(String(c.id), c.files)
@@ -137,9 +166,11 @@ export function SpaceThread({
         avatar: person?.photo ?? undefined,
       },
       // Stored mentions read as "@Name", with the person's current name; the ids stay beside the text.
-      body: c.body.replace(
-        STORED_MENTION,
-        (_, name: string, id: string) => `@${byId.get(Number(id))?.name ?? name}`,
+      body: toShown(
+        c.body.replace(
+          STORED_MENTION,
+          (_, name: string, id: string) => `@${byId.get(Number(id))?.name ?? name}`,
+        ),
       ),
       mentions: [...c.body.matchAll(STORED_MENTION)].map(([, name, id]) => {
         const person = byId.get(Number(id))
@@ -171,12 +202,25 @@ export function SpaceThread({
    * composer. A name nobody picked links only when one member has it.
    */
   const toStored = (text: string, mentions: CommentAuthor[]) => {
+    const found = [
+      ...matchMentions(text, mentions, authors).flatMap(({ start, end, person }) => {
+        const sameName = authors.filter((a) => a.name === person.name).length
+        if (!mentions.includes(person) && sameName > 1) return []
+        return [
+          { start, end, token: `[@${person.name.replace(/[[\]]/g, '')}](/people/${person.id})` },
+        ]
+      }),
+      ...matchTopics(text, topics).map(({ start, end, topic }) => ({
+        start,
+        end,
+        token: `[#${topic.name.replace(/[[\]]/g, '')}](session:${topic.id})`,
+      })),
+    ].sort((a, b) => a.start - b.start)
     let out = ''
     let from = 0
-    for (const { start, end, person } of matchMentions(text, mentions, authors)) {
-      const sameName = authors.filter((a) => a.name === person.name).length
-      if (!mentions.includes(person) && sameName > 1) continue
-      out += `${text.slice(from, start)}[@${person.name.replace(/[[\]]/g, '')}](/people/${person.id})`
+    for (const { start, end, token } of found) {
+      if (start < from) continue
+      out += `${text.slice(from, start)}${token}`
       from = end
     }
     return out + text.slice(from)
@@ -312,6 +356,8 @@ export function SpaceThread({
           return <PersonHover person={person}>{chip}</PersonHover>
         }}
         renderText={(text) => <LinkedText text={text} titles={titles} />}
+        topics={topics}
+        renderTopic={(topic, text) => <SessionChip id={topic.id} links={sessions} label={text} />}
         renderExtra={(c) => {
           const attached = filesOf.get(c.id)
           return attached ? <Attachments files={attached} label={tp('files')} compact /> : null
@@ -375,6 +421,7 @@ export function SpaceThread({
               you: String(you),
             }),
           mentions: t('mentions'),
+          topics: t('sessions'),
         }}
       />
       {error && (

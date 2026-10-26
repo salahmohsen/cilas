@@ -30,7 +30,14 @@ import {
 import { personOf } from '@/access'
 import { ABOUT_MAX } from '@/lib/space-about'
 import { mentionSafelist } from '@/lib/space-members'
-import { mySpaces, postSpace, postView, spaceEvents, spaceFeed } from '@/lib/spaces-data'
+import {
+  mySpaces,
+  postSpace,
+  postView,
+  sessionCounts,
+  spaceEvents,
+  spaceFeed,
+} from '@/lib/spaces-data'
 
 let payload: Payload
 let modeBefore: 'off' | 'trial' | 'on' = 'off'
@@ -1560,7 +1567,7 @@ describe('spaces write', () => {
     ).toBe(0)
   })
 
-  it('a moderator attaches a session of the course to an announcement; readers see it through their access', async () => {
+  it('any member names sessions of the course with # or places them as blocks; others turn into plain text', async () => {
     const setCourse = (data: Record<string, unknown>) =>
       payload.update({
         collection: 'courses',
@@ -1573,93 +1580,116 @@ describe('spaces write', () => {
     })
     const [one, two] = (updated.sessions ?? []).map((s) => s.id!)
     expect(one && two).toBeTruthy()
-
-    const post = (
-      user: User,
-      kind: 'announcement' | 'discussion',
-      session: string,
-      space = courseSpace.id,
-    ) => postCreate({ payload, user, space, kind, body: 'QA probe session', session })
-
-    // A member writes no announcement at all, but may link a discussion to a session of this course.
-    expect(await post(student, 'announcement', one!)).toMatchObject({
-      ok: false,
-      error: 'announcement',
-    })
-    const memberLinked = await post(student, 'discussion', one!)
-    expect(memberLinked.ok).toBe(true)
-    if (memberLinked.ok) {
-      track('space-posts', memberLinked.data.id)
-      const linked = await payload.findByID({
-        collection: 'space-posts',
-        id: memberLinked.data.id,
-        depth: 0,
-        overrideAccess: true,
-      })
-      expect(linked.course_session).toBe(one)
+    const mention = (id: string, label: string) => `[#${label}](session:${id})`
+    const block = (id: string) => `::session[${id}]`
+    const stored = async (collection: 'space-posts' | 'space-comments', id: number) =>
+      (await payload.findByID({ collection, id, depth: 0, overrideAccess: true })).body
+    const write = async (user: User, body: string, space = courseSpace.id) => {
+      const made = await postCreate({ payload, user, space, kind: 'discussion', body })
+      if (made.ok) track('space-posts', made.data.id)
+      return made
     }
-    // Only this course's session, only in its course space, for every kind.
-    expect(await post(student, 'discussion', 'not-a-session')).toMatchObject({
-      ok: false,
-      error: 'session',
-    })
-    expect(await post(student, 'discussion', one!, community.id)).toMatchObject({
-      ok: false,
-      error: 'session',
-    })
-    expect(await post(fellow, 'discussion', 'not-a-session')).toMatchObject({
-      ok: false,
-      error: 'session',
-    })
-    expect(await post(fellow, 'announcement', 'not-a-session')).toMatchObject({
-      ok: false,
-      error: 'session',
-    })
-    expect(await post(admin, 'announcement', one!, community.id)).toMatchObject({
-      ok: false,
-      error: 'session',
-    })
 
-    const made = await post(fellow, 'announcement', two!)
+    // A member (not only a fellow) names one session inline and places another as a block.
+    const body = `QA probe ${mention(one!, '1 Probe one')} today\n\n${block(two!)}\n\nmore`
+    const made = await write(student, body)
     expect(made.ok).toBe(true)
     if (!made.ok) return
-    track('space-posts', made.data.id)
-    const row = await payload.findByID({
+    expect(await stored('space-posts', made.data.id)).toBe(body)
+
+    // An unknown or foreign session turns into plain text; a block of one goes.
+    const foreign = await write(
+      student,
+      `QA probe ${mention('not-a-session', '9 Gone')}\n\n${block('not-a-session')}\n\nend`,
+    )
+    expect(foreign.ok).toBe(true)
+    if (foreign.ok)
+      expect(await stored('space-posts', foreign.data.id)).toBe('QA probe #9 Gone\n\nend')
+    // Outside a course space no session is known.
+    const elsewhere = await write(admin, `QA probe ${mention(one!, '1 Probe one')}`, community.id)
+    expect(elsewhere.ok).toBe(true)
+    if (elsewhere.ok)
+      expect(await stored('space-posts', elsewhere.data.id)).toBe('QA probe #1 Probe one')
+    // A post of nothing but unknown sessions has nothing left to post.
+    expect(await write(student, block('not-a-session'))).toMatchObject({
+      ok: false,
+      error: 'session',
+    })
+
+    // At most 10 mentions and 3 blocks; the rest turn into plain text.
+    const many = await write(
+      fellow,
+      [
+        `QA probe ${Array.from({ length: 12 }, (_, i) => mention(one!, `m${i}`)).join(' ')}`,
+        ...Array.from({ length: 4 }, () => block(two!)),
+      ].join('\n\n'),
+    )
+    expect(many.ok).toBe(true)
+    if (many.ok) {
+      const text = await stored('space-posts', many.data.id)
+      expect(text.match(/\(session:/g)).toHaveLength(10)
+      expect(text).toContain('#m10 #m11')
+      expect(text.match(/::session\[/g)).toHaveLength(3)
+    }
+
+    // A comment names sessions too, checked the same way; an edit is checked again.
+    const comment = await commentCreate({
+      payload,
+      user: student,
+      post: made.data.id,
+      body: `QA ${mention(two!, '2 Probe two')} and ${mention('nope', 'x')}`,
+    })
+    expect(comment.ok).toBe(true)
+    if (!comment.ok) return
+    track('space-comments', comment.data.id)
+    expect(await stored('space-comments', comment.data.id)).toBe(
+      `QA ${mention(two!, '2 Probe two')} and #x`,
+    )
+    await commentEdit({
+      payload,
+      user: student,
+      id: comment.data.id,
+      body: `QA ${mention('nope', 'y')} ${mention(one!, '1 Probe one')}`,
+    })
+    expect(await stored('space-comments', comment.data.id)).toBe(
+      `QA #y ${mention(one!, '1 Probe one')}`,
+    )
+
+    // A post linked by the older field still reads and counts.
+    const old = await payload.create({
       collection: 'space-posts',
-      id: made.data.id,
-      depth: 0,
+      data: {
+        space: courseSpace.id,
+        author: personOf(fellow),
+        kind: 'announcement',
+        body: 'QA probe old link',
+        course_session: two,
+        last_activity_at: new Date().toISOString(),
+      } as never,
       overrideAccess: true,
     })
-    expect(row.course_session).toBe(two)
+    track('space-posts', old.id)
 
-    const sessionFor = async (user: User) =>
-      (await spaceFeed(payload, user, courseSpace.id)).rows.find((r) => r.post.id === made.data.id)
-        ?.session
+    // Counts: a post is about a session once, whether its body, its thread or its link names it.
+    const feed = await spaceFeed(payload, fellow, courseSpace.id)
+    const { counts, named } = sessionCounts(feed.rows)
+    expect([...named.get(made.data.id)!].sort()).toEqual([one, two].sort())
+    const before = { one: counts.get(one!) ?? 0, two: counts.get(two!) ?? 0 }
+    expect(before.one).toBeGreaterThanOrEqual(2) // made (body and comment) and many
+    expect(named.get(old.id)).toEqual(new Set([two]))
+    expect(feed.rows.find((r) => r.post.id === old.id)?.session).toMatchObject({
+      state: 'shown',
+      session: two,
+    })
 
-    // The course is owner-only: its fellow reads the session, the student may not.
-    const shown = await sessionFor(fellow)
-    expect(shown).toMatchObject({ state: 'shown', session: two })
-    if (shown?.state === 'shown')
-      expect(shown.course.sessions?.map((s) => s.session_title)).toEqual(['Probe one', 'Probe two'])
-    expect(await sessionFor(student)).toEqual({ state: 'hidden' })
-    expect((await postView(payload, student, courseSpace, made.data.id))?.row.session).toEqual({
+    // The course is read through the reader's access: owner-only, the student may not read it.
+    expect(feed.sessions?.state).toBe('shown')
+    expect((await spaceFeed(payload, student, courseSpace.id)).sessions).toEqual({
       state: 'hidden',
     })
-
-    // Live data: a cancelled session shows cancelled; a removed one is gone.
-    await setCourse({
-      tier: 'community',
-      sessions: [
-        { id: one, session_title: 'Probe one' },
-        { id: two, session_title: 'Probe two', cancelled: true },
-      ],
+    expect((await postView(payload, student, courseSpace, made.data.id))?.sessions).toEqual({
+      state: 'hidden',
     })
-    const cancelled = await sessionFor(student)
-    expect(cancelled?.state).toBe('shown')
-    if (cancelled?.state === 'shown')
-      expect(cancelled.course.sessions?.find((s) => s.id === two)?.cancelled).toBe(true)
-    await setCourse({ tier: 'owner', sessions: [{ id: one, session_title: 'Probe one' }] })
-    expect(await sessionFor(fellow)).toEqual({ state: 'gone' })
     await setCourse({ sessions: [] })
   })
 
@@ -1701,7 +1731,7 @@ describe('spaces write', () => {
     })
     // Adding the sessions and the schedule is not a change of a session that existed.
     expect((await notices()).length).toBe(before)
-    const [one, two] = (weeks.sessions ?? []).map((s) => s.id!)
+    const [, two] = (weeks.sessions ?? []).map((s) => s.id!)
     const rows = (weeks.sessions ?? []).map((s) => ({ id: s.id!, session_title: s.session_title }))
 
     // Saving again with nothing different says nothing.

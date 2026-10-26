@@ -24,6 +24,7 @@ import { PostDialog } from './post-dialog-link'
 import { PostFoot } from './post-foot'
 import { PostLabels, type PostLabelItem } from './post-label'
 import { PostSession } from './post-session'
+import { sessionsFor, type SessionContext } from './session-block'
 import type { ThreadViewer } from './space-thread'
 import styles from './space.module.css'
 import { When } from './when'
@@ -43,6 +44,8 @@ export type FeedContext = {
   now: string
   /** Page titles of the page's bare links, read in one batch */
   titles: Record<string, string>
+  /** The course sessions posts and comments may name; absent outside a course space */
+  sessions?: SessionContext
 }
 
 /** Who wrote a post: the photo, then the name (with its card) above when it was posted. */
@@ -229,7 +232,12 @@ export async function FeedRow({
         {text && (
           <div id={`${id}-body`}>
             <Folded body={text} lines={8} more={t('readMore')} less={t('showLess')}>
-              <PostBody body={text} people={context.people} titles={context.titles} />
+              <PostBody
+                body={text}
+                people={context.people}
+                titles={context.titles}
+                sessions={sessionsFor(context.sessions, postHref)}
+              />
             </Folded>
           </div>
         )}
@@ -262,6 +270,7 @@ export async function FeedRow({
           notice={context.notice}
           now={context.now}
           titles={context.titles}
+          sessions={sessionsFor(context.sessions, postHref).links}
           preview
         />
       </article>

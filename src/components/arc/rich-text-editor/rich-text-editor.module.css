@@ -300,6 +300,9 @@
   background: var(--surface-raised);
   box-shadow: var(--shadow-floating);
 }
+.slash[data-wide] {
+  width: 320px;
+}
 .slash[data-above] {
   translate: 0 -100%;
 }
@@ -353,6 +356,17 @@
   text-overflow: ellipsis;
   white-space: nowrap;
 }
+.slashNote {
+  min-width: 0;
+  max-width: 40%;
+  flex: 0 1 auto;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: var(--text-muted);
+  font-size: var(--text-xs);
+  font-variant-numeric: tabular-nums;
+}
 .slashHint {
   flex: none;
   color: var(--text-muted);
@@ -373,4 +387,23 @@
   color: var(--mention, var(--accent-strong));
   font-weight: 500;
   text-decoration: none;
+}
+/* A session named with # reads like a mention; one placed with / sits on its own line as a quiet card. */
+.editor a[href^='session:'] {
+  color: var(--mention, var(--accent-strong));
+  font-weight: 500;
+  text-decoration: none;
+}
+.editor a[href^='session-block:'] {
+  display: block;
+  padding: 10px 12px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: var(--surface-muted);
+  color: var(--foreground);
+  font-size: var(--text-sm);
+  font-weight: 500;
+  text-decoration: none;
+  cursor: default;
+  user-select: none;
 }

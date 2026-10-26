@@ -95,6 +95,7 @@ export function EventEditDialog({
                 label={t('eventDescription')}
                 placeholder={t('placeholder_event')}
                 defaultMarkdown={initial.description}
+                minHeading={2}
                 onChange={(v) => setDescription(v.empty ? '' : v.markdown)}
               />
             </>

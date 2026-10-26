@@ -145,6 +145,7 @@ export function PostActions({
                 label={t('edit')}
                 hideLabel
                 defaultMarkdown={post.body}
+                minHeading={2}
                 onChange={(v) => setDraft(v.markdown)}
               />
               {error && (

@@ -17,6 +17,7 @@ import { EventCard, eventDescription } from './event-card'
 import { LinkPreviews } from './link-card'
 import { PostPhotos } from './photo-grid'
 import { PostBody } from './post-body'
+import { sessionContextOf, sessionsFor } from './session-block'
 import { PostDialog } from './post-dialog-link'
 import { PostFoot } from './post-foot'
 import { PostSession } from './post-session'
@@ -69,6 +70,7 @@ export async function loadPost(
       notice: NOTICE[locale === 'ar' ? 'ar' : 'en'],
       now: new Date().toISOString(),
       titles,
+      sessions: sessionContextOf(view.sessions),
     },
   }
 }
@@ -125,7 +127,12 @@ export async function PostArticle({
           {deleted ? (
             <p className={styles.meta}>{t('deletedNotice')}</p>
           ) : (
-            <PostBody body={text} people={context.people} titles={context.titles} />
+            <PostBody
+              body={text}
+              people={context.people}
+              titles={context.titles}
+              sessions={sessionsFor(context.sessions, href)}
+            />
           )}
         </div>
       )}
@@ -161,6 +168,7 @@ export async function PostArticle({
           notice={context.notice}
           now={context.now}
           titles={context.titles}
+          sessions={sessionsFor(context.sessions, href).links}
           preview={false}
           {...(dialog ? { limit: DIALOG_COMMENTS.limit, step: DIALOG_COMMENTS.step } : {})}
         />

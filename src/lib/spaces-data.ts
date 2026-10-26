@@ -15,6 +15,7 @@ import {
 } from '@/lib/spaces'
 import { cairoInstant } from '@/lib/cairo-day'
 import { expandSchedule } from '@/lib/schedule'
+import { sessionIdsIn } from '@/lib/session-refs'
 import type { Course, Programme, Space, SpacePost, User } from '@/payload-types'
 
 /**
@@ -507,47 +508,45 @@ export type SessionView =
   | { state: 'gone' }
   | { state: 'hidden' }
 
+/** The space's course as the reader may read it, for the sessions its posts name. */
+export type SessionRead =
+  { state: 'shown'; course: SessionCourse } | { state: 'gone' } | { state: 'hidden' }
+
 /**
- * Every post's session in one read of the course, through the reader's
- * access: a post shows no more of the course than its page would.
+ * The course behind a course space's session links and mentions, in one read
+ * through the reader's access: a post shows no more of the course than its
+ * page would. Null outside a course space.
  */
-const sessionViews = async (
+const sessionRead = async (
   payload: Payload,
   user: null | User,
-  posts: SpacePost[],
   courseId: number | null,
   locale: 'en' | 'ar',
-): Promise<Map<number, SessionView>> => {
-  const out = new Map<number, SessionView>()
-  const linked = posts.filter((p) => p.course_session && !p.deleted_at)
-  if (!linked.length) return out
-  const { docs } =
-    courseId != null
-      ? await payload.find({
-          collection: 'courses',
-          user: user ?? undefined,
-          depth: 0,
-          limit: 1,
-          locale,
-          overrideAccess: false,
-          select: {
-            slug: true,
-            title: true,
-            subtitle: true,
-            description: true,
-            sessions: true,
-            schedule: true,
-            session_unit: true,
-          },
-          where: { id: { equals: courseId } },
-        })
-      : { docs: [] }
+): Promise<SessionRead | null> => {
+  if (courseId == null) return null
+  const { docs } = await payload.find({
+    collection: 'courses',
+    user: user ?? undefined,
+    depth: 0,
+    limit: 1,
+    locale,
+    overrideAccess: false,
+    select: {
+      slug: true,
+      title: true,
+      subtitle: true,
+      description: true,
+      sessions: true,
+      schedule: true,
+      session_unit: true,
+    },
+    where: { id: { equals: courseId } },
+  })
   const course = docs[0] as SessionCourse | undefined
+  if (course) return { state: 'shown', course }
   // Unread, the course is either deleted or not the reader's to read; only
   // the server's count tells the two apart.
-  const unread: SessionView =
-    !course &&
-    courseId != null &&
+  const exists =
     (
       await payload.count({
         collection: 'courses',
@@ -555,20 +554,52 @@ const sessionViews = async (
         where: { id: { equals: courseId } },
       })
     ).totalDocs > 0
-      ? { state: 'hidden' }
-      : { state: 'gone' }
-  for (const p of linked) {
-    const session = p.course_session!
+  return exists ? { state: 'hidden' } : { state: 'gone' }
+}
+
+/** Each post's own session link (the older field), seen through the one course read. */
+const sessionViews = (posts: SpacePost[], read: SessionRead | null): Map<number, SessionView> => {
+  const out = new Map<number, SessionView>()
+  for (const p of posts) {
+    const session = p.course_session
+    if (!session || p.deleted_at) continue
     out.set(
       p.id,
-      !course
-        ? unread
-        : (course.sessions ?? []).some((s) => s.id === session)
-          ? { state: 'shown', course, session }
-          : { state: 'gone' },
+      !read
+        ? { state: 'gone' }
+        : read.state !== 'shown'
+          ? read
+          : (read.course.sessions ?? []).some((s) => s.id === session)
+            ? { state: 'shown', course: read.course, session }
+            : { state: 'gone' },
     )
   }
   return out
+}
+
+/**
+ * Which sessions each post is about (the one it links, and every one named
+ * in it or its thread), and how many posts are about each session: from the
+ * rows the feed already read, with no query of its own.
+ */
+export const sessionCounts = (
+  rows: FeedRow[],
+): { named: Map<number, Set<string>>; counts: Map<string, number> } => {
+  const named = new Map<number, Set<string>>()
+  const counts = new Map<string, number>()
+  for (const r of rows) {
+    const texts = [
+      r.post.body,
+      ...r.comments.flatMap((c) => [c.body, ...c.replies.map((reply) => reply.body)]),
+    ]
+    const ids = new Set([
+      ...(r.post.course_session ? [r.post.course_session] : []),
+      ...texts.flatMap((text) => (text ? sessionIdsIn(text) : [])),
+    ])
+    named.set(r.post.id, ids)
+    for (const id of ids) counts.set(id, (counts.get(id) ?? 0) + 1)
+  }
+  return { named, counts }
 }
 
 /** One row of the space feed (spec §7): the post with its roll-up counts. */
@@ -602,6 +633,8 @@ export const spaceFeed = async (
   locale: 'en' | 'ar' = 'en',
 ): Promise<{
   rows: FeedRow[]
+  /** The course its posts' sessions come from; null outside a course space */
+  sessions: SessionRead | null
   settings: SpacesSettings
   archived: boolean
   lastMeeting: string | null
@@ -625,12 +658,12 @@ export const spaceFeed = async (
   })
 
   const postIds = docs.map((p) => p.id)
-  const [threads, votes, rsvps, sessions, { docs: reactions }, { docs: postFiles }] =
-    await Promise.all([
+  const [threads, votes, rsvps, read, { docs: reactions }, { docs: postFiles }] = await Promise.all(
+    [
       postThreads(payload, user, postIds),
       voteViews(payload, user, docs, locale),
       rsvpViews(payload, user, docs, locale),
-      sessionViews(payload, user, docs, row.kind === 'course' ? relId(row.course) : null, locale),
+      sessionRead(payload, user, row.kind === 'course' ? relId(row.course) : null, locale),
       postIds.length
         ? payload.find({
             collection: 'space-reactions',
@@ -653,8 +686,10 @@ export const spaceFeed = async (
             where: { and: [{ post: { in: postIds } }, { comment: { exists: false } }] },
           })
         : Promise.resolve({ docs: [] }),
-    ])
+    ],
+  )
   const reactionsOf = tally(reactions, (r) => relId(r.post), user)
+  const sessions = sessionViews(docs, read)
   const filesOf = new Map<number, SpaceFileRef[]>()
   for (const f of postFiles) {
     const pid = relId(f.post as never)
@@ -673,7 +708,7 @@ export const spaceFeed = async (
     rsvp: rsvps.get(p.id) ?? null,
     session: sessions.get(p.id) ?? null,
   }))
-  return { rows, settings, archived, lastMeeting, daysSince }
+  return { rows, sessions: read, settings, archived, lastMeeting, daysSince }
 }
 
 /** A private file on a post or comment (ADR 0008), served through Payload's read rule. */
@@ -707,6 +742,8 @@ export type PostView = {
   row: FeedRow
   files: SpaceFileRef[]
   comments: TopComment[]
+  /** The course its sessions come from; null outside a course space */
+  sessions: SessionRead | null
   /** Deleted with comments: the body is gone, the thread stays (spec §3) */
   deleted: boolean
   archived: boolean
@@ -868,19 +905,13 @@ export const postView = async (
     .catch(() => null)
   if (!post || relId(post.space as never) !== space.id) return null
 
-  const [{ archived }, threads, votes, rsvps, sessions, { docs: reactions }, { docs: files }] =
+  const [{ archived }, threads, votes, rsvps, read, { docs: reactions }, { docs: files }] =
     await Promise.all([
       archiveState(payload, space),
       postThreads(payload, user, [post.id]),
       voteViews(payload, user, [post], locale),
       rsvpViews(payload, user, [post], locale),
-      sessionViews(
-        payload,
-        user,
-        [post],
-        space.kind === 'course' ? relId(space.course) : null,
-        locale,
-      ),
+      sessionRead(payload, user, space.kind === 'course' ? relId(space.course) : null, locale),
       payload.find({
         collection: 'space-reactions',
         user: user ?? undefined,
@@ -902,6 +933,7 @@ export const postView = async (
     ])
   const onPost = tally(reactions, (r) => relId(r.post), user)
   const thread = threads.get(post.id)
+  const sessions = sessionViews([post], read)
 
   const deleted = !!post.deleted_at
   return {
@@ -919,6 +951,7 @@ export const postView = async (
     },
     files: deleted ? [] : files.filter((f) => f.comment == null).map(fileRef),
     comments: thread?.comments ?? [],
+    sessions: read,
     deleted,
     archived,
   }

@@ -11,6 +11,7 @@ import type { TopComment } from '@/lib/spaces-data'
 
 import { FeedReactions } from './feed-reactions'
 import type { PersonCard } from './person-hover'
+import type { SessionLinks } from './session-chip'
 import styles from './space.module.css'
 import { SpaceThread, type ThreadViewer } from './space-thread'
 
@@ -32,6 +33,7 @@ export function PostFoot({
   notice,
   now,
   titles,
+  sessions,
   preview,
   limit,
   step,
@@ -50,6 +52,8 @@ export function PostFoot({
   notice: NoticePart[]
   now: string
   titles: Record<string, string>
+  /** The course sessions a comment may name with # */
+  sessions?: SessionLinks | null
   /** In the feed: the newest comments first, and the thread only once there is one or the member asks */
   preview: boolean
   /** Passed to the thread: how many comments show first, and how many each "Show more" adds */
@@ -101,6 +105,7 @@ export function PostFoot({
           notice={notice}
           now={now}
           titles={titles}
+          sessions={sessions}
           preview={preview}
           limit={limit}
           step={step}

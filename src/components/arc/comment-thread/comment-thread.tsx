@@ -2,8 +2,10 @@
 
 import {
   Fragment,
+  createContext,
   forwardRef,
   useCallback,
+  useContext,
   useEffect,
   useId,
   useImperativeHandle,
@@ -76,6 +78,36 @@ export function matchMentions(
   return found
 }
 
+/** Something a comment can name with "#", such as a course session. Its `name` follows the "#" in the text. */
+export interface CommentTopic {
+  id: string
+  name: string
+  /** A quiet second line in the suggestions, such as a date. */
+  hint?: string
+}
+
+/** Finds every "#name" of a known topic in `text`, longest names first. */
+export function matchTopics(
+  text: string,
+  topics: CommentTopic[],
+): { start: number; end: number; topic: CommentTopic }[] {
+  const byName = new Map(topics.map((topic) => [topic.name, topic]))
+  const names = [...byName.keys()].sort((a, b) => b.length - a.length).map(escapeName)
+  if (!names.length) return []
+  return [...text.matchAll(new RegExp(`#(${names.join('|')})`, 'g'))].map((match) => ({
+    start: match.index,
+    end: match.index + match[0].length,
+    topic: byName.get(match[1]!)!,
+  }))
+}
+
+/** The "#" topics, shared by every body and composer of one thread. */
+const TopicsContext = createContext<{
+  topics: CommentTopic[]
+  label: string
+  render?: (topic: CommentTopic, text: string) => ReactNode
+}>({ topics: [], label: 'Topics' })
+
 /** What changed, for syncing to a server. `comments` on `onCommentsChange` is always the full next tree. */
 export type CommentThreadEvent =
   | { type: 'reply'; comment: ThreadComment; parentId: string | null }
@@ -128,6 +160,8 @@ export interface CommentThreadLabels {
   reactionCount?: (emoji: string, count: number, includesYou: boolean) => string
   /** Accessible name of the @mention suggestions. */
   mentions?: string
+  /** Accessible name of the #topic suggestions. */
+  topics?: string
 }
 
 const DEFAULT_LABELS: Required<CommentThreadLabels> = {
@@ -160,6 +194,7 @@ const DEFAULT_LABELS: Required<CommentThreadLabels> = {
   reactionCount: (emoji, count, includesYou) =>
     `${emoji} ${count}${includesYou ? ', including you' : ''}`,
   mentions: 'People',
+  topics: 'Topics',
 }
 
 /** A key passed as undefined keeps its default too. */
@@ -214,6 +249,10 @@ export interface CommentThreadProps {
   renderMention?: (person: CommentAuthor, text: string) => ReactNode
   /** Renders the plain text between mentions, such as turning an address into a link. */
   renderText?: (text: string) => ReactNode
+  /** Things a comment can name with "#"; without them "#" stays an ordinary character. */
+  topics?: CommentTopic[]
+  /** Renders a highlighted "#name", such as a link. */
+  renderTopic?: (topic: CommentTopic, text: string) => ReactNode
   /** Extra content under a comment's body, such as an attachment. */
   renderExtra?: (comment: ThreadComment) => ReactNode
   /** Extra content beside the composer's send button, such as an attach button. */
@@ -350,17 +389,28 @@ function Body({
   renderMention?: (person: CommentAuthor, text: string) => ReactNode
   renderText?: (text: string) => ReactNode
 }) {
+  const topics = useContext(TopicsContext)
   const parts = useMemo(() => {
-    const found = matchMentions(text, mentions ?? [], people)
-    const out: (string | { person: CommentAuthor; text: string })[] = []
+    const found = [
+      ...matchMentions(text, mentions ?? [], people),
+      ...matchTopics(text, topics.topics),
+    ].sort((a, b) => a.start - b.start)
+    const out: (
+      string | { person: CommentAuthor; text: string } | { topic: CommentTopic; text: string }
+    )[] = []
     let from = 0
-    for (const { start, end, person } of found) {
-      out.push(text.slice(from, start), { person, text: text.slice(start, end) })
-      from = end
+    for (const hit of found) {
+      if (hit.start < from) continue
+      const part = text.slice(hit.start, hit.end)
+      out.push(
+        text.slice(from, hit.start),
+        'person' in hit ? { person: hit.person, text: part } : { topic: hit.topic, text: part },
+      )
+      from = hit.end
     }
     out.push(text.slice(from))
     return out
-  }, [mentions, people, text])
+  }, [mentions, people, text, topics.topics])
   return (
     <p className={styles.body} dir="auto">
       {parts.map((part, index) =>
@@ -372,7 +422,13 @@ function Body({
           )
         ) : (
           <span key={index} className={styles.mention}>
-            {renderMention ? renderMention(part.person, part.text) : part.text}
+            {'topic' in part
+              ? topics.render
+                ? topics.render(part.topic, part.text)
+                : part.text
+              : renderMention
+                ? renderMention(part.person, part.text)
+                : part.text}
           </span>
         ),
       )}
@@ -531,21 +587,26 @@ function Composer({
   const [text, setText] = useState(initial)
   // Picked people, kept in the order their "@Name" appears in the text.
   const [picked, setPicked] = useState<CommentAuthor[]>(initialMentions ?? [])
-  const [query, setQuery] = useState<{ start: number; term: string } | null>(null)
+  const { topics, label: topicsLabel } = useContext(TopicsContext)
+  const [query, setQuery] = useState<{ start: number; term: string; marker: '@' | '#' } | null>(
+    null,
+  )
   const [active, setActive] = useState(0)
-  const suggestions = useMemo(() => {
+  const suggestions = useMemo((): (CommentAuthor | (CommentTopic & { topic: true }))[] => {
     if (!query) return []
     const term = query.term.toLowerCase()
-    return people
-      .filter(
-        (person) =>
-          person.name
-            .toLowerCase()
-            .split(' ')
-            .some((part) => part.startsWith(term)) || person.name.toLowerCase().startsWith(term),
-      )
-      .slice(0, 5)
-  }, [people, query])
+    const fits = (name: string) =>
+      name
+        .toLowerCase()
+        .split(' ')
+        .some((part) => part.startsWith(term)) || name.toLowerCase().startsWith(term)
+    if (query.marker === '#')
+      return topics
+        .filter((topic) => fits(`${topic.name} ${topic.hint ?? ''}`))
+        .slice(0, 6)
+        .map((topic) => ({ ...topic, topic: true as const }))
+    return people.filter((person) => fits(person.name)).slice(0, 5)
+  }, [people, query, topics])
   const open = !!query && suggestions.length > 0
 
   useEffect(() => {
@@ -557,15 +618,34 @@ function Composer({
   }, [autoFocus, focusKey])
 
   const readQuery = (value: string, caret: number) => {
-    const match = /(^|\s)@([\p{L}]*)$/u.exec(value.slice(0, caret))
-    setQuery(match ? { start: caret - match[2]!.length - 1, term: match[2]! } : null)
+    // "#" with a space after it stays text; only "#" at a word start followed by letters or digits opens the list.
+    const match = /(^|\s)([@#])([\p{L}\p{N}]*)$/u.exec(value.slice(0, caret))
+    const marker = match?.[2] as '@' | '#' | undefined
+    const term = match?.[3] ?? ''
+    setQuery(
+      marker && (marker === '#' ? topics.length > 0 : !/\p{N}/u.test(term))
+        ? { start: caret - term.length - 1, term, marker }
+        : null,
+    )
     setActive(0)
   }
 
-  const insert = (person: CommentAuthor) => {
+  const insert = (choice: CommentAuthor | (CommentTopic & { topic: true })) => {
     const node = field.current
     if (!node || !query) return
     const caret = node.selectionStart ?? text.length
+    if ('topic' in choice) {
+      const next = `${text.slice(0, query.start)}#${choice.name} ${text.slice(caret)}`
+      const at = query.start + choice.name.length + 2
+      setText(next)
+      setQuery(null)
+      requestAnimationFrame(() => {
+        node.focus()
+        node.setSelectionRange(at, at)
+      })
+      return
+    }
+    const person = choice
     const before = text.slice(0, query.start)
     const ahead = matchMentions(before, picked).length
     const kept = matchedPicks(text, picked)
@@ -645,6 +725,7 @@ function Composer({
             aria-autocomplete="list"
             aria-expanded={open}
             aria-controls={`${uid}-people`}
+            aria-haspopup="listbox"
             aria-activedescendant={open ? `${uid}-person-${active}` : undefined}
             onChange={(event) => {
               setText(event.target.value)
@@ -677,7 +758,7 @@ function Composer({
               key="people"
               id={`${uid}-people`}
               role="listbox"
-              aria-label={mentionsLabel}
+              aria-label={query?.marker === '#' ? topicsLabel : mentionsLabel}
               className={styles.suggestions}
               initial={reduced ? { opacity: 0 } : { opacity: 0, height: 0 }}
               animate={{ opacity: 1, height: 'auto' }}
@@ -699,19 +780,28 @@ function Composer({
                     }
               }
             >
-              {suggestions.map((person, index) => (
+              {suggestions.map((item, index) => (
                 <li
-                  key={person.id}
+                  key={'topic' in item ? `t${item.id}` : item.id}
                   id={`${uid}-person-${index}`}
                   role="option"
                   aria-selected={index === active}
                   className={styles.suggestion}
                   onPointerDown={(event) => event.preventDefault()}
                   onPointerMove={() => setActive(index)}
-                  onClick={() => insert(person)}
+                  onClick={() => insert(item)}
                 >
-                  <Avatar author={person} size={20} />
-                  {person.name}
+                  {'topic' in item ? (
+                    <>
+                      <span className={styles.topicName}>#{item.name}</span>
+                      {item.hint && <span className={styles.topicHint}>{item.hint}</span>}
+                    </>
+                  ) : (
+                    <>
+                      <Avatar author={item} size={20} />
+                      {item.name}
+                    </>
+                  )}
                 </li>
               ))}
             </motion.ul>
@@ -774,6 +864,8 @@ export const CommentThread = forwardRef<HTMLElement, CommentThreadProps>(functio
     renderName,
     renderMention,
     renderText,
+    topics,
+    renderTopic,
     renderExtra,
     composerExtra,
     composerAttachments,
@@ -800,6 +892,10 @@ export const CommentThread = forwardRef<HTMLElement, CommentThreadProps>(functio
     [currentUser, list, people],
   )
   const total = countTree(list)
+  const topicsValue = useMemo(
+    () => ({ topics: topics ?? [], label: t.topics, render: renderTopic }),
+    [renderTopic, t.topics, topics],
+  )
   const participants = useMemo(() => [...authorsOf(list).values()], [list])
 
   const commit = useCallback(
@@ -1283,129 +1379,131 @@ export const CommentThread = forwardRef<HTMLElement, CommentThreadProps>(functio
   }
 
   return (
-    <section
-      ref={rootRef}
-      className={[styles.root, className].filter(Boolean).join(' ')}
-      data-resolved={isResolved || undefined}
-      aria-label={t.thread}
-    >
-      <AutoHeight reduced={reduced} morphKey={isResolved ? 'resolved' : 'thread'}>
-        <AnimatePresence mode="popLayout" initial={false}>
-          {isResolved ? (
-            <motion.div key="resolved" className={styles.resolved} {...face}>
-              <span className={styles.resolvedIcon} aria-hidden="true">
-                <Check size={14} strokeWidth={2} />
-              </span>
-              <span className={styles.resolvedText}>
-                <span className={styles.resolvedTitle}>
-                  {t.resolved}
-                  {title ? (
-                    <>
-                      {' '}
-                      · <span className={styles.resolvedSubject}>{title}</span>
-                    </>
-                  ) : null}
+    <TopicsContext.Provider value={topicsValue}>
+      <section
+        ref={rootRef}
+        className={[styles.root, className].filter(Boolean).join(' ')}
+        data-resolved={isResolved || undefined}
+        aria-label={t.thread}
+      >
+        <AutoHeight reduced={reduced} morphKey={isResolved ? 'resolved' : 'thread'}>
+          <AnimatePresence mode="popLayout" initial={false}>
+            {isResolved ? (
+              <motion.div key="resolved" className={styles.resolved} {...face}>
+                <span className={styles.resolvedIcon} aria-hidden="true">
+                  <Check size={14} strokeWidth={2} />
                 </span>
-                <span className={styles.resolvedMeta}>
-                  {t.commentCount(total)} · {t.peopleCount(participants.length)}
+                <span className={styles.resolvedText}>
+                  <span className={styles.resolvedTitle}>
+                    {t.resolved}
+                    {title ? (
+                      <>
+                        {' '}
+                        · <span className={styles.resolvedSubject}>{title}</span>
+                      </>
+                    ) : null}
+                  </span>
+                  <span className={styles.resolvedMeta}>
+                    {t.commentCount(total)} · {t.peopleCount(participants.length)}
+                  </span>
                 </span>
-              </span>
-              <span className={styles.stack} aria-hidden="true">
-                {participants.slice(0, 3).map((author) => (
-                  <Avatar key={author.id} author={author} size={22} />
-                ))}
-              </span>
-              <button
-                type="button"
-                className={styles.reopen}
-                data-reopen
-                onClick={() => setResolved(false)}
-              >
-                <RotateCcw size={14} strokeWidth={1.75} aria-hidden="true" />
-                {t.reopen}
-              </button>
-            </motion.div>
-          ) : (
-            <motion.div key="thread" className={styles.thread} {...face}>
-              {showHeader && (
-                <header className={styles.header}>
-                  <div className={styles.heading}>
-                    {title && <h3 className={styles.title}>{title}</h3>}
-                    <span className={styles.subtitle}>{t.commentCount(total)}</span>
-                  </div>
-                  {resolvable && (
-                    <button
-                      type="button"
-                      className={styles.resolve}
-                      data-resolve
-                      disabled={!total}
-                      onClick={() => setResolved(true)}
-                    >
-                      <Check size={15} strokeWidth={1.75} aria-hidden="true" />
-                      {t.resolve}
-                    </button>
-                  )}
-                </header>
-              )}
-              {listHeader}
-
-              {list.length > 0 ? (
-                <ul className={styles.list}>
-                  <AnimatePresence initial={false}>
-                    {list.map((comment) => renderComment(comment, 0))}
-                  </AnimatePresence>
-                </ul>
-              ) : (
-                <p className={styles.empty}>{t.empty}</p>
-              )}
-
-              {canReply && (
-                <div className={styles.composerArea}>
-                  <AnimatePresence initial={false}>
-                    {replyTo && (
-                      <motion.div key="replying" className={styles.replying} {...grow}>
-                        <span className={styles.replyingInner}>
-                          <CornerDownRight size={13} strokeWidth={1.75} aria-hidden="true" />
-                          <span>
-                            {highlight(
-                              t.replyingTo(replyTo.name),
-                              replyTo.name,
-                              styles.replyingName,
-                            )}
-                          </span>
-                          <button
-                            type="button"
-                            className={styles.iconAction}
-                            aria-label={t.cancelReply}
-                            onClick={() => setReplyTo(null)}
-                          >
-                            <X size={14} strokeWidth={1.75} aria-hidden="true" />
-                          </button>
-                        </span>
-                      </motion.div>
+                <span className={styles.stack} aria-hidden="true">
+                  {participants.slice(0, 3).map((author) => (
+                    <Avatar key={author.id} author={author} size={22} />
+                  ))}
+                </span>
+                <button
+                  type="button"
+                  className={styles.reopen}
+                  data-reopen
+                  onClick={() => setResolved(false)}
+                >
+                  <RotateCcw size={14} strokeWidth={1.75} aria-hidden="true" />
+                  {t.reopen}
+                </button>
+              </motion.div>
+            ) : (
+              <motion.div key="thread" className={styles.thread} {...face}>
+                {showHeader && (
+                  <header className={styles.header}>
+                    <div className={styles.heading}>
+                      {title && <h3 className={styles.title}>{title}</h3>}
+                      <span className={styles.subtitle}>{t.commentCount(total)}</span>
+                    </div>
+                    {resolvable && (
+                      <button
+                        type="button"
+                        className={styles.resolve}
+                        data-resolve
+                        disabled={!total}
+                        onClick={() => setResolved(true)}
+                      >
+                        <Check size={15} strokeWidth={1.75} aria-hidden="true" />
+                        {t.resolve}
+                      </button>
                     )}
-                  </AnimatePresence>
-                  <Composer
-                    people={mentionable}
-                    placeholder={placeholder}
-                    submitLabel={t.send}
-                    cancelLabel={t.cancel}
-                    mentionsLabel={t.mentions}
-                    focusKey={focusKey + (composerFocusKey ?? 0)}
-                    onSubmit={addReply}
-                    onCancel={replyTo ? () => setReplyTo(null) : undefined}
-                    leading={<Avatar author={currentUser} />}
-                    trailing={composerExtra}
-                    below={composerAttachments}
-                    inline={inlineActions}
-                  />
-                </div>
-              )}
-            </motion.div>
-          )}
-        </AnimatePresence>
-      </AutoHeight>
-    </section>
+                  </header>
+                )}
+                {listHeader}
+
+                {list.length > 0 ? (
+                  <ul className={styles.list}>
+                    <AnimatePresence initial={false}>
+                      {list.map((comment) => renderComment(comment, 0))}
+                    </AnimatePresence>
+                  </ul>
+                ) : (
+                  <p className={styles.empty}>{t.empty}</p>
+                )}
+
+                {canReply && (
+                  <div className={styles.composerArea}>
+                    <AnimatePresence initial={false}>
+                      {replyTo && (
+                        <motion.div key="replying" className={styles.replying} {...grow}>
+                          <span className={styles.replyingInner}>
+                            <CornerDownRight size={13} strokeWidth={1.75} aria-hidden="true" />
+                            <span>
+                              {highlight(
+                                t.replyingTo(replyTo.name),
+                                replyTo.name,
+                                styles.replyingName,
+                              )}
+                            </span>
+                            <button
+                              type="button"
+                              className={styles.iconAction}
+                              aria-label={t.cancelReply}
+                              onClick={() => setReplyTo(null)}
+                            >
+                              <X size={14} strokeWidth={1.75} aria-hidden="true" />
+                            </button>
+                          </span>
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
+                    <Composer
+                      people={mentionable}
+                      placeholder={placeholder}
+                      submitLabel={t.send}
+                      cancelLabel={t.cancel}
+                      mentionsLabel={t.mentions}
+                      focusKey={focusKey + (composerFocusKey ?? 0)}
+                      onSubmit={addReply}
+                      onCancel={replyTo ? () => setReplyTo(null) : undefined}
+                      leading={<Avatar author={currentUser} />}
+                      trailing={composerExtra}
+                      below={composerAttachments}
+                      inline={inlineActions}
+                    />
+                  </div>
+                )}
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </AutoHeight>
+      </section>
+    </TopicsContext.Provider>
   )
 })
 

@@ -1014,10 +1014,67 @@
   border-top: 1px solid var(--border);
 }
 
-.markdown a:not(.mentionLink) {
+.markdown a:not(.mentionLink, .sessionMention) {
   color: var(--mention);
   text-decoration: underline;
   text-underline-offset: 3px;
+}
+
+/* A session named with #: a small chip in the sentence that opens the posts about it. */
+.sessionMention {
+  display: inline-flex;
+  max-width: 100%;
+  align-items: center;
+  gap: 4px;
+  padding: 0 6px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: var(--surface-muted);
+  color: var(--foreground);
+  font-size: var(--text-sm);
+  font-weight: 500;
+  line-height: 1.5;
+  text-decoration: none;
+  vertical-align: baseline;
+}
+
+.sessionMention svg {
+  flex: none;
+  color: var(--text-secondary);
+}
+
+.sessionMentionName {
+  min-width: 0;
+  max-width: 28ch;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.sessionMention[data-cancelled] .sessionMentionName {
+  color: var(--text-secondary);
+  text-decoration: line-through;
+}
+
+.sessionMentionTag {
+  color: var(--text-secondary);
+  font-size: var(--text-xs);
+  font-weight: 400;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .sessionMention:hover {
+    border-color: var(--border-strong);
+  }
+}
+
+.sessionGoneText {
+  color: var(--text-secondary);
+}
+
+/* A session block sits in the text's flow, between its paragraphs. */
+.sessionBlock {
+  margin-block: 12px;
 }
 
 /* A mention reads as a link to the person, with their card on hover. */

@@ -969,13 +969,10 @@
     "voteResults": "Vote results",
     "saveError_upload": "The files could not be saved. Try again, or attach fewer or smaller files.",
     "saveError_failed": "Something went wrong. Try again.",
-    "sessionPick": "Session",
-    "sessionPickHint": "Members see the session's materials and in-class prompt under the post.",
-    "sessionNone": "No session",
     "sessionLabel": "Course session",
     "sessionGone": "This session is no longer in the course syllabus.",
     "sessionHidden": "This session is in a course you cannot open.",
-    "saveError_session": "Only a fellow's announcement can point at a session, and only at a session of this course.",
+    "saveError_session": "Name only sessions of this course, then post again.",
     "eventEndAdd": "Add an end time",
     "eventEnd": "Ends",
     "eventEndLater": "The end must be after the start",
@@ -1006,7 +1003,6 @@
     "saveError_event_over": "This event is over.",
     "saveError_rsvp": "Choose going, maybe or not going.",
     "sessionChipLabel": "Posts about {name}",
-    "sessionPickHintOpen": "Shows a small tag under your post that opens the posts about the same session.",
     "publicEvent": "Public event",
     "publicEventAria": "Public event: {title}",
     "eventEdit": "Edit event",
@@ -1020,7 +1016,12 @@
     "eventTitle": "Event name",
     "eventDescription": "Description",
     "eventCoverAdd": "Add a cover photo",
-    "dialogClose": "Close post"
+    "dialogClose": "Close post",
+    "sessionMention": "Session",
+    "sessionRemoved": "Session removed",
+    "sessionList": "Sessions",
+    "sessionBlocks": "Blocks and sessions",
+    "sessionHint": "Type # to name a session in a sentence, or / at the start of a line to place its card."
   },
   "SpaceComment": {
     "write": "Comment",
@@ -1169,7 +1170,8 @@
     "mentions": "Members",
     "formerMember": "Former member",
     "showEarlier": "{count, plural, one {Show # earlier comment} other {Show # earlier comments}}",
-    "showMore": "{count, plural, one {Show # more comment} other {Show # more comments}}"
+    "showMore": "{count, plural, one {Show # more comment} other {Show # more comments}}",
+    "sessions": "Sessions"
   },
   "SpacePhotos": {
     "photos": "Photos",

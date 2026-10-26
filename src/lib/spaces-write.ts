@@ -8,15 +8,11 @@ import { FILE_KINDS } from '@/lib/form-files'
 import { FILE_LIMITS } from '@/lib/space-file-limits'
 import { ABOUT_MAX } from '@/lib/space-about'
 import { locationUrl, eventOver, eventName, isRsvpStatus, type RsvpStatus } from '@/lib/space-event'
-import {
-  EVENT_LOCATION_MAX,
-  EVENT_TITLE_MAX,
-  SESSION_KINDS,
-  VOTE_OPTIONS,
-} from '@/lib/space-post-kinds'
+import { EVENT_LOCATION_MAX, EVENT_TITLE_MAX, VOTE_OPTIONS } from '@/lib/space-post-kinds'
 import { SPACE_FILE_LIMIT } from '@/collections/SpaceFiles'
 import { coverIssue, prepareCover } from '@/lib/event-cover-image'
 import { placeName } from '@/lib/link-preview'
+import { cleanSessionRefs, sessionIdsIn } from '@/lib/session-refs'
 import type { EventPosting, SpaceLike, PostingLevel } from '@/lib/spaces'
 import type { User } from '@/payload-types'
 
@@ -379,31 +375,32 @@ export const shapeData = (shape: PostShape, now = new Date()): Record<string, un
 }
 
 /**
- * Whether a post may carry this course session: a post of a session kind in
- * a course space, naming one row of that course's sessions. An announcement
- * is the moderator's; any member may link a discussion.
+ * The body with every course session it names checked against this space's
+ * course: an unknown or foreign session, or one past the cap, turns into
+ * plain text. Outside a course space no session is known.
  */
-export const sessionAllows = async (
+export const sessionSafeBody = async (
   payload: Payload,
   space: SpaceLike,
-  role: string,
-  kind: string,
-  session: string,
-): Promise<boolean> => {
-  if (!SESSION_KINDS.includes(kind)) return false
-  if (kind === 'announcement' ? role !== 'moderator' : role === 'none') return false
+  body: string,
+  options?: { blocks?: boolean },
+): Promise<string> => {
+  if (!sessionIdsIn(body).length) return body
   const courseId = space.kind === 'course' ? idOf(space.course) : null
-  if (courseId === null) return false
-  const course = (await payload
-    .findByID({
-      collection: 'courses',
-      id: courseId,
-      depth: 0,
-      overrideAccess: true,
-      select: { sessions: true },
-    })
-    .catch(() => null)) as { sessions?: { id?: string | null }[] | null } | null
-  return (course?.sessions ?? []).some((s) => s.id === session)
+  const course =
+    courseId === null
+      ? null
+      : ((await payload
+          .findByID({
+            collection: 'courses',
+            id: courseId,
+            depth: 0,
+            overrideAccess: true,
+            select: { sessions: true },
+          })
+          .catch(() => null)) as { sessions?: { id?: string | null }[] | null } | null)
+  const known = new Set((course?.sessions ?? []).flatMap((s) => (s.id ? [s.id] : [])))
+  return cleanSessionRefs(body, known, options)
 }
 
 /** Whether this member may start an event in this space (on top of the posting level). */
@@ -416,12 +413,10 @@ export const postCreate = async (
       space: number
       body: string
       files?: PostFile[]
-      /** One row id of the course's sessions */
-      session?: string | null
     } & PostShape
   >,
 ): Promise<WriteResult<{ id: number }>> => {
-  const { payload, user, space: spaceId, kind, body, files } = i
+  const { payload, user, space: spaceId, kind, files } = i
   const g = await gate(payload, user, spaceId, { write: true })
   if (g.stop) return err(g.error)
   const space = g.space
@@ -435,9 +430,9 @@ export const postCreate = async (
     return err('events')
   const extra = shapeData(i)
   if (!extra) return err(kind === 'vote' ? 'vote' : 'event')
-  const session = i.session?.trim() || null
-  if (session && !(await sessionAllows(payload, space, mem.role, kind, session)))
-    return err('session')
+  const body = await sessionSafeBody(payload, space, i.body)
+  // Only sessions this course does not have: nothing is left to post.
+  if (!body.trim()) return err('session')
 
   const mentioned = validateMentions(body, await mentionSafelist(payload, spaceId))
   if (mentioned.invalid.length > 0) return err('mention')
@@ -461,7 +456,6 @@ export const postCreate = async (
       kind,
       body,
       ...extra,
-      ...(session ? { course_session: session } : {}),
       last_activity_at: new Date().toISOString(),
       ...(kind === 'announcement' ? { pinned: true } : {}),
     } as never,
@@ -536,7 +530,7 @@ export const postCreate = async (
 export const postEdit = async (
   i: Input<{ id: number; body: string }>,
 ): Promise<WriteResult<true>> => {
-  const { payload, user, id, body } = i
+  const { payload, user, id } = i
   const post = (await payload.findByID({
     collection: 'space-posts',
     id,
@@ -574,6 +568,8 @@ export const postEdit = async (
   const canEdit = isAuthor || (mem.role === 'moderator' && isIntro)
   if (!canEdit) return err('not-yours')
 
+  const body = await sessionSafeBody(payload, space, i.body)
+  if (!body.trim()) return err('session')
   const mentioned = validateMentions(body, await mentionSafelist(payload, spaceId))
   if (mentioned.invalid.length > 0) return err('mention')
 
@@ -682,7 +678,7 @@ export const postModify = async (
 export const commentCreate = async (
   i: Input<{ post: number; parent?: number | null; body: string; files?: PostFile[] }>,
 ): Promise<WriteResult<{ id: number }>> => {
-  const { payload, user, post: postId, parent, body, files } = i
+  const { payload, user, post: postId, parent, files } = i
   const postData = (await payload.findByID({
     collection: 'space-posts',
     id: postId,
@@ -716,6 +712,8 @@ export const commentCreate = async (
     if (parentComment.parent) return err('depth')
   }
 
+  const body = await sessionSafeBody(payload, space, i.body, { blocks: false })
+  if (!body.trim()) return err('session')
   const mentioned = validateMentions(body, await mentionSafelist(payload, spaceId))
   if (mentioned.invalid.length > 0) return err('mention')
 
@@ -827,7 +825,7 @@ export const commentCreate = async (
 export const commentEdit = async (
   i: Input<{ id: number; body: string }>,
 ): Promise<WriteResult<true>> => {
-  const { payload, user, id, body } = i
+  const { payload, user, id } = i
   const comment = (await payload.findByID({
     collection: 'space-comments',
     id,
@@ -859,6 +857,8 @@ export const commentEdit = async (
     (typeof comment.author === 'object' ? comment.author.id : comment.author) === personOf(user)
   if (!isAuthor) return err('not-yours')
 
+  const body = await sessionSafeBody(payload, g.space, i.body, { blocks: false })
+  if (!body.trim()) return err('session')
   const mentioned = validateMentions(body, await mentionSafelist(payload, spaceId))
   if (mentioned.invalid.length > 0) return err('mention')
 
@@ -1220,11 +1220,12 @@ export const eventEdit = async (
     if (title === undefined) return err('event')
     if (title !== (post.event_title ?? null)) words.event_title = title
   }
-  if (i.body !== undefined && i.body !== post.body) {
-    if (i.body.trim() === '') return err('event')
-    const mentioned = validateMentions(i.body, await mentionSafelist(payload, spaceId))
+  const body = i.body === undefined ? undefined : await sessionSafeBody(payload, space, i.body)
+  if (body !== undefined && body !== post.body) {
+    if (body.trim() === '') return err('event')
+    const mentioned = validateMentions(body, await mentionSafelist(payload, spaceId))
     if (mentioned.invalid.length > 0) return err('mention')
-    words.body = i.body
+    words.body = body
   }
   const reworded = Object.keys(words).length > 0
   if (reworded && !isAuthor) return err('not-yours')

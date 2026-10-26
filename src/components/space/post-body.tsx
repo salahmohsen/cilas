@@ -1,8 +1,13 @@
-import ReactMarkdown from 'react-markdown'
+import ReactMarkdown, { defaultUrlTransform } from 'react-markdown'
 import remarkGfm from 'remark-gfm'
+
+import { SESSION_HREF, inlineBlocks, sessionIdsIn, splitBlocks } from '@/lib/session-refs'
+import type { SessionRead } from '@/lib/spaces-data'
 
 import { TitledLink } from './titled-link'
 import { PersonHover, type PersonCard } from './person-hover'
+import { SessionBlock } from './session-block'
+import { SessionChip, type SessionLinks } from './session-chip'
 import styles from './space.module.css'
 
 /**
@@ -10,7 +15,8 @@ import styles from './space.module.css'
  * makes, `remark-gfm` for strikethrough only. `/people/{id}` links become
  * mention links with the person's current name and card; other links open
  * in a new tab; raw HTML never renders (react-markdown default). Every block
- * sits with dir="auto".
+ * sits with dir="auto". A session mention reads as a chip in its sentence; a
+ * session block, alone in its paragraph, as the whole session card.
  */
 const ALLOWED = [
   'p',
@@ -37,22 +43,38 @@ export type PostBodyProps = {
   people?: Map<number, PersonCard>
   /** Page titles by address: a link whose text is its own address shows the title. */
   titles?: Record<string, string>
+  /** The course sessions the body may name: chips link through `links`, blocks read `read` */
+  sessions?: { links: SessionLinks | null; read: SessionRead | null }
 }
 
-export const PostBody = ({ body, people, titles }: PostBodyProps) => (
-  <div className={styles.markdown}>
+const keepSessions = (url: string) =>
+  url.startsWith(SESSION_HREF) ? url : defaultUrlTransform(url)
+
+export const PostBody = ({ body, people, titles, sessions }: PostBodyProps) => {
+  const markdown = (text: string, key?: number) => (
     <ReactMarkdown
+      key={key}
       remarkPlugins={[remarkGfm]}
       allowedElements={[...ALLOWED]}
       unwrapDisallowed={false}
+      urlTransform={keepSessions}
       components={{
         p: ({ children }) => <p dir="auto">{children}</p>,
-        h1: ({ children }) => <h1 dir="auto">{children}</h1>,
+        // Posts have no Heading 1 (# names a session); an older one reads as a Heading 2.
+        h1: ({ children }) => <h2 dir="auto">{children}</h2>,
         h2: ({ children }) => <h2 dir="auto">{children}</h2>,
         h3: ({ children }) => <h3 dir="auto">{children}</h3>,
         li: ({ children }) => <li dir="auto">{children}</li>,
         blockquote: ({ children }) => <blockquote dir="auto">{children}</blockquote>,
         a: ({ href, children }) => {
+          if (href?.startsWith(SESSION_HREF))
+            return (
+              <SessionChip
+                id={href.slice(SESSION_HREF.length)}
+                links={sessions?.links}
+                label={typeof children === 'string' ? children : undefined}
+              />
+            )
           if (href?.startsWith('/people/')) {
             const person = people?.get(Number(href.split('/').pop()))
             const name = person?.name ?? `${children}`.replace(/^@/, '')
@@ -81,7 +103,19 @@ export const PostBody = ({ body, people, titles }: PostBodyProps) => (
         },
       }}
     >
-      {body}
+      {text}
     </ReactMarkdown>
-  </div>
-)
+  )
+  if (!sessionIdsIn(body).length) return <div className={styles.markdown}>{markdown(body)}</div>
+  return (
+    <div className={styles.markdown}>
+      {splitBlocks(body).map((part, i) =>
+        part.type === 'block' ? (
+          <SessionBlock key={i} id={part.id} read={sessions?.read} />
+        ) : (
+          markdown(inlineBlocks(part.markdown), i)
+        ),
+      )}
+    </div>
+  )
+}
