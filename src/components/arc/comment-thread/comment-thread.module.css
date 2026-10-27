@@ -99,6 +99,10 @@
 .list {
   padding: 0 8px;
 }
+/* With no header above it, the first comment gets the room the composer's divider gives the last. */
+.list:first-child {
+  padding-top: 10px;
+}
 .item {
   overflow: clip;
   overflow-clip-margin: 4px;
