@@ -229,6 +229,9 @@
   margin: -4px;
   padding: 4px;
   list-style: none;
+  /* Makes the row the containing block of the cards' sr-only text, so it scrolls
+     with the row; a 1px absolute span past the edge would widen the page. */
+  position: relative;
   overflow-x: auto;
   overscroll-behavior-x: contain;
   scroll-snap-type: x mandatory;
