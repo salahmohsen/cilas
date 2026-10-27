@@ -7,6 +7,7 @@ import {
   useContext,
   useEffect,
   useMemo,
+  startTransition,
   useRef,
   useState,
   type AnchorHTMLAttributes,
@@ -81,7 +82,8 @@ export function PostDialog({
     try {
       const node = await postDialogAction(postId, href, locale)
       if (node) {
-        setContent(node)
+        // A transition, so the post's client chunks that are still loading do not hide the open dialog behind a boundary above it.
+        startTransition(() => setContent(node))
         setFailed(false)
       } else setFailed(true)
     } catch {
