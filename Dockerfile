@@ -1,3 +1,4 @@
+# syntax=docker/dockerfile:1
 # To use this Dockerfile, you have to set `output: 'standalone'` in your next.config.mjs file.
 # From https://github.com/vercel/next.js/blob/canary/examples/with-docker/Dockerfile
 
@@ -15,10 +16,10 @@ WORKDIR /app
 
 # Install dependencies based on the preferred package manager
 COPY package.json yarn.lock* package-lock.json* pnpm-lock.yaml* pnpm-workspace.yaml* ./
-RUN \
+RUN --mount=type=cache,id=cilas-pnpm,target=/pnpm/store,sharing=locked \
   if [ -f yarn.lock ]; then yarn --frozen-lockfile; \
   elif [ -f package-lock.json ]; then npm ci; \
-  elif [ -f pnpm-lock.yaml ]; then pnpm i --frozen-lockfile; \
+  elif [ -f pnpm-lock.yaml ]; then pnpm i --frozen-lockfile --store-dir=/pnpm/store; \
   else echo "Lockfile not found." && exit 1; \
   fi
 
@@ -67,7 +68,8 @@ COPY . .
 # use top-level dynamic imports that can deadlock under Payload's tsx loader.
 RUN pnpm db:migrate
 
-RUN \
+# Keep compiler work between source changes on the same Dokploy builder.
+RUN --mount=type=cache,id=cilas-next,target=/app/.next/cache,sharing=locked \
   if [ -f yarn.lock ]; then yarn run build; \
   elif [ -f package-lock.json ]; then npm run build; \
   elif [ -f pnpm-lock.yaml ]; then pnpm run build; \

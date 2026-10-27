@@ -1,2 +1,17 @@
+# Local dependencies, outputs, and checkout metadata invalidate COPY . .
+# unnecessarily and must not replace the container's dependencies or cache.
+node_modules
+.next
+.git
+.env
+.env.*
+!.env.example
+*.tsbuildinfo
+coverage
+test-results
+playwright-report
+blob-report
+.DS_Store
+
 # Legacy site archive: seed-time only, never shipped
 migration/raw
