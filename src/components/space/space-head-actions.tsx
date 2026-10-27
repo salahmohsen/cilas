@@ -3,10 +3,14 @@
 import { useRef, useState } from 'react'
 import type { ComponentProps, ReactNode } from 'react'
 import { useTranslations } from 'next-intl'
+import { useRouter } from 'next/navigation'
 import { BookOpen, ChartColumn, Info, Settings } from 'lucide-react'
 
 import { BottomSheet } from '@/components/arc/bottom-sheet/bottom-sheet'
-import { ButtonGroup, type ButtonGroupItem } from '@/components/arc/button-group/button-group'
+import {
+  ExpandingButtonGroup,
+  type ExpandingButtonGroupItem,
+} from '@/components/arc/expanding-button-group/expanding-button-group'
 import type { Participation } from '@/lib/spaces-data'
 
 import { ParticipationDialog } from './participation-dialog'
@@ -37,6 +41,7 @@ export function SpaceHeadActions({
 }) {
   const t = useTranslations('Spaces')
   const tp = useTranslations('Participation')
+  const router = useRouter()
   const [open, setOpen] = useState<Panel | null>(null)
   const root = useRef<HTMLDivElement>(null)
 
@@ -47,7 +52,7 @@ export function SpaceHeadActions({
     if (next) return
     setTimeout(() => {
       if (document.activeElement && document.activeElement !== document.body) return
-      const segments = root.current?.querySelectorAll<HTMLElement>(`[data-key="${panel}"]`) ?? []
+      const segments = root.current?.querySelectorAll<HTMLElement>(`[data-id="${panel}"]`) ?? []
       Array.from(segments)
         .find((segment) => segment.offsetParent !== null)
         ?.focus()
@@ -55,7 +60,7 @@ export function SpaceHeadActions({
   }
 
   const items = (phone: boolean) => {
-    const list: ButtonGroupItem[] = []
+    const list: ExpandingButtonGroupItem[] = []
     if (phone)
       list.push({
         id: 'about',
@@ -83,7 +88,7 @@ export function SpaceHeadActions({
   const group = (phone: boolean) => {
     const list = items(phone)
     return list.length > 0 ? (
-      <ButtonGroup items={list} label={t('spaceActions')} size="sm" collapseLabels />
+      <ExpandingButtonGroup items={list} label={t('spaceActions')} size="sm" />
     ) : null
   }
   // The course page leads away, so it stands apart from the space's own panels.
@@ -91,13 +96,13 @@ export function SpaceHeadActions({
   const groups = (
     <div ref={root} className={styles.headButtons}>
       {coursePage && (
-        <ButtonGroup
+        <ExpandingButtonGroup
           items={[
             {
               id: 'course',
               label: t('coursePage'),
               icon: <BookOpen size={16} aria-hidden="true" />,
-              href: coursePage,
+              onSelect: () => router.push(coursePage),
             },
           ]}
           label={t('coursePage')}

@@ -84,6 +84,38 @@
   background: var(--surface);
 }
 
+/* Arc's small expanding group: 3px inset, 2px gaps, 28px controls. The
+   resting action shows its label; its neighbours remain circular. */
+.loadingHeadActions {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  padding: 3px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-pill);
+  background: var(--surface);
+}
+
+.loadingHeadButton.loadingHeadButton {
+  width: 28px;
+}
+
+.loadingHeadExpanded.loadingHeadExpanded {
+  width: 6rem;
+}
+
+.loadingHeadButton > span,
+.loadingHeadExpanded > span {
+  padding: 0;
+}
+
+.loadingHeadButton > span > span,
+.loadingHeadExpanded > span > span {
+  width: 100%;
+  height: 28px;
+  border-radius: var(--radius-pill);
+}
+
 .loadingPinned {
   justify-content: space-between;
   gap: var(--space-4);
@@ -1127,7 +1159,7 @@
   gap: var(--space-3) var(--space-4);
 }
 
-/* A group never runs past the head: it may shrink, and its labels then fold to icons. */
+/* Separate pills wrap as a unit, keeping each toolbar's arrow-key order intact. */
 .headButtons > * {
   min-width: 0;
   max-width: 100%;

@@ -19,10 +19,12 @@ export async function SpaceLoading() {
             <Skeleton avatar lines={1} className={styles.loadingMembers} />
           </div>
           <div className={styles.headActions}>
-            <div className={styles.loadingControls}>
-              <Skeleton lines={1} />
-              <Skeleton lines={1} />
-              <Skeleton lines={1} />
+            <div className={styles.loadingHeadActions}>
+              <Skeleton lines={1} className={styles.loadingHeadExpanded} />
+              <Skeleton lines={1} className={styles.loadingHeadButton} />
+              <span className={styles.phoneOnly}>
+                <Skeleton lines={1} className={styles.loadingHeadButton} />
+              </span>
             </div>
           </div>
         </div>
