@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useRef, useState, type KeyboardEvent, type MouseEvent } from 'react'
+import { useEffect, useRef, useState, type KeyboardEvent } from 'react'
 import { useLocale, useTranslations } from 'next-intl'
 import { AnimatePresence, motion, useReducedMotion, type PanInfo } from 'motion/react'
 import { ArrowLeft, ArrowRight, ChevronLeft, ChevronRight } from 'lucide-react'
@@ -78,9 +78,7 @@ export function PhotoGrid({
                     ? `${t('open', { name: p.name })}, ${t('more', { count: rest })}`
                     : t('open', { name: p.name })
                 }
-                onClick={(event: MouseEvent<HTMLButtonElement>) =>
-                  post ? post.openAt(index, event.currentTarget) : setOpen(index)
-                }
+                onClick={() => (post ? post.openAt(index) : setOpen(index))}
                 whileTap={reduced ? undefined : { scale: 0.97 }}
                 transition={motionTokens.spring.snappy}
               >

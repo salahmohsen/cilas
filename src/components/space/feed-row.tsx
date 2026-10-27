@@ -255,7 +255,7 @@ export async function FeedRow({
   const links = outsideLinks(post.body)
   const text = eventDescription(post)
   return (
-    <PostDialog href={postHref} postId={post.id} photos={row.files.some((f) => f.isImage)}>
+    <PostDialog href={postHref} photos={row.files.some((f) => f.isImage)}>
       <article
         id={id}
         className={
@@ -302,6 +302,7 @@ export async function FeedRow({
           <VotePoll
             post={post.id}
             vote={row.vote}
+            viewer={context.viewer}
             disabled={context.archived || !!post.locked}
             people={context.people}
           />

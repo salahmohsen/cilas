@@ -17,7 +17,6 @@ import { LinkPreviews } from './link-card'
 import { PostPhotos } from './photo-grid'
 import { PostBody } from './post-body'
 import { sessionContextOf, sessionsFor } from './session-block'
-import { PostDialog } from './post-dialog-link'
 import { PostFoot } from './post-foot'
 import { PostSession } from './post-session'
 import { spacePeopleCards } from './space-people'
@@ -84,8 +83,8 @@ export async function loadPost(
  * One post and its whole thread, as the post page and the post dialog show it.
  * In the dialog a post with photos puts them in a viewer in their own column,
  * which the stylesheet turns into the left side (the right in Arabic) on a
- * wide screen and a first row on a phone. On the page a photo opens the
- * dialog over it, at that photo.
+ * wide screen and a first row on a phone. On the full page photos use
+ * the standalone lightbox.
  */
 export async function PostArticle({
   view,
@@ -148,6 +147,7 @@ export async function PostArticle({
         <VotePoll
           post={post.id}
           vote={row.vote}
+          viewer={context.viewer}
           disabled={archived || !!post.locked}
           people={context.people}
         />
@@ -181,12 +181,7 @@ export async function PostArticle({
       )}
     </article>
   )
-  if (!dialog)
-    return (
-      <PostDialog href={href} postId={post.id} photos={view.files.some((f) => f.isImage)} page>
-        {article}
-      </PostDialog>
-    )
+  if (!dialog) return article
   if (!photos.length) return article
   return (
     <div className={styles.dialogSplit}>

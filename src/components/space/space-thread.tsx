@@ -35,7 +35,6 @@ import { LinkedText } from './linked-text'
 import { saveErrorKey } from './composer'
 import { ConsentSheet } from './consent-sheet'
 import { PersonHover, type PersonCard } from './person-hover'
-import { useRefreshPost } from './post-dialog-link'
 import { SessionChip, useSessionName, useSessionWhen, type SessionLinks } from './session-chip'
 import styles from './space.module.css'
 
@@ -115,7 +114,6 @@ export function SpaceThread({
   const tf = useTranslations('SpacePhotos')
   const format = useFormatter()
   const router = useRouter()
-  const refreshPost = useRefreshPost()
   const [, start] = useTransition()
   const [error, setError] = useState<string | null>(null)
   const [visible, setVisible] = useState(limit ?? (preview ? PREVIEW : Infinity))
@@ -275,7 +273,6 @@ export function SpaceThread({
       }
       if (event.type === 'reply') attachments.clear()
       router.refresh()
-      refreshPost?.()
     })
   }
 

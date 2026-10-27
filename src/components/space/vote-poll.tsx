@@ -12,22 +12,32 @@ import { Dialog, DialogContent } from '@/components/arc/dialog/dialog'
 import { motionTokens } from '@/components/arc/lib/motion-tokens'
 import { numberingSystemOf } from '@/lib/digits'
 import { voteSetAction } from '@/app/(frontend)/[locale]/spaces/actions'
-import type { VoteView } from '@/lib/spaces-data'
+import type { VoteView, Voter } from '@/lib/spaces-data'
 
 import { saveErrorKey } from './composer'
 import { PersonHover, type PersonCard } from './person-hover'
+import type { ThreadViewer } from './space-thread'
 import styles from './vote-poll.module.css'
 
 /** The tally as it reads once the member's whole choice is replaced (voteSet's rule). */
-const chosen = (view: VoteView, mine: string[]): VoteView => {
+const chosen = (
+  view: VoteView,
+  { mine, voter }: { mine: string[]; voter: Voter | null },
+): VoteView => {
   const was = new Set(view.mine)
   const now = new Set(mine)
   return {
     ...view,
-    options: view.options.map((o) => ({
-      ...o,
-      count: o.count + (now.has(o.id) ? 1 : 0) - (was.has(o.id) ? 1 : 0),
-    })),
+    options: view.options.map((o) => {
+      const selected = now.has(o.id)
+      const delta = Number(selected) - Number(was.has(o.id))
+      let voters = view.anonymous ? [] : o.voters
+      if (!view.anonymous && voter && delta !== 0) {
+        voters = voters.filter((v) => v.personId !== voter.personId)
+        if (selected) voters = [...voters, voter]
+      }
+      return { ...o, count: o.count + delta, voters }
+    }),
     voters: view.voters + (now.size > 0 ? 1 : 0) - (was.size > 0 ? 1 : 0),
     mine,
   }
@@ -49,11 +59,13 @@ export function VotePoll({
   vote,
   disabled,
   people,
+  viewer,
 }: {
   post: number
   vote: VoteView
   /** The space's people, so a voter's face opens the same card as everywhere else */
   people?: Map<number, PersonCard>
+  viewer: ThreadViewer
   /** Archived or locked: results only */
   disabled: boolean
 }) {
@@ -77,7 +89,13 @@ export function VotePoll({
     form.set('post', String(post))
     for (const o of options) form.append('option', o)
     start(async () => {
-      apply(options)
+      apply({
+        mine: options,
+        voter:
+          !vote.anonymous && viewer.personId != null
+            ? { personId: viewer.personId, ...viewer.me }
+            : null,
+      })
       const result = await voteSetAction({ status: 'ok' }, form)
       if (result.status === 'ok') {
         setStatus(t(options.length ? 'voteSaved' : 'voteWithdrawn'))

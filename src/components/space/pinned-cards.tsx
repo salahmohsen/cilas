@@ -177,7 +177,7 @@ export async function PinnedCards({
             format.dateTime(new Date(startsAt ?? post.createdAt), { timeZone: CAIRO, ...options })
           return (
             <li key={post.id} className={styles.pinnedItem}>
-              <PostDialog href={href} postId={post.id} photos={row.files.some((f) => f.isImage)}>
+              <PostDialog href={href} photos={row.files.some((f) => f.isImage)}>
                 <PostDateLink
                   href={href}
                   id={`post-${post.id}`}
