@@ -45,7 +45,7 @@
 .result[data-mine] .bar {
   background: color-mix(in oklab, var(--accent) 24%, transparent);
 }
-.result > :not(.track) {
+.result > :not(.track):not(button.choice) {
   position: relative;
 }
 
