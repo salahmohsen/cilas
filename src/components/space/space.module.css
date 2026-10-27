@@ -366,7 +366,7 @@
   position: absolute;
   inset-block: 0;
   inset-inline-start: 0;
-  background: var(--accent-subtle);
+  background: color-mix(in oklab, var(--accent) 22%, transparent);
 }
 
 .pinnedVoteLabel {
