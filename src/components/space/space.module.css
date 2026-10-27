@@ -1040,6 +1040,10 @@
 /* The space's own head: the cover under a flat tint of the page colour, so
    the title reads in both themes without a gradient. */
 .spaceHead {
+  --cover-scrim: oklch(98% 0 0 / 0.82);
+  --on-cover: var(--foreground);
+  --on-cover-secondary: var(--text-secondary);
+  --head-title-shadow: none;
   position: relative;
   overflow: hidden;
   isolation: isolate;
@@ -1047,6 +1051,13 @@
   border-radius: var(--radius-surface);
   background: var(--surface);
   min-width: 0;
+}
+
+:global([data-theme='dark']) .spaceHead {
+  --cover-scrim: oklch(12% 0 0 / 0.58);
+  --on-cover: oklch(98% 0 0);
+  --on-cover-secondary: oklch(98% 0 0 / 0.82);
+  --head-title-shadow: 0 1px 2px oklch(0% 0 0 / 0.4);
 }
 
 .headImage {
@@ -1065,7 +1076,7 @@
 /* Text set straight on the cover; the button groups keep their own surfaces. */
 .spaceHead .spaceTitle {
   color: var(--on-cover);
-  text-shadow: 0 1px 2px oklch(0% 0 0 / 0.4);
+  text-shadow: var(--head-title-shadow);
 }
 
 .spaceHead .headBack a,
