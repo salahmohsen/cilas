@@ -2622,3 +2622,10 @@
   color: var(--text-secondary);
   text-wrap: pretty;
 }
+
+/* "Last comment …" beside a post's date is for screens wide enough to hold it. */
+@media (max-width: 639.98px) {
+  .lastComment {
+    display: none;
+  }
+}

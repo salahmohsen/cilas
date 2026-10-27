@@ -153,10 +153,10 @@ export async function PostHead({
             <When iso={post.createdAt} postHref={postHref} />
             {post.edited_at && ` · ${t('edited')}`}
             {lastComment && (
-              <>
+              <span className={styles.lastComment}>
                 {' · '}
                 {t.rich('lastComment', { when: () => <When iso={lastComment} /> })}
-              </>
+              </span>
             )}
           </>
         }
