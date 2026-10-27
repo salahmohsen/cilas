@@ -2,6 +2,7 @@
 
 import config from '@payload-config'
 import { revalidatePath } from 'next/cache'
+import { redirect } from 'next/navigation'
 import { getPayload } from 'payload'
 
 import { personOf } from '@/access'
@@ -240,6 +241,14 @@ export async function postRemoveAction(
   const result = await postRemove({ payload, user, id })
   if (!result.ok) return err(result.error)
   await revalidate()
+  // Leave the deleted post before revalidation renders its now-missing route.
+  // Only accept a local post route for this post, never an arbitrary return URL.
+  const match = text(form, 'pathname').match(
+    /^\/(en|ar)\/spaces\/(community|course|cohort)\/([^/?#]+)\/posts\/(\d+)$/,
+  )
+  if (match && Number(match[4]) === id) {
+    redirect(`/${match[1]}/spaces/${match[2]}/${match[3]}`, 'replace')
+  }
   return { status: 'ok' }
 }
 

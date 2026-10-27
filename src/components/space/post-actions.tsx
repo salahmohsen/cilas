@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import { useTranslations } from 'next-intl'
-import { useRouter } from 'next/navigation'
+import { usePathname, useRouter } from 'next/navigation'
 import {
   Ellipsis,
   GalleryHorizontal,
@@ -82,6 +82,7 @@ export function PostActions({
 }) {
   const t = useTranslations('SpacePost')
   const router = useRouter()
+  const pathname = usePathname()
   const [editing, setEditing] = useState(false)
   const [draft, setDraft] = useState(post.body)
   const [error, setError] = useState<string | null>(null)
@@ -179,7 +180,7 @@ export function PostActions({
             setDeleting(next)
             if (next === 'idle') router.refresh()
           }}
-          onConfirm={() => run(postRemoveAction, { post: String(post.id) })}
+          onConfirm={() => run(postRemoveAction, { post: String(post.id), pathname })}
         />
       )}
       {event ? (
