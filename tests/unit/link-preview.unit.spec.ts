@@ -116,6 +116,33 @@ describe('link previews', () => {
     expect(await linkPreview('file:///etc/passwd')).toBeNull()
   })
 
+  describe('a failed fetch', () => {
+    afterEach(() => {
+      vi.unstubAllGlobals()
+      vi.useRealTimers()
+    })
+    const page = () =>
+      new Response('<html><head><title>Back again</title></head></html>', {
+        status: 200,
+        headers: { 'content-type': 'text/html' },
+      })
+
+    it('tries a link again soon when the network fails, whatever the error says', async () => {
+      vi.useFakeTimers({ toFake: ['Date'] })
+      vi.stubGlobal(
+        'fetch',
+        vi
+          .fn()
+          .mockRejectedValueOnce(new Error('getaddrinfo EAI_AGAIN example.org'))
+          .mockImplementation(async () => page()),
+      )
+      const url = 'https://93.184.216.34/retry-dns'
+      expect(await linkPreview(url)).toBeNull()
+      vi.setSystemTime(Date.now() + 3 * 60_000)
+      expect((await linkPreview(url))?.title).toBe('Back again')
+    })
+  })
+
   describe('image check', () => {
     afterEach(() => vi.unstubAllGlobals())
     const answer = (status: number, type?: string) =>

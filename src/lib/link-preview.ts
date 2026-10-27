@@ -22,8 +22,10 @@ const MAX_BYTES = 512 * 1024
 const MAX_REDIRECTS = 3
 const HIT_MS = 24 * 3600_000
 const MISS_MS = 3600_000
-/** A timeout or a refused connection may pass, so it is tried again soon. */
+/** A failed fetch (a timeout, a DNS or network error) may pass, so it is tried again soon. */
 const RETRY_MS = 120_000
+/** The errors that are this module's own refusals, not the network's: they stay a miss. */
+const REFUSALS = new Set(['private', 'protocol', 'credentials'])
 const MAX_ENTRIES = 500
 
 /**
@@ -270,12 +272,29 @@ export const linkPreview = async (raw: string): Promise<LinkPreview | null> => {
     }
   } catch (e) {
     value = null
-    retry = e instanceof Error && (e.name === 'TimeoutError' || e.message === 'fetch failed')
+    // A page that answers but has no preview returns null above and is a miss.
+    // A throw is the network failing (EAI_AGAIN offline, a reset, a timeout),
+    // except for this module's own refusals of a private or odd address.
+    retry = !(e instanceof Error && REFUSALS.has(e.message))
   }
   if (cache.size >= MAX_ENTRIES) cache.delete(cache.keys().next().value!)
   cache.set(raw, { value, until: Date.now() + (value ? HIT_MS : retry ? RETRY_MS : MISS_MS) })
   return value
 }
+
+/**
+ * The previews of several links, in order, read through the cache at once.
+ * The caller waits at most `budgetMs`; a slow fetch finishes in the background
+ * and the next render finds it in the cache. Null where none is ready.
+ */
+export const previewsWithin = (
+  urls: string[],
+  budgetMs = TITLE_BUDGET_MS,
+): Promise<(LinkPreview | null)[]> =>
+  Promise.race([
+    Promise.all(urls.map((url) => linkPreview(url))),
+    new Promise<null[]>((resolve) => setTimeout(() => resolve(urls.map(() => null)), budgetMs)),
+  ])
 
 /**
  * The page titles for a page's bare links, read in one batch through the
@@ -288,10 +307,7 @@ export const linkTitles = async (
   urls: string[],
   budgetMs = TITLE_BUDGET_MS,
 ): Promise<Record<string, string>> => {
-  const found = await Promise.race([
-    Promise.all(urls.map((url) => linkPreview(url))),
-    new Promise<null[]>((resolve) => setTimeout(() => resolve(urls.map(() => null)), budgetMs)),
-  ])
+  const found = await previewsWithin(urls, budgetMs)
   const out: Record<string, string> = {}
   urls.forEach((url, i) => {
     const title = found[i]?.title
