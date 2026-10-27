@@ -63,6 +63,8 @@ COPY . .
 # build: `next build` reads Payload to prerender pages, so it needs the new
 # tables. A failed migration fails the deploy and the running site stays as
 # it was. Payload's `prodMigrations` would instead run in every build worker.
+# db:migrate selects static production exports: Lexical's default Node exports
+# use top-level dynamic imports that can deadlock under Payload's tsx loader.
 RUN pnpm db:migrate
 
 RUN \
