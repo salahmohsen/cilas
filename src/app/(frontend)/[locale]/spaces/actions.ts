@@ -79,6 +79,11 @@ const filesOf = async (form: FormData): Promise<PostFile[]> =>
       })),
   )
 
+const attachmentChangesOf = async (form: FormData) => ({
+  files: await filesOf(form),
+  removeFiles: form.getAll('remove_file').map((id) => Number(id)),
+})
+
 /** The event cover the form sends, if any (one photo, field `cover`). */
 const coverOf = async (form: FormData): Promise<PostFile | null> => {
   const f = form.get('cover')
@@ -191,7 +196,13 @@ export async function postEditAction(
   const id = num(form, 'post')
   if (!id) return err('not-found')
   const payload = await getPayload({ config })
-  const result = await postEdit({ payload, user, id, body: text(form, 'body') })
+  const result = await postEdit({
+    payload,
+    user,
+    id,
+    body: text(form, 'body'),
+    ...(await attachmentChangesOf(form)),
+  })
   if (!result.ok) return err(result.error)
   await revalidate()
   return { status: 'ok' }
@@ -215,6 +226,7 @@ export async function voteEditAction(
   })
   const payload = await getPayload({ config })
   const result = await voteEdit({
+    ...(await attachmentChangesOf(form)),
     payload,
     user,
     id,
@@ -429,6 +441,7 @@ export async function eventEditAction(
   const payload = await getPayload({ config })
   const cover = text(form, 'cover_remove') === '1' ? null : ((await coverOf(form)) ?? undefined)
   const result = await eventEdit({
+    ...(await attachmentChangesOf(form)),
     payload,
     user,
     id,

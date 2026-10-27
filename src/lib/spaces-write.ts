@@ -571,10 +571,53 @@ export const postCreate = async (
   return { ok: true, data: { id: postId }, notify: notifyFn }
 }
 
+export type PostAttachmentEdit = { files?: PostFile[]; removeFiles?: number[] }
+
+/** Stage new files before editing; a failed save removes only those staged files. */
+const savePostEdit = async (
+  payload: Payload,
+  user: User,
+  spaceId: number,
+  post: number,
+  changes: PostAttachmentEdit,
+  update: () => Promise<unknown>,
+): Promise<WriteResult<true>> => {
+  const files = changes.files ?? []
+  const remove = new Set(changes.removeFiles ?? [])
+  const stored: number[] = []
+  if (files.length || remove.size) {
+    if (!(await consentOf(payload, user))) return err('consent')
+    const { docs: existing } = await payload.find({
+      collection: 'space-files',
+      where: { post: { equals: post } },
+      depth: 0,
+      pagination: false,
+      overrideAccess: true,
+    })
+    if ([...remove].some((id) => !existing.some((f) => f.id === id))) return err('not-yours')
+    const issue = fileError(files, existing.length - remove.size, FILE_LIMITS.post)
+    if (issue) return err(issue)
+  }
+  try {
+    for (const file of files) stored.push(await storeFile(payload, spaceId, { post }, file))
+    await update()
+  } catch (error) {
+    for (const id of stored)
+      await payload
+        .delete({ collection: 'space-files', id, overrideAccess: true })
+        .catch(() => undefined)
+    payload.logger.error({ err: error, msg: `Editing space-posts ${post} failed` })
+    return err('upload')
+  }
+  for (const id of remove)
+    await payload.delete({ collection: 'space-files', id, overrideAccess: true })
+  return { ok: true, data: true }
+}
+
 // --- postEdit ---
 
 export const postEdit = async (
-  i: Input<{ id: number; body: string }>,
+  i: Input<{ id: number; body: string } & PostAttachmentEdit>,
 ): Promise<WriteResult<true>> => {
   const { payload, user, id } = i
   const post = (await payload.findByID({
@@ -619,14 +662,14 @@ export const postEdit = async (
   const mentioned = validateMentions(body, await mentionSafelist(payload, spaceId))
   if (mentioned.invalid.length > 0) return err('mention')
 
-  await payload.update({
-    collection: 'space-posts',
-    id,
-    data: { body, edited_at: new Date().toISOString() } as never,
-    overrideAccess: true,
-  })
-  // replace versions: payload handles versions automatically on update
-  return { ok: true, data: true }
+  return savePostEdit(payload, user, spaceId, id, i, () =>
+    payload.update({
+      collection: 'space-posts',
+      id,
+      data: { body, edited_at: new Date().toISOString() } as never,
+      overrideAccess: true,
+    }),
+  )
 }
 
 // --- postRemove ---
@@ -1184,14 +1227,16 @@ export type VoteOptionEdit = { id?: string | null; label: string }
  * and several choices stay allowed while a member holds more than one.
  */
 export const voteEdit = async (
-  i: Input<{
-    id: number
-    body: string
-    options: VoteOptionEdit[]
-    multiple: boolean
-    anonymous: boolean
-    closesAt: string | null
-  }>,
+  i: Input<
+    {
+      id: number
+      body: string
+      options: VoteOptionEdit[]
+      multiple: boolean
+      anonymous: boolean
+      closesAt: string | null
+    } & PostAttachmentEdit
+  >,
   now = new Date(),
 ): Promise<WriteResult<true>> => {
   const { payload, user, id } = i
@@ -1253,19 +1298,25 @@ export const voteEdit = async (
     if ([...perAccount.values()].some((n) => n > 1)) return err('vote-voted')
   }
 
-  await payload.update({
-    collection: 'space-posts',
-    id,
-    data: {
-      body,
-      vote_options: i.options.map((o, n) => ({ ...(o.id ? { id: o.id } : {}), label: labels[n] })),
-      vote_multiple: i.multiple,
-      vote_anonymous: i.anonymous,
-      vote_closes_at: closesAt,
-      edited_at: now.toISOString(),
-    } as never,
-    overrideAccess: true,
-  })
+  const saved = await savePostEdit(payload, user, spaceId, id, i, () =>
+    payload.update({
+      collection: 'space-posts',
+      id,
+      data: {
+        body,
+        vote_options: i.options.map((o, n) => ({
+          ...(o.id ? { id: o.id } : {}),
+          label: labels[n],
+        })),
+        vote_multiple: i.multiple,
+        vote_anonymous: i.anonymous,
+        vote_closes_at: closesAt,
+        edited_at: now.toISOString(),
+      } as never,
+      overrideAccess: true,
+    }),
+  )
+  if (!saved.ok) return saved
   for (const row of held)
     if (!kept.has(row.option))
       await payload.delete({ collection: 'space-votes', id: row.id, overrideAccess: true })
@@ -1345,17 +1396,19 @@ export const rsvpSet = async (
  * save like postCreate's).
  */
 export const eventEdit = async (
-  i: Input<{
-    id: number
-    location: string
-    startsAt: string
-    endsAt?: string | null
-    /** A new cover; null takes the cover away; left out, the cover stays */
-    cover?: PostFile | null
-    /** The name and the description are the author's words; left out, they stay */
-    title?: string | null
-    body?: string
-  }>,
+  i: Input<
+    {
+      id: number
+      location: string
+      startsAt: string
+      endsAt?: string | null
+      /** A new cover; null takes the cover away; left out, the cover stays */
+      cover?: PostFile | null
+      /** The name and the description are the author's words; left out, they stay */
+      title?: string | null
+      body?: string
+    } & PostAttachmentEdit
+  >,
   now = new Date(),
 ): Promise<WriteResult<true>> => {
   const { payload, user, id } = i
@@ -1404,7 +1457,8 @@ export const eventEdit = async (
     words.body = body
   }
   const reworded = Object.keys(words).length > 0
-  if (reworded && !isAuthor) return err('not-yours')
+  const filesChanged = !!(i.files?.length || i.removeFiles?.length)
+  if ((reworded || filesChanged) && !isAuthor) return err('not-yours')
   const over = eventOver(post.event_starts_at, post.event_ends_at, now)
 
   const startChanged = new Date(i.startsAt).getTime() !== new Date(post.event_starts_at).getTime()
@@ -1425,7 +1479,8 @@ export const eventEdit = async (
   const unnamed = post.event_place == null && locationUrl(next.location) !== null
   // An event that is over keeps its time, place and cover; its words may still be fixed.
   if (over && (changed || coverChanges)) return err('event-over')
-  if (!changed && !coverChanges && !(unnamed && !over) && !reworded) return { ok: true, data: true }
+  if (!changed && !coverChanges && !(unnamed && !over) && !reworded && !filesChanged)
+    return { ok: true, data: true }
 
   let coverId: number | null = null
   try {
@@ -1434,20 +1489,26 @@ export const eventEdit = async (
     payload.logger.error({ err: e, msg: `A cover for space-posts ${id} was not stored` })
     return err('upload')
   }
-  await payload.update({
-    collection: 'space-posts',
-    id,
-    data: {
-      event_location: next.location,
-      event_starts_at: next.startsAt,
-      event_ends_at: next.endsAt,
-      ...(moved || (unnamed && !over) ? { event_place: await placeOf(next.location) } : {}),
-      ...words,
-      ...(reworded ? { edited_at: now.toISOString() } : {}),
-      ...(coverChanges ? { event_cover: coverId, event_cover_tone: cover?.tone ?? null } : {}),
-    } as never,
-    overrideAccess: true,
-  })
+  const saved = await savePostEdit(payload, user, spaceId, id, i, async () =>
+    payload.update({
+      collection: 'space-posts',
+      id,
+      data: {
+        event_location: next.location,
+        event_starts_at: next.startsAt,
+        event_ends_at: next.endsAt,
+        ...(moved || (unnamed && !over) ? { event_place: await placeOf(next.location) } : {}),
+        ...words,
+        ...(reworded || filesChanged ? { edited_at: now.toISOString() } : {}),
+        ...(coverChanges ? { event_cover: coverId, event_cover_tone: cover?.tone ?? null } : {}),
+      } as never,
+      overrideAccess: true,
+    }),
+  )
+  if (!saved.ok) {
+    await removeFile(payload, coverId)
+    return saved
+  }
   if (coverChanges) await removeFile(payload, oldCover)
   // A new photo alone tells nobody: only a new time or place changes plans.
   if (!changed) return { ok: true, data: true }

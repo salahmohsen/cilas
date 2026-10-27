@@ -4,6 +4,7 @@ import { getPayload, type Payload } from 'payload'
 import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest'
 
 import sharp from 'sharp'
+import { readFileSync } from 'node:fs'
 
 import config from '@/payload.config'
 import type { Space, User } from '@/payload-types'
@@ -25,6 +26,7 @@ import {
   voteSet,
   rsvpSet,
   eventEdit,
+  voteEdit,
   spaceLink,
 } from '@/lib/spaces-write'
 import { personOf } from '@/access'
@@ -812,6 +814,162 @@ describe('spaces write', () => {
     track('space-posts', r.data.id)
     return r.data.id
   }
+
+  const editFile = (name: string) => {
+    const data = readFileSync(new URL('../fixtures/pixel.png', import.meta.url))
+    return { data, mimetype: 'image/png', name, size: data.length }
+  }
+
+  it('post editing replaces attachments and saves people mentions together', async () => {
+    const id = await newPost(student, community, 'Before attachments')
+    const added = await fileAdd({
+      payload,
+      user: student,
+      post: id,
+      file: editFile('edit-old.png'),
+    })
+    expect(added.ok).toBe(true)
+    if (!added.ok) return
+    const body = `Hello [@Fellow](/people/${fellowPerson})`
+    const result = await postEdit({
+      payload,
+      user: student,
+      id,
+      body,
+      files: [editFile('edit-new.png')],
+      removeFiles: [added.data.id],
+    })
+    expect(result.ok).toBe(true)
+    const saved = await payload.findByID({ collection: 'space-posts', id, depth: 0 })
+    expect(saved.body).toBe(body)
+    const files = await payload.find({
+      collection: 'space-files',
+      where: { post: { equals: id } },
+      depth: 0,
+    })
+    expect(files.docs.map((f) => f.filename)).toEqual([expect.stringMatching(/edit-new\.png$/)])
+    for (const file of files.docs) track('space-files', file.id)
+  })
+
+  it('post editing refuses files from another post and leaves both posts intact', async () => {
+    const id = await newPost(student, community, 'Keep my text')
+    const other = await newPost(student, community, 'Other post')
+    const added = await fileAdd({
+      payload,
+      user: student,
+      post: other,
+      file: editFile('edit-other.png'),
+    })
+    expect(added.ok).toBe(true)
+    if (!added.ok) return
+    track('space-files', added.data.id)
+    expect(
+      await postEdit({
+        payload,
+        user: student,
+        id,
+        body: 'Should not save',
+        removeFiles: [added.data.id],
+      }),
+    ).toEqual({ ok: false, error: 'not-yours' })
+    expect((await payload.findByID({ collection: 'space-posts', id })).body).toBe('Keep my text')
+    expect((await payload.findByID({ collection: 'space-files', id: added.data.id })).id).toBe(
+      added.data.id,
+    )
+  })
+
+  it('an edit upload failure preserves the old text and files', async () => {
+    const id = await newPost(student, community, 'Keep the original')
+    const added = await fileAdd({
+      payload,
+      user: student,
+      post: id,
+      file: editFile('edit-keep.png'),
+    })
+    expect(added.ok).toBe(true)
+    if (!added.ok) return
+    track('space-files', added.data.id)
+    const real = payload.create.bind(payload)
+    let uploaded = false
+    const spy = vi.spyOn(payload, 'create').mockImplementation((async (args: {
+      collection: string
+    }) => {
+      if (args.collection === 'space-files') {
+        if (uploaded) throw new Error('storage refused the edit')
+        uploaded = true
+      }
+      return real(args as never)
+    }) as never)
+    try {
+      expect(
+        await postEdit({
+          payload,
+          user: student,
+          id,
+          body: 'Unsaved text',
+          files: [editFile('edit-staged.png'), editFile('edit-failed.png')],
+          removeFiles: [added.data.id],
+        }),
+      ).toEqual({ ok: false, error: 'upload' })
+    } finally {
+      spy.mockRestore()
+    }
+    expect((await payload.findByID({ collection: 'space-posts', id })).body).toBe(
+      'Keep the original',
+    )
+    expect((await payload.findByID({ collection: 'space-files', id: added.data.id })).id).toBe(
+      added.data.id,
+    )
+    const remaining = await payload.find({
+      collection: 'space-files',
+      where: { post: { equals: id } },
+    })
+    expect(remaining.docs.map((f) => f.id)).toEqual([added.data.id])
+  })
+
+  it.each(['event', 'vote'] as const)(
+    'saves attachment-only changes on a %s post',
+    async (kind) => {
+      const startsAt = new Date(Date.now() + 7 * 86400_000).toISOString()
+      const shape =
+        kind === 'event'
+          ? { kind, event: { title: 'Meet', location: 'Room 1', startsAt } }
+          : { kind, vote: { options: ['Tea', 'Coffee'], multiple: false } }
+      const created = await postCreate({
+        payload,
+        user: student,
+        space: community.id,
+        body: 'Original',
+        ...shape,
+      })
+      expect(created.ok).toBe(true)
+      if (!created.ok) return
+      const id = created.data.id
+      track('space-posts', id)
+      const saved = await payload.findByID({ collection: 'space-posts', id, depth: 0 })
+      const common = { payload, user: student, id, files: [editFile(`edit-${kind}.png`)] }
+      const result =
+        kind === 'event'
+          ? await eventEdit({ ...common, location: 'Room 1', startsAt })
+          : await voteEdit({
+              ...common,
+              body: 'Original',
+              options: saved.vote_options ?? [],
+              multiple: false,
+              anonymous: false,
+              closesAt: null,
+            })
+      expect(result.ok).toBe(true)
+      const files = await payload.find({
+        collection: 'space-files',
+        where: { post: { equals: id } },
+      })
+      expect(files.docs.map((f) => f.filename)).toEqual([
+        expect.stringContaining(`edit-${kind}.png`),
+      ])
+      for (const file of files.docs) track('space-files', file.id)
+    },
+  )
 
   it('a file that storage refuses gives the upload error and leaves no post, comment or file behind', async () => {
     const postId = await newPost(student, community, 'Upload refused')
@@ -2085,6 +2243,9 @@ describe('spaces write', () => {
     expect(seen?.row.vote).toEqual({
       multiple: true,
       anonymous: false,
+      closesAt: null,
+      closed: false,
+      severalHeld: true,
       options: [
         {
           id: ids[0],
@@ -2128,6 +2289,9 @@ describe('spaces write', () => {
       expect(hidden?.row.vote).toEqual({
         multiple: false,
         anonymous: true,
+        closesAt: null,
+        closed: false,
+        severalHeld: false,
         options: [
           { id: yes[0], label: 'Yes', count: 1, voters: [] },
           { id: yes[1], label: 'No', count: 1, voters: [] },

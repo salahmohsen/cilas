@@ -2,18 +2,15 @@
 
 import { useState } from 'react'
 import { useTranslations } from 'next-intl'
-import { useRouter } from 'next/navigation'
 
-import { ActionButton } from '@/components/arc/action-button/action-button'
 import { Dialog, DialogContent } from '@/components/arc/dialog/dialog'
 import { Input } from '@/components/arc/input/input'
-import { RichField } from '@/components/rich-field'
 import { eventEditAction } from '@/app/(frontend)/[locale]/spaces/actions'
 import { EVENT_TITLE_MAX } from '@/lib/space-post-kinds'
 
-import { saveErrorKey } from './composer'
-import { EventFields, endsEarly, eventFormData, type EventValue } from './event-fields'
+import { PostEditForm, type PostEditContext } from './post-edit-form'
 import styles from './space.module.css'
+import { EventFields, endsEarly, eventFormData, type EventValue } from './event-fields'
 
 /** An event as its edit dialog opens: Cairo day as YYYY-MM-DD, times as HH:MM, the cover's address. */
 export type EventEditInitial = {
@@ -35,12 +32,14 @@ export type EventEditInitial = {
 export function EventEditDialog({
   post,
   initial,
+  editor,
   words,
   schedule,
   open,
   onOpenChange,
 }: {
   post: number
+  editor: PostEditContext
   initial: EventEditInitial
   /** The author's own name and description */
   words: boolean
@@ -50,7 +49,6 @@ export function EventEditDialog({
   onOpenChange: (open: boolean) => void
 }) {
   const t = useTranslations('SpacePost')
-  const router = useRouter()
   const fresh = (): EventValue => {
     const [y = 0, m = 1, d = 1] = initial.day.split('-').map(Number)
     return {
@@ -63,43 +61,46 @@ export function EventEditDialog({
   }
   const [value, setValue] = useState<EventValue>(fresh)
   const [title, setTitle] = useState(initial.title)
-  const [description, setDescription] = useState(initial.description)
-  const [error, setError] = useState<string | null>(null)
   const today = new Date()
   today.setHours(0, 0, 0, 0)
 
   return (
-    <Dialog
-      open={open}
-      onOpenChange={(next) => {
-        if (next) {
-          setValue(fresh())
-          setTitle(initial.title)
-          setDescription(initial.description)
-          setError(null)
-        }
-        onOpenChange(next)
-      }}
-    >
-      <DialogContent title={t('eventEdit')} description={schedule ? t('eventEditHint') : undefined}>
-        <div className={styles.column}>
-          {words && (
-            <>
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent
+        chrome={false}
+        className={styles.editDialog}
+        title={t('eventEdit')}
+        description={schedule ? t('eventEditHint') : undefined}
+      >
+        <PostEditForm
+          post={post}
+          initialBody={initial.description}
+          context={editor}
+          label={t('eventDescription')}
+          placeholder={t('placeholder_event')}
+          words={words}
+          ready={
+            (!words || title.trim() !== '') &&
+            (!schedule || (value.location.trim() !== '' && !!value.day && !endsEarly(value)))
+          }
+          uploadBytes={value.cover.file?.size ?? 0}
+          before={
+            words && (
               <Input
                 label={t('eventTitle')}
                 value={title}
                 maxLength={EVENT_TITLE_MAX}
                 onChange={(e) => setTitle(e.currentTarget.value)}
               />
-              <RichField
-                label={t('eventDescription')}
-                placeholder={t('placeholder_event')}
-                defaultMarkdown={initial.description}
-                minHeading={2}
-                onChange={(v) => setDescription(v.empty ? '' : v.markdown)}
-              />
-            </>
-          )}
+            )
+          }
+          onCancel={() => onOpenChange(false)}
+          onSave={async (form) => {
+            eventFormData(schedule ? value : fresh(), form, initial.cover)
+            if (words) form.set('title', title)
+            return eventEditAction({ status: 'ok' }, form)
+          }}
+        >
           {schedule && (
             <EventFields
               value={value}
@@ -107,43 +108,7 @@ export function EventEditDialog({
               minDate={today}
             />
           )}
-          {error && (
-            <p role="alert" className={styles.error}>
-              {error}
-            </p>
-          )}
-          <div>
-            <ActionButton
-              label={t('saveEdit')}
-              pendingLabel={t('saving')}
-              successLabel={t('saved')}
-              disabled={
-                (words && (title.trim() === '' || description.trim() === '')) ||
-                (schedule && (value.location.trim() === '' || !value.day || endsEarly(value)))
-              }
-              onAction={async () => {
-                setError(null)
-                const form = new FormData()
-                form.set('post', String(post))
-                // An event that is over keeps its schedule; the dialog sends it unchanged.
-                eventFormData(schedule ? value : fresh(), form, initial.cover)
-                if (words) {
-                  form.set('title', title)
-                  form.set('body', description)
-                }
-                const result = await eventEditAction({ status: 'ok' }, form).catch(
-                  () => ({ status: 'error', error: 'failed' }) as const,
-                )
-                if (result.status === 'error') {
-                  setError(t(saveErrorKey(result.error)))
-                  throw new Error(result.error)
-                }
-                router.refresh()
-                setTimeout(() => onOpenChange(false), 900)
-              }}
-            />
-          </div>
-        </div>
+        </PostEditForm>
       </DialogContent>
     </Dialog>
   )

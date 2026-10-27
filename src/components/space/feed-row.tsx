@@ -1,5 +1,5 @@
 import { Suspense } from 'react'
-import { getTranslations } from 'next-intl/server'
+import { getLocale, getTranslations } from 'next-intl/server'
 import { Lock, Megaphone, Pin, Vote } from 'lucide-react'
 
 import { Avatar } from '@/components/arc/avatar/avatar'
@@ -29,6 +29,7 @@ import { sessionsFor, type SessionContext } from './session-block'
 import type { ThreadViewer } from './space-thread'
 import styles from './space.module.css'
 import { When } from './when'
+import { sessionOptions } from './session-options'
 
 /** What every card in one space shares: who reads, who is in it, and what they may do. */
 export type FeedContext = {
@@ -110,6 +111,10 @@ export async function PostHead({
   postHref?: string
 }) {
   const t = await getTranslations('SpacePost')
+  const sessionChoices =
+    context.sessions?.read?.state === 'shown'
+      ? await sessionOptions(context.sessions.read.course, await getLocale())
+      : []
   const { post } = row
   const { viewer, archived } = context
   const mine = row.authorId != null && row.authorId === viewer.personId
@@ -172,6 +177,11 @@ export async function PostHead({
               pinnedFull: !!post.pinned_full,
               locked: !!post.locked,
               intro,
+            }}
+            editor={{
+              mentions: context.cards.map(({ id, name }) => ({ id, name })),
+              sessions: sessionChoices,
+              files: row.files,
             }}
             canEdit={(mine || (intro && viewer.moderator)) && !archived}
             canModerate={viewer.moderator && !archived}

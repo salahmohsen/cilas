@@ -23,6 +23,14 @@
   color: var(--foreground);
   box-shadow: var(--shadow-floating);
 }
+/* The child supplies the only visible surface and its own close action. Keep the modal's sizing and scrolling. */
+.content.chromeless {
+  border: 0;
+  background: transparent;
+  box-shadow: none;
+  font-size: var(--text-sm);
+  line-height: var(--leading-body);
+}
 /* Motion animates both layers. Keyframes only run when DialogContent sits under a bare Radix root. */
 .keyframes.overlay[data-state='open'] {
   animation: overlay-in var(--duration-standard) var(--ease-enter) both;

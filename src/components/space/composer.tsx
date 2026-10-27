@@ -12,7 +12,7 @@ import { Avatar } from '@/components/arc/avatar/avatar'
 import { BottomSheet } from '@/components/arc/bottom-sheet/bottom-sheet'
 import { Button } from '@/components/arc/button/button'
 import { Input } from '@/components/arc/input/input'
-import { RichField } from '@/components/rich-field'
+import { ComposerField } from './composer-field'
 import type { SessionSuggestion } from '@/components/arc/rich-text-editor/rich-text-editor'
 import SegmentedControl from '@/components/arc/segmented-control/segmented-control'
 import { postCreateAction, type SpacesWriteState } from '@/app/(frontend)/[locale]/spaces/actions'
@@ -249,17 +249,14 @@ function ComposerForm({
             onChange={(e) => set({ title: e.currentTarget.value })}
           />
         )}
-        <RichField
+        <ComposerField
           autoFocus
           label={kind === 'event' ? t('eventDescription') : t('newPost')}
           hideLabel={kind !== 'event'}
           placeholder={t(`placeholder_${kind}`)}
           defaultMarkdown={initial}
-          minHeading={2}
-          mentionSuggestions={mentions}
-          description={t(sessions.length ? 'composeHintCourse' : 'composeHint')}
-          sessionSuggestions={sessions.length ? sessions : undefined}
-          sessionLabels={{ list: t('sessionList'), blocks: t('sessionBlocks') }}
+          mentions={mentions}
+          sessions={sessions}
           onChange={(v) => {
             setBody({ markdown: v.markdown, empty: v.empty })
             if (v.empty) localStorage.removeItem(draftKey)

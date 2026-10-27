@@ -15,11 +15,9 @@ import {
   Trash2,
 } from 'lucide-react'
 
-import { ActionButton } from '@/components/arc/action-button/action-button'
 import { ConfirmMorph, type ConfirmMorphState } from '@/components/arc/confirm-morph/confirm-morph'
 import { Dialog, DialogContent } from '@/components/arc/dialog/dialog'
 import { DropdownMenu } from '@/components/arc/dropdown-menu/dropdown-menu'
-import { RichField } from '@/components/rich-field'
 import {
   postEditAction,
   postModifyAction,
@@ -27,10 +25,10 @@ import {
   type SpacesWriteState,
 } from '@/app/(frontend)/[locale]/spaces/actions'
 
-import { saveErrorKey } from './composer'
+import { PostEditForm, type PostEditContext } from './post-edit-form'
+import styles from './space.module.css'
 import { EventEditDialog, type EventEditInitial } from './event-edit'
 import { VoteEditDialog, type VoteEditInitial } from './vote-edit'
-import styles from './space.module.css'
 
 /**
  * `pinnedFull`: pinned whole at the top, not as a card in the carousel.
@@ -71,8 +69,10 @@ export function PostActions({
   canDelete,
   event,
   vote,
+  editor,
 }: {
   post: Post
+  editor: PostEditContext
   canEdit: boolean
   canModerate: boolean
   canDelete: boolean
@@ -84,8 +84,6 @@ export function PostActions({
   const router = useRouter()
   const pathname = usePathname()
   const [editing, setEditing] = useState(false)
-  const [draft, setDraft] = useState(post.body)
-  const [error, setError] = useState<string | null>(null)
   const [deleting, setDeleting] = useState<ConfirmMorphState>('idle')
 
   const modify = (fields: Record<string, string>) => async () => {
@@ -183,56 +181,42 @@ export function PostActions({
           onConfirm={() => run(postRemoveAction, { post: String(post.id), pathname })}
         />
       )}
-      {event ? (
-        <EventEditDialog
-          post={post.id}
-          initial={event.initial}
-          words={canEdit}
-          schedule={event.schedule}
-          open={editing}
-          onOpenChange={setEditing}
-        />
-      ) : vote ? (
-        <VoteEditDialog post={post.id} initial={vote} open={editing} onOpenChange={setEditing} />
-      ) : (
-        <Dialog open={editing} onOpenChange={setEditing}>
-          <DialogContent title={t('edit')}>
-            <div className={styles.column}>
-              <RichField
-                label={t('edit')}
-                hideLabel
-                defaultMarkdown={post.body}
-                minHeading={2}
-                onChange={(v) => setDraft(v.markdown)}
-              />
-              {error && (
-                <p role="alert" className={styles.error}>
-                  {error}
-                </p>
-              )}
-              <div>
-                <ActionButton
-                  label={t('saveEdit')}
-                  pendingLabel={t('saving')}
-                  successLabel={t('saved')}
-                  disabled={draft.trim() === ''}
-                  onAction={async () => {
-                    setError(null)
-                    try {
-                      await run(postEditAction, { post: String(post.id), body: draft })
-                    } catch (e) {
-                      setError(t(saveErrorKey((e as Error).message)))
-                      throw e
-                    }
-                    router.refresh()
-                    setTimeout(() => setEditing(false), 900)
-                  }}
+      {editing &&
+        (event ? (
+          <EventEditDialog
+            post={post.id}
+            initial={event.initial}
+            editor={editor}
+            words={canEdit}
+            schedule={event.schedule}
+            open={editing}
+            onOpenChange={setEditing}
+          />
+        ) : vote ? (
+          <VoteEditDialog
+            post={post.id}
+            initial={vote}
+            editor={editor}
+            open={editing}
+            onOpenChange={setEditing}
+          />
+        ) : (
+          <Dialog open={editing} onOpenChange={setEditing}>
+            <DialogContent title={t('edit')} chrome={false} className={styles.editDialog}>
+              {editing && (
+                <PostEditForm
+                  post={post.id}
+                  initialBody={post.body}
+                  context={editor}
+                  label={t('edit')}
+                  placeholder={t('placeholder_discussion')}
+                  onSave={(form) => postEditAction({ status: 'ok' }, form)}
+                  onCancel={() => setEditing(false)}
                 />
-              </div>
-            </div>
-          </DialogContent>
-        </Dialog>
-      )}
+              )}
+            </DialogContent>
+          </Dialog>
+        ))}
     </>
   )
 }

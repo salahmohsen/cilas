@@ -44,6 +44,8 @@ export interface DialogContentProps extends ComponentPropsWithoutRef<
   description?: string
   /** No title bar: the title and description stay as the dialog's accessible name and description, hidden from view, and the close button floats in the start corner. */
   bare?: boolean
+  /** False when the children provide their own surface and close action. Keeps the accessible title, overlay, and modal behavior. */
+  chrome?: boolean
   /** The close button's accessible name, for a translated interface. */
   closeLabel?: string
   children: ReactNode
@@ -95,6 +97,7 @@ export function DialogContent({
   title,
   description,
   bare = false,
+  chrome = true,
   closeLabel = 'Close dialog',
   children,
   className,
@@ -117,7 +120,9 @@ export function DialogContent({
     )
       event.preventDefault()
   }
-  const classes = [styles.content, className].filter(Boolean).join(' ')
+  const classes = [styles.content, !chrome && styles.chromeless, className]
+    .filter(Boolean)
+    .join(' ')
   const close = (
     <DialogPrimitive.Close
       className={bare ? styles.floatingClose : styles.close}
@@ -126,35 +131,36 @@ export function DialogContent({
       <X size={bare ? 20 : 16} strokeWidth={1.75} aria-hidden="true" />
     </DialogPrimitive.Close>
   )
-  const inner = bare ? (
-    <>
-      {close}
-      <DialogPrimitive.Title className={styles.hidden}>{title}</DialogPrimitive.Title>
-      {description ? (
-        <DialogPrimitive.Description className={styles.hidden}>
-          {description}
-        </DialogPrimitive.Description>
-      ) : null}
-      <div className={styles.body}>{children}</div>
-    </>
-  ) : (
-    <>
-      <div className={styles.header}>
-        <div>
-          <DialogPrimitive.Title className={styles.title}>
-            <SwapText text={title} />
-          </DialogPrimitive.Title>
-          {description ? (
-            <DialogPrimitive.Description className={styles.description}>
-              <SwapText text={description} />
-            </DialogPrimitive.Description>
-          ) : null}
+  const inner =
+    bare || !chrome ? (
+      <>
+        {chrome && close}
+        <DialogPrimitive.Title className={styles.hidden}>{title}</DialogPrimitive.Title>
+        {description ? (
+          <DialogPrimitive.Description className={styles.hidden}>
+            {description}
+          </DialogPrimitive.Description>
+        ) : null}
+        {chrome ? <div className={styles.body}>{children}</div> : children}
+      </>
+    ) : (
+      <>
+        <div className={styles.header}>
+          <div>
+            <DialogPrimitive.Title className={styles.title}>
+              <SwapText text={title} />
+            </DialogPrimitive.Title>
+            {description ? (
+              <DialogPrimitive.Description className={styles.description}>
+                <SwapText text={description} />
+              </DialogPrimitive.Description>
+            ) : null}
+          </div>
+          {close}
         </div>
-        {close}
-      </div>
-      <div className={styles.body}>{children}</div>
-    </>
-  )
+        <div className={styles.body}>{children}</div>
+      </>
+    )
   // Under a bare Radix root the open state is unknown here, so CSS keyframes keyed off data-state animate the layers instead.
   if (open === null)
     return (

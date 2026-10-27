@@ -131,6 +131,17 @@
   min-width: 0;
 }
 
+.editFields {
+  border: 0;
+  margin: 0;
+  padding: 0;
+  min-width: 0;
+}
+
+.editDialog[role='dialog'] {
+  width: min(calc(100vw - var(--space-8)), 42rem);
+}
+
 .groupHead {
   display: flex;
   flex-wrap: wrap;
