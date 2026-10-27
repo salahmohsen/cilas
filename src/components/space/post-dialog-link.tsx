@@ -28,6 +28,21 @@ type PostDialogApi = {
   openAt: (photo: number | null, opener: HTMLElement) => void
 }
 
+/**
+ * Next patches `history.pushState` to move its router to the new address, and every refresh or
+ * server action after that reloads the page at that address, so a like or a comment in the dialog
+ * would replace the feed with the post's page. The methods on the prototype are not patched: they
+ * change the address bar and the history, and Next keeps the page under the dialog as its own.
+ */
+const quietPush = (href: string) =>
+  History.prototype.pushState.call(window.history, window.history.state, '', href)
+
+/** Back at the post's entry, after Forward: Next moved its router to it, so move the router back to `feed`. */
+const quietRestore = (feed: string, href: string) => {
+  window.history.replaceState(null, '', feed)
+  History.prototype.replaceState.call(window.history, window.history.state, '', href)
+}
+
 const Api = createContext<PostDialogApi | null>(null)
 const StartPhoto = createContext<number | null>(null)
 const Refresh = createContext<(() => void) | null>(null)
@@ -72,6 +87,8 @@ export function PostDialog({
   const [failed, setFailed] = useState(false)
   const opener = useRef<HTMLElement | null>(null)
   const pushed = useRef(false)
+  // The address of the page under the dialog, from when the dialog opened.
+  const feed = useRef<string | null>(null)
   // The dialog's exit renders with the last open props, so its handlers read the state from here.
   const isOpen = useRef(open)
   useEffect(() => {
@@ -101,11 +118,33 @@ export function PostDialog({
       if (here) {
         setStart(null)
         void load()
+        // After Next's own popstate handler has moved its router to the post's address.
+        const base = feed.current
+        if (base) setTimeout(() => quietRestore(base, window.location.href), 0)
       }
     }
     window.addEventListener('popstate', sync)
     return () => window.removeEventListener('popstate', sync)
   }, [href, load, page])
+
+  // After each refresh Next writes the address of its own page into the bar again; the post's stays while the dialog is open.
+  useEffect(() => {
+    if (!open || page) return
+    const previous = window.history.replaceState
+    const keep = function (this: History, ...args: Parameters<History['replaceState']>) {
+      previous.apply(this, args)
+      const url = args[2]
+      if (!pushed.current || !feed.current || url == null) return
+      const own = new URL(feed.current)
+      const next = new URL(String(url), window.location.href)
+      if (next.pathname === own.pathname && next.search === own.search)
+        History.prototype.replaceState.call(window.history, window.history.state, '', href)
+    }
+    window.history.replaceState = keep
+    return () => {
+      if (window.history.replaceState === keep) window.history.replaceState = previous
+    }
+  }, [open, page, href])
 
   const api = useMemo<PostDialogApi>(
     () => ({
@@ -115,7 +154,8 @@ export function PostDialog({
         setFailed(false)
         setOpen(true)
         if (!page && !pushed.current) {
-          window.history.pushState(null, '', href)
+          feed.current = window.location.href
+          quietPush(href)
           pushed.current = true
         }
         void load()
