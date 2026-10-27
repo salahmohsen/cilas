@@ -10,38 +10,52 @@ import messages from '../../messages/en.json'
 import { Avatar } from '@/components/arc/avatar/avatar'
 import { AvatarGroup } from '@/components/arc/avatar-group/avatar-group'
 import { AvatarImage } from '@/components/person/avatar-image'
-import { avatarFallback, personAvatarSeed } from '@/lib/avatar'
+import { AvatarFallback } from '@/components/person/avatar-fallback'
+import { PeopleWheel } from '@/components/person/people-wheel'
+import { personAvatarSeed } from '@/lib/avatar'
+
+vi.mock('@/i18n/navigation', () => ({ Link: 'a' }))
 
 const seed = personAvatarSeed(42)
-const fallback = avatarFallback(seed)
+// React assigns unique mask IDs to each SVG; the portrait geometry stays the same.
+const portrait = (svg: Element | null) =>
+  svg?.innerHTML.replace(/id="[^"]+"/g, 'id="mask"').replace(/url\(#[^)]+\)/g, 'url(#mask)')
+const fallback = () => {
+  const container = document.createElement('div')
+  container.innerHTML = renderToString(<AvatarFallback seed={seed} />)
+  return portrait(container.querySelector('svg'))
+}
 
 afterEach(() => {
   cleanup()
   vi.restoreAllMocks()
 })
 
-describe('local Blobatar fallback', () => {
+describe('local Beam fallback', () => {
   it('generates deterministic, distinct SVGs without embedding names or making requests', () => {
     const fetch = vi.spyOn(globalThis, 'fetch')
-    expect(avatarFallback(personAvatarSeed('42'))).toBe(fallback)
-    expect(avatarFallback(personAvatarSeed(43))).not.toBe(fallback)
-    expect(fallback).toMatch(/^data:image\/svg\+xml,/)
-    const svg = decodeURIComponent(fallback.slice(fallback.indexOf(',') + 1))
+    const svg = renderToString(<AvatarFallback seed={personAvatarSeed('42')} />)
+    expect(svg).toBe(renderToString(<AvatarFallback seed={seed} />))
+    expect(svg).not.toBe(renderToString(<AvatarFallback seed={personAvatarSeed(43)} />))
     expect(svg).toContain('<svg')
+    // Beam's face uses a 36 × 36 canvas, with paths for its mouth and eyes.
+    expect(svg).toContain('viewBox="0 0 36 36"')
+    expect(svg).toContain('<path')
     expect(svg).not.toContain('person:42')
     expect(svg).not.toMatch(/<script|<image|https?:\/\/(?!www.w3.org)/)
-    expect(avatarFallback('')).toBe(avatarFallback('anonymous'))
+    expect(renderToString(<AvatarFallback seed="" />)).toBe(
+      renderToString(<AvatarFallback seed="anonymous" />),
+    )
     expect(fetch).not.toHaveBeenCalled()
   })
 
   it('keeps a person’s identity independent of their displayed name and size', () => {
     const { container, rerender } = render(<Avatar name="A person" fallbackSeed={seed} size="sm" />)
-    expect(container.querySelector('img')).toHaveAttribute('src', fallback)
+    expect(portrait(container.querySelector('svg'))).toBe(fallback())
     rerender(<Avatar name="شخص" fallbackSeed={seed} size="xl" status="online" />)
-    expect(container.querySelector('img')).toHaveAttribute('src', fallback)
+    expect(portrait(container.querySelector('svg'))).toBe(fallback())
     expect(screen.getByRole('img', { name: 'شخص, online' })).toBeInTheDocument()
-    expect(container.querySelector('img')).toHaveAttribute('alt', '')
-    expect(container.querySelector('img')).toHaveAttribute('aria-hidden', 'true')
+    expect(container.querySelector('svg')).toHaveAttribute('aria-hidden', 'true')
     expect(container.querySelector('span')).not.toHaveAttribute('fallbackSeed')
   })
 
@@ -55,12 +69,12 @@ describe('local Blobatar fallback', () => {
     fireEvent.load(photo)
     expect(photo).not.toHaveAttribute('data-loading')
     fireEvent.error(photo)
-    expect(container.querySelectorAll('img')).toHaveLength(1)
-    expect(container.querySelector('img')).toHaveAttribute('src', fallback)
+    expect(container.querySelectorAll('img')).toHaveLength(0)
+    expect(portrait(container.querySelector('svg'))).toBe(fallback())
     rerender(<Avatar name="Person" src="/replacement.jpg" fallbackSeed={seed} />)
     expect(container.querySelector('img[src="/replacement.jpg"]')).toBeInTheDocument()
     rerender(<Avatar name="Person" fallbackSeed={seed} />)
-    expect(container.querySelectorAll('img')).toHaveLength(1)
+    expect(container.querySelectorAll('svg')).toHaveLength(1)
   })
 
   it('leaves system and decorative initials alone without an explicit seed', () => {
@@ -81,10 +95,10 @@ describe('local Blobatar fallback', () => {
         label="Members"
       />,
     )
-    const images = container.querySelectorAll('img')
+    const images = container.querySelectorAll('svg')
     expect(images).toHaveLength(2)
-    expect(images[0]).toHaveAttribute('src', fallback)
-    expect(images[1].getAttribute('src')).not.toBe(fallback)
+    expect(portrait(images[0])).toBe(fallback())
+    expect(portrait(images[1])).not.toBe(fallback())
     expect(screen.getByRole('img', { name: '1 more members' })).toBeInTheDocument()
   })
 
@@ -104,17 +118,16 @@ describe('local Blobatar fallback', () => {
     const image = container.querySelector('img')!
     expect(image).toHaveAttribute('src', '/bad.jpg')
     fireEvent.error(image)
-    expect(image).toHaveAttribute('src', fallback)
-    expect(image).not.toHaveAttribute('srcSet')
-    expect(image).toHaveAttribute('alt', 'Person')
-    expect(image).toHaveAttribute('width', '48')
+    expect(container.querySelector('img')).toBeNull()
+    expect(portrait(container.querySelector('svg'))).toBe(fallback())
+    expect(container.querySelector('svg')).not.toHaveAttribute('srcSet')
+    expect(container.querySelector('svg')).toHaveAttribute('aria-label', 'Person')
+    expect(container.querySelector('svg')).toHaveAttribute('width', '48')
     expect(onError).toHaveBeenCalledOnce()
     rerender(<AvatarImage src="/good.jpg" fallbackSeed={seed} />)
-    expect(image).toHaveAttribute('src', '/good.jpg')
+    expect(container.querySelector('img')).toHaveAttribute('src', '/good.jpg')
     rerender(<AvatarImage fallbackSeed={seed} />)
-    expect(image).toHaveAttribute('src', fallback)
-    fireEvent.error(image)
-    expect(image).toHaveAttribute('src', fallback)
+    expect(portrait(container.querySelector('svg'))).toBe(fallback())
   })
 
   it('uses the same local portrait in account menus, profile upload controls, and comments', () => {
@@ -130,14 +143,20 @@ describe('local Blobatar fallback', () => {
         currentUser={author}
         comments={[{ id: '1', author, body: 'Comment', createdAt: 'Now' }]}
       />,
+      <NextIntlClientProvider key="wheel" locale="en" messages={messages}>
+        <PeopleWheel
+          namespace="Fellows"
+          people={[{ id: 42, slug: 'person', name: 'Person', eyebrow: '', lines: [], bio: '' }]}
+        />
+      </NextIntlClientProvider>,
     ]
     for (const surface of surfaces) {
       const container = document.createElement('div')
       container.innerHTML = renderToString(surface)
-      const images = [...container.querySelectorAll('img')]
+      const images = [...container.querySelectorAll('svg[viewBox="0 0 36 36"]')]
       expect(images.length).toBeGreaterThan(0)
-      expect(images.every((image) => image.getAttribute('src') === fallback)).toBe(true)
-      expect(images.every((image) => !image.getAttribute('src')?.includes('private'))).toBe(true)
+      expect(images.every((image) => portrait(image) === fallback())).toBe(true)
+      expect(container.innerHTML).not.toContain('person:42')
     }
   })
 
@@ -159,7 +178,7 @@ describe('local Blobatar fallback', () => {
     })
     expect(recoverable).not.toHaveBeenCalled()
     expect(
-      [...container.querySelectorAll('img')].every((img) => img.getAttribute('src') === fallback),
+      [...container.querySelectorAll('svg')].every((svg) => portrait(svg) === fallback()),
     ).toBe(true)
     await act(async () => {
       root.unmount()

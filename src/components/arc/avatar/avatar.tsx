@@ -4,12 +4,12 @@ import { useLayoutEffect, useRef, useState, type HTMLAttributes } from 'react'
 import { AnimatePresence, motion, useReducedMotion } from 'motion/react'
 import { ArcImage } from '../lib/arc-provider'
 import { motionTokens } from '../lib/motion-tokens'
-import { avatarFallback } from '@/lib/avatar'
+import { AvatarFallback } from '@/components/person/avatar-fallback'
 import styles from './avatar.module.css'
 export interface AvatarProps extends HTMLAttributes<HTMLSpanElement> {
   name: string
   src?: string
-  /** Opt in to a local Blobatar for a real person; other avatars keep initials. */
+  /** Opt in to a local Beam avatar for a real person; other avatars keep initials. */
   fallbackSeed?: string
   size?: 'sm' | 'md' | 'lg' | 'xl'
   status?: 'online' | 'offline'
@@ -46,12 +46,16 @@ export function Avatar({
       aria-label={`${name}${status ? `, ${status}` : ''}`}
     >
       {fallbackSeed && !showImage && (
-        // eslint-disable-next-line @next/next/no-img-element -- generated locally, no image service
-        <img
-          src={avatarFallback(fallbackSeed)}
-          alt=""
+        <AvatarFallback
+          seed={fallbackSeed}
           aria-hidden="true"
-          style={{ position: 'absolute', inset: 0, width: '100%', height: '100%' }}
+          style={{
+            position: 'absolute',
+            inset: 0,
+            width: '100%',
+            height: '100%',
+            borderRadius: 'inherit',
+          }}
         />
       )}
       {showImage ? (

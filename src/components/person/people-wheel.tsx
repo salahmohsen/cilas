@@ -3,7 +3,7 @@
 import { useLocale, useTranslations } from 'next-intl'
 import { useState, type ReactNode } from 'react'
 
-import { avatarFallback, personAvatarSeed } from '@/lib/avatar'
+import { personAvatarSeed } from '@/lib/avatar'
 import { WheelCarousel } from '@/components/ui/wheel-carousel'
 import { Link } from '@/i18n/navigation'
 
@@ -59,7 +59,8 @@ export function PeopleWheel({
           gap={24}
           items={people.map((p) => ({
             label: p.name,
-            image: p.photo?.url || avatarFallback(personAvatarSeed(p.id)),
+            image: p.photo?.url,
+            fallbackSeed: personAvatarSeed(p.id),
             imageAlt: p.photo?.alt || p.name,
           }))}
           label={t('wheel')}

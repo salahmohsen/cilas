@@ -9,6 +9,7 @@
  */
 
 import { cn } from '@/lib/utils'
+import { AvatarImage } from '@/components/person/avatar-image'
 import { AnimatePresence, motion, useReducedMotion } from 'motion/react'
 import {
   type KeyboardEvent,
@@ -25,6 +26,7 @@ export interface WheelCarouselItem {
   /** Omit when there is no photo: the panel then shows the label's initials. */
   image?: string
   imageAlt?: string
+  fallbackSeed?: string
 }
 
 export interface WheelCarouselProps {
@@ -359,18 +361,23 @@ export function WheelCarousel({
             }}
           >
             <AnimatePresence initial={false} mode="sync">
-              {selectedItem.image ? (
-                <motion.img
-                  key={`${safeSelectedIndex}-${selectedItem.image}`}
-                  src={selectedItem.image}
-                  alt={selectedItem.imageAlt ?? selectedItem.label}
+              {selectedItem.image || selectedItem.fallbackSeed ? (
+                <motion.div
+                  key={`${safeSelectedIndex}-${selectedItem.image ?? selectedItem.fallbackSeed}`}
                   initial={reduceMotion ? false : { opacity: 0, scale: 1.04 }}
                   animate={{ opacity: 1, scale: 1 }}
                   exit={{ opacity: 0 }}
                   transition={{ duration: reduceMotion ? 0 : crossfadeDuration }}
                   className="absolute inset-0 h-full w-full object-cover"
-                  draggable={false}
-                />
+                >
+                  <AvatarImage
+                    src={selectedItem.image}
+                    fallbackSeed={selectedItem.fallbackSeed ?? selectedItem.label}
+                    alt={selectedItem.imageAlt ?? selectedItem.label}
+                    className="h-full w-full object-cover"
+                    draggable={false}
+                  />
+                </motion.div>
               ) : (
                 <motion.span
                   key={`${safeSelectedIndex}-initials`}
