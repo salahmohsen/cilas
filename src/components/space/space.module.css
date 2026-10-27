@@ -2022,6 +2022,12 @@
   max-width: 100%;
 }
 
+/* The cover's tokens are see-through, so overlapped faces would show the one behind. The stack gets the same tints, solid over the field. */
+.event[data-cover] .rsvpGoing {
+  --surface: color-mix(in oklch, var(--event-field), oklch(100% 0 0) 18%);
+  --surface-muted: color-mix(in oklch, var(--event-field), oklch(100% 0 0) 10%);
+}
+
 .rsvpGoing {
   display: flex;
   flex-wrap: wrap;
