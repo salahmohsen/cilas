@@ -1,5 +1,7 @@
 'use client'
 
+import { AvatarImage } from '@/components/person/avatar-image'
+
 import {
   Fragment,
   createContext,
@@ -27,6 +29,7 @@ export interface CommentAuthor {
   name: string
   /** Square image URL. Initials are shown without one. */
   avatar?: string
+  fallbackSeed?: string
 }
 
 export interface CommentReaction {
@@ -354,6 +357,18 @@ let serial = 0
 const newId = () => `c-${Date.now().toString(36)}-${(serial++).toString(36)}`
 
 function Avatar({ author, size = 28 }: { author: CommentAuthor; size?: number }) {
+  if (author.fallbackSeed)
+    return (
+      <AvatarImage
+        src={author.avatar}
+        fallbackSeed={author.fallbackSeed}
+        className={styles.avatar}
+        width={size}
+        height={size}
+        style={{ width: size, height: size }}
+        aria-hidden="true"
+      />
+    )
   return author.avatar ? (
     // eslint-disable-next-line @next/next/no-img-element
     <img

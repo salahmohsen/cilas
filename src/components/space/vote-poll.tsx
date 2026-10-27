@@ -1,5 +1,7 @@
 'use client'
 
+import { personAvatarSeed } from '@/lib/avatar'
+
 import { useId, useOptimistic, useState, useTransition } from 'react'
 import { useFormatter, useLocale, useTranslations } from 'next-intl'
 import { useRouter } from 'next/navigation'
@@ -214,6 +216,7 @@ export function VotePoll({
                     label={t('voteChosenBy', { option: o.label })}
                     members={o.voters.map((v) => ({
                       id: v.personId,
+                      fallbackSeed: personAvatarSeed(v.personId),
                       name: v.name,
                       src: v.photo ?? undefined,
                     }))}
@@ -255,7 +258,12 @@ export function VotePoll({
           <ul className={styles.voterList}>
             {shownList?.voters.map((v) => (
               <li key={v.personId} className={styles.voterRow}>
-                <Avatar name={v.name} src={v.photo ?? undefined} size="sm" />
+                <Avatar
+                  fallbackSeed={personAvatarSeed(v.personId)}
+                  name={v.name}
+                  src={v.photo ?? undefined}
+                  size="sm"
+                />
                 <PersonHover
                   person={cardOf(people, {
                     id: v.personId,

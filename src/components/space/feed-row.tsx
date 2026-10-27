@@ -2,6 +2,7 @@ import { Suspense } from 'react'
 import { getLocale, getTranslations } from 'next-intl/server'
 import { Lock, Megaphone, Pin, Vote } from 'lucide-react'
 
+import { personAvatarSeed } from '@/lib/avatar'
 import { Avatar } from '@/components/arc/avatar/avatar'
 import { Badge } from '@/components/arc/badge/badge'
 import { outsideLinks } from '@/lib/link-preview'
@@ -79,7 +80,12 @@ export async function Byline({
   )
   return (
     <div className={styles.byline}>
-      <Avatar name={shown} src={person?.photo ?? undefined} size="md" />
+      <Avatar
+        fallbackSeed={personId != null ? personAvatarSeed(personId) : undefined}
+        name={shown}
+        src={person?.photo ?? undefined}
+        size="md"
+      />
       <div className={styles.bylineText}>
         <span className={styles.bylineName}>
           {person ? (

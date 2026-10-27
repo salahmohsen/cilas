@@ -36,7 +36,7 @@ const PHONE = '(max-width: 1023px)'
 
 const MB = 1024 * 1024
 
-type Me = { name: string; photo: string | null }
+type Me = { name: string; photo: string | null; fallbackSeed?: string }
 
 export type SessionChoice = SessionSuggestion
 
@@ -115,7 +115,12 @@ export function Composer({
         form
       ) : (
         <button type="button" className={styles.prompt} aria-haspopup="dialog" onClick={start}>
-          <Avatar name={me.name} src={me.photo ?? undefined} size="sm" />
+          <Avatar
+            fallbackSeed={me.fallbackSeed ?? 'anonymous'}
+            name={me.name}
+            src={me.photo ?? undefined}
+            size="sm"
+          />
           <span>{t('writePrompt')}</span>
         </button>
       )}

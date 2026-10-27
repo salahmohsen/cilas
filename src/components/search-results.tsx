@@ -1,5 +1,7 @@
 'use client'
 
+import { personAvatarSeed } from '@/lib/avatar'
+
 import { Highlight, Snippet } from 'react-instantsearch'
 import { useLocale, useTranslations } from 'next-intl'
 import { RotateCw, Search, SlidersHorizontal, X } from 'lucide-react'
@@ -66,7 +68,11 @@ function relativeTime(timestamp: number | undefined, locale: string): string | n
     const value = Math.round(seconds / size)
     if (value < limit) return format.format(-value, unit)
   }
-  return new Date(timestamp).toLocaleDateString(locale, { month: 'short', day: 'numeric', year: 'numeric' })
+  return new Date(timestamp).toLocaleDateString(locale, {
+    month: 'short',
+    day: 'numeric',
+    year: 'numeric',
+  })
 }
 
 /** A copy of the hit whose snippet is re-cut at sentence boundaries:
@@ -74,7 +80,13 @@ function relativeTime(timestamp: number | undefined, locale: string): string | n
 function withShapedSnippet(hit: SearchHit, attribute: string): SearchHit {
   const entry = hit._snippetResult?.[attribute]
   if (!entry?.value) return hit
-  return { ...hit, _snippetResult: { ...hit._snippetResult, [attribute]: { ...entry, value: shapeSnippet(entry.value) } } }
+  return {
+    ...hit,
+    _snippetResult: {
+      ...hit._snippetResult,
+      [attribute]: { ...entry, value: shapeSnippet(entry.value) },
+    },
+  }
 }
 
 /* ------------------------------------------------------------------ */
@@ -97,7 +109,10 @@ function TypeFacets({ facets, hiddenFacets, onToggleFacet }: Omit<FilterProps, '
         const checked = !hiddenFacets.has(facet.id)
         const disabled = facet.found === 0 && checked
         return (
-          <div key={facet.id} className={`flex items-center rounded-lg pe-1 ${disabled ? 'opacity-40' : ''}`}>
+          <div
+            key={facet.id}
+            className={`flex items-center rounded-lg pe-1 ${disabled ? 'opacity-40' : ''}`}
+          >
             <Checkbox
               checked={checked}
               disabled={disabled}
@@ -130,7 +145,11 @@ function TypeFacets({ facets, hiddenFacets, onToggleFacet }: Omit<FilterProps, '
 }
 
 /** The mobile filters sheet: the facets, then clear and show actions. */
-function FilterSheetBody({ total, onClose, ...props }: FilterProps & { total: number; onClose: () => void }) {
+function FilterSheetBody({
+  total,
+  onClose,
+  ...props
+}: FilterProps & { total: number; onClose: () => void }) {
   const t = useTranslations('Search')
   return (
     <div className="flex flex-col gap-6">
@@ -216,19 +235,26 @@ function ResultsHeader({
         {/* A clean sentence for screen readers: the slot's rolling strips
             would otherwise be read out digit by digit. */}
         <span className="sr-only" role="status">
-          {searching ? t('searching') : t('announce', { count: total, seconds: (seconds ?? 0).toFixed(2) })}
+          {searching
+            ? t('searching')
+            : t('announce', { count: total, seconds: (seconds ?? 0).toFixed(2) })}
         </span>
         <strong className="font-semibold text-foreground" aria-hidden="true">
           {searching ? (
             // The morph only renders Latin glyphs cleanly.
-            locale === 'ar' ? t('searching') : <TextMorph>{t('searching')}</TextMorph>
+            locale === 'ar' ? (
+              t('searching')
+            ) : (
+              <TextMorph>{t('searching')}</TextMorph>
+            )
           ) : locale === 'ar' ? (
             // Arabic reads the digits inside the sentence, so it stays one
             // plain line rather than a rolling reel.
             tail
           ) : (
             <>
-              <SlotText value={total} format={formatCount} spins={0} /> <span className="font-normal text-muted-foreground">{tail}</span>
+              <SlotText value={total} format={formatCount} spins={0} />{' '}
+              <span className="font-normal text-muted-foreground">{tail}</span>
             </>
           )}
         </strong>
@@ -268,7 +294,11 @@ function SearchEmptyState({
   return (
     <div className="grid place-items-center gap-3 px-6 py-20 text-center" role="status">
       <span className="text-muted-foreground" aria-hidden="true">
-        {failed && !searching ? <RotateCw width={20} height={20} /> : <Search width={20} height={20} />}
+        {failed && !searching ? (
+          <RotateCw width={20} height={20} />
+        ) : (
+          <Search width={20} height={20} />
+        )}
       </span>
       <strong className="text-[15px] font-medium" dir="auto">
         {title}
@@ -305,7 +335,12 @@ function SearchRowItem({
   const titleField = titleFieldOf(row, locale)
   const title = titleOf(row, locale)
   const snippetField = snippetFieldOf(row, locale)
-  const contributors = contributorsOf(hit, locale)
+  // The search index predates contributor IDs. Use the same canonical name in both locales.
+  const canonicalContributors = contributorsOf(hit, 'en')
+  const contributors = contributorsOf(hit, locale).map((person, index) => ({
+    ...person,
+    fallbackSeed: `name:${canonicalContributors[index]?.name ?? person.name}`,
+  }))
   const owner = contributors.map((entry) => entry.name).join(', ')
   const updated = relativeTime(hit.updatedAt, locale)
   // The tag follows what the eye sees: a title in the other script says so.
@@ -325,7 +360,13 @@ function SearchRowItem({
     >
       <div className="flex items-start gap-3 md:gap-4" dir="auto">
         {isPerson ? (
-          <Avatar name={title} src={hit.coverImage || undefined} size="md" className="shrink-0" />
+          <Avatar
+            fallbackSeed={personAvatarSeed(hit.objectID)}
+            name={title}
+            src={hit.coverImage || undefined}
+            size="md"
+            className="shrink-0"
+          />
         ) : hit.coverImage ? (
           <img
             src={hit.coverImage}
@@ -367,7 +408,10 @@ function SearchRowItem({
                 if ((event.target as HTMLElement).closest('button')) event.stopPropagation()
               }}
             >
-              <Snippet attribute={snippetField} hit={withShapedSnippet(hit, snippetField) as never} />
+              <Snippet
+                attribute={snippetField}
+                hit={withShapedSnippet(hit, snippetField) as never}
+              />
             </ExpandableText>
           ) : null}
           {owner ? (
@@ -378,7 +422,12 @@ function SearchRowItem({
                 {contributors.length > 1 ? (
                   <AvatarGroup members={contributors} max={3} size="sm" label={owner} />
                 ) : (
-                  <Avatar name={owner} size="sm" src={contributors[0]?.src} />
+                  <Avatar
+                    fallbackSeed={contributors[0]?.fallbackSeed}
+                    name={owner}
+                    size="sm"
+                    src={contributors[0]?.src}
+                  />
                 )}
               </span>
               <span className="min-w-0 truncate text-foreground/80" dir="auto">
@@ -414,7 +463,9 @@ function ResultsFooter({
   const t = useTranslations('Search')
   return (
     <div className="flex flex-col items-center gap-3 px-7 pt-2 pb-10">
-      <p className="text-[13px] text-muted-foreground tabular-nums">{t('showing', { shown, total })}</p>
+      <p className="text-[13px] text-muted-foreground tabular-nums">
+        {t('showing', { shown, total })}
+      </p>
       {hasMore ? (
         // Never disabled: a disabled button drops focus out of the panel,
         // and Escape with it. A click while loading simply waits.
@@ -665,7 +716,8 @@ export function SearchResults({
   const filters = { facets, hiddenFacets, onToggleFacet, onClearFilters }
 
   // Fresh results can leave the cursor out of range: clamp while rendering.
-  const cursor = activeIndex == null || rows.length === 0 ? null : Math.min(activeIndex, rows.length - 1)
+  const cursor =
+    activeIndex == null || rows.length === 0 ? null : Math.min(activeIndex, rows.length - 1)
   const activeRow = cursor == null ? null : rows[cursor]
   const activeId = activeRow ? `${inputId}-row-${activeRow.id}` : undefined
 

@@ -1,5 +1,7 @@
 'use client'
 
+import { AvatarImage } from '@/components/person/avatar-image'
+
 import { useEffect, useId, useLayoutEffect, useRef, useState, useSyncExternalStore } from 'react'
 import type {
   CSSProperties,
@@ -41,6 +43,7 @@ export interface UserMenuUser {
   name: string
   email: string
   plan?: string
+  fallbackSeed?: string
   avatarSrc?: string
   avatarSrcSet?: string
 }
@@ -167,6 +170,16 @@ export function PresenceDot({
 
 function Portrait({ user }: { user: UserMenuUser }) {
   const [failed, setFailed] = useState<string>()
+  if (user.fallbackSeed)
+    return (
+      <AvatarImage
+        src={user.avatarSrc}
+        srcSet={user.avatarSrcSet}
+        fallbackSeed={user.fallbackSeed}
+        className={styles.portrait}
+        draggable={false}
+      />
+    )
   if (!user.avatarSrc || failed === user.avatarSrc) {
     const initials = user.name
       .trim()
@@ -176,8 +189,8 @@ function Portrait({ user }: { user: UserMenuUser }) {
       .join('')
     return <span className={`${styles.portrait} ${styles.initials}`}>{initials}</span>
   }
-  // eslint-disable-next-line @next/next/no-img-element -- registry components stay framework agnostic; pass optimized URLs as avatarSrc and avatarSrcSet.
   return (
+    // eslint-disable-next-line @next/next/no-img-element -- registry components stay framework agnostic; pass optimized URLs as avatarSrc and avatarSrcSet.
     <img
       className={styles.portrait}
       src={user.avatarSrc}

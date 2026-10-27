@@ -1,5 +1,7 @@
 'use client'
 
+import { personAvatarSeed } from '@/lib/avatar'
+
 import { useMemo, useRef, useState, useTransition } from 'react'
 import { useFormatter, useTranslations } from 'next-intl'
 import { useRouter } from 'next/navigation'
@@ -57,7 +59,7 @@ const PREVIEW = 2
 export type ThreadViewer = {
   personId: number | null
   moderator: boolean
-  me: { name: string; photo: string | null }
+  me: { name: string; photo: string | null; fallbackSeed?: string }
 }
 
 /**
@@ -128,9 +130,18 @@ export function SpaceThread({
     id: String(viewer.personId ?? 'me'),
     name: viewer.me.name,
     avatar: viewer.me.photo ?? undefined,
+    fallbackSeed:
+      viewer.me.fallbackSeed ??
+      (viewer.personId != null ? personAvatarSeed(viewer.personId) : 'anonymous'),
   }
   const authors: CommentAuthor[] = useMemo(
-    () => people.map((p) => ({ id: String(p.id), name: p.name, avatar: p.photo ?? undefined })),
+    () =>
+      people.map((p) => ({
+        id: String(p.id),
+        fallbackSeed: personAvatarSeed(p.id),
+        name: p.name,
+        avatar: p.photo ?? undefined,
+      })),
     [people],
   )
 
@@ -164,6 +175,7 @@ export function SpaceThread({
         id: String(c.authorId ?? `gone-${c.id}`),
         name: person?.name ?? t('formerMember'),
         avatar: person?.photo ?? undefined,
+        fallbackSeed: c.authorId != null ? personAvatarSeed(c.authorId) : 'former-member',
       },
       // Stored mentions read as "@Name", with the person's current name; the ids stay beside the text.
       body: toShown(
@@ -174,7 +186,12 @@ export function SpaceThread({
       ),
       mentions: [...c.body.matchAll(STORED_MENTION)].map(([, name, id]) => {
         const person = byId.get(Number(id))
-        return { id: id!, name: person?.name ?? name!, avatar: person?.photo ?? undefined }
+        return {
+          id: id!,
+          fallbackSeed: personAvatarSeed(id!),
+          name: person?.name ?? name!,
+          avatar: person?.photo ?? undefined,
+        }
       }),
       createdAt: format.relativeTime(new Date(c.createdAt), new Date(now)),
       edited: c.edited,

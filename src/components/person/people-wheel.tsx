@@ -3,11 +3,18 @@
 import { useLocale, useTranslations } from 'next-intl'
 import { useState, type ReactNode } from 'react'
 
+import { avatarFallback, personAvatarSeed } from '@/lib/avatar'
 import { WheelCarousel } from '@/components/ui/wheel-carousel'
 import { Link } from '@/i18n/navigation'
 
 /** One line of a person's panel: a course, a cohort, a role. */
-export type WheelLine = { key: string; title: string; sub?: string; href?: string; icon?: ReactNode }
+export type WheelLine = {
+  key: string
+  title: string
+  sub?: string
+  href?: string
+  icon?: ReactNode
+}
 
 export type WheelPerson = {
   id: number
@@ -52,7 +59,8 @@ export function PeopleWheel({
           gap={24}
           items={people.map((p) => ({
             label: p.name,
-            ...(p.photo ? { image: p.photo.url, imageAlt: p.photo.alt } : {}),
+            image: p.photo?.url || avatarFallback(personAvatarSeed(p.id)),
+            imageAlt: p.photo?.alt || p.name,
           }))}
           label={t('wheel')}
           markerSize={8}
@@ -75,20 +83,28 @@ export function PeopleWheel({
 
         {person.lines.length ? (
           <>
-            <h3 className="mt-6 font-sans text-sm font-medium">{t('lines', { count: person.lines.length })}</h3>
+            <h3 className="mt-6 font-sans text-sm font-medium">
+              {t('lines', { count: person.lines.length })}
+            </h3>
             <ul className="mt-2 grid gap-2">
               {person.lines.map((line) => (
                 <li className="grid grid-cols-[1rem_1fr] gap-x-3 text-sm" key={line.key}>
                   {line.icon ?? <span />}
                   <span>
                     {line.href ? (
-                      <Link className="underline-offset-4 hover:underline" dir="auto" href={line.href}>
+                      <Link
+                        className="underline-offset-4 hover:underline"
+                        dir="auto"
+                        href={line.href}
+                      >
                         {line.title}
                       </Link>
                     ) : (
                       <span dir="auto">{line.title}</span>
                     )}
-                    {line.sub ? <span className="block text-xs text-[var(--text-muted)]">{line.sub}</span> : null}
+                    {line.sub ? (
+                      <span className="block text-xs text-[var(--text-muted)]">{line.sub}</span>
+                    ) : null}
                   </span>
                 </li>
               ))}
@@ -97,7 +113,10 @@ export function PeopleWheel({
         ) : null}
 
         {person.bio ? (
-          <p className="mt-6 line-clamp-6 text-sm leading-relaxed text-[var(--text-secondary)]" dir="auto">
+          <p
+            className="mt-6 line-clamp-6 text-sm leading-relaxed text-[var(--text-secondary)]"
+            dir="auto"
+          >
             {person.bio}
           </p>
         ) : null}

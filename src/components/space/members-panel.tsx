@@ -1,5 +1,7 @@
 'use client'
 
+import { personAvatarSeed } from '@/lib/avatar'
+
 import { useDeferredValue, useState } from 'react'
 import { useTranslations } from 'next-intl'
 
@@ -37,7 +39,12 @@ export function MembersPanel({
     <>
       <div className={styles.headMeta}>
         <AvatarGroup
-          members={members.map((m) => ({ id: m.id, name: m.name, src: m.photo ?? undefined }))}
+          members={members.map((m) => ({
+            id: m.id,
+            fallbackSeed: personAvatarSeed(m.id),
+            name: m.name,
+            src: m.photo ?? undefined,
+          }))}
           max={FACES}
           size="sm"
           label={t('membersLabel')}
@@ -68,7 +75,12 @@ export function MembersPanel({
               <ul className={styles.people}>
                 {shown.map((m) => (
                   <li key={m.id} className={styles.person}>
-                    <Avatar name={m.name} src={m.photo ?? undefined} size="md" />
+                    <Avatar
+                      fallbackSeed={personAvatarSeed(m.id)}
+                      name={m.name}
+                      src={m.photo ?? undefined}
+                      size="md"
+                    />
                     <span className={styles.rowText}>
                       <span className={styles.personName}>
                         <PersonHover person={m}>

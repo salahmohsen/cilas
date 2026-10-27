@@ -31,6 +31,7 @@ import {
   type UploadError,
 } from './pick'
 import { AutoHeight } from './auto-height'
+import { AvatarImage } from '@/components/person/avatar-image'
 import { useLoadedSrc } from './use-photo'
 import styles from './image-upload.module.css'
 
@@ -44,6 +45,7 @@ export type AvatarUploadHandle = {
 export type AvatarUploadProps = {
   /** The person's name, for the initials when there is no photo. */
   name: string
+  fallbackSeed?: string
   /** The current photo. Changing it replaces the shown photo. */
   src?: string | null
   /**
@@ -97,6 +99,7 @@ const initialsOf = (name: string) =>
  */
 export function AvatarUpload({
   name,
+  fallbackSeed,
   src,
   onUpload,
   onRemove,
@@ -327,7 +330,9 @@ export function AvatarUpload({
                       : motionTokens.spring.smooth
                 }
               >
-                {photo ? (
+                {fallbackSeed ? (
+                  <AvatarImage src={photo} fallbackSeed={fallbackSeed} draggable={false} />
+                ) : photo ? (
                   // eslint-disable-next-line @next/next/no-img-element -- a local crop or the member's stored photo
                   <img src={photo} alt="" draggable={false} />
                 ) : (

@@ -1,3 +1,5 @@
+import { personAvatarSeed } from '@/lib/avatar'
+import { AvatarImage } from '@/components/person/avatar-image'
 import config from '@payload-config'
 import { ArrowLeft } from 'lucide-react'
 import type { Metadata } from 'next'
@@ -56,26 +58,28 @@ export default async function PersonPage({ params }: Props) {
 
   const other: Locale = locale === 'ar' ? 'en' : 'ar'
   const publicationCovers = await getPublicationCovers(payload)
-  const [t, tArticle, tArticles, tCourse, format, contributions, otherName, tm] = await Promise.all([
-    getTranslations('Person'),
-    getTranslations('Article'),
-    getTranslations('Articles'),
-    getTranslations('Course'),
-    getFormatter(),
-    getContributions(payload, person.id, locale),
-    payload
-      .findByID({
-        collection: 'people',
-        id: person.id,
-        locale: other,
-        fallbackLocale: false,
-        depth: 0,
-        select: { name: true },
-      })
-      .then((p) => p?.name ?? null)
-      .catch(() => null),
-    getTranslations('Meta'),
-  ])
+  const [t, tArticle, tArticles, tCourse, format, contributions, otherName, tm] = await Promise.all(
+    [
+      getTranslations('Person'),
+      getTranslations('Article'),
+      getTranslations('Articles'),
+      getTranslations('Course'),
+      getFormatter(),
+      getContributions(payload, person.id, locale),
+      payload
+        .findByID({
+          collection: 'people',
+          id: person.id,
+          locale: other,
+          fallbackLocale: false,
+          depth: 0,
+          select: { name: true },
+        })
+        .then((p) => p?.name ?? null)
+        .catch(() => null),
+      getTranslations('Meta'),
+    ],
+  )
   // Where the page sits on the site: home, then this person.
   const crumbs = breadcrumbSchema([
     { name: tm('siteName'), path: '/' },
@@ -109,21 +113,12 @@ export default async function PersonPage({ params }: Props) {
           {/* Who they are. */}
           <header className="flex flex-col gap-6 sm:flex-row sm:items-end">
             <div className="size-36 shrink-0 overflow-hidden rounded-[26px] bg-[var(--surface-muted)] sm:size-44">
-              {photo?.url ? (
-                // eslint-disable-next-line @next/next/no-img-element
-                <img
-                  alt={photo.alt || person.name}
-                  className="h-full w-full object-cover"
-                  src={photo.url}
-                />
-              ) : (
-                <span
-                  aria-hidden
-                  className="flex h-full w-full items-center justify-center text-5xl font-medium text-[var(--text-muted)]"
-                >
-                  {person.name.trim().charAt(0)}
-                </span>
-              )}
+              <AvatarImage
+                src={photo?.url}
+                fallbackSeed={personAvatarSeed(person.id)}
+                alt={photo?.alt || person.name}
+                className="h-full w-full object-cover"
+              />
             </div>
             <div className="grid gap-2">
               <h1 className={grid.readerTitle}>{person.name}</h1>

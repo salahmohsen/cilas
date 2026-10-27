@@ -10,6 +10,7 @@ import type { PhotoState, ProfileState } from '@/app/(frontend)/[locale]/profile
 import { Button } from '@/components/arc/button/button'
 import { Input } from '@/components/arc/input/input'
 import { Tooltip } from '@/components/arc/tooltip/tooltip'
+import { personAvatarSeed } from '@/lib/avatar'
 import { AvatarUpload } from '@/components/image-upload/avatar-upload'
 import { sendWithProgress } from '@/components/image-upload/send'
 import { RichField } from '@/components/rich-field'
@@ -174,6 +175,7 @@ export function ProfileForm({ profile, messages: m, action, removePhotoAction, o
     >
       {/* The photo saves the moment it is cropped, on its own: the form's Save is for the words. */}
       <AvatarUpload
+        fallbackSeed={personAvatarSeed(profile.personId)}
         name={(locale === 'ar' && profile.name.ar) || profile.name.en}
         src={profile.photo?.url}
         onUpload={async (image, { report, signal, original }) => {

@@ -1,5 +1,7 @@
 'use client'
 
+import { personAvatarSeed } from '@/lib/avatar'
+
 import { useOptimistic, useState, useTransition } from 'react'
 import { useTranslations } from 'next-intl'
 import { useRouter } from 'next/navigation'
@@ -120,6 +122,7 @@ export function EventAnswers({
             label={t('rsvpGoingList')}
             members={view.going.map((v) => ({
               id: v.personId,
+              fallbackSeed: personAvatarSeed(v.personId),
               name: v.name,
               src: v.photo ?? undefined,
             }))}

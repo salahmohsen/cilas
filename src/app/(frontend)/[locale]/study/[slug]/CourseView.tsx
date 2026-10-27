@@ -1,3 +1,4 @@
+import { personAvatarSeed } from '@/lib/avatar'
 import {
   ArrowLeft,
   CalendarDays,
@@ -235,7 +236,12 @@ export const CourseView: React.FC<{
           <li key={person.id}>
             <Link className="group flex items-center gap-3" href={`/people/${person.slug}`}>
               <span className="course-fellow-photo">
-                <Avatar name={person.name} size="md" src={photoOf(person)} />
+                <Avatar
+                  fallbackSeed={personAvatarSeed(person.id)}
+                  name={person.name}
+                  size="md"
+                  src={photoOf(person)}
+                />
               </span>
               <span className="min-w-0">
                 <span className="block text-sm leading-snug font-medium underline-offset-4 group-hover:underline">
@@ -267,7 +273,12 @@ export const CourseView: React.FC<{
                 href={`/people/${person.slug}`}
                 tabIndex={-1}
               >
-                <Avatar name={person.name} size="lg" src={photoOf(person)} />
+                <Avatar
+                  fallbackSeed={personAvatarSeed(person.id)}
+                  name={person.name}
+                  size="lg"
+                  src={photoOf(person)}
+                />
               </Link>
               <div className="course-fellow-head">
                 <h3 className="text-base font-medium">

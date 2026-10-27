@@ -1,5 +1,7 @@
 'use client'
 
+import { personAvatarSeed } from '@/lib/avatar'
+
 import {
   BookOpen,
   Calendar,
@@ -55,9 +57,11 @@ export function CILASSiteHeader({ nav = ALL_SHOWN }: { nav?: Navigation }) {
         (
           body: {
             user?: {
+              id: number
               email: string
               person?:
                 | {
+                    id: number
                     name?: string
                     photo?:
                       | { url?: string | null; sizes?: { thumbnail?: { url?: string | null } } }
@@ -76,6 +80,11 @@ export function CILASSiteHeader({ nav = ALL_SHOWN }: { nav?: Navigation }) {
           setAccount({
             name: person?.name || user.email,
             email: user.email,
+            fallbackSeed: person
+              ? personAvatarSeed(person.id)
+              : typeof user.person === 'number'
+                ? personAvatarSeed(user.person)
+                : `account:${user.id}`,
             avatarSrc: photo?.sizes?.thumbnail?.url || photo?.url || undefined,
           })
           // Spaces shows only to an account that can read one (see /api/spaces-nav).

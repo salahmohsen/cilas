@@ -4,14 +4,25 @@ import { useLayoutEffect, useRef, useState, type HTMLAttributes } from 'react'
 import { AnimatePresence, motion, useReducedMotion } from 'motion/react'
 import { ArcImage } from '../lib/arc-provider'
 import { motionTokens } from '../lib/motion-tokens'
+import { avatarFallback } from '@/lib/avatar'
 import styles from './avatar.module.css'
 export interface AvatarProps extends HTMLAttributes<HTMLSpanElement> {
   name: string
   src?: string
+  /** Opt in to a local Blobatar for a real person; other avatars keep initials. */
+  fallbackSeed?: string
   size?: 'sm' | 'md' | 'lg' | 'xl'
   status?: 'online' | 'offline'
 }
-export function Avatar({ name, src, size = 'md', status, className, ...props }: AvatarProps) {
+export function Avatar({
+  name,
+  src,
+  fallbackSeed,
+  size = 'md',
+  status,
+  className,
+  ...props
+}: AvatarProps) {
   const initials = name
     .trim()
     .split(/\s+/)
@@ -34,6 +45,15 @@ export function Avatar({ name, src, size = 'md', status, className, ...props }: 
       role="img"
       aria-label={`${name}${status ? `, ${status}` : ''}`}
     >
+      {fallbackSeed && !showImage && (
+        // eslint-disable-next-line @next/next/no-img-element -- generated locally, no image service
+        <img
+          src={avatarFallback(fallbackSeed)}
+          alt=""
+          aria-hidden="true"
+          style={{ position: 'absolute', inset: 0, width: '100%', height: '100%' }}
+        />
+      )}
       {showImage ? (
         <ArcImage
           key={src}
@@ -47,11 +67,11 @@ export function Avatar({ name, src, size = 'md', status, className, ...props }: 
           }}
           onError={() => setFailedSrc(src)}
         />
-      ) : (
+      ) : !fallbackSeed ? (
         <span className={src ? styles.fallback : undefined} aria-hidden="true">
           {initials}
         </span>
-      )}
+      ) : null}
       <AnimatePresence initial={false}>
         {status && (
           <motion.i

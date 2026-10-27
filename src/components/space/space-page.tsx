@@ -1,3 +1,4 @@
+import { personAvatarSeed } from '@/lib/avatar'
 import config from '@payload-config'
 import { getTranslations } from 'next-intl/server'
 import { cookies } from 'next/headers'
@@ -181,9 +182,14 @@ export async function SpacePage({
   const notice = rules.parts
   const viewerPerson = personOf(user)
 
-  const me = (viewerPerson != null && byId.get(viewerPerson)) || {
+  const memberMe = (viewerPerson != null && byId.get(viewerPerson)) || {
     name: user.email,
     photo: null,
+  }
+  const me = {
+    name: memberMe.name,
+    photo: memberMe.photo,
+    fallbackSeed: viewerPerson != null ? personAvatarSeed(viewerPerson) : `account:${user.id}`,
   }
   // The same rules postCreate enforces, so the type switch never offers a closed door.
   const kinds = (['discussion', 'event', 'vote', 'announcement'] as const).filter(
@@ -200,7 +206,7 @@ export async function SpacePage({
   )
   const context: FeedContext = {
     archived: feed.archived,
-    viewer: { personId: viewerPerson, moderator, me: { name: me.name, photo: me.photo } },
+    viewer: { personId: viewerPerson, moderator, me },
     moderators,
     people: byId,
     cards,

@@ -1,3 +1,4 @@
+import { personAvatarSeed } from '@/lib/avatar'
 import { Suspense } from 'react'
 import { getTranslations } from 'next-intl/server'
 import type { Payload } from 'payload'
@@ -48,7 +49,12 @@ export async function loadPost(
   ])
   if (!view) return null
   const personId = personOf(user)
-  const me = (personId != null && byId.get(personId)) || { name: user.email, photo: null }
+  const memberMe = (personId != null && byId.get(personId)) || { name: user.email, photo: null }
+  const me = {
+    name: memberMe.name,
+    photo: memberMe.photo,
+    fallbackSeed: personId != null ? personAvatarSeed(personId) : `account:${user.id}`,
+  }
   const allowed = mayComment(mem, space.posting ?? 'open')
   const titles = await linkTitles(pageAddresses(threadTexts([view.row.post.body], view.comments)))
   return {
@@ -60,7 +66,7 @@ export async function loadPost(
       viewer: {
         personId,
         moderator: mem.role === 'moderator',
-        me: { name: me.name, photo: me.photo },
+        me,
       },
       moderators,
       people: byId,

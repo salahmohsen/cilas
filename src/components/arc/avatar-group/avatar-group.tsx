@@ -11,6 +11,7 @@ export interface AvatarGroupMember {
   id?: string | number
   name: string
   src?: string
+  fallbackSeed?: string
   status?: 'online' | 'offline'
 }
 export interface AvatarGroupProps {
@@ -118,6 +119,7 @@ export function AvatarGroup({
               className={styles.avatar}
               name={member.name}
               src={member.src}
+              fallbackSeed={member.fallbackSeed}
               status={member.status}
               size={size}
             />

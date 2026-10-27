@@ -1,5 +1,7 @@
 'use client'
 
+import { AvatarImage } from '@/components/person/avatar-image'
+import { personAvatarSeed } from '@/lib/avatar'
 import type { ReactElement } from 'react'
 import { Globe } from 'lucide-react'
 import { siFacebook, siInstagram, siX, siYoutube } from 'simple-icons'
@@ -97,7 +99,14 @@ export function PersonHover({
         <HoverCardProfile
           name={person.name}
           role={person.role}
-          avatar={person.photo ?? undefined}
+          avatar={
+            <AvatarImage
+              src={person.photo}
+              fallbackSeed={personAvatarSeed(person.id)}
+              width={48}
+              height={48}
+            />
+          }
           bio={person.bio ?? undefined}
           meta={person.links.length > 0 ? <PersonLinks links={person.links} /> : undefined}
         />

@@ -1,3 +1,4 @@
+import { personAvatarSeed } from '@/lib/avatar'
 import { Avatar } from '@/components/arc/avatar/avatar'
 import { Link } from '@/i18n/navigation'
 import type { Media, Person } from '@/payload-types'
@@ -10,7 +11,10 @@ export const photoOf = (p: Person): string | undefined =>
 /** A person's name linking to their page, in the site language. */
 export function PersonLink({ person, className }: { person: Person; className?: string }) {
   return (
-    <Link className={className ?? 'underline-offset-4 hover:underline'} href={`/people/${person.slug}`}>
+    <Link
+      className={className ?? 'underline-offset-4 hover:underline'}
+      href={`/people/${person.slug}`}
+    >
       {person.name}
     </Link>
   )
@@ -37,7 +41,12 @@ export function ContributorList({
         {contributors.map(({ person, role }) => (
           <li key={`${person.id}-${role}`}>
             <Link className="group flex items-center gap-3" href={`/people/${person.slug}`}>
-              <Avatar name={person.name} size="md" src={photoOf(person)} />
+              <Avatar
+                fallbackSeed={personAvatarSeed(person.id)}
+                name={person.name}
+                size="md"
+                src={photoOf(person)}
+              />
               <span className="min-w-0">
                 <span className="block text-sm leading-snug font-medium underline-offset-4 group-hover:underline">
                   {person.name}
