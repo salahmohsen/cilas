@@ -46,6 +46,7 @@ import { FreshPosts } from './fresh-posts'
 import { IntroLock } from './intro-lock'
 import { LoadMore } from './load-more'
 import { MembersPanel } from './members-panel'
+import { PINNED_CARDS, PinnedCards, pinnedOrder } from './pinned-cards'
 import { NextSession } from './next-session'
 import { sessionContextOf } from './session-block'
 import { CHECKLIST_COOKIE, OnboardingChecklist } from './onboarding-checklist'
@@ -226,17 +227,38 @@ export async function SpacePage({
   const listed = (view === 'announcements' && gatedBy == null ? announcements : feed.rows).filter(
     (r) => !bySession || named.get(r.post.id)?.has(bySession),
   )
-  const pinned = listed.filter((r) => r.post.pinned)
-  const rest = listed.filter((r) => !r.post.pinned)
+  const lastVisit = state.lastVisitedAt
+  // In the whole feed, pinned posts show as a row of cards, newest to this
+  // member first; a moderator keeps one whole at the top with `pinned_full`,
+  // and the intro post is always whole. Cards past the row's limit fall into
+  // the feed by their activity. The announcements tab and a session's posts
+  // list every post whole.
+  const asCards = view === 'all' && !bySession && gatedBy == null
+  const carded = asCards
+    ? pinnedOrder(
+        listed.filter(
+          (r) => r.post.pinned && !r.post.pinned_full && r.post.id !== context.introPost,
+        ),
+        lastVisit,
+        context.viewer.personId,
+      )
+    : []
+  const pinCards = carded.slice(0, PINNED_CARDS)
+  const spilled = carded.slice(PINNED_CARDS)
+  const pinned = listed.filter((r) => r.post.pinned && !carded.includes(r))
+  const unpinned = listed.filter((r) => !r.post.pinned)
+  const activity = (r: (typeof listed)[number]) => r.post.last_activity_at ?? r.post.createdAt
+  const rest = spilled.length
+    ? [...spilled, ...unpinned].sort((a, b) => activity(b).localeCompare(activity(a)))
+    : unpinned
+  const feedTotal = listed.length - pinCards.length
   const visible = rest.slice(0, Math.max(BATCH, shown))
   // The divider sits above the first post the reader saw last time, and only
   // when something newer sits above it.
-  const lastVisit = state.lastVisitedAt
-  const firstSeen = lastVisit
-    ? visible.findIndex((r) => (r.post.last_activity_at ?? r.post.createdAt) <= lastVisit)
-    : -1
+  const firstSeen = lastVisit ? visible.findIndex((r) => activity(r) <= lastVisit) : -1
   // The intro post has its own step.
-  const pinnedPost = feed.rows.find((r) => r.post.pinned && r.post.id !== context.introPost)
+  const pinnedPost =
+    pinCards[0] ?? feed.rows.find((r) => r.post.pinned && r.post.id !== context.introPost)
 
   // Behind the gate: how many posts wait, for the lock under the intro post.
   const hiddenPosts =
@@ -298,7 +320,7 @@ export async function SpacePage({
     <FeedRow
       row={r}
       position={position}
-      total={listed.length}
+      total={feedTotal}
       context={context}
       postHref={`${path}/posts/${r.post.id}`}
     />
@@ -472,21 +494,36 @@ export async function SpacePage({
                   }
                 />
               ) : (
-                <div role="feed" aria-label={title} aria-busy={false} className={styles.column}>
-                  {pinned.map((r, i) => (
-                    <div key={r.post.id}>{row(r, i + 1)}</div>
-                  ))}
-                  {visible.map((r, i) => (
-                    <div key={r.post.id} className={styles.column}>
-                      {i === firstSeen && i > 0 && (
-                        <p className={styles.divider} role="separator">
-                          {t('newSince')}
-                        </p>
-                      )}
-                      {row(r, pinned.length + i + 1)}
-                    </div>
-                  ))}
-                </div>
+                <>
+                  {pinCards.length > 0 && (
+                    <PinnedCards
+                      rows={pinCards}
+                      context={context}
+                      path={path}
+                      lastVisit={lastVisit}
+                      seeAll={
+                        spilled.some((r) => r.post.kind === 'announcement')
+                          ? `${path}?${new URLSearchParams({ tab: 'announcements' })}`
+                          : null
+                      }
+                    />
+                  )}
+                  <div role="feed" aria-label={title} aria-busy={false} className={styles.column}>
+                    {pinned.map((r, i) => (
+                      <div key={r.post.id}>{row(r, i + 1)}</div>
+                    ))}
+                    {visible.map((r, i) => (
+                      <div key={r.post.id} className={styles.column}>
+                        {i === firstSeen && i > 0 && (
+                          <p className={styles.divider} role="separator">
+                            {t('newSince')}
+                          </p>
+                        )}
+                        {row(r, pinned.length + i + 1)}
+                      </div>
+                    ))}
+                  </div>
+                </>
               )}
               {gatedBy != null && <IntroLock post={gatedBy} hidden={hiddenPosts} />}
               {rest.length > visible.length && (
@@ -498,7 +535,7 @@ export async function SpacePage({
                   })}`}
                   label={t('loadMore')}
                   status={t('showing', {
-                    shown: pinned.length + visible.length,
+                    shown: pinCards.length + pinned.length + visible.length,
                     total: listed.length,
                   })}
                 />

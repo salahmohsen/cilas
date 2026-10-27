@@ -3,7 +3,17 @@
 import { useState } from 'react'
 import { useTranslations } from 'next-intl'
 import { useRouter } from 'next/navigation'
-import { Ellipsis, Lock, LockOpen, Pencil, Pin, PinOff, Trash2 } from 'lucide-react'
+import {
+  Ellipsis,
+  GalleryHorizontal,
+  Lock,
+  LockOpen,
+  Pencil,
+  Pin,
+  PinOff,
+  RectangleHorizontal,
+  Trash2,
+} from 'lucide-react'
 
 import { ActionButton } from '@/components/arc/action-button/action-button'
 import { ConfirmMorph, type ConfirmMorphState } from '@/components/arc/confirm-morph/confirm-morph'
@@ -22,8 +32,18 @@ import { EventEditDialog, type EventEditInitial } from './event-edit'
 import { VoteEditDialog, type VoteEditInitial } from './vote-edit'
 import styles from './space.module.css'
 
-/** `intro`: the space's intro post, which a moderator edits but never locks or deletes */
-type Post = { id: number; body: string; pinned: boolean; locked: boolean; intro?: boolean }
+/**
+ * `pinnedFull`: pinned whole at the top, not as a card in the carousel.
+ * `intro`: the space's intro post, which a moderator edits but never locks or deletes, and which never shows as a card.
+ */
+type Post = {
+  id: number
+  body: string
+  pinned: boolean
+  pinnedFull: boolean
+  locked: boolean
+  intro?: boolean
+}
 
 const run = async (
   action: (prev: SpacesWriteState, form: FormData) => Promise<SpacesWriteState>,
@@ -85,10 +105,35 @@ export function PostActions({
       : []),
     ...(canModerate
       ? [
+          ...(post.intro
+            ? []
+            : post.pinned
+              ? [
+                  post.pinnedFull
+                    ? {
+                        label: t('pinAsCard'),
+                        icon: <GalleryHorizontal size={15} />,
+                        onSelect: modify({ pinnedFull: 'false' }),
+                      }
+                    : {
+                        label: t('pinAsFull'),
+                        icon: <RectangleHorizontal size={15} />,
+                        onSelect: modify({ pinnedFull: 'true' }),
+                      },
+                ]
+              : [
+                  {
+                    label: t('pinAsFull'),
+                    icon: <RectangleHorizontal size={15} />,
+                    onSelect: modify({ pinned: 'true', pinnedFull: 'true' }),
+                  },
+                ]),
           {
-            label: post.pinned ? t('unpin') : t('pin'),
+            label: post.pinned ? t('unpin') : t('pinAsCard'),
             icon: post.pinned ? <PinOff size={15} /> : <Pin size={15} />,
-            onSelect: modify({ pinned: String(!post.pinned) }),
+            onSelect: post.pinned
+              ? modify({ pinned: 'false' })
+              : modify({ pinned: 'true', pinnedFull: 'false' }),
           },
           ...(post.intro
             ? []

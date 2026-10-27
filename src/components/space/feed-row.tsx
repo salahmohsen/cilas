@@ -114,6 +114,14 @@ export async function PostHead({
   const { viewer, archived } = context
   const mine = row.authorId != null && row.authorId === viewer.personId
   const intro = post.id === context.introPost
+  // A comment moves its post up the feed (spec §7), so a post that sits high
+  // for a newer comment says so beside its own date.
+  const lastComment =
+    row.commentCount > 0 &&
+    post.last_activity_at &&
+    Date.parse(post.last_activity_at) - Date.parse(post.createdAt) > 60_000
+      ? post.last_activity_at
+      : null
   // An event shows no label: its card already carries the calendar leaf.
   const labels = [
     post.pinned && { id: 'pinned', label: t('pinned'), icon: <Pin size={16} /> },
@@ -144,6 +152,12 @@ export async function PostHead({
           <>
             <When iso={post.createdAt} postHref={postHref} />
             {post.edited_at && ` · ${t('edited')}`}
+            {lastComment && (
+              <>
+                {' · '}
+                {t.rich('lastComment', { when: () => <When iso={lastComment} /> })}
+              </>
+            )}
           </>
         }
       />
@@ -155,6 +169,7 @@ export async function PostHead({
               id: post.id,
               body: post.body,
               pinned: !!post.pinned,
+              pinnedFull: !!post.pinned_full,
               locked: !!post.locked,
               intro,
             }}

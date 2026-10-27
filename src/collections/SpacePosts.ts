@@ -159,6 +159,14 @@ export const SpacePosts: CollectionConfig = {
       },
     },
     { name: 'pinned', type: 'checkbox', defaultValue: false, index: true },
+    {
+      // A pinned post shows as a card in the carousel above the feed; a
+      // moderator may keep one whole at the top instead.
+      name: 'pinned_full',
+      label: 'Pinned as a full post',
+      type: 'checkbox',
+      defaultValue: false,
+    },
     { name: 'locked', type: 'checkbox', defaultValue: false },
     {
       // Set by the action that mailed the announcement (mailing lands in step 3).

@@ -161,6 +161,311 @@
   background: color-mix(in oklch, var(--warning) 2%, var(--surface));
 }
 
+/* Pinned posts as a row of cards above the feed. Every card shares one frame
+   and one size: the kind on top, the title and text, then who and when at the
+   foot. Only the box above the text changes with the kind (a photo, an event's
+   leaf, a vote's options); a card without one gives the room to its text. */
+.pinnedSection {
+  display: grid;
+  gap: var(--space-3);
+  min-width: 0;
+}
+
+.pinnedHead {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2) var(--space-4);
+  min-height: 32px;
+}
+
+.pinnedSeeAll {
+  font-size: var(--text-sm);
+  color: var(--text-secondary);
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+
+.pinnedSeeAll:hover {
+  color: var(--foreground);
+}
+
+.pinnedControls {
+  display: flex;
+  gap: var(--space-2);
+  margin-inline-start: auto;
+}
+
+.pinnedNav {
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-pill);
+  background: var(--surface);
+  color: var(--foreground);
+  cursor: pointer;
+  transition: background-color var(--duration-fast) var(--ease-standard);
+}
+
+.pinnedNav:hover:not(:disabled) {
+  background: var(--surface-muted);
+}
+
+.pinnedNav:disabled {
+  color: var(--text-muted);
+  cursor: default;
+}
+
+/* The next card peeks past the edge, so the row reads as one that scrolls. */
+.pinnedRow {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: min(256px, 78%);
+  gap: var(--space-3);
+  /* Room for the 2px focus ring at its 2px offset, which the scroll box would clip. */
+  margin: -4px;
+  padding: 4px;
+  list-style: none;
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  scroll-snap-type: x mandatory;
+  scroll-padding-inline: 4px;
+  scrollbar-width: none;
+}
+
+.pinnedRow::-webkit-scrollbar {
+  display: none;
+}
+
+.pinnedItem {
+  display: grid;
+  min-width: 0;
+  scroll-snap-align: start;
+}
+
+.pinnedCard {
+  display: flex;
+  flex-direction: column;
+  min-block-size: 17.5rem;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-panel);
+  background: var(--surface);
+  color: var(--foreground);
+  text-decoration: none;
+  scroll-margin-top: var(--space-24);
+  transition: background-color var(--duration-fast) var(--ease-standard);
+}
+
+.pinnedCard:hover {
+  background: var(--surface-muted);
+}
+
+/* An announcement speaks for the space, so it carries the accent's faint wash. */
+.pinnedCard[data-kind='announcement'] {
+  border-color: color-mix(in oklab, var(--accent) 18%, var(--border));
+  background: color-mix(in oklab, var(--accent-subtle) 45%, var(--surface));
+}
+
+.pinnedCard[data-kind='announcement']:hover {
+  background: color-mix(in oklab, var(--accent-subtle) 80%, var(--surface));
+}
+
+.pinnedMedia {
+  position: relative;
+  display: grid;
+  flex: none;
+  place-items: center;
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+  border-bottom: 1px solid var(--border-subtle);
+  background: var(--surface-muted);
+}
+
+.pinnedMedia img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  -webkit-user-drag: none;
+}
+
+/* A link's site over its page's image, so the card says where the picture is from. */
+.pinnedHost {
+  position: absolute;
+  inset-block-end: var(--space-3);
+  inset-inline-start: var(--space-3);
+  max-width: calc(100% - 2 * var(--space-3));
+  overflow: hidden;
+  padding: 2px var(--space-2);
+  border-radius: var(--radius-pill);
+  background: oklch(0% 0 0 / 0.6);
+  color: oklch(100% 0 0);
+  font-size: var(--text-xs);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* The site's initial when its image does not load, so the box keeps its size. */
+.pinnedHostMark {
+  color: var(--text-secondary);
+  font-size: var(--text-2xl);
+  font-weight: 500;
+}
+
+/* An event's day, as its card in the feed shows it; on a cover it sits in the corner. */
+.pinnedLeaf {
+  display: grid;
+  width: 56px;
+  overflow: hidden;
+  border-radius: var(--radius-control);
+  background: var(--surface);
+  box-shadow:
+    0 0 0 1px var(--border),
+    var(--shadow-resting);
+  text-align: center;
+}
+
+.pinnedCard[data-media='photo'] .pinnedLeaf {
+  position: absolute;
+  inset-block-start: var(--space-3);
+  inset-inline-start: var(--space-3);
+  width: 44px;
+}
+
+.pinnedCard[data-media='photo'] .pinnedLeaf .eventDay {
+  font-size: var(--text-base);
+}
+
+/* A vote's leading options, each filled to its share of the choices. */
+.pinnedVote {
+  display: grid;
+  align-content: center;
+  gap: 6px;
+  width: 100%;
+  padding-inline: var(--space-4);
+}
+
+.pinnedVoteRow {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  height: 28px;
+  overflow: hidden;
+  padding-inline: var(--space-3);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-pill);
+  background: var(--surface);
+  font-size: var(--text-xs);
+}
+
+.pinnedVoteBar {
+  position: absolute;
+  inset-block: 0;
+  inset-inline-start: 0;
+  background: var(--accent-subtle);
+}
+
+.pinnedVoteLabel {
+  position: relative;
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.pinnedVoteShare {
+  position: relative;
+  color: var(--text-secondary);
+  font-variant-numeric: tabular-nums;
+}
+
+.pinnedText {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: var(--space-1);
+  min-width: 0;
+  padding: var(--space-4);
+}
+
+.pinnedBadges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-1);
+  margin-block-end: var(--space-1);
+}
+
+.pinnedTitle {
+  font-weight: 500;
+  overflow-wrap: anywhere;
+  line-height: 1.4;
+  text-wrap: pretty;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.pinnedExcerpt {
+  font-size: var(--text-sm);
+  overflow-wrap: anywhere;
+  line-height: 1.5;
+  color: var(--text-secondary);
+  text-wrap: pretty;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* Without a box on top, the text takes the room. */
+.pinnedCard[data-media='none'] .pinnedTitle {
+  font-size: var(--text-lg);
+  line-height: 1.35;
+  -webkit-line-clamp: 3;
+}
+
+.pinnedCard[data-media='none'] .pinnedExcerpt {
+  -webkit-line-clamp: 6;
+}
+
+.pinnedMeta {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  min-width: 0;
+  margin-block-start: auto;
+  padding-block-start: var(--space-3);
+  font-size: var(--text-xs);
+  color: var(--text-secondary);
+  white-space: nowrap;
+}
+
+.pinnedAuthor {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.pinnedCount {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  gap: 4px;
+  margin-inline-start: auto;
+  padding-inline-start: var(--space-2);
+  font-variant-numeric: tabular-nums;
+}
+
+:global([dir='rtl']) .flipInRtl {
+  transform: scaleX(-1);
+}
+
 .postHead {
   display: flex;
   flex-wrap: wrap;

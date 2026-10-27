@@ -858,7 +858,12 @@
     "rulesField": "Privacy and rules",
     "rulesFieldHint": "Shown to members in this language. One part per paragraph: a short title on the first line, the answer under it. Leave empty for the CILAS text.",
     "rulesReset": "Use the CILAS text",
-    "introLockCount": "{count, plural, one {# more post opens after you introduce yourself} other {# more posts open after you introduce yourself}}"
+    "introLockCount": "{count, plural, one {# more post opens after you introduce yourself} other {# more posts open after you introduce yourself}}",
+    "pinnedTitle": "Pinned",
+    "pinnedNew": "New",
+    "pinnedPrevious": "Previous pinned posts",
+    "pinnedNext": "More pinned posts",
+    "pinnedSeeAll": "See all announcements"
   },
   "SpacePost": {
     "newPost": "New post",
@@ -908,7 +913,6 @@
     "saveEdit": "Save changes",
     "saving": "Saving",
     "saved": "Saved",
-    "pin": "Pin to top",
     "unpin": "Unpin",
     "lock": "Lock comments",
     "unlock": "Unlock comments",
@@ -1049,7 +1053,10 @@
     "voteQuestion": "Question",
     "saveError_vote_closed": "Voting on this has closed.",
     "saveError_vote_voted": "Members have voted, so this rule must stay as it is.",
-    "saveError_rules": "Privacy and rules is too long."
+    "saveError_rules": "Privacy and rules is too long.",
+    "pinAsCard": "Pin as a card",
+    "pinAsFull": "Pin as a full post",
+    "lastComment": "Last comment <when></when>"
   },
   "SpaceComment": {
     "write": "Comment",

@@ -31,7 +31,8 @@ export const eventOver = (
   now: Date = new Date(),
 ): boolean => new Date(endsAt || startsAt).getTime() < now.getTime()
 
-const plainLine = (line: string) =>
+/** One line of Markdown as plain text: links keep their words, marks go. */
+export const plainLine = (line: string) =>
   line
     .replace(/!?\[([^\]]*)\]\([^)]*\)/g, '$1')
     .replace(/^[#>\-*\s]+/, '')

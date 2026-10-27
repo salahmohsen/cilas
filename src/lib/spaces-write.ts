@@ -704,9 +704,9 @@ export const postRemove = async (i: Input<{ id: number }>): Promise<WriteResult<
 // --- postModify ---
 
 export const postModify = async (
-  i: Input<{ id: number; pinned?: boolean; locked?: boolean }>,
+  i: Input<{ id: number; pinned?: boolean; pinnedFull?: boolean; locked?: boolean }>,
 ): Promise<WriteResult<true>> => {
-  const { payload, user, id, pinned, locked } = i
+  const { payload, user, id, pinned, pinnedFull, locked } = i
   const post = (await payload.findByID({
     collection: 'space-posts',
     id,
@@ -723,6 +723,7 @@ export const postModify = async (
   if (locked && idOf(g.space.introduction_post) === id) return err('intro-post')
   const data: Record<string, unknown> = {}
   if (typeof pinned === 'boolean') data.pinned = pinned
+  if (typeof pinnedFull === 'boolean') data.pinned_full = pinnedFull
   if (typeof locked === 'boolean') data.locked = locked
   await payload.update({ collection: 'space-posts', id, data: data as never, overrideAccess: true })
   return { ok: true, data: true }

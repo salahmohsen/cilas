@@ -261,6 +261,7 @@ export async function postModifyAction(
     user,
     id,
     pinned: bool(form, 'pinned'),
+    pinnedFull: bool(form, 'pinnedFull'),
     locked: bool(form, 'locked'),
   })
   if (!result.ok) return err(result.error)

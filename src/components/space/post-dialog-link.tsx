@@ -190,9 +190,9 @@ type Props = Omit<AnchorHTMLAttributes<HTMLAnchorElement>, 'href'> & {
   children: ReactNode
 }
 
-/** A post's date as a link to its page. A plain click opens the post's dialog instead. */
+/** A post's date, or its pinned card, as a link to its page. A plain click opens the post's dialog instead. */
 export const PostDateLink = forwardRef<HTMLAnchorElement, Props>(function PostDateLink(
-  { href, children, onClick, ...rest },
+  { href, children, onClick, className, ...rest },
   ref,
 ) {
   const dialog = usePostDialog()
@@ -214,7 +214,7 @@ export const PostDateLink = forwardRef<HTMLAnchorElement, Props>(function PostDa
   }
 
   return (
-    <a {...rest} ref={ref} href={href} className={styles.dateLink} onClick={show}>
+    <a {...rest} ref={ref} href={href} className={className ?? styles.dateLink} onClick={show}>
       {children}
     </a>
   )

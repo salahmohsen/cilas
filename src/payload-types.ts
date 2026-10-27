@@ -2107,6 +2107,7 @@ export interface SpacePost {
   vote_anonymous?: boolean | null;
   course_session?: string | null;
   pinned?: boolean | null;
+  pinned_full?: boolean | null;
   locked?: boolean | null;
   announcement_email_sent?: boolean | null;
   edited_at?: string | null;
@@ -3661,6 +3662,7 @@ export interface SpacePostsSelect<T extends boolean = true> {
   vote_anonymous?: T;
   course_session?: T;
   pinned?: T;
+  pinned_full?: T;
   locked?: T;
   announcement_email_sent?: T;
   edited_at?: T;
