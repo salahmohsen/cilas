@@ -166,6 +166,25 @@ const assertPublic = async (url: URL) => {
   if (!addresses.length || !addresses.every(isPublicAddress)) throw new Error('private')
 }
 
+/** Our own metadata need not make a public round trip through Cloudflare. */
+const previewTarget = (url: URL): { url: URL; host?: string } => {
+  const site = process.env.NEXT_PUBLIC_SERVER_URL
+  if (process.env.NODE_ENV !== 'production' || !site) return { url }
+  try {
+    if (url.origin !== new URL(site).origin) return { url }
+    const port = Number(process.env.PORT || 3000)
+    if (!Number.isInteger(port) || port < 1 || port > 65535) return { url }
+    // The caller still checks the public URL on every redirect. Only this
+    // exact configured origin can use loopback; no user-supplied destination.
+    const local = new URL(`http://127.0.0.1:${port}`)
+    local.pathname = url.pathname
+    local.search = url.search
+    return { url: local, host: url.host }
+  } catch {
+    return { url }
+  }
+}
+
 /**
  * Fetches at most MAX_BYTES of HTML, following up to MAX_REDIRECTS, each hop
  * checked again. `enough` ends the walk at an address that already says what
@@ -180,10 +199,15 @@ const fetchHead = async (
   for (let hop = 0; hop <= MAX_REDIRECTS; hop++) {
     if (enough?.(url)) return { html: '', url: url.href }
     await assertPublic(url)
-    const res = await fetch(url, {
+    const target = previewTarget(url)
+    const res = await fetch(target.url, {
       redirect: 'manual',
       signal,
-      headers: { 'user-agent': 'CILAS link preview', accept: 'text/html' },
+      headers: {
+        'user-agent': 'CILAS link preview',
+        accept: 'text/html',
+        ...(target.host ? { host: target.host } : {}),
+      },
       cache: 'no-store',
       dispatcher: agent,
     } as RequestInit)

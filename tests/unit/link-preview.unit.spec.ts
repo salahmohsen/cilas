@@ -119,6 +119,7 @@ describe('link previews', () => {
   describe('a failed fetch', () => {
     afterEach(() => {
       vi.unstubAllGlobals()
+      vi.unstubAllEnvs()
       vi.useRealTimers()
     })
     const page = () =>
@@ -126,6 +127,44 @@ describe('link previews', () => {
         status: 200,
         headers: { 'content-type': 'text/html' },
       })
+
+    it('fetches this production site through its local server while keeping public preview URLs', async () => {
+      vi.stubEnv('NODE_ENV', 'production')
+      vi.stubEnv('NEXT_PUBLIC_SERVER_URL', 'https://93.184.216.34')
+      vi.stubEnv('PORT', '3000')
+      const fetch = vi.fn().mockImplementation(async () => page())
+      vi.stubGlobal('fetch', fetch)
+      const url = 'https://93.184.216.34/en/articles/local-preview'
+      expect((await linkPreview(url))?.url).toBe(url)
+      expect(String(fetch.mock.calls[0]?.[0])).toBe(
+        'http://127.0.0.1:3000/en/articles/local-preview',
+      )
+      expect(fetch.mock.calls[0]?.[1].headers.host).toBe('93.184.216.34')
+    })
+
+    it('keeps lookalike origins on the checked public transport', async () => {
+      vi.stubEnv('NODE_ENV', 'production')
+      vi.stubEnv('NEXT_PUBLIC_SERVER_URL', 'https://93.184.216.34:8443')
+      const fetch = vi.fn().mockImplementation(async () => page())
+      vi.stubGlobal('fetch', fetch)
+      const url = 'https://93.184.216.34/other-origin'
+      await linkPreview(url)
+      expect(String(fetch.mock.calls[0]?.[0])).toBe(url)
+      expect(fetch.mock.calls[0]?.[1].headers.host).toBeUndefined()
+    })
+
+    it('still blocks a private redirect from this site', async () => {
+      vi.stubEnv('NODE_ENV', 'production')
+      vi.stubEnv('NEXT_PUBLIC_SERVER_URL', 'https://93.184.216.34')
+      const fetch = vi
+        .fn()
+        .mockResolvedValue(
+          new Response(null, { status: 302, headers: { location: 'http://127.0.0.1/private' } }),
+        )
+      vi.stubGlobal('fetch', fetch)
+      expect(await linkPreview('https://93.184.216.34/private-redirect')).toBeNull()
+      expect(fetch).toHaveBeenCalledTimes(1)
+    })
 
     it('tries a link again soon when the network fails, whatever the error says', async () => {
       vi.useFakeTimers({ toFake: ['Date'] })
