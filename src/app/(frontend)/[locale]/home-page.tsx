@@ -5,7 +5,8 @@ import { getPayload } from 'payload'
 
 import { getPublicationCovers, type Locale, type Reader } from '@/api/articles.api'
 import { getPublicEvents } from '@/api/events.api'
-import { EventGrid } from '@/components/events/event-grid'
+import { EventCarousel } from '@/components/events/event-carousel'
+import { PublicEventCard } from '@/components/events/public-event-card'
 import { orderEvents } from '@/lib/events'
 import { getContactForm } from '@/api/contact.api'
 import { getHomeFaq } from '@/api/faq.api'
@@ -130,7 +131,13 @@ export async function HomePage({ locale, reader }: { locale: string; reader: Rea
                 {tEvents('all')}
               </Link>
             </header>
-            <EventGrid events={upcoming} now={now} />
+            <EventCarousel label={tEvents('upcoming')}>
+              {upcoming.map((event) => (
+                <div key={event.id} dir={locale === 'ar' ? 'rtl' : 'ltr'}>
+                  <PublicEventCard event={event} now={now} />
+                </div>
+              ))}
+            </EventCarousel>
           </section>
         ) : null}
 
