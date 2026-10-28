@@ -68,7 +68,11 @@
   background: var(--poster-ink);
   font-size: var(--text-sm);
 }
+.links:has(> ul) {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
 .links > ul {
+  align-items: center;
   justify-content: center;
   padding: var(--space-2) var(--space-4);
   background: var(--poster-paper);
