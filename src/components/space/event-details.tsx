@@ -151,6 +151,7 @@ export async function EventFace({
   description,
   corner,
   className,
+  layout,
 }: {
   title: string
   /** In the Events tab the name opens the post */
@@ -171,6 +172,7 @@ export async function EventFace({
   /** One quiet control in the card's top corner */
   corner?: ReactNode
   className?: string
+  layout?: 'card'
 }) {
   const [t, format] = await Promise.all([getTranslations('SpacePost'), getFormatter()])
   const Heading = headingLevel === 1 ? 'h1' : headingLevel === 2 ? 'h2' : 'h3'
@@ -180,6 +182,7 @@ export async function EventFace({
     <section
       className={[styles.event, className].filter(Boolean).join(' ')}
       aria-label={label}
+      data-layout={layout}
       data-cover={cover ? '' : undefined}
       data-over={over || undefined}
       style={cover ? ({ '--event-field': coverField(cover.tone) } as CSSProperties) : undefined}
@@ -210,7 +213,11 @@ export async function EventFace({
       <div className={styles.eventBody}>
         <div className={styles.eventHead}>
           {badge}
-          <Heading className={styles.eventTitle} dir="auto">
+          <Heading
+            className={styles.eventTitle}
+            dir="auto"
+            title={layout === 'card' ? title : undefined}
+          >
             {titleHref ? (
               <a href={titleHref} className={styles.eventTitleLink}>
                 {title}

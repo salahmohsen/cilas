@@ -2784,3 +2784,59 @@
     display: none;
   }
 }
+
+/* Browsing cards reserve the same image and text space, including without a cover. */
+.event[data-layout='card'] {
+  box-sizing: border-box;
+  block-size: 28rem;
+}
+.event[data-layout='card'] .eventBackdrop,
+.event[data-layout='card'] .eventBody {
+  --event-photo: 16rem;
+}
+.event[data-layout='card'] .eventBody {
+  box-sizing: border-box;
+  block-size: 100%;
+  align-content: start;
+  padding: 10rem var(--space-5) var(--space-5);
+  gap: 0;
+}
+.event[data-layout='card'] .eventLeaf {
+  position: absolute;
+  inset-block-start: var(--space-16);
+  inset-inline: 0;
+  margin: 0 auto;
+}
+.event[data-layout='card'] .eventBody,
+.event[data-layout='card'] .eventHead,
+.event[data-layout='card'] .eventFacts {
+  grid-template-columns: minmax(0, 1fr);
+}
+.event[data-layout='card'] .eventHead,
+.event[data-layout='card'] .eventFacts {
+  width: 100%;
+}
+.event[data-layout='card'] .eventTitle {
+  block-size: 3lh;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+  overflow: hidden;
+}
+.event[data-layout='card'] .eventDate {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
+}
+.event[data-layout='card'] .eventTime {
+  max-block-size: 2lh;
+  overflow: hidden;
+}
+.event[data-layout='card'] .eventWhere > a,
+.event[data-layout='card'] .eventWhere > bdi {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}

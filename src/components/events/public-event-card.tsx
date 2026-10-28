@@ -70,6 +70,7 @@ export async function PublicEventCard({
     <EventFace
       className={`${styles.publicCard} ${detail ? styles.hero : ''}`}
       title={event.title}
+      layout={detail ? undefined : 'card'}
       titleHref={detail ? undefined : `/${locale}/events/${event.slug}`}
       headingLevel={detail ? 1 : 3}
       cover={coverUrl ? { url: coverUrl, tone, alt: cover?.alt } : null}

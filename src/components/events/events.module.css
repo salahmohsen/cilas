@@ -41,7 +41,7 @@
   padding: 0;
   margin: 0;
 }
-.publicCard:not([data-cover]) {
+.hero:not([data-cover]) {
   padding-block-start: var(--space-10);
 }
 .type {
