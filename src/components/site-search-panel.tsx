@@ -374,7 +374,7 @@ export function SearchPanel({ onClose }: { onClose: () => void }) {
                   account={privateState.account}
                   onSummary={onPrivateSummary}
                   onOpen={(href) => {
-                    router.push(href)
+                    window.location.assign(href)
                     onClose()
                   }}
                 />

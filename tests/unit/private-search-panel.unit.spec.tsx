@@ -4,6 +4,8 @@ import { afterEach, describe, expect, it, vi } from 'vitest'
 
 const shared = vi.hoisted(() => ({
   refine: vi.fn(),
+  push: vi.fn(),
+  open: null as ((href: string) => void) | null,
   epoch: 1,
   report: null as
     ((summary: import('@/components/private-space-search').PrivateSearchSummary) => void) | null,
@@ -14,7 +16,7 @@ const shared = vi.hoisted(() => ({
   } as object | null,
 }))
 vi.mock('next-intl', () => ({ useLocale: () => 'en', useTranslations: () => (key: string) => key }))
-vi.mock('next/navigation', () => ({ useRouter: () => ({ push: vi.fn() }) }))
+vi.mock('next/navigation', () => ({ useRouter: () => ({ push: shared.push }) }))
 vi.mock('@/env.client', () => ({
   clientEnv: { NEXT_PUBLIC_TYPESENSE_API_KEY: 'disposable-public-key' },
 }))
@@ -33,8 +35,15 @@ vi.mock('react-instantsearch', () => ({
 }))
 vi.mock('@/components/private-space-search', () => ({
   usePrivateSpaces: () => ({ state: shared.state, epoch: shared.epoch }),
-  PrivateSpaceSearch: ({ onSummary }: { onSummary: typeof shared.report }) => {
+  PrivateSpaceSearch: ({
+    onSummary,
+    onOpen,
+  }: {
+    onSummary: typeof shared.report
+    onOpen: (href: string) => void
+  }) => {
     shared.report = onSummary
+    shared.open = onOpen
     return <p>Private results</p>
   },
 }))
@@ -76,6 +85,9 @@ import { SearchPanel } from '@/components/site-search-panel'
 afterEach(() => {
   cleanup()
   shared.refine.mockClear()
+  shared.push.mockClear()
+  shared.open = null
+  vi.unstubAllGlobals()
   shared.state = {
     account: 1,
     spaces: [{ id: 1, label: 'Accessible', href: '/en/spaces/community/1' }],
@@ -83,6 +95,22 @@ afterEach(() => {
   shared.epoch = 1
 })
 describe('private search scope routing', () => {
+  it.each([
+    '/en/spaces/course/another-course/posts/42',
+    '/ar/spaces/community/2/posts/17',
+  ])('opens a private result as a full page at %s rather than an intercepted dialog', (href) => {
+    const onClose = vi.fn()
+    render(<SearchPanel onClose={onClose} />)
+    fireEvent.click(screen.getByText('privateSpaces'))
+    const assign = vi.fn()
+    vi.stubGlobal('window', { location: { assign } })
+
+    shared.open?.(href)
+
+    expect(assign).toHaveBeenCalledWith(href)
+    expect(shared.push).not.toHaveBeenCalled()
+    expect(onClose).toHaveBeenCalledOnce()
+  })
   it('uses independent facet selection and retains intent only for the same freshly authorized account', () => {
     const { rerender } = render(<SearchPanel onClose={vi.fn()} />)
     fireEvent.click(screen.getByText('privateSpaces'))
