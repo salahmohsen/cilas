@@ -1690,6 +1690,9 @@ export interface Event {
    */
   generateSlug?: boolean | null;
   slug: string;
+  /**
+   * Used on event cards. Add images to the description editor to show them on the event page.
+   */
   cover_image?: (number | null) | Media;
   description?: {
     root: {
@@ -4569,6 +4572,319 @@ export interface TaskCreateCollectionImport {
     maxLimit?: number | null;
   };
   output?: unknown;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "PersonProfileBlock".
+ */
+export interface PersonProfileBlock {
+  /**
+   * Uses the public profile’s name, photo, bio, website, and social links. Update those on the person’s profile.
+   */
+  person: number | Person;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'personProfile';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "MovieBlock".
+ */
+export interface MovieBlock {
+  /**
+   * Select every subtitle language available at this screening. Leave empty if there are no subtitles.
+   */
+  subtitleLanguages?:
+    | (
+        | 'ab'
+        | 'aa'
+        | 'af'
+        | 'ak'
+        | 'sq'
+        | 'am'
+        | 'ar'
+        | 'an'
+        | 'hy'
+        | 'as'
+        | 'av'
+        | 'ae'
+        | 'ay'
+        | 'az'
+        | 'bm'
+        | 'ba'
+        | 'eu'
+        | 'be'
+        | 'bn'
+        | 'bi'
+        | 'bs'
+        | 'br'
+        | 'bg'
+        | 'my'
+        | 'cn'
+        | 'ca'
+        | 'ch'
+        | 'ce'
+        | 'ny'
+        | 'cv'
+        | 'kw'
+        | 'co'
+        | 'cr'
+        | 'hr'
+        | 'cs'
+        | 'da'
+        | 'dv'
+        | 'nl'
+        | 'dz'
+        | 'en'
+        | 'eo'
+        | 'et'
+        | 'ee'
+        | 'fo'
+        | 'fj'
+        | 'fi'
+        | 'fr'
+        | 'fy'
+        | 'ff'
+        | 'gd'
+        | 'gl'
+        | 'lg'
+        | 'ka'
+        | 'de'
+        | 'el'
+        | 'gn'
+        | 'gu'
+        | 'ht'
+        | 'ha'
+        | 'he'
+        | 'hz'
+        | 'hi'
+        | 'ho'
+        | 'hu'
+        | 'is'
+        | 'io'
+        | 'ig'
+        | 'id'
+        | 'ia'
+        | 'ie'
+        | 'iu'
+        | 'ik'
+        | 'ga'
+        | 'it'
+        | 'ja'
+        | 'jv'
+        | 'kl'
+        | 'kn'
+        | 'kr'
+        | 'ks'
+        | 'kk'
+        | 'km'
+        | 'ki'
+        | 'rw'
+        | 'ky'
+        | 'kv'
+        | 'kg'
+        | 'ko'
+        | 'kj'
+        | 'ku'
+        | 'lo'
+        | 'la'
+        | 'lv'
+        | 'lb'
+        | 'li'
+        | 'ln'
+        | 'lt'
+        | 'lu'
+        | 'mk'
+        | 'mg'
+        | 'ms'
+        | 'ml'
+        | 'mt'
+        | 'zh'
+        | 'gv'
+        | 'mi'
+        | 'mr'
+        | 'mh'
+        | 'mo'
+        | 'mn'
+        | 'na'
+        | 'nv'
+        | 'nr'
+        | 'nd'
+        | 'ng'
+        | 'ne'
+        | 'se'
+        | 'no'
+        | 'nb'
+        | 'nn'
+        | 'oc'
+        | 'oj'
+        | 'or'
+        | 'om'
+        | 'os'
+        | 'pi'
+        | 'fa'
+        | 'pl'
+        | 'pt'
+        | 'pa'
+        | 'ps'
+        | 'qu'
+        | 'rm'
+        | 'ro'
+        | 'rn'
+        | 'ru'
+        | 'sm'
+        | 'sg'
+        | 'sa'
+        | 'sc'
+        | 'sr'
+        | 'sh'
+        | 'sn'
+        | 'sd'
+        | 'si'
+        | 'cu'
+        | 'sk'
+        | 'sl'
+        | 'so'
+        | 'st'
+        | 'es'
+        | 'su'
+        | 'sw'
+        | 'ss'
+        | 'sv'
+        | 'tl'
+        | 'ty'
+        | 'tg'
+        | 'ta'
+        | 'tt'
+        | 'te'
+        | 'th'
+        | 'bo'
+        | 'ti'
+        | 'to'
+        | 'ts'
+        | 'tn'
+        | 'tr'
+        | 'tk'
+        | 'tw'
+        | 'ug'
+        | 'uk'
+        | 'ur'
+        | 'uz'
+        | 've'
+        | 'vi'
+        | 'vo'
+        | 'wa'
+        | 'cy'
+        | 'wo'
+        | 'xh'
+        | 'ii'
+        | 'yi'
+        | 'yo'
+        | 'za'
+        | 'zu'
+      )[]
+    | null;
+  /**
+   * Search by title, check the year, and select the movie. Its metadata is saved with this block.
+   */
+  movie:
+    | {
+        [k: string]: unknown;
+      }
+    | unknown[]
+    | string
+    | number
+    | boolean
+    | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'movie';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "ColumnsBlock".
+ */
+export interface ColumnsBlock {
+  /**
+   * Four columns become two on tablets and one on phones.
+   */
+  columnCount?: ('2' | '3' | '4') | null;
+  ratio?: ('equal' | 'oneThird' | 'twoThirds') | null;
+  /**
+   * Add text, an image, or a Person profile block.
+   */
+  first?: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  /**
+   * Add text, an image, or a Person profile block.
+   */
+  second?: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  /**
+   * Add text, an image, or a Person profile block.
+   */
+  third?: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  /**
+   * Add text, an image, or a Person profile block.
+   */
+  fourth?: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'columns';
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema

@@ -4,8 +4,12 @@ import { RichText, type JSXConvertersFunction } from '@payloadcms/richtext-lexic
 import React from 'react'
 
 import { FootnoteMark } from '@/components/article/footnote'
+import { ProfileCard } from '@/components/person/profile-card'
+import { MovieCard } from '@/components/movie/movie-card'
+import { movieSnapshotSchema } from '@/lib/movie'
 import type { Footnote } from '@/lib/footnotes'
-import type { FootnoteBlock } from '@/payload-types'
+import type { ColumnsBlock, FootnoteBlock, PersonProfileBlock, MovieBlock } from '@/payload-types'
+import styles from './rich-text-columns.module.css'
 
 /** The dash (or tilde) that opens a quote's source line. */
 const SOURCE_LEAD = /^\s*[—–~-]\s*/
@@ -53,6 +57,39 @@ export const RichTextField: React.FC<{
 }) => {
   if (!data) return null
 
+  const renderColumns = ({ node }: { node: { fields: ColumnsBlock } }) => {
+    const { first, second, third, fourth, ratio, columnCount } = node.fields
+    const count = Number(columnCount ?? 2)
+    return (
+      <div className={plain ? undefined : styles.columns} data-ratio={ratio} data-columns={count}>
+        {[first, second, third, fourth].slice(0, count).map((column, index) => (
+          <RichTextField
+            key={index}
+            data={column}
+            className={styles.column}
+            plain={plain}
+            blocks={blocks}
+            inlineBlocks={inlineBlocks}
+            footnotes={footnotes}
+            footnoteLabel={footnoteLabel}
+          />
+        ))}
+      </div>
+    )
+  }
+
+  const renderPersonProfile = ({ node }: { node: { fields: PersonProfileBlock } }) => {
+    const { person } = node.fields
+    if (!person || typeof person !== 'object' || !person.visible || !person.slug) return null
+    return (
+      <ProfileCard person={person}>
+        {person.bio && (
+          <RichTextField data={person.bio} plain className="article-prose article-prose--bio" />
+        )}
+      </ProfileCard>
+    )
+  }
+
   const fullConverters: JSXConvertersFunction = ({ defaultConverters }) => ({
     ...defaultConverters,
     // A quote whose last line starts with a dash ("— Pascal", written in the
@@ -80,12 +117,22 @@ export const RichTextField: React.FC<{
         </blockquote>
       )
     },
-    blocks: Object.fromEntries(
-      Object.entries(blocks).map(([type, draw]) => [
-        type,
-        ({ node }: { node: { fields: unknown } }) => draw(node.fields),
-      ]),
-    ),
+    blocks: {
+      columns: renderColumns,
+      personProfile: renderPersonProfile,
+      movie: ({ node }: { node: { fields: MovieBlock } }) => {
+        const parsed = movieSnapshotSchema.safeParse(node.fields.movie)
+        return parsed.success ? (
+          <MovieCard movie={parsed.data} subtitleLanguages={node.fields.subtitleLanguages ?? []} />
+        ) : null
+      },
+      ...Object.fromEntries(
+        Object.entries(blocks).map(([type, draw]) => [
+          type,
+          ({ node }: { node: { fields: unknown } }) => draw(node.fields),
+        ]),
+      ),
+    },
     inlineBlocks: {
       ...Object.fromEntries(
         Object.entries(inlineBlocks).map(([type, draw]) => [
@@ -121,7 +168,7 @@ export const RichTextField: React.FC<{
     upload: () => null,
     horizontalrule: () => null,
     table: () => null,
-    blocks: {},
+    blocks: { columns: renderColumns, personProfile: () => null, movie: () => null },
     inlineBlocks: {},
   })
 

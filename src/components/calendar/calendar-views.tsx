@@ -5,6 +5,7 @@ import { Card } from '@/components/arc/card/card'
 import { Link } from '@/i18n/navigation'
 import { monthGrid, monthStart, weekDays } from '@/lib/calendar'
 import { localDigits, numberingSystemOf, timeDir } from '@/lib/digits'
+import { focalPointStyle } from '@/lib/media-image'
 
 /** How many items a month's day cell lists before "+N more": fewer over a cover, to keep it legible. */
 const IN_CELL = 3
@@ -112,7 +113,7 @@ export async function MonthView({
                   media={
                     cover ? (
                       // eslint-disable-next-line @next/next/no-img-element
-                      <img alt="" className="cal-cover-img" decoding="async" src={cover.url} />
+                      <img alt="" className="cal-cover-img" decoding="async" src={cover.url} style={focalPointStyle(cover)} />
                     ) : undefined
                   }
                   preview={
@@ -167,7 +168,7 @@ function DayAgenda({ items, labels }: { items: CalendarItem[]; labels: Labels })
             </span>
             {item.cover ? (
               // eslint-disable-next-line @next/next/no-img-element
-              <img alt="" className="cal-agenda-cover" loading="lazy" src={item.cover.url} />
+              <img alt="" className="cal-agenda-cover" loading="lazy" src={item.cover.url} style={focalPointStyle(item.cover)} />
             ) : null}
             <span className="min-w-0">
               <ItemTitle className="block font-medium text-[var(--foreground)]" item={item} />
@@ -211,7 +212,7 @@ export async function WeekView({
               <li className="cal-card" key={item.key}>
                 {item.cover ? (
                   // eslint-disable-next-line @next/next/no-img-element
-                  <img alt={item.cover.alt} className="cal-card-cover" loading="lazy" src={item.cover.url} />
+                  <img alt={item.cover.alt} className="cal-card-cover" loading="lazy" src={item.cover.url} style={focalPointStyle(item.cover)} />
                 ) : null}
                 <div className="p-3">
                   <p className="cal-time" dir={item.start ? labels.timeDir : undefined}>
@@ -257,7 +258,7 @@ export async function AgendaView({ items, labels }: { items: CalendarItem[]; lab
                 </span>
                 {item.cover ? (
                   // eslint-disable-next-line @next/next/no-img-element
-                  <img alt={item.cover.alt} className="cal-agenda-cover" loading="lazy" src={item.cover.url} />
+                  <img alt={item.cover.alt} className="cal-agenda-cover" loading="lazy" src={item.cover.url} style={focalPointStyle(item.cover)} />
                 ) : null}
                 <span className="min-w-0">
                   <ItemTitle className="block font-medium" item={item} />

@@ -1,6 +1,7 @@
 'use client'
 
 import { personAvatarSeed } from '@/lib/avatar'
+import { focalPointStyle } from '@/lib/media-image'
 
 import { Highlight, Snippet } from 'react-instantsearch'
 import { useLocale, useTranslations } from 'next-intl'
@@ -370,6 +371,7 @@ function SearchRowItem({
         ) : hit.coverImage ? (
           <img
             src={hit.coverImage}
+            style={focalPointStyle(hit)}
             alt=""
             loading="lazy"
             className="hidden size-12 shrink-0 rounded-xl object-cover ring-1 ring-black/10 md:block dark:ring-white/10"

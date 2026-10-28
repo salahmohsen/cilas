@@ -172,7 +172,7 @@ export async function EventFace({
   /** One quiet control in the card's top corner */
   corner?: ReactNode
   className?: string
-  layout?: 'card'
+  layout?: 'card' | 'detail'
 }) {
   const [t, format] = await Promise.all([getTranslations('SpacePost'), getFormatter()])
   const Heading = headingLevel === 1 ? 'h1' : headingLevel === 2 ? 'h2' : 'h3'
@@ -188,18 +188,31 @@ export async function EventFace({
       style={cover ? ({ '--event-field': coverField(cover.tone) } as CSSProperties) : undefined}
     >
       {cover ? (
-        <div className={styles.eventBackdrop}>
-          {/* Private files come from Payload's own route, which next/image cannot read with the member's session; the server stores covers at most 1600 px wide. */}
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img className={styles.eventBlur} src={cover.url} alt="" decoding="async" />
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            className={styles.eventPhoto}
-            src={cover.url}
-            alt={cover.alt ?? t('eventCoverAlt', { title })}
-            decoding="async"
-          />
-        </div>
+        <>
+          <div className={styles.eventBackdrop}>
+            {/* Private Spaces covers require the member's session, so these use regular images. */}
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img className={styles.eventBlur} src={cover.url} alt="" decoding="async" />
+            {layout !== 'detail' && (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img
+                className={styles.eventPhoto}
+                src={cover.url}
+                alt={cover.alt ?? t('eventCoverAlt', { title })}
+                decoding="async"
+              />
+            )}
+          </div>
+          {layout === 'detail' && (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img
+              className={styles.eventFullPhoto}
+              src={cover.url}
+              alt={cover.alt ?? t('eventCoverAlt', { title })}
+              decoding="async"
+            />
+          )}
+        </>
       ) : startsAt ? (
         <time dateTime={startsAt} className={styles.eventLeaf} aria-hidden="true">
           <span className={styles.eventMonth}>{leaf(startsAt, { month: 'short' })}</span>

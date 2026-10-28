@@ -23,6 +23,8 @@ export type SearchHit = {
   slug?: string
   updatedAt?: number
   coverImage?: string
+  focalX?: number
+  focalY?: number
   contributors?: string
   courseType?: string
   _highlightResult?: Record<string, MatchMeta | undefined>

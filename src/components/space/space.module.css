@@ -2849,3 +2849,13 @@
   -webkit-line-clamp: 2;
   overflow: hidden;
 }
+
+.eventFullPhoto {
+  display: block;
+  position: relative;
+  width: 100%;
+  height: auto;
+}
+.event[data-layout='detail'][data-cover] .eventBody {
+  padding: var(--space-8) var(--space-6);
+}

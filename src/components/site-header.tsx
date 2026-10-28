@@ -12,10 +12,10 @@ import {
   Users,
 } from 'lucide-react'
 import { useLocale, useTranslations } from 'next-intl'
-import Image from 'next/image'
 import { Suspense, useEffect, useRef, useState } from 'react'
 
 import { SiteHeader } from '@/components/arc/blocks/site-header/site-header'
+import { CilasLogo } from '@/components/cilas-logo'
 import { UserMenu, type UserMenuUser } from '@/components/arc/user-menu/user-menu'
 import { LanguageSwitch, ThemeToggle } from '@/components/site-controls'
 import { SiteNotifications } from '@/components/site-notifications'
@@ -257,16 +257,7 @@ export function CILASSiteHeader({ nav = ALL_SHOWN }: { nav?: Navigation }) {
       brand={{
         name: t('brand'),
         href: href('/'),
-        mark: (
-          <Image
-            alt="CILAS"
-            height={20}
-            src="/assets/images/logo.webp"
-            style={{ width: 'auto' }}
-            className="dark:invert"
-            width={20}
-          />
-        ),
+        mark: <CilasLogo data-site-mark height={32} width={19} style={{ flexShrink: 0 }} />,
       }}
       items={items}
       label={t('label')}

@@ -1,7 +1,7 @@
 import { describe, expect, it, vi } from 'vitest'
 import type { Payload } from 'payload'
 import type { Event } from '@/payload-types'
-import { eventTiming, orderEvents } from '@/lib/events'
+import { eventTiming, orderEvents, otherUpcomingEvents } from '@/lib/events'
 import { getPublicEvents } from '@/api/events.api'
 import { pathOf } from '@/lib/paths'
 
@@ -22,6 +22,19 @@ const scheduled = (id: number, start: string, weeks = 1): Event => ({
 })
 
 describe('public event timing', () => {
+  it('shows at most three other upcoming events, soonest first, without past or undated events', () => {
+    const events = [
+      scheduled(1, '2026-11-18'),
+      scheduled(2, '2026-11-04'),
+      scheduled(3, '2026-11-11'),
+      scheduled(4, '2026-10-21'),
+      { ...scheduled(5, '2026-11-04'), schedule: {} },
+      scheduled(6, '2026-11-25'),
+      scheduled(7, '2026-12-02'),
+    ]
+    expect(otherUpcomingEvents(events, 2, now).map(({ id }) => id)).toEqual([3, 1, 6])
+    expect(otherUpcomingEvents([scheduled(1, '2026-10-21')], 2, now)).toEqual([])
+  })
   it('keeps an ongoing event, then archives it exactly when it ends', () => {
     const event = scheduled(1, '2026-10-28')
     expect(eventTiming(event, now).status).toBe('upcoming')

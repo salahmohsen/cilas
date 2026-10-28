@@ -15,9 +15,14 @@ import {
   type LucideIcon,
 } from 'lucide-react'
 import { getFormatter, getLocale, getTranslations } from 'next-intl/server'
-import { EventFace, EventPlace, EventWhen } from '@/components/space/event-details'
+import { Poster, type PosterData } from '@/components/home/poster'
+import { EventPlace, EventWhen } from '@/components/space/event-details'
+import readerStyles from '@/components/arc/blocks/blog-grid/blog-grid.module.css'
 import { cairoInstant } from '@/lib/cairo-day'
-import { publicEventCoverTone } from '@/lib/public-event-cover'
+import { numberingSystemOf } from '@/lib/digits'
+import { EVENT_POSTER_COLORS } from '@/lib/event-poster-colors'
+import { locationUrl } from '@/lib/space-event'
+import { mediaImage } from '@/lib/media-image'
 import { eventTiming } from '@/lib/events'
 import type { Event } from '@/payload-types'
 import spaceStyles from '@/components/space/space.module.css'
@@ -56,8 +61,6 @@ export async function PublicEventCard({
   ])
   const timing = eventTiming(event, now)
   const cover = typeof event.cover_image === 'object' ? event.cover_image : null
-  const coverUrl = cover?.sizes?.card?.url || cover?.url
-  const tone = coverUrl ? await publicEventCoverTone(coverUrl) : null
   const place = typeof event.place === 'object' ? event.place : null
   const venue = event.external_venue?.name ? event.external_venue : place
   const startsAt = timing.day
@@ -66,25 +69,73 @@ export async function PublicEventCard({
   const endsAt = timing.meeting ? cairoInstant(timing.meeting.date, timing.meeting.end_time) : null
   const Icon = TYPE_ICONS[event.event_type]
   const over = timing.status === 'past'
+  if (!detail) {
+    const lines = [
+      timing.day
+        ? format.dateTime(new Date(`${timing.day}T12:00:00Z`), {
+            day: 'numeric',
+            month: 'short',
+            year: 'numeric',
+            timeZone: 'Africa/Cairo',
+            numberingSystem: numberingSystemOf(locale),
+          })
+        : t('dateSoon'),
+    ]
+    if (timing.meeting && startsAt && endsAt) {
+      const clock = {
+        hour: 'numeric',
+        minute: '2-digit',
+        timeZone: 'Africa/Cairo',
+        numberingSystem: numberingSystemOf(locale),
+        ...(locale === 'ar' ? { hour12: false } : {}),
+      } as const
+      lines.push(format.dateTimeRange(new Date(startsAt), new Date(endsAt), clock))
+    }
+    const details: PosterData['details'] = []
+    if (venue?.name) {
+      const map = locationUrl(venue.map_url)
+      details.push(map ? { text: venue.name, href: map } : venue.name)
+    }
+    const online = locationUrl(event.online_url)
+    if (online) details.push({ text: t('online'), href: online })
+    const speakers = event.speakers
+      ?.flatMap(({ person }) => (typeof person === 'object' ? [person.name] : []))
+      .join(locale === 'ar' ? '، ' : ', ')
+    return (
+      <div className={`poster-frame ${styles.posterFrame}`}>
+        <Poster
+          poster={{
+            id: `event-${event.id}`,
+            href: `/${locale}/events/${event.slug}`,
+            layout: 1,
+            color: EVENT_POSTER_COLORS[event.event_type],
+            label: types(event.event_type),
+            title: event.title,
+            credit: speakers ? `${types(event.event_type)} · ${speakers}` : types(event.event_type),
+            image: mediaImage(cover),
+            imageFallback: 'logo',
+            meta: { lines, status: over ? t('ended') : undefined },
+            details,
+            action: t('viewEvent'),
+          }}
+        />
+      </div>
+    )
+  }
+  const typeBadge = (
+    <span className={styles.type}>
+      <Icon size={20} strokeWidth={1.75} aria-hidden />
+      <span>{types(event.event_type)}</span>
+    </span>
+  )
   return (
-    <EventFace
-      className={`${styles.publicCard} ${detail ? styles.hero : ''}`}
-      title={event.title}
-      layout={detail ? undefined : 'card'}
-      titleHref={detail ? undefined : `/${locale}/events/${event.slug}`}
-      headingLevel={detail ? 1 : 3}
-      cover={coverUrl ? { url: coverUrl, tone, alt: cover?.alt } : null}
-      startsAt={startsAt}
-      over={over}
-      label={event.title}
-      corner={
-        <span className={styles.type}>
-          <Icon size={20} strokeWidth={1.75} aria-hidden />
-          <span>{types(event.event_type)}</span>
-        </span>
-      }
-      when={
-        timing.meeting && startsAt ? (
+    <header className={styles.detailHeader}>
+      {typeBadge}
+      <h1 className={`${readerStyles.readerTitle} article-title`} dir="auto">
+        {event.title}
+      </h1>
+      <div className={styles.detailFacts}>
+        {timing.meeting && startsAt ? (
           <EventWhen startsAt={startsAt} endsAt={endsAt} over={over} />
         ) : (
           <div className={spaceStyles.eventWhen}>
@@ -100,19 +151,11 @@ export async function PublicEventCard({
             )}
             {over && <span className={spaceStyles.eventTime}>{t('ended')}</span>}
           </div>
-        )
-      }
-      where={
-        <>
-          {venue?.name && <EventPlace location={venue.map_url || venue.name} place={venue.name} />}
-          {event.online_url && <EventPlace location={event.online_url} place={t('online')} />}
-        </>
-      }
-      note={
-        detail && venue?.address ? (
-          <p className={spaceStyles.eventNote}>{venue.address}</p>
-        ) : undefined
-      }
-    />
+        )}
+        {venue?.name && <EventPlace location={venue.map_url || venue.name} place={venue.name} />}
+        {event.online_url && <EventPlace location={event.online_url} place={t('online')} />}
+        {venue?.address && <p className={spaceStyles.eventNote}>{venue.address}</p>}
+      </div>
+    </header>
   )
 }

@@ -20,7 +20,7 @@ export type WheelPerson = {
   id: number
   slug: string
   name: string
-  photo?: { url: string; alt: string }
+  photo?: { url: string; alt: string; focalX?: number | null; focalY?: number | null }
   /** The small line above the name: "Fellow", "Trustee". */
   eyebrow: string
   lines: WheelLine[]
@@ -60,6 +60,7 @@ export function PeopleWheel({
           items={people.map((p) => ({
             label: p.name,
             image: p.photo?.url,
+            imageFocalPoint: p.photo,
             fallbackSeed: personAvatarSeed(p.id),
             imageAlt: p.photo?.alt || p.name,
           }))}

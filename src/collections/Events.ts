@@ -80,7 +80,15 @@ export const Events: CollectionConfig = {
     { name: 'course', type: 'relationship', relationTo: 'courses', admin: { position: 'sidebar' } },
     { name: 'title', type: 'text', required: true, localized: true },
     slugField(),
-    { name: 'cover_image', type: 'upload', relationTo: 'media', admin: { position: 'sidebar' } },
+    {
+      name: 'cover_image',
+      type: 'upload',
+      relationTo: 'media',
+      admin: {
+        position: 'sidebar',
+        description: 'Used on event cards. Add images to the description editor to show them on the event page.',
+      },
+    },
     { name: 'description', type: 'richText', localized: true },
     scheduleField(),
     {

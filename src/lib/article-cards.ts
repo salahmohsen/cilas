@@ -2,6 +2,7 @@ import type { getFormatter } from 'next-intl/server'
 
 import { authorNames, excerptOf, joinNames, publicationOf, readingMinutes } from '@/lib/articles'
 import { pathOf } from '@/lib/paths'
+import { mediaImage, type MediaImage } from '@/lib/media-image'
 import type { Article, Course, Media, Person } from '@/payload-types'
 
 export type ArticleCard = {
@@ -15,7 +16,7 @@ export type ArticleCard = {
   readTime: number
   readTimeLabel: string
   author: { name: string; avatar?: string }
-  image?: { src: string; alt: string }
+  image?: MediaImage
   featured?: boolean
 }
 
@@ -73,7 +74,7 @@ export const toArticleCard = (
     readTime: minutes,
     readTimeLabel: minutesLabel(minutes),
     author: { ...byline(writer ? [writer] : [], and), name: joinNames(authorNames(a), and) },
-    ...(image?.url ? { image: { src: image.url, alt: image.alt } } : {}),
+    ...(image?.url ? { image: mediaImage(image) } : {}),
     ...(a.featured ? { featured: true } : {}),
   }
 }
@@ -112,6 +113,6 @@ export const toCourseCard = (
     readTime: weeks,
     readTimeLabel: weeks ? weeksLabel(weeks) : '',
     author: byline(fellows, and),
-    ...(image?.url ? { image: { src: image.url, alt: image.alt } } : {}),
+    ...(image?.url ? { image: mediaImage(image) } : {}),
   }
 }

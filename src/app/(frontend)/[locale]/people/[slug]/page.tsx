@@ -17,6 +17,7 @@ import { Link } from '@/i18n/navigation'
 import { isRtl, routing } from '@/i18n/routing'
 import { toArticleCard, toCourseCard } from '@/lib/article-cards'
 import { pathOf } from '@/lib/paths'
+import { focalPointStyle } from '@/lib/media-image'
 import { breadcrumbSchema, personSchema } from '@/lib/schema'
 import type { Media } from '@/payload-types'
 
@@ -118,6 +119,7 @@ export default async function PersonPage({ params }: Props) {
                 fallbackSeed={personAvatarSeed(person.id)}
                 alt={photo?.alt || person.name}
                 className="h-full w-full object-cover"
+                style={focalPointStyle(photo)}
               />
             </div>
             <div className="grid gap-2">

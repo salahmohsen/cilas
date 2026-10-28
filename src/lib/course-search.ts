@@ -6,6 +6,7 @@
  */
 
 import { latinDigits } from '@/lib/digits'
+import type { FocalPoint } from '@/lib/media-image'
 
 /** The filters, in the order the menu lists them; each is a URL parameter. */
 export const COURSE_FACETS = ['registration', 'type', 'season', 'year', 'academic', 'place', 'fellow', 'format', 'language'] as const
@@ -22,6 +23,7 @@ export type StudyCourse = {
   description?: string
   image?: string
   imageAlt?: string
+  imageFocalPoint?: FocalPoint
   /** Sorts the list: newest first. */
   startDate: string
   /** The last day to register (YYYY-MM-DD), its own or its cycle's. */

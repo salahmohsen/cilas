@@ -15,6 +15,7 @@ import { Link } from '@/i18n/navigation'
 import type { Season } from '@/lib/cycle'
 import { localDigits, numberingSystemOf } from '@/lib/digits'
 import { registrationStatus } from '@/lib/registration'
+import { focalPointStyle } from '@/lib/media-image'
 import type { Cycle } from '@/payload-types'
 
 /**
@@ -323,6 +324,7 @@ export async function BridgeYearView({
                 className="course-cover"
                 height={cover.height ?? undefined}
                 src={cover.url}
+                style={focalPointStyle(cover)}
                 width={cover.width ?? undefined}
               />
             ) : (

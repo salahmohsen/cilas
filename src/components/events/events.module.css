@@ -32,6 +32,24 @@
 }
 .carousel {
   min-width: 0;
+  container-type: inline-size;
+}
+.carousel > section {
+  --event-slide-size: min(84cqw, 28rem);
+}
+@container (min-width: 900px) {
+  .carousel > section {
+    --event-slide-size: calc((100cqw - 2 * var(--space-4)) / 3);
+  }
+}
+.carousel [aria-roledescription='slide'],
+.carousel [aria-roledescription='slide'] > div,
+.grid > li,
+.page [data-post] {
+  display: grid;
+}
+.posterFrame {
+  height: 100%;
 }
 .grid {
   display: grid;
@@ -41,14 +59,10 @@
   padding: 0;
   margin: 0;
 }
-.hero:not([data-cover]) {
-  padding-block-start: var(--space-10);
-}
 .type {
   display: inline-flex;
   align-items: center;
   gap: var(--space-2);
-  padding: var(--space-2) var(--space-3);
   font-size: var(--text-sm);
   font-weight: 500;
   line-height: var(--leading-body);
@@ -56,11 +70,31 @@
 .type svg {
   flex-shrink: 0;
 }
-.hero h1 {
-  font-size: var(--text-3xl);
+.detailHeader {
+  display: grid;
+  justify-items: start;
+  gap: var(--space-4);
+  container-type: inline-size;
+}
+.detailFacts {
+  display: grid;
+  justify-items: start;
+  gap: var(--space-2);
+}
+.detailFacts > div {
+  justify-items: start;
 }
 .detailPage {
   max-width: 860px;
+}
+.related {
+  gap: var(--space-6);
+  border-top: 1px solid var(--border);
+}
+.related h2 {
+  font-family: var(--font-display);
+  font-size: var(--text-2xl);
+  font-weight: 500;
 }
 .details {
   display: grid;

@@ -114,7 +114,7 @@ export async function CoursePage({ locale, slug, reader }: { locale: string; slu
         pagination: false,
         populate: {
           people: { name: true },
-          media: { url: true, alt: true, filename: true, prefix: true },
+          media: { url: true, alt: true, focalX: true, focalY: true, filename: true, prefix: true },
         },
         select: { title: true, slug: true, course_type: true, fellows: true, cover_image: true },
         locale: locale as 'en' | 'ar',
@@ -131,7 +131,7 @@ export async function CoursePage({ locale, slug, reader }: { locale: string; slu
       fellows: (c.fellows ?? []).flatMap((f) =>
         typeof f === 'object' && f ? [(f as Person).name] : [],
       ),
-      ...(cover?.url ? { image: { url: cover.url, alt: cover.alt ?? '' } } : {}),
+      ...(cover?.url ? { image: { url: cover.url, alt: cover.alt ?? '', focalX: cover.focalX, focalY: cover.focalY } } : {}),
     }
   })
 

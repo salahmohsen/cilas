@@ -1,7 +1,14 @@
 'use client'
 
 import { AnimatePresence, motion, useReducedMotion } from 'motion/react'
-import { useEffect, useRef, useState, type CSSProperties, type ReactNode, type RefObject } from 'react'
+import {
+  useEffect,
+  useRef,
+  useState,
+  type CSSProperties,
+  type ReactNode,
+  type RefObject,
+} from 'react'
 
 import { TextMorph } from '@/components/arc/text-morph/text-morph'
 import { HomeNumbers, type HomeStat } from '@/components/home/home-numbers'
@@ -40,7 +47,7 @@ function useSailAim(hero: RefObject<HTMLElement | null>) {
   useEffect(() => {
     const track = hero.current?.querySelector<HTMLElement>('[data-sail-track]')
     const brand = document.querySelector<HTMLElement>('.site-header [data-brand]')
-    const mark = brand?.querySelector<HTMLImageElement>('img')
+    const mark = brand?.querySelector<SVGSVGElement>('[data-site-mark]')
     if (!track || !brand || !mark) return
     const aim = () => {
       // The scene is mirrored on Arabic pages, which flips every local
@@ -64,7 +71,11 @@ function useSailAim(hero: RefObject<HTMLElement | null>) {
       const stuckFrom = brand.closest('header')?.offsetTop ?? 0
       const markX = markRect.x + markRect.width / 2 - brandTx
       const markY =
-        markRect.y + markRect.height / 2 - brandTy + window.scrollY - Math.max(window.scrollY, stuckFrom)
+        markRect.y +
+        markRect.height / 2 -
+        brandTy +
+        window.scrollY -
+        Math.max(window.scrollY, stuckFrom)
       // The flight ends when its range does, 90vh scrolled: the boat must
       // also catch up the distance its own rest place has travelled by then.
       // In the mirrored scene a local leftward translate sails it right.
@@ -79,13 +90,10 @@ function useSailAim(hero: RefObject<HTMLElement | null>) {
       track.style.setProperty('--sail-scale', `${scaleToMark.toFixed(3)}`)
     }
     aim()
-    // A late-loading mark would sit elsewhere than first measured.
-    if (!mark.complete) mark.addEventListener('load', aim, { once: true })
     const resize = new ResizeObserver(aim)
     resize.observe(document.body)
     window.addEventListener('resize', aim)
     return () => {
-      mark.removeEventListener('load', aim)
       resize.disconnect()
       window.removeEventListener('resize', aim)
     }

@@ -193,6 +193,8 @@ export const toSearchDocument = (
     slug: typeof en.slug === 'string' ? en.slug : '',
     updatedAt: timestamp(en.updatedAt),
     coverImage: mediaUrl(collection === 'people' ? en.photo : en.cover_image),
+    focalX: Number(asRecord(collection === 'people' ? en.photo : en.cover_image)?.focalX ?? 50),
+    focalY: Number(asRecord(collection === 'people' ? en.photo : en.cover_image)?.focalY ?? 50),
     contributors: contributors.length ? JSON.stringify(contributors) : '',
     ...(collection === 'courses' ? { courseType: String(en.course_type ?? '') } : {}),
     [sortTitleField('en')]: (titles.en || titles.ar).toLocaleLowerCase('en'),

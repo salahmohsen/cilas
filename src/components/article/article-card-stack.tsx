@@ -2,6 +2,7 @@
 
 import { Link } from '@/i18n/navigation'
 import { OrbitCardStack, type OrbitStackItem } from '@/components/ui/orbit-card-stack'
+import { focalPointStyle } from '@/lib/media-image'
 
 /**
  * A Card stack block in an article's text: the orbit card stack on wide
@@ -34,7 +35,7 @@ export function ArticleCardStack({
             >
               {item.image ? (
                 // eslint-disable-next-line @next/next/no-img-element
-                <img alt={item.imageAlt ?? ''} className="size-14 shrink-0 rounded-md object-cover" src={item.image} />
+                <img alt={item.imageAlt ?? ''} className="size-14 shrink-0 rounded-md object-cover" src={item.image} style={focalPointStyle(item.imageFocalPoint)} />
               ) : null}
               <span className="min-w-0">
                 <span className="block text-xs text-(--text-secondary)" dir="auto">

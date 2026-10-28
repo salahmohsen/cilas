@@ -12,7 +12,7 @@
   --font-mono: 'Roboto Mono', monospace;
   /* Two roles in two scripts (src/lib/fonts.ts): Latin first, Arabic after. */
   --font-text: var(--font-inter), var(--font-plex-arabic), system-ui, sans-serif;
-  --font-title: var(--font-newsreader), var(--font-amiri-quran), Georgia, serif;
+  --font-title: var(--font-playfair-display), var(--font-amiri-quran), Georgia, serif;
   --font-body: var(--font-text);
   --font-display: var(--font-title);
 
@@ -433,8 +433,8 @@ body {
 
 .course-cover {
   width: 100%;
-  aspect-ratio: 16 / 9;
-  object-fit: cover;
+  height: auto;
+  object-fit: contain;
   border-radius: calc(var(--radius) * 2);
 }
 .course-cover,
@@ -2092,8 +2092,12 @@ h3 {
 /* ===================================================== posters */
 
 /* The poster's frame is what its sizes and its narrow layout measure. */
+.poster-carousel [aria-roledescription='slide'] {
+  display: grid;
+}
 .poster-frame {
   container: poster / inline-size;
+  display: grid;
 }
 /* Four flat colours, as on the moodboard's festival posters; the ink on all of
    them is the same near-black, and the strip's white cell stays white in the
@@ -2116,13 +2120,13 @@ h3 {
      translation needs it, so nothing in the panel is cut off. */
   min-height: calc(100cqi * 9 / 16);
 }
-.poster[data-layout='1'] {
+.poster[data-color='1'] {
   --poster-color: #1782ea;
 }
-.poster[data-layout='2'] {
+.poster[data-color='2'] {
   --poster-color: #ff7d9d;
 }
-.poster[data-layout='3'] {
+.poster[data-color='3'] {
   --poster-color: #12d08f;
 }
 .poster-body {
@@ -2143,24 +2147,14 @@ h3 {
   justify-content: space-between;
   gap: 1.5rem;
   min-width: 0;
-  padding: var(--poster-pad);
   background: var(--poster-color);
-}
-.poster[data-layout='3'] .poster-panel {
-  flex: none;
-  flex-direction: row;
-  align-items: flex-start;
-}
-.poster[data-layout='3'] .poster-credit {
-  flex: none;
-  max-width: 40%;
-  text-align: end;
 }
 .poster-image {
   position: relative;
   flex: 1;
   min-width: 0;
   min-height: 0;
+  overflow: hidden;
 }
 .poster-image img {
   position: absolute;
@@ -2168,6 +2162,28 @@ h3 {
   width: 100%;
   height: 100%;
   object-fit: cover;
+  transition: transform var(--duration-considered) var(--ease-standard);
+}
+@media (hover: hover) and (pointer: fine) {
+  .poster:hover .poster-image img {
+    transform: scale(1.03);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .poster .poster-image img {
+    transition: none;
+    transform: none;
+  }
+}
+.poster-image[data-fallback='logo'] {
+  display: grid;
+  place-items: center;
+  background: transparent;
+}
+.poster-fallback-logo {
+  width: clamp(3rem, 8cqi, 5rem);
+  height: auto;
+  max-width: 40%;
 }
 .poster-title {
   font-family: var(--font-heading);
@@ -2177,13 +2193,17 @@ h3 {
   letter-spacing: -0.025em;
   text-wrap: balance;
   overflow-wrap: anywhere;
+  padding: var(--poster-pad);
 }
 .poster-title:dir(rtl) {
   line-height: 1.35;
   letter-spacing: 0;
 }
-.poster[data-layout='3'] .poster-title {
-  font-size: clamp(1.4rem, 4cqi, 3rem);
+.poster .poster-title-reveal {
+  color: inherit;
+}
+.poster-title h3 {
+  font: inherit;
 }
 /* The title's link covers the poster, so the poster is one target. */
 .poster-link::after {
@@ -2206,15 +2226,37 @@ h3 {
   line-height: 1.15;
   letter-spacing: -0.01em;
   text-wrap: balance;
+  padding: var(--poster-pad);
+  background: var(--poster-paper);
 }
+
+.poster[data-layout='0'] .poster-label {
+  border-bottom: 1px solid var(--poster-ink);
+}
+
+.poster-credit {
+  border-top: 1px solid var(--poster-ink);
+}
+
+@container poster (width > 34rem) {
+  .poster[data-layout='1'] .poster-panel,
+  .poster[data-layout='2'] .poster-panel {
+    border-inline-end: 1px solid var(--poster-ink);
+  }
+
+  .poster[data-layout='0'] .poster-panel {
+    border-inline-start: 1px solid var(--poster-ink);
+  }
+}
+
 .poster-label {
   font-family: var(--font-heading);
   font-size: clamp(1.25rem, 3.4cqi, 2.5rem);
   line-height: 1.05;
 }
 
-/* The strip: the mark and the date in the poster's colour, the time left in
-   its own cell, then the white cell. */
+/* The strip: the mark on paper, the date in the poster's colour, the time
+   left in its own cell, then the details and action. */
 .poster-strip {
   display: grid;
   /* Mark, date and time left make the side panel's 38%, so the white cell starts where the image does. */
@@ -2227,8 +2269,7 @@ h3 {
   border-top: 0;
 }
 .poster[data-layout='0'] .poster-strip,
-.poster[data-layout='1'] .poster-strip,
-.poster[data-layout='3'] .poster-strip {
+.poster[data-layout='1'] .poster-strip {
   border-bottom: 0;
 }
 .poster-mark,
@@ -2242,6 +2283,7 @@ h3 {
 .poster-mark {
   /* The mark keeps clear of the strip's rules. */
   padding-block: 0.5rem;
+  background: var(--poster-paper);
 }
 .poster-mark img {
   height: clamp(1.75rem, 5cqi, 2.75rem);
@@ -2268,6 +2310,12 @@ h3 {
   color: var(--poster-ink);
   font-size: clamp(0.8125rem, 1.5cqi, 1rem);
 }
+.poster-status {
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-3) var(--poster-pad);
+  text-align: center;
+}
 .poster .poster-time [data-variant='compact'] {
   display: flex;
   font-size: inherit;
@@ -2293,15 +2341,21 @@ h3 {
 .poster .poster-strip .poster-time [data-variant='compact'] [class*='name'] {
   color: color-mix(in oklab, var(--poster-ink) 55%, var(--poster-paper));
 }
-.poster-details {
+.poster-footer {
   /* Always the last column, whether or not there is a time-left cell. */
   grid-column: -2 / -1;
+  display: grid;
+  grid-template-columns: auto minmax(min-content, 1fr);
+  background: var(--poster-paper);
 }
 .poster-details {
   display: flex;
+  min-width: 0;
+  overflow-wrap: anywhere;
   flex-wrap: wrap;
   align-items: center;
   gap: 0.25rem 1.5rem;
+  padding-block: 0.625rem;
   padding-inline: var(--poster-pad);
   background: var(--poster-paper);
   font-size: clamp(0.75rem, 1.4cqi, 0.9375rem);
@@ -2310,16 +2364,30 @@ h3 {
   display: grid;
   gap: 0.75rem;
 }
-/* What the poster does, set apart as a pill so it reads as the way in. */
+.poster-detail-link {
+  position: relative;
+  z-index: 2;
+  overflow-wrap: anywhere;
+  text-decoration: underline;
+  text-underline-offset: 0.15em;
+}
+.poster-action-cell {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-inline-start: 1px solid var(--poster-ink);
+  padding: 0.625rem var(--poster-pad);
+  background: var(--poster-color);
+  color: var(--poster-ink);
+}
+.poster-action-cell:only-child {
+  grid-column: 1 / -1;
+  border-inline-start: 0;
+}
 .poster-action {
   display: inline-flex;
   align-items: center;
   gap: 0.375rem;
-  margin-inline-start: auto;
-  border-radius: 999px;
-  padding: 0.375rem 0.875rem;
-  background: var(--poster-ink);
-  color: var(--poster-paper);
   font-weight: 600;
   transition-property: gap;
   transition-duration: 150ms;
@@ -2327,7 +2395,8 @@ h3 {
 .poster-arrow:dir(rtl) {
   scale: -1 1;
 }
-.poster:hover .poster-action {
+.poster-action:hover,
+.poster-action:focus-visible {
   gap: 0.625rem;
 }
 
@@ -2345,24 +2414,11 @@ h3 {
     order: -1;
     aspect-ratio: 16 / 10;
   }
-  .poster[data-layout='3'] .poster-image {
-    aspect-ratio: 16 / 10;
-    order: 0;
-  }
   .poster-panel,
   .poster[data-layout='1'] .poster-panel,
   .poster[data-layout='2'] .poster-panel {
     flex: none;
     min-height: 11rem;
-  }
-  .poster[data-layout='3'] .poster-panel {
-    flex-direction: column;
-    min-height: 0;
-  }
-  /* Stacked, the credit follows the title on the same edge, at full width. */
-  .poster[data-layout='3'] .poster-credit {
-    max-width: none;
-    text-align: start;
   }
 }
 /* Tablet and narrower: the date and the time left share the strip's first
@@ -2378,14 +2434,13 @@ h3 {
   .poster-time {
     border-inline-end: 0;
   }
-  .poster-details {
+  .poster-meta:has(+ .poster-footer) {
+    border-inline-end: 0;
+  }
+  .poster-footer {
     grid-column: 1 / -1;
-    padding-block: 0.625rem;
     border-top: 1px solid var(--poster-ink);
   }
-}
-.poster[data-layout='3'] .poster-heading {
-  flex: 1;
 }
 
 /* The contact form after the questions, in the page's gutter; a link from

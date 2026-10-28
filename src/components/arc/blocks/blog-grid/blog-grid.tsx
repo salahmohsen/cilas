@@ -227,6 +227,7 @@ export function BlogCardBody({
             className={styles.image}
             src={post.image.src}
             alt={post.image.alt}
+            style={{ objectPosition: `${post.image.focalX ?? 50}% ${post.image.focalY ?? 50}%` }}
             loading={eager ? 'eager' : 'lazy'}
           />
         </motion.div>
@@ -436,7 +437,8 @@ export function BlogGrid({
                     // The fade's own transition wins when motion is reduced.
                     {...(reduced ? enterFade(true) : { transition: morph })}
                   >
-                    <img className={styles.image} src={reading.image.src} alt={reading.image.alt} />
+                    <img className={styles.image} src={reading.image.src} alt={reading.image.alt}
+                      style={{ objectPosition: `${reading.image.focalX ?? 50}% ${reading.image.focalY ?? 50}%` }} />
                   </motion.div>
                 )}
                 <motion.div

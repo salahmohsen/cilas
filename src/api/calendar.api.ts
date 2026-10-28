@@ -7,6 +7,7 @@ import { cairoDay } from '@/lib/cairo-day'
 import { COURSES_TAG } from '@/lib/revalidate-courses'
 import { expandSchedule, type Schedule, type SessionDates } from '@/lib/schedule'
 import type { Media } from '@/payload-types'
+import type { FocalPoint } from '@/lib/media-image'
 
 /** One thing on the calendar: a course meeting, a course's first day, or an event. */
 export type CalendarItem = {
@@ -23,18 +24,18 @@ export type CalendarItem = {
   session?: number
   /** Course type (`thematic`…) or event type, for its label. */
   type: string
-  cover?: { url: string; alt: string }
+  cover?: { url: string; alt: string } & FocalPoint
   cancelled?: boolean
 }
 
 const visible: Where = {
   and: [{ tier: { equals: 'public' } }, { _status: { equals: 'published' } }],
 }
-const media = { url: true, alt: true, filename: true, prefix: true } as const
+const media = { url: true, alt: true, focalX: true, focalY: true, filename: true, prefix: true } as const
 
 const coverOf = (value: unknown): CalendarItem['cover'] => {
   const m = value && typeof value === 'object' ? (value as Media) : null
-  return m?.url ? { url: m.url, alt: m.alt ?? '' } : undefined
+  return m?.url ? { url: m.url, alt: m.alt ?? '', focalX: m.focalX, focalY: m.focalY } : undefined
 }
 
 /**
@@ -141,7 +142,7 @@ export const getCalendarItems = async (
 /** The items above, built once per language and kept until a course changes. */
 export const getCachedCalendarItems = unstable_cache(
   async (locale: Locale) => getCalendarItems(await getPayload({ config }), locale),
-  ['calendar-items'],
+  ['calendar-items-v2'],
   { tags: [COURSES_TAG], revalidate: 3600 },
 )
 

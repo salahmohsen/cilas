@@ -44,3 +44,6 @@ export const orderEvents = (events: Event[], now = new Date()) => {
   groups.past.sort((a, b) => when(b).localeCompare(when(a)))
   return groups
 }
+
+export const otherUpcomingEvents = (events: Event[], currentId: number, now: Date, limit = 3) =>
+  orderEvents(events.filter((event) => event.id !== currentId), now).upcoming.slice(0, limit)

@@ -16,7 +16,7 @@ export type BlogPost = {
   /** Shown instead of "N min read"; empty hides it. */
   readTimeLabel?: string
   author: BlogAuthor
-  image?: { src: string; alt: string }
+  image?: { src: string; alt: string; focalX?: number | null; focalY?: number | null }
   /** Paragraphs for the in-place reader. Leave out when every post links out through getHref. */
   body?: string[]
   featured?: boolean

@@ -58,6 +58,7 @@ import { payloadTheme } from 'payload-theme'
 
 import { anyone, isAdmin } from './access'
 import { env } from './env'
+import { defaultEditorFeatures } from './lexical/default-features'
 import { pathOf } from './lib/paths'
 import { SEO_COLLECTIONS, seoDefaults, type SeoCollection } from './lib/seo'
 import { googleAuth } from './plugins/google-auth'
@@ -192,7 +193,7 @@ export default buildConfig({
     defaultLocale: 'en',
     fallback: true,
   },
-  editor: lexicalEditor(),
+  editor: lexicalEditor({ features: defaultEditorFeatures }),
   secret: env.PAYLOAD_SECRET,
   typescript: {
     outputFile: path.resolve(dirname, 'payload-types.ts'),
