@@ -1,5 +1,6 @@
 import { personAvatarSeed } from '@/lib/avatar'
 import { AvatarImage } from '@/components/person/avatar-image'
+import { SocialLinks } from '@/components/person/social-links'
 import config from '@payload-config'
 import { ArrowLeft } from 'lucide-react'
 import type { Metadata } from 'next'
@@ -24,14 +25,6 @@ import type { Media } from '@/payload-types'
 type Props = { params: Promise<{ locale: string; slug: string }> }
 
 export const revalidate = 3600
-
-const SOCIAL: Record<string, string> = {
-  facebook: 'Facebook',
-  x: 'X',
-  youtube: 'YouTube',
-  instagram: 'Instagram',
-  linkedin: 'LinkedIn',
-}
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { locale, slug } = await params
@@ -133,31 +126,7 @@ export default async function PersonPage({ params }: Props) {
                   {otherName}
                 </p>
               )}
-              {Boolean(person.website || person.social_links?.length) && (
-                <p className="flex flex-wrap gap-x-4 gap-y-1 text-sm">
-                  {person.website && (
-                    <a
-                      className="underline underline-offset-4"
-                      href={person.website}
-                      rel="noopener"
-                      target="_blank"
-                    >
-                      {t('website')}
-                    </a>
-                  )}
-                  {person.social_links?.map((s) => (
-                    <a
-                      className="underline underline-offset-4"
-                      href={s.url}
-                      key={s.id ?? s.url}
-                      rel="noopener"
-                      target="_blank"
-                    >
-                      {SOCIAL[s.platform] ?? s.platform}
-                    </a>
-                  ))}
-                </p>
-              )}
+              <SocialLinks person={person} websiteLabel={t('website')} />
             </div>
           </header>
 
