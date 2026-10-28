@@ -4,6 +4,7 @@ import { CardStack } from '@/blocks/card-stack'
 import { Columns } from '@/blocks/columns'
 import { PersonProfile } from '@/blocks/person-profile'
 import { Movie } from '@/blocks/movie'
+import { Gallery } from '@/blocks/gallery'
 import { Footnote } from '@/blocks/footnote'
 import { Mention } from '@/blocks/mention'
 
@@ -18,7 +19,7 @@ export const articleBodyFeatures = ({
 }) => [
   ...defaultFeatures,
   BlocksFeature({
-    blocks: [CardStack, Columns, PersonProfile, Movie],
+    blocks: [CardStack, Columns, PersonProfile, Movie, Gallery],
     inlineBlocks: [Footnote, Mention],
   }),
 ]

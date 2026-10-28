@@ -6,9 +6,16 @@ import React from 'react'
 import { FootnoteMark } from '@/components/article/footnote'
 import { ProfileCard } from '@/components/person/profile-card'
 import { MovieCard } from '@/components/movie/movie-card'
+import { ImageGallery } from '@/components/gallery/image-gallery'
 import { movieSnapshotSchema } from '@/lib/movie'
 import type { Footnote } from '@/lib/footnotes'
-import type { ColumnsBlock, FootnoteBlock, PersonProfileBlock, MovieBlock } from '@/payload-types'
+import type {
+  ColumnsBlock,
+  FootnoteBlock,
+  PersonProfileBlock,
+  MovieBlock,
+  GalleryBlock,
+} from '@/payload-types'
 import styles from './rich-text-columns.module.css'
 
 /** The dash (or tilde) that opens a quote's source line. */
@@ -120,6 +127,7 @@ export const RichTextField: React.FC<{
     blocks: {
       columns: renderColumns,
       personProfile: renderPersonProfile,
+      gallery: ({ node }: { node: { fields: GalleryBlock } }) => <ImageGallery {...node.fields} />,
       movie: ({ node }: { node: { fields: MovieBlock } }) => {
         const parsed = movieSnapshotSchema.safeParse(node.fields.movie)
         return parsed.success ? (
@@ -168,7 +176,12 @@ export const RichTextField: React.FC<{
     upload: () => null,
     horizontalrule: () => null,
     table: () => null,
-    blocks: { columns: renderColumns, personProfile: () => null, movie: () => null },
+    blocks: {
+      columns: renderColumns,
+      personProfile: () => null,
+      movie: () => null,
+      gallery: () => null,
+    },
     inlineBlocks: {},
   })
 

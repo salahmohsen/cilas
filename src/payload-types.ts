@@ -4802,6 +4802,27 @@ export interface MovieBlock {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "GalleryBlock".
+ */
+export interface GalleryBlock {
+  /**
+   * The grid uses fewer columns in narrow spaces and on phones.
+   */
+  columnCount: '1' | '2' | '3' | '4';
+  /**
+   * Add images and drag rows to change their order.
+   */
+  images: {
+    image: number | Media;
+    caption?: string | null;
+    id?: string | null;
+  }[];
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'gallery';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "ColumnsBlock".
  */
 export interface ColumnsBlock {
@@ -4811,7 +4832,7 @@ export interface ColumnsBlock {
   columnCount?: ('2' | '3' | '4') | null;
   ratio?: ('equal' | 'oneThird' | 'twoThirds') | null;
   /**
-   * Add text, an image, or a Person profile block.
+   * Add text, an image, a gallery, a movie, or a Person profile block.
    */
   first?: {
     root: {
@@ -4829,7 +4850,7 @@ export interface ColumnsBlock {
     [k: string]: unknown;
   } | null;
   /**
-   * Add text, an image, or a Person profile block.
+   * Add text, an image, a gallery, a movie, or a Person profile block.
    */
   second?: {
     root: {
@@ -4847,7 +4868,7 @@ export interface ColumnsBlock {
     [k: string]: unknown;
   } | null;
   /**
-   * Add text, an image, or a Person profile block.
+   * Add text, an image, a gallery, a movie, or a Person profile block.
    */
   third?: {
     root: {
@@ -4865,7 +4886,7 @@ export interface ColumnsBlock {
     [k: string]: unknown;
   } | null;
   /**
-   * Add text, an image, or a Person profile block.
+   * Add text, an image, a gallery, a movie, or a Person profile block.
    */
   fourth?: {
     root: {

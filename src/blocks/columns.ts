@@ -3,6 +3,7 @@ import type { Block, Field } from 'payload'
 
 import { PersonProfile } from './person-profile'
 import { Movie } from './movie'
+import { Gallery } from './gallery'
 
 export const Columns: Block = {
   slug: 'columns',
@@ -43,12 +44,12 @@ export const Columns: Block = {
         editor: lexicalEditor({
           features: ({ defaultFeatures }) => [
             ...defaultFeatures,
-            BlocksFeature({ blocks: [PersonProfile, Movie] }),
+            BlocksFeature({ blocks: [PersonProfile, Movie, Gallery] }),
           ],
         }),
         admin: {
           width: '50%',
-          description: 'Add text, an image, or a Person profile block.',
+          description: 'Add text, an image, a gallery, a movie, or a Person profile block.',
           condition: (_, sibling) => index < Number(sibling?.columnCount ?? 2),
         },
       })),
