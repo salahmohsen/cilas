@@ -186,6 +186,7 @@ function IssueCard({ issue, name, to }: { issue: NewsletterIssue; name: string; 
                 width={88}
                 height={88}
                 sizes="44px"
+                style={story.imageStyle}
               />
             ) : (
               <span className={styles.thumb} aria-hidden="true" />

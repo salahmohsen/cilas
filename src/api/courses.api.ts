@@ -20,7 +20,7 @@ const populate = {
   people: { name: true, slug: true },
   cycles: { title: true, season: true, start_year: true, start_date: true, academic_year: true, place: true, registration: true },
   places: { name: true, city: true, slug: true },
-  media: { url: true, alt: true, filename: true, prefix: true },
+  media: { url: true, alt: true, focalX: true, focalY: true, filename: true, prefix: true },
 } as const
 
 /**
@@ -163,6 +163,7 @@ export const getStudyCourses = async (
         description: description && description.length > 280 ? `${description.slice(0, 277).trimEnd()}…` : description,
         image: cover?.url ?? undefined,
         imageAlt: cover?.alt ?? undefined,
+        imageFocalPoint: cover ? { focalX: cover.focalX, focalY: cover.focalY } : undefined,
         startDate: c.schedule?.start_date ?? cycle?.start_date ?? `${cycle?.start_year ?? 0}`,
         ...((c.registration?.deadline ?? cycle?.registration?.deadline)
           ? { deadline: (c.registration?.deadline ?? cycle?.registration?.deadline)!.slice(0, 10) }

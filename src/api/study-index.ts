@@ -26,7 +26,7 @@ export const getStudyIndex = unstable_cache(
     return getStudyCourses(payload, locale, (key) => t(key as never), tiers)
   },
   // The key names the index's shape: a change to it starts a fresh cache.
-  ['study-index-v5'],
+  ['study-index-v6'],
   { tags: [COURSES_TAG], revalidate: 300 },
 )
 
@@ -34,7 +34,7 @@ export const getStudyIndex = unstable_cache(
 export const STUDY_PAGE_SIZE = 20
 
 /** What the page sends for one course: enough to show its row. */
-export type StudyRow = Pick<StudyCard, 'id' | 'href' | 'title' | 'description' | 'image' | 'imageAlt'> & {
+export type StudyRow = Pick<StudyCard, 'id' | 'href' | 'title' | 'description' | 'image' | 'imageAlt' | 'imageFocalPoint'> & {
   /** Its course type, cycle (season and year) and place, each with its label. */
   type: { value: string; label: string }
   season?: { value: string; label: string }
@@ -65,13 +65,14 @@ export const getStudyPage = async (locale: Locale, query: CourseQuery, page: num
   return {
     rows: matches
       .slice((current - 1) * STUDY_PAGE_SIZE, current * STUDY_PAGE_SIZE)
-      .map(({ id, href, title, description, image, imageAlt, facets }) => ({
+      .map(({ id, href, title, description, image, imageAlt, imageFocalPoint, facets }) => ({
         id,
         href,
         title,
         description,
         image,
         imageAlt,
+        imageFocalPoint,
         type: facets.type?.[0] ?? { value: '', label: '' },
         ...(facets.season?.[0] ? { season: facets.season[0] } : {}),
         ...(facets.year?.[0] ? { year: facets.year[0].label } : {}),

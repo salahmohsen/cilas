@@ -140,7 +140,7 @@ export async function ArticlePage({ locale: siteLocale, slug, user }: View) {
         role: c.author.name,
         description: c.excerpt,
         href: pathOf('articles', a) ?? '#',
-        ...(c.image ? { image: c.image.src, imageAlt: c.image.alt } : {}),
+        ...(c.image ? { image: c.image.src, imageAlt: c.image.alt, imageFocalPoint: { focalX: c.image.focalX, focalY: c.image.focalY } } : {}),
         stat: t('essayOf', { n: i + 1, total }),
       }
     },

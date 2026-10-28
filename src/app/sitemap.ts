@@ -16,6 +16,7 @@ const STATIC: SitePage[] = [
   { path: '/study/bridge' },
   { path: '/apply' },
   { path: '/articles' },
+  { path: '/events' },
   { path: '/people/fellows' },
   { path: '/people/cilasians' },
   { path: '/governance' },
@@ -31,7 +32,7 @@ const STATIC: SitePage[] = [
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const payload = await getPayload({ config })
   const anonymous = { overrideAccess: false, depth: 0, pagination: false, locale: 'en' } as const
-  const [courses, articles, people, years] = await Promise.all([
+  const [courses, articles, people, years, events] = await Promise.all([
     payload.find({
       collection: 'courses',
       where: { and: [{ tier: { equals: 'public' } }, { _status: { equals: 'published' } }] },
@@ -46,6 +47,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     }),
     payload.find({ collection: 'people', select: { slug: true, updatedAt: true }, ...anonymous }),
     listBridgeYears(payload, 'en'),
+    payload.find({
+      collection: 'events',
+      where: { tier: { equals: 'public' } },
+      select: { slug: true, updatedAt: true },
+      ...anonymous,
+    }),
   ])
 
   const pages = (collection: string, docs: Array<{ slug?: string | null; updatedAt?: string }>) =>
@@ -59,6 +66,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     ...pages('courses', courses.docs),
     ...pages('articles', articles.docs),
     ...pages('people', people.docs),
+    ...pages('events', events.docs),
     // The latest year is /study/bridge itself, listed above.
     ...years.slice(1).map((y) => ({ path: bridgeYearPath(y.slug) })),
   ])

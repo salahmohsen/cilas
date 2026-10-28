@@ -1,5 +1,13 @@
 # Third-party notices
 
+## TMDB
+
+Movie metadata and images are supplied by [TMDB](https://www.themoviedb.org).
+This product uses the TMDB API but is not endorsed or certified by TMDB.
+The approved TMDB logo at `public/assets/images/tmdb.svg` is reproduced unchanged
+from `https://files.readme.io/29c6fee-blue_short.svg`.
+See [TMDB's attribution and noncommercial API requirements](https://developer.themoviedb.org/docs/faq).
+
 ## Blobatar
 
 Local fallback avatars use [Blobatar](https://github.com/Alain00/blobatar), version 2.7.0, under the MIT license.

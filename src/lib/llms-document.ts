@@ -7,7 +7,7 @@ import {
   $isServerInlineBlockNode,
 } from '@payloadcms/richtext-lexical'
 import type { SanitizedServerEditorConfig } from '@payloadcms/richtext-lexical'
-import type { LexicalNode } from '@payloadcms/richtext-lexical/lexical'
+import type { SerializedEditorState } from '@payloadcms/richtext-lexical/lexical'
 import type { Payload } from 'payload'
 
 import { getRelatedArticles, type Locale } from '@/api/articles.api'
@@ -16,6 +16,7 @@ import { COURSE_TYPE_OPTIONS } from '@/fields/course-type'
 import { env } from '@/env'
 import { WEEKDAYS } from '@/lib/cairo-day'
 import { footnotesOf } from '@/lib/footnotes'
+import { flattenRichTextColumns } from '@/lib/flatten-rich-text-columns'
 import { articleBodyFeatures } from '@/lexical/article-body'
 import { pathOf } from '@/lib/paths'
 import { priceLabel, pricingFor } from '@/lib/pricing'
@@ -306,7 +307,10 @@ const toMarkdown = async (
   )
 
   return absolutize(
-    convertLexicalToMarkdown({ data: data as never, editorConfig }).trim(),
+    convertLexicalToMarkdown({
+      data: flattenRichTextColumns(data as SerializedEditorState),
+      editorConfig,
+    }).trim(),
     l,
   )
 }

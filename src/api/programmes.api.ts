@@ -1,5 +1,6 @@
 import { plainText } from '@/lib/plaintext'
 import type { Payload } from 'payload'
+import { mediaImage, type MediaImage } from '@/lib/media-image'
 
 import type { Course, Cycle, Media, Person, Programme } from '@/payload-types'
 
@@ -21,7 +22,7 @@ export type ProgrammeCourse = {
   type: Course['course_type']
   /** Its summary, or the start of its description. */
   excerpt: string
-  image: { src: string; alt: string } | null
+  image: MediaImage | null
   /** ISO day the course starts (its cycle's start when it has no date). */
   startDate: string
   fellows: Array<{ name: string; avatar: string | null }>
@@ -138,7 +139,7 @@ export const getBridgeYear = async (
               title: c.title,
               type: c.course_type,
               excerpt: clip(c.summary || c.subtitle || plain(c.description)),
-              image: cover?.url ? { src: cover.url, alt: cover.alt ?? '' } : null,
+              image: mediaImage(cover) ?? null,
               startDate: (c.schedule?.start_date ?? cycle.start_date ?? `${cycle.start_year}-01-01`).slice(0, 10),
               fellows: (c.fellows ?? []).flatMap((f) => {
                 const person = obj<Person>(f)

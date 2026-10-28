@@ -2784,3 +2784,78 @@
     display: none;
   }
 }
+
+/* Equal browsing cards keep their naturally sized information together in the lower field. */
+.event[data-layout='card'] {
+  box-sizing: border-box;
+  block-size: 28rem;
+}
+.event[data-layout='card'] .eventBackdrop,
+.event[data-layout='card'] .eventBody {
+  --event-photo: 20rem;
+}
+.event[data-layout='card'] .eventBody {
+  box-sizing: border-box;
+  block-size: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: stretch;
+  padding: 8rem var(--space-6) var(--space-6);
+  text-align: start;
+  gap: 0;
+}
+.event[data-layout='card'] .eventLeaf {
+  position: absolute;
+  inset-block-start: var(--space-16);
+  inset-inline: 0;
+  margin: 0 auto;
+}
+.event[data-layout='card'] .eventHead,
+.event[data-layout='card'] .eventFacts {
+  grid-template-columns: minmax(0, 1fr);
+  width: 100%;
+}
+.event[data-layout='card'] .eventHead {
+  justify-items: start;
+  gap: var(--space-4);
+}
+.event[data-layout='card'] .eventFacts,
+.event[data-layout='card'] .eventWhen {
+  justify-items: start;
+}
+.event[data-layout='card'] .eventTitle {
+  text-align: match-parent;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+  overflow: hidden;
+}
+.event[data-layout='card'] .eventDate {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
+}
+.event[data-layout='card'] .eventTime {
+  justify-content: flex-start;
+  max-block-size: 2lh;
+  overflow: hidden;
+}
+.event[data-layout='card'] .eventWhere > a,
+.event[data-layout='card'] .eventWhere > bdi {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
+}
+
+.eventFullPhoto {
+  display: block;
+  position: relative;
+  width: 100%;
+  height: auto;
+}
+.event[data-layout='detail'][data-cover] .eventBody {
+  padding: var(--space-8) var(--space-6);
+}

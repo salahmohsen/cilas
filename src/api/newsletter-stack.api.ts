@@ -9,12 +9,13 @@ import type {
 import { pickItemOf } from '@/emails/pick-types'
 import { readingMinutes } from '@/lib/articles'
 import { newsletterList } from '@/lib/newsletter-list'
+import { focalPointStyle } from '@/lib/media-image'
 import type { Article, Media, Newsletter } from '@/payload-types'
 
 const thumbOf = (media: unknown): string | null => {
   const m = media as Media | null
   if (!m || typeof m !== 'object') return null
-  return m.sizes?.thumbnail?.url ?? m.url ?? null
+  return m.url ?? null
 }
 
 const storyOf = (relationTo: string, doc: unknown): NewsletterStory | null => {
@@ -28,6 +29,7 @@ const storyOf = (relationTo: string, doc: unknown): NewsletterStory | null => {
   return {
     title: d.title,
     image: thumbOf(d.cover_image ?? d.cover),
+    imageStyle: focalPointStyle((d.cover_image ?? d.cover) as Media | null),
     minutes: relationTo === 'articles' ? readingMinutes(d as Pick<Article, 'body'>) : null,
   }
 }

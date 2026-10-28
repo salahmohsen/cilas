@@ -46,6 +46,7 @@ import * as migration_20261025_223023_space_event_cover_place from './20261025_2
 import * as migration_20261026_125844_space_introduction from './20261026_125844_space_introduction';
 import * as migration_20261026_182513_space_vote_close_rules from './20261026_182513_space_vote_close_rules';
 import * as migration_20261026_235338_space_pinned_full from './20261026_235338_space_pinned_full';
+import * as migration_20261028_060959_event_covers_navigation from './20261028_060959_event_covers_navigation';
 
 export const migrations = [
 
@@ -282,7 +283,12 @@ export const migrations = [
   {
     up: migration_20261026_235338_space_pinned_full.up,
     down: migration_20261026_235338_space_pinned_full.down,
-    name: '20261026_235338_space_pinned_full'
+    name: '20261026_235338_space_pinned_full',
+  },
+  {
+    up: migration_20261028_060959_event_covers_navigation.up,
+    down: migration_20261028_060959_event_covers_navigation.down,
+    name: '20261028_060959_event_covers_navigation'
   },
   { up: private_search.up, down: private_search.down, name: '20261028_120000_private_search' },
 ];

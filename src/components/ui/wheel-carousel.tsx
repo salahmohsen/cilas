@@ -9,6 +9,7 @@
  */
 
 import { cn } from '@/lib/utils'
+import { focalPointStyle } from '@/lib/media-image'
 import { AvatarImage } from '@/components/person/avatar-image'
 import { AnimatePresence, motion, useReducedMotion } from 'motion/react'
 import {
@@ -26,6 +27,7 @@ export interface WheelCarouselItem {
   /** Omit when there is no photo: the panel then shows the label's initials. */
   image?: string
   imageAlt?: string
+  imageFocalPoint?: { focalX?: number | null; focalY?: number | null }
   fallbackSeed?: string
 }
 
@@ -375,6 +377,7 @@ export function WheelCarousel({
                     fallbackSeed={selectedItem.fallbackSeed ?? selectedItem.label}
                     alt={selectedItem.imageAlt ?? selectedItem.label}
                     className="h-full w-full object-cover"
+                    style={focalPointStyle(selectedItem.imageFocalPoint)}
                     draggable={false}
                   />
                 </motion.div>

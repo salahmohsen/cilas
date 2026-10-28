@@ -14,6 +14,7 @@ import { type CSSProperties, type FocusEvent, useMemo, useRef, useState } from '
 
 import { Link } from '@/i18n/navigation'
 import { cn } from '@/lib/utils'
+import { focalPointStyle, type FocalPoint } from '@/lib/media-image'
 
 export interface OrbitStackItem {
   /** The card's heading. */
@@ -24,6 +25,7 @@ export interface OrbitStackItem {
   href: string
   image?: string
   imageAlt?: string
+  imageFocalPoint?: FocalPoint
   initials?: string
   /** The footer line, e.g. its place in a series. */
   stat?: string
@@ -57,7 +59,7 @@ function Portrait({ item }: { item: OrbitStackItem }) {
     <div className="relative flex aspect-[1.36] w-full overflow-hidden rounded-[1.15rem] bg-[var(--surface-muted,var(--muted))] outline outline-1 -outline-offset-1 outline-black/10 dark:outline-white/10">
       {item.image ? (
         // eslint-disable-next-line @next/next/no-img-element
-        <img alt={item.imageAlt ?? ''} className="h-full w-full object-cover" src={item.image} />
+        <img alt={item.imageAlt ?? ''} className="h-full w-full object-cover" src={item.image} style={focalPointStyle(item.imageFocalPoint)} />
       ) : (
         <span className="m-auto font-heading text-5xl text-[var(--text-muted)]">{initialsFor(item)}</span>
       )}

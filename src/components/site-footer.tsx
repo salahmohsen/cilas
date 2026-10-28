@@ -69,6 +69,7 @@ export function SiteFooter({
             { label: t('study'), href: href('/study') },
             ...(nav.articles ? [{ label: t('articles'), href: href('/articles') }] : []),
             { label: t('people'), href: href('/people') },
+            ...(nav.events ? [{ label: t('events'), href: href('/events') }] : []),
             ...(nav.calendar ? [{ label: t('calendar'), href: href('/calendar') }] : []),
           ],
         },

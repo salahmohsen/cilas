@@ -1,10 +1,12 @@
 import { avatar, photo, type PersonId, type PhotoId } from '../../lib/media'
+import type { CSSProperties } from 'react'
 
 /** One story teased in an issue. `image` is a small square-cropped thumbnail. */
 export interface NewsletterStory {
   title: string
   /** Without one the thumbnail is a plain tile. */
   image?: string | null
+  imageStyle?: Pick<CSSProperties, 'objectPosition'>
   /** Read time; left out for things that are not read, like a course. */
   minutes?: number | null
 }

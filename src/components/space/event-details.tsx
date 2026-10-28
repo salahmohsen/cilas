@@ -1,7 +1,7 @@
 import type { DateTimeFormatOptions } from 'next-intl'
 import { getFormatter, getLocale, getTranslations } from 'next-intl/server'
 import type { CSSProperties, ReactNode } from 'react'
-import { MapPin, Video } from 'lucide-react'
+import { CalendarDays, MapPin, Video } from 'lucide-react'
 
 import { Badge } from '@/components/arc/badge/badge'
 import { CAIRO, cairoDay } from '@/lib/cairo-day'
@@ -16,8 +16,8 @@ import { EventCalendar } from './event-calendar'
 import type { PersonCard } from './person-hover'
 import styles from './space.module.css'
 
-/** A cover as the card shows it: the private file's address and the photo's tone. */
-export type EventCover = { url: string; tone: string | null }
+/** The image and optional colour shared by public and Spaces event cards. */
+export type EventCover = { url: string; tone: string | null; alt?: string }
 
 /**
  * The day and time of an event in Cairo time (ADR 0002), as two quiet lines:
@@ -150,13 +150,15 @@ export async function EventFace({
   children,
   description,
   corner,
+  className,
+  layout,
 }: {
   title: string
   /** In the Events tab the name opens the post */
   titleHref?: string
-  headingLevel?: 2 | 3
+  headingLevel?: 1 | 2 | 3
   cover: EventCover | null
-  startsAt: string
+  startsAt: string | null
   over: boolean
   label: string
   when: ReactNode
@@ -169,42 +171,66 @@ export async function EventFace({
   description?: ReactNode
   /** One quiet control in the card's top corner */
   corner?: ReactNode
+  className?: string
+  layout?: 'card' | 'detail'
 }) {
   const [t, format] = await Promise.all([getTranslations('SpacePost'), getFormatter()])
-  const Heading = headingLevel === 2 ? 'h2' : 'h3'
-  const leaf = (options: DateTimeFormatOptions) =>
-    format.dateTime(new Date(startsAt), { timeZone: CAIRO, ...options })
+  const Heading = headingLevel === 1 ? 'h1' : headingLevel === 2 ? 'h2' : 'h3'
+  const leaf = (date: string, options: DateTimeFormatOptions) =>
+    format.dateTime(new Date(date), { timeZone: CAIRO, ...options })
   return (
     <section
-      className={styles.event}
+      className={[styles.event, className].filter(Boolean).join(' ')}
       aria-label={label}
+      data-layout={layout}
       data-cover={cover ? '' : undefined}
       data-over={over || undefined}
       style={cover ? ({ '--event-field': coverField(cover.tone) } as CSSProperties) : undefined}
     >
       {cover ? (
-        <div className={styles.eventBackdrop}>
-          {/* Private files come from Payload's own route, which next/image cannot read with the member's session; the server stores covers at most 1600 px wide. */}
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img className={styles.eventBlur} src={cover.url} alt="" decoding="async" />
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            className={styles.eventPhoto}
-            src={cover.url}
-            alt={t('eventCoverAlt', { title })}
-            decoding="async"
-          />
-        </div>
-      ) : (
+        <>
+          <div className={styles.eventBackdrop}>
+            {/* Private Spaces covers require the member's session, so these use regular images. */}
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img className={styles.eventBlur} src={cover.url} alt="" decoding="async" />
+            {layout !== 'detail' && (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img
+                className={styles.eventPhoto}
+                src={cover.url}
+                alt={cover.alt ?? t('eventCoverAlt', { title })}
+                decoding="async"
+              />
+            )}
+          </div>
+          {layout === 'detail' && (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img
+              className={styles.eventFullPhoto}
+              src={cover.url}
+              alt={cover.alt ?? t('eventCoverAlt', { title })}
+              decoding="async"
+            />
+          )}
+        </>
+      ) : startsAt ? (
         <time dateTime={startsAt} className={styles.eventLeaf} aria-hidden="true">
-          <span className={styles.eventMonth}>{leaf({ month: 'short' })}</span>
-          <span className={styles.eventDay}>{leaf({ day: 'numeric' })}</span>
+          <span className={styles.eventMonth}>{leaf(startsAt, { month: 'short' })}</span>
+          <span className={styles.eventDay}>{leaf(startsAt, { day: 'numeric' })}</span>
         </time>
+      ) : (
+        <div className={styles.eventLeaf} aria-hidden="true">
+          <CalendarDays size={32} strokeWidth={1.5} />
+        </div>
       )}
       <div className={styles.eventBody}>
         <div className={styles.eventHead}>
           {badge}
-          <Heading className={styles.eventTitle} dir="auto">
+          <Heading
+            className={styles.eventTitle}
+            dir="auto"
+            title={layout === 'card' ? title : undefined}
+          >
             {titleHref ? (
               <a href={titleHref} className={styles.eventTitleLink}>
                 {title}

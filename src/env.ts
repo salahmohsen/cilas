@@ -27,6 +27,7 @@ export const env = createEnv({
     // button is hidden. Callback: <NEXT_PUBLIC_SERVER_URL>/api/users/oauth/google/callback
     GOOGLE_CLIENT_ID: z.string().min(1).optional(),
     GOOGLE_CLIENT_SECRET: z.string().min(1).optional(),
+    TMDB_API_READ_TOKEN: z.string().min(1).optional(),
 
     // Optional: Cloudflare Turnstile's secret. With it, /api/form-submissions
     // refuses a post without a good token. Set it with the site key below.

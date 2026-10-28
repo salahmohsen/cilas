@@ -2,6 +2,7 @@
 
 import { SearchResultContent } from '@/components/search-result-content'
 import { personAvatarSeed } from '@/lib/avatar'
+import { focalPointStyle } from '@/lib/media-image'
 
 import { Highlight, Snippet } from 'react-instantsearch'
 import { useLocale, useTranslations } from 'next-intl'

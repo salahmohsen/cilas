@@ -22,6 +22,8 @@ const stored = (name: string): CollectionFieldSchema => ({
 export const fieldsOf = (collection: SearchCollection): CollectionFieldSchema[] => [
   stored('slug'),
   stored('coverImage'),
+  { name: 'focalX', type: 'float', index: false, optional: true },
+  { name: 'focalY', type: 'float', index: false, optional: true },
   stored('contributors'),
   { name: 'updatedAt', type: 'int64', sort: true },
   ...SEARCH_LOCALES.map((locale) => ({ name: sortTitleField(locale), type: 'string', sort: true }) as const),

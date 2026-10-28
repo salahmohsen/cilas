@@ -60,6 +60,8 @@ export interface CarouselProps {
   labels?: Partial<CarouselLabels>
   /** `slide` lines the controls up with the centered slide's edges; `start` sets them together at the carousel's start edge. */
   controlsAt?: 'slide' | 'start'
+  /** A compact counter suits collections too large for individual dots. */
+  indicators?: 'dots' | 'counter'
   className?: string
 }
 
@@ -149,6 +151,7 @@ export function Carousel({
   autoplay = false,
   labels: labelsProp,
   controlsAt = 'slide',
+  indicators = 'dots',
   className,
 }: CarouselProps) {
   const labels = { ...DEFAULT_LABELS, ...labelsProp }
@@ -551,6 +554,7 @@ export function Carousel({
               index={i}
               progress={progress}
               active={i === index}
+              tabbed={indicators === 'dots'}
               label={slideLabel(i, count)}
             >
               {slide}
@@ -592,24 +596,28 @@ export function Carousel({
               </span>
             </button>
           )}
-          <div className={styles.tabs} role="tablist" aria-label={labels.choose}>
-            {slides.map((_, i) => (
-              <Dot
-                key={i}
-                index={i}
-                last={last}
-                progress={progress}
-                drain={drains[i]!}
-                selected={i === index}
-                label={slideLabel(i, count)}
-                controls={`${id}-slide-${i}`}
-                tabRef={(node) => {
-                  tabRefs.current[i] = node
-                }}
-                onSelect={() => select(i)}
-              />
-            ))}
-          </div>
+          {indicators === 'counter' ? (
+            <span className={styles.counter}>{slideLabel(index, count)}</span>
+          ) : (
+            <div className={styles.tabs} role="tablist" aria-label={labels.choose}>
+              {slides.map((_, i) => (
+                <Dot
+                  key={i}
+                  index={i}
+                  last={last}
+                  progress={progress}
+                  drain={drains[i]!}
+                  selected={i === index}
+                  label={slideLabel(i, count)}
+                  controls={`${id}-slide-${i}`}
+                  tabRef={(node) => {
+                    tabRefs.current[i] = node
+                  }}
+                  onSelect={() => select(i)}
+                />
+              ))}
+            </div>
+          )}
           <div className={styles.arrows}>
             <button
               type="button"
@@ -649,6 +657,7 @@ function Slide({
   index,
   progress,
   active,
+  tabbed,
   label,
   children,
 }: {
@@ -656,6 +665,7 @@ function Slide({
   index: number
   progress: MotionValue<number>
   active: boolean
+  tabbed: boolean
   label: string
   children: ReactNode
 }) {
@@ -665,7 +675,7 @@ function Slide({
     <motion.div
       id={id}
       className={styles.slide}
-      role="tabpanel"
+      role={tabbed ? 'tabpanel' : 'group'}
       aria-roledescription="slide"
       aria-label={label}
       inert={!active}

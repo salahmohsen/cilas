@@ -67,6 +67,13 @@ describe('contributorsOf', () => {
 })
 
 describe('toSearchDocument', () => {
+  it('carries focal coordinates into search results without discarding zero', () => {
+    const document = toSearchDocument('courses', {
+      en: { id: 1, title: 'A course', cover_image: { url: '/cover.webp', focalX: 0, focalY: 80 } },
+      ar: {},
+    })
+    expect(document).toMatchObject({ coverImage: '/cover.webp', focalX: 0, focalY: 80 })
+  })
   const course = {
     id: 7,
     slug: 'reading-plato',

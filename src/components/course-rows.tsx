@@ -17,6 +17,7 @@ import type { StudyRow } from '@/api/study-index'
 import { SEASON_ICONS } from '@/components/season-icon'
 import type { Season } from '@/lib/cycle'
 import { localDigits } from '@/lib/digits'
+import { focalPointStyle } from '@/lib/media-image'
 
 /** A course type's mark, beside its name. */
 export const TYPE_ICONS: Record<string, LucideIcon> = {
@@ -71,7 +72,7 @@ export function CourseRows({ rows, start }: { rows: StudyRow[]; start: number })
           {row.image ? (
             <span aria-hidden className="course-row-cover">
               {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img alt="" decoding="async" loading="lazy" src={row.image} />
+              <img alt="" decoding="async" loading="lazy" src={row.image} style={focalPointStyle(row.imageFocalPoint)} />
             </span>
           ) : null}
           <span className="course-row-number">{localDigits(String(start + i).padStart(2, '0'), locale)}</span>

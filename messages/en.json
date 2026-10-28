@@ -41,12 +41,18 @@
       "description": "Essays, translations and notes written with and around CILAS."
     },
     "calendar": {
-      "label": "Calendar"
+      "label": "Calendar",
+      "description": "Course meetings and events by date."
     },
     "openMenu": "Open menu",
     "closeMenu": "Close menu",
     "spaces": {
       "label": "Spaces"
+    },
+    "whatsOn": "What’s on",
+    "events": {
+      "label": "Events",
+      "description": "Talks, screenings, and gatherings."
     }
   },
   "Search": {
@@ -143,7 +149,8 @@
       "invalid": "That email doesn't look right",
       "failed": "We couldn't subscribe you. Try again in a moment",
       "done": "You're on the list."
-    }
+    },
+    "events": "Events"
   },
   "Fallback": {
     "onlyIn": "Available in {language} only.",
@@ -395,6 +402,7 @@
     "home": "Go to the home page"
   },
   "Person": {
+    "viewProfile": "View profile",
     "written": "Writing",
     "credited": "Translations and other work",
     "taught": "Courses",
@@ -1307,5 +1315,53 @@
       "upload": "Upload failed. Your previous photo is unchanged."
     },
     "percent": "{percent, number}%"
+  },
+  "Movie": {
+    "director": "Directed by",
+    "writers": "Written by",
+    "released": "Release date",
+    "runtime": "Runtime",
+    "minutes": "{count} minutes",
+    "genres": "Genres",
+    "countries": "Countries",
+    "languages": "Languages",
+    "subtitles": "Screening subtitles",
+    "credits": "Cast, crew, and movie details",
+    "cast": "Cast",
+    "crew": "Crew",
+    "studios": "Production",
+    "rating": "TMDB rating",
+    "votes": "{count} votes",
+    "budget": "Budget",
+    "revenue": "Box office",
+    "source": "TMDB",
+    "attributionTrigger": "Credits",
+    "attributionLink": "Credits and attribution",
+    "movieData": "Movie data and images"
+  },
+  "Events": {
+    "title": "Events",
+    "intro": "Talks, screenings, workshops, and gatherings at CILAS.",
+    "upcoming": "Upcoming events",
+    "moreUpcoming": "More upcoming events",
+    "all": "All events",
+    "past": "Past events",
+    "filterBy": "Filter past events by type",
+    "choose": "Choose an event",
+    "undated": "Dates to be announced",
+    "empty": "No upcoming events",
+    "emptyText": "Check back for the next gathering. You can explore past events below.",
+    "dateSoon": "Date to be announced",
+    "cairoTime": "Cairo time",
+    "online": "Online",
+    "joinOnline": "Join online",
+    "viewEvent": "View event",
+    "ended": "This event has ended",
+    "register": "Register for this event",
+    "registrationClosed": "Registration is closed.",
+    "speakers": "Speakers",
+    "agenda": "Programme",
+    "free": "Free",
+    "egp": "EGP"
   }
 }

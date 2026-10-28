@@ -7,6 +7,7 @@ import { COURSE_TYPE_OPTIONS, type CourseType } from '@/fields/course-type'
 import type { ArticleCard } from '@/lib/article-cards'
 import type { Season } from '@/lib/cycle'
 import { pathOf } from '@/lib/paths'
+import { mediaImage } from '@/lib/media-image'
 import type { Article, Course, Cycle, Media, Person, Publication } from '@/payload-types'
 
 /** A grid card: a blog-grid post with the page it opens. */
@@ -52,7 +53,9 @@ const stacksIn = (node: unknown, found: StackFields[] = []): StackFields[] => {
 
 const coverOf = (m: unknown) => {
   const media = m as Media | null
-  return media && typeof media === 'object' && media.url ? { image: media.url, imageAlt: media.alt ?? '' } : {}
+  return media && typeof media === 'object' && media.url
+    ? { image: media.url, imageAlt: media.alt ?? '', imageFocalPoint: { focalX: media.focalX, focalY: media.focalY } }
+    : {}
 }
 
 const names = (people: unknown) =>
@@ -75,7 +78,7 @@ const courseItem = (c: Course): OrbitStackItem => {
 /** A course as a grid card: its type is its tab and its label. */
 const coursePost = (c: Course, locale: Locale, typeName: (type: CourseType) => string): GridPost => {
   const type = typeName(c.course_type)
-  const cover = coverOf(c.cover_image)
+  const image = mediaImage(typeof c.cover_image === 'object' ? c.cover_image : null)
   return {
     id: c.slug ?? String(c.id),
     href: pathOf('courses', c, locale) ?? '#',
@@ -88,7 +91,7 @@ const coursePost = (c: Course, locale: Locale, typeName: (type: CourseType) => s
     readTime: 0,
     readTimeLabel: '',
     author: { name: names(c.fellows) },
-    ...(cover.image ? { image: { src: cover.image, alt: cover.imageAlt ?? '' } } : {}),
+    ...(image ? { image } : {}),
   }
 }
 

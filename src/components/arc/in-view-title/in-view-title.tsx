@@ -57,20 +57,20 @@ export function InViewTitle({
   const inView = useInView(ref, { once, amount: 0.45 })
   const [passed, setPassed] = useState(false)
   useEffect(() => {
-    if (inView || passed) return
+    if (!once || inView || passed) return
     const revealPassedTitle = () => {
       if (ref.current && ref.current.getBoundingClientRect().top < 0) setPassed(true)
     }
     revealPassedTitle()
     window.addEventListener('scroll', revealPassedTitle, { passive: true })
     return () => window.removeEventListener('scroll', revealPassedTitle)
-  }, [inView, passed])
+  }, [inView, passed, once])
   const prefersReduced = useReducedMotion()
   const hydrated = useSyncExternalStore(subscribeHydration, clientSnapshot, serverSnapshot)
   const [serverRendered] = useState(!hydrated)
   const reduced = hydrated && prefersReduced
-  const late = hydrated && serverRendered && lateBoot
-  const visible = reduced || late || inView || passed
+  const late = once && hydrated && serverRendered && lateBoot
+  const visible = reduced || late || inView || (once && passed)
   const instant = Boolean(reduced || late)
   const Tag = as
   const wrapperClass = [styles.wrap, hydrated ? '' : styles.pending, className]

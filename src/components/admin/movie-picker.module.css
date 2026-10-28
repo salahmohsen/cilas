@@ -1,0 +1,63 @@
+.picker {
+  display: grid;
+  gap: 12px;
+  margin-block: 16px;
+}
+.search {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.picker input,
+.picker button {
+  min-height: 40px;
+  border: 1px solid var(--theme-elevation-300);
+  border-radius: 4px;
+  padding: 8px 12px;
+  background: var(--theme-elevation-0);
+  color: var(--theme-text);
+  font: inherit;
+}
+.picker input {
+  min-width: 0;
+  flex: 1 1 200px;
+}
+.picker button {
+  cursor: pointer;
+}
+.picker button:disabled {
+  cursor: default;
+  opacity: 0.5;
+}
+.results {
+  display: grid;
+  gap: 8px;
+  max-height: 360px;
+  overflow-y: auto;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.results button {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  text-align: start;
+}
+.results img {
+  width: 40px;
+  height: 60px;
+  object-fit: cover;
+}
+.results small {
+  display: block;
+}
+.selection {
+  padding: 16px;
+  border: 1px solid var(--theme-elevation-300);
+  border-radius: 4px;
+}
+.selection button {
+  margin-inline-end: 8px;
+}

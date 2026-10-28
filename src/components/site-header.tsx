@@ -12,10 +12,10 @@ import {
   Users,
 } from 'lucide-react'
 import { useLocale, useTranslations } from 'next-intl'
-import Image from 'next/image'
 import { Suspense, useEffect, useRef, useState } from 'react'
 
 import { SiteHeader } from '@/components/arc/blocks/site-header/site-header'
+import { CilasLogo } from '@/components/cilas-logo'
 import { UserMenu, type UserMenuUser } from '@/components/arc/user-menu/user-menu'
 import { LanguageSwitch, ThemeToggle } from '@/components/site-controls'
 import { SiteNotifications } from '@/components/site-notifications'
@@ -216,8 +216,35 @@ export function CILASSiteHeader({ nav = ALL_SHOWN }: { nav?: Navigation }) {
           },
         ]
       : []),
-    ...(nav.calendar
-      ? [{ value: 'calendar', label: t('calendar.label'), href: href('/calendar'), icon: Calendar }]
+    ...(nav.events || nav.calendar
+      ? [
+          {
+            value: 'whatsOn',
+            label: t('whatsOn'),
+            href: href(nav.events ? '/events' : '/calendar'),
+            icon: Calendar,
+            links: [
+              ...(nav.events
+                ? [
+                    {
+                      label: t('events.label'),
+                      href: href('/events'),
+                      description: t('events.description'),
+                    },
+                  ]
+                : []),
+              ...(nav.calendar
+                ? [
+                    {
+                      label: t('calendar.label'),
+                      href: href('/calendar'),
+                      description: t('calendar.description'),
+                    },
+                  ]
+                : []),
+            ],
+          },
+        ]
       : []),
     ...(spaces
       ? [{ value: 'spaces', label: t('spaces.label'), href: href('/spaces'), icon: MessagesSquare }]
@@ -231,16 +258,7 @@ export function CILASSiteHeader({ nav = ALL_SHOWN }: { nav?: Navigation }) {
       brand={{
         name: t('brand'),
         href: href('/'),
-        mark: (
-          <Image
-            alt="CILAS"
-            height={20}
-            src="/assets/images/logo.webp"
-            style={{ width: 'auto' }}
-            className="dark:invert"
-            width={20}
-          />
-        ),
+        mark: <CilasLogo data-site-mark height={32} width={19} style={{ flexShrink: 0 }} />,
       }}
       items={items}
       label={t('label')}

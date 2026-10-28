@@ -32,6 +32,7 @@ import { localDigits, numberingSystemOf, timeDir } from '@/lib/digits'
 import type { Season } from '@/lib/cycle'
 import { priceLabel, pricingFor } from '@/lib/pricing'
 import { registrationStatus } from '@/lib/registration'
+import { focalPointStyle } from '@/lib/media-image'
 import { EditorFields, labelOf } from '@/components/editor-fields'
 import { editableIn } from '@/lib/editable'
 import { expandSchedule, sessionsInOrder } from '@/lib/schedule'
@@ -47,7 +48,7 @@ export type RelatedCourse = {
   title: string
   type: Course['course_type']
   fellows: string[]
-  image?: { url: string; alt: string }
+  image?: { url: string; alt: string; focalX?: number | null; focalY?: number | null }
 }
 
 /** How many courses of the cycle the end of the page shows. */
@@ -493,7 +494,10 @@ export const CourseView: React.FC<{
             <img
               alt={cover.alt ?? ''}
               className="course-cover mt-8"
+              width={cover.width ?? undefined}
+              height={cover.height ?? undefined}
               src={cover.url}
+              style={focalPointStyle(cover)}
               {...pe('cover_image')}
             />
           ) : null}
@@ -619,7 +623,7 @@ export const CourseView: React.FC<{
                   <span className="course-related-image">
                     {r.image ? (
                       // eslint-disable-next-line @next/next/no-img-element
-                      <img alt={r.image.alt} loading="lazy" src={r.image.url} />
+                      <img alt={r.image.alt} loading="lazy" src={r.image.url} style={focalPointStyle(r.image)} />
                     ) : SeasonIcon ? (
                       <SeasonIcon aria-hidden size={28} strokeWidth={1.25} />
                     ) : null}

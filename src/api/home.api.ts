@@ -4,6 +4,7 @@ import { siteTiers } from '@/access'
 import { bridgeYearPath, listBridgeYears } from '@/api/programmes.api'
 import { getStudyIndex } from '@/api/study-index'
 import { registrationStatus } from '@/lib/registration'
+import { mediaImage, type MediaImage } from '@/lib/media-image'
 import type { Article, Media, Press } from '@/payload-types'
 
 type Locale = 'en' | 'ar'
@@ -23,7 +24,7 @@ export type OpenItem = {
   when?: string
   /** Who teaches it. */
   fellows?: string[]
-  image?: { src: string; alt: string }
+  image?: MediaImage
   /** The last day to register (YYYY-MM-DD), when there is one. */
   deadline?: string
 }
@@ -85,7 +86,7 @@ export const getOpenNow = async (
         href,
         // A Bridge year without its own cover shows the classroom, as its page does.
         image: cover?.url
-          ? { src: cover.url, alt: cover.alt ?? '' }
+          ? mediaImage(cover)
           : bridge
             ? { src: '/assets/images/cilas-classroom.jpg', alt: '' }
             : undefined,
@@ -110,7 +111,7 @@ export const getOpenNow = async (
         .filter(Boolean)
         .join(locale === 'ar' ? '، ' : ', '),
       fellows: (c.facets.fellow ?? []).map((f) => f.label),
-      image: c.image ? { src: c.image, alt: c.imageAlt ?? '' } : undefined,
+      image: c.image ? { src: c.image, alt: c.imageAlt ?? '', ...c.imageFocalPoint } : undefined,
       deadline: c.deadline,
     }))
     // The nearest deadline first; those without one last.

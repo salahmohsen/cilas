@@ -81,7 +81,7 @@ export type Fellow = {
   id: number
   slug: string
   name: string
-  photo?: { url: string; alt: string }
+  photo?: { url: string; alt: string; focalX?: number | null; focalY?: number | null }
   /** The bio as plain text, in the site language (or its own). */
   bio: string
   /** What they taught here, newest first. */
@@ -132,7 +132,7 @@ export const getFellows = async (payload: Payload, locale: Locale): Promise<Fell
         id: f.id,
         slug: f.slug,
         name: f.name,
-        ...(photo ? { photo: { url: photo.url!, alt: photo.alt ?? f.name } } : {}),
+        ...(photo ? { photo: { url: photo.url!, alt: photo.alt ?? f.name, focalX: photo.focalX, focalY: photo.focalY } } : {}),
         bio: f.bio ? plainText({ data: f.bio }).replace(/\s+/g, ' ').trim() : '',
         courses: [course],
       })
@@ -152,7 +152,7 @@ const cardOf = (p: Person): PersonCard => {
     id: p.id,
     slug: p.slug ?? String(p.id),
     name: p.name,
-    ...(photo ? { photo: { url: photo.url!, alt: photo.alt ?? p.name } } : {}),
+    ...(photo ? { photo: { url: photo.url!, alt: photo.alt ?? p.name, focalX: photo.focalX, focalY: photo.focalY } } : {}),
     bio: p.bio ? plainText({ data: p.bio }).replace(/\s+/g, ' ').trim() : '',
   }
 }
