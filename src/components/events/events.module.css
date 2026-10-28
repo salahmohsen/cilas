@@ -3,6 +3,7 @@
   margin-inline: auto;
   padding: var(--space-16) var(--space-6);
   display: grid;
+  grid-template-columns: minmax(0, 1fr);
   gap: var(--space-12);
 }
 .header {
@@ -21,12 +22,16 @@
   color: var(--text-secondary);
 }
 .section {
+  min-width: 0;
   display: grid;
   gap: var(--space-6);
 }
 .section h2 {
   font-size: var(--text-2xl);
   font-weight: 500;
+}
+.carousel {
+  min-width: 0;
 }
 .grid {
   display: grid;

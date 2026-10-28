@@ -53,6 +53,15 @@
   gap: var(--space-2);
   padding-inline: calc((100cqw - var(--carousel-slide)) / 2);
 }
+.counter {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: var(--text-secondary);
+  font-size: var(--text-sm);
+  font-variant-numeric: tabular-nums;
+}
 .tabs {
   display: flex;
   min-width: 0;

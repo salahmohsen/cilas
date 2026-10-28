@@ -12,7 +12,7 @@ export const getPublicEvents = async (payload: Payload, locale: Locale, slug?: s
     pagination: false,
     sort: 'schedule.start_date',
     populate: {
-      media: { url: true, alt: true, sizes: true },
+      media: { url: true, alt: true, sizes: true, filename: true, prefix: true },
       people: { name: true, slug: true },
       places: { name: true, address: true, map_url: true },
     },
