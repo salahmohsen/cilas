@@ -67,9 +67,28 @@ export const RichTextField: React.FC<{
   const renderColumns = ({ node }: { node: { fields: ColumnsBlock } }) => {
     const { first, second, third, fourth, ratio, columnCount } = node.fields
     const count = Number(columnCount ?? 2)
+    const columns = [first, second, third, fourth].slice(0, count)
+    const profileCarousel =
+      !plain &&
+      columns.length > 1 &&
+      columns.every((column) =>
+        column?.root.children.some(
+          (child) =>
+            child.type === 'block' &&
+            typeof child.fields === 'object' &&
+            child.fields !== null &&
+            'blockType' in child.fields &&
+            child.fields.blockType === 'personProfile',
+        ),
+      )
     return (
-      <div className={plain ? undefined : styles.columns} data-ratio={ratio} data-columns={count}>
-        {[first, second, third, fourth].slice(0, count).map((column, index) => (
+      <div
+        className={plain ? undefined : styles.columns}
+        data-ratio={ratio}
+        data-columns={count}
+        data-profile-carousel={profileCarousel || undefined}
+      >
+        {columns.map((column, index) => (
           <RichTextField
             key={index}
             data={column}

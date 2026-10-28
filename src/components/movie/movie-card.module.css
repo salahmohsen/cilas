@@ -94,6 +94,9 @@
   overflow-wrap: anywhere;
 }
 .facts dt {
+  display: flex;
+  align-items: center;
+  min-block-size: calc(2lh + 2 * var(--space-1) + 1px);
   font-weight: 500;
   background: var(--poster-color);
   margin: calc(-1 * var(--space-4)) calc(-1 * var(--space-6)) var(--space-2);

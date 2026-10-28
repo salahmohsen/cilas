@@ -1,0 +1,25 @@
+.links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-1);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.links a {
+  position: relative;
+  z-index: 2;
+  display: inline-grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border-radius: var(--radius-pill);
+  color: inherit;
+}
+.links a:hover {
+  background: var(--surface-muted);
+}
+.links a:focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 2px;
+}
