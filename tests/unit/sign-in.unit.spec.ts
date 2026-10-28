@@ -15,6 +15,12 @@ const request = (path: string, cookies: Record<string, string> = {}) => {
 }
 
 describe('safeNext', () => {
+  it.each(['/\t/evil.example', '/\n/evil.example', '/\r/evil.example', '/\u0000/evil.example'])(
+    'refuses control characters in a return path',
+    (path) => {
+      expect(safeNext(path)).toBe('/')
+    },
+  )
   it.each(['/', '/en/articles/x', '/admin/collections/courses?limit=10'])('keeps %s', (path) => {
     expect(safeNext(path)).toBe(path)
   })
@@ -43,7 +49,9 @@ describe('proxy', () => {
   it('serves signed-in readers the pages that list community courses', () => {
     const signedIn = { 'payload-token': 'token' }
     expect(rewrite(proxy(request('/en', signedIn)))).toBe('http://localhost:3000/en/signed-in')
-    expect(rewrite(proxy(request('/ar/apply', signedIn)))).toBe('http://localhost:3000/ar/signed-in/apply')
+    expect(rewrite(proxy(request('/ar/apply', signedIn)))).toBe(
+      'http://localhost:3000/ar/signed-in/apply',
+    )
     expect(rewrite(proxy(request('/en/study/on-cities', signedIn)))).toBe(
       'http://localhost:3000/en/signed-in/study/on-cities',
     )
@@ -66,7 +74,9 @@ describe('proxy', () => {
   })
 
   it('sends the admin login to the site login, keeping where to return', () => {
-    const res = proxy(request('/admin/login?redirect=%2Fadmin%2Fcollections%2Fcourses', { NEXT_LOCALE: 'ar' }))
+    const res = proxy(
+      request('/admin/login?redirect=%2Fadmin%2Fcollections%2Fcourses', { NEXT_LOCALE: 'ar' }),
+    )
     expect(res.headers.get('location')).toBe(
       'http://localhost:3000/ar/login?next=%2Fadmin%2Fcollections%2Fcourses',
     )
