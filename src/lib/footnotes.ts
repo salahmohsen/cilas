@@ -1,4 +1,5 @@
 import type { FootnoteBlock } from '@/payload-types'
+import { walkEditorNodes } from '@/lib/rich-text-references'
 
 type Node = { type?: string; fields?: unknown; children?: Node[] }
 
@@ -13,10 +14,13 @@ export const footnotesOf = (data: { root?: Node } | null | undefined): Footnote[
   const walk = (node: Node) => {
     const fields = node.fields as (Partial<FootnoteBlock> & { id?: string }) | undefined
     if (node.type === 'inlineBlock' && fields?.blockType === 'footnote' && fields.id) {
-      found.push({ id: fields.id, number: found.length + 1, note: fields.note as FootnoteBlock['note'] })
+      found.push({
+        id: fields.id,
+        number: found.length + 1,
+        note: fields.note as FootnoteBlock['note'],
+      })
     }
-    node.children?.forEach(walk)
   }
-  if (data?.root) walk(data.root)
+  walkEditorNodes(data, walk)
   return found
 }

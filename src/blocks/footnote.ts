@@ -1,5 +1,6 @@
 import {
   BoldFeature,
+  BlocksFeature,
   FixedToolbarFeature,
   InlineToolbarFeature,
   ItalicFeature,
@@ -8,6 +9,7 @@ import {
   ParagraphFeature,
 } from '@payloadcms/richtext-lexical'
 import type { Block } from 'payload'
+import { Mention } from './mention'
 
 /**
  * A footnote, written where it belongs in the text: in the editor, place the
@@ -35,6 +37,7 @@ export const Footnote: Block = {
           LinkFeature(),
           FixedToolbarFeature(),
           InlineToolbarFeature(),
+          BlocksFeature({ inlineBlocks: [Mention] }),
         ],
       }),
     },

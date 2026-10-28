@@ -7,7 +7,7 @@ import type { ReactNode } from 'react'
 
 import { getBridgeYear } from '@/api/programmes.api'
 import { PayloadForm } from '@/components/forms/payload-form'
-import { RichTextField } from '@/components/RichTextField'
+import { ResolvedRichTextField as RichTextField } from '@/components/resolved-rich-text-field'
 import { Link } from '@/i18n/navigation'
 import { numberingSystemOf } from '@/lib/digits'
 import { registrationStatus } from '@/lib/registration'

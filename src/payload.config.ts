@@ -1,5 +1,7 @@
 import { postgresAdapter } from '@payloadcms/db-postgres'
 import { lexicalEditor } from '@payloadcms/richtext-lexical'
+import { emailEditorFeatures } from '@/lexical/email-features'
+import { formEmailRichText } from '@/forms/email-rich-text'
 import path from 'path'
 import { buildConfig } from 'payload'
 import { fileURLToPath } from 'url'
@@ -217,9 +219,23 @@ export default buildConfig({
   sharp,
   plugins: [
     formBuilderPlugin({
+      beforeEmail: formEmailRichText,
       fields: formFields,
       // The forms themselves, with their emails and redirects, are admin work.
       formOverrides: {
+        fields: ({ defaultFields }) =>
+          defaultFields.map((field) =>
+            'name' in field && field.name === 'emails' && 'fields' in field
+              ? {
+                  ...field,
+                  fields: field.fields.map((child) =>
+                    child.type === 'richText'
+                      ? { ...child, editor: lexicalEditor({ features: emailEditorFeatures }) }
+                      : child,
+                  ),
+                }
+              : field,
+          ),
         access: { read: anyone, create: isAdmin, update: isAdmin, delete: isAdmin },
         // Any form asks name and email first; no admin deletes or renames them.
         hooks: { beforeChange: [ensureNameEmail] },

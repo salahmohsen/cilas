@@ -14,9 +14,12 @@ import type {
   FootnoteBlock,
   PersonProfileBlock,
   MovieBlock,
+  MentionBlock,
   GalleryBlock,
 } from '@/payload-types'
 import styles from './rich-text-columns.module.css'
+import { ReferenceMention, RelatedReference } from '@/components/rich-text-references'
+import { RichTextNodeLink } from '@/components/rich-text-node-link'
 
 /** The dash (or tilde) that opens a quote's source line. */
 const SOURCE_LEAD = /^\s*[—–~-]\s*/
@@ -118,6 +121,14 @@ export const RichTextField: React.FC<{
 
   const fullConverters: JSXConvertersFunction = ({ defaultConverters }) => ({
     ...defaultConverters,
+    link: ({ node, nodesToJSX }) => {
+      const children = nodesToJSX({ nodes: node.children })
+      return <RichTextNodeLink fields={node.fields}>{children}</RichTextNodeLink>
+    },
+    relationship: ({ node }) => {
+      const ref = node as unknown as { relationTo: string; value: unknown }
+      return <RelatedReference collection={ref.relationTo} value={ref.value} />
+    },
     // A quote whose last line starts with a dash ("— Pascal", written in the
     // editor as a line break then the source) gets that line as its citation.
     quote: ({ node, nodesToJSX }) => {
@@ -144,6 +155,10 @@ export const RichTextField: React.FC<{
       )
     },
     blocks: {
+      relatedContent: ({ node }: { node: { fields: { document: unknown } } }) => {
+        const ref = node.fields.document as { relationTo: string; value: unknown }
+        return <RelatedReference collection={ref.relationTo} value={ref.value} />
+      },
       columns: renderColumns,
       personProfile: renderPersonProfile,
       gallery: ({ node }: { node: { fields: GalleryBlock } }) => <ImageGallery {...node.fields} />,
@@ -161,6 +176,9 @@ export const RichTextField: React.FC<{
       ),
     },
     inlineBlocks: {
+      mention: ({ node }: { node: SerializedInlineBlockNode<MentionBlock> }) => (
+        <ReferenceMention fields={node.fields as unknown as Record<string, unknown>} />
+      ),
       ...Object.fromEntries(
         Object.entries(inlineBlocks).map(([type, draw]) => [
           type,
@@ -176,6 +194,8 @@ export const RichTextField: React.FC<{
 
   const plainConverters: JSXConvertersFunction = ({ defaultConverters }) => ({
     ...defaultConverters,
+    link: fullConverters({ defaultConverters }).link,
+    relationship: () => null,
     heading: ({ node, nodesToJSX }) => (
       <p>
         <strong>
@@ -196,12 +216,16 @@ export const RichTextField: React.FC<{
     horizontalrule: () => null,
     table: () => null,
     blocks: {
+      relatedContent: () => null,
       columns: renderColumns,
       personProfile: () => null,
       movie: () => null,
       gallery: () => null,
     },
-    inlineBlocks: {},
+    inlineBlocks: {
+      mention: ({ node }: { node: SerializedInlineBlockNode<MentionBlock> }) =>
+        node.fields.label ?? '',
+    },
   })
 
   return (

@@ -1,6 +1,7 @@
 import { personAvatarSeed } from '@/lib/avatar'
 import { Suspense } from 'react'
-import { getTranslations } from 'next-intl/server'
+import { getLocale, getTranslations } from 'next-intl/server'
+import { RichTextScope } from '@/components/rich-text-scope'
 import type { Payload } from 'payload'
 
 import { personOf } from '@/access'
@@ -93,11 +94,13 @@ export async function loadPost(
  * the standalone lightbox.
  */
 export async function PostArticle({
+  user,
   view,
   context,
   href,
   dialog = false,
 }: {
+  user: User
   view: PostView
   context: FeedContext
   /** The post's own route, for Copy link */
@@ -113,7 +116,7 @@ export async function PostArticle({
   const links = deleted ? [] : outsideLinks(post.body)
   const text = eventDescription(post)
 
-  const article = (
+  const content = (
     <article
       id={dialog ? undefined : id}
       className={dialog ? styles.dialogPost : styles.post}
@@ -186,6 +189,15 @@ export async function PostArticle({
         />
       )}
     </article>
+  )
+  const article = (
+    <RichTextScope
+      data={[row.session, context.sessions?.read]}
+      locale={await getLocale()}
+      user={user}
+    >
+      {content}
+    </RichTextScope>
   )
   if (!dialog) return article
   if (!photos.length) return article

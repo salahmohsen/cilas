@@ -6,6 +6,8 @@ import {
   type SearchCollection,
   type SearchLocale,
 } from '@/lib/search-config'
+import { flattenRichTextColumns } from '@/lib/flatten-rich-text-columns'
+import type { SerializedEditorState } from '@payloadcms/richtext-lexical/lexical'
 
 /**
  * Payload documents to Typesense records. Pure: the indexer reads each
@@ -53,11 +55,19 @@ export const lexicalText = (richText: unknown): string => {
     if (record.type === 'linebreak') return '\n'
     // A mention's words are part of the sentence (src/blocks/mention.ts).
     const fields = asRecord(record.fields)
-    if (record.type === 'inlineBlock' && fields?.blockType === 'mention') return String(fields.label ?? '')
+    if (record.type === 'inlineBlock' && fields?.blockType === 'mention')
+      return String(fields.label ?? '')
     const inner = asArray(record.children).map(walk).join('')
     return INLINE_NODES.has(String(record.type)) ? inner : `${inner}\n`
   }
-  return tidyLines(walk(asRecord(richText)?.root))
+  const data = asRecord(richText)
+  return tidyLines(
+    walk(
+      data?.root
+        ? flattenRichTextColumns(data as unknown as SerializedEditorState).root
+        : undefined,
+    ),
+  )
 }
 
 /** Trims every line and drops the empty ones. */
@@ -143,7 +153,12 @@ export const contributorsOf = (
 }
 
 /** One searchable field of one language copy. */
-const fieldText = (collection: SearchCollection, field: string, copy: Doc, locale: SearchLocale) => {
+const fieldText = (
+  collection: SearchCollection,
+  field: string,
+  copy: Doc,
+  locale: SearchLocale,
+) => {
   if (field === 'syllabus') return syllabusText(copy)
   if (field === 'owner') {
     return contributorsOf(collection, { en: {}, ar: {}, [locale]: copy })
@@ -155,7 +170,8 @@ const fieldText = (collection: SearchCollection, field: string, copy: Doc, local
 }
 
 const timestamp = (value: unknown): number => {
-  const ms = typeof value === 'string' || typeof value === 'number' ? new Date(value).getTime() : NaN
+  const ms =
+    typeof value === 'string' || typeof value === 'number' ? new Date(value).getTime() : NaN
   return Number.isNaN(ms) ? 0 : ms
 }
 

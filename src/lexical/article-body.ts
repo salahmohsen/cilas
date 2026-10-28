@@ -6,7 +6,9 @@ import { PersonProfile } from '@/blocks/person-profile'
 import { Movie } from '@/blocks/movie'
 import { Gallery } from '@/blocks/gallery'
 import { Footnote } from '@/blocks/footnote'
+import { RelatedContent } from '@/blocks/related-content'
 import { Mention } from '@/blocks/mention'
+import { legacyRelationshipFeature } from '@/lexical/legacy-features'
 
 /**
  * The article body's editor, as features: also given to the markdown
@@ -17,9 +19,10 @@ export const articleBodyFeatures = ({
 }: {
   defaultFeatures: FeatureProviderServer[]
 }) => [
-  ...defaultFeatures,
+  ...defaultFeatures.filter((feature) => feature.key !== 'relationship'),
+  legacyRelationshipFeature(),
   BlocksFeature({
-    blocks: [CardStack, Columns, PersonProfile, Movie, Gallery],
+    blocks: [CardStack, Columns, PersonProfile, Movie, Gallery, RelatedContent],
     inlineBlocks: [Footnote, Mention],
   }),
 ]

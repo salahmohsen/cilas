@@ -29,5 +29,5 @@ export async function PostDialogPage({ params }: { params: Promise<Params> }) {
   const loaded = await loadPost(payload, user, landing.space, postId, locale)
   if (!loaded) notFound()
   const href = `/${locale}/spaces/${community ? `community/${spaceKey}` : `${kind}/${slug}`}/posts/${postId}`
-  return <PostArticle view={loaded.view} context={loaded.context} href={href} dialog />
+  return <PostArticle user={user} view={loaded.view} context={loaded.context} href={href} dialog />
 }

@@ -706,6 +706,7 @@
     "nameAr": "Name in Arabic",
     "bioEn": "About you, in English",
     "bioAr": "About you, in Arabic",
+    "bioReadOnly": "This bio contains content that this editor cannot preserve. Ask an administrator to edit it.",
     "website": "Website",
     "social": "Social media",
     "platform": "Platform",

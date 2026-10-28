@@ -30,14 +30,12 @@ import { AdminFrameOnly, OutsideAdminFrame } from '@/components/admin-frame-only
 import { EditorFields, labelOf } from '@/components/editor-fields'
 import { RefreshRouteOnSave } from '@/components/RefreshRouteOnSave'
 import { ContributorList, PersonLink, type Contributor } from '@/components/person/contributors'
-import { RichTextField } from '@/components/RichTextField'
+import { ResolvedRichTextField as RichTextField } from '@/components/resolved-rich-text-field'
 import { ShareBar } from '@/components/share-bar'
 import { StudyWithAI } from '@/components/study-with-ai'
 import { ArticleCardStack } from '@/components/article/article-card-stack'
 import { ArticleCardGrid } from '@/components/article/article-card-grid'
 import { resolveCardStacks } from '@/api/card-stacks.api'
-import { resolveMentions } from '@/api/mentions.api'
-import { MentionLink } from '@/components/article/mention-link'
 import { NewsletterSignupEnd } from '@/components/newsletter-signup-end'
 import { Schema } from '@/components/schema'
 import { Link } from '@/i18n/navigation'
@@ -126,8 +124,6 @@ export async function ArticlePage({ locale: siteLocale, slug, user }: View) {
       publicationCovers,
     })
   const { text, notes, noteCount, sections } = splitBody(body)
-  // The mentions in the text, read as this reader may, before it is drawn.
-  const mentions = await resolveMentions(payload, text, { locale, user })
   // The Card stack blocks in the text, loaded before it is drawn.
   const stacks = await resolveCardStacks(payload, text, {
     locale,
@@ -140,7 +136,13 @@ export async function ArticlePage({ locale: siteLocale, slug, user }: View) {
         role: c.author.name,
         description: c.excerpt,
         href: pathOf('articles', a) ?? '#',
-        ...(c.image ? { image: c.image.src, imageAlt: c.image.alt, imageFocalPoint: { focalX: c.image.focalX, focalY: c.image.focalY } } : {}),
+        ...(c.image
+          ? {
+              image: c.image.src,
+              imageAlt: c.image.alt,
+              imageFocalPoint: { focalX: c.image.focalX, focalY: c.image.focalY },
+            }
+          : {}),
         stat: t('essayOf', { n: i + 1, total }),
       }
     },
@@ -368,6 +370,7 @@ export async function ArticlePage({ locale: siteLocale, slug, user }: View) {
               {text ? (
                 <div {...pe('body')}>
                   <RichTextField
+                    user={user}
                     blocks={{
                       cardStack: (fields: { id?: string }) => {
                         const stack = fields.id ? stacks[fields.id] : undefined
@@ -385,22 +388,6 @@ export async function ArticlePage({ locale: siteLocale, slug, user }: View) {
                             items={stack.items}
                             label={stack.label}
                           />
-                        )
-                      },
-                    }}
-                    inlineBlocks={{
-                      // A mention of something this reader cannot open stays its words.
-                      mention: (fields: { id?: string; label?: string }) => {
-                        const m = fields.id ? mentions[fields.id] : undefined
-                        return m ? (
-                          <MentionLink
-                            href={m.href}
-                            kindLabel={t(`mentionKinds.${m.preview.kind}`)}
-                            label={fields.label ?? m.preview.title}
-                            preview={m.preview}
-                          />
-                        ) : (
-                          (fields.label ?? null)
                         )
                       },
                     }}
@@ -427,6 +414,7 @@ export async function ArticlePage({ locale: siteLocale, slug, user }: View) {
                       <li id={`fn-${f.number}`} key={f.id}>
                         <span className="footnote-number">{f.number}</span>
                         <RichTextField
+                          user={user}
                           className="article-prose article-prose--notes"
                           data={f.note}
                         />
@@ -445,7 +433,11 @@ export async function ArticlePage({ locale: siteLocale, slug, user }: View) {
               {notes && (
                 <div className="mt-6">
                   <ArticleNotes title={t('notes', { count: noteCount })}>
-                    <RichTextField className="article-prose article-prose--notes" data={notes} />
+                    <RichTextField
+                      user={user}
+                      className="article-prose article-prose--notes"
+                      data={notes}
+                    />
                   </ArticleNotes>
                 </div>
               )}
@@ -473,7 +465,10 @@ export async function ArticlePage({ locale: siteLocale, slug, user }: View) {
             </section>
 
             {/* Taking it with AI, its own section at the tools' spacing. */}
-            <section aria-labelledby="article-ai" className="mt-6 grid gap-3 border-t border-border pt-6">
+            <section
+              aria-labelledby="article-ai"
+              className="mt-6 grid gap-3 border-t border-border pt-6"
+            >
               <h2 className="font-sans text-sm text-[var(--text-muted)]" id="article-ai">
                 {tShare('aiHeading')}
               </h2>

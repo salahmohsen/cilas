@@ -8,7 +8,7 @@ import type { ReactNode } from 'react'
 import { siteTiers } from '@/access'
 import type { Reader } from '@/api/articles.api'
 import { PayloadForm } from '@/components/forms/payload-form'
-import { RichTextField } from '@/components/RichTextField'
+import { ResolvedRichTextField as RichTextField } from '@/components/resolved-rich-text-field'
 import { Link } from '@/i18n/navigation'
 import { numberingSystemOf } from '@/lib/digits'
 import { registrationStatus } from '@/lib/registration'
@@ -37,9 +37,18 @@ const courseOf = async (payload: Payload, slug: string, lang: 'en' | 'ar', reade
 }
 
 /** Shared by the cached page and the signed-in one. */
-export async function courseApplyMetadata(locale: string, slug: string, reader: Reader): Promise<Metadata> {
+export async function courseApplyMetadata(
+  locale: string,
+  slug: string,
+  reader: Reader,
+): Promise<Metadata> {
   const t = await getTranslations({ locale, namespace: 'Apply' })
-  const course = await courseOf(await getPayload({ config }), slug, locale === 'ar' ? 'ar' : 'en', reader)
+  const course = await courseOf(
+    await getPayload({ config }),
+    slug,
+    locale === 'ar' ? 'ar' : 'en',
+    reader,
+  )
   return course ? { title: t('courseTitle', { title: course.title }) } : {}
 }
 
@@ -49,7 +58,15 @@ export async function courseApplyMetadata(locale: string, slug: string, reader: 
  * the course, so an admin can accept it into an enrollment. `reader` is null
  * on the cached page; the signed-in page passes the account (`community` courses).
  */
-export async function CourseApplyPage({ locale, slug, reader }: { locale: string; slug: string; reader: Reader }) {
+export async function CourseApplyPage({
+  locale,
+  slug,
+  reader,
+}: {
+  locale: string
+  slug: string
+  reader: Reader
+}) {
   const lang = locale === 'ar' ? 'ar' : 'en'
   const [t, format] = await Promise.all([getTranslations('Apply'), getFormatter()])
   const payload = await getPayload({ config })

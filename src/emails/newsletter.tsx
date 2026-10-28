@@ -1,4 +1,6 @@
-import { convertLexicalToHTML } from '@payloadcms/richtext-lexical/html'
+import { emailRichTextHTML } from './rich-text'
+import type { RichTextReferences } from '@/lib/rich-text-references'
+import { env } from '@/env'
 import { Column, Heading, Img, Link, Row, Section, Text } from 'react-email'
 
 import { cardOf, type Card, type Person } from './cards'
@@ -33,6 +35,7 @@ export type Section = Row &
   )
 
 export type Issue = {
+  references?: RichTextReferences
   title: string
   preheader?: string | null
   issue_date?: string | null
@@ -54,9 +57,9 @@ const monthOf = (date?: string | null) =>
  * Rich text as email HTML, each block reading in its own direction: an
  * Arabic paragraph runs right to left, an English one left to right.
  */
-const richHtml = (data: unknown) =>
+const richHtml = (data: unknown, references: RichTextReferences = {}) =>
   data
-    ? convertLexicalToHTML({ data: data as never })
+    ? emailRichTextHTML(data, references, env.NEXT_PUBLIC_SERVER_URL)
         .replace(
           /<(p|h[1-6]|li|blockquote|ul|ol)(\s|>)/g,
           (_, tag: string, next: string) => `<${tag} dir="auto"${next}`,
@@ -378,8 +381,13 @@ function Quote({ section, pe, path }: SectionProps<'quote'>) {
   )
 }
 
-function TextSection({ section, pe, path }: SectionProps<'text'>) {
-  const html = richHtml(section.body)
+function TextSection({
+  section,
+  pe,
+  path,
+  references,
+}: SectionProps<'text'> & { references?: RichTextReferences }) {
+  const html = richHtml(section.body, references)
   return html ? (
     <Box>
       <div
@@ -404,7 +412,7 @@ export function NewsletterEmail({
   editId?: number
 }) {
   const pe = editableIn(editId !== undefined)
-  const intro = richHtml(issue.body)
+  const intro = richHtml(issue.body, issue.references)
   const cover = urlOf(issue.cover_image as Media)
   const month = monthOf(issue.issue_date)
   return (
@@ -456,7 +464,14 @@ export function NewsletterEmail({
                 case 'quote':
                   return <Quote section={section} pe={pe} path={path} />
                 case 'text':
-                  return <TextSection section={section} pe={pe} path={path} />
+                  return (
+                    <TextSection
+                      section={section}
+                      pe={pe}
+                      path={path}
+                      references={issue.references}
+                    />
+                  )
                 default:
                   return null
               }

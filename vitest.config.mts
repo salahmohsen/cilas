@@ -22,7 +22,7 @@ export default defineConfig({
         // (`from './theme'`).
         // Next's bundler resolves those; vitest's native ESM loader does not, so
         // without inlining it every int test fails to import payload.config.
-        inline: ['payload-theme', 'payload-oauth2'],
+        inline: ['payload-theme', 'payload-oauth2', 'next-intl'],
       },
     },
   },
