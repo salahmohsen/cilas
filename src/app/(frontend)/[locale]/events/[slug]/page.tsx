@@ -1,5 +1,4 @@
 import config from '@payload-config'
-import Image from 'next/image'
 import { notFound } from 'next/navigation'
 import { getFormatter, getTranslations } from 'next-intl/server'
 import { getPayload } from 'payload'
@@ -8,7 +7,7 @@ import { cache } from 'react'
 import type { Locale } from '@/api/articles.api'
 import { getPublicEvents } from '@/api/events.api'
 import { RichTextField } from '@/components/RichTextField'
-import { Badge } from '@/components/arc/badge/badge'
+import { PublicEventCard } from '@/components/events/public-event-card'
 import { PayloadForm } from '@/components/forms/payload-form'
 import { Link } from '@/i18n/navigation'
 import { localDigits } from '@/lib/digits'
@@ -42,20 +41,14 @@ export async function generateMetadata({ params }: Props) {
 
 export default async function Page({ params }: Props) {
   const { locale, slug } = await params
-  const [event, t, types, format] = await Promise.all([
+  const [event, t, format] = await Promise.all([
     readEvent(locale, slug),
     getTranslations('Events'),
-    getTranslations('Calendar.eventTypes'),
     getFormatter(),
   ])
   if (!event) notFound()
   const now = new Date()
   const timing = eventTiming(event, now)
-  const cover = typeof event.cover_image === 'object' ? event.cover_image : null
-  const place = typeof event.place === 'object' ? event.place : null
-  const where = event.external_venue?.name || place?.name
-  const address = event.external_venue?.address || place?.address
-  const map = event.external_venue?.map_url || place?.map_url
   const form = typeof event.registration?.form === 'object' ? event.registration.form : null
   const open =
     timing.status !== 'past' && registrationStatus(event.registration, null, now) === 'open'
@@ -67,70 +60,40 @@ export default async function Page({ params }: Props) {
     if (block.blockType === 'message' && block.message && block.id)
       notes[block.id] = <RichTextField data={block.message} />
   return (
-    <article className={styles.page}>
+    <article className={`${styles.page} ${styles.detailPage}`}>
       <header className={styles.header}>
         <Link className="home-more" href="/events">
           {t('all')}
         </Link>
-        <p>{types(event.event_type)}</p>
-        <h1>{event.title}</h1>
-        {timing.status === 'past' && <Badge>{t('ended')}</Badge>}
       </header>
-      {cover?.url && (
-        <Image
-          className={styles.cover}
-          src={cover.url}
-          alt={cover.alt || ''}
-          width={1180}
-          height={786}
-          sizes="(max-width: 1180px) 100vw, 1180px"
-        />
+      <PublicEventCard event={event} now={now} detail />
+      {(meetings.length > 1 ||
+        event.schedule?.note ||
+        event.pricing?.min != null ||
+        event.pricing?.note) && (
+        <div className={styles.details}>
+          {meetings.length > 1 ? (
+            <ul className={styles.agenda}>
+              {meetings.map((m) => (
+                <li key={`${m.date}-${m.start_time}`}>
+                  <time dateTime={m.date}>{date(m.date)}</time> ·{' '}
+                  <bdi>{localDigits(`${m.start_time}–${m.end_time}`, locale)}</bdi> ·{' '}
+                  {t('cairoTime')}
+                </li>
+              ))}
+            </ul>
+          ) : null}
+          {event.schedule?.note && <p>{event.schedule.note}</p>}
+          {event.pricing?.min != null && (
+            <p>
+              {event.pricing.min === 0 && !event.pricing.max
+                ? t('free')
+                : `${format.number(event.pricing.min)}${event.pricing.max ? `–${format.number(event.pricing.max)}` : ''} ${t('egp')}`}
+            </p>
+          )}
+          {event.pricing?.note && <p>{event.pricing.note}</p>}
+        </div>
       )}
-      <div className={styles.details}>
-        {meetings.length ? (
-          <ul className={styles.agenda}>
-            {meetings.map((m) => (
-              <li key={`${m.date}-${m.start_time}`}>
-                <time dateTime={m.date}>{date(m.date)}</time> ·{' '}
-                <bdi>{localDigits(`${m.start_time}–${m.end_time}`, locale)}</bdi> · {t('cairoTime')}
-              </li>
-            ))}
-          </ul>
-        ) : (
-          <p>{timing.day ? date(timing.day) : t('dateSoon')}</p>
-        )}
-        {event.schedule?.note && <p>{event.schedule.note}</p>}
-        {where && (
-          <p>
-            {map ? (
-              <a className="home-more" href={map} rel="noopener noreferrer" target="_blank">
-                {where}
-              </a>
-            ) : (
-              where
-            )}
-            {address ? ` · ${address}` : ''}
-          </p>
-        )}
-        {event.online_url && (
-          <a
-            className="home-more"
-            href={event.online_url}
-            rel="noopener noreferrer"
-            target="_blank"
-          >
-            {t('joinOnline')}
-          </a>
-        )}
-        {event.pricing?.min != null && (
-          <p>
-            {event.pricing.min === 0 && !event.pricing.max
-              ? t('free')
-              : `${format.number(event.pricing.min)}${event.pricing.max ? `–${format.number(event.pricing.max)}` : ''} ${t('egp')}`}
-          </p>
-        )}
-        {event.pricing?.note && <p>{event.pricing.note}</p>}
-      </div>
       {event.description && <RichTextField data={event.description} className="article-prose" />}
       {!!event.speakers?.length && (
         <section className={styles.section}>
