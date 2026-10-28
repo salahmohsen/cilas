@@ -91,7 +91,22 @@
     "showMore": "اعرض نتائج أكثر",
     "errorTitle": "البحث غير متاح الآن",
     "errorHint": "تعذّر الاتصال بخدمة البحث. حاول مرة أخرى بعد قليل.",
-    "button": "بحث"
+    "button": "بحث",
+    "scopeLabel": "البحث في",
+    "publicSearch": "الموقع العام",
+    "privateSpaces": "مساحاتي",
+    "spaceLabel": "المساحة",
+    "showingLoaded": "النتائج المعروضة: {count}",
+    "showPrivateResults": "عرض النتائج",
+    "privatePlaceholder": "ابحث في المنشورات والتعليقات…",
+    "privateFiltersDescription": "أظهر المساحات أو أخفها؛ الأعداد حسب البحث.",
+    "allMySpaces": "كل مساحاتي",
+    "privateRestart": "تغيّر البحث أو صلاحياتك. ابدأ من جديد.",
+    "privateIncomplete": "البحث غير مكتمل. جرّب عبارة أكثر تحديدًا.",
+    "privatePost": "منشور",
+    "privateComment": "تعليق",
+    "privateUnavailable": "لا توجد مساحات متاحة حاليًا. يمكنك البحث في الموقع العام.",
+    "privateRetry": "ابدأ من جديد"
   },
   "Language": {
     "label": "اللغة",

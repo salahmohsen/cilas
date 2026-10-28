@@ -91,7 +91,22 @@
     "showMore": "Show more results",
     "errorTitle": "Search is not available now",
     "errorHint": "The connection to the search service failed. Try again in a moment.",
-    "button": "Search"
+    "button": "Search",
+    "scopeLabel": "Search in",
+    "publicSearch": "Public site",
+    "privateSpaces": "My spaces",
+    "spaceLabel": "Space",
+    "showingLoaded": "{count, plural, one {# result shown} other {# results shown}}",
+    "showPrivateResults": "Show results",
+    "privatePlaceholder": "Search posts and comments…",
+    "privateFiltersDescription": "Show or hide spaces; counts follow the query.",
+    "allMySpaces": "All my spaces",
+    "privateRestart": "Your access or search changed. Start again.",
+    "privateIncomplete": "Search is incomplete. Try a more specific phrase.",
+    "privatePost": "Post",
+    "privateComment": "Comment",
+    "privateUnavailable": "No spaces are available right now. You can still search the public site.",
+    "privateRetry": "Start again"
   },
   "Language": {
     "label": "Language",
