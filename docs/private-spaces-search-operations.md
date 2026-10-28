@@ -8,16 +8,16 @@ The CILAS Dokploy production environment already contains the web Application, i
 
 Keep the web Application's Dockerfile deployment and existing Postgres service. Add `typesense-private` to the existing Typesense Compose service, alongside the unchanged public `typesense` service. The reviewed configuration is [deploy/typesense.dokploy.yml](../deploy/typesense.dokploy.yml). Dokploy must set `typesense-private` to detach from `dokploy-network`; its explicit `cilas-search` network remains attached. The public service retains its existing Dokploy domain configuration.
 
-This gives CILAS one operational project and one search Compose deployment without coupling app builds to search restarts. Separate engines are deliberate. The existing public Typesense 29 engine fails the private curation API contract exercised by the Typesense 30.2 tests. Upgrading that engine in place would add an avoidable public-search interruption and data-format rollback risk. The new private engine has its own empty volume and no public listener, host port or domain. The old engine and its data are preserved.
+This gives CILAS one operational project and one search Compose deployment without coupling app builds to search restarts. Separate engines are deliberate. The existing public Typesense 29 engine fails the private curation API contract exercised by the Typesense 30.2 tests. Upgrading that engine in place would add an avoidable public-search interruption and data-format rollback risk. The new private engine has its own empty volume and no public listener, host port or domain. The public engine was subsequently upgraded independently to 30.2 using a verified clone, while preserving its original 29.0 volume and snapshot. See [the public upgrade record](public-typesense-upgrade.md). The two services retain separate data volumes, networks and keys.
 
 | Component      | Endpoint and storage                                                  | Deployment behavior                                                                   |
 | -------------- | --------------------------------------------------------------------- | ------------------------------------------------------------------------------------- |
 | Web + Payload  | Existing Dokploy Application and Postgres                             | Existing Dockerfile, migration and main-branch deployment                             |
-| Public search  | Existing Typesense 29, `typesense-data`                               | Existing browser domain and collection-scoped credentials                             |
+| Public search  | Typesense 30.2, `typesense-public-data`                               | Existing browser domain and collection-scoped credentials                             |
 | Private search | Typesense 30.2, `cilas-private-search:8108`, `typesense-private-data` | Dedicated internal attachable overlay `cilas-search`; 1 GiB RAM, 1 CPU, 256 processes |
 | Worker         | Runs inside the current web container                                 | Packaged `maintenance/run.mjs`; no source checkout, pnpm install or web listener      |
 
-The production volume names retain Dokploy's Compose project prefix. Do not change `appName`, `COMPOSE_PROJECT_NAME`, volume names, `isolatedDeploymentsVolume` or request fresh volumes. No Postgres stack move is needed. The public engine was not replaced or upgraded.
+The production volume names retain Dokploy's Compose project prefix. Do not change `appName`, `COMPOSE_PROJECT_NAME`, volume names, `isolatedDeploymentsVolume` or request fresh volumes. No Postgres stack move is needed. The public engine upgrade uses a separately verified external volume; its original `typesense-data` volume remains retained for rollback.
 
 ## Credentials and release checks
 
