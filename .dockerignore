@@ -2,6 +2,7 @@
 # unnecessarily and must not replace the container's dependencies or cache.
 node_modules
 .next
+.maintenance
 .git
 .env
 .env.*

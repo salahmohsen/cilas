@@ -5,7 +5,7 @@ import { activeGeneration, RecoveryRequired } from './generation'
 import { ALIAS, projection, numericId, schema, type Kind, type Source } from './model'
 
 type Event = { id: string; kind: Kind | 'thread'; source_id: number; attempts: number }
-const LOCK = 192834711
+export const WRITER_LOCK = 192834711
 type WriterLease = {
   check: () => Promise<void>
   publish: (generation: string) => Promise<void>
@@ -26,7 +26,9 @@ const withWriter = async <T>(
   connection.on('error', failed)
   let locked = false
   try {
-    const result = await connection.query('SELECT pg_try_advisory_lock($1) AS locked', [LOCK])
+    const result = await connection.query('SELECT pg_try_advisory_lock($1) AS locked', [
+      WRITER_LOCK,
+    ])
     locked = Boolean(result.rows[0].locked)
     if (!locked) return null
     const state = await connection.query(
@@ -65,7 +67,7 @@ const withWriter = async <T>(
     return value
   } finally {
     try {
-      if (locked && !lost) await connection.query('SELECT pg_advisory_unlock($1)', [LOCK])
+      if (locked && !lost) await connection.query('SELECT pg_advisory_unlock($1)', [WRITER_LOCK])
     } finally {
       connection.removeListener('error', failed)
       connection.release(lost)

@@ -33,8 +33,12 @@ export const env = createEnv({
     TURNSTILE_SECRET_KEY: z.string().min(1).optional(),
 
     PRIVATE_SPACES_SEARCH: z.enum(['true', 'false']).default('false'),
+    PRIVATE_SPACES_SEARCH_KEYS_VERIFIED: z.enum(['true', 'false']).default('false'),
     TYPESENSE_PRIVATE_SEARCH_KEY: z.string().min(1).optional(),
     TYPESENSE_PRIVATE_WRITE_KEY: z.string().min(1).optional(),
+    TYPESENSE_PRIVATE_HOST: z.string().optional(),
+    TYPESENSE_PRIVATE_PORT: z.coerce.number().optional(),
+    TYPESENSE_PRIVATE_PROTOCOL: z.enum(['http', 'https']).optional(),
     TYPESENSE_API_KEY: z.string().min(1).optional(),
     TYPESENSE_HOST: z.string().default('localhost'),
     TYPESENSE_PORT: z.coerce.number().default(8108),

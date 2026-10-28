@@ -17,7 +17,7 @@ export const SpaceFiles: CollectionConfig = {
   labels: { singular: 'Space file', plural: 'Space files' },
   access: {
     // Equal to the read access of the post it sits on (spec §6).
-    read: ({ req }) => contentWhere(req.payload, req.user, ['post', 'comment.post']),
+    read: ({ req }) => contentWhere(req.payload, req.user, ['post', 'comment.post'], req.context),
     // Writes run only in the server actions (counts and limits live in one
     // place); a file otherwise goes away with its post or comment. REST
     // deletes would let any member of a space hard-delete anyone's files.

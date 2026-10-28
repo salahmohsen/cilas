@@ -3,11 +3,12 @@ import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest'
 import { getPayload, type Payload, type PayloadRequest } from 'payload'
 import { SignJWT, decodeJwt, decodeProtectedHeader } from 'jose'
 import { Client } from 'typesense'
+import { spawnSync } from 'node:child_process'
 import config from '@/payload.config'
 import type { Space, SpacePost, User } from '@/payload-types'
 import { ALIAS, CursorReset, inputSchema, numericId, projection } from '@/lib/private-search/model'
 import { searchPrivate, SelectionDenied } from '@/lib/private-search/search'
-import { processOutbox, rebuild, pruneGenerations } from '@/lib/private-search/worker'
+import { processOutbox, rebuild, pruneGenerations, WRITER_LOCK } from '@/lib/private-search/worker'
 import { POST } from '@/app/(frontend)/api/spaces-search/route'
 import { activeGeneration, RecoveryRequired } from '@/lib/private-search/generation'
 import { rateAllowed } from '@/lib/private-search/rate'
@@ -165,6 +166,47 @@ describe.skipIf(!disposable)('private search with real Postgres and Typesense 30
   afterAll(async () => {
     await payload?.destroy()
   })
+
+  it('reports an active writer as healthy and an abandoned writer as requiring recovery', async () => {
+    const connection = await payload.db.pool.connect()
+    const token = '123e4567-e89b-12d3-a456-426614174000'
+    const status = () => {
+      const result = spawnSync(
+        process.execPath,
+        ['--conditions=production', '.maintenance/run.mjs', 'status'],
+        {
+          env: process.env,
+          encoding: 'utf8',
+          timeout: 20000,
+        },
+      )
+      const line = result.stdout.split('\n').find((line) => line.startsWith('{"pending":'))
+      expect(line).toBeDefined()
+      return { code: result.status, value: JSON.parse(line!) }
+    }
+    try {
+      await connection.query('SELECT pg_advisory_lock($1)', [WRITER_LOCK])
+      await connection.query('UPDATE spaces_search_state SET writer_token = $1 WHERE id = 1', [
+        token,
+      ])
+      expect(status()).toMatchObject({
+        code: 0,
+        value: { initialized: true, writer_active: true, recovery_required: false },
+      })
+      await connection.query('SELECT pg_advisory_unlock($1)', [WRITER_LOCK])
+      expect(status()).toMatchObject({
+        code: 1,
+        value: { initialized: true, writer_active: false, recovery_required: true },
+      })
+    } finally {
+      await connection.query(
+        'UPDATE spaces_search_state SET writer_token = NULL WHERE id = 1 AND writer_token = $1',
+        [token],
+      )
+      await connection.query('SELECT pg_advisory_unlock_all()')
+      connection.release()
+    }
+  }, 60000)
 
   it('uses current intro gating for posts and comments, then recloses after deleting the introduction', async () => {
     const gated = await search(alice, 'needle')
