@@ -1306,6 +1306,8 @@
     "upcoming": "Upcoming events",
     "all": "All events",
     "past": "Past events",
+    "filterBy": "Filter past events by type",
+    "choose": "Choose an event",
     "undated": "Dates to be announced",
     "empty": "No upcoming events",
     "emptyText": "Check back for the next gathering. You can explore past events below.",

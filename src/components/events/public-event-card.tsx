@@ -17,6 +17,7 @@ import {
 import { getFormatter, getLocale, getTranslations } from 'next-intl/server'
 import { EventFace, EventPlace, EventWhen } from '@/components/space/event-details'
 import { cairoInstant } from '@/lib/cairo-day'
+import { publicEventCoverTone } from '@/lib/public-event-cover'
 import { eventTiming } from '@/lib/events'
 import type { Event } from '@/payload-types'
 import spaceStyles from '@/components/space/space.module.css'
@@ -55,6 +56,8 @@ export async function PublicEventCard({
   ])
   const timing = eventTiming(event, now)
   const cover = typeof event.cover_image === 'object' ? event.cover_image : null
+  const coverUrl = cover?.sizes?.card?.url || cover?.url
+  const tone = coverUrl ? await publicEventCoverTone(coverUrl) : null
   const place = typeof event.place === 'object' ? event.place : null
   const venue = event.external_venue?.name ? event.external_venue : place
   const startsAt = timing.day
@@ -69,9 +72,7 @@ export async function PublicEventCard({
       title={event.title}
       titleHref={detail ? undefined : `/${locale}/events/${event.slug}`}
       headingLevel={detail ? 1 : 3}
-      cover={
-        cover?.url ? { url: cover.sizes?.card?.url || cover.url, tone: null, alt: cover.alt } : null
-      }
+      cover={coverUrl ? { url: coverUrl, tone, alt: cover?.alt } : null}
       startsAt={startsAt}
       over={over}
       label={event.title}
