@@ -6,6 +6,7 @@ import { registrationField } from '@/fields/registration'
 import { scheduleField, timeRangeFields } from '@/fields/schedule'
 import { slugField } from '@/fields/slug'
 import { httpUrl } from '@/fields/validators'
+import { revalidateEventAfterChange, revalidateEventAfterDelete } from '@/lib/revalidate-events'
 import { importFields } from '@/fields/import'
 
 const optionalUrl = (value: unknown) => (value ? httpUrl(value) : true)
@@ -27,6 +28,7 @@ export const Events: CollectionConfig = {
     useAsTitle: 'title',
     defaultColumns: ['title', 'event_type', 'schedule.start_date', 'tier'],
   },
+  hooks: { afterChange: [revalidateEventAfterChange], afterDelete: [revalidateEventAfterDelete] },
   fields: [
     {
       name: 'tier',
@@ -78,6 +80,7 @@ export const Events: CollectionConfig = {
     { name: 'course', type: 'relationship', relationTo: 'courses', admin: { position: 'sidebar' } },
     { name: 'title', type: 'text', required: true, localized: true },
     slugField(),
+    { name: 'cover_image', type: 'upload', relationTo: 'media', admin: { position: 'sidebar' } },
     { name: 'description', type: 'richText', localized: true },
     scheduleField(),
     {

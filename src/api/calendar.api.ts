@@ -27,7 +27,9 @@ export type CalendarItem = {
   cancelled?: boolean
 }
 
-const visible: Where = { and: [{ tier: { equals: 'public' } }, { _status: { equals: 'published' } }] }
+const visible: Where = {
+  and: [{ tier: { equals: 'public' } }, { _status: { equals: 'published' } }],
+}
 const media = { url: true, alt: true, filename: true, prefix: true } as const
 
 const coverOf = (value: unknown): CalendarItem['cover'] => {
@@ -40,7 +42,10 @@ const coverOf = (value: unknown): CalendarItem['cover'] => {
  * published course (its dates come from its schedule, ADR 0002), the first
  * day of a course that has no weekly times, and every public event.
  */
-export const getCalendarItems = async (payload: Payload, locale: Locale): Promise<CalendarItem[]> => {
+export const getCalendarItems = async (
+  payload: Payload,
+  locale: Locale,
+): Promise<CalendarItem[]> => {
   const fallbackLocale = locale === 'ar' ? 'en' : 'ar'
   const [courses, events] = await Promise.all([
     payload.find({
@@ -67,7 +72,7 @@ export const getCalendarItems = async (payload: Payload, locale: Locale): Promis
       where: { tier: { equals: 'public' } },
       depth: 1,
       pagination: false,
-      select: { title: true, slug: true, event_type: true, schedule: true },
+      select: { title: true, slug: true, event_type: true, schedule: true, cover_image: true },
       locale,
       fallbackLocale,
       overrideAccess: false,
@@ -97,8 +102,12 @@ export const getCalendarItems = async (payload: Payload, locale: Locale): Promis
       }),
     )
     // No weekly times: the course is shown on the day it starts, when that day is known.
-    const first = schedule?.start_precision !== 'week' && schedule?.start_date ? cairoDay(schedule.start_date) : null
-    if (!meetings.length && first) items.push({ ...base, key: `c${c.id}-start`, date: first, starts: true })
+    const first =
+      schedule?.start_precision !== 'week' && schedule?.start_date
+        ? cairoDay(schedule.start_date)
+        : null
+    if (!meetings.length && first)
+      items.push({ ...base, key: `c${c.id}-start`, date: first, starts: true })
   }
 
   for (const e of events.docs) {
@@ -106,18 +115,27 @@ export const getCalendarItems = async (payload: Payload, locale: Locale): Promis
     const base = {
       kind: 'event' as const,
       title: e.title,
-      href: null,
+      href: `/events/${e.slug}`,
+      cover: coverOf(e.cover_image),
       type: e.event_type ?? 'event',
     }
     const meetings = expandSchedule(schedule)
     meetings.forEach((m, i) =>
-      items.push({ ...base, key: `e${e.id}-${i}`, date: m.date, start: m.start_time, end: m.end_time }),
+      items.push({
+        ...base,
+        key: `e${e.id}-${i}`,
+        date: m.date,
+        start: m.start_time,
+        end: m.end_time,
+      }),
     )
     const first = schedule?.start_date ? cairoDay(schedule.start_date) : null
     if (!meetings.length && first) items.push({ ...base, key: `e${e.id}-day`, date: first })
   }
 
-  return items.sort((a, b) => a.date.localeCompare(b.date) || (a.start ?? '').localeCompare(b.start ?? ''))
+  return items.sort(
+    (a, b) => a.date.localeCompare(b.date) || (a.start ?? '').localeCompare(b.start ?? ''),
+  )
 }
 
 /** The items above, built once per language and kept until a course changes. */
@@ -128,10 +146,8 @@ export const getCachedCalendarItems = unstable_cache(
 )
 
 /**
- * Public events with what their JSON-LD needs resolved (the place, the
- * speakers' names), per language. Cached alone: an event write revalidates
- * nothing (no hook), so the hour's window rules here, as it does for the
- * calendar itself.
+ * Public events with their places and speakers resolved for JSON-LD.
+ * Event writes invalidate this cache alongside the calendar.
  */
 export const getCachedSchemaEvents = unstable_cache(
   async (locale: Locale) => {

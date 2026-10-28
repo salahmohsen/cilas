@@ -41,12 +41,18 @@
       "description": "Essays, translations and notes written with and around CILAS."
     },
     "calendar": {
-      "label": "Calendar"
+      "label": "Calendar",
+      "description": "Course meetings and events by date."
     },
     "openMenu": "Open menu",
     "closeMenu": "Close menu",
     "spaces": {
       "label": "Spaces"
+    },
+    "whatsOn": "What’s on",
+    "events": {
+      "label": "Events",
+      "description": "Talks, screenings, and gatherings."
     }
   },
   "Search": {
@@ -128,7 +134,8 @@
       "invalid": "That email doesn't look right",
       "failed": "We couldn't subscribe you. Try again in a moment",
       "done": "You're on the list."
-    }
+    },
+    "events": "Events"
   },
   "Fallback": {
     "onlyIn": "Available in {language} only.",
@@ -1292,5 +1299,26 @@
       "upload": "Upload failed. Your previous photo is unchanged."
     },
     "percent": "{percent, number}%"
+  },
+  "Events": {
+    "title": "Events",
+    "intro": "Talks, screenings, workshops, and gatherings at CILAS.",
+    "upcoming": "Upcoming events",
+    "all": "All events",
+    "past": "Past events",
+    "undated": "Dates to be announced",
+    "empty": "No upcoming events",
+    "emptyText": "Check back for the next gathering. You can explore past events below.",
+    "dateSoon": "Date to be announced",
+    "cairoTime": "Cairo time",
+    "online": "Online",
+    "joinOnline": "Join online",
+    "ended": "This event has ended",
+    "register": "Register for this event",
+    "registrationClosed": "Registration is closed.",
+    "speakers": "Speakers",
+    "agenda": "Programme",
+    "free": "Free",
+    "egp": "EGP"
   }
 }

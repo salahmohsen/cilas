@@ -1,0 +1,115 @@
+.page {
+  max-width: 1180px;
+  margin-inline: auto;
+  padding: var(--space-16) var(--space-6);
+  display: grid;
+  gap: var(--space-12);
+}
+.header {
+  display: grid;
+  gap: var(--space-4);
+  max-width: 720px;
+}
+.header h1 {
+  font-family: var(--font-display);
+  font-size: var(--text-4xl);
+  font-weight: 500;
+  line-height: var(--leading-display);
+  text-wrap: balance;
+}
+.header p,
+.meta,
+.place {
+  color: var(--text-secondary);
+}
+.section {
+  display: grid;
+  gap: var(--space-6);
+}
+.section h2 {
+  font-size: var(--text-2xl);
+  font-weight: 500;
+}
+.grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--space-8);
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.card {
+  display: grid;
+  gap: var(--space-5);
+  color: inherit;
+  text-decoration: none;
+}
+.image {
+  position: relative;
+  display: grid;
+  place-items: center;
+  aspect-ratio: 3 / 2;
+  overflow: hidden;
+  background: var(--surface-muted);
+  color: var(--text-muted);
+  border-radius: var(--radius-lg);
+}
+.image img {
+  object-fit: cover;
+}
+.info {
+  display: grid;
+  gap: var(--space-2);
+}
+.info h3 {
+  font-size: var(--text-xl);
+  font-weight: 500;
+  text-wrap: balance;
+}
+.meta,
+.place {
+  font-size: var(--text-sm);
+}
+.place {
+  display: flex;
+  gap: var(--space-2);
+  align-items: center;
+}
+.cover {
+  width: 100%;
+  height: auto;
+  max-height: 640px;
+  object-fit: contain;
+  border-radius: var(--radius-lg);
+}
+.details {
+  display: grid;
+  gap: var(--space-4);
+  padding-block: var(--space-6);
+  border-block: 1px solid var(--border);
+}
+.agenda {
+  display: grid;
+  gap: var(--space-3);
+  list-style: none;
+  padding: 0;
+}
+@media (hover: hover) {
+  .card:hover h3 {
+    text-decoration: underline;
+    text-underline-offset: 0.2em;
+  }
+}
+@media (max-width: 1000px) {
+  .grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+@media (max-width: 640px) {
+  .grid {
+    grid-template-columns: 1fr;
+  }
+  .page {
+    padding: var(--space-10) var(--space-4);
+  }
+}

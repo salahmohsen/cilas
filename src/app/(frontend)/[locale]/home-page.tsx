@@ -4,6 +4,9 @@ import { getFormatter, getTranslations } from 'next-intl/server'
 import { getPayload } from 'payload'
 
 import { getPublicationCovers, type Locale, type Reader } from '@/api/articles.api'
+import { getPublicEvents } from '@/api/events.api'
+import { EventGrid } from '@/components/events/event-grid'
+import { orderEvents } from '@/lib/events'
 import { getContactForm } from '@/api/contact.api'
 import { getHomeFaq } from '@/api/faq.api'
 import { getHomeArticles, getHomeStats, getOpenNow, getPressOutlets } from '@/api/home.api'
@@ -47,6 +50,8 @@ export async function HomePage({ locale, reader }: { locale: string; reader: Rea
     contact,
     faq,
     signup,
+    events,
+    tEvents,
   ] = await Promise.all([
     getTranslations('Home'),
     getTranslations('Header'),
@@ -61,7 +66,12 @@ export async function HomePage({ locale, reader }: { locale: string; reader: Rea
     getContactForm(payload, locale as Locale),
     getHomeFaq(payload, locale as Locale),
     newsletterList(payload),
+    getPublicEvents(payload, locale as Locale),
+    getTranslations('Events'),
   ])
+
+  const now = new Date()
+  const upcoming = orderEvents(events, now).upcoming.slice(0, 3)
 
   const toCard = (a: (typeof articles.featured)[number]) =>
     toArticleCard(a, {
@@ -109,6 +119,20 @@ export async function HomePage({ locale, reader }: { locale: string; reader: Rea
       <div className="home-page">
         {/* With nothing open there is no section; the hero says so instead. */}
         {open.length ? <OpenNow items={open} locale={locale} /> : null}
+
+        {upcoming.length ? (
+          <section aria-labelledby="home-events" className="home-section">
+            <header className="home-section-header" data-row>
+              <h2 className="home-heading" id="home-events">
+                {tEvents('upcoming')}
+              </h2>
+              <Link className="home-more" href="/events">
+                {tEvents('all')}
+              </Link>
+            </header>
+            <EventGrid events={upcoming} now={now} />
+          </section>
+        ) : null}
 
         {/* What editors chose, the first set large; then the newest of the rest. */}
         {featured.length ? (

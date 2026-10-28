@@ -1690,6 +1690,7 @@ export interface Event {
    */
   generateSlug?: boolean | null;
   slug: string;
+  cover_image?: (number | null) | Media;
   description?: {
     root: {
       type: string;
@@ -3373,6 +3374,7 @@ export interface EventsSelect<T extends boolean = true> {
   title?: T;
   generateSlug?: T;
   slug?: T;
+  cover_image?: T;
   description?: T;
   schedule?:
     | T
@@ -4178,6 +4180,7 @@ export interface SiteSetting {
     cilasians?: boolean | null;
     governance?: boolean | null;
     articles?: boolean | null;
+    events?: boolean | null;
     calendar?: boolean | null;
   };
   /**
@@ -4367,6 +4370,7 @@ export interface SiteSettingsSelect<T extends boolean = true> {
         cilasians?: T;
         governance?: T;
         articles?: T;
+        events?: T;
         calendar?: T;
       };
   spaces_mode?: T;

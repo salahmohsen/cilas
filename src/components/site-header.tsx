@@ -215,8 +215,35 @@ export function CILASSiteHeader({ nav = ALL_SHOWN }: { nav?: Navigation }) {
           },
         ]
       : []),
-    ...(nav.calendar
-      ? [{ value: 'calendar', label: t('calendar.label'), href: href('/calendar'), icon: Calendar }]
+    ...(nav.events || nav.calendar
+      ? [
+          {
+            value: 'whatsOn',
+            label: t('whatsOn'),
+            href: href(nav.events ? '/events' : '/calendar'),
+            icon: Calendar,
+            links: [
+              ...(nav.events
+                ? [
+                    {
+                      label: t('events.label'),
+                      href: href('/events'),
+                      description: t('events.description'),
+                    },
+                  ]
+                : []),
+              ...(nav.calendar
+                ? [
+                    {
+                      label: t('calendar.label'),
+                      href: href('/calendar'),
+                      description: t('calendar.description'),
+                    },
+                  ]
+                : []),
+            ],
+          },
+        ]
       : []),
     ...(spaces
       ? [{ value: 'spaces', label: t('spaces.label'), href: href('/spaces'), icon: MessagesSquare }]

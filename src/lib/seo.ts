@@ -22,7 +22,7 @@ const SOURCES: Record<SeoCollection, Source> = {
   programmes: { description: ['tagline'], image: 'cover' },
   publications: { description: ['subtitle'], image: 'cover_image' },
   articles: { richText: 'body', image: 'cover_image' },
-  events: { richText: 'description' },
+  events: { richText: 'description', image: 'cover_image' },
 }
 
 const MAX = 160
