@@ -76,6 +76,9 @@ RUN --mount=type=cache,id=cilas-next,target=/app/.next/cache,sharing=locked \
   else echo "Lockfile not found." && exit 1; \
   fi
 
+# Scheduled maintenance cannot rely on the web server's dependency trace.
+RUN node scripts/build-search-maintenance.mjs
+
 # Production image, copy all the files and run next
 FROM base AS runner
 WORKDIR /app
@@ -98,6 +101,7 @@ RUN chown nextjs:nodejs .next
 # https://nextjs.org/docs/advanced-features/output-file-tracing
 COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
 COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
+COPY --from=builder --chown=nextjs:nodejs /app/.maintenance ./maintenance
 
 USER nextjs
 

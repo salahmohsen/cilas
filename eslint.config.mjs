@@ -33,6 +33,7 @@ const eslintConfig = [
     // duplicates every finding. Git ignores them, ESLint does not.
     ignores: [
       '.next/',
+      '.maintenance/',
       'src/payload-types.ts',
       // Bundled third-party code (scripts/visual-editor-sdk.mjs).
       'public/assets/visual-editor/',

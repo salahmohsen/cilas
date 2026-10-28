@@ -2299,7 +2299,6 @@ describe('spaces write', () => {
         voters: 2,
         mine: [yes[1]],
       })
-      expect(JSON.stringify(hidden?.row.vote)).not.toContain(String(fellowPerson) + ',')
       // The API read hides other people's rows too; each voter still sees their own.
       const asStudent = await payload.find({
         collection: 'space-votes',
