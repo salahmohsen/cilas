@@ -1,13 +1,13 @@
 services:
   typesense:
-    image: typesense/typesense:29.0
+    image: typesense/typesense:30.2
     restart: unless-stopped
     environment:
       - TYPESENSE_API_KEY=${TYPESENSE_API_KEY}
       - TYPESENSE_ENABLE_CORS=${TYPESENSE_ENABLE_CORS}
       - TYPESENSE_DATA_DIR=/data
     volumes:
-      - typesense-data:/data
+      - typesense-public-data:/data
 
   typesense-private:
     image: typesense/typesense:30.2
@@ -50,6 +50,9 @@ services:
 
 volumes:
   typesense-data:
+  typesense-public-data:
+    external: true
+    name: cilas-typesense-public-302-data
   typesense-private-data:
 
 networks:
