@@ -2,6 +2,7 @@ import type { CollectionConfig } from 'payload'
 
 import { isAdminUser } from '@/access'
 import { contentWhere } from '@/lib/spaces'
+import { searchChanged, searchDeleted, searchDeletingComment } from '@/lib/private-search/outbox'
 
 /**
  * Comments on a post (spec §4). Plain text with `/people/{id}` mention
@@ -13,7 +14,7 @@ export const SpaceComments: CollectionConfig = {
   slug: 'space-comments',
   labels: { singular: 'Comment', plural: 'Comments' },
   access: {
-    read: ({ req }) => contentWhere(req.payload, req.user, ['post']),
+    read: ({ req }) => contentWhere(req.payload, req.user, ['post'], req.context),
     // Actions-only writes, as with posts (REST refusal).
     create: ({ req }) => isAdminUser(req.user),
     update: ({ req }) => isAdminUser(req.user),
@@ -21,6 +22,11 @@ export const SpaceComments: CollectionConfig = {
     // which leaves the placeholder when replies exist (spec §3). REST
     // hard-deletes orphan child rows — the rules refuse them.
     delete: ({ req }) => isAdminUser(req.user),
+  },
+  hooks: {
+    beforeDelete: [searchDeletingComment],
+    afterChange: [searchChanged('comment')],
+    afterDelete: [searchDeleted('comment')],
   },
   versions: { drafts: false },
   admin: { group: 'Community', defaultColumns: ['space', 'post', 'author', 'createdAt'] },

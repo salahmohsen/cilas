@@ -19,6 +19,7 @@ import { SiteHeader } from '@/components/arc/blocks/site-header/site-header'
 import { UserMenu, type UserMenuUser } from '@/components/arc/user-menu/user-menu'
 import { LanguageSwitch, ThemeToggle } from '@/components/site-controls'
 import { SiteNotifications } from '@/components/site-notifications'
+import { announceAuthChange } from '@/lib/auth-events'
 import { SiteSearch } from '@/components/site-search'
 import { useRouter } from '@/i18n/navigation'
 import { ALL_SHOWN, type Navigation } from '@/lib/navigation'
@@ -278,11 +279,12 @@ export function CILASSiteHeader({ nav = ALL_SHOWN }: { nav?: Navigation }) {
                 },
               ]}
               // Reload so nothing of the account stays on the page.
-              onSignOut={() =>
-                fetch('/api/users/logout', { method: 'POST', credentials: 'include' }).then(() =>
-                  window.location.reload(),
+              onSignOut={() => {
+                announceAuthChange()
+                return fetch('/api/users/logout', { method: 'POST', credentials: 'include' }).then(
+                  () => window.location.reload(),
                 )
-              }
+              }}
               labels={{ account: t('account'), signOut: t('signOut'), signingOut: t('signingOut') }}
             />
           )}

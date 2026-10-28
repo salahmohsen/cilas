@@ -1,5 +1,6 @@
 'use client'
 
+import { SearchResultContent } from '@/components/search-result-content'
 import { personAvatarSeed } from '@/lib/avatar'
 
 import { Highlight, Snippet } from 'react-instantsearch'
@@ -44,7 +45,7 @@ export type SearchFacet = {
   id: string
   label: string
   /** Matches for the query, counted whatever the checkboxes say. */
-  found: number
+  found?: number
 }
 
 /** What a row shows of the facet it belongs to. */
@@ -94,53 +95,76 @@ function withShapedSnippet(hit: SearchHit, attribute: string): SearchHit {
 /* ------------------------------------------------------------------ */
 
 type FilterProps = {
+  filterLabel?: string
+  filterDescription?: string
   facets: SearchFacet[]
   hiddenFacets: ReadonlySet<string>
   onToggleFacet: (id: string) => void
   onClearFilters: () => void
 }
 
-/** The facet rows, shared by the desktop sidebar and the mobile sheet. The
- * 18px Arc mark sits on the lane edge; its 44px touch target stays whole. */
-function TypeFacets({ facets, hiddenFacets, onToggleFacet }: Omit<FilterProps, 'onClearFilters'>) {
+/** One filter row in either tab, on desktop and in the mobile sheet.
+ * Private options omit counts because their match totals are unknown. */
+function SearchFilterRow({
+  label,
+  checked,
+  found,
+  onToggle,
+}: {
+  label: string
+  checked: boolean
+  found?: number
+  onToggle: () => void
+}) {
+  const disabled = found === 0 && checked
   return (
-    <>
-      {facets.map((facet) => {
-        const checked = !hiddenFacets.has(facet.id)
-        const disabled = facet.found === 0 && checked
-        return (
-          <div
-            key={facet.id}
-            className={`flex items-center rounded-lg pe-1 ${disabled ? 'opacity-40' : ''}`}
-          >
-            <Checkbox
-              checked={checked}
-              disabled={disabled}
-              onCheckedChange={() => onToggleFacet(facet.id)}
-              aria-label={facet.label}
-              className="-ms-3.25"
-            />
-            {/* The name toggles too; the checkbox carries the accessible name. */}
-            <span
-              className={`flex-1 text-sm font-medium ${disabled ? '' : 'cursor-pointer'}`}
-              aria-hidden="true"
-              onClick={() => {
-                if (!disabled) onToggleFacet(facet.id)
-              }}
-            >
-              {facet.label}
-            </span>
-            <SlotText
-              value={facet.found}
-              format={formatCount}
-              spins={0}
-              duration={0.6}
-              className="text-sm tabular-nums text-muted-foreground"
-            />
-          </div>
-        )
-      })}
-    </>
+    <div className={`flex items-center rounded-lg pe-1 ${disabled ? 'opacity-40' : ''}`}>
+      <Checkbox
+        checked={checked}
+        disabled={disabled}
+        onCheckedChange={onToggle}
+        aria-label={label}
+        className="-ms-3.25"
+      />
+      <span
+        className={`min-w-0 flex-1 break-words text-sm font-medium ${disabled ? '' : 'cursor-pointer'}`}
+        aria-hidden="true"
+        onClick={() => {
+          if (!disabled) onToggle()
+        }}
+      >
+        {label}
+      </span>
+      {found != null ? (
+        <SlotText
+          value={found}
+          format={formatCount}
+          spins={0}
+          duration={0.6}
+          className="text-sm tabular-nums text-muted-foreground"
+        />
+      ) : null}
+    </div>
+  )
+}
+
+function FilterChoices(props: FilterProps) {
+  const t = useTranslations('Search')
+  return (
+    <fieldset className="flex flex-col gap-1">
+      <legend className="pb-3 text-xs font-normal text-muted-foreground">
+        {props.filterLabel ?? t('type')}
+      </legend>
+      {props.facets.map((facet) => (
+        <SearchFilterRow
+          key={facet.id}
+          label={facet.label}
+          found={facet.found}
+          checked={!props.hiddenFacets.has(facet.id)}
+          onToggle={() => props.onToggleFacet(facet.id)}
+        />
+      ))}
+    </fieldset>
   )
 }
 
@@ -149,14 +173,11 @@ function FilterSheetBody({
   total,
   onClose,
   ...props
-}: FilterProps & { total: number; onClose: () => void }) {
+}: FilterProps & { total: number | null; onClose: () => void }) {
   const t = useTranslations('Search')
   return (
     <div className="flex flex-col gap-6">
-      <fieldset className="flex flex-col gap-1">
-        <legend className="text-xs font-normal text-muted-foreground">{t('type')}</legend>
-        <TypeFacets {...props} />
-      </fieldset>
+      <FilterChoices {...props} />
       <div className="flex items-center justify-between gap-3">
         <button
           type="button"
@@ -174,7 +195,7 @@ function FilterSheetBody({
           onClick={onClose}
           className="inline-flex h-11 flex-1 items-center justify-center rounded-full bg-foreground px-5 text-sm font-medium text-background transition-opacity hover:opacity-90"
         >
-          {t('showResults', { count: total })}
+          {total == null ? t('showPrivateResults') : t('showResults', { count: total })}
         </button>
       </div>
     </div>
@@ -185,12 +206,11 @@ function FilterSheetBody({
 function FiltersSidebar(props: FilterProps) {
   const t = useTranslations('Search')
   return (
-    <aside className="hidden w-64 shrink-0 flex-col border-e border-border px-6 py-8 md:flex">
+    <aside className="hidden w-64 shrink-0 flex-col overflow-y-auto overscroll-contain border-e border-border px-6 py-8 md:flex">
       <h2 className="font-sans text-md font-semibold tracking-tight">{t('filters')}</h2>
-      <fieldset className="mt-5 flex flex-col gap-1">
-        <legend className="pb-3 text-xs font-normal text-muted-foreground">{t('type')}</legend>
-        <TypeFacets {...props} />
-      </fieldset>
+      <div className="mt-5 min-w-0 break-words">
+        <FilterChoices {...props} />
+      </div>
       {props.hiddenFacets.size > 0 ? (
         <button
           type="button"
@@ -220,15 +240,16 @@ function ResultsHeader({
   locale: SearchLocale
   searching: boolean
   seconds: number | null
-  total: number
+  total: number | null
   sort: SearchSort
   onSortChange: (sort: SearchSort) => void
 }) {
   const t = useTranslations('Search')
+  const count = total ?? 0
   const tail =
     seconds != null
-      ? t('resultsTail', { count: total, seconds: seconds.toFixed(2) })
-      : t('resultsOnly', { count: total })
+      ? t('resultsTail', { count, seconds: seconds.toFixed(2) })
+      : t('resultsOnly', { count })
   return (
     <div className="flex shrink-0 flex-col items-start gap-4 px-7 pb-2 pt-6 md:flex-row md:items-center">
       <p className="flex-1 text-sm text-muted-foreground" dir={locale === 'ar' ? 'rtl' : 'ltr'}>
@@ -237,10 +258,16 @@ function ResultsHeader({
         <span className="sr-only" role="status">
           {searching
             ? t('searching')
-            : t('announce', { count: total, seconds: (seconds ?? 0).toFixed(2) })}
+            : total == null
+              ? t('privateIncomplete')
+              : seconds == null
+                ? t('showing', { shown: count, total: count })
+                : t('announce', { count, seconds: seconds.toFixed(2) })}
         </span>
         <strong className="font-semibold text-foreground" aria-hidden="true">
-          {searching ? (
+          {total == null && !searching ? (
+            t('privateIncomplete')
+          ) : searching ? (
             // The morph only renders Latin glyphs cleanly.
             locale === 'ar' ? (
               t('searching')
@@ -253,7 +280,7 @@ function ResultsHeader({
             tail
           ) : (
             <>
-              <SlotText value={total} format={formatCount} spins={0} />{' '}
+              <SlotText value={count} format={formatCount} spins={0} />{' '}
               <span className="font-normal text-muted-foreground">{tail}</span>
             </>
           )}
@@ -274,7 +301,7 @@ function ResultsHeader({
 }
 
 /** Nothing to list: still searching, no match, or Typesense unreachable. */
-function SearchEmptyState({
+export function SearchEmptyState({
   searching,
   failed,
   query,
@@ -358,96 +385,83 @@ function SearchRowItem({
       onClick={() => onOpen(row)}
       className="relative cursor-pointer rounded-2xl px-3.5 py-4 md:px-5 md:py-5"
     >
-      <div className="flex items-start gap-3 md:gap-4" dir="auto">
-        {isPerson ? (
-          <Avatar
-            fallbackSeed={personAvatarSeed(hit.objectID)}
-            name={title}
-            src={hit.coverImage || undefined}
-            size="md"
-            className="shrink-0"
-          />
-        ) : hit.coverImage ? (
-          <img
-            src={hit.coverImage}
-            alt=""
-            loading="lazy"
-            className="hidden size-12 shrink-0 rounded-xl object-cover ring-1 ring-black/10 md:block dark:ring-white/10"
-          />
-        ) : (
-          <span
-            className={`hidden size-12 shrink-0 place-items-center rounded-xl text-muted-foreground md:grid ${active ? 'text-foreground' : ''}`}
-            aria-hidden="true"
+      <SearchResultContent
+        image={hit.coverImage}
+        icon={section.icon}
+        active={active}
+        leading={
+          isPerson ? (
+            <Avatar
+              fallbackSeed={personAvatarSeed(hit.objectID)}
+              name={title}
+              src={hit.coverImage || undefined}
+              size="md"
+              className="shrink-0"
+            />
+          ) : undefined
+        }
+      >
+        <p className="text-[16px] leading-[1.4] font-medium" lang={titleLocale}>
+          <Highlight attribute={titleField} hit={hit as never} />
+        </p>
+        <p className="mt-1 text-[13px] text-muted-foreground">
+          {otherLanguage ? (
+            <>
+              <span lang={locale}>{t(titleLocale === 'ar' ? 'tagArabic' : 'tagEnglish')}</span>
+              {' · '}
+            </>
+          ) : null}
+          {section.label}
+        </p>
+        {snippetField ? (
+          // Read more opens a snippet past two lines. Only the toggle's
+          // click stays out of the row, so tapping the text still opens it.
+          <ExpandableText
+            lines={2}
+            moreLabel={t('readMore')}
+            lessLabel={t('showLess')}
+            className="mt-2.5"
+            style={{ fontSize: '15px', lineHeight: 1.45, color: 'inherit' }}
+            onClick={(event) => {
+              if ((event.target as HTMLElement).closest('button')) event.stopPropagation()
+            }}
           >
-            {section.icon}
-          </span>
-        )}
-        <div className="min-w-0 flex-1">
-          <p className="text-[16px] leading-[1.4] font-medium" lang={titleLocale}>
-            <Highlight attribute={titleField} hit={hit as never} />
+            <Snippet attribute={snippetField} hit={withShapedSnippet(hit, snippetField) as never} />
+          </ExpandableText>
+        ) : null}
+        {owner ? (
+          // A div: several contributors stack avatars, whose group is a
+          // div itself. The names truncate rather than wrap.
+          <div className="mt-2.5 flex items-center gap-2.5 text-[13px] text-muted-foreground">
+            <span className="shrink-0">
+              {contributors.length > 1 ? (
+                <AvatarGroup members={contributors} max={3} size="sm" label={owner} />
+              ) : (
+                <Avatar
+                  fallbackSeed={contributors[0]?.fallbackSeed}
+                  name={owner}
+                  size="sm"
+                  src={contributors[0]?.src}
+                />
+              )}
+            </span>
+            <span className="min-w-0 truncate text-foreground/80" dir="auto">
+              {owner}
+            </span>
+          </div>
+        ) : null}
+        {updated ? (
+          <p className="mt-1.5 text-[13px] text-muted-foreground">
+            {owner ? t('editedSuffix', { when: updated }) : t('updated', { when: updated })}
           </p>
-          <p className="mt-1 text-[13px] text-muted-foreground">
-            {otherLanguage ? (
-              <>
-                <span lang={locale}>{t(titleLocale === 'ar' ? 'tagArabic' : 'tagEnglish')}</span>
-                {' · '}
-              </>
-            ) : null}
-            {section.label}
-          </p>
-          {snippetField ? (
-            // Read more opens a snippet past two lines. Only the toggle's
-            // click stays out of the row, so tapping the text still opens it.
-            <ExpandableText
-              lines={2}
-              moreLabel={t('readMore')}
-              lessLabel={t('showLess')}
-              className="mt-2.5"
-              style={{ fontSize: '15px', lineHeight: 1.45, color: 'inherit' }}
-              onClick={(event) => {
-                if ((event.target as HTMLElement).closest('button')) event.stopPropagation()
-              }}
-            >
-              <Snippet
-                attribute={snippetField}
-                hit={withShapedSnippet(hit, snippetField) as never}
-              />
-            </ExpandableText>
-          ) : null}
-          {owner ? (
-            // A div: several contributors stack avatars, whose group is a
-            // div itself. The names truncate rather than wrap.
-            <div className="mt-2.5 flex items-center gap-2.5 text-[13px] text-muted-foreground">
-              <span className="shrink-0">
-                {contributors.length > 1 ? (
-                  <AvatarGroup members={contributors} max={3} size="sm" label={owner} />
-                ) : (
-                  <Avatar
-                    fallbackSeed={contributors[0]?.fallbackSeed}
-                    name={owner}
-                    size="sm"
-                    src={contributors[0]?.src}
-                  />
-                )}
-              </span>
-              <span className="min-w-0 truncate text-foreground/80" dir="auto">
-                {owner}
-              </span>
-            </div>
-          ) : null}
-          {updated ? (
-            <p className="mt-1.5 text-[13px] text-muted-foreground">
-              {owner ? t('editedSuffix', { when: updated }) : t('updated', { when: updated })}
-            </p>
-          ) : null}
-        </div>
-      </div>
+        ) : null}
+      </SearchResultContent>
     </li>
   )
 }
 
 /** How many rows show out of all matches, and the way to load more. */
-function ResultsFooter({
+export function ResultsFooter({
   shown,
   total,
   hasMore,
@@ -455,7 +469,7 @@ function ResultsFooter({
   onShowMore,
 }: {
   shown: number
-  total: number
+  total?: number
   hasMore: boolean
   searching: boolean
   onShowMore: () => void
@@ -464,7 +478,7 @@ function ResultsFooter({
   return (
     <div className="flex flex-col items-center gap-3 px-7 pt-2 pb-10">
       <p className="text-[13px] text-muted-foreground tabular-nums">
-        {t('showing', { shown, total })}
+        {total == null ? t('showingLoaded', { count: shown }) : t('showing', { shown, total })}
       </p>
       {hasMore ? (
         // Never disabled: a disabled button drops focus out of the panel,
@@ -499,6 +513,8 @@ function SearchQueryBar({
   hasRows,
   total,
   onClose,
+  privateScope,
+  placeholder,
   ...filters
 }: FilterProps & {
   query: string
@@ -507,7 +523,9 @@ function SearchQueryBar({
   inputRef: RefObject<HTMLInputElement | null>
   activeId: string | undefined
   hasRows: boolean
-  total: number
+  privateScope: boolean
+  placeholder?: string
+  total: number | null
   onClose: () => void
 }) {
   const t = useTranslations('Search')
@@ -522,7 +540,7 @@ function SearchQueryBar({
           label={t('fieldLabel')}
           labelHidden
           bare
-          placeholder={t('placeholder')}
+          placeholder={placeholder ?? t('placeholder')}
           hint={
             <kbd className="hidden size-6 items-center justify-center rounded-lg border border-border bg-muted/30 px-3 text-sm text-muted-foreground sm:inline-flex">
               /
@@ -531,8 +549,8 @@ function SearchQueryBar({
           value={query}
           onValueChange={onQueryChange}
           clearLabel={t('clearField')}
-          role="combobox"
-          aria-expanded={hasRows}
+          role={privateScope ? 'searchbox' : 'combobox'}
+          aria-expanded={privateScope ? undefined : hasRows}
           aria-controls={hasRows ? `${inputId}-rows` : undefined}
           aria-activedescendant={activeId}
           ref={inputRef}
@@ -540,28 +558,30 @@ function SearchQueryBar({
         />
       </div>
       {/* Mobile has no sidebar: the same facets open in a bottom sheet. */}
-      <BottomSheet
-        title={t('filters')}
-        description={t('filtersDescription')}
-        open={filtersOpen}
-        onOpenChange={setFiltersOpen}
-        trigger={
-          <button
-            type="button"
-            className="inline-flex h-10 shrink-0 items-center gap-2 rounded-full border border-border px-4 text-sm font-medium transition-colors hover:bg-muted md:hidden"
-          >
-            <SlidersHorizontal width={17} height={17} strokeWidth={1.75} aria-hidden="true" />
-            <span>{t('filters')}</span>
-            {applied > 0 ? (
-              <span className="grid place-items-center rounded-full bg-muted px-1.5 text-xs text-muted-foreground tabular-nums">
-                {applied}
-              </span>
-            ) : null}
-          </button>
-        }
-      >
-        <FilterSheetBody {...filters} total={total} onClose={() => setFiltersOpen(false)} />
-      </BottomSheet>
+      {filters.facets.length > 0 && (
+        <BottomSheet
+          title={t('filters')}
+          description={filters.filterDescription ?? t('filtersDescription')}
+          open={filtersOpen}
+          onOpenChange={setFiltersOpen}
+          trigger={
+            <button
+              type="button"
+              className="inline-flex h-10 shrink-0 items-center gap-2 rounded-full border border-border px-4 text-sm font-medium transition-colors hover:bg-muted md:hidden"
+            >
+              <SlidersHorizontal width={17} height={17} strokeWidth={1.75} aria-hidden="true" />
+              <span>{t('filters')}</span>
+              {applied > 0 ? (
+                <span className="grid place-items-center rounded-full bg-muted px-1.5 text-xs text-muted-foreground tabular-nums">
+                  {applied}
+                </span>
+              ) : null}
+            </button>
+          }
+        >
+          <FilterSheetBody {...filters} total={total} onClose={() => setFiltersOpen(false)} />
+        </BottomSheet>
+      )}
       {/* A full-screen panel has no backdrop to click away to, so on
           desktop leaving it takes a word, paired with its Escape key. On
           phones the icon keeps the field wide; the Filters button sits
@@ -659,6 +679,11 @@ function useSlashFocus(inputRef: RefObject<HTMLInputElement | null>) {
 /* ------------------------------------------------------------------ */
 
 export interface SearchResultsProps {
+  filterLabel?: string
+  filterDescription?: string
+  placeholder?: string
+  privateContent?: ReactNode
+  scopeControl?: ReactNode
   query: string
   onQueryChange: (query: string) => void
   facets: SearchFacet[]
@@ -669,7 +694,7 @@ export interface SearchResultsProps {
   rows: SearchRow[]
   sectionOf: (row: SearchRow) => RowSection
   /** All matches across the checked facets. */
-  total: number
+  total: number | null
   hasMore: boolean
   onShowMore: () => void
   seconds: number | null
@@ -688,6 +713,11 @@ export interface SearchResultsProps {
  * through props, inside the InstantSearch context the panel is mounted in.
  */
 export function SearchResults({
+  filterLabel,
+  filterDescription,
+  placeholder,
+  privateContent,
+  scopeControl,
   query,
   onQueryChange,
   facets,
@@ -713,7 +743,14 @@ export function SearchResults({
   const inputId = useId()
   const inputRef = useRef<HTMLInputElement>(null)
   const [activeIndex, setActiveIndex] = useState<number | null>(null)
-  const filters = { facets, hiddenFacets, onToggleFacet, onClearFilters }
+  const filters = {
+    facets,
+    hiddenFacets,
+    onToggleFacet,
+    onClearFilters,
+    filterLabel,
+    filterDescription,
+  }
 
   // Fresh results can leave the cursor out of range: clamp while rendering.
   const cursor =
@@ -741,6 +778,37 @@ export function SearchResults({
     // arrows still step into the list, as in any combobox.
     const typing = Boolean(target.closest('input, textarea, [contenteditable="true"]'))
     const key = event.key
+    // Composite controls own their arrows; the sheet owns Escape.
+    if (target.closest('[role="dialog"]') !== event.currentTarget.closest('[role="dialog"]')) return
+    if (
+      key !== 'Escape' &&
+      target.closest('button, input[type="radio"], [role="radiogroup"], [role="tablist"]') &&
+      !target.closest('[data-search-result]')
+    )
+      return
+    const resultKey =
+      !typing && key === 'j' ? 'ArrowDown' : !typing && key === 'k' ? 'ArrowUp' : key
+    if (privateContent && ['ArrowDown', 'ArrowUp', 'Home', 'End'].includes(resultKey)) {
+      if (typing && (resultKey === 'Home' || resultKey === 'End')) return
+      const items = Array.from(
+        event.currentTarget.querySelectorAll<HTMLElement>('[data-search-result]'),
+      )
+      if (!items.length) return
+      const current = items.indexOf(target.closest('[data-search-result]') as HTMLElement)
+      const next =
+        resultKey === 'Home'
+          ? 0
+          : resultKey === 'End'
+            ? items.length - 1
+            : resultKey === 'ArrowDown'
+              ? Math.min(current + 1, items.length - 1)
+              : current - 1
+      event.preventDefault()
+      if (next < 0) inputRef.current?.focus()
+      else items[next]?.focus()
+      return
+    }
+    if (target.closest('select') && key !== 'Escape') return
     if (key === 'ArrowDown' || (!typing && key === 'j')) {
       event.preventDefault()
       move(Math.min((cursor ?? -1) + 1, rows.length - 1))
@@ -793,11 +861,14 @@ export function SearchResults({
         inputId={inputId}
         inputRef={inputRef}
         activeId={activeId}
+        privateScope={Boolean(privateContent)}
+        placeholder={placeholder}
         hasRows={rows.length > 0}
         total={total}
         onClose={onClose}
       />
 
+      {scopeControl}
       <div className="flex min-h-0 flex-1">
         <FiltersSidebar {...filters} />
 
@@ -812,45 +883,46 @@ export function SearchResults({
           />
 
           <div className="relative min-h-0 flex-1 overflow-y-auto overscroll-contain">
-            {rows.length === 0 ? (
-              <SearchEmptyState searching={searching} failed={failed} query={query} />
-            ) : (
-              <>
-                <ul
-                  ref={listRef}
-                  id={`${inputId}-rows`}
-                  role="listbox"
-                  aria-label={t('resultsLabel')}
-                  className="relative flex flex-col gap-1 px-4 py-4"
-                >
-                  <div
-                    ref={fillRef}
-                    aria-hidden="true"
-                    className="pointer-events-none absolute inset-x-1 top-0 rounded-2xl bg-muted/60 opacity-0 transition-[transform,height,opacity] duration-150 motion-reduce:transition-none"
-                  />
-                  {rows.map((row, index) => (
-                    <SearchRowItem
-                      key={row.id}
-                      row={row}
-                      index={index}
-                      section={sectionOf(row)}
-                      active={cursor === index}
-                      locale={locale}
-                      inputId={inputId}
-                      onHover={setActiveIndex}
-                      onOpen={onOpen}
+            {privateContent ||
+              (rows.length === 0 ? (
+                <SearchEmptyState searching={searching} failed={failed} query={query} />
+              ) : (
+                <>
+                  <ul
+                    ref={listRef}
+                    id={`${inputId}-rows`}
+                    role="listbox"
+                    aria-label={t('resultsLabel')}
+                    className="relative flex flex-col gap-1 px-4 py-4"
+                  >
+                    <div
+                      ref={fillRef}
+                      aria-hidden="true"
+                      className="pointer-events-none absolute inset-x-1 top-0 rounded-2xl bg-muted/60 opacity-0 transition-[transform,height,opacity] duration-150 motion-reduce:transition-none"
                     />
-                  ))}
-                </ul>
-                <ResultsFooter
-                  shown={rows.length}
-                  total={total}
-                  hasMore={hasMore}
-                  searching={searching}
-                  onShowMore={onShowMore}
-                />
-              </>
-            )}
+                    {rows.map((row, index) => (
+                      <SearchRowItem
+                        key={row.id}
+                        row={row}
+                        index={index}
+                        section={sectionOf(row)}
+                        active={cursor === index}
+                        locale={locale}
+                        inputId={inputId}
+                        onHover={setActiveIndex}
+                        onOpen={onOpen}
+                      />
+                    ))}
+                  </ul>
+                  <ResultsFooter
+                    shown={rows.length}
+                    total={total ?? undefined}
+                    hasMore={hasMore}
+                    searching={searching}
+                    onShowMore={onShowMore}
+                  />
+                </>
+              ))}
           </div>
         </div>
       </div>

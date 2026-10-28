@@ -14,6 +14,13 @@ import { useLocale, useTranslations } from 'next-intl'
 import { useRouter } from 'next/navigation'
 import { useCallback, useEffect, useMemo, useState, type ReactNode } from 'react'
 
+import { useSearchFilters } from '@/components/search-filters'
+import SegmentedControl from '@/components/arc/segmented-control/segmented-control'
+import {
+  PrivateSpaceSearch,
+  usePrivateSpaces,
+  type PrivateSearchSummary,
+} from '@/components/private-space-search'
 import { SearchResults, type SearchFacet } from '@/components/search-results'
 import { clientEnv as env } from '@/env.client'
 import { pathOf } from '@/lib/paths'
@@ -159,12 +166,62 @@ export function SearchPanel({ onClose }: { onClose: () => void }) {
   const locale = isSearchLocale(siteLocale) ? siteLocale : 'en'
   const router = useRouter()
 
+  const { state: privateState, epoch } = usePrivateSpaces()
+  const [scope, setScope] = useState('public')
+  const privateActive = scope === 'spaces'
+  const privateFilters = useSearchFilters(
+    privateState ? String(privateState.account) : null,
+    (privateState?.spaces ?? []).map((option) => String(option.id)),
+  )
+  const selection = (privateState?.spaces ?? [])
+    .filter((option) => !privateFilters.hidden.has(String(option.id)))
+    .map((option) => option.id)
+    .sort((a, b) => a - b)
   const [term, setTerm] = useState('')
   const [sort, setSort] = useState<SearchSort>('relevance')
-  const [hidden, setHidden] = useState<ReadonlySet<string>>(new Set())
+  const publicFilters = useSearchFilters('public', [
+    ...COURSE_TYPES.map(courseFacetId),
+    ...SEARCH_ORDER.filter((collection) => collection !== 'courses'),
+  ])
+  const hidden = publicFilters.hidden
   const [pages, setPages] = useState(1)
   const [reported, setReported] = useState<Partial<Record<string, Reported>>>({})
   const [status, setStatus] = useState({ searching: false, failed: false })
+
+  const privateBinding = JSON.stringify([
+    privateState?.account,
+    epoch,
+    term,
+    selection,
+    sort,
+    privateActive,
+  ])
+  const privateQueryBinding = JSON.stringify([privateState?.account, epoch, term, privateActive])
+  const [privateCounts, setPrivateCounts] = useState<{
+    binding: string
+    facets: NonNullable<PrivateSearchSummary['aggregates']>['facets']
+  } | null>(null)
+  if (privateCounts && privateCounts.binding !== privateQueryBinding) setPrivateCounts(null)
+  const privateFacets = privateCounts?.binding === privateQueryBinding ? privateCounts.facets : null
+  const privateTotal =
+    privateFacets
+      ?.filter((facet) => selection.includes(facet.id))
+      .reduce((sum, facet) => sum + facet.found, 0) ?? null
+  const [privateReport, setPrivateReport] = useState<{
+    binding: string
+    summary: PrivateSearchSummary
+  } | null>(null)
+  if (privateReport && privateReport.binding !== privateBinding) setPrivateReport(null)
+  const privateSummary = privateReport?.binding === privateBinding ? privateReport.summary : null
+  const onPrivateSummary = useCallback(
+    (summary: PrivateSearchSummary) => {
+      setPrivateReport({ binding: privateBinding, summary })
+      if (summary.aggregates)
+        setPrivateCounts({ binding: privateQueryBinding, facets: summary.aggregates.facets })
+      else if (!summary.searching) setPrivateCounts(null)
+    },
+    [privateBinding, privateQueryBinding, setPrivateCounts, setPrivateReport],
+  )
 
   // A new question starts from the first page again.
   const ask =
@@ -174,9 +231,12 @@ export function SearchPanel({ onClose }: { onClose: () => void }) {
       setPages(1)
     }
 
-  const onResults = useCallback((collection: string, next: Reported) => {
-    setReported((previous) => ({ ...previous, [collection]: next }))
-  }, [])
+  const onResults = useCallback(
+    (collection: string, next: Reported) => {
+      setReported((previous) => ({ ...previous, [collection]: next }))
+    },
+    [setReported],
+  )
 
   const hiddenTypes = COURSE_TYPES.filter((type) => hidden.has(courseFacetId(type)))
   const visible = useCallback(
@@ -217,7 +277,7 @@ export function SearchPanel({ onClose }: { onClose: () => void }) {
 
   const total = facets
     .filter((facet) => !hidden.has(facet.id))
-    .reduce((sum, facet) => sum + facet.found, 0)
+    .reduce((sum, facet) => sum + (facet.found ?? 0), 0)
   const hasMore = SEARCH_ORDER.some(
     (collection) =>
       visible(collection) &&
@@ -258,7 +318,7 @@ export function SearchPanel({ onClose }: { onClose: () => void }) {
         searchClient={adapter!.searchClient}
         future={{ preserveSharedStateOnUnmount: true }}
       >
-        <QueryRefiner term={term} />
+        <QueryRefiner term={privateActive ? '' : term} />
         {SEARCH_ORDER.map((collection) => (
           <Index
             key={`${collection}:${sort}`}
@@ -284,25 +344,81 @@ export function SearchPanel({ onClose }: { onClose: () => void }) {
         <SearchResults
           query={term}
           onQueryChange={ask(setTerm)}
-          facets={facets}
-          hiddenFacets={hidden}
-          onToggleFacet={(id) =>
-            ask(setHidden)(
-              (() => {
-                const next = new Set(hidden)
-                if (!next.delete(id)) next.add(id)
-                return next
-              })(),
-            )
+          scopeControl={
+            privateActive || privateState?.spaces.length ? (
+              <div className="border-b border-border px-5 py-3">
+                <SegmentedControl
+                  value={scope}
+                  onValueChange={(value) => {
+                    setPrivateReport(null)
+                    setPrivateCounts(null)
+                    setScope(value)
+                  }}
+                  label={t('scopeLabel')}
+                  options={[
+                    { value: 'public', label: t('publicSearch') },
+                    { value: 'spaces', label: t('privateSpaces') },
+                  ]}
+                />
+              </div>
+            ) : null
           }
-          onClearFilters={() => ask(setHidden)(new Set())}
-          rows={rows}
+          privateContent={
+            privateActive ? (
+              privateState?.spaces.length ? (
+                <PrivateSpaceSearch
+                  key={`${privateState.account}:${epoch}`}
+                  query={term}
+                  spaces={selection}
+                  sort={sort}
+                  account={privateState.account}
+                  onSummary={onPrivateSummary}
+                  onOpen={(href) => {
+                    router.push(href)
+                    onClose()
+                  }}
+                />
+              ) : (
+                <p className="px-7 py-6 text-sm text-muted-foreground" role="status">
+                  {t('privateUnavailable')}
+                </p>
+              )
+            ) : undefined
+          }
+          placeholder={privateActive ? t('privatePlaceholder') : undefined}
+          filterLabel={privateActive ? t('spaceLabel') : undefined}
+          filterDescription={privateActive ? t('privateFiltersDescription') : undefined}
+          facets={
+            privateActive
+              ? (privateState?.spaces ?? []).map((option) => ({
+                  id: String(option.id),
+                  label: option.label,
+                  found: privateFacets?.find((facet) => facet.id === option.id)?.found,
+                }))
+              : facets
+          }
+          hiddenFacets={privateActive ? privateFilters.hidden : hidden}
+          onToggleFacet={(id) => {
+            const filters = privateActive ? privateFilters : publicFilters
+            filters.toggle(id)
+            setPages(1)
+          }}
+          onClearFilters={() => {
+            const filters = privateActive ? privateFilters : publicFilters
+            filters.clear()
+            setPages(1)
+          }}
+          rows={privateActive ? [] : rows}
           sectionOf={sectionOf}
-          total={total}
+          total={privateActive ? privateTotal : total}
           hasMore={hasMore}
           onShowMore={() => setPages((count) => count + 1)}
-          seconds={seconds}
-          searching={status.searching}
+          seconds={privateActive ? null : seconds}
+          searching={
+            privateActive
+              ? Boolean(privateState?.spaces.length) && (privateSummary?.searching ?? true)
+              : status.searching
+          }
           failed={status.failed}
           sort={sort}
           onSortChange={ask(setSort)}

@@ -6,6 +6,7 @@ import dynamic from 'next/dynamic'
 import { useCallback, useEffect, useRef, useState, useSyncExternalStore } from 'react'
 import { createPortal } from 'react-dom'
 
+import { AUTH_CHANGED } from '@/lib/auth-events'
 import { clientEnv as env } from '@/env.client'
 
 /**
@@ -48,6 +49,18 @@ export function SiteSearch() {
     // Focus returns where the reader opened the panel from.
     requestAnimationFrame(() => trigger.current?.focus())
   }, [])
+
+  useEffect(() => {
+    const storage = (event: StorageEvent) => {
+      if (event.key === AUTH_CHANGED) close()
+    }
+    window.addEventListener(AUTH_CHANGED, close)
+    window.addEventListener('storage', storage)
+    return () => {
+      window.removeEventListener(AUTH_CHANGED, close)
+      window.removeEventListener('storage', storage)
+    }
+  }, [close])
 
   // ⌘K / Ctrl + K anywhere; `/` too, unless the reader is typing. Once
   // open, the panel's own `/` handler moves focus to its field instead.
