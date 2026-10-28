@@ -44,7 +44,7 @@ announcement, comment, highlight, moderator, pulse, place.
 | Updates | The page checks for new posts every 30 seconds while open. |
 | Life cycle | A course space opens when the course is published (seen from `accepted`), turns read-only 2 weeks after the last meeting, and is kept for its members; `withdrawn` loses access. Cohort spaces stay open. The community space is always open. |
 | Languages | The interface follows the site language; content is written once, not translated, with `dir="auto"`. |
-| Search | Inside one space, in Postgres with `pg_trgm`. Never in Typesense or public search. |
+| Search | Private server-mediated Typesense search across currently readable spaces, with an optional space restriction. See ADR 0010, which supersedes the original Postgres-only choice. |
 | Privacy | Consent before the first post, kept on record; members download and delete their own content; member lists never public. |
 | Switch | Site settings → Spaces: Off (default at launch), Trial (chosen courses, plus community and cohort checkboxes), On. Enforced on the server; never deletes data. |
 | Measuring | Participation summary for moderators; the pulse with shadcn Questionnaire (Radix); reports with Arc charts. |
@@ -236,9 +236,14 @@ Admins see all space data in the Payload admin whatever the mode.
 
 ## 12. Search
 
-A search field in each space over posts and comments, with filters for kind,
-"No highlights yet" and author. Postgres `pg_trgm`, which handles Arabic and
-English without a stemmer. Spaces never go to Typesense or the public search.
+The site search panel has a private My spaces scope over posts and comments,
+with independently selected currently accessible spaces, validated per-space
+counts, and relevance/newest/A–Z sorting. Arabic and English text is indexed in a separate private Typesense
+collection. The server derives current permissions from Postgres and validates
+all matches against current Payload reads and content revisions. Private keys,
+text and totals never enter the public search adapter. Author and kind filters
+remain deferred. See [ADR 0010](../../adr/0010-private-spaces-search.md) for the
+security boundary, durable indexing, disabled-by-default rollout and tests.
 
 ## 13. Measuring
 
@@ -299,7 +304,7 @@ Each step ships on its own.
 ## Later, not in this version
 
 Weekly prompts with deadlines, automatic threads for each session, polls,
-summary posts, turning a thread into an article, search across spaces, web push,
+summary posts, turning a thread into an article, web push,
 cohort spaces for Women's Studies and Residency.
 
 ## Open checks for the build

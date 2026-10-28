@@ -2,6 +2,7 @@ import type { CollectionConfig } from 'payload'
 
 import { isAdminUser } from '@/access'
 import { contentWhere } from '@/lib/spaces'
+import { searchChanged, searchDeleted } from '@/lib/private-search/outbox'
 
 /**
  * Discussion, announcement, event and vote posts (spec §3). `question` sits
@@ -17,7 +18,7 @@ export const SpacePosts: CollectionConfig = {
   slug: 'space-posts',
   labels: { singular: 'Post', plural: 'Posts' },
   access: {
-    read: async ({ req }) => contentWhere(req.payload, req.user, ['id']),
+    read: async ({ req }) => contentWhere(req.payload, req.user, ['id'], req.context),
     create: ({ req }) => isAdminUser(req.user),
     update: ({ req }) => isAdminUser(req.user),
     // Deletes (authors included) go through the actions' postRemove, which
@@ -181,6 +182,8 @@ export const SpacePosts: CollectionConfig = {
     { name: 'deleted_at', type: 'date', index: true },
   ],
   hooks: {
+    afterChange: [searchChanged('post')],
+    afterDelete: [searchDeleted('post')],
     beforeChange: [
       ({ data, operation }) => {
         // An announcement pins itself (spec §3), and every post stamps its
