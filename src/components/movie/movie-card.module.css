@@ -77,7 +77,7 @@
 }
 .facts {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(min(100%, 12rem), 1fr));
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   margin-inline-end: -1px;
   margin-bottom: -1px;
   background: var(--poster-paper);
@@ -141,11 +141,11 @@
   min-width: 0;
   align-items: center;
   justify-content: center;
-  padding: var(--space-4) var(--space-6);
+  padding: var(--space-4) clamp(var(--space-2), 3cqi, var(--space-6));
   background: var(--poster-paper);
   color: var(--poster-ink);
   text-decoration: none;
-  overflow-wrap: anywhere;
+  white-space: nowrap;
 }
 .creditPreview {
   display: grid;
@@ -165,6 +165,9 @@
   cursor: pointer;
 }
 @container (min-width: 36rem) {
+  .facts {
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 12rem), 1fr));
+  }
   .main {
     grid-template-columns: minmax(0, 1fr) minmax(0, 2fr);
   }
