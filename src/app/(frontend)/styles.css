@@ -2230,7 +2230,7 @@ h3 {
   background: var(--poster-paper);
 }
 
-.poster[data-layout='0'] .poster-label {
+.poster-label {
   border-bottom: 1px solid var(--poster-ink);
 }
 

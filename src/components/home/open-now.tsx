@@ -31,6 +31,7 @@ export async function openPosters(items: OpenItem[], locale: string): Promise<Po
     href: `/${locale}${item.href}`,
     layout: layouts[i]!,
     label: item.kind === 'programme' ? t('programme') : item.type,
+    separateLabel: true,
     title: item.title,
     credit: item.fellows?.length ? t('with', { names: item.fellows.join(and) }) : undefined,
     image: item.image,

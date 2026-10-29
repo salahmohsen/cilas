@@ -29,6 +29,8 @@ export type PosterData = {
   color?: string
   /** Above the title: what it is ("Thematic Course", the publication). */
   label?: string
+  /** Keep the label in its own top cell across every layout. */
+  separateLabel?: boolean
   title: string
   /** Under the title: who ("With Ghosoun Ismail", the author). */
   credit?: string
@@ -49,6 +51,7 @@ export function Poster({ poster }: { poster: PosterData }) {
     layout: variant,
     color,
     label,
+    separateLabel,
     title,
     credit,
     image,
@@ -59,6 +62,7 @@ export function Poster({ poster }: { poster: PosterData }) {
     href,
   } = poster
   const layout = variant === 3 ? 1 : variant
+  const labelOnTop = layout === 0 || separateLabel
   const picture = (
     <div className="poster-image" data-fallback={!image ? imageFallback : undefined}>
       {!image && imageFallback === 'logo' ? (
@@ -139,8 +143,7 @@ export function Poster({ poster }: { poster: PosterData }) {
           />
         </a>
       </div>
-      {/* Layout 0 points at its label on top, so the credit follows the title instead. */}
-      {layout === 0 && credit ? (
+      {labelOnTop && credit ? (
         <p className="poster-credit" dir="auto">
           {credit}
         </p>
@@ -159,14 +162,14 @@ export function Poster({ poster }: { poster: PosterData }) {
       <div className="poster-body">
         {layout === 0 ? picture : null}
         <div className="poster-panel">
-          {layout === 0 ? (
+          {labelOnTop ? (
             <p className="poster-label" dir="auto">
               {label}
             </p>
           ) : (
             heading
           )}
-          {layout === 0 ? (
+          {labelOnTop ? (
             heading
           ) : credit || label ? (
             <p className="poster-credit" dir="auto">
