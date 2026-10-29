@@ -524,6 +524,7 @@
     "matches": "{count, plural, one {# option} other {# options}}"
   },
   "Share": {
+    "event": "Share this event",
     "course": "Share this course",
     "article": "Share this article",
     "heading": "Share",
@@ -1355,6 +1356,12 @@
     "movieData": "Movie data and images"
   },
   "Events": {
+    "details": "Event details",
+    "when": "When",
+    "where": "Where",
+    "admission": "Attendance",
+    "timeSoon": "Time to be announced",
+    "admissionSoon": "Attendance details to be announced.",
     "title": "Events",
     "intro": "Talks, screenings, workshops, and gatherings at CILAS.",
     "upcoming": "Upcoming events",

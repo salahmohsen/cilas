@@ -9,6 +9,9 @@ import type { Locale } from '@/api/articles.api'
 import { getPublicEvents } from '@/api/events.api'
 import { ResolvedRichTextField as RichTextField } from '@/components/resolved-rich-text-field'
 import { PublicEventCard } from '@/components/events/public-event-card'
+import { EventAttendance } from '@/components/events/event-attendance'
+import { EventDescription } from '@/components/events/event-description'
+import { ShareBar } from '@/components/share-bar'
 import { UpcomingEvents } from '@/components/events/upcoming-events'
 import { PayloadForm } from '@/components/forms/payload-form'
 import { Link } from '@/i18n/navigation'
@@ -44,10 +47,11 @@ export async function generateMetadata({ params }: Props) {
 
 export default async function Page({ params }: Props) {
   const { locale, slug } = await params
-  const [event, t, format] = await Promise.all([
+  const [event, t, format, share] = await Promise.all([
     readEvent(locale, slug),
     getTranslations('Events'),
     getFormatter(),
+    getTranslations('Share'),
   ])
   if (!event) notFound()
   const now = new Date()
@@ -63,100 +67,94 @@ export default async function Page({ params }: Props) {
     if (block.blockType === 'message' && block.message && block.id)
       notes[block.id] = <RichTextField data={block.message} />
   return (
-    <>
-      <article className={`${styles.page} ${styles.detailPage}`}>
-        <header className={styles.header}>
-          <Link className={readerStyles.back} href="/events">
-            <ArrowLeft aria-hidden className="rtl:-scale-x-100" size={16} />
-            {t('all')}
-          </Link>
-        </header>
-        <PublicEventCard event={event} now={now} detail />
-        {(meetings.length > 1 ||
-          event.schedule?.note ||
-          event.pricing?.min != null ||
-          event.pricing?.note) && (
-          <div className={styles.details}>
-            {meetings.length > 1 ? (
-              <ul className={styles.agenda}>
-                {meetings.map((m) => (
-                  <li key={`${m.date}-${m.start_time}`}>
-                    <time dateTime={m.date}>{date(m.date)}</time> ·{' '}
-                    <bdi>{localDigits(`${m.start_time}–${m.end_time}`, locale)}</bdi> ·{' '}
-                    {t('cairoTime')}
-                  </li>
-                ))}
-              </ul>
-            ) : null}
-            {event.schedule?.note && <p>{event.schedule.note}</p>}
-            {event.pricing?.min != null && (
-              <p>
-                {event.pricing.min === 0 && !event.pricing.max
-                  ? t('free')
-                  : `${format.number(event.pricing.min)}${event.pricing.max ? `–${format.number(event.pricing.max)}` : ''} ${t('egp')}`}
-              </p>
-            )}
-            {event.pricing?.note && <p>{event.pricing.note}</p>}
+    <div className={readerStyles.root}>
+      <div className={readerStyles.inner}>
+        <article className={styles.detailLayout} aria-labelledby="event-title">
+          <div className={styles.detailBack}>
+            <Link className={readerStyles.back} href="/events">
+              <ArrowLeft aria-hidden className="rtl:-scale-x-100" size={16} />
+              {t('all')}
+            </Link>
           </div>
-        )}
-        {event.description && <RichTextField data={event.description} className="article-prose" />}
-        {!!event.speakers?.length && (
-          <section className={styles.section}>
-            <h2>{t('speakers')}</h2>
-            <ul>
-              {event.speakers.map((speaker, i) => {
-                const person = typeof speaker.person === 'object' ? speaker.person : null
-                return person ? (
-                  <li key={speaker.id || i}>
-                    <Link className="home-more" href={`/people/${person.slug}`}>
-                      {person.name}
-                    </Link>
-                    {speaker.role ? ` · ${speaker.role}` : ''}
-                  </li>
-                ) : null
-              })}
-            </ul>
-          </section>
-        )}
-        {!!event.agenda?.length && (
-          <section className={styles.section}>
-            <h2>{t('agenda')}</h2>
-            <ul className={styles.agenda}>
-              {event.agenda.map((item, i) => (
-                <li key={item.id || i}>
-                  <bdi>{localDigits(`${item.start_time}–${item.end_time}`, locale)}</bdi> ·{' '}
-                  {item.title}
-                </li>
-              ))}
-            </ul>
-          </section>
-        )}
-        {open && event.registration?.method === 'external' && event.registration.url && (
-          <a
-            className="home-more"
-            href={event.registration.url}
-            rel="noopener noreferrer"
-            target="_blank"
-          >
-            {t('register')}
-          </a>
-        )}
-        {open && event.registration?.method === 'form' && form && (
-          <section className={styles.section}>
-            <h2>{t('register')}</h2>
-            <PayloadForm
-              form={form}
-              notes={notes}
-              confirmation={
-                form.confirmationMessage ? <RichTextField data={form.confirmationMessage} /> : null
-              }
-              back={{ href: '/events', label: t('all') }}
-            />
-          </section>
-        )}
-        {!open && event.registration?.method && <p>{t('registrationClosed')}</p>}
-      </article>
+          <div className={styles.detailHeading}>
+            <PublicEventCard event={event} now={now} detail showFacts={false} />
+          </div>
+          <EventAttendance event={event} now={now} locale={locale} />
+          <div className={styles.detailBody}>
+            {meetings.length > 1 && (
+              <div className={styles.details}>
+                <ul className={styles.agenda}>
+                  {meetings.map((m) => (
+                    <li key={`${m.date}-${m.start_time}`}>
+                      <time dateTime={m.date}>{date(m.date)}</time> ·{' '}
+                      <bdi>{localDigits(`${m.start_time}–${m.end_time}`, locale)}</bdi> ·{' '}
+                      {t('cairoTime')}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+            {event.description && <EventDescription data={event.description} />}
+            {!!event.speakers?.length && (
+              <section className={styles.section}>
+                <h2>{t('speakers')}</h2>
+                <ul>
+                  {event.speakers.map((speaker, i) => {
+                    const person = typeof speaker.person === 'object' ? speaker.person : null
+                    return person ? (
+                      <li key={speaker.id || i}>
+                        <Link className="home-more" href={`/people/${person.slug}`}>
+                          {person.name}
+                        </Link>
+                        {speaker.role ? ` · ${speaker.role}` : ''}
+                      </li>
+                    ) : null
+                  })}
+                </ul>
+              </section>
+            )}
+            {!!event.agenda?.length && (
+              <section className={styles.section}>
+                <h2>{t('agenda')}</h2>
+                <ul className={styles.agenda}>
+                  {event.agenda.map((item, i) => (
+                    <li key={item.id || i}>
+                      <bdi>{localDigits(`${item.start_time}–${item.end_time}`, locale)}</bdi> ·{' '}
+                      {item.title}
+                    </li>
+                  ))}
+                </ul>
+              </section>
+            )}
+            {open && event.registration?.method === 'form' && form && (
+              <section className={styles.section} id="event-registration">
+                <h2>{t('register')}</h2>
+                <PayloadForm
+                  form={form}
+                  notes={notes}
+                  confirmation={
+                    form.confirmationMessage ? (
+                      <RichTextField data={form.confirmationMessage} />
+                    ) : null
+                  }
+                  back={{ href: '/events', label: t('all') }}
+                />
+              </section>
+            )}
+            <section className={styles.share} aria-labelledby="event-share">
+              <h2 id="event-share">{share('heading')}</h2>
+              <div className={styles.shareActions}>
+                <ShareBar
+                  path={`/${locale}/events/${event.slug}`}
+                  title={event.title}
+                  label={share('event')}
+                />
+              </div>
+            </section>
+          </div>
+        </article>
+      </div>
       <UpcomingEvents currentId={event.id} locale={locale} now={now} />
-    </>
+    </div>
   )
 }

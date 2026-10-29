@@ -48,10 +48,12 @@ export async function PublicEventCard({
   event,
   now,
   detail = false,
+  showFacts = true,
 }: {
   event: Event
   now: Date
   detail?: boolean
+  showFacts?: boolean
 }) {
   const [t, types, format, locale] = await Promise.all([
     getTranslations('Events'),
@@ -131,31 +133,33 @@ export async function PublicEventCard({
   return (
     <header className={styles.detailHeader}>
       {typeBadge}
-      <h1 className={`${readerStyles.readerTitle} article-title`} dir="auto">
+      <h1 className={`${readerStyles.readerTitle} article-title`} id="event-title" dir="auto">
         {event.title}
       </h1>
-      <div className={styles.detailFacts}>
-        {timing.meeting && startsAt ? (
-          <EventWhen startsAt={startsAt} endsAt={endsAt} over={over} />
-        ) : (
-          <div className={spaceStyles.eventWhen}>
-            {timing.day ? (
-              <time className={spaceStyles.eventDate} dateTime={timing.day}>
-                {format.dateTime(new Date(`${timing.day}T12:00:00Z`), {
-                  dateStyle: 'long',
-                  timeZone: 'Africa/Cairo',
-                })}
-              </time>
-            ) : (
-              <p className={spaceStyles.eventDate}>{t('dateSoon')}</p>
-            )}
-            {over && <span className={spaceStyles.eventTime}>{t('ended')}</span>}
-          </div>
-        )}
-        {venue?.name && <EventPlace location={venue.map_url || venue.name} place={venue.name} />}
-        {event.online_url && <EventPlace location={event.online_url} place={t('online')} />}
-        {venue?.address && <p className={spaceStyles.eventNote}>{venue.address}</p>}
-      </div>
+      {showFacts && (
+        <div className={styles.detailFacts}>
+          {timing.meeting && startsAt ? (
+            <EventWhen startsAt={startsAt} endsAt={endsAt} over={over} />
+          ) : (
+            <div className={spaceStyles.eventWhen}>
+              {timing.day ? (
+                <time className={spaceStyles.eventDate} dateTime={timing.day}>
+                  {format.dateTime(new Date(`${timing.day}T12:00:00Z`), {
+                    dateStyle: 'long',
+                    timeZone: 'Africa/Cairo',
+                  })}
+                </time>
+              ) : (
+                <p className={spaceStyles.eventDate}>{t('dateSoon')}</p>
+              )}
+              {over && <span className={spaceStyles.eventTime}>{t('ended')}</span>}
+            </div>
+          )}
+          {venue?.name && <EventPlace location={venue.map_url || venue.name} place={venue.name} />}
+          {event.online_url && <EventPlace location={event.online_url} place={t('online')} />}
+          {venue?.address && <p className={spaceStyles.eventNote}>{venue.address}</p>}
+        </div>
+      )}
     </header>
   )
 }
