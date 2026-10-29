@@ -1,5 +1,7 @@
 # Payload Blank Template
 
+For local staged-file fixes, setup, worktrees and opt-out, see [Commit checks](docs/commit-checks.md).
+
 This template comes configured with the bare minimum to get started on anything you need.
 
 ## Quick start

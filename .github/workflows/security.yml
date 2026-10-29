@@ -13,6 +13,28 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  commit-quality:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          fetch-depth: 0
+      - uses: pnpm/action-setup@f40ffcd9367d9f12939873eb1018b921a783ffaa # v4
+        with:
+          version: 10.11.0
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version: 22
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - name: Exercise actual Git hooks in disposable repositories
+        run: pnpm test:commit-hooks
+      - name: Check changed committed files without fixing
+        env:
+          BASE_SHA: ${{ github.event.pull_request.base.sha || github.event.before }}
+        run: pnpm check:commit-quality "$BASE_SHA"
+
   security:
     runs-on: ubuntu-24.04
     timeout-minutes: 20
@@ -82,7 +104,7 @@ jobs:
 
   deploy-production:
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
-    needs: [security, production-smoke]
+    needs: [commit-quality, security, production-smoke]
     runs-on: ubuntu-24.04
     timeout-minutes: 5
     concurrency:
