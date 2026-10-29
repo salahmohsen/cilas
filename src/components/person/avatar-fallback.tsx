@@ -1,5 +1,6 @@
 import BoringAvatar from 'boring-avatars'
 import type { SVGProps } from 'react'
+import { POSTER_COLORS } from '@/lib/poster-colors'
 
 type Props = Omit<SVGProps<SVGSVGElement>, 'name'> & { seed: string }
 
@@ -9,6 +10,7 @@ export function AvatarFallback({ seed, ...props }: Props) {
     <BoringAvatar
       name={seed.trim() || 'anonymous'}
       variant="beam"
+      colors={POSTER_COLORS}
       size="100%"
       square
       preserveAspectRatio="xMidYMid slice"

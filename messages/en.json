@@ -416,6 +416,8 @@
     "home": "Go to the home page"
   },
   "Person": {
+    "profiles": "People",
+    "chooseProfile": "Choose a person",
     "viewProfile": "View profile",
     "written": "Writing",
     "credited": "Translations and other work",

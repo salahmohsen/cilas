@@ -13,6 +13,7 @@ import { AvatarImage } from '@/components/person/avatar-image'
 import { AvatarFallback } from '@/components/person/avatar-fallback'
 import { PeopleWheel } from '@/components/person/people-wheel'
 import { personAvatarSeed } from '@/lib/avatar'
+import { POSTER_COLORS } from '@/lib/poster-colors'
 
 vi.mock('@/i18n/navigation', () => ({ Link: 'a' }))
 
@@ -32,6 +33,20 @@ afterEach(() => {
 })
 
 describe('local Beam fallback', () => {
+  it('uses the registration poster palette through the built-in colors option', () => {
+    const seen = new Set<string>()
+    for (let id = 0; id < 20; id++) {
+      const container = document.createElement('div')
+      container.innerHTML = renderToString(<AvatarFallback seed={personAvatarSeed(id)} />)
+      for (const rectangle of container.querySelectorAll('g[mask] > rect')) {
+        const color = rectangle.getAttribute('fill')!
+        expect(POSTER_COLORS).toContain(color)
+        seen.add(color)
+      }
+    }
+    expect(seen).toEqual(new Set(POSTER_COLORS))
+  })
+
   it('generates deterministic, distinct SVGs without embedding names or making requests', () => {
     const fetch = vi.spyOn(globalThis, 'fetch')
     const svg = renderToString(<AvatarFallback seed={personAvatarSeed('42')} />)

@@ -14,6 +14,10 @@ const countdownCSS = readFileSync(
   new URL('../src/components/arc/countdown/countdown.module.css', import.meta.url),
   'utf8',
 )
+const carouselCSS = readFileSync(
+  new URL('../src/components/arc/carousel/carousel.module.css', import.meta.url),
+  'utf8',
+)
 
 function poster(layout, direction, credit) {
   const image = '<div class="poster-image"></div>'
@@ -36,6 +40,42 @@ function poster(layout, direction, credit) {
     </article>
   </div>`
 }
+
+test('carousel clipping preserves all four poster border corners on mobile', async () => {
+  const browser = await chromium.launch({ headless: true })
+  try {
+    const page = await browser.newPage()
+    for (const width of [288, 358, 528]) {
+      for (const layout of [0, 1, 2]) {
+        await page.setViewportSize({ width: width + 32, height: 1000 })
+        await page.setContent(`<style>
+          * { box-sizing: border-box; }
+          body, p, h3 { margin: 0; }
+          :root { --radius-panel: 26px; --space-4: 16px; }
+          .poster-carousel { width: ${width}px; }
+          ${posterCSS}
+          ${carouselCSS}
+        </style><div class="poster-carousel"><section class="root" style="--carousel-slide:${width}px;--carousel-start:0">
+          <div class="viewport"><div class="track"><div class="slide" aria-roledescription="slide">
+            ${poster(layout, 'ltr', 'With the fellow')}
+          </div></div></div>
+        </section></div>`)
+        const corners = await page.locator('.poster').evaluate((card) => {
+          const r = card.getBoundingClientRect()
+          return [
+            [4, 6],
+            [r.width - 4, 6],
+            [4, r.height - 6],
+            [r.width - 4, r.height - 6],
+          ].map(([x, y]) => card.contains(document.elementFromPoint(r.left + x, r.top + y)))
+        })
+        assert.deepEqual(corners, [true, true, true, true], JSON.stringify({ width, layout }))
+      }
+    }
+  } finally {
+    await browser.close()
+  }
+})
 
 test('stacked registration images absorb shared height while text cells fit their content', async () => {
   const browser = await chromium.launch({ headless: true })

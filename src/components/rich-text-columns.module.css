@@ -9,6 +9,19 @@
   min-width: 0;
   overflow-wrap: anywhere;
 }
+.profileCarousel {
+  --carousel-viewport-radius: 0px;
+  min-width: 0;
+  margin-block: 1.5em;
+}
+.profileCarousel [aria-roledescription='slide'],
+.profileSlide,
+.profileCarousel .column {
+  display: grid;
+}
+.profileSlide {
+  min-width: 0;
+}
 
 .column > :first-child {
   margin-block-start: 0;

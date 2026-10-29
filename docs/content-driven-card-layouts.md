@@ -42,6 +42,9 @@ Use these as acceptance criteria when applying this design elsewhere. Update thi
 6. Own each separator once. Keep the rule between the date and timer, including on mobile and in RTL.
 7. Changing a breakpoint must preserve these sizing responsibilities. Color and poster placement do not change them.
 8. Verify the rendered geometry for these rules, not just the presence of CSS classes. Keep the guide, implementation, and tests in agreement.
+9. Registration posters and generated person avatars share the palette in `src/lib/poster-colors.ts`. Pass it to Boring Avatars through its built-in `colors` prop; keep stable seeds and uploaded-photo precedence.
+10. Each card owns its rounded outline. A carousel viewport must not apply a larger rounded clipping shape over the card's corners.
+11. People-profile columns use Arc's carousel on mobile with manual navigation and automatic rotation disabled. Keep the desktop column layout.
 
 ### Closing-date row recipe
 
@@ -180,6 +183,22 @@ Use logical spacing and borders (`padding-inline`, `border-block-start`, `border
 
 ## Make boxes read as one system
 
+### Shared palette
+
+`POSTER_COLORS` in `src/lib/poster-colors.ts` is the shared registration and avatar palette: yellow `#ffb71b`, blue `#1782ea`, pink `#ff7d9d`, and green `#12d08f`. Registration `Poster` instances set their color from that array unless a specific color is supplied. Generated Beam avatars pass the same array to the library's built-in `colors` option. The library still draws facial details in black or white. Uploaded photos keep priority, and the stable person seed continues to determine the generated portrait.
+
+### Rounded corners inside carousels
+
+Registration and profile cards clip their own content to their rounded border. Arc's viewport also clips the horizontal track, but its default panel radius is larger than the poster radius. Applying both shapes at the same edge can cut away the card's border corners on mobile.
+
+The local Arc carousel supports `--carousel-viewport-radius`, falling back to its usual `--radius-panel`. Poster and profile carousels set that viewport radius to `0px`: the viewport still clips horizontal slide overflow, while each card draws and clips its own rounded shape. Other Arc carousels keep their default radius. Check all four card corners with real rendered hit testing, not just the computed `border-radius` value.
+
+### People-profile columns
+
+Columns containing person-profile blocks use the existing Arc carousel below `48rem`, with one column per slide at `88cqw`. The previous and next buttons, indicators, keyboard controls, and dragging provide manual navigation. No rotation interval is supplied and autoplay is disabled, so there is no play/pause rotation control. Carousel navigation runs left to right while each profile's text retains its own language direction.
+
+At wider widths the same content uses the existing column count and ratio. The server-rendered column layout remains available before hydration; the mobile client switches to Arc. Do not render duplicate sets of profile cards to implement the two presentations. Keep custom profile converters, public-profile visibility checks, and bio previews intact.
+
 Use a shared padding token so labels, titles, fellow names, and footer text align. Give each internal boundary one owner: for example, the panel owns the image-to-text border, the course-type cell owns its lower rule, and the fellow cell owns its upper rule. Avoid doubled borders and unbordered blank areas that visually merge with adjacent cells.
 
 Keep the title visually stronger than the course type and fellow. Keep actions recognizable, keyboard reachable, and visibly focused. A card-wide link must not cover independent links such as a venue map. Image focal points, missing images, reduced motion, and translated labels are part of the component's behavior.
@@ -220,6 +239,8 @@ It covers the three effective poster placements at 288, 358, 528, and 960 CSS pi
 - `src/components/home/open-now.tsx`: registration content and poster data.
 - `src/app/(frontend)/styles.css`: poster sizing, container queries, typography, and dividers.
 - `src/components/home/poster-carousel.tsx`: carousel integration.
+- `src/lib/poster-colors.ts`: shared registration and generated-avatar palette.
+- `src/components/person/profile-columns.tsx`: mobile Arc carousel and desktop profile columns.
 - `tests/poster-layout.test.mjs`: rendered geometry regression.
 
 For a new element, first write its content hierarchy, choose its spare-space owner, and identify which fields are optional. Reuse the existing poster when its semantics fit. Introduce a shared sizing primitive only when another real component needs the same contract; changing this guide does not require building a universal card engine.

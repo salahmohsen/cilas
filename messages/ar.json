@@ -416,6 +416,8 @@
     "home": "اذهب إلى الصفحة الرئيسية"
   },
   "Person": {
+    "profiles": "الأشخاص",
+    "chooseProfile": "اختر شخصًا",
     "viewProfile": "الملف الشخصي",
     "written": "كتابات",
     "credited": "ترجمات وأعمال أخرى",

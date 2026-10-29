@@ -13,7 +13,7 @@
   min-width: 0;
   overflow-x: clip;
   overflow-y: visible;
-  border-radius: var(--radius-panel);
+  border-radius: var(--carousel-viewport-radius, var(--radius-panel));
   cursor: grab;
   touch-action: pan-y;
   -webkit-tap-highlight-color: transparent;

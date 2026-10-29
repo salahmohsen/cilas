@@ -8,6 +8,7 @@ import { InViewTitle } from '@/components/arc/in-view-title/in-view-title'
 import { CilasLogo } from '@/components/cilas-logo'
 import { DeadlineCountdown } from '@/components/home/deadline-countdown'
 import { focalPointStyle, type MediaImage } from '@/lib/media-image'
+import { POSTER_COLORS } from '@/lib/poster-colors'
 
 /**
  * The four poster variants, after the festival posters on the moodboard:
@@ -175,7 +176,7 @@ export function Poster({
       data-layout={layout}
       data-color={variant}
       data-separate-label={separateLabel || undefined}
-      style={color ? ({ '--poster-color': color } as CSSProperties) : undefined}
+      style={{ '--poster-color': color ?? POSTER_COLORS[variant] } as CSSProperties}
     >
       {layout === 2 ? strip : null}
       <div className="poster-body">

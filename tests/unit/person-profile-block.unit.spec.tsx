@@ -1,11 +1,15 @@
-import { cleanup, render, screen } from '@testing-library/react'
+import { cleanup, fireEvent, render, screen } from '@testing-library/react'
 import { NextIntlClientProvider } from 'next-intl'
-import { afterEach, describe, expect, it } from 'vitest'
+import { afterEach, describe, expect, it, vi } from 'vitest'
 
 import { RichTextField } from '@/components/RichTextField'
 import messages from '../../messages/en.json'
+import arabicMessages from '../../messages/ar.json'
 
-afterEach(cleanup)
+afterEach(() => {
+  cleanup()
+  vi.unstubAllGlobals()
+})
 
 const documentOf = (children: unknown[]) => ({
   root: { type: 'root', version: 1, children, direction: null, format: '', indent: 0 },
@@ -32,14 +36,70 @@ const profile = (value: unknown = person) => ({
   version: 2,
   fields: { blockType: 'personProfile', person: value },
 })
-const renderBody = (children: unknown[], plain = false) =>
+const renderBody = (children: unknown[], plain = false, locale = 'en') =>
   render(
-    <NextIntlClientProvider locale="en" messages={messages}>
+    <NextIntlClientProvider
+      locale={locale}
+      messages={locale === 'ar' ? arabicMessages : messages}
+      formats={{
+        number: {
+          digits: { numberingSystem: locale === 'ar' ? 'arab' : 'latn', useGrouping: false },
+        },
+      }}
+    >
       <RichTextField data={documentOf(children)} plain={plain} />
     </NextIntlClientProvider>,
   )
 
 describe('person profile editor block', () => {
+  it.each(['en', 'ar'])(
+    'uses the Arc carousel on mobile in %s with manual navigation',
+    (locale) => {
+      vi.stubGlobal('matchMedia', () => ({
+        matches: true,
+        addEventListener() {},
+        removeEventListener() {},
+      }))
+      vi.stubGlobal(
+        'ResizeObserver',
+        class {
+          observe() {}
+          disconnect() {}
+        },
+      )
+      const { container } = renderBody(
+        [
+          {
+            type: 'block',
+            version: 2,
+            fields: {
+              blockType: 'columns',
+              columnCount: '2',
+              ratio: 'equal',
+              first: documentOf([profile()]),
+              second: documentOf([
+                profile({ ...person, id: 43, name: 'Second person', slug: 'second-person' }),
+              ]),
+            },
+          },
+        ],
+        false,
+        locale,
+      )
+      expect(container.querySelector('[aria-roledescription="carousel"]')).not.toBeNull()
+      const slides = container.querySelectorAll('[aria-roledescription="slide"]')
+      expect(slides).toHaveLength(2)
+      expect(slides[0].firstElementChild).toHaveAttribute('dir', locale === 'ar' ? 'rtl' : 'ltr')
+      expect(slides[0]).not.toHaveAttribute('inert')
+      const controls = (locale === 'ar' ? arabicMessages : messages).Home.controls
+      fireEvent.click(screen.getByRole('button', { name: controls.next }))
+      expect(slides[1]).not.toHaveAttribute('inert')
+      expect(slides[0]).toHaveAttribute('inert')
+      expect(screen.queryByRole('button', { name: controls.startRotation })).toBeNull()
+      expect(screen.queryByRole('button', { name: controls.pauseRotation })).toBeNull()
+    },
+  )
+
   it('renders stored public fields, profile links, and the uploaded photo', () => {
     const { container } = renderBody([profile()])
     expect(screen.getByRole('heading', { name: person.name })).toBeInTheDocument()

@@ -2092,6 +2092,9 @@ h3 {
 /* ===================================================== posters */
 
 /* The poster's frame is what its sizes and its narrow layout measure. */
+.poster-carousel {
+  --carousel-viewport-radius: 0px;
+}
 .poster-carousel [aria-roledescription='slide'] {
   display: grid;
 }
@@ -2119,15 +2122,6 @@ h3 {
   /* At least 16:9 of the frame's width, and taller when a long title or a
      translation needs it, so nothing in the panel is cut off. */
   min-height: calc(100cqi * 9 / 16);
-}
-.poster[data-color='1'] {
-  --poster-color: #1782ea;
-}
-.poster[data-color='2'] {
-  --poster-color: #ff7d9d;
-}
-.poster[data-color='3'] {
-  --poster-color: #12d08f;
 }
 .poster-body {
   display: flex;

@@ -5,6 +5,7 @@ import React from 'react'
 
 import { FootnoteMark } from '@/components/article/footnote'
 import { ProfileCard } from '@/components/person/profile-card'
+import { ProfileColumns } from '@/components/person/profile-columns'
 import { MovieCard } from '@/components/movie/movie-card'
 import { ImageGallery } from '@/components/gallery/image-gallery'
 import { movieSnapshotSchema } from '@/lib/movie'
@@ -84,6 +85,25 @@ export const RichTextField: React.FC<{
             child.fields.blockType === 'personProfile',
         ),
       )
+    const content = columns.map((column, index) => (
+      <RichTextField
+        key={index}
+        data={column}
+        className={styles.column}
+        plain={plain}
+        blocks={blocks}
+        inlineBlocks={inlineBlocks}
+        footnotes={footnotes}
+        footnoteLabel={footnoteLabel}
+      />
+    ))
+    if (profileCarousel) {
+      return (
+        <ProfileColumns columnCount={count} ratio={ratio}>
+          {content}
+        </ProfileColumns>
+      )
+    }
     return (
       <div
         className={plain ? undefined : styles.columns}
@@ -91,18 +111,7 @@ export const RichTextField: React.FC<{
         data-columns={count}
         data-profile-carousel={profileCarousel || undefined}
       >
-        {columns.map((column, index) => (
-          <RichTextField
-            key={index}
-            data={column}
-            className={styles.column}
-            plain={plain}
-            blocks={blocks}
-            inlineBlocks={inlineBlocks}
-            footnotes={footnotes}
-            footnoteLabel={footnoteLabel}
-          />
-        ))}
+        {content}
       </div>
     )
   }
