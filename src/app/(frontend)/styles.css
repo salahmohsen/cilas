@@ -2437,6 +2437,12 @@ h3 {
   .poster-image {
     flex: 1 0 auto;
   }
+  .poster[data-separate-label] .poster-panel {
+    flex: 1;
+  }
+  .poster[data-separate-label] .poster-image {
+    flex: none;
+  }
 }
 /* Tablet and narrower: the date and the time left share the strip's first
    row; when and where, and the way in, get the full row under it. */
