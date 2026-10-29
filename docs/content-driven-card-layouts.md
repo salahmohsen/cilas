@@ -6,17 +6,17 @@ Use this guide when adapting the Open for registration cards to other elements i
 
 The image establishes the subject. The course title is the primary text. Course type, fellow names, dates, and actions support it.
 
-| Region                          | Sizing responsibility                                                                         |
-| ------------------------------- | --------------------------------------------------------------------------------------------- |
-| Image                           | Keep the chosen aspect ratio on stacked registration cards; crop using the saved focal point. |
-| Course type                     | Text height plus shared padding and a divider.                                                |
-| Course title                    | Natural text height, then any spare panel height.                                             |
-| Fellow names                    | Text height plus shared padding and a divider; wrap when needed.                              |
-| Registration details and action | Content-sized rows; allow wrapping or a deliberate second row.                                |
+| Region                          | Sizing responsibility                                                                                               |
+| ------------------------------- | ------------------------------------------------------------------------------------------------------------------- |
+| Image                           | Start at the chosen aspect ratio on stacked cards, then absorb spare card height; crop using the saved focal point. |
+| Course type                     | Text height plus shared padding and a divider.                                                                      |
+| Course title                    | Natural text height on stacked cards; fill spare space inside a taller side panel on wide cards.                    |
+| Fellow names                    | Text height plus shared padding and a divider; wrap when needed.                                                    |
+| Registration details and action | Content-sized rows; allow wrapping or a deliberate second row.                                                      |
 
 “Fit the text” means the text's line boxes **plus padding and borders**. It does not mean removing the breathing room around a name. A longer name or several fellows must make the cell taller naturally.
 
-When a carousel makes cards as tall as the tallest slide, the registration title receives the extra height. Without an imposed shared height, the card follows its content; do not create empty title space just to imitate a screenshot.
+When a carousel makes stacked cards as tall as the tallest slide, the image receives the extra height. The label, title, fellows, and footer stay content-sized. Without an imposed shared height, the card follows its content. On wide cards, image and text sit side by side; the title can fill spare height inside the side panel.
 
 ## What caused the yellow mobile bug
 
@@ -24,14 +24,16 @@ The carousel stretches its slides to a shared height. At the stacked breakpoint,
 
 That empty area had the same white background as the fellow cell and no separating rule. It looked like an oversized fellow box even though `.poster-credit` itself was content-sized. Setting `flex: none` on the fellow again could not fix its ancestor's sizing.
 
-The fix lets stacked registration panels grow, keeps their images at the chosen aspect ratio, and passes the extra height through `.poster-heading` to `.poster-title`. The fellow remains content-sized. The change is scoped to registration posters marked `data-separate-label`; event cards keep their own image-led space allocation.
+The current layout gives the spare stacked-card height to the image. The text panel stops after its content and sits directly against the footer or card edge, so there is no unused white area below the fellow. `flex: 1` on `.poster-title` only distributes space available inside its heading; it does not make the outer image grow. The panel's sizing decides whether any external spare height reaches that title.
+
+On narrow cards, the time-left cell gets its own full-width row. Its countdown wrapper uses natural dimensions instead of its animated inline width and height; unit groups can wrap without clipping their text. Digit animation stays inside each wheel. Treat the text cells as content-sized regions rather than assigning them a shared fixed height.
 
 ## Assign one owner of spare space
 
 Choose the policy from the content's purpose, independently of its color:
 
-- **Title receives spare space:** registration cards, course summaries, or text-led tiles with supporting credits.
-- **Image receives spare space:** event posters or other image-led cards whose title panel should stop after its text.
+- **Title receives spare space:** text-led tiles, or the inside of a wide registration side panel with supporting credits.
+- **Image receives spare space:** stacked registration and event posters whose text panels stop after their content.
 - **Content determines all heights:** independent cards without a shared-height requirement.
 
 Flexbox distributes available space among flexible children; `flex: none` prevents growth and shrinkage. These sizing behaviors are defined in the [W3C Flexbox specification](https://www.w3.org/TR/css-flexbox-1/#flex-common).
@@ -44,7 +46,7 @@ The following is a suggested contract for future components, **not an API curren
 
 ```html
 <div class="card-frame">
-  <article class="content-card" data-space-owner="title">
+  <article class="content-card" data-space-owner="media">
     <div class="content-card__body">
       <div class="content-card__media"><!-- image --></div>
       <div class="content-card__panel">
@@ -168,7 +170,7 @@ pnpm exec playwright install chromium
 node --test tests/poster-layout.test.mjs
 ```
 
-It covers the three effective poster placements at 288, 358, 528, and 960 CSS pixels, with English, Arabic, wrapped fellows, and missing fellows. It checks layout allocation rather than production fonts, actual images, carousel animation, or a deployed page; those need a separate visual pass when changed. CI runs this geometry test in the production-smoke job after installing Chromium.
+It covers the three effective poster placements at 288, 358, 528, and 960 CSS pixels, with English, Arabic, wrapped fellows, and missing fellows. On stacked cards it checks image growth and stable text heights; on wide cards it checks title growth inside the side panel. It also checks the pink card's countdown at widths from 240 to 528 pixels in both directions and with larger text, including a stale inline animation size. It checks layout allocation rather than production fonts, actual images, live countdown transitions, carousel animation, or a deployed page; those need a separate visual pass when changed. CI runs this geometry test in the production-smoke job after installing Chromium.
 
 ## Where to apply this in CILAS
 

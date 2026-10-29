@@ -2318,6 +2318,7 @@ h3 {
 }
 .poster .poster-time [data-variant='compact'] {
   display: flex;
+  flex: 1;
   font-size: inherit;
 }
 /* Above Arc's own compact sizes, which load after these rules. */
@@ -2325,14 +2326,25 @@ h3 {
   font-size: inherit;
 }
 .poster .poster-time [data-variant='compact'] > div {
+  flex: 1;
+  min-width: 0;
+  width: auto !important;
   height: auto !important;
+  overflow: visible;
   border: 0;
   border-radius: 0;
   background: transparent;
 }
 .poster .poster-time [data-variant='compact'] > div > div {
-  height: 100%;
+  flex: 1;
+  min-width: 0;
+  height: auto;
   padding-inline: var(--poster-pad);
+}
+.poster .poster-time [data-variant='compact'] > div > div > span {
+  flex-wrap: wrap;
+  justify-content: center;
+  white-space: normal;
 }
 /* The poster's ink on its paper in either theme: digits full, units quieter. */
 .poster .poster-strip .poster-time [data-variant='compact'] {
@@ -2423,7 +2435,7 @@ h3 {
   }
   .poster-image,
   .poster[data-layout='0'] .poster-image {
-    flex: none;
+    flex: 1 0 auto;
     order: -1;
     aspect-ratio: 16 / 10;
   }
@@ -2433,15 +2445,6 @@ h3 {
     flex: none;
     gap: 0;
     border-top: 1px solid var(--poster-ink);
-  }
-  .poster-image {
-    flex: 1 0 auto;
-  }
-  .poster[data-separate-label] .poster-panel {
-    flex: 1;
-  }
-  .poster[data-separate-label] .poster-image {
-    flex: none;
   }
 }
 /* Tablet and narrower: the date and the time left share the strip's first
@@ -2463,6 +2466,23 @@ h3 {
   .poster-footer {
     grid-column: 1 / -1;
     border-top: 1px solid var(--poster-ink);
+  }
+}
+@container poster (max-width: 34rem) {
+  .poster-strip {
+    grid-template-columns: auto minmax(0, 1fr);
+  }
+  .poster-meta {
+    border-inline-end: 0;
+    min-width: 0;
+    overflow-wrap: anywhere;
+    padding-block: 0.5rem;
+  }
+  .poster-time {
+    grid-column: 1 / -1;
+    min-width: 0;
+    border-block-start: 1px solid var(--poster-ink);
+    padding-block: 0.5rem;
   }
 }
 
