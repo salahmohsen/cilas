@@ -1,6 +1,8 @@
 import config from '@payload-config'
 import type { Metadata } from 'next'
 import { draftMode } from 'next/headers'
+import { previewWhere } from '@/lib/preview-access'
+import { currentReader } from '@/lib/reader'
 import { getTranslations } from 'next-intl/server'
 import { notFound } from 'next/navigation'
 import { getPayload, type Where } from 'payload'
@@ -19,7 +21,7 @@ import { RichTextScope } from '@/components/rich-text-scope'
 import { pathOf } from '@/lib/paths'
 import { breadcrumbSchema, courseSchema } from '@/lib/schema'
 import { ogImages } from '@/lib/og'
-import { seoDefaults } from '@/lib/seo'
+import { pageAlternates, seoDefaults } from '@/lib/seo'
 import type { Course, Media, Person } from '@/payload-types'
 
 /**
@@ -52,6 +54,8 @@ export async function courseMetadata(
     joins: false,
     locale: locale as 'en' | 'ar',
     fallbackLocale: 'en',
+    overrideAccess: false,
+    user: reader,
   })
   const course = docs[0]
   if (!course) return {}
@@ -66,6 +70,7 @@ export async function courseMetadata(
   return {
     title,
     description,
+    alternates: pageAlternates(`/study/${course.slug}`, locale),
     openGraph: { title, description, images: ogImages(imageUrl) },
     twitter: { card: 'summary_large_image', images: ogImages(imageUrl).map((i) => i.url) },
   }
@@ -86,11 +91,14 @@ export async function CoursePage({
 }) {
   const { isEnabled: isPreview } = await draftMode()
   const payload = await getPayload({ config })
+  if (isPreview) reader = await currentReader()
+  const scope = isPreview ? await previewWhere(payload, 'courses', reader) : null
+  if (scope === false) notFound()
 
   const { docs } = await payload.find({
     collection: 'courses',
     // The admin's preview shows any course; the site only what the reader may see.
-    where: isPreview ? { slug: { equals: slug } } : shownTo(reader, slug),
+    where: isPreview ? { and: [{ slug: { equals: slug } }, scope ?? {}] } : shownTo(reader, slug),
     limit: 1,
     // Must match the `depth` given to `useLivePreview` in CourseLivePreview,
     // or populated relationships will not survive the live merge.
@@ -98,7 +106,7 @@ export async function CoursePage({
     // Joins are admin views (a course's enrollments, a cycle's courses); never
     // ship them to the page, where a previewing fellow would see assessments.
     joins: false,
-    overrideAccess: isPreview,
+    overrideAccess: false,
     user: reader,
     // A course without text in the site language shows its own (CONTEXT.md).
     locale: locale as 'en' | 'ar',
@@ -201,11 +209,12 @@ export async function CoursePage({
    */
   const { docs: drafts } = await payload.find({
     collection: 'courses',
-    where: { slug: { equals: slug } },
+    where: { and: [{ slug: { equals: slug } }, scope ?? {}] },
     limit: 1,
     depth: 2,
     joins: false,
-    overrideAccess: true,
+    overrideAccess: false,
+    user: reader,
     draft: true,
     locale: locale as 'en' | 'ar',
     fallbackLocale: locale === 'ar' ? 'en' : 'ar',

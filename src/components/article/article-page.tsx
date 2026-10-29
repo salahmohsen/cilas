@@ -4,6 +4,7 @@ import { ArrowLeft, ArrowUpRight, Languages } from 'lucide-react'
 import type { Metadata } from 'next'
 import { getFormatter, getTranslations } from 'next-intl/server'
 import { draftMode } from 'next/headers'
+import { currentReader } from '@/lib/reader'
 import { notFound } from 'next/navigation'
 import { getPayload } from 'payload'
 import React from 'react'
@@ -39,7 +40,7 @@ import { resolveCardStacks } from '@/api/card-stacks.api'
 import { NewsletterSignupEnd } from '@/components/newsletter-signup-end'
 import { Schema } from '@/components/schema'
 import { Link } from '@/i18n/navigation'
-import { isRtl, routing } from '@/i18n/routing'
+import { isRtl } from '@/i18n/routing'
 import { env } from '@/env'
 import { splitBody } from '@/lib/article-body'
 import { localDigits } from '@/lib/digits'
@@ -49,6 +50,7 @@ import { excerptOf, publicationOf, readingMinutes, repeatsOpening, yearOf } from
 import { articleSchema, absoluteUrl, breadcrumbSchema } from '@/lib/schema'
 import { ogImages } from '@/lib/og'
 import { pathOf } from '@/lib/paths'
+import { pageAlternates } from '@/lib/seo'
 import type { Article, Media, Person, Publication } from '@/payload-types'
 
 const isObject = <T,>(v: unknown): v is T => typeof v === 'object' && v !== null
@@ -72,13 +74,7 @@ export async function articleMetadata({ locale, slug, user }: View): Promise<Met
     description,
     openGraph: { title: metaTitle, description, type: 'article', images: ogImages(image) },
     twitter: { card: 'summary_large_image', images: ogImages(image).map((i) => i.url) },
-    // Each site language has its own URL (ADR 0006).
-    alternates: {
-      canonical: pathOf('articles', article, locale),
-      languages: Object.fromEntries(
-        routing.locales.map((l) => [l, pathOf('articles', article, l) ?? '']),
-      ),
-    },
+    alternates: pageAlternates(`/articles/${article.slug}`, locale),
   }
 }
 
@@ -87,9 +83,10 @@ export async function articleMetadata({ locale, slug, user }: View): Promise<Met
  * signed-in page (src/proxy.ts sends signed-in readers there) passes the
  * account, so `community` articles open too.
  */
-export async function ArticlePage({ locale: siteLocale, slug, user }: View) {
+export async function ArticlePage({ locale: siteLocale, slug, user: reader }: View) {
   const locale = siteLocale as Locale
   const { isEnabled: preview } = await draftMode()
+  const user = preview ? await currentReader() : reader
   // In the admin's live preview, mark the fields for the visual editor.
   const pe = editableIn(preview)
   const payload = await getPayload({ config })

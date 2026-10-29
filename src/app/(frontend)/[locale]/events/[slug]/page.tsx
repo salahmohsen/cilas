@@ -4,6 +4,7 @@ import { notFound } from 'next/navigation'
 import { getFormatter, getTranslations } from 'next-intl/server'
 import { getPayload } from 'payload'
 import type { ReactNode } from 'react'
+import type { Metadata } from 'next'
 import { cache } from 'react'
 import type { Locale } from '@/api/articles.api'
 import { getPublicEvents } from '@/api/events.api'
@@ -20,6 +21,10 @@ import { eventTiming } from '@/lib/events'
 import { expandSchedule } from '@/lib/schedule'
 import { registrationStatus } from '@/lib/registration'
 import { plainText } from '@/lib/plaintext'
+import { pageAlternates } from '@/lib/seo'
+import { ogImages } from '@/lib/og'
+import { breadcrumbSchema, eventSchema } from '@/lib/schema'
+import { Schema } from '@/components/schema'
 import styles from '@/components/events/events.module.css'
 import readerStyles from '@/components/arc/blocks/blog-grid/blog-grid.module.css'
 
@@ -31,29 +36,47 @@ const readEvent = cache(async (locale: Locale, slug: string) => {
   return (await getPublicEvents(payload, locale, slug))[0]
 })
 
-export async function generateMetadata({ params }: Props) {
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { locale, slug } = await params
   const event = await readEvent(locale, slug)
   if (!event) notFound()
+  const metaImage = typeof event.meta?.image === 'object' ? event.meta.image : null
   const cover = typeof event.cover_image === 'object' ? event.cover_image : null
+  const images = ogImages(metaImage?.url || cover?.url)
+  const title = event.meta?.title || event.title
+  const description =
+    event.meta?.description ||
+    (event.description ? plainText({ data: event.description }).slice(0, 160) : undefined)
   return {
-    title: event.meta?.title || event.title,
-    description:
-      event.meta?.description ||
-      (event.description ? plainText({ data: event.description }).slice(0, 160) : undefined),
-    openGraph: { images: cover?.url ? [{ url: cover.url, alt: cover.alt || event.title }] : [] },
+    title,
+    description,
+    alternates: pageAlternates(`/events/${event.slug}`, locale),
+    openGraph: { title, description, url: `/${locale}/events/${event.slug}`, images },
+    twitter: {
+      card: 'summary_large_image',
+      title,
+      description,
+      images: images.map((image) => image.url),
+    },
   }
 }
 
 export default async function Page({ params }: Props) {
   const { locale, slug } = await params
-  const [event, t, format, share] = await Promise.all([
+  const [event, t, format, share, tm] = await Promise.all([
     readEvent(locale, slug),
     getTranslations('Events'),
     getFormatter(),
     getTranslations('Share'),
+    getTranslations('Meta'),
   ])
   if (!event) notFound()
+  const schema = eventSchema({ event, locale, siteName: tm('siteName') })
+  const crumbs = breadcrumbSchema([
+    { name: tm('siteName'), path: `/${locale}` },
+    { name: t('title'), path: `/${locale}/events` },
+    { name: event.title, path: `/${locale}/events/${event.slug}` },
+  ])
   const now = new Date()
   const timing = eventTiming(event, now)
   const form = typeof event.registration?.form === 'object' ? event.registration.form : null
@@ -68,6 +91,7 @@ export default async function Page({ params }: Props) {
       notes[block.id] = <RichTextField data={block.message} />
   return (
     <div className={readerStyles.root}>
+      <Schema data={schema ? [schema, crumbs] : [crumbs]} />
       <div className={readerStyles.inner}>
         <article className={styles.detailLayout} aria-labelledby="event-title">
           <div className={styles.detailBack}>

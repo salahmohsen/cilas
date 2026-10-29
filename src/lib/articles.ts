@@ -2,7 +2,8 @@ import { plainText } from '@/lib/plaintext'
 
 import type { Article, Person, Publication } from '@/payload-types'
 
-const isObject = <T>(v: number | T | null | undefined): v is T => typeof v === 'object' && v !== null
+const isObject = <T>(v: number | T | null | undefined): v is T =>
+  typeof v === 'object' && v !== null
 
 export const authorNames = (article: Pick<Article, 'authors'>): string[] =>
   (article.authors ?? []).filter(isObject<Person>).map((p) => p.name)
@@ -58,3 +59,29 @@ export const yearOf = (article: Pick<Article, 'published_date' | 'createdAt'>): 
 
 /** Two-digit index for numbered lists: 1 → "01". */
 export const indexLabel = (i: number): string => String(i + 1).padStart(2, '0')
+
+export const ARTICLE_PAGE_SIZE = 9
+
+export const articleListSelection = (
+  articles: Article[],
+  query: { publication?: string; page?: string | number },
+) => {
+  const categoryOf = (article: Article) => publicationOf(article)?.slug ?? 'other'
+  const publication = articles.some((article) => categoryOf(article) === query.publication)
+    ? query.publication
+    : undefined
+  const count = publication
+    ? articles.filter((article) => categoryOf(article) === publication).length
+    : articles.length
+  const pages = Math.max(1, Math.ceil((count > 1 ? count - 1 : count) / ARTICLE_PAGE_SIZE))
+  const requested = Number(query.page)
+  const page = Number.isSafeInteger(requested) && requested > 0 ? Math.min(requested, pages) : 1
+  return { page, publication }
+}
+
+export const articleListPath = (page: number, publication?: string): string => {
+  const query = new URLSearchParams()
+  if (publication) query.set('publication', publication)
+  if (Number.isSafeInteger(page) && page > 1) query.set('page', String(page))
+  return `/articles${query.size ? `?${query}` : ''}`
+}

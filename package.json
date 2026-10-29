@@ -20,7 +20,8 @@
     "start": "cross-env NODE_OPTIONS=--no-deprecation next start",
     "test": "pnpm run test:int && pnpm run test:e2e",
     "test:e2e": "cross-env NODE_OPTIONS=\"--no-deprecation --import=tsx/esm\" playwright test --config=playwright.config.ts",
-    "test:int": "cross-env NODE_OPTIONS=--no-deprecation vitest run --config ./vitest.config.mts"
+    "test:int": "cross-env NODE_OPTIONS=--no-deprecation vitest run --config ./vitest.config.mts",
+    "test:seo": "node scripts/check-seo.mjs"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.1143.0",
@@ -73,14 +74,14 @@
     "react-instantsearch": "^7.52.0",
     "react-markdown": "^10.1.0",
     "remark-gfm": "^4.0.1",
-    "shadcn": "^4.21.0",
+    "shadcn": "^4.23.0",
     "sharp": "0.35.5",
     "simple-icons": "16.32.0",
     "tw-animate-css": "^1.4.0",
     "typesense": "^3.1.1",
     "typesense-instantsearch-adapter": "^3.0.2",
-    "undici": "7.30.0",
-    "zod": "^4.6.5"
+    "undici": "7.30.1",
+    "zod": "^4.6.6"
   },
   "devDependencies": {
     "@anthropic-ai/sdk": "^0.132.1",
@@ -105,6 +106,7 @@
     "tailwindcss": "^4.3.3",
     "tsx": "4.22.4",
     "typescript": "5.7.3",
+    "vite": "^7.3.7",
     "vite-tsconfig-paths": "6.0.5",
     "vitest": "4.1.12"
   },
@@ -115,13 +117,27 @@
   "pnpm": {
     "overrides": {
       "source-map-js@<1.2.2": "^1.2.2",
-      "dompurify@<3.4.16": "^3.4.17"
+      "systeminformation@<5.33.16": "^5.33.18",
+      "dompurify@<3.4.16": "^3.4.17",
+      "undici@>=7.0.0 <7.30.1": "7.30.1",
+      "postcss-selector-parser@<6.1.5": "^6.1.5",
+      "fast-uri@>=3.0.0 <3.1.9": "^3.1.9",
+      "csv-parse@<7.0.2": "^7.0.2",
+      "esbuild@<0.25.0": "^0.25.12",
+      "vite@>=7.0.0 <7.3.7": "^7.3.7",
+      "happy-dom@<21.0.4": "^21.0.4",
+      "ip-address@<10.7.4": "^10.7.4",
+      "qs@>=6.7.0 <6.16.1": "^6.16.1",
+      "graphql-scalars@<2.0.1": "^2.0.1"
     },
     "onlyBuiltDependencies": [
       "@parcel/watcher@2.6.0",
       "esbuild",
       "sharp",
       "unrs-resolver"
-    ]
+    ],
+    "patchedDependencies": {
+      "deepmerge@4.3.1": "patches/deepmerge@4.3.1.patch"
+    }
   }
 }

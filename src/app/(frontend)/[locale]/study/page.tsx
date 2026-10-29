@@ -1,4 +1,5 @@
 import Image from 'next/image'
+import type { Metadata } from 'next'
 import { getTranslations } from 'next-intl/server'
 import { Suspense } from 'react'
 
@@ -7,10 +8,32 @@ import { readCourseQuery } from '@/lib/course-search'
 import { Schema } from '@/components/schema'
 import { StudyList } from '@/components/study-list'
 import { itemListSchema, absoluteUrl } from '@/lib/schema'
+import { pageAlternates } from '@/lib/seo'
 
 type Props = {
   params: Promise<{ locale: string }>
   searchParams: Promise<Record<string, string | string[] | undefined>>
+}
+
+export async function generateMetadata({ params, searchParams }: Props): Promise<Metadata> {
+  const [{ locale }, raw] = await Promise.all([params, searchParams])
+  const t = await getTranslations('Study')
+  const query = readCourseQuery(
+    new URLSearchParams(
+      Object.entries(raw).flatMap(([key, value]) =>
+        typeof value === 'string' ? [[key, value]] : [],
+      ),
+    ),
+  )
+  const result = await getStudyPage(locale === 'ar' ? 'ar' : 'en', query, Number(raw.page) || 1)
+  const canonicalQuery = new URLSearchParams(query)
+  if (result.page > 1) canonicalQuery.set('page', String(result.page))
+  return {
+    title: `${t('title')} · CILAS`,
+    description: t('heroQuote'),
+    alternates: pageAlternates(`/study${canonicalQuery.size ? `?${canonicalQuery}` : ''}`, locale),
+    ...(Object.keys(query).length ? { robots: { index: false } } : {}),
+  }
 }
 
 export default async function CoursesPage({ params, searchParams }: Props) {
@@ -39,7 +62,9 @@ export default async function CoursesPage({ params, searchParams }: Props) {
       <header className="study-header">
         <div className="study-header-text">
           <h1 className="study-title">{t('title')}</h1>
-          {firstYear ? <p className="study-since">{t('since', { count: all, year: firstYear })}</p> : null}
+          {firstYear ? (
+            <p className="study-since">{t('since', { count: all, year: firstYear })}</p>
+          ) : null}
           <div className="article-prose study-quote">
             <blockquote className="quote-with-source">
               <p>{t('heroQuote')}</p>

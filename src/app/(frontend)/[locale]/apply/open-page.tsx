@@ -1,6 +1,7 @@
+import { pageAlternates } from '@/lib/seo'
 import config from '@payload-config'
 import type { Metadata } from 'next'
-import { getFormatter, getTranslations } from 'next-intl/server'
+import { getFormatter, getLocale, getTranslations } from 'next-intl/server'
 import { getPayload } from 'payload'
 
 import type { Locale, Reader } from '@/api/articles.api'
@@ -11,8 +12,13 @@ import { numberingSystemOf } from '@/lib/digits'
 
 /** Shared by the cached page and the signed-in one. */
 export async function openMetadata(): Promise<Metadata> {
+  const locale = await getLocale()
   const t = await getTranslations('Home')
-  return { title: t('openTitle'), description: t('openText') }
+  return {
+    alternates: pageAlternates('/apply', locale),
+    title: t('openTitle'),
+    description: t('openText'),
+  }
 }
 
 /**

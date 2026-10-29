@@ -35,6 +35,13 @@ export function PastEventsGrid({
   }
   return (
     <BlogGrid
+      getPageHref={(page, category) => {
+        const type = Object.keys(types).find((key) => types[key] === category)
+        const query = new URLSearchParams()
+        if (type) query.set('type', type)
+        if (page > 1) query.set('page', String(page))
+        return `/${locale}/events${query.size ? `?${query}` : ''}#past-events`
+      }}
       title={events('past')}
       header={false}
       flush

@@ -1,8 +1,9 @@
 import { plainText } from '@/lib/plaintext'
 import type { Payload } from 'payload'
 import { mediaImage, type MediaImage } from '@/lib/media-image'
+import { previewWhere } from '@/lib/preview-access'
 
-import type { Course, Cycle, Media, Person, Programme } from '@/payload-types'
+import type { Course, Cycle, Media, Person, Programme, User } from '@/payload-types'
 
 type Locale = 'en' | 'ar'
 
@@ -73,8 +74,10 @@ export const listBridgeYears = async (payload: Payload, locale: Locale) => {
 export const getBridgeYear = async (
   payload: Payload,
   locale: Locale,
-  { slug, draft = false }: { slug?: string; draft?: boolean } = {},
+  { slug, draft = false, user = null }: { slug?: string; draft?: boolean; user?: User | null } = {},
 ): Promise<BridgeYear | null> => {
+  const scope = draft ? await previewWhere(payload, 'programmes', user) : null
+  if (scope === false) return null
   const { docs } = await payload.find({
     collection: 'programmes',
     where: {
@@ -82,9 +85,12 @@ export const getBridgeYear = async (
         { kind: { equals: 'bridge' } },
         ...(slug ? [{ slug: { equals: slug } }] : []),
         ...(draft ? [] : [{ _status: { equals: 'published' } }]),
+        ...(scope ? [scope] : []),
       ],
     },
     draft,
+    user,
+    overrideAccess: false,
     sort: '-slug',
     limit: 1,
     depth: 1,

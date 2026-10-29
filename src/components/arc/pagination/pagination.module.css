@@ -5,7 +5,7 @@
   align-items: center;
   gap: var(--space-1);
 }
-.nav button {
+.nav :is(button, a) {
   position: relative;
   display: grid;
   width: var(--control-height-sm);
@@ -19,11 +19,12 @@
   font-size: var(--text-xs);
   font-variant-numeric: tabular-nums;
   cursor: pointer;
+  text-decoration: none;
   transition:
     background-color var(--duration-fast) var(--ease-standard),
     color var(--duration-fast) var(--ease-standard);
 }
-.nav button[aria-current='page'] {
+.nav :is(button, a)[aria-current='page'] {
   color: var(--foreground);
 }
 /* One shared mark travels between pages. Before it has measured (server render), the button draws its own. */
@@ -44,7 +45,7 @@
 .nav[data-mark-ready] .mark {
   opacity: 1;
 }
-.nav:not([data-mark-ready]) button[aria-current='page'] {
+.nav:not([data-mark-ready]) :is(button, a)[aria-current='page'] {
   border-color: var(--border);
   background: var(--surface);
   box-shadow: var(--shadow-resting);
@@ -57,31 +58,32 @@
     opacity var(--duration-fast) var(--ease-standard),
     transform var(--duration-spring) var(--ease-spring);
 }
-.nav .step:active:not(:disabled) {
+.nav .step:active:not(:disabled):not([aria-disabled='true']) {
   transform: scale(0.96);
   transition-duration: var(--duration-fast), var(--duration-fast), var(--duration-fast), 100ms;
   transition-timing-function:
     var(--ease-standard), var(--ease-standard), var(--ease-standard), ease-out;
 }
-.nav button:disabled {
+.nav :is(button, a):disabled,
+.nav [aria-disabled='true'] {
   opacity: 0.4;
   cursor: not-allowed;
 }
 @media (hover: hover) and (pointer: fine) {
-  .nav button:hover:not(:disabled) {
+  .nav :is(button, a):hover:not(:disabled):not([aria-disabled='true']) {
     background: var(--surface-muted);
     color: var(--foreground);
   }
-  .nav[data-mark-ready] button[aria-current='page']:hover {
+  .nav[data-mark-ready] :is(button, a)[aria-current='page']:hover {
     background: transparent;
   }
 }
 @media (prefers-reduced-motion: reduce) {
-  .nav button,
+  .nav :is(button, a),
   .nav .step {
     transition: none;
   }
-  .nav .step:active:not(:disabled) {
+  .nav .step:active:not(:disabled):not([aria-disabled='true']) {
     transform: none;
   }
 }
