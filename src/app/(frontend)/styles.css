@@ -2187,12 +2187,12 @@ h3 {
 }
 .poster-title {
   font-family: var(--font-heading);
-  font-size: clamp(1.6rem, 5.2cqi, 3.75rem);
+  font-size: clamp(1.25rem, 4.5cqi, 3.25rem);
   font-weight: 400;
   line-height: 1.1;
   letter-spacing: -0.025em;
   text-wrap: balance;
-  overflow-wrap: anywhere;
+  overflow-wrap: normal;
   padding: var(--poster-pad);
 }
 .poster-title:dir(rtl) {
