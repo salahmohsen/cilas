@@ -12,7 +12,7 @@
   --font-mono: 'Roboto Mono', monospace;
   /* Two roles in two scripts (src/lib/fonts.ts): Latin first, Arabic after. */
   --font-text: var(--font-inter), var(--font-plex-arabic), system-ui, sans-serif;
-  --font-title: var(--font-playfair-display), var(--font-amiri-quran), Georgia, serif;
+  --font-title: var(--font-playfair-display), var(--font-amiri), Georgia, serif;
   --font-body: var(--font-text);
   --font-display: var(--font-title);
 
@@ -143,7 +143,7 @@
 
   html {
     @apply font-sans;
-    /* Every weight in use is loaded; Amiri Quran has only 400, and a faked
+    /* Every weight in use is loaded; Amiri has only 400, and a faked
        bold would smear its strokes, so no weight is ever synthesised. */
     font-synthesis-weight: none;
   }
@@ -2180,7 +2180,7 @@ h3 {
   max-width: 40%;
 }
 .poster-title {
-  font-family: var(--font-playfair-display), var(--font-plex-arabic), serif;
+  font-family: var(--font-playfair-display), var(--font-amiri), serif;
   font-size: clamp(1.75rem, 5cqi, 3.75rem);
   font-weight: 700;
   line-height: 1.1;

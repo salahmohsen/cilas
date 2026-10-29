@@ -1,9 +1,9 @@
-import { Amiri_Quran, IBM_Plex_Sans_Arabic, Inter, Playfair_Display } from 'next/font/google'
+import { Amiri, IBM_Plex_Sans_Arabic, Inter, Playfair_Display } from 'next/font/google'
 
 /**
  * The site's four faces, two roles in two scripts:
  *
- *   titles  Playfair Display (Latin)  ·  Amiri Quran (Arabic)
+ *   titles  Playfair Display (Latin)  ·  Amiri (Arabic)
  *   text    Inter (Latin)       ·  IBM Plex Sans Arabic (Arabic)
  *
  * styles.css stacks each role Latin first (`--font-title`, `--font-text`).
@@ -40,15 +40,15 @@ const playfairDisplay = Playfair_Display({
 })
 
 // One weight only: Arabic titles are set at 400 whatever weight the Latin takes.
-const amiriQuran = Amiri_Quran({
+const amiri = Amiri({
   subsets: ['arabic'],
   weight: '400',
-  variable: '--font-amiri-quran',
+  variable: '--font-amiri',
   adjustFontFallback: false,
   fallback: [],
 })
 
 /** The faces' variables, set once on the document. */
-export const fontVariables = [inter, plexArabic, playfairDisplay, amiriQuran]
+export const fontVariables = [inter, plexArabic, playfairDisplay, amiri]
   .map((f) => f.variable)
   .join(' ')
