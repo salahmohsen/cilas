@@ -156,6 +156,7 @@ export function Poster({ poster }: { poster: PosterData }) {
       className="poster"
       data-layout={layout}
       data-color={variant}
+      data-separate-label={separateLabel || undefined}
       style={color ? ({ '--poster-color': color } as CSSProperties) : undefined}
     >
       {layout === 2 ? strip : null}
