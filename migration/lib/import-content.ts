@@ -411,6 +411,7 @@ export const importContent = async (payload: Payload, data: ArchiveContent): Pro
         slug: slugify(e.title_en),
         event_type: e.event_type,
         tier: e.tier,
+        _status: 'published',
         schedule: { start_precision: 'day', ...e.schedule },
         speakers: (await resolveSeq(e.speakers, e.legacy_url)).map((p) => ({ person: p })),
         ...(rich(e.description_en, 'ltr') ? { description: rich(e.description_en, 'ltr') } : {}),

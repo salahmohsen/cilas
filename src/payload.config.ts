@@ -122,6 +122,7 @@ export default buildConfig({
   admin: {
     user: Users.slug,
     components: {
+      beforeNavLinks: ['/components/admin/work-links#WorkLinks'],
       // Admin → Subscribers: the newsletter list from Resend, with CSV export.
       // Reached from the Newsletters list (src/components/admin/subscribers-link.tsx).
       views: {
@@ -148,7 +149,7 @@ export default buildConfig({
     // via `admin.livePreview.url`.
     livePreview: {
       url: '/',
-      collections: ['courses', 'articles', 'programmes', 'newsletters'],
+      collections: ['courses', 'articles', 'programmes', 'newsletters', 'events'],
       breakpoints: [
         { name: 'mobile', label: 'Mobile', width: 390, height: 844 },
         { name: 'tablet', label: 'Tablet', width: 768, height: 1024 },

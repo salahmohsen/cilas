@@ -7,7 +7,8 @@ import { getReviewQueue } from '@/lib/review-queue'
 import config from '@/payload.config'
 import type { User } from '@/payload-types'
 
-type Tracked = 'people' | 'articles' | 'publications' | 'press' | 'places' | 'cycles' | 'courses'
+type Tracked =
+  'people' | 'articles' | 'publications' | 'press' | 'places' | 'cycles' | 'courses' | 'users'
 
 let payload: Payload
 const created: Array<{ collection: Tracked; id: number }> = []
@@ -23,6 +24,17 @@ describe('publishing', () => {
 
   beforeAll(async () => {
     payload = await getPayload({ config: await config })
+    track(
+      'users',
+      await payload.create({
+        collection: 'users',
+        data: {
+          email: `publishing-admin-${crypto.randomUUID()}@cilas.test`,
+          password: crypto.randomUUID(),
+          roles: ['admin'],
+        },
+      }),
+    )
     personId = track(
       'people',
       await payload.create({

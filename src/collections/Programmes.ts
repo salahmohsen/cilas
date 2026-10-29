@@ -37,123 +37,153 @@ export const Programmes: CollectionConfig = {
     },
   },
   fields: [
-    {
-      name: 'kind',
-      type: 'select',
-      required: true,
-      options: [
-        { label: 'Bridge', value: 'bridge' },
-        { label: "Women's Studies", value: 'women_studies' },
-        { label: 'Residency', value: 'residency' },
-      ],
-      admin: {
-        description:
-          'What sort of programme: the Bridge (the year-long programme), Women’s Studies or a Residency.',
-        position: 'sidebar',
-      },
-    },
     { name: 'cover', type: 'upload', relationTo: 'media', admin: { position: 'sidebar' } },
     { name: 'title', type: 'text', required: true, localized: true },
     slugField(),
-    {
-      name: 'tagline',
-      type: 'text',
-      localized: true,
-      admin: {
-        description: 'One line under the title, e.g. “A year of the liberal arts in Cairo”.',
-      },
-    },
-    { name: 'overview', type: 'richText', localized: true },
-    {
-      name: 'highlights',
-      type: 'array',
-      fields: [{ name: 'text', type: 'text', localized: true, required: true }],
-      admin: { description: 'Short points shown as a list, e.g. “Taught in Arabic and English”.' },
-    },
-    {
-      label: 'Structure',
-      type: 'collapsible',
-      fields: [
-        {
-          name: 'cycles',
-          type: 'relationship',
-          relationTo: 'cycles',
-          hasMany: true,
-          admin: { description: 'The semester cycles, in order.' },
-        },
-        {
-          name: 'components',
-          type: 'array',
-          admin: { description: "Each part's courses are its cycle's courses of these types." },
-          fields: [
-            { name: 'label', type: 'text', localized: true, required: true },
-            { name: 'description', type: 'textarea', localized: true },
-            { name: 'cycle', type: 'relationship', relationTo: 'cycles', required: true },
-            {
-              name: 'course_types',
-              type: 'select',
-              hasMany: true,
-              required: true,
-              options: [...COURSE_TYPE_OPTIONS],
-            },
-          ],
-        },
-      ],
-    },
-    {
-      label: 'Commitment',
-      type: 'collapsible',
-      fields: [
-        {
-          type: 'row',
-          fields: [
-            {
-              name: 'capacity',
-              type: 'number',
-              min: 1,
-              admin: { description: 'Seats available, e.g. 20.', width: '50%' },
-            },
-            {
-              name: 'weekly_hours',
-              type: 'number',
-              min: 0,
-              admin: { description: 'Expected hours of study a week, e.g. 9.', width: '50%' },
-            },
-          ],
-        },
-        {
-          name: 'schedule_note',
-          type: 'textarea',
-          localized: true,
-          admin: {
-            description:
-              'When it meets, in words, e.g. “Saturdays and Tuesdays, from 10:30 or 5:30, three hours”.',
-          },
-        },
-        {
-          name: 'requirements',
-          type: 'richText',
-          localized: true,
-          admin: {
-            description:
-              'What applicants need, e.g. “A high-school certificate; a university degree helps.”',
-          },
-        },
-      ],
-    },
-    registrationField(),
-    pricingField({ dbName: 'programme_price' }),
-    {
-      name: 'testimonials',
-      type: 'array',
-      fields: [
-        { name: 'quote', type: 'textarea', localized: true, required: true },
-        { name: 'attribution', type: 'text', localized: true }, // "CILASian, 2018–19"
-        { name: 'person', type: 'relationship', relationTo: 'people' },
-      ],
-      admin: { description: 'Quotes from past participants, shown on the programme page.' },
-    },
     ...importFields(),
+    {
+      type: 'tabs',
+      tabs: [
+        {
+          label: 'Overview',
+          fields: [
+            {
+              name: 'tagline',
+              type: 'text',
+              localized: true,
+              admin: {
+                description:
+                  'One line under the title, e.g. “A year of the liberal arts in Cairo”.',
+              },
+            },
+            {
+              name: 'overview',
+              type: 'richText',
+              localized: true,
+              admin: {
+                description:
+                  'Write the introduction here. Use lists for highlights and quotes for testimonials, in the order you want readers to see them.',
+              },
+            },
+            {
+              name: 'highlights',
+              type: 'array',
+              fields: [{ name: 'text', type: 'text', localized: true, required: true }],
+              admin: { hidden: true, readOnly: true },
+            },
+            {
+              name: 'testimonials',
+              type: 'array',
+              fields: [
+                { name: 'quote', type: 'textarea', localized: true, required: true },
+                { name: 'attribution', type: 'text', localized: true }, // "CILASian, 2018–19"
+                { name: 'person', type: 'relationship', relationTo: 'people' },
+              ],
+              admin: { hidden: true, readOnly: true },
+            },
+            {
+              name: 'kind',
+              type: 'select',
+              required: true,
+              options: [
+                { label: 'Bridge', value: 'bridge' },
+                { label: "Women's Studies", value: 'women_studies' },
+                { label: 'Residency', value: 'residency' },
+              ],
+              admin: {
+                description:
+                  'What sort of programme: the Bridge (the year-long programme), Women’s Studies or a Residency.',
+              },
+            },
+          ],
+        },
+        {
+          label: 'Structure',
+          fields: [
+            {
+              label: 'Structure',
+              type: 'collapsible',
+              fields: [
+                {
+                  name: 'cycles',
+                  type: 'relationship',
+                  relationTo: 'cycles',
+                  hasMany: true,
+                  admin: { description: 'The semester cycles, in order.' },
+                },
+                {
+                  name: 'components',
+                  type: 'array',
+                  admin: {
+                    description: "Each part's courses are its cycle's courses of these types.",
+                  },
+                  fields: [
+                    { name: 'label', type: 'text', localized: true, required: true },
+                    { name: 'description', type: 'textarea', localized: true },
+                    { name: 'cycle', type: 'relationship', relationTo: 'cycles', required: true },
+                    {
+                      name: 'course_types',
+                      type: 'select',
+                      hasMany: true,
+                      required: true,
+                      options: [...COURSE_TYPE_OPTIONS],
+                    },
+                  ],
+                },
+              ],
+            },
+            {
+              label: 'Commitment',
+              type: 'collapsible',
+              fields: [
+                {
+                  type: 'row',
+                  fields: [
+                    {
+                      name: 'capacity',
+                      type: 'number',
+                      min: 1,
+                      admin: { description: 'Seats available, e.g. 20.', width: '50%' },
+                    },
+                    {
+                      name: 'weekly_hours',
+                      type: 'number',
+                      min: 0,
+                      admin: {
+                        description: 'Expected hours of study a week, e.g. 9.',
+                        width: '50%',
+                      },
+                    },
+                  ],
+                },
+                {
+                  name: 'schedule_note',
+                  type: 'textarea',
+                  localized: true,
+                  admin: {
+                    description:
+                      'When it meets, in words, e.g. “Saturdays and Tuesdays, from 10:30 or 5:30, three hours”.',
+                  },
+                },
+                {
+                  name: 'requirements',
+                  type: 'richText',
+                  localized: true,
+                  admin: {
+                    description:
+                      'What applicants need, e.g. “A high-school certificate; a university degree helps.”',
+                  },
+                },
+              ],
+            },
+          ],
+        },
+        {
+          label: 'Applications and pricing',
+          fields: [registrationField(), pricingField({ dbName: 'programme_price' })],
+        },
+      ],
+    },
   ],
   hooks: { afterChange: [ensureSpaceForProgramme] },
 }

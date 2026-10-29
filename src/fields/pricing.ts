@@ -38,7 +38,7 @@ export const pricingField = ({
           min: 0,
           admin: {
             description: 'The price in EGP; with a maximum it reads as a range, e.g. 2,500–3,000.',
-            width: '35%',
+            width: '50%',
           },
         },
         {
@@ -52,14 +52,14 @@ export const pricingField = ({
               ? notBelow(value, (options.siblingData as Record<string, unknown>).min, 'the minimum')
               : base
           }) satisfies NumberFieldSingleValidation,
-          admin: { width: '35%', description: 'Leave empty for a single price.' },
+          admin: { width: '50%', description: 'Leave empty for a single price.' },
         },
         {
           name: 'currency',
           type: 'select',
           defaultValue: 'EGP',
           options: [{ label: 'EGP', value: 'EGP' }],
-          admin: { width: '30%' },
+          admin: { hidden: true },
         },
       ],
     },

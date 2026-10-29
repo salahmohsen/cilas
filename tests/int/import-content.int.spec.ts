@@ -280,6 +280,7 @@ describe('publishing content import', () => {
 
     const event = (await payload.find({ collection: 'events', where: { legacy_url: { equals: L.event } }, depth: 0, overrideAccess: true })).docs[0]
     expect(event.tier).toBe('public')
+    expect(event._status).toBe('published')
     expect(event.schedule?.start_date).toContain('2014-01-06')
     expect(event.speakers).toHaveLength(1)
 

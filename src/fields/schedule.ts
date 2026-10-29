@@ -58,10 +58,29 @@ export const timeRangeFields = (width = '20%'): Field[] => [
  * How something meets: a start date, a number of weeks and weekly slots in
  * Cairo wall-clock time (ADR 0002). Dates come from `expandSchedule()`.
  */
-export const scheduleField = (): NamedGroupField => ({
+export const scheduleField = ({ event = false }: { event?: boolean } = {}): NamedGroupField => ({
   name: 'schedule',
+  ...(event ? { label: 'When' } : {}),
   type: 'group',
   fields: [
+    ...(event
+      ? [
+          {
+            name: 'mode',
+            label: 'Timing',
+            type: 'select' as const,
+            defaultValue: 'single',
+            options: [
+              { label: 'One date', value: 'single' },
+              { label: 'Repeating', value: 'recurring' },
+            ],
+            admin: {
+              description:
+                'A screening or talk needs only one date and time. Agenda segments are optional.',
+            },
+          },
+        ]
+      : []),
     {
       type: 'row',
       fields: [
@@ -91,15 +110,49 @@ export const scheduleField = (): NamedGroupField => ({
           admin: {
             description: 'How long it runs, e.g. 8. With the start date it sets the end date.',
             width: '30%',
+            ...(event
+              ? { condition: (_: unknown, sibling: Schedule) => sibling?.mode !== 'single' }
+              : {}),
           },
         },
       ],
     },
+    ...(event
+      ? [
+          {
+            type: 'row' as const,
+            admin: { condition: (_: unknown, sibling: Schedule) => sibling?.mode === 'single' },
+            fields: ['start_time', 'end_time'].map((name): Field => ({
+              name,
+              type: 'text',
+              admin: {
+                width: '50%',
+                placeholder: name === 'start_time' ? '19:00' : '21:00',
+                description: '24-hour Cairo time. Leave both empty if only the date is known.',
+              },
+              validate: ((value, options) => {
+                const sibling = options.siblingData as Schedule
+                if (sibling.mode !== 'single') return true
+                if (!value && !sibling.start_time && !sibling.end_time) return true
+                const valid = timeOfDay(value)
+                if (valid !== true) return valid
+                if (!sibling.start_date) return 'Choose the event date before adding a time.'
+                return name === 'end_time' ? endAfterStart(value, sibling.start_time) : true
+              }) satisfies TextFieldSingleValidation,
+            })),
+          },
+        ]
+      : []),
     {
       name: 'slots',
       type: 'array',
       labels: { singular: 'Slot', plural: 'Slots' },
-      admin: { description: 'Weekly meeting times, in Cairo time.' },
+      admin: {
+        description: 'Weekly meeting times, in Cairo time.',
+        ...(event
+          ? { condition: (_: unknown, sibling: Schedule) => sibling?.mode !== 'single' }
+          : {}),
+      },
       fields: [
         {
           type: 'row',

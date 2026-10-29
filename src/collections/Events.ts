@@ -19,16 +19,36 @@ export const Events: CollectionConfig = {
   slug: 'events',
   access: {
     // Events have no owners: the owner tier means admins only.
-    read: readTiers(),
+    read: readTiers(undefined, { drafts: true }),
+    readVersions: isAdmin,
     create: isAdmin,
     update: isAdmin,
     delete: isAdmin,
   },
+  versions: { drafts: { autosave: { interval: 2000, showSaveDraftButton: true } } },
   admin: {
     useAsTitle: 'title',
-    defaultColumns: ['title', 'event_type', 'schedule.start_date', 'tier'],
+    defaultColumns: ['title', 'event_type', 'schedule.start_date', 'tier', '_status'],
+    livePreview: {
+      url: ({ data, locale }) => `/${locale?.code ?? 'en'}/events/preview/${data?.id ?? ''}`,
+    },
   },
-  hooks: { afterChange: [revalidateEventAfterChange], afterDelete: [revalidateEventAfterDelete] },
+  hooks: {
+    beforeOperation: [
+      ({ args, operation }) => {
+        // Imports and older API clients send weekly slots without the new mode.
+        if ((operation === 'create' || operation === 'update') && 'data' in args) {
+          const schedule = args.data?.schedule
+          if (schedule && !schedule.mode && (schedule.weeks || schedule.slots?.length)) {
+            schedule.mode = 'recurring'
+          }
+        }
+        return args
+      },
+    ],
+    afterChange: [revalidateEventAfterChange],
+    afterDelete: [revalidateEventAfterDelete],
+  },
   fields: [
     {
       name: 'tier',
@@ -43,41 +63,6 @@ export const Events: CollectionConfig = {
       access: { create: canSetTier, update: canSetTier },
       admin: { position: 'sidebar' },
     },
-    {
-      name: 'event_type',
-      type: 'select',
-      required: true,
-      options: [
-        { label: 'Talk', value: 'talk' },
-        { label: 'Panel', value: 'panel' },
-        { label: 'Book discussion', value: 'book_discussion' },
-        { label: 'Reading group', value: 'reading_group' },
-        { label: 'Screening', value: 'screening' },
-        { label: 'Performance', value: 'performance' },
-        { label: 'Music', value: 'music' },
-        { label: 'Exhibition', value: 'exhibition' },
-        { label: 'Open day', value: 'open_day' },
-        { label: 'Workshop', value: 'workshop' },
-        { label: 'Residency', value: 'residency' },
-        { label: 'Visit', value: 'visit' },
-        { label: 'Other', value: 'other' },
-      ],
-      admin: { position: 'sidebar' },
-    },
-    {
-      name: 'series',
-      type: 'relationship',
-      relationTo: 'events',
-      filterOptions: ({ id }) => (id ? { id: { not_equals: id } } : true),
-      admin: { position: 'sidebar', description: 'The event this one is part of.' },
-    },
-    {
-      name: 'programme',
-      type: 'relationship',
-      relationTo: 'programmes',
-      admin: { position: 'sidebar' },
-    },
-    { name: 'course', type: 'relationship', relationTo: 'courses', admin: { position: 'sidebar' } },
     { name: 'title', type: 'text', required: true, localized: true },
     slugField(),
     {
@@ -86,59 +71,122 @@ export const Events: CollectionConfig = {
       relationTo: 'media',
       admin: {
         position: 'sidebar',
-        description: 'Used on event cards. Add images to the description editor to show them on the event page.',
+        description:
+          'Used on event cards. Add images to the description editor to show them on the event page.',
       },
     },
-    { name: 'description', type: 'richText', localized: true },
-    scheduleField(),
+    ...importFields(),
     {
-      label: 'Where',
-      type: 'collapsible',
-      fields: [
-        { name: 'place', type: 'relationship', relationTo: 'places' },
+      type: 'tabs',
+      tabs: [
         {
-          name: 'external_venue',
-          type: 'group',
-          admin: { description: 'Only when it is not at a CILAS place.' },
+          label: 'Content',
           fields: [
-            { name: 'name', type: 'text', localized: true },
-            { name: 'address', type: 'text', localized: true },
-            { name: 'map_url', type: 'text', validate: optionalUrl },
+            { name: 'description', type: 'richText', localized: true },
+            {
+              name: 'event_type',
+              type: 'select',
+              required: true,
+              options: [
+                { label: 'Talk', value: 'talk' },
+                { label: 'Panel', value: 'panel' },
+                { label: 'Book discussion', value: 'book_discussion' },
+                { label: 'Reading group', value: 'reading_group' },
+                { label: 'Screening', value: 'screening' },
+                { label: 'Performance', value: 'performance' },
+                { label: 'Music', value: 'music' },
+                { label: 'Exhibition', value: 'exhibition' },
+                { label: 'Open day', value: 'open_day' },
+                { label: 'Workshop', value: 'workshop' },
+                { label: 'Residency', value: 'residency' },
+                { label: 'Visit', value: 'visit' },
+                { label: 'Other', value: 'other' },
+              ],
+              admin: {},
+            },
+            {
+              name: 'speakers',
+              type: 'array',
+              fields: [
+                {
+                  type: 'row',
+                  fields: [
+                    {
+                      name: 'person',
+                      type: 'relationship',
+                      relationTo: 'people',
+                      required: true,
+                      admin: { width: '60%' },
+                    },
+                    { name: 'role', type: 'text', localized: true, admin: { width: '40%' } }, // "moderator"
+                  ],
+                },
+              ],
+            },
           ],
         },
-        { name: 'online_url', type: 'text', validate: optionalUrl },
-      ],
-    },
-    {
-      name: 'agenda',
-      type: 'array',
-      admin: { description: 'Time blocks within the day, in Cairo time.' },
-      fields: [
-        { type: 'row', fields: [...timeRangeFields('25%')] },
-        { name: 'title', type: 'text', localized: true, required: true },
-      ],
-    },
-    {
-      name: 'speakers',
-      type: 'array',
-      fields: [
         {
-          type: 'row',
+          label: 'When and where',
+          fields: [
+            scheduleField({ event: true }),
+            {
+              label: 'Where',
+              type: 'collapsible',
+              fields: [
+                { name: 'place', type: 'relationship', relationTo: 'places' },
+                {
+                  name: 'external_venue',
+                  type: 'group',
+                  admin: { description: 'Only when it is not at a CILAS place.' },
+                  fields: [
+                    { name: 'name', type: 'text', localized: true },
+                    { name: 'address', type: 'text', localized: true },
+                    { name: 'map_url', type: 'text', validate: optionalUrl },
+                  ],
+                },
+                { name: 'online_url', type: 'text', validate: optionalUrl },
+              ],
+            },
+            {
+              name: 'agenda',
+              type: 'array',
+              label: 'Agenda (optional)',
+              admin: {
+                initCollapsed: true,
+                description:
+                  'Only for named segments within the event, such as a screening followed by a discussion. Set the event’s own date and time in When; no agenda is needed.',
+              },
+              fields: [
+                { type: 'row', fields: [...timeRangeFields('25%')] },
+                { name: 'title', type: 'text', localized: true, required: true },
+              ],
+            },
+          ],
+        },
+        {
+          label: 'Registration and pricing',
+          fields: [registrationField(), pricingField({ dbName: 'event_price' })],
+        },
+        {
+          label: 'Relationships',
           fields: [
             {
-              name: 'person',
+              name: 'series',
               type: 'relationship',
-              relationTo: 'people',
-              required: true,
-              admin: { width: '60%' },
+              relationTo: 'events',
+              filterOptions: ({ id }) => (id ? { id: { not_equals: id } } : true),
+              admin: { description: 'The event this one is part of.' },
             },
-            { name: 'role', type: 'text', localized: true, admin: { width: '40%' } }, // "moderator"
+            {
+              name: 'programme',
+              type: 'relationship',
+              relationTo: 'programmes',
+              admin: {},
+            },
+            { name: 'course', type: 'relationship', relationTo: 'courses', admin: {} },
           ],
         },
       ],
     },
-    registrationField(),
-    pricingField({ dbName: 'event_price' }),
-    ...importFields(),
   ],
 }

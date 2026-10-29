@@ -1,4 +1,3 @@
-import * as private_search from './20261028_120000_private_search';
 import * as migration_20261010_121318 from './20261010_121318';
 import * as migration_20261011_204952 from './20261011_204952';
 import * as migration_20261012_120336_bridge_application_form from './20261012_120336_bridge_application_form';
@@ -47,9 +46,13 @@ import * as migration_20261026_125844_space_introduction from './20261026_125844
 import * as migration_20261026_182513_space_vote_close_rules from './20261026_182513_space_vote_close_rules';
 import * as migration_20261026_235338_space_pinned_full from './20261026_235338_space_pinned_full';
 import * as migration_20261028_060959_event_covers_navigation from './20261028_060959_event_covers_navigation';
+import * as migration_20261028_120000_private_search from './20261028_120000_private_search';
+import * as migration_20261029_034244_event_single_timing from './20261029_034244_event_single_timing';
+import * as migration_20261029_075239_event_drafts from './20261029_075239_event_drafts';
+
+import * as migration_20261029_081500_programme_editorial from './20261029_081500_programme_editorial';
 
 export const migrations = [
-
   {
     up: migration_20261010_121318.up,
     down: migration_20261010_121318.down,
@@ -288,7 +291,26 @@ export const migrations = [
   {
     up: migration_20261028_060959_event_covers_navigation.up,
     down: migration_20261028_060959_event_covers_navigation.down,
-    name: '20261028_060959_event_covers_navigation'
+    name: '20261028_060959_event_covers_navigation',
   },
-  { up: private_search.up, down: private_search.down, name: '20261028_120000_private_search' },
+  {
+    up: migration_20261028_120000_private_search.up,
+    down: migration_20261028_120000_private_search.down,
+    name: '20261028_120000_private_search',
+  },
+  {
+    up: migration_20261029_034244_event_single_timing.up,
+    down: migration_20261029_034244_event_single_timing.down,
+    name: '20261029_034244_event_single_timing',
+  },
+  {
+    up: migration_20261029_075239_event_drafts.up,
+    down: migration_20261029_075239_event_drafts.down,
+    name: '20261029_075239_event_drafts'
+  },
+  {
+    up: migration_20261029_081500_programme_editorial.up,
+    down: migration_20261029_081500_programme_editorial.down,
+    name: '20261029_081500_programme_editorial',
+  },
 ];

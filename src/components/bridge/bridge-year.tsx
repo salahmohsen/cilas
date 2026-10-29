@@ -76,7 +76,6 @@ export async function BridgeYearView({
     !current || !open ? null : viaForm ? `/${locale}/study/bridge/apply` : applyUrl
   const plan = programme.pricing?.payment_plans?.[0]
   const instalments = plan?.installments ?? []
-  const testimonial = programme.testimonials?.[0]
 
   // The year's courses as cards, semester by semester; a course drawn by two parts shows once.
   const day = (iso: string) =>
@@ -306,13 +305,6 @@ export async function BridgeYearView({
               {programme.title}
             </h1>
             {programme.tagline ? <p className="bridge-tagline">{programme.tagline}</p> : null}
-            {programme.highlights?.length ? (
-              <ul className="bridge-highlights">
-                {programme.highlights.map((h, i) => (
-                  <li key={h.id ?? i}>{h.text}</li>
-                ))}
-              </ul>
-            ) : null}
           </header>
 
           <figure className="bridge-figure">
@@ -359,19 +351,6 @@ export async function BridgeYearView({
                 title={t('courses')}
               />
             </section>
-          ) : null}
-
-          {testimonial ? (
-            <div className="article-prose mt-14">
-              <blockquote className="quote-with-source">
-                <p>{testimonial.quote}</p>
-                {testimonial.attribution ? (
-                  <footer>
-                    <cite>{testimonial.attribution}</cite>
-                  </footer>
-                ) : null}
-              </blockquote>
-            </div>
           ) : null}
 
           {/* Narrow screens: the rest of the side column closes the page. */}

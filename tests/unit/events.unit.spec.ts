@@ -4,6 +4,8 @@ import type { Event } from '@/payload-types'
 import { eventTiming, orderEvents, otherUpcomingEvents } from '@/lib/events'
 import { getPublicEvents } from '@/api/events.api'
 import { pathOf } from '@/lib/paths'
+import { spaceEvents } from '@/lib/spaces-data'
+import type { Space, User } from '@/payload-types'
 
 const now = new Date('2026-10-28T16:30:00Z') // 19:30 in Cairo.
 const scheduled = (id: number, start: string, weeks = 1): Event => ({
@@ -22,6 +24,33 @@ const scheduled = (id: number, start: string, weeks = 1): Event => ({
 })
 
 describe('public event timing', () => {
+  it('restricts a Space’s public event query to published events even for admins', async () => {
+    const find = vi.fn().mockResolvedValue({ docs: [] })
+    await spaceEvents(
+      { find } as unknown as Payload,
+      { id: -1, roles: ['admin'] } as User,
+      { id: 1, kind: 'course', course: 2 } as Space,
+    )
+    expect(
+      find.mock.calls.find(([query]) => query.collection === 'events')?.[0].where.and,
+    ).toContainEqual({ _status: { equals: 'published' } })
+  })
+  it('uses a screening’s primary time without requiring agenda entries', () => {
+    const event = {
+      schedule: {
+        mode: 'single' as const,
+        start_date: '2026-10-28',
+        start_time: '19:00',
+        end_time: '20:00',
+      },
+      agenda: [],
+    }
+    expect(eventTiming(event, now)).toMatchObject({
+      status: 'upcoming',
+      meeting: { start_time: '19:00', end_time: '20:00' },
+    })
+    expect(eventTiming(event, new Date('2026-10-28T17:00:00Z')).status).toBe('past')
+  })
   it('shows at most three other upcoming events, soonest first, without past or undated events', () => {
     const events = [
       scheduled(1, '2026-11-18'),

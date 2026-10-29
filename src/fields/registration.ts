@@ -1,4 +1,9 @@
-import type { NamedGroupField, TextFieldSingleValidation } from 'payload'
+import {
+  ValidationError,
+  type FieldHook,
+  type NamedGroupField,
+  type TextFieldSingleValidation,
+} from 'payload'
 import { text } from 'payload/shared'
 
 import { REGISTRATION_METHODS } from '@/lib/registration'
@@ -10,6 +15,54 @@ const METHOD_LABELS: Record<(typeof REGISTRATION_METHODS)[number], string> = {
   closed: 'Closed',
 }
 
+const validateDestination: FieldHook = async ({
+  value,
+  originalDoc,
+  data,
+  operation,
+  collection,
+  req,
+}) => {
+  if (data?._status === 'draft' && data?.review?.status !== 'submitted') return value
+  const own = { ...originalDoc?.registration, ...value }
+  const previous = originalDoc?.registration
+  const publishing = data?._status === 'published' || data?.review?.status === 'approved'
+  const changed = ['method', 'form', 'url'].some((key) => own[key] !== previous?.[key])
+  if (operation === 'update' && !changed && data?.cycle === originalDoc?.cycle && !publishing)
+    return value
+  let parent
+  const cycle = data?.cycle ?? originalDoc?.cycle
+  const cycleId = typeof cycle === 'object' && cycle ? cycle.id : cycle
+  if (collection?.slug === 'courses' && cycleId) {
+    parent = (
+      await req.payload.findByID({
+        collection: 'cycles',
+        id: cycleId,
+        depth: 0,
+        req,
+        overrideAccess: false,
+      })
+    ).registration
+  }
+  const method = own.method ?? parent?.method
+  const field = method === 'form' ? 'form' : method === 'external' ? 'url' : null
+  const destination = field ? (own[field] ?? parent?.[field]) : null
+  if (field && (!destination || (field === 'url' && httpUrl(destination) !== true))) {
+    throw new ValidationError({
+      errors: [
+        {
+          path: `registration.${field}`,
+          message:
+            field === 'form'
+              ? 'Choose a registration form, or inherit one from the cycle.'
+              : 'Enter the external registration URL, or inherit one from the cycle.',
+        },
+      ],
+    })
+  }
+  return value
+}
+
 /**
  * How people apply. Whether it is open now comes from `registrationStatus()`,
  * never from a stored flag.
@@ -17,6 +70,7 @@ const METHOD_LABELS: Record<(typeof REGISTRATION_METHODS)[number], string> = {
 export const registrationField = (): NamedGroupField => ({
   name: 'registration',
   type: 'group',
+  hooks: { beforeChange: [validateDestination] },
   fields: [
     {
       name: 'method',

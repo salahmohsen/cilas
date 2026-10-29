@@ -67,7 +67,12 @@ const recordDraftSave: CollectionBeforeOperationHook = async ({
     autosave?: boolean
     data?: Doc
     draft?: boolean
+    duplicateFromID?: number | string
     id?: number | string
+  }
+  if (operation === 'create' && write.duplicateFromID != null) {
+    write.draft = true
+    write.data = { ...write.data, _status: 'draft', review: { status: 'draft' } }
   }
   req.context[LIVE] = false
 

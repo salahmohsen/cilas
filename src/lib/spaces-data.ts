@@ -1305,7 +1305,13 @@ const courseEvents = async (
     pagination: false,
     locale,
     overrideAccess: false,
-    where: { and: [{ course: { equals: courseId } }, { tier: { equals: 'public' } }] },
+    where: {
+      and: [
+        { course: { equals: courseId } },
+        { tier: { equals: 'public' } },
+        { _status: { equals: 'published' } },
+      ],
+    },
   })
   return docs.flatMap((event): SpaceEventItem[] => {
     const meetings = expandSchedule(event.schedule).flatMap((m) => {

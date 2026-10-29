@@ -291,8 +291,7 @@ export const publishedOrOwn =
  * lets the admin live preview render the draft being edited.
  *
  * That gate only exists on collections with `versions.drafts`, so it is opt-in
- * — Events shares this rule but has no drafts and must not be filtered on a
- * `_status` column it does not have.
+ * — collections without drafts must not be filtered on a `_status` column.
  */
 export const readTiers =
   (owned?: Ownership, { drafts = false }: { drafts?: boolean } = {}): Access =>
