@@ -97,15 +97,16 @@ test('stacked registration images absorb shared height while text cells fit thei
   }
 })
 
-test('pink card countdown stays inside its cell with larger text and narrow containers', async () => {
+test('closing date fits its content beside a centered timer that fills the remaining row', async () => {
   const browser = await chromium.launch({ headless: true })
   try {
     const page = await browser.newPage()
-    for (const width of [240, 288, 358, 528]) {
+    for (const width of [240, 288, 358, 528, 960]) {
       for (const direction of ['ltr', 'rtl']) {
         for (const fontSize of [16, 28]) {
-          await page.setViewportSize({ width: width + 32, height: 1000 })
-          await page.setContent(`<style>
+          for (const dateText of ['Closes Nov 30', 'Registration closes November 30']) {
+            await page.setViewportSize({ width: width + 32, height: 1000 })
+            await page.setContent(`<style>
             * { box-sizing: border-box; }
             body, p, h3 { margin: 0; }
             body { font-family: Arial, sans-serif; --space-3: 12px; }
@@ -116,7 +117,7 @@ test('pink card countdown stays inside its cell with larger text and narrow cont
             <article class="poster" data-layout="2" data-separate-label="true">
               <div class="poster-strip">
                 <span class="poster-mark">C</span>
-                <span class="poster-meta">Registration closes November 30</span>
+                <span class="poster-meta">${dateText}</span>
                 <span class="poster-time" style="font-size: ${fontSize}px">
                   <div class="countdown" data-variant="compact" role="timer">
                     <div class="shell" style="width: 90px; height: 28px">
@@ -133,26 +134,66 @@ test('pink card countdown stays inside its cell with larger text and narrow cont
               </div>
             </article>
           </div>`)
-          const result = await page.locator('.poster-time').evaluate((cell) => {
-            const bounds = cell.getBoundingClientRect()
-            const shell = cell.querySelector('.shell').getBoundingClientRect()
-            const card = cell.closest('.poster').getBoundingClientRect()
-            return {
-              cellInsideCard: bounds.left >= card.left && bounds.right <= card.right,
-              unitsVisible: Array.from(cell.querySelectorAll('.unit')).every((unit) => {
-                const r = unit.getBoundingClientRect()
-                return (
-                  r.left >= Math.max(bounds.left, shell.left) - 1 &&
-                  r.right <= Math.min(bounds.right, shell.right) + 1 &&
-                  r.top >= bounds.top - 1 &&
-                  r.bottom <= bounds.bottom + 1
-                )
-              }),
-            }
-          })
-          const context = JSON.stringify({ width, direction, fontSize, result })
-          assert.ok(result.cellInsideCard, context)
-          assert.ok(result.unitsVisible, context)
+            const result = await page.locator('.poster-time').evaluate((cell) => {
+              const bounds = cell.getBoundingClientRect()
+              const shell = cell.querySelector('.shell').getBoundingClientRect()
+              const card = cell.closest('.poster').getBoundingClientRect()
+              const date = cell.parentElement.querySelector('.poster-meta').getBoundingClientRect()
+              const units = cell.querySelector('.units').getBoundingClientRect()
+              const mark = cell.parentElement.querySelector('.poster-mark').getBoundingClientRect()
+              const footer = cell.parentElement
+                .querySelector('.poster-footer')
+                .getBoundingClientRect()
+              const style = getComputedStyle(cell.parentElement.querySelector('.poster-meta'))
+              const canvas = document.createElement('canvas').getContext('2d')
+              canvas.font = `${style.fontWeight} ${style.fontSize} ${style.fontFamily}`
+              const naturalDateWidth =
+                canvas.measureText(cell.parentElement.querySelector('.poster-meta').textContent)
+                  .width +
+                parseFloat(style.paddingLeft) +
+                parseFloat(style.paddingRight) +
+                parseFloat(style.borderLeftWidth) +
+                parseFloat(style.borderRightWidth)
+              const wide = card.width > 832
+              const dateCap = (card.width - 2) * (wide ? 0.19 : 0.4)
+              return {
+                dateFitsContent:
+                  naturalDateWidth > dateCap - 2 || Math.abs(date.width - naturalDateWidth) < 2,
+                sameRow:
+                  Math.abs(date.top - bounds.top) < 1 && Math.abs(date.bottom - bounds.bottom) < 1,
+                fillsRemainder:
+                  Math.abs(
+                    bounds.width +
+                      date.width +
+                      mark.width +
+                      (wide ? footer.width : 0) -
+                      (card.width - 2),
+                  ) < 2,
+                centered:
+                  Math.abs((units.left + units.right) / 2 - (bounds.left + bounds.right) / 2) < 1,
+                verticallyCentered:
+                  Math.abs((units.top + units.bottom) / 2 - (bounds.top + bounds.bottom) / 2) < 1,
+                cellInsideCard: bounds.left >= card.left && bounds.right <= card.right,
+                unitsVisible: Array.from(cell.querySelectorAll('.unit')).every((unit) => {
+                  const r = unit.getBoundingClientRect()
+                  return (
+                    r.left >= Math.max(bounds.left, shell.left) - 1 &&
+                    r.right <= Math.min(bounds.right, shell.right) + 1 &&
+                    r.top >= bounds.top - 1 &&
+                    r.bottom <= bounds.bottom + 1
+                  )
+                }),
+              }
+            })
+            const context = JSON.stringify({ width, direction, fontSize, dateText, result })
+            assert.ok(result.dateFitsContent, context)
+            assert.ok(result.sameRow, context)
+            assert.ok(result.fillsRemainder, context)
+            assert.ok(result.centered, context)
+            assert.ok(result.verticallyCentered, context)
+            assert.ok(result.cellInsideCard, context)
+            assert.ok(result.unitsVisible, context)
+          }
         }
       }
     }

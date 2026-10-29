@@ -12,6 +12,8 @@ The image establishes the subject. The course title is the primary text. Course 
 | Course type                     | Text height plus shared padding and a divider.                                                                      |
 | Course title                    | Natural text height on stacked cards; fill spare space inside a taller side panel on wide cards.                    |
 | Fellow names                    | Text height plus shared padding and a divider; wrap when needed.                                                    |
+| Closing date                    | Content-sized width with padding; wrap within its bounded column when needed.                                       |
+| Time left                       | Fill the rest of the date's row; center its content horizontally and vertically.                                    |
 | Registration details and action | Content-sized rows; allow wrapping or a deliberate second row.                                                      |
 
 “Fit the text” means the text's line boxes **plus padding and borders**. It does not mean removing the breathing room around a name. A longer name or several fellows must make the cell taller naturally.
@@ -26,7 +28,47 @@ That empty area had the same white background as the fellow cell and no separati
 
 The current layout gives the spare stacked-card height to the image. The text panel stops after its content and sits directly against the footer or card edge, so there is no unused white area below the fellow. `flex: 1` on `.poster-title` only distributes space available inside its heading; it does not make the outer image grow. The panel's sizing decides whether any external spare height reaches that title.
 
-On narrow cards, the time-left cell gets its own full-width row. Its countdown wrapper uses natural dimensions instead of its animated inline width and height; unit groups can wrap without clipping their text. Digit animation stays inside each wheel. Treat the text cells as content-sized regions rather than assigning them a shared fixed height.
+The closing-date and time-left cells stay next to each other at every breakpoint. The date column fits its content; the timer column receives the remaining row width. Its countdown wrapper uses natural dimensions instead of its animated inline width and height, and the timer is centered horizontally and vertically. Unit groups and their labels can wrap inside that cell without clipping. Digit animation stays inside each wheel. Treat text cells as content-sized regions rather than assigning them a shared fixed height.
+
+## Approved rules for future changes
+
+Use these as acceptance criteria when applying this design elsewhere. Update this file with each approved correction so the examples and tests continue to describe the current design.
+
+1. On stacked cards, labels, titles, fellows, dates, and actions determine their own height. The image receives spare card height.
+2. A fellow cell fits the name or names plus padding. It never absorbs unused card height.
+3. The closing date and countdown remain adjacent. Do not move the timer to a full-width row to fix overflow.
+4. The date box fits its content; the timer fills the remainder and centers its content in both axes.
+5. When space gets tight, allow text and timer groups to wrap within their existing boxes and let the row grow vertically. Preserve readable type and the declared neighbors.
+6. Own each separator once. Keep the rule between the date and timer, including on mobile and in RTL.
+7. Changing a breakpoint must preserve these sizing responsibilities. Color and poster placement do not change them.
+8. Verify the rendered geometry for these rules, not just the presence of CSS classes. Keep the guide, implementation, and tests in agreement.
+
+### Closing-date row recipe
+
+Use a grid equivalent to a content-sized label followed by a flexible remainder. `minmax(0, 1fr)` is the grid counterpart of giving the timer `flex: 1` with a zero minimum width:
+
+```css
+.registration-strip {
+  display: grid;
+  grid-template-columns: auto fit-content(40%) minmax(0, 1fr);
+}
+
+.registration-date {
+  min-inline-size: 0;
+  overflow-wrap: anywhere;
+}
+
+.registration-timer {
+  display: flex;
+  min-inline-size: 0;
+  align-items: center;
+  justify-content: center;
+}
+```
+
+The first column is the mark, the second is the date, and the third is the timer. The date uses its natural width up to a 40% ceiling, protecting timer space in narrow containers. A longer date wraps rather than pushing the timer outside the card. Wide CILAS posters also reserve 62% for their details/action column, so their date ceiling is 19% of the full strip. A strip without a timer uses a separate two-column layout on mobile. These percentages belong to this composition; preserve the content-sized-date/flexible-timer contract when adapting it.
+
+Centering the timer box is not enough if its nested widget keeps a fixed animated width or a non-wrapping minimum width. Keep the wrapper and inner content shrinkable, let unit groups wrap when necessary, and test the digits themselves against the cell bounds.
 
 ## Assign one owner of spare space
 
@@ -170,7 +212,7 @@ pnpm exec playwright install chromium
 node --test tests/poster-layout.test.mjs
 ```
 
-It covers the three effective poster placements at 288, 358, 528, and 960 CSS pixels, with English, Arabic, wrapped fellows, and missing fellows. On stacked cards it checks image growth and stable text heights; on wide cards it checks title growth inside the side panel. It also checks the pink card's countdown at widths from 240 to 528 pixels in both directions and with larger text, including a stale inline animation size. It checks layout allocation rather than production fonts, actual images, live countdown transitions, carousel animation, or a deployed page; those need a separate visual pass when changed. CI runs this geometry test in the production-smoke job after installing Chromium.
+It covers the three effective poster placements at 288, 358, 528, and 960 CSS pixels, with English, Arabic, wrapped fellows, and missing fellows. On stacked cards it checks image growth and stable text heights; on wide cards it checks title growth inside the side panel. It also checks the pink card's countdown at widths from 240 to 960 pixels in both directions and with larger text, including a stale inline animation size. The date and timer must share a row, the date must fit its content when space allows, and the timer must occupy the remaining width with centered, visible content. It checks layout allocation rather than production fonts, actual images, live countdown transitions, carousel animation, or a deployed page; those need a separate visual pass when changed. CI runs this geometry test in the production-smoke job after installing Chromium.
 
 ## Where to apply this in CILAS
 

@@ -2260,10 +2260,13 @@ h3 {
 .poster-strip {
   display: grid;
   /* Mark, date and time left make the side panel's 38%, so the white cell starts where the image does. */
-  grid-template-columns: auto minmax(0, 1fr) auto 62%;
+  grid-template-columns: auto fit-content(19%) minmax(0, 1fr) 62%;
   flex: none;
   min-height: clamp(3.25rem, 8.6cqi, 4.5rem);
   border-block: 1px solid var(--poster-ink);
+}
+.poster-strip:not(:has(.poster-time)) {
+  grid-template-columns: auto minmax(0, 1fr) 62%;
 }
 .poster[data-layout='2'] .poster-strip {
   border-top: 0;
@@ -2292,6 +2295,8 @@ h3 {
 .poster-meta {
   /* The closing date, centred in its cell; a second line only if the cell is too narrow. */
   display: flex;
+  min-width: 0;
+  overflow-wrap: anywhere;
   flex-wrap: wrap;
   align-items: center;
   justify-content: center;
@@ -2304,7 +2309,9 @@ h3 {
    the cell. The poster is a printed thing, so it ignores the dark theme. */
 .poster-time {
   display: flex;
+  min-width: 0;
   align-items: stretch;
+  justify-content: center;
   border-inline-end: 1px solid var(--poster-ink);
   background: var(--poster-paper);
   color: var(--poster-ink);
@@ -2345,6 +2352,15 @@ h3 {
   flex-wrap: wrap;
   justify-content: center;
   white-space: normal;
+}
+.poster .poster-time [data-variant='compact'] [class*='unit'] {
+  max-width: 100%;
+  min-width: 0;
+}
+.poster .poster-time [data-variant='compact'] [class*='group'] {
+  flex-wrap: wrap;
+  justify-content: center;
+  min-width: 0;
 }
 /* The poster's ink on its paper in either theme: digits full, units quieter. */
 .poster .poster-strip .poster-time [data-variant='compact'] {
@@ -2451,7 +2467,10 @@ h3 {
    row; when and where, and the way in, get the full row under it. */
 @container poster (max-width: 52rem) {
   .poster-strip {
-    grid-template-columns: auto minmax(0, 1fr) auto;
+    grid-template-columns: auto fit-content(40%) minmax(0, 1fr);
+  }
+  .poster-strip:not(:has(.poster-time)) {
+    grid-template-columns: auto minmax(0, 1fr);
   }
   .poster-mark img {
     height: 1.5rem;
@@ -2469,19 +2488,10 @@ h3 {
   }
 }
 @container poster (max-width: 34rem) {
-  .poster-strip {
-    grid-template-columns: auto minmax(0, 1fr);
-  }
   .poster-meta {
-    border-inline-end: 0;
-    min-width: 0;
-    overflow-wrap: anywhere;
     padding-block: 0.5rem;
   }
   .poster-time {
-    grid-column: 1 / -1;
-    min-width: 0;
-    border-block-start: 1px solid var(--poster-ink);
     padding-block: 0.5rem;
   }
 }
