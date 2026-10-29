@@ -2187,7 +2187,7 @@ h3 {
 }
 .poster-title {
   font-family: var(--font-playfair-display), var(--font-plex-arabic), serif;
-  font-size: clamp(1.75rem, 5.5cqi, 4rem);
+  font-size: clamp(1.75rem, 5cqi, 3.75rem);
   font-weight: 700;
   line-height: 1.1;
   letter-spacing: -0.025em;
