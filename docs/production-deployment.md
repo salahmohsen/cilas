@@ -47,4 +47,5 @@ pnpm test:production
 ```
 
 The fixture script refuses any database URL other than `cilas_ci` on localhost
-port 5433. Use Node 22, matching CI and the deployment image.
+port 55440. Use Node 22, matching CI and the deployment image. Give it a separate
+Postgres service so concurrent development builds cannot exhaust its connections.

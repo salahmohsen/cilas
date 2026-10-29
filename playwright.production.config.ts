@@ -13,7 +13,7 @@ export default defineConfig({
   },
   projects: [{ name: 'chromium', use: { ...devices['Desktop Chrome'] } }],
   webServer: {
-    command: 'pnpm start',
+    command: 'node scripts/start-smoke.mjs',
     url: 'http://localhost:3000/en',
     reuseExistingServer: false,
     timeout: 120_000,

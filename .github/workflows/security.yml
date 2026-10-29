@@ -14,7 +14,7 @@ concurrency:
 
 jobs:
   security:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 20
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
@@ -40,7 +40,7 @@ jobs:
           pnpm exec vitest run tests/unit --reporter=dot
 
   production-smoke:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 20
     services:
       postgres:
@@ -50,7 +50,7 @@ jobs:
           POSTGRES_PASSWORD: dev
           POSTGRES_DB: cilas_ci
         ports:
-          - 5433:5432
+          - 55440:5432
         options: >-
           --health-cmd pg_isready
           --health-interval 5s
@@ -83,7 +83,7 @@ jobs:
   deploy-production:
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     needs: [security, production-smoke]
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 5
     concurrency:
       group: cilas-production-deploy

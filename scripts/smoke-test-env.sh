@@ -1,4 +1,4 @@
-export DATABASE_URL=postgres://cilas:dev@localhost:5433/cilas_ci
+export DATABASE_URL=postgres://cilas:dev@localhost:55440/cilas_ci
 export PAYLOAD_SECRET=disposable-ci-smoke-test-secret
 export R2_BUCKET=ci-smoke R2_ACCESS_KEY_ID=ci-smoke R2_SECRET_ACCESS_KEY=ci-smoke
 export R2_ENDPOINT=https://ci.r2.cloudflarestorage.com R2_PUBLIC_URL=https://ci.example.com

@@ -1,9 +1,9 @@
 import { postgresAdapter } from '@payloadcms/db-postgres'
 import { getPayload } from 'payload'
 
-const database = 'postgres://cilas:dev@localhost:5433/cilas_ci'
+const database = 'postgres://cilas:dev@localhost:55440/cilas_ci'
 if (process.env.DATABASE_URL !== database) {
-  throw new Error('Smoke fixtures require the disposable cilas_ci database on localhost:5433')
+  throw new Error('Smoke fixtures require the disposable cilas_ci database on localhost:55440')
 }
 
 const { default: config } = await import('../src/payload.config')
