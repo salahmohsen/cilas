@@ -206,6 +206,7 @@ export function BlogCardBody({
   imageLayoutId,
   imageFallback,
   eager = false,
+  imageSizing = 'ratio',
 }: {
   post: BlogPost
   featured?: boolean
@@ -214,6 +215,8 @@ export function BlogCardBody({
   /** Shown in the image frame of a post without an image, so every card keeps its frame. */
   imageFallback?: () => ReactNode
   eager?: boolean
+  /** Match a featured card's image height to its text instead of imposing an aspect ratio. */
+  imageSizing?: 'ratio' | 'content'
 }) {
   return (
     <>
@@ -222,6 +225,7 @@ export function BlogCardBody({
           layoutId={imageLayoutId}
           transition={morph}
           className={styles.imageFrame}
+          data-image-sizing={imageSizing}
         >
           <img
             className={styles.image}
@@ -291,9 +295,11 @@ export function BlogGrid({
   const [returning, setReturning] = useState<string | null>(null)
   const lastOpened = useRef<string | null>(null)
 
-  const sorted = sortOrder === 'given' ? posts : [...posts].sort((a, b) => b.date.localeCompare(a.date))
+  const sorted =
+    sortOrder === 'given' ? posts : [...posts].sort((a, b) => b.date.localeCompare(a.date))
   const order = category === 'All' ? undefined : categoryOrder?.[category]
-  const inCategory = category === 'All' ? sorted : sorted.filter((post) => post.category === category)
+  const inCategory =
+    category === 'All' ? sorted : sorted.filter((post) => post.category === category)
   const filtered = order
     ? [
         ...order.flatMap((id) => inCategory.filter((post) => post.id === id)),
@@ -437,8 +443,14 @@ export function BlogGrid({
                     // The fade's own transition wins when motion is reduced.
                     {...(reduced ? enterFade(true) : { transition: morph })}
                   >
-                    <img className={styles.image} src={reading.image.src} alt={reading.image.alt}
-                      style={{ objectPosition: `${reading.image.focalX ?? 50}% ${reading.image.focalY ?? 50}%` }} />
+                    <img
+                      className={styles.image}
+                      src={reading.image.src}
+                      alt={reading.image.alt}
+                      style={{
+                        objectPosition: `${reading.image.focalX ?? 50}% ${reading.image.focalY ?? 50}%`,
+                      }}
+                    />
                   </motion.div>
                 )}
                 <motion.div

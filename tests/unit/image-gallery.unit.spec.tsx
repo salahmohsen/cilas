@@ -1,5 +1,6 @@
 import { cleanup, fireEvent, render, screen, waitFor, within } from '@testing-library/react'
 import { NextIntlClientProvider } from 'next-intl'
+import { renderToStaticMarkup } from 'react-dom/server'
 import { afterEach, describe, expect, it } from 'vitest'
 
 import { RichTextField } from '@/components/RichTextField'
@@ -27,6 +28,9 @@ const gallery = {
           mimeType: 'image/webp',
           width: 800,
           height: 600,
+          focalX: 0,
+          focalY: 100,
+          sizes: { thumbnail: { url: '/one-thumbnail.webp', width: 400, height: 300 } },
         },
         caption: 'First gathering',
       },
@@ -87,7 +91,7 @@ describe('image gallery', () => {
 
   it('opens the clicked image, navigates with buttons and keys, and restores focus', async () => {
     show()
-    const trigger = screen.getByRole('button', { name: 'Open image: Classroom' })
+    const trigger = screen.getByRole('link', { name: 'Open image: Classroom' })
     trigger.focus()
     fireEvent.click(trigger)
     const dialog = await screen.findByRole('dialog')
@@ -105,7 +109,7 @@ describe('image gallery', () => {
 
   it('opens a later thumbnail and wraps gallery navigation', async () => {
     show()
-    fireEvent.click(screen.getByRole('button', { name: 'Open image: Rooftop' }))
+    fireEvent.click(screen.getByRole('link', { name: 'Open image: Rooftop' }))
     const dialog = await screen.findByRole('dialog')
     expect(within(dialog).getByAltText('Rooftop')).toBeInTheDocument()
     fireEvent.keyDown(dialog, { key: 'ArrowRight' })
@@ -114,7 +118,7 @@ describe('image gallery', () => {
 
   it('keeps zoomed arrow keys for panning, resets zoom on navigation, and closes on Escape', async () => {
     show()
-    fireEvent.click(screen.getByRole('button', { name: 'Open image: Classroom' }))
+    fireEvent.click(screen.getByRole('link', { name: 'Open image: Classroom' }))
     const dialog = await screen.findByRole('dialog')
     const frame = within(dialog).getByRole('group')
     fireEvent.click(within(dialog).getByRole('button', { name: 'Zoom in' }))
@@ -136,7 +140,7 @@ describe('image gallery', () => {
 
   it('offers a retry when an image fails to load', async () => {
     show()
-    fireEvent.click(screen.getByRole('button', { name: 'Open image: Classroom' }))
+    fireEvent.click(screen.getByRole('link', { name: 'Open image: Classroom' }))
     const dialog = await screen.findByRole('dialog')
     fireEvent.error(within(dialog).getByAltText('Classroom'))
     expect(within(dialog).getByRole('alert')).toHaveTextContent('This image could not be loaded')
@@ -146,7 +150,9 @@ describe('image gallery', () => {
     fireEvent.click(retry)
     fireEvent.load(within(dialog).getByAltText('Classroom'))
     expect(within(dialog).queryByRole('alert')).not.toBeInTheDocument()
-    expect(within(dialog).queryByText('Loading image…')).not.toBeInTheDocument()
+    await waitFor(() =>
+      expect(within(dialog).queryByText('Loading image…')).not.toBeInTheDocument(),
+    )
   })
 
   it('does not render an empty gallery or navigation for a single image', async () => {
@@ -154,9 +160,61 @@ describe('image gallery', () => {
     expect(screen.queryByRole('button')).not.toBeInTheDocument()
     view.unmount()
     show([{ ...gallery, fields: { ...gallery.fields, images: gallery.fields.images.slice(0, 1) } }])
-    fireEvent.click(screen.getByRole('button', { name: 'Open image: Classroom' }))
+    fireEvent.click(screen.getByRole('link', { name: 'Open image: Classroom' }))
     const dialog = await screen.findByRole('dialog')
     expect(within(dialog).queryByRole('button', { name: 'Next image' })).not.toBeInTheDocument()
     expect(within(dialog).queryByRole('button', { name: 'Previous image' })).not.toBeInTheDocument()
+  })
+
+  it('server-renders optimized responsive images and links to their originals', () => {
+    const html = renderToStaticMarkup(
+      <NextIntlClientProvider locale="en" timeZone="Africa/Cairo" messages={en}>
+        <RichTextField data={documentOf([gallery])} />
+      </NextIntlClientProvider>,
+    )
+    const document = new DOMParser().parseFromString(html, 'text/html')
+    const image = document.querySelector('img')!
+    expect(image.getAttribute('src')).toContain('/_next/image?')
+    expect(new URL(image.getAttribute('src')!, 'http://localhost').searchParams.get('url')).toBe(
+      '/one.webp',
+    )
+    expect(image.getAttribute('srcset')).toContain('640w')
+    expect(image.getAttribute('sizes')).toBeTruthy()
+    expect(image.closest('a')?.getAttribute('href')).toBe('/one.webp')
+    expect(image.getAttribute('loading')).toBe('lazy')
+    expect(image.style.objectPosition).toBe('0% 100%')
+    expect(document.querySelector('figcaption')?.textContent).toBe('First gathering')
+  })
+
+  it('preserves modified clicks so visitors can open original images in another tab', () => {
+    show()
+    let intercepted: boolean | undefined
+    document.addEventListener(
+      'click',
+      (event) => {
+        intercepted = event.defaultPrevented
+        event.preventDefault()
+      },
+      { once: true },
+    )
+    fireEvent.click(screen.getByRole('link', { name: 'Open image: Classroom' }), { ctrlKey: true })
+    expect(intercepted).toBe(false)
+    expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
+  })
+
+  it('uses Next.js Image in the lightbox and supports legacy images without dimensions', async () => {
+    const image = {
+      id: 1,
+      url: '/legacy.webp',
+      alt: 'Legacy archive image',
+      mimeType: 'image/webp',
+    }
+    show([{ ...gallery, fields: { ...gallery.fields, images: [{ image }] } }])
+    fireEvent.click(screen.getByRole('link', { name: 'Open image: Legacy archive image' }))
+    const dialog = await screen.findByRole('dialog')
+    const fullImage = within(dialog).getByAltText('Legacy archive image')
+    expect(fullImage.getAttribute('data-nimg')).toBeTruthy()
+    expect(fullImage.getAttribute('srcset')).toBeTruthy()
+    expect(fullImage.getAttribute('sizes')).toBeTruthy()
   })
 })

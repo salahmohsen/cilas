@@ -97,4 +97,18 @@ describe('public event timing', () => {
     })
     expect(pathOf('events', { slug: 'talk' }, 'ar')).toBe('/ar/events/talk')
   })
+
+  it('keeps image dimensions and variants available for responsive gallery rendering', async () => {
+    const find = vi.fn().mockResolvedValue({ docs: [] })
+    const payload = { find } as unknown as Payload
+    await getPublicEvents(payload, 'en', 'gallery')
+    expect(find.mock.calls[0][0].populate.media).toMatchObject({
+      url: true,
+      alt: true,
+      width: true,
+      height: true,
+      sizes: true,
+      mimeType: true,
+    })
+  })
 })

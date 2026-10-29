@@ -7,6 +7,8 @@ import { MentionLink } from '@/components/article/mention-link'
 import { MENTION_TYPES } from '@/blocks/mention'
 import { referenceKey, type RichTextReferences } from '@/lib/rich-text-references'
 import type { ResolvedMention } from '@/api/mentions.api'
+import { BlogCardBody } from '@/components/arc/blocks/blog-grid/blog-grid'
+import blogStyles from '@/components/arc/blocks/blog-grid/blog-grid.module.css'
 
 const References = createContext<RichTextReferences>({})
 
@@ -45,11 +47,6 @@ function MentionWithLabel({ resolved, label }: { resolved: ResolvedMention; labe
   )
 }
 
-function ReferenceKind({ kind }: { kind: ResolvedMention['preview']['kind'] }) {
-  const t = useTranslations('Article')
-  return <>{t(`mentionKinds.${kind}`)}</>
-}
-
 export function ReferenceLink({
   collection,
   value,
@@ -77,32 +74,37 @@ export function ReferenceLink({
 
 export function RelatedReference({ collection, value }: { collection: string; value: unknown }) {
   const resolved = useContext(References)[referenceKey(collection, value)]
-  if (!resolved) return null
+  return resolved ? <RelatedSummary resolved={resolved} /> : null
+}
+
+function RelatedSummary({ resolved }: { resolved: ResolvedMention }) {
+  const t = useTranslations('Article')
   const { preview, href } = resolved
+  const byline = ['article', 'course', 'publication'].includes(preview.kind)
   return (
-    <aside className="not-prose my-6 rounded-lg border border-(--border)" dir="auto">
-      <Link href={href} className="flex gap-4 p-4 text-inherit no-underline">
-        {preview.image ? (
-          // eslint-disable-next-line @next/next/no-img-element
-          <img
-            src={preview.image}
-            alt=""
-            loading="lazy"
-            className="h-20 w-20 shrink-0 rounded-md object-cover sm:h-24 sm:w-24"
-          />
-        ) : null}
-        <div className="min-w-0">
-          <p className="text-xs text-(--text-secondary)">
-            <ReferenceKind kind={preview.kind} />
-          </p>
-          <p className="mt-1 font-medium">{preview.title}</p>
-          {preview.meta ? (
-            <p className="mt-1 text-xs text-(--text-secondary)">{preview.meta}</p>
-          ) : null}
-          {preview.text ? (
-            <p className="mt-2 line-clamp-3 text-sm text-(--text-secondary)">{preview.text}</p>
-          ) : null}
-        </div>
+    <aside className="not-prose my-6" style={{ container: 'blog / inline-size' }}>
+      <Link
+        href={href}
+        className={blogStyles.featured}
+        data-image-sizing="content"
+        data-has-image={Boolean(preview.image)}
+      >
+        <BlogCardBody
+          featured
+          imageSizing="content"
+          post={{
+            id: href,
+            title: preview.title,
+            excerpt: [!byline && preview.meta, preview.text].filter(Boolean).join(' · '),
+            category: t(`mentionKinds.${preview.kind}`),
+            date: '',
+            dateLabel: '',
+            readTime: 0,
+            readTimeLabel: '',
+            author: { name: byline ? (preview.meta ?? '') : '' },
+            image: preview.image ? { src: preview.image, alt: '' } : undefined,
+          }}
+        />
       </Link>
     </aside>
   )

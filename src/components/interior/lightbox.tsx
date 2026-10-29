@@ -4,10 +4,13 @@
 import * as DialogPrimitive from '@radix-ui/react-dialog'
 import { ArrowLeft, ArrowRight } from 'lucide-react'
 import { useTranslations } from 'next-intl'
+import Image from 'next/image'
 import styles from './lightbox.module.css'
 
 import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react'
 import { AnimatePresence, animate, motion, useMotionValue, useReducedMotion } from 'motion/react'
+
+const MotionImage = motion.create(Image)
 
 const CELL = {
   type: 'spring',
@@ -372,6 +375,7 @@ function Stage({
 }: LightboxProps) {
   const t = useTranslations('Gallery')
   const reduced = useReducedMotion()
+  const hasDimensions = Boolean(width && height)
   const [loadedImage, setLoadedImage] = useState<string | null>(null)
   const [failedImage, setFailedImage] = useState<string | null>(null)
   const [attempt, setAttempt] = useState(0)
@@ -405,7 +409,7 @@ function Stage({
     const frame = frameRef.current
     const content = contentRef.current
     const origin = originRef?.current
-    if (frame && content && origin && content.offsetWidth > 0) {
+    if (hasDimensions && frame && content && origin && content.offsetWidth > 0) {
       const r = frame.getBoundingClientRect()
       const o = origin.getBoundingClientRect()
       if (o.width > 0) {
@@ -421,7 +425,7 @@ function Stage({
       }
     }
     return { dx: 0, dy: 10, s: 0.97, o: 0, r: 14 }
-  }, [contentRef, frameRef, originRef])
+  }, [contentRef, frameRef, originRef, hasDimensions])
 
   useLayoutEffect(() => {
     if (reduced) {
@@ -540,22 +544,25 @@ function Stage({
               exit="away"
               className={styles.stage}
             >
-              <motion.img
-                key={`${src}-${attempt}`}
-                ref={contentRef}
-                src={src}
-                alt={alt}
-                width={width}
-                height={height}
-                draggable={false}
-                style={{ x, y, scale, borderRadius: fr }}
-                variants={{ away: unwind }}
-                exit="away"
-                className={styles.image}
-                data-failed={failedImage === src}
-                onLoad={() => setLoadedImage(src)}
-                onError={() => setFailedImage(src)}
-              />
+              <div className={hasDimensions ? styles.imageBox : styles.imageFallback}>
+                <MotionImage
+                  key={`${src}-${attempt}`}
+                  ref={contentRef}
+                  src={src}
+                  alt={alt}
+                  {...(hasDimensions ? { width, height } : { fill: true })}
+                  sizes={zoomed ? `${maxScale * 100}vw` : '100vw'}
+                  loading="eager"
+                  draggable={false}
+                  style={{ x, y, scale, borderRadius: fr }}
+                  variants={{ away: unwind }}
+                  exit="away"
+                  className={styles.image}
+                  data-failed={failedImage === src}
+                  onLoad={() => setLoadedImage(src)}
+                  onError={() => setFailedImage(src)}
+                />
+              </div>
               {failedImage === src ? (
                 <div
                   className={styles.message}

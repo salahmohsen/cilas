@@ -46,6 +46,16 @@
   object-fit: contain;
 }
 
+.imageBox {
+  display: contents;
+}
+
+.imageFallback {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
 .image[data-failed='true'] {
   visibility: hidden;
 }
