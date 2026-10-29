@@ -32,7 +32,10 @@ function useSlow(active: boolean, delay = 400, min = 350) {
       }, delay)
       return () => clearTimeout(id)
     }
-    const id = setTimeout(() => setSlow(false), Math.max(0, min - (performance.now() - since.current)))
+    const id = setTimeout(
+      () => setSlow(false),
+      Math.max(0, min - (performance.now() - since.current)),
+    )
     return () => clearTimeout(id)
   }, [active, delay, min])
   return slow
@@ -60,14 +63,20 @@ export function StudyList({ result, pageSize }: { result: StudyPage; pageSize: n
     if (!keepPage) next.delete('page')
     change(next)
     const search = next.toString()
-    startTransition(() => router.replace(search ? `${pathname}?${search}` : pathname, { scroll: false }))
+    startTransition(() =>
+      router.replace(search ? `${pathname}?${search}` : pathname, { scroll: false }),
+    )
   }
 
   const { options } = result
   const fields: FilterField[] = COURSE_FACETS.filter((f) => options[f].length > 1).map((f) => ({
     id: f,
     label: t(`facets.${f}`),
-    options: options[f].map((o) => ({ value: o.value, label: o.label, hint: localDigits(o.count, locale) })),
+    options: options[f].map((o) => ({
+      value: o.value,
+      label: o.label,
+      hint: localDigits(o.count, locale),
+    })),
   }))
 
   const chips: FilterChip[] = COURSE_FACETS.flatMap((f) => {
@@ -81,6 +90,12 @@ export function StudyList({ result, pageSize }: { result: StudyPage; pageSize: n
   const goToPage = (next: number) => {
     navigate((p) => (next > 1 ? p.set('page', String(next)) : p.delete('page')), true)
     listRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+  }
+  const pageHref = (page: number) => {
+    const next = new URLSearchParams(params.toString())
+    if (page > 1) next.set('page', String(page))
+    else next.delete('page')
+    return `${pathname}${next.size ? `?${next}` : ''}`
   }
   // A quick change dims the list in place; a slow one gives way to rows of
   // placeholders shaped like the rows to come.
@@ -143,6 +158,7 @@ export function StudyList({ result, pageSize }: { result: StudyPage; pageSize: n
               // Pages run left to right in either language, like the calendar's arrows.
               <div className="mt-8 flex justify-center" dir="ltr">
                 <Pagination
+                  getPageHref={pageHref}
                   formatNumber={(n) => localDigits(n, locale)}
                   label={t('pages')}
                   nextLabel={t('nextPage')}

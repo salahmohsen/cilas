@@ -4,6 +4,9 @@ import { getPayload } from 'payload'
 
 import { currentReader } from '@/lib/reader'
 import { mode, spacesSettings } from '@/lib/spaces'
+import type { Metadata } from 'next'
+
+export const metadata: Metadata = { robots: { index: false } }
 
 type Props = {
   children: React.ReactNode

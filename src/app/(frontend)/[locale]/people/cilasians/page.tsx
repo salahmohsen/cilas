@@ -1,6 +1,7 @@
+import { pageAlternates } from '@/lib/seo'
 import config from '@payload-config'
 import type { Metadata } from 'next'
-import { getTranslations } from 'next-intl/server'
+import { getLocale, getTranslations } from 'next-intl/server'
 import { unstable_cache } from 'next/cache'
 import { getPayload } from 'payload'
 
@@ -19,8 +20,13 @@ const cilasiansFor = unstable_cache(
 )
 
 export async function generateMetadata(): Promise<Metadata> {
+  const locale = await getLocale()
   const t = await getTranslations('Cilasians')
-  return { title: t('metaTitle'), description: t('intro') }
+  return {
+    alternates: pageAlternates('/people/cilasians', locale),
+    title: t('metaTitle'),
+    description: t('intro'),
+  }
 }
 
 /** CILASians on a wheel: the students and resident fellows of each cohort, the newest first. */

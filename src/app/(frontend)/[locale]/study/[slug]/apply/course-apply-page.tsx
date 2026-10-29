@@ -49,7 +49,9 @@ export async function courseApplyMetadata(
     locale === 'ar' ? 'ar' : 'en',
     reader,
   )
-  return course ? { title: t('courseTitle', { title: course.title }) } : {}
+  return course
+    ? { title: t('courseTitle', { title: course.title }), robots: { index: false } }
+    : {}
 }
 
 /**

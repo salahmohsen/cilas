@@ -1,17 +1,26 @@
+import { pageAlternates } from '@/lib/seo'
 import { ChevronLeft, ChevronRight } from 'lucide-react'
 import type { Metadata } from 'next'
-import { getFormatter, getTranslations } from 'next-intl/server'
+import { getFormatter, getLocale, getTranslations } from 'next-intl/server'
 
-import { getCachedCalendarItems, getCachedSchemaEvents } from '@/api/calendar.api'
+import { getCachedCalendarItems } from '@/api/calendar.api'
 import { CalendarFeed, CalendarJump } from '@/components/calendar/calendar-tools'
-import { AgendaView, calendarLabels, MonthView, WeekView } from '@/components/calendar/calendar-views'
-import { Schema } from '@/components/schema'
+import {
+  AgendaView,
+  calendarLabels,
+  MonthView,
+  WeekView,
+} from '@/components/calendar/calendar-views'
 import { Link } from '@/i18n/navigation'
 import { cairoDay } from '@/lib/cairo-day'
 import { numberingSystemOf } from '@/lib/digits'
-import { eventSchema } from '@/lib/schema'
-import { expandSchedule } from '@/lib/schedule'
-import { CALENDAR_VIEWS, monthStart, readCalendarParams, viewRange, type CalendarView } from '@/lib/calendar'
+import {
+  CALENDAR_VIEWS,
+  monthStart,
+  readCalendarParams,
+  viewRange,
+  type CalendarView,
+} from '@/lib/calendar'
 
 type Props = {
   params: Promise<{ locale: string }>
@@ -19,15 +28,21 @@ type Props = {
 }
 
 export async function generateMetadata(): Promise<Metadata> {
+  const locale = await getLocale()
   const t = await getTranslations('Calendar')
-  return { title: t('metaTitle'), description: t('intro') }
+  return {
+    alternates: pageAlternates('/calendar', locale),
+    title: t('metaTitle'),
+    description: t('intro'),
+  }
 }
 
 const UTC = (day: string) => new Date(`${day}T00:00:00Z`)
 
 /** Every year from the first the calendar has to the last (or this one): none skipped, so any month can be reached. */
 const yearsOf = (years: number[]) => {
-  const first = Math.min(...years), last = Math.max(...years)
+  const first = Math.min(...years),
+    last = Math.max(...years)
   return Array.from({ length: last - first + 1 }, (_, i) => first + i)
 }
 
@@ -38,12 +53,10 @@ const yearsOf = (years: number[]) => {
  */
 export default async function CalendarPage({ params, searchParams }: Props) {
   const [{ locale }, query] = await Promise.all([params, searchParams])
-  const [t, tm, format, labels, schemaEvents] = await Promise.all([
+  const [t, format, labels] = await Promise.all([
     getTranslations('Calendar'),
-    getTranslations('Meta'),
     getFormatter(),
     calendarLabels(),
-    getCachedSchemaEvents(locale === 'ar' ? 'ar' : 'en'),
   ])
   const today = cairoDay(new Date())!
   const { view, date } = readCalendarParams(query, today)
@@ -57,7 +70,12 @@ export default async function CalendarPage({ params, searchParams }: Props) {
   const href = (v: CalendarView, d: string) => `/calendar?view=${v}&date=${d}`
   const title =
     view === 'month'
-      ? format.dateTime(UTC(date), { month: 'long', year: 'numeric', timeZone: 'UTC', numberingSystem: nu })
+      ? format.dateTime(UTC(date), {
+          month: 'long',
+          year: 'numeric',
+          timeZone: 'UTC',
+          numberingSystem: nu,
+        })
       : `${format.dateTime(UTC(range.from), { day: 'numeric', month: 'short', timeZone: 'UTC', numberingSystem: nu })} – ${format.dateTime(UTC(range.to), { day: 'numeric', month: 'short', year: 'numeric', timeZone: 'UTC', numberingSystem: nu })}`
 
   // Nothing here: point to the nearest time that has something.
@@ -65,24 +83,8 @@ export default async function CalendarPage({ params, searchParams }: Props) {
   const before = [...all].reverse().find((i) => i.date < range.from)
   const nearest = after ?? before
 
-  // Events still to come, as data a search engine reads. Past ones give it
-  // nothing to show, and an unknown day (a week's precision) is skipped.
-  const upcoming = schemaEvents
-    .filter((e) => {
-      const last = expandSchedule(e.schedule).filter((m) => !m.cancelled).at(-1)?.date
-      if (last) return last >= today
-      const day =
-        e.schedule?.start_precision !== 'week' && e.schedule?.start_date
-          ? cairoDay(e.schedule.start_date)
-          : null
-      return day !== null && day >= today
-    })
-    .map((e) => eventSchema({ event: e, locale, siteName: tm('siteName') }))
-    .filter((s) => s !== null)
-
   return (
     <div className="mx-auto w-full max-w-6xl px-4 py-10 sm:px-8 sm:py-14 xl:px-0">
-      {upcoming.length > 0 && <Schema data={upcoming} />}
       <header className="flex flex-wrap items-end justify-between gap-4">
         <div>
           <p className="text-sm text-[var(--text-muted)]">{t('title')}</p>
@@ -93,7 +95,10 @@ export default async function CalendarPage({ params, searchParams }: Props) {
         <CalendarFeed feedPath={`/${locale}/calendar.ics`} />
       </header>
 
-      <nav aria-label={t('navigation')} className="mt-6 flex flex-wrap items-center justify-between gap-3">
+      <nav
+        aria-label={t('navigation')}
+        className="mt-6 flex flex-wrap items-center justify-between gap-3"
+      >
         <div className="flex flex-wrap items-center gap-3">
           {/* Time runs left to right on a calendar's arrows in either language:
               next is always the right arrow. */}
@@ -111,7 +116,9 @@ export default async function CalendarPage({ params, searchParams }: Props) {
           <CalendarJump
             date={date}
             view={view}
-            years={yearsOf(all.map((i) => Number(i.date.slice(0, 4))).concat(Number(today.slice(0, 4))))}
+            years={yearsOf(
+              all.map((i) => Number(i.date.slice(0, 4))).concat(Number(today.slice(0, 4))),
+            )}
           />
         </div>
         <div className="cal-switch" role="group" aria-label={t('views')}>
@@ -130,7 +137,11 @@ export default async function CalendarPage({ params, searchParams }: Props) {
             {nearest ? (
               <Link className="underline underline-offset-4" href={href(view, nearest.date)}>
                 {t(after ? 'nextOn' : 'lastOn', {
-                  date: format.dateTime(UTC(nearest.date), { dateStyle: 'long', timeZone: 'UTC', numberingSystem: nu }),
+                  date: format.dateTime(UTC(nearest.date), {
+                    dateStyle: 'long',
+                    timeZone: 'UTC',
+                    numberingSystem: nu,
+                  }),
                 })}
               </Link>
             ) : null}
@@ -148,7 +159,9 @@ export default async function CalendarPage({ params, searchParams }: Props) {
             </div>
           </>
         ) : null}
-        {view === 'week' ? <WeekView date={date} items={items} labels={labels} today={today} /> : null}
+        {view === 'week' ? (
+          <WeekView date={date} items={items} labels={labels} today={today} />
+        ) : null}
         {view === 'agenda' ? <AgendaView items={items} labels={labels} /> : null}
       </div>
     </div>

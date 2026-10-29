@@ -13,6 +13,7 @@ import {
 } from 'motion/react'
 import { ArrowLeft, ChevronLeft, ChevronRight } from 'lucide-react'
 import { motionTokens } from '../../lib/motion-tokens'
+import { activatePage, pageNavigation } from '../../lib/page-navigation'
 import { blogCategories, blogPosts } from './blog-grid-data'
 import type { BlogPost } from './blog-grid-data'
 import styles from './blog-grid.module.css'
@@ -35,6 +36,7 @@ export interface BlogGridLabels {
 }
 
 export interface BlogGridProps {
+  getPageHref?: (page: number, category: string) => string
   title?: string
   description?: string
   posts?: BlogPost[]
@@ -267,6 +269,7 @@ export function BlogGrid({
   page: pageProp,
   defaultPage = 1,
   onPageChange,
+  getPageHref,
   pageSize = 6,
   showFeatured = true,
   order: sortOrder = 'newest',
@@ -316,6 +319,9 @@ export function BlogGrid({
   const pageCount = Math.max(1, Math.ceil(rest.length / pageSize))
   const safePage = Math.min(Math.max(1, page), pageCount)
   const pagePosts = rest.slice((safePage - 1) * pageSize, safePage * pageSize)
+  const PageControl = getPageHref ? 'a' : 'button'
+  const navigation = (number: number, disabled = false) =>
+    pageNavigation(disabled, getPageHref?.(number, category))
 
   function scrollToTop() {
     const node = rootRef.current
@@ -566,26 +572,31 @@ export function BlogGrid({
                         }}
                         transition={{ duration: motionTokens.duration.standard, ease: standard }}
                       >
-                        <button
-                          type="button"
+                        <PageControl
+                          {...navigation(safePage - 1, safePage === 1)}
+                          onClick={(event: MouseEvent<HTMLElement>) => {
+                            if (activatePage(event, safePage === 1, Boolean(getPageHref)))
+                              setPage(safePage - 1)
+                          }}
                           className={styles.pageStep}
-                          onClick={() => setPage(safePage - 1)}
-                          disabled={safePage === 1}
                           aria-label={labels.previousPage ?? 'Previous page'}
                         >
                           <ChevronLeft size={16} aria-hidden="true" />
                           <span>{labels.previous ?? 'Previous'}</span>
-                        </button>
+                        </PageControl>
                         <div className={styles.pageNumbers}>
                           {Array.from({ length: pageCount }, (_, index) => index + 1).map(
                             (number) => (
-                              <button
+                              <PageControl
+                                {...navigation(number)}
+                                onClick={(event: MouseEvent<HTMLElement>) => {
+                                  if (activatePage(event, false, Boolean(getPageHref)))
+                                    setPage(number)
+                                }}
                                 key={number}
-                                type="button"
                                 className={styles.pageNumber}
                                 aria-current={number === safePage ? 'page' : undefined}
                                 aria-label={labels.page ? labels.page(number) : `Page ${number}`}
-                                onClick={() => setPage(number)}
                               >
                                 {number === safePage && (
                                   <motion.span
@@ -595,20 +606,22 @@ export function BlogGrid({
                                   />
                                 )}
                                 <span>{labels.number ? labels.number(number) : number}</span>
-                              </button>
+                              </PageControl>
                             ),
                           )}
                         </div>
-                        <button
-                          type="button"
+                        <PageControl
+                          {...navigation(safePage + 1, safePage === pageCount)}
+                          onClick={(event: MouseEvent<HTMLElement>) => {
+                            if (activatePage(event, safePage === pageCount, Boolean(getPageHref)))
+                              setPage(safePage + 1)
+                          }}
                           className={styles.pageStep}
-                          onClick={() => setPage(safePage + 1)}
-                          disabled={safePage === pageCount}
                           aria-label={labels.nextPage ?? 'Next page'}
                         >
                           <span>{labels.next ?? 'Next'}</span>
                           <ChevronRight size={16} aria-hidden="true" />
-                        </button>
+                        </PageControl>
                       </motion.nav>
                     )}
                   </AnimatePresence>

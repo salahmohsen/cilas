@@ -21,7 +21,7 @@ import { RichTextScope } from '@/components/rich-text-scope'
 import { pathOf } from '@/lib/paths'
 import { breadcrumbSchema, courseSchema } from '@/lib/schema'
 import { ogImages } from '@/lib/og'
-import { seoDefaults } from '@/lib/seo'
+import { pageAlternates, seoDefaults } from '@/lib/seo'
 import type { Course, Media, Person } from '@/payload-types'
 
 /**
@@ -54,6 +54,8 @@ export async function courseMetadata(
     joins: false,
     locale: locale as 'en' | 'ar',
     fallbackLocale: 'en',
+    overrideAccess: false,
+    user: reader,
   })
   const course = docs[0]
   if (!course) return {}
@@ -68,6 +70,7 @@ export async function courseMetadata(
   return {
     title,
     description,
+    alternates: pageAlternates(`/study/${course.slug}`, locale),
     openGraph: { title, description, images: ogImages(imageUrl) },
     twitter: { card: 'summary_large_image', images: ogImages(imageUrl).map((i) => i.url) },
   }

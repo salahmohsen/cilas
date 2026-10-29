@@ -8,6 +8,7 @@ import { getPayload } from 'payload'
 import { getBridgeYear, listBridgeYears } from '@/api/programmes.api'
 import { BridgeYearView } from '@/components/bridge/bridge-year'
 import { ogImages } from '@/lib/og'
+import { pageAlternates } from '@/lib/seo'
 import { currentReader } from '@/lib/reader'
 
 type Props = { params: Promise<{ locale: string }>; searchParams: Promise<{ programme?: string }> }
@@ -26,6 +27,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   return {
     title,
     description,
+    alternates: pageAlternates('/study/bridge', locale),
     openGraph: { title, description, images: ogImages(year?.cover?.url ?? undefined) },
   }
 }
