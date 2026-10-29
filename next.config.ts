@@ -11,8 +11,11 @@ import { fileURLToPath } from 'url'
 const __filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(__filename)
 
-// Uploads live on R2; next/image may resize them from there.
+// The public media origin can be R2 or the local S3 service.
 const r2 = new URL(process.env.R2_PUBLIC_URL!)
+const localStorage =
+  process.env.NODE_ENV === 'development' &&
+  ['localhost', '127.0.0.1', '[::1]'].includes(r2.hostname)
 
 const nextConfig: NextConfig = {
   // A self-contained server for the Docker image (Dockerfile, Dokploy).
@@ -28,10 +31,12 @@ const nextConfig: NextConfig = {
     proxyClientMaxBodySize: UPLOAD_BODY_LIMIT,
   },
   images: {
+    dangerouslyAllowLocalIP: localStorage,
     remotePatterns: [
       {
         protocol: r2.protocol.replace(':', '') as 'http' | 'https',
         hostname: r2.hostname,
+        port: r2.port,
         pathname: `${r2.pathname.replace(/\/$/, '')}/**`,
       },
     ],

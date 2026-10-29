@@ -6,10 +6,20 @@ import React from 'react'
 import { FootnoteMark } from '@/components/article/footnote'
 import { ProfileCard } from '@/components/person/profile-card'
 import { MovieCard } from '@/components/movie/movie-card'
+import { ImageGallery } from '@/components/gallery/image-gallery'
 import { movieSnapshotSchema } from '@/lib/movie'
 import type { Footnote } from '@/lib/footnotes'
-import type { ColumnsBlock, FootnoteBlock, PersonProfileBlock, MovieBlock } from '@/payload-types'
+import type {
+  ColumnsBlock,
+  FootnoteBlock,
+  PersonProfileBlock,
+  MovieBlock,
+  MentionBlock,
+  GalleryBlock,
+} from '@/payload-types'
 import styles from './rich-text-columns.module.css'
+import { ReferenceMention, RelatedReference } from '@/components/rich-text-references'
+import { RichTextNodeLink } from '@/components/rich-text-node-link'
 
 /** The dash (or tilde) that opens a quote's source line. */
 const SOURCE_LEAD = /^\s*[—–~-]\s*/
@@ -60,9 +70,28 @@ export const RichTextField: React.FC<{
   const renderColumns = ({ node }: { node: { fields: ColumnsBlock } }) => {
     const { first, second, third, fourth, ratio, columnCount } = node.fields
     const count = Number(columnCount ?? 2)
+    const columns = [first, second, third, fourth].slice(0, count)
+    const profileCarousel =
+      !plain &&
+      columns.length > 1 &&
+      columns.every((column) =>
+        column?.root.children.some(
+          (child) =>
+            child.type === 'block' &&
+            typeof child.fields === 'object' &&
+            child.fields !== null &&
+            'blockType' in child.fields &&
+            child.fields.blockType === 'personProfile',
+        ),
+      )
     return (
-      <div className={plain ? undefined : styles.columns} data-ratio={ratio} data-columns={count}>
-        {[first, second, third, fourth].slice(0, count).map((column, index) => (
+      <div
+        className={plain ? undefined : styles.columns}
+        data-ratio={ratio}
+        data-columns={count}
+        data-profile-carousel={profileCarousel || undefined}
+      >
+        {columns.map((column, index) => (
           <RichTextField
             key={index}
             data={column}
@@ -92,6 +121,14 @@ export const RichTextField: React.FC<{
 
   const fullConverters: JSXConvertersFunction = ({ defaultConverters }) => ({
     ...defaultConverters,
+    link: ({ node, nodesToJSX }) => {
+      const children = nodesToJSX({ nodes: node.children })
+      return <RichTextNodeLink fields={node.fields}>{children}</RichTextNodeLink>
+    },
+    relationship: ({ node }) => {
+      const ref = node as unknown as { relationTo: string; value: unknown }
+      return <RelatedReference collection={ref.relationTo} value={ref.value} />
+    },
     // A quote whose last line starts with a dash ("— Pascal", written in the
     // editor as a line break then the source) gets that line as its citation.
     quote: ({ node, nodesToJSX }) => {
@@ -118,8 +155,13 @@ export const RichTextField: React.FC<{
       )
     },
     blocks: {
+      relatedContent: ({ node }: { node: { fields: { document: unknown } } }) => {
+        const ref = node.fields.document as { relationTo: string; value: unknown }
+        return <RelatedReference collection={ref.relationTo} value={ref.value} />
+      },
       columns: renderColumns,
       personProfile: renderPersonProfile,
+      gallery: ({ node }: { node: { fields: GalleryBlock } }) => <ImageGallery {...node.fields} />,
       movie: ({ node }: { node: { fields: MovieBlock } }) => {
         const parsed = movieSnapshotSchema.safeParse(node.fields.movie)
         return parsed.success ? (
@@ -134,6 +176,9 @@ export const RichTextField: React.FC<{
       ),
     },
     inlineBlocks: {
+      mention: ({ node }: { node: SerializedInlineBlockNode<MentionBlock> }) => (
+        <ReferenceMention fields={node.fields as unknown as Record<string, unknown>} />
+      ),
       ...Object.fromEntries(
         Object.entries(inlineBlocks).map(([type, draw]) => [
           type,
@@ -149,6 +194,8 @@ export const RichTextField: React.FC<{
 
   const plainConverters: JSXConvertersFunction = ({ defaultConverters }) => ({
     ...defaultConverters,
+    link: fullConverters({ defaultConverters }).link,
+    relationship: () => null,
     heading: ({ node, nodesToJSX }) => (
       <p>
         <strong>
@@ -168,8 +215,17 @@ export const RichTextField: React.FC<{
     upload: () => null,
     horizontalrule: () => null,
     table: () => null,
-    blocks: { columns: renderColumns, personProfile: () => null, movie: () => null },
-    inlineBlocks: {},
+    blocks: {
+      relatedContent: () => null,
+      columns: renderColumns,
+      personProfile: () => null,
+      movie: () => null,
+      gallery: () => null,
+    },
+    inlineBlocks: {
+      mention: ({ node }: { node: SerializedInlineBlockNode<MentionBlock> }) =>
+        node.fields.label ?? '',
+    },
   })
 
   return (

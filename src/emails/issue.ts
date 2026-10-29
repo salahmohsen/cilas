@@ -2,6 +2,7 @@ import type { Payload, PayloadRequest } from 'payload'
 
 import type { Issue } from './newsletter'
 import { PICK_TYPES } from './pick-types'
+import { resolveRichTextReferences } from '@/api/rich-text-references.api'
 
 /**
  * A newsletter issue's latest draft, its picks filled in for the cards.
@@ -56,5 +57,6 @@ export const issueForEmail = async (payload: Payload, id: number, req?: PayloadR
       }
     }
   }
+  issue.references = await resolveRichTextReferences(payload, issue, { locale: 'en', user: null })
   return issue
 }

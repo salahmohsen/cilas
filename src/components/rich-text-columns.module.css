@@ -23,6 +23,24 @@
   height: auto;
 }
 
+@media (width < 48rem) {
+  .columns[data-profile-carousel] {
+    grid-template-columns: none;
+    grid-auto-flow: column;
+    grid-auto-columns: 88%;
+    gap: var(--space-4);
+    overflow-x: auto;
+    overscroll-behavior-inline: contain;
+    scroll-snap-type: inline mandatory;
+    scrollbar-width: thin;
+    padding-block: var(--space-1);
+  }
+
+  .columns[data-profile-carousel] > .column {
+    scroll-snap-align: start;
+  }
+}
+
 @media (min-width: 48rem) {
   .columns {
     grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);

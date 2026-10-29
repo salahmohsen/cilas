@@ -244,12 +244,16 @@ export function ProfileForm({ profile, messages: m, action, removePhotoAction, o
         label={m.bioEn}
         dir="ltr"
         defaultMarkdown={profile.bio.en}
+        readOnly={profile.bioReadOnly?.en}
+        description={profile.bioReadOnly?.en ? m.bioReadOnly : undefined}
         onChange={(value) => setBioEn(bioFor('en', value.markdown))}
       />
       <RichField
         label={m.bioAr}
         dir="rtl"
         defaultMarkdown={profile.bio.ar}
+        readOnly={profile.bioReadOnly?.ar}
+        description={profile.bioReadOnly?.ar ? m.bioReadOnly : undefined}
         onChange={(value) => setBioAr(bioFor('ar', value.markdown))}
       />
 

@@ -131,6 +131,21 @@
   aspect-ratio: 16 / 10;
   border-radius: 26px;
 }
+.featured[data-image-sizing='content'] {
+  align-items: stretch;
+}
+.featured[data-image-sizing='content'] .imageFrame {
+  min-height: 0;
+  aspect-ratio: auto;
+}
+.imageFrame[data-image-sizing='content'] .image {
+  position: absolute;
+  inset: 0;
+  height: 100%;
+}
+.featured[data-has-image='false'] {
+  grid-template-columns: minmax(0, 1fr);
+}
 .image {
   display: block;
   width: 100%;
@@ -414,6 +429,9 @@
   .featured .imageFrame {
     aspect-ratio: 3 / 2;
     border-radius: 20px;
+  }
+  .featured[data-image-sizing='content'] .imageFrame {
+    aspect-ratio: 3 / 2;
   }
   .page {
     gap: var(--space-10);

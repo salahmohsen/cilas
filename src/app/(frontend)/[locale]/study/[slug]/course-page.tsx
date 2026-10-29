@@ -17,6 +17,7 @@ import { RefreshRouteOnSave } from '@/components/RefreshRouteOnSave'
 import { Schema } from '@/components/schema'
 import { CourseLivePreview } from './CourseLivePreview'
 import { CourseView, type RelatedCourse } from './CourseView'
+import { RichTextScope } from '@/components/rich-text-scope'
 import { pathOf } from '@/lib/paths'
 import { breadcrumbSchema, courseSchema } from '@/lib/schema'
 import { ogImages } from '@/lib/og'
@@ -39,7 +40,11 @@ const shownTo = (reader: Reader, slug: string): Where => ({
  * Meta fields win; the course's own title, summary and cover fill any gaps.
  * Shared by the cached page and the signed-in one.
  */
-export async function courseMetadata(locale: string, slug: string, reader: Reader): Promise<Metadata> {
+export async function courseMetadata(
+  locale: string,
+  slug: string,
+  reader: Reader,
+): Promise<Metadata> {
   const payload = await getPayload({ config })
   const { docs } = await payload.find({
     collection: 'courses',
@@ -72,7 +77,15 @@ export async function courseMetadata(locale: string, slug: string, reader: Reade
  * A course page. `reader` is null on the cached page; the signed-in page
  * passes the account, which adds `community` courses.
  */
-export async function CoursePage({ locale, slug, reader }: { locale: string; slug: string; reader: Reader }) {
+export async function CoursePage({
+  locale,
+  slug,
+  reader,
+}: {
+  locale: string
+  slug: string
+  reader: Reader
+}) {
   const { isEnabled: isPreview } = await draftMode()
   const payload = await getPayload({ config })
   if (isPreview) reader = await currentReader()
@@ -136,7 +149,16 @@ export async function CoursePage({ locale, slug, reader }: { locale: string; slu
       fellows: (c.fellows ?? []).flatMap((f) =>
         typeof f === 'object' && f ? [(f as Person).name] : [],
       ),
-      ...(cover?.url ? { image: { url: cover.url, alt: cover.alt ?? '', focalX: cover.focalX, focalY: cover.focalY } } : {}),
+      ...(cover?.url
+        ? {
+            image: {
+              url: cover.url,
+              alt: cover.alt ?? '',
+              focalX: cover.focalX,
+              focalY: cover.focalY,
+            },
+          }
+        : {}),
     }
   })
 
@@ -157,9 +179,7 @@ export async function CoursePage({ locale, slug, reader }: { locale: string; slu
       course,
       locale,
       siteName: tm('siteName'),
-      instructors: (course.fellows ?? []).flatMap((p) =>
-        typeof p === 'object' && p ? [p] : [],
-      ),
+      instructors: (course.fellows ?? []).flatMap((p) => (typeof p === 'object' && p ? [p] : [])),
     })
     // Where it sits: home, the study list, this course.
     const crumb = breadcrumbSchema([
@@ -170,7 +190,9 @@ export async function CoursePage({ locale, slug, reader }: { locale: string; slu
     return (
       <>
         <Schema data={schema ? [schema, crumb] : [crumb]} />
-        <CourseView after={newsletter} course={course} email={email} related={related} />
+        <RichTextScope data={course} locale={locale} user={reader}>
+          <CourseView after={newsletter} course={course} email={email} related={related} />
+        </RichTextScope>
       </>
     )
   }
@@ -198,12 +220,14 @@ export async function CoursePage({ locale, slug, reader }: { locale: string; slu
   return (
     <>
       <RefreshRouteOnSave />
-      <CourseLivePreview
-        after={newsletter}
-        email={email}
-        initialData={drafts[0] ?? course}
-        related={related}
-      />
+      <RichTextScope data={drafts[0] ?? course} locale={locale} user={reader}>
+        <CourseLivePreview
+          after={newsletter}
+          email={email}
+          initialData={drafts[0] ?? course}
+          related={related}
+        />
+      </RichTextScope>
     </>
   )
 }

@@ -61,14 +61,20 @@
 }
 .links {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(min(100%, 10rem), 1fr));
+  grid-template-columns: minmax(0, 1fr);
   gap: 1px;
   margin-top: auto;
   border-top: 1px solid var(--poster-ink);
   background: var(--poster-ink);
   font-size: var(--text-sm);
 }
-.links a {
+.links > ul {
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-2) var(--space-4);
+  background: var(--poster-paper);
+}
+.links > a {
   position: relative;
   z-index: 2;
   padding: var(--space-3) var(--space-4);

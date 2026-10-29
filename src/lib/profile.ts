@@ -16,6 +16,7 @@ import { z } from 'zod'
 import { personOf } from '@/access'
 import { SOCIAL_PLATFORMS } from '@/fields/social'
 import type { User } from '@/payload-types'
+import { profileBioReadOnly, protectedBioText } from '@/lib/profile-rich-text'
 
 type Locale = 'en' | 'ar'
 type SocialLink = { platform: (typeof SOCIAL_PLATFORMS)[number]; url: string }
@@ -28,6 +29,7 @@ export type ProfileView = {
   name: Record<Locale, string>
   /** The bio as Markdown, per language. */
   bio: Record<Locale, string>
+  bioReadOnly?: Record<Locale, boolean>
   website: string
   socialLinks: SocialLink[]
   photo: { url: string; alt: string } | null
@@ -118,7 +120,15 @@ const loadOwn = async (payload: Payload, user: User, id: number) => {
   const bio = (person as { bio?: Record<string, unknown> }).bio
   return {
     person,
-    bio: { en: await toMarkdown(payload, bio?.en), ar: await toMarkdown(payload, bio?.ar) },
+    bio: {
+      en: profileBioReadOnly(bio?.en)
+        ? protectedBioText(bio?.en)
+        : await toMarkdown(payload, bio?.en),
+      ar: profileBioReadOnly(bio?.ar)
+        ? protectedBioText(bio?.ar)
+        : await toMarkdown(payload, bio?.ar),
+    },
+    bioReadOnly: { en: profileBioReadOnly(bio?.en), ar: profileBioReadOnly(bio?.ar) },
   }
 }
 
@@ -129,13 +139,14 @@ const loadOwn = async (payload: Payload, user: User, id: number) => {
 export const readProfile = async (payload: Payload, user: User): Promise<ProfileView | null> => {
   const id = personOf(user)
   if (id === null) return null
-  const { person, bio } = await loadOwn(payload, user, id)
+  const { person, bio, bioReadOnly } = await loadOwn(payload, user, id)
   const photo = typeof person.photo === 'object' && person.photo?.url ? person.photo : null
   return {
     personId: person.id,
     visible: Boolean(person.visible),
     name: { en: textOf(person.name, 'en'), ar: textOf(person.name, 'ar') },
     bio,
+    bioReadOnly,
     website: person.website ?? '',
     socialLinks: (person.social_links ?? []).map(({ platform, url }) => ({ platform, url })),
     photo: photo ? { url: photo.url!, alt: photo.alt } : null,
@@ -169,7 +180,7 @@ export const saveProfile = async (
     return { ok: false, error: 'photo' }
   }
 
-  const { person: stored, bio: storedBio } = await loadOwn(payload, user, id)
+  const { person: stored, bio: storedBio, bioReadOnly } = await loadOwn(payload, user, id)
 
   // Payload refuses an empty required name in Arabic, so a stored one cannot be cleared here.
   if (!name.ar && textOf(stored.name, 'ar')) return { ok: false, error: 'name-ar' }
@@ -180,6 +191,7 @@ export const saveProfile = async (
   for (const locale of ['en', 'ar'] as const) {
     const markdown = bio[locale].trim()
     if (markdown === storedBio[locale]) continue
+    if (bioReadOnly[locale]) return { ok: false, error: 'bio' }
     const clean = stripUploads(markdown)
     if (!linksAreSafe(clean)) return { ok: false, error: 'bio' }
     bioData[locale] = await toLexical(payload, clean)

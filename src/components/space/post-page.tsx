@@ -68,7 +68,7 @@ export async function PostPage({
         />
       </header>
       <main className={styles.column} aria-labelledby={`post-${post.id}-author`}>
-        <PostArticle view={view} context={context} href={href} />
+        <PostArticle user={user} view={view} context={context} href={href} />
         {why && <Alert tone="info" title={why} />}
       </main>
     </div>

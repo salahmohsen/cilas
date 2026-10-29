@@ -1,4 +1,18 @@
 {
+  "Gallery": {
+    "loading": "Loading image…",
+    "loadError": "This image could not be loaded. Try again.",
+    "retry": "Retry image",
+    "open": "Open image: {alt}",
+    "close": "Close gallery",
+    "previous": "Previous image",
+    "next": "Next image",
+    "zoomIn": "Zoom in",
+    "zoomOut": "Zoom out",
+    "position": "{current} of {total}",
+    "zoomStatus": "Zoom {zoom} times",
+    "hint": "Scroll or press plus and minus to zoom. Double-click to toggle zoom. Drag or use arrow keys to pan while zoomed; use left and right arrows to browse while fitted. Press zero to reset. Escape resets zoom first, then closes."
+  },
   "Meta": {
     "siteName": "CILAS",
     "description": "Cairo Institute of Liberal Arts and Sciences — A pedagogy of discovery and attunement."
@@ -692,6 +706,7 @@
     "nameAr": "Name in Arabic",
     "bioEn": "About you, in English",
     "bioAr": "About you, in Arabic",
+    "bioReadOnly": "This bio contains content that this editor cannot preserve. Ask an administrator to edit it.",
     "website": "Website",
     "social": "Social media",
     "platform": "Platform",

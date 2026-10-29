@@ -1,5 +1,6 @@
 import type { SerializedEditorState } from '@payloadcms/richtext-lexical/lexical'
 import { convertLexicalToPlaintext } from '@payloadcms/richtext-lexical/plaintext'
+import { flattenRichTextColumns } from '@/lib/flatten-rich-text-columns'
 
 /**
  * Rich text as plain text, for excerpts, meta descriptions, reading time and
@@ -8,7 +9,7 @@ import { convertLexicalToPlaintext } from '@payloadcms/richtext-lexical/plaintex
  */
 export const plainText = ({ data }: { data: SerializedEditorState | { root: unknown } }): string =>
   convertLexicalToPlaintext({
-    data: data as SerializedEditorState,
+    data: flattenRichTextColumns(data as SerializedEditorState),
     converters: {
       inlineBlocks: {
         mention: ({ node }) => String((node.fields as { label?: string }).label ?? ''),

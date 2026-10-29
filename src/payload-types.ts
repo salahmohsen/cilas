@@ -4802,6 +4802,80 @@ export interface MovieBlock {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "GalleryBlock".
+ */
+export interface GalleryBlock {
+  /**
+   * The grid uses fewer columns in narrow spaces and on phones.
+   */
+  columnCount: '1' | '2' | '3' | '4';
+  /**
+   * Add images and drag rows to change their order.
+   */
+  images: {
+    image: number | Media;
+    caption?: string | null;
+    id?: string | null;
+  }[];
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'gallery';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "RelatedContentBlock".
+ */
+export interface RelatedContentBlock {
+  /**
+   * Shows a summary card with a link to the original content.
+   */
+  document:
+    | {
+        relationTo: 'articles';
+        value: number | Article;
+      }
+    | {
+        relationTo: 'courses';
+        value: number | Course;
+      }
+    | {
+        relationTo: 'events';
+        value: number | Event;
+      }
+    | {
+        relationTo: 'publications';
+        value: number | Publication;
+      }
+    | {
+        relationTo: 'programmes';
+        value: number | Programme;
+      };
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'relatedContent';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "MentionBlock".
+ */
+export interface MentionBlock {
+  /**
+   * The words shown in the text, e.g. “Ghosoun Ismail”.
+   */
+  label: string;
+  type: 'person' | 'article' | 'course' | 'event' | 'publication' | 'programme';
+  person?: (number | null) | Person;
+  article?: (number | null) | Article;
+  course?: (number | null) | Course;
+  event?: (number | null) | Event;
+  publication?: (number | null) | Publication;
+  programme?: (number | null) | Programme;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'mention';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "ColumnsBlock".
  */
 export interface ColumnsBlock {
@@ -4811,7 +4885,7 @@ export interface ColumnsBlock {
   columnCount?: ('2' | '3' | '4') | null;
   ratio?: ('equal' | 'oneThird' | 'twoThirds') | null;
   /**
-   * Add text, an image, or a Person profile block.
+   * Add text, an image, a gallery, a movie, or a Person profile block.
    */
   first?: {
     root: {
@@ -4829,7 +4903,7 @@ export interface ColumnsBlock {
     [k: string]: unknown;
   } | null;
   /**
-   * Add text, an image, or a Person profile block.
+   * Add text, an image, a gallery, a movie, or a Person profile block.
    */
   second?: {
     root: {
@@ -4847,7 +4921,7 @@ export interface ColumnsBlock {
     [k: string]: unknown;
   } | null;
   /**
-   * Add text, an image, or a Person profile block.
+   * Add text, an image, a gallery, a movie, or a Person profile block.
    */
   third?: {
     root: {
@@ -4865,7 +4939,7 @@ export interface ColumnsBlock {
     [k: string]: unknown;
   } | null;
   /**
-   * Add text, an image, or a Person profile block.
+   * Add text, an image, a gallery, a movie, or a Person profile block.
    */
   fourth?: {
     root: {
@@ -4937,26 +5011,6 @@ export interface FootnoteBlock {
   id?: string | null;
   blockName?: string | null;
   blockType: 'footnote';
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "MentionBlock".
- */
-export interface MentionBlock {
-  /**
-   * The words shown in the text, e.g. “Ghosoun Ismail”.
-   */
-  label: string;
-  type: 'person' | 'article' | 'course' | 'event' | 'publication' | 'programme';
-  person?: (number | null) | Person;
-  article?: (number | null) | Article;
-  course?: (number | null) | Course;
-  event?: (number | null) | Event;
-  publication?: (number | null) | Publication;
-  programme?: (number | null) | Programme;
-  id?: string | null;
-  blockName?: string | null;
-  blockType: 'mention';
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema

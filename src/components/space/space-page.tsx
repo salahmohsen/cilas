@@ -19,6 +19,7 @@ import { pageAddresses, threadTexts } from '@/lib/link-title'
 import { introGates, mayComment, membership } from '@/lib/spaces'
 import { CourseSyllabus, directionOf, textOf } from '@/components/course/course-syllabus'
 import { RichTextField } from '@/components/RichTextField'
+import { RichTextScope } from '@/components/rich-text-scope'
 import { profileMessages } from '@/components/profile/load-messages'
 import { readProfile } from '@/lib/profile'
 import { StudyWithAI } from '@/components/study-with-ai'
@@ -332,7 +333,7 @@ export async function SpacePage({
     />
   )
 
-  return (
+  const content = (
     <div className={`${styles.page}`}>
       <header className={styles.spaceHead}>
         <Image
@@ -570,5 +571,10 @@ export async function SpacePage({
         </StickyRail>
       </div>
     </div>
+  )
+  return (
+    <RichTextScope data={course} locale={locale} user={user}>
+      {content}
+    </RichTextScope>
   )
 }
