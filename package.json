@@ -117,6 +117,7 @@
   "pnpm": {
     "overrides": {
       "source-map-js@<1.2.2": "^1.2.2",
+      "systeminformation@<5.33.16": "^5.33.18",
       "dompurify@<3.4.16": "^3.4.17",
       "undici@>=7.0.0 <7.30.1": "7.30.1",
       "postcss-selector-parser@<6.1.5": "^6.1.5",
