@@ -27,7 +27,30 @@ const hiddenFor =
   }
 
 /** Collections the menu lists first, in this order; the rest keep theirs. */
-const FIRST = ['users']
+const GROUPS: Record<string, string> = {
+  'form-submissions': 'Admissions',
+  enrollments: 'Admissions',
+  memberships: 'Admissions',
+  forms: 'Admissions',
+  courses: 'Teaching',
+  cycles: 'Teaching',
+  programmes: 'Teaching',
+  places: 'Teaching',
+  articles: 'Publishing',
+  publications: 'Publishing',
+  press: 'Publishing',
+  newsletters: 'Communications',
+  'mailing-lists': 'Communications',
+  people: 'People',
+  users: 'People',
+  governance: 'People',
+  media: 'Site',
+  redirects: 'Site',
+  'site-settings': 'Site',
+  'email-settings': 'Site',
+}
+
+const FIRST = Object.keys(GROUPS)
 
 const rank = (slug: string) => (FIRST.includes(slug) ? FIRST.indexOf(slug) : FIRST.length)
 
@@ -37,12 +60,20 @@ export const roleNav = (): Plugin => (config) => ({
   collections: config.collections
     ?.map((collection) => ({
       ...collection,
-      admin: { ...collection.admin, hidden: hiddenFor(collection.slug, collection.admin?.hidden) },
+      admin: {
+        ...collection.admin,
+        ...(GROUPS[collection.slug] ? { group: GROUPS[collection.slug] } : {}),
+        hidden: hiddenFor(collection.slug, collection.admin?.hidden),
+      },
     }))
     // A stable sort: listed slugs move up, everything else stays as it was.
     .sort((a, b) => rank(a.slug) - rank(b.slug)),
   globals: config.globals?.map((global) => ({
     ...global,
-    admin: { ...global.admin, hidden: hiddenFor(global.slug, global.admin?.hidden) },
+    admin: {
+      ...global.admin,
+      ...(GROUPS[global.slug] ? { group: GROUPS[global.slug] } : {}),
+      hidden: hiddenFor(global.slug, global.admin?.hidden),
+    },
   })),
 })

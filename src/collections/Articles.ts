@@ -99,21 +99,6 @@ export const Articles: CollectionConfig = {
   fields: [
     { name: 'title', type: 'text', required: true, localized: true },
     slugField(),
-    {
-      name: 'body',
-      type: 'richText',
-      localized: true,
-      // Footnotes and mentions are inline blocks: inserted where they belong in the text.
-      editor: lexicalEditor({ features: articleBodyFeatures }),
-    },
-    {
-      name: 'authors',
-      type: 'relationship',
-      relationTo: 'people',
-      hasMany: true,
-      required: true,
-      admin: { position: 'sidebar' },
-    },
     { name: 'cover_image', type: 'upload', relationTo: 'media', admin: { position: 'sidebar' } },
     {
       label: 'Review',
@@ -163,58 +148,95 @@ export const Articles: CollectionConfig = {
         },
       ],
     },
-    creditsField(),
+    ...importFields(),
     {
-      label: 'Translation',
-      type: 'collapsible',
-      admin: { initCollapsed: true, description: 'Only for translated articles.' },
-      fields: [
+      type: 'tabs',
+      tabs: [
         {
-          name: 'translation',
-          type: 'group',
+          label: 'Writing',
           fields: [
             {
-              type: 'row',
+              name: 'body',
+              type: 'richText',
+              localized: true,
+              // Footnotes and mentions are inline blocks: inserted where they belong in the text.
+              editor: lexicalEditor({ features: articleBodyFeatures }),
+            },
+          ],
+        },
+        {
+          label: 'Credits and relationships',
+          fields: [
+            {
+              name: 'authors',
+              type: 'relationship',
+              relationTo: 'people',
+              hasMany: true,
+              required: true,
+              admin: {},
+            },
+            creditsField(),
+            {
+              label: 'Translation',
+              type: 'collapsible',
+              admin: { initCollapsed: true, description: 'Only for translated articles.' },
               fields: [
                 {
-                  name: 'original_language',
-                  type: 'select',
-                  options: [...LANGUAGE_OPTIONS],
-                  admin: { width: '30%' },
+                  name: 'translation',
+                  type: 'group',
+                  fields: [
+                    {
+                      type: 'row',
+                      fields: [
+                        {
+                          name: 'original_language',
+                          type: 'select',
+                          options: [...LANGUAGE_OPTIONS],
+                          admin: { width: '30%' },
+                        },
+                        { name: 'original_title', type: 'text', admin: { width: '70%' } },
+                      ],
+                    },
+                    {
+                      name: 'original_authors',
+                      type: 'relationship',
+                      relationTo: 'people',
+                      hasMany: true,
+                    },
+                    { name: 'original_url', type: 'text' },
+                    { name: 'original_source', type: 'text' }, // citation of where it first appeared
+                    { name: 'note', type: 'text', localized: true }, // "translated in 2018, not published before"
+                  ],
                 },
-                { name: 'original_title', type: 'text', admin: { width: '70%' } },
               ],
             },
-            { name: 'original_authors', type: 'relationship', relationTo: 'people', hasMany: true },
-            { name: 'original_url', type: 'text' },
-            { name: 'original_source', type: 'text' }, // citation of where it first appeared
-            { name: 'note', type: 'text', localized: true }, // "translated in 2018, not published before"
+            {
+              label: 'Related',
+              type: 'collapsible',
+              admin: { initCollapsed: true },
+              fields: [
+                { name: 'tags', type: 'array', fields: [{ name: 'tag', type: 'text' }] },
+                {
+                  name: 'related_articles',
+                  type: 'relationship',
+                  relationTo: 'articles',
+                  hasMany: true,
+                  admin: {
+                    description: 'Editor-curated. If empty, articles sharing tags are suggested.',
+                  },
+                },
+                {
+                  name: 'publications',
+                  type: 'join',
+                  collection: 'publications',
+                  on: 'articles',
+                  admin: { allowCreate: false },
+                },
+              ],
+            },
           ],
         },
       ],
     },
-    {
-      label: 'Related',
-      type: 'collapsible',
-      admin: { initCollapsed: true },
-      fields: [
-        { name: 'tags', type: 'array', fields: [{ name: 'tag', type: 'text' }] },
-        {
-          name: 'related_articles',
-          type: 'relationship',
-          relationTo: 'articles',
-          hasMany: true,
-          admin: { description: 'Editor-curated. If empty, articles sharing tags are suggested.' },
-        },
-        {
-          name: 'publications',
-          type: 'join',
-          collection: 'publications',
-          on: 'articles',
-          admin: { allowCreate: false },
-        },
-      ],
-    },
-    ...importFields(),
   ],
 }

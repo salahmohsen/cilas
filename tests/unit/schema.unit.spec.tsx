@@ -24,6 +24,18 @@ const dataFor = (overrides: Partial<Event> = {}) =>
   eventSchema({ event: { ...event, ...overrides }, locale: 'ar', siteName: 'CILAS' })
 
 describe('event structured data', () => {
+  it('uses single-event times without an agenda beside Cairo DST changes', () => {
+    for (const [day, utc] of [
+      ['2026-10-29', '19:30'],
+      ['2026-10-30', '20:30'],
+    ]) {
+      const data = dataFor({
+        schedule: { mode: 'single', start_date: day, start_time: '22:30', end_time: '23:00' },
+        agenda: [],
+      })
+      expect(new Date(data!.startDate).toISOString()).toBe(`${day}T${utc}:00.000Z`)
+    }
+  })
   it('identifies its localized detail page and cover', () => {
     expect(dataFor()).toMatchObject({
       '@type': 'Event',

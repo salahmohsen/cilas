@@ -1,4 +1,5 @@
 import { addDays, cairoDay, WEEKDAYS, weekdayOf, type Weekday } from '@/lib/cairo-day'
+import { timeOfDay } from '@/fields/validators'
 
 /**
  * The one place dates come from (ADR 0002). Every date shown anywhere, from
@@ -13,6 +14,9 @@ export type Slot = {
 }
 
 export type Schedule = {
+  mode?: 'single' | 'recurring' | null
+  start_time?: string | null
+  end_time?: string | null
   start_date?: string | null
   start_precision?: 'day' | 'week' | null
   weeks?: number | null
@@ -48,6 +52,18 @@ const daysUntil = (from: string, weekday: Weekday): number =>
 
 const expandPattern = (schedule: Schedule): Meeting[] => {
   const { start_date, weeks, slots } = schedule
+  if (schedule.mode === 'single') {
+    const { start_time, end_time } = schedule
+    const date = start_date ? cairoDay(start_date) : null
+    return date &&
+      start_time &&
+      end_time &&
+      timeOfDay(start_time) === true &&
+      timeOfDay(end_time) === true &&
+      end_time > start_time
+      ? [{ date, start_time, end_time }]
+      : []
+  }
   if (!start_date || !weeks || !slots?.length) return []
 
   const start = cairoDay(start_date)

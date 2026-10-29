@@ -64,41 +64,66 @@ export const People: CollectionConfig = {
       relationTo: 'media',
       admin: { position: 'sidebar' },
     },
-    {
-      label: 'Profile',
-      type: 'group',
-      fields: [{ name: 'bio', type: 'richText', localized: true }],
-    },
-    socialFields,
-    {
-      // Derived from courses.fellows; never stored on the person.
-      name: 'courses',
-      type: 'join',
-      collection: 'courses',
-      on: 'fellows',
-      admin: { allowCreate: false, defaultColumns: ['title', 'cycle', 'course_type'] },
-    },
-    {
-      name: 'governance',
-      type: 'join',
-      collection: 'governance',
-      on: 'person',
-      admin: { allowCreate: false, defaultColumns: ['role', 'term_from', 'term_to'] },
-    },
-    {
-      name: 'memberships',
-      type: 'join',
-      collection: 'memberships',
-      on: 'person',
-      admin: { allowCreate: true, defaultColumns: ['programme', 'role'] },
-    },
-    {
-      name: 'enrollments',
-      type: 'join',
-      collection: 'enrollments',
-      on: 'person',
-      admin: { allowCreate: true, defaultColumns: ['course', 'status'] },
-    },
     ...importFields(),
+    {
+      type: 'tabs',
+      tabs: [
+        {
+          label: 'Profile',
+          fields: [
+            {
+              label: 'Profile',
+              type: 'group',
+              fields: [{ name: 'bio', type: 'richText', localized: true }],
+            },
+            socialFields,
+          ],
+        },
+        {
+          label: 'Teaching',
+          fields: [
+            {
+              // Derived from courses.fellows; never stored on the person.
+              name: 'courses',
+              type: 'join',
+              collection: 'courses',
+              on: 'fellows',
+              admin: { allowCreate: false, defaultColumns: ['title', 'cycle', 'course_type'] },
+            },
+          ],
+        },
+        {
+          label: 'Memberships and enrollments',
+          fields: [
+            {
+              name: 'memberships',
+              type: 'join',
+              collection: 'memberships',
+              on: 'person',
+              admin: { allowCreate: true, defaultColumns: ['programme', 'role'] },
+            },
+            {
+              name: 'enrollments',
+              type: 'join',
+              collection: 'enrollments',
+              on: 'person',
+              admin: { allowCreate: true, defaultColumns: ['course', 'status'] },
+            },
+          ],
+        },
+        {
+          label: 'Governance',
+          fields: [
+            {
+              name: 'governance',
+              type: 'join',
+              collection: 'governance',
+              on: 'person',
+              admin: { allowCreate: false, defaultColumns: ['role', 'term_from', 'term_to'] },
+            },
+          ],
+        },
+      ],
+    },
   ],
 }

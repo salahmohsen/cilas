@@ -51,6 +51,22 @@ const card = async (data: Event) =>
 beforeEach(() => vi.clearAllMocks())
 
 describe('public event posters', () => {
+  it('shows the same time for a single screening without an agenda as for a legacy timed event', async () => {
+    const legacy = await card(event)
+    const single = await card({
+      ...event,
+      agenda: [],
+      schedule: {
+        mode: 'single',
+        start_date: '2026-11-04',
+        start_time: '19:00',
+        end_time: '20:00',
+      },
+    })
+    expect(single.querySelector('.poster-meta')?.textContent).toBe(
+      legacy.querySelector('.poster-meta')?.textContent,
+    )
+  })
   it('uses the same poster layout and a distinct fixed color for every event type', async () => {
     const colors = Object.values(EVENT_POSTER_COLORS)
     expect(new Set(colors).size).toBe(colors.length)
@@ -97,8 +113,13 @@ describe('public event posters', () => {
     const document = await card({
       ...event,
       cover_image: {
-        id: 1, alt: 'Event cover', createdAt: '', updatedAt: '',
-        url: '/assets/images/original.webp', focalX: 0, focalY: 85,
+        id: 1,
+        alt: 'Event cover',
+        createdAt: '',
+        updatedAt: '',
+        url: '/assets/images/original.webp',
+        focalX: 0,
+        focalY: 85,
         sizes: { card: { url: '/assets/images/portrait.webp' } },
       },
     })

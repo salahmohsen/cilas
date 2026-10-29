@@ -79,62 +79,82 @@ export const Publications: CollectionConfig = {
       admin: { position: 'sidebar' },
       fields: reviewFields('publication'),
     },
-    {
-      name: 'kind',
-      type: 'select',
-      required: true,
-      options: [
-        { label: 'Essay collection', value: 'essay_collection' },
-        { label: 'Translation booklet', value: 'translation_booklet' },
-        { label: 'Research', value: 'research' },
-        { label: 'Other', value: 'other' },
-      ],
-      admin: { position: 'sidebar' },
-    },
-    {
-      // Who may edit it before it is published. Not the printed credits.
-      name: 'editors',
-      type: 'relationship',
-      relationTo: 'people',
-      hasMany: true,
-      admin: { position: 'sidebar' },
-    },
     { name: 'cover_image', type: 'upload', relationTo: 'media', admin: { position: 'sidebar' } },
     { name: 'title', type: 'text', required: true, localized: true },
     slugField(),
-    { name: 'subtitle', type: 'text', localized: true },
-    { name: 'intro', type: 'richText', localized: true },
+    ...importFields(),
     {
-      name: 'articles',
-      type: 'relationship',
-      relationTo: 'articles',
-      hasMany: true,
-      admin: { description: 'In reading order.' },
-    },
-    creditsField(),
-    {
-      label: 'Provenance',
-      type: 'collapsible',
-      fields: [
-        { name: 'produced_by', type: 'relationship', relationTo: 'courses', hasMany: true },
+      type: 'tabs',
+      tabs: [
         {
-          name: 'license',
-          type: 'select',
-          options: [
-            { label: 'CC BY-NC-SA', value: 'cc_by_nc_sa' },
-            { label: 'CC BY-SA', value: 'cc_by_sa' },
-            { label: 'CC BY', value: 'cc_by' },
-            { label: 'All rights reserved', value: 'all_rights_reserved' },
+          label: 'Introduction',
+          fields: [
+            { name: 'subtitle', type: 'text', localized: true },
+            { name: 'intro', type: 'richText', localized: true },
+            {
+              name: 'kind',
+              type: 'select',
+              required: true,
+              options: [
+                { label: 'Essay collection', value: 'essay_collection' },
+                { label: 'Translation booklet', value: 'translation_booklet' },
+                { label: 'Research', value: 'research' },
+                { label: 'Other', value: 'other' },
+              ],
+              admin: {},
+            },
           ],
         },
         {
-          // A link to the designed print edition, e.g. a Wayback copy. No file is stored.
-          name: 'print_edition_url',
-          type: 'text',
-          validate: (value: unknown) => (value ? httpUrl(value) : true),
+          label: 'Reading order',
+          fields: [
+            {
+              name: 'articles',
+              type: 'relationship',
+              relationTo: 'articles',
+              hasMany: true,
+              admin: { description: 'In reading order.' },
+            },
+          ],
+        },
+        {
+          label: 'Credits and provenance',
+          fields: [
+            {
+              // Who may edit it before it is published. Not the printed credits.
+              name: 'editors',
+              type: 'relationship',
+              relationTo: 'people',
+              hasMany: true,
+              admin: {},
+            },
+            creditsField(),
+            {
+              label: 'Provenance',
+              type: 'collapsible',
+              fields: [
+                { name: 'produced_by', type: 'relationship', relationTo: 'courses', hasMany: true },
+                {
+                  name: 'license',
+                  type: 'select',
+                  options: [
+                    { label: 'CC BY-NC-SA', value: 'cc_by_nc_sa' },
+                    { label: 'CC BY-SA', value: 'cc_by_sa' },
+                    { label: 'CC BY', value: 'cc_by' },
+                    { label: 'All rights reserved', value: 'all_rights_reserved' },
+                  ],
+                },
+                {
+                  // A link to the designed print edition, e.g. a Wayback copy. No file is stored.
+                  name: 'print_edition_url',
+                  type: 'text',
+                  validate: (value: unknown) => (value ? httpUrl(value) : true),
+                },
+              ],
+            },
+          ],
         },
       ],
     },
-    ...importFields(),
   ],
 }

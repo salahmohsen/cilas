@@ -118,7 +118,8 @@ type Row = { id: number; slug?: string | null }
 type Written = { id: number; touched: boolean; doc?: Record<string, unknown> }
 
 const IMPORT_CONTEXT = { skipReviewEmail: true }
-const rich = (blocks: Block[] | null | undefined, dir: 'ltr' | 'rtl') => (blocks?.length ? blocksToLexical(blocks, dir) : null)
+const rich = (blocks: Block[] | null | undefined, dir: 'ltr' | 'rtl') =>
+  blocks?.length ? blocksToLexical(blocks, dir) : null
 const titlesMatch = (titles: string[]): Where => ({ title: { in: titles } })
 
 /**
@@ -126,7 +127,10 @@ const titlesMatch = (titles: string[]): Where => ({ title: { in: titles } })
  * editor marked `reviewed` are never touched; everything else is replaced, so
  * running it again changes nothing but versions.
  */
-export const importContent = async (payload: Payload, data: ArchiveContent): Promise<ContentResult> => {
+export const importContent = async (
+  payload: Payload,
+  data: ArchiveContent,
+): Promise<ContentResult> => {
   const tally = (): Tally => ({ created: 0, updated: 0, skipped: 0 })
   const result: ContentResult = {
     articles: tally(),
@@ -170,7 +174,8 @@ export const importContent = async (payload: Payload, data: ArchiveContent): Pro
       result[key].updated++
       return { id: existing.id, touched: true, doc: doc as unknown as Record<string, unknown> }
     }
-    const slug = typeof body.slug === 'string' ? await freeSlug(payload, collection, body.slug) : undefined
+    const slug =
+      typeof body.slug === 'string' ? await freeSlug(payload, collection, body.slug) : undefined
     const doc = await payload.create({
       collection,
       data: { ...body, ...options.createOnly, ...(slug ? { slug } : {}) },
@@ -187,11 +192,25 @@ export const importContent = async (payload: Payload, data: ArchiveContent): Pro
   const nameInArabic = async (id: number, nameAr: string | undefined) => {
     if (!nameAr || arabicNamed.has(id)) return
     arabicNamed.add(id)
-    const doc = (await payload.findByID({ collection: 'people', id, locale: 'ar', fallbackLocale: false, depth: 0, overrideAccess: true })) as {
+    const doc = (await payload.findByID({
+      collection: 'people',
+      id,
+      locale: 'ar',
+      fallbackLocale: false,
+      depth: 0,
+      overrideAccess: true,
+    })) as {
       name?: string | null
     }
     if (doc.name === nameAr) return
-    await payload.update({ collection: 'people', id, data: { name: nameAr }, locale: 'ar', overrideAccess: true, context: IMPORT_CONTEXT } as Parameters<Payload['update']>[0])
+    await payload.update({
+      collection: 'people',
+      id,
+      data: { name: nameAr },
+      locale: 'ar',
+      overrideAccess: true,
+      context: IMPORT_CONTEXT,
+    } as Parameters<Payload['update']>[0])
   }
   const person = async (name: string, from: string, nameAr?: string): Promise<number> => {
     const known = people.get(name)
@@ -199,12 +218,24 @@ export const importContent = async (payload: Payload, data: ArchiveContent): Pro
       await nameInArabic(known, nameAr)
       return known
     }
-    const { docs } = await payload.find({ collection: 'people', where: { name: { equals: name } }, limit: 1, depth: 0, overrideAccess: true })
+    const { docs } = await payload.find({
+      collection: 'people',
+      where: { name: { equals: name } },
+      limit: 1,
+      depth: 0,
+      overrideAccess: true,
+    })
     let id = docs[0]?.id as number | undefined
     if (!id) {
       const legacy_url = `${from}#person-${slugify(name)}`
       const legacyTaken =
-        (await payload.count({ collection: 'people', where: { legacy_url: { equals: legacy_url } }, overrideAccess: true })).totalDocs > 0
+        (
+          await payload.count({
+            collection: 'people',
+            where: { legacy_url: { equals: legacy_url } },
+            overrideAccess: true,
+          })
+        ).totalDocs > 0
       id = (
         await payload.create({
           collection: 'people',
@@ -222,7 +253,11 @@ export const importContent = async (payload: Payload, data: ArchiveContent): Pro
     await nameInArabic(id, nameAr)
     return id
   }
-  const resolveSeq = async (names: string[], from: string, namesAr: Record<string, string> = {}): Promise<number[]> => {
+  const resolveSeq = async (
+    names: string[],
+    from: string,
+    namesAr: Record<string, string> = {},
+  ): Promise<number[]> => {
     const ids: number[] = []
     for (const n of names) ids.push(await person(n, from, namesAr[n])) // sequential: a name may repeat
     return ids
@@ -249,15 +284,37 @@ export const importContent = async (payload: Payload, data: ArchiveContent): Pro
     }
     return out
   }
-  const hasArabicLabel = (credits: ArchiveCredit[]) => credits.some((c) => c.people.length && c.label?.ar)
+  const hasArabicLabel = (credits: ArchiveCredit[]) =>
+    credits.some((c) => c.people.length && c.label?.ar)
 
   // Editor-chosen images fill an empty upload field; one already set is kept.
-  const giveImage = async (collection: 'articles' | 'publications' | 'people', id: number, field: 'cover_image' | 'photo', image?: ArchiveImage) => {
+  const giveImage = async (
+    collection: 'articles' | 'publications' | 'people',
+    id: number,
+    field: 'cover_image' | 'photo',
+    image?: ArchiveImage,
+  ) => {
     if (!image || !data.imagesDir) return
-    const doc = (await payload.findByID({ collection, id, depth: 0, overrideAccess: true, draft: collection !== 'people' })) as unknown as Record<string, unknown>
+    const doc = (await payload.findByID({
+      collection,
+      id,
+      depth: 0,
+      overrideAccess: true,
+      draft: collection !== 'people',
+    })) as unknown as Record<string, unknown>
     if (doc[field]) return
-    const media = await mediaFor(payload, { path: `seed/${image.file}`, file: path.join(data.imagesDir, image.file), alt: image.alt })
-    await payload.update({ collection, id, data: { [field]: media.id }, overrideAccess: true, context: IMPORT_CONTEXT } as Parameters<Payload['update']>[0])
+    const media = await mediaFor(payload, {
+      path: `seed/${image.file}`,
+      file: path.join(data.imagesDir, image.file),
+      alt: image.alt,
+    })
+    await payload.update({
+      collection,
+      id,
+      data: { [field]: media.id },
+      overrideAccess: true,
+      context: IMPORT_CONTEXT,
+    } as Parameters<Payload['update']>[0])
   }
 
   // ---- Articles
@@ -311,7 +368,15 @@ export const importContent = async (payload: Payload, data: ArchiveContent): Pro
           // Same rule as English: no Arabic text, no Arabic body (never a copy).
           body: arabic ?? null,
           ...(hasArabicLabel(a.credits)
-            ? { credits: await creditRows(a.credits, a.legacy_url, 'ar', (written.doc?.credits as Array<{ id?: string }>) ?? [], namesAr) }
+            ? {
+                credits: await creditRows(
+                  a.credits,
+                  a.legacy_url,
+                  'ar',
+                  (written.doc?.credits as Array<{ id?: string }>) ?? [],
+                  namesAr,
+                ),
+              }
             : {}),
         },
         locale: 'ar',
@@ -324,13 +389,25 @@ export const importContent = async (payload: Payload, data: ArchiveContent): Pro
   // ---- Publications
   const articleId = async (legacy: string): Promise<number | undefined> =>
     articleIds.get(legacy) ??
-    ((await payload.find({ collection: 'articles', where: { legacy_url: { equals: legacy } }, limit: 1, depth: 0, overrideAccess: true })).docs[0]?.id as number | undefined)
+    ((
+      await payload.find({
+        collection: 'articles',
+        where: { legacy_url: { equals: legacy } },
+        limit: 1,
+        depth: 0,
+        overrideAccess: true,
+      })
+    ).docs[0]?.id as number | undefined)
   for (const p of data.publications) {
     const titles = [...new Set([p.title_en, ...p.match_titles_en])]
     const foreword = p.foreword ? await articleId(p.foreword) : undefined
     // The foreword leads the list too, so it belongs to the publication like its essays.
     const articles = [
-      ...new Set([foreword, ...(await Promise.all(p.articles.map(articleId)))].filter((id): id is number => id !== undefined)),
+      ...new Set(
+        [foreword, ...(await Promise.all(p.articles.map(articleId)))].filter(
+          (id): id is number => id !== undefined,
+        ),
+      ),
     ]
     const written = await put(
       'publications',
@@ -352,8 +429,16 @@ export const importContent = async (payload: Payload, data: ArchiveContent): Pro
       },
     )
     const arabicIntro = rich(p.intro_ar, 'rtl')
-    await giveImage('publications', written.id, 'cover_image', data.images?.publications?.[p.legacy_url])
-    if (written.touched && (p.title_ar || p.subtitle_ar || arabicIntro || hasArabicLabel(p.credits))) {
+    await giveImage(
+      'publications',
+      written.id,
+      'cover_image',
+      data.images?.publications?.[p.legacy_url],
+    )
+    if (
+      written.touched &&
+      (p.title_ar || p.subtitle_ar || arabicIntro || hasArabicLabel(p.credits))
+    ) {
       await payload.update({
         collection: 'publications',
         id: written.id,
@@ -362,7 +447,14 @@ export const importContent = async (payload: Payload, data: ArchiveContent): Pro
           ...(p.subtitle_ar ? { subtitle: p.subtitle_ar } : {}),
           ...(arabicIntro ? { intro: arabicIntro } : {}),
           ...(hasArabicLabel(p.credits)
-            ? { credits: await creditRows(p.credits, p.legacy_url, 'ar', (written.doc?.credits as Array<{ id?: string }>) ?? []) }
+            ? {
+                credits: await creditRows(
+                  p.credits,
+                  p.legacy_url,
+                  'ar',
+                  (written.doc?.credits as Array<{ id?: string }>) ?? [],
+                ),
+              }
             : {}),
         },
         locale: 'ar',
@@ -375,7 +467,13 @@ export const importContent = async (payload: Payload, data: ArchiveContent): Pro
   for (const item of data.press) {
     const authors = []
     for (const name of item.authors) {
-      const { docs } = await payload.find({ collection: 'people', where: { name: { equals: name } }, limit: 1, depth: 0, overrideAccess: true })
+      const { docs } = await payload.find({
+        collection: 'people',
+        where: { name: { equals: name } },
+        limit: 1,
+        depth: 0,
+        overrideAccess: true,
+      })
       authors.push(docs[0] ? { person: docs[0].id } : { name })
     }
     await put(
@@ -411,6 +509,7 @@ export const importContent = async (payload: Payload, data: ArchiveContent): Pro
         slug: slugify(e.title_en),
         event_type: e.event_type,
         tier: e.tier,
+        _status: 'published',
         schedule: { start_precision: 'day', ...e.schedule },
         speakers: (await resolveSeq(e.speakers, e.legacy_url)).map((p) => ({ person: p })),
         ...(rich(e.description_en, 'ltr') ? { description: rich(e.description_en, 'ltr') } : {}),
@@ -439,7 +538,13 @@ export const importContent = async (payload: Payload, data: ArchiveContent): Pro
 
   // ---- Portraits an editor added for people the content names.
   for (const [name, image] of Object.entries(data.images?.people ?? {})) {
-    const { docs } = await payload.find({ collection: 'people', where: { name: { equals: name } }, limit: 1, depth: 0, overrideAccess: true })
+    const { docs } = await payload.find({
+      collection: 'people',
+      where: { name: { equals: name } },
+      limit: 1,
+      depth: 0,
+      overrideAccess: true,
+    })
     if (docs[0]) await giveImage('people', docs[0].id as number, 'photo', image)
   }
 

@@ -2037,6 +2037,7 @@ describe('spaces write', () => {
         collection: 'events',
         data: {
           event_type: 'talk',
+          _status: 'published',
           slug: `probe-${Math.random().toString(36).slice(2, 8)}`,
           ...data,
         } as never,

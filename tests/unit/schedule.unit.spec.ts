@@ -21,6 +21,42 @@ const tueThu: Schedule = {
 
 const days = (s: Schedule) => expandSchedule(s).map((m) => m.date)
 
+describe('single event schedules', () => {
+  const screening = {
+    mode: 'single' as const,
+    start_date: '2026-10-29',
+    start_time: '19:00',
+    end_time: '21:00',
+  }
+
+  it('produces one timed occurrence without weeks, slots or an agenda', () => {
+    expect(expandSchedule(screening)).toEqual([
+      { date: '2026-10-29', start_time: '19:00', end_time: '21:00' },
+    ])
+    expect(scheduleEndDate(screening)).toBe('2026-10-29')
+    expect(isOnCalendar(screening)).toBe(true)
+  })
+
+  it('ignores stored recurring slots when single timing is selected', () => {
+    expect(expandSchedule({ ...tueThu, ...screening })).toHaveLength(1)
+  })
+
+  it('does not fabricate meetings for incomplete or invalid timing', () => {
+    expect(expandSchedule({ ...screening, end_time: null })).toEqual([])
+    expect(expandSchedule({ ...screening, start_time: '25:00' })).toEqual([])
+    expect(expandSchedule({ ...screening, end_time: '18:00' })).toEqual([])
+    expect(expandSchedule({ ...screening, start_date: 'invalid' })).toEqual([])
+    expect(isOnCalendar({ ...screening, start_precision: 'week' })).toBe(false)
+  })
+
+  it('reads the date in Cairo and keeps legacy recurrence when mode is absent', () => {
+    expect(expandSchedule({ ...screening, start_date: '2026-03-02T22:00:00Z' })[0].date).toBe(
+      '2026-03-03',
+    )
+    expect(expandSchedule({ ...tueThu, start_time: '10:00', end_time: '11:00' })).toHaveLength(4)
+  })
+})
+
 describe('expandSchedule (pattern only)', () => {
   it('produces every meeting in date order', () => {
     expect(days(tueThu)).toEqual(['2026-03-03', '2026-03-05', '2026-03-10', '2026-03-12'])

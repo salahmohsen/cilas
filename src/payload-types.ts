@@ -67,24 +67,27 @@ export interface Config {
   };
   blocks: {};
   collections: {
-    users: User;
-    people: Person;
-    memberships: Membership;
-    media: Media;
-    courses: Course;
+    'form-submissions': FormSubmission;
     enrollments: Enrollment;
-    programmes: Programme;
+    memberships: Membership;
+    forms: Form;
+    courses: Course;
     cycles: Cycle;
-    governance: Governance;
+    programmes: Programme;
+    places: Place;
     articles: Article;
     publications: Publication;
     press: Press;
-    events: Event;
     newsletters: Newsletter;
     'mailing-lists': MailingList;
+    people: Person;
+    users: User;
+    governance: Governance;
+    media: Media;
+    redirects: Redirect;
+    events: Event;
     'submission-files': SubmissionFile;
     notifications: Notification;
-    places: Place;
     spaces: Space;
     'space-posts': SpacePost;
     'space-comments': SpaceComment;
@@ -95,11 +98,8 @@ export interface Config {
     'space-preferences': SpacePreference;
     'space-votes': SpaceVote;
     'space-rsvps': SpaceRsvp;
-    forms: Form;
-    'form-submissions': FormSubmission;
     exports: Export;
     imports: Import;
-    redirects: Redirect;
     'payload-kv': PayloadKv;
     'payload-jobs': PayloadJob;
     'payload-locked-documents': PayloadLockedDocument;
@@ -107,12 +107,6 @@ export interface Config {
     'payload-migrations': PayloadMigration;
   };
   collectionsJoins: {
-    people: {
-      courses: 'courses';
-      governance: 'governance';
-      memberships: 'memberships';
-      enrollments: 'enrollments';
-    };
     courses: {
       enrollments: 'enrollments';
     };
@@ -122,26 +116,35 @@ export interface Config {
     articles: {
       publications: 'publications';
     };
+    people: {
+      courses: 'courses';
+      memberships: 'memberships';
+      enrollments: 'enrollments';
+      governance: 'governance';
+    };
   };
   collectionsSelect: {
-    users: UsersSelect<false> | UsersSelect<true>;
-    people: PeopleSelect<false> | PeopleSelect<true>;
-    memberships: MembershipsSelect<false> | MembershipsSelect<true>;
-    media: MediaSelect<false> | MediaSelect<true>;
-    courses: CoursesSelect<false> | CoursesSelect<true>;
+    'form-submissions': FormSubmissionsSelect<false> | FormSubmissionsSelect<true>;
     enrollments: EnrollmentsSelect<false> | EnrollmentsSelect<true>;
-    programmes: ProgrammesSelect<false> | ProgrammesSelect<true>;
+    memberships: MembershipsSelect<false> | MembershipsSelect<true>;
+    forms: FormsSelect<false> | FormsSelect<true>;
+    courses: CoursesSelect<false> | CoursesSelect<true>;
     cycles: CyclesSelect<false> | CyclesSelect<true>;
-    governance: GovernanceSelect<false> | GovernanceSelect<true>;
+    programmes: ProgrammesSelect<false> | ProgrammesSelect<true>;
+    places: PlacesSelect<false> | PlacesSelect<true>;
     articles: ArticlesSelect<false> | ArticlesSelect<true>;
     publications: PublicationsSelect<false> | PublicationsSelect<true>;
     press: PressSelect<false> | PressSelect<true>;
-    events: EventsSelect<false> | EventsSelect<true>;
     newsletters: NewslettersSelect<false> | NewslettersSelect<true>;
     'mailing-lists': MailingListsSelect<false> | MailingListsSelect<true>;
+    people: PeopleSelect<false> | PeopleSelect<true>;
+    users: UsersSelect<false> | UsersSelect<true>;
+    governance: GovernanceSelect<false> | GovernanceSelect<true>;
+    media: MediaSelect<false> | MediaSelect<true>;
+    redirects: RedirectsSelect<false> | RedirectsSelect<true>;
+    events: EventsSelect<false> | EventsSelect<true>;
     'submission-files': SubmissionFilesSelect<false> | SubmissionFilesSelect<true>;
     notifications: NotificationsSelect<false> | NotificationsSelect<true>;
-    places: PlacesSelect<false> | PlacesSelect<true>;
     spaces: SpacesSelect<false> | SpacesSelect<true>;
     'space-posts': SpacePostsSelect<false> | SpacePostsSelect<true>;
     'space-comments': SpaceCommentsSelect<false> | SpaceCommentsSelect<true>;
@@ -152,11 +155,8 @@ export interface Config {
     'space-preferences': SpacePreferencesSelect<false> | SpacePreferencesSelect<true>;
     'space-votes': SpaceVotesSelect<false> | SpaceVotesSelect<true>;
     'space-rsvps': SpaceRsvpsSelect<false> | SpaceRsvpsSelect<true>;
-    forms: FormsSelect<false> | FormsSelect<true>;
-    'form-submissions': FormSubmissionsSelect<false> | FormSubmissionsSelect<true>;
     exports: ExportsSelect<false> | ExportsSelect<true>;
     imports: ImportsSelect<false> | ImportsSelect<true>;
-    redirects: RedirectsSelect<false> | RedirectsSelect<true>;
     'payload-kv': PayloadKvSelect<false> | PayloadKvSelect<true>;
     'payload-jobs': PayloadJobsSelect<false> | PayloadJobsSelect<true>;
     'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>;
@@ -218,708 +218,38 @@ export interface UserAuthOperations {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "users".
+ * via the `definition` "form-submissions".
  */
-export interface User {
+export interface FormSubmission {
   id: number;
-  /**
-   * Set by Google sign-in.
-   */
-  sub?: string | null;
-  person?: (number | null) | Person;
-  roles: ('super_admin' | 'admin' | 'fellow' | 'member' | 'non_degree_seeking')[];
-  updatedAt: string;
-  createdAt: string;
-  email: string;
-  resetPasswordToken?: string | null;
-  resetPasswordExpiration?: string | null;
-  salt?: string | null;
-  hash?: string | null;
-  resetPasswordRequestedAt?: string | null;
-  loginAttempts?: number | null;
-  lockUntil?: string | null;
-  sessions?:
+  form: number | Form;
+  submissionData?:
     | {
-        id: string;
-        createdAt?: string | null;
-        expiresAt: string;
-      }[]
-    | null;
-  password?: string | null;
-  collection: 'users';
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "people".
- */
-export interface Person {
-  id: number;
-  name: string;
-  /**
-   * When enabled, the slug will auto-generate from the title field on save and autosave.
-   */
-  generateSlug?: boolean | null;
-  slug: string;
-  /**
-   * Off: no profile page, and left out of lists and search.
-   */
-  visible?: boolean | null;
-  photo?: (number | null) | Media;
-  bio?: {
-    root: {
-      type: string;
-      children: {
-        type: any;
-        version: number;
-        [k: string]: unknown;
-      }[];
-      direction: ('ltr' | 'rtl') | null;
-      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
-      indent: number;
-      version: number;
-    };
-    [k: string]: unknown;
-  } | null;
-  website?: string | null;
-  social_links?:
-    | {
-        platform: 'facebook' | 'x' | 'youtube' | 'instagram' | 'linkedin';
-        url: string;
-        id?: string | null;
-      }[]
-    | null;
-  courses?: {
-    docs?: (number | Course)[];
-    hasNextPage?: boolean;
-    totalDocs?: number;
-  };
-  governance?: {
-    docs?: (number | Governance)[];
-    hasNextPage?: boolean;
-    totalDocs?: number;
-  };
-  memberships?: {
-    docs?: (number | Membership)[];
-    hasNextPage?: boolean;
-    totalDocs?: number;
-  };
-  enrollments?: {
-    docs?: (number | Enrollment)[];
-    hasNextPage?: boolean;
-    totalDocs?: number;
-  };
-  legacy_url?: string | null;
-  updatedAt: string;
-  createdAt: string;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "media".
- */
-export interface Media {
-  id: number;
-  /**
-   * Describes the image for people who can’t see it, e.g. “Students reading on the rooftop”.
-   */
-  alt: string;
-  legacy_url?: string | null;
-  prefix?: string | null;
-  _objectKey?: string | null;
-  updatedAt: string;
-  createdAt: string;
-  url?: string | null;
-  thumbnailURL?: string | null;
-  filename?: string | null;
-  mimeType?: string | null;
-  filesize?: number | null;
-  width?: number | null;
-  height?: number | null;
-  focalX?: number | null;
-  focalY?: number | null;
-  sizes?: {
-    thumbnail?: {
-      url?: string | null;
-      width?: number | null;
-      height?: number | null;
-      mimeType?: string | null;
-      filesize?: number | null;
-      filename?: string | null;
-    };
-    card?: {
-      url?: string | null;
-      width?: number | null;
-      height?: number | null;
-      mimeType?: string | null;
-      filesize?: number | null;
-      filename?: string | null;
-    };
-  };
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "courses".
- */
-export interface Course {
-  id: number;
-  review?: {
-    /**
-     * Ready? Use “Submit for review”: an admin is emailed, and approves the course, asks for changes or declines it. Approving publishes it.
-     */
-    status?: ('draft' | 'submitted' | 'changes_requested' | 'approved' | 'rejected') | null;
-    /**
-     * What the owner asks of the published course.
-     */
-    request?: ('changes' | 'removal') | null;
-    /**
-     * The editor’s note to the owner when asking for changes or declining, e.g. “Shorten the second section.” It goes in the email.
-     */
-    review_note?: string | null;
-  };
-  /**
-   * Who sees it: Public (everyone), Community (signed-in members) or Owner only (its fellows and admins). A published course also needs a tier above Owner, else its public page disappears.
-   */
-  tier: 'owner' | 'community' | 'public';
-  /**
-   * Core, Thematic and Lab courses count toward the Bridge; Workshop and Short courses do not.
-   */
-  course_type: 'CORE' | 'THEMATIC' | 'LAB' | 'WORKSHOP' | 'SHORT';
-  cycle: number | Cycle;
-  cover_image?: (number | null) | Media;
-  title: string;
-  /**
-   * When enabled, the slug will auto-generate from the title field on save and autosave.
-   */
-  generateSlug?: boolean | null;
-  slug: string;
-  /**
-   * A second line under the title, e.g. “An introduction to translation studies”.
-   */
-  subtitle?: string | null;
-  /**
-   * One line for cards and search results, e.g. “Reading Plato’s Republic in Cairo, book by book.” Leave empty to use the description’s start.
-   */
-  summary?: string | null;
-  /**
-   * A short quote or question shown before the description, e.g. “What does a city remember?”
-   */
-  epigraph?: string | null;
-  description?: {
-    root: {
-      type: string;
-      children: {
-        type: any;
-        version: number;
-        [k: string]: unknown;
-      }[];
-      direction: ('ltr' | 'rtl') | null;
-      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
-      indent: number;
-      version: number;
-    };
-    [k: string]: unknown;
-  } | null;
-  /**
-   * The fellow’s practical notes to participants: what to bring, how work is assessed, e.g. “Bring an apron; all chemicals are provided.”
-   */
-  facilitator_note?: string | null;
-  /**
-   * Sensitive material participants should know about beforehand, e.g. “Discusses sexual violence.”
-   */
-  content_warning?: string | null;
-  schedule?: {
-    start_date?: string | null;
-    /**
-     * Week only keeps it off the calendar.
-     */
-    start_precision?: ('day' | 'week') | null;
-    /**
-     * How long it runs, e.g. 8. With the start date it sets the end date.
-     */
-    weeks?: number | null;
-    /**
-     * Weekly meeting times, in Cairo time.
-     */
-    slots?:
-      | {
-          weekday: 'sat' | 'sun' | 'mon' | 'tue' | 'wed' | 'thu' | 'fri';
-          start_time: string;
-          end_time: string;
-          id?: string | null;
-        }[]
-      | null;
-    /**
-     * Worked out from the schedule.
-     */
-    end_date?: string | null;
-    /**
-     * One-off exceptions, e.g. "hybrid for the first 6 weeks, then online".
-     */
-    note?: string | null;
-  };
-  registration?: {
-    /**
-     * Leave empty on a course to use its cycle's.
-     */
-    method?: ('form' | 'external' | 'closed') | null;
-    form?: (number | null) | Form;
-    url?: string | null;
-    /**
-     * The last day to register, in Cairo. Empty on a course uses its cycle's.
-     */
-    deadline?: string | null;
-    archived_registration_url?: string | null;
-  };
-  /**
-   * Extra questions for this course, asked after the website form’s own. They go live when an admin publishes the course. Not used when applications go to an external link, such as a Google Form.
-   */
-  applicant_questions?:
-    | (
-        | {
-            name: string;
-            label?: string | null;
-            width?: number | null;
-            defaultValue?: string | null;
-            required?: boolean | null;
-            /**
-             * Help text under the question.
-             */
-            description?: string | null;
-            id?: string | null;
-            blockName?: string | null;
-            blockType: 'text';
-          }
-        | {
-            name: string;
-            label?: string | null;
-            width?: number | null;
-            defaultValue?: string | null;
-            required?: boolean | null;
-            /**
-             * Help text under the question.
-             */
-            description?: string | null;
-            /**
-             * An image the question asks about, shown above the answer.
-             */
-            image?: (number | null) | Media;
-            /**
-             * The fewest words an answer may have.
-             */
-            minWords?: number | null;
-            id?: string | null;
-            blockName?: string | null;
-            blockType: 'textarea';
-          }
-        | {
-            name: string;
-            label?: string | null;
-            width?: number | null;
-            defaultValue?: string | null;
-            options?:
-              | {
-                  label: string;
-                  value: string;
-                  id?: string | null;
-                }[]
-              | null;
-            required?: boolean | null;
-            /**
-             * Help text under the question.
-             */
-            description?: string | null;
-            id?: string | null;
-            blockName?: string | null;
-            blockType: 'radio';
-          }
-        | {
-            name: string;
-            label?: string | null;
-            width?: number | null;
-            defaultValue?: string | null;
-            options?:
-              | {
-                  label: string;
-                  value: string;
-                  id?: string | null;
-                }[]
-              | null;
-            required?: boolean | null;
-            /**
-             * Help text under the question.
-             */
-            description?: string | null;
-            id?: string | null;
-            blockName?: string | null;
-            blockType: 'checkboxGroup';
-          }
-        | {
-            name: string;
-            label?: string | null;
-            width?: number | null;
-            required?: boolean | null;
-            defaultValue?: boolean | null;
-            /**
-             * Help text under the question.
-             */
-            description?: string | null;
-            id?: string | null;
-            blockName?: string | null;
-            blockType: 'checkbox';
-          }
-        | {
-            name: string;
-            label?: string | null;
-            width?: number | null;
-            defaultValue?: string | null;
-            placeholder?: string | null;
-            options?:
-              | {
-                  label: string;
-                  value: string;
-                  id?: string | null;
-                }[]
-              | null;
-            required?: boolean | null;
-            /**
-             * Help text under the question.
-             */
-            description?: string | null;
-            id?: string | null;
-            blockName?: string | null;
-            blockType: 'select';
-          }
-        | {
-            name: string;
-            label?: string | null;
-            width?: number | null;
-            defaultValue?: number | null;
-            required?: boolean | null;
-            /**
-             * Help text under the question.
-             */
-            description?: string | null;
-            id?: string | null;
-            blockName?: string | null;
-            blockType: 'number';
-          }
-        | {
-            name: string;
-            label?: string | null;
-            /**
-             * Help text under the question.
-             */
-            description?: string | null;
-            /**
-             * The kinds of file allowed.
-             */
-            accept: ('pdf' | 'word' | 'image')[];
-            maxSizeMB?: number | null;
-            multiple?: boolean | null;
-            required?: boolean | null;
-            id?: string | null;
-            blockName?: string | null;
-            blockType: 'fileUpload';
-          }
-      )[]
-    | null;
-  /**
-   * Only when this course costs something other than its cycle’s price.
-   */
-  pricing_override?: {
-    /**
-     * The price in EGP; with a maximum it reads as a range, e.g. 2,500–3,000.
-     */
-    min?: number | null;
-    /**
-     * Leave empty for a single price.
-     */
-    max?: number | null;
-    currency?: 'EGP' | null;
-    /**
-     * Anything the price needs said, e.g. “Sliding scale: choose the tier that fits your budget.”
-     */
-    note?: string | null;
-    /**
-     * Tick when people who can’t pay the full price may ask for a reduction.
-     */
-    need_based_deductions?: boolean | null;
-    /**
-     * Ways to pay in instalments, e.g. “Three payments” of 10,000 each.
-     */
-    payment_plans?:
-      | {
-          label: string;
-          installments?:
-            | {
-                amount: number;
-                id?: string | null;
-              }[]
-            | null;
-          id?: string | null;
-        }[]
-      | null;
-  };
-  sessions?:
-    | {
-        /**
-         * Its number in the flow: 1, 2, 3…
-         */
-        order?: number | null;
-        session_title?: string | null;
-        /**
-         * Default: one week of slots.
-         */
-        meetings?: number | null;
-        /**
-         * The session will not take place: marked as cancelled on the page and left off the calendar.
-         */
-        cancelled?: boolean | null;
-        description?: {
-          root: {
-            type: string;
-            children: {
-              type: any;
-              version: number;
-              [k: string]: unknown;
-            }[];
-            direction: ('ltr' | 'rtl') | null;
-            format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
-            indent: number;
-            version: number;
-          };
-          [k: string]: unknown;
-        } | null;
-        /**
-         * Only for a session off the weekly schedule, e.g. a 5-day workshop at changing hours. These dates replace the schedule’s for this session.
-         */
-        dates?:
-          | {
-              date: string;
-              start_time: string;
-              end_time: string;
-              id?: string | null;
-            }[]
-          | null;
-        bibliography?:
-          | {
-              type: 'reading' | 'watch' | 'listen' | 'prompt' | 'other';
-              title?: string | null;
-              /**
-               * A link to the text, video or recording, if it is online.
-               */
-              href?: string | null;
-              /**
-               * Author, year or pages, e.g. “Arendt, 1958, ch. 2”.
-               */
-              note?: string | null;
-              id?: string | null;
-            }[]
-          | null;
-        activities?:
-          | {
-              kind: 'discussion' | 'field_visit' | 'exercise' | 'screening' | 'presentation' | 'other';
-              description?: string | null;
-              id?: string | null;
-            }[]
-          | null;
-        id?: string | null;
-      }[]
-    | null;
-  bibliography?:
-    | {
-        type: 'reading' | 'watch' | 'listen' | 'prompt' | 'other';
-        title?: string | null;
-        /**
-         * A link to the text, video or recording, if it is online.
-         */
-        href?: string | null;
-        /**
-         * Author, year or pages, e.g. “Arendt, 1958, ch. 2”.
-         */
-        note?: string | null;
+        field: string;
+        value: string;
         id?: string | null;
       }[]
     | null;
   /**
-   * Offline (in person), Online, or Hybrid (both at once).
+   * What the applicant applied to.
    */
-  location?: ('OFFLINE' | 'ONLINE' | 'HYBRID')[] | null;
-  /**
-   * Languages the course is taught in. Mixed use goes in the language note.
-   */
-  teaching_languages?: ('ar' | 'en')[] | null;
-  /**
-   * Only when languages mix, e.g. “Readings in Arabic, discussion in either.”
-   */
-  language_note?: string | null;
-  /**
-   * Who teaches it. Each gets the Fellow role on their linked account.
-   */
-  fellows?: (number | Person)[] | null;
-  /**
-   * Tick when the fellow may still change the sessions; the page says the syllabus may change.
-   */
-  syllabus_tentative?: boolean | null;
-  /**
-   * How sessions are numbered on the page: “Week 3” or “Session 3”.
-   */
-  session_unit: 'session' | 'week';
-  enrollments?: {
-    docs?: (number | Enrollment)[];
-    hasNextPage?: boolean;
-    totalDocs?: number;
+  target?:
+    | ({
+        relationTo: 'programmes';
+        value: number | Programme;
+      } | null)
+    | ({
+        relationTo: 'courses';
+        value: number | Course;
+      } | null);
+  status?: ('new' | 'accepted' | 'rejected') | null;
+  decided_at?: string | null;
+  result?: {
+    user?: (number | null) | User;
+    person?: (number | null) | Person;
+    membership?: (number | null) | Membership;
+    enrollment?: (number | null) | Enrollment;
   };
-  legacy_url?: string | null;
-  meta?: {
-    title?: string | null;
-    description?: string | null;
-    /**
-     * Maximum upload file size: 12MB. Recommended file size for images is <500KB.
-     */
-    image?: (number | null) | Media;
-  };
-  updatedAt: string;
-  createdAt: string;
-  _status?: ('draft' | 'published') | null;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "cycles".
- */
-export interface Cycle {
-  id: number;
-  title?: string | null;
-  slug?: string | null;
-  season: 'fall' | 'winter' | 'spring' | 'summer';
-  /**
-   * The year it starts in. A winter cycle counts by its January: Dec 2025–Feb 2026 is 2026.
-   */
-  start_year: number;
-  place: number | Place;
-  start_date?: string | null;
-  academic_year?: string | null;
-  registration?: {
-    /**
-     * Leave empty on a course to use its cycle's.
-     */
-    method?: ('form' | 'external' | 'closed') | null;
-    form?: (number | null) | Form;
-    url?: string | null;
-    /**
-     * The last day to register, in Cairo. Empty on a course uses its cycle's.
-     */
-    deadline?: string | null;
-    archived_registration_url?: string | null;
-  };
-  /**
-   * One price per group of course types.
-   */
-  pricing?:
-    | {
-        /**
-         * Which course types this price is for, e.g. Thematic and Lab.
-         */
-        course_types: ('CORE' | 'THEMATIC' | 'LAB' | 'WORKSHOP' | 'SHORT')[];
-        pricing?: {
-          /**
-           * The price in EGP; with a maximum it reads as a range, e.g. 2,500–3,000.
-           */
-          min?: number | null;
-          /**
-           * Leave empty for a single price.
-           */
-          max?: number | null;
-          currency?: 'EGP' | null;
-          /**
-           * Anything the price needs said, e.g. “Sliding scale: choose the tier that fits your budget.”
-           */
-          note?: string | null;
-          /**
-           * Tick when people who can’t pay the full price may ask for a reduction.
-           */
-          need_based_deductions?: boolean | null;
-          /**
-           * Ways to pay in instalments, e.g. “Three payments” of 10,000 each.
-           */
-          payment_plans?:
-            | {
-                label: string;
-                installments?:
-                  | {
-                      amount: number;
-                      id?: string | null;
-                    }[]
-                  | null;
-                id?: string | null;
-              }[]
-            | null;
-        };
-        id?: string | null;
-      }[]
-    | null;
-  courses?: {
-    docs?: (number | Course)[];
-    hasNextPage?: boolean;
-    totalDocs?: number;
-  };
-  legacy_url?: string | null;
-  meta?: {
-    title?: string | null;
-    description?: string | null;
-    /**
-     * Maximum upload file size: 12MB. Recommended file size for images is <500KB.
-     */
-    image?: (number | null) | Media;
-  };
-  updatedAt: string;
-  createdAt: string;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "places".
- */
-export interface Place {
-  id: number;
-  name: string;
-  /**
-   * When enabled, the slug will auto-generate from the title field on save and autosave.
-   */
-  generateSlug?: boolean | null;
-  slug: string;
-  state?: ('current' | 'former') | null;
-  city?: string | null;
-  /**
-   * The street address, e.g. “10 Darb El Labana, El Darb El Ahmar, Cairo 11311, Egypt”.
-   */
-  address?: string | null;
-  /**
-   * Shown with the address, e.g. in the emails’ footer.
-   */
-  map_url?: string | null;
-  opened_year?: number | null;
-  closed_year?: number | null;
-  description?: {
-    root: {
-      type: string;
-      children: {
-        type: any;
-        version: number;
-        [k: string]: unknown;
-      }[];
-      direction: ('ltr' | 'rtl') | null;
-      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
-      indent: number;
-      version: number;
-    };
-    [k: string]: unknown;
-  } | null;
-  images?:
-    | {
-        image?: (number | null) | Media;
-        id?: string | null;
-      }[]
-    | null;
-  legacy_url?: string | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -1182,82 +512,46 @@ export interface Form {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "enrollments".
+ * via the `definition` "media".
  */
-export interface Enrollment {
+export interface Media {
   id: number;
-  person: number | Person;
-  course: number | Course;
-  status: 'applied' | 'accepted' | 'confirmed' | 'completed' | 'withdrawn';
   /**
-   * Which group they attend, e.g. "evening".
+   * Describes the image for people who can’t see it, e.g. “Students reading on the rooftop”.
    */
-  slot?: string | null;
-  assessment?: {
-    root: {
-      type: string;
-      children: {
-        type: any;
-        version: number;
-        [k: string]: unknown;
-      }[];
-      direction: ('ltr' | 'rtl') | null;
-      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
-      indent: number;
-      version: number;
+  alt: string;
+  legacy_url?: string | null;
+  prefix?: string | null;
+  _objectKey?: string | null;
+  updatedAt: string;
+  createdAt: string;
+  url?: string | null;
+  thumbnailURL?: string | null;
+  filename?: string | null;
+  mimeType?: string | null;
+  filesize?: number | null;
+  width?: number | null;
+  height?: number | null;
+  focalX?: number | null;
+  focalY?: number | null;
+  sizes?: {
+    thumbnail?: {
+      url?: string | null;
+      width?: number | null;
+      height?: number | null;
+      mimeType?: string | null;
+      filesize?: number | null;
+      filename?: string | null;
     };
-    [k: string]: unknown;
-  } | null;
-  source: 'registration_form' | 'admin' | 'backfill';
-  updatedAt: string;
-  createdAt: string;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "governance".
- */
-export interface Governance {
-  id: number;
-  person: number | Person;
-  role: 'advisor' | 'trustee';
-  title?: string | null;
-  /**
-   * Their role on the board, e.g. “Chair” or “Treasurer”.
-   */
-  board_role?: string | null;
-  /**
-   * What they advise on, e.g. “curriculum design and university partnerships”.
-   */
-  advises_on?: string | null;
-  /**
-   * First year on the board, e.g. 2016.
-   */
-  term_from?: number | null;
-  term_to?: number | null;
-  /**
-   * Position in the list: lower numbers come first.
-   */
-  order?: number | null;
-  legacy_url?: string | null;
-  updatedAt: string;
-  createdAt: string;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "memberships".
- */
-export interface Membership {
-  id: number;
-  person: number | Person;
-  programme: number | Programme;
-  role: 'student' | 'residential_fellow' | 'visiting_fellow';
-  /**
-   * Their role in words, if it needs more than the role, e.g. “Programme coordinator”.
-   */
-  title?: string | null;
-  legacy_url?: string | null;
-  updatedAt: string;
-  createdAt: string;
+    card?: {
+      url?: string | null;
+      width?: number | null;
+      height?: number | null;
+      mimeType?: string | null;
+      filesize?: number | null;
+      filename?: string | null;
+    };
+  };
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -1265,10 +559,6 @@ export interface Membership {
  */
 export interface Programme {
   id: number;
-  /**
-   * What sort of programme: the Bridge (the year-long programme), Women’s Studies or a Residency.
-   */
-  kind: 'bridge' | 'women_studies' | 'residency';
   cover?: (number | null) | Media;
   title: string;
   /**
@@ -1276,10 +566,14 @@ export interface Programme {
    */
   generateSlug?: boolean | null;
   slug: string;
+  legacy_url?: string | null;
   /**
    * One line under the title, e.g. “A year of the liberal arts in Cairo”.
    */
   tagline?: string | null;
+  /**
+   * Write the introduction here. Use lists for highlights and quotes for testimonials, in the order you want readers to see them.
+   */
   overview?: {
     root: {
       type: string;
@@ -1295,15 +589,24 @@ export interface Programme {
     };
     [k: string]: unknown;
   } | null;
-  /**
-   * Short points shown as a list, e.g. “Taught in Arabic and English”.
-   */
   highlights?:
     | {
         text: string;
         id?: string | null;
       }[]
     | null;
+  testimonials?:
+    | {
+        quote: string;
+        attribution?: string | null;
+        person?: (number | null) | Person;
+        id?: string | null;
+      }[]
+    | null;
+  /**
+   * What sort of programme: the Bridge (the year-long programme), Women’s Studies or a Residency.
+   */
+  kind: 'bridge' | 'women_studies' | 'residency';
   /**
    * The semester cycles, in order.
    */
@@ -1397,18 +700,6 @@ export interface Programme {
         }[]
       | null;
   };
-  /**
-   * Quotes from past participants, shown on the programme page.
-   */
-  testimonials?:
-    | {
-        quote: string;
-        attribution?: string | null;
-        person?: (number | null) | Person;
-        id?: string | null;
-      }[]
-    | null;
-  legacy_url?: string | null;
   meta?: {
     title?: string | null;
     description?: string | null;
@@ -1423,17 +714,23 @@ export interface Programme {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "articles".
+ * via the `definition` "people".
  */
-export interface Article {
+export interface Person {
   id: number;
-  title: string;
+  name: string;
   /**
    * When enabled, the slug will auto-generate from the title field on save and autosave.
    */
   generateSlug?: boolean | null;
   slug: string;
-  body?: {
+  /**
+   * Off: no profile page, and left out of lists and search.
+   */
+  visible?: boolean | null;
+  photo?: (number | null) | Media;
+  legacy_url?: string | null;
+  bio?: {
     root: {
       type: string;
       children: {
@@ -1448,7 +745,728 @@ export interface Article {
     };
     [k: string]: unknown;
   } | null;
-  authors: (number | Person)[];
+  website?: string | null;
+  social_links?:
+    | {
+        platform: 'facebook' | 'x' | 'youtube' | 'instagram' | 'linkedin';
+        url: string;
+        id?: string | null;
+      }[]
+    | null;
+  courses?: {
+    docs?: (number | Course)[];
+    hasNextPage?: boolean;
+    totalDocs?: number;
+  };
+  memberships?: {
+    docs?: (number | Membership)[];
+    hasNextPage?: boolean;
+    totalDocs?: number;
+  };
+  enrollments?: {
+    docs?: (number | Enrollment)[];
+    hasNextPage?: boolean;
+    totalDocs?: number;
+  };
+  governance?: {
+    docs?: (number | Governance)[];
+    hasNextPage?: boolean;
+    totalDocs?: number;
+  };
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "courses".
+ */
+export interface Course {
+  id: number;
+  review?: {
+    /**
+     * Ready? Use “Submit for review”: an admin is emailed, and approves the course, asks for changes or declines it. Approving publishes it.
+     */
+    status?: ('draft' | 'submitted' | 'changes_requested' | 'approved' | 'rejected') | null;
+    /**
+     * What the owner asks of the published course.
+     */
+    request?: ('changes' | 'removal') | null;
+    /**
+     * The editor’s note to the owner when asking for changes or declining, e.g. “Shorten the second section.” It goes in the email.
+     */
+    review_note?: string | null;
+  };
+  /**
+   * Who sees it: Public (everyone), Community (signed-in members) or Owner only (its fellows and admins). A published course also needs a tier above Owner, else its public page disappears.
+   */
+  tier: 'owner' | 'community' | 'public';
+  cover_image?: (number | null) | Media;
+  title: string;
+  /**
+   * When enabled, the slug will auto-generate from the title field on save and autosave.
+   */
+  generateSlug?: boolean | null;
+  slug: string;
+  legacy_url?: string | null;
+  /**
+   * A second line under the title, e.g. “An introduction to translation studies”.
+   */
+  subtitle?: string | null;
+  /**
+   * One line for cards and search results, e.g. “Reading Plato’s Republic in Cairo, book by book.” Leave empty to use the description’s start.
+   */
+  summary?: string | null;
+  /**
+   * A short quote or question shown before the description, e.g. “What does a city remember?”
+   */
+  epigraph?: string | null;
+  description?: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  /**
+   * Who teaches it. Each gets the Fellow role on their linked account.
+   */
+  fellows?: (number | Person)[] | null;
+  /**
+   * Core, Thematic and Lab courses count toward the Bridge; Workshop and Short courses do not.
+   */
+  course_type: 'CORE' | 'THEMATIC' | 'LAB' | 'WORKSHOP' | 'SHORT';
+  cycle: number | Cycle;
+  /**
+   * Offline (in person), Online, or Hybrid (both at once).
+   */
+  location?: ('OFFLINE' | 'ONLINE' | 'HYBRID')[] | null;
+  /**
+   * Languages the course is taught in. Mixed use goes in the language note.
+   */
+  teaching_languages?: ('ar' | 'en')[] | null;
+  /**
+   * Only when languages mix, e.g. “Readings in Arabic, discussion in either.”
+   */
+  language_note?: string | null;
+  sessions?:
+    | {
+        /**
+         * Its number in the flow: 1, 2, 3…
+         */
+        order?: number | null;
+        session_title?: string | null;
+        /**
+         * Default: one week of slots.
+         */
+        meetings?: number | null;
+        /**
+         * The session will not take place: marked as cancelled on the page and left off the calendar.
+         */
+        cancelled?: boolean | null;
+        description?: {
+          root: {
+            type: string;
+            children: {
+              type: any;
+              version: number;
+              [k: string]: unknown;
+            }[];
+            direction: ('ltr' | 'rtl') | null;
+            format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+            indent: number;
+            version: number;
+          };
+          [k: string]: unknown;
+        } | null;
+        /**
+         * Only for a session off the weekly schedule, e.g. a 5-day workshop at changing hours. These dates replace the schedule’s for this session.
+         */
+        dates?:
+          | {
+              date: string;
+              start_time: string;
+              end_time: string;
+              id?: string | null;
+            }[]
+          | null;
+        bibliography?:
+          | {
+              type: 'reading' | 'watch' | 'listen' | 'prompt' | 'other';
+              title?: string | null;
+              /**
+               * A link to the text, video or recording, if it is online.
+               */
+              href?: string | null;
+              /**
+               * Author, year or pages, e.g. “Arendt, 1958, ch. 2”.
+               */
+              note?: string | null;
+              id?: string | null;
+            }[]
+          | null;
+        activities?:
+          | {
+              kind: 'discussion' | 'field_visit' | 'exercise' | 'screening' | 'presentation' | 'other';
+              description?: string | null;
+              id?: string | null;
+            }[]
+          | null;
+        id?: string | null;
+      }[]
+    | null;
+  bibliography?:
+    | {
+        type: 'reading' | 'watch' | 'listen' | 'prompt' | 'other';
+        title?: string | null;
+        /**
+         * A link to the text, video or recording, if it is online.
+         */
+        href?: string | null;
+        /**
+         * Author, year or pages, e.g. “Arendt, 1958, ch. 2”.
+         */
+        note?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  /**
+   * The fellow’s practical notes to participants: what to bring, how work is assessed, e.g. “Bring an apron; all chemicals are provided.”
+   */
+  facilitator_note?: string | null;
+  /**
+   * Sensitive material participants should know about beforehand, e.g. “Discusses sexual violence.”
+   */
+  content_warning?: string | null;
+  /**
+   * Tick when the fellow may still change the sessions; the page says the syllabus may change.
+   */
+  syllabus_tentative?: boolean | null;
+  /**
+   * How sessions are numbered on the page: “Week 3” or “Session 3”.
+   */
+  session_unit: 'session' | 'week';
+  schedule?: {
+    start_date?: string | null;
+    /**
+     * Week only keeps it off the calendar.
+     */
+    start_precision?: ('day' | 'week') | null;
+    /**
+     * How long it runs, e.g. 8. With the start date it sets the end date.
+     */
+    weeks?: number | null;
+    /**
+     * Weekly meeting times, in Cairo time.
+     */
+    slots?:
+      | {
+          weekday: 'sat' | 'sun' | 'mon' | 'tue' | 'wed' | 'thu' | 'fri';
+          start_time: string;
+          end_time: string;
+          id?: string | null;
+        }[]
+      | null;
+    /**
+     * Worked out from the schedule.
+     */
+    end_date?: string | null;
+    /**
+     * One-off exceptions, e.g. "hybrid for the first 6 weeks, then online".
+     */
+    note?: string | null;
+  };
+  registration?: {
+    /**
+     * Leave empty on a course to use its cycle's.
+     */
+    method?: ('form' | 'external' | 'closed') | null;
+    form?: (number | null) | Form;
+    url?: string | null;
+    /**
+     * The last day to register, in Cairo. Empty on a course uses its cycle's.
+     */
+    deadline?: string | null;
+    archived_registration_url?: string | null;
+  };
+  /**
+   * Extra questions for this course, asked after the website form’s own. They go live when an admin publishes the course. Not used when applications go to an external link, such as a Google Form.
+   */
+  applicant_questions?:
+    | (
+        | {
+            name: string;
+            label?: string | null;
+            width?: number | null;
+            defaultValue?: string | null;
+            required?: boolean | null;
+            /**
+             * Help text under the question.
+             */
+            description?: string | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'text';
+          }
+        | {
+            name: string;
+            label?: string | null;
+            width?: number | null;
+            defaultValue?: string | null;
+            required?: boolean | null;
+            /**
+             * Help text under the question.
+             */
+            description?: string | null;
+            /**
+             * An image the question asks about, shown above the answer.
+             */
+            image?: (number | null) | Media;
+            /**
+             * The fewest words an answer may have.
+             */
+            minWords?: number | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'textarea';
+          }
+        | {
+            name: string;
+            label?: string | null;
+            width?: number | null;
+            defaultValue?: string | null;
+            options?:
+              | {
+                  label: string;
+                  value: string;
+                  id?: string | null;
+                }[]
+              | null;
+            required?: boolean | null;
+            /**
+             * Help text under the question.
+             */
+            description?: string | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'radio';
+          }
+        | {
+            name: string;
+            label?: string | null;
+            width?: number | null;
+            defaultValue?: string | null;
+            options?:
+              | {
+                  label: string;
+                  value: string;
+                  id?: string | null;
+                }[]
+              | null;
+            required?: boolean | null;
+            /**
+             * Help text under the question.
+             */
+            description?: string | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'checkboxGroup';
+          }
+        | {
+            name: string;
+            label?: string | null;
+            width?: number | null;
+            required?: boolean | null;
+            defaultValue?: boolean | null;
+            /**
+             * Help text under the question.
+             */
+            description?: string | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'checkbox';
+          }
+        | {
+            name: string;
+            label?: string | null;
+            width?: number | null;
+            defaultValue?: string | null;
+            placeholder?: string | null;
+            options?:
+              | {
+                  label: string;
+                  value: string;
+                  id?: string | null;
+                }[]
+              | null;
+            required?: boolean | null;
+            /**
+             * Help text under the question.
+             */
+            description?: string | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'select';
+          }
+        | {
+            name: string;
+            label?: string | null;
+            width?: number | null;
+            defaultValue?: number | null;
+            required?: boolean | null;
+            /**
+             * Help text under the question.
+             */
+            description?: string | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'number';
+          }
+        | {
+            name: string;
+            label?: string | null;
+            /**
+             * Help text under the question.
+             */
+            description?: string | null;
+            /**
+             * The kinds of file allowed.
+             */
+            accept: ('pdf' | 'word' | 'image')[];
+            maxSizeMB?: number | null;
+            multiple?: boolean | null;
+            required?: boolean | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'fileUpload';
+          }
+      )[]
+    | null;
+  /**
+   * Only when this course costs something other than its cycle’s price.
+   */
+  pricing_override?: {
+    /**
+     * The price in EGP; with a maximum it reads as a range, e.g. 2,500–3,000.
+     */
+    min?: number | null;
+    /**
+     * Leave empty for a single price.
+     */
+    max?: number | null;
+    currency?: 'EGP' | null;
+    /**
+     * Anything the price needs said, e.g. “Sliding scale: choose the tier that fits your budget.”
+     */
+    note?: string | null;
+    /**
+     * Tick when people who can’t pay the full price may ask for a reduction.
+     */
+    need_based_deductions?: boolean | null;
+    /**
+     * Ways to pay in instalments, e.g. “Three payments” of 10,000 each.
+     */
+    payment_plans?:
+      | {
+          label: string;
+          installments?:
+            | {
+                amount: number;
+                id?: string | null;
+              }[]
+            | null;
+          id?: string | null;
+        }[]
+      | null;
+  };
+  enrollments?: {
+    docs?: (number | Enrollment)[];
+    hasNextPage?: boolean;
+    totalDocs?: number;
+  };
+  meta?: {
+    title?: string | null;
+    description?: string | null;
+    /**
+     * Maximum upload file size: 12MB. Recommended file size for images is <500KB.
+     */
+    image?: (number | null) | Media;
+  };
+  updatedAt: string;
+  createdAt: string;
+  _status?: ('draft' | 'published') | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "cycles".
+ */
+export interface Cycle {
+  id: number;
+  title?: string | null;
+  slug?: string | null;
+  season: 'fall' | 'winter' | 'spring' | 'summer';
+  /**
+   * The year it starts in. A winter cycle counts by its January: Dec 2025–Feb 2026 is 2026.
+   */
+  start_year: number;
+  place: number | Place;
+  start_date?: string | null;
+  academic_year?: string | null;
+  registration?: {
+    /**
+     * Leave empty on a course to use its cycle's.
+     */
+    method?: ('form' | 'external' | 'closed') | null;
+    form?: (number | null) | Form;
+    url?: string | null;
+    /**
+     * The last day to register, in Cairo. Empty on a course uses its cycle's.
+     */
+    deadline?: string | null;
+    archived_registration_url?: string | null;
+  };
+  /**
+   * One price per group of course types.
+   */
+  pricing?:
+    | {
+        /**
+         * Which course types this price is for, e.g. Thematic and Lab.
+         */
+        course_types: ('CORE' | 'THEMATIC' | 'LAB' | 'WORKSHOP' | 'SHORT')[];
+        pricing?: {
+          /**
+           * The price in EGP; with a maximum it reads as a range, e.g. 2,500–3,000.
+           */
+          min?: number | null;
+          /**
+           * Leave empty for a single price.
+           */
+          max?: number | null;
+          currency?: 'EGP' | null;
+          /**
+           * Anything the price needs said, e.g. “Sliding scale: choose the tier that fits your budget.”
+           */
+          note?: string | null;
+          /**
+           * Tick when people who can’t pay the full price may ask for a reduction.
+           */
+          need_based_deductions?: boolean | null;
+          /**
+           * Ways to pay in instalments, e.g. “Three payments” of 10,000 each.
+           */
+          payment_plans?:
+            | {
+                label: string;
+                installments?:
+                  | {
+                      amount: number;
+                      id?: string | null;
+                    }[]
+                  | null;
+                id?: string | null;
+              }[]
+            | null;
+        };
+        id?: string | null;
+      }[]
+    | null;
+  courses?: {
+    docs?: (number | Course)[];
+    hasNextPage?: boolean;
+    totalDocs?: number;
+  };
+  legacy_url?: string | null;
+  meta?: {
+    title?: string | null;
+    description?: string | null;
+    /**
+     * Maximum upload file size: 12MB. Recommended file size for images is <500KB.
+     */
+    image?: (number | null) | Media;
+  };
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "places".
+ */
+export interface Place {
+  id: number;
+  name: string;
+  /**
+   * When enabled, the slug will auto-generate from the title field on save and autosave.
+   */
+  generateSlug?: boolean | null;
+  slug: string;
+  state?: ('current' | 'former') | null;
+  city?: string | null;
+  /**
+   * The street address, e.g. “10 Darb El Labana, El Darb El Ahmar, Cairo 11311, Egypt”.
+   */
+  address?: string | null;
+  /**
+   * Shown with the address, e.g. in the emails’ footer.
+   */
+  map_url?: string | null;
+  opened_year?: number | null;
+  closed_year?: number | null;
+  description?: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  images?:
+    | {
+        image?: (number | null) | Media;
+        id?: string | null;
+      }[]
+    | null;
+  legacy_url?: string | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "enrollments".
+ */
+export interface Enrollment {
+  id: number;
+  person: number | Person;
+  course: number | Course;
+  status: 'applied' | 'accepted' | 'confirmed' | 'completed' | 'withdrawn';
+  /**
+   * Which group they attend, e.g. "evening".
+   */
+  slot?: string | null;
+  assessment?: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  source: 'registration_form' | 'admin' | 'backfill';
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "memberships".
+ */
+export interface Membership {
+  id: number;
+  person: number | Person;
+  programme: number | Programme;
+  role: 'student' | 'residential_fellow' | 'visiting_fellow';
+  /**
+   * Their role in words, if it needs more than the role, e.g. “Programme coordinator”.
+   */
+  title?: string | null;
+  legacy_url?: string | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "governance".
+ */
+export interface Governance {
+  id: number;
+  person: number | Person;
+  role: 'advisor' | 'trustee';
+  title?: string | null;
+  /**
+   * Their role on the board, e.g. “Chair” or “Treasurer”.
+   */
+  board_role?: string | null;
+  /**
+   * What they advise on, e.g. “curriculum design and university partnerships”.
+   */
+  advises_on?: string | null;
+  /**
+   * First year on the board, e.g. 2016.
+   */
+  term_from?: number | null;
+  term_to?: number | null;
+  /**
+   * Position in the list: lower numbers come first.
+   */
+  order?: number | null;
+  legacy_url?: string | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "users".
+ */
+export interface User {
+  id: number;
+  /**
+   * Set by Google sign-in.
+   */
+  sub?: string | null;
+  person?: (number | null) | Person;
+  roles: ('super_admin' | 'admin' | 'fellow' | 'member' | 'non_degree_seeking')[];
+  updatedAt: string;
+  createdAt: string;
+  email: string;
+  resetPasswordToken?: string | null;
+  resetPasswordExpiration?: string | null;
+  salt?: string | null;
+  hash?: string | null;
+  resetPasswordRequestedAt?: string | null;
+  loginAttempts?: number | null;
+  lockUntil?: string | null;
+  sessions?:
+    | {
+        id: string;
+        createdAt?: string | null;
+        expiresAt: string;
+      }[]
+    | null;
+  password?: string | null;
+  collection: 'users';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "articles".
+ */
+export interface Article {
+  id: number;
+  title: string;
+  /**
+   * When enabled, the slug will auto-generate from the title field on save and autosave.
+   */
+  generateSlug?: boolean | null;
+  slug: string;
   cover_image?: (number | null) | Media;
   review: {
     /**
@@ -1471,6 +1489,23 @@ export interface Article {
   tier: 'owner' | 'community' | 'public';
   published_date?: string | null;
   featured?: boolean | null;
+  legacy_url?: string | null;
+  body?: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  authors: (number | Person)[];
   credits?:
     | {
         role:
@@ -1514,7 +1549,6 @@ export interface Article {
     hasNextPage?: boolean;
     totalDocs?: number;
   };
-  legacy_url?: string | null;
   meta?: {
     title?: string | null;
     description?: string | null;
@@ -1547,8 +1581,6 @@ export interface Publication {
      */
     review_note?: string | null;
   };
-  kind: 'essay_collection' | 'translation_booklet' | 'research' | 'other';
-  editors?: (number | Person)[] | null;
   cover_image?: (number | null) | Media;
   title: string;
   /**
@@ -1556,6 +1588,7 @@ export interface Publication {
    */
   generateSlug?: boolean | null;
   slug: string;
+  legacy_url?: string | null;
   subtitle?: string | null;
   intro?: {
     root: {
@@ -1572,10 +1605,12 @@ export interface Publication {
     };
     [k: string]: unknown;
   } | null;
+  kind: 'essay_collection' | 'translation_booklet' | 'research' | 'other';
   /**
    * In reading order.
    */
   articles?: (number | Article)[] | null;
+  editors?: (number | Person)[] | null;
   credits?:
     | {
         role:
@@ -1599,7 +1634,6 @@ export interface Publication {
   produced_by?: (number | Course)[] | null;
   license?: ('cc_by_nc_sa' | 'cc_by_sa' | 'cc_by' | 'all_rights_reserved') | null;
   print_edition_url?: string | null;
-  legacy_url?: string | null;
   meta?: {
     title?: string | null;
     description?: string | null;
@@ -1659,175 +1693,6 @@ export interface Press {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "events".
- */
-export interface Event {
-  id: number;
-  tier: 'owner' | 'community' | 'public';
-  event_type:
-    | 'talk'
-    | 'panel'
-    | 'book_discussion'
-    | 'reading_group'
-    | 'screening'
-    | 'performance'
-    | 'music'
-    | 'exhibition'
-    | 'open_day'
-    | 'workshop'
-    | 'residency'
-    | 'visit'
-    | 'other';
-  /**
-   * The event this one is part of.
-   */
-  series?: (number | null) | Event;
-  programme?: (number | null) | Programme;
-  course?: (number | null) | Course;
-  title: string;
-  /**
-   * When enabled, the slug will auto-generate from the title field on save and autosave.
-   */
-  generateSlug?: boolean | null;
-  slug: string;
-  /**
-   * Used on event cards. Add images to the description editor to show them on the event page.
-   */
-  cover_image?: (number | null) | Media;
-  description?: {
-    root: {
-      type: string;
-      children: {
-        type: any;
-        version: number;
-        [k: string]: unknown;
-      }[];
-      direction: ('ltr' | 'rtl') | null;
-      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
-      indent: number;
-      version: number;
-    };
-    [k: string]: unknown;
-  } | null;
-  schedule?: {
-    start_date?: string | null;
-    /**
-     * Week only keeps it off the calendar.
-     */
-    start_precision?: ('day' | 'week') | null;
-    /**
-     * How long it runs, e.g. 8. With the start date it sets the end date.
-     */
-    weeks?: number | null;
-    /**
-     * Weekly meeting times, in Cairo time.
-     */
-    slots?:
-      | {
-          weekday: 'sat' | 'sun' | 'mon' | 'tue' | 'wed' | 'thu' | 'fri';
-          start_time: string;
-          end_time: string;
-          id?: string | null;
-        }[]
-      | null;
-    /**
-     * Worked out from the schedule.
-     */
-    end_date?: string | null;
-    /**
-     * One-off exceptions, e.g. "hybrid for the first 6 weeks, then online".
-     */
-    note?: string | null;
-  };
-  place?: (number | null) | Place;
-  /**
-   * Only when it is not at a CILAS place.
-   */
-  external_venue?: {
-    name?: string | null;
-    address?: string | null;
-    map_url?: string | null;
-  };
-  online_url?: string | null;
-  /**
-   * Time blocks within the day, in Cairo time.
-   */
-  agenda?:
-    | {
-        start_time: string;
-        end_time: string;
-        title: string;
-        id?: string | null;
-      }[]
-    | null;
-  speakers?:
-    | {
-        person: number | Person;
-        role?: string | null;
-        id?: string | null;
-      }[]
-    | null;
-  registration?: {
-    /**
-     * Leave empty on a course to use its cycle's.
-     */
-    method?: ('form' | 'external' | 'closed') | null;
-    form?: (number | null) | Form;
-    url?: string | null;
-    /**
-     * The last day to register, in Cairo. Empty on a course uses its cycle's.
-     */
-    deadline?: string | null;
-    archived_registration_url?: string | null;
-  };
-  pricing?: {
-    /**
-     * The price in EGP; with a maximum it reads as a range, e.g. 2,500–3,000.
-     */
-    min?: number | null;
-    /**
-     * Leave empty for a single price.
-     */
-    max?: number | null;
-    currency?: 'EGP' | null;
-    /**
-     * Anything the price needs said, e.g. “Sliding scale: choose the tier that fits your budget.”
-     */
-    note?: string | null;
-    /**
-     * Tick when people who can’t pay the full price may ask for a reduction.
-     */
-    need_based_deductions?: boolean | null;
-    /**
-     * Ways to pay in instalments, e.g. “Three payments” of 10,000 each.
-     */
-    payment_plans?:
-      | {
-          label: string;
-          installments?:
-            | {
-                amount: number;
-                id?: string | null;
-              }[]
-            | null;
-          id?: string | null;
-        }[]
-      | null;
-  };
-  legacy_url?: string | null;
-  meta?: {
-    title?: string | null;
-    description?: string | null;
-    /**
-     * Maximum upload file size: 12MB. Recommended file size for images is <500KB.
-     */
-    image?: (number | null) | Media;
-  };
-  updatedAt: string;
-  createdAt: string;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "newsletters".
  */
 export interface Newsletter {
@@ -1840,6 +1705,7 @@ export interface Newsletter {
   slug: string;
   issue_date: string;
   cover_image?: (number | null) | Media;
+  legacy_url?: string | null;
   /**
    * The line mail apps show after the subject. Empty: the title.
    */
@@ -1944,7 +1810,188 @@ export interface Newsletter {
   send_to?: (number | null) | MailingList;
   sent_at?: string | null;
   broadcast_id?: string | null;
+  updatedAt: string;
+  createdAt: string;
+  _status?: ('draft' | 'published') | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "events".
+ */
+export interface Event {
+  id: number;
+  tier: 'owner' | 'community' | 'public';
+  title: string;
+  /**
+   * When enabled, the slug will auto-generate from the title field on save and autosave.
+   */
+  generateSlug?: boolean | null;
+  slug: string;
+  /**
+   * Used on event cards. Add images to the description editor to show them on the event page.
+   */
+  cover_image?: (number | null) | Media;
   legacy_url?: string | null;
+  description?: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  event_type:
+    | 'talk'
+    | 'panel'
+    | 'book_discussion'
+    | 'reading_group'
+    | 'screening'
+    | 'performance'
+    | 'music'
+    | 'exhibition'
+    | 'open_day'
+    | 'workshop'
+    | 'residency'
+    | 'visit'
+    | 'other';
+  speakers?:
+    | {
+        person: number | Person;
+        role?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  schedule?: {
+    /**
+     * A screening or talk needs only one date and time. Agenda segments are optional.
+     */
+    mode?: ('single' | 'recurring') | null;
+    start_date?: string | null;
+    /**
+     * Week only keeps it off the calendar.
+     */
+    start_precision?: ('day' | 'week') | null;
+    /**
+     * How long it runs, e.g. 8. With the start date it sets the end date.
+     */
+    weeks?: number | null;
+    /**
+     * 24-hour Cairo time. Leave both empty if only the date is known.
+     */
+    start_time?: string | null;
+    /**
+     * 24-hour Cairo time. Leave both empty if only the date is known.
+     */
+    end_time?: string | null;
+    /**
+     * Weekly meeting times, in Cairo time.
+     */
+    slots?:
+      | {
+          weekday: 'sat' | 'sun' | 'mon' | 'tue' | 'wed' | 'thu' | 'fri';
+          start_time: string;
+          end_time: string;
+          id?: string | null;
+        }[]
+      | null;
+    /**
+     * Worked out from the schedule.
+     */
+    end_date?: string | null;
+    /**
+     * One-off exceptions, e.g. "hybrid for the first 6 weeks, then online".
+     */
+    note?: string | null;
+  };
+  place?: (number | null) | Place;
+  /**
+   * Only when it is not at a CILAS place.
+   */
+  external_venue?: {
+    name?: string | null;
+    address?: string | null;
+    map_url?: string | null;
+  };
+  online_url?: string | null;
+  /**
+   * Only for named segments within the event, such as a screening followed by a discussion. Set the event’s own date and time in When; no agenda is needed.
+   */
+  agenda?:
+    | {
+        start_time: string;
+        end_time: string;
+        title: string;
+        id?: string | null;
+      }[]
+    | null;
+  registration?: {
+    /**
+     * Leave empty on a course to use its cycle's.
+     */
+    method?: ('form' | 'external' | 'closed') | null;
+    form?: (number | null) | Form;
+    url?: string | null;
+    /**
+     * The last day to register, in Cairo. Empty on a course uses its cycle's.
+     */
+    deadline?: string | null;
+    archived_registration_url?: string | null;
+  };
+  pricing?: {
+    /**
+     * The price in EGP; with a maximum it reads as a range, e.g. 2,500–3,000.
+     */
+    min?: number | null;
+    /**
+     * Leave empty for a single price.
+     */
+    max?: number | null;
+    currency?: 'EGP' | null;
+    /**
+     * Anything the price needs said, e.g. “Sliding scale: choose the tier that fits your budget.”
+     */
+    note?: string | null;
+    /**
+     * Tick when people who can’t pay the full price may ask for a reduction.
+     */
+    need_based_deductions?: boolean | null;
+    /**
+     * Ways to pay in instalments, e.g. “Three payments” of 10,000 each.
+     */
+    payment_plans?:
+      | {
+          label: string;
+          installments?:
+            | {
+                amount: number;
+                id?: string | null;
+              }[]
+            | null;
+          id?: string | null;
+        }[]
+      | null;
+  };
+  /**
+   * The event this one is part of.
+   */
+  series?: (number | null) | Event;
+  programme?: (number | null) | Programme;
+  course?: (number | null) | Course;
+  meta?: {
+    title?: string | null;
+    description?: string | null;
+    /**
+     * Maximum upload file size: 12MB. Recommended file size for images is <500KB.
+     */
+    image?: (number | null) | Media;
+  };
   updatedAt: string;
   createdAt: string;
   _status?: ('draft' | 'published') | null;
@@ -1990,6 +2037,54 @@ export interface MailingList {
   member_count?: number | null;
   last_synced?: string | null;
   sync_note?: string | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "redirects".
+ */
+export interface Redirect {
+  id: number;
+  from: string;
+  to?: {
+    type?: ('reference' | 'custom') | null;
+    reference?:
+      | ({
+          relationTo: 'courses';
+          value: number | Course;
+        } | null)
+      | ({
+          relationTo: 'cycles';
+          value: number | Cycle;
+        } | null)
+      | ({
+          relationTo: 'programmes';
+          value: number | Programme;
+        } | null)
+      | ({
+          relationTo: 'publications';
+          value: number | Publication;
+        } | null)
+      | ({
+          relationTo: 'articles';
+          value: number | Article;
+        } | null)
+      | ({
+          relationTo: 'events';
+          value: number | Event;
+        } | null)
+      | ({
+          relationTo: 'press';
+          value: number | Press;
+        } | null)
+      | ({
+          relationTo: 'people';
+          value: number | Person;
+        } | null);
+    url?: string | null;
+  };
+  type: '301' | '302';
   updatedAt: string;
   createdAt: string;
 }
@@ -2241,43 +2336,6 @@ export interface SpaceRsvp {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "form-submissions".
- */
-export interface FormSubmission {
-  id: number;
-  form: number | Form;
-  submissionData?:
-    | {
-        field: string;
-        value: string;
-        id?: string | null;
-      }[]
-    | null;
-  /**
-   * What the applicant applied to.
-   */
-  target?:
-    | ({
-        relationTo: 'programmes';
-        value: number | Programme;
-      } | null)
-    | ({
-        relationTo: 'courses';
-        value: number | Course;
-      } | null);
-  status?: ('new' | 'accepted' | 'rejected') | null;
-  decided_at?: string | null;
-  result?: {
-    user?: (number | null) | User;
-    person?: (number | null) | Person;
-    membership?: (number | null) | Membership;
-    enrollment?: (number | null) | Enrollment;
-  };
-  updatedAt: string;
-  createdAt: string;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "exports".
  */
 export interface Export {
@@ -2350,54 +2408,6 @@ export interface Import {
   height?: number | null;
   focalX?: number | null;
   focalY?: number | null;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "redirects".
- */
-export interface Redirect {
-  id: number;
-  from: string;
-  to?: {
-    type?: ('reference' | 'custom') | null;
-    reference?:
-      | ({
-          relationTo: 'courses';
-          value: number | Course;
-        } | null)
-      | ({
-          relationTo: 'cycles';
-          value: number | Cycle;
-        } | null)
-      | ({
-          relationTo: 'programmes';
-          value: number | Programme;
-        } | null)
-      | ({
-          relationTo: 'publications';
-          value: number | Publication;
-        } | null)
-      | ({
-          relationTo: 'articles';
-          value: number | Article;
-        } | null)
-      | ({
-          relationTo: 'events';
-          value: number | Event;
-        } | null)
-      | ({
-          relationTo: 'press';
-          value: number | Press;
-        } | null)
-      | ({
-          relationTo: 'people';
-          value: number | Person;
-        } | null);
-    url?: string | null;
-  };
-  type: '301' | '302';
-  updatedAt: string;
-  createdAt: string;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -2516,40 +2526,36 @@ export interface PayloadLockedDocument {
   id: number;
   document?:
     | ({
-        relationTo: 'users';
-        value: number | User;
-      } | null)
-    | ({
-        relationTo: 'people';
-        value: number | Person;
-      } | null)
-    | ({
-        relationTo: 'memberships';
-        value: number | Membership;
-      } | null)
-    | ({
-        relationTo: 'media';
-        value: number | Media;
-      } | null)
-    | ({
-        relationTo: 'courses';
-        value: number | Course;
+        relationTo: 'form-submissions';
+        value: number | FormSubmission;
       } | null)
     | ({
         relationTo: 'enrollments';
         value: number | Enrollment;
       } | null)
     | ({
-        relationTo: 'programmes';
-        value: number | Programme;
+        relationTo: 'memberships';
+        value: number | Membership;
+      } | null)
+    | ({
+        relationTo: 'forms';
+        value: number | Form;
+      } | null)
+    | ({
+        relationTo: 'courses';
+        value: number | Course;
       } | null)
     | ({
         relationTo: 'cycles';
         value: number | Cycle;
       } | null)
     | ({
-        relationTo: 'governance';
-        value: number | Governance;
+        relationTo: 'programmes';
+        value: number | Programme;
+      } | null)
+    | ({
+        relationTo: 'places';
+        value: number | Place;
       } | null)
     | ({
         relationTo: 'articles';
@@ -2564,10 +2570,6 @@ export interface PayloadLockedDocument {
         value: number | Press;
       } | null)
     | ({
-        relationTo: 'events';
-        value: number | Event;
-      } | null)
-    | ({
         relationTo: 'newsletters';
         value: number | Newsletter;
       } | null)
@@ -2576,16 +2578,36 @@ export interface PayloadLockedDocument {
         value: number | MailingList;
       } | null)
     | ({
+        relationTo: 'people';
+        value: number | Person;
+      } | null)
+    | ({
+        relationTo: 'users';
+        value: number | User;
+      } | null)
+    | ({
+        relationTo: 'governance';
+        value: number | Governance;
+      } | null)
+    | ({
+        relationTo: 'media';
+        value: number | Media;
+      } | null)
+    | ({
+        relationTo: 'redirects';
+        value: number | Redirect;
+      } | null)
+    | ({
+        relationTo: 'events';
+        value: number | Event;
+      } | null)
+    | ({
         relationTo: 'submission-files';
         value: number | SubmissionFile;
       } | null)
     | ({
         relationTo: 'notifications';
         value: number | Notification;
-      } | null)
-    | ({
-        relationTo: 'places';
-        value: number | Place;
       } | null)
     | ({
         relationTo: 'spaces';
@@ -2626,18 +2648,6 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'space-rsvps';
         value: number | SpaceRsvp;
-      } | null)
-    | ({
-        relationTo: 'forms';
-        value: number | Form;
-      } | null)
-    | ({
-        relationTo: 'form-submissions';
-        value: number | FormSubmission;
-      } | null)
-    | ({
-        relationTo: 'redirects';
-        value: number | Redirect;
       } | null);
   globalSlug?: string | null;
   user: {
@@ -2683,373 +2693,30 @@ export interface PayloadMigration {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "users_select".
+ * via the `definition` "form-submissions_select".
  */
-export interface UsersSelect<T extends boolean = true> {
-  sub?: T;
-  person?: T;
-  roles?: T;
-  updatedAt?: T;
-  createdAt?: T;
-  email?: T;
-  resetPasswordToken?: T;
-  resetPasswordExpiration?: T;
-  salt?: T;
-  hash?: T;
-  resetPasswordRequestedAt?: T;
-  loginAttempts?: T;
-  lockUntil?: T;
-  sessions?:
+export interface FormSubmissionsSelect<T extends boolean = true> {
+  form?: T;
+  submissionData?:
     | T
     | {
-        id?: T;
-        createdAt?: T;
-        expiresAt?: T;
-      };
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "people_select".
- */
-export interface PeopleSelect<T extends boolean = true> {
-  name?: T;
-  generateSlug?: T;
-  slug?: T;
-  visible?: T;
-  photo?: T;
-  bio?: T;
-  website?: T;
-  social_links?:
-    | T
-    | {
-        platform?: T;
-        url?: T;
+        field?: T;
+        value?: T;
         id?: T;
       };
-  courses?: T;
-  governance?: T;
-  memberships?: T;
-  enrollments?: T;
-  legacy_url?: T;
-  updatedAt?: T;
-  createdAt?: T;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "memberships_select".
- */
-export interface MembershipsSelect<T extends boolean = true> {
-  person?: T;
-  programme?: T;
-  role?: T;
-  title?: T;
-  legacy_url?: T;
-  updatedAt?: T;
-  createdAt?: T;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "media_select".
- */
-export interface MediaSelect<T extends boolean = true> {
-  alt?: T;
-  legacy_url?: T;
-  prefix?: T;
-  _objectKey?: T;
-  updatedAt?: T;
-  createdAt?: T;
-  url?: T;
-  thumbnailURL?: T;
-  filename?: T;
-  mimeType?: T;
-  filesize?: T;
-  width?: T;
-  height?: T;
-  focalX?: T;
-  focalY?: T;
-  sizes?:
+  target?: T;
+  status?: T;
+  decided_at?: T;
+  result?:
     | T
     | {
-        thumbnail?:
-          | T
-          | {
-              url?: T;
-              width?: T;
-              height?: T;
-              mimeType?: T;
-              filesize?: T;
-              filename?: T;
-            };
-        card?:
-          | T
-          | {
-              url?: T;
-              width?: T;
-              height?: T;
-              mimeType?: T;
-              filesize?: T;
-              filename?: T;
-            };
-      };
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "courses_select".
- */
-export interface CoursesSelect<T extends boolean = true> {
-  review?:
-    | T
-    | {
-        status?: T;
-        request?: T;
-        review_note?: T;
-      };
-  tier?: T;
-  course_type?: T;
-  cycle?: T;
-  cover_image?: T;
-  title?: T;
-  generateSlug?: T;
-  slug?: T;
-  subtitle?: T;
-  summary?: T;
-  epigraph?: T;
-  description?: T;
-  facilitator_note?: T;
-  content_warning?: T;
-  schedule?:
-    | T
-    | {
-        start_date?: T;
-        start_precision?: T;
-        weeks?: T;
-        slots?:
-          | T
-          | {
-              weekday?: T;
-              start_time?: T;
-              end_time?: T;
-              id?: T;
-            };
-        end_date?: T;
-        note?: T;
-      };
-  registration?:
-    | T
-    | {
-        method?: T;
-        form?: T;
-        url?: T;
-        deadline?: T;
-        archived_registration_url?: T;
-      };
-  applicant_questions?:
-    | T
-    | {
-        text?:
-          | T
-          | {
-              name?: T;
-              label?: T;
-              width?: T;
-              defaultValue?: T;
-              required?: T;
-              description?: T;
-              id?: T;
-              blockName?: T;
-            };
-        textarea?:
-          | T
-          | {
-              name?: T;
-              label?: T;
-              width?: T;
-              defaultValue?: T;
-              required?: T;
-              description?: T;
-              image?: T;
-              minWords?: T;
-              id?: T;
-              blockName?: T;
-            };
-        radio?:
-          | T
-          | {
-              name?: T;
-              label?: T;
-              width?: T;
-              defaultValue?: T;
-              options?:
-                | T
-                | {
-                    label?: T;
-                    value?: T;
-                    id?: T;
-                  };
-              required?: T;
-              description?: T;
-              id?: T;
-              blockName?: T;
-            };
-        checkboxGroup?:
-          | T
-          | {
-              name?: T;
-              label?: T;
-              width?: T;
-              defaultValue?: T;
-              options?:
-                | T
-                | {
-                    label?: T;
-                    value?: T;
-                    id?: T;
-                  };
-              required?: T;
-              description?: T;
-              id?: T;
-              blockName?: T;
-            };
-        checkbox?:
-          | T
-          | {
-              name?: T;
-              label?: T;
-              width?: T;
-              required?: T;
-              defaultValue?: T;
-              description?: T;
-              id?: T;
-              blockName?: T;
-            };
-        select?:
-          | T
-          | {
-              name?: T;
-              label?: T;
-              width?: T;
-              defaultValue?: T;
-              placeholder?: T;
-              options?:
-                | T
-                | {
-                    label?: T;
-                    value?: T;
-                    id?: T;
-                  };
-              required?: T;
-              description?: T;
-              id?: T;
-              blockName?: T;
-            };
-        number?:
-          | T
-          | {
-              name?: T;
-              label?: T;
-              width?: T;
-              defaultValue?: T;
-              required?: T;
-              description?: T;
-              id?: T;
-              blockName?: T;
-            };
-        fileUpload?:
-          | T
-          | {
-              name?: T;
-              label?: T;
-              description?: T;
-              accept?: T;
-              maxSizeMB?: T;
-              multiple?: T;
-              required?: T;
-              id?: T;
-              blockName?: T;
-            };
-      };
-  pricing_override?:
-    | T
-    | {
-        min?: T;
-        max?: T;
-        currency?: T;
-        note?: T;
-        need_based_deductions?: T;
-        payment_plans?:
-          | T
-          | {
-              label?: T;
-              installments?:
-                | T
-                | {
-                    amount?: T;
-                    id?: T;
-                  };
-              id?: T;
-            };
-      };
-  sessions?:
-    | T
-    | {
-        order?: T;
-        session_title?: T;
-        meetings?: T;
-        cancelled?: T;
-        description?: T;
-        dates?:
-          | T
-          | {
-              date?: T;
-              start_time?: T;
-              end_time?: T;
-              id?: T;
-            };
-        bibliography?:
-          | T
-          | {
-              type?: T;
-              title?: T;
-              href?: T;
-              note?: T;
-              id?: T;
-            };
-        activities?:
-          | T
-          | {
-              kind?: T;
-              description?: T;
-              id?: T;
-            };
-        id?: T;
-      };
-  bibliography?:
-    | T
-    | {
-        type?: T;
-        title?: T;
-        href?: T;
-        note?: T;
-        id?: T;
-      };
-  location?: T;
-  teaching_languages?: T;
-  language_note?: T;
-  fellows?: T;
-  syllabus_tentative?: T;
-  session_unit?: T;
-  enrollments?: T;
-  legacy_url?: T;
-  meta?:
-    | T
-    | {
-        title?: T;
-        description?: T;
-        image?: T;
+        user?: T;
+        person?: T;
+        membership?: T;
+        enrollment?: T;
       };
   updatedAt?: T;
   createdAt?: T;
-  _status?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -3067,723 +2734,14 @@ export interface EnrollmentsSelect<T extends boolean = true> {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "programmes_select".
+ * via the `definition` "memberships_select".
  */
-export interface ProgrammesSelect<T extends boolean = true> {
-  kind?: T;
-  cover?: T;
-  title?: T;
-  generateSlug?: T;
-  slug?: T;
-  tagline?: T;
-  overview?: T;
-  highlights?:
-    | T
-    | {
-        text?: T;
-        id?: T;
-      };
-  cycles?: T;
-  components?:
-    | T
-    | {
-        label?: T;
-        description?: T;
-        cycle?: T;
-        course_types?: T;
-        id?: T;
-      };
-  capacity?: T;
-  weekly_hours?: T;
-  schedule_note?: T;
-  requirements?: T;
-  registration?:
-    | T
-    | {
-        method?: T;
-        form?: T;
-        url?: T;
-        deadline?: T;
-        archived_registration_url?: T;
-      };
-  pricing?:
-    | T
-    | {
-        min?: T;
-        max?: T;
-        currency?: T;
-        note?: T;
-        need_based_deductions?: T;
-        payment_plans?:
-          | T
-          | {
-              label?: T;
-              installments?:
-                | T
-                | {
-                    amount?: T;
-                    id?: T;
-                  };
-              id?: T;
-            };
-      };
-  testimonials?:
-    | T
-    | {
-        quote?: T;
-        attribution?: T;
-        person?: T;
-        id?: T;
-      };
-  legacy_url?: T;
-  meta?:
-    | T
-    | {
-        title?: T;
-        description?: T;
-        image?: T;
-      };
-  updatedAt?: T;
-  createdAt?: T;
-  _status?: T;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "cycles_select".
- */
-export interface CyclesSelect<T extends boolean = true> {
-  title?: T;
-  slug?: T;
-  season?: T;
-  start_year?: T;
-  place?: T;
-  start_date?: T;
-  academic_year?: T;
-  registration?:
-    | T
-    | {
-        method?: T;
-        form?: T;
-        url?: T;
-        deadline?: T;
-        archived_registration_url?: T;
-      };
-  pricing?:
-    | T
-    | {
-        course_types?: T;
-        pricing?:
-          | T
-          | {
-              min?: T;
-              max?: T;
-              currency?: T;
-              note?: T;
-              need_based_deductions?: T;
-              payment_plans?:
-                | T
-                | {
-                    label?: T;
-                    installments?:
-                      | T
-                      | {
-                          amount?: T;
-                          id?: T;
-                        };
-                    id?: T;
-                  };
-            };
-        id?: T;
-      };
-  courses?: T;
-  legacy_url?: T;
-  meta?:
-    | T
-    | {
-        title?: T;
-        description?: T;
-        image?: T;
-      };
-  updatedAt?: T;
-  createdAt?: T;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "governance_select".
- */
-export interface GovernanceSelect<T extends boolean = true> {
+export interface MembershipsSelect<T extends boolean = true> {
   person?: T;
+  programme?: T;
   role?: T;
   title?: T;
-  board_role?: T;
-  advises_on?: T;
-  term_from?: T;
-  term_to?: T;
-  order?: T;
   legacy_url?: T;
-  updatedAt?: T;
-  createdAt?: T;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "articles_select".
- */
-export interface ArticlesSelect<T extends boolean = true> {
-  title?: T;
-  generateSlug?: T;
-  slug?: T;
-  body?: T;
-  authors?: T;
-  cover_image?: T;
-  review?:
-    | T
-    | {
-        status?: T;
-        request?: T;
-        review_note?: T;
-      };
-  requested_tier?: T;
-  tier?: T;
-  published_date?: T;
-  featured?: T;
-  credits?:
-    | T
-    | {
-        role?: T;
-        label?: T;
-        people?: T;
-        id?: T;
-      };
-  translation?:
-    | T
-    | {
-        original_language?: T;
-        original_title?: T;
-        original_authors?: T;
-        original_url?: T;
-        original_source?: T;
-        note?: T;
-      };
-  tags?:
-    | T
-    | {
-        tag?: T;
-        id?: T;
-      };
-  related_articles?: T;
-  publications?: T;
-  legacy_url?: T;
-  meta?:
-    | T
-    | {
-        title?: T;
-        description?: T;
-        image?: T;
-      };
-  updatedAt?: T;
-  createdAt?: T;
-  _status?: T;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "publications_select".
- */
-export interface PublicationsSelect<T extends boolean = true> {
-  review?:
-    | T
-    | {
-        status?: T;
-        request?: T;
-        review_note?: T;
-      };
-  kind?: T;
-  editors?: T;
-  cover_image?: T;
-  title?: T;
-  generateSlug?: T;
-  slug?: T;
-  subtitle?: T;
-  intro?: T;
-  articles?: T;
-  credits?:
-    | T
-    | {
-        role?: T;
-        label?: T;
-        people?: T;
-        id?: T;
-      };
-  produced_by?: T;
-  license?: T;
-  print_edition_url?: T;
-  legacy_url?: T;
-  meta?:
-    | T
-    | {
-        title?: T;
-        description?: T;
-        image?: T;
-      };
-  updatedAt?: T;
-  createdAt?: T;
-  _status?: T;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "press_select".
- */
-export interface PressSelect<T extends boolean = true> {
-  kind?: T;
-  title?: T;
-  language?: T;
-  outlet?:
-    | T
-    | {
-        name?: T;
-        url?: T;
-        logo?: T;
-      };
-  authors?:
-    | T
-    | {
-        person?: T;
-        name?: T;
-        id?: T;
-      };
-  published_date?: T;
-  date_precision?: T;
-  links?:
-    | T
-    | {
-        language?: T;
-        url?: T;
-        id?: T;
-      };
-  excerpt?: T;
-  legacy_url?: T;
-  updatedAt?: T;
-  createdAt?: T;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "events_select".
- */
-export interface EventsSelect<T extends boolean = true> {
-  tier?: T;
-  event_type?: T;
-  series?: T;
-  programme?: T;
-  course?: T;
-  title?: T;
-  generateSlug?: T;
-  slug?: T;
-  cover_image?: T;
-  description?: T;
-  schedule?:
-    | T
-    | {
-        start_date?: T;
-        start_precision?: T;
-        weeks?: T;
-        slots?:
-          | T
-          | {
-              weekday?: T;
-              start_time?: T;
-              end_time?: T;
-              id?: T;
-            };
-        end_date?: T;
-        note?: T;
-      };
-  place?: T;
-  external_venue?:
-    | T
-    | {
-        name?: T;
-        address?: T;
-        map_url?: T;
-      };
-  online_url?: T;
-  agenda?:
-    | T
-    | {
-        start_time?: T;
-        end_time?: T;
-        title?: T;
-        id?: T;
-      };
-  speakers?:
-    | T
-    | {
-        person?: T;
-        role?: T;
-        id?: T;
-      };
-  registration?:
-    | T
-    | {
-        method?: T;
-        form?: T;
-        url?: T;
-        deadline?: T;
-        archived_registration_url?: T;
-      };
-  pricing?:
-    | T
-    | {
-        min?: T;
-        max?: T;
-        currency?: T;
-        note?: T;
-        need_based_deductions?: T;
-        payment_plans?:
-          | T
-          | {
-              label?: T;
-              installments?:
-                | T
-                | {
-                    amount?: T;
-                    id?: T;
-                  };
-              id?: T;
-            };
-      };
-  legacy_url?: T;
-  meta?:
-    | T
-    | {
-        title?: T;
-        description?: T;
-        image?: T;
-      };
-  updatedAt?: T;
-  createdAt?: T;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "newsletters_select".
- */
-export interface NewslettersSelect<T extends boolean = true> {
-  title?: T;
-  generateSlug?: T;
-  slug?: T;
-  issue_date?: T;
-  cover_image?: T;
-  preheader?: T;
-  body?: T;
-  sections?:
-    | T
-    | {
-        picks?:
-          | T
-          | {
-              heading?: T;
-              items?:
-                | T
-                | {
-                    type?: T;
-                    course?: T;
-                    article?: T;
-                    publication?: T;
-                    cycle?: T;
-                    event?: T;
-                    programme?: T;
-                    note?: T;
-                    id?: T;
-                  };
-              id?: T;
-              blockName?: T;
-            };
-        gallery?:
-          | T
-          | {
-              heading?: T;
-              columns?: T;
-              images?:
-                | T
-                | {
-                    image?: T;
-                    caption?: T;
-                    id?: T;
-                  };
-              id?: T;
-              blockName?: T;
-            };
-        quote?:
-          | T
-          | {
-              text?: T;
-              attribution?: T;
-              id?: T;
-              blockName?: T;
-            };
-        text?:
-          | T
-          | {
-              body?: T;
-              id?: T;
-              blockName?: T;
-            };
-      };
-  send_to?: T;
-  sent_at?: T;
-  broadcast_id?: T;
-  legacy_url?: T;
-  updatedAt?: T;
-  createdAt?: T;
-  _status?: T;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "mailing-lists_select".
- */
-export interface MailingListsSelect<T extends boolean = true> {
-  name?: T;
-  source?: T;
-  members?:
-    | T
-    | {
-        everyone?: T;
-        roles?: T;
-        courses?: T;
-        course_people?: T;
-        programmes?: T;
-        users?: T;
-      };
-  segment_id?: T;
-  topic_id?: T;
-  member_count?: T;
-  last_synced?: T;
-  sync_note?: T;
-  updatedAt?: T;
-  createdAt?: T;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "submission-files_select".
- */
-export interface SubmissionFilesSelect<T extends boolean = true> {
-  field?: T;
-  prefix?: T;
-  _objectKey?: T;
-  updatedAt?: T;
-  createdAt?: T;
-  url?: T;
-  thumbnailURL?: T;
-  filename?: T;
-  mimeType?: T;
-  filesize?: T;
-  width?: T;
-  height?: T;
-  focalX?: T;
-  focalY?: T;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "notifications_select".
- */
-export interface NotificationsSelect<T extends boolean = true> {
-  recipient?: T;
-  kind?: T;
-  title?: T;
-  description?: T;
-  actor_name?: T;
-  actor_photo?: T;
-  link?: T;
-  read_at?: T;
-  updatedAt?: T;
-  createdAt?: T;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "places_select".
- */
-export interface PlacesSelect<T extends boolean = true> {
-  name?: T;
-  generateSlug?: T;
-  slug?: T;
-  state?: T;
-  city?: T;
-  address?: T;
-  map_url?: T;
-  opened_year?: T;
-  closed_year?: T;
-  description?: T;
-  images?:
-    | T
-    | {
-        image?: T;
-        id?: T;
-      };
-  legacy_url?: T;
-  updatedAt?: T;
-  createdAt?: T;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "spaces_select".
- */
-export interface SpacesSelect<T extends boolean = true> {
-  kind?: T;
-  name?: T;
-  audience?: T;
-  course?: T;
-  programme?: T;
-  posting?: T;
-  events?: T;
-  about?: T;
-  privacy_rules?: T;
-  reopened?: T;
-  introduction_post?: T;
-  updatedAt?: T;
-  createdAt?: T;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "space-posts_select".
- */
-export interface SpacePostsSelect<T extends boolean = true> {
-  space?: T;
-  author?: T;
-  kind?: T;
-  body?: T;
-  event_title?: T;
-  event_location?: T;
-  event_starts_at?: T;
-  event_ends_at?: T;
-  event_place?: T;
-  event_cover?: T;
-  event_cover_tone?: T;
-  vote_options?:
-    | T
-    | {
-        label?: T;
-        id?: T;
-      };
-  vote_multiple?: T;
-  vote_closes_at?: T;
-  vote_anonymous?: T;
-  course_session?: T;
-  pinned?: T;
-  pinned_full?: T;
-  locked?: T;
-  announcement_email_sent?: T;
-  edited_at?: T;
-  last_activity_at?: T;
-  deleted_at?: T;
-  updatedAt?: T;
-  createdAt?: T;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "space-comments_select".
- */
-export interface SpaceCommentsSelect<T extends boolean = true> {
-  space?: T;
-  post?: T;
-  parent?: T;
-  author?: T;
-  body?: T;
-  edited_at?: T;
-  deleted_at?: T;
-  updatedAt?: T;
-  createdAt?: T;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "space-files_select".
- */
-export interface SpaceFilesSelect<T extends boolean = true> {
-  space?: T;
-  post?: T;
-  comment?: T;
-  prefix?: T;
-  _objectKey?: T;
-  updatedAt?: T;
-  createdAt?: T;
-  url?: T;
-  thumbnailURL?: T;
-  filename?: T;
-  mimeType?: T;
-  filesize?: T;
-  width?: T;
-  height?: T;
-  focalX?: T;
-  focalY?: T;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "space-reactions_select".
- */
-export interface SpaceReactionsSelect<T extends boolean = true> {
-  space?: T;
-  account?: T;
-  post?: T;
-  comment?: T;
-  reaction?: T;
-  updatedAt?: T;
-  createdAt?: T;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "space-consents_select".
- */
-export interface SpaceConsentsSelect<T extends boolean = true> {
-  account?: T;
-  version?: T;
-  accepted_at?: T;
-  updatedAt?: T;
-  createdAt?: T;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "space-visits_select".
- */
-export interface SpaceVisitsSelect<T extends boolean = true> {
-  account?: T;
-  space?: T;
-  last_visited_at?: T;
-  saw_privacy?: T;
-  introduced?: T;
-  read_pinned?: T;
-  checked_profile?: T;
-  chose_digest?: T;
-  updatedAt?: T;
-  createdAt?: T;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "space-preferences_select".
- */
-export interface SpacePreferencesSelect<T extends boolean = true> {
-  account?: T;
-  digest?: T;
-  updatedAt?: T;
-  createdAt?: T;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "space-votes_select".
- */
-export interface SpaceVotesSelect<T extends boolean = true> {
-  space?: T;
-  account?: T;
-  post?: T;
-  option?: T;
-  updatedAt?: T;
-  createdAt?: T;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "space-rsvps_select".
- */
-export interface SpaceRsvpsSelect<T extends boolean = true> {
-  space?: T;
-  account?: T;
-  post?: T;
-  status?: T;
   updatedAt?: T;
   createdAt?: T;
 }
@@ -3981,28 +2939,1101 @@ export interface FormsSelect<T extends boolean = true> {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "form-submissions_select".
+ * via the `definition` "courses_select".
  */
-export interface FormSubmissionsSelect<T extends boolean = true> {
-  form?: T;
-  submissionData?:
+export interface CoursesSelect<T extends boolean = true> {
+  review?:
     | T
     | {
-        field?: T;
-        value?: T;
+        status?: T;
+        request?: T;
+        review_note?: T;
+      };
+  tier?: T;
+  cover_image?: T;
+  title?: T;
+  generateSlug?: T;
+  slug?: T;
+  legacy_url?: T;
+  subtitle?: T;
+  summary?: T;
+  epigraph?: T;
+  description?: T;
+  fellows?: T;
+  course_type?: T;
+  cycle?: T;
+  location?: T;
+  teaching_languages?: T;
+  language_note?: T;
+  sessions?:
+    | T
+    | {
+        order?: T;
+        session_title?: T;
+        meetings?: T;
+        cancelled?: T;
+        description?: T;
+        dates?:
+          | T
+          | {
+              date?: T;
+              start_time?: T;
+              end_time?: T;
+              id?: T;
+            };
+        bibliography?:
+          | T
+          | {
+              type?: T;
+              title?: T;
+              href?: T;
+              note?: T;
+              id?: T;
+            };
+        activities?:
+          | T
+          | {
+              kind?: T;
+              description?: T;
+              id?: T;
+            };
         id?: T;
       };
-  target?: T;
-  status?: T;
-  decided_at?: T;
-  result?:
+  bibliography?:
     | T
     | {
-        user?: T;
-        person?: T;
-        membership?: T;
-        enrollment?: T;
+        type?: T;
+        title?: T;
+        href?: T;
+        note?: T;
+        id?: T;
       };
+  facilitator_note?: T;
+  content_warning?: T;
+  syllabus_tentative?: T;
+  session_unit?: T;
+  schedule?:
+    | T
+    | {
+        start_date?: T;
+        start_precision?: T;
+        weeks?: T;
+        slots?:
+          | T
+          | {
+              weekday?: T;
+              start_time?: T;
+              end_time?: T;
+              id?: T;
+            };
+        end_date?: T;
+        note?: T;
+      };
+  registration?:
+    | T
+    | {
+        method?: T;
+        form?: T;
+        url?: T;
+        deadline?: T;
+        archived_registration_url?: T;
+      };
+  applicant_questions?:
+    | T
+    | {
+        text?:
+          | T
+          | {
+              name?: T;
+              label?: T;
+              width?: T;
+              defaultValue?: T;
+              required?: T;
+              description?: T;
+              id?: T;
+              blockName?: T;
+            };
+        textarea?:
+          | T
+          | {
+              name?: T;
+              label?: T;
+              width?: T;
+              defaultValue?: T;
+              required?: T;
+              description?: T;
+              image?: T;
+              minWords?: T;
+              id?: T;
+              blockName?: T;
+            };
+        radio?:
+          | T
+          | {
+              name?: T;
+              label?: T;
+              width?: T;
+              defaultValue?: T;
+              options?:
+                | T
+                | {
+                    label?: T;
+                    value?: T;
+                    id?: T;
+                  };
+              required?: T;
+              description?: T;
+              id?: T;
+              blockName?: T;
+            };
+        checkboxGroup?:
+          | T
+          | {
+              name?: T;
+              label?: T;
+              width?: T;
+              defaultValue?: T;
+              options?:
+                | T
+                | {
+                    label?: T;
+                    value?: T;
+                    id?: T;
+                  };
+              required?: T;
+              description?: T;
+              id?: T;
+              blockName?: T;
+            };
+        checkbox?:
+          | T
+          | {
+              name?: T;
+              label?: T;
+              width?: T;
+              required?: T;
+              defaultValue?: T;
+              description?: T;
+              id?: T;
+              blockName?: T;
+            };
+        select?:
+          | T
+          | {
+              name?: T;
+              label?: T;
+              width?: T;
+              defaultValue?: T;
+              placeholder?: T;
+              options?:
+                | T
+                | {
+                    label?: T;
+                    value?: T;
+                    id?: T;
+                  };
+              required?: T;
+              description?: T;
+              id?: T;
+              blockName?: T;
+            };
+        number?:
+          | T
+          | {
+              name?: T;
+              label?: T;
+              width?: T;
+              defaultValue?: T;
+              required?: T;
+              description?: T;
+              id?: T;
+              blockName?: T;
+            };
+        fileUpload?:
+          | T
+          | {
+              name?: T;
+              label?: T;
+              description?: T;
+              accept?: T;
+              maxSizeMB?: T;
+              multiple?: T;
+              required?: T;
+              id?: T;
+              blockName?: T;
+            };
+      };
+  pricing_override?:
+    | T
+    | {
+        min?: T;
+        max?: T;
+        currency?: T;
+        note?: T;
+        need_based_deductions?: T;
+        payment_plans?:
+          | T
+          | {
+              label?: T;
+              installments?:
+                | T
+                | {
+                    amount?: T;
+                    id?: T;
+                  };
+              id?: T;
+            };
+      };
+  enrollments?: T;
+  meta?:
+    | T
+    | {
+        title?: T;
+        description?: T;
+        image?: T;
+      };
+  updatedAt?: T;
+  createdAt?: T;
+  _status?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "cycles_select".
+ */
+export interface CyclesSelect<T extends boolean = true> {
+  title?: T;
+  slug?: T;
+  season?: T;
+  start_year?: T;
+  place?: T;
+  start_date?: T;
+  academic_year?: T;
+  registration?:
+    | T
+    | {
+        method?: T;
+        form?: T;
+        url?: T;
+        deadline?: T;
+        archived_registration_url?: T;
+      };
+  pricing?:
+    | T
+    | {
+        course_types?: T;
+        pricing?:
+          | T
+          | {
+              min?: T;
+              max?: T;
+              currency?: T;
+              note?: T;
+              need_based_deductions?: T;
+              payment_plans?:
+                | T
+                | {
+                    label?: T;
+                    installments?:
+                      | T
+                      | {
+                          amount?: T;
+                          id?: T;
+                        };
+                    id?: T;
+                  };
+            };
+        id?: T;
+      };
+  courses?: T;
+  legacy_url?: T;
+  meta?:
+    | T
+    | {
+        title?: T;
+        description?: T;
+        image?: T;
+      };
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "programmes_select".
+ */
+export interface ProgrammesSelect<T extends boolean = true> {
+  cover?: T;
+  title?: T;
+  generateSlug?: T;
+  slug?: T;
+  legacy_url?: T;
+  tagline?: T;
+  overview?: T;
+  highlights?:
+    | T
+    | {
+        text?: T;
+        id?: T;
+      };
+  testimonials?:
+    | T
+    | {
+        quote?: T;
+        attribution?: T;
+        person?: T;
+        id?: T;
+      };
+  kind?: T;
+  cycles?: T;
+  components?:
+    | T
+    | {
+        label?: T;
+        description?: T;
+        cycle?: T;
+        course_types?: T;
+        id?: T;
+      };
+  capacity?: T;
+  weekly_hours?: T;
+  schedule_note?: T;
+  requirements?: T;
+  registration?:
+    | T
+    | {
+        method?: T;
+        form?: T;
+        url?: T;
+        deadline?: T;
+        archived_registration_url?: T;
+      };
+  pricing?:
+    | T
+    | {
+        min?: T;
+        max?: T;
+        currency?: T;
+        note?: T;
+        need_based_deductions?: T;
+        payment_plans?:
+          | T
+          | {
+              label?: T;
+              installments?:
+                | T
+                | {
+                    amount?: T;
+                    id?: T;
+                  };
+              id?: T;
+            };
+      };
+  meta?:
+    | T
+    | {
+        title?: T;
+        description?: T;
+        image?: T;
+      };
+  updatedAt?: T;
+  createdAt?: T;
+  _status?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "places_select".
+ */
+export interface PlacesSelect<T extends boolean = true> {
+  name?: T;
+  generateSlug?: T;
+  slug?: T;
+  state?: T;
+  city?: T;
+  address?: T;
+  map_url?: T;
+  opened_year?: T;
+  closed_year?: T;
+  description?: T;
+  images?:
+    | T
+    | {
+        image?: T;
+        id?: T;
+      };
+  legacy_url?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "articles_select".
+ */
+export interface ArticlesSelect<T extends boolean = true> {
+  title?: T;
+  generateSlug?: T;
+  slug?: T;
+  cover_image?: T;
+  review?:
+    | T
+    | {
+        status?: T;
+        request?: T;
+        review_note?: T;
+      };
+  requested_tier?: T;
+  tier?: T;
+  published_date?: T;
+  featured?: T;
+  legacy_url?: T;
+  body?: T;
+  authors?: T;
+  credits?:
+    | T
+    | {
+        role?: T;
+        label?: T;
+        people?: T;
+        id?: T;
+      };
+  translation?:
+    | T
+    | {
+        original_language?: T;
+        original_title?: T;
+        original_authors?: T;
+        original_url?: T;
+        original_source?: T;
+        note?: T;
+      };
+  tags?:
+    | T
+    | {
+        tag?: T;
+        id?: T;
+      };
+  related_articles?: T;
+  publications?: T;
+  meta?:
+    | T
+    | {
+        title?: T;
+        description?: T;
+        image?: T;
+      };
+  updatedAt?: T;
+  createdAt?: T;
+  _status?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "publications_select".
+ */
+export interface PublicationsSelect<T extends boolean = true> {
+  review?:
+    | T
+    | {
+        status?: T;
+        request?: T;
+        review_note?: T;
+      };
+  cover_image?: T;
+  title?: T;
+  generateSlug?: T;
+  slug?: T;
+  legacy_url?: T;
+  subtitle?: T;
+  intro?: T;
+  kind?: T;
+  articles?: T;
+  editors?: T;
+  credits?:
+    | T
+    | {
+        role?: T;
+        label?: T;
+        people?: T;
+        id?: T;
+      };
+  produced_by?: T;
+  license?: T;
+  print_edition_url?: T;
+  meta?:
+    | T
+    | {
+        title?: T;
+        description?: T;
+        image?: T;
+      };
+  updatedAt?: T;
+  createdAt?: T;
+  _status?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "press_select".
+ */
+export interface PressSelect<T extends boolean = true> {
+  kind?: T;
+  title?: T;
+  language?: T;
+  outlet?:
+    | T
+    | {
+        name?: T;
+        url?: T;
+        logo?: T;
+      };
+  authors?:
+    | T
+    | {
+        person?: T;
+        name?: T;
+        id?: T;
+      };
+  published_date?: T;
+  date_precision?: T;
+  links?:
+    | T
+    | {
+        language?: T;
+        url?: T;
+        id?: T;
+      };
+  excerpt?: T;
+  legacy_url?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "newsletters_select".
+ */
+export interface NewslettersSelect<T extends boolean = true> {
+  title?: T;
+  generateSlug?: T;
+  slug?: T;
+  issue_date?: T;
+  cover_image?: T;
+  legacy_url?: T;
+  preheader?: T;
+  body?: T;
+  sections?:
+    | T
+    | {
+        picks?:
+          | T
+          | {
+              heading?: T;
+              items?:
+                | T
+                | {
+                    type?: T;
+                    course?: T;
+                    article?: T;
+                    publication?: T;
+                    cycle?: T;
+                    event?: T;
+                    programme?: T;
+                    note?: T;
+                    id?: T;
+                  };
+              id?: T;
+              blockName?: T;
+            };
+        gallery?:
+          | T
+          | {
+              heading?: T;
+              columns?: T;
+              images?:
+                | T
+                | {
+                    image?: T;
+                    caption?: T;
+                    id?: T;
+                  };
+              id?: T;
+              blockName?: T;
+            };
+        quote?:
+          | T
+          | {
+              text?: T;
+              attribution?: T;
+              id?: T;
+              blockName?: T;
+            };
+        text?:
+          | T
+          | {
+              body?: T;
+              id?: T;
+              blockName?: T;
+            };
+      };
+  send_to?: T;
+  sent_at?: T;
+  broadcast_id?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  _status?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "mailing-lists_select".
+ */
+export interface MailingListsSelect<T extends boolean = true> {
+  name?: T;
+  source?: T;
+  members?:
+    | T
+    | {
+        everyone?: T;
+        roles?: T;
+        courses?: T;
+        course_people?: T;
+        programmes?: T;
+        users?: T;
+      };
+  segment_id?: T;
+  topic_id?: T;
+  member_count?: T;
+  last_synced?: T;
+  sync_note?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "people_select".
+ */
+export interface PeopleSelect<T extends boolean = true> {
+  name?: T;
+  generateSlug?: T;
+  slug?: T;
+  visible?: T;
+  photo?: T;
+  legacy_url?: T;
+  bio?: T;
+  website?: T;
+  social_links?:
+    | T
+    | {
+        platform?: T;
+        url?: T;
+        id?: T;
+      };
+  courses?: T;
+  memberships?: T;
+  enrollments?: T;
+  governance?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "users_select".
+ */
+export interface UsersSelect<T extends boolean = true> {
+  sub?: T;
+  person?: T;
+  roles?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  email?: T;
+  resetPasswordToken?: T;
+  resetPasswordExpiration?: T;
+  salt?: T;
+  hash?: T;
+  resetPasswordRequestedAt?: T;
+  loginAttempts?: T;
+  lockUntil?: T;
+  sessions?:
+    | T
+    | {
+        id?: T;
+        createdAt?: T;
+        expiresAt?: T;
+      };
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "governance_select".
+ */
+export interface GovernanceSelect<T extends boolean = true> {
+  person?: T;
+  role?: T;
+  title?: T;
+  board_role?: T;
+  advises_on?: T;
+  term_from?: T;
+  term_to?: T;
+  order?: T;
+  legacy_url?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "media_select".
+ */
+export interface MediaSelect<T extends boolean = true> {
+  alt?: T;
+  legacy_url?: T;
+  prefix?: T;
+  _objectKey?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  url?: T;
+  thumbnailURL?: T;
+  filename?: T;
+  mimeType?: T;
+  filesize?: T;
+  width?: T;
+  height?: T;
+  focalX?: T;
+  focalY?: T;
+  sizes?:
+    | T
+    | {
+        thumbnail?:
+          | T
+          | {
+              url?: T;
+              width?: T;
+              height?: T;
+              mimeType?: T;
+              filesize?: T;
+              filename?: T;
+            };
+        card?:
+          | T
+          | {
+              url?: T;
+              width?: T;
+              height?: T;
+              mimeType?: T;
+              filesize?: T;
+              filename?: T;
+            };
+      };
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "redirects_select".
+ */
+export interface RedirectsSelect<T extends boolean = true> {
+  from?: T;
+  to?:
+    | T
+    | {
+        type?: T;
+        reference?: T;
+        url?: T;
+      };
+  type?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "events_select".
+ */
+export interface EventsSelect<T extends boolean = true> {
+  tier?: T;
+  title?: T;
+  generateSlug?: T;
+  slug?: T;
+  cover_image?: T;
+  legacy_url?: T;
+  description?: T;
+  event_type?: T;
+  speakers?:
+    | T
+    | {
+        person?: T;
+        role?: T;
+        id?: T;
+      };
+  schedule?:
+    | T
+    | {
+        mode?: T;
+        start_date?: T;
+        start_precision?: T;
+        weeks?: T;
+        start_time?: T;
+        end_time?: T;
+        slots?:
+          | T
+          | {
+              weekday?: T;
+              start_time?: T;
+              end_time?: T;
+              id?: T;
+            };
+        end_date?: T;
+        note?: T;
+      };
+  place?: T;
+  external_venue?:
+    | T
+    | {
+        name?: T;
+        address?: T;
+        map_url?: T;
+      };
+  online_url?: T;
+  agenda?:
+    | T
+    | {
+        start_time?: T;
+        end_time?: T;
+        title?: T;
+        id?: T;
+      };
+  registration?:
+    | T
+    | {
+        method?: T;
+        form?: T;
+        url?: T;
+        deadline?: T;
+        archived_registration_url?: T;
+      };
+  pricing?:
+    | T
+    | {
+        min?: T;
+        max?: T;
+        currency?: T;
+        note?: T;
+        need_based_deductions?: T;
+        payment_plans?:
+          | T
+          | {
+              label?: T;
+              installments?:
+                | T
+                | {
+                    amount?: T;
+                    id?: T;
+                  };
+              id?: T;
+            };
+      };
+  series?: T;
+  programme?: T;
+  course?: T;
+  meta?:
+    | T
+    | {
+        title?: T;
+        description?: T;
+        image?: T;
+      };
+  updatedAt?: T;
+  createdAt?: T;
+  _status?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "submission-files_select".
+ */
+export interface SubmissionFilesSelect<T extends boolean = true> {
+  field?: T;
+  prefix?: T;
+  _objectKey?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  url?: T;
+  thumbnailURL?: T;
+  filename?: T;
+  mimeType?: T;
+  filesize?: T;
+  width?: T;
+  height?: T;
+  focalX?: T;
+  focalY?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "notifications_select".
+ */
+export interface NotificationsSelect<T extends boolean = true> {
+  recipient?: T;
+  kind?: T;
+  title?: T;
+  description?: T;
+  actor_name?: T;
+  actor_photo?: T;
+  link?: T;
+  read_at?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "spaces_select".
+ */
+export interface SpacesSelect<T extends boolean = true> {
+  kind?: T;
+  name?: T;
+  audience?: T;
+  course?: T;
+  programme?: T;
+  posting?: T;
+  events?: T;
+  about?: T;
+  privacy_rules?: T;
+  reopened?: T;
+  introduction_post?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "space-posts_select".
+ */
+export interface SpacePostsSelect<T extends boolean = true> {
+  space?: T;
+  author?: T;
+  kind?: T;
+  body?: T;
+  event_title?: T;
+  event_location?: T;
+  event_starts_at?: T;
+  event_ends_at?: T;
+  event_place?: T;
+  event_cover?: T;
+  event_cover_tone?: T;
+  vote_options?:
+    | T
+    | {
+        label?: T;
+        id?: T;
+      };
+  vote_multiple?: T;
+  vote_closes_at?: T;
+  vote_anonymous?: T;
+  course_session?: T;
+  pinned?: T;
+  pinned_full?: T;
+  locked?: T;
+  announcement_email_sent?: T;
+  edited_at?: T;
+  last_activity_at?: T;
+  deleted_at?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "space-comments_select".
+ */
+export interface SpaceCommentsSelect<T extends boolean = true> {
+  space?: T;
+  post?: T;
+  parent?: T;
+  author?: T;
+  body?: T;
+  edited_at?: T;
+  deleted_at?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "space-files_select".
+ */
+export interface SpaceFilesSelect<T extends boolean = true> {
+  space?: T;
+  post?: T;
+  comment?: T;
+  prefix?: T;
+  _objectKey?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  url?: T;
+  thumbnailURL?: T;
+  filename?: T;
+  mimeType?: T;
+  filesize?: T;
+  width?: T;
+  height?: T;
+  focalX?: T;
+  focalY?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "space-reactions_select".
+ */
+export interface SpaceReactionsSelect<T extends boolean = true> {
+  space?: T;
+  account?: T;
+  post?: T;
+  comment?: T;
+  reaction?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "space-consents_select".
+ */
+export interface SpaceConsentsSelect<T extends boolean = true> {
+  account?: T;
+  version?: T;
+  accepted_at?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "space-visits_select".
+ */
+export interface SpaceVisitsSelect<T extends boolean = true> {
+  account?: T;
+  space?: T;
+  last_visited_at?: T;
+  saw_privacy?: T;
+  introduced?: T;
+  read_pinned?: T;
+  checked_profile?: T;
+  chose_digest?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "space-preferences_select".
+ */
+export interface SpacePreferencesSelect<T extends boolean = true> {
+  account?: T;
+  digest?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "space-votes_select".
+ */
+export interface SpaceVotesSelect<T extends boolean = true> {
+  space?: T;
+  account?: T;
+  post?: T;
+  option?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "space-rsvps_select".
+ */
+export interface SpaceRsvpsSelect<T extends boolean = true> {
+  space?: T;
+  account?: T;
+  post?: T;
+  status?: T;
   updatedAt?: T;
   createdAt?: T;
 }
@@ -4064,23 +4095,6 @@ export interface ImportsSelect<T extends boolean = true> {
   height?: T;
   focalX?: T;
   focalY?: T;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "redirects_select".
- */
-export interface RedirectsSelect<T extends boolean = true> {
-  from?: T;
-  to?:
-    | T
-    | {
-        type?: T;
-        reference?: T;
-        url?: T;
-      };
-  type?: T;
-  updatedAt?: T;
-  createdAt?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -4187,6 +4201,16 @@ export interface SiteSetting {
     calendar?: boolean | null;
   };
   /**
+   * Shown on the home page, in this order.
+   */
+  faq?:
+    | {
+        question: string;
+        answer: string;
+        id?: string | null;
+      }[]
+    | null;
+  /**
    * Off: space pages return not found and writes are refused; data stays. Trial: only the chosen courses, plus the community and cohort checkboxes. On: every space.
    */
   spaces_mode: 'off' | 'trial' | 'on';
@@ -4199,16 +4223,6 @@ export interface SiteSetting {
    * In Trial, only these programmes have a cohort space.
    */
   spaces_trial_cohorts?: (number | Programme)[] | null;
-  /**
-   * Shown on the home page, in this order.
-   */
-  faq?:
-    | {
-        question: string;
-        answer: string;
-        id?: string | null;
-      }[]
-    | null;
   updatedAt?: string | null;
   createdAt?: string | null;
 }
@@ -4376,10 +4390,6 @@ export interface SiteSettingsSelect<T extends boolean = true> {
         events?: T;
         calendar?: T;
       };
-  spaces_mode?: T;
-  spaces_trial_courses?: T;
-  spaces_trial_community?: T;
-  spaces_trial_cohorts?: T;
   faq?:
     | T
     | {
@@ -4387,6 +4397,10 @@ export interface SiteSettingsSelect<T extends boolean = true> {
         answer?: T;
         id?: T;
       };
+  spaces_mode?: T;
+  spaces_trial_courses?: T;
+  spaces_trial_community?: T;
+  spaces_trial_cohorts?: T;
   updatedAt?: T;
   createdAt?: T;
   globalType?: T;
