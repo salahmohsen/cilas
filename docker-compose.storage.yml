@@ -1,0 +1,32 @@
+services:
+  storage:
+    image: rustfs/rustfs:1.0.4@sha256:ed9210d6411d77ffceb70d94b964a3cb7d225983368bc25bebe01e995293dcc2
+    restart: unless-stopped
+    command: ['/data']
+    environment:
+      RUSTFS_ACCESS_KEY: ${RUSTFS_ACCESS_KEY:?Run the local storage clone script first}
+      RUSTFS_SECRET_KEY: ${RUSTFS_SECRET_KEY:?Run the local storage clone script first}
+      RUSTFS_ADDRESS: ':9000'
+      RUSTFS_CONSOLE_ADDRESS: ':9001'
+      RUSTFS_CONSOLE_ENABLE: 'true'
+      RUSTFS_OBS_LOGGER_LEVEL: warn
+    ports:
+      - '127.0.0.1:19002:9000'
+      - '127.0.0.1:19003:9001'
+    volumes:
+      - storage-data:/data
+    healthcheck:
+      test: ['CMD', 'curl', '--fail', '--silent', 'http://localhost:9000/health']
+      interval: 5s
+      timeout: 3s
+      retries: 30
+      start_period: 10s
+    logging:
+      driver: json-file
+      options:
+        max-size: 10m
+        max-file: '3'
+
+volumes:
+  storage-data:
+    name: cilas-local-s3-data

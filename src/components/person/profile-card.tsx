@@ -3,20 +3,13 @@ import { ArrowRight } from 'lucide-react'
 import { useLocale, useTranslations } from 'next-intl'
 
 import { AvatarImage } from '@/components/person/avatar-image'
+import { SocialLinks } from '@/components/person/social-links'
 import { personAvatarSeed } from '@/lib/avatar'
 import { focalPointStyle } from '@/lib/media-image'
-import { locationUrl } from '@/lib/space-event'
 import { EVENT_POSTER_COLORS } from '@/lib/event-poster-colors'
 import type { Person } from '@/payload-types'
 import styles from './profile-card.module.css'
 
-const SOCIAL_NAMES = {
-  facebook: 'Facebook',
-  x: 'X',
-  youtube: 'YouTube',
-  instagram: 'Instagram',
-  linkedin: 'LinkedIn',
-}
 const PROFILE_COLORS = [
   EVENT_POSTER_COLORS.panel,
   EVENT_POSTER_COLORS.book_discussion,
@@ -28,11 +21,6 @@ export function ProfileCard({ person, children }: { person: Person; children?: R
   const t = useTranslations('Person')
   const locale = useLocale()
   const photo = typeof person.photo === 'object' ? person.photo : null
-  const website = locationUrl(person.website)
-  const links = (person.social_links ?? []).flatMap((link) => {
-    const href = locationUrl(link.url)
-    return href ? [{ href, label: SOCIAL_NAMES[link.platform] }] : []
-  })
   return (
     <article
       className={`poster ${styles.card} not-prose`}
@@ -55,16 +43,7 @@ export function ProfileCard({ person, children }: { person: Person; children?: R
       </h3>
       <div className={styles.body}>{children}</div>
       <footer className={styles.links}>
-        {website && (
-          <a href={website} target="_blank" rel="noopener noreferrer">
-            {t('website')}
-          </a>
-        )}
-        {links.map(({ href, label }) => (
-          <a href={href} key={`${label}-${href}`} target="_blank" rel="noopener noreferrer">
-            {label}
-          </a>
-        ))}
+        <SocialLinks person={person} websiteLabel={t('website')} />
         <a
           href={`/${locale}/people/${person.slug}`}
           className={`${styles.action} poster-action-cell`}

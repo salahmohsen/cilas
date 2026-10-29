@@ -12,6 +12,9 @@ import type { Payload } from 'payload'
 
 import { getRelatedArticles, type Locale } from '@/api/articles.api'
 import { resolveMentions, type ResolvedMention } from '@/api/mentions.api'
+import { resolveRichTextReferences } from '@/api/rich-text-references.api'
+import { referenceKey } from '@/lib/rich-text-references'
+import { defaultEditorFeatures } from '@/lexical/default-features'
 import { COURSE_TYPE_OPTIONS } from '@/fields/course-type'
 import { env } from '@/env'
 import { WEEKDAYS } from '@/lib/cairo-day'
@@ -74,7 +77,10 @@ export const factsList = (facts: Array<[string, string | null | undefined]>): st
     .join('\n')
 
 export const bulletList = (items: Array<string | null | undefined>): string =>
-  items.filter(Boolean).map((item) => `- ${item}`).join('\n')
+  items
+    .filter(Boolean)
+    .map((item) => `- ${item}`)
+    .join('\n')
 
 const BIBLIOGRAPHY_LABELS: Record<string, Record<Locale, string>> = {
   reading: { en: 'Reading', ar: 'قراءة' },
@@ -92,13 +98,15 @@ export const bibliographyLine = (
   locale: Locale,
 ): string | null => {
   if (!item?.title) return null
-  const kind = BIBLIOGRAPHY_LABELS[item.type ?? 'other']?.[locale] ?? BIBLIOGRAPHY_LABELS.other[locale]
+  const kind =
+    BIBLIOGRAPHY_LABELS[item.type ?? 'other']?.[locale] ?? BIBLIOGRAPHY_LABELS.other[locale]
   const note = item.note ? ` — ${item.note}` : ''
   const href = item.href ? `. ${item.href.trim()}` : ''
   return `- [${kind}] ${item.title}${note}${href}`
 }
 
-const markdownHref = (text: string, link: string | null): string => (link ? `[${text}](${link})` : text)
+const markdownHref = (text: string, link: string | null): string =>
+  link ? `[${text}](${link})` : text
 
 const personLink = (l: SiteLink, person: Person | null | undefined): string | null => {
   if (!person?.name && !person?.slug) return null
@@ -252,8 +260,12 @@ const toMarkdown = async (
   if (!data || typeof data !== 'object' || !('root' in data)) return ''
   const base = await (options.features
     ? editorConfigFactory.fromFeatures({ config: payload.config, features: options.features })
-    : editorConfigFactory.default({ config: payload.config }))
+    : editorConfigFactory.fromFeatures({ config: payload.config, features: defaultEditorFeatures }))
   const editorConfig = withExtraTransformers(base)
+  const references = await resolveRichTextReferences(payload, data, {
+    locale: l.locale,
+    user: null,
+  })
 
   editorConfig.features.markdownTransformers.push(
     {
@@ -289,6 +301,13 @@ const toMarkdown = async (
       export: (node) => {
         const f = fieldsOf(node)
         if (!$isServerBlockNode(node)) return null
+        if (f.blockType === 'relatedContent') {
+          const ref = (f as { document?: { relationTo: string; value: unknown } }).document
+          const resolved = ref && references[referenceKey(ref.relationTo, ref.value)]
+          return resolved
+            ? `${markdownHref(resolved.preview.title, mentionUrl(l, resolved))}${resolved.preview.text ? `: ${resolved.preview.text}` : ''}`
+            : ''
+        }
         return `[Card: ${String(f.label || f.blockType || 'cards')}]`
       },
     },
@@ -315,7 +334,8 @@ const toMarkdown = async (
   )
 }
 
-export const endnotesOf = async (  payload: Payload,
+export const endnotesOf = async (
+  payload: Payload,
   body: unknown,
   l: SiteLink,
 ): Promise<Array<{ id: string; number: number; markdown: string }>> => {
@@ -390,7 +410,10 @@ export const courseDocument = async (
         .join(locale === 'ar' ? '، ' : ', ') || null,
     ],
     [locale === 'ar' ? 'ملاحظة اللغة' : 'Language note', course.language_note || null],
-    [locale === 'ar' ? 'السعر' : 'Price', price ? `${price}${priceNote ? ` — ${priceNote}` : ''}` : null],
+    [
+      locale === 'ar' ? 'السعر' : 'Price',
+      price ? `${price}${priceNote ? ` — ${priceNote}` : ''}` : null,
+    ],
     [t.registerDeadline, registration?.deadline ?? cycle?.registration?.deadline ?? null],
     [
       locale === 'ar' ? 'التقديم' : 'Apply',
@@ -414,7 +437,9 @@ export const courseDocument = async (
 
   const description = await toMarkdown(payload, course.description?.description, l)
 
-  const fellows = (course.fellows ?? []).filter((p): p is Person => typeof p === 'object' && p !== null)
+  const fellows = (course.fellows ?? []).filter(
+    (p): p is Person => typeof p === 'object' && p !== null,
+  )
   const fellowBlocks = await Promise.all(
     fellows.map(async (fellow) => {
       const name = personName(fellow)
@@ -474,9 +499,7 @@ export const courseDocument = async (
         ? [
             {
               heading: t.notes,
-              body: [course.facilitator_note, course.content_warning]
-                .filter(Boolean)
-                .join('\n'),
+              body: [course.facilitator_note, course.content_warning].filter(Boolean).join('\n'),
             },
           ]
         : []),
@@ -484,10 +507,7 @@ export const courseDocument = async (
         ? [
             {
               heading: t.syllabus,
-              body: [
-                ...(course.syllabus_tentative ? [t.syllabusMayChange] : []),
-                ...sessionBlocks,
-              ]
+              body: [...(course.syllabus_tentative ? [t.syllabusMayChange] : []), ...sessionBlocks]
                 .filter(Boolean)
                 .join('\n\n'),
             },
@@ -527,22 +547,31 @@ export const articleDocument = async (
         .filter(Boolean)
         .join(' · ') || null,
     ],
-    [t.tags, (article.tags ?? []).map((x) => x.tag).filter(Boolean).join(', ') || null],
+    [
+      t.tags,
+      (article.tags ?? [])
+        .map((x) => x.tag)
+        .filter(Boolean)
+        .join(', ') || null,
+    ],
     [
       t.publication,
       (article.publications?.docs ?? [])
         .filter((p): p is Publication => typeof p === 'object' && p !== null && Boolean(p.slug))
-        .map((p) => markdownHref(p.title, `${l.serverUrl.replace(/\/+$/, '')}/${l.locale}/articles?publication=${encodeURIComponent(p.slug)}`))
+        .map((p) =>
+          markdownHref(
+            p.title,
+            `${l.serverUrl.replace(/\/+$/, '')}/${l.locale}/articles?publication=${encodeURIComponent(p.slug)}`,
+          ),
+        )
         .join(', ') || null,
     ],
-    ...(((hasOriginal && translation)
+    ...((hasOriginal && translation
       ? [
           [
             t.original,
             [
-              translation.original_language && originalLanguage
-                ? `(${originalLanguage})`
-                : null,
+              translation.original_language && originalLanguage ? `(${originalLanguage})` : null,
               translation.original_title ? `“${translation.original_title}”` : null,
               namesLinks(l, translation.original_authors),
               translation.original_source,
@@ -551,10 +580,7 @@ export const articleDocument = async (
               .join(' — ') || null,
           ],
           [locale === 'ar' ? 'الرابط' : 'Link', translation.original_url ?? null],
-          [
-            locale === 'ar' ? 'ملاحظة المترجم' : 'Translation note',
-            translation.note ?? null,
-          ],
+          [locale === 'ar' ? 'ملاحظة المترجم' : 'Translation note', translation.note ?? null],
         ]
       : []) as Array<[string, string | null | undefined]>),
   ]) as never

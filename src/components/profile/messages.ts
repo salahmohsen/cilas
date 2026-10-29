@@ -8,6 +8,7 @@ export const PROFILE_MESSAGE_KEYS = [
   'nameAr',
   'bioEn',
   'bioAr',
+  'bioReadOnly',
   'website',
   'social',
   'platform',

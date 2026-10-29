@@ -1,4 +1,6 @@
 import type { CollectionConfig, Field } from 'payload'
+import { lexicalEditor } from '@payloadcms/richtext-lexical'
+import { emailEditorFeatures } from '@/lexical/email-features'
 
 import { isAdmin, publishedOrAdmin } from '@/access'
 import { slugField } from '@/fields/slug'
@@ -47,6 +49,7 @@ export const Newsletters: CollectionConfig = {
     {
       name: 'body',
       type: 'richText',
+      editor: lexicalEditor({ features: emailEditorFeatures }),
       localized: true,
       admin: { description: 'The intro, above the picks.' },
     },
@@ -143,7 +146,14 @@ export const Newsletters: CollectionConfig = {
         {
           slug: 'text',
           labels: { singular: 'Text', plural: 'Texts' },
-          fields: [{ name: 'body', type: 'richText', required: true }],
+          fields: [
+            {
+              name: 'body',
+              type: 'richText',
+              required: true,
+              editor: lexicalEditor({ features: emailEditorFeatures }),
+            },
+          ],
         },
       ],
     },

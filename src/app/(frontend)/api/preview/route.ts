@@ -3,9 +3,9 @@ import { draftMode } from 'next/headers'
 import { headers as getHeaders } from 'next/headers.js'
 import { redirect } from 'next/navigation'
 import { getPayload } from 'payload'
-import type { PayloadRequest } from 'payload'
 
 import { pathOf } from '@/lib/paths'
+import { previewWhere } from '@/lib/preview-access'
 
 /**
  * Turns on Next's draft mode and sends the admin live-preview iframe to the
@@ -33,22 +33,21 @@ export async function GET(request: Request) {
     return new Response('You are not allowed to preview this page', { status: 403 })
   }
 
-  const req = { user } as PayloadRequest
-
   // Editing a course is admin, or a fellow listed on it; an article, admin or
   // one of its authors. The live preview renders the whole document, so the
   // same bar applies to it.
-  const canUpdate = await payload.collections[collection].config.access.update?.({ req })
+  const canUpdate = await previewWhere(payload, collection, user)
   if (!canUpdate) {
     return new Response('You are not allowed to preview this page', { status: 403 })
   }
 
   const { docs } = await payload.find({
     collection,
-    where: { slug: { equals: slug } },
+    where: { and: [{ slug: { equals: slug } }, canUpdate] },
     limit: 1,
     depth: 0,
-    overrideAccess: true,
+    overrideAccess: false,
+    user,
     draft: true,
   })
 

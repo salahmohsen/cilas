@@ -1,8 +1,18 @@
 import { createEnv } from '@t3-oss/env-nextjs'
 import * as z from 'zod'
 
-// The Payload CLI loads .env but tsx scripts (db:seed, db:migrate:create) do
-// not. This covers both without overriding a real environment.
+// Match Next's local overrides for scripts too. Explicit environment wins;
+// tests use only their supplied environment and .env, as Next does.
+if (process.env.NODE_ENV === 'development') {
+  try {
+    process.loadEnvFile('.env.development.local')
+  } catch {}
+}
+if (process.env.NODE_ENV !== 'test') {
+  try {
+    process.loadEnvFile('.env.local')
+  } catch {}
+}
 try {
   process.loadEnvFile('.env')
 } catch {}
@@ -18,6 +28,7 @@ export const env = createEnv({
     R2_SECRET_ACCESS_KEY: z.string().min(1),
     R2_ENDPOINT: z.url(),
     R2_PUBLIC_URL: z.url(),
+    R2_REGION: z.string().min(1).default('auto'),
 
     // Optional: without it Payload logs emails to the console (fine in dev).
     RESEND_API_KEY: z.string().min(1).optional(),
@@ -84,3 +95,10 @@ export const env = createEnv({
   // failing later inside the AWS SDK.
   emptyStringAsUndefined: true,
 })
+
+if (process.env.NODE_ENV === 'production') {
+  const storage = new URL(env.R2_ENDPOINT)
+  if (storage.protocol !== 'https:' || !storage.hostname.endsWith('.r2.cloudflarestorage.com')) {
+    throw new Error('Production storage must use a Cloudflare R2 HTTPS endpoint')
+  }
+}

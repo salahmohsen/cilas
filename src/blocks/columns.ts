@@ -3,6 +3,10 @@ import type { Block, Field } from 'payload'
 
 import { PersonProfile } from './person-profile'
 import { Movie } from './movie'
+import { Gallery } from './gallery'
+import { RelatedContent } from './related-content'
+import { Mention } from './mention'
+import { legacyRelationshipFeature } from '@/lexical/legacy-features'
 
 export const Columns: Block = {
   slug: 'columns',
@@ -42,13 +46,17 @@ export const Columns: Block = {
         required: index < 2,
         editor: lexicalEditor({
           features: ({ defaultFeatures }) => [
-            ...defaultFeatures,
-            BlocksFeature({ blocks: [PersonProfile, Movie] }),
+            ...defaultFeatures.filter((feature) => feature.key !== 'relationship'),
+            legacyRelationshipFeature(),
+            BlocksFeature({
+              blocks: [PersonProfile, Movie, Gallery, RelatedContent],
+              inlineBlocks: [Mention],
+            }),
           ],
         }),
         admin: {
           width: '50%',
-          description: 'Add text, an image, or a Person profile block.',
+          description: 'Add text, an image, a gallery, a movie, or a Person profile block.',
           condition: (_, sibling) => index < Number(sibling?.columnCount ?? 2),
         },
       })),

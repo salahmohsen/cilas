@@ -208,6 +208,7 @@ export function BlogCardBody({
   imageLayoutId,
   imageFallback,
   eager = false,
+  imageSizing = 'ratio',
 }: {
   post: BlogPost
   featured?: boolean
@@ -216,11 +217,18 @@ export function BlogCardBody({
   /** Shown in the image frame of a post without an image, so every card keeps its frame. */
   imageFallback?: () => ReactNode
   eager?: boolean
+  /** Match a featured card's image height to its text instead of imposing an aspect ratio. */
+  imageSizing?: 'ratio' | 'content'
 }) {
   return (
     <>
       {post.image ? (
-        <motion.div layoutId={imageLayoutId} transition={morph} className={styles.imageFrame}>
+        <motion.div
+          layoutId={imageLayoutId}
+          transition={morph}
+          className={styles.imageFrame}
+          data-image-sizing={imageSizing}
+        >
           <img
             className={styles.image}
             src={post.image.src}

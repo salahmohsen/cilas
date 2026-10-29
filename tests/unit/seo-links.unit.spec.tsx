@@ -4,6 +4,8 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { Pagination } from '@/components/arc/pagination/pagination'
 import { BlogGrid } from '@/components/arc/blocks/blog-grid/blog-grid'
 import { RichTextField } from '@/components/RichTextField'
+import { RichTextReferencesProvider } from '@/components/rich-text-references'
+import type { RichTextReferences } from '@/lib/rich-text-references'
 
 vi.mock('motion/react', async (original) => ({
   ...(await original<typeof import('motion/react')>()),
@@ -103,15 +105,17 @@ const content = (fields: object) => ({
 })
 
 describe('rich-text internal links', () => {
-  const body = (fields: object, plain = false) =>
+  const body = (fields: object, plain = false, references: RichTextReferences = {}) =>
     render(
       <NextIntlClientProvider locale="ar" messages={{}}>
-        <RichTextField data={content(fields)} plain={plain} />
+        <RichTextReferencesProvider references={references}>
+          <RichTextField data={content(fields)} plain={plain} />
+        </RichTextReferencesProvider>
       </NextIntlClientProvider>,
     )
 
   it.each([false, true])(
-    'resolves populated document routes in the reader locale, plain=%s',
+    'localizes authorized document routes in the reader locale, plain=%s',
     (plain) => {
       body(
         {
@@ -123,6 +127,12 @@ describe('rich-text internal links', () => {
           },
         },
         plain,
+        {
+          'courses:1': {
+            href: '/study/plato',
+            preview: { kind: 'course', title: 'Plato', text: '', image: null, meta: null },
+          },
+        },
       )
       const link = screen.getByRole('link', { name: 'Read this' })
       expect(link).toHaveAttribute('href', '/ar/study/plato')
@@ -137,6 +147,10 @@ describe('rich-text internal links', () => {
     { relationTo: 'users', value: { slug: 'someone' } },
     { relationTo: 'people', value: { slug: 'hidden', visible: false } },
     { relationTo: 'courses', value: { slug: 'private', tier: 'owner' } },
+    {
+      relationTo: 'courses',
+      value: { id: 1, slug: 'plato', tier: 'public', _status: 'published' },
+    },
   ])('keeps unavailable target text without inventing a link, %j', (doc) => {
     const { container } = body({ linkType: 'internal', doc })
     expect(container.textContent).toContain('Read this')

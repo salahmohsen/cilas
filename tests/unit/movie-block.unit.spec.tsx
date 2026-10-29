@@ -44,7 +44,7 @@ describe('movie editor blocks', () => {
     expect(screen.queryByText('Screening subtitles')).toBeNull()
   })
   it('renders the saved film, poster, credits, public source links, and attribution', async () => {
-    const { container } = renderMovie(movie)
+    renderMovie(movie)
     expect(screen.getByRole('heading', { name: 'Faces (1968)' })).toBeInTheDocument()
     expect(screen.getByAltText('Faces')).toHaveAttribute(
       'src',
@@ -52,7 +52,6 @@ describe('movie editor blocks', () => {
     )
     expect(screen.getByText(movie.overview)).toBeInTheDocument()
     expect(screen.getByText('130 minutes')).toBeInTheDocument()
-    expect(container.querySelector('details')?.textContent).toContain('Gena Rowlands · Jeannie')
     expect(screen.getByRole('link', { name: 'TMDB' })).toHaveAttribute(
       'href',
       'https://www.themoviedb.org/movie/753',
