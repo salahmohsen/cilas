@@ -36,7 +36,11 @@ const content = (reviewedBody = 'Imported over a reviewed article'): ArchiveCont
       match_titles_en: [],
       blocks_en: [
         { type: 'heading', level: 2, text: 'English heading' },
-        { type: 'paragraph', level: null, text: 'English first paragraph with a [link](https://example.org/x).' },
+        {
+          type: 'paragraph',
+          level: null,
+          text: 'English first paragraph with a [link](https://example.org/x).',
+        },
         { type: 'quote', level: null, text: 'An English quote' },
       ],
       blocks_ar: [
@@ -45,7 +49,13 @@ const content = (reviewedBody = 'Imported over a reviewed article'): ArchiveCont
         { type: 'quote', level: null, text: 'اقتباس عربي' },
       ],
       authors: ['Probe Content Author'],
-      credits: [{ role: 'translator', label: { en: 'Translation', ar: 'ترجمة' }, people: ['Probe Content Translator'] }],
+      credits: [
+        {
+          role: 'translator',
+          label: { en: 'Translation', ar: 'ترجمة' },
+          people: ['Probe Content Translator'],
+        },
+      ],
       translation: null,
       publication: L.publication,
       published_date: null,
@@ -60,7 +70,12 @@ const content = (reviewedBody = 'Imported over a reviewed article'): ArchiveCont
       blocks_ar: [{ type: 'paragraph', level: null, text: 'نص عربي فقط' }],
       authors: ['Probe Content Author'],
       credits: [],
-      translation: { original_language: 'en', original_title: 'Original', original_authors: ['Probe Content Original'], original_source: 'A journal, 2016' },
+      translation: {
+        original_language: 'en',
+        original_title: 'Original',
+        original_authors: ['Probe Content Original'],
+        original_source: 'A journal, 2016',
+      },
       publication: null,
       published_date: null,
     },
@@ -213,7 +228,10 @@ describe('publishing content import', () => {
         slug: 'probe-content-booklet',
         authors: [author.id],
         legacy_url: L.booklet,
-        body: blocksToLexical([{ type: 'paragraph', level: null, text: 'An English digest.' }], 'ltr'),
+        body: blocksToLexical(
+          [{ type: 'paragraph', level: null, text: 'An English digest.' }],
+          'ltr',
+        ),
       },
       overrideAccess: true,
     } as Parameters<Payload['create']>[0])
@@ -253,7 +271,11 @@ describe('publishing content import', () => {
     expect(en.body ?? null).toBeNull()
     const ar = await article(L.booklet, 'ar')
     expect(plain(ar.body)).toContain('نص عربي فقط')
-    expect(en.translation).toMatchObject({ original_language: 'en', original_title: 'Original', original_source: 'A journal, 2016' })
+    expect(en.translation).toMatchObject({
+      original_language: 'en',
+      original_title: 'Original',
+      original_source: 'A journal, 2016',
+    })
   })
 
   it('replaces the body of a seeded article matched by title and publishes it', async () => {
@@ -267,24 +289,53 @@ describe('publishing content import', () => {
   })
 
   it('writes the publication, press, event and newsletter', async () => {
-    const pub = (await payload.find({ collection: 'publications', where: { legacy_url: { equals: L.publication } }, depth: 0, overrideAccess: true })).docs[0]
+    const pub = (
+      await payload.find({
+        collection: 'publications',
+        where: { legacy_url: { equals: L.publication } },
+        depth: 0,
+        overrideAccess: true,
+      })
+    ).docs[0]
     const pair = await article(L.pair)
     // The foreword leads the collection's list (it opens with a Card stack block).
     expect(pub.articles?.[0]).toBe(pair.id)
     expect(pub.articles).toHaveLength(2)
     expect(pub.license).toBe('cc_by_nc_sa')
 
-    const press = (await payload.find({ collection: 'press', where: { 'links.url': { equals: PRESS_URL } }, depth: 0, overrideAccess: true })).docs
+    const press = (
+      await payload.find({
+        collection: 'press',
+        where: { 'links.url': { equals: PRESS_URL } },
+        depth: 0,
+        overrideAccess: true,
+      })
+    ).docs
     expect(press).toHaveLength(1)
     expect(press[0].authors?.map((a) => Boolean(a.person) || a.name)).toEqual([true, 'A Free Name'])
 
-    const event = (await payload.find({ collection: 'events', where: { legacy_url: { equals: L.event } }, depth: 0, overrideAccess: true })).docs[0]
+    const event = (
+      await payload.find({
+        collection: 'events',
+        where: { legacy_url: { equals: L.event } },
+        depth: 0,
+        overrideAccess: true,
+      })
+    ).docs[0]
     expect(event.tier).toBe('public')
     expect(event._status).toBe('published')
     expect(event.schedule?.start_date).toContain('2014-01-06')
     expect(event.speakers).toHaveLength(1)
 
-    const issue = (await payload.find({ collection: 'newsletters', where: { legacy_url: { equals: L.newsletter } }, draft: true, depth: 0, overrideAccess: true })).docs[0]
+    const issue = (
+      await payload.find({
+        collection: 'newsletters',
+        where: { legacy_url: { equals: L.newsletter } },
+        draft: true,
+        depth: 0,
+        overrideAccess: true,
+      })
+    ).docs[0]
     expect(issue._status).toBe('draft')
     expect(plain(issue.body)).toContain('Dear friends.')
   })
@@ -292,9 +343,17 @@ describe('publishing content import', () => {
   it('creates nothing new on a second run', async () => {
     const result = await importContent(payload, content())
     for (const t of Object.values(result)) expect(t.created).toBe(0)
-    const press = await payload.count({ collection: 'press', where: { 'links.url': { equals: PRESS_URL } }, overrideAccess: true })
+    const press = await payload.count({
+      collection: 'press',
+      where: { 'links.url': { equals: PRESS_URL } },
+      overrideAccess: true,
+    })
     expect(press.totalDocs).toBe(1)
-    const pair = await payload.count({ collection: 'articles', where: { legacy_url: { equals: L.pair } }, overrideAccess: true })
+    const pair = await payload.count({
+      collection: 'articles',
+      where: { legacy_url: { equals: L.pair } },
+      overrideAccess: true,
+    })
     expect(pair.totalDocs).toBe(1)
   })
 })
