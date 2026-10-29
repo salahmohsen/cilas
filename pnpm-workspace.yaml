@@ -2,6 +2,8 @@ allowBuilds:
   '@parcel/watcher': true
   '@swc/core': false
   esbuild: true
+  # The root prepare script installs hooks safely for each checkout.
+  lefthook: false
   sharp: true
   unrs-resolver: true
   workerd: true

@@ -1,0 +1,32 @@
+# Dependencies, build output, caches and test artifacts
+node_modules/
+.next/
+out/
+build/
+dist/
+.maintenance/
+.vercel/
+coverage/
+test-results/
+playwright-report/
+blob-report/
+.kilo/
+
+# Generated Payload and Next files; preserve generator output
+src/payload-types.ts
+src/payload-generated-schema.ts
+src/app/(payload)/admin/importMap.js
+src/migrations/
+next-env.d.ts
+pnpm-lock.yaml
+
+# Vendored editor bundles and local media
+public/assets/visual-editor/
+media/
+typesense-data/
+
+# Imported archive data; migration scripts and their docs remain checkable
+migration/raw/
+migration/extracted/
+migration/**/*.json
+seed/data/

@@ -5,6 +5,10 @@
   "license": "MIT",
   "type": "module",
   "scripts": {
+    "prepare": "node scripts/install-commit-hooks.mjs",
+    "hooks:install": "node scripts/install-commit-hooks.mjs",
+    "test:commit-hooks": "node --test tests/commit-hooks.test.mjs",
+    "check:commit-quality": "node scripts/check-commit-quality.mjs",
     "build": "cross-env NODE_OPTIONS=\"--no-deprecation --max-old-space-size=8000\" next build",
     "dev": "cross-env NODE_OPTIONS=--no-deprecation next dev",
     "devsafe": "rm -rf .next && cross-env NODE_OPTIONS=--no-deprecation next dev",
@@ -102,6 +106,7 @@
     "eslint-config-next": "16.4.2",
     "jose": "5.10.0",
     "jsdom": "28.0.0",
+    "lefthook": "2.2.2",
     "postcss": "^8.5.28",
     "prettier": "^3.4.2",
     "tailwindcss": "^4.3.3",
