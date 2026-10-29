@@ -4,6 +4,7 @@ import { ArrowLeft, ArrowUpRight, Languages } from 'lucide-react'
 import type { Metadata } from 'next'
 import { getFormatter, getTranslations } from 'next-intl/server'
 import { draftMode } from 'next/headers'
+import { currentReader } from '@/lib/reader'
 import { notFound } from 'next/navigation'
 import { getPayload } from 'payload'
 import React from 'react'
@@ -92,6 +93,7 @@ export async function articleMetadata({ locale, slug, user }: View): Promise<Met
 export async function ArticlePage({ locale: siteLocale, slug, user }: View) {
   const locale = siteLocale as Locale
   const { isEnabled: preview } = await draftMode()
+  if (preview) user = await currentReader()
   // In the admin's live preview, mark the fields for the visual editor.
   const pe = editableIn(preview)
   const payload = await getPayload({ config })

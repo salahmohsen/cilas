@@ -8,6 +8,7 @@ import { getPayload } from 'payload'
 import { getBridgeYear, listBridgeYears } from '@/api/programmes.api'
 import { BridgeYearView } from '@/components/bridge/bridge-year'
 import { ogImages } from '@/lib/og'
+import { currentReader } from '@/lib/reader'
 
 type Props = { params: Promise<{ locale: string }>; searchParams: Promise<{ programme?: string }> }
 
@@ -41,7 +42,7 @@ export default async function BridgePage({ params, searchParams }: Props) {
   const previewSlug = isPreview ? (await searchParams).programme : undefined
   const payload = await getPayload({ config })
   const [year, years] = await Promise.all([
-    getBridgeYear(payload, lang, previewSlug ? { slug: previewSlug, draft: true } : {}),
+    getBridgeYear(payload, lang, previewSlug ? { slug: previewSlug, draft: true, user: await currentReader() } : {}),
     listBridgeYears(payload, lang),
   ])
   if (!year) notFound()

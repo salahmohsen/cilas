@@ -1,6 +1,7 @@
 import type { Payload, Where } from 'payload'
 
 import type { Article, Media, Publication, User } from '@/payload-types'
+import { previewWhere } from '@/lib/preview-access'
 
 export type Locale = 'en' | 'ar'
 
@@ -56,7 +57,7 @@ export type ArticleReading = {
  * One article as a visitor reads it. The page stays in the site language;
  * when the article has no text in it, its body (and title) come from its
  * content language. In preview (draft mode) the latest draft is read with
- * access bypassed; otherwise access rules apply, so a `community` article
+ * the editor's update constraint; access rules also apply, so a `community` article
  * opens only for a signed-in reader.
  */
 export const getArticleForReading = async (
@@ -64,12 +65,14 @@ export const getArticleForReading = async (
   slug: string,
   { locale, preview = false, user = null }: { locale: Locale; preview?: boolean; user?: Reader },
 ): Promise<ArticleReading | undefined> => {
+  const scope = preview ? await previewWhere(payload, 'articles', user) : null
+  if (scope === false) return undefined
   const read = (l: Locale) =>
     payload
       .find({
         collection: 'articles',
         where: preview
-          ? { slug: { equals: slug } }
+          ? { and: [{ slug: { equals: slug } }, scope ?? {}] }
           : { and: [{ slug: { equals: slug } }, { _status: { equals: 'published' } }] },
         limit: 1,
         depth: 2,
@@ -77,7 +80,8 @@ export const getArticleForReading = async (
         fallbackLocale: false,
         draft: preview,
         // The Local API skips access rules unless told otherwise.
-        overrideAccess: preview,
+        overrideAccess: false,
+        joins: false,
         user,
       })
       .then((r) => r.docs[0])
