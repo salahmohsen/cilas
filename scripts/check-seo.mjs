@@ -31,7 +31,11 @@ for (const entry of entries) {
     alternates.en && alternates.ar && alternates['x-default'],
     `Incomplete sitemap languages for ${url.pathname}`,
   )
-  if (process.argv.includes('--all') || url.pathname.split('/').length <= 3)
+  if (
+    process.argv.includes('--all') ||
+    url.pathname.split('/').length <= 3 ||
+    /^\/(en|ar)\/people\/(fellows|cilasians)$/.test(url.pathname)
+  )
     selected.add(url.pathname)
   const group =
     !/^\/(en|ar)\/people\/(fellows|cilasians)$/.test(url.pathname) &&
@@ -44,6 +48,9 @@ for (const entry of entries) {
     samples.set(group, (samples.get(group) ?? 0) + 1)
   }
 }
+for (const arg of process.argv.slice(3)) {
+  if (arg.startsWith('--path=')) selected.add(arg.slice('--path='.length))
+}
 
 const failures = []
 let checked = 0
@@ -52,9 +59,19 @@ for (const path of selected) {
   try {
     const { response, text } = await fetchPage(path)
     assert.equal(response.status, 200, `${path} must return 200`)
-    assert.equal(new URL(response.url).pathname, path, `${path} must not redirect`)
+    assert.equal(
+      new URL(response.url).pathname,
+      new URL(path, origin).pathname,
+      `${path} must not redirect`,
+    )
     dom = new JSDOM(text)
     const document = dom.window.document
+    if (/^\/(en|ar)\/(study|articles|events)$/.test(path)) {
+      const pageTwo = [...document.querySelectorAll('nav a[href]')]
+        .map((link) => new URL(link.getAttribute('href'), new URL(path, origin)))
+        .find((url) => url.pathname === path && url.searchParams.get('page') === '2')
+      if (pageTwo) selected.add(`${pageTwo.pathname}${pageTwo.search}`)
+    }
     assert.ok(document.title.trim(), `${path} needs a title`)
     assert.ok(
       document.querySelector('meta[name="description"]')?.content,
@@ -108,6 +125,13 @@ for (const path of selected) {
             'Course schedule must be a Schedule object',
           )
         }
+      }
+      if (schema['@type'] === 'ProfilePage' && schema.mainEntity?.description) {
+        assert.equal(
+          document.querySelector('meta[name="description"]')?.content,
+          schema.mainEntity.description.slice(0, 160),
+          'Profile snippet must describe the visible biography',
+        )
       }
     }
     assert.ok(

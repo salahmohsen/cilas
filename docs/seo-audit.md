@@ -1,6 +1,6 @@
 # Structured data and SEO audit
 
-Audited on 2026-10-29 against the installed Next.js 16.4.2 guides and current Google Search documentation. This is an implementation audit with local rendered HTML checks. It does not establish Google indexing, rankings or rich-result eligibility.
+Audited on 2026-10-29 against the installed Next.js 16.4.2 guides and current Google Search documentation. The follow-up includes local rendered HTML checks and actual [Google Rich Results Test results](seo-google-validation.md). It does not establish Google indexing, rankings or eventual rich-result display.
 
 ## Fixed in this PR
 
@@ -16,12 +16,18 @@ Audited on 2026-10-29 against the installed Next.js 16.4.2 guides and current Go
 
 6. **Robots.txt prevented noindex discovery.** Login, signed-in and application routes were blocked from crawling, so Google could not read their page directives. Course and Bridge application pages also lacked noindex. Page routes are now crawlable; applications and the Spaces layout explicitly emit noindex. Admin and API crawl exclusions remain. [Google noindex guidance](https://developers.google.com/search/docs/crawling-indexing/block-indexing).
 
+7. **Pagination depended on button handlers.** Study, article-index and event-archive pagination now exposes actual links with localized page URLs. Existing client interaction, modified clicks and disabled states are preserved. Article listing metadata and page rendering share page bounds and filter normalization. [Google crawlable-link guidance](https://developers.google.com/search/docs/crawling-indexing/links-crawlable).
+
+8. **Rich-text internal links fell back to `#`.** Supported populated document targets now resolve in the reader's locale in full and plain presentations. Unavailable or unsupported relationships keep their text without an invented link. New-tab safety attributes and external links keep their existing behavior.
+
+9. **Generic profile snippets.** Profiles now derive descriptions from the visible biography and share metadata from the person's title and photo.
+
 ## Verification
 
 - The initial schema regression run reproduced `Tests 8 failed | 1 passed (9)`. The passing case already protected JSON-LD from script-tag injection.
-- The final focused run passed 49 tests across nine files. Coverage includes schemas, localized URL agreement with the sitemap, event timing, Cairo dates, calendar feeds, event cards and people revalidation.
+- The final focused run passed 76 tests across 13 files. Coverage includes schemas, localized URLs, pagination, rich-text links, event timing, Cairo dates, calendar feeds, event cards and people revalidation. A separate existing movie-block assertion failure is documented in the [follow-up report](seo-google-validation.md).
 - TypeScript and ESLint on changed code passed. The optimized production compilation passed with `pnpm build --experimental-build-mode compile`. Full production prerendering was not run.
-- `pnpm test:seo http://localhost:3037` validated all 1,238 local sitemap entries and checked the server-rendered HTML of 32 sampled public pages, plus both locales' login and signed-in noindex directives. This is a sample crawl, not a crawl of all 1,238 pages. The script supports `--all` for a full crawl against a running app whose configured public origin matches the supplied origin.
+- The expanded `test:seo` run validated all 1,238 local sitemap entries and checked the server-rendered HTML of 44 sampled public pages, including page-two links, profile snippets and eligible event detail pages, plus both locales' login and signed-in noindex directives. This is a sample crawl, not a crawl of all 1,238 pages. The script supports `--all` for a full crawl and `--path=` for extra samples against a running app whose configured public origin matches the supplied origin.
 - Additional requests confirmed page-two canonicals in both locales, noindex on search/filter variants and the Bridge application page, and the base canonical on calendar navigation variants.
 - The local server used the existing development Postgres at localhost:5433 and dummy external-service settings. No production configuration or data changed.
 
@@ -33,15 +39,15 @@ DATABASE_URL=postgres://cilas:dev@localhost:5433/cilas_dev pnpm exec vitest run 
   tests/unit/sitemap.unit.spec.ts tests/unit/events.unit.spec.ts \
   tests/unit/ics.unit.spec.ts tests/unit/cairo-day.unit.spec.ts \
   tests/unit/revalidate-people.unit.spec.ts \
-  tests/unit/public-event-card.unit.spec.tsx tests/unit/public-event-cover.unit.spec.ts
+  tests/unit/public-event-card.unit.spec.tsx tests/unit/public-event-cover.unit.spec.ts \
+  tests/unit/seo-links.unit.spec.tsx tests/unit/rich-text-columns.unit.spec.tsx \
+  tests/unit/person-profile-block.unit.spec.tsx tests/unit/blog-grid-cards.unit.spec.tsx
 ```
 
 ## Remaining findings and checks
 
-1. **Medium. Crawlable pagination.** StudyList and BlogGrid navigate pages through button handlers. They should expose actual page links with `href` while retaining their existing interaction. The sitemap already exposes public documents, but listing pagination does not provide normal crawler navigation. [Google crawlable-link guidance](https://developers.google.com/search/docs/crawling-indexing/links-crawlable).
-2. **Medium. Rich-text internal links.** Local editor fixtures produced Payload warnings about internal links without `internalDocToHref`. RichTextField does not configure that resolver. A separate renderer change should resolve supported document routes in the current locale and test unavailable or restricted relationship targets. Production prevalence was not measured.
-3. **Low. Profile snippets.** Profile pages have unique titles and ProfilePage markup but still inherit the generic site description. Derive a short description from the visible biography when one exists.
-4. **Deployment validation.** Requests to `https://ci-las.org` returned 404 for localized app paths, robots.txt and sitemap.xml. That hostname has not been confirmed as the current app deployment, so this is not attributed to the app implementation. Confirm the deployment origin before testing live URLs.
-5. **Google and performance checks.** After deployment, run representative event, course, article and profile URLs through the [Rich Results Test](https://search.google.com/test/rich-results), confirm the sitemap and inspect URLs in Search Console. Check real mobile Core Web Vitals separately. No live Google validation, Search Console data or browser performance measurements were available in this audit.
+1. **Optional structured content.** Google's non-critical warnings identify separate city/postal-code properties and missing event performer, offers and status fields. These need accurate structured content rather than guessed values. Local sample image/URL warnings are documented separately from the successful public homepage logo check.
+2. **Deployment validation.** The configured app is `https://cilas.salahmohsen.com`, whose homepage Google crawled successfully. Earlier 404 responses at `https://ci-las.org` concerned a different hostname. The PR branch has not been deployed; validate its public detail URLs after deployment.
+3. **Search Console and performance checks.** Four representative page types passed Google's Code-mode test. Confirm the sitemap and inspect deployed URLs in Search Console, then check real mobile Core Web Vitals separately. Search Console data and browser performance measurements were not available in this audit.
 
 The script checks metadata, JSON syntax and selected schema contracts. It does not replace Google's Rich Results Test or the [Schema Markup Validator](https://validator.schema.org/). Correct markup alone does not guarantee a rich result. [Google structured-data policies](https://developers.google.com/search/docs/appearance/structured-data/sd-policies).

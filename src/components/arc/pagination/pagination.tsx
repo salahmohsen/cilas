@@ -1,5 +1,6 @@
 'use client'
 import { useLayoutEffect, useRef, useState } from 'react'
+import type { MouseEvent } from 'react'
 import { ChevronLeft as NavArrowLeft, ChevronRight as NavArrowRight } from 'lucide-react'
 import {
   AnimatePresence,
@@ -11,10 +12,12 @@ import {
 } from 'motion/react'
 import { motionTokens } from '../lib/motion-tokens'
 import styles from './pagination.module.css'
+import { activatePage, pageNavigation } from '../lib/page-navigation'
 export interface PaginationProps {
   page: number
   pageCount: number
   onPageChange: (page: number) => void
+  getPageHref?: (page: number) => string
   label?: string
   /** The controls' accessible names, for other languages. */
   previousLabel?: string
@@ -41,6 +44,7 @@ export function Pagination({
   page,
   pageCount,
   onPageChange,
+  getPageHref,
   label = 'Pagination',
   previousLabel = 'Previous page',
   nextLabel = 'Next page',
@@ -94,24 +98,32 @@ export function Pagination({
   }, [currentPage, start, safePageCount, reduced, markX, markY])
 
   if (!safePageCount) return <nav className={styles.nav} aria-label={label} />
+  const Step = getPageHref ? 'a' : 'button'
+  const PageNumber = getPageHref ? motion.a : motion.button
+  const navigation = (number: number, disabled = false) =>
+    pageNavigation(disabled, getPageHref?.(number))
   return (
     <nav ref={navRef} className={styles.nav} aria-label={label}>
-      <button
-        type="button"
+      <Step
+        {...navigation(currentPage - 1, currentPage <= 1)}
+        onClick={(event: MouseEvent<HTMLElement>) => {
+          if (activatePage(event, currentPage <= 1, Boolean(getPageHref)))
+            onPageChange(currentPage - 1)
+        }}
         className={styles.step}
-        onClick={() => onPageChange(currentPage - 1)}
-        disabled={currentPage <= 1}
         aria-label={previousLabel}
       >
         <NavArrowLeft width={16} height={16} aria-hidden="true" />
-      </button>
+      </Step>
       <motion.span aria-hidden="true" className={styles.mark} style={{ x: markX, y: markY }} />
       <AnimatePresence mode="popLayout" initial={false} custom={shift}>
         {visible.map((number) => (
-          <motion.button
-            type="button"
+          <PageNumber
+            {...navigation(number)}
+            onClick={(event: MouseEvent<HTMLElement>) => {
+              if (activatePage(event, false, Boolean(getPageHref))) onPageChange(number)
+            }}
             key={number}
-            onClick={() => onPageChange(number)}
             aria-label={pageLabel(number)}
             aria-current={currentPage === number ? 'page' : undefined}
             layout={reduced ? false : 'position'}
@@ -135,18 +147,20 @@ export function Pagination({
             }
           >
             {formatNumber(number)}
-          </motion.button>
+          </PageNumber>
         ))}
       </AnimatePresence>
-      <button
-        type="button"
+      <Step
+        {...navigation(currentPage + 1, currentPage >= safePageCount)}
+        onClick={(event: MouseEvent<HTMLElement>) => {
+          if (activatePage(event, currentPage >= safePageCount, Boolean(getPageHref)))
+            onPageChange(currentPage + 1)
+        }}
         className={styles.step}
-        onClick={() => onPageChange(currentPage + 1)}
-        disabled={currentPage >= safePageCount}
         aria-label={nextLabel}
       >
         <NavArrowRight width={16} height={16} aria-hidden="true" />
-      </button>
+      </Step>
     </nav>
   )
 }

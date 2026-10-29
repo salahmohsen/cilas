@@ -3,6 +3,7 @@ import config from '@payload-config'
 import type { Metadata } from 'next'
 import { getFormatter, getLocale, getTranslations } from 'next-intl/server'
 import { getPayload } from 'payload'
+import { cache } from 'react'
 
 import {
   getPublicationCovers,
@@ -13,14 +14,24 @@ import {
 import { ArticlesGrid } from '@/components/article/articles-grid'
 import { EmptyState } from '@/components/arc/empty-state/empty-state'
 import { toArticleCard } from '@/lib/article-cards'
-import { publicationOf } from '@/lib/articles'
+import { articleListPath, articleListSelection, publicationOf } from '@/lib/articles'
+
+const publishedFor = cache(async (locale: Locale, user: Reader) =>
+  getPublishedArticles(await getPayload({ config }), locale, user),
+)
 
 /** The page metadata. Shared by the cached page and the signed-in one. */
-export async function articlesMetadata(): Promise<Metadata> {
+export async function articlesMetadata(
+  selected: { publication?: string; page?: string } = {},
+  user: Reader = null,
+): Promise<Metadata> {
   const locale = await getLocale()
   const t = await getTranslations('Articles')
+  const { docs } = await publishedFor(locale as Locale, user)
+  const selection = articleListSelection(docs, selected)
   return {
-    alternates: pageAlternates('/articles', locale),
+    alternates: pageAlternates(articleListPath(selection.page, selection.publication), locale),
+    ...(selection.publication ? { robots: { index: false } } : {}),
     title: t('metaTitle'),
     description: t('metaDescription'),
   }
@@ -34,10 +45,12 @@ export async function articlesMetadata(): Promise<Metadata> {
 export async function ArticlesPage({
   locale,
   selected,
+  page = 1,
   user,
 }: {
   locale: string
   selected?: string
+  page?: number
   user: Reader
 }) {
   const [t, tArticle, format] = await Promise.all([
@@ -47,7 +60,7 @@ export async function ArticlesPage({
   ])
   const payload = await getPayload({ config })
   const [{ docs }, publicationCovers] = await Promise.all([
-    getPublishedArticles(payload, locale as Locale, user),
+    publishedFor(locale as Locale, user),
     getPublicationCovers(payload),
   ])
 
@@ -80,7 +93,8 @@ export async function ArticlesPage({
         String(typeof x === 'object' ? x.id : x),
       )
   }
-  const initial = Object.entries(slugs).find(([, slug]) => slug === selected)?.[0]
+  const selection = articleListSelection(docs, { publication: selected, page })
+  const initial = Object.entries(slugs).find(([, slug]) => slug === selection.publication)?.[0]
 
   if (posts.length === 0) {
     return (
@@ -96,6 +110,7 @@ export async function ArticlesPage({
       categoryOrder={categoryOrder}
       description={t('intro')}
       initialCategory={initial}
+      initialPage={selection.page}
       posts={posts}
       slugs={slugs}
       title={t('title')}

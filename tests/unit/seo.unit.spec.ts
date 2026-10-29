@@ -3,11 +3,32 @@ import { describe, expect, it } from 'vitest'
 import { pathOf } from '@/lib/paths'
 import { pageAlternates, SEO_COLLECTIONS, seoDefaults } from '@/lib/seo'
 import { sitemapEntries } from '@/lib/sitemap'
+import { articleListSelection } from '@/lib/articles'
+import type { Article } from '@/payload-types'
 import { lexical } from '../../seed/seed.utils'
 
 const long = 'word '.repeat(60).trim()
 
 describe('public URL metadata', () => {
+  it('keeps article canonicals and the displayed page together for invalid pages and filters', () => {
+    const articles = Array.from({ length: 17 }, (_, id) => ({ id }) as Article)
+    expect(articleListSelection(articles, { page: 999 })).toEqual({
+      page: 2,
+      publication: undefined,
+    })
+    expect(articleListSelection(articles, { page: Infinity })).toEqual({
+      page: 1,
+      publication: undefined,
+    })
+    expect(articleListSelection(articles, { page: 1.5, publication: 'missing' })).toEqual({
+      page: 1,
+      publication: undefined,
+    })
+    expect(articleListSelection(articles, { page: 999, publication: 'other' })).toEqual({
+      page: 2,
+      publication: 'other',
+    })
+  })
   it('agrees with the sitemap in both languages, including the default', () => {
     const origin = 'https://ci-las.org'
     const pages = [{ path: '' }, { path: '/events/reading-group' }]

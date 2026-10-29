@@ -1,18 +1,63 @@
-import type { SerializedInlineBlockNode } from '@payloadcms/richtext-lexical'
+import type { SerializedInlineBlockNode, SerializedLinkNode } from '@payloadcms/richtext-lexical'
 import type { SerializedLexicalNode } from '@payloadcms/richtext-lexical/lexical'
 import { RichText, type JSXConvertersFunction } from '@payloadcms/richtext-lexical/react'
 import React from 'react'
+import { useLocale } from 'next-intl'
 
 import { FootnoteMark } from '@/components/article/footnote'
 import { ProfileCard } from '@/components/person/profile-card'
 import { MovieCard } from '@/components/movie/movie-card'
 import { movieSnapshotSchema } from '@/lib/movie'
+import { pathOf } from '@/lib/paths'
 import type { Footnote } from '@/lib/footnotes'
 import type { ColumnsBlock, FootnoteBlock, PersonProfileBlock, MovieBlock } from '@/payload-types'
 import styles from './rich-text-columns.module.css'
 
 /** The dash (or tilde) that opens a quote's source line. */
 const SOURCE_LEAD = /^\s*[—–~-]\s*/
+
+function InternalLink({ node, children }: { node: SerializedLinkNode; children: React.ReactNode }) {
+  const locale = useLocale()
+  const doc = node.fields.doc
+  const value = doc?.value
+  if (
+    !doc ||
+    !value ||
+    typeof value !== 'object' ||
+    !('slug' in value) ||
+    typeof value.slug !== 'string'
+  )
+    return <>{children}</>
+  if (
+    ('visible' in value && value.visible === false) ||
+    ('tier' in value && value.tier === 'owner') ||
+    ('_status' in value && value._status === 'draft')
+  )
+    return <>{children}</>
+  const href = pathOf(doc.relationTo, { slug: value.slug }, locale)
+  if (!href) return <>{children}</>
+  return (
+    <a
+      href={href}
+      target={node.fields.newTab ? '_blank' : undefined}
+      rel={node.fields.newTab ? 'noopener noreferrer' : undefined}
+    >
+      {children}
+    </a>
+  )
+}
+
+const localizedLinks: JSXConvertersFunction = ({ defaultConverters }) => ({
+  ...defaultConverters,
+  link: (args) =>
+    args.node.fields.linkType === 'internal' ? (
+      <InternalLink node={args.node}>{args.nodesToJSX({ nodes: args.node.children })}</InternalLink>
+    ) : typeof defaultConverters.link === 'function' ? (
+      defaultConverters.link(args)
+    ) : (
+      defaultConverters.link
+    ),
+})
 
 /**
  * Renders Lexical rich text through Payload's own converters, so the frontend
@@ -91,7 +136,7 @@ export const RichTextField: React.FC<{
   }
 
   const fullConverters: JSXConvertersFunction = ({ defaultConverters }) => ({
-    ...defaultConverters,
+    ...localizedLinks({ defaultConverters }),
     // A quote whose last line starts with a dash ("— Pascal", written in the
     // editor as a line break then the source) gets that line as its citation.
     quote: ({ node, nodesToJSX }) => {
@@ -148,7 +193,7 @@ export const RichTextField: React.FC<{
   })
 
   const plainConverters: JSXConvertersFunction = ({ defaultConverters }) => ({
-    ...defaultConverters,
+    ...localizedLinks({ defaultConverters }),
     heading: ({ node, nodesToJSX }) => (
       <p>
         <strong>

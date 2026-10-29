@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation'
 import { BlogGrid } from '@/components/arc/blocks/blog-grid/blog-grid'
 import type { ArticleCard } from '@/lib/article-cards'
 import { localDigits } from '@/lib/digits'
+import { ARTICLE_PAGE_SIZE, articleListPath } from '@/lib/articles'
 
 /**
  * Arc's blog-grid with CILAS articles: publications are the categories, and
@@ -18,9 +19,10 @@ export function ArticlesGrid({
   posts,
   categories,
   initialCategory,
+  initialPage = 1,
   slugs,
   showFeatured = true,
-  pageSize = 9,
+  pageSize = ARTICLE_PAGE_SIZE,
   categoryOrder,
   header = true,
   flush = false,
@@ -30,6 +32,7 @@ export function ArticlesGrid({
   posts: ArticleCard[]
   categories: string[]
   initialCategory?: string
+  initialPage?: number
   /** Category title → URL value. */
   slugs?: Record<string, string>
   showFeatured?: boolean
@@ -44,8 +47,18 @@ export function ArticlesGrid({
   const t = useTranslations('Articles.grid')
   const locale = useLocale()
   const router = useRouter()
+  const pageHref = (page: number, category: string) =>
+    `/${locale}${articleListPath(page, category === 'All' ? undefined : slugs?.[category])}`
   return (
     <BlogGrid
+      getPageHref={slugs ? pageHref : undefined}
+      page={slugs ? initialPage : undefined}
+      category={slugs ? (initialCategory ?? 'All') : undefined}
+      onPageChange={
+        slugs
+          ? (page) => router.replace(pageHref(page, initialCategory ?? 'All'), { scroll: false })
+          : undefined
+      }
       flush={flush}
       header={header}
       categories={categories}
@@ -68,11 +81,7 @@ export function ArticlesGrid({
       }}
       onCategoryChange={(category) => {
         if (!slugs) return
-        const slug = category === 'All' ? null : slugs[category]
-        const url = new URL(window.location.href)
-        if (slug) url.searchParams.set('publication', slug)
-        else url.searchParams.delete('publication')
-        router.replace(`${url.pathname}${url.search}`, { scroll: false })
+        router.replace(pageHref(1, category), { scroll: false })
       }}
       pageSize={pageSize}
       posts={posts}

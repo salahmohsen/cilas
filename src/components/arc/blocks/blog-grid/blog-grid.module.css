@@ -272,6 +272,7 @@
 }
 .pageNumber,
 .pageStep {
+  text-decoration: none;
   position: relative;
   isolation: isolate;
   display: inline-flex;
@@ -297,6 +298,7 @@
 }
 .pageNumber {
   padding: 0;
+  text-decoration: none;
 }
 .pageNumber[aria-current='page'] {
   color: var(--foreground);
@@ -308,17 +310,18 @@
   border-radius: inherit;
   background: var(--surface-muted);
 }
-.pageStep:disabled {
+.pageStep:disabled,
+.pageStep[aria-disabled='true'] {
   color: var(--text-muted);
   opacity: 0.5;
   cursor: default;
 }
-.pageStep:not(:disabled):active {
+.pageStep:not(:disabled):not([aria-disabled='true']):active {
   transform: scale(0.97);
 }
 @media (hover: hover) and (pointer: fine) {
   .pageNumber:hover,
-  .pageStep:not(:disabled):hover {
+  .pageStep:not(:disabled):not([aria-disabled='true']):hover {
     color: var(--foreground);
   }
 }

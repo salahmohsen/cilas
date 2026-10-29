@@ -21,6 +21,8 @@ import { focalPointStyle } from '@/lib/media-image'
 import { breadcrumbSchema, personSchema } from '@/lib/schema'
 import type { Media } from '@/payload-types'
 import { pageAlternates } from '@/lib/seo'
+import { plainText } from '@/lib/plaintext'
+import { ogImages } from '@/lib/og'
 
 type Props = { params: Promise<{ locale: string; slug: string }> }
 
@@ -39,8 +41,21 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const payload = await getPayload({ config })
   const person = await getPerson(payload, slug, locale as Locale)
   if (!person) return {}
+  const description = person.bio
+    ? plainText({ data: person.bio }).replace(/\s+/g, ' ').trim().slice(0, 160)
+    : undefined
+  const photo = typeof person.photo === 'object' ? person.photo?.url : undefined
+  const title = `${person.name} · CILAS`
   return {
-    title: `${person.name} — CILAS`,
+    title,
+    ...(description ? { description } : {}),
+    openGraph: { title, description, images: ogImages(photo) },
+    twitter: {
+      card: 'summary_large_image',
+      title,
+      description,
+      images: ogImages(photo).map((image) => image.url),
+    },
     alternates: pageAlternates(`/people/${person.slug}`, locale),
   }
 }
