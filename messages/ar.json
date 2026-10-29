@@ -524,6 +524,7 @@
     "matches": "{count, plural, zero {لا خيارات} one {خيار واحد} two {خياران} few {{count, number, digits} خيارات} many {{count, number, digits} خيارًا} other {{count, number, digits} خيار}}"
   },
   "Share": {
+    "event": "مشاركة هذه الفعالية",
     "course": "شارك هذا المقرر",
     "article": "شارك هذا المقال",
     "heading": "مشاركة",
@@ -1355,6 +1356,12 @@
     "movieData": "بيانات الأفلام وصورها"
   },
   "Events": {
+    "details": "تفاصيل الفعالية",
+    "when": "الموعد",
+    "where": "المكان",
+    "admission": "الحضور",
+    "timeSoon": "سيُعلن الوقت قريبًا",
+    "admissionSoon": "ستُعلن تفاصيل الحضور قريبًا.",
     "title": "الفعاليات",
     "intro": "محاضرات وعروض وورش عمل ولقاءات في سيلاس.",
     "upcoming": "الفعاليات القادمة",
