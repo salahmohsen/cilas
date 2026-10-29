@@ -5,11 +5,11 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { PayloadForm } from '@/components/forms/payload-form'
 import type { Form } from '@/payload-types'
 
-vi.mock('@/env', async (importOriginal) => {
-  const actual = await importOriginal<typeof import('@/env')>()
+vi.mock('@/env.client', async (importOriginal) => {
+  const actual = await importOriginal<typeof import('@/env.client')>()
   // No Turnstile in the sandbox: the widget never answers, so a send waiting
   // on its token would hang.
-  return { env: { ...actual.env, NEXT_PUBLIC_TURNSTILE_SITE_KEY: '' } }
+  return { clientEnv: { ...actual.clientEnv, NEXT_PUBLIC_TURNSTILE_SITE_KEY: '' } }
 })
 vi.mock('next-intl', () => ({
   useTranslations: () => (key: string) => key,

@@ -27,6 +27,7 @@ const nextConfig: NextConfig = {
   // The profile form sends a photo of up to 5 MB; a space post or comment up
   // to 36 MB of files (src/lib/space-file-limits.ts). The default limit is 1 MB.
   experimental: {
+    cpus: process.env.CI ? 2 : undefined,
     serverActions: { bodySizeLimit: UPLOAD_BODY_LIMIT },
     proxyClientMaxBodySize: UPLOAD_BODY_LIMIT,
   },

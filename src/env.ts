@@ -96,7 +96,7 @@ export const env = createEnv({
   emptyStringAsUndefined: true,
 })
 
-if (process.env.NODE_ENV === 'production') {
+if (typeof window === 'undefined' && process.env.NODE_ENV === 'production') {
   const storage = new URL(env.R2_ENDPOINT)
   if (storage.protocol !== 'https:' || !storage.hostname.endsWith('.r2.cloudflarestorage.com')) {
     throw new Error('Production storage must use a Cloudflare R2 HTTPS endpoint')

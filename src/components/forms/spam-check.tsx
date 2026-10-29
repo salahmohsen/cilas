@@ -4,7 +4,7 @@ import { Turnstile, type TurnstileInstance } from '@marsidev/react-turnstile'
 import { useLocale } from 'next-intl'
 import { useRef } from 'react'
 
-import { env } from '@/env'
+import { clientEnv as env } from '@/env.client'
 import { TURNSTILE_HEADER } from '@/lib/turnstile'
 
 const siteKey = env.NEXT_PUBLIC_TURNSTILE_SITE_KEY
