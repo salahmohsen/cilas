@@ -35,7 +35,7 @@ function install() {
   const hooksDir = resolve(gitDir, 'cilas-hooks')
   const hookPath = resolve(hooksDir, 'pre-commit')
   const currentPath = optionalConfig('--get', 'core.hooksPath')
-  const defaultPath = git('rev-parse', '--path-format=absolute', '--git-common-dir')
+  const defaultPath = resolve(git('rev-parse', '--git-common-dir'))
   const currentDir = currentPath !== null ? resolve(currentPath) : resolve(defaultPath, 'hooks')
 
   // A hooksPath override would disable other hooks, even if pre-commit is absent.
