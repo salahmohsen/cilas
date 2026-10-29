@@ -8,7 +8,7 @@ import {
   ExpandingButtonGroup,
   type ExpandingButtonGroupItem,
 } from '@/components/arc/expanding-button-group/expanding-button-group'
-import { env } from '@/env'
+import { clientEnv as env } from '@/env.client'
 import {
   aiLink,
   fillPrompt,

@@ -1,4 +1,4 @@
-name: Security checks
+name: CI
 
 on:
   pull_request:
@@ -7,6 +7,10 @@ on:
 
 permissions:
   contents: read
+
+concurrency:
+  group: ci-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
 
 jobs:
   security:
@@ -24,9 +28,83 @@ jobs:
       - run: pnpm install --frozen-lockfile
       - name: Audit dependencies
         run: pnpm audit --audit-level moderate
-      - name: Check types, lint, and unit tests
+      - name: Check types
         run: |
           . ./scripts/search-test-env.sh
           pnpm exec tsc --noEmit
-          pnpm lint
+      - name: Lint
+        run: pnpm lint
+      - name: Unit tests
+        run: |
+          . ./scripts/search-test-env.sh
           pnpm exec vitest run tests/unit --reporter=dot
+
+  production-smoke:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    services:
+      postgres:
+        image: postgres:17-alpine
+        env:
+          POSTGRES_USER: cilas
+          POSTGRES_PASSWORD: dev
+          POSTGRES_DB: cilas_ci
+        ports:
+          - 5433:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      - uses: pnpm/action-setup@f40ffcd9367d9f12939873eb1018b921a783ffaa # v4
+        with:
+          version: 10.11.0
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version: 22
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm exec playwright install --with-deps chromium
+      - name: Initialize disposable current-schema fixtures
+        run: |
+          . ./scripts/smoke-test-env.sh
+          NODE_ENV=development pnpm exec tsx scripts/bootstrap-smoke.ts
+      - name: Build production application
+        run: |
+          . ./scripts/smoke-test-env.sh
+          pnpm build
+      - name: Test production JavaScript in Chromium
+        run: |
+          . ./scripts/smoke-test-env.sh
+          pnpm test:production
+
+  deploy-production:
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    needs: [security, production-smoke]
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    concurrency:
+      group: cilas-production-deploy
+      cancel-in-progress: false
+    steps:
+      - name: Deploy verified main
+        env:
+          GH_TOKEN: ${{ github.token }}
+          DOKPLOY_URL: ${{ secrets.DOKPLOY_URL }}
+          DOKPLOY_API_KEY: ${{ secrets.DOKPLOY_API_KEY }}
+        run: |
+          set -eu
+          current_head=$(gh api "repos/$GITHUB_REPOSITORY/commits/main" --jq .sha)
+          if [ "$current_head" != "$GITHUB_SHA" ]; then
+            echo 'Main has advanced. Its own CI run will deploy it.'
+            exit 0
+          fi
+          test -n "$DOKPLOY_URL"
+          test -n "$DOKPLOY_API_KEY"
+          curl --fail --silent --show-error --max-time 60 \
+            --request POST "$DOKPLOY_URL/api/application.deploy" \
+            --header "x-api-key: $DOKPLOY_API_KEY" \
+            --header 'Content-Type: application/json' \
+            --data '{"applicationId":"3l3uu-SF_vXo3wrIEjqbC","title":"CI-verified production deployment"}'

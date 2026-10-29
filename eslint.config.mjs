@@ -11,6 +11,14 @@ const eslintConfig = [
   ...nextTypescript,
   {
     rules: {
+      'no-restricted-syntax': [
+        'error',
+        {
+          selector:
+            "Program:has(ExpressionStatement[expression.value='use client']) > ImportDeclaration[source.value='@/env']",
+          message: 'Client Components must import public settings from @/env.client.',
+        },
+      ],
       '@typescript-eslint/ban-ts-comment': 'warn',
       '@typescript-eslint/no-empty-object-type': 'warn',
       '@typescript-eslint/no-explicit-any': 'warn',
