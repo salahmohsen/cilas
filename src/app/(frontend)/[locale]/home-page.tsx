@@ -1,6 +1,7 @@
+import { pageAlternates } from '@/lib/seo'
 import config from '@payload-config'
 import type { Metadata } from 'next'
-import { getFormatter, getTranslations } from 'next-intl/server'
+import { getFormatter, getLocale, getTranslations } from 'next-intl/server'
 import { getPayload } from 'payload'
 
 import { getPublicationCovers, type Locale, type Reader } from '@/api/articles.api'
@@ -25,8 +26,13 @@ import { newsletterList } from '@/lib/newsletter-list'
 
 /** Shared by the cached page and the signed-in one. */
 export async function homeMetadata(): Promise<Metadata> {
+  const locale = await getLocale()
   const [t, tf] = await Promise.all([getTranslations('Home'), getTranslations('Footer')])
-  return { title: { absolute: t('metaTitle') }, description: tf('tagline') }
+  return {
+    alternates: pageAlternates('', locale),
+    title: { absolute: t('metaTitle') },
+    description: tf('tagline'),
+  }
 }
 
 /**

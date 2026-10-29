@@ -1,6 +1,7 @@
+import { pageAlternates } from '@/lib/seo'
 import config from '@payload-config'
 import type { Metadata } from 'next'
-import { getTranslations } from 'next-intl/server'
+import { getLocale, getTranslations } from 'next-intl/server'
 import { unstable_cache } from 'next/cache'
 import { getPayload } from 'payload'
 
@@ -25,8 +26,13 @@ const fellowsFor = unstable_cache(
 )
 
 export async function generateMetadata(): Promise<Metadata> {
+  const locale = await getLocale()
   const t = await getTranslations('Fellows')
-  return { title: t('metaTitle'), description: t('intro') }
+  return {
+    alternates: pageAlternates('/people/fellows', locale),
+    title: t('metaTitle'),
+    description: t('intro'),
+  }
 }
 
 /** CILAS's fellows on a wheel: everyone who has taught here, the most recent first. */
@@ -49,9 +55,21 @@ export default async function FellowsPage({ params }: Props) {
             key: c.slug,
             title: c.title,
             href: `/study/${c.slug}`,
-            ...(c.season && c.year ? { sub: `${tf(`seasons.${c.season}`)} ${localDigits(c.year, locale)}` } : {}),
+            ...(c.season && c.year
+              ? { sub: `${tf(`seasons.${c.season}`)} ${localDigits(c.year, locale)}` }
+              : {}),
             ...(Icon
-              ? { icon: <Icon aria-hidden className="course-season mt-0.5" data-season={c.season} size={16} strokeWidth={1.5} /> }
+              ? {
+                  icon: (
+                    <Icon
+                      aria-hidden
+                      className="course-season mt-0.5"
+                      data-season={c.season}
+                      size={16}
+                      strokeWidth={1.5}
+                    />
+                  ),
+                }
               : {}),
           }
         }),

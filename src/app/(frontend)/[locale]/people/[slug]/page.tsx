@@ -14,12 +14,13 @@ import grid from '@/components/arc/blocks/blog-grid/blog-grid.module.css'
 import { RichTextField } from '@/components/RichTextField'
 import { Schema } from '@/components/schema'
 import { Link } from '@/i18n/navigation'
-import { isRtl, routing } from '@/i18n/routing'
+import { isRtl } from '@/i18n/routing'
 import { toArticleCard, toCourseCard } from '@/lib/article-cards'
 import { pathOf } from '@/lib/paths'
 import { focalPointStyle } from '@/lib/media-image'
 import { breadcrumbSchema, personSchema } from '@/lib/schema'
 import type { Media } from '@/payload-types'
+import { pageAlternates } from '@/lib/seo'
 
 type Props = { params: Promise<{ locale: string; slug: string }> }
 
@@ -40,12 +41,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   if (!person) return {}
   return {
     title: `${person.name} — CILAS`,
-    alternates: {
-      canonical: pathOf('people', person, locale),
-      languages: Object.fromEntries(
-        routing.locales.map((l) => [l, pathOf('people', person, l) ?? '']),
-      ),
-    },
+    alternates: pageAlternates(`/people/${person.slug}`, locale),
   }
 }
 

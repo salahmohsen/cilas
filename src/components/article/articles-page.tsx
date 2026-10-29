@@ -1,6 +1,7 @@
+import { pageAlternates } from '@/lib/seo'
 import config from '@payload-config'
 import type { Metadata } from 'next'
-import { getFormatter, getTranslations } from 'next-intl/server'
+import { getFormatter, getLocale, getTranslations } from 'next-intl/server'
 import { getPayload } from 'payload'
 
 import {
@@ -16,8 +17,13 @@ import { publicationOf } from '@/lib/articles'
 
 /** The page metadata. Shared by the cached page and the signed-in one. */
 export async function articlesMetadata(): Promise<Metadata> {
+  const locale = await getLocale()
   const t = await getTranslations('Articles')
-  return { title: t('metaTitle'), description: t('metaDescription') }
+  return {
+    alternates: pageAlternates('/articles', locale),
+    title: t('metaTitle'),
+    description: t('metaDescription'),
+  }
 }
 
 /**
@@ -70,7 +76,9 @@ export async function ArticlesPage({
   for (const a of docs) {
     const p = publicationOf(a)
     if (p && !categoryOrder[p.title])
-      categoryOrder[p.title] = (p.articles ?? []).map((x) => String(typeof x === 'object' ? x.id : x))
+      categoryOrder[p.title] = (p.articles ?? []).map((x) =>
+        String(typeof x === 'object' ? x.id : x),
+      )
   }
   const initial = Object.entries(slugs).find(([, slug]) => slug === selected)?.[0]
 

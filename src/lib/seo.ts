@@ -1,5 +1,16 @@
 import { plainText } from '@/lib/plaintext'
 import type { SerializedEditorState } from '@payloadcms/richtext-lexical/lexical'
+import type { Metadata } from 'next'
+import { routing } from '@/i18n/routing'
+
+/** Paths exclude the locale prefix; query strings identify distinct listing pages. */
+export const pageAlternates = (path: string, locale: string): Metadata['alternates'] => ({
+  canonical: `/${locale}${path}`,
+  languages: {
+    ...Object.fromEntries(routing.locales.map((language) => [language, `/${language}${path}`])),
+    'x-default': `/${routing.defaultLocale}${path}`,
+  },
+})
 
 /** Collections with SEO fields (docs/schema.md, Plugins). */
 export const SEO_COLLECTIONS = [

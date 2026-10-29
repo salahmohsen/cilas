@@ -1,7 +1,8 @@
+import { pageAlternates } from '@/lib/seo'
 import config from '@payload-config'
 import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
-import { getTranslations } from 'next-intl/server'
+import { getLocale, getTranslations } from 'next-intl/server'
 import { getPayload } from 'payload'
 
 import { getContactForm } from '@/api/contact.api'
@@ -12,8 +13,13 @@ export const revalidate = 3600
 type Props = { params: Promise<{ locale: string }> }
 
 export async function generateMetadata(): Promise<Metadata> {
+  const locale = await getLocale()
   const t = await getTranslations('Contact')
-  return { title: t('metaTitle'), description: t('text') }
+  return {
+    alternates: pageAlternates('/contact', locale),
+    title: t('metaTitle'),
+    description: t('text'),
+  }
 }
 
 /** Write to CILAS: the Contact form in Payload, shown with Arc's contact section. */

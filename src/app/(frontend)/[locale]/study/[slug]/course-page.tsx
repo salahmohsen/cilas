@@ -18,7 +18,7 @@ import { CourseView, type RelatedCourse } from './CourseView'
 import { pathOf } from '@/lib/paths'
 import { breadcrumbSchema, courseSchema } from '@/lib/schema'
 import { ogImages } from '@/lib/og'
-import { seoDefaults } from '@/lib/seo'
+import { pageAlternates, seoDefaults } from '@/lib/seo'
 import type { Course, Media, Person } from '@/payload-types'
 
 /**
@@ -37,7 +37,11 @@ const shownTo = (reader: Reader, slug: string): Where => ({
  * Meta fields win; the course's own title, summary and cover fill any gaps.
  * Shared by the cached page and the signed-in one.
  */
-export async function courseMetadata(locale: string, slug: string, reader: Reader): Promise<Metadata> {
+export async function courseMetadata(
+  locale: string,
+  slug: string,
+  reader: Reader,
+): Promise<Metadata> {
   const payload = await getPayload({ config })
   const { docs } = await payload.find({
     collection: 'courses',
@@ -47,6 +51,8 @@ export async function courseMetadata(locale: string, slug: string, reader: Reade
     joins: false,
     locale: locale as 'en' | 'ar',
     fallbackLocale: 'en',
+    overrideAccess: false,
+    user: reader,
   })
   const course = docs[0]
   if (!course) return {}
@@ -61,6 +67,7 @@ export async function courseMetadata(locale: string, slug: string, reader: Reade
   return {
     title,
     description,
+    alternates: pageAlternates(`/study/${course.slug}`, locale),
     openGraph: { title, description, images: ogImages(imageUrl) },
     twitter: { card: 'summary_large_image', images: ogImages(imageUrl).map((i) => i.url) },
   }
@@ -70,7 +77,15 @@ export async function courseMetadata(locale: string, slug: string, reader: Reade
  * A course page. `reader` is null on the cached page; the signed-in page
  * passes the account, which adds `community` courses.
  */
-export async function CoursePage({ locale, slug, reader }: { locale: string; slug: string; reader: Reader }) {
+export async function CoursePage({
+  locale,
+  slug,
+  reader,
+}: {
+  locale: string
+  slug: string
+  reader: Reader
+}) {
   const { isEnabled: isPreview } = await draftMode()
   const payload = await getPayload({ config })
 
@@ -131,7 +146,16 @@ export async function CoursePage({ locale, slug, reader }: { locale: string; slu
       fellows: (c.fellows ?? []).flatMap((f) =>
         typeof f === 'object' && f ? [(f as Person).name] : [],
       ),
-      ...(cover?.url ? { image: { url: cover.url, alt: cover.alt ?? '', focalX: cover.focalX, focalY: cover.focalY } } : {}),
+      ...(cover?.url
+        ? {
+            image: {
+              url: cover.url,
+              alt: cover.alt ?? '',
+              focalX: cover.focalX,
+              focalY: cover.focalY,
+            },
+          }
+        : {}),
     }
   })
 
@@ -152,9 +176,7 @@ export async function CoursePage({ locale, slug, reader }: { locale: string; slu
       course,
       locale,
       siteName: tm('siteName'),
-      instructors: (course.fellows ?? []).flatMap((p) =>
-        typeof p === 'object' && p ? [p] : [],
-      ),
+      instructors: (course.fellows ?? []).flatMap((p) => (typeof p === 'object' && p ? [p] : [])),
     })
     // Where it sits: home, the study list, this course.
     const crumb = breadcrumbSchema([

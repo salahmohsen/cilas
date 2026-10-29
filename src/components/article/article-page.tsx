@@ -41,7 +41,7 @@ import { MentionLink } from '@/components/article/mention-link'
 import { NewsletterSignupEnd } from '@/components/newsletter-signup-end'
 import { Schema } from '@/components/schema'
 import { Link } from '@/i18n/navigation'
-import { isRtl, routing } from '@/i18n/routing'
+import { isRtl } from '@/i18n/routing'
 import { env } from '@/env'
 import { splitBody } from '@/lib/article-body'
 import { localDigits } from '@/lib/digits'
@@ -51,6 +51,7 @@ import { excerptOf, publicationOf, readingMinutes, repeatsOpening, yearOf } from
 import { articleSchema, absoluteUrl, breadcrumbSchema } from '@/lib/schema'
 import { ogImages } from '@/lib/og'
 import { pathOf } from '@/lib/paths'
+import { pageAlternates } from '@/lib/seo'
 import type { Article, Media, Person, Publication } from '@/payload-types'
 
 const isObject = <T,>(v: unknown): v is T => typeof v === 'object' && v !== null
@@ -74,13 +75,7 @@ export async function articleMetadata({ locale, slug, user }: View): Promise<Met
     description,
     openGraph: { title: metaTitle, description, type: 'article', images: ogImages(image) },
     twitter: { card: 'summary_large_image', images: ogImages(image).map((i) => i.url) },
-    // Each site language has its own URL (ADR 0006).
-    alternates: {
-      canonical: pathOf('articles', article, locale),
-      languages: Object.fromEntries(
-        routing.locales.map((l) => [l, pathOf('articles', article, l) ?? '']),
-      ),
-    },
+    alternates: pageAlternates(`/articles/${article.slug}`, locale),
   }
 }
 
@@ -140,7 +135,13 @@ export async function ArticlePage({ locale: siteLocale, slug, user }: View) {
         role: c.author.name,
         description: c.excerpt,
         href: pathOf('articles', a) ?? '#',
-        ...(c.image ? { image: c.image.src, imageAlt: c.image.alt, imageFocalPoint: { focalX: c.image.focalX, focalY: c.image.focalY } } : {}),
+        ...(c.image
+          ? {
+              image: c.image.src,
+              imageAlt: c.image.alt,
+              imageFocalPoint: { focalX: c.image.focalX, focalY: c.image.focalY },
+            }
+          : {}),
         stat: t('essayOf', { n: i + 1, total }),
       }
     },
@@ -473,7 +474,10 @@ export async function ArticlePage({ locale: siteLocale, slug, user }: View) {
             </section>
 
             {/* Taking it with AI, its own section at the tools' spacing. */}
-            <section aria-labelledby="article-ai" className="mt-6 grid gap-3 border-t border-border pt-6">
+            <section
+              aria-labelledby="article-ai"
+              className="mt-6 grid gap-3 border-t border-border pt-6"
+            >
               <h2 className="font-sans text-sm text-[var(--text-muted)]" id="article-ai">
                 {tShare('aiHeading')}
               </h2>

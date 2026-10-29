@@ -37,10 +37,21 @@ const courseOf = async (payload: Payload, slug: string, lang: 'en' | 'ar', reade
 }
 
 /** Shared by the cached page and the signed-in one. */
-export async function courseApplyMetadata(locale: string, slug: string, reader: Reader): Promise<Metadata> {
+export async function courseApplyMetadata(
+  locale: string,
+  slug: string,
+  reader: Reader,
+): Promise<Metadata> {
   const t = await getTranslations({ locale, namespace: 'Apply' })
-  const course = await courseOf(await getPayload({ config }), slug, locale === 'ar' ? 'ar' : 'en', reader)
-  return course ? { title: t('courseTitle', { title: course.title }) } : {}
+  const course = await courseOf(
+    await getPayload({ config }),
+    slug,
+    locale === 'ar' ? 'ar' : 'en',
+    reader,
+  )
+  return course
+    ? { title: t('courseTitle', { title: course.title }), robots: { index: false } }
+    : {}
 }
 
 /**
@@ -49,7 +60,15 @@ export async function courseApplyMetadata(locale: string, slug: string, reader: 
  * the course, so an admin can accept it into an enrollment. `reader` is null
  * on the cached page; the signed-in page passes the account (`community` courses).
  */
-export async function CourseApplyPage({ locale, slug, reader }: { locale: string; slug: string; reader: Reader }) {
+export async function CourseApplyPage({
+  locale,
+  slug,
+  reader,
+}: {
+  locale: string
+  slug: string
+  reader: Reader
+}) {
   const lang = locale === 'ar' ? 'ar' : 'en'
   const [t, format] = await Promise.all([getTranslations('Apply'), getFormatter()])
   const payload = await getPayload({ config })

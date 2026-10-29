@@ -7,7 +7,7 @@
  */
 
 import { env } from '@/env'
-import { CAIRO, cairoDay } from '@/lib/cairo-day'
+import { cairoDay, cairoInstant } from '@/lib/cairo-day'
 import { pathOf } from '@/lib/paths'
 import { plainText } from '@/lib/plaintext'
 import { expandSchedule } from '@/lib/schedule'
@@ -24,37 +24,11 @@ export const absoluteUrl = (path: string): string =>
 
 /** Rich text as one line: description without the line breaks and indents. */
 const plainOf = (data: unknown): string =>
-  data ? plainText({ data: data as { root: unknown } }).replace(/\s+/g, ' ').trim() : ''
-
-/**
- * A Cairo wall-clock time as an absolute instant (`2026-03-07T19:00:00+02:00`).
- * Egypt's offset moves with daylight saving, so it is read off the calendar:
- * the instant Cairo places at that wall-clock, in the spirit of ADR 0002.
- */
-const isoOf = (day: string, time: string): string => {
-  const hhmm = time.length > 5 ? time.slice(0, 5) : time
-  const guess = new Date(`${day}T${hhmm}:00Z`)
-  if (Number.isNaN(guess.getTime())) return `${day}T${hhmm}:00`
-
-  const at = (type: string) => cairoClock.formatToParts(guess).find((p) => p.type === type)?.value
-  const re = new Date(`${at('year')}-${at('month')}-${at('day')}T${at('hour')}:${at('minute')}:00Z`)
-  const minutes = Math.round((re.getTime() - guess.getTime()) / 60000)
-  const sign = minutes < 0 ? '-' : '+'
-  const abs = Math.abs(minutes)
-  const offset = `${sign}${String(Math.floor(abs / 60)).padStart(2, '0')}:${String(abs % 60).padStart(2, '0')}`
-  return `${day}T${hhmm}:00${offset}`
-}
-
-// Cairo's clock, as year, month, day and hours 0–23.
-const cairoClock = new Intl.DateTimeFormat('en-US', {
-  timeZone: CAIRO,
-  hourCycle: 'h23',
-  year: 'numeric',
-  month: '2-digit',
-  day: '2-digit',
-  hour: '2-digit',
-  minute: '2-digit',
-})
+  data
+    ? plainText({ data: data as { root: unknown } })
+        .replace(/\s+/g, ' ')
+        .trim()
+    : ''
 
 /** A person as other data refers to them; a profile page's URL when it has one. */
 const personRef = (person: Person, locale: string) => {
@@ -182,8 +156,7 @@ export const articleSchema = ({
 /** A person's profile page: the Person is what the page is about. */
 export const personSchema = ({ person, locale }: { person: Person; locale: string }) => {
   const bio = plainOf(person.bio)
-  const photoUrl =
-    typeof person.photo === 'object' && person.photo?.url ? person.photo.url : null
+  const photoUrl = typeof person.photo === 'object' && person.photo?.url ? person.photo.url : null
   const sameAs = [person.website, ...(person.social_links ?? []).map((s) => s.url)].filter(
     (link): link is string => Boolean(link),
   )
@@ -204,69 +177,57 @@ export const personSchema = ({ person, locale }: { person: Person; locale: strin
   }
 }
 
-/**
- * An event (an event has no detail page: the calendar is its record). Its
- * times are the first and last meetings; without a weekly schedule, the
- * start day and the agenda's first and last hours instead. `null` when no
- * single day is known, or there is nowhere for it to happen — such an event
- * gives a search engine nothing to show.
- */
+/** Google event markup belongs on a detail page with a known day and physical address. */
 export const eventSchema = ({
   event,
   locale,
   siteName,
 }: {
-  event: Pick<
-    Event,
-    | 'title'
-    | 'description'
-    | 'schedule'
-    | 'place'
-    | 'external_venue'
-    | 'online_url'
-    | 'agenda'
-    | 'speakers'
-    | 'pricing'
-    | 'registration'
-  >
+  event: Event
   locale: string
   siteName: string
 }) => {
+  const page = pathOf('events', event, locale)
+  if (!page || event.schedule?.start_precision === 'week') return null
   const place = event.place && typeof event.place === 'object' ? event.place : null
-  const venue = place
-    ? { name: place.name, address: place.address, mapUrl: place.map_url }
-    : event.external_venue?.name
-      ? {
-          name: event.external_venue.name,
-          address: event.external_venue.address,
-          mapUrl: event.external_venue.map_url,
-        }
+  const venue = event.external_venue?.name
+    ? {
+        name: event.external_venue.name,
+        address: event.external_venue.address,
+        mapUrl: event.external_venue.map_url,
+      }
+    : place
+      ? { name: place.name, address: place.address, mapUrl: place.map_url }
       : null
   const online = event.online_url
-  if (!(venue || online)) return null
+  if (!venue?.name || !venue.address) return null
 
   const meetings = expandSchedule(event.schedule).filter((m) => !m.cancelled)
   const first = meetings[0]
   const last = meetings.at(-1) ?? first ?? null
   const exact =
     first && last
-      ? { startDate: isoOf(first.date, first.start_time), endDate: isoOf(last.date, last.end_time) }
+      ? {
+          startDate: cairoInstant(first.date, first.start_time),
+          endDate: cairoInstant(last.date, last.end_time),
+        }
       : null
   // No weekly times: the day it starts, running the agenda's hours when the
   // agenda has times, else the bare day (Google wants no made-up midnight).
-  const day =
-    !first && event.schedule?.start_precision !== 'week' && event.schedule?.start_date
-      ? cairoDay(event.schedule.start_date)
-      : null
-  const agendaOpen = event.agenda?.[0]?.start_time
-  const agendaClose = event.agenda?.at(-1)?.end_time
-  const times = exact ??
+  const day = !first && event.schedule?.start_date ? cairoDay(event.schedule.start_date) : null
+  const agendaOpen = event.agenda?.map((item) => item.start_time).sort()[0]
+  const agendaClose = event.agenda
+    ?.map((item) => item.end_time)
+    .sort()
+    .at(-1)
+  const times =
+    exact ??
     (day
       ? agendaOpen && agendaClose
-        ? { startDate: isoOf(day, agendaOpen), endDate: isoOf(day, agendaClose) }
+        ? { startDate: cairoInstant(day, agendaOpen), endDate: cairoInstant(day, agendaClose) }
         : { startDate: day, endDate: day }
       : null)
-  if (!times) return null
+  if (!times?.startDate || !times.endDate) return null
 
   // The price when it is set (0 is free), and the form to register elsewhere.
   const price = typeof event.pricing?.min === 'number' ? event.pricing.min : null
@@ -279,37 +240,31 @@ export const eventSchema = ({
     '@context': CONTEXT,
     '@type': 'Event',
     name: event.title,
+    url: absoluteUrl(page),
+    ...(typeof event.cover_image === 'object' && event.cover_image?.url
+      ? { image: [absoluteUrl(event.cover_image.url)] }
+      : {}),
     ...(event.description?.root?.children?.length
       ? { description: plainOf(event.description) }
       : {}),
-    // Both a room and a link is hybrid; only a link is online.
     eventAttendanceMode: online
-      ? venue
-        ? 'MixedEventAttendanceMode'
-        : 'OnlineEventAttendanceMode'
-      : 'OfflineEventAttendanceMode',
+      ? `${CONTEXT}/MixedEventAttendanceMode`
+      : `${CONTEXT}/OfflineEventAttendanceMode`,
     location: [
-      ...(venue
-        ? [
-            {
-              '@type': 'Place',
-              name: venue.name,
-              ...(venue.address
-                ? {
-                    address: {
-                      '@type': 'PostalAddress',
-                      streetAddress: venue.address,
-                      addressCountry: 'EG',
-                    },
-                  }
-                : {}),
-              ...(venue.mapUrl ? { hasMap: venue.mapUrl } : {}),
-            },
-          ]
-        : []),
+      {
+        '@type': 'Place',
+        name: venue.name,
+        address: {
+          '@type': 'PostalAddress',
+          streetAddress: venue.address,
+          addressCountry: 'EG',
+        },
+        ...(venue.mapUrl ? { hasMap: venue.mapUrl } : {}),
+      },
       ...(online ? [{ '@type': 'VirtualLocation', url: online }] : []),
     ],
-    ...times,
+    startDate: times.startDate,
+    endDate: times.endDate,
     ...(speakers.length ? { performer: speakers } : {}),
     ...(price !== null
       ? {
@@ -325,11 +280,7 @@ export const eventSchema = ({
   }
 }
 
-/**
- * A course, for Google's course-info results. Each instance says where it
- * happens (the `location` field) and, when it runs to a weekly pattern, how
- * often it meets. `null` when the course has no text at all to describe it.
- */
+/** A course detail page, paired with the study index's course-list markup. */
 export const courseSchema = ({
   course,
   locale,
@@ -341,39 +292,42 @@ export const courseSchema = ({
   siteName: string
   instructors: Person[]
 }) => {
-  const description = (
-    course.meta?.description ??
-    course.summary ??
-    course.subtitle ??
-    ''
-  )
-    .trim() ||
+  const description =
+    (course.meta?.description || course.summary || course.subtitle || '').trim() ||
     plainOf(course.description)
   if (!description) return null
 
   const uses = course.location ?? []
-  const hybrid =
-    uses.includes('HYBRID') || (uses.includes('ONLINE') && uses.includes('OFFLINE'))
+  const hybrid = uses.includes('HYBRID') || (uses.includes('ONLINE') && uses.includes('OFFLINE'))
   const courseMode = hybrid
     ? 'Hybrid'
     : uses.includes('ONLINE')
       ? 'Online'
-      : 'Onsite' // A course with no locations named is taught in person, as they all are.
-  const slots = course.schedule?.slots?.length ?? 0
+      : uses.includes('OFFLINE')
+        ? 'Onsite'
+        : null
+  const page = pathOf('courses', course, locale)
 
   return {
     '@context': CONTEXT,
     '@type': 'Course',
     name: course.title,
+    ...(page ? { url: absoluteUrl(page) } : {}),
     description,
     inLanguage: locale,
     provider: { '@type': 'EducationalOrganization', name: siteName, url: absoluteUrl('/') },
-    ...(instructors.length ? { instructor: instructors.map((p) => personRef(p, locale)) } : {}),
-    hasCourseInstance: [
-      {
-        courseMode,
-        ...(slots ? { courseSchedule: `${slots} times per week` } : {}),
-      },
-    ],
+    ...(courseMode || instructors.length
+      ? {
+          hasCourseInstance: [
+            {
+              '@type': 'CourseInstance',
+              ...(courseMode ? { courseMode } : {}),
+              ...(instructors.length
+                ? { instructor: instructors.map((p) => personRef(p, locale)) }
+                : {}),
+            },
+          ],
+        }
+      : {}),
   }
 }

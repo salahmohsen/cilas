@@ -1,10 +1,44 @@
 import { describe, expect, it } from 'vitest'
 
 import { pathOf } from '@/lib/paths'
-import { SEO_COLLECTIONS, seoDefaults } from '@/lib/seo'
+import { pageAlternates, SEO_COLLECTIONS, seoDefaults } from '@/lib/seo'
+import { sitemapEntries } from '@/lib/sitemap'
 import { lexical } from '../../seed/seed.utils'
 
 const long = 'word '.repeat(60).trim()
+
+describe('public URL metadata', () => {
+  it('agrees with the sitemap in both languages, including the default', () => {
+    const origin = 'https://ci-las.org'
+    const pages = [{ path: '' }, { path: '/events/reading-group' }]
+    const entries = sitemapEntries(origin, pages)
+    for (const { path } of pages) {
+      for (const locale of ['en', 'ar']) {
+        const metadata = pageAlternates(path, locale)!
+        const canonical = new URL(String(metadata.canonical), origin).href
+        const sitemap = entries.find((entry) => entry.url === canonical)!
+        const languages = Object.fromEntries(
+          Object.entries(metadata.languages!).map(([language, url]) => [
+            language,
+            new URL(String(url), origin).href,
+          ]),
+        )
+        expect(sitemap.alternates?.languages).toEqual(languages)
+      }
+    }
+  })
+
+  it('preserves pagination on each locale rather than pointing page two at page one', () => {
+    expect(pageAlternates('/study?page=2', 'ar')).toEqual({
+      canonical: '/ar/study?page=2',
+      languages: {
+        en: '/en/study?page=2',
+        ar: '/ar/study?page=2',
+        'x-default': '/en/study?page=2',
+      },
+    })
+  })
+})
 
 describe('pathOf', () => {
   it('places courses under /study', () => {

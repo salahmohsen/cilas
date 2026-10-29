@@ -31,7 +31,14 @@ export type CalendarItem = {
 const visible: Where = {
   and: [{ tier: { equals: 'public' } }, { _status: { equals: 'published' } }],
 }
-const media = { url: true, alt: true, focalX: true, focalY: true, filename: true, prefix: true } as const
+const media = {
+  url: true,
+  alt: true,
+  focalX: true,
+  focalY: true,
+  filename: true,
+  prefix: true,
+} as const
 
 const coverOf = (value: unknown): CalendarItem['cover'] => {
   const m = value && typeof value === 'object' ? (value as Media) : null
@@ -143,43 +150,5 @@ export const getCalendarItems = async (
 export const getCachedCalendarItems = unstable_cache(
   async (locale: Locale) => getCalendarItems(await getPayload({ config }), locale),
   ['calendar-items-v2'],
-  { tags: [COURSES_TAG], revalidate: 3600 },
-)
-
-/**
- * Public events with their places and speakers resolved for JSON-LD.
- * Event writes invalidate this cache alongside the calendar.
- */
-export const getCachedSchemaEvents = unstable_cache(
-  async (locale: Locale) => {
-    const payload = await getPayload({ config })
-    const { docs } = await payload.find({
-      collection: 'events',
-      where: { tier: { equals: 'public' } },
-      depth: 2,
-      pagination: false,
-      select: {
-        title: true,
-        description: true,
-        schedule: true,
-        place: true,
-        external_venue: true,
-        online_url: true,
-        agenda: true,
-        speakers: true,
-        pricing: true,
-        registration: true,
-      },
-      populate: {
-        places: { name: true, address: true, map_url: true },
-        people: { name: true, slug: true },
-      },
-      locale,
-      fallbackLocale: locale === 'ar' ? 'en' : 'ar',
-      overrideAccess: false,
-    })
-    return docs
-  },
-  ['schema-events'],
   { tags: [COURSES_TAG], revalidate: 3600 },
 )
