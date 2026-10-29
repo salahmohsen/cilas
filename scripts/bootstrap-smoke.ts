@@ -8,7 +8,11 @@ if (process.env.DATABASE_URL !== database) {
 
 const { default: config } = await import('../src/payload.config')
 const resolved = await config
-resolved.db = postgresAdapter({ pool: { connectionString: database }, push: true })
+resolved.db = {
+  ...postgresAdapter({ pool: { connectionString: database }, push: true }),
+  allowIDOnCreate: false,
+  name: 'postgres',
+}
 const payload = await getPayload({ config: resolved })
 
 try {

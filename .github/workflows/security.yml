@@ -104,7 +104,8 @@ jobs:
           test -n "$DOKPLOY_URL"
           test -n "$DOKPLOY_API_KEY"
           curl --fail --silent --show-error --max-time 60 \
+            --user-agent cilas-github-actions-deploy \
             --request POST "$DOKPLOY_URL/api/application.deploy" \
             --header "x-api-key: $DOKPLOY_API_KEY" \
             --header 'Content-Type: application/json' \
-            --data '{"applicationId":"3l3uu-SF_vXo3wrIEjqbC","title":"CI-verified production deployment"}'
+            --data "{\"applicationId\":\"3l3uu-SF_vXo3wrIEjqbC\",\"title\":\"CI-verified production deployment\",\"description\":\"Commit: $GITHUB_SHA\"}"
