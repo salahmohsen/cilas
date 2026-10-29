@@ -1,6 +1,7 @@
 'use client'
 
 import { useTranslations } from 'next-intl'
+import { useState } from 'react'
 
 import { Carousel } from '@/components/arc/carousel/carousel'
 import { Poster, type PosterData } from '@/components/home/poster'
@@ -16,11 +17,16 @@ const INTERVAL = 7000
  */
 export function PosterCarousel({ posters, label }: { posters: PosterData[]; label: string }) {
   const t = useTranslations('Home.controls')
+  const [selectedIndex, setSelectedIndex] = useState(0)
+  const activeIndex = Math.min(selectedIndex, Math.max(0, posters.length - 1))
+  const nextIndex = posters.length ? (activeIndex + 1) % posters.length : 0
   return (
     <div className="poster-carousel" dir="ltr">
       <Carousel
         autoplay
         interval={INTERVAL}
+        index={activeIndex}
+        onIndexChange={setSelectedIndex}
         label={label}
         labels={{
           slides: label,
@@ -33,9 +39,13 @@ export function PosterCarousel({ posters, label }: { posters: PosterData[]; labe
         slideLabel={(i, count) => t('position', { position: i + 1, total: count })}
         slideSize="min(100cqw, 75rem)"
       >
-        {posters.map((poster) => (
+        {posters.map((poster, index) => (
           <div className="poster-frame" dir="auto" key={poster.id}>
-            <Poster poster={poster} />
+            <Poster
+              poster={poster}
+              imageLoading={index === activeIndex || index === nextIndex ? 'eager' : 'lazy'}
+              imageFetchPriority={index === activeIndex ? 'high' : 'auto'}
+            />
           </div>
         ))}
       </Carousel>

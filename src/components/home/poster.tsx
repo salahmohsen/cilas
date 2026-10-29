@@ -2,7 +2,7 @@
 
 import { ArrowRight } from 'lucide-react'
 import Image from 'next/image'
-import type { CSSProperties } from 'react'
+import { useState, type CSSProperties } from 'react'
 
 import { InViewTitle } from '@/components/arc/in-view-title/in-view-title'
 import { CilasLogo } from '@/components/cilas-logo'
@@ -35,6 +35,8 @@ export type PosterData = {
   /** Under the title: who ("With Ghosoun Ismail", the author). */
   credit?: string
   image?: MediaImage
+  /** Prepared images can be served directly without another server-side transform. */
+  imageDelivery?: 'direct'
   imageFallback?: 'logo'
   /** The strip's coloured cell: a line or two; the time left to a deadline (YYYY-MM-DD) gets the cell after it. */
   meta: { lines: string[]; deadline?: string; status?: string }
@@ -46,7 +48,15 @@ export type PosterData = {
 
 const FALLBACK = '/assets/images/cilas-classroom.jpg'
 
-export function Poster({ poster }: { poster: PosterData }) {
+export function Poster({
+  poster,
+  imageLoading = 'lazy',
+  imageFetchPriority,
+}: {
+  poster: PosterData
+  imageLoading?: 'eager' | 'lazy'
+  imageFetchPriority?: 'high' | 'auto'
+}) {
   const {
     layout: variant,
     color,
@@ -55,26 +65,34 @@ export function Poster({ poster }: { poster: PosterData }) {
     title,
     credit,
     image,
+    imageDelivery,
     imageFallback,
     meta,
     details,
     action,
     href,
   } = poster
+  const source = image?.src ?? FALLBACK
+  const [failedSource, setFailedSource] = useState<string | null>(null)
+  const imageFailed = failedSource === source
   const layout = variant === 3 ? 1 : variant
   const labelOnTop = layout === 0 || separateLabel
   const picture = (
-    <div className="poster-image" data-fallback={!image ? imageFallback : undefined}>
-      {!image && imageFallback === 'logo' ? (
+    <div className="poster-image" data-fallback={!image || imageFailed ? imageFallback : undefined}>
+      {(!image || imageFailed) && imageFallback === 'logo' ? (
         <CilasLogo className="poster-fallback-logo" />
       ) : (
         <Image
-          alt={image?.alt ?? ''}
+          alt={imageFailed ? '' : (image?.alt ?? '')}
           draggable={false}
           fill
+          loading={imageLoading}
+          fetchPriority={imageFetchPriority}
           sizes="(min-width: 75rem) 46rem, (min-width: 48rem) 62vw, 100vw"
-          src={image?.src ?? FALLBACK}
-          style={focalPointStyle(image)}
+          src={imageFailed ? FALLBACK : source}
+          unoptimized={imageDelivery === 'direct' || imageFailed}
+          onError={source !== FALLBACK && !imageFailed ? () => setFailedSource(source) : undefined}
+          style={focalPointStyle(imageFailed ? undefined : image)}
         />
       )}
     </div>

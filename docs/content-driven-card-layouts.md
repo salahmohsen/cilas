@@ -142,6 +142,14 @@ Keep the title visually stronger than the course type and fellow. Keep actions r
 
 ## Verification before reuse
 
+### Image delivery
+
+Registration covers use `imageDelivery: 'direct'` on `PosterData`: Payload has already converted uploaded media to WebP. This avoids a second runtime image transform and the upstream-fetch timeouts observed in production. Direct delivery uses the stored file's resolution and byte size; it does not generate a responsive `srcset`. Keep uploads appropriately sized. Other poster types retain Next.js image optimization unless they explicitly choose direct delivery.
+
+The registration carousel loads its active and next image eagerly, gives only the active image high fetch priority, and leaves the other images lazy. This prepares the next transition without eagerly downloading every slide. Failed covers use a local classroom image, or the logo when that poster requests it. Fallback images do not reuse the original artwork's alt text or focal point.
+
+### Layout checks
+
 Test the full sizing chain, including a taller neighboring card. An isolated card can look correct while the carousel version fails.
 
 - Narrow, medium, and wide containers, including both sides of the composition breakpoint.
