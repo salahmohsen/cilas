@@ -143,6 +143,8 @@
   },
   "Footer": {
     "tagline": "A pedagogy of discovery and attunement.",
+    "allCourses": "All courses",
+    "allPeople": "All people",
     "explore": "Explore",
     "study": "Study",
     "articles": "Articles",
