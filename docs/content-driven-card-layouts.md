@@ -270,7 +270,7 @@ A section that holds a list rather than a single card (the course flow beside th
 - The image scales to 1.03 on hover with a fine pointer, and not at all with reduced motion.
 - The action's arrow steps 3px toward the reading direction on hover and keyboard focus (`translate`, `--duration-fast`), and stays still with reduced motion.
 - Keyboard focus on the action or card link: `outline: 3px solid var(--poster-ink)` with `outline-offset: -3px`, inside the outline.
-- Compose from the card's container width, not the viewport: stacked below `34rem`, side by side above it.
+- Compose from the card's container width, not the viewport: stacked below the card's threshold, side by side above it (`34rem` for posters, `44rem` for fellow cards, whose photo fills a column beside a long bio).
 
 ### Reference implementations
 
@@ -279,7 +279,7 @@ A section that holds a list rather than a single card (the course flow beside th
 | Registration poster | `src/components/home/poster.tsx`                          | `.poster*`                               |
 | Fellow card         | `src/app/(frontend)/[locale]/study/[slug]/CourseView.tsx` | `.fellow-card*`                          |
 
-The fellow card maps the poster like this: photo (media cell, 4:3 when stacked; when wide, a square at the top of a `min(36%, 18rem)` column, with the card's colour filling the column under it when the text is taller, so the photo is never stretched), name on the colour panel, the bio as a paper cell under the name, the fellows' note ("From the fellow") as the notice row, and a strip with the mark, the role, and "View profile". The note is course-level: with one fellow it closes that card; with several it gets its own card after theirs, in the next palette colour. Content sizes the card; nothing shares a height with a neighbour.
+The fellow card maps the poster like this: photo (media cell, 4:3 when stacked; when wide, a `min(36%, 18rem)` column that the photo fills from top to bottom, at least square, so its end meets the end of the text beside it; the image covers the cell from its focal point), name on the colour panel, the bio as a paper cell under the name, the fellows' note ("From the fellow") as the notice row, and a strip with the mark, the role, and "View profile". The note is course-level: with one fellow it closes that card; with several it gets its own card after theirs, in the next palette colour. Content sizes the card; nothing shares a height with a neighbour.
 
 ## 8. Verification
 
@@ -332,7 +332,7 @@ Files:
 - `src/components/rich-text-columns.module.css`: profile carousel and column styles.
 - `src/lib/poster-colors.ts`: shared palette.
 - `tests/poster-layout.test.mjs`: rendered geometry regression.
-- `src/app/(frontend)/[locale]/study/[slug]/CourseView.tsx`: fellow cards in Who teaches it, in the poster look (section 7); content sizes all; the `fellow-card` container switches at `34rem`.
+- `src/app/(frontend)/[locale]/study/[slug]/CourseView.tsx`: fellow cards in Who teaches it, in the poster look (section 7); content sizes all; the `fellow-card` container switches at `44rem`, later than posters, because a photo that fills a column beside a long bio needs that width to stay a portrait and not a strip.
 
 ## 11. Wide blocks in prose
 

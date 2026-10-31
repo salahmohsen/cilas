@@ -790,17 +790,17 @@ body {
   outline: 3px solid var(--poster-ink);
   outline-offset: -3px;
 }
-/* Wide: a square photo at the top of its own column; the name, note and bio
-   sit beside it. When the text is taller, the card's colour fills the column
-   under the photo, so the photo is never stretched or cropped further. The
-   text column owns the rule between the columns. */
-@container fellow-card (width > 34rem) {
+/* Wide: the photo fills its own column from top to bottom, at least
+   square, so its end always meets the end of the text beside it. The
+   image covers the cell from its focal point. The text column owns the
+   rule between the columns. The side layout waits for a 44rem card: below
+   that, a long bio would turn the photo into a thin strip. */
+@container fellow-card (width > 44rem) {
   .fellow-card-body {
     grid-template-columns: min(36%, 18rem) minmax(0, 1fr);
-    background: var(--poster-color);
   }
   .fellow-card-photo {
-    align-self: start;
+    align-self: stretch;
     border-block-end: 0;
   }
   .fellow-card-photo::before {
