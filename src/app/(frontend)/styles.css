@@ -542,6 +542,7 @@ body {
 .fellow-note-text {
   display: grid;
   gap: 0.75rem;
+  max-width: 68ch;
   margin: 0.5rem 0 0;
   font-family: var(--font-heading);
   font-size: 1.2rem;
