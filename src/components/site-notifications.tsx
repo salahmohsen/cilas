@@ -1,7 +1,7 @@
 'use client'
 
 import { useLocale, useTranslations } from 'next-intl'
-import { useCallback, useEffect, useState, type ReactNode } from 'react'
+import { useCallback, useEffect, useRef, useState, type ReactNode } from 'react'
 import { formatDistanceToNow, isYesterday } from 'date-fns'
 import {
   AtSign,
@@ -23,20 +23,15 @@ import {
   NotificationCenter,
   type NotificationItem,
 } from '@/components/arc/notification-center/notification-center'
+import { useToastStack } from '@/components/arc/toast-stack/toast-stack'
 import { localDigits } from '@/lib/digits'
 import { EVENT_NAMES, type NotificationKind } from '@/lib/notify'
+import type { ClientNotificationEvent, StoredNotification } from '@/lib/realtime/events'
+import { subscribeNotifications, tabId } from '@/lib/realtime/stream-client'
 
-type Stored = {
-  id: number
-  kind: NotificationKind
-  title: string
-  description?: string | null
-  link?: string | null
-  read_at?: string | null
-  actor_name?: string | null
-  actor_photo?: string | null
-  createdAt: string
-}
+type Stored = StoredNotification & { kind: NotificationKind }
+
+const LIMIT = 20
 
 const API = '/api/notifications'
 const TONES: Record<NotificationKind, NotificationItem['tone']> = {
@@ -96,65 +91,116 @@ const relativeTime = (date: Date) => {
 /**
  * The signed-in account's notifications on the site (Arc's notification
  * center), the same ones as the admin's bell (src/collections/Notifications.ts):
- * marking one read here marks it there. It looks again every minute and when
- * the tab comes back into view.
+ * marking one read here marks it there. Changes arrive live from the tab's
+ * stream (src/lib/realtime/stream-client.ts); a new one also shows a toast,
+ * except in the tab whose action caused it. It loads again when the stream
+ * comes back after a gap and when the tab comes back into view.
  */
 export function SiteNotifications() {
   const t = useTranslations('Notifications')
   const locale = useLocale()
+  const { toast } = useToastStack()
   const [items, setItems] = useState<NotificationItem[] | null>(null)
 
+  const toItem = useCallback(
+    (n: Stored): NotificationItem => {
+      // The kind carries the short label; rows written before the registry
+      // keep their old sentence as the detail line instead of the title.
+      const known = n.kind in EVENT_NAMES
+      const label = known ? t(`kinds.${n.kind}`) : n.title
+      const detail =
+        n.description ??
+        (!known || n.title === EVENT_NAMES[n.kind] || n.title.startsWith('{') ? undefined : n.title)
+      return {
+        id: String(n.id),
+        title: label,
+        description: detail,
+        actor:
+          n.actor_name || n.actor_photo
+            ? { name: n.actor_name ?? '', photo: n.actor_photo ?? '' }
+            : undefined,
+        icon: known ? ICONS[n.kind] : undefined,
+        time: relativeTime(new Date(n.createdAt)),
+        read: Boolean(n.read_at),
+        tone: TONES[n.kind],
+        href: n.link ?? undefined,
+      }
+    },
+    [t],
+  )
+
   const load = useCallback(async () => {
-    const res = await call('?limit=20&depth=0&sort=-createdAt')
+    const res = await call(`?limit=${LIMIT}&depth=0&sort=-createdAt`)
     if (!res?.ok) return
     const { docs } = (await res.json()) as { docs: Stored[] }
-    setItems(
-      docs.map((n) => {
-        // The kind carries the short label; rows written before the registry
-        // keep their old sentence as the detail line instead of the title.
-        const known = n.kind in EVENT_NAMES
-        const label = known ? t(`kinds.${n.kind}`) : n.title
-        const detail =
-          n.description ??
-          (!known || n.title === EVENT_NAMES[n.kind] || n.title.startsWith('{')
-            ? undefined
-            : n.title)
-        return {
-          id: String(n.id),
-          title: label,
-          description: detail,
-          actor:
-            n.actor_name || n.actor_photo
-              ? { name: n.actor_name ?? '', photo: n.actor_photo ?? '' }
-              : undefined,
-          icon: known ? ICONS[n.kind] : undefined,
-          time: relativeTime(new Date(n.createdAt)),
-          read: Boolean(n.read_at),
-          tone: TONES[n.kind],
-          href: n.link ?? undefined,
-        }
+    setItems(docs.map(toItem))
+  }, [toItem])
+
+  const markRead = useCallback(
+    (item: NotificationItem, read: boolean) =>
+      void call(`/${item.id}`, {
+        method: 'PATCH',
+        body: JSON.stringify({ read_at: read ? new Date().toISOString() : null }),
       }),
-    )
-  }, [t])
+    [],
+  )
+
+  const onEvent = useCallback(
+    (event: ClientNotificationEvent) => {
+      const id = String(event.id)
+      if (event.op === 'deleted') {
+        setItems((list) => list?.filter((item) => item.id !== id) ?? list)
+        return
+      }
+      // Too big for one database message: the row comes from the API instead.
+      if (!event.doc) return void load()
+      const item = toItem(event.doc as Stored)
+      if (event.op === 'updated') {
+        setItems((list) => list?.map((entry) => (entry.id === id ? item : entry)) ?? list)
+        return
+      }
+      setItems((list) => [item, ...(list ?? []).filter((entry) => entry.id !== id)].slice(0, LIMIT))
+      if (event.origin === tabId()) return
+      toast({
+        type: item.tone ?? 'info',
+        title: item.title,
+        description: item.description,
+        action: item.href
+          ? {
+              label: t('open'),
+              onClick: () => {
+                markRead(item, true)
+                window.location.assign(item.href!)
+              },
+            }
+          : undefined,
+      })
+    },
+    [load, markRead, t, toItem, toast],
+  )
+
+  // The stream's listener stays the same; it calls the latest handlers.
+  const handlers = useRef({ load, onEvent })
+  useEffect(() => {
+    handlers.current = { load, onEvent }
+  }, [load, onEvent])
 
   useEffect(() => {
-    const first = setTimeout(() => void load(), 0)
-    const every = setInterval(() => void load(), 60_000)
-    const back = () => document.visibilityState === 'visible' && void load()
+    const first = setTimeout(() => void handlers.current.load(), 0)
+    const unsubscribe = subscribeNotifications({
+      event: (event) => handlers.current.onEvent(event),
+      sync: () => void handlers.current.load(),
+    })
+    const back = () => document.visibilityState === 'visible' && void handlers.current.load()
     document.addEventListener('visibilitychange', back)
     return () => {
       clearTimeout(first)
-      clearInterval(every)
+      unsubscribe()
       document.removeEventListener('visibilitychange', back)
     }
-  }, [load])
+  }, [])
 
   if (!items) return null
-  const markRead = (item: NotificationItem, read: boolean) =>
-    void call(`/${item.id}`, {
-      method: 'PATCH',
-      body: JSON.stringify({ read_at: read ? new Date().toISOString() : null }),
-    })
 
   return (
     <NotificationCenter
