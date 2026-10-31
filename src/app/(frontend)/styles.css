@@ -2095,12 +2095,20 @@ h3 {
 .poster-carousel {
   --carousel-viewport-radius: 0px;
 }
+/* Every grid between the slide and the card uses a zero-minimum column. An
+   "auto" column grows to its content's min-content width, so one rigid cell
+   (other font metrics on a device, a countdown wheel, an image) would make the
+   card wider than its slide: the viewport clips its right border and it covers
+   the next card. */
 .poster-carousel [aria-roledescription='slide'] {
   display: grid;
+  grid-template-columns: minmax(0, 1fr);
 }
 .poster-frame {
   container: poster / inline-size;
   display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  min-width: 0;
 }
 /* Four flat colours, as on the moodboard's festival posters; the ink on all of
    them is the same near-black, and the strip's white cell stays white in the
@@ -2114,6 +2122,7 @@ h3 {
   position: relative;
   display: flex;
   flex-direction: column;
+  min-width: 0;
   overflow: clip;
   border: 1px solid var(--poster-ink);
   border-radius: 1rem;

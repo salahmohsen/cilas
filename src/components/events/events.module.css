@@ -47,6 +47,8 @@
 .grid > li,
 .page [data-post] {
   display: grid;
+  /* A zero minimum, so rigid content cannot make a card wider than its slide. */
+  grid-template-columns: minmax(0, 1fr);
 }
 .posterFrame {
   height: 100%;

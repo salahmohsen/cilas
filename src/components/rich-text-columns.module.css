@@ -18,6 +18,8 @@
 .profileSlide,
 .profileCarousel .column {
   display: grid;
+  /* A zero minimum, so rigid content cannot make a card wider than its slide. */
+  grid-template-columns: minmax(0, 1fr);
 }
 .profileSlide {
   min-width: 0;

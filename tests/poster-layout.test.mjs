@@ -77,6 +77,66 @@ test('carousel clipping preserves all four poster border corners on mobile', asy
   }
 })
 
+test('a poster never grows wider than its carousel slide, even with rigid content', async () => {
+  // Real devices can give a cell more min-content width than the slide has: other
+  // font metrics, a countdown wheel, an image. The card must still match its slide,
+  // or its right border is clipped and it runs into the next slide.
+  const rigid = {
+    word: (html) => html.replace('Antiphilosophy', 'Antiphilosophyantiphilosophyantiphilosophy'),
+    block: (html) =>
+      html.replace(
+        '<h3>Antiphilosophy</h3>',
+        '<h3>Anti<span style="display:inline-block;width:900px">x</span></h3>',
+      ),
+    strip: (html) =>
+      html.replace(
+        '<div class="poster-strip">Apply</div>',
+        '<div class="poster-strip"><span style="display:inline-block;width:900px">Apply</span></div>',
+      ),
+  }
+  const browser = await chromium.launch({ headless: true })
+  try {
+    const page = await browser.newPage()
+    for (const width of [288, 358]) {
+      for (const layout of [0, 1, 2]) {
+        for (const [kind, widen] of Object.entries(rigid)) {
+          await page.setViewportSize({ width: width + 32, height: 1200 })
+          await page.setContent(`<style>
+            * { box-sizing: border-box; }
+            body, p, h3 { margin: 0; }
+            :root { --radius-panel: 26px; --space-4: 16px; }
+            .poster-carousel { width: ${width}px; }
+            ${posterCSS}
+            ${carouselCSS}
+          </style><div class="poster-carousel"><section class="root" style="--carousel-slide:${width}px;--carousel-start:0">
+            <div class="viewport"><div class="track">
+              <div class="slide" aria-roledescription="slide">${widen(poster(layout, 'ltr', 'With the fellow'))}</div>
+              <div class="slide" aria-roledescription="slide">${poster(layout, 'ltr', 'With the fellow')}</div>
+            </div></div>
+          </section></div>`)
+          const geometry = await page.evaluate(() => {
+            const [first, second] = document.querySelectorAll('.slide')
+            const slide = first.getBoundingClientRect()
+            const card = first.querySelector('.poster').getBoundingClientRect()
+            return {
+              slide: Math.round(slide.width),
+              card: Math.round(card.width),
+              gap: Math.round(
+                second.querySelector('.poster').getBoundingClientRect().left - card.right,
+              ),
+            }
+          })
+          const label = JSON.stringify({ width, layout, kind, ...geometry })
+          assert.equal(geometry.card, geometry.slide, label)
+          assert.ok(geometry.gap >= 0, label)
+        }
+      }
+    }
+  } finally {
+    await browser.close()
+  }
+})
+
 test('stacked registration images absorb shared height while text cells fit their content', async () => {
   const browser = await chromium.launch({ headless: true })
   try {
