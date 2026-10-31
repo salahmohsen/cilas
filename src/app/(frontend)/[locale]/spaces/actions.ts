@@ -295,7 +295,6 @@ export async function commentCreateAction(
   if (!user || user.collection !== 'users') return err('auth')
   const post = num(form, 'post')
   if (!post) return err('not-found')
-  const files = await filesOf(form)
   const payload = await getPayload({ config })
   const result = await commentCreate({
     payload,
@@ -303,7 +302,6 @@ export async function commentCreateAction(
     post,
     parent: num(form, 'parent'),
     body: text(form, 'body'),
-    files,
   }).catch((error) => {
     payload.logger.error({ err: error, msg: 'commentCreate threw' })
     return null
@@ -352,18 +350,11 @@ export async function fileAddAction(
   const user = await currentReader()
   if (!user || user.collection !== 'users') return err('auth')
   const post = num(form, 'post')
-  const comment = num(form, 'comment')
-  if (!post && !comment) return err('not-found')
+  if (!post) return err('not-found')
   const file = (await filesOf(form))[0]
   if (!file) return err('file-type')
   const payload = await getPayload({ config })
-  const result = await fileAdd({
-    payload,
-    user,
-    post: post ?? undefined,
-    comment: comment ?? undefined,
-    file,
-  })
+  const result = await fileAdd({ payload, user, post, file })
   if (!result.ok) return err(result.error)
   await revalidate()
   return { status: 'ok' }

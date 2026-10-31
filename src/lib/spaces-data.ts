@@ -724,7 +724,7 @@ export const spaceFeed = async (
   return { rows, sessions: read, settings, archived, lastMeeting, daysSince }
 }
 
-/** A private file on a post or comment (ADR 0008), served through Payload's read rule. */
+/** A private file on a post (ADR 0008), served through Payload's read rule. Comments take no files. */
 export type SpaceFileRef = {
   id: number
   url: string
@@ -744,7 +744,6 @@ export type ThreadComment = {
   createdAt: string
   edited: boolean
   deleted: boolean
-  files: SpaceFileRef[]
   reactions: Reactions
 }
 
@@ -804,34 +803,18 @@ export const postThreads = async (
     where: { post: { in: postIds } },
   })
   const commentIds = comments.map((c) => c.id)
-  const [{ docs: reactions }, { docs: files }] = commentIds.length
-    ? await Promise.all([
-        payload.find({
-          collection: 'space-reactions',
-          user: user ?? undefined,
-          depth: 0,
-          pagination: false,
-          overrideAccess: false,
-          select: { comment: true, account: true, reaction: true },
-          where: { comment: { in: commentIds } },
-        }),
-        payload.find({
-          collection: 'space-files',
-          user: user ?? undefined,
-          depth: 0,
-          pagination: false,
-          overrideAccess: false,
-          sort: 'createdAt',
-          where: { comment: { in: commentIds } },
-        }),
-      ])
-    : [{ docs: [] }, { docs: [] }]
+  const { docs: reactions } = commentIds.length
+    ? await payload.find({
+        collection: 'space-reactions',
+        user: user ?? undefined,
+        depth: 0,
+        pagination: false,
+        overrideAccess: false,
+        select: { comment: true, account: true, reaction: true },
+        where: { comment: { in: commentIds } },
+      })
+    : { docs: [] }
   const onComment = tally(reactions, (r) => relId(r.comment), user)
-  const filesOf = new Map<number, SpaceFileRef[]>()
-  for (const f of files) {
-    const cid = relId(f.comment as never)
-    if (cid != null) filesOf.set(cid, [...(filesOf.get(cid) ?? []), fileRef(f)])
-  }
 
   const node = (c: (typeof comments)[number]): ThreadComment => ({
     id: c.id,
@@ -840,7 +823,6 @@ export const postThreads = async (
     createdAt: c.createdAt,
     edited: !!c.edited_at,
     deleted: !!c.deleted_at,
-    files: c.deleted_at ? [] : (filesOf.get(c.id) ?? []),
     reactions: onComment.get(c.id) ?? NO_REACTIONS,
   })
   const repliesOf = new Map<number, ThreadComment[]>()

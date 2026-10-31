@@ -916,7 +916,7 @@
     "locked": "مقفل",
     "readOnlyNotice": "هذه المساحة مؤرشفة للقراءة فقط.",
     "placeAnnouncementLabel": "إعلان",
-    "filesDrop": "أضف ملفات",
+    "filesDrop": "أضف صورًا",
     "saveError_mode": "المساحات مغلقة الآن.",
     "saveError_not_member": "الأعضاء فقط هم من ينشرون هنا.",
     "saveError_read_only": "هذه المساحة للقراءة فقط.",
@@ -927,9 +927,9 @@
     "saveError_mention": "يمكنك ذكر أعضاء هذه المساحة فقط.",
     "saveError_consent": "اقبل الخصوصية والقواعد أولًا.",
     "saveError_not_yours": "يمكنك تعديل منشوراتك أنت فقط.",
-    "saveError_file_count": "الكثير من الملفات.",
-    "saveError_file_size": "ملف كبير جداً.",
-    "saveError_file_type": "نوع ملف غير مسموح به.",
+    "saveError_file_count": "عدد الصور أكبر من المسموح.",
+    "saveError_file_size": "صورة كبيرة جداً.",
+    "saveError_file_type": "يُسمح بصور JPEG وPNG وWebP فقط.",
     "saveError_duplicate": "لقد نشرت هذا بالفعل.",
     "saveError_space": "هذه المساحة غير موجودة.",
     "saveError_auth": "سجّل الدخول أولاً.",
@@ -1018,7 +1018,7 @@
     "dialogLoading": "جارٍ تحميل المنشور",
     "dialogFailed": "تعذّر تحميل المنشور. افتح صفحته بدلاً من ذلك.",
     "voteResults": "نتائج التصويت",
-    "saveError_upload": "تعذّر حفظ الملفات. حاول مرة أخرى، أو أرفق ملفات أقل أو أصغر.",
+    "saveError_upload": "تعذّر حفظ الصور. حاول مرة أخرى، أو أرفق صورًا أقل أو أصغر.",
     "saveError_failed": "حدث خطأ ما. حاول مرة أخرى.",
     "sessionLabel": "جلسة المقرر",
     "sessionGone": "لم تعد هذه الجلسة في منهج المقرر.",
@@ -1102,8 +1102,6 @@
   "SpaceComment": {
     "write": "علِّق",
     "reply": "رد",
-    "filesDrop": "أضف ملفاً",
-    "maxFiles": "ملف واحد لكل تعليق",
     "deleted": "حُذف هذا التعليق.",
     "placeholder": "اكتب تعليقًا",
     "replyPlaceholder": "اكتب ردًا",
@@ -1262,9 +1260,8 @@
     "show": "اعرض {name}",
     "attachments": "الملفات المرفقة",
     "remove": "أزل {name}",
-    "attach": "أرفق ملفات",
-    "attachLimit": "حتى {count, plural, one {ملف واحد} two {ملفين} few {# ملفات} many {# ملفًا} other {# ملف}}، بحجم 10 ميغابايت لكل ملف",
-    "tooLarge": "حجم هذه الملفات معًا {size} ميغابايت، والحد الأقصى لمنشور أو تعليق واحد {max} ميغابايت. أزل بعض الملفات أو اختر ملفات أصغر."
+    "attachLimit": "حتى {count, plural, one {صورة واحدة} two {صورتين} few {# صور} many {# صورة} other {# صورة}}، بحجم 10 ميغابايت لكل صورة",
+    "tooLarge": "حجم هذه الصور معًا {size} ميغابايت، والحد الأقصى لمنشور واحد {max} ميغابايت. أزل بعض الصور أو اختر صورًا أصغر."
   },
   "StudyPrompt": {
     "course": {

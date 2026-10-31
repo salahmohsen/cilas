@@ -73,7 +73,7 @@ export function PostEditForm({
   const [error, setError] = useState<string | null>(null)
   const [saving, setSaving] = useState(false)
   const kept = context.files.filter((f) => !removed.includes(f.id))
-  const attachments = useAttachments(FILE_LIMITS.post - kept.length, setError)
+  const attachments = useAttachments(Math.max(0, FILE_LIMITS.post - kept.length), setError)
 
   const save = async () => {
     const total = attachments.files.reduce((n, f) => n + f.size, uploadBytes)
