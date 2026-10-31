@@ -47,6 +47,17 @@ export const env = createEnv({
     // refuses a post without a good token. Set it with the site key below.
     TURNSTILE_SECRET_KEY: z.string().min(1).optional(),
 
+    // Optional: Web Push to devices (the settings page's "On your devices").
+    // Set both keys or neither; without them the device switch is hidden and
+    // nothing is sent. Generate a pair with: npx web-push generate-vapid-keys
+    VAPID_PUBLIC_KEY: z.string().min(1).optional(),
+    VAPID_PRIVATE_KEY: z.string().min(1).optional(),
+    // Who the push services contact about this sender: a mailto: or https: URL.
+    VAPID_SUBJECT: z
+      .string()
+      .regex(/^(mailto:\S+@\S+|https:\/\/\S+)$/)
+      .optional(),
+
     PRIVATE_SPACES_SEARCH: z.enum(['true', 'false']).default('false'),
     PRIVATE_SPACES_SEARCH_KEYS_VERIFIED: z.enum(['true', 'false']).default('false'),
     TYPESENSE_PRIVATE_SEARCH_KEY: z.string().min(1).optional(),

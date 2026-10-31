@@ -8,6 +8,7 @@ import { fileURLToPath } from 'url'
 import sharp from 'sharp'
 
 import { Users } from './collections/Users'
+import { PushSubscriptions } from './collections/PushSubscriptions'
 import { People } from './collections/People'
 import { Memberships } from './collections/Memberships'
 import { Media } from './collections/Media'
@@ -179,6 +180,7 @@ export default buildConfig({
     MailingLists,
     SubmissionFiles,
     Notifications,
+    PushSubscriptions,
     Places,
     Spaces,
     SpacePosts,

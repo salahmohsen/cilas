@@ -88,6 +88,7 @@ export interface Config {
     events: Event;
     'submission-files': SubmissionFile;
     notifications: Notification;
+    'push-subscriptions': PushSubscription;
     spaces: Space;
     'space-posts': SpacePost;
     'space-comments': SpaceComment;
@@ -145,6 +146,7 @@ export interface Config {
     events: EventsSelect<false> | EventsSelect<true>;
     'submission-files': SubmissionFilesSelect<false> | SubmissionFilesSelect<true>;
     notifications: NotificationsSelect<false> | NotificationsSelect<true>;
+    'push-subscriptions': PushSubscriptionsSelect<false> | PushSubscriptionsSelect<true>;
     spaces: SpacesSelect<false> | SpacesSelect<true>;
     'space-posts': SpacePostsSelect<false> | SpacePostsSelect<true>;
     'space-comments': SpaceCommentsSelect<false> | SpaceCommentsSelect<true>;
@@ -1434,6 +1436,15 @@ export interface User {
    */
   sub?: string | null;
   person?: (number | null) | Person;
+  notification_preferences?:
+    | {
+        [k: string]: unknown;
+      }
+    | unknown[]
+    | string
+    | number
+    | boolean
+    | null;
   roles: ('super_admin' | 'admin' | 'fellow' | 'member' | 'non_degree_seeking')[];
   updatedAt: string;
   createdAt: string;
@@ -2129,6 +2140,7 @@ export interface Notification {
     | 'mention'
     | 'comment'
     | 'reply'
+    | 'reaction'
     | 'announcement'
     | 'moderation'
     | 'report'
@@ -2140,6 +2152,21 @@ export interface Notification {
   actor_photo?: string | null;
   link?: string | null;
   read_at?: string | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "push-subscriptions".
+ */
+export interface PushSubscription {
+  id: number;
+  user: number | User;
+  endpoint: string;
+  p256dh: string;
+  auth: string;
+  user_agent?: string | null;
+  locale?: ('en' | 'ar') | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -2608,6 +2635,10 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'notifications';
         value: number | Notification;
+      } | null)
+    | ({
+        relationTo: 'push-subscriptions';
+        value: number | PushSubscription;
       } | null)
     | ({
         relationTo: 'spaces';
@@ -3636,6 +3667,7 @@ export interface PeopleSelect<T extends boolean = true> {
 export interface UsersSelect<T extends boolean = true> {
   sub?: T;
   person?: T;
+  notification_preferences?: T;
   roles?: T;
   updatedAt?: T;
   createdAt?: T;
@@ -3868,6 +3900,20 @@ export interface NotificationsSelect<T extends boolean = true> {
   actor_photo?: T;
   link?: T;
   read_at?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "push-subscriptions_select".
+ */
+export interface PushSubscriptionsSelect<T extends boolean = true> {
+  user?: T;
+  endpoint?: T;
+  p256dh?: T;
+  auth?: T;
+  user_agent?: T;
+  locale?: T;
   updatedAt?: T;
   createdAt?: T;
 }
@@ -4532,6 +4578,7 @@ export interface TaskCreateCollectionExport {
       | 'mailing-lists'
       | 'submission-files'
       | 'notifications'
+      | 'push-subscriptions'
       | 'places'
       | 'spaces'
       | 'space-posts'
