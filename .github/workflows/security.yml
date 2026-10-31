@@ -59,7 +59,7 @@ jobs:
       - name: Unit tests
         run: |
           . ./scripts/search-test-env.sh
-          pnpm exec vitest run tests/unit --reporter=dot
+          pnpm test:unit --reporter=dot
 
   production-smoke:
     runs-on: ubuntu-24.04
