@@ -20,6 +20,9 @@ try {
 export const env = createEnv({
   server: {
     DATABASE_URL: z.url(),
+    // Optional: a direct (session) connection for the live notifications'
+    // LISTEN, when DATABASE_URL goes through a transaction pooler.
+    DATABASE_LISTEN_URL: z.url().optional(),
     PAYLOAD_SECRET: z.string().min(1),
 
     // disableLocalStorage is on, so there is no local fallback for these.
