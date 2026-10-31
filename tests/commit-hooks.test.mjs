@@ -133,6 +133,63 @@ for (const [name, content, diagnostic] of [
   })
 }
 
+function remote(cwd, root) {
+  const bare = resolve(root, 'remote.git')
+  ok(root, 'git', ['init', '--bare', '-b', 'main', bare])
+  ok(cwd, 'git', ['remote', 'add', 'origin', bare])
+  ok(cwd, 'git', ['push', 'origin', 'main'], { LEFTHOOK: '0' })
+}
+
+// The type check needs the real tsconfig; the fixture has none, and CI runs it anyway.
+const push = (cwd, ...args) => run(cwd, 'git', ['push', ...args], { LEFTHOOK_EXCLUDE: 'typecheck' })
+
+for (const [name, content, diagnostic] of [
+  ['lint error', 'export const broken = ;\n', 'Unexpected token'],
+  ['unformatted file', 'let answer={value:42};\nexport {answer};\n', 'answer'],
+]) {
+  test(`pre-push blocks a pushed ${name}, then allows the fixed push`, (t) => {
+    const { cwd, root } = fixture(t)
+    install(cwd)
+    remote(cwd, root)
+    write(cwd, 'src/pushed.ts', content)
+    write(cwd, 'unchanged-since-push.md', 'tracked and unpushed\n')
+    ok(cwd, 'git', ['add', '.'])
+    ok(cwd, 'git', ['commit', '-m', 'bad change'], { LEFTHOOK: '0' })
+    const rejected = push(cwd, 'origin', 'main')
+    assert.notEqual(rejected.status, 0, rejected.output)
+    assert.ok(rejected.output.includes(diagnostic), rejected.output)
+    assert.notEqual(
+      ok(cwd, 'git', ['rev-parse', 'HEAD']),
+      ok(cwd, 'git', ['rev-parse', 'origin/main']),
+    )
+    write(cwd, 'src/pushed.ts', 'export const fixed = 1\n')
+    ok(cwd, 'git', ['commit', '-am', 'fix change'], { LEFTHOOK: '0' })
+    const accepted = push(cwd, 'origin', 'main')
+    assert.equal(accepted.status, 0, accepted.output)
+    assert.equal(
+      ok(cwd, 'git', ['rev-parse', 'HEAD']),
+      ok(cwd, 'git', ['rev-parse', 'origin/main']),
+    )
+  })
+}
+
+test('pre-push ignores files that were not pushed, and LEFTHOOK=0 skips it', (t) => {
+  const { cwd, root } = fixture(t)
+  install(cwd)
+  remote(cwd, root)
+  write(cwd, 'src/local-only.ts', 'export const broken = ;\n') // untracked, not pushed
+  write(cwd, 'docs/note.md', '# Note\n')
+  ok(cwd, 'git', ['add', 'docs/note.md'])
+  ok(cwd, 'git', ['commit', '-m', 'docs'], { LEFTHOOK: '0' })
+  const docsPush = push(cwd, 'origin', 'main')
+  assert.equal(docsPush.status, 0, docsPush.output)
+  write(cwd, 'src/bad.ts', 'export const broken = ;\n')
+  ok(cwd, 'git', ['add', 'src/bad.ts'])
+  ok(cwd, 'git', ['commit', '-m', 'bad'], { LEFTHOOK: '0' })
+  assert.notEqual(push(cwd, 'origin', 'main').status, 0)
+  assert.equal(run(cwd, 'git', ['push', 'origin', 'main'], { LEFTHOOK: '0' }).status, 0)
+})
+
 function partial(cwd) {
   const path = 'src/app/(frontend)/[locale]/partial file.ts'
   const baseline = Array.from({ length: 24 }, (_, i) => `export const value${i} = ${i}\n`).join('')
