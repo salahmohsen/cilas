@@ -70,12 +70,15 @@ export function NotificationsSection({ initial, pushPublicKey }: Props) {
           label={t(`kinds.${kind}.label`)}
           hint={t(`kinds.${kind}.hint`)}
         >
-          <Switch
-            checked={values[channel][kind]}
-            onCheckedChange={(on) => flip(channel, kind, on)}
-            aria-labelledby={`${id}-label`}
-            aria-describedby={`${id}-hint`}
-          />
+          {/* Arc's switch moves its thumb with a fixed offset, so it needs a left to right box. */}
+          <span dir="ltr" style={{ display: 'inline-flex' }}>
+            <Switch
+              checked={values[channel][kind]}
+              onCheckedChange={(on) => flip(channel, kind, on)}
+              aria-labelledby={`${id}-label`}
+              aria-describedby={`${id}-hint`}
+            />
+          </span>
         </SettingsRow>
       )
     })
