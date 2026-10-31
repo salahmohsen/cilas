@@ -211,7 +211,61 @@ Registration covers use `imageDelivery: 'direct'` on `PosterData`. Payload alrea
 
 The registration carousel loads the active and next image eagerly, gives only the active image high fetch priority, and loads the rest lazily. Failed covers fall back to a local classroom image, or the logo when the poster asks for it. Fallback images do not reuse the original alt text or focal point.
 
-## 7. Verification
+## 7. The poster look
+
+Sections 1 to 6 decide sizes. This section decides how a CILAS card looks, so another element (the fellow cards in Who teaches it, for example) reads as part of the same family as the registration posters. Copy these values; do not approximate them.
+
+### Materials
+
+| Token            | Value                                                          | Use                                                        |
+| ---------------- | -------------------------------------------------------------- | ---------------------------------------------------------- |
+| `--poster-ink`   | `#121212`                                                      | Every rule, the outline, and all text on the card.         |
+| `--poster-paper` | `#ffffff`                                                      | Paper cells: labels, credits, bios, the mark, the details. |
+| `--poster-color` | One of `POSTER_COLORS`                                         | Colour cells: the title panel, the date, the action.       |
+| `--poster-pad`   | `clamp(0.875rem, 2.2cqi, 1.5rem)`                              | The one inset for every cell, so all text shares edges.    |
+| Outline          | `1px solid var(--poster-ink)`, `1rem` radius, `overflow: clip` | The card's edge. Nothing else is rounded inside it.        |
+
+A card is a printed thing: it stays ink on paper in the dark theme. Do not swap these tokens for theme tokens, and set `color: var(--poster-ink)` on links inside it, or theme link colours turn invisible on paper.
+
+### Colour
+
+- One flat colour per card from `POSTER_COLORS` (`src/lib/poster-colors.ts`). In a list, cycle by position (`POSTER_COLORS[index % 4]`) so neighbours differ. Pass it as the inline `--poster-color` custom property.
+- No gradients, tints, shadows, or transparency. A cell is either paper or the card's colour.
+- Text on a colour cell is always ink. Ink on all four colours passes WCAG AA for large text; keep body-size text on paper.
+- Generated avatars draw from the same four colours (section 6), so a person without a photo still matches the card.
+
+### Cells and rules
+
+The card is a stack of boxes divided by 1px ink rules. Each rule has one owner (rule 9):
+
+1. **Media cell**: the photo or poster image, `object-fit: cover` with the focal point. Its rule faces the text: `border-block-end` when stacked, `border-inline-end` (or `-start` for image-after layouts) when side by side.
+2. **Title panel**: the card's colour, holding the title. When the card is wider than its content needs, this panel takes the spare width or height (the title-owns-spare-space policy).
+3. **Paper cells** on the panel: label above the title (owns its lower rule), credit or bio below it (owns its upper rule).
+4. **Strip** at the foot: a grid of cells in one row. The strip owns the rule above it; each cell owns the rule at its inline end, and the action owns the rule at its start. Order: the CILAS mark on paper, then supporting facts (a date in the colour cell, details or a role on paper), then the action in the colour cell.
+
+### Type
+
+- Title: `var(--font-playfair-display), var(--font-amiri), serif`, weight 700, `line-height: 1.1`, `letter-spacing: -0.025em`, `text-wrap: balance`, size from the card's container (`clamp(1.75rem, 5cqi, 3rem)` for profile cards, up to `3.75rem` for posters). In Arabic (`:dir(rtl)`): `line-height: 1.35`, no letter spacing.
+- Label: `var(--font-heading)`, regular, `clamp(1.25rem, 3.4cqi, 2.5rem)`, `line-height: 1.05`.
+- Strip text: `clamp(0.75rem, 1.4cqi, 0.9375rem)`; the action is weight 600 with an arrow that flips in RTL.
+- Long text (a bio) sits on paper at the page's reading size, `line-height: 1.7`, ink at 82% on paper, `max-width: 68ch`.
+
+### Behaviour
+
+- The image scales to 1.03 on hover with a fine pointer, and not at all with reduced motion.
+- Keyboard focus on the action or card link: `outline: 3px solid var(--poster-ink)` with `outline-offset: -3px`, inside the outline.
+- Compose from the card's container width, not the viewport: stacked below `34rem`, side by side above it.
+
+### Reference implementations
+
+| Element             | Markup                                                    | Styles (`src/app/(frontend)/styles.css`) |
+| ------------------- | --------------------------------------------------------- | ---------------------------------------- |
+| Registration poster | `src/components/home/poster.tsx`                          | `.poster*`                               |
+| Fellow card         | `src/app/(frontend)/[locale]/study/[slug]/CourseView.tsx` | `.fellow-card*`                          |
+
+The fellow card maps the poster like this: photo (media cell, 4:3 when stacked; when wide, a square at the top of a `min(36%, 18rem)` column, with the card's colour filling the column under it when the text is taller, so the photo is never stretched), name on the colour panel, the fellows' note ("From the fellow") as a paper cell under the name, the bio as the next paper cell, and a strip with the mark, the role, and "View profile". The note is course-level: with one fellow it sits in that card; with several it gets its own card above them (label on the colour panel, words on paper). Content sizes the card; nothing shares a height with a neighbour.
+
+## 8. Verification
 
 Test the full sizing chain, including a taller neighboring slide. An isolated card can look correct while the carousel version fails.
 
@@ -235,16 +289,16 @@ It covers the three poster placements at 288, 358, 528, and 960 CSS pixels, in E
 
 `tests/unit/person-profile-block.unit.spec.tsx` checks that profile columns become an Arc carousel on mobile in English and Arabic, with manual navigation and no rotation control.
 
-## 8. Lessons from past bugs
+## 9. Lessons from past bugs
 
 - **Yellow mobile gap.** The carousel stretched slides to a shared height, but at the stacked breakpoint `.poster-panel` had `flex: none` and the image kept its aspect ratio. Spare height collected below the panel, white like the fellow cell and without a rule, so it looked like an oversized fellow box. `flex: none` on the fellow could not fix a parent's sizing. Fix: the image owns spare height (rule 2).
 - **Cut corners in carousels.** The viewport clipped with `--radius-panel` over the poster's smaller radius. Fix: `--carousel-viewport-radius: 0px` (rule 10).
 - **Timer overflow.** The countdown kept its animated inline width. Fix: natural dimensions and wrapping unit groups (rules 11 to 13).
 
-## 9. Applying this to a new element
+## 10. Applying this to a new element
 
 1. Write the content hierarchy and choose the spare-space owner (section 1).
-2. Reuse `Poster` when its semantics fit. Otherwise follow section 3.
+2. Reuse `Poster` when its semantics fit. Otherwise follow section 3, and give it the poster look (section 7).
 3. If it goes in a carousel, follow section 5 and add it to the table.
 4. Add a rendered-geometry check or extend `tests/poster-layout.test.mjs`.
 5. Add the new component to the file list below and record new rules in section 2.
@@ -262,8 +316,8 @@ Files:
 - `src/components/rich-text-columns.module.css`: profile carousel and column styles.
 - `src/lib/poster-colors.ts`: shared palette.
 - `tests/poster-layout.test.mjs`: rendered geometry regression.
-- `src/app/(frontend)/[locale]/study/[slug]/CourseView.tsx`: fellow cards in Who teaches it (content sizes all; `fellow-card` container switches at `34rem`; the footer owns the only inner rule).
+- `src/app/(frontend)/[locale]/study/[slug]/CourseView.tsx`: fellow cards in Who teaches it, in the poster look (section 7); content sizes all; the `fellow-card` container switches at `34rem`.
 
-## 10. Wide blocks in prose
+## 11. Wide blocks in prose
 
 A Columns block inside article, course, or event prose grows past the reading measure to the page's main column on screens from `64rem`. The page marks that column with `prose-frame` (an inline-size container). The prose must be centered in the frame, because the block grows by the same amount on both sides: `margin-inline: max(-16rem, min(0px, (100% - 100cqi) / 2))`. Below `64rem` the columns stay inside the prose and stack on phones. A size container takes no width from its content, so give a `prose-frame` an explicit `width: 100%` when it has auto margins.
