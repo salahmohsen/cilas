@@ -107,6 +107,10 @@
   gap: var(--space-8);
   min-width: 0;
 }
+.detailBody > :global(.article-prose) {
+  /* The body's 760px is the measure, so the text centers in a wide column. */
+  max-width: 760px;
+}
 .detailBody > :global(.article-prose) > :first-child {
   margin-block-start: 0;
 }
@@ -188,11 +192,20 @@
 @media (min-width: 80rem) {
   .detailLayout {
     max-width: none;
-    grid-template-columns: 17rem minmax(0, 760px);
+    grid-template-columns: 17rem minmax(0, 1fr);
     grid-template-areas: 'rail back' 'rail heading' 'rail body';
-    justify-content: center;
     column-gap: var(--space-16);
   }
+  /* The column beside the rail is wider than the text: each part keeps a
+     760px measure in its middle, and Columns blocks may use the full width. */
+  .detailBack,
+  .detailHeading,
+  .detailBody > * {
+    width: 100%;
+    max-width: 760px;
+    margin-inline: auto;
+  }
+
   .attendance {
     position: sticky;
     top: var(--space-24);

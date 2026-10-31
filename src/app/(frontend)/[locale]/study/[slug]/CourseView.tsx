@@ -411,7 +411,7 @@ export const CourseView: React.FC<{
         </div>
       ) : null}
       <div className="lg:grid lg:grid-cols-[minmax(0,1fr)_20rem] lg:gap-14">
-        <article aria-labelledby="course-title" className="min-w-0">
+        <article aria-labelledby="course-title" className="prose-frame min-w-0">
           {editable ? (
             <EditorFields
               pe={pe}

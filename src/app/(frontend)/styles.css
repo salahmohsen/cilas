@@ -1680,6 +1680,42 @@ a.collection-item:hover {
   object-fit: cover;
 }
 
+/* ===================================================== wide blocks in prose */
+
+/* A page's main column. Prose inside it keeps its reading measure; a Columns
+   block in that prose grows to the column's full width on wide screens, so a
+   photo grid can sit beside text. The prose must be centered in the frame
+   (both sides grow by the same amount). On phones the columns stack. */
+.prose-frame {
+  container: prose-frame / inline-size;
+}
+@media (min-width: 64rem) {
+  .prose-frame .article-prose .rich-columns {
+    margin-inline: max(-16rem, min(0px, (100% - 100cqi) / 2));
+  }
+}
+
+/* The article reader on wide screens: the column takes the room beside the
+   contents rail; each part of the article keeps a 760px measure in its middle. */
+@media (min-width: 80rem) {
+  article.article-reader {
+    max-width: none;
+  }
+  article.article-reader > * {
+    width: 100%;
+    max-width: 760px;
+    margin-inline: auto;
+  }
+}
+/* A size container takes no width from its content, so the reader fills its track. */
+article.article-reader {
+  width: 100%;
+}
+/* The reader's 760px is the measure, so the text stays centered in it. */
+article.article-reader .article-prose {
+  max-width: none;
+}
+
 /* ===================================================== home page */
 
 /* The opening fills the rest of the first screen under the header, edge to

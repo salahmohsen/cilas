@@ -71,7 +71,7 @@ export async function EventPage({
             <PublicEventCard event={event} now={now} detail showFacts={false} />
           </div>
           <EventAttendance event={event} now={now} locale={locale} />
-          <div className={styles.detailBody}>
+          <div className={`${styles.detailBody} prose-frame`}>
             {meetings.length > 1 && (
               <div className={styles.details}>
                 <ul className={styles.agenda}>

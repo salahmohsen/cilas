@@ -235,7 +235,7 @@ export async function ArticlePage({ locale: siteLocale, slug, user: reader }: Vi
       {/* The article itself, as data a search engine reads. */}
       <Schema data={[schema, crumbs]} />
       <div className={grid.inner}>
-        <div className="xl:grid xl:grid-cols-[17rem_minmax(0,760px)] xl:justify-center xl:gap-16">
+        <div className="xl:grid xl:grid-cols-[17rem_minmax(0,1fr)] xl:gap-16">
           {/* Margin: the contents, sticky beside the column on wide screens. */}
           <aside className="hidden xl:block">
             <div className="sticky top-24 max-h-[calc(100vh-7rem)] space-y-10 overflow-y-auto pe-2">
@@ -249,7 +249,7 @@ export async function ArticlePage({ locale: siteLocale, slug, user: reader }: Vi
 
           <article
             aria-labelledby="article-title"
-            className={grid.reader}
+            className={`${grid.reader} article-reader prose-frame`}
             {...pe.scope({ collection: 'articles', id: article.id })}
           >
             {preview ? (

@@ -106,7 +106,7 @@ export const RichTextField: React.FC<{
     }
     return (
       <div
-        className={plain ? undefined : styles.columns}
+        className={plain ? undefined : `${styles.columns} rich-columns`}
         data-ratio={ratio}
         data-columns={count}
         data-profile-carousel={profileCarousel || undefined}
