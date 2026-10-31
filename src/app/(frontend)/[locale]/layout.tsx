@@ -8,6 +8,7 @@ import '../styles.css'
 import { SiteDeadlines } from '@/components/site-deadlines'
 import { getNavigation, getSocialLinks } from '@/api/social.api'
 import { SiteFooter } from '@/components/site-footer'
+import { SiteToasts } from '@/components/site-toasts'
 import config from '@payload-config'
 import { getPayload } from 'payload'
 
@@ -89,14 +90,21 @@ export default async function RootLayout({ children }: { children: React.ReactNo
         <ThemeProvider>
           <NextIntlClientProvider>
             <DirectionProvider direction={direction}>
-              {/* Open deadlines, across the whole width, above the header. */}
-              <SiteDeadlines locale={locale as 'en' | 'ar'} />
-              <CILASSiteHeader nav={nav} />
-              <main className="mx-auto min-h-[60vh] max-w-300">{children}</main>
-              {/* The same width as the page content. */}
-              <div className="mx-auto max-w-300">
-                <SiteFooter nav={nav} newsletter={Boolean(list)} place={place} socials={socials} />
-              </div>
+              <SiteToasts rtl={direction === 'rtl'}>
+                {/* Open deadlines, across the whole width, above the header. */}
+                <SiteDeadlines locale={locale as 'en' | 'ar'} />
+                <CILASSiteHeader nav={nav} />
+                <main className="mx-auto min-h-[60vh] max-w-300">{children}</main>
+                {/* The same width as the page content. */}
+                <div className="mx-auto max-w-300">
+                  <SiteFooter
+                    nav={nav}
+                    newsletter={Boolean(list)}
+                    place={place}
+                    socials={socials}
+                  />
+                </div>
+              </SiteToasts>
             </DirectionProvider>
           </NextIntlClientProvider>
         </ThemeProvider>

@@ -1,10 +1,11 @@
 'use client'
 
-import { useAuth } from '@payloadcms/ui'
+import { toast, useAuth } from '@payloadcms/ui'
 import { Bell } from 'lucide-react'
 import { useCallback, useEffect, useId, useRef, useState } from 'react'
 
 import { EVENT_NAMES, type NotificationKind } from '@/lib/notify'
+import { subscribeNotifications, tabId } from '@/lib/realtime/stream-client'
 
 type Note = {
   id: number
@@ -35,9 +36,11 @@ const ago = (iso: string) => {
 
 /**
  * The bell in the admin's top bar: the signed-in account's notifications
- * (src/collections/Notifications.ts), the unread ones counted. It looks again
- * every minute and when the tab comes back into view. Opening one marks it
- * read and goes to what it is about.
+ * (src/collections/Notifications.ts), the unread ones counted. Changes arrive
+ * live from the tab's stream (src/lib/realtime/stream-client.ts) and a new one
+ * shows Payload's toast, except in the tab that caused it. It looks again when
+ * the stream comes back after a gap and when the tab comes back into view.
+ * Opening one marks it read and goes to what it is about.
  */
 export function NotificationBell() {
   const { user } = useAuth()
@@ -64,12 +67,27 @@ export function NotificationBell() {
     if (!user) return
     // On a timer, as every later look is: the counts arrive after the first paint.
     const first = setTimeout(() => void load(), 0)
-    const every = setInterval(() => void load(), 60_000)
+    // "Mark all read" sends one event per row: look once, after the burst.
+    let soon: ReturnType<typeof setTimeout> | undefined
+    const loadSoon = () => {
+      clearTimeout(soon)
+      soon = setTimeout(() => void load(), 150)
+    }
+    const unsubscribe = subscribeNotifications({
+      event: (event) => {
+        loadSoon()
+        if (event.op !== 'created' || !event.doc || event.origin === tabId()) return
+        const note = event.doc as Note
+        toast.info(labelOf(note), { description: detailOf(note) })
+      },
+      sync: () => void load(),
+    })
     const back = () => document.visibilityState === 'visible' && void load()
     document.addEventListener('visibilitychange', back)
     return () => {
       clearTimeout(first)
-      clearInterval(every)
+      clearTimeout(soon)
+      unsubscribe()
       document.removeEventListener('visibilitychange', back)
     }
   }, [user, load])

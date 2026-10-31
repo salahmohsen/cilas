@@ -162,6 +162,9 @@ importers:
       payload-theme:
         specifier: ^0.9.4
         version: 0.9.4(10c68af870af0124f3a3f2573b4d3a87)
+      pg:
+        specifier: 8.20.0
+        version: 8.20.0
       react:
         specifier: 19.2.6
         version: 19.2.6
@@ -229,6 +232,9 @@ importers:
       '@types/node':
         specifier: 22.19.9
         version: 22.19.9
+      '@types/pg':
+        specifier: 8.20.0
+        version: 8.20.0
       '@types/react':
         specifier: 19.2.14
         version: 19.2.14

@@ -1,5 +1,7 @@
 import type { Access, CollectionConfig, PayloadHandler } from 'payload'
 
+import { publishChange, publishDelete } from '@/lib/realtime/publish'
+
 /** Each account sees, marks and clears only its own notifications. */
 const own: Access = ({ req }) => (req.user ? { recipient: { equals: req.user.id } } : false)
 
@@ -19,7 +21,9 @@ const readAll: PayloadHandler = async (req) => {
  * What happened that an account should know: a submission waiting for an
  * admin, a decision on an owner's work, a new application. Shown under the
  * bell in the admin's top bar (src/components/admin/notification-bell.tsx),
- * beside the emails. Written by the server only (src/lib/notify.ts).
+ * beside the emails. Written by the server only (src/lib/notify.ts). Each
+ * change also goes live to the recipient's open tabs
+ * (docs/realtime-notifications.md).
  */
 export const Notifications: CollectionConfig = {
   slug: 'notifications',
@@ -27,6 +31,7 @@ export const Notifications: CollectionConfig = {
   access: { read: own, update: own, delete: own, create: () => false },
   defaultSort: '-createdAt',
   endpoints: [{ path: '/read-all', method: 'post', handler: readAll }],
+  hooks: { afterChange: [publishChange], afterDelete: [publishDelete] },
   fields: [
     {
       name: 'recipient',
