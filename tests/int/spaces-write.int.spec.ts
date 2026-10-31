@@ -1,6 +1,8 @@
 // @vitest-environment node
 import { sql } from '@payloadcms/db-postgres'
 import { getPayload, type Payload } from 'payload'
+
+import { FILE_LIMITS } from '@/lib/space-file-limits'
 import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest'
 
 import sharp from 'sharp'
@@ -852,6 +854,37 @@ describe('spaces write', () => {
       depth: 0,
     })
     expect(files.docs.map((f) => f.filename)).toEqual([expect.stringMatching(/edit-new\.webp$/)])
+    for (const file of files.docs) track('space-files', file.id)
+  })
+
+  it('post editing swaps a photo on a post that is already full', async () => {
+    const id = await newPost(student, community, 'Full post')
+    const ids: number[] = []
+    for (let n = 0; n < FILE_LIMITS.post; n++) {
+      const added = await fileAdd({
+        payload,
+        user: student,
+        post: id,
+        file: editFile(`full-${n}.png`),
+      })
+      expect(added.ok).toBe(true)
+      if (added.ok) ids.push(added.data.id)
+    }
+    const result = await postEdit({
+      payload,
+      user: student,
+      id,
+      body: 'Full post',
+      files: [editFile('full-swap.png')],
+      removeFiles: [ids[0]],
+    })
+    expect(result.ok).toBe(true)
+    const files = await payload.find({
+      collection: 'space-files',
+      where: { post: { equals: id } },
+      depth: 0,
+    })
+    expect(files.totalDocs).toBe(FILE_LIMITS.post)
     for (const file of files.docs) track('space-files', file.id)
   })
 

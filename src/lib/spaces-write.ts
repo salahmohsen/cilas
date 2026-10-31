@@ -184,8 +184,10 @@ const storeFile = async (
   spaceId: number,
   target: { post: number },
   file: PostFile,
+  replacing = 0,
 ): Promise<number> => {
   const created = await payload.create({
+    context: { spaceFilesReplacing: replacing },
     collection: 'space-files',
     data: {
       space: spaceId,
@@ -596,7 +598,8 @@ const savePostEdit = async (
     if (issue) return err(issue)
   }
   try {
-    for (const file of files) stored.push(await storeFile(payload, spaceId, { post }, file))
+    for (const file of files)
+      stored.push(await storeFile(payload, spaceId, { post }, file, remove.size))
     await update()
   } catch (error) {
     for (const id of stored)

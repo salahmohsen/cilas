@@ -88,7 +88,10 @@ export const SpaceFiles: CollectionConfig = {
           overrideAccess: true,
           req,
         })
-        if (totalDocs >= FILE_LIMITS.post)
+        // An edit stores its new photos before it deletes the ones it
+        // replaces, so those still count here; the write layer passes how many.
+        const replacing = Number(req.context.spaceFilesReplacing ?? 0)
+        if (totalDocs - replacing >= FILE_LIMITS.post)
           throw new APIError(
             `A post takes at most ${FILE_LIMITS.post} photos.`,
             400,
