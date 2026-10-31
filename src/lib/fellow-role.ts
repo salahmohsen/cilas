@@ -17,9 +17,7 @@ export const withFellowRole = (roles: Role[], fellow: boolean): Role[] => {
 }
 
 /** `fellows` arrives as ids, or as populated people when depth > 0. */
-export const toPersonIds = (
-  fellows: Array<number | { id: number }> | null | undefined,
-): number[] =>
+export const toPersonIds = (fellows: Array<number | { id: number }> | null | undefined): number[] =>
   (fellows ?? [])
     .map((fellow) => (typeof fellow === 'object' ? fellow.id : fellow))
     .filter((id): id is number => typeof id === 'number')

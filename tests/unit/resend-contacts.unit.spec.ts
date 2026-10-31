@@ -29,9 +29,12 @@ describe('contactsCsv', () => {
   })
 
   it('adds everyone with a Status column when asked', () => {
-    const csv = contactsCsv([contact({}), contact({ id: 'c2', email: 'gone@example.com', unsubscribed: true })], {
-      all: true,
-    })
+    const csv = contactsCsv(
+      [contact({}), contact({ id: 'c2', email: 'gone@example.com', unsubscribed: true })],
+      {
+        all: true,
+      },
+    )
     expect(csv).toContain('Email Address,First Name,Last Name,Subscribed At,Status')
     expect(csv).toContain('gone@example.com,Mona,Adel,2026-10-06,unsubscribed')
   })

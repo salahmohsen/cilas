@@ -44,7 +44,11 @@ export default async function BridgePage({ params, searchParams }: Props) {
   const previewSlug = isPreview ? (await searchParams).programme : undefined
   const payload = await getPayload({ config })
   const [year, years] = await Promise.all([
-    getBridgeYear(payload, lang, previewSlug ? { slug: previewSlug, draft: true, user: await currentReader() } : {}),
+    getBridgeYear(
+      payload,
+      lang,
+      previewSlug ? { slug: previewSlug, draft: true, user: await currentReader() } : {},
+    ),
     listBridgeYears(payload, lang),
   ])
   if (!year) notFound()

@@ -8,7 +8,8 @@ const shared = vi.hoisted(() => ({
   open: null as ((href: string) => void) | null,
   epoch: 1,
   report: null as
-    ((summary: import('@/components/private-space-search').PrivateSearchSummary) => void) | null,
+    | ((summary: import('@/components/private-space-search').PrivateSearchSummary) => void)
+    | null,
   props: null as import('@/components/search-results').SearchResultsProps | null,
   state: {
     account: 1,
@@ -95,22 +96,22 @@ afterEach(() => {
   shared.epoch = 1
 })
 describe('private search scope routing', () => {
-  it.each([
-    '/en/spaces/course/another-course/posts/42',
-    '/ar/spaces/community/2/posts/17',
-  ])('opens a private result as a full page at %s rather than an intercepted dialog', (href) => {
-    const onClose = vi.fn()
-    render(<SearchPanel onClose={onClose} />)
-    fireEvent.click(screen.getByText('privateSpaces'))
-    const assign = vi.fn()
-    vi.stubGlobal('window', { location: { assign } })
+  it.each(['/en/spaces/course/another-course/posts/42', '/ar/spaces/community/2/posts/17'])(
+    'opens a private result as a full page at %s rather than an intercepted dialog',
+    (href) => {
+      const onClose = vi.fn()
+      render(<SearchPanel onClose={onClose} />)
+      fireEvent.click(screen.getByText('privateSpaces'))
+      const assign = vi.fn()
+      vi.stubGlobal('window', { location: { assign } })
 
-    shared.open?.(href)
+      shared.open?.(href)
 
-    expect(assign).toHaveBeenCalledWith(href)
-    expect(shared.push).not.toHaveBeenCalled()
-    expect(onClose).toHaveBeenCalledOnce()
-  })
+      expect(assign).toHaveBeenCalledWith(href)
+      expect(shared.push).not.toHaveBeenCalled()
+      expect(onClose).toHaveBeenCalledOnce()
+    },
+  )
   it('uses independent facet selection and retains intent only for the same freshly authorized account', () => {
     const { rerender } = render(<SearchPanel onClose={vi.fn()} />)
     fireEvent.click(screen.getByText('privateSpaces'))

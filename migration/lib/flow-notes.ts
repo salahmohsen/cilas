@@ -18,7 +18,8 @@ const BIO_LABEL =
   /^(?:(?:personal|instructor(?:['’]s)?|facilitator(?:['’]s)?|fellow(?:['’]s)?)\s+)?bio(?:graphy)?\b\s*(?:\(([^)]*)\))?\s*(?:\(verbatim\))?\s*[:|\n]?\s*/i
 
 /** A role that opens a bio: "FELLOW: Nabil …", "المدربة: سارة …", or the Arabic "السيرة" heading. */
-const ROLE_LABEL = /^(?:fellow|facilitator|instructor|المدر\u0651س|المدرس|المدر\u0651سة|المدرسة|المدربة|المدرب|الميسرة|الميسر|السيرة)\s*[:：|\n]\s*/i
+const ROLE_LABEL =
+  /^(?:fellow|facilitator|instructor|المدر\u0651س|المدرس|المدر\u0651سة|المدرسة|المدربة|المدرب|الميسرة|الميسر|السيرة)\s*[:：|\n]\s*/i
 const ROLE_HEADING = /^(?:السيرة|السيرة الذاتية|نبذة)\s*:?$/
 
 /** "عن ميسر المساق محمد عبد العظيم: …", "About the instructor: …": the name, if any, then the bio. */
@@ -26,7 +27,8 @@ const ABOUT_LABEL =
   /^(?:عن (?:ميسر|ميسرة|مقدم|مقدمة|مدرس|مدرسة|مدرب|مدربة) (?:المساق|المقرر|الورشة|المعمل)|عن (?:الميسر|الميسرة|المدرب|المدربة|المحاضر|المحاضرة)|about the (?:facilitator|instructor|fellow|teacher|lecturer))\s*([^:：\n]{0,60})[:：]\s*/i
 
 /** "تيسر المعمل مي عامر …", "تقدم المساق مي عامر …": the rest is the bio. */
-const ARABIC_INTRO = /^(?:تيسر|تيس\u0651ر|يقدم|تقدم|تقد\u0651م|يدير|تدير)\s+(?:المعمل|المساق|الورشة|المقرر)\s+/
+const ARABIC_INTRO =
+  /^(?:تيسر|تيس\u0651ر|يقدم|تقدم|تقد\u0651م|يدير|تدير)\s+(?:المعمل|المساق|الورشة|المقرر)\s+/
 
 /** A course's own description, which a role label can also open ("Instructor: X. Course description: …"). */
 const NOT_BIO = /course (?:description|overview|flow)|description\s*:/i
@@ -39,7 +41,8 @@ const EXTRACTOR_REMARK =
   /\b(?:the|this) flow\b|\bflow['’]s\b|\bflow header\b|\bwere not recorded\b|\brecorded as\b/i
 
 /** A line that only points the reader elsewhere on the page ("For English, please scroll below."). */
-const NAVIGATION = /^(?:for (?:english|arabic)\b.*(?:below|above|scroll)|scroll (?:down|below) for (?:english|arabic)|(?:english|arabic) (?:version )?below)\W*$/i
+const NAVIGATION =
+  /^(?:for (?:english|arabic)\b.*(?:below|above|scroll)|scroll (?:down|below) for (?:english|arabic)|(?:english|arabic) (?:version )?below)\W*$/i
 
 /** "Course description (verbatim):", "Course Flow, verbatim:" → "Course description:", "Course Flow:". */
 const unannotate = (p: string): string =>
@@ -67,7 +70,11 @@ const fold = (s: string): string =>
 const whose = (text: string, label: string | null, fellows: string[][]): string | null => {
   const named = (s: string) =>
     fellows.find((names) => names.some((n) => fold(n) && fold(s).includes(fold(n))))?.[0] ?? null
-  return (label && named(label)) || named(text.slice(0, 80)) || (fellows.length === 1 ? fellows[0][0] : null)
+  return (
+    (label && named(label)) ||
+    named(text.slice(0, 80)) ||
+    (fellows.length === 1 ? fellows[0][0] : null)
+  )
 }
 
 /**
@@ -136,7 +143,10 @@ export const withSubject = (name: string, bio: string): string => {
   return /^[a-z]/.test(text) ? `${name} ${text}` : text
 }
 
-const wordsOf = (text: string): string[] => fold(text).split(' ').filter((w) => w.length > 1)
+const wordsOf = (text: string): string[] =>
+  fold(text)
+    .split(' ')
+    .filter((w) => w.length > 1)
 
 /** Whether nearly every word of a paragraph is already in `known` (a set of folded words). */
 const covered = (paragraph: string, known: Set<string>, least: number): boolean => {
@@ -158,7 +168,8 @@ export const keepNotIn = (paragraphs: string[], other: string, least = 6): boole
   const keep = paragraphs.map((p) => wordsOf(p).length > 0 && !covered(p, known, least))
   // A heading whose next paragraph went (or that ends the text) goes too.
   for (let i = paragraphs.length - 1; i >= 0; i--) {
-    if (keep[i] && isHeading(paragraphs[i]) && (i === paragraphs.length - 1 || !keep[i + 1])) keep[i] = false
+    if (keep[i] && isHeading(paragraphs[i]) && (i === paragraphs.length - 1 || !keep[i + 1]))
+      keep[i] = false
   }
   return keep
 }

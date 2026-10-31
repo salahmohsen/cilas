@@ -3,6 +3,7 @@
 Arc components own their internals; your CSS module owns the layout.
 
 ## Contents
+
 - Plan the page
 - One page container
 - Product pages and dashboards
@@ -37,17 +38,20 @@ An app has one page container that sets the max width and the gutters, usually i
   display: grid;
   gap: 24px;
 }
-.page > * { min-width: 0; }
+.page > * {
+  min-width: 0;
+}
 ```
 
 ```tsx
 // Incorrect: a second container inside the page doubles the gutter
 <main className={styles.page}>
-  <section style={{ maxWidth: 960, margin: "0 auto", padding: "0 24px" }}>...</section>
+  <section style={{ maxWidth: 960, margin: '0 auto', padding: '0 24px' }}>...</section>
 </main>
 ```
 
 Checks:
+
 - The left edge of the heading, the first card, and the table line up.
 - An embedded block fills its column edge to edge; if the block ships with outer padding for its demo, remove it rather than stacking it on yours.
 - Grid and flex children get `min-width: 0` so long content cannot push the page sideways.
@@ -61,8 +65,15 @@ Checks:
 - Wide tables scroll inside their card, never the page:
 
 ```css
-.tableCard { border: 1px solid var(--border); border-radius: var(--radius-surface); overflow: hidden; }
-.tableScroll { overflow-x: auto; overscroll-behavior-x: contain; }
+.tableCard {
+  border: 1px solid var(--border);
+  border-radius: var(--radius-surface);
+  overflow: hidden;
+}
+.tableScroll {
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+}
 ```
 
 - Settings: a list of rows (label and description on the left, control on the right) inside one bordered group per section, with `--border-subtle` dividers. Do not wrap each row in its own card.
@@ -96,14 +107,14 @@ Checks:
 
 Design every data region for all of them before you finish:
 
-| State | Treatment |
-| --- | --- |
-| Loading | `skeleton` in the final layout, same dimensions, `aria-busy` on the region |
-| Empty | `empty-state` with why it is empty and one next step |
-| Error | Inline `alert` next to the cause, with a retry |
-| Success | Confirm in place: the button label, the row, the value |
-| Disabled | Explain why nearby, or hide the control. A save button disabled until something changes needs no explanation |
-| Long content | Wrap or truncate with the full value reachable |
+| State        | Treatment                                                                                                    |
+| ------------ | ------------------------------------------------------------------------------------------------------------ |
+| Loading      | `skeleton` in the final layout, same dimensions, `aria-busy` on the region                                   |
+| Empty        | `empty-state` with why it is empty and one next step                                                         |
+| Error        | Inline `alert` next to the cause, with a retry                                                               |
+| Success      | Confirm in place: the button label, the row, the value                                                       |
+| Disabled     | Explain why nearby, or hide the control. A save button disabled until something changes needs no explanation |
+| Long content | Wrap or truncate with the full value reachable                                                               |
 
 ## React correctness
 
@@ -111,14 +122,18 @@ Design every data region for all of them before you finish:
 
 ```tsx
 // Incorrect: differs between server and client
-const [theme] = useState(localStorage.getItem("theme") ?? "light");
+const [theme] = useState(localStorage.getItem('theme') ?? 'light')
 
 // Correct: the server snapshot ("light") is also the first client render, then it syncs
 const subscribe = (onChange: () => void) => {
-  window.addEventListener("storage", onChange);
-  return () => window.removeEventListener("storage", onChange);
-};
-const theme = useSyncExternalStore(subscribe, () => localStorage.getItem("theme") ?? "light", () => "light");
+  window.addEventListener('storage', onChange)
+  return () => window.removeEventListener('storage', onChange)
+}
+const theme = useSyncExternalStore(
+  subscribe,
+  () => localStorage.getItem('theme') ?? 'light',
+  () => 'light',
+)
 ```
 
 - **Do not remount animated elements.** Keep `key` stable on anything that animates, never define a component inside another component's render, and never swap the element type of an animated node on state change. A remount restarts the animation and loses focus.
@@ -129,13 +144,13 @@ const theme = useSyncExternalStore(subscribe, () => localStorage.getItem("theme"
 
 Free items unless marked Pro. Full worked code: example-settings.md, example-pricing.md, example-dashboard.md.
 
-| Page | Build it from |
-| --- | --- |
-| Sign in and sign up | `sign-in` or `login-centered`, then `signup-form`, `otp-input`. Pro: `login-split`, `login-immersive` |
-| Dashboard | `h1` and `segmented-control` for range, `metric-card` row, `line-chart` or `bar-chart`, `sortable-data-table`. Pro: `metrics-dashboard`, `metric-explorer` |
-| Settings | Sections of `input`, `select`, `switch` rows, a save `button`, `confirm-morph` for deleting. Pro: `settings-page`, `security-settings` |
-| Record list | `filter-toolbar` or `search-field`, `sortable-data-table`, `pagination`, `empty-state`. Pro: `data-grid` |
-| Pricing | `billing-toggle` and `BillingPrice`, plan cards or `radio-cards`, `comparison-table`, `faq-section`. Pro: `pricing-calculator`, `usage-pricing` |
-| Landing page | `site-header`, `hero-section`, `logo-marquee`, `stats-band`, `comparison-table`, `faq-section`, `cta-section`, `site-footer`. Pro: `feature-bento`, `scroll-story` |
-| App shell | `command-palette`, `user-menu`, `notification-center`. Pro: `sidebar-rail`, `workspace-sidebar` |
-| Not found, offline, no results | `empty-states` block, or `empty-state` inside a region |
+| Page                           | Build it from                                                                                                                                                      |
+| ------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Sign in and sign up            | `sign-in` or `login-centered`, then `signup-form`, `otp-input`. Pro: `login-split`, `login-immersive`                                                              |
+| Dashboard                      | `h1` and `segmented-control` for range, `metric-card` row, `line-chart` or `bar-chart`, `sortable-data-table`. Pro: `metrics-dashboard`, `metric-explorer`         |
+| Settings                       | Sections of `input`, `select`, `switch` rows, a save `button`, `confirm-morph` for deleting. Pro: `settings-page`, `security-settings`                             |
+| Record list                    | `filter-toolbar` or `search-field`, `sortable-data-table`, `pagination`, `empty-state`. Pro: `data-grid`                                                           |
+| Pricing                        | `billing-toggle` and `BillingPrice`, plan cards or `radio-cards`, `comparison-table`, `faq-section`. Pro: `pricing-calculator`, `usage-pricing`                    |
+| Landing page                   | `site-header`, `hero-section`, `logo-marquee`, `stats-band`, `comparison-table`, `faq-section`, `cta-section`, `site-footer`. Pro: `feature-bento`, `scroll-story` |
+| App shell                      | `command-palette`, `user-menu`, `notification-center`. Pro: `sidebar-rail`, `workspace-sidebar`                                                                    |
+| Not found, offline, no results | `empty-states` block, or `empty-state` inside a region                                                                                                             |

@@ -30,7 +30,15 @@ type Course = {
 
 const { default: config } = await import('../../src/payload.config')
 const payload = await getPayload({ config: await config })
-const { docs } = await payload.find({ collection: 'courses', limit: 1000, pagination: false, depth: 0, draft: true, locale: 'all', overrideAccess: true })
+const { docs } = await payload.find({
+  collection: 'courses',
+  limit: 1000,
+  pagination: false,
+  depth: 0,
+  draft: true,
+  locale: 'all',
+  overrideAccess: true,
+})
 
 let changed = 0
 for (const c of docs as unknown as Course[]) {
@@ -47,7 +55,9 @@ for (const c of docs as unknown as Course[]) {
       for (let i = 1; i < 7; i++) {
         const next = new Date(d.getTime() + i * 86_400_000)
         if (weekdays.has(DAYS[next.getUTCDay()])) {
-          log.push(`start ${schedule.start_date.slice(0, 10)} → ${next.toISOString().slice(0, 10)} (first ${DAYS[next.getUTCDay()]})`)
+          log.push(
+            `start ${schedule.start_date.slice(0, 10)} → ${next.toISOString().slice(0, 10)} (first ${DAYS[next.getUTCDay()]})`,
+          )
           en.schedule = { ...(en.schedule as object), start_date: next.toISOString().slice(0, 10) }
           break
         }
@@ -65,14 +75,19 @@ for (const c of docs as unknown as Course[]) {
     if (slots.some((s) => isJson(s.label?.[locale]))) {
       target.schedule = {
         ...(target.schedule as object),
-        slots: slots.map((s) => ({ ...s, label: isJson(s.label?.[locale]) ? null : (s.label?.[locale] ?? null) })),
+        slots: slots.map((s) => ({
+          ...s,
+          label: isJson(s.label?.[locale]) ? null : (s.label?.[locale] ?? null),
+        })),
       }
       log.push(`slot labels.${locale} were JSON`)
     }
   }
 
   const bib = c.bibliography ?? []
-  const keep = bib.filter((b) => !Object.values(b.title ?? {}).some((t) => t && JUNK_TITLE.test(t.trim())))
+  const keep = bib.filter(
+    (b) => !Object.values(b.title ?? {}).some((t) => t && JUNK_TITLE.test(t.trim())),
+  )
   if (keep.length < bib.length) {
     log.push(`bibliography: dropped ${bib.length - keep.length} file-name/credit row(s)`)
     en.bibliography = keep.map((b) => ({ ...b, title: b.title?.en ?? null }))
@@ -82,15 +97,38 @@ for (const c of docs as unknown as Course[]) {
   changed++
   console.log(`${c.id} ${c.legacy_url}: ${log.join('; ')}`)
   if (dry) continue
-  for (const [locale, data] of [['en', en], ['ar', ar]] as const) {
+  for (const [locale, data] of [
+    ['en', en],
+    ['ar', ar],
+  ] as const) {
     if (!Object.keys(data).length) continue
     if (data.schedule) {
-      const fresh = (await payload.findByID({ collection: 'courses', id: c.id, depth: 0, draft: true, locale, fallbackLocale: false, overrideAccess: true })) as unknown as Course
+      const fresh = (await payload.findByID({
+        collection: 'courses',
+        id: c.id,
+        depth: 0,
+        draft: true,
+        locale,
+        fallbackLocale: false,
+        overrideAccess: true,
+      })) as unknown as Course
       data.schedule = { ...(fresh.schedule ?? {}), ...(data.schedule as object) }
     }
-    await payload.update({ collection: 'courses', id: c.id, data, locale, draft: true, overrideAccess: true })
+    await payload.update({
+      collection: 'courses',
+      id: c.id,
+      data,
+      locale,
+      draft: true,
+      overrideAccess: true,
+    })
   }
-  await payload.update({ collection: 'courses', id: c.id, data: { _status: 'published' }, overrideAccess: true })
+  await payload.update({
+    collection: 'courses',
+    id: c.id,
+    data: { _status: 'published' },
+    overrideAccess: true,
+  })
 }
 console.log(`${changed} course(s)${dry ? ' (dry run)' : ''}`)
 await payload.destroy()

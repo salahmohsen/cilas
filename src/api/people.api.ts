@@ -11,7 +11,11 @@ const otherLocale = (locale: Locale): Locale => (locale === 'ar' ? 'en' : 'ar')
  * language when missing in the site language (CONTENT language rule). Joins
  * stay off: they hold enrollments and memberships, which are not public.
  */
-export const getPerson = async (payload: Payload, slug: string, locale: Locale): Promise<Person | undefined> => {
+export const getPerson = async (
+  payload: Payload,
+  slug: string,
+  locale: Locale,
+): Promise<Person | undefined> => {
   const { docs } = await payload.find({
     collection: 'people',
     where: { slug: { equals: slug } },
@@ -40,20 +44,53 @@ export type Contributions = {
  * What a person has contributed that a visitor may see: published articles
  * they wrote or are credited on, and published courses they taught.
  */
-export const getContributions = async (payload: Payload, personId: number, locale: Locale): Promise<Contributions> => {
-  const query = { locale, fallbackLocale: otherLocale(locale), overrideAccess: false, depth: 2, limit: 100 } as const
+export const getContributions = async (
+  payload: Payload,
+  personId: number,
+  locale: Locale,
+): Promise<Contributions> => {
+  const query = {
+    locale,
+    fallbackLocale: otherLocale(locale),
+    overrideAccess: false,
+    depth: 2,
+    limit: 100,
+  } as const
   const [byAuthor, byOriginal, byCredit, courses] = await Promise.all([
-    payload.find({ collection: 'articles', where: { and: [{ authors: { in: [personId] } }, { _status: { equals: 'published' } }] }, sort: '-published_date', ...query }),
     payload.find({
       collection: 'articles',
-      where: { and: [{ 'translation.original_authors': { in: [personId] } }, { _status: { equals: 'published' } }] },
+      where: { and: [{ authors: { in: [personId] } }, { _status: { equals: 'published' } }] },
       sort: '-published_date',
       ...query,
     }),
-    payload.find({ collection: 'articles', where: { and: [{ 'credits.people': { in: [personId] } }, { _status: { equals: 'published' } }] }, sort: '-published_date', ...query }),
+    payload.find({
+      collection: 'articles',
+      where: {
+        and: [
+          { 'translation.original_authors': { in: [personId] } },
+          { _status: { equals: 'published' } },
+        ],
+      },
+      sort: '-published_date',
+      ...query,
+    }),
+    payload.find({
+      collection: 'articles',
+      where: {
+        and: [{ 'credits.people': { in: [personId] } }, { _status: { equals: 'published' } }],
+      },
+      sort: '-published_date',
+      ...query,
+    }),
     payload.find({
       collection: 'courses',
-      where: { and: [{ fellows: { in: [personId] } }, { _status: { equals: 'published' } }, { tier: { equals: 'public' } }] },
+      where: {
+        and: [
+          { fellows: { in: [personId] } },
+          { _status: { equals: 'published' } },
+          { tier: { equals: 'public' } },
+        ],
+      },
       sort: '-createdAt',
       joins: false,
       ...query,
@@ -76,7 +113,13 @@ export const getContributions = async (payload: Payload, personId: number, local
   return { written, credited, taught: courses.docs }
 }
 
-export type FellowCourse = { slug: string; title: string; season: string | null; year: number | null; start: string }
+export type FellowCourse = {
+  slug: string
+  title: string
+  season: string | null
+  year: number | null
+  start: string
+}
 export type Fellow = {
   id: number
   slug: string
@@ -132,7 +175,16 @@ export const getFellows = async (payload: Payload, locale: Locale): Promise<Fell
         id: f.id,
         slug: f.slug,
         name: f.name,
-        ...(photo ? { photo: { url: photo.url!, alt: photo.alt ?? f.name, focalX: photo.focalX, focalY: photo.focalY } } : {}),
+        ...(photo
+          ? {
+              photo: {
+                url: photo.url!,
+                alt: photo.alt ?? f.name,
+                focalX: photo.focalX,
+                focalY: photo.focalY,
+              },
+            }
+          : {}),
         bio: f.bio ? plainText({ data: f.bio }).replace(/\s+/g, ' ').trim() : '',
         courses: [course],
       })
@@ -152,7 +204,16 @@ const cardOf = (p: Person): PersonCard => {
     id: p.id,
     slug: p.slug ?? String(p.id),
     name: p.name,
-    ...(photo ? { photo: { url: photo.url!, alt: photo.alt ?? p.name, focalX: photo.focalX, focalY: photo.focalY } } : {}),
+    ...(photo
+      ? {
+          photo: {
+            url: photo.url!,
+            alt: photo.alt ?? p.name,
+            focalX: photo.focalX,
+            focalY: photo.focalY,
+          },
+        }
+      : {}),
     bio: p.bio ? plainText({ data: p.bio }).replace(/\s+/g, ' ').trim() : '',
   }
 }
@@ -193,9 +254,16 @@ export const getCilasians = async (payload: Payload, locale: Locale): Promise<Ci
     if (known) known.places.push(place)
     else people.set(m.person.id, { ...cardOf(m.person), places: [place] })
   }
-  const newest = (c: Cilasian) => c.places.map((p) => p.programme ?? '').sort().at(-1) ?? ''
+  const newest = (c: Cilasian) =>
+    c.places
+      .map((p) => p.programme ?? '')
+      .sort()
+      .at(-1) ?? ''
   return [...people.values()]
-    .map((c) => ({ ...c, places: c.places.sort((a, b) => (b.programme ?? '').localeCompare(a.programme ?? '')) }))
+    .map((c) => ({
+      ...c,
+      places: c.places.sort((a, b) => (b.programme ?? '').localeCompare(a.programme ?? '')),
+    }))
     .sort((a, b) => newest(b).localeCompare(newest(a)) || a.name.localeCompare(b.name))
 }
 
@@ -209,7 +277,10 @@ export type GovernanceMember = PersonCard & {
 }
 
 /** The advisors and trustees, in the order an editor gave them. */
-export const getGovernance = async (payload: Payload, locale: Locale): Promise<GovernanceMember[]> => {
+export const getGovernance = async (
+  payload: Payload,
+  locale: Locale,
+): Promise<GovernanceMember[]> => {
   const { docs } = await payload.find({
     collection: 'governance',
     depth: 2,

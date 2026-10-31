@@ -23,7 +23,13 @@ export const mediaFor = async (
   payload: Payload,
   { path, file, alt }: { path: string; file: string; alt: string },
 ): Promise<{ id: number; url: string; created: boolean }> => {
-  const { docs } = await payload.find({ collection: 'media', where: { legacy_url: { equals: path } }, limit: 1, depth: 0, overrideAccess: true })
+  const { docs } = await payload.find({
+    collection: 'media',
+    where: { legacy_url: { equals: path } },
+    limit: 1,
+    depth: 0,
+    overrideAccess: true,
+  })
   const found = docs[0] as MediaDoc | undefined
   if (found) return { id: found.id, url: found.url ?? '', created: false }
   const doc = (await payload.create({
@@ -51,7 +57,16 @@ export const importMedia = async (
   resolve: (path: string) => ResolvedFile,
   extras: Array<{ path: string; alt: string }> = [],
 ): Promise<MediaResult> => {
-  const result: MediaResult = { uploaded: 0, reused: 0, attached: 0, skippedSet: 0, missing: 0, noTarget: 0, urls: new Map(), noTargetJobs: [] }
+  const result: MediaResult = {
+    uploaded: 0,
+    reused: 0,
+    attached: 0,
+    skippedSet: 0,
+    missing: 0,
+    noTarget: 0,
+    urls: new Map(),
+    noTargetJobs: [],
+  }
   const cache = new Map<string, { id: number; url: string }>()
 
   /** null when the file is not in the archive. */
@@ -64,7 +79,13 @@ export const importMedia = async (
       got = await mediaFor(payload, { path: key, file, alt })
     } else {
       // No file: an earlier run may still have uploaded it.
-      const { docs } = await payload.find({ collection: 'media', where: { legacy_url: { equals: key } }, limit: 1, depth: 0, overrideAccess: true })
+      const { docs } = await payload.find({
+        collection: 'media',
+        where: { legacy_url: { equals: key } },
+        limit: 1,
+        depth: 0,
+        overrideAccess: true,
+      })
       const found = docs[0] as MediaDoc | undefined
       if (!found) return null
       got = { id: found.id, url: found.url ?? '', created: false }
@@ -77,12 +98,19 @@ export const importMedia = async (
     return entry
   }
 
-  const hasDrafts = (collection: CollectionSlug): boolean => Boolean(payload.collections[collection]?.config.versions?.drafts)
+  const hasDrafts = (collection: CollectionSlug): boolean =>
+    Boolean(payload.collections[collection]?.config.versions?.drafts)
 
   for (const job of jobs) {
     // An outlet's logo: every press item from that outlet that has none yet.
     if (job.collection === 'press') {
-      const { docs } = await payload.find({ collection: 'press', where: { 'outlet.name': { equals: job.name } }, pagination: false, depth: 0, overrideAccess: true })
+      const { docs } = await payload.find({
+        collection: 'press',
+        where: { 'outlet.name': { equals: job.name } },
+        pagination: false,
+        depth: 0,
+        overrideAccess: true,
+      })
       const bare = docs.filter((d) => !d.outlet?.logo)
       if (!docs.length) {
         result.noTarget++
@@ -99,20 +127,40 @@ export const importMedia = async (
         continue
       }
       for (const d of bare) {
-        await payload.update({ collection: 'press', id: d.id, overrideAccess: true, data: { outlet: { ...d.outlet, logo: m.id } } })
+        await payload.update({
+          collection: 'press',
+          id: d.id,
+          overrideAccess: true,
+          data: { outlet: { ...d.outlet, logo: m.id } },
+        })
       }
       result.attached++
       continue
     }
     const draft = hasDrafts(job.collection)
-    const where: Where = job.name ? { name: { equals: job.name } } : { legacy_url: { equals: job.legacy_url ?? '' } }
-    let { docs } = await payload.find({ collection: job.collection, where, limit: 1, depth: 0, overrideAccess: true, draft })
+    const where: Where = job.name
+      ? { name: { equals: job.name } }
+      : { legacy_url: { equals: job.legacy_url ?? '' } }
+    let { docs } = await payload.find({
+      collection: job.collection,
+      where,
+      limit: 1,
+      depth: 0,
+      overrideAccess: true,
+      draft,
+    })
     // A person first met as a course fellow keeps that course's legacy_url;
     // the people import matched them by name, so the photo's page differs.
     if (!docs.length && job.collection === 'people' && job.alt) {
-      ;({ docs } = await payload.find({ collection: 'people', where: { name: { equals: job.alt } }, limit: 1, depth: 0, overrideAccess: true }))
+      ;({ docs } = await payload.find({
+        collection: 'people',
+        where: { name: { equals: job.alt } },
+        limit: 1,
+        depth: 0,
+        overrideAccess: true,
+      }))
     }
-    const doc = docs[0] as unknown as Record<string, unknown> & { id: number } | undefined
+    const doc = docs[0] as unknown as (Record<string, unknown> & { id: number }) | undefined
     if (!doc) {
       result.noTarget++
       result.noTargetJobs.push(`${job.collection} ${job.name ?? job.legacy_url} (${job.field})`)
@@ -120,7 +168,12 @@ export const importMedia = async (
     }
     // A published document stays published: the file is written to it, not
     // to a new draft that the site would not show.
-    const args = { collection: job.collection, id: doc.id, overrideAccess: true, draft: draft && doc._status !== 'published' } as const
+    const args = {
+      collection: job.collection,
+      id: doc.id,
+      overrideAccess: true,
+      draft: draft && doc._status !== 'published',
+    } as const
 
     if (job.field === 'body_pdf_link') {
       if (!doc.body) {
@@ -145,7 +198,11 @@ export const importMedia = async (
     }
 
     const current = doc[job.field]
-    if (job.field === 'print_edition_url' ? typeof current === 'string' && current && !isArchiveUrl(current) : Boolean(current)) {
+    if (
+      job.field === 'print_edition_url'
+        ? typeof current === 'string' && current && !isArchiveUrl(current)
+        : Boolean(current)
+    ) {
       result.skippedSet++
       continue
     }

@@ -40,7 +40,9 @@ export const DEFAULT_TEXTS = {
   },
 } as const
 
-type Texts = { [K in keyof typeof DEFAULT_TEXTS]: { [F in keyof (typeof DEFAULT_TEXTS)[K]]: string } }
+type Texts = {
+  [K in keyof typeof DEFAULT_TEXTS]: { [F in keyof (typeof DEFAULT_TEXTS)[K]]: string }
+}
 
 export type SocialLink = { platform: string; url: string; icon: string }
 
@@ -105,7 +107,9 @@ export const withDefaults = (
   const origin = site.replace(/\/+$/, '')
   const texts = {} as Record<string, Record<string, string>>
   for (const [group, fields] of Object.entries(DEFAULT_TEXTS)) {
-    const saved = (stored.texts as Record<string, Record<string, string | null> | null> | null)?.[group]
+    const saved = (stored.texts as Record<string, Record<string, string | null> | null> | null)?.[
+      group
+    ]
     texts[group] = {}
     for (const [field, fallback] of Object.entries(fields)) {
       texts[group][field] = saved?.[field]?.trim() || fallback
@@ -127,7 +131,13 @@ export const withDefaults = (
     address: addressOf(stored.address_place) ?? DEFAULT_ADDRESS,
     social: (social ?? []).flatMap((s) =>
       s.platform && PLATFORMS[s.platform] && s.url?.startsWith('http')
-        ? [{ platform: PLATFORMS[s.platform], url: s.url, icon: `${origin}/assets/email/${s.platform}.png` }]
+        ? [
+            {
+              platform: PLATFORMS[s.platform],
+              url: s.url,
+              icon: `${origin}/assets/email/${s.platform}.png`,
+            },
+          ]
         : [],
     ),
     texts: texts as Texts,

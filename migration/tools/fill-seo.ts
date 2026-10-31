@@ -18,10 +18,21 @@ import { SEO_COLLECTIONS, seoDefaults, type SeoCollection } from '../../src/lib/
 
 const dry = process.argv.includes('--dry')
 const MAX = 160
-const DEFAULT_OG = path.join(import.meta.dirname, '..', '..', 'public', 'assets', 'images', 'og-default.jpg')
+const DEFAULT_OG = path.join(
+  import.meta.dirname,
+  '..',
+  '..',
+  'public',
+  'assets',
+  'images',
+  'og-default.jpg',
+)
 const DEFAULT_KEY = 'site/og-default.jpg'
 
-type Doc = Record<string, unknown> & { id: number; meta?: { title?: string | null; description?: string | null; image?: unknown } | null }
+type Doc = Record<string, unknown> & {
+  id: number
+  meta?: { title?: string | null; description?: string | null; image?: unknown } | null
+}
 type Locale = 'en' | 'ar'
 
 const clip = (text: string): string => {
@@ -40,7 +51,11 @@ const plain = (v: unknown): string => {
   }
 }
 const idOf = (v: unknown): number | undefined =>
-  typeof v === 'number' ? v : v && typeof v === 'object' && 'id' in v ? (v as { id: number }).id : undefined
+  typeof v === 'number'
+    ? v
+    : v && typeof v === 'object' && 'id' in v
+      ? (v as { id: number }).id
+      : undefined
 
 /** Longer text each collection can describe itself with, after seo.ts's sources. */
 const LONG: Partial<Record<SeoCollection, string[]>> = {
@@ -51,7 +66,15 @@ const LONG: Partial<Record<SeoCollection, string[]>> = {
 }
 
 const defaultImage = async (payload: Payload): Promise<number> => {
-  const found = (await payload.find({ collection: 'media', where: { legacy_url: { equals: DEFAULT_KEY } }, limit: 1, depth: 0, overrideAccess: true })).docs[0]
+  const found = (
+    await payload.find({
+      collection: 'media',
+      where: { legacy_url: { equals: DEFAULT_KEY } },
+      limit: 1,
+      depth: 0,
+      overrideAccess: true,
+    })
+  ).docs[0]
   if (found) return found.id as number
   if (dry) return -1
   const doc = await payload.create({
@@ -63,19 +86,39 @@ const defaultImage = async (payload: Payload): Promise<number> => {
   return doc.id as number
 }
 
-const imageFor = async (payload: Payload, collection: SeoCollection, doc: Doc, fallback: number): Promise<number> => {
+const imageFor = async (
+  payload: Payload,
+  collection: SeoCollection,
+  doc: Doc,
+  fallback: number,
+): Promise<number> => {
   const own = seoDefaults(collection, doc).image
   if (own !== undefined) return Number(own)
   if (collection === 'cycles') {
-    const { docs } = await payload.find({ collection: 'courses', where: { and: [{ cycle: { equals: doc.id } }, { cover_image: { exists: true } }] }, limit: 1, depth: 0, overrideAccess: true })
+    const { docs } = await payload.find({
+      collection: 'courses',
+      where: { and: [{ cycle: { equals: doc.id } }, { cover_image: { exists: true } }] },
+      limit: 1,
+      depth: 0,
+      overrideAccess: true,
+    })
     const cover = idOf((docs[0] as unknown as Doc | undefined)?.cover_image)
     if (cover) return cover
   }
   if (collection === 'events') {
-    for (const [rel, field] of [['courses', 'cover_image'], ['programmes', 'cover']] as const) {
+    for (const [rel, field] of [
+      ['courses', 'cover_image'],
+      ['programmes', 'cover'],
+    ] as const) {
       const id = idOf(doc[rel === 'courses' ? 'course' : 'programme'])
       if (!id) continue
-      const linked = (await payload.findByID({ collection: rel, id, depth: 0, draft: true, overrideAccess: true })) as unknown as Doc
+      const linked = (await payload.findByID({
+        collection: rel,
+        id,
+        depth: 0,
+        draft: true,
+        overrideAccess: true,
+      })) as unknown as Doc
       const img = idOf(linked[field])
       if (img) return img
     }
@@ -104,10 +147,27 @@ const fallback = await defaultImage(payload)
 const drafts = (c: CollectionSlug) => Boolean(payload.collections[c]?.config.versions?.drafts)
 
 for (const collection of SEO_COLLECTIONS) {
-  const { docs } = await payload.find({ collection, limit: 2000, pagination: false, depth: 0, draft: drafts(collection), locale: 'en', fallbackLocale: false, overrideAccess: true })
+  const { docs } = await payload.find({
+    collection,
+    limit: 2000,
+    pagination: false,
+    depth: 0,
+    draft: drafts(collection),
+    locale: 'en',
+    fallbackLocale: false,
+    overrideAccess: true,
+  })
   let filled = 0
   for (const enDoc of docs as unknown as Doc[]) {
-    const arDoc = (await payload.findByID({ collection, id: enDoc.id, depth: 0, draft: drafts(collection), locale: 'ar', fallbackLocale: false, overrideAccess: true })) as unknown as Doc
+    const arDoc = (await payload.findByID({
+      collection,
+      id: enDoc.id,
+      depth: 0,
+      draft: drafts(collection),
+      locale: 'ar',
+      fallbackLocale: false,
+      overrideAccess: true,
+    })) as unknown as Doc
     const image = await imageFor(payload, collection, enDoc, fallback)
     const texts = { en: textFor(collection, enDoc), ar: textFor(collection, arDoc) }
     let touched = false
@@ -143,7 +203,12 @@ for (const collection of SEO_COLLECTIONS) {
     }
     // The drafts above become the published version, as they were before.
     if (touched && !dry && drafts(collection) && enDoc._status === 'published') {
-      await payload.update({ collection, id: enDoc.id, data: { _status: 'published' }, overrideAccess: true } as Parameters<Payload['update']>[0])
+      await payload.update({
+        collection,
+        id: enDoc.id,
+        data: { _status: 'published' },
+        overrideAccess: true,
+      } as Parameters<Payload['update']>[0])
     }
     if (touched) filled++
   }

@@ -17,7 +17,10 @@ const isSet = (pricing: Pricing | null | undefined): pricing is SetPricing =>
  */
 export const pricingFor = (
   course: { course_type: string; pricing_override?: Pricing | null },
-  cycle: { pricing?: Array<{ course_types?: string[] | null; pricing?: Pricing | null }> | null } | null | undefined,
+  cycle:
+    | { pricing?: Array<{ course_types?: string[] | null; pricing?: Pricing | null }> | null }
+    | null
+    | undefined,
 ): Pricing | null => {
   if (isSet(course.pricing_override)) return course.pricing_override
   const pricing = cycle?.pricing?.find((entry) =>

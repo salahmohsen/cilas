@@ -129,12 +129,7 @@ const seedCover = async (): Promise<number | null> => {
 
 /* ==================================================================== course */
 
-const day = (
-  order: number,
-  title: string,
-  description: string,
-  readings: MaterialSeed[],
-) => ({
+const day = (order: number, title: string, description: string, readings: MaterialSeed[]) => ({
   order,
   session_title: title,
   meetings: 1,

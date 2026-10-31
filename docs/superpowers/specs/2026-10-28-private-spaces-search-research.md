@@ -46,17 +46,17 @@ The public collections should have no schema references to private collections. 
 
 Use one private alias, `spaces_search`, containing one record per post or comment. This avoids duplicating content per member and gives one private ranking/pagination stream. Keep it outside public `SEARCH_COLLECTIONS`.
 
-| Field | Proposed shape | Purpose |
-| --- | --- | --- |
-| `id` | `post:42` or `comment:83` | Collision-free index identity |
-| `sourceId` | indexed `int64` | Payload row lookup |
-| `kind` | indexed string enum | Post/comment discriminator |
-| `spaceId` | indexed `int64` | Authorization and space selection |
-| `postId` | indexed `int64`, also on posts | Introduction-thread filtering |
-| `title` | optional indexed string | The item's own title, if any |
-| `body` | indexed string | Normalized searchable text |
-| `updatedAt` | sortable numeric timestamp | Newest ordering |
-| `sourceRevision` | stored string, unindexed | Compare indexed text with current source |
+| Field            | Proposed shape                 | Purpose                                  |
+| ---------------- | ------------------------------ | ---------------------------------------- |
+| `id`             | `post:42` or `comment:83`      | Collision-free index identity            |
+| `sourceId`       | indexed `int64`                | Payload row lookup                       |
+| `kind`           | indexed string enum            | Post/comment discriminator               |
+| `spaceId`        | indexed `int64`                | Authorization and space selection        |
+| `postId`         | indexed `int64`, also on posts | Introduction-thread filtering            |
+| `title`          | optional indexed string        | The item's own title, if any             |
+| `body`           | indexed string                 | Normalized searchable text               |
+| `updatedAt`      | sortable numeric timestamp     | Newest ordering                          |
+| `sourceRevision` | stored string, unindexed       | Compare indexed text with current source |
 
 Use an explicit schema. Enable facets only for actual product requirements, and avoid indexing author identities, membership arrays, email, phone, voter identities, attachment contents, or attachment URLs. Filtering requires indexed fields; faceting and indexing are distinct settings. Language tokenization is configurable. [Collections API](https://typesense.org/docs/30.2/api/collections.html)
 
@@ -125,25 +125,25 @@ Typesense multi-search batches requests and also permits per-search keys. Keep a
 
 Use the exact pinned server and installed SDK, plus realistic Payload/Postgres integration. UI-only tests are insufficient.
 
-| Scenario | Required observation |
-| --- | --- |
-| Signed out, expired session, account switch | No private result or retained client result |
-| Two users with disjoint spaces | No cross-space content, labels, counts, or suggestions |
-| Forged selected space or injected filter/multi-search body | Denied or rejected; no engine passthrough |
-| Introduction gate, including comments | Only the introduction thread is searchable until the gate opens |
-| Enrollment withdrawal, audience/Trial switch change, intro comment deletion | Next validated request follows current rules without waiting for reindex |
-| Administrator role removal and linked-person change | Current authorization wins over stale token assumptions |
-| Soft delete, hard delete, parent tombstone, live child reply | Same display semantics as the specified search policy; old text never returned |
-| Edit while worker is unavailable | Revision mismatch suppresses stale matches, not merely stale snippets |
-| Empty permission set and authorization errors | No query without its mandatory filter |
-| Public key against alias, physical generation, JOIN, export, key APIs | All private access denied |
-| Curated/pinned inaccessible hit and stored highlights | No bypass of filter or response allowlist |
-| Partial bulk failure and malicious document content in errors | Correct retry; no private content in logs |
-| Transaction rollback and worker crash | No uncommitted item indexed; committed work eventually reconciles |
-| Delayed older write, duplicate job, concurrent rebuild and delete | Latest committed state converges without resurrection |
-| Unauthorized/stale hits fill candidate pages | Correct refill; no false exact totals or unvalidated next-page flag |
-| Shared caches, logout, CDN and reverse proxy | Private responses never served to another session |
-| Arabic/English, empty input, long queries, repeated requests | Useful matching within bounded work and observed resource limits |
+| Scenario                                                                    | Required observation                                                           |
+| --------------------------------------------------------------------------- | ------------------------------------------------------------------------------ |
+| Signed out, expired session, account switch                                 | No private result or retained client result                                    |
+| Two users with disjoint spaces                                              | No cross-space content, labels, counts, or suggestions                         |
+| Forged selected space or injected filter/multi-search body                  | Denied or rejected; no engine passthrough                                      |
+| Introduction gate, including comments                                       | Only the introduction thread is searchable until the gate opens                |
+| Enrollment withdrawal, audience/Trial switch change, intro comment deletion | Next validated request follows current rules without waiting for reindex       |
+| Administrator role removal and linked-person change                         | Current authorization wins over stale token assumptions                        |
+| Soft delete, hard delete, parent tombstone, live child reply                | Same display semantics as the specified search policy; old text never returned |
+| Edit while worker is unavailable                                            | Revision mismatch suppresses stale matches, not merely stale snippets          |
+| Empty permission set and authorization errors                               | No query without its mandatory filter                                          |
+| Public key against alias, physical generation, JOIN, export, key APIs       | All private access denied                                                      |
+| Curated/pinned inaccessible hit and stored highlights                       | No bypass of filter or response allowlist                                      |
+| Partial bulk failure and malicious document content in errors               | Correct retry; no private content in logs                                      |
+| Transaction rollback and worker crash                                       | No uncommitted item indexed; committed work eventually reconciles              |
+| Delayed older write, duplicate job, concurrent rebuild and delete           | Latest committed state converges without resurrection                          |
+| Unauthorized/stale hits fill candidate pages                                | Correct refill; no false exact totals or unvalidated next-page flag            |
+| Shared caches, logout, CDN and reverse proxy                                | Private responses never served to another session                              |
+| Arabic/English, empty input, long queries, repeated requests                | Useful matching within bounded work and observed resource limits               |
 
 ## Implementation sequence
 

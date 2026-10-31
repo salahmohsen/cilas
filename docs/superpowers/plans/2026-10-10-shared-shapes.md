@@ -38,21 +38,21 @@ These fill gaps the spec leaves open. Each is cheap to change before plan 3 wire
 
 ## File map
 
-| File | Change | Responsibility |
-|---|---|---|
-| `src/lib/cairo-day.ts` | create | `cairoDay()`, `addDays()`, `weekdayOf()` on `YYYY-MM-DD` strings |
-| `src/lib/schedule.ts` | create | Schedule types, `expandSchedule()`, `scheduleEndDate()`, `isOnCalendar()` |
-| `src/lib/registration.ts` | create | `registrationStatus()` |
-| `src/fields/validators.ts` | create | `httpUrl` (moved from `social.ts`), `timeOfDay`, `endAfterStart`, `notBelow` |
-| `src/fields/social.ts` | modify | Import `httpUrl` from `validators.ts` |
-| `src/fields/schedule.ts` | create | `scheduleField()` and its `computeEndDate` hook |
-| `src/fields/registration.ts` | create | `registrationField()` |
-| `src/fields/pricing.ts` | create | `pricingField()` |
-| `tests/unit/cairo-day.unit.spec.ts` | create | Day helpers |
-| `tests/unit/schedule.unit.spec.ts` | create | Expansion, sessions, end date, calendar |
-| `tests/unit/registration.unit.spec.ts` | create | Open/closed and fallback |
-| `tests/unit/shape-fields.unit.spec.ts` | create | Validators, field shapes, end-date hook |
-| `docs/schema.md` | modify | Drop the finished shared-shape sections |
+| File                                   | Change | Responsibility                                                               |
+| -------------------------------------- | ------ | ---------------------------------------------------------------------------- |
+| `src/lib/cairo-day.ts`                 | create | `cairoDay()`, `addDays()`, `weekdayOf()` on `YYYY-MM-DD` strings             |
+| `src/lib/schedule.ts`                  | create | Schedule types, `expandSchedule()`, `scheduleEndDate()`, `isOnCalendar()`    |
+| `src/lib/registration.ts`              | create | `registrationStatus()`                                                       |
+| `src/fields/validators.ts`             | create | `httpUrl` (moved from `social.ts`), `timeOfDay`, `endAfterStart`, `notBelow` |
+| `src/fields/social.ts`                 | modify | Import `httpUrl` from `validators.ts`                                        |
+| `src/fields/schedule.ts`               | create | `scheduleField()` and its `computeEndDate` hook                              |
+| `src/fields/registration.ts`           | create | `registrationField()`                                                        |
+| `src/fields/pricing.ts`                | create | `pricingField()`                                                             |
+| `tests/unit/cairo-day.unit.spec.ts`    | create | Day helpers                                                                  |
+| `tests/unit/schedule.unit.spec.ts`     | create | Expansion, sessions, end date, calendar                                      |
+| `tests/unit/registration.unit.spec.ts` | create | Open/closed and fallback                                                     |
+| `tests/unit/shape-fields.unit.spec.ts` | create | Validators, field shapes, end-date hook                                      |
+| `docs/schema.md`                       | modify | Drop the finished shared-shape sections                                      |
 
 Run a single spec with `pnpm vitest run --config ./vitest.config.mts <path>`.
 
@@ -63,6 +63,7 @@ Baseline before starting: `npx tsc --noEmit` prints nothing, and `pnpm lint` has
 ### Task 1: Cairo day helpers
 
 **Files:**
+
 - Create: `src/lib/cairo-day.ts`
 - Test: `tests/unit/cairo-day.unit.spec.ts`
 
@@ -171,6 +172,7 @@ Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>"
 ### Task 2: Expand a schedule pattern
 
 **Files:**
+
 - Create: `src/lib/schedule.ts`
 - Test: `tests/unit/schedule.unit.spec.ts`
 
@@ -325,6 +327,7 @@ Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>"
 ### Task 3: Hand meetings to sessions
 
 **Files:**
+
 - Modify: `src/lib/schedule.ts`
 - Test: `tests/unit/schedule.unit.spec.ts`
 
@@ -505,6 +508,7 @@ Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>"
 ### Task 4: End date and calendar visibility
 
 **Files:**
+
 - Modify: `src/lib/schedule.ts`
 - Test: `tests/unit/schedule.unit.spec.ts`
 
@@ -608,6 +612,7 @@ Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>"
 ### Task 5: Registration status
 
 **Files:**
+
 - Create: `src/lib/registration.ts`
 - Test: `tests/unit/registration.unit.spec.ts`
 
@@ -658,7 +663,7 @@ describe('registrationStatus', () => {
     expect(registrationStatus({ deadline: '2026-03-01' }, cycle, lateOnDeadline)).toBe('open')
   })
 
-  it("lets a course close even when its cycle is open", () => {
+  it('lets a course close even when its cycle is open', () => {
     const cycle = { method: 'form' as const }
     expect(registrationStatus({ method: 'closed' }, cycle)).toBe('closed')
   })
@@ -723,6 +728,7 @@ Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>"
 ### Task 6: Shared field validators
 
 **Files:**
+
 - Create: `src/fields/validators.ts`
 - Modify: `src/fields/social.ts`
 - Test: `tests/unit/shape-fields.unit.spec.ts`
@@ -833,6 +839,7 @@ Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>"
 ### Task 7: `scheduleField()`
 
 **Files:**
+
 - Create: `src/fields/schedule.ts`
 - Test: `tests/unit/shape-fields.unit.spec.ts`
 
@@ -967,7 +974,10 @@ export const scheduleField = (): NamedGroupField => ({
               name: 'end_time',
               type: 'text',
               required: true,
-              validate: (value: unknown, { siblingData }: { siblingData: Record<string, unknown> }) => {
+              validate: (
+                value: unknown,
+                { siblingData }: { siblingData: Record<string, unknown> },
+              ) => {
                 const time = timeOfDay(value)
                 return time === true ? endAfterStart(value, siblingData.start_time) : time
               },
@@ -992,7 +1002,9 @@ export const scheduleField = (): NamedGroupField => ({
       name: 'note',
       type: 'textarea',
       localized: true,
-      admin: { description: 'One-off exceptions, e.g. "hybrid for the first 6 weeks, then online".' },
+      admin: {
+        description: 'One-off exceptions, e.g. "hybrid for the first 6 weeks, then online".',
+      },
     },
   ],
 })
@@ -1019,6 +1031,7 @@ Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>"
 ### Task 8: `registrationField()`
 
 **Files:**
+
 - Create: `src/fields/registration.ts`
 - Test: `tests/unit/shape-fields.unit.spec.ts`
 
@@ -1091,7 +1104,10 @@ export const registrationField = (): NamedGroupField => ({
       name: 'url',
       type: 'text',
       validate: (value: unknown) => (value ? httpUrl(value) : true),
-      admin: { condition: (_, sibling) => sibling?.method === 'external', placeholder: 'https://…' },
+      admin: {
+        condition: (_, sibling) => sibling?.method === 'external',
+        placeholder: 'https://…',
+      },
     },
     {
       name: 'deadline',
@@ -1127,6 +1143,7 @@ Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>"
 ### Task 9: `pricingField()`
 
 **Files:**
+
 - Create: `src/fields/pricing.ts`
 - Test: `tests/unit/shape-fields.unit.spec.ts`
 
@@ -1252,6 +1269,7 @@ Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>"
 ### Task 10: Verify and update the spec
 
 **Files:**
+
 - Modify: `docs/schema.md`
 
 - [ ] **Step 1: Run the full suite, lint and type check**

@@ -19,5 +19,7 @@ export const getCurrentPlace = async (locale: 'en' | 'ar'): Promise<Place | null
     overrideAccess: false,
   })
   const place = docs.find((s) => s.address?.trim())
-  return place ? { name: place.name, address: place.address!.trim(), mapUrl: place.map_url ?? null } : null
+  return place
+    ? { name: place.name, address: place.address!.trim(), mapUrl: place.map_url ?? null }
+    : null
 }

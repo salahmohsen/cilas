@@ -22,15 +22,16 @@ vi.mock('@/i18n/navigation', () => ({
 }))
 
 /** A form as the apply page sends it: the two defaults first (name, email), then questions. */
-const formOf = (fields: NonNullable<Form['fields']>): Form => ({
-  id: 7,
-  title: 'Application probe',
-  fields: [
-    { blockType: 'text', name: 'name', label: 'Name', required: true },
-    { blockType: 'email', name: 'email', label: 'Email', required: true },
-    ...fields,
-  ] as NonNullable<Form['fields']>,
-}) as never as Form
+const formOf = (fields: NonNullable<Form['fields']>): Form =>
+  ({
+    id: 7,
+    title: 'Application probe',
+    fields: [
+      { blockType: 'text', name: 'name', label: 'Name', required: true },
+      { blockType: 'email', name: 'email', label: 'Email', required: true },
+      ...fields,
+    ] as NonNullable<Form['fields']>,
+  }) as never as Form
 
 const selectBlock = {
   blockType: 'select',
@@ -45,7 +46,7 @@ const selectBlock = {
 }
 
 describe('the payload form', () => {
-  let sent: { url: string; body: unknown, method: string }[] = []
+  let sent: { url: string; body: unknown; method: string }[] = []
 
   beforeEach(() => {
     sent = []
@@ -81,13 +82,17 @@ describe('the payload form', () => {
     const options = await screen.findAllByRole('option')
     fireEvent.keyDown(options[1]!, { key: 'Enter' })
 
-    fireEvent.change(screen.getByRole('textbox', { name: /Name/ }), { target: { value: 'Mona Adel' } })
+    fireEvent.change(screen.getByRole('textbox', { name: /Name/ }), {
+      target: { value: 'Mona Adel' },
+    })
     fireEvent.change(screen.getByRole('textbox', { name: /Email/ }), {
       target: { value: 'mona@example.com' },
     })
     fireEvent.click(screen.getByRole('button', { name: /submit/i }))
 
-    await waitFor(() => expect(sent.filter((s) => s.url.includes('form-submissions'))).toHaveLength(1))
+    await waitFor(() =>
+      expect(sent.filter((s) => s.url.includes('form-submissions'))).toHaveLength(1),
+    )
     const create = sent.find((s) => s.url.endsWith('/api/form-submissions'))!
     const body = JSON.parse(String(create.body)) as {
       submissionData: { field: string; value: string }[]

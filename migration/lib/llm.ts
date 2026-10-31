@@ -37,7 +37,10 @@ export const extractCached = async <T>({
   }
   const data = schema.parse(await call(prompt))
   mkdirSync(dir, { recursive: true })
-  writeFileSync(file, `${JSON.stringify({ sha256, model, version, data } satisfies Cached, null, 2)}\n`)
+  writeFileSync(
+    file,
+    `${JSON.stringify({ sha256, model, version, data } satisfies Cached, null, 2)}\n`,
+  )
   return data
 }
 
@@ -65,6 +68,7 @@ export const anthropicCall =
       messages: [{ role: 'user', content: prompt }],
     })
     const tool = res.content.find((b) => b.type === 'tool_use')
-    if (!tool || tool.type !== 'tool_use') throw new Error(`No tool call (stop: ${res.stop_reason})`)
+    if (!tool || tool.type !== 'tool_use')
+      throw new Error(`No tool call (stop: ${res.stop_reason})`)
     return tool.input
   }

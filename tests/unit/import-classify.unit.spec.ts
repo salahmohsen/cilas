@@ -35,6 +35,8 @@ describe('classifyPage', () => {
   })
 
   it('lets a hand override win', () => {
-    expect(classifyPage('anarchist-recipes.html', { 'anarchist-recipes.html': 'info' })).toBe('info')
+    expect(classifyPage('anarchist-recipes.html', { 'anarchist-recipes.html': 'info' })).toBe(
+      'info',
+    )
   })
 })

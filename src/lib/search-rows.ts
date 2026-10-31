@@ -61,7 +61,9 @@ export const titleFieldOf = (row: SearchRow, locale: SearchLocale): string => {
   const [own, other] = localesFor(locale).map((entry) => localizedField(title, entry))
   if (!textOf(row.hit, own)) return other
   const highlights = row.hit._highlightResult
-  return !matched(highlights?.[own]) && matched(highlights?.[other]) && textOf(row.hit, other) ? other : own
+  return !matched(highlights?.[own]) && matched(highlights?.[other]) && textOf(row.hit, other)
+    ? other
+    : own
 }
 
 /** The plain title text, in the language `titleFieldOf` picks. */
@@ -148,7 +150,11 @@ export type CollectionResults = { hits: SearchHit[]; found: number }
  * one's best hit stays near the top; people the query merely overlaps
  * trail, since a shared word is weaker evidence than a full-text match.
  */
-const byRelevance = (lists: Map<SearchCollection, SearchRow[]>, query: string, locale: SearchLocale) => {
+const byRelevance = (
+  lists: Map<SearchCollection, SearchRow[]>,
+  query: string,
+  locale: SearchLocale,
+) => {
   const normalized = query.trim().toLocaleLowerCase()
   const people = lists.get('people') ?? []
   const exact = normalized
@@ -219,7 +225,11 @@ export const mergeRows = ({
     })
   }
   if (sort === 'relevance') {
-    return byRelevance(new Map([...lists].map(([collection, list]) => [collection, list.rows])), query, locale)
+    return byRelevance(
+      new Map([...lists].map(([collection, list]) => [collection, list.rows])),
+      query,
+      locale,
+    )
   }
   return bySortKey(lists, sort, locale)
 }

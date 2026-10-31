@@ -18,7 +18,5 @@ import { clientEnv as env } from '@/env.client'
 export const RefreshRouteOnSave: React.FC = () => {
   const router = useRouter()
 
-  return (
-    <PayloadLivePreview refresh={router.refresh} serverURL={env.NEXT_PUBLIC_SERVER_URL} />
-  )
+  return <PayloadLivePreview refresh={router.refresh} serverURL={env.NEXT_PUBLIC_SERVER_URL} />
 }

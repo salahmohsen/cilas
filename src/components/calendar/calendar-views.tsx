@@ -40,7 +40,9 @@ const timeOf = (item: CalendarItem) => (item.start ? item.start : null)
 function ItemTitle({ item, className }: { item: CalendarItem; className?: string }) {
   // dir=auto on the title itself: a title in the other script keeps its own
   // order, and its clamp's ellipsis falls at its own end.
-  const classes = [className, item.cancelled ? 'line-through opacity-60' : null].filter(Boolean).join(' ')
+  const classes = [className, item.cancelled ? 'line-through opacity-60' : null]
+    .filter(Boolean)
+    .join(' ')
   return item.href ? (
     <Link className={`underline-offset-4 hover:underline ${classes}`} dir="auto" href={item.href}>
       {item.title}
@@ -113,7 +115,13 @@ export async function MonthView({
                   media={
                     cover ? (
                       // eslint-disable-next-line @next/next/no-img-element
-                      <img alt="" className="cal-cover-img" decoding="async" src={cover.url} style={focalPointStyle(cover)} />
+                      <img
+                        alt=""
+                        className="cal-cover-img"
+                        decoding="async"
+                        src={cover.url}
+                        style={focalPointStyle(cover)}
+                      />
                     ) : undefined
                   }
                   preview={
@@ -131,7 +139,9 @@ export async function MonthView({
                               <span />
                             )}
                             {i === shown - 1 && dayItems.length > shown ? (
-                              <span className="cal-more">{labels.more(dayItems.length - shown)}</span>
+                              <span className="cal-more">
+                                {labels.more(dayItems.length - shown)}
+                              </span>
                             ) : null}
                           </span>
                           <span className="cal-item-title" dir="auto">
@@ -164,16 +174,30 @@ function DayAgenda({ items, labels }: { items: CalendarItem[]; labels: Labels })
         {items.map((item) => (
           <li className="cal-agenda-item" key={item.key}>
             <span className="cal-time" dir={item.start ? labels.timeDir : undefined}>
-              {item.start ? labels.digits(`${item.start}${item.end ? `–${item.end}` : ''}`) : item.starts ? labels.starts : ''}
+              {item.start
+                ? labels.digits(`${item.start}${item.end ? `–${item.end}` : ''}`)
+                : item.starts
+                  ? labels.starts
+                  : ''}
             </span>
             {item.cover ? (
               // eslint-disable-next-line @next/next/no-img-element
-              <img alt="" className="cal-agenda-cover" loading="lazy" src={item.cover.url} style={focalPointStyle(item.cover)} />
+              <img
+                alt=""
+                className="cal-agenda-cover"
+                loading="lazy"
+                src={item.cover.url}
+                style={focalPointStyle(item.cover)}
+              />
             ) : null}
             <span className="min-w-0">
               <ItemTitle className="block font-medium text-[var(--foreground)]" item={item} />
               <span className="block text-xs text-[var(--text-muted)]">
-                {[labels.type(item), item.session ? labels.session(item.session) : null, item.cancelled ? labels.cancelled : null]
+                {[
+                  labels.type(item),
+                  item.session ? labels.session(item.session) : null,
+                  item.cancelled ? labels.cancelled : null,
+                ]
                   .filter(Boolean)
                   .join(' · ')}
               </span>
@@ -202,25 +226,52 @@ export async function WeekView({
   return (
     <div className="cal-week">
       {weekDays(date).map((day) => (
-        <section aria-label={format.dateTime(UTC(day), { dateStyle: 'full', timeZone: 'UTC', numberingSystem: nu })} className="cal-week-day" data-today={day === today || undefined} key={day}>
+        <section
+          aria-label={format.dateTime(UTC(day), {
+            dateStyle: 'full',
+            timeZone: 'UTC',
+            numberingSystem: nu,
+          })}
+          className="cal-week-day"
+          data-today={day === today || undefined}
+          key={day}
+        >
           <header className="cal-week-head">
-            <span className="cal-weekday">{format.dateTime(UTC(day), { weekday: 'long', timeZone: 'UTC' })}</span>
-            <span className="cal-day-number">{format.number(Number(day.slice(8)), { numberingSystem: nu })}</span>
+            <span className="cal-weekday">
+              {format.dateTime(UTC(day), { weekday: 'long', timeZone: 'UTC' })}
+            </span>
+            <span className="cal-day-number">
+              {format.number(Number(day.slice(8)), { numberingSystem: nu })}
+            </span>
           </header>
           <ul className="grid gap-3">
             {(map.get(day) ?? []).map((item) => (
               <li className="cal-card" key={item.key}>
                 {item.cover ? (
                   // eslint-disable-next-line @next/next/no-img-element
-                  <img alt={item.cover.alt} className="cal-card-cover" loading="lazy" src={item.cover.url} style={focalPointStyle(item.cover)} />
+                  <img
+                    alt={item.cover.alt}
+                    className="cal-card-cover"
+                    loading="lazy"
+                    src={item.cover.url}
+                    style={focalPointStyle(item.cover)}
+                  />
                 ) : null}
                 <div className="p-3">
                   <p className="cal-time" dir={item.start ? labels.timeDir : undefined}>
-                    {item.start ? labels.digits(`${item.start}${item.end ? `–${item.end}` : ''}`) : item.starts ? labels.starts : ''}
+                    {item.start
+                      ? labels.digits(`${item.start}${item.end ? `–${item.end}` : ''}`)
+                      : item.starts
+                        ? labels.starts
+                        : ''}
                   </p>
                   <ItemTitle className="mt-1 block text-sm font-medium" item={item} />
                   <p className="mt-1 text-xs text-[var(--text-muted)]">
-                    {[labels.type(item), item.session ? labels.session(item.session) : null, item.cancelled ? labels.cancelled : null]
+                    {[
+                      labels.type(item),
+                      item.session ? labels.session(item.session) : null,
+                      item.cancelled ? labels.cancelled : null,
+                    ]
                       .filter(Boolean)
                       .join(' · ')}
                   </p>
@@ -243,27 +294,48 @@ export async function AgendaView({ items, labels }: { items: CalendarItem[]; lab
       {[...map.entries()].map(([day, dayItems]) => (
         <li className="cal-agenda-day" key={day}>
           <div className="cal-agenda-date">
-            <span className="cal-day-number">{format.number(Number(day.slice(8)), { numberingSystem: nu })}</span>
+            <span className="cal-day-number">
+              {format.number(Number(day.slice(8)), { numberingSystem: nu })}
+            </span>
             <span className="text-sm leading-snug text-[var(--text-muted)]">
               {format.dateTime(UTC(day), { weekday: 'long', timeZone: 'UTC' })}
               <br />
-              {format.dateTime(UTC(day), { month: 'long', year: 'numeric', timeZone: 'UTC', numberingSystem: nu })}
+              {format.dateTime(UTC(day), {
+                month: 'long',
+                year: 'numeric',
+                timeZone: 'UTC',
+                numberingSystem: nu,
+              })}
             </span>
           </div>
           <ul className="grid gap-2">
             {dayItems.map((item) => (
               <li className="cal-agenda-item" key={item.key}>
                 <span className="cal-time" dir={item.start ? labels.timeDir : undefined}>
-                  {item.start ? labels.digits(`${item.start}${item.end ? `–${item.end}` : ''}`) : item.starts ? labels.starts : ''}
+                  {item.start
+                    ? labels.digits(`${item.start}${item.end ? `–${item.end}` : ''}`)
+                    : item.starts
+                      ? labels.starts
+                      : ''}
                 </span>
                 {item.cover ? (
                   // eslint-disable-next-line @next/next/no-img-element
-                  <img alt={item.cover.alt} className="cal-agenda-cover" loading="lazy" src={item.cover.url} style={focalPointStyle(item.cover)} />
+                  <img
+                    alt={item.cover.alt}
+                    className="cal-agenda-cover"
+                    loading="lazy"
+                    src={item.cover.url}
+                    style={focalPointStyle(item.cover)}
+                  />
                 ) : null}
                 <span className="min-w-0">
                   <ItemTitle className="block font-medium" item={item} />
                   <span className="block text-xs text-[var(--text-muted)]">
-                    {[labels.type(item), item.session ? labels.session(item.session) : null, item.cancelled ? labels.cancelled : null]
+                    {[
+                      labels.type(item),
+                      item.session ? labels.session(item.session) : null,
+                      item.cancelled ? labels.cancelled : null,
+                    ]
                       .filter(Boolean)
                       .join(' · ')}
                   </span>
@@ -279,9 +351,14 @@ export async function AgendaView({ items, labels }: { items: CalendarItem[]; lab
 
 /** The labels the views share, in the site language. */
 export const calendarLabels = async (): Promise<Labels> => {
-  const [t, tf, locale] = await Promise.all([getTranslations('Calendar'), getTranslations('Study.filters'), getLocale()])
+  const [t, tf, locale] = await Promise.all([
+    getTranslations('Calendar'),
+    getTranslations('Study.filters'),
+    getLocale(),
+  ])
   return {
-    type: (item) => (item.kind === 'course' ? tf(`types.${item.type}`) : t(`eventTypes.${item.type}`)),
+    type: (item) =>
+      item.kind === 'course' ? tf(`types.${item.type}`) : t(`eventTypes.${item.type}`),
     session: (n) => t('session', { n }),
     starts: t('starts'),
     more: (n) => t('more', { count: n }),

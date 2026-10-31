@@ -17,7 +17,9 @@ export function EditorFields({ pe, fields }: { pe: Editable; fields: EditorField
       dir="ltr"
       lang="en"
     >
-      <p className="mb-2 text-xs font-medium text-(--text-muted)">Page settings · only editors see this</p>
+      <p className="mb-2 text-xs font-medium text-(--text-muted)">
+        Page settings · only editors see this
+      </p>
       <dl className="grid gap-1.5 sm:grid-cols-[10rem_1fr]">
         {fields.map(({ label, path, value }) => (
           <div className="contents" key={path}>
@@ -36,6 +38,12 @@ export function EditorFields({ pe, fields }: { pe: Editable; fields: EditorField
 export const labelOf = (value: unknown): string | null => {
   if (!value) return null
   if (typeof value !== 'object') return `#${value}`
-  const v = value as { title?: string; name?: string; filename?: string; alt?: string; id?: unknown }
+  const v = value as {
+    title?: string
+    name?: string
+    filename?: string
+    alt?: string
+    id?: unknown
+  }
   return v.title ?? v.name ?? v.alt ?? v.filename ?? (v.id ? `#${v.id}` : null)
 }

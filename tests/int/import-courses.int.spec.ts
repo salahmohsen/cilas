@@ -4,12 +4,22 @@ import { getPayload, type Payload } from 'payload'
 import { afterAll, beforeAll, describe, expect, it } from 'vitest'
 
 import config from '@/payload.config'
-import { importCourses, type ArchiveCourse, type ArchiveCycle } from '../../migration/lib/import-courses'
+import {
+  importCourses,
+  type ArchiveCourse,
+  type ArchiveCycle,
+} from '../../migration/lib/import-courses'
 
 let payload: Payload
 
 const cycles: ArchiveCycle[] = [
-  { key: 'fall-2031-Darb el-Labbana', season: 'fall', start_year: 2031, space: 'Darb el-Labbana', legacy_url: '/probe-fall-2031.html' },
+  {
+    key: 'fall-2031-Darb el-Labbana',
+    season: 'fall',
+    start_year: 2031,
+    space: 'Darb el-Labbana',
+    legacy_url: '/probe-fall-2031.html',
+  },
 ]
 const course = (over: Partial<ArchiveCourse> = {}): ArchiveCourse => ({
   legacy_url: '/probe-fall-2031.html#probe-course',
@@ -61,7 +71,9 @@ describe('archive course import', () => {
     expect(docs).toHaveLength(1)
     expect(docs[0]).toMatchObject({ _status: 'published', tier: 'public' })
     expect(docs[0].registration?.archived_registration_url).toBe('https://forms.gle/probe')
-    expect((docs[0].fellows as Array<{ name: string }>).map((f) => f.name)).toEqual(['Probe Import Fellow'])
+    expect((docs[0].fellows as Array<{ name: string }>).map((f) => f.name)).toEqual([
+      'Probe Import Fellow',
+    ])
   })
 
   it('is idempotent', async () => {
@@ -84,7 +96,12 @@ describe('archive course import', () => {
 
   it('lands two courses with one title, the second under a year-suffixed slug', async () => {
     const twin = (n: number) =>
-      course({ legacy_url: `/probe-twin-${n}.html`, title: 'Probe Import Twin', fellows: [], title_ar: n === 1 ? 'توأم' : null })
+      course({
+        legacy_url: `/probe-twin-${n}.html`,
+        title: 'Probe Import Twin',
+        fellows: [],
+        title_ar: n === 1 ? 'توأم' : null,
+      })
     await importCourses(payload, { cycles, courses: [twin(1), twin(2)] })
     const { docs } = await payload.find({
       collection: 'courses',
@@ -95,7 +112,13 @@ describe('archive course import', () => {
     })
     expect(docs.map((d) => d.slug)).toEqual(['probe-import-twin', 'probe-import-twin-2031'])
 
-    const ar = await payload.findByID({ collection: 'courses', id: docs[0].id, draft: true, locale: 'ar', overrideAccess: true })
+    const ar = await payload.findByID({
+      collection: 'courses',
+      id: docs[0].id,
+      draft: true,
+      locale: 'ar',
+      overrideAccess: true,
+    })
     expect(ar.title).toBe('توأم')
 
     // A re-run updates both in place and keeps their slugs.

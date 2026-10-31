@@ -26,7 +26,15 @@ export const SEARCH_COLLECTIONS = {
     // `owner` joins the fellows' names; `syllabus` is the flattened session
     // flow and bibliography, deep in the weights behind the fields people
     // actually title their content with.
-    fields: { title: 10, subtitle: 8, owner: 8, epigraph: 7, summary: 6, description: 5, syllabus: 3 },
+    fields: {
+      title: 10,
+      subtitle: 8,
+      owner: 8,
+      epigraph: 7,
+      summary: 6,
+      description: 5,
+      syllabus: 3,
+    },
     snippets: ['description', 'syllabus'],
   },
   articles: {
@@ -46,7 +54,11 @@ export const SEARCH_COLLECTIONS = {
 export type SearchCollection = keyof typeof SEARCH_COLLECTIONS
 
 /** Section order in the panel and in the facet list. */
-export const SEARCH_ORDER = ['courses', 'articles', 'people'] as const satisfies readonly SearchCollection[]
+export const SEARCH_ORDER = [
+  'courses',
+  'articles',
+  'people',
+] as const satisfies readonly SearchCollection[]
 
 /** Course kinds the panel facets on, in Payload option order. */
 export const COURSE_TYPES = ['CORE', 'THEMATIC', 'LAB', 'WORKSHOP', 'SHORT'] as const

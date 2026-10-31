@@ -19,11 +19,24 @@ export const writeBio = async (
   const { en, ar } = splitLocales(bio)
   if (en.trim()) {
     const paras = withSubject(name, en).split(/\n\s*\n/)
-    await payload.update({ collection: 'people', id, data: { bio: lexical(paras, 'ltr') }, locale: 'en', overrideAccess: true })
+    await payload.update({
+      collection: 'people',
+      id,
+      data: { bio: lexical(paras, 'ltr') },
+      locale: 'en',
+      overrideAccess: true,
+    })
   }
   if (ar.trim()) {
     // An Arabic name not yet known: the name as written, until one is.
-    const current = (await payload.findByID({ collection: 'people', id, depth: 0, locale: 'ar', fallbackLocale: false, overrideAccess: true })) as { name?: string | null }
+    const current = (await payload.findByID({
+      collection: 'people',
+      id,
+      depth: 0,
+      locale: 'ar',
+      fallbackLocale: false,
+      overrideAccess: true,
+    })) as { name?: string | null }
     const arName = nameAr ?? (isMostlyArabic(name) ? name : (current.name ?? name))
     await payload.update({
       collection: 'people',

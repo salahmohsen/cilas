@@ -42,7 +42,9 @@ describe('Google sign-in', () => {
   })
 
   afterAll(async () => {
-    await payload.delete({ collection: 'users', id: user.id, overrideAccess: true }).catch(() => undefined)
+    await payload
+      .delete({ collection: 'users', id: user.id, overrideAccess: true })
+      .catch(() => undefined)
     await payload.destroy()
   })
 

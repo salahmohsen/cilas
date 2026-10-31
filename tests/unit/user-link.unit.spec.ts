@@ -46,9 +46,11 @@ describe('syncFellowRoleOnLink', () => {
   })
 
   it('ignores saves that do not touch person', async () => {
-    const out = await call({ roles: roles(['admin']) }, { roles: roles(['member']), person: 50 }, [
-      50,
-    ])
+    const out = await call(
+      { roles: roles(['admin']) },
+      { roles: roles(['member']), person: 50 },
+      [50],
+    )
     expect(out).toEqual({ roles: ['admin'] })
   })
 

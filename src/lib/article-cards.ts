@@ -35,7 +35,13 @@ const avatarOf = (p: Person | undefined): string | undefined => {
 
 const byline = (people: Person[], and: string) => {
   const avatar = avatarOf(people.find((p) => avatarOf(p)))
-  return { name: joinNames(people.map((p) => p.name), and), ...(avatar ? { avatar } : {}) }
+  return {
+    name: joinNames(
+      people.map((p) => p.name),
+      and,
+    ),
+    ...(avatar ? { avatar } : {}),
+  }
 }
 
 export const toArticleCard = (
@@ -60,7 +66,10 @@ export const toArticleCard = (
   const writer = (a.authors ?? []).find((p): p is Person => typeof p === 'object' && p !== null)
   const pub = publicationOf(a)
   const image =
-    media(a.cover_image) ?? media(writer?.photo) ?? media(pub?.cover_image) ?? (pub ? publicationCovers?.get(pub.id) : undefined)
+    media(a.cover_image) ??
+    media(writer?.photo) ??
+    media(pub?.cover_image) ??
+    (pub ? publicationCovers?.get(pub.id) : undefined)
   const date = a.published_date ?? a.createdAt
   const minutes = readingMinutes(a)
   return {

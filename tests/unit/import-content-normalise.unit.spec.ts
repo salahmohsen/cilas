@@ -87,7 +87,9 @@ describe('licenseOf', () => {
     expect(licenseOf('CC BY-SA 3.0')).toBe('cc_by_sa')
     expect(licenseOf('cc by')).toBe('cc_by')
     expect(licenseOf('All rights reserved')).toBe('all_rights_reserved')
-    expect(licenseOf('(… [النسبة-بذات الرخصة](http://creativecommons.org/licenses/by-sa/3.0/))')).toBe('cc_by_sa')
+    expect(
+      licenseOf('(… [النسبة-بذات الرخصة](http://creativecommons.org/licenses/by-sa/3.0/))'),
+    ).toBe('cc_by_sa')
     expect(licenseOf(null)).toBeNull()
     expect(licenseOf('Public domain')).toBeNull()
   })
@@ -96,7 +98,9 @@ describe('licenseOf', () => {
 describe('outletFromUrl', () => {
   it('names an outlet from the link domain, looking through mirrors', () => {
     expect(outletFromUrl('http://madamasr.com/content/x')).toBe('Mada Masr')
-    expect(outletFromUrl('https://madamirror18.appspot.com/madamasr.com/en/2019/x')).toBe('Mada Masr')
+    expect(outletFromUrl('https://madamirror18.appspot.com/madamasr.com/en/2019/x')).toBe(
+      'Mada Masr',
+    )
     expect(outletFromUrl('https://www.opendemocracy.net/a')).toBe('OpenDemocracy')
     expect(outletFromUrl('https://www.mashallahnews.com/x/')).toBe('Mashallah News')
     expect(outletFromUrl('http://egyptianstreets.com/2015')).toBe('Egyptian Streets')

@@ -90,7 +90,16 @@ for (const upload of sorted) {
   const courseUrls = [...uploads.get(upload)!].sort()
   const isDoc = /\.docx?$/i.test(upload)
   if (!found) {
-    entries.push({ id, upload, source: null, method: isDoc ? 'docx' : 'text', pages: null, links: 0, arabic_share: 0, courses: courseUrls })
+    entries.push({
+      id,
+      upload,
+      source: null,
+      method: isDoc ? 'docx' : 'text',
+      pages: null,
+      links: 0,
+      arabic_share: 0,
+      courses: courseUrls,
+    })
     continue
   }
 
@@ -103,7 +112,8 @@ for (const upload of sorted) {
   let method: FlowMethod = 'docx'
   try {
     if (isDoc) {
-      if (!existsSync(textFile)) run('textutil', ['-convert', 'txt', '-output', textFile, found.file])
+      if (!existsSync(textFile))
+        run('textutil', ['-convert', 'txt', '-output', textFile, found.file])
       share = arabicShareOf(readFileSync(textFile, 'utf8'))
     } else {
       if (!existsSync(textFile)) run('pdftotext', ['-layout', found.file, textFile])
@@ -139,7 +149,16 @@ for (const upload of sorted) {
   } catch (e) {
     failures.push(`${id}: ${(e as Error).message.split('\n')[0]}`)
   }
-  entries.push({ id, upload, source: found.source, method, pages, links, arabic_share: Math.round(share * 1000) / 1000, courses: courseUrls })
+  entries.push({
+    id,
+    upload,
+    source: found.source,
+    method,
+    pages,
+    links,
+    arabic_share: Math.round(share * 1000) / 1000,
+    courses: courseUrls,
+  })
   console.error(`${entries.length}/${sorted.length} ${id} (${method})`)
 }
 
@@ -160,10 +179,22 @@ for (const c of courses) {
   const dir = path.join(flowsRoot, id)
   mkdirSync(dir, { recursive: true })
   const textFile = path.join(dir, 'text.txt')
-  const html = readFileSync(path.join(page.source === 'zip' ? roots.zip : path.join(roots.mirror, 'pages'), page.file), 'utf8')
+  const html = readFileSync(
+    path.join(page.source === 'zip' ? roots.zip : path.join(roots.mirror, 'pages'), page.file),
+    'utf8',
+  )
   const text = pageText(html)
   if (!existsSync(textFile)) writeFileSync(textFile, text)
-  entries.push({ id, upload: c.legacy_url, source: page.source, method: 'text', pages: 1, links: 0, arabic_share: Math.round(arabicShareOf(text) * 1000) / 1000, courses: [c.legacy_url] })
+  entries.push({
+    id,
+    upload: c.legacy_url,
+    source: page.source,
+    method: 'text',
+    pages: 1,
+    links: 0,
+    arabic_share: Math.round(arabicShareOf(text) * 1000) / 1000,
+    courses: [c.legacy_url],
+  })
 }
 
 entries.sort((a, b) => (a.id < b.id ? -1 : a.id > b.id ? 1 : 0))

@@ -1,5 +1,18 @@
 import type { ReactNode } from 'react'
-import { Body, Column, Container, Font, Head, Html, Img, Link, Preview, Row, Section, Text } from 'react-email'
+import {
+  Body,
+  Column,
+  Container,
+  Font,
+  Head,
+  Html,
+  Img,
+  Link,
+  Preview,
+  Row,
+  Section,
+  Text,
+} from 'react-email'
 
 import type { EmailSettings } from './settings'
 import { colors, font, link, mobileCss, type } from './theme'
@@ -64,7 +77,10 @@ export function EmailLayout({
       </Head>
       <Preview>{preview}</Preview>
       <Body style={{ backgroundColor: colors.bg2, margin: 0, fontFamily: font }}>
-        <Container className="m-container" style={{ maxWidth: '640px', width: '100%', margin: '32px auto' }}>
+        <Container
+          className="m-container"
+          style={{ maxWidth: '640px', width: '100%', margin: '32px auto' }}
+        >
           <Section className="m-frame" style={{ backgroundColor: colors.bg, padding: '16px 24px' }}>
             {/* Header */}
             <Section style={{ padding: '0 24px', marginBottom: '12px' }}>
@@ -73,10 +89,17 @@ export function EmailLayout({
                   <Link href={settings.site} style={{ textDecoration: 'none' }}>
                     <Row>
                       <Column style={{ width: '30px', verticalAlign: 'middle' }}>
-                        <Img src={settings.logo.url} alt={settings.logo.alt} height={32} style={{ display: 'block' }} />
+                        <Img
+                          src={settings.logo.url}
+                          alt={settings.logo.alt}
+                          height={32}
+                          style={{ display: 'block' }}
+                        />
                       </Column>
                       <Column style={{ verticalAlign: 'middle', paddingLeft: '8px' }}>
-                        <Text style={{ ...type[13], color: colors.fg, margin: 0, lineHeight: '1.25' }}>
+                        <Text
+                          style={{ ...type[13], color: colors.fg, margin: 0, lineHeight: '1.25' }}
+                        >
                           Cairo Institute of
                           <br />
                           Liberal Arts and Sciences
@@ -85,9 +108,16 @@ export function EmailLayout({
                     </Row>
                   </Link>
                 </Column>
-                <Column align="right" style={{ width: '40%', verticalAlign: 'middle', padding: '7px 0' }}>
+                <Column
+                  align="right"
+                  style={{ width: '40%', verticalAlign: 'middle', padding: '7px 0' }}
+                >
                   {kicker ? (
-                    <Text style={{ ...type[13], margin: 0, textAlign: 'right', whiteSpace: 'nowrap' }}>{kicker}</Text>
+                    <Text
+                      style={{ ...type[13], margin: 0, textAlign: 'right', whiteSpace: 'nowrap' }}
+                    >
+                      {kicker}
+                    </Text>
                   ) : null}
                 </Column>
               </Row>
@@ -97,7 +127,14 @@ export function EmailLayout({
 
             {/* Footer */}
             <Section style={{ padding: '40px 24px', textAlign: 'center' }}>
-              <Text style={{ ...type[13], margin: '0 auto 32px', maxWidth: '280px', textAlign: 'center' }}>
+              <Text
+                style={{
+                  ...type[13],
+                  margin: '0 auto 32px',
+                  maxWidth: '280px',
+                  textAlign: 'center',
+                }}
+              >
                 {settings.tagline}
               </Text>
               {settings.social.length ? (
@@ -108,7 +145,13 @@ export function EmailLayout({
                       href={s.url}
                       style={{ display: 'inline-block', padding: '0 8px', verticalAlign: 'middle' }}
                     >
-                      <Img src={s.icon} alt={s.platform} width={18} height={18} style={{ display: 'block' }} />
+                      <Img
+                        src={s.icon}
+                        alt={s.platform}
+                        width={18}
+                        height={18}
+                        style={{ display: 'block' }}
+                      />
                     </Link>
                   ))}
                 </Section>
@@ -131,7 +174,10 @@ export function EmailLayout({
               </Text>
               {unsubscribe ? (
                 <Text style={{ ...type[11], margin: 0, textAlign: 'center' }}>
-                  <Link href={unsubscribe} style={{ color: colors.fg3, textDecoration: 'underline' }}>
+                  <Link
+                    href={unsubscribe}
+                    style={{ color: colors.fg3, textDecoration: 'underline' }}
+                  >
                     {settings.texts.newsletter.unsubscribe}
                   </Link>{' '}
                   from CILAS emails.

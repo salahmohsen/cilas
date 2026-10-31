@@ -3,11 +3,13 @@
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
 **Goal:** Import every archived cycle and course as drafts marked "needs review". The pipeline has three stages:
+
 - **Extract:** turn each cycle, course and lab page into structured JSON with a cheap model, fed clean text only.
 - **Normalise:** merge and convert that JSON into seed data.
 - **Seed:** upsert it into Payload by `legacy_url`.
 
 **Architecture:**
+
 - **Stage 2, extract:**
   - `migration/lib/page-text.ts` strips a Weebly page to its body text and keeps links, headings and emphasis as plain markers. It is free and deterministic.
   - `migration/extract-courses.ts` sends that text to Claude Haiku 5.5 with a forced tool call whose schema is a zod schema. It validates the result and writes one committed JSON file per page to `migration/extracted/`.
@@ -31,18 +33,21 @@
 ## Decisions made in this plan
 
 **Extraction**
+
 - **Model:** text extraction uses `claude-haiku-5-5`, a cheap model, as the user chose: pages go in as text, never as images.
 - **Committed output:** each page's extraction is committed under `migration/extracted/<file>.json`. It carries `sha256` of (prompt version + page text) and `model`, and the extract step skips a page whose hash still matches.
 - **API key:** the API key is read from `ANTHROPIC_API_KEY`, and Tasks 1–3 and 5–7 need no key.
 - **Pages with several cycles:** one page can hold several cycles, e.g. `2013-2014.html` or `cilas-in-alex-2018-2019.html`. So the schema returns `cycles[]`, each with its own `courses[]`. A course page returns one course with `cycles: []`.
 
 **Cycles and spaces**
+
 - **Season and start year:** the extracted `start_date` decides them when present. Otherwise they come from the file name:
   - trimesters map first → fall, second → winter, third → spring;
   - for an academic-year pair `A-B`, fall starts in `A`, and winter, spring and summer start in `B`.
 - **Space:** from the page's own venue mention (`space_hint`: `darb el-labbana`, `al-ghuria`, `al-manshiya`, `online`). Failing that, a file name or title with `alex` means al-Manshiya. Anything left defaults to Darb el-Labbana, flagged in the review file. Online-only cycles also go to Darb el-Labbana: a cycle needs a space, and the courses' `location` says they were online.
 
 **Courses**
+
 - **Legacy URL:** a course with its own page (the 2013–2018 "continue reading" pages, or a single-course page) uses that page's path. Inline courses use `<cycle page>#<slugified title>`.
 - **Merging:** the cycle-page summary and the course page merge into one course. The course page wins on every field it fills.
 - **Course type:** the model chooses from the page's own wording:
@@ -63,28 +68,30 @@
 - **Flow PDFs and register links:** the uploads a course links as its flow go into `seed/data/archive/courses.json` as `flow_uploads` for plan 6.4. They are not stored on the course (ADR 0004). Register links go into `registration.archived_registration_url`.
 
 **Import status and access**
+
 - **Drafts:** imported courses are Payload drafts (`_status: 'draft'`), `tier: 'public'`, `import_status: 'needs_review'`. A reviewer publishes. Cycles have no drafts and get `import_status: 'needs_review'`.
 - **Never overwrite reviewed content:** the importer is idempotent, and on a re-run it never overwrites a document whose `import_status` is `reviewed`.
 
 ## File map
 
-| File | Change | Responsibility |
-|---|---|---|
-| `migration/lib/page-text.ts` | create | `pageText(html)` |
-| `migration/lib/extraction-schema.ts` | create | zod schema, prompt, version |
-| `migration/lib/llm.ts` | create | cached, validated tool-call extraction |
-| `migration/extract-courses.ts` | create | stage 2 runner |
-| `migration/extracted/*.json` | generate | per-page extraction, committed |
-| `migration/lib/normalise-courses.ts` | create | pure stage-3 rules |
-| `migration/aliases.json` | create | name variants → canonical name |
-| `migration/normalise-courses.ts` | create | stage 3 runner |
-| `seed/data/archive/cycles.json`, `courses.json` | generate | normalised seed data |
-| `migration/review/courses.md` | generate | guesses for a person to check |
-| `migration/lib/import-courses.ts` | create | stage 4 upserts |
-| `migration/seed-courses.ts` | create | stage 4 runner |
-| `tests/unit/import-*.unit.spec.ts`, `tests/int/import-courses.int.spec.ts` | create | |
+| File                                                                       | Change   | Responsibility                         |
+| -------------------------------------------------------------------------- | -------- | -------------------------------------- |
+| `migration/lib/page-text.ts`                                               | create   | `pageText(html)`                       |
+| `migration/lib/extraction-schema.ts`                                       | create   | zod schema, prompt, version            |
+| `migration/lib/llm.ts`                                                     | create   | cached, validated tool-call extraction |
+| `migration/extract-courses.ts`                                             | create   | stage 2 runner                         |
+| `migration/extracted/*.json`                                               | generate | per-page extraction, committed         |
+| `migration/lib/normalise-courses.ts`                                       | create   | pure stage-3 rules                     |
+| `migration/aliases.json`                                                   | create   | name variants → canonical name         |
+| `migration/normalise-courses.ts`                                           | create   | stage 3 runner                         |
+| `seed/data/archive/cycles.json`, `courses.json`                            | generate | normalised seed data                   |
+| `migration/review/courses.md`                                              | generate | guesses for a person to check          |
+| `migration/lib/import-courses.ts`                                          | create   | stage 4 upserts                        |
+| `migration/seed-courses.ts`                                                | create   | stage 4 runner                         |
+| `tests/unit/import-*.unit.spec.ts`, `tests/int/import-courses.int.spec.ts` | create   |                                        |
 
 **Commands**
+
 - One spec: `pnpm vitest run --config ./vitest.config.mts <path>`.
 - **pnpm:** installs use the repo's pnpm, `npx -y pnpm@11.8.0 add …`.
 - **Raw files:** the raw archive is untrusted input, so scripts take its path as an argument. Never run anything from inside `migration/raw`.
@@ -95,6 +102,7 @@
 ### Task 1: Page text
 
 **Files:**
+
 - Create: `migration/lib/page-text.ts`
 - Test: `tests/unit/import-page-text.unit.spec.ts`
 
@@ -145,7 +153,20 @@ Expected: FAIL, unresolved import.
 ```ts
 import { JSDOM } from 'jsdom'
 
-const BLOCK = new Set(['P', 'DIV', 'LI', 'UL', 'OL', 'H1', 'H2', 'H3', 'H4', 'TABLE', 'TR', 'BLOCKQUOTE'])
+const BLOCK = new Set([
+  'P',
+  'DIV',
+  'LI',
+  'UL',
+  'OL',
+  'H1',
+  'H2',
+  'H3',
+  'H4',
+  'TABLE',
+  'TR',
+  'BLOCKQUOTE',
+])
 
 /**
  * A Weebly page's content as plain text the extractor can read: headings as
@@ -217,6 +238,7 @@ Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>"
 ### Task 2: Extraction schema and prompt
 
 **Files:**
+
 - Create: `migration/lib/extraction-schema.ts`
 - Test: `tests/unit/import-extraction-schema.unit.spec.ts`
 
@@ -263,7 +285,9 @@ const sample = {
 
 describe('CoursePage', () => {
   it('accepts a cycle page extraction', () => {
-    expect(CoursePage.parse(sample).cycles[0].courses[0].title).toBe('Story as participative enquiry')
+    expect(CoursePage.parse(sample).cycles[0].courses[0].title).toBe(
+      'Story as participative enquiry',
+    )
   })
 
   it('rejects times that are not 24-hour HH:MM', () => {
@@ -275,7 +299,12 @@ describe('CoursePage', () => {
 
 describe('coursePrompt', () => {
   it('names the page and carries its text', () => {
-    const prompt = coursePrompt({ file: 'fall-cycle-2024.html', kind: 'cycle', title: 'Fall cycle 2024', text: 'BODY' })
+    const prompt = coursePrompt({
+      file: 'fall-cycle-2024.html',
+      kind: 'cycle',
+      title: 'Fall cycle 2024',
+      text: 'BODY',
+    })
     expect(prompt).toContain('fall-cycle-2024.html')
     expect(prompt).toContain('BODY')
     expect(PROMPT_VERSION).toMatch(/^\d+$/)
@@ -296,8 +325,14 @@ import * as z from 'zod'
 /** Bump when the prompt or schema changes, so cached extractions re-run. */
 export const PROMPT_VERSION = '1'
 
-const time = z.string().regex(/^([01]\d|2[0-3]):[0-5]\d$/).nullable()
-const day = z.string().regex(/^\d{4}-\d{2}-\d{2}$/).nullable()
+const time = z
+  .string()
+  .regex(/^([01]\d|2[0-3]):[0-5]\d$/)
+  .nullable()
+const day = z
+  .string()
+  .regex(/^\d{4}-\d{2}-\d{2}$/)
+  .nullable()
 
 export const ExtractedCourse = z.object({
   title: z.string().min(1),
@@ -397,6 +432,7 @@ Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>"
 ### Task 3: Cached, validated extraction
 
 **Files:**
+
 - Create: `migration/lib/llm.ts`
 - Modify: `package.json`, `pnpm-lock.yaml`
 - Test: `tests/unit/import-llm.unit.spec.ts`
@@ -423,7 +459,15 @@ describe('extractCached', () => {
   it('calls the model once, then reads the cache while the input is unchanged', async () => {
     const dir = mkdtempSync(path.join(tmpdir(), 'extract-'))
     const call = vi.fn().mockResolvedValue({ answer: 42 })
-    const args = { dir, name: 'page.html', prompt: 'P', version: '1', model: 'm', schema: Schema, call }
+    const args = {
+      dir,
+      name: 'page.html',
+      prompt: 'P',
+      version: '1',
+      model: 'm',
+      schema: Schema,
+      call,
+    }
 
     expect(await extractCached(args)).toEqual({ answer: 42 })
     expect(await extractCached(args)).toEqual({ answer: 42 })
@@ -437,8 +481,24 @@ describe('extractCached', () => {
   it('re-runs when the prompt changes', async () => {
     const dir = mkdtempSync(path.join(tmpdir(), 'extract-'))
     const call = vi.fn().mockResolvedValue({ answer: 1 })
-    await extractCached({ dir, name: 'p', prompt: 'A', version: '1', model: 'm', schema: Schema, call })
-    await extractCached({ dir, name: 'p', prompt: 'B', version: '1', model: 'm', schema: Schema, call })
+    await extractCached({
+      dir,
+      name: 'p',
+      prompt: 'A',
+      version: '1',
+      model: 'm',
+      schema: Schema,
+      call,
+    })
+    await extractCached({
+      dir,
+      name: 'p',
+      prompt: 'B',
+      version: '1',
+      model: 'm',
+      schema: Schema,
+      call,
+    })
     expect(call).toHaveBeenCalledTimes(2)
   })
 
@@ -446,10 +506,26 @@ describe('extractCached', () => {
     const dir = mkdtempSync(path.join(tmpdir(), 'extract-'))
     const call = vi.fn().mockResolvedValue({ answer: 'no' })
     await expect(
-      extractCached({ dir, name: 'p', prompt: 'A', version: '1', model: 'm', schema: Schema, call }),
+      extractCached({
+        dir,
+        name: 'p',
+        prompt: 'A',
+        version: '1',
+        model: 'm',
+        schema: Schema,
+        call,
+      }),
     ).rejects.toThrow()
     await expect(
-      extractCached({ dir, name: 'p', prompt: 'A', version: '1', model: 'm', schema: Schema, call }),
+      extractCached({
+        dir,
+        name: 'p',
+        prompt: 'A',
+        version: '1',
+        model: 'm',
+        schema: Schema,
+        call,
+      }),
     ).rejects.toThrow()
     expect(call).toHaveBeenCalledTimes(2)
   })
@@ -503,7 +579,10 @@ export const extractCached = async <T>({
   }
   const data = schema.parse(await call(prompt))
   mkdirSync(dir, { recursive: true })
-  writeFileSync(file, `${JSON.stringify({ sha256, model, version, data } satisfies Cached, null, 2)}\n`)
+  writeFileSync(
+    file,
+    `${JSON.stringify({ sha256, model, version, data } satisfies Cached, null, 2)}\n`,
+  )
   return data
 }
 
@@ -529,7 +608,8 @@ export const anthropicCall =
       messages: [{ role: 'user', content: prompt }],
     })
     const tool = res.content.find((b) => b.type === 'tool_use')
-    if (!tool || tool.type !== 'tool_use') throw new Error(`No tool call (stop: ${res.stop_reason})`)
+    if (!tool || tool.type !== 'tool_use')
+      throw new Error(`No tool call (stop: ${res.stop_reason})`)
     return tool.input
   }
 ```
@@ -555,6 +635,7 @@ Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>"
 ### Task 4: Extract every cycle, course and lab page
 
 **Files:**
+
 - Create: `migration/extract-courses.ts`
 - Generate: `migration/extracted/*.json`
 
@@ -634,12 +715,14 @@ main()
 Run: `npx tsx --env-file=.env migration/extract-courses.ts migration/raw --only 2014-2015-second-trimester.html,spring-cycle-2023.html,fall-cycle-2024.html`
 
 Open the three JSON files and compare them with the page text, from `pageText` or the raw HTML read as text. Check:
+
 - every course on the page is present, and none is invented;
 - times, weekdays and dates match the page;
 - descriptions are verbatim and exclude bios;
 - `own_page` is set for the 2014 continue-reading courses.
 
 If the prompt needs fixing:
+
 - change it;
 - bump `PROMPT_VERSION`;
 - re-run the trial;
@@ -664,6 +747,7 @@ Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>"
 ### Task 5: Normalisation rules
 
 **Files:**
+
 - Create: `migration/lib/normalise-courses.ts`, `migration/aliases.json`
 - Test: `tests/unit/import-normalise.unit.spec.ts`
 
@@ -724,26 +808,38 @@ describe('cycleFromFile', () => {
 describe('spaceOf', () => {
   it('trusts the page, then Alexandria in the name, then defaults with a flag', () => {
     expect(spaceOf('al-ghuria', 'x.html', '')).toEqual({ space: 'al-Ghuria', guessed: false })
-    expect(spaceOf(null, 'cilas-in-alex-2019-2020.html', '')).toEqual({ space: 'al-Manshiya', guessed: false })
-    expect(spaceOf(null, 'spring-2021.html', '')).toEqual({ space: 'Darb el-Labbana', guessed: true })
-    expect(spaceOf('online', 'summer-2021.html', '')).toEqual({ space: 'Darb el-Labbana', guessed: true })
+    expect(spaceOf(null, 'cilas-in-alex-2019-2020.html', '')).toEqual({
+      space: 'al-Manshiya',
+      guessed: false,
+    })
+    expect(spaceOf(null, 'spring-2021.html', '')).toEqual({
+      space: 'Darb el-Labbana',
+      guessed: true,
+    })
+    expect(spaceOf('online', 'summer-2021.html', '')).toEqual({
+      space: 'Darb el-Labbana',
+      guessed: true,
+    })
   })
 })
 
 describe('courseLegacyUrl', () => {
   it("uses the course's own page when it has one, else a fragment of the cycle page", () => {
-    expect(courseLegacyUrl('/2014-2015-second-trimester.html', course({ own_page: 'art-and-the-city.html' }))).toBe(
-      '/art-and-the-city.html',
-    )
+    expect(
+      courseLegacyUrl(
+        '/2014-2015-second-trimester.html',
+        course({ own_page: 'art-and-the-city.html' }),
+      ),
+    ).toBe('/art-and-the-city.html')
     expect(courseLegacyUrl('/fall-cycle-2024.html', course())).toBe(
       '/fall-cycle-2024.html#story-as-participative-enquiry',
     )
   })
 
   it('ignores own_page links that are not pages on the site', () => {
-    expect(courseLegacyUrl('/fall-cycle-2024.html', course({ own_page: 'https://forms.gle/x' }))).toBe(
-      '/fall-cycle-2024.html#story-as-participative-enquiry',
-    )
+    expect(
+      courseLegacyUrl('/fall-cycle-2024.html', course({ own_page: 'https://forms.gle/x' })),
+    ).toBe('/fall-cycle-2024.html#story-as-participative-enquiry')
   })
 })
 
@@ -759,7 +855,11 @@ describe('scheduleOf', () => {
   })
 
   it('keeps only the note when times are unknown', () => {
-    expect(scheduleOf(course({ weekdays: [], start_time: null, end_time: null, weeks: null, start_date: null }))).toEqual({
+    expect(
+      scheduleOf(
+        course({ weekdays: [], start_time: null, end_time: null, weeks: null, start_date: null }),
+      ),
+    ).toEqual({
       start_precision: 'day',
       slots: [],
       note: 'Sundays, 5:30-8 pm',
@@ -853,7 +953,12 @@ export const scheduleOf = (course: ExtractedCourse) => {
 }
 
 const fold = (name: string): string =>
-  name.normalize('NFKD').replace(/[̀-ͯ]/g, '').toLowerCase().replace(/[^\p{L}\p{N}]+/gu, ' ').trim()
+  name
+    .normalize('NFKD')
+    .replace(/[̀-ͯ]/g, '')
+    .toLowerCase()
+    .replace(/[^\p{L}\p{N}]+/gu, ' ')
+    .trim()
 
 /** One spelling per person: aliases first, then a tidy form of the name as written. */
 export const canonicalName = (name: string, aliases: Record<string, string[]>): string => {
@@ -899,6 +1004,7 @@ Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>"
 ### Task 6: Normalise into seed data
 
 **Files:**
+
 - Create: `migration/normalise-courses.ts`
 - Generate: `seed/data/archive/cycles.json`, `seed/data/archive/courses.json`, `migration/review/courses.md`
 
@@ -915,17 +1021,34 @@ import { mkdirSync, readFileSync, readdirSync, writeFileSync } from 'node:fs'
 import path from 'node:path'
 
 import { CoursePage, type ExtractedCourse } from './lib/extraction-schema'
-import { canonicalName, courseLegacyUrl, cycleFromFile, scheduleOf, spaceOf } from './lib/normalise-courses'
+import {
+  canonicalName,
+  courseLegacyUrl,
+  cycleFromFile,
+  scheduleOf,
+  spaceOf,
+} from './lib/normalise-courses'
 
 const here = import.meta.dirname
 const root = path.join(here, '..')
-const aliases = JSON.parse(readFileSync(path.join(here, 'aliases.json'), 'utf8')) as Record<string, string[]>
+const aliases = JSON.parse(readFileSync(path.join(here, 'aliases.json'), 'utf8')) as Record<
+  string,
+  string[]
+>
 const { pages } = JSON.parse(readFileSync(path.join(here, 'manifest.json'), 'utf8')) as {
   pages: Array<{ file: string; legacy_url: string; title: string }>
 }
 const pageOf = new Map(pages.map((p) => [p.file, p]))
 
-type Cycle = { key: string; season: string; start_year: number; start_date?: string; deadline?: string; space: string; legacy_url: string }
+type Cycle = {
+  key: string
+  season: string
+  start_year: number
+  start_date?: string
+  deadline?: string
+  space: string
+  legacy_url: string
+}
 type Course = {
   legacy_url: string
   cycle: string | null
@@ -964,7 +1087,10 @@ const toCourse = (pageUrl: string, c: ExtractedCourse, cycle: string | null): Co
 const merge = (base: Course, extra: Course): Course => {
   const out = { ...base }
   for (const [k, v] of Object.entries(extra) as Array<[keyof Course, Course[keyof Course]]>) {
-    const empty = out[k] == null || out[k] === '' || (Array.isArray(out[k]) && (out[k] as unknown[]).length === 0)
+    const empty =
+      out[k] == null ||
+      out[k] === '' ||
+      (Array.isArray(out[k]) && (out[k] as unknown[]).length === 0)
     if (empty) (out as Record<string, unknown>)[k] = v
   }
   return out
@@ -976,7 +1102,9 @@ const files = readdirSync(path.join(here, 'extracted')).filter((f) => f.endsWith
 const parsed = files
   .map((f) => {
     const file = f.replace(/\.json$/, '')
-    const data = CoursePage.parse(JSON.parse(readFileSync(path.join(here, 'extracted', f), 'utf8')).data)
+    const data = CoursePage.parse(
+      JSON.parse(readFileSync(path.join(here, 'extracted', f), 'utf8')).data,
+    )
     return { file, page: pageOf.get(file), data }
   })
   .sort((a, b) => Number(Boolean(a.data.course)) - Number(Boolean(b.data.course)))
@@ -986,13 +1114,18 @@ for (const { file, page, data } of parsed) {
   for (const c of data.cycles) {
     const fromName = cycleFromFile(file)
     const season = c.season ?? fromName?.season
-    const start_year = c.start_date ? Number(c.start_date.slice(0, 4)) : (c.start_year ?? fromName?.start_year)
+    const start_year = c.start_date
+      ? Number(c.start_date.slice(0, 4))
+      : (c.start_year ?? fromName?.start_year)
     if (!season || !start_year) {
-      review.push(`- ${pageUrl}: cycle "${c.label}" has no season or year; its ${c.courses.length} course(s) were skipped`)
+      review.push(
+        `- ${pageUrl}: cycle "${c.label}" has no season or year; its ${c.courses.length} course(s) were skipped`,
+      )
       continue
     }
     const { space, guessed } = spaceOf(c.space_hint, file, page?.title ?? '')
-    if (guessed) review.push(`- ${pageUrl}: ${season} ${start_year} placed at ${space} (no venue on the page)`)
+    if (guessed)
+      review.push(`- ${pageUrl}: ${season} ${start_year} placed at ${space} (no venue on the page)`)
     const key = `${season}-${start_year}-${space}`
     if (!cycles.has(key)) {
       cycles.set(key, {
@@ -1017,7 +1150,9 @@ for (const { file, page, data } of parsed) {
     if (listed) {
       courses.set(course.legacy_url, merge(course, listed)) // the course page wins
     } else {
-      review.push(`- ${pageUrl}: course "${course.title}" is not listed on any cycle page; it has no cycle`)
+      review.push(
+        `- ${pageUrl}: course "${course.title}" is not listed on any cycle page; it has no cycle`,
+      )
       courses.set(course.legacy_url, course)
     }
   }
@@ -1026,15 +1161,24 @@ for (const { file, page, data } of parsed) {
 const orphans = [...courses.values()].filter((c) => !c.cycle)
 const outDir = path.join(root, 'seed', 'data', 'archive')
 mkdirSync(outDir, { recursive: true })
-const sorted = <T extends { legacy_url: string }>(xs: T[]) => xs.sort((a, b) => a.legacy_url.localeCompare(b.legacy_url))
-writeFileSync(path.join(outDir, 'cycles.json'), `${JSON.stringify(sorted([...cycles.values()]), null, 2)}\n`)
-writeFileSync(path.join(outDir, 'courses.json'), `${JSON.stringify(sorted([...courses.values()]), null, 2)}\n`)
+const sorted = <T extends { legacy_url: string }>(xs: T[]) =>
+  xs.sort((a, b) => a.legacy_url.localeCompare(b.legacy_url))
+writeFileSync(
+  path.join(outDir, 'cycles.json'),
+  `${JSON.stringify(sorted([...cycles.values()]), null, 2)}\n`,
+)
+writeFileSync(
+  path.join(outDir, 'courses.json'),
+  `${JSON.stringify(sorted([...courses.values()]), null, 2)}\n`,
+)
 mkdirSync(path.join(here, 'review'), { recursive: true })
 writeFileSync(
   path.join(here, 'review', 'courses.md'),
   `# Cycles and courses: to check\n\nGenerated by \`normalise-courses.ts\`. Each line is a guess or a gap.\n\n${review.sort().join('\n')}\n`,
 )
-console.log(`${cycles.size} cycles, ${courses.size} courses (${orphans.length} without a cycle), ${review.length} review note(s)`)
+console.log(
+  `${cycles.size} cycles, ${courses.size} courses (${orphans.length} without a cycle), ${review.length} review note(s)`,
+)
 ```
 
 - [ ] **Step 2: Run it and inspect**
@@ -1042,6 +1186,7 @@ console.log(`${cycles.size} cycles, ${courses.size} courses (${orphans.length} w
 Run: `npx tsx migration/normalise-courses.ts`
 
 Inspect the output:
+
 - Read `migration/review/courses.md`.
 - Spot-check five courses in `courses.json`. Include one 2014 course merged from a cycle page and its own page, and one 2025–26 course from the mirror.
 - If the same person appears under two spellings, add an entry to `migration/aliases.json` and re-run. Find candidates with `node -e "const c=require('./seed/data/archive/courses.json');const n=new Map();for(const x of c)for(const f of x.fellows)n.set(f.name,(n.get(f.name)||0)+1);console.log([...n].sort())"`.
@@ -1062,6 +1207,7 @@ Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>"
 ### Task 7: Import into Payload
 
 **Files:**
+
 - Create: `migration/lib/import-courses.ts`, `migration/seed-courses.ts`
 - Test: `tests/int/import-courses.int.spec.ts`
 
@@ -1099,7 +1245,11 @@ export type ArchiveCourse = {
     start_date?: string
     start_precision: 'day' | 'week'
     weeks?: number
-    slots: Array<{ weekday: 'sat' | 'sun' | 'mon' | 'tue' | 'wed' | 'thu' | 'fri'; start_time: string; end_time: string }>
+    slots: Array<{
+      weekday: 'sat' | 'sun' | 'mon' | 'tue' | 'wed' | 'thu' | 'fri'
+      start_time: string
+      end_time: string
+    }>
     note?: string
   }
   description: string
@@ -1107,7 +1257,11 @@ export type ArchiveCourse = {
   register_url: string | null
 }
 
-const paragraphs = (text: string): string[] => text.split(/\n\s*\n/).map((p) => p.trim()).filter(Boolean)
+const paragraphs = (text: string): string[] =>
+  text
+    .split(/\n\s*\n/)
+    .map((p) => p.trim())
+    .filter(Boolean)
 const rich = (text: string) =>
   text.trim() ? lexical(paragraphs(text), isMostlyArabic(text) ? 'rtl' : 'ltr') : null
 
@@ -1122,14 +1276,32 @@ const upsert = async (
   data: Record<string, unknown>,
   options: { draft?: boolean } = {},
 ): Promise<number> => {
-  const { docs } = await payload.find({ collection, where, limit: 1, depth: 0, overrideAccess: true, draft: options.draft })
+  const { docs } = await payload.find({
+    collection,
+    where,
+    limit: 1,
+    depth: 0,
+    overrideAccess: true,
+    draft: options.draft,
+  })
   const existing = docs[0] as { id: number; import_status?: string | null } | undefined
   if (existing?.import_status === 'reviewed') return existing.id
   if (existing) {
-    await payload.update({ collection, id: existing.id, data, overrideAccess: true, draft: options.draft })
+    await payload.update({
+      collection,
+      id: existing.id,
+      data,
+      overrideAccess: true,
+      draft: options.draft,
+    })
     return existing.id
   }
-  const doc = await payload.create({ collection, data, overrideAccess: true, draft: options.draft } as Parameters<Payload['create']>[0])
+  const doc = await payload.create({
+    collection,
+    data,
+    overrideAccess: true,
+    draft: options.draft,
+  } as Parameters<Payload['create']>[0])
   return doc.id as number
 }
 
@@ -1152,26 +1324,31 @@ export const importCourses = async (
       c.key,
       // One cycle per season, year and space (unique index), so match an
       // existing one, e.g. from the dev seed, as well as an earlier import.
-      await upsert(payload, 'cycles', {
-        or: [
-          { legacy_url: { equals: c.legacy_url } },
-          {
-            and: [
-              { season: { equals: c.season } },
-              { start_year: { equals: c.start_year } },
-              { space: { equals: spaces.get(c.space) } },
-            ],
-          },
-        ],
-      }, {
-        season: c.season,
-        start_year: c.start_year,
-        space: spaces.get(c.space),
-        ...(c.start_date ? { start_date: c.start_date } : {}),
-        ...(c.deadline ? { registration: { deadline: c.deadline } } : {}),
-        legacy_url: c.legacy_url,
-        import_status: 'needs_review',
-      }),
+      await upsert(
+        payload,
+        'cycles',
+        {
+          or: [
+            { legacy_url: { equals: c.legacy_url } },
+            {
+              and: [
+                { season: { equals: c.season } },
+                { start_year: { equals: c.start_year } },
+                { space: { equals: spaces.get(c.space) } },
+              ],
+            },
+          ],
+        },
+        {
+          season: c.season,
+          start_year: c.start_year,
+          space: spaces.get(c.space),
+          ...(c.start_date ? { start_date: c.start_date } : {}),
+          ...(c.deadline ? { registration: { deadline: c.deadline } } : {}),
+          legacy_url: c.legacy_url,
+          import_status: 'needs_review',
+        },
+      ),
     )
   }
 
@@ -1179,7 +1356,13 @@ export const importCourses = async (
   const personFor = async (f: ArchiveCourse['fellows'][number], from: string): Promise<number> => {
     const known = people.get(f.name)
     if (known) return known
-    const { docs } = await payload.find({ collection: 'people', where: { name: { equals: f.name } }, limit: 1, depth: 0, overrideAccess: true })
+    const { docs } = await payload.find({
+      collection: 'people',
+      where: { name: { equals: f.name } },
+      limit: 1,
+      depth: 0,
+      overrideAccess: true,
+    })
     const id =
       docs[0]?.id ??
       (
@@ -1263,7 +1446,10 @@ const read = (f: string) => JSON.parse(readFileSync(path.join(dir, f), 'utf8'))
 const main = async () => {
   const { default: config } = await import('../src/payload.config')
   const payload = await getPayload({ config: await config })
-  const result = await importCourses(payload, { cycles: read('cycles.json'), courses: read('courses.json') })
+  const result = await importCourses(payload, {
+    cycles: read('cycles.json'),
+    courses: read('courses.json'),
+  })
   console.log(`cycles ${result.cycles}, courses ${result.courses}, new people ${result.people}`)
   if (result.skipped.length) console.log(`skipped (no cycle): ${result.skipped.join(', ')}`)
   await payload.destroy()
@@ -1284,12 +1470,22 @@ import { getPayload, type Payload } from 'payload'
 import { afterAll, beforeAll, describe, expect, it } from 'vitest'
 
 import config from '@/payload.config'
-import { importCourses, type ArchiveCourse, type ArchiveCycle } from '../../migration/lib/import-courses'
+import {
+  importCourses,
+  type ArchiveCourse,
+  type ArchiveCycle,
+} from '../../migration/lib/import-courses'
 
 let payload: Payload
 
 const cycles: ArchiveCycle[] = [
-  { key: 'fall-2031-Darb el-Labbana', season: 'fall', start_year: 2031, space: 'Darb el-Labbana', legacy_url: '/probe-fall-2031.html' },
+  {
+    key: 'fall-2031-Darb el-Labbana',
+    season: 'fall',
+    start_year: 2031,
+    space: 'Darb el-Labbana',
+    legacy_url: '/probe-fall-2031.html',
+  },
 ]
 const course = (over: Partial<ArchiveCourse> = {}): ArchiveCourse => ({
   legacy_url: '/probe-fall-2031.html#probe-course',
@@ -1339,9 +1535,15 @@ describe('archive course import', () => {
       depth: 1,
     })
     expect(docs).toHaveLength(1)
-    expect(docs[0]).toMatchObject({ _status: 'draft', import_status: 'needs_review', tier: 'public' })
+    expect(docs[0]).toMatchObject({
+      _status: 'draft',
+      import_status: 'needs_review',
+      tier: 'public',
+    })
     expect(docs[0].registration?.archived_registration_url).toBe('https://forms.gle/probe')
-    expect((docs[0].fellows as Array<{ name: string }>).map((f) => f.name)).toEqual(['Probe Import Fellow'])
+    expect((docs[0].fellows as Array<{ name: string }>).map((f) => f.name)).toEqual([
+      'Probe Import Fellow',
+    ])
   })
 
   it('is idempotent', async () => {
@@ -1369,7 +1571,12 @@ describe('archive course import', () => {
       draft: true,
     })
     await importCourses(payload, { cycles, courses: [course()] })
-    const after = await payload.findByID({ collection: 'courses', id: docs[0].id, draft: true, overrideAccess: true })
+    const after = await payload.findByID({
+      collection: 'courses',
+      id: docs[0].id,
+      draft: true,
+      overrideAccess: true,
+    })
     expect(after.title).toBe('Edited by a reviewer')
   })
 
@@ -1409,6 +1616,7 @@ Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>"
 ### Task 8: Documentation
 
 **Files:**
+
 - Modify: `migration/README.md`, `docs/schema.md`
 
 - [ ] **Step 1: Document the stages**

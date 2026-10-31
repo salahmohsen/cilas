@@ -10,7 +10,12 @@ import type {
 import { Client } from 'typesense'
 
 import { env } from '@/env'
-import { SEARCH_COLLECTIONS, SEARCH_ORDER, type SearchCollection, type SearchLocale } from '@/lib/search-config'
+import {
+  SEARCH_COLLECTIONS,
+  SEARCH_ORDER,
+  type SearchCollection,
+  type SearchLocale,
+} from '@/lib/search-config'
 
 import { toSearchDocument, type SearchDocument } from './documents'
 import { createIndexer, type Indexer } from './indexer'
@@ -116,7 +121,10 @@ async function* publicDocuments(
     const english = await readPublic(reader, collection, 'en', { where, page })
     const ids = english.docs.map((doc) => doc.id)
     const arabic = ids.length
-      ? await readPublic(reader, collection, 'ar', { where: { id: { in: ids } }, pagination: false })
+      ? await readPublic(reader, collection, 'ar', {
+          where: { id: { in: ids } },
+          pagination: false,
+        })
       : { docs: [] }
     const arabicById = new Map(arabic.docs.map((doc) => [doc.id, doc]))
     yield english.docs.flatMap(
@@ -152,12 +160,18 @@ const createHooks = (indexer: Indexer) => {
     const documents = await collect(publicDocuments(reader, collection, { id: { in: ids } }))
     const found = new Set(documents.map((document) => document.id))
     const gone = ids.filter((id) => !found.has(id))
-    write(reader.payload, Promise.all([indexer.upsert(collection, documents), indexer.remove(collection, gone)]))
+    write(
+      reader.payload,
+      Promise.all([indexer.upsert(collection, documents), indexer.remove(collection, gone)]),
+    )
   }
 
   /** Re-indexes every public course and article crediting the person. */
   const refreshWorksOf = async (reader: Reader, personId: string) => {
-    for (const [collection, where] of Object.entries(worksOf(personId)) as [SearchCollection, Where][]) {
+    for (const [collection, where] of Object.entries(worksOf(personId)) as [
+      SearchCollection,
+      Where,
+    ][]) {
       const documents = await collect(publicDocuments(reader, collection, where))
       write(reader.payload, indexer.upsert(collection, documents))
     }
@@ -175,7 +189,10 @@ const createHooks = (indexer: Indexer) => {
           await refreshWorksOf(reader, String(doc.id))
         }
       } catch (error) {
-        req.payload.logger.error({ err: error }, `[typesense] failed to refresh ${collection}/${doc.id}`)
+        req.payload.logger.error(
+          { err: error },
+          `[typesense] failed to refresh ${collection}/${doc.id}`,
+        )
       }
     }
 
@@ -187,7 +204,10 @@ const createHooks = (indexer: Indexer) => {
       try {
         await refreshWorksOf({ payload: req.payload, req }, String(id))
       } catch (error) {
-        req.payload.logger.error({ err: error }, `[typesense] failed to refresh the works of people/${id}`)
+        req.payload.logger.error(
+          { err: error },
+          `[typesense] failed to refresh the works of people/${id}`,
+        )
       }
     }
 
@@ -203,7 +223,10 @@ const syncAll = async (payload: Payload, indexer: Indexer) => {
   }
   for (const collection of SEARCH_ORDER) {
     try {
-      const { indexed, removed } = await indexer.rebuild(collection, publicDocuments({ payload }, collection))
+      const { indexed, removed } = await indexer.rebuild(
+        collection,
+        publicDocuments({ payload }, collection),
+      )
       payload.logger.info(`[typesense] ${collection}: ${indexed} indexed, ${removed} stale removed`)
     } catch (error) {
       payload.logger.error({ err: error }, `[typesense] failed to rebuild ${collection}`)
@@ -218,13 +241,16 @@ export const typesenseSearch =
   (incoming: Config): Config => {
     // `next build` evaluates this config too, where the Typesense host
     // resolves nowhere; without a key there is nothing to talk to.
-    if (!env.TYPESENSE_API_KEY || process.env.NEXT_PHASE === 'phase-production-build') return incoming
+    if (!env.TYPESENSE_API_KEY || process.env.NEXT_PHASE === 'phase-production-build')
+      return incoming
 
     const indexer = createIndexer(
       new Client({
         apiKey: env.TYPESENSE_API_KEY,
         connectionTimeoutSeconds: 5,
-        nodes: [{ host: env.TYPESENSE_HOST, port: env.TYPESENSE_PORT, protocol: env.TYPESENSE_PROTOCOL }],
+        nodes: [
+          { host: env.TYPESENSE_HOST, port: env.TYPESENSE_PORT, protocol: env.TYPESENSE_PROTOCOL },
+        ],
       }),
     )
     const hooks = createHooks(indexer)

@@ -33,7 +33,9 @@ export const resolveUpload = (
   files: Set<string>,
 ): { path: string; missing: boolean } | null => {
   const clean = href.split(/[?#]/)[0].replace(/^https?:\/\/web\.archive\.org\/web\/[^/]+\//, '')
-  const match = UPLOADS.exec(clean.replace(/^https?:\/\/(www\.)?(ci-las\.org|cilas\.lkssystems\.com)\//, ''))
+  const match = UPLOADS.exec(
+    clean.replace(/^https?:\/\/(www\.)?(ci-las\.org|cilas\.lkssystems\.com)\//, ''),
+  )
   if (!match) return null
 
   let path = decodeURIComponent(match[1])

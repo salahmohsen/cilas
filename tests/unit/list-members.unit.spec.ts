@@ -38,13 +38,22 @@ const payload = {
 
 describe('memberEmails', () => {
   it('unions roles, programmes and chosen accounts, each address once', async () => {
-    const emails = await memberEmails(payload, { roles: ['fellow'], programmes: [9], users: [{ id: 4 }, 1] })
+    const emails = await memberEmails(payload, {
+      roles: ['fellow'],
+      programmes: [9],
+      users: [{ id: 4 }, 1],
+    })
     expect(emails).toEqual(['bridge@cilas.org', 'chosen@cilas.org', 'fellow@cilas.org'])
   })
 
   it('takes a course’s enrolled students and its fellows', async () => {
-    expect(await memberEmails(payload, { courses: [7] })).toEqual(['fellow@cilas.org', 'student@cilas.org'])
-    expect(await memberEmails(payload, { courses: [7], course_people: ['students'] })).toEqual(['student@cilas.org'])
+    expect(await memberEmails(payload, { courses: [7] })).toEqual([
+      'fellow@cilas.org',
+      'student@cilas.org',
+    ])
+    expect(await memberEmails(payload, { courses: [7], course_people: ['students'] })).toEqual([
+      'student@cilas.org',
+    ])
   })
 
   it('holds nobody without a rule, and every account with “everyone”', async () => {

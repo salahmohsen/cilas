@@ -221,7 +221,9 @@ function Countdown({
   }, [target])
   const { d, h, m, s } = parts(now === null ? 0 : target - now)
   const pending = now === null
-  const spoken = pending ? '' : `${d ? `${d} ${d === 1 ? 'day' : 'days'} ` : ''}${h} ${h === 1 ? 'hour' : 'hours'} ${m} ${m === 1 ? 'minute' : 'minutes'}`
+  const spoken = pending
+    ? ''
+    : `${d ? `${d} ${d === 1 ? 'day' : 'days'} ` : ''}${h} ${h === 1 ? 'hour' : 'hours'} ${m} ${m === 1 ? 'minute' : 'minutes'}`
   const digits = (value: string, key: string) =>
     value
       .split('')

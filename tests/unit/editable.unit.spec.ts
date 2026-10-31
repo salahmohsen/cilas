@@ -11,7 +11,9 @@ describe('editableIn', () => {
       'data-pve-row': 'abc',
     })
     expect(pe.container('sessions')).toEqual({ 'data-pve-container': 'sessions' })
-    expect(pe.scope({ collection: 'courses', id: 7 })).toEqual({ 'data-pve-scope': 'collection:courses;id:7' })
+    expect(pe.scope({ collection: 'courses', id: 7 })).toEqual({
+      'data-pve-scope': 'collection:courses;id:7',
+    })
   })
 
   it('adds nothing to the public page', () => {

@@ -14,21 +14,22 @@ Spec: `docs/superpowers/specs/2026-10-21-card-grid-layout-design.md`. Work on `m
 
 ## File map
 
-| File | Change |
-| --- | --- |
-| `src/blocks/card-stack.ts` | `layout` field, new labels |
-| `src/payload-types.ts` | generated |
-| `src/api/card-stacks.api.ts` | `ResolvedStack` gets `layout`, `posts`, `categories`, `seasons`; new options `articleCard`, `labels.courseType` |
-| `tests/unit/card-stacks.unit.spec.ts` | grid tests, existing test updated for the new shape |
-| `messages/en.json`, `messages/ar.json` | `Article.gridFilterBy` |
-| `src/components/article/article-card-grid.tsx` | new: `BlogGrid` for a block |
-| `src/components/article/article-page.tsx` | pass the new options; render the grid |
+| File                                           | Change                                                                                                          |
+| ---------------------------------------------- | --------------------------------------------------------------------------------------------------------------- |
+| `src/blocks/card-stack.ts`                     | `layout` field, new labels                                                                                      |
+| `src/payload-types.ts`                         | generated                                                                                                       |
+| `src/api/card-stacks.api.ts`                   | `ResolvedStack` gets `layout`, `posts`, `categories`, `seasons`; new options `articleCard`, `labels.courseType` |
+| `tests/unit/card-stacks.unit.spec.ts`          | grid tests, existing test updated for the new shape                                                             |
+| `messages/en.json`, `messages/ar.json`         | `Article.gridFilterBy`                                                                                          |
+| `src/components/article/article-card-grid.tsx` | new: `BlogGrid` for a block                                                                                     |
+| `src/components/article/article-page.tsx`      | pass the new options; render the grid                                                                           |
 
 ---
 
 ### Task 1: The `layout` field on the block
 
 **Files:**
+
 - Modify: `src/blocks/card-stack.ts`
 - Modify (generated): `src/payload-types.ts`
 
@@ -84,6 +85,7 @@ Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>"
 ### Task 2: The resolver gives grid posts and tabs
 
 **Files:**
+
 - Modify: `src/api/card-stacks.api.ts`
 - Test: `tests/unit/card-stacks.unit.spec.ts`
 
@@ -95,8 +97,25 @@ Replace the `courses` fixture with:
 
 ```ts
 const courses = [
-  { id: 10, title: 'Plato', slug: 'plato', course_type: 'CORE', fellows: [{ name: 'Mona' }], summary: 'Book by book.', cycle: { title: 'Fall 2026, Cairo', season: 'fall' } },
-  { id: 11, title: 'Archives', slug: 'archives', course_type: 'WORKSHOP', fellows: [], subtitle: 'Reading the files.', cycle: { title: 'Fall 2026, Cairo', season: 'fall' }, cover_image: { url: '/media/a.jpg', alt: 'Files' } },
+  {
+    id: 10,
+    title: 'Plato',
+    slug: 'plato',
+    course_type: 'CORE',
+    fellows: [{ name: 'Mona' }],
+    summary: 'Book by book.',
+    cycle: { title: 'Fall 2026, Cairo', season: 'fall' },
+  },
+  {
+    id: 11,
+    title: 'Archives',
+    slug: 'archives',
+    course_type: 'WORKSHOP',
+    fellows: [],
+    subtitle: 'Reading the files.',
+    cycle: { title: 'Fall 2026, Cairo', season: 'fall' },
+    cover_image: { url: '/media/a.jpg', alt: 'Files' },
+  },
 ]
 ```
 
@@ -136,72 +155,103 @@ In `options`, add `articleCard` and `labels.courseType`:
 Change the expected value in the test `draws chosen courses with their fellows and cycle, and uses the admin’s label` to:
 
 ```ts
-    expect(stacks.c).toEqual({
-      label: 'This autumn',
-      layout: 'stack',
-      items: [{ name: 'Plato', role: 'Mona', description: 'Book by book.', href: '/study/plato', stat: 'Fall 2026, Cairo' }],
-      posts: [],
-      categories: [],
-      seasons: {},
-    })
+expect(stacks.c).toEqual({
+  label: 'This autumn',
+  layout: 'stack',
+  items: [
+    {
+      name: 'Plato',
+      role: 'Mona',
+      description: 'Book by book.',
+      href: '/study/plato',
+      stat: 'Fall 2026, Cairo',
+    },
+  ],
+  posts: [],
+  categories: [],
+  seasons: {},
+})
 ```
 
 Add these tests at the end of the `describe` block:
 
 ```ts
-  it('draws a cycle’s courses as grid posts, with a tab for each course type', async () => {
-    const stacks = await resolveCardStacks(payload, body(block({ id: 'g', layout: 'grid', source: 'cycle', cycle: { id: 5, title: 'Fall 2026, Cairo' } })), options as never)
-    expect(stacks.g!.layout).toBe('grid')
-    expect(stacks.g!.posts).toEqual([
-      {
-        id: 'plato',
-        href: '/en/study/plato',
-        title: 'Plato',
-        excerpt: 'Book by book.',
-        category: 'Core Course',
-        label: 'Core Course',
-        date: '',
-        dateLabel: '',
-        readTime: 0,
-        readTimeLabel: '',
-        author: { name: 'Mona' },
-      },
-      {
-        id: 'archives',
-        href: '/en/study/archives',
-        title: 'Archives',
-        excerpt: 'Reading the files.',
-        category: 'Workshop',
-        label: 'Workshop',
-        date: '',
-        dateLabel: '',
-        readTime: 0,
-        readTimeLabel: '',
-        author: { name: '' },
-        image: { src: '/media/a.jpg', alt: 'Files' },
-      },
-    ])
-    expect(stacks.g!.categories).toEqual(['Core Course', 'Workshop'])
-    expect(stacks.g!.seasons).toEqual({ plato: 'fall', archives: 'fall' })
-  })
+it('draws a cycle’s courses as grid posts, with a tab for each course type', async () => {
+  const stacks = await resolveCardStacks(
+    payload,
+    body(
+      block({
+        id: 'g',
+        layout: 'grid',
+        source: 'cycle',
+        cycle: { id: 5, title: 'Fall 2026, Cairo' },
+      }),
+    ),
+    options as never,
+  )
+  expect(stacks.g!.layout).toBe('grid')
+  expect(stacks.g!.posts).toEqual([
+    {
+      id: 'plato',
+      href: '/en/study/plato',
+      title: 'Plato',
+      excerpt: 'Book by book.',
+      category: 'Core Course',
+      label: 'Core Course',
+      date: '',
+      dateLabel: '',
+      readTime: 0,
+      readTimeLabel: '',
+      author: { name: 'Mona' },
+    },
+    {
+      id: 'archives',
+      href: '/en/study/archives',
+      title: 'Archives',
+      excerpt: 'Reading the files.',
+      category: 'Workshop',
+      label: 'Workshop',
+      date: '',
+      dateLabel: '',
+      readTime: 0,
+      readTimeLabel: '',
+      author: { name: '' },
+      image: { src: '/media/a.jpg', alt: 'Files' },
+    },
+  ])
+  expect(stacks.g!.categories).toEqual(['Core Course', 'Workshop'])
+  expect(stacks.g!.seasons).toEqual({ plato: 'fall', archives: 'fall' })
+})
 
-  it('keeps the chosen order in a grid, and shows no tabs for one course type', async () => {
-    const stacks = await resolveCardStacks(payload, body(block({ id: 'g', layout: 'grid', source: 'courses', courses: [10] })), options as never)
-    expect(stacks.g!.posts.map((p) => p.id)).toEqual(['plato'])
-    expect(stacks.g!.categories).toEqual([])
-  })
+it('keeps the chosen order in a grid, and shows no tabs for one course type', async () => {
+  const stacks = await resolveCardStacks(
+    payload,
+    body(block({ id: 'g', layout: 'grid', source: 'courses', courses: [10] })),
+    options as never,
+  )
+  expect(stacks.g!.posts.map((p) => p.id)).toEqual(['plato'])
+  expect(stacks.g!.categories).toEqual([])
+})
 
-  it('draws chosen articles as grid posts without tabs', async () => {
-    const stacks = await resolveCardStacks(payload, body(block({ id: 'g', layout: 'grid', source: 'articles', articles: [3, 2] })), options as never)
-    expect(stacks.g!.posts.map((p) => p.title)).toEqual(['Third', 'Second'])
-    expect(stacks.g!.categories).toEqual([])
-  })
+it('draws chosen articles as grid posts without tabs', async () => {
+  const stacks = await resolveCardStacks(
+    payload,
+    body(block({ id: 'g', layout: 'grid', source: 'articles', articles: [3, 2] })),
+    options as never,
+  )
+  expect(stacks.g!.posts.map((p) => p.title)).toEqual(['Third', 'Second'])
+  expect(stacks.g!.categories).toEqual([])
+})
 
-  it('reads a block from before the layout field as a stack', async () => {
-    const stacks = await resolveCardStacks(payload, body(block({ id: 's', source: 'articles', articles: [2] })), options as never)
-    expect(stacks.s!.layout).toBe('stack')
-    expect(stacks.s!.posts).toEqual([])
-  })
+it('reads a block from before the layout field as a stack', async () => {
+  const stacks = await resolveCardStacks(
+    payload,
+    body(block({ id: 's', source: 'articles', articles: [2] })),
+    options as never,
+  )
+  expect(stacks.s!.layout).toBe('stack')
+  expect(stacks.s!.posts).toEqual([])
+})
 ```
 
 - [ ] **Step 2: Run the tests to see them fail**
@@ -256,7 +306,11 @@ After `courseItem`, add:
 
 ```ts
 /** A course as a grid card: its type is its tab and its label. */
-const coursePost = (c: Course, locale: Locale, typeName: (type: CourseType) => string): GridPost => {
+const coursePost = (
+  c: Course,
+  locale: Locale,
+  typeName: (type: CourseType) => string,
+): GridPost => {
   const type = typeName(c.course_type)
   const cover = coverOf(c.cover_image)
   return {
@@ -277,13 +331,17 @@ const coursePost = (c: Course, locale: Locale, typeName: (type: CourseType) => s
 
 /** One tab per course type present, in the types' own order; none for a single type. */
 const typeTabs = (courses: Course[], typeName: (type: CourseType) => string): string[] => {
-  const present = COURSE_TYPE_OPTIONS.map((o) => o.value).filter((v) => courses.some((c) => c.course_type === v))
+  const present = COURSE_TYPE_OPTIONS.map((o) => o.value).filter((v) =>
+    courses.some((c) => c.course_type === v),
+  )
   return present.length > 1 ? present.map(typeName) : []
 }
 
 const seasonsOf = (courses: Course[]): Record<string, Season> =>
   Object.fromEntries(
-    courses.flatMap((c) => (typeof c.cycle === 'object' && c.cycle?.season && c.slug ? [[c.slug, c.cycle.season]] : [])),
+    courses.flatMap((c) =>
+      typeof c.cycle === 'object' && c.cycle?.season && c.slug ? [[c.slug, c.cycle.season]] : [],
+    ),
   )
 ```
 
@@ -390,6 +448,7 @@ Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>"
 ### Task 3: The grid component and its message
 
 **Files:**
+
 - Modify: `messages/en.json`, `messages/ar.json`
 - Create: `src/components/article/article-card-grid.tsx`
 
@@ -497,6 +556,7 @@ Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>"
 ### Task 4: The article page shows the grid
 
 **Files:**
+
 - Modify: `src/components/article/article-page.tsx` (imports near line 34; `resolveCardStacks` call near lines 123–143; `cardStack` renderer near lines 340–350)
 
 - [ ] **Step 1: Import the grid**
@@ -512,28 +572,28 @@ import { ArticleCardGrid } from '@/components/article/article-card-grid'
 Near line 99, replace:
 
 ```ts
-  const [t, tl, tArticles, tShare, format, collection] = await Promise.all([
-    getTranslations('Article'),
-    getTranslations('Language'),
-    getTranslations('Articles'),
-    getTranslations('Share'),
-    getFormatter(),
-    getArticleCollection(payload, article, locale, user),
-  ])
+const [t, tl, tArticles, tShare, format, collection] = await Promise.all([
+  getTranslations('Article'),
+  getTranslations('Language'),
+  getTranslations('Articles'),
+  getTranslations('Share'),
+  getFormatter(),
+  getArticleCollection(payload, article, locale, user),
+])
 ```
 
 with:
 
 ```ts
-  const [t, tl, tArticles, tShare, format, collection, tf] = await Promise.all([
-    getTranslations('Article'),
-    getTranslations('Language'),
-    getTranslations('Articles'),
-    getTranslations('Share'),
-    getFormatter(),
-    getArticleCollection(payload, article, locale, user),
-    getTranslations('Study.filters'),
-  ])
+const [t, tl, tArticles, tShare, format, collection, tf] = await Promise.all([
+  getTranslations('Article'),
+  getTranslations('Language'),
+  getTranslations('Articles'),
+  getTranslations('Share'),
+  getFormatter(),
+  getArticleCollection(payload, article, locale, user),
+  getTranslations('Study.filters'),
+])
 ```
 
 - [ ] **Step 3: Give the resolver its new options**
@@ -601,9 +661,11 @@ Expected: all pass.
 - [ ] **Step 2: Check in the browser**
 
 Start the dev server (`pnpm dev`). In the admin, open an article draft and add a **Cards (stack or grid)** block with:
+
 - Layout: Grid, Source: A cycle (all its courses), a cycle that has published public courses of 2 or more types.
 
 Open the live preview, then the article page in `/en` and `/ar`. Expected:
+
 - The cards of all the cycle's published public courses, with no pagination.
 - Tabs "All" plus one tab for each course type. A tab shows only its courses.
 - Each card opens `/<locale>/study/<slug>`.

@@ -126,8 +126,7 @@ export const once = (date: string, start: string, end: string): ScheduleSeed => 
  * Course- or session-level bibliography entry, mirroring the schema's
  * reading/watch/listen/prompt/other select.
  */
-export const bib = ({ type, title, note, href }: MaterialSeed) =>
-  ({ type, title, note, href })
+export const bib = ({ type, title, note, href }: MaterialSeed) => ({ type, title, note, href })
 
 /* ================================================================== upsert */
 

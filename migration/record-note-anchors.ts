@@ -20,12 +20,22 @@ if (!unit || !answerFile) throw new Error('Usage: record-note-anchors.ts <unit> 
 
 const content = path.join(import.meta.dirname, 'extracted', 'content')
 const file = (u: string) => path.join(content, `${u.replaceAll(':', '__')}.json`)
-const essay = JSON.parse(readFileSync(file(unit), 'utf8')).data as { blocks: Array<{ type: string; text: string }> }
+const essay = JSON.parse(readFileSync(file(unit), 'utf8')).data as {
+  blocks: Array<{ type: string; text: string }>
+}
 const notes = new Set(
-  essay.blocks.filter((b) => b.type === 'note').flatMap((b) => (b.text.match(/^\s*(\d+)/) ? [Number(b.text.match(/^\s*(\d+)/)?.[1])] : [])),
+  essay.blocks
+    .filter((b) => b.type === 'note')
+    .flatMap((b) => (b.text.match(/^\s*(\d+)/) ? [Number(b.text.match(/^\s*(\d+)/)?.[1])] : [])),
 )
 
-const Answer = z.array(z.object({ number: z.number().int().positive().nullable(), block: z.number().int().min(0), before: z.string().min(1) }))
+const Answer = z.array(
+  z.object({
+    number: z.number().int().positive().nullable(),
+    block: z.number().int().min(0),
+    before: z.string().min(1),
+  }),
+)
 const answer = Answer.parse(JSON.parse(readFileSync(answerFile, 'utf8')))
 
 const problems: string[] = []
@@ -42,7 +52,8 @@ for (const a of answer) {
     continue
   }
   const offset = offsetAfter(block.text, a.before)
-  if (offset === null) problems.push(`note ${a.number}: "${a.before}" is not found exactly once in block ${a.block}`)
+  if (offset === null)
+    problems.push(`note ${a.number}: "${a.before}" is not found exactly once in block ${a.block}`)
   else anchors.push({ number: a.number, block: a.block, offset })
 }
 const fatal = problems.filter((p) => !p.includes('unnumbered'))

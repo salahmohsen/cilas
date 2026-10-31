@@ -13,7 +13,15 @@ describe('extractCached', () => {
   it('calls the model once, then reads the cache while the input is unchanged', async () => {
     const dir = mkdtempSync(path.join(tmpdir(), 'extract-'))
     const call = vi.fn().mockResolvedValue({ answer: 42 })
-    const args = { dir, name: 'page.html', prompt: 'P', version: '1', model: 'm', schema: Schema, call }
+    const args = {
+      dir,
+      name: 'page.html',
+      prompt: 'P',
+      version: '1',
+      model: 'm',
+      schema: Schema,
+      call,
+    }
 
     expect(await extractCached(args)).toEqual({ answer: 42 })
     expect(await extractCached(args)).toEqual({ answer: 42 })
@@ -27,8 +35,24 @@ describe('extractCached', () => {
   it('re-runs when the prompt changes', async () => {
     const dir = mkdtempSync(path.join(tmpdir(), 'extract-'))
     const call = vi.fn().mockResolvedValue({ answer: 1 })
-    await extractCached({ dir, name: 'p', prompt: 'A', version: '1', model: 'm', schema: Schema, call })
-    await extractCached({ dir, name: 'p', prompt: 'B', version: '1', model: 'm', schema: Schema, call })
+    await extractCached({
+      dir,
+      name: 'p',
+      prompt: 'A',
+      version: '1',
+      model: 'm',
+      schema: Schema,
+      call,
+    })
+    await extractCached({
+      dir,
+      name: 'p',
+      prompt: 'B',
+      version: '1',
+      model: 'm',
+      schema: Schema,
+      call,
+    })
     expect(call).toHaveBeenCalledTimes(2)
   })
 
@@ -36,10 +60,26 @@ describe('extractCached', () => {
     const dir = mkdtempSync(path.join(tmpdir(), 'extract-'))
     const call = vi.fn().mockResolvedValue({ answer: 'no' })
     await expect(
-      extractCached({ dir, name: 'p', prompt: 'A', version: '1', model: 'm', schema: Schema, call }),
+      extractCached({
+        dir,
+        name: 'p',
+        prompt: 'A',
+        version: '1',
+        model: 'm',
+        schema: Schema,
+        call,
+      }),
     ).rejects.toThrow()
     await expect(
-      extractCached({ dir, name: 'p', prompt: 'A', version: '1', model: 'm', schema: Schema, call }),
+      extractCached({
+        dir,
+        name: 'p',
+        prompt: 'A',
+        version: '1',
+        model: 'm',
+        schema: Schema,
+        call,
+      }),
     ).rejects.toThrow()
     expect(call).toHaveBeenCalledTimes(2)
   })

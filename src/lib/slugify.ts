@@ -10,47 +10,65 @@
 /** Arabic letter -> Latin transliteration (simplified, omits short vowels). */
 const ARABIC_TO_LATIN: Record<string, string> = {
   // alif
-  آ: 'a', أ: 'a', إ: 'i', ا: 'a',
+  آ: 'a',
+  أ: 'a',
+  إ: 'i',
+  ا: 'a',
   // ba
   ب: 'b',
   // ta
-  ت: 't', ث: 'th',
+  ت: 't',
+  ث: 'th',
   // jim
   ج: 'j',
   // ha
-  ح: 'h', خ: 'kh',
+  ح: 'h',
+  خ: 'kh',
   // dal
-  د: 'd', ذ: 'dh',
+  د: 'd',
+  ذ: 'dh',
   // ra
-  ر: 'r', ز: 'z',
+  ر: 'r',
+  ز: 'z',
   // sin
-  س: 's', ش: 'sh',
+  س: 's',
+  ش: 'sh',
   // sad
-  ص: 's', ض: 'd',
+  ص: 's',
+  ض: 'd',
   // tah
-  ط: 't', ظ: 'z',
+  ط: 't',
+  ظ: 'z',
   // ain
-  ع: 'a', غ: 'gh',
+  ع: 'a',
+  غ: 'gh',
   // fa / qaf
-  ف: 'f', ق: 'q',
+  ف: 'f',
+  ق: 'q',
   // kaf
   ك: 'k',
   // lam
   ل: 'l',
   // mim / noon
-  م: 'm', ن: 'n',
+  م: 'm',
+  ن: 'n',
   // ha
   ه: 'h',
   // waw
   و: 'w',
   // ya
-  ي: 'y', ى: 'a', ئ: 'i',
+  ي: 'y',
+  ى: 'a',
+  ئ: 'i',
   // hamza carriers
-  ء: '', ؤ: 'u',
+  ء: '',
+  ؤ: 'u',
   // ta marbuta
   ة: 'a',
   // lam-alef ligatures
-  لا: 'la', لأ: 'la', لإ: 'li',
+  لا: 'la',
+  لأ: 'la',
+  لإ: 'li',
 }
 
 /**

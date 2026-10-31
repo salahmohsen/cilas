@@ -130,7 +130,6 @@ img.brandMark {
   white-space: nowrap;
 }
 
-
 @container logos (max-width: 639px) {
   .intro {
     grid-template-columns: 1fr;

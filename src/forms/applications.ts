@@ -207,7 +207,12 @@ const accept = async (req: PayloadRequest, id: number): Promise<Accepted | null>
     let personId = personOf(user)
     if (personId === null) {
       personId = await createPerson()
-      await payload.update({ collection: 'users', id: user.id, data: { person: personId }, ...local })
+      await payload.update({
+        collection: 'users',
+        id: user.id,
+        data: { person: personId },
+        ...local,
+      })
     }
     result = { user: user.id, person: personId }
     const roles = rolesAfterAccept(user.roles, kind)
@@ -252,7 +257,12 @@ const accept = async (req: PayloadRequest, id: number): Promise<Accepted | null>
       (
         await payload.create({
           collection: 'enrollments',
-          data: { person: result.person, course: targetId, status: 'accepted', source: 'registration_form' },
+          data: {
+            person: result.person,
+            course: targetId,
+            status: 'accepted',
+            source: 'registration_form',
+          },
           ...local,
         })
       ).id

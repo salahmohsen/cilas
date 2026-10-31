@@ -42,8 +42,10 @@ export const spaceOf = (
 ): { space: string; guessed: boolean } => {
   if (hint && hint in SPACES) return { space: SPACES[hint as keyof typeof SPACES], guessed: false }
   if (/alex/i.test(file) || /alex/i.test(title)) return { space: 'al-Manshiya', guessed: false }
-  const academicStart = start_year === undefined ? undefined : season === 'fall' ? start_year : start_year - 1
-  if (academicStart !== undefined && academicStart <= 2016) return { space: 'al-Ghuria', guessed: true }
+  const academicStart =
+    start_year === undefined ? undefined : season === 'fall' ? start_year : start_year - 1
+  if (academicStart !== undefined && academicStart <= 2016)
+    return { space: 'al-Ghuria', guessed: true }
   return { space: 'Darb el-Labbana', guessed: true }
 }
 
@@ -73,7 +75,12 @@ export const scheduleOf = (course: ExtractedCourse) => {
 }
 
 const fold = (name: string): string =>
-  name.normalize('NFKD').replace(/[̀-ͯ]/g, '').toLowerCase().replace(/[^\p{L}\p{N}]+/gu, ' ').trim()
+  name
+    .normalize('NFKD')
+    .replace(/[̀-ͯ]/g, '')
+    .toLowerCase()
+    .replace(/[^\p{L}\p{N}]+/gu, ' ')
+    .trim()
 
 /** One spelling per person: aliases first, then a tidy form of the name as written. */
 export const canonicalName = (name: string, aliases: Record<string, string[]>): string => {
@@ -92,7 +99,8 @@ export const isMostlyArabic = (text: string): boolean => {
 }
 
 /** The old site's stand-in for a translation not yet written ("الترجمة في الطريق"). */
-const PLACEHOLDER = /^(?:الترجمة (?:جاية في السكة|جاية|في الطريق|في السكة|قادمة)|translation (?:is )?(?:coming|to follow))\W*$/i
+const PLACEHOLDER =
+  /^(?:الترجمة (?:جاية في السكة|جاية|في الطريق|في السكة|قادمة)|translation (?:is )?(?:coming|to follow))\W*$/i
 
 /**
  * Splits a description into its English and Arabic paragraphs, so each lands

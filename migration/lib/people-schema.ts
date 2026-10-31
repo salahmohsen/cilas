@@ -5,7 +5,15 @@ export const PEOPLE_PROMPT_VERSION = '1'
 export const ExtractedPerson = z.object({
   name: z.string().min(1),
   name_ar: z.string().nullable(),
-  group: z.enum(['student', 'residential_fellow', 'visiting_fellow', 'fellow', 'team', 'advisor', 'trustee']),
+  group: z.enum([
+    'student',
+    'residential_fellow',
+    'visiting_fellow',
+    'fellow',
+    'team',
+    'advisor',
+    'trustee',
+  ]),
   title: z.string().nullable(),
   bio: z.string(),
   email: z.string().nullable(),
@@ -16,13 +24,24 @@ export const ExtractedPerson = z.object({
 export type ExtractedPerson = z.infer<typeof ExtractedPerson>
 
 export const PeoplePage = z.object({
-  year: z.string().regex(/^\d{4}-\d{4}$/).nullable(),
+  year: z
+    .string()
+    .regex(/^\d{4}-\d{4}$/)
+    .nullable(),
   place: z.enum(['cairo', 'alexandria']).nullable(),
   people: z.array(ExtractedPerson),
 })
 export type PeoplePage = z.infer<typeof PeoplePage>
 
-export const peoplePrompt = ({ file, title, text }: { file: string; title: string; text: string }): string => `You are extracting people from one archived page of CILAS, the Cairo Institute for Liberal Arts and Sciences. The page lists a year's community (students, fellows, team) or its board (advisors, trustees). Pages are in English, Arabic or both.
+export const peoplePrompt = ({
+  file,
+  title,
+  text,
+}: {
+  file: string
+  title: string
+  text: string
+}): string => `You are extracting people from one archived page of CILAS, the Cairo Institute for Liberal Arts and Sciences. The page lists a year's community (students, fellows, team) or its board (advisors, trustees). Pages are in English, Arabic or both.
 
 Page file: ${file}
 Page title: ${title}

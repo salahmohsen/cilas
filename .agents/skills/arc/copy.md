@@ -15,15 +15,15 @@ Arc copy is short, specific, and honest.
 
 ## Examples
 
-| Incorrect | Correct |
-| --- | --- |
-| `<p class="eyebrow">PRICING</p><h2>Simple, Transparent Pricing.</h2>` | `<h2>Pricing that grows with your team</h2>` |
-| Two clauses joined by an em dash ("Fast builds, em dash, every time") | "Builds finish in under a minute." |
-| Button: "Submit" | Button: "Save changes" |
-| "Oops! Something went wrong!!" | "We could not save your changes. Check your connection and try again." |
-| "No data" | "No invoices yet. Your first invoice appears after the trial ends." |
-| "Trusted by 10,000+ teams" (unverified) | Remove it, or state what is true: "Used by the Arc team every day" |
-| Tab: "ACTIVITY LOG" | Tab: "Activity" |
+| Incorrect                                                             | Correct                                                                |
+| --------------------------------------------------------------------- | ---------------------------------------------------------------------- |
+| `<p class="eyebrow">PRICING</p><h2>Simple, Transparent Pricing.</h2>` | `<h2>Pricing that grows with your team</h2>`                           |
+| Two clauses joined by an em dash ("Fast builds, em dash, every time") | "Builds finish in under a minute."                                     |
+| Button: "Submit"                                                      | Button: "Save changes"                                                 |
+| "Oops! Something went wrong!!"                                        | "We could not save your changes. Check your connection and try again." |
+| "No data"                                                             | "No invoices yet. Your first invoice appears after the trial ends."    |
+| "Trusted by 10,000+ teams" (unverified)                               | Remove it, or state what is true: "Used by the Arc team every day"     |
+| Tab: "ACTIVITY LOG"                                                   | Tab: "Activity"                                                        |
 
 ## Patterns
 

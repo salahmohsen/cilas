@@ -15,6 +15,8 @@ await sharp(new URL('../public/assets/images/logo.webp', import.meta.url).pathna
 const icons = { facebook: siFacebook, twitter: siX, youtube: siYoutube, instagram: siInstagram }
 for (const [platform, icon] of Object.entries(icons)) {
   const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="48" height="48"><path fill="${GRAY}" d="${icon.path}"/></svg>`
-  await sharp(Buffer.from(svg)).png().toFile(new URL(`${platform}.png`, out).pathname)
+  await sharp(Buffer.from(svg))
+    .png()
+    .toFile(new URL(`${platform}.png`, out).pathname)
 }
 console.log('email assets written')

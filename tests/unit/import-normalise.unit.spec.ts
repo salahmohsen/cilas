@@ -53,33 +53,57 @@ describe('cycleFromFile', () => {
 describe('spaceOf', () => {
   it('trusts the page, then Alexandria in the name, then defaults with a flag', () => {
     expect(spaceOf('al-ghuria', 'x.html', '')).toEqual({ space: 'al-Ghuria', guessed: false })
-    expect(spaceOf(null, 'cilas-in-alex-2019-2020.html', '')).toEqual({ space: 'al-Manshiya', guessed: false })
-    expect(spaceOf(null, 'spring-2021.html', '')).toEqual({ space: 'Darb el-Labbana', guessed: true })
-    expect(spaceOf('online', 'summer-2021.html', '')).toEqual({ space: 'Darb el-Labbana', guessed: true })
+    expect(spaceOf(null, 'cilas-in-alex-2019-2020.html', '')).toEqual({
+      space: 'al-Manshiya',
+      guessed: false,
+    })
+    expect(spaceOf(null, 'spring-2021.html', '')).toEqual({
+      space: 'Darb el-Labbana',
+      guessed: true,
+    })
+    expect(spaceOf('online', 'summer-2021.html', '')).toEqual({
+      space: 'Darb el-Labbana',
+      guessed: true,
+    })
   })
 
   it('places undated-venue Cairo cycles by academic year: al-Ghuria to 2016–17, then Darb el-Labbana', () => {
-    expect(spaceOf(null, '2015-2016-third-trimester.html', '', 'spring', 2016)).toEqual({ space: 'al-Ghuria', guessed: true })
-    expect(spaceOf(null, '2016-2017-third-trimester.html', '', 'spring', 2017)).toEqual({ space: 'al-Ghuria', guessed: true })
-    expect(spaceOf(null, 'x.html', '', 'fall', 2017)).toEqual({ space: 'Darb el-Labbana', guessed: true })
-    expect(spaceOf(null, '2017-2018-second-trimester.html', '', 'winter', 2018)).toEqual({ space: 'Darb el-Labbana', guessed: true })
+    expect(spaceOf(null, '2015-2016-third-trimester.html', '', 'spring', 2016)).toEqual({
+      space: 'al-Ghuria',
+      guessed: true,
+    })
+    expect(spaceOf(null, '2016-2017-third-trimester.html', '', 'spring', 2017)).toEqual({
+      space: 'al-Ghuria',
+      guessed: true,
+    })
+    expect(spaceOf(null, 'x.html', '', 'fall', 2017)).toEqual({
+      space: 'Darb el-Labbana',
+      guessed: true,
+    })
+    expect(spaceOf(null, '2017-2018-second-trimester.html', '', 'winter', 2018)).toEqual({
+      space: 'Darb el-Labbana',
+      guessed: true,
+    })
   })
 })
 
 describe('courseLegacyUrl', () => {
   it("uses the course's own page when it has one, else a fragment of the cycle page", () => {
-    expect(courseLegacyUrl('/2014-2015-second-trimester.html', course({ own_page: 'art-and-the-city.html' }))).toBe(
-      '/art-and-the-city.html',
-    )
+    expect(
+      courseLegacyUrl(
+        '/2014-2015-second-trimester.html',
+        course({ own_page: 'art-and-the-city.html' }),
+      ),
+    ).toBe('/art-and-the-city.html')
     expect(courseLegacyUrl('/fall-cycle-2024.html', course())).toBe(
       '/fall-cycle-2024.html#story-as-participative-enquiry',
     )
   })
 
   it('ignores own_page links that are not pages on the site', () => {
-    expect(courseLegacyUrl('/fall-cycle-2024.html', course({ own_page: 'https://forms.gle/x' }))).toBe(
-      '/fall-cycle-2024.html#story-as-participative-enquiry',
-    )
+    expect(
+      courseLegacyUrl('/fall-cycle-2024.html', course({ own_page: 'https://forms.gle/x' })),
+    ).toBe('/fall-cycle-2024.html#story-as-participative-enquiry')
   })
 })
 
@@ -95,7 +119,11 @@ describe('scheduleOf', () => {
   })
 
   it('keeps only the note when times are unknown', () => {
-    expect(scheduleOf(course({ weekdays: [], start_time: null, end_time: null, weeks: null, start_date: null }))).toEqual({
+    expect(
+      scheduleOf(
+        course({ weekdays: [], start_time: null, end_time: null, weeks: null, start_date: null }),
+      ),
+    ).toEqual({
       start_precision: 'day',
       slots: [],
       note: 'Sundays, 5:30-8 pm',

@@ -36,14 +36,12 @@ export const Mention: Block = {
       defaultValue: 'person',
       options: MENTION_TYPES.map(({ value, label }) => ({ value, label })),
     },
-    ...MENTION_TYPES.map(
-      ({ value, label, relationTo }): Field => ({
-        name: value,
-        label,
-        type: 'relationship',
-        relationTo,
-        admin: { condition: (_, sibling) => sibling?.type === value },
-      }),
-    ),
+    ...MENTION_TYPES.map(({ value, label, relationTo }): Field => ({
+      name: value,
+      label,
+      type: 'relationship',
+      relationTo,
+      admin: { condition: (_, sibling) => sibling?.type === value },
+    })),
   ],
 }

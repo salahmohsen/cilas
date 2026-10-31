@@ -92,24 +92,24 @@ Read in full on 2026-10-24: NN/g on infinite scrolling, confirmation dialogs, pr
 
 ## What was built
 
-| Rule | In the space page |
-| --- | --- |
-| Batches | 20 posts, then `LoadMore` with "N of M posts". |
-| Feed never moves | `FreshPosts` checks every 30 s while visible and shows "Show N new posts". |
-| Status region | The banner and "Published" are `role="status"`. |
-| Feed semantics | `role="feed"`, `article` with posinset, setsize, labelledby, describedby. |
-| Divider | "New since your last visit" above the first post older than the previous visit. |
-| Collapsed composer | One line with the member's avatar; inline on desktop, `bottom-sheet` on phones; files behind "Add files"; draft kept in local storage. |
-| Notice at the moment of need | "Write a post" opens the privacy notice in a `dialog` first; the checklist step accepts it too. |
-| Delete | `confirm-morph` in countdown mode: 3 seconds to cancel. An undo after the fact is impossible because delete does not keep the body (see open issues). |
-| Long text | `expandable-text` only on bodies that can pass the clamp, so short posts never flash "Read more". |
-| Roles | "Fellow" `badge` and `hover-card` profile; moderators from course fellows or residential fellows. |
-| Checklist | Arc `onboarding-checklist`, least effort first; hidden state in a cookie so the server renders it right. |
-| Rail | About with an `accordion` (posting, privacy, digest); Members with `avatar-group` and a `drawer`; moderators get a participation `drawer` with `metric-card`s and the table. |
-| Phone | Rail behind an "About" `bottom-sheet`; one column, no sideways scroll at 390px. |
-| Timestamps | `When`: relative for 7 days, then the date, `tooltip` with the exact time. |
-| Loading | `skeleton` in the final layout (`loading.tsx`). |
-| My spaces | Arc `card` per space with the latest post preview, unread `badge`, and last activity. |
+| Rule                         | In the space page                                                                                                                                                            |
+| ---------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Batches                      | 20 posts, then `LoadMore` with "N of M posts".                                                                                                                               |
+| Feed never moves             | `FreshPosts` checks every 30 s while visible and shows "Show N new posts".                                                                                                   |
+| Status region                | The banner and "Published" are `role="status"`.                                                                                                                              |
+| Feed semantics               | `role="feed"`, `article` with posinset, setsize, labelledby, describedby.                                                                                                    |
+| Divider                      | "New since your last visit" above the first post older than the previous visit.                                                                                              |
+| Collapsed composer           | One line with the member's avatar; inline on desktop, `bottom-sheet` on phones; files behind "Add files"; draft kept in local storage.                                       |
+| Notice at the moment of need | "Write a post" opens the privacy notice in a `dialog` first; the checklist step accepts it too.                                                                              |
+| Delete                       | `confirm-morph` in countdown mode: 3 seconds to cancel. An undo after the fact is impossible because delete does not keep the body (see open issues).                        |
+| Long text                    | `expandable-text` only on bodies that can pass the clamp, so short posts never flash "Read more".                                                                            |
+| Roles                        | "Fellow" `badge` and `hover-card` profile; moderators from course fellows or residential fellows.                                                                            |
+| Checklist                    | Arc `onboarding-checklist`, least effort first; hidden state in a cookie so the server renders it right.                                                                     |
+| Rail                         | About with an `accordion` (posting, privacy, digest); Members with `avatar-group` and a `drawer`; moderators get a participation `drawer` with `metric-card`s and the table. |
+| Phone                        | Rail behind an "About" `bottom-sheet`; one column, no sideways scroll at 390px.                                                                                              |
+| Timestamps                   | `When`: relative for 7 days, then the date, `tooltip` with the exact time.                                                                                                   |
+| Loading                      | `skeleton` in the final layout (`loading.tsx`).                                                                                                                              |
+| My spaces                    | Arc `card` per space with the latest post preview, unread `badge`, and last activity.                                                                                        |
 
 ## Open issues found on the way
 

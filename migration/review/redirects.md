@@ -4,7 +4,9 @@
 Created 481, unchanged 0, kept (edited by an admin) 0.
 
 ## No target (49)
+
 An editor can add a redirect to a custom URL in the admin.
+
 - / (info) Cairo Institute of Liberal Arts and Sciences - about
 - /15871610160415751587-15761575160415931585157616101577.html (info) سيلاس بالعربية
 - /about1.html (info) about
@@ -56,6 +58,7 @@ An editor can add a redirect to a custom URL in the admin.
 - /workshopslabs.html (lab) WorkShops/Labs
 
 ## Ambiguous (17)
+
 - /-latest.html (blog) Cairo Institute of Liberal Arts and Sciences - latest: articles/15, articles/14, articles/13, people/59
 - /fall-20211.html (cycle) fall 2021: courses/75, courses/74, courses/73, courses/72, courses/71, people/119, people/118, people/117, people/116
 - /fall-labs-2022.html (cycle) Fall Labs 2022: courses/92, courses/91, people/128, people/127, people/126
@@ -75,7 +78,9 @@ An editor can add a redirect to a custom URL in the admin.
 - /spring-semester-labs-2026.html (cycle) Spring Semester Labs: 2026: courses/228, courses/227, courses/226, people/204
 
 ## Spaces (4)
+
 Spaces are not in the redirects plugin, so these pages get no redirect.
+
 - /al-ghuria-former-space-in-cairo.html (space) al-Ghuria (former space in Cairo)
 - /al-manshiya-cilas-in-alex.html (space) al-Manshiya (CILAS in Alex)
 - /darb-el-labbana-current-space-in-cairo.html (space) Darb el-Labbana (current space in Cairo)

@@ -3,6 +3,7 @@
 Motion shows cause and effect: what opened, what changed, where it came from, what is ready next. If an animation explains nothing, remove it.
 
 ## Contents
+
 - Tokens
 - Choosing a spring
 - Rules
@@ -13,15 +14,15 @@ Motion shows cause and effect: what opened, what changed, where it came from, wh
 
 Import from `@/components/arc/lib/motion-tokens` (installed with the first Arc item).
 
-| Token | Value | Use for |
-| --- | --- | --- |
-| `spring.smooth` | 0.4s, bounce 0 | Panels, height, drawers, progress, layout shifts. Never overshoots |
-| `spring.snappy` | 0.26s, bounce 0.12 | Press feedback, small indicators, icon swaps |
-| `spring.morph` | 0.42s, bounce 0.16 | Shared highlights (`layoutId`), width that follows new content, shape morphs |
-| `duration.instant` / `fast` / `exit` / `standard` / `considered` | 0.12 / 0.16 / 0.18 / 0.24 / 0.48s | Tweens for color, opacity, and small fades |
-| `ease.enter`, `ease.exit`, `ease.standard`, `ease.inOut` | cubic-bezier arrays | Entrances, exits, color changes, on-screen moves |
-| `stagger.item` / `line` / `word` / `char` | 0.035 / 0.08 / 0.04 / 0.016s | Lists and text, total under about 0.4s |
-| `blur.subtle` / `soft` / `text` | 2 / 4 / 8px | Brief crossfades only |
+| Token                                                            | Value                             | Use for                                                                      |
+| ---------------------------------------------------------------- | --------------------------------- | ---------------------------------------------------------------------------- |
+| `spring.smooth`                                                  | 0.4s, bounce 0                    | Panels, height, drawers, progress, layout shifts. Never overshoots           |
+| `spring.snappy`                                                  | 0.26s, bounce 0.12                | Press feedback, small indicators, icon swaps                                 |
+| `spring.morph`                                                   | 0.42s, bounce 0.16                | Shared highlights (`layoutId`), width that follows new content, shape morphs |
+| `duration.instant` / `fast` / `exit` / `standard` / `considered` | 0.12 / 0.16 / 0.18 / 0.24 / 0.48s | Tweens for color, opacity, and small fades                                   |
+| `ease.enter`, `ease.exit`, `ease.standard`, `ease.inOut`         | cubic-bezier arrays               | Entrances, exits, color changes, on-screen moves                             |
+| `stagger.item` / `line` / `word` / `char`                        | 0.035 / 0.08 / 0.04 / 0.016s      | Lists and text, total under about 0.4s                                       |
+| `blur.subtle` / `soft` / `text`                                  | 2 / 4 / 8px                       | Brief crossfades only                                                        |
 
 CSS transitions use the matching variables: `var(--duration-fast)` with `var(--ease-standard)` for color and opacity, `var(--duration-spring)` (580ms) with `var(--ease-spring)` for transforms. CSS has `--duration-instant`, `-fast`, `-standard`, `-considered`, and `-spring`; there is no `--duration-exit`.
 
@@ -48,19 +49,29 @@ CSS transitions use the matching variables: `var(--duration-fast)` with `var(--e
 Selected highlight that glides between options (what `segmented-control` and `tabs` do):
 
 ```tsx
-import { motion, useReducedMotion } from "motion/react";
-import { motionTokens } from "@/components/arc/lib/motion-tokens";
+import { motion, useReducedMotion } from 'motion/react'
+import { motionTokens } from '@/components/arc/lib/motion-tokens'
 
-const reduce = useReducedMotion();
-{options.map(option => (
-  <button key={option.value} onClick={() => setValue(option.value)} aria-pressed={value === option.value}>
-    {value === option.value && (
-      <motion.span layoutId="view-highlight" className={styles.highlight}
-        transition={reduce ? { duration: 0 } : motionTokens.spring.morph} aria-hidden="true" />
-    )}
-    <span className={styles.label}>{option.label}</span>
-  </button>
-))}
+const reduce = useReducedMotion()
+{
+  options.map((option) => (
+    <button
+      key={option.value}
+      onClick={() => setValue(option.value)}
+      aria-pressed={value === option.value}
+    >
+      {value === option.value && (
+        <motion.span
+          layoutId="view-highlight"
+          className={styles.highlight}
+          transition={reduce ? { duration: 0 } : motionTokens.spring.morph}
+          aria-hidden="true"
+        />
+      )}
+      <span className={styles.label}>{option.label}</span>
+    </button>
+  ))
+}
 ```
 
 Panel that opens with height and opacity together, no overshoot:
@@ -68,12 +79,18 @@ Panel that opens with height and opacity together, no overshoot:
 ```tsx
 <AnimatePresence initial={false}>
   {open && (
-    <motion.div key="details"
+    <motion.div
+      key="details"
       initial={{ height: 0, opacity: 0 }}
-      animate={{ height: "auto", opacity: 1 }}
-      exit={{ height: 0, opacity: 0, transition: { duration: motionTokens.duration.exit, ease: [...motionTokens.ease.exit] } }}
+      animate={{ height: 'auto', opacity: 1 }}
+      exit={{
+        height: 0,
+        opacity: 0,
+        transition: { duration: motionTokens.duration.exit, ease: [...motionTokens.ease.exit] },
+      }}
       transition={reduce ? { duration: 0 } : motionTokens.spring.smooth}
-      style={{ overflow: "hidden" }}>
+      style={{ overflow: 'hidden' }}
+    >
       {children}
     </motion.div>
   )}
@@ -83,11 +100,25 @@ Panel that opens with height and opacity together, no overshoot:
 Hover and press in CSS:
 
 ```css
-.row { transition: background-color var(--duration-fast) var(--ease-standard); }
-.row:hover, .row[data-selected] { background: var(--surface-muted); }
-.press { transition: transform var(--duration-spring) var(--ease-spring); }
-.press:active { transform: scale(.97); }
-@media (prefers-reduced-motion: reduce) { .press, .row { transition: none; } }
+.row {
+  transition: background-color var(--duration-fast) var(--ease-standard);
+}
+.row:hover,
+.row[data-selected] {
+  background: var(--surface-muted);
+}
+.press {
+  transition: transform var(--duration-spring) var(--ease-spring);
+}
+.press:active {
+  transform: scale(0.97);
+}
+@media (prefers-reduced-motion: reduce) {
+  .press,
+  .row {
+    transition: none;
+  }
+}
 ```
 
 Save confirmation in place: pass the promise to the Arc item (`onConfirm`, `onSave`) or set `loading` on `button`, then change its label to "Saved". Do not add a toast for a foreground action.
@@ -97,8 +128,8 @@ Save confirmation in place: pass the promise to the Arc item (`onConfirm`, `onSa
 Every animation has a branch:
 
 ```tsx
-const reduce = useReducedMotion();
-<motion.div transition={reduce ? { duration: 0 } : motionTokens.spring.smooth} />
+const reduce = useReducedMotion()
+;<motion.div transition={reduce ? { duration: 0 } : motionTokens.spring.smooth} />
 ```
 
 Keep the final state, focus, and feedback. Remove travel, loops, parallax, and autoplay. A counter jumps straight to its value; a panel appears at full height.

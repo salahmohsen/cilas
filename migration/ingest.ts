@@ -59,7 +59,8 @@ const read = (source: Page['source'], dir: string): Page[] =>
       for (const href of hrefs) {
         const upload = resolveUpload(href, allUploads)
         if (upload) uploads.set(upload.path, upload)
-        else if (/^\/?[^/:?#]+\.html/.test(href)) links.add(legacyUrlOf(href.replace(/^\//, '').split(/[?#]/)[0]))
+        else if (/^\/?[^/:?#]+\.html/.test(href))
+          links.add(legacyUrlOf(href.replace(/^\//, '').split(/[?#]/)[0]))
       }
       return {
         legacy_url: legacyUrlOf(file),
@@ -74,25 +75,36 @@ const read = (source: Page['source'], dir: string): Page[] =>
 
 const zipPages = read('zip', zip)
 const known = new Set(zipPages.map((p) => p.file))
-const pages = [...zipPages, ...read('mirror', path.join(mirror, 'pages')).filter((p) => !known.has(p.file))]
-  .sort((a, b) => a.legacy_url.localeCompare(b.legacy_url))
+const pages = [
+  ...zipPages,
+  ...read('mirror', path.join(mirror, 'pages')).filter((p) => !known.has(p.file)),
+].sort((a, b) => a.legacy_url.localeCompare(b.legacy_url))
 
 const referencedBy = new Map<string, string[]>()
 for (const page of pages) {
-  for (const u of page.uploads) referencedBy.set(u.path, [...(referencedBy.get(u.path) ?? []), page.legacy_url])
+  for (const u of page.uploads)
+    referencedBy.set(u.path, [...(referencedBy.get(u.path) ?? []), page.legacy_url])
 }
-const uploads = [...allUploads]
-  .sort()
-  .map((p) => ({
-    path: p,
-    source: zipUploads.includes(p) ? 'zip' : 'mirror',
-    referenced_by: referencedBy.get(p) ?? [],
-  }))
+const uploads = [...allUploads].sort().map((p) => ({
+  path: p,
+  source: zipUploads.includes(p) ? 'zip' : 'mirror',
+  referenced_by: referencedBy.get(p) ?? [],
+}))
 
 const manifest = { generated_from: 'weebly-zip-2025-04-23 + cilas.lkssystems.com', pages, uploads }
-writeFileSync(path.join(import.meta.dirname, 'manifest.json'), `${JSON.stringify(manifest, null, 2)}\n`)
+writeFileSync(
+  path.join(import.meta.dirname, 'manifest.json'),
+  `${JSON.stringify(manifest, null, 2)}\n`,
+)
 
-const byKind = pages.reduce<Record<string, number>>((acc, p) => ({ ...acc, [p.kind]: (acc[p.kind] ?? 0) + 1 }), {})
+const byKind = pages.reduce<Record<string, number>>(
+  (acc, p) => ({ ...acc, [p.kind]: (acc[p.kind] ?? 0) + 1 }),
+  {},
+)
 console.log(`${pages.length} pages`, byKind)
-console.log(`${uploads.length} uploads, ${uploads.filter((u) => u.referenced_by.length).length} referenced`)
-console.log(`${pages.flatMap((p) => p.uploads).filter((u) => u.missing).length} upload link(s) missing`)
+console.log(
+  `${uploads.length} uploads, ${uploads.filter((u) => u.referenced_by.length).length} referenced`,
+)
+console.log(
+  `${pages.flatMap((p) => p.uploads).filter((u) => u.missing).length} upload link(s) missing`,
+)

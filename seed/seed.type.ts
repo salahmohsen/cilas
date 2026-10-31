@@ -1,12 +1,5 @@
 import type { SOCIAL_PLATFORMS } from '@/fields/social'
-import type {
-  Article,
-  Course,
-  Event,
-  Publication,
-  Place,
-  User,
-} from '@/payload-types'
+import type { Article, Course, Event, Publication, Place, User } from '@/payload-types'
 import type { CourseType } from '@/fields/course-type'
 
 /**
@@ -171,7 +164,6 @@ export type PlaceSeed = Omit<Draft<Place>, 'description' | 'slug'> & {
 }
 
 /* ========================================================== site settings */
-
 
 /* =============================================================== context */
 

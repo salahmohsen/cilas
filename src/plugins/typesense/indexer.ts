@@ -31,12 +31,18 @@ const idFilter = (ids: readonly string[]) => `id:[${ids.map((id) => `\`${id}\``)
 export const createIndexer = (client: Client) => {
   const importInto = async (name: string, documents: SearchDocument[]) => {
     if (!documents.length) return
-    await client.collections<SearchDocument>(name).documents().import(documents, { action: 'upsert' })
+    await client
+      .collections<SearchDocument>(name)
+      .documents()
+      .import(documents, { action: 'upsert' })
   }
 
   const removeFrom = async (name: string, ids: readonly string[]) => {
     if (!ids.length) return
-    await client.collections(name).documents().delete({ filter_by: idFilter(ids) })
+    await client
+      .collections(name)
+      .documents()
+      .delete({ filter_by: idFilter(ids) })
   }
 
   const idsIn = async (name: string): Promise<string[]> => {
@@ -59,7 +65,11 @@ export const createIndexer = (client: Client) => {
   /** Points the alias at `target`, then drops every other physical
    * generation of the collection and the real collection an older indexer
    * kept under the alias's own name. */
-  const pointAlias = async (collection: SearchCollection, target: string, existing: Set<string>) => {
+  const pointAlias = async (
+    collection: SearchCollection,
+    target: string,
+    existing: Set<string>,
+  ) => {
     if ((await aliasTarget(collection)) !== target) {
       if (existing.has(collection)) await client.collections(collection).delete()
       await client.aliases().upsert(collection, { collection_name: target })

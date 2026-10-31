@@ -43,16 +43,16 @@ describe('requireTurnstile', () => {
 
   it('refuses a token Cloudflare rejects', async () => {
     cloudflare(false)
-    await expect(run('secret', { headers: { [TURNSTILE_HEADER]: 'bad' } })).rejects.toMatchObject(
-      { status: 403 },
-    )
+    await expect(run('secret', { headers: { [TURNSTILE_HEADER]: 'bad' } })).rejects.toMatchObject({
+      status: 403,
+    })
   })
 
   it('refuses when Cloudflare cannot be reached', async () => {
     vi.spyOn(globalThis, 'fetch').mockRejectedValue(new Error('offline'))
-    await expect(run('secret', { headers: { [TURNSTILE_HEADER]: 'tok' } })).rejects.toMatchObject(
-      { status: 403 },
-    )
+    await expect(run('secret', { headers: { [TURNSTILE_HEADER]: 'tok' } })).rejects.toMatchObject({
+      status: 403,
+    })
   })
 
   it('accepts a good token and sends the visitor IP', async () => {

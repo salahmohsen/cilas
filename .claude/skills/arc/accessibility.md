@@ -10,15 +10,26 @@ Do not write your own outlines, ring `box-shadow`s, or halos. Tune the shared ri
 
 ```css
 /* Correct: adjust the shared keyboard ring */
-.tab { --focus-outline-offset: -2px; }          /* inside a container that clips */
-:root { --focus-outline: var(--accent); }       /* a stronger ring for the whole app */
+.tab {
+  --focus-outline-offset: -2px;
+} /* inside a container that clips */
+:root {
+  --focus-outline: var(--accent);
+} /* a stronger ring for the whole app */
 
 /* Correct: highlighted items in composite widgets look like the hovered one */
-.item:hover, .item[data-highlighted] { background: var(--surface-muted); }
+.item:hover,
+.item[data-highlighted] {
+  background: var(--surface-muted);
+}
 
 /* Incorrect: a hand-made ring, or one that also shows on mouse clicks */
-.item:focus { outline: 2px solid var(--accent); }
-.item:focus-visible { box-shadow: 0 0 0 3px var(--accent); }
+.item:focus {
+  outline: 2px solid var(--accent);
+}
+.item:focus-visible {
+  box-shadow: 0 0 0 3px var(--accent);
+}
 ```
 
 Radix-based Arc menus, selects, and lists already set `data-highlighted` on the active item. Keep focus order logical so people can follow it.

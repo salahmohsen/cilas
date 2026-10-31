@@ -38,8 +38,10 @@ export const pairEssays = (
   const orders = [...new Set([...en.keys(), ...ar.keys()])].sort((a, b) => a - b)
   const pairs = orders.map((order) => {
     const pair = { order, en: en.get(order) ?? null, ar: ar.get(order) ?? null }
-    if (!pair.en) problems.push(`order ${order}: no English essay for the Arabic "${pair.ar?.title}"`)
-    if (!pair.ar) problems.push(`order ${order}: no Arabic essay for the English "${pair.en?.title}"`)
+    if (!pair.en)
+      problems.push(`order ${order}: no English essay for the Arabic "${pair.ar?.title}"`)
+    if (!pair.ar)
+      problems.push(`order ${order}: no Arabic essay for the English "${pair.en?.title}"`)
     return pair
   })
   return { pairs, problems }
@@ -51,7 +53,11 @@ export const pairEssays = (
  * extractor's snake_case labels are all understood. Anything else is `other`.
  */
 export const creditRole = (label: string): CreditRole => {
-  const l = label.toLowerCase().replace(/[_&\-/]+/g, ' ').replace(/\s+/g, ' ').trim()
+  const l = label
+    .toLowerCase()
+    .replace(/[_&\-/]+/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim()
   const has = (...needles: string[]) => needles.some((n) => l.includes(n))
   if (has('copy edit', 'مراجعة لغوية')) return 'copy_editor'
   if (has('proofread', 'تدقيق')) return 'proofreader'
@@ -178,6 +184,4 @@ export const absolutizeLinks = (text: string, fixUpload?: (href: string) => stri
 
 /** Spots where a hyphen was left at a line end ("out- side"). */
 export const hyphenationSpots = (text: string): string[] =>
-  [...text.matchAll(/\p{L}+- (\p{Ll}+)/gu)]
-    .filter((m) => !/^(and|or)$/.test(m[1]))
-    .map((m) => m[0])
+  [...text.matchAll(/\p{L}+- (\p{Ll}+)/gu)].filter((m) => !/^(and|or)$/.test(m[1])).map((m) => m[0])

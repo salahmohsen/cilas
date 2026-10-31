@@ -381,48 +381,48 @@ export function Countdown({
       aria-label={label}
     >
       <Numerals.Provider value={numerals}>
-      <motion.div className={styles.shell} style={{ width, height }}>
-        <div ref={content} className={styles.content} aria-hidden="true">
-          <AnimatePresence mode="popLayout" initial={false}>
-            {complete ? (
-              <motion.span key="done" className={styles.done} {...swap}>
-                <span className={styles.pulse} />
-                {completeLabel}
-              </motion.span>
-            ) : (
-              <motion.span key="running" className={styles.units} {...swap}>
-                {parts.map((part, group) => {
-                  const text = String(part.value)
-                  const bases = basesFor(part.unit, group === 0, text.length)
-                  return (
-                    <span key={part.unit} className={styles.unit}>
-                      {!compact && group > 0 && <span className={styles.colon}>:</span>}
-                      <span className={styles.group}>
-                        <span className={styles.number}>
-                          <AnimatePresence initial={false}>
-                            {[...text].map((char, index) => (
-                              <Wheel
-                                key={`${part.unit}${text.length - index}`}
-                                digit={Number(char)}
-                                base={bases[index]!}
-                                delay={Math.min((group * 2 + index) * stagger.item, 0.3)}
-                                reduced={reduced}
-                              />
-                            ))}
-                          </AnimatePresence>
-                        </span>
-                        <span className={styles.name}>
-                          {(names?.[part.unit] ?? NAMES[part.unit])[compact ? 1 : 0]}
+        <motion.div className={styles.shell} style={{ width, height }}>
+          <div ref={content} className={styles.content} aria-hidden="true">
+            <AnimatePresence mode="popLayout" initial={false}>
+              {complete ? (
+                <motion.span key="done" className={styles.done} {...swap}>
+                  <span className={styles.pulse} />
+                  {completeLabel}
+                </motion.span>
+              ) : (
+                <motion.span key="running" className={styles.units} {...swap}>
+                  {parts.map((part, group) => {
+                    const text = String(part.value)
+                    const bases = basesFor(part.unit, group === 0, text.length)
+                    return (
+                      <span key={part.unit} className={styles.unit}>
+                        {!compact && group > 0 && <span className={styles.colon}>:</span>}
+                        <span className={styles.group}>
+                          <span className={styles.number}>
+                            <AnimatePresence initial={false}>
+                              {[...text].map((char, index) => (
+                                <Wheel
+                                  key={`${part.unit}${text.length - index}`}
+                                  digit={Number(char)}
+                                  base={bases[index]!}
+                                  delay={Math.min((group * 2 + index) * stagger.item, 0.3)}
+                                  reduced={reduced}
+                                />
+                              ))}
+                            </AnimatePresence>
+                          </span>
+                          <span className={styles.name}>
+                            {(names?.[part.unit] ?? NAMES[part.unit])[compact ? 1 : 0]}
+                          </span>
                         </span>
                       </span>
-                    </span>
-                  )
-                })}
-              </motion.span>
-            )}
-          </AnimatePresence>
-        </div>
-      </motion.div>
+                    )
+                  })}
+                </motion.span>
+              )}
+            </AnimatePresence>
+          </div>
+        </motion.div>
       </Numerals.Provider>
       <span className={styles.srOnly}>{spoken}</span>
     </div>

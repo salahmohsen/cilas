@@ -34,14 +34,25 @@ export const cairoToUtc = (day: string, time: string): Date => {
     minute: '2-digit',
   }).formatToParts(new Date(guess))
   const part = (type: string) => Number(parts.find((p) => p.type === type)?.value)
-  const asCairo = Date.UTC(part('year'), part('month') - 1, part('day'), part('hour'), part('minute'))
+  const asCairo = Date.UTC(
+    part('year'),
+    part('month') - 1,
+    part('day'),
+    part('hour'),
+    part('minute'),
+  )
   return new Date(guess - (asCairo - guess))
 }
 
-const stamp = (date: Date) => date.toISOString().replace(/[-:]/g, '').replace(/\.\d{3}/, '')
+const stamp = (date: Date) =>
+  date
+    .toISOString()
+    .replace(/[-:]/g, '')
+    .replace(/\.\d{3}/, '')
 
 /** Escapes text for a property value. */
-const text = (value: string) => value.replace(/\\/g, '\\\\').replace(/;/g, '\\;').replace(/,/g, '\\,').replace(/\r?\n/g, '\\n')
+const text = (value: string) =>
+  value.replace(/\\/g, '\\\\').replace(/;/g, '\\;').replace(/,/g, '\\,').replace(/\r?\n/g, '\\n')
 
 /** Folds a line at 75 octets, as the format asks; continuation lines start with a space. */
 const fold = (line: string): string => {
@@ -59,7 +70,10 @@ const fold = (line: string): string => {
   return out.join('\r\n ')
 }
 
-export const buildIcs = (entries: IcsEntry[], { name, now = new Date() }: { name: string; now?: Date }): string => {
+export const buildIcs = (
+  entries: IcsEntry[],
+  { name, now = new Date() }: { name: string; now?: Date },
+): string => {
   const lines = [
     'BEGIN:VCALENDAR',
     'VERSION:2.0',
@@ -76,7 +90,10 @@ export const buildIcs = (entries: IcsEntry[], { name, now = new Date() }: { name
       if (e.end) lines.push(`DTEND:${stamp(cairoToUtc(e.date, e.end))}`)
     } else {
       // A day without a time is an all-day entry: the end is the next day.
-      lines.push(`DTSTART;VALUE=DATE:${e.date.replace(/-/g, '')}`, `DTEND;VALUE=DATE:${addDays(e.date, 1).replace(/-/g, '')}`)
+      lines.push(
+        `DTSTART;VALUE=DATE:${e.date.replace(/-/g, '')}`,
+        `DTEND;VALUE=DATE:${addDays(e.date, 1).replace(/-/g, '')}`,
+      )
     }
     lines.push(`SUMMARY:${text(e.title)}`)
     if (e.description) lines.push(`DESCRIPTION:${text(e.description)}`)

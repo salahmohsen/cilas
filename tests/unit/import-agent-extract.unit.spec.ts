@@ -14,11 +14,20 @@ describe('agent extraction cache', () => {
     const dir = mkdtempSync(path.join(tmpdir(), 'agent-'))
     const answer = path.join(dir, 'a.json')
     writeFileSync(answer, JSON.stringify({ n: 3 }))
-    recordAnswer({ outDir: dir, name: 'page.html', prompt: 'P', version: '1', schema: Schema, answerFile: answer })
+    recordAnswer({
+      outDir: dir,
+      name: 'page.html',
+      prompt: 'P',
+      version: '1',
+      schema: Schema,
+      answerFile: answer,
+    })
     const saved = JSON.parse(readFileSync(path.join(dir, 'page.html.json'), 'utf8'))
     expect(saved).toMatchObject({ model: AGENT_MODEL, version: '1', data: { n: 3 } })
     expect(isCurrent({ outDir: dir, name: 'page.html', prompt: 'P', version: '1' })).toBe(true)
-    expect(isCurrent({ outDir: dir, name: 'page.html', prompt: 'changed', version: '1' })).toBe(false)
+    expect(isCurrent({ outDir: dir, name: 'page.html', prompt: 'changed', version: '1' })).toBe(
+      false,
+    )
   })
 
   it('refuses an answer that does not match the schema', () => {
@@ -26,7 +35,14 @@ describe('agent extraction cache', () => {
     const answer = path.join(dir, 'a.json')
     writeFileSync(answer, JSON.stringify({ n: 'x' }))
     expect(() =>
-      recordAnswer({ outDir: dir, name: 'p', prompt: 'P', version: '1', schema: Schema, answerFile: answer }),
+      recordAnswer({
+        outDir: dir,
+        name: 'p',
+        prompt: 'P',
+        version: '1',
+        schema: Schema,
+        answerFile: answer,
+      }),
     ).toThrow()
   })
 })

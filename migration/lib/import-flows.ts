@@ -43,7 +43,11 @@ type StoredCourse = {
   fellows?: number[] | null
 }
 
-const paragraphs = (text: string): string[] => text.split(/\n\s*\n/).map((p) => p.trim()).filter(Boolean)
+const paragraphs = (text: string): string[] =>
+  text
+    .split(/\n\s*\n/)
+    .map((p) => p.trim())
+    .filter(Boolean)
 const rich = (text: string, dir: 'ltr' | 'rtl'): Lexical | null =>
   paragraphs(text).length ? lexical(paragraphs(text), dir) : null
 
@@ -82,7 +86,8 @@ const withoutNotes = (description: Lexical | null | undefined): Lexical | null =
 }
 
 /** "Week 7: We are things?", "الأسبوع 7: …": a unit's heading line, and its title. */
-const UNIT_HEADING = /^(?:week|session|class|unit|الأسبوع|الجلسة|اللقاء|المحاضرة)\s*[\d٠-٩]+\s*[:：.\-–]\s*(.+)$/i
+const UNIT_HEADING =
+  /^(?:week|session|class|unit|الأسبوع|الجلسة|اللقاء|المحاضرة)\s*[\d٠-٩]+\s*[:：.\-–]\s*(.+)$/i
 
 /**
  * A session's title and description in each language. The extracted title
@@ -127,12 +132,22 @@ const syllabusText = (s: Syllabus): string =>
   ].join('\n')
 
 /** The description without the paragraphs the syllabus now holds, or null when none go. */
-const withoutSyllabus = (description: Lexical | null | undefined, syllabus: Syllabus): Lexical | null => {
+const withoutSyllabus = (
+  description: Lexical | null | undefined,
+  syllabus: Syllabus,
+): Lexical | null => {
   const children = description?.root?.children ?? []
   if (!description || !children.length) return null
-  const keep = keepNotIn(children.map((n) => textOf(n).trim()), syllabusText(syllabus), 2)
+  const keep = keepNotIn(
+    children.map((n) => textOf(n).trim()),
+    syllabusText(syllabus),
+    2,
+  )
   if (keep.every(Boolean)) return null
-  return { ...description, root: { ...description.root, children: children.filter((_, i) => keep[i]) } }
+  return {
+    ...description,
+    root: { ...description.root, children: children.filter((_, i) => keep[i]) },
+  }
 }
 
 type Fellow = {
@@ -155,7 +170,11 @@ const fellowsOf = async (payload: Payload, ids: number[]): Promise<Fellow[]> => 
     overrideAccess: true,
   })
   return docs.map((d) => {
-    const p = d as unknown as { id: number; name?: Record<string, string>; bio?: Record<string, unknown> }
+    const p = d as unknown as {
+      id: number
+      name?: Record<string, string>
+      bio?: Record<string, unknown>
+    }
     return {
       id: p.id,
       names: Object.values(p.name ?? {}).filter(Boolean),
@@ -171,14 +190,26 @@ const fellowsOf = async (payload: Payload, ids: number[]): Promise<Fellow[]> => 
  * when the profile has none there yet: a bio from the course page, or one an
  * editor wrote, wins.
  */
-const giveBios = async (payload: Payload, bios: FlowBio[], fellows: Fellow[], locale: Locale, dir: 'ltr' | 'rtl') => {
+const giveBios = async (
+  payload: Payload,
+  bios: FlowBio[],
+  fellows: Fellow[],
+  locale: Locale,
+  dir: 'ltr' | 'rtl',
+) => {
   for (const bio of bios) {
     const fellow = fellows.find((f) => bio.name && f.names.includes(bio.name))
     if (!fellow || fellow.reviewed || textOf(fellow.bio[locale]).trim()) continue
     const body = rich(withSubject(fellow.names[0], bio.text), dir)
     // The name is required in every locale written; one only spelled in the other keeps that spelling.
     const name = fellow.name[locale] ? {} : { name: fellow.names[0] }
-    await payload.update({ collection: 'people', id: fellow.id, data: { ...name, bio: body }, locale, overrideAccess: true })
+    await payload.update({
+      collection: 'people',
+      id: fellow.id,
+      data: { ...name, bio: body },
+      locale,
+      overrideAccess: true,
+    })
     fellow.bio[locale] = body
   }
 }
@@ -248,7 +279,10 @@ export const importFlows = async (
       }
       // The flow's notes are the fellow's note on the course; bios in them go to the fellows.
       const fellows = await fellowsOf(payload, course.fellows ?? [])
-      const { notes: flowNotes, bios } = splitBios(syllabus.notes, fellows.map((f) => f.names))
+      const { notes: flowNotes, bios } = splitBios(
+        syllabus.notes,
+        fellows.map((f) => f.names),
+      )
       await giveBios(payload, bios, fellows, locale, dir)
       const trimmed = withoutNotes(course.description)
       // A page flow is the course's own page: its sessions were in the
@@ -304,7 +338,10 @@ export const importFlows = async (
             session_title: texts[i].en.title,
             description: rich(texts[i].en.description, 'ltr'),
             bibliography: s.materials.map((m) => materialShape(m, english)),
-            activities: s.activities.map((a) => ({ kind: a.kind, ...(english ? { description: a.description } : {}) })),
+            activities: s.activities.map((a) => ({
+              kind: a.kind,
+              ...(english ? { description: a.description } : {}),
+            })),
           })),
           bibliography: syllabus.bibliography.map((m) => materialShape(m, english)),
           ...(english && description ? { description } : {}),
@@ -334,14 +371,18 @@ export const importFlows = async (
             meetings: s.meetings,
             session_title: texts[i].ar.title,
             description: rich(texts[i].ar.description, 'rtl'),
-            bibliography: s.materials.map((m, j) => materialShape(m, !english, rows[i]?.bibliography?.[j]?.id)),
+            bibliography: s.materials.map((m, j) =>
+              materialShape(m, !english, rows[i]?.bibliography?.[j]?.id),
+            ),
             activities: s.activities.map((a, j) => ({
               id: rows[i]?.activities?.[j]?.id,
               kind: a.kind,
               ...(english ? {} : { description: a.description }),
             })),
           })),
-          bibliography: syllabus.bibliography.map((m, j) => materialShape(m, !english, stored.bibliography?.[j]?.id)),
+          bibliography: syllabus.bibliography.map((m, j) =>
+            materialShape(m, !english, stored.bibliography?.[j]?.id),
+          ),
           ...(!english && description ? { description } : {}),
           facilitator_note: notesAr,
         },

@@ -29,8 +29,19 @@ export default async function LoginPage({ params, searchParams }: Props) {
 
   const t = await getTranslations('Login')
   const keys = [
-    'title', 'intro', 'google', 'or', 'email', 'password', 'submit',
-    'forgot', 'wrong', 'googleRefused', 'failed', 'showPassword', 'hidePassword',
+    'title',
+    'intro',
+    'google',
+    'or',
+    'email',
+    'password',
+    'submit',
+    'forgot',
+    'wrong',
+    'googleRefused',
+    'failed',
+    'showPassword',
+    'hidePassword',
   ] as const
   const messages = Object.fromEntries(keys.map((k) => [k, t(k)])) as LoginMessages
 

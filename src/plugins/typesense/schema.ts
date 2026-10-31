@@ -26,10 +26,16 @@ export const fieldsOf = (collection: SearchCollection): CollectionFieldSchema[] 
   { name: 'focalY', type: 'float', index: false, optional: true },
   stored('contributors'),
   { name: 'updatedAt', type: 'int64', sort: true },
-  ...SEARCH_LOCALES.map((locale) => ({ name: sortTitleField(locale), type: 'string', sort: true }) as const),
-  ...(collection === 'courses' ? [{ name: 'courseType', type: 'string', facet: true } as const] : []),
+  ...SEARCH_LOCALES.map(
+    (locale) => ({ name: sortTitleField(locale), type: 'string', sort: true }) as const,
+  ),
+  ...(collection === 'courses'
+    ? [{ name: 'courseType', type: 'string', facet: true } as const]
+    : []),
   ...Object.keys(SEARCH_COLLECTIONS[collection].fields).flatMap((field) =>
-    SEARCH_LOCALES.map((locale) => ({ name: localizedField(field, locale), type: 'string' }) as const),
+    SEARCH_LOCALES.map(
+      (locale) => ({ name: localizedField(field, locale), type: 'string' }) as const,
+    ),
   ),
 ]
 
@@ -39,6 +45,8 @@ export const fieldsOf = (collection: SearchCollection): CollectionFieldSchema[] 
  * one, and search keeps answering until the alias swaps over.
  */
 export const physicalNameOf = (collection: SearchCollection): string => {
-  const hash = createHash('sha1').update(JSON.stringify(fieldsOf(collection))).digest('hex')
+  const hash = createHash('sha1')
+    .update(JSON.stringify(fieldsOf(collection)))
+    .digest('hex')
   return `${collection}_${hash.slice(0, 8)}`
 }

@@ -36,12 +36,25 @@ import { resolveUpload } from './lib/uploads'
 
 const here = import.meta.dirname
 const root = path.join(here, '..')
-const aliases = JSON.parse(readFileSync(path.join(here, 'aliases.json'), 'utf8')) as Record<string, string[]>
+const aliases = JSON.parse(readFileSync(path.join(here, 'aliases.json'), 'utf8')) as Record<
+  string,
+  string[]
+>
 const manifest = JSON.parse(readFileSync(path.join(here, 'manifest.json'), 'utf8')) as {
-  pages: Array<{ file: string; legacy_url: string; title: string; uploads: Array<{ path: string; missing: boolean }> }>
+  pages: Array<{
+    file: string
+    legacy_url: string
+    title: string
+    uploads: Array<{ path: string; missing: boolean }>
+  }>
 }
-const docs = JSON.parse(readFileSync(path.join(here, 'docs.json'), 'utf8')) as Array<{ id: string; file: string }>
-const people = JSON.parse(readFileSync(path.join(root, 'seed/data/archive/people.json'), 'utf8')) as Array<{ name: string }>
+const docs = JSON.parse(readFileSync(path.join(here, 'docs.json'), 'utf8')) as Array<{
+  id: string
+  file: string
+}>
+const people = JSON.parse(
+  readFileSync(path.join(root, 'seed/data/archive/people.json'), 'utf8'),
+) as Array<{ name: string }>
 const known = new Set(people.map((p) => p.name))
 
 const uploadFiles = new Set(manifest.pages.flatMap((p) => p.uploads.map((u) => u.path)))
@@ -56,7 +69,9 @@ const SITE = 'https://www.ci-las.org/'
 const siteUrl = (p: string): string => SITE + encodeURI(p)
 
 const unit = <T>(name: string, schema: { parse: (x: unknown) => T }): T =>
-  schema.parse(JSON.parse(readFileSync(path.join(here, 'extracted', 'content', `${name}.json`), 'utf8')).data)
+  schema.parse(
+    JSON.parse(readFileSync(path.join(here, 'extracted', 'content', `${name}.json`), 'utf8')).data,
+  )
 
 /**
  * An essay's blocks with its notes placed: a `[^n]` marker where each note is
@@ -64,14 +79,20 @@ const unit = <T>(name: string, schema: { parse: (x: unknown) => T }): T =>
  * blocks.ts turns into a footnote. An unnumbered note directly after a
  * numbered one continues it (the Arabic Jeng essay's "ملاحظة ذات صلة").
  */
-const withNotes = <B extends { type: string; text: string }>(unitFile: string, blocks: B[]): B[] => {
+const withNotes = <B extends { type: string; text: string }>(
+  unitFile: string,
+  blocks: B[],
+): B[] => {
   const file = path.join(here, 'extracted', 'content', `notes__${unitFile}.json`)
-  const anchors = existsSync(file) ? NoteAnchors.parse(JSON.parse(readFileSync(file, 'utf8'))).anchors : []
+  const anchors = existsSync(file)
+    ? NoteAnchors.parse(JSON.parse(readFileSync(file, 'utf8'))).anchors
+    : []
   const marked = markNotes(blocks, anchors)
   const out: B[] = []
   for (const b of marked) {
     const prev = out.at(-1)
-    if (b.type === 'note' && !/^\s*\d/.test(b.text) && prev?.type === 'note') out[out.length - 1] = { ...prev, text: `${prev.text} ${b.text}` }
+    if (b.type === 'note' && !/^\s*\d/.test(b.text) && prev?.type === 'note')
+      out[out.length - 1] = { ...prev, text: `${prev.text} ${b.text}` }
     else out.push(b)
   }
   return out
@@ -116,13 +137,16 @@ const KNOWN_ARABIC: Record<string, string> = {
   // A translator of essay 5, credited on its title page only (not in the imprint).
   'نزيه عوض': 'Nazih Awad',
 }
-const arabicMap = new Map<string, string>(Object.entries(KNOWN_ARABIC).map(([k, v]) => [foldArabic(k), v]))
+const arabicMap = new Map<string, string>(
+  Object.entries(KNOWN_ARABIC).map(([k, v]) => [foldArabic(k), v]),
+)
 const ARABIC = /[؀-ۿ]/
 
 /** Latin name → its Arabic spelling as a source prints it (first one seen). */
 const latinToArabic = new Map<string, string>()
 const noteArabic = (latin: string, arabic: string) => {
-  if (ARABIC.test(arabic) && !ARABIC.test(latin) && !latinToArabic.has(latin)) latinToArabic.set(latin, arabic)
+  if (ARABIC.test(arabic) && !ARABIC.test(latin) && !latinToArabic.has(latin))
+    latinToArabic.set(latin, arabic)
 }
 
 const nameOf = (raw: string): string => {
@@ -148,13 +172,18 @@ const namesOf = (xs: string[]): string[] => [...new Set(xs.map(nameOf))]
 
 /* ---------------------------------------------------------------- blocks */
 
-type Blk = { type: 'heading' | 'paragraph' | 'quote' | 'list_item' | 'note'; level: number | null; text: string }
+type Blk = {
+  type: 'heading' | 'paragraph' | 'quote' | 'list_item' | 'note'
+  level: number | null
+  text: string
+}
 
 const fixUpload = (p: string): string => {
   const r = resolveUpload(p, uploadFiles)
   if (r && !r.missing) return encodeURI(r.path)
   // A name whose Arabic mark was cut off in the link ("..._-_Ùarabic.pdf").
-  if (/pigeon_towers_-_.{0,3}arabic\.pdf$/i.test(p)) return encodeURI(docFile('on_the_emergence_of_pigeon_towers_-_arabic'))
+  if (/pigeon_towers_-_.{0,3}arabic\.pdf$/i.test(p))
+    return encodeURI(docFile('on_the_emergence_of_pigeon_towers_-_arabic'))
   review.links.push(`- upload link not found in the archive: ${p}`)
   return encodeURI(p)
 }
@@ -180,9 +209,14 @@ const creditsOf = (lines: Array<{ role: string; names: string[] }>): Credit[] =>
     const role = creditRole(line.role)
     const credit: Credit = { role, people: namesOf(line.names) }
     if (COMBINED[line.role]) credit.label = COMBINED[line.role]
-    else if (role === 'other') credit.label = ARABIC.test(line.role) ? { ar: line.role } : { en: line.role }
-    else if (/&|\band\b|وتحرير|وتنسيق/.test(line.role)) credit.label = ARABIC.test(line.role) ? { ar: line.role } : { en: line.role }
-    if (role === 'other') review.other.push(`- credit role "${line.role}" is not a known role; kept as "other" with its label`)
+    else if (role === 'other')
+      credit.label = ARABIC.test(line.role) ? { ar: line.role } : { en: line.role }
+    else if (/&|\band\b|وتحرير|وتنسيق/.test(line.role))
+      credit.label = ARABIC.test(line.role) ? { ar: line.role } : { en: line.role }
+    if (role === 'other')
+      review.other.push(
+        `- credit role "${line.role}" is not a known role; kept as "other" with its label`,
+      )
     return credit
   })
 
@@ -232,7 +266,11 @@ const tocEn = unit(`toc__${pigeonEn}`, Toc)
 const tocAr = unit(`toc__${pigeonAr}`, Toc)
 const { pairs, problems } = pairEssays(tocEn, tocAr)
 review.pairing.push(
-  ...(problems.length ? problems.map((p) => `- Pigeon Towers: ${p}`) : [`- Pigeon Towers: ${pairs.length} English essays paired with ${pairs.length} Arabic essays by order, none left over`]),
+  ...(problems.length
+    ? problems.map((p) => `- Pigeon Towers: ${p}`)
+    : [
+        `- Pigeon Towers: ${pairs.length} English essays paired with ${pairs.length} Arabic essays by order, none left over`,
+      ]),
 )
 
 // The Arabic essays name no translator; the Arabic imprint credits the translation.
@@ -240,9 +278,13 @@ const pigeonTranslators = tocAr.imprint.credits
   .filter((c) => creditRole(c.role) === 'translator')
   .map((c) => namesOf(c.names))
   .flat()
-review.pairing.push(`- Translator credit on every Pigeon Towers article comes from the Arabic imprint (ترجمة): ${pigeonTranslators.join(', ')}`)
+review.pairing.push(
+  `- Translator credit on every Pigeon Towers article comes from the Arabic imprint (ترجمة): ${pigeonTranslators.join(', ')}`,
+)
 
-const PIGEON_SEED_TITLES: Record<number, string> = { 1: 'On the Emergence of Pigeon Towers: Foreword' }
+const PIGEON_SEED_TITLES: Record<number, string> = {
+  1: 'On the Emergence of Pigeon Towers: Foreword',
+}
 const pigeonUrls = new Map<number, string>()
 for (const pair of pairs) {
   if (!pair.en || !pair.ar) continue
@@ -255,7 +297,8 @@ for (const pair of pairs) {
   // The Arabic edition prints the same authors in Arabic, in the same order.
   const authorsEn = namesOf(en.authors.length ? en.authors : pair.en.authors)
   const authorsAr = ar.authors.length ? ar.authors : pair.ar.authors
-  if (authorsAr.length === authorsEn.length) authorsEn.forEach((n, i) => noteArabic(n, authorsAr[i]))
+  if (authorsAr.length === authorsEn.length)
+    authorsEn.forEach((n, i) => noteArabic(n, authorsAr[i]))
   articles.push({
     legacy_url: url,
     kind: 'essay',
@@ -273,7 +316,7 @@ for (const pair of pairs) {
   })
 }
 review.titles.push(
-  '- Article titles come from the table of contents (the full title), not the essay\'s own title/subtitle split.',
+  "- Article titles come from the table of contents (the full title), not the essay's own title/subtitle split.",
   `- The foreword is titled "Foreword" (and Arabic "مقدمة"); it lists "${PIGEON_SEED_TITLES[1]}" in \`match_titles_en\` so the dev seed's article is still found.`,
 )
 
@@ -292,34 +335,35 @@ for (const [k, v] of arabicNameMap(labPage.credits, tocLab.imprint.credits)) ara
 //   4 southerncrossreview.org/55/miller-education.htm
 //   5 libcom.org/article/reading-and-not-reading-theoretical-works
 //   6 ascd.org/el/articles/reading-writing-and-understanding (the booklet names no source)
-const LAB_ORIGINALS: Record<number, { title: string; source: string | null; url: string | null }> = {
-  2: {
-    title: 'Healing Ourselves from the Diploma Disease',
-    source: 'Shikshantar Andolan',
-    url: 'https://www.shikshantar.org/initiatives/walkouts-network/healing-ourselves-diploma-disease',
-  },
-  // The URL as the P2P Foundation wiki (Unitierra) cites it.
-  3: {
-    title: 'Reclaiming Our Freedom to Learn',
-    source: 'YES! Magazine, "Liberate Your Space", Winter 2008',
-    url: 'https://www.yesmagazine.org/issues/liberate-your-space/reclaiming-our-freedom-to-learn',
-  },
-  4: {
-    title: 'A Brief History of Alternative Education',
-    source: 'Southern Cross Review',
-    url: 'https://southerncrossreview.org/55/miller-education.htm',
-  },
-  5: {
-    title: 'On Reading and Not Reading Theoretical Works',
-    source: 'libcom.org',
-    url: 'https://libcom.org/article/reading-and-not-reading-theoretical-works',
-  },
-  6: {
-    title: 'Reading, Writing, and Understanding',
-    source: 'Educational Leadership 60(3), November 2002',
-    url: 'https://ascd.org/el/articles/reading-writing-and-understanding',
-  },
-}
+const LAB_ORIGINALS: Record<number, { title: string; source: string | null; url: string | null }> =
+  {
+    2: {
+      title: 'Healing Ourselves from the Diploma Disease',
+      source: 'Shikshantar Andolan',
+      url: 'https://www.shikshantar.org/initiatives/walkouts-network/healing-ourselves-diploma-disease',
+    },
+    // The URL as the P2P Foundation wiki (Unitierra) cites it.
+    3: {
+      title: 'Reclaiming Our Freedom to Learn',
+      source: 'YES! Magazine, "Liberate Your Space", Winter 2008',
+      url: 'https://www.yesmagazine.org/issues/liberate-your-space/reclaiming-our-freedom-to-learn',
+    },
+    4: {
+      title: 'A Brief History of Alternative Education',
+      source: 'Southern Cross Review',
+      url: 'https://southerncrossreview.org/55/miller-education.htm',
+    },
+    5: {
+      title: 'On Reading and Not Reading Theoretical Works',
+      source: 'libcom.org',
+      url: 'https://libcom.org/article/reading-and-not-reading-theoretical-works',
+    },
+    6: {
+      title: 'Reading, Writing, and Understanding',
+      source: 'Educational Leadership 60(3), November 2002',
+      url: 'https://ascd.org/el/articles/reading-writing-and-understanding',
+    },
+  }
 // The dev seed's former English titles, so its articles are found and corrected in place.
 const LAB_SEED_TITLES: Record<number, string> = {
   2: 'Recovering from the Diploma Disease',
@@ -359,7 +403,9 @@ for (const toc of tocLab.essays) {
       ? {
           original_language: 'en',
           original_title: original?.title ?? null,
-          original_authors: essay.original?.authors.length ? namesOf(essay.original.authors) : authors,
+          original_authors: essay.original?.authors.length
+            ? namesOf(essay.original.authors)
+            : authors,
           original_source: original?.source ?? null,
           original_url: original?.url ?? null,
         }
@@ -369,7 +415,13 @@ for (const toc of tocLab.essays) {
   })
 }
 review.titles.push(
-  `- Booklet essays 2-6 take their English titles from the original publications (see LAB_ORIGINALS): ${Object.values(LAB_ORIGINALS).map((o) => `"${o.title}"`).join(', ')}. Their Arabic titles are the booklet's table of contents. They have no English text, so the English site shows the Arabic text with a notice.`,
+  `- Booklet essays 2-6 take their English titles from the original publications (see LAB_ORIGINALS): ${Object.values(
+    LAB_ORIGINALS,
+  )
+    .map((o) => `"${o.title}"`)
+    .join(
+      ', ',
+    )}. Their Arabic titles are the booklet's table of contents. They have no English text, so the English site shows the Arabic text with a notice.`,
   '- Booklet articles list the original authors as `authors` (as the essay prints them) and again as `translation.original_authors`; the translators are credits. `original_language` is "en" for all five (inferred: the sources are English-language publications).',
 )
 
@@ -383,10 +435,14 @@ for (const post of blog.posts) {
     const hit = WRITERS.find(([re]) => re.test(text) && /written by|account of/i.test(text))
     if (hit) {
       authors = [hit[1]]
-      review.blog.push(`- "${post.title}": the post says the account was "written by the young gentleman with the red hair, otherwise known as Fayez"; author set to ${hit[1]} (the only Fayez in people.json). Check.`)
+      review.blog.push(
+        `- "${post.title}": the post says the account was "written by the young gentleman with the red hair, otherwise known as Fayez"; author set to ${hit[1]} (the only Fayez in people.json). Check.`,
+      )
     } else {
       authors = ['Karim-Yassin Goessinger']
-      review.blog.push(`- "${post.title}": names no author; set to Karim-Yassin Goessinger, who wrote the blog. Check.`)
+      review.blog.push(
+        `- "${post.title}": names no author; set to Karim-Yassin Goessinger, who wrote the blog. Check.`,
+      )
     }
   }
   const blocks = blocksOf(post.blocks)
@@ -419,13 +475,19 @@ const introBlocks = (blocks: Blk[], from: RegExp, to: RegExp): Blk[] => {
 }
 
 const pigeonPage = unit('page__on-pigeon-towers.html', PublicationPage)
-const pigeonIntro = introBlocks(pigeonPage.intro, /^The idea behind a collection of essays/, /^I hope you enjoy/)
+const pigeonIntro = introBlocks(
+  pigeonPage.intro,
+  /^The idea behind a collection of essays/,
+  /^I hope you enjoy/,
+)
 review.intro.push(
   `- Pigeon Towers: the page's text (${pigeonPage.intro.length} blocks) is the foreword (with two epigraphs, Goodman and Darwish, in blocks 1-7), then the contributors' bios. The publication's introduction is only the part about the collection itself: blocks ${pigeonPage.intro.indexOf(pigeonIntro[0]) + 1}-${pigeonPage.intro.indexOf(pigeonIntro[pigeonIntro.length - 1]) + 1}, from "The idea behind a collection of essays…" to "I hope you enjoy the collection of essays!". Left out: the epigraphs, the Ivory Tower/Pigeon Tower foreword (it is the foreword article), and the six bios (${pigeonPage.intro.length - pigeonPage.intro.indexOf(pigeonIntro[pigeonIntro.length - 1]) - 1} blocks). The bios are not imported anywhere yet.`,
   '- Pigeon Towers intro still says the recordings are "coming shortly / coming soon" (the old page text); edit if they never appeared.',
   '- The two PDF links in that intro are made absolute; the Arabic one had a cut-off character in the page and was repaired from the archive file name.',
 )
-const labIntro = labPage.intro.filter((b) => !/^\[[^\]]*\]\(uploads\/[^)]*\.pdf\)$/.test(b.text.trim()))
+const labIntro = labPage.intro.filter(
+  (b) => !/^\[[^\]]*\]\(uploads\/[^)]*\.pdf\)$/.test(b.text.trim()),
+)
 review.intro.push(
   `- Translation as Education: the page text is only its introduction (${labPage.intro.length} blocks); the last, a "click to read" link to the PDF, is dropped from the intro because it becomes \`print_edition_url\`.`,
 )
@@ -439,7 +501,11 @@ const funderName = (n: string): string => FUNDERS.find(([re]) => re.test(n))?.[1
 const pigeonCredits: Credit[] = creditsOf(tocEn.imprint.credits)
 for (const line of pigeonPage.credits) {
   if (creditRole(line.role) === 'author') {
-    pigeonCredits.push({ role: 'author', label: { en: 'Contributing authors' }, people: namesOf(line.names) })
+    pigeonCredits.push({
+      role: 'author',
+      label: { en: 'Contributing authors' },
+      people: namesOf(line.names),
+    })
   }
 }
 
@@ -488,7 +554,9 @@ const publications = [
       intro_en: null,
       intro_ar: blocksOf(labIntro),
       foreword: labUrls.get(tocLab.essays.find((e) => e.is_foreword)?.order ?? 1) as string,
-      articles: tocLab.essays.filter((e) => !e.is_foreword).map((e) => labUrls.get(e.order) as string),
+      articles: tocLab.essays
+        .filter((e) => !e.is_foreword)
+        .map((e) => labUrls.get(e.order) as string),
       credits: creditsOf(labPage.credits),
       funders: labPage.funders.map(funderName),
       license: labLicense,
@@ -498,10 +566,12 @@ const publications = [
   })(),
 ]
 review.other.push(
-  '- Pigeon Towers `print_edition_url` is the English PDF (the field holds one URL); the Arabic PDF is ' + siteUrl(docFile(pigeonAr)) + '.',
+  '- Pigeon Towers `print_edition_url` is the English PDF (the field holds one URL); the Arabic PDF is ' +
+    siteUrl(docFile(pigeonAr)) +
+    '.',
   '- Translation as Education: title_en "Translation as Education" (Arabic title and subtitle split at the page title\'s colon). The dev seed calls it "Works of the Translation Lab", kept in `match_titles_en`. Pigeon Towers has no Arabic title in the extraction; the dev seed has one.',
   '- `produced_by` is empty for both: courses.json has no 2016-2018 Translation Lab course (only labs from 2021 on).',
-  '- Booklet credits use the page\'s roles (the page calls the last-but-two line proofreading; the imprint says مراجعة لغوية). Arabic names are mapped to the imprint\'s Latin spelling line by line.',
+  "- Booklet credits use the page's roles (the page calls the last-but-two line proofreading; the imprint says مراجعة لغوية). Arabic names are mapped to the imprint's Latin spelling line by line.",
   '- Book year_from for the booklet is 2016 (from the title "2016 - 2018"); Pigeon Towers is 2018 (imprint).',
 )
 
@@ -516,9 +586,13 @@ const pressOut = press.items.map((item) => {
     outlet = item.links.map((l) => outletFromUrl(l.url)).find(Boolean) ?? null
     if (outlet) {
       derived = true
-      review.outlets.push(`- "${item.title}": outlet "${outlet}" derived from the link domain (the page names none)`)
+      review.outlets.push(
+        `- "${item.title}": outlet "${outlet}" derived from the link domain (the page names none)`,
+      )
     } else {
-      review.outlets.push(`- "${item.title}": no outlet on the page and none derivable from ${item.links[0]?.url}`)
+      review.outlets.push(
+        `- "${item.title}": no outlet on the page and none derivable from ${item.links[0]?.url}`,
+      )
     }
   }
   const links = item.links.map((l) => {
@@ -535,12 +609,16 @@ const pressOut = press.items.map((item) => {
     const mirror = /^https?:\/\/[^/]*appspot\.com\/(madamasr\.com\/.+?)(\?.*)?$/.exec(url)
     if (mirror) {
       url = `https://www.${mirror[1]}`
-      review.links.push(`- "${item.title}": link was a mirror (${l.url.slice(0, 60)}…); rewritten to ${url}`)
+      review.links.push(
+        `- "${item.title}": link was a mirror (${l.url.slice(0, 60)}…); rewritten to ${url}`,
+      )
     }
     return { language: l.language, url }
   })
   if (new Set(links.map((l) => l.url)).size < links.length) {
-    review.links.push(`- "${item.title}": two links with the same address but different languages (${links.map((l) => l.language).join(', ')}); kept as the page has them`)
+    review.links.push(
+      `- "${item.title}": two links with the same address but different languages (${links.map((l) => l.language).join(', ')}); kept as the page has them`,
+    )
   }
   if (!date) review.undated.push(`- press item "${item.title}" has no date`)
   return {
@@ -558,7 +636,9 @@ const pressOut = press.items.map((item) => {
     logo: item.logo,
   }
 })
-review.outlets.push('- Outlet names follow the dev seed\'s partners (e.g. "OpenDemocracy"), so an import finds them.')
+review.outlets.push(
+  '- Outlet names follow the dev seed\'s partners (e.g. "OpenDemocracy"), so an import finds them.',
+)
 
 /* ================================================================= events */
 
@@ -572,7 +652,9 @@ const events = news.posts
         : []
     if (!p.date) review.undated.push(`- event "${p.title}" has no date`)
     if (p.start_time && !p.end_time) {
-      review.other.push(`- event "${p.title}": only a start time (${p.start_time}) is stated, so it has no slot (a slot needs an end); the time is in the description if the page gives it`)
+      review.other.push(
+        `- event "${p.title}": only a start time (${p.start_time}) is stated, so it has no slot (a slot needs an end); the time is in the description if the page gives it`,
+      )
     }
     return {
       legacy_url: legacy('/news-and-events.html', p.title),
@@ -587,9 +669,13 @@ const events = news.posts
 for (const p of news.posts.filter((x) => !x.is_gathering)) {
   review.notImported.push(`- "${p.title}" (${p.date ?? 'undated'}): not a gathering, not imported`)
 }
-const sameDay = events.filter((e, i) => events.findIndex((o) => o.schedule.start_date === e.schedule.start_date) !== i)
+const sameDay = events.filter(
+  (e, i) => events.findIndex((o) => o.schedule.start_date === e.schedule.start_date) !== i,
+)
 for (const e of sameDay) {
-  review.other.push(`- event "${e.title_en}" is on the same day as another event; it looks like a second post about the same day (the open day schedule). Both imported; consider merging.`)
+  review.other.push(
+    `- event "${e.title_en}" is on the same day as another event; it looks like a second post about the same day (the open day schedule). Both imported; consider merging.`,
+  )
 }
 
 /* ============================================================== newsletters */
@@ -599,7 +685,11 @@ const issues = unit('page__events-documents.html', NewsletterSources)
 const nlDocIssue = nlDoc.issues[0]
 const newsletters = issues.issues.map((issue) => {
   const isPdf = Boolean(issue.archive_url && /^uploads\//.test(issue.archive_url))
-  const archive = issue.archive_url ? (isPdf ? SITE + fixUpload(issue.archive_url) : issue.archive_url) : null
+  const archive = issue.archive_url
+    ? isPdf
+      ? SITE + fixUpload(issue.archive_url)
+      : issue.archive_url
+    : null
   const date = pressDate(issue.date)
   if (!date) review.undated.push(`- newsletter "${issue.title}" has no date`)
   let blocks: Blk[]
@@ -610,7 +700,15 @@ const newsletters = issues.issues.map((issue) => {
       { type: 'paragraph', level: null, text: `Original PDF: [${issue.title}](${archive})` },
     ]
   } else {
-    blocks = archive ? [{ type: 'paragraph', level: null, text: `Read this issue online: [${issue.title}](${archive})` }] : []
+    blocks = archive
+      ? [
+          {
+            type: 'paragraph',
+            level: null,
+            text: `Read this issue online: [${issue.title}](${archive})`,
+          },
+        ]
+      : []
   }
   return {
     legacy_url: legacy('/events-documents.html', issue.title),
@@ -632,12 +730,19 @@ const outDir = path.join(root, 'seed', 'data', 'archive')
 mkdirSync(outDir, { recursive: true })
 // Every person's Arabic spelling, as printed, once all sources are read.
 for (const a of articles) {
-  const named = [...a.authors, ...a.credits.flatMap((c) => c.people), ...(a.translation?.original_authors ?? [])]
-  const pairs = named.flatMap((n) => (latinToArabic.has(n) ? [[n, latinToArabic.get(n) as string] as const] : []))
+  const named = [
+    ...a.authors,
+    ...a.credits.flatMap((c) => c.people),
+    ...(a.translation?.original_authors ?? []),
+  ]
+  const pairs = named.flatMap((n) =>
+    latinToArabic.has(n) ? [[n, latinToArabic.get(n) as string] as const] : [],
+  )
   if (pairs.length) a.names_ar = Object.fromEntries(pairs)
 }
 
-const write = (name: string, data: unknown) => writeFileSync(path.join(outDir, `${name}.json`), `${JSON.stringify(data, null, 2)}\n`)
+const write = (name: string, data: unknown) =>
+  writeFileSync(path.join(outDir, `${name}.json`), `${JSON.stringify(data, null, 2)}\n`)
 write('articles', articles)
 write('publications', publications)
 write('press', pressOut)
@@ -645,7 +750,8 @@ write('events', events)
 write('newsletters', newsletters)
 
 const noPerson = [...usedNames].filter((n) => !ARABIC.test(n) && !known.has(n)).sort()
-const section = (title: string, lines: string[], empty = '- none'): string => `## ${title}\n\n${(lines.length ? lines : [empty]).join('\n')}\n`
+const section = (title: string, lines: string[], empty = '- none'): string =>
+  `## ${title}\n\n${(lines.length ? lines : [empty]).join('\n')}\n`
 const md = [
   '# Publishing content: to check',
   '',
@@ -670,7 +776,10 @@ const md = [
     'Arabic-script names resolved to a Latin spelling (check)',
     [...resolvedArabic].sort().map(([a, l]) => `- ${a} → ${l}`),
   ),
-  section('Names with no match in people.json (an import creates them as needs_review)', noPerson.map((n) => `- ${n}`)),
+  section(
+    'Names with no match in people.json (an import creates them as needs_review)',
+    noPerson.map((n) => `- ${n}`),
+  ),
   section('Line-end hyphens left in English text (not fixed)', review.hyphens),
 ].join('\n')
 mkdirSync(path.join(here, 'review'), { recursive: true })

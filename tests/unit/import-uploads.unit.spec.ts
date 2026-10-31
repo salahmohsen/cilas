@@ -24,7 +24,9 @@ describe('resolveUpload', () => {
   })
 
   it('maps a published image to its _orig file', () => {
-    expect(resolveUpload('uploads/1/9/1/0/19102967/published/1022666471.jpg?1510668144', files)).toEqual({
+    expect(
+      resolveUpload('uploads/1/9/1/0/19102967/published/1022666471.jpg?1510668144', files),
+    ).toEqual({
       path: 'uploads/1/9/1/0/19102967/1022666471_orig.jpg',
       missing: false,
     })
@@ -56,7 +58,10 @@ describe('resolveUpload', () => {
     const bytes = Buffer.from('مقال_فريدة_مقار.pdf', 'utf8')
     const cp1252 = new TextDecoder('windows-1252').decode(bytes)
     for (const name of [bytes.toString('latin1'), cp1252]) {
-      expect(resolveUpload(dir + name, arabic)).toEqual({ path: `${dir}مقال_فريدة_مقار.pdf`, missing: false })
+      expect(resolveUpload(dir + name, arabic)).toEqual({
+        path: `${dir}مقال_فريدة_مقار.pdf`,
+        missing: false,
+      })
     }
   })
 })

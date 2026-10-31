@@ -20,7 +20,11 @@ const one = (url: string, kind?: string) => redirectTargets([page(url, kind)], d
 
 describe('redirectTargets', () => {
   it('sends a course page to its course', () => {
-    expect(one('/a-course.html')).toMatchObject({ from: '/a-course.html', target: { collection: 'courses', id: 1 }, reason: 'exact' })
+    expect(one('/a-course.html')).toMatchObject({
+      from: '/a-course.html',
+      target: { collection: 'courses', id: 1 },
+      reason: 'exact',
+    })
   })
 
   it('sends a cycle page to the cycle, not to a course fragment', () => {
@@ -32,11 +36,17 @@ describe('redirectTargets', () => {
   })
 
   it('falls back to the one cycle or programme among fragments', () => {
-    expect(one('/trimester.html', 'cycle')).toMatchObject({ target: { collection: 'cycles', id: 7 }, reason: 'page-doc' })
+    expect(one('/trimester.html', 'cycle')).toMatchObject({
+      target: { collection: 'cycles', id: 7 },
+      reason: 'page-doc',
+    })
   })
 
   it('falls back to a single fragment document', () => {
-    expect(one('/solo.html', 'press')).toMatchObject({ target: { collection: 'press', id: 11 }, reason: 'single-fragment' })
+    expect(one('/solo.html', 'press')).toMatchObject({
+      target: { collection: 'press', id: 11 },
+      reason: 'single-fragment',
+    })
   })
 
   it('has no target for an info page', () => {

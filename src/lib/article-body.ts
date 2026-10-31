@@ -9,11 +9,18 @@ type Node = Body['root']['children'][number]
 const NOTES_HEADINGS = new Set(['Notes', 'ملاحظات'])
 
 const textOf = (node: Node): string =>
-  plainText({ data: { root: { type: 'root', children: [node], direction: null, format: '', indent: 0, version: 1 } } })
+  plainText({
+    data: {
+      root: { type: 'root', children: [node], direction: null, format: '', indent: 0, version: 1 },
+    },
+  })
     .replace(/\s+/g, ' ')
     .trim()
 
-const withChildren = (body: Body, children: Node[]): Body => ({ ...body, root: { ...body.root, children } })
+const withChildren = (body: Body, children: Node[]): Body => ({
+  ...body,
+  root: { ...body.root, children },
+})
 
 export type Section = { id: string; title: string }
 

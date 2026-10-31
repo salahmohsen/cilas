@@ -3,7 +3,10 @@ import type { CollectionConfig } from 'payload'
 import { isAdmin, isAuthenticated } from '@/access'
 
 import { importFields } from '@/fields/import'
-import { revalidateCoursesAfterChange, revalidateCoursesAfterDelete } from '@/lib/revalidate-courses'
+import {
+  revalidateCoursesAfterChange,
+  revalidateCoursesAfterDelete,
+} from '@/lib/revalidate-courses'
 
 export const Media: CollectionConfig = {
   slug: 'media',

@@ -8,7 +8,9 @@ for (const file of process.argv.slice(2)) {
   if (r.success) console.log(`OK ${file}`)
   else {
     bad++
-    console.log(`INVALID ${file}\n${r.error.issues.map((i) => `  ${i.path.join('.')}: ${i.message}`).join('\n')}`)
+    console.log(
+      `INVALID ${file}\n${r.error.issues.map((i) => `  ${i.path.join('.')}: ${i.message}`).join('\n')}`,
+    )
   }
 }
 process.exit(bad ? 1 : 0)

@@ -11,9 +11,17 @@ export const programmesData: ProgrammeSeed[] = [
     cycles: ['fall-2025', 'spring-2026'],
     components: [
       { label: 'Core courses, fall semester', cycle: 'fall-2025', course_types: ['CORE'] },
-      { label: 'Thematic courses and labs, fall semester', cycle: 'fall-2025', course_types: ['THEMATIC', 'LAB'] },
+      {
+        label: 'Thematic courses and labs, fall semester',
+        cycle: 'fall-2025',
+        course_types: ['THEMATIC', 'LAB'],
+      },
       { label: 'Core courses, spring semester', cycle: 'spring-2026', course_types: ['CORE'] },
-      { label: 'Thematic courses and labs, spring semester', cycle: 'spring-2026', course_types: ['THEMATIC', 'LAB'] },
+      {
+        label: 'Thematic courses and labs, spring semester',
+        cycle: 'spring-2026',
+        course_types: ['THEMATIC', 'LAB'],
+      },
     ],
     weekly_hours: 15,
     self_directed_study: true,

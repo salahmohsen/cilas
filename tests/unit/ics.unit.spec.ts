@@ -14,7 +14,14 @@ describe('buildIcs', () => {
   it('writes timed meetings in UTC and dayless ones as all-day', () => {
     const ics = buildIcs(
       [
-        { uid: 'c1-0@cilas', title: 'Writing, Self; and More', date: '2025-07-19', start: '19:00', end: '21:30', url: 'https://ci-las.org/en/study/x' },
+        {
+          uid: 'c1-0@cilas',
+          title: 'Writing, Self; and More',
+          date: '2025-07-19',
+          start: '19:00',
+          end: '21:30',
+          url: 'https://ci-las.org/en/study/x',
+        },
         { uid: 'c2-start@cilas', title: 'نكتب أنفسنا', date: '2025-07-20' },
       ],
       { name: 'CILAS', now },
@@ -23,6 +30,8 @@ describe('buildIcs', () => {
     expect(ics).toContain('SUMMARY:Writing\\, Self\\; and More')
     expect(ics).toContain('DTSTART;VALUE=DATE:20250720\r\nDTEND;VALUE=DATE:20250721')
     expect(ics.startsWith('BEGIN:VCALENDAR\r\n')).toBe(true)
-    expect(ics.split('\r\n').every((line) => new TextEncoder().encode(line).length <= 75)).toBe(true)
+    expect(ics.split('\r\n').every((line) => new TextEncoder().encode(line).length <= 75)).toBe(
+      true,
+    )
   })
 })

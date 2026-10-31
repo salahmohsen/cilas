@@ -16,7 +16,9 @@ import { FLOW_PROMPT_VERSION, flowPrompt, Syllabus } from './lib/syllabus-schema
 
 const [raw, mode, ...rest] = process.argv.slice(2)
 if (!raw || !mode) {
-  throw new Error('Usage: extract-flows.ts <raw dir> --pending | --prompt <id> | --record <id> <answer.json>')
+  throw new Error(
+    'Usage: extract-flows.ts <raw dir> --pending | --prompt <id> | --record <id> <answer.json>',
+  )
 }
 
 type Flow = {
@@ -52,10 +54,16 @@ const promptFor = (f: Flow): string =>
     id: f.id,
     method: f.method,
     courses: f.courses.map((url) => titles.get(url) ?? url),
-    text: readFileSync(path.join(flowDir(f.id), f.method === 'vision' ? 'ocr.txt' : 'text.txt'), 'utf8'),
+    text: readFileSync(
+      path.join(flowDir(f.id), f.method === 'vision' ? 'ocr.txt' : 'text.txt'),
+      'utf8',
+    ),
     images: f.method === 'vision' || f.method === 'mixed' ? imagesOf(f.id) : [],
     links: existsSync(path.join(flowDir(f.id), 'links.json'))
-      ? (JSON.parse(readFileSync(path.join(flowDir(f.id), 'links.json'), 'utf8')) as Array<{ page: number; url: string }>)
+      ? (JSON.parse(readFileSync(path.join(flowDir(f.id), 'links.json'), 'utf8')) as Array<{
+          page: number
+          url: string
+        }>)
       : [],
   })
 
@@ -74,10 +82,17 @@ if (mode === '--rehash-paths') {
   for (const f of flows) {
     const file = path.join(outDir, `${f.id}.json`)
     if (!existsSync(file)) continue
-    const cached = JSON.parse(readFileSync(file, 'utf8')) as { sha256: string; model: string; version: string }
+    const cached = JSON.parse(readFileSync(file, 'utf8')) as {
+      sha256: string
+      model: string
+      version: string
+    }
     const prompt = promptFor(f)
     if (cached.sha256 !== legacy(FLOW_PROMPT_VERSION, cached.model, prompt)) continue
-    writeFileSync(file, `${JSON.stringify({ ...cached, sha256: shaOf(FLOW_PROMPT_VERSION, cached.model, prompt) }, null, 2)}\n`)
+    writeFileSync(
+      file,
+      `${JSON.stringify({ ...cached, sha256: shaOf(FLOW_PROMPT_VERSION, cached.model, prompt) }, null, 2)}\n`,
+    )
     restamped++
   }
   console.log(`re-stamped ${restamped} flow answer(s)`)

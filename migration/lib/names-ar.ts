@@ -30,7 +30,13 @@ export const applyArabicNames = async (payload: Payload): Promise<number> => {
     const en = d.name?.en ?? ''
     const ar = names[en] ?? (isArabic(en) ? en : undefined)
     if (!ar) continue
-    await payload.update({ collection: 'people', id: d.id, data: { name: ar }, locale: 'ar', overrideAccess: true })
+    await payload.update({
+      collection: 'people',
+      id: d.id,
+      data: { name: ar },
+      locale: 'ar',
+      overrideAccess: true,
+    })
     named++
   }
   return named

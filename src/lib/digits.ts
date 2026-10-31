@@ -9,7 +9,8 @@
 const ARABIC_INDIC = '٠١٢٣٤٥٦٧٨٩'
 
 /** The numbering system a locale's own numbers use, for `Intl` formats. */
-export const numberingSystemOf = (locale: string): 'arab' | 'latn' => (locale === 'ar' ? 'arab' : 'latn')
+export const numberingSystemOf = (locale: string): 'arab' | 'latn' =>
+  locale === 'ar' ? 'arab' : 'latn'
 
 /** `text` with its Western digits written as `locale` writes them. */
 export const localDigits = (text: string | number, locale: string): string => {
@@ -27,4 +28,6 @@ export const timeDir = (locale: string): 'ltr' | undefined => (locale === 'ar' ?
 
 /** `text` with Arabic-Indic (and Persian) digits written as Western ones, for search and parsing. */
 export const latinDigits = (text: string): string =>
-  text.replace(/[٠-٩]/g, (d) => String(d.charCodeAt(0) - 0x0660)).replace(/[۰-۹]/g, (d) => String(d.charCodeAt(0) - 0x06f0))
+  text
+    .replace(/[٠-٩]/g, (d) => String(d.charCodeAt(0) - 0x0660))
+    .replace(/[۰-۹]/g, (d) => String(d.charCodeAt(0) - 0x06f0))

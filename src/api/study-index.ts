@@ -22,7 +22,11 @@ type Locale = 'en' | 'ar'
 export const getStudyIndex = unstable_cache(
   async (locale: Locale, tiers: SiteTier[]) => {
     const payload = await getPayload({ config })
-    const t = createTranslator({ locale, messages: locale === 'ar' ? ar : en, namespace: 'Study.filters' })
+    const t = createTranslator({
+      locale,
+      messages: locale === 'ar' ? ar : en,
+      namespace: 'Study.filters',
+    })
     return getStudyCourses(payload, locale, (key) => t(key as never), tiers)
   },
   // The key names the index's shape: a change to it starts a fresh cache.
@@ -34,7 +38,10 @@ export const getStudyIndex = unstable_cache(
 export const STUDY_PAGE_SIZE = 20
 
 /** What the page sends for one course: enough to show its row. */
-export type StudyRow = Pick<StudyCard, 'id' | 'href' | 'title' | 'description' | 'image' | 'imageAlt' | 'imageFocalPoint'> & {
+export type StudyRow = Pick<
+  StudyCard,
+  'id' | 'href' | 'title' | 'description' | 'image' | 'imageAlt' | 'imageFocalPoint'
+> & {
   /** Its course type, cycle (season and year) and place, each with its label. */
   type: { value: string; label: string }
   season?: { value: string; label: string }
@@ -57,7 +64,11 @@ export type StudyPage = {
  * match the filters and search, newest first, cut to the page asked for.
  * Only that page's rows (and the filters' options) go to the browser.
  */
-export const getStudyPage = async (locale: Locale, query: CourseQuery, page: number): Promise<StudyPage> => {
+export const getStudyPage = async (
+  locale: Locale,
+  query: CourseQuery,
+  page: number,
+): Promise<StudyPage> => {
   const index = await getStudyIndex(locale, ['public'])
   const matches = filterCourses(index, query)
   const pageCount = Math.max(1, Math.ceil(matches.length / STUDY_PAGE_SIZE))

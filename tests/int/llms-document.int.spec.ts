@@ -10,21 +10,31 @@ let payload: Payload
 let person: Person
 let course: Course
 
-const note = (text: string) => ({ root: { type: 'root', children: [{ type: 'paragraph', children: [{ type: 'text', text }] }] } })
+const note = (text: string) => ({
+  root: { type: 'root', children: [{ type: 'paragraph', children: [{ type: 'text', text }] }] },
+})
 
 beforeAll(async () => {
   payload = await getPayload({ config: await config })
-  person = await payload.create({
+  person = (await payload.create({
     collection: 'people',
     data: { name: 'Test Person', slug: 'test-person-llms-' + Date.now() },
     overrideAccess: true,
-  }) as Person
-  const found = await payload.find({ collection: 'courses', where: { tier: { equals: 'public' }, _status: { equals: 'published' } }, limit: 20, depth: 2, overrideAccess: true })
+  })) as Person
+  const found = await payload.find({
+    collection: 'courses',
+    where: { tier: { equals: 'public' }, _status: { equals: 'published' } },
+    limit: 20,
+    depth: 2,
+    overrideAccess: true,
+  })
   course = (found.docs.find((d: any) => d.sessions?.length) ?? found.docs[0]) as Course
 })
 
 afterAll(async () => {
-  await payload.delete({ collection: 'people', id: person.id, overrideAccess: true }).catch(() => {})
+  await payload
+    .delete({ collection: 'people', id: person.id, overrideAccess: true })
+    .catch(() => {})
 })
 
 describe('llms-document', () => {
@@ -48,11 +58,26 @@ describe('llms-document', () => {
         root: {
           type: 'root',
           children: [
-            { type: 'paragraph', children: [
-              { type: 'text', text: 'Body text here' },
-              { type: 'inlineBlock', fields: { id: 'fn1', blockType: 'footnote', note: note('Footnote text') } },
-              { type: 'inlineBlock', fields: { id: 'm1', blockType: 'mention', type: 'person', person: person.id, label: 'Mona' } },
-            ] },
+            {
+              type: 'paragraph',
+              children: [
+                { type: 'text', text: 'Body text here' },
+                {
+                  type: 'inlineBlock',
+                  fields: { id: 'fn1', blockType: 'footnote', note: note('Footnote text') },
+                },
+                {
+                  type: 'inlineBlock',
+                  fields: {
+                    id: 'm1',
+                    blockType: 'mention',
+                    type: 'person',
+                    person: person.id,
+                    label: 'Mona',
+                  },
+                },
+              ],
+            },
           ],
         },
       },

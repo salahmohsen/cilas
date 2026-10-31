@@ -9,7 +9,17 @@ import { latinDigits } from '@/lib/digits'
 import type { FocalPoint } from '@/lib/media-image'
 
 /** The filters, in the order the menu lists them; each is a URL parameter. */
-export const COURSE_FACETS = ['registration', 'type', 'season', 'year', 'academic', 'place', 'fellow', 'format', 'language'] as const
+export const COURSE_FACETS = [
+  'registration',
+  'type',
+  'season',
+  'year',
+  'academic',
+  'place',
+  'fellow',
+  'format',
+  'language',
+] as const
 export type CourseFacet = (typeof COURSE_FACETS)[number]
 
 /** `rank` orders values with a natural order (seasons, course types). */
@@ -52,7 +62,10 @@ export const normaliseSearch = (text: string): string =>
     .replace(/ؤ/g, 'و')
     .replace(/ئ/g, 'ي')
 
-const splitWords = (text: string): string[] => normaliseSearch(text).split(/[^\p{L}\p{N}]+/u).filter(Boolean)
+const splitWords = (text: string): string[] =>
+  normaliseSearch(text)
+    .split(/[^\p{L}\p{N}]+/u)
+    .filter(Boolean)
 
 /** The unique words of all the given texts, for `StudyCourse.words`. */
 export const searchWords = (texts: Array<string | null | undefined>): string =>
@@ -82,7 +95,9 @@ export const readCourseQuery = (params: URLSearchParams): CourseQuery => {
 
 /** True when the course has every chosen filter value. */
 export const matchesFacets = (course: Pick<StudyCourse, 'facets'>, query: CourseQuery): boolean =>
-  COURSE_FACETS.every((f) => !query[f] || (course.facets[f] ?? []).some((v) => v.value === query[f]))
+  COURSE_FACETS.every(
+    (f) => !query[f] || (course.facets[f] ?? []).some((v) => v.value === query[f]),
+  )
 
 /** The courses that match every chosen filter and the search words. */
 export const filterCourses = (courses: StudyCourse[], query: CourseQuery): StudyCourse[] =>

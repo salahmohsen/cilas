@@ -16,7 +16,9 @@ describe('archive import foundations', () => {
 
   afterAll(async () => {
     for (const id of created) {
-      await payload.delete({ collection: 'places', id, overrideAccess: true }).catch(() => undefined)
+      await payload
+        .delete({ collection: 'places', id, overrideAccess: true })
+        .catch(() => undefined)
     }
     await payload.destroy()
   })

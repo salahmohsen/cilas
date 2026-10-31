@@ -57,7 +57,10 @@ export const SearchField = forwardRef<HTMLInputElement, SearchFieldProps>(functi
       <label htmlFor={controlId} className={labelHidden ? 'sr-only' : undefined}>
         {label}
       </label>
-      <div className={[styles.shell, bare ? styles.bare : ''].filter(Boolean).join(' ')} data-filled={value ? 'true' : undefined}>
+      <div
+        className={[styles.shell, bare ? styles.bare : ''].filter(Boolean).join(' ')}
+        data-filled={value ? 'true' : undefined}
+      >
         <Search width={18} height={18} aria-hidden="true" />
         <input
           {...props}

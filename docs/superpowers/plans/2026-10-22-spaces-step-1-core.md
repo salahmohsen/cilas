@@ -39,42 +39,42 @@
 
 ## File map
 
-| File | Responsibility |
-| --- | --- |
-| `src/globals/SiteSettings.ts` | The `Spaces` group: mode, trial lists (modify) |
-| `src/lib/spaces.ts` | **The one access helper**: mode, membership, read/write/moderator rules as Payload `Where`/`Access`, read-only lifecycle (create) |
-| `src/lib/space-lifecycle.ts` | Course end from the schedule; read-only after 14 days (unit-testable, create) |
-| `src/lib/space-members.ts` | Member ids of a space, mention validation (import from membership layer, create) |
-| `src/lib/spaces-write.ts` | Every write rule: post/comment/file/reaction validation, placeholders, read-only + trial enforcement (create) |
-| `src/lib/spaces-data.ts` | Page queries: my spaces, feed, post view, participation summary (create) |
-| `src/lib/space-hooks.ts` | Create course/cohort spaces and their intro posts on first publish (create) |
-| `src/lib/notify.ts` | Notification kind type grows (modify) |
-| `src/collections/Notifications.ts` | Enum options grow (modify) |
-| `src/collections/Spaces.ts` | `spaces` rows: kind, course/programme, post settings, reopened (create) |
-| `src/collections/SpacePosts.ts` | Discussion/announcement/question posts; versions on (create) |
-| `src/collections/SpaceComments.ts` | Replies, one file; versions on (create) |
-| `src/collections/SpaceFiles.ts` | Private upload collection (ADR 0008) (create) |
-| `src/collections/SpaceReactions.ts` | One row per account, target, reaction (create) |
-| `src/collections/SpaceConsents.ts` | Notice acceptance, per account (create) |
-| `src/collections/SpaceVisits.ts` | Per account + space: last visit, checklist steps (create) |
-| `src/collections/SpacePreferences.ts` | Per account: email digest choice (create) |
-| `src/payload.config.ts` | Register all new collections (modify) |
-| `src/collections/Courses.ts`, `src/collections/Programmes.ts` | afterChange paperwork hooks (modify) |
-| `src/migrations/<ts>_space_*.{ts,json}` | Two migrations: notification kinds enum, spaces tables. `.ts` bodies hand-checked |
-| `seed/collections/spaces.seed.ts` | Community space + intro post (create) |
-| `seed/seed.type.ts`, `seed/index.ts`, `seed/seed.utils.ts` | Track the new collections (modify) |
-| `src/app/(frontend)/[locale]/spaces/…` | Pages: list, space, post; server actions; `layout.tsx` guard (create) |
-| `src/components/space/*` | Feed row, composer, reactions wiring, checklist, participation table, markdown body (create) |
-| `src/components/arc/reactions/*` | New Arc copy: the four reactions (create) |
-| `src/components/arc/page-header/*` | New Arc copy: breadcrumb header with props + window-scroll fold (create) |
-| `src/components/arc/rich-text-editor/rich-text-editor.tsx` | "@" member trigger beside the "/" menu (modify) |
-| `src/components/site-header.tsx` | "Spaces" item in the account menu + dedicated link with dot (modify) |
-| `src/components/site-notifications.tsx` | New kinds' tones (modify) |
-| `src/app/(frontend)/[locale]/study/[slug]/CourseView.tsx` | "Open the course space" for members (modify) |
-| `messages/en.json`, `messages/ar.json` | `Spaces`, `Space`, `SpacePost`, `SpaceComment` namespaces; `Notifications` kinds (modify) |
-| `tests/int/spaces-core.int.spec.ts` | Membership, switch, lifecycle (create) |
-| `tests/int/spaces-write.int.spec.ts` | Write rules end to end (create) |
-| `tests/unit/space-lifecycle.unit.spec.ts`, `tests/unit/space-write.unit.spec.ts`, `tests/unit/post-body.unit.spec.tsx` | Pure logic (create) |
+| File                                                                                                                   | Responsibility                                                                                                                    |
+| ---------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
+| `src/globals/SiteSettings.ts`                                                                                          | The `Spaces` group: mode, trial lists (modify)                                                                                    |
+| `src/lib/spaces.ts`                                                                                                    | **The one access helper**: mode, membership, read/write/moderator rules as Payload `Where`/`Access`, read-only lifecycle (create) |
+| `src/lib/space-lifecycle.ts`                                                                                           | Course end from the schedule; read-only after 14 days (unit-testable, create)                                                     |
+| `src/lib/space-members.ts`                                                                                             | Member ids of a space, mention validation (import from membership layer, create)                                                  |
+| `src/lib/spaces-write.ts`                                                                                              | Every write rule: post/comment/file/reaction validation, placeholders, read-only + trial enforcement (create)                     |
+| `src/lib/spaces-data.ts`                                                                                               | Page queries: my spaces, feed, post view, participation summary (create)                                                          |
+| `src/lib/space-hooks.ts`                                                                                               | Create course/cohort spaces and their intro posts on first publish (create)                                                       |
+| `src/lib/notify.ts`                                                                                                    | Notification kind type grows (modify)                                                                                             |
+| `src/collections/Notifications.ts`                                                                                     | Enum options grow (modify)                                                                                                        |
+| `src/collections/Spaces.ts`                                                                                            | `spaces` rows: kind, course/programme, post settings, reopened (create)                                                           |
+| `src/collections/SpacePosts.ts`                                                                                        | Discussion/announcement/question posts; versions on (create)                                                                      |
+| `src/collections/SpaceComments.ts`                                                                                     | Replies, one file; versions on (create)                                                                                           |
+| `src/collections/SpaceFiles.ts`                                                                                        | Private upload collection (ADR 0008) (create)                                                                                     |
+| `src/collections/SpaceReactions.ts`                                                                                    | One row per account, target, reaction (create)                                                                                    |
+| `src/collections/SpaceConsents.ts`                                                                                     | Notice acceptance, per account (create)                                                                                           |
+| `src/collections/SpaceVisits.ts`                                                                                       | Per account + space: last visit, checklist steps (create)                                                                         |
+| `src/collections/SpacePreferences.ts`                                                                                  | Per account: email digest choice (create)                                                                                         |
+| `src/payload.config.ts`                                                                                                | Register all new collections (modify)                                                                                             |
+| `src/collections/Courses.ts`, `src/collections/Programmes.ts`                                                          | afterChange paperwork hooks (modify)                                                                                              |
+| `src/migrations/<ts>_space_*.{ts,json}`                                                                                | Two migrations: notification kinds enum, spaces tables. `.ts` bodies hand-checked                                                 |
+| `seed/collections/spaces.seed.ts`                                                                                      | Community space + intro post (create)                                                                                             |
+| `seed/seed.type.ts`, `seed/index.ts`, `seed/seed.utils.ts`                                                             | Track the new collections (modify)                                                                                                |
+| `src/app/(frontend)/[locale]/spaces/…`                                                                                 | Pages: list, space, post; server actions; `layout.tsx` guard (create)                                                             |
+| `src/components/space/*`                                                                                               | Feed row, composer, reactions wiring, checklist, participation table, markdown body (create)                                      |
+| `src/components/arc/reactions/*`                                                                                       | New Arc copy: the four reactions (create)                                                                                         |
+| `src/components/arc/page-header/*`                                                                                     | New Arc copy: breadcrumb header with props + window-scroll fold (create)                                                          |
+| `src/components/arc/rich-text-editor/rich-text-editor.tsx`                                                             | "@" member trigger beside the "/" menu (modify)                                                                                   |
+| `src/components/site-header.tsx`                                                                                       | "Spaces" item in the account menu + dedicated link with dot (modify)                                                              |
+| `src/components/site-notifications.tsx`                                                                                | New kinds' tones (modify)                                                                                                         |
+| `src/app/(frontend)/[locale]/study/[slug]/CourseView.tsx`                                                              | "Open the course space" for members (modify)                                                                                      |
+| `messages/en.json`, `messages/ar.json`                                                                                 | `Spaces`, `Space`, `SpacePost`, `SpaceComment` namespaces; `Notifications` kinds (modify)                                         |
+| `tests/int/spaces-core.int.spec.ts`                                                                                    | Membership, switch, lifecycle (create)                                                                                            |
+| `tests/int/spaces-write.int.spec.ts`                                                                                   | Write rules end to end (create)                                                                                                   |
+| `tests/unit/space-lifecycle.unit.spec.ts`, `tests/unit/space-write.unit.spec.ts`, `tests/unit/post-body.unit.spec.tsx` | Pure logic (create)                                                                                                               |
 
 **Not in this plan (later steps):** questions, highlights, reply-first, anonymity, search (step 2); hide/mute/reports/purge/edit-history UI/digests/pulse/participation beyond the summary (step 3).
 
@@ -89,22 +89,22 @@ Everything in this branch runs on a local container. The dokploy host's database
 The file exists (Payload template: a `payload` service carrying `env_file: .env` and a `mongo` service). Keep both untouched — the `payload` service points at the production .env, so never `docker compose up` it here; only `db` is ever started — and append:
 
 ```yaml
-  db:
-    image: postgres:16-alpine
-    ports:
-      - '5433:5432'
-    environment:
-      POSTGRES_USER: cilas
-      POSTGRES_PASSWORD: dev
-      POSTGRES_DB: cilas_dev
-    volumes:
-      - cilas_dev:/var/lib/postgresql/data
+db:
+  image: postgres:16-alpine
+  ports:
+    - '5433:5432'
+  environment:
+    POSTGRES_USER: cilas
+    POSTGRES_PASSWORD: dev
+    POSTGRES_DB: cilas_dev
+  volumes:
+    - cilas_dev:/var/lib/postgresql/data
 ```
 
 and one volume appended to the existing `volumes:` block:
 
 ```yaml
-  cilas_dev:
+cilas_dev:
 ```
 
 - And `.env.local` in the repo root (gitignored — `.env*.local` is in `.gitignore` — so it never leaves this machine):
@@ -130,7 +130,9 @@ The exported `DATABASE_URL` is what keeps vitest and the seed off production —
 
 ```ts
 if (!process.env.DATABASE_URL?.includes('@localhost:5433/')) {
-  throw new Error('Refusing to run tests: DATABASE_URL must point at the local docker Postgres. Export DATABASE_URL=postgres://cilas:dev@localhost:5433/cilas_dev.')
+  throw new Error(
+    'Refusing to run tests: DATABASE_URL must point at the local docker Postgres. Export DATABASE_URL=postgres://cilas:dev@localhost:5433/cilas_dev.',
+  )
 }
 ```
 
@@ -138,7 +140,9 @@ if (!process.env.DATABASE_URL?.includes('@localhost:5433/')) {
 
 ```ts
 if (!process.env.DATABASE_URL?.includes('@localhost:5433/')) {
-  throw new Error('Refusing to seed: the seed wipes and re-creates content, so it only ever runs against localhost:5433/cilas_dev (an exported DATABASE_URL).')
+  throw new Error(
+    'Refusing to seed: the seed wipes and re-creates content, so it only ever runs against localhost:5433/cilas_dev (an exported DATABASE_URL).',
+  )
 }
 ```
 
@@ -171,6 +175,7 @@ Co-Authored-By: GLM 5.3 Flash <noreply@opencode.ai>"
 # Task 1 — The switch (Site settings → Spaces)
 
 **Files:**
+
 - Modify: `src/globals/SiteSettings.ts`
 - Test: none yet (used from Task 2's spec)
 
@@ -246,6 +251,7 @@ Co-Authored-By: GLM 5.3 Flash <noreply@opencode.ai>"
 One file carries every access decision; nothing else works out who belongs (spec §1).
 
 **Files:**
+
 - Create: `src/collections/Spaces.ts`, `src/lib/spaces.ts`
 - Modify: `src/payload.config.ts`
 - Test: `tests/int/spaces-core.int.spec.ts`
@@ -289,11 +295,20 @@ describe('spaces core', () => {
     // People and accounts: the fellow teaches, the student is enrolled,
     // the stranger is a member of nothing.
     const mk = async (name: string, person: Record<string, unknown>) => {
-      const p = await payload.create({ collection: 'people', data: { name, slug: name.toLowerCase().replace(/\s+/g, '-'), ...person }, overrideAccess: true })
+      const p = await payload.create({
+        collection: 'people',
+        data: { name, slug: name.toLowerCase().replace(/\s+/g, '-'), ...person },
+        overrideAccess: true,
+      })
       track('people', p.id)
       const u = await payload.create({
         collection: 'users',
-        data: { email: `${name.toLowerCase().replace(/\s+/g, '-')}@probe.cilas`, password: 'probe-probe', roles: ['member'], person: p.id },
+        data: {
+          email: `${name.toLowerCase().replace(/\s+/g, '-')}@probe.cilas`,
+          password: 'probe-probe',
+          roles: ['member'],
+          person: p.id,
+        },
         overrideAccess: true,
       })
       track('users', u.id)
@@ -306,7 +321,12 @@ describe('spaces core', () => {
     course = (await payload.create({
       collection: 'courses',
       depth: 0,
-      data: { title: 'Probe Course', slug: 'probe-space-course', fellows: [(personOf(fellow) as number)], _status: 'published' },
+      data: {
+        title: 'Probe Course',
+        slug: 'probe-space-course',
+        fellows: [personOf(fellow) as number],
+        _status: 'published',
+      },
       overrideAccess: true,
     })) as unknown as { id: number }
     // Courses need more than title/slug/fellows to validate (course_type,
@@ -316,18 +336,38 @@ describe('spaces core', () => {
     // missing @/lib/spaces import (Step 2); a Payload validation error met
     // instead is filled from that fixture and is not a plan bug.
     track('courses', (course as { id: number }).id)
-    const enrollment = await payload.create({ collection: 'enrollments', data: { course: (course as { id: number }).id, person: personOf(student), status: 'confirmed' }, overrideAccess: true })
+    const enrollment = await payload.create({
+      collection: 'enrollments',
+      data: {
+        course: (course as { id: number }).id,
+        person: personOf(student),
+        status: 'confirmed',
+      },
+      overrideAccess: true,
+    })
     track('enrollments', enrollment.id as number)
 
     programmeId = (
-      await payload.create({ collection: 'programmes', data: { title: 'Probe Bridge', slug: 'probe-bridge', kind: 'bridge', _status: 'published' }, overrideAccess: true })
+      await payload.create({
+        collection: 'programmes',
+        data: { title: 'Probe Bridge', slug: 'probe-bridge', kind: 'bridge', _status: 'published' },
+        overrideAccess: true,
+      })
     ).id as number
     track('programmes', programmeId)
-    const membership = await payload.create({ collection: 'memberships', data: { programme: programmeId, person: personOf(student), role: 'student' }, overrideAccess: true })
+    const membership = await payload.create({
+      collection: 'memberships',
+      data: { programme: programmeId, person: personOf(student), role: 'student' },
+      overrideAccess: true,
+    })
     track('memberships', membership.id as number)
 
     const mkSpace = async (data: Partial<Space>) =>
-      payload.create({ collection: 'spaces', data: data as never, overrideAccess: true }) as Promise<Space>
+      payload.create({
+        collection: 'spaces',
+        data: data as never,
+        overrideAccess: true,
+      }) as Promise<Space>
     community = await mkSpace({ kind: 'community' })
     track('spaces', community.id)
     courseSpace = await mkSpace({ kind: 'course', course: (course as { id: number }).id })
@@ -343,10 +383,31 @@ describe('spaces core', () => {
   })
 
   afterAll(async () => {
-    await payload.updateGlobal({ slug: 'site-settings', data: { spaces_mode: 'off' }, overrideAccess: true })
+    await payload.updateGlobal({
+      slug: 'site-settings',
+      data: { spaces_mode: 'off' },
+      overrideAccess: true,
+    })
     // Children delete before parents: Payload's required-relation FKs
     // restrict, so a parent deleted first leaks the row silently otherwise.
-    for (const collection of ['space-posts', 'space-comments', 'space-files', 'space-reactions', 'space-consents', 'space-visits', 'space-preferences', 'spaces', 'enrollments', 'memberships', 'courses', 'programmes', 'cycles', 'places', 'users', 'people'] as const) {
+    for (const collection of [
+      'space-posts',
+      'space-comments',
+      'space-files',
+      'space-reactions',
+      'space-consents',
+      'space-visits',
+      'space-preferences',
+      'spaces',
+      'enrollments',
+      'memberships',
+      'courses',
+      'programmes',
+      'cycles',
+      'places',
+      'users',
+      'people',
+    ] as const) {
       const ids = [...(tracked.get(collection) ?? [])].reverse()
       for (const id of ids) {
         await payload
@@ -361,7 +422,9 @@ describe('spaces core', () => {
     const where = await readableWhere(payload, student, 'id')
     expect(where).toBeTruthy()
     const { docs } = await payload.find({ collection: 'spaces', where, overrideAccess: true })
-    expect(docs.map((s) => s.id).sort()).toEqual([community.id, courseSpace.id, cohortSpace.id].sort())
+    expect(docs.map((s) => s.id).sort()).toEqual(
+      [community.id, courseSpace.id, cohortSpace.id].sort(),
+    )
   })
 
   it('gives the student the course and cohort and community spaces, and the stranger only the community', async () => {
@@ -395,11 +458,17 @@ describe('spaces core', () => {
   it('Trial opens only the pilot courses/cohorts plus the community (spec §10)', async () => {
     await payload.updateGlobal({
       slug: 'site-settings',
-      data: { spaces_mode: 'trial', spaces_trial_community: true, spaces_trial_courses: [course.id] },
+      data: {
+        spaces_mode: 'trial',
+        spaces_trial_community: true,
+        spaces_trial_courses: [course.id],
+      },
       overrideAccess: true,
     })
     const trial = async () =>
-      payload.find({ collection: 'spaces', user: student, overrideAccess: false, depth: 0 }).then((r) => r.docs.map((s) => s.id).sort())
+      payload
+        .find({ collection: 'spaces', user: student, overrideAccess: false, depth: 0 })
+        .then((r) => r.docs.map((s) => s.id).sort())
     expect(await trial()).toEqual([community.id, courseSpace.id].sort())
     // The same cohort space, with trial list empty: closed.
     await payload.updateGlobal({
@@ -408,11 +477,20 @@ describe('spaces core', () => {
       overrideAccess: true,
     })
     expect(await trial()).toEqual([community.id])
-    await payload.updateGlobal({ slug: 'site-settings', data: { spaces_mode: 'on' }, overrideAccess: true })
+    await payload.updateGlobal({
+      slug: 'site-settings',
+      data: { spaces_mode: 'on' },
+      overrideAccess: true,
+    })
   })
 
   it('Off yields the same refusal as the access floor for reads and writes', async () => {
-    const anon: User = { id: -1, roles: ['member'], person: null, collection: 'users' } as unknown as User
+    const anon: User = {
+      id: -1,
+      roles: ['member'],
+      person: null,
+      collection: 'users',
+    } as unknown as User
     const refuse = (user: User) =>
       payload.create({
         collection: 'space-posts',
@@ -421,9 +499,17 @@ describe('spaces core', () => {
         data: { space: community.id, kind: 'discussion', body: 'x' } as never,
       })
     await expect(refuse(anon)).rejects.toThrow()
-    await payload.updateGlobal({ slug: 'site-settings', data: { spaces_mode: 'off' }, overrideAccess: true })
+    await payload.updateGlobal({
+      slug: 'site-settings',
+      data: { spaces_mode: 'off' },
+      overrideAccess: true,
+    })
     expect(await readableWhere(payload, student, 'id')).toBe(false)
-    await payload.updateGlobal({ slug: 'site-settings', data: { spaces_mode: 'on' }, overrideAccess: true })
+    await payload.updateGlobal({
+      slug: 'site-settings',
+      data: { spaces_mode: 'on' },
+      overrideAccess: true,
+    })
   })
 
   it('moderators are the course fellows; admins are everywhere, not listed', async () => {
@@ -490,7 +576,10 @@ const idOf = (v: number | { id: number } | null | undefined) =>
 export const spacesSettings = async (payload: Payload): Promise<SpacesSettings> => {
   const { _globals } = await import('@/payload-types') // avoid a hard cycle at import time
   void _globals
-  return (await payload.findGlobal({ slug: 'site-settings', overrideAccess: true })) as SpacesSettings
+  return (await payload.findGlobal({
+    slug: 'site-settings',
+    overrideAccess: true,
+  })) as SpacesSettings
 }
 
 // Pure, DB-free facts the caller gathers (this head block ends at `SpaceFacts`):
@@ -507,7 +596,6 @@ export type SpaceFacts = {
   /** whether the account has a linked person (community rule) */
   hasPerson?: boolean | null
 }
-
 ```
 
 The module continues — append this body to the same file after the head block (it carries the final `spacesSettings`, `mode`, `spaceOpenOn`):
@@ -529,8 +617,16 @@ export const mode = (settings: SpacesSettings | null | undefined) => settings?.s
 export const spaceOpenOn = (space: SpaceLike, settings: SpacesSettings): boolean => {
   if (mode(settings) === 'on') return true
   if (mode(settings) === 'trial') {
-    if (space.kind === 'course' && relIds(settings.spaces_trial_courses).includes(idOf(space.course)!)) return true
-    if (space.kind === 'cohort' && relIds(settings.spaces_trial_cohorts).includes(idOf(space.programme)!)) return true
+    if (
+      space.kind === 'course' &&
+      relIds(settings.spaces_trial_courses).includes(idOf(space.course)!)
+    )
+      return true
+    if (
+      space.kind === 'cohort' &&
+      relIds(settings.spaces_trial_cohorts).includes(idOf(space.programme)!)
+    )
+      return true
     if (space.kind === 'community') return Boolean(settings.spaces_trial_community)
   }
   return false
@@ -583,13 +679,29 @@ export const factsFor = async (
   spaces: Pick<SpaceLike, 'kind' | 'course' | 'programme'>[],
 ): Promise<SpaceFacts> => {
   const facts: SpaceFacts & { _programsFresh?: number[] } = { hasPerson: personId !== null }
-  const courseIds = new Set(spaces.filter((s) => s.kind === 'course').map((s) => idOf(s.course)!).filter(Boolean))
-  const programmeIds = new Set(spaces.filter((s) => s.kind === 'cohort').map((s) => idOf(s.programme)!).filter(Boolean))
+  const courseIds = new Set(
+    spaces
+      .filter((s) => s.kind === 'course')
+      .map((s) => idOf(s.course)!)
+      .filter(Boolean),
+  )
+  const programmeIds = new Set(
+    spaces
+      .filter((s) => s.kind === 'cohort')
+      .map((s) => idOf(s.programme)!)
+      .filter(Boolean),
+  )
   if (personId !== null) {
     if (courseIds.size) {
       const { docs } = await payload.find({
         collection: 'enrollments',
-        where: { and: [{ course: { in: [...courseIds] } }, { status: { in: [...ENROLLED] } }, { person: { equals: personId } }] },
+        where: {
+          and: [
+            { course: { in: [...courseIds] } },
+            { status: { in: [...ENROLLED] } },
+            { person: { equals: personId } },
+          ],
+        },
         select: { course: true },
         depth: 0,
         pagination: false,
@@ -600,7 +712,9 @@ export const factsFor = async (
     if (programmeIds.size) {
       const { docs } = await payload.find({
         collection: 'memberships',
-        where: { and: [{ programme: { in: [...programmeIds] } }, { person: { equals: personId } }] },
+        where: {
+          and: [{ programme: { in: [...programmeIds] } }, { person: { equals: personId } }],
+        },
         select: { programme: true, role: true },
         depth: 0,
         pagination: false,
@@ -609,7 +723,13 @@ export const factsFor = async (
       facts.memberProgrammes = [...new Set(docs.map((m) => idOf(m.programme as never)!))]
       // Cohort moderators are the programme's residential fellows (spec §7);
       // visiting fellows are members, not moderators.
-      facts.fellowProgrammes = [...new Set(docs.filter((m) => m.role === 'residential_fellow').map((m) => idOf(m.programme as never)!))]
+      facts.fellowProgrammes = [
+        ...new Set(
+          docs
+            .filter((m) => m.role === 'residential_fellow')
+            .map((m) => idOf(m.programme as never)!),
+        ),
+      ]
     }
     // The course-fellow question by one query: the course ids that list this
     // person as a fellow, keyed so membershipOf joins them against the
@@ -657,7 +777,11 @@ type SpaceIds = number[] | true | false
  * The ids of the spaces this account can read right now, `true` for admin/
  * none, `false` for no user. Everything else builds Where clauses on top.
  */
-export const readableSpaceIds = async (payload: Payload, user: null | { roles?: readonly string[]; person?: unknown }, settings?: SpacesSettings): Promise<SpaceIds> => {
+export const readableSpaceIds = async (
+  payload: Payload,
+  user: null | { roles?: readonly string[]; person?: unknown },
+  settings?: SpacesSettings,
+): Promise<SpaceIds> => {
   if (!user) return false
   if (isAdminUser(user as never)) return true
   const stored = settings ?? (await spacesSettings(payload))
@@ -825,12 +949,15 @@ export const mayStart = (
   membership: Membership,
   kind: 'discussion' | 'question' | 'announcement',
   posting: PostingLevel = 'open',
-): { ok: true } | { ok: false; error: 'not-member' | 'read-only' | 'posting-level' | 'announcement' } => {
+):
+  | { ok: true }
+  | { ok: false; error: 'not-member' | 'read-only' | 'posting-level' | 'announcement' } => {
   if (membership.role === 'none') return { ok: false, error: 'not-member' }
   const mod = membership.role === 'moderator'
   if (kind === 'announcement' && !mod) return { ok: false, error: 'announcement' }
   if (posting === 'fellows_only' && !mod) return { ok: false, error: 'posting-level' }
-  if (posting === 'members_comment' && kind !== 'announcement' && !mod) return { ok: false, error: 'posting-level' }
+  if (posting === 'members_comment' && kind !== 'announcement' && !mod)
+    return { ok: false, error: 'posting-level' }
   return { ok: true }
 }
 
@@ -875,6 +1002,7 @@ Co-Authored-By: GLM 5.3 Flash <noreply@opencode.ai>"
 # Task 3 — Notification kinds (one enum migration)
 
 **Files:**
+
 - Modify: `src/collections/Notifications.ts`, `src/lib/notify.ts`
 - Create: `src/migrations/<ts>_space_notification_kinds.{ts,json}` (user-generated)
 
@@ -917,6 +1045,7 @@ Co-Authored-By: GLM 5.3 Flash <noreply@opencode.ai>"
 # Task 4 — Posts and comments collections + lifecycle
 
 **Files:**
+
 - Create: `src/collections/SpacePosts.ts`, `src/collections/SpaceComments.ts`, `src/lib/space-lifecycle.ts`, `src/lib/space-hooks.ts`
 - Modify: `src/collections/Courses.ts`, `src/collections/Programmes.ts`
 - Test: `tests/int/spaces-core.int.spec.ts` (extend), `tests/unit/space-lifecycle.unit.spec.ts`
@@ -1023,10 +1152,26 @@ export const SpacePosts: CollectionConfig = {
     delete: ({ req }) => isAdminUser(req.user),
   },
   versions: { drafts: false },
-  admin: { group: 'Community', defaultColumns: ['space', 'kind', 'author', 'last_activity_at', 'updatedAt'] },
+  admin: {
+    group: 'Community',
+    defaultColumns: ['space', 'kind', 'author', 'last_activity_at', 'updatedAt'],
+  },
   fields: [
-    { name: 'space', type: 'relationship', relationTo: 'spaces', required: true, index: true, access: { update: () => false } },
-    { name: 'author', type: 'relationship', relationTo: 'people', index: true, access: { update: () => false } },
+    {
+      name: 'space',
+      type: 'relationship',
+      relationTo: 'spaces',
+      required: true,
+      index: true,
+      access: { update: () => false },
+    },
+    {
+      name: 'author',
+      type: 'relationship',
+      relationTo: 'people',
+      index: true,
+      access: { update: () => false },
+    },
     {
       name: 'kind',
       type: 'select',
@@ -1100,10 +1245,30 @@ export const SpaceComments: CollectionConfig = {
   versions: { drafts: false },
   admin: { group: 'Community', defaultColumns: ['space', 'post', 'author', 'createdAt'] },
   fields: [
-    { name: 'space', type: 'relationship', relationTo: 'spaces', required: true, index: true, access: { update: () => false } },
-    { name: 'post', type: 'relationship', relationTo: 'space-posts', required: true, index: true, access: { update: () => false } },
+    {
+      name: 'space',
+      type: 'relationship',
+      relationTo: 'spaces',
+      required: true,
+      index: true,
+      access: { update: () => false },
+    },
+    {
+      name: 'post',
+      type: 'relationship',
+      relationTo: 'space-posts',
+      required: true,
+      index: true,
+      access: { update: () => false },
+    },
     { name: 'parent', type: 'relationship', relationTo: 'space-comments' },
-    { name: 'author', type: 'relationship', relationTo: 'people', index: true, access: { update: () => false } },
+    {
+      name: 'author',
+      type: 'relationship',
+      relationTo: 'people',
+      index: true,
+      access: { update: () => false },
+    },
     { name: 'body', type: 'textarea', required: true },
     { name: 'edited_at', type: 'date' },
     { name: 'deleted_at', type: 'date', index: true },
@@ -1128,7 +1293,11 @@ export const INTRO = 'What question brings you here?\nما السؤال الذي
  * published course never makes a second space. The community space is the
  * seed's to create (seed/collections/spaces.seed.ts).
  */
-export const ensureSpaceForCourse: CollectionAfterChangeHook<Course> = async ({ doc, req, previousDoc }) => {
+export const ensureSpaceForCourse: CollectionAfterChangeHook<Course> = async ({
+  doc,
+  req,
+  previousDoc,
+}) => {
   if (doc._status !== 'published') return
   if (previousDoc?._status === 'published') return
   const noSpace = await req.payload.count({
@@ -1139,7 +1308,11 @@ export const ensureSpaceForCourse: CollectionAfterChangeHook<Course> = async ({ 
   if (noSpace.totalDocs === 0) await createSpace(req.payload, req, 'course', { course: doc.id })
 }
 
-export const ensureSpaceForProgramme: CollectionAfterChangeHook<Programme> = async ({ doc, req, previousDoc }) => {
+export const ensureSpaceForProgramme: CollectionAfterChangeHook<Programme> = async ({
+  doc,
+  req,
+  previousDoc,
+}) => {
   if (doc._status !== 'published') return
   if (previousDoc?._status === 'published') return
   // Only Bridge cohort spaces for now (spec: not Women's Studies or
@@ -1196,26 +1369,26 @@ The tables and the site-settings columns arrived in Task 2's `spaces_core`, so t
 In `tests/int/spaces-core.int.spec.ts`, add inside the existing describe:
 
 ```ts
-  it('a published course owns its space and its intro post', async () => {
-    const { docs } = await payload.find({
-      collection: 'spaces',
-      where: { course: { equals: (course as { id: number }).id } },
-      overrideAccess: true,
-    })
-    expect(docs.length).toBe(1)
-    track('spaces', (docs[0] as { id: number }).id)
-    const introId = (docs[0] as { introduction_post?: { id: number } | number }).introduction_post
-    expect(introId).toBeTruthy()
-    const postId = typeof introId === 'object' ? introId.id : introId!
-    track('space-posts', postId)
-    const post = await payload.findByID({
-      collection: 'space-posts',
-      id: postId,
-      overrideAccess: true,
-    })
-    expect((post as { body: string }).body).toContain('What question brings you here?')
-    expect((post as { author: unknown }).author).toBeNull()
+it('a published course owns its space and its intro post', async () => {
+  const { docs } = await payload.find({
+    collection: 'spaces',
+    where: { course: { equals: (course as { id: number }).id } },
+    overrideAccess: true,
   })
+  expect(docs.length).toBe(1)
+  track('spaces', (docs[0] as { id: number }).id)
+  const introId = (docs[0] as { introduction_post?: { id: number } | number }).introduction_post
+  expect(introId).toBeTruthy()
+  const postId = typeof introId === 'object' ? introId.id : introId!
+  track('space-posts', postId)
+  const post = await payload.findByID({
+    collection: 'space-posts',
+    id: postId,
+    overrideAccess: true,
+  })
+  expect((post as { body: string }).body).toContain('What question brings you here?')
+  expect((post as { author: unknown }).author).toBeNull()
+})
 ```
 
 Run:
@@ -1247,6 +1420,7 @@ Co-Authored-By: GLM 5.3 Flash <noreply@opencode.ai>"
 # Task 5 — Private files (ADR 0008)
 
 **Files:**
+
 - Create: `src/collections/SpaceFiles.ts`
 - Modify: `src/payload.config.ts`
 - Test: covered by the write spec in Task 8 (counts) and by space access here
@@ -1283,7 +1457,9 @@ export const SpaceFiles: CollectionConfig = {
   },
   admin: { hidden: true },
   upload: {
-    mimeTypes: Object.values(FILE_KINDS as Record<string, { mime: string[] }>).flatMap((k) => [...k.mime]),
+    mimeTypes: Object.values(FILE_KINDS as Record<string, { mime: string[] }>).flatMap((k) => [
+      ...k.mime,
+    ]),
     filesRequiredOnCreate: true,
   },
   hooks: {
@@ -1347,6 +1523,7 @@ Co-Authored-By: GLM 5.3 Flash <noreply@opencode.ai>"
 # Task 6 — Reactions collection
 
 **Files:**
+
 - Create: `src/collections/SpaceReactions.ts`
 - Modify: `src/payload.config.ts`
 - Test: extend `tests/int/spaces-core.int.spec.ts`
@@ -1392,7 +1569,14 @@ export const SpaceReactions: CollectionConfig = {
   admin: { hidden: true },
   fields: [
     { name: 'space', type: 'relationship', relationTo: 'spaces', required: true, index: true },
-    { name: 'account', type: 'relationship', relationTo: 'users', required: true, index: true, access: { update: () => false } },
+    {
+      name: 'account',
+      type: 'relationship',
+      relationTo: 'users',
+      required: true,
+      index: true,
+      access: { update: () => false },
+    },
     { name: 'post', type: 'relationship', relationTo: 'space-posts', index: true },
     { name: 'comment', type: 'relationship', relationTo: 'space-comments', index: true },
     { name: 'reaction', type: 'select', required: true, options: REACTIONS },
@@ -1407,7 +1591,10 @@ export const SpaceReactions: CollectionConfig = {
     beforeChange: [
       ({ data, operation }) => {
         if (operation !== 'create') return data
-        const targets = [(data as { post?: unknown })?.post, (data as { comment?: unknown })?.comment].filter(Boolean)
+        const targets = [
+          (data as { post?: unknown })?.post,
+          (data as { comment?: unknown })?.comment,
+        ].filter(Boolean)
         if (targets.length !== 1) throw new Error('space-reactions: exactly one of post or comment')
         return data
       },
@@ -1421,15 +1608,23 @@ Import `type { Where }` from `payload` alongside `CollectionConfig`. (Personal d
 - [ ] **Step 2: Extend the int spec with the uniqueness proof**
 
 ```ts
-  it('one reaction per account, target and kind, twice rejected', async () => {
-    const row = async () =>
-      payload.create({
+it('one reaction per account, target and kind, twice rejected', async () => {
+  const row = async () =>
+    payload
+      .create({
         collection: 'space-reactions',
-        data: { space: community.id, account: (student as { id: number }).id, post: null, comment: null, reaction: 'agree' } as never,
+        data: {
+          space: community.id,
+          account: (student as { id: number }).id,
+          post: null,
+          comment: null,
+          reaction: 'agree',
+        } as never,
         overrideAccess: true,
-      }).catch(() => null)
-    void row
-  })
+      })
+      .catch(() => null)
+  void row
+})
 ```
 
 That sketch is not testable without a real target. Replace this step with: **defer the uniqueness int test to Task 8** (the write actions exercise it), and here only verify the collection loads. Do not ship the sketch.
@@ -1453,6 +1648,7 @@ Co-Authored-By: GLM 5.3 Flash <noreply@opencode.ai>"
 # Task 7 — Consent, visits and preferences
 
 **Files:**
+
 - Create: `src/collections/SpaceConsents.ts`, `src/collections/SpaceVisits.ts`, `src/collections/SpacePreferences.ts`, `src/lib/space-consent.ts`
 - Modify: `src/payload.config.ts`
 - Test: extend `tests/int/spaces-core.int.spec.ts`
@@ -1499,14 +1695,24 @@ export const SpaceConsents: CollectionConfig = {
   slug: 'space-consents',
   labels: { singular: 'Consent', plural: 'Consents' },
   access: {
-    read: ({ req }) => (isAdminUser(req.user) ? true : { account: { equals: (req.user as { id?: number })?.id ?? null } }),
+    read: ({ req }) =>
+      isAdminUser(req.user)
+        ? true
+        : { account: { equals: (req.user as { id?: number })?.id ?? null } },
     create: () => false, // the action writes it with overrideAccess
     update: () => false,
     delete: () => isAdminUser(req.user),
   },
   admin: { hidden: true },
   fields: [
-    { name: 'account', type: 'relationship', relationTo: 'users', required: true, index: true, access: { update: () => false } },
+    {
+      name: 'account',
+      type: 'relationship',
+      relationTo: 'users',
+      required: true,
+      index: true,
+      access: { update: () => false },
+    },
     { name: 'version', type: 'number', required: true },
     { name: 'accepted_at', type: 'date', required: true },
   ],
@@ -1533,14 +1739,29 @@ export const SpaceVisits: CollectionConfig = {
     read: ({ req }) => ({ account: { equals: (req.user as { id?: number })?.id ?? null } }),
     // Query constraints on create and a Where on update: no member touches
     // another member's visit row (the REST surface matches the intent).
-    create: ({ req }) => (req.user ? { account: { equals: (req.user as { id: number }).id } } : false),
+    create: ({ req }) =>
+      req.user ? { account: { equals: (req.user as { id: number }).id } } : false,
     update: ({ req }) => ({ account: { equals: (req.user as { id: number }).id } }),
     delete: () => false, // retention handled with the purge in step 3
   },
   admin: { hidden: true },
   fields: [
-    { name: 'account', type: 'relationship', relationTo: 'users', required: true, index: true, access: { update: () => false } },
-    { name: 'space', type: 'relationship', relationTo: 'spaces', required: true, index: true, access: { update: () => false } },
+    {
+      name: 'account',
+      type: 'relationship',
+      relationTo: 'users',
+      required: true,
+      index: true,
+      access: { update: () => false },
+    },
+    {
+      name: 'space',
+      type: 'relationship',
+      relationTo: 'spaces',
+      required: true,
+      index: true,
+      access: { update: () => false },
+    },
     { name: 'last_visited_at', type: 'date', required: true },
     { name: 'saw_privacy', type: 'checkbox', defaultValue: false },
     { name: 'introduced', type: 'checkbox', defaultValue: false },
@@ -1566,13 +1787,21 @@ export const SpacePreferences: CollectionConfig = {
   labels: { singular: 'Preference', plural: 'Preferences' },
   access: {
     read: ({ req }) => ({ account: { equals: (req.user as { id?: number })?.id ?? null } }),
-    create: ({ req }) => (req.user ? { account: { equals: (req.user as { id: number }).id } } : false),
+    create: ({ req }) =>
+      req.user ? { account: { equals: (req.user as { id: number }).id } } : false,
     update: ({ req }) => ({ account: { equals: (req.user as { id: number }).id } }),
     delete: () => false,
   },
   admin: { hidden: true },
   fields: [
-    { name: 'account', type: 'relationship', relationTo: 'users', required: true, index: true, access: { update: () => false } },
+    {
+      name: 'account',
+      type: 'relationship',
+      relationTo: 'users',
+      required: true,
+      index: true,
+      access: { update: () => false },
+    },
     {
       name: 'digest',
       label: 'Email digest',
@@ -1593,12 +1822,18 @@ export const SpacePreferences: CollectionConfig = {
 - [ ] **Step 3: Extend the int spec**
 
 ```ts
-  it('consent is per account and version, unique', async () => {
-    const data = { account: (student as { id: number }).id, version: 1, accepted_at: new Date().toISOString() } as never
-    const made = await payload.create({ collection: 'space-consents', data, overrideAccess: true })
-    track('space-consents', made.id)
-    await expect(payload.create({ collection: 'space-consents', data, overrideAccess: true })).rejects.toThrow()
-  })
+it('consent is per account and version, unique', async () => {
+  const data = {
+    account: (student as { id: number }).id,
+    version: 1,
+    accepted_at: new Date().toISOString(),
+  } as never
+  const made = await payload.create({ collection: 'space-consents', data, overrideAccess: true })
+  track('space-consents', made.id)
+  await expect(
+    payload.create({ collection: 'space-consents', data, overrideAccess: true }),
+  ).rejects.toThrow()
+})
 ```
 
 - [ ] **Step 4: Migration checkpoint, generate types, verify, commit**
@@ -1629,6 +1864,7 @@ Co-Authored-By: GLM 5.3 Flash <noreply@opencode.ai>"
 Every member write passes one function; the actions only carry FormData. TDD: the int spec drives.
 
 **Files:**
+
 - Create: `src/lib/spaces-write.ts`, `src/lib/space-members.ts`, `src/app/(frontend)/[locale]/spaces/actions.ts`
 - Test: `tests/int/spaces-write.int.spec.ts`, `tests/unit/space-write.unit.spec.ts`
 
@@ -1686,10 +1922,7 @@ Create `tests/int/spaces-write.int.spec.ts`. Reuse the fixture shape of `spaces-
 import type { Payload } from 'payload'
 
 /** The person who may be mentioned in one space: its members (spec §5). */
-export const mentionSafelist = async (
-  payload: Payload,
-  spaceId: number,
-): Promise<Set<number>> => {
+export const mentionSafelist = async (payload: Payload, spaceId: number): Promise<Set<number>> => {
   void payload
   void spaceId
   throw new Error('implemented with spaces.ts below (Step 3)')
@@ -1747,7 +1980,12 @@ Bodies follow the pattern below (shown for `postCreate`; the executor mirrors it
 const gate = async (payload: Payload, user: NonNullable<User>, spaceId: number) => {
   const settings = await spacesSettings(payload)
   if (mode(settings) === 'off') return { stop: true, error: 'mode', space: null as never }
-  const space = (await payload.findByID({ collection: 'spaces', id: spaceId, depth: 0, overrideAccess: true })) as SpaceLike | null
+  const space = (await payload.findByID({
+    collection: 'spaces',
+    id: spaceId,
+    depth: 0,
+    overrideAccess: true,
+  })) as SpaceLike | null
   if (!space) return { stop: true, error: 'space', space: null as never }
   if (!spaceOpenOn(space, settings)) return { stop: true, error: 'mode', space: space as SpaceLike }
   return { stop: false, space: space as SpaceLike, settings }
@@ -1778,7 +2016,15 @@ Consent helper at the bottom of `spaces-write.ts`:
 ```ts
 const consentOf = async (payload: Payload, user: NonNullable<User>) => {
   const { NOTICE_VERSION } = await import('@/lib/space-consent')
-  return (await payload.count({ collection: 'space-consents', where: { and: [{ account: { equals: user.id } }, { version: { equals: NOTICE_VERSION } }] }, overrideAccess: true })).totalDocs > 0
+  return (
+    (
+      await payload.count({
+        collection: 'space-consents',
+        where: { and: [{ account: { equals: user.id } }, { version: { equals: NOTICE_VERSION } }] },
+        overrideAccess: true,
+      })
+    ).totalDocs > 0
+  )
 }
 ```
 
@@ -1801,7 +2047,7 @@ Measured reconcile (2026-10-23, space-feature branch), read before the listing a
   posting-level check alone says `posting-level`, which names the wrong door
   to the UI); the lifecycle read-only check and membership precede it in the
   fixed rule order.
-- An announcement is pinned by the *action's* create data. The collection
+- An announcement is pinned by the _action's_ create data. The collection
   `beforeChange` hook's `data` mutation does not reach the row through the
   Local API, so the pairing is: action sets `pinned`, hook stays as the
   admin/REST path's backstop.
@@ -1860,6 +2106,7 @@ Co-Authored-By: GLM 5.3 Flash <noreply@opencode.ai>"
 # Task 9 — Rendering: Markdown bodies and mention chips
 
 **Files:**
+
 - Create: `src/components/space/post-body.tsx`
 - Test: `tests/unit/post-body.unit.spec.tsx`
 
@@ -1933,7 +2180,24 @@ import remarkGfm from 'remark-gfm'
  * tab; raw HTML never renders (react-markdown default). Every block sits
  * with dir="auto".
  */
-const ALLOWED = ['p', 'h1', 'h2', 'h3', 'ul', 'ol', 'li', 'blockquote', 'pre', 'code', 'hr', 'strong', 'em', 'del', 'a', 'br'] as const
+const ALLOWED = [
+  'p',
+  'h1',
+  'h2',
+  'h3',
+  'ul',
+  'ol',
+  'li',
+  'blockquote',
+  'pre',
+  'code',
+  'hr',
+  'strong',
+  'em',
+  'del',
+  'a',
+  'br',
+] as const
 
 export type PostBodyProps = {
   body: string
@@ -1965,10 +2229,18 @@ export const PostBody = ({ body, people = {}, peopleLinks = {} }: PostBodyProps)
           if (href?.startsWith('/people/')) {
             const id = Number(href.split('/').pop())
             const to = peopleLinks[id] ?? null
-            const chip = <span className="mention-chip" dir="auto">@{people[id] ?? text.replace(/^@/, '')}</span>
+            const chip = (
+              <span className="mention-chip" dir="auto">
+                @{people[id] ?? text.replace(/^@/, '')}
+              </span>
+            )
             return to ? <a href={to}>{chip}</a> : chip
           }
-          return <a href={href} target="_blank" rel="noreferrer">{children}</a>
+          return (
+            <a href={href} target="_blank" rel="noreferrer">
+              {children}
+            </a>
+          )
         },
       }}
     >
@@ -2000,6 +2272,7 @@ Co-Authored-By: GLM 5.3 Flash <noreply@opencode.ai>"
 # Task 10 — Arc copies: `reactions` and `page-header`
 
 **Files:**
+
 - Create: `src/components/arc/reactions/{reactions.tsx,reactions.module.css}`, `src/components/arc/page-header/{page-header.tsx,page-header.module.css}`
 - Test: manual (component concerns; visuals checked by the pilot)
 
@@ -2034,7 +2307,14 @@ export type ReactionsProps = {
  * Thank you = heart, Insightful = lightbulb, Same question = hand), counts
  * and names, no points and no "seen by" (spec §4). Hover shows names.
  */
-export function Reactions({ counts, names = {}, mine = [], labels, onToggle, busy = false }: ReactionsProps) {
+export function Reactions({
+  counts,
+  names = {},
+  mine = [],
+  labels,
+  onToggle,
+  busy = false,
+}: ReactionsProps) {
   const [hovering, setHovering] = useState<ReactionKind | null>(null)
   return (
     <div className={WRAPPER.className} data-busy={busy}>
@@ -2052,16 +2332,28 @@ export function Reactions({ counts, names = {}, mine = [], labels, onToggle, bus
           <span aria-hidden>{ICON[k]}</span>
           <span className="count">{countOf(counts, k)}</span>
           <span className="sr-only">{labels[k]}</span>
-          {hovering === k && (names[k]?.length ?? 0) > 0 && ( <span role="tooltip" className={NAMES.className}>{names[k]!.join(', ')}</span> )}
+          {hovering === k && (names[k]?.length ?? 0) > 0 && (
+            <span role="tooltip" className={NAMES.className}>
+              {names[k]!.join(', ')}
+            </span>
+          )}
         </button>
       ))}
     </div>
   )
 }
 
-const countOf = (counts: ReactionCounts, k: ReactionKind) => { const n = counts[k]; return Number(n ?? 0) }
+const countOf = (counts: ReactionCounts, k: ReactionKind) => {
+  const n = counts[k]
+  return Number(n ?? 0)
+}
 
-const ICON: Record<ReactionKind, string> = { agree: '👍', thank_you: '❤️', insightful: '💡', same_question: '✋' }
+const ICON: Record<ReactionKind, string> = {
+  agree: '👍',
+  thank_you: '❤️',
+  insightful: '💡',
+  same_question: '✋',
+}
 ```
 
 Use CSS modules like other Arc copies (import `styles from './reactions.module.css'` and replace the placeholder `CLASS` members — `WRAPPER`/`CHIP`/`NAMES` — with `styles.wrapper`, `styles.chip`, `styles.names`). Give the module real styles: `chip` as pill (border, rounded-full, text-xs, gap-1), `data-on` fills the accent, `names` an absolutely-positioned card. Icons may be the glyph text above or the lucide set the other copies use — match the closest existing copy (`avatar` or `chip-group`).
@@ -2130,6 +2422,7 @@ Co-Authored-By: GLM 5.3 Flash <noreply@opencode.ai>"
 # Task 11 — The editor's @ trigger and comments with reactions
 
 **Files:**
+
 - Modify: `src/components/arc/rich-text-editor/rich-text-editor.tsx` (the seam is the existing `slash` machinery, lines ~1147–1950)
 - Modify: usage-level only, the composer's comment thread (Task 14 wires it)
 - Test: `tests/unit/mention-trigger.unit.spec.ts`
@@ -2197,6 +2490,7 @@ Co-Authored-By: GLM 5.3 Flash <noreply@opencode.ai>"
 Pure Payload reads driving every page. Headless, so the int spec exercises them.
 
 **Files:**
+
 - Create: `src/lib/spaces-data.ts`
 - Test: extend `tests/int/spaces-core.int.spec.ts`
 
@@ -2267,6 +2561,7 @@ Co-Authored-By: GLM 5.3 Flash <noreply@opencode.ai>"
 # Task 13 — Pages: guard, "My spaces", the space page
 
 **Files:**
+
 - Create: `src/app/(frontend)/[locale]/spaces/layout.tsx`, `page.tsx`, `[kind]/[slug]/page.tsx`, `community/page.tsx` (spec §2's `/{locale}/spaces/community` — one segment, no slug; a one-line render of the same `SpacePage` component), `src/components/space/{feed-row.tsx,comment-body.tsx,composer.tsx,space-page.tsx,onboarding-checklist.tsx,consent-sheet.tsx,live-refresh.tsx,participation-summary.tsx}`
 - Modify: messages files
 - API: `src/app/(frontend)/[locale]/spaces/actions.ts` already holds `consentAccept`, `visitRecord`, `stepMark`, `preferenceSet`, `spaceSettingsSet` (Task 8)
@@ -2288,7 +2583,9 @@ export default async function SpacesLayout({ children, params }: Props) {
   const { locale } = await params
   const user = await currentReader()
   if (!user) redirect(`/${locale}/login?next=${encodeURIComponent(`/${locale}/spaces`)}`)
-  const settings = await spacesSettings(await getPayload({ config: (await import('@payload-config')).default }))
+  const settings = await spacesSettings(
+    await getPayload({ config: (await import('@payload-config')).default }),
+  )
   if (mode(settings) === 'off') notFound()
   return (
     <main className="prose-layout" data-page="spaces">
@@ -2311,10 +2608,10 @@ RSC page over `mySpaces()`. Each summary row: title (course/course title, cohort
 1. `spaceLanding()` → not found page when null.
 2. Membership via `membership()`; `none` → the same not-found page (never "who belongs"; spec §9).
 3. `spaceFeed()`; read-only from the feed package (`archived`).
-`[kind]/[slug]/page.tsx` and `community/page.tsx` render ONE `SpacePage` (`src/components/space/space-page.tsx`) — the route files differ only in reading two params vs resolving the community row (`kind: 'community'`).
+   `[kind]/[slug]/page.tsx` and `community/page.tsx` render ONE `SpacePage` (`src/components/space/space-page.tsx`) — the route files differ only in reading two params vs resolving the community row (`kind: 'community'`).
 4. Header: `<PageHeader>` from Task 10, breadcrumb (My spaces → space), status badge (Open / Read-only archive), member avatars via Task 8's `spaceRoster` (names and photos, in-space display only; small N), course progress for course spaces (from the schedule util the CourseView uses — grep it), tabs (All / Announcements / with counts; Questions appears in step 2), actions: New post, and posting-level/reopen Settings for moderators wired to `spaceSettingsSet`.
 5. `<OnboardingChecklist>` when steps are unfinished (`src/components/space/onboarding-checklist.tsx`, created in this task's Files list — no Arc copy exists for it): five marks, each opens the right surface — privacy (consent-sheet), introduce (opens the intro post composing), pinned (scrolls to it), profile (link to `/{locale}/profile`), digest (opens the digest selection inline). Writing marks goes through the checklist action; hidden at members' will; never gates the space (spec §2).
-6. `<ConsentSheet>` when no consent for the current version (spec §9): blocks the *composing only* until accepted; reading proceeds. The acceptance action is Task 8's `consentAccept`.
+6. `<ConsentSheet>` when no consent for the current version (spec §9): blocks the _composing only_ until accepted; reading proceeds. The acceptance action is Task 8's `consentAccept`.
 7. Feed: pinned announcements first (the intro post previews pinned-text first), then `last_activity_at` desc. `FeedRow` uses `PostBody`, reactions, comment count, file badges; per row, an onClick target for the post page route. Freshness (spec §Updates: the page checks for new posts every 30 seconds while open): `src/components/space/live-refresh.tsx`, a client component on the page calling `router.refresh()` every 30 s while `document.visibilityState === 'visible'`; the space and post pages both mount it.
 8. `<ParticipationSummary>` for moderators only (spec §13: members never see others' numbers): `sortable-data-table` with Posts/Comments/Reactions/LastVisit columns.
 9. `<Composer>` (client, Arc rich-text-editor + file-dropzone): the only way to write; disabled under read-only; the announcement kind available to moderators only; files convert files like Task 8's action.
@@ -2403,6 +2700,7 @@ Co-Authored-By: GLM 5.3 Flash <noreply@opencode.ai>"
 # Task 14 — The post page, comments thread, reactions wiring
 
 **Files:**
+
 - Create: `src/app/(frontend)/[locale]/spaces/[kind]/[slug]/posts/[id]/page.tsx`, `src/app/(frontend)/[locale]/spaces/community/posts/[id]/page.tsx` (the community post route — `postLink` yields it; the file renders the same view, resolving the community space by kind), `src/components/space/{comment-thread-space.tsx,delete-hold.tsx}` — and `comment-body.tsx` (Task 13's mentions-only renderer) travels with the post page where the thread mounts.
 - Modify: `src/lib/spaces-data.ts` (adds `postView`), `messages/{en,ar}.json`
 
@@ -2450,6 +2748,7 @@ Co-Authored-By: GLM 5.3 Flash <noreply@opencode.ai>"
 # Task 15 — Entry points: header, course link, notification labels
 
 **Files:**
+
 - Modify: `src/components/site-header.tsx`, `src/components/site-notifications.tsx`, `src/app/(frontend)/[locale]/study/[slug]/CourseView.tsx`, `messages/{en,ar}.json`
 
 - [ ] **Step 1: The Spaces link with its dot (spec §2)**
@@ -2477,6 +2776,7 @@ for members; the notification center knows the new tones (spec §2, 8).
 
 Co-Authored-By: GLM 5.3 Flash <noreply@opencode.ai>"
 ```
+
 - [ ] **Step 5: Sign-in lands right (spec §2)**
 
 `src/app/(frontend)/[locale]/login/page.tsx` defaults every sign-in to `/admin` today (`safeNext(query.next ?? '/admin')`). Spec §2: no `next` param → members go to **My spaces**, admins keep `/admin` (with an explicit `next`, both keep it). One default change + a re-test of the redirect chain (the layout guard already sends the `next` back).
@@ -2486,6 +2786,7 @@ Co-Authored-By: GLM 5.3 Flash <noreply@opencode.ai>"
 # Task 16 — The seed: the community space
 
 **Files:**
+
 - Create: `seed/collections/spaces.seed.ts`
 - Modify: `seed/index.ts`, `seed/seed.type.ts`, `seed/seed.utils.ts`
 - Test: covered by the int suite (the community space appears)
@@ -2571,4 +2872,3 @@ Co-Authored-By: GLM 5.3 Flash <noreply@opencode.ai>"
 - **Step 2 (Learning):** question kind UI, highlights, reply-first, intro-post prompt as default (editable by moderators — arrived already), anonymity on questions, search (`pg_trgm`).
 - **Step 3 (Care and reach):** hide, mute, reports in Admin → Reviews, thread delete by moderators, 30-day purge job, moderators' edit-history UI, the announcement email (Task 4's `announcement_email_sent` waits for it), email digests at 08:00 Cairo, data download and delete, the pulse questionnaire and its report (loads the dataviz skill), moderation/report notification tones in the bell UI.
 - **Later:** weekly prompts, session threads, polls, summary posts, thread-to-article, cross-space search, web push, Women's Studies and Residency cohort spaces.
-

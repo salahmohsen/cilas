@@ -43,7 +43,11 @@ describe('people page schema', () => {
   })
 
   it('builds a prompt holding the file name and the page text', () => {
-    const prompt = peoplePrompt({ file: 'cilasians-2015-2016.html', title: 'CILASians', text: 'Eman Maarek' })
+    const prompt = peoplePrompt({
+      file: 'cilasians-2015-2016.html',
+      title: 'CILASians',
+      text: 'Eman Maarek',
+    })
     expect(prompt).toContain('cilasians-2015-2016.html')
     expect(prompt).toContain('Eman Maarek')
     expect(PEOPLE_PROMPT_VERSION).toMatch(/^\d+$/)

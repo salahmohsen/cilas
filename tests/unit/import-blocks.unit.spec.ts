@@ -87,11 +87,19 @@ describe('blocksToLexical', () => {
       ['b', 1],
       [' c', 0],
     ])
-    expect(kids('ten weeks** **with two')).toMatchObject([{ text: 'ten weeks' }, { text: ' ', format: 0 }, { text: 'with two' }])
+    expect(kids('ten weeks** **with two')).toMatchObject([
+      { text: 'ten weeks' },
+      { text: ' ', format: 0 },
+      { text: 'with two' },
+    ])
     expect(kids('**[apply](https://x.org)**')).toMatchObject([
       { type: 'link', children: [{ text: 'apply', format: 1 }] },
     ])
-    expect(kids('one ** unpaired').map((c) => c.text).join('')).toBe('one  unpaired')
+    expect(
+      kids('one ** unpaired')
+        .map((c) => c.text)
+        .join(''),
+    ).toBe('one  unpaired')
   })
 })
 
@@ -124,8 +132,15 @@ describe('blocksToLexical quotes', () => {
       'ltr',
     )!.root
     expect(root.children).toHaveLength(1)
-    const quote = root.children[0] as unknown as { type: string; children: Array<{ type: string; text?: string }> }
+    const quote = root.children[0] as unknown as {
+      type: string
+      children: Array<{ type: string; text?: string }>
+    }
     expect(quote.type).toBe('quote')
-    expect(quote.children.map((c) => c.text ?? c.type)).toEqual(['“Said.”', 'linebreak', '— Someone'])
+    expect(quote.children.map((c) => c.text ?? c.type)).toEqual([
+      '“Said.”',
+      'linebreak',
+      '— Someone',
+    ])
   })
 })

@@ -411,7 +411,9 @@ function Body({
       ...matchTopics(text, topics.topics),
     ].sort((a, b) => a.start - b.start)
     const out: (
-      string | { person: CommentAuthor; text: string } | { topic: CommentTopic; text: string }
+      | string
+      | { person: CommentAuthor; text: string }
+      | { topic: CommentTopic; text: string }
     )[] = []
     let from = 0
     for (const hit of found) {

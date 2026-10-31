@@ -55,20 +55,20 @@ This needs `{ "registries": { "@uiarc": "https://uiarc.dev/r/{name}.json" } }` i
 
 ## Quick decisions
 
-| The user wants | Use | Not |
-| --- | --- | --- |
-| 2 to 5 views of the same data | `segmented-control` | `tabs` (tabs swap whole panels) |
-| Peer panels of one object | `tabs` | Separate routes for each panel |
-| On or off that applies now | `switch` | `checkbox` (checkbox is for forms that submit) |
-| One of a few visible options | `radio-group`, or `radio-cards` with descriptions | `select` for fewer than 5 options |
-| Long option list | `select`, `combobox` to search | `radio-group` |
-| A decision that must interrupt | `dialog` | `drawer` |
-| A long form or record detail beside the page | `drawer` | `dialog` |
-| A task on phones | `bottom-sheet` | `dialog` for mobile-first tasks |
-| Destructive action | `confirm-morph`, `hold-to-confirm` for irreversible | A modal for every delete |
-| Records to compare | `sortable-data-table` | Hand-built tables |
-| KPI row | `metric-card` | Hand-built cards |
-| Result of a save | The button or row confirms in place | `toast` (background work only) |
+| The user wants                               | Use                                                 | Not                                            |
+| -------------------------------------------- | --------------------------------------------------- | ---------------------------------------------- |
+| 2 to 5 views of the same data                | `segmented-control`                                 | `tabs` (tabs swap whole panels)                |
+| Peer panels of one object                    | `tabs`                                              | Separate routes for each panel                 |
+| On or off that applies now                   | `switch`                                            | `checkbox` (checkbox is for forms that submit) |
+| One of a few visible options                 | `radio-group`, or `radio-cards` with descriptions   | `select` for fewer than 5 options              |
+| Long option list                             | `select`, `combobox` to search                      | `radio-group`                                  |
+| A decision that must interrupt               | `dialog`                                            | `drawer`                                       |
+| A long form or record detail beside the page | `drawer`                                            | `dialog`                                       |
+| A task on phones                             | `bottom-sheet`                                      | `dialog` for mobile-first tasks                |
+| Destructive action                           | `confirm-morph`, `hold-to-confirm` for irreversible | A modal for every delete                       |
+| Records to compare                           | `sortable-data-table`                               | Hand-built tables                              |
+| KPI row                                      | `metric-card`                                       | Hand-built cards                               |
+| Result of a save                             | The button or row confirms in place                 | `toast` (background work only)                 |
 
 The full catalog by job, with free and Pro ids, is in components.md.
 
@@ -76,20 +76,20 @@ The full catalog by job, with free and Pro ids, is in components.md.
 
 Read only the file the task needs. Each is one level from here.
 
-| File | Read it when |
-| --- | --- |
-| [components.md](components.md) | Choosing an item: every live id by job, overlays, inputs, data, marketing blocks |
-| [composition.md](composition.md) | Laying out a page: containers, dashboards, marketing sections, states, React correctness |
-| [design.md](design.md) | Tokens for color, type, surfaces, radii, spacing, icons, metallic and brand treatments |
-| [copy.md](copy.md) | Writing any visible text: headings, buttons, errors, empty states, claims |
-| [motion.md](motion.md) | Adding or reviewing animation |
-| [accessibility.md](accessibility.md) | Semantics, keyboard, names, announcements |
-| [responsive.md](responsive.md) | Widths, touch targets, overflow, tables on phones |
-| [checklist.md](checklist.md) | Before you finish. Always |
-| [example-settings.md](example-settings.md) | Worked example: account settings page |
-| [example-pricing.md](example-pricing.md) | Worked example: pricing section with plans, comparison, and FAQ |
-| [example-dashboard.md](example-dashboard.md) | Worked example: analytics overview with KPIs, chart, and table |
-| [INSTRUCTIONS.md](INSTRUCTIONS.md) | Short always-on rules for AGENTS.md, CLAUDE.md, or Cursor rules |
+| File                                         | Read it when                                                                             |
+| -------------------------------------------- | ---------------------------------------------------------------------------------------- |
+| [components.md](components.md)               | Choosing an item: every live id by job, overlays, inputs, data, marketing blocks         |
+| [composition.md](composition.md)             | Laying out a page: containers, dashboards, marketing sections, states, React correctness |
+| [design.md](design.md)                       | Tokens for color, type, surfaces, radii, spacing, icons, metallic and brand treatments   |
+| [copy.md](copy.md)                           | Writing any visible text: headings, buttons, errors, empty states, claims                |
+| [motion.md](motion.md)                       | Adding or reviewing animation                                                            |
+| [accessibility.md](accessibility.md)         | Semantics, keyboard, names, announcements                                                |
+| [responsive.md](responsive.md)               | Widths, touch targets, overflow, tables on phones                                        |
+| [checklist.md](checklist.md)                 | Before you finish. Always                                                                |
+| [example-settings.md](example-settings.md)   | Worked example: account settings page                                                    |
+| [example-pricing.md](example-pricing.md)     | Worked example: pricing section with plans, comparison, and FAQ                          |
+| [example-dashboard.md](example-dashboard.md) | Worked example: analytics overview with KPIs, chart, and table                           |
+| [INSTRUCTIONS.md](INSTRUCTIONS.md)           | Short always-on rules for AGENTS.md, CLAUDE.md, or Cursor rules                          |
 
 Over MCP, `get_skill` returns any of these by file name without `.md` (`get_skill { "id": "checklist" }`). Raw copies: `https://uiarc.dev/r/skills/arc/<file>`.
 

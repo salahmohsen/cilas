@@ -3,6 +3,7 @@
 Turns the old Weebly site into CILAS content (docs/schema.md, Archive import; ADR 0004).
 
 Raw files live in `raw/`, which git and Docker ignore:
+
 - `raw/weebly-zip-2025-04-23/`: the site export, the primary source.
 - `raw/mirror/`: pages and uploads the ZIP lacks, fetched from the live mirror (cilas.lkssystems.com) by `fetch-mirror.ts`. A page the ZIP has is never refetched.
 
@@ -20,16 +21,19 @@ Reviewed content is protected: `pnpm db:seed` refuses to reset while any documen
 ## Cycles and courses (plan 6.2)
 
 Extraction runs page by page through Claude Code agents on a Claude subscription (no API key):
+
 - `npx tsx migration/extract-courses.ts migration/raw --pending` lists pages that are new or changed.
 - `--prompt <file>` prints a page's prompt. An agent answers it, then `--record <file> <answer.json>` checks the answer against the schema and saves it to `extracted/`.
 - After a prompt change that only matters for bilingual pages, `--restamp-monolingual` re-certifies the single-language ones.
 - With an `ANTHROPIC_API_KEY`, `--api` does the whole run itself instead.
 
 Then:
+
 1. `npx tsx migration/normalise-courses.ts` writes `../seed/data/archive/{cycles,courses}.json`, plus `review/courses.md` listing every guess or gap.
 2. `npx tsx --env-file=.env migration/seed-courses.ts` upserts them as drafts marked "needs review". Running it again is safe, and reviewed documents are never overwritten.
 
 Rules worth knowing:
+
 - Winter cycles count by their January year.
 - Cairo cycles whose page names no venue are placed by date: al-Ghuria up to 2016–17, Darb el-Labbana after.
 - Name variants of one person go in `aliases.json`.
@@ -64,14 +68,14 @@ Tools: `brew install poppler tesseract-lang` (pdftotext, pdftoppm, pdfinfo, Tess
 
 ## Publishing content (plan 6.5)
 
-Sources: the two *Pigeon Towers* books (English and Arabic), the *Translation as Education* booklet (Arabic), the newsletter PDF, and the press, news, blog, publication and newsletter pages.
+Sources: the two _Pigeon Towers_ books (English and Arabic), the _Translation as Education_ booklet (Arabic), the newsletter PDF, and the press, news, blog, publication and newsletter pages.
 
 1. `npx tsx migration/prepare-docs.ts migration/raw` writes each document's pages to `raw/docs/<id>/`: `page-N.txt`, plus `page-N.png` and Tesseract `page-N.ocr.txt` for the Arabic ones. The document list goes to `docs.json`.
 2. `npx tsx migration/extract-content.ts migration/raw --pending | --prompt <unit> | --record <unit> <answer.json>`. The units are extracted in two passes, by agents on the subscription:
    - **Pass 1:** `toc:<doc>` gives each document's essays with their PDF page ranges, and its imprint. Check the ranges against the page images: printed page numbers are offset from PDF pages.
    - **Pass 2:** `essay:<doc>:<order>` units, available once their toc is recorded, plus `page:<file>` and `doc:newsletter-1`.
    - Arabic essays are read from the page images. A cheap model's first pass misreads Arabic words, so every Arabic essay is proofread against its images by a stronger model before it is committed.
-2b. Notes become footnotes where the source marks them. `migration/extracted/content/notes__<unit>.json` holds, for each note, its block and the offset its marker follows; record one with `npx tsx migration/record-note-anchors.ts <unit> <answer.json>`, which checks each anchor's words occur exactly once in their block.
+     2b. Notes become footnotes where the source marks them. `migration/extracted/content/notes__<unit>.json` holds, for each note, its block and the offset its marker follows; record one with `npx tsx migration/record-note-anchors.ts <unit> <answer.json>`, which checks each anchor's words occur exactly once in their block.
    - **English Pigeon Towers:** `python3 -I migration/tools/anchor-english-notes.py <repo> <outdir>` reads the superscripts' positions from the PDF (they are separate, smaller words) and writes the answers.
    - **Arabic essays:** their text layers are unusable, so an agent reads the page images and lists, per note, the block and the exact words before its marker.
    - An unnumbered note right after a numbered one continues it.

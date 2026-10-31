@@ -15,17 +15,29 @@ const syllabus = (hrefs: string[], bibHrefs: string[] = []): Syllabus => ({
       activities: [],
     },
   ],
-  bibliography: bibHrefs.map((href) => ({ type: 'reading' as const, title: 't', note: null, href })),
+  bibliography: bibHrefs.map((href) => ({
+    type: 'reading' as const,
+    title: 't',
+    note: null,
+    href,
+  })),
   notes: null,
 })
 
 describe('missingLinks', () => {
   it('ignores trailing slashes and http/https', () => {
-    expect(missingLinks(['https://a.org/x/', 'http://b.org'], syllabus(['http://a.org/x', 'https://b.org/']))).toEqual([])
+    expect(
+      missingLinks(
+        ['https://a.org/x/', 'http://b.org'],
+        syllabus(['http://a.org/x', 'https://b.org/']),
+      ),
+    ).toEqual([])
   })
 
   it('reports the link that is absent', () => {
-    expect(missingLinks(['https://a.org/x', 'https://c.org'], syllabus(['https://a.org/x/']))).toEqual(['https://c.org'])
+    expect(
+      missingLinks(['https://a.org/x', 'https://c.org'], syllabus(['https://a.org/x/'])),
+    ).toEqual(['https://c.org'])
   })
 
   it('counts course-level bibliography links', () => {

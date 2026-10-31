@@ -3,6 +3,7 @@
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
 **Goal:** Ship the publishing half of the target schema:
+
 - `partners`
 - shared `credits[]`
 - the article review flow, with email notifications
@@ -14,6 +15,7 @@
 It also closes plan 3's draft-leak follow-up.
 
 **Architecture:**
+
 - **Review rules:** the article review state machine is a pure function in `src/lib/review.ts`. A `beforeChange` hook applies it, which makes approval the only way an article is published. An `afterChange` hook emails the admins or the authors.
 - **Authors:** authors are people. An account owns an article when its person is among the authors.
 - **Events:** events reuse plan 2's schedule, registration and pricing.
@@ -42,6 +44,7 @@ It also closes plan 3's draft-leak follow-up.
 These fill gaps the spec leaves open. Where the grilling session (Q10, Q11, Q17–Q19) already decided something, this list follows it.
 
 **Review**
+
 - **Authors** may make exactly one move: from `draft` or `changes_requested` to `submitted`. Admins may make any move.
 - **Approving** sets three things at once:
   - `_status: published`
@@ -54,28 +57,33 @@ These fill gaps the spec leaves open. Where the grilling session (Q10, Q11, Q17�
 - **A duplicate starts review again.** A create always reviews from `draft`, because on create `originalDoc` is the duplicate source. Duplicating resets `review.status` to `draft`, and clears `review_note`, `published_date` and `featured`, through field `beforeDuplicate` hooks.
 
 **Article access**
+
 - **Who can write articles:** `member`, `fellow`, `non_degree_seeking` and admins. A non-admin also needs a linked person, since an article is owned through its authors.
 - **Who can delete:** the same as edit. Admins always; an author only while the review is `draft` or `changes_requested`.
 - **When an author can edit:** only while the review is `draft` or `changes_requested`. Once submitted, the article is locked to them.
 - **New articles:** a non-admin's own person is added to `authors` automatically, so they never lock themselves out.
 
 **Notification emails**
+
 - Submitted: to every admin and super admin.
 - Approved, changes requested, or rejected: to the accounts linked to the authors. The admin's note goes out only with changes requested or rejected, since it stays on the article afterwards.
 - **Server writes are silent.** Only a write by a signed-in account sends mail. A write with no user (the seed, the archive import) sends nothing, and any caller can opt out with `context: { skipReviewEmail: true }`.
 - A failed send is logged and never fails the save.
 
 **Credits and article shapes**
+
 - **Credit roles:** the union of the spec's list and the archive evidence from Q19: `author`, `editor`, `translator`, `copy_editor`, `proofreader`, `supervisor`, `coordinator`, `art_director`, `cover_designer`, `illustrator`, `photographer`, `other`. An optional localized `label` names an odd role exactly ("Translation & editing").
 - **Article `translation` group:** `original_language`, `original_title`, `original_authors` (→ people), `original_url`, `original_source` (a citation), and `note` ("translated in 2018, not published before"). The translator goes in `credits[]` with the `translator` role.
 - **`author` → `authors`:** it is renamed and now points at people. The virtual "Article Collection" field and its `afterRead` lookup are replaced by a `publications` join.
 
 **Publications**
+
 - **`kind`:** `essay_collection`, `translation_booklet`, `research` or `other`.
 - **`license`:** `cc_by_nc_sa`, `cc_by_sa`, `cc_by` or `all_rights_reserved`. No version numbers, because the archive contradicts itself on them.
 - **`publications` replaces `article-collections` outright.** The database is disposable, so nothing is migrated.
 
 **Press**
+
 - **`kind`:** `coverage`, `interview`, `talk` or `op_ed`.
 - **`language`:** shared `LANGUAGE_OPTIONS`: `ar`, `en`, `de`, `fr`, `other`.
 - **`authors[]` rows:** each row holds a `person` or a free-text `name`, never neither.
@@ -83,10 +91,12 @@ These fill gaps the spec leaves open. Where the grilling session (Q10, Q11, Q17�
 - **Dropped:** the slug and logo. The logo belongs to the outlet partner.
 
 **Partners**
+
 - `kind` is `hasMany`, because one organisation can be both funder and co-host.
 - Programmes get `partners[]` → partners.
 
 **Events**
+
 - **`event_type`** keeps the old six types and adds `book_discussion`, `music`, `panel`, `open_day`, `residency`, `visit` and `other`.
 - **Speakers** are `{ person, role }`, with `role` as localized text ("moderator").
 - **Partners** are `{ partner, role }`, with `role` one of `sponsor`, `co_host`, `venue`, `other`.
@@ -101,32 +111,34 @@ These fill gaps the spec leaves open. Where the grilling session (Q10, Q11, Q17�
 
 ## File map
 
-| File | Change | Responsibility |
-|---|---|---|
-| `src/lib/review.ts` | create | Review states, `canMove`, `reviewPatch`, `notifyOn`, `reviewEmail` |
-| `src/lib/review-mail.ts` | create | Resolve recipients and send (needs Payload) |
-| `src/access.ts` | modify | `ownsViaAuthors`, `canAuthor`, `isAdminOrOwnWhile`; drop `ownsViaAuthor` |
-| `src/fields/credits.ts` | create | `creditsField()` |
-| `src/fields/language.ts` | create | `LANGUAGE_OPTIONS` |
-| `src/collections/Partners.ts` | create | Outside organisations |
-| `src/collections/Articles.ts` | rewrite | Review flow, authors → people, credits, translation |
-| `src/collections/Publications.ts` | create | Replaces `Article-collections.ts` |
-| `src/collections/Article-collections.ts` | delete | |
-| `src/collections/Press.ts` | rewrite | Target press shape |
-| `src/collections/Events.ts` | rewrite | Schedule, venue, agenda, speakers, partners |
-| `src/collections/Newsletters.ts` | create | Issue archive |
-| `src/collections/Programmes.ts`, `Courses.ts` | modify | Programme `partners[]`; `readVersions` |
-| `src/env.ts`, `src/payload.config.ts` | modify | Resend adapter; register collections |
-| `seed/*` | modify | Seed the new shapes |
-| `tests/unit/review.unit.spec.ts`, `access.unit.spec.ts`, `shape-fields.unit.spec.ts` | create/modify | |
-| `tests/int/publishing.int.spec.ts` | create | Review flow, joins, validation against the database |
-| `docs/schema.md` | modify | Drop finished sections |
+| File                                                                                 | Change        | Responsibility                                                           |
+| ------------------------------------------------------------------------------------ | ------------- | ------------------------------------------------------------------------ |
+| `src/lib/review.ts`                                                                  | create        | Review states, `canMove`, `reviewPatch`, `notifyOn`, `reviewEmail`       |
+| `src/lib/review-mail.ts`                                                             | create        | Resolve recipients and send (needs Payload)                              |
+| `src/access.ts`                                                                      | modify        | `ownsViaAuthors`, `canAuthor`, `isAdminOrOwnWhile`; drop `ownsViaAuthor` |
+| `src/fields/credits.ts`                                                              | create        | `creditsField()`                                                         |
+| `src/fields/language.ts`                                                             | create        | `LANGUAGE_OPTIONS`                                                       |
+| `src/collections/Partners.ts`                                                        | create        | Outside organisations                                                    |
+| `src/collections/Articles.ts`                                                        | rewrite       | Review flow, authors → people, credits, translation                      |
+| `src/collections/Publications.ts`                                                    | create        | Replaces `Article-collections.ts`                                        |
+| `src/collections/Article-collections.ts`                                             | delete        |                                                                          |
+| `src/collections/Press.ts`                                                           | rewrite       | Target press shape                                                       |
+| `src/collections/Events.ts`                                                          | rewrite       | Schedule, venue, agenda, speakers, partners                              |
+| `src/collections/Newsletters.ts`                                                     | create        | Issue archive                                                            |
+| `src/collections/Programmes.ts`, `Courses.ts`                                        | modify        | Programme `partners[]`; `readVersions`                                   |
+| `src/env.ts`, `src/payload.config.ts`                                                | modify        | Resend adapter; register collections                                     |
+| `seed/*`                                                                             | modify        | Seed the new shapes                                                      |
+| `tests/unit/review.unit.spec.ts`, `access.unit.spec.ts`, `shape-fields.unit.spec.ts` | create/modify |                                                                          |
+| `tests/int/publishing.int.spec.ts`                                                   | create        | Review flow, joins, validation against the database                      |
+| `docs/schema.md`                                                                     | modify        | Drop finished sections                                                   |
 
 **Commands**
+
 - One spec: `pnpm vitest run --config ./vitest.config.mts <path>`.
 - After every collection change: `pnpm generate:types`, then `npx tsc --noEmit`, which should print nothing.
 
 **Before starting**
+
 - **Baseline:** tsc is clean, lint has 0 errors, and 128 tests pass.
 - **Uncommitted package files:** if `package.json`, `pnpm-lock.yaml` or `pnpm-workspace.yaml` have uncommitted changes that aren't yours, stop and ask the user to commit or stash them. Task 10 adds a dependency, and the two changes must not be mixed.
 
@@ -137,6 +149,7 @@ These fill gaps the spec leaves open. Where the grilling session (Q10, Q11, Q17�
 ### Task 1: Review state machine
 
 **Files:**
+
 - Create: `src/lib/review.ts`
 - Test: `tests/unit/review.unit.spec.ts`
 
@@ -217,9 +230,9 @@ describe('reviewPatch', () => {
   })
 
   it('leaves an already approved article alone', () => {
-    expect(
-      reviewPatch({ from: 'approved', to: 'approved', trusted: true, data: {}, now }),
-    ).toEqual({ patch: {} })
+    expect(reviewPatch({ from: 'approved', to: 'approved', trusted: true, data: {}, now })).toEqual(
+      { patch: {} },
+    )
   })
 })
 
@@ -389,6 +402,7 @@ Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>"
 ### Task 2: Author access rules
 
 **Files:**
+
 - Modify: `src/access.ts`
 - Test: `tests/unit/access.unit.spec.ts`
 
@@ -462,6 +476,7 @@ Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>"
 ### Task 3: Credits and language fields
 
 **Files:**
+
 - Create: `src/fields/credits.ts`, `src/fields/language.ts`
 - Test: `tests/unit/shape-fields.unit.spec.ts`
 
@@ -593,6 +608,7 @@ Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>"
 ### Task 4: Partners
 
 **Files:**
+
 - Create: `src/collections/Partners.ts`, `seed/collections/partners.seed.ts`
 - Modify: `src/payload.config.ts`, `src/collections/Programmes.ts`, `seed/seed.type.ts`, `seed/seed.utils.ts`, `seed/index.ts`
 
@@ -677,7 +693,11 @@ import type { PartnerSeed, SeedContext } from '../seed.type'
 import { getOrCreateId } from '../seed.utils'
 
 export const partnersData: PartnerSeed[] = [
-  { name: 'Arab Council for the Social Sciences', kind: ['funder'], url: 'https://www.theacss.org' },
+  {
+    name: 'Arab Council for the Social Sciences',
+    kind: ['funder'],
+    url: 'https://www.theacss.org',
+  },
   { name: 'Ford Foundation', kind: ['funder'], url: 'https://www.fordfoundation.org' },
   { name: 'Mada Masr', kind: ['outlet'], url: 'https://www.madamasr.com' },
   { name: 'OpenDemocracy', kind: ['outlet'], url: 'https://www.opendemocracy.net' },
@@ -726,6 +746,7 @@ Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>"
 ### Task 5: Articles
 
 **Files:**
+
 - Rewrite: `src/collections/Articles.ts`
 - Create: `src/lib/review-mail.ts`
 - Modify: `seed/collections/articles.seed.ts`, `seed/seed.type.ts`
@@ -836,11 +857,7 @@ export const addSelfAsAuthor: CollectionBeforeValidateHook<Article> = ({
  * Applies the review rules (src/lib/review.ts) to every write. Server calls
  * with no user (seeds, imports) are trusted like an admin.
  */
-export const applyReview: CollectionBeforeChangeHook<Article> = ({
-  data,
-  originalDoc,
-  req,
-}) => {
+export const applyReview: CollectionBeforeChangeHook<Article> = ({ data, originalDoc, req }) => {
   const trusted = !req.user || isAdminUser(req.user)
   const from: ReviewState = originalDoc?.review?.status ?? 'draft'
   const to: ReviewState = data.review?.status ?? from
@@ -1098,6 +1115,7 @@ Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>"
 ### Task 6: Publications
 
 **Files:**
+
 - Create: `src/collections/Publications.ts`, `seed/collections/publications.seed.ts`
 - Delete: `src/collections/Article-collections.ts`, `seed/collections/article-collections.seed.ts`
 - Modify: `src/payload.config.ts`, `seed/seed.type.ts`, `seed/seed.utils.ts`, `seed/index.ts`
@@ -1197,6 +1215,7 @@ export const Publications: CollectionConfig = {
 ```
 
 In `src/payload.config.ts`:
+
 - Replace the `ArticleCollections` import with `Publications`.
 - Register `Publications` in its slot.
 - Delete `src/collections/Article-collections.ts`.
@@ -1254,6 +1273,7 @@ Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>"
 ### Task 7: Press
 
 **Files:**
+
 - Rewrite: `src/collections/Press.ts`, `seed/collections/press.seed.ts`
 - Modify: `seed/seed.type.ts`, `seed/index.ts`, `src/fields/slug.ts`
 
@@ -1321,8 +1341,10 @@ export const Press: CollectionConfig = {
               name: 'name',
               type: 'text',
               admin: { width: '50%' },
-              validate: (value: unknown, { siblingData }: { siblingData: Record<string, unknown> }) =>
-                value || siblingData.person ? true : 'Pick a person or type a name.',
+              validate: (
+                value: unknown,
+                { siblingData }: { siblingData: Record<string, unknown> },
+              ) => (value || siblingData.person ? true : 'Pick a person or type a name.'),
             },
           ],
         },
@@ -1408,6 +1430,7 @@ export type PressSeed = {
 ```
 
 Rewrite `seed/collections/press.seed.ts`:
+
 - Keep the five items, mapping `organisation` → `outlet` (the partner names from Task 4), `article_title` → `title` and `article_url` → `url`. All are `language: 'en'`.
 - The two `-01-01` dates get `date_precision: 'year'`, and `2013-08-01` gets `'month'`.
 - The seeder:
@@ -1454,6 +1477,7 @@ Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>"
 ### Task 8: Events
 
 **Files:**
+
 - Rewrite: `src/collections/Events.ts`, `seed/collections/events.seed.ts`
 - Modify: `seed/seed.type.ts`, `seed/seed.utils.ts`
 
@@ -1530,7 +1554,12 @@ export const Events: CollectionConfig = {
       filterOptions: ({ id }) => (id ? { id: { not_equals: id } } : true),
       admin: { position: 'sidebar', description: 'The event this one is part of.' },
     },
-    { name: 'programme', type: 'relationship', relationTo: 'programmes', admin: { position: 'sidebar' } },
+    {
+      name: 'programme',
+      type: 'relationship',
+      relationTo: 'programmes',
+      admin: { position: 'sidebar' },
+    },
     { name: 'course', type: 'relationship', relationTo: 'courses', admin: { position: 'sidebar' } },
     { name: 'title', type: 'text', required: true, localized: true },
     slugField(),
@@ -1647,6 +1676,7 @@ export type EventSeed = {
 ```
 
 Rewrite the data in `seed/collections/events.seed.ts`:
+
 - The 2017 discussion: `schedule: once('2017-10-15', '18:00', '20:00')`, `space: 'Darb el-Labbana'`, `speakers: ['surti.singh@cilas.test', 'robin.weiss@cilas.test']`.
 - The exhibition: `event_type: 'open_day'`, `schedule: once('2026-06-05', '16:00', '21:00')`, `space: 'Darb el-Labbana'`.
 - The screening: `schedule: once('2026-05-03', '19:00', '22:00')`, `space: 'Darb el-Labbana'`.
@@ -1686,6 +1716,7 @@ Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>"
 ### Task 9: Newsletters
 
 **Files:**
+
 - Create: `src/collections/Newsletters.ts`
 - Modify: `src/payload.config.ts`, `seed/seed.utils.ts`
 
@@ -1753,6 +1784,7 @@ Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>"
 ### Task 10: Email adapter
 
 **Files:**
+
 - Modify: `package.json`, `pnpm-lock.yaml`, `src/env.ts`, `src/payload.config.ts`, `.env.example`
 
 - [ ] **Step 1: Install the adapter at the Payload version**
@@ -1817,6 +1849,7 @@ Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>"
 ### Task 11: Close the draft-version leak on courses
 
 **Files:**
+
 - Modify: `src/collections/Courses.ts`
 
 - [ ] **Step 1: Add `readVersions`**
@@ -1849,6 +1882,7 @@ Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>"
 ### Task 12: Migrate, reseed and test against the database
 
 **Files:**
+
 - Regenerate: `src/migrations/*`
 - Create: `tests/int/publishing.int.spec.ts`
 
@@ -2059,10 +2093,12 @@ describe('publishing', () => {
 
 Run: `pnpm test:int`
 Expected:
+
 - `publishing.int.spec.ts`: 6 tests pass.
 - Everything else still passes. `seed-localization` and `people` are unaffected, and `teaching` is unaffected apart from courses now having `readVersions`.
 
 If an assertion fails because Payload behaves differently from what the plan assumes, stop and report it. Examples:
+
 - `APIError` message matching
 - the draft or published read semantics after `update` with `draft: true`
 - `vi.spyOn` on `payload.sendEmail`
@@ -2072,11 +2108,13 @@ Don't loosen the assertion. If a create call fails to type-check because a field
 - [ ] **Step 5: Smoke-check the seed**
 
 Write a scratch script inside the repo, delete it afterwards, and run it with `npx tsx --env-file=.env <file>`. It should print:
+
 - each article's title, `_status`, `tier` and `review.status`, with `draft: true`;
 - the publications with their funders, at `depth: 1`;
 - the press titles with their outlet names.
 
 Expected:
+
 - Every seeded article is `published` and `approved`, at its seeded tier.
 - Pigeon Towers lists ACSS and the Ford Foundation as funders.
 - Each press item names its outlet.
@@ -2095,11 +2133,13 @@ Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>"
 ### Task 13: Update the spec
 
 **Files:**
+
 - Modify: `docs/schema.md`
 
 - [ ] **Step 1: Replace the finished sections**
 
 In `docs/schema.md`:
+
 - Delete the `**credits[]**` block under Shared shapes. Change the Shared shapes paragraph to say events use the shapes too.
 - Delete the `## Partners` and `## Publishing` sections, and replace them with:
 
@@ -2107,6 +2147,7 @@ In `docs/schema.md`:
 ## Partners and publishing
 
 Partners, articles (with review), publications, press, events and newsletters match the code (ADR 0005). Still to do:
+
 - **Newsletter sign-up:** a public form that posts to the Resend Audience API (frontend work).
 - **Press links:** a periodic check that marks dead links so the page falls back to `archived_url`.
 ```

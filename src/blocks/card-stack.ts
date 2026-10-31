@@ -46,14 +46,20 @@ export const CardStack: Block = {
       type: 'relationship',
       relationTo: 'articles',
       hasMany: true,
-      admin: { condition: (_, s) => s?.source === 'articles', description: 'In the order the stack shows them.' },
+      admin: {
+        condition: (_, s) => s?.source === 'articles',
+        description: 'In the order the stack shows them.',
+      },
     },
     {
       name: 'courses',
       type: 'relationship',
       relationTo: 'courses',
       hasMany: true,
-      admin: { condition: (_, s) => s?.source === 'courses', description: 'In the order the stack shows them.' },
+      admin: {
+        condition: (_, s) => s?.source === 'courses',
+        description: 'In the order the stack shows them.',
+      },
     },
     {
       name: 'cycle',
@@ -65,7 +71,10 @@ export const CardStack: Block = {
       name: 'label',
       type: 'text',
       localized: true,
-      admin: { description: 'Read out to screen readers, e.g. “Essays in this collection”. Empty: a label from the source.' },
+      admin: {
+        description:
+          'Read out to screen readers, e.g. “Essays in this collection”. Empty: a label from the source.',
+      },
     },
   ],
 }

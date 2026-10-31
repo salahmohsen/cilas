@@ -3,12 +3,14 @@
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
 **Goal:** Lay the ground for importing the old site:
+
 - every imported document records where it came from (`legacy_url`) and whether a person has checked it (`import_status`);
 - the dev reset can never wipe checked content;
 - the few pages missing from the ZIP are fetched from the live mirror (cilas.lkssystems.com);
 - a committed `migration/manifest.json` catalogues every page and upload, with its kind and what it links to.
 
 **Architecture:**
+
 - **Pure helpers in `migration/lib/`:** page classification and upload-path resolution. Both are unit-tested.
 - **Two scripts in `migration/`:**
   - `fetch-mirror.ts`: idempotent downloads into the gitignored `migration/raw/mirror/`.
@@ -36,6 +38,7 @@ Each later sub-plan is written just before it starts, using this manifest.
 ## Decisions made in this plan
 
 **Import fields**
+
 - **`legacy_url` and `import_status` go on every collection the import writes to:** spaces, people, memberships, governance, partners, cycles, programmes, courses, articles, publications, press, events and newsletters.
 - **`legacy_url`:**
   - It is unique per collection, and it is the upsert key.
@@ -47,9 +50,11 @@ Each later sub-plan is written just before it starts, using this manifest.
   - Documents created by hand leave it empty.
 
 **Reset guard**
+
 - `resetContent()` refuses to run when any content collection holds a `reviewed` document. It throws an error naming the counts, before deleting anything.
 
 **Manifest**
+
 - **Legacy URLs:** every page's legacy URL is `/<file name>`, e.g. `/fall-cycle-2024.html`. The Weebly home page `index.html` becomes `/`.
 - **Page kinds:** `cycle`, `course`, `lab`, `people`, `space`, `programme`, `publication`, `press`, `blog`, `info`.
   - Rules on the file name set the kind.
@@ -62,22 +67,23 @@ Each later sub-plan is written just before it starts, using this manifest.
 
 ## File map
 
-| File | Change | Responsibility |
-|---|---|---|
-| `src/fields/import.ts` | create | `importFields()` |
-| `src/collections/*.ts` (13) | modify | add `...importFields()` |
-| `seed/seed.utils.ts` | modify | the reset guard |
-| `migration/lib/classify.ts` | create | `legacyUrlOf()`, `classifyPage()` |
-| `migration/lib/uploads.ts` | create | `resolveUpload()` |
-| `migration/page-kinds.json` | create | hand overrides |
-| `migration/fetch-mirror.ts` | create | download pages and assets the ZIP lacks from the live mirror |
-| `migration/ingest.ts` | create | write `migration/manifest.json` |
-| `migration/manifest.json` | generate | the catalogue |
-| `migration/README.md` | create | how to run the pipeline |
-| `tests/unit/import-*.unit.spec.ts` | create | |
-| `tests/int/import.int.spec.ts` | create | |
+| File                               | Change   | Responsibility                                               |
+| ---------------------------------- | -------- | ------------------------------------------------------------ |
+| `src/fields/import.ts`             | create   | `importFields()`                                             |
+| `src/collections/*.ts` (13)        | modify   | add `...importFields()`                                      |
+| `seed/seed.utils.ts`               | modify   | the reset guard                                              |
+| `migration/lib/classify.ts`        | create   | `legacyUrlOf()`, `classifyPage()`                            |
+| `migration/lib/uploads.ts`         | create   | `resolveUpload()`                                            |
+| `migration/page-kinds.json`        | create   | hand overrides                                               |
+| `migration/fetch-mirror.ts`        | create   | download pages and assets the ZIP lacks from the live mirror |
+| `migration/ingest.ts`              | create   | write `migration/manifest.json`                              |
+| `migration/manifest.json`          | generate | the catalogue                                                |
+| `migration/README.md`              | create   | how to run the pipeline                                      |
+| `tests/unit/import-*.unit.spec.ts` | create   |                                                              |
+| `tests/int/import.int.spec.ts`     | create   |                                                              |
 
 **Commands**
+
 - One spec: `pnpm vitest run --config ./vitest.config.mts <path>`.
 - **Scripts:** run as `npx tsx migration/<script>.ts`. They read the raw archive, so pass the paths as arguments. Never run an interpreter from inside `migration/raw`.
 - **Database:** Task 2 adds columns. Until Task 8 resets the database, don't run the dev server or the int tests.
@@ -88,6 +94,7 @@ Each later sub-plan is written just before it starts, using this manifest.
 ### Task 1: Import fields
 
 **Files:**
+
 - Create: `src/fields/import.ts`
 - Test: `tests/unit/shape-fields.unit.spec.ts`
 
@@ -100,11 +107,17 @@ describe('importFields', () => {
   it('adds a hidden, unique legacy URL and an import status', () => {
     const [legacy, status] = importFields()
     expect(names([legacy, status])).toEqual(['legacy_url', 'import_status'])
-    expect(legacy).toMatchObject({ type: 'text', unique: true, index: true, admin: { hidden: true } })
+    expect(legacy).toMatchObject({
+      type: 'text',
+      unique: true,
+      index: true,
+      admin: { hidden: true },
+    })
     expect(status).toMatchObject({ type: 'select', admin: { position: 'sidebar' } })
-    expect(
-      (status as { options: Array<{ value: string }> }).options.map((o) => o.value),
-    ).toEqual(['needs_review', 'reviewed'])
+    expect((status as { options: Array<{ value: string }> }).options.map((o) => o.value)).toEqual([
+      'needs_review',
+      'reviewed',
+    ])
   })
 })
 ```
@@ -170,11 +183,13 @@ Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>"
 ### Task 2: Add the import fields to imported collections
 
 **Files:**
+
 - Modify: `src/collections/{Spaces,People,Memberships,Governance,Partners,Cycles,Programmes,Courses,Articles,Publications,Press,Events,Newsletters}.ts`
 
 - [ ] **Step 1: Spread the fields in**
 
 In each of the 13 collections:
+
 - import `importFields` from `@/fields/import`;
 - append `...importFields()` as the last entries of `fields`.
 
@@ -199,6 +214,7 @@ Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>"
 ### Task 3: Never wipe reviewed content
 
 **Files:**
+
 - Modify: `seed/seed.utils.ts`
 
 - [ ] **Step 1: Add the guard**
@@ -224,9 +240,7 @@ export const assertNoReviewedContent = async (payload: Payload): Promise<void> =
     if (totalDocs) reviewed.push(`${collection}: ${totalDocs}`)
   }
   if (reviewed.length) {
-    throw new Error(
-      `Refusing to reset: reviewed content would be lost (${reviewed.join(', ')}).`,
-    )
+    throw new Error(`Refusing to reset: reviewed content would be lost (${reviewed.join(', ')}).`)
   }
 }
 ```
@@ -254,6 +268,7 @@ Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>"
 ### Task 4: Page classification and upload resolution
 
 **Files:**
+
 - Create: `migration/lib/classify.ts`, `migration/lib/uploads.ts`, `migration/page-kinds.json`
 - Test: `tests/unit/import-classify.unit.spec.ts`, `tests/unit/import-uploads.unit.spec.ts`
 
@@ -299,7 +314,9 @@ describe('classifyPage', () => {
   })
 
   it('lets a hand override win', () => {
-    expect(classifyPage('anarchist-recipes.html', { 'anarchist-recipes.html': 'info' })).toBe('info')
+    expect(classifyPage('anarchist-recipes.html', { 'anarchist-recipes.html': 'info' })).toBe(
+      'info',
+    )
   })
 })
 ```
@@ -332,7 +349,9 @@ describe('resolveUpload', () => {
   })
 
   it('maps a published image to its _orig file', () => {
-    expect(resolveUpload('uploads/1/9/1/0/19102967/published/1022666471.jpg?1510668144', files)).toEqual({
+    expect(
+      resolveUpload('uploads/1/9/1/0/19102967/published/1022666471.jpg?1510668144', files),
+    ).toEqual({
       path: 'uploads/1/9/1/0/19102967/1022666471_orig.jpg',
       missing: false,
     })
@@ -460,11 +479,13 @@ Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>"
 ### Task 5: Fetch what the ZIP lacks from the live mirror
 
 **Files:**
+
 - Create: `migration/fetch-mirror.ts`
 
 - [ ] **Step 1: Write the script**
 
 `migration/fetch-mirror.ts` crawls https://cilas.lkssystems.com/ (same Weebly paths; no sitemap) breadth-first from `/`, capped at 400 pages, one request at a time with a 200 ms delay.
+
 - ZIP pages are fetched only to discover links, and are never saved.
 - Pages the ZIP lacks are saved to `migration/raw/mirror/pages/`.
 - Uploads those pages link to and the ZIP lacks (via `resolveUpload`) are saved under `migration/raw/mirror/uploads/…`.
@@ -491,6 +512,7 @@ Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>"
 ### Task 6: Ingest into the manifest
 
 **Files:**
+
 - Create: `migration/ingest.ts`
 - Generate: `migration/manifest.json`
 
@@ -558,7 +580,8 @@ const read = (source: Page['source'], dir: string): Page[] =>
       for (const href of hrefs) {
         const upload = resolveUpload(href, allUploads)
         if (upload) uploads.set(upload.path, upload)
-        else if (/^\/?[^/:?#]+\.html/.test(href)) links.add(legacyUrlOf(href.replace(/^\//, '').split(/[?#]/)[0]))
+        else if (/^\/?[^/:?#]+\.html/.test(href))
+          links.add(legacyUrlOf(href.replace(/^\//, '').split(/[?#]/)[0]))
       }
       return {
         legacy_url: legacyUrlOf(file),
@@ -573,28 +596,39 @@ const read = (source: Page['source'], dir: string): Page[] =>
 
 const zipPages = read('zip', zip)
 const known = new Set(zipPages.map((p) => p.file))
-const pages = [...zipPages, ...read('mirror', path.join(mirror, 'pages')).filter((p) => !known.has(p.file))]
-  .sort((a, b) => a.legacy_url.localeCompare(b.legacy_url))
+const pages = [
+  ...zipPages,
+  ...read('mirror', path.join(mirror, 'pages')).filter((p) => !known.has(p.file)),
+].sort((a, b) => a.legacy_url.localeCompare(b.legacy_url))
 
 const referencedBy = new Map<string, string[]>()
 for (const page of pages) {
-  for (const u of page.uploads) referencedBy.set(u.path, [...(referencedBy.get(u.path) ?? []), page.legacy_url])
+  for (const u of page.uploads)
+    referencedBy.set(u.path, [...(referencedBy.get(u.path) ?? []), page.legacy_url])
 }
-const uploads = [...allUploads]
-  .sort()
-  .map((p) => ({
-    path: p,
-    source: zipUploads.includes(p) ? 'zip' : 'mirror',
-    referenced_by: referencedBy.get(p) ?? [],
-  }))
+const uploads = [...allUploads].sort().map((p) => ({
+  path: p,
+  source: zipUploads.includes(p) ? 'zip' : 'mirror',
+  referenced_by: referencedBy.get(p) ?? [],
+}))
 
 const manifest = { generated_from: 'weebly-zip-2025-04-23 + cilas.lkssystems.com', pages, uploads }
-writeFileSync(path.join(import.meta.dirname, 'manifest.json'), `${JSON.stringify(manifest, null, 2)}\n`)
+writeFileSync(
+  path.join(import.meta.dirname, 'manifest.json'),
+  `${JSON.stringify(manifest, null, 2)}\n`,
+)
 
-const byKind = pages.reduce<Record<string, number>>((acc, p) => ({ ...acc, [p.kind]: (acc[p.kind] ?? 0) + 1 }), {})
+const byKind = pages.reduce<Record<string, number>>(
+  (acc, p) => ({ ...acc, [p.kind]: (acc[p.kind] ?? 0) + 1 }),
+  {},
+)
 console.log(`${pages.length} pages`, byKind)
-console.log(`${uploads.length} uploads, ${uploads.filter((u) => u.referenced_by.length).length} referenced`)
-console.log(`${pages.flatMap((p) => p.uploads).filter((u) => u.missing).length} upload link(s) missing`)
+console.log(
+  `${uploads.length} uploads, ${uploads.filter((u) => u.referenced_by.length).length} referenced`,
+)
+console.log(
+  `${pages.flatMap((p) => p.uploads).filter((u) => u.missing).length} upload link(s) missing`,
+)
 ```
 
 If `import.meta.dirname` isn't available under `tsx` here, use `path.dirname(fileURLToPath(import.meta.url))`.
@@ -626,6 +660,7 @@ Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>"
 ### Task 7: Pipeline README
 
 **Files:**
+
 - Create: `migration/README.md`
 
 - [ ] **Step 1: Write it**
@@ -636,6 +671,7 @@ Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>"
 Turns the old Weebly site into CILAS content (docs/schema.md, Archive import; ADR 0004).
 
 Raw files live in `raw/`, which git and Docker ignore:
+
 - `raw/weebly-zip-2025-04-23/`: the site export, the primary source.
 - `raw/mirror/`: pages and uploads the ZIP lacks, fetched by `fetch-mirror.ts`.
 
@@ -665,6 +701,7 @@ Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>"
 ### Task 8: Migrate, reset and test against the database
 
 **Files:**
+
 - Regenerate: `src/migrations/*`
 - Create: `tests/int/import.int.spec.ts`
 
@@ -704,7 +741,9 @@ describe('archive import foundations', () => {
 
   afterAll(async () => {
     for (const id of created) {
-      await payload.delete({ collection: 'partners', id, overrideAccess: true }).catch(() => undefined)
+      await payload
+        .delete({ collection: 'partners', id, overrideAccess: true })
+        .catch(() => undefined)
     }
     await payload.destroy()
   })
@@ -712,14 +751,24 @@ describe('archive import foundations', () => {
   it('refuses a second document with the same legacy URL', async () => {
     const first = await payload.create({
       collection: 'partners',
-      data: { name: 'Legacy Probe', slug: 'legacy-probe', kind: ['other'], legacy_url: '/probe.html#a' },
+      data: {
+        name: 'Legacy Probe',
+        slug: 'legacy-probe',
+        kind: ['other'],
+        legacy_url: '/probe.html#a',
+      },
       overrideAccess: true,
     })
     created.push(first.id)
     await expect(
       payload.create({
         collection: 'partners',
-        data: { name: 'Legacy Probe 2', slug: 'legacy-probe-2', kind: ['other'], legacy_url: '/probe.html#a' },
+        data: {
+          name: 'Legacy Probe 2',
+          slug: 'legacy-probe-2',
+          kind: ['other'],
+          legacy_url: '/probe.html#a',
+        },
         overrideAccess: true,
       }),
     ).rejects.toThrow()
@@ -730,7 +779,12 @@ describe('archive import foundations', () => {
 
     const reviewed = await payload.create({
       collection: 'partners',
-      data: { name: 'Reviewed Probe', slug: 'reviewed-probe', kind: ['other'], import_status: 'reviewed' },
+      data: {
+        name: 'Reviewed Probe',
+        slug: 'reviewed-probe',
+        kind: ['other'],
+        import_status: 'reviewed',
+      },
       overrideAccess: true,
     })
     created.push(reviewed.id)
@@ -758,6 +812,7 @@ Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>"
 ### Task 9: Update the spec
 
 **Files:**
+
 - Modify: `docs/schema.md`
 
 - [ ] **Step 1: Mark what exists**
@@ -766,6 +821,7 @@ At the top of `## Archive import (seed)`, add:
 
 ```markdown
 **Built (plan 6.1):**
+
 - `legacy_url` and `import_status` on every imported collection.
 - The reset guard.
 - `migration/fetch-mirror.ts`, and the stage-1 `migration/ingest.ts` → `migration/manifest.json` (see `migration/README.md`).

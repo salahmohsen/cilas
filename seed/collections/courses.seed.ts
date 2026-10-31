@@ -32,7 +32,6 @@ export const coursesData: CourseSeed[] = [
     cycle: 'fall-2025',
     fellows: [],
   },
-
 ]
 
 export const seedCourses = async (payload: Payload, ctx: SeedContext): Promise<void> => {

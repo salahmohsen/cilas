@@ -1,11 +1,18 @@
 import { describe, expect, it } from 'vitest'
 
-import { UNVERIFIED_YEARS, completeBio, membershipRole, programmeTitle } from '../../migration/lib/normalise-people'
+import {
+  UNVERIFIED_YEARS,
+  completeBio,
+  membershipRole,
+  programmeTitle,
+} from '../../migration/lib/normalise-people'
 
 describe('programmeTitle', () => {
   it('names Cairo and Alexandria programmes', () => {
     expect(programmeTitle('2015-2016', 'cairo')).toBe('Bridge Programme 2015–2016')
-    expect(programmeTitle('2018-2019', 'alexandria')).toBe('Bridge Programme 2018–2019 (Alexandria)')
+    expect(programmeTitle('2018-2019', 'alexandria')).toBe(
+      'Bridge Programme 2018–2019 (Alexandria)',
+    )
   })
 })
 
@@ -15,7 +22,10 @@ describe('membershipRole', () => {
   })
   it('maps clear roles unflagged', () => {
     expect(membershipRole('visiting_fellow')).toEqual({ role: 'visiting_fellow', flagged: false })
-    expect(membershipRole('residential_fellow')).toEqual({ role: 'residential_fellow', flagged: false })
+    expect(membershipRole('residential_fellow')).toEqual({
+      role: 'residential_fellow',
+      flagged: false,
+    })
     expect(membershipRole('student')).toEqual({ role: 'student', flagged: false })
   })
   it('gives team, advisors and trustees no membership', () => {
@@ -33,7 +43,9 @@ describe('UNVERIFIED_YEARS', () => {
 
 describe('completeBio', () => {
   it('restores the name before a bio that starts in lowercase', () => {
-    expect(completeBio('Jane Doe', 'is the Uyeno-Tseng Professor')).toBe('Jane Doe is the Uyeno-Tseng Professor')
+    expect(completeBio('Jane Doe', 'is the Uyeno-Tseng Professor')).toBe(
+      'Jane Doe is the Uyeno-Tseng Professor',
+    )
     expect(completeBio('Jane Doe', 'holds a Bachelor’s')).toBe('Jane Doe holds a Bachelor’s')
   })
   it('leaves a bio that starts with a capital unchanged', () => {

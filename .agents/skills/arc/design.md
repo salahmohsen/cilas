@@ -3,6 +3,7 @@
 The visual rules for anything built with or next to Arc components. Every token below is defined in `components/arc/foundation.css`.
 
 ## Contents
+
 - Color
 - Brand, metallic, and logo treatments
 - Type
@@ -16,15 +17,15 @@ The visual rules for anything built with or next to Arc components. Every token 
 
 Components and pages use semantic roles only. Never the `--neutral-*` ramp, raw hex, or Tailwind color classes.
 
-| Role | Tokens |
-| --- | --- |
-| Page and surfaces | `--background`, `--surface`, `--surface-raised`, `--surface-muted` |
-| Text | `--foreground`, `--text-secondary`, `--text-muted` |
-| Lines | `--border` (default), `--border-subtle` (inside a surface), `--border-strong` (inputs, emphasis) |
-| Accent | `--accent`, `--accent-strong`, `--accent-subtle`, `--accent-foreground` |
-| Status | `--success`, `--warning`, `--danger` (and `--accent` for info) |
-| Selection controls | `--control-on`, `--control-glyph`, `--control-track`, `--control-thumb`, `--control-thumb-on` |
-| Chart series | `--series-1` to `--series-4` |
+| Role               | Tokens                                                                                           |
+| ------------------ | ------------------------------------------------------------------------------------------------ |
+| Page and surfaces  | `--background`, `--surface`, `--surface-raised`, `--surface-muted`                               |
+| Text               | `--foreground`, `--text-secondary`, `--text-muted`                                               |
+| Lines              | `--border` (default), `--border-subtle` (inside a surface), `--border-strong` (inputs, emphasis) |
+| Accent             | `--accent`, `--accent-strong`, `--accent-subtle`, `--accent-foreground`                          |
+| Status             | `--success`, `--warning`, `--danger` (and `--accent` for info)                                   |
+| Selection controls | `--control-on`, `--control-glyph`, `--control-track`, `--control-thumb`, `--control-thumb-on`    |
+| Chart series       | `--series-1` to `--series-4`                                                                     |
 
 **Accent with intent.** Most of the screen stays neutral. Spend `--accent` on: the active nav item, a selected row or option, the one data series that matters, progress, and a few interaction details (a link, a count that just changed). Tint with `--accent-subtle` behind accent text or icons. Do not color headings, card backgrounds, or every icon with it.
 
@@ -40,26 +41,40 @@ Components and pages use semantic roles only. Never the `--neutral-*` ramp, raw 
 
 ```css
 .premium {
-  --metal-plate: linear-gradient(112deg, oklch(93.4% .003 260), oklch(98.6% .002 260) 24%, oklch(91.2% .004 260) 50%, oklch(96.8% .003 260) 74%, oklch(92.6% .004 260));
-  --metal-edge: inset 0 0 0 1px oklch(0% 0 0 / .075), inset 0 1px 0 oklch(100% 0 0 / .95);
-  --metal-ink: oklch(26% .012 260);
+  --metal-plate: linear-gradient(
+    112deg,
+    oklch(93.4% 0.003 260),
+    oklch(98.6% 0.002 260) 24%,
+    oklch(91.2% 0.004 260) 50%,
+    oklch(96.8% 0.003 260) 74%,
+    oklch(92.6% 0.004 260)
+  );
+  --metal-edge: inset 0 0 0 1px oklch(0% 0 0 / 0.075), inset 0 1px 0 oklch(100% 0 0 / 0.95);
+  --metal-ink: oklch(26% 0.012 260);
   background: var(--metal-plate);
   box-shadow: var(--metal-edge);
   color: var(--metal-ink);
 }
-:root[data-theme="dark"] .premium {
-  --metal-plate: linear-gradient(112deg, oklch(24.5% .004 260), oklch(30.5% .005 260) 24%, oklch(22.5% .004 260) 50%, oklch(28.5% .005 260) 74%, oklch(24% .004 260));
-  --metal-edge: inset 0 0 0 1px oklch(100% 0 0 / .09), inset 0 1px 0 oklch(100% 0 0 / .06);
-  --metal-ink: oklch(95.5% .004 260);
+:root[data-theme='dark'] .premium {
+  --metal-plate: linear-gradient(
+    112deg,
+    oklch(24.5% 0.004 260),
+    oklch(30.5% 0.005 260) 24%,
+    oklch(22.5% 0.004 260) 50%,
+    oklch(28.5% 0.005 260) 74%,
+    oklch(24% 0.004 260)
+  );
+  --metal-edge: inset 0 0 0 1px oklch(100% 0 0 / 0.09), inset 0 1px 0 oklch(100% 0 0 / 0.06);
+  --metal-ink: oklch(95.5% 0.004 260);
 }
 ```
 
 ## Type
 
-| Face | Token | Use | Settings |
-| --- | --- | --- | --- |
-| Geist | `--font-display` | Headings 30px and up | 400 or 500, `letter-spacing: var(--tracking-display)` (-0.03em), `line-height: var(--leading-display)` (1.1) |
-| Inter | `--font-body` | Body, labels, controls, small headings | 400 or 500, `letter-spacing: var(--tracking-body)` (-0.01em), `line-height: var(--leading-body)` (1.4) |
+| Face  | Token            | Use                                    | Settings                                                                                                     |
+| ----- | ---------------- | -------------------------------------- | ------------------------------------------------------------------------------------------------------------ |
+| Geist | `--font-display` | Headings 30px and up                   | 400 or 500, `letter-spacing: var(--tracking-display)` (-0.03em), `line-height: var(--leading-display)` (1.1) |
+| Inter | `--font-body`    | Body, labels, controls, small headings | 400 or 500, `letter-spacing: var(--tracking-body)` (-0.01em), `line-height: var(--leading-body)` (1.4)       |
 
 - Sizes come from the scale only: `--text-xs` 12, `--text-sm` 14, `--text-base` 16, `--text-lg` 18, `--text-xl` 22, `--text-2xl` 28, `--text-3xl` 36, `--text-4xl` 52, `--text-5xl` 72.
 - Weights are 400 and 500. Never 600 or bold. Hierarchy comes from size, color (`--foreground` over `--text-secondary`), and spacing.
@@ -82,17 +97,32 @@ A nested corner is the outer radius minus the padding between them, so the curve
 
 ```css
 /* Correct: inner = outer - padding */
-.card  { border-radius: var(--radius-surface); padding: 8px; }
-.inner { border-radius: calc(var(--radius-surface) - 8px); } /* 26px, same as --radius-panel */
+.card {
+  border-radius: var(--radius-surface);
+  padding: 8px;
+}
+.inner {
+  border-radius: calc(var(--radius-surface) - 8px);
+} /* 26px, same as --radius-panel */
 
-.panel { border-radius: var(--radius-surface); padding: 24px; }
-.panel > .media { border-radius: calc(var(--radius-surface) - 24px); } /* 10px */
+.panel {
+  border-radius: var(--radius-surface);
+  padding: 24px;
+}
+.panel > .media {
+  border-radius: calc(var(--radius-surface) - 24px);
+} /* 10px */
 ```
 
 ```css
 /* Incorrect: the same radius inside and out makes a thick, uneven corner */
-.card  { border-radius: 34px; padding: 16px; }
-.inner { border-radius: 34px; }
+.card {
+  border-radius: 34px;
+  padding: 16px;
+}
+.inner {
+  border-radius: 34px;
+}
 ```
 
 Clamp the result at a small positive value (`max(6px, calc(...))`) when padding is large.

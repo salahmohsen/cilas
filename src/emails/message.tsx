@@ -45,7 +45,13 @@ export function MessageEmail({
         {paragraphs.map((p, i) => (
           <Text
             key={i}
-            style={{ ...type[16], margin: '0 auto 16px', maxWidth: '400px', textAlign: 'center', whiteSpace: 'pre-line' }}
+            style={{
+              ...type[16],
+              margin: '0 auto 16px',
+              maxWidth: '400px',
+              textAlign: 'center',
+              whiteSpace: 'pre-line',
+            }}
           >
             {p}
           </Text>

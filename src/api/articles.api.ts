@@ -38,7 +38,8 @@ export const getPublishedArticles = async (
     user,
   })
 
-const hasBody = (a?: Pick<Article, 'body'> | null): boolean => Boolean(a?.body?.root?.children?.length)
+const hasBody = (a?: Pick<Article, 'body'> | null): boolean =>
+  Boolean(a?.body?.root?.children?.length)
 
 export type ArticleReading = {
   /** The article with its metadata in the site language. */
@@ -92,7 +93,14 @@ export const getArticleForReading = async (
   const inOther = await read(other)
 
   if (hasBody(article)) {
-    return { article, contentLocale: locale, body: article.body, title: article.title, hasOther: hasBody(inOther), other: inOther }
+    return {
+      article,
+      contentLocale: locale,
+      body: article.body,
+      title: article.title,
+      hasOther: hasBody(inOther),
+      other: inOther,
+    }
   }
   if (inOther && hasBody(inOther)) {
     return {
@@ -104,7 +112,14 @@ export const getArticleForReading = async (
       other: inOther,
     }
   }
-  return { article, contentLocale: locale, body: null, title: article.title || inOther?.title || '', hasOther: false, other: inOther }
+  return {
+    article,
+    contentLocale: locale,
+    body: null,
+    title: article.title || inOther?.title || '',
+    hasOther: false,
+    other: inOther,
+  }
 }
 
 /**
@@ -135,7 +150,9 @@ export const getRelatedArticles = async (
       overrideAccess: false,
       user,
     })
-    const ordered = order ? order.map((id) => docs.find((d) => d.id === id)).filter((d): d is Article => Boolean(d)) : docs
+    const ordered = order
+      ? order.map((id) => docs.find((d) => d.id === id)).filter((d): d is Article => Boolean(d))
+      : docs
     for (const doc of ordered) {
       if (picked.length >= limit || seen.has(doc.id)) continue
       seen.add(doc.id)
@@ -146,7 +163,9 @@ export const getRelatedArticles = async (
   const editorIds = (article.related_articles ?? []).map(idOf)
   await take(editorIds.length ? { id: { in: editorIds } } : null, editorIds)
 
-  const publication = (article.publications?.docs ?? []).find((p) => typeof p === 'object' && p !== null)
+  const publication = (article.publications?.docs ?? []).find(
+    (p) => typeof p === 'object' && p !== null,
+  )
   const siblingIds =
     publication && typeof publication === 'object' ? (publication.articles ?? []).map(idOf) : []
   await take(siblingIds.length ? { id: { in: siblingIds } } : null, siblingIds)
@@ -195,7 +214,9 @@ export const getArticleCollection = async (
     overrideAccess: false,
     user,
   })
-  const articles = order.map((id) => docs.find((d) => d.id === id)).filter((d): d is Article => Boolean(d))
+  const articles = order
+    .map((id) => docs.find((d) => d.id === id))
+    .filter((d): d is Article => Boolean(d))
   return { publication, articles }
 }
 
@@ -205,8 +226,14 @@ export const getArticleCollection = async (
  * to carry the image, so the covers are looked up once per page.
  */
 export const getPublicationCovers = async (payload: Payload): Promise<Map<number, Media>> => {
-  const { docs } = await payload.find({ collection: 'publications', depth: 1, limit: 50, overrideAccess: false })
+  const { docs } = await payload.find({
+    collection: 'publications',
+    depth: 1,
+    limit: 50,
+    overrideAccess: false,
+  })
   const covers = new Map<number, Media>()
-  for (const p of docs) if (typeof p.cover_image === 'object' && p.cover_image?.url) covers.set(p.id, p.cover_image)
+  for (const p of docs)
+    if (typeof p.cover_image === 'object' && p.cover_image?.url) covers.set(p.id, p.cover_image)
   return covers
 }

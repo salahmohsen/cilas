@@ -139,7 +139,9 @@
 @supports (animation-timeline: scroll()) {
   @media (prefers-reduced-motion: no-preference) {
     .track {
-      animation: sail-out linear both, ebb linear both;
+      animation:
+        sail-out linear both,
+        ebb linear both;
       animation-timeline: scroll(root), scroll(root);
       animation-range: 0 90vh;
     }

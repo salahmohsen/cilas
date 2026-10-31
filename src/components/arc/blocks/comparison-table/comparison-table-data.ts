@@ -1,5 +1,8 @@
 export type ComparisonValue =
-  boolean | 'partial' | string | { value: boolean | 'partial' | string; note?: string }
+  | boolean
+  | 'partial'
+  | string
+  | { value: boolean | 'partial' | string; note?: string }
 
 export type ComparisonColumn = {
   id: string

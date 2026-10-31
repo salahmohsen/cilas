@@ -46,4 +46,7 @@ export const orderEvents = (events: Event[], now = new Date()) => {
 }
 
 export const otherUpcomingEvents = (events: Event[], currentId: number, now: Date, limit = 3) =>
-  orderEvents(events.filter((event) => event.id !== currentId), now).upcoming.slice(0, limit)
+  orderEvents(
+    events.filter((event) => event.id !== currentId),
+    now,
+  ).upcoming.slice(0, limit)

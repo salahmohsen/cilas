@@ -1,6 +1,15 @@
 import type { Payload } from 'payload'
 
-export const REDIRECT_COLLECTIONS = ['courses', 'cycles', 'programmes', 'publications', 'articles', 'events', 'press', 'people'] as const
+export const REDIRECT_COLLECTIONS = [
+  'courses',
+  'cycles',
+  'programmes',
+  'publications',
+  'articles',
+  'events',
+  'press',
+  'people',
+] as const
 export type RedirectCollection = (typeof REDIRECT_COLLECTIONS)[number]
 
 export type PageRef = { legacy_url: string; kind: string; title?: string }
@@ -37,28 +46,53 @@ export const redirectTargets = (pages: PageRef[], docs: DocRef[]): RedirectPlan[
     const from = p.legacy_url
     if (p.kind === 'space') return { from, target: null, reason: 'space' }
 
-    const hit = [...(exact.get(from) ?? [])].sort((a, b) => rank(a.collection) - rank(b.collection))[0]
+    const hit = [...(exact.get(from) ?? [])].sort(
+      (a, b) => rank(a.collection) - rank(b.collection),
+    )[0]
     if (hit) return { from, target: ref(hit), reason: 'exact' }
 
     const frags = fragments.get(from) ?? []
     const pageDocs = frags.filter((d) => d.collection === 'cycles' || d.collection === 'programmes')
     if (pageDocs.length === 1) return { from, target: ref(pageDocs[0]), reason: 'page-doc' }
-    if (pageDocs.length === 0 && frags.length === 1) return { from, target: ref(frags[0]), reason: 'single-fragment' }
-    if (frags.length > 0) return { from, target: null, reason: 'ambiguous', candidates: (pageDocs.length ? pageDocs : frags).map(ref) }
+    if (pageDocs.length === 0 && frags.length === 1)
+      return { from, target: ref(frags[0]), reason: 'single-fragment' }
+    if (frags.length > 0)
+      return {
+        from,
+        target: null,
+        reason: 'ambiguous',
+        candidates: (pageDocs.length ? pageDocs : frags).map(ref),
+      }
     return { from, target: null, reason: 'no-document' }
   })
 }
 
 export type RedirectTally = { created: number; unchanged: number; kept: number }
 
-type Existing = { id: number; to?: { type?: string | null; url?: string | null; reference?: { relationTo: string; value: unknown } | null } | null }
+type Existing = {
+  id: number
+  to?: {
+    type?: string | null
+    url?: string | null
+    reference?: { relationTo: string; value: unknown } | null
+  } | null
+}
 
-const idOf = (v: unknown): unknown => (typeof v === 'object' && v !== null ? (v as { id?: unknown }).id : v)
+const idOf = (v: unknown): unknown =>
+  typeof v === 'object' && v !== null ? (v as { id?: unknown }).id : v
 
-const same = (old: Existing['to'], to: { type: 'reference'; reference: { relationTo: string; value: number } } | { type: 'custom'; url: string }): boolean => {
+const same = (
+  old: Existing['to'],
+  to:
+    | { type: 'reference'; reference: { relationTo: string; value: number } }
+    | { type: 'custom'; url: string },
+): boolean => {
   if (!old || old.type !== to.type) return false
   if (to.type === 'custom') return old.url === to.url
-  return old.reference?.relationTo === to.reference.relationTo && idOf(old.reference?.value) === to.reference.value
+  return (
+    old.reference?.relationTo === to.reference.relationTo &&
+    idOf(old.reference?.value) === to.reference.value
+  )
 }
 
 /**
@@ -76,7 +110,13 @@ export const importRedirects = async (
   const tally: RedirectTally = { created: 0, unchanged: 0, kept: 0 }
 
   const upsert = async (from: string, to: Parameters<typeof same>[1]) => {
-    const { docs } = await payload.find({ collection: 'redirects', where: { from: { equals: from } }, limit: 1, depth: 0, overrideAccess: true })
+    const { docs } = await payload.find({
+      collection: 'redirects',
+      where: { from: { equals: from } },
+      limit: 1,
+      depth: 0,
+      overrideAccess: true,
+    })
     const found = docs[0] as unknown as Existing | undefined
     if (found) {
       if (same(found.to, to)) tally.unchanged++
@@ -94,7 +134,10 @@ export const importRedirects = async (
 
   for (const plan of plans) {
     if (!plan.target) continue
-    await upsert(plan.from, { type: 'reference', reference: { relationTo: plan.target.collection, value: plan.target.id } })
+    await upsert(plan.from, {
+      type: 'reference',
+      reference: { relationTo: plan.target.collection, value: plan.target.id },
+    })
   }
   for (const u of uploads) {
     if (!u.legacy_url || !u.url) continue

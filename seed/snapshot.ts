@@ -32,7 +32,9 @@ const SKIP = new Set([
   'form_submissions_rels',
 ])
 
-type Client = { query: (sql: string, params?: unknown[]) => Promise<{ rows: Record<string, unknown>[] }> }
+type Client = {
+  query: (sql: string, params?: unknown[]) => Promise<{ rows: Record<string, unknown>[] }>
+}
 type Pool = Client & { connect: () => Promise<Client & { release: () => void }> }
 const poolOf = (payload: Payload): Pool => (payload.db as unknown as { pool: Pool }).pool
 const ident = (name: string) => `"${name.replace(/"/g, '""')}"`
@@ -53,9 +55,13 @@ export const exportSnapshot = async (payload: Payload, dir = SNAPSHOT_DIR): Prom
   let rows = 0
   for (const table of await tables(pool)) {
     const hasId = (
-      await pool.query(`select 1 from information_schema.columns where table_schema = 'public' and table_name = $1 and column_name = 'id'`, [table])
+      await pool.query(
+        `select 1 from information_schema.columns where table_schema = 'public' and table_name = $1 and column_name = 'id'`,
+        [table],
+      )
     ).rows.length
-    const data = (await pool.query(`select * from ${ident(table)}${hasId ? ' order by id' : ''}`)).rows
+    const data = (await pool.query(`select * from ${ident(table)}${hasId ? ' order by id' : ''}`))
+      .rows
     writeFileSync(path.join(dir, `${table}.json`), `${JSON.stringify(data, null, 1)}\n`)
     rows += data.length
   }
@@ -89,7 +95,10 @@ export const restoreSnapshot = async (payload: Payload, dir = SNAPSHOT_DIR): Pro
       if (!data.length) continue
       const columns = new Set(
         (
-          await pool.query(`select column_name from information_schema.columns where table_schema = 'public' and table_name = $1`, [table])
+          await pool.query(
+            `select column_name from information_schema.columns where table_schema = 'public' and table_name = $1`,
+            [table],
+          )
         ).rows.map((r) => String(r.column_name)),
       )
       const keys = Object.keys(data[0]).filter((k) => columns.has(k))
@@ -107,7 +116,10 @@ export const restoreSnapshot = async (payload: Payload, dir = SNAPSHOT_DIR): Pro
               })
               .join(', ')})`,
         )
-        await pool.query(`insert into ${ident(table)} (${keys.map(ident).join(', ')}) values ${values.join(', ')}`, params)
+        await pool.query(
+          `insert into ${ident(table)} (${keys.map(ident).join(', ')}) values ${values.join(', ')}`,
+          params,
+        )
       }
       rows += data.length
       // Snapshots from before `people.visible` showed everyone; the column's

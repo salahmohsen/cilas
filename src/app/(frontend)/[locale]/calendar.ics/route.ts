@@ -40,7 +40,9 @@ export async function GET(request: Request, { params }: { params: Promise<{ loca
     headers: {
       'content-type': 'text/calendar; charset=utf-8',
       'cache-control': 'public, max-age=3600',
-      ...(download ? { 'content-disposition': `attachment; filename="cilas-calendar-${lang}.ics"` } : {}),
+      ...(download
+        ? { 'content-disposition': `attachment; filename="cilas-calendar-${lang}.ics"` }
+        : {}),
     },
   })
 }

@@ -15,7 +15,9 @@ import { PEOPLE_PROMPT_VERSION, PeoplePage, peoplePrompt } from './lib/people-sc
 
 const [raw, mode, ...rest] = process.argv.slice(2)
 if (!raw || !mode) {
-  throw new Error('Usage: extract-people.ts <raw dir> --pending | --prompt <file> | --record <file> <answer.json>')
+  throw new Error(
+    'Usage: extract-people.ts <raw dir> --pending | --prompt <file> | --record <file> <answer.json>',
+  )
 }
 
 /** The pages read as people pages: Cairo and Alexandria cohorts, advisors, trustees. */
@@ -61,7 +63,8 @@ const pageNamed = (file: string): ManifestPage => {
 
 if (mode === '--pending') {
   const pending = todo.filter(
-    (p) => !isCurrent({ outDir, name: p.file, prompt: promptFor(p), version: PEOPLE_PROMPT_VERSION }),
+    (p) =>
+      !isCurrent({ outDir, name: p.file, prompt: promptFor(p), version: PEOPLE_PROMPT_VERSION }),
   )
   for (const p of pending) console.log(p.file)
   console.error(`${pending.length} of ${todo.length} page(s) pending`)

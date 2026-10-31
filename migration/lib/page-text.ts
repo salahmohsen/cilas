@@ -1,6 +1,19 @@
 import { JSDOM } from 'jsdom'
 
-const BLOCK = new Set(['P', 'DIV', 'LI', 'UL', 'OL', 'H1', 'H2', 'H3', 'H4', 'TABLE', 'TR', 'BLOCKQUOTE'])
+const BLOCK = new Set([
+  'P',
+  'DIV',
+  'LI',
+  'UL',
+  'OL',
+  'H1',
+  'H2',
+  'H3',
+  'H4',
+  'TABLE',
+  'TR',
+  'BLOCKQUOTE',
+])
 
 /**
  * A Weebly page's content as plain text the extractor can read: headings as

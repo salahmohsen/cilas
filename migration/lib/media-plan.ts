@@ -38,7 +38,9 @@ export const firstImage = (text: string): string | null => {
 }
 
 /** Each path once, in first-seen order: two jobs on one file share one upload. */
-export const uniquePaths = (jobs: Array<{ path: string }>): string[] => [...new Set(jobs.map((j) => j.path))]
+export const uniquePaths = (jobs: Array<{ path: string }>): string[] => [
+  ...new Set(jobs.map((j) => j.path)),
+]
 
 type Page = { legacy_url: string; kind: string; text: string }
 
@@ -61,14 +63,27 @@ export const mediaJobs = ({
   const jobs: MediaJob[] = []
 
   for (const p of people) {
-    if (p.photo) jobs.push({ collection: 'people', legacy_url: p.legacy_url, field: 'photo', path: stripQuery(p.photo), alt: p.name })
+    if (p.photo)
+      jobs.push({
+        collection: 'people',
+        legacy_url: p.legacy_url,
+        field: 'photo',
+        path: stripQuery(p.photo),
+        alt: p.name,
+      })
   }
 
   const outlets = new Set<string>()
   for (const item of press) {
     if (!item.outlet || !item.logo || outlets.has(item.outlet)) continue
     outlets.add(item.outlet)
-    jobs.push({ collection: 'press', name: item.outlet, field: 'outlet.logo', path: stripQuery(item.logo), alt: item.outlet })
+    jobs.push({
+      collection: 'press',
+      name: item.outlet,
+      field: 'outlet.logo',
+      path: stripQuery(item.logo),
+      alt: item.outlet,
+    })
   }
 
   const byUrl = new Map(pages.map((p) => [p.legacy_url, p]))
@@ -76,18 +91,32 @@ export const mediaJobs = ({
     if (NO_COVER.has(pub.legacy_url)) continue
     const image = firstImage(byUrl.get(pub.legacy_url)?.text ?? '')
     if (image) {
-      jobs.push({ collection: 'publications', legacy_url: pub.legacy_url, field: 'cover_image', path: image, alt: pub.title_en || pub.title_ar || '' })
+      jobs.push({
+        collection: 'publications',
+        legacy_url: pub.legacy_url,
+        field: 'cover_image',
+        path: image,
+        alt: pub.title_en || pub.title_ar || '',
+      })
     }
   }
 
   const perPage = new Map<string, number>()
-  for (const c of courses) perPage.set(c.legacy_url.split('#')[0], (perPage.get(c.legacy_url.split('#')[0]) ?? 0) + 1)
+  for (const c of courses)
+    perPage.set(c.legacy_url.split('#')[0], (perPage.get(c.legacy_url.split('#')[0]) ?? 0) + 1)
   for (const c of courses) {
     const url = c.legacy_url.split('#')[0]
     const page = byUrl.get(url)
     if (!page || page.kind !== 'course' || perPage.get(url) !== 1) continue
     const image = firstImage(page.text)
-    if (image) jobs.push({ collection: 'courses', legacy_url: c.legacy_url, field: 'cover_image', path: image, alt: c.title || c.title_ar || '' })
+    if (image)
+      jobs.push({
+        collection: 'courses',
+        legacy_url: c.legacy_url,
+        field: 'cover_image',
+        path: image,
+        alt: c.title || c.title_ar || '',
+      })
   }
 
   return jobs
@@ -97,7 +126,10 @@ export const mediaJobs = ({
  * Rewrites every `link` node's url in a Lexical tree through `map` (null keeps
  * it). Returns a copy and the number of links changed.
  */
-export const rewriteLinks = <T>(tree: T, map: (url: string) => string | null): { tree: T; count: number } => {
+export const rewriteLinks = <T>(
+  tree: T,
+  map: (url: string) => string | null,
+): { tree: T; count: number } => {
   let count = 0
   const walk = (node: unknown): unknown => {
     if (Array.isArray(node)) return node.map(walk)
@@ -131,11 +163,26 @@ export const pdfJobs = ({
   const jobs: MediaJob[] = []
   for (const p of publications) {
     const path = p.print_edition_url ? uploadsPath(p.print_edition_url) : null
-    if (path) jobs.push({ collection: 'publications', legacy_url: p.legacy_url, field: 'print_edition_url', path, alt: p.title_en })
+    if (path)
+      jobs.push({
+        collection: 'publications',
+        legacy_url: p.legacy_url,
+        field: 'print_edition_url',
+        path,
+        alt: p.title_en,
+      })
   }
   for (const n of newsletters) {
-    const path = n.archive_url && /\.pdf$/i.test(stripQuery(n.archive_url)) ? uploadsPath(n.archive_url) : null
-    if (path) jobs.push({ collection: 'newsletters', legacy_url: n.legacy_url, field: 'body_pdf_link', path, alt: n.title_en })
+    const path =
+      n.archive_url && /\.pdf$/i.test(stripQuery(n.archive_url)) ? uploadsPath(n.archive_url) : null
+    if (path)
+      jobs.push({
+        collection: 'newsletters',
+        legacy_url: n.legacy_url,
+        field: 'body_pdf_link',
+        path,
+        alt: n.title_en,
+      })
   }
   return jobs
 }

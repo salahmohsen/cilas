@@ -261,7 +261,9 @@ export function PayloadForm({
       try {
         // Files cannot be kept on the device; the rest of the answers are,
         // except what a signed-in account holds (its identity, not a draft).
-        const skip = me ? [...givenNames.split('\n'), ...fileNames.split('\n')] : fileNames.split('\n')
+        const skip = me
+          ? [...givenNames.split('\n'), ...fileNames.split('\n')]
+          : fileNames.split('\n')
         const kept = Object.fromEntries(
           Object.entries(values).filter(([name]) => !skip.includes(name) && name !== ''),
         )

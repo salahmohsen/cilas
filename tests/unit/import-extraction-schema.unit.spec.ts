@@ -38,7 +38,9 @@ const sample = {
 
 describe('CoursePage', () => {
   it('accepts a cycle page extraction', () => {
-    expect(CoursePage.parse(sample).cycles[0].courses[0].title).toBe('Story as participative enquiry')
+    expect(CoursePage.parse(sample).cycles[0].courses[0].title).toBe(
+      'Story as participative enquiry',
+    )
   })
 
   it('rejects times that are not 24-hour HH:MM', () => {
@@ -50,7 +52,12 @@ describe('CoursePage', () => {
 
 describe('coursePrompt', () => {
   it('names the page and carries its text', () => {
-    const prompt = coursePrompt({ file: 'fall-cycle-2024.html', kind: 'cycle', title: 'Fall cycle 2024', text: 'BODY' })
+    const prompt = coursePrompt({
+      file: 'fall-cycle-2024.html',
+      kind: 'cycle',
+      title: 'Fall cycle 2024',
+      text: 'BODY',
+    })
     expect(prompt).toContain('fall-cycle-2024.html')
     expect(prompt).toContain('BODY')
     expect(PROMPT_VERSION).toMatch(/^\d+$/)

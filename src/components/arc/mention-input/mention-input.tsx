@@ -88,7 +88,8 @@ export interface MentionInputProps {
 }
 
 type Suggestion =
-  { kind: 'person'; item: MentionPerson } | { kind: 'channel'; item: MentionChannel }
+  | { kind: 'person'; item: MentionPerson }
+  | { kind: 'channel'; item: MentionChannel }
 type Trigger = { kind: MentionKind; start: number; query: string }
 
 const EMPTY: MentionValue = { text: '', mentions: [] }

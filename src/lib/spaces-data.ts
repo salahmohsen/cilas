@@ -521,7 +521,9 @@ export type SessionView =
 
 /** The space's course as the reader may read it, for the sessions its posts name. */
 export type SessionRead =
-  { state: 'shown'; course: SessionCourse } | { state: 'gone' } | { state: 'hidden' }
+  | { state: 'shown'; course: SessionCourse }
+  | { state: 'gone' }
+  | { state: 'hidden' }
 
 /**
  * The course behind a course space's session links and mentions, in one read

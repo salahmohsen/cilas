@@ -41,7 +41,8 @@ import {
  * `auth` means no signed-in account reached the action.
  */
 export type SpacesWriteState =
-  { status: 'ok' } | { status: 'error'; error: WriteError | 'auth' | 'failed' }
+  | { status: 'ok' }
+  | { status: 'error'; error: WriteError | 'auth' | 'failed' }
 
 const err = (error: WriteError | 'auth' | 'failed'): SpacesWriteState => ({
   status: 'error',

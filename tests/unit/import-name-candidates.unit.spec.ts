@@ -12,12 +12,18 @@ describe('candidateGroups', () => {
   })
 
   it('groups a lone first name with full names starting with it', () => {
-    expect(candidateGroups([n('Leon'), n('Leon Conrad'), n('Sara Salem')])).toEqual([['Leon', 'Leon Conrad']])
+    expect(candidateGroups([n('Leon'), n('Leon Conrad'), n('Sara Salem')])).toEqual([
+      ['Leon', 'Leon Conrad'],
+    ])
   })
 
   it('groups names a couple of letters apart', () => {
-    expect(candidateGroups([n('Manar Hazza'), n('Manar Hazzaa')])).toEqual([['Manar Hazza', 'Manar Hazzaa']])
-    expect(candidateGroups([n('Omar El-Rakhawi'), n('Omar El-Rakhawy')])).toEqual([['Omar El-Rakhawi', 'Omar El-Rakhawy']])
+    expect(candidateGroups([n('Manar Hazza'), n('Manar Hazzaa')])).toEqual([
+      ['Manar Hazza', 'Manar Hazzaa'],
+    ])
+    expect(candidateGroups([n('Omar El-Rakhawi'), n('Omar El-Rakhawy')])).toEqual([
+      ['Omar El-Rakhawi', 'Omar El-Rakhawy'],
+    ])
   })
 
   it('leaves different people apart', () => {

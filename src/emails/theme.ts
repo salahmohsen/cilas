@@ -16,12 +16,48 @@ export const font = "Inter, 'IBM Plex Sans Arabic', system-ui, Arial, sans-serif
 
 /** Barebone's type scale: size, weight, tracking and leading together. */
 export const type = {
-  11: { fontSize: '11px', fontWeight: 420, letterSpacing: '-0.033px', lineHeight: '1.5', color: colors.fg3 },
-  13: { fontSize: '13px', fontWeight: 420, letterSpacing: '-0.039px', lineHeight: '1.5', color: colors.fg3 },
-  16: { fontSize: '16px', fontWeight: 420, letterSpacing: '-0.048px', lineHeight: '1.5', color: colors.fg2 },
-  20: { fontSize: '20px', fontWeight: 600, letterSpacing: '-0.06px', lineHeight: '1.3', color: colors.fg },
-  28: { fontSize: '28px', fontWeight: 600, letterSpacing: '-0.084px', lineHeight: '1.3', color: colors.fg },
-  32: { fontSize: '32px', fontWeight: 600, letterSpacing: '-0.64px', lineHeight: '1.25', color: colors.fg },
+  11: {
+    fontSize: '11px',
+    fontWeight: 420,
+    letterSpacing: '-0.033px',
+    lineHeight: '1.5',
+    color: colors.fg3,
+  },
+  13: {
+    fontSize: '13px',
+    fontWeight: 420,
+    letterSpacing: '-0.039px',
+    lineHeight: '1.5',
+    color: colors.fg3,
+  },
+  16: {
+    fontSize: '16px',
+    fontWeight: 420,
+    letterSpacing: '-0.048px',
+    lineHeight: '1.5',
+    color: colors.fg2,
+  },
+  20: {
+    fontSize: '20px',
+    fontWeight: 600,
+    letterSpacing: '-0.06px',
+    lineHeight: '1.3',
+    color: colors.fg,
+  },
+  28: {
+    fontSize: '28px',
+    fontWeight: 600,
+    letterSpacing: '-0.084px',
+    lineHeight: '1.3',
+    color: colors.fg,
+  },
+  32: {
+    fontSize: '32px',
+    fontWeight: 600,
+    letterSpacing: '-0.64px',
+    lineHeight: '1.25',
+    color: colors.fg,
+  },
 } as const
 
 /**
@@ -36,7 +72,8 @@ export const link = {
 } as const
 
 /** The same, as a style attribute for links inside converted rich text. */
-export const linkCss = 'color:#14171E;text-decoration:underline;text-decoration-color:#C4C5C9;text-underline-offset:3px'
+export const linkCss =
+  'color:#14171E;text-decoration:underline;text-decoration-color:#C4C5C9;text-underline-offset:3px'
 
 export const button = (accent: string) =>
   ({

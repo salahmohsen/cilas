@@ -28,8 +28,11 @@ export function CalendarJump({
   const year = Number(date.slice(0, 4))
   const month = Number(date.slice(5, 7))
   const monthName = (m: number) =>
-    new Intl.DateTimeFormat(locale, { month: 'long', timeZone: 'UTC' }).format(new Date(Date.UTC(2000, m - 1, 1)))
-  const go = (y: number, m: number) => router.push(`/calendar?view=${view}&date=${y}-${String(m).padStart(2, '0')}-01`)
+    new Intl.DateTimeFormat(locale, { month: 'long', timeZone: 'UTC' }).format(
+      new Date(Date.UTC(2000, m - 1, 1)),
+    )
+  const go = (y: number, m: number) =>
+    router.push(`/calendar?view=${view}&date=${y}-${String(m).padStart(2, '0')}-01`)
 
   const yearList = years.includes(year) ? years : [...years, year].sort()
 

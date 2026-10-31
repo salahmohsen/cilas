@@ -11,11 +11,18 @@ import { readFileSync, writeFileSync } from 'node:fs'
 import path from 'node:path'
 import { getPayload } from 'payload'
 
-import { REDIRECT_COLLECTIONS, importRedirects, redirectTargets, type DocRef } from './lib/import-redirects'
+import {
+  REDIRECT_COLLECTIONS,
+  importRedirects,
+  redirectTargets,
+  type DocRef,
+} from './lib/import-redirects'
 
 const here = import.meta.dirname
 type Page = { legacy_url: string; kind: string; title: string }
-const pages = (JSON.parse(readFileSync(path.join(here, 'manifest.json'), 'utf8')) as { pages: Page[] }).pages
+const pages = (
+  JSON.parse(readFileSync(path.join(here, 'manifest.json'), 'utf8')) as { pages: Page[] }
+).pages
 
 const main = async () => {
   const { default: config } = await import('../src/payload.config')
@@ -43,8 +50,18 @@ const main = async () => {
 
   const uploads: Array<{ legacy_url: string; url: string }> = []
   for (let page = 1; ; page++) {
-    const res = await payload.find({ collection: 'media', where: { legacy_url: { exists: true } }, depth: 0, limit: 500, page, overrideAccess: true })
-    for (const m of res.docs as unknown as Array<{ legacy_url?: string | null; url?: string | null }>) {
+    const res = await payload.find({
+      collection: 'media',
+      where: { legacy_url: { exists: true } },
+      depth: 0,
+      limit: 500,
+      page,
+      overrideAccess: true,
+    })
+    for (const m of res.docs as unknown as Array<{
+      legacy_url?: string | null
+      url?: string | null
+    }>) {
       if (m.legacy_url && m.url) uploads.push({ legacy_url: m.legacy_url, url: m.url })
     }
     if (!res.hasNextPage) break
@@ -70,14 +87,19 @@ const main = async () => {
     ...missing.map((p) => `- ${label(byUrl.get(p.from))}`),
     '',
     `## Ambiguous (${ambiguous.length})`,
-    ...ambiguous.map((p) => `- ${label(byUrl.get(p.from))}: ${p.candidates?.map((c) => `${c.collection}/${c.id}`).join(', ')}`),
+    ...ambiguous.map(
+      (p) =>
+        `- ${label(byUrl.get(p.from))}: ${p.candidates?.map((c) => `${c.collection}/${c.id}`).join(', ')}`,
+    ),
     '',
     `## Spaces (${spaces.length})`,
     'Spaces are not in the redirects plugin, so these pages get no redirect.',
     ...spaces.map((p) => `- ${label(byUrl.get(p.from))}`),
   ]
   writeFileSync(path.join(here, 'review', 'redirects.md'), lines.join('\n') + '\n')
-  console.log(`pages ${plans.length}, with target ${withTarget}, upload redirects ${uploads.length}`)
+  console.log(
+    `pages ${plans.length}, with target ${withTarget}, upload redirects ${uploads.length}`,
+  )
   console.log(`created ${tally.created}, unchanged ${tally.unchanged}, kept ${tally.kept}`)
   await payload.destroy()
   process.exit(0)

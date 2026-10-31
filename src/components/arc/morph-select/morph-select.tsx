@@ -704,7 +704,9 @@ export function MorphSelect({
                   aria-activedescendant={
                     open && current !== null ? optionId(indexOf.get(current) ?? 0) : undefined
                   }
-                  placeholder={searchPlaceholder ?? selectedOption?.label ?? words.search ?? 'Search'}
+                  placeholder={
+                    searchPlaceholder ?? selectedOption?.label ?? words.search ?? 'Search'
+                  }
                   value={query}
                   autoComplete="off"
                   spellCheck={false}

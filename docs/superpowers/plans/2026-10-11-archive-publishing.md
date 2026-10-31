@@ -3,13 +3,15 @@
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
 **Goal:** Import the archive's publishing content as drafts awaiting review:
-- the essays of *On the Emergence of Pigeon Towers* (English and Arabic) and the *Translation as Education* booklet, as full-text articles inside their publications;
+
+- the essays of _On the Emergence of Pigeon Towers_ (English and Arabic) and the _Translation as Education_ booklet, as full-text articles inside their publications;
 - the press page;
 - the 2013 news posts and open day, as events;
 - the three 2015 blog posts, as articles;
 - the newsletter issues.
 
 **Architecture:** Same pipeline as 6.2–6.4: prepare → agent extraction on the subscription (`--prompt` / `--record`) → normalise → upsert. Two new pieces:
+
 - **Long PDFs** are extracted per essay. A first pass reads each document's table of contents into page ranges. A second pass extracts each essay from only its pages, so no agent sees a whole 65-page book.
 - **Article bodies** come back as typed blocks (heading, paragraph, quote, list item, note). They are converted to Lexical with real headings and quotes, not just paragraphs.
 
@@ -28,8 +30,8 @@
 ## Decisions made in this plan
 
 - **Sources**
-  - *Pigeon Towers*: `on_the_emergence_of_pigeon_towers_-_english.pdf` (65 pp.) and `…_-_ِarabic.pdf`.
-  - *Translation as Education*: `translation_lab_works.pdf` (38 pp., Arabic).
+  - _Pigeon Towers_: `on_the_emergence_of_pigeon_towers_-_english.pdf` (65 pp.) and `…_-_ِarabic.pdf`.
+  - _Translation as Education_: `translation_lab_works.pdf` (38 pp., Arabic).
   - Pages: `on-pigeon-towers`, `translation-as-education`, `press`, `news-and-events`, `events-documents`, `-latest`.
   - Newsletters: `cilas_newsletter_issue_no._1.pdf`, plus the Mailchimp campaign-archive links on the site.
 - **Reading method:** the English book uses its text layer. The Arabic book and the booklet are read from page images, with OCR as a helper (the 6.4 benchmark: Arabic text layers are broken).
@@ -62,17 +64,17 @@
 
 ## File map
 
-| File | Change | Responsibility |
-|---|---|---|
-| `migration/lib/uploads.ts` | modify | mojibake retry |
-| `migration/lib/blocks.ts` | create | blocks → Lexical |
-| `migration/lib/content-schemas.ts` | create | zod schemas + prompts: `Toc`, `Essay`, `PressPage`, `NewsPage`, `BlogPage`, `PublicationPage`, `NewsletterDoc` |
-| `migration/prepare-docs.ts` | create | per-page text, images, OCR for the 4 documents → `migration/raw/docs/<id>/` |
-| `migration/extract-content.ts` | create | `--pending` / `--prompt` / `--record` over every extraction unit |
-| `migration/extracted/content/*.json` | generate | committed |
-| `migration/normalise-content.ts` | create | → `seed/data/archive/{articles,publications,press,events,newsletters}.json` + `review/content.md` |
-| `migration/lib/import-content.ts`, `migration/seed-content.ts` | create | upserts |
-| tests | create | unit tests for the pure parts, an int test for the import |
+| File                                                           | Change   | Responsibility                                                                                                 |
+| -------------------------------------------------------------- | -------- | -------------------------------------------------------------------------------------------------------------- |
+| `migration/lib/uploads.ts`                                     | modify   | mojibake retry                                                                                                 |
+| `migration/lib/blocks.ts`                                      | create   | blocks → Lexical                                                                                               |
+| `migration/lib/content-schemas.ts`                             | create   | zod schemas + prompts: `Toc`, `Essay`, `PressPage`, `NewsPage`, `BlogPage`, `PublicationPage`, `NewsletterDoc` |
+| `migration/prepare-docs.ts`                                    | create   | per-page text, images, OCR for the 4 documents → `migration/raw/docs/<id>/`                                    |
+| `migration/extract-content.ts`                                 | create   | `--pending` / `--prompt` / `--record` over every extraction unit                                               |
+| `migration/extracted/content/*.json`                           | generate | committed                                                                                                      |
+| `migration/normalise-content.ts`                               | create   | → `seed/data/archive/{articles,publications,press,events,newsletters}.json` + `review/content.md`              |
+| `migration/lib/import-content.ts`, `migration/seed-content.ts` | create   | upserts                                                                                                        |
+| tests                                                          | create   | unit tests for the pure parts, an int test for the import                                                      |
 
 **Baseline:** tsc is clean, lint has 0 errors, and all tests pass. Raw files are untrusted: pass paths as arguments, and never run anything from inside `migration/raw`.
 
@@ -81,6 +83,7 @@
 ### Task 1: Upload links with mis-decoded Arabic names
 
 **Files:**
+
 - Modify: `migration/lib/uploads.ts`
 - Test: `tests/unit/import-uploads.unit.spec.ts`
 
@@ -94,6 +97,7 @@
 ### Task 2: Blocks to Lexical
 
 **Files:**
+
 - Create: `migration/lib/blocks.ts`
 - Test: `tests/unit/import-blocks.unit.spec.ts`
 
@@ -127,6 +131,7 @@
 ### Task 3: Content schemas and prompts
 
 **Files:**
+
 - Create: `migration/lib/content-schemas.ts`
 - Test: `tests/unit/import-content-schemas.unit.spec.ts`
 
@@ -142,14 +147,16 @@ const Block = z.object({
 // Pass 1: what a long document contains, and where.
 export const Toc = z.object({
   front_matter_pages: z.array(z.number().int().positive()), // imprint/credits pages
-  essays: z.array(z.object({
-    order: z.number().int().positive(),
-    title: z.string().min(1),
-    authors: z.array(z.string()),
-    first_page: z.number().int().positive(),
-    last_page: z.number().int().positive(),
-    is_foreword: z.boolean(),
-  })),
+  essays: z.array(
+    z.object({
+      order: z.number().int().positive(),
+      title: z.string().min(1),
+      authors: z.array(z.string()),
+      first_page: z.number().int().positive(),
+      last_page: z.number().int().positive(),
+      is_foreword: z.boolean(),
+    }),
+  ),
   imprint: z.object({
     credits: z.array(z.object({ role: z.string(), names: z.array(z.string()) })),
     license: z.string().nullable(),
@@ -163,44 +170,119 @@ export const Essay = z.object({
   subtitle: z.string().nullable(),
   authors: z.array(z.string()),
   translators: z.array(z.string()),
-  original: z.object({ title: z.string().nullable(), authors: z.array(z.string()), source: z.string().nullable() }).nullable(),
+  original: z
+    .object({
+      title: z.string().nullable(),
+      authors: z.array(z.string()),
+      source: z.string().nullable(),
+    })
+    .nullable(),
   blocks: z.array(Block).min(1),
 })
 
-export const PressPage = z.object({ items: z.array(z.object({
-  title: z.string().min(1), outlet: z.string().nullable(), authors: z.array(z.string()),
-  kind: z.enum(['coverage', 'interview', 'talk', 'op_ed']),
-  date: z.string().regex(/^\d{4}(-\d{2}(-\d{2})?)?$/).nullable(),
-  links: z.array(z.object({ language: z.enum(['ar', 'en', 'de', 'fr', 'other']).nullable(), url: z.string() })),
-  excerpt: z.string().nullable(), logo: z.string().nullable(),
-})) })
-
-export const NewsPage = z.object({ posts: z.array(z.object({
-  title: z.string().min(1), date: z.string().regex(/^\d{4}-\d{2}-\d{2}$/).nullable(),
-  is_gathering: z.boolean(),
-  event_type: z.enum(['talk', 'panel', 'book_discussion', 'reading_group', 'screening', 'performance', 'music', 'exhibition', 'open_day', 'workshop', 'residency', 'visit', 'other']).nullable(),
-  start_time: z.string().regex(/^([01]\d|2[0-3]):[0-5]\d$/).nullable(), end_time: z.string().regex(/^([01]\d|2[0-3]):[0-5]\d$/).nullable(),
-  speakers: z.array(z.string()), blocks: z.array(Block),
-})) })
-
-export const BlogPage = z.object({ posts: z.array(z.object({
-  title: z.string().min(1), date: z.string().regex(/^\d{4}-\d{2}-\d{2}$/).nullable(),
-  authors: z.array(z.string()), blocks: z.array(Block).min(1),
-})) })
-
-export const PublicationPage = z.object({
-  title: z.string(), subtitle: z.string().nullable(), intro: z.array(Block),
-  credits: z.array(z.object({ role: z.string(), names: z.array(z.string()) })),
-  funders: z.array(z.string()), license: z.string().nullable(),
+export const PressPage = z.object({
+  items: z.array(
+    z.object({
+      title: z.string().min(1),
+      outlet: z.string().nullable(),
+      authors: z.array(z.string()),
+      kind: z.enum(['coverage', 'interview', 'talk', 'op_ed']),
+      date: z
+        .string()
+        .regex(/^\d{4}(-\d{2}(-\d{2})?)?$/)
+        .nullable(),
+      links: z.array(
+        z.object({
+          language: z.enum(['ar', 'en', 'de', 'fr', 'other']).nullable(),
+          url: z.string(),
+        }),
+      ),
+      excerpt: z.string().nullable(),
+      logo: z.string().nullable(),
+    }),
+  ),
 })
 
-export const NewsletterSources = z.object({ issues: z.array(z.object({
-  title: z.string().min(1), date: z.string().regex(/^\d{4}(-\d{2}(-\d{2})?)?$/).nullable(),
-  archive_url: z.string().nullable(), blocks: z.array(Block),
-})) })
+export const NewsPage = z.object({
+  posts: z.array(
+    z.object({
+      title: z.string().min(1),
+      date: z
+        .string()
+        .regex(/^\d{4}-\d{2}-\d{2}$/)
+        .nullable(),
+      is_gathering: z.boolean(),
+      event_type: z
+        .enum([
+          'talk',
+          'panel',
+          'book_discussion',
+          'reading_group',
+          'screening',
+          'performance',
+          'music',
+          'exhibition',
+          'open_day',
+          'workshop',
+          'residency',
+          'visit',
+          'other',
+        ])
+        .nullable(),
+      start_time: z
+        .string()
+        .regex(/^([01]\d|2[0-3]):[0-5]\d$/)
+        .nullable(),
+      end_time: z
+        .string()
+        .regex(/^([01]\d|2[0-3]):[0-5]\d$/)
+        .nullable(),
+      speakers: z.array(z.string()),
+      blocks: z.array(Block),
+    }),
+  ),
+})
+
+export const BlogPage = z.object({
+  posts: z.array(
+    z.object({
+      title: z.string().min(1),
+      date: z
+        .string()
+        .regex(/^\d{4}-\d{2}-\d{2}$/)
+        .nullable(),
+      authors: z.array(z.string()),
+      blocks: z.array(Block).min(1),
+    }),
+  ),
+})
+
+export const PublicationPage = z.object({
+  title: z.string(),
+  subtitle: z.string().nullable(),
+  intro: z.array(Block),
+  credits: z.array(z.object({ role: z.string(), names: z.array(z.string()) })),
+  funders: z.array(z.string()),
+  license: z.string().nullable(),
+})
+
+export const NewsletterSources = z.object({
+  issues: z.array(
+    z.object({
+      title: z.string().min(1),
+      date: z
+        .string()
+        .regex(/^\d{4}(-\d{2}(-\d{2})?)?$/)
+        .nullable(),
+      archive_url: z.string().nullable(),
+      blocks: z.array(Block),
+    }),
+  ),
+})
 ```
 
 Prompts follow the 6.4 style (`flowPrompt`):
+
 - **Verbatim only**: never translate or summarise.
 - **Documents read from images**: read every listed page image.
 - **Links**: every link the source gives is kept.
@@ -214,6 +296,7 @@ Prompts follow the 6.4 style (`flowPrompt`):
 ### Task 4: Prepare the documents and the extraction runner
 
 **Files:**
+
 - Create: `migration/prepare-docs.ts`, `migration/extract-content.ts`
 
 - [ ] **Step 1: `prepare-docs.ts`.** It follows `migration/prepare-flows.ts`: `execFileSync` with argument arrays, idempotent. For each of the 4 documents it writes `migration/raw/docs/<id>/`:
@@ -258,6 +341,7 @@ Prompts follow the 6.4 style (`flowPrompt`):
 ### Task 6: Normalise
 
 **Files:**
+
 - Create: `migration/normalise-content.ts`
 - Test: `tests/unit/import-content-normalise.unit.spec.ts`, for the pure helpers
 - Output: `seed/data/archive/{articles,publications,press,events,newsletters}.json` and `migration/review/content.md`
@@ -282,6 +366,7 @@ Prompts follow the 6.4 style (`flowPrompt`):
 ### Task 7: Import, test, run
 
 **Files:**
+
 - Create: `migration/lib/import-content.ts`, `migration/seed-content.ts`
 - Test: `tests/int/import-content.int.spec.ts`
 

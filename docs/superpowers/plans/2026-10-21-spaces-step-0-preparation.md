@@ -26,35 +26,35 @@
 
 **Part A (rename)**
 
-| File | Change |
-| --- | --- |
-| `src/collections/Spaces.ts` → `src/collections/Places.ts` | Collection `places`, export `Places` |
-| `src/payload.config.ts` | Import and register `Places` |
-| `src/collections/Cycles.ts` | Field `place` → `places`; unique index on `place` |
-| `src/collections/Events.ts` | Field `place` → `places` |
-| `src/globals/EmailSettings.ts` | Field `address_place` → `places` |
-| `src/emails/settings.ts`, `src/emails/cards.ts` | Read `address_place`, `place` |
-| `src/api/place.api.ts`, `src/api/courses.api.ts`, `src/api/study-index.ts` | Query `places`, read `cycle.place` |
-| `src/app/(frontend)/[locale]/study/[slug]/CourseView.tsx`, `src/components/site-footer.tsx` | Read `cycle.place`; comments |
-| `src/migrations/<timestamp>_rename_spaces_to_places.{ts,json}` | New migration, hand-written SQL |
-| `seed/collections/spaces.seed.ts` → `seed/collections/places.seed.ts`, `seed/seed.type.ts`, `seed/seed.utils.ts`, `seed/index.ts`, `seed/collections/cycles.seed.ts`, `seed/collections/events.seed.ts`, `seed/workshop-value-of-work.ts` | Seed the `places` collection |
-| `seed/data/live/spaces*.json` → `places*.json`, and `space_id` keys in `seed/data/live/*.json` | Snapshot follows the new schema |
-| `migration/lib/import-courses.ts`, `migration/lib/import-people.ts`, `migration/apply-reviews.ts` | Write to `places` / `place` |
-| `tests/int/*.int.spec.ts`, `tests/unit/emails.unit.spec.tsx` | Use `places` / `place` / `address_place` |
+| File                                                                                                                                                                                                                                      | Change                                            |
+| ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------- |
+| `src/collections/Spaces.ts` → `src/collections/Places.ts`                                                                                                                                                                                 | Collection `places`, export `Places`              |
+| `src/payload.config.ts`                                                                                                                                                                                                                   | Import and register `Places`                      |
+| `src/collections/Cycles.ts`                                                                                                                                                                                                               | Field `place` → `places`; unique index on `place` |
+| `src/collections/Events.ts`                                                                                                                                                                                                               | Field `place` → `places`                          |
+| `src/globals/EmailSettings.ts`                                                                                                                                                                                                            | Field `address_place` → `places`                  |
+| `src/emails/settings.ts`, `src/emails/cards.ts`                                                                                                                                                                                           | Read `address_place`, `place`                     |
+| `src/api/place.api.ts`, `src/api/courses.api.ts`, `src/api/study-index.ts`                                                                                                                                                                | Query `places`, read `cycle.place`                |
+| `src/app/(frontend)/[locale]/study/[slug]/CourseView.tsx`, `src/components/site-footer.tsx`                                                                                                                                               | Read `cycle.place`; comments                      |
+| `src/migrations/<timestamp>_rename_spaces_to_places.{ts,json}`                                                                                                                                                                            | New migration, hand-written SQL                   |
+| `seed/collections/spaces.seed.ts` → `seed/collections/places.seed.ts`, `seed/seed.type.ts`, `seed/seed.utils.ts`, `seed/index.ts`, `seed/collections/cycles.seed.ts`, `seed/collections/events.seed.ts`, `seed/workshop-value-of-work.ts` | Seed the `places` collection                      |
+| `seed/data/live/spaces*.json` → `places*.json`, and `space_id` keys in `seed/data/live/*.json`                                                                                                                                            | Snapshot follows the new schema                   |
+| `migration/lib/import-courses.ts`, `migration/lib/import-people.ts`, `migration/apply-reviews.ts`                                                                                                                                         | Write to `places` / `place`                       |
+| `tests/int/*.int.spec.ts`, `tests/unit/emails.unit.spec.tsx`                                                                                                                                                                              | Use `places` / `place` / `address_place`          |
 
-**Not renamed, on purpose:** the import pipeline's *input* formats describe the old Weebly site and keep their own words: the `space` key in `migration/extracted/**` and `seed/data/archive/*.json`, `spaceOf()` and `SPACES` in `migration/lib/normalise-courses.ts`, the `space` page kind in `migration/lib/classify.ts` and `migration/lib/import-redirects.ts`, and their unit tests. ADRs 0001–0006 are history and stay as written.
+**Not renamed, on purpose:** the import pipeline's _input_ formats describe the old Weebly site and keep their own words: the `space` key in `migration/extracted/**` and `seed/data/archive/*.json`, `spaceOf()` and `SPACES` in `migration/lib/normalise-courses.ts`, the `space` page kind in `migration/lib/classify.ts` and `migration/lib/import-redirects.ts`, and their unit tests. ADRs 0001–0006 are history and stay as written.
 
 **Part B (profile)**
 
-| File | Responsibility |
-| --- | --- |
-| `src/lib/profile.ts` | Read and save the signed-in member's own person (validation, Markdown ⇄ Lexical, photo upload) |
-| `src/app/(frontend)/[locale]/profile/actions.ts` | Server action: form data → `saveProfile` |
-| `src/app/(frontend)/[locale]/profile/page.tsx` | Signed-in page; redirects to login |
-| `src/components/profile/profile-form.tsx` | Client form with Arc inputs and the rich text editor |
-| `src/components/site-header.tsx` | "Profile" item in the account menu |
-| `messages/en.json`, `messages/ar.json` | `Profile` strings, `Header.profile` |
-| `tests/int/profile.int.spec.ts` | Behaviour of `src/lib/profile.ts` |
+| File                                             | Responsibility                                                                                 |
+| ------------------------------------------------ | ---------------------------------------------------------------------------------------------- |
+| `src/lib/profile.ts`                             | Read and save the signed-in member's own person (validation, Markdown ⇄ Lexical, photo upload) |
+| `src/app/(frontend)/[locale]/profile/actions.ts` | Server action: form data → `saveProfile`                                                       |
+| `src/app/(frontend)/[locale]/profile/page.tsx`   | Signed-in page; redirects to login                                                             |
+| `src/components/profile/profile-form.tsx`        | Client form with Arc inputs and the rich text editor                                           |
+| `src/components/site-header.tsx`                 | "Profile" item in the account menu                                                             |
+| `messages/en.json`, `messages/ar.json`           | `Profile` strings, `Header.profile`                                                            |
+| `tests/int/profile.int.spec.ts`                  | Behaviour of `src/lib/profile.ts`                                                              |
 
 ---
 
@@ -65,6 +65,7 @@ Partial states of Part A do not run: code that says `places` cannot read a datab
 ### Task 1: Rename the collection and its relationships
 
 **Files:**
+
 - Move: `src/collections/Spaces.ts` → `src/collections/Places.ts`
 - Modify: `src/payload.config.ts`, `src/collections/Cycles.ts`, `src/collections/Events.ts`, `src/globals/EmailSettings.ts`
 
@@ -78,13 +79,13 @@ git mv src/collections/Spaces.ts src/collections/Places.ts
 
 Replace exactly:
 
-| Old | New |
-| --- | --- |
-| `export const Spaces: CollectionConfig = {` | `/** A physical site where CILAS has taught (CONTEXT.md: Place; ADR 0007). */`<br>`export const Places: CollectionConfig = {` |
-| `  slug: 'spaces',` | `  slug: 'places',` |
-| `    // Spaces have no \`title\`; the name is the human-readable label.` | `    // Places have no \`title\`; the name is the human-readable label.` |
-| `      // Not a visibility tier — whether the space is still in use. Renamed from` | `      // Not a visibility tier — whether the place is still in use. Renamed from` |
-| `{ name: 'city', type: 'text', localized: true }, // names the space's cycles: "Spring 2026, Cairo"` | `{ name: 'city', type: 'text', localized: true }, // names the place's cycles: "Spring 2026, Cairo"` |
+| Old                                                                                                  | New                                                                                                                           |
+| ---------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------- |
+| `export const Spaces: CollectionConfig = {`                                                          | `/** A physical site where CILAS has taught (CONTEXT.md: Place; ADR 0007). */`<br>`export const Places: CollectionConfig = {` |
+| `  slug: 'spaces',`                                                                                  | `  slug: 'places',`                                                                                                           |
+| `    // Spaces have no \`title\`; the name is the human-readable label.`                             | `    // Places have no \`title\`; the name is the human-readable label.`                                                      |
+| `      // Not a visibility tier — whether the space is still in use. Renamed from`                   | `      // Not a visibility tier — whether the place is still in use. Renamed from`                                            |
+| `{ name: 'city', type: 'text', localized: true }, // names the space's cycles: "Spring 2026, Cairo"` | `{ name: 'city', type: 'text', localized: true }, // names the place's cycles: "Spring 2026, Cairo"`                          |
 
 - [ ] **Step 3: Register it in `src/payload.config.ts`**
 
@@ -100,35 +101,35 @@ Change `import { Spaces } from './collections/Spaces'` to `import { Places } fro
 
 Replace exactly:
 
-| Old | New |
-| --- | --- |
-| ` * place in the title is the space's city, so it needs a lookup.` | ` * place in the title is the place's city, so it needs a lookup.` |
-| `  const spaceId = typeof merged.space === 'object' ? merged.space?.id : merged.space` | `  const placeId = typeof merged.place === 'object' ? merged.place?.id : merged.place` |
-| `  const space = spaceId` | `  const place = placeId` |
-| `          collection: 'spaces',` | `          collection: 'places',` |
-| `          id: spaceId,` | `          id: placeId,` |
+| Old                                                                                       | New                                                                                       |
+| ----------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------- |
+| ` * place in the title is the space's city, so it needs a lookup.`                        | ` * place in the title is the place's city, so it needs a lookup.`                        |
+| `  const spaceId = typeof merged.space === 'object' ? merged.space?.id : merged.space`    | `  const placeId = typeof merged.place === 'object' ? merged.place?.id : merged.place`    |
+| `  const space = spaceId`                                                                 | `  const place = placeId`                                                                 |
+| `          collection: 'spaces',`                                                         | `          collection: 'places',`                                                         |
+| `          id: spaceId,`                                                                  | `          id: placeId,`                                                                  |
 | `  const title = cycleTitle({ season, start_year, place: space?.city \|\| space?.name })` | `  const title = cycleTitle({ season, start_year, place: place?.city \|\| place?.name })` |
-| `/** One intake of courses in a season, start year and space (CONTEXT.md). */` | `/** One intake of courses in a season, start year and place (CONTEXT.md). */` |
-| `  // One intake per season, year and space (ADR 0003).` | `  // One intake per season, year and place (ADR 0003, ADR 0007).` |
-| `  indexes: [{ fields: ['season', 'start_year', 'space'], unique: true }],` | `  indexes: [{ fields: ['season', 'start_year', 'place'], unique: true }],` |
-| `          name: 'space',` (the relationship near line 111) | `          name: 'place',` |
-| `          relationTo: 'spaces',` | `          relationTo: 'places',` |
+| `/** One intake of courses in a season, start year and space (CONTEXT.md). */`            | `/** One intake of courses in a season, start year and place (CONTEXT.md). */`            |
+| `  // One intake per season, year and space (ADR 0003).`                                  | `  // One intake per season, year and place (ADR 0003, ADR 0007).`                        |
+| `  indexes: [{ fields: ['season', 'start_year', 'space'], unique: true }],`               | `  indexes: [{ fields: ['season', 'start_year', 'place'], unique: true }],`               |
+| `          name: 'space',` (the relationship near line 111)                               | `          name: 'place',`                                                                |
+| `          relationTo: 'spaces',`                                                         | `          relationTo: 'places',`                                                         |
 
 Read lines 25–50 after the edit: any other `space` identifier in `deriveCycleIdentity` (for example in a `select` or a type) must become `place` too.
 
 - [ ] **Step 5: `src/collections/Events.ts`**
 
-| Old | New |
-| --- | --- |
-| `        { name: 'space', type: 'relationship', relationTo: 'spaces' },` | `        { name: 'place', type: 'relationship', relationTo: 'places' },` |
+| Old                                                                          | New                                                                          |
+| ---------------------------------------------------------------------------- | ---------------------------------------------------------------------------- |
+| `        { name: 'space', type: 'relationship', relationTo: 'spaces' },`     | `        { name: 'place', type: 'relationship', relationTo: 'places' },`     |
 | `          admin: { description: 'Only when it is not at a CILAS space.' },` | `          admin: { description: 'Only when it is not at a CILAS place.' },` |
 
 - [ ] **Step 6: `src/globals/EmailSettings.ts`**
 
-| Old | New |
-| --- | --- |
-| `              name: 'address_space',` | `              name: 'address_place',` |
-| `              relationTo: 'spaces',` | `              relationTo: 'places',` |
+| Old                                                                                                                            | New                                                                                                                            |
+| ------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------ |
+| `              name: 'address_space',`                                                                                         | `              name: 'address_place',`                                                                                         |
+| `              relationTo: 'spaces',`                                                                                          | `              relationTo: 'places',`                                                                                          |
 | `'The space whose address and Google Maps link end each email. Edit them in Spaces. Bulk email must carry a postal address.',` | `'The place whose address and Google Maps link end each email. Edit them in Places. Bulk email must carry a postal address.',` |
 
 - [ ] **Step 7: Regenerate types**
@@ -139,6 +140,7 @@ Expected: `src/payload-types.ts` now has `Place`, `places`, `place?: (number | n
 ```bash
 grep -c "interface Space\b\|'spaces'" src/payload-types.ts
 ```
+
 Expected: `0`
 
 ### Task 2: Rename the readers in app code
@@ -147,44 +149,44 @@ Expected: `0`
 
 - [ ] **Step 1: `src/emails/settings.ts`**
 
-| Old | New |
-| --- | --- |
-| `  /** The chosen space's address and map link (Email settings → Address). */` | `  /** The chosen place's address and map link (Email settings → Address). */` |
-| `  address_space?: unknown` | `  address_place?: unknown` |
+| Old                                                                                        | New                                                                                        |
+| ------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------ |
+| `  /** The chosen space's address and map link (Email settings → Address). */`             | `  /** The chosen place's address and map link (Email settings → Address). */`             |
+| `  address_space?: unknown`                                                                | `  address_place?: unknown`                                                                |
 | `// A postal address: bulk email must carry one (CAN-SPAM). Used when no space is chosen.` | `// A postal address: bulk email must carry one (CAN-SPAM). Used when no place is chosen.` |
-| `const addressOf = (space: unknown): EmailSettings['address'] \| null => {` | `const addressOf = (place: unknown): EmailSettings['address'] \| null => {` |
-| `  const s = space as { address?: string \| null; map_url?: string \| null } \| null` | `  const s = place as { address?: string \| null; map_url?: string \| null } \| null` |
-| `    address: addressOf(stored.address_space) ?? DEFAULT_ADDRESS,` | `    address: addressOf(stored.address_place) ?? DEFAULT_ADDRESS,` |
+| `const addressOf = (space: unknown): EmailSettings['address'] \| null => {`                | `const addressOf = (place: unknown): EmailSettings['address'] \| null => {`                |
+| `  const s = space as { address?: string \| null; map_url?: string \| null } \| null`      | `  const s = place as { address?: string \| null; map_url?: string \| null } \| null`      |
+| `    address: addressOf(stored.address_space) ?? DEFAULT_ADDRESS,`                         | `    address: addressOf(stored.address_place) ?? DEFAULT_ADDRESS,`                         |
 
 - [ ] **Step 2: `src/emails/cards.ts` (around line 107)**
 
-| Old | New |
-| --- | --- |
-| `  const space = doc.space as { name?: string } \| null` | `  const place = doc.place as { name?: string } \| null` |
+| Old                                                                         | New                                                                         |
+| --------------------------------------------------------------------------- | --------------------------------------------------------------------------- |
+| `  const space = doc.space as { name?: string } \| null`                    | `  const place = doc.place as { name?: string } \| null`                    |
 | `  if (space && typeof space === 'object' && space.name) return space.name` | `  if (place && typeof place === 'object' && place.name) return place.name` |
 
 - [ ] **Step 3: `src/api/place.api.ts`**
 
-| Old | New |
-| --- | --- |
-| ` * Where CILAS is now: the current space with an address, in the page's` | ` * Where CILAS is now: the current place with an address, in the page's` |
-| ` * language, for the footer's map. Null when no current space has one.` | ` * language, for the footer's map. Null when no current place has one.` |
-| `    collection: 'spaces',` | `    collection: 'places',` |
-| `  const space = docs.find((s) => s.address?.trim())` | `  const place = docs.find((s) => s.address?.trim())` |
+| Old                                                                                                           | New                                                                                                           |
+| ------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------- |
+| ` * Where CILAS is now: the current space with an address, in the page's`                                     | ` * Where CILAS is now: the current place with an address, in the page's`                                     |
+| ` * language, for the footer's map. Null when no current space has one.`                                      | ` * language, for the footer's map. Null when no current place has one.`                                      |
+| `    collection: 'spaces',`                                                                                   | `    collection: 'places',`                                                                                   |
+| `  const space = docs.find((s) => s.address?.trim())`                                                         | `  const place = docs.find((s) => s.address?.trim())`                                                         |
 | `  return space ? { name: space.name, address: space.address!.trim(), mapUrl: space.map_url ?? null } : null` | `  return place ? { name: place.name, address: place.address!.trim(), mapUrl: place.map_url ?? null } : null` |
 
 - [ ] **Step 4: `src/api/courses.api.ts`**
 
-| Old | New |
-| --- | --- |
+| Old                                                                                                                                | New                                                                                                                                |
+| ---------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------- |
 | `cycles: { title: true, season: true, start_year: true, start_date: true, academic_year: true, space: true, registration: true },` | `cycles: { title: true, season: true, start_year: true, start_date: true, academic_year: true, place: true, registration: true },` |
-| `  spaces: { name: true, city: true, slug: true },` | `  places: { name: true, city: true, slug: true },` |
-| `  const [{ docs }, { docs: otherDocs }, { docs: spaces }] = await Promise.all([` | `  const [{ docs }, { docs: otherDocs }, { docs: places }] = await Promise.all([` |
-| `payload.find({ collection: 'spaces', depth: 0, pagination: false, locale: 'en', select: { city: true, name: true } }),` | `payload.find({ collection: 'places', depth: 0, pagination: false, locale: 'en', select: { city: true, name: true } }),` |
-| `  const placeKey = new Map(spaces.map((s) => [s.id, slugify(s.city ?? s.name)]))` | `  const placeKey = new Map(places.map((s) => [s.id, slugify(s.city ?? s.name)]))` |
-| `      const space = obj<Space>(cycle?.space)` | `      const site = obj<Place>(cycle?.place)` |
-| `      const place = space ? (space.city ?? space.name) : null` | `      const place = site ? (site.city ?? site.name) : null` |
-| `...(space && place ? { place: [{ value: placeKey.get(space.id) ?? String(space.id), label: place }] } : {}),` | `...(site && place ? { place: [{ value: placeKey.get(site.id) ?? String(site.id), label: place }] } : {}),` |
+| `  spaces: { name: true, city: true, slug: true },`                                                                                | `  places: { name: true, city: true, slug: true },`                                                                                |
+| `  const [{ docs }, { docs: otherDocs }, { docs: spaces }] = await Promise.all([`                                                  | `  const [{ docs }, { docs: otherDocs }, { docs: places }] = await Promise.all([`                                                  |
+| `payload.find({ collection: 'spaces', depth: 0, pagination: false, locale: 'en', select: { city: true, name: true } }),`           | `payload.find({ collection: 'places', depth: 0, pagination: false, locale: 'en', select: { city: true, name: true } }),`           |
+| `  const placeKey = new Map(spaces.map((s) => [s.id, slugify(s.city ?? s.name)]))`                                                 | `  const placeKey = new Map(places.map((s) => [s.id, slugify(s.city ?? s.name)]))`                                                 |
+| `      const space = obj<Space>(cycle?.space)`                                                                                     | `      const site = obj<Place>(cycle?.place)`                                                                                      |
+| `      const place = space ? (space.city ?? space.name) : null`                                                                    | `      const place = site ? (site.city ?? site.name) : null`                                                                       |
+| `...(space && place ? { place: [{ value: placeKey.get(space.id) ?? String(space.id), label: place }] } : {}),`                     | `...(site && place ? { place: [{ value: placeKey.get(site.id) ?? String(site.id), label: place }] } : {}),`                        |
 
 Also change the `Space` type import at the top of the file to `Place`.
 
@@ -194,10 +196,10 @@ Also change the `Space` type import at the top of the file to `Place`.
 
 - [ ] **Step 6: `src/app/(frontend)/[locale]/study/[slug]/CourseView.tsx` (lines 129–135)**
 
-| Old | New |
-| --- | --- |
+| Old                                                                          | New                                                                          |
+| ---------------------------------------------------------------------------- | ---------------------------------------------------------------------------- |
 | `  const space = cycle && isObject<Space>(cycle.space) ? cycle.space : null` | `  const place = cycle && isObject<Place>(cycle.place) ? cycle.place : null` |
-| `        space?.city ?? space?.name,` | `        place?.city ?? place?.name,` |
+| `        space?.city ?? space?.name,`                                        | `        place?.city ?? place?.name,`                                        |
 
 Change the `Space` type import to `Place`. If the file already has a variable named `place` in that scope, name the new one `site` instead.
 
@@ -222,15 +224,15 @@ Rename the exported function `seedSpaces` → `seedPlaces`, the data array `spac
 
 - [ ] **Step 3: `seed/seed.type.ts`**
 
-| Old | New |
-| --- | --- |
-| `  Space,` (in the type import) | `  Place,` |
-| `  /** Space name, resolved to an id. */`<br>`  space: string` (line 68) | `  /** Place name, resolved to an id. */`<br>`  place: string` |
-| `  /** Space name, resolved to an id. */`<br>`  space?: string` (line 160) | `  /** Place name, resolved to an id. */`<br>`  place?: string` |
+| Old                                                                              | New                                                                              |
+| -------------------------------------------------------------------------------- | -------------------------------------------------------------------------------- |
+| `  Space,` (in the type import)                                                  | `  Place,`                                                                       |
+| `  /** Space name, resolved to an id. */`<br>`  space: string` (line 68)         | `  /** Place name, resolved to an id. */`<br>`  place: string`                   |
+| `  /** Space name, resolved to an id. */`<br>`  space?: string` (line 160)       | `  /** Place name, resolved to an id. */`<br>`  place?: string`                  |
 | `/* ================================================================= spaces */` | `/* ================================================================= places */` |
-| `export type SpaceSeed = Omit<Draft<Space>, 'description' \| 'slug'> & {` | `export type PlaceSeed = Omit<Draft<Place>, 'description' \| 'slug'> & {` |
-| `  /** Space names, resolved to ids. */`<br>`  spaces: IdMap` | `  /** Place names, resolved to ids. */`<br>`  places: IdMap` |
-| `  spaces: {},` | `  places: {},` |
+| `export type SpaceSeed = Omit<Draft<Space>, 'description' \| 'slug'> & {`        | `export type PlaceSeed = Omit<Draft<Place>, 'description' \| 'slug'> & {`        |
+| `  /** Space names, resolved to ids. */`<br>`  spaces: IdMap`                    | `  /** Place names, resolved to ids. */`<br>`  places: IdMap`                    |
+| `  spaces: {},`                                                                  | `  places: {},`                                                                  |
 
 Then update every use of `SpaceSeed` in `seed/collections/places.seed.ts` to `PlaceSeed`.
 
@@ -246,33 +248,33 @@ Then update every use of `SpaceSeed` in `seed/collections/places.seed.ts` to `Pl
 
 `migration/lib/import-courses.ts` (lines 155–189):
 
-| Old | New |
-| --- | --- |
-| `  const spaces = new Map<string, number>()` | `  const places = new Map<string, number>()` |
-| `  for (const name of new Set(cycles.map((c) => c.space))) {` | (unchanged: `c.space` is the input) |
-| `    spaces.set(` | `    places.set(` |
+| Old                                                                                           | New                                                                                           |
+| --------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------- |
+| `  const spaces = new Map<string, number>()`                                                  | `  const places = new Map<string, number>()`                                                  |
+| `  for (const name of new Set(cycles.map((c) => c.space))) {`                                 | (unchanged: `c.space` is the input)                                                           |
+| `    spaces.set(`                                                                             | `    places.set(`                                                                             |
 | `await upsert(payload, 'spaces', { name: { equals: name } }, { name, slug: slugify(name) }),` | `await upsert(payload, 'places', { name: { equals: name } }, { name, slug: slugify(name) }),` |
-| `      // One cycle per season, year and space (unique index), so match an` | `      // One cycle per season, year and place (unique index), so match an` |
-| `                { space: { equals: spaces.get(c.space) } },` | `                { place: { equals: places.get(c.space) } },` |
-| `          space: spaces.get(c.space),` | `          place: places.get(c.space),` |
+| `      // One cycle per season, year and space (unique index), so match an`                   | `      // One cycle per season, year and place (unique index), so match an`                   |
+| `                { space: { equals: spaces.get(c.space) } },`                                 | `                { place: { equals: places.get(c.space) } },`                                 |
+| `          space: spaces.get(c.space),`                                                       | `          place: places.get(c.space),`                                                       |
 
 `migration/lib/import-people.ts` (lines 151–164):
 
-| Old | New |
-| --- | --- |
+| Old                                                                                                                                          | New                                                                                                                                          |
+| -------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------- |
 | `const { docs } = await payload.find({ collection: 'spaces', where: { name: { equals: name } }, limit: 1, depth: 0, overrideAccess: true })` | `const { docs } = await payload.find({ collection: 'places', where: { name: { equals: name } }, limit: 1, depth: 0, overrideAccess: true })` |
-| `where: { and: [{ academic_year: { equals: year } }, { space: { in: spaces } }] },` | `where: { and: [{ academic_year: { equals: year } }, { place: { in: spaces } }] },` |
+| `where: { and: [{ academic_year: { equals: year } }, { space: { in: spaces } }] },`                                                          | `where: { and: [{ academic_year: { equals: year } }, { place: { in: spaces } }] },`                                                          |
 
 (The local names `spaceIds`, `spaces` and `SPACES_BY_PLACE` there are about input names; leave them.)
 
 `migration/apply-reviews.ts` (lines 211–220):
 
-| Old | New |
-| --- | --- |
+| Old                                                                                                                                                          | New                                                                                                                                                          |
+| ------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------ |
 | `const space = (await payload.find({ collection: 'spaces', where: { name: { equals: c.cycle.space } }, limit: 1, depth: 0, overrideAccess: true })).docs[0]` | `const place = (await payload.find({ collection: 'places', where: { name: { equals: c.cycle.space } }, limit: 1, depth: 0, overrideAccess: true })).docs[0]` |
-| `    if (!space) throw new Error(\`no space ${c.cycle.space}\`)` | `    if (!place) throw new Error(\`no place ${c.cycle.space}\`)` |
-| `{ space: { equals: space.id } }` | `{ place: { equals: place.id } }` |
-| `        space: space.id,` | `        place: place.id,` |
+| `    if (!space) throw new Error(\`no space ${c.cycle.space}\`)`                                                                                             | `    if (!place) throw new Error(\`no place ${c.cycle.space}\`)`                                                                                             |
+| `{ space: { equals: space.id } }`                                                                                                                            | `{ place: { equals: place.id } }`                                                                                                                            |
+| `        space: space.id,`                                                                                                                                   | `        place: place.id,`                                                                                                                                   |
 
 - [ ] **Step 6: Typecheck**
 
@@ -287,16 +289,16 @@ Expected: errors only under `tests/`.
 
 In each of the four int files: `'spaces'` → `'places'` (in `Tracked` types, `track(…)`, `collection:` and `del(…)`), and the cycle data key `space: space.id` → `place: place.id` with the local variable `space` renamed `place`. Keep test data names such as `'Probe Space'` → rename to `'Probe Place'` and slugs `probe-space` → `probe-place`, `publishing-probe-space` → `publishing-probe-place`, `probe-redirects-space` → `probe-redirects-place` (both where they are created and where they are deleted). In `teaching.int.spec.ts` rename the test title `'builds the cycle title, slug and academic year from its space'` → `'… from its place'`.
 
-Leave `tests/int/import-people.int.spec.ts`, `import-flows.int.spec.ts` and `import-courses.int.spec.ts` alone: their `space:` keys are import *input*.
+Leave `tests/int/import-people.int.spec.ts`, `import-flows.int.spec.ts` and `import-courses.int.spec.ts` alone: their `space:` keys are import _input_.
 
 - [ ] **Step 2: `tests/unit/emails.unit.spec.tsx`**
 
-| Old | New |
-| --- | --- |
-| `          space: { name: 'CILAS, Darb El Ahmar' },` | `          place: { name: 'CILAS, Darb El Ahmar' },` |
-| `  it('comes from the chosen space, linked to its map', () => {` | `  it('comes from the chosen place, linked to its map', () => {` |
+| Old                                                                                       | New                                                                                       |
+| ----------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------- |
+| `          space: { name: 'CILAS, Darb El Ahmar' },`                                      | `          place: { name: 'CILAS, Darb El Ahmar' },`                                      |
+| `  it('comes from the chosen space, linked to its map', () => {`                          | `  it('comes from the chosen place, linked to its map', () => {`                          |
 | `      address_space: { address: 'Somewhere 1, Cairo', map_url: 'https://maps.test/x' },` | `      address_place: { address: 'Somewhere 1, Cairo', map_url: 'https://maps.test/x' },` |
-| `withDefaults({ address_space: { address: '' } })` | `withDefaults({ address_place: { address: '' } })` |
+| `withDefaults({ address_space: { address: '' } })`                                        | `withDefaults({ address_place: { address: '' } })`                                        |
 
 - [ ] **Step 3: Nothing physical is still called a space**
 
@@ -304,6 +306,7 @@ Leave `tests/int/import-people.int.spec.ts`, `import-flows.int.spec.ts` and `imp
 pnpm exec tsc --noEmit -p .
 grep -rn -E "collection: 'spaces'|relationTo: 'spaces'|address_space|\.space\b|ctx\.spaces" src seed tests migration/lib/import-courses.ts migration/lib/import-people.ts migration/apply-reviews.ts | grep -v "src/migrations/" | grep -v "c\.space\|c\.cycle\.space"
 ```
+
 Expected: `tsc` prints nothing; `grep` prints nothing.
 
 - [ ] **Step 4: Unit tests**
@@ -415,6 +418,7 @@ export async function down({ db }: MigrateDownArgs): Promise<void> {
 ```bash
 grep -n -E "DROP (TABLE|COLUMN|TYPE)|CREATE TABLE" src/migrations/*rename_spaces_to_places.ts
 ```
+
 Expected: no output.
 
 - [ ] **Step 4: Ask the user to apply it**
@@ -452,6 +456,7 @@ for f in seed/data/live/spaces*.json; do git mv "$f" "${f/spaces/places}"; done
 ```bash
 ls seed/data/live | grep -c spaces; grep -l '"space_id"\|"address_space_id"' seed/data/live/*.json | wc -l; grep -c '"place_id"' seed/data/live/cycles.json seed/data/live/events.json
 ```
+
 Expected: `0`, `0`, and a non-zero count for both files.
 
 ### Task 7: Verify Part A and commit
@@ -497,6 +502,7 @@ Members may already edit their own person (`People.update`), but only through th
 ### Task 8: The profile module, test first
 
 **Files:**
+
 - Create: `src/lib/profile.ts`
 - Test: `tests/int/profile.int.spec.ts`
 
@@ -538,7 +544,9 @@ describe('profile', () => {
 
   afterAll(async () => {
     for (const id of people) {
-      await payload.delete({ collection: 'people', id, overrideAccess: true }).catch(() => undefined)
+      await payload
+        .delete({ collection: 'people', id, overrideAccess: true })
+        .catch(() => undefined)
     }
     await payload.destroy()
   })
@@ -557,7 +565,9 @@ describe('profile', () => {
     expect(view?.bio.en).toContain('**Fanon**')
     expect(view?.bio.ar).toContain('أقرأ فانون')
     expect(view?.website).toBe('https://nour.example')
-    expect(view?.socialLinks).toEqual([{ platform: 'instagram', url: 'https://instagram.com/nour' }])
+    expect(view?.socialLinks).toEqual([
+      { platform: 'instagram', url: 'https://instagram.com/nour' },
+    ])
     expect(view?.visible).toBe(false)
   })
 
@@ -569,7 +579,11 @@ describe('profile', () => {
       socialLinks: [],
       visible: true,
     } as never)
-    const person = await payload.findByID({ collection: 'people', id: people[0]!, overrideAccess: true })
+    const person = await payload.findByID({
+      collection: 'people',
+      id: people[0]!,
+      overrideAccess: true,
+    })
     expect(person.visible).toBe(false)
   })
 
@@ -602,11 +616,20 @@ describe('profile', () => {
         overrideAccess: false,
       }),
     ).rejects.toThrow()
-    const other = await payload.findByID({ collection: 'people', id: otherId, overrideAccess: true })
+    const other = await payload.findByID({
+      collection: 'people',
+      id: otherId,
+      overrideAccess: true,
+    })
     expect(other.name).toBe('Profile Other')
 
     // An account with no person gets nothing.
-    const nobody = { id: -4, roles: ['member'], person: null, collection: 'users' } as unknown as User
+    const nobody = {
+      id: -4,
+      roles: ['member'],
+      person: null,
+      collection: 'users',
+    } as unknown as User
     expect(await readProfile(payload, nobody)).toBeNull()
     expect(
       await saveProfile(payload, nobody, {
@@ -667,7 +690,11 @@ export type ProfileInput = {
 /** A field the page names in its error message, or the account has no person. */
 export type ProfileError = 'name' | 'bio' | 'website' | 'social' | 'photo' | 'no-person'
 
-const httpUrl = z.string().trim().url().regex(/^https?:\/\//i)
+const httpUrl = z
+  .string()
+  .trim()
+  .url()
+  .regex(/^https?:\/\//i)
 
 const schema = z.object({
   name: z.object({ en: z.string().trim().min(1).max(120), ar: z.string().trim().max(120) }),
@@ -972,8 +999,22 @@ import { SOCIAL_PLATFORMS } from '@/fields/social'
 import type { ProfileError, ProfileView } from '@/lib/profile'
 
 export type ProfileMessages = Record<
-  | 'public' | 'private' | 'nameEn' | 'nameAr' | 'bioEn' | 'bioAr' | 'website' | 'social'
-  | 'platform' | 'url' | 'addLink' | 'removeLink' | 'photo' | 'photoHint' | 'save' | 'saved',
+  | 'public'
+  | 'private'
+  | 'nameEn'
+  | 'nameAr'
+  | 'bioEn'
+  | 'bioAr'
+  | 'website'
+  | 'social'
+  | 'platform'
+  | 'url'
+  | 'addLink'
+  | 'removeLink'
+  | 'photo'
+  | 'photoHint'
+  | 'save'
+  | 'saved',
   string
 > & { errors: Record<ProfileError, string> }
 
@@ -1035,7 +1076,11 @@ export function ProfileForm({ profile, messages: m, action }: Props) {
                 className="rounded-md border px-2 py-2"
                 value={link.platform}
                 onChange={(e) =>
-                  setLinks(links.map((l, j) => (j === i ? { ...l, platform: e.target.value as typeof l.platform } : l)))
+                  setLinks(
+                    links.map((l, j) =>
+                      j === i ? { ...l, platform: e.target.value as typeof l.platform } : l,
+                    ),
+                  )
                 }
               >
                 {SOCIAL_PLATFORMS.map((p) => (
@@ -1051,10 +1096,16 @@ export function ProfileForm({ profile, messages: m, action }: Props) {
                 type="url"
                 dir="ltr"
                 value={link.url}
-                onChange={(e) => setLinks(links.map((l, j) => (j === i ? { ...l, url: e.target.value } : l)))}
+                onChange={(e) =>
+                  setLinks(links.map((l, j) => (j === i ? { ...l, url: e.target.value } : l)))
+                }
               />
             </div>
-            <Button type="button" variant="ghost" onClick={() => setLinks(links.filter((_, j) => j !== i))}>
+            <Button
+              type="button"
+              variant="ghost"
+              onClick={() => setLinks(links.filter((_, j) => j !== i))}
+            >
               {m.removeLink}
             </Button>
           </div>
@@ -1074,7 +1125,11 @@ export function ProfileForm({ profile, messages: m, action }: Props) {
       <div className="grid gap-2">
         {profile.photo && (
           // eslint-disable-next-line @next/next/no-img-element -- a member's own upload, any size
-          <img src={profile.photo.url} alt={profile.photo.alt} className="size-24 rounded-full object-cover" />
+          <img
+            src={profile.photo.url}
+            alt={profile.photo.alt}
+            className="size-24 rounded-full object-cover"
+          />
         )}
         <Input
           label={m.photo}
@@ -1090,7 +1145,11 @@ export function ProfileForm({ profile, messages: m, action }: Props) {
           {m.save}
         </Button>
         <p role="status" className="text-sm">
-          {state.status === 'saved' ? m.saved : state.status === 'error' ? m.errors[state.error] : ''}
+          {state.status === 'saved'
+            ? m.saved
+            : state.status === 'error'
+              ? m.errors[state.error]
+              : ''}
         </p>
       </div>
     </form>
@@ -1139,8 +1198,22 @@ export default async function ProfilePage({ params }: Props) {
   const profile = await readProfile(await getPayload({ config }), user)
 
   const keys = [
-    'public', 'private', 'nameEn', 'nameAr', 'bioEn', 'bioAr', 'website', 'social',
-    'platform', 'url', 'addLink', 'removeLink', 'photo', 'photoHint', 'save', 'saved',
+    'public',
+    'private',
+    'nameEn',
+    'nameAr',
+    'bioEn',
+    'bioAr',
+    'website',
+    'social',
+    'platform',
+    'url',
+    'addLink',
+    'removeLink',
+    'photo',
+    'photoHint',
+    'save',
+    'saved',
   ] as const
   const errors = ['name', 'name-ar', 'bio', 'website', 'social', 'photo', 'no-person'] as const
   const messages = {
@@ -1170,6 +1243,7 @@ export default async function ProfilePage({ params }: Props) {
 pnpm exec tsc --noEmit -p .
 pnpm exec eslint "src/app/(frontend)/[locale]/profile" src/components/profile src/lib/profile.ts
 ```
+
 Expected: no errors.
 
 ### Task 13: The account menu
@@ -1226,6 +1300,7 @@ Open the person in `/admin/collections/people/<id>`: name (both languages), bio,
 pnpm exec prettier --write "src/app/(frontend)/[locale]/profile" src/components/profile src/components/site-header.tsx
 pnpm exec vitest run --config ./vitest.config.mts tests/unit tests/int/profile.int.spec.ts
 ```
+
 Expected: all pass.
 
 - [ ] **Step 2: Commit**

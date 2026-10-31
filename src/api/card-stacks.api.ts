@@ -39,7 +39,11 @@ type StackFields = {
 }
 
 const idOf = (v: unknown): number | null =>
-  typeof v === 'number' ? v : v && typeof v === 'object' && 'id' in v ? (v as { id: number }).id : null
+  typeof v === 'number'
+    ? v
+    : v && typeof v === 'object' && 'id' in v
+      ? (v as { id: number }).id
+      : null
 
 /** Every Card stack block in a Lexical body, at any depth. */
 const stacksIn = (node: unknown, found: StackFields[] = []): StackFields[] => {
@@ -54,7 +58,11 @@ const stacksIn = (node: unknown, found: StackFields[] = []): StackFields[] => {
 const coverOf = (m: unknown) => {
   const media = m as Media | null
   return media && typeof media === 'object' && media.url
-    ? { image: media.url, imageAlt: media.alt ?? '', imageFocalPoint: { focalX: media.focalX, focalY: media.focalY } }
+    ? {
+        image: media.url,
+        imageAlt: media.alt ?? '',
+        imageFocalPoint: { focalX: media.focalX, focalY: media.focalY },
+      }
     : {}
 }
 
@@ -76,7 +84,11 @@ const courseItem = (c: Course): OrbitStackItem => {
 }
 
 /** A course as a grid card: its type is its tab and its label. */
-const coursePost = (c: Course, locale: Locale, typeName: (type: CourseType) => string): GridPost => {
+const coursePost = (
+  c: Course,
+  locale: Locale,
+  typeName: (type: CourseType) => string,
+): GridPost => {
   const type = typeName(c.course_type)
   const image = mediaImage(typeof c.cover_image === 'object' ? c.cover_image : null)
   return {
@@ -97,14 +109,18 @@ const coursePost = (c: Course, locale: Locale, typeName: (type: CourseType) => s
 
 /** One tab per course type present, in the types' own order; none for a single type. */
 const typeTabs = (courses: Course[], typeName: (type: CourseType) => string): string[] => {
-  const present = COURSE_TYPE_OPTIONS.map((o) => o.value).filter((v) => courses.some((c) => c.course_type === v))
+  const present = COURSE_TYPE_OPTIONS.map((o) => o.value).filter((v) =>
+    courses.some((c) => c.course_type === v),
+  )
   return present.length > 1 ? present.map(typeName) : []
 }
 
 /** Each course's cycle season, by slug. */
 const seasonsOf = (courses: Course[]): Record<string, Season> =>
   Object.fromEntries(
-    courses.flatMap((c) => (typeof c.cycle === 'object' && c.cycle?.season && c.slug ? [[c.slug, c.cycle.season]] : [])),
+    courses.flatMap((c) =>
+      typeof c.cycle === 'object' && c.cycle?.season && c.slug ? [[c.slug, c.cycle.season]] : [],
+    ),
   )
 
 /**
@@ -138,7 +154,12 @@ export const resolveCardStacks = async (
     }
   },
 ): Promise<Record<string, ResolvedStack>> => {
-  const read = { locale, fallbackLocale: (locale === 'ar' ? 'en' : 'ar') as Locale, overrideAccess: false, user }
+  const read = {
+    locale,
+    fallbackLocale: (locale === 'ar' ? 'en' : 'ar') as Locale,
+    overrideAccess: false,
+    user,
+  }
   const findArticles = async (ids: number[]) => {
     if (!ids.length) return []
     const { docs } = await payload.find({
@@ -171,14 +192,20 @@ export const resolveCardStacks = async (
     if (block.source === 'publication') {
       const pubId = idOf(block.publication)
       const pub = pubId
-        ? await payload.findByID({ collection: 'publications', id: pubId, depth: 0, ...read }).catch(() => null)
+        ? await payload
+            .findByID({ collection: 'publications', id: pubId, depth: 0, ...read })
+            .catch(() => null)
         : null
       if (pub) {
-        articles = await findArticles((pub.articles ?? []).map(idOf).filter((id): id is number => id !== null))
+        articles = await findArticles(
+          (pub.articles ?? []).map(idOf).filter((id): id is number => id !== null),
+        )
         label ||= labels.collection(pub.title)
       }
     } else if (block.source === 'articles') {
-      articles = await findArticles((block.articles ?? []).map(idOf).filter((id): id is number => id !== null))
+      articles = await findArticles(
+        (block.articles ?? []).map(idOf).filter((id): id is number => id !== null),
+      )
       label ||= labels.articles
     } else if (block.source === 'courses') {
       const ids = (block.courses ?? []).map(idOf).filter((id): id is number => id !== null)
@@ -187,16 +214,25 @@ export const resolveCardStacks = async (
     } else if (block.source === 'cycle') {
       const cycleId = idOf(block.cycle)
       courses = cycleId ? await findCourses({ cycle: { equals: cycleId } }) : []
-      label ||= typeof block.cycle === 'object' && block.cycle?.title ? block.cycle.title : labels.courses
+      label ||=
+        typeof block.cycle === 'object' && block.cycle?.title ? block.cycle.title : labels.courses
     }
-    const items = [...articles.map((a, i) => articleItem(a, i, articles.length)), ...courses.map(courseItem)]
+    const items = [
+      ...articles.map((a, i) => articleItem(a, i, articles.length)),
+      ...courses.map(courseItem),
+    ]
     if (!items.length) continue
     const grid = block.layout === 'grid'
     out[block.id] = {
       label,
       layout: grid ? 'grid' : 'stack',
       items,
-      posts: grid ? [...articles.map((a) => articleCard(a)), ...courses.map((c) => coursePost(c, locale, labels.courseType))] : [],
+      posts: grid
+        ? [
+            ...articles.map((a) => articleCard(a)),
+            ...courses.map((c) => coursePost(c, locale, labels.courseType)),
+          ]
+        : [],
       categories: grid ? typeTabs(courses, labels.courseType) : [],
       seasons: grid ? seasonsOf(courses) : {},
     }

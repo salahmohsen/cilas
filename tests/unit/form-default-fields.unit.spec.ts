@@ -40,9 +40,11 @@ describe('ensureNameEmail', () => {
   })
 
   it('puts them back when removed, and once only', () => {
-    expect(
-      run([message]).fields.map((b) => (b as { name?: string }).name),
-    ).toEqual(['name', 'email', undefined])
+    expect(run([message]).fields.map((b) => (b as { name?: string }).name)).toEqual([
+      'name',
+      'email',
+      undefined,
+    ])
     expect(
       run([question('name'), question('email', 'email'), question('name')]).fields.filter(
         (b) => (b as { name?: string }).name === 'name',
@@ -52,7 +54,10 @@ describe('ensureNameEmail', () => {
 
   it('keeps the default labels: a rename is not a way out', () => {
     const saved = run([question('name'), question('email', 'email'), question('track')])
-    const first = saved.fields.map((b) => ({ name: (b as { name?: string }).name, label: (b as { label?: string }).label }))
+    const first = saved.fields.map((b) => ({
+      name: (b as { name?: string }).name,
+      label: (b as { label?: string }).label,
+    }))
     expect(first.slice(0, 3)).toEqual([
       { name: 'name', label: 'Name' },
       { name: 'email', label: 'Email' },

@@ -34,7 +34,9 @@ describe('blocksToLexical footnotes', () => {
   const children = doc?.root.children ?? []
 
   it('turns a marker into a footnote holding the note without its number', () => {
-    const para = children[0] as unknown as { children: Array<{ type: string; fields?: { blockType: string; note: unknown } }> }
+    const para = children[0] as unknown as {
+      children: Array<{ type: string; fields?: { blockType: string; note: unknown } }>
+    }
     const fn = para.children.find((c) => c.type === 'inlineBlock')
     expect(fn?.fields?.blockType).toBe('footnote')
     expect(JSON.stringify(fn?.fields?.note)).toContain('A source, p. 3.')

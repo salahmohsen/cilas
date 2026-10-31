@@ -20,7 +20,14 @@ export const Syllabus = z.object({
       materials: z.array(Material),
       activities: z.array(
         z.object({
-          kind: z.enum(['discussion', 'field_visit', 'exercise', 'screening', 'presentation', 'other']),
+          kind: z.enum([
+            'discussion',
+            'field_visit',
+            'exercise',
+            'screening',
+            'presentation',
+            'other',
+          ]),
           description: z.string().min(1),
         }),
       ),

@@ -5,7 +5,11 @@ import { afterAll, beforeAll, describe, expect, it } from 'vitest'
 
 import config from '@/payload.config'
 import type { Course } from '@/payload-types'
-import { importCourses, type ArchiveCourse, type ArchiveCycle } from '../../migration/lib/import-courses'
+import {
+  importCourses,
+  type ArchiveCourse,
+  type ArchiveCycle,
+} from '../../migration/lib/import-courses'
 import { importFlows, NOTES_HEADING, NOTES_HEADING_AR } from '../../migration/lib/import-flows'
 import type { Syllabus } from '../../migration/lib/syllabus-schema'
 
@@ -16,7 +20,13 @@ let payload: Payload
 const CYCLE_URL = '/probeflows-fall-2033.html'
 const url = (name: string) => `${CYCLE_URL}#${name}`
 const cycles: ArchiveCycle[] = [
-  { key: 'fall-2033-al-Manshiya', season: 'fall', start_year: 2033, space: 'al-Manshiya', legacy_url: CYCLE_URL },
+  {
+    key: 'fall-2033-al-Manshiya',
+    season: 'fall',
+    start_year: 2033,
+    space: 'al-Manshiya',
+    legacy_url: CYCLE_URL,
+  },
 ]
 const course = (name: string): ArchiveCourse => ({
   legacy_url: url(name),
@@ -42,7 +52,14 @@ const english: Syllabus = {
       title: 'Walking the city',
       description: 'Why walk?\n\nWhere to?',
       meetings: null,
-      materials: [{ type: 'reading', title: 'The Arcades Project', note: 'Benjamin, pp. 1-20', href: 'https://example.org/arcades' }],
+      materials: [
+        {
+          type: 'reading',
+          title: 'The Arcades Project',
+          note: 'Benjamin, pp. 1-20',
+          href: 'https://example.org/arcades',
+        },
+      ],
       activities: [{ kind: 'field_visit', description: 'A walk through al-Ghuria' }],
     },
     {
@@ -54,7 +71,9 @@ const english: Syllabus = {
       activities: [],
     },
   ],
-  bibliography: [{ type: 'reading', title: 'General reading', note: null, href: 'https://example.org/general' }],
+  bibliography: [
+    { type: 'reading', title: 'General reading', note: null, href: 'https://example.org/general' },
+  ],
   notes: 'Assessment by essay.',
 }
 
@@ -66,7 +85,14 @@ const arabic: Syllabus = {
       title: 'تاريخ القضاء',
       description: 'كيف تطور النظام القضائي؟',
       meetings: null,
-      materials: [{ type: 'reading', title: 'تاريخ القضاء المصري الحديث', note: 'لطيفة سالم', href: 'https://example.org/qada' }],
+      materials: [
+        {
+          type: 'reading',
+          title: 'تاريخ القضاء المصري الحديث',
+          note: 'لطيفة سالم',
+          href: 'https://example.org/qada',
+        },
+      ],
       activities: [{ kind: 'discussion', description: 'نقاش مفتوح' }],
     },
     {
@@ -143,11 +169,20 @@ describe('course flow import', () => {
       [2, 'Mapping', 2],
     ])
     expect(c.sessions?.[0].bibliography).toMatchObject([
-      { type: 'reading', title: 'The Arcades Project', note: 'Benjamin, pp. 1-20', href: 'https://example.org/arcades' },
+      {
+        type: 'reading',
+        title: 'The Arcades Project',
+        note: 'Benjamin, pp. 1-20',
+        href: 'https://example.org/arcades',
+      },
     ])
-    expect(c.sessions?.[0].activities).toMatchObject([{ kind: 'field_visit', description: 'A walk through al-Ghuria' }])
+    expect(c.sessions?.[0].activities).toMatchObject([
+      { kind: 'field_visit', description: 'A walk through al-Ghuria' },
+    ])
     expect(plain(c.sessions?.[0].description)).toContain('Where to?')
-    expect(c.bibliography).toMatchObject([{ type: 'reading', title: 'General reading', href: 'https://example.org/general' }])
+    expect(c.bibliography).toMatchObject([
+      { type: 'reading', title: 'General reading', href: 'https://example.org/general' },
+    ])
     expect(plain(c.description)).toContain('The course.')
     // The flow's notes are the fellow's note, not part of the description.
     expect(c.facilitator_note).toBe('Assessment by essay.')
@@ -158,9 +193,16 @@ describe('course flow import', () => {
     const ar = await find('arabic', 'ar')
     expect(ar.sessions?.map((s) => s.session_title)).toEqual(['تاريخ القضاء', 'محاكم الشريعة'])
     expect(ar.sessions?.[0].bibliography).toMatchObject([
-      { type: 'reading', title: 'تاريخ القضاء المصري الحديث', note: 'لطيفة سالم', href: 'https://example.org/qada' },
+      {
+        type: 'reading',
+        title: 'تاريخ القضاء المصري الحديث',
+        note: 'لطيفة سالم',
+        href: 'https://example.org/qada',
+      },
     ])
-    expect(ar.sessions?.[0].activities).toMatchObject([{ kind: 'discussion', description: 'نقاش مفتوح' }])
+    expect(ar.sessions?.[0].activities).toMatchObject([
+      { kind: 'discussion', description: 'نقاش مفتوح' },
+    ])
     expect(plain(ar.sessions?.[0].description)).toContain('"direction":"rtl"')
     expect(ar.bibliography).toMatchObject([{ type: 'reading', title: 'قراءة عامة' }])
     expect(ar.facilitator_note).toBe('التقييم بالمقالة.')
@@ -181,7 +223,10 @@ describe('course flow import', () => {
       collection: 'courses',
       id: before.id,
       data: {
-        sessions: (before.sessions ?? []).map((s, i) => ({ ...s, session_title: `English ${i + 1}` })),
+        sessions: (before.sessions ?? []).map((s, i) => ({
+          ...s,
+          session_title: `English ${i + 1}`,
+        })),
       },
       locale: 'en',
       draft: true,
@@ -193,7 +238,9 @@ describe('course flow import', () => {
     await payload.update({
       collection: 'courses',
       id: ar.id,
-      data: { sessions: (ar.sessions ?? []).map((s) => ({ ...s, session_title: `${s.session_title}!` })) },
+      data: {
+        sessions: (ar.sessions ?? []).map((s) => ({ ...s, session_title: `${s.session_title}!` })),
+      },
       locale: 'ar',
       draft: true,
       overrideAccess: true,
@@ -201,7 +248,10 @@ describe('course flow import', () => {
     expect((await find('arabic', 'en')).sessions?.map((s) => s.session_title)).toEqual(
       en.sessions?.map((s) => s.session_title),
     )
-    expect((await find('arabic', 'ar')).sessions?.map((s) => s.session_title)).toEqual(['تاريخ القضاء!', 'محاكم الشريعة!'])
+    expect((await find('arabic', 'ar')).sessions?.map((s) => s.session_title)).toEqual([
+      'تاريخ القضاء!',
+      'محاكم الشريعة!',
+    ])
   })
 
   it('does not duplicate sessions or notes on a re-run', async () => {
@@ -217,5 +267,4 @@ describe('course flow import', () => {
     expect(ar.facilitator_note).toBe('التقييم بالمقالة.')
     expect((await find('arabic', 'en')).sessions).toHaveLength(2)
   })
-
 })

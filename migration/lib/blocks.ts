@@ -77,7 +77,12 @@ const footnote = (number: number, text: string, direction: Direction): LexicalCh
         indent: 0,
         version: 1,
         direction,
-        children: [element('paragraph', direction, inlineToLexical(text, direction), { textFormat: '', textStyle: '' })],
+        children: [
+          element('paragraph', direction, inlineToLexical(text, direction), {
+            textFormat: '',
+            textStyle: '',
+          }),
+        ],
       },
     },
   },
@@ -89,7 +94,11 @@ const footnote = (number: number, text: string, direction: Direction): LexicalCh
  * dropped rather than shown. With `footnotes`, a `[^n]` marker becomes a
  * Footnote inline block holding note n.
  */
-export const inlineToLexical = (text: string, direction: Direction, footnotes?: Footnotes): LexicalChild[] => {
+export const inlineToLexical = (
+  text: string,
+  direction: Direction,
+  footnotes?: Footnotes,
+): LexicalChild[] => {
   if (footnotes && FOOTNOTE.test(text)) {
     FOOTNOTE.lastIndex = 0
     const out: LexicalChild[] = []
@@ -120,7 +129,10 @@ export const inlineToLexical = (text: string, direction: Direction, footnotes?: 
 }
 
 const paragraph = (text: string, direction: Direction, footnotes?: Footnotes) =>
-  element('paragraph', direction, inlineToLexical(text, direction, footnotes), { textFormat: '', textStyle: '' })
+  element('paragraph', direction, inlineToLexical(text, direction, footnotes), {
+    textFormat: '',
+    textStyle: '',
+  })
 
 const heading = (text: string, level: number, direction: Direction, footnotes?: Footnotes) =>
   element('heading', direction, inlineToLexical(text, direction, footnotes), {
@@ -151,7 +163,11 @@ const looksLikeAttribution = (text: string): boolean => {
 export const splitAttribution = (text: string): [string, string | null] => {
   const lines = text.split('\n')
   const last = lines.at(-1) ?? ''
-  if (lines.length > 1 && ATTRIBUTION_LEAD.test(last) && looksLikeAttribution(last.replace(ATTRIBUTION_LEAD, ''))) {
+  if (
+    lines.length > 1 &&
+    ATTRIBUTION_LEAD.test(last) &&
+    looksLikeAttribution(last.replace(ATTRIBUTION_LEAD, ''))
+  ) {
     return [lines.slice(0, -1).join('\n').trimEnd(), last.replace(ATTRIBUTION_LEAD, '').trim()]
   }
   const m = text.match(/^([\s\S]*[”"»])\.?\s*[~–—-]?\s*([^”"«»\n]+)$/)
@@ -163,7 +179,11 @@ export const splitAttribution = (text: string): [string, string | null] => {
 const quote = (text: string, direction: Direction, footnotes?: Footnotes): LexicalChild => {
   const [quotation, source] = splitAttribution(text)
   const children = inlineToLexical(quotation, direction, footnotes)
-  if (source) children.push({ type: 'linebreak', version: 1 } as LexicalChild, ...inlineToLexical(`— ${source}`, direction, footnotes))
+  if (source)
+    children.push(
+      { type: 'linebreak', version: 1 } as LexicalChild,
+      ...inlineToLexical(`— ${source}`, direction, footnotes),
+    )
   return element('quote', direction, children)
 }
 
@@ -195,8 +215,14 @@ export const blocksToLexical = (blocks: Block[], direction: Direction): LexicalJ
       !splitAttribution(prev.text)[1] &&
       (ATTRIBUTION_LEAD.test(b.text)
         ? looksLikeAttribution(b.text.replace(ATTRIBUTION_LEAD, ''))
-        : looksLikeAttribution(b.text) && /\[\^\d+\]\s*$/.test(b.text) && !/\.\s*\[\^\d+\]\s*$/.test(b.text))
-    if (attribution && prev) joined[joined.length - 1] = { ...prev, text: `${prev.text}\n— ${b.text.replace(ATTRIBUTION_LEAD, '').trim()}` }
+        : looksLikeAttribution(b.text) &&
+          /\[\^\d+\]\s*$/.test(b.text) &&
+          !/\.\s*\[\^\d+\]\s*$/.test(b.text))
+    if (attribution && prev)
+      joined[joined.length - 1] = {
+        ...prev,
+        text: `${prev.text}\n— ${b.text.replace(ATTRIBUTION_LEAD, '').trim()}`,
+      }
     else joined.push(b)
   }
 

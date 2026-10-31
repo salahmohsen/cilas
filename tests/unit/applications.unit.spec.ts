@@ -10,7 +10,10 @@ const answers = (pairs: Record<string, string>) =>
 describe('rolesAfterAccept', () => {
   it('makes a programme applicant a member', () => {
     expect(rolesAfterAccept([], 'programmes')).toEqual(['member'])
-    expect(rolesAfterAccept(['non_degree_seeking'], 'programmes')).toEqual(['non_degree_seeking', 'member'])
+    expect(rolesAfterAccept(['non_degree_seeking'], 'programmes')).toEqual([
+      'non_degree_seeking',
+      'member',
+    ])
     expect(rolesAfterAccept(['member', 'fellow'], 'programmes')).toEqual(['member', 'fellow'])
   })
 

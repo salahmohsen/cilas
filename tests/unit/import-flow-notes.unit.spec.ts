@@ -4,7 +4,8 @@ import { splitBios, withoutRepeats, withSubject } from '../../migration/lib/flow
 import { sessionTexts } from '../../migration/lib/import-flows'
 
 const hisham = [['Hisham Fahmy', 'هشام فهمي']]
-const bio = 'Hisham Fahmy is the teaching fellow of philosophy and poetry in this year’s Bridge Program at CILAS.'
+const bio =
+  'Hisham Fahmy is the teaching fellow of philosophy and poetry in this year’s Bridge Program at CILAS.'
 
 describe('splitBios', () => {
   it('takes a labelled bio out of the notes and gives it to its fellow', () => {
@@ -16,9 +17,13 @@ describe('splitBios', () => {
 
   it('reads the fellow from the label, and a heading-only label from the next paragraph', () => {
     const two = [['Sarah Maher'], ['Marlies Van Coillie']]
-    const text = 'Marlies Van Coillie is a dancer, knitter, nerd and an aspirational pianist in her dreams.'
-    expect(splitBios(`Bio (Marlies Van Coillie): ${text}`, two).bios).toEqual([{ text, name: 'Marlies Van Coillie' }])
-    const ar = 'مينا ناجي، كاتب ومترجم مصري. أحدث أعماله كتاب في استلهام فكر وفلسفة سيمون فايل وتجربتها.'
+    const text =
+      'Marlies Van Coillie is a dancer, knitter, nerd and an aspirational pianist in her dreams.'
+    expect(splitBios(`Bio (Marlies Van Coillie): ${text}`, two).bios).toEqual([
+      { text, name: 'Marlies Van Coillie' },
+    ])
+    const ar =
+      'مينا ناجي، كاتب ومترجم مصري. أحدث أعماله كتاب في استلهام فكر وفلسفة سيمون فايل وتجربتها.'
     expect(splitBios(`وصف المساق\n\nالسيرة\n\n${ar}`, [['Mina Nagy', 'مينا ناجي']])).toEqual({
       notes: 'وصف المساق',
       bios: [{ text: ar, name: 'Mina Nagy' }],
@@ -39,16 +44,20 @@ describe('splitBios', () => {
   })
 
   it('reads an "about the facilitator" label', () => {
-    const text = 'كاتب نشر مقالات نقدية وتغطيات صحفية حول الأدب والسينما والدراما والقصص القصيرة في صحف مصرية وعربية.'
-    expect(splitBios(`عن ميسر المساق محمد عبد العظيم: ${text}`, [['محمد عبد العظيم']]).bios).toEqual([
-      { text, name: 'محمد عبد العظيم' },
-    ])
+    const text =
+      'كاتب نشر مقالات نقدية وتغطيات صحفية حول الأدب والسينما والدراما والقصص القصيرة في صحف مصرية وعربية.'
+    expect(
+      splitBios(`عن ميسر المساق محمد عبد العظيم: ${text}`, [['محمد عبد العظيم']]).bios,
+    ).toEqual([{ text, name: 'محمد عبد العظيم' }])
   })
 
   it('drops a line that only points elsewhere on the page', () => {
-    expect(splitBios('For English, please scroll below.\n\nAssessment by essay, at the end of the lab.', []).notes).toBe(
-      'Assessment by essay, at the end of the lab.',
-    )
+    expect(
+      splitBios(
+        'For English, please scroll below.\n\nAssessment by essay, at the end of the lab.',
+        [],
+      ).notes,
+    ).toBe('Assessment by essay, at the end of the lab.')
   })
 
   it('has nothing to split in empty notes', () => {
@@ -59,7 +68,9 @@ describe('splitBios', () => {
 describe('withSubject', () => {
   it('gives a bio that starts with its verb the person’s name back', () => {
     expect(withSubject('Hisham Fahmy', 'is a writer.')).toBe('Hisham Fahmy is a writer.')
-    expect(withSubject('Hisham Fahmy', 'Hisham Fahmy is a writer.')).toBe('Hisham Fahmy is a writer.')
+    expect(withSubject('Hisham Fahmy', 'Hisham Fahmy is a writer.')).toBe(
+      'Hisham Fahmy is a writer.',
+    )
     expect(withSubject('مي عامر', 'باحثة نسوية')).toBe('باحثة نسوية')
   })
 })
@@ -72,26 +83,39 @@ describe('withoutRepeats', () => {
     expect(withoutRepeats(notes, description)).toBeNull()
   })
   it('keeps what is new', () => {
-    const notes = 'Assessment:\n\nA short essay at the end of the course, on a question of your choice.'
+    const notes =
+      'Assessment:\n\nA short essay at the end of the course, on a question of your choice.'
     expect(withoutRepeats(notes, description)).toBe(notes)
   })
 })
 
 describe('sessionTexts', () => {
   it('puts an Arabic title on the Arabic side even in a mostly English flow', () => {
-    const texts = sessionTexts('عن نسوية كتابة الحياة', 'نستهدف في الأسبوع الأول التعارف.\n\nWeek 1: On the Feminism of Life Writing\nIn the first week, we meet.', true)
+    const texts = sessionTexts(
+      'عن نسوية كتابة الحياة',
+      'نستهدف في الأسبوع الأول التعارف.\n\nWeek 1: On the Feminism of Life Writing\nIn the first week, we meet.',
+      true,
+    )
     expect(texts.ar.title).toBe('عن نسوية كتابة الحياة')
-    expect(texts.en).toEqual({ title: 'On the Feminism of Life Writing', description: 'In the first week, we meet.' })
+    expect(texts.en).toEqual({
+      title: 'On the Feminism of Life Writing',
+      description: 'In the first week, we meet.',
+    })
   })
 
   it('gives a bilingual session each language, the other language’s heading as its title', () => {
     const description =
       'سنبدأ الجزء الثالث والأخير من هذا المعمل بقراءة في كتاب Object-oriented feminism.\n\nWeek 7: We are things?\nWe will begin the third and final part of this lab by reading a book Object-oriented feminism.'
     expect(sessionTexts('نحن أشياء؟', description, false)).toEqual({
-      ar: { title: 'نحن أشياء؟', description: 'سنبدأ الجزء الثالث والأخير من هذا المعمل بقراءة في كتاب Object-oriented feminism.' },
+      ar: {
+        title: 'نحن أشياء؟',
+        description:
+          'سنبدأ الجزء الثالث والأخير من هذا المعمل بقراءة في كتاب Object-oriented feminism.',
+      },
       en: {
         title: 'We are things?',
-        description: 'We will begin the third and final part of this lab by reading a book Object-oriented feminism.',
+        description:
+          'We will begin the third and final part of this lab by reading a book Object-oriented feminism.',
       },
     })
   })

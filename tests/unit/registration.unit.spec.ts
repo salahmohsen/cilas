@@ -42,7 +42,7 @@ describe('registrationStatus', () => {
     expect(registrationStatus({ deadline: '2026-03-01' }, cycle, lateOnDeadline)).toBe('open')
   })
 
-  it("lets a course close even when its cycle is open", () => {
+  it('lets a course close even when its cycle is open', () => {
     const cycle = { method: 'form' as const }
     expect(registrationStatus({ method: 'closed' }, cycle)).toBe('closed')
   })

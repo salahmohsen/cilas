@@ -40,7 +40,12 @@ export async function GET(request: Request) {
     const sample = { name: 'Mona Adel', email: 'mona@example.com', site }
     const mails = await Promise.all([
       acceptanceMail(settings, { ...sample, title: 'The Bridge Programme 2026', newAccount: true }),
-      reviewMail(settings, 'changes_requested', 'On translation', 'Please shorten the second part.'),
+      reviewMail(
+        settings,
+        'changes_requested',
+        'On translation',
+        'Please shorten the second part.',
+      ),
       resetMail(settings, { email: sample.email, token: 'sample-token', site }),
     ])
     html = `<!doctype html><html lang="en"><body style="margin:0;background:#f3f4f6">${mails
@@ -66,7 +71,9 @@ export async function GET(request: Request) {
   </script>`
     : ''
   const scripts = reload + sdk
-  const page = html.includes('</body>') ? html.replace('</body>', `${scripts}</body>`) : html + scripts
+  const page = html.includes('</body>')
+    ? html.replace('</body>', `${scripts}</body>`)
+    : html + scripts
   return new Response(page, {
     headers: { 'Content-Type': 'text/html; charset=utf-8', 'Cache-Control': 'no-store' },
   })

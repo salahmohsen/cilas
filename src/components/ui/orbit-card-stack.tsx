@@ -43,7 +43,8 @@ interface OrbitCardStackProps {
   dir?: 'ltr' | 'rtl'
 }
 
-const inRange = (index: number, length: number) => Math.min(Math.max(0, index), Math.max(0, length - 1))
+const inRange = (index: number, length: number) =>
+  Math.min(Math.max(0, index), Math.max(0, length - 1))
 
 const initialsFor = (item: OrbitStackItem) =>
   item.initials ??
@@ -59,9 +60,16 @@ function Portrait({ item }: { item: OrbitStackItem }) {
     <div className="relative flex aspect-[1.36] w-full overflow-hidden rounded-[1.15rem] bg-[var(--surface-muted,var(--muted))] outline outline-1 -outline-offset-1 outline-black/10 dark:outline-white/10">
       {item.image ? (
         // eslint-disable-next-line @next/next/no-img-element
-        <img alt={item.imageAlt ?? ''} className="h-full w-full object-cover" src={item.image} style={focalPointStyle(item.imageFocalPoint)} />
+        <img
+          alt={item.imageAlt ?? ''}
+          className="h-full w-full object-cover"
+          src={item.image}
+          style={focalPointStyle(item.imageFocalPoint)}
+        />
       ) : (
-        <span className="m-auto font-heading text-5xl text-[var(--text-muted)]">{initialsFor(item)}</span>
+        <span className="m-auto font-heading text-5xl text-[var(--text-muted)]">
+          {initialsFor(item)}
+        </span>
       )}
     </div>
   )

@@ -842,7 +842,12 @@ export function FilterMenu({
                     }
                     transition={reduced ? fade : { ...motionTokens.spring.snappy, opacity: enter }}
                   >
-                    <ChevronLeft className="rtl:-scale-x-100" size={16} strokeWidth={1.8} aria-hidden="true" />
+                    <ChevronLeft
+                      className="rtl:-scale-x-100"
+                      size={16}
+                      strokeWidth={1.8}
+                      aria-hidden="true"
+                    />
                   </motion.button>
                 ) : null}
               </AnimatePresence>

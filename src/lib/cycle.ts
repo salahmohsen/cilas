@@ -31,9 +31,7 @@ export const academicYear = ({
   start_date?: string | null
 }): string => {
   const day = start_date ? cairoDay(start_date) : null
-  const [year, month] = day
-    ? day.split('-').map(Number)
-    : [start_year, season === 'fall' ? 9 : 1]
+  const [year, month] = day ? day.split('-').map(Number) : [start_year, season === 'fall' ? 9 : 1]
   const first = month >= 9 ? year : year - 1
   return `${first}–${first + 1}`
 }

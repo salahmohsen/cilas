@@ -3,7 +3,15 @@ import { describe, expect, it } from 'vitest'
 import { excerptOf, readingMinutes } from '@/lib/articles'
 import { plainText } from '@/lib/plaintext'
 
-const text = (t: string) => ({ type: 'text', version: 1, text: t, format: 0, mode: 'normal', style: '', detail: 0 })
+const text = (t: string) => ({
+  type: 'text',
+  version: 1,
+  text: t,
+  format: 0,
+  mode: 'normal',
+  style: '',
+  detail: 0,
+})
 const body = {
   root: {
     type: 'root',
@@ -14,9 +22,17 @@ const body = {
         version: 1,
         children: [
           text('Taught by '),
-          { type: 'inlineBlock', version: 1, fields: { id: 'm1', blockType: 'mention', label: 'Ghosoun Ismail', type: 'person' } },
+          {
+            type: 'inlineBlock',
+            version: 1,
+            fields: { id: 'm1', blockType: 'mention', label: 'Ghosoun Ismail', type: 'person' },
+          },
           text(' in Cairo.'),
-          { type: 'inlineBlock', version: 1, fields: { id: 'f1', blockType: 'footnote', note: null } },
+          {
+            type: 'inlineBlock',
+            version: 1,
+            fields: { id: 'f1', blockType: 'footnote', note: null },
+          },
         ],
       },
     ],

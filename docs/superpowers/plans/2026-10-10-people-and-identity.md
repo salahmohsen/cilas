@@ -25,24 +25,24 @@ Each plan ships working software on its own and is written just before it starts
 
 ## File map
 
-| File | Change | Responsibility |
-|---|---|---|
-| `src/access.ts` | modify | `Ownership` type, `personOf`, fixed `isAdminOrOwnAndDraft`, `readTiers` |
-| `src/fields/social.ts` | create | Shared social-link fields and URL validator |
-| `src/lib/fellow-role.ts` | create | Fellow-role rules shared by course and user hooks |
-| `src/collections/People.ts` | create | Public profiles, with joins to courses, memberships, governance |
-| `src/collections/Memberships.ts` | create | A person's role in a programme |
-| `src/collections/Users.ts` | modify | Auth, roles and `person` only, plus the link hook |
-| `src/collections/Courses.ts` | modify | `fellows` → people; hooks use `src/lib/fellow-role.ts` |
-| `src/collections/Governance.ts` | modify | `person`, `title`, terms, `order` |
-| `src/collections/Events.ts` | modify | `fellows` → people (reshaped later, in plan 4) |
-| `src/payload.config.ts` | modify | Register People and Memberships |
-| `seed/*` | modify | Seed people and link users |
-| `tests/unit/access.unit.spec.ts` | create | Ownership and tier rules |
-| `tests/unit/fellow-role.unit.spec.ts` | rewrite | Course hooks keyed by person |
-| `tests/unit/user-link.unit.spec.ts` | create | Linking a user to a person syncs `fellow` |
-| `tests/int/people.int.spec.ts` | create | Joins and the membership unique index against Postgres |
-| `tests/int/seed-localization.int.spec.ts` | rewrite | Locale passes now write to people |
+| File                                      | Change  | Responsibility                                                          |
+| ----------------------------------------- | ------- | ----------------------------------------------------------------------- |
+| `src/access.ts`                           | modify  | `Ownership` type, `personOf`, fixed `isAdminOrOwnAndDraft`, `readTiers` |
+| `src/fields/social.ts`                    | create  | Shared social-link fields and URL validator                             |
+| `src/lib/fellow-role.ts`                  | create  | Fellow-role rules shared by course and user hooks                       |
+| `src/collections/People.ts`               | create  | Public profiles, with joins to courses, memberships, governance         |
+| `src/collections/Memberships.ts`          | create  | A person's role in a programme                                          |
+| `src/collections/Users.ts`                | modify  | Auth, roles and `person` only, plus the link hook                       |
+| `src/collections/Courses.ts`              | modify  | `fellows` → people; hooks use `src/lib/fellow-role.ts`                  |
+| `src/collections/Governance.ts`           | modify  | `person`, `title`, terms, `order`                                       |
+| `src/collections/Events.ts`               | modify  | `fellows` → people (reshaped later, in plan 4)                          |
+| `src/payload.config.ts`                   | modify  | Register People and Memberships                                         |
+| `seed/*`                                  | modify  | Seed people and link users                                              |
+| `tests/unit/access.unit.spec.ts`          | create  | Ownership and tier rules                                                |
+| `tests/unit/fellow-role.unit.spec.ts`     | rewrite | Course hooks keyed by person                                            |
+| `tests/unit/user-link.unit.spec.ts`       | create  | Linking a user to a person syncs `fellow`                               |
+| `tests/int/people.int.spec.ts`            | create  | Joins and the membership unique index against Postgres                  |
+| `tests/int/seed-localization.int.spec.ts` | rewrite | Locale passes now write to people                                       |
 
 ---
 
@@ -74,6 +74,7 @@ Expected: a number. Save the full output to the scratchpad. Later "no errors" ch
 `isAdminOrOwnAndDraft` returns `owned(req.user) && { _status: … }`. A Where object is always truthy, so the expression evaluates to just `{ _status: { equals: 'draft' } }`. The ownership constraint is dropped, and **any fellow can update or delete any draft course**.
 
 **Files:**
+
 - Modify: `src/access.ts`
 - Create: `tests/unit/access.unit.spec.ts`
 
@@ -174,8 +175,8 @@ export const isAdminOrOwnAndDraft =
 In `readTiers`, change the signature to `(owned?: Ownership, …)` and replace `if (owned) visible.push(owned(req.user))` with:
 
 ```ts
-    const owns = owned?.(req.user)
-    if (owns) visible.push(owns)
+const owns = owned?.(req.user)
+if (owns) visible.push(owns)
 ```
 
 - [ ] **Step 4: Run the test to make sure it passes**
@@ -197,6 +198,7 @@ git commit -m "fix(access): keep the ownership constraint on draft edits"
 `member` is the permission to write articles. Being a CILASian is a cohort fact that comes from memberships (CONTEXT.md).
 
 **Files:**
+
 - Modify: `src/collections/Users.ts`, `src/collections/Courses.ts`, `tests/unit/fellow-role.unit.spec.ts`, `tests/int/seed-localization.int.spec.ts`, `seed/collections/users.seed.ts`, and any other file the grep finds
 
 - [ ] **Step 1: Find every occurrence**
@@ -211,6 +213,7 @@ In `src/collections/Users.ts`, the option and default become:
 ```ts
           defaultValue: 'member',
 ```
+
 ```ts
             { label: 'Member', value: 'member' },
 ```
@@ -245,6 +248,7 @@ git commit -m "refactor(users): rename the ciliasian role to member"
 ### Task 3: Shared social fields and the People collection
 
 **Files:**
+
 - Create: `src/fields/social.ts`, `src/collections/People.ts`
 - Modify: `src/payload.config.ts`
 
@@ -392,6 +396,7 @@ git commit -m "feat(people): public profiles separate from login accounts"
 ### Task 4: Slim Users down to auth and add the person link
 
 **Files:**
+
 - Modify: `src/access.ts`, `src/collections/Users.ts`, `seed/super-admin.ts`
 
 - [ ] **Step 1: Rewrite `src/collections/Users.ts`**
@@ -469,6 +474,7 @@ git commit -m "refactor(users): auth and roles only, linked to an optional perso
 ### Task 5: Fellows are people; the fellow role follows the linked user
 
 **Files:**
+
 - Create: `src/lib/fellow-role.ts`
 - Modify: `src/access.ts`, `src/collections/Courses.ts`, `src/collections/Events.ts`, `src/collections/People.ts`
 - Rewrite: `tests/unit/fellow-role.unit.spec.ts`
@@ -522,7 +528,15 @@ const course = (id: number, fellows: Array<number | { id: number }>): Course =>
 
 type ChangeArgs = Parameters<typeof propagateFellowRole>[0]
 const onChange = (payload: Payload, doc: Course, previousDoc: Course): ChangeArgs =>
-  ({ collection: {}, context: {}, data: {}, doc, previousDoc, operation: 'update', req: { payload } }) as unknown as ChangeArgs
+  ({
+    collection: {},
+    context: {},
+    data: {},
+    doc,
+    previousDoc,
+    operation: 'update',
+    req: { payload },
+  }) as unknown as ChangeArgs
 
 type DeleteArgs = Parameters<typeof revokeDeletedCourseFellows>[0]
 const onDelete = (payload: Payload, doc: Course): DeleteArgs =>
@@ -625,11 +639,11 @@ describe('ownsViaFellows', () => {
 In the same file, change the Task 1 expectation `'keeps ownership AND draft for a fellow'` to use a linked person:
 
 ```ts
-  it('keeps ownership AND draft for a fellow', () => {
-    expect(run(rule, user(['fellow'], { person: 42 }))).toEqual({
-      and: [{ fellows: { contains: 42 } }, { _status: { equals: 'draft' } }],
-    })
+it('keeps ownership AND draft for a fellow', () => {
+  expect(run(rule, user(['fellow'], { person: 42 }))).toEqual({
+    and: [{ fellows: { contains: 42 } }, { _status: { equals: 'draft' } }],
   })
+})
 ```
 
 - [ ] **Step 2: Run the tests to make sure they fail**
@@ -733,6 +747,7 @@ export const revokeIfUnteaching = async (
 ```
 
 In `src/collections/Courses.ts`:
+
 1. Delete `toIds`, `grantFellow` and `revokeIfUnteaching`.
 2. Import `{ grantFellow, revokeIfUnteaching, toPersonIds }` from `@/lib/fellow-role`.
 3. In both hooks, replace `toIds(` with `toPersonIds(`.
@@ -794,6 +809,7 @@ git commit -m "feat(courses): fellows are people; the fellow role follows the li
 Without this, someone who taught in 2016 and creates an account in 2027 would never get `fellow`, because the course hook only runs when a course changes.
 
 **Files:**
+
 - Modify: `src/collections/Users.ts`
 - Create: `tests/unit/user-link.unit.spec.ts`
 
@@ -836,12 +852,20 @@ describe('syncFellowRoleOnLink', () => {
   })
 
   it('revokes fellow when unlinked', async () => {
-    const out = await call({ person: null }, { roles: roles(['member', 'fellow']), person: 50 }, [50])
+    const out = await call(
+      { person: null },
+      { roles: roles(['member', 'fellow']), person: 50 },
+      [50],
+    )
     expect(out.roles).toEqual(['member'])
   })
 
   it('ignores saves that do not touch person', async () => {
-    const out = await call({ roles: roles(['admin']) }, { roles: roles(['member']), person: 50 }, [50])
+    const out = await call(
+      { roles: roles(['admin']) },
+      { roles: roles(['member']), person: 50 },
+      [50],
+    )
     expect(out).toEqual({ roles: ['admin'] })
   })
 
@@ -917,6 +941,7 @@ git commit -m "feat(users): linking an account to a teaching person grants fello
 ### Task 7: Governance points at people
 
 **Files:**
+
 - Modify: `src/collections/Governance.ts`, `src/collections/People.ts`
 
 - [ ] **Step 1: Rewrite `src/collections/Governance.ts`**
@@ -956,7 +981,12 @@ export const Governance: CollectionConfig = {
     // "Chairman", "Secretary", "Treasurer"
     { name: 'board_role', type: 'text', admin: { condition: (d) => d.role === 'trustee' } },
     // "curriculum design and university partnerships"
-    { name: 'advises_on', type: 'text', localized: true, admin: { condition: (d) => d.role === 'advisor' } },
+    {
+      name: 'advises_on',
+      type: 'text',
+      localized: true,
+      admin: { condition: (d) => d.role === 'advisor' },
+    },
     {
       type: 'row',
       fields: [
@@ -1001,6 +1031,7 @@ git commit -m "feat(governance): board terms point at people"
 ### Task 8: Memberships
 
 **Files:**
+
 - Create: `src/collections/Memberships.ts`, `tests/int/people.int.spec.ts`
 - Modify: `src/collections/People.ts`, `src/payload.config.ts`
 
@@ -1019,7 +1050,10 @@ import config from '@/payload.config'
 let payload: Payload
 const created: Array<{ collection: 'people' | 'programmes' | 'memberships'; id: number }> = []
 
-const track = <T extends { id: number }>(collection: (typeof created)[number]['collection'], doc: T): T => {
+const track = <T extends { id: number }>(
+  collection: (typeof created)[number]['collection'],
+  doc: T,
+): T => {
   created.push({ collection, id: doc.id })
   return doc
 }
@@ -1030,8 +1064,22 @@ describe('people and memberships', () => {
 
   beforeAll(async () => {
     payload = await getPayload({ config: await config })
-    personId = track('people', await payload.create({ collection: 'people', data: { name: 'Membership Probe' }, overrideAccess: true })).id
-    programmeId = track('programmes', await payload.create({ collection: 'programmes', data: { title: 'Probe Programme' } as never, overrideAccess: true })).id
+    personId = track(
+      'people',
+      await payload.create({
+        collection: 'people',
+        data: { name: 'Membership Probe' },
+        overrideAccess: true,
+      }),
+    ).id
+    programmeId = track(
+      'programmes',
+      await payload.create({
+        collection: 'programmes',
+        data: { title: 'Probe Programme' } as never,
+        overrideAccess: true,
+      }),
+    ).id
   })
 
   afterAll(async () => {
@@ -1042,13 +1090,20 @@ describe('people and memberships', () => {
   })
 
   it('lists a membership on the person through the join', async () => {
-    track('memberships', await payload.create({
-      collection: 'memberships',
-      data: { person: personId, programme: programmeId, role: 'visiting_fellow' },
-      overrideAccess: true,
-    }))
+    track(
+      'memberships',
+      await payload.create({
+        collection: 'memberships',
+        data: { person: personId, programme: programmeId, role: 'visiting_fellow' },
+        overrideAccess: true,
+      }),
+    )
 
-    const person = await payload.findByID({ collection: 'people', id: personId, overrideAccess: true })
+    const person = await payload.findByID({
+      collection: 'people',
+      id: personId,
+      overrideAccess: true,
+    })
     expect(person.memberships?.docs).toHaveLength(1)
   })
 
@@ -1098,7 +1153,13 @@ export const Memberships: CollectionConfig = {
   indexes: [{ fields: ['person', 'programme'], unique: true }],
   fields: [
     { name: 'person', type: 'relationship', relationTo: 'people', required: true, index: true },
-    { name: 'programme', type: 'relationship', relationTo: 'programmes', required: true, index: true },
+    {
+      name: 'programme',
+      type: 'relationship',
+      relationTo: 'programmes',
+      required: true,
+      index: true,
+    },
     {
       name: 'role',
       type: 'select',
@@ -1148,6 +1209,7 @@ git commit -m "feat(memberships): a person's place in a programme community"
 ### Task 9: Events fellows and seeds
 
 **Files:**
+
 - Modify: `src/collections/Events.ts`, `seed/seed.type.ts`, `seed/seed.utils.ts`, `seed/collections/users.seed.ts`, `seed/collections/courses.seed.ts`, `seed/collections/events.seed.ts`, `seed/collections/governance.seed.ts`, `seed/index.ts`
 - Rewrite: `tests/int/seed-localization.int.spec.ts`
 
@@ -1208,6 +1270,7 @@ export const createSeedContext = (): SeedContext => ({
 - [ ] **Step 3: Seed utils**
 
 In `seed/seed.utils.ts`:
+
 - `getOrCreateUser` creates `data: { email, password: password ?? DEFAULT_PASSWORD, roles }`, with no `name` and no `bio`. Remove `bio` and `name` from its destructuring.
 - Add `'people'` and `'memberships'` to `CONTENT_COLLECTIONS`. Accounts survive the reset, and their `person` link is restored by `seedUsers`.
 
@@ -1277,16 +1340,16 @@ Add `getOrCreateId` to the import from `'../seed.utils'`.
 - `seed/collections/governance.seed.ts`: the loop body becomes:
 
 ```ts
-        const { email, role, ...detail } = member
-        const personId = requireId(ctx.people, email)
+const { email, role, ...detail } = member
+const personId = requireId(ctx.people, email)
 
-        await getOrCreateId(payload, 'governance', { person: { equals: personId } }, () =>
-            payload.create({
-                collection: 'governance',
-                data: { person: personId, role, ...detail },
-                overrideAccess: true,
-            }),
-        )
+await getOrCreateId(payload, 'governance', { person: { equals: personId } }, () =>
+  payload.create({
+    collection: 'governance',
+    data: { person: personId, role, ...detail },
+    overrideAccess: true,
+  }),
+)
 ```
 
 `articles.seed.ts:328` keeps `ctx.users`. Article authors stay accounts until plan 4 introduces credits.
@@ -1313,7 +1376,8 @@ let payload: Payload
 let personId: number
 
 const bioText = (bio: unknown): string => {
-  const root = (bio as { root?: { children?: Array<{ children?: Array<{ text?: string }> }> } })?.root
+  const root = (bio as { root?: { children?: Array<{ children?: Array<{ text?: string }> }> } })
+    ?.root
   return root?.children?.[0]?.children?.[0]?.text ?? ''
 }
 
@@ -1373,6 +1437,7 @@ git commit -m "feat(seed): seed people and link fixture accounts to them"
 ### Task 10: Reset, verify end to end, update the spec
 
 **Files:**
+
 - Modify: `docs/schema.md`
 
 - [ ] **Step 1: Rebuild the dev database**
@@ -1397,6 +1462,7 @@ console.log(u.docs[0].roles, typeof u.docs[0].person === 'object' && u.docs[0].p
 process.exit(0)
 "
 ```
+
 Expected: `[ 'member', 'fellow' ] Shadi Jamal`. The seed sets `['fellow']`, the link hook replaces it with `['member']` because no course exists yet, and then `propagateFellowRole` adds `fellow` back. If the output is `[ 'member' ]` alone, the course hook isn't finding the account through `users.person`.
 
 - [ ] **Step 3: Run the whole suite**

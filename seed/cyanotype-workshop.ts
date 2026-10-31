@@ -127,7 +127,12 @@ const seedImages = async (dir: string): Promise<Record<string, number>> => {
 
 /* ==================================================================== course */
 
-const day = (order: number, title: string, description: string, dates: Array<{ date: string; start_time: string; end_time: string }>) => ({
+const day = (
+  order: number,
+  title: string,
+  description: string,
+  dates: Array<{ date: string; start_time: string; end_time: string }>,
+) => ({
   order,
   session_title: title,
   meetings: 1,
@@ -263,7 +268,9 @@ const seedCourse = async (cycleId: number, personId: number, coverId: number) =>
       title: TITLE_AR,
       subtitle: 'ورشة عمل السيانوتايب / الطباعة الزرقاء',
       description: lexical(DESCRIPTION_AR, 'rtl'),
-      schedule: { note: 'خمسة أيام على مدى أسبوعين بساعات متفاوتة؛ التاريخ والوقت لكل جلسة مذكور عندها.' },
+      schedule: {
+        note: 'خمسة أيام على مدى أسبوعين بساعات متفاوتة؛ التاريخ والوقت لكل جلسة مذكور عندها.',
+      },
       facilitator_note: REQUIREMENTS_AR.join('\n\n'),
       pricing_override: {
         note: 'تسعيرة متدرجة — يرجى اختيار الفئة التي تناسب ميزانيتك الحالية: ٢٥٠٠ / ٢٧٥٠ / ٣٠٠٠ جنيه مصري. تشمل جميع الفئات نفس المستوى من التعليم، وطباعة الصور على الورق الشفاف، والمحاليل الكيميائية، والأوراق-الأعمال، وتنظيم المعرض؛ وكل شيء تستخدمه ملك لك ويمكن الاحتفاظ به لاستخدامات أخرى في مساحتك الخاصة.',

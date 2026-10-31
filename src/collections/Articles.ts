@@ -47,7 +47,9 @@ export const addSelfAsAuthor: CollectionBeforeValidateHook<Article> = ({
 const approveArticle: ReviewOptions['onApprove'] = ({ data, originalDoc, now }) => {
   const tier = (data.tier ?? originalDoc?.tier) as string | null | undefined
   const requested = (data.requested_tier ?? originalDoc?.requested_tier) as
-    string | null | undefined
+    | string
+    | null
+    | undefined
   return {
     tier: tier && tier !== 'owner' ? tier : (requested ?? 'community'),
     published_date: data.published_date ?? originalDoc?.published_date ?? now.toISOString(),

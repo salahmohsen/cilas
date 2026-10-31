@@ -24,14 +24,26 @@ export function MentionLink({
 }) {
   const content =
     preview.kind === 'person' ? (
-      <HoverCardProfile avatar={preview.image ?? undefined} bio={preview.text ?? undefined} name={preview.title} role={kindLabel} />
+      <HoverCardProfile
+        avatar={preview.image ?? undefined}
+        bio={preview.text ?? undefined}
+        name={preview.title}
+        role={kindLabel}
+      />
     ) : (
       <div className="grid max-w-[20rem] gap-2 text-sm leading-relaxed">
         {preview.image ? (
           // eslint-disable-next-line @next/next/no-img-element
-          <img alt="" className="aspect-[4/3] w-full rounded-md object-cover" decoding="async" src={preview.image} />
+          <img
+            alt=""
+            className="aspect-[4/3] w-full rounded-md object-cover"
+            decoding="async"
+            src={preview.image}
+          />
         ) : null}
-        <p className="text-xs text-(--text-secondary)">{[kindLabel, preview.meta].filter(Boolean).join(' · ')}</p>
+        <p className="text-xs text-(--text-secondary)">
+          {[kindLabel, preview.meta].filter(Boolean).join(' · ')}
+        </p>
         <p className="font-medium text-(--foreground)" dir="auto">
           {preview.title}
         </p>

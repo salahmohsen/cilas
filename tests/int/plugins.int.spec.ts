@@ -67,7 +67,11 @@ describe('redirects and SEO', () => {
     await expect(
       payload.create({
         collection: 'redirects',
-        data: { from: '/hijack.html', type: '301', to: { type: 'custom', url: 'https://example.org' } },
+        data: {
+          from: '/hijack.html',
+          type: '301',
+          to: { type: 'custom', url: 'https://example.org' },
+        },
         user: member,
         overrideAccess: false,
       }),

@@ -35,7 +35,12 @@ export function ArticleCardStack({
             >
               {item.image ? (
                 // eslint-disable-next-line @next/next/no-img-element
-                <img alt={item.imageAlt ?? ''} className="size-14 shrink-0 rounded-md object-cover" src={item.image} style={focalPointStyle(item.imageFocalPoint)} />
+                <img
+                  alt={item.imageAlt ?? ''}
+                  className="size-14 shrink-0 rounded-md object-cover"
+                  src={item.image}
+                  style={focalPointStyle(item.imageFocalPoint)}
+                />
               ) : null}
               <span className="min-w-0">
                 <span className="block text-xs text-(--text-secondary)" dir="auto">

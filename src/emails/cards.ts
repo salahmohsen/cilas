@@ -20,7 +20,12 @@ export type Card = {
 }
 
 export type PickRelation =
-  'courses' | 'articles' | 'publications' | 'cycles' | 'programmes' | 'events'
+  | 'courses'
+  | 'articles'
+  | 'publications'
+  | 'cycles'
+  | 'programmes'
+  | 'events'
 type Pick = { relationTo: PickRelation; value: unknown }
 type Doc = Record<string, unknown> & { id: number; title?: string; slug?: string | null }
 

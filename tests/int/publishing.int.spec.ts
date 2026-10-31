@@ -8,7 +8,14 @@ import config from '@/payload.config'
 import type { User } from '@/payload-types'
 
 type Tracked =
-  'people' | 'articles' | 'publications' | 'press' | 'places' | 'cycles' | 'courses' | 'users'
+  | 'people'
+  | 'articles'
+  | 'publications'
+  | 'press'
+  | 'places'
+  | 'cycles'
+  | 'courses'
+  | 'users'
 
 let payload: Payload
 const created: Array<{ collection: Tracked; id: number }> = []

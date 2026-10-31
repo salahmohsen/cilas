@@ -27,7 +27,9 @@ const main = async () => {
     imagesDir: dir,
   })
   for (const [name, t] of Object.entries(result)) {
-    console.log(`${name.padEnd(13)} created ${t.created}, updated ${t.updated}, skipped (reviewed) ${t.skipped}`)
+    console.log(
+      `${name.padEnd(13)} created ${t.created}, updated ${t.updated}, skipped (reviewed) ${t.skipped}`,
+    )
   }
   await payload.destroy()
   process.exit(0)

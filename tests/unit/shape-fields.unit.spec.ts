@@ -298,6 +298,11 @@ describe('importFields', () => {
   it('adds a hidden, unique legacy URL and nothing else', () => {
     const fields = importFields()
     expect(names(fields)).toEqual(['legacy_url'])
-    expect(fields[0]).toMatchObject({ type: 'text', unique: true, index: true, admin: { hidden: true } })
+    expect(fields[0]).toMatchObject({
+      type: 'text',
+      unique: true,
+      index: true,
+      admin: { hidden: true },
+    })
   })
 })

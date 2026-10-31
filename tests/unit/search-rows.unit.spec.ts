@@ -13,7 +13,10 @@ import {
 const marked = (value: string) => ({ value: `<mark>${value}</mark>`, matchLevel: 'full' })
 const plain = (value: string) => ({ value, matchLevel: 'none' })
 
-const hit = (id: string, fields: Partial<SearchHit> = {}): SearchHit => ({ objectID: id, ...fields })
+const hit = (id: string, fields: Partial<SearchHit> = {}): SearchHit => ({
+  objectID: id,
+  ...fields,
+})
 const row = (collection: SearchRow['collection'], value: SearchHit): SearchRow => ({
   id: `${collection}:${value.objectID}`,
   collection,
@@ -29,12 +32,17 @@ describe('titleFieldOf', () => {
   })
 
   it('shows the other language when only it matched', () => {
-    const matchedArabic = { ...both, _highlightResult: { title_en: plain('Reading Plato'), title_ar: marked('قراءة') } }
+    const matchedArabic = {
+      ...both,
+      _highlightResult: { title_en: plain('Reading Plato'), title_ar: marked('قراءة') },
+    }
     expect(titleFieldOf(row('courses', matchedArabic), 'en')).toBe('title_ar')
   })
 
   it('falls back when the site language has no title', () => {
-    expect(titleFieldOf(row('people', hit('2', { name_en: '', name_ar: 'علي' })), 'en')).toBe('name_ar')
+    expect(titleFieldOf(row('people', hit('2', { name_en: '', name_ar: 'علي' })), 'en')).toBe(
+      'name_ar',
+    )
   })
 })
 
@@ -52,7 +60,9 @@ describe('snippetFieldOf', () => {
   })
 
   it('quotes nothing for a title-only match', () => {
-    expect(snippetFieldOf(row('articles', hit('1', { _snippetResult: { body_en: plain('…') } })), 'en')).toBeNull()
+    expect(
+      snippetFieldOf(row('articles', hit('1', { _snippetResult: { body_en: plain('…') } })), 'en'),
+    ).toBeNull()
   })
 })
 
@@ -75,15 +85,21 @@ describe('contributorsOf', () => {
 
 describe('shapeSnippet', () => {
   it('keeps the sentences holding the matches', () => {
-    expect(shapeSnippet('like ours. What <mark>Plato</mark> said. And then')).toBe('What <mark>Plato</mark> said.')
+    expect(shapeSnippet('like ours. What <mark>Plato</mark> said. And then')).toBe(
+      'What <mark>Plato</mark> said.',
+    )
   })
 
   it('treats a line break as a sentence edge', () => {
-    expect(shapeSnippet('What to Expect\nThe <mark>course</mark> reads\nNext')).toBe('The <mark>course</mark> reads')
+    expect(shapeSnippet('What to Expect\nThe <mark>course</mark> reads\nNext')).toBe(
+      'The <mark>course</mark> reads',
+    )
   })
 
   it('spans every match', () => {
-    expect(shapeSnippet('A. One <mark>x</mark>. Two <mark>x</mark>! Three.')).toBe('One <mark>x</mark>. Two <mark>x</mark>!')
+    expect(shapeSnippet('A. One <mark>x</mark>. Two <mark>x</mark>! Three.')).toBe(
+      'One <mark>x</mark>. Two <mark>x</mark>!',
+    )
   })
 
   it('keeps the window edge when no boundary is near', () => {
@@ -92,7 +108,9 @@ describe('shapeSnippet', () => {
   })
 
   it('ends Arabic sentences on the Arabic question mark', () => {
-    expect(shapeSnippet('قبل. ماذا قال <mark>أفلاطون</mark>؟ بعد')).toBe('ماذا قال <mark>أفلاطون</mark>؟')
+    expect(shapeSnippet('قبل. ماذا قال <mark>أفلاطون</mark>؟ بعد')).toBe(
+      'ماذا قال <mark>أفلاطون</mark>؟',
+    )
   })
 })
 
@@ -108,7 +126,13 @@ describe('mergeRows', () => {
   }
 
   it('interleaves collections, exact names first and weak names last', () => {
-    const ids = mergeRows({ results, visible, sort: 'relevance', query: 'naguib', locale: 'en' }).map((entry) => entry.id)
+    const ids = mergeRows({
+      results,
+      visible,
+      sort: 'relevance',
+      query: 'naguib',
+      locale: 'en',
+    }).map((entry) => entry.id)
     expect(ids).toEqual(['people:p1', 'courses:c1', 'articles:a1', 'courses:c2', 'people:p2'])
   })
 

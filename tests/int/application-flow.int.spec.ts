@@ -16,7 +16,16 @@ import type { Course, Form, FormSubmission, Person, User } from '@/payload-types
  * enrolls them.
  */
 
-type Tracked = 'forms' | 'form-submissions' | 'courses' | 'cycles' | 'places' | 'people' | 'users' | 'enrollments' | 'memberships'
+type Tracked =
+  | 'forms'
+  | 'form-submissions'
+  | 'courses'
+  | 'cycles'
+  | 'places'
+  | 'people'
+  | 'users'
+  | 'enrollments'
+  | 'memberships'
 const created: Array<{ collection: Tracked; id: number }> = []
 const track = <T extends { id: number }>(collection: Tracked, doc: T): T => {
   created.push({ collection, id: doc.id })
@@ -42,9 +51,33 @@ const personSlug = (name: string) => `${name.replace(/\s+/g, '-').toLowerCase()}
 /** The form builder requires a confirmation message. */
 const thanks = {
   root: {
-    type: 'root', version: 1, format: '', indent: 0, direction: 'ltr',
-    children: [{ type: 'paragraph', version: 1, format: '', indent: 0, direction: 'ltr', textFormat: 0, textStyle: '',
-      children: [{ type: 'text', version: 1, text: 'Thanks', format: 0, mode: 'normal', style: '', detail: 0 }] }],
+    type: 'root',
+    version: 1,
+    format: '',
+    indent: 0,
+    direction: 'ltr',
+    children: [
+      {
+        type: 'paragraph',
+        version: 1,
+        format: '',
+        indent: 0,
+        direction: 'ltr',
+        textFormat: 0,
+        textStyle: '',
+        children: [
+          {
+            type: 'text',
+            version: 1,
+            text: 'Thanks',
+            format: 0,
+            mode: 'normal',
+            style: '',
+            detail: 0,
+          },
+        ],
+      },
+    ],
   },
 } as never
 
@@ -103,9 +136,10 @@ const decide = async (action: 'accept' | 'reject', id: number) => {
 const cleanup = async () => {
   for (const { collection, id } of created.reverse()) {
     if (collection === 'users') {
-      const person = await payload.findByID({ collection: 'users', id, overrideAccess: true }).then(
-        (u) => (typeof u.person === 'object' ? u.person?.id : u.person),
-      ).catch(() => undefined)
+      const person = await payload
+        .findByID({ collection: 'users', id, overrideAccess: true })
+        .then((u) => (typeof u.person === 'object' ? u.person?.id : u.person))
+        .catch(() => undefined)
       await payload.delete({ collection, id }).catch(() => undefined)
       if (person) await payload.delete({ collection: 'people', id: person }).catch(() => undefined)
       continue
@@ -119,10 +153,12 @@ describe('the application flow, from the questions to the enrollment', () => {
   beforeAll(async () => {
     payload = await getPayload({ config: await config })
     vi.spyOn(payload, 'sendEmail').mockResolvedValue(undefined)
-    await payload.delete({
-      collection: 'users',
-      where: { email: { in: [APPLICANT_EMAIL, MEMBER_EMAIL, ADMIN_EMAIL, FELLOW_EMAIL] } },
-    }).catch(() => undefined)
+    await payload
+      .delete({
+        collection: 'users',
+        where: { email: { in: [APPLICANT_EMAIL, MEMBER_EMAIL, ADMIN_EMAIL, FELLOW_EMAIL] } },
+      })
+      .catch(() => undefined)
     admin = await payload.create({
       collection: 'users',
       data: { email: ADMIN_EMAIL, password: 'probe-password-1', roles: ['admin'] },
@@ -171,7 +207,7 @@ describe('the application flow, from the questions to the enrollment', () => {
 
   it('the fellow builds the course with application questions, one a dropdown', async () => {
     const req = await createLocalReq({ user: fellow }, payload)
-    course = await payload.create({
+    course = (await payload.create({
       collection: 'courses',
       data: {
         title: 'Flow Course',
@@ -202,7 +238,7 @@ describe('the application flow, from the questions to the enrollment', () => {
         sessions: [{ order: 1 }],
       } as never,
       req,
-    } as never) as unknown as Course
+    } as never)) as unknown as Course
     track('courses', course as unknown as { id: number })
 
     const questions = course.applicant_questions ?? []
@@ -211,11 +247,11 @@ describe('the application flow, from the questions to the enrollment', () => {
   })
 
   it('the admin form always carries name and email, and they cannot be removed', async () => {
-    form = await payload.create({
+    form = (await payload.create({
       collection: 'forms',
       data: { title: 'Flow application', confirmationType: 'message', confirmationMessage: thanks },
       overrideAccess: true,
-    }) as unknown as Form
+    })) as unknown as Form
     track('forms', form)
 
     const first = form.fields ?? []
@@ -227,16 +263,21 @@ describe('the application flow, from the questions to the enrollment', () => {
     expect(first.every((b) => (b as { required?: boolean }).required === true)).toBe(true)
 
     // An admin deleting or renaming them leaves the form as it was.
-    const renamed = await payload.update({
+    const renamed = (await payload.update({
       collection: 'forms',
       id: form.id,
       data: {
         fields: [
-          { blockType: 'select', name: 'track', label: 'Track', options: [{ label: 'A', value: 'a' }] },
+          {
+            blockType: 'select',
+            name: 'track',
+            label: 'Track',
+            options: [{ label: 'A', value: 'a' }],
+          },
         ] as never,
       },
       overrideAccess: true,
-    }) as unknown as Form
+    })) as unknown as Form
     const after = (renamed.fields ?? []).map((b) => (b as { name?: string }).name ?? 'message')
     expect(after.slice(0, 2)).toEqual(['name', 'email'])
     expect(after.length).toBe(3)
@@ -301,13 +342,14 @@ describe('the application flow, from the questions to the enrollment', () => {
       enrollment: enrollments.docs[0].id,
       membership: null,
     })
-    expect(payload.sendEmail).toHaveBeenCalledWith(
-      expect.objectContaining({ to: APPLICANT_EMAIL }),
-    )
+    expect(payload.sendEmail).toHaveBeenCalledWith(expect.objectContaining({ to: APPLICANT_EMAIL }))
   })
 
   it('a signed-in member keeps their account, gains no second role, and gets the enrollment', async () => {
-    const before = await payload.find({ collection: 'users', where: { email: { equals: MEMBER_EMAIL } } })
+    const before = await payload.find({
+      collection: 'users',
+      where: { email: { equals: MEMBER_EMAIL } },
+    })
     const submission = await submit(MEMBER_EMAIL.toUpperCase(), [
       { field: 'track', value: 'Film' },
       { field: 'course_years', value: '1' },
@@ -347,7 +389,11 @@ describe('the application flow, from the questions to the enrollment', () => {
     track('form-submissions', submission)
     const res = await decide('reject', submission.id)
     expect(res.status).toBe(200)
-    const rejected = await payload.findByID({ collection: 'form-submissions', id: submission.id, overrideAccess: true })
+    const rejected = await payload.findByID({
+      collection: 'form-submissions',
+      id: submission.id,
+      overrideAccess: true,
+    })
     expect(rejected.status).toBe('rejected')
     expect(rejected.decided_at).toBeTruthy()
 
@@ -385,5 +431,4 @@ describe('the application flow, from the questions to the enrollment', () => {
 })
 
 /** The cycle created in beforeAll; the course must name one. */
-const cycleId = () =>
-  created.find((t) => t.collection === 'cycles')!.id
+const cycleId = () => created.find((t) => t.collection === 'cycles')!.id

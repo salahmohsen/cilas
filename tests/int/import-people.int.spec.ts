@@ -5,7 +5,11 @@ import { afterAll, beforeAll, describe, expect, it } from 'vitest'
 
 import config from '@/payload.config'
 import { importCourses } from '../../migration/lib/import-courses'
-import { importPeople, prunePeople, type ArchivePeopleData } from '../../migration/lib/import-people'
+import {
+  importPeople,
+  prunePeople,
+  type ArchivePeopleData,
+} from '../../migration/lib/import-people'
 
 let payload: Payload
 
@@ -17,14 +21,40 @@ const PROBE = { name: { like: 'Probe People' } }
 
 const data: ArchivePeopleData = {
   people: [
-    { name: 'Probe People Student', name_ar: 'طالب', bio: 'A student.', email: null, photo: null, legacy_url: '/probepeople-cohort.html#student' },
-    { name: 'Probe People Advisor', name_ar: null, bio: 'An advisor.', email: null, photo: null, legacy_url: '/probepeople-advisors.html#advisor' },
+    {
+      name: 'Probe People Student',
+      name_ar: 'طالب',
+      bio: 'A student.',
+      email: null,
+      photo: null,
+      legacy_url: '/probepeople-cohort.html#student',
+    },
+    {
+      name: 'Probe People Advisor',
+      name_ar: null,
+      bio: 'An advisor.',
+      email: null,
+      photo: null,
+      legacy_url: '/probepeople-advisors.html#advisor',
+    },
   ],
   programmes: [
-    { title: PROGRAMME, year: '2031-2032', place: 'alexandria', verified: true, legacy_url: '/probepeople-cohort.html' },
+    {
+      title: PROGRAMME,
+      year: '2031-2032',
+      place: 'alexandria',
+      verified: true,
+      legacy_url: '/probepeople-cohort.html',
+    },
   ],
   memberships: [
-    { person: 'Probe People Student', programme: PROGRAMME, role: 'student', title: null, legacy_url: '/probepeople-cohort.html#student' },
+    {
+      person: 'Probe People Student',
+      programme: PROGRAMME,
+      role: 'student',
+      title: null,
+      legacy_url: '/probepeople-cohort.html#student',
+    },
   ],
   governance: [
     {
@@ -40,14 +70,22 @@ const data: ArchivePeopleData = {
 }
 
 const probeIds = async (): Promise<number[]> =>
-  (await payload.find({ collection: 'people', where: PROBE, pagination: false, depth: 0, overrideAccess: true })).docs.map(
-    (d) => d.id as number,
-  )
+  (
+    await payload.find({
+      collection: 'people',
+      where: PROBE,
+      pagination: false,
+      depth: 0,
+      overrideAccess: true,
+    })
+  ).docs.map((d) => d.id as number)
 
 const cleanup = async () => {
   const ids = await probeIds()
   const del = (collection: Parameters<Payload['delete']>[0]['collection'], where: object) =>
-    payload.delete({ collection, where, overrideAccess: true } as Parameters<Payload['delete']>[0]).catch(() => undefined)
+    payload
+      .delete({ collection, where, overrideAccess: true } as Parameters<Payload['delete']>[0])
+      .catch(() => undefined)
   if (ids.length) {
     await del('memberships', { person: { in: ids } })
     await del('governance', { person: { in: ids } })
@@ -63,7 +101,15 @@ describe('archive people import', () => {
     await cleanup()
     // The cycle the probe programme should link to: academic year 2031–2032.
     await importCourses(payload, {
-      cycles: [{ key: 'probe', season: 'spring', start_year: 2032, space: 'al-Manshiya', legacy_url: CYCLE_URL }],
+      cycles: [
+        {
+          key: 'probe',
+          season: 'spring',
+          start_year: 2032,
+          space: 'al-Manshiya',
+          legacy_url: CYCLE_URL,
+        },
+      ],
       courses: [],
     })
   })
@@ -76,9 +122,21 @@ describe('archive people import', () => {
     const first = await importPeople(payload, data)
     expect(first).toEqual({ people: 2, programmes: 1, memberships: 1, governance: 1 })
 
-    const { docs } = await payload.find({ collection: 'people', where: PROBE, depth: 0, overrideAccess: true, sort: 'name' })
+    const { docs } = await payload.find({
+      collection: 'people',
+      where: PROBE,
+      depth: 0,
+      overrideAccess: true,
+      sort: 'name',
+    })
     expect(docs.map((d) => d.name)).toEqual(['Probe People Advisor', 'Probe People Student'])
-    const ar = await payload.findByID({ collection: 'people', id: docs[1].id, locale: 'ar', fallbackLocale: false, overrideAccess: true })
+    const ar = await payload.findByID({
+      collection: 'people',
+      id: docs[1].id,
+      locale: 'ar',
+      fallbackLocale: false,
+      overrideAccess: true,
+    })
     expect(ar.name).toBe('طالب')
 
     const second = await importPeople(payload, data)
@@ -88,7 +146,12 @@ describe('archive people import', () => {
 
   it('creates the programme as a draft with its cycle and two components per cycle', async () => {
     const cycle = (
-      await payload.find({ collection: 'cycles', where: { legacy_url: { equals: CYCLE_URL } }, depth: 0, overrideAccess: true })
+      await payload.find({
+        collection: 'cycles',
+        where: { legacy_url: { equals: CYCLE_URL } },
+        depth: 0,
+        overrideAccess: true,
+      })
     ).docs[0]
     expect(cycle.academic_year).toBe('2031–2032')
 
@@ -111,9 +174,19 @@ describe('archive people import', () => {
 
   it('keeps one membership per person and programme', async () => {
     const [student] = (
-      await payload.find({ collection: 'people', where: { name: { equals: 'Probe People Student' } }, depth: 0, overrideAccess: true })
+      await payload.find({
+        collection: 'people',
+        where: { name: { equals: 'Probe People Student' } },
+        depth: 0,
+        overrideAccess: true,
+      })
     ).docs
-    const { docs } = await payload.find({ collection: 'memberships', where: { person: { equals: student.id } }, depth: 0, overrideAccess: true })
+    const { docs } = await payload.find({
+      collection: 'memberships',
+      where: { person: { equals: student.id } },
+      depth: 0,
+      overrideAccess: true,
+    })
     expect(docs).toHaveLength(1)
     expect(docs[0]).toMatchObject({ role: 'student' })
     await expect(
@@ -133,7 +206,12 @@ describe('archive people import', () => {
       overrideAccess: true,
     })
     expect(docs).toHaveLength(1)
-    expect(docs[0]).toMatchObject({ role: 'advisor', title: 'Professor of Probing', advises_on: 'probes', order: 1 })
+    expect(docs[0]).toMatchObject({
+      role: 'advisor',
+      title: 'Professor of Probing',
+      advises_on: 'probes',
+      order: 1,
+    })
     expect((docs[0].person as { name: string }).name).toBe('Probe People Advisor')
   })
 
@@ -144,19 +222,41 @@ describe('archive people import', () => {
     ] as const) {
       await payload.create({
         collection: 'people',
-        data: { name, slug: name.toLowerCase().replaceAll(' ', '-'), ...(legacy_url ? { legacy_url } : {}) },
+        data: {
+          name,
+          slug: name.toLowerCase().replaceAll(' ', '-'),
+          ...(legacy_url ? { legacy_url } : {}),
+        },
         overrideAccess: true,
       })
     }
     const pruned = await prunePeople(payload, { scope: PROBE })
     expect(pruned).toEqual(['Probe People Orphan'])
 
-    const left = await payload.find({ collection: 'people', where: PROBE, depth: 0, overrideAccess: true, sort: 'name' })
-    expect(left.docs.map((d) => d.name)).toEqual(['Probe People Advisor', 'Probe People Reviewed', 'Probe People Student'])
+    const left = await payload.find({
+      collection: 'people',
+      where: PROBE,
+      depth: 0,
+      overrideAccess: true,
+      sort: 'name',
+    })
+    expect(left.docs.map((d) => d.name)).toEqual([
+      'Probe People Advisor',
+      'Probe People Reviewed',
+      'Probe People Student',
+    ])
   })
 
   it('refuses to prune more than the limit', async () => {
-    await payload.create({ collection: 'people', data: { name: 'Probe People Orphan 2', slug: 'probe-people-orphan-2', legacy_url: '/probe-people.html#orphan-2' }, overrideAccess: true })
+    await payload.create({
+      collection: 'people',
+      data: {
+        name: 'Probe People Orphan 2',
+        slug: 'probe-people-orphan-2',
+        legacy_url: '/probe-people.html#orphan-2',
+      },
+      overrideAccess: true,
+    })
     await expect(prunePeople(payload, { scope: PROBE, limit: 0 })).rejects.toThrow(/refusing/)
     expect(await probeIds()).toHaveLength(4)
   })

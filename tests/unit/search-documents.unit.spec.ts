@@ -21,10 +21,10 @@ const person = (id: number, name: string | null, photo?: string) => ({
 
 describe('lexicalText', () => {
   it('keeps inline runs together and ends each block on its own line', () => {
-    const body = richText(
-      paragraph(text('un'), text('believ'), text('able')),
-      { type: 'heading', children: [text('Next')] },
-    )
+    const body = richText(paragraph(text('un'), text('believ'), text('able')), {
+      type: 'heading',
+      children: [text('Next')],
+    })
     expect(lexicalText(body)).toBe('unbelievable\nNext')
   })
 
@@ -53,7 +53,10 @@ describe('syllabusText', () => {
 
 describe('contributorsOf', () => {
   it('matches each person across languages by id', () => {
-    const en = { authors: [person(1, 'Iman Mersal', 'https://cdn/iman.webp')], credits: [{ people: [person(2, 'Ali')] }] }
+    const en = {
+      authors: [person(1, 'Iman Mersal', 'https://cdn/iman.webp')],
+      credits: [{ people: [person(2, 'Ali')] }],
+    }
     const ar = { authors: [person(1, 'إيمان مرسال')], credits: [{ people: [person(2, null)] }] }
     expect(contributorsOf('articles', { en, ar })).toEqual([
       { name: { en: 'Iman Mersal', ar: 'إيمان مرسال' }, photo: 'https://cdn/iman.webp' },
@@ -115,7 +118,10 @@ describe('toSearchDocument', () => {
   })
 
   it('keeps an Arabic-only document', () => {
-    const document = toSearchDocument('people', { en: { id: 2, name: null }, ar: { id: 2, name: 'علي' } })
+    const document = toSearchDocument('people', {
+      en: { id: 2, name: null },
+      ar: { id: 2, name: 'علي' },
+    })
     expect(document).toMatchObject({ name_en: '', name_ar: 'علي', sortTitle_en: 'علي' })
   })
 
@@ -152,7 +158,15 @@ describe('mentions in rich text', () => {
             type: 'paragraph',
             children: [
               { type: 'text', text: 'A course by ' },
-              { type: 'inlineBlock', fields: { blockType: 'mention', label: 'Ghosoun Ismail', type: 'person', person: 3 } },
+              {
+                type: 'inlineBlock',
+                fields: {
+                  blockType: 'mention',
+                  label: 'Ghosoun Ismail',
+                  type: 'person',
+                  person: 3,
+                },
+              },
               { type: 'text', text: ', with a note.' },
               { type: 'inlineBlock', fields: { blockType: 'footnote', note: {} } },
             ],

@@ -5,6 +5,7 @@
 **Goal:** Reshape spaces, cycles, programmes and courses to the target schema, wire in the shared `schedule` / `registration` / `pricing` fields from plan 2, add `enrollments`, and make the course page read dates, prices and registration from the shared logic.
 
 **Architecture:**
+
 - **Cycles** become one intake per season, start year and space. Their title, slug and academic year are built by a collection hook (ADR 0003).
 - **Courses** point to their cycle. Cycles list their courses through a `join`, so there is no stored back-link.
 - **Programmes** get drafts.
@@ -56,36 +57,38 @@ These fill gaps the spec leaves open.
 
 ## File map
 
-| File | Change | Responsibility |
-|---|---|---|
-| `src/lib/cycle.ts` | create | `SEASONS`, `cycleTitle()`, `academicYear()` |
-| `src/lib/pricing.ts` | create | `pricingFor()`, `priceLabel()` |
-| `src/lib/programme.ts` | create | `componentCoursesWhere()` |
-| `src/lib/schedule.ts` | modify | export `sessionsInOrder()` (was the private `inOrder`) |
-| `src/access.ts` | modify | `publishedOrAdmin`, `ownsViaPerson`, `isAdminOrOwn` |
-| `src/fields/course-type.ts` | create | `COURSE_TYPES`, `COURSE_TYPE_OPTIONS` |
-| `src/fields/bibliography.ts` | create | `bibliographyField()` (deduplicates courses' two copies) |
-| `src/fields/schedule.ts` | modify | export `timeRangeFields()`, used by slots and session dates |
-| `src/collections/Spaces.ts` | modify | `city`, `opened_year`, `closed_year` |
-| `src/collections/Cycles.ts` | rewrite | season, year, space, dates, registration, pricing, `courses` join |
-| `src/collections/Programmes.ts` | rewrite | target programme shape, drafts |
-| `src/collections/Courses.ts` | modify | target course shape |
-| `src/collections/Enrollments.ts` | create | person ↔ course |
-| `src/collections/People.ts` | modify | `enrollments` join |
-| `src/payload.config.ts` | modify | register Enrollments |
-| `src/app/(frontend)/study/[slug]/CourseView.tsx` | modify | dates, price, registration from the shared logic |
-| `seed/*` | modify | seed the new shapes |
-| `tests/unit/*.unit.spec.ts` | create/modify | pure helpers, access |
-| `tests/int/teaching.int.spec.ts` | create | hooks, joins, access against the database |
-| `tests/int/people.int.spec.ts` | modify | programmes now need `kind` |
-| `docs/schema.md` | modify | drop the finished sections |
+| File                                             | Change        | Responsibility                                                    |
+| ------------------------------------------------ | ------------- | ----------------------------------------------------------------- |
+| `src/lib/cycle.ts`                               | create        | `SEASONS`, `cycleTitle()`, `academicYear()`                       |
+| `src/lib/pricing.ts`                             | create        | `pricingFor()`, `priceLabel()`                                    |
+| `src/lib/programme.ts`                           | create        | `componentCoursesWhere()`                                         |
+| `src/lib/schedule.ts`                            | modify        | export `sessionsInOrder()` (was the private `inOrder`)            |
+| `src/access.ts`                                  | modify        | `publishedOrAdmin`, `ownsViaPerson`, `isAdminOrOwn`               |
+| `src/fields/course-type.ts`                      | create        | `COURSE_TYPES`, `COURSE_TYPE_OPTIONS`                             |
+| `src/fields/bibliography.ts`                     | create        | `bibliographyField()` (deduplicates courses' two copies)          |
+| `src/fields/schedule.ts`                         | modify        | export `timeRangeFields()`, used by slots and session dates       |
+| `src/collections/Spaces.ts`                      | modify        | `city`, `opened_year`, `closed_year`                              |
+| `src/collections/Cycles.ts`                      | rewrite       | season, year, space, dates, registration, pricing, `courses` join |
+| `src/collections/Programmes.ts`                  | rewrite       | target programme shape, drafts                                    |
+| `src/collections/Courses.ts`                     | modify        | target course shape                                               |
+| `src/collections/Enrollments.ts`                 | create        | person ↔ course                                                   |
+| `src/collections/People.ts`                      | modify        | `enrollments` join                                                |
+| `src/payload.config.ts`                          | modify        | register Enrollments                                              |
+| `src/app/(frontend)/study/[slug]/CourseView.tsx` | modify        | dates, price, registration from the shared logic                  |
+| `seed/*`                                         | modify        | seed the new shapes                                               |
+| `tests/unit/*.unit.spec.ts`                      | create/modify | pure helpers, access                                              |
+| `tests/int/teaching.int.spec.ts`                 | create        | hooks, joins, access against the database                         |
+| `tests/int/people.int.spec.ts`                   | modify        | programmes now need `kind`                                        |
+| `docs/schema.md`                                 | modify        | drop the finished sections                                        |
 
 **Commands**
+
 - One spec: `pnpm vitest run --config ./vitest.config.mts <path>`.
 - Types: `pnpm generate:types`, after every collection change.
 - **Type-check after every task:** `npx tsc --noEmit` should print nothing.
 
 **Baseline before starting:**
+
 - `npx tsc --noEmit` is clean.
 - `pnpm lint` has 0 errors.
 - 95 tests pass.
@@ -97,6 +100,7 @@ These fill gaps the spec leaves open.
 ### Task 1: Cycle title and academic year
 
 **Files:**
+
 - Create: `src/lib/cycle.ts`
 - Test: `tests/unit/cycle.unit.spec.ts`
 
@@ -195,9 +199,7 @@ export const academicYear = ({
   start_date?: string | null
 }): string => {
   const day = start_date ? cairoDay(start_date) : null
-  const [year, month] = day
-    ? day.split('-').map(Number)
-    : [start_year, season === 'fall' ? 9 : 1]
+  const [year, month] = day ? day.split('-').map(Number) : [start_year, season === 'fall' ? 9 : 1]
   const first = month >= 9 ? year : year - 1
   return `${first}–${first + 1}`
 }
@@ -222,6 +224,7 @@ Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>"
 ### Task 2: Price lookup and label
 
 **Files:**
+
 - Create: `src/lib/pricing.ts`
 - Test: `tests/unit/pricing.unit.spec.ts`
 
@@ -309,7 +312,10 @@ const isSet = (pricing: Pricing | null | undefined): pricing is SetPricing =>
  */
 export const pricingFor = (
   course: { course_type: string; pricing_override?: Pricing | null },
-  cycle: { pricing?: Array<{ course_types?: string[] | null; pricing?: Pricing | null }> | null } | null | undefined,
+  cycle:
+    | { pricing?: Array<{ course_types?: string[] | null; pricing?: Pricing | null }> | null }
+    | null
+    | undefined,
 ): Pricing | null => {
   if (isSet(course.pricing_override)) return course.pricing_override
   const pricing = cycle?.pricing?.find((entry) =>
@@ -350,6 +356,7 @@ Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>"
 ### Task 3: Access rules and the component query
 
 **Files:**
+
 - Modify: `src/access.ts`
 - Create: `src/lib/programme.ts`
 - Test: `tests/unit/access.unit.spec.ts`, `tests/unit/programme.unit.spec.ts`
@@ -496,6 +503,7 @@ Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>"
 ### Task 4: Shared field pieces
 
 **Files:**
+
 - Create: `src/fields/course-type.ts`, `src/fields/bibliography.ts`
 - Modify: `src/fields/schedule.ts`, `src/lib/schedule.ts`
 - Test: `tests/unit/shape-fields.unit.spec.ts`
@@ -658,6 +666,7 @@ Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>"
 ### Task 5: Spaces
 
 **Files:**
+
 - Modify: `src/collections/Spaces.ts`, `seed/collections/spaces.seed.ts`, `seed/seed.type.ts`, `seed/index.ts`
 
 - [ ] **Step 1: Add the fields**
@@ -706,7 +715,8 @@ export const seedSpaces = async (payload: Payload, ctx: SeedContext): Promise<vo
 }
 ```
 
-  (Import `SeedContext` from `../seed.type`.)
+(Import `SeedContext` from `../seed.type`.)
+
 - In `seed/index.ts`, move `await seedSpaces(payload, ctx)` up, to directly after `seedUsers`, and remove the old call near the end. Cycles will need space ids.
 
 - [ ] **Step 3: Regenerate types and type-check**
@@ -728,6 +738,7 @@ Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>"
 ### Task 6: Cycles
 
 **Files:**
+
 - Rewrite: `src/collections/Cycles.ts`
 - Modify: `seed/collections/cycles.seed.ts`, `seed/seed.type.ts`, `seed/collections/courses.seed.ts`, `src/app/(frontend)/study/[slug]/CourseView.tsx`
 
@@ -900,10 +911,34 @@ import { getOrCreateId, requireId } from '../seed.utils'
  * holding every course type it offered (ADR 0003). Keyed `season-year`.
  */
 export const cyclesData: CycleSeed[] = [
-  { season: 'fall', start_year: 2025, space: 'Darb el-Labbana', start_date: '2025-10-19', deadline: '2025-10-10' },
-  { season: 'winter', start_year: 2026, space: 'Darb el-Labbana', start_date: '2026-02-21', deadline: '2026-01-31' },
-  { season: 'spring', start_year: 2026, space: 'Darb el-Labbana', start_date: '2026-04-25', deadline: '2026-04-15' },
-  { season: 'summer', start_year: 2026, space: 'Darb el-Labbana', start_date: '2026-07-19', deadline: '2026-07-10' },
+  {
+    season: 'fall',
+    start_year: 2025,
+    space: 'Darb el-Labbana',
+    start_date: '2025-10-19',
+    deadline: '2025-10-10',
+  },
+  {
+    season: 'winter',
+    start_year: 2026,
+    space: 'Darb el-Labbana',
+    start_date: '2026-02-21',
+    deadline: '2026-01-31',
+  },
+  {
+    season: 'spring',
+    start_year: 2026,
+    space: 'Darb el-Labbana',
+    start_date: '2026-04-25',
+    deadline: '2026-04-15',
+  },
+  {
+    season: 'summer',
+    start_year: 2026,
+    space: 'Darb el-Labbana',
+    start_date: '2026-07-19',
+    deadline: '2026-07-10',
+  },
 ]
 
 export const seedCycles = async (payload: Payload, ctx: SeedContext): Promise<void> => {
@@ -940,7 +975,7 @@ In `seed/collections/courses.seed.ts`, delete the "Back-link cycles.courses" loo
 In `src/app/(frontend)/study/[slug]/CourseView.tsx`, replace the `cycleLabel` computation with:
 
 ```ts
-  const cycleLabel = cycle?.title ?? null
+const cycleLabel = cycle?.title ?? null
 ```
 
 - [ ] **Step 4: Regenerate types and type-check**
@@ -962,6 +997,7 @@ Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>"
 ### Task 7: Programmes
 
 **Files:**
+
 - Rewrite: `src/collections/Programmes.ts`
 - Modify: `seed/collections/programmes.seed.ts`, `seed/seed.type.ts`, `tests/int/people.int.spec.ts`
 
@@ -1136,9 +1172,17 @@ export const programmesData: ProgrammeSeed[] = [
     cycles: ['fall-2025', 'spring-2026'],
     components: [
       { label: 'Core courses, fall semester', cycle: 'fall-2025', course_types: ['CORE'] },
-      { label: 'Thematic courses and labs, fall semester', cycle: 'fall-2025', course_types: ['THEMATIC', 'LAB'] },
+      {
+        label: 'Thematic courses and labs, fall semester',
+        cycle: 'fall-2025',
+        course_types: ['THEMATIC', 'LAB'],
+      },
       { label: 'Core courses, spring semester', cycle: 'spring-2026', course_types: ['CORE'] },
-      { label: 'Thematic courses and labs, spring semester', cycle: 'spring-2026', course_types: ['THEMATIC', 'LAB'] },
+      {
+        label: 'Thematic courses and labs, spring semester',
+        cycle: 'spring-2026',
+        course_types: ['THEMATIC', 'LAB'],
+      },
     ],
     weekly_hours: 15,
     self_directed_study: true,
@@ -1210,6 +1254,7 @@ Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>"
 ### Task 8: Courses
 
 **Files:**
+
 - Modify: `src/collections/Courses.ts`, `seed/seed.utils.ts`, `seed/seed.type.ts`, `seed/collections/courses.seed.ts`, `src/app/(frontend)/study/[slug]/CourseView.tsx`
 
 - [ ] **Step 1: Reshape the collection**
@@ -1385,6 +1430,7 @@ Run: `pnpm generate:types`
 - [ ] **Step 3: Seed schedules, not per-session dates**
 
 In `seed/seed.utils.ts`:
+
 - Delete `stampTime`, the local `addDays` and the old `weekly`.
 - Replace them with the code below.
 - Import `weekdayOf` from `@/lib/cairo-day`, and `ScheduleSeed` and `SessionSeed` from `./seed.type`.
@@ -1418,6 +1464,7 @@ export type ScheduleSeed = NonNullable<Draft<Course>['schedule']>
 Make `CourseSeed` omit `'schedule'` as well, then add back an optional `schedule?: ScheduleSeed`.
 
 In `seed/collections/courses.seed.ts`:
+
 - `shortSeries` now returns what `weekly` returns. Its return type becomes `ReturnType<typeof weekly>`.
 - Replace every `sessions: shortSeries(` with `...shortSeries(`.
 - Replace both `sessions: weekly(` with `...weekly(`.
@@ -1428,6 +1475,7 @@ The existing `sessions` mapping stays as it is.
 - [ ] **Step 4: Rewrite the course page's facts and syllabus**
 
 In `src/app/(frontend)/study/[slug]/CourseView.tsx`:
+
 - Import:
 
   ```ts
@@ -1440,12 +1488,12 @@ In `src/app/(frontend)/study/[slug]/CourseView.tsx`:
 - Compute, after `cycleLabel`:
 
 ```ts
-  const sessions = sessionsInOrder(course.sessions ?? [])
-  const meetings = expandSchedule(course.schedule, course.sessions)
-  const firstMeeting = meetings.find((m) => !m.cancelled)
-  const price = priceLabel(pricingFor(course, cycle))
-  const registration = registrationStatus(course.registration, cycle?.registration)
-  const unit = course.session_unit === 'week' ? 'Week' : 'Session'
+const sessions = sessionsInOrder(course.sessions ?? [])
+const meetings = expandSchedule(course.schedule, course.sessions)
+const firstMeeting = meetings.find((m) => !m.cancelled)
+const price = priceLabel(pricingFor(course, cycle))
+const registration = registrationStatus(course.registration, cycle?.registration)
+const unit = course.session_unit === 'week' ? 'Week' : 'Session'
 ```
 
 - In the `<dl>`, replace the `Sessions` and `Tuition` entries with:
@@ -1475,35 +1523,37 @@ In `src/app/(frontend)/study/[slug]/CourseView.tsx`:
 - Replace the Syllabus `<ol>` body with:
 
 ```tsx
-            {sessions.map((session, i) => {
-              const own = meetings.filter((m) => m.session === i + 1)
-              return (
-                <li key={session.id ?? i}>
-                  <div className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
-                    <p className="font-medium">
-                      {unit} {i + 1}
-                      {session.session_title ? ` · ${session.session_title}` : ''}
-                      {session.cancelled ? ' (cancelled)' : ''}
-                    </p>
-                    {own.length ? (
-                      <p className="text-sm opacity-60">{own.map(meetingLabel).join(', ')}</p>
-                    ) : null}
-                  </div>
-                  {session.description ? (
-                    <div className="opacity-70">
-                      <RichTextField className="prose-sm" data={session.description} />
-                    </div>
-                  ) : null}
-                  {session.bibliography?.length ? (
-                    <ul className="mt-1 text-sm opacity-70">
-                      {session.bibliography.map((material, j) => (
-                        <li key={material.id ?? j}>{renderEntry(material)}</li>
-                      ))}
-                    </ul>
-                  ) : null}
-                </li>
-              )
-            })}
+{
+  sessions.map((session, i) => {
+    const own = meetings.filter((m) => m.session === i + 1)
+    return (
+      <li key={session.id ?? i}>
+        <div className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
+          <p className="font-medium">
+            {unit} {i + 1}
+            {session.session_title ? ` · ${session.session_title}` : ''}
+            {session.cancelled ? ' (cancelled)' : ''}
+          </p>
+          {own.length ? (
+            <p className="text-sm opacity-60">{own.map(meetingLabel).join(', ')}</p>
+          ) : null}
+        </div>
+        {session.description ? (
+          <div className="opacity-70">
+            <RichTextField className="prose-sm" data={session.description} />
+          </div>
+        ) : null}
+        {session.bibliography?.length ? (
+          <ul className="mt-1 text-sm opacity-70">
+            {session.bibliography.map((material, j) => (
+              <li key={material.id ?? j}>{renderEntry(material)}</li>
+            ))}
+          </ul>
+        ) : null}
+      </li>
+    )
+  })
+}
 ```
 
 - Change the guard around the Syllabus section to `sessions.length ?`.
@@ -1520,8 +1570,7 @@ const dayLabel = (day: string): string =>
   })
 
 /** "Tue 3 Mar, 18:00–20:30" */
-const meetingLabel = (m: Meeting): string =>
-  `${dayLabel(m.date)}, ${m.start_time}–${m.end_time}`
+const meetingLabel = (m: Meeting): string => `${dayLabel(m.date)}, ${m.start_time}–${m.end_time}`
 ```
 
 If tsc says `cycle` doesn't match `pricingFor`'s parameter, check `Cycle['pricing']` in `src/payload-types.ts`. Widen `pricingFor`'s `cycle` parameter type to accept it; don't cast at the call site.
@@ -1545,6 +1594,7 @@ Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>"
 ### Task 9: Enrollments
 
 **Files:**
+
 - Create: `src/collections/Enrollments.ts`
 - Modify: `src/collections/People.ts`, `src/collections/Courses.ts`, `src/payload.config.ts`, `seed/seed.utils.ts`
 
@@ -1663,6 +1713,7 @@ Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>"
 ### Task 10: Migrate, reseed and test against the database
 
 **Files:**
+
 - Regenerate: `src/migrations/*`
 - Create: `tests/int/teaching.int.spec.ts`
 
@@ -1775,14 +1826,22 @@ describe('time, place and teaching', () => {
   })
 
   it('builds the cycle title, slug and academic year from its space', async () => {
-    const cycle = await payload.findByID({ collection: 'cycles', id: cycleId, overrideAccess: true })
+    const cycle = await payload.findByID({
+      collection: 'cycles',
+      id: cycleId,
+      overrideAccess: true,
+    })
     expect(cycle.title).toBe('Spring 2031, Probeville')
     expect(cycle.slug).toBe('spring-2031-probeville')
     expect(cycle.academic_year).toBe('2030–2031')
   })
 
   it("lists the cycle's courses through the join", async () => {
-    const cycle = await payload.findByID({ collection: 'cycles', id: cycleId, overrideAccess: true })
+    const cycle = await payload.findByID({
+      collection: 'cycles',
+      id: cycleId,
+      overrideAccess: true,
+    })
     expect(cycle.courses?.docs?.map((c) => (typeof c === 'object' ? c.id : c))).toContain(courseId)
   })
 
@@ -1872,6 +1931,7 @@ describe('time, place and teaching', () => {
 
 Run: `pnpm test:int`
 Expected:
+
 - `teaching.int.spec.ts` passes 7 tests.
 - Everything else still passes, including `people.int.spec.ts` with its new `kind`.
 
@@ -1886,6 +1946,7 @@ npx tsx --env-file=.env -e "import('payload').then(async ({getPayload})=>{const 
 ```
 
 Expected:
+
 - The four cycles are titled `Fall 2025, Cairo`, `Winter 2026, Cairo`, `Spring 2026, Cairo` and `Summer 2026, Cairo`.
 - Each has academic year `2025–2026`.
 - "Writing the Self" ends on 2026-09-20 (10 weekly Sundays from 2026-07-19). The value is a timestamp on that day.
@@ -1906,11 +1967,13 @@ Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>"
 ### Task 11: Update the spec
 
 **Files:**
+
 - Modify: `docs/schema.md`
 
 - [ ] **Step 1: Replace the finished sections**
 
 In `docs/schema.md`:
+
 - Delete the `## Time and place`, `## Programmes` and `## Teaching` sections, including `enrollments`.
 - Put this in their place:
 
@@ -1918,6 +1981,7 @@ In `docs/schema.md`:
 ## Time and place, programmes, teaching
 
 Spaces, cycles, programmes, courses and enrollments match the code (ADR 0002, ADR 0003). Still to do:
+
 - **Admin:** show a course session's computed dates as placeholders in its `dates[]` (needs a custom field component).
 - **Programmes:** `partners[]` → partners, once plan 4 adds the collection.
 - **Access:** courses and articles have no `readVersions` rule, so any signed-in account can read their drafts through the versions endpoint. Set it to match their edit rules (plan 4 reworks articles).

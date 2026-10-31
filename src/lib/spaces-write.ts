@@ -60,7 +60,11 @@ export type WriteResult<T> =
 export type PostFile = { data: Buffer; mimetype: string; name: string; size: number }
 
 export type StepKey =
-  'saw_privacy' | 'introduced' | 'read_pinned' | 'checked_profile' | 'chose_digest'
+  | 'saw_privacy'
+  | 'introduced'
+  | 'read_pinned'
+  | 'checked_profile'
+  | 'chose_digest'
 
 export const STEP_KEYS: readonly StepKey[] = [
   'saw_privacy',

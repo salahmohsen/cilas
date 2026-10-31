@@ -23,9 +23,16 @@ export function MailingListsNote() {
         <li>Synced lists: CILAS accounts picked by role, course, programme or by name.</li>
         <li>Each newsletter picks its list in “Send to”.</li>
       </ul>
-      <p style={muted}>The Resend API key stays a server setting (RESEND_API_KEY), as it is a secret.</p>
+      <p style={muted}>
+        The Resend API key stays a server setting (RESEND_API_KEY), as it is a secret.
+      </p>
       <div>
-        <Button buttonStyle="secondary" el="link" margin={false} url="/admin/collections/mailing-lists">
+        <Button
+          buttonStyle="secondary"
+          el="link"
+          margin={false}
+          url="/admin/collections/mailing-lists"
+        >
           Open Mailing lists
         </Button>
       </div>

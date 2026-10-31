@@ -26,7 +26,10 @@ const lab = course(
 )
 const thematic = course(
   2,
-  { type: [{ value: 'thematic', label: 'Thematic Course', rank: 1 }], year: [{ value: '2025', label: '2025' }] },
+  {
+    type: [{ value: 'thematic', label: 'Thematic Course', rank: 1 }],
+    year: [{ value: '2025', label: '2025' }],
+  },
   ['Melancholia in the City', 'Surti Singh'],
 )
 

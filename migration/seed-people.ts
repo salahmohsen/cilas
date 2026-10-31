@@ -26,8 +26,13 @@ const main = async () => {
   const { default: config } = await import('../src/payload.config')
   const payload = await getPayload({ config: await config })
 
-  const courses = await importCourses(payload, { cycles: read('cycles.json'), courses: read('courses.json') })
-  console.log(`courses: cycles ${courses.cycles}, courses ${courses.courses}, new people ${courses.people}`)
+  const courses = await importCourses(payload, {
+    cycles: read('cycles.json'),
+    courses: read('courses.json'),
+  })
+  console.log(
+    `courses: cycles ${courses.cycles}, courses ${courses.courses}, new people ${courses.people}`,
+  )
   if (courses.skipped.length) console.log(`skipped (no cycle): ${courses.skipped.join(', ')}`)
 
   const people = await importPeople(payload, {

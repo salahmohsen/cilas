@@ -17,37 +17,37 @@ announcement, comment, highlight, moderator, pulse, place.
 
 ## Decisions
 
-| Question | Decision |
-| --- | --- |
-| Name | Space, with three kinds. The physical sites become places first (ADR 0007). |
-| Where | The website's signed-in area, built with Arc. The Payload admin stays for writing articles, proposing courses and publications, not for spaces. |
-| Course space members | The course's fellows and its `ENROLLED` people (`accepted`, `confirmed`, `completed`), the rule the mailing lists use. Payment does not decide. |
-| Cohort space members | One space for each Bridge programme record, for the people with a membership on it. Not for Women's Studies or Residency yet; the rule allows them later. |
-| Community space members | Every account linked to a person. Accounts are closed: only an admin or an accepted application makes one. |
-| Admins | Read and moderate every space; not listed as members. |
-| Posting | Everyone who can see a space posts and comments. Moderators can narrow a space to "members comment only" or "only fellows and admins post", and lock one post. |
-| Post kinds | Discussion, Question (a label and a filter), Announcement (fellows and admins: pinned, notifies all, emails at once). |
-| Highlights | The post's author and moderators can highlight any number of comments. No "the answer". |
-| Reply first | "Reply before you see others" on a post: any author on their own post, moderators on any post. |
-| Editors | Posts: Arc `rich-text-editor` with an added @mention trigger, stored as Markdown. Comments: Arc `mention-input` in `comment-thread`, plain text with mentions. |
-| Rendering | `react-markdown`, `allowedElements` limited to what the editor makes, `remark-gfm` for strikethrough only. |
-| Mentions | Only members of the same space; stored by person id as `/people/{id}` links and shown as chips; no mass mentions. |
-| Reactions | One set for posts and comments, with Arc `reactions`: Agree, Thank you, Insightful, Same question. Counts and names; no points, no "seen by", no notifications. |
-| Files | Private `space-files` collection (ADR 0008). PDF, Word, images; 10 MB; 5 per post, 1 per comment. |
-| Edit | Any time, marked "edited"; moderators see earlier versions. |
-| Delete | `hold-to-confirm`. An author's delete of a post or comment with replies leaves a placeholder and keeps the replies. Only a moderator deletes a whole thread. |
-| Moderation | Pin, lock, hide with a reason, delete a thread, mute a member in one space; reports go to moderators and Admin → Reviews. |
-| Retention | Deleted and hidden content restorable for 30 days, then purged with its files. |
-| Anonymity | "Anonymous to members" on Questions and their comments in course and cohort spaces only. Fellows of the space and admins see the name. |
-| People | Members edit their own name, bio, photo and links on the website; only admins decide if a person is public. In a space, members see each other's name and photo; never email or phone. |
-| Notifications | Bell at once (mentions, comments on your post, replies, announcements, moderator actions, reports). Email digest at 08:00 Cairo: daily by default, weekly or off. Announcements email at once. No web push. |
-| Updates | The page checks for new posts every 30 seconds while open. |
-| Life cycle | A course space opens when the course is published (seen from `accepted`), turns read-only 2 weeks after the last meeting, and is kept for its members; `withdrawn` loses access. Cohort spaces stay open. The community space is always open. |
-| Languages | The interface follows the site language; content is written once, not translated, with `dir="auto"`. |
-| Search | Private server-mediated Typesense search across currently readable spaces, with an optional space restriction. See ADR 0010, which supersedes the original Postgres-only choice. |
-| Privacy | Consent before the first post, kept on record; members download and delete their own content; member lists never public. |
-| Switch | Site settings → Spaces: Off (default at launch), Trial (chosen courses, plus community and cohort checkboxes), On. Enforced on the server; never deletes data. |
-| Measuring | Participation summary for moderators; the pulse with shadcn Questionnaire (Radix); reports with Arc charts. |
+| Question                | Decision                                                                                                                                                                                                                                      |
+| ----------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Name                    | Space, with three kinds. The physical sites become places first (ADR 0007).                                                                                                                                                                   |
+| Where                   | The website's signed-in area, built with Arc. The Payload admin stays for writing articles, proposing courses and publications, not for spaces.                                                                                               |
+| Course space members    | The course's fellows and its `ENROLLED` people (`accepted`, `confirmed`, `completed`), the rule the mailing lists use. Payment does not decide.                                                                                               |
+| Cohort space members    | One space for each Bridge programme record, for the people with a membership on it. Not for Women's Studies or Residency yet; the rule allows them later.                                                                                     |
+| Community space members | Every account linked to a person. Accounts are closed: only an admin or an accepted application makes one.                                                                                                                                    |
+| Admins                  | Read and moderate every space; not listed as members.                                                                                                                                                                                         |
+| Posting                 | Everyone who can see a space posts and comments. Moderators can narrow a space to "members comment only" or "only fellows and admins post", and lock one post.                                                                                |
+| Post kinds              | Discussion, Question (a label and a filter), Announcement (fellows and admins: pinned, notifies all, emails at once).                                                                                                                         |
+| Highlights              | The post's author and moderators can highlight any number of comments. No "the answer".                                                                                                                                                       |
+| Reply first             | "Reply before you see others" on a post: any author on their own post, moderators on any post.                                                                                                                                                |
+| Editors                 | Posts: Arc `rich-text-editor` with an added @mention trigger, stored as Markdown. Comments: Arc `mention-input` in `comment-thread`, plain text with mentions.                                                                                |
+| Rendering               | `react-markdown`, `allowedElements` limited to what the editor makes, `remark-gfm` for strikethrough only.                                                                                                                                    |
+| Mentions                | Only members of the same space; stored by person id as `/people/{id}` links and shown as chips; no mass mentions.                                                                                                                             |
+| Reactions               | One set for posts and comments, with Arc `reactions`: Agree, Thank you, Insightful, Same question. Counts and names; no points, no "seen by", no notifications.                                                                               |
+| Files                   | Private `space-files` collection (ADR 0008). PDF, Word, images; 10 MB; 5 per post, 1 per comment.                                                                                                                                             |
+| Edit                    | Any time, marked "edited"; moderators see earlier versions.                                                                                                                                                                                   |
+| Delete                  | `hold-to-confirm`. An author's delete of a post or comment with replies leaves a placeholder and keeps the replies. Only a moderator deletes a whole thread.                                                                                  |
+| Moderation              | Pin, lock, hide with a reason, delete a thread, mute a member in one space; reports go to moderators and Admin → Reviews.                                                                                                                     |
+| Retention               | Deleted and hidden content restorable for 30 days, then purged with its files.                                                                                                                                                                |
+| Anonymity               | "Anonymous to members" on Questions and their comments in course and cohort spaces only. Fellows of the space and admins see the name.                                                                                                        |
+| People                  | Members edit their own name, bio, photo and links on the website; only admins decide if a person is public. In a space, members see each other's name and photo; never email or phone.                                                        |
+| Notifications           | Bell at once (mentions, comments on your post, replies, announcements, moderator actions, reports). Email digest at 08:00 Cairo: daily by default, weekly or off. Announcements email at once. No web push.                                   |
+| Updates                 | The page checks for new posts every 30 seconds while open.                                                                                                                                                                                    |
+| Life cycle              | A course space opens when the course is published (seen from `accepted`), turns read-only 2 weeks after the last meeting, and is kept for its members; `withdrawn` loses access. Cohort spaces stay open. The community space is always open. |
+| Languages               | The interface follows the site language; content is written once, not translated, with `dir="auto"`.                                                                                                                                          |
+| Search                  | Private server-mediated Typesense search across currently readable spaces, with an optional space restriction. See ADR 0010, which supersedes the original Postgres-only choice.                                                              |
+| Privacy                 | Consent before the first post, kept on record; members download and delete their own content; member lists never public.                                                                                                                      |
+| Switch                  | Site settings → Spaces: Off (default at launch), Trial (chosen courses, plus community and cohort checkboxes), On. Enforced on the server; never deletes data.                                                                                |
+| Measuring               | Participation summary for moderators; the pulse with shadcn Questionnaire (Radix); reports with Arc charts.                                                                                                                                   |
 
 ## 1. Spaces and who belongs
 
@@ -190,6 +190,7 @@ New notification kinds (a migration on the enum): `mention`, `comment`,
 a link to the post or comment.
 
 Email:
+
 - Announcements: sent at once to every member of the space.
 - Digest: one email at 08:00 Cairo time listing mentions, replies and new posts
   in the member's spaces since the last digest, only when there is something.
@@ -255,25 +256,26 @@ security boundary, durable indexing, disabled-by-default rollout and tests.
   and at the end; optional; one invitation per round. Items are editable by
   admins in Site settings → Spaces, in both languages, stored as numbers:
 
-  | Measures | Item (1 strongly disagree to 5 strongly agree) |
-  | --- | --- |
-  | Belonging | I feel part of this course's group. |
-  | Belonging | I feel comfortable sharing an unfinished idea here. |
-  | Social presence | Through the space I got to know other members. |
-  | Teaching presence | The fellow's posts helped me see what to focus on. |
-  | Learning | Discussion in the space helped me think more deeply about the readings. |
-  | Learning | I used an idea from someone else's post in my own thinking or work. |
-  | The tool | The space was easy to use on my phone. |
-  | The tool | For this course, I prefer the space to a WhatsApp group. |
-  | Use | How often did you read the space? (Rarely / Weekly / A few times a week / Daily) |
-  | Suggestions | What helped you most? (free text) |
-  | Suggestions | What should we change? (free text) |
+  | Measures          | Item (1 strongly disagree to 5 strongly agree)                                   |
+  | ----------------- | -------------------------------------------------------------------------------- |
+  | Belonging         | I feel part of this course's group.                                              |
+  | Belonging         | I feel comfortable sharing an unfinished idea here.                              |
+  | Social presence   | Through the space I got to know other members.                                   |
+  | Teaching presence | The fellow's posts helped me see what to focus on.                               |
+  | Learning          | Discussion in the space helped me think more deeply about the readings.          |
+  | Learning          | I used an idea from someone else's post in my own thinking or work.              |
+  | The tool          | The space was easy to use on my phone.                                           |
+  | The tool          | For this course, I prefer the space to a WhatsApp group.                         |
+  | Use               | How often did you read the space? (Rarely / Weekly / A few times a week / Daily) |
+  | Suggestions       | What helped you most? (free text)                                                |
+  | Suggestions       | What should we change? (free text)                                               |
 
   Adapted from the research constructs, not a validated scale. Answers are
   confidential: the account is stored only to prevent a second answer; reports
   show totals and free text without names, and hide scale results below 5
   answers. If the Questionnaire cannot hold a text-only question, those two steps
   use our own textarea in the same flow. Test the flow right to left.
+
 - **Report** for each space (admins, and fellows for their space), with Arc
   charts: `metric-card` with `sparkline` (active members, posts, comments this
   week), `line-chart` (weekly activity), `slope-chart` (each pulse item, week 2

@@ -12,12 +12,12 @@ hero is on screen and solid again when it is not.
 
 ## Decisions
 
-| Question | Decision |
-| --- | --- |
-| Visual | Inline SVG boat in the logo's brush style, with ink "V" birds. No raster image. |
+| Question     | Decision                                                                                                                                                |
+| ------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Visual       | Inline SVG boat in the logo's brush style, with ink "V" birds. No raster image.                                                                         |
 | Hero content | Keep the title, text, rotating "who" line and the two actions. Add the three numbers at the bottom. Remove the separate `StatsBand` from the home page. |
-| Scroll | Normal scroll with scroll-linked motion. No scroll-jacking, no snap, no pinning. |
-| Colour | Follows the site theme: black ink on paper (light), pale ink on a night river (dark). |
+| Scroll       | Normal scroll with scroll-linked motion. No scroll-jacking, no snap, no pinning.                                                                        |
+| Colour       | Follows the site theme: black ink on paper (light), pale ink on a night river (dark).                                                                   |
 
 ## 1. Layout
 

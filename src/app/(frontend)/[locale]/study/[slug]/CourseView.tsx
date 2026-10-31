@@ -623,7 +623,12 @@ export const CourseView: React.FC<{
                   <span className="course-related-image">
                     {r.image ? (
                       // eslint-disable-next-line @next/next/no-img-element
-                      <img alt={r.image.alt} loading="lazy" src={r.image.url} style={focalPointStyle(r.image)} />
+                      <img
+                        alt={r.image.alt}
+                        loading="lazy"
+                        src={r.image.url}
+                        style={focalPointStyle(r.image)}
+                      />
                     ) : SeasonIcon ? (
                       <SeasonIcon aria-hidden size={28} strokeWidth={1.25} />
                     ) : null}

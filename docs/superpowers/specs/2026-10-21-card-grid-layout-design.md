@@ -16,12 +16,12 @@ Open for registration page and the Bridge page already use for courses.
 
 ## Decisions
 
-| Question | Decision |
-| --- | --- |
+| Question             | Decision                                                                            |
+| -------------------- | ----------------------------------------------------------------------------------- |
 | New block or option? | An option: `layout` on the Card stack block. No second block with the same sources. |
-| Grid parts | Course cards, with tabs by course type. No featured card, no pagination. |
-| Sources for the grid | All four sources. Tabs only for course sources. |
-| Migration | None. The block is JSON in the Lexical body. |
+| Grid parts           | Course cards, with tabs by course type. No featured card, no pagination.            |
+| Sources for the grid | All four sources. Tabs only for course sources.                                     |
+| Migration            | None. The block is JSON in the Lexical body.                                        |
 
 ## Admin
 

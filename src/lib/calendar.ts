@@ -37,14 +37,16 @@ export const monthGrid = (day: string): string[] => {
 }
 
 /** The seven days of a day's week. */
-export const weekDays = (day: string): string[] => Array.from({ length: 7 }, (_, i) => addDays(weekStart(day), i))
+export const weekDays = (day: string): string[] =>
+  Array.from({ length: 7 }, (_, i) => addDays(weekStart(day), i))
 
 /** The view and day a calendar URL asks for; anything unreadable falls back. */
 export const readCalendarParams = (
   params: { view?: string | string[]; date?: string | string[] },
   today: string,
 ): { view: CalendarView; date: string } => {
-  const view = typeof params.view === 'string' && (CALENDAR_VIEWS as readonly string[]).includes(params.view)
+  const view =
+    typeof params.view === 'string' && (CALENDAR_VIEWS as readonly string[]).includes(params.view)
   const date = typeof params.date === 'string' ? cairoDay(params.date) : null
   return { view: view ? (params.view as CalendarView) : 'month', date: date ?? today }
 }
@@ -56,11 +58,21 @@ export const viewRange = (
 ): { from: string; to: string; previous: string; next: string } => {
   if (view === 'month') {
     const grid = monthGrid(date)
-    return { from: grid[0], to: grid.at(-1)!, previous: shiftMonth(monthStart(date), -1), next: shiftMonth(monthStart(date), 1) }
+    return {
+      from: grid[0],
+      to: grid.at(-1)!,
+      previous: shiftMonth(monthStart(date), -1),
+      next: shiftMonth(monthStart(date), 1),
+    }
   }
   if (view === 'week') {
     const days = weekDays(date)
     return { from: days[0], to: days[6], previous: addDays(days[0], -7), next: addDays(days[0], 7) }
   }
-  return { from: date, to: addDays(date, AGENDA_DAYS - 1), previous: addDays(date, -AGENDA_DAYS), next: addDays(date, AGENDA_DAYS) }
+  return {
+    from: date,
+    to: addDays(date, AGENDA_DAYS - 1),
+    previous: addDays(date, -AGENDA_DAYS),
+    next: addDays(date, AGENDA_DAYS),
+  }
 }

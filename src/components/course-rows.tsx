@@ -41,7 +41,13 @@ export function CourseMeta({ row }: { row: StudyRow }) {
       {row.season && row.year ? (
         <li>
           {SeasonIcon ? (
-            <SeasonIcon aria-hidden className="course-season" data-season={row.season.value} size={14} strokeWidth={1.75} />
+            <SeasonIcon
+              aria-hidden
+              className="course-season"
+              data-season={row.season.value}
+              size={14}
+              strokeWidth={1.75}
+            />
           ) : null}
           {row.season.label} {row.year}
         </li>
@@ -72,10 +78,18 @@ export function CourseRows({ rows, start }: { rows: StudyRow[]; start: number })
           {row.image ? (
             <span aria-hidden className="course-row-cover">
               {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img alt="" decoding="async" loading="lazy" src={row.image} style={focalPointStyle(row.imageFocalPoint)} />
+              <img
+                alt=""
+                decoding="async"
+                loading="lazy"
+                src={row.image}
+                style={focalPointStyle(row.imageFocalPoint)}
+              />
             </span>
           ) : null}
-          <span className="course-row-number">{localDigits(String(start + i).padStart(2, '0'), locale)}</span>
+          <span className="course-row-number">
+            {localDigits(String(start + i).padStart(2, '0'), locale)}
+          </span>
           <div className="course-row-main">
             <h3 className="course-row-title">
               {/* The href already carries its locale (`/en/study/…`), so a plain

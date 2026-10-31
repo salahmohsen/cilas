@@ -63,7 +63,8 @@ const pageOf = (href: string): string | null => {
   return file.endsWith('.html') ? file : null
 }
 
-const hrefsOf = (html: string): string[] => [...html.matchAll(/(?:href|src)="([^"]+)"/g)].map((m) => m[1])
+const hrefsOf = (html: string): string[] =>
+  [...html.matchAll(/(?:href|src)="([^"]+)"/g)].map((m) => m[1])
 
 const main = async () => {
   const queue = ['index.html']
@@ -111,7 +112,10 @@ const main = async () => {
       let target = to
       if (!body) {
         // Weebly's `_orig` file may not exist on the mirror; keep the published copy.
-        const published = href.split(/[?#]/)[0].replace(/^https?:\/\/[^/]+\//, '').replace(/^\//, '')
+        const published = href
+          .split(/[?#]/)[0]
+          .replace(/^https?:\/\/[^/]+\//, '')
+          .replace(/^\//, '')
         const alt = decodeURIComponent(published)
         if (alt !== upload.path && !existsSync(path.join(mirror, alt))) {
           body = await get(`${ORIGIN}/${encodeURI(alt)}`)

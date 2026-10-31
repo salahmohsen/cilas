@@ -42,7 +42,10 @@ export const Places: CollectionConfig = {
       name: 'address',
       type: 'text',
       localized: true,
-      admin: { description: 'The street address, e.g. “10 Darb El Labana, El Darb El Ahmar, Cairo 11311, Egypt”.' },
+      admin: {
+        description:
+          'The street address, e.g. “10 Darb El Labana, El Darb El Ahmar, Cairo 11311, Egypt”.',
+      },
     },
     {
       name: 'map_url',

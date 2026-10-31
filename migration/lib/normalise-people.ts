@@ -13,7 +13,9 @@ type MembershipRole = 'student' | 'residential_fellow' | 'visiting_fellow'
  * The membership role for a section group. A plain "Fellows" section is read
  * as residential fellows and flagged. Team, advisors and trustees get none.
  */
-export const membershipRole = (group: ExtractedPerson['group']): { role: MembershipRole; flagged: boolean } | null => {
+export const membershipRole = (
+  group: ExtractedPerson['group'],
+): { role: MembershipRole; flagged: boolean } | null => {
   switch (group) {
     case 'student':
       return { role: 'student', flagged: false }
@@ -32,4 +34,5 @@ export const membershipRole = (group: ExtractedPerson['group']): { role: Members
  * Extracted bios often begin right after the bolded name ("is the … Professor").
  * When the first paragraph starts with a lowercase Latin letter, put the name back.
  */
-export const completeBio = (name: string, bio: string): string => (/^[a-z]/.test(bio.trimStart()) ? `${name} ${bio.trimStart()}` : bio)
+export const completeBio = (name: string, bio: string): string =>
+  /^[a-z]/.test(bio.trimStart()) ? `${name} ${bio.trimStart()}` : bio

@@ -25,9 +25,17 @@ import { resolveUpload } from './lib/uploads'
 
 const args = process.argv.slice(2)
 const raw = args[0]
-if (!raw || raw.startsWith('--')) throw new Error('Usage: npx tsx --env-file=.env migration/apply-reviews.ts <raw dir> [--dry] [id...]')
+if (!raw || raw.startsWith('--'))
+  throw new Error(
+    'Usage: npx tsx --env-file=.env migration/apply-reviews.ts <raw dir> [--dry] [id...]',
+  )
 const dry = args.includes('--dry')
-const only = new Set(args.slice(1).filter((a) => /^\d+$/.test(a)).map(Number))
+const only = new Set(
+  args
+    .slice(1)
+    .filter((a) => /^\d+$/.test(a))
+    .map(Number),
+)
 
 const here = import.meta.dirname
 const dir = path.join(here, 'extracted', 'reviews')
@@ -50,10 +58,23 @@ const zipFiles = new Set(listFiles(path.join(zip, 'uploads'), 'uploads'))
 const allFiles = new Set([...zipFiles, ...listFiles(path.join(mirror, 'uploads'), 'uploads')])
 
 type Locale = 'en' | 'ar'
-const LOCALIZED = ['subtitle', 'summary', 'epigraph', 'facilitator_note', 'content_warning', 'language_note'] as const
-const paragraphs = (text: string): string[] => text.split(/\n\s*\n/).map((p) => p.trim()).filter(Boolean)
+const LOCALIZED = [
+  'subtitle',
+  'summary',
+  'epigraph',
+  'facilitator_note',
+  'content_warning',
+  'language_note',
+] as const
+const paragraphs = (text: string): string[] =>
+  text
+    .split(/\n\s*\n/)
+    .map((p) => p.trim())
+    .filter(Boolean)
 const rich = (text: string | null, locale: Locale) =>
-  text && paragraphs(text).length ? lexical(paragraphs(text), locale === 'ar' ? 'rtl' : 'ltr') : null
+  text && paragraphs(text).length
+    ? lexical(paragraphs(text), locale === 'ar' ? 'rtl' : 'ltr')
+    : null
 
 type Stored = {
   id: number
@@ -92,7 +113,15 @@ const dataFor = (set: CourseReview['set'], locale: Locale, schedule: Record<stri
 
 const apply = async (payload: Payload, review: CourseReview, log: string[]) => {
   const find = (locale: Locale) =>
-    payload.findByID({ collection: 'courses', id: review.id, depth: 0, draft: true, locale, fallbackLocale: false, overrideAccess: true }) as unknown as Promise<Stored>
+    payload.findByID({
+      collection: 'courses',
+      id: review.id,
+      depth: 0,
+      draft: true,
+      locale,
+      fallbackLocale: false,
+      overrideAccess: true,
+    }) as unknown as Promise<Stored>
   const course = await find('en').catch(() => null)
   if (!course) return log.push(`- ${review.id}: no such course`)
   const head = `### ${review.id} ${course.legacy_url ?? ''}`
@@ -102,7 +131,14 @@ const apply = async (payload: Payload, review: CourseReview, log: string[]) => {
   if (review.syllabus && course.legacy_url) {
     // importFlows sets facilitator_note from the syllabus notes (null here):
     // keep the course's own unless the review sets it.
-    const before = (await payload.findByID({ collection: 'courses', id: review.id, depth: 0, draft: true, locale: 'all', overrideAccess: true })) as unknown as {
+    const before = (await payload.findByID({
+      collection: 'courses',
+      id: review.id,
+      depth: 0,
+      draft: true,
+      locale: 'all',
+      overrideAccess: true,
+    })) as unknown as {
       facilitator_note?: Partial<Record<Locale, string | null>> | null
     }
     const id = `page-review-${review.id}`
@@ -114,7 +150,15 @@ const apply = async (payload: Payload, review: CourseReview, log: string[]) => {
     if (!review.set.facilitator_note) {
       for (const locale of ['en', 'ar'] as const) {
         const note = before.facilitator_note?.[locale] ?? null
-        if (note) await payload.update({ collection: 'courses', id: review.id, data: { facilitator_note: note }, locale, draft: true, overrideAccess: true })
+        if (note)
+          await payload.update({
+            collection: 'courses',
+            id: review.id,
+            data: { facilitator_note: note },
+            locale,
+            draft: true,
+            overrideAccess: true,
+          })
       }
     }
   }
@@ -124,7 +168,14 @@ const apply = async (payload: Payload, review: CourseReview, log: string[]) => {
       const current = await find(locale)
       const data = dataFor(review.set, locale, (current.schedule ?? {}) as Record<string, unknown>)
       if (Object.keys(data).length) {
-        await payload.update({ collection: 'courses', id: review.id, data, locale, draft: true, overrideAccess: true })
+        await payload.update({
+          collection: 'courses',
+          id: review.id,
+          data,
+          locale,
+          draft: true,
+          overrideAccess: true,
+        })
       }
     }
   }
@@ -135,7 +186,13 @@ const apply = async (payload: Payload, review: CourseReview, log: string[]) => {
     else {
       const file = path.join(zipFiles.has(r.path) ? zip : mirror, r.path)
       const media = await mediaFor(payload, { path: r.path, file, alt: review.cover.alt })
-      await payload.update({ collection: 'courses', id: review.id, data: { cover_image: media.id }, draft: true, overrideAccess: true })
+      await payload.update({
+        collection: 'courses',
+        id: review.id,
+        data: { cover_image: media.id },
+        draft: true,
+        overrideAccess: true,
+      })
       log.push(`- cover: ${r.path}`)
     }
   }
@@ -147,10 +204,22 @@ const apply = async (payload: Payload, review: CourseReview, log: string[]) => {
 const applyPeople = async (payload: Payload, log: string[]) => {
   const file = path.join(here, 'extracted', 'corrections', 'people-fixes.json')
   if (!existsSync(file)) return
-  const fixes = JSON.parse(readFileSync(file, 'utf8')) as Array<{ name: string; bio: Partial<Record<Locale, string | null>>; $why: string }>
+  const fixes = JSON.parse(readFileSync(file, 'utf8')) as Array<{
+    name: string
+    bio: Partial<Record<Locale, string | null>>
+    $why: string
+  }>
   log.push('## People')
   for (const fix of fixes) {
-    const person = (await payload.find({ collection: 'people', where: { name: { equals: fix.name } }, limit: 1, depth: 0, overrideAccess: true })).docs[0]
+    const person = (
+      await payload.find({
+        collection: 'people',
+        where: { name: { equals: fix.name } },
+        limit: 1,
+        depth: 0,
+        overrideAccess: true,
+      })
+    ).docs[0]
     if (!person) {
       log.push(`- ${fix.name}: no such person`)
       continue
@@ -159,7 +228,14 @@ const applyPeople = async (payload: Payload, log: string[]) => {
     if (dry) continue
     for (const locale of ['en', 'ar'] as const) {
       const bio = fix.bio[locale]
-      if (bio) await payload.update({ collection: 'people', id: person.id, data: { bio: rich(bio, locale) }, locale, overrideAccess: true })
+      if (bio)
+        await payload.update({
+          collection: 'people',
+          id: person.id,
+          data: { bio: rich(bio, locale) },
+          locale,
+          overrideAccess: true,
+        })
     }
   }
 }
@@ -170,16 +246,29 @@ const applyCycles = async (payload: Payload, log: string[]) => {
   if (!existsSync(file)) return
   const entries = JSON.parse(readFileSync(file, 'utf8')) as Array<{
     id: number
-    set: { start_date?: string | null; deadline?: string | null; season?: string; start_year?: number }
+    set: {
+      start_date?: string | null
+      deadline?: string | null
+      season?: string
+      start_year?: number
+    }
     notes: string[]
   }>
   log.push('## Cycles')
   for (const { id: oldId, set, notes } of entries) {
     const id = await cycleId(payload, oldId)
-    log.push(`### cycle ${oldId}${id === oldId ? '' : ` (now ${id})`}`, ...notes.map((n) => `- ${n}`))
+    log.push(
+      `### cycle ${oldId}${id === oldId ? '' : ` (now ${id})`}`,
+      ...notes.map((n) => `- ${n}`),
+    )
     if (dry || id === null) continue
     const { deadline, ...rest } = set
-    const current = (await payload.findByID({ collection: 'cycles', id, depth: 0, overrideAccess: true })) as unknown as {
+    const current = (await payload.findByID({
+      collection: 'cycles',
+      id,
+      depth: 0,
+      overrideAccess: true,
+    })) as unknown as {
       registration?: Record<string, unknown> | null
     }
     await payload.update({
@@ -188,7 +277,9 @@ const applyCycles = async (payload: Payload, log: string[]) => {
       overrideAccess: true,
       data: {
         ...rest,
-        ...(deadline !== undefined ? { registration: { ...(current.registration ?? {}), deadline } } : {}),
+        ...(deadline !== undefined
+          ? { registration: { ...(current.registration ?? {}), deadline } }
+          : {}),
       } as Record<string, unknown>,
     })
   }
@@ -208,12 +299,26 @@ const createNewCourses = async (payload: Payload, log: string[]): Promise<Course
     const c = NewCourse.parse(JSON.parse(readFileSync(path.join(dir, f), 'utf8')))
     log.push(`### new ${c.legacy_url}`, ...c.notes.map((n) => `- ${n}`))
     if (dry) continue
-    const place = (await payload.find({ collection: 'places', where: { name: { equals: c.cycle.space } }, limit: 1, depth: 0, overrideAccess: true })).docs[0]
+    const place = (
+      await payload.find({
+        collection: 'places',
+        where: { name: { equals: c.cycle.space } },
+        limit: 1,
+        depth: 0,
+        overrideAccess: true,
+      })
+    ).docs[0]
     if (!place) throw new Error(`no place ${c.cycle.space}`)
     const cycle = await upsert(
       payload,
       'cycles',
-      { and: [{ season: { equals: c.cycle.season } }, { start_year: { equals: c.cycle.start_year } }, { place: { equals: place.id } }] },
+      {
+        and: [
+          { season: { equals: c.cycle.season } },
+          { start_year: { equals: c.cycle.start_year } },
+          { place: { equals: place.id } },
+        ],
+      },
       {
         season: c.cycle.season,
         start_year: c.cycle.start_year,
@@ -223,16 +328,30 @@ const createNewCourses = async (payload: Payload, log: string[]): Promise<Course
     )
     const fellows: number[] = []
     for (const name of c.fellows) {
-      const found = (await payload.find({ collection: 'people', where: { name: { equals: name } }, limit: 1, depth: 0, overrideAccess: true })).docs[0]
-      fellows.push(Number(
-        found?.id ??
-          (
-            await payload.create({
-              collection: 'people',
-              data: { name, visible: true, slug: await freeSlug(payload, 'people', slugify(name)) },
-              overrideAccess: true,
-            })
-          ).id),
+      const found = (
+        await payload.find({
+          collection: 'people',
+          where: { name: { equals: name } },
+          limit: 1,
+          depth: 0,
+          overrideAccess: true,
+        })
+      ).docs[0]
+      fellows.push(
+        Number(
+          found?.id ??
+            (
+              await payload.create({
+                collection: 'people',
+                data: {
+                  name,
+                  visible: true,
+                  slug: await freeSlug(payload, 'people', slugify(name)),
+                },
+                overrideAccess: true,
+              })
+            ).id,
+        ),
       )
     }
     const title = c.set.title as { en: string; ar: string | null }
@@ -263,14 +382,25 @@ const createNewCourses = async (payload: Payload, log: string[]): Promise<Course
  * were written against (2026-10-13); review-index.json keeps each one's
  * legacy URL (and a cycle's season and year), so they apply to a rebuilt one.
  */
-const index = JSON.parse(readFileSync(path.join(here, 'extracted', 'corrections', 'review-index.json'), 'utf8')) as {
+const index = JSON.parse(
+  readFileSync(path.join(here, 'extracted', 'corrections', 'review-index.json'), 'utf8'),
+) as {
   courses: Record<string, string>
   cycles: Record<string, { legacy_url: string | null; season: string; start_year: number }>
 }
 const courseId = async (payload: Payload, id: number): Promise<number | null> => {
   const url = index.courses[String(id)]
   if (!url) return id
-  const found = (await payload.find({ collection: 'courses', where: { legacy_url: { equals: url } }, limit: 1, depth: 0, draft: true, overrideAccess: true })).docs[0]
+  const found = (
+    await payload.find({
+      collection: 'courses',
+      where: { legacy_url: { equals: url } },
+      limit: 1,
+      depth: 0,
+      draft: true,
+      overrideAccess: true,
+    })
+  ).docs[0]
   return found ? (found.id as number) : null
 }
 const cycleId = async (payload: Payload, id: number): Promise<number | null> => {
@@ -279,7 +409,9 @@ const cycleId = async (payload: Payload, id: number): Promise<number | null> => 
   const where: Where = known.legacy_url
     ? { legacy_url: { equals: known.legacy_url } }
     : { and: [{ season: { equals: known.season } }, { start_year: { equals: known.start_year } }] }
-  const found = (await payload.find({ collection: 'cycles', where, limit: 1, depth: 0, overrideAccess: true })).docs[0]
+  const found = (
+    await payload.find({ collection: 'cycles', where, limit: 1, depth: 0, overrideAccess: true })
+  ).docs[0]
   return found ? (found.id as number) : null
 }
 

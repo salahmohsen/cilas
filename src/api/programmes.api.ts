@@ -7,13 +7,14 @@ import type { Course, Cycle, Media, Person, Programme, User } from '@/payload-ty
 
 type Locale = 'en' | 'ar'
 
-const obj = <T,>(v: unknown): T | null => (typeof v === 'object' && v !== null ? (v as T) : null)
+const obj = <T>(v: unknown): T | null => (typeof v === 'object' && v !== null ? (v as T) : null)
 
 const plain = (data: unknown): string =>
   data && typeof data === 'object' && 'root' in data
     ? plainText({ data: data as Parameters<typeof plainText>[0]['data'] })
     : ''
-const clip = (text: string, max = 220) => (text.length > max ? `${text.slice(0, max - 1).trimEnd()}…` : text)
+const clip = (text: string, max = 220) =>
+  text.length > max ? `${text.slice(0, max - 1).trimEnd()}…` : text
 
 /** A course as the programme page shows it: a card with its cover, words and fellows. */
 export type ProgrammeCourse = {
@@ -45,7 +46,8 @@ export type BridgeYear = {
 }
 
 /** A Bridge year's page: `/study/bridge/2024-2025` for `bridge-programme-2024-2025`. */
-export const bridgeYearPath = (slug: string) => `/study/bridge/${slug.replace(/^bridge-programme-/, '')}`
+export const bridgeYearPath = (slug: string) =>
+  `/study/bridge/${slug.replace(/^bridge-programme-/, '')}`
 /** The programme slug a year's page names. */
 export const bridgeSlugOf = (year: string) => `bridge-programme-${year}`
 
@@ -146,12 +148,18 @@ export const getBridgeYear = async (
               type: c.course_type,
               excerpt: clip(c.summary || c.subtitle || plain(c.description)),
               image: mediaImage(cover) ?? null,
-              startDate: (c.schedule?.start_date ?? cycle.start_date ?? `${cycle.start_year}-01-01`).slice(0, 10),
+              startDate: (
+                c.schedule?.start_date ??
+                cycle.start_date ??
+                `${cycle.start_year}-01-01`
+              ).slice(0, 10),
               fellows: (c.fellows ?? []).flatMap((f) => {
                 const person = obj<Person>(f)
                 if (!person?.name) return []
                 const photo = obj<Media>(person.photo)
-                return [{ name: person.name, avatar: photo?.sizes?.thumbnail?.url ?? photo?.url ?? null }]
+                return [
+                  { name: person.name, avatar: photo?.sizes?.thumbnail?.url ?? photo?.url ?? null },
+                ]
               }),
             }
           })

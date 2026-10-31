@@ -16,18 +16,24 @@ const root = path.join(here, '..')
 
 const mentions: Array<{ name: string; where: string }> = []
 
-const courses = JSON.parse(readFileSync(path.join(root, 'seed/data/archive/courses.json'), 'utf8')) as Array<{
+const courses = JSON.parse(
+  readFileSync(path.join(root, 'seed/data/archive/courses.json'), 'utf8'),
+) as Array<{
   title: string
   cycle: string
   fellows: Array<{ name: string }>
 }>
 for (const c of courses)
-  for (const f of c.fellows) mentions.push({ name: f.name, where: `course "${c.title}" (${c.cycle})` })
+  for (const f of c.fellows)
+    mentions.push({ name: f.name, where: `course "${c.title}" (${c.cycle})` })
 
 const dir = path.join(here, 'extracted/people')
-for (const file of readdirSync(dir).filter((f) => f.endsWith('.json')).sort()) {
+for (const file of readdirSync(dir)
+  .filter((f) => f.endsWith('.json'))
+  .sort()) {
   const { data } = JSON.parse(readFileSync(path.join(dir, file), 'utf8')) as { data: PeoplePage }
-  for (const p of data.people) mentions.push({ name: p.name, where: `page ${file.replace(/\.json$/, '')} (${p.group})` })
+  for (const p of data.people)
+    mentions.push({ name: p.name, where: `page ${file.replace(/\.json$/, '')} (${p.group})` })
 }
 
 const seed = readFileSync(path.join(root, 'seed/collections/users.seed.ts'), 'utf8')

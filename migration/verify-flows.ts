@@ -13,7 +13,13 @@ import { missingLinks, sessionMismatch, unitMarkers } from './lib/verify-flows'
 const [raw] = process.argv.slice(2)
 if (!raw) throw new Error('Usage: verify-flows.ts <raw dir>')
 
-type Flow = { id: string; upload: string; source: 'zip' | 'mirror' | null; method: string; courses: string[] }
+type Flow = {
+  id: string
+  upload: string
+  source: 'zip' | 'mirror' | null
+  method: string
+  courses: string[]
+}
 const here = import.meta.dirname
 const flows = JSON.parse(readFileSync(path.join(here, 'flows.json'), 'utf8')) as Flow[]
 const flowDir = (id: string) => path.join(path.resolve(raw), 'flows', id)
@@ -36,21 +42,29 @@ for (const f of flows) {
     notExtracted.push(f.id)
     continue
   }
-  const syllabus = Syllabus.parse((JSON.parse(readFileSync(file, 'utf8')) as { data: unknown }).data)
+  const syllabus = Syllabus.parse(
+    (JSON.parse(readFileSync(file, 'utf8')) as { data: unknown }).data,
+  )
 
   const linksFile = path.join(flowDir(f.id), 'links.json')
   if (existsSync(linksFile)) {
-    const links = (JSON.parse(readFileSync(linksFile, 'utf8')) as { url: string }[]).map((l) => l.url)
+    const links = (JSON.parse(readFileSync(linksFile, 'utf8')) as { url: string }[]).map(
+      (l) => l.url,
+    )
     const missing = missingLinks(links, syllabus)
     if (missing.length) linkGaps.push({ id: f.id, urls: missing })
   }
 
-  const text = readFileSync(path.join(flowDir(f.id), f.method === 'vision' ? 'ocr.txt' : 'text.txt'), 'utf8')
+  const text = readFileSync(
+    path.join(flowDir(f.id), f.method === 'vision' ? 'ocr.txt' : 'text.txt'),
+    'utf8',
+  )
   const markers = unitMarkers(text)
   const meetings = syllabus.sessions.reduce((n, s) => n + (s.meetings ?? 1), 0)
   if (syllabus.sessions.length === 0) empty.push(f.id)
   else if (markers === 0) unmarked.push(f.id)
-  else if (sessionMismatch(markers, meetings)) countChecks.push({ id: f.id, markers, sessions: meetings })
+  else if (sessionMismatch(markers, meetings))
+    countChecks.push({ id: f.id, markers, sessions: meetings })
 }
 
 const list = (items: string[]) => (items.length ? items.map((i) => `- ${i}`).join('\n') : '_none_')

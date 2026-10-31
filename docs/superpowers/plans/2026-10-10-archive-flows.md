@@ -3,6 +3,7 @@
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
 **Goal:** Turn each archived course flow (166 files: 160 PDFs, 4 Word, 2 missing) into its course's syllabus fields. Those fields are:
+
 - `session_unit`;
 - `sessions[]`: `order`, `session_title`, `description`, `meetings`, `bibliography[]` with `href`s, and `activities[]`;
 - the course-level `bibliography[]`.
@@ -10,6 +11,7 @@
 The result must be **checked against the source**, not just extracted: every link in the PDF must land in the syllabus, and session counts are sanity-checked (ADR 0004; the user's requirement).
 
 **Architecture:** use the cheapest method that reads each file correctly. The method was chosen by benchmark, not assumption:
+
 - **Benchmark, 160 PDFs:**
   - 140 are mostly English with a clean text layer.
   - 20 are Arabic. Their text layers are broken in the ways ADR 0004 describes: reversed lam-alef ("خالل" for "خلال"), missing word spaces, displaced punctuation.
@@ -36,6 +38,7 @@ The extraction runs on the Claude subscription through the shared `--prompt` / `
 ## Decisions made in this plan
 
 **Derived files**
+
 - Derived files live under `migration/raw/flows/<flow id>/`, which is gitignored, like all raw-derived data:
   - `text.txt`
   - `ocr.txt`
@@ -45,6 +48,7 @@ The extraction runs on the Claude subscription through the shared `--prompt` / `
 - A flow id is the slug of its upload file name.
 
 **Syllabus fields**
+
 - One `sessions[]` row per unit the flow numbers (week, session, لقاء or أسبوع), in order.
 - A unit the flow spans across several meetings ("Weeks 2 & 3") becomes one session with `meetings: 2`. Otherwise `meetings` is left empty, so the default applies.
 - `session_unit` is `week` when the flow numbers weeks, otherwise `session`.
@@ -58,10 +62,12 @@ The extraction runs on the Claude subscription through the shared `--prompt` / `
 - General readings not tied to a session go into the course-level `bibliography`.
 
 **Language**
+
 - A flow is Arabic when most of its letters are Arabic. Its localized fields (`session_title`, `description`, bibliography `title`/`note`, activity `description`) are then written in the `ar` locale. English flows write `en`.
 - Array rows are shared by both locales, so non-localized fields are written once.
 
 **Writing and checking**
+
 - Never overwrite a course marked `reviewed`. Re-running replaces the sessions of courses still `needs_review`.
 - **Verification**, written to `migration/review/flows.md`:
   - **Links:** every non-`mailto:` URL from `pdfinfo -url` must appear in some `href` in that flow's syllabus, after normalising trailing slashes and `http`/`https`.
@@ -71,17 +77,17 @@ The extraction runs on the Claude subscription through the shared `--prompt` / `
 
 ## File map
 
-| File | Change | Responsibility |
-|---|---|---|
-| `migration/lib/flow-files.ts` | create | flow id, method choice, language |
-| `migration/prepare-flows.ts` | create | derive text, OCR, images, links → `migration/raw/flows/`; write `migration/flows.json` |
-| `migration/lib/syllabus-schema.ts` | create | zod schema and prompt |
-| `migration/extract-flows.ts` | create | `--pending` / `--prompt` / `--record` |
-| `migration/extracted/flows/*.json` | generate | committed |
-| `migration/lib/verify-flows.ts` | create | link coverage, session-count check |
-| `migration/verify-flows.ts` | create | → `migration/review/flows.md` |
-| `migration/lib/import-flows.ts`, `migration/seed-flows.ts` | create | write syllabi into courses |
-| tests | create | unit tests for the pure parts, int test for the import |
+| File                                                       | Change   | Responsibility                                                                         |
+| ---------------------------------------------------------- | -------- | -------------------------------------------------------------------------------------- |
+| `migration/lib/flow-files.ts`                              | create   | flow id, method choice, language                                                       |
+| `migration/prepare-flows.ts`                               | create   | derive text, OCR, images, links → `migration/raw/flows/`; write `migration/flows.json` |
+| `migration/lib/syllabus-schema.ts`                         | create   | zod schema and prompt                                                                  |
+| `migration/extract-flows.ts`                               | create   | `--pending` / `--prompt` / `--record`                                                  |
+| `migration/extracted/flows/*.json`                         | generate | committed                                                                              |
+| `migration/lib/verify-flows.ts`                            | create   | link coverage, session-count check                                                     |
+| `migration/verify-flows.ts`                                | create   | → `migration/review/flows.md`                                                          |
+| `migration/lib/import-flows.ts`, `migration/seed-flows.ts` | create   | write syllabi into courses                                                             |
+| tests                                                      | create   | unit tests for the pure parts, int test for the import                                 |
 
 **Baseline:** tsc clean, lint 0 errors, all tests pass. Tools on `PATH`: `pdftotext`, `pdftoppm`, `pdfinfo` and `tesseract` (with `ara`). Raw files are untrusted: pass their paths as arguments, never run anything from inside `migration/raw`.
 
@@ -90,6 +96,7 @@ The extraction runs on the Claude subscription through the shared `--prompt` / `
 ### Task 1: Flow files and method choice
 
 **Files:**
+
 - Create: `migration/lib/flow-files.ts`
 - Test: `tests/unit/import-flow-files.unit.spec.ts`
 
@@ -118,6 +125,7 @@ The extraction runs on the Claude subscription through the shared `--prompt` / `
 ### Task 2: Prepare the flows
 
 **Files:**
+
 - Create: `migration/prepare-flows.ts`
 - Generate: `migration/flows.json`
 
@@ -149,6 +157,7 @@ The extraction runs on the Claude subscription through the shared `--prompt` / `
 ### Task 3: Syllabus schema and prompt
 
 **Files:**
+
 - Create: `migration/lib/syllabus-schema.ts`
 - Test: `tests/unit/import-syllabus-schema.unit.spec.ts`
 
@@ -176,6 +185,7 @@ The extraction runs on the Claude subscription through the shared `--prompt` / `
 ```
 
 `flowPrompt({ id, method, courses, text, images })` contains:
+
 - the course titles;
 - the text;
 - for `vision`, the instruction to Read each listed image path and treat the OCR text only as a helper.
@@ -209,7 +219,14 @@ export const Syllabus = z.object({
       materials: z.array(Material),
       activities: z.array(
         z.object({
-          kind: z.enum(['discussion', 'field_visit', 'exercise', 'screening', 'presentation', 'other']),
+          kind: z.enum([
+            'discussion',
+            'field_visit',
+            'exercise',
+            'screening',
+            'presentation',
+            'other',
+          ]),
           description: z.string().min(1),
         }),
       ),
@@ -264,6 +281,7 @@ ${text}
 ### Task 4: Flow extraction runner
 
 **Files:**
+
 - Create: `migration/extract-flows.ts`
 
 - [ ] **Step 1: Write the runner** `npx tsx migration/extract-flows.ts migration/raw --pending | --prompt <id> | --record <id> <answer.json>`, built on `migration/lib/agent-extract.ts`.
@@ -283,6 +301,7 @@ ${text}
 ### Task 5: Verification
 
 **Files:**
+
 - Create: `migration/lib/verify-flows.ts`, `migration/verify-flows.ts`
 - Test: `tests/unit/import-verify-flows.unit.spec.ts`
 
@@ -332,6 +351,7 @@ The controller does this task, not an implementer subagent.
 ### Task 7: Write syllabi into courses
 
 **Files:**
+
 - Create: `migration/lib/import-flows.ts`, `migration/seed-flows.ts`
 - Test: `tests/int/import-flows.int.spec.ts`
 

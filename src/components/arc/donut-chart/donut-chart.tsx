@@ -604,14 +604,14 @@ export function DonutChart({
   const rows = useRef<(HTMLButtonElement | null)[]>([])
   const step = (key: string, index: number, count: number) =>
     (
-      ({
+      {
         ArrowDown: index + 1,
         ArrowRight: index + 1,
         ArrowUp: index - 1,
         ArrowLeft: index - 1,
         Home: 0,
         End: count - 1,
-      }) as Record<string, number>
+      } as Record<string, number>
     )[key]
   const onLegendKey = (event: KeyboardEvent<HTMLButtonElement>, index: number) => {
     if (event.key === 'Escape' && selected) {
@@ -650,10 +650,12 @@ export function DonutChart({
     setAnnouncement(describe(item))
   }
   const onLegendBlur = (event: FocusEvent<HTMLButtonElement>) => {
-    if (!(
-      event.relatedTarget instanceof Node &&
-      event.currentTarget.closest('ul')?.contains(event.relatedTarget)
-    ))
+    if (
+      !(
+        event.relatedTarget instanceof Node &&
+        event.currentTarget.closest('ul')?.contains(event.relatedTarget)
+      )
+    )
       setPreview(null)
   }
 

@@ -5,6 +5,7 @@
 **Goal:** The imported documents get their images and PDFs from the archive, stored in R2 through the `media` collection, and every legacy ci-las.org page gets one redirect to the document that replaces it.
 
 **Architecture:** Two importers follow the 6.2–6.5 pattern. Both are idempotent and both upsert by `legacy_url`.
+
 - **Media:** `importMedia` uploads each archive file once. The file is keyed by its upload path, stored in `media.legacy_url`. It then sets the upload fields that point at it.
 - **Redirects:** `importRedirects` writes one `redirects` doc per manifest page. Each doc references the document that replaced the page. `pathOf` (src/lib/paths.ts) turns that reference into a URL once the collection has a frontend route. Until then, the redirect is stored but resolves to nothing, and the page shows 404, as it does today.
 
@@ -27,8 +28,8 @@
   - **People:** `photo`, from `people.json` `photo`. 104 people have one.
   - **Partners (outlets):** `logo`, from the press item's `logo`. Several press items share an outlet; the first logo wins.
   - **Publications:** `cover_image`.
-    - *Translation as Education*: the cover image on its page.
-    - *Pigeon Towers*: none. Its page shows only portraits.
+    - _Translation as Education_: the cover image on its page.
+    - _Pigeon Towers_: none. Its page shows only portraits.
   - **Print editions:** the three book PDFs and the newsletter PDF are uploaded to `media`. Then:
     - `print_edition_url` is set to the media file's R2 URL. The ci-las.org address will stop working when the old site goes.
     - The newsletter's "Original PDF" link moves to R2 too.
@@ -49,15 +50,15 @@
 
 ## File map
 
-| File | Change | Responsibility |
-|---|---|---|
-| `src/collections/Media.ts` | modify | `...importFields()` |
-| `migration/lib/import-media.ts` | create | `mediaFor(payload, path, alt)` (find or upload), `importMedia(payload, data)` |
-| `migration/lib/media-plan.ts` | create | pure: which file goes to which doc field (`mediaJobs`), course-cover choice (`firstImage`) |
-| `migration/seed-media.ts` | create | runner with `--dry` |
-| `migration/lib/import-redirects.ts` | create | pure `redirectTargets(pages, docs)` + `importRedirects(payload, …)` |
-| `migration/seed-redirects.ts` | create | runner; writes `migration/review/redirects.md` |
-| tests | create | unit tests for the pure parts, int tests for both importers |
+| File                                | Change | Responsibility                                                                             |
+| ----------------------------------- | ------ | ------------------------------------------------------------------------------------------ |
+| `src/collections/Media.ts`          | modify | `...importFields()`                                                                        |
+| `migration/lib/import-media.ts`     | create | `mediaFor(payload, path, alt)` (find or upload), `importMedia(payload, data)`              |
+| `migration/lib/media-plan.ts`       | create | pure: which file goes to which doc field (`mediaJobs`), course-cover choice (`firstImage`) |
+| `migration/seed-media.ts`           | create | runner with `--dry`                                                                        |
+| `migration/lib/import-redirects.ts` | create | pure `redirectTargets(pages, docs)` + `importRedirects(payload, …)`                        |
+| `migration/seed-redirects.ts`       | create | runner; writes `migration/review/redirects.md`                                             |
+| tests                               | create | unit tests for the pure parts, int tests for both importers                                |
 
 **Baseline:** tsc is clean, lint has 0 errors, and all tests pass. Raw files are untrusted: pass paths as arguments, and never run anything from inside `migration/raw`.
 
@@ -66,6 +67,7 @@
 ### Task 1: Media gets import fields
 
 **Files:**
+
 - Modify: `src/collections/Media.ts`
 
 - [ ] **Step 1:** Add `...importFields()` from `@/fields/import` to the Media fields, after `space`.
@@ -79,6 +81,7 @@
 ### Task 2: Which file goes where (pure)
 
 **Files:**
+
 - Create: `migration/lib/media-plan.ts`
 - Test: `tests/unit/import-media-plan.unit.spec.ts`
 
@@ -99,6 +102,7 @@
 ### Task 3: Upload and attach
 
 **Files:**
+
 - Create: `migration/lib/import-media.ts`, `migration/seed-media.ts`
 - Test: `tests/int/import-media.int.spec.ts`
 
@@ -123,6 +127,7 @@
 ### Task 4: Redirects
 
 **Files:**
+
 - Create: `migration/lib/import-redirects.ts`, `migration/seed-redirects.ts`
 - Test: `tests/unit/import-redirects.unit.spec.ts`, `tests/int/import-redirects.int.spec.ts`
 

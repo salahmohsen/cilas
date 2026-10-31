@@ -5,6 +5,7 @@ The Payload schema CILAS is moving to. It replaces the old `CILAS.md` / `CILAS-s
 The code in `src/collections` is what exists today. This file is what it should become. Delete each section once the code matches it.
 
 Conventions:
+
 - Text that people read is `localized` (en, ar).
 - Arabic falls back to English and English falls back to Arabic, and the page says "available in X only" when it shows the fallback.
 - Every imported document has a hidden `legacy_url` and an `import_status`.
@@ -16,12 +17,14 @@ Conventions:
 ## Time and place, programmes, teaching
 
 Spaces, cycles, programmes, courses and enrollments match the code (ADR 0002, ADR 0003). Still to do:
+
 - **Admin:** show a course session's computed dates as placeholders in its `dates[]` (needs a custom field component).
 - **Archive import (plan 6):** `legacy_url` and `import_status` on imported documents; unverified Bridge years (2020–21, 2023–24, 2024–25) as draft programmes; legacy trimesters mapped onto fall, winter and spring.
 
 ## Partners and publishing
 
 People, users, governance and memberships match the code (ADR 0001). Partners, articles (with review), publications, press, events and newsletters match the code (ADR 0005). Still to do:
+
 - **Newsletter sign-up:** a public form that posts to the Resend Audience API (frontend work).
 - **Press links:** a periodic check that marks dead links so the page falls back to `archived_url`.
 - **Article submission UI:** authors submit by choosing Submitted and using the main save button; a dedicated Submit button belongs with the frontend.
@@ -29,17 +32,20 @@ People, users, governance and memberships match the code (ADR 0001). Partners, a
 ## Plugins
 
 `plugin-redirects` and `plugin-seo` match the code, pinned to the other `@payloadcms` packages' version. Still to do:
+
 - **Pages:** `src/lib/paths.ts` knows only `/study/<slug>`. Each new frontend route adds its collection there, which also makes redirects and SEO preview URLs reach it.
 - **Archive import (plan 6):** one redirect per legacy URL (`from` is unique, so one row per old path).
 - **Search:** `plugin-search` is postponed until the frontend has a search page.
 
 ## Removed
+
 - `fields-of-study` and every reference to it.
 - Stored course-flow PDFs, which are never kept in media or R2.
 
 ## Archive import (seed)
 
 **Built (plan 6.1):**
+
 - `legacy_url` and `import_status` on every imported collection.
 - The reset guard.
 - `migration/fetch-mirror.ts`, and the stage-1 `migration/ingest.ts` → `migration/manifest.json` (see `migration/README.md`).
@@ -50,7 +56,7 @@ People, users, governance and memberships match the code (ADR 0001). Partners, a
 
 - Course flows (plan 6.4): 164 of 166 flows (2 files missing) written into 165 courses, 1,318 sessions in all. Every PDF link is captured. `migration/review/flows.md` lists what a person should check.
 
-- Publishing content (plan 6.5): 15 articles (5 *Pigeon Towers* essays in English and Arabic, 7 *Translation as Education* essays in Arabic, 3 blog posts), 2 publications, 11 press items, 6 events and 19 newsletters. Articles are published; the rest are drafts for review. `migration/review/content.md` lists what a person should check.
+- Publishing content (plan 6.5): 15 articles (5 _Pigeon Towers_ essays in English and Arabic, 7 _Translation as Education_ essays in Arabic, 3 blog posts), 2 publications, 11 press items, 6 events and 19 newsletters. Articles are published; the rest are drafts for review. `migration/review/content.md` lists what a person should check.
 
 - Media and redirects (plan 6.6): 192 archive files in media on R2 (98 people photos, outlet logos, course covers, the booklet cover, the book and newsletter PDFs; 13 files are missing from the archive). 330 redirects: 138 legacy pages to the documents that replaced them, and 192 old upload paths to their R2 copies. `migration/review/{media,redirects}.md` list what a person should check.
 
@@ -73,4 +79,5 @@ People, users, governance and memberships match the code (ADR 0001). Partners, a
 - The development-only `resetContent()` wipe must never run against reviewed content.
 
 ## Open
+
 - **SiteSettings:** `social_links` platform `twitter` → `x`, to match people.

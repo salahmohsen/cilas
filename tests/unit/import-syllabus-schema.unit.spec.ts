@@ -11,7 +11,12 @@ const sample = {
       description: 'Overview of course and the importance of imagination…',
       meetings: null,
       materials: [
-        { type: 'prompt', title: "Why do stories start with 'kan yama kan'?", note: null, href: null },
+        {
+          type: 'prompt',
+          title: "Why do stories start with 'kan yama kan'?",
+          note: null,
+          href: null,
+        },
         {
           type: 'reading',
           title: "'The Birth of Story' in Story and Structure: A complete guide",
@@ -39,7 +44,12 @@ describe('Syllabus', () => {
 })
 
 describe('flowPrompt', () => {
-  const base = { id: 'f', courses: ['Course A', 'Course B'], text: 'WEEK ONE TEXT', images: [] as string[] }
+  const base = {
+    id: 'f',
+    courses: ['Course A', 'Course B'],
+    text: 'WEEK ONE TEXT',
+    images: [] as string[],
+  }
 
   it('carries the course titles and the text', () => {
     const p = flowPrompt({ ...base, method: 'text' })

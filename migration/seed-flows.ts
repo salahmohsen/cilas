@@ -29,8 +29,11 @@ const main = async () => {
   const { default: config } = await import('../src/payload.config')
   const payload = await getPayload({ config: await config })
   const result = await importFlows(payload, { flows, syllabi, courses })
-  console.log(`${syllabi.size} syllabi of ${flows.length} flow(s): courses ${result.courses}, sessions ${result.sessions}`)
-  if (result.skipped.length) console.log(`skipped (missing or reviewed): ${result.skipped.join(', ')}`)
+  console.log(
+    `${syllabi.size} syllabi of ${flows.length} flow(s): courses ${result.courses}, sessions ${result.sessions}`,
+  )
+  if (result.skipped.length)
+    console.log(`skipped (missing or reviewed): ${result.skipped.join(', ')}`)
   await payload.destroy()
   process.exit(0)
 }

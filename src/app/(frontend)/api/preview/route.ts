@@ -23,7 +23,10 @@ export async function GET(request: Request) {
   const slug = searchParams.get('slug')
   const collection = searchParams.get('collection')
 
-  if (!slug || (collection !== 'courses' && collection !== 'articles' && collection !== 'programmes')) {
+  if (
+    !slug ||
+    (collection !== 'courses' && collection !== 'articles' && collection !== 'programmes')
+  ) {
     return new Response('Missing or unsupported preview target', { status: 400 })
   }
 

@@ -17,7 +17,8 @@ type Note = {
 }
 
 /** Rows written before the registry keep their old sentence as the detail line. */
-const labelOf = (note: Note) => (note.kind && note.kind in EVENT_NAMES ? EVENT_NAMES[note.kind as NotificationKind] : note.title)
+const labelOf = (note: Note) =>
+  note.kind && note.kind in EVENT_NAMES ? EVENT_NAMES[note.kind as NotificationKind] : note.title
 const detailOf = (note: Note) =>
   note.description ??
   (note.title === labelOf(note) || note.title.startsWith('{') ? undefined : note.title)

@@ -24,7 +24,9 @@ import { pageText } from './lib/page-text'
 
 const [raw, mode, ...rest] = process.argv.slice(2)
 if (!raw || !mode) {
-  throw new Error('Usage: extract-courses.ts <raw dir> --pending | --prompt <file> | --record <file> <answer.json> | --api [--only a,b]')
+  throw new Error(
+    'Usage: extract-courses.ts <raw dir> --pending | --prompt <file> | --record <file> <answer.json> | --api [--only a,b]',
+  )
 }
 
 type ManifestPage = { file: string; source: 'zip' | 'mirror'; kind: string; title: string }

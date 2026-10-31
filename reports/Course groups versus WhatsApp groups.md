@@ -58,19 +58,19 @@ WhatsApp and the in-app groups do different social jobs. In Bouhnik and Deshen's
 
 The design consequence is two spaces inside one app. One space is a light social layer: introductions, reactions, polls and logistics. The other is threaded, task-shaped discussion for course work. This keeps the relationship benefit of a chat, but it does not bury the course content. It also keeps people visible by name and face, which a forum with only text and usernames does not do well.
 
-| Social design move | Evidence behind it | Phase |
-|---|---|---|
-| Bilingual introduction thread, opened by the fellow in week 0 ("What question brings you here?") | Social presence; belonging needs real chances to connect | 1 |
-| Profiles with optional photo and name form the member controls | Social presence; MENA norms on exposure | 1 |
-| Visible fellow presence: prompts, modelling of tentative thinking and polite disagreement | Teaching presence; face-saving norms | 1 |
-| Polls and reactions as low-risk first steps | Legitimate peripheral participation | 1 |
-| Small task sub-groups of 3–5 members | Structured collaboration g ≈ 0.4–0.6; MOOC grouping alone failed | 1 (fellow-made) |
-| Quiet hours, digest instead of constant push, no on-call fellows | WhatsApp overload and 24-hour expectation | 1 |
-| Hidden phone numbers; CILAS profiles only | Privacy; boundary collapse on WhatsApp | 1 |
-| Alumni "how I got through" stories at onboarding | Belonging interventions (Walton & Cohen; Walton et al.) | 2 |
-| Alumni mentors as an optional role | Communities of practice; weak ties | 2–3 |
-| Course group becomes a read-only archive; members stay in programme and community groups | Weak ties (Rajkumar et al.) | 2 |
-| Do not build: public leaderboards, post counts, "seen by" read receipts, forced public posting without a small-group option | Social comparison, shame and face threat | Never |
+| Social design move                                                                                                          | Evidence behind it                                               | Phase           |
+| --------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------- | --------------- |
+| Bilingual introduction thread, opened by the fellow in week 0 ("What question brings you here?")                            | Social presence; belonging needs real chances to connect         | 1               |
+| Profiles with optional photo and name form the member controls                                                              | Social presence; MENA norms on exposure                          | 1               |
+| Visible fellow presence: prompts, modelling of tentative thinking and polite disagreement                                   | Teaching presence; face-saving norms                             | 1               |
+| Polls and reactions as low-risk first steps                                                                                 | Legitimate peripheral participation                              | 1               |
+| Small task sub-groups of 3–5 members                                                                                        | Structured collaboration g ≈ 0.4–0.6; MOOC grouping alone failed | 1 (fellow-made) |
+| Quiet hours, digest instead of constant push, no on-call fellows                                                            | WhatsApp overload and 24-hour expectation                        | 1               |
+| Hidden phone numbers; CILAS profiles only                                                                                   | Privacy; boundary collapse on WhatsApp                           | 1               |
+| Alumni "how I got through" stories at onboarding                                                                            | Belonging interventions (Walton & Cohen; Walton et al.)          | 2               |
+| Alumni mentors as an optional role                                                                                          | Communities of practice; weak ties                               | 2–3             |
+| Course group becomes a read-only archive; members stay in programme and community groups                                    | Weak ties (Rajkumar et al.)                                      | 2               |
+| Do not build: public leaderboards, post counts, "seen by" read receipts, forced public posting without a small-group option | Social comparison, shame and face threat                         | Never           |
 
 ## WhatsApp wins on habit, but loses on structure, record and privacy
 
@@ -86,20 +86,20 @@ Egypt's data law now applies. The **Executive Regulations of the PDPL (Law 151/2
 
 Facebook Groups is a weaker choice than WhatsApp for course work. It has good admin tools, such as Admin Assist, membership questions and slow mode ([Social Media Today](https://www.socialmediatoday.com/news/facebook-adds-a-range-of-new-group-admin-tools-including-an-updated-dashbo/601941)). But students **do not want coursework on their social platform and prefer private tools** for classmates and instructors ([Dennen & Burner 2013](https://spir.aoir.org/ojs/index.php/spir/article/view/8480)). Teachers left Facebook class groups because of friend-request pressure and student exposure ([Bouhnik & Deshen 2014](https://www.jite.org/documents/Vol13/JITEv13ResearchP217-231Bouhnik0601.pdf)). Meta has also removed group features in the past, such as Rooms, Group Stories and Facebook Campus ([Ubergizmo](https://www.ubergizmo.com/2022/03/facebook-campus-shut-down/)). Facebook still has reach in Egypt, with **51.6M ad reach, but the audience is 60.1% male** ([DataReportal 2026](https://datareportal.com/reports/digital-2026-egypt)). For a mixed cohort, that skew is a concern. Arab youth survey data shows **daily Facebook use falling, with WhatsApp first at 82%** ([Arab News](https://www.arabnews.pk/node/2167336)).
 
-| Criterion | WhatsApp groups / Communities | Facebook Groups | In-app groups (CILAS) |
-|---|---|---|---|
-| Adoption today | Very high; already on every phone | High reach, falling for youth | Zero; must be earned |
-| Notifications | Instant, reliable push | Push, but mixed with social feed | Email digest reliable; web push needs an installed PWA on iOS |
-| Threads and structure | None; one stream per group | Posts and comments | Threads, categories per session, prompts, Q&A |
-| Record for late joiners | 25–100 messages, only if shared | Yes, searchable | Full archive, searchable, linkable |
-| Phone-number exposure | Visible to all members until usernames reach Egypt | No numbers; social profile exposed | None; uses CILAS profiles and access rules |
-| Data control under PDPL | None; data on members' phones and Meta | None; data at Meta | Full; in CILAS Postgres and backups |
-| Arabic/RTL | Widely used in Arabic (no formal evaluation found) | Widely used in Arabic (no formal evaluation found) | Already bilingual and RTL-aware |
-| Link to sessions, readings, articles | Links only | Links only | Native: thread per session, promote to article |
-| Moderation by fellows | Admin remove/approve only | Strong admin tools | Pin, endorse, hide, mute, see anonymous author |
-| Social layer | Strong informal ties and quick help; no boundaries | Mixes study with the social profile and feed | Introductions, profiles, reactions, small task groups; quiet hours |
-| Weak ties after the course | Group continues informally, numbers exposed | Group continues, social identity exposed | Archive plus programme, community and alumni groups |
-| Cost to CILAS | Free | Free | 3–6 weeks of one developer for an MVP (estimate) |
+| Criterion                            | WhatsApp groups / Communities                      | Facebook Groups                                    | In-app groups (CILAS)                                              |
+| ------------------------------------ | -------------------------------------------------- | -------------------------------------------------- | ------------------------------------------------------------------ |
+| Adoption today                       | Very high; already on every phone                  | High reach, falling for youth                      | Zero; must be earned                                               |
+| Notifications                        | Instant, reliable push                             | Push, but mixed with social feed                   | Email digest reliable; web push needs an installed PWA on iOS      |
+| Threads and structure                | None; one stream per group                         | Posts and comments                                 | Threads, categories per session, prompts, Q&A                      |
+| Record for late joiners              | 25–100 messages, only if shared                    | Yes, searchable                                    | Full archive, searchable, linkable                                 |
+| Phone-number exposure                | Visible to all members until usernames reach Egypt | No numbers; social profile exposed                 | None; uses CILAS profiles and access rules                         |
+| Data control under PDPL              | None; data on members' phones and Meta             | None; data at Meta                                 | Full; in CILAS Postgres and backups                                |
+| Arabic/RTL                           | Widely used in Arabic (no formal evaluation found) | Widely used in Arabic (no formal evaluation found) | Already bilingual and RTL-aware                                    |
+| Link to sessions, readings, articles | Links only                                         | Links only                                         | Native: thread per session, promote to article                     |
+| Moderation by fellows                | Admin remove/approve only                          | Strong admin tools                                 | Pin, endorse, hide, mute, see anonymous author                     |
+| Social layer                         | Strong informal ties and quick help; no boundaries | Mixes study with the social profile and feed       | Introductions, profiles, reactions, small task groups; quiet hours |
+| Weak ties after the course           | Group continues informally, numbers exposed        | Group continues, social identity exposed           | Archive plus programme, community and alumni groups                |
+| Cost to CILAS                        | Free                                               | Free                                               | 3–6 weeks of one developer for an MVP (estimate)                   |
 
 ## Patterns proven by education platforms give the feature its strength
 
@@ -109,26 +109,26 @@ The outcome numbers for these tools are mostly vendor claims. Piazza reports a *
 
 The table maps each pattern to its evidence and to the parts of the CILAS app that it can reuse.
 
-| Pattern | Source of the pattern | Evidence strength | CILAS reuse | Phase |
-|---|---|---|---|---|
-| Fellow-opened bilingual introduction thread and member profiles | Social presence; belonging needs real chances | Medium (correlational, plus RCT logic) | People, users | 1 |
-| Small task sub-groups of 3–5 inside a course group | Structured collaboration (g ≈ 0.42–0.64) | Strong (meta-analyses) | Enrollments | 1 |
-| Session-anchored thread, made automatically per session | Ed categories per lecture; Perusall reading anchor | Medium (structure, CoI) | Course sessions and schedules | 1 |
-| Fellow-started weekly prompt with deadline | Instructor posting > replying; deadlines raise posts | Medium | Fellow role, sessions | 1 |
-| "Reply before you see others" option on a prompt | Moodle Q&A forum | Low (design logic) | None needed | 1 |
-| Synthesis (wrap-up) post per session or prompt | Few posts reach "resolution" | Medium (known weakness) | Rich text, pinned posts | 1 |
-| Q&A post with fellow-endorsed answer and resolved state | Ed, Piazza | Medium (fast staff response) | Fellow role | 1 |
-| Anonymous to classmates, visible to fellow | Ed, Canvas partial anonymity | Mixed (helps sensitive posts; can hide women) | Access functions | 1 |
-| Polls and reactions | WhatsApp, Teams, Minerva; peripheral participation | Low for learning; useful as low-risk first steps and for logistics | New collections | 1 |
-| Daily or weekly email digest | Reader-centred design for 90-9-1 | Medium (participation inequality) | Notifications, Resend | 1 |
-| Fellow participation view (posts and replies per student) | Teams Insights, Minerva talk time | Medium (quality feedback) | Enrollments | 2 |
-| Fellow badges such as "Insightful" | Yellowdig accolades | Low (vendor data) | Fellow role | 2 |
-| Promote a thread to an article | Knowledge building: ideas as public objects | Theory-strong, data-weak | Editorial review flow, visibility tiers | 2 |
-| Archive after the course; visible to later cohorts; members roll into programme and community groups | Knowledge Forum; Bouhnik alumni groups; weak ties | Low to medium (no study on later cohorts) | Visibility tiers, programme memberships | 2 |
-| Alumni onboarding stories and optional alumni mentors | Belonging interventions; communities of practice | Medium (RCTs on the message, not on the feature) | People, programme memberships | 2–3 |
-| Social annotation on readings and articles | Perusall, Hypothesis | Promising, vendor-affiliated | Articles; Hypothesis is open source | 3 |
-| Pro/con argument map | Kialo Edu | Low (no outcome data found) | None | Not planned |
-| Public leaderboards, post counts, "seen by" receipts, forced public posting | Yellowdig, Packback, chat apps | Risk of social comparison and face threat | None | Never |
+| Pattern                                                                                              | Source of the pattern                                | Evidence strength                                                  | CILAS reuse                             | Phase       |
+| ---------------------------------------------------------------------------------------------------- | ---------------------------------------------------- | ------------------------------------------------------------------ | --------------------------------------- | ----------- |
+| Fellow-opened bilingual introduction thread and member profiles                                      | Social presence; belonging needs real chances        | Medium (correlational, plus RCT logic)                             | People, users                           | 1           |
+| Small task sub-groups of 3–5 inside a course group                                                   | Structured collaboration (g ≈ 0.42–0.64)             | Strong (meta-analyses)                                             | Enrollments                             | 1           |
+| Session-anchored thread, made automatically per session                                              | Ed categories per lecture; Perusall reading anchor   | Medium (structure, CoI)                                            | Course sessions and schedules           | 1           |
+| Fellow-started weekly prompt with deadline                                                           | Instructor posting > replying; deadlines raise posts | Medium                                                             | Fellow role, sessions                   | 1           |
+| "Reply before you see others" option on a prompt                                                     | Moodle Q&A forum                                     | Low (design logic)                                                 | None needed                             | 1           |
+| Synthesis (wrap-up) post per session or prompt                                                       | Few posts reach "resolution"                         | Medium (known weakness)                                            | Rich text, pinned posts                 | 1           |
+| Q&A post with fellow-endorsed answer and resolved state                                              | Ed, Piazza                                           | Medium (fast staff response)                                       | Fellow role                             | 1           |
+| Anonymous to classmates, visible to fellow                                                           | Ed, Canvas partial anonymity                         | Mixed (helps sensitive posts; can hide women)                      | Access functions                        | 1           |
+| Polls and reactions                                                                                  | WhatsApp, Teams, Minerva; peripheral participation   | Low for learning; useful as low-risk first steps and for logistics | New collections                         | 1           |
+| Daily or weekly email digest                                                                         | Reader-centred design for 90-9-1                     | Medium (participation inequality)                                  | Notifications, Resend                   | 1           |
+| Fellow participation view (posts and replies per student)                                            | Teams Insights, Minerva talk time                    | Medium (quality feedback)                                          | Enrollments                             | 2           |
+| Fellow badges such as "Insightful"                                                                   | Yellowdig accolades                                  | Low (vendor data)                                                  | Fellow role                             | 2           |
+| Promote a thread to an article                                                                       | Knowledge building: ideas as public objects          | Theory-strong, data-weak                                           | Editorial review flow, visibility tiers | 2           |
+| Archive after the course; visible to later cohorts; members roll into programme and community groups | Knowledge Forum; Bouhnik alumni groups; weak ties    | Low to medium (no study on later cohorts)                          | Visibility tiers, programme memberships | 2           |
+| Alumni onboarding stories and optional alumni mentors                                                | Belonging interventions; communities of practice     | Medium (RCTs on the message, not on the feature)                   | People, programme memberships           | 2–3         |
+| Social annotation on readings and articles                                                           | Perusall, Hypothesis                                 | Promising, vendor-affiliated                                       | Articles; Hypothesis is open source     | 3           |
+| Pro/con argument map                                                                                 | Kialo Edu                                            | Low (no outcome data found)                                        | None                                    | Not planned |
+| Public leaderboards, post counts, "seen by" receipts, forced public posting                          | Yellowdig, Packback, chat apps                       | Risk of social comparison and face threat                          | None                                    | Never       |
 
 ## Discourse is the only credible platform, and it still loses on fit
 
@@ -138,14 +138,14 @@ The cost of Discourse for CILAS is not the licence. It is a second large system 
 
 Other options fit less well. Circle and Mighty Networks are for creators who sell memberships. They cost **$79–354+ per month plus transaction fees**, and API and SSO access depend on the plan ([Mighty Networks](https://www.mightynetworks.com/pricing); [Schoolmaker](https://schoolmaker.com/blog/circle-so-pricing)). Zulip is free or cheap for education, but it is a chat tool, and its plans page does not mention RTL ([Zulip plans](https://zulip.com/plans/)). Embedded SDKs are too small when free and too expensive when paid. **Stream Feeds jumps from 5,000 free activities a month to $499/month** ([Stream](https://getstream.io/activity-feeds/pricing/)). **Liveblocks Free has a hard cap of 200 comments** and has no polls, categories or digests ([Liveblocks](https://liveblocks.io/pricing)). Both keep CILAS content outside its Postgres. Education tools such as Ed, Piazza and Perusall connect through LTI, which CILAS does not have. The research found **almost no evidence of Arabic or RTL support** in Ed, Piazza, Perusall, Kialo or Yellowdig. Padlet is the only one with documented Arabic ([Padlet](https://padlet.help/l/en/article/v6iz7bhhl1-untitled-article-klr)). This is a strong reason to build, because CILAS already handles bilingual text and RTL.
 
-| Option | Cost per month | Identity and groups | Arabic/RTL | Data ownership | Fit for one developer |
-|---|---|---|---|---|---|
-| Native build in CILAS app | Hosting only; 3–6 weeks MVP (estimate) | Uses enrollments and memberships directly | Already done | Full | Good: one stack |
-| Discourse self-hosted | Server only | DiscourseConnect plus group sync code | Unverified, needs a test | Full, with export | Weak: second large stack |
-| Discourse hosted | $100–500 (education discount if eligible) | SSO on Business; Pro unclear | Unverified | Full export | Medium |
-| Circle / Mighty Networks | $79–354+ plus fees | Plan-gated API and SSO | Not found | Limited | Weak |
-| Stream / Liveblocks SDK | $0 at tiny scale, then $25–600+ | Custom code | Not found | Vendor store | Weak |
-| WhatsApp Communities | Free | Manual; phone numbers | Widely used | None | Good, but no structure |
+| Option                    | Cost per month                            | Identity and groups                       | Arabic/RTL               | Data ownership    | Fit for one developer    |
+| ------------------------- | ----------------------------------------- | ----------------------------------------- | ------------------------ | ----------------- | ------------------------ |
+| Native build in CILAS app | Hosting only; 3–6 weeks MVP (estimate)    | Uses enrollments and memberships directly | Already done             | Full              | Good: one stack          |
+| Discourse self-hosted     | Server only                               | DiscourseConnect plus group sync code     | Unverified, needs a test | Full, with export | Weak: second large stack |
+| Discourse hosted          | $100–500 (education discount if eligible) | SSO on Business; Pro unclear              | Unverified               | Full export       | Medium                   |
+| Circle / Mighty Networks  | $79–354+ plus fees                        | Plan-gated API and SSO                    | Not found                | Limited           | Weak                     |
+| Stream / Liveblocks SDK   | $0 at tiny scale, then $25–600+           | Custom code                               | Not found                | Vendor store      | Weak                     |
+| WhatsApp Communities      | Free                                      | Manual; phone numbers                     | Widely used              | None              | Good, but no structure   |
 
 ## A native build is cheap; adoption and alerts are the real risk
 
@@ -159,40 +159,40 @@ The fellows are the second risk. The same course design gives **different teachi
 
 **Build the feature in the app. Pilot it in two or three courses for one term. Keep a WhatsApp announcement Channel for alerts only.** Do not start the community-wide group until the course groups work. Large open groups suffer most from participation inequality, and the evidence for programme-level belonging is only inference.
 
-| Phase | Scope | Exit condition |
-|---|---|---|
-| 0. Preparation (1 week) | Add groups to the PDPL register, privacy notice (Arabic and English) and retention policy. Write a one-page fellow guide: weekly prompt, synthesis, response time. Choose 2–3 pilot courses with willing fellows. Test PWA install and push on Android and iOS. | Lawyer and fellows agree |
-| 1. Course groups MVP (3–6 weeks) | One group per course, membership from enrollments. Fellow-opened bilingual introduction thread in week 0. Profiles with optional photo and name form. Small task sub-groups of 3–5 that the fellow makes. Thread per session, made automatically. Post types: prompt (deadline, optional "reply before you see others"), question (endorsed answer, resolved state), discussion, synthesis. Anonymous-to-peers option on questions. Comments, reactions, single-choice polls. Fellow tools: pin, endorse, hide, lock, mute. Report button. In-app notifications plus daily or weekly Resend digest with per-user settings. Quiet hours. Phone numbers never shown. No leaderboards, post counts or read receipts. | Pilot term runs |
-| 2. After a successful pilot | Programme and bridge-programme groups (staff moderate, student stewards optional). Fellow participation view (private to the fellow). Fellow badges. Promote thread to article through the review flow. Archive after course end, with a choice of visibility tier; members stay in programme groups. Alumni "how I got through" stories at onboarding. Optional web push for installed PWA users. | Pilot metrics met |
-| 3. Later | Community-wide group with alumni. Optional alumni mentor role. Social annotation on readings and articles (evaluate Hypothesis first). | Phase 2 groups active |
+| Phase                            | Scope                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             | Exit condition           |
+| -------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------ |
+| 0. Preparation (1 week)          | Add groups to the PDPL register, privacy notice (Arabic and English) and retention policy. Write a one-page fellow guide: weekly prompt, synthesis, response time. Choose 2–3 pilot courses with willing fellows. Test PWA install and push on Android and iOS.                                                                                                                                                                                                                                                                                                                                                                                                                                                   | Lawyer and fellows agree |
+| 1. Course groups MVP (3–6 weeks) | One group per course, membership from enrollments. Fellow-opened bilingual introduction thread in week 0. Profiles with optional photo and name form. Small task sub-groups of 3–5 that the fellow makes. Thread per session, made automatically. Post types: prompt (deadline, optional "reply before you see others"), question (endorsed answer, resolved state), discussion, synthesis. Anonymous-to-peers option on questions. Comments, reactions, single-choice polls. Fellow tools: pin, endorse, hide, lock, mute. Report button. In-app notifications plus daily or weekly Resend digest with per-user settings. Quiet hours. Phone numbers never shown. No leaderboards, post counts or read receipts. | Pilot term runs          |
+| 2. After a successful pilot      | Programme and bridge-programme groups (staff moderate, student stewards optional). Fellow participation view (private to the fellow). Fellow badges. Promote thread to article through the review flow. Archive after course end, with a choice of visibility tier; members stay in programme groups. Alumni "how I got through" stories at onboarding. Optional web push for installed PWA users.                                                                                                                                                                                                                                                                                                                | Pilot metrics met        |
+| 3. Later                         | Community-wide group with alumni. Optional alumni mentor role. Social annotation on readings and articles (evaluate Hypothesis first).                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            | Phase 2 groups active    |
 
 The pilot needs clear decision rules. Set them before the term starts, so that the result is honest.
 
-| Decision | Condition |
-|---|---|
-| Continue to Phase 2 | Most success targets below are met in at least two of the pilot courses. |
-| Change and run a second pilot | Students read but do not post, or fellows exceed the time budget. Fix the prompts, notifications or fellow guide first. |
-| Stop the build; move to WhatsApp Channel plus a simple forum or Discourse | Fewer than one-third of students open the group each week, and course discussion stays on WhatsApp in all pilot courses. |
-| Choose Discourse over the native build | The native MVP is not ready after 8 weeks, or maintenance takes more than about 2 days per month. Run an Arabic/RTL test on Discourse first. |
+| Decision                                                                  | Condition                                                                                                                                    |
+| ------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------- |
+| Continue to Phase 2                                                       | Most success targets below are met in at least two of the pilot courses.                                                                     |
+| Change and run a second pilot                                             | Students read but do not post, or fellows exceed the time budget. Fix the prompts, notifications or fellow guide first.                      |
+| Stop the build; move to WhatsApp Channel plus a simple forum or Discourse | Fewer than one-third of students open the group each week, and course discussion stays on WhatsApp in all pilot courses.                     |
+| Choose Discourse over the native build                                    | The native MVP is not ready after 8 weeks, or maintenance takes more than about 2 days per month. Run an Arabic/RTL test on Discourse first. |
 
 The targets below are proposals for the pilot. No source sets them. They are calibrated against the 90-9-1 rule, against Piazza response times, and against the design goals of the feature.
 
-| Metric | How to measure | Proposed target |
-|---|---|---|
-| Weekly readers | Share of enrolled members who open the group or a digest link per week | 70% or more |
-| Weekly contributors | Share of enrolled members who post or comment per week | 40% or more (far above 1–25% in open communities) |
-| Prompt coverage | Share of sessions with a fellow prompt and a synthesis post | 80% or more |
-| Response to questions | Median time to the first reply or fellow endorsement | Under 24 hours |
-| Fellow time cost | Self-reported hours per week on the group | 2 hours or less |
-| Reach of alerts | Share of members with digest on, or push on an installed PWA | 80% or more |
-| Shift from WhatsApp | Fellow and student report of where course questions are asked | Most course questions in the app by week 6 |
-| Privacy | Number of phone numbers exposed to peers through course channels | Zero |
-| Introductions | Share of members who post in the introduction thread by the end of week 1 | 80% or more |
-| Belonging | Short sense-of-belonging survey at week 2 and at course end | Score rises from week 2 to course end; equal to or better than a WhatsApp-only comparison course |
-| Social presence | Short social-presence survey at week 2 and at course end | Same rule as belonging |
-| Value for learning | End-of-term question on usefulness of the group for the course work | Equal to or better than a WhatsApp-only comparison course |
-| Inclusion | Contributor share by gender and by first language (Arabic or English) | No group far below its share of enrollment |
-| Knowledge made together | Threads promoted to articles or reused by fellows | At least one per pilot course |
+| Metric                  | How to measure                                                            | Proposed target                                                                                  |
+| ----------------------- | ------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------ |
+| Weekly readers          | Share of enrolled members who open the group or a digest link per week    | 70% or more                                                                                      |
+| Weekly contributors     | Share of enrolled members who post or comment per week                    | 40% or more (far above 1–25% in open communities)                                                |
+| Prompt coverage         | Share of sessions with a fellow prompt and a synthesis post               | 80% or more                                                                                      |
+| Response to questions   | Median time to the first reply or fellow endorsement                      | Under 24 hours                                                                                   |
+| Fellow time cost        | Self-reported hours per week on the group                                 | 2 hours or less                                                                                  |
+| Reach of alerts         | Share of members with digest on, or push on an installed PWA              | 80% or more                                                                                      |
+| Shift from WhatsApp     | Fellow and student report of where course questions are asked             | Most course questions in the app by week 6                                                       |
+| Privacy                 | Number of phone numbers exposed to peers through course channels          | Zero                                                                                             |
+| Introductions           | Share of members who post in the introduction thread by the end of week 1 | 80% or more                                                                                      |
+| Belonging               | Short sense-of-belonging survey at week 2 and at course end               | Score rises from week 2 to course end; equal to or better than a WhatsApp-only comparison course |
+| Social presence         | Short social-presence survey at week 2 and at course end                  | Same rule as belonging                                                                           |
+| Value for learning      | End-of-term question on usefulness of the group for the course work       | Equal to or better than a WhatsApp-only comparison course                                        |
+| Inclusion               | Contributor share by gender and by first language (Arabic or English)     | No group far below its share of enrollment                                                       |
+| Knowledge made together | Threads promoted to articles or reused by fellows                         | At least one per pilot course                                                                    |
 
 ## Conclusion
 

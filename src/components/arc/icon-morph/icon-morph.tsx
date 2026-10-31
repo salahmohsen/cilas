@@ -8,7 +8,14 @@ import { motionTokens } from '../lib/motion-tokens'
 import styles from './icon-morph.module.css'
 
 export type IconMorphName =
-  'menu' | 'play' | 'plus' | 'copy' | 'theme' | 'chevron' | 'bell' | 'heart'
+  | 'menu'
+  | 'play'
+  | 'plus'
+  | 'copy'
+  | 'theme'
+  | 'chevron'
+  | 'bell'
+  | 'heart'
 
 export interface IconMorphIconProps extends Omit<SVGProps<SVGSVGElement>, 'ref' | 'children'> {
   /**

@@ -7,10 +7,34 @@ import { getOrCreateId, requireId } from '../seed.utils'
  * holding every course type it offered (ADR 0003). Keyed `season-year`.
  */
 export const cyclesData: CycleSeed[] = [
-  { season: 'fall', start_year: 2025, place: 'Darb el-Labbana', start_date: '2025-10-19', deadline: '2025-10-10' },
-  { season: 'winter', start_year: 2026, place: 'Darb el-Labbana', start_date: '2026-02-21', deadline: '2026-01-31' },
-  { season: 'spring', start_year: 2026, place: 'Darb el-Labbana', start_date: '2026-04-25', deadline: '2026-04-15' },
-  { season: 'summer', start_year: 2026, place: 'Darb el-Labbana', start_date: '2026-07-19', deadline: '2026-07-10' },
+  {
+    season: 'fall',
+    start_year: 2025,
+    place: 'Darb el-Labbana',
+    start_date: '2025-10-19',
+    deadline: '2025-10-10',
+  },
+  {
+    season: 'winter',
+    start_year: 2026,
+    place: 'Darb el-Labbana',
+    start_date: '2026-02-21',
+    deadline: '2026-01-31',
+  },
+  {
+    season: 'spring',
+    start_year: 2026,
+    place: 'Darb el-Labbana',
+    start_date: '2026-04-25',
+    deadline: '2026-04-15',
+  },
+  {
+    season: 'summer',
+    start_year: 2026,
+    place: 'Darb el-Labbana',
+    start_date: '2026-07-19',
+    deadline: '2026-07-10',
+  },
 ]
 
 export const seedCycles = async (payload: Payload, ctx: SeedContext): Promise<void> => {

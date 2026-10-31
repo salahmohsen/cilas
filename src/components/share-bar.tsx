@@ -24,7 +24,8 @@ export type ShareFile = { href: string; label: string; kind: 'pdf' | 'print' }
 const FILE_ICONS = { pdf: FileDown, print: BookOpen }
 
 const noSubscribe = () => () => {}
-const hasShareSheet = () => typeof navigator.share === 'function' && window.matchMedia('(pointer: coarse)').matches
+const hasShareSheet = () =>
+  typeof navigator.share === 'function' && window.matchMedia('(pointer: coarse)').matches
 
 const open = (href: string) => {
   window.open(href, '_blank', 'noopener,noreferrer')
@@ -85,10 +86,30 @@ export function ShareBar({
           },
         ]
       : [
-          { id: 'whatsapp', label: t('whatsapp'), icon: <Brand icon={siWhatsapp} />, onSelect: () => open(`https://wa.me/?text=${text}%20${encoded()}`) },
-          { id: 'facebook', label: t('facebook'), icon: <Brand icon={siFacebook} />, onSelect: () => open(`https://www.facebook.com/sharer/sharer.php?u=${encoded()}`) },
-          { id: 'x', label: t('x'), icon: <Brand icon={siX} />, onSelect: () => open(`https://x.com/intent/post?text=${text}&url=${encoded()}`) },
-          { id: 'telegram', label: t('telegram'), icon: <Brand icon={siTelegram} />, onSelect: () => open(`https://t.me/share/url?url=${encoded()}&text=${text}`) },
+          {
+            id: 'whatsapp',
+            label: t('whatsapp'),
+            icon: <Brand icon={siWhatsapp} />,
+            onSelect: () => open(`https://wa.me/?text=${text}%20${encoded()}`),
+          },
+          {
+            id: 'facebook',
+            label: t('facebook'),
+            icon: <Brand icon={siFacebook} />,
+            onSelect: () => open(`https://www.facebook.com/sharer/sharer.php?u=${encoded()}`),
+          },
+          {
+            id: 'x',
+            label: t('x'),
+            icon: <Brand icon={siX} />,
+            onSelect: () => open(`https://x.com/intent/post?text=${text}&url=${encoded()}`),
+          },
+          {
+            id: 'telegram',
+            label: t('telegram'),
+            icon: <Brand icon={siTelegram} />,
+            onSelect: () => open(`https://t.me/share/url?url=${encoded()}&text=${text}`),
+          },
           {
             id: 'email',
             label: t('email'),
