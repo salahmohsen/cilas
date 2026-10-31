@@ -250,8 +250,13 @@ The card is a stack of boxes divided by 1px ink rules. Each rule has one owner (
 - Strip text: `clamp(0.75rem, 1.4cqi, 0.9375rem)`; the action is weight 600 with an arrow that flips in RTL.
 - Long text (a bio) sits on paper at the page's reading size, `line-height: 1.7`, ink at 82% on paper, `max-width: 68ch`.
 
+### Notice row
+
+A notice that people must not miss (the fellows' note: fees, travel, forms) closes the card, just above the strip. Its heading row is a white label box (paper, ink rule at its inline end, body font at 700) beside a band of still hazard stripes: `repeating-linear-gradient(-45deg, colour 0 1.125rem, ink 1.125rem 1.875rem)` in the card's own colour. The stripes do not move. The notice text sits below on paper in the same face, size, and colour as the bio, and owns no extra rule. This band is the one patterned surface allowed on a card; use it only for a notice.
+
 ### Behaviour
 
+- The title enters with Arc's `InViewTitle` (`variant="line"`, `once={false}`), the same entrance as the poster titles. Wrap it in a `dir="auto"` element that carries the title's type, and set `font: inherit` on the heading it renders.
 - The image scales to 1.03 on hover with a fine pointer, and not at all with reduced motion.
 - Keyboard focus on the action or card link: `outline: 3px solid var(--poster-ink)` with `outline-offset: -3px`, inside the outline.
 - Compose from the card's container width, not the viewport: stacked below `34rem`, side by side above it.
@@ -263,7 +268,7 @@ The card is a stack of boxes divided by 1px ink rules. Each rule has one owner (
 | Registration poster | `src/components/home/poster.tsx`                          | `.poster*`                               |
 | Fellow card         | `src/app/(frontend)/[locale]/study/[slug]/CourseView.tsx` | `.fellow-card*`                          |
 
-The fellow card maps the poster like this: photo (media cell, 4:3 when stacked; when wide, a square at the top of a `min(36%, 18rem)` column, with the card's colour filling the column under it when the text is taller, so the photo is never stretched), name on the colour panel, the fellows' note ("From the fellow") as a paper cell under the name, the bio as the next paper cell, and a strip with the mark, the role, and "View profile". The note is course-level: with one fellow it sits in that card; with several it gets its own card above them (label on the colour panel, words on paper). Content sizes the card; nothing shares a height with a neighbour.
+The fellow card maps the poster like this: photo (media cell, 4:3 when stacked; when wide, a square at the top of a `min(36%, 18rem)` column, with the card's colour filling the column under it when the text is taller, so the photo is never stretched), name on the colour panel, the bio as a paper cell under the name, the fellows' note ("From the fellow") as the notice row, and a strip with the mark, the role, and "View profile". The note is course-level: with one fellow it closes that card; with several it gets its own card after theirs, in the next palette colour. Content sizes the card; nothing shares a height with a neighbour.
 
 ## 8. Verification
 
