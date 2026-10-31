@@ -340,7 +340,8 @@
   line-height: 1.5;
   text-wrap: pretty;
 }
-.article-title:where([dir='rtl'] *, [dir='rtl']) {
+/* h1, to outweigh the reader module's tracking. */
+h1.article-title:where([dir='rtl'] *, [dir='rtl']) {
   letter-spacing: 0;
   line-height: 1.35;
 }
@@ -425,9 +426,17 @@ body {
 
 /* ===================================================== course page */
 
+/* Page titles (course, article, event) take the poster title's face: bold
+   Playfair for Latin. Amiri ships only 400, so no bold is synthesised and
+   Arabic letters keep their real regular weight. */
+.course-title,
+h1.article-title {
+  font-family: var(--font-playfair-display), var(--font-amiri), serif;
+  font-weight: 700;
+  font-synthesis-weight: none;
+}
 .course-title {
   font-size: clamp(2rem, 4.2vw, 3.1rem);
-  font-weight: 500;
   letter-spacing: -0.02em;
   line-height: 1.08;
   text-wrap: balance;
@@ -609,14 +618,17 @@ body {
   flex: 1 1 auto;
   background: var(--poster-color);
 }
+/* The name reads as a section heading, like Course flow: the display face
+   at regular weight and the same size. The page's title above is the bold
+   one. */
 .fellow-card-name {
   margin: 0;
   padding: var(--poster-pad);
-  font-family: var(--font-playfair-display), var(--font-amiri), serif;
-  font-size: clamp(1.75rem, 5cqi, 3rem);
-  font-weight: 700;
-  line-height: 1.1;
-  letter-spacing: -0.025em;
+  font-family: var(--font-display);
+  font-size: var(--text-3xl);
+  font-weight: 400;
+  line-height: var(--leading-display);
+  letter-spacing: var(--tracking-display);
   text-wrap: balance;
 }
 .fellow-card-name h3 {
