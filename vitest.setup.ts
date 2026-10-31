@@ -4,7 +4,16 @@
 import 'dotenv/config'
 // DOM assertions (`toBeDisabled`, `toBeInTheDocument`, …) in unit tests.
 import '@testing-library/jest-dom/vitest'
-import { afterEach } from 'vitest'
+import { cleanup } from '@testing-library/react'
+import { afterEach, vi } from 'vitest'
+
+// CI runs unit tests with `--no-isolate`: workers keep one jsdom and Node's
+// native module cache across files, so a file must not see another file's
+// leftovers. Source modules are re-evaluated for every file (a mocked child
+// component from one file cannot leak into the next), and rendered DOM is
+// unmounted after every test (see the afterEach below). Without both the
+// suite is flaky.
+vi.resetModules()
 
 // Integration specs need the migrated local schema. dotenv reads .env only,
 // and .env still names the production database, so refusal is structural:
@@ -23,8 +32,10 @@ if (!isolatedSearchDB && !process.env.DATABASE_URL?.includes('@localhost:5433/')
 // dialog in `afterEach(cleanup)`, that timer used to fire after vitest tore
 // the jsdom environment down. The global `CustomEvent` was then Node's, not
 // jsdom's, and `dispatchEvent` threw an unhandled TypeError that failed the
-// whole run. This hook is registered first, so it runs last in each test and
-// lets those timers finish while the DOM still exists.
+// whole run. So: unmount first, wait one macrotask so those timers finish
+// while the DOM still exists, then reset modules for the next test.
 afterEach(async () => {
+  cleanup()
   await new Promise<void>((resolve) => setTimeout(resolve, 0))
+  vi.resetModules()
 })
