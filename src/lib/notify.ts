@@ -10,6 +10,7 @@ export type NotificationKind =
   | 'mention'
   | 'comment'
   | 'reply'
+  | 'reaction'
   | 'announcement'
   | 'moderation'
   | 'report'
@@ -31,6 +32,7 @@ export const EVENT_NAMES: Record<NotificationKind, string> = {
   mention: 'Mentioned you',
   comment: 'New comment',
   reply: 'New reply',
+  reaction: 'New reaction',
   announcement: 'New announcement',
   moderation: 'Moderation issue',
   report: 'New report',
@@ -65,6 +67,25 @@ export const actorOf = async (
     return { id: person }
   }
 }
+
+/** What each reaction reads as in a sentence: "liked", "thanked you for", and so on. */
+const REACTION_VERB: Record<string, string> = {
+  agree: 'liked',
+  thank_you: 'thanked you for',
+  celebrate: 'celebrated',
+  insightful: 'found insightful',
+  same_question: 'has the same question as',
+  rocket: 'boosted',
+}
+
+/** The detail line of a reaction note: "Sam liked your post in Spring seminar". */
+export const reactionNote = (i: {
+  actor?: string
+  reaction: string
+  target: 'post' | 'comment'
+  context: string
+}): string =>
+  `${i.actor ?? 'Someone'} ${REACTION_VERB[i.reaction] ?? 'reacted to'} your ${i.target} in ${i.context}`
 
 /**
  * Leaves a notification for each account, beside the email it gets. A failed

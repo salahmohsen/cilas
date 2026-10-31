@@ -58,6 +58,7 @@ export const Notifications: CollectionConfig = {
         'mention',
         'comment',
         'reply',
+        'reaction',
         'announcement',
         'moderation',
         'report',
