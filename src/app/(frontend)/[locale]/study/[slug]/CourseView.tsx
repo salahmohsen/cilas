@@ -22,7 +22,9 @@ import {
   isObject,
   textOf,
 } from '@/components/course/course-syllabus'
+import { AvatarFallback } from '@/components/person/avatar-fallback'
 import { photoOf } from '@/components/person/contributors'
+import { POSTER_COLORS } from '@/lib/poster-colors'
 import { RichTextField } from '@/components/RichTextField'
 import { SEASON_ICONS } from '@/components/season-icon'
 import { ShareBar } from '@/components/share-bar'
@@ -262,59 +264,109 @@ export const CourseView: React.FC<{
   // with their whole bio. Cards size to their content (no shared height);
   // each card picks its composition from its own width.
   const note = course.facilitator_note?.trim()
+  // The fellows' note, as a card cell: inside the card when one fellow
+  // teaches, its own card above them when several do.
+  const noteText = note ? (
+    <blockquote className="fellow-card-quote" dir="auto">
+      {note.split(/\n\s*\n/).map((p, i) => (
+        <p className="whitespace-pre-line" key={i}>
+          {p}
+        </p>
+      ))}
+    </blockquote>
+  ) : null
+  const noteInCard = fellows.length === 1
   const fellowsSection =
     fellows.length || note ? (
       <section aria-labelledby="course-teachers" className="mt-12" {...pe('fellows')}>
         <h2 className="course-heading" id="course-teachers">
           {t('whoTeaches')}
         </h2>
-        {note ? (
-          <figure className="fellow-note" {...pe('facilitator_note')}>
-            <figcaption className="fellow-note-label">{t('note')}</figcaption>
-            <blockquote className="fellow-note-text" dir="auto">
-              {note.split(/\n\s*\n/).map((p, i) => (
-                <p className="whitespace-pre-line" key={i}>
-                  {p}
-                </p>
-              ))}
-            </blockquote>
-          </figure>
+        {note && !noteInCard ? (
+          <div className="fellow-card-frame mt-4">
+            <figure
+              className="fellow-card"
+              {...pe('facilitator_note')}
+              style={
+                {
+                  '--poster-color': POSTER_COLORS[fellows.length % POSTER_COLORS.length],
+                } as React.CSSProperties
+              }
+            >
+              <figcaption className="fellow-card-panel fellow-card-note-head">
+                {t('note')}
+              </figcaption>
+              <div className="fellow-card-note">{noteText}</div>
+            </figure>
+          </div>
         ) : null}
         {fellows.length ? (
           <ul className="fellow-cards">
-            {fellows.map((person) => {
+            {fellows.map((person, index) => {
               const hasBio = Boolean(textOf(person.bio).trim())
+              const photo = photoOf(person)
               return (
                 <li className="fellow-card-frame" key={person.id}>
-                  <article className="fellow-card" aria-labelledby={`fellow-${person.id}`}>
-                    <Link
-                      aria-hidden
-                      className="fellow-card-photo course-fellow-photo"
-                      href={`/people/${person.slug}`}
-                      tabIndex={-1}
-                    >
-                      <Avatar
-                        fallbackSeed={personAvatarSeed(person.id)}
-                        name={person.name}
-                        size="xl"
-                        src={photoOf(person)}
-                      />
-                    </Link>
-                    <header className="fellow-card-heading">
-                      <h3 className="fellow-card-name" dir="auto" id={`fellow-${person.id}`}>
-                        {person.name}
-                      </h3>
-                      <p className="fellow-card-role">{t('fellow')}</p>
-                    </header>
-                    {hasBio ? (
-                      <div className="fellow-card-bio" dir="auto">
-                        <RichTextField className="grid gap-3 [&_p]:m-0" data={person.bio} />
+                  {/* The registration poster's look: ink rules, paper cells and
+                      one palette colour per card (docs/content-driven-card-layouts.md). */}
+                  <article
+                    aria-labelledby={`fellow-${person.id}`}
+                    className="fellow-card"
+                    style={
+                      {
+                        '--poster-color': POSTER_COLORS[index % POSTER_COLORS.length],
+                      } as React.CSSProperties
+                    }
+                  >
+                    <div className="fellow-card-body">
+                      <Link
+                        aria-hidden
+                        className="fellow-card-photo"
+                        href={`/people/${person.slug}`}
+                        tabIndex={-1}
+                      >
+                        {photo ? (
+                          // eslint-disable-next-line @next/next/no-img-element
+                          <img
+                            alt=""
+                            loading="lazy"
+                            src={photo}
+                            style={focalPointStyle(
+                              typeof person.photo === 'object' ? person.photo : undefined,
+                            )}
+                          />
+                        ) : (
+                          <AvatarFallback seed={personAvatarSeed(person.id)} aria-hidden />
+                        )}
+                      </Link>
+                      <div className="fellow-card-main">
+                        <div className="fellow-card-panel">
+                          <h3 className="fellow-card-name" dir="auto" id={`fellow-${person.id}`}>
+                            {person.name}
+                          </h3>
+                        </div>
+                        {note && noteInCard ? (
+                          <figure className="fellow-card-note" {...pe('facilitator_note')}>
+                            <figcaption className="fellow-card-note-label">{t('note')}</figcaption>
+                            {noteText}
+                          </figure>
+                        ) : null}
+                        {hasBio ? (
+                          <div className="fellow-card-bio" dir="auto">
+                            <RichTextField className="grid gap-3 [&_p]:m-0" data={person.bio} />
+                          </div>
+                        ) : null}
                       </div>
-                    ) : null}
-                    <footer className="fellow-card-footer">
-                      <Link className="home-more" href={`/people/${person.slug}`}>
+                    </div>
+                    <footer className="fellow-card-strip">
+                      <span className="fellow-card-mark">
+                        {/* eslint-disable-next-line @next/next/no-img-element */}
+                        <img alt="" src="/assets/images/logo.webp" />
+                      </span>
+                      <span className="fellow-card-role">{t('fellow')}</span>
+                      <Link className="fellow-card-action" href={`/people/${person.slug}`}>
                         {t('viewProfile')}
-                        <ArrowRight aria-hidden className="rtl:-scale-x-100" size={14} />
+                        <ArrowRight aria-hidden className="rtl:-scale-x-100" size={16} />
                       </Link>
                     </footer>
                   </article>
