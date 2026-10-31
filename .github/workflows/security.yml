@@ -164,7 +164,7 @@ jobs:
           . ./scripts/smoke-test-env.sh
           pnpm test:production
       - name: Save Next.js build cache
-        if: steps.next-cache.outputs.cache-hit != 'true'
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main' && steps.next-cache.outputs.cache-hit != 'true'
         uses: actions/cache/save@0057852bfaa89a56745cba8c7296529d2fc39830 # v4
         with:
           path: .next/cache
