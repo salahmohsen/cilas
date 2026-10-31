@@ -5,4 +5,4 @@ Files attached to posts and comments go into their own upload collection, `space
 ## Consequences
 
 - A file is deleted from storage with its post or comment, and purged with them after 30 days.
-- Allowed types and limits reuse `FILE_KINDS` from the application forms (PDF, Word, images; 10 MB; 5 per post, 1 per comment), enforced on the server.
+- Posts take photos only (JPEG, PNG, WebP; 10 MB in; 4 per post), and comments take no files. Each photo is stored as one WebP of at most 1600 px. The `space-files` collection enforces this; see `docs/spaces-media-budget.md`. Files added under the earlier rules (PDF, Word, comment files) stay as they are.
