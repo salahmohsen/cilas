@@ -34,6 +34,9 @@ missed). Run B restored the caches that run A saved.
 | `production-smoke` |                 256s |         313s |     **140s** |
 | Billed minutes     |                   10 |           11 |        **7** |
 
+A third run (commit f10b92e9, source unchanged, cache saving limited to `main`) took the same
+time as run B: `security` 81s, `production-smoke` 139s, `commit-quality` 46s.
+
 Run steps, before to warm:
 
 | Step                             | Before | Warm | Change                                              |
@@ -105,7 +108,7 @@ fixtures 14s, containers 12s, browser 11s, install and setup about 25s.
 ## Minutes trade-off
 
 The repo has 2000 free minutes a month. Warm runs bill **7 min** against 10 before, because
-`production-smoke` and `security` each lose one or two billed minutes. Cold runs bill about 11.
+`security` falls from 5 to 2 billed minutes and `production-smoke` from 5 to 3. Cold runs bill about 11.
 The `changes` job adds one billed minute to each PR run but saves about 6-7 minutes on a
 docs-only PR. No parallel job was added to the main path.
 The cache quota is 10 GB (3.4 GB used before this PR). Saving the Next cache only from `main`
