@@ -561,20 +561,19 @@ describe('spaces write', () => {
     expect(post.ok).toBe(true)
     if (!post.ok) return
     track('space-posts', post.data.id)
-    // Seed the five-row cap at the table: going through fileAdd would move
+    // Seed the four-row cap at the table: going through fileAdd would move
     // bytes to the real bucket, which no test may do. The refusal itself is
     // the product behavior (the gate fires before any storage work).
     await (
       payload.db as unknown as { drizzle: { execute: (q: unknown) => Promise<unknown> } }
     ).drizzle.execute(
-      sql`insert into space_files (filename, space_id, post_id, url, mime_type, filesize) select 'probe-f' || g || '.pdf', ${courseSpace.id}, ${post.data.id}, '/probe/' || g || '.pdf', 'application/pdf', 5 from generate_series(1, 5) g`,
+      sql`insert into space_files (filename, space_id, post_id, url, mime_type, filesize) select 'probe-f' || g || '.webp', ${courseSpace.id}, ${post.data.id}, '/probe/' || g || '.webp', 'image/webp', 5 from generate_series(1, 4) g`,
     )
-    const pdf = Buffer.from('%PDF-1.4\n')
     const r = await fileAdd({
       payload,
       user: student,
       post: post.data.id,
-      file: { data: pdf, mimetype: 'application/pdf', name: 'f6.pdf', size: 9 },
+      file: { data: Buffer.from('x'), mimetype: 'image/webp', name: 'f5.webp', size: 1 },
     })
     expect(r.ok).toBe(false)
     if (!r.ok) expect(r.error).toBe('file-count')
@@ -596,18 +595,23 @@ describe('spaces write', () => {
       payload,
       user: student,
       post: post.data.id,
-      file: { data: buf, mimetype: 'application/pdf', name: 'big.pdf', size: 11 * 1024 * 1024 },
+      file: { data: buf, mimetype: 'image/png', name: 'big.png', size: 11 * 1024 * 1024 },
     })
     expect(rSize.ok).toBe(false)
     if (!rSize.ok) expect(rSize.error).toBe('file-size')
-    const rType = await fileAdd({
-      payload,
-      user: student,
-      post: post.data.id,
-      file: { data: Buffer.from('x'), mimetype: 'video/mp4', name: 'v.mp4', size: 5 },
-    })
-    expect(rType.ok).toBe(false)
-    if (!rType.ok) expect(rType.error).toBe('file-type')
+    for (const [mimetype, name] of [
+      ['video/mp4', 'v.mp4'],
+      ['application/pdf', 'doc.pdf'],
+    ] as const) {
+      const rType = await fileAdd({
+        payload,
+        user: student,
+        post: post.data.id,
+        file: { data: Buffer.from('x'), mimetype, name, size: 5 },
+      })
+      expect(rType.ok).toBe(false)
+      if (!rType.ok) expect(rType.error).toBe('file-type')
+    }
   })
 
   it('postEdit by author passes, by stranger refuses', async () => {
@@ -800,11 +804,11 @@ describe('spaces write', () => {
     }
   })
 
-  const pdf = (name: string) => ({
-    data: Buffer.from('%PDF-1.4\n'),
-    mimetype: 'application/pdf',
+  const photoFile = (name: string) => ({
+    data: Buffer.from('x'),
+    mimetype: 'image/png',
     name,
-    size: 9,
+    size: 1,
   })
 
   const newPost = async (user: User, space: Space, body: string) => {
@@ -847,7 +851,7 @@ describe('spaces write', () => {
       where: { post: { equals: id } },
       depth: 0,
     })
-    expect(files.docs.map((f) => f.filename)).toEqual([expect.stringMatching(/edit-new\.png$/)])
+    expect(files.docs.map((f) => f.filename)).toEqual([expect.stringMatching(/edit-new\.webp$/)])
     for (const file of files.docs) track('space-files', file.id)
   })
 
@@ -965,46 +969,15 @@ describe('spaces write', () => {
         where: { post: { equals: id } },
       })
       expect(files.docs.map((f) => f.filename)).toEqual([
-        expect.stringContaining(`edit-${kind}.png`),
+        expect.stringContaining(`edit-${kind}.webp`),
       ])
       for (const file of files.docs) track('space-files', file.id)
     },
   )
 
-  it('a file that storage refuses gives the upload error and leaves no post, comment or file behind', async () => {
-    const postId = await newPost(student, community, 'Upload refused')
+  it('a file that storage refuses gives the upload error and leaves no post or file behind', async () => {
     const real = payload.create.bind(payload)
-    const stored: number[] = []
     const spy = vi.spyOn(payload, 'create').mockImplementation((async (args: {
-      collection: string
-    }) => {
-      if (args.collection !== 'space-files') return real(args as never)
-      if (stored.length === 1) throw new Error('storage refused the file')
-      stored.push(-1)
-      return { id: -1 }
-    }) as never)
-    try {
-      const comment = await commentCreate({
-        payload,
-        user: student,
-        post: postId,
-        body: 'QA two files, the second is refused',
-        files: [pdf('probe-f1.pdf'), pdf('probe-f2.pdf')],
-      })
-      expect(comment.ok).toBe(false)
-      if (!comment.ok) expect(comment.error).toBe('upload')
-    } finally {
-      spy.mockRestore()
-    }
-    const left = await payload.find({
-      collection: 'space-comments',
-      where: { post: { equals: postId } },
-      overrideAccess: true,
-      depth: 0,
-    })
-    expect(left.totalDocs).toBe(0)
-
-    const spy2 = vi.spyOn(payload, 'create').mockImplementation((async (args: {
       collection: string
     }) => {
       if (args.collection === 'space-files') throw new Error('storage refused the file')
@@ -1017,12 +990,12 @@ describe('spaces write', () => {
         space: community.id,
         kind: 'discussion',
         body: 'QA post whose file is refused',
-        files: [pdf('probe-f1.pdf')],
+        files: [photoFile('probe-f1.png')],
       })
       expect(post.ok).toBe(false)
       if (!post.ok) expect(post.error).toBe('upload')
     } finally {
-      spy2.mockRestore()
+      spy.mockRestore()
     }
     const posts = await payload.find({
       collection: 'space-posts',
@@ -1104,7 +1077,7 @@ describe('spaces write', () => {
       await commentCreate({ payload, user: student, post: postId, body: 'Late' }),
       await postEdit({ payload, user: student, id: postId, body: 'Edited late' }),
       await commentEdit({ payload, user: student, id: c.data.id, body: 'Edited late' }),
-      await fileAdd({ payload, user: student, post: postId, file: pdf('late.pdf') }),
+      await fileAdd({ payload, user: student, post: postId, file: photoFile('late.png') }),
       await reactionToggle({ payload, user: student, post: postId, reaction: 'agree', on: true }),
     ]
     for (const r of await refused()) {
@@ -1144,37 +1117,33 @@ describe('spaces write', () => {
     }
   })
 
-  it('attachments are counted per post and per comment, then stored on the new row', async () => {
+  it('photos are counted per post, then stored on the new row', async () => {
     const tooMany = await postCreate({
       payload,
       user: student,
       space: community.id,
       kind: 'discussion',
-      body: 'Six files',
-      files: Array.from({ length: 6 }, (_, n) => pdf(`probe-f${n}.pdf`)),
+      body: 'Five photos',
+      files: Array.from({ length: 5 }, (_, n) => photoFile(`probe-f${n}.png`)),
     })
     expect(tooMany.ok).toBe(false)
     if (!tooMany.ok) expect(tooMany.error).toBe('file-count')
 
-    const postId = await newPost(student, community, 'Comment files')
-    const elevenOnComment = await commentCreate({
-      payload,
-      user: student,
-      post: postId,
-      body: 'Eleven files',
-      files: Array.from({ length: 11 }, (_, n) => pdf(`probe-f${n}.pdf`)),
-    })
-    expect(elevenOnComment.ok).toBe(false)
-    if (!elevenOnComment.ok) expect(elevenOnComment.error).toBe('file-count')
-    const videoOnComment = await commentCreate({
-      payload,
-      user: student,
-      post: postId,
-      body: 'A video',
-      files: [{ data: Buffer.from('x'), mimetype: 'video/mp4', name: 'probe-f.mp4', size: 1 }],
-    })
-    expect(videoOnComment.ok).toBe(false)
-    if (!videoOnComment.ok) expect(videoOnComment.error).toBe('file-type')
+    for (const [mimetype, name] of [
+      ['video/mp4', 'probe-f.mp4'],
+      ['application/pdf', 'probe-f.pdf'],
+    ] as const) {
+      const notPhoto = await postCreate({
+        payload,
+        user: student,
+        space: community.id,
+        kind: 'discussion',
+        body: 'Not a photo',
+        files: [{ data: Buffer.from('x'), mimetype, name, size: 1 }],
+      })
+      expect(notPhoto.ok).toBe(false)
+      if (!notPhoto.ok) expect(notPhoto.error).toBe('file-type')
+    }
 
     // Storage would write to the real bucket, so the space-files create is
     // intercepted; the row it would get is what is under test.
@@ -1189,30 +1158,18 @@ describe('spaces write', () => {
         user: student,
         space: community.id,
         kind: 'discussion',
-        body: 'Has two files',
-        files: [pdf('probe-f1.pdf'), pdf('probe-f2.pdf')],
+        body: 'Has four photos',
+        files: Array.from({ length: 4 }, (_, n) => photoFile(`probe-f${n}.png`)),
       })
       expect(withFiles.ok).toBe(true)
       if (!withFiles.ok) return
       track('space-posts', withFiles.data.id)
-      const comment = await commentCreate({
-        payload,
-        user: student,
-        post: postId,
-        body: 'Has ten files',
-        files: Array.from({ length: 10 }, (_, n) => pdf(`probe-f${n}.pdf`)),
-      })
-      expect(comment.ok).toBe(true)
-      if (!comment.ok) return
-      track('space-comments', comment.data.id)
       const fileCalls = spy.mock.calls
         .map(([a]) => a as unknown as { collection: string; data: Record<string, unknown> })
         .filter((a) => a.collection === 'space-files')
-      expect(fileCalls.map((a) => [a.data.post, a.data.comment])).toEqual([
-        [withFiles.data.id, null],
-        [withFiles.data.id, null],
-        ...Array.from({ length: 10 }, () => [null, comment.data.id]),
-      ])
+      expect(fileCalls.map((a) => [a.data.post, a.data.comment])).toEqual(
+        Array.from({ length: 4 }, () => [withFiles.data.id, undefined]),
+      )
     } finally {
       spy.mockRestore()
     }
@@ -1296,9 +1253,9 @@ describe('spaces write', () => {
     expect(mark.ok).toBe(false)
   })
 
-  it('a comment shows all its files in order, and says which are images', async () => {
-    const postId = await newPost(student, courseSpace, 'Photos in a comment')
-    const c = await commentCreate({ payload, user: student, post: postId, body: 'Three files' })
+  it('files on older comments stay stored, but the thread no longer shows them', async () => {
+    const postId = await newPost(student, courseSpace, 'Photos in an old comment')
+    const c = await commentCreate({ payload, user: student, post: postId, body: 'Has an old file' })
     expect(c.ok).toBe(true)
     if (!c.ok) return
     track('space-comments', c.data.id)
@@ -1307,16 +1264,19 @@ describe('spaces write', () => {
       payload.db as unknown as { drizzle: { execute: (q: unknown) => Promise<unknown> } }
     ).drizzle.execute(
       sql`insert into space_files (filename, space_id, comment_id, url, mime_type, filesize, width, height, created_at, updated_at) values
-        ('probe-f-a.png', ${courseSpace.id}, ${c.data.id}, '/probe/a.png', 'image/png', 5, 800, 600, now() - interval '2 seconds', now()),
-        ('probe-f-b.pdf', ${courseSpace.id}, ${c.data.id}, '/probe/b.pdf', 'application/pdf', 5, null, null, now() - interval '1 second', now()),
-        ('probe-f-c.webp', ${courseSpace.id}, ${c.data.id}, '/probe/c.webp', 'image/webp', 5, 300, 400, now(), now())`,
+        ('probe-f-a.png', ${courseSpace.id}, ${c.data.id}, '/probe/a.png', 'image/png', 5, 800, 600, now(), now())`,
     )
     const view = await postView(payload, student, courseSpace, postId)
-    expect(view?.comments[0].files).toMatchObject([
-      { name: 'probe-f-a.png', isImage: true, mime: 'image/png', width: 800, height: 600 },
-      { name: 'probe-f-b.pdf', isImage: false, mime: 'application/pdf', width: null },
-      { name: 'probe-f-c.webp', isImage: true, width: 300, height: 400 },
-    ])
+    expect(view?.comments[0]).not.toHaveProperty('files')
+    expect(
+      (
+        await payload.count({
+          collection: 'space-files',
+          where: { comment: { equals: c.data.id } },
+          overrideAccess: true,
+        })
+      ).totalDocs,
+    ).toBe(1)
     expect(await postView(payload, stranger, courseSpace, postId)).toBeNull()
   })
 

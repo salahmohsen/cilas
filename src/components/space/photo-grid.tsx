@@ -39,12 +39,9 @@ const singleRatio = (p: SpaceFileRef) =>
  */
 export function PhotoGrid({
   photos,
-  compact = false,
   opensPost = false,
 }: {
   photos: SpaceFileRef[]
-  /** In a comment: a smaller grid under the text */
-  compact?: boolean
   /** A post's images: a tile opens the post dialog instead of the lightbox */
   opensPost?: boolean
 }) {
@@ -62,7 +59,6 @@ export function PhotoGrid({
       <ul
         className={styles.grid}
         data-count={Math.min(photos.length, TILES)}
-        data-compact={compact || undefined}
         aria-label={t('photos')}
         style={photos.length === 1 ? { aspectRatio: singleRatio(photos[0]) } : undefined}
       >

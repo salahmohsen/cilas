@@ -916,7 +916,7 @@
     "locked": "Locked",
     "readOnlyNotice": "This space is archived and read-only.",
     "placeAnnouncementLabel": "Announcement",
-    "filesDrop": "Add files",
+    "filesDrop": "Add photos",
     "saveError_mode": "Spaces are off right now.",
     "saveError_not_member": "Only members post here.",
     "saveError_read_only": "This space is read-only.",
@@ -927,9 +927,9 @@
     "saveError_mention": "You can mention members of this space only.",
     "saveError_consent": "Accept the privacy and rules first.",
     "saveError_not_yours": "You can edit only your own.",
-    "saveError_file_count": "Too many files.",
-    "saveError_file_size": "A file is too large.",
-    "saveError_file_type": "A file type is not allowed.",
+    "saveError_file_count": "Too many photos.",
+    "saveError_file_size": "A photo is too large.",
+    "saveError_file_type": "Only JPEG, PNG and WebP photos are allowed.",
     "saveError_duplicate": "You already posted this.",
     "saveError_space": "This space does not exist.",
     "saveError_auth": "Sign in first.",
@@ -1018,7 +1018,7 @@
     "dialogLoading": "Loading the post",
     "dialogFailed": "The post could not be loaded. Open its page instead.",
     "voteResults": "Vote results",
-    "saveError_upload": "The files could not be saved. Try again, or attach fewer or smaller files.",
+    "saveError_upload": "The photos could not be saved. Try again, or attach fewer or smaller photos.",
     "saveError_failed": "Something went wrong. Try again.",
     "sessionLabel": "Course session",
     "sessionGone": "This session is no longer in the course syllabus.",
@@ -1102,8 +1102,6 @@
   "SpaceComment": {
     "write": "Comment",
     "reply": "Reply",
-    "filesDrop": "Add a file",
-    "maxFiles": "One file per comment",
     "deleted": "This comment was deleted.",
     "placeholder": "Write a comment",
     "replyPlaceholder": "Write a reply",
@@ -1262,9 +1260,8 @@
     "show": "Show {name}",
     "attachments": "Attached files",
     "remove": "Remove {name}",
-    "attach": "Attach files",
-    "attachLimit": "Up to {count} files, 10 MB each",
-    "tooLarge": "These files add up to {size} MB. One post or comment can carry {max} MB. Remove some files or choose smaller ones."
+    "attachLimit": "Up to {count} photos, 10 MB each",
+    "tooLarge": "These photos add up to {size} MB. One post can carry {max} MB. Remove some photos or choose smaller ones."
   },
   "StudyPrompt": {
     "course": {

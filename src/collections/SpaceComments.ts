@@ -6,8 +6,9 @@ import { searchChanged, searchDeleted, searchDeletingComment } from '@/lib/priva
 
 /**
  * Comments on a post (spec §4). Plain text with `/people/{id}` mention
- * links, stored by the mention-input serializer. One file each, in
- * `space-files`. The reply depth (2 total) is enforced by the UI composer
+ * links, stored by the mention-input serializer. Comments take no files
+ * (media budget); older `space-files` rows that point at a comment stay as
+ * they are. The reply depth (2 total) is enforced by the UI composer
  * and the action, not by the data model.
  */
 export const SpaceComments: CollectionConfig = {

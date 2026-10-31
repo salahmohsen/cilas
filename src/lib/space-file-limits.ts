@@ -1,38 +1,48 @@
 import { FILE_KINDS } from './form-files'
 
 /**
- * Spec §6 gave 5 files per post and 1 per comment. Comments now take up to 10:
- * members answer with a set of photos (a field visit, a whiteboard), and one
- * per comment forced a reply per photo. Size and type rules stay the post's.
+ * Space posts take photos only, and no comment takes a file (media budget:
+ * docs/spaces-media-budget.md). Four fills a 2 x 2 photo grid and, at about
+ * 0.2 MB a photo once optimised, keeps a post under 1 MB. Five or six would
+ * raise the worst-case post by a half and nobody asked for more than a
+ * handful of pictures. The server enforces this (SpaceFiles hook), not only
+ * the picker.
  */
-export const FILE_LIMITS = { post: 5, comment: 10 } as const
+export const FILE_LIMITS = { post: 4 } as const
 
-/** The picker's `accept`: every kind a space file may be (PDF, Word, images). */
-export const SPACE_FILE_ACCEPT = Object.values(FILE_KINDS)
-  .flatMap((k) => [...k.extensions, ...k.mime])
-  .join(',')
+/** The picker's `accept`: the photo kinds a post may carry (JPEG, PNG, WebP). */
+export const SPACE_FILE_ACCEPT = [...FILE_KINDS.image.extensions, ...FILE_KINDS.image.mime].join(
+  ',',
+)
+
+/** The MIME types a space file may be: photos only. */
+export const SPACE_FILE_MIME = FILE_KINDS.image.mime
 
 const MB = 1024 * 1024
 
 /**
- * Spec §6 pins 10 MB for space files (ADR 0008). Applications' 20 MB
- * (`MAX_SIZE_MB` in form-files) is the application forms' own ceiling and
- * does not transfer. Here so the browser can check a file before it is sent.
+ * The most one photo may weigh as it arrives. The browser shrinks photos
+ * before they are sent, so a bigger file means the shrink did not run; the
+ * server refuses it rather than buffer it. Here so the browser can check a
+ * file before it is sent.
  */
 export const SPACE_FILE_LIMIT = 10 * MB
 
-/** The browser shrinks a photo bigger than this before it is sent. */
-export const DOWNSCALE_OVER = 2 * MB
-/** The longest side of a shrunk photo, in pixels. */
-export const DOWNSCALE_EDGE = 2560
+/**
+ * The longest side of a stored photo, in pixels, and its WebP quality. The
+ * browser and the server (the space-files collection) use the same values,
+ * so the server only re-encodes a file the browser left alone. 1600 px fills
+ * the widest photo slot on a 2x screen at the post dialog's width.
+ */
+export const IMAGE_EDGE = 1600
+export const IMAGE_QUALITY = 80
 
 /**
- * The most one post or comment may send, after photos are shrunk. A photo of
- * at most 2560 x 2560 pixels at quality 0.85 stays under about 3.3 MB, so ten
- * of them (a comment's limit) come to about 33 MB. The page refuses a bigger
- * total with a message, before anything is sent.
+ * The most one post may send, with its event cover. A shrunk photo is about
+ * 0.2 MB, so this is room for photos the browser could not shrink: four at
+ * the 10 MB limit would not fit, which is the point.
  */
-export const UPLOAD_TOTAL_MAX = 36 * MB
+export const UPLOAD_TOTAL_MAX = 24 * MB
 
 /**
  * `serverActions.bodySizeLimit` and `proxyClientMaxBodySize` in next.config:
@@ -40,4 +50,4 @@ export const UPLOAD_TOTAL_MAX = 36 * MB
  * needed: the proxy keeps a copy of each request body and cuts it at its own
  * limit (10 MB by default), which would break an upload the action accepts.
  */
-export const UPLOAD_BODY_LIMIT = '40mb'
+export const UPLOAD_BODY_LIMIT = '28mb'

@@ -4,8 +4,7 @@ import { personOf } from '@/access'
 import { archivedNow } from '@/lib/space-lifecycle'
 import { mentionSafelist, spacePeople, type PersonLink } from '@/lib/space-members'
 import { spacesSettings, mode, spaceOpenOn, membership, mayComment, introGates } from '@/lib/spaces'
-import { FILE_KINDS } from '@/lib/form-files'
-import { FILE_LIMITS } from '@/lib/space-file-limits'
+import { FILE_LIMITS, SPACE_FILE_MIME } from '@/lib/space-file-limits'
 import { ABOUT_MAX } from '@/lib/space-about'
 import { RULES_MAX } from '@/lib/space-consent'
 import { locationUrl, eventOver, eventName, isRsvpStatus, type RsvpStatus } from '@/lib/space-event'
@@ -171,30 +170,26 @@ const consentOf = async (payload: Payload, user: NonNullable<User>): Promise<boo
   )
 }
 
-/** Type, size and count checks for files joining a post or comment that already holds `existing`. */
-const fileError = (files: PostFile[], existing: number, limit: number): WriteError | null => {
+/** Type, size and count checks for photos joining a post that already holds `existing`. The space-files collection checks again. */
+const fileError = (files: PostFile[], existing: number): WriteError | null => {
   for (const f of files) {
-    const kindEntry = Object.values(FILE_KINDS as Record<string, { mime: readonly string[] }>).find(
-      (k) => (k.mime as readonly string[]).includes(f.mimetype),
-    )
-    if (!kindEntry) return 'file-type'
+    if (!(SPACE_FILE_MIME as readonly string[]).includes(f.mimetype)) return 'file-type'
     if (f.size > SPACE_FILE_LIMIT) return 'file-size'
   }
-  return existing + files.length > limit ? 'file-count' : null
+  return files.length && existing + files.length > FILE_LIMITS.post ? 'file-count' : null
 }
 
 const storeFile = async (
   payload: Payload,
   spaceId: number,
-  target: { post: number } | { comment: number },
+  target: { post: number },
   file: PostFile,
 ): Promise<number> => {
   const created = await payload.create({
     collection: 'space-files',
     data: {
       space: spaceId,
-      post: 'post' in target ? target.post : null,
-      comment: 'comment' in target ? target.comment : null,
+      post: target.post,
       filename: file.name,
     } as never,
     file: { data: file.data, mimetype: file.mimetype, name: file.name, size: file.size } as never,
@@ -204,27 +199,28 @@ const storeFile = async (
 }
 
 /**
- * Stores every file on a just-created row. When storage refuses one, the row
- * and its files go and the member gets the 'upload' error, not a server error.
+ * Stores every photo on a just-created post. When storage refuses one, the
+ * post and its photos go and the member gets the 'upload' error, not a
+ * server error.
  */
 const storeFilesOrRollback = async (
   payload: Payload,
   spaceId: number,
-  collection: 'space-posts' | 'space-comments',
-  rowId: number,
+  postId: number,
   files: PostFile[],
 ): Promise<boolean> => {
-  const target = collection === 'space-posts' ? { post: rowId } : { comment: rowId }
   const stored: number[] = []
   try {
-    for (const f of files) stored.push(await storeFile(payload, spaceId, target, f))
+    for (const f of files) stored.push(await storeFile(payload, spaceId, { post: postId }, f))
   } catch (e) {
     for (const id of stored)
       await payload
         .delete({ collection: 'space-files', id, overrideAccess: true })
         .catch(() => undefined)
-    await payload.delete({ collection, id: rowId, overrideAccess: true }).catch(() => undefined)
-    payload.logger.error({ err: e, msg: `A file for ${collection} ${rowId} was not stored` })
+    await payload
+      .delete({ collection: 'space-posts', id: postId, overrideAccess: true })
+      .catch(() => undefined)
+    payload.logger.error({ err: e, msg: `A file for space-posts ${postId} was not stored` })
     return false
   }
   return true
@@ -489,7 +485,7 @@ export const postCreate = async (
 
   if (!(await consentOf(payload, user))) return err('consent')
 
-  const fileIssue = files?.length ? fileError(files, 0, FILE_LIMITS.post) : null
+  const fileIssue = files?.length ? fileError(files, 0) : null
   if (fileIssue) return err(fileIssue)
   const cover = i.kind === 'event' && i.cover ? await coverOf(i.cover) : null
   if (typeof cover === 'string') return err(cover)
@@ -512,10 +508,7 @@ export const postCreate = async (
     overrideAccess: true,
   })
   const postId = (post as { id: number }).id
-  if (
-    files?.length &&
-    !(await storeFilesOrRollback(payload, spaceId, 'space-posts', postId, files))
-  )
+  if (files?.length && !(await storeFilesOrRollback(payload, spaceId, postId, files)))
     return err('upload')
   if (cover) {
     let coverId: number | null = null
@@ -599,7 +592,7 @@ const savePostEdit = async (
       overrideAccess: true,
     })
     if ([...remove].some((id) => !existing.some((f) => f.id === id))) return err('not-yours')
-    const issue = fileError(files, existing.length - remove.size, FILE_LIMITS.post)
+    const issue = fileError(files, existing.length - remove.size)
     if (issue) return err(issue)
   }
   try {
@@ -779,9 +772,9 @@ export const postModify = async (
 // --- commentCreate ---
 
 export const commentCreate = async (
-  i: Input<{ post: number; parent?: number | null; body: string; files?: PostFile[] }>,
+  i: Input<{ post: number; parent?: number | null; body: string }>,
 ): Promise<WriteResult<{ id: number }>> => {
-  const { payload, user, post: postId, parent, files } = i
+  const { payload, user, post: postId, parent } = i
   const postData = (await payload.findByID({
     collection: 'space-posts',
     id: postId,
@@ -824,9 +817,6 @@ export const commentCreate = async (
 
   if (!(await consentOf(payload, user))) return err('consent')
 
-  const fileIssue = files?.length ? fileError(files, 0, FILE_LIMITS.comment) : null
-  if (fileIssue) return err(fileIssue)
-
   const personId = personOf(user)
   const comment = await payload.create({
     collection: 'space-comments',
@@ -834,9 +824,6 @@ export const commentCreate = async (
     overrideAccess: true,
   })
   const commentId = (comment as { id: number }).id
-  if (files?.length)
-    if (!(await storeFilesOrRollback(payload, spaceId, 'space-comments', commentId, files)))
-      return err('upload')
 
   await payload.update({
     collection: 'space-posts',
@@ -1034,32 +1021,25 @@ export const commentRemove = async (i: Input<{ id: number }>): Promise<WriteResu
 
 // --- fileAdd ---
 
+/** Adds one photo to a post. Comments take no files. */
 export const fileAdd = async (
-  i: Input<{ post?: number; comment?: number; file: PostFile }>,
+  i: Input<{ post: number; file: PostFile }>,
 ): Promise<WriteResult<{ id: number }>> => {
-  const { payload, user, post, comment, file } = i
-  const targetId = post ?? comment
-  const isPost = !!post
-  const collection = isPost ? 'space-posts' : 'space-comments'
+  const { payload, user, post: postId, file } = i
   const doc = (await payload.findByID({
-    collection,
-    id: targetId!,
+    collection: 'space-posts',
+    id: postId,
     depth: 0,
     overrideAccess: true,
   })) as {
     space: number | { id: number }
-    /** On a comment: the post it answers */
-    post?: number | { id: number } | null
     author?: number | { id: number } | null
     deleted_at?: string | null
     locked?: boolean
   } | null
   if (!doc) return err('not-found')
   const spaceId = typeof doc.space === 'object' ? doc.space.id : doc.space
-  const g = await gate(payload, user, spaceId, {
-    write: true,
-    post: isPost ? targetId! : idOf(doc.post),
-  })
+  const g = await gate(payload, user, spaceId, { write: true, post: postId })
   if (g.stop) return err((g as { error: WriteError }).error)
   const mem = await membership(payload, user, g.space)
   if (mem.role === 'none') return err('not-member')
@@ -1069,25 +1049,19 @@ export const fileAdd = async (
   if (!isAuthor && mem.role !== 'moderator') return err('not-yours')
   if (!(await consentOf(payload, user))) return err('consent')
 
-  const countField = isPost ? 'post' : 'comment'
   const { totalDocs } = await payload.count({
     collection: 'space-files',
-    where: { [countField]: { equals: targetId } },
+    where: { post: { equals: postId } },
     overrideAccess: true,
   })
-  const issue = fileError([file], totalDocs, isPost ? FILE_LIMITS.post : FILE_LIMITS.comment)
+  const issue = fileError([file], totalDocs)
   if (issue) return err(issue)
 
   try {
-    const id = await storeFile(
-      payload,
-      spaceId,
-      isPost ? { post: targetId! } : { comment: targetId! },
-      file,
-    )
+    const id = await storeFile(payload, spaceId, { post: postId }, file)
     return { ok: true, data: { id } }
   } catch (e) {
-    payload.logger.error({ err: e, msg: `A file for ${collection} ${targetId} was not stored` })
+    payload.logger.error({ err: e, msg: `A file for space-posts ${postId} was not stored` })
     return err('upload')
   }
 }

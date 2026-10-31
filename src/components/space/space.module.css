@@ -1674,7 +1674,6 @@
   color: var(--foreground);
 }
 
-.attach,
 .chipClose {
   display: inline-grid;
   place-items: center;
@@ -1683,25 +1682,6 @@
   background: none;
   color: var(--text-secondary);
   cursor: pointer;
-}
-
-.attach {
-  width: 32px;
-  height: 32px;
-  /* Inside the comment field, concentric with its corner. */
-  border-radius: var(--inline-radius, var(--radius-pill));
-}
-
-.attach:hover {
-  background: var(--surface-muted);
-  color: var(--foreground);
-}
-
-@media (pointer: coarse) {
-  .attach {
-    width: 36px;
-    height: 36px;
-  }
 }
 
 /* A link's preview: the page's image, then its site, title and summary. */
@@ -2427,15 +2407,10 @@
   background: var(--border);
 }
 
-/* A post's or a comment's own files: the photo grid, then the other files as chips. */
+/* A post's own files: the photo grid, then any older non-image files as chips. */
 .attachments {
   display: grid;
   gap: var(--space-2);
-}
-
-/* The thread puts a comment's files right under its text, with no gap of its own. */
-.commentAttachments {
-  margin-block-start: var(--space-3);
 }
 
 /* The post date: a link that opens the post in a dialog; the text looks like the plain date until pointed at. */
