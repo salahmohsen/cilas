@@ -49,8 +49,8 @@ import * as migration_20261028_060959_event_covers_navigation from './20261028_0
 import * as migration_20261028_120000_private_search from './20261028_120000_private_search';
 import * as migration_20261029_034244_event_single_timing from './20261029_034244_event_single_timing';
 import * as migration_20261029_075239_event_drafts from './20261029_075239_event_drafts';
-
 import * as migration_20261029_081500_programme_editorial from './20261029_081500_programme_editorial';
+import * as migration_20261031_163425_push_notifications_preferences from './20261031_163425_push_notifications_preferences';
 
 export const migrations = [
   {
@@ -306,11 +306,16 @@ export const migrations = [
   {
     up: migration_20261029_075239_event_drafts.up,
     down: migration_20261029_075239_event_drafts.down,
-    name: '20261029_075239_event_drafts'
+    name: '20261029_075239_event_drafts',
   },
   {
     up: migration_20261029_081500_programme_editorial.up,
     down: migration_20261029_081500_programme_editorial.down,
     name: '20261029_081500_programme_editorial',
+  },
+  {
+    up: migration_20261031_163425_push_notifications_preferences.up,
+    down: migration_20261031_163425_push_notifications_preferences.down,
+    name: '20261031_163425_push_notifications_preferences'
   },
 ];

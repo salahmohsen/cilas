@@ -552,6 +552,74 @@ describe('spaces write', () => {
     if (r3.ok) expect(r3.data.removed).toBe(true)
   })
 
+  it('a reaction notifies the author once, and never the author themself', async () => {
+    const post = await postCreate({
+      payload,
+      user: student,
+      space: community.id,
+      kind: 'discussion',
+      body: 'Notice my reaction',
+    })
+    expect(post.ok).toBe(true)
+    if (!post.ok) return
+    track('space-posts', post.data.id)
+    await consentAccept({ payload, user: fellow })
+    const unread = async () =>
+      (
+        await payload.find({
+          collection: 'notifications',
+          where: { and: [{ recipient: { equals: student.id } }, { kind: { equals: 'reaction' } }] },
+          overrideAccess: true,
+          pagination: false,
+        })
+      ).docs
+    const before = (await unread()).length
+
+    const liked = await reactionToggle({
+      payload,
+      user: fellow,
+      post: post.data.id,
+      reaction: 'agree',
+      on: true,
+    })
+    expect(liked.ok).toBe(true)
+    if (liked.ok) await liked.notify?.()
+    const rows = await unread()
+    expect(rows.length).toBe(before + 1)
+    const note = rows.find((n) => n.description?.includes('liked your post'))
+    expect(note?.link).toContain(`/posts/${post.data.id}`)
+    for (const n of rows) track('notifications', n.id)
+
+    // Off and on again: the unread note stands, no second one.
+    await reactionToggle({
+      payload,
+      user: fellow,
+      post: post.data.id,
+      reaction: 'agree',
+      on: false,
+    })
+    const again = await reactionToggle({
+      payload,
+      user: fellow,
+      post: post.data.id,
+      reaction: 'agree',
+      on: true,
+    })
+    if (again.ok) await again.notify?.()
+    expect((await unread()).length).toBe(before + 1)
+
+    // The author reacting to their own post tells no one.
+    const own = await reactionToggle({
+      payload,
+      user: student,
+      post: post.data.id,
+      reaction: 'celebrate',
+      on: true,
+    })
+    if (own.ok) await own.notify?.()
+    expect((await unread()).length).toBe(before + 1)
+  })
+
   it('fileAdd enforces count limit', async () => {
     const post = await postCreate({
       payload,

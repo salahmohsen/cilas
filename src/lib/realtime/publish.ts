@@ -1,6 +1,8 @@
 import { sql, type PostgresAdapter } from '@payloadcms/db-postgres'
 import type { CollectionAfterChangeHook, CollectionAfterDeleteHook, PayloadRequest } from 'payload'
 
+import { sendPushForNotification } from '@/lib/push/send'
+
 import {
   NOTIFICATION_CHANNEL,
   TAB_HEADER,
@@ -82,6 +84,17 @@ export const publishChange: CollectionAfterChangeHook = async ({
       createdAt: row.createdAt,
     },
   })
+  // Phones and other devices hear of it too. Not awaited: the write must not
+  // wait for a push service, and a failed push is logged inside.
+  if (operation === 'create') {
+    void sendPushForNotification(req.payload, {
+      id: row.id,
+      recipient,
+      kind: row.kind,
+      description: row.description,
+      link: row.link,
+    })
+  }
   return doc
 }
 

@@ -1,0 +1,171 @@
+.shell {
+  display: grid;
+  gap: var(--space-8);
+  min-width: 0;
+}
+
+.header {
+  display: grid;
+  gap: var(--space-2);
+}
+
+.title {
+  margin: 0;
+  font-size: var(--text-3xl);
+  font-weight: 500;
+}
+
+.intro {
+  margin: 0;
+  color: var(--text-secondary);
+}
+
+/* Nav beside the sections; below 720px it becomes a row above them. */
+.layout {
+  display: grid;
+  grid-template-columns: 13rem minmax(0, 1fr);
+  gap: var(--space-8);
+  align-items: start;
+}
+
+.nav {
+  position: sticky;
+  inset-block-start: calc(var(--site-header-height, 4rem) + var(--space-4));
+  display: grid;
+  gap: var(--space-1);
+}
+
+.tab {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  min-height: var(--control-height-md);
+  padding-inline: var(--space-3);
+  border: 0;
+  border-radius: var(--radius-control);
+  background: transparent;
+  color: var(--text-secondary);
+  font: inherit;
+  font-size: var(--text-sm);
+  text-align: start;
+  cursor: pointer;
+  transition:
+    background-color 0.16s,
+    color 0.16s;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.tab:hover {
+  background: var(--surface-muted);
+  color: var(--foreground);
+}
+
+.tab[data-selected] {
+  background: var(--surface-muted);
+  color: var(--foreground);
+  font-weight: 500;
+}
+
+.tabIcon {
+  display: inline-flex;
+  flex: 0 0 auto;
+}
+
+.tabCount {
+  margin-inline-start: auto;
+  min-width: 1.25rem;
+  padding-inline: var(--space-1);
+  border-radius: var(--radius-pill);
+  background: var(--accent);
+  color: var(--accent-foreground);
+  font-size: var(--text-xs);
+  text-align: center;
+  font-variant-numeric: tabular-nums;
+}
+
+.panels {
+  min-width: 0;
+}
+
+.panel[hidden] {
+  display: none;
+}
+
+/* Fixed to the bottom of the viewport while the page is in view. */
+.barWrap {
+  position: sticky;
+  inset-block-end: max(var(--space-4), env(safe-area-inset-bottom));
+  z-index: 20;
+  display: flex;
+  justify-content: center;
+  pointer-events: none;
+}
+
+.bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3) var(--space-6);
+  width: min(100%, 36rem);
+  padding: var(--space-3) var(--space-4);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-panel);
+  background: var(--surface-raised);
+  box-shadow: 0 8px 24px oklch(0% 0 0 / 0.12);
+  pointer-events: auto;
+}
+
+.barText {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-2);
+  margin: 0;
+  font-size: var(--text-sm);
+}
+
+.barCount {
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+}
+
+.barActions {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.barError {
+  flex-basis: 100%;
+  margin: 0;
+  color: var(--danger);
+  font-size: var(--text-sm);
+}
+
+@media (max-width: 719px) {
+  .layout {
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--space-4);
+  }
+
+  .nav {
+    position: static;
+    display: flex;
+    gap: var(--space-1);
+    overflow-x: auto;
+    padding-block-end: var(--space-1);
+    border-block-end: 1px solid var(--border);
+    scrollbar-width: none;
+  }
+
+  .tab {
+    flex: 0 0 auto;
+    white-space: nowrap;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tab {
+    transition: none;
+  }
+}

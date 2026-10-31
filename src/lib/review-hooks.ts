@@ -9,7 +9,12 @@ import type {
 import { isAdminUser, personOf } from '@/access'
 import { canMove, notifyOn, type ReviewRequest, type ReviewState } from '@/lib/review'
 import { actorOf, notify, type NotificationKind } from '@/lib/notify'
-import { adminRecipients, ownerRecipients, sendReviewEmail } from '@/lib/review-mail'
+import {
+  adminRecipients,
+  emailRecipients,
+  ownerRecipients,
+  sendReviewEmail,
+} from '@/lib/review-mail'
 
 const DRAFT_SAVE = 'reviewDraftSave'
 const AUTOSAVE = 'reviewAutosave'
@@ -222,7 +227,7 @@ const notifyReview =
     if (!(removal && state === 'draft')) {
       await sendReviewEmail(
         req,
-        people.map((p) => p.email),
+        (await emailRecipients(req, people, state)).map((p) => p.email),
         state,
         removal ? `${title} (removal from the site)` : title,
         doc.review?.review_note,

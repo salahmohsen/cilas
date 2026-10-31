@@ -49,7 +49,7 @@ const shortcutsFor = (user: User, locale: string): Shortcut[] => [
     external: true,
   },
   { key: 'myArticles', href: '/admin/collections/articles', icon: Files, external: true },
-  { key: 'editProfile', href: `/${locale}/profile`, icon: UserRound, external: false },
+  { key: 'editProfile', href: `/${locale}/settings`, icon: UserRound, external: false },
   ...(isFellowUser(user)
     ? [
         {

@@ -8,6 +8,7 @@ import '../styles.css'
 import { SiteDeadlines } from '@/components/site-deadlines'
 import { getNavigation, getSocialLinks } from '@/api/social.api'
 import { SiteFooter } from '@/components/site-footer'
+import { PushRegistrar } from '@/components/push/push-registrar'
 import { SiteToasts } from '@/components/site-toasts'
 import config from '@payload-config'
 import { getPayload } from 'payload'
@@ -22,6 +23,7 @@ import { env } from '@/env'
 import { fontVariables } from '@/lib/fonts'
 import { newsletterList } from '@/lib/newsletter-list'
 import { DEFAULT_OG_IMAGE } from '@/lib/og'
+import { pushConfig } from '@/lib/push/config'
 import { organizationSchema, websiteSchema } from '@/lib/schema'
 
 export function generateStaticParams() {
@@ -94,6 +96,8 @@ export default async function RootLayout({ children }: { children: React.ReactNo
                 {/* Open deadlines, across the whole width, above the header. */}
                 <SiteDeadlines locale={locale as 'en' | 'ar'} />
                 <CILASSiteHeader nav={nav} />
+                {/* Only when VAPID keys are set; the worker then registers after sign-in. */}
+                {pushConfig() && <PushRegistrar />}
                 <main className="mx-auto min-h-[60vh] max-w-300">{children}</main>
                 {/* The same width as the page content. */}
                 <div className="mx-auto max-w-300">

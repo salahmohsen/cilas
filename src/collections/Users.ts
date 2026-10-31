@@ -160,6 +160,15 @@ export const Users: CollectionConfig = {
       admin: { position: 'sidebar' },
     },
     {
+      // What the account wants to hear about, per kind and channel: only the
+      // refusals are stored (src/lib/notification-preferences.ts). The settings
+      // page writes it with a server action; the senders read it.
+      name: 'notification_preferences',
+      type: 'json',
+      access: { create: () => false, update: isAdminField },
+      admin: { hidden: true },
+    },
+    {
       // Role plumbing lives in the sidebar: identity first, permissions to
       // the side.
       label: 'Roles',

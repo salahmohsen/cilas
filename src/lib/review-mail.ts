@@ -3,6 +3,7 @@ import type { PayloadRequest } from 'payload'
 import { getEmailSettings } from '@/emails/settings'
 import { reviewMail } from '@/emails/transactional'
 import { env } from '@/env'
+import { readPreferences, wantsChannel } from '@/lib/notification-preferences'
 import type { ReviewState } from '@/lib/review'
 
 export type Recipient = { id: number; email: string }
@@ -38,6 +39,39 @@ export const ownerRecipients = async (
     req,
   })
   return recipientsOf(docs)
+}
+
+/**
+ * The recipients who have not turned this kind's email off (Settings →
+ * Notifications). A failed read keeps everyone: the default is to send.
+ */
+export const emailRecipients = async (
+  req: PayloadRequest,
+  people: Recipient[],
+  kind: string,
+): Promise<Recipient[]> => {
+  if (!people.length) return people
+  try {
+    const { docs } = await req.payload.find({
+      collection: 'users',
+      where: { id: { in: people.map((p) => p.id) } },
+      depth: 0,
+      limit: people.length,
+      pagination: false,
+      overrideAccess: true,
+      select: { notification_preferences: true },
+      req,
+    })
+    const refused = new Set(
+      docs
+        .filter((u) => !wantsChannel(readPreferences(u.notification_preferences), 'email', kind))
+        .map((u) => u.id),
+    )
+    return people.filter((p) => !refused.has(p.id))
+  } catch (error) {
+    req.payload.logger.error({ err: error, msg: 'Email preferences not read; sending to all' })
+    return people
+  }
 }
 
 /** Sends one review notification. A failed send is logged, never thrown. */
