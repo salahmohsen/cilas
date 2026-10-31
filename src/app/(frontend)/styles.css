@@ -643,6 +643,10 @@ body {
 .fellow-card:has(> .fellow-card-note:first-child) .fellow-card-note {
   border-block-start: 0;
 }
+.fellow-card-note {
+  /* The icon box's width: the label and the note text both start after it. */
+  --notice-icon: 2.75rem;
+}
 .fellow-card-hazard {
   display: flex;
   min-height: 2.75rem;
@@ -662,7 +666,7 @@ body {
   display: grid;
   flex: 0 0 auto;
   place-items: center;
-  inline-size: 2.75rem;
+  inline-size: var(--notice-icon);
   border-inline-end: 1px solid var(--poster-ink);
 }
 .fellow-card-hazard-label {
@@ -676,27 +680,29 @@ body {
   font-weight: 700;
   line-height: 1.3;
 }
-/* The stripes: the palette's yellow and paper at 45deg, the same on every
+/* The stripes: the palette's pink and paper at 45deg, the same on every
    card. Softer on the eye than ink, still read as a site warning. */
 .fellow-card-hazard::after {
-  --hazard-yellow: #ffb71b;
+  --hazard-pink: #ff7d9d;
   --hazard-band: 1rem;
   content: '';
   flex: 1 1 auto;
   min-width: 2.75rem;
-  background-color: var(--hazard-yellow);
+  background-color: var(--hazard-pink);
   background-image: repeating-linear-gradient(
     -45deg,
-    var(--hazard-yellow) 0 var(--hazard-band),
+    var(--hazard-pink) 0 var(--hazard-band),
     var(--poster-paper) var(--hazard-band) calc(var(--hazard-band) * 2)
   );
 }
 .fellow-card-quote {
   display: grid;
   gap: 0.75rem;
-  max-width: 68ch;
+  max-width: calc(68ch + var(--notice-icon));
   margin: 0;
   padding: var(--poster-pad);
+  /* The note's text starts on the label's edge, after the icon box. */
+  padding-inline-start: calc(var(--notice-icon) + var(--poster-pad));
   color: color-mix(in oklab, var(--poster-ink) 82%, var(--poster-paper));
   font-family: var(--font-text);
   font-size: var(--course-text-size, 1.1rem);

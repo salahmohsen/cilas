@@ -256,9 +256,9 @@ A notice that people must not miss (the fellows' note: fees, travel, forms) clos
 
 1. A square icon box (`2.75rem`, paper, a message icon at 18px, ink rule at its inline end).
 2. The label box (paper, body font at 700, `0.9375rem`).
-3. A band of still hazard stripes filling the rest of the row: `repeating-linear-gradient(-45deg, #ffb71b 0 1rem, paper 1rem 2rem)`. The stripes are always the palette yellow with paper, whatever the card's colour: softer on the eye than ink, still read as a site warning. They do not move.
+3. A band of still hazard stripes filling the rest of the row: `repeating-linear-gradient(-45deg, #ff7d9d 0 1rem, paper 1rem 2rem)`. The stripes are always the palette pink with paper, whatever the card's colour: softer on the eye than ink, still read as a site warning. They do not move.
 
-On a card with a side photo, the icon and label boxes together are exactly as wide as the photo column (`calc(min(36%, 18rem) + 1px)`, the 1px being the text column's rule), so the stripes start on that rule. The notice text sits below on paper in the same face, size, and colour as the bio. This band is the one patterned surface allowed on a card; use it only for a notice.
+On a card with a side photo, the icon and label boxes together are exactly as wide as the photo column (`calc(min(36%, 18rem) + 1px)`, the 1px being the text column's rule), so the stripes start on that rule. The notice text sits below on paper in the same face, size, and colour as the bio, and starts on the label's text edge (`padding-inline-start: calc(2.75rem + var(--poster-pad))`), so the icon box hangs in the margin. This band is the one patterned surface allowed on a card; use it only for a notice.
 
 ### Behaviour
 
