@@ -630,17 +630,15 @@ body {
   line-height: 1.35;
   letter-spacing: 0;
 }
-/* The fellows' note: the card's last row before the strip. Its heading row
-   is an icon box and a label box on paper, then an empty paper cell. The
-   words below match the bio. */
+/* The card's foot: one ruled row. The note's label (an icon box and the
+   words, on paper) sits under the photo; View profile, in the card's colour,
+   runs across the text column, its words on the bio's edge. The note's text
+   follows on paper and matches the bio. */
 .fellow-card-note {
   flex: 0 0 auto;
   margin: 0;
   border-block-start: 1px solid var(--poster-ink);
   background: var(--poster-paper);
-}
-.fellow-card:has(> .fellow-card-note:first-child) .fellow-card-note {
-  border-block-start: 0;
 }
 .fellow-card-note {
   /* The icon box's width: the label and the note text both start after it. */
@@ -649,6 +647,9 @@ body {
 .fellow-card-hazard {
   display: flex;
   min-height: 2.75rem;
+}
+/* The row owns the rule under it only when the note's words follow. */
+.fellow-card-hazard:not(:last-child) {
   border-block-end: 1px solid var(--poster-ink);
 }
 /* The heading: a square icon box and the label box, on paper. On wide cards
@@ -679,9 +680,13 @@ body {
   font-weight: 700;
   line-height: 1.3;
 }
-/* The rest of the heading row: an empty paper cell, bounded by the
-   heading's end rule and the row's lower rule. */
-.fellow-card-hazard::after {
+/* A card without a fellow's note has no label: on narrow cards the action
+   takes the whole row; on wide ones an empty box keeps the photo column. */
+.fellow-card-hazard-head:empty {
+  display: none;
+}
+/* A row with no action (the note's own card) ends in an empty paper cell. */
+.fellow-card-hazard:not(:has(.fellow-card-action))::after {
   content: '';
   flex: 1 1 auto;
   background: var(--poster-paper);
@@ -726,40 +731,14 @@ body {
 .fellow-card-bio a {
   color: var(--poster-ink);
 }
-/* The strip, as on the poster: the mark on paper, the role, then the action
-   in the card's colour. The strip owns the rule above it; each cell owns the
-   rule at its end. */
-.fellow-card-strip {
-  display: grid;
-  grid-template-columns: auto minmax(0, 1fr) auto;
-  min-height: clamp(3.25rem, 8.6cqi, 4.5rem);
-  border-block-start: 1px solid var(--poster-ink);
-}
-.fellow-card-mark {
-  display: flex;
-  align-items: center;
-  padding: 0.5rem var(--poster-pad);
-  border-inline-end: 1px solid var(--poster-ink);
-}
-.fellow-card-mark img {
-  width: auto;
-  height: clamp(1.75rem, 5cqi, 2.75rem);
-}
-.fellow-card-role {
-  display: flex;
-  align-items: center;
-  min-width: 0;
-  padding: 0.625rem var(--poster-pad);
-  font-size: clamp(0.8125rem, 1.5cqi, 1rem);
-}
 .fellow-card-action {
   display: flex;
+  flex: 1 1 auto;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
   gap: 0.5rem;
   min-height: 2.75rem;
   padding: 0.625rem var(--poster-pad);
-  border-inline-start: 1px solid var(--poster-ink);
   background: var(--poster-color);
   color: var(--poster-ink);
   font-weight: 600;
@@ -813,6 +792,9 @@ body {
      heading's end rule sits on that rule. */
   .fellow-card-hazard-head {
     flex-basis: calc(min(36%, 18rem) + 1px);
+  }
+  .fellow-card-hazard-head:empty {
+    display: flex;
   }
 }
 
@@ -1956,6 +1938,30 @@ a.collection-item:hover {
   max-width: 100%;
   height: auto;
   margin-inline: auto;
+}
+
+/* The course flow's head (title and filters) is a printed band in the
+   palette yellow, ink on yellow in both themes; the filter buttons stay
+   white, and the months below stay on the page. The band's last row owns
+   the rule under it. */
+.course-page .course-flow > header,
+.course-page .course-flow > header + div:has(> [role='group']) {
+  --poster-ink: #121212;
+  background: #ffb71b;
+  color: var(--poster-ink);
+}
+.course-page .course-flow > header p,
+.course-page .course-flow > header + div:has(> [role='group']) p {
+  color: var(--poster-ink);
+}
+.course-page .course-flow > header:not(:has(+ div > [role='group'])),
+.course-page .course-flow > header + div:has(> [role='group']) {
+  border-block-end: 1px solid var(--foreground);
+}
+.course-page .course-flow [role='group'] button:not([aria-pressed='true']) {
+  border-color: var(--poster-ink);
+  background: #ffffff;
+  color: var(--poster-ink);
 }
 
 /* The course flow wears the cards' frame: one 1px rule in the text colour

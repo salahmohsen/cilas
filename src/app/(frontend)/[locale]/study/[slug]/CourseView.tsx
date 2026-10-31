@@ -267,32 +267,27 @@ export const CourseView: React.FC<{
   // with their whole bio. Cards size to their content (no shared height);
   // each card picks its composition from its own width.
   const note = course.facilitator_note?.trim()
-  // The fellows' note closes the card: a white label box beside moving hazard
-  // stripes, then the words on paper. With one fellow it ends that fellow's card; with several
-  // it is its own card after theirs.
+  // The card's foot is one ruled row: the note's label (an icon box and the
+  // words) under the photo, then View profile in the card's colour across the
+  // text column. The note's words follow on paper. With several fellows the
+  // note is its own card after theirs, with an empty cell in the action's place.
   const noteDir = note ? textDirection(note) : 'ltr'
-  const noteBlock = note ? (
-    <figure className="fellow-card-note" {...pe('facilitator_note')}>
-      <figcaption className="fellow-card-hazard">
-        <span className="fellow-card-hazard-head">
-          <span className="fellow-card-hazard-icon">
-            <MessageSquareText aria-hidden size={18} strokeWidth={1.75} />
-          </span>
-          <span className="fellow-card-hazard-label">{t('note')}</span>
-        </span>
-      </figcaption>
-      <blockquote
-        className="fellow-card-quote"
-        dir={noteDir}
-        lang={noteDir === 'rtl' ? 'ar' : 'en'}
-      >
-        {note.split(/\n\s*\n/).map((p, i) => (
-          <p className="whitespace-pre-line" key={i}>
-            {p}
-          </p>
-        ))}
-      </blockquote>
-    </figure>
+  const noteHead = (
+    <span className="fellow-card-hazard-head">
+      <span className="fellow-card-hazard-icon">
+        <MessageSquareText aria-hidden size={18} strokeWidth={1.75} />
+      </span>
+      <span className="fellow-card-hazard-label">{t('note')}</span>
+    </span>
+  )
+  const noteQuote = note ? (
+    <blockquote className="fellow-card-quote" dir={noteDir} lang={noteDir === 'rtl' ? 'ar' : 'en'}>
+      {note.split(/\n\s*\n/).map((p, i) => (
+        <p className="whitespace-pre-line" key={i}>
+          {p}
+        </p>
+      ))}
+    </blockquote>
   ) : null
   const noteInCard = fellows.length === 1
   // One palette colour per card, in turn, as on the posters.
@@ -360,22 +355,34 @@ export const CourseView: React.FC<{
                         ) : null}
                       </div>
                     </div>
-                    {noteInCard ? noteBlock : null}
-                    <footer className="fellow-card-strip">
-                      <span className="fellow-card-mark">
-                        {/* eslint-disable-next-line @next/next/no-img-element */}
-                        <img alt="" src="/assets/images/logo.webp" />
-                      </span>
-                      <span className="fellow-card-role">{t('fellow')}</span>
-                      <Link className="fellow-card-action" href={`/people/${person.slug}`}>
-                        {t('viewProfile')}
-                        <ArrowRight
-                          aria-hidden
-                          className="fellow-card-arrow rtl:-scale-x-100"
-                          size={16}
-                        />
-                      </Link>
-                    </footer>
+                    {(() => {
+                      const action = (
+                        <Link className="fellow-card-action" href={`/people/${person.slug}`}>
+                          {t('viewProfile')}
+                          <ArrowRight
+                            aria-hidden
+                            className="fellow-card-arrow rtl:-scale-x-100"
+                            size={16}
+                          />
+                        </Link>
+                      )
+                      return note && noteInCard ? (
+                        <figure className="fellow-card-note" {...pe('facilitator_note')}>
+                          <figcaption className="fellow-card-hazard">
+                            {noteHead}
+                            {action}
+                          </figcaption>
+                          {noteQuote}
+                        </figure>
+                      ) : (
+                        <div className="fellow-card-note">
+                          <div className="fellow-card-hazard">
+                            <span aria-hidden className="fellow-card-hazard-head" />
+                            {action}
+                          </div>
+                        </div>
+                      )
+                    })()}
                   </article>
                 </li>
               )
@@ -384,9 +391,14 @@ export const CourseView: React.FC<{
         ) : null}
         {note && !noteInCard ? (
           <div className="fellow-card-frame mt-4">
-            <div className="fellow-card" style={cardColors(fellows.length)}>
-              {noteBlock}
-            </div>
+            <figure
+              className="fellow-card fellow-card-note"
+              style={cardColors(fellows.length)}
+              {...pe('facilitator_note')}
+            >
+              <figcaption className="fellow-card-hazard">{noteHead}</figcaption>
+              {noteQuote}
+            </figure>
           </div>
         ) : null}
       </section>
