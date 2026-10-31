@@ -89,7 +89,7 @@ export function Poster({
           fill
           loading={imageLoading}
           fetchPriority={imageFetchPriority}
-          sizes="(min-width: 75rem) 46rem, (min-width: 48rem) 62vw, 100vw"
+          sizes="(min-width: 90rem) 53rem, (min-width: 48rem) 62vw, 100vw"
           src={imageFailed ? FALLBACK : source}
           unoptimized={imageDelivery === 'direct' || imageFailed}
           onError={source !== FALLBACK && !imageFailed ? () => setFailedSource(source) : undefined}

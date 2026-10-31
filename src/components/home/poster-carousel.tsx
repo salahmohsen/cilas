@@ -37,7 +37,7 @@ export function PosterCarousel({ posters, label }: { posters: PosterData[]; labe
           next: t('next'),
         }}
         slideLabel={(i, count) => t('position', { position: i + 1, total: count })}
-        slideSize="min(100cqw, 75rem)"
+        slideSize="100cqw"
       >
         {posters.map((poster, index) => (
           <div className="poster-frame" dir="auto" key={poster.id}>

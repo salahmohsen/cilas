@@ -194,7 +194,7 @@ Current carousels:
 
 | Carousel          | Component                                   | `slideSize`                          | Rotation |
 | ----------------- | ------------------------------------------- | ------------------------------------ | -------- |
-| Open registration | `src/components/home/poster-carousel.tsx`   | `min(100cqw, 75rem)`                 | Yes      |
+| Open registration | `src/components/home/poster-carousel.tsx`   | `100cqw` (the page frame)            | Yes      |
 | Events            | `src/components/events/event-carousel.tsx`  | `min(84cqw, 28rem)`; 3 up from 900px | No       |
 | Articles          | `src/components/home/home-articles.tsx`     | `min(84cqw, 420px)`                  | Yes      |
 | People profiles   | `src/components/person/profile-columns.tsx` | `88cqw`, below `48rem` only          | No       |
