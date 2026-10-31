@@ -1,4 +1,4 @@
-import type { Metadata } from 'next'
+import type { Metadata, Viewport } from 'next'
 import { NextIntlClientProvider } from 'next-intl'
 import { getLocale, getTranslations } from 'next-intl/server'
 import React from 'react'
@@ -27,6 +27,9 @@ export function generateStaticParams() {
   return routing.locales.map((locale) => ({ locale }))
 }
 
+// Matches the manifest's theme colour (src/app/manifest.ts).
+export const viewport: Viewport = { themeColor: '#18181b' }
+
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations('Meta')
   return {
@@ -35,7 +38,13 @@ export async function generateMetadata(): Promise<Metadata> {
     title: t('siteName'),
     description: t('description'),
     // The logo in white, centred on a square at its own proportions.
-    icons: { icon: '/assets/images/favicon.png', apple: '/assets/images/apple-icon.png' },
+    // iOS shows a transparent icon on black, so Apple gets the opaque one.
+    icons: {
+      icon: '/assets/images/favicon.png',
+      apple: '/assets/icons/apple-touch-icon.png',
+    },
+    // Home-screen web app on iOS; the manifest covers the rest.
+    appleWebApp: { capable: true, title: t('siteName'), statusBarStyle: 'default' },
     // A page with no image of its own shares the default one.
     openGraph: { siteName: t('siteName'), images: [DEFAULT_OG_IMAGE] },
     twitter: { card: 'summary_large_image', images: [DEFAULT_OG_IMAGE.url] },

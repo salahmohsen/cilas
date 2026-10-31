@@ -65,11 +65,12 @@ export default function proxy(request: NextRequest) {
 }
 
 export const config = {
-  // Everything except Payload (/admin, /api), Next internals and static files;
-  // `.html` pages and `/uploads/...` are let through for the legacy lookup,
-  // and /admin/login to send it to the site's login page.
+  // Everything except Payload (/admin, /api), Next internals and static files
+  // (the web app manifest included: it is not under a locale); `.html` pages
+  // and `/uploads/...` are let through for the legacy lookup, and /admin/login
+  // to send it to the site's login page.
   matcher: [
-    '/((?!api|admin|_next|_vercel|.*\\.(?:ico|png|jpe?g|gif|svg|webp|avif|css|js|map|txt|xml|json|woff2?|pdf)$).*)',
+    '/((?!api|admin|_next|_vercel|.*\\.(?:ico|png|jpe?g|gif|svg|webp|avif|css|js|map|txt|xml|json|webmanifest|woff2?|pdf)$).*)',
     '/uploads/:path*',
     '/admin/login',
   ],
