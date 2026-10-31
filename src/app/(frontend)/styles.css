@@ -16,6 +16,13 @@
   --font-body: var(--font-text);
   --font-display: var(--font-title);
 
+  /* The page frame: the one width every page, the header and the footer share.
+     1440px fills a 1280 to 1440 laptop with only the gutter to spare and keeps
+     grids from stretching on a 1920 screen. Long prose keeps its own measure
+     (68ch, or the reader's 760px column) inside the frame. */
+  --page-max: 90rem;
+  --page-gutter: 1rem;
+
   --background: oklch(1 0 0);
   --foreground: oklch(0.141 0.005 285.823);
   --card: oklch(1 0 0);
@@ -48,6 +55,25 @@
   --sidebar-accent-foreground: oklch(0.21 0.006 285.885);
   --sidebar-border: oklch(0.92 0.004 286.32);
   --sidebar-ring: oklch(0.705 0.015 286.067);
+}
+
+@media (min-width: 40rem) {
+  :root {
+    --page-gutter: 1.5rem;
+  }
+}
+@media (min-width: 64rem) {
+  :root {
+    --page-gutter: 2.5rem;
+  }
+}
+
+/* A page's own container: the frame's width, with the site gutter. */
+@utility page-frame {
+  width: 100%;
+  max-width: var(--page-max);
+  margin-inline: auto;
+  padding-inline: var(--page-gutter);
 }
 
 .dark {
@@ -85,6 +111,7 @@
 }
 
 @theme inline {
+  --container-page: var(--page-max);
   --font-heading: var(--font-title);
   --font-sans: var(--font-text);
   --color-sidebar-ring: var(--sidebar-ring);
@@ -1678,9 +1705,9 @@ a.collection-item:hover {
   align-content: center;
   gap: var(--hero-gap);
   width: 100%;
-  max-width: 1200px;
+  max-width: var(--page-max);
   margin-inline: auto;
-  padding: clamp(1rem, 4svh, 2.5rem) 1.5rem calc(var(--water) + var(--hero-gap));
+  padding: clamp(1rem, 4svh, 2.5rem) var(--page-gutter) calc(var(--water) + var(--hero-gap));
 }
 /* On a phone the boat rides lower in the copy's way, so the copy leaves it room. */
 @media (max-width: 40rem) {
@@ -1896,17 +1923,7 @@ a.collection-item:hover {
 .home-page {
   display: grid;
   gap: clamp(4rem, 9vw, 6rem);
-  padding: clamp(4rem, 9vw, 6rem) 1rem 2rem;
-}
-@media (min-width: 40rem) {
-  .home-page {
-    padding-inline: 2rem;
-  }
-}
-@media (min-width: 80rem) {
-  .home-page {
-    padding-inline: 0;
-  }
+  padding: clamp(4rem, 9vw, 6rem) var(--page-gutter) 2rem;
 }
 .home-section {
   display: grid;

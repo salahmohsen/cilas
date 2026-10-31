@@ -1,7 +1,7 @@
 .page {
-  max-width: 1180px;
+  max-width: var(--page-max);
   margin-inline: auto;
-  padding: var(--space-16) var(--space-6);
+  padding: var(--space-16) var(--page-gutter);
   display: grid;
   grid-template-columns: minmax(0, 1fr);
   gap: var(--space-12);

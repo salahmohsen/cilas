@@ -57,7 +57,7 @@ export default async function CoursesPage({ params, searchParams }: Props) {
   const firstYear = result.options.year.at(-1)?.value
 
   return (
-    <div className="mx-auto flex w-full max-w-6xl flex-col gap-12 px-4 py-10 sm:px-8 sm:py-14 xl:px-0">
+    <div className="page-frame flex flex-col gap-12 py-10 sm:py-14">
       {list ? <Schema data={list} /> : null}
       <header className="study-header">
         <div className="study-header-text">

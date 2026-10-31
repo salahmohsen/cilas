@@ -282,9 +282,7 @@ export async function BridgeYearView({
     )
 
   return (
-    <div
-      className={`course-page mx-auto w-full max-w-6xl px-4 py-10 sm:px-8 sm:py-14 xl:px-0 ${stickyApply ? 'max-lg:pb-28' : ''}`}
-    >
+    <div className={`course-page page-frame py-10 sm:py-14 ${stickyApply ? 'max-lg:pb-28' : ''}`}>
       {preview ? <RefreshRouteOnSave /> : null}
       {/* As on a course page: once the details' Apply has scrolled away, a bar along the bottom on narrow screens. */}
       {stickyApply ? (

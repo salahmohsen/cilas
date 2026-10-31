@@ -84,7 +84,7 @@ export default async function CalendarPage({ params, searchParams }: Props) {
   const nearest = after ?? before
 
   return (
-    <div className="mx-auto w-full max-w-6xl px-4 py-10 sm:px-8 sm:py-14 xl:px-0">
+    <div className="page-frame py-10 sm:py-14">
       <header className="flex flex-wrap items-end justify-between gap-4">
         <div>
           <p className="text-sm text-[var(--text-muted)]">{t('title')}</p>

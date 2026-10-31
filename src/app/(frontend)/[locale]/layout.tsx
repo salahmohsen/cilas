@@ -94,9 +94,9 @@ export default async function RootLayout({ children }: { children: React.ReactNo
                 {/* Open deadlines, across the whole width, above the header. */}
                 <SiteDeadlines locale={locale as 'en' | 'ar'} />
                 <CILASSiteHeader nav={nav} />
-                <main className="mx-auto min-h-[60vh] max-w-300">{children}</main>
+                <main className="mx-auto min-h-[60vh] max-w-page">{children}</main>
                 {/* The same width as the page content. */}
-                <div className="mx-auto max-w-300">
+                <div className="mx-auto max-w-page">
                   <SiteFooter
                     nav={nav}
                     newsletter={Boolean(list)}

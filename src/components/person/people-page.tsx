@@ -15,7 +15,7 @@ export function PeoplePage({
   namespace: 'Fellows' | 'Cilasians' | 'Governance'
 }) {
   return (
-    <div className="mx-auto w-full max-w-6xl px-4 py-12 sm:px-8 sm:py-16 xl:px-0">
+    <div className="page-frame py-12 sm:py-16">
       <header className="max-w-2xl">
         <h1 className="text-[clamp(2rem,4.2vw,3.1rem)] leading-[1.08] font-semibold tracking-[-0.02em] rtl:leading-[1.3] rtl:tracking-normal">
           {title}

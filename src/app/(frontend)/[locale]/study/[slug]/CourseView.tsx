@@ -396,7 +396,7 @@ export const CourseView: React.FC<{
 
   return (
     <div
-      className={`course-page mx-auto w-full max-w-6xl px-4 py-10 sm:px-8 sm:py-14 xl:px-0 ${applyUrl ? 'max-lg:pb-28' : ''}`}
+      className={`course-page page-frame py-10 sm:py-14 ${applyUrl ? 'max-lg:pb-28' : ''}`}
       {...pe.scope({ collection: 'courses', id: course.id })}
     >
       {applyUrl ? (

@@ -67,7 +67,7 @@ export async function OpenPage({ locale, reader }: { locale: string; reader: Rea
   const categories = ['All', ...new Set(posts.map((p) => p.category))]
 
   return (
-    <div className="mx-auto flex w-full max-w-6xl flex-col gap-10 px-4 py-10 sm:px-8 sm:py-14 xl:px-0">
+    <div className="page-frame flex flex-col gap-10 py-10 sm:py-14">
       <header className="home-section-header">
         <h1 className="home-heading">{t('openTitle')}</h1>
         <p className="home-lead">{posts.length ? t('openText') : t('noneOpen')}</p>
