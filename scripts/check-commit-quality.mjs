@@ -30,9 +30,5 @@ function check(command, args, selected) {
   }
 }
 
-check(
-  'eslint',
-  ['--cache', '--cache-strategy', 'content', '--cache-location', 'node_modules/.cache/eslint/'],
-  scripts,
-)
-check('prettier', ['--check'], formatted)
+check('oxlint', ['--no-error-on-unmatched-pattern'], scripts)
+check('oxfmt', ['--check', '--no-error-on-unmatched-pattern'], formatted)

@@ -67,9 +67,9 @@ function fixture(t) {
   symlinkSync(resolve(project, 'node_modules'), resolve(cwd, 'node_modules'), 'dir')
   for (const file of [
     'lefthook.yml',
-    'eslint.config.mjs',
-    '.prettierrc.json',
-    '.prettierignore',
+    '.oxlintrc.json',
+    '.oxfmtrc.json',
+    'scripts/oxlint-plugin-cilas.mjs',
     'scripts/install-commit-hooks.mjs',
     'scripts/check-commit-quality.mjs',
   ]) {
@@ -89,7 +89,7 @@ function commit(cwd) {
   return run(cwd, 'git', ['commit', '-m', 'fixture change'])
 }
 
-test('real hook fixes ESLint then formats route paths; stages only selected files', (t) => {
+test('real hook fixes lint then formats route paths; stages only selected files', (t) => {
   const { cwd } = fixture(t)
   install(cwd)
   const path = 'src/app/(frontend)/[locale]/[[...slug]]/file with spaces.ts'
@@ -105,15 +105,14 @@ test('real hook fixes ESLint then formats route paths; stages only selected file
   assert.equal(read(cwd, 'docs/file with spaces.md'), '# Hello\n\n- one\n')
   assert.equal(read(cwd, 'scratch.ts'), 'untracked and untouched')
   assert.equal(ok(cwd, 'git', ['status', '--short']), '?? scratch.ts')
-  assert.ok(existsSync(resolve(cwd, 'node_modules/.cache/eslint')))
 })
 
 for (const [name, content, diagnostic] of [
-  ['syntax error', 'export const broken = ;\n', 'Parsing error'],
+  ['syntax error', 'export const broken = ;\n', 'Unexpected token'],
   [
     'Client Component environment import',
     "'use client'\nimport { env } from '@/env'\nexport const publicValue = env.VALUE\n",
-    'no-restricted-syntax',
+    'no-env-in-client-component',
   ],
 ]) {
   test(`real hook blocks ${name} and preserves index and working files`, (t) => {
@@ -300,7 +299,7 @@ test('CI checker rejects unformatted committed content without writing fixes', (
   ok(cwd, 'git', ['commit', '-m', 'bypass local hooks'])
   const result = run(cwd, process.execPath, ['scripts/check-commit-quality.mjs', base])
   assert.notEqual(result.status, 0, result.output)
-  assert.ok(result.output.includes('Code style issues'), result.output)
+  assert.ok(result.output.includes('Format issues found'), result.output)
   assert.equal(read(cwd, path), content)
   assert.equal(ok(cwd, 'git', ['status', '--short']), '')
 })

@@ -6,9 +6,9 @@ disabled, run `pnpm hooks:install` afterward. Lefthook is pinned to 2.2.2; its o
 dependency postinstall is disabled in pnpm so it cannot install shared hooks before
 our installer runs. Use pnpm for dependency installation.
 
-The pre-commit hook checks staged JS/TS with the existing Next.js ESLint config and
-ordinary automatic fixes, then formats those files with Prettier. ESLint's content
-cache lives under ignored `node_modules/.cache/eslint/`. Staged CSS, SCSS, Less,
+The pre-commit hook checks staged JS/TS with Oxlint (`.oxlintrc.json`) and
+ordinary automatic fixes, then formats those files with Oxfmt (`.oxfmtrc.json`).
+The local rule in `scripts/oxlint-plugin-cilas.mjs` runs as an Oxlint JS plugin. Staged CSS, SCSS, Less,
 JSON/JSONC, YAML, Markdown/MDX and HTML receive formatting. The two file groups run
 sequentially. Warnings remain warnings; unfixable lint and parsing errors block the
 commit, including Client Components importing `@/env` instead of `@/env.client`.
@@ -20,7 +20,7 @@ restoring unstaged edits would conflict with the fixes, the commit fails and the
 original staging and working edits are restored. Review the diff and resolve the
 overlap before retrying. No hook runs full tests, type checks, builds or services.
 
-`.prettierignore` excludes generated Payload types/schema/import maps, migrations,
+`.oxfmtrc.json` `ignorePatterns` exclude generated Payload types/schema/import maps, migrations,
 vendored editor bundles, build/test output, the lockfile and imported archival
 data. It leaves migration scripts and documentation eligible. This setup does not
 format the existing repository or require its warning baseline to be cleaned up.

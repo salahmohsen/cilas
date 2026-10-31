@@ -108,7 +108,7 @@ Space files stay private and are served through authorization checks. Enrollment
 - **CMS:** Payload CMS 3 with the PostgreSQL adapter and Lexical rich text.
 - **Storage:** Cloudflare R2 for production media and private files; local S3-compatible storage for development.
 - **Services:** Resend email, optional Google OAuth and Turnstile, Typesense search, and optional TMDB metadata.
-- **Quality checks:** ESLint, Prettier, Vitest, and Playwright.
+- **Quality checks:** Oxlint, Oxfmt, Vitest, and Playwright.
 
 ## Local development
 
@@ -167,7 +167,8 @@ Use [.env.example](.env.example) and [src/env.ts](src/env.ts) as the configurati
 pnpm dev                  # Development server
 pnpm build                # Production build
 pnpm start                # Serve the production build
-pnpm lint                 # ESLint
+pnpm lint                 # Oxlint
+pnpm format               # Oxfmt (format:check to verify)
 pnpm exec tsc --noEmit    # Type checking
 pnpm test:int             # Vitest suite
 pnpm test:e2e             # Playwright suite

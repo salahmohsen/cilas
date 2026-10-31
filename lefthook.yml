@@ -8,11 +8,10 @@ pre-commit:
     lint-and-format:
       glob: '*.{js,jsx,mjs,cjs,ts,tsx,mts,cts}'
       run: >-
-        pnpm exec eslint --fix --cache --cache-strategy content
-        --cache-location node_modules/.cache/eslint/ -- {staged_files}
-        && pnpm exec prettier --write -- {staged_files}
+        pnpm exec oxlint --fix --no-error-on-unmatched-pattern -- {staged_files}
+        && pnpm exec oxfmt --write --no-error-on-unmatched-pattern -- {staged_files}
       stage_fixed: true
     format:
       glob: '*.{css,scss,less,json,jsonc,yaml,yml,md,mdx,html}'
-      run: pnpm exec prettier --write -- {staged_files}
+      run: pnpm exec oxfmt --write --no-error-on-unmatched-pattern -- {staged_files}
       stage_fixed: true
