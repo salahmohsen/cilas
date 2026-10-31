@@ -262,3 +262,8 @@ Files:
 - `src/components/rich-text-columns.module.css`: profile carousel and column styles.
 - `src/lib/poster-colors.ts`: shared palette.
 - `tests/poster-layout.test.mjs`: rendered geometry regression.
+- `src/app/(frontend)/[locale]/study/[slug]/CourseView.tsx`: fellow cards in Who teaches it (content sizes all; `fellow-card` container switches at `34rem`; the footer owns the only inner rule).
+
+## 10. Wide blocks in prose
+
+A Columns block inside article, course, or event prose grows past the reading measure to the page's main column on screens from `64rem`. The page marks that column with `prose-frame` (an inline-size container). The prose must be centered in the frame, because the block grows by the same amount on both sides: `margin-inline: max(-16rem, min(0px, (100% - 100cqi) / 2))`. Below `64rem` the columns stay inside the prose and stack on phones. A size container takes no width from its content, so give a `prose-frame` an explicit `width: 100%` when it has auto margins.
