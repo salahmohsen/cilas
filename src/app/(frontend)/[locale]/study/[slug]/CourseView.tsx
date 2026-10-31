@@ -13,6 +13,7 @@ import { useFormatter, useLocale, useTranslations } from 'next-intl'
 import React from 'react'
 
 import { Avatar } from '@/components/arc/avatar/avatar'
+import { InViewTitle } from '@/components/arc/in-view-title/in-view-title'
 import {
   CourseSyllabus,
   MATERIAL_ICONS,
@@ -264,42 +265,33 @@ export const CourseView: React.FC<{
   // with their whole bio. Cards size to their content (no shared height);
   // each card picks its composition from its own width.
   const note = course.facilitator_note?.trim()
-  // The fellows' note, as a card cell: inside the card when one fellow
-  // teaches, its own card above them when several do.
-  const noteText = note ? (
-    <blockquote className="fellow-card-quote" dir="auto">
-      {note.split(/\n\s*\n/).map((p, i) => (
-        <p className="whitespace-pre-line" key={i}>
-          {p}
-        </p>
-      ))}
-    </blockquote>
+  // The fellows' note closes the card: a white label box beside moving hazard
+  // stripes, then the words on paper. With one fellow it ends that fellow's card; with several
+  // it is its own card after theirs.
+  const noteBlock = note ? (
+    <figure className="fellow-card-note" {...pe('facilitator_note')}>
+      <figcaption className="fellow-card-hazard">
+        <span className="fellow-card-hazard-label">{t('note')}</span>
+      </figcaption>
+      <blockquote className="fellow-card-quote" dir="auto">
+        {note.split(/\n\s*\n/).map((p, i) => (
+          <p className="whitespace-pre-line" key={i}>
+            {p}
+          </p>
+        ))}
+      </blockquote>
+    </figure>
   ) : null
   const noteInCard = fellows.length === 1
+  // One palette colour per card, in turn, as on the posters.
+  const cardColors = (index: number) =>
+    ({ '--poster-color': POSTER_COLORS[index % POSTER_COLORS.length] }) as React.CSSProperties
   const fellowsSection =
     fellows.length || note ? (
       <section aria-labelledby="course-teachers" className="mt-12" {...pe('fellows')}>
         <h2 className="course-heading" id="course-teachers">
           {t('whoTeaches')}
         </h2>
-        {note && !noteInCard ? (
-          <div className="fellow-card-frame mt-4">
-            <figure
-              className="fellow-card"
-              {...pe('facilitator_note')}
-              style={
-                {
-                  '--poster-color': POSTER_COLORS[fellows.length % POSTER_COLORS.length],
-                } as React.CSSProperties
-              }
-            >
-              <figcaption className="fellow-card-panel fellow-card-note-head">
-                {t('note')}
-              </figcaption>
-              <div className="fellow-card-note">{noteText}</div>
-            </figure>
-          </div>
-        ) : null}
         {fellows.length ? (
           <ul className="fellow-cards">
             {fellows.map((person, index) => {
@@ -312,11 +304,7 @@ export const CourseView: React.FC<{
                   <article
                     aria-labelledby={`fellow-${person.id}`}
                     className="fellow-card"
-                    style={
-                      {
-                        '--poster-color': POSTER_COLORS[index % POSTER_COLORS.length],
-                      } as React.CSSProperties
-                    }
+                    style={cardColors(index)}
                   >
                     <div className="fellow-card-body">
                       <Link
@@ -341,16 +329,18 @@ export const CourseView: React.FC<{
                       </Link>
                       <div className="fellow-card-main">
                         <div className="fellow-card-panel">
-                          <h3 className="fellow-card-name" dir="auto" id={`fellow-${person.id}`}>
-                            {person.name}
-                          </h3>
+                          {/* The poster titles' entrance: each line rises in when the card is in view. */}
+                          <div className="fellow-card-name" dir="auto">
+                            <InViewTitle
+                              as="h3"
+                              className="fellow-card-name-reveal"
+                              id={`fellow-${person.id}`}
+                              once={false}
+                              text={person.name}
+                              variant="line"
+                            />
+                          </div>
                         </div>
-                        {note && noteInCard ? (
-                          <figure className="fellow-card-note" {...pe('facilitator_note')}>
-                            <figcaption className="fellow-card-note-label">{t('note')}</figcaption>
-                            {noteText}
-                          </figure>
-                        ) : null}
                         {hasBio ? (
                           <div className="fellow-card-bio" dir="auto">
                             <RichTextField className="grid gap-3 [&_p]:m-0" data={person.bio} />
@@ -358,6 +348,7 @@ export const CourseView: React.FC<{
                         ) : null}
                       </div>
                     </div>
+                    {noteInCard ? noteBlock : null}
                     <footer className="fellow-card-strip">
                       <span className="fellow-card-mark">
                         {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -374,6 +365,13 @@ export const CourseView: React.FC<{
               )
             })}
           </ul>
+        ) : null}
+        {note && !noteInCard ? (
+          <div className="fellow-card-frame mt-4">
+            <div className="fellow-card" style={cardColors(fellows.length)}>
+              {noteBlock}
+            </div>
+          </div>
         ) : null}
       </section>
     ) : null
