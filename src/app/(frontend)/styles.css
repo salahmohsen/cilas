@@ -466,6 +466,7 @@ body {
   max-width: 100%;
   height: auto;
   max-height: min(75svh, 40rem);
+  margin-inline: auto;
   object-fit: contain;
   border-radius: calc(var(--radius) * 2);
 }
@@ -1772,6 +1773,20 @@ a.collection-item:hover {
   height: auto;
   aspect-ratio: 4 / 3;
   object-fit: cover;
+}
+
+/* Images in article, course and event text sit in the middle of the
+   measure, whatever the text's direction. */
+.article-prose picture {
+  display: block;
+}
+.article-prose picture > img,
+.article-prose > img,
+.article-prose p > img:only-child {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  margin-inline: auto;
 }
 
 /* ===================================================== wide blocks in prose */
