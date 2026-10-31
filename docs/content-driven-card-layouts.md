@@ -252,13 +252,17 @@ The card is a stack of boxes divided by 1px ink rules. Each rule has one owner (
 
 ### Notice row
 
-A notice that people must not miss (the fellows' note: fees, travel, forms) closes the card, just above the strip. Its heading row has three parts:
+A notice that people must not miss (the fellows' note: fees, travel, forms) closes the card, just above the strip. Its heading row has three parts on paper, divided by ink rules:
 
-1. A square icon box (`2.75rem`, paper, a message icon at 18px, ink rule at its inline end).
-2. The label box (paper, body font at 700, `0.9375rem`).
-3. A band of still hazard stripes filling the rest of the row: `repeating-linear-gradient(-45deg, #ff7d9d 0 1rem, paper 1rem 2rem)`. The stripes are always the palette pink with paper, whatever the card's colour: softer on the eye than ink, still read as a site warning. They do not move.
+1. A square icon box (`2.75rem`, a message icon at 18px).
+2. The label box (body font at 700, `0.9375rem`).
+3. An empty cell filling the rest of the row. No pattern and no colour: the row reads as a ruled form, like the strip.
 
-On a card with a side photo, the icon and label boxes together are exactly as wide as the photo column (`calc(min(36%, 18rem) + 1px)`, the 1px being the text column's rule), so the stripes start on that rule. The notice text sits below on paper in the same face, size, and colour as the bio, and starts on the label's text edge (`padding-inline-start: calc(2.75rem + var(--poster-pad))`), so the icon box hangs in the margin. The note gets an explicit `dir` and `lang` from `textDirection()` (`src/lib/text-direction.ts`), because the CSS build turns `:dir()` into `:lang()` lists that follow the page language. An English note on an Arabic page runs from the left with the plain inset (the icon box is on the other side), and the 68ch measure sits on its paragraphs, not on the box, so the box never pushes the text to the page's side. This band is the one patterned surface allowed on a card; use it only for a notice.
+On a card with a side photo, the icon and label boxes together are exactly as wide as the photo column (`calc(min(36%, 18rem) + 1px)`, the 1px being the text column's rule), so the empty cell starts on that rule. The notice text sits below on paper in the same face, size, and colour as the bio, and starts on the label's text edge (`padding-inline-start: calc(2.75rem + var(--poster-pad))`), so the icon box hangs in the margin. The note gets an explicit `dir` and `lang` from `textDirection()` (`src/lib/text-direction.ts`), because the CSS build turns `:dir()` into `:lang()` lists that follow the page language. An English note on an Arabic page runs from the left with the plain inset (the icon box is on the other side), and the 68ch measure sits on its paragraphs, not on the box, so the box never pushes the text to the page's side.
+
+### Sections around cards
+
+A section that holds a list rather than a single card (the course flow beside the fellow cards) takes the cards' frame, not their materials: 1px rule in `var(--foreground)` (ink in the light theme, still visible in the dark one), `1rem` radius, and no fill, so the page shows through. It follows the theme, because it is page structure, not a printed card.
 
 ### Behaviour
 

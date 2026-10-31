@@ -631,9 +631,8 @@ body {
   letter-spacing: 0;
 }
 /* The fellows' note: the card's last row before the strip. Its heading row
-   is a white label box beside a band of still hazard stripes, ink on the
-   card's colour, as on a construction-site board. The words below match
-   the bio. */
+   is an icon box and a label box on paper, then an empty paper cell. The
+   words below match the bio. */
 .fellow-card-note {
   flex: 0 0 auto;
   margin: 0;
@@ -680,20 +679,12 @@ body {
   font-weight: 700;
   line-height: 1.3;
 }
-/* The stripes: the palette's pink and paper at 45deg, the same on every
-   card. Softer on the eye than ink, still read as a site warning. */
+/* The rest of the heading row: an empty paper cell, bounded by the
+   heading's end rule and the row's lower rule. */
 .fellow-card-hazard::after {
-  --hazard-pink: #ff7d9d;
-  --hazard-band: 1rem;
   content: '';
   flex: 1 1 auto;
-  min-width: 2.75rem;
-  background-color: var(--hazard-pink);
-  background-image: repeating-linear-gradient(
-    -45deg,
-    var(--hazard-pink) 0 var(--hazard-band),
-    var(--poster-paper) var(--hazard-band) calc(var(--hazard-band) * 2)
-  );
+  background: var(--poster-paper);
 }
 .fellow-card-quote {
   display: grid;
@@ -1965,6 +1956,17 @@ a.collection-item:hover {
   max-width: 100%;
   height: auto;
   margin-inline: auto;
+}
+
+/* The course flow wears the cards' frame: one 1px rule in the text colour
+   (ink in the light theme) and the cards' 1rem radius, on the page itself
+   with no surface fill. */
+.course-page .course-flow {
+  /* The column's full width, so its edges line up with the fellow cards. */
+  width: 100%;
+  border-color: var(--foreground);
+  border-radius: 1rem;
+  background: transparent;
 }
 
 /* ===================================================== wide blocks in prose */

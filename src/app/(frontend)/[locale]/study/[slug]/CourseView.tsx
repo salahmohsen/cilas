@@ -630,7 +630,7 @@ export const CourseView: React.FC<{
 
           {sessions.length ? (
             <div className="mt-12">
-              <CourseSyllabus course={course} editable={editable} />
+              <CourseSyllabus className="course-flow" course={course} editable={editable} />
             </div>
           ) : null}
 
