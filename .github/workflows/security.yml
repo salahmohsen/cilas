@@ -171,7 +171,13 @@ jobs:
           key: nextjs-${{ runner.os }}-${{ hashFiles('pnpm-lock.yaml') }}-${{ github.sha }}
 
   deploy-production:
-    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    # The checks need `changes`, which is skipped on pushes; without a status
+    # function a skipped ancestor skips this job too. Require each check to
+    # have passed instead.
+    if: >-
+      ${{ !cancelled() && github.event_name == 'push' && github.ref == 'refs/heads/main'
+      && needs.commit-quality.result == 'success' && needs.security.result == 'success'
+      && needs.production-smoke.result == 'success' }}
     needs: [commit-quality, security, production-smoke]
     runs-on: ubuntu-24.04
     timeout-minutes: 5
