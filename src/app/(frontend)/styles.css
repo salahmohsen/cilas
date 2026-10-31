@@ -525,32 +525,127 @@ body {
 }
 /* Who teaches it: the photo, name and role as one row; the bio below it,
    on the section's own edge like the rest of the course text. */
-.course-fellows {
-  display: grid;
-  gap: 2.5rem;
-  margin-top: 1.25rem;
+/* Who teaches it (docs/content-driven-card-layouts.md). The fellows' note
+   opens the section as a quote; then one card per fellow. Policy: content
+   sizes all. Cards stand alone in a list, so no region takes spare height. */
+.fellow-note {
+  margin: 1.25rem 0 0;
+  border-inline-start: 2px solid var(--foreground);
+  padding-inline-start: 1.25rem;
 }
-.course-fellow {
-  display: grid;
-  grid-template-columns: auto minmax(0, 1fr);
-  column-gap: 0.875rem;
-  align-items: center;
-}
-.course-fellow-head {
-  min-width: 0;
-}
-.course-fellow-bio {
-  grid-column: 1 / -1;
-  /* The description's own measure and size, so a bio sits on the same edges
-     as the text around it. */
-  max-width: 68ch;
-  font-size: var(--course-text-size);
-  line-height: 1.7;
-  margin-top: 1rem;
-  margin-inline: auto;
+.fellow-note-label {
   color: var(--text-secondary);
+  font-size: var(--text-sm, 0.875rem);
+  font-weight: 500;
+}
+.fellow-note-text {
+  display: grid;
+  gap: 0.75rem;
+  margin: 0.5rem 0 0;
+  font-family: var(--font-heading);
+  font-size: 1.2rem;
+  line-height: 1.55;
   text-wrap: pretty;
 }
+.fellow-cards {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  align-items: start;
+  gap: 1rem;
+  margin: 1.5rem 0 0;
+  padding: 0;
+  list-style: none;
+}
+.fellow-card-frame {
+  container: fellow-card / inline-size;
+  display: grid;
+  min-width: 0;
+}
+/* Narrow: photo beside the name, then the bio and the link across the card. */
+.fellow-card {
+  /* One padding for every cell, so name, bio and link share edges. */
+  --fellow-pad: clamp(1rem, 4cqi, 1.5rem);
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  grid-template-areas:
+    'photo heading'
+    'bio bio'
+    'footer footer';
+  align-items: center;
+  column-gap: 1rem;
+  min-width: 0;
+  overflow: clip;
+  border: 1px solid var(--border);
+  border-radius: calc(var(--radius) * 3);
+  background: var(--background);
+}
+.fellow-card-photo {
+  grid-area: photo;
+  align-self: start;
+  margin: var(--fellow-pad) 0 var(--fellow-pad);
+  margin-inline-start: var(--fellow-pad);
+}
+.fellow-card-heading {
+  grid-area: heading;
+  min-width: 0;
+  padding-inline-end: var(--fellow-pad);
+}
+.fellow-card-name {
+  margin: 0;
+  font-family: var(--font-heading);
+  font-size: clamp(1.25rem, 1rem + 2cqi, 1.6rem);
+  font-weight: 500;
+  line-height: 1.25;
+  overflow-wrap: anywhere;
+}
+:lang(ar) .fellow-card-name {
+  line-height: 1.5;
+}
+.fellow-card-role {
+  margin: 0.25rem 0 0;
+  color: var(--text-muted);
+  font-size: var(--text-sm, 0.875rem);
+}
+.fellow-card-bio {
+  grid-area: bio;
+  min-width: 0;
+  padding: 0 var(--fellow-pad) var(--fellow-pad);
+  color: var(--text-secondary);
+  font-size: var(--course-text-size, 1.1rem);
+  line-height: 1.7;
+  text-wrap: pretty;
+}
+/* The footer owns the rule above it; the cells above have none. */
+.fellow-card-footer {
+  grid-area: footer;
+  border-block-start: 1px solid var(--border);
+  padding: 0.75rem var(--fellow-pad);
+}
+.fellow-card-footer a {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  min-height: 2.75rem;
+}
+/* Wide: the photo keeps its own column; name, bio and link share one edge. */
+@container fellow-card (width > 34rem) {
+  .fellow-card {
+    grid-template-areas:
+      'photo heading'
+      'photo bio'
+      'footer footer';
+    align-items: start;
+    column-gap: 1.5rem;
+  }
+  .fellow-card-heading {
+    padding-block-start: var(--fellow-pad);
+  }
+  .fellow-card-bio {
+    padding-block-start: 1rem;
+    padding-inline-start: 0;
+  }
+}
+
 /* A photo's edge: pure black or white at a tenth, never a tinted grey. */
 .course-fellow-photo {
   display: inline-flex;
@@ -936,12 +1031,6 @@ a.bridge-year:hover > :first-child {
 }
 .course-apply:active {
   scale: 0.96;
-}
-
-.course-note {
-  border-radius: calc(var(--radius) * 2);
-  background: var(--surface-muted, var(--muted));
-  padding: 1.25rem 1.5rem;
 }
 
 /* The season mark: the one coloured thing on the page. */

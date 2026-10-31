@@ -1,6 +1,7 @@
 import { personAvatarSeed } from '@/lib/avatar'
 import {
   ArrowLeft,
+  ArrowRight,
   CalendarDays,
   Clock,
   Languages,
@@ -257,52 +258,73 @@ export const CourseView: React.FC<{
     </section>
   )
 
-  // Each fellow with their whole bio: who teaches a course matters to it.
-  const fellowsSection = fellows.length ? (
-    <section aria-labelledby="course-teachers" className="mt-12" {...pe('fellows')}>
-      <h2 className="course-heading" id="course-teachers">
-        {t('whoTeaches')}
-      </h2>
-      <ul className="course-fellows">
-        {fellows.map((person) => {
-          const hasBio = Boolean(textOf(person.bio).trim())
-          return (
-            <li className="course-fellow" key={person.id}>
-              <Link
-                aria-hidden
-                className="course-fellow-photo"
-                href={`/people/${person.slug}`}
-                tabIndex={-1}
-              >
-                <Avatar
-                  fallbackSeed={personAvatarSeed(person.id)}
-                  name={person.name}
-                  size="lg"
-                  src={photoOf(person)}
-                />
-              </Link>
-              <div className="course-fellow-head">
-                <h3 className="text-base font-medium">
-                  <Link
-                    className="underline-offset-4 hover:underline"
-                    href={`/people/${person.slug}`}
-                  >
-                    {person.name}
-                  </Link>
-                </h3>
-                <p className="text-sm text-[var(--text-muted)]">{t('fellow')}</p>
-              </div>
-              {hasBio ? (
-                <div className="course-fellow-bio" dir="auto">
-                  <RichTextField className="grid gap-3 [&_p]:m-0" data={person.bio} />
-                </div>
-              ) : null}
-            </li>
-          )
-        })}
-      </ul>
-    </section>
-  ) : null
+  // Who teaches it: the fellows' note to the class, then one card per fellow
+  // with their whole bio. Cards size to their content (no shared height);
+  // each card picks its composition from its own width.
+  const note = course.facilitator_note?.trim()
+  const fellowsSection =
+    fellows.length || note ? (
+      <section aria-labelledby="course-teachers" className="mt-12" {...pe('fellows')}>
+        <h2 className="course-heading" id="course-teachers">
+          {t('whoTeaches')}
+        </h2>
+        {note ? (
+          <figure className="fellow-note" {...pe('facilitator_note')}>
+            <figcaption className="fellow-note-label">{t('note')}</figcaption>
+            <blockquote className="fellow-note-text" dir="auto">
+              {note.split(/\n\s*\n/).map((p, i) => (
+                <p className="whitespace-pre-line" key={i}>
+                  {p}
+                </p>
+              ))}
+            </blockquote>
+          </figure>
+        ) : null}
+        {fellows.length ? (
+          <ul className="fellow-cards">
+            {fellows.map((person) => {
+              const hasBio = Boolean(textOf(person.bio).trim())
+              return (
+                <li className="fellow-card-frame" key={person.id}>
+                  <article className="fellow-card" aria-labelledby={`fellow-${person.id}`}>
+                    <Link
+                      aria-hidden
+                      className="fellow-card-photo course-fellow-photo"
+                      href={`/people/${person.slug}`}
+                      tabIndex={-1}
+                    >
+                      <Avatar
+                        fallbackSeed={personAvatarSeed(person.id)}
+                        name={person.name}
+                        size="xl"
+                        src={photoOf(person)}
+                      />
+                    </Link>
+                    <header className="fellow-card-heading">
+                      <h3 className="fellow-card-name" dir="auto" id={`fellow-${person.id}`}>
+                        {person.name}
+                      </h3>
+                      <p className="fellow-card-role">{t('fellow')}</p>
+                    </header>
+                    {hasBio ? (
+                      <div className="fellow-card-bio" dir="auto">
+                        <RichTextField className="grid gap-3 [&_p]:m-0" data={person.bio} />
+                      </div>
+                    ) : null}
+                    <footer className="fellow-card-footer">
+                      <Link className="home-more" href={`/people/${person.slug}`}>
+                        {t('viewProfile')}
+                        <ArrowRight aria-hidden className="rtl:-scale-x-100" size={14} />
+                      </Link>
+                    </footer>
+                  </article>
+                </li>
+              )
+            })}
+          </ul>
+        ) : null}
+      </section>
+    ) : null
 
   const factsCard = (
     <section aria-label={t('details')} className="course-side">
@@ -524,25 +546,6 @@ export const CourseView: React.FC<{
               </h2>
               <div dir={dir} lang={lang} {...pe('description')}>
                 <RichTextField className="article-prose mt-4" data={course.description} />
-              </div>
-            </section>
-          ) : null}
-
-          {course.facilitator_note ? (
-            <section
-              aria-labelledby="course-note"
-              className="course-note mt-10"
-              {...pe('facilitator_note')}
-            >
-              <h2 className="font-sans text-sm font-medium" id="course-note">
-                {t('note')}
-              </h2>
-              <div className="mt-3 grid gap-3 text-[0.95rem] leading-relaxed" dir="auto">
-                {course.facilitator_note.split(/\n\s*\n/).map((p, i) => (
-                  <p className="whitespace-pre-line" key={i}>
-                    {p}
-                  </p>
-                ))}
               </div>
             </section>
           ) : null}

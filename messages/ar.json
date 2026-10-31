@@ -399,6 +399,7 @@
     },
     "allInCycle": "كل مقررات هذه الدورة ({count, number, digits})",
     "whoTeaches": "مَن يقدّم المقرر",
+    "viewProfile": "الملف الشخصي",
     "feedFilterBy": "تصفية مسار المقرر",
     "feedMaterial": "للتحضير",
     "feedShowAll": "إظهار الكل",

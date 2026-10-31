@@ -399,6 +399,7 @@
     },
     "allInCycle": "See all {count} courses of this cycle",
     "whoTeaches": "Who teaches it",
+    "viewProfile": "View profile",
     "feedFilterBy": "Filter the syllabus",
     "feedMaterial": "To prepare",
     "feedShowAll": "Show all",
