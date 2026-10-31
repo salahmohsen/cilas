@@ -88,6 +88,15 @@ jobs:
           node-version: 22
           cache: pnpm
       - run: pnpm install --frozen-lockfile
+      - name: Read Playwright version
+        id: playwright
+        run: echo "version=$(pnpm exec playwright --version | awk '{print $2}')" >> "$GITHUB_OUTPUT"
+      # Browser download only; apt packages are still installed by --with-deps.
+      # Saved on a miss from any branch, so main seeds it for pull requests.
+      - uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830 # v4
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-${{ runner.os }}-${{ steps.playwright.outputs.version }}
       - run: pnpm exec playwright install --with-deps chromium
       - name: Check registration card layout in Chromium
         run: node --test tests/poster-layout.test.mjs
@@ -95,6 +104,18 @@ jobs:
         run: |
           . ./scripts/smoke-test-env.sh
           NODE_ENV=development pnpm exec tsx scripts/bootstrap-smoke.ts
+      # Turbopack's build cache lives in .next/cache. Only pushes to main save
+      # it, so pull requests always restore main's newest cache and do not
+      # fill the 10 GB repository cache quota with one entry per push.
+      - name: Restore Next.js build cache
+        id: next-cache
+        uses: actions/cache/restore@0057852bfaa89a56745cba8c7296529d2fc39830 # v4
+        with:
+          path: .next/cache
+          key: nextjs-${{ runner.os }}-${{ hashFiles('pnpm-lock.yaml') }}-${{ github.sha }}
+          restore-keys: |
+            nextjs-${{ runner.os }}-${{ hashFiles('pnpm-lock.yaml') }}-
+            nextjs-${{ runner.os }}-
       - name: Build production application
         run: |
           . ./scripts/smoke-test-env.sh
@@ -103,6 +124,12 @@ jobs:
         run: |
           . ./scripts/smoke-test-env.sh
           pnpm test:production
+      - name: Save Next.js build cache
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main' && steps.next-cache.outputs.cache-hit != 'true'
+        uses: actions/cache/save@0057852bfaa89a56745cba8c7296529d2fc39830 # v4
+        with:
+          path: .next/cache
+          key: nextjs-${{ runner.os }}-${{ hashFiles('pnpm-lock.yaml') }}-${{ github.sha }}
 
   deploy-production:
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
