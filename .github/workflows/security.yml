@@ -13,6 +13,38 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  # Pull requests that only change documentation skip the slow jobs. The gate
+  # fails open: any error, an empty list or 3000+ files means "run everything".
+  # A skipped job reports success, so a docs-only diff can never hide a code
+  # change; commit-quality (formatting of the docs) always runs. Pushes to main
+  # skip this job and always run everything, including the deploy.
+  changes:
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 2
+    permissions:
+      contents: read
+      pull-requests: read
+    outputs:
+      docs_only: ${{ steps.diff.outputs.docs_only }}
+    steps:
+      - id: diff
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+        run: |
+          docs_only=false
+          if files=$(gh api --paginate "repos/$GITHUB_REPOSITORY/pulls/$PR_NUMBER/files" \
+              --jq '.[] | .filename, (.previous_filename // empty)') \
+            && [ -n "$files" ] && [ "$(printf '%s\n' "$files" | wc -l)" -lt 3000 ]; then
+            # Documentation folders and top-level Markdown files only.
+            if ! printf '%s\n' "$files" | grep -qvE '^(docs|todos|reports|research_notes)/|^[A-Za-z0-9_.-]+\.md$'; then
+              docs_only=true
+            fi
+          fi
+          echo "docs_only=$docs_only" >> "$GITHUB_OUTPUT"
+          echo "docs_only=$docs_only"
+
   commit-quality:
     runs-on: ubuntu-24.04
     timeout-minutes: 10
@@ -39,6 +71,8 @@ jobs:
         run: pnpm check:commit-quality "$BASE_SHA"
 
   security:
+    needs: changes
+    if: ${{ !cancelled() && (github.event_name != 'pull_request' || needs.changes.outputs.docs_only != 'true') }}
     runs-on: ubuntu-24.04
     timeout-minutes: 20
     steps:
@@ -65,6 +99,8 @@ jobs:
           pnpm test:unit --reporter=dot
 
   production-smoke:
+    needs: changes
+    if: ${{ !cancelled() && (github.event_name != 'pull_request' || needs.changes.outputs.docs_only != 'true') }}
     runs-on: ubuntu-24.04
     timeout-minutes: 20
     services:
