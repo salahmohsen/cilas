@@ -459,8 +459,13 @@ body {
 }
 
 .course-cover {
-  width: 100%;
+  display: block;
+  /* The whole image, never cropped: a tall poster shrinks to fit the
+     height cap instead of filling the column. */
+  width: auto;
+  max-width: 100%;
   height: auto;
+  max-height: min(75svh, 40rem);
   object-fit: contain;
   border-radius: calc(var(--radius) * 2);
 }
