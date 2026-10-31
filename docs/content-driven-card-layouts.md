@@ -252,12 +252,19 @@ The card is a stack of boxes divided by 1px ink rules. Each rule has one owner (
 
 ### Notice row
 
-A notice that people must not miss (the fellows' note: fees, travel, forms) closes the card, just above the strip. Its heading row is a white label box (paper, ink rule at its inline end, body font at 700) beside a band of still hazard stripes: `repeating-linear-gradient(-45deg, colour 0 1.125rem, ink 1.125rem 1.875rem)` in the card's own colour. The stripes do not move. The notice text sits below on paper in the same face, size, and colour as the bio, and owns no extra rule. This band is the one patterned surface allowed on a card; use it only for a notice.
+A notice that people must not miss (the fellows' note: fees, travel, forms) closes the card, just above the strip. Its heading row has three parts:
+
+1. A square icon box (`2.75rem`, paper, a message icon at 18px, ink rule at its inline end).
+2. The label box (paper, body font at 700, `0.9375rem`).
+3. A band of still hazard stripes filling the rest of the row: `repeating-linear-gradient(-45deg, #ffb71b 0 1rem, paper 1rem 2rem)`. The stripes are always the palette yellow with paper, whatever the card's colour: softer on the eye than ink, still read as a site warning. They do not move.
+
+On a card with a side photo, the icon and label boxes together are exactly as wide as the photo column (`calc(min(36%, 18rem) + 1px)`, the 1px being the text column's rule), so the stripes start on that rule. The notice text sits below on paper in the same face, size, and colour as the bio. This band is the one patterned surface allowed on a card; use it only for a notice.
 
 ### Behaviour
 
 - The title enters with Arc's `InViewTitle` (`variant="line"`, `once={false}`), the same entrance as the poster titles. Wrap it in a `dir="auto"` element that carries the title's type, and set `font: inherit` on the heading it renders.
 - The image scales to 1.03 on hover with a fine pointer, and not at all with reduced motion.
+- The action's arrow steps 3px toward the reading direction on hover and keyboard focus (`translate`, `--duration-fast`), and stays still with reduced motion.
 - Keyboard focus on the action or card link: `outline: 3px solid var(--poster-ink)` with `outline-offset: -3px`, inside the outline.
 - Compose from the card's container width, not the viewport: stacked below `34rem`, side by side above it.
 
