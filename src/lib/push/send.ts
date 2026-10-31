@@ -11,6 +11,21 @@ import en from '../../../messages/en.json'
 /** The Web Push limit is about 4 KB; stay well under it. */
 const MAX_BYTES = 3500
 const ICON = '/assets/icons/icon-192.png'
+/** A link longer than this is not worth the room in a push: the device opens home. */
+const MAX_URL_BYTES = 512
+
+/**
+ * A path of this site, or home. `//host` and `/\\host` are addresses of other
+ * sites to a browser, so they do not count as paths.
+ */
+const pathOf = (link: string | null | undefined): string =>
+  link &&
+  link.startsWith('/') &&
+  !link.startsWith('//') &&
+  !link.startsWith('/\\') &&
+  Buffer.byteLength(link) <= MAX_URL_BYTES
+    ? link
+    : '/'
 
 /** What a stored notification carries into a push: no more than the bell shows. */
 export type PushNote = {
@@ -65,14 +80,17 @@ export const pushBody = (note: PushNote, locale: string | null | undefined): str
       title,
       body: description ?? '',
       // A path stays on this site: the service worker resolves it against its own origin.
-      url: note.link?.startsWith('/') ? note.link : '/',
+      url: pathOf(note.link),
       tag: `cilas-${note.id}`,
       icon: ICON,
     })
   let description = note.description?.trim() || null
   let json = make(description)
+  // Every other field is small (the title is a fixed label, the url is capped),
+  // so cutting the line always ends: an empty line leaves a few hundred bytes.
   while (description && Buffer.byteLength(json) > MAX_BYTES) {
-    description = `${description.slice(0, Math.floor(description.length * 0.7)).trimEnd()}…`
+    const cut = description.slice(0, Math.floor(description.length * 0.7)).trimEnd()
+    description = cut.length > 1 ? `${cut}…` : null
     json = make(description)
   }
   return json
