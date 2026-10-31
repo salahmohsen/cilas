@@ -3,7 +3,7 @@
 import { useEffect, useRef } from 'react'
 import { useTranslations } from 'next-intl'
 import { AnimatePresence, motion, useReducedMotion } from 'motion/react'
-import { Paperclip, X } from 'lucide-react'
+import { X } from 'lucide-react'
 
 import { motionTokens } from '@/components/arc/lib/motion-tokens'
 
@@ -12,8 +12,8 @@ import styles from './space.module.css'
 const fade = { duration: motionTokens.duration.instant }
 
 /**
- * The files picked in a composer, under it: an image as a thumbnail, any
- * other file as a chip, each with its own remove button.
+ * The photos picked in a composer, under it: a thumbnail each, with its own
+ * remove button.
  */
 export function AttachmentTray({
   files,
@@ -30,7 +30,6 @@ export function AttachmentTray({
     <ul className={styles.tray} aria-label={t('attachments')}>
       <AnimatePresence initial={false}>
         {files.map((file) => {
-          const image = file.type.startsWith('image/')
           const remove = (
             <button
               type="button"
@@ -45,7 +44,7 @@ export function AttachmentTray({
             <motion.li
               key={`${file.name}-${file.size}-${file.lastModified}`}
               layout={!reduced}
-              className={image ? styles.trayThumb : styles.trayChip}
+              className={styles.trayThumb}
               initial={reduced ? { opacity: 0 } : { opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
               exit={
@@ -55,14 +54,7 @@ export function AttachmentTray({
               }
               transition={reduced ? fade : motionTokens.spring.snappy}
             >
-              {image ? (
-                <Preview file={file} />
-              ) : (
-                <>
-                  <Paperclip size={14} aria-hidden="true" />
-                  <bdi>{file.name}</bdi>
-                </>
-              )}
+              <Preview file={file} />
               {remove}
             </motion.li>
           )

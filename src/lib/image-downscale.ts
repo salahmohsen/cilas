@@ -1,18 +1,20 @@
-import { DOWNSCALE_EDGE, DOWNSCALE_OVER } from '@/lib/space-file-limits'
+import { IMAGE_EDGE, IMAGE_QUALITY } from '@/lib/space-file-limits'
 
 const SHRINKABLE = new Set(['image/jpeg', 'image/png', 'image/webp'])
 
 const encode = (canvas: HTMLCanvasElement, type: string) =>
-  new Promise<Blob | null>((resolve) => canvas.toBlob(resolve, type, 0.85))
+  new Promise<Blob | null>((resolve) => canvas.toBlob(resolve, type, IMAGE_QUALITY / 100))
 
 /**
- * Shrinks a big photo in the browser before upload: over 2 MB, at most 2560
- * px on the long side, WebP (JPEG where the browser cannot write WebP) at
- * quality 0.85. The original stays when the new file is not smaller. GIFs and
- * other files pass through; so does any photo the browser cannot decode.
+ * Shrinks a photo in the browser before upload: at most IMAGE_EDGE px on the
+ * long side, turned upright, WebP (JPEG where the browser cannot write WebP)
+ * at the quality the server uses. Drawing on a canvas drops EXIF and GPS data.
+ * The original stays when the new file is not smaller; the server (the
+ * space-files collection) is the authority and shrinks it again. Any file the
+ * browser cannot decode passes through for the server to judge.
  */
 export const downscaleImage = async (file: File): Promise<File> => {
-  if (!SHRINKABLE.has(file.type) || file.size <= DOWNSCALE_OVER) return file
+  if (!SHRINKABLE.has(file.type)) return file
   let bitmap: ImageBitmap
   try {
     bitmap = await createImageBitmap(file, { imageOrientation: 'from-image' })
@@ -20,7 +22,7 @@ export const downscaleImage = async (file: File): Promise<File> => {
     return file
   }
   try {
-    const scale = Math.min(1, DOWNSCALE_EDGE / Math.max(bitmap.width, bitmap.height))
+    const scale = Math.min(1, IMAGE_EDGE / Math.max(bitmap.width, bitmap.height))
     const canvas = document.createElement('canvas')
     canvas.width = Math.max(1, Math.round(bitmap.width * scale))
     canvas.height = Math.max(1, Math.round(bitmap.height * scale))
