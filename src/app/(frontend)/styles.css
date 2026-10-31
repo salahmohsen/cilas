@@ -626,7 +626,7 @@ body {
 .fellow-card .fellow-card-name-reveal {
   color: inherit;
 }
-.fellow-card-name:dir(rtl) {
+.fellow-card-name[dir='rtl'] {
   line-height: 1.35;
   letter-spacing: 0;
 }
@@ -698,7 +698,6 @@ body {
 .fellow-card-quote {
   display: grid;
   gap: 0.75rem;
-  max-width: calc(68ch + var(--notice-icon));
   margin: 0;
   padding: var(--poster-pad);
   /* The note's text starts on the label's edge, after the icon box. */
@@ -708,6 +707,16 @@ body {
   font-size: var(--course-text-size, 1.1rem);
   line-height: 1.7;
   text-wrap: pretty;
+}
+/* The measure sits on the paragraphs, so the box fills the row and the text
+   starts on its own side: an English note on an Arabic page runs from the
+   left. That side has no icon box, so the text keeps the plain inset. */
+.fellow-card-quote > * {
+  max-width: 68ch;
+}
+[dir='rtl'] .fellow-card-quote[dir='ltr'],
+[dir='ltr'] .fellow-card-quote[dir='rtl'] {
+  padding-inline-start: var(--poster-pad);
 }
 /* The bio on paper; the bio owns the rule above it. */
 .fellow-card-bio {

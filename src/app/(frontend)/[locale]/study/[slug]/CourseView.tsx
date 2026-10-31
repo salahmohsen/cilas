@@ -27,6 +27,7 @@ import {
 import { AvatarFallback } from '@/components/person/avatar-fallback'
 import { photoOf } from '@/components/person/contributors'
 import { POSTER_COLORS } from '@/lib/poster-colors'
+import { textDirection } from '@/lib/text-direction'
 import { RichTextField } from '@/components/RichTextField'
 import { SEASON_ICONS } from '@/components/season-icon'
 import { ShareBar } from '@/components/share-bar'
@@ -269,6 +270,7 @@ export const CourseView: React.FC<{
   // The fellows' note closes the card: a white label box beside moving hazard
   // stripes, then the words on paper. With one fellow it ends that fellow's card; with several
   // it is its own card after theirs.
+  const noteDir = note ? textDirection(note) : 'ltr'
   const noteBlock = note ? (
     <figure className="fellow-card-note" {...pe('facilitator_note')}>
       <figcaption className="fellow-card-hazard">
@@ -279,7 +281,11 @@ export const CourseView: React.FC<{
           <span className="fellow-card-hazard-label">{t('note')}</span>
         </span>
       </figcaption>
-      <blockquote className="fellow-card-quote" dir="auto">
+      <blockquote
+        className="fellow-card-quote"
+        dir={noteDir}
+        lang={noteDir === 'rtl' ? 'ar' : 'en'}
+      >
         {note.split(/\n\s*\n/).map((p, i) => (
           <p className="whitespace-pre-line" key={i}>
             {p}
@@ -336,7 +342,7 @@ export const CourseView: React.FC<{
                       <div className="fellow-card-main">
                         <div className="fellow-card-panel">
                           {/* The poster titles' entrance: each line rises in when the card is in view. */}
-                          <div className="fellow-card-name" dir="auto">
+                          <div className="fellow-card-name" dir={textDirection(person.name)}>
                             <InViewTitle
                               as="h3"
                               className="fellow-card-name-reveal"
