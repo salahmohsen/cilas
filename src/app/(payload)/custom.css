@@ -123,3 +123,29 @@
   --radius-3xl: calc(var(--radius) * 2.2);
   --radius-4xl: calc(var(--radius) * 2.6);
 }
+
+/* Top bar links (src/components/admin/work-links.tsx). */
+.cilas-work-links {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-inline-end: 8px;
+}
+.cilas-work-links a {
+  padding: 6px 10px;
+  border-radius: var(--pt-radius-ctl, 8px);
+  color: var(--theme-elevation-600);
+  font-size: 13px;
+  text-decoration: none;
+  white-space: nowrap;
+}
+.cilas-work-links a:hover,
+.cilas-work-links a:focus-visible {
+  background: color-mix(in srgb, var(--theme-elevation-500) 10%, transparent);
+  color: var(--theme-text);
+}
+@media (max-width: 700px) {
+  .cilas-work-links {
+    display: none;
+  }
+}
