@@ -17,6 +17,7 @@ import { RichField } from '@/components/rich-field'
 import { bioBaseline, bioToSend } from '@/components/profile/bio'
 import type { ProfileMessages } from '@/components/profile/messages'
 import { Select } from '@/components/select'
+import { useSettingsSection } from '@/components/settings/settings-shell'
 import { SOCIAL_PLATFORMS } from '@/fields/social'
 import type { ProfileError, ProfileView } from '@/lib/profile'
 
@@ -63,6 +64,22 @@ export function ProfileForm({ profile, messages: m, action, removePhotoAction, o
   const [bioEn, setBioEn] = useState(profile.bio.en)
   const [bioAr, setBioAr] = useState(profile.bio.ar)
   const [result, setResult] = useState<ProfileState>({ status: 'idle' })
+  // What is stored, as far as this form knows: the values a save last wrote.
+  // The settings page counts a field as changed when it differs from this.
+  const [base, setBase] = useState({
+    values: {
+      nameEn: profile.name.en,
+      nameAr: profile.name.ar,
+      website: profile.website,
+      socialLinks: profile.socialLinks,
+    } as Values,
+    bioEn: profile.bio.en,
+    bioAr: profile.bio.ar,
+  })
+  // Bumped by Discard so the editors start again from the stored bios.
+  const [editorKey, setEditorKey] = useState(0)
+  // How the last submit ended, for the settings page's Save, which awaits it.
+  const outcome = useRef<{ ok: boolean; message?: string } | null>(null)
   // The editor's own rendering of each stored bio, found on first use (it needs the
   // browser) and found again when the stored bio changes.
   const baselines = useRef<{ en?: [string, string]; ar?: [string, string] }>({})
@@ -106,13 +123,9 @@ export function ProfileForm({ profile, messages: m, action, removePhotoAction, o
     )
 
   const form = useForm({
-    defaultValues: {
-      nameEn: profile.name.en,
-      nameAr: profile.name.ar,
-      website: profile.website,
-      socialLinks: profile.socialLinks,
-    } as Values,
+    defaultValues: base.values,
     onSubmit: async ({ value }) => {
+      outcome.current = { ok: false }
       const data = new FormData()
       data.set('name_en', value.nameEn)
       data.set('name_ar', value.nameAr)
@@ -135,15 +148,45 @@ export function ProfileForm({ profile, messages: m, action, removePhotoAction, o
             ...meta,
             errorMap: { ...meta.errorMap, onServer: m.errors[next.error] },
           }))
+        outcome.current = { ok: false, message: m.errors[next.error] }
         focusFirstError()
         return
       }
+      outcome.current = { ok: true }
+      setBase({ values: value, bioEn, bioAr })
       router.refresh()
       onSaved?.()
     },
     // Every field at once, so Save names all that need fixing, and each rechecks as it changes.
     validators: { onChange: ({ value }) => check(value), onSubmit: ({ value }) => check(value) },
     onSubmitInvalid: focusFirstError,
+  })
+
+  const values = useSelector(form.store, (s) => s.values)
+  const changedCount =
+    (values.nameEn !== base.values.nameEn ? 1 : 0) +
+    (values.nameAr !== base.values.nameAr ? 1 : 0) +
+    (values.website !== base.values.website ? 1 : 0) +
+    (JSON.stringify(values.socialLinks) !== JSON.stringify(base.values.socialLinks) ? 1 : 0) +
+    (bioEn !== base.bioEn ? 1 : 0) +
+    (bioAr !== base.bioAr ? 1 : 0)
+  // Inside the settings page the shell's save bar saves and discards; alone
+  // (the space drawer) the form keeps its own Save button.
+  const embedded = useSettingsSection('profile', {
+    count: changedCount,
+    save: async () => {
+      outcome.current = null
+      await form.handleSubmit()
+      const ended = outcome.current as { ok: boolean; message?: string } | null
+      return ended?.ok ? { ok: true } : { ok: false, message: ended?.message }
+    },
+    discard: () => {
+      form.reset(base.values)
+      setBioEn(base.bioEn)
+      setBioAr(base.bioAr)
+      setEditorKey((k) => k + 1)
+      setResult({ status: 'idle' })
+    },
   })
 
   const attempts = useSelector(form.store, (s) => s.submissionAttempts)
@@ -241,17 +284,19 @@ export function ProfileForm({ profile, messages: m, action, removePhotoAction, o
       </div>
 
       <RichField
+        key={`en-${editorKey}`}
         label={m.bioEn}
         dir="ltr"
-        defaultMarkdown={profile.bio.en}
+        defaultMarkdown={base.bioEn}
         readOnly={profile.bioReadOnly?.en}
         description={profile.bioReadOnly?.en ? m.bioReadOnly : undefined}
         onChange={(value) => setBioEn(bioFor('en', value.markdown))}
       />
       <RichField
+        key={`ar-${editorKey}`}
         label={m.bioAr}
         dir="rtl"
-        defaultMarkdown={profile.bio.ar}
+        defaultMarkdown={base.bioAr}
         readOnly={profile.bioReadOnly?.ar}
         description={profile.bioReadOnly?.ar ? m.bioReadOnly : undefined}
         onChange={(value) => setBioAr(bioFor('ar', value.markdown))}
@@ -344,19 +389,27 @@ export function ProfileForm({ profile, messages: m, action, removePhotoAction, o
         )}
       </form.Field>
 
-      <div className={styles.foot}>
-        <Button type="submit" loading={submitting}>
-          {m.save}
-        </Button>
-        <p role="status" className={styles.saved}>
-          {!submitting && result.status === 'saved' ? m.saved : ''}
-        </p>
-        {lineError && (
+      {embedded ? (
+        lineError && (
           <p role="alert" className={styles.lineError}>
             {lineError}
           </p>
-        )}
-      </div>
+        )
+      ) : (
+        <div className={styles.foot}>
+          <Button type="submit" loading={submitting}>
+            {m.save}
+          </Button>
+          <p role="status" className={styles.saved}>
+            {!submitting && result.status === 'saved' ? m.saved : ''}
+          </p>
+          {lineError && (
+            <p role="alert" className={styles.lineError}>
+              {lineError}
+            </p>
+          )}
+        </div>
+      )}
     </form>
   )
 }
