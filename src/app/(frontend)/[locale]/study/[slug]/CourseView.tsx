@@ -7,6 +7,7 @@ import {
   Languages,
   ListOrdered,
   MapPin,
+  MessageSquareText,
   type LucideIcon,
 } from 'lucide-react'
 import { useFormatter, useLocale, useTranslations } from 'next-intl'
@@ -271,7 +272,12 @@ export const CourseView: React.FC<{
   const noteBlock = note ? (
     <figure className="fellow-card-note" {...pe('facilitator_note')}>
       <figcaption className="fellow-card-hazard">
-        <span className="fellow-card-hazard-label">{t('note')}</span>
+        <span className="fellow-card-hazard-head">
+          <span className="fellow-card-hazard-icon">
+            <MessageSquareText aria-hidden size={18} strokeWidth={1.75} />
+          </span>
+          <span className="fellow-card-hazard-label">{t('note')}</span>
+        </span>
       </figcaption>
       <blockquote className="fellow-card-quote" dir="auto">
         {note.split(/\n\s*\n/).map((p, i) => (
@@ -357,7 +363,11 @@ export const CourseView: React.FC<{
                       <span className="fellow-card-role">{t('fellow')}</span>
                       <Link className="fellow-card-action" href={`/people/${person.slug}`}>
                         {t('viewProfile')}
-                        <ArrowRight aria-hidden className="rtl:-scale-x-100" size={16} />
+                        <ArrowRight
+                          aria-hidden
+                          className="fellow-card-arrow rtl:-scale-x-100"
+                          size={16}
+                        />
                       </Link>
                     </footer>
                   </article>

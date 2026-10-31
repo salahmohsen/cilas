@@ -648,31 +648,47 @@ body {
   min-height: 2.75rem;
   border-block-end: 1px solid var(--poster-ink);
 }
-.fellow-card-hazard-label {
+/* The heading: a square icon box and the label box, on paper. On wide cards
+   it is exactly as wide as the photo column, so the stripes start on the
+   text column's rule. */
+.fellow-card-hazard-head {
   display: flex;
   flex: 0 0 auto;
-  align-items: center;
-  padding: 0.5rem var(--poster-pad);
   border-inline-end: 1px solid var(--poster-ink);
   background: var(--poster-paper);
   color: var(--poster-ink);
+}
+.fellow-card-hazard-icon {
+  display: grid;
+  flex: 0 0 auto;
+  place-items: center;
+  inline-size: 2.75rem;
+  border-inline-end: 1px solid var(--poster-ink);
+}
+.fellow-card-hazard-label {
+  display: flex;
+  flex: 1 1 auto;
+  align-items: center;
+  min-width: 0;
+  padding: 0.5rem var(--poster-pad);
   font-family: var(--font-text);
   font-size: 0.9375rem;
   font-weight: 700;
   line-height: 1.3;
 }
-/* The stripes: a wide colour band and a narrower ink band at 45deg. */
+/* The stripes: the palette's yellow and paper at 45deg, the same on every
+   card. Softer on the eye than ink, still read as a site warning. */
 .fellow-card-hazard::after {
-  --hazard-color: 1.125rem;
-  --hazard-ink: 0.75rem;
+  --hazard-yellow: #ffb71b;
+  --hazard-band: 1rem;
   content: '';
   flex: 1 1 auto;
   min-width: 2.75rem;
-  background-color: var(--poster-color);
+  background-color: var(--hazard-yellow);
   background-image: repeating-linear-gradient(
     -45deg,
-    var(--poster-color) 0 var(--hazard-color),
-    var(--poster-ink) var(--hazard-color) calc(var(--hazard-color) + var(--hazard-ink))
+    var(--hazard-yellow) 0 var(--hazard-band),
+    var(--poster-paper) var(--hazard-band) calc(var(--hazard-band) * 2)
   );
 }
 .fellow-card-quote {
@@ -747,6 +763,23 @@ body {
   text-decoration: underline;
   text-underline-offset: 4px;
 }
+/* The arrow steps toward the reading direction on hover and keyboard focus. */
+.fellow-card-arrow {
+  transition: translate var(--duration-fast, 150ms) var(--ease-standard, ease-out);
+}
+.fellow-card-action:hover .fellow-card-arrow,
+.fellow-card-action:focus-visible .fellow-card-arrow {
+  translate: 3px 0;
+}
+.fellow-card-action:dir(rtl):hover .fellow-card-arrow,
+.fellow-card-action:dir(rtl):focus-visible .fellow-card-arrow {
+  translate: -3px 0;
+}
+@media (prefers-reduced-motion: reduce) {
+  .fellow-card-arrow {
+    transition: none;
+  }
+}
 .fellow-card-action:focus-visible {
   outline: 3px solid var(--poster-ink);
   outline-offset: -3px;
@@ -769,6 +802,11 @@ body {
   }
   .fellow-card-main {
     border-inline-start: 1px solid var(--poster-ink);
+  }
+  /* The photo column's width plus the 1px rule the text column owns, so the
+     heading's end rule sits on that rule. */
+  .fellow-card-hazard-head {
+    flex-basis: calc(min(36%, 18rem) + 1px);
   }
 }
 
