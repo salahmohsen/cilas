@@ -80,10 +80,15 @@ const connect = (): Promise<void> => {
     if (hub.client !== client) return
     log('listener lost, reconnecting', err)
     hub.client = null
-    client.removeAllListeners()
     client.end().catch(() => {})
     scheduleReconnect()
   }
+  // Attached before connecting: pg emits `error` on a dead socket, and with no
+  // listener that throws and stops the process. While connecting, `drop` does
+  // nothing: the failed connect or LISTEN query below schedules the retry.
+  client.on('notification', (msg) => deliver(msg.payload))
+  client.on('error', drop)
+  client.on('end', () => drop())
   hub.connecting = client
     .connect()
     .then(() => client.query(`LISTEN ${NOTIFICATION_CHANNEL}`))
@@ -91,9 +96,6 @@ const connect = (): Promise<void> => {
       const recovered = hub.delay > 1_000
       hub.client = client
       hub.delay = 1_000
-      client.on('notification', (msg) => deliver(msg.payload))
-      client.on('error', drop)
-      client.on('end', () => drop())
       log('listening')
       if (recovered) resyncAll()
     })
