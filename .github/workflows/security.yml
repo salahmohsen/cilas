@@ -53,7 +53,7 @@ jobs:
       - name: Check types
         run: |
           . ./scripts/search-test-env.sh
-          pnpm exec tsc --noEmit
+          pnpm typecheck
       - name: Lint
         run: pnpm lint
       - name: Unit tests
