@@ -69,6 +69,14 @@ export const env = createEnv({
     TYPESENSE_HOST: z.string().default('localhost'),
     TYPESENSE_PORT: z.coerce.number().default(8108),
     TYPESENSE_PROTOCOL: z.enum(['http', 'https']).default('http'),
+
+    // Optional: PostHog analytics (docs/analytics.md). The admin dashboard
+    // reads the numbers back through the Query API, and needs all three of
+    // these; without them its analytics widgets hide.
+    POSTHOG_API_HOST: z.url().optional(),
+    POSTHOG_PROJECT_ID: z.string().regex(/^\d+$/).optional(),
+    // A personal API key with the Query read scope only. Never public.
+    POSTHOG_PERSONAL_API_KEY: z.string().min(1).optional(),
   },
 
   // Read by the admin live-preview iframe, which postMessages back to Payload.
@@ -92,6 +100,13 @@ export const env = createEnv({
     // The Turnstile widget on the site's forms. Without it the forms send no
     // token, so a set TURNSTILE_SECRET_KEY would refuse every submission.
     NEXT_PUBLIC_TURNSTILE_SITE_KEY: z.string().min(1).optional(),
+
+    // PostHog's public project key (phc_...). Without it the site loads no
+    // analytics, makes no request and keeps nothing in the browser.
+    NEXT_PUBLIC_POSTHOG_KEY: z.string().min(1).optional(),
+    // PostHog's ingestion host: the site forwards /ingest to it, and the
+    // server sends errors to it. https://eu.i.posthog.com for the EU cloud.
+    NEXT_PUBLIC_POSTHOG_HOST: z.url().default('https://eu.i.posthog.com'),
   },
 
   experimental__runtimeEnv: {
@@ -103,6 +118,9 @@ export const env = createEnv({
     NEXT_PUBLIC_TYPESENSE_API_KEY: process.env.NEXT_PUBLIC_TYPESENSE_API_KEY,
 
     NEXT_PUBLIC_TURNSTILE_SITE_KEY: process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY,
+
+    NEXT_PUBLIC_POSTHOG_KEY: process.env.NEXT_PUBLIC_POSTHOG_KEY,
+    NEXT_PUBLIC_POSTHOG_HOST: process.env.NEXT_PUBLIC_POSTHOG_HOST,
   },
 
   // Stops a blank R2_SECRET_ACCESS_KEY in .env passing as an empty string and
