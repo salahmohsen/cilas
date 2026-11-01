@@ -264,7 +264,7 @@ On a card with a side photo, the icon and label boxes together are exactly as wi
 
 ### Sections around cards
 
-A section that holds a list rather than a single card (the course flow beside the fellow cards) takes the cards' frame, not their materials: 1px rule in `var(--foreground)` (ink in the light theme, still visible in the dark one), `1rem` radius, and no fill, so the page shows through. It follows the theme, because it is page structure, not a printed card. Its head (the course flow's title and filter row) is a printed band: palette yellow `#ffb71b` with ink text in both themes, white filter buttons with ink rules, and an ink rule under the band's last row. The rows below the band (months, sessions) stay on the page.
+A section that holds a list rather than a single card (the course flow beside the fellow cards) takes the cards' frame, not their materials: 1px rule in `var(--foreground)` (ink in the light theme, still visible in the dark one), `1rem` radius, and no fill, so the page shows through. It follows the theme, because it is page structure, not a printed card. Its head, filters and rows keep the component's own styling.
 
 ### Behaviour
 

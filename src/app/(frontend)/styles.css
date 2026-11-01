@@ -1952,30 +1952,6 @@ a.collection-item:hover {
   margin-inline: auto;
 }
 
-/* The course flow's head (title and filters) is a printed band in the
-   palette yellow, ink on yellow in both themes; the filter buttons stay
-   white, and the months below stay on the page. The band's last row owns
-   the rule under it. */
-.course-page .course-flow > header,
-.course-page .course-flow > header + div:has(> [role='group']) {
-  --poster-ink: #121212;
-  background: #ffb71b;
-  color: var(--poster-ink);
-}
-.course-page .course-flow > header p,
-.course-page .course-flow > header + div:has(> [role='group']) p {
-  color: var(--poster-ink);
-}
-.course-page .course-flow > header:not(:has(+ div > [role='group'])),
-.course-page .course-flow > header + div:has(> [role='group']) {
-  border-block-end: 1px solid var(--foreground);
-}
-.course-page .course-flow [role='group'] button:not([aria-pressed='true']) {
-  border-color: var(--poster-ink);
-  background: #ffffff;
-  color: var(--poster-ink);
-}
-
 /* The course flow wears the cards' frame: one 1px rule in the text colour
    (ink in the light theme) and the cards' 1rem radius, on the page itself
    with no surface fill. */
