@@ -1,5 +1,8 @@
+import { Cog } from 'lucide-react'
 import Link from 'next/link'
+import type { Payload } from 'payload'
 
+import { Avatar } from '@/components/arc/avatar/avatar'
 import { EmptyState } from '@/components/arc/empty-state/empty-state'
 import { MetricCard } from '@/components/arc/metric-card/metric-card'
 import { Timeline } from '@/components/arc/timeline/timeline'
@@ -143,7 +146,36 @@ export async function UpcomingEvents() {
   )
 }
 
-type Change = { id: string; title: string; collection: string; at: string }
+type Editor = { name: string; photo: string | null }
+type Change = {
+  id: string
+  title: string
+  collection: string
+  at: string
+  /** Who saved it last; null for a save before the editor was recorded. */
+  by: Editor | null
+}
+
+/** Names and portraits for account ids: the person behind the account, else the email's first part. */
+const editorsOf = async (payload: Payload, ids: number[]): Promise<Map<number, Editor>> => {
+  if (!ids.length) return new Map()
+  const { docs } = await payload.find({
+    collection: 'users',
+    where: { id: { in: ids } },
+    select: { email: true, person: true },
+    populate: { people: { name: true, photo: true }, media: { url: true } },
+    pagination: false,
+    depth: 2,
+    overrideAccess: true,
+  })
+  return new Map(
+    docs.map((user) => {
+      const person = typeof user.person === 'object' ? user.person : null
+      const photo = typeof person?.photo === 'object' ? (person.photo?.url ?? null) : null
+      return [user.id, { name: person?.name || user.email.split('@')[0], photo }]
+    }),
+  )
+}
 
 const recent = () =>
   cachedStat<Change[]>('recent-changes', async (payload) => {
@@ -151,7 +183,7 @@ const recent = () =>
       PIPELINE.map(async ({ slug, label }) => {
         const { docs } = await payload.find({
           collection: slug,
-          select: { title: true, updatedAt: true },
+          select: { title: true, updatedAt: true, last_edited_by: true },
           sort: '-updatedAt',
           limit: 8,
           depth: 0,
@@ -162,13 +194,21 @@ const recent = () =>
           title: doc.title,
           collection: label,
           at: doc.updatedAt,
+          editorId: typeof doc.last_edited_by === 'number' ? doc.last_edited_by : null,
         }))
       }),
     )
-    return lists
+    const latest = lists
       .flat()
       .sort((a, b) => b.at.localeCompare(a.at))
       .slice(0, 8)
+    const editors = await editorsOf(payload, [
+      ...new Set(latest.flatMap((c) => (c.editorId === null ? [] : [c.editorId]))),
+    ])
+    return latest.map(({ editorId, ...change }) => ({
+      ...change,
+      by: editorId === null ? null : (editors.get(editorId) ?? null),
+    }))
   })
 
 export async function RecentChanges() {
@@ -186,11 +226,17 @@ export async function RecentChanges() {
           now={Date.now()}
           timeZone={CAIRO}
           maxHeight={360}
-          events={changes.map(({ id, title, collection, at }) => ({
+          events={changes.map(({ id, title, collection, at, by }) => ({
             id,
             at,
-            title: `Edited ${title}`,
+            actor: by?.name ?? 'System',
+            title: `edited ${title}`,
             meta: collection,
+            icon: by ? (
+              <Avatar name={by.name} src={by.photo ?? undefined} size="sm" />
+            ) : (
+              <Cog size={14} aria-hidden />
+            ),
           }))}
         />
       )}

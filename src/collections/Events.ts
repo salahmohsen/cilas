@@ -8,6 +8,7 @@ import { slugField } from '@/fields/slug'
 import { httpUrl } from '@/fields/validators'
 import { revalidateEventAfterChange, revalidateEventAfterDelete } from '@/lib/revalidate-events'
 import { importFields } from '@/fields/import'
+import { lastEditedByField, stampLastEditor } from '@/fields/last-edited-by'
 
 const optionalUrl = (value: unknown) => (value ? httpUrl(value) : true)
 
@@ -46,10 +47,12 @@ export const Events: CollectionConfig = {
         return args
       },
     ],
+    beforeChange: [stampLastEditor],
     afterChange: [revalidateEventAfterChange],
     afterDelete: [revalidateEventAfterDelete],
   },
   fields: [
+    lastEditedByField,
     {
       name: 'tier',
       type: 'select',

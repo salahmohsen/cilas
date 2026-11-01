@@ -37,6 +37,7 @@ import {
   revalidateCoursesAfterChange,
   revalidateCoursesAfterDelete,
 } from '@/lib/revalidate-courses'
+import { lastEditedByField, stampLastEditor } from '@/fields/last-edited-by'
 
 /**
  * `courses.fellows` lists people, but the `fellow` role lives on the account
@@ -123,6 +124,7 @@ export const Courses: CollectionConfig = {
     },
   },
   fields: [
+    lastEditedByField,
     {
       label: 'Review',
       type: 'collapsible',
@@ -484,7 +486,7 @@ export const Courses: CollectionConfig = {
   hooks: {
     beforeOperation: courseReview.beforeOperation,
     beforeValidate: [addSelfAsFellow],
-    beforeChange: courseReview.beforeChange,
+    beforeChange: [...(courseReview.beforeChange ?? []), stampLastEditor],
     afterChange: [
       ...courseReview.afterChange,
       propagateFellowRole,

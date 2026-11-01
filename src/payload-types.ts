@@ -784,6 +784,7 @@ export interface Person {
  */
 export interface Course {
   id: number;
+  last_edited_by?: (number | null) | User;
   review?: {
     /**
      * Ready? Use “Submit for review”: an admin is emailed, and approves the course, asks for changes or declines it. Approving publishes it.
@@ -1207,6 +1208,47 @@ export interface Course {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "users".
+ */
+export interface User {
+  id: number;
+  /**
+   * Set by Google sign-in.
+   */
+  sub?: string | null;
+  person?: (number | null) | Person;
+  notification_preferences?:
+    | {
+        [k: string]: unknown;
+      }
+    | unknown[]
+    | string
+    | number
+    | boolean
+    | null;
+  roles: ('super_admin' | 'admin' | 'fellow' | 'member' | 'non_degree_seeking')[];
+  updatedAt: string;
+  createdAt: string;
+  email: string;
+  resetPasswordToken?: string | null;
+  resetPasswordExpiration?: string | null;
+  salt?: string | null;
+  hash?: string | null;
+  resetPasswordRequestedAt?: string | null;
+  loginAttempts?: number | null;
+  lockUntil?: string | null;
+  sessions?:
+    | {
+        id: string;
+        createdAt?: string | null;
+        expiresAt: string;
+      }[]
+    | null;
+  password?: string | null;
+  collection: 'users';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "cycles".
  */
 export interface Cycle {
@@ -1427,51 +1469,11 @@ export interface Governance {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "users".
- */
-export interface User {
-  id: number;
-  /**
-   * Set by Google sign-in.
-   */
-  sub?: string | null;
-  person?: (number | null) | Person;
-  notification_preferences?:
-    | {
-        [k: string]: unknown;
-      }
-    | unknown[]
-    | string
-    | number
-    | boolean
-    | null;
-  roles: ('super_admin' | 'admin' | 'fellow' | 'member' | 'non_degree_seeking')[];
-  updatedAt: string;
-  createdAt: string;
-  email: string;
-  resetPasswordToken?: string | null;
-  resetPasswordExpiration?: string | null;
-  salt?: string | null;
-  hash?: string | null;
-  resetPasswordRequestedAt?: string | null;
-  loginAttempts?: number | null;
-  lockUntil?: string | null;
-  sessions?:
-    | {
-        id: string;
-        createdAt?: string | null;
-        expiresAt: string;
-      }[]
-    | null;
-  password?: string | null;
-  collection: 'users';
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "articles".
  */
 export interface Article {
   id: number;
+  last_edited_by?: (number | null) | User;
   title: string;
   /**
    * When enabled, the slug will auto-generate from the title field on save and autosave.
@@ -1578,6 +1580,7 @@ export interface Article {
  */
 export interface Publication {
   id: number;
+  last_edited_by?: (number | null) | User;
   review?: {
     /**
      * Ready? Use “Submit for review”: an admin is emailed, and approves the publication, asks for changes or declines it. Approving publishes it.
@@ -1831,6 +1834,7 @@ export interface Newsletter {
  */
 export interface Event {
   id: number;
+  last_edited_by?: (number | null) | User;
   tier: 'owner' | 'community' | 'public';
   title: string;
   /**
@@ -2973,6 +2977,7 @@ export interface FormsSelect<T extends boolean = true> {
  * via the `definition` "courses_select".
  */
 export interface CoursesSelect<T extends boolean = true> {
+  last_edited_by?: T;
   review?:
     | T
     | {
@@ -3399,6 +3404,7 @@ export interface PlacesSelect<T extends boolean = true> {
  * via the `definition` "articles_select".
  */
 export interface ArticlesSelect<T extends boolean = true> {
+  last_edited_by?: T;
   title?: T;
   generateSlug?: T;
   slug?: T;
@@ -3459,6 +3465,7 @@ export interface ArticlesSelect<T extends boolean = true> {
  * via the `definition` "publications_select".
  */
 export interface PublicationsSelect<T extends boolean = true> {
+  last_edited_by?: T;
   review?:
     | T
     | {
@@ -3771,6 +3778,7 @@ export interface RedirectsSelect<T extends boolean = true> {
  * via the `definition` "events_select".
  */
 export interface EventsSelect<T extends boolean = true> {
+  last_edited_by?: T;
   tier?: T;
   title?: T;
   generateSlug?: T;

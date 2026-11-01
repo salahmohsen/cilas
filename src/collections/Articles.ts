@@ -26,6 +26,7 @@ import { reviewHooks, type ReviewOptions } from '@/lib/review-hooks'
 import { articleBodyFeatures } from '@/lexical/article-body'
 import type { Article } from '@/payload-types'
 import { importFields } from '@/fields/import'
+import { lastEditedByField, stampLastEditor } from '@/fields/last-edited-by'
 
 /**
  * A non-admin's new article always lists them as an author, so they keep
@@ -97,8 +98,10 @@ export const Articles: CollectionConfig = {
   hooks: {
     ...articleReview,
     beforeValidate: [addSelfAsAuthor],
+    beforeChange: [...(articleReview.beforeChange ?? []), stampLastEditor],
   },
   fields: [
+    lastEditedByField,
     { name: 'title', type: 'text', required: true, localized: true },
     slugField(),
     { name: 'cover_image', type: 'upload', relationTo: 'media', admin: { position: 'sidebar' } },
