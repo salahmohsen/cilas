@@ -2,6 +2,8 @@
 
 import { useEffect, useState } from 'react'
 
+import { SideCardApply } from '@/components/side-card'
+
 import { newTab } from './new-tab'
 
 /**
@@ -27,7 +29,11 @@ export function RegisterBar({
 
   useEffect(() => {
     // The details' Apply buttons (one per layout; only the visible one counts).
-    const buttons = [...document.querySelectorAll<HTMLElement>('.course-apply[data-primary]')]
+    const buttons = [
+      ...document.querySelectorAll<HTMLElement>(
+        '.course-apply[data-primary], [data-apply-primary]',
+      ),
+    ]
     if (!buttons.length) return
     const update = () => {
       const visible = buttons.filter((b) => b.offsetParent !== null)
@@ -51,15 +57,28 @@ export function RegisterBar({
       data-variant={variant}
       inert={!shown}
     >
-      <div className="min-w-0">
-        <span className="course-status" data-open>
-          {status}
-        </span>
-        {price ? <span className="course-register-price">{price}</span> : null}
-      </div>
-      <a className="course-apply" href={applyUrl} {...newTab(applyUrl)}>
-        {applyLabel}
-      </a>
+      {variant === 'side' ? (
+        <SideCardApply
+          applyLabel={applyLabel}
+          applyUrl={applyUrl}
+          newTab={Boolean(newTab(applyUrl).target)}
+          open
+          price={price}
+          status={status}
+        />
+      ) : (
+        <>
+          <div className="min-w-0">
+            <span className="course-status" data-open>
+              {status}
+            </span>
+            {price ? <span className="course-register-price">{price}</span> : null}
+          </div>
+          <a className="course-apply" href={applyUrl} {...newTab(applyUrl)}>
+            {applyLabel}
+          </a>
+        </>
+      )}
     </div>
   )
 }

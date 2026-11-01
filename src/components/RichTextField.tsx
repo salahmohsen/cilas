@@ -106,7 +106,7 @@ export const RichTextField: React.FC<{
     }
     return (
       <div
-        className={plain ? undefined : styles.columns}
+        className={plain ? undefined : `${styles.columns} rich-columns`}
         data-ratio={ratio}
         data-columns={count}
         data-profile-carousel={profileCarousel || undefined}
@@ -120,7 +120,7 @@ export const RichTextField: React.FC<{
     const { person } = node.fields
     if (!person || typeof person !== 'object' || !person.visible || !person.slug) return null
     return (
-      <ProfileCard person={person}>
+      <ProfileCard look="fellow" person={person}>
         {person.bio && (
           <RichTextField data={person.bio} plain className="article-prose article-prose--bio" />
         )}

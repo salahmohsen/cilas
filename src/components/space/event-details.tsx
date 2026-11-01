@@ -5,8 +5,8 @@ import { CalendarDays, MapPin, Video } from 'lucide-react'
 
 import { Badge } from '@/components/arc/badge/badge'
 import { CAIRO, cairoDay } from '@/lib/cairo-day'
-import { coverField } from '@/lib/event-cover'
 import { meetingService, placeHost } from '@/lib/event-place'
+import { POSTER_COLORS } from '@/lib/poster-colors'
 import { googleCalendarUrl, locationUrl } from '@/lib/space-event'
 import { absoluteUrl } from '@/lib/schema'
 import type { RsvpView } from '@/lib/spaces-data'
@@ -116,7 +116,9 @@ export async function EventPlace({ location, place }: { location: string; place:
       : (place ?? placeHost(url))
   return (
     <p className={styles.eventWhere}>
-      <Icon size={16} aria-hidden="true" />
+      <span className={styles.eventWhereIcon}>
+        <Icon size={16} aria-hidden="true" />
+      </span>
       {url ? (
         <a href={url} target="_blank" rel="noopener noreferrer" className={styles.eventLink}>
           <bdi>{name}</bdi>
@@ -129,11 +131,10 @@ export async function EventPlace({ location, place }: { location: string; place:
 }
 
 /**
- * The face every event card shares. With a cover, the photo fills the top
- * and dissolves into a field made from its own colour, which carries the
- * details in light text (the one place Spaces uses a gradient and blur, at
- * the members' request). Without one, the same layout sits on a quiet tonal
- * surface with a calendar leaf where the photo would be.
+ * The face every event card shares, in the poster look
+ * (docs/content-driven-card-layouts.md, section 7): the cover photo, or a
+ * calendar leaf, on top; the title on the card's colour; then the when and
+ * where, the answers and the event's words, each on paper under an ink rule.
  */
 export async function EventFace({
   title,
@@ -152,7 +153,10 @@ export async function EventFace({
   corner,
   className,
   layout,
+  color,
 }: {
+  /** The card's palette colour (POSTER_COLORS); yellow by default. */
+  color?: string
   title: string
   /** In the Events tab the name opens the post */
   titleHref?: string
@@ -169,7 +173,7 @@ export async function EventFace({
   children?: ReactNode
   /** The event's own words, under the answers */
   description?: ReactNode
-  /** One quiet control in the card's top corner */
+  /** One control beside the date, such as Add to calendar; the whole box is the button */
   corner?: ReactNode
   className?: string
   layout?: 'card' | 'detail'
@@ -185,7 +189,7 @@ export async function EventFace({
       data-layout={layout}
       data-cover={cover ? '' : undefined}
       data-over={over || undefined}
-      style={cover ? ({ '--event-field': coverField(cover.tone) } as CSSProperties) : undefined}
+      style={{ '--poster-color': color ?? POSTER_COLORS[0] } as CSSProperties}
     >
       {cover ? (
         <>
@@ -239,16 +243,20 @@ export async function EventFace({
               title
             )}
           </Heading>
+          {/* The when beside the calendar button, then the place, then the note:
+              each its own box. */}
           <div className={styles.eventFacts}>
-            {when}
+            <div className={styles.eventWhenRow}>
+              <div className={styles.eventWhenCell}>{when}</div>
+              {corner && <div className={styles.eventCalendarCell}>{corner}</div>}
+            </div>
             {where}
-            {note}
+            {note && <div className={styles.eventNoteCell}>{note}</div>}
           </div>
         </div>
         {children}
         {description}
       </div>
-      {corner && <div className={styles.eventCorner}>{corner}</div>}
     </section>
   )
 }
@@ -305,6 +313,7 @@ export async function EventDetails({
   const [t, locale] = await Promise.all([getTranslations('SpacePost'), getLocale()])
   return (
     <EventFace
+      color={POSTER_COLORS[post % POSTER_COLORS.length]}
       title={title}
       titleHref={titleHref}
       headingLevel={headingLevel}

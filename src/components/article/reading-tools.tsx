@@ -52,9 +52,12 @@ export function ReadingProgress({ target }: { target: string }) {
 export function ArticleContents({
   sections,
   container,
+  bare = false,
 }: {
   sections: Section[]
   container: string
+  /** Only the list: a side card's section names it. */
+  bare?: boolean
 }) {
   const t = useTranslations('Article')
   const [active, setActive] = useState<string | null>(null)
@@ -65,15 +68,23 @@ export function ArticleContents({
     headings.forEach((h, i) => {
       if (sections[i]) h.id = sections[i].id
     })
+    const text = document.getElementById(container)
+    // A section is current only while it is on screen: before the first
+    // heading reaches the line, and once the text has scrolled away, none is.
     const update = () => {
       const line = window.innerHeight / 3
       let current: string | null = null
       for (const h of headings) if (h.getBoundingClientRect().top <= line) current = h.id
+      if (text && text.getBoundingClientRect().bottom < line) current = null
       setActive(current)
     }
     update()
     window.addEventListener('scroll', update, { passive: true })
-    return () => window.removeEventListener('scroll', update)
+    window.addEventListener('resize', update)
+    return () => {
+      window.removeEventListener('scroll', update)
+      window.removeEventListener('resize', update)
+    }
   }, [container, sections])
 
   // rareui's BounceSidebar: the dot travels to the section in view.
@@ -82,13 +93,16 @@ export function ArticleContents({
       aria-label={t('contents')}
       className="text-sm leading-snug"
       items={sections.map((s) => ({ label: s.title, href: `#${s.id}` }))}
-      value={Math.max(
-        0,
-        sections.findIndex((s) => s.id === active),
-      )}
+      value={sections.findIndex((s) => s.id === active)}
     />
   )
 
+  if (bare)
+    return (
+      <nav aria-label={t('contents')} className="side-card-body">
+        {list}
+      </nav>
+    )
   return (
     <nav aria-label={t('contents')}>
       <details className="border-y border-border py-3 lg:hidden">
@@ -130,7 +144,7 @@ const subscribeStep = (onChange: () => void) => {
 }
 
 /** A− / A+ for the essay text, remembered in this browser. */
-export function TextSize({ target }: { target: string }) {
+export function TextSize({ target, cells = false }: { target: string; cells?: boolean }) {
   const t = useTranslations('Article')
   const step = useSyncExternalStore(subscribeStep, readStep, () => 1)
   const setStep = (update: (s: number) => number) => {
@@ -144,6 +158,29 @@ export function TextSize({ target }: { target: string }) {
   useEffect(() => {
     document.getElementById(target)?.style.setProperty('--reading-scale', String(SIZES[step]))
   }, [step, target])
+  if (cells)
+    return (
+      <div aria-label={t('textSize')} className="side-card-buttons" role="group">
+        <button
+          aria-label={t('smaller')}
+          className="side-card-button text-xs"
+          disabled={step === 0}
+          onClick={() => setStep((s) => s - 1)}
+          type="button"
+        >
+          <bdi dir="ltr">A−</bdi>
+        </button>
+        <button
+          aria-label={t('larger')}
+          className="side-card-button text-base"
+          disabled={step === SIZES.length - 1}
+          onClick={() => setStep((s) => s + 1)}
+          type="button"
+        >
+          <bdi dir="ltr">A+</bdi>
+        </button>
+      </div>
+    )
   const button =
     'inline-flex h-8 w-8 items-center justify-center rounded-full border border-border transition-colors hover:bg-[var(--surface-muted)] disabled:opacity-30'
   return (

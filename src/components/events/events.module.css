@@ -1,7 +1,7 @@
 .page {
-  max-width: 1180px;
+  max-width: var(--page-max);
   margin-inline: auto;
-  padding: var(--space-16) var(--space-6);
+  padding: var(--space-16) var(--page-gutter);
   display: grid;
   grid-template-columns: minmax(0, 1fr);
   gap: var(--space-12);
@@ -107,66 +107,26 @@
   gap: var(--space-8);
   min-width: 0;
 }
+.detailBody > :global(.article-prose) {
+  /* The body's 760px is the measure, so the text centers in a wide column. */
+  max-width: 760px;
+}
 .detailBody > :global(.article-prose) > :first-child {
   margin-block-start: 0;
 }
 .attendance {
   grid-area: rail;
-  display: grid;
-  gap: var(--space-6);
   min-width: 0;
   align-self: start;
 }
-.railSection {
-  display: grid;
-  gap: var(--space-3);
-  font-size: var(--text-sm);
-  line-height: var(--leading-body);
-}
-.railSection + .railSection {
-  border-top: 1px solid var(--border);
-  padding-top: var(--space-6);
-}
-.railSection h2,
 .share h2 {
   margin: 0;
   font-size: var(--text-sm);
   font-weight: 500;
   color: var(--text-secondary);
 }
-.railSection p {
-  margin: 0;
-  overflow-wrap: anywhere;
-}
-.railText {
-  display: grid;
-  gap: var(--space-2);
-}
 .secondary {
   color: var(--text-secondary);
-}
-.railLink {
-  display: inline-flex;
-  align-items: center;
-  gap: var(--space-2);
-  width: fit-content;
-  min-height: 44px;
-  color: var(--foreground);
-  text-decoration: underline;
-  text-underline-offset: 0.2em;
-}
-.register {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: var(--space-2);
-  min-height: 44px;
-  padding: var(--space-3) var(--space-4);
-  border-radius: var(--radius-control);
-  background: var(--foreground);
-  color: var(--background);
-  font-weight: 500;
-  text-decoration: none;
 }
 .speakerBio {
   margin: 0;
@@ -188,17 +148,25 @@
 @media (min-width: 80rem) {
   .detailLayout {
     max-width: none;
-    grid-template-columns: 17rem minmax(0, 760px);
+    grid-template-columns: 17rem minmax(0, 1fr);
     grid-template-areas: 'rail back' 'rail heading' 'rail body';
-    justify-content: center;
     column-gap: var(--space-16);
   }
+  /* The column beside the rail is wider than the text: each part keeps a
+     760px measure in its middle, and Columns blocks may use the full width. */
+  .detailBack,
+  .detailHeading,
+  .detailBody > * {
+    width: 100%;
+    max-width: 760px;
+    margin-inline: auto;
+  }
+
   .attendance {
     position: sticky;
     top: var(--space-24);
     max-height: calc(100dvh - 7rem);
     overflow-y: auto;
-    padding-inline-end: var(--space-2);
   }
 }
 .related {
@@ -234,4 +202,23 @@
   .page {
     padding: var(--space-10) var(--space-4);
   }
+}
+
+/* Speakers: one profile card a row, wide enough for its side-by-side layout. */
+.speakers {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.speakers > li {
+  display: flex;
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+}
+.speakers > li > * {
+  flex: 1;
 }

@@ -1,5 +1,5 @@
 import { getFormatter, getTranslations } from 'next-intl/server'
-import { ArrowUpRight } from 'lucide-react'
+import { ArrowDown, ArrowUpRight } from 'lucide-react'
 import type { Event } from '@/payload-types'
 import { EventWhen } from '@/components/space/event-details'
 import { cairoInstant } from '@/lib/cairo-day'
@@ -7,7 +7,11 @@ import { eventTiming } from '@/lib/events'
 import { mapEmbedUrl } from '@/lib/map-embed'
 import { locationUrl } from '@/lib/space-event'
 import { registrationStatus } from '@/lib/registration'
-import spaceStyles from '@/components/space/space.module.css'
+import { SideCard, SideCardSection } from '@/components/side-card'
+import { EVENT_POSTER_COLORS } from '@/lib/event-poster-colors'
+import { eventGoogleUrl } from '@/lib/event-calendar'
+import { EventCalendar } from '@/components/space/event-calendar'
+import { absoluteUrl } from '@/lib/schema'
 import styles from './events.module.css'
 
 export async function EventAttendance({
@@ -34,112 +38,146 @@ export async function EventAttendance({
     timing.status !== 'past' && registrationStatus(event.registration, null, now) === 'open'
   const registrationUrl = locationUrl(event.registration?.url)
   const hasForm = typeof event.registration?.form === 'object' && event.registration.form !== null
+  const price =
+    event.pricing?.min != null
+      ? event.pricing.min === 0 && !event.pricing.max
+        ? t('free')
+        : `${format.number(event.pricing.min)}${event.pricing.max ? `–${format.number(event.pricing.max)}` : ''} ${t('egp')}`
+      : null
+  const register =
+    open && event.registration?.method === 'external' && registrationUrl ? (
+      <a
+        className="side-card-action"
+        href={registrationUrl}
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        {t('register')}
+        <ArrowUpRight size={16} aria-hidden />
+      </a>
+    ) : open && event.registration?.method === 'form' && hasForm ? (
+      <a className="side-card-action" href="#event-registration">
+        {t('register')}
+        <ArrowDown size={16} aria-hidden />
+      </a>
+    ) : null
+  const pageUrl = absoluteUrl(`/${locale}/events/${event.slug}`)
+  const words = {
+    speakers: t('speakers'),
+    agenda: t('agenda'),
+    admission: t('admission'),
+    online: t('online'),
+    egp: t('egp'),
+    free: t('free'),
+  }
+  const google = eventGoogleUrl(event, timing.meeting, pageUrl, words)
+  // The Space event card's menu, with its words: Google Calendar or the .ics file.
+  const calendar =
+    timing.status === 'upcoming' ? (
+      <div className="side-card-dropdown">
+        <EventCalendar google={google} ics={`/${locale}/events/${event.slug}/event.ics`} labelled />
+      </div>
+    ) : null
+  // Registration that was set up but is not open (and the event is not over).
+  const closed =
+    !register && timing.status !== 'past' && !open && Boolean(event.registration?.method)
+  const attendance = Boolean(price || event.pricing?.note || register || closed)
   return (
-    <aside className={styles.attendance} aria-label={t('details')}>
-      <section className={styles.railSection}>
-        <h2>{t('when')}</h2>
-        {timing.meeting ? (
-          <EventWhen
-            startsAt={cairoInstant(timing.meeting.date, timing.meeting.start_time)!}
-            endsAt={cairoInstant(timing.meeting.date, timing.meeting.end_time)}
-            over={timing.status === 'past'}
-          />
-        ) : (
-          <div className={styles.railText}>
-            {timing.day ? (
-              <time dateTime={timing.day}>
-                {format.dateTime(new Date(`${timing.day}T12:00:00Z`), {
-                  dateStyle: 'full',
-                  timeZone: 'Africa/Cairo',
-                })}
-              </time>
-            ) : (
-              <p>{t('dateSoon')}</p>
-            )}
-            {(timing.day || timing.status === 'past') && (
-              <p className={styles.secondary}>
-                {timing.status === 'past' ? t('ended') : t('timeSoon')}
-              </p>
-            )}
-          </div>
-        )}
-        {event.schedule?.note && <p className={styles.secondary}>{event.schedule.note}</p>}
-      </section>
+    <SideCard
+      as="aside"
+      className={styles.attendance}
+      color={EVENT_POSTER_COLORS[event.event_type]}
+      label={t('details')}
+    >
+      <SideCardSection label={t('when')}>
+        <div className="side-card-body">
+          {timing.meeting ? (
+            <EventWhen
+              startsAt={cairoInstant(timing.meeting.date, timing.meeting.start_time)!}
+              endsAt={cairoInstant(timing.meeting.date, timing.meeting.end_time)}
+              over={timing.status === 'past'}
+            />
+          ) : (
+            <>
+              {timing.day ? (
+                <time dateTime={timing.day}>
+                  {format.dateTime(new Date(`${timing.day}T12:00:00Z`), {
+                    dateStyle: 'full',
+                    timeZone: 'Africa/Cairo',
+                  })}
+                </time>
+              ) : (
+                <p>{t('dateSoon')}</p>
+              )}
+              {(timing.day || timing.status === 'past') && (
+                <p className="side-card-muted">
+                  {timing.status === 'past' ? t('ended') : t('timeSoon')}
+                </p>
+              )}
+            </>
+          )}
+          {event.schedule?.note && <p className="side-card-muted">{event.schedule.note}</p>}
+        </div>
+        {calendar}
+      </SideCardSection>
       {(venue || online) && (
-        <section className={styles.railSection}>
-          <h2>{t('where')}</h2>
+        <SideCardSection label={t('where')}>
           {embed && (
             <iframe
-              className={spaceStyles.placeMap}
+              className="side-card-media"
               src={embed}
               title={spaces('placeMap', { name: venue?.name || t('where') })}
               loading="lazy"
               referrerPolicy="no-referrer"
             />
           )}
-          {venue && (
-            <div className={styles.railText}>
-              <p dir="auto">{venue.name}</p>
-              {venue.address && (
-                <p className={styles.secondary} dir="auto">
-                  {venue.address}
+          <div className="side-card-body">
+            {venue && (
+              <>
+                <p className="font-semibold" dir="auto">
+                  {venue.name}
                 </p>
-              )}
-              {!embed && mapUrl && (
-                <a
-                  className={styles.railLink}
-                  href={mapUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  {spaces('openInMaps')}
-                  <ArrowUpRight size={16} aria-hidden />
-                </a>
-              )}
-            </div>
-          )}
-          {online && (
-            <a className={styles.railLink} href={online} target="_blank" rel="noopener noreferrer">
-              {t('joinOnline')}
-              <ArrowUpRight size={16} aria-hidden />
-            </a>
-          )}
-        </section>
+                {venue.address && (
+                  <p className="side-card-muted" dir="auto">
+                    {venue.address}
+                  </p>
+                )}
+                {!embed && mapUrl && (
+                  <a
+                    className="side-card-link"
+                    href={mapUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    {spaces('openInMaps')}
+                    <ArrowUpRight size={16} aria-hidden />
+                  </a>
+                )}
+              </>
+            )}
+            {online && (
+              <a className="side-card-link" href={online} target="_blank" rel="noopener noreferrer">
+                {t('joinOnline')}
+                <ArrowUpRight size={16} aria-hidden />
+              </a>
+            )}
+          </div>
+        </SideCardSection>
       )}
-      <section className={styles.railSection}>
-        <h2>{t('admission')}</h2>
-        {event.pricing?.min != null && (
-          <p>
-            {event.pricing.min === 0 && !event.pricing.max
-              ? t('free')
-              : `${format.number(event.pricing.min)}${event.pricing.max ? `–${format.number(event.pricing.max)}` : ''} ${t('egp')}`}
-          </p>
-        )}
-        {event.pricing?.note && <p className={styles.secondary}>{event.pricing.note}</p>}
-        {open && event.registration?.method === 'external' && registrationUrl ? (
-          <a
-            className={styles.register}
-            href={registrationUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            {t('register')}
-            <ArrowUpRight size={16} aria-hidden />
-          </a>
-        ) : open && event.registration?.method === 'form' && hasForm ? (
-          <a className={styles.register} href="#event-registration">
-            {t('register')}
-          </a>
-        ) : (
-          <p className={styles.secondary}>
-            {timing.status === 'past'
-              ? t('ended')
-              : !open && event.registration?.method
-                ? t('registrationClosed')
-                : t('admissionSoon')}
-          </p>
-        )}
-      </section>
-    </aside>
+      {/* Only when there is something to say: no attendance setting means a
+          public event, open to all, which needs no line (see the card guide). */}
+      {attendance && (
+        <SideCardSection label={t('admission')}>
+          {price || event.pricing?.note || closed ? (
+            <div className="side-card-body">
+              {price && <p className="font-semibold">{price}</p>}
+              {event.pricing?.note && <p className="side-card-muted">{event.pricing.note}</p>}
+              {closed && <p className="side-card-muted">{t('registrationClosed')}</p>}
+            </div>
+          ) : null}
+          {register}
+        </SideCardSection>
+      )}
+    </SideCard>
   )
 }

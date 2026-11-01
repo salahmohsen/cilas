@@ -16,6 +16,13 @@
   --font-body: var(--font-text);
   --font-display: var(--font-title);
 
+  /* The page frame: the one width every page, the header and the footer share.
+     1440px fills a 1280 to 1440 laptop with only the gutter to spare and keeps
+     grids from stretching on a 1920 screen. Long prose keeps its own measure
+     (68ch, or the reader's 760px column) inside the frame. */
+  --page-max: 90rem;
+  --page-gutter: 1rem;
+
   --background: oklch(1 0 0);
   --foreground: oklch(0.141 0.005 285.823);
   --card: oklch(1 0 0);
@@ -48,6 +55,25 @@
   --sidebar-accent-foreground: oklch(0.21 0.006 285.885);
   --sidebar-border: oklch(0.92 0.004 286.32);
   --sidebar-ring: oklch(0.705 0.015 286.067);
+}
+
+@media (min-width: 40rem) {
+  :root {
+    --page-gutter: 1.5rem;
+  }
+}
+@media (min-width: 64rem) {
+  :root {
+    --page-gutter: 2.5rem;
+  }
+}
+
+/* A page's own container: the frame's width, with the site gutter. */
+@utility page-frame {
+  width: 100%;
+  max-width: var(--page-max);
+  margin-inline: auto;
+  padding-inline: var(--page-gutter);
 }
 
 .dark {
@@ -85,6 +111,7 @@
 }
 
 @theme inline {
+  --container-page: var(--page-max);
   --font-heading: var(--font-title);
   --font-sans: var(--font-text);
   --color-sidebar-ring: var(--sidebar-ring);
@@ -313,7 +340,8 @@
   line-height: 1.5;
   text-wrap: pretty;
 }
-.article-title:where([dir='rtl'] *, [dir='rtl']) {
+/* h1, to outweigh the reader module's tracking. */
+h1.article-title:where([dir='rtl'] *, [dir='rtl']) {
   letter-spacing: 0;
   line-height: 1.35;
 }
@@ -398,9 +426,18 @@ body {
 
 /* ===================================================== course page */
 
+/* Page titles (course, article, event) take the poster title's face: bold
+   Playfair for Latin. Amiri ships only 400, so no bold is synthesised and
+   Arabic letters keep their real regular weight. */
+.course-title,
+.study-title,
+h1.article-title {
+  font-family: var(--font-playfair-display), var(--font-amiri), serif;
+  font-weight: 700;
+  font-synthesis-weight: none;
+}
 .course-title {
   font-size: clamp(2rem, 4.2vw, 3.1rem);
-  font-weight: 500;
   letter-spacing: -0.02em;
   line-height: 1.08;
   text-wrap: balance;
@@ -432,8 +469,14 @@ body {
 }
 
 .course-cover {
-  width: 100%;
+  display: block;
+  /* The whole image, never cropped: a tall poster shrinks to fit the
+     height cap instead of filling the column. */
+  width: auto;
+  max-width: 100%;
   height: auto;
+  max-height: min(75svh, 40rem);
+  margin-inline: auto;
   object-fit: contain;
   border-radius: calc(var(--radius) * 2);
 }
@@ -493,32 +536,281 @@ body {
 }
 /* Who teaches it: the photo, name and role as one row; the bio below it,
    on the section's own edge like the rest of the course text. */
-.course-fellows {
+/* Who teaches it (docs/content-driven-card-layouts.md). The fellows' note
+   opens the section as a quote; then one card per fellow. Policy: content
+   sizes all. Cards stand alone in a list, so no region takes spare height. */
+.fellow-cards {
   display: grid;
-  gap: 2.5rem;
-  margin-top: 1.25rem;
+  grid-template-columns: minmax(0, 1fr);
+  align-items: start;
+  gap: 1rem;
+  margin: 1rem 0 0;
+  padding: 0;
+  list-style: none;
 }
-.course-fellow {
+.fellow-card-frame {
+  container: fellow-card / inline-size;
   display: grid;
-  grid-template-columns: auto minmax(0, 1fr);
-  column-gap: 0.875rem;
-  align-items: center;
-}
-.course-fellow-head {
+  grid-template-columns: minmax(0, 1fr);
   min-width: 0;
 }
-.course-fellow-bio {
-  grid-column: 1 / -1;
-  /* The description's own measure and size, so a bio sits on the same edges
-     as the text around it. */
-  max-width: 68ch;
-  font-size: var(--course-text-size);
+/* The poster look (docs/content-driven-card-layouts.md, section 7): ink rules,
+   paper cells, one flat palette colour, printed, so it stays light in the dark
+   theme. Policy: content sizes all; on wide cards the photo stretches to the
+   text beside it. */
+.fellow-card {
+  --poster-ink: #121212;
+  --poster-paper: #ffffff;
+  --poster-color: #ffb71b;
+  --poster-pad: clamp(0.875rem, 2.2cqi, 1.5rem);
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  overflow: clip;
+  border: 1px solid var(--poster-ink);
+  border-radius: 1rem;
+  background: var(--poster-paper);
+  color: var(--poster-ink);
+}
+.fellow-card-body {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+}
+.fellow-card-main {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+/* The photo cell: a 4:3 floor from its sizer, the image covering it. */
+.fellow-card-photo {
+  position: relative;
+  display: block;
+  overflow: hidden;
+  border-block-end: 1px solid var(--poster-ink);
+  background: var(--poster-paper);
+}
+.fellow-card-photo::before {
+  content: '';
+  display: block;
+  padding-block-end: 75%;
+}
+.fellow-card-photo > img,
+.fellow-card-photo > svg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform var(--duration-considered) var(--ease-standard);
+}
+@media (hover: hover) and (pointer: fine) {
+  .fellow-card:hover .fellow-card-photo > img {
+    transform: scale(1.03);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .fellow-card-photo > img {
+    transition: none;
+    transform: none;
+  }
+}
+/* The name on the card's colour: the strongest text, the poster title's face. */
+.fellow-card-panel {
+  flex: 1 1 auto;
+  background: var(--poster-color);
+}
+/* The name reads as a section heading, like Course flow: the display face
+   at regular weight and the same size. The page's title above is the bold
+   one. */
+.fellow-card-name {
+  margin: 0;
+  padding: var(--poster-pad);
+  font-family: var(--font-display);
+  font-size: var(--text-3xl);
+  font-weight: 400;
+  line-height: var(--leading-display);
+  letter-spacing: var(--tracking-display);
+  text-wrap: balance;
+}
+.fellow-card-name h3 {
+  margin: 0;
+  font: inherit;
+}
+.fellow-card .fellow-card-name-reveal {
+  color: inherit;
+}
+.fellow-card-name[dir='rtl'] {
+  line-height: 1.35;
+  letter-spacing: 0;
+}
+/* The card's foot: one ruled row. The note's label (an icon box and the
+   words, on paper) sits under the photo; View profile, in the card's colour,
+   runs across the text column, its words on the bio's edge. The note's text
+   follows on paper and matches the bio. */
+.fellow-card-note {
+  flex: 0 0 auto;
+  margin: 0;
+  border-block-start: 1px solid var(--poster-ink);
+  background: var(--poster-paper);
+}
+.fellow-card-note {
+  /* The icon box's width: the label and the note text both start after it. */
+  --notice-icon: 2.75rem;
+}
+.fellow-card-hazard {
+  display: flex;
+  min-height: 2.75rem;
+}
+/* The row owns the rule under it only when the note's words follow. */
+.fellow-card-hazard:not(:last-child) {
+  border-block-end: 1px solid var(--poster-ink);
+}
+/* The heading: a square icon box and the label box, on paper. On wide cards
+   it is exactly as wide as the photo column, so the stripes start on the
+   text column's rule. */
+.fellow-card-hazard-head {
+  display: flex;
+  flex: 0 0 auto;
+  border-inline-end: 1px solid var(--poster-ink);
+  background: var(--poster-paper);
+  color: var(--poster-ink);
+}
+.fellow-card-hazard-icon {
+  display: grid;
+  flex: 0 0 auto;
+  place-items: center;
+  inline-size: var(--notice-icon);
+  border-inline-end: 1px solid var(--poster-ink);
+}
+.fellow-card-hazard-label {
+  display: flex;
+  flex: 1 1 auto;
+  align-items: center;
+  min-width: 0;
+  padding: 0.5rem var(--poster-pad);
+  font-family: var(--font-text);
+  font-size: 0.9375rem;
+  font-weight: 700;
+  line-height: 1.3;
+}
+/* A card without a fellow's note has no label: on narrow cards the action
+   takes the whole row; on wide ones an empty box keeps the photo column. */
+.fellow-card-hazard-head:empty {
+  display: none;
+}
+/* A row with no action (the note's own card) ends in an empty paper cell. */
+.fellow-card-hazard:not(:has(.fellow-card-action))::after {
+  content: '';
+  flex: 1 1 auto;
+  background: var(--poster-paper);
+}
+.fellow-card-quote {
+  display: grid;
+  gap: 0.75rem;
+  margin: 0;
+  padding: var(--poster-pad);
+  /* The note's text starts on the label's edge, after the icon box. */
+  padding-inline-start: calc(var(--notice-icon) + var(--poster-pad));
+  color: color-mix(in oklab, var(--poster-ink) 82%, var(--poster-paper));
+  font-family: var(--font-text);
+  font-size: var(--course-text-size, 1.1rem);
   line-height: 1.7;
-  margin-top: 1rem;
-  margin-inline: auto;
-  color: var(--text-secondary);
   text-wrap: pretty;
 }
+/* The measure sits on the paragraphs, so the box fills the row and the text
+   starts on its own side: an English note on an Arabic page runs from the
+   left. That side has no icon box, so the text keeps the plain inset. */
+.fellow-card-quote > * {
+  max-width: 68ch;
+}
+[dir='rtl'] .fellow-card-quote[dir='ltr'],
+[dir='ltr'] .fellow-card-quote[dir='rtl'] {
+  padding-inline-start: var(--poster-pad);
+}
+/* The bio on paper; the bio owns the rule above it. */
+.fellow-card-bio {
+  flex: 0 0 auto;
+  padding: var(--poster-pad);
+  border-block-start: 1px solid var(--poster-ink);
+  background: var(--poster-paper);
+  color: color-mix(in oklab, var(--poster-ink) 82%, var(--poster-paper));
+  font-size: var(--course-text-size, 1.1rem);
+  line-height: 1.7;
+  text-wrap: pretty;
+}
+.fellow-card-bio > * {
+  max-width: 68ch;
+}
+.fellow-card-bio a {
+  color: var(--poster-ink);
+}
+.fellow-card-action {
+  display: flex;
+  flex: 1 1 auto;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 0.5rem;
+  min-height: 2.75rem;
+  padding: 0.625rem var(--poster-pad);
+  background: var(--poster-color);
+  color: var(--poster-ink);
+  font-weight: 600;
+  text-decoration: none;
+}
+.fellow-card-action:hover {
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+/* The arrow steps toward the reading direction on hover and keyboard focus. */
+.fellow-card-arrow {
+  transition: translate var(--duration-fast, 150ms) var(--ease-standard, ease-out);
+}
+.fellow-card-action:hover .fellow-card-arrow,
+.fellow-card-action:focus-visible .fellow-card-arrow {
+  translate: 3px 0;
+}
+.fellow-card-action:dir(rtl):hover .fellow-card-arrow,
+.fellow-card-action:dir(rtl):focus-visible .fellow-card-arrow {
+  translate: -3px 0;
+}
+@media (prefers-reduced-motion: reduce) {
+  .fellow-card-arrow {
+    transition: none;
+  }
+}
+.fellow-card-action:focus-visible {
+  outline: 3px solid var(--poster-ink);
+  outline-offset: -3px;
+}
+/* Wide: the photo fills its own column from top to bottom, at least
+   square, so its end always meets the end of the text beside it. The
+   image covers the cell from its focal point. The text column owns the
+   rule between the columns. The side layout waits for a 44rem card: below
+   that, a long bio would turn the photo into a thin strip. */
+@container fellow-card (width > 44rem) {
+  .fellow-card-body {
+    grid-template-columns: min(36%, 18rem) minmax(0, 1fr);
+  }
+  .fellow-card-photo {
+    align-self: stretch;
+    border-block-end: 0;
+  }
+  .fellow-card-photo::before {
+    padding-block-end: 100%;
+  }
+  .fellow-card-main {
+    border-inline-start: 1px solid var(--poster-ink);
+  }
+  /* The photo column's width plus the 1px rule the text column owns, so the
+     heading's end rule sits on that rule. */
+  .fellow-card-hazard-head {
+    flex-basis: calc(min(36%, 18rem) + 1px);
+  }
+  .fellow-card-hazard-head:empty {
+    display: flex;
+  }
+}
+
 /* A photo's edge: pure black or white at a tenth, never a tinted grey. */
 .course-fellow-photo {
   display: inline-flex;
@@ -904,12 +1196,6 @@ a.bridge-year:hover > :first-child {
 }
 .course-apply:active {
   scale: 0.96;
-}
-
-.course-note {
-  border-radius: calc(var(--radius) * 2);
-  background: var(--surface-muted, var(--muted));
-  padding: 1.25rem 1.5rem;
 }
 
 /* The season mark: the one coloured thing on the page. */
@@ -1602,21 +1888,51 @@ a.collection-item:hover {
   }
 }
 
-/* The study page's header: the words, and the classroom beside them. */
-.study-header {
-  display: grid;
-  align-items: center;
-  gap: 2.5rem;
+/* The study page's header: one poster card (docs/content-driven-card-layouts.md,
+   section 7). The title on the palette yellow, the quote on paper beside it
+   (under it on narrow cards), and the course filters on paper across the
+   foot. The card is printed, so it stays light in the dark theme; the
+   filter toolbar inside it gets the light theme's tokens. */
+.study-card-frame {
+  container: study-card / inline-size;
+  min-width: 0;
 }
-@media (min-width: 64rem) {
-  .study-header {
-    grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr);
-    gap: 4rem;
-  }
+.study-card {
+  --poster-ink: #121212;
+  --poster-paper: #ffffff;
+  --poster-color: #ffb71b;
+  --poster-pad: clamp(1rem, 2.6cqi, 2rem);
+  --surface: oklch(100% 0 0);
+  --surface-raised: oklch(100% 0 0);
+  --surface-muted: oklch(97.8% 0 0);
+  --foreground: oklch(15% 0 0);
+  --text-secondary: oklch(46% 0 0);
+  --text-muted: oklch(59% 0 0);
+  --border: oklch(93.5% 0 0);
+  --border-strong: oklch(82% 0 0);
+  --accent: oklch(33% 0 0);
+  --accent-strong: oklch(24% 0 0);
+  --accent-subtle: oklch(33% 0 0 / 0.1);
+  --accent-foreground: oklch(100% 0 0);
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  border: 1px solid var(--poster-ink);
+  border-radius: 1rem;
+  background: var(--poster-paper);
+  color: var(--poster-ink);
+}
+.study-card-panel {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: var(--poster-pad);
+  border-start-start-radius: calc(1rem - 1px);
+  border-start-end-radius: calc(1rem - 1px);
+  background: var(--poster-color);
 }
 .study-title {
+  margin: 0;
   font-size: clamp(2.4rem, 5vw, 3.6rem);
-  font-weight: 500;
   line-height: 1.02;
   letter-spacing: -0.03em;
 }
@@ -1624,33 +1940,528 @@ a.collection-item:hover {
   letter-spacing: 0;
   line-height: 1.25;
 }
-.study-since {
-  margin-top: 1rem;
-  font-size: 0.875rem;
-  font-variant-numeric: tabular-nums;
-  color: var(--text-muted);
+/* On while any filter is on: a pink dot after the title, ink-ringed so it
+   reads on the yellow. It breathes while the next list loads. */
+.study-filter-dot {
+  display: inline-block;
+  width: 0.3em;
+  height: 0.3em;
+  margin-inline-start: 0.18em;
+  vertical-align: 0.12em;
+  border: max(1.5px, 0.05em) solid var(--poster-ink);
+  border-radius: 999px;
+  background: #ff7d9d;
 }
+.study-filter-dot[data-pending] {
+  animation: study-filter-dot 0.9s var(--ease-standard) infinite alternate;
+}
+@keyframes study-filter-dot {
+  to {
+    transform: scale(0.6);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .study-filter-dot[data-pending] {
+    animation: none;
+  }
+}
+.study-since {
+  margin-top: 0.75rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+  color: var(--poster-ink);
+}
+/* The quote cell: paper, ink text, the rule shared with the panel. */
 .study-quote {
-  margin-top: 2rem;
+  max-width: none;
+  padding: var(--poster-pad);
+  border-block-start: 1px solid var(--poster-ink);
   font-size: 1.05rem;
 }
-.study-quote blockquote {
+.study-card .study-quote blockquote {
   margin-block: 0;
+  max-width: 60ch;
+  padding-inline-start: 0;
+  border-inline-start: 0;
+  color: var(--poster-ink);
 }
-.study-figure {
-  overflow: hidden;
-  border-radius: calc(var(--radius) * 3);
-  outline: 1px solid oklch(0 0 0 / 0.1);
-  outline-offset: -1px;
+.study-card .study-quote footer {
+  display: flex;
 }
-.dark .study-figure {
-  outline-color: oklch(1 0 0 / 0.1);
+/* The source's dash stays beside the first line of the source, even when
+   the source wraps. */
+.study-card .study-quote cite {
+  flex-wrap: nowrap;
+  color: oklch(0.3 0 0);
 }
-.study-figure-image {
-  width: 100%;
+.study-card .study-quote cite::before {
+  flex: none;
+  align-self: flex-start;
+  margin-block-start: 0.72em;
+}
+/* The filters row: the toolbar loses its own box and sits on the paper; the
+   count is its own cell at the row's end. */
+.study-card-filters {
+  display: flex;
+  align-items: stretch;
+  border-block-start: 1px solid var(--poster-ink);
+}
+.study-card-filters > [role='group'] {
+  flex: 1 1 auto;
+  min-width: 0;
+  min-height: 0;
+  padding: calc(var(--poster-pad) * 0.6) var(--poster-pad);
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+}
+.study-card-count {
+  display: flex;
+  flex: none;
+  align-items: center;
+  padding: calc(var(--poster-pad) * 0.6) var(--poster-pad);
+  border-inline-start: 1px solid var(--poster-ink);
+  font-size: 0.875rem;
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+  color: var(--poster-ink);
+}
+/* On narrow cards the filters take the whole row and the count drops to a
+   row of its own under them. */
+@container study-card (width <= 34rem) {
+  .study-card-filters {
+    flex-wrap: wrap;
+  }
+  .study-card-filters > [role='group'],
+  .study-card-count {
+    flex-basis: 100%;
+  }
+  .study-card-count {
+    border-inline-start: 0;
+    border-block-start: 1px solid var(--poster-ink);
+  }
+  /* The toolbar's own phone layout stacks its buttons under the chips; here
+     they share a row while they fit, and wrap to the row's end when not. */
+  .study-card-filters > [role='group'] {
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+  .study-card-filters > [role='group'] > :first-child {
+    flex: 1 1 8rem;
+  }
+  .study-card-filters > [role='group'] > :last-child {
+    margin-inline-start: auto;
+  }
+}
+@container study-card (width > 48rem) {
+  .study-card {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  }
+  .study-card-panel {
+    border-start-end-radius: 0;
+  }
+  .study-quote {
+    display: flex;
+    align-items: flex-end;
+    border-block-start: 0;
+    border-inline-start: 1px solid var(--poster-ink);
+  }
+  .study-card-filters {
+    grid-column: 1 / -1;
+  }
+}
+
+/* Images in article, course and event text sit in the middle of the
+   measure, whatever the text's direction. */
+.article-prose picture {
+  display: block;
+}
+.article-prose picture > img,
+.article-prose > img,
+.article-prose p > img:only-child {
+  display: block;
+  max-width: 100%;
   height: auto;
-  aspect-ratio: 4 / 3;
-  object-fit: cover;
+  margin-inline: auto;
+}
+
+/* The course flow keeps its own border, on the page with no surface fill. */
+.course-page .course-flow {
+  /* The column's full width, so its edges line up with the fellow cards. */
+  width: 100%;
+  background: transparent;
+}
+
+/* ===================================================== side cards */
+
+/* The article's and the event's side column as one poster card
+   (docs/content-driven-card-layouts.md, section 7): sections stacked under
+   ink rules, each named on a band of the card's colour, its content on
+   paper. Controls are cells, not outlined buttons: A− and A+ share a row,
+   and the main action fills a row in the card's colour. Printed, so it stays
+   light in the dark theme; theme tokens inside it get light values. */
+.side-card {
+  --poster-ink: #121212;
+  --poster-paper: #ffffff;
+  --poster-color: #ffb71b;
+  --poster-pad: 1rem;
+  --surface: oklch(100% 0 0);
+  --surface-muted: oklch(97.8% 0 0);
+  --foreground: oklch(15% 0 0);
+  --text-secondary: oklch(40% 0 0);
+  --text-muted: oklch(46% 0 0);
+  --border: oklch(88% 0 0);
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  overflow: clip;
+  border: 1px solid var(--poster-ink);
+  border-radius: 1rem;
+  background: var(--poster-paper);
+  color: var(--poster-ink);
+  font-size: var(--text-sm);
+  line-height: var(--leading-body);
+}
+.side-card-section {
+  min-width: 0;
+}
+.side-card > * + * {
+  border-block-start: 1px solid var(--poster-ink);
+}
+.side-card-label {
+  display: flex;
+  align-items: center;
+  min-height: 2.75rem;
+  justify-content: space-between;
+  gap: 0.5rem;
+  margin: 0;
+  padding: 0.625rem var(--poster-pad);
+  border-block-end: 1px solid var(--poster-ink);
+  background: var(--poster-color);
+  color: var(--poster-ink);
+  font-family: var(--font-sans);
+  font-size: 0.8125rem;
+  font-weight: 700;
+  line-height: 1.3;
+}
+/* A folding section: the band is its summary. */
+summary.side-card-label {
+  cursor: pointer;
+  list-style: none;
+}
+summary.side-card-label::-webkit-details-marker {
+  display: none;
+}
+summary.side-card-label::after {
+  content: '+';
+  font-weight: 500;
+}
+details[open] > summary.side-card-label::after {
+  content: '−';
+}
+details:not([open]) > summary.side-card-label {
+  border-block-end: 0;
+}
+.side-card-body {
+  display: grid;
+  gap: 0.5rem;
+  padding: var(--poster-pad);
+  overflow-wrap: anywhere;
+}
+.side-card-body p {
+  margin: 0;
+}
+/* Shared parts such as the event's date block start at the cell's edge. */
+.side-card-body > div {
+  justify-items: start;
+  text-align: start;
+}
+.side-card-muted {
+  color: var(--text-secondary);
+}
+/* Controls that sit centred in their cell, such as share and AI. Text
+   under them, such as the AI steps, stays at the start. */
+.side-card-center {
+  justify-items: center;
+}
+.side-card-center > ol,
+.side-card-center > ul,
+.side-card-center > p {
+  justify-self: stretch;
+  text-align: start;
+}
+/* A row of controls wider than the card, such as the share bar, scrolls in its cell. */
+.side-card-scroll {
+  grid-template-columns: minmax(0, 1fr);
+  min-width: 0;
+  overflow-x: auto;
+  /* Almost no inset: the share bar's own pill is the frame, and it needs
+     the cell's whole width in a 20rem column. */
+  padding-inline: 0.25rem;
+}
+.side-card-scroll > * {
+  max-width: 100%;
+}
+/* People: one ruled row each, photo then name and role. */
+.side-card-people {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.side-card-people > li + li {
+  border-block-start: 1px solid var(--poster-ink);
+}
+.side-card-people a {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem var(--poster-pad);
+  color: inherit;
+  text-decoration: none;
+}
+.side-card-people a:hover .side-card-name {
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+}
+.side-card-name {
+  display: block;
+  font-weight: 600;
+  line-height: 1.3;
+}
+.side-card-role {
+  display: block;
+  color: var(--text-secondary);
+  font-size: 0.75rem;
+}
+/* A full-bleed cell, such as a map: no inset, a rule under it. */
+.side-card-media {
+  display: block;
+  width: 100%;
+  aspect-ratio: 16 / 10;
+  border: 0;
+  border-block-end: 1px solid var(--poster-ink);
+}
+/* A row of cell buttons: equal cells, a rule between them. */
+.side-card-buttons {
+  display: grid;
+  grid-auto-columns: minmax(0, 1fr);
+  grid-auto-flow: column;
+}
+.side-card-buttons > * + *,
+.side-card-buttons > .side-card-button + .side-card-button {
+  border-inline-start: 1px solid var(--poster-ink);
+}
+.side-card-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 2.75rem;
+  padding: 0.5rem;
+  border: 0;
+  background: var(--poster-paper);
+  color: var(--poster-ink);
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color var(--duration-fast) var(--ease-standard);
+}
+@media (hover: hover) and (pointer: fine) {
+  .side-card-button:not(:disabled):hover {
+    background: color-mix(in oklab, var(--poster-color) 45%, var(--poster-paper));
+  }
+}
+.side-card-button:disabled {
+  color: color-mix(in oklab, var(--poster-ink) 30%, var(--poster-paper));
+  cursor: default;
+}
+.side-card-button:focus-visible,
+.side-card-action:focus-visible {
+  outline: 3px solid var(--poster-ink);
+  outline-offset: -3px;
+}
+/* The main action: a row in the card's colour, its arrow stepping forward. */
+.side-card-action {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  min-height: 2.75rem;
+  padding: 0.625rem var(--poster-pad);
+  border-block-start: 1px solid var(--poster-ink);
+  background: var(--poster-color);
+  color: var(--poster-ink);
+  font-weight: 600;
+  text-decoration: none;
+}
+.side-card-action:hover {
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+}
+.side-card-action svg {
+  flex: none;
+  transition: translate var(--duration-fast) var(--ease-standard);
+}
+.side-card-action:hover svg,
+.side-card-action:focus-visible svg {
+  translate: 3px 0;
+}
+.side-card-action:dir(rtl):hover svg,
+.side-card-action:dir(rtl):focus-visible svg {
+  translate: -3px 0;
+}
+/* A menu row, such as Add to calendar: Arc's dropdown trigger fills the row. */
+.side-card-dropdown {
+  display: grid;
+  border-block-start: 1px solid var(--poster-ink);
+}
+.side-card-dropdown > button {
+  justify-content: space-between;
+  width: 100%;
+  max-width: none;
+  min-height: 2.75rem;
+  padding: 0.625rem var(--poster-pad);
+  border: 0;
+  border-radius: 0;
+  background: var(--poster-paper);
+  color: var(--poster-ink);
+  font-weight: 600;
+  box-shadow: none;
+}
+.side-card-dropdown > button:hover,
+.side-card-dropdown > button[data-state='open'] {
+  background: color-mix(in oklab, var(--poster-color) 35%, var(--poster-paper));
+}
+.side-card-buttons .side-card-button {
+  gap: 0.375rem;
+  font-size: 0.8125rem;
+  text-align: center;
+  text-decoration: none;
+}
+/* Registration: the dot and the status in one box, the price in a row of its
+   own under a rule. */
+.apply-card-row {
+  display: flex;
+  align-items: stretch;
+  min-height: 2.75rem;
+}
+.apply-card-dot {
+  display: grid;
+  flex: none;
+  place-items: center;
+  width: 2.75rem;
+  margin-inline-end: calc(-1 * var(--poster-pad));
+}
+.apply-card-dot::before {
+  content: '';
+  width: 0.625rem;
+  height: 0.625rem;
+  border: 1px solid var(--poster-ink);
+  border-radius: 999px;
+  background: oklch(0.62 0.21 25);
+}
+.apply-card-dot[data-open]::before {
+  background: oklch(0.72 0.17 150);
+}
+.apply-card-status,
+.apply-card-price {
+  display: flex;
+  align-items: center;
+  padding: 0.5rem var(--poster-pad);
+  font-weight: 600;
+}
+.apply-card-status {
+  flex: 1;
+  min-width: 0;
+}
+.apply-card-price {
+  min-height: 2.75rem;
+  border-block-start: 1px solid var(--poster-ink);
+  font-variant-numeric: tabular-nums;
+}
+/* Facts and counts: one ruled row each, the icon in its own column. */
+.side-card-facts {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.side-card-facts > * {
+  display: grid;
+  grid-template-columns: 2.75rem minmax(0, 1fr);
+  align-items: stretch;
+}
+.side-card-facts > * + * {
+  border-block-start: 1px solid var(--poster-ink);
+}
+/* The icon in its own box, centred, a rule between it and the words. */
+.side-card-icon {
+  display: grid;
+  place-items: center;
+  border-inline-end: 1px solid var(--poster-ink);
+}
+.side-card-facts > * > :last-child {
+  align-self: center;
+  padding: 0.625rem var(--poster-pad);
+}
+.side-card-facts dt {
+  color: var(--text-secondary);
+  font-size: 0.75rem;
+}
+.side-card-facts dd {
+  margin: 0;
+  font-weight: 500;
+}
+.side-card-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  width: fit-content;
+  color: inherit;
+  font-weight: 600;
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+}
+@media (prefers-reduced-motion: reduce) {
+  .side-card-button,
+  .side-card-action svg {
+    transition: none;
+  }
+}
+
+/* ===================================================== wide blocks in prose */
+
+/* A page's main column. Prose inside it keeps its reading measure; a Columns
+   block in that prose grows to the column's full width on wide screens, so a
+   photo grid can sit beside text. The prose must be centered in the frame
+   (both sides grow by the same amount). On phones the columns stack. */
+.prose-frame {
+  container: prose-frame / inline-size;
+}
+@media (min-width: 64rem) {
+  .prose-frame .article-prose .rich-columns {
+    margin-inline: max(-16rem, min(0px, (100% - 100cqi) / 2));
+  }
+}
+
+/* The article reader on wide screens: the column takes the room beside the
+   contents rail; each part of the article keeps a 760px measure in its middle. */
+@media (min-width: 80rem) {
+  article.article-reader {
+    max-width: none;
+  }
+  article.article-reader > * {
+    width: 100%;
+    max-width: 760px;
+    margin-inline: auto;
+  }
+}
+/* A size container takes no width from its content, so the reader fills its track. */
+article.article-reader {
+  width: 100%;
+}
+/* The reader's 760px is the measure, so the text stays centered in it. */
+article.article-reader .article-prose {
+  max-width: none;
 }
 
 /* ===================================================== home page */
@@ -1678,9 +2489,9 @@ a.collection-item:hover {
   align-content: center;
   gap: var(--hero-gap);
   width: 100%;
-  max-width: 1200px;
+  max-width: var(--page-max);
   margin-inline: auto;
-  padding: clamp(1rem, 4svh, 2.5rem) 1.5rem calc(var(--water) + var(--hero-gap));
+  padding: clamp(1rem, 4svh, 2.5rem) var(--page-gutter) calc(var(--water) + var(--hero-gap));
 }
 /* On a phone the boat rides lower in the copy's way, so the copy leaves it room. */
 @media (max-width: 40rem) {
@@ -1896,17 +2707,7 @@ a.collection-item:hover {
 .home-page {
   display: grid;
   gap: clamp(4rem, 9vw, 6rem);
-  padding: clamp(4rem, 9vw, 6rem) 1rem 2rem;
-}
-@media (min-width: 40rem) {
-  .home-page {
-    padding-inline: 2rem;
-  }
-}
-@media (min-width: 80rem) {
-  .home-page {
-    padding-inline: 0;
-  }
+  padding: clamp(4rem, 9vw, 6rem) var(--page-gutter) 2rem;
 }
 .home-section {
   display: grid;
@@ -2094,6 +2895,16 @@ h3 {
 /* The poster's frame is what its sizes and its narrow layout measure. */
 .poster-carousel {
   --carousel-viewport-radius: 0px;
+  /* Phones: one poster, the full width. */
+  --poster-slide: 100cqw;
+}
+/* Laptops and up: one poster whole and its neighbours peeking in, dimmed by
+   the carousel, so the open list reads as a list and the card stays readable. */
+@media (min-width: 64rem) {
+  .poster-carousel {
+    /* Wide enough for the time left on one line from 1280px up. */
+    --poster-slide: min(max(85cqw, 68rem), 72rem, 92cqw);
+  }
 }
 /* Every grid between the slide and the card uses a zero-minimum column. An
    "auto" column grows to its content's min-content width, so one rigid cell
@@ -2130,7 +2941,8 @@ h3 {
   color: var(--poster-ink);
   /* At least 16:9 of the frame's width, and taller when a long title or a
      translation needs it, so nothing in the panel is cut off. */
-  min-height: calc(100cqi * 9 / 16);
+  /* Capped, so a wide open-list poster is no taller than before it widened. */
+  min-height: min(calc(100cqi * 9 / 16), 34.5rem);
 }
 .poster-body {
   display: flex;
@@ -2190,7 +3002,9 @@ h3 {
 }
 .poster-title {
   font-family: var(--font-playfair-display), var(--font-amiri), serif;
-  font-size: clamp(1.75rem, 5cqi, 3.75rem);
+  /* The top equals 5cqi on a 62rem card, so a wider open-list poster keeps
+     its title size and does not grow taller. */
+  font-size: clamp(1.75rem, 5cqi, 3.1rem);
   font-weight: 700;
   line-height: 1.1;
   letter-spacing: -0.025em;
@@ -2237,6 +3051,33 @@ h3 {
   border-bottom: 1px solid var(--poster-ink);
 }
 
+/* The credit row with a tag: the kind of thing, with its icon, in its own
+   paper box, then who, in the rest of the row. */
+.poster-credit-row {
+  display: flex;
+  align-items: stretch;
+  padding: 0;
+}
+.poster-tag {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  gap: 0.5em;
+  padding: var(--poster-pad);
+}
+.poster-tag {
+  border-inline-end: 1px solid var(--poster-ink);
+}
+.poster-tag-icon {
+  flex: none;
+  width: 0.9em;
+  height: 0.9em;
+}
+.poster-credit-text {
+  min-width: 0;
+  padding: var(--poster-pad);
+}
+
 .poster-credit {
   border-top: 1px solid var(--poster-ink);
 }
@@ -2254,7 +3095,7 @@ h3 {
 
 .poster-label {
   font-family: var(--font-heading);
-  font-size: clamp(1.25rem, 3.4cqi, 2.5rem);
+  font-size: clamp(1.25rem, 3.4cqi, 2.1rem);
   line-height: 1.05;
 }
 
@@ -2313,6 +3154,8 @@ h3 {
 .poster-time {
   display: flex;
   min-width: 0;
+  /* Fixed-width digits, so the cell does not shift as the time runs down. */
+  font-variant-numeric: tabular-nums;
   align-items: stretch;
   justify-content: center;
   border-inline-end: 1px solid var(--poster-ink);
@@ -2349,7 +3192,8 @@ h3 {
   flex: 1;
   min-width: 0;
   height: auto;
-  padding-inline: var(--poster-pad);
+  /* A smaller inset than the other cells, so the time left stays on one line. */
+  padding-inline: 0.625rem;
 }
 .poster .poster-time [data-variant='compact'] > div > div > span {
   flex-wrap: wrap;

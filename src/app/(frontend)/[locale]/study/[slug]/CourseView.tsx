@@ -1,17 +1,19 @@
 import { personAvatarSeed } from '@/lib/avatar'
 import {
   ArrowLeft,
+  ArrowRight,
   CalendarDays,
   Clock,
   Languages,
   ListOrdered,
   MapPin,
+  MessageSquareText,
   type LucideIcon,
 } from 'lucide-react'
 import { useFormatter, useLocale, useTranslations } from 'next-intl'
 import React from 'react'
 
-import { Avatar } from '@/components/arc/avatar/avatar'
+import { InViewTitle } from '@/components/arc/in-view-title/in-view-title'
 import {
   CourseSyllabus,
   MATERIAL_ICONS,
@@ -21,7 +23,11 @@ import {
   isObject,
   textOf,
 } from '@/components/course/course-syllabus'
-import { photoOf } from '@/components/person/contributors'
+import { AvatarFallback } from '@/components/person/avatar-fallback'
+import { ContributorRows, photoOf } from '@/components/person/contributors'
+import { SideCard, SideCardApply, SideCardSection } from '@/components/side-card'
+import { POSTER_COLORS } from '@/lib/poster-colors'
+import { textDirection } from '@/lib/text-direction'
 import { RichTextField } from '@/components/RichTextField'
 import { SEASON_ICONS } from '@/components/season-icon'
 import { ShareBar } from '@/components/share-bar'
@@ -226,177 +232,237 @@ export const CourseView: React.FC<{
       : []),
   ]
 
-  // The side column names who teaches; their bios are read in the main text.
-  const facultyCard = (
-    <section aria-labelledby="course-fellows" className="course-side" {...pe('fellows')}>
-      <h2 className="course-side-heading" id="course-fellows">
-        {t('taughtBy')}
-      </h2>
-      <ul className="grid gap-3">
-        {fellows.map((person) => (
-          <li key={person.id}>
-            <Link className="group flex items-center gap-3" href={`/people/${person.slug}`}>
-              <span className="course-fellow-photo">
-                <Avatar
-                  fallbackSeed={personAvatarSeed(person.id)}
-                  name={person.name}
-                  size="md"
-                  src={photoOf(person)}
-                />
-              </span>
-              <span className="min-w-0">
-                <span className="block text-sm leading-snug font-medium underline-offset-4 group-hover:underline">
-                  {person.name}
-                </span>
-                <span className="block text-xs text-[var(--text-muted)]">{t('fellow')}</span>
-              </span>
-            </Link>
-          </li>
-        ))}
-      </ul>
-    </section>
+  // Who teaches it: the fellows' note to the class, then one card per fellow
+  // with their whole bio. Cards size to their content (no shared height);
+  // each card picks its composition from its own width.
+  const note = course.facilitator_note?.trim()
+  // The card's foot is one ruled row: the note's label (an icon box and the
+  // words) under the photo, then View profile in the card's colour across the
+  // text column. The note's words follow on paper. With several fellows the
+  // note is its own card after theirs, with an empty cell in the action's place.
+  const noteDir = note ? textDirection(note) : 'ltr'
+  const noteHead = (
+    <span className="fellow-card-hazard-head">
+      <span className="fellow-card-hazard-icon">
+        <MessageSquareText aria-hidden size={18} strokeWidth={1.75} />
+      </span>
+      <span className="fellow-card-hazard-label">{t('note')}</span>
+    </span>
   )
-
-  // Each fellow with their whole bio: who teaches a course matters to it.
-  const fellowsSection = fellows.length ? (
-    <section aria-labelledby="course-teachers" className="mt-12" {...pe('fellows')}>
-      <h2 className="course-heading" id="course-teachers">
-        {t('whoTeaches')}
-      </h2>
-      <ul className="course-fellows">
-        {fellows.map((person) => {
-          const hasBio = Boolean(textOf(person.bio).trim())
-          return (
-            <li className="course-fellow" key={person.id}>
-              <Link
-                aria-hidden
-                className="course-fellow-photo"
-                href={`/people/${person.slug}`}
-                tabIndex={-1}
-              >
-                <Avatar
-                  fallbackSeed={personAvatarSeed(person.id)}
-                  name={person.name}
-                  size="lg"
-                  src={photoOf(person)}
-                />
-              </Link>
-              <div className="course-fellow-head">
-                <h3 className="text-base font-medium">
-                  <Link
-                    className="underline-offset-4 hover:underline"
-                    href={`/people/${person.slug}`}
+  const noteQuote = note ? (
+    <blockquote className="fellow-card-quote" dir={noteDir} lang={noteDir === 'rtl' ? 'ar' : 'en'}>
+      {note.split(/\n\s*\n/).map((p, i) => (
+        <p className="whitespace-pre-line" key={i}>
+          {p}
+        </p>
+      ))}
+    </blockquote>
+  ) : null
+  const noteInCard = fellows.length === 1
+  // One palette colour per card, in turn, as on the posters.
+  const cardColors = (index: number) =>
+    ({ '--poster-color': POSTER_COLORS[index % POSTER_COLORS.length] }) as React.CSSProperties
+  const fellowsSection =
+    fellows.length || note ? (
+      <section aria-labelledby="course-teachers" className="mt-12" {...pe('fellows')}>
+        <h2 className="course-heading" id="course-teachers">
+          {t('whoTeaches')}
+        </h2>
+        {fellows.length ? (
+          <ul className="fellow-cards">
+            {fellows.map((person, index) => {
+              const hasBio = Boolean(textOf(person.bio).trim())
+              const photo = photoOf(person)
+              return (
+                <li className="fellow-card-frame" key={person.id}>
+                  {/* The registration poster's look: ink rules, paper cells and
+                      one palette colour per card (docs/content-driven-card-layouts.md). */}
+                  <article
+                    aria-labelledby={`fellow-${person.id}`}
+                    className="fellow-card"
+                    style={cardColors(index)}
                   >
-                    {person.name}
-                  </Link>
-                </h3>
-                <p className="text-sm text-[var(--text-muted)]">{t('fellow')}</p>
-              </div>
-              {hasBio ? (
-                <div className="course-fellow-bio" dir="auto">
-                  <RichTextField className="grid gap-3 [&_p]:m-0" data={person.bio} />
-                </div>
-              ) : null}
-            </li>
-          )
-        })}
-      </ul>
-    </section>
-  ) : null
-
-  const factsCard = (
-    <section aria-label={t('details')} className="course-side">
-      <div className="flex items-center justify-between gap-3">
-        <span className="course-status" data-open={open || undefined} {...pe('registration')}>
-          {open ? t('open') : t('closed')}
-        </span>
-        {price ? (
-          <span className="text-sm text-(--text-secondary)" {...pe('pricing_override')}>
-            {price}
-          </span>
+                    <div className="fellow-card-body">
+                      <Link
+                        aria-hidden
+                        className="fellow-card-photo"
+                        href={`/people/${person.slug}`}
+                        tabIndex={-1}
+                      >
+                        {photo ? (
+                          // eslint-disable-next-line @next/next/no-img-element
+                          <img
+                            alt=""
+                            loading="lazy"
+                            src={photo}
+                            style={focalPointStyle(
+                              typeof person.photo === 'object' ? person.photo : undefined,
+                            )}
+                          />
+                        ) : (
+                          <AvatarFallback seed={personAvatarSeed(person.id)} aria-hidden />
+                        )}
+                      </Link>
+                      <div className="fellow-card-main">
+                        <div className="fellow-card-panel">
+                          {/* The poster titles' entrance: each line rises in when the card is in view. */}
+                          <div className="fellow-card-name" dir={textDirection(person.name)}>
+                            <InViewTitle
+                              as="h3"
+                              className="fellow-card-name-reveal"
+                              id={`fellow-${person.id}`}
+                              once={false}
+                              text={person.name}
+                              variant="line"
+                            />
+                          </div>
+                        </div>
+                        {hasBio ? (
+                          <div className="fellow-card-bio" dir="auto">
+                            <RichTextField className="grid gap-3 [&_p]:m-0" data={person.bio} />
+                          </div>
+                        ) : null}
+                      </div>
+                    </div>
+                    {(() => {
+                      const action = (
+                        <Link className="fellow-card-action" href={`/people/${person.slug}`}>
+                          {t('viewProfile')}
+                          <ArrowRight
+                            aria-hidden
+                            className="fellow-card-arrow rtl:-scale-x-100"
+                            size={16}
+                          />
+                        </Link>
+                      )
+                      return note && noteInCard ? (
+                        // The action row keeps its empty cell under the photo; the
+                        // note's label takes a row of its own, with its icon.
+                        <figure className="fellow-card-note" {...pe('facilitator_note')}>
+                          <div className="fellow-card-hazard">
+                            <span aria-hidden className="fellow-card-hazard-head" />
+                            {action}
+                          </div>
+                          <figcaption className="fellow-card-hazard">{noteHead}</figcaption>
+                          {noteQuote}
+                        </figure>
+                      ) : (
+                        <div className="fellow-card-note">
+                          <div className="fellow-card-hazard">
+                            <span aria-hidden className="fellow-card-hazard-head" />
+                            {action}
+                          </div>
+                        </div>
+                      )
+                    })()}
+                  </article>
+                </li>
+              )
+            })}
+          </ul>
         ) : null}
-      </div>
-      {applyUrl ? (
-        <a className="course-apply" data-primary href={applyUrl} {...newTab(applyUrl)}>
-          {t('apply')}
-        </a>
-      ) : null}
-      {facts.length ? (
-        <dl className="course-facts">
-          {facts.map(({ icon: Icon, label, value, path }) => (
-            <div
-              className="grid grid-cols-[1.25rem_1fr] items-start gap-x-3"
-              key={label}
-              {...pe(path)}
+        {note && !noteInCard ? (
+          <div className="fellow-card-frame mt-4">
+            <figure
+              className="fellow-card fellow-card-note"
+              style={cardColors(fellows.length)}
+              {...pe('facilitator_note')}
             >
-              <Icon
-                aria-hidden
-                className="mt-0.5 text-(--text-muted)"
-                size={16}
-                strokeWidth={1.5}
-              />
-              <div>
-                <dt className="text-xs text-(--text-muted)">{label}</dt>
-                <dd className="text-sm">{value}</dd>
-              </div>
-            </div>
-          ))}
-        </dl>
-      ) : null}
-    </section>
-  )
+              <figcaption className="fellow-card-hazard">{noteHead}</figcaption>
+              {noteQuote}
+            </figure>
+          </div>
+        ) : null}
+      </section>
+    ) : null
 
-  const materialsCard = counts.length ? (
-    <section aria-labelledby="course-materials" className="course-side">
-      <h2 className="course-side-heading" id="course-materials">
-        {t('materials')}
-      </h2>
-      <ul className="grid gap-2">
-        {counts.map(({ type, count }) => {
-          const Icon = MATERIAL_ICONS[type]
-          return (
-            <li className="grid grid-cols-[1.25rem_1fr] items-center gap-x-3 text-sm" key={type}>
-              <Icon aria-hidden className="text-(--text-muted)" size={16} strokeWidth={1.5} />
-              {t(`materialCounts.${type}`, { count })}
-            </li>
-          )
-        })}
-      </ul>
-    </section>
-  ) : null
-
-  const shareCard = (
-    <section aria-labelledby="course-share" className="course-side">
-      <h2 className="course-side-heading" id="course-share">
-        {ts('heading')}
-      </h2>
-      <ShareBar
-        label={ts('course')}
-        path={`/${locale}/study/${course.slug}`}
-        title={course.title}
-        email={email}
+  // The side column as one card (docs/content-driven-card-layouts.md, side
+  // card): status, price and apply; the facts; who teaches; the materials;
+  // sharing; studying it with AI. Each part in its own ruled section.
+  const applyCard = (
+    <div {...pe('registration')}>
+      <SideCardApply
+        applyLabel={t('apply')}
+        applyUrl={applyUrl}
+        newTab={applyUrl ? Boolean(newTab(applyUrl).target) : false}
+        open={open}
+        price={price}
+        primary
+        status={open ? t('open') : t('closed')}
       />
-    </section>
+    </div>
   )
-
-  // Taking the course with AI: its own card, at Share's spacing and rhythm.
-  const aiCard = (
-    <section aria-labelledby="course-ai" className="course-side">
-      <h2 className="course-side-heading" id="course-ai">
-        {ts('aiHeading')}
-      </h2>
-      <StudyWithAI kind="course" path={`/${locale}/study/${course.slug}`} />
-      <ol className="grid gap-1 list-decimal list-inside text-xs leading-relaxed text-(--text-muted)">
-        {(ts.raw('aiSteps') as string[]).map((step) => (
-          <li key={step}>{step}</li>
-        ))}
-      </ol>
-    </section>
+  const sideCard = (withPeople: boolean) => (
+    <SideCard color={POSTER_COLORS[0]} label={t('details')}>
+      <SideCardSection label={t('details')}>
+        {facts.length ? (
+          <dl className="side-card-facts">
+            {facts.map(({ icon: Icon, label, value, path }) => (
+              <div key={label} {...pe(path)}>
+                <span className="side-card-icon">
+                  <Icon aria-hidden size={16} strokeWidth={1.5} />
+                </span>
+                <div>
+                  <dt>{label}</dt>
+                  <dd>{value}</dd>
+                </div>
+              </div>
+            ))}
+          </dl>
+        ) : null}
+      </SideCardSection>
+      {withPeople && fellows.length ? (
+        <div {...pe('fellows')}>
+          <SideCardSection label={t('taughtBy')}>
+            <ContributorRows
+              contributors={fellows.map((person) => ({ person, role: t('fellow') }))}
+            />
+          </SideCardSection>
+        </div>
+      ) : null}
+      {withPeople && counts.length ? (
+        <SideCardSection label={t('materials')}>
+          <ul className="side-card-facts">
+            {counts.map(({ type, count }) => {
+              const Icon = MATERIAL_ICONS[type]
+              return (
+                <li key={type}>
+                  <span className="side-card-icon">
+                    <Icon aria-hidden size={16} strokeWidth={1.5} />
+                  </span>
+                  <span>{t(`materialCounts.${type}`, { count })}</span>
+                </li>
+              )
+            })}
+          </ul>
+        </SideCardSection>
+      ) : null}
+      <SideCardSection label={ts('heading')}>
+        <div className="side-card-body side-card-center side-card-scroll">
+          <ShareBar
+            label={ts('course')}
+            path={`/${locale}/study/${course.slug}`}
+            title={course.title}
+            email={email}
+          />
+        </div>
+      </SideCardSection>
+      <SideCardSection label={ts('aiHeading')}>
+        <div className="side-card-body side-card-center">
+          <StudyWithAI kind="course" path={`/${locale}/study/${course.slug}`} />
+          <ol className="grid list-inside list-decimal gap-1 text-xs leading-relaxed side-card-muted">
+            {(ts.raw('aiSteps') as string[]).map((step) => (
+              <li key={step}>{step}</li>
+            ))}
+          </ol>
+        </div>
+      </SideCardSection>
+    </SideCard>
   )
 
   return (
     <div
-      className={`course-page mx-auto w-full max-w-6xl px-4 py-10 sm:px-8 sm:py-14 xl:px-0 ${applyUrl ? 'max-lg:pb-28' : ''}`}
+      className={`course-page page-frame py-10 sm:py-14 ${applyUrl ? 'max-lg:pb-28' : ''}`}
       {...pe.scope({ collection: 'courses', id: course.id })}
     >
       {applyUrl ? (
@@ -411,7 +477,7 @@ export const CourseView: React.FC<{
         </div>
       ) : null}
       <div className="lg:grid lg:grid-cols-[minmax(0,1fr)_20rem] lg:gap-14">
-        <article aria-labelledby="course-title" className="min-w-0">
+        <article aria-labelledby="course-title" className="prose-frame min-w-0">
           {editable ? (
             <EditorFields
               pe={pe}
@@ -503,10 +569,9 @@ export const CourseView: React.FC<{
           ) : null}
 
           {/* Narrow screens: the facts and the fellows come before the text. */}
-          <div className="mt-10 grid gap-10 lg:hidden">
-            {factsCard}
-            {shareCard}
-            {aiCard}
+          <div className="mt-10 grid gap-6 lg:hidden">
+            {applyCard}
+            {sideCard(false)}
           </div>
 
           {course.epigraph ? (
@@ -528,25 +593,6 @@ export const CourseView: React.FC<{
             </section>
           ) : null}
 
-          {course.facilitator_note ? (
-            <section
-              aria-labelledby="course-note"
-              className="course-note mt-10"
-              {...pe('facilitator_note')}
-            >
-              <h2 className="font-sans text-sm font-medium" id="course-note">
-                {t('note')}
-              </h2>
-              <div className="mt-3 grid gap-3 text-[0.95rem] leading-relaxed" dir="auto">
-                {course.facilitator_note.split(/\n\s*\n/).map((p, i) => (
-                  <p className="whitespace-pre-line" key={i}>
-                    {p}
-                  </p>
-                ))}
-              </div>
-            </section>
-          ) : null}
-
           {course.content_warning ? (
             <p
               className="mt-6 border-s-2 border-foreground ps-4 text-sm"
@@ -561,7 +607,7 @@ export const CourseView: React.FC<{
 
           {sessions.length ? (
             <div className="mt-12">
-              <CourseSyllabus course={course} editable={editable} />
+              <CourseSyllabus className="course-flow" course={course} editable={editable} />
             </div>
           ) : null}
 
@@ -581,12 +627,9 @@ export const CourseView: React.FC<{
         <aside className="hidden lg:flex lg:flex-col lg:gap-10">
           {/* Not sticky: a fellow's bio can make the column taller than the screen.
               Only applying follows the reader down, at the column's end. */}
-          <div className="grid gap-10">
-            {factsCard}
-            {fellows.length ? facultyCard : null}
-            {materialsCard}
-            {shareCard}
-            {aiCard}
+          <div className="grid gap-6">
+            {applyCard}
+            {sideCard(true)}
           </div>
           {applyUrl ? (
             <div className="sticky top-22">

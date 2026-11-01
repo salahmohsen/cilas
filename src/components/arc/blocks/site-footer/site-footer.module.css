@@ -1,5 +1,5 @@
 .footer {
-  --footer-pad: var(--space-6);
+  --footer-pad: var(--page-gutter, var(--space-6));
   position: relative;
   container: site-footer / inline-size;
   overflow: hidden;
@@ -62,8 +62,15 @@
 
 .columns {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: var(--space-6);
+  /* As many columns as fit, each wide enough for a two-word link. */
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 9rem), 1fr));
+  gap: var(--space-8) var(--space-6);
+}
+/* A wide footer gives the links two thirds and the brand and signup one. */
+@container site-footer (min-width: 1000px) {
+  .top {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 2fr);
+  }
 }
 .column h2 {
   margin: 0 0 var(--space-3);

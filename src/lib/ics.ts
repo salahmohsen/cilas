@@ -15,6 +15,7 @@ export type IcsEntry = {
   end?: string
   url?: string
   description?: string
+  location?: string
   cancelled?: boolean
 }
 
@@ -96,6 +97,7 @@ export const buildIcs = (
       )
     }
     lines.push(`SUMMARY:${text(e.title)}`)
+    if (e.location) lines.push(`LOCATION:${text(e.location)}`)
     if (e.description) lines.push(`DESCRIPTION:${text(e.description)}`)
     if (e.url) lines.push(`URL:${e.url}`)
     if (e.cancelled) lines.push('STATUS:CANCELLED')

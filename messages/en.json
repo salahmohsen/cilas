@@ -63,7 +63,6 @@
     "spaces": {
       "label": "Spaces"
     },
-    "whatsOn": "What’s on",
     "events": {
       "label": "Events",
       "description": "Talks, screenings, and gatherings."
@@ -144,6 +143,8 @@
   },
   "Footer": {
     "tagline": "A pedagogy of discovery and attunement.",
+    "allCourses": "All courses",
+    "allPeople": "All people",
     "explore": "Explore",
     "study": "Study",
     "articles": "Articles",
@@ -398,6 +399,7 @@
     },
     "allInCycle": "See all {count} courses of this cycle",
     "whoTeaches": "Who teaches it",
+    "viewProfile": "View profile",
     "feedFilterBy": "Filter the syllabus",
     "feedMaterial": "To prepare",
     "feedShowAll": "Show all",
@@ -538,7 +540,7 @@
     "x": "X",
     "telegram": "Telegram",
     "email": "Email",
-    "aiHeading": "Take it with AI",
+    "aiHeading": "Discuss it with AI",
     "ai": "Study with an AI partner",
     "aiArticle": "Read this article with AI",
     "aiSteps": [
@@ -1413,6 +1415,9 @@
     "percent": "{percent, number}%"
   },
   "Movie": {
+    "allDetails": "All movie details",
+    "originalTitle": "Original title",
+    "close": "Close",
     "director": "Directed by",
     "writers": "Written by",
     "released": "Release date",
@@ -1441,7 +1446,6 @@
     "where": "Where",
     "admission": "Attendance",
     "timeSoon": "Time to be announced",
-    "admissionSoon": "Attendance details to be announced.",
     "title": "Events",
     "intro": "Talks, screenings, workshops, and gatherings at CILAS.",
     "upcoming": "Upcoming events",

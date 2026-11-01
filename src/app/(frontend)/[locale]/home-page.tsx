@@ -17,6 +17,7 @@ import { LogoMarquee } from '@/components/arc/blocks/logo-marquee/logo-marquee'
 import { ContactForm } from '@/components/contact/contact-form'
 import { ArticlesGrid } from '@/components/article/articles-grid'
 import { HomeHero } from '@/components/home/home-hero'
+import { HomeSnap } from '@/components/home/home-snap'
 import { HomeScene } from '@/components/home/home-scene'
 import { HomeArticles } from '@/components/home/home-articles'
 import { OpenNow } from '@/components/home/open-now'
@@ -126,6 +127,8 @@ export async function HomePage({ locale, reader }: { locale: string; reader: Rea
       <div className="home-page">
         {/* With nothing open there is no section; the hero says so instead. */}
         {open.length ? <OpenNow items={open} locale={locale} /> : null}
+        {/* The first screen snaps down to what is open; the rest scrolls freely. */}
+        {open.length ? <HomeSnap id="open" /> : null}
 
         {upcoming.length ? (
           <section aria-labelledby="home-events" className="home-section">

@@ -24,9 +24,9 @@
 
 .inner {
   position: relative;
-  max-width: 1200px;
+  max-width: var(--page-max, 1200px);
   margin: 0 auto;
-  padding: 0 var(--space-6);
+  padding: 0 var(--page-gutter, var(--space-6));
 }
 .bar {
   display: flex;

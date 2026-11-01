@@ -63,7 +63,6 @@
     "spaces": {
       "label": "المساحات"
     },
-    "whatsOn": "ماذا يحدث",
     "events": {
       "label": "الفعاليات",
       "description": "محاضرات وعروض ولقاءات."
@@ -144,6 +143,8 @@
   },
   "Footer": {
     "tagline": "بيداجوجيا الاكتشاف والتناغم.",
+    "allCourses": "كل المقررات",
+    "allPeople": "كل الناس",
     "explore": "استكشف",
     "study": "الدراسة",
     "articles": "مقالات",
@@ -398,6 +399,7 @@
     },
     "allInCycle": "كل مقررات هذه الدورة ({count, number, digits})",
     "whoTeaches": "مَن يقدّم المقرر",
+    "viewProfile": "الملف الشخصي",
     "feedFilterBy": "تصفية مسار المقرر",
     "feedMaterial": "للتحضير",
     "feedShowAll": "إظهار الكل",
@@ -538,7 +540,7 @@
     "x": "إكس",
     "telegram": "تيليجرام",
     "email": "البريد",
-    "aiHeading": "التعلّم مع الذكاء الاصطناعي",
+    "aiHeading": "ناقشه مع الذكاء الاصطناعي",
     "ai": "ادرس مع شريك من الذكاء الاصطناعي",
     "aiArticle": "اقرأ هذا المقال مع الذكاء الاصطناعي",
     "aiSteps": [
@@ -1413,6 +1415,9 @@
     "percent": "{percent, number, digits}٪"
   },
   "Movie": {
+    "allDetails": "كل تفاصيل الفيلم",
+    "originalTitle": "العنوان الأصلي",
+    "close": "إغلاق",
     "director": "إخراج",
     "writers": "تأليف",
     "released": "تاريخ الإصدار",
@@ -1441,7 +1446,6 @@
     "where": "المكان",
     "admission": "الحضور",
     "timeSoon": "سيُعلن الوقت قريبًا",
-    "admissionSoon": "ستُعلن تفاصيل الحضور قريبًا.",
     "title": "الفعاليات",
     "intro": "محاضرات وعروض وورش عمل ولقاءات في سيلاس.",
     "upcoming": "الفعاليات القادمة",

@@ -8,6 +8,7 @@ import {
   LayoutDashboard,
   MessagesSquare,
   Newspaper,
+  Ticket,
   UserRound,
   Users,
 } from 'lucide-react'
@@ -217,33 +218,26 @@ export function CILASSiteHeader({ nav = ALL_SHOWN }: { nav?: Navigation }) {
           },
         ]
       : []),
-    ...(nav.events || nav.calendar
+    // The header has the room, so events and the calendar are top-level items.
+    ...(nav.events
       ? [
           {
-            value: 'whatsOn',
-            label: t('whatsOn'),
-            href: href(nav.events ? '/events' : '/calendar'),
+            value: 'events',
+            label: t('events.label'),
+            href: href('/events'),
+            icon: Ticket,
+            description: t('events.description'),
+          },
+        ]
+      : []),
+    ...(nav.calendar
+      ? [
+          {
+            value: 'calendar',
+            label: t('calendar.label'),
+            href: href('/calendar'),
             icon: Calendar,
-            links: [
-              ...(nav.events
-                ? [
-                    {
-                      label: t('events.label'),
-                      href: href('/events'),
-                      description: t('events.description'),
-                    },
-                  ]
-                : []),
-              ...(nav.calendar
-                ? [
-                    {
-                      label: t('calendar.label'),
-                      href: href('/calendar'),
-                      description: t('calendar.description'),
-                    },
-                  ]
-                : []),
-            ],
+            description: t('calendar.description'),
           },
         ]
       : []),

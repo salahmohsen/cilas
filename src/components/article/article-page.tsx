@@ -30,7 +30,8 @@ import grid from '@/components/arc/blocks/blog-grid/blog-grid.module.css'
 import { AdminFrameOnly, OutsideAdminFrame } from '@/components/admin-frame-only'
 import { EditorFields, labelOf } from '@/components/editor-fields'
 import { RefreshRouteOnSave } from '@/components/RefreshRouteOnSave'
-import { ContributorList, PersonLink, type Contributor } from '@/components/person/contributors'
+import { ContributorRows, PersonLink, type Contributor } from '@/components/person/contributors'
+import { SideCard, SideCardSection } from '@/components/side-card'
 import { ResolvedRichTextField as RichTextField } from '@/components/resolved-rich-text-field'
 import { ShareBar } from '@/components/share-bar'
 import { StudyWithAI } from '@/components/study-with-ai'
@@ -220,6 +221,27 @@ export async function ArticlePage({ locale: siteLocale, slug, user: reader }: Vi
     : localDigits(yearOf(article), locale)
   const hasContents = sections.length >= 3
 
+  // The side card: who made it, its sections, and the text size.
+  const sideCard = (narrow: boolean) => (
+    <SideCard>
+      {contributors.length > 0 && (
+        <div {...pe('authors')}>
+          <SideCardSection label={t('people')}>
+            <ContributorRows contributors={contributors} />
+          </SideCardSection>
+        </div>
+      )}
+      {hasContents && (
+        <SideCardSection fold={narrow} label={narrow ? t('contents') : t('onThisPage')}>
+          <ArticleContents bare container="article-text" sections={sections} />
+        </SideCardSection>
+      )}
+      <SideCardSection label={t('textSize')}>
+        <TextSize cells target="article-text" />
+      </SideCardSection>
+    </SideCard>
+  )
+
   // The layout is Arc's blog-grid reader (blocks/blog-grid): one centred
   // column with a back link, meta line, title, byline, image and body. The
   // reading tools sit around it.
@@ -235,21 +257,17 @@ export async function ArticlePage({ locale: siteLocale, slug, user: reader }: Vi
       {/* The article itself, as data a search engine reads. */}
       <Schema data={[schema, crumbs]} />
       <div className={grid.inner}>
-        <div className="xl:grid xl:grid-cols-[17rem_minmax(0,760px)] xl:justify-center xl:gap-16">
+        <div className="xl:grid xl:grid-cols-[17rem_minmax(0,1fr)] xl:gap-16">
           {/* Margin: the contents, sticky beside the column on wide screens. */}
           <aside className="hidden xl:block">
-            <div className="sticky top-24 max-h-[calc(100vh-7rem)] space-y-10 overflow-y-auto pe-2">
-              <div {...pe('authors')}>
-                <ContributorList contributors={contributors} title={t('people')} />
-              </div>
-              {hasContents && <ArticleContents container="article-text" sections={sections} />}
-              <TextSize target="article-text" />
+            <div className="sticky top-24 max-h-[calc(100vh-7rem)] overflow-y-auto">
+              {sideCard(false)}
             </div>
           </aside>
 
           <article
             aria-labelledby="article-title"
-            className={grid.reader}
+            className={`${grid.reader} article-reader prose-frame`}
             {...pe.scope({ collection: 'articles', id: article.id })}
           >
             {preview ? (
@@ -346,12 +364,8 @@ export async function ArticlePage({ locale: siteLocale, slug, user: reader }: Vi
               </div>
             )}
 
-            {/* Narrow screens: the tools fold into the column. */}
-            <div className="flex flex-col gap-6 xl:hidden" {...pe('authors')}>
-              <ContributorList contributors={contributors} title={t('people')} />
-              {hasContents && <ArticleContents container="article-text" sections={sections} />}
-              <TextSize target="article-text" />
-            </div>
+            {/* Narrow screens: the same card in the column, its contents folded. */}
+            <div className="xl:hidden">{sideCard(true)}</div>
 
             {/* No text in the site language: show the content language, and say so. */}
             {fallback && (

@@ -42,14 +42,14 @@ export function SiteFooter({
   nav?: Navigation
 }) {
   const t = useTranslations('Footer')
-  const brand = useTranslations('Header')
+  const header = useTranslations('Header')
   const locale = useLocale()
   const href = (path: string) => `/${locale}${path}`
 
   return (
     <ArcSiteFooter
       brand={{
-        name: brand('brand').replace('\n', ' '),
+        name: header('brand').replace('\n', ' '),
         href: href(''),
         mark: (
           <Image
@@ -64,11 +64,43 @@ export function SiteFooter({
       }}
       columns={[
         {
+          title: header('study.label'),
+          links: [
+            { label: t('allCourses'), href: href('/study') },
+            ...(nav.thematic
+              ? [{ label: header('study.thematic'), href: href('/study?type=thematic') }]
+              : []),
+            ...(nav.labs ? [{ label: header('study.labs'), href: href('/study?type=lab') }] : []),
+            ...(nav.workshops
+              ? [{ label: header('study.workshops'), href: href('/study?type=workshop') }]
+              : []),
+            ...(nav.short
+              ? [{ label: header('study.short'), href: href('/study?type=short') }]
+              : []),
+            ...(nav.bridge
+              ? [{ label: header('study.featureTitle'), href: href('/study/bridge') }]
+              : []),
+          ],
+        },
+        {
+          title: header('people.label'),
+          links: [
+            { label: t('allPeople'), href: href('/people') },
+            ...(nav.fellows
+              ? [{ label: header('people.fellows'), href: href('/people/fellows') }]
+              : []),
+            ...(nav.cilasians
+              ? [{ label: header('people.cilasians'), href: href('/people/cilasians') }]
+              : []),
+            ...(nav.governance
+              ? [{ label: header('people.governance'), href: href('/governance') }]
+              : []),
+          ],
+        },
+        {
           title: t('explore'),
           links: [
-            { label: t('study'), href: href('/study') },
             ...(nav.articles ? [{ label: t('articles'), href: href('/articles') }] : []),
-            { label: t('people'), href: href('/people') },
             ...(nav.events ? [{ label: t('events'), href: href('/events') }] : []),
             ...(nav.calendar ? [{ label: t('calendar'), href: href('/calendar') }] : []),
           ],
@@ -83,7 +115,7 @@ export function SiteFooter({
             { label: t('contact'), href: href('/contact') },
           ],
         },
-      ]}
+      ].filter((column) => column.links.length > 0)}
       legal={[]}
       notice={
         <a

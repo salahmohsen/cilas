@@ -2834,3 +2834,316 @@
 .event[data-layout='detail'][data-cover] .eventBody {
   padding: var(--space-8) var(--space-6);
 }
+
+/* ===================================================== event card, poster look */
+
+/* The event card in the poster look (docs/content-driven-card-layouts.md,
+   section 7): ink rules, paper cells, the title on one palette colour. The
+   photo sits sharp in its own cell, with no blur or fade. Printed, so it
+   stays light in the dark theme: the theme tokens inside get light values. */
+.event,
+.event[data-cover] {
+  --poster-ink: #121212;
+  --poster-paper: #ffffff;
+  --event-pad: clamp(0.875rem, 4cqi, 1.5rem);
+  --foreground: oklch(15% 0 0);
+  --text-secondary: oklch(40% 0 0);
+  --text-muted: oklch(46% 0 0);
+  --surface: oklch(100% 0 0);
+  --surface-muted: oklch(97.8% 0 0);
+  --surface-raised: oklch(100% 0 0);
+  --border: oklch(88% 0 0);
+  --border-subtle: oklch(93.5% 0 0);
+  --border-strong: oklch(82% 0 0);
+  --accent: oklch(33% 0 0);
+  --accent-strong: oklch(24% 0 0);
+  --focus-outline: var(--poster-ink);
+  --shadow-resting: none;
+  color-scheme: light;
+  border: 1px solid var(--poster-ink);
+  border-radius: 1rem;
+  background: var(--poster-paper);
+  color: var(--poster-ink);
+}
+.event[data-cover] .rsvpGoing {
+  --surface: oklch(100% 0 0);
+  --surface-muted: oklch(97.8% 0 0);
+}
+/* The photo: its own 16:9 cell, an ink rule under it. */
+.event .eventBackdrop {
+  position: relative;
+  inset: auto;
+  z-index: auto;
+  aspect-ratio: 16 / 9;
+  border-block-end: 1px solid var(--poster-ink);
+}
+.event .eventBlur,
+.event .eventBackdrop::after {
+  display: none;
+}
+.event .eventPhoto {
+  inset: 0;
+  height: 100%;
+  -webkit-mask-image: none;
+  mask-image: none;
+}
+.event[data-layout='detail'] .eventBackdrop {
+  display: none;
+}
+.event[data-layout='detail'] .eventFullPhoto {
+  border-block-end: 1px solid var(--poster-ink);
+}
+/* No photo: the calendar leaf, printed, with the month on the card's colour. */
+.event .eventLeaf {
+  margin: var(--event-pad) auto;
+  border: 1px solid var(--poster-ink);
+  box-shadow: none;
+}
+.event .eventMonth {
+  border-block-end: 1px solid var(--poster-ink);
+  background: var(--poster-color);
+  color: var(--poster-ink);
+}
+/* The body: cells stacked under ink rules, text at the start. */
+.event .eventBody,
+.event[data-cover] .eventBody,
+.event[data-layout='detail'][data-cover] .eventBody {
+  justify-items: stretch;
+  gap: 0;
+  padding: 0;
+  text-align: start;
+}
+.event .eventHead {
+  justify-items: stretch;
+  gap: 0;
+}
+.event:not([data-cover]) .eventHead {
+  border-block-start: 1px solid var(--poster-ink);
+}
+.event .eventHead > :not(.eventTitle, .eventFacts) {
+  justify-self: start;
+  margin: var(--event-pad) var(--event-pad) 0;
+}
+.event .eventTitle {
+  /* The poster title's face: Playfair at its real bold, Amiri's regular for Arabic. */
+  font-family: var(--font-playfair-display), var(--font-amiri), serif;
+  font-weight: 700;
+  font-synthesis-weight: none;
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+  padding: var(--event-pad);
+  border-block-end: 1px solid var(--poster-ink);
+  background: var(--poster-color);
+  color: var(--poster-ink);
+}
+.event .eventHead > :not(.eventTitle, .eventFacts) + .eventTitle {
+  margin-block-start: var(--event-pad);
+  border-block-start: 1px solid var(--poster-ink);
+}
+.event .eventFacts,
+.event .eventWhen {
+  justify-items: start;
+}
+.event .eventFacts {
+  padding: var(--event-pad);
+}
+.event .eventTime {
+  justify-content: flex-start;
+}
+.event .eventBody > :not(.eventHead) {
+  padding: var(--event-pad);
+  border-block-start: 1px solid var(--poster-ink);
+}
+.event .eventReply,
+.event .rsvpChoose {
+  justify-items: start;
+}
+
+/* The facts: boxes under ink rules. The date and time, with the calendar
+   button as a box beside them; the place, its icon in a box of its own; the note. */
+.event .eventFacts {
+  display: grid;
+  justify-items: stretch;
+  gap: 0;
+  padding: 0;
+}
+.eventWhenRow {
+  display: flex;
+  align-items: stretch;
+}
+.eventWhenCell {
+  flex: 1;
+  min-width: 0;
+  padding: var(--event-pad);
+}
+.eventCalendarCell {
+  display: grid;
+  flex: none;
+  width: 4.5rem;
+  border-inline-start: 1px solid var(--poster-ink);
+}
+/* The whole box is the button: the trigger fills it, past Arc's icon size. */
+.event .eventCalendarCell > button,
+.event .eventCalendarCell > * > button {
+  display: grid;
+  place-items: center;
+  width: 100%;
+  min-width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: var(--poster-paper);
+  color: var(--poster-ink);
+  box-shadow: none;
+  cursor: pointer;
+}
+@media (hover: hover) and (pointer: fine) {
+  .event .eventCalendarCell > button:hover,
+  .event .eventCalendarCell > * > button:hover {
+    background: color-mix(in oklab, var(--poster-color) 40%, var(--poster-paper));
+  }
+}
+.event .eventCalendarCell > button:focus-visible,
+.event .eventCalendarCell > * > button:focus-visible {
+  outline: 3px solid var(--poster-ink);
+  outline-offset: -3px;
+}
+.event .eventWhere {
+  display: flex;
+  align-items: stretch;
+  gap: 0;
+  width: 100%;
+  margin: 0;
+  border-block-start: 1px solid var(--poster-ink);
+}
+.eventWhereIcon {
+  display: grid;
+  flex: none;
+  place-items: center;
+  width: 2.75rem;
+  border-inline-end: 1px solid var(--poster-ink);
+  color: var(--poster-ink);
+}
+.event .eventWhere > svg {
+  margin: 0;
+}
+.event .eventWhere > a,
+.event .eventWhere > bdi {
+  align-self: center;
+  padding: 0.75rem var(--event-pad);
+}
+.eventNoteCell {
+  padding: 0.75rem var(--event-pad);
+  border-block-start: 1px solid var(--poster-ink);
+}
+/* The answers: three boxes in a row, the reader's own on the card's colour;
+   then who is going, centred in a box of its own. */
+.event .eventBody > .eventReply {
+  justify-items: stretch;
+  gap: 0;
+  padding: 0;
+}
+.rsvpCells {
+  display: flex;
+  align-items: stretch;
+}
+.rsvpCell {
+  display: inline-flex;
+  flex: 1 1 0;
+  align-items: center;
+  justify-content: center;
+  gap: 0.375rem;
+  min-width: 0;
+  min-height: 2.75rem;
+  padding: 0.5rem;
+  border: 0;
+  background: var(--poster-paper);
+  color: var(--poster-ink);
+  font: inherit;
+  font-size: var(--text-sm);
+  font-weight: 500;
+}
+.rsvpCell + .rsvpCell {
+  border-inline-start: 1px solid var(--poster-ink);
+}
+button.rsvpCell {
+  cursor: pointer;
+}
+@media (hover: hover) and (pointer: fine) {
+  button.rsvpCell:not([data-mine]):hover {
+    background: color-mix(in oklab, var(--poster-color) 35%, var(--poster-paper));
+  }
+}
+.rsvpCell[data-mine] {
+  background: var(--poster-color);
+  font-weight: 600;
+}
+.rsvpCell:focus-visible {
+  outline: 3px solid var(--poster-ink);
+  outline-offset: -3px;
+}
+.event .rsvpGoing {
+  justify-content: center;
+  padding: 0.75rem var(--event-pad);
+  border-block-start: 1px solid var(--poster-ink);
+}
+.event .eventReply > [role='alert'] {
+  padding: 0.5rem var(--event-pad);
+  border-block-start: 1px solid var(--poster-ink);
+}
+/* The full list of who is going, in a dialog. */
+.rsvpList {
+  display: grid;
+  gap: var(--space-2);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.rsvpList li {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+/* Browsing cards: the photo or leaf, then the title's colour takes the spare
+   height, so cards in a row end together. */
+.event[data-layout='card'] {
+  display: flex;
+  flex-direction: column;
+  block-size: 100%;
+}
+.event[data-layout='card'] .eventBackdrop {
+  flex: none;
+}
+.event[data-layout='card'] .eventLeaf {
+  position: static;
+  margin: var(--event-pad) auto;
+}
+.event[data-layout='card'] .eventBody {
+  flex: 1;
+  block-size: auto;
+  padding: 0;
+  justify-content: flex-start;
+}
+.event[data-layout='card'] .eventHead {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 0;
+}
+.event[data-layout='card'] .eventTitle {
+  flex: 1;
+}
+/* The words keep their measure; the cell and its rule span the card. */
+.event .eventDescription {
+  max-width: none;
+}
+.event .eventDescription > * {
+  max-width: 65ch;
+}
+/* Arabic pages: Amiri takes no negative tracking and needs taller lines. */
+:global([dir='rtl']) .event .eventTitle {
+  letter-spacing: 0;
+  line-height: 1.35;
+}

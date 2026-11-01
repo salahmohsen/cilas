@@ -43,7 +43,7 @@ describe('movie editor blocks', () => {
     renderMovie(movie)
     expect(screen.queryByText('Screening subtitles')).toBeNull()
   })
-  it('renders the saved film, poster, credits, public source links, and attribution', async () => {
+  it('renders the saved film on the card and the rest of its metadata in a dialog', async () => {
     renderMovie(movie)
     expect(screen.getByRole('heading', { name: 'Faces (1968)' })).toBeInTheDocument()
     expect(screen.getByAltText('Faces')).toHaveAttribute(
@@ -51,7 +51,11 @@ describe('movie editor blocks', () => {
       'https://image.tmdb.org/t/p/w500/poster.jpg',
     )
     expect(screen.getByText(movie.overview)).toBeInTheDocument()
-    expect(screen.getByText('130 minutes')).toBeInTheDocument()
+    // Runtime, sources and attribution wait in the dialog.
+    expect(screen.queryByText('130 minutes')).toBeNull()
+    expect(screen.queryByRole('link', { name: 'TMDB' })).toBeNull()
+    fireEvent.click(screen.getByRole('button', { name: 'All movie details' }))
+    expect(await screen.findByText('130 minutes')).toBeInTheDocument()
     expect(screen.getByRole('link', { name: 'TMDB' })).toHaveAttribute(
       'href',
       'https://www.themoviedb.org/movie/753',
@@ -60,21 +64,10 @@ describe('movie editor blocks', () => {
       'href',
       'https://www.imdb.com/title/tt0062952/',
     )
-    expect(screen.queryByRole('region', { name: 'Credits and attribution' })).toBeNull()
-    fireEvent.click(screen.getByRole('button', { name: 'Credits' }))
-    expect(
-      await screen.findByRole('region', { name: 'Credits and attribution' }),
-    ).toHaveTextContent('This product uses the TMDB API but is not endorsed or certified by TMDB.')
+    expect(screen.getByRole('region', { name: 'Credits and attribution' })).toHaveTextContent(
+      'This product uses the TMDB API but is not endorsed or certified by TMDB.',
+    )
     expect(screen.getByRole('img', { name: 'TMDB' })).toBeInTheDocument()
-  })
-  it('opens the attribution hover card when hovering its trigger', async () => {
-    renderMovie(movie)
-    fireEvent.pointerEnter(screen.getByRole('button', { name: 'Credits' }), {
-      pointerType: 'mouse',
-    })
-    expect(
-      await screen.findByRole('region', { name: 'Credits and attribution' }),
-    ).toHaveTextContent('This product uses the TMDB API')
   })
   it('keeps missing posters usable and rejects malformed saved metadata', () => {
     const { container } = renderMovie({ ...movie, posterPath: null })

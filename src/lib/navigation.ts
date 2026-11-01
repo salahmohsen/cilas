@@ -13,8 +13,8 @@ export const NAV_ITEMS = [
   { key: 'cilasians', label: 'People → CILASians' },
   { key: 'governance', label: 'People → Governance' },
   { key: 'articles', label: 'Articles' },
-  { key: 'events', label: 'What’s on → Events' },
-  { key: 'calendar', label: 'What’s on → Calendar' },
+  { key: 'events', label: 'Events' },
+  { key: 'calendar', label: 'Calendar' },
 ] as const
 
 export type NavKey = (typeof NAV_ITEMS)[number]['key']

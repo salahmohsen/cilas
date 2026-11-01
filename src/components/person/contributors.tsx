@@ -60,3 +60,27 @@ export function ContributorList({
     </section>
   )
 }
+
+/** The same people as ruled rows, for a side card's section. */
+export function ContributorRows({ contributors }: { contributors: Contributor[] }) {
+  return (
+    <ul className="side-card-people">
+      {contributors.map(({ person, role }) => (
+        <li key={`${person.id}-${role}`}>
+          <Link href={`/people/${person.slug}`}>
+            <Avatar
+              fallbackSeed={personAvatarSeed(person.id)}
+              name={person.name}
+              size="md"
+              src={photoOf(person)}
+            />
+            <span className="min-w-0">
+              <span className="side-card-name">{person.name}</span>
+              <span className="side-card-role">{role}</span>
+            </span>
+          </Link>
+        </li>
+      ))}
+    </ul>
+  )
+}

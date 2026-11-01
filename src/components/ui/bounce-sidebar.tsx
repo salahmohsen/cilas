@@ -118,7 +118,8 @@ export function BounceSidebar({
           width: DOT_SIZE,
           height: DOT_SIZE,
           backgroundColor: dotColor,
-          opacity: ready ? 1 : 0,
+          // No item is current (value -1): the dot hides.
+          opacity: ready && activeIndex >= 0 ? 1 : 0,
         }}
       />
 

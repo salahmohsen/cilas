@@ -77,25 +77,21 @@ describe('poster image delivery', () => {
     expect(image(container)).toHaveAttribute('srcset')
   })
 
-  it('replaces a failed request with the local fallback and recovers for a different cover', () => {
+  it('shows the CILAS mark when the cover fails, and recovers for a different cover', () => {
     const { container, rerender } = render(<Poster poster={poster} />)
     fireEvent.error(image(container))
-    expect(image(container)).toHaveAttribute('src', '/assets/images/cilas-classroom.jpg')
-    expect(image(container)).toHaveAttribute('alt', '')
-    expect(image(container).style.objectPosition).toBe('50% 50%')
-    fireEvent.error(image(container))
-    expect(image(container)).toHaveAttribute('src', '/assets/images/cilas-classroom.jpg')
+    expect(container.querySelector('.poster-image img')).toBeNull()
+    expect(container.querySelector('.poster-fallback-logo')).not.toBeNull()
     rerender(
       <Poster
         poster={{ ...poster, image: { src: '/assets/images/new.webp', alt: 'New cover' } }}
       />,
     )
-    expect(image(container)).toHaveAttribute('src', '/assets/images/new.webp')
+    expect(image(container).getAttribute('src')).toContain('/assets/images/new.webp')
   })
 
-  it('uses the logo fallback when that poster requests one', () => {
-    const { container } = render(<Poster poster={{ ...poster, imageFallback: 'logo' }} />)
-    fireEvent.error(image(container))
+  it('shows the CILAS mark when a poster has no image', () => {
+    const { container } = render(<Poster poster={{ ...poster, image: undefined }} />)
     expect(container.querySelector('.poster-image img')).toBeNull()
     expect(container.querySelector('.poster-fallback-logo')).not.toBeNull()
   })

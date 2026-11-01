@@ -1,4 +1,3 @@
-import Image from 'next/image'
 import type { Metadata } from 'next'
 import { getTranslations } from 'next-intl/server'
 import { Suspense } from 'react'
@@ -57,37 +56,29 @@ export default async function CoursesPage({ params, searchParams }: Props) {
   const firstYear = result.options.year.at(-1)?.value
 
   return (
-    <div className="mx-auto flex w-full max-w-6xl flex-col gap-12 px-4 py-10 sm:px-8 sm:py-14 xl:px-0">
+    <div className="page-frame flex flex-col gap-12 py-10 sm:py-14">
       {list ? <Schema data={list} /> : null}
-      <header className="study-header">
-        <div className="study-header-text">
-          <h1 className="study-title">{t('title')}</h1>
-          {firstYear ? (
-            <p className="study-since">{t('since', { count: all, year: firstYear })}</p>
-          ) : null}
-          <div className="article-prose study-quote">
-            <blockquote className="quote-with-source">
-              <p>{t('heroQuote')}</p>
-              <footer>
-                <cite>{t('heroAttribution').replace(/^\s*[—–-]\s*/, '')}</cite>
-              </footer>
-            </blockquote>
-          </div>
-        </div>
-        <figure className="study-figure">
-          <Image
-            alt={t('heroImageAlt')}
-            className="study-figure-image"
-            height={1536}
-            priority
-            sizes="(min-width: 64rem) 34rem, 100vw"
-            src="/assets/images/cilas-classroom.jpg"
-            width={2048}
-          />
-        </figure>
-      </header>
       <Suspense>
-        <StudyList pageSize={STUDY_PAGE_SIZE} result={result} />
+        <StudyList
+          intro={
+            firstYear ? (
+              <p className="study-since">{t('since', { count: all, year: firstYear })}</p>
+            ) : null
+          }
+          pageSize={STUDY_PAGE_SIZE}
+          quote={
+            <div className="article-prose study-quote">
+              <blockquote className="quote-with-source">
+                <p>{t('heroQuote')}</p>
+                <footer>
+                  <cite>{t('heroAttribution').replace(/^\s*[—–-]\s*/, '')}</cite>
+                </footer>
+              </blockquote>
+            </div>
+          }
+          result={result}
+          title={t('title')}
+        />
       </Suspense>
     </div>
   )

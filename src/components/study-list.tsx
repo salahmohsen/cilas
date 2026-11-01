@@ -2,7 +2,7 @@
 
 import { useLocale, useTranslations } from 'next-intl'
 import { usePathname, useRouter, useSearchParams } from 'next/navigation'
-import { useEffect, useMemo, useRef, useState, useTransition } from 'react'
+import { useEffect, useMemo, useRef, useState, useTransition, type ReactNode } from 'react'
 
 import type { StudyPage } from '@/api/study-index'
 import { EmptyState } from '@/components/arc/empty-state/empty-state'
@@ -46,9 +46,22 @@ function useSlow(active: boolean, delay = 400, min = 350) {
  * live in the URL (`?type=thematic&page=2`); the server works the list out
  * from it and sends one page, so the browser never holds the whole catalogue.
  * Here the controls change the URL, and the list dims while the next page
- * comes.
+ * comes. The page's header card holds the filters, so the title can show a
+ * dot while any filter is on.
  */
-export function StudyList({ result, pageSize }: { result: StudyPage; pageSize: number }) {
+export function StudyList({
+  intro,
+  pageSize,
+  quote,
+  result,
+  title,
+}: {
+  intro: ReactNode
+  pageSize: number
+  quote: ReactNode
+  result: StudyPage
+  title: string
+}) {
   const t = useTranslations('Study.filters')
   const locale = useLocale()
   const router = useRouter()
@@ -102,38 +115,56 @@ export function StudyList({ result, pageSize }: { result: StudyPage; pageSize: n
   const slow = useSlow(pending)
 
   return (
-    <section className="study-list flex flex-col gap-6">
-      <div className="flex flex-col gap-4">
-        <FilterToolbar
-          addFilter={{
-            fields,
-            label: t('add'),
-            onAdd: (chip, field) => {
-              const value = field.options
-                .map((o) => (typeof o === 'string' ? { value: o, label: o } : o))
-                .find((o) => (o.label ?? o.value) === chip.value)?.value
-              if (value) navigate((next) => next.set(field.id as CourseFacet, value))
-            },
-          }}
-          filters={chips}
-          label={t('label')}
-          text={{
-            empty: t('none'),
-            clearAll: t('clearAll'),
-            back: t('back'),
-            remove: (chip) => t('remove', { chip }),
-            added: (chip) => t('added', { chip }),
-            removed: (chip) => t('removed', { chip }),
-            changed: (field, value) => t('changed', { field, value }),
-            cleared: t('cleared'),
-          }}
-          onClearAll={() => navigate((next) => COURSE_FACETS.forEach((f) => next.delete(f)))}
-          onRemove={(id) => navigate((next) => next.delete(id))}
-        />
-        <p aria-live="polite" className="text-sm text-[var(--text-secondary)]">
-          {pending ? t('searching') : t('count', { count: result.total })}
-        </p>
-      </div>
+    <section className="study-list flex flex-col gap-12">
+      <header className="study-card-frame">
+        <div className="study-card">
+          <div className="study-card-panel">
+            <h1 className="study-title">
+              {title}
+              {chips.length ? (
+                <span
+                  aria-hidden
+                  className="study-filter-dot"
+                  data-pending={pending || undefined}
+                />
+              ) : null}
+            </h1>
+            {intro}
+          </div>
+          {quote}
+          <div className="study-card-filters">
+            <FilterToolbar
+              addFilter={{
+                fields,
+                label: t('add'),
+                onAdd: (chip, field) => {
+                  const value = field.options
+                    .map((o) => (typeof o === 'string' ? { value: o, label: o } : o))
+                    .find((o) => (o.label ?? o.value) === chip.value)?.value
+                  if (value) navigate((next) => next.set(field.id as CourseFacet, value))
+                },
+              }}
+              filters={chips}
+              label={t('label')}
+              text={{
+                empty: t('none'),
+                clearAll: t('clearAll'),
+                back: t('back'),
+                remove: (chip) => t('remove', { chip }),
+                added: (chip) => t('added', { chip }),
+                removed: (chip) => t('removed', { chip }),
+                changed: (field, value) => t('changed', { field, value }),
+                cleared: t('cleared'),
+              }}
+              onClearAll={() => navigate((next) => COURSE_FACETS.forEach((f) => next.delete(f)))}
+              onRemove={(id) => navigate((next) => next.delete(id))}
+            />
+            <p aria-live="polite" className="study-card-count">
+              {pending ? t('searching') : t('count', { count: result.total })}
+            </p>
+          </div>
+        </div>
+      </header>
 
       <div
         aria-busy={pending || undefined}

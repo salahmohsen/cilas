@@ -9,9 +9,9 @@
 }
 .inner {
   position: relative;
-  max-width: 1180px;
+  max-width: var(--page-max, 1180px);
   margin: 0 auto;
-  padding: var(--space-16) var(--space-6);
+  padding: var(--space-16) var(--page-gutter, var(--space-6));
 }
 .index {
   display: grid;
@@ -42,9 +42,9 @@
 .filters {
   display: flex;
   gap: 2px;
-  margin: 0 calc(var(--space-6) * -1);
+  margin: 0 calc(var(--page-gutter, var(--space-6)) * -1);
   overflow-x: auto;
-  padding: 0 var(--space-6);
+  padding: 0 var(--page-gutter, var(--space-6));
   scrollbar-width: none;
 }
 .filters::-webkit-scrollbar {
