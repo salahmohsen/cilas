@@ -13,6 +13,7 @@ import {
 import { TextMorph } from '@/components/arc/text-morph/text-morph'
 import { HomeNumbers, type HomeStat } from '@/components/home/home-numbers'
 import { Link } from '@/i18n/navigation'
+import { scrollToSection } from '@/lib/scroll-to-section'
 
 type Action = { label: string; href: string }
 /** The main action while it can't be taken: its label, and why, with where to go instead. */
@@ -249,7 +250,18 @@ export function HomeHero({
         </p>
         <div className="home-hero-actions home-hero-rise" style={step(2)}>
           {'href' in primary ? (
-            <Link className="home-action" data-primary href={primary.href}>
+            <Link
+              className="home-action"
+              data-primary
+              href={primary.href}
+              onClick={(event) => {
+                // A section on this page: scroll there on every click, not only
+                // the first (the same hash again is no navigation).
+                const hash = primary.href.split('#')[1]
+                if (hash && scrollToSection(hash, { reduced: Boolean(reduced) }))
+                  event.preventDefault()
+              }}
+            >
               {primary.label}
             </Link>
           ) : (
