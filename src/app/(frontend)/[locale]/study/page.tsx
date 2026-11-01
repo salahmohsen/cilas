@@ -1,4 +1,3 @@
-import Image from 'next/image'
 import type { Metadata } from 'next'
 import { getTranslations } from 'next-intl/server'
 import { Suspense } from 'react'
@@ -59,15 +58,15 @@ export default async function CoursesPage({ params, searchParams }: Props) {
   return (
     <div className="page-frame flex flex-col gap-12 py-10 sm:py-14">
       {list ? <Schema data={list} /> : null}
-      <header className="study-card-frame">
-        <div className="study-card">
-          <div className="study-card-main">
-            <div className="study-card-panel">
-              <h1 className="study-title">{t('title')}</h1>
-              {firstYear ? (
-                <p className="study-since">{t('since', { count: all, year: firstYear })}</p>
-              ) : null}
-            </div>
+      <Suspense>
+        <StudyList
+          intro={
+            firstYear ? (
+              <p className="study-since">{t('since', { count: all, year: firstYear })}</p>
+            ) : null
+          }
+          pageSize={STUDY_PAGE_SIZE}
+          quote={
             <div className="article-prose study-quote">
               <blockquote className="quote-with-source">
                 <p>{t('heroQuote')}</p>
@@ -76,22 +75,10 @@ export default async function CoursesPage({ params, searchParams }: Props) {
                 </footer>
               </blockquote>
             </div>
-          </div>
-          <figure className="study-figure">
-            <Image
-              alt={t('heroImageAlt')}
-              className="study-figure-image"
-              height={1536}
-              priority
-              sizes="(min-width: 64rem) 40rem, 100vw"
-              src="/assets/images/cilas-classroom.jpg"
-              width={2048}
-            />
-          </figure>
-        </div>
-      </header>
-      <Suspense>
-        <StudyList pageSize={STUDY_PAGE_SIZE} result={result} />
+          }
+          result={result}
+          title={t('title')}
+        />
       </Suspense>
     </div>
   )
