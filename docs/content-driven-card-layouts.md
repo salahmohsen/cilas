@@ -280,8 +280,11 @@ A section that holds a list rather than a single card (the course flow beside th
 | ------------------- | --------------------------------------------------------- | ---------------------------------------- |
 | Registration poster | `src/components/home/poster.tsx`                          | `.poster*`                               |
 | Fellow card         | `src/app/(frontend)/[locale]/study/[slug]/CourseView.tsx` | `.fellow-card*`                          |
+| Study page header   | `src/app/(frontend)/[locale]/study/page.tsx`              | `.study-card*`, `.study-*`               |
 
 The fellow card maps the poster like this: photo (media cell, 4:3 when stacked; when wide, a `min(36%, 18rem)` column that the photo fills from top to bottom, at least square, so its end meets the end of the text beside it; the image covers the cell from its focal point), name on the colour panel (section-heading style, regular weight), the bio as a paper cell under the name, then one ruled foot row instead of the poster's strip: the notice label (icon box and "From the fellow") under the photo column, and "View profile" in the card's colour across the text column, its words on the bio's text edge. The fellows' note follows on paper. The note is course-level: with one fellow it closes that card; with several it gets its own card after theirs, in the next palette colour, with an empty paper cell where the action would be. A card without a note keeps an empty paper box under the photo on wide cards, and gives the action the whole row on narrow ones. Content sizes the card; nothing shares a height with a neighbour.
+
+The study page header is the same card as a page head: the page title (bold, see Type) and the course count on the yellow panel, which takes the spare height and sets its words at the bottom; the quote on paper under it; the classroom photo beside them when the card is wider than `48rem`, stretched to the full card height, and under them, 4:3, when it is narrower. The title comes first in the source, so on phones the words lead and the photo follows.
 
 ## 8. Verification
 
