@@ -830,6 +830,34 @@
     "showPassword": "Show password",
     "hidePassword": "Hide password"
   },
+  "Forgot": {
+    "metaTitle": "Reset your password — CILAS",
+    "title": "Forgot your password?",
+    "intro": "Enter the email of your CILAS account. We send you a link to set a new password.",
+    "email": "Email",
+    "submit": "Send the link",
+    "invalidEmail": "Enter a valid email address.",
+    "failed": "The email was not sent. Try again.",
+    "sentTitle": "Check your email",
+    "sentBody": "If an account exists for {email}, we sent a link to set a new password. The link works once and expires in one hour.",
+    "back": "Back to sign in"
+  },
+  "Reset": {
+    "metaTitle": "Set a new password — CILAS",
+    "title": "Set a new password",
+    "intro": "Choose a password for your CILAS account.",
+    "password": "New password",
+    "confirm": "Repeat the new password",
+    "submit": "Save the password",
+    "tooShort": "Use at least 8 characters.",
+    "mismatch": "The two passwords do not match.",
+    "invalid": "This link has expired or was already used. Ask for a new one.",
+    "failed": "The password was not saved. Try again.",
+    "requestNew": "Send a new link",
+    "showPassword": "Show password",
+    "hidePassword": "Hide password",
+    "back": "Back to sign in"
+  },
   "NewsletterSignup": {
     "title": "Get the CILAS newsletter",
     "description": "New courses, open calls and articles from CILAS, in your inbox.",
