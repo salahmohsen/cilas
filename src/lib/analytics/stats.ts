@@ -68,6 +68,13 @@ export const activityFrom = (rows: Row[], now = new Date()): { date: string; cou
   return pointsFromCounts(views, 365, now).map(({ key, value }) => ({ date: key, count: value }))
 }
 
+/** The first `keep` entries, with the rest added up as one "Other" (a waffle needs every share in it). */
+export const withOther = (list: Ranked[], keep: number, label = 'Other'): Ranked[] => {
+  if (list.length <= keep) return list
+  const rest = list.slice(keep).reduce((sum, item) => sum + item.value, 0)
+  return [...list.slice(0, keep), { key: 'other', label, value: rest }]
+}
+
 /* Pages */
 
 export type Ranked = { key: string; label: string; value: number }
@@ -103,6 +110,10 @@ const ranked = (
     .map(([key, value]): Ranked => ({ key, label: label(key), value }))
 
 const pageLabel = (path: string) => (path === '/' ? 'Home' : path)
+
+/** All page views in the last 30 days, whatever the page: the whole that the top lists share. */
+export const totalViewsOf = (rows: Row[]): number =>
+  rows.reduce((sum, row) => sum + count(row[1]), 0)
 
 export const topPages = (rows: Row[], limit = 8): Ranked[] =>
   ranked(viewsByPath(rows), limit, pageLabel)
