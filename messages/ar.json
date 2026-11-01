@@ -1357,6 +1357,9 @@
     "movieData": "بيانات الأفلام وصورها"
   },
   "Events": {
+    "addToCalendar": "أضف إلى التقويم",
+    "googleCalendar": "تقويم جوجل",
+    "downloadIcs": "آبل، آوتلوك (.ics)",
     "details": "تفاصيل الفعالية",
     "when": "الموعد",
     "where": "المكان",

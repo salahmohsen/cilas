@@ -1357,6 +1357,9 @@
     "movieData": "Movie data and images"
   },
   "Events": {
+    "addToCalendar": "Add to calendar",
+    "googleCalendar": "Google Calendar",
+    "downloadIcs": "Apple, Outlook (.ics)",
     "details": "Event details",
     "when": "When",
     "where": "Where",

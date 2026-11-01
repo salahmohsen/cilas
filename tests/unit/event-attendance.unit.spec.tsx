@@ -36,7 +36,7 @@ describe('event attendance details', () => {
     const page = await render()
     expect(page.body.textContent).toContain('Time to be announced')
     expect(page.body.textContent).toContain('Attendance details to be announced.')
-    expect(page.querySelector('a')).toBeNull()
+    expect(page.querySelector('a.side-card-action')).toBeNull()
   })
 
   it('embeds the pinned Maps location with the same loading and privacy settings as Spaces', async () => {
@@ -60,9 +60,11 @@ describe('event attendance details', () => {
       ...event,
       registration: { method: 'external' as const, url: 'https://example.com/register' },
     }
-    expect((await render(external)).querySelector('a')?.href).toBe('https://example.com/register')
+    expect(
+      (await render(external)).querySelector<HTMLAnchorElement>('a.side-card-action')?.href,
+    ).toBe('https://example.com/register')
     const ended = await render(external, new Date('2026-11-02T12:00:00Z'))
-    expect(ended.querySelector('a')).toBeNull()
+    expect(ended.querySelector('a.side-card-action')).toBeNull()
     expect(ended.body.textContent).toContain('This event has ended')
   })
 
@@ -71,8 +73,17 @@ describe('event attendance details', () => {
       ...event,
       registration: { method: 'external', url: 'javascript:alert(1)' },
     })
-    expect(page.querySelector('a')).toBeNull()
+    expect(page.querySelector('a.side-card-action')).toBeNull()
     expect(page.body.textContent).toContain('Attendance details to be announced.')
     expect(page.body.textContent).not.toContain('Registration is closed.')
+  })
+})
+
+describe('event attendance calendar', () => {
+  it('offers the event to a calendar only while it is upcoming', async () => {
+    const page = await render()
+    expect(page.querySelector('a[href="/en/events/screening/event.ics"]')).not.toBeNull()
+    const ended = await render(event, new Date('2026-11-02T12:00:00Z'))
+    expect(ended.querySelector('a[href$="event.ics"]')).toBeNull()
   })
 })

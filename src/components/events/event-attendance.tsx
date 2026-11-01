@@ -1,5 +1,5 @@
 import { getFormatter, getTranslations } from 'next-intl/server'
-import { ArrowDown, ArrowUpRight } from 'lucide-react'
+import { ArrowDown, ArrowUpRight, CalendarPlus, Download, ExternalLink } from 'lucide-react'
 import type { Event } from '@/payload-types'
 import { EventWhen } from '@/components/space/event-details'
 import { cairoInstant } from '@/lib/cairo-day'
@@ -9,6 +9,8 @@ import { locationUrl } from '@/lib/space-event'
 import { registrationStatus } from '@/lib/registration'
 import { SideCard, SideCardSection } from '@/components/side-card'
 import { EVENT_POSTER_COLORS } from '@/lib/event-poster-colors'
+import { eventGoogleUrl } from '@/lib/event-calendar'
+import { absoluteUrl } from '@/lib/schema'
 import styles from './events.module.css'
 
 export async function EventAttendance({
@@ -57,6 +59,42 @@ export async function EventAttendance({
         {t('register')}
         <ArrowDown size={16} aria-hidden />
       </a>
+    ) : null
+  // Add to calendar: a Google Calendar page, or the .ics file with every meeting.
+  const pageUrl = absoluteUrl(`/${locale}/events/${event.slug}`)
+  const words = {
+    speakers: t('speakers'),
+    agenda: t('agenda'),
+    admission: t('admission'),
+    online: t('online'),
+    egp: t('egp'),
+    free: t('free'),
+  }
+  const google = eventGoogleUrl(event, timing.meeting, pageUrl, words)
+  const calendar =
+    timing.status === 'upcoming' ? (
+      <details className="side-card-menu">
+        <summary className="side-card-action side-card-action--paper">
+          {t('addToCalendar')}
+          <CalendarPlus size={16} aria-hidden />
+        </summary>
+        <div className="side-card-buttons">
+          {google && (
+            <a className="side-card-button" href={google} target="_blank" rel="noopener noreferrer">
+              <ExternalLink size={14} aria-hidden />
+              {t('googleCalendar')}
+            </a>
+          )}
+          <a
+            className="side-card-button"
+            href={`/${locale}/events/${event.slug}/event.ics`}
+            download
+          >
+            <Download size={14} aria-hidden />
+            {t('downloadIcs')}
+          </a>
+        </div>
+      </details>
     ) : null
   return (
     <SideCard
@@ -153,6 +191,7 @@ export async function EventAttendance({
             </p>
           )}
         </div>
+        {calendar}
         {register}
       </SideCardSection>
     </SideCard>

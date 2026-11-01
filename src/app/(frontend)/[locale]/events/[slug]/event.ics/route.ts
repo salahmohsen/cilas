@@ -1,0 +1,40 @@
+import config from '@payload-config'
+import { getTranslations } from 'next-intl/server'
+import { getPayload } from 'payload'
+
+import { getPublicEvents } from '@/api/events.api'
+import { absoluteUrl } from '@/lib/schema'
+import { eventIcs } from '@/lib/event-calendar'
+
+/**
+ * One public event as an iCalendar file, every meeting with its full
+ * details: `/en/events/<slug>/event.ics`. The UIDs are stable, so adding it
+ * again updates the same entries.
+ */
+export async function GET(
+  _request: Request,
+  { params }: { params: Promise<{ locale: string; slug: string }> },
+) {
+  const { locale, slug } = await params
+  const lang = locale === 'ar' ? 'ar' : 'en'
+  const payload = await getPayload({ config })
+  const [event] = await getPublicEvents(payload, lang, slug)
+  if (!event) return new Response('Not found', { status: 404 })
+  const t = await getTranslations({ locale: lang, namespace: 'Events' })
+  const ics = eventIcs(event, absoluteUrl(`/${lang}/events/${event.slug}`), {
+    speakers: t('speakers'),
+    agenda: t('agenda'),
+    admission: t('admission'),
+    online: t('online'),
+    egp: t('egp'),
+    free: t('free'),
+  })
+  if (!ics) return new Response('This event has no date yet.', { status: 404 })
+  return new Response(ics, {
+    headers: {
+      'content-type': 'text/calendar; charset=utf-8',
+      'content-disposition': `attachment; filename="cilas-${event.slug}.ics"`,
+      'cache-control': 'public, max-age=300',
+    },
+  })
+}
