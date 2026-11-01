@@ -10,7 +10,8 @@ import { Poster, type PosterData } from '@/components/home/poster'
 const INTERVAL = 7000
 
 /**
- * Posters one at a time, turning on their own and starting over after the
+ * Posters, one whole and the next ones peeking in on laptop widths (dimmed by
+ * the carousel), one at a time on phones; turning on their own and starting over after the
  * last. Rotation stops on hover or focus, has a pause button, and stays off
  * with reduced motion. The carousel moves left to right in both languages;
  * each poster keeps its own direction.
@@ -37,7 +38,7 @@ export function PosterCarousel({ posters, label }: { posters: PosterData[]; labe
           next: t('next'),
         }}
         slideLabel={(i, count) => t('position', { position: i + 1, total: count })}
-        slideSize="100cqw"
+        slideSize="var(--poster-slide, 100cqw)"
       >
         {posters.map((poster, index) => (
           <div className="poster-frame" dir="auto" key={poster.id}>
