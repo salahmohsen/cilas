@@ -1,13 +1,13 @@
 'use client'
 
 import Image from 'next/image'
-import Link from 'next/link'
 import { useState, type FormEvent } from 'react'
 
 import styles from '@/components/arc/blocks/sign-in/sign-in.module.css'
 import { Button } from '@/components/arc/button/button'
 import { Input } from '@/components/arc/input/input'
 import { PasswordField } from '@/components/arc/password-field/password-field'
+import { Link } from '@/i18n/navigation'
 
 export type LoginMessages = {
   title: string
@@ -164,8 +164,7 @@ export function LoginForm({
       </div>
 
       <footer className={styles.footer}>
-        {/* Payload's own reset flow emails a link. */}
-        <Link className={styles.textButton} href="/admin/forgot-password">
+        <Link className={styles.textButton} href="/forgot">
           {m.forgot}
         </Link>
       </footer>

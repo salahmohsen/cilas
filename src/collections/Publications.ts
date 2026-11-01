@@ -23,6 +23,7 @@ import { reviewFields } from '@/fields/review'
 import { slugField } from '@/fields/slug'
 import { httpUrl } from '@/fields/validators'
 import { importFields } from '@/fields/import'
+import { lastEditedByField, stampLastEditor } from '@/fields/last-edited-by'
 
 /** As `addSelfAsAuthor` on articles: a student or fellow keeps access to what they propose. */
 export const addSelfAsEditor: CollectionBeforeValidateHook<Publication> = ({
@@ -71,8 +72,10 @@ export const Publications: CollectionConfig = {
   hooks: {
     ...publicationReview,
     beforeValidate: [addSelfAsEditor],
+    beforeChange: [...(publicationReview.beforeChange ?? []), stampLastEditor],
   },
   fields: [
+    lastEditedByField,
     {
       label: 'Review',
       type: 'collapsible',

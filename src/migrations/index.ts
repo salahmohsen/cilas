@@ -51,6 +51,7 @@ import * as migration_20261029_034244_event_single_timing from './20261029_03424
 import * as migration_20261029_075239_event_drafts from './20261029_075239_event_drafts';
 import * as migration_20261029_081500_programme_editorial from './20261029_081500_programme_editorial';
 import * as migration_20261031_163425_push_notifications_preferences from './20261031_163425_push_notifications_preferences';
+import * as migration_20261101_145118_last_edited_by from './20261101_145118_last_edited_by';
 
 export const migrations = [
   {
@@ -316,6 +317,11 @@ export const migrations = [
   {
     up: migration_20261031_163425_push_notifications_preferences.up,
     down: migration_20261031_163425_push_notifications_preferences.down,
-    name: '20261031_163425_push_notifications_preferences'
+    name: '20261031_163425_push_notifications_preferences',
+  },
+  {
+    up: migration_20261101_145118_last_edited_by.up,
+    down: migration_20261101_145118_last_edited_by.down,
+    name: '20261101_145118_last_edited_by'
   },
 ];

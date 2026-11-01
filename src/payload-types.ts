@@ -185,6 +185,25 @@ export interface Config {
   };
   locale: 'en' | 'ar';
   widgets: {
+    'quick-actions': QuickActionsWidget;
+    'open-applications': OpenApplicationsWidget;
+    'enrollments-in-progress': EnrollmentsInProgressWidget;
+    'published-courses': PublishedCoursesWidget;
+    'upcoming-events-count': UpcomingEventsCountWidget;
+    'applications-per-day': ApplicationsPerDayWidget;
+    'applications-by-outcome': ApplicationsByOutcomeWidget;
+    'enrollments-by-stage': EnrollmentsByStageWidget;
+    'enrollments-over-time': EnrollmentsOverTimeWidget;
+    'accounts-by-role': AccountsByRoleWidget;
+    'new-accounts': NewAccountsWidget;
+    'community-activity': CommunityActivityWidget;
+    'media-storage': MediaStorageWidget;
+    'newsletter-usage': NewsletterUsageWidget;
+    'waiting-for-review': WaitingForReviewWidget;
+    'upcoming-events': UpcomingEventsWidget;
+    'active-spaces': ActiveSpacesWidget;
+    'content-pipeline': ContentPipelineWidget;
+    'recent-changes': RecentChangesWidget;
     collections: CollectionsWidget;
   };
   user: User;
@@ -784,6 +803,7 @@ export interface Person {
  */
 export interface Course {
   id: number;
+  last_edited_by?: (number | null) | User;
   review?: {
     /**
      * Ready? Use “Submit for review”: an admin is emailed, and approves the course, asks for changes or declines it. Approving publishes it.
@@ -1207,6 +1227,47 @@ export interface Course {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "users".
+ */
+export interface User {
+  id: number;
+  /**
+   * Set by Google sign-in.
+   */
+  sub?: string | null;
+  person?: (number | null) | Person;
+  notification_preferences?:
+    | {
+        [k: string]: unknown;
+      }
+    | unknown[]
+    | string
+    | number
+    | boolean
+    | null;
+  roles: ('super_admin' | 'admin' | 'fellow' | 'member' | 'non_degree_seeking')[];
+  updatedAt: string;
+  createdAt: string;
+  email: string;
+  resetPasswordToken?: string | null;
+  resetPasswordExpiration?: string | null;
+  salt?: string | null;
+  hash?: string | null;
+  resetPasswordRequestedAt?: string | null;
+  loginAttempts?: number | null;
+  lockUntil?: string | null;
+  sessions?:
+    | {
+        id: string;
+        createdAt?: string | null;
+        expiresAt: string;
+      }[]
+    | null;
+  password?: string | null;
+  collection: 'users';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "cycles".
  */
 export interface Cycle {
@@ -1427,51 +1488,11 @@ export interface Governance {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "users".
- */
-export interface User {
-  id: number;
-  /**
-   * Set by Google sign-in.
-   */
-  sub?: string | null;
-  person?: (number | null) | Person;
-  notification_preferences?:
-    | {
-        [k: string]: unknown;
-      }
-    | unknown[]
-    | string
-    | number
-    | boolean
-    | null;
-  roles: ('super_admin' | 'admin' | 'fellow' | 'member' | 'non_degree_seeking')[];
-  updatedAt: string;
-  createdAt: string;
-  email: string;
-  resetPasswordToken?: string | null;
-  resetPasswordExpiration?: string | null;
-  salt?: string | null;
-  hash?: string | null;
-  resetPasswordRequestedAt?: string | null;
-  loginAttempts?: number | null;
-  lockUntil?: string | null;
-  sessions?:
-    | {
-        id: string;
-        createdAt?: string | null;
-        expiresAt: string;
-      }[]
-    | null;
-  password?: string | null;
-  collection: 'users';
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "articles".
  */
 export interface Article {
   id: number;
+  last_edited_by?: (number | null) | User;
   title: string;
   /**
    * When enabled, the slug will auto-generate from the title field on save and autosave.
@@ -1578,6 +1599,7 @@ export interface Article {
  */
 export interface Publication {
   id: number;
+  last_edited_by?: (number | null) | User;
   review?: {
     /**
      * Ready? Use “Submit for review”: an admin is emailed, and approves the publication, asks for changes or declines it. Approving publishes it.
@@ -1831,6 +1853,7 @@ export interface Newsletter {
  */
 export interface Event {
   id: number;
+  last_edited_by?: (number | null) | User;
   tier: 'owner' | 'community' | 'public';
   title: string;
   /**
@@ -2973,6 +2996,7 @@ export interface FormsSelect<T extends boolean = true> {
  * via the `definition` "courses_select".
  */
 export interface CoursesSelect<T extends boolean = true> {
+  last_edited_by?: T;
   review?:
     | T
     | {
@@ -3399,6 +3423,7 @@ export interface PlacesSelect<T extends boolean = true> {
  * via the `definition` "articles_select".
  */
 export interface ArticlesSelect<T extends boolean = true> {
+  last_edited_by?: T;
   title?: T;
   generateSlug?: T;
   slug?: T;
@@ -3459,6 +3484,7 @@ export interface ArticlesSelect<T extends boolean = true> {
  * via the `definition` "publications_select".
  */
 export interface PublicationsSelect<T extends boolean = true> {
+  last_edited_by?: T;
   review?:
     | T
     | {
@@ -3771,6 +3797,7 @@ export interface RedirectsSelect<T extends boolean = true> {
  * via the `definition` "events_select".
  */
 export interface EventsSelect<T extends boolean = true> {
+  last_edited_by?: T;
   tier?: T;
   title?: T;
   generateSlug?: T;
@@ -4540,6 +4567,196 @@ export interface LlmsTxtSettingsSelect<T extends boolean = true> {
   updatedAt?: T;
   createdAt?: T;
   globalType?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "quick-actions_widget".
+ */
+export interface QuickActionsWidget {
+  data?: {
+    [k: string]: unknown;
+  };
+  width: 'x-small' | 'small' | 'medium' | 'large' | 'x-large' | 'full';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "open-applications_widget".
+ */
+export interface OpenApplicationsWidget {
+  data?: {
+    [k: string]: unknown;
+  };
+  width: 'x-small' | 'small' | 'medium' | 'large' | 'x-large' | 'full';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "enrollments-in-progress_widget".
+ */
+export interface EnrollmentsInProgressWidget {
+  data?: {
+    [k: string]: unknown;
+  };
+  width: 'x-small' | 'small' | 'medium' | 'large' | 'x-large' | 'full';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "published-courses_widget".
+ */
+export interface PublishedCoursesWidget {
+  data?: {
+    [k: string]: unknown;
+  };
+  width: 'x-small' | 'small' | 'medium' | 'large' | 'x-large' | 'full';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "upcoming-events-count_widget".
+ */
+export interface UpcomingEventsCountWidget {
+  data?: {
+    [k: string]: unknown;
+  };
+  width: 'x-small' | 'small' | 'medium' | 'large' | 'x-large' | 'full';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "applications-per-day_widget".
+ */
+export interface ApplicationsPerDayWidget {
+  data?: {
+    [k: string]: unknown;
+  };
+  width: 'x-small' | 'small' | 'medium' | 'large' | 'x-large' | 'full';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "applications-by-outcome_widget".
+ */
+export interface ApplicationsByOutcomeWidget {
+  data?: {
+    [k: string]: unknown;
+  };
+  width: 'x-small' | 'small' | 'medium' | 'large' | 'x-large' | 'full';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "enrollments-by-stage_widget".
+ */
+export interface EnrollmentsByStageWidget {
+  data?: {
+    [k: string]: unknown;
+  };
+  width: 'x-small' | 'small' | 'medium' | 'large' | 'x-large' | 'full';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "enrollments-over-time_widget".
+ */
+export interface EnrollmentsOverTimeWidget {
+  data?: {
+    [k: string]: unknown;
+  };
+  width: 'x-small' | 'small' | 'medium' | 'large' | 'x-large' | 'full';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "accounts-by-role_widget".
+ */
+export interface AccountsByRoleWidget {
+  data?: {
+    [k: string]: unknown;
+  };
+  width: 'x-small' | 'small' | 'medium' | 'large' | 'x-large' | 'full';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "new-accounts_widget".
+ */
+export interface NewAccountsWidget {
+  data?: {
+    [k: string]: unknown;
+  };
+  width: 'x-small' | 'small' | 'medium' | 'large' | 'x-large' | 'full';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "community-activity_widget".
+ */
+export interface CommunityActivityWidget {
+  data?: {
+    [k: string]: unknown;
+  };
+  width: 'x-small' | 'small' | 'medium' | 'large' | 'x-large' | 'full';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "media-storage_widget".
+ */
+export interface MediaStorageWidget {
+  data?: {
+    [k: string]: unknown;
+  };
+  width: 'x-small' | 'small' | 'medium' | 'large' | 'x-large' | 'full';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "newsletter-usage_widget".
+ */
+export interface NewsletterUsageWidget {
+  data?: {
+    [k: string]: unknown;
+  };
+  width: 'x-small' | 'small' | 'medium' | 'large' | 'x-large' | 'full';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "waiting-for-review_widget".
+ */
+export interface WaitingForReviewWidget {
+  data?: {
+    [k: string]: unknown;
+  };
+  width: 'x-small' | 'small' | 'medium' | 'large' | 'x-large' | 'full';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "upcoming-events_widget".
+ */
+export interface UpcomingEventsWidget {
+  data?: {
+    [k: string]: unknown;
+  };
+  width: 'x-small' | 'small' | 'medium' | 'large' | 'x-large' | 'full';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "active-spaces_widget".
+ */
+export interface ActiveSpacesWidget {
+  data?: {
+    [k: string]: unknown;
+  };
+  width: 'x-small' | 'small' | 'medium' | 'large' | 'x-large' | 'full';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "content-pipeline_widget".
+ */
+export interface ContentPipelineWidget {
+  data?: {
+    [k: string]: unknown;
+  };
+  width: 'x-small' | 'small' | 'medium' | 'large' | 'x-large' | 'full';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "recent-changes_widget".
+ */
+export interface RecentChangesWidget {
+  data?: {
+    [k: string]: unknown;
+  };
+  width: 'x-small' | 'small' | 'medium' | 'large' | 'x-large' | 'full';
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema

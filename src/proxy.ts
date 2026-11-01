@@ -47,6 +47,15 @@ export default function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl
   // One login screen for the site and the admin panel.
   if (pathname === '/admin/login') return NextResponse.redirect(loginFor(request))
+  // And one reset flow: Payload's own pages are sent to the site's, in the
+  // visitor's language. The reset email still links to /admin/reset/<token>.
+  if (pathname === '/admin/forgot' || pathname === '/admin/forgot-password') {
+    return NextResponse.redirect(new URL(`/${savedLocale(request)}/forgot`, request.url))
+  }
+  const reset = /^\/admin\/reset\/([^/]+)\/?$/.exec(pathname)
+  if (reset) {
+    return NextResponse.redirect(new URL(`/${savedLocale(request)}/reset/${reset[1]}`, request.url))
+  }
   if (LEGACY.test(pathname)) {
     const url = request.nextUrl.clone()
     url.pathname = `/${savedLocale(request)}${pathname}`
@@ -67,11 +76,14 @@ export default function proxy(request: NextRequest) {
 export const config = {
   // Everything except Payload (/admin, /api), Next internals and static files
   // (the web app manifest included: it is not under a locale); `.html` pages
-  // and `/uploads/...` are let through for the legacy lookup, and /admin/login
-  // to send it to the site's login page.
+  // and `/uploads/...` are let through for the legacy lookup, and the
+  // admin's login, forgot and reset pages to send them to the site's own.
   matcher: [
     '/((?!api|admin|_next|_vercel|.*\\.(?:ico|png|jpe?g|gif|svg|webp|avif|css|js|map|txt|xml|json|webmanifest|woff2?|pdf)$).*)',
     '/uploads/:path*',
     '/admin/login',
+    '/admin/forgot',
+    '/admin/forgot-password',
+    '/admin/reset/:token',
   ],
 }
