@@ -4,8 +4,13 @@
   display: flex;
   flex-direction: column;
   min-width: 0;
-  height: 100%;
   min-height: 0;
+}
+/* Cards in a profile carousel share the tallest card's height. Elsewhere a
+   card is as tall as its content: a percentage height there would take the
+   whole text column's height. */
+:global([data-profile-carousel]) .card:global(.poster) {
+  height: 100%;
 }
 .photo {
   aspect-ratio: 16 / 10;
