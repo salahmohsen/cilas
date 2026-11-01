@@ -336,11 +336,14 @@ export const CourseView: React.FC<{
                         </Link>
                       )
                       return note && noteInCard ? (
+                        // The action row keeps its empty cell under the photo; the
+                        // note's label takes a row of its own, with its icon.
                         <figure className="fellow-card-note" {...pe('facilitator_note')}>
-                          <figcaption className="fellow-card-hazard">
-                            {noteHead}
+                          <div className="fellow-card-hazard">
+                            <span aria-hidden className="fellow-card-hazard-head" />
                             {action}
-                          </figcaption>
+                          </div>
+                          <figcaption className="fellow-card-hazard">{noteHead}</figcaption>
                           {noteQuote}
                         </figure>
                       ) : (
