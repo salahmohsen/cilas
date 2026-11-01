@@ -2588,8 +2588,6 @@ h3 {
   --poster-ink: #121212;
   --poster-paper: #ffffff;
   --poster-color: #ffb71b;
-  /* Text on the palette colour: near-black in both themes. */
-  --poster-on-color: #121212;
   /* One inset for the panel and every strip cell, so their text shares edges. */
   --poster-pad: clamp(0.875rem, 2.2cqi, 1.5rem);
   position: relative;
@@ -2624,7 +2622,6 @@ h3 {
   gap: 1.5rem;
   min-width: 0;
   background: var(--poster-color);
-  color: var(--poster-on-color);
 }
 .poster-image {
   position: relative;
@@ -2705,7 +2702,6 @@ h3 {
   text-wrap: balance;
   padding: var(--poster-pad);
   background: var(--poster-paper);
-  color: var(--poster-ink);
 }
 
 .poster-label {
@@ -2758,7 +2754,6 @@ h3 {
   display: flex;
   align-items: center;
   background: var(--poster-color);
-  color: var(--poster-on-color);
   border-inline-end: 1px solid var(--poster-ink);
   padding-inline: var(--poster-pad);
 }
@@ -2898,21 +2893,11 @@ h3 {
   border-inline-start: 1px solid var(--poster-ink);
   padding: 0.625rem var(--poster-pad);
   background: var(--poster-color);
-  color: var(--poster-on-color);
+  color: var(--poster-ink);
 }
 .poster-action-cell:only-child {
   grid-column: 1 / -1;
   border-inline-start: 0;
-}
-/* Trial: the poster in the dark theme. Paper turns to a dark sheet a step
-   above the page, ink turns light for rules and text on paper, and the
-   palette colours stay as printed, with near-black text on them. */
-.dark .poster {
-  --poster-ink: oklch(0.93 0 0);
-  --poster-paper: oklch(0.2 0 0);
-}
-.dark .poster-mark img {
-  filter: invert(1);
 }
 .poster-action {
   display: inline-flex;
