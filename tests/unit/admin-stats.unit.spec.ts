@@ -6,6 +6,7 @@ import {
   countBy,
   percentChange,
   periodChange,
+  thinAxis,
   totalOf,
 } from '@/lib/admin-stats'
 
@@ -107,5 +108,24 @@ describe('countBy', () => {
 
   it('returns an empty record for no items', () => {
     expect(countBy([], () => 'x')).toEqual({})
+  })
+})
+
+describe('thinAxis', () => {
+  it('keeps every nth label, counted back from the newest point', () => {
+    const labels = thinAxis(bucketByDay([], 7, NOW), 3).map((p) => p.axisLabel)
+    expect(labels).toEqual([
+      'Oct 8',
+      undefined,
+      undefined,
+      'Oct 11',
+      undefined,
+      undefined,
+      'Oct 14',
+    ])
+  })
+
+  it('handles no points', () => {
+    expect(thinAxis([], 5)).toEqual([])
   })
 })

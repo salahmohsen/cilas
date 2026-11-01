@@ -6,8 +6,8 @@ export type TimePoint = {
   key: string
   /** The full label, for screen readers and tooltips. */
   label: string
-  /** The short label under the point. */
-  axisLabel: string
+  /** The short label under the point; left out to keep the axis quiet. */
+  axisLabel?: string
   value: number
 }
 
@@ -91,3 +91,9 @@ export const countBy = <T>(items: T[], keyOf: (item: T) => string | null | undef
   }
   return counts
 }
+
+/** Keeps an axis label on every `every`th point, counted back from the newest. */
+export const thinAxis = (points: TimePoint[], every: number): TimePoint[] =>
+  points.map((point, i) =>
+    (points.length - 1 - i) % every === 0 ? point : { ...point, axisLabel: undefined },
+  )
