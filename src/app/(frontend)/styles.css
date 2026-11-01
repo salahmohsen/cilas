@@ -2902,7 +2902,8 @@ h3 {
    the carousel, so the open list reads as a list and the card stays readable. */
 @media (min-width: 64rem) {
   .poster-carousel {
-    --poster-slide: min(72cqw, 62rem);
+    /* Wide enough for the time left on one line from 1280px up. */
+    --poster-slide: min(max(85cqw, 68rem), 72rem, 92cqw);
   }
 }
 /* Every grid between the slide and the card uses a zero-minimum column. An
@@ -2940,7 +2941,8 @@ h3 {
   color: var(--poster-ink);
   /* At least 16:9 of the frame's width, and taller when a long title or a
      translation needs it, so nothing in the panel is cut off. */
-  min-height: calc(100cqi * 9 / 16);
+  /* Capped, so a wide open-list poster is no taller than before it widened. */
+  min-height: min(calc(100cqi * 9 / 16), 34.5rem);
 }
 .poster-body {
   display: flex;
@@ -3000,7 +3002,9 @@ h3 {
 }
 .poster-title {
   font-family: var(--font-playfair-display), var(--font-amiri), serif;
-  font-size: clamp(1.75rem, 5cqi, 3.75rem);
+  /* The top equals 5cqi on a 62rem card, so a wider open-list poster keeps
+     its title size and does not grow taller. */
+  font-size: clamp(1.75rem, 5cqi, 3.1rem);
   font-weight: 700;
   line-height: 1.1;
   letter-spacing: -0.025em;
@@ -3091,7 +3095,7 @@ h3 {
 
 .poster-label {
   font-family: var(--font-heading);
-  font-size: clamp(1.25rem, 3.4cqi, 2.5rem);
+  font-size: clamp(1.25rem, 3.4cqi, 2.1rem);
   line-height: 1.05;
 }
 
@@ -3150,6 +3154,8 @@ h3 {
 .poster-time {
   display: flex;
   min-width: 0;
+  /* Fixed-width digits, so the cell does not shift as the time runs down. */
+  font-variant-numeric: tabular-nums;
   align-items: stretch;
   justify-content: center;
   border-inline-end: 1px solid var(--poster-ink);
@@ -3186,7 +3192,8 @@ h3 {
   flex: 1;
   min-width: 0;
   height: auto;
-  padding-inline: var(--poster-pad);
+  /* A smaller inset than the other cells, so the time left stays on one line. */
+  padding-inline: 0.625rem;
 }
 .poster .poster-time [data-variant='compact'] > div > div > span {
   flex-wrap: wrap;
