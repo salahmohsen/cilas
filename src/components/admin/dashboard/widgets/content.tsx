@@ -146,7 +146,7 @@ export async function UpcomingEvents() {
   )
 }
 
-type Editor = { name: string; photo: string | null }
+type Editor = { id: number; name: string; photo: string | null }
 type Change = {
   id: string
   title: string
@@ -172,13 +172,13 @@ const editorsOf = async (payload: Payload, ids: number[]): Promise<Map<number, E
     docs.map((user) => {
       const person = typeof user.person === 'object' ? user.person : null
       const photo = typeof person?.photo === 'object' ? (person.photo?.url ?? null) : null
-      return [user.id, { name: person?.name || user.email.split('@')[0], photo }]
+      return [user.id, { id: user.id, name: person?.name || user.email.split('@')[0], photo }]
     }),
   )
 }
 
 const recent = () =>
-  cachedStat<Change[]>('recent-changes', async (payload) => {
+  cachedStat<Change[]>('recent-changes-v2', async (payload) => {
     const lists = await Promise.all(
       PIPELINE.map(async ({ slug, label }) => {
         const { docs } = await payload.find({
@@ -230,6 +230,7 @@ export async function RecentChanges() {
             id,
             at,
             actor: by?.name ?? 'System',
+            actorHref: by ? `/admin/collections/users/${by.id}` : undefined,
             title: `edited ${title}`,
             meta: collection,
             icon: by ? (

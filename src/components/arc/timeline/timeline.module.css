@@ -189,6 +189,13 @@ button.trigger:active {
   color: var(--foreground);
   font-weight: 500;
 }
+.actorLink {
+  text-decoration: none;
+}
+.actorLink:hover {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
 .meta {
   color: var(--text-muted);
   font-size: var(--text-xs);

@@ -24,6 +24,8 @@ export interface TimelineEvent {
   at: string | number
   /** Who did it, shown first in the foreground color. */
   actor?: string
+  /** Makes the actor a link, such as the person's profile. CILAS addition; not in the Arc registry. */
+  actorHref?: string
   /** What happened, completing the actor: "merged Checkout redesign into main". */
   title: string
   /** Short context under the title, such as a pull request or a build. */
@@ -334,7 +336,14 @@ function TimelineRow({
         >
           <span className={styles.text}>
             <span className={styles.title}>
-              {row.actor && <span className={styles.actor}>{row.actor}</span>}
+              {row.actor &&
+                (row.actorHref ? (
+                  <a className={`${styles.actor} ${styles.actorLink}`} href={row.actorHref}>
+                    {row.actor}
+                  </a>
+                ) : (
+                  <span className={styles.actor}>{row.actor}</span>
+                ))}
               {row.actor ? ' ' : ''}
               {row.title}
             </span>
