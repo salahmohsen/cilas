@@ -25,7 +25,7 @@ import {
 } from '@/components/course/course-syllabus'
 import { AvatarFallback } from '@/components/person/avatar-fallback'
 import { ContributorRows, photoOf } from '@/components/person/contributors'
-import { SideCard, SideCardSection } from '@/components/side-card'
+import { SideCard, SideCardApply, SideCardSection } from '@/components/side-card'
 import { POSTER_COLORS } from '@/lib/poster-colors'
 import { textDirection } from '@/lib/text-direction'
 import { RichTextField } from '@/components/RichTextField'
@@ -376,24 +376,29 @@ export const CourseView: React.FC<{
   // The side column as one card (docs/content-driven-card-layouts.md, side
   // card): status, price and apply; the facts; who teaches; the materials;
   // sharing; studying it with AI. Each part in its own ruled section.
+  const applyCard = (
+    <div {...pe('registration')}>
+      <SideCardApply
+        applyLabel={t('apply')}
+        applyUrl={applyUrl}
+        newTab={applyUrl ? Boolean(newTab(applyUrl).target) : false}
+        open={open}
+        price={price}
+        primary
+        status={open ? t('open') : t('closed')}
+      />
+    </div>
+  )
   const sideCard = (withPeople: boolean) => (
     <SideCard color={POSTER_COLORS[0]} label={t('details')}>
       <SideCardSection label={t('details')}>
-        <div className="side-card-status">
-          <span className="course-status" data-open={open || undefined} {...pe('registration')}>
-            {open ? t('open') : t('closed')}
-          </span>
-          {price ? (
-            <span className="side-card-price" {...pe('pricing_override')}>
-              {price}
-            </span>
-          ) : null}
-        </div>
         {facts.length ? (
           <dl className="side-card-facts">
             {facts.map(({ icon: Icon, label, value, path }) => (
               <div key={label} {...pe(path)}>
-                <Icon aria-hidden size={16} strokeWidth={1.5} />
+                <span className="side-card-icon">
+                  <Icon aria-hidden size={16} strokeWidth={1.5} />
+                </span>
                 <div>
                   <dt>{label}</dt>
                   <dd>{value}</dd>
@@ -401,12 +406,6 @@ export const CourseView: React.FC<{
               </div>
             ))}
           </dl>
-        ) : null}
-        {applyUrl ? (
-          <a className="side-card-action" data-apply-primary href={applyUrl} {...newTab(applyUrl)}>
-            {t('apply')}
-            <ArrowRight aria-hidden className="rtl:-scale-x-100" size={16} />
-          </a>
         ) : null}
       </SideCardSection>
       {withPeople && fellows.length ? (
@@ -425,7 +424,9 @@ export const CourseView: React.FC<{
               const Icon = MATERIAL_ICONS[type]
               return (
                 <li key={type}>
-                  <Icon aria-hidden size={16} strokeWidth={1.5} />
+                  <span className="side-card-icon">
+                    <Icon aria-hidden size={16} strokeWidth={1.5} />
+                  </span>
                   <span>{t(`materialCounts.${type}`, { count })}</span>
                 </li>
               )
@@ -434,7 +435,7 @@ export const CourseView: React.FC<{
         </SideCardSection>
       ) : null}
       <SideCardSection label={ts('heading')}>
-        <div className="side-card-body side-card-scroll">
+        <div className="side-card-body side-card-center side-card-scroll">
           <ShareBar
             label={ts('course')}
             path={`/${locale}/study/${course.slug}`}
@@ -444,7 +445,7 @@ export const CourseView: React.FC<{
         </div>
       </SideCardSection>
       <SideCardSection label={ts('aiHeading')}>
-        <div className="side-card-body">
+        <div className="side-card-body side-card-center">
           <StudyWithAI kind="course" path={`/${locale}/study/${course.slug}`} />
           <ol className="grid list-inside list-decimal gap-1 text-xs leading-relaxed side-card-muted">
             {(ts.raw('aiSteps') as string[]).map((step) => (
@@ -565,7 +566,10 @@ export const CourseView: React.FC<{
           ) : null}
 
           {/* Narrow screens: the facts and the fellows come before the text. */}
-          <div className="mt-10 lg:hidden">{sideCard(false)}</div>
+          <div className="mt-10 grid gap-6 lg:hidden">
+            {applyCard}
+            {sideCard(false)}
+          </div>
 
           {course.epigraph ? (
             <div className="article-prose mt-10" {...pe('epigraph')}>
@@ -620,7 +624,10 @@ export const CourseView: React.FC<{
         <aside className="hidden lg:flex lg:flex-col lg:gap-10">
           {/* Not sticky: a fellow's bio can make the column taller than the screen.
               Only applying follows the reader down, at the column's end. */}
-          {sideCard(true)}
+          <div className="grid gap-6">
+            {applyCard}
+            {sideCard(true)}
+          </div>
           {applyUrl ? (
             <div className="sticky top-22">
               <RegisterBar

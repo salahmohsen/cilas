@@ -2,6 +2,8 @@
 
 import { useEffect, useState } from 'react'
 
+import { SideCardApply } from '@/components/side-card'
+
 import { newTab } from './new-tab'
 
 /**
@@ -55,15 +57,28 @@ export function RegisterBar({
       data-variant={variant}
       inert={!shown}
     >
-      <div className="min-w-0">
-        <span className="course-status" data-open>
-          {status}
-        </span>
-        {price ? <span className="course-register-price">{price}</span> : null}
-      </div>
-      <a className="course-apply" href={applyUrl} {...newTab(applyUrl)}>
-        {applyLabel}
-      </a>
+      {variant === 'side' ? (
+        <SideCardApply
+          applyLabel={applyLabel}
+          applyUrl={applyUrl}
+          newTab={Boolean(newTab(applyUrl).target)}
+          open
+          price={price}
+          status={status}
+        />
+      ) : (
+        <>
+          <div className="min-w-0">
+            <span className="course-status" data-open>
+              {status}
+            </span>
+            {price ? <span className="course-register-price">{price}</span> : null}
+          </div>
+          <a className="course-apply" href={applyUrl} {...newTab(applyUrl)}>
+            {applyLabel}
+          </a>
+        </>
+      )}
     </div>
   )
 }

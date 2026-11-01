@@ -1,3 +1,4 @@
+import { ArrowRight } from 'lucide-react'
 import type { CSSProperties, ReactNode } from 'react'
 
 import { POSTER_COLORS } from '@/lib/poster-colors'
@@ -55,5 +56,51 @@ export function SideCardSection({
       <h2 className="side-card-label">{label}</h2>
       {children}
     </section>
+  )
+}
+
+/**
+ * Registration as its own card: a row of boxes (the status dot, the status,
+ * the price), then Apply across the card in its colour. `primary` marks the
+ * page's own Apply, which the sticky copy watches.
+ */
+export function SideCardApply({
+  open,
+  status,
+  price,
+  applyLabel,
+  applyUrl,
+  primary = false,
+  newTab = false,
+  color = POSTER_COLORS[0],
+}: {
+  open: boolean
+  status: string
+  price?: string | null
+  applyLabel: string
+  applyUrl?: string | null
+  primary?: boolean
+  newTab?: boolean
+  color?: string
+}) {
+  return (
+    <div className="side-card" style={{ '--poster-color': color } as CSSProperties}>
+      <div className="apply-card-row">
+        <span aria-hidden className="apply-card-dot" data-open={open || undefined} />
+        <span className="apply-card-status">{status}</span>
+        {price ? <span className="apply-card-price">{price}</span> : null}
+      </div>
+      {applyUrl ? (
+        <a
+          className="side-card-action"
+          data-apply-primary={primary || undefined}
+          href={applyUrl}
+          {...(newTab ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
+        >
+          {applyLabel}
+          <ArrowRight aria-hidden className="rtl:-scale-x-100" size={16} />
+        </a>
+      ) : null}
+    </div>
   )
 }

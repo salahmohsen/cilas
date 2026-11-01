@@ -540,7 +540,7 @@
     "x": "X",
     "telegram": "Telegram",
     "email": "Email",
-    "aiHeading": "Take it with AI",
+    "aiHeading": "Discuss it with AI",
     "ai": "Study with an AI partner",
     "aiArticle": "Read this article with AI",
     "aiSteps": [
@@ -1334,6 +1334,9 @@
     "percent": "{percent, number}%"
   },
   "Movie": {
+    "allDetails": "All movie details",
+    "originalTitle": "Original title",
+    "close": "Close",
     "director": "Directed by",
     "writers": "Written by",
     "released": "Release date",

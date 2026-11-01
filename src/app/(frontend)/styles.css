@@ -2130,6 +2130,7 @@ a.collection-item:hover {
 .side-card-label {
   display: flex;
   align-items: center;
+  min-height: 2.75rem;
   justify-content: space-between;
   gap: 0.5rem;
   margin: 0;
@@ -2177,10 +2178,19 @@ details:not([open]) > summary.side-card-label {
 .side-card-muted {
   color: var(--text-secondary);
 }
+/* Controls that sit centred in their cell, such as share and AI. */
+.side-card-center {
+  justify-items: center;
+  text-align: center;
+}
 /* A row of controls wider than the card, such as the share bar, scrolls in its cell. */
 .side-card-scroll {
+  grid-template-columns: minmax(0, 1fr);
   min-width: 0;
   overflow-x: auto;
+}
+.side-card-scroll > * {
+  max-width: 100%;
 }
 /* People: one ruled row each, photo then name and role. */
 .side-card-people {
@@ -2311,18 +2321,45 @@ details:not([open]) > summary.side-card-label {
   text-align: center;
   text-decoration: none;
 }
-/* Status and price on one line, the status dot at the start. */
-.side-card-status {
+/* Registration: the dot, the status and the price, each in its own box. */
+.apply-card-row {
   display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: space-between;
-  gap: 0.25rem 0.75rem;
-  padding: 0.75rem var(--poster-pad);
-  border-block-end: 1px solid var(--poster-ink);
+  align-items: stretch;
+  min-height: 2.75rem;
 }
-.side-card-price {
+.apply-card-row > * + * {
+  border-inline-start: 1px solid var(--poster-ink);
+}
+.apply-card-dot {
+  display: grid;
+  flex: none;
+  place-items: center;
+  width: 2.75rem;
+}
+.apply-card-dot::before {
+  content: '';
+  width: 0.625rem;
+  height: 0.625rem;
+  border: 1px solid var(--poster-ink);
+  border-radius: 999px;
+  background: oklch(0.62 0.21 25);
+}
+.apply-card-dot[data-open]::before {
+  background: oklch(0.72 0.17 150);
+}
+.apply-card-status,
+.apply-card-price {
+  display: flex;
+  align-items: center;
+  padding: 0.5rem var(--poster-pad);
   font-weight: 600;
+}
+.apply-card-status {
+  flex: 1;
+  min-width: 0;
+}
+.apply-card-price {
+  flex: none;
   font-variant-numeric: tabular-nums;
 }
 /* Facts and counts: one ruled row each, the icon in its own column. */
@@ -2333,16 +2370,21 @@ details:not([open]) > summary.side-card-label {
 }
 .side-card-facts > * {
   display: grid;
-  grid-template-columns: 1rem minmax(0, 1fr);
-  align-items: start;
-  gap: 0.75rem;
-  padding: 0.625rem var(--poster-pad);
+  grid-template-columns: 2.75rem minmax(0, 1fr);
+  align-items: stretch;
 }
 .side-card-facts > * + * {
   border-block-start: 1px solid var(--poster-ink);
 }
-.side-card-facts svg {
-  margin-top: 0.15rem;
+/* The icon in its own box, centred, a rule between it and the words. */
+.side-card-icon {
+  display: grid;
+  place-items: center;
+  border-inline-end: 1px solid var(--poster-ink);
+}
+.side-card-facts > * > :last-child {
+  align-self: center;
+  padding: 0.625rem var(--poster-pad);
 }
 .side-card-facts dt {
   color: var(--text-secondary);
