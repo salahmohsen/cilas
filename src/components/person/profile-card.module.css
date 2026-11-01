@@ -170,3 +170,14 @@
 .card[data-look='fellow'] .body > * {
   max-width: 68ch;
 }
+
+/* Social icons on hover: the ink disc with the icon in white, in either theme
+   (the card is printed, so the theme's muted surface would hide the icon). */
+.links > ul a:hover {
+  background: var(--poster-ink);
+  color: var(--poster-paper);
+}
+/* The fellow look's action, as on the fellow cards: View profile on the card's colour. */
+.card[data-look='fellow'] .links .action {
+  background: var(--poster-color);
+}

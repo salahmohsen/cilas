@@ -120,7 +120,7 @@ export const RichTextField: React.FC<{
     const { person } = node.fields
     if (!person || typeof person !== 'object' || !person.visible || !person.slug) return null
     return (
-      <ProfileCard person={person}>
+      <ProfileCard look="fellow" person={person}>
         {person.bio && (
           <RichTextField data={person.bio} plain className="article-prose article-prose--bio" />
         )}
