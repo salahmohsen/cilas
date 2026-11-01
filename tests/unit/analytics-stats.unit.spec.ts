@@ -220,8 +220,8 @@ describe('goals and errors', () => {
   })
 
   it('counts errors against the week before', () => {
-    expect(errorsFrom([[9, 12]])).toEqual({ last7: 9, change: '-25%' })
-    expect(errorsFrom([])).toEqual({ last7: 0, change: null })
+    expect(errorsFrom([[9, 12]])).toEqual({ last7: 9, before7: 12, change: '-25%' })
+    expect(errorsFrom([])).toEqual({ last7: 0, before7: null, change: null })
   })
 })
 

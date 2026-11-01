@@ -171,7 +171,6 @@ export async function PageMovement() {
         <SlopeChart
           data={movement}
           endLabel="Last 30 days"
-          formatValue={(value) => number.format(value)}
           highlightKey={movement[0]?.key}
           label="Page views per page"
           startLabel="Before"
@@ -332,8 +331,7 @@ export async function SiteErrors() {
   const errors = errorsFrom(await posthogRows('errors'))
   return (
     <MetricCard
-      change={errors.change ?? undefined}
-      context="browser and server errors, last 7 days"
+      context={`browser and server errors, last 7 days${errors.before7 === null ? '' : ` (${errors.before7} the week before)`}`}
       label="Site errors"
       value={errors.last7}
     />
@@ -356,6 +354,7 @@ export async function FreePlanUsage() {
           <UsageMeter
             key={meter.key}
             label={meter.label}
+            decimals={0}
             limit={meter.limit}
             segments={[{ id: meter.key, label: 'Used', value: meter.used }]}
             unit={meter.key}

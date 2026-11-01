@@ -200,7 +200,6 @@ export interface Config {
     visitors: VisitorsWidget;
     'page-views': PageViewsWidget;
     'site-errors': SiteErrorsWidget;
-    'posthog-usage': PosthogUsageWidget;
     traffic: TrafficWidget;
     'application-funnel': ApplicationFunnelWidget;
     'top-pages': TopPagesWidget;
@@ -209,6 +208,7 @@ export interface Config {
     audience: AudienceWidget;
     'visitor-goals': VisitorGoalsWidget;
     'courses-and-events': CoursesAndEventsWidget;
+    'posthog-usage': PosthogUsageWidget;
     'daily-activity': DailyActivityWidget;
     'media-storage': MediaStorageWidget;
     'newsletter-usage': NewsletterUsageWidget;
@@ -4733,16 +4733,6 @@ export interface SiteErrorsWidget {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "posthog-usage_widget".
- */
-export interface PosthogUsageWidget {
-  data?: {
-    [k: string]: unknown;
-  };
-  width: 'x-small' | 'small' | 'medium' | 'large' | 'x-large' | 'full';
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "traffic_widget".
  */
 export interface TrafficWidget {
@@ -4816,6 +4806,16 @@ export interface VisitorGoalsWidget {
  * via the `definition` "courses-and-events_widget".
  */
 export interface CoursesAndEventsWidget {
+  data?: {
+    [k: string]: unknown;
+  };
+  width: 'x-small' | 'small' | 'medium' | 'large' | 'x-large' | 'full';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "posthog-usage_widget".
+ */
+export interface PosthogUsageWidget {
   data?: {
     [k: string]: unknown;
   };

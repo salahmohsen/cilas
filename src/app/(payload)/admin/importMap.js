@@ -85,7 +85,6 @@ import { CommunityActivityWidget as CommunityActivityWidget_436edcd5bbee54004355
 import { VisitorsWidget as VisitorsWidget_436edcd5bbee540043551d770d33a9e2 } from '../../../components/admin/dashboard/native'
 import { PageViewsWidget as PageViewsWidget_436edcd5bbee540043551d770d33a9e2 } from '../../../components/admin/dashboard/native'
 import { SiteErrorsWidget as SiteErrorsWidget_436edcd5bbee540043551d770d33a9e2 } from '../../../components/admin/dashboard/native'
-import { FreePlanUsageWidget as FreePlanUsageWidget_436edcd5bbee540043551d770d33a9e2 } from '../../../components/admin/dashboard/native'
 import { TrafficWidget as TrafficWidget_436edcd5bbee540043551d770d33a9e2 } from '../../../components/admin/dashboard/native'
 import { ApplyFunnelWidget as ApplyFunnelWidget_436edcd5bbee540043551d770d33a9e2 } from '../../../components/admin/dashboard/native'
 import { TopPagesWidget as TopPagesWidget_436edcd5bbee540043551d770d33a9e2 } from '../../../components/admin/dashboard/native'
@@ -94,6 +93,7 @@ import { TrafficSourcesWidget as TrafficSourcesWidget_436edcd5bbee540043551d770d
 import { AudienceWidget as AudienceWidget_436edcd5bbee540043551d770d33a9e2 } from '../../../components/admin/dashboard/native'
 import { GoalsWidget as GoalsWidget_436edcd5bbee540043551d770d33a9e2 } from '../../../components/admin/dashboard/native'
 import { CoursesAndEventsWidget as CoursesAndEventsWidget_436edcd5bbee540043551d770d33a9e2 } from '../../../components/admin/dashboard/native'
+import { FreePlanUsageWidget as FreePlanUsageWidget_436edcd5bbee540043551d770d33a9e2 } from '../../../components/admin/dashboard/native'
 import { DailyActivityWidget as DailyActivityWidget_436edcd5bbee540043551d770d33a9e2 } from '../../../components/admin/dashboard/native'
 import { MediaStorageWidget as MediaStorageWidget_436edcd5bbee540043551d770d33a9e2 } from '../../../components/admin/dashboard/native'
 import { NewsletterUsageWidget as NewsletterUsageWidget_436edcd5bbee540043551d770d33a9e2 } from '../../../components/admin/dashboard/native'
@@ -194,7 +194,6 @@ export const importMap = {
   "/components/admin/dashboard/native#VisitorsWidget": VisitorsWidget_436edcd5bbee540043551d770d33a9e2,
   "/components/admin/dashboard/native#PageViewsWidget": PageViewsWidget_436edcd5bbee540043551d770d33a9e2,
   "/components/admin/dashboard/native#SiteErrorsWidget": SiteErrorsWidget_436edcd5bbee540043551d770d33a9e2,
-  "/components/admin/dashboard/native#FreePlanUsageWidget": FreePlanUsageWidget_436edcd5bbee540043551d770d33a9e2,
   "/components/admin/dashboard/native#TrafficWidget": TrafficWidget_436edcd5bbee540043551d770d33a9e2,
   "/components/admin/dashboard/native#ApplyFunnelWidget": ApplyFunnelWidget_436edcd5bbee540043551d770d33a9e2,
   "/components/admin/dashboard/native#TopPagesWidget": TopPagesWidget_436edcd5bbee540043551d770d33a9e2,
@@ -203,6 +202,7 @@ export const importMap = {
   "/components/admin/dashboard/native#AudienceWidget": AudienceWidget_436edcd5bbee540043551d770d33a9e2,
   "/components/admin/dashboard/native#GoalsWidget": GoalsWidget_436edcd5bbee540043551d770d33a9e2,
   "/components/admin/dashboard/native#CoursesAndEventsWidget": CoursesAndEventsWidget_436edcd5bbee540043551d770d33a9e2,
+  "/components/admin/dashboard/native#FreePlanUsageWidget": FreePlanUsageWidget_436edcd5bbee540043551d770d33a9e2,
   "/components/admin/dashboard/native#DailyActivityWidget": DailyActivityWidget_436edcd5bbee540043551d770d33a9e2,
   "/components/admin/dashboard/native#MediaStorageWidget": MediaStorageWidget_436edcd5bbee540043551d770d33a9e2,
   "/components/admin/dashboard/native#NewsletterUsageWidget": NewsletterUsageWidget_436edcd5bbee540043551d770d33a9e2,

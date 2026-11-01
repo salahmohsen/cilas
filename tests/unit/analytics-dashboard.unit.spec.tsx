@@ -94,3 +94,14 @@ describe('a failing PostHog', () => {
     spy.mockRestore()
   })
 })
+
+describe('server widgets and client charts', () => {
+  it('pass no function to a chart: a server component cannot send one to the browser', async () => {
+    const { readFileSync } = await import('node:fs')
+    const source = readFileSync('src/components/admin/dashboard/widgets/analytics.tsx', 'utf8')
+    // A prop such as formatValue={(v) => ...} or onSelect={handler} fails at render, only in Next.
+    const functionProps = [...source.matchAll(/\s(\w+)=\{(?:\([^)]*\)|\w+)\s*=>/g)].map((m) => m[1])
+    const handlers = [...source.matchAll(/\s(on[A-Z]\w*)=\{/g)].map((m) => m[1])
+    expect([...functionProps, ...handlers]).toEqual([])
+  })
+})

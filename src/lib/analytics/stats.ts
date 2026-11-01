@@ -272,12 +272,16 @@ export const goalsFrom = (rows: Row[]): Goal[] => {
 
 /* Errors */
 
-export type ErrorCount = { last7: number; change: string | null }
+export type ErrorCount = { last7: number; before7: number | null; change: string | null }
 
 /** One row: `[errors in the last 7 days, errors in the 7 days before]`. */
 export const errorsFrom = (rows: Row[]): ErrorCount => {
   const [current, before] = rows[0] ?? []
-  return { last7: count(current), change: percentChange(count(current), count(before)) }
+  return {
+    last7: count(current),
+    before7: rows[0] ? count(before) : null,
+    change: percentChange(count(current), count(before)),
+  }
 }
 
 /* The free plan's monthly allowance */

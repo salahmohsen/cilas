@@ -112,17 +112,10 @@ const ENTRIES: Entry[] = [
     analytics: true,
   },
   {
-    slug: 'posthog-usage',
-    label: 'PostHog free plan',
-    component: 'FreePlanUsageWidget',
-    width: 'x-small',
-    analytics: true,
-  },
-  {
     slug: 'traffic',
     label: 'Traffic',
     component: 'TrafficWidget',
-    width: 'medium',
+    width: 'x-large',
     analytics: true,
   },
   {
@@ -171,6 +164,13 @@ const ENTRIES: Entry[] = [
     slug: 'courses-and-events',
     label: 'Courses and events',
     component: 'CoursesAndEventsWidget',
+    width: 'medium',
+    analytics: true,
+  },
+  {
+    slug: 'posthog-usage',
+    label: 'PostHog free plan',
+    component: 'FreePlanUsageWidget',
     width: 'medium',
     analytics: true,
   },

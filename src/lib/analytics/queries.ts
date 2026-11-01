@@ -17,12 +17,12 @@ export const QUERIES = {
   /** `[path, views last 30 days, views the 30 days before]`. Pages, movement, languages, courses and events read this. */
   pages: `
     SELECT properties.$pathname AS path,
-           countIf(timestamp >= now() - INTERVAL 30 DAY) AS current,
-           countIf(timestamp < now() - INTERVAL 30 DAY) AS before
+           countIf(timestamp >= now() - INTERVAL 30 DAY) AS views_now,
+           countIf(timestamp < now() - INTERVAL 30 DAY) AS views_before
     FROM events
     WHERE event = '$pageview' AND timestamp >= now() - INTERVAL 60 DAY
     GROUP BY path
-    ORDER BY current DESC
+    ORDER BY views_now DESC
     LIMIT 500`,
 
   /** `[source, visitors]`, 30 days: a campaign's utm_source, else the referring domain. */
@@ -67,8 +67,8 @@ export const QUERIES = {
   /** `[event, count last 30 days, count the 30 days before]` for the site's own events. */
   goals: `
     SELECT event,
-           countIf(timestamp >= now() - INTERVAL 30 DAY) AS current,
-           countIf(timestamp < now() - INTERVAL 30 DAY) AS before
+           countIf(timestamp >= now() - INTERVAL 30 DAY) AS count_now,
+           countIf(timestamp < now() - INTERVAL 30 DAY) AS count_before
     FROM events
     WHERE timestamp >= now() - INTERVAL 60 DAY
       AND event IN ('register_clicked', 'calendar_added', 'newsletter_subscribed',
@@ -77,14 +77,14 @@ export const QUERIES = {
 
   /** One row: `[errors in the last 7 days, errors in the 7 days before]`. */
   errors: `
-    SELECT countIf(timestamp >= now() - INTERVAL 7 DAY) AS last7,
-           countIf(timestamp < now() - INTERVAL 7 DAY) AS before7
+    SELECT countIf(timestamp >= now() - INTERVAL 7 DAY) AS errors_last7,
+           countIf(timestamp < now() - INTERVAL 7 DAY) AS errors_before7
     FROM events
     WHERE event = '$exception' AND timestamp >= now() - INTERVAL 14 DAY`,
 
   /** One row: `[events, errors]` since the start of this month (the free plan counts a month). */
   usage: `
-    SELECT count() AS events, countIf(event = '$exception') AS errors
+    SELECT count() AS event_count, countIf(event = '$exception') AS error_count
     FROM events
     WHERE timestamp >= toStartOfMonth(now())`,
 
