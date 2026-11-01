@@ -38,7 +38,7 @@ const answered = (
 /**
  * An event's answers: three boxes, one per choice, with its count and the
  * member's own filled (choosing it again clears it); then the faces of who is
- * going, the count and +N opening the full list. Once the event is over, or the
+ * going, +N opening the full list. Once the event is over, or the
  * post is closed, the boxes keep their counts without being buttons.
  */
 export function EventAnswers({
@@ -156,9 +156,6 @@ export function EventAnswers({
               </PersonHover>
             )}
           />
-          <button className={styles.rsvpGoingCount} onClick={() => setListOpen(true)} type="button">
-            {t('rsvpGoingCount', { count: view.counts.going })}
-          </button>
         </div>
       )}
       <Dialog open={listOpen} onOpenChange={setListOpen}>

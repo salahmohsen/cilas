@@ -2925,6 +2925,12 @@
   margin: var(--event-pad) var(--event-pad) 0;
 }
 .event .eventTitle {
+  /* The poster title's face: Playfair at its real bold, Amiri's regular for Arabic. */
+  font-family: var(--font-playfair-display), var(--font-amiri), serif;
+  font-weight: 700;
+  font-synthesis-weight: none;
+  letter-spacing: -0.02em;
+  line-height: 1.1;
   padding: var(--event-pad);
   border-block-end: 1px solid var(--poster-ink);
   background: var(--poster-color);
@@ -2976,22 +2982,33 @@
   width: 4.5rem;
   border-inline-start: 1px solid var(--poster-ink);
 }
-.eventCalendarCell > *,
-.eventCalendarCell button {
+/* The whole box is the button: the trigger fills it, past Arc's icon size. */
+.event .eventCalendarCell > button,
+.event .eventCalendarCell > * > button {
+  display: grid;
+  place-items: center;
   width: 100%;
+  min-width: 100%;
   height: 100%;
-}
-.eventCalendarCell button {
+  margin: 0;
+  padding: 0;
   border: 0;
   border-radius: 0;
   background: var(--poster-paper);
   color: var(--poster-ink);
   box-shadow: none;
+  cursor: pointer;
 }
 @media (hover: hover) and (pointer: fine) {
-  .eventCalendarCell button:hover {
+  .event .eventCalendarCell > button:hover,
+  .event .eventCalendarCell > * > button:hover {
     background: color-mix(in oklab, var(--poster-color) 40%, var(--poster-paper));
   }
+}
+.event .eventCalendarCell > button:focus-visible,
+.event .eventCalendarCell > * > button:focus-visible {
+  outline: 3px solid var(--poster-ink);
+  outline-offset: -3px;
 }
 .event .eventWhere {
   display: flex;
@@ -3063,8 +3080,7 @@ button.rsvpCell {
   background: var(--poster-color);
   font-weight: 600;
 }
-.rsvpCell:focus-visible,
-.rsvpGoingCount:focus-visible {
+.rsvpCell:focus-visible {
   outline: 3px solid var(--poster-ink);
   outline-offset: -3px;
 }
@@ -3072,16 +3088,6 @@ button.rsvpCell {
   justify-content: center;
   padding: 0.75rem var(--event-pad);
   border-block-start: 1px solid var(--poster-ink);
-}
-.rsvpGoingCount {
-  border: 0;
-  background: none;
-  color: inherit;
-  font: inherit;
-  font-size: var(--text-sm);
-  text-decoration: underline;
-  text-underline-offset: 0.2em;
-  cursor: pointer;
 }
 .event .eventReply > [role='alert'] {
   padding: 0.5rem var(--event-pad);
@@ -3135,4 +3141,9 @@ button.rsvpCell {
 }
 .event .eventDescription > * {
   max-width: 65ch;
+}
+/* Arabic pages: Amiri takes no negative tracking and needs taller lines. */
+:global([dir='rtl']) .event .eventTitle {
+  letter-spacing: 0;
+  line-height: 1.35;
 }
