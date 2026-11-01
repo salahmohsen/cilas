@@ -1,4 +1,4 @@
-import { fireEvent, render, screen } from '@testing-library/react'
+import { cleanup, fireEvent, render, screen } from '@testing-library/react'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 
 import { RegisterLink } from '@/components/events/register-link'
@@ -13,6 +13,7 @@ beforeEach(() => {
   window.history.pushState({}, '', '/en/events/open-day')
 })
 afterEach(() => {
+  cleanup()
   setSender(null)
   vi.unstubAllGlobals()
 })
