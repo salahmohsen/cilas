@@ -68,15 +68,23 @@ export function ArticleContents({
     headings.forEach((h, i) => {
       if (sections[i]) h.id = sections[i].id
     })
+    const text = document.getElementById(container)
+    // A section is current only while it is on screen: before the first
+    // heading reaches the line, and once the text has scrolled away, none is.
     const update = () => {
       const line = window.innerHeight / 3
       let current: string | null = null
       for (const h of headings) if (h.getBoundingClientRect().top <= line) current = h.id
+      if (text && text.getBoundingClientRect().bottom < line) current = null
       setActive(current)
     }
     update()
     window.addEventListener('scroll', update, { passive: true })
-    return () => window.removeEventListener('scroll', update)
+    window.addEventListener('resize', update)
+    return () => {
+      window.removeEventListener('scroll', update)
+      window.removeEventListener('resize', update)
+    }
   }, [container, sections])
 
   // rareui's BounceSidebar: the dot travels to the section in view.
@@ -85,10 +93,7 @@ export function ArticleContents({
       aria-label={t('contents')}
       className="text-sm leading-snug"
       items={sections.map((s) => ({ label: s.title, href: `#${s.id}` }))}
-      value={Math.max(
-        0,
-        sections.findIndex((s) => s.id === active),
-      )}
+      value={sections.findIndex((s) => s.id === active)}
     />
   )
 
