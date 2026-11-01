@@ -64,6 +64,7 @@ import { env } from './env'
 import { defaultEditorFeatures } from './lexical/default-features'
 import { pathOf } from './lib/paths'
 import { SEO_COLLECTIONS, seoDefaults, type SeoCollection } from './lib/seo'
+import { adminDashboard } from './plugins/admin-dashboard'
 import { googleAuth } from './plugins/google-auth'
 import { llmsTxt } from './plugins/llms'
 import { visualEditor } from 'payload-inline-visual-editor'
@@ -139,8 +140,8 @@ export default buildConfig({
       // The top bar: links to Reviews and Subscribers for admins, then the
       // notifications bell (src/collections/Notifications.ts). payload-theme
       // replaces the sidebar (Nav) and the dashboard view, so `beforeNavLinks`
-      // and `beforeDashboard` never render; `actions` and the theme's
-      // `dashboard.widgets` do.
+      // and `beforeDashboard` never render; `actions` does. The dashboard is
+      // src/plugins/admin-dashboard.ts.
       actions: [
         '/components/admin/work-links#WorkLinks',
         '/components/admin/notification-bell#NotificationBell',
@@ -311,14 +312,10 @@ export default buildConfig({
       },
     }),
     storage,
-    payloadTheme({
-      accent: '#000',
-      // What waits for review, for admins. The theme renders widgets below its
-      // collection cards (docs/research/admin-dashboard.md).
-      dashboard: {
-        widgets: [{ component: '/components/admin/review-queue#ReviewQueueWidget', width: 'full' }],
-      },
-    }),
+    payloadTheme({ accent: '#000' }),
+    // The admin home: statistics for admins, the theme's cards for everyone
+    // else. After payloadTheme(), which sets the same slot.
+    adminDashboard(),
     // Site search: bilingual Typesense collections of the public courses,
     // articles and people. Off without TYPESENSE_API_KEY (builds, tests).
     typesenseSearch(),

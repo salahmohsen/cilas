@@ -66,11 +66,10 @@ import { ThemeProvider as ThemeProvider_f436cf2a4719114d9e44505773a04007 } from 
 import { ListQuickActions as ListQuickActions_f436cf2a4719114d9e44505773a04007 } from 'payload-theme/client'
 import { SubscribersView as SubscribersView_82e10948fdeb08928ce643cc0b1632a7 } from '../../../components/admin/subscribers-view'
 import { ReviewQueueView as ReviewQueueView_5ad28f33e67910b7fd7d6503bf8c6322 } from '../../../components/admin/review-queue'
-import { Dashboard as Dashboard_37fe5310e1c82b2fade6b239ca4c79e5 } from 'payload-theme/rsc'
+import { DashboardView as DashboardView_30ab6a8fe8b58dbb3d774c6a70c4dfd0 } from '../../../components/admin/dashboard/dashboard-view'
 import { VisualEditorView as VisualEditorView_0dcc31907b7bffb0624a38194b3c7196 } from 'payload-inline-visual-editor/rsc'
 import { CollectionCards as CollectionCards_f9c02e79a4aed9a3924487c0cd4cafb1 } from '@payloadcms/next/rsc'
 import { S3ClientUploadHandler as S3ClientUploadHandler_f97aa6c64367fa259c5bc0567239ef24 } from '@payloadcms/storage-s3/client'
-import { ReviewQueueWidget as ReviewQueueWidget_5ad28f33e67910b7fd7d6503bf8c6322 } from '../../../components/admin/review-queue'
 
 /** @type import('payload').ImportMap */
 export const importMap = {
@@ -142,9 +141,8 @@ export const importMap = {
   "payload-theme/client#ListQuickActions": ListQuickActions_f436cf2a4719114d9e44505773a04007,
   "/components/admin/subscribers-view#SubscribersView": SubscribersView_82e10948fdeb08928ce643cc0b1632a7,
   "/components/admin/review-queue#ReviewQueueView": ReviewQueueView_5ad28f33e67910b7fd7d6503bf8c6322,
-  "payload-theme/rsc#Dashboard": Dashboard_37fe5310e1c82b2fade6b239ca4c79e5,
+  "/components/admin/dashboard/dashboard-view#DashboardView": DashboardView_30ab6a8fe8b58dbb3d774c6a70c4dfd0,
   "payload-inline-visual-editor/rsc#VisualEditorView": VisualEditorView_0dcc31907b7bffb0624a38194b3c7196,
   "@payloadcms/next/rsc#CollectionCards": CollectionCards_f9c02e79a4aed9a3924487c0cd4cafb1,
-  "@payloadcms/storage-s3/client#S3ClientUploadHandler": S3ClientUploadHandler_f97aa6c64367fa259c5bc0567239ef24,
-  "/components/admin/review-queue#ReviewQueueWidget": ReviewQueueWidget_5ad28f33e67910b7fd7d6503bf8c6322
+  "@payloadcms/storage-s3/client#S3ClientUploadHandler": S3ClientUploadHandler_f97aa6c64367fa259c5bc0567239ef24
 }
