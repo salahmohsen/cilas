@@ -2708,6 +2708,33 @@ h3 {
   border-bottom: 1px solid var(--poster-ink);
 }
 
+/* The credit row with a tag: the kind of thing, with its icon, in its own
+   paper box, then who, in the rest of the row. */
+.poster-credit-row {
+  display: flex;
+  align-items: stretch;
+  padding: 0;
+}
+.poster-tag {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  gap: 0.5em;
+  padding: var(--poster-pad);
+}
+.poster-tag {
+  border-inline-end: 1px solid var(--poster-ink);
+}
+.poster-tag-icon {
+  flex: none;
+  width: 0.9em;
+  height: 0.9em;
+}
+.poster-credit-text {
+  min-width: 0;
+  padding: var(--poster-pad);
+}
+
 .poster-credit {
   border-top: 1px solid var(--poster-ink);
 }

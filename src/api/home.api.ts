@@ -78,18 +78,13 @@ export const getOpenNow = async (
         : (p.registration?.url ?? null)
     if (!href) return []
     const cover = obj<Media>(p.cover)
-    const bridge = p.kind === 'bridge'
     return [
       {
         kind: 'programme',
         title: p.title,
         href,
-        // A Bridge year without its own cover shows the classroom, as its page does.
-        image: cover?.url
-          ? mediaImage(cover)
-          : bridge
-            ? { src: '/assets/images/cilas-classroom.jpg', alt: '' }
-            : undefined,
+        // Without its own cover the poster shows the CILAS mark.
+        image: mediaImage(cover),
         deadline: p.registration?.deadline?.slice(0, 10),
       },
     ]

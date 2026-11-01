@@ -2,7 +2,7 @@
 
 import { ArrowRight } from 'lucide-react'
 import Image from 'next/image'
-import { useState, type CSSProperties } from 'react'
+import { useState, type CSSProperties, type ReactNode } from 'react'
 
 import { InViewTitle } from '@/components/arc/in-view-title/in-view-title'
 import { CilasLogo } from '@/components/cilas-logo'
@@ -35,10 +35,11 @@ export type PosterData = {
   title: string
   /** Under the title: who ("With Ghosoun Ismail", the author). */
   credit?: string
+  /** What kind of thing it is, with its icon: its own box at the start of the credit row. */
+  tag?: { icon: ReactNode; text: string }
   image?: MediaImage
   /** Prepared images can be served directly without another server-side transform. */
   imageDelivery?: 'direct'
-  imageFallback?: 'logo'
   /** The strip's coloured cell: a line or two; the time left to a deadline (YYYY-MM-DD) gets the cell after it. */
   meta: { lines: string[]; deadline?: string; status?: string }
   /** The strip's white cell: when and where, the reading time. */
@@ -46,8 +47,6 @@ export type PosterData = {
   /** What the link does: "Apply", "Read". */
   action: string
 }
-
-const FALLBACK = '/assets/images/cilas-classroom.jpg'
 
 export function Poster({
   poster,
@@ -65,35 +64,35 @@ export function Poster({
     separateLabel,
     title,
     credit,
+    tag,
     image,
     imageDelivery,
-    imageFallback,
     meta,
     details,
     action,
     href,
   } = poster
-  const source = image?.src ?? FALLBACK
+  // No image, or one that fails to load: the CILAS mark on the paper.
   const [failedSource, setFailedSource] = useState<string | null>(null)
-  const imageFailed = failedSource === source
+  const missing = !image || failedSource === image.src
   const layout = variant === 3 ? 1 : variant
   const labelOnTop = layout === 0 || separateLabel
   const picture = (
-    <div className="poster-image" data-fallback={!image || imageFailed ? imageFallback : undefined}>
-      {(!image || imageFailed) && imageFallback === 'logo' ? (
+    <div className="poster-image" data-fallback={missing ? 'logo' : undefined}>
+      {missing ? (
         <CilasLogo className="poster-fallback-logo" />
       ) : (
         <Image
-          alt={imageFailed ? '' : (image?.alt ?? '')}
+          alt={image.alt}
           draggable={false}
           fill
           loading={imageLoading}
           fetchPriority={imageFetchPriority}
           sizes="(min-width: 90rem) 53rem, (min-width: 48rem) 62vw, 100vw"
-          src={imageFailed ? FALLBACK : source}
-          unoptimized={imageDelivery === 'direct' || imageFailed}
-          onError={source !== FALLBACK && !imageFailed ? () => setFailedSource(source) : undefined}
-          style={focalPointStyle(imageFailed ? undefined : image)}
+          src={image.src}
+          unoptimized={imageDelivery === 'direct'}
+          onError={() => setFailedSource(image.src)}
+          style={focalPointStyle(image)}
         />
       )}
     </div>
@@ -191,6 +190,18 @@ export function Poster({
           )}
           {labelOnTop ? (
             heading
+          ) : tag ? (
+            <div className="poster-credit poster-credit-row">
+              <span className="poster-tag">
+                {tag.icon}
+                <span dir="auto">{tag.text}</span>
+              </span>
+              {credit ? (
+                <span className="poster-credit-text" dir="auto">
+                  {credit}
+                </span>
+              ) : null}
+            </div>
           ) : credit || label ? (
             <p className="poster-credit" dir="auto">
               {credit ?? label}
