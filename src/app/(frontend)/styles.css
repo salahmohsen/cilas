@@ -1982,34 +1982,39 @@ a.collection-item:hover {
 .study-card .study-quote blockquote {
   margin-block: 0;
   max-width: 60ch;
-  border-inline-start-color: var(--poster-ink);
+  padding-inline-start: 0;
+  border-inline-start: 0;
   color: var(--poster-ink);
 }
 .study-card .study-quote cite {
   color: oklch(0.3 0 0);
 }
-/* The filters cell: the toolbar loses its own box and sits on the paper,
-   the count at the row's end. */
+/* The filters row: the toolbar loses its own box and sits on the paper; the
+   count is its own cell at the row's end. */
 .study-card-filters {
   display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 0.5rem 1.5rem;
-  padding: calc(var(--poster-pad) * 0.6) var(--poster-pad);
+  align-items: stretch;
   border-block-start: 1px solid var(--poster-ink);
 }
 .study-card-filters > [role='group'] {
-  flex: 1 1 20rem;
+  flex: 1 1 auto;
+  min-width: 0;
   min-height: 0;
-  padding: 0;
+  padding: calc(var(--poster-pad) * 0.6) var(--poster-pad);
   border: 0;
   border-radius: 0;
   background: transparent;
 }
 .study-card-count {
+  display: flex;
+  flex: none;
+  align-items: center;
+  padding: calc(var(--poster-pad) * 0.6) var(--poster-pad);
+  border-inline-start: 1px solid var(--poster-ink);
   font-size: 0.875rem;
+  font-weight: 500;
   font-variant-numeric: tabular-nums;
-  color: var(--text-secondary);
+  color: var(--poster-ink);
 }
 @container study-card (width > 48rem) {
   .study-card {
