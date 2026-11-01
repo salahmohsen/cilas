@@ -96,7 +96,7 @@ export async function EventPage({
             {speakers.length > 0 && (
               <section className={styles.section}>
                 <h2>{t('speakers')}</h2>
-                {/* One card each, in a wrapping row; neighbours never share a colour. */}
+                {/* One card a row; neighbours never share a colour. */}
                 <ul className={styles.speakers}>
                   {speakers.map(({ person, role, key }, i) => (
                     <li key={key}>
