@@ -197,6 +197,19 @@ export interface Config {
     'accounts-by-role': AccountsByRoleWidget;
     'new-accounts': NewAccountsWidget;
     'community-activity': CommunityActivityWidget;
+    visitors: VisitorsWidget;
+    'page-views': PageViewsWidget;
+    'site-errors': SiteErrorsWidget;
+    'posthog-usage': PosthogUsageWidget;
+    traffic: TrafficWidget;
+    'application-funnel': ApplicationFunnelWidget;
+    'top-pages': TopPagesWidget;
+    'page-movement': PageMovementWidget;
+    'traffic-sources': TrafficSourcesWidget;
+    audience: AudienceWidget;
+    'visitor-goals': VisitorGoalsWidget;
+    'courses-and-events': CoursesAndEventsWidget;
+    'daily-activity': DailyActivityWidget;
     'media-storage': MediaStorageWidget;
     'newsletter-usage': NewsletterUsageWidget;
     'waiting-for-review': WaitingForReviewWidget;
@@ -4683,6 +4696,136 @@ export interface NewAccountsWidget {
  * via the `definition` "community-activity_widget".
  */
 export interface CommunityActivityWidget {
+  data?: {
+    [k: string]: unknown;
+  };
+  width: 'x-small' | 'small' | 'medium' | 'large' | 'x-large' | 'full';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "visitors_widget".
+ */
+export interface VisitorsWidget {
+  data?: {
+    [k: string]: unknown;
+  };
+  width: 'x-small' | 'small' | 'medium' | 'large' | 'x-large' | 'full';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "page-views_widget".
+ */
+export interface PageViewsWidget {
+  data?: {
+    [k: string]: unknown;
+  };
+  width: 'x-small' | 'small' | 'medium' | 'large' | 'x-large' | 'full';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "site-errors_widget".
+ */
+export interface SiteErrorsWidget {
+  data?: {
+    [k: string]: unknown;
+  };
+  width: 'x-small' | 'small' | 'medium' | 'large' | 'x-large' | 'full';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "posthog-usage_widget".
+ */
+export interface PosthogUsageWidget {
+  data?: {
+    [k: string]: unknown;
+  };
+  width: 'x-small' | 'small' | 'medium' | 'large' | 'x-large' | 'full';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "traffic_widget".
+ */
+export interface TrafficWidget {
+  data?: {
+    [k: string]: unknown;
+  };
+  width: 'x-small' | 'small' | 'medium' | 'large' | 'x-large' | 'full';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "application-funnel_widget".
+ */
+export interface ApplicationFunnelWidget {
+  data?: {
+    [k: string]: unknown;
+  };
+  width: 'x-small' | 'small' | 'medium' | 'large' | 'x-large' | 'full';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "top-pages_widget".
+ */
+export interface TopPagesWidget {
+  data?: {
+    [k: string]: unknown;
+  };
+  width: 'x-small' | 'small' | 'medium' | 'large' | 'x-large' | 'full';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "page-movement_widget".
+ */
+export interface PageMovementWidget {
+  data?: {
+    [k: string]: unknown;
+  };
+  width: 'x-small' | 'small' | 'medium' | 'large' | 'x-large' | 'full';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "traffic-sources_widget".
+ */
+export interface TrafficSourcesWidget {
+  data?: {
+    [k: string]: unknown;
+  };
+  width: 'x-small' | 'small' | 'medium' | 'large' | 'x-large' | 'full';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "audience_widget".
+ */
+export interface AudienceWidget {
+  data?: {
+    [k: string]: unknown;
+  };
+  width: 'x-small' | 'small' | 'medium' | 'large' | 'x-large' | 'full';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "visitor-goals_widget".
+ */
+export interface VisitorGoalsWidget {
+  data?: {
+    [k: string]: unknown;
+  };
+  width: 'x-small' | 'small' | 'medium' | 'large' | 'x-large' | 'full';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "courses-and-events_widget".
+ */
+export interface CoursesAndEventsWidget {
+  data?: {
+    [k: string]: unknown;
+  };
+  width: 'x-small' | 'small' | 'medium' | 'large' | 'x-large' | 'full';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "daily-activity_widget".
+ */
+export interface DailyActivityWidget {
   data?: {
     [k: string]: unknown;
   };

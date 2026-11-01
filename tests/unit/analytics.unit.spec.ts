@@ -2,7 +2,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 
 import { routing } from '@/i18n/routing'
 import { isBotPath, isNoisyError } from '@/lib/analytics/errors'
-import { posthogHosts, ingestRewrites } from '@/lib/analytics/hosts'
+import { INGEST_PATH, posthogHosts, ingestRewrites } from '@/lib/analytics/hosts'
 import {
   EXCLUDED_SECTIONS,
   TRACKED_SECTIONS,
@@ -53,7 +53,7 @@ describe('which pages analytics may see', () => {
     '/admin',
     '/admin/collections/users',
     '/api/users/me',
-    '/ingest/e/',
+    '/relay-k3/e/',
     '/en/events/preview',
     '/en/events/preview/9',
     '/en/unknown-section',
@@ -268,14 +268,20 @@ describe('what the browser is set to do', () => {
     expect(config.autocapture).toBe(false)
     expect(config.capture_pageleave).toBe(false)
     expect(config.capture_heatmaps).toBe(false)
-    expect(config.advanced_disable_flags).toBe(true)
+    expect(config.advanced_disable_feature_flags).toBe(true)
+    expect(config.internal_or_test_user_hostname).toBeNull()
     expect(config.disable_surveys).toBe(true)
     expect(config.disable_session_recording).toBe(true)
     expect(config.respect_dnt).toBe(true)
   })
 
+  it("uses PostHog's recommended defaults and puts its scripts in head", () => {
+    expect(config.defaults).toBe('2026-08-30')
+    expect(config.external_scripts_inject_target).toBe('head')
+  })
+
   it('goes through the site and masks the forms in recordings', () => {
-    expect(config.api_host).toBe('/ingest')
+    expect(config.api_host).toBe(INGEST_PATH)
     expect(config.session_recording).toMatchObject({ maskAllInputs: true })
     expect(config.session_recording?.maskTextSelector).toContain('form')
   })
@@ -313,15 +319,25 @@ describe('PostHog hosts', () => {
     expect(posthogHosts('').ingest).toBe('https://eu.i.posthog.com')
   })
 
-  it('forwards /ingest only when a key is set, assets first', () => {
+  it('forwards the relay path only when a key is set, assets first', () => {
     expect(ingestRewrites(undefined)).toEqual([])
     const rules = ingestRewrites('phc_x')
     expect(rules.map((r) => r.source)).toEqual([
-      '/ingest/static/:path*',
-      '/ingest/array/:path*',
-      '/ingest/:path*',
+      `${INGEST_PATH}/static/:path*`,
+      `${INGEST_PATH}/array/:path*`,
+      `${INGEST_PATH}/:path*`,
     ])
     expect(rules[0]?.destination).toBe('https://eu-assets.i.posthog.com/static/:path*')
     expect(rules[2]?.destination).toBe('https://eu.i.posthog.com/:path*')
+  })
+})
+
+describe('the locale proxy', () => {
+  it('leaves the relay path alone, so a language redirect never reaches PostHog', async () => {
+    const { config } = await import('@/proxy')
+    const matcher = new RegExp(`^${config.matcher[0]}$`)
+    expect(matcher.test(`${INGEST_PATH}/e/`)).toBe(false)
+    expect(matcher.test(`${INGEST_PATH}/static/recorder.js`)).toBe(false)
+    expect(matcher.test('/en/about')).toBe(true)
   })
 })

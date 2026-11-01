@@ -1,3 +1,5 @@
+import { INGEST_PATH } from './hosts'
+
 /**
  * Which pages analytics may see. The rule is an allowlist: a page counts only
  * if its first path segment (after the language) names a public section, so a
@@ -34,7 +36,7 @@ export const EXCLUDED_SECTIONS = [
   'signed-in',
   'admin',
   'api',
-  'ingest',
+  INGEST_PATH.slice(1),
 ] as const
 
 /** `/en/about` becomes `/about`, `/ar` becomes `/`. A path with no language is kept as it is. */

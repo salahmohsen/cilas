@@ -1,6 +1,7 @@
 import type { MetadataRoute } from 'next'
 
 import { env } from '@/env'
+import { INGEST_PATH } from '@/lib/analytics/hosts'
 
 /** Page routes remain crawlable so their noindex directives can be read. */
 export default function robots(): MetadataRoute.Robots {
@@ -9,7 +10,7 @@ export default function robots(): MetadataRoute.Robots {
     rules: {
       userAgent: '*',
       allow: '/',
-      disallow: ['/admin', '/api/', '/ingest/'],
+      disallow: ['/admin', '/api/', `${INGEST_PATH}/`],
     },
     sitemap: `${origin}/sitemap.xml`,
     host: origin,

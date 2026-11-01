@@ -42,6 +42,11 @@ export const makeBeforeSend = () => {
  * are the only automatic events; the rest go through `track`.
  */
 export const posthogConfig = (): Partial<PostHogConfig> => ({
+  // PostHog's own recommended defaults (docs/libraries/next-js). Among them:
+  // its scripts go into <head> (no hydration mismatch), a recording shorter
+  // than its minimum duration is dropped, and a hash is stripped from addresses.
+  defaults: '2026-08-30',
+  external_scripts_inject_target: 'head',
   api_host: INGEST_PATH,
   ui_host: posthogHosts().ui,
   persistence: 'memory',
@@ -58,7 +63,11 @@ export const posthogConfig = (): Partial<PostHogConfig> => ({
     capture_unhandled_rejections: true,
     capture_console_errors: false,
   },
-  advanced_disable_flags: true,
+  // Remote config must stay on: the recorder reads its settings from it. No
+  // feature flags are evaluated, and the "internal user" check (a $set event
+  // that would start a person profile on localhost) is off.
+  advanced_disable_feature_flags: true,
+  internal_or_test_user_hostname: null,
   disable_surveys: true,
   disable_session_recording: true,
   respect_dnt: true,
@@ -95,8 +104,7 @@ export const onNavigate = (url: string) => {
 
 /**
  * Starts analytics when a key is set. Without one nothing is downloaded, no
- * request is made and `track` stays a no-op. PostHog loads in a separate
- * chunk, so the first page view can follow hydration by a moment.
+ * request is made and `track` stays a no-op.
  */
 export const startAnalytics = (key: string | undefined) => {
   if (!key || typeof window === 'undefined') return

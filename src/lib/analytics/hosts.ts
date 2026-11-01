@@ -1,8 +1,12 @@
 /** The default: PostHog's EU cloud, where CILAS's project lives. */
 export const DEFAULT_POSTHOG_HOST = 'https://eu.i.posthog.com'
 
-/** Path the site forwards to PostHog, so ad blockers see only the site's own address. */
-export const INGEST_PATH = '/ingest'
+/**
+ * Path the site forwards to PostHog, so ad blockers see only the site's own
+ * address. PostHog advises against obvious names (/analytics, /tracking,
+ * /posthog, /ingest), which blockers learn, so this one is arbitrary.
+ */
+export const INGEST_PATH = '/relay-k3'
 
 /**
  * The three PostHog addresses that go with an ingestion host: where events
@@ -19,7 +23,7 @@ export const posthogHosts = (host?: string) => {
   }
 }
 
-/** The rewrites that forward `/ingest/*` to PostHog (next.config.ts). Empty without a key. */
+/** The rewrites that forward `/relay-k3/*` to PostHog (next.config.ts). Empty without a key. */
 export const ingestRewrites = (key: string | undefined, host?: string) => {
   if (!key) return []
   const { ingest, assets } = posthogHosts(host)

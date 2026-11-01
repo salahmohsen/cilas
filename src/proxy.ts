@@ -82,12 +82,12 @@ export default function proxy(request: NextRequest) {
 
 export const config = {
   // Everything except Payload (/admin, /api), the analytics forwarding
-  // (/ingest, which must never be redirected to a language), Next internals and static files
+  // (/relay-k3, which must never be redirected to a language), Next internals and static files
   // (the web app manifest included: it is not under a locale); `.html` pages
   // and `/uploads/...` are let through for the legacy lookup, and the
   // admin's login, forgot and reset pages to send them to the site's own.
   matcher: [
-    '/((?!api|admin|ingest|_next|_vercel|.*\\.(?:ico|png|jpe?g|gif|svg|webp|avif|css|js|map|txt|xml|json|webmanifest|woff2?|pdf)$).*)',
+    '/((?!api|admin|relay-k3|_next|_vercel|.*\\.(?:ico|png|jpe?g|gif|svg|webp|avif|css|js|map|txt|xml|json|webmanifest|woff2?|pdf)$).*)',
     '/uploads/:path*',
     '/admin/login',
     '/admin/forgot',
