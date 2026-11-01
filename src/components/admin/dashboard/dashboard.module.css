@@ -1,0 +1,215 @@
+.page {
+  display: grid;
+  gap: 2rem;
+  padding-block: 1.5rem 3rem;
+  color: var(--foreground);
+  font-family: var(--font-body);
+}
+
+.title {
+  margin: 0;
+  font-size: var(--text-2xl);
+  font-weight: 500;
+  color: var(--foreground);
+}
+
+.section {
+  display: grid;
+  gap: 0.875rem;
+}
+
+.sectionTitle {
+  margin: 0;
+  font-size: var(--text-lg);
+  font-weight: 500;
+  color: var(--foreground);
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.slot {
+  min-width: 0;
+}
+.slot[data-span='2'] {
+  grid-column: span 2;
+}
+.slot[data-span='3'] {
+  grid-column: span 3;
+}
+.slot[data-span='4'] {
+  grid-column: 1 / -1;
+}
+
+/* Tablet: two columns. Wide widgets keep the full row. */
+@media (max-width: 1100px) {
+  .grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .slot[data-span='3'],
+  .slot[data-span='4'] {
+    grid-column: 1 / -1;
+  }
+}
+
+@media (max-width: 640px) {
+  .grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .slot[data-span='2'] {
+    grid-column: auto;
+  }
+}
+
+.card {
+  display: grid;
+  align-content: start;
+  gap: 1rem;
+  height: 100%;
+  padding: 1.25rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-panel);
+  background: var(--surface);
+  color: var(--foreground);
+  box-shadow: var(--shadow-resting);
+}
+
+.cardHeader {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.75rem;
+}
+
+.cardTitle {
+  margin: 0;
+  font-size: var(--text-base);
+  font-weight: 500;
+  color: var(--foreground);
+}
+
+.cardNote {
+  margin: 0.25rem 0 0;
+  font-size: var(--text-sm);
+  color: var(--text-secondary);
+}
+
+.cardLink {
+  font-size: var(--text-sm);
+  color: var(--text-secondary);
+  text-decoration: none;
+  white-space: nowrap;
+}
+.cardLink:hover {
+  color: var(--foreground);
+  text-decoration: underline;
+}
+
+/* Quick actions */
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.tile {
+  display: grid;
+  gap: 0.125rem;
+  min-width: 11rem;
+  padding: 0.875rem 1.125rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-panel);
+  background: var(--surface);
+  color: var(--foreground);
+  text-decoration: none;
+  box-shadow: var(--shadow-resting);
+}
+a.tile:hover {
+  border-color: var(--border-strong);
+  background: var(--surface-raised);
+}
+.tileCount {
+  font-size: var(--text-2xl);
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+  line-height: 1.1;
+}
+.tileLabel {
+  font-size: var(--text-sm);
+  color: var(--text-secondary);
+}
+
+.create {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.pill {
+  display: inline-flex;
+  align-items: center;
+  min-height: var(--control-height-sm);
+  padding-inline: 1rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-pill);
+  background: var(--surface);
+  color: var(--foreground);
+  font-size: var(--text-sm);
+  text-decoration: none;
+}
+.pill:hover {
+  border-color: var(--border-strong);
+  background: var(--surface-muted);
+}
+
+/* Keyboard focus only, and only inside the dashboard. */
+.tile:focus-visible,
+.pill:focus-visible,
+.cardLink:focus-visible {
+  outline: 2px solid color-mix(in oklab, var(--accent-strong) 72%, transparent);
+  outline-offset: 2px;
+}
+
+/* Lists inside cards */
+.list {
+  display: grid;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+  padding-block: 0.625rem;
+  border-bottom: 1px solid var(--border-subtle);
+  font-size: var(--text-sm);
+}
+.row:last-child {
+  border-bottom: 0;
+}
+.rowMain {
+  min-width: 0;
+  overflow: hidden;
+  color: var(--foreground);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  text-decoration: none;
+}
+a.rowMain:hover {
+  text-decoration: underline;
+}
+.rowMeta {
+  flex: none;
+  color: var(--text-secondary);
+  font-variant-numeric: tabular-nums;
+}
+
+/* A widget with nothing to show (Resend off) leaves no empty cell. */
+.slot:empty {
+  display: none;
+}
