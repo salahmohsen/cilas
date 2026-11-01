@@ -2338,20 +2338,19 @@ details:not([open]) > summary.side-card-label {
   text-align: center;
   text-decoration: none;
 }
-/* Registration: the dot, the status and the price, each in its own box. */
+/* Registration: the dot and the status in one box, the price in a row of its
+   own under a rule. */
 .apply-card-row {
   display: flex;
   align-items: stretch;
   min-height: 2.75rem;
-}
-.apply-card-row > * + * {
-  border-inline-start: 1px solid var(--poster-ink);
 }
 .apply-card-dot {
   display: grid;
   flex: none;
   place-items: center;
   width: 2.75rem;
+  margin-inline-end: calc(-1 * var(--poster-pad));
 }
 .apply-card-dot::before {
   content: '';
@@ -2376,7 +2375,8 @@ details:not([open]) > summary.side-card-label {
   min-width: 0;
 }
 .apply-card-price {
-  flex: none;
+  min-height: 2.75rem;
+  border-block-start: 1px solid var(--poster-ink);
   font-variant-numeric: tabular-nums;
 }
 /* Facts and counts: one ruled row each, the icon in its own column. */

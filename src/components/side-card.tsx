@@ -60,8 +60,8 @@ export function SideCardSection({
 }
 
 /**
- * Registration as its own card: a row of boxes (the status dot, the status,
- * the price), then Apply across the card in its colour. `primary` marks the
+ * Registration as its own card: the status with its dot, the price in a row
+ * of its own, then Apply across the card in its colour. `primary` marks the
  * page's own Apply, which the sticky copy watches.
  */
 export function SideCardApply({
@@ -88,8 +88,8 @@ export function SideCardApply({
       <div className="apply-card-row">
         <span aria-hidden className="apply-card-dot" data-open={open || undefined} />
         <span className="apply-card-status">{status}</span>
-        {price ? <span className="apply-card-price">{price}</span> : null}
       </div>
+      {price ? <div className="apply-card-price">{price}</div> : null}
       {applyUrl ? (
         <a
           className="side-card-action"
