@@ -56,6 +56,8 @@ import { ImportPreview as ImportPreview_cdf7e044479f899a31f804427d568b36 } from 
 import { ImportSaveButton as ImportSaveButton_cdf7e044479f899a31f804427d568b36 } from '@payloadcms/plugin-import-export/rsc'
 import { MailingListsNote as MailingListsNote_982ef07d70d1f99a8bc95a2e0421396d } from '../../../components/admin/mailing-lists-note'
 import { Nav as Nav_f436cf2a4719114d9e44505773a04007 } from 'payload-theme/client'
+import { AdminIcon as AdminIcon_78c6b9411a3b5197e36221642877758f } from '../../../components/admin/brand/admin-logo'
+import { AdminLogo as AdminLogo_78c6b9411a3b5197e36221642877758f } from '../../../components/admin/brand/admin-logo'
 import { WorkLinks as WorkLinks_56c7a9e85087df4e3a170f2dfd1c66e7 } from '../../../components/admin/work-links'
 import { NotificationBell as NotificationBell_30f6ed48d1f6793e07a5e73de280de4d } from '../../../components/admin/notification-bell'
 import { HeaderActions as HeaderActions_f436cf2a4719114d9e44505773a04007 } from 'payload-theme/client'
@@ -131,6 +133,8 @@ export const importMap = {
   "@payloadcms/plugin-import-export/rsc#ImportSaveButton": ImportSaveButton_cdf7e044479f899a31f804427d568b36,
   "/components/admin/mailing-lists-note#MailingListsNote": MailingListsNote_982ef07d70d1f99a8bc95a2e0421396d,
   "payload-theme/client#Nav": Nav_f436cf2a4719114d9e44505773a04007,
+  "/components/admin/brand/admin-logo#AdminIcon": AdminIcon_78c6b9411a3b5197e36221642877758f,
+  "/components/admin/brand/admin-logo#AdminLogo": AdminLogo_78c6b9411a3b5197e36221642877758f,
   "/components/admin/work-links#WorkLinks": WorkLinks_56c7a9e85087df4e3a170f2dfd1c66e7,
   "/components/admin/notification-bell#NotificationBell": NotificationBell_30f6ed48d1f6793e07a5e73de280de4d,
   "payload-theme/client#HeaderActions": HeaderActions_f436cf2a4719114d9e44505773a04007,
