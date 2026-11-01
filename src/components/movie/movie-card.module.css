@@ -83,7 +83,11 @@
   background: var(--poster-paper);
   border-top: 1px solid var(--poster-ink);
 }
-.facts > div {
+.factList {
+  display: contents;
+}
+.factList > div,
+.detailsCell {
   display: grid;
   align-content: start;
   gap: var(--space-1);
@@ -103,23 +107,24 @@
   padding: var(--space-1) var(--space-6);
   border-bottom: 1px solid var(--poster-ink);
 }
-.footer {
-  display: flex;
-  border-top: 1px solid var(--poster-ink);
-  background: var(--poster-paper);
+/* The grid's last cell: a button in the cells' own type, filling the cell. */
+.detailsCell {
+  padding: 0;
 }
 .detailsTrigger {
   display: flex;
-  flex: 1;
   align-items: center;
-  justify-content: center;
-  min-height: 2.75rem;
-  padding: var(--space-4);
+  width: 100%;
+  min-height: 100%;
+  padding: var(--space-4) var(--space-6);
   border: 0;
   background: var(--poster-paper);
   color: var(--poster-ink);
   font: inherit;
-  font-weight: 600;
+  font-weight: 500;
+  text-align: start;
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
   cursor: pointer;
 }
 @media (hover: hover) and (pointer: fine) {

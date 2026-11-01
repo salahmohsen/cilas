@@ -89,82 +89,85 @@ export function MovieCard({
           </div>
         </div>
       </div>
-      <dl className={styles.facts}>
-        {metadata.map(([label, value]) => (
-          <div key={label}>
-            <dt>{label}</dt>
-            <dd dir="auto">{value}</dd>
-          </div>
-        ))}
-      </dl>
-      <footer className={styles.footer}>
-        <MovieDetailsDialog
-          className={`${styles.detailsTrigger} poster-action`}
-          closeLabel={t('close')}
-          label={t('allDetails')}
-          title={movie.title}
-        >
-          <div className={styles.details}>
-            <dl>
-              {allMetadata.map(([label, value]) => (
-                <div key={label}>
-                  <dt>{label}</dt>
-                  <dd dir="auto">{value}</dd>
-                </div>
-              ))}
-            </dl>
-            {movie.cast.length > 0 && (
-              <section>
-                <h4>{t('cast')}</h4>
-                <ul>
-                  {movie.cast.map((c) => (
-                    <li dir="auto" key={`${c.name}-${c.character}`}>
-                      {c.character ? `${c.name} · ${c.character}` : c.name}
-                    </li>
-                  ))}
-                </ul>
-              </section>
-            )}
-            {movie.crew.length > 0 && (
-              <section>
-                <h4>{t('crew')}</h4>
-                <ul>
-                  {movie.crew.map((c) => (
-                    <li dir="auto" key={`${c.name}-${c.job}`}>
-                      {`${c.name} · ${c.job}`}
-                    </li>
-                  ))}
-                </ul>
-              </section>
-            )}
-            <p className={styles.detailsLinks}>
-              <a
-                href={`https://www.themoviedb.org/movie/${movie.id}`}
-                rel="noopener noreferrer"
-                target="_blank"
-              >
-                {t('source')}
-              </a>
-              {movie.imdbId && (
+      {/* The facts' grid; its last cell opens the rest of the metadata. */}
+      <div className={styles.facts}>
+        <dl className={styles.factList}>
+          {metadata.map(([label, value]) => (
+            <div key={label}>
+              <dt>{label}</dt>
+              <dd dir="auto">{value}</dd>
+            </div>
+          ))}
+        </dl>
+        <div className={styles.detailsCell}>
+          <MovieDetailsDialog
+            className={styles.detailsTrigger}
+            closeLabel={t('close')}
+            label={t('allDetails')}
+            title={movie.title}
+          >
+            <div className={styles.details}>
+              <dl>
+                {allMetadata.map(([label, value]) => (
+                  <div key={label}>
+                    <dt>{label}</dt>
+                    <dd dir="auto">{value}</dd>
+                  </div>
+                ))}
+              </dl>
+              {movie.cast.length > 0 && (
+                <section>
+                  <h4>{t('cast')}</h4>
+                  <ul>
+                    {movie.cast.map((c) => (
+                      <li dir="auto" key={`${c.name}-${c.character}`}>
+                        {c.character ? `${c.name} · ${c.character}` : c.name}
+                      </li>
+                    ))}
+                  </ul>
+                </section>
+              )}
+              {movie.crew.length > 0 && (
+                <section>
+                  <h4>{t('crew')}</h4>
+                  <ul>
+                    {movie.crew.map((c) => (
+                      <li dir="auto" key={`${c.name}-${c.job}`}>
+                        {`${c.name} · ${c.job}`}
+                      </li>
+                    ))}
+                  </ul>
+                </section>
+              )}
+              <p className={styles.detailsLinks}>
                 <a
-                  href={`https://www.imdb.com/title/${movie.imdbId}/`}
+                  href={`https://www.themoviedb.org/movie/${movie.id}`}
                   rel="noopener noreferrer"
                   target="_blank"
                 >
-                  IMDb
+                  {t('source')}
                 </a>
-              )}
-            </p>
-            <section aria-label={t('attributionLink')} className={styles.attribution}>
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img alt="TMDB" src="/assets/images/tmdb.svg" width={90} />
-              <p lang="en">
-                This product uses the TMDB API but is not endorsed or certified by TMDB.
+                {movie.imdbId && (
+                  <a
+                    href={`https://www.imdb.com/title/${movie.imdbId}/`}
+                    rel="noopener noreferrer"
+                    target="_blank"
+                  >
+                    IMDb
+                  </a>
+                )}
               </p>
-            </section>
-          </div>
-        </MovieDetailsDialog>
-      </footer>
+              <section aria-label={t('attributionLink')} className={styles.attribution}>
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img alt="TMDB" src="/assets/images/tmdb.svg" width={90} />
+                <p lang="en">
+                  This product uses the TMDB API but is not endorsed or certified by TMDB.
+                </p>
+              </section>
+            </div>
+          </MovieDetailsDialog>
+        </div>
+      </div>
     </article>
   )
 }
