@@ -115,10 +115,7 @@ export function MovieCard({
           }
         >
           <button type="button" className={styles.creditTrigger}>
-            <span className="poster-action">
-              {t('attributionTrigger')}
-              <ArrowRight size={16} strokeWidth={2} aria-hidden className="poster-arrow" />
-            </span>
+            <span className="poster-action">{t('attributionTrigger')}</span>
           </button>
         </HoverCard>
       </footer>
