@@ -15,3 +15,23 @@ pre-commit:
       glob: '*.{css,scss,less,json,jsonc,yaml,yml,md,mdx,html}'
       run: pnpm exec oxfmt --write --no-error-on-unmatched-pattern -- {staged_files}
       stage_fixed: true
+
+# Fast guard before code leaves the machine: the same checks CI runs first.
+# `files` is everything this branch changes against origin/main (CI's view);
+# {push_files} would fall back to every tracked file on a branch with no
+# upstream yet. Only those files are formatted and linted, and the type check
+# (tsgo, about 4 s) runs only when they include TypeScript or JSON.
+# Skip once with LEFTHOOK=0 git push.
+pre-push:
+  parallel: true
+  files: git diff --name-only --diff-filter=ACMR "$(git merge-base origin/main HEAD 2>/dev/null || echo HEAD~1)" HEAD
+  commands:
+    lint:
+      glob: '*.{js,jsx,mjs,cjs,ts,tsx,mts,cts}'
+      run: pnpm exec oxlint --no-error-on-unmatched-pattern -- {files}
+    format:
+      glob: '*.{js,jsx,mjs,cjs,ts,tsx,mts,cts,css,scss,less,json,jsonc,yaml,yml,md,mdx,html}'
+      run: pnpm exec oxfmt --check --no-error-on-unmatched-pattern -- {files}
+    typecheck:
+      glob: '*.{ts,tsx,mts,cts,json}'
+      run: pnpm exec tsgo --noEmit

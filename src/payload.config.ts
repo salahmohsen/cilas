@@ -8,6 +8,7 @@ import { fileURLToPath } from 'url'
 import sharp from 'sharp'
 
 import { Users } from './collections/Users'
+import { PushSubscriptions } from './collections/PushSubscriptions'
 import { People } from './collections/People'
 import { Memberships } from './collections/Memberships'
 import { Media } from './collections/Media'
@@ -122,7 +123,6 @@ export default buildConfig({
   admin: {
     user: Users.slug,
     components: {
-      beforeNavLinks: ['/components/admin/work-links#WorkLinks'],
       // Admin → Subscribers: the newsletter list from Resend, with CSV export.
       // Reached from the Newsletters list (src/components/admin/subscribers-link.tsx).
       views: {
@@ -136,10 +136,15 @@ export default buildConfig({
           path: '/reviews',
         },
       },
-      // The dashboard opens with what waits for review, for admins.
-      beforeDashboard: ['/components/admin/review-queue#ReviewQueueWidget'],
-      // The notifications bell in the top bar (src/collections/Notifications.ts).
-      actions: ['/components/admin/notification-bell#NotificationBell'],
+      // The top bar: links to Reviews and Subscribers for admins, then the
+      // notifications bell (src/collections/Notifications.ts). payload-theme
+      // replaces the sidebar (Nav) and the dashboard view, so `beforeNavLinks`
+      // and `beforeDashboard` never render; `actions` and the theme's
+      // `dashboard.widgets` do.
+      actions: [
+        '/components/admin/work-links#WorkLinks',
+        '/components/admin/notification-bell#NotificationBell',
+      ],
     },
     importMap: {
       baseDir: path.resolve(dirname),
@@ -175,6 +180,7 @@ export default buildConfig({
     MailingLists,
     SubmissionFiles,
     Notifications,
+    PushSubscriptions,
     Places,
     Spaces,
     SpacePosts,
@@ -305,7 +311,14 @@ export default buildConfig({
       },
     }),
     storage,
-    payloadTheme({ accent: '#000' }),
+    payloadTheme({
+      accent: '#000',
+      // What waits for review, for admins. The theme renders widgets below its
+      // collection cards (docs/research/admin-dashboard.md).
+      dashboard: {
+        widgets: [{ component: '/components/admin/review-queue#ReviewQueueWidget', width: 'full' }],
+      },
+    }),
     // Site search: bilingual Typesense collections of the public courses,
     // articles and people. Off without TYPESENSE_API_KEY (builds, tests).
     typesenseSearch(),

@@ -1083,7 +1083,11 @@ export const reactionToggle = async (
     id: targetId!,
     depth: 0,
     overrideAccess: true,
-  })) as { space: number | { id: number }; post?: number | { id: number } | null } | null
+  })) as {
+    space: number | { id: number }
+    post?: number | { id: number } | null
+    author?: number | { id: number } | null
+  } | null
   if (!doc) return err('not-found')
   const spaceId = typeof doc.space === 'object' ? doc.space.id : doc.space
   const g = await gate(payload, user, spaceId, {
@@ -1123,7 +1127,53 @@ export const reactionToggle = async (
       } as never,
       overrideAccess: true,
     })
-    return { ok: true, data: {} }
+    const notifyFn = async () => {
+      if (!doc.author) return
+      const { actorOf, notify, reactionNote } = await import('@/lib/notify')
+      const { docs: owners } = await payload.find({
+        collection: 'users',
+        where: { person: { equals: idOf(doc.author) } },
+        depth: 0,
+        overrideAccess: true,
+        pagination: false,
+        limit: 10,
+      })
+      const recipients = owners.map((u) => (u as { id: number }).id).filter((id) => id !== user.id)
+      if (!recipients.length) return
+      const actor = await actorOf(payload, personOf(user))
+      const description = reactionNote({
+        actor: actor?.name,
+        reaction,
+        target: isPost ? 'post' : 'comment',
+        context: await spaceNameOf(payload, g.space),
+      })
+      const link = await spaceLink(payload, g.space, isPost ? targetId! : idOf(doc.post)!)
+      // Switching a reaction off and on must not ring twice: one unread note
+      // per person, place and line is enough.
+      const { docs: unread } = await payload.find({
+        collection: 'notifications',
+        where: {
+          and: [
+            { recipient: { in: recipients } },
+            { kind: { equals: 'reaction' } },
+            { description: { equals: description } },
+            { link: { equals: link } },
+            { read_at: { exists: false } },
+          ],
+        },
+        depth: 0,
+        overrideAccess: true,
+        pagination: false,
+        select: { recipient: true },
+      })
+      const done = new Set(unread.map((n) => idOf(n.recipient as never)))
+      await notify(
+        payload,
+        recipients.filter((id) => !done.has(id)),
+        { kind: 'reaction', description, link, actor },
+      )
+    }
+    return { ok: true, data: {}, notify: notifyFn }
   } else {
     if (existing.length === 0) return { ok: true, data: { removed: true } }
     for (const e of existing)

@@ -379,6 +379,7 @@ export async function reactionToggleAction(
     on: text(form, 'on') === 'true',
   })
   if (!result.ok) return err(result.error)
+  await result.notify?.()
   await revalidate()
   return { status: 'ok' }
 }
