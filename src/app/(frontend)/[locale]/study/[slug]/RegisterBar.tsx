@@ -27,7 +27,11 @@ export function RegisterBar({
 
   useEffect(() => {
     // The details' Apply buttons (one per layout; only the visible one counts).
-    const buttons = [...document.querySelectorAll<HTMLElement>('.course-apply[data-primary]')]
+    const buttons = [
+      ...document.querySelectorAll<HTMLElement>(
+        '.course-apply[data-primary], [data-apply-primary]',
+      ),
+    ]
     if (!buttons.length) return
     const update = () => {
       const visible = buttons.filter((b) => b.offsetParent !== null)

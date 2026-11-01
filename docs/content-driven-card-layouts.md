@@ -264,7 +264,7 @@ On a card with a side photo, the icon and label boxes together are exactly as wi
 
 ### Sections around cards
 
-A section that holds a list rather than a single card (the course flow beside the fellow cards) takes the cards' frame, not their materials: 1px rule in `var(--foreground)` (ink in the light theme, still visible in the dark one), `1rem` radius, and no fill, so the page shows through. It follows the theme, because it is page structure, not a printed card. Its head, filters and rows keep the component's own styling.
+A section that holds a list rather than a single card (the course flow beside the fellow cards) keeps its component's own border and styling, takes the column's full width so its edges line up with the cards, and has no fill, so the page shows through.
 
 ### Behaviour
 
@@ -282,10 +282,18 @@ A section that holds a list rather than a single card (the course flow beside th
 | Fellow card         | `src/app/(frontend)/[locale]/study/[slug]/CourseView.tsx` | `.fellow-card*`                          |
 | Study page header   | `src/app/(frontend)/[locale]/study/page.tsx`              | `.study-card*`, `.study-*`               |
 | Side card           | `src/components/side-card.tsx`                            | `.side-card*`                            |
+| Profile card        | `src/components/person/profile-card.tsx`                  | `profile-card.module.css`                |
+| Spaces event card   | `src/components/space/event-details.tsx` (`EventFace`)    | `space.module.css` (poster look block)   |
 
 The fellow card maps the poster like this: photo (media cell, 4:3 when stacked; when wide, a `min(36%, 18rem)` column that the photo fills from top to bottom, at least square, so its end meets the end of the text beside it; the image covers the cell from its focal point), name on the colour panel (section-heading style, regular weight), the bio as a paper cell under the name, then one ruled foot row instead of the poster's strip: the notice label (icon box and "From the fellow") under the photo column, and "View profile" in the card's colour across the text column, its words on the bio's text edge. The fellows' note follows on paper. The note is course-level: with one fellow it closes that card; with several it gets its own card after theirs, in the next palette colour, with an empty paper cell where the action would be. A card without a note keeps an empty paper box under the photo on wide cards, and gives the action the whole row on narrow ones. Content sizes the card; nothing shares a height with a neighbour.
 
 The side card is the article's and the event's side column: sections stacked under ink rules, each named on a band of the card's colour (yellow for articles, the event type's colour for events), its content on paper. People are ruled rows (photo, name, role). Controls are cells, not outlined buttons: A− and A+ share a row of two equal cells with a rule between them, and the main action (Register) is a row in the card's colour with its arrow at the end. A map fills its cell edge to edge. On narrow article pages the same card sits in the column, and its contents section folds behind its band.
+
+The course page uses the same side card: status and price on one line, the facts as ruled rows with the icon in its own column, Apply as the action row, then who teaches, the materials, sharing and studying with AI, each in its own section. The event's side card ends with Add to calendar (a paper row that opens two cells: Google Calendar and an .ics file with every meeting and its full details), then Register in the event type's colour. A− and A+ share a row with a rule between them.
+
+The profile card measures its own frame. Wider than `40rem`, the photo and name take one column and the bio and links the other, the photo stretching to the bio's height and the name on the links' row. Narrower, it stacks: photo, name, bio, links. Event speakers are profile cards in a wrapping row (`flex: 1 1 15rem`, so up to three abreast), cycling three palette colours so neighbours differ, the role under the name.
+
+The Spaces event card takes the poster look: the cover sharp in a 16:9 cell (no blur or fade), or a printed calendar leaf; the title on the card's colour; then the when and where, the answers and the event's words, each on paper under an ink rule. The calendar button is a paper box with an ink rule.
 
 Event posters put the event type, with its icon, in a paper box at the start of the credit row, the speakers in the rest of the row. A poster without a cover, or whose cover fails to load, shows the CILAS mark on paper.
 

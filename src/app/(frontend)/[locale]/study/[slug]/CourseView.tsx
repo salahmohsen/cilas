@@ -13,7 +13,6 @@ import {
 import { useFormatter, useLocale, useTranslations } from 'next-intl'
 import React from 'react'
 
-import { Avatar } from '@/components/arc/avatar/avatar'
 import { InViewTitle } from '@/components/arc/in-view-title/in-view-title'
 import {
   CourseSyllabus,
@@ -25,7 +24,8 @@ import {
   textOf,
 } from '@/components/course/course-syllabus'
 import { AvatarFallback } from '@/components/person/avatar-fallback'
-import { photoOf } from '@/components/person/contributors'
+import { ContributorRows, photoOf } from '@/components/person/contributors'
+import { SideCard, SideCardSection } from '@/components/side-card'
 import { POSTER_COLORS } from '@/lib/poster-colors'
 import { textDirection } from '@/lib/text-direction'
 import { RichTextField } from '@/components/RichTextField'
@@ -232,37 +232,6 @@ export const CourseView: React.FC<{
       : []),
   ]
 
-  // The side column names who teaches; their bios are read in the main text.
-  const facultyCard = (
-    <section aria-labelledby="course-fellows" className="course-side" {...pe('fellows')}>
-      <h2 className="course-side-heading" id="course-fellows">
-        {t('taughtBy')}
-      </h2>
-      <ul className="grid gap-3">
-        {fellows.map((person) => (
-          <li key={person.id}>
-            <Link className="group flex items-center gap-3" href={`/people/${person.slug}`}>
-              <span className="course-fellow-photo">
-                <Avatar
-                  fallbackSeed={personAvatarSeed(person.id)}
-                  name={person.name}
-                  size="md"
-                  src={photoOf(person)}
-                />
-              </span>
-              <span className="min-w-0">
-                <span className="block text-sm leading-snug font-medium underline-offset-4 group-hover:underline">
-                  {person.name}
-                </span>
-                <span className="block text-xs text-[var(--text-muted)]">{t('fellow')}</span>
-              </span>
-            </Link>
-          </li>
-        ))}
-      </ul>
-    </section>
-  )
-
   // Who teaches it: the fellows' note to the class, then one card per fellow
   // with their whole bio. Cards size to their content (no shared height);
   // each card picks its composition from its own width.
@@ -404,94 +373,87 @@ export const CourseView: React.FC<{
       </section>
     ) : null
 
-  const factsCard = (
-    <section aria-label={t('details')} className="course-side">
-      <div className="flex items-center justify-between gap-3">
-        <span className="course-status" data-open={open || undefined} {...pe('registration')}>
-          {open ? t('open') : t('closed')}
-        </span>
-        {price ? (
-          <span className="text-sm text-(--text-secondary)" {...pe('pricing_override')}>
-            {price}
+  // The side column as one card (docs/content-driven-card-layouts.md, side
+  // card): status, price and apply; the facts; who teaches; the materials;
+  // sharing; studying it with AI. Each part in its own ruled section.
+  const sideCard = (withPeople: boolean) => (
+    <SideCard color={POSTER_COLORS[0]} label={t('details')}>
+      <SideCardSection label={t('details')}>
+        <div className="side-card-status">
+          <span className="course-status" data-open={open || undefined} {...pe('registration')}>
+            {open ? t('open') : t('closed')}
           </span>
-        ) : null}
-      </div>
-      {applyUrl ? (
-        <a className="course-apply" data-primary href={applyUrl} {...newTab(applyUrl)}>
-          {t('apply')}
-        </a>
-      ) : null}
-      {facts.length ? (
-        <dl className="course-facts">
-          {facts.map(({ icon: Icon, label, value, path }) => (
-            <div
-              className="grid grid-cols-[1.25rem_1fr] items-start gap-x-3"
-              key={label}
-              {...pe(path)}
-            >
-              <Icon
-                aria-hidden
-                className="mt-0.5 text-(--text-muted)"
-                size={16}
-                strokeWidth={1.5}
-              />
-              <div>
-                <dt className="text-xs text-(--text-muted)">{label}</dt>
-                <dd className="text-sm">{value}</dd>
+          {price ? (
+            <span className="side-card-price" {...pe('pricing_override')}>
+              {price}
+            </span>
+          ) : null}
+        </div>
+        {facts.length ? (
+          <dl className="side-card-facts">
+            {facts.map(({ icon: Icon, label, value, path }) => (
+              <div key={label} {...pe(path)}>
+                <Icon aria-hidden size={16} strokeWidth={1.5} />
+                <div>
+                  <dt>{label}</dt>
+                  <dd>{value}</dd>
+                </div>
               </div>
-            </div>
-          ))}
-        </dl>
+            ))}
+          </dl>
+        ) : null}
+        {applyUrl ? (
+          <a className="side-card-action" data-apply-primary href={applyUrl} {...newTab(applyUrl)}>
+            {t('apply')}
+            <ArrowRight aria-hidden className="rtl:-scale-x-100" size={16} />
+          </a>
+        ) : null}
+      </SideCardSection>
+      {withPeople && fellows.length ? (
+        <div {...pe('fellows')}>
+          <SideCardSection label={t('taughtBy')}>
+            <ContributorRows
+              contributors={fellows.map((person) => ({ person, role: t('fellow') }))}
+            />
+          </SideCardSection>
+        </div>
       ) : null}
-    </section>
-  )
-
-  const materialsCard = counts.length ? (
-    <section aria-labelledby="course-materials" className="course-side">
-      <h2 className="course-side-heading" id="course-materials">
-        {t('materials')}
-      </h2>
-      <ul className="grid gap-2">
-        {counts.map(({ type, count }) => {
-          const Icon = MATERIAL_ICONS[type]
-          return (
-            <li className="grid grid-cols-[1.25rem_1fr] items-center gap-x-3 text-sm" key={type}>
-              <Icon aria-hidden className="text-(--text-muted)" size={16} strokeWidth={1.5} />
-              {t(`materialCounts.${type}`, { count })}
-            </li>
-          )
-        })}
-      </ul>
-    </section>
-  ) : null
-
-  const shareCard = (
-    <section aria-labelledby="course-share" className="course-side">
-      <h2 className="course-side-heading" id="course-share">
-        {ts('heading')}
-      </h2>
-      <ShareBar
-        label={ts('course')}
-        path={`/${locale}/study/${course.slug}`}
-        title={course.title}
-        email={email}
-      />
-    </section>
-  )
-
-  // Taking the course with AI: its own card, at Share's spacing and rhythm.
-  const aiCard = (
-    <section aria-labelledby="course-ai" className="course-side">
-      <h2 className="course-side-heading" id="course-ai">
-        {ts('aiHeading')}
-      </h2>
-      <StudyWithAI kind="course" path={`/${locale}/study/${course.slug}`} />
-      <ol className="grid gap-1 list-decimal list-inside text-xs leading-relaxed text-(--text-muted)">
-        {(ts.raw('aiSteps') as string[]).map((step) => (
-          <li key={step}>{step}</li>
-        ))}
-      </ol>
-    </section>
+      {withPeople && counts.length ? (
+        <SideCardSection label={t('materials')}>
+          <ul className="side-card-facts">
+            {counts.map(({ type, count }) => {
+              const Icon = MATERIAL_ICONS[type]
+              return (
+                <li key={type}>
+                  <Icon aria-hidden size={16} strokeWidth={1.5} />
+                  <span>{t(`materialCounts.${type}`, { count })}</span>
+                </li>
+              )
+            })}
+          </ul>
+        </SideCardSection>
+      ) : null}
+      <SideCardSection label={ts('heading')}>
+        <div className="side-card-body side-card-scroll">
+          <ShareBar
+            label={ts('course')}
+            path={`/${locale}/study/${course.slug}`}
+            title={course.title}
+            email={email}
+          />
+        </div>
+      </SideCardSection>
+      <SideCardSection label={ts('aiHeading')}>
+        <div className="side-card-body">
+          <StudyWithAI kind="course" path={`/${locale}/study/${course.slug}`} />
+          <ol className="grid list-inside list-decimal gap-1 text-xs leading-relaxed side-card-muted">
+            {(ts.raw('aiSteps') as string[]).map((step) => (
+              <li key={step}>{step}</li>
+            ))}
+          </ol>
+        </div>
+      </SideCardSection>
+    </SideCard>
   )
 
   return (
@@ -603,11 +565,7 @@ export const CourseView: React.FC<{
           ) : null}
 
           {/* Narrow screens: the facts and the fellows come before the text. */}
-          <div className="mt-10 grid gap-10 lg:hidden">
-            {factsCard}
-            {shareCard}
-            {aiCard}
-          </div>
+          <div className="mt-10 lg:hidden">{sideCard(false)}</div>
 
           {course.epigraph ? (
             <div className="article-prose mt-10" {...pe('epigraph')}>
@@ -662,13 +620,7 @@ export const CourseView: React.FC<{
         <aside className="hidden lg:flex lg:flex-col lg:gap-10">
           {/* Not sticky: a fellow's bio can make the column taller than the screen.
               Only applying follows the reader down, at the column's end. */}
-          <div className="grid gap-10">
-            {factsCard}
-            {fellows.length ? facultyCard : null}
-            {materialsCard}
-            {shareCard}
-            {aiCard}
-          </div>
+          {sideCard(true)}
           {applyUrl ? (
             <div className="sticky top-22">
               <RegisterBar
