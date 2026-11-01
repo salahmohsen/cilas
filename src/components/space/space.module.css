@@ -2834,3 +2834,174 @@
 .event[data-layout='detail'][data-cover] .eventBody {
   padding: var(--space-8) var(--space-6);
 }
+
+/* ===================================================== event card, poster look */
+
+/* The event card in the poster look (docs/content-driven-card-layouts.md,
+   section 7): ink rules, paper cells, the title on one palette colour. The
+   photo sits sharp in its own cell, with no blur or fade. Printed, so it
+   stays light in the dark theme: the theme tokens inside get light values. */
+.event,
+.event[data-cover] {
+  --poster-ink: #121212;
+  --poster-paper: #ffffff;
+  --event-pad: clamp(0.875rem, 4cqi, 1.5rem);
+  --foreground: oklch(15% 0 0);
+  --text-secondary: oklch(40% 0 0);
+  --text-muted: oklch(46% 0 0);
+  --surface: oklch(100% 0 0);
+  --surface-muted: oklch(97.8% 0 0);
+  --surface-raised: oklch(100% 0 0);
+  --border: oklch(88% 0 0);
+  --border-subtle: oklch(93.5% 0 0);
+  --border-strong: oklch(82% 0 0);
+  --accent: oklch(33% 0 0);
+  --accent-strong: oklch(24% 0 0);
+  --focus-outline: var(--poster-ink);
+  --shadow-resting: none;
+  color-scheme: light;
+  border: 1px solid var(--poster-ink);
+  border-radius: 1rem;
+  background: var(--poster-paper);
+  color: var(--poster-ink);
+}
+.event[data-cover] .rsvpGoing {
+  --surface: oklch(100% 0 0);
+  --surface-muted: oklch(97.8% 0 0);
+}
+/* The photo: its own 16:9 cell, an ink rule under it. */
+.event .eventBackdrop {
+  position: relative;
+  inset: auto;
+  z-index: auto;
+  aspect-ratio: 16 / 9;
+  border-block-end: 1px solid var(--poster-ink);
+}
+.event .eventBlur,
+.event .eventBackdrop::after {
+  display: none;
+}
+.event .eventPhoto {
+  inset: 0;
+  height: 100%;
+  -webkit-mask-image: none;
+  mask-image: none;
+}
+.event[data-layout='detail'] .eventBackdrop {
+  display: none;
+}
+.event[data-layout='detail'] .eventFullPhoto {
+  border-block-end: 1px solid var(--poster-ink);
+}
+/* No photo: the calendar leaf, printed, with the month on the card's colour. */
+.event .eventLeaf {
+  margin: var(--event-pad) auto;
+  border: 1px solid var(--poster-ink);
+  box-shadow: none;
+}
+.event .eventMonth {
+  border-block-end: 1px solid var(--poster-ink);
+  background: var(--poster-color);
+  color: var(--poster-ink);
+}
+/* The body: cells stacked under ink rules, text at the start. */
+.event .eventBody,
+.event[data-cover] .eventBody,
+.event[data-layout='detail'][data-cover] .eventBody {
+  justify-items: stretch;
+  gap: 0;
+  padding: 0;
+  text-align: start;
+}
+.event .eventHead {
+  justify-items: stretch;
+  gap: 0;
+}
+.event:not([data-cover]) .eventHead {
+  border-block-start: 1px solid var(--poster-ink);
+}
+.event .eventHead > :not(.eventTitle, .eventFacts) {
+  justify-self: start;
+  margin: var(--event-pad) var(--event-pad) 0;
+}
+.event .eventTitle {
+  padding: var(--event-pad);
+  border-block-end: 1px solid var(--poster-ink);
+  background: var(--poster-color);
+  color: var(--poster-ink);
+}
+.event .eventHead > :not(.eventTitle, .eventFacts) + .eventTitle {
+  margin-block-start: var(--event-pad);
+  border-block-start: 1px solid var(--poster-ink);
+}
+.event .eventFacts,
+.event .eventWhen {
+  justify-items: start;
+}
+.event .eventFacts {
+  padding: var(--event-pad);
+}
+.event .eventTime {
+  justify-content: flex-start;
+}
+.event .eventBody > :not(.eventHead) {
+  padding: var(--event-pad);
+  border-block-start: 1px solid var(--poster-ink);
+}
+.event .eventReply,
+.event .rsvpChoose {
+  justify-items: start;
+}
+.event .rsvpGoing,
+.event .rsvpCounts {
+  justify-content: flex-start;
+}
+/* The calendar button: a paper box with an ink rule, over the photo or the leaf. */
+.event .eventCorner,
+.event[data-cover] .eventCorner {
+  border: 1px solid var(--poster-ink);
+  border-radius: 0.75rem;
+  background: var(--poster-paper);
+  box-shadow: none;
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+}
+.event[data-cover] .eventCorner button {
+  color: var(--poster-ink);
+}
+/* Browsing cards: the photo or leaf, then the title's colour takes the spare
+   height, so cards in a row end together. */
+.event[data-layout='card'] {
+  display: flex;
+  flex-direction: column;
+  block-size: 100%;
+}
+.event[data-layout='card'] .eventBackdrop {
+  flex: none;
+}
+.event[data-layout='card'] .eventLeaf {
+  position: static;
+  margin: var(--event-pad) auto;
+}
+.event[data-layout='card'] .eventBody {
+  flex: 1;
+  block-size: auto;
+  padding: 0;
+  justify-content: flex-start;
+}
+.event[data-layout='card'] .eventHead {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 0;
+}
+.event[data-layout='card'] .eventTitle {
+  flex: 1;
+}
+/* The words keep their measure; the cell and its rule span the card. */
+.event .eventDescription {
+  max-width: none;
+}
+.event .eventDescription > * {
+  max-width: 65ch;
+}

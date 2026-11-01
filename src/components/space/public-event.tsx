@@ -2,6 +2,7 @@ import { getTranslations } from 'next-intl/server'
 
 import { Badge } from '@/components/arc/badge/badge'
 import { eventOver } from '@/lib/space-event'
+import { POSTER_COLORS } from '@/lib/poster-colors'
 import type { SpaceEventItem } from '@/lib/spaces-data'
 
 import { EventFace, EventPlace, EventWhen } from './event-details'
@@ -22,6 +23,7 @@ export async function PublicEvent({
   const over = eventOver(item.startsAt, item.endsAt, new Date(now))
   return (
     <EventFace
+      color={POSTER_COLORS[1]}
       title={item.title}
       cover={null}
       startsAt={item.startsAt}
