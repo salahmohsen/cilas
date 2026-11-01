@@ -13,6 +13,7 @@ import { Select } from '@/components/arc/select/select'
 import { Textarea } from '@/components/arc/textarea/textarea'
 import { useSpamCheck } from '@/components/forms/spam-check'
 import { Link } from '@/i18n/navigation'
+import { track } from '@/lib/analytics/track'
 import { acceptAttribute, acceptedLabel, maxBytes, maxCount } from '@/lib/form-files'
 import type { Form, Media } from '@/payload-types'
 
@@ -84,6 +85,7 @@ export function PayloadForm({
   lang,
   disabled = false,
   target,
+  analytics,
 }: {
   form: Form
   notes?: Record<string, ReactNode>
@@ -91,6 +93,8 @@ export function PayloadForm({
   back?: { href: string; label: string }
   /** What the applicant applies to; admins accept the submission into it. */
   target?: { relationTo: 'programmes' | 'courses'; value: number }
+  /** What the counters call this application: a course or programme and its public slug. */
+  analytics?: { kind: 'course' | 'programme'; id: string }
   /** The questions' language, when it is not the page's. */
   lang?: string
   /** The questions are shown to read, not to answer (applications closed). */
@@ -104,6 +108,7 @@ export function PayloadForm({
   const [failed, setFailed] = useState(false)
   const top = useRef<HTMLDivElement>(null)
   const spam = useSpamCheck()
+  const started = useRef(false)
 
   /**
    * Who is signed in, so their name and email fill the two default questions
@@ -215,6 +220,7 @@ export function PayloadForm({
       try {
         localStorage.removeItem(draftKey)
       } catch {}
+      if (analytics) track('apply_submitted', analytics)
       setSent(true)
       top.current?.scrollIntoView({ behavior: 'smooth', block: 'start' })
     },
@@ -500,6 +506,12 @@ export function PayloadForm({
       dir={lang ? (lang === 'ar' ? 'rtl' : 'ltr') : undefined}
       lang={lang}
       noValidate
+      // The first time someone enters a field: they have started. Nothing they type is sent.
+      onFocusCapture={() => {
+        if (!analytics || disabled || started.current) return
+        started.current = true
+        track('apply_started', analytics)
+      }}
       onSubmit={(e) => {
         e.preventDefault()
         e.stopPropagation()

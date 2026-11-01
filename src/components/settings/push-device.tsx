@@ -8,6 +8,7 @@ import {
   savePushSubscriptionAction,
 } from '@/app/(frontend)/[locale]/settings/actions'
 import { Button } from '@/components/arc/button/button'
+import { track } from '@/lib/analytics/track'
 import {
   currentSubscription,
   deviceSupport,
@@ -65,8 +66,10 @@ export function PushDevice({ publicKey }: { publicKey: string }) {
       return
     }
     const saved = await savePushSubscriptionAction(result.subscription, locale).catch(() => null)
-    if (saved?.ok) setState({ kind: 'on' })
-    else setError(t('deviceFailed'))
+    if (saved?.ok) {
+      track('push_enabled', {})
+      setState({ kind: 'on' })
+    } else setError(t('deviceFailed'))
     setBusy(false)
   }
 

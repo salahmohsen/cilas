@@ -9,9 +9,9 @@ export type AnalyticsEvents = {
   apply_submitted: { kind: 'course' | 'programme'; id: string }
   register_clicked: { kind: 'event'; id: string }
   calendar_added: { source: 'event-google' | 'event-ics' | 'feed-subscribe' | 'feed-download' }
-  newsletter_subscribed: { place: 'footer' | 'article' | 'page' }
+  newsletter_subscribed: { place: 'footer' | 'page' }
   push_enabled: Record<string, never>
-  login: { method: 'password' | 'google' }
+  login: { method: 'password' }
   contact_submitted: { topic?: string }
 }
 

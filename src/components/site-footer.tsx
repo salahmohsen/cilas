@@ -164,7 +164,7 @@ export function SiteFooter({
                 failed: t('newsletter.failed'),
                 done: t('newsletter.done'),
               },
-              onSubscribe: subscribeToNewsletter,
+              onSubscribe: (email: string) => subscribeToNewsletter(email, 'footer'),
             }
           : null
       }

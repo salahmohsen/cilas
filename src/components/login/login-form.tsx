@@ -8,6 +8,7 @@ import { Button } from '@/components/arc/button/button'
 import { Input } from '@/components/arc/input/input'
 import { PasswordField } from '@/components/arc/password-field/password-field'
 import { Link } from '@/i18n/navigation'
+import { track } from '@/lib/analytics/track'
 
 export type LoginMessages = {
   title: string
@@ -99,6 +100,7 @@ export function LoginForm({
         body: JSON.stringify({ email, password }),
       })
       if (res.ok) {
+        track('login', { method: 'password' })
         window.location.assign(next)
         return
       }

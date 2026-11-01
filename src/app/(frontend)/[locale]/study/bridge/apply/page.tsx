@@ -94,6 +94,7 @@ export default async function ApplyPage({ params }: Props) {
 
       {/* The questions are written in English, so they read left to right on either page. */}
       <PayloadForm
+        analytics={{ kind: 'programme', id: 'bridge' }}
         back={{ href: '/study/bridge', label: t('backTo', { title: year.programme.title }) }}
         confirmation={confirmation}
         disabled={!open}

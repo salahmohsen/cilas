@@ -7,6 +7,7 @@ import { useState } from 'react'
 import { DropdownMenu } from '@/components/arc/dropdown-menu/dropdown-menu'
 import { Select } from '@/components/select'
 import { useRouter } from '@/i18n/navigation'
+import { track } from '@/lib/analytics/track'
 import { localDigits } from '@/lib/digits'
 
 const MONTHS = Array.from({ length: 12 }, (_, i) => i + 1)
@@ -75,6 +76,7 @@ export function CalendarFeed({ feedPath }: { /** `/en/calendar.ics`. */ feedPath
             label: t('subscribe'),
             icon: <Rss aria-hidden size={16} />,
             onSelect: () => {
+              track('calendar_added', { source: 'feed-subscribe' })
               window.location.href = feedUrl().replace(/^https?:/, 'webcal:')
             },
           },
@@ -82,6 +84,7 @@ export function CalendarFeed({ feedPath }: { /** `/en/calendar.ics`. */ feedPath
             label: t('download'),
             icon: <Download aria-hidden size={16} />,
             onSelect: () => {
+              track('calendar_added', { source: 'feed-download' })
               // A file, not a page: a link asked to download it.
               const link = document.createElement('a')
               link.href = `${feedPath}?download`
