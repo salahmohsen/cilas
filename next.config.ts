@@ -1,5 +1,6 @@
 // Fails the build on a missing or malformed variable.
 import './src/env'
+import { ingestRewrites } from './src/lib/analytics/hosts'
 import { UPLOAD_BODY_LIMIT } from './src/lib/space-file-limits'
 
 import { withPayload } from '@payloadcms/next/withPayload'
@@ -49,6 +50,15 @@ const nextConfig: NextConfig = {
         pathname: '/assets/images/**',
       },
     ],
+  },
+  // PostHog's event addresses end in a slash (/e/); Next would redirect them
+  // and the redirect breaks sendBeacon. src/proxy.ts puts the redirect back
+  // for the site's own pages.
+  skipTrailingSlashRedirect: true,
+  // Analytics goes through the site's own address, so ad blockers that list
+  // posthog.com do not break it. Without a key nothing is forwarded.
+  async rewrites() {
+    return ingestRewrites(process.env.NEXT_PUBLIC_POSTHOG_KEY, process.env.NEXT_PUBLIC_POSTHOG_HOST)
   },
   async headers() {
     return [
