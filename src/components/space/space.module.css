@@ -2952,22 +2952,153 @@
 .event .rsvpChoose {
   justify-items: start;
 }
-.event .rsvpGoing,
-.event .rsvpCounts {
-  justify-content: flex-start;
+
+/* The facts: boxes under ink rules. The date and time, with the calendar
+   button as a box beside them; the place, its icon in a box of its own; the note. */
+.event .eventFacts {
+  display: grid;
+  justify-items: stretch;
+  gap: 0;
+  padding: 0;
 }
-/* The calendar button: a paper box with an ink rule, over the photo or the leaf. */
-.event .eventCorner,
-.event[data-cover] .eventCorner {
-  border: 1px solid var(--poster-ink);
-  border-radius: 0.75rem;
+.eventWhenRow {
+  display: flex;
+  align-items: stretch;
+}
+.eventWhenCell {
+  flex: 1;
+  min-width: 0;
+  padding: var(--event-pad);
+}
+.eventCalendarCell {
+  display: grid;
+  flex: none;
+  width: 4.5rem;
+  border-inline-start: 1px solid var(--poster-ink);
+}
+.eventCalendarCell > *,
+.eventCalendarCell button {
+  width: 100%;
+  height: 100%;
+}
+.eventCalendarCell button {
+  border: 0;
+  border-radius: 0;
   background: var(--poster-paper);
-  box-shadow: none;
-  -webkit-backdrop-filter: none;
-  backdrop-filter: none;
-}
-.event[data-cover] .eventCorner button {
   color: var(--poster-ink);
+  box-shadow: none;
+}
+@media (hover: hover) and (pointer: fine) {
+  .eventCalendarCell button:hover {
+    background: color-mix(in oklab, var(--poster-color) 40%, var(--poster-paper));
+  }
+}
+.event .eventWhere {
+  display: flex;
+  align-items: stretch;
+  gap: 0;
+  width: 100%;
+  margin: 0;
+  border-block-start: 1px solid var(--poster-ink);
+}
+.eventWhereIcon {
+  display: grid;
+  flex: none;
+  place-items: center;
+  width: 2.75rem;
+  border-inline-end: 1px solid var(--poster-ink);
+  color: var(--poster-ink);
+}
+.event .eventWhere > svg {
+  margin: 0;
+}
+.event .eventWhere > a,
+.event .eventWhere > bdi {
+  align-self: center;
+  padding: 0.75rem var(--event-pad);
+}
+.eventNoteCell {
+  padding: 0.75rem var(--event-pad);
+  border-block-start: 1px solid var(--poster-ink);
+}
+/* The answers: three boxes in a row, the reader's own on the card's colour;
+   then who is going, centred in a box of its own. */
+.event .eventBody > .eventReply {
+  justify-items: stretch;
+  gap: 0;
+  padding: 0;
+}
+.rsvpCells {
+  display: flex;
+  align-items: stretch;
+}
+.rsvpCell {
+  display: inline-flex;
+  flex: 1 1 0;
+  align-items: center;
+  justify-content: center;
+  gap: 0.375rem;
+  min-width: 0;
+  min-height: 2.75rem;
+  padding: 0.5rem;
+  border: 0;
+  background: var(--poster-paper);
+  color: var(--poster-ink);
+  font: inherit;
+  font-size: var(--text-sm);
+  font-weight: 500;
+}
+.rsvpCell + .rsvpCell {
+  border-inline-start: 1px solid var(--poster-ink);
+}
+button.rsvpCell {
+  cursor: pointer;
+}
+@media (hover: hover) and (pointer: fine) {
+  button.rsvpCell:not([data-mine]):hover {
+    background: color-mix(in oklab, var(--poster-color) 35%, var(--poster-paper));
+  }
+}
+.rsvpCell[data-mine] {
+  background: var(--poster-color);
+  font-weight: 600;
+}
+.rsvpCell:focus-visible,
+.rsvpGoingCount:focus-visible {
+  outline: 3px solid var(--poster-ink);
+  outline-offset: -3px;
+}
+.event .rsvpGoing {
+  justify-content: center;
+  padding: 0.75rem var(--event-pad);
+  border-block-start: 1px solid var(--poster-ink);
+}
+.rsvpGoingCount {
+  border: 0;
+  background: none;
+  color: inherit;
+  font: inherit;
+  font-size: var(--text-sm);
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+  cursor: pointer;
+}
+.event .eventReply > [role='alert'] {
+  padding: 0.5rem var(--event-pad);
+  border-block-start: 1px solid var(--poster-ink);
+}
+/* The full list of who is going, in a dialog. */
+.rsvpList {
+  display: grid;
+  gap: var(--space-2);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.rsvpList li {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
 }
 /* Browsing cards: the photo or leaf, then the title's colour takes the spare
    height, so cards in a row end together. */

@@ -116,7 +116,9 @@ export async function EventPlace({ location, place }: { location: string; place:
       : (place ?? placeHost(url))
   return (
     <p className={styles.eventWhere}>
-      <Icon size={16} aria-hidden="true" />
+      <span className={styles.eventWhereIcon}>
+        <Icon size={16} aria-hidden="true" />
+      </span>
       {url ? (
         <a href={url} target="_blank" rel="noopener noreferrer" className={styles.eventLink}>
           <bdi>{name}</bdi>
@@ -171,7 +173,7 @@ export async function EventFace({
   children?: ReactNode
   /** The event's own words, under the answers */
   description?: ReactNode
-  /** One quiet control in the card's top corner */
+  /** One control beside the date, such as Add to calendar; the whole box is the button */
   corner?: ReactNode
   className?: string
   layout?: 'card' | 'detail'
@@ -241,16 +243,20 @@ export async function EventFace({
               title
             )}
           </Heading>
+          {/* The when beside the calendar button, then the place, then the note:
+              each its own box. */}
           <div className={styles.eventFacts}>
-            {when}
+            <div className={styles.eventWhenRow}>
+              <div className={styles.eventWhenCell}>{when}</div>
+              {corner && <div className={styles.eventCalendarCell}>{corner}</div>}
+            </div>
             {where}
-            {note}
+            {note && <div className={styles.eventNoteCell}>{note}</div>}
           </div>
         </div>
         {children}
         {description}
       </div>
-      {corner && <div className={styles.eventCorner}>{corner}</div>}
     </section>
   )
 }

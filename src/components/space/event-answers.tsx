@@ -8,8 +8,8 @@ import { useRouter } from 'next/navigation'
 import { Check } from 'lucide-react'
 
 import { AvatarGroup } from '@/components/arc/avatar-group/avatar-group'
-import { Button } from '@/components/arc/button/button'
-import SegmentedControl from '@/components/arc/segmented-control/segmented-control'
+import { Avatar } from '@/components/arc/avatar/avatar'
+import { Dialog, DialogContent } from '@/components/arc/dialog/dialog'
 import { rsvpSetAction } from '@/app/(frontend)/[locale]/spaces/actions'
 import { RSVP_STATUSES, type RsvpStatus } from '@/lib/space-event'
 import type { RsvpView, Voter } from '@/lib/spaces-data'
@@ -36,9 +36,10 @@ const answered = (
 }
 
 /**
- * An event's answers: three choices with the member's own selected, the count
- * of each, and the faces of who is going. Once the event is over, or the post
- * is closed, the choices turn into the same counts without buttons.
+ * An event's answers: three boxes, one per choice, with its count and the
+ * member's own filled (choosing it again clears it); then the faces of who is
+ * going, the count and +N opening the full list. Once the event is over, or the
+ * post is closed, the boxes keep their counts without being buttons.
  */
 export function EventAnswers({
   post,
@@ -80,46 +81,57 @@ export function EventAnswers({
     })
   }
 
+  const [listOpen, setListOpen] = useState(false)
+  // Choosing the selected answer again clears it.
+  const toggle = (s: RsvpStatus) => choose(view.mine === s ? null : s)
+
   return (
     <div className={styles.eventReply}>
-      {readOnly ? (
-        <ul className={styles.rsvpCounts} aria-label={t('rsvpCounts')}>
-          {RSVP_STATUSES.map((s) => (
-            <li key={s} data-mine={view.mine === s || undefined}>
+      {/* The three answers, each its own box with its count; the reader's own is filled. */}
+      <div
+        className={styles.rsvpCells}
+        role={readOnly ? 'list' : 'group'}
+        aria-label={readOnly ? t('rsvpCounts') : t('rsvpLabel')}
+      >
+        {RSVP_STATUSES.map((s) => {
+          const inner = (
+            <>
               {view.mine === s && <Check size={14} aria-hidden="true" />}
               <span>{t(`rsvp_${s}`)}</span>
               <span className={styles.rsvpCount}>{view.counts[s]}</span>
               {view.mine === s && <span className="sr-only">{t('rsvpYours')}</span>}
-            </li>
-          ))}
-        </ul>
-      ) : (
-        <div className={styles.rsvpChoose}>
-          <SegmentedControl
-            label={t('rsvpLabel')}
-            value={view.mine ?? ''}
-            onValueChange={(next) => {
-              if (next !== view.mine) choose(next as RsvpStatus)
-            }}
-            options={RSVP_STATUSES.map((s) => ({
-              value: s,
-              label: t(`rsvp_${s}`),
-              accessory: <span className={styles.rsvpCount}>{view.counts[s]}</span>,
-            }))}
-          />
-          {view.mine && (
-            <Button size="sm" variant="ghost" onClick={() => choose(null)}>
-              {t('rsvpClear')}
-            </Button>
-          )}
-        </div>
-      )}
+            </>
+          )
+          return readOnly ? (
+            <span
+              className={styles.rsvpCell}
+              data-mine={view.mine === s || undefined}
+              key={s}
+              role="listitem"
+            >
+              {inner}
+            </span>
+          ) : (
+            <button
+              aria-pressed={view.mine === s}
+              className={styles.rsvpCell}
+              data-mine={view.mine === s || undefined}
+              key={s}
+              onClick={() => toggle(s)}
+              type="button"
+            >
+              {inner}
+            </button>
+          )
+        })}
+      </div>
       {view.going.length > 0 && (
         <div className={styles.rsvpGoing}>
           <AvatarGroup
             size="sm"
             max={6}
             label={t('rsvpGoingList')}
+            onOverflowClick={() => setListOpen(true)}
             members={view.going.map((v) => ({
               id: v.personId,
               fallbackSeed: personAvatarSeed(v.personId),
@@ -144,9 +156,28 @@ export function EventAnswers({
               </PersonHover>
             )}
           />
-          <span className={styles.meta}>{t('rsvpGoingCount', { count: view.counts.going })}</span>
+          <button className={styles.rsvpGoingCount} onClick={() => setListOpen(true)} type="button">
+            {t('rsvpGoingCount', { count: view.counts.going })}
+          </button>
         </div>
       )}
+      <Dialog open={listOpen} onOpenChange={setListOpen}>
+        <DialogContent title={t('rsvpGoingList')}>
+          <ul className={styles.rsvpList}>
+            {view.going.map((v) => (
+              <li key={v.personId}>
+                <Avatar
+                  fallbackSeed={personAvatarSeed(v.personId)}
+                  name={v.name}
+                  size="sm"
+                  src={v.photo ?? undefined}
+                />
+                <span dir="auto">{v.name}</span>
+              </li>
+            ))}
+          </ul>
+        </DialogContent>
+      </Dialog>
       {error && (
         <p className={styles.error} role="alert">
           {error}
