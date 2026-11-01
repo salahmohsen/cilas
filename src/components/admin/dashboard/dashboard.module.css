@@ -148,3 +148,38 @@ a.rowMain:hover {
   color: var(--foreground);
   font-family: var(--font-body);
 }
+
+/* Analytics: ranked rows with a share bar, two charts side by side */
+.ranked {
+  display: grid;
+  gap: 0.875rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.rankedRow {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: end;
+  gap: 0.75rem;
+}
+.rankedCount {
+  color: var(--text-secondary);
+  font-size: var(--text-sm);
+  font-variant-numeric: tabular-nums;
+}
+.pair {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr));
+  gap: 1.5rem;
+}
+.subhead {
+  margin: 0 0 0.5rem;
+  color: var(--text-secondary);
+  font-size: var(--text-sm);
+  font-weight: 500;
+}
+.meters {
+  display: grid;
+  gap: 1.25rem;
+}

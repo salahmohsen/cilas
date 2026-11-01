@@ -4,6 +4,7 @@ import { useTranslations } from 'next-intl'
 
 import { ContactSection } from '@/components/arc/blocks/contact-section/contact-section'
 import { useSpamCheck } from '@/components/forms/spam-check'
+import { track } from '@/lib/analytics/track'
 
 /**
  * The contact page's form: Arc's contact section in the page's language,
@@ -71,6 +72,8 @@ export function ContactForm({
           })
           // The section shows its failure note and keeps what was written.
           if (!res.ok) throw new Error(`Contact form: ${res.status}`)
+          // The topic is one of the form's own labels; the message and the sender are not sent.
+          track('contact_submitted', topics.includes(message.topic) ? { topic: message.topic } : {})
         } finally {
           spam.reset()
         }

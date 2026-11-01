@@ -1,5 +1,7 @@
 import type { Widget, WidgetInstance, WidgetWidth } from 'payload'
 
+import { queryConfig } from '@/lib/analytics/posthog-query'
+
 /**
  * The dashboard's widgets for Payload's native modular dashboard
  * (`admin.dashboard`, experimental in 3.91): admins drag, resize, add and
@@ -16,9 +18,15 @@ type Entry = {
   width: WidgetWidth
   min?: WidgetWidth
   max?: WidgetWidth
+  /** Needs PostHog: in the default layout only when the PostHog settings are there. */
+  analytics?: boolean
 }
 
-/** In default layout order: quick actions, key numbers, trends, then lists. */
+/**
+ * In default layout order: quick actions, key numbers, trends, site analytics
+ * (when PostHog is set up), then lists. The analytics widgets are always
+ * registered, so a saved layout keeps them, but they draw nothing without PostHog.
+ */
 const ENTRIES: Entry[] = [
   { slug: 'quick-actions', label: 'Quick actions', component: 'QuickActionsWidget', width: 'full' },
   {
@@ -83,6 +91,97 @@ const ENTRIES: Entry[] = [
     width: 'medium',
   },
   {
+    slug: 'visitors',
+    label: 'Visitors',
+    component: 'VisitorsWidget',
+    width: 'x-small',
+    analytics: true,
+  },
+  {
+    slug: 'page-views',
+    label: 'Page views',
+    component: 'PageViewsWidget',
+    width: 'x-small',
+    analytics: true,
+  },
+  {
+    slug: 'site-errors',
+    label: 'Site errors',
+    component: 'SiteErrorsWidget',
+    width: 'x-small',
+    analytics: true,
+  },
+  {
+    slug: 'traffic',
+    label: 'Traffic',
+    component: 'TrafficWidget',
+    width: 'x-large',
+    analytics: true,
+  },
+  {
+    slug: 'application-funnel',
+    label: 'Application funnel',
+    component: 'ApplyFunnelWidget',
+    width: 'medium',
+    analytics: true,
+  },
+  {
+    slug: 'top-pages',
+    label: 'Top pages',
+    component: 'TopPagesWidget',
+    width: 'medium',
+    analytics: true,
+  },
+  {
+    slug: 'page-movement',
+    label: 'Page movement',
+    component: 'PageMovementWidget',
+    width: 'medium',
+    analytics: true,
+  },
+  {
+    slug: 'traffic-sources',
+    label: 'Where visitors come from',
+    component: 'TrafficSourcesWidget',
+    width: 'medium',
+    analytics: true,
+  },
+  {
+    slug: 'audience',
+    label: 'Audience',
+    component: 'AudienceWidget',
+    width: 'medium',
+    analytics: true,
+  },
+  {
+    slug: 'visitor-goals',
+    label: 'What visitors do',
+    component: 'GoalsWidget',
+    width: 'medium',
+    analytics: true,
+  },
+  {
+    slug: 'courses-and-events',
+    label: 'Courses and events',
+    component: 'CoursesAndEventsWidget',
+    width: 'medium',
+    analytics: true,
+  },
+  {
+    slug: 'posthog-usage',
+    label: 'PostHog free plan',
+    component: 'FreePlanUsageWidget',
+    width: 'medium',
+    analytics: true,
+  },
+  {
+    slug: 'daily-activity',
+    label: 'Daily activity',
+    component: 'DailyActivityWidget',
+    width: 'full',
+    analytics: true,
+  },
+  {
     slug: 'media-storage',
     label: 'Media library',
     component: 'MediaStorageWidget',
@@ -136,7 +235,9 @@ export const dashboardWidgets: Widget[] = ENTRIES.map(({ slug, label, component,
 
 // The generated WidgetInstance type is a union over each registered slug, which
 // a list built from ENTRIES cannot narrow to.
-export const defaultLayout = ENTRIES.map(({ slug, width }) => ({
+export const defaultLayout = ENTRIES.filter(
+  ({ analytics }) => !analytics || queryConfig() !== null,
+).map(({ slug, width }) => ({
   widgetSlug: slug,
   width,
 })) as WidgetInstance[]

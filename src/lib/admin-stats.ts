@@ -41,16 +41,26 @@ const tally = (stamps: Stamp[], keyOf: (day: string) => string) => {
   return counts
 }
 
-/** Timestamps counted per Cairo day over the last `days` days. Empty days stay as zeros. */
-export const bucketByDay = (stamps: Stamp[], days: number, now = new Date()): TimePoint[] => {
-  const counts = tally(stamps, (day) => day)
-  return daysEnding(days, now).map((key) => ({
+/** Counts already keyed by Cairo day (`YYYY-MM-DD`), laid out over the last `days` days. Empty days stay as zeros. */
+export const pointsFromCounts = (
+  counts: ReadonlyMap<string, number>,
+  days: number,
+  now = new Date(),
+): TimePoint[] =>
+  daysEnding(days, now).map((key) => ({
     key,
     label: full.format(at(key)),
     axisLabel: short.format(at(key)),
     value: counts.get(key) ?? 0,
   }))
-}
+
+/** Timestamps counted per Cairo day over the last `days` days. Empty days stay as zeros. */
+export const bucketByDay = (stamps: Stamp[], days: number, now = new Date()): TimePoint[] =>
+  pointsFromCounts(
+    tally(stamps, (day) => day),
+    days,
+    now,
+  )
 
 /** Timestamps counted per week (Saturday to Friday) over the last `weeks` weeks. */
 export const bucketByWeek = (stamps: Stamp[], weeks: number, now = new Date()): TimePoint[] => {

@@ -10,6 +10,7 @@ import { registrationStatus } from '@/lib/registration'
 import { SideCard, SideCardSection } from '@/components/side-card'
 import { EVENT_POSTER_COLORS } from '@/lib/event-poster-colors'
 import { eventGoogleUrl } from '@/lib/event-calendar'
+import { RegisterLink } from '@/components/events/register-link'
 import { EventCalendar } from '@/components/space/event-calendar'
 import { absoluteUrl } from '@/lib/schema'
 import styles from './events.module.css'
@@ -46,20 +47,21 @@ export async function EventAttendance({
       : null
   const register =
     open && event.registration?.method === 'external' && registrationUrl ? (
-      <a
+      <RegisterLink
         className="side-card-action"
         href={registrationUrl}
+        slug={event.slug}
         target="_blank"
         rel="noopener noreferrer"
       >
         {t('register')}
         <ArrowUpRight size={16} aria-hidden />
-      </a>
+      </RegisterLink>
     ) : open && event.registration?.method === 'form' && hasForm ? (
-      <a className="side-card-action" href="#event-registration">
+      <RegisterLink className="side-card-action" href="#event-registration" slug={event.slug}>
         {t('register')}
         <ArrowDown size={16} aria-hidden />
-      </a>
+      </RegisterLink>
     ) : null
   const pageUrl = absoluteUrl(`/${locale}/events/${event.slug}`)
   const words = {

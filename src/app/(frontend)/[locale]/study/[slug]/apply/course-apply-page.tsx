@@ -136,6 +136,7 @@ export async function CourseApplyPage({
       </div>
 
       <PayloadForm
+        analytics={{ kind: 'course', id: course.slug }}
         back={{ href: back, label: t('backTo', { title: course.title }) }}
         confirmation={confirmation}
         disabled={!open}

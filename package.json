@@ -31,7 +31,8 @@
     "test:production": "playwright test --config=playwright.production.config.ts",
     "test:unit": "vitest run tests/unit --no-isolate",
     "test:int": "cross-env NODE_OPTIONS=--no-deprecation vitest run --config ./vitest.config.mts",
-    "test:seo": "node scripts/check-seo.mjs"
+    "test:seo": "node scripts/check-seo.mjs",
+    "analytics:check": "tsx scripts/check-posthog-queries.ts"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.1143.0",
@@ -79,6 +80,8 @@
     "payload-plugin-llms-txt": "0.2.0",
     "payload-theme": "^0.9.4",
     "pg": "8.20.0",
+    "posthog-js": "^1.444.0",
+    "posthog-node": "^5.61.1",
     "react": "19.2.6",
     "react-dom": "19.2.6",
     "react-email": "6.11.3",

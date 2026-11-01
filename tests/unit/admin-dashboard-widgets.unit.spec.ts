@@ -1,6 +1,6 @@
 import { readFileSync } from 'node:fs'
 
-import { describe, expect, it } from 'vitest'
+import { afterEach, describe, expect, it, vi } from 'vitest'
 
 import { dashboardWidgets, defaultLayout } from '@/components/admin/dashboard/native-widgets'
 
@@ -40,5 +40,53 @@ describe('dashboard widgets (Payload native dashboard)', () => {
       expect(at).toBeGreaterThanOrEqual(WIDTHS.indexOf(widget.minWidth ?? 'x-small'))
       expect(at).toBeLessThanOrEqual(WIDTHS.indexOf(widget.maxWidth ?? 'full'))
     }
+  })
+})
+
+describe('analytics widgets in the dashboard', () => {
+  const analytics = [
+    'visitors',
+    'page-views',
+    'site-errors',
+    'traffic',
+    'top-pages',
+    'application-funnel',
+    'daily-activity',
+  ]
+
+  afterEach(() => {
+    vi.unstubAllEnvs()
+    vi.resetModules()
+  })
+
+  const layoutWith = async (keys: Record<string, string>) => {
+    vi.resetModules()
+    for (const name of ['POSTHOG_API_HOST', 'POSTHOG_PROJECT_ID', 'POSTHOG_PERSONAL_API_KEY']) {
+      vi.stubEnv(name, keys[name] ?? '')
+    }
+    return import('@/components/admin/dashboard/native-widgets')
+  }
+
+  it('registers them whatever the settings, so a saved layout keeps them', async () => {
+    const { dashboardWidgets } = await layoutWith({})
+    const slugs = dashboardWidgets.map((w) => w.slug as string)
+    for (const slug of analytics) expect(slugs).toContain(slug)
+  })
+
+  it('leaves them out of the default layout without the PostHog settings', async () => {
+    const { defaultLayout } = await layoutWith({ POSTHOG_PROJECT_ID: '1' })
+    const placed = defaultLayout.map((item) => item.widgetSlug as string)
+    for (const slug of analytics) expect(placed).not.toContain(slug)
+    expect(placed).toContain('open-applications')
+  })
+
+  it('puts them in the default layout with all three settings', async () => {
+    const { defaultLayout } = await layoutWith({
+      POSTHOG_API_HOST: 'https://eu.posthog.com',
+      POSTHOG_PROJECT_ID: '1',
+      POSTHOG_PERSONAL_API_KEY: 'phx_test',
+    })
+    const placed = defaultLayout.map((item) => item.widgetSlug as string)
+    for (const slug of analytics) expect(placed).toContain(slug)
   })
 })

@@ -4,6 +4,7 @@ import { useTranslations } from 'next-intl'
 import { CalendarPlus, Download, ExternalLink } from 'lucide-react'
 
 import { DropdownMenu } from '@/components/arc/dropdown-menu/dropdown-menu'
+import { track } from '@/lib/analytics/track'
 
 /**
  * "Add to calendar": a prefilled Google Calendar page, or an .ics file any
@@ -32,14 +33,20 @@ export function EventCalendar({
               {
                 label: t('calendarGoogle'),
                 icon: <ExternalLink size={15} />,
-                onSelect: () => window.open(google, '_blank', 'noopener,noreferrer'),
+                onSelect: () => {
+                  track('calendar_added', { source: 'event-google' })
+                  window.open(google, '_blank', 'noopener,noreferrer')
+                },
               },
             ]
           : []),
         {
           label: t('calendarIcs'),
           icon: <Download size={15} />,
-          onSelect: () => window.location.assign(ics),
+          onSelect: () => {
+            track('calendar_added', { source: 'event-ics' })
+            window.location.assign(ics)
+          },
         },
       ]}
     />

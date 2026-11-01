@@ -45,6 +45,13 @@ const loginFor = (request: NextRequest) => {
  */
 export default function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl
+  // next.config.ts turns Next's trailing-slash redirect off (PostHog needs
+  // that); this keeps it for the site's pages: /en/about/ is /en/about.
+  if (pathname.length > 1 && pathname.endsWith('/')) {
+    const url = request.nextUrl.clone()
+    url.pathname = pathname.replace(/\/+$/, '')
+    return NextResponse.redirect(url, 308)
+  }
   // One login screen for the site and the admin panel.
   if (pathname === '/admin/login') return NextResponse.redirect(loginFor(request))
   // And one reset flow: Payload's own pages are sent to the site's, in the
@@ -74,12 +81,13 @@ export default function proxy(request: NextRequest) {
 }
 
 export const config = {
-  // Everything except Payload (/admin, /api), Next internals and static files
+  // Everything except Payload (/admin, /api), the analytics forwarding
+  // (/relay-k3, which must never be redirected to a language), Next internals and static files
   // (the web app manifest included: it is not under a locale); `.html` pages
   // and `/uploads/...` are let through for the legacy lookup, and the
   // admin's login, forgot and reset pages to send them to the site's own.
   matcher: [
-    '/((?!api|admin|_next|_vercel|.*\\.(?:ico|png|jpe?g|gif|svg|webp|avif|css|js|map|txt|xml|json|webmanifest|woff2?|pdf)$).*)',
+    '/((?!api|admin|relay-k3|_next|_vercel|.*\\.(?:ico|png|jpe?g|gif|svg|webp|avif|css|js|map|txt|xml|json|webmanifest|woff2?|pdf)$).*)',
     '/uploads/:path*',
     '/admin/login',
     '/admin/forgot',
