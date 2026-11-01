@@ -2124,6 +2124,9 @@ a.collection-item:hover {
   font-size: var(--text-sm);
   line-height: var(--leading-body);
 }
+.side-card-section {
+  min-width: 0;
+}
 .side-card > * + * {
   border-block-start: 1px solid var(--poster-ink);
 }
@@ -2325,6 +2328,79 @@ details:not([open]) > summary.side-card-label {
   font-size: 0.8125rem;
   text-align: center;
   text-decoration: none;
+}
+/* Registration: the dot, the status and the price, each in its own box. */
+.apply-card-row {
+  display: flex;
+  align-items: stretch;
+  min-height: 2.75rem;
+}
+.apply-card-row > * + * {
+  border-inline-start: 1px solid var(--poster-ink);
+}
+.apply-card-dot {
+  display: grid;
+  flex: none;
+  place-items: center;
+  width: 2.75rem;
+}
+.apply-card-dot::before {
+  content: '';
+  width: 0.625rem;
+  height: 0.625rem;
+  border: 1px solid var(--poster-ink);
+  border-radius: 999px;
+  background: oklch(0.62 0.21 25);
+}
+.apply-card-dot[data-open]::before {
+  background: oklch(0.72 0.17 150);
+}
+.apply-card-status,
+.apply-card-price {
+  display: flex;
+  align-items: center;
+  padding: 0.5rem var(--poster-pad);
+  font-weight: 600;
+}
+.apply-card-status {
+  flex: 1;
+  min-width: 0;
+}
+.apply-card-price {
+  flex: none;
+  font-variant-numeric: tabular-nums;
+}
+/* Facts and counts: one ruled row each, the icon in its own column. */
+.side-card-facts {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.side-card-facts > * {
+  display: grid;
+  grid-template-columns: 2.75rem minmax(0, 1fr);
+  align-items: stretch;
+}
+.side-card-facts > * + * {
+  border-block-start: 1px solid var(--poster-ink);
+}
+/* The icon in its own box, centred, a rule between it and the words. */
+.side-card-icon {
+  display: grid;
+  place-items: center;
+  border-inline-end: 1px solid var(--poster-ink);
+}
+.side-card-facts > * > :last-child {
+  align-self: center;
+  padding: 0.625rem var(--poster-pad);
+}
+.side-card-facts dt {
+  color: var(--text-secondary);
+  font-size: 0.75rem;
+}
+.side-card-facts dd {
+  margin: 0;
+  font-weight: 500;
 }
 .side-card-link {
   display: inline-flex;
