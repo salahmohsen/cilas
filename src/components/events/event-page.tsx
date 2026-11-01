@@ -7,6 +7,8 @@ import { PublicEventCard } from '@/components/events/public-event-card'
 import { EventAttendance } from '@/components/events/event-attendance'
 import { EventDescription } from '@/components/events/event-description'
 import { ShareBar } from '@/components/share-bar'
+import { PROFILE_COLORS, ProfileCard } from '@/components/person/profile-card'
+import { RichTextField as PlainRichText } from '@/components/RichTextField'
 import { UpcomingEvents } from '@/components/events/upcoming-events'
 import { PayloadForm } from '@/components/forms/payload-form'
 import { Link } from '@/i18n/navigation'
@@ -51,6 +53,11 @@ export async function EventPage({
   const meetings = event.schedule?.start_precision === 'week' ? [] : expandSchedule(event.schedule)
   const date = (day: string) =>
     format.dateTime(new Date(`${day}T12:00:00Z`), { dateStyle: 'full', timeZone: 'Africa/Cairo' })
+  const speakers = (event.speakers ?? []).flatMap((speaker, i) =>
+    typeof speaker.person === 'object' && speaker.person?.slug
+      ? [{ person: speaker.person, role: speaker.role, key: speaker.id || String(i) }]
+      : [],
+  )
   const notes: Record<string, ReactNode> = {}
   for (const block of form?.fields ?? [])
     if (block.blockType === 'message' && block.message && block.id)
@@ -86,21 +93,24 @@ export async function EventPage({
               </div>
             )}
             {event.description && <EventDescription data={event.description} />}
-            {!!event.speakers?.length && (
+            {speakers.length > 0 && (
               <section className={styles.section}>
                 <h2>{t('speakers')}</h2>
-                <ul>
-                  {event.speakers.map((speaker, i) => {
-                    const person = typeof speaker.person === 'object' ? speaker.person : null
-                    return person ? (
-                      <li key={speaker.id || i}>
-                        <Link className="home-more" href={`/people/${person.slug}`}>
-                          {person.name}
-                        </Link>
-                        {speaker.role ? ` · ${speaker.role}` : ''}
-                      </li>
-                    ) : null
-                  })}
+                {/* One card each, in a wrapping row; neighbours never share a colour. */}
+                <ul className={styles.speakers}>
+                  {speakers.map(({ person, role, key }, i) => (
+                    <li key={key}>
+                      <ProfileCard color={PROFILE_COLORS[i % 3]} person={person} role={role}>
+                        {person.bio && (
+                          <PlainRichText
+                            className="article-prose article-prose--bio"
+                            data={person.bio}
+                            plain
+                          />
+                        )}
+                      </ProfileCard>
+                    </li>
+                  ))}
                 </ul>
               </section>
             )}

@@ -203,3 +203,26 @@
     padding: var(--space-10) var(--space-4);
   }
 }
+
+/* Speakers: profile cards in a wrapping row, up to three abreast. */
+.speakers {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-4);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.speakers > li {
+  display: flex;
+  flex: 1 1 15rem;
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+}
+.speakers > li > * {
+  flex: 1;
+}
+.speakers > li > * > article {
+  height: 100%;
+}
