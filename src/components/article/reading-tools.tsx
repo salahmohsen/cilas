@@ -52,9 +52,12 @@ export function ReadingProgress({ target }: { target: string }) {
 export function ArticleContents({
   sections,
   container,
+  bare = false,
 }: {
   sections: Section[]
   container: string
+  /** Only the list: a side card's section names it. */
+  bare?: boolean
 }) {
   const t = useTranslations('Article')
   const [active, setActive] = useState<string | null>(null)
@@ -89,6 +92,12 @@ export function ArticleContents({
     />
   )
 
+  if (bare)
+    return (
+      <nav aria-label={t('contents')} className="side-card-body">
+        {list}
+      </nav>
+    )
   return (
     <nav aria-label={t('contents')}>
       <details className="border-y border-border py-3 lg:hidden">
@@ -130,7 +139,7 @@ const subscribeStep = (onChange: () => void) => {
 }
 
 /** A− / A+ for the essay text, remembered in this browser. */
-export function TextSize({ target }: { target: string }) {
+export function TextSize({ target, cells = false }: { target: string; cells?: boolean }) {
   const t = useTranslations('Article')
   const step = useSyncExternalStore(subscribeStep, readStep, () => 1)
   const setStep = (update: (s: number) => number) => {
@@ -144,6 +153,29 @@ export function TextSize({ target }: { target: string }) {
   useEffect(() => {
     document.getElementById(target)?.style.setProperty('--reading-scale', String(SIZES[step]))
   }, [step, target])
+  if (cells)
+    return (
+      <div aria-label={t('textSize')} className="side-card-buttons" role="group">
+        <button
+          aria-label={t('smaller')}
+          className="side-card-button text-xs"
+          disabled={step === 0}
+          onClick={() => setStep((s) => s - 1)}
+          type="button"
+        >
+          <bdi dir="ltr">A−</bdi>
+        </button>
+        <button
+          aria-label={t('larger')}
+          className="side-card-button text-base"
+          disabled={step === SIZES.length - 1}
+          onClick={() => setStep((s) => s + 1)}
+          type="button"
+        >
+          <bdi dir="ltr">A+</bdi>
+        </button>
+      </div>
+    )
   const button =
     'inline-flex h-8 w-8 items-center justify-center rounded-full border border-border transition-colors hover:bg-[var(--surface-muted)] disabled:opacity-30'
   return (

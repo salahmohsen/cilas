@@ -116,61 +116,17 @@
 }
 .attendance {
   grid-area: rail;
-  display: grid;
-  gap: var(--space-6);
   min-width: 0;
   align-self: start;
 }
-.railSection {
-  display: grid;
-  gap: var(--space-3);
-  font-size: var(--text-sm);
-  line-height: var(--leading-body);
-}
-.railSection + .railSection {
-  border-top: 1px solid var(--border);
-  padding-top: var(--space-6);
-}
-.railSection h2,
 .share h2 {
   margin: 0;
   font-size: var(--text-sm);
   font-weight: 500;
   color: var(--text-secondary);
 }
-.railSection p {
-  margin: 0;
-  overflow-wrap: anywhere;
-}
-.railText {
-  display: grid;
-  gap: var(--space-2);
-}
 .secondary {
   color: var(--text-secondary);
-}
-.railLink {
-  display: inline-flex;
-  align-items: center;
-  gap: var(--space-2);
-  width: fit-content;
-  min-height: 44px;
-  color: var(--foreground);
-  text-decoration: underline;
-  text-underline-offset: 0.2em;
-}
-.register {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: var(--space-2);
-  min-height: 44px;
-  padding: var(--space-3) var(--space-4);
-  border-radius: var(--radius-control);
-  background: var(--foreground);
-  color: var(--background);
-  font-weight: 500;
-  text-decoration: none;
 }
 .speakerBio {
   margin: 0;
@@ -211,7 +167,6 @@
     top: var(--space-24);
     max-height: calc(100dvh - 7rem);
     overflow-y: auto;
-    padding-inline-end: var(--space-2);
   }
 }
 .related {
