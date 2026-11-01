@@ -2,7 +2,10 @@ import { spawnSync } from 'node:child_process'
 import { existsSync, mkdirSync, readFileSync, readdirSync, writeFileSync } from 'node:fs'
 import { resolve } from 'node:path'
 
-const hook = `#!/bin/sh
+// One dispatcher per Git hook; the pre-commit text must stay byte-identical so
+// existing installs are recognised, not refused as "another hook".
+const hooks = ['pre-commit', 'pre-push']
+const dispatcher = (name) => `#!/bin/sh
 # CILAS per-worktree Lefthook dispatcher v1
 [ "\$LEFTHOOK" = "0" ] && exit 0
 # Older branches/checkouts can lack this feature.
@@ -11,7 +14,7 @@ if [ ! -f node_modules/lefthook/bin/index.js ]; then
   echo 'CILAS commit checks: run pnpm install (or LEFTHOOK=0 to skip once).' >&2
   exit 1
 fi
-exec node node_modules/lefthook/bin/index.js run pre-commit "\$@"
+exec node node_modules/lefthook/bin/index.js run ${name} "\$@"
 `
 
 function git(...args) {
@@ -33,7 +36,7 @@ function install() {
 
   const gitDir = git('rev-parse', '--absolute-git-dir')
   const hooksDir = resolve(gitDir, 'cilas-hooks')
-  const hookPath = resolve(hooksDir, 'pre-commit')
+  const hookPaths = hooks.map((name) => [resolve(hooksDir, name), dispatcher(name)])
   const currentPath = optionalConfig('--get', 'core.hooksPath')
   const defaultPath = resolve(git('rev-parse', '--git-common-dir'))
   const currentDir = currentPath !== null ? resolve(currentPath) : resolve(defaultPath, 'hooks')
@@ -52,8 +55,10 @@ function install() {
     }
   }
 
-  if (existsSync(hookPath) && readFileSync(hookPath, 'utf8') !== hook) {
-    throw new Error(`Refusing to replace another hook: ${hookPath}`)
+  for (const [hookPath, hook] of hookPaths) {
+    if (existsSync(hookPath) && readFileSync(hookPath, 'utf8') !== hook) {
+      throw new Error(`Refusing to replace another hook: ${hookPath}`)
+    }
   }
 
   // Enabling worktree config changes where these special values are read.
@@ -70,7 +75,7 @@ function install() {
   }
 
   mkdirSync(hooksDir, { recursive: true })
-  writeFileSync(hookPath, hook, { mode: 0o755 })
+  for (const [hookPath, hook] of hookPaths) writeFileSync(hookPath, hook, { mode: 0o755 })
   git('config', '--worktree', 'core.hooksPath', hooksDir)
   console.log(`CILAS commit hooks installed for this checkout: ${hooksDir}`)
 }

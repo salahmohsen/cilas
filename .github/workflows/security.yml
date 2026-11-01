@@ -13,6 +13,38 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  # Pull requests that only change documentation skip the slow jobs. The gate
+  # fails open: any error, an empty list or 3000+ files means "run everything".
+  # A skipped job reports success, so a docs-only diff can never hide a code
+  # change; commit-quality (formatting of the docs) always runs. Pushes to main
+  # skip this job and always run everything, including the deploy.
+  changes:
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 2
+    permissions:
+      contents: read
+      pull-requests: read
+    outputs:
+      docs_only: ${{ steps.diff.outputs.docs_only }}
+    steps:
+      - id: diff
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+        run: |
+          docs_only=false
+          if files=$(gh api --paginate "repos/$GITHUB_REPOSITORY/pulls/$PR_NUMBER/files" \
+              --jq '.[] | .filename, (.previous_filename // empty)') \
+            && [ -n "$files" ] && [ "$(printf '%s\n' "$files" | wc -l)" -lt 3000 ]; then
+            # Documentation folders and top-level Markdown files only.
+            if ! printf '%s\n' "$files" | grep -qvE '^(docs|todos|reports|research_notes)/|^[A-Za-z0-9_.-]+\.md$'; then
+              docs_only=true
+            fi
+          fi
+          echo "docs_only=$docs_only" >> "$GITHUB_OUTPUT"
+          echo "docs_only=$docs_only"
+
   commit-quality:
     runs-on: ubuntu-24.04
     timeout-minutes: 10
@@ -20,6 +52,9 @@ jobs:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
         with:
           fetch-depth: 0
+          # Full history is only read for names (git diff --name-only); file
+          # contents come from the checked-out commit, so skip old blobs.
+          filter: blob:none
       - uses: pnpm/action-setup@f40ffcd9367d9f12939873eb1018b921a783ffaa # v4
         with:
           version: 10.11.0
@@ -36,6 +71,8 @@ jobs:
         run: pnpm check:commit-quality "$BASE_SHA"
 
   security:
+    needs: changes
+    if: ${{ !cancelled() && (github.event_name != 'pull_request' || needs.changes.outputs.docs_only != 'true') }}
     runs-on: ubuntu-24.04
     timeout-minutes: 20
     steps:
@@ -53,15 +90,17 @@ jobs:
       - name: Check types
         run: |
           . ./scripts/search-test-env.sh
-          pnpm exec tsc --noEmit
+          pnpm typecheck
       - name: Lint
         run: pnpm lint
       - name: Unit tests
         run: |
           . ./scripts/search-test-env.sh
-          pnpm exec vitest run tests/unit --reporter=dot
+          pnpm test:unit --reporter=dot
 
   production-smoke:
+    needs: changes
+    if: ${{ !cancelled() && (github.event_name != 'pull_request' || needs.changes.outputs.docs_only != 'true') }}
     runs-on: ubuntu-24.04
     timeout-minutes: 20
     services:
@@ -88,6 +127,15 @@ jobs:
           node-version: 22
           cache: pnpm
       - run: pnpm install --frozen-lockfile
+      - name: Read Playwright version
+        id: playwright
+        run: echo "version=$(pnpm exec playwright --version | awk '{print $2}')" >> "$GITHUB_OUTPUT"
+      # Browser download only; apt packages are still installed by --with-deps.
+      # Saved on a miss from any branch, so main seeds it for pull requests.
+      - uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830 # v4
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-${{ runner.os }}-${{ steps.playwright.outputs.version }}
       - run: pnpm exec playwright install --with-deps chromium
       - name: Check registration card layout in Chromium
         run: node --test tests/poster-layout.test.mjs
@@ -95,6 +143,18 @@ jobs:
         run: |
           . ./scripts/smoke-test-env.sh
           NODE_ENV=development pnpm exec tsx scripts/bootstrap-smoke.ts
+      # Turbopack's build cache lives in .next/cache. Only pushes to main save
+      # it, so pull requests always restore main's newest cache and do not
+      # fill the 10 GB repository cache quota with one entry per push.
+      - name: Restore Next.js build cache
+        id: next-cache
+        uses: actions/cache/restore@0057852bfaa89a56745cba8c7296529d2fc39830 # v4
+        with:
+          path: .next/cache
+          key: nextjs-${{ runner.os }}-${{ hashFiles('pnpm-lock.yaml') }}-${{ github.sha }}
+          restore-keys: |
+            nextjs-${{ runner.os }}-${{ hashFiles('pnpm-lock.yaml') }}-
+            nextjs-${{ runner.os }}-
       - name: Build production application
         run: |
           . ./scripts/smoke-test-env.sh
@@ -103,9 +163,21 @@ jobs:
         run: |
           . ./scripts/smoke-test-env.sh
           pnpm test:production
+      - name: Save Next.js build cache
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main' && steps.next-cache.outputs.cache-hit != 'true'
+        uses: actions/cache/save@0057852bfaa89a56745cba8c7296529d2fc39830 # v4
+        with:
+          path: .next/cache
+          key: nextjs-${{ runner.os }}-${{ hashFiles('pnpm-lock.yaml') }}-${{ github.sha }}
 
   deploy-production:
-    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    # The checks need `changes`, which is skipped on pushes; without a status
+    # function a skipped ancestor skips this job too. Require each check to
+    # have passed instead.
+    if: >-
+      ${{ !cancelled() && github.event_name == 'push' && github.ref == 'refs/heads/main'
+      && needs.commit-quality.result == 'success' && needs.security.result == 'success'
+      && needs.production-smoke.result == 'success' }}
     needs: [commit-quality, security, production-smoke]
     runs-on: ubuntu-24.04
     timeout-minutes: 5

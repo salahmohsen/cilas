@@ -18,12 +18,22 @@ partially staged files while checks run, then restores them. Formatting applies 
 the selected staged version of the whole file, not only the selected lines. If
 restoring unstaged edits would conflict with the fixes, the commit fails and the
 original staging and working edits are restored. Review the diff and resolve the
-overlap before retrying. No hook runs full tests, type checks, builds or services.
+overlap before retrying. No pre-commit hook runs full tests, type checks, builds or services.
 
 `.oxfmtrc.json` `ignorePatterns` exclude generated Payload types/schema/import maps, migrations,
 vendored editor bundles, build/test output, the lockfile and imported archival
 data. It leaves migration scripts and documentation eligible. This setup does not
 format the existing repository or require its warning baseline to be cleaned up.
+
+## Pre-push check
+
+`git push` runs a second Lefthook hook, `pre-push`, in about 5 seconds. It takes every
+file this branch changes against `origin/main` (the same view CI uses) and runs
+`oxlint` and `oxfmt --check` on them. If the change includes TypeScript or JSON it
+also runs `tsgo --noEmit` for the whole project. It never fixes files, so a pushed
+commit is exactly what you committed. It catches the errors that otherwise cost a
+CI round trip. Skip it once with `LEFTHOOK=0 git push`. The installer writes the
+`pre-push` dispatcher next to `pre-commit`, with the same safeguards.
 
 ## Git worktrees and existing hooks
 

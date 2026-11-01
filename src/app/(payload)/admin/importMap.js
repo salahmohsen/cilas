@@ -56,11 +56,10 @@ import { ImportPreview as ImportPreview_cdf7e044479f899a31f804427d568b36 } from 
 import { ImportSaveButton as ImportSaveButton_cdf7e044479f899a31f804427d568b36 } from '@payloadcms/plugin-import-export/rsc'
 import { MailingListsNote as MailingListsNote_982ef07d70d1f99a8bc95a2e0421396d } from '../../../components/admin/mailing-lists-note'
 import { Nav as Nav_f436cf2a4719114d9e44505773a04007 } from 'payload-theme/client'
+import { WorkLinks as WorkLinks_56c7a9e85087df4e3a170f2dfd1c66e7 } from '../../../components/admin/work-links'
 import { NotificationBell as NotificationBell_30f6ed48d1f6793e07a5e73de280de4d } from '../../../components/admin/notification-bell'
 import { HeaderActions as HeaderActions_f436cf2a4719114d9e44505773a04007 } from 'payload-theme/client'
-import { ReviewQueueWidget as ReviewQueueWidget_5ad28f33e67910b7fd7d6503bf8c6322 } from '../../../components/admin/review-queue'
 import { LoginHero as LoginHero_37fe5310e1c82b2fade6b239ca4c79e5 } from 'payload-theme/rsc'
-import { WorkLinks as WorkLinks_56c7a9e85087df4e3a170f2dfd1c66e7 } from '../../../components/admin/work-links'
 import { ImportExportProvider as ImportExportProvider_cdf7e044479f899a31f804427d568b36 } from '@payloadcms/plugin-import-export/rsc'
 import { AvatarProvider as AvatarProvider_37fe5310e1c82b2fade6b239ca4c79e5 } from 'payload-theme/rsc'
 import { ThemeProvider as ThemeProvider_f436cf2a4719114d9e44505773a04007 } from 'payload-theme/client'
@@ -71,6 +70,7 @@ import { Dashboard as Dashboard_37fe5310e1c82b2fade6b239ca4c79e5 } from 'payload
 import { VisualEditorView as VisualEditorView_0dcc31907b7bffb0624a38194b3c7196 } from 'payload-inline-visual-editor/rsc'
 import { CollectionCards as CollectionCards_f9c02e79a4aed9a3924487c0cd4cafb1 } from '@payloadcms/next/rsc'
 import { S3ClientUploadHandler as S3ClientUploadHandler_f97aa6c64367fa259c5bc0567239ef24 } from '@payloadcms/storage-s3/client'
+import { ReviewQueueWidget as ReviewQueueWidget_5ad28f33e67910b7fd7d6503bf8c6322 } from '../../../components/admin/review-queue'
 
 /** @type import('payload').ImportMap */
 export const importMap = {
@@ -132,11 +132,10 @@ export const importMap = {
   "@payloadcms/plugin-import-export/rsc#ImportSaveButton": ImportSaveButton_cdf7e044479f899a31f804427d568b36,
   "/components/admin/mailing-lists-note#MailingListsNote": MailingListsNote_982ef07d70d1f99a8bc95a2e0421396d,
   "payload-theme/client#Nav": Nav_f436cf2a4719114d9e44505773a04007,
+  "/components/admin/work-links#WorkLinks": WorkLinks_56c7a9e85087df4e3a170f2dfd1c66e7,
   "/components/admin/notification-bell#NotificationBell": NotificationBell_30f6ed48d1f6793e07a5e73de280de4d,
   "payload-theme/client#HeaderActions": HeaderActions_f436cf2a4719114d9e44505773a04007,
-  "/components/admin/review-queue#ReviewQueueWidget": ReviewQueueWidget_5ad28f33e67910b7fd7d6503bf8c6322,
   "payload-theme/rsc#LoginHero": LoginHero_37fe5310e1c82b2fade6b239ca4c79e5,
-  "/components/admin/work-links#WorkLinks": WorkLinks_56c7a9e85087df4e3a170f2dfd1c66e7,
   "@payloadcms/plugin-import-export/rsc#ImportExportProvider": ImportExportProvider_cdf7e044479f899a31f804427d568b36,
   "payload-theme/rsc#AvatarProvider": AvatarProvider_37fe5310e1c82b2fade6b239ca4c79e5,
   "payload-theme/client#ThemeProvider": ThemeProvider_f436cf2a4719114d9e44505773a04007,
@@ -146,5 +145,6 @@ export const importMap = {
   "payload-theme/rsc#Dashboard": Dashboard_37fe5310e1c82b2fade6b239ca4c79e5,
   "payload-inline-visual-editor/rsc#VisualEditorView": VisualEditorView_0dcc31907b7bffb0624a38194b3c7196,
   "@payloadcms/next/rsc#CollectionCards": CollectionCards_f9c02e79a4aed9a3924487c0cd4cafb1,
-  "@payloadcms/storage-s3/client#S3ClientUploadHandler": S3ClientUploadHandler_f97aa6c64367fa259c5bc0567239ef24
+  "@payloadcms/storage-s3/client#S3ClientUploadHandler": S3ClientUploadHandler_f97aa6c64367fa259c5bc0567239ef24,
+  "/components/admin/review-queue#ReviewQueueWidget": ReviewQueueWidget_5ad28f33e67910b7fd7d6503bf8c6322
 }

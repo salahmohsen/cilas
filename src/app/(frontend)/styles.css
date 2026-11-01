@@ -2878,6 +2878,15 @@ h3 {
 /* The poster's frame is what its sizes and its narrow layout measure. */
 .poster-carousel {
   --carousel-viewport-radius: 0px;
+  /* Phones: one poster, the full width. */
+  --poster-slide: 100cqw;
+}
+/* Laptops and up: one poster whole and its neighbours peeking in, dimmed by
+   the carousel, so the open list reads as a list and the card stays readable. */
+@media (min-width: 64rem) {
+  .poster-carousel {
+    --poster-slide: min(72cqw, 62rem);
+  }
 }
 /* Every grid between the slide and the card uses a zero-minimum column. An
    "auto" column grows to its content's min-content width, so one rigid cell

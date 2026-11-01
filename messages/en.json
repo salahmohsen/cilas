@@ -22,7 +22,7 @@
     "label": "CILAS main navigation",
     "signIn": "Sign in",
     "dashboard": "Dashboard",
-    "profile": "Profile",
+    "settings": "Settings",
     "account": "Account menu",
     "signOut": "Sign out",
     "signingOut": "Signing out",
@@ -734,6 +734,86 @@
     "linkEmpty": "Write the link, or remove this row.",
     "linkInvalid": "The link must start with http:// or https://."
   },
+  "Settings": {
+    "metaTitle": "Settings — CILAS",
+    "title": "Settings",
+    "intro": "Your profile, and how CILAS reaches you.",
+    "navLabel": "Settings sections",
+    "profile": "Profile",
+    "notifications": "Notifications",
+    "notificationsIntro": "Choose what CILAS tells you about, and where.",
+    "save": "Save",
+    "discard": "Discard",
+    "saving": "Saving",
+    "saved": "Settings saved.",
+    "saveFailed": "Some changes did not save. Try again.",
+    "unsaved": "{count, plural, one {unsaved change} other {unsaved changes}}",
+    "unsavedAnnounce": "{count, plural, one {# unsaved change} other {# unsaved changes}}. Press Control or Command and S to save.",
+    "sectionChanges": "{count, plural, one {# change} other {# changes}} in this section",
+    "emailGroup": "Email",
+    "emailHint": "Sent to the address on your account.",
+    "deviceGroup": "On your devices",
+    "deviceHint": "Alerts on a phone or computer, even when CILAS is closed.",
+    "deviceChecking": "Checking this device.",
+    "deviceOn": "This device gets alerts.",
+    "deviceOff": "This device does not get alerts yet.",
+    "deviceEnable": "Enable on this device",
+    "deviceDisable": "Turn off on this device",
+    "deviceDenied": "Alerts are blocked for CILAS in this browser. Allow them in the site settings of your browser, then come back.",
+    "deviceUnsupported": "This browser cannot receive alerts.",
+    "deviceIos": "On iPhone and iPad, add CILAS to your Home Screen first. Tap Share, choose Add to Home Screen, then open CILAS from the Home Screen and return here.",
+    "deviceFailed": "Alerts did not turn on. Try again.",
+    "kinds": {
+      "reaction": {
+        "label": "Reactions",
+        "hint": "Someone likes or reacts to your post or comment."
+      },
+      "comment": {
+        "label": "Comments",
+        "hint": "Someone comments on your post."
+      },
+      "reply": {
+        "label": "Replies",
+        "hint": "Someone replies to your comment."
+      },
+      "mention": {
+        "label": "Mentions",
+        "hint": "Someone mentions you."
+      },
+      "announcement": {
+        "label": "Announcements",
+        "hint": "A new announcement in a space you belong to."
+      },
+      "event_changed": {
+        "label": "Event changes",
+        "hint": "An event you answered gets a new time or place."
+      },
+      "approved": {
+        "label": "Work approved",
+        "hint": "A reviewer approves your submission."
+      },
+      "changes_requested": {
+        "label": "Changes requested",
+        "hint": "A reviewer asks for changes to your work."
+      },
+      "rejected": {
+        "label": "Work declined",
+        "hint": "A reviewer declines your submission or removal request."
+      },
+      "removed": {
+        "label": "Work removed",
+        "hint": "Your work is taken down from the site."
+      },
+      "submitted": {
+        "label": "Review requests",
+        "hint": "Someone submits work for review. Shown to admins."
+      },
+      "application": {
+        "label": "New applications",
+        "hint": "Someone applies to a course or programme. Shown to admins."
+      }
+    }
+  },
   "Login": {
     "metaTitle": "Sign in — CILAS",
     "title": "Sign in to CILAS",
@@ -804,6 +884,7 @@
       "mention": "Mentioned you",
       "comment": "New comment",
       "reply": "New reply",
+      "reaction": "New reaction",
       "announcement": "New announcement",
       "moderation": "Moderation issue",
       "report": "New report",
