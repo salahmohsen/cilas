@@ -2181,16 +2181,25 @@ details:not([open]) > summary.side-card-label {
 .side-card-muted {
   color: var(--text-secondary);
 }
-/* Controls that sit centred in their cell, such as share and AI. */
+/* Controls that sit centred in their cell, such as share and AI. Text
+   under them, such as the AI steps, stays at the start. */
 .side-card-center {
   justify-items: center;
-  text-align: center;
+}
+.side-card-center > ol,
+.side-card-center > ul,
+.side-card-center > p {
+  justify-self: stretch;
+  text-align: start;
 }
 /* A row of controls wider than the card, such as the share bar, scrolls in its cell. */
 .side-card-scroll {
   grid-template-columns: minmax(0, 1fr);
   min-width: 0;
   overflow-x: auto;
+  /* Almost no inset: the share bar's own pill is the frame, and it needs
+     the cell's whole width in a 20rem column. */
+  padding-inline: 0.25rem;
 }
 .side-card-scroll > * {
   max-width: 100%;
