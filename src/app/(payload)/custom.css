@@ -149,3 +149,10 @@
     display: none;
   }
 }
+
+/* payload-theme hides the header breadcrumb, which is where Payload's native
+   dashboard puts Edit dashboard, Add widget and Reset layout. Show it on the
+   admin home only (the dashboard wrapper is `.arc-scope`). */
+:root:has(.arc-scope .modular-dashboard) .app-header__step-nav-wrapper {
+  display: flex;
+}
