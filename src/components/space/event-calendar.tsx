@@ -5,20 +5,37 @@ import { CalendarPlus, Download, ExternalLink } from 'lucide-react'
 
 import { DropdownMenu } from '@/components/arc/dropdown-menu/dropdown-menu'
 
-/** "Add to calendar", an icon in the event card's corner: a prefilled Google Calendar page, or an .ics file any calendar app opens. */
-export function EventCalendar({ google, ics }: { google: string; ics: string }) {
+/**
+ * "Add to calendar": a prefilled Google Calendar page, or an .ics file any
+ * calendar app opens. An icon in the Space event card; with `labelled`, the
+ * words and the icon, as in the public event's side card. Without a Google
+ * link (a date with no time), only the file.
+ */
+export function EventCalendar({
+  google,
+  ics,
+  labelled = false,
+}: {
+  google?: string | null
+  ics: string
+  labelled?: boolean
+}) {
   const t = useTranslations('SpacePost')
   return (
     <DropdownMenu
       label={t('calendarAdd')}
       icon={<CalendarPlus size={18} aria-hidden="true" />}
-      iconOnly
+      iconOnly={!labelled}
       items={[
-        {
-          label: t('calendarGoogle'),
-          icon: <ExternalLink size={15} />,
-          onSelect: () => window.open(google, '_blank', 'noopener,noreferrer'),
-        },
+        ...(google
+          ? [
+              {
+                label: t('calendarGoogle'),
+                icon: <ExternalLink size={15} />,
+                onSelect: () => window.open(google, '_blank', 'noopener,noreferrer'),
+              },
+            ]
+          : []),
         {
           label: t('calendarIcs'),
           icon: <Download size={15} />,

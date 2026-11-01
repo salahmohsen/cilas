@@ -1,5 +1,5 @@
 import { getFormatter, getTranslations } from 'next-intl/server'
-import { ArrowDown, ArrowUpRight, CalendarPlus, Download, ExternalLink } from 'lucide-react'
+import { ArrowDown, ArrowUpRight } from 'lucide-react'
 import type { Event } from '@/payload-types'
 import { EventWhen } from '@/components/space/event-details'
 import { cairoInstant } from '@/lib/cairo-day'
@@ -10,6 +10,7 @@ import { registrationStatus } from '@/lib/registration'
 import { SideCard, SideCardSection } from '@/components/side-card'
 import { EVENT_POSTER_COLORS } from '@/lib/event-poster-colors'
 import { eventGoogleUrl } from '@/lib/event-calendar'
+import { EventCalendar } from '@/components/space/event-calendar'
 import { absoluteUrl } from '@/lib/schema'
 import styles from './events.module.css'
 
@@ -60,7 +61,6 @@ export async function EventAttendance({
         <ArrowDown size={16} aria-hidden />
       </a>
     ) : null
-  // Add to calendar: a Google Calendar page, or the .ics file with every meeting.
   const pageUrl = absoluteUrl(`/${locale}/events/${event.slug}`)
   const words = {
     speakers: t('speakers'),
@@ -71,31 +71,17 @@ export async function EventAttendance({
     free: t('free'),
   }
   const google = eventGoogleUrl(event, timing.meeting, pageUrl, words)
+  // The Space event card's menu, with its words: Google Calendar or the .ics file.
   const calendar =
     timing.status === 'upcoming' ? (
-      <details className="side-card-menu">
-        <summary className="side-card-action side-card-action--paper">
-          {t('addToCalendar')}
-          <CalendarPlus size={16} aria-hidden />
-        </summary>
-        <div className="side-card-buttons">
-          {google && (
-            <a className="side-card-button" href={google} target="_blank" rel="noopener noreferrer">
-              <ExternalLink size={14} aria-hidden />
-              {t('googleCalendar')}
-            </a>
-          )}
-          <a
-            className="side-card-button"
-            href={`/${locale}/events/${event.slug}/event.ics`}
-            download
-          >
-            <Download size={14} aria-hidden />
-            {t('downloadIcs')}
-          </a>
-        </div>
-      </details>
+      <div className="side-card-dropdown">
+        <EventCalendar google={google} ics={`/${locale}/events/${event.slug}/event.ics`} labelled />
+      </div>
     ) : null
+  // Registration that was set up but is not open (and the event is not over).
+  const closed =
+    !register && timing.status !== 'past' && !open && Boolean(event.registration?.method)
+  const attendance = Boolean(price || event.pricing?.note || register || closed)
   return (
     <SideCard
       as="aside"
@@ -132,6 +118,7 @@ export async function EventAttendance({
           )}
           {event.schedule?.note && <p className="side-card-muted">{event.schedule.note}</p>}
         </div>
+        {calendar}
       </SideCardSection>
       {(venue || online) && (
         <SideCardSection label={t('where')}>
@@ -177,23 +164,20 @@ export async function EventAttendance({
           </div>
         </SideCardSection>
       )}
-      <SideCardSection label={t('admission')}>
-        <div className="side-card-body">
-          {price && <p className="font-semibold">{price}</p>}
-          {event.pricing?.note && <p className="side-card-muted">{event.pricing.note}</p>}
-          {!register && (
-            <p className="side-card-muted">
-              {timing.status === 'past'
-                ? t('ended')
-                : !open && event.registration?.method
-                  ? t('registrationClosed')
-                  : t('admissionSoon')}
-            </p>
-          )}
-        </div>
-        {calendar}
-        {register}
-      </SideCardSection>
+      {/* Only when there is something to say: no attendance setting means a
+          public event, open to all, which needs no line (see the card guide). */}
+      {attendance && (
+        <SideCardSection label={t('admission')}>
+          {price || event.pricing?.note || closed ? (
+            <div className="side-card-body">
+              {price && <p className="font-semibold">{price}</p>}
+              {event.pricing?.note && <p className="side-card-muted">{event.pricing.note}</p>}
+              {closed && <p className="side-card-muted">{t('registrationClosed')}</p>}
+            </div>
+          ) : null}
+          {register}
+        </SideCardSection>
+      )}
     </SideCard>
   )
 }

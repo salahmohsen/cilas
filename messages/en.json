@@ -1441,15 +1441,11 @@
     "movieData": "Movie data and images"
   },
   "Events": {
-    "addToCalendar": "Add to calendar",
-    "googleCalendar": "Google Calendar",
-    "downloadIcs": "Apple, Outlook (.ics)",
     "details": "Event details",
     "when": "When",
     "where": "Where",
     "admission": "Attendance",
     "timeSoon": "Time to be announced",
-    "admissionSoon": "Attendance details to be announced.",
     "title": "Events",
     "intro": "Talks, screenings, workshops, and gatherings at CILAS.",
     "upcoming": "Upcoming events",

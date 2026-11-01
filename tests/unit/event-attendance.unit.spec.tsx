@@ -13,6 +13,9 @@ vi.mock('next-intl/server', async () => {
   }
 })
 vi.mock('@/components/space/event-details', () => ({ EventWhen: () => null }))
+vi.mock('@/components/space/event-calendar', () => ({
+  EventCalendar: ({ ics }: { ics: string }) => <span data-calendar={ics} />,
+}))
 
 const event: Event = {
   id: 1,
@@ -32,10 +35,11 @@ const render = async (value: Event = event, at = now) =>
   )
 
 describe('event attendance details', () => {
-  it('keeps an unknown time and admission explicit instead of inventing a schedule or a free walk-in policy', async () => {
+  it('keeps an unknown time explicit, and shows no attendance line for an open public event', async () => {
     const page = await render()
     expect(page.body.textContent).toContain('Time to be announced')
-    expect(page.body.textContent).toContain('Attendance details to be announced.')
+    // No attendance setting means public: nothing to announce.
+    expect(page.body.textContent).not.toContain('Attendance')
     expect(page.querySelector('a.side-card-action')).toBeNull()
   })
 
@@ -74,7 +78,6 @@ describe('event attendance details', () => {
       registration: { method: 'external', url: 'javascript:alert(1)' },
     })
     expect(page.querySelector('a.side-card-action')).toBeNull()
-    expect(page.body.textContent).toContain('Attendance details to be announced.')
     expect(page.body.textContent).not.toContain('Registration is closed.')
   })
 })
@@ -82,8 +85,21 @@ describe('event attendance details', () => {
 describe('event attendance calendar', () => {
   it('offers the event to a calendar only while it is upcoming', async () => {
     const page = await render()
-    expect(page.querySelector('a[href="/en/events/screening/event.ics"]')).not.toBeNull()
+    expect(page.querySelector('[data-calendar="/en/events/screening/event.ics"]')).not.toBeNull()
     const ended = await render(event, new Date('2026-11-02T12:00:00Z'))
-    expect(ended.querySelector('a[href$="event.ics"]')).toBeNull()
+    expect(ended.querySelector('[data-calendar]')).toBeNull()
+  })
+})
+
+describe('event attendance section', () => {
+  it('shows the price, and registration that is set up but closed', async () => {
+    const priced = await render({ ...event, pricing: { min: 100 } } as Event)
+    expect(priced.body.textContent).toContain('Attendance')
+    expect(priced.body.textContent).toContain('100')
+    const closed = await render({
+      ...event,
+      registration: { method: 'external', url: 'https://example.com', deadline: '2026-10-01' },
+    } as Event)
+    expect(closed.body.textContent).toContain('Registration is closed.')
   })
 })
