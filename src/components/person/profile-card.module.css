@@ -148,3 +148,25 @@
     margin-top: 0;
   }
 }
+
+/* The fellow look (the course page's fellow cards, styles.css .fellow-card*):
+   the name on the colour panel in the section-heading face, the bio on paper
+   in the course text size, muted ink, at a reading measure. */
+.card[data-look='fellow'] .name {
+  padding: var(--poster-pad);
+  background: var(--poster-color);
+  font-size: var(--text-3xl);
+  font-weight: 400;
+  letter-spacing: var(--tracking-display);
+}
+.card[data-look='fellow'] .body {
+  padding: var(--poster-pad);
+  background: var(--poster-paper);
+  color: color-mix(in oklab, var(--poster-ink) 82%, var(--poster-paper));
+  font-size: var(--course-text-size, 1.1rem);
+  line-height: 1.7;
+  text-wrap: pretty;
+}
+.card[data-look='fellow'] .body > * {
+  max-width: 68ch;
+}

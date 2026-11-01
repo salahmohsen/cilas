@@ -100,7 +100,12 @@ export async function EventPage({
                 <ul className={styles.speakers}>
                   {speakers.map(({ person, role, key }, i) => (
                     <li key={key}>
-                      <ProfileCard color={PROFILE_COLORS[i % 3]} person={person} role={role}>
+                      <ProfileCard
+                        color={PROFILE_COLORS[i % 3]}
+                        look="fellow"
+                        person={person}
+                        role={role}
+                      >
                         {person.bio && (
                           <PlainRichText
                             className="article-prose article-prose--bio"

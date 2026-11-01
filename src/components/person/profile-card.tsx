@@ -22,7 +22,10 @@ export function ProfileCard({
   children,
   color,
   role,
+  look,
 }: {
+  /** 'fellow': the name on the colour panel and the bio on paper, as the course page's fellow cards. */
+  look?: 'fellow'
   person: Person
   children?: ReactNode
   /** The card's colour; by default one of PROFILE_COLORS, from the person. */
@@ -37,6 +40,7 @@ export function ProfileCard({
     <div className={`${styles.frame} not-prose`}>
       <article
         className={`poster ${styles.card} not-prose`}
+        data-look={look}
         style={
           {
             '--poster-color': color ?? PROFILE_COLORS[person.id % PROFILE_COLORS.length],
