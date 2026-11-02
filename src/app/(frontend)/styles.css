@@ -1912,10 +1912,7 @@ a.collection-item:hover {
 }
 .cal-agenda-day {
   display: grid;
-  overflow: clip;
-  border: 1px solid var(--cal-rule);
-  border-radius: 1rem;
-  background: var(--background);
+  gap: 0.5rem;
 }
 .cal-agenda-date {
   display: flex;
@@ -1945,9 +1942,15 @@ a.collection-item:hover {
   background: var(--foreground);
   color: var(--background);
 }
+.cal-agenda .cal-agenda-date {
+  overflow: clip;
+  border: 1px solid var(--cal-rule);
+  border-radius: 1rem;
+  background-color: var(--background);
+}
+/* The items are one stack: connected by shared rules, rounded at its first and last item only. */
 .cal-agenda .cal-slots {
-  border: 0;
-  border-radius: 0;
+  background: var(--background);
 }
 
 /* ===================================================== course list */
@@ -3812,22 +3815,28 @@ h3 {
   }
 }
 
-/* Pointing at (or tabbing to) a day, or a row in the week, turns its title boxes the palette yellow. */
-.cal-item-title,
-.cal-slot-title {
+/* Pointing at (or tabbing to) a day, or at a row in the week, the agenda or the quick look, turns the
+   whole item card the palette yellow. */
+.cal-item,
+.cal-slot {
   transition-property: background-color;
   transition-duration: 150ms;
 }
-.cal-day:hover .cal-item-title,
-.cal-day:has(button:focus-visible) .cal-item-title,
-.cal-week .cal-item:hover .cal-item-title,
-.cal-slot:hover .cal-slot-title {
+.cal-day:hover .cal-item,
+.cal-day:has(button:focus-visible) .cal-item,
+.cal-week .cal-item:hover,
+.cal-slot:hover {
   background-color: #ffb71b;
   color: #121212;
 }
+.cal-day:hover .cal-item :is(.cal-item-when, .cal-item-title),
+.cal-slot:hover :is(.cal-item-when, .cal-slot-title, .cal-slot-note),
+.cal-week .cal-item:hover :is(.cal-item-when, .cal-item-title) {
+  color: #121212;
+}
 @media (prefers-reduced-motion: reduce) {
-  .cal-item-title,
-  .cal-slot-title {
+  .cal-item,
+  .cal-slot {
     transition: none;
   }
 }
