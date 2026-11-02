@@ -1473,9 +1473,16 @@ a.collection-item:hover {
     grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
   }
   .cal-head-title {
+    grid-column: 1;
     border-start-end-radius: 0;
   }
+  /* The key is a white box under the yellow one; the controls take the other column's whole height. */
+  .cal-head-legend {
+    grid-column: 1;
+  }
   .cal-head-nav {
+    grid-column: 2;
+    grid-row: 1 / span 2;
     border-block-start: 0;
     border-inline-start: 1px solid var(--poster-ink);
     border-start-end-radius: calc(1rem - 1px);
@@ -1717,13 +1724,12 @@ a.collection-item:hover {
   background: var(--tone, var(--border-strong));
   box-shadow: 0 0 0 1px var(--cal-rule);
 }
-/* What each colour means: its own box between the title and controls and the views. */
+/* What each colour means: a white box under the title. */
 .cal-head-legend {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
   gap: 0.5rem 1.25rem;
-  grid-column: 1 / -1;
   margin: 0;
   padding: calc(var(--poster-pad) * 0.6) var(--poster-pad);
   list-style: none;

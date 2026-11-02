@@ -94,6 +94,7 @@ export default async function CalendarPage({ params, searchParams }: Props) {
           <h1 className="cal-title">{title}</h1>
           <p className="cal-head-count">{t('inView', { count: items.length })}</p>
         </div>
+        <CalendarLegend items={items} label={t('legend')} labels={labels} />
         <div className="cal-head-nav">
           <nav aria-label={t('navigation')} className="cal-head-controls">
             {/* Time runs left to right on a calendar's arrows in either language:
@@ -122,7 +123,6 @@ export default async function CalendarPage({ params, searchParams }: Props) {
             />
           </nav>
         </div>
-        <CalendarLegend items={items} label={t('legend')} labels={labels} />
         <div className="cal-head-foot">
           <div className="cal-head-views">
             <div className="cal-switch" role="group" aria-label={t('views')}>
