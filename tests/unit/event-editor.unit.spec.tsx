@@ -194,7 +194,7 @@ describe('event editor feature rendering', () => {
     expect(screen.getByRole('heading', { name: 'Faces (1968)' })).toBeInTheDocument()
     expect(screen.getByText('A brief introduction.')).toBeInTheDocument()
     expect(screen.queryByText('The full biography stays on the profile.')).toBeNull()
-    expect(screen.getByRole('link', { name: 'View profile' })).toHaveAttribute(
+    expect(screen.getByRole('link', { name: 'Speaker' })).toHaveAttribute(
       'href',
       '/en/people/speaker',
     )

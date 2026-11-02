@@ -399,7 +399,6 @@
     },
     "allInCycle": "كل مقررات هذه الدورة ({count, number, digits})",
     "whoTeaches": "مَن يقدّم المقرر",
-    "viewProfile": "الملف الشخصي",
     "feedFilterBy": "تصفية مسار المقرر",
     "feedMaterial": "للتحضير",
     "feedShowAll": "إظهار الكل",
@@ -420,7 +419,6 @@
   "Person": {
     "profiles": "الأشخاص",
     "chooseProfile": "اختر شخصًا",
-    "viewProfile": "الملف الشخصي",
     "written": "كتابات",
     "credited": "ترجمات وأعمال أخرى",
     "taught": "المقررات",

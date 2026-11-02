@@ -132,7 +132,7 @@
 }
 @media (hover: hover) and (pointer: fine) {
   .detailsTrigger:hover {
-    background: color-mix(in oklab, var(--poster-color) 35%, var(--poster-paper));
+    background: var(--poster-color);
   }
 }
 .detailsTrigger:focus-visible {

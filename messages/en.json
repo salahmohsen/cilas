@@ -399,7 +399,6 @@
     },
     "allInCycle": "See all {count} courses of this cycle",
     "whoTeaches": "Who teaches it",
-    "viewProfile": "View profile",
     "feedFilterBy": "Filter the syllabus",
     "feedMaterial": "To prepare",
     "feedShowAll": "Show all",
@@ -420,7 +419,6 @@
   "Person": {
     "profiles": "People",
     "chooseProfile": "Choose a person",
-    "viewProfile": "View profile",
     "written": "Writing",
     "credited": "Translations and other work",
     "taught": "Courses",
