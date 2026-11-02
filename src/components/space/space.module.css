@@ -3002,7 +3002,7 @@
 @media (hover: hover) and (pointer: fine) {
   .event .eventCalendarCell > button:hover,
   .event .eventCalendarCell > * > button:hover {
-    background: color-mix(in oklab, var(--poster-color) 40%, var(--poster-paper));
+    background: var(--poster-color);
   }
 }
 .event .eventCalendarCell > button:focus-visible,
@@ -3073,7 +3073,7 @@ button.rsvpCell {
 }
 @media (hover: hover) and (pointer: fine) {
   button.rsvpCell:not([data-mine]):hover {
-    background: color-mix(in oklab, var(--poster-color) 35%, var(--poster-paper));
+    background: var(--poster-color);
   }
 }
 .rsvpCell[data-mine] {
