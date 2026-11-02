@@ -1861,38 +1861,20 @@ a.collection-item:hover {
   min-height: 12rem;
   background: var(--background);
 }
-.cal-week-head {
-  display: flex;
-  align-items: stretch;
-  justify-content: space-between;
-  border-block-end: 1px solid var(--cal-rule);
+.cal-week-day:not(:has(li)) {
+  background-image: repeating-linear-gradient(135deg, transparent 0 6px, var(--cal-hatch) 6px 7px);
 }
-.cal-week-head .cal-weekday {
-  display: grid;
-  align-items: center;
-  padding: 0 0.75rem;
-  text-align: start;
-}
-.cal-week-head .cal-day-number {
-  border-block-end: 0;
-  border-inline-end: 0;
-  border-inline-start: 1px solid var(--cal-rule);
-}
-.cal-week-day[data-today] .cal-week-head .cal-day-number {
+.cal-week-day[data-today] .cal-day-number {
   background: var(--foreground);
   color: var(--background);
 }
-.cal-week-day > ul {
-  padding: 0.75rem;
-}
-.cal-card {
-  overflow: hidden;
-  box-shadow: 0 0 0 1px var(--cal-rule);
-}
-.cal-card-cover {
+/* A picture across the top of an item, 3:2, a rule under it. */
+.cal-item-cover {
+  grid-column: 1 / -1;
   width: 100%;
-  aspect-ratio: 16 / 9;
+  aspect-ratio: 3 / 2;
   object-fit: cover;
+  border-block-end: 1px solid var(--cal-rule);
 }
 
 /* The agenda, and a phone's month: a box a day, its date cell on top, then its rows. */
@@ -1915,17 +1897,22 @@ a.collection-item:hover {
   border-block-end: 1px solid var(--cal-rule);
   background-image: repeating-linear-gradient(135deg, transparent 0 6px, var(--cal-hatch) 6px 7px);
 }
+/* The number and the date are boxes on paper; the hatch fills what is left of the row. */
 .cal-agenda-date .cal-day-number {
   flex: none;
+  height: auto;
+  min-height: 2.5rem;
   border-block-end: 0;
 }
 .cal-agenda-when {
   display: grid;
   align-content: center;
   padding: 0.5rem 0.875rem;
+  border-inline-end: 1px solid var(--cal-rule);
+  background: var(--background);
   font-size: 0.8rem;
-  line-height: 1.35;
   font-weight: 500;
+  line-height: 1.35;
   color: var(--text-secondary);
 }
 .cal-agenda-day[data-today] .cal-day-number {

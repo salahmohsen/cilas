@@ -207,7 +207,7 @@ function Slot({ item, labels }: { item: CalendarItem; labels: Labels }) {
   )
 }
 
-/** The week: seven columns, each day's items in time order with their cover. */
+/** The week: seven columns, each day's items in time order, as boxes like the month's: cover, type and time, name. */
 export async function WeekView({
   date,
   today,
@@ -234,46 +234,42 @@ export async function WeekView({
           data-today={day === today || undefined}
           key={day}
         >
-          <header className="cal-week-head">
-            <span className="cal-weekday">
-              {format.dateTime(UTC(day), { weekday: 'long', timeZone: 'UTC' })}
-            </span>
+          <header className="cal-agenda-date">
             <span className="cal-day-number">
               {format.number(Number(day.slice(8)), { numberingSystem: nu })}
             </span>
+            <span className="cal-agenda-when">
+              {format.dateTime(UTC(day), { weekday: 'long', timeZone: 'UTC' })}
+            </span>
           </header>
-          <ul className="grid gap-3">
+          <ul className="cal-day-items">
             {(map.get(day) ?? []).map((item) => (
-              <li className="cal-card" key={item.key}>
+              <li
+                className="cal-item"
+                data-cancelled={item.cancelled || undefined}
+                key={item.key}
+                style={{ '--tone': toneOf(item) } as CSSProperties}
+              >
                 {item.cover ? (
                   // eslint-disable-next-line @next/next/no-img-element
                   <img
-                    alt={item.cover.alt}
-                    className="cal-card-cover"
+                    alt=""
+                    className="cal-item-cover"
                     loading="lazy"
                     src={item.cover.url}
                     style={focalPointStyle(item.cover)}
                   />
                 ) : null}
-                <div className="p-3">
-                  <p className="cal-time" dir={item.start ? labels.timeDir : undefined}>
-                    {item.start
-                      ? labels.digits(`${item.start}${item.end ? `–${item.end}` : ''}`)
-                      : item.starts
-                        ? labels.starts
-                        : ''}
-                  </p>
-                  <ItemTitle className="mt-1 block text-sm font-medium" item={item} />
-                  <p className="mt-1 text-xs text-[var(--text-muted)]">
-                    {[
-                      labels.type(item),
-                      item.session ? labels.session(item.session) : null,
-                      item.cancelled ? labels.cancelled : null,
-                    ]
-                      .filter(Boolean)
-                      .join(' · ')}
-                  </p>
-                </div>
+                <span className="cal-item-type">
+                  <span aria-hidden className="cal-dot" />
+                  {labels.type(item)}
+                </span>
+                {item.start || item.starts ? (
+                  <span className="cal-item-when" dir={item.start ? labels.timeDir : undefined}>
+                    {item.start ? labels.digits(item.start) : labels.starts}
+                  </span>
+                ) : null}
+                <ItemTitle className="cal-item-title" item={item} />
               </li>
             ))}
           </ul>
