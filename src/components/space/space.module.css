@@ -3119,7 +3119,7 @@ button.rsvpCell {
 }
 
 /* The space head is the poster card, set lower: a shorter card, the cover always filling its
-   cell, small text in the cells, and the cover at the left in both reading directions. */
+   cell, small text in the cells, and the title panel at the start edge. */
 .head.head:global(.poster) {
   min-height: min(calc(100cqi * 9 / 28), 17rem);
 }
@@ -3188,12 +3188,13 @@ button.rsvpCell {
   }
 }
 
+/* The title panel at the start edge (left in English, right in Arabic), the cover after it. */
 @container poster (width > 34rem) {
-  :global([dir='rtl']) .head :global(.poster-body) {
+  .head :global(.poster-body) {
     flex-direction: row-reverse;
   }
 
-  :global([dir='rtl']) .head :global(.poster-panel) {
+  .head :global(.poster-panel) {
     border-inline-start: 0;
     border-inline-end: 1px solid var(--poster-ink);
   }
