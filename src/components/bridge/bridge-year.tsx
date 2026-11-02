@@ -11,9 +11,11 @@ import { RegisterBar } from '@/app/(frontend)/[locale]/study/[slug]/RegisterBar'
 import { RefreshRouteOnSave } from '@/components/RefreshRouteOnSave'
 import { ResolvedRichTextField as RichTextField } from '@/components/resolved-rich-text-field'
 import { ShareBar } from '@/components/share-bar'
+import { SideCard, SideCardApply, SideCardSection } from '@/components/side-card'
 import { Link } from '@/i18n/navigation'
 import type { Season } from '@/lib/cycle'
 import { localDigits, numberingSystemOf } from '@/lib/digits'
+import { POSTER_COLORS } from '@/lib/poster-colors'
 import { registrationStatus } from '@/lib/registration'
 import { focalPointStyle } from '@/lib/media-image'
 import type { Cycle } from '@/payload-types'
@@ -156,70 +158,20 @@ export async function BridgeYearView({
       : []),
   ]
 
-  // The side column renders twice, beside the text on wide screens and in its
-  // flow on narrow ones; `at` keeps each copy's ids its own.
-  const details = (
-    <section aria-label={t('details')} className="course-side">
-      {current ? (
-        <span className="course-status" data-open={open || undefined}>
-          {open ? tc('open') : tc('closed')}
-        </span>
-      ) : (
-        <p className="text-sm text-(--text-secondary)">{t('pastYear')}</p>
-      )}
-      {!current ? null : open && viaForm ? (
-        <Link className="course-apply" data-primary href="/study/bridge/apply">
-          {tc('apply')}
-        </Link>
-      ) : applyUrl ? (
-        <a className="course-apply" data-primary href={applyUrl} rel="noopener" target="_blank">
-          {tc('apply')}
-        </a>
-      ) : viaForm ? (
-        <Link className="bridge-link" href="/study/bridge/apply">
-          {ta('questions')}
-        </Link>
-      ) : null}
-      <dl className="course-facts">
-        {facts.map(({ icon: Icon, label, value }) => (
-          <div className="grid grid-cols-[1.25rem_1fr] items-start gap-x-3" key={label}>
-            <Icon aria-hidden className="mt-0.5 text-(--text-muted)" size={16} strokeWidth={1.5} />
-            <div>
-              <dt className="text-xs text-(--text-muted)">{label}</dt>
-              <dd className="text-sm">{value}</dd>
-            </div>
-          </div>
-        ))}
-      </dl>
-    </section>
-  )
-
-  const requirements = (at: string) =>
-    programme.requirements ? (
-      <section aria-labelledby={`bridge-requirements-${at}`} className="course-side">
-        <h2 className="course-side-heading" id={`bridge-requirements-${at}`}>
-          {t('requirements')}
-        </h2>
-        <RichTextField
-          className="grid gap-2 text-sm leading-relaxed [&_p]:m-0"
-          data={programme.requirements}
-        />
-      </section>
-    ) : null
-
-  const share = (at: string) => (
-    <section aria-labelledby={`bridge-share-${at}`} className="course-side">
-      <h2 className="course-side-heading" id={`bridge-share-${at}`}>
-        {ts('heading')}
-      </h2>
-      <ShareBar
-        email={email}
-        label={t('share')}
-        path={`/${locale}${current ? '/study/bridge' : bridgeYearPath(programme.slug ?? '')}`}
-        title={programme.title}
-      />
-    </section>
-  )
+  // Where the page's own Apply leads: the site form, or wherever registration points.
+  // Once registration has closed, the form's page still shows the questions.
+  const applyHref = viaForm ? `/${locale}/study/bridge/apply` : applyUrl
+  const sideApply = current ? (
+    <SideCardApply
+      applyLabel={open ? tc('apply') : ta('questions')}
+      applyUrl={open || viaForm ? applyHref : null}
+      newTab={Boolean(open && applyUrl)}
+      open={open}
+      price={price}
+      primary={open}
+      status={open ? tc('open') : tc('closed')}
+    />
+  ) : null
 
   // A year by its span, and its city when it was not Cairo: «2019–2020 Alexandria».
   const yearLabel = (slug: string) => {
@@ -229,57 +181,91 @@ export async function BridgeYearView({
       place: place === 'alexandria' ? t('alexandria') : null,
     }
   }
-  const yearsNav = (at: string) =>
+  const yearsSection =
     years.length > 1 ? (
-      <nav aria-labelledby={`bridge-years-${at}`} className="course-side">
-        <h2 className="course-side-heading" id={`bridge-years-${at}`}>
-          {t('years')}
-        </h2>
-        <ul className="bridge-years">
+      <SideCardSection label={t('years')}>
+        <ul className="side-card-years">
           {years.map((y, i) => {
             const { span, place } = yearLabel(y.slug)
             const label = (
               <>
                 <span>{span}</span>
-                {place ? <span className="bridge-year-place">{place}</span> : null}
+                {place ? <span className="side-card-role">{place}</span> : null}
               </>
             )
             return (
               <li key={y.slug}>
                 {y.slug === programme.slug ? (
-                  <span aria-current="page" className="bridge-year">
-                    {label}
-                  </span>
+                  <span aria-current="page">{label}</span>
                 ) : (
-                  <Link
-                    className="bridge-year"
-                    href={i === 0 ? '/study/bridge' : bridgeYearPath(y.slug)}
-                  >
-                    {label}
-                  </Link>
+                  <Link href={i === 0 ? '/study/bridge' : bridgeYearPath(y.slug)}>{label}</Link>
                 )}
               </li>
             )
           })}
         </ul>
-      </nav>
+      </SideCardSection>
     ) : null
-  // Beside the current year, who can apply follows the apply button; on a past
-  // year, the other years come first.
-  const side = (at: string) =>
-    current ? (
-      <>
-        {requirements(at)}
-        {yearsNav(at)}
-        {share(at)}
-      </>
-    ) : (
-      <>
-        {yearsNav(at)}
-        {requirements(at)}
-        {share(at)}
-      </>
-    )
+  const requirementsSection = programme.requirements ? (
+    <SideCardSection label={t('requirements')}>
+      <div className="side-card-body">
+        <RichTextField
+          className="grid gap-2 text-sm leading-relaxed [&_p]:m-0"
+          data={programme.requirements}
+        />
+      </div>
+    </SideCardSection>
+  ) : null
+  const shareSection = (
+    <SideCardSection label={ts('heading')}>
+      <div className="side-card-body side-card-center side-card-scroll">
+        <ShareBar
+          email={email}
+          label={t('share')}
+          path={`/${locale}${current ? '/study/bridge' : bridgeYearPath(programme.slug ?? '')}`}
+          title={programme.title}
+        />
+      </div>
+    </SideCardSection>
+  )
+
+  // As on a course page, the side column is one card, shown twice: the facts
+  // under the cover on narrow screens (the rest closes the page), all of it
+  // beside the text on wide ones. Beside the current year, who can apply comes
+  // first; on a past year, the other years do.
+  const detailsSection =
+    facts.length || !current ? (
+      <SideCardSection label={t('details')}>
+        {!current ? <p className="side-card-body side-card-muted">{t('pastYear')}</p> : null}
+        {facts.length ? (
+          <dl className="side-card-facts">
+            {facts.map(({ icon: Icon, label, value }) => (
+              <div key={label}>
+                <span className="side-card-icon">
+                  <Icon aria-hidden size={16} strokeWidth={1.5} />
+                </span>
+                <div>
+                  <dt>{label}</dt>
+                  <dd>{value}</dd>
+                </div>
+              </div>
+            ))}
+          </dl>
+        ) : null}
+      </SideCardSection>
+    ) : null
+  const sideCard = (part: 'top' | 'rest' | 'all') => (
+    <SideCard color={POSTER_COLORS[0]} label={t('details')}>
+      {part !== 'rest' ? detailsSection : null}
+      {part !== 'top' ? (
+        <>
+          {current ? requirementsSection : yearsSection}
+          {current ? yearsSection : requirementsSection}
+          {shareSection}
+        </>
+      ) : null}
+    </SideCard>
+  )
 
   return (
     <div className={`course-page page-frame py-10 sm:py-14 ${stickyApply ? 'max-lg:pb-28' : ''}`}>
@@ -331,7 +317,10 @@ export async function BridgeYearView({
           </figure>
 
           {/* Narrow screens: the details come before the text. */}
-          <div className="mt-10 grid gap-10 lg:hidden">{details}</div>
+          <div className="mt-10 grid gap-6 lg:hidden">
+            {sideApply}
+            {detailsSection ? sideCard('top') : null}
+          </div>
 
           {programme.overview ? (
             <RichTextField className="article-prose mt-10" data={programme.overview} />
@@ -352,15 +341,15 @@ export async function BridgeYearView({
           ) : null}
 
           {/* Narrow screens: the rest of the side column closes the page. */}
-          <div className="mt-14 grid gap-10 lg:hidden">{side('narrow')}</div>
+          <div className="mt-14 lg:hidden">{sideCard('rest')}</div>
         </article>
 
         <aside className="hidden lg:flex lg:flex-col lg:gap-10">
           {/* Not sticky: the column can be taller than the screen. Only applying
               follows the reader down, at the column's end, as on a course page. */}
-          <div className="grid gap-10">
-            {details}
-            {side('wide')}
+          <div className="grid gap-6">
+            {sideApply}
+            {sideCard('all')}
           </div>
           {stickyApply ? (
             <div className="sticky top-22">
