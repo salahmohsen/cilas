@@ -1349,8 +1349,7 @@ a.collection-item:hover {
   --cal-rule-soft: oklch(0.92 0 0 / 0.3);
   --cal-hatch: oklch(1 0 0 / 0.16);
 }
-.cal-page :is(h1, h2, h3),
-[role='dialog']:has(.cal-slots) :is(h2, h3) {
+.cal-page :is(h1, h2, h3) {
   font-family: var(--font-sans);
 }
 
@@ -1817,10 +1816,12 @@ a.collection-item:hover {
 }
 .cal-slots {
   display: grid;
+  overflow: clip;
   margin: 0;
   padding: 0;
   list-style: none;
   border: 1px solid var(--cal-rule);
+  border-radius: 1rem;
 }
 .cal-slot {
   grid-template-columns: minmax(0, 1fr) auto 6rem;
@@ -1955,6 +1956,7 @@ a.collection-item:hover {
 }
 .cal-agenda .cal-slots {
   border: 0;
+  border-radius: 0;
 }
 
 /* ===================================================== course list */
