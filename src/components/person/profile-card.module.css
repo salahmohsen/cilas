@@ -162,6 +162,16 @@
     min-height: 14rem;
     aspect-ratio: auto;
     border-inline-end: 1px solid var(--poster-ink);
+    /* The photo hangs from the top of its cell, with a rule under it, instead of floating in the middle. */
+    display: block;
+    border-bottom: 0;
+  }
+  .photo > img,
+  .photo > svg {
+    height: auto;
+    max-height: 100%;
+    object-position: top;
+    border-bottom: 1px solid var(--poster-ink);
   }
   .name {
     grid-area: name;
