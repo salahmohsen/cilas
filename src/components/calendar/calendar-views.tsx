@@ -5,7 +5,7 @@ import type { CalendarItem } from '@/api/calendar.api'
 import { Card } from '@/components/arc/card/card'
 import { DayCovers } from '@/components/calendar/day-covers'
 import { Link } from '@/i18n/navigation'
-import { monthGrid, monthStart, summariseDay, toneOf, weekDays } from '@/lib/calendar'
+import { monthGrid, monthStart, summariseDay, toneOf, TYPE_ORDER, weekDays } from '@/lib/calendar'
 import { localDigits, numberingSystemOf, timeDir } from '@/lib/digits'
 import { focalPointStyle } from '@/lib/media-image'
 
@@ -117,7 +117,10 @@ export async function MonthView({
                             key={item.key}
                             style={{ '--tone': toneOf(item) } as CSSProperties}
                           >
-                            <span className="cal-item-type">{labels.type(item)}</span>
+                            <span className="cal-item-type">
+                              <span aria-hidden className="cal-dot" />
+                              {labels.type(item)}
+                            </span>
                             {timeOf(item) ? (
                               <span className="cal-item-when" dir={labels.timeDir}>
                                 {labels.digits(timeOf(item)!)}
@@ -168,7 +171,10 @@ function Slot({ item, labels }: { item: CalendarItem; labels: Labels }) {
       data-cancelled={item.cancelled || undefined}
       style={{ '--tone': toneOf(item) } as CSSProperties}
     >
-      <span className="cal-item-type">{labels.type(item)}</span>
+      <span className="cal-item-type">
+        <span aria-hidden className="cal-dot" />
+        {labels.type(item)}
+      </span>
       {item.start || item.starts ? (
         <span className="cal-item-when" dir={item.start ? labels.timeDir : undefined}>
           {item.start
@@ -305,6 +311,37 @@ export async function AgendaView({ items, labels }: { items: CalendarItem[]; lab
         </li>
       ))}
     </ol>
+  )
+}
+
+/** What each colour means: a dot and its name for every type on show, courses first. */
+export function CalendarLegend({
+  items,
+  labels,
+  label,
+}: {
+  items: CalendarItem[]
+  labels: Labels
+  label: string
+}) {
+  const seen = new Map<string, { item: CalendarItem; rank: number }>()
+  for (const item of items) {
+    const key = `${labels.type(item)}|${toneOf(item)}`
+    if (seen.has(key)) continue
+    const rank = TYPE_ORDER.indexOf(item.type)
+    seen.set(key, { item, rank: rank < 0 ? TYPE_ORDER.length : rank })
+  }
+  const entries = [...seen.values()].sort((a, b) => a.rank - b.rank)
+  if (!entries.length) return null
+  return (
+    <ul aria-label={label} className="cal-head-legend">
+      {entries.map(({ item }) => (
+        <li key={item.key} style={{ '--tone': toneOf(item) } as CSSProperties}>
+          <span aria-hidden className="cal-dot" />
+          {labels.type(item)}
+        </li>
+      ))}
+    </ul>
   )
 }
 

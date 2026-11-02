@@ -8,6 +8,7 @@ import { CalendarFeed, CalendarJump } from '@/components/calendar/calendar-tools
 import {
   AgendaView,
   calendarLabels,
+  CalendarLegend,
   MonthView,
   WeekView,
 } from '@/components/calendar/calendar-views'
@@ -129,6 +130,7 @@ export default async function CalendarPage({ params, searchParams }: Props) {
             <CalendarFeed feedPath={`/${locale}/calendar.ics`} />
           </div>
         </div>
+        <CalendarLegend items={items} label={t('legend')} labels={labels} />
       </header>
 
       <div className="mt-6">

@@ -128,6 +128,9 @@ const TYPE_TONES: Record<string, string> = {
   visit: GREEN,
 }
 
+/** Every known type, courses first, in the order a legend lists them. */
+export const TYPE_ORDER = Object.keys(TYPE_TONES)
+
 /** The colour of an item's type; a type with none yet falls back to a neutral rule. */
 export const toneOf = (item: Pick<CalendarItem, 'type'>): string =>
   TYPE_TONES[item.type] ?? 'var(--border-strong, var(--border))'
