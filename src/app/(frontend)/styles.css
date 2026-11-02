@@ -813,6 +813,15 @@ h1.article-title {
   .fellow-card-photo::before {
     padding-block-end: 100%;
   }
+  /* The photo hangs from the top of its cell, whole, with a rule under it. */
+  .fellow-card-photo > img,
+  .fellow-card-photo > svg {
+    inset: 0 0 auto;
+    height: auto;
+    max-height: 100%;
+    object-position: top;
+    border-block-end: 1px solid var(--poster-ink);
+  }
   .fellow-card-main {
     border-inline-start: 1px solid var(--poster-ink);
   }
