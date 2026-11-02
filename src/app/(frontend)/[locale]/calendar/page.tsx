@@ -84,22 +84,16 @@ export default async function CalendarPage({ params, searchParams }: Props) {
   const nearest = after ?? before
 
   return (
-    <div className="page-frame py-10 sm:py-14">
-      <header className="flex flex-wrap items-end justify-between gap-4">
-        <div>
-          <p className="text-sm text-[var(--text-muted)]">{t('title')}</p>
-          <h1 className="mt-1 text-[clamp(1.8rem,3.6vw,2.6rem)] leading-tight font-semibold tracking-tight rtl:tracking-normal">
-            {title}
-          </h1>
+    <div className="page-frame cal-page py-10 sm:py-14">
+      {/* One poster card, as the study page's header is: the title on yellow, the way around the
+          calendar beside it, the views and the feed across the foot. */}
+      <header className="cal-head">
+        <div className="cal-head-title">
+          <p className="sr-only">{t('title')}</p>
+          <h1 className="cal-title">{title}</h1>
+          <p className="cal-head-count">{t('inView', { count: items.length })}</p>
         </div>
-        <CalendarFeed feedPath={`/${locale}/calendar.ics`} />
-      </header>
-
-      <nav
-        aria-label={t('navigation')}
-        className="mt-6 flex flex-wrap items-center justify-between gap-3"
-      >
-        <div className="flex flex-wrap items-center gap-3">
+        <nav aria-label={t('navigation')} className="cal-head-nav">
           {/* Time runs left to right on a calendar's arrows in either language:
               next is always the right arrow. */}
           <div className="flex items-center gap-1" dir="ltr">
@@ -120,17 +114,24 @@ export default async function CalendarPage({ params, searchParams }: Props) {
               all.map((i) => Number(i.date.slice(0, 4))).concat(Number(today.slice(0, 4))),
             )}
           />
+        </nav>
+        <div className="cal-head-foot">
+          <div className="cal-head-views">
+            <div className="cal-switch" role="group" aria-label={t('views')}>
+              {CALENDAR_VIEWS.map((v) => (
+                <Link aria-current={v === view ? 'page' : undefined} href={href(v, date)} key={v}>
+                  {t(`view.${v}`)}
+                </Link>
+              ))}
+            </div>
+          </div>
+          <div className="cal-head-feed">
+            <CalendarFeed feedPath={`/${locale}/calendar.ics`} />
+          </div>
         </div>
-        <div className="cal-switch" role="group" aria-label={t('views')}>
-          {CALENDAR_VIEWS.map((v) => (
-            <Link aria-current={v === view ? 'page' : undefined} href={href(v, date)} key={v}>
-              {t(`view.${v}`)}
-            </Link>
-          ))}
-        </div>
-      </nav>
+      </header>
 
-      <div className="mt-8">
+      <div className="mt-6">
         {!items.length ? (
           <p className="cal-empty">
             {t('empty')}{' '}

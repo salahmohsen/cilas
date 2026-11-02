@@ -1332,11 +1332,123 @@ a.collection-item:hover {
 
 /* ===================================================== calendar */
 
+/*
+ * The calendar: sharp boxes ruled like the side card and the study header
+ * (docs/content-driven-card-layouts.md). One rule colour, light ink on paper
+ * and light on dark; no serif and no radius anywhere in the feature.
+ */
+:root {
+  --cal-rule: oklch(0.15 0 0);
+  --cal-hatch: oklch(0 0 0 / 0.16);
+}
+.dark,
+[data-theme='dark'] {
+  --cal-rule: oklch(0.92 0 0);
+  --cal-hatch: oklch(1 0 0 / 0.16);
+}
+.cal-page :is(h1, h2, h3),
+[role='dialog']:has(.cal-slots) :is(h2, h3) {
+  font-family: var(--font-sans);
+}
+
+/* The header: one poster card. The title on the palette yellow, the controls on paper beside it,
+   the views and the feed across the foot. Printed, so it stays light in the dark theme. */
+.cal-head {
+  --poster-ink: #121212;
+  --poster-paper: #ffffff;
+  --poster-color: #ffb71b;
+  --poster-pad: clamp(1rem, 2.6vw, 2rem);
+  --surface: oklch(100% 0 0);
+  --surface-raised: oklch(100% 0 0);
+  --surface-muted: oklch(97.8% 0 0);
+  --background: oklch(100% 0 0);
+  --foreground: oklch(15% 0 0);
+  --text-secondary: oklch(46% 0 0);
+  --text-muted: oklch(59% 0 0);
+  --border: oklch(93.5% 0 0);
+  --border-strong: oklch(82% 0 0);
+  --accent: oklch(33% 0 0);
+  --accent-foreground: oklch(100% 0 0);
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  border: 1px solid var(--poster-ink);
+  background: var(--poster-paper);
+  color: var(--poster-ink);
+}
+.cal-head > * + * {
+  border-block-start: 1px solid var(--poster-ink);
+}
+.cal-head-title {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: var(--poster-pad);
+  background: var(--poster-color);
+}
+.cal-title {
+  margin: 0;
+  font-size: clamp(2.2rem, 5vw, 3.4rem);
+  font-weight: 700;
+  line-height: 1.05;
+  letter-spacing: -0.03em;
+}
+[dir='rtl'] .cal-title {
+  letter-spacing: 0;
+  line-height: 1.25;
+}
+.cal-head-count {
+  margin-top: 0.75rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+}
+.cal-head-nav,
+.cal-head-views,
+.cal-head-feed {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem;
+  padding: calc(var(--poster-pad) * 0.6) var(--poster-pad);
+}
+.cal-head-nav {
+  align-content: center;
+}
+.cal-head-foot {
+  display: flex;
+  flex-wrap: wrap;
+}
+.cal-head-views {
+  flex: 1 1 auto;
+}
+.cal-head-feed {
+  flex: none;
+  border-inline-start: 1px solid var(--poster-ink);
+}
+@media (min-width: 48rem) {
+  .cal-head {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  }
+  .cal-head-nav {
+    border-block-start: 0;
+    border-inline-start: 1px solid var(--poster-ink);
+  }
+  .cal-head-foot {
+    grid-column: 1 / -1;
+  }
+}
+@media (max-width: 30rem) {
+  .cal-head-feed {
+    flex: 1 1 100%;
+    border-inline-start: 0;
+    border-block-start: 1px solid var(--poster-ink);
+  }
+}
 .cal-switch {
   display: inline-flex;
   border-radius: 999px;
   padding: 3px;
-  box-shadow: 0 0 0 1px var(--border);
+  box-shadow: 0 0 0 1px var(--border-strong);
 }
 .cal-switch a {
   border-radius: 999px;
@@ -1366,7 +1478,7 @@ a.collection-item:hover {
 }
 .cal-today {
   padding-inline: 0.9rem;
-  box-shadow: 0 0 0 1px var(--border);
+  box-shadow: 0 0 0 1px var(--border-strong);
 }
 .cal-step:hover,
 .cal-today:hover {
@@ -1382,21 +1494,50 @@ a.collection-item:hover {
   --ms-h: var(--control-height-sm);
 }
 
+/* The day's number: a ruled square cell, as the notice icon is in the fellow card. */
+.cal-day-number,
+.cal-day .cal-day-card h3 {
+  display: grid;
+  place-items: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  margin: 0;
+  border-inline-end: 1px solid var(--cal-rule);
+  border-block-end: 1px solid var(--cal-rule);
+  border-radius: 0;
+  padding: 0;
+  background: var(--background);
+  color: var(--foreground);
+  font-size: 0.9375rem;
+  font-weight: 600;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+
 /*
- * The month: a box a day, set apart by space, as the side column's boxes are
- * (docs/content-driven-card-layouts.md): a rule between a box's parts, one
- * inset (0.75rem) for every text row, one gap (0.75rem) between boxes.
+ * The month: one ruled grid, a box a day. The rules are the gap between
+ * cells over the rule colour, so neighbours share one line.
  */
+.cal-month {
+  border: 1px solid var(--cal-rule);
+  background: var(--background);
+}
 .cal-month-head,
 .cal-month-body {
   display: grid;
   grid-template-columns: repeat(7, minmax(0, 1fr));
-  gap: 0.75rem;
+  gap: 1px;
+  background: var(--cal-rule);
+}
+.cal-month-head {
+  border-block-end: 1px solid var(--cal-rule);
 }
 .cal-weekday {
-  padding-block: 0.5rem;
+  padding: 0.6rem 0.5rem;
+  background: var(--background);
   font-size: 0.8rem;
-  color: var(--text-muted);
+  font-weight: 500;
+  color: var(--text-secondary);
   text-align: center;
 }
 .cal-day {
@@ -1405,46 +1546,17 @@ a.collection-item:hover {
   min-height: 17.5rem;
   flex-direction: column;
   overflow: clip;
-  border: 1px solid var(--foreground);
-  border-radius: 1rem;
   background: var(--background);
-  transition-property: border-color;
-  transition-duration: 150ms;
 }
-/* A day with nothing is a quiet fill, not an outline. */
+/* A day with nothing is hatched paper under its number. */
 .cal-day:not(:has(.cal-day-card)) {
-  border-color: transparent;
-  background: var(--surface-muted);
+  background-image: repeating-linear-gradient(135deg, transparent 0 6px, var(--cal-hatch) 6px 7px);
 }
-.cal-day[data-outside] {
+.cal-day > .cal-day-number {
+  color: var(--text-secondary);
+}
+.cal-day[data-outside] > * {
   opacity: 0.5;
-}
-
-/* The big, light number of the week and agenda views. */
-.cal-day-number {
-  font-size: 2rem;
-  font-weight: 300;
-  line-height: 1;
-  font-variant-numeric: tabular-nums;
-}
-/* The day's number: one small box, its number centred, the same on every day. */
-.cal-month .cal-day > .cal-day-number,
-.cal-day .cal-day-card h3 {
-  display: grid;
-  place-items: center;
-  width: fit-content;
-  min-width: 2rem;
-  height: 2rem;
-  margin: 0.5rem;
-  border-radius: 0.5rem;
-  padding: 0 0.5rem;
-  font-size: 0.9375rem;
-  font-weight: 500;
-  line-height: 1;
-  font-variant-numeric: tabular-nums;
-}
-.cal-month .cal-day > .cal-day-number {
-  color: var(--text-muted);
 }
 .cal-day[data-today] > .cal-day-number,
 .cal-day[data-today] .cal-day-card h3 {
@@ -1453,7 +1565,7 @@ a.collection-item:hover {
 }
 
 /*
- * A day with something is an Arc Card filling its box, laid out as the Open
+ * A day with something is an Arc Card filling its cell, laid out as the Open
  * for registration cards are (docs/superpowers/specs/2026-10-21-card-grid-layout-design.md):
  * the cover on top, then a row for each course or event. It opens into the
  * day's agenda.
@@ -1472,33 +1584,29 @@ a.collection-item:hover {
   overflow: visible;
 }
 /* The card's content wrapper steps aside so the number and the rows are rows of the card itself.
-   The number then stays unpositioned, and its open control (::after) covers the whole box. */
+   The number then stays unpositioned, and its open control (::after) covers the whole cell. */
 .cal-day .cal-day-card > div:last-child {
   display: contents;
 }
-/* The cover fills the box's width: 3:2, no inset, a rule under it. */
+/* The cover fills the cell's width: 3:2, no inset, a rule under it. */
 .cal-day .cal-day-card > div:first-child {
   grid-area: 1 / 1;
   aspect-ratio: 3 / 2;
   border-radius: 0;
-  border-block-end: 1px solid var(--foreground);
+  border-block-end: 1px solid var(--cal-rule);
 }
 .cal-day .cal-day-card > div:first-child > div {
   display: block;
   height: 100%;
   min-height: 0;
 }
-/* On a cover, the number sits on its corner. No blur: a backdrop filter would make it the containing
-   block of its open control (::after), shrinking the click area from the box to the number. */
+/* On a cover, the number cell sits in its corner. No blur: a backdrop filter would make it the containing
+   block of its open control (::after), shrinking the click area from the cell to the number. */
 .cal-day .cal-day-card[data-cover] h3 {
   grid-area: 1 / 1;
   z-index: 1;
   align-self: start;
   justify-self: start;
-  background: oklch(from var(--background) l c h / 0.9);
-}
-.cal-day[data-today] .cal-day-card[data-cover] h3 {
-  background: var(--foreground);
 }
 .cal-day .cal-day-card:hover h3 button,
 .cal-day .cal-day-card:focus-within h3 button {
@@ -1516,6 +1624,7 @@ a.collection-item:hover {
   padding: 0;
   list-style: none;
 }
+
 /*
  * A course or event as three sharp boxes, ruled like the side card's rows:
  * the type on its colour beside the time, then the name under them.
@@ -1528,19 +1637,19 @@ a.collection-item:hover {
 }
 .cal-item + .cal-item,
 .cal-day .cal-day-card .cal-more {
-  border-block-start: 1px solid var(--foreground);
+  border-block-start: 1px solid var(--cal-rule);
 }
 .cal-item-type,
 .cal-item-when {
   padding: 0.35rem 0.625rem;
-  border-block-end: 1px solid var(--foreground);
+  border-block-end: 1px solid var(--cal-rule);
   font-size: 0.7rem;
   font-weight: 600;
   line-height: 1.3;
 }
 .cal-item-type {
   min-width: 0;
-  border-inline-end: 1px solid var(--foreground);
+  border-inline-end: 1px solid var(--cal-rule);
   background: var(--tone, var(--surface-muted));
   color: #121212;
 }
@@ -1633,7 +1742,7 @@ a.collection-item:hover {
   }
 }
 
-/* The quick look: the cover cut to a band, then a box for each course or event. */
+/* The quick look and the agenda: the same three boxes, a picture at the end. */
 [role='dialog'] .cal-covers,
 [role='dialog'] .cal-cover-img {
   height: 14rem;
@@ -1643,7 +1752,7 @@ a.collection-item:hover {
   margin: 0;
   padding: 0;
   list-style: none;
-  border: 1px solid var(--foreground);
+  border: 1px solid var(--cal-rule);
 }
 .cal-slot {
   grid-template-columns: minmax(0, 1fr) auto 6rem;
@@ -1652,7 +1761,7 @@ a.collection-item:hover {
   grid-template-columns: minmax(0, 1fr) auto;
 }
 .cal-slot + .cal-slot {
-  border-block-start: 1px solid var(--foreground);
+  border-block-start: 1px solid var(--cal-rule);
 }
 .cal-slot .cal-item-type,
 .cal-slot .cal-item-when {
@@ -1683,21 +1792,19 @@ a.collection-item:hover {
   height: 100%;
   min-height: 5rem;
   object-fit: cover;
-  border-inline-start: 1px solid var(--foreground);
+  border-inline-start: 1px solid var(--cal-rule);
 }
 .cal-slot:not(:has(.cal-slot-cover)) .cal-slot-title,
 .cal-slot:not(:has(.cal-slot-cover)) .cal-slot-note {
   grid-column: 1 / -1;
 }
 
-/* The week: a column a day. */
+/* The week: a column a day, ruled. */
 .cal-week {
   display: grid;
   gap: 1px;
-  background: var(--border);
-  box-shadow: 0 0 0 1px var(--border);
-  border-radius: calc(var(--radius) * 2);
-  overflow: hidden;
+  background: var(--cal-rule);
+  border: 1px solid var(--cal-rule);
 }
 @media (min-width: 48rem) {
   .cal-week {
@@ -1707,28 +1814,34 @@ a.collection-item:hover {
 .cal-week-day {
   min-height: 12rem;
   background: var(--background);
-  padding: 0.75rem;
 }
 .cal-week-head {
   display: flex;
-  align-items: baseline;
+  align-items: stretch;
   justify-content: space-between;
-  margin-bottom: 0.75rem;
+  border-block-end: 1px solid var(--cal-rule);
 }
 .cal-week-head .cal-weekday {
-  padding: 0;
+  display: grid;
+  align-items: center;
+  padding: 0 0.75rem;
   text-align: start;
 }
+.cal-week-head .cal-day-number {
+  border-block-end: 0;
+  border-inline-end: 0;
+  border-inline-start: 1px solid var(--cal-rule);
+}
 .cal-week-day[data-today] .cal-week-head .cal-day-number {
-  border-radius: 0.4rem;
   background: var(--foreground);
-  padding: 0.15rem 0.4rem;
   color: var(--background);
+}
+.cal-week-day > ul {
+  padding: 0.75rem;
 }
 .cal-card {
   overflow: hidden;
-  border-radius: calc(var(--radius) * 1.5);
-  box-shadow: 0 0 0 1px var(--border);
+  box-shadow: 0 0 0 1px var(--cal-rule);
 }
 .cal-card-cover {
   width: 100%;
@@ -1736,51 +1849,45 @@ a.collection-item:hover {
   object-fit: cover;
 }
 
-/* The agenda: a date, then its items. */
+/* The agenda, and a phone's month: a box a day, its date cell on top, then its rows. */
 .cal-agenda {
   display: grid;
+  gap: 1px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border: 1px solid var(--cal-rule);
+  background: var(--cal-rule);
 }
 .cal-agenda-day {
   display: grid;
-  gap: 0.75rem;
-  padding-block: 1.25rem;
-  border-bottom: 1px dashed var(--border-strong, var(--border));
-}
-@media (min-width: 48rem) {
-  .cal-agenda-day {
-    grid-template-columns: 11rem minmax(0, 1fr);
-    gap: 1.5rem;
-  }
+  background: var(--background);
 }
 .cal-agenda-date {
   display: flex;
-  align-items: baseline;
-  gap: 0.6rem;
+  align-items: stretch;
+  border-block-end: 1px solid var(--cal-rule);
+  background-image: repeating-linear-gradient(135deg, transparent 0 6px, var(--cal-hatch) 6px 7px);
 }
-@media (min-width: 48rem) {
-  .cal-agenda-date {
-    flex-direction: column;
-    gap: 0.35rem;
-  }
-}
-.cal-agenda-item {
-  display: flex;
-  align-items: center;
-  gap: 0.9rem;
-}
-.cal-agenda-item > .cal-time {
+.cal-agenda-date .cal-day-number {
   flex: none;
-  width: 5.5rem;
+  border-block-end: 0;
 }
-.cal-agenda-item > .cal-agenda-cover {
-  flex: none;
+.cal-agenda-when {
+  display: grid;
+  align-content: center;
+  padding: 0.5rem 0.875rem;
+  font-size: 0.8rem;
+  line-height: 1.35;
+  font-weight: 500;
+  color: var(--text-secondary);
 }
-.cal-agenda-cover {
-  width: 3.5rem;
-  height: 3.5rem;
-  border-radius: calc(var(--radius) * 1.5);
-  background: var(--surface-muted, var(--muted));
-  object-fit: cover;
+.cal-agenda-day[data-today] .cal-day-number {
+  background: var(--foreground);
+  color: var(--background);
+}
+.cal-agenda .cal-slots {
+  border: 0;
 }
 
 /* ===================================================== course list */

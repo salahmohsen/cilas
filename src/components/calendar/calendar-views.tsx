@@ -149,53 +149,55 @@ export async function MonthView({
   )
 }
 
-/**
- * One day's agenda, the quick look's list: a box a course or event, laid out
- * as the Open for registration cards are (picture flush to the box, the type
- * in its colour, the name, then when), its colour a rule down the start edge.
- */
+/** One day's agenda, the quick look's list, as boxes ruled like the Open for registration cards. */
 function DayAgenda({ items, labels }: { items: CalendarItem[]; labels: Labels }) {
   return (
     <ul className="cal-slots">
       {items.map((item) => (
-        <li
-          className="cal-slot"
-          data-cancelled={item.cancelled || undefined}
-          key={item.key}
-          style={{ '--tone': toneOf(item) } as CSSProperties}
-        >
-          <span className="cal-item-type">{labels.type(item)}</span>
-          {item.start || item.starts ? (
-            <span className="cal-item-when" dir={item.start ? labels.timeDir : undefined}>
-              {item.start
-                ? labels.digits(`${item.start}${item.end ? `–${item.end}` : ''}`)
-                : labels.starts}
-            </span>
-          ) : null}
-          <ItemTitle className="cal-slot-title" item={item} />
-          {item.session || item.cancelled ? (
-            <span className="cal-slot-note">
-              {[
-                item.session ? labels.session(item.session) : null,
-                item.cancelled ? labels.cancelled : null,
-              ]
-                .filter(Boolean)
-                .join(' · ')}
-            </span>
-          ) : null}
-          {item.cover ? (
-            // eslint-disable-next-line @next/next/no-img-element
-            <img
-              alt=""
-              className="cal-slot-cover"
-              loading="lazy"
-              src={item.cover.url}
-              style={focalPointStyle(item.cover)}
-            />
-          ) : null}
-        </li>
+        <Slot item={item} key={item.key} labels={labels} />
       ))}
     </ul>
+  )
+}
+
+/** One course or event of the quick look and the agenda: type and time, the name, a picture at the end. */
+function Slot({ item, labels }: { item: CalendarItem; labels: Labels }) {
+  return (
+    <li
+      className="cal-slot"
+      data-cancelled={item.cancelled || undefined}
+      style={{ '--tone': toneOf(item) } as CSSProperties}
+    >
+      <span className="cal-item-type">{labels.type(item)}</span>
+      {item.start || item.starts ? (
+        <span className="cal-item-when" dir={item.start ? labels.timeDir : undefined}>
+          {item.start
+            ? labels.digits(`${item.start}${item.end ? `–${item.end}` : ''}`)
+            : labels.starts}
+        </span>
+      ) : null}
+      <ItemTitle className="cal-slot-title" item={item} />
+      {item.session || item.cancelled ? (
+        <span className="cal-slot-note">
+          {[
+            item.session ? labels.session(item.session) : null,
+            item.cancelled ? labels.cancelled : null,
+          ]
+            .filter(Boolean)
+            .join(' · ')}
+        </span>
+      ) : null}
+      {item.cover ? (
+        // eslint-disable-next-line @next/next/no-img-element
+        <img
+          alt=""
+          className="cal-slot-cover"
+          loading="lazy"
+          src={item.cover.url}
+          style={focalPointStyle(item.cover)}
+        />
+      ) : null}
+    </li>
   )
 }
 
@@ -275,7 +277,7 @@ export async function WeekView({
   )
 }
 
-/** The agenda: the days that have something, each with its items in time order. */
+/** The agenda: the days that have something, each a box with its date on top and its items under it. */
 export async function AgendaView({ items, labels }: { items: CalendarItem[]; labels: Labels }) {
   const [format, nu] = await Promise.all([getFormatter(), getLocale().then(numberingSystemOf)])
   const map = byDay(items)
@@ -287,52 +289,19 @@ export async function AgendaView({ items, labels }: { items: CalendarItem[]; lab
             <span className="cal-day-number">
               {format.number(Number(day.slice(8)), { numberingSystem: nu })}
             </span>
-            <span className="text-sm leading-snug text-[var(--text-muted)]">
-              {format.dateTime(UTC(day), { weekday: 'long', timeZone: 'UTC' })}
-              <br />
-              {format.dateTime(UTC(day), {
-                month: 'long',
-                year: 'numeric',
-                timeZone: 'UTC',
-                numberingSystem: nu,
-              })}
+            <span className="cal-agenda-when">
+              <span>{format.dateTime(UTC(day), { weekday: 'long', timeZone: 'UTC' })}</span>
+              <span>
+                {format.dateTime(UTC(day), {
+                  month: 'long',
+                  year: 'numeric',
+                  timeZone: 'UTC',
+                  numberingSystem: nu,
+                })}
+              </span>
             </span>
           </div>
-          <ul className="grid gap-2">
-            {dayItems.map((item) => (
-              <li className="cal-agenda-item" key={item.key}>
-                <span className="cal-time" dir={item.start ? labels.timeDir : undefined}>
-                  {item.start
-                    ? labels.digits(`${item.start}${item.end ? `–${item.end}` : ''}`)
-                    : item.starts
-                      ? labels.starts
-                      : ''}
-                </span>
-                {item.cover ? (
-                  // eslint-disable-next-line @next/next/no-img-element
-                  <img
-                    alt={item.cover.alt}
-                    className="cal-agenda-cover"
-                    loading="lazy"
-                    src={item.cover.url}
-                    style={focalPointStyle(item.cover)}
-                  />
-                ) : null}
-                <span className="min-w-0">
-                  <ItemTitle className="block font-medium" item={item} />
-                  <span className="block text-xs text-[var(--text-muted)]">
-                    {[
-                      labels.type(item),
-                      item.session ? labels.session(item.session) : null,
-                      item.cancelled ? labels.cancelled : null,
-                    ]
-                      .filter(Boolean)
-                      .join(' · ')}
-                  </span>
-                </span>
-              </li>
-            ))}
-          </ul>
+          <DayAgenda items={dayItems} labels={labels} />
         </li>
       ))}
     </ol>

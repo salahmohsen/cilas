@@ -484,6 +484,7 @@
     "previous": "Previous",
     "next": "Next",
     "today": "Today",
+    "inView": "{count, plural, one {# course or event} other {# courses and events}}",
     "empty": "Nothing on the calendar here.",
     "nextOn": "Next: {date}",
     "lastOn": "Most recent: {date}",
