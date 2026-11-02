@@ -11,8 +11,6 @@ import {
   ExpandingButtonGroup,
   type ExpandingButtonGroupItem,
 } from '@/components/arc/expanding-button-group/expanding-button-group'
-import { SideCard, SideCardSection } from '@/components/side-card'
-import { POSTER_COLORS } from '@/lib/poster-colors'
 import type { Participation } from '@/lib/spaces-data'
 
 import { ParticipationDialog } from './participation-dialog'
@@ -33,6 +31,7 @@ export function SpaceHeadActions({
   participation,
   now,
   settings,
+  ai,
 }: {
   coursePage: string | null
   /** The rail, shown in a sheet on narrow screens */
@@ -40,6 +39,8 @@ export function SpaceHeadActions({
   participation: Participation | null
   now: string
   settings: SettingsProps | null
+  /** Study with AI, beside the space's own buttons; null outside a course space */
+  ai?: ReactNode
 }) {
   const t = useTranslations('Spaces')
   const tp = useTranslations('Participation')
@@ -100,40 +101,40 @@ export function SpaceHeadActions({
     </div>
   )
   const hasPanels = items(true).length > 0
-  // Without a wide-screen item (About lives in the rail there) the card shows on phones only.
-  const phoneOnlyCard = items(false).length === 0
-  // The popover anchors to a plain box, which a card component cannot hand a ref to.
-  const actions = (
-    <div className={phoneOnlyCard ? styles.phoneBlock : undefined}>
-      <SideCard color={POSTER_COLORS[2]}>
-        <SideCardSection label={t('spaceActions')}>
-          <div className="side-card-body side-card-center">{groups}</div>
-        </SideCardSection>
-      </SideCard>
-    </div>
+  // Without a wide-screen item (About lives in the rail there) the buttons show on phones only.
+  const phoneOnlyCell = items(false).length === 0
+  const buttons = settings ? (
+    <SpaceSettings
+      {...settings}
+      open={open === 'settings'}
+      onOpenChange={(next) => change('settings', next)}
+      anchor={groups}
+    />
+  ) : (
+    hasPanels && groups
   )
+  const details =
+    buttons || ai ? (
+      <div className="poster-details">
+        {buttons}
+        {ai}
+      </div>
+    ) : null
+  const bare = !coursePage && !ai && phoneOnlyCell
 
   return (
     <>
-      {settings ? (
-        <SpaceSettings
-          {...settings}
-          open={open === 'settings'}
-          onOpenChange={(next) => change('settings', next)}
-          anchor={actions}
-        />
-      ) : (
-        hasPanels && actions
-      )}
-      {coursePage && (
-        <SideCard color={POSTER_COLORS[3]}>
-          {/* The course page leads away, so it is a card of its own. */}
-          <Link href={coursePage} className="side-card-action">
-            {t('coursePage')}
-            <ArrowRight aria-hidden className="rtl:-scale-x-100" size={16} />
-          </Link>
-        </SideCard>
-      )}
+      <div className={`poster-footer ${bare ? styles.phoneBlock : ''}`}>
+        {details}
+        {coursePage && (
+          <div className="poster-action-cell">
+            <Link href={coursePage} className="poster-action">
+              {t('coursePage')}
+              <ArrowRight aria-hidden className="poster-arrow" size={16} strokeWidth={2} />
+            </Link>
+          </div>
+        )}
+      </div>
       <BottomSheet
         title={t('about')}
         detents={[0.6, 0.92]}

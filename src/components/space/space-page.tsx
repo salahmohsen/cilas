@@ -5,8 +5,7 @@ import { cookies } from 'next/headers'
 import { notFound } from 'next/navigation'
 import { getPayload } from 'payload'
 import Image from 'next/image'
-import Link from 'next/link'
-import { ChevronLeft } from 'lucide-react'
+import type { CSSProperties } from 'react'
 
 import { personOf } from '@/access'
 import { Alert } from '@/components/arc/alert/alert'
@@ -51,7 +50,6 @@ import { PINNED_CARDS, PinnedCards, pinnedOrder } from './pinned-cards'
 import { NextSession } from './next-session'
 import { sessionContextOf } from './session-block'
 import { CHECKLIST_COOKIE, OnboardingChecklist } from './onboarding-checklist'
-import { SideCard, SideCardSection } from '@/components/side-card'
 import { POSTER_COLORS } from '@/lib/poster-colors'
 import { SpaceHeadActions } from './space-head-actions'
 import { spacePeopleCards } from './space-people'
@@ -103,7 +101,6 @@ export async function SpacePage({
   const [
     t,
     tp,
-    ts,
     feed,
     state,
     { cards, byId, moderators },
@@ -116,7 +113,6 @@ export async function SpacePage({
   ] = await Promise.all([
     getTranslations('Spaces'),
     getTranslations('SpacePost'),
-    getTranslations('Share'),
     spaceFeed(payload, user, space, lang),
     memberState(payload, user, space.id),
     spacePeopleCards(payload, user, space, locale),
@@ -336,81 +332,76 @@ export async function SpacePage({
 
   const content = (
     <div className={`${styles.page}`}>
-      <header className={styles.spaceHead}>
-        <div className={styles.headMain}>
-          {/* The title card: the way back, the status with its dot, then the title. */}
-          <SideCard as="div" color={POSTER_COLORS[0]} label={title}>
-            <nav aria-label={t('breadcrumb')} className="side-card-body">
-              <Link href={`/${locale}/spaces`} className="side-card-link">
-                <ChevronLeft size={16} aria-hidden="true" className="rtl:-scale-x-100" />
-                {t('title')}
-              </Link>
-            </nav>
-            <div className="apply-card-row">
-              <span
-                aria-hidden
-                className="apply-card-dot"
-                data-open={!feed.archived || undefined}
-              />
-              <span className="apply-card-status">{feed.archived ? t('archived') : t('open')}</span>
-            </div>
-            <div className="side-card-body">
-              <h1 className={`course-title ${styles.headTitle}`}>
-                <bdi>{title}</bdi>
-              </h1>
-            </div>
-          </SideCard>
-          <SideCard color={POSTER_COLORS[0]}>
-            <div className={styles.headCover}>
+      <header className="poster-frame">
+        {/* The poster card of the open-for-registration list: the cover, a panel with the status,
+            the title and a line under it, then a strip of cells. */}
+        <article
+          className="poster"
+          data-layout="0"
+          data-separate-label="true"
+          style={{ '--poster-color': POSTER_COLORS[0] } as CSSProperties}
+        >
+          <div className="poster-body">
+            <div className="poster-image">
               <Image
                 src={cover ?? COMMUNITY_COVER}
                 alt=""
                 fill
                 priority
-                sizes="(min-width: 1280px) 700px, 100vw"
-                className={styles.headImage}
+                sizes="(min-width: 90rem) 53rem, (min-width: 48rem) 62vw, 100vw"
               />
             </div>
-          </SideCard>
-        </div>
-        <div className={styles.headSide}>
-          <SideCard color={POSTER_COLORS[1]}>
-            <SideCardSection label={t('members')}>
-              <div className="side-card-body">
-                <MembersPanel members={cards} viewerId={viewerPerson} />
-              </div>
-            </SideCardSection>
-          </SideCard>
-          <SpaceHeadActions
-            coursePage={course ? `/${locale}/study/${course.slug}` : null}
-            rail={rail}
-            participation={numbers}
-            now={renderedAt}
-            settings={
-              moderator
-                ? {
-                    space: space.id,
-                    posting: space.posting ?? 'open',
-                    events: space.events ?? 'members',
-                    archived: feed.archived,
-                    about: custom,
-                    aboutDefault: defaultAbout,
-                    rules: rules.custom,
-                    rulesDefault: rules.fallback,
-                  }
-                : null
-            }
-          />
-          {course && (
-            <SideCard color={POSTER_COLORS[3]}>
-              <SideCardSection label={ts('ai')}>
-                <div className="side-card-body side-card-center">
-                  <StudyWithAI kind="course" path={`/${locale}/study/${course.slug}`} size="sm" />
+            <div className="poster-panel">
+              <p className="poster-label" dir="auto">
+                {feed.archived ? t('archived') : t('open')}
+              </p>
+              <div className="poster-heading">
+                <div className="poster-title" dir="auto">
+                  <h1 className={styles.headTitle}>
+                    <bdi>{title}</bdi>
+                  </h1>
                 </div>
-              </SideCardSection>
-            </SideCard>
-          )}
-        </div>
+                <p className="poster-credit" dir="auto">
+                  {t('membersCount', { count: cards.length })}
+                </p>
+              </div>
+            </div>
+          </div>
+          <div className="poster-strip">
+            <span className="poster-mark">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img alt="" draggable={false} src="/assets/images/logo.webp" />
+            </span>
+            <div className="poster-meta">
+              <MembersPanel members={cards} viewerId={viewerPerson} />
+            </div>
+            <SpaceHeadActions
+              coursePage={course ? `/${locale}/study/${course.slug}` : null}
+              rail={rail}
+              participation={numbers}
+              now={renderedAt}
+              settings={
+                moderator
+                  ? {
+                      space: space.id,
+                      posting: space.posting ?? 'open',
+                      events: space.events ?? 'members',
+                      archived: feed.archived,
+                      about: custom,
+                      aboutDefault: defaultAbout,
+                      rules: rules.custom,
+                      rulesDefault: rules.fallback,
+                    }
+                  : null
+              }
+              ai={
+                course ? (
+                  <StudyWithAI kind="course" path={`/${locale}/study/${course.slug}`} size="sm" />
+                ) : null
+              }
+            />
+          </div>
+        </article>
       </header>
       <div className={styles.layout}>
         <main className={styles.feed} aria-label={title}>

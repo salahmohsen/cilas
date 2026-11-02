@@ -27,25 +27,31 @@
   min-width: 0;
 }
 
-/* A card of the head while it loads: the course cards' ink rule, no content. */
-.loadingCard {
+/* The head while it loads: the poster's frame, its panel and its strip as blank cells. */
+.loadingHead {
   display: grid;
-  gap: var(--space-3);
-  padding: var(--space-4);
+  grid-template-rows: minmax(16rem, 1fr) auto;
+  min-height: min(56.25cqi, 34.5rem);
+  overflow: clip;
   border: 1px solid var(--foreground);
   border-radius: 1rem;
   background: var(--surface-muted);
 }
 
-.loadingCover {
-  aspect-ratio: 16 / 9;
-  padding: 0;
+.loadingStrip {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  min-height: 3.5rem;
+  padding: var(--space-3) var(--space-4);
+  border-block-start: 1px solid var(--foreground);
 }
 
-@media (min-width: 640px) {
-  .loadingCover {
-    aspect-ratio: 21 / 9;
-  }
+.loadingPanel {
+  display: grid;
+  align-content: end;
+  gap: var(--space-3);
+  padding: var(--space-5);
 }
 
 .loadingBack.loadingBack {
@@ -645,12 +651,86 @@
 .settings {
   display: grid;
   gap: var(--space-4);
-  width: min(320px, 80vw);
-  /* The About field makes the panel tall: scroll inside it on a short screen. */
-  max-height: calc(var(--radix-popover-content-available-height, 100dvh) - 40px);
+}
+
+/* The settings dialog: a header and a footer that stay, the fields scrolling between them. */
+.settingsDialog[role='dialog'] {
+  width: min(calc(100vw - var(--space-8)), 560px);
+  overflow: visible;
+}
+
+.settingsPanel {
+  display: flex;
+  flex-direction: column;
+  max-height: calc(100dvh - var(--space-8));
+  overflow: hidden;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-surface);
+  background: var(--surface-raised);
+  box-shadow: var(--shadow-floating);
+}
+
+.settingsHead {
+  display: flex;
+  flex: none;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4);
+  padding: var(--space-4) var(--space-6);
+  border-bottom: 1px solid var(--border);
+}
+
+.settingsTitle {
+  margin: 0;
+  font-size: var(--text-lg);
+  font-weight: 500;
+}
+
+.settingsClose {
+  display: grid;
+  place-items: center;
+  width: var(--space-8);
+  height: var(--space-8);
+  border: 0;
+  border-radius: var(--radius-pill);
+  background: transparent;
+  color: var(--text-secondary);
+  cursor: pointer;
+}
+
+.settingsClose:hover {
+  background: var(--surface-muted);
+  color: var(--foreground);
+}
+
+.settingsBody {
+  flex: 1;
+  min-height: 0;
   overflow-y: auto;
-  padding: 2px;
-  margin: -2px;
+  overscroll-behavior: contain;
+  padding: var(--space-6);
+}
+
+.settingsFooter {
+  position: sticky;
+  bottom: 0;
+  display: grid;
+  gap: var(--space-3);
+  flex: none;
+  padding: var(--space-4) var(--space-6);
+  border-top: 1px solid var(--border);
+  background: var(--surface-raised);
+}
+
+/* In the bottom sheet the body scrolls, so the footer sticks to its foot. */
+.settingsSheet {
+  display: grid;
+  gap: var(--space-4);
+}
+
+.settingsSheet .settingsFooter {
+  margin-inline: calc(-1 * var(--space-5));
+  margin-block-end: calc(-1 * var(--space-6));
 }
 
 .aboutField {
@@ -1046,56 +1126,14 @@
   min-width: 0;
 }
 
-/* The space's own head: one outer box in the course cards' ink and paper, holding the title, cover,
-   members, actions and AI as inner cards (.side-card). The columns match the feed and rail below. */
-.spaceHead {
-  --poster-ink: #121212;
-  --poster-paper: #ffffff;
-  display: grid;
-  gap: var(--space-4);
-  min-width: 0;
-  padding: var(--space-4);
-  border: 1px solid var(--poster-ink);
-  border-radius: 1.25rem;
-  background: var(--poster-paper);
-}
-
-.spaceHead > * {
-  display: grid;
-  align-content: start;
-  gap: var(--space-4);
-  min-width: 0;
-}
-
-@media (min-width: 1024px) {
-  .spaceHead {
-    grid-template-columns: minmax(0, 1fr) minmax(280px, 0.6fr);
-    align-items: start;
-  }
-}
-
-/* The face and size come from the shared course-title; only the wrapping is set here. */
+/* The space's own head is the poster card (.poster, in the global styles); only its parts' fine print is set here. */
+/* The title takes the poster title's face and size; only the wrapping is set here. */
 .headTitle {
   margin: 0;
+  font: inherit;
+  letter-spacing: inherit;
   overflow-wrap: anywhere;
   min-width: 0;
-}
-
-.headCover {
-  position: relative;
-  aspect-ratio: 16 / 9;
-  width: 100%;
-  background: var(--surface-muted);
-}
-
-@media (min-width: 640px) {
-  .headCover {
-    aspect-ratio: 21 / 9;
-  }
-}
-
-.headImage {
-  object-fit: cover;
 }
 
 .headMeta {
@@ -1103,17 +1141,7 @@
   align-items: center;
   gap: var(--space-2);
   font-size: var(--text-sm);
-  color: var(--text-secondary);
-}
-
-/* The space's own buttons at the start, the AI group at the end; on a phone the group drops below
-   and starts the next line, so both rows begin at the same edge. */
-.headActions {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: var(--space-3) var(--space-4);
-  min-width: 0;
+  color: inherit;
 }
 
 /* Separate pills wrap as a unit, keeping each toolbar's arrow-key order intact. */
@@ -3092,4 +3120,18 @@ button.rsvpCell {
 :global([dir='rtl']) .event .eventTitle {
   letter-spacing: 0;
   line-height: 1.35;
+}
+
+/* The strip's footer cell only holds the phone-only buttons: above 1024px it has nothing to show.
+   Beats the poster's own display rule. */
+@media (min-width: 1024px) {
+  :global(.poster-footer).phoneBlock {
+    display: none;
+  }
+}
+
+@media (min-width: 1024px) {
+  :global(.poster-strip):has(:global(.poster-footer).phoneBlock) {
+    grid-template-columns: auto minmax(0, 1fr);
+  }
 }

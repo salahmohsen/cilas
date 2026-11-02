@@ -8,19 +8,14 @@ export async function SpaceLoading() {
 
   return (
     <div className={styles.page} role="status" aria-label={t('loading')} aria-busy="true">
-      <div className={styles.spaceHead} aria-hidden="true">
-        <div>
-          <div className={styles.loadingCard}>
+      <div className="poster-frame" aria-hidden="true">
+        <div className={styles.loadingHead}>
+          <div className={styles.loadingPanel}>
             <Skeleton lines={1} className={styles.loadingBack} />
             <Skeleton lines={1} className={styles.loadingTitle} />
           </div>
-          <div className={`${styles.loadingCard} ${styles.loadingCover}`} />
-        </div>
-        <div>
-          <div className={styles.loadingCard}>
+          <div className={styles.loadingStrip}>
             <Skeleton avatar lines={1} className={styles.loadingMembers} />
-          </div>
-          <div className={styles.loadingCard}>
             <div className={styles.loadingHeadActions}>
               <Skeleton lines={1} className={styles.loadingHeadExpanded} />
               <Skeleton lines={1} className={styles.loadingHeadButton} />
