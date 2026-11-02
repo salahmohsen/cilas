@@ -121,8 +121,8 @@ export default async function CalendarPage({ params, searchParams }: Props) {
               )}
             />
           </nav>
-          <CalendarLegend items={items} label={t('legend')} labels={labels} />
         </div>
+        <CalendarLegend items={items} label={t('legend')} labels={labels} />
         <div className="cal-head-foot">
           <div className="cal-head-views">
             <div className="cal-switch" role="group" aria-label={t('views')}>
