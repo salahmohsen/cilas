@@ -1485,7 +1485,8 @@ a.collection-item:hover {
   display: inline-flex;
   border-radius: 999px;
   padding: 3px;
-  box-shadow: 0 0 0 1px var(--border-strong);
+  background: var(--poster-paper);
+  box-shadow: 0 0 0 1px var(--poster-ink);
 }
 .cal-switch a {
   border-radius: 999px;
