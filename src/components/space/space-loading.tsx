@@ -9,7 +9,11 @@ export async function SpaceLoading() {
   return (
     <div className={styles.page} role="status" aria-label={t('loading')} aria-busy="true">
       <div className="poster-frame" aria-hidden="true">
-        <article className={`poster ${styles.head}`} data-layout="0" data-separate-label="true">
+        <article
+          className={`poster ${styles.head} ${styles.loadingPoster}`}
+          data-layout="0"
+          data-separate-label="true"
+        >
           <div className="poster-body">
             <div className={`poster-image ${styles.loadingImage}`} />
             <div className="poster-panel">

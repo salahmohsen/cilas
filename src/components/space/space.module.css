@@ -28,7 +28,13 @@
 }
 
 /* The head while it loads: the poster's frame, its panel and its strip as blank cells. */
-/* The head while it loads: the poster's own cells, left blank. */
+/* The head while it loads: the poster's own cells, left blank, on the page's surface tokens so the
+   dark theme gets no white paper. */
+.loadingPoster.loadingPoster {
+  --poster-paper: var(--surface);
+  --poster-ink: var(--border);
+}
+
 .loadingImage {
   background: var(--surface-muted);
 }
