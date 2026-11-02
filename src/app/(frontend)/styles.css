@@ -1456,6 +1456,47 @@ a.collection-item:hover {
 .cal-cell + .cal-cell {
   border-block-start: 1px solid var(--poster-ink);
 }
+/* Add to calendar: the whole box is the button; its trigger loses the pill and fills the cell. */
+.cal-cell-feed {
+  align-items: stretch;
+  padding: 0;
+  overflow: clip;
+  border-end-start-radius: calc(1rem - 1px);
+  border-end-end-radius: calc(1rem - 1px);
+}
+.cal-feed {
+  position: relative;
+  display: flex;
+  flex: 1;
+  align-items: stretch;
+}
+.cal-feed > button {
+  flex: 1;
+  justify-content: center;
+  min-height: 100%;
+  padding-inline: var(--poster-pad);
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+  transition-property: background-color;
+  transition-duration: 150ms;
+}
+.cal-feed > button:is(:hover, :focus-visible),
+.cal-feed > button[data-state='open'] {
+  border: 0;
+  background: #ffb71b;
+  box-shadow: none;
+}
+.cal-feed-note {
+  position: absolute;
+  inset-block-end: 0.25rem;
+  inset-inline: 0;
+  text-align: center;
+  font-size: 0.7rem;
+  color: var(--text-secondary);
+  pointer-events: none;
+}
 @media (min-width: 48rem) {
   .cal-head {
     grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
@@ -1478,6 +1519,9 @@ a.collection-item:hover {
     border-block-start: 0;
     border-inline-start: 1px solid var(--poster-ink);
     border-start-end-radius: calc(1rem - 1px);
+    border-end-start-radius: 0;
+  }
+  .cal-cell-feed {
     border-end-start-radius: 0;
   }
 }

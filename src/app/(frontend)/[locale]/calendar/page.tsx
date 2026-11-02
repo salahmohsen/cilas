@@ -131,7 +131,7 @@ export default async function CalendarPage({ params, searchParams }: Props) {
               )}
             />
           </nav>
-          <div className="cal-cell">
+          <div className="cal-cell cal-cell-feed">
             <CalendarFeed feedPath={`/${locale}/calendar.ics`} />
           </div>
         </div>

@@ -68,7 +68,7 @@ export function CalendarFeed({ feedPath }: { /** `/en/calendar.ics`. */ feedPath
   const feedUrl = () => `${window.location.origin}${feedPath}`
 
   return (
-    <div className="flex items-center gap-2">
+    <div className="cal-feed">
       <DropdownMenu
         icon={<CalendarPlus aria-hidden size={16} />}
         items={[
@@ -105,7 +105,7 @@ export function CalendarFeed({ feedPath }: { /** `/en/calendar.ics`. */ feedPath
         ]}
         label={t('feed')}
       />
-      <span aria-live="polite" className="text-xs text-[var(--text-muted)]">
+      <span aria-live="polite" className="cal-feed-note">
         {announce}
       </span>
     </div>
