@@ -305,17 +305,26 @@ export const CourseView: React.FC<{
                       </Link>
                       <div className="fellow-card-main">
                         <div className="fellow-card-panel">
-                          {/* The poster titles' entrance: each line rises in when the card is in view. */}
-                          <div className="fellow-card-name" dir={textDirection(person.name)}>
-                            <InViewTitle
-                              as="h3"
-                              className="fellow-card-name-reveal"
-                              id={`fellow-${person.id}`}
-                              once={false}
-                              text={person.name}
-                              variant="line"
+                          {/* The whole name box is the link to the profile; the arrow shows on hover and keyboard focus. */}
+                          <Link className="fellow-card-name-link" href={`/people/${person.slug}`}>
+                            {/* The poster titles' entrance: each line rises in when the card is in view. */}
+                            <div className="fellow-card-name" dir={textDirection(person.name)}>
+                              <InViewTitle
+                                as="h3"
+                                className="fellow-card-name-reveal"
+                                id={`fellow-${person.id}`}
+                                once={false}
+                                text={person.name}
+                                variant="line"
+                              />
+                            </div>
+                            <ArrowRight
+                              aria-hidden
+                              className="fellow-card-arrow"
+                              size={20}
+                              strokeWidth={1.75}
                             />
-                          </div>
+                          </Link>
                         </div>
                         {hasBio ? (
                           <div className="fellow-card-bio" dir="auto">
@@ -324,37 +333,12 @@ export const CourseView: React.FC<{
                         ) : null}
                       </div>
                     </div>
-                    {(() => {
-                      const action = (
-                        <Link className="fellow-card-action" href={`/people/${person.slug}`}>
-                          {t('viewProfile')}
-                          <ArrowRight
-                            aria-hidden
-                            className="fellow-card-arrow rtl:-scale-x-100"
-                            size={16}
-                          />
-                        </Link>
-                      )
-                      return note && noteInCard ? (
-                        // The action row keeps its empty cell under the photo; the
-                        // note's label takes a row of its own, with its icon.
-                        <figure className="fellow-card-note" {...pe('facilitator_note')}>
-                          <div className="fellow-card-hazard">
-                            <span aria-hidden className="fellow-card-hazard-head" />
-                            {action}
-                          </div>
-                          <figcaption className="fellow-card-hazard">{noteHead}</figcaption>
-                          {noteQuote}
-                        </figure>
-                      ) : (
-                        <div className="fellow-card-note">
-                          <div className="fellow-card-hazard">
-                            <span aria-hidden className="fellow-card-hazard-head" />
-                            {action}
-                          </div>
-                        </div>
-                      )
-                    })()}
+                    {note && noteInCard ? (
+                      <figure className="fellow-card-note" {...pe('facilitator_note')}>
+                        <figcaption className="fellow-card-hazard">{noteHead}</figcaption>
+                        {noteQuote}
+                      </figure>
+                    ) : null}
                   </article>
                 </li>
               )

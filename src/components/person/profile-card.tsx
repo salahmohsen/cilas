@@ -56,23 +56,18 @@ export function ProfileCard({
           />
         </div>
         <h3 className={styles.name} dir="auto">
-          <a className="poster-link" href={`/${locale}/people/${person.slug}`}>
-            {person.name}
+          {/* The whole name box is the link; its arrow shows on hover and keyboard focus. */}
+          <a className={`poster-link ${styles.nameLink}`} href={`/${locale}/people/${person.slug}`}>
+            <span className={styles.nameText}>
+              {person.name}
+              {role ? <span className={styles.role}>{role}</span> : null}
+            </span>
+            <ArrowRight size={20} strokeWidth={1.75} aria-hidden className={styles.arrow} />
           </a>
-          {role ? <span className={styles.role}>{role}</span> : null}
         </h3>
         <div className={styles.body}>{children}</div>
         <footer className={styles.links}>
           <SocialLinks person={person} websiteLabel={t('website')} />
-          <a
-            href={`/${locale}/people/${person.slug}`}
-            className={`${styles.action} poster-action-cell`}
-          >
-            <span className="poster-action">
-              {t('viewProfile')}
-              <ArrowRight size={16} strokeWidth={2} aria-hidden className="poster-arrow" />
-            </span>
-          </a>
         </footer>
       </article>
     </div>
