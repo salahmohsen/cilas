@@ -80,8 +80,8 @@ export const viewRange = (
 
 /** How many courses a month's day cell lists under its image; the rest are "+N more". */
 export const DAY_LISTED = 2
-/** How many covers a day's mosaic holds. */
-export const MOSAIC_MAX = 4
+/** How many covers a day turns through. */
+export const DAY_COVERS_MAX = 6
 
 /**
  * What a month's day cell shows of its items: the covers of the day's
@@ -91,7 +91,7 @@ export const MOSAIC_MAX = 4
 export const summariseDay = (items: CalendarItem[]) => {
   const covers: NonNullable<CalendarItem['cover']>[] = []
   for (const item of items) {
-    if (item.cancelled || !item.cover || covers.length === MOSAIC_MAX) continue
+    if (item.cancelled || !item.cover || covers.length === DAY_COVERS_MAX) continue
     if (!covers.some((c) => c.url === item.cover!.url)) covers.push(item.cover)
   }
   return {

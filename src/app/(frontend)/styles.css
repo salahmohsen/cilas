@@ -1493,9 +1493,10 @@ a.collection-item:hover {
 .cal-day .cal-day-card,
 .cal-day .cal-day-card[data-hover] {
   flex: 1;
-  display: flex;
-  flex-direction: column;
-  gap: 0.625rem;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  align-content: start;
+  row-gap: 0.625rem;
   border: 0;
   border-radius: 0;
   background: transparent;
@@ -1503,8 +1504,14 @@ a.collection-item:hover {
   cursor: pointer;
   overflow: visible;
 }
-/* The picture: 3:2, a radius concentric with the cell's 0.5rem inset. */
+/* The card's content wrapper steps aside so the number and the names are rows of the card itself.
+   The number then stays unpositioned, and its open control (::after) covers the whole card. */
+.cal-day .cal-day-card > div:last-child {
+  display: contents;
+}
+/* The cover: 3:2, a radius concentric with the cell's 0.5rem inset. */
 .cal-day .cal-day-card > div:first-child {
+  grid-area: 1 / 1;
   aspect-ratio: 3 / 2;
   border-radius: 0.875rem;
   outline: 1px solid oklch(0 0 0 / 0.1);
@@ -1518,30 +1525,24 @@ a.collection-item:hover {
   height: 100%;
   min-height: 0;
 }
-.cal-day .cal-day-card > div:last-child {
-  display: flex;
-  flex: 1;
-  flex-direction: column;
-  gap: 0.5rem;
-  padding: 0 0.125rem;
-}
 .cal-day .cal-day-card h3 {
   font-size: 2rem;
   font-weight: 300;
   line-height: 1;
   font-variant-numeric: tabular-nums;
 }
-/* The number of a day with a picture sits on its corner, on a frosted chip. */
+/* The number of a day with a cover sits on its corner, on a frosted chip. */
 .cal-day .cal-day-card[data-cover] h3 {
-  position: absolute;
+  grid-area: 1 / 1;
   z-index: 1;
-  inset-block-start: 0.4rem;
-  inset-inline-start: 0.4rem;
+  align-self: start;
+  justify-self: start;
+  margin: 0.4rem;
   border-radius: 0.5rem;
   padding: 0.2rem 0.5rem;
-  background: oklch(from var(--background) l c h / 0.82);
-  -webkit-backdrop-filter: blur(8px);
-  backdrop-filter: blur(8px);
+  /* No blur here: a backdrop filter would make the chip the containing block of
+     its open control (::after), shrinking the click area from the cell to the chip. */
+  background: oklch(from var(--background) l c h / 0.9);
   font-size: 1.125rem;
   font-weight: 500;
 }
@@ -1565,10 +1566,12 @@ a.collection-item:hover {
   outline-offset: -2px;
   border-radius: 0.5rem;
 }
-/* The whole cell opens the day: the names let clicks through to the open control under them. */
-.cal-day .cal-day-card .cal-day-items,
+.cal-day .cal-day-card .cal-day-items {
+  padding-inline: 0.125rem;
+}
 .cal-day .cal-day-card .cal-more {
-  pointer-events: none;
+  padding-inline: 0.125rem;
+  justify-self: start;
 }
 .cal-day .cal-day-card .cal-item-when {
   display: block;
@@ -1578,74 +1581,43 @@ a.collection-item:hover {
   opacity: 0.6;
 }
 
-/* The day's pictures: one fills the frame; two to four tile it. */
-.cal-mosaic {
-  display: grid;
+/* A day's cover turns over to the next, as an album does in macOS's Album Artwork screen saver. */
+.cal-covers {
   width: 100%;
   height: 100%;
-  gap: 2px;
-  background: var(--surface-muted);
+  perspective: 700px;
 }
-.cal-mosaic[data-count='2'] {
-  grid-template-columns: 1fr 1fr;
-}
-.cal-mosaic[data-count='3'] {
-  grid-template-columns: 1.25fr 1fr;
-  grid-template-rows: 1fr 1fr;
-}
-.cal-mosaic[data-count='3'] > :first-child {
-  grid-row: span 2;
-}
-.cal-mosaic[data-count='4'] {
-  grid-template-columns: 1fr 1fr;
-  grid-template-rows: 1fr 1fr;
-}
-.cal-mosaic-tile {
+.cal-covers-turner {
   position: relative;
-  min-width: 0;
-  min-height: 0;
-  overflow: hidden;
+  width: 100%;
+  height: 100%;
+  transform-style: preserve-3d;
+  transition: transform 800ms cubic-bezier(0.4, 0, 0.2, 1);
 }
-.cal-mosaic-tile img {
+.cal-covers-face {
   position: absolute;
   inset: 0;
+  overflow: hidden;
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+  background: var(--surface-muted);
+}
+.cal-covers-face[data-face='1'] {
+  transform: rotateY(180deg);
+}
+.cal-covers-face img {
   width: 100%;
   height: 100%;
   object-fit: cover;
 }
-/* Each tile drifts a few percent, slowly, out of step with its neighbours. */
-@media (prefers-reduced-motion: no-preference) {
-  .cal-mosaic[data-count]:not([data-count='1']) .cal-mosaic-tile img {
-    animation: cal-drift 16s ease-in-out infinite alternate;
-  }
-  .cal-mosaic-tile:nth-child(2) img {
-    animation-duration: 21s;
-    animation-delay: -7s;
-    --drift-x: 3%;
-  }
-  .cal-mosaic-tile:nth-child(3) img {
-    animation-duration: 18s;
-    animation-delay: -12s;
-    --drift-y: 3%;
-  }
-  .cal-mosaic-tile:nth-child(4) img {
-    animation-duration: 24s;
-    animation-delay: -4s;
-    --drift-x: 3%;
-    --drift-y: 3%;
-  }
-}
-@keyframes cal-drift {
-  from {
-    transform: scale(1.04) translate(0, 0);
-  }
-  to {
-    transform: scale(1.16) translate(var(--drift-x, -3%), var(--drift-y, -2%));
+@media (prefers-reduced-motion: reduce) {
+  .cal-covers-turner {
+    transition: none;
   }
 }
 
 /* The quick look: the day's agenda under a cover cut to a band. */
-[role='dialog'] .cal-mosaic,
+[role='dialog'] .cal-covers,
 [role='dialog'] .cal-cover-img {
   height: 14rem;
 }

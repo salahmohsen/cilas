@@ -95,8 +95,8 @@ describe('summariseDay', () => {
     expect(day.covers.map((c) => c.url)).toEqual(['/c1.jpg'])
   })
 
-  it('holds at most four covers', () => {
-    const day = summariseDay([1, 2, 3, 4, 5].map((n) => item(`k${n}`, { cover: cover(n) })))
-    expect(day.covers).toHaveLength(4)
+  it('turns through at most six covers', () => {
+    const day = summariseDay([1, 2, 3, 4, 5, 6, 7].map((n) => item(`k${n}`, { cover: cover(n) })))
+    expect(day.covers).toHaveLength(6)
   })
 })

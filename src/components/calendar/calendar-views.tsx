@@ -2,6 +2,7 @@ import { getFormatter, getLocale, getTranslations } from 'next-intl/server'
 
 import type { CalendarItem } from '@/api/calendar.api'
 import { Card } from '@/components/arc/card/card'
+import { DayCovers } from '@/components/calendar/day-covers'
 import { Link } from '@/i18n/navigation'
 import { monthGrid, monthStart, summariseDay, weekDays } from '@/lib/calendar'
 import { localDigits, numberingSystemOf, timeDir } from '@/lib/digits'
@@ -52,8 +53,8 @@ function ItemTitle({ item, className }: { item: CalendarItem; className?: string
 
 /**
  * The month: whole weeks, Saturday to Friday. A day is a card as on the
- * Open for registration page: its pictures on top (a mosaic when the day has
- * more than one), then up to two courses by name.
+ * Open for registration page: its cover on top (turning to the next when the
+ * day has several), then up to two courses by name.
  */
 export async function MonthView({
   date,
@@ -104,7 +105,7 @@ export async function MonthView({
                   closeLabel={labels.close}
                   data-cover={covers.length ? '' : undefined}
                   details={<DayAgenda items={all} labels={labels} />}
-                  media={covers.length ? <DayMosaic covers={covers} /> : undefined}
+                  media={covers.length ? <DayCovers covers={covers} /> : undefined}
                   preview={
                     <>
                       <ul className="cal-day-items">
@@ -141,30 +142,6 @@ export async function MonthView({
           )
         })}
       </div>
-    </div>
-  )
-}
-
-/**
- * A day's pictures as one: a single cover fills the frame; two to four share
- * it as a mosaic whose tiles drift slowly, each on its own beat (the motion
- * is ambient, off for those who ask for less).
- */
-function DayMosaic({ covers }: { covers: NonNullable<CalendarItem['cover']>[] }) {
-  return (
-    <div className="cal-mosaic" data-count={covers.length}>
-      {covers.map((cover) => (
-        <span className="cal-mosaic-tile" key={cover.url}>
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            alt=""
-            decoding="async"
-            loading="lazy"
-            src={cover.url}
-            style={focalPointStyle(cover)}
-          />
-        </span>
-      ))}
     </div>
   )
 }
