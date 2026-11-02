@@ -3,14 +3,16 @@
 import { useRef, useState } from 'react'
 import type { ComponentProps, ReactNode } from 'react'
 import { useTranslations } from 'next-intl'
-import { useRouter } from 'next/navigation'
-import { BookOpen, ChartColumn, Info, Settings } from 'lucide-react'
+import Link from 'next/link'
+import { ArrowRight, ChartColumn, Info, Settings } from 'lucide-react'
 
 import { BottomSheet } from '@/components/arc/bottom-sheet/bottom-sheet'
 import {
   ExpandingButtonGroup,
   type ExpandingButtonGroupItem,
 } from '@/components/arc/expanding-button-group/expanding-button-group'
+import { SideCard, SideCardSection } from '@/components/side-card'
+import { POSTER_COLORS } from '@/lib/poster-colors'
 import type { Participation } from '@/lib/spaces-data'
 
 import { ParticipationDialog } from './participation-dialog'
@@ -41,7 +43,6 @@ export function SpaceHeadActions({
 }) {
   const t = useTranslations('Spaces')
   const tp = useTranslations('Participation')
-  const router = useRouter()
   const [open, setOpen] = useState<Panel | null>(null)
   const root = useRef<HTMLDivElement>(null)
 
@@ -91,26 +92,24 @@ export function SpaceHeadActions({
       <ExpandingButtonGroup items={list} label={t('spaceActions')} size="sm" />
     ) : null
   }
-  // The course page leads away, so it stands apart from the space's own panels.
   // Two panel groups, one per width, so the About segment is there only where the rail is not.
   const groups = (
     <div ref={root} className={styles.headButtons}>
-      {coursePage && (
-        <ExpandingButtonGroup
-          items={[
-            {
-              id: 'course',
-              label: t('coursePage'),
-              icon: <BookOpen size={16} aria-hidden="true" />,
-              onSelect: () => router.push(coursePage),
-            },
-          ]}
-          label={t('coursePage')}
-          size="sm"
-        />
-      )}
       <span className={styles.phoneOnly}>{group(true)}</span>
       <span className={styles.wideOnly}>{group(false)}</span>
+    </div>
+  )
+  const hasPanels = items(true).length > 0
+  // Without a wide-screen item (About lives in the rail there) the card shows on phones only.
+  const phoneOnlyCard = items(false).length === 0
+  // The popover anchors to a plain box, which a card component cannot hand a ref to.
+  const actions = (
+    <div className={phoneOnlyCard ? styles.phoneBlock : undefined}>
+      <SideCard color={POSTER_COLORS[2]}>
+        <SideCardSection label={t('spaceActions')}>
+          <div className="side-card-body side-card-center">{groups}</div>
+        </SideCardSection>
+      </SideCard>
     </div>
   )
 
@@ -121,10 +120,19 @@ export function SpaceHeadActions({
           {...settings}
           open={open === 'settings'}
           onOpenChange={(next) => change('settings', next)}
-          anchor={groups}
+          anchor={actions}
         />
       ) : (
-        groups
+        hasPanels && actions
+      )}
+      {coursePage && (
+        <SideCard color={POSTER_COLORS[3]}>
+          {/* The course page leads away, so it is a card of its own. */}
+          <Link href={coursePage} className="side-card-action">
+            {t('coursePage')}
+            <ArrowRight aria-hidden className="rtl:-scale-x-100" size={16} />
+          </Link>
+        </SideCard>
       )}
       <BottomSheet
         title={t('about')}

@@ -27,17 +27,24 @@
   min-width: 0;
 }
 
+/* A card of the head while it loads: the course cards' ink rule, no content. */
+.loadingCard {
+  display: grid;
+  gap: var(--space-3);
+  padding: var(--space-4);
+  border: 1px solid var(--foreground);
+  border-radius: 1rem;
+  background: var(--surface-muted);
+}
+
 .loadingCover {
   aspect-ratio: 16 / 9;
-  max-height: min(50svh, 28rem);
-  width: 100%;
-  border-radius: calc(var(--radius) * 2);
-  background: var(--surface-muted);
+  padding: 0;
 }
 
 @media (min-width: 640px) {
   .loadingCover {
-    aspect-ratio: 21 / 8;
+    aspect-ratio: 21 / 9;
   }
 }
 
@@ -1039,19 +1046,32 @@
   min-width: 0;
 }
 
-/* The space's own head, laid out as the course page's: the way back, a meta line, the title,
-   the cover as a rounded picture, then the members and the actions. No frame, no text on the cover. */
+/* The space's own head: one outer box in the course cards' ink and paper, holding the title, cover,
+   members, actions and AI as inner cards (.side-card). The columns match the feed and rail below. */
 .spaceHead {
+  --poster-ink: #121212;
+  --poster-paper: #ffffff;
   display: grid;
-  gap: var(--space-5);
+  gap: var(--space-4);
+  min-width: 0;
+  padding: var(--space-4);
+  border: 1px solid var(--poster-ink);
+  border-radius: 1.25rem;
+  background: var(--poster-paper);
+}
+
+.spaceHead > * {
+  display: grid;
+  align-content: start;
+  gap: var(--space-4);
   min-width: 0;
 }
 
-.headLead {
-  display: grid;
-  justify-items: start;
-  gap: var(--space-3);
-  min-width: 0;
+@media (min-width: 1024px) {
+  .spaceHead {
+    grid-template-columns: minmax(0, 1fr) minmax(280px, 0.6fr);
+    align-items: start;
+  }
 }
 
 /* The face and size come from the shared course-title; only the wrapping is set here. */
@@ -1063,17 +1083,14 @@
 
 .headCover {
   position: relative;
-  overflow: hidden;
   aspect-ratio: 16 / 9;
-  max-height: min(50svh, 28rem);
   width: 100%;
-  border-radius: calc(var(--radius) * 2);
   background: var(--surface-muted);
 }
 
 @media (min-width: 640px) {
   .headCover {
-    aspect-ratio: 21 / 8;
+    aspect-ratio: 21 / 9;
   }
 }
 
@@ -1081,77 +1098,10 @@
   object-fit: cover;
 }
 
-/* The same hairline the course cover has, drawn above the picture. */
-.headCover::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  border-radius: inherit;
-  box-shadow: inset 0 0 0 1px oklch(0 0 0 / 0.1);
-  pointer-events: none;
-}
-
-:global([data-theme='dark']) .headCover::after {
-  box-shadow: inset 0 0 0 1px oklch(1 0 0 / 0.1);
-}
-
-.headFoot {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: space-between;
-  gap: var(--space-3) var(--space-4);
-  min-width: 0;
-}
-
-/* Back to My spaces: the title is the heading right below, so the trail stops at the parent. */
-.headBack a {
-  display: inline-flex;
-  align-items: center;
-  gap: var(--space-1);
-  min-height: 24px;
-  font-size: var(--text-sm);
-  color: var(--text-secondary);
-  text-decoration: none;
-  transition: color var(--duration-fast) var(--ease-standard);
-}
-
-.headBack a:hover {
-  color: var(--foreground);
-}
-
-.headBackIcon {
-  margin-inline-start: -4px;
-}
-
-:global([dir='rtl']) .headBackIcon {
-  transform: scaleX(-1);
-}
-
-.spaceTitle {
-  margin: 0;
-  font-size: var(--text-2xl);
-  font-weight: 500;
-  line-height: var(--leading-tight, 1.2);
-  text-wrap: balance;
-  overflow-wrap: anywhere;
-  min-width: 0;
-}
-
 .headMeta {
   display: inline-flex;
   align-items: center;
   gap: var(--space-2);
-  font-size: var(--text-sm);
-  color: var(--text-secondary);
-}
-
-.headKicker {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: var(--space-2);
-  margin: 0;
   font-size: var(--text-sm);
   color: var(--text-secondary);
 }

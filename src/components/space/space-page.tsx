@@ -10,7 +10,6 @@ import { ChevronLeft } from 'lucide-react'
 
 import { personOf } from '@/access'
 import { Alert } from '@/components/arc/alert/alert'
-import { Badge } from '@/components/arc/badge/badge'
 import { EmptyState } from '@/components/arc/empty-state/empty-state'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/arc/tabs/tabs'
 import type { Course, Programme, Space, User } from '@/payload-types'
@@ -52,6 +51,8 @@ import { PINNED_CARDS, PinnedCards, pinnedOrder } from './pinned-cards'
 import { NextSession } from './next-session'
 import { sessionContextOf } from './session-block'
 import { CHECKLIST_COOKIE, OnboardingChecklist } from './onboarding-checklist'
+import { SideCard, SideCardSection } from '@/components/side-card'
+import { POSTER_COLORS } from '@/lib/poster-colors'
 import { SpaceHeadActions } from './space-head-actions'
 import { spacePeopleCards } from './space-people'
 import { SpaceRail } from './space-rail'
@@ -336,63 +337,79 @@ export async function SpacePage({
   const content = (
     <div className={`${styles.page}`}>
       <header className={styles.spaceHead}>
-        <div className={styles.headLead}>
-          {/* The title is the heading right below, so the trail names only where it leads back to. */}
-          <nav aria-label={t('breadcrumb')} className={styles.headBack}>
-            <Link href={`/${locale}/spaces`}>
-              <ChevronLeft size={16} aria-hidden="true" className={styles.headBackIcon} />
-              {t('title')}
-            </Link>
-          </nav>
-          <p className={styles.headKicker}>
-            <Badge tone={feed.archived ? 'neutral' : 'success'}>
-              {feed.archived ? t('archived') : t('open')}
-            </Badge>
-          </p>
-          <h1 className={`course-title ${styles.headTitle}`}>
-            <bdi>{title}</bdi>
-          </h1>
+        <div className={styles.headMain}>
+          {/* The title card: the way back, the status with its dot, then the title. */}
+          <SideCard as="div" color={POSTER_COLORS[0]} label={title}>
+            <nav aria-label={t('breadcrumb')} className="side-card-body">
+              <Link href={`/${locale}/spaces`} className="side-card-link">
+                <ChevronLeft size={16} aria-hidden="true" className="rtl:-scale-x-100" />
+                {t('title')}
+              </Link>
+            </nav>
+            <div className="apply-card-row">
+              <span
+                aria-hidden
+                className="apply-card-dot"
+                data-open={!feed.archived || undefined}
+              />
+              <span className="apply-card-status">{feed.archived ? t('archived') : t('open')}</span>
+            </div>
+            <div className="side-card-body">
+              <h1 className={`course-title ${styles.headTitle}`}>
+                <bdi>{title}</bdi>
+              </h1>
+            </div>
+          </SideCard>
+          <SideCard color={POSTER_COLORS[0]}>
+            <div className={styles.headCover}>
+              <Image
+                src={cover ?? COMMUNITY_COVER}
+                alt=""
+                fill
+                priority
+                sizes="(min-width: 1280px) 700px, 100vw"
+                className={styles.headImage}
+              />
+            </div>
+          </SideCard>
         </div>
-        <div className={styles.headCover}>
-          <Image
-            src={cover ?? COMMUNITY_COVER}
-            alt=""
-            fill
-            priority
-            sizes="(min-width: 1280px) 1200px, 100vw"
-            className={styles.headImage}
-          />
-        </div>
-        <div className={styles.headFoot}>
-          <MembersPanel members={cards} viewerId={viewerPerson} />
-          <div className={styles.headActions}>
-            <SpaceHeadActions
-              coursePage={course ? `/${locale}/study/${course.slug}` : null}
-              rail={rail}
-              participation={numbers}
-              now={renderedAt}
-              settings={
-                moderator
-                  ? {
-                      space: space.id,
-                      posting: space.posting ?? 'open',
-                      events: space.events ?? 'members',
-                      archived: feed.archived,
-                      about: custom,
-                      aboutDefault: defaultAbout,
-                      rules: rules.custom,
-                      rulesDefault: rules.fallback,
-                    }
-                  : null
-              }
-            />
-            {course && (
-              <div className={styles.headAi}>
-                <span>{ts('ai')}</span>
-                <StudyWithAI kind="course" path={`/${locale}/study/${course.slug}`} size="sm" />
+        <div className={styles.headSide}>
+          <SideCard color={POSTER_COLORS[1]}>
+            <SideCardSection label={t('members')}>
+              <div className="side-card-body">
+                <MembersPanel members={cards} viewerId={viewerPerson} />
               </div>
-            )}
-          </div>
+            </SideCardSection>
+          </SideCard>
+          <SpaceHeadActions
+            coursePage={course ? `/${locale}/study/${course.slug}` : null}
+            rail={rail}
+            participation={numbers}
+            now={renderedAt}
+            settings={
+              moderator
+                ? {
+                    space: space.id,
+                    posting: space.posting ?? 'open',
+                    events: space.events ?? 'members',
+                    archived: feed.archived,
+                    about: custom,
+                    aboutDefault: defaultAbout,
+                    rules: rules.custom,
+                    rulesDefault: rules.fallback,
+                  }
+                : null
+            }
+          />
+          {course && (
+            <SideCard color={POSTER_COLORS[3]}>
+              <SideCardSection label={ts('ai')}>
+                <div className="side-card-body side-card-center">
+                  <StudyWithAI kind="course" path={`/${locale}/study/${course.slug}`} size="sm" />
+                </div>
+              </SideCardSection>
+            </SideCard>
+          )}
         </div>
       </header>
       <div className={styles.layout}>

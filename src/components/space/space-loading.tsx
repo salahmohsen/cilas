@@ -9,20 +9,25 @@ export async function SpaceLoading() {
   return (
     <div className={styles.page} role="status" aria-label={t('loading')} aria-busy="true">
       <div className={styles.spaceHead} aria-hidden="true">
-        <div className={styles.headLead}>
-          <Skeleton lines={1} className={styles.loadingBack} />
-          <Skeleton lines={1} className={styles.loadingBadge} />
-          <Skeleton lines={1} className={styles.loadingTitle} />
+        <div>
+          <div className={styles.loadingCard}>
+            <Skeleton lines={1} className={styles.loadingBack} />
+            <Skeleton lines={1} className={styles.loadingTitle} />
+          </div>
+          <div className={`${styles.loadingCard} ${styles.loadingCover}`} />
         </div>
-        <div className={styles.loadingCover} />
-        <div className={styles.headFoot}>
-          <Skeleton avatar lines={1} className={styles.loadingMembers} />
-          <div className={styles.loadingHeadActions}>
-            <Skeleton lines={1} className={styles.loadingHeadExpanded} />
-            <Skeleton lines={1} className={styles.loadingHeadButton} />
-            <span className={styles.phoneOnly}>
+        <div>
+          <div className={styles.loadingCard}>
+            <Skeleton avatar lines={1} className={styles.loadingMembers} />
+          </div>
+          <div className={styles.loadingCard}>
+            <div className={styles.loadingHeadActions}>
+              <Skeleton lines={1} className={styles.loadingHeadExpanded} />
               <Skeleton lines={1} className={styles.loadingHeadButton} />
-            </span>
+              <span className={styles.phoneOnly}>
+                <Skeleton lines={1} className={styles.loadingHeadButton} />
+              </span>
+            </div>
           </div>
         </div>
       </div>
