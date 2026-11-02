@@ -165,8 +165,11 @@ export async function PageMovement() {
       title="Page movement"
       description="The busiest pages now against the 30 days before"
     >
-      {movement.length < 2 ? (
-        <EmptyState title="Not enough yet" description="Needs page views in both periods." />
+      {movement.length < 2 || movement.filter((page) => page.start > 0).length < 2 ? (
+        <EmptyState
+          title="Not enough yet"
+          description="Needs page views in the 30 days before too. Tracking is new, so this fills in over the next weeks."
+        />
       ) : (
         <SlopeChart
           data={movement}
