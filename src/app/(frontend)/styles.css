@@ -1385,7 +1385,8 @@ a.collection-item:hover {
   padding: var(--poster-pad);
   background: var(--poster-color);
 }
-.cal-title {
+.cal-page .cal-title {
+  font-family: var(--font-display);
   margin: 0;
   font-size: clamp(2.2rem, 5vw, 3.4rem);
   font-weight: 700;
@@ -1413,6 +1414,7 @@ a.collection-item:hover {
 }
 .cal-head-nav {
   align-content: center;
+  justify-content: center;
 }
 .cal-head-foot {
   display: flex;
@@ -1494,7 +1496,7 @@ a.collection-item:hover {
   --ms-h: var(--control-height-sm);
 }
 
-/* The day's number: a ruled square cell on the palette yellow, in the display serif. Today's is inverted. */
+/* The day's number: a ruled square cell on paper, in the display serif. Today's is inverted. */
 .cal-day-number,
 .cal-day .cal-day-card h3 {
   display: grid;
@@ -1506,8 +1508,8 @@ a.collection-item:hover {
   border-block-end: 1px solid var(--cal-rule);
   border-radius: 0;
   padding: 0;
-  background: #ffb71b;
-  color: #121212;
+  background: var(--background);
+  color: var(--foreground);
   font-family: var(--font-display);
   font-size: 1.0625rem;
   font-weight: 700;
