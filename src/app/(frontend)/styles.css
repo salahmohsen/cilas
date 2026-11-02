@@ -809,6 +809,14 @@ h1.article-title {
   .fellow-card-photo {
     align-self: stretch;
     border-block-end: 0;
+    /* Where the photo is shorter than the cell, thin 45-degree lines in the card's ink fill the rest. */
+    background:
+      repeating-linear-gradient(
+        45deg,
+        transparent 0 0.5rem,
+        color-mix(in oklab, var(--poster-ink) 30%, transparent) 0.5rem calc(0.5rem + 1px)
+      ),
+      var(--poster-paper);
   }
   .fellow-card-photo::before {
     padding-block-end: 100%;
