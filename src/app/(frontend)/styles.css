@@ -1353,7 +1353,11 @@ a.collection-item:hover {
 
 /* The header: one poster card. The title on the palette yellow, the controls on paper beside it,
    the views and the feed across the foot. Printed, so it stays light in the dark theme. */
-.cal-head {
+/* The calendar's boxes are printed: paper and ink in both themes, so they take the light theme's tokens. */
+.cal-head,
+.cal-month,
+.cal-week,
+.cal-agenda {
   --poster-ink: #121212;
   --poster-paper: #ffffff;
   --poster-color: #ffb71b;
@@ -1369,6 +1373,11 @@ a.collection-item:hover {
   --border-strong: oklch(82% 0 0);
   --accent: oklch(33% 0 0);
   --accent-foreground: oklch(100% 0 0);
+  --cal-rule: oklch(0.15 0 0);
+  --cal-hatch: oklch(0 0 0 / 0.16);
+  color: var(--poster-ink);
+}
+.cal-head {
   display: grid;
   grid-template-columns: minmax(0, 1fr);
   border: 1px solid var(--poster-ink);
