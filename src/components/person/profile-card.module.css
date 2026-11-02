@@ -152,9 +152,11 @@
   .card:global(.poster) {
     display: grid;
     grid-template-columns: min(38%, 20rem) minmax(0, 1fr);
-    grid-template-rows: minmax(0, 1fr) auto;
+    /* The photo takes its own height; the name box fills what is left under it. */
+    grid-template-rows: auto minmax(0, 1fr) auto;
     grid-template-areas:
       'photo body'
+      'name body'
       'name links';
   }
   .photo {
@@ -178,6 +180,7 @@
     display: flex;
     flex-direction: column;
     justify-content: center;
+    text-align: center;
     border-bottom: 0;
     border-inline-end: 1px solid var(--poster-ink);
   }
@@ -187,6 +190,15 @@
   .links {
     grid-area: links;
     margin-top: 0;
+  }
+  /* The name sits in the middle of its box; a spacer the arrow's size keeps it there. */
+  .nameLink {
+    justify-content: center;
+  }
+  .nameLink::before {
+    content: '';
+    flex: none;
+    width: 20px;
   }
 }
 
