@@ -122,9 +122,7 @@ export default async function CalendarPage({ params, searchParams }: Props) {
               )}
             />
           </nav>
-        </div>
-        <div className="cal-head-foot">
-          <div className="cal-head-views">
+          <div className="cal-head-actions">
             <div className="cal-switch" role="group" aria-label={t('views')}>
               {CALENDAR_VIEWS.map((v) => (
                 <Link aria-current={v === view ? 'page' : undefined} href={href(v, date)} key={v}>
@@ -132,8 +130,6 @@ export default async function CalendarPage({ params, searchParams }: Props) {
                 </Link>
               ))}
             </div>
-          </div>
-          <div className="cal-head-feed">
             <CalendarFeed feedPath={`/${locale}/calendar.ics`} />
           </div>
         </div>

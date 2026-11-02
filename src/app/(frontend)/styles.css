@@ -1435,38 +1435,23 @@ a.collection-item:hover {
   font-weight: 500;
   font-variant-numeric: tabular-nums;
 }
-.cal-head-nav,
-.cal-head-views,
-.cal-head-feed {
+.cal-head-nav {
   display: flex;
-  flex-wrap: wrap;
+  flex-direction: column;
   align-items: center;
+  justify-content: center;
   gap: 0.75rem;
   padding: calc(var(--poster-pad) * 0.6) var(--poster-pad);
+  border-end-start-radius: calc(1rem - 1px);
+  border-end-end-radius: calc(1rem - 1px);
 }
-.cal-head-nav {
-  align-content: center;
-  justify-content: center;
-}
-.cal-head-controls {
+.cal-head-controls,
+.cal-head-actions {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
   justify-content: center;
   gap: 0.75rem;
-}
-.cal-head-foot {
-  display: flex;
-  flex-wrap: wrap;
-}
-.cal-head-views {
-  flex: 1 1 auto;
-  border-end-start-radius: calc(1rem - 1px);
-}
-.cal-head-feed {
-  flex: none;
-  border-inline-start: 1px solid var(--poster-ink);
-  border-end-end-radius: calc(1rem - 1px);
 }
 @media (min-width: 48rem) {
   .cal-head {
@@ -1476,9 +1461,13 @@ a.collection-item:hover {
     grid-column: 1;
     border-start-end-radius: 0;
   }
+  .cal-head-title:has(+ .cal-head-nav) {
+    border-end-start-radius: calc(1rem - 1px);
+  }
   /* The key is a white box under the yellow one; the controls take the other column's whole height. */
   .cal-head-legend {
     grid-column: 1;
+    border-end-start-radius: calc(1rem - 1px);
   }
   .cal-head-nav {
     grid-column: 2;
@@ -1486,19 +1475,6 @@ a.collection-item:hover {
     border-block-start: 0;
     border-inline-start: 1px solid var(--poster-ink);
     border-start-end-radius: calc(1rem - 1px);
-  }
-  .cal-head-foot {
-    grid-column: 1 / -1;
-  }
-}
-@media (max-width: 30rem) {
-  .cal-head-feed {
-    flex: 1 1 100%;
-    border-inline-start: 0;
-    border-block-start: 1px solid var(--poster-ink);
-    border-end-start-radius: calc(1rem - 1px);
-  }
-  .cal-head-views {
     border-end-start-radius: 0;
   }
 }
