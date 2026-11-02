@@ -155,11 +155,9 @@
   .card:global(.poster) {
     display: grid;
     grid-template-columns: min(38%, 20rem) minmax(0, 1fr);
-    /* The photo takes its own height; the name box fills what is left under it. */
-    grid-template-rows: auto minmax(0, 1fr) auto;
+    grid-template-rows: minmax(0, 1fr) auto;
     grid-template-areas:
       'photo body'
-      'name body'
       'name links';
   }
   .photo {
@@ -170,6 +168,14 @@
     /* The photo hangs from the top of its cell, with a rule under it, instead of floating in the middle. */
     display: block;
     border-bottom: 0;
+    /* Where the photo is shorter than its cell, thin 45-degree lines in the card's ink fill the rest. */
+    background:
+      repeating-linear-gradient(
+        45deg,
+        transparent 0 0.5rem,
+        color-mix(in oklab, var(--poster-ink) 30%, transparent) 0.5rem calc(0.5rem + 1px)
+      ),
+      var(--poster-paper);
   }
   .photo > img,
   .photo > svg {
