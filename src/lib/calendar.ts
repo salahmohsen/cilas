@@ -1,4 +1,5 @@
 import type { CalendarItem } from '@/api/calendar.api'
+import { POSTER_COLORS } from '@/lib/poster-colors'
 import { addDays, cairoDay, weekdayOf, WEEKDAYS } from '@/lib/cairo-day'
 
 /**
@@ -100,3 +101,33 @@ export const summariseDay = (items: CalendarItem[]) => {
     hidden: Math.max(0, items.length - DAY_LISTED),
   }
 }
+
+const [YELLOW, BLUE, PINK, GREEN] = POSTER_COLORS as unknown as [string, string, string, string]
+
+/**
+ * One poster colour per kind of course or event, so a day reads by colour at
+ * a glance: the programme's own courses (core, thematic, lab), the short
+ * formats, and events grouped by what they are (talks, arts, visits).
+ */
+const TYPE_TONES: Record<string, string> = {
+  core: YELLOW,
+  thematic: BLUE,
+  lab: GREEN,
+  workshop: PINK,
+  short: PINK,
+  talk: BLUE,
+  panel: BLUE,
+  book_discussion: BLUE,
+  reading_group: BLUE,
+  screening: YELLOW,
+  performance: YELLOW,
+  music: YELLOW,
+  exhibition: YELLOW,
+  open_day: GREEN,
+  residency: GREEN,
+  visit: GREEN,
+}
+
+/** The colour of an item's type; a type with none yet falls back to a neutral rule. */
+export const toneOf = (item: Pick<CalendarItem, 'type'>): string =>
+  TYPE_TONES[item.type] ?? 'var(--border-strong, var(--border))'

@@ -6,6 +6,7 @@ import {
   readCalendarParams,
   shiftMonth,
   summariseDay,
+  toneOf,
   viewRange,
   weekDays,
   weekStart,
@@ -98,5 +99,13 @@ describe('summariseDay', () => {
   it('turns through at most six covers', () => {
     const day = summariseDay([1, 2, 3, 4, 5, 6, 7].map((n) => item(`k${n}`, { cover: cover(n) })))
     expect(day.covers).toHaveLength(6)
+  })
+})
+
+describe('toneOf', () => {
+  it('gives a course and an event type their poster colour, and an unknown type a neutral one', () => {
+    expect(toneOf({ type: 'core' })).toBe('#ffb71b')
+    expect(toneOf({ type: 'talk' })).toBe('#1782ea')
+    expect(toneOf({ type: 'something-new' })).toContain('--border')
   })
 })

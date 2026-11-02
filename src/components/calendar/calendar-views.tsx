@@ -1,10 +1,11 @@
+import type { CSSProperties } from 'react'
 import { getFormatter, getLocale, getTranslations } from 'next-intl/server'
 
 import type { CalendarItem } from '@/api/calendar.api'
 import { Card } from '@/components/arc/card/card'
 import { DayCovers } from '@/components/calendar/day-covers'
 import { Link } from '@/i18n/navigation'
-import { monthGrid, monthStart, summariseDay, weekDays } from '@/lib/calendar'
+import { monthGrid, monthStart, summariseDay, toneOf, weekDays } from '@/lib/calendar'
 import { localDigits, numberingSystemOf, timeDir } from '@/lib/digits'
 import { focalPointStyle } from '@/lib/media-image'
 
@@ -114,14 +115,18 @@ export async function MonthView({
                             className="cal-item"
                             data-cancelled={item.cancelled || undefined}
                             key={item.key}
+                            style={{ '--tone': toneOf(item) } as CSSProperties}
                           >
-                            {timeOf(item) ? (
-                              <span className="cal-item-when" dir={labels.timeDir}>
-                                {labels.digits(timeOf(item)!)}
-                              </span>
-                            ) : item.starts ? (
-                              <span className="cal-item-when">{labels.starts}</span>
-                            ) : null}
+                            <span className="cal-item-meta">
+                              <span className="cal-item-type">{labels.type(item)}</span>
+                              {timeOf(item) ? (
+                                <span className="cal-item-when" dir={labels.timeDir}>
+                                  {labels.digits(timeOf(item)!)}
+                                </span>
+                              ) : item.starts ? (
+                                <span className="cal-item-when">{labels.starts}</span>
+                              ) : null}
+                            </span>
                             <span className="cal-item-title" dir="auto">
                               {item.title}
                             </span>
@@ -146,46 +151,49 @@ export async function MonthView({
   )
 }
 
-/** One day's agenda: what the quick look of a month's day lists. */
+/**
+ * One day's agenda, the quick look's list: a box a course or event, laid out
+ * as the Open for registration cards are (picture flush to the box, the type
+ * in its colour, the name, then when), its colour a rule down the start edge.
+ */
 function DayAgenda({ items, labels }: { items: CalendarItem[]; labels: Labels }) {
   return (
-    <div>
-      <ul className="grid gap-3">
-        {items.map((item) => (
-          <li className="cal-agenda-item" key={item.key}>
-            <span className="cal-time" dir={item.start ? labels.timeDir : undefined}>
+    <ul className="cal-slots">
+      {items.map((item) => (
+        <li
+          className="cal-slot"
+          data-cancelled={item.cancelled || undefined}
+          key={item.key}
+          style={{ '--tone': toneOf(item) } as CSSProperties}
+        >
+          {item.cover ? (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img
+              alt=""
+              className="cal-slot-cover"
+              loading="lazy"
+              src={item.cover.url}
+              style={focalPointStyle(item.cover)}
+            />
+          ) : null}
+          <span className="cal-slot-body">
+            <span className="cal-slot-meta">
+              <span className="cal-item-type">{labels.type(item)}</span>
+              {item.session ? <span>{labels.session(item.session)}</span> : null}
+              {item.cancelled ? <span>{labels.cancelled}</span> : null}
+            </span>
+            <ItemTitle className="cal-slot-title" item={item} />
+            <span className="cal-slot-when" dir={item.start ? labels.timeDir : undefined}>
               {item.start
                 ? labels.digits(`${item.start}${item.end ? `–${item.end}` : ''}`)
                 : item.starts
                   ? labels.starts
                   : ''}
             </span>
-            {item.cover ? (
-              // eslint-disable-next-line @next/next/no-img-element
-              <img
-                alt=""
-                className="cal-agenda-cover"
-                loading="lazy"
-                src={item.cover.url}
-                style={focalPointStyle(item.cover)}
-              />
-            ) : null}
-            <span className="min-w-0">
-              <ItemTitle className="block font-medium text-[var(--foreground)]" item={item} />
-              <span className="block text-xs text-[var(--text-muted)]">
-                {[
-                  labels.type(item),
-                  item.session ? labels.session(item.session) : null,
-                  item.cancelled ? labels.cancelled : null,
-                ]
-                  .filter(Boolean)
-                  .join(' · ')}
-              </span>
-            </span>
-          </li>
-        ))}
-      </ul>
-    </div>
+          </span>
+        </li>
+      ))}
+    </ul>
   )
 }
 
