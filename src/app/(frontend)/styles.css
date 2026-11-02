@@ -699,11 +699,17 @@ h1.article-title {
 .fellow-card-hazard-head:empty {
   display: none;
 }
-/* The label row ends in an empty paper cell. */
+/* The label row ends in a cell with nothing in it: the same 45-degree lines as under a short photo. */
 .fellow-card-hazard::after {
   content: '';
   flex: 1 1 auto;
-  background: var(--poster-paper);
+  background:
+    repeating-linear-gradient(
+      45deg,
+      transparent 0 0.5rem,
+      color-mix(in oklab, var(--poster-ink) 30%, transparent) 0.5rem calc(0.5rem + 1px)
+    ),
+    var(--poster-paper);
 }
 .fellow-card-quote {
   display: grid;
