@@ -1,3 +1,5 @@
+import type { CalendarItem } from '@/api/calendar.api'
+import { POSTER_COLORS } from '@/lib/poster-colors'
 import { addDays, cairoDay, weekdayOf, WEEKDAYS } from '@/lib/cairo-day'
 
 /**
@@ -76,3 +78,59 @@ export const viewRange = (
     next: addDays(date, AGENDA_DAYS),
   }
 }
+
+/** How many courses a month's day cell lists under its image; the rest are "+N more". */
+export const DAY_LISTED = 2
+/** How many covers a day turns through. */
+export const DAY_COVERS_MAX = 6
+
+/**
+ * What a month's day cell shows of its items: the covers of the day's
+ * meetings (each picture once, none for a cancelled meeting), the first
+ * few items to list by name, and how many are left out.
+ */
+export const summariseDay = (items: CalendarItem[]) => {
+  const covers: NonNullable<CalendarItem['cover']>[] = []
+  for (const item of items) {
+    if (item.cancelled || !item.cover || covers.length === DAY_COVERS_MAX) continue
+    if (!covers.some((c) => c.url === item.cover!.url)) covers.push(item.cover)
+  }
+  return {
+    covers,
+    listed: items.slice(0, DAY_LISTED),
+    hidden: Math.max(0, items.length - DAY_LISTED),
+  }
+}
+
+const [YELLOW, BLUE, PINK, GREEN] = POSTER_COLORS as unknown as [string, string, string, string]
+
+/**
+ * One poster colour per kind of course or event, so a day reads by colour at
+ * a glance: the programme's own courses (core, thematic, lab), the short
+ * formats, and events grouped by what they are (talks, arts, visits).
+ */
+const TYPE_TONES: Record<string, string> = {
+  core: YELLOW,
+  thematic: BLUE,
+  lab: GREEN,
+  workshop: PINK,
+  short: PINK,
+  talk: BLUE,
+  panel: BLUE,
+  book_discussion: BLUE,
+  reading_group: BLUE,
+  screening: YELLOW,
+  performance: YELLOW,
+  music: YELLOW,
+  exhibition: YELLOW,
+  open_day: GREEN,
+  residency: GREEN,
+  visit: GREEN,
+}
+
+/** Every known type, courses first, in the order a legend lists them. */
+export const TYPE_ORDER = Object.keys(TYPE_TONES)
+
+/** The colour of an item's type; a type with none yet falls back to a neutral rule. */
+export const toneOf = (item: Pick<CalendarItem, 'type'>): string =>
+  TYPE_TONES[item.type] ?? 'var(--border-strong, var(--border))'

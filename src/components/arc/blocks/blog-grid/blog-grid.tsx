@@ -600,12 +600,15 @@ export function BlogGrid({
                               >
                                 {number === safePage && (
                                   <motion.span
+                                    key="highlight"
                                     layoutId={`${uid}-page`}
                                     className={styles.pageHighlight}
                                     transition={reduced ? { duration: 0 } : morph}
                                   />
                                 )}
-                                <span>{labels.number ? labels.number(number) : number}</span>
+                                <span key="label">
+                                  {labels.number ? labels.number(number) : number}
+                                </span>
                               </PageControl>
                             ),
                           )}

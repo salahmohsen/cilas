@@ -144,7 +144,6 @@
   "Footer": {
     "tagline": "A pedagogy of discovery and attunement.",
     "allCourses": "All courses",
-    "allPeople": "All people",
     "explore": "Explore",
     "study": "Study",
     "articles": "Articles",
@@ -483,6 +482,8 @@
     "previous": "Previous",
     "next": "Next",
     "today": "Today",
+    "inView": "{count, plural, one {# course or event} other {# courses and events}}",
+    "legend": "Colour key",
     "empty": "Nothing on the calendar here.",
     "nextOn": "Next: {date}",
     "lastOn": "Most recent: {date}",

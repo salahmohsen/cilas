@@ -1,15 +1,13 @@
+import type { CSSProperties } from 'react'
 import { getFormatter, getLocale, getTranslations } from 'next-intl/server'
 
 import type { CalendarItem } from '@/api/calendar.api'
 import { Card } from '@/components/arc/card/card'
+import { DayCovers } from '@/components/calendar/day-covers'
 import { Link } from '@/i18n/navigation'
-import { monthGrid, monthStart, weekDays } from '@/lib/calendar'
+import { monthGrid, monthStart, summariseDay, toneOf, TYPE_ORDER, weekDays } from '@/lib/calendar'
 import { localDigits, numberingSystemOf, timeDir } from '@/lib/digits'
 import { focalPointStyle } from '@/lib/media-image'
-
-/** How many items a month's day cell lists before "+N more": fewer over a cover, to keep it legible. */
-const IN_CELL = 3
-const IN_COVER_CELL = 1
 
 type Labels = {
   type: (item: CalendarItem) => string
@@ -55,8 +53,9 @@ function ItemTitle({ item, className }: { item: CalendarItem; className?: string
 }
 
 /**
- * The month: whole weeks, Saturday to Friday. A day a course with a cover
- * meets takes that cover as its ground; its items sit on it in white.
+ * The month: whole weeks, Saturday to Friday. A day is a card as on the
+ * Open for registration page: its cover on top (turning to the next when the
+ * day has several), then up to two courses by name.
  */
 export async function MonthView({
   date,
@@ -90,66 +89,56 @@ export async function MonthView({
       <div className="cal-month-body">
         {days.map((day) => {
           const all = map.get(day) ?? []
-          const owner = all.find((i) => i.cover && !i.cancelled)
-          const cover = owner?.cover
-          // The course whose cover the day shows comes first, so its name is on it.
-          const dayItems = owner ? [owner, ...all.filter((i) => i !== owner)] : all
+          const { covers, listed, hidden } = summariseDay(all)
           const outside = !day.startsWith(month)
-          const shown = cover ? IN_COVER_CELL : IN_CELL
           return (
             <div
               className="cal-day"
-              data-cover={cover ? '' : undefined}
               data-outside={outside || undefined}
               data-today={day === today || undefined}
               key={day}
               role="gridcell"
             >
-              {dayItems.length ? (
+              {all.length ? (
                 // A day with something opens, growing into that day's agenda.
                 <Card
                   className="cal-day-card"
                   closeLabel={labels.close}
-                  data-cover={cover ? '' : undefined}
+                  data-cover={covers.length ? '' : undefined}
                   details={<DayAgenda items={all} labels={labels} />}
-                  media={
-                    cover ? (
-                      // eslint-disable-next-line @next/next/no-img-element
-                      <img
-                        alt=""
-                        className="cal-cover-img"
-                        decoding="async"
-                        src={cover.url}
-                        style={focalPointStyle(cover)}
-                      />
-                    ) : undefined
-                  }
+                  media={covers.length ? <DayCovers covers={covers} /> : undefined}
                   preview={
-                    <ul className="cal-day-items">
-                      {dayItems.slice(0, shown).map((item, i) => (
-                        <li className="cal-item" key={item.key}>
-                          <span className="cal-item-head">
+                    <>
+                      <ul className="cal-day-items">
+                        {listed.map((item) => (
+                          <li
+                            className="cal-item"
+                            data-cancelled={item.cancelled || undefined}
+                            key={item.key}
+                            style={{ '--tone': toneOf(item) } as CSSProperties}
+                          >
+                            <span className="cal-item-type">
+                              <span aria-hidden className="cal-dot" />
+                              {/* With a time beside it the type is the dot (the key names it). */}
+                              <span className={timeOf(item) || item.starts ? 'sr-only' : undefined}>
+                                {labels.type(item)}
+                              </span>
+                            </span>
                             {timeOf(item) ? (
                               <span className="cal-item-when" dir={labels.timeDir}>
                                 {labels.digits(timeOf(item)!)}
                               </span>
                             ) : item.starts ? (
                               <span className="cal-item-when">{labels.starts}</span>
-                            ) : (
-                              <span />
-                            )}
-                            {i === shown - 1 && dayItems.length > shown ? (
-                              <span className="cal-more">
-                                {labels.more(dayItems.length - shown)}
-                              </span>
                             ) : null}
-                          </span>
-                          <span className="cal-item-title" dir="auto">
-                            {item.title}
-                          </span>
-                        </li>
-                      ))}
-                    </ul>
+                            <span className="cal-item-title" dir="auto">
+                              {item.title}
+                            </span>
+                          </li>
+                        ))}
+                      </ul>
+                      {hidden ? <span className="cal-more">{labels.more(hidden)}</span> : null}
+                    </>
                   }
                   panelTitle={longDate(day)}
                   title={number(day)}
@@ -166,50 +155,62 @@ export async function MonthView({
   )
 }
 
-/** One day's agenda: what the quick look of a month's day lists. */
+/** One day's agenda, the quick look's list, as boxes ruled like the Open for registration cards. */
 function DayAgenda({ items, labels }: { items: CalendarItem[]; labels: Labels }) {
   return (
-    <div>
-      <ul className="grid gap-3">
-        {items.map((item) => (
-          <li className="cal-agenda-item" key={item.key}>
-            <span className="cal-time" dir={item.start ? labels.timeDir : undefined}>
-              {item.start
-                ? labels.digits(`${item.start}${item.end ? `–${item.end}` : ''}`)
-                : item.starts
-                  ? labels.starts
-                  : ''}
-            </span>
-            {item.cover ? (
-              // eslint-disable-next-line @next/next/no-img-element
-              <img
-                alt=""
-                className="cal-agenda-cover"
-                loading="lazy"
-                src={item.cover.url}
-                style={focalPointStyle(item.cover)}
-              />
-            ) : null}
-            <span className="min-w-0">
-              <ItemTitle className="block font-medium text-[var(--foreground)]" item={item} />
-              <span className="block text-xs text-[var(--text-muted)]">
-                {[
-                  labels.type(item),
-                  item.session ? labels.session(item.session) : null,
-                  item.cancelled ? labels.cancelled : null,
-                ]
-                  .filter(Boolean)
-                  .join(' · ')}
-              </span>
-            </span>
-          </li>
-        ))}
-      </ul>
-    </div>
+    <ul className="cal-slots">
+      {items.map((item) => (
+        <Slot item={item} key={item.key} labels={labels} />
+      ))}
+    </ul>
   )
 }
 
-/** The week: seven columns, each day's items in time order with their cover. */
+/** One course or event of the quick look and the agenda: type and time, the name, a picture at the end. */
+function Slot({ item, labels }: { item: CalendarItem; labels: Labels }) {
+  return (
+    <li
+      className="cal-slot"
+      data-cancelled={item.cancelled || undefined}
+      style={{ '--tone': toneOf(item) } as CSSProperties}
+    >
+      <span className="cal-item-type">
+        <span aria-hidden className="cal-dot" />
+        {labels.type(item)}
+      </span>
+      {item.start || item.starts ? (
+        <span className="cal-item-when" dir={item.start ? labels.timeDir : undefined}>
+          {item.start
+            ? labels.digits(`${item.start}${item.end ? `–${item.end}` : ''}`)
+            : labels.starts}
+        </span>
+      ) : null}
+      <ItemTitle className="cal-slot-title" item={item} />
+      {item.session || item.cancelled ? (
+        <span className="cal-slot-note">
+          {[
+            item.session ? labels.session(item.session) : null,
+            item.cancelled ? labels.cancelled : null,
+          ]
+            .filter(Boolean)
+            .join(' · ')}
+        </span>
+      ) : null}
+      {item.cover ? (
+        // eslint-disable-next-line @next/next/no-img-element
+        <img
+          alt=""
+          className="cal-slot-cover"
+          loading="lazy"
+          src={item.cover.url}
+          style={focalPointStyle(item.cover)}
+        />
+      ) : null}
+    </li>
+  )
+}
+
+/** The week: seven columns, each day's items in time order, as boxes like the month's: cover, type and time, name. */
 export async function WeekView({
   date,
   today,
@@ -236,46 +237,44 @@ export async function WeekView({
           data-today={day === today || undefined}
           key={day}
         >
-          <header className="cal-week-head">
-            <span className="cal-weekday">
-              {format.dateTime(UTC(day), { weekday: 'long', timeZone: 'UTC' })}
-            </span>
+          <header className="cal-agenda-date">
             <span className="cal-day-number">
               {format.number(Number(day.slice(8)), { numberingSystem: nu })}
             </span>
+            <span className="cal-agenda-when">
+              {format.dateTime(UTC(day), { weekday: 'long', timeZone: 'UTC' })}
+            </span>
           </header>
-          <ul className="grid gap-3">
+          <ul className="cal-day-items">
             {(map.get(day) ?? []).map((item) => (
-              <li className="cal-card" key={item.key}>
+              <li
+                className="cal-item"
+                data-cancelled={item.cancelled || undefined}
+                key={item.key}
+                style={{ '--tone': toneOf(item) } as CSSProperties}
+              >
                 {item.cover ? (
                   // eslint-disable-next-line @next/next/no-img-element
                   <img
-                    alt={item.cover.alt}
-                    className="cal-card-cover"
+                    alt=""
+                    className="cal-item-cover"
                     loading="lazy"
                     src={item.cover.url}
                     style={focalPointStyle(item.cover)}
                   />
                 ) : null}
-                <div className="p-3">
-                  <p className="cal-time" dir={item.start ? labels.timeDir : undefined}>
-                    {item.start
-                      ? labels.digits(`${item.start}${item.end ? `–${item.end}` : ''}`)
-                      : item.starts
-                        ? labels.starts
-                        : ''}
-                  </p>
-                  <ItemTitle className="mt-1 block text-sm font-medium" item={item} />
-                  <p className="mt-1 text-xs text-[var(--text-muted)]">
-                    {[
-                      labels.type(item),
-                      item.session ? labels.session(item.session) : null,
-                      item.cancelled ? labels.cancelled : null,
-                    ]
-                      .filter(Boolean)
-                      .join(' · ')}
-                  </p>
-                </div>
+                <span className="cal-item-type">
+                  <span aria-hidden className="cal-dot" />
+                  <span className={item.start || item.starts ? 'sr-only' : undefined}>
+                    {labels.type(item)}
+                  </span>
+                </span>
+                {item.start || item.starts ? (
+                  <span className="cal-item-when" dir={item.start ? labels.timeDir : undefined}>
+                    {item.start ? labels.digits(item.start) : labels.starts}
+                  </span>
+                ) : null}
+                <ItemTitle className="cal-item-title" item={item} />
               </li>
             ))}
           </ul>
@@ -285,7 +284,7 @@ export async function WeekView({
   )
 }
 
-/** The agenda: the days that have something, each with its items in time order. */
+/** The agenda: the days that have something, each a box with its date on top and its items under it. */
 export async function AgendaView({ items, labels }: { items: CalendarItem[]; labels: Labels }) {
   const [format, nu] = await Promise.all([getFormatter(), getLocale().then(numberingSystemOf)])
   const map = byDay(items)
@@ -297,55 +296,53 @@ export async function AgendaView({ items, labels }: { items: CalendarItem[]; lab
             <span className="cal-day-number">
               {format.number(Number(day.slice(8)), { numberingSystem: nu })}
             </span>
-            <span className="text-sm leading-snug text-[var(--text-muted)]">
-              {format.dateTime(UTC(day), { weekday: 'long', timeZone: 'UTC' })}
-              <br />
-              {format.dateTime(UTC(day), {
-                month: 'long',
-                year: 'numeric',
-                timeZone: 'UTC',
-                numberingSystem: nu,
-              })}
+            <span className="cal-agenda-when">
+              <span>{format.dateTime(UTC(day), { weekday: 'long', timeZone: 'UTC' })}</span>
+              <span>
+                {format.dateTime(UTC(day), {
+                  month: 'long',
+                  year: 'numeric',
+                  timeZone: 'UTC',
+                  numberingSystem: nu,
+                })}
+              </span>
             </span>
           </div>
-          <ul className="grid gap-2">
-            {dayItems.map((item) => (
-              <li className="cal-agenda-item" key={item.key}>
-                <span className="cal-time" dir={item.start ? labels.timeDir : undefined}>
-                  {item.start
-                    ? labels.digits(`${item.start}${item.end ? `–${item.end}` : ''}`)
-                    : item.starts
-                      ? labels.starts
-                      : ''}
-                </span>
-                {item.cover ? (
-                  // eslint-disable-next-line @next/next/no-img-element
-                  <img
-                    alt={item.cover.alt}
-                    className="cal-agenda-cover"
-                    loading="lazy"
-                    src={item.cover.url}
-                    style={focalPointStyle(item.cover)}
-                  />
-                ) : null}
-                <span className="min-w-0">
-                  <ItemTitle className="block font-medium" item={item} />
-                  <span className="block text-xs text-[var(--text-muted)]">
-                    {[
-                      labels.type(item),
-                      item.session ? labels.session(item.session) : null,
-                      item.cancelled ? labels.cancelled : null,
-                    ]
-                      .filter(Boolean)
-                      .join(' · ')}
-                  </span>
-                </span>
-              </li>
-            ))}
-          </ul>
+          <DayAgenda items={dayItems} labels={labels} />
         </li>
       ))}
     </ol>
+  )
+}
+
+/** What each colour means: a dot and its name for every type on show, courses first. */
+export function CalendarLegend({
+  items,
+  labels,
+  label,
+}: {
+  items: CalendarItem[]
+  labels: Labels
+  label: string
+}) {
+  const seen = new Map<string, { item: CalendarItem; rank: number }>()
+  for (const item of items) {
+    const key = `${labels.type(item)}|${toneOf(item)}`
+    if (seen.has(key)) continue
+    const rank = TYPE_ORDER.indexOf(item.type)
+    seen.set(key, { item, rank: rank < 0 ? TYPE_ORDER.length : rank })
+  }
+  const entries = [...seen.values()].sort((a, b) => a.rank - b.rank)
+  if (!entries.length) return null
+  return (
+    <ul aria-label={label} className="cal-head-legend">
+      {entries.map(({ item }) => (
+        <li key={item.key} style={{ '--tone': toneOf(item) } as CSSProperties}>
+          <span aria-hidden className="cal-dot" />
+          {labels.type(item)}
+        </li>
+      ))}
+    </ul>
   )
 }
 

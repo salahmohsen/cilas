@@ -85,7 +85,6 @@ export function SiteFooter({
         {
           title: header('people.label'),
           links: [
-            { label: t('allPeople'), href: href('/people') },
             ...(nav.fellows
               ? [{ label: header('people.fellows'), href: href('/people/fellows') }]
               : []),

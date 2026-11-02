@@ -1,9 +1,12 @@
 import { describe, expect, it } from 'vitest'
 
+import type { CalendarItem } from '@/api/calendar.api'
 import {
   monthGrid,
   readCalendarParams,
   shiftMonth,
+  summariseDay,
+  toneOf,
   viewRange,
   weekDays,
   weekStart,
@@ -62,5 +65,47 @@ describe('calendar dates', () => {
       from: '2026-03-01',
       to: '2026-03-30',
     })
+  })
+})
+
+describe('summariseDay', () => {
+  const cover = (n: number) => ({ url: `/c${n}.jpg`, alt: '' })
+  const item = (key: string, over: Partial<CalendarItem> = {}): CalendarItem => ({
+    key,
+    kind: 'course',
+    title: key,
+    href: null,
+    date: '2026-03-07',
+    type: 'thematic',
+    ...over,
+  })
+
+  it('lists two items and counts the rest', () => {
+    const day = summariseDay([item('a'), item('b'), item('c'), item('d')])
+    expect(day.listed.map((i) => i.key)).toEqual(['a', 'b'])
+    expect(day.hidden).toBe(2)
+  })
+
+  it('shows a shared picture once and skips cancelled meetings', () => {
+    const day = summariseDay([
+      item('a', { cover: cover(1) }),
+      item('b', { cover: cover(1) }),
+      item('c', { cover: cover(2), cancelled: true }),
+      item('d'),
+    ])
+    expect(day.covers.map((c) => c.url)).toEqual(['/c1.jpg'])
+  })
+
+  it('turns through at most six covers', () => {
+    const day = summariseDay([1, 2, 3, 4, 5, 6, 7].map((n) => item(`k${n}`, { cover: cover(n) })))
+    expect(day.covers).toHaveLength(6)
+  })
+})
+
+describe('toneOf', () => {
+  it('gives a course and an event type their poster colour, and an unknown type a neutral one', () => {
+    expect(toneOf({ type: 'core' })).toBe('#ffb71b')
+    expect(toneOf({ type: 'talk' })).toBe('#1782ea')
+    expect(toneOf({ type: 'something-new' })).toContain('--border')
   })
 })
