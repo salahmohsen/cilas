@@ -4,6 +4,7 @@ import { getFormatter, getLocale, getTranslations } from 'next-intl/server'
 import type { CalendarItem } from '@/api/calendar.api'
 import { Card } from '@/components/arc/card/card'
 import { DayCovers } from '@/components/calendar/day-covers'
+import { TypeIcon } from '@/components/calendar/type-icon'
 import { Link } from '@/i18n/navigation'
 import { monthGrid, monthStart, summariseDay, toneOf, weekDays } from '@/lib/calendar'
 import { localDigits, numberingSystemOf, timeDir } from '@/lib/digits'
@@ -117,18 +118,23 @@ export async function MonthView({
                             key={item.key}
                             style={{ '--tone': toneOf(item) } as CSSProperties}
                           >
-                            <span className="cal-item-meta">
-                              <span className="cal-item-type">{labels.type(item)}</span>
-                              {timeOf(item) ? (
-                                <span className="cal-item-when" dir={labels.timeDir}>
-                                  {labels.digits(timeOf(item)!)}
-                                </span>
-                              ) : item.starts ? (
-                                <span className="cal-item-when">{labels.starts}</span>
-                              ) : null}
+                            <span className="cal-item-icon">
+                              <TypeIcon type={item.type} />
                             </span>
-                            <span className="cal-item-title" dir="auto">
-                              {item.title}
+                            <span className="cal-item-body">
+                              <span className="cal-item-meta">
+                                <span>{labels.type(item)}</span>
+                                {timeOf(item) ? (
+                                  <span className="cal-item-when" dir={labels.timeDir}>
+                                    {labels.digits(timeOf(item)!)}
+                                  </span>
+                                ) : item.starts ? (
+                                  <span className="cal-item-when">{labels.starts}</span>
+                                ) : null}
+                              </span>
+                              <span className="cal-item-title" dir="auto">
+                                {item.title}
+                              </span>
                             </span>
                           </li>
                         ))}
@@ -166,19 +172,12 @@ function DayAgenda({ items, labels }: { items: CalendarItem[]; labels: Labels })
           key={item.key}
           style={{ '--tone': toneOf(item) } as CSSProperties}
         >
-          {item.cover ? (
-            // eslint-disable-next-line @next/next/no-img-element
-            <img
-              alt=""
-              className="cal-slot-cover"
-              loading="lazy"
-              src={item.cover.url}
-              style={focalPointStyle(item.cover)}
-            />
-          ) : null}
+          <span className="cal-item-icon">
+            <TypeIcon type={item.type} />
+          </span>
           <span className="cal-slot-body">
             <span className="cal-slot-meta">
-              <span className="cal-item-type">{labels.type(item)}</span>
+              <span>{labels.type(item)}</span>
               {item.session ? <span>{labels.session(item.session)}</span> : null}
               {item.cancelled ? <span>{labels.cancelled}</span> : null}
             </span>
@@ -191,6 +190,16 @@ function DayAgenda({ items, labels }: { items: CalendarItem[]; labels: Labels })
                   : ''}
             </span>
           </span>
+          {item.cover ? (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img
+              alt=""
+              className="cal-slot-cover"
+              loading="lazy"
+              src={item.cover.url}
+              style={focalPointStyle(item.cover)}
+            />
+          ) : null}
         </li>
       ))}
     </ul>
