@@ -27,16 +27,33 @@
   min-width: 0;
 }
 
-.loadingCover.loadingCover {
+/* The head while it loads: the poster's frame, its panel and its strip as blank cells. */
+/* The head while it loads: the poster's own cells, left blank, on the page's surface tokens so the
+   dark theme gets no white paper. */
+.loadingPoster.loadingPoster {
+  --poster-paper: var(--surface);
+  --poster-ink: var(--border);
+}
+
+.loadingImage {
   background: var(--surface-muted);
 }
 
-.loadingCover.loadingCover::before {
-  content: none;
+.loadingCell {
+  display: flex;
+  align-items: center;
+  background: var(--poster-paper);
 }
 
-.loadingCover .titleRow {
-  width: 100%;
+.loadingTitleCell {
+  display: flex;
+  align-items: flex-end;
+  background: var(--surface-muted);
+}
+
+.headCell {
+  display: flex;
+  align-items: center;
 }
 
 .loadingBack.loadingBack {
@@ -636,12 +653,86 @@
 .settings {
   display: grid;
   gap: var(--space-4);
-  width: min(320px, 80vw);
-  /* The About field makes the panel tall: scroll inside it on a short screen. */
-  max-height: calc(var(--radix-popover-content-available-height, 100dvh) - 40px);
+}
+
+/* The settings dialog: a header and a footer that stay, the fields scrolling between them. */
+.settingsDialog[role='dialog'] {
+  width: min(calc(100vw - var(--space-8)), 560px);
+  overflow: visible;
+}
+
+.settingsPanel {
+  display: flex;
+  flex-direction: column;
+  max-height: calc(100dvh - var(--space-8));
+  overflow: hidden;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-surface);
+  background: var(--surface-raised);
+  box-shadow: var(--shadow-floating);
+}
+
+.settingsHead {
+  display: flex;
+  flex: none;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4);
+  padding: var(--space-4) var(--space-6);
+  border-bottom: 1px solid var(--border);
+}
+
+.settingsTitle {
+  margin: 0;
+  font-size: var(--text-lg);
+  font-weight: 500;
+}
+
+.settingsClose {
+  display: grid;
+  place-items: center;
+  width: var(--space-8);
+  height: var(--space-8);
+  border: 0;
+  border-radius: var(--radius-pill);
+  background: transparent;
+  color: var(--text-secondary);
+  cursor: pointer;
+}
+
+.settingsClose:hover {
+  background: var(--surface-muted);
+  color: var(--foreground);
+}
+
+.settingsBody {
+  flex: 1;
+  min-height: 0;
   overflow-y: auto;
-  padding: 2px;
-  margin: -2px;
+  overscroll-behavior: contain;
+  padding: var(--space-6);
+}
+
+.settingsFooter {
+  position: sticky;
+  bottom: 0;
+  display: grid;
+  gap: var(--space-3);
+  flex: none;
+  padding: var(--space-4) var(--space-6);
+  border-top: 1px solid var(--border);
+  background: var(--surface-raised);
+}
+
+/* In the bottom sheet the body scrolls, so the footer sticks to its foot. */
+.settingsSheet {
+  display: grid;
+  gap: var(--space-4);
+}
+
+.settingsSheet .settingsFooter {
+  margin-inline: calc(-1 * var(--space-5));
+  margin-block-end: calc(-1 * var(--space-6));
 }
 
 .aboutField {
@@ -1037,117 +1128,12 @@
   min-width: 0;
 }
 
-/* The space's own head: the cover under a flat tint of the page colour, so
-   the title reads in both themes without a gradient. */
-.spaceHead {
-  --cover-scrim: oklch(98% 0 0 / 0.82);
-  --on-cover: var(--foreground);
-  --on-cover-secondary: var(--text-secondary);
-  --head-title-shadow: none;
-  position: relative;
-  overflow: hidden;
-  isolation: isolate;
-  border: 1px solid var(--border);
-  border-radius: var(--radius-surface);
-  background: var(--surface);
-  min-width: 0;
-}
-
-:global([data-theme='dark']) .spaceHead {
-  --cover-scrim: oklch(12% 0 0 / 0.58);
-  --on-cover: oklch(98% 0 0);
-  --on-cover-secondary: oklch(98% 0 0 / 0.82);
-  --head-title-shadow: 0 1px 2px oklch(0% 0 0 / 0.4);
-}
-
-.headImage {
-  z-index: -2;
-  object-fit: cover;
-}
-
-.spaceHead::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  z-index: -1;
-  background: var(--cover-scrim);
-}
-
-/* Text set straight on the cover; the button groups keep their own surfaces. */
-.spaceHead .spaceTitle {
-  color: var(--on-cover);
-  text-shadow: var(--head-title-shadow);
-}
-
-.spaceHead .headBack a,
-.spaceHead .headAi {
-  color: var(--on-cover-secondary);
-}
-
-.spaceHead .headBack a:hover {
-  color: var(--on-cover);
-}
-
-.headInner {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr);
-  gap: var(--space-4);
-  /* The corner is rounded by --radius-surface, so the content keeps well inside it. */
-  padding: var(--space-5);
-  min-width: 0;
-}
-
-@media (min-width: 640px) {
-  .headInner {
-    padding: var(--space-6) var(--space-8);
-  }
-}
-
-/* Back to My spaces: the title is the heading right below, so the trail stops at the parent. */
-.headBack a {
-  display: inline-flex;
-  align-items: center;
-  gap: var(--space-1);
-  min-height: 24px;
-  font-size: var(--text-sm);
-  color: var(--text-secondary);
-  text-decoration: none;
-  transition: color var(--duration-fast) var(--ease-standard);
-}
-
-.headBack a:hover {
-  color: var(--foreground);
-}
-
-.headBackIcon {
-  margin-inline-start: -4px;
-}
-
-:global([dir='rtl']) .headBackIcon {
-  transform: scaleX(-1);
-}
-
-.titleBlock {
-  display: grid;
-  justify-items: start;
-  gap: var(--space-3);
-  min-width: 0;
-}
-
-.titleRow {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: var(--space-2) var(--space-3);
-  min-width: 0;
-}
-
-.spaceTitle {
+/* The space's own head is the poster card (.poster, in the global styles); only its parts' fine print is set here. */
+/* The title takes the poster title's face and size; only the wrapping is set here. */
+.headTitle {
   margin: 0;
-  font-size: var(--text-2xl);
-  font-weight: 500;
-  line-height: var(--leading-tight, 1.2);
-  text-wrap: balance;
+  font: inherit;
+  letter-spacing: inherit;
   overflow-wrap: anywhere;
   min-width: 0;
 }
@@ -1157,17 +1143,7 @@
   align-items: center;
   gap: var(--space-2);
   font-size: var(--text-sm);
-  color: var(--text-secondary);
-}
-
-/* The space's own buttons at the start, the AI group at the end; on a phone the group drops below
-   and starts the next line, so both rows begin at the same edge. */
-.headActions {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: space-between;
-  gap: var(--space-3) var(--space-4);
+  color: inherit;
 }
 
 /* Separate pills wrap as a unit, keeping each toolbar's arrow-key order intact. */
@@ -3146,4 +3122,101 @@ button.rsvpCell {
 :global([dir='rtl']) .event .eventTitle {
   letter-spacing: 0;
   line-height: 1.35;
+}
+
+/* The space head is the poster card, set lower: a shorter card, the cover always filling its
+   cell, small text in the cells, and the title panel at the start edge. */
+.head.head:global(.poster) {
+  min-height: min(calc(100cqi * 9 / 28), 17rem);
+}
+
+.head :global(.poster-title) {
+  font-size: clamp(1.5rem, 3.6cqi, 2.4rem);
+}
+
+.head :global(.poster-label),
+.head :global(.poster-credit) {
+  font-size: 0.9375rem;
+  line-height: 1.3;
+  padding-block: var(--space-3);
+}
+
+.headCredit {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2) var(--space-4);
+}
+
+.head :global(.poster-image img) {
+  object-fit: cover;
+}
+
+.head :global(.poster-details) {
+  font-size: 0.8125rem;
+}
+
+/* The strip: the AI box, then the buttons and the course page cell. */
+.head :global(.poster-strip) {
+  grid-template-columns: fit-content(55%) minmax(0, 1fr);
+}
+
+.head :global(.poster-strip:not(:has(> .poster-meta))) {
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.head :global(.poster-footer) {
+  grid-column: auto;
+  border-top: 0;
+}
+
+/* Without the moderators' buttons the AI box sits beside the yellow course page cell, so it takes the paper. */
+.head :global(.poster-meta).headAiPaper {
+  background: var(--poster-paper);
+}
+
+.headAi {
+  color: var(--poster-ink);
+  flex-wrap: wrap;
+  gap: var(--space-2) var(--space-3);
+  font-size: 0.8125rem;
+}
+
+/* The strip holds nothing above 1024px when only the phone-only button group is in it. */
+@media (min-width: 1024px) {
+  .head :global(.poster-strip):has(> .phoneBlock:only-child) {
+    display: none;
+  }
+
+  :global(.poster-footer).phoneBlock {
+    display: none;
+  }
+}
+
+/* The title panel at the start edge (left in English, right in Arabic), the cover after it. */
+@container poster (width > 34rem) {
+  .head :global(.poster-body) {
+    flex-direction: row-reverse;
+  }
+
+  .head :global(.poster-panel) {
+    border-inline-start: 0;
+    border-inline-end: 1px solid var(--poster-ink);
+  }
+}
+
+@container poster (max-width: 34rem) {
+  .head :global(.poster-image) {
+    aspect-ratio: 2 / 1;
+  }
+
+  .head :global(.poster-strip) {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .head :global(.poster-meta) {
+    border-inline-end: 0;
+    border-bottom: 1px solid var(--poster-ink);
+  }
 }

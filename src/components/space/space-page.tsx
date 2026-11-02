@@ -5,12 +5,10 @@ import { cookies } from 'next/headers'
 import { notFound } from 'next/navigation'
 import { getPayload } from 'payload'
 import Image from 'next/image'
-import Link from 'next/link'
-import { ChevronLeft } from 'lucide-react'
+import type { CSSProperties } from 'react'
 
 import { personOf } from '@/access'
 import { Alert } from '@/components/arc/alert/alert'
-import { Badge } from '@/components/arc/badge/badge'
 import { EmptyState } from '@/components/arc/empty-state/empty-state'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/arc/tabs/tabs'
 import type { Course, Programme, Space, User } from '@/payload-types'
@@ -52,6 +50,7 @@ import { PINNED_CARDS, PinnedCards, pinnedOrder } from './pinned-cards'
 import { NextSession } from './next-session'
 import { sessionContextOf } from './session-block'
 import { CHECKLIST_COOKIE, OnboardingChecklist } from './onboarding-checklist'
+import { POSTER_COLORS } from '@/lib/poster-colors'
 import { SpaceHeadActions } from './space-head-actions'
 import { spacePeopleCards } from './space-people'
 import { SpaceRail } from './space-rail'
@@ -333,65 +332,83 @@ export async function SpacePage({
     />
   )
 
+  const actions = (
+    <SpaceHeadActions
+      cell={!course}
+      coursePage={course ? `/${locale}/study/${course.slug}` : null}
+      rail={rail}
+      participation={numbers}
+      now={renderedAt}
+      settings={
+        moderator
+          ? {
+              space: space.id,
+              posting: space.posting ?? 'open',
+              events: space.events ?? 'members',
+              archived: feed.archived,
+              about: custom,
+              aboutDefault: defaultAbout,
+              rules: rules.custom,
+              rulesDefault: rules.fallback,
+            }
+          : null
+      }
+    />
+  )
+
   const content = (
     <div className={`${styles.page}`}>
-      <header className={styles.spaceHead}>
-        <Image
-          src={cover ?? COMMUNITY_COVER}
-          alt=""
-          fill
-          priority
-          sizes="(min-width: 1280px) 1200px, 100vw"
-          className={styles.headImage}
-        />
-        <div className={styles.headInner}>
-          {/* The title is the heading right below, so the trail names only where it leads back to. */}
-          <nav aria-label={t('breadcrumb')} className={styles.headBack}>
-            <Link href={`/${locale}/spaces`}>
-              <ChevronLeft size={16} aria-hidden="true" className={styles.headBackIcon} />
-              {t('title')}
-            </Link>
-          </nav>
-          <div className={styles.titleBlock}>
-            <div className={styles.titleRow}>
-              <h1 className={styles.spaceTitle}>
-                <bdi>{title}</bdi>
-              </h1>
-              <Badge tone={feed.archived ? 'neutral' : 'success'}>
-                {feed.archived ? t('archived') : t('open')}
-              </Badge>
+      <header className="poster-frame">
+        {/* The poster card of the open-for-registration list: the cover, a panel with the status,
+            the title and a line under it, then a strip of cells. */}
+        <article
+          className={`poster ${styles.head}`}
+          data-layout="0"
+          data-separate-label="true"
+          style={{ '--poster-color': POSTER_COLORS[0] } as CSSProperties}
+        >
+          <div className="poster-body">
+            <div className="poster-image">
+              <Image
+                src={cover ?? COMMUNITY_COVER}
+                alt=""
+                fill
+                priority
+                sizes="(min-width: 90rem) 53rem, (min-width: 48rem) 62vw, 100vw"
+              />
             </div>
-            <MembersPanel members={cards} viewerId={viewerPerson} />
-          </div>
-          <div className={styles.headActions}>
-            <SpaceHeadActions
-              coursePage={course ? `/${locale}/study/${course.slug}` : null}
-              rail={rail}
-              participation={numbers}
-              now={renderedAt}
-              settings={
-                moderator
-                  ? {
-                      space: space.id,
-                      posting: space.posting ?? 'open',
-                      events: space.events ?? 'members',
-                      archived: feed.archived,
-                      about: custom,
-                      aboutDefault: defaultAbout,
-                      rules: rules.custom,
-                      rulesDefault: rules.fallback,
-                    }
-                  : null
-              }
-            />
-            {course && (
-              <div className={styles.headAi}>
-                <span>{ts('ai')}</span>
-                <StudyWithAI kind="course" path={`/${locale}/study/${course.slug}`} size="sm" />
+            <div className="poster-panel">
+              <p className="poster-label" dir="auto">
+                {feed.archived ? t('archived') : t('open')}
+              </p>
+              <div className="poster-heading">
+                <div className="poster-title" dir="auto">
+                  <h1 className={styles.headTitle}>
+                    <bdi>{title}</bdi>
+                  </h1>
+                </div>
+                <div className={`poster-credit ${styles.headCredit}`} dir="auto">
+                  <span>{t('membersCount', { count: cards.length })}</span>
+                  <MembersPanel members={cards} viewerId={viewerPerson} />
+                </div>
+                {!course && actions}
               </div>
-            )}
+            </div>
           </div>
-        </div>
+          {course && (
+            <div className="poster-strip">
+              {course && (
+                <div
+                  className={`poster-meta ${styles.headAi} ${moderator ? '' : styles.headAiPaper}`}
+                >
+                  <span>{ts('ai')}</span>
+                  <StudyWithAI kind="course" path={`/${locale}/study/${course.slug}`} size="sm" />
+                </div>
+              )}
+              {actions}
+            </div>
+          )}
+        </article>
       </header>
       <div className={styles.layout}>
         <main className={styles.feed} aria-label={title}>

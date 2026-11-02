@@ -68,10 +68,12 @@ describe('space header actions', () => {
     expect(screen.queryByRole('button', { name: messages.Spaces.coursePage })).toBeNull()
   })
 
-  it('navigates to the course from its expanding action', () => {
+  it('links to the course page from the strip', () => {
     mount({ coursePage: '/en/study/example' })
-    fireEvent.click(screen.getByRole('button', { name: messages.Spaces.coursePage }))
-    expect(push).toHaveBeenCalledWith('/en/study/example')
+    expect(screen.getByRole('link', { name: messages.Spaces.coursePage })).toHaveProperty(
+      'href',
+      expect.stringContaining('/en/study/example'),
+    )
   })
 
   it('opens About and returns focus to its action on close', async () => {

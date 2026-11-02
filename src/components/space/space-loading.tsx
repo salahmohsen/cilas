@@ -8,26 +8,29 @@ export async function SpaceLoading() {
 
   return (
     <div className={styles.page} role="status" aria-label={t('loading')} aria-busy="true">
-      <div className={`${styles.spaceHead} ${styles.loadingCover}`} aria-hidden="true">
-        <div className={styles.headInner}>
-          <Skeleton lines={1} className={styles.loadingBack} />
-          <div className={styles.titleBlock}>
-            <div className={styles.titleRow}>
-              <Skeleton lines={1} className={styles.loadingTitle} />
-              <Skeleton lines={1} className={styles.loadingBadge} />
+      <div className="poster-frame" aria-hidden="true">
+        <article
+          className={`poster ${styles.head} ${styles.loadingPoster}`}
+          data-layout="0"
+          data-separate-label="true"
+        >
+          <div className="poster-body">
+            <div className={`poster-image ${styles.loadingImage}`} />
+            <div className="poster-panel">
+              <div className={`poster-label ${styles.loadingCell}`}>
+                <Skeleton lines={1} className={styles.loadingBack} />
+              </div>
+              <div className="poster-heading">
+                <div className={`poster-title ${styles.loadingTitleCell}`}>
+                  <Skeleton lines={1} className={styles.loadingTitle} />
+                </div>
+                <div className={`poster-credit ${styles.loadingCell}`}>
+                  <Skeleton avatar lines={1} className={styles.loadingMembers} />
+                </div>
+              </div>
             </div>
-            <Skeleton avatar lines={1} className={styles.loadingMembers} />
           </div>
-          <div className={styles.headActions}>
-            <div className={styles.loadingHeadActions}>
-              <Skeleton lines={1} className={styles.loadingHeadExpanded} />
-              <Skeleton lines={1} className={styles.loadingHeadButton} />
-              <span className={styles.phoneOnly}>
-                <Skeleton lines={1} className={styles.loadingHeadButton} />
-              </span>
-            </div>
-          </div>
-        </div>
+        </article>
       </div>
       <div className={styles.layout} aria-hidden="true">
         <div className={styles.feed}>

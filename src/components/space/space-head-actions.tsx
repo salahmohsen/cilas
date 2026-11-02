@@ -3,8 +3,8 @@
 import { useRef, useState } from 'react'
 import type { ComponentProps, ReactNode } from 'react'
 import { useTranslations } from 'next-intl'
-import { useRouter } from 'next/navigation'
-import { BookOpen, ChartColumn, Info, Settings } from 'lucide-react'
+import Link from 'next/link'
+import { ArrowRight, ChartColumn, Info, Settings } from 'lucide-react'
 
 import { BottomSheet } from '@/components/arc/bottom-sheet/bottom-sheet'
 import {
@@ -31,6 +31,7 @@ export function SpaceHeadActions({
   participation,
   now,
   settings,
+  cell = false,
 }: {
   coursePage: string | null
   /** The rail, shown in a sheet on narrow screens */
@@ -38,10 +39,11 @@ export function SpaceHeadActions({
   participation: Participation | null
   now: string
   settings: SettingsProps | null
+  /** Render the buttons as one cell of the title panel, for a space with no strip (no course) */
+  cell?: boolean
 }) {
   const t = useTranslations('Spaces')
   const tp = useTranslations('Participation')
-  const router = useRouter()
   const [open, setOpen] = useState<Panel | null>(null)
   const root = useRef<HTMLDivElement>(null)
 
@@ -91,41 +93,52 @@ export function SpaceHeadActions({
       <ExpandingButtonGroup items={list} label={t('spaceActions')} size="sm" />
     ) : null
   }
-  // The course page leads away, so it stands apart from the space's own panels.
   // Two panel groups, one per width, so the About segment is there only where the rail is not.
   const groups = (
     <div ref={root} className={styles.headButtons}>
-      {coursePage && (
-        <ExpandingButtonGroup
-          items={[
-            {
-              id: 'course',
-              label: t('coursePage'),
-              icon: <BookOpen size={16} aria-hidden="true" />,
-              onSelect: () => router.push(coursePage),
-            },
-          ]}
-          label={t('coursePage')}
-          size="sm"
-        />
-      )}
       <span className={styles.phoneOnly}>{group(true)}</span>
       <span className={styles.wideOnly}>{group(false)}</span>
+    </div>
+  )
+  const hasPanels = items(true).length > 0
+  // Without a wide-screen item (About lives in the rail there) the buttons show on phones only.
+  const phoneOnlyCell = items(false).length === 0
+  const buttons = settings ? (
+    <SpaceSettings
+      {...settings}
+      open={open === 'settings'}
+      onOpenChange={(next) => change('settings', next)}
+      anchor={groups}
+    />
+  ) : (
+    hasPanels && groups
+  )
+  const details = buttons ? <div className="poster-details">{buttons}</div> : null
+  const bare = !coursePage && phoneOnlyCell
+
+  const footer = cell ? (
+    buttons ? (
+      <div className={`poster-credit ${styles.headCell} ${phoneOnlyCell ? styles.phoneBlock : ''}`}>
+        {buttons}
+      </div>
+    ) : null
+  ) : (
+    <div className={`poster-footer ${bare ? styles.phoneBlock : ''}`}>
+      {details}
+      {coursePage && (
+        <div className="poster-action-cell">
+          <Link href={coursePage} className="poster-action">
+            {t('coursePage')}
+            <ArrowRight aria-hidden className="poster-arrow" size={16} strokeWidth={2} />
+          </Link>
+        </div>
+      )}
     </div>
   )
 
   return (
     <>
-      {settings ? (
-        <SpaceSettings
-          {...settings}
-          open={open === 'settings'}
-          onOpenChange={(next) => change('settings', next)}
-          anchor={groups}
-        />
-      ) : (
-        groups
-      )}
+      {footer}
       <BottomSheet
         title={t('about')}
         detents={[0.6, 0.92]}
