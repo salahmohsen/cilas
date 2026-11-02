@@ -1339,11 +1339,14 @@ a.collection-item:hover {
  */
 :root {
   --cal-rule: oklch(0.15 0 0);
+  /* Inside a day: softer than the lines between days, so the days read as the units. */
+  --cal-rule-soft: oklch(0.15 0 0 / 0.25);
   --cal-hatch: oklch(0 0 0 / 0.16);
 }
 .dark,
 [data-theme='dark'] {
   --cal-rule: oklch(0.92 0 0);
+  --cal-rule-soft: oklch(0.92 0 0 / 0.3);
   --cal-hatch: oklch(1 0 0 / 0.16);
 }
 .cal-page :is(h1, h2, h3),
@@ -1374,6 +1377,7 @@ a.collection-item:hover {
   --accent: oklch(33% 0 0);
   --accent-foreground: oklch(100% 0 0);
   --cal-rule: oklch(0.15 0 0);
+  --cal-rule-soft: oklch(0.15 0 0 / 0.25);
   --cal-hatch: oklch(0 0 0 / 0.16);
   color: var(--poster-ink);
 }
@@ -1533,8 +1537,8 @@ a.collection-item:hover {
   width: 2.5rem;
   height: 2.5rem;
   margin: 0;
-  border-inline-end: 1px solid var(--cal-rule);
-  border-block-end: 1px solid var(--cal-rule);
+  border-inline-end: 1px solid var(--cal-rule-soft);
+  border-block-end: 1px solid var(--cal-rule-soft);
   border-radius: 0;
   padding: 0;
   background: var(--background);
@@ -1577,7 +1581,7 @@ a.collection-item:hover {
 .cal-day {
   position: relative;
   display: flex;
-  min-height: 17.5rem;
+  min-height: 15rem;
   flex-direction: column;
   overflow: clip;
   background: var(--background);
@@ -1619,12 +1623,12 @@ a.collection-item:hover {
 .cal-day .cal-day-card > div:last-child {
   display: contents;
 }
-/* The cover fills the cell's width: 3:2, no inset, a rule under it. */
+/* The cover fills the cell's width: 2:1, no inset, a rule under it. */
 .cal-day .cal-day-card > div:first-child {
   grid-area: 1 / 1;
-  aspect-ratio: 3 / 2;
+  aspect-ratio: 2 / 1;
   border-radius: 0;
-  border-block-end: 1px solid var(--cal-rule);
+  border-block-end: 1px solid var(--cal-rule-soft);
 }
 .cal-day .cal-day-card > div:first-child > div {
   display: block;
@@ -1668,12 +1672,15 @@ a.collection-item:hover {
 }
 .cal-item + .cal-item,
 .cal-day .cal-day-card .cal-more {
-  border-block-start: 1px solid var(--cal-rule);
+  border-block-start: 1px solid var(--cal-rule-soft);
+}
+.cal-item {
+  grid-template-columns: auto minmax(0, 1fr);
 }
 .cal-item-type,
 .cal-item-when {
   padding: 0.35rem 0.625rem;
-  border-block-end: 1px solid var(--cal-rule);
+  border-block-end: 1px solid var(--cal-rule-soft);
   font-size: 0.7rem;
   font-weight: 600;
   line-height: 1.3;
@@ -1683,7 +1690,7 @@ a.collection-item:hover {
   align-items: center;
   gap: 0.4rem;
   min-width: 0;
-  border-inline-end: 1px solid var(--cal-rule);
+  border-inline-end: 1px solid var(--cal-rule-soft);
 }
 /* A type's colour: a dot, ringed so it reads on any paper. */
 .cal-dot {
@@ -1822,7 +1829,7 @@ a.collection-item:hover {
   grid-template-columns: minmax(0, 1fr) auto;
 }
 .cal-slot + .cal-slot {
-  border-block-start: 1px solid var(--cal-rule);
+  border-block-start: 1px solid var(--cal-rule-soft);
 }
 .cal-slot .cal-item-type,
 .cal-slot .cal-item-when {
@@ -1853,7 +1860,7 @@ a.collection-item:hover {
   height: 100%;
   min-height: 5rem;
   object-fit: cover;
-  border-inline-start: 1px solid var(--cal-rule);
+  border-inline-start: 1px solid var(--cal-rule-soft);
 }
 .cal-slot:not(:has(.cal-slot-cover)) .cal-slot-title,
 .cal-slot:not(:has(.cal-slot-cover)) .cal-slot-note {
@@ -1885,13 +1892,13 @@ a.collection-item:hover {
   background: var(--foreground);
   color: var(--background);
 }
-/* A picture across the top of an item, 3:2, a rule under it. */
+/* A picture across the top of an item, 2:1, a rule under it. */
 .cal-item-cover {
   grid-column: 1 / -1;
   width: 100%;
-  aspect-ratio: 3 / 2;
+  aspect-ratio: 2 / 1;
   object-fit: cover;
-  border-block-end: 1px solid var(--cal-rule);
+  border-block-end: 1px solid var(--cal-rule-soft);
 }
 
 /* The agenda, and a phone's month: a box a day, its date cell on top, then its rows. */
@@ -1921,7 +1928,7 @@ a.collection-item:hover {
 .cal-agenda-date {
   display: flex;
   align-items: stretch;
-  border-block-end: 1px solid var(--cal-rule);
+  border-block-end: 1px solid var(--cal-rule-soft);
   background-image: repeating-linear-gradient(135deg, transparent 0 6px, var(--cal-hatch) 6px 7px);
 }
 /* The number and the date are boxes on paper; the hatch fills what is left of the row. */
@@ -1935,7 +1942,7 @@ a.collection-item:hover {
   display: grid;
   align-content: center;
   padding: 0.5rem 0.875rem;
-  border-inline-end: 1px solid var(--cal-rule);
+  border-inline-end: 1px solid var(--cal-rule-soft);
   background: var(--background);
   font-size: 0.8rem;
   font-weight: 500;
@@ -3810,4 +3817,30 @@ h3 {
   .site-sheet-button:hover {
     background: var(--surface-muted);
   }
+}
+
+/* Pointing at (or tabbing to) a day, or a row in the week, turns its title boxes the palette yellow. */
+.cal-item-title,
+.cal-slot-title {
+  transition-property: background-color;
+  transition-duration: 150ms;
+}
+.cal-day:hover .cal-item-title,
+.cal-day:has(button:focus-visible) .cal-item-title,
+.cal-week .cal-item:hover .cal-item-title,
+.cal-slot:hover .cal-slot-title {
+  background-color: #ffb71b;
+  color: #121212;
+}
+@media (prefers-reduced-motion: reduce) {
+  .cal-item-title,
+  .cal-slot-title {
+    transition: none;
+  }
+}
+/* Today is ringed whole, as well as its number inverted. */
+.cal-day[data-today],
+.cal-week-day[data-today] {
+  outline: 2px solid var(--foreground);
+  outline-offset: -2px;
 }

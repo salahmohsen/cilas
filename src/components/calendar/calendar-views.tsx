@@ -119,7 +119,10 @@ export async function MonthView({
                           >
                             <span className="cal-item-type">
                               <span aria-hidden className="cal-dot" />
-                              {labels.type(item)}
+                              {/* With a time beside it the type is the dot (the key names it). */}
+                              <span className={timeOf(item) || item.starts ? 'sr-only' : undefined}>
+                                {labels.type(item)}
+                              </span>
                             </span>
                             {timeOf(item) ? (
                               <span className="cal-item-when" dir={labels.timeDir}>
@@ -262,7 +265,9 @@ export async function WeekView({
                 ) : null}
                 <span className="cal-item-type">
                   <span aria-hidden className="cal-dot" />
-                  {labels.type(item)}
+                  <span className={item.start || item.starts ? 'sr-only' : undefined}>
+                    {labels.type(item)}
+                  </span>
                 </span>
                 {item.start || item.starts ? (
                   <span className="cal-item-when" dir={item.start ? labels.timeDir : undefined}>
