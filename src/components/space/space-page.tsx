@@ -101,6 +101,7 @@ export async function SpacePage({
   const [
     t,
     tp,
+    ts,
     feed,
     state,
     { cards, byId, moderators },
@@ -113,6 +114,7 @@ export async function SpacePage({
   ] = await Promise.all([
     getTranslations('Spaces'),
     getTranslations('SpacePost'),
+    getTranslations('Share'),
     spaceFeed(payload, user, space, lang),
     memberState(payload, user, space.id),
     spacePeopleCards(payload, user, space, locale),
@@ -336,7 +338,7 @@ export async function SpacePage({
         {/* The poster card of the open-for-registration list: the cover, a panel with the status,
             the title and a line under it, then a strip of cells. */}
         <article
-          className="poster"
+          className={`poster ${styles.head}`}
           data-layout="0"
           data-separate-label="true"
           style={{ '--poster-color': POSTER_COLORS[0] } as CSSProperties}
@@ -361,20 +363,20 @@ export async function SpacePage({
                     <bdi>{title}</bdi>
                   </h1>
                 </div>
-                <p className="poster-credit" dir="auto">
-                  {t('membersCount', { count: cards.length })}
-                </p>
+                <div className={`poster-credit ${styles.headCredit}`} dir="auto">
+                  <span>{t('membersCount', { count: cards.length })}</span>
+                  <MembersPanel members={cards} viewerId={viewerPerson} />
+                </div>
               </div>
             </div>
           </div>
           <div className="poster-strip">
-            <span className="poster-mark">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img alt="" draggable={false} src="/assets/images/logo.webp" />
-            </span>
-            <div className="poster-meta">
-              <MembersPanel members={cards} viewerId={viewerPerson} />
-            </div>
+            {course && (
+              <div className={`poster-meta ${styles.headAi}`}>
+                <span>{ts('ai')}</span>
+                <StudyWithAI kind="course" path={`/${locale}/study/${course.slug}`} size="sm" />
+              </div>
+            )}
             <SpaceHeadActions
               coursePage={course ? `/${locale}/study/${course.slug}` : null}
               rail={rail}
@@ -393,11 +395,6 @@ export async function SpacePage({
                       rulesDefault: rules.fallback,
                     }
                   : null
-              }
-              ai={
-                course ? (
-                  <StudyWithAI kind="course" path={`/${locale}/study/${course.slug}`} size="sm" />
-                ) : null
               }
             />
           </div>

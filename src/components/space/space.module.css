@@ -3122,16 +3122,92 @@ button.rsvpCell {
   line-height: 1.35;
 }
 
-/* The strip's footer cell only holds the phone-only buttons: above 1024px it has nothing to show.
-   Beats the poster's own display rule. */
+/* The space head is the poster card, set lower: a shorter card, the cover always filling its
+   cell, small text in the cells, and the cover at the left in both reading directions. */
+.head.head:global(.poster) {
+  min-height: min(calc(100cqi * 9 / 28), 17rem);
+}
+
+.head :global(.poster-title) {
+  font-size: clamp(1.5rem, 3.6cqi, 2.4rem);
+}
+
+.head :global(.poster-label),
+.head :global(.poster-credit) {
+  font-size: 0.9375rem;
+  line-height: 1.3;
+  padding-block: var(--space-3);
+}
+
+.headCredit {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2) var(--space-4);
+}
+
+.head :global(.poster-image img) {
+  object-fit: cover;
+}
+
+.head :global(.poster-details) {
+  font-size: 0.8125rem;
+}
+
+/* The strip: the AI box, then the buttons and the course page cell. */
+.head :global(.poster-strip) {
+  grid-template-columns: fit-content(55%) minmax(0, 1fr);
+}
+
+.head :global(.poster-strip:not(:has(> .poster-meta))) {
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.head :global(.poster-footer) {
+  grid-column: auto;
+  border-top: 0;
+}
+
+.headAi {
+  flex-wrap: wrap;
+  gap: var(--space-2) var(--space-3);
+  font-size: 0.8125rem;
+}
+
+/* The strip holds nothing above 1024px when only the phone-only button group is in it. */
 @media (min-width: 1024px) {
+  .head :global(.poster-strip):has(> .phoneBlock:only-child) {
+    display: none;
+  }
+
   :global(.poster-footer).phoneBlock {
     display: none;
   }
 }
 
-@media (min-width: 1024px) {
-  :global(.poster-strip):has(:global(.poster-footer).phoneBlock) {
-    grid-template-columns: auto minmax(0, 1fr);
+@container poster (width > 34rem) {
+  :global([dir='rtl']) .head :global(.poster-body) {
+    flex-direction: row-reverse;
+  }
+
+  :global([dir='rtl']) .head :global(.poster-panel) {
+    border-inline-start: 0;
+    border-inline-end: 1px solid var(--poster-ink);
+  }
+}
+
+@container poster (max-width: 34rem) {
+  .head :global(.poster-image) {
+    aspect-ratio: 2 / 1;
+  }
+
+  .head :global(.poster-strip) {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .head :global(.poster-meta) {
+    border-inline-end: 0;
+    border-bottom: 1px solid var(--poster-ink);
   }
 }

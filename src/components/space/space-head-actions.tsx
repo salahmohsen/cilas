@@ -31,7 +31,6 @@ export function SpaceHeadActions({
   participation,
   now,
   settings,
-  ai,
 }: {
   coursePage: string | null
   /** The rail, shown in a sheet on narrow screens */
@@ -39,8 +38,6 @@ export function SpaceHeadActions({
   participation: Participation | null
   now: string
   settings: SettingsProps | null
-  /** Study with AI, beside the space's own buttons; null outside a course space */
-  ai?: ReactNode
 }) {
   const t = useTranslations('Spaces')
   const tp = useTranslations('Participation')
@@ -113,14 +110,8 @@ export function SpaceHeadActions({
   ) : (
     hasPanels && groups
   )
-  const details =
-    buttons || ai ? (
-      <div className="poster-details">
-        {buttons}
-        {ai}
-      </div>
-    ) : null
-  const bare = !coursePage && !ai && phoneOnlyCell
+  const details = buttons ? <div className="poster-details">{buttons}</div> : null
+  const bare = !coursePage && phoneOnlyCell
 
   return (
     <>
