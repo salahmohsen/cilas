@@ -31,6 +31,7 @@ export function SpaceHeadActions({
   participation,
   now,
   settings,
+  cell = false,
 }: {
   coursePage: string | null
   /** The rail, shown in a sheet on narrow screens */
@@ -38,6 +39,8 @@ export function SpaceHeadActions({
   participation: Participation | null
   now: string
   settings: SettingsProps | null
+  /** Render the buttons as one cell of the title panel, for a space with no strip (no course) */
+  cell?: boolean
 }) {
   const t = useTranslations('Spaces')
   const tp = useTranslations('Participation')
@@ -113,19 +116,29 @@ export function SpaceHeadActions({
   const details = buttons ? <div className="poster-details">{buttons}</div> : null
   const bare = !coursePage && phoneOnlyCell
 
+  const footer = cell ? (
+    buttons ? (
+      <div className={`poster-credit ${styles.headCell} ${phoneOnlyCell ? styles.phoneBlock : ''}`}>
+        {buttons}
+      </div>
+    ) : null
+  ) : (
+    <div className={`poster-footer ${bare ? styles.phoneBlock : ''}`}>
+      {details}
+      {coursePage && (
+        <div className="poster-action-cell">
+          <Link href={coursePage} className="poster-action">
+            {t('coursePage')}
+            <ArrowRight aria-hidden className="poster-arrow" size={16} strokeWidth={2} />
+          </Link>
+        </div>
+      )}
+    </div>
+  )
+
   return (
     <>
-      <div className={`poster-footer ${bare ? styles.phoneBlock : ''}`}>
-        {details}
-        {coursePage && (
-          <div className="poster-action-cell">
-            <Link href={coursePage} className="poster-action">
-              {t('coursePage')}
-              <ArrowRight aria-hidden className="poster-arrow" size={16} strokeWidth={2} />
-            </Link>
-          </div>
-        )}
-      </div>
+      {footer}
       <BottomSheet
         title={t('about')}
         detents={[0.6, 0.92]}

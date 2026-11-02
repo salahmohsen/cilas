@@ -28,30 +28,26 @@
 }
 
 /* The head while it loads: the poster's frame, its panel and its strip as blank cells. */
-.loadingHead {
-  display: grid;
-  grid-template-rows: minmax(16rem, 1fr) auto;
-  min-height: min(56.25cqi, 34.5rem);
-  overflow: clip;
-  border: 1px solid var(--foreground);
-  border-radius: 1rem;
+/* The head while it loads: the poster's own cells, left blank. */
+.loadingImage {
   background: var(--surface-muted);
 }
 
-.loadingStrip {
+.loadingCell {
   display: flex;
   align-items: center;
-  gap: var(--space-4);
-  min-height: 3.5rem;
-  padding: var(--space-3) var(--space-4);
-  border-block-start: 1px solid var(--foreground);
+  background: var(--poster-paper);
 }
 
-.loadingPanel {
-  display: grid;
-  align-content: end;
-  gap: var(--space-3);
-  padding: var(--space-5);
+.loadingTitleCell {
+  display: flex;
+  align-items: flex-end;
+  background: var(--surface-muted);
+}
+
+.headCell {
+  display: flex;
+  align-items: center;
 }
 
 .loadingBack.loadingBack {
@@ -3175,6 +3171,7 @@ button.rsvpCell {
 }
 
 .headAi {
+  color: var(--poster-ink);
   flex-wrap: wrap;
   gap: var(--space-2) var(--space-3);
   font-size: 0.8125rem;

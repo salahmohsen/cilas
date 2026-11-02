@@ -9,22 +9,24 @@ export async function SpaceLoading() {
   return (
     <div className={styles.page} role="status" aria-label={t('loading')} aria-busy="true">
       <div className="poster-frame" aria-hidden="true">
-        <div className={styles.loadingHead}>
-          <div className={styles.loadingPanel}>
-            <Skeleton lines={1} className={styles.loadingBack} />
-            <Skeleton lines={1} className={styles.loadingTitle} />
-          </div>
-          <div className={styles.loadingStrip}>
-            <Skeleton avatar lines={1} className={styles.loadingMembers} />
-            <div className={styles.loadingHeadActions}>
-              <Skeleton lines={1} className={styles.loadingHeadExpanded} />
-              <Skeleton lines={1} className={styles.loadingHeadButton} />
-              <span className={styles.phoneOnly}>
-                <Skeleton lines={1} className={styles.loadingHeadButton} />
-              </span>
+        <article className={`poster ${styles.head}`} data-layout="0" data-separate-label="true">
+          <div className="poster-body">
+            <div className={`poster-image ${styles.loadingImage}`} />
+            <div className="poster-panel">
+              <div className={`poster-label ${styles.loadingCell}`}>
+                <Skeleton lines={1} className={styles.loadingBack} />
+              </div>
+              <div className="poster-heading">
+                <div className={`poster-title ${styles.loadingTitleCell}`}>
+                  <Skeleton lines={1} className={styles.loadingTitle} />
+                </div>
+                <div className={`poster-credit ${styles.loadingCell}`}>
+                  <Skeleton avatar lines={1} className={styles.loadingMembers} />
+                </div>
+              </div>
             </div>
           </div>
-        </div>
+        </article>
       </div>
       <div className={styles.layout} aria-hidden="true">
         <div className={styles.feed}>

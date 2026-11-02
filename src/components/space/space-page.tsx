@@ -332,6 +332,30 @@ export async function SpacePage({
     />
   )
 
+  const actions = (
+    <SpaceHeadActions
+      cell={!course}
+      coursePage={course ? `/${locale}/study/${course.slug}` : null}
+      rail={rail}
+      participation={numbers}
+      now={renderedAt}
+      settings={
+        moderator
+          ? {
+              space: space.id,
+              posting: space.posting ?? 'open',
+              events: space.events ?? 'members',
+              archived: feed.archived,
+              about: custom,
+              aboutDefault: defaultAbout,
+              rules: rules.custom,
+              rulesDefault: rules.fallback,
+            }
+          : null
+      }
+    />
+  )
+
   const content = (
     <div className={`${styles.page}`}>
       <header className="poster-frame">
@@ -367,39 +391,23 @@ export async function SpacePage({
                   <span>{t('membersCount', { count: cards.length })}</span>
                   <MembersPanel members={cards} viewerId={viewerPerson} />
                 </div>
+                {!course && actions}
               </div>
             </div>
           </div>
-          <div className="poster-strip">
-            {course && (
-              <div
-                className={`poster-meta ${styles.headAi} ${moderator ? '' : styles.headAiPaper}`}
-              >
-                <span>{ts('ai')}</span>
-                <StudyWithAI kind="course" path={`/${locale}/study/${course.slug}`} size="sm" />
-              </div>
-            )}
-            <SpaceHeadActions
-              coursePage={course ? `/${locale}/study/${course.slug}` : null}
-              rail={rail}
-              participation={numbers}
-              now={renderedAt}
-              settings={
-                moderator
-                  ? {
-                      space: space.id,
-                      posting: space.posting ?? 'open',
-                      events: space.events ?? 'members',
-                      archived: feed.archived,
-                      about: custom,
-                      aboutDefault: defaultAbout,
-                      rules: rules.custom,
-                      rulesDefault: rules.fallback,
-                    }
-                  : null
-              }
-            />
-          </div>
+          {course && (
+            <div className="poster-strip">
+              {course && (
+                <div
+                  className={`poster-meta ${styles.headAi} ${moderator ? '' : styles.headAiPaper}`}
+                >
+                  <span>{ts('ai')}</span>
+                  <StudyWithAI kind="course" path={`/${locale}/study/${course.slug}`} size="sm" />
+                </div>
+              )}
+              {actions}
+            </div>
+          )}
         </article>
       </header>
       <div className={styles.layout}>
