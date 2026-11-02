@@ -336,15 +336,7 @@ export async function SpacePage({
   const content = (
     <div className={`${styles.page}`}>
       <header className={styles.spaceHead}>
-        <Image
-          src={cover ?? COMMUNITY_COVER}
-          alt=""
-          fill
-          priority
-          sizes="(min-width: 1280px) 1200px, 100vw"
-          className={styles.headImage}
-        />
-        <div className={styles.headInner}>
+        <div className={styles.headLead}>
           {/* The title is the heading right below, so the trail names only where it leads back to. */}
           <nav aria-label={t('breadcrumb')} className={styles.headBack}>
             <Link href={`/${locale}/spaces`}>
@@ -352,17 +344,27 @@ export async function SpacePage({
               {t('title')}
             </Link>
           </nav>
-          <div className={styles.titleBlock}>
-            <div className={styles.titleRow}>
-              <h1 className={styles.spaceTitle}>
-                <bdi>{title}</bdi>
-              </h1>
-              <Badge tone={feed.archived ? 'neutral' : 'success'}>
-                {feed.archived ? t('archived') : t('open')}
-              </Badge>
-            </div>
-            <MembersPanel members={cards} viewerId={viewerPerson} />
-          </div>
+          <p className={styles.headKicker}>
+            <Badge tone={feed.archived ? 'neutral' : 'success'}>
+              {feed.archived ? t('archived') : t('open')}
+            </Badge>
+          </p>
+          <h1 className={`course-title ${styles.headTitle}`}>
+            <bdi>{title}</bdi>
+          </h1>
+        </div>
+        <div className={styles.headCover}>
+          <Image
+            src={cover ?? COMMUNITY_COVER}
+            alt=""
+            fill
+            priority
+            sizes="(min-width: 1280px) 1200px, 100vw"
+            className={styles.headImage}
+          />
+        </div>
+        <div className={styles.headFoot}>
+          <MembersPanel members={cards} viewerId={viewerPerson} />
           <div className={styles.headActions}>
             <SpaceHeadActions
               coursePage={course ? `/${locale}/study/${course.slug}` : null}

@@ -27,16 +27,18 @@
   min-width: 0;
 }
 
-.loadingCover.loadingCover {
+.loadingCover {
+  aspect-ratio: 16 / 9;
+  max-height: min(50svh, 28rem);
+  width: 100%;
+  border-radius: calc(var(--radius) * 2);
   background: var(--surface-muted);
 }
 
-.loadingCover.loadingCover::before {
-  content: none;
-}
-
-.loadingCover .titleRow {
-  width: 100%;
+@media (min-width: 640px) {
+  .loadingCover {
+    aspect-ratio: 21 / 8;
+  }
 }
 
 .loadingBack.loadingBack {
@@ -1037,70 +1039,69 @@
   min-width: 0;
 }
 
-/* The space's own head: the cover under a flat tint of the page colour, so
-   the title reads in both themes without a gradient. */
+/* The space's own head, laid out as the course page's: the way back, a meta line, the title,
+   the cover as a rounded picture, then the members and the actions. No frame, no text on the cover. */
 .spaceHead {
-  --cover-scrim: oklch(98% 0 0 / 0.82);
-  --on-cover: var(--foreground);
-  --on-cover-secondary: var(--text-secondary);
-  --head-title-shadow: none;
+  display: grid;
+  gap: var(--space-5);
+  min-width: 0;
+}
+
+.headLead {
+  display: grid;
+  justify-items: start;
+  gap: var(--space-3);
+  min-width: 0;
+}
+
+/* The face and size come from the shared course-title; only the wrapping is set here. */
+.headTitle {
+  margin: 0;
+  overflow-wrap: anywhere;
+  min-width: 0;
+}
+
+.headCover {
   position: relative;
   overflow: hidden;
-  isolation: isolate;
-  border: 1px solid var(--border);
-  border-radius: var(--radius-surface);
-  background: var(--surface);
-  min-width: 0;
-}
-
-:global([data-theme='dark']) .spaceHead {
-  --cover-scrim: oklch(12% 0 0 / 0.58);
-  --on-cover: oklch(98% 0 0);
-  --on-cover-secondary: oklch(98% 0 0 / 0.82);
-  --head-title-shadow: 0 1px 2px oklch(0% 0 0 / 0.4);
-}
-
-.headImage {
-  z-index: -2;
-  object-fit: cover;
-}
-
-.spaceHead::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  z-index: -1;
-  background: var(--cover-scrim);
-}
-
-/* Text set straight on the cover; the button groups keep their own surfaces. */
-.spaceHead .spaceTitle {
-  color: var(--on-cover);
-  text-shadow: var(--head-title-shadow);
-}
-
-.spaceHead .headBack a,
-.spaceHead .headAi {
-  color: var(--on-cover-secondary);
-}
-
-.spaceHead .headBack a:hover {
-  color: var(--on-cover);
-}
-
-.headInner {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr);
-  gap: var(--space-4);
-  /* The corner is rounded by --radius-surface, so the content keeps well inside it. */
-  padding: var(--space-5);
-  min-width: 0;
+  aspect-ratio: 16 / 9;
+  max-height: min(50svh, 28rem);
+  width: 100%;
+  border-radius: calc(var(--radius) * 2);
+  background: var(--surface-muted);
 }
 
 @media (min-width: 640px) {
-  .headInner {
-    padding: var(--space-6) var(--space-8);
+  .headCover {
+    aspect-ratio: 21 / 8;
   }
+}
+
+.headImage {
+  object-fit: cover;
+}
+
+/* The same hairline the course cover has, drawn above the picture. */
+.headCover::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  box-shadow: inset 0 0 0 1px oklch(0 0 0 / 0.1);
+  pointer-events: none;
+}
+
+:global([data-theme='dark']) .headCover::after {
+  box-shadow: inset 0 0 0 1px oklch(1 0 0 / 0.1);
+}
+
+.headFoot {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3) var(--space-4);
+  min-width: 0;
 }
 
 /* Back to My spaces: the title is the heading right below, so the trail stops at the parent. */
@@ -1127,21 +1128,6 @@
   transform: scaleX(-1);
 }
 
-.titleBlock {
-  display: grid;
-  justify-items: start;
-  gap: var(--space-3);
-  min-width: 0;
-}
-
-.titleRow {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: var(--space-2) var(--space-3);
-  min-width: 0;
-}
-
 .spaceTitle {
   margin: 0;
   font-size: var(--text-2xl);
@@ -1160,14 +1146,24 @@
   color: var(--text-secondary);
 }
 
+.headKicker {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2);
+  margin: 0;
+  font-size: var(--text-sm);
+  color: var(--text-secondary);
+}
+
 /* The space's own buttons at the start, the AI group at the end; on a phone the group drops below
    and starts the next line, so both rows begin at the same edge. */
 .headActions {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  justify-content: space-between;
   gap: var(--space-3) var(--space-4);
+  min-width: 0;
 }
 
 /* Separate pills wrap as a unit, keeping each toolbar's arrow-key order intact. */
