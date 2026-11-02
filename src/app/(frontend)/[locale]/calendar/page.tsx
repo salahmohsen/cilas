@@ -94,28 +94,35 @@ export default async function CalendarPage({ params, searchParams }: Props) {
           <h1 className="cal-title">{title}</h1>
           <p className="cal-head-count">{t('inView', { count: items.length })}</p>
         </div>
-        <nav aria-label={t('navigation')} className="cal-head-nav">
-          {/* Time runs left to right on a calendar's arrows in either language:
+        <div className="cal-head-nav">
+          <nav aria-label={t('navigation')} className="cal-head-controls">
+            {/* Time runs left to right on a calendar's arrows in either language:
               next is always the right arrow. */}
-          <div className="flex items-center gap-1" dir="ltr">
-            <Link aria-label={t('previous')} className="cal-step" href={href(view, range.previous)}>
-              <ChevronLeft aria-hidden size={18} />
-            </Link>
-            <Link className="cal-today" href={href(view, today)}>
-              {t('today')}
-            </Link>
-            <Link aria-label={t('next')} className="cal-step" href={href(view, range.next)}>
-              <ChevronRight aria-hidden size={18} />
-            </Link>
-          </div>
-          <CalendarJump
-            date={date}
-            view={view}
-            years={yearsOf(
-              all.map((i) => Number(i.date.slice(0, 4))).concat(Number(today.slice(0, 4))),
-            )}
-          />
-        </nav>
+            <div className="flex items-center gap-1" dir="ltr">
+              <Link
+                aria-label={t('previous')}
+                className="cal-step"
+                href={href(view, range.previous)}
+              >
+                <ChevronLeft aria-hidden size={18} />
+              </Link>
+              <Link className="cal-today" href={href(view, today)}>
+                {t('today')}
+              </Link>
+              <Link aria-label={t('next')} className="cal-step" href={href(view, range.next)}>
+                <ChevronRight aria-hidden size={18} />
+              </Link>
+            </div>
+            <CalendarJump
+              date={date}
+              view={view}
+              years={yearsOf(
+                all.map((i) => Number(i.date.slice(0, 4))).concat(Number(today.slice(0, 4))),
+              )}
+            />
+          </nav>
+          <CalendarLegend items={items} label={t('legend')} labels={labels} />
+        </div>
         <div className="cal-head-foot">
           <div className="cal-head-views">
             <div className="cal-switch" role="group" aria-label={t('views')}>
@@ -130,7 +137,6 @@ export default async function CalendarPage({ params, searchParams }: Props) {
             <CalendarFeed feedPath={`/${locale}/calendar.ics`} />
           </div>
         </div>
-        <CalendarLegend items={items} label={t('legend')} labels={labels} />
       </header>
 
       <div className="mt-6">

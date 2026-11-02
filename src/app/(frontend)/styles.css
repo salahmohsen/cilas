@@ -1413,8 +1413,15 @@ a.collection-item:hover {
   padding: calc(var(--poster-pad) * 0.6) var(--poster-pad);
 }
 .cal-head-nav {
-  align-content: center;
+  flex-direction: column;
   justify-content: center;
+}
+.cal-head-controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
 }
 .cal-head-foot {
   display: flex;
@@ -1663,14 +1670,14 @@ a.collection-item:hover {
   background: var(--tone, var(--border-strong));
   box-shadow: 0 0 0 1px var(--cal-rule);
 }
-/* What each colour means, across the foot of the header. */
+/* What each colour means, under the date controls. */
 .cal-head-legend {
   display: flex;
   flex-wrap: wrap;
+  justify-content: center;
   gap: 0.5rem 1.25rem;
-  grid-column: 1 / -1;
   margin: 0;
-  padding: calc(var(--poster-pad) * 0.5) var(--poster-pad);
+  padding: 0;
   list-style: none;
   font-size: 0.8rem;
   font-weight: 500;
