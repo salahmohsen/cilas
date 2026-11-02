@@ -3,13 +3,9 @@ import { getFormatter, getLocale, getTranslations } from 'next-intl/server'
 import type { CalendarItem } from '@/api/calendar.api'
 import { Card } from '@/components/arc/card/card'
 import { Link } from '@/i18n/navigation'
-import { monthGrid, monthStart, weekDays } from '@/lib/calendar'
+import { monthGrid, monthStart, summariseDay, weekDays } from '@/lib/calendar'
 import { localDigits, numberingSystemOf, timeDir } from '@/lib/digits'
 import { focalPointStyle } from '@/lib/media-image'
-
-/** How many items a month's day cell lists before "+N more": fewer over a cover, to keep it legible. */
-const IN_CELL = 3
-const IN_COVER_CELL = 1
 
 type Labels = {
   type: (item: CalendarItem) => string
@@ -55,8 +51,9 @@ function ItemTitle({ item, className }: { item: CalendarItem; className?: string
 }
 
 /**
- * The month: whole weeks, Saturday to Friday. A day a course with a cover
- * meets takes that cover as its ground; its items sit on it in white.
+ * The month: whole weeks, Saturday to Friday. A day is a card as on the
+ * Open for registration page: its pictures on top (a mosaic when the day has
+ * more than one), then up to two courses by name.
  */
 export async function MonthView({
   date,
@@ -90,66 +87,48 @@ export async function MonthView({
       <div className="cal-month-body">
         {days.map((day) => {
           const all = map.get(day) ?? []
-          const owner = all.find((i) => i.cover && !i.cancelled)
-          const cover = owner?.cover
-          // The course whose cover the day shows comes first, so its name is on it.
-          const dayItems = owner ? [owner, ...all.filter((i) => i !== owner)] : all
+          const { covers, listed, hidden } = summariseDay(all)
           const outside = !day.startsWith(month)
-          const shown = cover ? IN_COVER_CELL : IN_CELL
           return (
             <div
               className="cal-day"
-              data-cover={cover ? '' : undefined}
               data-outside={outside || undefined}
               data-today={day === today || undefined}
               key={day}
               role="gridcell"
             >
-              {dayItems.length ? (
+              {all.length ? (
                 // A day with something opens, growing into that day's agenda.
                 <Card
                   className="cal-day-card"
                   closeLabel={labels.close}
-                  data-cover={cover ? '' : undefined}
+                  data-cover={covers.length ? '' : undefined}
                   details={<DayAgenda items={all} labels={labels} />}
-                  media={
-                    cover ? (
-                      // eslint-disable-next-line @next/next/no-img-element
-                      <img
-                        alt=""
-                        className="cal-cover-img"
-                        decoding="async"
-                        src={cover.url}
-                        style={focalPointStyle(cover)}
-                      />
-                    ) : undefined
-                  }
+                  media={covers.length ? <DayMosaic covers={covers} /> : undefined}
                   preview={
-                    <ul className="cal-day-items">
-                      {dayItems.slice(0, shown).map((item, i) => (
-                        <li className="cal-item" key={item.key}>
-                          <span className="cal-item-head">
+                    <>
+                      <ul className="cal-day-items">
+                        {listed.map((item) => (
+                          <li
+                            className="cal-item"
+                            data-cancelled={item.cancelled || undefined}
+                            key={item.key}
+                          >
                             {timeOf(item) ? (
                               <span className="cal-item-when" dir={labels.timeDir}>
                                 {labels.digits(timeOf(item)!)}
                               </span>
                             ) : item.starts ? (
                               <span className="cal-item-when">{labels.starts}</span>
-                            ) : (
-                              <span />
-                            )}
-                            {i === shown - 1 && dayItems.length > shown ? (
-                              <span className="cal-more">
-                                {labels.more(dayItems.length - shown)}
-                              </span>
                             ) : null}
-                          </span>
-                          <span className="cal-item-title" dir="auto">
-                            {item.title}
-                          </span>
-                        </li>
-                      ))}
-                    </ul>
+                            <span className="cal-item-title" dir="auto">
+                              {item.title}
+                            </span>
+                          </li>
+                        ))}
+                      </ul>
+                      {hidden ? <span className="cal-more">{labels.more(hidden)}</span> : null}
+                    </>
                   }
                   panelTitle={longDate(day)}
                   title={number(day)}
@@ -162,6 +141,30 @@ export async function MonthView({
           )
         })}
       </div>
+    </div>
+  )
+}
+
+/**
+ * A day's pictures as one: a single cover fills the frame; two to four share
+ * it as a mosaic whose tiles drift slowly, each on its own beat (the motion
+ * is ambient, off for those who ask for less).
+ */
+function DayMosaic({ covers }: { covers: NonNullable<CalendarItem['cover']>[] }) {
+  return (
+    <div className="cal-mosaic" data-count={covers.length}>
+      {covers.map((cover) => (
+        <span className="cal-mosaic-tile" key={cover.url}>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            alt=""
+            decoding="async"
+            loading="lazy"
+            src={cover.url}
+            style={focalPointStyle(cover)}
+          />
+        </span>
+      ))}
     </div>
   )
 }

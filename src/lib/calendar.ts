@@ -1,3 +1,4 @@
+import type { CalendarItem } from '@/api/calendar.api'
 import { addDays, cairoDay, weekdayOf, WEEKDAYS } from '@/lib/cairo-day'
 
 /**
@@ -74,5 +75,28 @@ export const viewRange = (
     to: addDays(date, AGENDA_DAYS - 1),
     previous: addDays(date, -AGENDA_DAYS),
     next: addDays(date, AGENDA_DAYS),
+  }
+}
+
+/** How many courses a month's day cell lists under its image; the rest are "+N more". */
+export const DAY_LISTED = 2
+/** How many covers a day's mosaic holds. */
+export const MOSAIC_MAX = 4
+
+/**
+ * What a month's day cell shows of its items: the covers of the day's
+ * meetings (each picture once, none for a cancelled meeting), the first
+ * few items to list by name, and how many are left out.
+ */
+export const summariseDay = (items: CalendarItem[]) => {
+  const covers: NonNullable<CalendarItem['cover']>[] = []
+  for (const item of items) {
+    if (item.cancelled || !item.cover || covers.length === MOSAIC_MAX) continue
+    if (!covers.some((c) => c.url === item.cover!.url)) covers.push(item.cover)
+  }
+  return {
+    covers,
+    listed: items.slice(0, DAY_LISTED),
+    hidden: Math.max(0, items.length - DAY_LISTED),
   }
 }

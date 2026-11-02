@@ -1479,40 +1479,51 @@ a.collection-item:hover {
 }
 
 /*
- * A day with something is an Arc Card filling its cell; it opens into the
- * day's agenda. Without a cover it reads like any day; with one, the cover
- * is the day and the course sits on a frosted band, legible on any picture.
+ * A day with something is an Arc Card in its cell, laid out as the Open for
+ * registration cards are (docs/superpowers/specs/2026-10-21-card-grid-layout-design.md):
+ * the picture in a rounded frame, the names under it on the page. It opens
+ * into the day's agenda.
  */
+.cal-day {
+  min-height: 17.5rem;
+}
 .cal-day:has(.cal-day-card) {
-  padding: 0;
+  padding: 0.5rem;
 }
 .cal-day .cal-day-card,
 .cal-day .cal-day-card[data-hover] {
-  position: absolute;
-  inset: 0;
+  flex: 1;
   display: flex;
   flex-direction: column;
+  gap: 0.625rem;
   border: 0;
   border-radius: 0;
   background: transparent;
   box-shadow: none;
-}
-/* The whole cell opens the day: the preview (on its own layer, the frosted
-   band) lets clicks through to the card's open control under it. */
-.cal-day .cal-day-card .cal-day-items {
-  pointer-events: none;
-}
-.cal-day .cal-day-card {
   cursor: pointer;
+  overflow: visible;
 }
-
-/* The card's content: the day number, then the preview. */
+/* The picture: 3:2, a radius concentric with the cell's 0.5rem inset. */
+.cal-day .cal-day-card > div:first-child {
+  aspect-ratio: 3 / 2;
+  border-radius: 0.875rem;
+  outline: 1px solid oklch(0 0 0 / 0.1);
+  outline-offset: -1px;
+}
+.dark .cal-day .cal-day-card > div:first-child {
+  outline-color: oklch(1 0 0 / 0.1);
+}
+.cal-day .cal-day-card > div:first-child > div {
+  display: block;
+  height: 100%;
+  min-height: 0;
+}
 .cal-day .cal-day-card > div:last-child {
   display: flex;
   flex: 1;
   flex-direction: column;
   gap: 0.5rem;
-  padding: 0.75rem;
+  padding: 0 0.125rem;
 }
 .cal-day .cal-day-card h3 {
   font-size: 2rem;
@@ -1520,14 +1531,28 @@ a.collection-item:hover {
   line-height: 1;
   font-variant-numeric: tabular-nums;
 }
-.cal-day[data-outside] .cal-day-card h3 {
-  color: var(--text-muted);
+/* The number of a day with a picture sits on its corner, on a frosted chip. */
+.cal-day .cal-day-card[data-cover] h3 {
+  position: absolute;
+  z-index: 1;
+  inset-block-start: 0.4rem;
+  inset-inline-start: 0.4rem;
+  border-radius: 0.5rem;
+  padding: 0.2rem 0.5rem;
+  background: oklch(from var(--background) l c h / 0.82);
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+  font-size: 1.125rem;
+  font-weight: 500;
 }
 .cal-day[data-today] .cal-day-card h3 {
   border-radius: 0.4rem;
   background: var(--foreground);
   padding: 0.15rem 0.4rem;
   color: var(--background);
+}
+.cal-day[data-outside] .cal-day-card {
+  opacity: 0.6;
 }
 .cal-day .cal-day-card:hover h3 button,
 .cal-day .cal-day-card:focus-within h3 button {
@@ -1538,63 +1563,91 @@ a.collection-item:hover {
 .cal-day .cal-day-card:has(button:focus-visible) {
   outline: 2px solid var(--ring);
   outline-offset: -2px;
+  border-radius: 0.5rem;
+}
+/* The whole cell opens the day: the names let clicks through to the open control under them. */
+.cal-day .cal-day-card .cal-day-items,
+.cal-day .cal-day-card .cal-more {
+  pointer-events: none;
+}
+.cal-day .cal-day-card .cal-item-when {
+  display: block;
+}
+.cal-item[data-cancelled] .cal-item-title {
+  text-decoration: line-through;
+  opacity: 0.6;
 }
 
-/* With a cover: the picture fills the card; a light shade under the number. */
-.cal-day .cal-day-card[data-cover] {
-  color: #fff;
+/* The day's pictures: one fills the frame; two to four tile it. */
+.cal-mosaic {
+  display: grid;
+  width: 100%;
+  height: 100%;
+  gap: 2px;
+  background: var(--surface-muted);
 }
-.cal-day .cal-day-card[data-cover] > div:first-child {
+.cal-mosaic[data-count='2'] {
+  grid-template-columns: 1fr 1fr;
+}
+.cal-mosaic[data-count='3'] {
+  grid-template-columns: 1.25fr 1fr;
+  grid-template-rows: 1fr 1fr;
+}
+.cal-mosaic[data-count='3'] > :first-child {
+  grid-row: span 2;
+}
+.cal-mosaic[data-count='4'] {
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr 1fr;
+}
+.cal-mosaic-tile {
+  position: relative;
+  min-width: 0;
+  min-height: 0;
+  overflow: hidden;
+}
+.cal-mosaic-tile img {
   position: absolute;
   inset: 0;
-  z-index: -1;
-  background: oklch(0.2 0 0);
-}
-.cal-day .cal-day-card[data-cover] > div:first-child > div {
-  height: 100%;
-  min-height: 0;
-}
-.cal-day .cal-day-card[data-cover] > div:first-child img {
   width: 100%;
   height: 100%;
   object-fit: cover;
 }
-.cal-day .cal-day-card[data-cover] > div:first-child::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(to bottom, oklch(0 0 0 / 0.5) 0%, oklch(0 0 0 / 0) 38%);
+/* Each tile drifts a few percent, slowly, out of step with its neighbours. */
+@media (prefers-reduced-motion: no-preference) {
+  .cal-mosaic[data-count]:not([data-count='1']) .cal-mosaic-tile img {
+    animation: cal-drift 16s ease-in-out infinite alternate;
+  }
+  .cal-mosaic-tile:nth-child(2) img {
+    animation-duration: 21s;
+    animation-delay: -7s;
+    --drift-x: 3%;
+  }
+  .cal-mosaic-tile:nth-child(3) img {
+    animation-duration: 18s;
+    animation-delay: -12s;
+    --drift-y: 3%;
+  }
+  .cal-mosaic-tile:nth-child(4) img {
+    animation-duration: 24s;
+    animation-delay: -4s;
+    --drift-x: 3%;
+    --drift-y: 3%;
+  }
 }
-.cal-day .cal-day-card[data-cover] > div:last-child {
-  padding: 0;
-}
-.cal-day .cal-day-card[data-cover] h3 {
-  margin: 0.75rem;
-  text-shadow: 0 1px 12px oklch(0 0 0 / 0.45);
-}
-.cal-day[data-today] .cal-day-card[data-cover] h3 {
-  background: #fff;
-  color: #000;
-  text-shadow: none;
-}
-.cal-day .cal-day-card[data-cover] .cal-day-items {
-  margin-top: auto;
-  padding: 0.6rem 0.75rem 0.7rem;
-  background: oklch(0.12 0 0 / 0.62);
-  -webkit-backdrop-filter: blur(10px) saturate(1.1);
-  backdrop-filter: blur(10px) saturate(1.1);
-}
-.cal-day .cal-day-card[data-cover] .cal-item-when,
-.cal-day .cal-day-card[data-cover] .cal-more,
-.cal-day[data-outside] .cal-day-card[data-cover] h3 {
-  color: oklch(1 0 0 / 0.78);
+@keyframes cal-drift {
+  from {
+    transform: scale(1.04) translate(0, 0);
+  }
+  to {
+    transform: scale(1.16) translate(var(--drift-x, -3%), var(--drift-y, -2%));
+  }
 }
 
 /* The quick look: the day's agenda under a cover cut to a band. */
+[role='dialog'] .cal-mosaic,
 [role='dialog'] .cal-cover-img {
-  width: 100%;
   height: 14rem;
-  object-fit: cover;
 }
 .cal-day-card ~ * .cal-agenda-item,
 [role='dialog'] .cal-agenda-item {
