@@ -3169,6 +3169,11 @@ button.rsvpCell {
   border-top: 0;
 }
 
+/* Without the moderators' buttons the AI box sits beside the yellow course page cell, so it takes the paper. */
+.head :global(.poster-meta).headAiPaper {
+  background: var(--poster-paper);
+}
+
 .headAi {
   flex-wrap: wrap;
   gap: var(--space-2) var(--space-3);

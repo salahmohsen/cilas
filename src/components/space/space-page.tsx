@@ -372,7 +372,9 @@ export async function SpacePage({
           </div>
           <div className="poster-strip">
             {course && (
-              <div className={`poster-meta ${styles.headAi}`}>
+              <div
+                className={`poster-meta ${styles.headAi} ${moderator ? '' : styles.headAiPaper}`}
+              >
                 <span>{ts('ai')}</span>
                 <StudyWithAI kind="course" path={`/${locale}/study/${course.slug}`} size="sm" />
               </div>
