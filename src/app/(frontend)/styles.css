@@ -1903,16 +1903,22 @@ a.collection-item:hover {
 }
 
 /* The agenda, and a phone's month: a box a day, its date cell on top, then its rows. */
+/* One block: rounded at its first day's top and its last day's bottom, the days joined by a rule. */
 .cal-agenda {
   display: grid;
-  gap: 1rem;
+  overflow: clip;
   margin: 0;
   padding: 0;
   list-style: none;
+  border: 1px solid var(--cal-rule);
+  border-radius: 1rem;
+  background: var(--background);
 }
 .cal-agenda-day {
   display: grid;
-  gap: 0.5rem;
+}
+.cal-agenda-day + .cal-agenda-day {
+  border-block-start: 1px solid var(--cal-rule);
 }
 .cal-agenda-date {
   display: flex;
@@ -1942,15 +1948,9 @@ a.collection-item:hover {
   background: var(--foreground);
   color: var(--background);
 }
-.cal-agenda .cal-agenda-date {
-  overflow: clip;
-  border: 1px solid var(--cal-rule);
-  border-radius: 1rem;
-  background-color: var(--background);
-}
-/* The items are one stack: connected by shared rules, rounded at its first and last item only. */
 .cal-agenda .cal-slots {
-  background: var(--background);
+  border: 0;
+  border-radius: 0;
 }
 
 /* ===================================================== course list */
