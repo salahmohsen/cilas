@@ -1494,7 +1494,7 @@ a.collection-item:hover {
   --ms-h: var(--control-height-sm);
 }
 
-/* The day's number: a ruled square cell, as the notice icon is in the fellow card. */
+/* The day's number: a ruled square cell on the palette yellow, in the display serif. Today's is inverted. */
 .cal-day-number,
 .cal-day .cal-day-card h3 {
   display: grid;
@@ -1506,10 +1506,11 @@ a.collection-item:hover {
   border-block-end: 1px solid var(--cal-rule);
   border-radius: 0;
   padding: 0;
-  background: var(--background);
-  color: var(--foreground);
-  font-size: 0.9375rem;
-  font-weight: 600;
+  background: #ffb71b;
+  color: #121212;
+  font-family: var(--font-display);
+  font-size: 1.0625rem;
+  font-weight: 700;
   line-height: 1;
   font-variant-numeric: tabular-nums;
 }
@@ -1551,9 +1552,6 @@ a.collection-item:hover {
 /* A day with nothing is hatched paper under its number. */
 .cal-day:not(:has(.cal-day-card)) {
   background-image: repeating-linear-gradient(135deg, transparent 0 6px, var(--cal-hatch) 6px 7px);
-}
-.cal-day > .cal-day-number {
-  color: var(--text-secondary);
 }
 .cal-day[data-outside] > * {
   opacity: 0.5;
