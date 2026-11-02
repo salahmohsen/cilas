@@ -990,13 +990,14 @@ export const spaceLanding = async (
     })
     space = docs[0] ?? null
   } else {
-    // The document holds the slug. One internal read for its id (draft
-    // aware, published only), then the space read through the access rule.
+    // The document holds the slug. One internal read for its id (published
+    // only), then the space read through the access rule. No `draft: true`:
+    // that reads the latest version, and an autosaved draft after publishing
+    // would fail the published filter and 404 the space.
     const { docs: rels } = await payload.find({
       collection: kind === 'course' ? 'courses' : 'programmes',
       // One level, so the cover arrives as a file and not as an id.
       depth: 1,
-      draft: true,
       pagination: false,
       limit: 1,
       locale: locale === 'ar' ? 'ar' : 'en',

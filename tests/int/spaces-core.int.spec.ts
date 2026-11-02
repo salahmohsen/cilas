@@ -619,6 +619,18 @@ describe('spaces core', () => {
     // The stranger's membership stops at the community.
     expect(await spaceLanding(payload, stranger, 'course', 'probe-space-course')).toBeNull()
     expect(await spaceLanding(payload, student, 'course', 'not-a-course')).toBeNull()
+    // A draft saved after publishing is the latest version; the published
+    // course still lands (it 404'd in production when the lookup read drafts).
+    await payload.update({
+      collection: 'courses',
+      id: course.id,
+      draft: true,
+      data: { title: 'Probe Course (draft edit)' },
+      overrideAccess: true,
+    })
+    const afterDraft = await spaceLanding(payload, student, 'course', 'probe-space-course')
+    expect(afterDraft?.space.id).toBe(courseSpace.id)
+    expect(afterDraft?.course?.title).toBe('Probe Course')
     // The switch closes every landing and empties My spaces.
     await payload.updateGlobal({
       slug: 'site-settings',
