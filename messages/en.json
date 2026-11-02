@@ -412,8 +412,8 @@
   },
   "NotFound": {
     "title": "Page not found",
-    "text": "The page you are looking for is not here. It may have moved when the site was rebuilt.",
-    "home": "Go to the home page"
+    "text": "The page you are looking for moved, vanished, or never existed.",
+    "home": "Back home"
   },
   "Person": {
     "profiles": "People",

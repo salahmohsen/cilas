@@ -1,5 +1,6 @@
 import { getTranslations } from 'next-intl/server'
 
+import button from '@/components/arc/button/button.module.css'
 import { NotFoundEyes } from '@/components/not-found-eyes'
 import { Link } from '@/i18n/navigation'
 
@@ -13,10 +14,8 @@ export default async function NotFound() {
         <h1 className="text-2xl font-medium text-balance text-[var(--foreground)]">{t('title')}</h1>
         <p className="text-pretty text-[var(--text-secondary)]">{t('text')}</p>
       </div>
-      <Link
-        href="/"
-        className="font-medium text-[var(--foreground)] underline underline-offset-4 hover:text-[var(--text-secondary)]"
-      >
+      {/* A link dressed as Arc's primary button: it navigates, so it stays an <a>. */}
+      <Link href="/" className={`${button.button} ${button.primary} ${button.md} no-underline`}>
         {t('home')}
       </Link>
     </div>
