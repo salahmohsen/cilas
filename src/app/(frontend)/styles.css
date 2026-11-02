@@ -1375,8 +1375,6 @@ a.collection-item:hover {
   --accent-foreground: oklch(100% 0 0);
   --cal-rule: oklch(0.15 0 0);
   --cal-hatch: oklch(0 0 0 / 0.16);
-  /* The line between day boxes: thick, so each day reads as its own card. */
-  --cal-gap: 3px;
   color: var(--poster-ink);
 }
 .cal-head {
@@ -1562,7 +1560,7 @@ a.collection-item:hover {
 .cal-month-body {
   display: grid;
   grid-template-columns: repeat(7, minmax(0, 1fr));
-  gap: var(--cal-gap);
+  gap: 1px;
   background: var(--cal-rule);
 }
 .cal-month-head {
@@ -1867,7 +1865,7 @@ a.collection-item:hover {
   display: grid;
   overflow: clip;
   border-radius: 1rem;
-  gap: var(--cal-gap);
+  gap: 1px;
   background: var(--cal-rule);
   border: 1px solid var(--cal-rule);
 }
@@ -1901,16 +1899,24 @@ a.collection-item:hover {
   display: grid;
   overflow: clip;
   border-radius: 1rem;
-  gap: var(--cal-gap);
+  gap: 0.75rem;
   margin: 0;
   padding: 0;
   list-style: none;
   border: 1px solid var(--cal-rule);
-  background: var(--cal-rule);
+  /* The strips between the day boxes are hatched, as an empty day is. */
+  background-color: var(--background);
+  background-image: repeating-linear-gradient(135deg, transparent 0 6px, var(--cal-hatch) 6px 7px);
 }
 .cal-agenda-day {
   display: grid;
   background: var(--background);
+}
+.cal-agenda-day:not(:first-child) {
+  border-block-start: 1px solid var(--cal-rule);
+}
+.cal-agenda-day:not(:last-child) {
+  border-block-end: 1px solid var(--cal-rule);
 }
 .cal-agenda-date {
   display: flex;
