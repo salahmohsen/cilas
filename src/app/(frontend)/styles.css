@@ -1412,8 +1412,10 @@ a.collection-item:hover {
   border-start-start-radius: calc(1rem - 1px);
   border-start-end-radius: calc(1rem - 1px);
   display: flex;
-  flex-direction: column;
-  justify-content: flex-end;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 1rem;
   padding: var(--poster-pad);
   background: var(--poster-color);
 }
@@ -1436,22 +1438,23 @@ a.collection-item:hover {
   font-variant-numeric: tabular-nums;
 }
 .cal-head-nav {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 0.75rem;
-  padding: calc(var(--poster-pad) * 0.6) var(--poster-pad);
+  display: grid;
+  grid-template-rows: repeat(2, minmax(3.5rem, 1fr));
   border-end-start-radius: calc(1rem - 1px);
   border-end-end-radius: calc(1rem - 1px);
 }
-.cal-head-controls,
-.cal-head-actions {
+/* Each item is a box of its own: the date controls together, then Add to calendar. */
+.cal-cell {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
   justify-content: center;
   gap: 0.75rem;
+  min-width: 0;
+  padding: calc(var(--poster-pad) * 0.6) var(--poster-pad);
+}
+.cal-cell + .cal-cell {
+  border-block-start: 1px solid var(--poster-ink);
 }
 @media (min-width: 48rem) {
   .cal-head {

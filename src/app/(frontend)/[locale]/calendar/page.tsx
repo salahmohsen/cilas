@@ -90,13 +90,22 @@ export default async function CalendarPage({ params, searchParams }: Props) {
           calendar beside it, the views and the feed across the foot. */}
       <header className="cal-head">
         <div className="cal-head-title">
-          <p className="sr-only">{t('title')}</p>
-          <h1 className="cal-title">{title}</h1>
-          <p className="cal-head-count">{t('inView', { count: items.length })}</p>
+          <div>
+            <p className="sr-only">{t('title')}</p>
+            <h1 className="cal-title">{title}</h1>
+            <p className="cal-head-count">{t('inView', { count: items.length })}</p>
+          </div>
+          <div className="cal-switch" role="group" aria-label={t('views')}>
+            {CALENDAR_VIEWS.map((v) => (
+              <Link aria-current={v === view ? 'page' : undefined} href={href(v, date)} key={v}>
+                {t(`view.${v}`)}
+              </Link>
+            ))}
+          </div>
         </div>
         <CalendarLegend items={items} label={t('legend')} labels={labels} />
         <div className="cal-head-nav">
-          <nav aria-label={t('navigation')} className="cal-head-controls">
+          <nav aria-label={t('navigation')} className="cal-cell cal-head-controls">
             {/* Time runs left to right on a calendar's arrows in either language:
               next is always the right arrow. */}
             <div className="flex items-center gap-1" dir="ltr">
@@ -122,14 +131,7 @@ export default async function CalendarPage({ params, searchParams }: Props) {
               )}
             />
           </nav>
-          <div className="cal-head-actions">
-            <div className="cal-switch" role="group" aria-label={t('views')}>
-              {CALENDAR_VIEWS.map((v) => (
-                <Link aria-current={v === view ? 'page' : undefined} href={href(v, date)} key={v}>
-                  {t(`view.${v}`)}
-                </Link>
-              ))}
-            </div>
+          <div className="cal-cell">
             <CalendarFeed feedPath={`/${locale}/calendar.ics`} />
           </div>
         </div>
