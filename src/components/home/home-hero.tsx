@@ -220,9 +220,11 @@ export function HomeHero({
             </span>
           ))}
         </h1>
-        <p className="home-hero-text home-hero-rise" style={step(0)}>
-          {text}
-        </p>
+        {text ? (
+          <p className="home-hero-text home-hero-rise" style={step(0)}>
+            {text}
+          </p>
+        ) : null}
         {/* Read once, whole, by screen readers; the moving line is for the eye. */}
         <p className="sr-only">{who.join(locale === 'ar' ? '، ' : ', ')}</p>
         <p aria-hidden className="home-hero-who home-hero-rise" style={step(1)}>

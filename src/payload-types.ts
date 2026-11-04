@@ -4288,7 +4288,7 @@ export interface SiteSetting {
   };
   hero?: {
     /**
-     * Shown below the institute name on the home page. Leave blank to use the default description for this language.
+     * Shown below the institute name on the home page. Leave blank to hide the description for this language.
      */
     description?: string | null;
   };

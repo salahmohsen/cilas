@@ -17,7 +17,7 @@ export const getHomeHeroDescription = async (payload: Payload, locale: Locale) =
     fallbackLocale: false,
     select: { hero: true },
   })
-  return settings.hero?.description?.trim() || null
+  return settings.hero?.description?.trim() ?? ''
 }
 
 const obj = <T>(v: unknown): T | null => (typeof v === 'object' && v !== null ? (v as T) : null)
