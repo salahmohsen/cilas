@@ -9,6 +9,17 @@ import type { Article, Media, Press } from '@/payload-types'
 
 type Locale = 'en' | 'ar'
 
+export const getHomeHeroDescription = async (payload: Payload, locale: Locale) => {
+  const settings = await payload.findGlobal({
+    slug: 'site-settings',
+    depth: 0,
+    locale,
+    fallbackLocale: false,
+    select: { hero: true },
+  })
+  return settings.hero?.description?.trim() || null
+}
+
 const obj = <T>(v: unknown): T | null => (typeof v === 'object' && v !== null ? (v as T) : null)
 
 /** Something people can register for today: a programme or a course. */

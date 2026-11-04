@@ -69,6 +69,22 @@ export const SiteSettings: GlobalConfig = {
           label: 'Home content',
           fields: [
             {
+              name: 'hero',
+              label: 'Hero',
+              type: 'group',
+              fields: [
+                {
+                  name: 'description',
+                  type: 'textarea',
+                  localized: true,
+                  admin: {
+                    description:
+                      'Shown below the institute name on the home page. Leave blank to use the default description for this language.',
+                  },
+                },
+              ],
+            },
+            {
               // The home page's "Questions people ask"; each language its own.
               name: 'faq',
               label: 'FAQ',

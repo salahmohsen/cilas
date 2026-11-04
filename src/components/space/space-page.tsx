@@ -382,7 +382,7 @@ export async function SpacePage({
                 {feed.archived ? t('archived') : t('open')}
               </p>
               <div className="poster-heading">
-                <div className="poster-title" dir="auto">
+                <div className="poster-title" dir={locale === 'ar' ? 'rtl' : 'ltr'}>
                   <h1 className={styles.headTitle}>
                     <bdi>{title}</bdi>
                   </h1>

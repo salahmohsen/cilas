@@ -4286,6 +4286,12 @@ export interface SiteSetting {
     events?: boolean | null;
     calendar?: boolean | null;
   };
+  hero?: {
+    /**
+     * Shown below the institute name on the home page. Leave blank to use the default description for this language.
+     */
+    description?: string | null;
+  };
   /**
    * Shown on the home page, in this order.
    */
@@ -4475,6 +4481,11 @@ export interface SiteSettingsSelect<T extends boolean = true> {
         articles?: T;
         events?: T;
         calendar?: T;
+      };
+  hero?:
+    | T
+    | {
+        description?: T;
       };
   faq?:
     | T

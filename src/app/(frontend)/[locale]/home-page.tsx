@@ -11,7 +11,13 @@ import { PublicEventCard } from '@/components/events/public-event-card'
 import { orderEvents } from '@/lib/events'
 import { getContactForm } from '@/api/contact.api'
 import { getHomeFaq } from '@/api/faq.api'
-import { getHomeArticles, getHomeStats, getOpenNow, getPressOutlets } from '@/api/home.api'
+import {
+  getHomeArticles,
+  getHomeHeroDescription,
+  getHomeStats,
+  getOpenNow,
+  getPressOutlets,
+} from '@/api/home.api'
 import { FaqSection } from '@/components/arc/blocks/faq-section/faq-section'
 import { LogoMarquee } from '@/components/arc/blocks/logo-marquee/logo-marquee'
 import { ContactForm } from '@/components/contact/contact-form'
@@ -56,6 +62,7 @@ export async function HomePage({ locale, reader }: { locale: string; reader: Rea
     covers,
     contact,
     faq,
+    heroDescription,
     signup,
     events,
     tEvents,
@@ -72,6 +79,7 @@ export async function HomePage({ locale, reader }: { locale: string; reader: Rea
     getPublicationCovers(payload),
     getContactForm(payload, locale as Locale),
     getHomeFaq(payload, locale as Locale),
+    getHomeHeroDescription(payload, locale as Locale),
     newsletterList(payload),
     getPublicEvents(payload, locale as Locale),
     getTranslations('Events'),
@@ -117,7 +125,7 @@ export async function HomePage({ locale, reader }: { locale: string; reader: Rea
               }
         }
         secondary={{ label: t('readArticles'), href: '/articles' }}
-        text={t('heroText')}
+        text={heroDescription ?? t('heroText')}
         // The institute's name, as the header writes it, line break and all.
         title={tHeader('brand')}
         who={t.raw('heroWho') as string[]}

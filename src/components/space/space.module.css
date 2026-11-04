@@ -3200,7 +3200,7 @@ button.rsvpCell {
     flex-direction: row-reverse;
   }
 
-  .head :global(.poster-panel) {
+  .head:global(.poster[data-layout='0']) :global(.poster-panel) {
     border-inline-start: 0;
     border-inline-end: 1px solid var(--poster-ink);
   }
