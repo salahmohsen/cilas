@@ -3,16 +3,13 @@ import type { CollectionConfig } from 'payload'
 import { isAdmin, isAuthenticated } from '@/access'
 
 import { importFields } from '@/fields/import'
-import {
-  revalidateCoursesAfterChange,
-  revalidateCoursesAfterDelete,
-} from '@/lib/revalidate-courses'
+import { revalidateAfterChange, revalidateAfterDelete } from '@/lib/revalidate'
 
 export const Media: CollectionConfig = {
   slug: 'media',
   hooks: {
-    afterChange: [revalidateCoursesAfterChange],
-    afterDelete: [revalidateCoursesAfterDelete],
+    afterChange: [revalidateAfterChange('media')],
+    afterDelete: [revalidateAfterDelete('media')],
   },
 
   access: {

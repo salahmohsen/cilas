@@ -7,7 +7,7 @@ import { registrationField } from '@/fields/registration'
 import { scheduleField, timeRangeFields } from '@/fields/schedule'
 import { slugField } from '@/fields/slug'
 import { optionalHttpUrl } from '@/fields/validators'
-import { revalidateEventAfterChange, revalidateEventAfterDelete } from '@/lib/revalidate-events'
+import { revalidateAfterChange, revalidateAfterDelete } from '@/lib/revalidate'
 import { importFields } from '@/fields/import'
 import { lastEditedByField, stampLastEditor } from '@/fields/last-edited-by'
 
@@ -47,8 +47,8 @@ export const Events: CollectionConfig = {
       },
     ],
     beforeChange: [stampLastEditor],
-    afterChange: [revalidateEventAfterChange],
-    afterDelete: [revalidateEventAfterDelete],
+    afterChange: [revalidateAfterChange('events')],
+    afterDelete: [revalidateAfterDelete('events')],
   },
   fields: [
     lastEditedByField,

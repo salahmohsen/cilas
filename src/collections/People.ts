@@ -4,11 +4,7 @@ import type { CollectionConfig } from 'payload'
 import { slugField } from '@/fields/slug'
 import { socialFields } from '@/fields/social'
 import { importFields } from '@/fields/import'
-import {
-  revalidateCoursesAfterChange,
-  revalidateCoursesAfterDelete,
-} from '@/lib/revalidate-courses'
-import { revalidatePersonAfterChange } from '@/lib/revalidate-people'
+import { revalidateAfterChange, revalidateAfterDelete } from '@/lib/revalidate'
 
 /**
  * Everyone who appears on the site: fellows, CILASians, authors, advisors,
@@ -38,8 +34,8 @@ export const People: CollectionConfig = {
   },
   // Its names show in the cached study list; its pages are built ahead.
   hooks: {
-    afterChange: [revalidateCoursesAfterChange, revalidatePersonAfterChange],
-    afterDelete: [revalidateCoursesAfterDelete],
+    afterChange: [revalidateAfterChange('people')],
+    afterDelete: [revalidateAfterDelete('people')],
   },
   fields: [
     { name: 'name', type: 'text', required: true, localized: true },

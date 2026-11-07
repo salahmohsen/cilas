@@ -8,7 +8,7 @@ import { getPayload } from 'payload'
 
 import { getCilasians } from '@/api/people.api'
 import { PeoplePage } from '@/components/person/people-page'
-import { COURSES_TAG } from '@/lib/revalidate-courses'
+import { PUBLIC_LISTS_TAG } from '@/lib/paths'
 
 type Props = { params: Promise<{ locale: string }> }
 
@@ -16,7 +16,7 @@ type Props = { params: Promise<{ locale: string }> }
 const cilasiansFor = unstable_cache(
   async (locale: Locale) => getCilasians(await getPayload({ config }), locale),
   ['cilasians'],
-  { tags: [COURSES_TAG], revalidate: 3600 },
+  { tags: [PUBLIC_LISTS_TAG], revalidate: 3600 },
 )
 
 export async function generateMetadata(): Promise<Metadata> {

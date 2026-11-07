@@ -4,10 +4,7 @@ import { slugField } from '@/fields/slug'
 import { optionalHttpUrl } from '@/fields/validators'
 import { anyone, isAdmin } from '../access'
 import { importFields } from '@/fields/import'
-import {
-  revalidateCoursesAfterChange,
-  revalidateCoursesAfterDelete,
-} from '@/lib/revalidate-courses'
+import { revalidateAfterChange, revalidateAfterDelete } from '@/lib/revalidate'
 
 /** A physical site where CILAS has taught (CONTEXT.md: Place; ADR 0007). */
 export const Places: CollectionConfig = {
@@ -20,8 +17,8 @@ export const Places: CollectionConfig = {
   },
   // Its names show in the cached study list.
   hooks: {
-    afterChange: [revalidateCoursesAfterChange],
-    afterDelete: [revalidateCoursesAfterDelete],
+    afterChange: [revalidateAfterChange('places')],
+    afterDelete: [revalidateAfterDelete('places')],
   },
   fields: [
     { name: 'name', type: 'text', required: true },

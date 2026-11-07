@@ -8,7 +8,7 @@ import { getPayload, type Payload, type Where } from 'payload'
 
 import { cairoDay } from '@/lib/cairo-day'
 import type { FocalPoint } from '@/lib/media-image'
-import { COURSES_TAG } from '@/lib/revalidate-courses'
+import { PUBLIC_LISTS_TAG } from '@/lib/paths'
 import { expandSchedule, type Schedule, type SessionDates } from '@/lib/schedule'
 import type { Media } from '@/payload-types'
 
@@ -147,5 +147,5 @@ const getCalendarItems = async (payload: Payload, locale: Locale): Promise<Calen
 export const getCachedCalendarItems = unstable_cache(
   async (locale: Locale) => getCalendarItems(await getPayload({ config }), locale),
   ['calendar-items-v2'],
-  { tags: [COURSES_TAG], revalidate: 3600 },
+  { tags: [PUBLIC_LISTS_TAG], revalidate: 3600 },
 )

@@ -12,7 +12,7 @@ import { PeoplePage } from '@/components/person/people-page'
 import { SEASON_ICONS } from '@/components/season-icon'
 import type { Season } from '@/lib/cycle'
 import { localDigits } from '@/lib/digits'
-import { COURSES_TAG } from '@/lib/revalidate-courses'
+import { PUBLIC_LISTS_TAG } from '@/lib/paths'
 
 type Props = { params: Promise<{ locale: string }> }
 
@@ -23,7 +23,7 @@ const COURSES_SHOWN = 4
 const fellowsFor = unstable_cache(
   async (locale: Locale) => getFellows(await getPayload({ config }), locale),
   ['fellows'],
-  { tags: [COURSES_TAG], revalidate: 3600 },
+  { tags: [PUBLIC_LISTS_TAG], revalidate: 3600 },
 )
 
 export async function generateMetadata(): Promise<Metadata> {

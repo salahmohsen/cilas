@@ -7,7 +7,7 @@ import { getPayload } from 'payload'
 import type { SiteTier } from '@/access'
 import { getStudyCourses } from '@/api/courses.api'
 import { facetOptions, filterCourses, type CourseQuery, type StudyCard } from '@/lib/course-search'
-import { COURSES_TAG } from '@/lib/revalidate-courses'
+import { PUBLIC_LISTS_TAG } from '@/lib/paths'
 import ar from '../../messages/ar.json'
 import en from '../../messages/en.json'
 
@@ -30,7 +30,7 @@ export const getStudyIndex = unstable_cache(
   },
   // The key names the index's shape: a change to it starts a fresh cache.
   ['study-index-v6'],
-  { tags: [COURSES_TAG], revalidate: 300 },
+  { tags: [PUBLIC_LISTS_TAG], revalidate: 300 },
 )
 
 /** Courses on a page of the study list. */

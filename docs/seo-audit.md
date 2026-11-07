@@ -38,7 +38,7 @@ DATABASE_URL=postgres://cilas:dev@localhost:5433/cilas_dev pnpm exec vitest run 
   tests/unit/schema.unit.spec.tsx tests/unit/seo.unit.spec.ts \
   tests/unit/sitemap.unit.spec.ts tests/unit/events.unit.spec.ts \
   tests/unit/ics.unit.spec.ts tests/unit/cairo-day.unit.spec.ts \
-  tests/unit/revalidate-people.unit.spec.ts \
+  tests/unit/revalidation-paths.unit.spec.ts \
   tests/unit/public-event-card.unit.spec.tsx tests/unit/public-event-cover.unit.spec.ts \
   tests/unit/seo-links.unit.spec.tsx tests/unit/rich-text-columns.unit.spec.tsx \
   tests/unit/person-profile-block.unit.spec.tsx tests/unit/blog-grid-cards.unit.spec.tsx

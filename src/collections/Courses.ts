@@ -30,10 +30,7 @@ import type {
 } from 'payload'
 import type { Course } from '@/payload-types'
 import { importFields } from '@/fields/import'
-import {
-  revalidateCoursesAfterChange,
-  revalidateCoursesAfterDelete,
-} from '@/lib/revalidate-courses'
+import { revalidateAfterChange, revalidateAfterDelete } from '@/lib/revalidate'
 import { lastEditedByField, stampLastEditor } from '@/fields/last-edited-by'
 
 /**
@@ -455,10 +452,10 @@ export const Courses: CollectionConfig = {
     afterChange: [
       ...courseReview.afterChange,
       propagateFellowRole,
-      revalidateCoursesAfterChange,
+      revalidateAfterChange('courses'),
       ensureSpaceFor('course'),
       announceScheduleChanges,
     ],
-    afterDelete: [revokeDeletedCourseFellows, revalidateCoursesAfterDelete],
+    afterDelete: [revokeDeletedCourseFellows, revalidateAfterDelete('courses')],
   },
 }

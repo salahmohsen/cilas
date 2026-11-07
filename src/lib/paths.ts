@@ -1,18 +1,42 @@
-/** Where a document lives, without the site language. */
-const pagePath = (collection: string, slug: string): string | null => {
-  switch (collection) {
-    case 'courses':
-      return `/study/${slug}`
-    case 'articles':
-      return `/articles/${slug}`
-    case 'events':
-      return `/events/${slug}`
-    case 'people':
-      return `/people/${slug}`
-    default:
-      return null
+/**
+ * What each collection shows on the public site, and so what a save drops from
+ * the cache: its detail page (under the current and the previous slug), the
+ * pages that list it (per language), fixed pages, and whether it feeds the
+ * lists cached under `PUBLIC_LISTS_TAG`. Add a line as each frontend route lands.
+ */
+const ROUTES: Record<
+  string,
+  {
+    detail?: (slug: string) => string
+    lists?: readonly string[]
+    fixed?: readonly string[]
+    tag?: boolean
   }
+> = {
+  courses: { detail: (slug) => `/study/${slug}`, tag: true },
+  articles: { detail: (slug) => `/articles/${slug}` },
+  events: {
+    detail: (slug) => `/events/${slug}`,
+    lists: ['', '/events', '/calendar', '/signed-in'],
+    fixed: ['/sitemap.xml'],
+    tag: true,
+  },
+  people: { detail: (slug) => `/people/${slug}`, tag: true },
+  cycles: { tag: true },
+  places: { tag: true },
+  media: { tag: true },
 }
+
+/**
+ * The cache tag of the lists built from courses, cycles, people, places,
+ * events and media (study, calendar, fellows). The string is kept as it was
+ * when only courses fed it.
+ */
+export const PUBLIC_LISTS_TAG = 'courses'
+
+/** Where a document lives, without the site language. */
+const pagePath = (collection: string, slug: string): string | null =>
+  ROUTES[collection]?.detail?.(slug) ?? null
 
 /**
  * Where a document lives on the public site, or null when its collection has
@@ -37,6 +61,25 @@ export const detailPath = (
   locale?: string,
   child?: string,
 ): string => `${locale ? `/${locale}` : ''}${pagePath(collection, slug)}${child ? `/${child}` : ''}`
+
+/** The paths, per language, and the tag a change to `collection` drops from the cache. */
+export const revalidationOf = (
+  collection: string,
+  locales: readonly string[],
+  doc: { slug?: string | null },
+  previousDoc?: { slug?: string | null } | null,
+) => {
+  const route = ROUTES[collection]
+  const paths = new Set<string>(route?.fixed)
+  for (const locale of locales) {
+    for (const list of route?.lists ?? []) paths.add(`/${locale}${list}`)
+    for (const source of [doc, previousDoc]) {
+      const path = source ? pathOf(collection, source, locale) : null
+      if (path) paths.add(path)
+    }
+  }
+  return { paths: [...paths], tag: Boolean(route?.tag) }
+}
 
 export const BRIDGE_APPLY_PATH = '/study/bridge/apply'
 
