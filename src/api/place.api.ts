@@ -1,3 +1,4 @@
+import { otherLocale } from '@/i18n/routing'
 import config from '@payload-config'
 import { getPayload } from 'payload'
 
@@ -15,7 +16,7 @@ export const getCurrentPlace = async (locale: 'en' | 'ar'): Promise<Place | null
     depth: 0,
     limit: 5,
     locale,
-    fallbackLocale: locale === 'ar' ? 'en' : 'ar',
+    fallbackLocale: otherLocale(locale),
     overrideAccess: false,
   })
   const place = docs.find((s) => s.address?.trim())

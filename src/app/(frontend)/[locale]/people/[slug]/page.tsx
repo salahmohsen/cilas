@@ -1,3 +1,5 @@
+import { type Locale } from '@/i18n/routing'
+import { otherLocale } from '@/i18n/routing'
 import { personAvatarSeed } from '@/lib/avatar'
 import { AvatarImage } from '@/components/person/avatar-image'
 import { SocialLinks } from '@/components/person/social-links'
@@ -8,7 +10,7 @@ import { getFormatter, getTranslations } from 'next-intl/server'
 import { notFound } from 'next/navigation'
 import { getPayload } from 'payload'
 
-import { getPublicationCovers, type Locale } from '@/api/articles.api'
+import { getPublicationCovers } from '@/api/articles.api'
 import { getContributions, getPerson } from '@/api/people.api'
 import { ArticlesGrid } from '@/components/article/articles-grid'
 import grid from '@/components/arc/blocks/blog-grid/blog-grid.module.css'
@@ -61,7 +63,7 @@ export default async function PersonPage({ params }: Props) {
   const person = await getPerson(payload, slug, locale)
   if (!person) notFound()
 
-  const other: Locale = locale === 'ar' ? 'en' : 'ar'
+  const other: Locale = otherLocale(locale)
   const publicationCovers = await getPublicationCovers(payload)
   const [t, tArticle, tArticles, tCourse, format, contributions, otherName, tm] = await Promise.all(
     [

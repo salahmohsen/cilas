@@ -1,6 +1,7 @@
+import { type Locale } from '@/i18n/routing'
+import { otherLocale } from '@/i18n/routing'
 import type { Payload } from 'payload'
 
-import type { Locale } from '@/api/articles.api'
 import type {
   NewsletterIssue,
   NewsletterPublication,
@@ -60,7 +61,7 @@ export const getNewsletterStack = async (
   if (!(await newsletterList(payload))) return null
   const read = {
     locale,
-    fallbackLocale: (locale === 'ar' ? 'en' : 'ar') as Locale,
+    fallbackLocale: otherLocale(locale) as Locale,
     overrideAccess: false,
   }
   const [issues, latest] = await Promise.all([

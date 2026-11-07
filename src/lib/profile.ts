@@ -1,3 +1,5 @@
+import { routing } from '@/i18n/routing'
+import { type Locale } from '@/i18n/routing'
 import {
   convertLexicalToMarkdown,
   convertMarkdownToLexical,
@@ -18,7 +20,6 @@ import { SOCIAL_PLATFORMS } from '@/fields/social'
 import type { User } from '@/payload-types'
 import { profileBioReadOnly, protectedBioText } from '@/lib/profile-rich-text'
 
-type Locale = 'en' | 'ar'
 type SocialLink = { platform: (typeof SOCIAL_PLATFORMS)[number]; url: string }
 
 /** What the profile page shows and edits: the member's own person. */
@@ -188,7 +189,7 @@ export const saveProfile = async (
   // Write a bio only when the member changed it: Markdown cannot carry every
   // node an admin may have used, so an untouched bio must not be rewritten.
   const bioData: Partial<Record<Locale, Awaited<ReturnType<typeof toLexical>>>> = {}
-  for (const locale of ['en', 'ar'] as const) {
+  for (const locale of routing.locales) {
     const markdown = bio[locale].trim()
     if (markdown === storedBio[locale]) continue
     if (bioReadOnly[locale]) return { ok: false, error: 'bio' }

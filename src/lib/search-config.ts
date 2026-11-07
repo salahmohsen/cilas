@@ -1,3 +1,4 @@
+import { routing } from '@/i18n/routing'
 /**
  * The site-search schema in one place, shared by the Payload indexer and the
  * browser panel. Each collection gets one Typesense collection whose
@@ -8,7 +9,7 @@
  * Client-safe: no server imports.
  */
 
-export const SEARCH_LOCALES = ['en', 'ar'] as const
+export const SEARCH_LOCALES = routing.locales
 export type SearchLocale = (typeof SEARCH_LOCALES)[number]
 
 type CollectionSpec = {

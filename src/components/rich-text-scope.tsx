@@ -1,7 +1,8 @@
+import { type Locale } from '@/i18n/routing'
 import config from '@payload-config'
 import { getPayload } from 'payload'
 import type { ReactNode } from 'react'
-import type { Locale, Reader } from '@/api/articles.api'
+import type { Reader } from '@/api/articles.api'
 import { resolveRichTextReferences } from '@/api/rich-text-references.api'
 import { RichTextReferencesProvider } from '@/components/rich-text-references'
 

@@ -1,3 +1,4 @@
+import { type Locale } from '@/i18n/routing'
 import { relId } from '@/lib/relation'
 import { pageAlternates } from '@/lib/seo'
 import config from '@payload-config'
@@ -6,12 +7,7 @@ import { getFormatter, getLocale, getTranslations } from 'next-intl/server'
 import { getPayload } from 'payload'
 import { cache } from 'react'
 
-import {
-  getPublicationCovers,
-  getPublishedArticles,
-  type Locale,
-  type Reader,
-} from '@/api/articles.api'
+import { getPublicationCovers, getPublishedArticles, type Reader } from '@/api/articles.api'
 import { ArticlesGrid } from '@/components/article/articles-grid'
 import { EmptyState } from '@/components/arc/empty-state/empty-state'
 import { toArticleCard } from '@/lib/article-cards'

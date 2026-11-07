@@ -1,3 +1,4 @@
+import { routing } from '@/i18n/routing'
 import { INGEST_PATH } from './hosts'
 
 /**
@@ -9,7 +10,7 @@ import { INGEST_PATH } from './hosts'
  * reset, the signed-in copies of pages, /admin, /api, previews and the
  * ingestion proxy itself.
  */
-const LOCALES = ['en', 'ar'] as const
+const LOCALES = routing.locales
 
 /** Public sections, by first path segment. `''` is the home page. */
 export const TRACKED_SECTIONS = [

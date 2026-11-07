@@ -1,5 +1,7 @@
+import { type Locale } from '@/i18n/routing'
+import { otherLocale } from '@/i18n/routing'
 import type { Payload } from 'payload'
-import type { Locale, Reader } from '@/api/articles.api'
+import type { Reader } from '@/api/articles.api'
 import { isAdminUser } from '@/access'
 
 export async function getEventPreview(payload: Payload, id: number, locale: Locale, user: Reader) {
@@ -8,7 +10,7 @@ export async function getEventPreview(payload: Payload, id: number, locale: Loca
     collection: 'events',
     id,
     locale,
-    fallbackLocale: locale === 'ar' ? 'en' : 'ar',
+    fallbackLocale: otherLocale(locale),
     depth: 2,
     draft: true,
     user,

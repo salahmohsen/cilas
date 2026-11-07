@@ -1,3 +1,4 @@
+import { otherLocale } from '@/i18n/routing'
 import { relId } from '@/lib/relation'
 import config from '@payload-config'
 import type { Metadata } from 'next'
@@ -30,7 +31,7 @@ const courseOf = async (payload: Payload, slug: string, lang: 'en' | 'ar', reade
     depth: 1,
     joins: false,
     locale: lang,
-    fallbackLocale: lang === 'ar' ? 'en' : 'ar',
+    fallbackLocale: otherLocale(lang),
     overrideAccess: false,
     user: reader,
   })

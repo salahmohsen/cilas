@@ -1,8 +1,8 @@
+import { type Locale } from '@/i18n/routing'
 import config from '@payload-config'
 import { getTranslations } from 'next-intl/server'
 import { getPayload } from 'payload'
 
-import type { Locale } from '@/api/articles.api'
 import { getNewsletterStack } from '@/api/newsletter-stack.api'
 import { NewsletterSignupSection } from '@/components/newsletter-signup-section'
 

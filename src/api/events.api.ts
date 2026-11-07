@@ -1,5 +1,7 @@
+import { type Locale } from '@/i18n/routing'
+import { otherLocale } from '@/i18n/routing'
 import type { Payload } from 'payload'
-import type { Locale } from '@/api/articles.api'
+
 import { PUBLIC_PROFILE_FIELDS } from '@/lib/public-profile'
 
 export const getPublicEvents = async (payload: Payload, locale: Locale, slug?: string) => {
@@ -7,7 +9,7 @@ export const getPublicEvents = async (payload: Payload, locale: Locale, slug?: s
     collection: 'events',
     where: { and: [{ tier: { equals: 'public' } }, ...(slug ? [{ slug: { equals: slug } }] : [])] },
     locale,
-    fallbackLocale: locale === 'ar' ? 'en' : 'ar',
+    fallbackLocale: otherLocale(locale),
     overrideAccess: false,
     depth: 2,
     pagination: false,

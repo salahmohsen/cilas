@@ -1,10 +1,11 @@
+import { type Locale } from '@/i18n/routing'
 import { pageAlternates } from '@/lib/seo'
 import config from '@payload-config'
 import type { Metadata } from 'next'
 import { getFormatter, getLocale, getTranslations } from 'next-intl/server'
 import { getPayload } from 'payload'
 
-import { getPublicationCovers, type Locale, type Reader } from '@/api/articles.api'
+import { getPublicationCovers, type Reader } from '@/api/articles.api'
 import { getPublicEvents } from '@/api/events.api'
 import { EventCarousel } from '@/components/events/event-carousel'
 import { PublicEventCard } from '@/components/events/public-event-card'

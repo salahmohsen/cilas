@@ -1,3 +1,4 @@
+import { routing } from '@/i18n/routing'
 import { createHash, createHmac, timingSafeEqual } from 'node:crypto'
 import type { CollectionCreateSchema } from 'typesense/lib/Typesense/Collections'
 import { z } from 'zod'
@@ -17,7 +18,7 @@ export const inputSchema = z
     space: z.number().int().positive().safe().optional(),
     spaces: z.array(z.number().int().positive().safe()).max(2000).optional(),
     sort: z.enum(['relevance', 'newest', 'alpha']).default('relevance'),
-    locale: z.enum(['en', 'ar']).default('en'),
+    locale: z.enum(routing.locales).default('en'),
     cursor: z.string().max(2048).optional(),
   })
   .strict()

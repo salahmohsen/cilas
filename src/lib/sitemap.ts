@@ -1,9 +1,10 @@
+import { routing } from '@/i18n/routing'
 import type { MetadataRoute } from 'next'
 
 /** A page without its language: `/study/reading-plato`, or `''` for home. */
 export type SitePage = { path: string; lastModified?: string | Date | null }
 
-const LOCALES = ['en', 'ar'] as const
+const LOCALES = routing.locales
 
 /**
  * Sitemap entries for pages that exist in both site languages (ADR 0006):

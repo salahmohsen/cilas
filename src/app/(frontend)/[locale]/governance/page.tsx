@@ -1,10 +1,10 @@
+import { type Locale } from '@/i18n/routing'
 import { pageAlternates } from '@/lib/seo'
 import config from '@payload-config'
 import type { Metadata } from 'next'
 import { getLocale, getTranslations } from 'next-intl/server'
 import { getPayload } from 'payload'
 
-import type { Locale } from '@/api/articles.api'
 import { getGovernance } from '@/api/people.api'
 import { PeoplePage } from '@/components/person/people-page'
 import { localDigits } from '@/lib/digits'

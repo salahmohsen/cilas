@@ -1,3 +1,4 @@
+import { type Locale } from '@/i18n/routing'
 import { pageAlternates } from '@/lib/seo'
 import config from '@payload-config'
 import type { Metadata } from 'next'
@@ -5,7 +6,6 @@ import { getLocale, getTranslations } from 'next-intl/server'
 import { unstable_cache } from 'next/cache'
 import { getPayload } from 'payload'
 
-import type { Locale } from '@/api/articles.api'
 import { getCilasians } from '@/api/people.api'
 import { PeoplePage } from '@/components/person/people-page'
 import { COURSES_TAG } from '@/lib/revalidate-courses'

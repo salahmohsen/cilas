@@ -1,11 +1,10 @@
+import { type Locale } from '@/i18n/routing'
+import { otherLocale } from '@/i18n/routing'
 import { relId } from '@/lib/relation'
 import { plainText } from '@/lib/plaintext'
 import type { Payload } from 'payload'
 
-import type { Locale } from '@/api/articles.api'
 import type { Article, Course, Person } from '@/payload-types'
-
-const otherLocale = (locale: Locale): Locale => (locale === 'ar' ? 'en' : 'ar')
 
 /**
  * A person as a visitor sees them. Name and bio fall back to the other
@@ -150,7 +149,7 @@ export const getFellows = async (payload: Payload, locale: Locale): Promise<Fell
       cycles: { season: true, start_year: true, start_date: true },
     },
     locale,
-    fallbackLocale: locale === 'ar' ? 'en' : 'ar',
+    fallbackLocale: otherLocale(locale),
     overrideAccess: false,
   })
 

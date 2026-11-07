@@ -1,6 +1,7 @@
+import { type Locale } from '@/i18n/routing'
+import { otherLocale } from '@/i18n/routing'
 import config from '@payload-config'
 import { getPayload } from 'payload'
-import type { Locale } from '@/api/articles.api'
 
 import { courseDocument, documentToMarkdown } from '@/lib/llms-document'
 
@@ -28,7 +29,7 @@ export async function GET(_request: Request, { params }: Params) {
     // The file serves what an anonymous visitor may read.
     overrideAccess: false,
     locale,
-    fallbackLocale: locale === 'ar' ? 'en' : 'ar',
+    fallbackLocale: otherLocale(locale),
   })
   const course = docs[0]
   if (!course) return new Response(null, { status: 404 })

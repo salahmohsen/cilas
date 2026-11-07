@@ -1,9 +1,10 @@
+import { type Locale } from '@/i18n/routing'
 import config from '@payload-config'
 import { getPayload } from 'payload'
 import { getTranslations } from 'next-intl/server'
 
 import { getPublicEvents } from '@/api/events.api'
-import type { Locale } from '@/api/articles.api'
+
 import { otherUpcomingEvents } from '@/lib/events'
 import { EventGrid } from './event-grid'
 import styles from './events.module.css'

@@ -1,8 +1,9 @@
+import { type Locale } from '@/i18n/routing'
 import config from '@payload-config'
 import { getPayload } from 'payload'
 import { notFound } from 'next/navigation'
 import type { Metadata } from 'next'
-import type { Locale } from '@/api/articles.api'
+
 import { EventPage } from '@/components/events/event-page'
 import { getEventPreview } from '@/lib/event-preview'
 import { currentReader } from '@/lib/reader'

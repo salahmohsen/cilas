@@ -1,5 +1,7 @@
+import { type Locale } from '@/i18n/routing'
+import { otherLocale } from '@/i18n/routing'
 import type { Payload } from 'payload'
-import type { Locale, Reader } from '@/api/articles.api'
+import type { Reader } from '@/api/articles.api'
 import { resolveMentionDocument } from '@/api/mentions.api'
 import { MENTION_TYPES } from '@/blocks/mention'
 import {
@@ -50,7 +52,7 @@ export const resolveRichTextReferences = async (
       collection: relationTo,
       where: { id: { in: [...ids] } },
       locale,
-      fallbackLocale: locale === 'ar' ? 'en' : 'ar',
+      fallbackLocale: otherLocale(locale),
       depth: 1,
       pagination: false,
       draft: false,

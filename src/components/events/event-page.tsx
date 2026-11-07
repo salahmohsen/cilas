@@ -1,7 +1,8 @@
+import { type Locale } from '@/i18n/routing'
 import { ArrowLeft } from 'lucide-react'
 import { getFormatter, getTranslations } from 'next-intl/server'
 import type { ReactNode } from 'react'
-import type { Locale } from '@/api/articles.api'
+
 import { ResolvedRichTextField as RichTextField } from '@/components/resolved-rich-text-field'
 import { PublicEventCard } from '@/components/events/public-event-card'
 import { EventAttendance } from '@/components/events/event-attendance'

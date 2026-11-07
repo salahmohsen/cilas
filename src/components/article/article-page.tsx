@@ -1,3 +1,4 @@
+import { type Locale } from '@/i18n/routing'
 import { relation } from '@/lib/relation'
 import config from '@payload-config'
 import { VisualEditing } from '@payload-inline-visual-editor/react'
@@ -15,7 +16,6 @@ import {
   getArticleForReading,
   getPublicationCovers,
   getRelatedArticles,
-  type Locale,
   type Reader,
 } from '@/api/articles.api'
 import { getContactEmail } from '@/api/contact.api'

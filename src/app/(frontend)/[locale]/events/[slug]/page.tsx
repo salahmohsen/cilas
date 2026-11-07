@@ -1,9 +1,10 @@
+import { type Locale } from '@/i18n/routing'
 import config from '@payload-config'
 import { notFound } from 'next/navigation'
 import { getPayload } from 'payload'
 import type { Metadata } from 'next'
 import { cache } from 'react'
-import type { Locale } from '@/api/articles.api'
+
 import { getPublicEvents } from '@/api/events.api'
 import { EventPage } from '@/components/events/event-page'
 import { plainText } from '@/lib/plaintext'

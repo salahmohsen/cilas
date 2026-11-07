@@ -1,7 +1,9 @@
+import { type Locale } from '@/i18n/routing'
+import { otherLocale } from '@/i18n/routing'
 import { relId } from '@/lib/relation'
 import type { Payload, Where } from 'payload'
 
-import type { Locale, Reader } from '@/api/articles.api'
+import type { Reader } from '@/api/articles.api'
 import type { BlogPost } from '@/components/arc/blocks/blog-grid/blog-grid-data'
 import type { OrbitStackItem } from '@/components/ui/orbit-card-stack'
 import { COURSE_TYPE_OPTIONS, type CourseType } from '@/fields/course-type'
@@ -153,7 +155,7 @@ export const resolveCardStacks = async (
 ): Promise<Record<string, ResolvedStack>> => {
   const read = {
     locale,
-    fallbackLocale: (locale === 'ar' ? 'en' : 'ar') as Locale,
+    fallbackLocale: otherLocale(locale) as Locale,
     overrideAccess: false,
     user,
   }

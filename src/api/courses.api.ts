@@ -1,3 +1,5 @@
+import { type Locale } from '@/i18n/routing'
+import { otherLocale } from '@/i18n/routing'
 import { relation as obj } from '@/lib/relation'
 import { plainText } from '@/lib/plaintext'
 import type { Payload, Where } from 'payload'
@@ -10,8 +12,6 @@ import { registrationStatus } from '@/lib/registration'
 import { slugify } from '@/lib/slugify'
 import { searchWords, type StudyCourse } from '@/lib/course-search'
 import type { Course, Cycle, Media, Person, Place } from '@/payload-types'
-
-type Locale = 'en' | 'ar'
 
 /**
  * What a course's relations bring along: enough to name and picture them.
@@ -55,7 +55,7 @@ export const getListedCourses = async (payload: Payload, locale: Locale, tiers: 
     overrideAccess: true,
     locale,
     // A course without text in the site language shows its own (CONTEXT.md).
-    fallbackLocale: locale === 'ar' ? 'en' : 'ar',
+    fallbackLocale: otherLocale(locale),
   })
 
 const plain = (data: unknown): string =>
@@ -93,7 +93,7 @@ export const getStudyCourses = async (
   t: (key: string) => string,
   tiers: SiteTier[],
 ): Promise<StudyCourse[]> => {
-  const other: Locale = locale === 'ar' ? 'en' : 'ar'
+  const other: Locale = otherLocale(locale)
   const [{ docs }, { docs: otherDocs }, { docs: places }] = await Promise.all([
     getListedCourses(payload, locale, tiers),
     payload.find({

@@ -1,3 +1,4 @@
+import { otherLocale } from '@/i18n/routing'
 import {
   SEARCH_COLLECTIONS,
   SEARCH_LOCALES,
@@ -38,8 +39,6 @@ export type SearchRow = {
   collection: SearchCollection
   hit: SearchHit
 }
-
-const otherLocale = (locale: SearchLocale): SearchLocale => (locale === 'ar' ? 'en' : 'ar')
 
 /** The site language first, then the other one. */
 const localesFor = (locale: SearchLocale): SearchLocale[] => [locale, otherLocale(locale)]

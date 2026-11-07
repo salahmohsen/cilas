@@ -1,8 +1,9 @@
+import { type Locale } from '@/i18n/routing'
+import { otherLocale } from '@/i18n/routing'
 import config from '@payload-config'
 import { unstable_cache } from 'next/cache'
 import { getPayload, type Payload, type Where } from 'payload'
 
-import type { Locale } from '@/api/articles.api'
 import { cairoDay } from '@/lib/cairo-day'
 import { COURSES_TAG } from '@/lib/revalidate-courses'
 import { expandSchedule, type Schedule, type SessionDates } from '@/lib/schedule'
@@ -54,7 +55,7 @@ export const getCalendarItems = async (
   payload: Payload,
   locale: Locale,
 ): Promise<CalendarItem[]> => {
-  const fallbackLocale = locale === 'ar' ? 'en' : 'ar'
+  const fallbackLocale = otherLocale(locale)
   const [courses, events] = await Promise.all([
     payload.find({
       collection: 'courses',

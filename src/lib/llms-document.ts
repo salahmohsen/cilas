@@ -1,3 +1,4 @@
+import { type Locale } from '@/i18n/routing'
 import {
   convertLexicalToMarkdown,
   editorConfigFactory,
@@ -10,7 +11,7 @@ import type { SanitizedServerEditorConfig } from '@payloadcms/richtext-lexical'
 import type { SerializedEditorState } from '@payloadcms/richtext-lexical/lexical'
 import type { Payload } from 'payload'
 
-import { getRelatedArticles, type Locale } from '@/api/articles.api'
+import { getRelatedArticles } from '@/api/articles.api'
 import { resolveMentions, type ResolvedMention } from '@/api/mentions.api'
 import { resolveRichTextReferences } from '@/api/rich-text-references.api'
 import { referenceKey } from '@/lib/rich-text-references'

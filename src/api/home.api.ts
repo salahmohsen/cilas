@@ -1,3 +1,5 @@
+import { type Locale } from '@/i18n/routing'
+import { otherLocale } from '@/i18n/routing'
 import { relId } from '@/lib/relation'
 import { relation as obj } from '@/lib/relation'
 import type { Payload, Where } from 'payload'
@@ -8,8 +10,6 @@ import { getStudyIndex } from '@/api/study-index'
 import { registrationStatus } from '@/lib/registration'
 import { mediaImage, type MediaImage } from '@/lib/media-image'
 import type { Article, Media, Press } from '@/payload-types'
-
-type Locale = 'en' | 'ar'
 
 export const getHomeHeroDescription = async (payload: Payload, locale: Locale) => {
   const settings = await payload.findGlobal({
@@ -143,7 +143,7 @@ export const getHomeArticles = async (
       depth: 2,
       limit,
       locale,
-      fallbackLocale: locale === 'ar' ? 'en' : 'ar',
+      fallbackLocale: otherLocale(locale),
       overrideAccess: false,
     })
   const [featured, latest] = await Promise.all([

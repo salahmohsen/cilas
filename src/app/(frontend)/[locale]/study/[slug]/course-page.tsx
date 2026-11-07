@@ -1,3 +1,4 @@
+import { otherLocale } from '@/i18n/routing'
 import { relId } from '@/lib/relation'
 import config from '@payload-config'
 import type { Metadata } from 'next'
@@ -111,7 +112,7 @@ export async function CoursePage({
     user: reader,
     // A course without text in the site language shows its own (CONTEXT.md).
     locale: locale as 'en' | 'ar',
-    fallbackLocale: locale === 'ar' ? 'en' : 'ar',
+    fallbackLocale: otherLocale(locale),
   })
 
   const course: Course | undefined = docs[0]
@@ -140,7 +141,7 @@ export async function CoursePage({
         },
         select: { title: true, slug: true, course_type: true, fellows: true, cover_image: true },
         locale: locale as 'en' | 'ar',
-        fallbackLocale: locale === 'ar' ? 'en' : 'ar',
+        fallbackLocale: otherLocale(locale),
       })
     : { docs: [] }
   const related: RelatedCourse[] = siblings.map((c) => {
@@ -218,7 +219,7 @@ export async function CoursePage({
     user: reader,
     draft: true,
     locale: locale as 'en' | 'ar',
-    fallbackLocale: locale === 'ar' ? 'en' : 'ar',
+    fallbackLocale: otherLocale(locale),
   })
 
   return (

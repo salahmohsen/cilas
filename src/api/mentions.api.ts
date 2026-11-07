@@ -1,7 +1,9 @@
+import { type Locale } from '@/i18n/routing'
+import { otherLocale } from '@/i18n/routing'
 import { relId } from '@/lib/relation'
 import type { Payload } from 'payload'
 
-import type { Locale, Reader } from '@/api/articles.api'
+import type { Reader } from '@/api/articles.api'
 import { MENTION_TYPES, type MentionType } from '@/blocks/mention'
 import { pathOf } from '@/lib/paths'
 import { plainText } from '@/lib/plaintext'
@@ -179,7 +181,7 @@ export const resolveMentions = async (
   if (!mentions.length) return {}
   const read = {
     locale,
-    fallbackLocale: (locale === 'ar' ? 'en' : 'ar') as Locale,
+    fallbackLocale: otherLocale(locale) as Locale,
     overrideAccess: false,
     user,
   }

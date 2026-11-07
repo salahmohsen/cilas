@@ -1,3 +1,4 @@
+import { type Locale } from '@/i18n/routing'
 import { relation as obj } from '@/lib/relation'
 import { plainText } from '@/lib/plaintext'
 import type { Payload } from 'payload'
@@ -5,8 +6,6 @@ import { mediaImage, type MediaImage } from '@/lib/media-image'
 import { previewWhere } from '@/lib/preview-access'
 
 import type { Course, Cycle, Media, Person, Programme, User } from '@/payload-types'
-
-type Locale = 'en' | 'ar'
 
 const plain = (data: unknown): string =>
   data && typeof data === 'object' && 'root' in data

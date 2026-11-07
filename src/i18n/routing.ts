@@ -14,3 +14,5 @@ export const routing = defineRouting({
 export type Locale = (typeof routing.locales)[number]
 
 export const isRtl = (locale: string): boolean => locale === 'ar'
+
+export const otherLocale = (locale: string): Locale => (locale === 'ar' ? 'en' : 'ar')

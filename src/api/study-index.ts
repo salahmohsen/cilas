@@ -1,3 +1,4 @@
+import { type Locale } from '@/i18n/routing'
 import config from '@payload-config'
 import { createTranslator } from 'next-intl'
 import { unstable_cache } from 'next/cache'
@@ -9,8 +10,6 @@ import { facetOptions, filterCourses, type CourseQuery, type StudyCard } from '@
 import { COURSES_TAG } from '@/lib/revalidate-courses'
 import ar from '../../messages/ar.json'
 import en from '../../messages/en.json'
-
-type Locale = 'en' | 'ar'
 
 /**
  * The study list with its search words, built once per language and tier set

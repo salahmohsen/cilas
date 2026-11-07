@@ -1,8 +1,9 @@
+import { type Locale } from '@/i18n/routing'
 import type { ReactNode } from 'react'
 import config from '@payload-config'
 import { getPayload } from 'payload'
 import { getLocale, getTranslations } from 'next-intl/server'
-import type { Locale } from '@/api/articles.api'
+
 import { getPublicEvents } from '@/api/events.api'
 import { EventCarousel } from '@/components/events/event-carousel'
 import { PastEventsGrid } from '@/components/events/past-events-grid'

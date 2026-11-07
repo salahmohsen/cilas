@@ -1,10 +1,11 @@
+import { type Locale } from '@/i18n/routing'
 import { pageAlternates } from '@/lib/seo'
 import config from '@payload-config'
 import type { Metadata } from 'next'
 import { getFormatter, getLocale, getTranslations } from 'next-intl/server'
 import { getPayload } from 'payload'
 
-import type { Locale, Reader } from '@/api/articles.api'
+import type { Reader } from '@/api/articles.api'
 import { getOpenNow } from '@/api/home.api'
 import { OpenGrid, type OpenPost } from '@/components/open-grid'
 import { Link } from '@/i18n/navigation'
