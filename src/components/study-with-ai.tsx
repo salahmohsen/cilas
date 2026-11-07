@@ -1,6 +1,6 @@
 'use client'
 
-import { siClaude, siGooglegemini, siZdotai } from 'simple-icons'
+import { siClaude, siGooglegemini, siMistralai, siZdotai } from 'simple-icons'
 import { useTranslations } from 'next-intl'
 import React from 'react'
 
@@ -37,13 +37,15 @@ const iconOf: Record<ProviderId, React.ReactNode> = {
   grok: <BrandMark paths={GROK_PATHS} viewBox={GROK_VIEWBOX} />,
   chatgpt: <BrandMark paths={[CHATGPT_PATH]} />,
   zai: <BrandMark paths={[siZdotai.path]} />,
+  mistral: <BrandMark paths={[siMistralai.path]} />,
 }
 
 /** The session a space post points at, for a prompt about that one session. */
 type StudySession = { course: string; session: string; readings: string[] }
 
 /**
- * Studying a page with AI: Claude, Gemini, Grok, ChatGPT and Z.ai, in Arc's
+ * Studying a page with AI: Claude, Gemini, Grok, ChatGPT, Z.ai and
+ * Mistral, in Arc's
  * expanding button group (the same pill sharing uses, its labels revealing as
  * they're pointed at). An action opens the assistant in a new tab with the
  * page's prompt prefilled, in the page's language, cut down to what that
