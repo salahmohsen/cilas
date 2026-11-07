@@ -5,6 +5,7 @@ import { useLocale } from 'next-intl'
 import { useRouter } from 'next/navigation'
 
 import { BlogGrid } from '@/components/arc/blocks/blog-grid/blog-grid'
+import { CilasLogo } from '@/components/cilas-logo'
 import type { ArticleCard } from '@/lib/article-cards'
 import { ARTICLE_PAGE_SIZE, articleListPath } from '@/lib/articles'
 
@@ -66,6 +67,7 @@ export function ArticlesGrid({
       defaultCategory={initialCategory ?? 'All'}
       description={description}
       getHref={(post) => posts.find((p) => p.id === post.id)?.href ?? '#'}
+      imageFallback={() => <CilasLogo className="article-fallback-logo" />}
       labels={labels}
       onCategoryChange={(category) => {
         if (!slugs) return
