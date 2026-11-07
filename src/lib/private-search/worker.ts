@@ -2,7 +2,15 @@ import { randomUUID } from 'node:crypto'
 import type { Payload } from 'payload'
 import type { Client } from 'typesense'
 import { activeGeneration, RecoveryRequired } from './generation'
-import { ALIAS, projection, numericId, schema, type Kind, type Source } from './model'
+import { projection, numericId, schema, type Kind, type Source } from './model'
+import {
+  ALIAS,
+  generationName,
+  GENERATION_PATTERN,
+  OUTBOX_TABLE,
+  RATE_TABLE,
+  STATE_TABLE,
+} from './names'
 
 type Event = { id: string; kind: Kind | 'thread'; source_id: number; attempts: number }
 export const WRITER_LOCK = 192834711
@@ -31,22 +39,18 @@ const withWriter = async <T>(
     ])
     locked = Boolean(result.rows[0].locked)
     if (!locked) return null
-    const state = await connection.query(
-      'SELECT writer_token FROM spaces_search_state WHERE id = 1',
-    )
+    const state = await connection.query(`SELECT writer_token FROM ${STATE_TABLE} WHERE id = 1`)
     if (state.rows[0]?.writer_token && !recovery) throw new RecoveryRequired()
-    await connection.query('UPDATE spaces_search_state SET writer_token = $1 WHERE id = 1', [token])
+    await connection.query(`UPDATE ${STATE_TABLE} SET writer_token = $1 WHERE id = 1`, [token])
     const check = async () => {
       if (lost) throw new RecoveryRequired()
-      const owner = await connection.query(
-        'SELECT writer_token FROM spaces_search_state WHERE id = 1',
-      )
+      const owner = await connection.query(`SELECT writer_token FROM ${STATE_TABLE} WHERE id = 1`)
       if (lost || owner.rows[0]?.writer_token !== token) throw new RecoveryRequired()
     }
     const publish = async (generation: string) => {
       await check()
       const updated = await connection.query(
-        'UPDATE spaces_search_state SET generation = $1 WHERE id = 1 AND writer_token = $2',
+        `UPDATE ${STATE_TABLE} SET generation = $1 WHERE id = 1 AND writer_token = $2`,
         [generation, token],
       )
       if (updated.rowCount !== 1) throw new RecoveryRequired()
@@ -61,7 +65,7 @@ const withWriter = async <T>(
     await check()
     if (!uncertain)
       await connection.query(
-        'UPDATE spaces_search_state SET writer_token = NULL WHERE id = 1 AND writer_token = $1',
+        `UPDATE ${STATE_TABLE} SET writer_token = NULL WHERE id = 1 AND writer_token = $1`,
         [token],
       )
     return value
@@ -159,7 +163,7 @@ export const processOutbox = async (payload: Payload, client: Client, limit = 10
   withWriter(payload, async ({ check, uncertain }) => {
     const generation = await activeGeneration(payload)
     const { rows } = await payload.db.pool.query<Event>(
-      'SELECT id, kind, source_id, attempts FROM spaces_search_outbox WHERE available_at <= now() ORDER BY id LIMIT $1',
+      `SELECT id, kind, source_id, attempts FROM ${OUTBOX_TABLE} WHERE available_at <= now() ORDER BY id LIMIT $1`,
       [Math.min(100, Math.max(1, limit))],
     )
     let processed = 0
@@ -168,7 +172,7 @@ export const processOutbox = async (payload: Payload, client: Client, limit = 10
     for (const event of rows) {
       try {
         await refresh(payload, client, generation, event, check)
-        await payload.db.pool.query('DELETE FROM spaces_search_outbox WHERE id = $1', [event.id])
+        await payload.db.pool.query(`DELETE FROM ${OUTBOX_TABLE} WHERE id = $1`, [event.id])
         processed++
       } catch (error) {
         await check()
@@ -187,7 +191,7 @@ export const processOutbox = async (payload: Payload, client: Client, limit = 10
           recoveryRequired = true
         }
         await payload.db.pool.query(
-          `UPDATE spaces_search_outbox SET attempts = attempts + 1,
+          `UPDATE ${OUTBOX_TABLE} SET attempts = attempts + 1,
         available_at = now() + make_interval(secs => $2) WHERE id = $1`,
           [event.id, Math.min(3600, 2 ** Math.min(12, event.attempts + 1))],
         )
@@ -197,7 +201,7 @@ export const processOutbox = async (payload: Payload, client: Client, limit = 10
     }
     // Bounded maintenance; keys contain user IDs and hashed network identifiers, never queries.
     await payload.db.pool.query(
-      "DELETE FROM spaces_search_rate WHERE window_start < now() - interval '2 minutes'",
+      `DELETE FROM ${RATE_TABLE} WHERE window_start < now() - interval '2 minutes'`,
     )
     return { processed, failed, recoveryRequired }
   })
@@ -206,7 +210,7 @@ export const rebuild = async (payload: Payload, client: Client) =>
   withWriter(
     payload,
     async ({ check, publish }) => {
-      const generation = `${ALIAS}_${randomUUID().replaceAll('-', '')}`
+      const generation = generationName(randomUUID())
       await check()
       await client.collections().create(schema(generation))
       await check()
@@ -235,7 +239,7 @@ export const rebuild = async (payload: Payload, client: Client) =>
         // Capture actual committed rows, never a sequence watermark: earlier IDs can commit later.
         // Keep them durable until after alias swap. A crash can only cause idempotent replays.
         const { rows } = await payload.db.pool.query<Event>(
-          'SELECT id, kind, source_id, attempts FROM spaces_search_outbox ORDER BY id LIMIT 10001',
+          `SELECT id, kind, source_id, attempts FROM ${OUTBOX_TABLE} ORDER BY id LIMIT 10001`,
         )
         if (rows.length > 10000) throw new Error('Rebuild backlog budget exceeded')
         for (const event of rows) await refresh(payload, client, generation, event, check)
@@ -244,10 +248,9 @@ export const rebuild = async (payload: Payload, client: Client) =>
         await client.aliases().upsert(ALIAS, { collection_name: generation })
         await publish(generation)
         if (rows.length)
-          await payload.db.pool.query(
-            'DELETE FROM spaces_search_outbox WHERE id = ANY($1::bigint[])',
-            [rows.map((r) => r.id)],
-          )
+          await payload.db.pool.query(`DELETE FROM ${OUTBOX_TABLE} WHERE id = ANY($1::bigint[])`, [
+            rows.map((r) => r.id),
+          ])
         return { generation, replayed: rows.length }
       } finally {
         if (!swapAttempted) {
@@ -269,8 +272,7 @@ export const pruneGenerations = async (payload: Payload, client: Client) =>
     const collections = await client.collections().retrieve()
     let removed = 0
     for (const collection of collections) {
-      if (collection.name === current || !/^spaces_search_[a-f0-9]{32}$/.test(collection.name))
-        continue
+      if (collection.name === current || !GENERATION_PATTERN.test(collection.name)) continue
       await check()
       await client.collections(collection.name).delete()
       removed++

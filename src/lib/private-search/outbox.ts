@@ -6,6 +6,7 @@ import type {
   PayloadRequest,
 } from 'payload'
 import type { Kind } from './model'
+import { OUTBOX_TABLE } from './names'
 
 const transactionOf = async (req: PayloadRequest) => {
   const transactionID = await req.transactionID
@@ -19,7 +20,7 @@ const transactionOf = async (req: PayloadRequest) => {
 export const enqueue = async (req: PayloadRequest, kind: Kind | 'thread', id: number) => {
   const transaction = await transactionOf(req)
   await transaction.execute(
-    sql`INSERT INTO spaces_search_outbox (kind, source_id) VALUES (${kind}, ${id})`,
+    sql`INSERT INTO ${sql.raw(OUTBOX_TABLE)} (kind, source_id) VALUES (${kind}, ${id})`,
   )
 }
 export const searchChanged =
@@ -38,6 +39,6 @@ export const searchDeleted =
 export const searchDeletingComment: CollectionBeforeDeleteHook = async ({ req, id }) => {
   const transaction = await transactionOf(req)
   // Postgres nulls child relationships without running Payload child hooks.
-  await transaction.execute(sql`INSERT INTO spaces_search_outbox (kind, source_id)
+  await transaction.execute(sql`INSERT INTO ${sql.raw(OUTBOX_TABLE)} (kind, source_id)
     SELECT 'comment', id FROM space_comments WHERE parent_id = ${Number(id)}`)
 }

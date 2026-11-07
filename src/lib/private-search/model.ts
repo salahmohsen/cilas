@@ -4,7 +4,6 @@ import { createHash, createHmac, timingSafeEqual } from 'node:crypto'
 import type { CollectionCreateSchema } from 'typesense/lib/Typesense/Collections'
 import { z } from 'zod'
 
-export const ALIAS = 'spaces_search'
 export const PAGE_SIZE = 20
 export const BATCH_SIZE = 40
 export const SCAN_LIMIT = 200
