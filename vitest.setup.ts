@@ -27,6 +27,14 @@ if (!isolatedSearchDB && !process.env.DATABASE_URL?.includes('@localhost:5433/')
   )
 }
 
+// Node 25+ defines its own `localStorage` global, which reads as undefined
+// without `--localstorage-file`, and vitest's jsdom environment does not
+// replace a global that already exists. Point it at jsdom's storage.
+const jsdomStorage = (globalThis as { jsdom?: { window: Window } }).jsdom?.window.localStorage
+if (jsdomStorage && globalThis.localStorage === undefined) {
+  Object.defineProperty(globalThis, 'localStorage', { value: jsdomStorage, configurable: true })
+}
+
 // Radix FocusScope schedules `setTimeout(0)` on unmount to dispatch an
 // unmount-autofocus event. When the last test in a file unmounts an open
 // dialog in `afterEach(cleanup)`, that timer used to fire after vitest tore
