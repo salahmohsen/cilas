@@ -7,7 +7,7 @@ import { getFormatter, getLocale, getTranslations } from 'next-intl/server'
 import { getPayload } from 'payload'
 import { cache } from 'react'
 
-import { getPublicationCovers, getPublishedArticles } from '@/api/articles.api'
+import { getPublishedArticles } from '@/api/articles.api'
 import type { Reader } from '@/lib/reader'
 import { ArticlesGrid } from '@/components/article/articles-grid'
 import { EmptyState } from '@/components/arc/empty-state/empty-state'
@@ -56,11 +56,7 @@ export async function ArticlesPage({
     getTranslations('Article'),
     getFormatter(),
   ])
-  const payload = await getPayload({ config })
-  const [{ docs }, publicationCovers] = await Promise.all([
-    publishedFor(locale as Locale, user),
-    getPublicationCovers(payload),
-  ])
+  const { docs } = await publishedFor(locale as Locale, user)
 
   const other = t('notes')
   const posts = docs.map((a) =>
@@ -70,7 +66,6 @@ export async function ArticlesPage({
       minutesLabel: (m) => tArticle('minutes', { count: m }),
       and: tArticle('and'),
       otherCategory: other,
-      publicationCovers,
     }),
   )
   // Publications in first-seen order (newest article first), then the rest.

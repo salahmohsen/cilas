@@ -10,7 +10,6 @@ import { getFormatter, getTranslations } from 'next-intl/server'
 import { notFound } from 'next/navigation'
 import { getPayload } from 'payload'
 
-import { getPublicationCovers } from '@/api/articles.api'
 import { getContributions, getPerson } from '@/api/people.api'
 import grid from '@/components/arc/blocks/blog-grid/blog-grid.module.css'
 import { ArticlesGrid } from '@/components/article/articles-grid'
@@ -57,7 +56,6 @@ export default async function PersonPage({ params }: Props) {
   if (!person) notFound()
 
   const other: Locale = otherLocale(locale)
-  const publicationCovers = await getPublicationCovers(payload)
   const [t, tArticle, tArticles, tCourse, format, contributions, otherName, tm] = await Promise.all(
     [
       getTranslations('Person'),
@@ -96,7 +94,6 @@ export default async function PersonPage({ params }: Props) {
       minutesLabel: (m) => tArticle('minutes', { count: m }),
       and: tArticle('and'),
       otherCategory: tArticles('notes'),
-      publicationCovers,
     })
 
   return (

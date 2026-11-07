@@ -104,7 +104,6 @@ export async function ArticlePage({ locale: siteLocale, slug, user: reader }: Vi
       minutesLabel: (m) => t('minutes', { count: m }),
       and: t('and'),
       otherCategory: tArticles('notes'),
-      publicationCovers,
     })
   const { text, notes, noteCount, sections } = splitBody(body)
   // The Card stack blocks in the text, loaded before it is drawn.

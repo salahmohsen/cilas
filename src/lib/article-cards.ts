@@ -52,23 +52,17 @@ export const toArticleCard = (
     minutesLabel,
     and,
     otherCategory,
-    publicationCovers,
   }: {
     locale: string
     format: Awaited<ReturnType<typeof getFormatter>>
     minutesLabel: (m: number) => string
     and: string
     otherCategory: string
-    publicationCovers?: Map<number, Media>
   },
 ): ArticleCard => {
   const writer = (a.authors ?? []).find((p): p is Person => typeof p === 'object' && p !== null)
-  const pub = publicationOf(a)
-  const image =
-    media(a.cover_image) ??
-    media(writer?.photo) ??
-    media(pub?.cover_image) ??
-    (pub ? publicationCovers?.get(pub.id) : undefined)
+  // Only the article's own cover: a card without one shows the CILAS mark.
+  const image = media(a.cover_image)
   const date = a.published_date ?? a.createdAt
   const minutes = readingMinutes(a)
   return {

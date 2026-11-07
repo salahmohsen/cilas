@@ -5,7 +5,6 @@ import type { Metadata } from 'next'
 import { getFormatter, getLocale, getTranslations } from 'next-intl/server'
 import { getPayload } from 'payload'
 
-import { getPublicationCovers } from '@/api/articles.api'
 import type { Reader } from '@/lib/reader'
 import { getPublicEvents } from '@/api/events.api'
 import { EventCarousel } from '@/components/events/event-carousel'
@@ -61,7 +60,6 @@ export async function HomePage({ locale, reader }: { locale: string; reader: Rea
     articles,
     stats,
     outlets,
-    covers,
     contact,
     faq,
     heroDescription,
@@ -78,7 +76,6 @@ export async function HomePage({ locale, reader }: { locale: string; reader: Rea
     getHomeArticles(payload, locale as Locale),
     getHomeStats(payload),
     getPressOutlets(payload, locale as Locale),
-    getPublicationCovers(payload),
     getContactForm(payload, locale as Locale),
     getHomeFaq(payload, locale as Locale),
     getHomeHeroDescription(payload, locale as Locale),
@@ -97,7 +94,6 @@ export async function HomePage({ locale, reader }: { locale: string; reader: Rea
       minutesLabel: (m) => tArticle('minutes', { count: m }),
       and: tArticle('and'),
       otherCategory: tArticles('notes'),
-      publicationCovers: covers,
     })
   const featured = articles.featured.map(toCard)
   const latest = articles.latest.map(toCard)
