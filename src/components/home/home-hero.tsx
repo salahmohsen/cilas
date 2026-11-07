@@ -1,5 +1,7 @@
 'use client'
 
+import { listSeparator } from '@/lib/locale-format'
+
 import { AnimatePresence, motion, useReducedMotion } from 'motion/react'
 import {
   useEffect,
@@ -226,7 +228,7 @@ export function HomeHero({
           </p>
         ) : null}
         {/* Read once, whole, by screen readers; the moving line is for the eye. */}
-        <p className="sr-only">{who.join(locale === 'ar' ? '، ' : ', ')}</p>
+        <p className="sr-only">{who.join(listSeparator(locale))}</p>
         <p aria-hidden className="home-hero-who home-hero-rise" style={step(1)}>
           {locale === 'ar' ? (
             // Arabic letters join, so the line changes whole instead of letter by

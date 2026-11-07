@@ -1,3 +1,4 @@
+import { CAIRO } from '@/lib/cairo-day'
 import { type Locale } from '@/i18n/routing'
 import { otherLocale } from '@/i18n/routing'
 import { relId } from '@/lib/relation'
@@ -116,7 +117,7 @@ export const resolveMentionDocument = (
             day: 'numeric',
             month: 'long',
             year: 'numeric',
-            timeZone: 'Africa/Cairo',
+            timeZone: CAIRO,
           })
         : null
       const href = pathOf('events', e)

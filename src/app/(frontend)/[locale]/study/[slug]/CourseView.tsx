@@ -1,3 +1,4 @@
+import { listSeparator } from '@/lib/locale-format'
 import { personAvatarSeed } from '@/lib/avatar'
 import {
   ArrowLeft,
@@ -98,7 +99,7 @@ export const CourseView: React.FC<{
         place?.city ?? place?.name,
       ]
         .filter(Boolean)
-        .join(locale === 'ar' ? '، ' : ', ')
+        .join(listSeparator(locale))
     : null
   const typeLabel = tf(`types.${course.course_type.toLowerCase()}`)
   const fellows = (course.fellows ?? []).filter(isObject<Person>)
@@ -158,7 +159,7 @@ export const CourseView: React.FC<{
         ]
       : []
   })
-  const comma = locale === 'ar' ? '، ' : ', '
+  const comma = listSeparator(locale)
 
   const facts: Array<{ icon: LucideIcon; label: string; value: React.ReactNode; path: string }> = [
     ...(cycleLabel && SeasonIcon

@@ -95,3 +95,5 @@ export const cairoTime = (value: string | Date): string | null => {
   const part = (type: string) => cairoHours.formatToParts(date).find((p) => p.type === type)?.value
   return `${part('hour')}:${part('minute')}`
 }
+
+export const cairoNoon = (day: string): Date => new Date(`${day}T12:00:00Z`)

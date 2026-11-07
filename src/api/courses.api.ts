@@ -1,3 +1,4 @@
+import { listSeparator } from '@/lib/locale-format'
 import { type Locale } from '@/i18n/routing'
 import { otherLocale } from '@/i18n/routing'
 import { relation as obj } from '@/lib/relation'
@@ -131,7 +132,7 @@ export const getStudyCourses = async (
       const cycleLabel = cycle
         ? [`${t(`seasons.${season}`)} ${localDigits(cycle.start_year, locale)}`, place]
             .filter(Boolean)
-            .join(locale === 'ar' ? '، ' : ', ')
+            .join(listSeparator(locale))
         : null
       const type = c.course_type
       const fellows = (c.fellows ?? []).flatMap((f) => {

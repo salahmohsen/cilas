@@ -1,3 +1,4 @@
+import { CAIRO } from '@/lib/cairo-day'
 /**
  * The dashboard's HogQL (PostHog's SQL). Every query reads `events` over a
  * fixed window and returns a handful of rows, so the free plan's query
@@ -6,7 +7,7 @@
 export const QUERIES = {
   /** `[day, page views, visitors]` for a year: sparklines, the line chart and the heatmap. */
   daily: `
-    SELECT toString(toDate(toTimeZone(timestamp, 'Africa/Cairo'))) AS day,
+    SELECT toString(toDate(toTimeZone(timestamp, '${CAIRO}'))) AS day,
            count() AS views,
            count(DISTINCT distinct_id) AS visitors
     FROM events

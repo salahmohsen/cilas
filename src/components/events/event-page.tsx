@@ -1,3 +1,4 @@
+import { CAIRO, cairoNoon } from '@/lib/cairo-day'
 import { type Locale } from '@/i18n/routing'
 import { ArrowLeft } from 'lucide-react'
 import { getFormatter, getTranslations } from 'next-intl/server'
@@ -53,7 +54,7 @@ export async function EventPage({
     timing.status !== 'past' && registrationStatus(event.registration, null, now) === 'open'
   const meetings = event.schedule?.start_precision === 'week' ? [] : expandSchedule(event.schedule)
   const date = (day: string) =>
-    format.dateTime(new Date(`${day}T12:00:00Z`), { dateStyle: 'full', timeZone: 'Africa/Cairo' })
+    format.dateTime(cairoNoon(day), { dateStyle: 'full', timeZone: CAIRO })
   const speakers = (event.speakers ?? []).flatMap((speaker, i) =>
     typeof speaker.person === 'object' && speaker.person?.slug
       ? [{ person: speaker.person, role: speaker.role, key: speaker.id || String(i) }]

@@ -1,5 +1,7 @@
 'use client'
 
+import { CAIRO } from '@/lib/cairo-day'
+
 import { useFormFields } from '@payloadcms/ui'
 import { useEffect, useState } from 'react'
 import type { Cycle } from '@/payload-types'
@@ -80,7 +82,7 @@ export function CourseSettings() {
         {deadline
           ? new Intl.DateTimeFormat('en-GB', {
               dateStyle: 'medium',
-              timeZone: 'Africa/Cairo',
+              timeZone: CAIRO,
             }).format(new Date(deadline))
           : 'No deadline'}
       </p>

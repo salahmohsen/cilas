@@ -1,3 +1,4 @@
+import { CAIRO } from '@/lib/cairo-day'
 import { type Locale } from '@/i18n/routing'
 import { otherLocale } from '@/i18n/routing'
 import type { Payload } from 'payload'
@@ -90,7 +91,7 @@ export const getNewsletterStack = async (
       day: 'numeric',
       month: 'long',
       year: 'numeric',
-      timeZone: 'Africa/Cairo',
+      timeZone: CAIRO,
     })
   // Numbered by their order among the published issues: the newest is the count.
   const recent: NewsletterIssue[] = issues.docs.map((issue, i) => ({

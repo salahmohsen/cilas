@@ -1,3 +1,4 @@
+import { CAIRO } from '@/lib/cairo-day'
 import { relId } from '@/lib/relation'
 import config from '@payload-config'
 import type { Metadata } from 'next'
@@ -53,7 +54,7 @@ export default async function ApplyPage({ params }: Props) {
         day: 'numeric',
         month: 'long',
         year: 'numeric',
-        timeZone: 'Africa/Cairo',
+        timeZone: CAIRO,
         numberingSystem: numberingSystemOf(locale),
       })
     : null

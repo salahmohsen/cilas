@@ -1,3 +1,4 @@
+import { CAIRO } from '@/lib/cairo-day'
 import { emailRichTextHTML } from './rich-text'
 import type { RichTextReferences } from '@/lib/rich-text-references'
 import { env } from '@/env'
@@ -49,7 +50,7 @@ const monthOf = (date?: string | null) =>
     ? new Date(date).toLocaleDateString('en-GB', {
         month: 'long',
         year: 'numeric',
-        timeZone: 'Africa/Cairo',
+        timeZone: CAIRO,
       })
     : null
 

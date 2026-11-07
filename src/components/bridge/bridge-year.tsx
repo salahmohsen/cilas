@@ -1,3 +1,4 @@
+import { CAIRO, cairoNoon } from '@/lib/cairo-day'
 import { Clock, Hourglass, Wallet } from 'lucide-react'
 import Image from 'next/image'
 import { getFormatter, getTranslations } from 'next-intl/server'
@@ -81,11 +82,11 @@ export async function BridgeYearView({
 
   // The year's courses as cards, semester by semester; a course drawn by two parts shows once.
   const day = (iso: string) =>
-    format.dateTime(new Date(`${iso}T12:00:00Z`), {
+    format.dateTime(cairoNoon(iso), {
       day: 'numeric',
       month: 'short',
       year: 'numeric',
-      timeZone: 'Africa/Cairo',
+      timeZone: CAIRO,
       numberingSystem: numberingSystemOf(locale),
     })
   const seasons: Record<string, Season> = {}

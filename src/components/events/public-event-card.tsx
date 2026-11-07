@@ -1,3 +1,5 @@
+import { listSeparator } from '@/lib/locale-format'
+import { CAIRO, cairoNoon } from '@/lib/cairo-day'
 import {
   BookOpen,
   BookOpenText,
@@ -74,11 +76,11 @@ export async function PublicEventCard({
   if (!detail) {
     const lines = [
       timing.day
-        ? format.dateTime(new Date(`${timing.day}T12:00:00Z`), {
+        ? format.dateTime(cairoNoon(timing.day), {
             day: 'numeric',
             month: 'short',
             year: 'numeric',
-            timeZone: 'Africa/Cairo',
+            timeZone: CAIRO,
             numberingSystem: numberingSystemOf(locale),
           })
         : t('dateSoon'),
@@ -87,7 +89,7 @@ export async function PublicEventCard({
       const clock = {
         hour: 'numeric',
         minute: '2-digit',
-        timeZone: 'Africa/Cairo',
+        timeZone: CAIRO,
         numberingSystem: numberingSystemOf(locale),
         ...(locale === 'ar' ? { hour12: false } : {}),
       } as const
@@ -102,7 +104,7 @@ export async function PublicEventCard({
     if (online) details.push({ text: t('online'), href: online })
     const speakers = event.speakers
       ?.flatMap(({ person }) => (typeof person === 'object' ? [person.name] : []))
-      .join(locale === 'ar' ? '، ' : ', ')
+      .join(listSeparator(locale))
     return (
       <div className={`poster-frame ${styles.posterFrame}`}>
         <Poster
@@ -147,9 +149,9 @@ export async function PublicEventCard({
             <div className={spaceStyles.eventWhen}>
               {timing.day ? (
                 <time className={spaceStyles.eventDate} dateTime={timing.day}>
-                  {format.dateTime(new Date(`${timing.day}T12:00:00Z`), {
+                  {format.dateTime(cairoNoon(timing.day), {
                     dateStyle: 'long',
-                    timeZone: 'Africa/Cairo',
+                    timeZone: CAIRO,
                   })}
                 </time>
               ) : (

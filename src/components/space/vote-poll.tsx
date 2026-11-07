@@ -1,5 +1,7 @@
 'use client'
 
+import { CAIRO } from '@/lib/cairo-day'
+
 import { personAvatarSeed } from '@/lib/avatar'
 
 import { useId, useOptimistic, useState, useTransition } from 'react'
@@ -130,7 +132,7 @@ export function VotePoll({
         month: 'short',
         hour: 'numeric',
         minute: '2-digit',
-        timeZone: 'Africa/Cairo',
+        timeZone: CAIRO,
         numberingSystem: numberingSystemOf(locale),
       })
     : null

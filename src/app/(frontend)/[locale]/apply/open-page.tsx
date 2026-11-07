@@ -1,3 +1,4 @@
+import { CAIRO, cairoNoon } from '@/lib/cairo-day'
 import { type Locale } from '@/i18n/routing'
 import { pageAlternates } from '@/lib/seo'
 import config from '@payload-config'
@@ -37,10 +38,10 @@ export async function OpenPage({ locale, reader }: { locale: string; reader: Rea
     getOpenNow(payload, locale as Locale, reader),
   ])
   const day = (iso: string) =>
-    format.dateTime(new Date(`${iso}T12:00:00Z`), {
+    format.dateTime(cairoNoon(iso), {
       day: 'numeric',
       month: 'long',
-      timeZone: 'Africa/Cairo',
+      timeZone: CAIRO,
       numberingSystem: numberingSystemOf(locale),
     })
   const and = locale === 'ar' ? ' و' : ' & '

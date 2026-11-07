@@ -1,3 +1,5 @@
+import { listSeparator } from '@/lib/locale-format'
+import { cairoNoon } from '@/lib/cairo-day'
 import { Film } from 'lucide-react'
 import type { CSSProperties } from 'react'
 import { useFormatter, useLocale, useTranslations } from 'next-intl'
@@ -18,11 +20,11 @@ export function MovieCard({
   const t = useTranslations('Movie')
   const locale = useLocale()
   const format = useFormatter()
-  const join = (items: string[]) => items.join(locale === 'ar' ? '، ' : ', ')
+  const join = (items: string[]) => items.join(listSeparator(locale))
   const poster = moviePosterUrl(movie.posterPath)
   const subtitles = subtitleLanguageNames(subtitleLanguages, locale)
   const released = /^\d{4}-\d{2}-\d{2}$/.test(movie.releaseDate)
-    ? format.dateTime(new Date(`${movie.releaseDate}T12:00:00Z`), {
+    ? format.dateTime(cairoNoon(movie.releaseDate), {
         dateStyle: 'long',
         timeZone: 'UTC',
       })

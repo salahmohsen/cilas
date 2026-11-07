@@ -1,3 +1,4 @@
+import { CAIRO } from '@/lib/cairo-day'
 import { otherLocale } from '@/i18n/routing'
 import { relId } from '@/lib/relation'
 import config from '@payload-config'
@@ -104,7 +105,7 @@ export async function CourseApplyPage({
         day: 'numeric',
         month: 'long',
         year: 'numeric',
-        timeZone: 'Africa/Cairo',
+        timeZone: CAIRO,
         numberingSystem: numberingSystemOf(locale),
       })
     : null

@@ -1,3 +1,4 @@
+import { listSeparator } from '@/lib/locale-format'
 import { type Locale } from '@/i18n/routing'
 import { otherLocale } from '@/i18n/routing'
 import { relId } from '@/lib/relation'
@@ -115,7 +116,7 @@ export const getOpenNow = async (
         c.facets.place?.[0]?.label,
       ]
         .filter(Boolean)
-        .join(locale === 'ar' ? '، ' : ', '),
+        .join(listSeparator(locale)),
       fellows: (c.facets.fellow ?? []).map((f) => f.label),
       image: c.image ? { src: c.image, alt: c.imageAlt ?? '', ...c.imageFocalPoint } : undefined,
       deadline: c.deadline,

@@ -1,3 +1,4 @@
+import { listSeparator } from '@/lib/locale-format'
 import { type Locale } from '@/i18n/routing'
 import {
   convertLexicalToMarkdown,
@@ -382,9 +383,7 @@ export const courseDocument = async (
       (slot) =>
         `${WEEKDAY_LABELS[slot.weekday]?.[locale] ?? slot.weekday} ${slot.start_time}–${slot.end_time}`,
     )
-  const meetingsLine = slotLines.length
-    ? `${slotLines.join(locale === 'ar' ? '، ' : ', ')} (Cairo)`
-    : null
+  const meetingsLine = slotLines.length ? `${slotLines.join(listSeparator(locale))} (Cairo)` : null
 
   const price = priceLabel(pricingFor(course, cycle))
   const priceNote = course.pricing_override?.note || null
@@ -408,7 +407,7 @@ export const courseDocument = async (
       locale === 'ar' ? 'لغات التدريس' : 'Taught in',
       (course.teaching_languages ?? [])
         .map((lang) => LANGUAGE_LABELS[lang]?.[locale] ?? lang)
-        .join(locale === 'ar' ? '، ' : ', ') || null,
+        .join(listSeparator(locale)) || null,
     ],
     [locale === 'ar' ? 'ملاحظة اللغة' : 'Language note', course.language_note || null],
     [
@@ -460,7 +459,7 @@ export const courseDocument = async (
       const count = meetings.filter((m) => !m.cancelled && m.session === number).length
       const extraDates = (session.dates ?? [])
         .map((d) => `${d.date} ${d.start_time}–${d.end_time}`)
-        .join(locale === 'ar' ? '، ' : ', ')
+        .join(listSeparator(locale))
       const descriptionMarkdown = await toMarkdown(payload, session.description, l)
       const activities = bulletList(
         (session.activities ?? []).map(

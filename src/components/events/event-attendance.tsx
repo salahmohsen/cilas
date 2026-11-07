@@ -1,3 +1,4 @@
+import { CAIRO, cairoNoon } from '@/lib/cairo-day'
 import { getFormatter, getTranslations } from 'next-intl/server'
 import { ArrowDown, ArrowUpRight } from 'lucide-react'
 import type { Event } from '@/payload-types'
@@ -103,9 +104,9 @@ export async function EventAttendance({
             <>
               {timing.day ? (
                 <time dateTime={timing.day}>
-                  {format.dateTime(new Date(`${timing.day}T12:00:00Z`), {
+                  {format.dateTime(cairoNoon(timing.day), {
                     dateStyle: 'full',
-                    timeZone: 'Africa/Cairo',
+                    timeZone: CAIRO,
                   })}
                 </time>
               ) : (

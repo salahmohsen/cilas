@@ -1,5 +1,7 @@
 'use client'
 
+import { CAIRO } from '@/lib/cairo-day'
+
 import { useLocale, useTranslations } from 'next-intl'
 
 import { Countdown, type CountdownUnit } from '@/components/arc/countdown/countdown'
@@ -34,7 +36,7 @@ export function DeadlineCountdown({
       numerals={locale === 'ar' ? ARABIC_DIGITS : undefined}
       speak={(count, unit) => t('unitSpoken', { count, unit })}
       target={`${deadline}T23:59:59`}
-      timeZone="Africa/Cairo"
+      timeZone={CAIRO}
       units={units}
       variant={variant}
     />

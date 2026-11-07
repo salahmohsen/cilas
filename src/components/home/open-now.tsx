@@ -1,3 +1,4 @@
+import { CAIRO, cairoNoon } from '@/lib/cairo-day'
 import { getFormatter, getTranslations } from 'next-intl/server'
 
 import type { OpenItem } from '@/api/home.api'
@@ -17,11 +18,11 @@ import { posterLayouts } from '@/lib/posters'
 export async function openPosters(items: OpenItem[], locale: string): Promise<PosterData[]> {
   const [t, format] = await Promise.all([getTranslations('Home'), getFormatter()])
   const day = (iso: string) =>
-    format.dateTime(new Date(`${iso}T12:00:00Z`), {
+    format.dateTime(cairoNoon(iso), {
       day: 'numeric',
       // Short, so the date and the time left share one line in the poster's strip.
       month: 'short',
-      timeZone: 'Africa/Cairo',
+      timeZone: CAIRO,
       numberingSystem: numberingSystemOf(locale),
     })
   const and = locale === 'ar' ? ' و' : ' & '

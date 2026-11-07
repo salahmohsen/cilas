@@ -1,3 +1,4 @@
+import { CAIRO } from '@/lib/cairo-day'
 import { plainText } from '@/lib/plaintext'
 
 import { pathOf } from '@/lib/paths'
@@ -99,7 +100,7 @@ const whenOf = (schedule: unknown) => {
       day: 'numeric',
       month: 'long',
       year: 'numeric',
-      timeZone: 'Africa/Cairo',
+      timeZone: CAIRO,
     })
     .replace(',', '')
   const slot = s.slots?.[0]

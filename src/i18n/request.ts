@@ -1,3 +1,4 @@
+import { CAIRO } from '@/lib/cairo-day'
 import { hasLocale } from 'next-intl'
 import { getRequestConfig } from 'next-intl/server'
 import { notFound } from 'next/navigation'
@@ -25,7 +26,7 @@ export default getRequestConfig(async ({ locale: override, requestLocale }) => {
   return {
     locale,
     messages: (await import(`../../messages/${locale}.json`)).default,
-    timeZone: 'Africa/Cairo',
+    timeZone: CAIRO,
     formats: {
       dateTime: {
         day: { day: 'numeric', month: 'long', year: 'numeric', numberingSystem },
