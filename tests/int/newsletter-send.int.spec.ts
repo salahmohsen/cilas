@@ -7,11 +7,13 @@ import { env } from '@/env'
 import config from '@/payload.config'
 import type { Newsletter, User } from '@/payload-types'
 
+import { uniq, uniqEmail } from './fixtures'
+
 let payload: Payload
 let admin: User
 let issue: Newsletter
 let list: { id: number } | null = null
-const ADMIN = 'newsletter-admin-probe@cilas.test'
+const ADMIN = uniqEmail('newsletter-admin-probe')
 
 /** Calls a newsletter endpoint the way the sidebar buttons do. */
 const call = async (action: 'test' | 'send', user: User | null = admin) => {
@@ -28,18 +30,15 @@ describe('sending a newsletter issue', () => {
   beforeAll(async () => {
     payload = await getPayload({ config: await config })
     vi.spyOn(payload, 'sendEmail').mockResolvedValue(undefined)
-    await payload.delete({ collection: 'users', where: { email: { equals: ADMIN } } })
-    await payload.delete({ collection: 'newsletters', where: { slug: { equals: 'probe-issue' } } })
     admin = await payload.create({
       collection: 'users',
       data: { email: ADMIN, password: 'probe-password-1', roles: ['admin'] },
     })
     // A list of its own, with a made-up segment, so no real list is touched.
-    await payload.delete({ collection: 'mailing-lists', where: { name: { equals: 'Probe list' } } })
     list = await payload.create({
       collection: 'mailing-lists',
       data: {
-        name: 'Probe list',
+        name: uniq('Probe list'),
         source: 'members',
         segment_id: 'seg_probe',
         members: { users: [] },
@@ -50,7 +49,7 @@ describe('sending a newsletter issue', () => {
       collection: 'newsletters',
       data: {
         title: 'Probe issue',
-        slug: 'probe-issue',
+        slug: uniq('probe-issue'),
         issue_date: '2026-10-18',
         send_to: list.id,
       },

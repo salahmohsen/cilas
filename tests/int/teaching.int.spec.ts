@@ -7,14 +7,12 @@ import config from '@/payload.config'
 import { cairoDay } from '@/lib/cairo-day'
 import type { User } from '@/payload-types'
 
-type Tracked = 'places' | 'cycles' | 'courses' | 'people' | 'enrollments' | 'programmes' | 'users'
+import { RUN, createTracker, uniq } from './fixtures'
 
 let payload: Payload
-const created: Array<{ collection: Tracked; id: number }> = []
-const track = <T extends { id: number }>(collection: Tracked, doc: T): T => {
-  created.push({ collection, id: doc.id })
-  return doc
-}
+const { track, cleanup } = createTracker()
+// The cycle slug comes from the city, so a unique city keeps the cycle unique.
+const CITY = `Probeville ${RUN}`
 
 describe('time, place and teaching', () => {
   let cycleId: number
@@ -27,7 +25,7 @@ describe('time, place and teaching', () => {
       'places',
       await payload.create({
         collection: 'places',
-        data: { name: 'Probe Place', slug: 'probe-place', city: 'Probeville' },
+        data: { name: 'Probe Place', slug: uniq('probe-place'), city: CITY },
         overrideAccess: true,
       }),
     )
@@ -43,7 +41,7 @@ describe('time, place and teaching', () => {
       'people',
       await payload.create({
         collection: 'people',
-        data: { name: 'Enrollment Probe', slug: 'enrollment-probe' },
+        data: { name: 'Enrollment Probe', slug: uniq('enrollment-probe') },
         overrideAccess: true,
       }),
     ).id
@@ -53,7 +51,7 @@ describe('time, place and teaching', () => {
         collection: 'courses',
         data: {
           title: 'Probe Course',
-          slug: 'probe-course',
+          slug: uniq('probe-course'),
           course_type: 'THEMATIC',
           session_unit: 'session',
           tier: 'owner',
@@ -72,9 +70,7 @@ describe('time, place and teaching', () => {
   })
 
   afterAll(async () => {
-    for (const { collection, id } of created.reverse()) {
-      await payload.delete({ collection, id, overrideAccess: true }).catch(() => undefined)
-    }
+    await cleanup(payload)
     await payload.destroy()
   })
 
@@ -84,8 +80,8 @@ describe('time, place and teaching', () => {
       id: cycleId,
       overrideAccess: true,
     })
-    expect(cycle.title).toBe('Spring 2031, Probeville')
-    expect(cycle.slug).toBe('spring-2031-probeville')
+    expect(cycle.title).toBe(`Spring 2031, ${CITY}`)
+    expect(cycle.slug).toBe(`spring-2031-${uniq('probeville')}`)
     expect(cycle.academic_year).toBe('2030–2031')
   })
 
@@ -165,7 +161,11 @@ describe('time, place and teaching', () => {
       'programmes',
       await payload.create({
         collection: 'programmes',
-        data: { kind: 'bridge', title: 'Probe Draft Programme', slug: 'probe-draft-programme' },
+        data: {
+          kind: 'bridge',
+          title: 'Probe Draft Programme',
+          slug: uniq('probe-draft-programme'),
+        },
         draft: true,
         overrideAccess: true,
       }),

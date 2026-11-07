@@ -23,6 +23,13 @@ import { getBridgeYear } from '@/api/programmes.api'
 import type { User } from '@/payload-types'
 import { GET } from '@/app/(frontend)/api/preview/route'
 
+import { uniq } from './fixtures'
+
+const OWNER_SLUG = uniq('security-preview-owner')
+const ARTICLE_SLUG = uniq('security-private-preview')
+const PROGRAMME_SLUG = uniq('security-private-programme')
+const COURSE_SLUG = uniq('security-private-course')
+
 describe('draft preview authorization', () => {
   let payload: Payload
   let person: number
@@ -38,7 +45,7 @@ describe('draft preview authorization', () => {
     person = (
       await payload.create({
         collection: 'people',
-        data: { name: 'Preview owner', slug: 'security-preview-owner' },
+        data: { name: 'Preview owner', slug: OWNER_SLUG },
       })
     ).id
     owner = { id: -2, collection: 'users', roles: ['member'], person } as User
@@ -49,7 +56,7 @@ describe('draft preview authorization', () => {
         draft: true,
         data: {
           title: 'Private preview',
-          slug: 'security-private-preview',
+          slug: ARTICLE_SLUG,
           authors: [person],
           tier: 'owner',
         },
@@ -61,7 +68,7 @@ describe('draft preview authorization', () => {
         draft: true,
         data: {
           title: 'Private programme',
-          slug: 'security-private-programme',
+          slug: PROGRAMME_SLUG,
           kind: 'bridge',
         },
       })
@@ -72,7 +79,7 @@ describe('draft preview authorization', () => {
         draft: true,
         data: {
           title: 'Private course',
-          slug: 'security-private-course',
+          slug: COURSE_SLUG,
           course_type: 'CORE',
           fellows: [person],
           tier: 'owner',
@@ -96,7 +103,7 @@ describe('draft preview authorization', () => {
 
   it('does not treat the preview flag as authority after logout', async () => {
     expect(
-      await getArticleForReading(payload, 'security-private-preview', {
+      await getArticleForReading(payload, ARTICLE_SLUG, {
         locale: 'en',
         preview: true,
       }),
@@ -105,7 +112,7 @@ describe('draft preview authorization', () => {
 
   it("does not let an author preview someone else's draft", async () => {
     expect(
-      await getArticleForReading(payload, 'security-private-preview', {
+      await getArticleForReading(payload, ARTICLE_SLUG, {
         locale: 'en',
         preview: true,
         user: stranger,
@@ -117,7 +124,7 @@ describe('draft preview authorization', () => {
     for (const user of [owner, admin]) {
       expect(
         (
-          await getArticleForReading(payload, 'security-private-preview', {
+          await getArticleForReading(payload, ARTICLE_SLUG, {
             locale: 'en',
             preview: true,
             user,
@@ -128,15 +135,13 @@ describe('draft preview authorization', () => {
   })
 
   it('refuses anonymous programme previews', async () => {
-    expect(
-      await getBridgeYear(payload, 'en', { slug: 'security-private-programme', draft: true }),
-    ).toBeNull()
+    expect(await getBridgeYear(payload, 'en', { slug: PROGRAMME_SLUG, draft: true })).toBeNull()
   })
 
   it('restricts programme previews to administrators', async () => {
     expect(
       await getBridgeYear(payload, 'en', {
-        slug: 'security-private-programme',
+        slug: PROGRAMME_SLUG,
         draft: true,
         user: owner,
       }),
@@ -144,7 +149,7 @@ describe('draft preview authorization', () => {
     expect(
       (
         await getBridgeYear(payload, 'en', {
-          slug: 'security-private-programme',
+          slug: PROGRAMME_SLUG,
           draft: true,
           user: admin,
         })
@@ -153,8 +158,8 @@ describe('draft preview authorization', () => {
   })
 
   it.each([
-    ['articles', 'security-private-preview', 'member'],
-    ['courses', 'security-private-course', 'fellow'],
+    ['articles', ARTICLE_SLUG, 'member'],
+    ['courses', COURSE_SLUG, 'fellow'],
   ])(
     'applies the %s ownership filter before enabling draft mode',
     async (collection, slug, role) => {
@@ -174,10 +179,8 @@ describe('draft preview authorization', () => {
       user: { ...owner, roles: ['fellow'] },
     } as Awaited<ReturnType<Payload['auth']>>)
     await expect(
-      GET(
-        new Request('http://localhost/api/preview?collection=courses&slug=security-private-course'),
-      ),
-    ).rejects.toThrow('redirect:/en/study/security-private-course')
+      GET(new Request(`http://localhost/api/preview?collection=courses&slug=${COURSE_SLUG}`)),
+    ).rejects.toThrow(`redirect:/en/study/${COURSE_SLUG}`)
     expect(enable).toHaveBeenCalledOnce()
   })
 })

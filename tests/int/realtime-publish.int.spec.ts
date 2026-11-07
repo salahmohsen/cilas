@@ -7,11 +7,14 @@ import { afterAll, beforeAll, describe, expect, it } from 'vitest'
 import config from '@/payload.config'
 import { NOTIFICATION_CHANNEL, type NotificationEvent } from '@/lib/realtime/events'
 
+import { uniqEmail } from './fixtures'
+
 let payload: Payload
 let listener: pg.Client
 let recipient: number
 const heard: NotificationEvent[] = []
 const made: number[] = []
+let account: number
 
 const settle = () => new Promise((resolve) => setTimeout(resolve, 400))
 
@@ -26,10 +29,26 @@ const create = (data: { title: string; description?: string }, req?: unknown) =>
 describe('live notification publishing', () => {
   beforeAll(async () => {
     payload = await getPayload({ config: await config })
-    recipient = (await payload.find({ collection: 'users', limit: 1, depth: 0 })).docs[0].id
+    // A recipient of its own, so the test needs no account in the database.
+    recipient = account = (
+      await payload.create({
+        collection: 'users',
+        data: {
+          email: uniqEmail('realtime-recipient'),
+          password: crypto.randomUUID(),
+          roles: ['member'],
+        },
+        overrideAccess: true,
+      })
+    ).id
     listener = new pg.Client({ connectionString: process.env.DATABASE_URL })
     await listener.connect()
-    listener.on('notification', (msg) => heard.push(JSON.parse(msg.payload!)))
+    // The channel is shared by every spec running against this database;
+    // only this test's own recipient counts.
+    listener.on('notification', (msg) => {
+      const event = JSON.parse(msg.payload!) as NotificationEvent
+      if (event.recipient === recipient) heard.push(event)
+    })
     await listener.query(`LISTEN ${NOTIFICATION_CHANNEL}`)
   })
 
@@ -39,6 +58,7 @@ describe('live notification publishing', () => {
         .delete({ collection: 'notifications', id, overrideAccess: true })
         .catch(() => {})
     }
+    await payload.delete({ collection: 'users', id: account, overrideAccess: true }).catch(() => {})
     await listener?.end()
   })
 

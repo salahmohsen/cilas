@@ -6,14 +6,18 @@ import { afterAll, beforeAll, describe, expect, it } from 'vitest'
 import config from '@/payload.config'
 import { findRedirect } from '@/lib/redirects'
 import { importRedirects, redirectTargets, type DocRef } from '../../migration/lib/import-redirects'
+import { RUN, uniq } from './fixtures'
 
 let payload: Payload
 
 // Fixtures use the "/proberedirects-" prefix, apart from the other import specs.
-const P = '/proberedirects-'
+const P = `/proberedirects-${RUN}-`
 const L = { course: `${P}course.html`, cycle: `${P}cycle.html`, info: `${P}about.html` }
-const UPLOAD = 'uploads/proberedirects/x.jpg'
-const UPLOAD_URL = 'https://example.org/media/proberedirects-x.jpg'
+const UPLOAD_DIR = `uploads/proberedirects-${RUN}`
+const UPLOAD = `${UPLOAD_DIR}/x.jpg`
+const UPLOAD_URL = `https://example.org/media/proberedirects-${RUN}-x.jpg`
+const PLACE_SLUG = uniq('probe-redirects-place')
+const COURSE_SLUG = uniq('probe-redirects-course')
 
 const cleanup = async () => {
   const del = (collection: CollectionSlug, where: object) =>
@@ -21,10 +25,10 @@ const cleanup = async () => {
       .delete({ collection, where, overrideAccess: true } as Parameters<Payload['delete']>[0])
       .catch(() => undefined)
   await del('redirects', { from: { like: P } })
-  await del('redirects', { from: { like: '/uploads/proberedirects/' } })
+  await del('redirects', { from: { like: `/${UPLOAD_DIR}/` } })
   await del('courses', { legacy_url: { like: P } })
   await del('cycles', { legacy_url: { like: P } })
-  await del('places', { slug: { equals: 'probe-redirects-place' } })
+  await del('places', { slug: { equals: PLACE_SLUG } })
 }
 
 describe('importRedirects', () => {
@@ -38,10 +42,9 @@ describe('importRedirects', () => {
 
   beforeAll(async () => {
     payload = await getPayload({ config: await config })
-    await cleanup()
     const place = await payload.create({
       collection: 'places',
-      data: { name: 'Probe Redirects Place', slug: 'probe-redirects-place', city: 'Probeville' },
+      data: { name: 'Probe Redirects Place', slug: PLACE_SLUG, city: `Probeville ${RUN}` },
       overrideAccess: true,
     })
     const cycle = await payload.create({
@@ -53,7 +56,7 @@ describe('importRedirects', () => {
       collection: 'courses',
       data: {
         title: 'Probe Redirects Course',
-        slug: 'probe-redirects-course',
+        slug: COURSE_SLUG,
         course_type: 'CORE',
         legacy_url: L.course,
         _status: 'draft',
@@ -106,7 +109,7 @@ describe('importRedirects', () => {
 
   it('resolves the legacy path without .html to the course page', async () => {
     expect(await findRedirect(payload, `${P}course`)).toEqual({
-      url: '/study/probe-redirects-course',
+      url: `/study/${COURSE_SLUG}`,
       permanent: true,
     })
     expect(await findRedirect(payload, `/${UPLOAD}`)).toEqual({ url: UPLOAD_URL, permanent: true })

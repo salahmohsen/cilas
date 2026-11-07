@@ -26,8 +26,8 @@ describe('stored person profile blocks', () => {
 
   beforeAll(async () => {
     const url = new URL(process.env.DATABASE_URL!)
-    if (url.hostname !== 'localhost' || url.port !== '5433' || url.pathname !== '/cilas_dev') {
-      throw new Error('This test requires the local cilas_dev database on localhost:5433.')
+    if (url.hostname !== 'localhost' || url.port !== '5433') {
+      throw new Error('This test requires a local database on localhost:5433.')
     }
     payload = await getPayload({ config: await config })
     const person = await payload.create({
@@ -60,6 +60,7 @@ describe('stored person profile blocks', () => {
         title: 'Profile block probe',
         slug,
         tier: 'public',
+        _status: 'published',
         event_type: 'talk',
         description: documentOf([
           profile(personId),

@@ -8,6 +8,8 @@ import { afterAll, beforeAll, describe, expect, it } from 'vitest'
 import config from '@/payload.config'
 import type { User } from '@/payload-types'
 
+import { uniqEmail } from './fixtures'
+
 let payload: Payload
 let user: User
 
@@ -36,7 +38,7 @@ describe('Google sign-in', () => {
     payload = await getPayload({ config: await config })
     user = await payload.create({
       collection: 'users',
-      data: { email: 'google-probe@cilas.test', password: 'probe-password-1', roles: ['member'] },
+      data: { email: uniqEmail('google-probe'), password: 'probe-password-1', roles: ['member'] },
       overrideAccess: true,
     })
   })

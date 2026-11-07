@@ -10,32 +10,44 @@ import {
   prunePeople,
   type ArchivePeopleData,
 } from '../../migration/lib/import-people'
+import { RUN, uniq } from './fixtures'
 
 let payload: Payload
 
 // Fixtures avoid the "/probe-" prefix and the fall 2031 Cairo cycle of the
 // course import spec, so the two specs can run side by side.
-const CYCLE_URL = '/probepeople-spring-2032.html'
-const PROGRAMME = 'Probe People Bridge 2031–2032'
-const PROBE = { name: { like: 'Probe People' } }
+const P = `/probepeople-${RUN}`
+const CYCLE_URL = `${P}-spring-2032.html`
+const PROGRAMME = `Probe People Bridge ${RUN} 2031–2032`
+// The importer ties a programme to the cycles of fixed place names, so this
+// spec uses the real place; it deletes only the cycle it makes.
+const PLACE = 'al-Manshiya'
+// Every probe person carries the run suffix in the name.
+const PROBE = { name: { like: RUN } }
+const named = (name: string) => `Probe People ${name} ${RUN}`
+const STUDENT = named('Student')
+const ADVISOR = named('Advisor')
+const ORPHAN = named('Orphan')
+const REVIEWED = named('Reviewed')
+const ORPHAN_2 = named('Orphan 2')
 
 const data: ArchivePeopleData = {
   people: [
     {
-      name: 'Probe People Student',
+      name: STUDENT,
       name_ar: 'طالب',
       bio: 'A student.',
       email: null,
       photo: null,
-      legacy_url: '/probepeople-cohort.html#student',
+      legacy_url: `${P}-cohort.html#student`,
     },
     {
-      name: 'Probe People Advisor',
+      name: ADVISOR,
       name_ar: null,
       bio: 'An advisor.',
       email: null,
       photo: null,
-      legacy_url: '/probepeople-advisors.html#advisor',
+      legacy_url: `${P}-advisors.html#advisor`,
     },
   ],
   programmes: [
@@ -44,27 +56,27 @@ const data: ArchivePeopleData = {
       year: '2031-2032',
       place: 'alexandria',
       verified: true,
-      legacy_url: '/probepeople-cohort.html',
+      legacy_url: `${P}-cohort.html`,
     },
   ],
   memberships: [
     {
-      person: 'Probe People Student',
+      person: STUDENT,
       programme: PROGRAMME,
       role: 'student',
       title: null,
-      legacy_url: '/probepeople-cohort.html#student',
+      legacy_url: `${P}-cohort.html#student`,
     },
   ],
   governance: [
     {
-      person: 'Probe People Advisor',
+      person: ADVISOR,
       role: 'advisor',
       title: 'Professor of Probing',
       advises_on: 'probes',
       board_role: null,
       order: 1,
-      legacy_url: '/probepeople-advisors.html#advisor',
+      legacy_url: `${P}-advisors.html#advisor`,
     },
   ],
 }
@@ -90,15 +102,14 @@ const cleanup = async () => {
     await del('memberships', { person: { in: ids } })
     await del('governance', { person: { in: ids } })
   }
-  await del('programmes', { title: { like: 'Probe People' } })
-  await del('cycles', { legacy_url: { like: '/probepeople-' } })
+  await del('programmes', { title: { equals: PROGRAMME } })
+  await del('cycles', { legacy_url: { like: P } })
   await del('people', PROBE)
 }
 
 describe('archive people import', () => {
   beforeAll(async () => {
     payload = await getPayload({ config: await config })
-    await cleanup()
     // The cycle the probe programme should link to: academic year 2031–2032.
     await importCourses(payload, {
       cycles: [
@@ -106,7 +117,7 @@ describe('archive people import', () => {
           key: 'probe',
           season: 'spring',
           start_year: 2032,
-          space: 'al-Manshiya',
+          space: PLACE,
           legacy_url: CYCLE_URL,
         },
       ],
@@ -118,8 +129,24 @@ describe('archive people import', () => {
     await payload.destroy()
   })
 
+  // importPeople reports counts of whole collections, which other spec files
+  // running against the same database change too, so these count this run's
+  // own rows instead.
+  const mine = async () => {
+    const ids = await probeIds()
+    const count = async (collection: 'memberships' | 'governance' | 'programmes', where: object) =>
+      (await payload.count({ collection, where, overrideAccess: true } as never)).totalDocs
+    return {
+      people: ids.length,
+      programmes: await count('programmes', { title: { equals: PROGRAMME } }),
+      memberships: await count('memberships', { person: { in: ids } }),
+      governance: await count('governance', { person: { in: ids } }),
+    }
+  }
+
   it('creates the people, and a second run creates nothing new', async () => {
-    const first = await importPeople(payload, data)
+    await importPeople(payload, data)
+    const first = await mine()
     expect(first).toEqual({ people: 2, programmes: 1, memberships: 1, governance: 1 })
 
     const { docs } = await payload.find({
@@ -129,7 +156,7 @@ describe('archive people import', () => {
       overrideAccess: true,
       sort: 'name',
     })
-    expect(docs.map((d) => d.name)).toEqual(['Probe People Advisor', 'Probe People Student'])
+    expect(docs.map((d) => d.name)).toEqual([ADVISOR, STUDENT])
     const ar = await payload.findByID({
       collection: 'people',
       id: docs[1].id,
@@ -139,9 +166,8 @@ describe('archive people import', () => {
     })
     expect(ar.name).toBe('طالب')
 
-    const second = await importPeople(payload, data)
-    expect(second).toEqual({ people: 0, programmes: 0, memberships: 0, governance: 0 })
-    expect(await probeIds()).toHaveLength(2)
+    await importPeople(payload, data)
+    expect(await mine()).toEqual(first)
   })
 
   it('creates the programme as a draft with its cycle and two components per cycle', async () => {
@@ -176,7 +202,7 @@ describe('archive people import', () => {
     const [student] = (
       await payload.find({
         collection: 'people',
-        where: { name: { equals: 'Probe People Student' } },
+        where: { name: { equals: STUDENT } },
         depth: 0,
         overrideAccess: true,
       })
@@ -201,7 +227,7 @@ describe('archive people import', () => {
   it('creates a governance row for the advisor', async () => {
     const { docs } = await payload.find({
       collection: 'governance',
-      where: { legacy_url: { equals: '/probepeople-advisors.html#advisor' } },
+      where: { legacy_url: { equals: `${P}-advisors.html#advisor` } },
       depth: 1,
       overrideAccess: true,
     })
@@ -212,13 +238,13 @@ describe('archive people import', () => {
       advises_on: 'probes',
       order: 1,
     })
-    expect((docs[0].person as { name: string }).name).toBe('Probe People Advisor')
+    expect((docs[0].person as { name: string }).name).toBe(ADVISOR)
   })
 
   it('prunes an unreferenced imported person, and keeps hand-added and referenced ones', async () => {
     for (const [name, legacy_url] of [
-      ['Probe People Orphan', '/probe-people.html#orphan'],
-      ['Probe People Reviewed', null],
+      [ORPHAN, `${P}-people.html#orphan`],
+      [REVIEWED, null],
     ] as const) {
       await payload.create({
         collection: 'people',
@@ -231,7 +257,7 @@ describe('archive people import', () => {
       })
     }
     const pruned = await prunePeople(payload, { scope: PROBE })
-    expect(pruned).toEqual(['Probe People Orphan'])
+    expect(pruned).toEqual([ORPHAN])
 
     const left = await payload.find({
       collection: 'people',
@@ -240,20 +266,16 @@ describe('archive people import', () => {
       overrideAccess: true,
       sort: 'name',
     })
-    expect(left.docs.map((d) => d.name)).toEqual([
-      'Probe People Advisor',
-      'Probe People Reviewed',
-      'Probe People Student',
-    ])
+    expect(left.docs.map((d) => d.name)).toEqual([ADVISOR, REVIEWED, STUDENT])
   })
 
   it('refuses to prune more than the limit', async () => {
     await payload.create({
       collection: 'people',
       data: {
-        name: 'Probe People Orphan 2',
-        slug: 'probe-people-orphan-2',
-        legacy_url: '/probe-people.html#orphan-2',
+        name: ORPHAN_2,
+        slug: uniq('probe-people-orphan-2'),
+        legacy_url: `${P}-people.html#orphan-2`,
       },
       overrideAccess: true,
     })

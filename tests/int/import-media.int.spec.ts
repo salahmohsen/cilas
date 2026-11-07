@@ -1,5 +1,7 @@
 // @vitest-environment node
 // Boots the real config against DATABASE_URL and uploads to R2.
+import { copyFileSync, mkdtempSync, rmSync } from 'node:fs'
+import { tmpdir } from 'node:os'
 import path from 'node:path'
 import { getPayload, type CollectionSlug, type Payload } from 'payload'
 import { afterAll, beforeAll, describe, expect, it } from 'vitest'
@@ -7,21 +9,34 @@ import { afterAll, beforeAll, describe, expect, it } from 'vitest'
 import config from '@/payload.config'
 import { importMedia } from '../../migration/lib/import-media'
 import type { MediaJob } from '../../migration/lib/media-plan'
+import { RUN, uniq } from './fixtures'
 
 let payload: Payload
 
 // Fixtures use the "/probemedia-" prefix and "Probe Media" names, apart from
 // the other import specs (which run against the same database).
-const P = '/probemedia-'
+const P = `/probemedia-${RUN}-`
+const UPLOAD_DIR = `uploads/probemedia-${RUN}`
+const OUTLET = `Probe Media Outlet ${RUN}`
+const PRESS = `Probe Media Press ${RUN}`
 const K = {
-  png: 'uploads/probemedia/pixel.png',
-  other: 'uploads/probemedia/other.png',
-  pdf: 'uploads/probemedia/tiny.pdf',
+  png: `${UPLOAD_DIR}/pixel.png`,
+  other: `${UPLOAD_DIR}/other.png`,
+  pdf: `${UPLOAD_DIR}/tiny.pdf`,
+}
+// Media filenames are unique, so each run uploads its own copy of a fixture
+// under a name no earlier (or interrupted) run used.
+const TMP = mkdtempSync(path.join(tmpdir(), 'probemedia-'))
+const copyOf = (fixture: string, as: string): string => {
+  const ext = path.extname(fixture)
+  const to = path.join(TMP, `${as}-${RUN}${ext}`)
+  copyFileSync(path.join(import.meta.dirname, '..', 'fixtures', fixture), to)
+  return to
 }
 const FILES: Record<string, string> = {
-  [K.png]: path.join(import.meta.dirname, '..', 'fixtures', 'pixel.png'),
-  [K.other]: path.join(import.meta.dirname, '..', 'fixtures', 'pixel.png'),
-  [K.pdf]: path.join(import.meta.dirname, '..', 'fixtures', 'tiny.pdf'),
+  [K.png]: copyOf('pixel.png', 'pixel'),
+  [K.other]: copyOf('pixel.png', 'other'),
+  [K.pdf]: copyOf('tiny.pdf', 'tiny'),
 }
 const resolve = (p: string) => ({ key: p, file: FILES[p] ?? null })
 const OLD_PDF = `https://www.ci-las.org/${K.pdf}`
@@ -53,7 +68,7 @@ const jobs: MediaJob[] = [
   },
   {
     collection: 'press',
-    name: 'Probe Media Outlet',
+    name: OUTLET,
     field: 'outlet.logo',
     path: K.png,
     alt: 'Probe Media Outlet',
@@ -76,7 +91,7 @@ const jobs: MediaJob[] = [
     collection: 'people',
     legacy_url: L.gone,
     field: 'photo',
-    path: 'uploads/probemedia/nope.png',
+    path: `${UPLOAD_DIR}/nope.png`,
     alt: 'Gone',
   },
 ]
@@ -94,9 +109,9 @@ const cleanup = async () => {
   ] as const) {
     await del(collection, { [field]: { like: `${P}` } })
   }
-  await del('press', { title: { equals: 'Probe Media Press' } })
+  await del('press', { title: { equals: PRESS } })
   // Deleting a media doc deletes its R2 object.
-  await del('media', { legacy_url: { like: 'uploads/probemedia/' } })
+  await del('media', { legacy_url: { like: `${UPLOAD_DIR}/` } })
 }
 
 describe('importMedia', () => {
@@ -104,7 +119,6 @@ describe('importMedia', () => {
 
   beforeAll(async () => {
     payload = await getPayload({ config: await config })
-    await cleanup()
     const make = (collection: CollectionSlug, data: Record<string, unknown>) =>
       payload.create({
         collection,
@@ -122,39 +136,44 @@ describe('importMedia', () => {
     existingMediaId = chosen.id as number
     await make('people', {
       name: 'Probe Media Person',
-      slug: 'probe-media-person',
+      slug: uniq('probe-media-person'),
       legacy_url: L.person,
     })
     await make('people', {
       name: 'Probe Media Set',
-      slug: 'probe-media-set',
+      slug: uniq('probe-media-set'),
       legacy_url: L.set,
       photo: existingMediaId,
     })
-    await make('people', { name: 'Probe Media Gone', slug: 'probe-media-gone', legacy_url: L.gone })
+    await make('people', {
+      name: 'Probe Media Gone',
+      slug: uniq('probe-media-gone'),
+      legacy_url: L.gone,
+    })
     await make('courses', {
       title: 'Probe Media Course',
-      slug: 'probe-media-course',
+      slug: uniq('probe-media-course'),
       course_type: 'CORE',
       legacy_url: L.course,
       _status: 'draft',
     })
     await make('press', {
       kind: 'coverage',
-      title: 'Probe Media Press',
-      outlet: { name: 'Probe Media Outlet' },
+      title: PRESS,
+      outlet: { name: OUTLET },
       links: [{ url: 'https://example.com/probe-media' }],
     })
     await make('publications', {
       title: 'Probe Media Pub',
-      slug: 'probe-media-pub',
+      slug: uniq('probe-media-pub'),
       kind: 'essay_collection',
+      _status: 'published',
       legacy_url: L.pub,
       print_edition_url: OLD_PDF,
     })
     await make('newsletters', {
       title: 'Probe Media Issue',
-      slug: 'probe-media-issue',
+      slug: uniq('probe-media-issue'),
       issue_date: '2013-06-01',
       legacy_url: L.newsletter,
       body: {
@@ -202,6 +221,7 @@ describe('importMedia', () => {
 
   afterAll(async () => {
     await cleanup()
+    rmSync(TMP, { recursive: true, force: true })
   }, 300_000)
 
   const photoOf = async (legacy: string) => {
@@ -246,7 +266,7 @@ describe('importMedia', () => {
     expect(course.docs[0].cover_image).toBe(photo)
     const outlet = await payload.find({
       collection: 'press',
-      where: { title: { equals: 'Probe Media Press' } },
+      where: { title: { equals: PRESS } },
       depth: 0,
       overrideAccess: true,
     })

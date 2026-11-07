@@ -1,5 +1,6 @@
 // @vitest-environment node
 // Boots the real config against DATABASE_URL.
+import { readFile } from 'node:fs/promises'
 import { getPayload, type Payload } from 'payload'
 import { afterAll, beforeAll, describe, expect, it } from 'vitest'
 
@@ -7,8 +8,13 @@ import { readProfile, saveProfile, saveProfilePhoto, type ProfileInput } from '@
 import config from '@/payload.config'
 import type { User } from '@/payload-types'
 
+import { RUN, createTracker, uniq } from './fixtures'
+
 let payload: Payload
 const people: number[] = []
+const { track, cleanup } = createTracker()
+// The bio tests that hold an uploaded image need a media row; they make it.
+let mediaId: number
 
 describe('profile', () => {
   let me: User
@@ -18,20 +24,31 @@ describe('profile', () => {
     payload = await getPayload({ config: await config })
     const mine = await payload.create({
       collection: 'people',
-      data: { name: 'Profile Probe', slug: 'profile-probe' },
+      data: { name: 'Profile Probe', slug: uniq('profile-probe') },
       overrideAccess: true,
     })
     const other = await payload.create({
       collection: 'people',
-      data: { name: 'Profile Other', slug: 'profile-other' },
+      data: { name: 'Profile Other', slug: uniq('profile-other') },
       overrideAccess: true,
     })
     people.push(mine.id, other.id)
     otherId = other.id
     me = { id: -3, roles: ['member'], person: mine.id, collection: 'users' } as unknown as User
+    const data = await readFile(new URL('../fixtures/pixel.png', import.meta.url))
+    mediaId = track(
+      'media',
+      await payload.create({
+        collection: 'media',
+        data: { alt: 'Profile probe image' },
+        file: { name: `pixel-${RUN}.png`, mimetype: 'image/png', data, size: data.length },
+        overrideAccess: true,
+      }),
+    ).id
   })
 
   afterAll(async () => {
+    await cleanup(payload)
     for (const id of people) {
       await payload
         .delete({ collection: 'people', id, overrideAccess: true })
@@ -269,7 +286,22 @@ describe('profile', () => {
     ).toEqual({ ok: false, error: 'bio' })
   })
 
+  // Earlier tests leave a read-only bio (underlined text) on the person; the
+  // tests that write a bio start from an empty one.
+  const clearBio = async () => {
+    for (const locale of ['en', 'ar'] as const) {
+      await payload.update({
+        collection: 'people',
+        id: people[0]!,
+        locale,
+        data: { bio: null },
+        overrideAccess: true,
+      })
+    }
+  }
+
   it('refuses to clear a stored Arabic name', async () => {
+    await clearBio()
     expect(await saveProfile(payload, me, base({ name: { en: 'Nour Probe', ar: 'نور' } }))).toEqual(
       {
         ok: true,
@@ -350,11 +382,9 @@ describe('profile', () => {
     expect(await storedBio()).toContain('"format":8')
   })
 
-  it('drops upload placeholders from a member bio', async (ctx) => {
-    const found = await payload.find({ collection: 'media', limit: 1, overrideAccess: true })
-    const media = found.docs[0]
-    if (!media) ctx.skip()
-    const id = media!.id
+  it('drops upload placeholders from a member bio', async () => {
+    await clearBio()
+    const id = mediaId
     expect(
       await saveProfile(
         payload,
@@ -367,15 +397,12 @@ describe('profile', () => {
     expect(stored).not.toContain('"type":"upload"')
   })
 
-  it('keeps an unchanged bio that holds an uploaded image', async (ctx) => {
-    const found = await payload.find({ collection: 'media', limit: 1, overrideAccess: true })
-    const media = found.docs[0]
-    if (!media) ctx.skip()
+  it('keeps an unchanged bio that holds an uploaded image', async () => {
     await payload.update({
       collection: 'people',
       id: people[0]!,
       locale: 'en',
-      data: { bio: lexicalOf({ text: 'Before', format: 0 }, { upload: media!.id }) } as never,
+      data: { bio: lexicalOf({ text: 'Before', format: 0 }, { upload: mediaId }) } as never,
       overrideAccess: true,
     })
     const view = await readProfile(payload, me)

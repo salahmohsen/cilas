@@ -4,11 +4,14 @@ import { afterAll, beforeAll, describe, expect, it } from 'vitest'
 
 import config from '@/payload.config'
 import { courseDocument, articleDocument, documentToMarkdown } from '@/api/llms-document'
-import type { Article, Course, Person } from '@/payload-types'
+import type { Course, Person } from '@/payload-types'
+
+import { RUN, createTracker, uniq } from './fixtures'
 
 let payload: Payload
 let person: Person
 let course: Course
+const { track, cleanup } = createTracker()
 
 const note = (text: string) => ({
   root: { type: 'root', children: [{ type: 'paragraph', children: [{ type: 'text', text }] }] },
@@ -16,25 +19,74 @@ const note = (text: string) => ({
 
 beforeAll(async () => {
   payload = await getPayload({ config: await config })
-  person = (await payload.create({
-    collection: 'people',
-    data: { name: 'Test Person', slug: 'test-person-llms-' + Date.now() },
-    overrideAccess: true,
-  })) as Person
-  const found = await payload.find({
+  person = track(
+    'people',
+    (await payload.create({
+      collection: 'people',
+      data: { name: 'Test Person', slug: uniq('test-person-llms') },
+      overrideAccess: true,
+    })) as Person,
+  )
+  // The course the document test reads: public and published, with a weekly
+  // slot and a session reading that links to the web.
+  const place = track(
+    'places',
+    await payload.create({
+      collection: 'places',
+      data: { name: 'Llms Place', slug: uniq('llms-place'), city: `Llmsville ${RUN}` },
+      overrideAccess: true,
+    }),
+  )
+  const cycle = track(
+    'cycles',
+    await payload.create({
+      collection: 'cycles',
+      data: { season: 'spring', start_year: 2031, place: place.id, start_date: '2031-03-04' },
+      overrideAccess: true,
+    }),
+  )
+  const made = track(
+    'courses',
+    await payload.create({
+      collection: 'courses',
+      data: {
+        title: 'Llms Course',
+        slug: uniq('llms-course'),
+        course_type: 'THEMATIC',
+        session_unit: 'session',
+        tier: 'public',
+        cycle: cycle.id,
+        _status: 'published',
+        schedule: {
+          start_date: '2031-03-04',
+          weeks: 2,
+          slots: [{ weekday: 'tue', start_time: '18:00', end_time: '20:00' }],
+        },
+        sessions: [
+          {
+            order: 1,
+            session_title: 'First session',
+            bibliography: [
+              { type: 'reading', title: 'A reading', href: 'https://example.org/reading' },
+            ],
+          },
+          { order: 2, session_title: 'Second session' },
+        ],
+      },
+      overrideAccess: true,
+    }),
+  )
+  course = (await payload.findByID({
     collection: 'courses',
-    where: { tier: { equals: 'public' }, _status: { equals: 'published' } },
-    limit: 20,
+    id: made.id,
     depth: 2,
     overrideAccess: true,
-  })
-  course = (found.docs.find((d: any) => d.sessions?.length) ?? found.docs[0]) as Course
+  })) as Course
 })
 
 afterAll(async () => {
-  await payload
-    .delete({ collection: 'people', id: person.id, overrideAccess: true })
-    .catch(() => {})
+  await cleanup(payload)
+  await payload.destroy()
 })
 
 describe('llms-document', () => {
@@ -51,7 +103,7 @@ describe('llms-document', () => {
     const article: any = {
       id: 1,
       title: 'Test Article',
-      slug: 'test-article-llms',
+      slug: uniq('test-article-llms'),
       authors: [person],
       published_date: '2026-01-01',
       body: {

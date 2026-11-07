@@ -43,6 +43,8 @@ import {
   spaceRoster,
 } from '@/lib/spaces-data'
 
+import { RUN, createTracker, lockSpacesMode, uniq, uniqEmail } from './fixtures'
+
 let payload: Payload
 let modeBefore: 'off' | 'trial' | 'on' = 'off'
 let fellow: User
@@ -72,14 +74,19 @@ const introOf = (space: Space) => {
 
 const relSpace = (v: number | { id: number }) => (typeof v === 'object' ? v.id : v)
 
-const tracked = new Map<string, number[]>()
-const track = (collection: string, id: number) => {
-  const list = tracked.get(collection) ?? []
-  list.push(id)
-  tracked.set(collection, list)
-}
+const { track, cleanup } = createTracker()
+const COURSE_SLUG = uniq('probe-space-course')
+const BRIDGE_SLUG = uniq('probe-bridge')
+// The cycle slug comes from the city, so a unique city keeps the cycle unique.
+const CITY = `Probeville ${RUN}`
 
 describe('spaces write', () => {
+  let unlockSpacesMode: () => Promise<void>
+  // Waits for any other spaces spec to finish with the shared spaces mode.
+  beforeAll(async () => {
+    unlockSpacesMode = await lockSpacesMode()
+  }, 600_000)
+
   let mkUser: (name: string) => Promise<User | undefined>
   beforeAll(async () => {
     payload = await getPayload({ config: await (config as never as Promise<typeof config>) })
@@ -92,14 +99,14 @@ describe('spaces write', () => {
     const mk = async (name: string) => {
       const p = await payload.create({
         collection: 'people',
-        data: { name, slug: name.toLowerCase().replace(/\s+/g, '-') },
+        data: { name, slug: uniq(name.toLowerCase().replace(/\s+/g, '-')) },
         overrideAccess: true,
       })
       track('people', p.id)
       const u = await payload.create({
         collection: 'users',
         data: {
-          email: `${name.toLowerCase().replace(/\s+/g, '-')}@probe.cilas`,
+          email: uniqEmail(name.toLowerCase().replace(/\s+/g, '-')),
           password: 'probe-probe',
           roles: ['member'],
           person: p.id,
@@ -115,14 +122,14 @@ describe('spaces write', () => {
     {
       const p = await payload.create({
         collection: 'people',
-        data: { name: 'Probe Admin', slug: 'probe-admin' },
+        data: { name: 'Probe Admin', slug: uniq('probe-admin') },
         overrideAccess: true,
       })
       track('people', p.id)
       admin = (await payload.create({
         collection: 'users',
         data: {
-          email: 'probe-admin@probe.cilas',
+          email: uniqEmail('probe-admin'),
           password: 'probe-probe',
           roles: ['admin', 'member'],
           person: p.id,
@@ -138,7 +145,7 @@ describe('spaces write', () => {
 
     const place = await payload.create({
       collection: 'places',
-      data: { name: 'Probe Place', slug: 'probe-place', city: 'Probeville' },
+      data: { name: 'Probe Place', slug: uniq('probe-place'), city: CITY },
       overrideAccess: true,
     })
     track('places', place.id)
@@ -152,7 +159,7 @@ describe('spaces write', () => {
       collection: 'courses',
       data: {
         title: 'Probe Course',
-        slug: 'probe-space-course',
+        slug: COURSE_SLUG,
         course_type: 'THEMATIC',
         session_unit: 'session',
         tier: 'owner',
@@ -172,7 +179,7 @@ describe('spaces write', () => {
     programmeId = (
       await payload.create({
         collection: 'programmes',
-        data: { title: 'Probe Bridge', slug: 'probe-bridge', kind: 'bridge', _status: 'published' },
+        data: { title: 'Probe Bridge', slug: BRIDGE_SLUG, kind: 'bridge', _status: 'published' },
         overrideAccess: true,
       })
     ).id as number
@@ -269,35 +276,9 @@ describe('spaces write', () => {
     await (
       payload.db as unknown as { drizzle: { execute: (q: unknown) => Promise<unknown> } }
     ).drizzle.execute(sql`delete from space_files where filename like 'probe-f%'`)
-    for (const collection of [
-      'space-rsvps',
-      'space-votes',
-      'space-reactions',
-      'space-files',
-      'space-preferences',
-      'space-visits',
-      'space-consents',
-      'space-comments',
-      'notifications',
-      'space-posts',
-      'spaces',
-      'enrollments',
-      'memberships',
-      'courses',
-      'programmes',
-      'cycles',
-      'places',
-      'users',
-      'people',
-    ] as const) {
-      const ids = [...(tracked.get(collection) ?? [])].reverse()
-      for (const id of ids) {
-        await payload
-          .delete({ collection: collection as never, id, overrideAccess: true })
-          .catch(() => undefined)
-      }
-    }
+    await cleanup(payload)
     await payload.destroy()
+    await unlockSpacesMode()
   })
 
   it('postCreate by member writes a row', async () => {
@@ -421,14 +402,14 @@ describe('spaces write', () => {
     const twin = async (email: string) => {
       const person = await payload.create({
         collection: 'people',
-        data: { name: 'Probe Twin', slug: `probe-twin-${email}` },
+        data: { name: 'Probe Twin', slug: uniq(`probe-twin-${email}`) },
         overrideAccess: true,
       })
       track('people', person.id)
       const account = (await payload.create({
         collection: 'users',
         data: {
-          email: `probe-twin-${email}@probe.cilas`,
+          email: uniqEmail(`probe-twin-${email}`),
           password: 'probe-probe',
           roles: ['member'],
           person: person.id,
@@ -485,7 +466,7 @@ describe('spaces write', () => {
     expect(await notesOf(a.account)).toHaveLength(0)
     const forB = await notesOf(b.account)
     expect(forB).toHaveLength(1)
-    expect(forB[0]!.link).toBe(`/spaces/course/probe-space-course/posts/${post.data.id}`)
+    expect(forB[0]!.link).toBe(`/spaces/course/${COURSE_SLUG}/posts/${post.data.id}`)
 
     const community_ = await postCreate({
       payload,
@@ -500,7 +481,7 @@ describe('spaces write', () => {
     expect(await spaceLink(payload, community, community_.data.id)).toBe(
       `/spaces/community/${community.id}/posts/${community_.data.id}`,
     )
-    expect(await spaceLink(payload, cohortSpace, 7)).toBe('/spaces/cohort/probe-bridge/posts/7')
+    expect(await spaceLink(payload, cohortSpace, 7)).toBe(`/spaces/cohort/${BRIDGE_SLUG}/posts/7`)
     for (const account of [a.account, b.account]) {
       const rows = await payload.find({
         collection: 'notifications',
@@ -2623,7 +2604,7 @@ describe('spaces write', () => {
         collection: 'programmes',
         data: {
           title: 'Probe Bridge Two',
-          slug: 'probe-bridge-two',
+          slug: uniq('probe-bridge-two'),
           kind: 'bridge',
           _status: 'published',
         },
@@ -2656,7 +2637,7 @@ describe('spaces write', () => {
   it('a course or cohort space made by hand in the dashboard opens with its intro post too', async () => {
     const programme = await payload.create({
       collection: 'programmes',
-      data: { title: 'Probe Draft Bridge', slug: 'probe-draft-bridge', kind: 'bridge' },
+      data: { title: 'Probe Draft Bridge', slug: uniq('probe-draft-bridge'), kind: 'bridge' },
       overrideAccess: true,
     })
     track('programmes', programme.id as number)

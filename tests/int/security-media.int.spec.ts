@@ -6,6 +6,8 @@ import { afterAll, beforeAll, describe, expect, it } from 'vitest'
 import config from '@/payload.config'
 import type { User } from '@/payload-types'
 
+import { RUN } from './fixtures'
+
 describe('public media uploads', () => {
   let payload: Payload
   const created: number[] = []
@@ -14,7 +16,8 @@ describe('public media uploads', () => {
     const media = await payload.create({
       collection: 'media',
       data: { alt: 'Security upload probe' },
-      file: { name, mimetype, data, size: data.length },
+      // Media filenames are unique, so each run stores its own copy.
+      file: { name: name.replace(/(\.[^.]+)$/, `-${RUN}$1`), mimetype, data, size: data.length },
       user,
       overrideAccess: false,
     })

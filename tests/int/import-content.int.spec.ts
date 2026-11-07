@@ -7,12 +7,13 @@ import config from '@/payload.config'
 import type { Article } from '@/payload-types'
 import { blocksToLexical } from '../../migration/lib/blocks'
 import { importContent, type ArchiveContent } from '../../migration/lib/import-content'
+import { RUN, uniq } from './fixtures'
 
 let payload: Payload
 
 // Fixtures use the "/probecontent-" prefix and "Probe Content" names, apart
 // from the other import specs.
-const P = '/probecontent-'
+const P = `/probecontent-${RUN}-`
 const L = {
   pair: `${P}book.html#pair`,
   booklet: `${P}booklet.html#only-arabic`,
@@ -23,15 +24,15 @@ const L = {
   press: `${P}press.html#item`,
   publication: `${P}book.html`,
 }
-const PRESS_URL = 'https://example.org/probecontent-press'
-const SEEDED_TITLE = 'Probe Content Seeded Title'
+const PRESS_URL = `https://example.org/probecontent-${RUN}-press`
+const SEEDED_TITLE = `Probe Content Seeded Title ${RUN}`
 
 const content = (reviewedBody = 'Imported over a reviewed article'): ArchiveContent => ({
   articles: [
     {
       legacy_url: L.pair,
       kind: 'essay',
-      title_en: 'Probe Content Pair',
+      title_en: `Probe Content Pair ${RUN}`,
       title_ar: 'زوج الاختبار',
       match_titles_en: [],
       blocks_en: [
@@ -48,12 +49,12 @@ const content = (reviewedBody = 'Imported over a reviewed article'): ArchiveCont
         { type: 'paragraph', level: null, text: 'الفقرة العربية الأولى' },
         { type: 'quote', level: null, text: 'اقتباس عربي' },
       ],
-      authors: ['Probe Content Author'],
+      authors: [`Probe Content Author ${RUN}`],
       credits: [
         {
           role: 'translator',
           label: { en: 'Translation', ar: 'ترجمة' },
-          people: ['Probe Content Translator'],
+          people: [`Probe Content Translator ${RUN}`],
         },
       ],
       translation: null,
@@ -63,17 +64,17 @@ const content = (reviewedBody = 'Imported over a reviewed article'): ArchiveCont
     {
       legacy_url: L.booklet,
       kind: 'essay',
-      title_en: 'Probe Content Booklet',
+      title_en: `Probe Content Booklet ${RUN}`,
       title_ar: 'كتيب الاختبار',
       match_titles_en: [],
       blocks_en: null,
       blocks_ar: [{ type: 'paragraph', level: null, text: 'نص عربي فقط' }],
-      authors: ['Probe Content Author'],
+      authors: [`Probe Content Author ${RUN}`],
       credits: [],
       translation: {
         original_language: 'en',
         original_title: 'Original',
-        original_authors: ['Probe Content Original'],
+        original_authors: [`Probe Content Original ${RUN}`],
         original_source: 'A journal, 2016',
       },
       publication: null,
@@ -82,12 +83,12 @@ const content = (reviewedBody = 'Imported over a reviewed article'): ArchiveCont
     {
       legacy_url: L.seeded,
       kind: 'essay',
-      title_en: 'Probe Content Seeded Replacement',
+      title_en: `Probe Content Seeded Replacement ${RUN}`,
       title_ar: null,
       match_titles_en: [SEEDED_TITLE],
       blocks_en: [{ type: 'paragraph', level: null, text: 'The full text replaces the digest.' }],
       blocks_ar: null,
-      authors: ['Probe Content Author'],
+      authors: [`Probe Content Author ${RUN}`],
       credits: [],
       translation: null,
       publication: null,
@@ -96,12 +97,12 @@ const content = (reviewedBody = 'Imported over a reviewed article'): ArchiveCont
     {
       legacy_url: L.reviewed,
       kind: 'blog',
-      title_en: 'Probe Content Reviewed',
+      title_en: `Probe Content Reviewed ${RUN}`,
       title_ar: null,
       match_titles_en: [],
       blocks_en: [{ type: 'paragraph', level: null, text: reviewedBody }],
       blocks_ar: null,
-      authors: ['Probe Content Author'],
+      authors: [`Probe Content Author ${RUN}`],
       credits: [],
       translation: null,
       publication: null,
@@ -112,7 +113,7 @@ const content = (reviewedBody = 'Imported over a reviewed article'): ArchiveCont
     {
       legacy_url: L.publication,
       kind: 'essay_collection',
-      title_en: 'Probe Content Collection',
+      title_en: `Probe Content Collection ${RUN}`,
       title_ar: 'مجموعة الاختبار',
       subtitle_en: null,
       subtitle_ar: null,
@@ -123,21 +124,21 @@ const content = (reviewedBody = 'Imported over a reviewed article'): ArchiveCont
       intro_ar: null,
       foreword: L.pair,
       articles: [L.pair, L.seeded],
-      credits: [{ role: 'editor', people: ['Probe Content Author'] }],
-      funders: ['Probe Content Funder'],
+      credits: [{ role: 'editor', people: [`Probe Content Author ${RUN}`] }],
+      funders: [`Probe Content Funder ${RUN}`],
       license: 'cc_by_nc_sa',
       produced_by: [],
-      print_edition_url: 'https://example.org/probecontent.pdf',
+      print_edition_url: `https://example.org/probecontent-${RUN}.pdf`,
     },
   ],
   press: [
     {
       legacy_url: L.press,
       kind: 'coverage',
-      title: 'Probe Content Press',
+      title: `Probe Content Press ${RUN}`,
       language: 'en',
-      outlet: 'Probe Content Outlet',
-      authors: ['Probe Content Author', 'A Free Name'],
+      outlet: `Probe Content Outlet ${RUN}`,
+      authors: [`Probe Content Author ${RUN}`, 'A Free Name'],
       published_date: '2019-09-18',
       date_precision: 'day',
       links: [{ language: 'en', url: PRESS_URL }],
@@ -147,18 +148,18 @@ const content = (reviewedBody = 'Imported over a reviewed article'): ArchiveCont
   events: [
     {
       legacy_url: L.event,
-      title_en: 'Probe Content Talk',
+      title_en: `Probe Content Talk ${RUN}`,
       event_type: 'talk',
       tier: 'public',
       schedule: { start_date: '2014-01-06', start_precision: 'day', weeks: 1, slots: [] },
-      speakers: ['Probe Content Author'],
+      speakers: [`Probe Content Author ${RUN}`],
       description_en: [{ type: 'paragraph', level: null, text: 'A talk.' }],
     },
   ],
   newsletters: [
     {
       legacy_url: L.newsletter,
-      title_en: 'Probe Content Issue',
+      title_en: `Probe Content Issue ${RUN}`,
       issue_date: '2013-06-01',
       blocks_en: [{ type: 'paragraph', level: null, text: 'Dear friends.' }],
     },
@@ -173,7 +174,7 @@ const cleanup = async () => {
     ['press', like],
     ['events', like],
     ['newsletters', like],
-    ['people', { name: { like: 'Probe Content' } }],
+    ['people', { name: { like: RUN } }],
   ]
   for (const [collection, where] of targets) {
     await payload.delete({ collection, where, overrideAccess: true }).catch(() => undefined)
@@ -199,10 +200,9 @@ const nodeTypes = (a: Article): string[] =>
 describe('publishing content import', () => {
   beforeAll(async () => {
     payload = await getPayload({ config: await config })
-    await cleanup()
     const author = await payload.create({
       collection: 'people',
-      data: { name: 'Probe Content Author', slug: 'probe-content-author' },
+      data: { name: `Probe Content Author ${RUN}`, slug: uniq('probe-content-author') },
       overrideAccess: true,
     })
     // An article the old dev seed would have made: a digest, a community tier,
@@ -211,7 +211,7 @@ describe('publishing content import', () => {
       collection: 'articles',
       data: {
         title: SEEDED_TITLE,
-        slug: 'probe-content-seeded-title',
+        slug: uniq('probe-content-seeded-title'),
         authors: [author.id],
         tier: 'community',
         requested_tier: 'community',
@@ -224,8 +224,8 @@ describe('publishing content import', () => {
     await payload.create({
       collection: 'articles',
       data: {
-        title: 'Probe Content Booklet',
-        slug: 'probe-content-booklet',
+        title: `Probe Content Booklet ${RUN}`,
+        slug: uniq('probe-content-booklet'),
         authors: [author.id],
         legacy_url: L.booklet,
         body: blocksToLexical(
@@ -245,7 +245,7 @@ describe('publishing content import', () => {
     await importContent(payload, content())
 
     const en = await article(L.pair, 'en')
-    expect(en.title).toBe('Probe Content Pair')
+    expect(en.title).toBe(`Probe Content Pair ${RUN}`)
     expect(nodeTypes(en)).toEqual(['heading', 'paragraph', 'quote'])
     expect(plain(en.body)).toContain('English first paragraph')
     expect(plain(en.body)).toContain('"direction":"ltr"')
@@ -266,7 +266,7 @@ describe('publishing content import', () => {
 
   it('writes a booklet article in Arabic only, clearing an English stand-in, with its translation group', async () => {
     const en = await article(L.booklet, 'en')
-    expect(en.title).toBe('Probe Content Booklet')
+    expect(en.title).toBe(`Probe Content Booklet ${RUN}`)
     // No English text: no English body, so the site shows the Arabic one.
     expect(en.body ?? null).toBeNull()
     const ar = await article(L.booklet, 'ar')
@@ -280,12 +280,12 @@ describe('publishing content import', () => {
 
   it('replaces the body of a seeded article matched by title and publishes it', async () => {
     const seeded = await article(L.seeded)
-    expect(seeded.title).toBe('Probe Content Seeded Replacement')
+    expect(seeded.title).toBe(`Probe Content Seeded Replacement ${RUN}`)
     expect(plain(seeded.body)).toContain('The full text replaces the digest.')
     expect(seeded.tier).toBe('public')
     expect(seeded.review?.status).toBe('approved')
     expect(seeded._status).toBe('published')
-    expect(seeded.slug).toBe('probe-content-seeded-title')
+    expect(seeded.slug).toBe(uniq('probe-content-seeded-title'))
   })
 
   it('writes the publication, press, event and newsletter', async () => {

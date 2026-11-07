@@ -6,11 +6,16 @@ import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest'
 import config from '@/payload.config'
 import type { Form, FormSubmission, Programme, User } from '@/payload-types'
 
+import { uniq, uniqEmail } from './fixtures'
+
 let payload: Payload
 let admin: User
 let form: Form
 let programme: Programme
-const EMAIL = 'applicant-probe@cilas.test'
+const EMAIL = uniqEmail('applicant-probe')
+const ADMIN_EMAIL = uniqEmail('decision-admin-probe')
+// The person is found by name, so a unique name keeps old runs out of the count.
+const APPLICANT = uniq('Applicant Probe')
 
 /** The form builder requires a confirmation message. */
 const thanks = {
@@ -52,7 +57,7 @@ const submit = (target: FormSubmission['target'], formId = form.id) =>
       form: formId,
       target,
       submissionData: [
-        { field: 'name', value: 'Applicant Probe' },
+        { field: 'name', value: APPLICANT },
         { field: 'email', value: EMAIL.toUpperCase() },
       ],
     },
@@ -94,14 +99,10 @@ describe('accepting an application', () => {
     payload = await getPayload({ config: await config })
     vi.spyOn(payload, 'sendEmail').mockResolvedValue(undefined)
     await cleanup()
-    await payload.delete({
-      collection: 'users',
-      where: { email: { equals: 'decision-admin-probe@cilas.test' } },
-    })
     admin = await payload.create({
       collection: 'users',
       data: {
-        email: 'decision-admin-probe@cilas.test',
+        email: ADMIN_EMAIL,
         password: 'probe-password-1',
         roles: ['admin'],
       },
@@ -172,7 +173,7 @@ describe('accepting an application', () => {
     expect(docs).toHaveLength(1)
     expect(docs[0].roles).toEqual(['member'])
     const person = docs[0].person as { id: number; name: string; visible: boolean }
-    expect(person).toMatchObject({ name: 'Applicant Probe', visible: false })
+    expect(person).toMatchObject({ name: APPLICANT, visible: false })
 
     const memberships = await payload.find({
       collection: 'memberships',
@@ -206,7 +207,7 @@ describe('accepting an application', () => {
   it('hides the new person from visitors', async () => {
     const { docs } = await payload.find({
       collection: 'people',
-      where: { name: { equals: 'Applicant Probe' } },
+      where: { name: { equals: APPLICANT } },
       overrideAccess: false,
     })
     expect(docs).toHaveLength(0)

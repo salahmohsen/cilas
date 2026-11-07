@@ -5,9 +5,11 @@ import { afterAll, beforeAll, describe, expect, it } from 'vitest'
 
 import config from '@/payload.config'
 import { assertResetAllowed } from '../../seed/seed.utils'
+import { RUN, createTracker, uniq, uniqPath } from './fixtures'
 
 let payload: Payload
-const created: number[] = []
+const { track, cleanup } = createTracker()
+const LEGACY_URL = `${uniqPath('probe')}.html#a`
 
 describe('archive import foundations', () => {
   beforeAll(async () => {
@@ -15,34 +17,62 @@ describe('archive import foundations', () => {
   })
 
   afterAll(async () => {
-    for (const id of created) {
-      await payload
-        .delete({ collection: 'places', id, overrideAccess: true })
-        .catch(() => undefined)
-    }
+    await cleanup(payload)
     await payload.destroy()
   })
 
   it('refuses a second document with the same legacy URL', async () => {
-    const first = await payload.create({
-      collection: 'places',
-      data: { name: 'Legacy Probe', slug: 'legacy-probe', legacy_url: '/probe.html#a' },
-      overrideAccess: true,
-    })
-    created.push(first.id)
+    track(
+      'places',
+      await payload.create({
+        collection: 'places',
+        data: { name: 'Legacy Probe', slug: uniq('legacy-probe'), legacy_url: LEGACY_URL },
+        overrideAccess: true,
+      }),
+    )
     await expect(
       payload.create({
         collection: 'places',
-        data: { name: 'Legacy Probe 2', slug: 'legacy-probe-2', legacy_url: '/probe.html#a' },
+        data: { name: 'Legacy Probe 2', slug: uniq('legacy-probe-2'), legacy_url: LEGACY_URL },
         overrideAccess: true,
       }),
     ).rejects.toThrow()
   })
 
   it('refuses to reset a database that holds courses, unless asked to wipe', async () => {
-    const { totalDocs } = await payload.count({ collection: 'courses', overrideAccess: true })
-    if (totalDocs) await expect(assertResetAllowed(payload)).rejects.toThrow(/--wipe/)
-    else await expect(assertResetAllowed(payload)).resolves.toBeUndefined()
+    // Whatever else the database holds, this course makes it non-empty.
+    const place = track(
+      'places',
+      await payload.create({
+        collection: 'places',
+        data: { name: 'Reset Probe', slug: uniq('reset-probe'), city: `Resetville ${RUN}` },
+        overrideAccess: true,
+      }),
+    )
+    const cycle = track(
+      'cycles',
+      await payload.create({
+        collection: 'cycles',
+        data: { season: 'fall', start_year: 2032, place: place.id },
+        overrideAccess: true,
+      }),
+    )
+    track(
+      'courses',
+      await payload.create({
+        collection: 'courses',
+        data: {
+          title: 'Reset probe course',
+          slug: uniq('reset-probe-course'),
+          course_type: 'THEMATIC',
+          session_unit: 'session',
+          tier: 'owner',
+          cycle: cycle.id,
+        },
+        overrideAccess: true,
+      }),
+    )
+    await expect(assertResetAllowed(payload)).rejects.toThrow(/--wipe/)
 
     process.argv.push('--wipe')
     try {

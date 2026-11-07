@@ -9,15 +9,13 @@ import { mySpaces, participation, spaceFeed, spaceLanding } from '@/lib/spaces-d
 import config from '@/payload.config'
 import type { Space, User } from '@/payload-types'
 
-const tracked = new Map<string, number[]>() // collection -> ids made here
-// A leaked row from a failed run never collides with the next run's fixtures.
-const run = Date.now().toString(36)
+import { RUN, createTracker, lockSpacesMode, uniq, uniqEmail } from './fixtures'
 
-const track = (collection: string, id: number) => {
-  const list = tracked.get(collection) ?? []
-  list.push(id)
-  tracked.set(collection, list)
-}
+const { track, cleanup } = createTracker()
+const COURSE_SLUG = uniq('probe-space-course')
+const BRIDGE_SLUG = uniq('probe-bridge')
+// The cycle slug comes from the city, so a unique city keeps the cycle unique.
+const CITY = `Probeville ${RUN}`
 
 describe('spaces core', () => {
   let payload: Payload
@@ -30,6 +28,12 @@ describe('spaces core', () => {
   let courseSpace: Space
   let programmeId: number
   let cohortSpace: Space
+
+  let unlockSpacesMode: () => Promise<void>
+  // Waits for any other spaces spec to finish with the shared spaces mode.
+  beforeAll(async () => {
+    unlockSpacesMode = await lockSpacesMode()
+  }, 600_000)
 
   beforeAll(async () => {
     payload = await getPayload({ config: await config })
@@ -44,14 +48,14 @@ describe('spaces core', () => {
     const mk = async (name: string, person: Record<string, unknown>) => {
       const p = await payload.create({
         collection: 'people',
-        data: { name, slug: `${name.toLowerCase().replace(/\s+/g, '-')}-${run}`, ...person },
+        data: { name, slug: uniq(name.toLowerCase().replace(/\s+/g, '-')), ...person },
         overrideAccess: true,
       })
       track('people', p.id)
       const u = await payload.create({
         collection: 'users',
         data: {
-          email: `${name.toLowerCase().replace(/\s+/g, '-')}-${run}@cilas.test`,
+          email: uniqEmail(name.toLowerCase().replace(/\s+/g, '-')),
           password: 'probe-probe',
           roles: ['member'],
           person: p.id,
@@ -69,7 +73,7 @@ describe('spaces core', () => {
     // working course create in tests/int/teaching.int.spec.ts.
     const place = await payload.create({
       collection: 'places',
-      data: { name: 'Probe Place', slug: 'probe-place', city: 'Probeville' },
+      data: { name: 'Probe Place', slug: uniq('probe-place'), city: CITY },
       overrideAccess: true,
     })
     track('places', place.id)
@@ -84,7 +88,7 @@ describe('spaces core', () => {
       depth: 0,
       data: {
         title: 'Probe Course',
-        slug: 'probe-space-course',
+        slug: COURSE_SLUG,
         course_type: 'THEMATIC',
         session_unit: 'session',
         tier: 'owner',
@@ -109,7 +113,7 @@ describe('spaces core', () => {
     programmeId = (
       await payload.create({
         collection: 'programmes',
-        data: { title: 'Probe Bridge', slug: 'probe-bridge', kind: 'bridge', _status: 'published' },
+        data: { title: 'Probe Bridge', slug: BRIDGE_SLUG, kind: 'bridge', _status: 'published' },
         overrideAccess: true,
       })
     ).id as number
@@ -196,35 +200,16 @@ describe('spaces core', () => {
       data: { spaces_mode: modeBefore },
       overrideAccess: true,
     })
-    // Children delete before parents: Payload's required-relation FKs
-    // restrict, so a parent deleted first leaks the row silently otherwise.
-    for (const collection of [
-      'space-posts',
-      'space-comments',
-      'space-files',
-      'space-reactions',
-      'space-consents',
-      'space-visits',
-      'space-preferences',
-      'spaces',
-      'enrollments',
-      'memberships',
-      'courses',
-      'programmes',
-      'cycles',
-      'places',
-      'users',
-      'people',
-    ] as const) {
-      const ids = [...(tracked.get(collection) ?? [])].reverse()
-      for (const id of ids) {
-        await payload
-          .delete({ collection: collection as never, id, overrideAccess: true })
-          .catch((i) => console.error(`cleanup ${collection} ${id}`, i))
-      }
-    }
+    await cleanup(payload)
     await payload.destroy()
+    await unlockSpacesMode()
   })
+
+  // Other spec files make spaces of their own in this database (a second
+  // community space, the spaces of public courses), so the readable-space
+  // checks look only at the spaces this spec made, and at the seeded community.
+  const ours = (ids: number[]) =>
+    ids.filter((id) => [community.id, courseSpace.id, cohortSpace.id].includes(id)).sort()
 
   it('the read Where holds the student’s readable spaces', async () => {
     const where = await readableWhere(payload, student, 'id')
@@ -234,7 +219,7 @@ describe('spaces core', () => {
       where: where as never,
       overrideAccess: true,
     })
-    expect(docs.map((s) => s.id).sort()).toEqual(
+    expect(ours(docs.map((s) => s.id))).toEqual(
       [community.id, courseSpace.id, cohortSpace.id].sort(),
     )
   })
@@ -243,9 +228,9 @@ describe('spaces core', () => {
     // Read through access rules, as each user does on the site.
     const view = (user: User) =>
       payload.find({ collection: 'spaces', user, overrideAccess: false, depth: 0 })
-    const seen = (await view(student)).docs.map((s) => s.id).sort()
+    const seen = ours((await view(student)).docs.map((s) => s.id))
     expect(seen).toEqual([community.id, courseSpace.id, cohortSpace.id].sort())
-    expect((await view(stranger)).docs.map((s) => s.id)).toEqual([community.id])
+    expect(ours((await view(stranger)).docs.map((s) => s.id))).toEqual([community.id])
     // Admins read everything; not listed as members.
     expect((await view(fellow)).docs.map((s) => s.id)).toContain(courseSpace.id)
   })
@@ -280,7 +265,7 @@ describe('spaces core', () => {
     const trial = async () =>
       payload
         .find({ collection: 'spaces', user: student, overrideAccess: false, depth: 0 })
-        .then((r) => r.docs.map((s) => s.id).sort())
+        .then((r) => ours(r.docs.map((s) => s.id)))
     expect(await trial()).toEqual([community.id, courseSpace.id].sort())
     // The same cohort space, with trial list empty: closed.
     await payload.updateGlobal({
@@ -338,11 +323,9 @@ describe('spaces core', () => {
       where: where as never,
       overrideAccess: true,
     })
-    expect(
-      (docs as unknown as Array<{ space: { id: number } }>).every(
-        (p) => p.space.id === community.id,
-      ),
-    ).toBe(true)
+    // Of the spaces this spec made, the stranger reads posts only in the community.
+    const spaceIds = (docs as unknown as Array<{ space: { id: number } }>).map((p) => p.space.id)
+    expect(ours(spaceIds).every((id) => id === community.id)).toBe(true)
   })
 
   it('a published course owns its space and its intro post', async () => {
@@ -394,12 +377,13 @@ describe('spaces core', () => {
     // Before any visit row: every non-own post is unread (the intro post).
     const before = await mySpaces(payload, student, 'en')
     expect(before.cohorts.map((s) => s.title)).toEqual(['Probe Bridge'])
-    expect(before.cohorts[0]?.href).toBe('/en/spaces/cohort/probe-bridge')
+    expect(before.cohorts[0]?.href).toBe(`/en/spaces/cohort/${BRIDGE_SLUG}`)
     expect(before.courses.map((s) => s.title)).toEqual(['Probe Course'])
-    expect(before.courses[0]?.href).toBe('/en/spaces/course/probe-space-course')
+    expect(before.courses[0]?.href).toBe(`/en/spaces/course/${COURSE_SLUG}`)
     expect(before.courses[0]?.unread).toBe(1)
     const listed = before.communities.find((c) => c.space.id === community.id)
-    expect(listed?.title).toBe('Community')
+    // A seeded community space may carry a name of its own; an unnamed one reads 'Community'.
+    expect(listed?.title).toBe(community.name || 'Community')
     expect(listed?.href).toBe(`/en/spaces/community/${community.id}`)
 
     // The fellow posts an older row; the student posts their own; the visit
@@ -608,16 +592,16 @@ describe('spaces core', () => {
   })
 
   it('landing resolves each kind by its document slug and gates by the switch', async () => {
-    const courseLanding = await spaceLanding(payload, student, 'course', 'probe-space-course')
+    const courseLanding = await spaceLanding(payload, student, 'course', COURSE_SLUG)
     expect(courseLanding?.space.id).toBe(courseSpace.id)
     expect(courseLanding?.course?.title).toBe('Probe Course')
-    const cohortLanding = await spaceLanding(payload, student, 'cohort', 'probe-bridge')
+    const cohortLanding = await spaceLanding(payload, student, 'cohort', BRIDGE_SLUG)
     expect(cohortLanding?.space.id).toBe(cohortSpace.id)
     expect(cohortLanding?.programme?.title).toBe('Probe Bridge')
     const communityLanding = await spaceLanding(payload, student, 'community', '')
     expect(communityLanding?.space.id).toBe(community.id)
     // The stranger's membership stops at the community.
-    expect(await spaceLanding(payload, stranger, 'course', 'probe-space-course')).toBeNull()
+    expect(await spaceLanding(payload, stranger, 'course', COURSE_SLUG)).toBeNull()
     expect(await spaceLanding(payload, student, 'course', 'not-a-course')).toBeNull()
     // A draft saved after publishing is the latest version; the published
     // course still lands (it 404'd in production when the lookup read drafts).
@@ -628,7 +612,7 @@ describe('spaces core', () => {
       data: { title: 'Probe Course (draft edit)' },
       overrideAccess: true,
     })
-    const afterDraft = await spaceLanding(payload, student, 'course', 'probe-space-course')
+    const afterDraft = await spaceLanding(payload, student, 'course', COURSE_SLUG)
     expect(afterDraft?.space.id).toBe(courseSpace.id)
     expect(afterDraft?.course?.title).toBe('Probe Course')
     // The switch closes every landing and empties My spaces.

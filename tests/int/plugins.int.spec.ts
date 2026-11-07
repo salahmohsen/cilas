@@ -7,8 +7,12 @@ import config from '@/payload.config'
 import { findRedirect } from '@/lib/redirects'
 import type { User } from '@/payload-types'
 
+import { RUN, createTracker, uniq } from './fixtures'
+
 let payload: Payload
-const created: Array<{ collection: 'redirects' | 'courses'; id: number }> = []
+const { track, cleanup } = createTracker()
+// The old path the redirect answers to; unique, so the redirect never clashes.
+const OLD = `/writing-the-self-probe-${RUN}`
 
 describe('redirects and SEO', () => {
   let courseId: number
@@ -16,41 +20,71 @@ describe('redirects and SEO', () => {
 
   beforeAll(async () => {
     payload = await getPayload({ config: await config })
-    const { docs } = await payload.find({
+    const place = track(
+      'places',
+      await payload.create({
+        collection: 'places',
+        data: {
+          name: 'Redirect Place',
+          slug: uniq('redirect-place'),
+          city: `Redirectville ${RUN}`,
+        },
+        overrideAccess: true,
+      }),
+    )
+    const cycle = track(
+      'cycles',
+      await payload.create({
+        collection: 'cycles',
+        data: { season: 'spring', start_year: 2031, place: place.id },
+        overrideAccess: true,
+      }),
+    )
+    const course = track(
+      'courses',
+      await payload.create({
+        collection: 'courses',
+        data: {
+          title: 'Writing the Self',
+          slug: uniq('writing-the-self'),
+          course_type: 'THEMATIC',
+          session_unit: 'session',
+          tier: 'public',
+          cycle: cycle.id,
+          _status: 'published',
+        },
+        overrideAccess: true,
+      }),
+    )
+    // The SEO test writes an Arabic title, which the course must already have.
+    await payload.update({
       collection: 'courses',
-      where: { title: { equals: 'Writing the Self' } },
-      limit: 1,
-      depth: 0,
+      id: course.id,
+      data: { title: 'نكتب أنفسنا' },
+      locale: 'ar',
       overrideAccess: true,
-      draft: true,
     })
-    courseId = docs[0].id
-    courseSlug = docs[0].slug
+    courseId = course.id
+    courseSlug = course.slug
     const r = await payload.create({
       collection: 'redirects',
       data: {
-        from: '/writing-the-self-probe.html',
+        from: `${OLD}.html`,
         type: '301',
         to: { type: 'reference', reference: { relationTo: 'courses', value: courseId } },
       },
       overrideAccess: true,
     })
-    created.push({ collection: 'redirects', id: r.id })
+    track('redirects', r)
   })
 
   afterAll(async () => {
-    for (const { collection, id } of created.reverse()) {
-      await payload.delete({ collection, id, overrideAccess: true }).catch(() => undefined)
-    }
+    await cleanup(payload)
     await payload.destroy()
   })
 
   it('resolves an old path, in any of its forms, to the course page', async () => {
-    for (const path of [
-      '/writing-the-self-probe.html',
-      '/writing-the-self-probe',
-      '/writing-the-self-probe/',
-    ]) {
+    for (const path of [`${OLD}.html`, OLD, `${OLD}/`]) {
       expect(await findRedirect(payload, path)).toEqual({
         url: `/study/${courseSlug}`,
         permanent: true,

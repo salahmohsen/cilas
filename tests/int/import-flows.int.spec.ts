@@ -12,26 +12,30 @@ import {
 } from '../../migration/lib/import-courses'
 import { importFlows, NOTES_HEADING, NOTES_HEADING_AR } from '../../migration/lib/import-flows'
 import type { Syllabus } from '../../migration/lib/syllabus-schema'
+import { RUN } from './fixtures'
 
 let payload: Payload
 
 // Fixtures use the "/probeflows-" prefix and a 2033 cycle, apart from the
 // other import specs, so they can run side by side.
-const CYCLE_URL = '/probeflows-fall-2033.html'
+const P = `/probeflows-${RUN}`
+const CYCLE_URL = `${P}-fall-2033.html`
+// The place is matched by name, so a unique one keeps old runs' cycles out.
+const PLACE = `Probe Flows Space ${RUN}`
 const url = (name: string) => `${CYCLE_URL}#${name}`
 const cycles: ArchiveCycle[] = [
   {
-    key: 'fall-2033-al-Manshiya',
+    key: 'fall-2033-probe',
     season: 'fall',
     start_year: 2033,
-    space: 'al-Manshiya',
+    space: PLACE,
     legacy_url: CYCLE_URL,
   },
 ]
 const course = (name: string): ArchiveCourse => ({
   legacy_url: url(name),
-  cycle: 'fall-2033-al-Manshiya',
-  title: `Probe Flows ${name}`,
+  cycle: 'fall-2033-probe',
+  title: `Probe Flows ${name} ${RUN}`,
   title_ar: null,
   subtitle: null,
   course_type: 'SHORT',
@@ -140,8 +144,9 @@ const headings = (c: Course): number => {
 
 const cleanup = async () => {
   for (const [collection, where] of [
-    ['courses', { legacy_url: { like: '/probeflows-' } }],
-    ['cycles', { legacy_url: { like: '/probeflows-' } }],
+    ['courses', { legacy_url: { like: P } }],
+    ['cycles', { legacy_url: { like: P } }],
+    ['places', { name: { equals: PLACE } }],
   ] as const) {
     await payload.delete({ collection, where, overrideAccess: true }).catch(() => undefined)
   }
@@ -150,7 +155,6 @@ const cleanup = async () => {
 describe('course flow import', () => {
   beforeAll(async () => {
     payload = await getPayload({ config: await config })
-    await cleanup()
     await importCourses(payload, { cycles, courses: archived })
   })
   afterAll(async () => {

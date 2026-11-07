@@ -6,6 +6,7 @@ import { afterAll, beforeAll, describe, expect, it } from 'vitest'
 
 import config from '@/payload.config'
 import { lexical } from '../../seed/seed.utils'
+import { uniq } from './fixtures'
 
 /**
  * Regression cover for the seeder's localized profile fields: a person is
@@ -41,7 +42,7 @@ describe('seed localization', () => {
     payload = await getPayload({ config: await config })
     const person = await payload.create({
       collection: 'people',
-      data: { name: 'Probe Fellow', slug: 'probe-fellow', bio: lexical('English bio.') },
+      data: { name: 'Probe Fellow', slug: uniq('probe-fellow'), bio: lexical('English bio.') },
       overrideAccess: true,
     })
     personId = person.id

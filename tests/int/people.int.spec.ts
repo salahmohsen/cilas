@@ -5,15 +5,10 @@ import { afterAll, beforeAll, describe, expect, it } from 'vitest'
 
 import config from '@/payload.config'
 
-type Tracked = 'people' | 'programmes' | 'memberships'
+import { createTracker, uniq } from './fixtures'
 
 let payload: Payload
-const created: Array<{ collection: Tracked; id: number }> = []
-
-const track = <T extends { id: number }>(collection: Tracked, doc: T): T => {
-  created.push({ collection, id: doc.id })
-  return doc
-}
+const { track, cleanup } = createTracker()
 
 describe('people and memberships', () => {
   let personId: number
@@ -25,7 +20,7 @@ describe('people and memberships', () => {
       'people',
       await payload.create({
         collection: 'people',
-        data: { name: 'Membership Probe', slug: 'membership-probe' },
+        data: { name: 'Membership Probe', slug: uniq('membership-probe') },
         overrideAccess: true,
       }),
     ).id
@@ -33,16 +28,14 @@ describe('people and memberships', () => {
       'programmes',
       await payload.create({
         collection: 'programmes',
-        data: { kind: 'bridge', title: 'Probe Programme', slug: 'probe-programme' },
+        data: { kind: 'bridge', title: 'Probe Programme', slug: uniq('probe-programme') },
         overrideAccess: true,
       }),
     ).id
   })
 
   afterAll(async () => {
-    for (const { collection, id } of created.reverse()) {
-      await payload.delete({ collection, id, overrideAccess: true }).catch(() => undefined)
-    }
+    await cleanup(payload)
     await payload.destroy()
   })
 

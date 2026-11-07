@@ -7,57 +7,56 @@ import { getReviewQueue } from '@/lib/review-queue'
 import config from '@/payload.config'
 import type { User } from '@/payload-types'
 
-type Tracked =
-  | 'people'
-  | 'articles'
-  | 'publications'
-  | 'press'
-  | 'places'
-  | 'cycles'
-  | 'courses'
-  | 'users'
+import { createTracker, uniq, uniqEmail } from './fixtures'
 
 let payload: Payload
-const created: Array<{ collection: Tracked; id: number }> = []
-const track = <T extends { id: number }>(collection: Tracked, doc: T): T => {
-  created.push({ collection, id: doc.id })
-  return doc
-}
+const { track, cleanup } = createTracker()
 
 describe('publishing', () => {
   let personId: number
   let author: User
-  const admin = { id: -1, roles: ['admin'] } as unknown as User
+  // Real accounts: a save stamps its editor on the document (a foreign key).
+  let admin: User
 
   beforeAll(async () => {
     payload = await getPayload({ config: await config })
-    track(
+    admin = track(
       'users',
-      await payload.create({
+      (await payload.create({
         collection: 'users',
         data: {
-          email: `publishing-admin-${crypto.randomUUID()}@cilas.test`,
+          email: uniqEmail('publishing-admin'),
           password: crypto.randomUUID(),
           roles: ['admin'],
         },
-      }),
+      })) as unknown as User,
     )
     personId = track(
       'people',
       await payload.create({
         collection: 'people',
-        data: { name: 'Author Probe', slug: 'author-probe' },
+        data: { name: 'Author Probe', slug: uniq('author-probe') },
         overrideAccess: true,
       }),
     ).id
-    author = { id: -2, roles: ['member'], person: personId } as unknown as User
+    author = track(
+      'users',
+      (await payload.create({
+        collection: 'users',
+        data: {
+          email: uniqEmail('publishing-author'),
+          password: crypto.randomUUID(),
+          roles: ['member'],
+          person: personId,
+        },
+        overrideAccess: true,
+      })) as unknown as User,
+    )
   })
 
   afterAll(async () => {
     vi.restoreAllMocks()
-    for (const { collection, id } of created.reverse()) {
-      await payload.delete({ collection, id, overrideAccess: true }).catch(() => undefined)
-    }
+    await cleanup(payload)
     await payload.destroy()
   })
 
@@ -71,7 +70,7 @@ describe('publishing', () => {
           collection: 'articles',
           data: {
             title: 'Review Probe',
-            slug: 'review-probe',
+            slug: uniq('review-probe'),
             authors: [],
             requested_tier: 'public',
             tier: 'owner',
@@ -147,7 +146,7 @@ describe('publishing', () => {
         await payload.duplicate({
           collection: 'articles',
           id: articleId,
-          data: { slug: 'review-probe-copy' },
+          data: { slug: uniq('review-probe-copy') },
           user: admin,
           overrideAccess: true,
         }),
@@ -166,7 +165,7 @@ describe('publishing', () => {
           collection: 'articles',
           data: {
             title: 'Draft Save Probe',
-            slug: 'draft-save-probe',
+            slug: uniq('draft-save-probe'),
             authors: [],
             tier: 'owner',
             review: { status: 'draft' },
@@ -194,7 +193,7 @@ describe('publishing', () => {
           collection: 'articles',
           data: {
             title: 'Autosave Probe',
-            slug: 'autosave-probe',
+            slug: uniq('autosave-probe'),
             authors: [],
             tier: 'owner',
             review: { status: 'draft' },
@@ -232,7 +231,7 @@ describe('publishing', () => {
           collection: 'articles',
           data: {
             title: 'Live Probe',
-            slug: 'live-probe',
+            slug: uniq('live-probe'),
             authors: [personId],
             tier: 'public',
             review: { status: 'approved' },
@@ -360,8 +359,8 @@ describe('publishing', () => {
         collection: 'places',
         data: {
           name: 'Publishing Probe Place',
-          slug: 'publishing-probe-place',
-          city: 'Probeville',
+          slug: uniq('publishing-probe-place'),
+          city: uniq('Probeville'),
         },
         overrideAccess: true,
       }),
@@ -378,7 +377,7 @@ describe('publishing', () => {
       'people',
       await payload.create({
         collection: 'people',
-        data: { name: 'Fellow Probe', slug: 'fellow-probe' },
+        data: { name: 'Fellow Probe', slug: uniq('fellow-probe') },
         overrideAccess: true,
       }),
     )
@@ -388,7 +387,7 @@ describe('publishing', () => {
         collection: 'courses',
         data: {
           title: 'Versions Probe',
-          slug: 'versions-probe',
+          slug: uniq('versions-probe'),
           course_type: 'THEMATIC',
           session_unit: 'session',
           tier: 'owner',
@@ -416,7 +415,7 @@ describe('publishing', () => {
         collection: 'articles',
         data: {
           title: 'Joined Probe',
-          slug: 'joined-probe',
+          slug: uniq('joined-probe'),
           authors: [personId],
           tier: 'public',
           review: { status: 'approved' },
@@ -431,7 +430,7 @@ describe('publishing', () => {
         data: {
           kind: 'other',
           title: 'Publication Probe',
-          slug: 'publication-probe',
+          slug: uniq('publication-probe'),
           articles: [article.id],
         },
         overrideAccess: true,
