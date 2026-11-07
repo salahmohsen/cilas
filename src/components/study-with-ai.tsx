@@ -4,6 +4,7 @@ import { siClaude, siGooglegemini } from 'simple-icons'
 import { useTranslations } from 'next-intl'
 import React from 'react'
 
+import { BrandMark } from '@/components/brand-mark'
 import {
   ExpandingButtonGroup,
   type ExpandingButtonGroupItem,
@@ -17,6 +18,7 @@ import {
   type ProviderId,
   type StudyKind,
 } from '@/lib/ai-study'
+import { openNewTab } from '@/lib/open-new-tab'
 
 /** ChatGPT's mark. Simple Icons dropped OpenAI's on request; an old release still carried it. */
 const CHATGPT_PATH =
@@ -29,22 +31,11 @@ const GROK_PATHS = [
   'M325.226 695.251C206.128 580.84 226.662 403.776 328.285 301.668C403.431 226.097 526.549 195.254 634.026 240.596L749.454 186.994C728.657 171.88 702.007 155.623 671.424 144.2C533.19 86.9942 367.693 115.465 255.323 228.382C147.234 337.081 113.244 504.215 171.613 646.833C215.216 753.423 143.739 828.818 71.7385 904.916C46.2237 931.893 20.6216 958.87 0 987.429L325.139 695.339',
 ]
 
-/** A brand's mark, one colour like the line icons besides it. */
-function BrandMark({ viewBox, paths }: { viewBox: string; paths: string[] }) {
-  return (
-    <svg aria-hidden fill="currentColor" height={16} viewBox={viewBox} width={16}>
-      {paths.map((d) => (
-        <path d={d} key={d.slice(0, 24)} />
-      ))}
-    </svg>
-  )
-}
-
 const iconOf: Record<ProviderId, React.ReactNode> = {
-  claude: <BrandMark paths={[siClaude.path]} viewBox="0 0 24 24" />,
-  gemini: <BrandMark paths={[siGooglegemini.path]} viewBox="0 0 24 24" />,
+  claude: <BrandMark paths={[siClaude.path]} />,
+  gemini: <BrandMark paths={[siGooglegemini.path]} />,
   grok: <BrandMark paths={GROK_PATHS} viewBox={GROK_VIEWBOX} />,
-  chatgpt: <BrandMark paths={[CHATGPT_PATH]} viewBox="0 0 24 24" />,
+  chatgpt: <BrandMark paths={[CHATGPT_PATH]} />,
 }
 
 /** The session a space post points at, for a prompt about that one session. */
@@ -103,7 +94,7 @@ export function StudyWithAI({
     icon: iconOf[p.id],
     label: t(`providers.${p.id}`),
     onSelect: () => {
-      window.open(aiLink(p.id, prompts()), '_blank', 'noopener,noreferrer')
+      openNewTab(aiLink(p.id, prompts()))
       return true
     },
   }))

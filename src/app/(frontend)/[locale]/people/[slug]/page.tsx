@@ -1,4 +1,4 @@
-import { AvatarImage } from '@/components/person/avatar-image'
+import { AvatarImage } from '@/components/arc/lib/avatar-image'
 import { SocialLinks } from '@/components/person/social-links'
 import { isRtl, type Locale, otherLocale } from '@/i18n/routing'
 import { personAvatarSeed } from '@/lib/avatar'

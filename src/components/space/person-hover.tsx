@@ -1,6 +1,6 @@
 'use client'
 
-import { AvatarImage } from '@/components/person/avatar-image'
+import { AvatarImage } from '@/components/arc/lib/avatar-image'
 import { personAvatarSeed } from '@/lib/avatar'
 import type { ReactElement } from 'react'
 import { SocialIcon, SOCIAL_LABELS } from '@/components/person/social-icon'

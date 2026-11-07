@@ -13,7 +13,7 @@ import { PHOTO_MAX_BYTES, PHOTO_TYPES } from '@/lib/profile-limits'
 import { Cropper, type CropResult } from './cropper'
 import { renderCrop, useImagePick } from './pick'
 import { AutoHeight } from './auto-height'
-import { AvatarImage } from '@/components/person/avatar-image'
+import { AvatarImage } from '@/components/arc/lib/avatar-image'
 import { useLoadedSrc } from './use-photo'
 import styles from './image-upload.module.css'
 

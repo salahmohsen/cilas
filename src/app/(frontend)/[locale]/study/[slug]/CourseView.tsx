@@ -28,7 +28,7 @@ import {
   textOf,
 } from '@/components/course/course-syllabus'
 import { EditorFields, labelOf } from '@/components/editor-fields'
-import { AvatarFallback } from '@/components/person/avatar-fallback'
+import { AvatarFallback } from '@/components/arc/lib/avatar-fallback'
 import { ContributorRows, photoOf } from '@/components/person/contributors'
 import { RichTextField } from '@/components/RichTextField'
 import { SEASON_ICONS } from '@/components/season-icon'

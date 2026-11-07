@@ -1,6 +1,6 @@
 'use client'
 
-import { AvatarImage } from '@/components/person/avatar-image'
+import { AvatarImage } from '@/components/arc/lib/avatar-image'
 
 import { useEffect, useId, useLayoutEffect, useRef, useState, useSyncExternalStore } from 'react'
 import type {

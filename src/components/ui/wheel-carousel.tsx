@@ -10,7 +10,7 @@
 
 import { cn } from '@/lib/utils'
 import { focalPointStyle } from '@/lib/media-image'
-import { AvatarImage } from '@/components/person/avatar-image'
+import { AvatarImage } from '@/components/arc/lib/avatar-image'
 import { AnimatePresence, motion, useReducedMotion } from 'motion/react'
 import {
   type KeyboardEvent,

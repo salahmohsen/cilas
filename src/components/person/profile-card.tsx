@@ -3,7 +3,7 @@ import type { CSSProperties, ReactNode } from 'react'
 import { ArrowRight } from 'lucide-react'
 import { useLocale, useTranslations } from 'next-intl'
 
-import { AvatarImage } from '@/components/person/avatar-image'
+import { AvatarImage } from '@/components/arc/lib/avatar-image'
 import { SocialLinks } from '@/components/person/social-links'
 import { personAvatarSeed } from '@/lib/avatar'
 import { focalPointStyle } from '@/lib/media-image'

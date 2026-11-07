@@ -4,7 +4,7 @@ import { useLayoutEffect, useRef, useState, type HTMLAttributes } from 'react'
 import { AnimatePresence, motion, useReducedMotion } from 'motion/react'
 import { ArcImage } from '../lib/arc-provider'
 import { motionTokens } from '../lib/motion-tokens'
-import { AvatarFallback } from '@/components/person/avatar-fallback'
+import { AvatarFallback } from '@/components/arc/lib/avatar-fallback'
 import styles from './avatar.module.css'
 export interface AvatarProps extends HTMLAttributes<HTMLSpanElement> {
   name: string

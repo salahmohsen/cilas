@@ -3,21 +3,14 @@
 import { BookOpen, FileDown, Link2, Mail, Share2 } from 'lucide-react'
 import { useTranslations } from 'next-intl'
 import { useSyncExternalStore } from 'react'
-import { siFacebook, siTelegram, siWhatsapp, siX, type SimpleIcon } from 'simple-icons'
+import { siFacebook, siTelegram, siWhatsapp, siX } from 'simple-icons'
 
+import { BrandMark } from '@/components/brand-mark'
 import {
   ExpandingButtonGroup,
   type ExpandingButtonGroupItem,
 } from '@/components/arc/expanding-button-group/expanding-button-group'
-
-/** A brand's mark, one colour like the line icons beside it. */
-function Brand({ icon }: { icon: SimpleIcon }) {
-  return (
-    <svg aria-hidden fill="currentColor" height={16} viewBox="0 0 24 24" width={16}>
-      <path d={icon.path} />
-    </svg>
-  )
-}
+import { openNewTab } from '@/lib/open-new-tab'
 
 /** A file the page offers beside sharing: a PDF to download, or a print edition to see. */
 export type ShareFile = { href: string; label: string; kind: 'pdf' | 'print' }
@@ -26,10 +19,6 @@ const FILE_ICONS = { pdf: FileDown, print: BookOpen }
 const noSubscribe = () => () => {}
 const hasShareSheet = () =>
   typeof navigator.share === 'function' && window.matchMedia('(pointer: coarse)').matches
-
-const open = (href: string) => {
-  window.open(href, '_blank', 'noopener,noreferrer')
-}
 
 /**
  * Sharing a page: copying its link, sending it to WhatsApp, Facebook, X,
@@ -89,26 +78,26 @@ export function ShareBar({
           {
             id: 'whatsapp',
             label: t('whatsapp'),
-            icon: <Brand icon={siWhatsapp} />,
-            onSelect: () => open(`https://wa.me/?text=${text}%20${encoded()}`),
+            icon: <BrandMark paths={[siWhatsapp.path]} />,
+            onSelect: () => openNewTab(`https://wa.me/?text=${text}%20${encoded()}`),
           },
           {
             id: 'facebook',
             label: t('facebook'),
-            icon: <Brand icon={siFacebook} />,
-            onSelect: () => open(`https://www.facebook.com/sharer/sharer.php?u=${encoded()}`),
+            icon: <BrandMark paths={[siFacebook.path]} />,
+            onSelect: () => openNewTab(`https://www.facebook.com/sharer/sharer.php?u=${encoded()}`),
           },
           {
             id: 'x',
             label: t('x'),
-            icon: <Brand icon={siX} />,
-            onSelect: () => open(`https://x.com/intent/post?text=${text}&url=${encoded()}`),
+            icon: <BrandMark paths={[siX.path]} />,
+            onSelect: () => openNewTab(`https://x.com/intent/post?text=${text}&url=${encoded()}`),
           },
           {
             id: 'telegram',
             label: t('telegram'),
-            icon: <Brand icon={siTelegram} />,
-            onSelect: () => open(`https://t.me/share/url?url=${encoded()}&text=${text}`),
+            icon: <BrandMark paths={[siTelegram.path]} />,
+            onSelect: () => openNewTab(`https://t.me/share/url?url=${encoded()}&text=${text}`),
           },
           {
             id: 'email',
@@ -128,7 +117,7 @@ export function ShareBar({
               const Icon = FILE_ICONS[file.kind]
               return <Icon />
             })(),
-            onSelect: () => open(file.href),
+            onSelect: () => openNewTab(file.href),
           },
         ]
       : []),
