@@ -10,6 +10,7 @@ import { Button } from '@/components/arc/button/button'
 import type { SpacesWriteState } from '@/app/(frontend)/[locale]/spaces/actions'
 import type { SpaceFileRef } from '@/lib/spaces-data'
 import { FILE_LIMITS, SPACE_FILE_ACCEPT, UPLOAD_TOTAL_MAX } from '@/lib/space-file-limits'
+import { readDraft, useDraft } from '@/components/use-draft'
 import { AttachmentTray } from './attachment-tray'
 import { ComposerField, type ComposerSuggestions } from './composer-field'
 import { saveErrorKey } from './composer'
@@ -59,19 +60,23 @@ export function PostEditForm({
   )
   const draftKey = `space-edit-draft-${post}`
   const [initial] = useState(() => {
-    try {
-      const draft = JSON.parse(localStorage.getItem(draftKey) ?? 'null')
-      return draft?.original === initialBody && typeof draft.markdown === 'string'
-        ? (draft.markdown as string)
-        : initialBody
-    } catch {
-      return initialBody
-    }
+    const draft = readDraft<{ original?: unknown; markdown?: unknown }>(draftKey)
+    return draft?.original === initialBody && typeof draft.markdown === 'string'
+      ? draft.markdown
+      : initialBody
   })
   const [body, setBody] = useState({ markdown: initial, empty: !initial.trim() })
   const [removed, setRemoved] = useState<number[]>([])
   const [error, setError] = useState<string | null>(null)
   const [saving, setSaving] = useState(false)
+  const [saved, setSaved] = useState(false)
+  const { clear: clearDraft } = useDraft<{ original: string; markdown: string }>(draftKey, {
+    enabled: words,
+    draft:
+      saved || body.markdown === initialBody
+        ? null
+        : { original: initialBody, markdown: body.markdown },
+  })
   const kept = context.files.filter((f) => !removed.includes(f.id))
   const attachments = useAttachments(Math.max(0, FILE_LIMITS.post - kept.length), setError)
 
@@ -109,11 +114,8 @@ export function PostEditForm({
       setSaving(false)
       throw e
     }
-    try {
-      localStorage.removeItem(draftKey)
-    } catch {
-      /* Saving does not depend on browser storage. */
-    }
+    setSaved(true)
+    clearDraft()
     router.refresh()
     closeTimer.current = setTimeout(onCancel, 1200)
   }
@@ -132,17 +134,7 @@ export function PostEditForm({
               placeholder={placeholder}
               defaultMarkdown={initial}
               disabled={saving}
-              onChange={(value) => {
-                setBody(value)
-                try {
-                  localStorage.setItem(
-                    draftKey,
-                    JSON.stringify({ original: initialBody, markdown: value.markdown }),
-                  )
-                } catch {
-                  /* The editor remains usable when storage is unavailable. */
-                }
-              }}
+              onChange={setBody}
             />
           )}
           {children}

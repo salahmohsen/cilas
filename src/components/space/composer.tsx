@@ -19,6 +19,7 @@ import { postCreateAction, type SpacesWriteState } from '@/app/(frontend)/[local
 import { FILE_LIMITS, SPACE_FILE_ACCEPT, UPLOAD_TOTAL_MAX } from '@/lib/space-file-limits'
 import { EVENT_TITLE_MAX, type ComposerKind } from '@/lib/space-rules'
 
+import { readDraft, useDraft } from '@/components/use-draft'
 import { AttachmentTray } from './attachment-tray'
 import { EventFields, NO_COVER, endsEarly, eventFormData, type EventValue } from './event-fields'
 import { useAttachments } from './use-attachments'
@@ -177,8 +178,16 @@ function ComposerForm({
   const t = useTranslations('SpacePost')
   const router = useRouter()
   const draftKey = `space-draft-${space}`
-  const [initial] = useState(() => localStorage.getItem(draftKey) ?? '')
+  const [initial] = useState(() => {
+    const saved = readDraft<unknown>(draftKey)
+    return typeof saved === 'string' ? saved : ''
+  })
   const [body, setBody] = useState({ markdown: initial, empty: initial.trim() === '' })
+  const [published, setPublished] = useState(false)
+  const { clear: clearDraft } = useDraft<string>(draftKey, {
+    enabled: true,
+    draft: published || body.empty ? null : body.markdown,
+  })
   const [kind, setKind] = useState<ComposerKind>(kinds[0] ?? 'discussion')
   const [extra, setExtra] = useState<Extra>(EMPTY_EXTRA)
   const picker = useRef<HTMLInputElement>(null)
@@ -229,7 +238,8 @@ function ComposerForm({
       setError(t(saveErrorKey(result.error)))
       throw new Error(result.error)
     }
-    localStorage.removeItem(draftKey)
+    setPublished(true)
+    clearDraft()
     router.refresh()
     setTimeout(onPublished, 1200)
   }
@@ -261,11 +271,7 @@ function ComposerForm({
           defaultMarkdown={initial}
           mentions={mentions}
           sessions={sessions}
-          onChange={(v) => {
-            setBody({ markdown: v.markdown, empty: v.empty })
-            if (v.empty) localStorage.removeItem(draftKey)
-            else localStorage.setItem(draftKey, v.markdown)
-          }}
+          onChange={(v) => setBody({ markdown: v.markdown, empty: v.empty })}
         />
         {kind === 'announcement' && <p className={styles.meta}>{t('announcementHint')}</p>}
         {kind === 'event' && <EventFields value={extra} onChange={set} minDate={today} />}
