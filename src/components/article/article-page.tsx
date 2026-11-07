@@ -32,6 +32,7 @@ import { EditorFields, labelOf } from '@/components/editor-fields'
 import { RefreshRouteOnSave } from '@/components/RefreshRouteOnSave'
 import { ContributorRows, PersonLink, type Contributor } from '@/components/person/contributors'
 import { SideCard, SideCardSection } from '@/components/side-card'
+import { ScrollArea } from '@/components/arc/scroll-area/scroll-area'
 import { ResolvedRichTextField as RichTextField } from '@/components/resolved-rich-text-field'
 import { ShareBar } from '@/components/share-bar'
 import { StudyWithAI } from '@/components/study-with-ai'
@@ -237,8 +238,10 @@ export async function ArticlePage({ locale: siteLocale, slug, user: reader }: Vi
   // The side card: its collection, who made it, its sections, and the text
   // size; on wide screens also sharing and Discuss it with AI, which narrow
   // screens keep at the end of the text.
+  // On wide screens the card fits the window: only the people list shrinks,
+  // and it scrolls when it is long.
   const sideCard = (narrow: boolean) => (
-    <SideCard>
+    <SideCard className={narrow ? undefined : 'min-h-0'}>
       {collection && (
         <SideCardSection label={t('inCollection')}>
           <CollectionDialog
@@ -272,9 +275,15 @@ export async function ArticlePage({ locale: siteLocale, slug, user: reader }: Vi
         </SideCardSection>
       )}
       {contributors.length > 0 && (
-        <div {...pe('authors')}>
+        <div className={narrow ? undefined : 'side-card-grow'} {...pe('authors')}>
           <SideCardSection label={t('people')}>
-            <ContributorRows contributors={contributors} />
+            {narrow ? (
+              <ContributorRows contributors={contributors} />
+            ) : (
+              <ScrollArea label={t('people')}>
+                <ContributorRows contributors={contributors} />
+              </ScrollArea>
+            )}
           </SideCardSection>
         </div>
       )}
@@ -332,7 +341,7 @@ export async function ArticlePage({ locale: siteLocale, slug, user: reader }: Vi
         <div className="xl:grid xl:grid-cols-[17rem_minmax(0,1fr)] xl:gap-16">
           {/* Margin: the contents, sticky beside the column on wide screens. */}
           <aside className="hidden xl:block">
-            <div className="sticky top-24 max-h-[calc(100vh-7rem)] overflow-y-auto">
+            <div className="sticky top-24 flex max-h-[calc(100dvh-7rem)] flex-col overflow-y-auto">
               {sideCard(false)}
             </div>
           </aside>

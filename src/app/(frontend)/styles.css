@@ -2756,6 +2756,21 @@ details:not([open]) > summary.side-card-label {
 .side-card-scroll > * {
   max-width: 100%;
 }
+/* A card that fits its column's height: this section alone shrinks, and
+   its content scrolls. The others keep their full size. */
+.side-card > :not(.side-card-grow) {
+  flex-shrink: 0;
+}
+.side-card-grow,
+.side-card-grow > .side-card-section {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+.side-card-grow {
+  /* The band and about two rows stay in view. */
+  min-height: 11rem;
+}
 /* People: one ruled row each, photo then name and role. */
 .side-card-people {
   margin: 0;
