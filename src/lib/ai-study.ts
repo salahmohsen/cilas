@@ -12,6 +12,8 @@
  *   Studio (Gemini), as Google's own quality-of-life update documents
  * - `https://chatgpt.com/?q=` prefills the composer
  * - `https://grok.com/?q=` prefills Grok
+ * - `https://chat.z.ai/?q=` prefills Z.ai (GLM, open weights), signed out
+ *   too (2026-11)
  * When one drifts, the assistant simply opens without the prefill.
  *
  * `maxUrl` is the longest link we hand each one, measured 2026-10-25:
@@ -23,13 +25,15 @@
  * - claude.ai answered 200 at 28,000 characters and chatgpt.com at 24,000
  *   (a fresh headless browser; repeat requests meet a bot check, not a limit).
  *   Both sit behind Cloudflare, which refuses a URI over 32 KB. 20,000.
+ * - chat.z.ai answered 200 at 7,449 characters and 414 at 12,402, so
+ *   7,000 (2026-11-07).
  * Arabic text grows six times when encoded, so an Arabic prompt meets these
  * limits long before an English one does.
  */
 
 export type StudyKind = 'course' | 'article' | 'session'
 
-export type ProviderId = 'claude' | 'gemini' | 'grok' | 'chatgpt'
+export type ProviderId = 'claude' | 'gemini' | 'grok' | 'chatgpt' | 'zai'
 
 export const providers: Array<{ id: ProviderId; maxUrl: number; href: (q: string) => string }> = [
   { id: 'claude', maxUrl: 20_000, href: (q) => `https://claude.ai/new?q=${q}` },
@@ -40,6 +44,7 @@ export const providers: Array<{ id: ProviderId; maxUrl: number; href: (q: string
   },
   { id: 'grok', maxUrl: 6_000, href: (q) => `https://grok.com/?q=${q}` },
   { id: 'chatgpt', maxUrl: 20_000, href: (q) => `https://chatgpt.com/?q=${q}` },
+  { id: 'zai', maxUrl: 7_000, href: (q) => `https://chat.z.ai/?q=${q}` },
 ]
 
 /**
