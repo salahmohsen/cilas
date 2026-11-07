@@ -375,7 +375,8 @@ export const SiteFooter = forwardRef<HTMLElement, SiteFooterProps>(function Site
   const socialNode = socials.length > 0 && (
     <ul className={styles.inline} aria-label="Social">
       {socials.map((link) => (
-        <li key={link.label}>
+        // Two accounts on one platform share a label; the address tells them apart.
+        <li key={link.href ?? link.label}>
           {link.icon && link.href ? (
             <a
               aria-label={link.label}
