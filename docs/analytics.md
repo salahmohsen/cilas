@@ -8,11 +8,12 @@ Without the keys the site builds and runs as before, loads no analytics code, ma
 
 Automatic events, on public pages only:
 
-| Event        | When                                                  | Notes                                                                                                                                            |
-| ------------ | ----------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `$pageview`  | A page loads, or the address changes without a reload | Path and campaign tags (`utm_*`, `ref`) only. Referrer is cut to origin and path. A person's name in `/people/<name>` is replaced by `[person]`. |
-| `$exception` | An unhandled browser error                            | Known noise is dropped (cancelled requests, extensions, `ResizeObserver`). One page load sends at most 5, and one of each kind.                  |
-| `$snapshot`  | A session recording (10% of visits)                   | Only while on a public page. All form text and inputs are masked.                                                                                |
+| Event         | When                                                  | Notes                                                                                                                                                                                   |
+| ------------- | ----------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `$pageview`   | A page loads, or the address changes without a reload | Path and campaign tags (`utm_*`, `ref`) only. Referrer is cut to origin and path. A person's name in `/people/<name>` is replaced by `[person]`.                                        |
+| `$exception`  | An unhandled browser error                            | Known noise is dropped (cancelled requests, extensions, `ResizeObserver`). One page load sends at most 5, and one of each kind.                                                         |
+| `$web_vitals` | A page has loaded and been used                       | LCP, CLS, FCP and INP, sent together about 5 seconds after the numbers are ready. Addresses nested in the event (`navigationURL`, the attribution's `url`) are cleaned like the others. |
+| `$snapshot`   | A session recording (10% of visits)                   | Only while on a public page. All form text and inputs are masked.                                                                                                                       |
 
 Events the site sends itself, through `track()` (`src/lib/analytics/track.ts`). Properties are public labels, never text a person typed:
 
@@ -39,13 +40,13 @@ An allowlist decides (`src/lib/analytics/paths.ts`). A page counts only if its f
 
 Why: these pages show posts, comments, names, emails and tokens. No page view, recording or error is sent from them.
 
-One gate (`src/lib/analytics/policy.ts`, PostHog's `before_send`) checks every event, whatever raised it, and drops it if the page is excluded. On the events it keeps, it cleans every property that holds an address, found by its name (ending in `_url`, `pathname` or `referrer`), not only `$current_url`. PostHog adds its own: the page a visit started on (`$session_entry_url`, `$session_entry_referrer`) and the page before (`$prev_pageview_pathname`). An address on this site is dropped when its page is excluded, and otherwise loses its query, its hash and a person's name. An address on another site keeps only its origin and path. A search engine keyword (`$session_entry_ph_keyword`) is dropped. A browser error message is cleaned of emails and secrets, as a server error message is.
+One gate (`src/lib/analytics/policy.ts`, PostHog's `before_send`) checks every event, whatever raised it, and drops it if the page is excluded. On the events it keeps, it cleans every property that holds an address, found by its name (ending in `url`, `pathname` or `referrer`, in any letter case), not only `$current_url`. It also looks inside nested objects, as the `$web_vitals_*_event` objects of a web vital. PostHog adds its own: the page a visit started on (`$session_entry_url`, `$session_entry_referrer`) and the page before (`$prev_pageview_pathname`). An address on this site is dropped when its page is excluded, and otherwise loses its query, its hash and a person's name. An address on another site keeps only its origin and path. A search engine keyword (`$session_entry_ph_keyword`) is dropped. A browser error message is cleaned of emails and secrets, as a server error message is.
 
 `tests/unit/analytics-sdk.unit.spec.ts` runs the real posthog-js with the site's settings and checks what leaves after the gate. Run it after each posthog-js upgrade: a new SDK can add properties.
 
 The two exceptions are `login` and `push_enabled`. They happen on pages that are otherwise excluded (the login and settings pages). They are sent with no address (`/[private]`), no referrer and no other property.
 
-Never done: `posthog.identify`, autocapture, page-leave events, heart beats, heat maps, feature flags, surveys, network capture in recordings.
+Never done: `posthog.identify`, autocapture, page-leave events, heart beats, heat maps, feature flags, surveys, network capture in recordings (`network_timing: false`).
 
 ## Cookieless
 
@@ -73,6 +74,12 @@ Related settings:
 - PostHog's 2026-08-30 defaults make a recording shorter than the project's minimum duration be dropped.
 
 Set these once in PostHog (Project settings, Session replay), because the key in the site cannot: minimum duration 5 seconds, and "Discard client IP data" on in the project settings if you want no IP-based location kept.
+
+## Web vitals
+
+`capture_performance: { web_vitals: true, network_timing: false }` in `src/lib/analytics/client.ts`. PostHog loads its web vitals script through the relay (`/relay-k3/static/`) and sends one `$web_vitals` event per page with LCP, CLS, FCP and INP. INP and LCP carry attribution: the CSS selector of the slow element and timing parts. A resource address in the attribution is kept only when it is on another site (origin and path); one on this site is dropped unless it is a public page.
+
+The client setting turns them on; the project toggle is not needed. See them in PostHog, Web analytics, Web vitals. Values over 15 minutes are discarded as noise (PostHog's default).
 
 ## Dashboard
 
@@ -119,7 +126,7 @@ The two `NEXT_PUBLIC_*` values are inlined into the browser code at build time, 
 
 Free limits per month (check https://posthog.com/pricing before relying on them): 1,000,000 events, 5,000 session recordings, 1,000,000 flag requests, 100,000 exceptions. No payment method is on the account, so PostHog stops counting at the limit; nothing is charged.
 
-How the design stays far below them: no autocapture, no page-leave, no heart beats; a page view is one event; the own events fire once per action; recordings are 10% and dropped when short; exceptions are limited per page load and per server process; bots are filtered by PostHog; feature flags are not evaluated.
+How the design stays far below them: no autocapture, no page-leave, no heart beats; a page view is one event; web vitals add about one event per page (two when INP comes late); the own events fire once per action; recordings are 10% and dropped when short; exceptions are limited per page load and per server process; bots are filtered by PostHog; feature flags are not evaluated.
 
 To check usage: the "PostHog free plan" widget on the dashboard, or PostHog's Billing page (Organization settings). The widget counts the calendar month, which is close to PostHog's billing period.
 

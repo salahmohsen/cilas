@@ -256,6 +256,58 @@ describe('the last gate before an event leaves', () => {
     ])
   })
 
+  it('cleans the addresses nested in a web vital', () => {
+    const out = gateCapture({
+      event: '$web_vitals',
+      properties: {
+        $current_url: 'https://ci-las.org/en/people/jane-doe?ref=x&token=abc',
+        $web_vitals_LCP_value: 1800,
+        $web_vitals_LCP_event: {
+          name: 'LCP',
+          value: 1800,
+          $current_url: 'https://ci-las.org/en/people/jane-doe?ref=x&token=abc',
+          navigationURL: 'https://ci-las.org/en/people/jane-doe?token=abc',
+          attribution: {
+            target: 'main > img',
+            url: 'https://ci-las.org/api/media/file/jane-doe.jpg?w=800',
+            timeToFirstByte: 120,
+          },
+        },
+        $web_vitals_INP_event: {
+          name: 'INP',
+          attribution: { url: 'https://cdn.example.org/font.woff2?v=2' },
+        },
+      },
+    })
+    expect(out?.properties).toEqual({
+      $current_url: 'https://ci-las.org/en/people/[person]?ref=x',
+      $web_vitals_LCP_value: 1800,
+      $web_vitals_LCP_event: {
+        name: 'LCP',
+        value: 1800,
+        $current_url: 'https://ci-las.org/en/people/[person]?ref=x',
+        navigationURL: 'https://ci-las.org/en/people/[person]',
+        attribution: { target: 'main > img', timeToFirstByte: 120 },
+      },
+      $web_vitals_INP_event: {
+        name: 'INP',
+        attribution: { url: 'https://cdn.example.org/font.woff2' },
+      },
+    })
+  })
+
+  it('drops a web vital measured on a private page', () => {
+    expect(
+      gateCapture({
+        event: '$web_vitals',
+        properties: {
+          $current_url: 'https://ci-las.org/en/spaces/my-space',
+          $web_vitals_LCP_value: 1,
+        },
+      }),
+    ).toBeNull()
+  })
+
   it('does not change what it was given', () => {
     const input = { event: '$pageview', properties: { $current_url: 'https://a.b/en?x=1' } }
     gateCapture(input)
@@ -363,6 +415,10 @@ describe('what the browser is set to do', () => {
     expect(config.disable_surveys).toBe(true)
     expect(config.disable_session_recording).toBe(true)
     expect(config.respect_dnt).toBe(true)
+  })
+
+  it('measures web vitals, but never the network in recordings', () => {
+    expect(config.capture_performance).toEqual({ web_vitals: true, network_timing: false })
   })
 
   it("uses PostHog's recommended defaults and puts its scripts in head", () => {

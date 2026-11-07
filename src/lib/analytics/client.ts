@@ -38,8 +38,8 @@ export const makeBeforeSend = () => {
  * Cookieless and quiet. Nothing is stored in the browser (`persistence:
  * memory`: a new page load is a new visitor), nothing is captured on its own
  * (no autocapture, no page-leave, no heartbeats, no heat maps), nobody is
- * identified, and the flags and survey calls are off. Page views and errors
- * are the only automatic events; the rest go through `track`.
+ * identified, and the flags and survey calls are off. Page views, errors and
+ * web vitals are the only automatic events; the rest go through `track`.
  */
 export const posthogConfig = (): Partial<PostHogConfig> => ({
   // PostHog's own recommended defaults (docs/libraries/next-js). Among them:
@@ -57,7 +57,10 @@ export const posthogConfig = (): Partial<PostHogConfig> => ({
   capture_dead_clicks: false,
   capture_heatmaps: false,
   rageclick: false,
-  capture_performance: false,
+  // Web vitals (LCP, CLS, FCP, INP), one `$web_vitals` event per page. The
+  // gate cleans the addresses nested in it. Network timing would add every
+  // request's address to recordings, so it stays off.
+  capture_performance: { web_vitals: true, network_timing: false },
   capture_exceptions: {
     capture_unhandled_errors: true,
     capture_unhandled_rejections: true,
