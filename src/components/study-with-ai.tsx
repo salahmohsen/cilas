@@ -39,7 +39,7 @@ const iconOf: Record<ProviderId, React.ReactNode> = {
 }
 
 /** The session a space post points at, for a prompt about that one session. */
-export type StudySession = { course: string; session: string; readings: string[] }
+type StudySession = { course: string; session: string; readings: string[] }
 
 /**
  * Studying a page with AI: Claude, Gemini, Grok and ChatGPT, in Arc's

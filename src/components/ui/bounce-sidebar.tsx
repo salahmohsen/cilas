@@ -13,12 +13,12 @@ const MotionLink = motion.create(Link)
 
 const useIsomorphicLayoutEffect = typeof window !== 'undefined' ? useLayoutEffect : useEffect
 
-export type BounceSidebarItem =
+type BounceSidebarItem =
   | string
   | { label: string; href?: string }
   | { label: string; heading: true }
 
-export type BounceSidebarProps = Omit<ComponentProps<'ul'>, 'onChange'> & {
+type BounceSidebarProps = Omit<ComponentProps<'ul'>, 'onChange'> & {
   items: BounceSidebarItem[]
   value?: number
   defaultValue?: number

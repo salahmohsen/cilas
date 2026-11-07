@@ -17,7 +17,7 @@ import { AvatarImage } from '@/components/arc/lib/avatar-image'
 import { useLoadedSrc } from './use-photo'
 import styles from './image-upload.module.css'
 
-export type AvatarUploadProps = {
+type AvatarUploadProps = {
   /** The person's name, for the initials when there is no photo. */
   name: string
   fallbackSeed?: string

@@ -18,7 +18,7 @@ import styles from './image-upload.module.css'
 export type ImageValue = { file: File | null; url: string | null }
 export const NO_IMAGE: ImageValue = { file: null, url: null }
 
-export type ImageUploadFieldProps = {
+type ImageUploadFieldProps = {
   label: string
   value: ImageValue
   onChange: (value: ImageValue) => void

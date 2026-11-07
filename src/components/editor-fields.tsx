@@ -1,6 +1,6 @@
 import type { Editable } from '@/lib/editable'
 
-export type EditorField = { label: string; path: string; value: React.ReactNode }
+type EditorField = { label: string; path: string; value: React.ReactNode }
 
 const empty = <span style={{ opacity: 0.55 }}>Empty</span>
 

@@ -24,7 +24,7 @@ import { isRtl } from '@/i18n/routing'
 import styles from './settings-shell.module.css'
 
 /** What a section tells the shell: how many fields changed, and how to save or drop them. */
-export type SectionState = {
+type SectionState = {
   count: number
   save: () => Promise<{ ok: true } | { ok: false; message?: string }>
   discard: () => void
@@ -57,7 +57,7 @@ export function useSettingsSection(id: string, state: SectionState): boolean {
   return registry !== null
 }
 
-export type SettingsSectionDef = {
+type SettingsSectionDef = {
   id: string
   label: string
   icon?: ReactNode

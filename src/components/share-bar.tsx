@@ -13,7 +13,7 @@ import {
 import { openNewTab } from '@/lib/open-new-tab'
 
 /** A file the page offers beside sharing: a PDF to download, or a print edition to see. */
-export type ShareFile = { href: string; label: string; kind: 'pdf' | 'print' }
+type ShareFile = { href: string; label: string; kind: 'pdf' | 'print' }
 const FILE_ICONS = { pdf: FileDown, print: BookOpen }
 
 const noSubscribe = () => () => {}

@@ -5,7 +5,7 @@ import { useSyncExternalStore } from 'react'
 import { AUTH_CHANGED } from '@/lib/auth-events'
 
 /** The signed-in account, with its linked person (name and photo) when it has one. */
-export type SessionUser = {
+type SessionUser = {
   id: number
   email: string
   person?:

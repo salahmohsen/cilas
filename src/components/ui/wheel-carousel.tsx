@@ -22,7 +22,7 @@ import {
   useState,
 } from 'react'
 
-export interface WheelCarouselItem {
+interface WheelCarouselItem {
   label: string
   /** Omit when there is no photo: the panel then shows the label's initials. */
   image?: string
@@ -31,7 +31,7 @@ export interface WheelCarouselItem {
   fallbackSeed?: string
 }
 
-export interface WheelCarouselProps {
+interface WheelCarouselProps {
   items: WheelCarouselItem[]
   /** Names the list for screen readers. */
   label: string
