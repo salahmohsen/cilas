@@ -423,7 +423,7 @@ export const CourseView: React.FC<{
         </SideCardSection>
       ) : null}
       <SideCardSection label={ts('heading')}>
-        <div className="side-card-body side-card-center side-card-scroll">
+        <div className="side-card-body side-card-flush side-card-scroll">
           <ShareBar
             label={ts('course')}
             path={`/${locale}/study/${course.slug}`}
@@ -433,7 +433,7 @@ export const CourseView: React.FC<{
         </div>
       </SideCardSection>
       <SideCardSection label={ts('aiHeading')} labelAction={<AIInstructions />}>
-        <div className="side-card-body side-card-center">
+        <div className="side-card-body side-card-flush">
           <StudyWithAI kind="course" path={`/${locale}/study/${course.slug}`} />
         </div>
       </SideCardSection>

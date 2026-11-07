@@ -2756,6 +2756,27 @@ details:not([open]) > summary.side-card-label {
 .side-card-scroll > * {
   max-width: 100%;
 }
+/* A button group that is the whole cell, such as share and AI: no inset,
+   no pill of its own. The cell's rules frame it, and its buttons spread
+   across the cell's width. */
+.side-card-flush {
+  padding: 0;
+}
+/* Two classes: the group's own module rule has one, and loads later. */
+.side-card-body.side-card-flush > * {
+  width: 100%;
+  justify-content: space-between;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  padding: 0;
+}
+/* Square buttons as tall as the section's label band: the open one's
+   tint fills the cell from rule to rule. */
+.side-card-body.side-card-flush > * > * {
+  height: 2.75rem;
+  border-radius: 0;
+}
 /* A card that fits its column's height: this section alone shrinks, and
    its content scrolls. The others keep their full size. */
 .article-sidebar-viewport {

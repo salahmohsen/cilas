@@ -300,7 +300,7 @@ export async function ArticlePage({ locale: siteLocale, slug, user: reader }: Vi
         {!narrow && (
           <>
             <SideCardSection label={tShare('heading')}>
-              <div className="side-card-body side-card-center side-card-scroll">
+              <div className="side-card-body side-card-flush side-card-scroll">
                 <ShareBar
                   email={email}
                   file={printEdition}
@@ -311,7 +311,7 @@ export async function ArticlePage({ locale: siteLocale, slug, user: reader }: Vi
               </div>
             </SideCardSection>
             <SideCardSection label={tShare('aiHeading')} labelAction={<AIInstructions />}>
-              <div className="side-card-body side-card-center">
+              <div className="side-card-body side-card-flush">
                 <StudyWithAI kind="article" path={articlePath} />
               </div>
             </SideCardSection>

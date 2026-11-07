@@ -218,7 +218,7 @@ export async function BridgeYearView({
   ) : null
   const shareSection = (
     <SideCardSection label={ts('heading')}>
-      <div className="side-card-body side-card-center side-card-scroll">
+      <div className="side-card-body side-card-flush side-card-scroll">
         <ShareBar
           email={email}
           label={t('share')}
