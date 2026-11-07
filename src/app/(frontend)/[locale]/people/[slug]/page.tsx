@@ -2,7 +2,7 @@ import { AvatarImage } from '@/components/arc/lib/avatar-image'
 import { SocialLinks } from '@/components/person/social-links'
 import { isRtl, type Locale, otherLocale } from '@/i18n/routing'
 import { personAvatarSeed } from '@/lib/avatar'
-import { detailPath, pathOf } from '@/lib/paths'
+import { pathOf } from '@/lib/paths'
 import config from '@payload-config'
 import { ArrowLeft } from 'lucide-react'
 import type { Metadata } from 'next'
@@ -18,10 +18,11 @@ import { Schema } from '@/components/schema'
 import { Link } from '@/i18n/navigation'
 import { toArticleCard, toCourseCard } from '@/lib/article-cards'
 import { focalPointStyle } from '@/lib/media-image'
-import { plainText } from '@/lib/plaintext'
 import { breadcrumbSchema, personSchema } from '@/lib/schema'
-import { buildPageMetadata } from '@/lib/seo'
 import type { Media } from '@/payload-types'
+import { withShareCard } from '@/lib/seo'
+
+import { personMetadata } from './metadata'
 
 type Props = { params: Promise<{ locale: string; slug: string }> }
 
@@ -29,22 +30,7 @@ export const revalidate = 3600
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { locale, slug } = await params
-  const payload = await getPayload({ config })
-  const person = await getPerson(payload, slug, locale as Locale)
-  if (!person) return {}
-  const description = person.bio
-    ? plainText({ data: person.bio }).replace(/\s+/g, ' ').trim().slice(0, 160)
-    : undefined
-  const photo = typeof person.photo === 'object' ? person.photo?.url : undefined
-  const title = `${person.name} · CILAS`
-  const metadata = buildPageMetadata({
-    title,
-    description,
-    image: photo,
-    path: detailPath('people', String(person.slug)),
-    locale,
-  })
-  return { ...metadata, twitter: { ...metadata.twitter, title, description } }
+  return withShareCard(await personMetadata(locale, slug))
 }
 
 /** A person's page: who they are, and what they have written, translated and taught. */

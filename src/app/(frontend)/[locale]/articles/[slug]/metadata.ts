@@ -17,7 +17,7 @@ export async function articleMetadata({ locale, slug, user }: View): Promise<Met
   if (!reading) return {}
   const { article, title, body } = reading
   const metaTitle = article.meta?.title || `${title} — CILAS`
-  // The SEO image, else the article's cover; the site's default otherwise.
+  // The SEO image, else the article's cover: the share card's background.
   const media = (v: unknown) => (isObject<Media>(v) && v.url ? v.url : null)
   const image = media(article.meta?.image) ?? media(article.cover_image)
   const description = article.meta?.description || excerptOf({ body }, 160)

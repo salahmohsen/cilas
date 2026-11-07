@@ -2,6 +2,8 @@ import config from '@payload-config'
 import type { Metadata } from 'next'
 import { getPayload } from 'payload'
 
+import { withShareCard } from '@/lib/seo'
+
 import { CoursePage, courseMetadata } from './course-page'
 
 type Params = { params: Promise<{ locale: string; slug: string }> }
@@ -31,7 +33,7 @@ export async function generateStaticParams() {
 
 export async function generateMetadata({ params }: Params): Promise<Metadata> {
   const { slug, locale } = await params
-  return courseMetadata(locale, slug, null)
+  return withShareCard(await courseMetadata(locale, slug, null))
 }
 
 export default async function Page({ params }: Params) {

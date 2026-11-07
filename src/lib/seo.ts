@@ -1,5 +1,4 @@
 import { routing } from '@/i18n/routing'
-import { ogImages } from '@/lib/og'
 import { plainText } from '@/lib/plaintext'
 import { relId } from '@/lib/relation'
 import type { SerializedEditorState } from '@payloadcms/richtext-lexical/lexical'
@@ -76,6 +75,11 @@ export const seoDefaults = (
   return result
 }
 
+/**
+ * A page's title, description, address and share image (its own, when it
+ * has one). A page with an opengraph-image.tsx passes this through
+ * withShareCard, which hands the image to the card instead.
+ */
 export function buildPageMetadata({
   title,
   description,
@@ -91,12 +95,32 @@ export function buildPageMetadata({
   locale: string
   type?: 'article'
 }): Metadata {
-  const images = ogImages(image)
   return {
     title,
     description,
     alternates: pageAlternates(path, locale),
-    openGraph: { title, description: description ?? undefined, images, ...(type ? { type } : {}) },
-    twitter: { card: 'summary_large_image', images: images.map((image) => image.url) },
+    openGraph: {
+      title,
+      description: description ?? undefined,
+      ...(image ? { images: [{ url: image }] } : {}),
+      ...(type ? { type } : {}),
+    },
+    twitter: { card: 'summary_large_image', ...(image ? { images: [image] } : {}) },
+  }
+}
+
+/**
+ * For a page whose opengraph-image.tsx draws its share card
+ * (src/lib/og-card.tsx): the image goes into the card's background, not the
+ * tags. Next uses the card only while the page's own metadata names no
+ * images, and Twitter then takes the card too.
+ */
+export function withShareCard(metadata: Metadata): Metadata {
+  const { images: _og, ...openGraph } = metadata.openGraph ?? {}
+  const { images: _twitter, ...twitter } = metadata.twitter ?? {}
+  return {
+    ...metadata,
+    ...(metadata.openGraph ? { openGraph } : {}),
+    ...(metadata.twitter ? { twitter } : {}),
   }
 }

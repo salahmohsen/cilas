@@ -23,7 +23,6 @@ import { isRtl, routing } from '@/i18n/routing'
 import { env } from '@/env'
 import { fontVariables } from '@/lib/fonts'
 import { newsletterList } from '@/lib/newsletter-list'
-import { DEFAULT_OG_IMAGE } from '@/lib/og'
 import { pushConfig } from '@/lib/push/config'
 import { organizationSchema, websiteSchema } from '@/lib/schema'
 
@@ -49,9 +48,9 @@ export async function generateMetadata(): Promise<Metadata> {
     },
     // Home-screen web app on iOS; the manifest covers the rest.
     appleWebApp: { capable: true, title: t('siteName'), statusBarStyle: 'default' },
-    // A page with no image of its own shares the default one.
-    openGraph: { siteName: t('siteName'), images: [DEFAULT_OG_IMAGE] },
-    twitter: { card: 'summary_large_image', images: [DEFAULT_OG_IMAGE.url] },
+    // A page with no card of its own shares the site's (opengraph-image.tsx).
+    openGraph: { siteName: t('siteName') },
+    twitter: { card: 'summary_large_image' },
   }
 }
 

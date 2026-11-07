@@ -5,6 +5,7 @@ import { getPayload } from 'payload'
 import { articleMetadata } from '@/app/(frontend)/[locale]/articles/[slug]/metadata'
 import { ArticlePage } from '@/components/article/article-page'
 import { routing } from '@/i18n/routing'
+import { withShareCard } from '@/lib/seo'
 
 type Props = { params: Promise<{ locale: string; slug: string }> }
 
@@ -26,7 +27,7 @@ export async function generateStaticParams() {
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  return articleMetadata({ ...(await params), user: null })
+  return withShareCard(await articleMetadata({ ...(await params), user: null }))
 }
 
 export default async function Page({ params }: Props) {

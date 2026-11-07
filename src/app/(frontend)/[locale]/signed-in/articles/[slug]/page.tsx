@@ -3,6 +3,7 @@ import type { Metadata } from 'next'
 import { articleMetadata } from '@/app/(frontend)/[locale]/articles/[slug]/metadata'
 import { ArticlePage } from '@/components/article/article-page'
 import { currentReader } from '@/lib/reader'
+import { withShareCard } from '@/lib/seo'
 
 type Props = { params: Promise<{ locale: string; slug: string }> }
 
@@ -14,7 +15,7 @@ type Props = { params: Promise<{ locale: string; slug: string }> }
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const meta = await articleMetadata({ ...(await params), user: await currentReader() })
   // Only reached through the rewrite; the public address is the canonical one.
-  return { ...meta, robots: { index: false } }
+  return { ...withShareCard(meta), robots: { index: false } }
 }
 
 export default async function Page({ params }: Props) {
