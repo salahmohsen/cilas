@@ -109,9 +109,14 @@ export async function ArticlePage({ locale: siteLocale, slug, user: reader }: Vi
     getTranslations('Study.filters'),
     getTranslations('Meta'),
   ])
-  // A collection's article ends with the whole collection, in its order;
-  // any other article with related ones.
-  const related = collection ? [] : await getRelatedArticles(payload, article, locale, 3, user)
+  // A collection's article shows its editor's picks, else the rest of its
+  // collection, in order; any other article its related ones.
+  const picks = article.related_articles?.length ?? 0
+  const related = !collection
+    ? await getRelatedArticles(payload, article, locale, 3, user)
+    : picks > 0
+      ? await getRelatedArticles(payload, article, locale, picks, user)
+      : collection.articles.filter((a) => a.id !== article.id)
   const card = (a: Article) =>
     toArticleCard(a, {
       locale,
