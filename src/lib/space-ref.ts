@@ -25,7 +25,7 @@ export type SpaceParent = {
   fellows?: Rel[] | null
 }
 
-export const COMMUNITY_TITLE: Record<Locale, string> = { en: 'Community', ar: 'المجتمع' }
+const COMMUNITY_TITLE: Record<Locale, string> = { en: 'Community', ar: 'المجتمع' }
 
 /** Which row a course or cohort space hangs from; null for a community, and for a course space whose course was deleted. */
 export const parentRef = (

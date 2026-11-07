@@ -9,10 +9,14 @@ import type { EventPosting, Membership, PostingLevel, SpaceKind } from '@/lib/sp
 
 /** Every post kind the posts collection stores. `question` is kept for older rows. */
 export const POST_KINDS = ['discussion', 'question', 'announcement', 'event', 'vote'] as const
-export type PostKind = (typeof POST_KINDS)[number]
 
 /** The kinds the composer offers, in its order. */
-export const COMPOSER_KINDS = ['discussion', 'event', 'vote', 'announcement'] as const
+export const COMPOSER_KINDS = [
+  'discussion',
+  'event',
+  'vote',
+  'announcement',
+] as const satisfies readonly (typeof POST_KINDS)[number][]
 export type ComposerKind = (typeof COMPOSER_KINDS)[number]
 
 /** The longest custom "About this space" text, in characters. */
@@ -26,7 +30,7 @@ export const VOTE_OPTIONS = { min: 2, max: 10, length: 120 } as const
 export const SESSION_CARD_KINDS: readonly string[] = ['announcement']
 
 /** A course space turns read-only this many days after its last meeting (spec §11). */
-export const READ_ONLY_AFTER_DAYS = 14
+const READ_ONLY_AFTER_DAYS = 14
 
 export type PostFile = { data: Buffer; mimetype: string; name: string; size: number }
 
