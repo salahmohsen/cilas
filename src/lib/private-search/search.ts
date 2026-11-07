@@ -1,10 +1,10 @@
-import type { Payload, PayloadRequest, Where } from 'payload'
+import type { Payload, Where } from 'payload'
 import type { Client } from 'typesense'
 import { activeGeneration } from './generation'
 import type { User } from '@/payload-types'
 import { relation } from '@/lib/relation'
 import { spaceHref, spaceTitle, type SpaceParent } from '@/lib/space-ref'
-import { requestReadState } from '@/lib/spaces'
+import { readStateFor } from '@/lib/spaces'
 import {
   BATCH_SIZE,
   PAGE_SIZE,
@@ -30,10 +30,9 @@ export class SelectionDenied extends Error {}
 export const permissionEnvelope = async (
   payload: Payload,
   user: User,
-  req: Partial<PayloadRequest>,
+  context: Record<string, unknown>,
 ) => {
-  req.context ??= {}
-  const state = await requestReadState(payload, user, req.context)
+  const state = await readStateFor(payload, user, { context })
   if (state.ids !== true) return { ids: state.ids || [], gated: state.gated }
   const spaces = await payload.find({
     collection: 'spaces',
@@ -77,7 +76,7 @@ export const spaceOptions = async (
 export const validateCandidates = async (
   payload: Payload,
   user: User,
-  req: Partial<PayloadRequest>,
+  context: Record<string, unknown>,
   envelope: Envelope,
   options: SpaceOption[],
   candidates: SearchDocument[],
@@ -100,7 +99,7 @@ export const validateCandidates = async (
     payload.find({
       collection: 'space-posts',
       user,
-      req,
+      context,
       overrideAccess: false,
       depth: 0,
       pagination: false,
@@ -112,7 +111,7 @@ export const validateCandidates = async (
       ? payload.find({
           collection: 'space-comments',
           user,
-          req,
+          context,
           overrideAccess: false,
           depth: 0,
           pagination: false,
@@ -136,7 +135,7 @@ export const validateCandidates = async (
     ? await payload.find({
         collection: 'space-comments',
         user,
-        req,
+        context,
         overrideAccess: false,
         depth: 0,
         pagination: false,
@@ -203,8 +202,8 @@ export const searchPrivate = async ({
   input: SearchInput
   secret: string
 }): Promise<SearchPage> => {
-  const req: Partial<PayloadRequest> = { context: {}, user }
-  const envelope = await permissionEnvelope(payload, user, req)
+  const context = {}
+  const envelope = await permissionEnvelope(payload, user, context)
   const selection =
     input.spaces === undefined
       ? input.space === undefined
@@ -282,7 +281,7 @@ export const searchPrivate = async ({
     const candidates = (response.hits ?? []).map((hit) => hit.document)
     const value = {
       candidates,
-      validated: await validateCandidates(payload, user, req, envelope, options, candidates),
+      validated: await validateCandidates(payload, user, context, envelope, options, candidates),
       cutoff: Boolean(response.search_cutoff),
     }
     batches.set(offset, value)
@@ -352,13 +351,13 @@ export const searchPrivate = async ({
     exhausted = aggregateComplete && nextOffset === undefined
   }
   // A membership or generation change invalidates both rows and aggregates.
-  const current = await permissionEnvelope(payload, user, { context: {}, user })
+  const current = await permissionEnvelope(payload, user, {})
   if (
     fingerprint(permissionBinding(current)) !== fingerprint(permissionBinding(envelope)) ||
     (await activeGeneration(payload)) !== generation
   )
     throw new CursorReset()
-  results = await withResultImages(payload, user, req, results)
+  results = await withResultImages(payload, user, context, results)
   return {
     ...empty,
     results,
@@ -381,7 +380,7 @@ export const searchPrivate = async ({
 async function withResultImages(
   payload: Payload,
   user: User,
-  req: Partial<PayloadRequest>,
+  context: Record<string, unknown>,
   rows: SearchResult[],
 ) {
   if (!rows.length) return rows
@@ -393,7 +392,7 @@ async function withResultImages(
     ? await payload.find({
         collection: 'space-posts',
         user,
-        req,
+        context,
         overrideAccess: false,
         depth: 0,
         pagination: false,
@@ -411,7 +410,7 @@ async function withResultImages(
   const files = await payload.find({
     collection: 'space-files',
     user,
-    req,
+    context,
     overrideAccess: false,
     depth: 0,
     limit: PAGE_SIZE * 10,

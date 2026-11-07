@@ -20,7 +20,7 @@ vi.mock('@/lib/private-search/generation', () => ({
   activeGeneration: async () => shared.generation,
 }))
 vi.mock('@/lib/spaces', () => ({
-  requestReadState: async () => ({ ids: shared.ids, gated: new Map() }),
+  readStateFor: async () => ({ ids: shared.ids, gated: new Map() }),
 }))
 const user = { id: 1, roles: ['member'], person: 1 } as User
 let sources: Source[]

@@ -66,7 +66,7 @@ export async function POST(request: Request) {
         (locale !== 'en' && locale !== 'ar')
       )
         return reply({ error: 'invalid-input' }, 400)
-      const envelope = await permissionEnvelope(payload, user, { context: {}, user })
+      const envelope = await permissionEnvelope(payload, user, {})
       return reply({
         spaces: await spaceOptions(payload, user, envelope, locale),
         account: user.id,

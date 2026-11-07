@@ -38,7 +38,7 @@ export type SpaceLike = {
   introduction_post?: number | { id: number } | null
 }
 
-export type SpaceFacts = {
+type SpaceFacts = {
   /** course ids where the person is a listed fellow */
   courseFellows?: number[] | null
   /** enrolled course ids for the person */
@@ -102,7 +102,7 @@ export type Membership = { role: 'moderator' | 'member' | 'none' }
 // moderators so far: admins, the course's fellows, the programme's
 // residential fellows (spec §7 without step 3's moderation powers).
 
-export const membershipOf = (
+const membershipOf = (
   space: SpaceLike,
   facts: SpaceFacts,
   { isAdmin = false }: { isAdmin?: boolean } = {},
@@ -191,7 +191,7 @@ export const fellowPersonIds = async (payload: Payload): Promise<Set<number>> =>
  * that list the person as a fellow. `spaces` is every space the caller asks
  * about.
  */
-export const factsFor = async (
+const factsFor = async (
   payload: Payload,
   personId: number | null,
   spaces: Pick<SpaceLike, 'kind' | 'course' | 'programme' | 'audience'>[],
@@ -290,9 +290,10 @@ export const membership = async (
 
 /* ------------------------------------------------- Where-builders & rules */
 
+type Reader = null | { roles?: readonly string[]; person?: unknown }
 type SpaceIds = number[] | true | false
 
-export type ReadState = {
+type ReadState = {
   ids: SpaceIds
   /** Space id to its intro post, for the spaces this reader has not introduced themselves in yet */
   gated: Map<number, number>
@@ -301,12 +302,12 @@ export type ReadState = {
 /**
  * The spaces this account can read right now (`true` for admin/none, `false`
  * for no user) and the ones still behind their introduction gate. Everything
- * else builds Where clauses on top. `cache` keeps this to one membership read
- * per render — the rules and the pages all ask.
+ * else builds Where clauses on top. `readStateFor` keeps this to one membership
+ * read per render or request — the rules and the pages all ask.
  */
-export const loadReadState = async (
+const loadReadState = async (
   payload: Payload,
-  user: null | { roles?: readonly string[]; person?: unknown },
+  user: Reader,
   settings?: SpacesSettings,
 ): Promise<ReadState> => {
   const gated = new Map<number, number>()
@@ -376,22 +377,45 @@ export const loadReadState = async (
   return { ids: readable, gated }
 }
 
-const readState = cache(loadReadState)
+/** One scope per render, for the pages. A collection's access rule has its request's context instead. */
+const renderScope = cache(() => ({}))
+const reads = new WeakMap<object, { user: unknown; state: Promise<ReadState> }>()
+
+/**
+ * The read state, memoized for one reader in one scope: the request's
+ * `context` when the caller has one (the collections' access rules, the
+ * private search), else the current render. The scope outlives any copy of the
+ * context object, since it is a nested object that spreads keep.
+ */
+export const readStateFor = (
+  payload: Payload,
+  user: Reader,
+  { context, settings }: { context?: Record<string, unknown>; settings?: SpacesSettings } = {},
+): Promise<ReadState> => {
+  const scope = context
+    ? typeof context.spacesReadScope === 'object' && context.spacesReadScope
+      ? context.spacesReadScope
+      : (context.spacesReadScope = {})
+    : renderScope()
+  const prior = reads.get(scope)
+  if (prior?.user === user) return prior.state
+  const state = loadReadState(payload, user, settings)
+  reads.set(scope, { user, state })
+  return state
+}
 
 export const readableSpaceIds = async (
   payload: Payload,
-  user: null | { roles?: readonly string[]; person?: unknown },
+  user: Reader,
   settings?: SpacesSettings,
-): Promise<SpaceIds> => (await readState(payload, user, settings)).ids
+): Promise<SpaceIds> => (await readStateFor(payload, user, { settings })).ids
 
 /**
  * The spaces this reader still has to introduce themselves in, each with its
  * intro post: the only post they read there until they comment on it.
  */
-export const introGates = async (
-  payload: Payload,
-  user: null | { roles?: readonly string[]; person?: unknown },
-): Promise<Map<number, number>> => (await readState(payload, user)).gated
+export const introGates = async (payload: Payload, user: Reader): Promise<Map<number, number>> =>
+  (await readStateFor(payload, user)).gated
 
 /** Access rules assembled once, reused by the collections (spec §1). */
 
@@ -402,7 +426,7 @@ export const introGates = async (
  */
 export const readableWhere = async (
   payload: Payload,
-  user: null | { roles?: readonly string[]; person?: unknown },
+  user: Reader,
   field: 'id' | 'space' = 'space',
   settings?: SpacesSettings,
 ): Promise<Where | boolean> => {
@@ -421,11 +445,11 @@ export const readableWhere = async (
  */
 export const contentWhere = async (
   payload: Payload,
-  user: null | { roles?: readonly string[]; person?: unknown },
+  user: Reader,
   post: readonly string[],
   context?: Record<string, unknown>,
 ): Promise<Where | boolean> => {
-  const { ids, gated } = await requestReadState(payload, user, context)
+  const { ids, gated } = await readStateFor(payload, user, { context })
   if (ids === true) return true
   if (!ids || !ids.length) return false
   if (!gated.size) return { space: { in: ids } }
@@ -445,21 +469,3 @@ export const contentWhere = async (
 /** The space's access read rule for the `spaces` collection itself. */
 export const readSpaces: Access = async ({ req }) =>
   req.user ? readableWhere(req.payload, req.user, 'id') : false
-
-const readPolicies = new WeakMap<object, { user: unknown; promise: Promise<ReadState> }>()
-export const requestReadState = (
-  payload: Payload,
-  user: Parameters<typeof loadReadState>[1],
-  context?: Record<string, unknown>,
-): Promise<ReadState> => {
-  if (!context) return readState(payload, user)
-  const scope =
-    context.spacesReadScope && typeof context.spacesReadScope === 'object'
-      ? context.spacesReadScope
-      : (context.spacesReadScope = {})
-  const prior = readPolicies.get(scope)
-  if (prior?.user === user) return prior.promise
-  const promise = loadReadState(payload, user)
-  readPolicies.set(scope, { user, promise })
-  return promise
-}
