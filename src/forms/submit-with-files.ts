@@ -1,13 +1,9 @@
 import type { PayloadHandler, PayloadRequest } from 'payload'
 
-import { SUBMISSION_FILE_LIMIT } from '@/collections/SubmissionFiles'
 import { env } from '@/env'
 import { fileAllowed, maxBytes, maxCount, type FileRule } from '@/lib/form-files'
-import { registrationStatus } from '@/lib/registration'
-import { TURNSTILE_HEADER, verifyTurnstile } from '@/lib/turnstile'
-
-/** Set on the submission this endpoint makes, whose Turnstile token it has already spent. */
-export const TURNSTILE_VERIFIED = 'turnstileVerified'
+import { loadApplicationTarget } from '@/lib/registration'
+import { checkTurnstile, TURNSTILE_VERIFIED } from '@/lib/turnstile'
 
 type FileQuestion = FileRule & { blockType: 'fileUpload'; name: string; required?: boolean | null }
 type Sent = {
@@ -46,15 +42,8 @@ const fileQuestionsOf = async (req: PayloadRequest, sent: Sent): Promise<FileQue
  * anything fails, the stored files are removed again.
  */
 export const submitWithFiles: PayloadHandler = async (req) => {
-  const secret = env.TURNSTILE_SECRET_KEY
-  if (secret) {
-    const token = req.headers.get(TURNSTILE_HEADER)
-    const ip =
-      req.headers.get('cf-connecting-ip') ??
-      req.headers.get('x-forwarded-for')?.split(',')[0]?.trim()
-    if (!token || !(await verifyTurnstile(token, secret, ip))) {
-      return fail('The spam check failed. Reload the page and try again.', 403)
-    }
+  if (!(await checkTurnstile(req, env.TURNSTILE_SECRET_KEY))) {
+    return fail('The spam check failed. Reload the page and try again.', 403)
   }
 
   const data = await (req as unknown as Request).formData().catch(() => null)
@@ -72,19 +61,12 @@ export const submitWithFiles: PayloadHandler = async (req) => {
   // This endpoint writes through the Local API, which that hook skips, so
   // the rule repeats here, and before any file row exists to clean up.
   if (sent.target) {
-    const target = await req.payload
-      .findByID({
-        collection: sent.target.relationTo,
-        id: sent.target.value,
-        depth: 1,
-        overrideAccess: true,
-      })
-      .catch(() => null)
-    const cycle =
-      target && 'cycle' in target && typeof target.cycle === 'object' ? target.cycle : null
-    if (target && registrationStatus(target.registration, cycle?.registration) !== 'open') {
-      return fail('Applications are closed.')
-    }
+    const loaded = await loadApplicationTarget(
+      req.payload,
+      sent.target.relationTo,
+      sent.target.value,
+    )
+    if (loaded && !loaded.open) return fail('Applications are closed.')
   }
 
   const questions = await fileQuestionsOf(req, sent)
@@ -102,8 +84,7 @@ export const submitWithFiles: PayloadHandler = async (req) => {
     if (q.required && !sentFiles.length) return fail(`“${q.name}” needs a file.`)
     if (sentFiles.length > maxCount(q)) return fail(`Too many files for “${q.name}”.`)
     for (const f of sentFiles) {
-      if (f.size > Math.min(maxBytes(q), SUBMISSION_FILE_LIMIT))
-        return fail(`“${f.name}” is too large.`)
+      if (f.size > maxBytes(q)) return fail(`“${f.name}” is too large.`)
       if (!fileAllowed(q, f)) return fail(`“${f.name}” is not a kind of file this question takes.`)
     }
   }

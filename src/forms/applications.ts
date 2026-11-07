@@ -17,7 +17,7 @@ import { env } from '@/env'
 import { getEmailSettings } from '@/emails/settings'
 import { acceptanceMail } from '@/emails/transactional'
 import { slugify } from '@/lib/slugify'
-import { registrationStatus } from '@/lib/registration'
+import { loadApplicationTarget } from '@/lib/registration'
 import type { FormSubmission } from '@/payload-types'
 
 /**
@@ -91,15 +91,9 @@ export const checkTarget: CollectionBeforeChangeHook = async ({ data, operation,
   if (operation !== 'create' || !data.target) return data
   const { relationTo, value } = data.target as { relationTo: TargetKind; value: unknown }
   const id = idOf(value)
-  const target =
-    id === null
-      ? null
-      : await req.payload
-          .findByID({ collection: relationTo, id, depth: 1, overrideAccess: true, req })
-          .catch(() => null)
+  const loaded = id === null ? null : await loadApplicationTarget(req.payload, relationTo, id, req)
+  const { target, cycle } = loaded ?? { target: null, cycle: null }
   // A course without its own form uses its cycle's.
-  const cycle =
-    target && 'cycle' in target && typeof target.cycle === 'object' ? target.cycle : null
   const form = target?.registration?.form ?? cycle?.registration?.form
   if (!target || idOf(form) !== idOf(data.form)) {
     throw new APIError('This form is not the registration form of what it names.', 400)
@@ -107,10 +101,7 @@ export const checkTarget: CollectionBeforeChangeHook = async ({ data, operation,
   // The page hides the button at the deadline; this repeats the rule where
   // the API cannot skip it. Local callers (seeds, backfills) may still add
   // one, the way they may add a historic submission at all.
-  if (
-    req.payloadAPI !== 'local' &&
-    registrationStatus(target.registration, cycle?.registration) !== 'open'
-  ) {
+  if (req.payloadAPI !== 'local' && !loaded?.open) {
     throw new APIError('This is not open for applications.', 400)
   }
   return data

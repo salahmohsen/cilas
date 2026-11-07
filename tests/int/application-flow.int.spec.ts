@@ -5,7 +5,7 @@ import { randomBytes } from 'node:crypto'
 import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest'
 
 import config from '@/payload.config'
-import { TURNSTILE_VERIFIED } from '@/forms/submit-with-files'
+import { TURNSTILE_VERIFIED } from '@/lib/turnstile'
 import type { Course, Form, FormSubmission, Person, User } from '@/payload-types'
 
 /**

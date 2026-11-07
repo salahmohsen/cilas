@@ -27,6 +27,8 @@ export const MAX_FILES = 5
 /** No question may take files bigger than this, whatever its setting. */
 export const MAX_SIZE_MB = 20
 export const DEFAULT_SIZE_MB = 10
+/** Above this the form endpoint refuses a file, whatever the question allows. */
+export const SUBMISSION_FILE_LIMIT = MAX_SIZE_MB * 1024 * 1024
 
 export type FileRule = {
   accept?: FileKind[] | null
@@ -43,7 +45,7 @@ export const acceptAttribute = (rule: FileRule) =>
     .join(',')
 
 export const maxBytes = (rule: FileRule) =>
-  Math.min(rule.maxSizeMB || DEFAULT_SIZE_MB, MAX_SIZE_MB) * 1024 * 1024
+  Math.min((rule.maxSizeMB || DEFAULT_SIZE_MB) * 1024 * 1024, SUBMISSION_FILE_LIMIT)
 
 export const maxCount = (rule: FileRule) => (rule.multiple ? MAX_FILES : 1)
 

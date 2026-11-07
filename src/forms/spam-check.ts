@@ -1,8 +1,7 @@
 import { APIError, type CollectionBeforeChangeHook } from 'payload'
 
 import { isAdminUser } from '@/access'
-import { TURNSTILE_VERIFIED } from '@/forms/submit-with-files'
-import { TURNSTILE_HEADER, verifyTurnstile } from '@/lib/turnstile'
+import { checkTurnstile, TURNSTILE_VERIFIED } from '@/lib/turnstile'
 
 /**
  * Refuses a form submission without a good Turnstile token, so a bot cannot
@@ -16,11 +15,7 @@ export const requireTurnstile =
     if (req.payloadAPI === 'local' || isAdminUser(req.user)) return data
     // The files endpoint (src/forms/submit-with-files.ts) has spent the token already.
     if (req.context?.[TURNSTILE_VERIFIED]) return data
-    const token = req.headers.get(TURNSTILE_HEADER)
-    const ip =
-      req.headers.get('cf-connecting-ip') ??
-      req.headers.get('x-forwarded-for')?.split(',')[0]?.trim()
-    if (!token || !(await verifyTurnstile(token, secret, ip))) {
+    if (!(await checkTurnstile(req, secret))) {
       throw new APIError('The spam check failed. Reload the page and try again.', 403)
     }
     return data

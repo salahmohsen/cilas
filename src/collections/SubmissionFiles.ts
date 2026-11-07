@@ -3,7 +3,7 @@ import { randomBytes } from 'node:crypto'
 import type { CollectionConfig } from 'payload'
 
 import { isAdmin } from '@/access'
-import { FILE_KINDS, MAX_SIZE_MB } from '@/lib/form-files'
+import { FILE_KINDS } from '@/lib/form-files'
 
 /**
  * Files sent with a form (a CV, a writing sample): personal data, so admins
@@ -37,6 +37,3 @@ export const SubmissionFiles: CollectionConfig = {
     },
   ],
 }
-
-/** Above this the form endpoint refuses a file, whatever the question allows. */
-export const SUBMISSION_FILE_LIMIT = MAX_SIZE_MB * 1024 * 1024
