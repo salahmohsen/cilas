@@ -3608,6 +3608,11 @@ h3 {
   height: auto;
   max-width: 40%;
 }
+.article-fallback-logo {
+  width: clamp(3rem, 22%, 5rem);
+  height: auto;
+  color: var(--foreground);
+}
 .poster-title {
   font-family: var(--font-playfair-display), var(--font-amiri), serif;
   font-size: clamp(1.75rem, 5cqi, 3.1rem);
