@@ -2758,8 +2758,16 @@ details:not([open]) > summary.side-card-label {
 }
 /* A card that fits its column's height: this section alone shrinks, and
    its content scrolls. The others keep their full size. */
-.side-card > :not(.side-card-grow) {
+.article-sidebar-viewport {
+  display: flex;
+  flex-direction: column;
+}
+.side-card > :not(.side-card-grow),
+.article-sidebar-viewport > :not(.side-card-grow) {
   flex-shrink: 0;
+}
+.article-sidebar-viewport > * + * {
+  border-block-start: 1px solid var(--poster-ink);
 }
 .side-card-grow,
 .side-card-grow > .side-card-section {
@@ -2768,8 +2776,10 @@ details:not([open]) > summary.side-card-label {
   min-height: 0;
 }
 .side-card-grow {
-  /* The band and about two rows stay in view. */
-  min-height: 11rem;
+  min-height: 6.75rem;
+}
+.side-card-grow .side-card-label {
+  flex-shrink: 0;
 }
 /* People: one ruled row each, photo then name and role. */
 .side-card-people {

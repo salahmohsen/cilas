@@ -25,6 +25,7 @@ import {
   TextSize,
 } from '@/components/article/reading-tools'
 import { ArticlesGrid } from '@/components/article/articles-grid'
+import { ArticleSidebar } from '@/components/article/article-sidebar'
 import { toArticleCard } from '@/lib/article-cards'
 import grid from '@/components/arc/blocks/blog-grid/blog-grid.module.css'
 import { AdminFrameOnly, OutsideAdminFrame } from '@/components/admin-frame-only'
@@ -240,88 +241,106 @@ export async function ArticlePage({ locale: siteLocale, slug, user: reader }: Vi
   // screens keep at the end of the text.
   // On wide screens the card fits the window: only the people list shrinks,
   // and it scrolls when it is long.
-  const sideCard = (narrow: boolean) => (
-    <SideCard className={narrow ? undefined : 'min-h-0'}>
-      {collection && (
-        <SideCardSection label={t('inCollection')}>
-          <CollectionDialog
-            cover={mediaImage(
-              publicationCovers.get(collection.publication.id) ??
-                (typeof collection.publication.cover_image === 'object'
-                  ? collection.publication.cover_image
-                  : null),
-            )}
-            current={article.id}
-            href={`/articles?publication=${collection.publication.slug}`}
-            labels={{
-              kicker: t('inCollection'),
-              current: t('readingNow'),
-              count: t('collectionCount', {
-                count: collection.articles.length,
-                n: localDigits(String(collection.articles.length), locale),
-              }),
-              all: t('collectionAll'),
-            }}
-            locale={locale}
-            title={collection.publication.title}
-            items={collection.articles.map((a) => ({
-              id: a.id,
-              title: card(a).title,
-              authors: card(a).author.name,
-              href: pathOf('articles', a) ?? '#',
-            }))}
-            closeLabel={t('closeCollection')}
-          />
-        </SideCardSection>
-      )}
-      {contributors.length > 0 && (
-        <div className={narrow ? undefined : 'side-card-grow'} {...pe('authors')}>
-          <SideCardSection label={t('people')}>
-            {narrow ? (
-              <ContributorRows contributors={contributors} />
-            ) : (
-              <ScrollArea label={t('people')}>
+  const sideCard = (narrow: boolean) => {
+    const content = (
+      <>
+        {collection && (
+          <SideCardSection label={t('inCollection')}>
+            <CollectionDialog
+              cover={mediaImage(
+                publicationCovers.get(collection.publication.id) ??
+                  (typeof collection.publication.cover_image === 'object'
+                    ? collection.publication.cover_image
+                    : null),
+              )}
+              current={article.id}
+              href={`/articles?publication=${collection.publication.slug}`}
+              labels={{
+                kicker: t('inCollection'),
+                current: t('readingNow'),
+                count: t('collectionCount', {
+                  count: collection.articles.length,
+                  n: localDigits(String(collection.articles.length), locale),
+                }),
+                all: t('collectionAll'),
+              }}
+              locale={locale}
+              title={collection.publication.title}
+              items={collection.articles.map((a) => ({
+                id: a.id,
+                title: card(a).title,
+                authors: card(a).author.name,
+                href: pathOf('articles', a) ?? '#',
+              }))}
+              closeLabel={t('closeCollection')}
+            />
+          </SideCardSection>
+        )}
+        {contributors.length > 0 && (
+          <div className={narrow ? undefined : 'side-card-grow'} {...pe('authors')}>
+            <SideCardSection label={t('people')}>
+              {narrow ? (
                 <ContributorRows contributors={contributors} />
-              </ScrollArea>
-            )}
+              ) : (
+                <ScrollArea label={t('people')}>
+                  <ContributorRows contributors={contributors} />
+                </ScrollArea>
+              )}
+            </SideCardSection>
+          </div>
+        )}
+        {hasContents && (
+          <SideCardSection fold={narrow} label={narrow ? t('contents') : t('onThisPage')}>
+            <ArticleContents bare container="article-text" sections={sections} />
           </SideCardSection>
-        </div>
-      )}
-      {hasContents && (
-        <SideCardSection fold={narrow} label={narrow ? t('contents') : t('onThisPage')}>
-          <ArticleContents bare container="article-text" sections={sections} />
+        )}
+        <SideCardSection label={t('textSize')}>
+          <TextSize cells target="article-text" />
         </SideCardSection>
-      )}
-      <SideCardSection label={t('textSize')}>
-        <TextSize cells target="article-text" />
-      </SideCardSection>
-      {!narrow && (
-        <>
-          <SideCardSection label={tShare('heading')}>
-            <div className="side-card-body side-card-center side-card-scroll">
-              <ShareBar
-                email={email}
-                file={printEdition}
-                label={tShare('article')}
-                path={articlePath}
-                title={title}
-              />
-            </div>
-          </SideCardSection>
-          <SideCardSection label={tShare('aiHeading')}>
-            <div className="side-card-body side-card-center">
-              <StudyWithAI kind="article" path={articlePath} />
-              <ol className="grid list-inside list-decimal gap-1 text-xs leading-relaxed side-card-muted">
-                {aiSteps.map((step) => (
-                  <li key={step}>{step}</li>
-                ))}
-              </ol>
-            </div>
-          </SideCardSection>
-        </>
-      )}
-    </SideCard>
-  )
+        {!narrow && (
+          <>
+            <SideCardSection label={tShare('heading')}>
+              <div className="side-card-body side-card-center side-card-scroll">
+                <ShareBar
+                  email={email}
+                  file={printEdition}
+                  label={tShare('article')}
+                  path={articlePath}
+                  title={title}
+                />
+              </div>
+            </SideCardSection>
+            <SideCardSection label={tShare('aiHeading')}>
+              <div className="side-card-body side-card-center">
+                <StudyWithAI kind="article" path={articlePath} />
+                <ol className="grid list-inside list-decimal gap-1 text-xs leading-relaxed side-card-muted">
+                  {aiSteps.map((step) => (
+                    <li key={step}>{step}</li>
+                  ))}
+                </ol>
+              </div>
+            </SideCardSection>
+          </>
+        )}
+      </>
+    )
+    return (
+      <SideCard>
+        {narrow ? (
+          content
+        ) : (
+          <ScrollArea
+            fade={0}
+            label={t('onThisPage')}
+            maxHeight="calc(var(--article-sidebar-height, 100dvh - 12rem) - 2px)"
+            viewportClassName="article-sidebar-viewport"
+          >
+            {content}
+          </ScrollArea>
+        )}
+      </SideCard>
+    )
+  }
 
   // The layout is Arc's blog-grid reader (blocks/blog-grid): one centred
   // column with a back link, meta line, title, byline, image and body. The
@@ -341,9 +360,7 @@ export async function ArticlePage({ locale: siteLocale, slug, user: reader }: Vi
         <div className="xl:grid xl:grid-cols-[17rem_minmax(0,1fr)] xl:gap-16">
           {/* Margin: the contents, sticky beside the column on wide screens. */}
           <aside className="hidden xl:block">
-            <div className="sticky top-24 flex max-h-[calc(100dvh-7rem)] flex-col overflow-y-auto">
-              {sideCard(false)}
-            </div>
+            <ArticleSidebar>{sideCard(false)}</ArticleSidebar>
           </aside>
 
           <article
