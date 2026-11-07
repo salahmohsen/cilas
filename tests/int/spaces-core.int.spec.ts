@@ -3,7 +3,7 @@ import { getPayload, type Payload, type Where } from 'payload'
 import { afterAll, beforeAll, describe, expect, it } from 'vitest'
 
 import { personOf } from '@/access'
-import { membership, readableWhere, writePostWhere } from '@/lib/spaces'
+import { membership, readableWhere } from '@/lib/spaces'
 import { introBody } from '@/lib/space-intro'
 import { mySpaces, participation, spaceFeed, spaceLanding } from '@/lib/spaces-data'
 import config from '@/payload.config'
@@ -251,7 +251,7 @@ describe('spaces core', () => {
   })
 
   it('the write floor is a Where over readable spaces', async () => {
-    const floor = await writePostWhere(payload, student)
+    const floor = await readableWhere(payload, student, 'space')
     expect(floor).not.toBe(false)
 
     const refuse = (user: User) =>

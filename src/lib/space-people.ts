@@ -5,10 +5,8 @@ import { getTranslations } from 'next-intl/server'
 import { personOf } from '@/access'
 import type { Space, User } from '@/payload-types'
 import { peopleRows, staffPersonIds } from '@/lib/space-members'
-import { moderatorPeople } from '@/lib/spaces-data'
-import { spaceRoster } from '@/lib/spaces-write'
-
-import type { PersonCard } from './person-hover'
+import type { PersonCard } from '@/components/space/person-hover'
+import { moderatorPeople, spaceRoster } from '@/lib/spaces-data'
 
 /**
  * Everyone in one space as the person card shows them, fellows first, then
@@ -25,11 +23,11 @@ export async function spacePeopleCards(
   const lang = locale === 'ar' ? 'ar' : 'en'
   const [t, roster, moderators, staff] = await Promise.all([
     getTranslations('Spaces'),
-    spaceRoster({ payload, user, space: space.id, locale: lang }),
+    spaceRoster(payload, user, space.id, lang),
     moderatorPeople(payload, space),
     staffPersonIds(payload),
   ])
-  const cards = (roster.ok ? roster.data.members : [])
+  const cards = (roster ?? [])
     .map((m) => ({
       id: m.personId,
       name: m.name,

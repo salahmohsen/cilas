@@ -1,5 +1,3 @@
-import type { Membership, SpaceKind } from '@/lib/spaces'
-
 /** The space-introduction template as the dashboard stores it, one language at a time. */
 export type IntroText = { title?: string | null; body?: string | null }
 
@@ -27,17 +25,3 @@ const part = (text: IntroText | null | undefined, lang: 'en' | 'ar') => {
  */
 export const introBody = (en: IntroText | null | undefined, ar: IntroText | null | undefined) =>
   `${part(en, 'en')}\n\n---\n\n${part(ar, 'ar')}`
-
-/**
- * The introduction gate (W20): a member of a course or cohort space reads
- * only its intro post until they comment on it. Moderators (admins, the
- * course's fellows, the programme's residential fellows) never wait. A space
- * without a live intro post has nothing to gate on.
- */
-export const introGated = (
-  kind: SpaceKind,
-  role: Membership['role'],
-  introPost: number | null,
-  introduced: boolean,
-): boolean =>
-  (kind === 'course' || kind === 'cohort') && role === 'member' && introPost != null && !introduced

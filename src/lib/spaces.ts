@@ -5,7 +5,7 @@ import { cache } from 'react'
 
 import { isAdminUser, personOf } from '@/access'
 import { ENROLLED } from '@/lib/list-members'
-import { introGated } from '@/lib/space-intro'
+import { introGated } from '@/lib/space-rules'
 import { isGhostCourse } from '@/lib/space-ref'
 
 /**
@@ -445,40 +445,6 @@ export const contentWhere = async (
 /** The space's access read rule for the `spaces` collection itself. */
 export const readSpaces: Access = async ({ req }) =>
   req.user ? readableWhere(req.payload, req.user, 'id') : false
-
-/**
- * Whether this member may start a post in this space (spec §7 posting levels,
- * without step 3's moderation powers). Announcement permission needs role
- * and kind — `mayStart` answers only "may this post kind begin here".
- */
-export const mayStart = (
-  membership: Membership,
-  kind: 'discussion' | 'question' | 'announcement',
-  posting: PostingLevel = 'open',
-):
-  | { ok: true }
-  | { ok: false; error: 'not-member' | 'read-only' | 'posting-level' | 'announcement' } => {
-  if (membership.role === 'none') return { ok: false, error: 'not-member' }
-  const mod = membership.role === 'moderator'
-  if (kind === 'announcement' && !mod) return { ok: false, error: 'announcement' }
-  if (posting === 'fellows_only' && !mod) return { ok: false, error: 'posting-level' }
-  if (posting === 'members_comment' && kind !== 'announcement' && !mod)
-    return { ok: false, error: 'posting-level' }
-  return { ok: true }
-}
-
-/** Whether this member may comment (spec §7): only `fellows_only` keeps members to reading. */
-export const mayComment = (membership: Membership, posting: PostingLevel = 'open'): boolean =>
-  membership.role === 'moderator' || (membership.role !== 'none' && posting !== 'fellows_only')
-
-/**
- * May this member write at all right now (consent and read-only live in the
- * write module — this is the collection access floor).
- */
-export const writePostWhere = async (
-  payload: Payload,
-  user: null | { roles?: readonly string[]; person?: unknown },
-): Promise<Where | boolean> => readableWhere(payload, user, 'space')
 
 const readPolicies = new WeakMap<object, { user: unknown; promise: Promise<ReadState> }>()
 export const requestReadState = (

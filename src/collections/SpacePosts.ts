@@ -1,6 +1,7 @@
 import type { CollectionConfig } from 'payload'
 
 import { isAdminUser } from '@/access'
+import { POST_KINDS } from '@/lib/space-rules'
 import { contentWhere } from '@/lib/spaces'
 import { searchChanged, searchDeleted } from '@/lib/private-search/outbox'
 
@@ -53,7 +54,7 @@ export const SpacePosts: CollectionConfig = {
       type: 'select',
       required: true,
       defaultValue: 'discussion',
-      options: ['discussion', 'question', 'announcement', 'event', 'vote'],
+      options: [...POST_KINDS],
       access: { update: () => false },
     },
     { name: 'body', type: 'textarea', required: true },

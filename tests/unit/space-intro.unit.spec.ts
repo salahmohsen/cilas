@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest'
 
-import { INTRO_DEFAULTS, introBody, introGated } from '@/lib/space-intro'
+import { INTRO_DEFAULTS, introBody } from '@/lib/space-intro'
+import { introGated } from '@/lib/space-rules'
 
 describe('introBody', () => {
   it('copies both languages of the template, English first, each under its title', () => {

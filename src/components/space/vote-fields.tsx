@@ -9,7 +9,7 @@ import { DatePicker } from '@/components/arc/date-picker/date-picker'
 import { Input } from '@/components/arc/input/input'
 import { TimePicker } from '@/components/arc/time-picker/time-picker'
 import { Tooltip } from '@/components/arc/tooltip/tooltip'
-import { VOTE_OPTIONS } from '@/lib/space-post-kinds'
+import { VOTE_OPTIONS } from '@/lib/space-rules'
 
 import { dayOf } from './event-fields'
 import styles from './space.module.css'

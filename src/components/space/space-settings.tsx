@@ -13,7 +13,7 @@ import { BottomSheet } from '@/components/arc/bottom-sheet/bottom-sheet'
 import { Dialog, DialogClose, DialogContent } from '@/components/arc/dialog/dialog'
 import { RadioGroup } from '@/components/arc/radio-group/radio-group'
 import { Textarea } from '@/components/arc/textarea/textarea'
-import { ABOUT_MAX } from '@/lib/space-about'
+import { ABOUT_MAX } from '@/lib/space-rules'
 import { RULES_MAX } from '@/lib/space-consent'
 import { spaceSettingsSetAction } from '@/app/(frontend)/[locale]/spaces/actions'
 

@@ -5,18 +5,26 @@ import type { Payload, Where } from 'payload'
 import { personOf } from '@/access'
 import { archivedNow } from '@/lib/space-lifecycle'
 import { parentOf, spaceLink, spaceTitle } from '@/lib/space-ref'
-import { mentionSafelist, spacePeople, type PersonLink } from '@/lib/space-members'
-import { spacesSettings, mode, spaceOpenOn, membership, mayComment, introGates } from '@/lib/spaces'
+import { mentionSafelist, spacePeople } from '@/lib/space-members'
+import { actorOf, notify, reactionNote } from '@/lib/notify'
+import { spacesSettings, mode, spaceOpenOn, membership, introGates } from '@/lib/spaces'
 import { FILE_LIMITS, SPACE_FILE_MIME } from '@/lib/space-file-limits'
-import { ABOUT_MAX } from '@/lib/space-about'
-import { RULES_MAX } from '@/lib/space-consent'
+import { NOTICE_VERSION, RULES_MAX } from '@/lib/space-consent'
 import { locationUrl, eventOver, eventName, isRsvpStatus, type RsvpStatus } from '@/lib/space-event'
 import {
-  EVENT_LOCATION_MAX,
-  EVENT_TITLE_MAX,
-  VOTE_OPTIONS,
+  ABOUT_MAX,
+  closingOf,
+  eventsAllow,
+  eventTimes,
+  eventTitleOf,
+  mayComment,
+  postingAllows,
+  shapeData,
   voteClosed,
-} from '@/lib/space-post-kinds'
+  voteLabels,
+  type PostFile,
+  type PostShape,
+} from '@/lib/space-rules'
 import { SPACE_FILE_LIMIT } from '@/collections/SpaceFiles'
 import { coverIssue, prepareCover } from '@/lib/event-cover-image'
 import { placeName } from '@/lib/link-preview'
@@ -59,8 +67,6 @@ export type WriteResult<T> =
   | { ok: true; data: T; notify?: (() => Promise<void>) | null }
   | { ok: false; error: WriteError; data?: { field?: string } }
 
-export type PostFile = { data: Buffer; mimetype: string; name: string; size: number }
-
 export type StepKey =
   | 'saw_privacy'
   | 'introduced'
@@ -82,14 +88,6 @@ const TOMBSTONE_BODY = ' '
 type Input<T> = { payload: Payload; user: NonNullable<User> } & T
 
 // --- Pure decision layer ---
-
-export const postingAllows = (postingLevel: string, role: string, kind: string): boolean => {
-  const isModerator = role === 'moderator'
-  if (kind === 'announcement') return isModerator
-  if (postingLevel === 'members_post' || postingLevel === 'open') return true
-  if (postingLevel === 'members_comment' || postingLevel === 'fellows_only') return isModerator
-  return false
-}
 
 export const validateMentions = (
   body: string,
@@ -153,7 +151,6 @@ const gate = async (
 }
 
 const consentOf = async (payload: Payload, user: NonNullable<User>): Promise<boolean> => {
-  const { NOTICE_VERSION } = await import('@/lib/space-consent')
   return (
     (
       await payload.count({
@@ -268,111 +265,6 @@ const removeFile = async (payload: Payload, id: number | null) => {
       .catch(() => undefined)
 }
 
-/** What an event or a vote adds to a post; the other kinds add nothing. */
-export type PostShape =
-  | { kind: 'discussion' | 'announcement' }
-  | {
-      kind: 'event'
-      /** `title` is the name on the card; without one the card shows the body's first line */
-      event: { title?: string | null; location: string; startsAt: string; endsAt?: string | null }
-      /** One photo shown behind the event's details */
-      cover?: PostFile | null
-    }
-  | {
-      kind: 'vote'
-      vote: {
-        options: string[]
-        multiple: boolean
-        anonymous?: boolean
-        /** When voting closes; null or left out keeps it open */
-        closesAt?: string | null
-      }
-    }
-
-/**
- * An event's place and times once checked: a place within the limit (an
- * address is stored as the full address), a real start that has not passed
- * (when `fresh`), and an end, if any, after the start.
- */
-const eventTimes = (
-  event: { location: string; startsAt: string; endsAt?: string | null },
-  now: Date,
-  fresh: boolean,
-): { location: string; startsAt: string; endsAt: string | null } | null => {
-  const text = event.location.trim()
-  const location = locationUrl(text) ?? text
-  const starts = new Date(event.startsAt)
-  if (!location || location.length > EVENT_LOCATION_MAX) return null
-  if (Number.isNaN(starts.getTime()) || (fresh && starts.getTime() < now.getTime())) return null
-  let endsAt: string | null = null
-  if (event.endsAt) {
-    const ends = new Date(event.endsAt)
-    if (Number.isNaN(ends.getTime()) || ends.getTime() <= starts.getTime()) return null
-    endsAt = ends.toISOString()
-  }
-  return { location, startsAt: starts.toISOString(), endsAt }
-}
-
-/** An event's name once checked: trimmed, null when empty, undefined when it is too long. */
-const titleOf = (title: string | null | undefined): string | null | undefined => {
-  const text = (title ?? '').replace(/\s+/g, ' ').trim()
-  if (!text) return null
-  return text.length > EVENT_TITLE_MAX ? undefined : text
-}
-
-/** A vote's option labels once checked: trimmed, two to ten, distinct, none too long; null when they break a rule. */
-const voteLabels = (labels: string[]): string[] | null => {
-  const options = labels.map((o) => o.trim()).filter(Boolean)
-  const distinct = new Set(options.map((o) => o.toLocaleLowerCase()))
-  if (distinct.size !== options.length) return null
-  if (options.length < VOTE_OPTIONS.min || options.length > VOTE_OPTIONS.max) return null
-  if (options.some((o) => o.length > VOTE_OPTIONS.length)) return null
-  return options
-}
-
-/** When a vote closes, once checked: null for never, undefined for a time that is not real or has passed. */
-const closingOf = (raw: string | null | undefined, now: Date): string | null | undefined => {
-  if (!raw) return null
-  const at = new Date(raw)
-  if (Number.isNaN(at.getTime()) || at.getTime() <= now.getTime()) return undefined
-  return at.toISOString()
-}
-
-/**
- * The extra columns an event or a vote stores, or null when they break a
- * rule: an event needs a place, a start that has not passed and, if given, a later end; a vote needs
- * two to ten distinct options and, if given, a closing time that has not passed.
- */
-export const shapeData = (shape: PostShape, now = new Date()): Record<string, unknown> | null => {
-  switch (shape.kind) {
-    case 'discussion':
-    case 'announcement':
-      return {}
-    case 'event': {
-      const times = eventTimes(shape.event, now, true)
-      const title = titleOf(shape.event.title)
-      if (!times || title === undefined) return null
-      return {
-        ...(title ? { event_title: title } : {}),
-        event_location: times.location,
-        event_starts_at: times.startsAt,
-        event_ends_at: times.endsAt,
-      }
-    }
-    case 'vote': {
-      const options = voteLabels(shape.vote.options)
-      const closesAt = closingOf(shape.vote.closesAt, now)
-      if (!options || closesAt === undefined) return null
-      return {
-        vote_options: options.map((label) => ({ label })),
-        vote_multiple: shape.vote.multiple,
-        vote_anonymous: shape.vote.anonymous === true,
-        vote_closes_at: closesAt,
-      }
-    }
-  }
-}
-
 /**
  * The body with every course session it names checked against this space's
  * course: an unknown or foreign session, or one past the cap, turns into
@@ -390,10 +282,6 @@ export const sessionSafeBody = async (
   const known = new Set((course?.sessions ?? []).flatMap((s) => (s.id ? [s.id] : [])))
   return cleanSessionRefs(body, known, options)
 }
-
-/** Whether this member may start an event in this space (on top of the posting level). */
-export const eventsAllow = (events: EventPosting | null | undefined, role: string): boolean =>
-  (events ?? 'members') === 'members' || role === 'moderator'
 
 export const postCreate = async (
   i: Input<
@@ -471,7 +359,6 @@ export const postCreate = async (
   }
 
   const notifyFn = async () => {
-    const { actorOf, notify } = await import('@/lib/notify')
     const actor = await actorOf(payload, personOf(user))
     const context = await spaceNameOf(payload, space)
     if (kind === 'announcement') {
@@ -772,7 +659,6 @@ export const commentCreate = async (
   })
 
   const notifyFn = async () => {
-    const { actorOf, notify } = await import('@/lib/notify')
     const actor = await actorOf(payload, personOf(user))
     const context = await spaceNameOf(payload, space)
     if (!parent && (postData as { author?: number | { id: number } | null }).author) {
@@ -1060,7 +946,6 @@ export const reactionToggle = async (
     })
     const notifyFn = async () => {
       if (!doc.author) return
-      const { actorOf, notify, reactionNote } = await import('@/lib/notify')
       const { docs: owners } = await payload.find({
         collection: 'users',
         where: { person: { equals: idOf(doc.author) } },
@@ -1405,7 +1290,7 @@ export const eventEdit = async (
   // The author's words: a moderator may move someone's event, not reword it.
   const words: Record<string, unknown> = {}
   if (i.title !== undefined) {
-    const title = titleOf(i.title)
+    const title = eventTitleOf(i.title)
     if (title === undefined) return err('event')
     if (title !== (post.event_title ?? null)) words.event_title = title
   }
@@ -1484,7 +1369,6 @@ export const eventEdit = async (
     })
     const accounts = answers.map((a) => relId(a.account)).filter((account) => account !== user.id)
     if (!accounts.length) return
-    const { actorOf, notify } = await import('@/lib/notify')
     await notify(payload, accounts, {
       kind: 'event_changed',
       description: `“${eventName(post, 'An event')}” in ${await spaceNameOf(payload, space)} has a new time or place`,
@@ -1497,7 +1381,6 @@ export const eventEdit = async (
 
 export const consentAccept = async (i: Input<object>): Promise<WriteResult<true>> => {
   const { payload, user } = i
-  const { NOTICE_VERSION } = await import('@/lib/space-consent')
   const existing = await payload.count({
     collection: 'space-consents',
     where: { and: [{ account: { equals: user.id } }, { version: { equals: NOTICE_VERSION } }] },
@@ -1727,35 +1610,4 @@ export const spaceSettingsSet = async (
     overrideAccess: true,
   })
   return { ok: true, data: true }
-}
-
-// --- spaceRoster ---
-
-export type RosterMember = {
-  personId: number
-  name: string
-  photo: { url: string; alt: string } | null
-  /** The public profile path, only for a person shown on the site. */
-  slug: string | null
-  bio: string | null
-  links: PersonLink[]
-}
-
-export const spaceRoster = async (
-  i: Input<{ space: number; locale?: 'en' | 'ar' }>,
-): Promise<WriteResult<{ members: RosterMember[] }>> => {
-  const { payload, user, space: spaceId, locale } = i
-  const g = await gate(payload, user, spaceId)
-  if (g.stop) return err((g as { error: WriteError }).error)
-  if ((await membership(payload, user, g.space)).role === 'none') return err('not-member')
-  const people = await spacePeople(payload, spaceId, locale)
-  const members = people.map((p) => ({
-    personId: p.id,
-    name: p.name,
-    photo: p.photo,
-    slug: p.visible ? p.slug : null,
-    bio: p.bio,
-    links: p.links,
-  }))
-  return { ok: true, data: { members } }
 }

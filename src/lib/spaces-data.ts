@@ -6,11 +6,12 @@ import type { ReactionCounts, ReactionKind } from '@/lib/space-reactions'
 import { archiveOf, archivedNow } from '@/lib/space-lifecycle'
 import { isGhostCourse, parentOf, parentRef, spaceHref, spaceTitle } from '@/lib/space-ref'
 import { NOTICE, NOTICE_VERSION, rulesParts, rulesText, type NoticePart } from '@/lib/space-consent'
-import { spacePeople } from '@/lib/space-members'
+import { spacePeople, type PersonLink } from '@/lib/space-members'
 import { mapEmbedUrl } from '@/lib/map-embed'
-import { voteClosed } from '@/lib/space-post-kinds'
+import { voteClosed } from '@/lib/space-rules'
 import { isRsvpStatus, type RsvpStatus } from '@/lib/space-event'
 import {
+  membership,
   mode,
   readableSpaceIds,
   spaceOpenOn,
@@ -1422,4 +1423,40 @@ export const spaceNotice = async (
   ])
   const fallback = site || rulesText(NOTICE[locale])
   return { parts: rulesParts(own || fallback), custom: own, fallback }
+}
+
+export type RosterMember = {
+  personId: number
+  name: string
+  photo: { url: string; alt: string } | null
+  /** The public profile path, only for a person shown on the site. */
+  slug: string | null
+  bio: string | null
+  links: PersonLink[]
+}
+
+/** Everyone in one space, or null when the space is closed or the reader is not in it. */
+export const spaceRoster = async (
+  payload: Payload,
+  user: User,
+  spaceId: number,
+  locale?: 'en' | 'ar',
+): Promise<RosterMember[] | null> => {
+  const space = await payload.findByID({
+    collection: 'spaces',
+    id: spaceId,
+    depth: 0,
+    overrideAccess: true,
+  })
+  if (!spaceOpenOn(space, await spacesSettings(payload))) return null
+  if ((await membership(payload, user, space)).role === 'none') return null
+  const people = await spacePeople(payload, spaceId, locale)
+  return people.map((p) => ({
+    personId: p.id,
+    name: p.name,
+    photo: p.photo,
+    slug: p.visible ? p.slug : null,
+    bio: p.bio,
+    links: p.links,
+  }))
 }

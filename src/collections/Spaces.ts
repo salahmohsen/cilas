@@ -3,7 +3,7 @@ import type { CollectionConfig } from 'payload'
 import { isAdminUser } from '@/access'
 import { readSpaces } from '@/lib/spaces'
 import { addIntroPost } from '@/lib/space-hooks'
-import { ABOUT_MAX } from '@/lib/space-about'
+import { ABOUT_MAX } from '@/lib/space-rules'
 import { RULES_MAX } from '@/lib/space-consent'
 import type { CommunityAudience, EventPosting, PostingLevel, SpaceKind } from '@/lib/spaces'
 

@@ -6,7 +6,7 @@ import { useTranslations } from 'next-intl'
 import { Dialog, DialogContent } from '@/components/arc/dialog/dialog'
 import { Input } from '@/components/arc/input/input'
 import { eventEditAction } from '@/app/(frontend)/[locale]/spaces/actions'
-import { EVENT_TITLE_MAX } from '@/lib/space-post-kinds'
+import { EVENT_TITLE_MAX } from '@/lib/space-rules'
 
 import { PostEditForm, type PostEditContext } from './post-edit-form'
 import styles from './space.module.css'

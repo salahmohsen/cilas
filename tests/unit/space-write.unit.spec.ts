@@ -1,13 +1,14 @@
 // @vitest-environment node
 import { describe, expect, it } from 'vitest'
 
-import { postingAllows, validateMentions } from '@/lib/spaces-write'
+import { postingAllows } from '@/lib/space-rules'
+import { validateMentions } from '@/lib/spaces-write'
 
 describe('pure decision layer of the write module', () => {
   it('postingAllows: announcements for moderators only; members_comment still lets moderators post', () => {
-    expect(postingAllows('members_post', 'member', 'discussion')).toBe(true)
-    expect(postingAllows('members_post', 'member', 'announcement')).toBe(false)
-    expect(postingAllows('members_post', 'moderator', 'announcement')).toBe(true)
+    expect(postingAllows('open', 'member', 'discussion')).toBe(true)
+    expect(postingAllows('open', 'member', 'announcement')).toBe(false)
+    expect(postingAllows('open', 'moderator', 'announcement')).toBe(true)
     expect(postingAllows('members_comment', 'member', 'discussion')).toBe(false)
     expect(postingAllows('members_comment', 'moderator', 'discussion')).toBe(true)
     expect(postingAllows('fellows_only', 'member', 'discussion')).toBe(false)

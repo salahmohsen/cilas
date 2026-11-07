@@ -16,7 +16,14 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/arc/tabs/
 import type { Course, Programme, Space, User } from '@/payload-types'
 import { linkTitles } from '@/lib/link-preview'
 import { pageAddresses, threadTexts } from '@/lib/link-title'
-import { introGates, mayComment, membership } from '@/lib/spaces'
+import { introGates, membership } from '@/lib/spaces'
+import {
+  COMPOSER_KINDS,
+  eventsAllow,
+  mayComment,
+  postingAllows,
+  type ComposerKind,
+} from '@/lib/space-rules'
 import { CourseSyllabus, directionOf, textOf } from '@/components/course/course-syllabus'
 import { RichTextField } from '@/components/RichTextField'
 import { RichTextScope } from '@/components/rich-text-scope'
@@ -37,10 +44,10 @@ import {
   sessionCounts,
   spaceNotice,
 } from '@/lib/spaces-data'
-import { eventsAllow, postingAllows, visitRecord } from '@/lib/spaces-write'
+import { visitRecord } from '@/lib/spaces-write'
 
 import { AboutClamp } from './about-clamp'
-import { Composer, type PostKind } from './composer'
+import { Composer } from './composer'
 import { sessionOptions } from './session-options'
 import { EventList } from './event-list'
 import { FeedFilter, FeedFilterMenu, SpaceFeedFilters } from './feed-filter'
@@ -55,7 +62,7 @@ import { sessionContextOf } from './session-block'
 import { CHECKLIST_COOKIE, OnboardingChecklist } from './onboarding-checklist'
 import { POSTER_COLORS } from '@/lib/poster-colors'
 import { SpaceHeadActions } from './space-head-actions'
-import { spacePeopleCards } from './space-people'
+import { spacePeopleCards } from '@/lib/space-people'
 import { SpaceRail } from './space-rail'
 import { StickyRail } from './sticky-rail'
 import styles from './space.module.css'
@@ -203,8 +210,8 @@ export async function SpacePage({
     fallbackSeed: viewerPerson != null ? personAvatarSeed(viewerPerson) : `account:${user.id}`,
   }
   // The same rules postCreate enforces, so the type switch never offers a closed door.
-  const kinds = (['discussion', 'event', 'vote', 'announcement'] as const).filter(
-    (k): k is PostKind =>
+  const kinds = COMPOSER_KINDS.filter(
+    (k): k is ComposerKind =>
       gatedBy == null &&
       postingAllows(space.posting ?? 'open', mem.role, k) &&
       (k !== 'event' || eventsAllow(space.events, mem.role)),

@@ -8,7 +8,7 @@ import { CourseSession } from '@/components/course/course-syllabus'
 import { StudyWithAI } from '@/components/study-with-ai'
 import { AIInstructions } from '@/components/ai-instructions'
 import { sessionsInOrder } from '@/lib/schedule'
-import { SESSION_CARD_KINDS } from '@/lib/space-post-kinds'
+import { SESSION_CARD_KINDS } from '@/lib/space-rules'
 import type { SessionView } from '@/lib/spaces-data'
 
 import styles from './space.module.css'

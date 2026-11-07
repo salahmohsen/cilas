@@ -1,7 +1,8 @@
 // @vitest-environment node
 import { describe, expect, it } from 'vitest'
 
-import { courseLastMeeting, readOnly } from '@/lib/space-lifecycle'
+import { courseLastMeeting } from '@/lib/space-lifecycle'
+import { readOnly } from '@/lib/space-rules'
 
 describe('space lifecycle (spec §11)', () => {
   it('the last non-cancelled meeting comes last', () => {

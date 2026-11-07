@@ -19,7 +19,6 @@ import {
   commentEdit,
   commentRemove,
   fileAdd,
-  spaceRoster,
   stepMark,
   visitRecord,
   reactionToggle,
@@ -32,7 +31,7 @@ import {
 } from '@/lib/spaces-write'
 import { spaceLink } from '@/lib/space-ref'
 import { personOf } from '@/access'
-import { ABOUT_MAX } from '@/lib/space-about'
+import { ABOUT_MAX } from '@/lib/space-rules'
 import { mentionSafelist } from '@/lib/space-members'
 import {
   mySpaces,
@@ -41,6 +40,7 @@ import {
   sessionCounts,
   spaceEvents,
   spaceFeed,
+  spaceRoster,
 } from '@/lib/spaces-data'
 
 let payload: Payload
@@ -1339,9 +1339,7 @@ describe('spaces write', () => {
   })
 
   it('roster, visits and checklist marks need membership; unknown steps are refused', async () => {
-    const roster = await spaceRoster({ payload, user: stranger, space: courseSpace.id })
-    expect(roster.ok).toBe(false)
-    if (!roster.ok) expect(roster.error).toBe('not-member')
+    expect(await spaceRoster(payload, stranger, courseSpace.id)).toBeNull()
     const visit = await visitRecord({ payload, user: stranger, space: courseSpace.id })
     expect(visit.ok).toBe(false)
     const mark = await stepMark({

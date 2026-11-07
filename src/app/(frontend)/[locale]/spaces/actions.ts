@@ -10,6 +10,7 @@ import { routing } from '@/i18n/routing'
 import { cairoInstant } from '@/lib/cairo-day'
 import { currentReader } from '@/lib/reader'
 import { isRsvpStatus } from '@/lib/space-event'
+import type { PostFile, PostShape } from '@/lib/space-rules'
 import {
   commentCreate,
   commentEdit,
@@ -30,8 +31,6 @@ import {
   visitRecord,
   voteEdit,
   voteSet,
-  type PostFile,
-  type PostShape,
   type StepKey,
   type WriteError,
 } from '@/lib/spaces-write'

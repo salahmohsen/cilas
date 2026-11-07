@@ -17,7 +17,7 @@ import type { SessionSuggestion } from '@/components/arc/rich-text-editor/rich-t
 import SegmentedControl from '@/components/arc/segmented-control/segmented-control'
 import { postCreateAction, type SpacesWriteState } from '@/app/(frontend)/[locale]/spaces/actions'
 import { FILE_LIMITS, SPACE_FILE_ACCEPT, UPLOAD_TOTAL_MAX } from '@/lib/space-file-limits'
-import { EVENT_TITLE_MAX } from '@/lib/space-post-kinds'
+import { EVENT_TITLE_MAX, type ComposerKind } from '@/lib/space-rules'
 
 import { AttachmentTray } from './attachment-tray'
 import { EventFields, NO_COVER, endsEarly, eventFormData, type EventValue } from './event-fields'
@@ -41,7 +41,6 @@ type Me = { name: string; photo: string | null; fallbackSeed?: string }
 export type SessionChoice = SessionSuggestion
 
 /** The kinds this member may start here, in the order the type switch shows them. */
-export type PostKind = 'discussion' | 'event' | 'vote' | 'announcement'
 
 /**
  * The only way to write a post (spec §5). Collapsed to one line so readers
@@ -60,7 +59,7 @@ export function Composer({
 }: {
   space: number
   /** Empty when the posting level keeps this member to reading and commenting */
-  kinds: PostKind[]
+  kinds: ComposerKind[]
   archived: boolean
   me: Me
   mentions: { id: number; name: string }[]
@@ -169,7 +168,7 @@ function ComposerForm({
   onPublished,
 }: {
   space: number
-  kinds: PostKind[]
+  kinds: ComposerKind[]
   mentions: { id: number; name: string }[]
   sessions: SessionChoice[]
   onCancel: () => void
@@ -180,7 +179,7 @@ function ComposerForm({
   const draftKey = `space-draft-${space}`
   const [initial] = useState(() => localStorage.getItem(draftKey) ?? '')
   const [body, setBody] = useState({ markdown: initial, empty: initial.trim() === '' })
-  const [kind, setKind] = useState<PostKind>(kinds[0] ?? 'discussion')
+  const [kind, setKind] = useState<ComposerKind>(kinds[0] ?? 'discussion')
   const [extra, setExtra] = useState<Extra>(EMPTY_EXTRA)
   const picker = useRef<HTMLInputElement>(null)
   const tf = useTranslations('SpacePhotos')
@@ -242,7 +241,7 @@ function ComposerForm({
           <SegmentedControl
             label={t('kindLabel')}
             value={kind}
-            onValueChange={(next) => setKind(next as PostKind)}
+            onValueChange={(next) => setKind(next as ComposerKind)}
             options={kinds.map((k) => ({ value: k, label: t(`kind_${k}`) }))}
           />
         )}

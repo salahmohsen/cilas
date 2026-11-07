@@ -13,7 +13,7 @@ import {
 } from '@/components/image-upload/image-upload-field'
 import { COVER_EDGE, COVER_TYPES } from '@/lib/event-cover'
 import { SPACE_FILE_LIMIT } from '@/lib/space-file-limits'
-import { EVENT_LOCATION_MAX } from '@/lib/space-post-kinds'
+import { EVENT_LOCATION_MAX } from '@/lib/space-rules'
 
 import styles from './space.module.css'
 
