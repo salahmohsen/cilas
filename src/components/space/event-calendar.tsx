@@ -5,6 +5,7 @@ import { CalendarPlus, Download, ExternalLink } from 'lucide-react'
 
 import { DropdownMenu } from '@/components/arc/dropdown-menu/dropdown-menu'
 import { track } from '@/lib/analytics/track'
+import { openNewTab } from '@/lib/open-new-tab'
 
 /**
  * "Add to calendar": a prefilled Google Calendar page, or an .ics file any
@@ -35,7 +36,7 @@ export function EventCalendar({
                 icon: <ExternalLink size={15} />,
                 onSelect: () => {
                   track('calendar_added', { source: 'event-google' })
-                  window.open(google, '_blank', 'noopener,noreferrer')
+                  openNewTab(google)
                 },
               },
             ]
