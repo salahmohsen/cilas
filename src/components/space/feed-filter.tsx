@@ -5,6 +5,7 @@ import { usePathname, useRouter, useSearchParams } from 'next/navigation'
 import { useTransition } from 'react'
 
 import {
+  FilterMenu,
   FilterToolbar,
   type FilterChip,
   type FilterField,
@@ -40,27 +41,13 @@ export function FeedFilter({
 export const FEED_FILTERS = ['session', 'kind', 'author'] as const
 export type FeedFilterId = (typeof FEED_FILTERS)[number]
 
-/**
- * Narrowing the feed by session, post type or author. The page reads the
- * filters from the URL and lists the matching posts; each change replaces
- * the URL and starts the list again at its first batch.
- */
-export function SpaceFeedFilters({
-  fields,
-  filters,
-}: {
-  /** Only fields with more than one value to choose. */
-  fields: FilterField[]
-  /** The filters set now, a chip each, its id the URL parameter. */
-  filters: FilterChip[]
-}) {
-  const t = useTranslations('Spaces.filters')
+/** Replaces the URL's filters and starts the list again at its first batch. */
+function useFeedNavigate() {
   const router = useRouter()
   const pathname = usePathname()
   const params = useSearchParams()
   const [, startTransition] = useTransition()
-
-  const navigate = (change: (next: URLSearchParams) => void) => {
+  return (change: (next: URLSearchParams) => void) => {
     const next = new URLSearchParams(params.toString())
     next.delete('shown')
     change(next)
@@ -69,25 +56,51 @@ export function SpaceFeedFilters({
       router.replace(search ? `${pathname}?${search}` : pathname, { scroll: false }),
     )
   }
+}
 
-  if (!fields.length && !filters.length) return null
+/**
+ * The Filter trigger beside the view switch: it opens a field, then a value,
+ * and sets that filter in the URL. The page lists the matching posts.
+ */
+export function FeedFilterMenu({
+  fields,
+  filters,
+}: {
+  /** Only fields with more than one value to choose. */
+  fields: FilterField[]
+  /** The filters set now, so the menu marks their values. */
+  filters: FilterChip[]
+}) {
+  const t = useTranslations('Spaces.filters')
+  const navigate = useFeedNavigate()
+  if (!fields.length) return null
+  return (
+    <FilterMenu
+      active={filters}
+      align="end"
+      backLabel={t('back')}
+      fields={fields}
+      label={t('add')}
+      onSelect={(chip, field) => {
+        const value = field.options
+          .map((o) => (typeof o === 'string' ? { value: o, label: o } : o))
+          .find((o) => (o.label ?? o.value) === chip.value)?.value
+        if (value) navigate((next) => next.set(field.id, value))
+      }}
+    />
+  )
+}
+
+/**
+ * The filters set now, a chip each, on a row of their own under the view
+ * switch. With none set the row is not there: the Filter trigger adds one.
+ */
+export function SpaceFeedFilters({ filters }: { filters: FilterChip[] }) {
+  const t = useTranslations('Spaces.filters')
+  const navigate = useFeedNavigate()
+  if (!filters.length) return null
   return (
     <FilterToolbar
-      addFilter={
-        fields.length
-          ? {
-              fields,
-              label: t('add'),
-              align: 'end',
-              onAdd: (chip, field) => {
-                const value = field.options
-                  .map((o) => (typeof o === 'string' ? { value: o, label: o } : o))
-                  .find((o) => (o.label ?? o.value) === chip.value)?.value
-                if (value) navigate((next) => next.set(field.id, value))
-              },
-            }
-          : undefined
-      }
       filters={filters}
       label={t('label')}
       text={{

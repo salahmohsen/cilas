@@ -42,7 +42,7 @@ import { AboutClamp } from './about-clamp'
 import { Composer, type PostKind } from './composer'
 import { sessionOptions } from './session-options'
 import { EventList } from './event-list'
-import { FeedFilter, SpaceFeedFilters } from './feed-filter'
+import { FeedFilter, FeedFilterMenu, SpaceFeedFilters } from './feed-filter'
 import { FeedRow, type FeedContext } from './feed-row'
 import { FreshPosts } from './fresh-posts'
 import { IntroLock } from './intro-lock'
@@ -331,6 +331,8 @@ export async function SpacePage({
   // and the intro post is always whole. Cards past the row's limit fall into
   // the feed by their activity. The announcements tab and a session's posts
   // list every post whole.
+  // The filters belong to the feed's own views, and not behind the intro gate.
+  const feedFilters = (view === 'all' || view === 'announcements') && gatedBy == null
   const asCards = view === 'all' && !filtered && gatedBy == null
   const carded = asCards
     ? pinnedOrder(
@@ -552,11 +554,10 @@ export async function SpacePage({
                 { value: 'events', label: t('events') },
               ]}
             />
+            {feedFilters && <FeedFilterMenu fields={filterFields} filters={filterChips} />}
           </div>
-          {/* The filters have a row of their own under the view switch, the feed's width. */}
-          {(view === 'all' || view === 'announcements') && gatedBy == null && (
-            <SpaceFeedFilters fields={filterFields} filters={filterChips} />
-          )}
+          {/* The filters set have a row of their own under the view switch, the feed's width. */}
+          {feedFilters && <SpaceFeedFilters filters={filterChips} />}
           {view === 'syllabus' && course ? (
             course.sessions?.length ? (
               <CourseSyllabus
