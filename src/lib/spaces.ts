@@ -1,3 +1,5 @@
+import { relId as unwrapId } from '@/lib/relation'
+import { relId } from '@/lib/relation'
 import type { Access, Payload, Where } from 'payload'
 
 import { cache } from 'react'
@@ -52,10 +54,9 @@ export type SpaceFacts = {
 }
 
 const relIds = (v: Array<number | { id: number }> | null | undefined) =>
-  (v ?? []).map((x) => (typeof x === 'object' ? x.id : x))
+  (v ?? []).map((x) => relId(x))
 
-const idOf = (v: number | { id: number } | null | undefined) =>
-  v == null ? null : typeof v === 'object' ? v.id : v
+const idOf = (v: number | { id: number } | null | undefined) => unwrapId(v) ?? null
 
 /**
  * The settings as they read right now. `cache` makes one settings read per

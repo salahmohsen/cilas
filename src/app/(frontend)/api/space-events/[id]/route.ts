@@ -1,3 +1,4 @@
+import { relId } from '@/lib/relation'
 import config from '@payload-config'
 import { getPayload } from 'payload'
 
@@ -30,7 +31,7 @@ export async function GET(request: Request, { params }: { params: Promise<{ id: 
     .catch(() => null)
   if (!post || post.kind !== 'event' || post.deleted_at || !post.event_starts_at)
     return new Response('Not found', { status: 404 })
-  const spaceId = typeof post.space === 'object' ? post.space.id : post.space
+  const spaceId = relId(post.space)
   const space = await payload.findByID({ collection: 'spaces', id: spaceId, depth: 0 })
   const locale = new URL(request.url).searchParams.get('locale') === 'ar' ? 'ar' : 'en'
   const link = absoluteUrl(`/${locale}${await spaceLink(payload, space, post.id)}`)

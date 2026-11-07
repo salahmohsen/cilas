@@ -1,3 +1,4 @@
+import { relId } from '@/lib/relation'
 import type { Payload, Where } from 'payload'
 
 import type { Locale, Reader } from '@/api/articles.api'
@@ -39,11 +40,7 @@ type StackFields = {
 }
 
 const idOf = (v: unknown): number | null =>
-  typeof v === 'number'
-    ? v
-    : v && typeof v === 'object' && 'id' in v
-      ? (v as { id: number }).id
-      : null
+  typeof v === 'string' ? null : ((relId(v) as number | null | undefined) ?? null)
 
 /** Every Card stack block in a Lexical body, at any depth. */
 const stacksIn = (node: unknown, found: StackFields[] = []): StackFields[] => {

@@ -1,3 +1,4 @@
+import { relId } from '@/lib/relation'
 import type { Payload } from 'payload'
 
 import type { Locale, Reader } from '@/api/articles.api'
@@ -25,11 +26,7 @@ type MentionFields = { id?: string; blockType?: string; type?: MentionType } & P
 >
 
 const idOf = (v: unknown): number | null =>
-  typeof v === 'number'
-    ? v
-    : v && typeof v === 'object' && 'id' in v
-      ? (v as { id: number }).id
-      : null
+  typeof v === 'string' ? null : ((relId(v) as number | null | undefined) ?? null)
 
 /** Every mention in a Lexical body, at any depth. */
 const mentionsIn = (node: unknown, found: MentionFields[] = []): MentionFields[] => {

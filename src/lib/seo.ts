@@ -1,3 +1,4 @@
+import { relId } from '@/lib/relation'
 import { plainText } from '@/lib/plaintext'
 import type { SerializedEditorState } from '@payloadcms/richtext-lexical/lexical'
 import type { Metadata } from 'next'
@@ -45,11 +46,7 @@ const clip = (text: string): string => {
   return `${cut.slice(0, cut.lastIndexOf(' ')).trim()}…`
 }
 
-const idOf = (value: unknown): number | string | undefined => {
-  if (typeof value === 'number' || typeof value === 'string') return value
-  if (value && typeof value === 'object' && 'id' in value) return (value as { id: number }).id
-  return undefined
-}
+const idOf = (value: unknown) => relId(value) ?? undefined
 
 /**
  * The SEO title, description and image a document gets from its own fields.

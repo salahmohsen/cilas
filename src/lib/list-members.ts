@@ -1,3 +1,4 @@
+import { relId } from '@/lib/relation'
 import type { Payload, Where } from 'payload'
 
 import type { Contact } from '@/lib/resend-contacts'
@@ -16,10 +17,9 @@ export type MembersRule = {
 export const ENROLLED = ['accepted', 'confirmed', 'completed'] as const
 
 const ids = (values: Array<number | { id: number }> | null | undefined) =>
-  (values ?? []).map((v) => (typeof v === 'object' ? v.id : v))
+  (values ?? []).map((v) => relId(v))
 
-const personId = (p: unknown) =>
-  typeof p === 'object' && p ? (p as { id: number }).id : (p as number | null)
+const personId = (p: unknown) => relId(p) as number | null
 
 /** The people a rule reaches through courses and programmes. */
 const peopleOf = async (payload: Payload, rule: MembersRule): Promise<number[]> => {

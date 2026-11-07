@@ -1,3 +1,4 @@
+import { relation as obj } from '@/lib/relation'
 import { plainText } from '@/lib/plaintext'
 import type { Payload, Where } from 'payload'
 
@@ -61,9 +62,6 @@ const plain = (data: unknown): string =>
   data && typeof data === 'object' && 'root' in data
     ? plainText({ data: data as Parameters<typeof plainText>[0]['data'] })
     : ''
-
-const obj = <T>(value: unknown): T | null =>
-  value && typeof value === 'object' ? (value as T) : null
 
 /** Every text a course has in one locale: what the search reads. */
 const courseTexts = (c: Course): string[] => [

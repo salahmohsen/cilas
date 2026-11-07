@@ -1,3 +1,4 @@
+import { relId } from '@/lib/relation'
 import { randomBytes } from 'node:crypto'
 
 import { APIError, type CollectionConfig } from 'payload'
@@ -81,7 +82,7 @@ export const SpaceFiles: CollectionConfig = {
         // they stay readable and can be cleaned up, but none is made now.
         if (data.comment) throw new APIError('A comment takes no files.', 400, undefined, true)
         if (!data.post) return data
-        const post = typeof data.post === 'object' ? (data.post as { id: number }).id : data.post
+        const post = relId(data.post)
         const { totalDocs } = await req.payload.count({
           collection: 'space-files',
           where: { post: { equals: post } },

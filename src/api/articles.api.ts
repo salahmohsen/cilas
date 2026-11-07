@@ -1,3 +1,4 @@
+import { relId } from '@/lib/relation'
 import type { Payload, Where } from 'payload'
 
 import type { Article, Media, Publication, User } from '@/payload-types'
@@ -136,7 +137,6 @@ export const getRelatedArticles = async (
   limit = 3,
   user: Reader = null,
 ): Promise<Article[]> => {
-  const idOf = (v: number | { id: number }) => (typeof v === 'object' ? v.id : v)
   const picked: Article[] = []
   const seen = new Set<number>([article.id])
 
@@ -162,20 +162,22 @@ export const getRelatedArticles = async (
     }
   }
 
-  const editorIds = (article.related_articles ?? []).map(idOf)
+  const editorIds = (article.related_articles ?? []).map((v) => relId(v))
   await take(editorIds.length ? { id: { in: editorIds } } : null, editorIds)
 
   const publication = (article.publications?.docs ?? []).find(
     (p) => typeof p === 'object' && p !== null,
   )
   const siblingIds =
-    publication && typeof publication === 'object' ? (publication.articles ?? []).map(idOf) : []
+    publication && typeof publication === 'object'
+      ? (publication.articles ?? []).map((v) => relId(v))
+      : []
   await take(siblingIds.length ? { id: { in: siblingIds } } : null, siblingIds)
 
   const tags = (article.tags ?? []).map((t) => t.tag).filter((t): t is string => Boolean(t))
   await take(tags.length ? { 'tags.tag': { in: tags } } : null)
 
-  const authorIds = (article.authors ?? []).map(idOf)
+  const authorIds = (article.authors ?? []).map((v) => relId(v))
   await take(authorIds.length ? { authors: { in: authorIds } } : null)
 
   return picked
@@ -198,12 +200,11 @@ export const getArticleCollection = async (
   locale: Locale,
   user: Reader = null,
 ): Promise<ArticleCollection | undefined> => {
-  const idOf = (v: number | { id: number }) => (typeof v === 'object' ? v.id : v)
   const publication = (article.publications?.docs ?? []).find(
     (p): p is Publication => typeof p === 'object' && p !== null,
   )
   if (!publication) return undefined
-  const order = (publication.articles ?? []).map(idOf)
+  const order = (publication.articles ?? []).map((v) => relId(v))
   if (order.length < 2) return undefined
   const { docs } = await payload.find({
     collection: 'articles',

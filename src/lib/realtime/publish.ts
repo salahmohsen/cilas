@@ -1,3 +1,4 @@
+import { relId } from '@/lib/relation'
 import { sql, type PostgresAdapter } from '@payloadcms/db-postgres'
 import type { CollectionAfterChangeHook, CollectionAfterDeleteHook, PayloadRequest } from 'payload'
 
@@ -13,12 +14,10 @@ import {
 // Postgres refuses a NOTIFY payload of 8000 bytes or more.
 const MAX_PAYLOAD = 7800
 
-const idOf = (value: unknown): number | undefined =>
-  typeof value === 'number'
-    ? value
-    : typeof value === 'object' && value && 'id' in value && typeof value.id === 'number'
-      ? value.id
-      : undefined
+const idOf = (value: unknown): number | undefined => {
+  const id = relId(value)
+  return typeof id === 'number' ? id : undefined
+}
 
 /**
  * The tab that made the request. A REST call carries the header on `req`; a

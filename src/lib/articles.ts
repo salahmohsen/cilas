@@ -1,9 +1,9 @@
+import { relation } from '@/lib/relation'
 import { plainText } from '@/lib/plaintext'
 
 import type { Article, Person, Publication } from '@/payload-types'
 
-const isObject = <T>(v: number | T | null | undefined): v is T =>
-  typeof v === 'object' && v !== null
+const isObject = <T>(v: number | T | null | undefined): v is T => relation<T>(v) !== null
 
 export const authorNames = (article: Pick<Article, 'authors'>): string[] =>
   (article.authors ?? []).filter(isObject<Person>).map((p) => p.name)

@@ -1,3 +1,4 @@
+import { relId } from '@/lib/relation'
 import type { Payload } from 'payload'
 
 import type { Role } from '@/access'
@@ -19,7 +20,7 @@ export const withFellowRole = (roles: Role[], fellow: boolean): Role[] => {
 /** `fellows` arrives as ids, or as populated people when depth > 0. */
 export const toPersonIds = (fellows: Array<number | { id: number }> | null | undefined): number[] =>
   (fellows ?? [])
-    .map((fellow) => (typeof fellow === 'object' ? fellow.id : fellow))
+    .map((fellow) => relId(fellow))
     .filter((id): id is number => typeof id === 'number')
 
 export const accountOf = async (payload: Payload, person: number): Promise<User | null> => {

@@ -1,3 +1,4 @@
+import { relId } from '@/lib/relation'
 import config from '@payload-config'
 import type { Metadata } from 'next'
 import { getFormatter, getTranslations } from 'next-intl/server'
@@ -40,7 +41,7 @@ export default async function ApplyPage({ params }: Props) {
 
   const form: Form = await payload.findByID({
     collection: 'forms',
-    id: typeof formRef === 'object' ? formRef.id : formRef,
+    id: relId(formRef),
     depth: 1,
     locale: lang,
     fallbackLocale: 'en',

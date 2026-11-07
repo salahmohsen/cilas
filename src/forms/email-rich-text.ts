@@ -1,3 +1,4 @@
+import { relId } from '@/lib/relation'
 import type { BeforeEmail } from '@payloadcms/plugin-form-builder/types'
 import { resolveRichTextReferences } from '@/api/rich-text-references.api'
 import { emailRichTextHTML } from '@/emails/rich-text'
@@ -5,7 +6,7 @@ import { env } from '@/env'
 
 export const formEmailRichText: BeforeEmail = async (emails, params) => {
   const { data, req } = params
-  const formId = data?.form && typeof data.form === 'object' ? data.form.id : data?.form
+  const formId = relId(data?.form)
   if (!formId) return emails
   const form = await req.payload.findByID({
     collection: 'forms',

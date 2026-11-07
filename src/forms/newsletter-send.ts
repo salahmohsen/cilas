@@ -1,3 +1,4 @@
+import { relId } from '@/lib/relation'
 import type { PayloadHandler, PayloadRequest } from 'payload'
 
 import { isAdminUser } from '@/access'
@@ -52,7 +53,7 @@ const send = guarded(async (req, id) => {
   if (issue.sent_at)
     return Response.json({ error: 'This issue was already sent.' }, { status: 409 })
   const chosen = issue.send_to
-  const listId = typeof chosen === 'object' && chosen ? chosen.id : chosen
+  const listId = relId(chosen)
   const list = listId
     ? await mailingList(req.payload, listId, req)
     : await newsletterList(req.payload, req)

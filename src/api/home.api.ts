@@ -1,3 +1,5 @@
+import { relId } from '@/lib/relation'
+import { relation as obj } from '@/lib/relation'
 import type { Payload, Where } from 'payload'
 
 import { siteTiers } from '@/access'
@@ -19,8 +21,6 @@ export const getHomeHeroDescription = async (payload: Payload, locale: Locale) =
   })
   return settings.hero?.description?.trim() ?? ''
 }
-
-const obj = <T>(v: unknown): T | null => (typeof v === 'object' && v !== null ? (v as T) : null)
 
 /** Something people can register for today: a programme or a course. */
 export type OpenItem = {
@@ -170,8 +170,7 @@ export const getHomeStats = async (payload: Payload): Promise<HomeStats> => {
       select: { fellows: true },
     }),
   ])
-  const distinct = (ids: unknown[]) =>
-    new Set(ids.map((v) => (typeof v === 'object' && v ? (v as { id: number }).id : v))).size
+  const distinct = (ids: unknown[]) => new Set(ids.map((v) => relId(v))).size
   return {
     // CILAS opened in 2013.
     years: new Date().getFullYear() - 2013,

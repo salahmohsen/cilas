@@ -1,3 +1,4 @@
+import { relation } from '@/lib/relation'
 import config from '@payload-config'
 import { VisualEditing } from '@payload-inline-visual-editor/react'
 import { ArrowLeft, ArrowUpRight, Languages } from 'lucide-react'
@@ -59,7 +60,7 @@ import { pathOf } from '@/lib/paths'
 import { pageAlternates } from '@/lib/seo'
 import type { Article, Media, Person } from '@/payload-types'
 
-const isObject = <T,>(v: unknown): v is T => typeof v === 'object' && v !== null
+const isObject = <T,>(v: unknown): v is T => relation<T>(v) !== null
 
 /** Which article, and who reads it (null: an anonymous visitor). */
 type View = { locale: string; slug: string; user: Reader }

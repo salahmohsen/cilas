@@ -1,3 +1,4 @@
+import { relId } from '@/lib/relation'
 import type { CollectionAfterChangeHook } from 'payload'
 
 import { applicantOf } from '@/forms/applications'
@@ -14,7 +15,7 @@ export const notifyNewApplication: CollectionAfterChangeHook = async ({ doc, ope
     relationTo: 'courses' | 'programmes'
     value: number | { id: number }
   }
-  const id = typeof value === 'object' ? value.id : value
+  const id = relId(value)
   const target = await req.payload
     .findByID({ collection: relationTo, id, depth: 0, overrideAccess: true })
     .catch(() => null)

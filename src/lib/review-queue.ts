@@ -1,3 +1,4 @@
+import { relId } from '@/lib/relation'
 import type { Payload } from 'payload'
 
 export type QueueKind = 'article' | 'course' | 'publication' | 'application'
@@ -61,7 +62,7 @@ export const getReviewQueue = async (payload: Payload): Promise<QueueItem[]> => 
         const waiting = new Map<number, Record<string, unknown>>()
         for (const v of versions) {
           const ref = v.parent as unknown as number | { id: number }
-          const parent = typeof ref === 'object' ? ref.id : ref
+          const parent = relId(ref)
           waiting.set(parent, { ...(v.version as unknown as Record<string, unknown>), id: parent })
         }
         for (const d of docs) waiting.set(d.id, d as unknown as Record<string, unknown>)

@@ -1,3 +1,5 @@
+import { relId as unwrapId } from '@/lib/relation'
+import { relId } from '@/lib/relation'
 import type { Payload, Where } from 'payload'
 
 import { personOf } from '@/access'
@@ -111,8 +113,7 @@ export const validateMentions = (
 
 // --- Helpers ---
 
-const idOf = (v: number | { id: number } | null | undefined): number | null =>
-  v == null ? null : typeof v === 'object' ? v.id : v
+const idOf = (v: number | { id: number } | null | undefined) => unwrapId(v) ?? null
 
 const err = <E extends WriteError>(error: E): WriteResult<never> => ({ ok: false, error })
 
@@ -632,7 +633,7 @@ export const postEdit = async (
     locked?: boolean
   } | null
   if (!post) return err('not-found')
-  const spaceId = typeof post.space === 'object' ? post.space.id : post.space
+  const spaceId = relId(post.space)
   const g = await gate(payload, user, spaceId, { write: true, post: id })
   if (g.stop) return err((g as { error: WriteError }).error)
   const space = g.space
@@ -640,9 +641,7 @@ export const postEdit = async (
   if (mem.role === 'none') return err('not-member')
   if (post.deleted_at) return err('not-found')
   if (post.locked) return err('locked')
-  const isAuthor =
-    post.author !== null &&
-    (typeof post.author === 'object' ? post.author.id : post.author) === personOf(user)
+  const isAuthor = post.author !== null && relId(post.author) === personOf(user)
   const fullSpace = (await payload.findByID({
     collection: 'spaces',
     id: spaceId,
@@ -687,13 +686,11 @@ export const postRemove = async (i: Input<{ id: number }>): Promise<WriteResult<
     event_cover?: number | { id: number } | null
   } | null
   if (!post) return err('not-found')
-  const spaceId = typeof post.space === 'object' ? post.space.id : post.space
+  const spaceId = relId(post.space)
   const g = await gate(payload, user, spaceId)
   if (g.stop) return err((g as { error: WriteError }).error)
   const mem = await membership(payload, user, g.space)
-  const isAuthor =
-    post.author !== null &&
-    (typeof post.author === 'object' ? post.author.id : post.author) === personOf(user)
+  const isAuthor = post.author !== null && relId(post.author) === personOf(user)
   if (!isAuthor && mem.role !== 'moderator') return err('not-yours')
   // The intro post opens the space to its members; without it the gate has nothing to open.
   if (idOf(g.space.introduction_post) === id) return err('intro-post')
@@ -757,7 +754,7 @@ export const postModify = async (
     overrideAccess: true,
   })) as { space: number | { id: number } } | null
   if (!post) return err('not-found')
-  const spaceId = typeof post.space === 'object' ? post.space.id : post.space
+  const spaceId = relId(post.space)
   const g = await gate(payload, user, spaceId)
   if (g.stop) return err((g as { error: WriteError }).error)
   const mem = await membership(payload, user, g.space)
@@ -790,7 +787,7 @@ export const commentCreate = async (
     author?: number | { id: number } | null
   } | null
   if (!postData) return err('not-found')
-  const spaceId = typeof postData.space === 'object' ? postData.space.id : postData.space
+  const spaceId = relId(postData.space)
   const g = await gate(payload, user, spaceId, { write: true, post: postId })
   if (g.stop) return err((g as { error: WriteError }).error)
   const space = g.space
@@ -870,8 +867,7 @@ export const commentCreate = async (
         overrideAccess: true,
       })) as { author?: number | { id: number } | null }
       if (parentComment?.author) {
-        const authorId =
-          typeof parentComment.author === 'object' ? parentComment.author.id : parentComment.author
+        const authorId = relId(parentComment.author)
         const { docs: users } = await payload.find({
           collection: 'users',
           where: { person: { equals: authorId } },
@@ -933,7 +929,7 @@ export const commentEdit = async (
     deleted_at?: string | null
   } | null
   if (!comment) return err('not-found')
-  const spaceId = typeof comment.space === 'object' ? comment.space.id : comment.space
+  const spaceId = relId(comment.space)
   const g = await gate(payload, user, spaceId, { write: true, post: idOf(comment.post) })
   if (g.stop) return err((g as { error: WriteError }).error)
   const mem = await membership(payload, user, g.space)
@@ -947,9 +943,7 @@ export const commentEdit = async (
   })) as { deleted_at?: string | null; locked?: boolean }
   if (parentPost.deleted_at) return err('not-found')
   if (parentPost.locked) return err('locked')
-  const isAuthor =
-    comment.author !== null &&
-    (typeof comment.author === 'object' ? comment.author.id : comment.author) === personOf(user)
+  const isAuthor = comment.author !== null && relId(comment.author) === personOf(user)
   if (!isAuthor) return err('not-yours')
 
   const body = await sessionSafeBody(payload, g.space, i.body, { blocks: false })
@@ -977,12 +971,10 @@ export const commentRemove = async (i: Input<{ id: number }>): Promise<WriteResu
     overrideAccess: true,
   })) as { space: number | { id: number }; author: number | { id: number } | null } | null
   if (!comment) return err('not-found')
-  const spaceId = typeof comment.space === 'object' ? comment.space.id : comment.space
+  const spaceId = relId(comment.space)
   const g = await gate(payload, user, spaceId)
   if (g.stop) return err((g as { error: WriteError }).error)
-  const isAuthor =
-    comment.author !== null &&
-    (typeof comment.author === 'object' ? comment.author.id : comment.author) === personOf(user)
+  const isAuthor = comment.author !== null && relId(comment.author) === personOf(user)
   const mem = await membership(payload, user, g.space)
   if (!isAuthor && mem.role !== 'moderator') return err('not-yours')
 
@@ -1041,7 +1033,7 @@ export const fileAdd = async (
     locked?: boolean
   } | null
   if (!doc) return err('not-found')
-  const spaceId = typeof doc.space === 'object' ? doc.space.id : doc.space
+  const spaceId = relId(doc.space)
   const g = await gate(payload, user, spaceId, { write: true, post: postId })
   if (g.stop) return err((g as { error: WriteError }).error)
   const mem = await membership(payload, user, g.space)
@@ -1089,7 +1081,7 @@ export const reactionToggle = async (
     author?: number | { id: number } | null
   } | null
   if (!doc) return err('not-found')
-  const spaceId = typeof doc.space === 'object' ? doc.space.id : doc.space
+  const spaceId = relId(doc.space)
   const g = await gate(payload, user, spaceId, {
     write: true,
     post: isPost ? targetId! : idOf(doc.post),
@@ -1212,7 +1204,7 @@ export const voteSet = async (
     vote_closes_at?: string | null
   } | null
   if (!post || post.kind !== 'vote' || post.deleted_at) return err('not-found')
-  const spaceId = typeof post.space === 'object' ? post.space.id : post.space
+  const spaceId = relId(post.space)
   const g = await gate(payload, user, spaceId, { write: true, post: postId })
   if (g.stop) return err((g as { error: WriteError }).error)
   if ((await membership(payload, user, g.space)).role === 'none') return err('not-member')
@@ -1285,7 +1277,7 @@ export const voteEdit = async (
     vote_closes_at?: string | null
   } | null
   if (!post || post.kind !== 'vote' || post.deleted_at) return err('not-found')
-  const spaceId = typeof post.space === 'object' ? post.space.id : post.space
+  const spaceId = relId(post.space)
   const g = await gate(payload, user, spaceId, { write: true, post: id })
   if (g.stop) return err((g as { error: WriteError }).error)
   const space = g.space
@@ -1380,7 +1372,7 @@ export const rsvpSet = async (
   } | null
   if (!post || post.kind !== 'event' || post.deleted_at || !post.event_starts_at)
     return err('not-found')
-  const spaceId = typeof post.space === 'object' ? post.space.id : post.space
+  const spaceId = relId(post.space)
   const g = await gate(payload, user, spaceId, { write: true, post: postId })
   if (g.stop) return err((g as { error: WriteError }).error)
   if ((await membership(payload, user, g.space)).role === 'none') return err('not-member')
@@ -1461,15 +1453,13 @@ export const eventEdit = async (
   } | null
   if (!post || post.kind !== 'event' || post.deleted_at || !post.event_starts_at)
     return err('not-found')
-  const spaceId = typeof post.space === 'object' ? post.space.id : post.space
+  const spaceId = relId(post.space)
   const g = await gate(payload, user, spaceId, { write: true, post: id })
   if (g.stop) return err((g as { error: WriteError }).error)
   const space = g.space
   const mem = await membership(payload, user, space)
   if (mem.role === 'none') return err('not-member')
-  const isAuthor =
-    post.author !== null &&
-    (typeof post.author === 'object' ? post.author.id : post.author) === personOf(user)
+  const isAuthor = post.author !== null && relId(post.author) === personOf(user)
   if (!isAuthor && mem.role !== 'moderator') return err('not-yours')
   if (post.locked) return err('locked')
 
@@ -1553,9 +1543,7 @@ export const eventEdit = async (
       depth: 0,
       select: { account: true },
     })
-    const accounts = answers
-      .map((a) => (typeof a.account === 'object' ? a.account.id : a.account))
-      .filter((account) => account !== user.id)
+    const accounts = answers.map((a) => relId(a.account)).filter((account) => account !== user.id)
     if (!accounts.length) return
     const { actorOf, notify } = await import('@/lib/notify')
     await notify(payload, accounts, {

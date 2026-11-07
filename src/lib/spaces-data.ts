@@ -1,3 +1,4 @@
+import { relId as unwrapId } from '@/lib/relation'
 import type { Payload, Where } from 'payload'
 
 import { personOf } from '@/access'
@@ -36,8 +37,7 @@ import type { Course, Programme, Space, SpacePost, User } from '@/payload-types'
  * aggregate whose caller has already checked the role (spec §13).
  */
 
-const relId = (v: number | { id: number } | null | undefined) =>
-  v == null ? null : typeof v === 'object' ? v.id : v
+const relId = (v: number | { id: number } | null | undefined) => unwrapId(v) ?? null
 
 /**
  * The people who moderate a space (spec §7): the course's fellows, or the
@@ -279,7 +279,7 @@ export const mySpaces = async (
 const archiveState = async (payload: Payload, space: number | Space) => {
   const row = (await payload.findByID({
     collection: 'spaces',
-    id: typeof space === 'object' ? space.id : space,
+    id: unwrapId(space),
     depth: 0,
     overrideAccess: true,
   })) as Space
@@ -1065,7 +1065,7 @@ export const participation = async (
   space: number | { id: number },
   now: Date = new Date(),
 ): Promise<Participation> => {
-  const spaceId = typeof space === 'object' ? space.id : space
+  const spaceId = unwrapId(space)
   const live: Where = { and: [{ space: { equals: spaceId } }, { deleted_at: { exists: false } }] }
   const [members, posts, comments, reactions, visits, accounts] = await Promise.all([
     spacePeople(payload, spaceId),
@@ -1342,7 +1342,7 @@ export const spaceEvents = async (
     overrideAccess: false,
     where: {
       and: [
-        { space: { equals: typeof space === 'object' ? space.id : space } },
+        { space: { equals: unwrapId(space) } },
         { kind: { equals: 'event' } },
         { deleted_at: { exists: false } },
       ],

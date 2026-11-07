@@ -1,3 +1,4 @@
+import { relId } from '@/lib/relation'
 import { plainText } from '@/lib/plaintext'
 import type { Payload } from 'payload'
 
@@ -103,7 +104,7 @@ export const getContributions = async (
   const credited: Credit[] = []
   for (const article of byCredit.docs) {
     for (const c of article.credits ?? []) {
-      const named = c.people.some((p) => (typeof p === 'object' ? p.id : p) === personId)
+      const named = c.people.some((p) => relId(p) === personId)
       if (named && !credited.some((x) => x.article.id === article.id && x.role === c.role)) {
         credited.push({ article, role: c.role, label: c.label })
       }

@@ -1,3 +1,4 @@
+import { relId } from '@/lib/relation'
 import {
   ValidationError,
   type FieldHook,
@@ -32,7 +33,7 @@ const validateDestination: FieldHook = async ({
     return value
   let parent
   const cycle = data?.cycle ?? originalDoc?.cycle
-  const cycleId = typeof cycle === 'object' && cycle ? cycle.id : cycle
+  const cycleId = relId(cycle)
   if (collection?.slug === 'courses' && cycleId) {
     parent = (
       await req.payload.findByID({

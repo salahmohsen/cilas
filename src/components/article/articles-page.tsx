@@ -1,3 +1,4 @@
+import { relId } from '@/lib/relation'
 import { pageAlternates } from '@/lib/seo'
 import config from '@payload-config'
 import type { Metadata } from 'next'
@@ -89,9 +90,7 @@ export async function ArticlesPage({
   for (const a of docs) {
     const p = publicationOf(a)
     if (p && !categoryOrder[p.title])
-      categoryOrder[p.title] = (p.articles ?? []).map((x) =>
-        String(typeof x === 'object' ? x.id : x),
-      )
+      categoryOrder[p.title] = (p.articles ?? []).map((x) => String(relId(x)))
   }
   const selection = articleListSelection(docs, { publication: selected, page })
   const initial = Object.entries(slugs).find(([, slug]) => slug === selection.publication)?.[0]

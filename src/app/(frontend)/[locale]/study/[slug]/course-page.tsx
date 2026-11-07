@@ -1,3 +1,4 @@
+import { relId } from '@/lib/relation'
 import config from '@payload-config'
 import type { Metadata } from 'next'
 import { draftMode } from 'next/headers'
@@ -118,7 +119,7 @@ export async function CoursePage({
   if (!course) notFound()
 
   // The other published courses of the same cycle, for the end of the page.
-  const cycleId = typeof course.cycle === 'object' ? course.cycle?.id : course.cycle
+  const cycleId = relId(course.cycle) ?? undefined
   const { docs: siblings } = cycleId
     ? await payload.find({
         collection: 'courses',

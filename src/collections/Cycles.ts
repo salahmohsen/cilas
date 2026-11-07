@@ -1,3 +1,4 @@
+import { relId } from '@/lib/relation'
 import type { CollectionBeforeValidateHook, CollectionConfig } from 'payload'
 
 import { anyone, isAdmin } from '@/access'
@@ -27,7 +28,7 @@ export const deriveCycleIdentity: CollectionBeforeValidateHook = async ({
   const start_year = merged.start_year as number | undefined
   if (!season || !start_year) return data
 
-  const placeId = typeof merged.place === 'object' ? merged.place?.id : merged.place
+  const placeId = relId(merged.place) ?? undefined
   const place = placeId
     ? await req.payload
         .findByID({

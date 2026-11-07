@@ -1,3 +1,4 @@
+import { relId } from '@/lib/relation'
 import type { Access, CollectionConfig, FieldAccess } from 'payload'
 
 import { isAdmin, isAdminUser, isFellowUser, personOf, readEnrollments } from '@/access'
@@ -23,7 +24,7 @@ const assessor: FieldAccess = ({ req, doc }) => {
   if (isAdminUser(req.user)) return true
   if (!isFellowUser(req.user)) return false
   const own = personOf(req.user)
-  const about = typeof doc?.person === 'object' ? doc?.person?.id : doc?.person
+  const about = relId(doc?.person) ?? undefined
   return own !== null && own !== about
 }
 

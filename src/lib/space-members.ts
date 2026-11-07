@@ -1,3 +1,4 @@
+import { relId } from '@/lib/relation'
 import type { Payload } from 'payload'
 
 import { isAdminUser, personOf } from '@/access'
@@ -66,7 +67,7 @@ export const mentionSafelist = async (payload: Payload, spaceId: number): Promis
   }
 
   if (space.kind === 'course') {
-    const courseId = typeof space.course === 'object' ? space.course?.id : space.course
+    const courseId = relId(space.course) ?? undefined
     if (courseId) {
       const course = (await payload.findByID({
         collection: 'courses',
@@ -77,7 +78,7 @@ export const mentionSafelist = async (payload: Payload, spaceId: number): Promis
       })) as {
         fellows?: Array<number | { id: number }>
       }
-      for (const f of course.fellows ?? []) ids.add(typeof f === 'object' ? f.id : f)
+      for (const f of course.fellows ?? []) ids.add(relId(f))
       const { docs: enrollments } = await payload.find({
         collection: 'enrollments',
         where: { and: [{ course: { equals: courseId } }, { status: { in: [...ENROLLED] } }] },
@@ -95,7 +96,7 @@ export const mentionSafelist = async (payload: Payload, spaceId: number): Promis
   }
 
   if (space.kind === 'cohort') {
-    const programmeId = typeof space.programme === 'object' ? space.programme?.id : space.programme
+    const programmeId = relId(space.programme) ?? undefined
     if (programmeId) {
       const { docs: memberships } = await payload.find({
         collection: 'memberships',

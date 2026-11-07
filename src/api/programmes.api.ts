@@ -1,3 +1,4 @@
+import { relation as obj } from '@/lib/relation'
 import { plainText } from '@/lib/plaintext'
 import type { Payload } from 'payload'
 import { mediaImage, type MediaImage } from '@/lib/media-image'
@@ -6,8 +7,6 @@ import { previewWhere } from '@/lib/preview-access'
 import type { Course, Cycle, Media, Person, Programme, User } from '@/payload-types'
 
 type Locale = 'en' | 'ar'
-
-const obj = <T>(v: unknown): T | null => (typeof v === 'object' && v !== null ? (v as T) : null)
 
 const plain = (data: unknown): string =>
   data && typeof data === 'object' && 'root' in data
