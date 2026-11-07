@@ -37,6 +37,7 @@ import { ScrollArea } from '@/components/arc/scroll-area/scroll-area'
 import { ResolvedRichTextField as RichTextField } from '@/components/resolved-rich-text-field'
 import { ShareBar } from '@/components/share-bar'
 import { StudyWithAI } from '@/components/study-with-ai'
+import { AIInstructions } from '@/components/ai-instructions'
 import { ArticleCardStack } from '@/components/article/article-card-stack'
 import { ArticleCardGrid } from '@/components/article/article-card-grid'
 import { CollectionDialog } from '@/components/article/collection-dialog'
@@ -234,7 +235,6 @@ export async function ArticlePage({ locale: siteLocale, slug, user: reader }: Vi
   const printEdition = pub?.print_edition_url
     ? { href: pub.print_edition_url, label: t('printEdition'), kind: 'print' as const }
     : undefined
-  const aiSteps = tShare.raw('aiSteps') as string[]
 
   // The side card: its collection, who made it, its sections, and the text
   // size; on wide screens also sharing and Discuss it with AI, which narrow
@@ -310,14 +310,9 @@ export async function ArticlePage({ locale: siteLocale, slug, user: reader }: Vi
                 />
               </div>
             </SideCardSection>
-            <SideCardSection label={tShare('aiHeading')}>
+            <SideCardSection label={tShare('aiHeading')} labelAction={<AIInstructions />}>
               <div className="side-card-body side-card-center">
                 <StudyWithAI kind="article" path={articlePath} />
-                <ol className="grid list-inside list-decimal gap-1 text-xs leading-relaxed side-card-muted">
-                  {aiSteps.map((step) => (
-                    <li key={step}>{step}</li>
-                  ))}
-                </ol>
               </div>
             </SideCardSection>
           </>
@@ -575,15 +570,14 @@ export async function ArticlePage({ locale: siteLocale, slug, user: reader }: Vi
               aria-labelledby="article-ai"
               className="mt-6 grid gap-3 border-t border-border pt-6 xl:hidden"
             >
-              <h2 className="font-sans text-sm text-[var(--text-muted)]" id="article-ai">
+              <h2
+                className="flex items-center justify-between gap-2 font-sans text-sm text-[var(--text-muted)]"
+                id="article-ai"
+              >
                 {tShare('aiHeading')}
+                <AIInstructions />
               </h2>
               <StudyWithAI kind="article" path={articlePath} />
-              <ol className="grid gap-1 list-decimal list-inside text-xs leading-relaxed text-[var(--text-muted)]">
-                {aiSteps.map((step) => (
-                  <li key={step}>{step}</li>
-                ))}
-              </ol>
             </section>
 
             {/* The original this text translates, with a way to read it. */}

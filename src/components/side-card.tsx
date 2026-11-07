@@ -37,23 +37,31 @@ export function SideCard({
  */
 export function SideCardSection({
   label,
+  labelAction,
   fold = false,
   children,
 }: {
   label: string
+  labelAction?: ReactNode
   fold?: boolean
   children: ReactNode
 }) {
   if (fold)
     return (
       <details className="side-card-section">
-        <summary className="side-card-label">{label}</summary>
+        <summary className="side-card-label">
+          {label}
+          {labelAction}
+        </summary>
         {children}
       </details>
     )
   return (
     <section aria-label={label} className="side-card-section">
-      <h2 className="side-card-label">{label}</h2>
+      <h2 className="side-card-label">
+        {label}
+        {labelAction}
+      </h2>
       {children}
     </section>
   )

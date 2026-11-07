@@ -545,6 +545,7 @@
     "aiHeading": "Discuss it with AI",
     "ai": "Study with an AI partner",
     "aiArticle": "Read this article with AI",
+    "aiInstructions": "How to discuss this page with AI",
     "aiSteps": [
       "Choose your preferred AI assistant.",
       "A new tab will open with a prompt prepared for this page.",

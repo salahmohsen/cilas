@@ -32,6 +32,7 @@ import { RichTextField } from '@/components/RichTextField'
 import { SEASON_ICONS } from '@/components/season-icon'
 import { ShareBar } from '@/components/share-bar'
 import { StudyWithAI } from '@/components/study-with-ai'
+import { AIInstructions } from '@/components/ai-instructions'
 import { Link } from '@/i18n/navigation'
 import { weekdayOf as cairoWeekday } from '@/lib/cairo-day'
 import { localDigits, numberingSystemOf, timeDir } from '@/lib/digits'
@@ -431,14 +432,9 @@ export const CourseView: React.FC<{
           />
         </div>
       </SideCardSection>
-      <SideCardSection label={ts('aiHeading')}>
+      <SideCardSection label={ts('aiHeading')} labelAction={<AIInstructions />}>
         <div className="side-card-body side-card-center">
           <StudyWithAI kind="course" path={`/${locale}/study/${course.slug}`} />
-          <ol className="grid list-inside list-decimal gap-1 text-xs leading-relaxed side-card-muted">
-            {(ts.raw('aiSteps') as string[]).map((step) => (
-              <li key={step}>{step}</li>
-            ))}
-          </ol>
         </div>
       </SideCardSection>
     </SideCard>

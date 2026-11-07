@@ -5,6 +5,7 @@ import { Alert } from '@/components/arc/alert/alert'
 import { Badge } from '@/components/arc/badge/badge'
 import { CourseSession } from '@/components/course/course-syllabus'
 import { StudyWithAI } from '@/components/study-with-ai'
+import { AIInstructions } from '@/components/ai-instructions'
 import { sessionsInOrder } from '@/lib/schedule'
 import { SESSION_CARD_KINDS } from '@/lib/space-post-kinds'
 import type { SessionView } from '@/lib/spaces-data'
@@ -62,7 +63,10 @@ export function PostSession({
 
   const ai = (
     <div className={styles.sessionAi}>
-      <span>{ts('aiSession')}</span>
+      <span className="inline-flex items-center gap-1">
+        {ts('aiSession')}
+        <AIInstructions />
+      </span>
       <StudyWithAI
         kind="course"
         path={`/${locale}/study/${course.slug}`}

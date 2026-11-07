@@ -21,6 +21,7 @@ import { RichTextScope } from '@/components/rich-text-scope'
 import { profileMessages } from '@/components/profile/load-messages'
 import { readProfile } from '@/lib/profile'
 import { StudyWithAI } from '@/components/study-with-ai'
+import { AIInstructions } from '@/components/ai-instructions'
 import { cairoDay } from '@/lib/cairo-day'
 import { nextSession } from '@/lib/schedule'
 import {
@@ -401,7 +402,10 @@ export async function SpacePage({
                 <div
                   className={`poster-meta ${styles.headAi} ${moderator ? '' : styles.headAiPaper}`}
                 >
-                  <span>{ts('ai')}</span>
+                  <span className="inline-flex items-center gap-1">
+                    {ts('ai')}
+                    <AIInstructions />
+                  </span>
                   <StudyWithAI kind="course" path={`/${locale}/study/${course.slug}`} size="sm" />
                 </div>
               )}
