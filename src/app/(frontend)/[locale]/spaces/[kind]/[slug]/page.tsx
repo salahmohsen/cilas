@@ -10,7 +10,13 @@ import { spaceLanding } from '@/lib/spaces-data'
 
 type Props = {
   params: Promise<{ kind: string; slug: string; locale: string }>
-  searchParams: Promise<{ tab?: string; shown?: string; session?: string }>
+  searchParams: Promise<{
+    tab?: string
+    shown?: string
+    session?: string
+    kind?: string
+    author?: string
+  }>
 }
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -20,10 +26,8 @@ export async function generateMetadata(): Promise<Metadata> {
 
 /** Course and cohort spaces, by the slug of their course or programme. */
 export default async function KindSlugPage({ params, searchParams }: Props) {
-  const [{ kind, slug, locale }, { tab, shown, session }] = await Promise.all([
-    params,
-    searchParams,
-  ])
+  const [{ kind, slug, locale }, { tab, shown, session, kind: postKind, author }] =
+    await Promise.all([params, searchParams])
   if (kind !== 'course' && kind !== 'cohort') notFound()
   const path = `/${locale}/spaces/${kind}/${slug}`
   const user = await currentReader()
@@ -39,6 +43,8 @@ export default async function KindSlugPage({ params, searchParams }: Props) {
       shown={Math.min(Math.max(Number(shown) || 0, 0), 500)}
       path={path}
       session={session?.slice(0, 64) || null}
+      kind={postKind?.slice(0, 32) || null}
+      author={author?.slice(0, 32) || null}
     />
   )
 }

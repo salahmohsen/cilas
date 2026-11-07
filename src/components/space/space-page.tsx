@@ -8,7 +8,8 @@ import Image from 'next/image'
 import type { CSSProperties } from 'react'
 
 import { personOf } from '@/access'
-import { Alert } from '@/components/arc/alert/alert'
+import type { FilterChip, FilterField } from '@/components/arc/filter-toolbar/filter-toolbar'
+import { localDigits } from '@/lib/digits'
 import { EmptyState } from '@/components/arc/empty-state/empty-state'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/arc/tabs/tabs'
 import type { Course, Programme, Space, User } from '@/payload-types'
@@ -41,7 +42,7 @@ import { AboutClamp } from './about-clamp'
 import { Composer, type PostKind } from './composer'
 import { sessionOptions } from './session-options'
 import { EventList } from './event-list'
-import { FeedFilter } from './feed-filter'
+import { FeedFilter, SpaceFeedFilters } from './feed-filter'
 import { FeedRow, type FeedContext } from './feed-row'
 import { FreshPosts } from './fresh-posts'
 import { IntroLock } from './intro-lock'
@@ -74,6 +75,10 @@ type SpacePageProps = {
   path: string
   /** A course session's id: only the posts that point at it. */
   session?: string | null
+  /** A post type: only posts of that type. */
+  kind?: string | null
+  /** An author's person id, or `cilas` for the posts with no author: only their posts. */
+  author?: string | null
 }
 
 /**
@@ -89,6 +94,8 @@ export async function SpacePage({
   shown,
   path,
   session = null,
+  kind = null,
+  author = null,
 }: SpacePageProps) {
   const { space } = landing
   const payload = await getPayload({ config })
@@ -103,6 +110,7 @@ export async function SpacePage({
     t,
     tp,
     ts,
+    tf,
     feed,
     state,
     { cards, byId, moderators },
@@ -116,6 +124,7 @@ export async function SpacePage({
     getTranslations('Spaces'),
     getTranslations('SpacePost'),
     getTranslations('Share'),
+    getTranslations('Spaces.filters'),
     spaceFeed(payload, user, space, lang),
     memberState(payload, user, space.id),
     spacePeopleCards(payload, user, space, locale),
@@ -230,17 +239,99 @@ export async function SpacePage({
   // How many posts are about each session (linked, or named in the post or
   // its thread), from the rows the feed already read.
   const { named, counts: linked } = sessionCounts(feed.rows)
+  // The feed's filters, each one URL parameter: a session (a course's), a
+  // post type (not on the announcements tab, which is one) and an author.
+  const base = view === 'announcements' && gatedBy == null ? announcements : feed.rows
+  const kindOf = (r: (typeof base)[number]) =>
+    r.post.kind === 'question' ? 'discussion' : r.post.kind
+  const authorOf = (r: (typeof base)[number]) => (r.authorId != null ? String(r.authorId) : 'cilas')
   const bySession = course && session ? session : null
-  const listed = (view === 'announcements' && gatedBy == null ? announcements : feed.rows).filter(
-    (r) => !bySession || named.get(r.post.id)?.has(bySession),
+  const byKind = view !== 'announcements' && kind ? kind : null
+  const byAuthor = author || null
+  const filtered = Boolean(bySession || byKind || byAuthor)
+  const listed = base.filter(
+    (r) =>
+      (!bySession || named.get(r.post.id)?.has(bySession)) &&
+      (!byKind || kindOf(r) === byKind) &&
+      (!byAuthor || authorOf(r) === byAuthor),
   )
+  // A field offers only the values the feed holds, each with its number of posts.
+  const tally = <T,>(keys: T[]) => {
+    const counts = new Map<T, number>()
+    for (const k of keys) counts.set(k, (counts.get(k) ?? 0) + 1)
+    return counts
+  }
+  const kindCounts = tally(base.map(kindOf))
+  const authorCounts = tally(base.map(authorOf))
+  const sessionCounted = new Map(
+    sessionChoices.flatMap((c) => {
+      const count = base.filter((r) => named.get(r.post.id)?.has(c.id)).length
+      return count ? [[c.id, count] as const] : []
+    }),
+  )
+  const kindLabel = (k: string) => tp(`kind_${k}` as 'kind_discussion')
+  const authorLabel = (id: string) =>
+    id === 'cilas'
+      ? tf('cilas')
+      : (base.find((r) => authorOf(r) === id)?.authorName ?? tf('author'))
+  const hint = (count: number) => localDigits(count, locale)
+  const filterFields: FilterField[] = [
+    ...(course && sessionCounted.size > 0
+      ? [
+          {
+            id: 'session',
+            label: tf('session'),
+            options: sessionChoices
+              .filter((c) => sessionCounted.has(c.id))
+              .map((c) => ({ value: c.id, label: c.label, hint: hint(sessionCounted.get(c.id)!) })),
+          },
+        ]
+      : []),
+    ...(view !== 'announcements' && kindCounts.size > 1
+      ? [
+          {
+            id: 'kind',
+            label: tf('kind'),
+            options: [...kindCounts].map(([k, n]) => ({
+              value: k,
+              label: kindLabel(k),
+              hint: hint(n),
+            })),
+          },
+        ]
+      : []),
+    ...(authorCounts.size > 1
+      ? [
+          {
+            id: 'author',
+            label: tf('author'),
+            options: [...authorCounts]
+              .map(([id, n]) => ({ value: id, label: authorLabel(id), hint: hint(n) }))
+              .sort((a, b) => a.label.localeCompare(b.label, locale)),
+          },
+        ]
+      : []),
+  ]
+  const filterChips: FilterChip[] = [
+    ...(bySession
+      ? [
+          {
+            id: 'session',
+            label: tf('session'),
+            value: sessionChoices.find((c) => c.id === bySession)?.label ?? tf('session'),
+          },
+        ]
+      : []),
+    ...(byKind ? [{ id: 'kind', label: tf('kind'), value: kindLabel(byKind) }] : []),
+    ...(byAuthor ? [{ id: 'author', label: tf('author'), value: authorLabel(byAuthor) }] : []),
+  ]
   const lastVisit = state.lastVisitedAt
   // In the whole feed, pinned posts show as a row of cards, newest to this
   // member first; a moderator keeps one whole at the top with `pinned_full`,
   // and the intro post is always whole. Cards past the row's limit fall into
   // the feed by their activity. The announcements tab and a session's posts
   // list every post whole.
-  const asCards = view === 'all' && !bySession && gatedBy == null
+  const asCards = view === 'all' && !filtered && gatedBy == null
   const carded = asCards
     ? pinnedOrder(
         listed.filter(
@@ -462,6 +553,10 @@ export async function SpacePage({
               ]}
             />
           </div>
+          {/* The filters have a row of their own under the view switch, the feed's width. */}
+          {(view === 'all' || view === 'announcements') && gatedBy == null && (
+            <SpaceFeedFilters fields={filterFields} filters={filterChips} />
+          )}
           {view === 'syllabus' && course ? (
             course.sessions?.length ? (
               <CourseSyllabus
@@ -502,25 +597,17 @@ export async function SpacePage({
           ) : (
             <>
               <FreshPosts space={space.id} since={renderedAt} />
-              {bySession && (
-                <Alert
-                  tone="info"
-                  title={t('sessionFilterTitle', {
-                    name: sessionChoices.find((c) => c.id === bySession)?.label ?? '',
-                  })}
-                >
-                  <a className={styles.sessionPosts} href={path}>
-                    {t('sessionFilterClear')}
-                  </a>
-                </Alert>
-              )}
               {listed.length === 0 ? (
-                <EmptyState
-                  title={view === 'announcements' ? t('noAnnouncements') : tp('empty')}
-                  description={
-                    view === 'announcements' ? t('noAnnouncementsHint') : tp('emptyHint')
-                  }
-                />
+                filtered ? (
+                  <EmptyState title={tf('empty')} description={tf('emptyHint')} />
+                ) : (
+                  <EmptyState
+                    title={view === 'announcements' ? t('noAnnouncements') : tp('empty')}
+                    description={
+                      view === 'announcements' ? t('noAnnouncementsHint') : tp('emptyHint')
+                    }
+                  />
+                )
               ) : (
                 <>
                   {pinCards.length > 0 && (
@@ -559,6 +646,8 @@ export async function SpacePage({
                   href={`${path}?${new URLSearchParams({
                     ...(view === 'announcements' ? { tab: view } : {}),
                     ...(bySession ? { session: bySession } : {}),
+                    ...(byKind ? { kind: byKind } : {}),
+                    ...(byAuthor ? { author: byAuthor } : {}),
                     shown: String(visible.length + BATCH),
                   })}`}
                   label={t('loadMore')}

@@ -995,8 +995,6 @@
     "events": "Events",
     "sessionPostCount": "{count, plural, one {# post} other {# posts}}",
     "sessionPostsSee": "{count, plural, one {See the post about this session} other {See the # posts about this session}}",
-    "sessionFilterTitle": "Posts about {name}",
-    "sessionFilterClear": "Show all posts",
     "nextSession": "Next session",
     "place": "Place",
     "openInMaps": "Open in maps",
@@ -1018,7 +1016,25 @@
     "pinnedNew": "New",
     "pinnedPrevious": "Previous pinned posts",
     "pinnedNext": "More pinned posts",
-    "pinnedSeeAll": "See all announcements"
+    "pinnedSeeAll": "See all announcements",
+    "filters": {
+      "label": "Post filters",
+      "add": "Filter",
+      "none": "No filters",
+      "clearAll": "Clear all",
+      "back": "Back to filters",
+      "remove": "Remove {chip}",
+      "added": "Added {chip}",
+      "removed": "Removed {chip}",
+      "changed": "{field} changed to {value}",
+      "cleared": "All filters cleared",
+      "session": "Session",
+      "kind": "Post type",
+      "author": "Posted by",
+      "cilas": "CILAS",
+      "empty": "No posts match these filters",
+      "emptyHint": "Remove a filter to see more posts."
+    }
   },
   "SpacePost": {
     "newPost": "New post",

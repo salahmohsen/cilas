@@ -995,8 +995,6 @@
     "events": "الفعاليات",
     "sessionPostCount": "{count, plural, zero {لا منشورات} one {منشور واحد} two {منشوران} few {{count, number, digits} منشورات} many {{count, number, digits} منشورًا} other {{count, number, digits} منشور}}",
     "sessionPostsSee": "{count, plural, zero {لا منشورات عن هذه الجلسة} one {عرض المنشور عن هذه الجلسة} two {عرض المنشورين عن هذه الجلسة} few {عرض {count, number, digits} منشورات عن هذه الجلسة} many {عرض {count, number, digits} منشورًا عن هذه الجلسة} other {عرض {count, number, digits} منشور عن هذه الجلسة}}",
-    "sessionFilterTitle": "منشورات عن {name}",
-    "sessionFilterClear": "عرض كل المنشورات",
     "nextSession": "الجلسة القادمة",
     "place": "المكان",
     "openInMaps": "افتح في الخرائط",
@@ -1018,7 +1016,25 @@
     "pinnedNew": "جديد",
     "pinnedPrevious": "المنشورات المثبّتة السابقة",
     "pinnedNext": "منشورات مثبّتة أخرى",
-    "pinnedSeeAll": "اعرض كل الإعلانات"
+    "pinnedSeeAll": "اعرض كل الإعلانات",
+    "filters": {
+      "label": "تصفية المنشورات",
+      "add": "تصفية",
+      "none": "بلا تصفية",
+      "clearAll": "امسح الكل",
+      "back": "رجوع إلى التصفيات",
+      "remove": "أزل {chip}",
+      "added": "أُضيف {chip}",
+      "removed": "أُزيل {chip}",
+      "changed": "تغيّر {field} إلى {value}",
+      "cleared": "أُزيلت كل التصفيات",
+      "session": "الجلسة",
+      "kind": "نوع المنشور",
+      "author": "الناشر",
+      "cilas": "سيلاس",
+      "empty": "لا منشورات تطابق هذه التصفيات",
+      "emptyHint": "أزل تصفية لترى منشورات أكثر."
+    }
   },
   "SpacePost": {
     "newPost": "منشور جديد",
