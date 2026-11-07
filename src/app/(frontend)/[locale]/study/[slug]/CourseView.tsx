@@ -1,3 +1,4 @@
+import { isRelation as isObject } from '@/lib/relation'
 import { detailPath } from '@/lib/paths'
 import { listSeparator } from '@/lib/locale-format'
 import { personAvatarSeed } from '@/lib/avatar'
@@ -22,7 +23,6 @@ import {
   MATERIAL_ORDER,
   MaterialList,
   directionOf,
-  isObject,
   textOf,
 } from '@/components/course/course-syllabus'
 import { AvatarFallback } from '@/components/person/avatar-fallback'

@@ -1,11 +1,10 @@
-import { bridgeYearPath } from '@/lib/paths'
+import { bridgeYearPath, pathOf } from '@/lib/paths'
 import config from '@payload-config'
 import type { MetadataRoute } from 'next'
 import { getPayload } from 'payload'
 
 import { listBridgeYears } from '@/api/programmes.api'
 import { env } from '@/env'
-import { pathOf } from '@/lib/paths'
 import { sitemapEntries, type SitePage } from '@/lib/sitemap'
 
 // New courses and articles appear within the hour.

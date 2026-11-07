@@ -1,6 +1,5 @@
+import { type Locale, otherLocale } from '@/i18n/routing'
 import { detailPath } from '@/lib/paths'
-import { type Locale } from '@/i18n/routing'
-import { otherLocale } from '@/i18n/routing'
 import config from '@payload-config'
 import { unstable_cache } from 'next/cache'
 import { getPayload, type Payload, type Where } from 'payload'

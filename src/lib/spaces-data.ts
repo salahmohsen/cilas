@@ -37,7 +37,7 @@ import type { Course, Programme, Space, SpacePost, User } from '@/payload-types'
  * aggregate whose caller has already checked the role (spec §13).
  */
 
-const relId = (v: number | { id: number } | null | undefined) => unwrapId(v) ?? null
+const relId = (v: number | { id: number } | null | undefined) => (v == null ? null : unwrapId(v))
 
 /**
  * The people who moderate a space (spec §7): the course's fellows, or the

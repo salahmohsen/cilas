@@ -1,5 +1,4 @@
-import { type Locale } from '@/i18n/routing'
-import { otherLocale } from '@/i18n/routing'
+import { type Locale, otherLocale } from '@/i18n/routing'
 import type { Payload } from 'payload'
 
 import { PUBLIC_PROFILE_FIELDS } from '@/lib/public-profile'

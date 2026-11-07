@@ -1,8 +1,7 @@
-import { ADMIN_ROLES } from '@/access'
+import { ADMIN_ROLES, isAdminUser, personOf } from '@/access'
 import { relId } from '@/lib/relation'
 import type { Payload } from 'payload'
 
-import { isAdminUser, personOf } from '@/access'
 import type { SOCIAL_PLATFORMS } from '@/fields/social'
 import { ENROLLED } from '@/lib/list-members'
 import { plainText } from '@/lib/plaintext'

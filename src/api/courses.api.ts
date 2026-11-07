@@ -1,7 +1,6 @@
+import { type Locale, otherLocale } from '@/i18n/routing'
 import { detailPath } from '@/lib/paths'
 import { listSeparator } from '@/lib/locale-format'
-import { type Locale } from '@/i18n/routing'
-import { otherLocale } from '@/i18n/routing'
 import { relation as obj } from '@/lib/relation'
 import { plainText } from '@/lib/plaintext'
 import type { Payload, Where } from 'payload'

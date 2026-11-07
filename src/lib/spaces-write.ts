@@ -1,6 +1,5 @@
+import { relId as unwrapId, relId } from '@/lib/relation'
 import { detailPath } from '@/lib/paths'
-import { relId as unwrapId } from '@/lib/relation'
-import { relId } from '@/lib/relation'
 import type { Payload, Where } from 'payload'
 
 import { personOf } from '@/access'
@@ -114,7 +113,7 @@ export const validateMentions = (
 
 // --- Helpers ---
 
-const idOf = (v: number | { id: number } | null | undefined) => unwrapId(v) ?? null
+const idOf = (v: number | { id: number } | null | undefined) => (v == null ? null : unwrapId(v))
 
 const err = <E extends WriteError>(error: E): WriteResult<never> => ({ ok: false, error })
 

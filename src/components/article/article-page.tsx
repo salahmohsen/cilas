@@ -1,6 +1,6 @@
-import { detailPath } from '@/lib/paths'
-import { type Locale } from '@/i18n/routing'
-import { relation } from '@/lib/relation'
+import { detailPath, pathOf } from '@/lib/paths'
+import { type Locale, isRtl } from '@/i18n/routing'
+import { isRelation as isObject } from '@/lib/relation'
 import config from '@payload-config'
 import { VisualEditing } from '@payload-inline-visual-editor/react'
 import { ArrowLeft, ArrowUpRight, Languages } from 'lucide-react'
@@ -48,7 +48,6 @@ import { resolveCardStacks } from '@/api/card-stacks.api'
 import { NewsletterSignupEnd } from '@/components/newsletter-signup-end'
 import { Schema } from '@/components/schema'
 import { Link } from '@/i18n/navigation'
-import { isRtl } from '@/i18n/routing'
 import { env } from '@/env'
 import { splitBody } from '@/lib/article-body'
 import { localDigits } from '@/lib/digits'
@@ -57,11 +56,8 @@ import { footnotesOf } from '@/lib/footnotes'
 import { excerptOf, publicationOf, readingMinutes, repeatsOpening, yearOf } from '@/lib/articles'
 import { articleSchema, absoluteUrl, breadcrumbSchema } from '@/lib/schema'
 import { ogImages } from '@/lib/og'
-import { pathOf } from '@/lib/paths'
 import { pageAlternates } from '@/lib/seo'
 import type { Article, Media, Person } from '@/payload-types'
-
-const isObject = <T,>(v: unknown): v is T => relation<T>(v) !== null
 
 /** Which article, and who reads it (null: an anonymous visitor). */
 type View = { locale: string; slug: string; user: Reader }

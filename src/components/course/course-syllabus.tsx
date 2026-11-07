@@ -1,4 +1,4 @@
-import { relation } from '@/lib/relation'
+import { isRelation as isObject } from '@/lib/relation'
 import {
   BookOpen,
   Clapperboard,
@@ -54,8 +54,6 @@ const ACTIVITY_ICONS: Record<ActivityKind, LucideIcon> = {
   presentation: Presentation,
   other: Shapes,
 }
-
-export const isObject = <T,>(v: unknown): v is T => relation<T>(v) !== null
 
 /** Every text in a rich-text tree, joined. */
 export const textOf = (node: unknown): string => {

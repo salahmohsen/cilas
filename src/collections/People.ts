@@ -1,7 +1,6 @@
-import { adminOnlyField } from '@/access'
+import { adminOnlyField, isAdmin, isAdminUser, personOf, readPeople } from '@/access'
 import type { CollectionConfig } from 'payload'
 
-import { isAdmin, isAdminUser, personOf, readPeople } from '@/access'
 import { slugField } from '@/fields/slug'
 import { socialFields } from '@/fields/social'
 import { importFields } from '@/fields/import'

@@ -1,8 +1,6 @@
-import { detailPath } from '@/lib/paths'
+import { detailPath, pathOf } from '@/lib/paths'
 import { CAIRO } from '@/lib/cairo-day'
 import { plainText } from '@/lib/plaintext'
-
-import { pathOf } from '@/lib/paths'
 
 /** One newsletter pick as the email shows it. */
 export type Card = {

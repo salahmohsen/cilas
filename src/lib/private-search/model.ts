@@ -1,3 +1,4 @@
+import { relId } from '@/lib/relation'
 import { routing } from '@/i18n/routing'
 import { createHash, createHmac, timingSafeEqual } from 'node:crypto'
 import type { CollectionCreateSchema } from 'typesense/lib/Typesense/Collections'
@@ -39,7 +40,7 @@ export type Source = {
   updatedAt: string
 }
 export const numericId = (value: unknown): number | null => {
-  const id = value && typeof value === 'object' && 'id' in value ? value.id : value
+  const id = relId(value)
   return typeof id === 'number' && Number.isSafeInteger(id) && id > 0 ? id : null
 }
 export const fingerprint = (value: unknown) =>

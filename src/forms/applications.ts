@@ -1,4 +1,5 @@
-import { adminOnlyField } from '@/access'
+import { adminOnlyField, isAdminUser, personOf, type Role } from '@/access'
+import { relId } from '@/lib/relation'
 import { randomBytes } from 'node:crypto'
 
 import {
@@ -12,7 +13,6 @@ import {
   type PayloadRequest,
 } from 'payload'
 
-import { isAdminUser, personOf, type Role } from '@/access'
 import { env } from '@/env'
 import { getEmailSettings } from '@/emails/settings'
 import { acceptanceMail } from '@/emails/transactional'
@@ -82,8 +82,7 @@ export const applicationFields: Field[] = [
 ]
 
 const idOf = (value: unknown): number | null => {
-  if (typeof value === 'number') return value
-  const id = (value as { id?: unknown } | null)?.id
+  const id = relId(value)
   return typeof id === 'number' ? id : null
 }
 

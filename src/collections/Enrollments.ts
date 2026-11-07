@@ -1,8 +1,13 @@
-import { adminOnlyField } from '@/access'
+import {
+  adminOnlyField,
+  isAdmin,
+  isAdminUser,
+  isFellowUser,
+  personOf,
+  readEnrollments,
+} from '@/access'
 import { relId } from '@/lib/relation'
 import type { Access, CollectionConfig, FieldAccess } from 'payload'
-
-import { isAdmin, isAdminUser, isFellowUser, personOf, readEnrollments } from '@/access'
 
 /** Admins; and a fellow, for the enrollments of the courses they teach. */
 const adminOrTeachingFellow: Access = ({ req }) => {

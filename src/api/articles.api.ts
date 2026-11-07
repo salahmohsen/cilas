@@ -1,5 +1,4 @@
-import { type Locale } from '@/i18n/routing'
-import { otherLocale } from '@/i18n/routing'
+import { type Locale, otherLocale } from '@/i18n/routing'
 import { relId } from '@/lib/relation'
 import type { Payload, Where } from 'payload'
 

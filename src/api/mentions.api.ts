@@ -1,13 +1,11 @@
-import { bridgeYearPath } from '@/lib/paths'
+import { bridgeYearPath, pathOf } from '@/lib/paths'
+import { type Locale, otherLocale } from '@/i18n/routing'
 import { CAIRO } from '@/lib/cairo-day'
-import { type Locale } from '@/i18n/routing'
-import { otherLocale } from '@/i18n/routing'
 import { relId } from '@/lib/relation'
 import type { Payload } from 'payload'
 
 import type { Reader } from '@/api/articles.api'
 import { MENTION_TYPES, type MentionType } from '@/blocks/mention'
-import { pathOf } from '@/lib/paths'
 import { plainText } from '@/lib/plaintext'
 import { walkEditorNodes } from '@/lib/rich-text-references'
 import type { Article, Course, Event, Media, Person, Programme, Publication } from '@/payload-types'
@@ -30,7 +28,9 @@ type MentionFields = { id?: string; blockType?: string; type?: MentionType } & P
 >
 
 const idOf = (v: unknown): number | null =>
-  typeof v === 'string' ? null : ((relId(v) as number | null | undefined) ?? null)
+  typeof v === 'number' || (v !== null && typeof v === 'object' && 'id' in v)
+    ? (relId(v) as number)
+    : null
 
 /** Every mention in a Lexical body, at any depth. */
 const mentionsIn = (node: unknown, found: MentionFields[] = []): MentionFields[] => {

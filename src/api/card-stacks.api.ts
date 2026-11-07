@@ -1,5 +1,4 @@
-import { type Locale } from '@/i18n/routing'
-import { otherLocale } from '@/i18n/routing'
+import { type Locale, otherLocale } from '@/i18n/routing'
 import { relId } from '@/lib/relation'
 import type { Payload, Where } from 'payload'
 
@@ -42,7 +41,9 @@ type StackFields = {
 }
 
 const idOf = (v: unknown): number | null =>
-  typeof v === 'string' ? null : ((relId(v) as number | null | undefined) ?? null)
+  typeof v === 'number' || (v !== null && typeof v === 'object' && 'id' in v)
+    ? (relId(v) as number)
+    : null
 
 /** Every Card stack block in a Lexical body, at any depth. */
 const stacksIn = (node: unknown, found: StackFields[] = []): StackFields[] => {

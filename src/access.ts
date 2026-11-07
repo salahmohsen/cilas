@@ -1,3 +1,4 @@
+import { relId } from '@/lib/relation'
 import type { Access, BaseFilter, FieldAccess, Where } from 'payload'
 import { appendVersionToQueryKey } from 'payload'
 import type { User } from '@/payload-types'
@@ -58,11 +59,8 @@ export const adminViewOf = (user: RoleHolder): AdminView | null => {
  */
 export const personOf = (user: unknown): number | null => {
   const person = (user as { person?: unknown } | null | undefined)?.person
-  if (typeof person === 'number') return person
-  if (person && typeof person === 'object' && typeof (person as { id?: unknown }).id === 'number') {
-    return (person as { id: number }).id
-  }
-  return null
+  const id = relId(person)
+  return typeof id === 'number' ? id : null
 }
 
 /* ============================================================= constraints */

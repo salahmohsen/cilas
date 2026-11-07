@@ -46,7 +46,8 @@ const clip = (text: string): string => {
   return `${cut.slice(0, cut.lastIndexOf(' ')).trim()}…`
 }
 
-const idOf = (value: unknown) => relId(value) ?? undefined
+const idOf = (value: unknown) =>
+  value == null ? undefined : (relId(value) as number | string | undefined)
 
 /**
  * The SEO title, description and image a document gets from its own fields.

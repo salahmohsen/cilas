@@ -1,9 +1,10 @@
+import { relId } from '@/lib/relation'
 import type { ResolvedMention } from '@/api/mentions.api'
 
 export type RichTextReferences = Record<string, ResolvedMention>
 
 export const referenceKey = (collection: string, value: unknown): string => {
-  const id = value && typeof value === 'object' && 'id' in value ? value.id : value
+  const id = relId(value)
   return typeof id === 'number' || typeof id === 'string' ? `${collection}:${id}` : ''
 }
 

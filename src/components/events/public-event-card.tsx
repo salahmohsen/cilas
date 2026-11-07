@@ -1,6 +1,6 @@
+import { CAIRO, cairoNoon, cairoInstant } from '@/lib/cairo-day'
 import { detailPath } from '@/lib/paths'
 import { listSeparator } from '@/lib/locale-format'
-import { CAIRO, cairoNoon } from '@/lib/cairo-day'
 import {
   BookOpen,
   BookOpenText,
@@ -21,7 +21,6 @@ import { getFormatter, getLocale, getTranslations } from 'next-intl/server'
 import { Poster, type PosterData } from '@/components/home/poster'
 import { EventPlace, EventWhen } from '@/components/space/event-details'
 import readerStyles from '@/components/arc/blocks/blog-grid/blog-grid.module.css'
-import { cairoInstant } from '@/lib/cairo-day'
 import { numberingSystemOf } from '@/lib/digits'
 import { EVENT_POSTER_COLORS } from '@/lib/event-poster-colors'
 import { locationUrl } from '@/lib/space-event'

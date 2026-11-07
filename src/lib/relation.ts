@@ -14,3 +14,5 @@ export function relId(value: unknown): number | string | null | undefined {
 /** Return only populated relationships. */
 export const relation = <T>(value: unknown): T | null =>
   typeof value === 'object' && value !== null ? (value as T) : null
+
+export const isRelation = <T>(value: unknown): value is T => relation<T>(value) !== null

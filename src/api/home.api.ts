@@ -1,9 +1,7 @@
+import { type Locale, otherLocale } from '@/i18n/routing'
+import { relId, relation as obj } from '@/lib/relation'
 import { bridgeYearPath } from '@/lib/paths'
 import { listSeparator } from '@/lib/locale-format'
-import { type Locale } from '@/i18n/routing'
-import { otherLocale } from '@/i18n/routing'
-import { relId } from '@/lib/relation'
-import { relation as obj } from '@/lib/relation'
 import type { Payload, Where } from 'payload'
 
 import { siteTiers } from '@/access'

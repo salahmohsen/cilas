@@ -1,3 +1,4 @@
+import { relId } from '@/lib/relation'
 import type {
   CollectionAfterChangeHook,
   CollectionAfterDeleteHook,
@@ -141,7 +142,7 @@ const collect = async (batches: AsyncIterable<SearchDocument[]>) => {
 }
 
 const photoId = (photo: unknown) =>
-  photo != null && typeof photo === 'object' ? (photo as { id?: unknown }).id : photo
+  photo != null && typeof photo === 'object' ? relId(photo) : photo
 
 /** Whether a save changed what a person's works show of them. */
 const personChanged = (doc: Doc, previous: Doc | undefined) =>
