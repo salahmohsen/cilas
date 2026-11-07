@@ -18,6 +18,13 @@ const stored = (name: string): CollectionFieldSchema => ({
   optional: true,
 })
 
+/**
+ * Arabic text fields use the Snowball Arabic stemmer. Its first step folds
+ * hamza forms (أ إ آ → ا), taa marbuta, and harakat, so ايمان matches إيمان
+ * exactly instead of through typo tolerance.
+ */
+const ARABIC = { locale: 'ar', stem: true } as const
+
 /** The Typesense fields of one search collection. */
 export const fieldsOf = (collection: SearchCollection): CollectionFieldSchema[] => [
   stored('slug'),
@@ -33,9 +40,11 @@ export const fieldsOf = (collection: SearchCollection): CollectionFieldSchema[] 
     ? [{ name: 'courseType', type: 'string', facet: true } as const]
     : []),
   ...Object.keys(SEARCH_COLLECTIONS[collection].fields).flatMap((field) =>
-    SEARCH_LOCALES.map(
-      (locale) => ({ name: localizedField(field, locale), type: 'string' }) as const,
-    ),
+    SEARCH_LOCALES.map((locale) => ({
+      name: localizedField(field, locale),
+      type: 'string' as const,
+      ...(locale === 'ar' ? ARABIC : {}),
+    })),
   ),
 ]
 
