@@ -63,7 +63,6 @@
     "@t3-oss/env-nextjs": "^0.13.11",
     "@tanstack/react-form": "1.33.5",
     "boring-avatars": "^2.0.4",
-    "class-variance-authority": "^0.7.1",
     "cn": "^0.4.0",
     "cross-env": "^7.0.3",
     "date-fns": "^4.4.0",
