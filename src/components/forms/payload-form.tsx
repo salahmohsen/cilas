@@ -3,7 +3,7 @@
 import { useForm, useSelector, type AnyFieldApi } from '@tanstack/react-form'
 import { Check } from 'lucide-react'
 import { useTranslations } from 'next-intl'
-import { Fragment, useEffect, useRef, useState, type ReactNode } from 'react'
+import { Fragment, useEffect, useMemo, useRef, useState, type ReactNode } from 'react'
 
 import { Checkbox } from '@/components/arc/checkbox/checkbox'
 import { FileUpload, type FileUploadItem } from '@/components/arc/file-upload/file-upload'
@@ -12,6 +12,9 @@ import { RadioGroup } from '@/components/arc/radio-group/radio-group'
 import { Select } from '@/components/arc/select/select'
 import { Textarea } from '@/components/arc/textarea/textarea'
 import { useSpamCheck } from '@/components/forms/spam-check'
+import { useDraft } from '@/components/use-draft'
+import { useSession } from '@/components/use-session'
+import { isRtl } from '@/i18n/routing'
 import { Link } from '@/i18n/navigation'
 import { track } from '@/lib/analytics/track'
 import { acceptAttribute, acceptedLabel, maxBytes, maxCount } from '@/lib/form-files'
@@ -115,29 +118,12 @@ export function PayloadForm({
    * and lock them. The ask comes back only with a session cookie, like the
    * site header's account menu.
    */
-  const [me, setMe] = useState<{ name: string | null; email: string } | null>(null)
-  useEffect(() => {
-    if (disabled) return
-    let live = true
-    fetch('/api/users/me?depth=1', { credentials: 'include' })
-      .then((res) => (res.ok ? res.json() : null))
-      .then(
-        (
-          body: {
-            user?: { email?: string; person?: { name?: string } | number | null } | null
-          } | null,
-        ) => {
-          const user = body?.user
-          if (!live || !user?.email) return
-          const name = typeof user.person === 'object' ? (user.person?.name ?? null) : null
-          setMe({ name, email: user.email })
-        },
-      )
-      .catch(() => {})
-    return () => {
-      live = false
-    }
-  }, [disabled])
+  const session = useSession()
+  const sessionName = typeof session?.person === 'object' ? (session.person?.name ?? null) : null
+  const me = useMemo(
+    () => (!disabled && session?.email ? { name: sessionName, email: session.email } : null),
+    [disabled, session?.email, sessionName],
+  )
   /** A question the account fills: email always signed in, name with a person. */
   const locked = (q: Question) =>
     Boolean(me) && (q.name === 'email' || (q.name === 'name' && Boolean(me?.name)))
@@ -217,9 +203,7 @@ export function PayloadForm({
         setFailed(true)
         return
       }
-      try {
-        localStorage.removeItem(draftKey)
-      } catch {}
+      clearDraft()
       if (analytics) track('apply_submitted', analytics)
       setSent(true)
       top.current?.scrollIntoView({ behavior: 'smooth', block: 'start' })
@@ -230,18 +214,6 @@ export function PayloadForm({
     },
   })
 
-  // The draft: restored once, then kept as the answers change.
-  useEffect(() => {
-    if (disabled) return
-    try {
-      const saved = JSON.parse(localStorage.getItem(draftKey) ?? 'null') as Values | null
-      if (saved)
-        for (const q of questions)
-          if (q.name in saved && !isFiles(q))
-            api.setFieldValue(q.name, saved[q.name]!, { dontUpdateMeta: true })
-    } catch {}
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
   const values = useSelector(api.store, (s) => s.values)
   // As one string, so the effect below sees it change only when the questions do.
   const fileNames = questions
@@ -253,6 +225,23 @@ export function PayloadForm({
     .filter((q) => q.name === 'email' || q.name === 'name')
     .map((q) => q.name)
     .join('\n')
+  // Files cannot be kept on the device; the rest of the answers are, except
+  // what a signed-in account holds (its identity, not a draft).
+  const skip = me ? [...givenNames.split('\n'), ...fileNames.split('\n')] : fileNames.split('\n')
+  const { clear: clearDraft } = useDraft<Values>(draftKey, {
+    enabled: !disabled,
+    draft: sent
+      ? null
+      : Object.fromEntries(
+          Object.entries(values).filter(([name]) => !skip.includes(name) && name !== ''),
+        ),
+    onRestore: (saved) => {
+      for (const q of questions)
+        if (q.name in saved && !isFiles(q))
+          api.setFieldValue(q.name, saved[q.name]!, { dontUpdateMeta: true })
+    },
+  })
+
   // When the identity arrives it wins over any draft: the account's answers
   // are set and nothing of theirs sits in the draft on a shared device.
   useEffect(() => {
@@ -261,23 +250,6 @@ export function PayloadForm({
       if (me.name && givenNames.includes('name')) api.setFieldValue('name', me.name)
     }
   }, [me, api, givenNames])
-  useEffect(() => {
-    if (disabled || sent) return
-    const id = setTimeout(() => {
-      try {
-        // Files cannot be kept on the device; the rest of the answers are,
-        // except what a signed-in account holds (its identity, not a draft).
-        const skip = me
-          ? [...givenNames.split('\n'), ...fileNames.split('\n')]
-          : fileNames.split('\n')
-        const kept = Object.fromEntries(
-          Object.entries(values).filter(([name]) => !skip.includes(name) && name !== ''),
-        )
-        localStorage.setItem(draftKey, JSON.stringify(kept))
-      } catch {}
-    }, 500)
-    return () => clearTimeout(id)
-  }, [values, draftKey, disabled, sent, fileNames, me, givenNames])
 
   const attempts = useSelector(api.store, (s) => s.submissionAttempts)
   const errorOf = (field: AnyFieldApi) =>
@@ -503,7 +475,7 @@ export function PayloadForm({
   return (
     <form
       className="payload-form"
-      dir={lang ? (lang === 'ar' ? 'rtl' : 'ltr') : undefined}
+      dir={lang ? (isRtl(lang) ? 'rtl' : 'ltr') : undefined}
       lang={lang}
       noValidate
       // The first time someone enters a field: they have started. Nothing they type is sent.

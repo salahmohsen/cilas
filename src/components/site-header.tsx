@@ -13,7 +13,7 @@ import {
   Users,
 } from 'lucide-react'
 import { useLocale, useTranslations } from 'next-intl'
-import { Suspense, useEffect, useRef, useState } from 'react'
+import { Suspense, useEffect, useMemo, useRef, useState } from 'react'
 
 import { SiteHeader } from '@/components/arc/blocks/site-header/site-header'
 import { CilasLogo } from '@/components/cilas-logo'
@@ -23,6 +23,7 @@ import { SiteNotifications } from '@/components/site-notifications'
 import { announceAuthChange } from '@/lib/auth-events'
 import { forgetThisDevice } from '@/lib/push/forget'
 import { SiteSearch } from '@/components/site-search'
+import { useSession } from '@/components/use-session'
 import { useRouter } from '@/i18n/navigation'
 import { ALL_SHOWN, type Navigation } from '@/lib/navigation'
 
@@ -48,61 +49,42 @@ export function CILASSiteHeader({ nav = ALL_SHOWN }: { nav?: Navigation }) {
   }, [])
 
   // The header is cached for everyone, so it asks who is signed in: a
-  // signed-in account gets its account menu instead of "Sign in". Depth 2
-  // brings the linked person's name and photo; an account with no person shows its email.
-  const [account, setAccount] = useState<UserMenuUser | null>(null)
+  // signed-in account gets its account menu instead of "Sign in". The linked
+  // person's name and photo are used; an account with no person shows its email.
+  const session = useSession()
+  const account: UserMenuUser | null = useMemo(() => {
+    if (!session) return null
+    const person = typeof session.person === 'object' ? session.person : null
+    const photo = typeof person?.photo === 'object' ? person.photo : null
+    return {
+      name: person?.name || session.email,
+      email: session.email,
+      fallbackSeed: person
+        ? personAvatarSeed(person.id)
+        : typeof session.person === 'number'
+          ? personAvatarSeed(session.person)
+          : `account:${session.id}`,
+      avatarSrc: photo?.sizes?.thumbnail?.url || photo?.url || undefined,
+    }
+  }, [session])
+  // Spaces shows only to an account that can read one (see /api/spaces-nav).
   const [spaces, setSpaces] = useState(false)
   useEffect(() => {
+    if (!session) {
+      setSpaces(false)
+      return
+    }
     let live = true
-    fetch('/api/users/me?depth=2', { credentials: 'include' })
+    fetch('/api/spaces-nav', { credentials: 'include' })
       .then((res) => (res.ok ? res.json() : null))
-      .then(
-        (
-          body: {
-            user?: {
-              id: number
-              email: string
-              person?:
-                | {
-                    id: number
-                    name?: string
-                    photo?:
-                      | { url?: string | null; sizes?: { thumbnail?: { url?: string | null } } }
-                      | number
-                      | null
-                  }
-                | number
-                | null
-            } | null
-          } | null,
-        ) => {
-          const user = body?.user
-          if (!live || !user) return
-          const person = typeof user.person === 'object' ? user.person : null
-          const photo = typeof person?.photo === 'object' ? person.photo : null
-          setAccount({
-            name: person?.name || user.email,
-            email: user.email,
-            fallbackSeed: person
-              ? personAvatarSeed(person.id)
-              : typeof user.person === 'number'
-                ? personAvatarSeed(user.person)
-                : `account:${user.id}`,
-            avatarSrc: photo?.sizes?.thumbnail?.url || photo?.url || undefined,
-          })
-          // Spaces shows only to an account that can read one (see /api/spaces-nav).
-          return fetch('/api/spaces-nav', { credentials: 'include' })
-            .then((res) => (res.ok ? res.json() : null))
-            .then((entry: { spaces?: boolean } | null) => {
-              if (live) setSpaces(entry?.spaces === true)
-            })
-        },
-      )
+      .then((entry: { spaces?: boolean } | null) => {
+        if (live) setSpaces(entry?.spaces === true)
+      })
       .catch(() => {})
     return () => {
       live = false
     }
-  }, [])
+  }, [session])
 
   // Apply shows only while something is open, and leads to it (see /api/open).
   const [applyPath, setApplyPath] = useState<string | null>(null)
