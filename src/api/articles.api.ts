@@ -82,7 +82,9 @@ export const getArticleForReading = async (
         draft: preview,
         // The Local API skips access rules unless told otherwise.
         overrideAccess: false,
-        joins: false,
+        // A preview reads no joins (security audit 2026-10-29); a visitor's
+        // read keeps them, so the page knows the article's collection.
+        ...(preview ? { joins: false as const } : {}),
         user,
       })
       .then((r) => r.docs[0])
