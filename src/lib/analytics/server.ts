@@ -1,6 +1,6 @@
 import type { PostHog } from 'posthog-node'
 
-import { DEFAULT_POSTHOG_HOST } from './hosts'
+import { env } from '@/env'
 import { buildServerError, ErrorLimiter, type ErrorContext, type RequestInfo } from './server-error'
 
 /** The longest a failing request waits for PostHog. */
@@ -14,11 +14,11 @@ let client: PostHog | null | undefined
 
 const posthog = async (): Promise<PostHog | null> => {
   if (client !== undefined) return client
-  const key = process.env.NEXT_PUBLIC_POSTHOG_KEY
+  const key = env.NEXT_PUBLIC_POSTHOG_KEY
   if (!key) return (client = null)
   const { PostHog } = await import('posthog-node')
   return (client = new PostHog(key, {
-    host: process.env.NEXT_PUBLIC_POSTHOG_HOST || DEFAULT_POSTHOG_HOST,
+    host: env.NEXT_PUBLIC_POSTHOG_HOST,
     flushAt: 1,
     flushInterval: 0,
     requestTimeout: SEND_TIMEOUT_MS,

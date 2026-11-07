@@ -1,5 +1,4 @@
-/** The default: PostHog's EU cloud, where CILAS's project lives. */
-export const DEFAULT_POSTHOG_HOST = 'https://eu.i.posthog.com'
+import { clientDefaults } from '../../env.client'
 
 /**
  * Path the site forwards to PostHog, so ad blockers see only the site's own
@@ -14,7 +13,7 @@ export const INGEST_PATH = '/relay-k3'
  * `https://eu.i.posthog.com` gives `eu-assets.i.posthog.com` and `eu.posthog.com`.
  */
 export const posthogHosts = (host?: string) => {
-  const { origin, hostname } = new URL(host || DEFAULT_POSTHOG_HOST)
+  const { origin, hostname } = new URL(host || clientDefaults.NEXT_PUBLIC_POSTHOG_HOST)
   const region = /^(us|eu)\.i\.posthog\.com$/.exec(hostname)?.[1]
   return {
     ingest: origin,

@@ -16,7 +16,7 @@ import {
 import { env } from '@/env'
 import { getEmailSettings } from '@/emails/settings'
 import { acceptanceMail } from '@/emails/transactional'
-import { slugify } from '@/lib/slugify'
+import { createPerson } from '@/lib/create-person'
 import { loadApplicationTarget } from '@/lib/registration'
 import type { FormSubmission } from '@/payload-types'
 
@@ -164,21 +164,8 @@ const accept = async (req: PayloadRequest, id: number): Promise<Accepted | null>
   // application. The name comes from the answer, not the email — the Users
   // hook would name one from the email, so it is created here first, linked
   // into the same write.
-  const createPerson = async () => {
-    const created = await payload.create({
-      collection: 'people',
-      // A hidden person has no page, so a unique slug is enough.
-      data: {
-        name: applicant.name,
-        slug: `${slugify(applicant.name) || 'applicant'}-${randomBytes(3).toString('hex')}`,
-        visible: false,
-      },
-      ...local,
-    })
-    return created.id
-  }
   if (!user) {
-    const personId = await createPerson()
+    const personId = await createPerson(req, applicant.name)
     user = await payload.create({
       collection: 'users',
       data: {
@@ -194,7 +181,7 @@ const accept = async (req: PayloadRequest, id: number): Promise<Accepted | null>
   } else {
     let personId = personOf(user)
     if (personId === null) {
-      personId = await createPerson()
+      personId = await createPerson(req, applicant.name)
       await payload.update({
         collection: 'users',
         id: user.id,

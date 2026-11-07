@@ -4,6 +4,7 @@ import { isIP } from 'node:net'
 
 import { Agent } from 'undici'
 
+import { env } from '@/env'
 import { mapsPlace, meetingService, titlePlace } from './event-place'
 import { titleKey } from './link-title'
 
@@ -168,11 +169,11 @@ const assertPublic = async (url: URL) => {
 
 /** Our own metadata need not make a public round trip through Cloudflare. */
 const previewTarget = (url: URL): { url: URL; host?: string } => {
-  const site = process.env.NEXT_PUBLIC_SERVER_URL
+  const site = env.NEXT_PUBLIC_SERVER_URL
   if (process.env.NODE_ENV !== 'production' || !site) return { url }
   try {
     if (url.origin !== new URL(site).origin) return { url }
-    const port = Number(process.env.PORT || 3000)
+    const port = Number(env.PORT || 3000)
     if (!Number.isInteger(port) || port < 1 || port > 65535) return { url }
     // The caller still checks the public URL on every redirect. Only this
     // exact configured origin can use loopback; no user-supplied destination.

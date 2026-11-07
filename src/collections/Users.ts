@@ -1,13 +1,11 @@
 import { adminOnlyField, ROLE_OPTIONS, isAdmin, isAdminUser, personOf, type Role } from '@/access'
 import type { CollectionBeforeChangeHook, CollectionConfig, PayloadRequest } from 'payload'
 
-import { randomBytes } from 'node:crypto'
-
 import { getEmailSettings, withDefaults } from '@/emails/settings'
 import { resetMail } from '@/emails/transactional'
 import { env } from '@/env'
 import { teaches, withFellowRole } from '@/lib/fellow-role'
-import { slugify } from '@/lib/slugify'
+import { createPerson } from '@/lib/create-person'
 
 import type { User } from '@/payload-types'
 
@@ -36,16 +34,8 @@ export const ensurePerson: CollectionBeforeChangeHook<User> = async ({
       .split('@')[0]
       ?.replace(/[._-]+/g, ' ')
       .trim() || 'CILAS member'
-  const person = await req.payload.create({
-    collection: 'people',
-    data: {
-      name,
-      slug: `${slugify(name) || 'member'}-${randomBytes(3).toString('hex')}`,
-      visible: false,
-    },
-    req,
-  })
-  return { ...data, person: person.id }
+  const person = await createPerson(req, name)
+  return { ...data, person }
 }
 
 export const syncFellowRoleOnLink: CollectionBeforeChangeHook<User> = async ({

@@ -1,5 +1,12 @@
 import { afterEach, describe, expect, it, vi } from 'vitest'
 
+// link-preview reads the validated env, built once; tests set these per case.
+const env = vi.hoisted(() => ({
+  NEXT_PUBLIC_SERVER_URL: undefined as string | undefined,
+  PORT: undefined as string | undefined,
+}))
+vi.mock('@/env', () => ({ env }))
+
 import {
   MAX_PREVIEWS,
   imageUsable,
@@ -120,6 +127,8 @@ describe('link previews', () => {
     afterEach(() => {
       vi.unstubAllGlobals()
       vi.unstubAllEnvs()
+      env.NEXT_PUBLIC_SERVER_URL = undefined
+      env.PORT = undefined
       vi.useRealTimers()
     })
     const page = () =>
@@ -130,8 +139,8 @@ describe('link previews', () => {
 
     it('fetches this production site through its local server while keeping public preview URLs', async () => {
       vi.stubEnv('NODE_ENV', 'production')
-      vi.stubEnv('NEXT_PUBLIC_SERVER_URL', 'https://93.184.216.34')
-      vi.stubEnv('PORT', '3000')
+      env.NEXT_PUBLIC_SERVER_URL = 'https://93.184.216.34'
+      env.PORT = '3000'
       const fetch = vi.fn().mockImplementation(async () => page())
       vi.stubGlobal('fetch', fetch)
       const url = 'https://93.184.216.34/en/articles/local-preview'
@@ -144,7 +153,7 @@ describe('link previews', () => {
 
     it('keeps lookalike origins on the checked public transport', async () => {
       vi.stubEnv('NODE_ENV', 'production')
-      vi.stubEnv('NEXT_PUBLIC_SERVER_URL', 'https://93.184.216.34:8443')
+      env.NEXT_PUBLIC_SERVER_URL = 'https://93.184.216.34:8443'
       const fetch = vi.fn().mockImplementation(async () => page())
       vi.stubGlobal('fetch', fetch)
       const url = 'https://93.184.216.34/other-origin'
@@ -155,7 +164,7 @@ describe('link previews', () => {
 
     it('still blocks a private redirect from this site', async () => {
       vi.stubEnv('NODE_ENV', 'production')
-      vi.stubEnv('NEXT_PUBLIC_SERVER_URL', 'https://93.184.216.34')
+      env.NEXT_PUBLIC_SERVER_URL = 'https://93.184.216.34'
       const fetch = vi
         .fn()
         .mockResolvedValue(

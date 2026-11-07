@@ -1,6 +1,8 @@
 import { createEnv } from '@t3-oss/env-nextjs'
 import * as z from 'zod'
 
+import { clientDefaults } from './env.client'
+
 // Match Next's local overrides for scripts too. Explicit environment wins;
 // tests use only their supplied environment and .env, as Next does.
 if (process.env.NODE_ENV === 'development') {
@@ -77,6 +79,9 @@ export const env = createEnv({
     POSTHOG_PROJECT_ID: z.string().regex(/^\d+$/).optional(),
     // A personal API key with the Query read scope only. Never public.
     POSTHOG_PERSONAL_API_KEY: z.string().min(1).optional(),
+
+    // The port the production server listens on, for fetching its own pages.
+    PORT: z.string().optional(),
   },
 
   // Read by the admin live-preview iframe, which postMessages back to Payload.
@@ -84,7 +89,7 @@ export const env = createEnv({
   // be a real absolute origin. The admin and frontend share one in
   // development, so it is only needed when they are deployed separately.
   client: {
-    NEXT_PUBLIC_SERVER_URL: z.string().url().default('http://localhost:3000'),
+    NEXT_PUBLIC_SERVER_URL: z.string().url().default(clientDefaults.NEXT_PUBLIC_SERVER_URL),
 
     // Where the browser asks Typesense directly (InstantSearch). Needs a
     // public Typesense address and a search-only API key — never the admin
@@ -92,9 +97,13 @@ export const env = createEnv({
     //   { "actions": ["documents:search"],
     //     "collections": ["^(courses|articles|people)(_[0-9a-f]{8})?$"] }
     // Without the key the site hides the search field entirely.
-    NEXT_PUBLIC_TYPESENSE_HOST: z.string().default('localhost'),
-    NEXT_PUBLIC_TYPESENSE_PORT: z.coerce.number().default(8108),
-    NEXT_PUBLIC_TYPESENSE_PROTOCOL: z.enum(['http', 'https']).default('http'),
+    NEXT_PUBLIC_TYPESENSE_HOST: z.string().default(clientDefaults.NEXT_PUBLIC_TYPESENSE_HOST),
+    NEXT_PUBLIC_TYPESENSE_PORT: z.coerce
+      .number()
+      .default(clientDefaults.NEXT_PUBLIC_TYPESENSE_PORT),
+    NEXT_PUBLIC_TYPESENSE_PROTOCOL: z
+      .enum(['http', 'https'])
+      .default(clientDefaults.NEXT_PUBLIC_TYPESENSE_PROTOCOL),
     NEXT_PUBLIC_TYPESENSE_API_KEY: z.string().min(1).optional(),
 
     // The Turnstile widget on the site's forms. Without it the forms send no
@@ -106,7 +115,7 @@ export const env = createEnv({
     NEXT_PUBLIC_POSTHOG_KEY: z.string().min(1).optional(),
     // PostHog's ingestion host: the site forwards /ingest to it, and the
     // server sends errors to it. https://eu.i.posthog.com for the EU cloud.
-    NEXT_PUBLIC_POSTHOG_HOST: z.url().default('https://eu.i.posthog.com'),
+    NEXT_PUBLIC_POSTHOG_HOST: z.url().default(clientDefaults.NEXT_PUBLIC_POSTHOG_HOST),
   },
 
   experimental__runtimeEnv: {

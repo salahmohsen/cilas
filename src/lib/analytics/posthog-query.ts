@@ -1,3 +1,5 @@
+import { env as serverEnv } from '@/env'
+
 import { parseRows } from './stats'
 
 export type PostHogQueryConfig = {
@@ -8,10 +10,13 @@ export type PostHogQueryConfig = {
   apiKey: string
 }
 
-type Environment = Record<string, string | undefined>
+type Environment = Pick<
+  typeof serverEnv,
+  'POSTHOG_API_HOST' | 'POSTHOG_PROJECT_ID' | 'POSTHOG_PERSONAL_API_KEY'
+>
 
 /** The three settings the dashboard needs, or null (then its widgets hide). */
-export const queryConfig = (env: Environment = process.env): PostHogQueryConfig | null => {
+export const queryConfig = (env: Partial<Environment> = serverEnv): PostHogQueryConfig | null => {
   const apiHost = env.POSTHOG_API_HOST?.trim().replace(/\/+$/, '')
   const projectId = env.POSTHOG_PROJECT_ID?.trim()
   const apiKey = env.POSTHOG_PERSONAL_API_KEY?.trim()
