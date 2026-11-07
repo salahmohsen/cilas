@@ -2,8 +2,9 @@ import { getPayload } from 'payload'
 
 import config from '@/payload.config'
 import { navigationOf, type Navigation } from '@/lib/navigation'
+import type { SOCIAL_PLATFORMS } from '@/fields/social'
 
-export type SocialLink = { platform: 'facebook' | 'twitter' | 'youtube' | 'instagram'; url: string }
+export type SocialLink = { platform: (typeof SOCIAL_PLATFORMS)[number]; url: string }
 
 /** The institute's social accounts, from Site settings, in their order there. */
 export const getSocialLinks = async (): Promise<SocialLink[]> => {

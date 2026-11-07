@@ -4265,7 +4265,7 @@ export interface SiteSetting {
   };
   social_links?:
     | {
-        platform?: ('facebook' | 'twitter' | 'youtube' | 'instagram') | null;
+        platform?: ('facebook' | 'x' | 'youtube' | 'instagram' | 'linkedin') | null;
         url?: string | null;
         id?: string | null;
       }[]

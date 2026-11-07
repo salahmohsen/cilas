@@ -4,28 +4,14 @@ import { useLocale, useTranslations } from 'next-intl'
 import { Heart } from 'lucide-react'
 import Image from 'next/image'
 
-import {
-  siCreativecommons,
-  siFacebook,
-  siInstagram,
-  siX,
-  siYoutube,
-  type SimpleIcon,
-} from 'simple-icons'
+import { siCreativecommons } from 'simple-icons'
 
 import type { Place } from '@/api/place.api'
 import { ALL_SHOWN, type Navigation } from '@/lib/navigation'
 import { subscribeToNewsletter } from '@/lib/newsletter-subscribe'
 import type { SocialLink } from '@/api/social.api'
 import { SiteFooter as ArcSiteFooter } from '@/components/arc/blocks/site-footer/site-footer'
-
-/** Each platform's mark and name; Twitter is X now. */
-const PLATFORMS: Record<SocialLink['platform'], { icon: SimpleIcon; label: string }> = {
-  facebook: { icon: siFacebook, label: 'Facebook' },
-  twitter: { icon: siX, label: 'X' },
-  youtube: { icon: siYoutube, label: 'YouTube' },
-  instagram: { icon: siInstagram, label: 'Instagram' },
-}
+import { SocialIcon, SOCIAL_LABELS } from '@/components/person/social-icon'
 
 /** The site footer: where to go next, the newsletter, the social accounts and the licence line. */
 export function SiteFooter({
@@ -169,14 +155,10 @@ export function SiteFooter({
       }
       // Icons only, from Site settings; the platform names their links.
       socials={socials.map(({ platform, url }) => ({
-        label: PLATFORMS[platform].label,
+        label: SOCIAL_LABELS[platform],
         href: url,
         external: true,
-        icon: (
-          <svg aria-hidden fill="currentColor" viewBox="0 0 24 24">
-            <path d={PLATFORMS[platform].icon.path} />
-          </svg>
-        ),
+        icon: <SocialIcon kind={platform} />,
       }))}
       status={null}
       tagline={t('tagline')}

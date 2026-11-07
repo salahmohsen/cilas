@@ -4,7 +4,7 @@ export const siteSettingsData = {
   contact_emails: { admissions: 'admissions@ci-las.org', info: 'info@ci-las.org' },
   social_links: [
     { platform: 'facebook' as const, url: 'https://www.facebook.com/cilasian' },
-    { platform: 'twitter' as const, url: 'https://twitter.com/CILASian' },
+    { platform: 'x' as const, url: 'https://twitter.com/CILASian' },
     {
       platform: 'youtube' as const,
       url: 'http://www.youtube.com/channel/UCPDXrYj4ok4oslkuGROHsxA',

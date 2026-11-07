@@ -2,6 +2,7 @@ import type { Field, GlobalConfig } from 'payload'
 
 import { NAV_ITEMS } from '@/lib/navigation'
 import { isAdmin } from '@/access'
+import { SOCIAL_PLATFORMS } from '@/fields/social'
 
 // Site-wide config with no collection home: contact, social links, the home page's questions.
 export const SiteSettings: GlobalConfig = {
@@ -33,7 +34,7 @@ export const SiteSettings: GlobalConfig = {
                     {
                       name: 'platform',
                       type: 'select',
-                      options: ['facebook', 'twitter', 'youtube', 'instagram'].map((s) => ({
+                      options: SOCIAL_PLATFORMS.map((s) => ({
                         label: s,
                         value: s,
                       })),
