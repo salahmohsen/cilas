@@ -24,7 +24,7 @@ export async function POST(request: Request) {
   }
 
   // An address already on the list counts as success: the visitor's intent is met.
-  const ok = await subscribe(list.apiKey, list.segmentId, parsed.data.email).catch(() => false)
+  const ok = await subscribe(list.segmentId, parsed.data.email).catch(() => false)
   if (!ok) {
     return Response.json({ error: 'Could not subscribe right now' }, { status: 502 })
   }

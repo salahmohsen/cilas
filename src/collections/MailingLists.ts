@@ -36,7 +36,7 @@ const ensureSegment: CollectionBeforeChangeHook = async ({ data }) => {
   if (data.segment_id?.trim()) return { ...data, segment_id: data.segment_id.trim() }
   if (!env.RESEND_API_KEY)
     throw new APIError('RESEND_API_KEY is not set on the server, so no segment can be made.', 503)
-  return { ...data, segment_id: await createSegment(env.RESEND_API_KEY, data.name) }
+  return { ...data, segment_id: await createSegment(data.name) }
 }
 
 /** After an admin saves a synced list, its segment follows, in the background. */

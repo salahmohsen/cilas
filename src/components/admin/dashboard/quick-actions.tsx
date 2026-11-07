@@ -25,7 +25,7 @@ const waiting = () =>
 const subscribers = () =>
   cachedStat<number | null>(
     'subscribers',
-    async () => (env.RESEND_API_KEY ? accountContactCount(env.RESEND_API_KEY) : null),
+    async () => (env.RESEND_API_KEY ? accountContactCount() : null),
     600,
   ).catch(() => null)
 

@@ -4,7 +4,7 @@
  * renamed Audiences to Segments in Nov 2025).
  */
 
-const API = 'https://api.resend.com'
+import { resend, wait } from '@/lib/resend'
 
 /**
  * The free Marketing plan's limit: broadcasts stop (403) once the account
@@ -22,34 +22,9 @@ export type Contact = {
   unsubscribed: boolean
 }
 
-const wait = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms))
-
-/**
- * Resend allows 10 requests a second for the whole team, transactional mail
- * included: a 429 waits as long as its retry-after says, three times at most.
- */
-const request = async (apiKey: string, path: string, init: RequestInit = {}) => {
-  for (let attempt = 0; ; attempt++) {
-    const res = await fetch(`${API}${path}`, {
-      ...init,
-      headers: {
-        Authorization: `Bearer ${apiKey}`,
-        'Content-Type': 'application/json',
-        ...init.headers,
-      },
-    })
-    if (res.status === 429 && attempt < 3) {
-      await wait(Math.max(1, Number(res.headers.get('retry-after')) || 1) * 1000)
-      continue
-    }
-    const body = (await res.json().catch(() => ({}))) as Record<string, unknown>
-    return { ok: res.ok, status: res.status, body }
-  }
-}
-
 /** A new segment, named as the list; returns its id. */
-export const createSegment = async (apiKey: string, name: string): Promise<string> => {
-  const { ok, status, body } = await request(apiKey, '/segments', {
+export const createSegment = async (name: string): Promise<string> => {
+  const { ok, status, body } = await resend('/segments', {
     method: 'POST',
     body: JSON.stringify({ name }),
   })
@@ -62,24 +37,22 @@ export const createSegment = async (apiKey: string, name: string): Promise<strin
  * Puts a member in a segment without touching their consent: a new contact
  * starts subscribed, an existing one keeps an unsubscribe they made.
  */
-export const addToSegment = async (apiKey: string, segmentId: string, email: string) => {
-  const created = await request(apiKey, '/contacts', {
+export const addToSegment = async (segmentId: string, email: string) => {
+  const created = await resend('/contacts', {
     method: 'POST',
     body: JSON.stringify({ email, segments: [{ id: segmentId }] }),
   })
   if (created.ok) return true
-  const added = await request(
-    apiKey,
-    `/contacts/${encodeURIComponent(email)}/segments/${segmentId}`,
-    { method: 'POST' },
-  )
+  const added = await resend(`/contacts/${encodeURIComponent(email)}/segments/${segmentId}`, {
+    method: 'POST',
+  })
   return added.ok
 }
 
 /** Takes a contact out of a segment; the contact stays, for its other lists. */
-export const removeFromSegment = async (apiKey: string, segmentId: string, email: string) =>
+export const removeFromSegment = async (segmentId: string, email: string) =>
   (
-    await request(apiKey, `/contacts/${encodeURIComponent(email)}/segments/${segmentId}`, {
+    await resend(`/contacts/${encodeURIComponent(email)}/segments/${segmentId}`, {
       method: 'DELETE',
     })
   ).ok
@@ -99,18 +72,18 @@ export const paced = async <T>(items: T[], run: (item: T) => Promise<boolean>) =
  * contact exists already, adds it to the segment and marks it subscribed
  * again (signing up is fresh consent).
  */
-export const subscribe = async (apiKey: string, segmentId: string, email: string) => {
-  const created = await request(apiKey, '/contacts', {
+export const subscribe = async (segmentId: string, email: string) => {
+  const created = await resend('/contacts', {
     method: 'POST',
     body: JSON.stringify({ email, unsubscribed: false, segments: [{ id: segmentId }] }),
   })
   if (created.ok) return true
   const contact = encodeURIComponent(email)
-  const added = await request(apiKey, `/contacts/${contact}/segments/${segmentId}`, {
+  const added = await resend(`/contacts/${contact}/segments/${segmentId}`, {
     method: 'POST',
   })
   if (!added.ok) return false
-  await request(apiKey, `/contacts/${contact}`, {
+  await resend(`/contacts/${contact}`, {
     method: 'PATCH',
     body: JSON.stringify({ unsubscribed: false }),
   })
@@ -118,12 +91,12 @@ export const subscribe = async (apiKey: string, segmentId: string, email: string
 }
 
 /** Every contact in the segment, 100 a page. */
-export const listContacts = async (apiKey: string, segmentId: string): Promise<Contact[]> => {
+export const listContacts = async (segmentId: string): Promise<Contact[]> => {
   const contacts: Contact[] = []
   let after: string | undefined
   for (let page = 0; page < 100; page++) {
     const query = new URLSearchParams({ limit: '100', ...(after ? { after } : {}) })
-    const { ok, status, body } = await request(apiKey, `/segments/${segmentId}/contacts?${query}`)
+    const { ok, status, body } = await resend(`/segments/${segmentId}/contacts?${query}`)
     if (!ok) throw new Error((body.message as string) ?? `Resend answered ${status}`)
     const data = (body.data as Contact[]) ?? []
     contacts.push(...data)
@@ -134,8 +107,8 @@ export const listContacts = async (apiKey: string, segmentId: string): Promise<C
 }
 
 /** Contacts stored in the whole account: what the free plan's limit counts. */
-export const accountContactCount = async (apiKey: string): Promise<number | null> => {
-  const { ok, body } = await request(apiKey, '/segments/metrics?metrics=all_contacts')
+export const accountContactCount = async (): Promise<number | null> => {
+  const { ok, body } = await resend('/segments/metrics?metrics=all_contacts')
   const total = (body.totals as { all_contacts?: number } | undefined)?.all_contacts
   return ok && typeof total === 'number' ? total : null
 }

@@ -1,15 +1,17 @@
 import type { Payload, PayloadRequest } from 'payload'
 
 import { env } from '@/env'
+import type { MembersRule } from '@/lib/list-members'
 
-/** A mailing list as Resend sees it: the key (a secret, so env only), its segment and topic. */
+/** A mailing list as Resend sees it: its segment and topic. The API key is a secret, so env only. */
 export type ListTarget = {
   id: number
   name: string
   source: 'signup' | 'members'
-  apiKey: string
   segmentId: string
   topicId: string | null
+  /** Who a synced list holds. */
+  members: MembersRule | null
 }
 
 type ListDoc = {
@@ -18,6 +20,7 @@ type ListDoc = {
   source: 'signup' | 'members'
   segment_id?: string | null
   topic_id?: string | null
+  members?: MembersRule | null
 }
 
 const targetOf = (list: ListDoc): ListTarget | null =>
@@ -26,9 +29,9 @@ const targetOf = (list: ListDoc): ListTarget | null =>
         id: list.id,
         name: list.name,
         source: list.source,
-        apiKey: env.RESEND_API_KEY,
         segmentId: list.segment_id,
         topicId: list.topic_id?.trim() || null,
+        members: list.members ?? null,
       }
     : null
 
@@ -41,16 +44,14 @@ export const newsletterList = async (
   payload: Payload,
   req?: PayloadRequest,
 ): Promise<ListTarget | null> => {
-  const { docs } = await payload
-    .find({
-      collection: 'mailing-lists',
-      where: { source: { equals: 'signup' } },
-      limit: 1,
-      depth: 0,
-      overrideAccess: true,
-      req,
-    })
-    .catch(() => ({ docs: [] }))
+  const { docs } = await payload.find({
+    collection: 'mailing-lists',
+    where: { source: { equals: 'signup' } },
+    limit: 1,
+    depth: 0,
+    overrideAccess: true,
+    req,
+  })
   const list = docs[0] as ListDoc | undefined
   return list ? targetOf(list) : null
 }

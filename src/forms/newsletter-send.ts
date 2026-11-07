@@ -64,17 +64,16 @@ const send = guarded(async (req, id) => {
     )
   }
   // A synced list first takes in who joined or left since its last sync.
-  if (list.source === 'members' && list.id) {
-    const doc = await req.payload.findByID({
-      collection: 'mailing-lists',
+  if (list.source === 'members') {
+    await syncList(req.payload, {
       id: list.id,
-      depth: 0,
-      overrideAccess: true,
+      source: list.source,
+      segment_id: list.segmentId,
+      members: list.members,
     })
-    await syncList(req.payload, doc)
   }
   // Resend refuses broadcasts once the account stores more contacts than the plan allows.
-  const stored = await accountContactCount(list.apiKey)
+  const stored = await accountContactCount()
   if (stored !== null && stored > FREE_CONTACT_LIMIT) {
     return Response.json(
       {
@@ -88,7 +87,6 @@ const send = guarded(async (req, id) => {
     unsubscribe: '{{{RESEND_UNSUBSCRIBE_URL}}}',
   })
   const broadcastId = await sendBroadcast({
-    apiKey: list.apiKey,
     segmentId: list.segmentId,
     topicId: list.topicId,
     from: `${settings.fromName} <${env.EMAIL_FROM_ADDRESS}>`,

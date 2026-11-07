@@ -140,7 +140,7 @@ export async function MediaStorage() {
 const contacts = () =>
   cachedStat<number | null>(
     'newsletter-contacts',
-    async () => (env.RESEND_API_KEY ? accountContactCount(env.RESEND_API_KEY) : null),
+    async () => (env.RESEND_API_KEY ? accountContactCount() : null),
     600,
   ).catch(() => null)
 

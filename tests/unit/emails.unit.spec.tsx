@@ -2,6 +2,10 @@
 // React Email renders with react-dom/server, which needs Node's streams.
 import { afterEach, describe, expect, it, vi } from 'vitest'
 
+vi.hoisted(() => {
+  process.env.RESEND_API_KEY = 'key'
+})
+
 import { cardOf } from '@/emails/cards'
 import { MessageEmail } from '@/emails/message'
 import { newsletterMail } from '@/emails/newsletter'
@@ -378,7 +382,6 @@ describe('cards for collections, cycles and events', () => {
 describe('sendBroadcast', () => {
   afterEach(() => vi.restoreAllMocks())
   const args = {
-    apiKey: 'key',
     segmentId: 'seg',
     from: 'CILAS <news@ci-las.org>',
     replyTo: null,

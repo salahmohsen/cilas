@@ -1,4 +1,9 @@
+// @vitest-environment node
 import { afterEach, describe, expect, it, vi } from 'vitest'
+
+vi.hoisted(() => {
+  process.env.RESEND_API_KEY = 'key'
+})
 
 import { contactsCsv, listContacts, subscribe, type Contact } from '@/lib/resend-contacts'
 
@@ -45,7 +50,7 @@ describe('Resend calls', () => {
 
   it('creates a new contact in the segment', async () => {
     const fetch = vi.spyOn(globalThis, 'fetch').mockResolvedValue(Response.json({ id: 'c1' }))
-    expect(await subscribe('key', 'seg', 'mona@example.com')).toBe(true)
+    expect(await subscribe('seg', 'mona@example.com')).toBe(true)
     const [url, init] = fetch.mock.calls[0]!
     expect(url).toBe('https://api.resend.com/contacts')
     expect(JSON.parse(init!.body as string)).toEqual({
@@ -61,7 +66,7 @@ describe('Resend calls', () => {
       .mockResolvedValueOnce(Response.json({ message: 'exists' }, { status: 409 }))
       .mockResolvedValueOnce(Response.json({ id: 'seg' }))
       .mockResolvedValueOnce(Response.json({ id: 'c1' }))
-    expect(await subscribe('key', 'seg', 'mona@example.com')).toBe(true)
+    expect(await subscribe('seg', 'mona@example.com')).toBe(true)
     expect(fetch.mock.calls.map(([url, init]) => [init?.method, url])).toEqual([
       ['POST', 'https://api.resend.com/contacts'],
       ['POST', 'https://api.resend.com/contacts/mona%40example.com/segments/seg'],
@@ -74,7 +79,7 @@ describe('Resend calls', () => {
       .spyOn(globalThis, 'fetch')
       .mockResolvedValueOnce(Response.json({ has_more: true, data: [contact({ id: 'a' })] }))
       .mockResolvedValueOnce(Response.json({ has_more: false, data: [contact({ id: 'b' })] }))
-    expect((await listContacts('key', 'seg')).map((c) => c.id)).toEqual(['a', 'b'])
+    expect((await listContacts('seg')).map((c) => c.id)).toEqual(['a', 'b'])
     expect(String(fetch.mock.calls[1]![0])).toContain('after=a')
   })
 })

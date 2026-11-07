@@ -19,7 +19,7 @@ export async function GET(request: Request) {
   const list = asked ? await mailingList(payload, asked) : await newsletterList(payload)
   if (!list) return new Response(LIST_OFF, { status: 503 })
   const all = params.get('all') === '1'
-  const contacts = await listContacts(list.apiKey, list.segmentId)
+  const contacts = await listContacts(list.segmentId)
   const day = new Date().toISOString().slice(0, 10)
   return new Response(contactsCsv(contacts, { all }), {
     headers: {

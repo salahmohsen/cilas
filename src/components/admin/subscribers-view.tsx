@@ -98,10 +98,7 @@ export async function SubscribersView({
   let contacts: Contact[]
   let stored: number | null
   try {
-    ;[contacts, stored] = await Promise.all([
-      listContacts(list.apiKey, list.segmentId),
-      accountContactCount(list.apiKey),
-    ])
+    ;[contacts, stored] = await Promise.all([listContacts(list.segmentId), accountContactCount()])
   } catch (error) {
     return template(<p>Resend did not answer: {(error as Error).message}</p>)
   }

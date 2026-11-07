@@ -28,17 +28,16 @@ export const syncList = async (payload: Payload, list: List): Promise<SyncResult
   if (list.source !== 'members' || !list.segment_id || !env.RESEND_API_KEY) return null
   if (running.has(list.id)) throw new Error('This list is syncing already.')
   running.add(list.id)
-  const apiKey = env.RESEND_API_KEY
   const segmentId = list.segment_id
   try {
     const [wanted, current] = await Promise.all([
       memberEmails(payload, list.members ?? {}),
-      listContacts(apiKey, segmentId),
+      listContacts(segmentId),
     ])
     const { add, remove } = segmentDiff(wanted, current)
     const failed =
-      (await paced(add, (email) => addToSegment(apiKey, segmentId, email))) +
-      (await paced(remove, (email) => removeFromSegment(apiKey, segmentId, email)))
+      (await paced(add, (email) => addToSegment(segmentId, email))) +
+      (await paced(remove, (email) => removeFromSegment(segmentId, email)))
     const result = { members: wanted.length, added: add.length, removed: remove.length, failed }
     await record(payload, list.id, {
       last_synced: new Date().toISOString(),

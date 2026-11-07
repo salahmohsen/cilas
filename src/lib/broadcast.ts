@@ -1,10 +1,11 @@
+import { resend } from '@/lib/resend'
+
 /**
  * Sends a newsletter issue to a Resend segment (ADR 0005: the list lives in
  * Resend). Resend adds each contact's unsubscribe link where the HTML has
  * {{{RESEND_UNSUBSCRIBE_URL}}}. Returns the broadcast id.
  */
 export async function sendBroadcast(args: {
-  apiKey: string
   segmentId: string
   /** People who opted out of this topic are skipped. */
   topicId?: string | null
@@ -15,9 +16,8 @@ export async function sendBroadcast(args: {
   text: string
   name: string
 }): Promise<string> {
-  const res = await fetch('https://api.resend.com/broadcasts', {
+  const { ok, status, body } = await resend('/broadcasts', {
     method: 'POST',
-    headers: { Authorization: `Bearer ${args.apiKey}`, 'Content-Type': 'application/json' },
     body: JSON.stringify({
       segment_id: args.segmentId,
       ...(args.topicId ? { topic_id: args.topicId } : {}),
@@ -30,7 +30,7 @@ export async function sendBroadcast(args: {
       send: true,
     }),
   })
-  const body = (await res.json().catch(() => ({}))) as { id?: string; message?: string }
-  if (!res.ok || !body.id) throw new Error(body.message ?? `Resend answered ${res.status}`)
+  if (!ok || typeof body.id !== 'string')
+    throw new Error((body.message as string) ?? `Resend answered ${status}`)
   return body.id
 }
