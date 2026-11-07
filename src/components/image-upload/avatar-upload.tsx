@@ -1,15 +1,6 @@
 'use client'
 
-import {
-  useEffect,
-  useId,
-  useImperativeHandle,
-  useRef,
-  useState,
-  type CSSProperties,
-  type ReactNode,
-  type Ref,
-} from 'react'
+import { useEffect, useId, useRef, useState, type ReactNode } from 'react'
 import { useTranslations } from 'next-intl'
 import { AnimatePresence, motion, useReducedMotion } from 'motion/react'
 import { Camera, Check, CircleAlert } from 'lucide-react'
@@ -17,30 +8,14 @@ import { Camera, Check, CircleAlert } from 'lucide-react'
 import { Button } from '@/components/arc/button/button'
 import { motionTokens } from '@/components/arc/lib/motion-tokens'
 import { outputSize } from '@/lib/image-crop'
-import { downscaleImage } from '@/lib/image-downscale'
+import { PHOTO_MAX_BYTES, PHOTO_TYPES } from '@/lib/profile-limits'
 
 import { Cropper, type CropResult } from './cropper'
-import {
-  DEFAULT_ACCEPT,
-  DEFAULT_MAX_SIZE,
-  decodePhoto,
-  dropPicked,
-  renderCrop,
-  useUploadWords,
-  type Picked,
-  type UploadError,
-} from './pick'
+import { renderCrop, useImagePick } from './pick'
 import { AutoHeight } from './auto-height'
 import { AvatarImage } from '@/components/person/avatar-image'
 import { useLoadedSrc } from './use-photo'
 import styles from './image-upload.module.css'
-
-export type AvatarUploadHandle = {
-  /** Shows the file picker. */
-  open: () => void
-  /** Runs a file through the same checks as a pick or a drop. */
-  selectFile: (file: File) => void
-}
 
 export type AvatarUploadProps = {
   /** The person's name, for the initials when there is no photo. */
@@ -60,28 +35,15 @@ export type AvatarUploadProps = {
   ) => Promise<string | void>
   /** Called by Remove; without it there is no Remove. A rejected promise keeps the photo. */
   onRemove?: () => void | Promise<void>
-  onError?: (error: UploadError) => void
-  accept?: string[]
-  /** The largest file in bytes, checked before the photo is decoded. */
-  maxSize?: number
-  /** The avatar's diameter at rest, in px. The crop circle is 184px. */
-  size?: number
-  /** The side of the square passed to `onUpload`, in px. */
-  outputSize?: number
-  /** False skips the crop step: the photo uploads as chosen, shrunk like a post's photos. */
-  crop?: boolean
-  label?: string
-  hint?: ReactNode
-  disabled?: boolean
-  className?: string
-  style?: CSSProperties
-  ref?: Ref<AvatarUploadHandle>
 }
 
 type Phase = 'idle' | 'crop' | 'uploading' | 'failed' | 'done'
 type Note = { tone: 'hint' | 'success' | 'error'; text: ReactNode } | null
 
 const CROP = 184
+const SIZE = 88
+/** The side of the square passed to `onUpload`, in px. */
+const OUTPUT_SIZE = 512
 const SETTLE_MS = 480
 
 const initialsOf = (name: string) =>
@@ -97,47 +59,24 @@ const initialsOf = (name: string) =>
  * the avatar, crop it in a circle the avatar grows into, and watch it upload
  * through a ring around the avatar. Errors are explained in place, with retry.
  */
-export function AvatarUpload({
-  name,
-  fallbackSeed,
-  src,
-  onUpload,
-  onRemove,
-  onError,
-  accept = DEFAULT_ACCEPT,
-  maxSize = DEFAULT_MAX_SIZE,
-  size = 88,
-  outputSize: edge = 512,
-  crop = true,
-  label,
-  hint,
-  disabled,
-  className,
-  style,
-  ref,
-}: AvatarUploadProps) {
+export function AvatarUpload({ name, fallbackSeed, src, onUpload, onRemove }: AvatarUploadProps) {
   const t = useTranslations('ImageUpload')
-  const words = useUploadWords(accept, maxSize)
   const reduce = !!useReducedMotion()
   const id = useId()
-  const picker = useRef<HTMLInputElement>(null)
   const action = useRef<HTMLButtonElement>(null)
   const refocus = useRef(false)
   const [phase, setPhase] = useState<Phase>('idle')
-  const [picked, setPicked] = useState<Picked | null>(null)
   const [pending, setPending] = useState<{ blob: Blob; url: string; original: File } | null>(null)
   const [progress, setProgress] = useState<number | null>(null)
   const [note, setNote] = useState<Note>(null)
   const [announce, setAnnounce] = useState('')
-  const [over, setOver] = useState(false)
   const controller = useRef<AbortController | null>(null)
   // A local photo (an upload that kept no URL) or a removal, until `src` changes.
   const [local, setLocal] = useState<{ for: string | null | undefined; url: string | null }>()
   const current = local && local.for === src ? local.url : (src ?? null)
   const shown = useLoadedSrc(current)
-  const name_ = label ?? t('avatarLabel')
+  const label = t('avatarLabel')
 
-  useEffect(() => () => dropPicked(picked), [picked])
   useEffect(() => () => void (pending && URL.revokeObjectURL(pending.url)), [pending])
   useEffect(() => () => controller.current?.abort(), [])
   useEffect(() => {
@@ -146,10 +85,22 @@ export function AvatarUpload({
     action.current?.focus()
   }, [phase])
 
-  const fail = (error: UploadError) => {
-    setNote({ tone: 'error', text: error.message })
-    setAnnounce(error.message)
-    onError?.(error)
+  const busy = phase === 'uploading' || phase === 'done'
+  const pick = useImagePick({
+    accept: PHOTO_TYPES,
+    maxSize: PHOTO_MAX_BYTES,
+    locked: busy,
+    onPicked: () => {
+      setNote(null)
+      setPhase('crop')
+    },
+    onError: (message) => fail(message),
+  })
+  const { words, picked } = pick
+
+  const fail = (message: string) => {
+    setNote({ tone: 'error', text: message })
+    setAnnounce(message)
   }
 
   const upload = async (blob: Blob, original: File) => {
@@ -181,53 +132,33 @@ export function AvatarUpload({
       setLocal({ for: src, url: url || URL.createObjectURL(blob) })
       setNote({ tone: 'success', text: t('updated') })
       setAnnounce(t('updated'))
-      window.setTimeout(
-        () => {
-          setPhase((p) => (p === 'done' ? 'idle' : p))
-          setPending(null)
-        },
-        reduce ? 0 : SETTLE_MS + 280,
-      )
+      // With motion the closing ring ends the phase (`settle`); without it nothing waits.
+      if (reduce) settle()
     } catch (error) {
       if (ctrl.signal.aborted) return
       setPhase('failed')
       const message = error instanceof Error && error.message ? error.message : ''
-      fail({ code: 'upload', message: message || words.upload.message })
+      fail(message || words.upload)
     }
   }
 
-  const take = async (file: File) => {
-    if (disabled || phase === 'uploading') return
-    const issue = words.check(file)
-    if (issue) return fail(issue)
-    if (!crop) {
-      setNote(null)
-      return upload(await downscaleImage(file), file)
-    }
-    const next = await decodePhoto(file)
-    if (!next) return fail(words.decode)
-    setPicked(next)
-    setNote(null)
-    setPhase('crop')
+  const settle = () => {
+    setPhase((p) => (p === 'done' ? 'idle' : p))
+    setPending(null)
   }
-
-  useImperativeHandle(ref, () => ({
-    open: () => picker.current?.click(),
-    selectFile: (file) => void take(file),
-  }))
 
   const save = async (rect: CropResult) => {
     if (!picked) return
     refocus.current = true
-    const blob = await renderCrop(picked, rect, outputSize(1, edge))
+    const blob = await renderCrop(picked, rect, outputSize(1, OUTPUT_SIZE))
     const original = picked.file
-    setPicked(null)
+    pick.clear()
     void upload(blob, original)
   }
 
   const cancelCrop = () => {
     refocus.current = true
-    setPicked(null)
+    pick.clear()
     setPhase('idle')
   }
 
@@ -240,12 +171,12 @@ export function AvatarUpload({
   }
 
   const remove = async () => {
-    if (!onRemove || disabled) return
+    if (!onRemove) return
     try {
       await onRemove()
     } catch (error) {
       const message = error instanceof Error && error.message ? error.message : ''
-      return fail({ code: 'upload', message: message || words.upload.message })
+      return fail(message || words.upload)
     }
     refocus.current = true
     setLocal({ for: src, url: null })
@@ -254,32 +185,15 @@ export function AvatarUpload({
     setPhase('idle')
   }
 
-  const busy = phase === 'uploading' || phase === 'done'
   const inset = phase === 'uploading' || phase === 'failed'
   const photo = pending && phase !== 'idle' ? pending.url : shown
-  const message = note ?? { tone: 'hint' as const, text: hint ?? words.hint }
+  const message = note ?? { tone: 'hint' as const, text: words.hint }
   const layoutId = `${id}-avatar`
   const smooth = reduce ? { duration: 0 } : motionTokens.spring.smooth
 
   return (
-    <div
-      className={[styles.avatarUpload, className].filter(Boolean).join(' ')}
-      style={style}
-      role="group"
-      aria-label={name_}
-      data-disabled={disabled || undefined}
-    >
-      <input
-        ref={picker}
-        type="file"
-        hidden
-        accept={accept.join(',')}
-        onChange={(event) => {
-          const file = event.currentTarget.files?.[0]
-          event.currentTarget.value = ''
-          if (file) void take(file)
-        }}
-      />
+    <div className={styles.avatarUpload} role="group" aria-label={label}>
+      <input {...pick.inputProps} />
       <AutoHeight>
         {phase === 'crop' && picked ? (
           <Cropper
@@ -298,25 +212,14 @@ export function AvatarUpload({
               type="button"
               layoutId={layoutId}
               className={styles.avatar}
-              style={{ width: size, height: size, borderRadius: 9999 }}
+              style={{ width: SIZE, height: SIZE, borderRadius: 9999 }}
               transition={smooth}
               aria-label={shown ? t('avatarChange') : t('avatarUpload')}
-              aria-disabled={disabled || busy || undefined}
-              data-over={over || undefined}
+              aria-disabled={busy || undefined}
+              data-over={pick.over || undefined}
               data-busy={busy || inset || undefined}
-              onClick={() => !disabled && !busy && !inset && picker.current?.click()}
-              onDragOver={(event) => {
-                if (disabled || busy) return
-                event.preventDefault()
-                setOver(true)
-              }}
-              onDragLeave={() => setOver(false)}
-              onDrop={(event) => {
-                event.preventDefault()
-                setOver(false)
-                const file = event.dataTransfer.files[0]
-                if (file) void take(file)
-              }}
+              onClick={() => !busy && !inset && pick.open()}
+              {...pick.dropProps}
             >
               <motion.span
                 className={styles.avatarPhoto}
@@ -356,13 +259,13 @@ export function AvatarUpload({
                 />
               </motion.span>
               <span className={styles.camera} aria-hidden="true">
-                <Camera size={Math.round(size / 4)} strokeWidth={1.75} />
+                <Camera size={Math.round(SIZE / 4)} strokeWidth={1.75} />
               </span>
-              <Ring phase={phase} progress={progress} reduce={reduce} />
+              <Ring phase={phase} progress={progress} reduce={reduce} onSettled={settle} />
             </motion.button>
 
             <div className={styles.side}>
-              <p className={styles.title}>{name_}</p>
+              <p className={styles.title}>{label}</p>
               <AnimatePresence mode="popLayout" initial={false}>
                 <motion.p
                   key={`${message.tone}-${typeof message.text === 'string' ? message.text.replace(/\d+%$/, '') : 'x'}`}
@@ -415,8 +318,8 @@ export function AvatarUpload({
                       type="button"
                       size="sm"
                       variant="secondary"
-                      disabled={disabled || phase === 'done'}
-                      onClick={() => picker.current?.click()}
+                      disabled={phase === 'done'}
+                      onClick={pick.open}
                     >
                       {shown ? t('replace') : t('upload')}
                     </Button>
@@ -425,7 +328,7 @@ export function AvatarUpload({
                         type="button"
                         size="sm"
                         variant="ghost"
-                        disabled={disabled || phase === 'done'}
+                        disabled={phase === 'done'}
                         onClick={() => void remove()}
                       >
                         {t('remove')}
@@ -454,10 +357,13 @@ function Ring({
   phase,
   progress,
   reduce,
+  onSettled,
 }: {
   phase: Phase
   progress: number | null
   reduce: boolean
+  /** The closing ring has finished: the success phase may end. */
+  onSettled: () => void
 }) {
   const shown = phase === 'uploading' || phase === 'failed' || phase === 'done'
   const waiting = phase === 'uploading' && progress === null
@@ -493,6 +399,7 @@ function Ring({
               r="49"
               initial={{ scale: 1, opacity: 1 }}
               animate={{ scale: 1.12, opacity: 0 }}
+              onAnimationComplete={onSettled}
               transition={{
                 duration: SETTLE_MS / 1000,
                 delay: 0.22,

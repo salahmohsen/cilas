@@ -18,6 +18,7 @@ import { personOf } from '@/access'
 import { SOCIAL_PLATFORMS } from '@/fields/social'
 import type { User } from '@/payload-types'
 import { profileBioReadOnly, protectedBioText } from '@/lib/profile-rich-text'
+import { HTTP_URL, LINKS_MAX, NAME_MAX, PHOTO_MAX_BYTES, PHOTO_TYPES } from '@/lib/profile-limits'
 
 type SocialLink = { platform: (typeof SOCIAL_PLATFORMS)[number]; url: string }
 
@@ -46,26 +47,25 @@ export type ProfileInput = {
 export type ProfileError = 'name' | 'bio' | 'website' | 'social' | 'name-ar' | 'photo' | 'no-person'
 
 // Same rule as the collection's own URL validator, so Payload never rejects what passes here.
-const httpUrl = z
-  .url()
-  .trim()
-  .regex(/^https?:\/\/\S+$/i)
+const httpUrl = z.url().trim().regex(HTTP_URL)
 
 const unixEol = (value: string): string => value.replace(/\r\n?/g, '\n')
 
 const schema = z.object({
-  name: z.object({ en: z.string().trim().min(1).max(120), ar: z.string().trim().max(120) }),
+  name: z.object({
+    en: z.string().trim().min(1).max(NAME_MAX),
+    ar: z.string().trim().max(NAME_MAX),
+  }),
   // Browsers send multi-line values with \r\n; stored bios export with \n.
   bio: z.object({
     en: z.string().max(5000).transform(unixEol),
     ar: z.string().max(5000).transform(unixEol),
   }),
   website: z.union([z.literal(''), httpUrl]),
-  socialLinks: z.array(z.object({ platform: z.enum(SOCIAL_PLATFORMS), url: httpUrl })).max(8),
+  socialLinks: z
+    .array(z.object({ platform: z.enum(SOCIAL_PLATFORMS), url: httpUrl }))
+    .max(LINKS_MAX),
 })
-
-const PHOTO_TYPES = ['image/jpeg', 'image/png', 'image/webp']
-const PHOTO_MAX_BYTES = 5 * 1024 * 1024
 
 const FIELD_ERROR: Record<keyof ProfileInput, ProfileError> = {
   name: 'name',

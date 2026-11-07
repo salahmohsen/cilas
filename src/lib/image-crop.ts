@@ -104,7 +104,7 @@ export const outputSize = (ratio: number, edge: number, crop?: Size): Size => {
     : { width: Math.max(1, Math.round(long * ratio)), height: long }
 }
 
-export type ImageIssue = 'type' | 'size'
+type ImageIssue = 'type' | 'size'
 
 /** Type and size, checked before the photo is decoded. */
 export const imageIssue = (

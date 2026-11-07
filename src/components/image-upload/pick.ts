@@ -1,22 +1,17 @@
 'use client'
 
+import { useEffect, useRef, useState, type ChangeEvent, type DragEvent } from 'react'
 import { useLocale, useTranslations } from 'next-intl'
 
 import { fileKind, imageIssue, megabytes, typeNames, type Size } from '@/lib/image-crop'
 
 import type { CropResult } from './cropper'
 
-export type UploadErrorCode = 'type' | 'size' | 'decode' | 'upload'
-export type UploadError = { code: UploadErrorCode; message: string }
-
-export const DEFAULT_ACCEPT = ['image/png', 'image/jpeg', 'image/webp']
-export const DEFAULT_MAX_SIZE = 5 * 1024 * 1024
-
 /** A picked photo, decoded and upright, ready for the crop step. */
-export type Picked = { file: File; url: string; bitmap: ImageBitmap; size: Size }
+type Picked = { file: File; url: string; bitmap: ImageBitmap; size: Size }
 
 /** Decodes a photo, turned upright, or null when it is not one. */
-export const decodePhoto = async (file: File): Promise<Picked | null> => {
+const decodePhoto = async (file: File): Promise<Picked | null> => {
   try {
     const bitmap = await createImageBitmap(file, { imageOrientation: 'from-image' })
     return {
@@ -30,7 +25,7 @@ export const decodePhoto = async (file: File): Promise<Picked | null> => {
   }
 }
 
-export const dropPicked = (picked: Picked | null) => {
+const dropPicked = (picked: Picked | null) => {
   if (!picked) return
   picked.bitmap.close()
   URL.revokeObjectURL(picked.url)
@@ -78,7 +73,7 @@ export const asFile = (blob: Blob, original: File) =>
   )
 
 /** The hint and every check's message, in the page's language. */
-export function useUploadWords(accept: readonly string[], maxSize: number) {
+function useUploadWords(accept: readonly string[], maxSize: number) {
   const t = useTranslations('ImageUpload')
   const locale = useLocale()
   const list = new Intl.ListFormat(locale === 'ar' ? 'ar' : 'en-GB', {
@@ -90,22 +85,93 @@ export function useUploadWords(accept: readonly string[], maxSize: number) {
   return {
     hint: t('hint', { types, max }),
     /** The type and size checks, before decoding; null when the file may go on. */
-    check: (file: File): UploadError | null => {
+    check: (file: File): string | null => {
       const issue = imageIssue(file, accept, maxSize)
       if (issue === 'size') {
         const size = t('megabytes', { n: megabytes(file.size) })
-        return { code: 'size', message: t('errors.size', { size, max }) }
+        return t('errors.size', { size, max })
       }
       if (issue === 'type') {
         const kind = fileKind(file.name)
-        return {
-          code: 'type',
-          message: kind ? t('errors.type', { kind, types }) : t('errors.typeUnknown', { types }),
-        }
+        return kind ? t('errors.type', { kind, types }) : t('errors.typeUnknown', { types })
       }
       return null
     },
-    decode: { code: 'decode', message: t('errors.decode') } satisfies UploadError,
-    upload: { code: 'upload', message: t('errors.upload') } satisfies UploadError,
+    decode: t('errors.decode'),
+    upload: t('errors.upload'),
+  }
+}
+
+/**
+ * Picking a photo for both uploaders: the file input, the drop target, the
+ * type and size checks and the decode. `onPicked` gets the decoded photo for
+ * the crop step; `onError` gets the message of a refused file. Nothing is
+ * taken while `locked`.
+ */
+export function useImagePick({
+  accept,
+  maxSize,
+  locked,
+  onPicked,
+  onError,
+}: {
+  accept: readonly string[]
+  maxSize: number
+  locked: boolean
+  onPicked: () => void
+  onError: (message: string) => void
+}) {
+  const words = useUploadWords(accept, maxSize)
+  const input = useRef<HTMLInputElement>(null)
+  const [picked, setPicked] = useState<Picked | null>(null)
+  const [over, setOver] = useState(false)
+
+  useEffect(() => () => dropPicked(picked), [picked])
+
+  const take = async (file: File) => {
+    if (locked) return
+    const issue = words.check(file)
+    if (issue) return onError(issue)
+    const next = await decodePhoto(file)
+    if (!next) return onError(words.decode)
+    setPicked(next)
+    onPicked()
+  }
+
+  return {
+    words,
+    picked,
+    /** Lets the picked photo go, when the crop is saved or cancelled. */
+    clear: () => setPicked(null),
+    /** Shows the file picker. */
+    open: () => input.current?.click(),
+    over,
+    /** Spread on the hidden file input. */
+    inputProps: {
+      ref: input,
+      type: 'file' as const,
+      hidden: true,
+      accept: accept.join(','),
+      onChange: (event: ChangeEvent<HTMLInputElement>) => {
+        const file = event.currentTarget.files?.[0]
+        event.currentTarget.value = ''
+        if (file) void take(file)
+      },
+    },
+    /** Spread on whatever takes a dropped photo. */
+    dropProps: {
+      onDragOver: (event: DragEvent) => {
+        if (locked) return
+        event.preventDefault()
+        setOver(true)
+      },
+      onDragLeave: () => setOver(false),
+      onDrop: (event: DragEvent) => {
+        event.preventDefault()
+        setOver(false)
+        const file = event.dataTransfer.files[0]
+        if (file) void take(file)
+      },
+    },
   }
 }

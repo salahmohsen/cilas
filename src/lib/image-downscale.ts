@@ -13,7 +13,7 @@ const encode = (canvas: HTMLCanvasElement, type: string) =>
  * space-files collection) is the authority and shrinks it again. Any file the
  * browser cannot decode passes through for the server to judge.
  */
-export const downscaleImage = async (file: File): Promise<File> => {
+const downscaleImage = async (file: File): Promise<File> => {
   if (!SHRINKABLE.has(file.type)) return file
   let bitmap: ImageBitmap
   try {

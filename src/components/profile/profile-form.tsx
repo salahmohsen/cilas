@@ -12,6 +12,7 @@ import { Input } from '@/components/arc/input/input'
 import { Tooltip } from '@/components/arc/tooltip/tooltip'
 import { personAvatarSeed } from '@/lib/avatar'
 import { AvatarUpload } from '@/components/image-upload/avatar-upload'
+import { asFile } from '@/components/image-upload/pick'
 import { sendWithProgress } from '@/components/image-upload/send'
 import { RichField } from '@/components/rich-field'
 import { bioBaseline, bioToSend } from '@/components/profile/bio'
@@ -20,15 +21,11 @@ import { Select } from '@/components/select'
 import { useSettingsSection } from '@/components/settings/settings-shell'
 import { SOCIAL_PLATFORMS } from '@/fields/social'
 import type { ProfileError, ProfileView } from '@/lib/profile'
+import { HTTP_URL, LINKS_MAX, NAME_MAX } from '@/lib/profile-limits'
 
 import styles from './profile-form.module.css'
 
 const platformLabel = (p: string) => (p === 'x' ? 'X' : p.charAt(0).toUpperCase() + p.slice(1))
-
-/** The rule the server keeps (lib/profile): a web address starting with http:// or https://. */
-const HTTP_URL = /^https?:\/\/\S+$/i
-const NAME_MAX = 120
-const LINKS_MAX = 8
 
 export type { ProfileMessages }
 
@@ -223,9 +220,7 @@ export function ProfileForm({ profile, messages: m, action, removePhotoAction, o
         src={profile.photo?.url}
         onUpload={async (image, { report, signal, original }) => {
           const data = new FormData()
-          const type = image.type === 'image/png' ? 'png' : 'jpg'
-          const name = `${original.name.replace(/\.[^.]+$/, '') || 'photo'}.${type}`
-          data.set('photo', new File([image], name, { type: image.type }))
+          data.set('photo', asFile(image, original))
           const sent = await sendWithProgress<PhotoState>('/api/profile-photo', data, {
             onProgress: report,
             signal,

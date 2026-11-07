@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useId, useRef, useState, type DragEvent } from 'react'
+import { useEffect, useId, useRef, useState } from 'react'
 import { useTranslations } from 'next-intl'
 import { AnimatePresence, motion, useReducedMotion } from 'motion/react'
 import { CircleAlert, ImagePlus } from 'lucide-react'
@@ -8,20 +8,9 @@ import { CircleAlert, ImagePlus } from 'lucide-react'
 import { Button } from '@/components/arc/button/button'
 import { motionTokens } from '@/components/arc/lib/motion-tokens'
 import { outputSize } from '@/lib/image-crop'
-import { downscaleImage } from '@/lib/image-downscale'
 
 import { Cropper, type CropResult } from './cropper'
-import {
-  DEFAULT_ACCEPT,
-  DEFAULT_MAX_SIZE,
-  asFile,
-  decodePhoto,
-  dropPicked,
-  renderCrop,
-  useUploadWords,
-  type Picked,
-  type UploadError,
-} from './pick'
+import { asFile, renderCrop, useImagePick } from './pick'
 import { AutoHeight } from './auto-height'
 import styles from './image-upload.module.css'
 
@@ -35,19 +24,15 @@ export type ImageUploadFieldProps = {
   onChange: (value: ImageValue) => void
   /** Width over height of the crop and the preview: 16 / 9, 4 / 5, 1 for a square. */
   ratio?: number
-  /** False skips the crop step: the photo is kept as chosen, shrunk like a post's photos. */
-  crop?: boolean
-  accept?: string[]
+  accept: string[]
   /** The largest file in bytes, checked before the photo is decoded. */
-  maxSize?: number
+  maxSize: number
   /** The long side of the cropped photo, in px; a smaller crop is never enlarged. */
   outputEdge?: number
   /** The empty field's button. */
   addLabel?: string
   /** Words before the generated hint (the kinds and the size limit). */
   description?: string
-  disabled?: boolean
-  onError?: (error: UploadError) => void
 }
 
 const STAGE_PAD = 20
@@ -62,30 +47,29 @@ export function ImageUploadField({
   value,
   onChange,
   ratio = 16 / 9,
-  crop = true,
-  accept = DEFAULT_ACCEPT,
-  maxSize = DEFAULT_MAX_SIZE,
+  accept,
+  maxSize,
   outputEdge = 1600,
   addLabel,
   description,
-  disabled,
-  onError,
 }: ImageUploadFieldProps) {
   const t = useTranslations('ImageUpload')
-  const words = useUploadWords(accept, maxSize)
   const reduce = !!useReducedMotion()
   const id = useId()
-  const picker = useRef<HTMLInputElement>(null)
   const action = useRef<HTMLButtonElement>(null)
   const refocus = useRef(false)
   const root = useRef<HTMLDivElement>(null)
   const [width, setWidth] = useState(0)
-  const [picked, setPicked] = useState<Picked | null>(null)
   const [busy, setBusy] = useState(false)
   const [error, setError] = useState<string | null>(null)
-  const [over, setOver] = useState(false)
-
-  useEffect(() => () => dropPicked(picked), [picked])
+  const pick = useImagePick({
+    accept,
+    maxSize,
+    locked: busy,
+    onPicked: () => setError(null),
+    onError: setError,
+  })
+  const { words, picked } = pick
   // A preview made here is let go when the value moves on.
   const preview = value.file ? value.url : null
   useEffect(() => () => void (preview && URL.revokeObjectURL(preview)), [preview])
@@ -102,27 +86,6 @@ export function ImageUploadField({
     action.current?.focus()
   }, [picked, value.url])
 
-  const fail = (issue: UploadError) => {
-    setError(issue.message)
-    onError?.(issue)
-  }
-
-  const take = async (file: File) => {
-    if (disabled || busy) return
-    const issue = words.check(file)
-    if (issue) return fail(issue)
-    setError(null)
-    if (!crop) {
-      setBusy(true)
-      const ready = await downscaleImage(file)
-      setBusy(false)
-      return onChange({ file: ready, url: URL.createObjectURL(ready) })
-    }
-    const next = await decodePhoto(file)
-    if (!next) return fail(words.decode)
-    setPicked(next)
-  }
-
   const save = async (rect: CropResult) => {
     if (!picked) return
     refocus.current = true
@@ -131,43 +94,19 @@ export function ImageUploadField({
     const file = asFile(blob, picked.file)
     setBusy(false)
     onChange({ file, url: URL.createObjectURL(file) })
-    setPicked(null)
+    pick.clear()
   }
 
   const frameWidth = Math.max(160, Math.round(width - STAGE_PAD * 2))
   const smooth = reduce ? { duration: 0 } : motionTokens.spring.smooth
   const layoutId = `${id}-image`
-  const drop = {
-    onDragOver: (event: DragEvent) => {
-      if (disabled || busy) return
-      event.preventDefault()
-      setOver(true)
-    },
-    onDragLeave: () => setOver(false),
-    onDrop: (event: DragEvent) => {
-      event.preventDefault()
-      setOver(false)
-      const file = event.dataTransfer.files[0]
-      if (file) void take(file)
-    },
-  }
 
   return (
     <div ref={root} className={styles.field} role="group" aria-labelledby={`${id}-label`}>
       <span id={`${id}-label`} className={styles.fieldLabel}>
         {label}
       </span>
-      <input
-        ref={picker}
-        type="file"
-        hidden
-        accept={accept.join(',')}
-        onChange={(event) => {
-          const file = event.currentTarget.files?.[0]
-          event.currentTarget.value = ''
-          if (file) void take(file)
-        }}
-      />
+      <input {...pick.inputProps} />
       <AutoHeight>
         {picked && width > 0 ? (
           <Cropper
@@ -180,7 +119,7 @@ export function ImageUploadField({
             onSave={save}
             onCancel={() => {
               refocus.current = true
-              setPicked(null)
+              pick.clear()
             }}
           />
         ) : value.url ? (
@@ -189,8 +128,8 @@ export function ImageUploadField({
             className={styles.preview}
             style={{ aspectRatio: ratio, borderRadius: 'var(--radius-control)' }}
             transition={smooth}
-            data-over={over || undefined}
-            {...drop}
+            data-over={pick.over || undefined}
+            {...pick.dropProps}
           >
             {/* A local preview or the stored private file; next/image cannot read either. */}
             {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -201,8 +140,8 @@ export function ImageUploadField({
                 type="button"
                 size="sm"
                 variant="secondary"
-                disabled={disabled || busy}
-                onClick={() => picker.current?.click()}
+                disabled={busy}
+                onClick={pick.open}
               >
                 {t('replace')}
               </Button>
@@ -210,7 +149,7 @@ export function ImageUploadField({
                 type="button"
                 size="sm"
                 variant="secondary"
-                disabled={disabled || busy}
+                disabled={busy}
                 onClick={() => {
                   refocus.current = true
                   setError(null)
@@ -227,10 +166,10 @@ export function ImageUploadField({
             type="button"
             className={styles.add}
             aria-describedby={`${id}-message`}
-            disabled={disabled || busy}
-            data-over={over || undefined}
-            onClick={() => picker.current?.click()}
-            {...drop}
+            disabled={busy}
+            data-over={pick.over || undefined}
+            onClick={pick.open}
+            {...pick.dropProps}
           >
             <ImagePlus size={18} aria-hidden="true" />
             {addLabel ?? t('add')}
