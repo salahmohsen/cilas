@@ -89,8 +89,8 @@ export interface SyllabusFeedProps {
   openAll?: boolean
   /** The visual editor's container marks for the list itself, spread onto it. */
   containerAttrs?: Attrs
-  /** Writes a number in the reader's digits, such as Arabic-Indic ones. Defaults to plain digits. */
-  digits?: (value: number) => string
+  /** The `Intl` numbering system counts are written in, such as `arab` for Arabic-Indic digits. */
+  numberingSystem?: string
   className?: string
 }
 
@@ -414,10 +414,14 @@ export function SyllabusFeed({
   defaultOpen,
   openAll = false,
   containerAttrs,
-  digits = String,
+  numberingSystem = 'latn',
   className,
 }: SyllabusFeedProps) {
   const t = useTranslations('Course')
+  const digits = useMemo(() => {
+    const format = new Intl.NumberFormat('en-US', { numberingSystem, useGrouping: false })
+    return (value: number) => format.format(value)
+  }, [numberingSystem])
   const uid = useId()
   const reduce = useReducedMotion() ?? false
   const [filters, setFilters] = useState<FilterState>({ activity: [], material: [] })
