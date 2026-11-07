@@ -57,7 +57,7 @@ Use these as acceptance criteria. Update this list with each approved correction
 
 ### Color, direction, and behavior
 
-15. Registration posters and generated person avatars share the palette in `src/lib/poster-colors.ts`. Pass it to Boring Avatars through its built-in `colors` prop. Keep stable seeds and uploaded-photo precedence.
+15. Registration posters and generated person avatars share the palette in `src/components/arc/lib/poster-colors.ts`. Pass it to Boring Avatars through its built-in `colors` prop. Keep stable seeds and uploaded-photo precedence.
 16. Use logical properties (`padding-inline`, `border-block-start`, `border-inline-end`). Set the document language and `dir="auto"` on mixed-language text.
 17. Actions stay recognizable, keyboard reachable, and visibly focused. A card-wide link must not cover independent links such as a venue map.
 18. Focal points, missing images, reduced motion, and translated labels are part of the component's behavior.
@@ -205,7 +205,7 @@ Columns that contain person-profile blocks use the Arc carousel below `48rem`, o
 
 ## 6. Shared palette and images
 
-`POSTER_COLORS` in `src/lib/poster-colors.ts` holds the registration and avatar palette: yellow `#ffb71b`, blue `#1782ea`, pink `#ff7d9d`, green `#12d08f`. Registration posters take their color from this array unless a color is supplied. Generated Beam avatars pass the same array to the library's `colors` option; the library still draws faces in black or white. Uploaded photos have priority, and the person's stable seed selects the generated portrait.
+`POSTER_COLORS` in `src/components/arc/lib/poster-colors.ts` holds the registration and avatar palette: yellow `#ffb71b`, blue `#1782ea`, pink `#ff7d9d`, green `#12d08f`. Registration posters take their color from this array unless a color is supplied. Generated Beam avatars pass the same array to the library's `colors` option; the library still draws faces in black or white. Uploaded photos have priority, and the person's stable seed selects the generated portrait.
 
 Registration covers use `imageDelivery: 'direct'` on `PosterData`. Payload already stores uploads as WebP, so this avoids a second runtime transform and the upstream fetch timeouts seen in production. Direct delivery has no responsive `srcset`, so keep uploads to a sensible size. Other posters keep Next.js image optimization unless they opt in.
 
@@ -229,7 +229,7 @@ A card is a printed thing: it stays ink on paper in the dark theme. Do not swap 
 
 ### Colour
 
-- One flat colour per card from `POSTER_COLORS` (`src/lib/poster-colors.ts`). In a list, cycle by position (`POSTER_COLORS[index % 4]`) so neighbours differ. Pass it as the inline `--poster-color` custom property.
+- One flat colour per card from `POSTER_COLORS` (`src/components/arc/lib/poster-colors.ts`). In a list, cycle by position (`POSTER_COLORS[index % 4]`) so neighbours differ. Pass it as the inline `--poster-color` custom property.
 - No gradients, tints, shadows, or transparency. A cell is either paper or the card's colour.
 - Text on a colour cell is always ink. Ink on all four colours passes WCAG AA for large text; keep body-size text on paper.
 - Generated avatars draw from the same four colours (section 6), so a person without a photo still matches the card.
@@ -353,7 +353,7 @@ Files:
 - `src/components/events/event-carousel.tsx`: events carousel.
 - `src/components/person/profile-columns.tsx`: mobile profile carousel and desktop columns.
 - `src/components/rich-text-columns.module.css`: profile carousel and column styles.
-- `src/lib/poster-colors.ts`: shared palette.
+- `src/components/arc/lib/poster-colors.ts`: shared palette.
 - `tests/poster-layout.test.mjs`: rendered geometry regression.
 - `src/app/(frontend)/[locale]/study/[slug]/CourseView.tsx`: fellow cards in Who teaches it, in the poster look (section 7); content sizes all; the `fellow-card` container switches at `44rem`, later than posters, because a photo that fills a column beside a long bio needs that width to stay a portrait and not a strip.
 

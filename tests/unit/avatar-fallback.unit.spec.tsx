@@ -13,7 +13,7 @@ import { AvatarImage } from '@/components/arc/lib/avatar-image'
 import { AvatarFallback } from '@/components/arc/lib/avatar-fallback'
 import { PeopleWheel } from '@/components/person/people-wheel'
 import { personAvatarSeed } from '@/lib/avatar'
-import { POSTER_COLORS } from '@/lib/poster-colors'
+import { POSTER_COLORS } from '@/components/arc/lib/poster-colors'
 
 vi.mock('@/i18n/navigation', () => ({ Link: 'a' }))
 

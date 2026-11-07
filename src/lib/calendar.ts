@@ -1,6 +1,6 @@
 import type { CalendarItem } from '@/api/calendar.api'
 import { addDays, cairoDay, weekdayOf, WEEKDAYS } from '@/lib/cairo-day'
-import { POSTER_COLORS } from '@/lib/poster-colors'
+import { POSTER_COLORS } from '@/components/arc/lib/poster-colors'
 
 /**
  * The calendar page's dates: which days a month, week or agenda shows.

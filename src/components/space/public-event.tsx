@@ -2,7 +2,7 @@ import { getTranslations } from 'next-intl/server'
 
 import { Badge } from '@/components/arc/badge/badge'
 import { eventOver } from '@/lib/space-event'
-import { POSTER_COLORS } from '@/lib/poster-colors'
+import { POSTER_COLORS } from '@/components/arc/lib/poster-colors'
 import type { SpaceEventItem } from '@/lib/spaces-data'
 
 import { EventFace, EventPlace, EventWhen } from './event-details'

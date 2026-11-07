@@ -1,8 +1,7 @@
 import BoringAvatar from 'boring-avatars'
 import type { SVGProps } from 'react'
 
-/** The site's poster colors (src/lib/poster-colors.ts), kept here so Arc imports no app code. */
-const AVATAR_COLORS = ['#ffb71b', '#1782ea', '#ff7d9d', '#12d08f']
+import { POSTER_COLORS } from './poster-colors'
 
 type Props = Omit<SVGProps<SVGSVGElement>, 'name'> & { seed: string }
 
@@ -12,7 +11,7 @@ export function AvatarFallback({ seed, ...props }: Props) {
     <BoringAvatar
       name={seed.trim() || 'anonymous'}
       variant="beam"
-      colors={AVATAR_COLORS}
+      colors={POSTER_COLORS}
       size="100%"
       square
       preserveAspectRatio="xMidYMid slice"

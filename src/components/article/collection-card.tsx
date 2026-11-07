@@ -5,7 +5,7 @@ import type { CSSProperties, ReactNode } from 'react'
 import { Link } from '@/i18n/navigation'
 import { localDigits } from '@/lib/digits'
 import type { MediaImage } from '@/lib/media-image'
-import { POSTER_COLORS } from '@/lib/poster-colors'
+import { POSTER_COLORS } from '@/components/arc/lib/poster-colors'
 
 export type CollectionCardItem = { id: number; title: string; authors: string; href: string }
 

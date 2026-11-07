@@ -8,7 +8,7 @@ import { InViewTitle } from '@/components/arc/in-view-title/in-view-title'
 import { CilasLogo } from '@/components/cilas-logo'
 import { DeadlineCountdown } from '@/components/home/deadline-countdown'
 import { focalPointStyle, type MediaImage } from '@/lib/media-image'
-import { POSTER_COLORS } from '@/lib/poster-colors'
+import { POSTER_COLORS } from '@/components/arc/lib/poster-colors'
 
 /**
  * The four poster variants, after the festival posters on the moodboard:

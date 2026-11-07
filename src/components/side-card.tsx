@@ -1,7 +1,7 @@
 import { ArrowRight } from 'lucide-react'
 import type { CSSProperties, ReactNode } from 'react'
 
-import { POSTER_COLORS } from '@/lib/poster-colors'
+import { POSTER_COLORS } from '@/components/arc/lib/poster-colors'
 
 /**
  * A page's side column as one poster card: sections under ink rules, each

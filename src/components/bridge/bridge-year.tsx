@@ -18,7 +18,7 @@ import { Link } from '@/i18n/navigation'
 import type { Season } from '@/lib/cycle'
 import { localDigits, numberingSystemOf } from '@/lib/digits'
 import { focalPointStyle } from '@/lib/media-image'
-import { POSTER_COLORS } from '@/lib/poster-colors'
+import { POSTER_COLORS } from '@/components/arc/lib/poster-colors'
 import { registrationStatus } from '@/lib/registration'
 import type { Cycle } from '@/payload-types'
 
