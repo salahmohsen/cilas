@@ -29,8 +29,8 @@ import {
   rsvpSet,
   eventEdit,
   voteEdit,
-  spaceLink,
 } from '@/lib/spaces-write'
+import { spaceLink } from '@/lib/space-ref'
 import { personOf } from '@/access'
 import { ABOUT_MAX } from '@/lib/space-about'
 import { mentionSafelist } from '@/lib/space-members'

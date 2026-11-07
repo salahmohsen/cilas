@@ -5,7 +5,7 @@ import { getPayload } from 'payload'
 import { currentReader } from '@/lib/reader'
 import { absoluteUrl } from '@/lib/schema'
 import { eventName, icsFor } from '@/lib/space-event'
-import { spaceLink } from '@/lib/spaces-write'
+import { spaceLink } from '@/lib/space-ref'
 
 /**
  * One event post as an iCalendar file. The post is read through the reader's

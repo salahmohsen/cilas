@@ -3,7 +3,8 @@ import type { Payload, Where } from 'payload'
 
 import { personOf } from '@/access'
 import type { ReactionCounts, ReactionKind } from '@/lib/space-reactions'
-import { archivedNow, courseLastMeeting, readOnly } from '@/lib/space-lifecycle'
+import { archiveOf, archivedNow } from '@/lib/space-lifecycle'
+import { isGhostCourse, parentOf, parentRef, spaceHref, spaceTitle } from '@/lib/space-ref'
 import { NOTICE, NOTICE_VERSION, rulesParts, rulesText, type NoticePart } from '@/lib/space-consent'
 import { spacePeople } from '@/lib/space-members'
 import { mapEmbedUrl } from '@/lib/map-embed'
@@ -45,18 +46,12 @@ const relId = (v: number | { id: number } | null | undefined) => (v == null ? nu
  * not people, so they carry no badge.
  */
 export const moderatorPeople = async (payload: Payload, space: Space): Promise<Set<number>> => {
-  if (space.kind === 'course' && space.course != null) {
-    const course = await payload.findByID({
-      collection: 'courses',
-      id: relId(space.course)!,
-      depth: 0,
-      draft: true,
-      select: { fellows: true },
-      overrideAccess: true,
-    })
-    return new Set((course.fellows ?? []).map((f) => relId(f)!).filter((v) => v != null))
+  if (space.kind === 'course') {
+    const course = await parentOf(payload, space, { select: { fellows: true }, draft: true })
+    return new Set((course?.fellows ?? []).map((f) => relId(f)!).filter((v) => v != null))
   }
-  if (space.kind === 'cohort' && space.programme != null) {
+  const ref = parentRef(space)
+  if (space.kind === 'cohort' && ref) {
     const { docs } = await payload.find({
       collection: 'memberships',
       depth: 0,
@@ -64,19 +59,13 @@ export const moderatorPeople = async (payload: Payload, space: Space): Promise<S
       overrideAccess: true,
       select: { person: true },
       where: {
-        and: [
-          { programme: { equals: relId(space.programme) } },
-          { role: { equals: 'residential_fellow' } },
-        ],
+        and: [{ programme: { equals: ref.id } }, { role: { equals: 'residential_fellow' } }],
       },
     })
     return new Set(docs.map((m) => relId(m.person as never)!).filter((v) => v != null))
   }
   return new Set()
 }
-
-/** The community space's fixed label (spec §2: it is the one kind with no document behind it). */
-export const COMMUNITY_LABEL = 'Community'
 
 /** One row of My spaces (spec §2): a link, an unread count, a last activity. */
 export type SpaceSummary = {
@@ -96,7 +85,7 @@ export type SpaceSummary = {
 /** The cover of a community space, which has no course or programme to lend one. */
 export const COMMUNITY_COVER = '/assets/images/pigeons-tower.jpg'
 
-export const coverOf = (label: { cover_image?: unknown; cover?: unknown } | undefined) => {
+export const coverOf = (label: { cover_image?: unknown; cover?: unknown } | null | undefined) => {
   const media = label?.cover_image ?? label?.cover
   return media && typeof media === 'object'
     ? ((media as { url?: string | null }).url ?? null)
@@ -113,6 +102,7 @@ export const mySpaces = async (
   cohorts: SpaceSummary[]
   courses: SpaceSummary[]
 }> => {
+  const lang = locale === 'ar' ? 'ar' : 'en'
   const settings = await spacesSettings(payload)
   if (mode(settings) === 'off') return { communities: [], cohorts: [], courses: [] }
   const ids = await readableSpaceIds(payload, user, settings)
@@ -126,7 +116,7 @@ export const mySpaces = async (
     depth: 0,
     pagination: false,
     overrideAccess: true,
-    locale: locale === 'ar' ? 'ar' : 'en',
+    locale: lang,
     sort: 'id',
     where: ids === true ? undefined : { id: { in: ids } },
   })
@@ -234,10 +224,8 @@ export const mySpaces = async (
   const cohorts: SpaceSummary[] = []
   const courses: SpaceSummary[] = []
   for (const s of docs) {
-    const courseId = relId(s.course)
-    // A course row deleted since its space was made leaves `course: null`.
-    // Nobody reads that ghost (mirrors readableSpaceIds).
-    if (s.kind === 'course' && courseId == null) continue
+    // Nobody reads a ghost course space (mirrors readableSpaceIds).
+    if (isGhostCourse(s)) continue
     const list = postsBySpace.get(s.id) ?? []
     const visited = visitedAt.get(s.id)
     const isNew = (x: { createdAt: string; author?: unknown }) =>
@@ -249,19 +237,16 @@ export const mySpaces = async (
       const when = p.last_activity_at ?? p.createdAt
       return acc && acc > when ? acc : when
     }, null)
-    const course = s.kind === 'course' ? courseOf.get(relId(s.course) ?? -1) : undefined
-    const programme = s.kind === 'cohort' ? programmeOf.get(relId(s.programme) ?? -1) : undefined
+    const ref = parentRef(s)
+    const parent = ref && (ref.collection === 'courses' ? courseOf : programmeOf).get(ref.id)
     const summary: SpaceSummary = {
       space: s,
-      title: course?.title ?? programme?.title ?? (s.name?.trim() || COMMUNITY_LABEL),
-      href:
-        s.kind === 'community'
-          ? `/${locale}/spaces/community/${s.id}`
-          : `/${locale}/spaces/${s.kind}/${course?.slug ?? programme?.slug ?? ''}`,
+      title: spaceTitle(s, parent, lang),
+      href: spaceHref(s, parent, { locale: lang }),
       unread,
       lastActivity,
-      archived: archivedNow(s, course),
-      cover: coverOf(course ?? programme),
+      archived: archivedNow(s, parent),
+      cover: coverOf(parent),
     }
     if (s.kind === 'community') communities.push(summary)
     else if (s.kind === 'cohort') cohorts.push(summary)
@@ -283,23 +268,8 @@ const archiveState = async (payload: Payload, space: number | Space) => {
     depth: 0,
     overrideAccess: true,
   })) as Space
-  const courseRel = row.kind === 'course' ? relId(row.course) : null
-  const course =
-    courseRel != null
-      ? await payload.findByID({
-          collection: 'courses',
-          id: courseRel,
-          depth: 0,
-          draft: true,
-          overrideAccess: true,
-        })
-      : null
-  const lastMeeting = course ? courseLastMeeting(course) : null
-  const daysSince = lastMeeting
-    ? Math.floor((Date.now() - new Date(lastMeeting).getTime()) / 86_400_000)
-    : null
-  const archived = readOnly({ kind: row.kind, reopened: row.reopened }, lastMeeting, daysSince)
-  return { row, archived, lastMeeting, daysSince }
+  const course = row.kind === 'course' ? await parentOf(payload, row, { draft: true }) : null
+  return { row, ...archiveOf(row, course) }
 }
 
 type Reactions = { counts: ReactionCounts; mine: ReactionKind[] }

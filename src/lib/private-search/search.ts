@@ -2,6 +2,8 @@ import type { Payload, PayloadRequest, Where } from 'payload'
 import type { Client } from 'typesense'
 import { activeGeneration } from './generation'
 import type { User } from '@/payload-types'
+import { relation } from '@/lib/relation'
+import { spaceHref, spaceTitle, type SpaceParent } from '@/lib/space-ref'
 import { requestReadState } from '@/lib/spaces'
 import {
   BATCH_SIZE,
@@ -64,15 +66,10 @@ export const spaceOptions = async (
     populate: { courses: { title: true, slug: true }, programmes: { title: true, slug: true } },
   })
   return docs.flatMap((s) => {
-    const relation = s.kind === 'course' ? s.course : s.programme
-    const parent = relation && typeof relation === 'object' ? relation : null
+    const parent = relation<SpaceParent>(s.kind === 'course' ? s.course : s.programme)
     if (s.kind !== 'community' && !parent?.slug) return []
     return [
-      {
-        id: s.id,
-        label: parent?.title || s.name || (locale === 'ar' ? 'المجتمع' : 'Community'),
-        href: `/${locale}/spaces/${s.kind}/${s.kind === 'community' ? s.id : encodeURIComponent(parent!.slug!)}`,
-      },
+      { id: s.id, label: spaceTitle(s, parent, locale), href: spaceHref(s, parent, { locale }) },
     ]
   })
 }

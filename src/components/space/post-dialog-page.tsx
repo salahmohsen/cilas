@@ -3,6 +3,7 @@ import { notFound } from 'next/navigation'
 import { getPayload } from 'payload'
 
 import { currentReader } from '@/lib/reader'
+import { spaceHref } from '@/lib/space-ref'
 import { spaceLanding } from '@/lib/spaces-data'
 import { loadPost, PostArticle } from './post-article'
 
@@ -28,6 +29,6 @@ export async function PostDialogPage({ params }: { params: Promise<Params> }) {
   if (!landing) notFound()
   const loaded = await loadPost(payload, user, landing.space, postId, locale)
   if (!loaded) notFound()
-  const href = `/${locale}/spaces/${community ? `community/${spaceKey}` : `${kind}/${slug}`}/posts/${postId}`
+  const href = spaceHref(landing.space, { slug }, { locale: locale === 'ar' ? 'ar' : 'en', postId })
   return <PostArticle user={user} view={loaded.view} context={loaded.context} href={href} dialog />
 }

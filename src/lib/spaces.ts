@@ -6,6 +6,7 @@ import { cache } from 'react'
 import { isAdminUser, personOf } from '@/access'
 import { ENROLLED } from '@/lib/list-members'
 import { introGated } from '@/lib/space-intro'
+import { isGhostCourse } from '@/lib/space-ref'
 
 /**
  * ADR 0009. One helper for every rule and page: membership comes from the
@@ -327,10 +328,8 @@ export const loadReadState = async (
   const readable: number[] = []
   const waiting = new Map<number, number>()
   for (const s of open) {
-    // A course row deleted since its space was made leaves `course: null`
-    // (relations null out on delete). Nobody reads that ghost: skip it
-    // instead of findById(null) throwing inside a read rule.
-    if (s.kind === 'course' && idOf(s.course as never) == null) continue
+    // Nobody reads a ghost course space: skip it instead of findById(null) throwing inside a read rule.
+    if (isGhostCourse(s)) continue
     const { role } = membershipOf(s as SpaceLike, facts)
     if (role === 'none') continue
     readable.push(s.id)

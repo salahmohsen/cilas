@@ -5,6 +5,7 @@ import { localDigits, numberingSystemOf } from '@/lib/digits'
 import { notify } from '@/lib/notify'
 import { expandSchedule, sessionsInOrder, type Meeting } from '@/lib/schedule'
 import { spacePeople } from '@/lib/space-members'
+import { spaceHref } from '@/lib/space-ref'
 import type { Course } from '@/payload-types'
 import ar from '../../messages/ar.json'
 import en from '../../messages/en.json'
@@ -183,7 +184,7 @@ export const announceScheduleChanges: CollectionAfterChangeHook<Course> = async 
           messages: en,
           namespace: 'ScheduleNotice',
         })('notification', { space: doc.title }),
-        link: `/spaces/course/${doc.slug}/posts/${post.id}`,
+        link: spaceHref(space, doc, { postId: post.id }),
       },
     )
   } catch (error) {

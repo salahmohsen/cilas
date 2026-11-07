@@ -24,12 +24,21 @@ export const readOnly = (
   return (daysSinceLast ?? 0) >= 14
 }
 
+const DAY_MS = 86_400_000
+
 /** The archive state as of now, from the space row and its course row (null outside course spaces). */
-export const archivedNow = (
+export const archiveOf = (
   space: { kind: 'community' | 'cohort' | 'course'; reopened?: boolean | null },
   course: { schedule?: unknown; sessions?: unknown } | null | undefined,
-): boolean => {
-  const last = course ? courseLastMeeting(course) : null
-  const days = last ? Math.floor((Date.now() - new Date(last).getTime()) / 86_400_000) : null
-  return readOnly(space, last, days)
+): { archived: boolean; lastMeeting: string | null; daysSince: number | null } => {
+  const lastMeeting = course ? courseLastMeeting(course) : null
+  const daysSince = lastMeeting
+    ? Math.floor((Date.now() - new Date(lastMeeting).getTime()) / DAY_MS)
+    : null
+  return { archived: readOnly(space, lastMeeting, daysSince), lastMeeting, daysSince }
 }
+
+export const archivedNow = (
+  space: Parameters<typeof archiveOf>[0],
+  course: Parameters<typeof archiveOf>[1],
+): boolean => archiveOf(space, course).archived

@@ -4,6 +4,7 @@ import type { Payload, Where } from 'payload'
 
 import { personOf } from '@/access'
 import { archivedNow } from '@/lib/space-lifecycle'
+import { parentOf, spaceLink, spaceTitle } from '@/lib/space-ref'
 import { mentionSafelist, spacePeople, type PersonLink } from '@/lib/space-members'
 import { spacesSettings, mode, spaceOpenOn, membership, mayComment, introGates } from '@/lib/spaces'
 import { FILE_LIMITS, SPACE_FILE_MIME } from '@/lib/space-file-limits'
@@ -140,14 +141,7 @@ const gate = async (
   if (!spaceOpenOn(space, settings))
     return { stop: true as const, error: 'mode' as WriteError, space: space as SpaceLike }
   if (opts.write && space.kind === 'course') {
-    const courseId = idOf(space.course)
-    const course =
-      courseId === null
-        ? null
-        : ((await payload
-            .findByID({ collection: 'courses', id: courseId, depth: 0, overrideAccess: true })
-            .catch(() => null)) as { schedule?: unknown; sessions?: unknown } | null)
-    if (archivedNow(space, course))
+    if (archivedNow(space, await parentOf(payload, space)))
       return { stop: true as const, error: 'read-only' as WriteError, space: space as SpaceLike }
   }
   if (opts.post !== undefined) {
@@ -229,53 +223,9 @@ const storeFilesOrRollback = async (
   return true
 }
 
-/**
- * A post's page by the space's real path (course or programme slug). No
- * language prefix: users and people store no language, so the bare path
- * redirects to the reader's saved language (next-intl, localePrefix "always").
- */
-export const spaceLink = async (
-  payload: Payload,
-  space: SpaceLike,
-  postId: number,
-): Promise<string> => {
-  if (space.kind === 'community') return `/spaces/community/${space.id}/posts/${postId}`
-  const target = space.kind === 'course' ? idOf(space.course) : idOf(space.programme)
-  const doc =
-    target === null
-      ? null
-      : ((await payload
-          .findByID({
-            collection: space.kind === 'course' ? 'courses' : 'programmes',
-            id: target,
-            depth: 0,
-            overrideAccess: true,
-            select: { slug: true },
-          })
-          .catch(() => null)) as { slug?: string } | null)
-  return `/spaces/${space.kind}/${doc?.slug ?? target}/posts/${postId}`
-}
-
 /** The space's display name, quoted, for notification detail text. */
-const spaceNameOf = async (payload: Payload, space: SpaceLike): Promise<string> => {
-  if (space.kind === 'community') {
-    const row = (await payload
-      .findByID({ collection: 'spaces', id: space.id, depth: 0, overrideAccess: true })
-      .catch(() => null)) as { name?: string | null } | null
-    return row?.name?.trim() ? `“${row.name.trim()}”` : '“the community space”'
-  }
-  const slug = space.kind === 'course' ? idOf(space.course) : idOf(space.programme)
-  if (slug === null) return '“the space”'
-  const doc = (await payload
-    .findByID({
-      collection: space.kind === 'course' ? 'courses' : 'programmes',
-      id: slug,
-      depth: 0,
-      overrideAccess: true,
-    })
-    .catch(() => null)) as { title?: string } | null
-  return doc?.title ? `“${doc.title}”` : '“the space”'
-}
+const spaceNameOf = async (payload: Payload, space: SpaceLike): Promise<string> =>
+  `“${spaceTitle(space, await parentOf(payload, space, { select: { title: true } }), 'en')}”`
 
 // --- postCreate ---
 
@@ -435,19 +385,8 @@ export const sessionSafeBody = async (
   options?: { blocks?: boolean },
 ): Promise<string> => {
   if (!sessionIdsIn(body).length) return body
-  const courseId = space.kind === 'course' ? idOf(space.course) : null
   const course =
-    courseId === null
-      ? null
-      : ((await payload
-          .findByID({
-            collection: 'courses',
-            id: courseId,
-            depth: 0,
-            overrideAccess: true,
-            select: { sessions: true },
-          })
-          .catch(() => null)) as { sessions?: { id?: string | null }[] | null } | null)
+    space.kind === 'course' ? await parentOf(payload, space, { select: { sessions: true } }) : null
   const known = new Set((course?.sessions ?? []).flatMap((s) => (s.id ? [s.id] : [])))
   return cleanSessionRefs(body, known, options)
 }
