@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react'
 
 import { SideCardApply } from '@/components/side-card'
 
-import { newTab } from './new-tab'
+import { newTab } from '@/lib/new-tab'
 
 /**
  * Applying, kept in reach once the course details have scrolled away: on wide
@@ -13,12 +13,14 @@ import { newTab } from './new-tab'
  * own Apply button is still on screen, so the button never shows twice.
  */
 export function RegisterBar({
+  primaryIds,
   variant,
   status,
   price,
   applyLabel,
   applyUrl,
 }: {
+  primaryIds: readonly string[]
   variant: 'side' | 'bar'
   status: string
   price?: string | null
@@ -27,13 +29,13 @@ export function RegisterBar({
 }) {
   const [shown, setShown] = useState(false)
 
+  const primaryKey = primaryIds.join(' ')
   useEffect(() => {
     // The details' Apply buttons (one per layout; only the visible one counts).
-    const buttons = [
-      ...document.querySelectorAll<HTMLElement>(
-        '.course-apply[data-primary], [data-apply-primary]',
-      ),
-    ]
+    const buttons = primaryKey
+      .split(' ')
+      .map((id) => document.getElementById(id))
+      .filter((element): element is HTMLElement => element !== null)
     if (!buttons.length) return
     const update = () => {
       const visible = buttons.filter((b) => b.offsetParent !== null)
@@ -47,7 +49,7 @@ export function RegisterBar({
       observer.disconnect()
       window.removeEventListener('resize', update)
     }
-  }, [])
+  }, [primaryKey])
 
   return (
     <div

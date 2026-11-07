@@ -16,9 +16,8 @@ export const sitemapEntries = (site: string, pages: SitePage[]): MetadataRoute.S
   const urlOf = (locale: string, path: string) => `${origin}/${locale}${path}`
   return pages.flatMap(({ path, lastModified }) => {
     const languages = {
-      en: urlOf('en', path),
-      ar: urlOf('ar', path),
-      'x-default': urlOf('en', path),
+      ...Object.fromEntries(routing.locales.map((locale) => [locale, urlOf(locale, path)])),
+      'x-default': urlOf(routing.defaultLocale, path),
     }
     return LOCALES.map((locale) => ({
       url: urlOf(locale, path),

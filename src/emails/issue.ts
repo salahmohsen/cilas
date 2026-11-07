@@ -2,7 +2,7 @@ import type { Payload, PayloadRequest } from 'payload'
 
 import type { Issue } from './newsletter'
 import { PICK_TYPES } from './pick-types'
-import { resolveRichTextReferences } from '@/api/rich-text-references.api'
+import { resolveRichTextReferences } from '@/lib/resolve-rich-text-references'
 
 /**
  * A newsletter issue's latest draft, its picks filled in for the cards.

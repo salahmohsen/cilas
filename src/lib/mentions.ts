@@ -1,13 +1,9 @@
-import { bridgeYearPath, pathOf } from '@/lib/paths'
-import { type Locale, otherLocale } from '@/i18n/routing'
+import type { MentionType } from '@/blocks/mention'
 import { CAIRO } from '@/lib/cairo-day'
-import { relId } from '@/lib/relation'
-import type { Payload } from 'payload'
+import { mediaThumbnail } from '@/lib/media-image'
+import { bridgeYearPath, pathOf } from '@/lib/paths'
 
-import type { Reader } from '@/api/articles.api'
-import { MENTION_TYPES, type MentionType } from '@/blocks/mention'
 import { plainText } from '@/lib/plaintext'
-import { walkEditorNodes } from '@/lib/rich-text-references'
 import type { Article, Course, Event, Media, Person, Programme, Publication } from '@/payload-types'
 
 /** What a mention's hover card shows. */
@@ -23,28 +19,10 @@ export type MentionPreview = {
 /** A mention that leads somewhere: its link and its preview. */
 export type ResolvedMention = { href: string; preview: MentionPreview }
 
-type MentionFields = { id?: string; blockType?: string; type?: MentionType } & Partial<
-  Record<MentionType, unknown>
->
-
-const idOf = (v: unknown): number | null =>
-  typeof v === 'number' || (v !== null && typeof v === 'object' && 'id' in v)
-    ? (relId(v) as number)
-    : null
-
-/** Every mention in a Lexical body, at any depth. */
-const mentionsIn = (node: unknown, found: MentionFields[] = []): MentionFields[] => {
-  walkEditorNodes(node, (n) => {
-    if (n.type === 'inlineBlock' && n.fields?.blockType === 'mention')
-      found.push(n.fields as MentionFields)
-  })
-  return found
-}
-
 const imageOf = (m: unknown) => {
   const media = m as Media | null
   if (!media || typeof media !== 'object') return null
-  return media.sizes?.thumbnail?.url ?? media.url ?? null
+  return mediaThumbnail(media) ?? null
 }
 const names = (people: unknown) =>
   ((people as Array<Person | number> | null | undefined) ?? [])
@@ -167,50 +145,4 @@ export const resolveMentionDocument = (
         : null
     }
   }
-}
-
-/**
- * The mentions of an article's text, each as a link and a preview, read as
- * this reader may: a mention of something they cannot open (a draft, a
- * members-only course, a hidden person) stays plain text. Keyed by block id.
- */
-export const resolveMentions = async (
-  payload: Payload,
-  body: unknown,
-  { locale, user }: { locale: Locale; user: Reader },
-): Promise<Record<string, ResolvedMention>> => {
-  const mentions = mentionsIn(body)
-  if (!mentions.length) return {}
-  const read = {
-    locale,
-    fallbackLocale: otherLocale(locale) as Locale,
-    overrideAccess: false,
-    user,
-  }
-  const out: Record<string, ResolvedMention> = {}
-  for (const { value, relationTo } of MENTION_TYPES) {
-    const wanted = mentions.filter((m) => m.type === value && m.id && idOf(m[value]) !== null)
-    if (!wanted.length) continue
-    const ids = [...new Set(wanted.map((m) => idOf(m[value])!))]
-    // Drafts never: the published version, as visitors read it.
-    const { docs } = await payload.find({
-      collection: relationTo,
-      where: { id: { in: ids } },
-      depth: 1,
-      pagination: false,
-      draft: false,
-      ...read,
-    })
-    for (const m of wanted) {
-      const doc = docs.find((d) => d.id === idOf(m[value]))
-      const statusOk = !doc || !('_status' in doc) || doc._status === 'published'
-      const visible = !doc || !('visible' in doc) || doc.visible !== false
-      const resolved =
-        doc && statusOk && visible
-          ? resolveMentionDocument(value, doc as unknown as Record<string, unknown>)
-          : null
-      if (resolved) out[m.id!] = resolved
-    }
-  }
-  return out
 }

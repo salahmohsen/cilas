@@ -1,8 +1,9 @@
+import { mediaThumbnail } from '@/lib/media-image'
 import type { getFormatter } from 'next-intl/server'
 
 import { authorNames, excerptOf, joinNames, publicationOf, readingMinutes } from '@/lib/articles'
-import { pathOf } from '@/lib/paths'
 import { mediaImage, type MediaImage } from '@/lib/media-image'
+import { pathOf } from '@/lib/paths'
 import type { Article, Course, Media, Person } from '@/payload-types'
 
 export type ArticleCard = {
@@ -30,7 +31,7 @@ const media = (v: unknown): Media | undefined =>
 /** A person's photo at byline size, when they have one. */
 const avatarOf = (p: Person | undefined): string | undefined => {
   const photo = media(p?.photo)
-  return photo ? (photo.sizes?.thumbnail?.url ?? photo.url ?? undefined) : undefined
+  return photo ? mediaThumbnail(photo) : undefined
 }
 
 const byline = (people: Person[], and: string) => {

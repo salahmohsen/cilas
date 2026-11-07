@@ -1,6 +1,7 @@
 import { type Locale, otherLocale } from '@/i18n/routing'
-import { relId } from '@/lib/relation'
+import { mediaCover, mediaPopulate } from '@/lib/media-image'
 import { plainText } from '@/lib/plaintext'
+import { relId } from '@/lib/relation'
 import type { Payload } from 'payload'
 
 import type { Article, Course, Person } from '@/payload-types'
@@ -144,7 +145,7 @@ export const getFellows = async (payload: Payload, locale: Locale): Promise<Fell
     select: { title: true, slug: true, fellows: true, cycle: true, schedule: true },
     populate: {
       people: { name: true, slug: true, photo: true, bio: true },
-      media: { url: true, alt: true, filename: true, prefix: true },
+      media: mediaPopulate,
       cycles: { season: true, start_year: true, start_date: true },
     },
     locale,
@@ -169,24 +170,7 @@ export const getFellows = async (payload: Payload, locale: Locale): Promise<Fell
         known.courses.push(course)
         continue
       }
-      const photo = typeof f.photo === 'object' && f.photo?.url ? f.photo : null
-      fellows.set(f.id, {
-        id: f.id,
-        slug: f.slug,
-        name: f.name,
-        ...(photo
-          ? {
-              photo: {
-                url: photo.url!,
-                alt: photo.alt ?? f.name,
-                focalX: photo.focalX,
-                focalY: photo.focalY,
-              },
-            }
-          : {}),
-        bio: f.bio ? plainText({ data: f.bio }).replace(/\s+/g, ' ').trim() : '',
-        courses: [course],
-      })
+      fellows.set(f.id, { ...cardOf(f), courses: [course] })
     }
   }
   const latest = (f: Fellow) => f.courses.reduce((m, c) => (c.start > m ? c.start : m), '')
@@ -203,23 +187,14 @@ const cardOf = (p: Person): PersonCard => {
     id: p.id,
     slug: p.slug ?? String(p.id),
     name: p.name,
-    ...(photo
-      ? {
-          photo: {
-            url: photo.url!,
-            alt: photo.alt ?? p.name,
-            focalX: photo.focalX,
-            focalY: photo.focalY,
-          },
-        }
-      : {}),
+    ...(photo ? { photo: mediaCover(photo, p.name) } : {}),
     bio: p.bio ? plainText({ data: p.bio }).replace(/\s+/g, ' ').trim() : '',
   }
 }
 
 const personPopulate = {
   people: { name: true, slug: true, photo: true, bio: true },
-  media: { url: true, alt: true, filename: true, prefix: true },
+  media: mediaPopulate,
 } as const
 
 export type CilasianPlace = { role: string; title: string | null; programme: string | null }

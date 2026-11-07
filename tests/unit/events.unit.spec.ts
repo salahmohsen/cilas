@@ -2,7 +2,7 @@ import { describe, expect, it, vi } from 'vitest'
 import type { Payload } from 'payload'
 import type { Event } from '@/payload-types'
 import { eventTiming, orderEvents, otherUpcomingEvents } from '@/lib/events'
-import { getPublicEvents } from '@/api/events.api'
+import { getPublicEvents, getPublicEvent } from '@/api/events.api'
 import { pathOf } from '@/lib/paths'
 import { spaceEvents } from '@/lib/spaces-data'
 import type { Space, User } from '@/payload-types'
@@ -113,7 +113,7 @@ describe('public event timing', () => {
     const find = vi.fn().mockResolvedValue({ docs: [] })
     const payload = { find } as unknown as Payload
     await getPublicEvents(payload, 'en')
-    await getPublicEvents(payload, 'ar', 'private-event')
+    await getPublicEvent(payload, 'ar', 'private-event')
     expect(find.mock.calls[0][0]).toMatchObject({
       overrideAccess: false,
       where: { and: [{ tier: { equals: 'public' } }] },
@@ -130,7 +130,7 @@ describe('public event timing', () => {
   it('keeps image dimensions and variants available for responsive gallery rendering', async () => {
     const find = vi.fn().mockResolvedValue({ docs: [] })
     const payload = { find } as unknown as Payload
-    await getPublicEvents(payload, 'en', 'gallery')
+    await getPublicEvent(payload, 'en', 'gallery')
     expect(find.mock.calls[0][0].populate.media).toMatchObject({
       url: true,
       alt: true,

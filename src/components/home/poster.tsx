@@ -21,7 +21,7 @@ import { POSTER_COLORS } from '@/lib/poster-colors'
  * "Then" follows the reading direction, so Arabic mirrors each layout. On a
  * narrow screen every layout stacks: image, panel, strip.
  */
-export type PosterLayout = 0 | 1 | 2 | 3
+import type { PosterLayout } from '@/lib/posters'
 
 export type PosterData = {
   id: string

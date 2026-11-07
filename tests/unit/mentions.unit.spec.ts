@@ -1,7 +1,7 @@
 import type { Payload } from 'payload'
 import { describe, expect, it, vi } from 'vitest'
 
-import { resolveMentions } from '@/api/mentions.api'
+import { resolveRichTextReferences } from '@/lib/resolve-rich-text-references'
 
 const mention = (fields: Record<string, unknown>) => ({
   type: 'inlineBlock',
@@ -36,9 +36,9 @@ const payload = {
   ),
 } as unknown as Payload
 
-describe('resolveMentions', () => {
+describe('resolveRichTextReferences', () => {
   it('links what the reader may open and previews it', async () => {
-    const out = await resolveMentions(
+    const out = await resolveRichTextReferences(
       payload,
       body(
         mention({ id: 'a', type: 'person', person: 1, label: 'Mona' }),
@@ -46,16 +46,16 @@ describe('resolveMentions', () => {
       ),
       { locale: 'en', user: null },
     )
-    expect(out.a).toEqual({
+    expect(out['people:1']).toEqual({
       href: '/people/mona',
       preview: { kind: 'person', title: 'Mona', meta: null, text: null, image: null },
     })
-    expect(out.b!.href).toBe('/study/plato')
-    expect(out.b!.preview.meta).toBe('Mona · Fall 2026')
+    expect(out['courses:10']!.href).toBe('/study/plato')
+    expect(out['courses:10']!.preview.meta).toBe('Mona · Fall 2026')
   })
 
   it('leaves drafts and missing targets out, so they stay plain words', async () => {
-    const out = await resolveMentions(
+    const out = await resolveRichTextReferences(
       payload,
       body(
         mention({ id: 'c', type: 'course', course: 11, label: 'Draft' }),
@@ -67,7 +67,7 @@ describe('resolveMentions', () => {
   })
 
   it('reads as the reader, without drafts', async () => {
-    await resolveMentions(
+    await resolveRichTextReferences(
       payload,
       body(mention({ id: 'e', type: 'person', person: 1, label: 'Mona' })),
       { locale: 'en', user: null },

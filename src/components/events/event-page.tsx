@@ -1,31 +1,32 @@
-import { detailPath } from '@/lib/paths'
-import { CAIRO, cairoNoon } from '@/lib/cairo-day'
 import { type Locale } from '@/i18n/routing'
+import { CAIRO, cairoNoon } from '@/lib/cairo-day'
+import { detailPath } from '@/lib/paths'
+import { isOnCalendar } from '@/lib/schedule'
 import { ArrowLeft } from 'lucide-react'
 import { getFormatter, getTranslations } from 'next-intl/server'
 import type { ReactNode } from 'react'
 
-import { ResolvedRichTextField as RichTextField } from '@/components/resolved-rich-text-field'
-import { PublicEventCard } from '@/components/events/public-event-card'
+import readerStyles from '@/components/arc/blocks/blog-grid/blog-grid.module.css'
 import { EventAttendance } from '@/components/events/event-attendance'
 import { EventDescription } from '@/components/events/event-description'
-import { ShareBar } from '@/components/share-bar'
-import { PROFILE_COLORS, ProfileCard } from '@/components/person/profile-card'
-import { RichTextField as PlainRichText } from '@/components/RichTextField'
+import styles from '@/components/events/events.module.css'
+import { PublicEventCard } from '@/components/events/public-event-card'
 import { UpcomingEvents } from '@/components/events/upcoming-events'
 import { PayloadForm } from '@/components/forms/payload-form'
+import { PROFILE_COLORS, ProfileCard } from '@/components/person/profile-card'
+import { ResolvedRichTextField as RichTextField } from '@/components/resolved-rich-text-field'
+import { RichTextField as PlainRichText } from '@/components/RichTextField'
+import { Schema } from '@/components/schema'
+import { ShareBar } from '@/components/share-bar'
 import { Link } from '@/i18n/navigation'
 import { localDigits } from '@/lib/digits'
 import { eventTiming } from '@/lib/events'
-import { expandSchedule } from '@/lib/schedule'
 import { registrationStatus } from '@/lib/registration'
+import { expandSchedule } from '@/lib/schedule'
 import { breadcrumbSchema, eventSchema } from '@/lib/schema'
-import { Schema } from '@/components/schema'
-import styles from '@/components/events/events.module.css'
-import readerStyles from '@/components/arc/blocks/blog-grid/blog-grid.module.css'
 
-import type { Event } from '@/payload-types'
 import { RefreshRouteOnSave } from '@/components/RefreshRouteOnSave'
+import type { Event } from '@/payload-types'
 
 export async function EventPage({
   event,
@@ -53,7 +54,7 @@ export async function EventPage({
   const form = typeof event.registration?.form === 'object' ? event.registration.form : null
   const open =
     timing.status !== 'past' && registrationStatus(event.registration, null, now) === 'open'
-  const meetings = event.schedule?.start_precision === 'week' ? [] : expandSchedule(event.schedule)
+  const meetings = isOnCalendar(event.schedule) ? expandSchedule(event.schedule) : []
   const date = (day: string) =>
     format.dateTime(cairoNoon(day), { dateStyle: 'full', timeZone: CAIRO })
   const speakers = (event.speakers ?? []).flatMap((speaker, i) =>

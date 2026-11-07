@@ -3,9 +3,9 @@ import config from '@payload-config'
 import { getTranslations } from 'next-intl/server'
 import { getPayload } from 'payload'
 
-import { getPublicEvents } from '@/api/events.api'
-import { absoluteUrl } from '@/lib/schema'
+import { getPublicEvent } from '@/api/events.api'
 import { eventIcs } from '@/lib/event-calendar'
+import { absoluteUrl } from '@/lib/schema'
 
 /**
  * One public event as an iCalendar file, every meeting with its full
@@ -19,7 +19,7 @@ export async function GET(
   const { locale, slug } = await params
   const lang = locale === 'ar' ? 'ar' : 'en'
   const payload = await getPayload({ config })
-  const [event] = await getPublicEvents(payload, lang, slug)
+  const event = await getPublicEvent(payload, lang, slug)
   if (!event) return new Response('Not found', { status: 404 })
   const t = await getTranslations({ locale: lang, namespace: 'Events' })
   const ics = eventIcs(event, absoluteUrl(detailPath('events', String(event.slug), lang)), {

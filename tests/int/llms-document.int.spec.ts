@@ -3,7 +3,7 @@ import { getPayload, type Payload } from 'payload'
 import { afterAll, beforeAll, describe, expect, it } from 'vitest'
 
 import config from '@/payload.config'
-import { courseDocument, articleDocument, documentToMarkdown } from '@/lib/llms-document'
+import { courseDocument, articleDocument, documentToMarkdown } from '@/api/llms-document'
 import type { Article, Course, Person } from '@/payload-types'
 
 let payload: Payload

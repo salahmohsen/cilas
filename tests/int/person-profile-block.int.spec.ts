@@ -4,7 +4,7 @@ import { getPayload, type Payload } from 'payload'
 import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest'
 
 import config from '@/payload.config'
-import { getPublicEvents } from '@/api/events.api'
+import { getPublicEvent } from '@/api/events.api'
 import type { ColumnsBlock, PersonProfileBlock } from '@/payload-types'
 
 vi.mock('@/plugins/typesense', () => ({ typesenseSearch: () => (incoming: unknown) => incoming }))
@@ -81,7 +81,7 @@ describe('stored person profile blocks', () => {
   })
 
   it('populates a standalone and four nested profile selections through the public event query', async () => {
-    const [event] = await getPublicEvents(payload, 'en', slug)
+    const event = (await getPublicEvent(payload, 'en', slug))!
     const children = event.description!.root.children as unknown as {
       fields: PersonProfileBlock | ColumnsBlock
     }[]
@@ -108,7 +108,7 @@ describe('stored person profile blocks', () => {
       locale: 'en',
       overrideAccess: true,
     })
-    const [updated] = await getPublicEvents(payload, 'en', slug)
+    const updated = (await getPublicEvent(payload, 'en', slug))!
     expect(JSON.stringify(updated.description)).toContain('Updated profile')
     await payload.update({
       collection: 'people',
@@ -116,7 +116,7 @@ describe('stored person profile blocks', () => {
       data: { visible: false },
       overrideAccess: true,
     })
-    const [hidden] = await getPublicEvents(payload, 'en', slug)
+    const hidden = (await getPublicEvent(payload, 'en', slug))!
     expect(JSON.stringify(hidden.description)).not.toContain('Updated profile')
     expect(JSON.stringify(hidden.description)).not.toContain('Current public bio')
   })

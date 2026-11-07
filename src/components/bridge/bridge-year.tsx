@@ -1,15 +1,15 @@
-import { bridgeYearPath, BRIDGE_APPLY_PATH, bridgeYearParts } from '@/lib/paths'
 import { CAIRO, cairoNoon } from '@/lib/cairo-day'
+import { BRIDGE_APPLY_PATH, bridgeYearParts, bridgeYearPath } from '@/lib/paths'
 import { Clock, Hourglass, Wallet } from 'lucide-react'
-import Image from 'next/image'
 import { getFormatter, getTranslations } from 'next-intl/server'
+import Image from 'next/image'
 import type { ReactNode } from 'react'
 
-import { type BridgeYear } from '@/api/programmes.api'
 import { getContactEmail } from '@/api/contact.api'
+import { type BridgeYear } from '@/api/programmes.api'
 import type { BlogPost } from '@/components/arc/blocks/blog-grid/blog-grid'
 import { BridgeCourses } from '@/components/bridge/bridge-courses'
-import { RegisterBar } from '@/app/(frontend)/[locale]/study/[slug]/RegisterBar'
+import { RegisterBar } from '@/components/course/RegisterBar'
 import { RefreshRouteOnSave } from '@/components/RefreshRouteOnSave'
 import { ResolvedRichTextField as RichTextField } from '@/components/resolved-rich-text-field'
 import { ShareBar } from '@/components/share-bar'
@@ -17,9 +17,9 @@ import { SideCard, SideCardApply, SideCardSection } from '@/components/side-card
 import { Link } from '@/i18n/navigation'
 import type { Season } from '@/lib/cycle'
 import { localDigits, numberingSystemOf } from '@/lib/digits'
+import { focalPointStyle } from '@/lib/media-image'
 import { POSTER_COLORS } from '@/lib/poster-colors'
 import { registrationStatus } from '@/lib/registration'
-import { focalPointStyle } from '@/lib/media-image'
 import type { Cycle } from '@/payload-types'
 
 /**
@@ -276,6 +276,7 @@ export async function BridgeYearView({
       {stickyApply ? (
         <div className="lg:hidden">
           <RegisterBar
+            primaryIds={['bridge-apply-mobile', 'bridge-apply-wide']}
             applyLabel={tc('apply')}
             applyUrl={stickyApply}
             price={price}
@@ -320,7 +321,7 @@ export async function BridgeYearView({
 
           {/* Narrow screens: the details come before the text. */}
           <div className="mt-10 grid gap-6 lg:hidden">
-            {sideApply}
+            <div id="bridge-apply-mobile">{sideApply}</div>
             {detailsSection ? sideCard('top') : null}
           </div>
 
@@ -350,12 +351,13 @@ export async function BridgeYearView({
           {/* Not sticky: the column can be taller than the screen. Only applying
               follows the reader down, at the column's end, as on a course page. */}
           <div className="grid gap-6">
-            {sideApply}
+            <div id="bridge-apply-wide">{sideApply}</div>
             {sideCard('all')}
           </div>
           {stickyApply ? (
             <div className="sticky top-22">
               <RegisterBar
+                primaryIds={['bridge-apply-mobile', 'bridge-apply-wide']}
                 applyLabel={tc('apply')}
                 applyUrl={stickyApply}
                 price={price}

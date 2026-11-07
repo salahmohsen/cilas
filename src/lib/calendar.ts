@@ -1,6 +1,6 @@
 import type { CalendarItem } from '@/api/calendar.api'
-import { POSTER_COLORS } from '@/lib/poster-colors'
 import { addDays, cairoDay, weekdayOf, WEEKDAYS } from '@/lib/cairo-day'
+import { POSTER_COLORS } from '@/lib/poster-colors'
 
 /**
  * The calendar page's dates: which days a month, week or agenda shows.
@@ -12,7 +12,7 @@ export const CALENDAR_VIEWS = ['month', 'week', 'agenda'] as const
 export type CalendarView = (typeof CALENDAR_VIEWS)[number]
 
 /** How many days the agenda lists from its date. */
-export const AGENDA_DAYS = 30
+const AGENDA_DAYS = 30
 
 /** The Saturday on or before a day. */
 export const weekStart = (day: string): string => addDays(day, -WEEKDAYS.indexOf(weekdayOf(day)))
@@ -80,9 +80,9 @@ export const viewRange = (
 }
 
 /** How many courses a month's day cell lists under its image; the rest are "+N more". */
-export const DAY_LISTED = 2
+const DAY_LISTED = 2
 /** How many covers a day turns through. */
-export const DAY_COVERS_MAX = 6
+const DAY_COVERS_MAX = 6
 
 /**
  * What a month's day cell shows of its items: the covers of the day's

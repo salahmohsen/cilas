@@ -1,11 +1,11 @@
 'use client'
+import { useBlogGridLabels } from '@/lib/blog-grid-labels'
 
-import { useLocale, useTranslations } from 'next-intl'
+import { useLocale } from 'next-intl'
 import { useRouter } from 'next/navigation'
 
 import { BlogGrid } from '@/components/arc/blocks/blog-grid/blog-grid'
 import type { ArticleCard } from '@/lib/article-cards'
-import { localDigits } from '@/lib/digits'
 import { ARTICLE_PAGE_SIZE, articleListPath } from '@/lib/articles'
 
 /**
@@ -44,7 +44,7 @@ export function ArticlesGrid({
   /** Sits inside the page's column, without the grid's own width and padding. */
   flush?: boolean
 }) {
-  const t = useTranslations('Articles.grid')
+  const labels = useBlogGridLabels()
   const locale = useLocale()
   const router = useRouter()
   const pageHref = (page: number, category: string) =>
@@ -66,19 +66,7 @@ export function ArticlesGrid({
       defaultCategory={initialCategory ?? 'All'}
       description={description}
       getHref={(post) => posts.find((p) => p.id === post.id)?.href ?? '#'}
-      labels={{
-        all: t('all'),
-        allPosts: t('allPosts'),
-        filterBy: t('filterBy'),
-        pagination: t('pagination'),
-        previous: t('previous'),
-        next: t('next'),
-        previousPage: t('previousPage'),
-        nextPage: t('nextPage'),
-        page: (n) => t('page', { n }),
-        number: (n) => localDigits(n, locale),
-        empty: (category) => t('empty', { category }),
-      }}
+      labels={labels}
       onCategoryChange={(category) => {
         if (!slugs) return
         router.replace(pageHref(1, category), { scroll: false })

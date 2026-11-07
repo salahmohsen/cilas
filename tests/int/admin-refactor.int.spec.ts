@@ -7,7 +7,7 @@ import config from '@/payload.config'
 import type { User } from '@/payload-types'
 import { expandSchedule } from '@/lib/schedule'
 import { getEventPreview } from '@/lib/event-preview'
-import { getPublicEvents } from '@/api/events.api'
+import { getPublicEvent } from '@/api/events.api'
 
 describe('admin event timing and validation', () => {
   let payload: Payload
@@ -165,7 +165,7 @@ describe('admin event timing and validation', () => {
       data: { ...event(), _status: 'draft', tier: 'public' },
     })
     ids.push(doc.id)
-    expect(await getPublicEvents(payload, 'en', doc.slug!)).toEqual([])
+    expect(await getPublicEvent(payload, 'en', doc.slug!)).toBeUndefined()
     await expect(
       payload.findVersions({
         collection: 'events',

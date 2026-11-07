@@ -16,3 +16,28 @@ const percent = (value: number | null | undefined) =>
 export const focalPointStyle = (point?: FocalPoint | null) => ({
   objectPosition: `${percent(point?.focalX)}% ${percent(point?.focalY)}%`,
 })
+
+export const mediaPopulate = {
+  url: true,
+  alt: true,
+  focalX: true,
+  focalY: true,
+  filename: true,
+  prefix: true,
+} as const
+
+export const mediaThumbnail = (media: Media | null | undefined): string | undefined =>
+  media?.sizes?.thumbnail?.url ?? media?.url ?? undefined
+
+export const mediaCover = (media: Media | null | undefined, fallbackAlt = '') => {
+  const image = mediaImage(media)
+  return image
+    ? { url: image.src, alt: media?.alt ?? fallbackAlt, focalX: image.focalX, focalY: image.focalY }
+    : undefined
+}
+
+export const mediaStudyImage = (media: Media | null | undefined) => ({
+  image: media?.url ?? undefined,
+  imageAlt: media?.alt ?? undefined,
+  imageFocalPoint: media ? { focalX: media.focalX, focalY: media.focalY } : undefined,
+})

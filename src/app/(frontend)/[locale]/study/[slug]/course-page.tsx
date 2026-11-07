@@ -1,42 +1,27 @@
+import { courseWhere, getCourseForReading } from '@/api/courses.api'
+import type { Locale } from '@/i18n/routing'
+import { mediaCover } from '@/lib/media-image'
 import { detailPath, pathOf } from '@/lib/paths'
-import { otherLocale } from '@/i18n/routing'
-import { relId } from '@/lib/relation'
+import { currentReader } from '@/lib/reader'
 import config from '@payload-config'
 import type { Metadata } from 'next'
-import { draftMode } from 'next/headers'
-import { previewWhere } from '@/lib/preview-access'
-import { currentReader } from '@/lib/reader'
 import { getTranslations } from 'next-intl/server'
+import { draftMode } from 'next/headers'
 import { notFound } from 'next/navigation'
-import { getPayload, type Where } from 'payload'
-import React from 'react'
+import { getPayload } from 'payload'
 
-import { siteTiers } from '@/access'
 import type { Reader } from '@/api/articles.api'
 import { getContactEmail } from '@/api/contact.api'
 import { OutsideAdminFrame } from '@/components/admin-frame-only'
 import { NewsletterSignupEnd } from '@/components/newsletter-signup-end'
 import { RefreshRouteOnSave } from '@/components/RefreshRouteOnSave'
+import { RichTextScope } from '@/components/rich-text-scope'
 import { Schema } from '@/components/schema'
+import { breadcrumbSchema, courseSchema } from '@/lib/schema'
+import { buildPageMetadata, seoDefaults } from '@/lib/seo'
+import type { Media, Person } from '@/payload-types'
 import { CourseLivePreview } from './CourseLivePreview'
 import { CourseView, type RelatedCourse } from './CourseView'
-import { RichTextScope } from '@/components/rich-text-scope'
-import { breadcrumbSchema, courseSchema } from '@/lib/schema'
-import { ogImages } from '@/lib/og'
-import { pageAlternates, seoDefaults } from '@/lib/seo'
-import type { Course, Media, Person } from '@/payload-types'
-
-/**
- * A course the site shows `reader`: published, in a tier they may see. An
- * owner-only course shows only in the admin's preview.
- */
-const shownTo = (reader: Reader, slug: string): Where => ({
-  and: [
-    { slug: { equals: slug } },
-    { tier: { in: siteTiers(reader) } },
-    { _status: { equals: 'published' } },
-  ],
-})
 
 /**
  * Meta fields win; the course's own title, summary and cover fill any gaps.
@@ -50,7 +35,7 @@ export async function courseMetadata(
   const payload = await getPayload({ config })
   const { docs } = await payload.find({
     collection: 'courses',
-    where: shownTo(reader, slug),
+    where: courseWhere(reader, slug),
     limit: 1,
     depth: 1,
     joins: false,
@@ -69,13 +54,13 @@ export async function courseMetadata(
   const title = meta.title || fallback.title
   const description = meta.description || fallback.description
 
-  return {
+  return buildPageMetadata({
     title,
     description,
-    alternates: pageAlternates(detailPath('courses', String(course.slug)), locale),
-    openGraph: { title, description, images: ogImages(imageUrl) },
-    twitter: { card: 'summary_large_image', images: ogImages(imageUrl).map((i) => i.url) },
-  }
+    image: imageUrl,
+    path: detailPath('courses', String(course.slug)),
+    locale,
+  })
 }
 
 /**
@@ -94,56 +79,13 @@ export async function CoursePage({
   const { isEnabled: isPreview } = await draftMode()
   const payload = await getPayload({ config })
   if (isPreview) reader = await currentReader()
-  const scope = isPreview ? await previewWhere(payload, 'courses', reader) : null
-  if (scope === false) notFound()
-
-  const { docs } = await payload.find({
-    collection: 'courses',
-    // The admin's preview shows any course; the site only what the reader may see.
-    where: isPreview ? { and: [{ slug: { equals: slug } }, scope ?? {}] } : shownTo(reader, slug),
-    limit: 1,
-    // Must match the `depth` given to `useLivePreview` in CourseLivePreview,
-    // or populated relationships will not survive the live merge.
-    depth: 2,
-    // Joins are admin views (a course's enrollments, a cycle's courses); never
-    // ship them to the page, where a previewing fellow would see assessments.
-    joins: false,
-    overrideAccess: false,
-    user: reader,
-    // A course without text in the site language shows its own (CONTEXT.md).
-    locale: locale as 'en' | 'ar',
-    fallbackLocale: otherLocale(locale),
+  const reading = await getCourseForReading(payload, slug, {
+    locale: locale as Locale,
+    reader,
+    preview: isPreview,
   })
-
-  const course: Course | undefined = docs[0]
-
-  if (!course) notFound()
-
-  // The other published courses of the same cycle, for the end of the page.
-  const cycleId = relId(course.cycle) ?? undefined
-  const { docs: siblings } = cycleId
-    ? await payload.find({
-        collection: 'courses',
-        where: {
-          and: [
-            { cycle: { equals: cycleId } },
-            { id: { not_equals: course.id } },
-            { tier: { in: siteTiers(reader) } },
-            { _status: { equals: 'published' } },
-          ],
-        },
-        depth: 1,
-        joins: false,
-        pagination: false,
-        populate: {
-          people: { name: true },
-          media: { url: true, alt: true, focalX: true, focalY: true, filename: true, prefix: true },
-        },
-        select: { title: true, slug: true, course_type: true, fellows: true, cover_image: true },
-        locale: locale as 'en' | 'ar',
-        fallbackLocale: otherLocale(locale),
-      })
-    : { docs: [] }
+  if (!reading) notFound()
+  const { course, siblings, previewCourse } = reading
   const related: RelatedCourse[] = siblings.map((c) => {
     const cover = typeof c.cover_image === 'object' ? (c.cover_image as Media | null) : null
     return {
@@ -154,16 +96,7 @@ export async function CoursePage({
       fellows: (c.fellows ?? []).flatMap((f) =>
         typeof f === 'object' && f ? [(f as Person).name] : [],
       ),
-      ...(cover?.url
-        ? {
-            image: {
-              url: cover.url,
-              alt: cover.alt ?? '',
-              focalX: cover.focalX,
-              focalY: cover.focalY,
-            },
-          }
-        : {}),
+      ...(cover?.url ? { image: mediaCover(cover) } : {}),
     }
   })
 
@@ -202,34 +135,14 @@ export async function CoursePage({
     )
   }
 
-  /*
-   * In preview, `draft: true` is what returns the in-progress version. It reads
-   * from the versions table, and a document that has never been saved as a draft
-   * has no row there — the published document is the only record. So fall back
-   * to the published read, otherwise previewing any freshly published course
-   * 404s until something triggers a version write.
-   */
-  const { docs: drafts } = await payload.find({
-    collection: 'courses',
-    where: { and: [{ slug: { equals: slug } }, scope ?? {}] },
-    limit: 1,
-    depth: 2,
-    joins: false,
-    overrideAccess: false,
-    user: reader,
-    draft: true,
-    locale: locale as 'en' | 'ar',
-    fallbackLocale: otherLocale(locale),
-  })
-
   return (
     <>
       <RefreshRouteOnSave />
-      <RichTextScope data={drafts[0] ?? course} locale={locale} user={reader}>
+      <RichTextScope data={previewCourse ?? course} locale={locale} user={reader}>
         <CourseLivePreview
           after={newsletter}
           email={email}
-          initialData={drafts[0] ?? course}
+          initialData={previewCourse ?? course}
           related={related}
         />
       </RichTextScope>

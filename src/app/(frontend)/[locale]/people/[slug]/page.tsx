@@ -1,8 +1,8 @@
-import { detailPath, pathOf } from '@/lib/paths'
-import { type Locale, otherLocale, isRtl } from '@/i18n/routing'
-import { personAvatarSeed } from '@/lib/avatar'
 import { AvatarImage } from '@/components/person/avatar-image'
 import { SocialLinks } from '@/components/person/social-links'
+import { isRtl, type Locale, otherLocale } from '@/i18n/routing'
+import { personAvatarSeed } from '@/lib/avatar'
+import { detailPath, pathOf } from '@/lib/paths'
 import config from '@payload-config'
 import { ArrowLeft } from 'lucide-react'
 import type { Metadata } from 'next'
@@ -12,18 +12,17 @@ import { getPayload } from 'payload'
 
 import { getPublicationCovers } from '@/api/articles.api'
 import { getContributions, getPerson } from '@/api/people.api'
-import { ArticlesGrid } from '@/components/article/articles-grid'
 import grid from '@/components/arc/blocks/blog-grid/blog-grid.module.css'
+import { ArticlesGrid } from '@/components/article/articles-grid'
 import { ResolvedRichTextField as RichTextField } from '@/components/resolved-rich-text-field'
 import { Schema } from '@/components/schema'
 import { Link } from '@/i18n/navigation'
 import { toArticleCard, toCourseCard } from '@/lib/article-cards'
 import { focalPointStyle } from '@/lib/media-image'
-import { breadcrumbSchema, personSchema } from '@/lib/schema'
-import type { Media } from '@/payload-types'
-import { pageAlternates } from '@/lib/seo'
 import { plainText } from '@/lib/plaintext'
-import { ogImages } from '@/lib/og'
+import { breadcrumbSchema, personSchema } from '@/lib/schema'
+import { buildPageMetadata } from '@/lib/seo'
+import type { Media } from '@/payload-types'
 
 type Props = { params: Promise<{ locale: string; slug: string }> }
 
@@ -39,18 +38,14 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     : undefined
   const photo = typeof person.photo === 'object' ? person.photo?.url : undefined
   const title = `${person.name} · CILAS`
-  return {
+  const metadata = buildPageMetadata({
     title,
-    ...(description ? { description } : {}),
-    openGraph: { title, description, images: ogImages(photo) },
-    twitter: {
-      card: 'summary_large_image',
-      title,
-      description,
-      images: ogImages(photo).map((image) => image.url),
-    },
-    alternates: pageAlternates(detailPath('people', String(person.slug)), locale),
-  }
+    description,
+    image: photo,
+    path: detailPath('people', String(person.slug)),
+    locale,
+  })
+  return { ...metadata, twitter: { ...metadata.twitter, title, description } }
 }
 
 /** A person's page: who they are, and what they have written, translated and taught. */

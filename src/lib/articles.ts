@@ -1,5 +1,5 @@
-import { isRelation as isObject } from '@/lib/relation'
 import { plainText } from '@/lib/plaintext'
+import { isRelation as isObject } from '@/lib/relation'
 
 import type { Article, Person, Publication } from '@/payload-types'
 
@@ -9,11 +9,6 @@ export const authorNames = (article: Pick<Article, 'authors'>): string[] =>
 /** "A", "A and B", "A, B and C". */
 export const joinNames = (names: string[], and = 'and'): string =>
   names.length <= 1 ? (names[0] ?? '') : `${names.slice(0, -1).join(', ')} ${and} ${names.at(-1)}`
-
-export const creditNames = (article: Pick<Article, 'credits'>, role: string): string[] =>
-  (article.credits ?? [])
-    .filter((c) => c.role === role)
-    .flatMap((c) => c.people.filter(isObject<Person>).map((p) => p.name))
 
 /** The first publication the article belongs to (the join lists them). */
 export const publicationOf = (article: Pick<Article, 'publications'>): Publication | undefined =>
@@ -54,9 +49,6 @@ export const readingMinutes = (article: Pick<Article, 'body'>): number => {
 
 export const yearOf = (article: Pick<Article, 'published_date' | 'createdAt'>): string =>
   new Date(article.published_date ?? article.createdAt).getFullYear().toString()
-
-/** Two-digit index for numbered lists: 1 → "01". */
-export const indexLabel = (i: number): string => String(i + 1).padStart(2, '0')
 
 export const ARTICLE_PAGE_SIZE = 9
 

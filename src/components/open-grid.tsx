@@ -1,9 +1,7 @@
 'use client'
-
-import { useLocale, useTranslations } from 'next-intl'
+import { useBlogGridLabels } from '@/lib/blog-grid-labels'
 
 import { BlogGrid, type BlogPost } from '@/components/arc/blocks/blog-grid/blog-grid'
-import { localDigits } from '@/lib/digits'
 
 export type OpenPost = BlogPost & { href: string }
 
@@ -22,8 +20,7 @@ export function OpenGrid({
   categories: string[]
   title: string
 }) {
-  const t = useTranslations('Articles.grid')
-  const locale = useLocale()
+  const labels = useBlogGridLabels()
   return (
     <BlogGrid
       categories={categories}
@@ -31,19 +28,7 @@ export function OpenGrid({
       flush
       getHref={(post) => posts.find((p) => p.id === post.id)?.href ?? '#'}
       header={false}
-      labels={{
-        all: t('all'),
-        allPosts: t('allPosts'),
-        filterBy: t('filterBy'),
-        pagination: t('pagination'),
-        previous: t('previous'),
-        next: t('next'),
-        previousPage: t('previousPage'),
-        nextPage: t('nextPage'),
-        page: (n) => t('page', { n }),
-        number: (n) => localDigits(n, locale),
-        empty: (category) => t('empty', { category }),
-      }}
+      labels={labels}
       order="given"
       pageSize={12}
       posts={posts}

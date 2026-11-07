@@ -1,10 +1,10 @@
 'use client'
+import { useBlogGridLabels } from '@/lib/blog-grid-labels'
 
-import type { ReactNode } from 'react'
+import { BlogGrid, type BlogPost } from '@/components/arc/blocks/blog-grid/blog-grid'
 import { useLocale, useTranslations } from 'next-intl'
 import { useRouter } from 'next/navigation'
-import { BlogGrid, type BlogPost } from '@/components/arc/blocks/blog-grid/blog-grid'
-import { localDigits } from '@/lib/digits'
+import type { ReactNode } from 'react'
 
 export function PastEventsGrid({
   posts,
@@ -21,7 +21,7 @@ export function PastEventsGrid({
   initialType?: string
   initialPage: number
 }) {
-  const t = useTranslations('Articles.grid')
+  const labels = useBlogGridLabels()
   const events = useTranslations('Events')
   const locale = useLocale()
   const router = useRouter()
@@ -57,19 +57,7 @@ export function PastEventsGrid({
         updateUrl(Object.keys(types).find((key) => types[key] === category) ?? null, 1)
       }
       onPageChange={(page) => updateUrl(initialType ?? null, page)}
-      labels={{
-        all: t('all'),
-        allPosts: events('past'),
-        filterBy: events('filterBy'),
-        pagination: t('pagination'),
-        previous: t('previous'),
-        next: t('next'),
-        previousPage: t('previousPage'),
-        nextPage: t('nextPage'),
-        page: (n) => t('page', { n }),
-        number: (n) => localDigits(n, locale),
-        empty: (category) => t('empty', { category }),
-      }}
+      labels={{ ...labels, allPosts: events('past'), filterBy: events('filterBy') }}
     />
   )
 }

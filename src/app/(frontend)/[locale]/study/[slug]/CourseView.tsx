@@ -1,7 +1,8 @@
-import { isRelation as isObject } from '@/lib/relation'
-import { detailPath } from '@/lib/paths'
-import { listSeparator } from '@/lib/locale-format'
 import { personAvatarSeed } from '@/lib/avatar'
+import { listSeparator } from '@/lib/locale-format'
+import { detailPath } from '@/lib/paths'
+import { isRelation as isObject } from '@/lib/relation'
+import { hasDayPrecision } from '@/lib/schedule'
 import {
   ArrowLeft,
   ArrowRight,
@@ -16,6 +17,7 @@ import {
 import { useFormatter, useLocale, useTranslations } from 'next-intl'
 import React from 'react'
 
+import { AIInstructions } from '@/components/ai-instructions'
 import { InViewTitle } from '@/components/arc/in-view-title/in-view-title'
 import {
   CourseSyllabus,
@@ -25,30 +27,29 @@ import {
   directionOf,
   textOf,
 } from '@/components/course/course-syllabus'
+import { EditorFields, labelOf } from '@/components/editor-fields'
 import { AvatarFallback } from '@/components/person/avatar-fallback'
 import { ContributorRows, photoOf } from '@/components/person/contributors'
-import { SideCard, SideCardApply, SideCardSection } from '@/components/side-card'
-import { POSTER_COLORS } from '@/lib/poster-colors'
-import { textDirection } from '@/lib/text-direction'
 import { RichTextField } from '@/components/RichTextField'
 import { SEASON_ICONS } from '@/components/season-icon'
 import { ShareBar } from '@/components/share-bar'
+import { SideCard, SideCardApply, SideCardSection } from '@/components/side-card'
 import { StudyWithAI } from '@/components/study-with-ai'
-import { AIInstructions } from '@/components/ai-instructions'
 import { Link } from '@/i18n/navigation'
 import { weekdayOf as cairoWeekday } from '@/lib/cairo-day'
-import { localDigits, numberingSystemOf, timeDir } from '@/lib/digits'
 import type { Season } from '@/lib/cycle'
+import { localDigits, numberingSystemOf, timeDir } from '@/lib/digits'
+import { editableIn } from '@/lib/editable'
+import { focalPointStyle } from '@/lib/media-image'
+import { POSTER_COLORS } from '@/lib/poster-colors'
 import { priceLabel, pricingFor } from '@/lib/pricing'
 import { registrationStatus } from '@/lib/registration'
-import { focalPointStyle } from '@/lib/media-image'
-import { EditorFields, labelOf } from '@/components/editor-fields'
-import { editableIn } from '@/lib/editable'
 import { expandSchedule, sessionsInOrder } from '@/lib/schedule'
+import { textDirection } from '@/lib/text-direction'
 import type { Course, Media, Person, Place } from '@/payload-types'
 
-import { newTab } from './new-tab'
-import { RegisterBar } from './RegisterBar'
+import { RegisterBar } from '@/components/course/RegisterBar'
+import { newTab } from '@/lib/new-tab'
 
 /** A course in the same cycle, as the end of the page lists it. */
 export type RelatedCourse = {
@@ -172,10 +173,9 @@ export const CourseView: React.FC<{
             icon: CalendarDays,
             label: t('starts'),
             path: 'schedule',
-            value:
-              course.schedule?.start_precision === 'week'
-                ? t('weekOf', { date: dayLabel(firstMeeting.date) })
-                : dayLabel(firstMeeting.date, 'long'),
+            value: !hasDayPrecision(course.schedule)
+              ? t('weekOf', { date: dayLabel(firstMeeting.date) })
+              : dayLabel(firstMeeting.date, 'long'),
           },
         ]
       : []),
@@ -453,6 +453,7 @@ export const CourseView: React.FC<{
       {applyUrl ? (
         <div className="lg:hidden">
           <RegisterBar
+            primaryIds={['course-apply-mobile', 'course-apply-wide']}
             applyLabel={t('apply')}
             applyUrl={applyUrl}
             price={price}
@@ -555,7 +556,7 @@ export const CourseView: React.FC<{
 
           {/* Narrow screens: the facts and the fellows come before the text. */}
           <div className="mt-10 grid gap-6 lg:hidden">
-            {applyCard}
+            <div id="course-apply-mobile">{applyCard}</div>
             {sideCard(false)}
           </div>
 
@@ -613,12 +614,13 @@ export const CourseView: React.FC<{
           {/* Not sticky: a fellow's bio can make the column taller than the screen.
               Only applying follows the reader down, at the column's end. */}
           <div className="grid gap-6">
-            {applyCard}
+            <div id="course-apply-wide">{applyCard}</div>
             {sideCard(true)}
           </div>
           {applyUrl ? (
             <div className="sticky top-22">
               <RegisterBar
+                primaryIds={['course-apply-mobile', 'course-apply-wide']}
                 applyLabel={t('apply')}
                 applyUrl={applyUrl}
                 price={price}

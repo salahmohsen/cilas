@@ -2,7 +2,8 @@ import config from '@payload-config'
 import type { Metadata } from 'next'
 import { getPayload } from 'payload'
 
-import { ArticlePage, articleMetadata } from '@/components/article/article-page'
+import { articleMetadata } from '@/app/(frontend)/[locale]/articles/[slug]/metadata'
+import { ArticlePage } from '@/components/article/article-page'
 import { routing } from '@/i18n/routing'
 
 type Props = { params: Promise<{ locale: string; slug: string }> }

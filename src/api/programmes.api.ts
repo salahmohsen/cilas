@@ -1,9 +1,10 @@
 import { type Locale } from '@/i18n/routing'
-import { relation as obj } from '@/lib/relation'
+import { mediaImage, mediaThumbnail, type MediaImage } from '@/lib/media-image'
 import { plainText } from '@/lib/plaintext'
-import type { Payload } from 'payload'
-import { mediaImage, type MediaImage } from '@/lib/media-image'
 import { previewWhere } from '@/lib/preview-access'
+import { componentCoursesWhere } from '@/lib/programme'
+import { relation as obj } from '@/lib/relation'
+import type { Payload } from 'payload'
 
 import type { Course, Cycle, Media, Person, Programme, User } from '@/payload-types'
 
@@ -102,8 +103,7 @@ export const getBridgeYear = async (
         collection: 'courses',
         where: {
           and: [
-            { cycle: { equals: cycle.id } },
-            { course_type: { in: component.course_types } },
+            componentCoursesWhere(component)!,
             { tier: { equals: 'public' } },
             { _status: { equals: 'published' } },
           ],
@@ -149,9 +149,7 @@ export const getBridgeYear = async (
                 const person = obj<Person>(f)
                 if (!person?.name) return []
                 const photo = obj<Media>(person.photo)
-                return [
-                  { name: person.name, avatar: photo?.sizes?.thumbnail?.url ?? photo?.url ?? null },
-                ]
+                return [{ name: person.name, avatar: mediaThumbnail(photo) ?? null }]
               }),
             }
           })

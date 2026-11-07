@@ -3,7 +3,7 @@ import config from '@payload-config'
 import { getPayload } from 'payload'
 
 import { getArticleForReading } from '@/api/articles.api'
-import { articleDocument, documentToMarkdown } from '@/lib/llms-document'
+import { articleDocument, documentToMarkdown } from '@/api/llms-document'
 
 type Params = { params: Promise<{ locale: string; slug: string }> }
 

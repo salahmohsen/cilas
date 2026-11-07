@@ -94,7 +94,7 @@ export const readCourseQuery = (params: URLSearchParams): CourseQuery => {
 }
 
 /** True when the course has every chosen filter value. */
-export const matchesFacets = (course: Pick<StudyCourse, 'facets'>, query: CourseQuery): boolean =>
+const matchesFacets = (course: Pick<StudyCourse, 'facets'>, query: CourseQuery): boolean =>
   COURSE_FACETS.every(
     (f) => !query[f] || (course.facets[f] ?? []).some((v) => v.value === query[f]),
   )

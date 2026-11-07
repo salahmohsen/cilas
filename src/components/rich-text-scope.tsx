@@ -3,7 +3,7 @@ import config from '@payload-config'
 import { getPayload } from 'payload'
 import type { ReactNode } from 'react'
 import type { Reader } from '@/api/articles.api'
-import { resolveRichTextReferences } from '@/api/rich-text-references.api'
+import { resolveRichTextReferences } from '@/lib/resolve-rich-text-references'
 import { RichTextReferencesProvider } from '@/components/rich-text-references'
 
 export async function RichTextScope({

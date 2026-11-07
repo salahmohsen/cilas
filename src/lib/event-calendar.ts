@@ -1,9 +1,9 @@
-import type { Event } from '@/payload-types'
 import { cairoDay, cairoInstant } from '@/lib/cairo-day'
 import { buildIcs, type IcsEntry } from '@/lib/ics'
 import { plainText } from '@/lib/plaintext'
-import { expandSchedule } from '@/lib/schedule'
+import { expandSchedule, hasDayPrecision } from '@/lib/schedule'
 import { googleCalendarUrl } from '@/lib/space-event'
+import type { Event } from '@/payload-types'
 
 type Words = {
   speakers: string
@@ -27,7 +27,7 @@ export const eventLocation = (event: Event, words: Pick<Words, 'online'>): strin
  * The event's full details as calendar text: what it is, who speaks, the
  * agenda, admission, the online link and the page.
  */
-export const eventDetails = (event: Event, url: string, words: Words): string => {
+const eventDetails = (event: Event, url: string, words: Words): string => {
   const speakers = (event.speakers ?? [])
     .flatMap(({ person, role }) =>
       typeof person === 'object' && person ? [role ? `${person.name} (${role})` : person.name] : [],
@@ -64,7 +64,7 @@ export const eventEntries = (event: Event, url: string, words: Words): IcsEntry[
     description: eventDetails(event, url, words),
     location: eventLocation(event, words),
   }
-  if (event.schedule?.start_precision === 'week') return []
+  if (!hasDayPrecision(event.schedule)) return []
   const meetings = expandSchedule(event.schedule)
   if (meetings.length)
     return meetings.map((m) => ({

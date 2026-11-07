@@ -1,5 +1,5 @@
-import { addDays, cairoDay, WEEKDAYS, weekdayOf, type Weekday } from '@/lib/cairo-day'
 import { timeOfDay } from '@/fields/validators'
+import { addDays, cairoDay, weekdayOf, WEEKDAYS, type Weekday } from '@/lib/cairo-day'
 
 /**
  * The one place dates come from (ADR 0002). Every date shown anywhere, from
@@ -139,7 +139,7 @@ export const scheduleEndDate = (
 
 /** Only schedules whose start day is known go on the calendar (ADR 0002). */
 export const isOnCalendar = (schedule: Schedule | null | undefined): boolean =>
-  !!schedule && schedule.start_precision !== 'week' && expandSchedule(schedule).length > 0
+  !!schedule && hasDayPrecision(schedule) && expandSchedule(schedule).length > 0
 
 /**
  * The session the course meets for next: the one with the earliest meeting on
@@ -159,3 +159,6 @@ export const nextSession = <T extends SessionDates>(
   const index = upcoming.session - 1
   return { session: sessionsInOrder(sessions)[index]!, index }
 }
+
+export const hasDayPrecision = (schedule: Schedule | null | undefined): boolean =>
+  schedule?.start_precision !== 'week'

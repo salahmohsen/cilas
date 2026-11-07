@@ -1,4 +1,5 @@
 'use client'
+import { useBlogGridLabels } from '@/lib/blog-grid-labels'
 
 import { detailPath } from '@/lib/paths'
 
@@ -7,7 +8,6 @@ import { useLocale, useTranslations } from 'next-intl'
 import { BlogGrid, type BlogPost } from '@/components/arc/blocks/blog-grid/blog-grid'
 import { SEASON_ICONS } from '@/components/season-icon'
 import type { Season } from '@/lib/cycle'
-import { localDigits } from '@/lib/digits'
 
 /**
  * The Bridge year's courses as Arc's blog-grid: the semesters are the
@@ -29,7 +29,7 @@ export function BridgeCourses({
   seasons: Record<string, Season>
 }) {
   const t = useTranslations('Bridge')
-  const tg = useTranslations('Articles.grid')
+  const labels = useBlogGridLabels()
   const locale = useLocale()
   return (
     <BlogGrid
@@ -42,15 +42,10 @@ export function BridgeCourses({
         return Icon ? <Icon aria-hidden size={28} strokeWidth={1.5} /> : null
       }}
       labels={{
+        ...labels,
         all: t('wholeYear'),
+        allPosts: undefined,
         filterBy: t('filterBy'),
-        pagination: tg('pagination'),
-        previous: tg('previous'),
-        next: tg('next'),
-        previousPage: tg('previousPage'),
-        nextPage: tg('nextPage'),
-        page: (n) => tg('page', { n }),
-        number: (n) => localDigits(n, locale),
         empty: () => t('noCourses'),
       }}
       order="given"

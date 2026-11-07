@@ -1,7 +1,7 @@
 import { renderToStaticMarkup } from 'react-dom/server'
 import type { Payload } from 'payload'
 import { describe, expect, it, vi } from 'vitest'
-import { getPublicEvents } from '@/api/events.api'
+import { getPublicEvent } from '@/api/events.api'
 import { RichTextField } from '@/components/RichTextField'
 
 describe('public event editor uploads', () => {
@@ -30,8 +30,8 @@ describe('public event editor uploads', () => {
         ],
       }
     })
-    const events = await getPublicEvents({ find } as unknown as Payload, 'en', 'screening')
-    const html = renderToStaticMarkup(<RichTextField data={events[0].description} />)
+    const event = await getPublicEvent({ find } as unknown as Payload, 'en', 'screening')
+    const html = renderToStaticMarkup(<RichTextField data={event!.description} />)
     if (file.mimeType.startsWith('image/')) {
       expect(html).toContain('src="/screening.webp"')
       expect(html).toContain('width="800"')

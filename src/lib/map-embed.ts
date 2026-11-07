@@ -31,7 +31,7 @@ const expanded = async (raw: string): Promise<string> => {
   }
 }
 
-export const coordinatesOf = (url: string): { lat: number; lng: number } | null => {
+const coordinatesOf = (url: string): { lat: number; lng: number } | null => {
   const pin = /!3d(-?\d+(?:\.\d+)?)!4d(-?\d+(?:\.\d+)?)/.exec(url)
   const view = /@(-?\d+(?:\.\d+)?),(-?\d+(?:\.\d+)?)/.exec(url)
   const match = pin ?? view

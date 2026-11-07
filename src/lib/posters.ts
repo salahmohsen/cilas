@@ -1,4 +1,4 @@
-import type { PosterLayout } from '@/components/home/poster'
+export type PosterLayout = 0 | 1 | 2 | 3
 
 /**
  * A layout for each of `count` posters, at random, with no two neighbours

@@ -7,8 +7,7 @@ import { getPayload } from 'payload'
 import { getBridgeYear, listBridgeYears } from '@/api/programmes.api'
 import { BridgeYearView } from '@/components/bridge/bridge-year'
 import { redirect } from '@/i18n/navigation'
-import { ogImages } from '@/lib/og'
-import { pageAlternates } from '@/lib/seo'
+import { buildPageMetadata } from '@/lib/seo'
 
 type Props = { params: Promise<{ locale: string; year: string }> }
 
@@ -23,16 +22,14 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   })
   if (!year) return {}
   const title = year.programme.title
-  return {
+  const { twitter: _twitter, ...metadata } = buildPageMetadata({
     title,
     description: year.programme.tagline,
-    alternates: pageAlternates(`/study/bridge/${path}`, locale),
-    openGraph: {
-      title,
-      description: year.programme.tagline ?? undefined,
-      images: ogImages(year.cover?.url ?? undefined),
-    },
-  }
+    image: year.cover?.url,
+    path: `/study/bridge/${path}`,
+    locale,
+  })
+  return metadata
 }
 
 /** A past Bridge year, as a record: `/study/bridge/2024-2025`. The current year lives at /study/bridge. */

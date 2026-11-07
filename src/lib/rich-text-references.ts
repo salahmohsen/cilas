@@ -1,5 +1,5 @@
+import type { ResolvedMention } from '@/lib/mentions'
 import { relId } from '@/lib/relation'
-import type { ResolvedMention } from '@/api/mentions.api'
 
 export type RichTextReferences = Record<string, ResolvedMention>
 
@@ -16,13 +16,17 @@ export type EditorNode = {
   value?: unknown
 }
 
-export const walkEditorNodes = (data: unknown, visit: (node: EditorNode) => void): void => {
+export const walkEditorNodes = (
+  data: unknown,
+  visit: (node: EditorNode) => void,
+  embedded = true,
+): void => {
   if (!data || typeof data !== 'object') return
-  if ('root' in data) return walkEditorNodes(data.root, visit)
+  if ('root' in data) return walkEditorNodes(data.root, visit, embedded)
   const node = data as EditorNode
   visit(node)
-  for (const child of node.children ?? []) walkEditorNodes(child, visit)
-  if (node.fields?.blockType === 'columns') {
+  for (const child of node.children ?? []) walkEditorNodes(child, visit, embedded)
+  if (embedded && node.fields?.blockType === 'columns') {
     for (const key of ['first', 'second', 'third', 'fourth'].slice(
       0,
       Number(node.fields.columnCount ?? 2),
@@ -30,7 +34,7 @@ export const walkEditorNodes = (data: unknown, visit: (node: EditorNode) => void
       walkEditorNodes(node.fields[key], visit)
     }
   }
-  if (node.fields?.blockType === 'footnote') walkEditorNodes(node.fields.note, visit)
+  if (embedded && node.fields?.blockType === 'footnote') walkEditorNodes(node.fields.note, visit)
 }
 
 export const documentsIn = (data: unknown): unknown[] => {

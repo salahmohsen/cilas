@@ -1,17 +1,21 @@
+import { siteTiers } from '@/access'
+import type { Reader } from '@/api/articles.api'
 import { type Locale, otherLocale } from '@/i18n/routing'
-import { detailPath } from '@/lib/paths'
 import { listSeparator } from '@/lib/locale-format'
-import { relation as obj } from '@/lib/relation'
+import { mediaPopulate, mediaStudyImage } from '@/lib/media-image'
+import { detailPath } from '@/lib/paths'
 import { plainText } from '@/lib/plaintext'
+import { previewWhere } from '@/lib/preview-access'
+import { relation as obj, relId } from '@/lib/relation'
 import type { Payload, Where } from 'payload'
 
 import type { SiteTier } from '@/access'
 import { COURSE_TYPE_OPTIONS } from '@/fields/course-type'
+import { searchWords, type StudyCourse } from '@/lib/course-search'
 import { SEASONS } from '@/lib/cycle'
 import { localDigits } from '@/lib/digits'
 import { registrationStatus } from '@/lib/registration'
 import { slugify } from '@/lib/slugify'
-import { searchWords, type StudyCourse } from '@/lib/course-search'
 import type { Course, Cycle, Media, Person, Place } from '@/payload-types'
 
 /**
@@ -30,7 +34,7 @@ const populate = {
     registration: true,
   },
   places: { name: true, city: true, slug: true },
-  media: { url: true, alt: true, focalX: true, focalY: true, filename: true, prefix: true },
+  media: mediaPopulate,
 } as const
 
 /**
@@ -45,7 +49,7 @@ const visible = (tiers: SiteTier[]): Where => ({
  * Published courses in these tiers. Drafts (imported courses awaiting review
  * among them) stay off the list, matching what `/study/<slug>` will show.
  */
-export const getListedCourses = async (payload: Payload, locale: Locale, tiers: SiteTier[]) =>
+const getListedCourses = async (payload: Payload, locale: Locale, tiers: SiteTier[]) =>
   payload.find({
     collection: 'courses',
     where: visible(tiers),
@@ -203,9 +207,7 @@ export const getStudyCourses = async (
           description && description.length > 280
             ? `${description.slice(0, 277).trimEnd()}…`
             : description,
-        image: cover?.url ?? undefined,
-        imageAlt: cover?.alt ?? undefined,
-        imageFocalPoint: cover ? { focalX: cover.focalX, focalY: cover.focalY } : undefined,
+        ...mediaStudyImage(cover),
         startDate: c.schedule?.start_date ?? cycle?.start_date ?? `${cycle?.start_year ?? 0}`,
         ...((c.registration?.deadline ?? cycle?.registration?.deadline)
           ? { deadline: (c.registration?.deadline ?? cycle?.registration?.deadline)!.slice(0, 10) }
@@ -221,4 +223,117 @@ export const getStudyCourses = async (
       }
     })
     .sort((a, b) => b.startDate.localeCompare(a.startDate))
+}
+
+/**
+ * A course the site shows `reader`: published, in a tier they may see. An
+ * owner-only course shows only in the admin's preview.
+ */
+export const courseWhere = (reader: Reader, slug: string): Where => ({
+  and: [
+    { slug: { equals: slug } },
+    { tier: { in: siteTiers(reader) } },
+    { _status: { equals: 'published' } },
+  ],
+})
+
+export const getCourse = async (
+  payload: Payload,
+  slug: string,
+  { locale, reader, depth = 2 }: { locale: Locale; reader: Reader; depth?: number },
+) => {
+  const { docs } = await payload.find({
+    collection: 'courses',
+    where: courseWhere(reader, slug),
+    limit: 1,
+    depth,
+    joins: false,
+    overrideAccess: false,
+    user: reader,
+    locale,
+    fallbackLocale: otherLocale(locale),
+  })
+  return docs[0]
+}
+export const getCourseForReading = async (
+  payload: Payload,
+  slug: string,
+  { locale, reader, preview = false }: { locale: Locale; reader: Reader; preview?: boolean },
+) => {
+  const scope = preview ? await previewWhere(payload, 'courses', reader) : null
+  if (scope === false) return undefined
+
+  const docs = preview
+    ? (
+        await payload.find({
+          collection: 'courses',
+          // The admin's preview shows any course; the site only what the reader may see.
+          where: { and: [{ slug: { equals: slug } }, scope ?? {}] },
+          limit: 1,
+          // Must match the `depth` given to `useLivePreview` in CourseLivePreview,
+          // or populated relationships will not survive the live merge.
+          depth: 2,
+          // Joins are admin views (a course's enrollments, a cycle's courses); never
+          // ship them to the page, where a previewing fellow would see assessments.
+          joins: false,
+          overrideAccess: false,
+          user: reader,
+          // A course without text in the site language shows its own (CONTEXT.md).
+          locale: locale as 'en' | 'ar',
+          fallbackLocale: otherLocale(locale),
+        })
+      ).docs
+    : [await getCourse(payload, slug, { locale, reader })]
+
+  const course: Course | undefined = docs[0]
+
+  if (!course) return undefined
+
+  // The other published courses of the same cycle, for the end of the page.
+  const cycleId = relId(course.cycle) ?? undefined
+  const { docs: siblings } = cycleId
+    ? await payload.find({
+        collection: 'courses',
+        where: {
+          and: [
+            { cycle: { equals: cycleId } },
+            { id: { not_equals: course.id } },
+            { tier: { in: siteTiers(reader) } },
+            { _status: { equals: 'published' } },
+          ],
+        },
+        depth: 1,
+        joins: false,
+        pagination: false,
+        populate: {
+          people: { name: true },
+          media: mediaPopulate,
+        },
+        select: { title: true, slug: true, course_type: true, fellows: true, cover_image: true },
+        locale: locale as 'en' | 'ar',
+        fallbackLocale: otherLocale(locale),
+      })
+    : { docs: [] }
+  if (!preview) return { course, siblings, previewCourse: undefined }
+  /*
+   * In preview, `draft: true` is what returns the in-progress version. It reads
+   * from the versions table, and a document that has never been saved as a draft
+   * has no row there — the published document is the only record. So fall back
+   * to the published read, otherwise previewing any freshly published course
+   * 404s until something triggers a version write.
+   */
+  const { docs: drafts } = await payload.find({
+    collection: 'courses',
+    where: { and: [{ slug: { equals: slug } }, scope ?? {}] },
+    limit: 1,
+    depth: 2,
+    joins: false,
+    overrideAccess: false,
+    user: reader,
+    draft: true,
+    locale: locale as 'en' | 'ar',
+    fallbackLocale: otherLocale(locale),
+  })
+
+  return { course, siblings, previewCourse: drafts[0] ?? course }
 }

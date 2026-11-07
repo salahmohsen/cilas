@@ -1,5 +1,6 @@
 import { type Locale, otherLocale } from '@/i18n/routing'
 import { relId } from '@/lib/relation'
+import { walkEditorNodes } from '@/lib/rich-text-references'
 import type { Payload, Where } from 'payload'
 
 import type { Reader } from '@/api/articles.api'
@@ -8,8 +9,8 @@ import type { OrbitStackItem } from '@/components/ui/orbit-card-stack'
 import { COURSE_TYPE_OPTIONS, type CourseType } from '@/fields/course-type'
 import type { ArticleCard } from '@/lib/article-cards'
 import type { Season } from '@/lib/cycle'
-import { pathOf } from '@/lib/paths'
 import { mediaImage } from '@/lib/media-image'
+import { pathOf } from '@/lib/paths'
 import type { Article, Course, Cycle, Media, Person, Publication } from '@/payload-types'
 
 /** A grid card: a blog-grid post with the page it opens. */
@@ -47,21 +48,24 @@ const idOf = (v: unknown): number | null =>
 
 /** Every Card stack block in a Lexical body, at any depth. */
 const stacksIn = (node: unknown, found: StackFields[] = []): StackFields[] => {
-  if (!node || typeof node !== 'object') return found
-  const n = node as { type?: string; fields?: StackFields; children?: unknown[]; root?: unknown }
-  if (n.type === 'block' && n.fields?.blockType === 'cardStack') found.push(n.fields)
-  for (const child of n.children ?? []) stacksIn(child, found)
-  if (n.root) stacksIn(n.root, found)
+  walkEditorNodes(
+    node,
+    (n) => {
+      if (n.type === 'block' && n.fields?.blockType === 'cardStack')
+        found.push(n.fields as StackFields)
+    },
+    false,
+  )
   return found
 }
 
 const coverOf = (m: unknown) => {
-  const media = m as Media | null
-  return media && typeof media === 'object' && media.url
+  const image = mediaImage(m && typeof m === 'object' ? (m as Media) : null)
+  return image
     ? {
-        image: media.url,
-        imageAlt: media.alt ?? '',
-        imageFocalPoint: { focalX: media.focalX, focalY: media.focalY },
+        image: image.src,
+        imageAlt: image.alt,
+        imageFocalPoint: { focalX: image.focalX, focalY: image.focalY },
       }
     : {}
 }

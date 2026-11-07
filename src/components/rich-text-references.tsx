@@ -1,14 +1,14 @@
 'use client'
 
-import { createContext, useContext, type ReactNode } from 'react'
-import { useTranslations } from 'next-intl'
-import { Link } from '@/i18n/navigation'
-import { MentionLink } from '@/components/article/mention-link'
 import { MENTION_TYPES } from '@/blocks/mention'
-import { referenceKey, type RichTextReferences } from '@/lib/rich-text-references'
-import type { ResolvedMention } from '@/api/mentions.api'
 import { BlogCardBody } from '@/components/arc/blocks/blog-grid/blog-grid'
 import blogStyles from '@/components/arc/blocks/blog-grid/blog-grid.module.css'
+import { MentionLink } from '@/components/article/mention-link'
+import { Link } from '@/i18n/navigation'
+import type { ResolvedMention } from '@/lib/mentions'
+import { referenceKey, type RichTextReferences } from '@/lib/rich-text-references'
+import { useTranslations } from 'next-intl'
+import { createContext, useContext, type ReactNode } from 'react'
 
 const References = createContext<RichTextReferences>({})
 

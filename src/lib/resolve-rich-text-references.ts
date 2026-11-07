@@ -1,14 +1,15 @@
-import { type Locale, otherLocale } from '@/i18n/routing'
-import type { Payload } from 'payload'
-import type { Reader } from '@/api/articles.api'
-import { resolveMentionDocument } from '@/api/mentions.api'
 import { MENTION_TYPES } from '@/blocks/mention'
+import { otherLocale, type Locale } from '@/i18n/routing'
+import { resolveMentionDocument } from '@/lib/mentions'
 import {
   documentsIn,
   referenceKey,
   walkEditorNodes,
   type RichTextReferences,
 } from '@/lib/rich-text-references'
+import type { User } from '@/payload-types'
+import type { Payload } from 'payload'
+type Reader = User | null
 
 export const resolveRichTextReferences = async (
   payload: Payload,

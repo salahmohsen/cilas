@@ -1,3 +1,4 @@
+import { hasDayPrecision } from '@/lib/schedule'
 /**
  * Structured data (schema.org JSON-LD) for pages that describe one thing:
  * the institute itself, a person, an article, a course, an event. Each page
@@ -188,7 +189,7 @@ export const eventSchema = ({
   siteName: string
 }) => {
   const page = pathOf('events', event, locale)
-  if (!page || event.schedule?.start_precision === 'week') return null
+  if (!page || !hasDayPrecision(event.schedule)) return null
   const place = event.place && typeof event.place === 'object' ? event.place : null
   const venue = event.external_venue?.name
     ? {

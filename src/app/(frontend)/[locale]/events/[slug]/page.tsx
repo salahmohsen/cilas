@@ -1,22 +1,20 @@
-import { detailPath } from '@/lib/paths'
 import { type Locale } from '@/i18n/routing'
+import { detailPath } from '@/lib/paths'
 import config from '@payload-config'
+import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import { getPayload } from 'payload'
-import type { Metadata } from 'next'
 import { cache } from 'react'
 
-import { getPublicEvents } from '@/api/events.api'
+import { getPublicEvent } from '@/api/events.api'
 import { EventPage } from '@/components/events/event-page'
-import { plainText } from '@/lib/plaintext'
-import { pageAlternates } from '@/lib/seo'
-import { ogImages } from '@/lib/og'
+import { buildPageMetadata, seoDefaults } from '@/lib/seo'
 
 type Props = { params: Promise<{ locale: Locale; slug: string }> }
 export const revalidate = 60
 const readEvent = cache(async (locale: Locale, slug: string) => {
   const payload = await getPayload({ config })
-  return (await getPublicEvents(payload, locale, slug))[0]
+  return await getPublicEvent(payload, locale, slug)
 })
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
@@ -25,27 +23,21 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   if (!event) notFound()
   const metaImage = typeof event.meta?.image === 'object' ? event.meta.image : null
   const cover = typeof event.cover_image === 'object' ? event.cover_image : null
-  const images = ogImages(metaImage?.url || cover?.url)
   const title = event.meta?.title || event.title
   const description =
     event.meta?.description ||
-    (event.description ? plainText({ data: event.description }).slice(0, 160) : undefined)
-  return {
+    seoDefaults('events', event as unknown as Record<string, unknown>).description
+  const metadata = buildPageMetadata({
     title,
     description,
-    alternates: pageAlternates(detailPath('events', String(event.slug)), locale),
-    openGraph: {
-      title,
-      description,
-      url: detailPath('events', String(event.slug), locale),
-      images,
-    },
-    twitter: {
-      card: 'summary_large_image',
-      title,
-      description,
-      images: images.map((image) => image.url),
-    },
+    image: metaImage?.url || cover?.url,
+    path: detailPath('events', String(event.slug)),
+    locale,
+  })
+  return {
+    ...metadata,
+    openGraph: { ...metadata.openGraph, url: detailPath('events', String(event.slug), locale) },
+    twitter: { ...metadata.twitter, title, description },
   }
 }
 

@@ -1,5 +1,5 @@
 import { cairoDay, cairoInstant } from '@/lib/cairo-day'
-import { expandSchedule, type Meeting } from '@/lib/schedule'
+import { expandSchedule, hasDayPrecision, type Meeting } from '@/lib/schedule'
 import type { Event } from '@/payload-types'
 
 export type EventTiming = {
@@ -13,7 +13,7 @@ export const eventTiming = (
   now = new Date(),
 ): EventTiming => {
   const schedule = event.schedule
-  if (schedule?.start_precision === 'week') return { status: 'undated' }
+  if (!hasDayPrecision(schedule)) return { status: 'undated' }
   const meetings = expandSchedule(schedule)
   if (meetings.length) {
     const next = meetings.find((m) => {

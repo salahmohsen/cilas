@@ -3,7 +3,7 @@
 import { HoverCard, HoverCardProfile } from '@/components/arc/hover-card/hover-card'
 import { Link } from '@/i18n/navigation'
 
-import type { MentionPreview } from '@/api/mentions.api'
+import type { MentionPreview } from '@/lib/mentions'
 
 /**
  * A mention in an article's text: a real link (crawlers and keyboards follow

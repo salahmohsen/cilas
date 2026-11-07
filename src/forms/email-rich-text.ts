@@ -1,6 +1,6 @@
 import { relId } from '@/lib/relation'
 import type { BeforeEmail } from '@payloadcms/plugin-form-builder/types'
-import { resolveRichTextReferences } from '@/api/rich-text-references.api'
+import { resolveRichTextReferences } from '@/lib/resolve-rich-text-references'
 import { emailRichTextHTML } from '@/emails/rich-text'
 import { env } from '@/env'
 

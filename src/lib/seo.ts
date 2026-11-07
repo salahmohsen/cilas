@@ -1,8 +1,9 @@
-import { relId } from '@/lib/relation'
+import { routing } from '@/i18n/routing'
+import { ogImages } from '@/lib/og'
 import { plainText } from '@/lib/plaintext'
+import { relId } from '@/lib/relation'
 import type { SerializedEditorState } from '@payloadcms/richtext-lexical/lexical'
 import type { Metadata } from 'next'
-import { routing } from '@/i18n/routing'
 
 /** Paths exclude the locale prefix; query strings identify distinct listing pages. */
 export const pageAlternates = (path: string, locale: string): Metadata['alternates'] => ({
@@ -73,4 +74,29 @@ export const seoDefaults = (
   if (image !== undefined) result.image = image
 
   return result
+}
+
+export function buildPageMetadata({
+  title,
+  description,
+  image,
+  path,
+  locale,
+  type,
+}: {
+  title?: string
+  description?: string | null
+  image?: string | null
+  path: string
+  locale: string
+  type?: 'article'
+}): Metadata {
+  const images = ogImages(image)
+  return {
+    title,
+    description,
+    alternates: pageAlternates(path, locale),
+    openGraph: { title, description: description ?? undefined, images, ...(type ? { type } : {}) },
+    twitter: { card: 'summary_large_image', images: images.map((image) => image.url) },
+  }
 }

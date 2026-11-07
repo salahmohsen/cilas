@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 
-import { ArticlePage, articleMetadata } from '@/components/article/article-page'
+import { articleMetadata } from '@/app/(frontend)/[locale]/articles/[slug]/metadata'
+import { ArticlePage } from '@/components/article/article-page'
 import { currentReader } from '@/lib/reader'
 
 type Props = { params: Promise<{ locale: string; slug: string }> }

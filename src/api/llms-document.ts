@@ -1,31 +1,32 @@
-import { listSeparator } from '@/lib/locale-format'
+import { MENTION_TYPES } from '@/blocks/mention'
 import { type Locale } from '@/i18n/routing'
+import { listSeparator } from '@/lib/locale-format'
+import type { SanitizedServerEditorConfig } from '@payloadcms/richtext-lexical'
 import {
+  $isServerBlockNode,
+  $isServerInlineBlockNode,
   convertLexicalToMarkdown,
   editorConfigFactory,
   ServerBlockNode,
   ServerInlineBlockNode,
-  $isServerBlockNode,
-  $isServerInlineBlockNode,
 } from '@payloadcms/richtext-lexical'
-import type { SanitizedServerEditorConfig } from '@payloadcms/richtext-lexical'
 import type { SerializedEditorState } from '@payloadcms/richtext-lexical/lexical'
 import type { Payload } from 'payload'
 
 import { getRelatedArticles } from '@/api/articles.api'
-import { resolveMentions, type ResolvedMention } from '@/api/mentions.api'
-import { resolveRichTextReferences } from '@/api/rich-text-references.api'
-import { referenceKey } from '@/lib/rich-text-references'
-import { defaultEditorFeatures } from '@/lexical/default-features'
-import { COURSE_TYPE_OPTIONS } from '@/fields/course-type'
 import { env } from '@/env'
-import { WEEKDAYS } from '@/lib/cairo-day'
-import { footnotesOf } from '@/lib/footnotes'
-import { flattenRichTextColumns } from '@/lib/flatten-rich-text-columns'
+import { COURSE_TYPE_OPTIONS } from '@/fields/course-type'
 import { articleBodyFeatures } from '@/lexical/article-body'
+import { defaultEditorFeatures } from '@/lexical/default-features'
+import { WEEKDAYS } from '@/lib/cairo-day'
+import { flattenRichTextColumns } from '@/lib/flatten-rich-text-columns'
+import { footnotesOf } from '@/lib/footnotes'
+import { type ResolvedMention } from '@/lib/mentions'
 import { pathOf } from '@/lib/paths'
 import { priceLabel, pricingFor } from '@/lib/pricing'
 import { registrationStatus, type Registration } from '@/lib/registration'
+import { resolveRichTextReferences } from '@/lib/resolve-rich-text-references'
+import { referenceKey, type RichTextReferences } from '@/lib/rich-text-references'
 import { expandSchedule, sessionsInOrder } from '@/lib/schedule'
 import type { Article, Course, Person, Publication } from '@/payload-types'
 
@@ -57,7 +58,7 @@ const contextOf = (locale: Locale): SiteLink => ({
   serverUrl: env.NEXT_PUBLIC_SERVER_URL,
 })
 
-export const linkTo = (l: SiteLink, path: string | null | undefined): string | null =>
+const linkTo = (l: SiteLink, path: string | null | undefined): string | null =>
   path ? `${l.serverUrl.replace(/\/+$/, '')}/${l.locale}${path}` : null
 
 export const documentToMarkdown = (doc: LlmsDocument): string => {
@@ -72,13 +73,13 @@ export const documentToMarkdown = (doc: LlmsDocument): string => {
   return `${parts.join('\n\n')}\n`
 }
 
-export const factsList = (facts: Array<[string, string | null | undefined]>): string =>
+const factsList = (facts: Array<[string, string | null | undefined]>): string =>
   facts
     .filter(([, value]) => Boolean(value))
     .map(([label, value]) => `**${label}:** ${value}`)
     .join('\n')
 
-export const bulletList = (items: Array<string | null | undefined>): string =>
+const bulletList = (items: Array<string | null | undefined>): string =>
   items
     .filter(Boolean)
     .map((item) => `- ${item}`)
@@ -92,7 +93,7 @@ const BIBLIOGRAPHY_LABELS: Record<string, Record<Locale, string>> = {
   other: { en: 'Other', ar: 'أخرى' },
 }
 
-export const bibliographyLine = (
+const bibliographyLine = (
   item:
     | { type?: string | null; title?: string | null; href?: string | null; note?: string | null }
     | null
@@ -253,9 +254,9 @@ const toMarkdown = async (
   payload: Payload,
   data: unknown,
   l: SiteLink,
+  references: RichTextReferences,
   options: {
     features?: typeof articleBodyFeatures
-    mentions?: Record<string, ResolvedMention>
     footnotes?: Map<string, number>
   } = {},
 ): Promise<string> => {
@@ -264,10 +265,6 @@ const toMarkdown = async (
     ? editorConfigFactory.fromFeatures({ config: payload.config, features: options.features })
     : editorConfigFactory.fromFeatures({ config: payload.config, features: defaultEditorFeatures }))
   const editorConfig = withExtraTransformers(base)
-  const references = await resolveRichTextReferences(payload, data, {
-    locale: l.locale,
-    user: null,
-  })
 
   editorConfig.features.markdownTransformers.push(
     {
@@ -291,7 +288,8 @@ const toMarkdown = async (
         const f = fieldsOf(node)
         if (!$isServerInlineBlockNode(node) || f.blockType !== 'mention') return null
         const label = String(f.label ?? '')
-        const resolved = f.id ? options.mentions?.[f.id] : undefined
+        const kind = MENTION_TYPES.find((type) => type.value === f.type)
+        const resolved = kind ? references[referenceKey(kind.relationTo, f[kind.value])] : undefined
         return resolved ? markdownHref(label, mentionUrl(l, resolved)) : label
       },
     },
@@ -336,10 +334,11 @@ const toMarkdown = async (
   )
 }
 
-export const endnotesOf = async (
+const endnotesOf = async (
   payload: Payload,
   body: unknown,
   l: SiteLink,
+  references: RichTextReferences,
 ): Promise<Array<{ id: string; number: number; markdown: string }>> => {
   const footnotes = footnotesOf(body as never)
   const notes: Array<{ id: string; number: number; markdown: string }> = []
@@ -347,7 +346,7 @@ export const endnotesOf = async (
     notes.push({
       id: note.id,
       number: note.number,
-      markdown: await toMarkdown(payload, note.note, l),
+      markdown: await toMarkdown(payload, note.note, l, references),
     })
   }
   return notes
@@ -358,9 +357,9 @@ const articleBodyToMarkdown = async (
   body: unknown,
   l: SiteLink,
   footnotes: Map<string, number>,
+  references: RichTextReferences,
 ): Promise<string> => {
-  const mentions = await resolveMentions(payload, body, { locale: l.locale, user: null })
-  return toMarkdown(payload, body, l, { features: articleBodyFeatures, mentions, footnotes })
+  return toMarkdown(payload, body, l, references, { features: articleBodyFeatures, footnotes })
 }
 
 export const courseDocument = async (
@@ -368,6 +367,7 @@ export const courseDocument = async (
   course: Course,
   locale: Locale,
 ): Promise<LlmsDocument> => {
+  const references = await resolveRichTextReferences(payload, course, { locale, user: null })
   const l = contextOf(locale)
   const t = labelsOf(locale)
   const cycle = typeof course.cycle === 'object' ? course.cycle : null
@@ -435,7 +435,7 @@ export const courseDocument = async (
     .filter(Boolean)
     .join('\n')
 
-  const description = await toMarkdown(payload, course.description?.description, l)
+  const description = await toMarkdown(payload, course.description?.description, l, references)
 
   const fellows = (course.fellows ?? []).filter(
     (p): p is Person => typeof p === 'object' && p !== null,
@@ -444,7 +444,7 @@ export const courseDocument = async (
     fellows.map(async (fellow) => {
       const name = personName(fellow)
       if (!name) return null
-      const bio = await toMarkdown(payload, fellow.bio, l)
+      const bio = await toMarkdown(payload, fellow.bio, l, references)
       const profile = linkTo(l, pathOf('people', fellow))
       return [markdownHref(name, profile), bio].filter(Boolean).join('\n\n')
     }),
@@ -460,7 +460,7 @@ export const courseDocument = async (
       const extraDates = (session.dates ?? [])
         .map((d) => `${d.date} ${d.start_time}–${d.end_time}`)
         .join(listSeparator(locale))
-      const descriptionMarkdown = await toMarkdown(payload, session.description, l)
+      const descriptionMarkdown = await toMarkdown(payload, session.description, l, references)
       const activities = bulletList(
         (session.activities ?? []).map(
           (a) => `${a.kind}${a.description ? ` — ${a.description}` : ''}`,
@@ -524,6 +524,11 @@ export const articleDocument = async (
   body: unknown,
   locale: Locale,
 ): Promise<LlmsDocument> => {
+  const references = await resolveRichTextReferences(
+    payload,
+    { article, body },
+    { locale, user: null },
+  )
   const l = contextOf(locale)
   const t = labelsOf(locale)
 
@@ -585,9 +590,9 @@ export const articleDocument = async (
       : []) as Array<[string, string | null | undefined]>),
   ]) as never
 
-  const notes = await endnotesOf(payload, body, l)
+  const notes = await endnotesOf(payload, body, l, references)
   const footnoteNumbers = new Map(notes.map((note) => [note.id, note.number]))
-  const bodyMarkdown = await articleBodyToMarkdown(payload, body, l, footnoteNumbers)
+  const bodyMarkdown = await articleBodyToMarkdown(payload, body, l, footnoteNumbers, references)
   const endnotes = notes.map((n) => `[^${n.number}]: ${n.markdown}`).join('\n')
 
   const related = await getRelatedArticles(payload, article, l.locale, 5, null)

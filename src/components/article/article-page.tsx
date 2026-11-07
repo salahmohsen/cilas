@@ -1,13 +1,12 @@
-import { detailPath, pathOf } from '@/lib/paths'
-import { type Locale, isRtl } from '@/i18n/routing'
+import { isRtl, type Locale } from '@/i18n/routing'
+import { pathOf } from '@/lib/paths'
+import { currentReader } from '@/lib/reader'
 import { isRelation as isObject } from '@/lib/relation'
 import config from '@payload-config'
 import { VisualEditing } from '@payload-inline-visual-editor/react'
 import { ArrowLeft, ArrowUpRight, Languages } from 'lucide-react'
-import type { Metadata } from 'next'
 import { getFormatter, getTranslations } from 'next-intl/server'
 import { draftMode } from 'next/headers'
-import { currentReader } from '@/lib/reader'
 import { notFound } from 'next/navigation'
 import { getPayload } from 'payload'
 import React from 'react'
@@ -19,68 +18,46 @@ import {
   getRelatedArticles,
   type Reader,
 } from '@/api/articles.api'
+import { resolveCardStacks } from '@/api/card-stacks.api'
 import { getContactEmail } from '@/api/contact.api'
+import { AdminFrameOnly, OutsideAdminFrame } from '@/components/admin-frame-only'
+import { AIInstructions } from '@/components/ai-instructions'
+import grid from '@/components/arc/blocks/blog-grid/blog-grid.module.css'
+import { ScrollArea } from '@/components/arc/scroll-area/scroll-area'
+import { ArticleCardGrid } from '@/components/article/article-card-grid'
+import { ArticleCardStack } from '@/components/article/article-card-stack'
+import { ArticleSidebar } from '@/components/article/article-sidebar'
+import { ArticlesGrid } from '@/components/article/articles-grid'
+import { CollectionDialog } from '@/components/article/collection-dialog'
 import {
   ArticleContents,
   ArticleNotes,
   ReadingProgress,
   TextSize,
 } from '@/components/article/reading-tools'
-import { ArticlesGrid } from '@/components/article/articles-grid'
-import { ArticleSidebar } from '@/components/article/article-sidebar'
-import { toArticleCard } from '@/lib/article-cards'
-import grid from '@/components/arc/blocks/blog-grid/blog-grid.module.css'
-import { AdminFrameOnly, OutsideAdminFrame } from '@/components/admin-frame-only'
 import { EditorFields, labelOf } from '@/components/editor-fields'
-import { RefreshRouteOnSave } from '@/components/RefreshRouteOnSave'
-import { ContributorRows, PersonLink, type Contributor } from '@/components/person/contributors'
-import { SideCard, SideCardSection } from '@/components/side-card'
-import { ScrollArea } from '@/components/arc/scroll-area/scroll-area'
-import { ResolvedRichTextField as RichTextField } from '@/components/resolved-rich-text-field'
-import { ShareBar } from '@/components/share-bar'
-import { StudyWithAI } from '@/components/study-with-ai'
-import { AIInstructions } from '@/components/ai-instructions'
-import { ArticleCardStack } from '@/components/article/article-card-stack'
-import { ArticleCardGrid } from '@/components/article/article-card-grid'
-import { CollectionDialog } from '@/components/article/collection-dialog'
-import { mediaImage } from '@/lib/media-image'
-import { resolveCardStacks } from '@/api/card-stacks.api'
 import { NewsletterSignupEnd } from '@/components/newsletter-signup-end'
+import { ContributorRows, PersonLink, type Contributor } from '@/components/person/contributors'
+import { RefreshRouteOnSave } from '@/components/RefreshRouteOnSave'
+import { ResolvedRichTextField as RichTextField } from '@/components/resolved-rich-text-field'
 import { Schema } from '@/components/schema'
-import { Link } from '@/i18n/navigation'
+import { ShareBar } from '@/components/share-bar'
+import { SideCard, SideCardSection } from '@/components/side-card'
+import { StudyWithAI } from '@/components/study-with-ai'
 import { env } from '@/env'
+import { Link } from '@/i18n/navigation'
 import { splitBody } from '@/lib/article-body'
+import { toArticleCard } from '@/lib/article-cards'
+import { excerptOf, publicationOf, readingMinutes, repeatsOpening, yearOf } from '@/lib/articles'
 import { localDigits } from '@/lib/digits'
 import { editableIn } from '@/lib/editable'
 import { footnotesOf } from '@/lib/footnotes'
-import { excerptOf, publicationOf, readingMinutes, repeatsOpening, yearOf } from '@/lib/articles'
-import { articleSchema, absoluteUrl, breadcrumbSchema } from '@/lib/schema'
-import { ogImages } from '@/lib/og'
-import { pageAlternates } from '@/lib/seo'
+import { mediaImage } from '@/lib/media-image'
+import { absoluteUrl, articleSchema, breadcrumbSchema } from '@/lib/schema'
 import type { Article, Media, Person } from '@/payload-types'
 
 /** Which article, and who reads it (null: an anonymous visitor). */
 type View = { locale: string; slug: string; user: Reader }
-
-/** The page metadata. Shared by the cached page and the signed-in one. */
-export async function articleMetadata({ locale, slug, user }: View): Promise<Metadata> {
-  const payload = await getPayload({ config })
-  const reading = await getArticleForReading(payload, slug, { locale: locale as Locale, user })
-  if (!reading) return {}
-  const { article, title, body } = reading
-  const metaTitle = article.meta?.title || `${title} — CILAS`
-  // The SEO image, else the article's cover; the site's default otherwise.
-  const media = (v: unknown) => (isObject<Media>(v) && v.url ? v.url : null)
-  const image = media(article.meta?.image) ?? media(article.cover_image)
-  const description = article.meta?.description || excerptOf({ body }, 160)
-  return {
-    title: metaTitle,
-    description,
-    openGraph: { title: metaTitle, description, type: 'article', images: ogImages(image) },
-    twitter: { card: 'summary_large_image', images: ogImages(image).map((i) => i.url) },
-    alternates: pageAlternates(detailPath('articles', String(article.slug)), locale),
-  }
-}
 
 /**
  * One article. The cached page renders it for anonymous visitors; the

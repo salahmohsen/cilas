@@ -11,7 +11,7 @@ const components = [
   'src/components/article/reading-tools.tsx',
   'src/components/events/event-attendance.tsx',
   'src/app/(frontend)/[locale]/study/[slug]/CourseView.tsx',
-  'src/app/(frontend)/[locale]/study/[slug]/RegisterBar.tsx',
+  'src/components/course/RegisterBar.tsx',
 ]
 
 describe('side card styles', () => {

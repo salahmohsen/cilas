@@ -1,44 +1,21 @@
-import { detailPath } from '@/lib/paths'
+import { getCourse } from '@/api/courses.api'
 import { CAIRO } from '@/lib/cairo-day'
-import { otherLocale } from '@/i18n/routing'
+import { detailPath } from '@/lib/paths'
 import { relId } from '@/lib/relation'
 import config from '@payload-config'
 import type { Metadata } from 'next'
 import { getFormatter, getTranslations } from 'next-intl/server'
 import { notFound } from 'next/navigation'
-import { getPayload, type Payload } from 'payload'
+import { getPayload } from 'payload'
 import type { ReactNode } from 'react'
 
-import { siteTiers } from '@/access'
 import type { Reader } from '@/api/articles.api'
 import { PayloadForm } from '@/components/forms/payload-form'
 import { ResolvedRichTextField as RichTextField } from '@/components/resolved-rich-text-field'
 import { Link } from '@/i18n/navigation'
 import { numberingSystemOf } from '@/lib/digits'
 import { registrationStatus } from '@/lib/registration'
-import type { Course, Cycle, Form } from '@/payload-types'
-
-/** The published course, in a tier `reader` may see. */
-const courseOf = async (payload: Payload, slug: string, lang: 'en' | 'ar', reader: Reader) => {
-  const { docs } = await payload.find({
-    collection: 'courses',
-    where: {
-      and: [
-        { slug: { equals: slug } },
-        { tier: { in: siteTiers(reader) } },
-        { _status: { equals: 'published' } },
-      ],
-    },
-    limit: 1,
-    depth: 1,
-    joins: false,
-    locale: lang,
-    fallbackLocale: otherLocale(lang),
-    overrideAccess: false,
-    user: reader,
-  })
-  return docs[0] as Course | undefined
-}
+import type { Cycle, Form } from '@/payload-types'
 
 /** Shared by the cached page and the signed-in one. */
 export async function courseApplyMetadata(
@@ -47,12 +24,11 @@ export async function courseApplyMetadata(
   reader: Reader,
 ): Promise<Metadata> {
   const t = await getTranslations({ locale, namespace: 'Apply' })
-  const course = await courseOf(
-    await getPayload({ config }),
-    slug,
-    locale === 'ar' ? 'ar' : 'en',
+  const course = await getCourse(await getPayload({ config }), slug, {
+    locale: locale === 'ar' ? 'ar' : 'en',
     reader,
-  )
+    depth: 1,
+  })
   return course
     ? { title: t('courseTitle', { title: course.title }), robots: { index: false } }
     : {}
@@ -76,7 +52,7 @@ export async function CourseApplyPage({
   const lang = locale === 'ar' ? 'ar' : 'en'
   const [t, format] = await Promise.all([getTranslations('Apply'), getFormatter()])
   const payload = await getPayload({ config })
-  const course = await courseOf(payload, slug, lang, reader)
+  const course = await getCourse(payload, slug, { locale: lang, reader, depth: 1 })
   if (!course) notFound()
 
   const cycle = typeof course.cycle === 'object' ? (course.cycle as Cycle | null) : null

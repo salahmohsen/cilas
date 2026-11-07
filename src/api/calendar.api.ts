@@ -1,14 +1,16 @@
 import { type Locale, otherLocale } from '@/i18n/routing'
+import { mediaCover, mediaPopulate } from '@/lib/media-image'
 import { detailPath } from '@/lib/paths'
+import { hasDayPrecision } from '@/lib/schedule'
 import config from '@payload-config'
 import { unstable_cache } from 'next/cache'
 import { getPayload, type Payload, type Where } from 'payload'
 
 import { cairoDay } from '@/lib/cairo-day'
+import type { FocalPoint } from '@/lib/media-image'
 import { COURSES_TAG } from '@/lib/revalidate-courses'
 import { expandSchedule, type Schedule, type SessionDates } from '@/lib/schedule'
 import type { Media } from '@/payload-types'
-import type { FocalPoint } from '@/lib/media-image'
 
 /** One thing on the calendar: a course meeting, a course's first day, or an event. */
 export type CalendarItem = {
@@ -32,18 +34,11 @@ export type CalendarItem = {
 const visible: Where = {
   and: [{ tier: { equals: 'public' } }, { _status: { equals: 'published' } }],
 }
-const media = {
-  url: true,
-  alt: true,
-  focalX: true,
-  focalY: true,
-  filename: true,
-  prefix: true,
-} as const
+const media = mediaPopulate
 
 const coverOf = (value: unknown): CalendarItem['cover'] => {
   const m = value && typeof value === 'object' ? (value as Media) : null
-  return m?.url ? { url: m.url, alt: m.alt ?? '', focalX: m.focalX, focalY: m.focalY } : undefined
+  return mediaCover(m)
 }
 
 /**
@@ -51,10 +46,7 @@ const coverOf = (value: unknown): CalendarItem['cover'] => {
  * published course (its dates come from its schedule, ADR 0002), the first
  * day of a course that has no weekly times, and every public event.
  */
-export const getCalendarItems = async (
-  payload: Payload,
-  locale: Locale,
-): Promise<CalendarItem[]> => {
+const getCalendarItems = async (payload: Payload, locale: Locale): Promise<CalendarItem[]> => {
   const fallbackLocale = otherLocale(locale)
   const [courses, events] = await Promise.all([
     payload.find({
@@ -89,20 +81,19 @@ export const getCalendarItems = async (
   ])
 
   const items: CalendarItem[] = []
-  for (const c of courses.docs) {
-    const schedule = c.schedule as Schedule | null
-    const base = {
-      kind: 'course' as const,
-      title: c.title,
-      href: detailPath('courses', String(c.slug)),
-      type: c.course_type.toLowerCase(),
-      cover: coverOf(c.cover_image),
-    }
-    const meetings = expandSchedule(schedule, c.sessions as SessionDates[] | null)
+  const add = (
+    id: number,
+    base: Omit<CalendarItem, 'key' | 'date'>,
+    schedule: Schedule | null | undefined,
+    sessions?: SessionDates[] | null,
+  ) => {
+    if (base.kind === 'event' && !hasDayPrecision(schedule)) return
+    const prefix = `${base.kind === 'course' ? 'c' : 'e'}${id}`
+    const meetings = expandSchedule(schedule, sessions)
     meetings.forEach((m, i) =>
       items.push({
         ...base,
-        key: `c${c.id}-${i}`,
+        key: `${prefix}-${i}`,
         date: m.date,
         start: m.start_time,
         end: m.end_time,
@@ -110,37 +101,42 @@ export const getCalendarItems = async (
         ...(m.cancelled ? { cancelled: true } : {}),
       }),
     )
-    // No weekly times: the course is shown on the day it starts, when that day is known.
+    // No weekly times: show the first day only when that day is known.
     const first =
-      schedule?.start_precision !== 'week' && schedule?.start_date
-        ? cairoDay(schedule.start_date)
-        : null
+      hasDayPrecision(schedule) && schedule?.start_date ? cairoDay(schedule.start_date) : null
     if (!meetings.length && first)
-      items.push({ ...base, key: `c${c.id}-start`, date: first, starts: true })
-  }
-
-  for (const e of events.docs) {
-    const schedule = e.schedule as Schedule | null
-    const base = {
-      kind: 'event' as const,
-      title: e.title,
-      href: detailPath('events', String(e.slug)),
-      cover: coverOf(e.cover_image),
-      type: e.event_type ?? 'event',
-    }
-    const meetings = expandSchedule(schedule)
-    meetings.forEach((m, i) =>
       items.push({
         ...base,
-        key: `e${e.id}-${i}`,
-        date: m.date,
-        start: m.start_time,
-        end: m.end_time,
-      }),
-    )
-    const first = schedule?.start_date ? cairoDay(schedule.start_date) : null
-    if (!meetings.length && first) items.push({ ...base, key: `e${e.id}-day`, date: first })
+        key: `${prefix}-${base.kind === 'course' ? 'start' : 'day'}`,
+        date: first,
+        ...(base.kind === 'course' ? { starts: true } : {}),
+      })
   }
+  for (const c of courses.docs)
+    add(
+      c.id,
+      {
+        kind: 'course',
+        title: c.title,
+        href: detailPath('courses', String(c.slug)),
+        type: c.course_type.toLowerCase(),
+        cover: coverOf(c.cover_image),
+      },
+      c.schedule,
+      c.sessions,
+    )
+  for (const e of events.docs)
+    add(
+      e.id,
+      {
+        kind: 'event',
+        title: e.title,
+        href: detailPath('events', String(e.slug)),
+        type: e.event_type ?? 'event',
+        cover: coverOf(e.cover_image),
+      },
+      e.schedule,
+    )
 
   return items.sort(
     (a, b) => a.date.localeCompare(b.date) || (a.start ?? '').localeCompare(b.start ?? ''),
