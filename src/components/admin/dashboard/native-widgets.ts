@@ -58,6 +58,7 @@ const ENTRIES = [
   { slug: 'audience', label: 'Audience', width: 'medium', analytics: true },
   { slug: 'visitor-goals', label: 'What visitors do', width: 'medium', analytics: true },
   { slug: 'courses-and-events', label: 'Courses and events', width: 'medium', analytics: true },
+  { slug: 'web-vitals', label: 'Web vitals', width: 'medium', analytics: true },
   { slug: 'posthog-usage', label: 'PostHog free plan', width: 'medium', analytics: true },
   { slug: 'daily-activity', label: 'Daily activity', width: 'full', analytics: true },
   { slug: 'media-storage', label: 'Media library', width: 'x-small' },

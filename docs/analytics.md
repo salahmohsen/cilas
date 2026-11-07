@@ -79,26 +79,27 @@ Set these once in PostHog (Project settings, Session replay), because the key in
 
 `capture_performance: { web_vitals: true, network_timing: false }` in `src/lib/analytics/client.ts`. PostHog loads its web vitals script through the relay (`/relay-k3/static/`) and sends one `$web_vitals` event per page with LCP, CLS, FCP and INP. INP and LCP carry attribution: the CSS selector of the slow element and timing parts. A resource address in the attribution is kept only when it is on another site (origin and path); one on this site is dropped unless it is a public page.
 
-The client setting turns them on; the project toggle is not needed. See them in PostHog, Web analytics, Web vitals. Values over 15 minutes are discarded as noise (PostHog's default).
+The client setting turns them on; the project toggle is not needed. See them on the dashboard's Web vitals widget, or in PostHog, Web analytics, Web vitals. The widget shows, for each metric, the share of page loads within Google's "good" limit (LCP 2.5 s, INP 200 ms, CLS 0.1, FCP 1.8 s) and the 75th percentile. At 75% good or more a metric passes Google's test. Values over 15 minutes are discarded as noise (PostHog's default).
 
 ## Dashboard
 
 The admin dashboard home shows these widgets (`src/components/admin/dashboard/widgets/analytics.tsx`), all built from Arc charts. They are in the default layout only when the three server settings below are set, and they can be added, moved or removed like the others. Reset layout works as before.
 
-| Widget                   | Arc component         | Data                                                            |
-| ------------------------ | --------------------- | --------------------------------------------------------------- |
-| Visitors, Page views     | Sparkline             | Daily counts for 30 days, change against the 30 days before     |
-| Site errors              | Metric card           | `$exception` events, last 7 days                                |
-| Traffic                  | Line chart            | Page views and visitors per day                                 |
-| Application funnel       | Progress              | Viewed an apply page, `apply_started`, `apply_submitted`        |
-| Top pages                | Progress              | Page views by path, both languages added together               |
-| Page movement            | Slope chart           | The busiest pages, now against the 30 days before               |
-| Where visitors come from | Waffle chart          | `utm_source`, else referring domain; the site itself is dropped |
-| Audience                 | Donut chart, Progress | Language, device, country                                       |
-| What visitors do         | list                  | The six own events above, with change                           |
-| Courses and events       | Progress              | Views of `/study/<slug>` and `/events/<slug>`                   |
-| PostHog free plan        | Usage meter           | This month's events, errors and recordings against the limits   |
-| Daily activity           | Activity heatmap      | Page views per day for a year                                   |
+| Widget                   | Arc component         | Data                                                                            |
+| ------------------------ | --------------------- | ------------------------------------------------------------------------------- |
+| Visitors, Page views     | Sparkline             | Daily counts for 30 days, change against the 30 days before                     |
+| Site errors              | Metric card           | `$exception` events, last 7 days                                                |
+| Traffic                  | Line chart            | Page views and visitors per day                                                 |
+| Application funnel       | Progress              | Viewed an apply page, `apply_started`, `apply_submitted`                        |
+| Top pages                | Progress              | Page views by path, both languages added together                               |
+| Page movement            | Slope chart           | The busiest pages, now against the 30 days before                               |
+| Where visitors come from | Waffle chart          | `utm_source`, else referring domain; the site itself is dropped                 |
+| Audience                 | Donut chart, Progress | Language, device, country                                                       |
+| What visitors do         | list                  | The six own events above, with change                                           |
+| Courses and events       | Progress              | Views of `/study/<slug>` and `/events/<slug>`                                   |
+| Web vitals               | Gauge                 | Share of page loads rated good for LCP, INP, CLS, FCP, with p75                 |
+| PostHog free plan        | Usage meter           | This month's events (errors left out), errors and recordings against the limits |
+| Daily activity           | Activity heatmap      | Page views per day for a year                                                   |
 
 The Arc Pro funnel chart is not used (no licence); the funnel is built from Progress bars.
 
@@ -126,7 +127,7 @@ The two `NEXT_PUBLIC_*` values are inlined into the browser code at build time, 
 
 Free limits per month (check https://posthog.com/pricing before relying on them): 1,000,000 events, 5,000 session recordings, 1,000,000 flag requests, 100,000 exceptions. No payment method is on the account, so PostHog stops counting at the limit; nothing is charged.
 
-How the design stays far below them: no autocapture, no page-leave, no heart beats; a page view is one event; web vitals add about one event per page (two when INP comes late); the own events fire once per action; recordings are 10% and dropped when short; exceptions are limited per page load and per server process; bots are filtered by PostHog; feature flags are not evaluated.
+How the design stays far below them: no autocapture, no page-leave, no heart beats; a page view is one event; web vitals add about 30% of the page view count (PostHog's average); the own events fire once per action; recordings are 10% and dropped when short; exceptions are limited per page load and per server process; bots are filtered by PostHog; feature flags are not evaluated.
 
 To check usage: the "PostHog free plan" widget on the dashboard, or PostHog's Billing page (Organization settings). The widget counts the calendar month, which is close to PostHog's billing period.
 

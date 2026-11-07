@@ -1,4 +1,15 @@
 import { CAIRO } from '@/lib/cairo-day'
+
+import { WEB_VITALS } from './stats'
+
+/** For each web vital: page loads that reported it, loads within its "good" limit, and its 75th percentile. */
+const vitalColumns = WEB_VITALS.map(({ key, good }) => {
+  const value = `toFloat(properties.$web_vitals_${key}_value)`
+  return `countIf(isNotNull(${value})) AS ${key.toLowerCase()}_loads,
+           countIf(${value} <= ${good}) AS ${key.toLowerCase()}_good,
+           quantileIf(0.75)(${value}, isNotNull(${value})) AS ${key.toLowerCase()}_p75`
+}).join(',\n           ')
+
 /**
  * The dashboard's HogQL (PostHog's SQL). Every query reads `events` over a
  * fixed window and returns a handful of rows, so the free plan's query
@@ -83,9 +94,19 @@ export const QUERIES = {
     FROM events
     WHERE event = '$exception' AND timestamp >= now() - INTERVAL 14 DAY`,
 
-  /** One row: `[events, errors]` since the start of this month (the free plan counts a month). */
+  /** One row: `[loads, good, p75]` for each metric in `WEB_VITALS` order, 30 days. */
+  webVitals: `
+    SELECT ${vitalColumns}
+    FROM events
+    WHERE event = '$web_vitals' AND timestamp >= now() - INTERVAL 30 DAY`,
+
+  /**
+   * One row: `[events, errors]` since the start of this month (the free plan
+   * counts a month). PostHog bills errors apart from other events, so the
+   * events count leaves them out.
+   */
   usage: `
-    SELECT count() AS event_count, countIf(event = '$exception') AS error_count
+    SELECT countIf(event != '$exception') AS event_count, countIf(event = '$exception') AS error_count
     FROM events
     WHERE timestamp >= toStartOfMonth(now())`,
 

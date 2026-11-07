@@ -1,6 +1,7 @@
 import { ActivityHeatmap } from '@/components/arc/activity-heatmap/activity-heatmap'
 import { DonutChart } from '@/components/arc/donut-chart/donut-chart'
 import { EmptyState } from '@/components/arc/empty-state/empty-state'
+import { Gauge } from '@/components/arc/gauge/gauge'
 import { LineChart } from '@/components/arc/line-chart/line-chart'
 import { MetricCard } from '@/components/arc/metric-card/metric-card'
 import { Progress } from '@/components/arc/progress/progress'
@@ -25,6 +26,8 @@ import {
   totalViewsOf,
   trafficFrom,
   usageFrom,
+  webVitalsFrom,
+  WEB_VITALS_PASS,
   withOther,
   type Ranked,
 } from '@/lib/analytics/stats'
@@ -334,6 +337,43 @@ export async function SiteErrors() {
       label="Site errors"
       value={errors.last7}
     />
+  )
+}
+
+/** Bands by share of good page loads; at Google's pass mark a metric is good. */
+const VITAL_BANDS = [
+  { from: 0, tone: 'danger', label: 'Poor' },
+  { from: 50, tone: 'warning', label: 'Needs work' },
+  { from: WEB_VITALS_PASS, tone: 'success', label: 'Good' },
+] as const
+
+export async function WebVitals() {
+  const vitals = webVitalsFrom(await posthogRows('webVitals'))
+  return (
+    <WidgetCard
+      title="Web vitals"
+      description={`${PERIOD}. Share of page loads rated good; ${WEB_VITALS_PASS}% or more passes Google's test.`}
+      action={openIn('web/web-vitals')}
+    >
+      {vitals.length === 0 ? (
+        <EmptyState
+          title="Nothing yet"
+          description="Page speed appears here after visitors load public pages."
+        />
+      ) : (
+        <div className={styles.pair}>
+          {vitals.map((vital) => (
+            <Gauge
+              key={vital.key}
+              detail={`p75 ${vital.p75}, ${formatNumber(vital.loads)} loads`}
+              label={vital.label}
+              thresholds={[...VITAL_BANDS]}
+              value={vital.goodShare}
+            />
+          ))}
+        </div>
+      )}
+    </WidgetCard>
   )
 }
 

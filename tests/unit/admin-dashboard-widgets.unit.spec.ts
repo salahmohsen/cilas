@@ -53,6 +53,7 @@ describe('analytics widgets in the dashboard', () => {
     'top-pages',
     'application-funnel',
     'daily-activity',
+    'web-vitals',
   ]
 
   afterEach(() => {

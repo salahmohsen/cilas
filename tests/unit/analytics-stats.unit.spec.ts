@@ -20,6 +20,7 @@ import {
   topReferrers,
   trafficFrom,
   usageFrom,
+  webVitalsFrom,
 } from '@/lib/analytics/stats'
 
 // Noon in Cairo on 2026-07-31: the last day on the charts.
@@ -240,7 +241,41 @@ describe('the free plan allowance', () => {
   })
 })
 
+describe('web vitals', () => {
+  it('gives each metric its share of good loads and a readable p75, in Core Web Vitals order', () => {
+    const rows = [[200, 150, 2140.5, 80, 70, 96, 200, 190, 0.048, 200, 120, 1960]]
+    expect(webVitalsFrom(rows)).toEqual([
+      { key: 'LCP', label: 'Largest paint (LCP)', loads: 200, goodShare: 75, p75: '2.1 s' },
+      { key: 'INP', label: 'Response to input (INP)', loads: 80, goodShare: 88, p75: '96 ms' },
+      { key: 'CLS', label: 'Layout shift (CLS)', loads: 200, goodShare: 95, p75: '0.05' },
+      { key: 'FCP', label: 'First paint (FCP)', loads: 200, goodShare: 60, p75: '2.0 s' },
+    ])
+  })
+
+  it('leaves out a metric no page load reported, and reads nothing from no rows', () => {
+    expect(
+      webVitalsFrom([[10, 10, 900, 0, 0, null, 0, 0, null, 0, 0, null]]).map((v) => v.key),
+    ).toEqual(['LCP'])
+    expect(webVitalsFrom([])).toEqual([])
+  })
+
+  it('asks for every metric with its own good limit', () => {
+    for (const [key, good] of [
+      ['LCP', 2500],
+      ['INP', 200],
+      ['CLS', 0.1],
+      ['FCP', 1800],
+    ]) {
+      expect(QUERIES.webVitals).toContain(`toFloat(properties.$web_vitals_${key}_value) <= ${good}`)
+    }
+  })
+})
+
 describe('the HogQL', () => {
+  it('counts errors apart from the events the free plan counts', () => {
+    expect(QUERIES.usage).toContain("countIf(event != '$exception') AS event_count")
+  })
+
   it('uses the free plan only through named, bounded windows', () => {
     for (const query of Object.values(QUERIES)) {
       expect(query).toMatch(/INTERVAL \d+ DAY|toStartOfMonth/)
