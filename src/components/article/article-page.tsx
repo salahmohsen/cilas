@@ -105,7 +105,7 @@ export async function ArticlePage({ locale: siteLocale, slug, user: reader }: Vi
       and: t('and'),
       otherCategory: tArticles('notes'),
     })
-  const { text, notes, noteCount, sections } = splitBody(body)
+  const { text, notes, noteCount, sections, sectionTag } = splitBody(body)
   // The Card stack blocks in the text, loaded before it is drawn.
   const stacks = await resolveCardStacks(payload, text, {
     locale,
@@ -265,7 +265,12 @@ export async function ArticlePage({ locale: siteLocale, slug, user: reader }: Vi
         )}
         {hasContents && (
           <SideCardSection fold={narrow} label={narrow ? t('contents') : t('onThisPage')}>
-            <ArticleContents bare container="article-text" sections={sections} />
+            <ArticleContents
+              bare
+              container="article-text"
+              sectionTag={sectionTag}
+              sections={sections}
+            />
           </SideCardSection>
         )}
         <SideCardSection label={t('textSize')}>

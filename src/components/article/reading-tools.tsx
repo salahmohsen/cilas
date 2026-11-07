@@ -5,7 +5,7 @@ import { useEffect, useState, useSyncExternalStore, type ReactNode } from 'react
 
 import { Accordion } from '@/components/arc/accordion/accordion'
 import { BounceSidebar } from '@/components/ui/bounce-sidebar'
-import type { Section } from '@/lib/article-body'
+import type { Section, SectionTag } from '@/lib/article-body'
 
 /** A thin bar across the top of the viewport that fills as the essay is read. */
 export function ReadingProgress({ target }: { target: string }) {
@@ -51,10 +51,13 @@ export function ReadingProgress({ target }: { target: string }) {
  */
 export function ArticleContents({
   sections,
+  sectionTag = 'h2',
   container,
   bare = false,
 }: {
   sections: Section[]
+  /** The heading level the sections come from. */
+  sectionTag?: SectionTag
   container: string
   /** Only the list: a side card's section names it. */
   bare?: boolean
@@ -63,8 +66,8 @@ export function ArticleContents({
   const [active, setActive] = useState<string | null>(null)
 
   useEffect(() => {
-    // The rich text renders plain h2s; give them the ids the list links to.
-    const headings = [...(document.getElementById(container)?.querySelectorAll('h2') ?? [])]
+    // The rich text renders plain headings; give them the ids the list links to.
+    const headings = [...(document.getElementById(container)?.querySelectorAll(sectionTag) ?? [])]
     headings.forEach((h, i) => {
       if (sections[i]) h.id = sections[i].id
     })
@@ -85,7 +88,7 @@ export function ArticleContents({
       window.removeEventListener('scroll', update)
       window.removeEventListener('resize', update)
     }
-  }, [container, sections])
+  }, [container, sections, sectionTag])
 
   // rareui's BounceSidebar: the dot travels to the section in view.
   const list = (
