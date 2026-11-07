@@ -253,6 +253,7 @@
     "readingNow": "Reading now",
     "collectionCount": "{count, plural, one {# article} other {# articles}}",
     "collectionAll": "The whole collection",
+    "closeCollection": "Close the collection",
     "foreword": "Foreword",
     "essayOf": "{n} of {total}",
     "mentionKinds": {

@@ -1319,7 +1319,7 @@ h1.article-title {
   }
 }
 
-/* A collection's contents at the end of its articles, as a poster card
+/* A collection's contents in a dialog, opened from the article's side card, as a poster card
    (docs/content-driven-card-layouts.md, section 7). Content sizes the card.
    Head: the cover (when there is one) beside a paper label and the
    collection's name on the card's colour; the name's cell takes the spare
@@ -1331,7 +1331,45 @@ h1.article-title {
   container: collection-card / inline-size;
   display: grid;
   grid-template-columns: minmax(0, 1fr);
-  margin-block-start: 2rem;
+}
+/* The dialog: the card is its only surface. */
+.collection-dialog[role='dialog'] {
+  width: min(calc(100vw - var(--space-8)), 40rem);
+  border-radius: 1rem;
+}
+/* The side card's row that opens it: the name and count on paper, the
+   card's colour on hover, an arrow at the end. */
+.side-card-collection {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  width: 100%;
+  padding: 0.75rem var(--poster-pad);
+  border: 0;
+  background: var(--poster-paper);
+  color: var(--poster-ink);
+  text-align: start;
+  cursor: pointer;
+  transition: background-color var(--duration-fast) var(--ease-standard);
+}
+.side-card-collection-text {
+  display: grid;
+  gap: 0.125rem;
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+.side-card-collection svg {
+  flex: none;
+}
+@media (hover: hover) and (pointer: fine) {
+  .side-card-collection:hover {
+    background: var(--poster-color);
+  }
+}
+.side-card-collection:focus-visible {
+  outline: 3px solid var(--poster-ink);
+  outline-offset: -3px;
 }
 .collection-card {
   --poster-ink: #121212;
@@ -1356,17 +1394,30 @@ h1.article-title {
   grid-template-columns: minmax(0, 1fr);
 }
 .collection-card-head[data-cover] {
-  grid-template-columns: min(32%, 12rem) minmax(0, 1fr);
+  grid-template-columns: min(28%, 10rem) minmax(0, 1fr);
 }
+/* The cover shows whole, on paper, inside the head's height: the name sets
+   that height, not the image. */
 .collection-card-cover {
-  position: relative;
-  min-height: 100%;
-  aspect-ratio: 3 / 4;
-  overflow: clip;
+  display: grid;
+  min-block-size: 8rem;
   border-inline-end: 1px solid var(--poster-ink);
+  /* Around the cover, thin 45-degree lines in the card's ink, as under a
+     short photo on the fellow and profile cards. */
+  background:
+    repeating-linear-gradient(
+      45deg,
+      transparent 0 0.5rem,
+      color-mix(in oklab, var(--poster-ink) 30%, transparent) 0.5rem calc(0.5rem + 1px)
+    ),
+    var(--poster-paper);
+}
+.collection-card-cover-frame {
+  position: relative;
+  min-block-size: 0;
 }
 .collection-card-cover img {
-  object-fit: cover;
+  object-fit: contain;
 }
 .collection-card-panel {
   display: flex;
@@ -1464,7 +1515,7 @@ h1.article-title {
 }
 .collection-card-strip {
   display: grid;
-  grid-template-columns: minmax(0, auto) minmax(0, 1fr);
+  grid-template-columns: minmax(0, auto) minmax(0, 1fr) auto;
   border-block-start: 1px solid var(--poster-ink);
   font-size: clamp(0.8125rem, 1.4cqi, 0.9375rem);
 }
@@ -1500,6 +1551,24 @@ h1.article-title {
 .collection-card-action:dir(rtl):focus-visible svg {
   translate: -3px 0;
 }
+/* Closes the dialog: a square box at the strip's end, on paper. */
+.collection-card-close {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.75rem;
+  border: 0;
+  border-inline-start: 1px solid var(--poster-ink);
+  background: var(--poster-paper);
+  color: var(--poster-ink);
+  cursor: pointer;
+}
+@media (hover: hover) and (pointer: fine) {
+  .collection-card-close:hover {
+    background: var(--poster-color);
+  }
+}
+.collection-card-close:focus-visible,
 .collection-card-item:focus-visible,
 .collection-card-action:focus-visible,
 .collection-card-title a:focus-visible {
@@ -1509,10 +1578,11 @@ h1.article-title {
 /* A narrow card: a narrower cover column, so the name keeps its width. */
 @container collection-card (max-width: 26rem) {
   .collection-card-head[data-cover] {
-    grid-template-columns: min(36%, 8rem) minmax(0, 1fr);
+    grid-template-columns: min(32%, 7rem) minmax(0, 1fr);
   }
 }
 @media (prefers-reduced-motion: reduce) {
+  .side-card-collection,
   .collection-card-item,
   .collection-card-action svg {
     transition: none;

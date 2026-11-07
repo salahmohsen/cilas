@@ -1,21 +1,22 @@
 import { ArrowRight } from 'lucide-react'
 import Image from 'next/image'
-import type { CSSProperties } from 'react'
+import type { CSSProperties, ReactNode } from 'react'
 
 import { Link } from '@/i18n/navigation'
 import { localDigits } from '@/lib/digits'
-import { focalPointStyle, type MediaImage } from '@/lib/media-image'
+import type { MediaImage } from '@/lib/media-image'
 import { POSTER_COLORS } from '@/lib/poster-colors'
 
 export type CollectionCardItem = { id: number; title: string; authors: string; href: string }
 
 /**
- * A collection's articles in their order, the open one marked: the end of
- * every article that belongs to one. A poster card
+ * A collection's articles in their order, the open one marked, opened from
+ * the article's side card (CollectionDialog). A poster card
  * (docs/content-driven-card-layouts.md, section 7): the cover beside the
  * collection's name on the card's colour, the articles as ruled rows, and a
  * strip with the count and a link to the whole collection. Content sizes the
- * card; beside a cover, the title panel takes the spare height.
+ * card: the head takes its height from the name, and the cover fits whole
+ * inside that height.
  */
 export function CollectionCard({
   title,
@@ -25,6 +26,7 @@ export function CollectionCard({
   current,
   labels,
   locale,
+  close,
   color = POSTER_COLORS[0],
 }: {
   title: string
@@ -34,6 +36,8 @@ export function CollectionCard({
   current: number
   labels: { kicker: string; current: string; count: string; all: string }
   locale: string
+  /** A box at the strip's end that closes the dialog the card sits in. */
+  close?: ReactNode
   color?: string
 }) {
   return (
@@ -46,13 +50,9 @@ export function CollectionCard({
         <header className="collection-card-head" data-cover={cover ? '' : undefined}>
           {cover && (
             <div className="collection-card-cover">
-              <Image
-                alt={cover.alt}
-                fill
-                sizes="12rem"
-                src={cover.src}
-                style={focalPointStyle(cover)}
-              />
+              <div className="collection-card-cover-frame">
+                <Image alt={cover.alt} fill sizes="10rem" src={cover.src} />
+              </div>
             </div>
           )}
           <div className="collection-card-panel">
@@ -106,6 +106,7 @@ export function CollectionCard({
             <span>{labels.all}</span>
             <ArrowRight aria-hidden size={16} />
           </Link>
+          {close}
         </div>
       </nav>
     </div>

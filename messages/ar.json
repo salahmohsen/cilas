@@ -253,6 +253,7 @@
     "readingNow": "تقرؤه الآن",
     "collectionCount": "{count, plural, zero {لا مقالات} one {مقال واحد} two {مقالان} few {{n} مقالات} many {{n} مقالًا} other {{n} مقال}}",
     "collectionAll": "المجموعة كاملة",
+    "closeCollection": "إغلاق المجموعة",
     "foreword": "تقديم",
     "essayOf": "{n, number, digits} من {total, number, digits}",
     "mentionKinds": {

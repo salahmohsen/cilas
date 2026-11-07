@@ -37,7 +37,7 @@ import { ShareBar } from '@/components/share-bar'
 import { StudyWithAI } from '@/components/study-with-ai'
 import { ArticleCardStack } from '@/components/article/article-card-stack'
 import { ArticleCardGrid } from '@/components/article/article-card-grid'
-import { CollectionCard } from '@/components/article/collection-card'
+import { CollectionDialog } from '@/components/article/collection-dialog'
 import { mediaImage } from '@/lib/media-image'
 import { resolveCardStacks } from '@/api/card-stacks.api'
 import { NewsletterSignupEnd } from '@/components/newsletter-signup-end'
@@ -228,9 +228,41 @@ export async function ArticlePage({ locale: siteLocale, slug, user: reader }: Vi
     : localDigits(yearOf(article), locale)
   const hasContents = sections.length >= 3
 
-  // The side card: who made it, its sections, and the text size.
+  // The side card: its collection, who made it, its sections, and the text size.
   const sideCard = (narrow: boolean) => (
     <SideCard>
+      {collection && (
+        <SideCardSection label={t('inCollection')}>
+          <CollectionDialog
+            cover={mediaImage(
+              publicationCovers.get(collection.publication.id) ??
+                (typeof collection.publication.cover_image === 'object'
+                  ? collection.publication.cover_image
+                  : null),
+            )}
+            current={article.id}
+            href={`/articles?publication=${collection.publication.slug}`}
+            labels={{
+              kicker: t('inCollection'),
+              current: t('readingNow'),
+              count: t('collectionCount', {
+                count: collection.articles.length,
+                n: localDigits(String(collection.articles.length), locale),
+              }),
+              all: t('collectionAll'),
+            }}
+            locale={locale}
+            title={collection.publication.title}
+            items={collection.articles.map((a) => ({
+              id: a.id,
+              title: card(a).title,
+              authors: card(a).author.name,
+              href: pathOf('articles', a) ?? '#',
+            }))}
+            closeLabel={t('closeCollection')}
+          />
+        </SideCardSection>
+      )}
       {contributors.length > 0 && (
         <div {...pe('authors')}>
           <SideCardSection label={t('people')}>
@@ -517,36 +549,6 @@ export async function ArticlePage({ locale: siteLocale, slug, user: reader }: Vi
                 source={original.original_source}
                 title={original.original_title}
                 url={original.original_url}
-              />
-            )}
-
-            {collection && (
-              <CollectionCard
-                cover={mediaImage(
-                  publicationCovers.get(collection.publication.id) ??
-                    (typeof collection.publication.cover_image === 'object'
-                      ? collection.publication.cover_image
-                      : null),
-                )}
-                current={article.id}
-                href={`/articles?publication=${collection.publication.slug}`}
-                labels={{
-                  kicker: t('inCollection'),
-                  current: t('readingNow'),
-                  count: t('collectionCount', {
-                    count: collection.articles.length,
-                    n: localDigits(String(collection.articles.length), locale),
-                  }),
-                  all: t('collectionAll'),
-                }}
-                locale={locale}
-                title={collection.publication.title}
-                items={collection.articles.map((a) => ({
-                  id: a.id,
-                  title: card(a).title,
-                  authors: card(a).author.name,
-                  href: pathOf('articles', a) ?? '#',
-                }))}
               />
             )}
 
