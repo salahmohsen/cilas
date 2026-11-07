@@ -1,3 +1,4 @@
+import { PREVIEW_COLLECTIONS } from '@/lib/preview-url'
 import { postgresAdapter } from '@payloadcms/db-postgres'
 import { lexicalEditor } from '@payloadcms/richtext-lexical'
 import { BUCKET_PREFIXES } from '@/lib/storage-usage'
@@ -180,7 +181,7 @@ export default buildConfig({
     // via `admin.livePreview.url`.
     livePreview: {
       url: '/',
-      collections: ['courses', 'articles', 'programmes', 'newsletters', 'events'],
+      collections: [...PREVIEW_COLLECTIONS, 'newsletters', 'events'],
       breakpoints: [
         { name: 'mobile', label: 'Mobile', width: 390, height: 844 },
         { name: 'tablet', label: 'Tablet', width: 768, height: 1024 },

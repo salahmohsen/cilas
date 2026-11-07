@@ -1,3 +1,4 @@
+import { REVIEWED } from '@/lib/reviewed-collections'
 import { relId } from '@/lib/relation'
 import type { Payload } from 'payload'
 
@@ -14,12 +15,6 @@ export type QueueItem = {
   since: string
   href: string
 }
-
-const REVIEWED = [
-  { kind: 'article', collection: 'articles', owners: 'authors' },
-  { kind: 'course', collection: 'courses', owners: 'fellows' },
-  { kind: 'publication', collection: 'publications', owners: 'editors' },
-] as const
 
 const namesOf = (people: unknown) =>
   ((people as Array<{ name?: string } | number> | null | undefined) ?? [])

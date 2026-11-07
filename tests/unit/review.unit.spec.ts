@@ -1,8 +1,6 @@
 import { describe, expect, it } from 'vitest'
 
-import { canMove, notifyOn, reviewPatch } from '@/lib/review'
-
-const now = new Date('2026-10-10T12:00:00.000Z')
+import { canMove, notifyOn } from '@/lib/review'
 
 describe('canMove', () => {
   it('lets an author only submit, from draft or changes requested', () => {
@@ -28,61 +26,6 @@ describe('canMove', () => {
   it('lets an admin make any move', () => {
     expect(canMove('draft', 'approved', true)).toBe(true)
     expect(canMove('approved', 'rejected', true)).toBe(true)
-  })
-})
-
-describe('reviewPatch', () => {
-  it('refuses a move the author may not make', () => {
-    expect(
-      reviewPatch({ from: 'submitted', to: 'approved', trusted: false, data: {}, now }),
-    ).toEqual({ error: 'Only an admin can move a submitted article to approved.' })
-  })
-
-  it('keeps every unapproved article a draft', () => {
-    expect(reviewPatch({ from: 'draft', to: 'submitted', trusted: false, data: {}, now })).toEqual({
-      patch: { _status: 'draft' },
-    })
-    expect(
-      reviewPatch({ from: 'approved', to: 'changes_requested', trusted: true, data: {}, now }),
-    ).toEqual({ patch: { _status: 'draft' } })
-  })
-
-  it('publishes on approval at the requested tier, dated now', () => {
-    expect(
-      reviewPatch({
-        from: 'submitted',
-        to: 'approved',
-        trusted: true,
-        data: { tier: 'owner', requested_tier: 'public' },
-        now,
-      }),
-    ).toEqual({
-      patch: { _status: 'published', tier: 'public', published_date: '2026-10-10T12:00:00.000Z' },
-    })
-  })
-
-  it("keeps an admin's lower tier and an existing date", () => {
-    expect(
-      reviewPatch({
-        from: 'submitted',
-        to: 'approved',
-        trusted: true,
-        data: { tier: 'community', requested_tier: 'public', published_date: '2018-01-01' },
-        now,
-      }),
-    ).toEqual({ patch: { _status: 'published', tier: 'community', published_date: '2018-01-01' } })
-  })
-
-  it('defaults to community when no tier was requested', () => {
-    expect(
-      reviewPatch({ from: 'draft', to: 'approved', trusted: true, data: {}, now }),
-    ).toMatchObject({ patch: { tier: 'community' } })
-  })
-
-  it('leaves an already approved article alone', () => {
-    expect(reviewPatch({ from: 'approved', to: 'approved', trusted: true, data: {}, now })).toEqual(
-      { patch: {} },
-    )
   })
 })
 

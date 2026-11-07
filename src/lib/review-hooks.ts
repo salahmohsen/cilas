@@ -3,9 +3,10 @@ import type {
   CollectionAfterChangeHook,
   CollectionBeforeChangeHook,
   CollectionBeforeOperationHook,
-  CollectionSlug,
 } from 'payload'
 
+import { REVIEWED } from '@/lib/reviewed-collections'
+import { toPersonIds } from '@/lib/fellow-role'
 import { isAdminUser, personOf } from '@/access'
 import { canMove, notifyOn, type ReviewRequest, type ReviewState } from '@/lib/review'
 import { actorOf, notify } from '@/lib/notify'
@@ -37,8 +38,8 @@ type Doc = {
 
 export type ReviewOptions = {
   /** What the documents are called in messages: "article", "course", "publication". */
-  noun: string
-  collection: CollectionSlug
+  noun: (typeof REVIEWED)[number]['kind']
+  collection: (typeof REVIEWED)[number]['collection']
   /** The people who own a document and hear the decisions. */
   ownersOf: (doc: Doc) => number[]
   /** What approval adds besides publishing, e.g. an article's tier and date. */
@@ -204,13 +205,13 @@ const REMOVAL_NOTES: Partial<Record<ReviewState, (noun: string, title: string) =
 /**
  * Emails admins on a submission and owners on a decision, with a link to the
  * document in the admin. Only for writes by a signed-in account: server
- * writes are silent, and `context.skipReviewEmail` opts out. A change to a
+ * writes are silent. A change to a
  * published document is all draft saves, and is announced like any other.
  */
 const notifyReview =
   ({ noun, collection, ownersOf }: ReviewOptions): CollectionAfterChangeHook =>
   async ({ doc, previousDoc, req }) => {
-    if (!req.user || req.context?.skipReviewEmail) return doc
+    if (!req.user) return doc
     if (req.context?.[DRAFT_SAVE] && !req.context[LIVE]) return doc
     const state: ReviewState = doc.review?.status ?? 'draft'
     const before: ReviewState = previousDoc?.review?.status ?? 'draft'
@@ -275,8 +276,20 @@ const publishOwners =
   }
 
 /** The review path's hooks, to spread into a collection's `hooks`. */
-export const reviewHooks = (options: ReviewOptions) => ({
-  beforeOperation: [recordDraftSave],
-  beforeChange: [applyReview(options)],
-  afterChange: [publishOwners(options), notifyReview(options)],
-})
+export const reviewHooks = (
+  kind: ReviewOptions['noun'],
+  extra: Pick<ReviewOptions, 'onApprove'> = {},
+) => {
+  const entry = REVIEWED.find((item) => item.kind === kind)!
+  const options: ReviewOptions = {
+    noun: entry.kind,
+    collection: entry.collection,
+    ownersOf: (doc) => toPersonIds(doc[entry.owners] as never),
+    ...extra,
+  }
+  return {
+    beforeOperation: [recordDraftSave],
+    beforeChange: [applyReview(options)],
+    afterChange: [publishOwners(options), notifyReview(options)],
+  }
+}

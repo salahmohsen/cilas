@@ -1,4 +1,5 @@
 import type { Plugin } from 'payload'
+import { REVIEWED } from '@/lib/reviewed-collections'
 
 import { adminViewOf, type AdminView } from '@/access'
 
@@ -10,8 +11,20 @@ import { adminViewOf, type AdminView } from '@/access'
 const VISIBLE: Record<Exclude<AdminView, 'admin'>, readonly string[]> = {
   // People shows a non-admin only their own profile (People's baseFilter);
   // Enrollments only theirs, or those of the courses they teach.
-  fellow: ['courses', 'articles', 'publications', 'enrollments', 'people'],
-  student: ['articles', 'publications', 'enrollments', 'people'],
+  fellow: [
+    ...REVIEWED.filter((item) => (item.roles as readonly string[]).includes('fellow')).map(
+      (item) => item.collection,
+    ),
+    'enrollments',
+    'people',
+  ],
+  student: [
+    ...REVIEWED.filter((item) => (item.roles as readonly string[]).includes('student')).map(
+      (item) => item.collection,
+    ),
+    'enrollments',
+    'people',
+  ],
 }
 
 /** Collections and globals type `user` differently; both carry `roles`. */

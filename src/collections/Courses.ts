@@ -1,13 +1,13 @@
+import { tierField } from '@/fields/tier'
+import { previewUrl } from '@/lib/preview-url'
+import { addSelfAs } from '@/lib/review-ownership'
 import {
   adminPublishes,
-  adminOnlyField,
   canTeach,
-  isAdminUser,
   isAdminOrOwn,
   ownList,
   OWNER_EDITS,
   ownsViaFellows,
-  personOf,
   readTiers,
   WITH_OWNER,
 } from '@/access'
@@ -26,7 +26,6 @@ import { ensureSpaceFor } from '@/lib/space-hooks'
 import type {
   CollectionAfterChangeHook,
   CollectionAfterDeleteHook,
-  CollectionBeforeValidateHook,
   CollectionConfig,
 } from 'payload'
 import type { Course } from '@/payload-types'
@@ -69,23 +68,9 @@ export const propagateFellowRole: CollectionAfterChangeHook<Course> = async ({
   return doc
 }
 
-/**
- * As `addSelfAsAuthor` on articles: a fellow who proposes a course teaches
- * it, so they keep access to the draft they made. Admins add fellows by hand.
- */
-export const addSelfAsFellow: CollectionBeforeValidateHook<Course> = ({ data, req, operation }) => {
-  const self = personOf(req.user)
-  if (!data || operation !== 'create' || isAdminUser(req.user) || self === null) return data
-  const fellows = toPersonIds(data.fellows)
-  return fellows.includes(self) ? data : { ...data, fellows: [...fellows, self] }
-}
-
 /** A fellow submits a course; an admin approves (publishes) it, asks for changes or declines. */
-const courseReview = reviewHooks({
-  noun: 'course',
-  collection: 'courses',
-  ownersOf: (doc) => toPersonIds(doc.fellows as Course['fellows']),
-})
+const courseNoun = 'course' as const
+const courseReview = reviewHooks(courseNoun)
 
 /** afterChange never fires for a delete, so revocation needs its own hook. */
 export const revokeDeletedCourseFellows: CollectionAfterDeleteHook<Course> = async ({
@@ -127,29 +112,13 @@ export const Courses: CollectionConfig = {
       label: 'Review',
       type: 'collapsible',
       admin: { position: 'sidebar' },
-      fields: reviewFields('course'),
+      fields: reviewFields(courseNoun),
     },
-    {
-      // `tier` is who may see this, not whether it is published — that is
-      // Payload's `_status`. Named distinctly so the two never read alike.
-      name: 'tier',
-      type: 'select',
-      defaultValue: 'owner',
-      required: true,
-      options: [
-        { label: 'Owner only', value: 'owner' }, // whoever can edit it
-        { label: 'Community', value: 'community' }, // signed-in members only
-        { label: 'Public', value: 'public' }, // world
-      ],
-      // Admin-only on create *and* update, so a fellow's course keeps the
-      // `owner` default and promoting it stays an admin action.
-      access: { create: adminOnlyField, update: adminOnlyField },
-      admin: {
-        description:
-          'Who sees it: Public (everyone), Community (signed-in members) or Owner only (its fellows and admins). A published course also needs a tier above Owner, else its public page disappears.',
-        position: 'sidebar',
-      },
-    },
+    tierField({
+      sidebar: true,
+      description:
+        'Who sees it: Public (everyone), Community (signed-in members) or Owner only (its fellows and admins). A published course also needs a tier above Owner, else its public page disappears.',
+    }),
     {
       name: 'cover_image',
       type: 'upload',
@@ -476,13 +445,12 @@ export const Courses: CollectionConfig = {
     // is what lets the page render an unpublished draft.
     livePreview: {
       // The page in the editor's language, so what shows is what the fields hold.
-      url: ({ data, locale }) =>
-        `/api/preview?collection=courses&slug=${data?.slug ?? ''}&locale=${locale?.code ?? 'en'}`,
+      url: previewUrl('courses'),
     },
   },
   hooks: {
     beforeOperation: courseReview.beforeOperation,
-    beforeValidate: [addSelfAsFellow],
+    beforeValidate: [addSelfAs('fellows')],
     beforeChange: [...(courseReview.beforeChange ?? []), stampLastEditor],
     afterChange: [
       ...courseReview.afterChange,

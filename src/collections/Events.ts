@@ -1,6 +1,7 @@
+import { tierField } from '@/fields/tier'
 import type { CollectionConfig } from 'payload'
 
-import { adminOnlyField, isAdmin, readTiers } from '@/access'
+import { isAdmin, readTiers } from '@/access'
 import { pricingField } from '@/fields/pricing'
 import { registrationField } from '@/fields/registration'
 import { scheduleField, timeRangeFields } from '@/fields/schedule'
@@ -51,19 +52,7 @@ export const Events: CollectionConfig = {
   },
   fields: [
     lastEditedByField,
-    {
-      name: 'tier',
-      type: 'select',
-      required: true,
-      defaultValue: 'owner',
-      options: [
-        { label: 'Owner only', value: 'owner' },
-        { label: 'Community', value: 'community' },
-        { label: 'Public', value: 'public' },
-      ],
-      access: { create: adminOnlyField, update: adminOnlyField },
-      admin: { position: 'sidebar' },
-    },
+    tierField({ sidebar: true }),
     { name: 'title', type: 'text', required: true, localized: true },
     slugField(),
     {

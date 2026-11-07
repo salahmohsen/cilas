@@ -1,4 +1,7 @@
-import type { CollectionBeforeValidateHook, CollectionConfig } from 'payload'
+import { tierField } from '@/fields/tier'
+import { previewUrl } from '@/lib/preview-url'
+import { addSelfAs } from '@/lib/review-ownership'
+import type { CollectionConfig } from 'payload'
 
 import {
   adminPublishes,
@@ -9,7 +12,6 @@ import {
   ownList,
   OWNER_EDITS,
   ownsViaAuthors,
-  personOf,
   readTiers,
   WITH_OWNER,
 } from '@/access'
@@ -18,29 +20,11 @@ import { lexicalEditor } from '@payloadcms/richtext-lexical'
 import { creditsField } from '@/fields/credits'
 import { LANGUAGE_OPTIONS } from '@/fields/language'
 import { slugField } from '@/fields/slug'
-import { toPersonIds } from '@/lib/fellow-role'
 import { reviewFields } from '@/fields/review'
 import { reviewHooks, type ReviewOptions } from '@/lib/review-hooks'
 import { articleBodyFeatures } from '@/lexical/article-body'
-import type { Article } from '@/payload-types'
 import { importFields } from '@/fields/import'
 import { lastEditedByField, stampLastEditor } from '@/fields/last-edited-by'
-
-/**
- * A non-admin's new article always lists them as an author, so they keep
- * access to it. beforeValidate, because `authors` is required and validation
- * runs before beforeChange.
- */
-export const addSelfAsAuthor: CollectionBeforeValidateHook<Article> = ({
-  data,
-  req,
-  operation,
-}) => {
-  const self = personOf(req.user)
-  if (!data || operation !== 'create' || isAdminUser(req.user) || self === null) return data
-  const authors = toPersonIds(data.authors)
-  return authors.includes(self) ? data : { ...data, authors: [...authors, self] }
-}
 
 /** On approval an article takes the admin's tier, else the requested one, and a date. */
 const approveArticle: ReviewOptions['onApprove'] = ({ data, originalDoc, now }) => {
@@ -55,12 +39,8 @@ const approveArticle: ReviewOptions['onApprove'] = ({ data, originalDoc, now }) 
   }
 }
 
-const articleReview = reviewHooks({
-  noun: 'article',
-  collection: 'articles',
-  ownersOf: (doc) => toPersonIds(doc.authors as Article['authors']),
-  onApprove: approveArticle,
-})
+const articleNoun = 'article' as const
+const articleReview = reviewHooks(articleNoun, { onApprove: approveArticle })
 
 /** A piece of writing by members of the community, published after review. */
 export const Articles: CollectionConfig = {
@@ -89,13 +69,12 @@ export const Articles: CollectionConfig = {
     // as courses do.
     livePreview: {
       // The page in the editor's language, so what shows is what the fields hold.
-      url: ({ data, locale }) =>
-        `/api/preview?collection=articles&slug=${data?.slug ?? ''}&locale=${locale?.code ?? 'en'}`,
+      url: previewUrl('articles'),
     },
   },
   hooks: {
     ...articleReview,
-    beforeValidate: [addSelfAsAuthor],
+    beforeValidate: [addSelfAs('authors')],
     beforeChange: [...(articleReview.beforeChange ?? []), stampLastEditor],
   },
   fields: [
@@ -108,7 +87,7 @@ export const Articles: CollectionConfig = {
       type: 'collapsible',
       admin: { position: 'sidebar' },
       fields: [
-        ...reviewFields('article', { required: true }),
+        ...reviewFields(articleNoun, { required: true }),
         {
           name: 'requested_tier',
           type: 'select',
@@ -119,21 +98,7 @@ export const Articles: CollectionConfig = {
           ],
           admin: { description: 'Who you would like to read it. An editor decides.' },
         },
-        {
-          // Who may see it. Admin-only; approval fills it in.
-          name: 'tier',
-          type: 'select',
-          required: true,
-          defaultValue: 'owner',
-          options: [
-            { label: 'Owner only', value: 'owner' },
-            { label: 'Community', value: 'community' },
-            { label: 'Public', value: 'public' },
-          ],
-          access: { create: adminOnlyField, update: adminOnlyField },
-          // A copy is a new piece: it goes back through review from owner-only.
-          hooks: { beforeDuplicate: [() => 'owner'] },
-        },
+        tierField({ duplicate: true }),
         {
           name: 'published_date',
           type: 'date',

@@ -1,3 +1,4 @@
+import { previewUrl } from '@/lib/preview-url'
 import type { CollectionConfig } from 'payload'
 
 import { isAdmin, publishedOrAdmin } from '@/access'
@@ -32,8 +33,7 @@ export const Programmes: CollectionConfig = {
     // turns on draft mode and opens the programme's page with this draft.
     livePreview: {
       // The page in the editor's language, so what shows is what the fields hold.
-      url: ({ data, locale }) =>
-        `/api/preview?collection=programmes&slug=${data?.slug ?? ''}&locale=${locale?.code ?? 'en'}`,
+      url: previewUrl('programmes'),
     },
   },
   fields: [

@@ -1,21 +1,18 @@
-import type { CollectionBeforeValidateHook, CollectionConfig } from 'payload'
+import { addSelfAs } from '@/lib/review-ownership'
+import type { CollectionConfig } from 'payload'
 
 import {
   adminPublishes,
   canProposePublication,
   isAdminOrOwn,
-  isAdminUser,
   ownList,
   OWNER_EDITS,
   ownsViaEditors,
-  personOf,
   publishedOrOwn,
   type Role,
   WITH_OWNER,
 } from '@/access'
-import { toPersonIds } from '@/lib/fellow-role'
 import { reviewHooks } from '@/lib/review-hooks'
-import type { Publication } from '@/payload-types'
 import { creditsField } from '@/fields/credits'
 import { reviewFields } from '@/fields/review'
 import { slugField } from '@/fields/slug'
@@ -23,24 +20,9 @@ import { optionalHttpUrl } from '@/fields/validators'
 import { importFields } from '@/fields/import'
 import { lastEditedByField, stampLastEditor } from '@/fields/last-edited-by'
 
-/** As `addSelfAsAuthor` on articles: a student or fellow keeps access to what they propose. */
-export const addSelfAsEditor: CollectionBeforeValidateHook<Publication> = ({
-  data,
-  req,
-  operation,
-}) => {
-  const self = personOf(req.user)
-  if (!data || operation !== 'create' || isAdminUser(req.user) || self === null) return data
-  const editors = toPersonIds(data.editors)
-  return editors.includes(self) ? data : { ...data, editors: [...editors, self] }
-}
-
 /** A student or fellow submits a publication; an admin approves (publishes) it. */
-const publicationReview = reviewHooks({
-  noun: 'publication',
-  collection: 'publications',
-  ownersOf: (doc) => toPersonIds(doc.editors as Publication['editors']),
-})
+const publicationNoun = 'publication' as const
+const publicationReview = reviewHooks(publicationNoun)
 
 /** Students and fellows edit their own drafts. Publishing is the admin's approval. */
 const OWNER_ROLES: { allow: Role[] } = { allow: ['member', 'non_degree_seeking', 'fellow'] }
@@ -69,7 +51,7 @@ export const Publications: CollectionConfig = {
   },
   hooks: {
     ...publicationReview,
-    beforeValidate: [addSelfAsEditor],
+    beforeValidate: [addSelfAs('editors')],
     beforeChange: [...(publicationReview.beforeChange ?? []), stampLastEditor],
   },
   fields: [
@@ -78,7 +60,7 @@ export const Publications: CollectionConfig = {
       label: 'Review',
       type: 'collapsible',
       admin: { position: 'sidebar' },
-      fields: reviewFields('publication'),
+      fields: reviewFields(publicationNoun),
     },
     { name: 'cover_image', type: 'upload', relationTo: 'media', admin: { position: 'sidebar' } },
     { name: 'title', type: 'text', required: true, localized: true },
