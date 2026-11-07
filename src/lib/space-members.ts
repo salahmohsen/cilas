@@ -1,3 +1,4 @@
+import { ADMIN_ROLES } from '@/access'
 import { relId } from '@/lib/relation'
 import type { Payload } from 'payload'
 
@@ -190,7 +191,7 @@ export const peopleRows = async (
 export const staffPersonIds = async (payload: Payload): Promise<number[]> => {
   const { docs } = await payload.find({
     collection: 'users',
-    where: { roles: { in: ['admin', 'super_admin'] } },
+    where: { roles: { in: ADMIN_ROLES } },
     depth: 0,
     overrideAccess: true,
     pagination: false,

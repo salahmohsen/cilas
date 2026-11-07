@@ -1,3 +1,4 @@
+import { adminOnlyField } from '@/access'
 import { randomBytes } from 'node:crypto'
 
 import {
@@ -7,7 +8,6 @@ import {
   killTransaction,
   type CollectionBeforeChangeHook,
   type Field,
-  type FieldAccess,
   type PayloadHandler,
   type PayloadRequest,
 } from 'payload'
@@ -29,8 +29,6 @@ import type { FormSubmission } from '@/payload-types'
 
 export type TargetKind = 'programmes' | 'courses'
 
-const isAdminField: FieldAccess = ({ req }) => isAdminUser(req.user)
-
 export const applicationFields: Field[] = [
   {
     // Set by the apply page; checked against the target's form on create.
@@ -38,7 +36,7 @@ export const applicationFields: Field[] = [
     type: 'relationship',
     relationTo: ['programmes', 'courses'],
     index: true,
-    access: { update: isAdminField },
+    access: { update: adminOnlyField },
     admin: { position: 'sidebar', readOnly: true, description: 'What the applicant applied to.' },
   },
   {
@@ -51,7 +49,7 @@ export const applicationFields: Field[] = [
       { label: 'Accepted', value: 'accepted' },
       { label: 'Rejected', value: 'rejected' },
     ],
-    access: { create: isAdminField, update: isAdminField },
+    access: { create: adminOnlyField, update: adminOnlyField },
     admin: { position: 'sidebar', readOnly: true },
   },
   {
@@ -65,14 +63,14 @@ export const applicationFields: Field[] = [
   {
     name: 'decided_at',
     type: 'date',
-    access: { create: isAdminField, update: isAdminField },
+    access: { create: adminOnlyField, update: adminOnlyField },
     admin: { position: 'sidebar', readOnly: true, date: { pickerAppearance: 'dayAndTime' } },
   },
   {
     // What accepting made or found.
     name: 'result',
     type: 'group',
-    access: { create: isAdminField, update: isAdminField },
+    access: { create: adminOnlyField, update: adminOnlyField },
     admin: { position: 'sidebar', readOnly: true },
     fields: [
       { name: 'user', type: 'relationship', relationTo: 'users' },

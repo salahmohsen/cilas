@@ -1,3 +1,4 @@
+import { adminOnlyField } from '@/access'
 import { relId } from '@/lib/relation'
 import type { Access, CollectionConfig, FieldAccess } from 'payload'
 
@@ -13,7 +14,6 @@ const adminOrTeachingFellow: Access = ({ req }) => {
 }
 
 /** Every field but the assessment is the admin's to change. */
-const adminOnly: FieldAccess = ({ req }) => isAdminUser(req.user)
 
 /**
  * The assessment: written and read by admins and the course's fellows (the
@@ -54,7 +54,7 @@ export const Enrollments: CollectionConfig = {
       relationTo: 'people',
       required: true,
       index: true,
-      access: { update: adminOnly },
+      access: { update: adminOnlyField },
     },
     {
       name: 'course',
@@ -62,13 +62,13 @@ export const Enrollments: CollectionConfig = {
       relationTo: 'courses',
       required: true,
       index: true,
-      access: { update: adminOnly },
+      access: { update: adminOnlyField },
     },
     {
       name: 'status',
       type: 'select',
       required: true,
-      access: { update: adminOnly },
+      access: { update: adminOnlyField },
       defaultValue: 'applied',
       options: [
         { label: 'Applied', value: 'applied' },
@@ -81,7 +81,7 @@ export const Enrollments: CollectionConfig = {
     {
       name: 'slot',
       type: 'text',
-      access: { update: adminOnly },
+      access: { update: adminOnlyField },
       admin: { description: 'Which group they attend, e.g. "evening".' },
     },
     {
@@ -95,7 +95,7 @@ export const Enrollments: CollectionConfig = {
       name: 'source',
       type: 'select',
       required: true,
-      access: { update: adminOnly },
+      access: { update: adminOnlyField },
       defaultValue: 'admin',
       options: [
         { label: 'Registration form', value: 'registration_form' },

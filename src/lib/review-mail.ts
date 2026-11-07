@@ -1,3 +1,4 @@
+import { ADMIN_ROLES } from '@/access'
 import type { PayloadRequest } from 'payload'
 
 import { getEmailSettings } from '@/emails/settings'
@@ -15,7 +16,7 @@ const recipientsOf = (docs: Array<{ id: number; email?: string | null }>): Recip
 export const adminRecipients = async (req: PayloadRequest): Promise<Recipient[]> => {
   const { docs } = await req.payload.find({
     collection: 'users',
-    where: { roles: { in: ['admin', 'super_admin'] } },
+    where: { roles: { in: ADMIN_ROLES } },
     depth: 0,
     limit: 100,
     overrideAccess: true,

@@ -1,6 +1,6 @@
 import type { Field } from 'payload'
 
-import { canSetTier } from '@/access'
+import { adminOnlyField } from '@/access'
 
 /**
  * The review path's fields (src/lib/review-hooks.ts): the status, the
@@ -59,7 +59,7 @@ export const reviewFields = (
       {
         name: 'review_note',
         type: 'textarea',
-        access: { create: canSetTier, update: canSetTier },
+        access: { create: adminOnlyField, update: adminOnlyField },
         hooks: { beforeDuplicate: [() => null] },
         admin: {
           description: `The editor’s note to the owner when asking for changes or declining, e.g. “Shorten the second section.” It goes in the email.`,

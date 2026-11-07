@@ -1,6 +1,6 @@
 import {
   adminPublishes,
-  canSetTier,
+  adminOnlyField,
   canTeach,
   isAdminUser,
   isAdminOrOwnAndDraft,
@@ -145,7 +145,7 @@ export const Courses: CollectionConfig = {
       ],
       // Admin-only on create *and* update, so a fellow's course keeps the
       // `owner` default and promoting it stays an admin action.
-      access: { create: canSetTier, update: canSetTier },
+      access: { create: adminOnlyField, update: adminOnlyField },
       admin: {
         description:
           'Who sees it: Public (everyone), Community (signed-in members) or Owner only (its fellows and admins). A published course also needs a tier above Owner, else its public page disappears.',

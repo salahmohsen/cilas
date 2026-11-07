@@ -1,3 +1,4 @@
+import { adminOnlyField } from '@/access'
 import type { CollectionConfig } from 'payload'
 
 import { isAdmin, isAdminUser, personOf, readPeople } from '@/access'
@@ -52,7 +53,7 @@ export const People: CollectionConfig = {
       label: 'Show on the site',
       defaultValue: false,
       index: true,
-      access: { update: ({ req }) => isAdminUser(req.user) },
+      access: { update: adminOnlyField },
       admin: {
         position: 'sidebar',
         description: 'Off: no profile page, and left out of lists and search.',

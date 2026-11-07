@@ -6,6 +6,17 @@ import type { User } from '@/payload-types'
 
 export type Role = User['roles'][number]
 
+export const ADMIN_ROLES = ['admin', 'super_admin'] as const
+
+/** An account's roles; Mailing lists pick members by them too. */
+export const ROLE_OPTIONS = [
+  { label: 'Super Admin', value: 'super_admin' },
+  { label: 'Admin', value: 'admin' },
+  { label: 'Fellow', value: 'fellow' },
+  { label: 'Member', value: 'member' },
+  { label: 'Non-Degree-Seeking Student', value: 'non_degree_seeking' },
+] as const
+
 /**
  * The minimum needed to read roles. `admin.hidden` / `admin.condition` receive
  * Payload's `ClientUser`, typed as `{ [key: string]: any } & BaseUser` — it
@@ -20,13 +31,11 @@ const rolesOf = (user: RoleHolder): Role[] => {
   return Array.isArray(roles) ? (roles as Role[]) : []
 }
 
-export const getRoles = (user: RoleHolder): Role[] => rolesOf(user)
-
 /** The one place a role is compared. `users.roles` is a hasMany select. */
 export const hasRole = (user: RoleHolder, ...roles: Role[]): boolean =>
   rolesOf(user).some((role) => roles.includes(role))
 
-export const isAdminUser = (user: RoleHolder): boolean => hasRole(user, 'admin', 'super_admin')
+export const isAdminUser = (user: RoleHolder): boolean => hasRole(user, ...ADMIN_ROLES)
 
 export const isFellowUser = (user: RoleHolder): boolean => hasRole(user, 'fellow')
 
@@ -66,22 +75,18 @@ export const personOf = (user: unknown): number | null => {
  */
 export type Ownership = (user: User) => Where | false
 
-export const ownsViaFellows: Ownership = (user) => {
-  const person = personOf(user)
-  return person === null ? false : { fellows: { contains: person } }
-}
-export const ownsViaAuthors: Ownership = (user) => {
-  const person = personOf(user)
-  return person === null ? false : { authors: { contains: person } }
-}
-export const ownsViaEditors: Ownership = (user) => {
-  const person = personOf(user)
-  return person === null ? false : { editors: { contains: person } }
-}
-export const ownsViaPerson: Ownership = (user) => {
-  const person = personOf(user)
-  return person === null ? false : { person: { equals: person } }
-}
+export const ownsVia =
+  (field: 'fellows' | 'authors' | 'editors' | 'person'): Ownership =>
+  (user) => {
+    const person = personOf(user)
+    return person === null
+      ? false
+      : { [field]: { [field === 'person' ? 'equals' : 'contains']: person } }
+  }
+export const ownsViaFellows = ownsVia('fellows')
+export const ownsViaAuthors = ownsVia('authors')
+export const ownsViaEditors = ownsVia('editors')
+export const ownsViaPerson = ownsVia('person')
 
 /* =========================================================== access rules */
 
@@ -334,7 +339,4 @@ export const siteTiers = (reader: unknown): SiteTier[] =>
  * `defaultValue` — so a fellow-authored course starts as `owner` and can
  * never be published by them. Publishing stays an admin action.
  */
-export const canSetTier: FieldAccess = ({ req }) => isAdminUser(req.user)
-
-/** Convenience aliases so call sites read as intent, not as role plumbing. */
-export const canPublish: FieldAccess = canSetTier
+export const adminOnlyField: FieldAccess = ({ req }) => isAdminUser(req.user)

@@ -1,6 +1,6 @@
 import type { CollectionConfig } from 'payload'
 
-import { canSetTier, isAdmin, readTiers } from '@/access'
+import { adminOnlyField, isAdmin, readTiers } from '@/access'
 import { pricingField } from '@/fields/pricing'
 import { registrationField } from '@/fields/registration'
 import { scheduleField, timeRangeFields } from '@/fields/schedule'
@@ -63,7 +63,7 @@ export const Events: CollectionConfig = {
         { label: 'Community', value: 'community' },
         { label: 'Public', value: 'public' },
       ],
-      access: { create: canSetTier, update: canSetTier },
+      access: { create: adminOnlyField, update: adminOnlyField },
       admin: { position: 'sidebar' },
     },
     { name: 'title', type: 'text', required: true, localized: true },

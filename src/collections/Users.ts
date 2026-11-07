@@ -1,9 +1,6 @@
-import type {
-  CollectionBeforeChangeHook,
-  CollectionConfig,
-  FieldAccess,
-  PayloadRequest,
-} from 'payload'
+import { adminOnlyField } from '@/access'
+import { ROLE_OPTIONS } from '@/access'
+import type { CollectionBeforeChangeHook, CollectionConfig, PayloadRequest } from 'payload'
 
 import { randomBytes } from 'node:crypto'
 
@@ -14,14 +11,6 @@ import { env } from '@/env'
 import { teaches, withFellowRole } from '@/lib/fellow-role'
 import { slugify } from '@/lib/slugify'
 
-/** An account's roles; Mailing lists pick members by them too. */
-export const ROLE_OPTIONS = [
-  { label: 'Super Admin', value: 'super_admin' },
-  { label: 'Admin', value: 'admin' },
-  { label: 'Fellow', value: 'fellow' },
-  { label: 'Member', value: 'member' },
-  { label: 'Non-Degree-Seeking Student', value: 'non_degree_seeking' },
-] as const
 import type { User } from '@/payload-types'
 
 /**
@@ -112,8 +101,6 @@ export const resetPasswordEmail = async ({
 const resetPasswordSubject = async ({ req }: { req?: PayloadRequest } = {}): Promise<string> =>
   (await settingsFor(req)).texts.reset.subject
 
-const isAdminField: FieldAccess = ({ req }) => isAdminUser(req.user)
-
 /** Login accounts. Public profiles live in `people` (ADR 0001). */
 export const Users: CollectionConfig = {
   slug: 'users',
@@ -148,7 +135,7 @@ export const Users: CollectionConfig = {
       name: 'sub',
       type: 'text',
       index: true,
-      access: { read: isAdminField, create: () => false, update: () => false },
+      access: { read: adminOnlyField, create: () => false, update: () => false },
       admin: { readOnly: true, position: 'sidebar', description: 'Set by Google sign-in.' },
     },
     {
@@ -165,7 +152,7 @@ export const Users: CollectionConfig = {
       // page writes it with a server action; the senders read it.
       name: 'notification_preferences',
       type: 'json',
-      access: { create: () => false, update: isAdminField },
+      access: { create: () => false, update: adminOnlyField },
       admin: { hidden: true },
     },
     {

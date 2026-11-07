@@ -1,5 +1,7 @@
 'use client'
 
+import { isAdminUser } from '@/access'
+
 import {
   Button,
   toast,
@@ -11,9 +13,6 @@ import {
   useLocale,
 } from '@payloadcms/ui'
 import { useState } from 'react'
-
-const isAdmin = (roles: unknown) =>
-  Array.isArray(roles) && roles.some((r) => r === 'admin' || r === 'super_admin')
 
 const NOTES: Record<string, string> = {
   submitted: 'Submitted. An admin will review it, and you will get an email with the decision.',
@@ -45,7 +44,7 @@ export function SubmitForReview() {
     ([fields]) => fields['review.request']?.value as Request | null | undefined,
   )
 
-  if (isAdmin(user?.roles)) return <AdminDecision />
+  if (isAdminUser(user)) return <AdminDecision />
   if (!id)
     return <p className="field-description">Save a draft first, then submit it for review.</p>
   if (status === 'submitted' && request === 'removal')

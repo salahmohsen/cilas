@@ -3,7 +3,7 @@ import type { CollectionBeforeValidateHook, CollectionConfig } from 'payload'
 import {
   adminPublishes,
   canAuthor,
-  canSetTier,
+  adminOnlyField,
   isAdminOrOwnAndDraft,
   isAdminOrOwnVersions,
   isAdminOrOwnWhile,
@@ -132,21 +132,21 @@ export const Articles: CollectionConfig = {
             { label: 'Community', value: 'community' },
             { label: 'Public', value: 'public' },
           ],
-          access: { create: canSetTier, update: canSetTier },
+          access: { create: adminOnlyField, update: adminOnlyField },
           // A copy is a new piece: it goes back through review from owner-only.
           hooks: { beforeDuplicate: [() => 'owner'] },
         },
         {
           name: 'published_date',
           type: 'date',
-          access: { create: canSetTier, update: canSetTier },
+          access: { create: adminOnlyField, update: adminOnlyField },
           hooks: { beforeDuplicate: [() => null] },
         },
         {
           name: 'featured',
           type: 'checkbox',
           label: 'Feature on home page',
-          access: { create: canSetTier, update: canSetTier },
+          access: { create: adminOnlyField, update: adminOnlyField },
           // An editor's choice: authors do not see it.
           admin: { condition: (_, __, { user }) => isAdminUser(user) },
           hooks: { beforeDuplicate: [() => false] },

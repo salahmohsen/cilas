@@ -11,7 +11,7 @@ import { env } from '@/env'
 import { SYNC_WRITE, syncLater, syncList } from '@/lib/list-sync'
 import { createSegment } from '@/lib/resend-contacts'
 
-import { ROLE_OPTIONS } from './Users'
+import { ROLE_OPTIONS } from '@/access'
 
 /** One list takes the public signups; a second would split them. */
 const oneSignupList: CollectionBeforeChangeHook = async ({ data, originalDoc, req }) => {

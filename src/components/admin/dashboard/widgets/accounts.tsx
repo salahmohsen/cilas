@@ -1,7 +1,7 @@
 import { DonutChart } from '@/components/arc/donut-chart/donut-chart'
 import { Sparkline } from '@/components/arc/sparkline/sparkline'
 import { bucketByDay, periodChange, totalOf } from '@/lib/admin-stats'
-import { ROLE_OPTIONS } from '@/collections/Users'
+import { ROLE_OPTIONS } from '@/access'
 import type { User } from '@/payload-types'
 
 import { cachedStat } from '../cached'
