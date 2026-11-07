@@ -2,6 +2,7 @@ import pg from 'pg'
 
 import { env } from '@/env'
 
+import { backoff } from './backoff'
 import {
   NOTIFICATION_CHANNEL,
   type ClientNotificationEvent,
@@ -57,7 +58,7 @@ const resyncAll = () => {
 const scheduleReconnect = () => {
   if (hub.retry) return
   const wait = hub.delay
-  hub.delay = Math.min(hub.delay * 2, 30_000)
+  hub.delay = backoff(hub.delay, 30_000)
   hub.retry = setTimeout(() => {
     hub.retry = null
     void connect()

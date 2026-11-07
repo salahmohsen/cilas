@@ -1,3 +1,4 @@
+import { backoff } from './backoff'
 import { TAB_HEADER, type ClientNotificationEvent } from './events'
 
 /**
@@ -80,7 +81,7 @@ const connect = () => {
     source = null
     clearTimeout(retry)
     retry = setTimeout(connect, delay)
-    delay = Math.min(delay * 2, 60_000)
+    delay = backoff(delay, 60_000)
   })
 }
 
