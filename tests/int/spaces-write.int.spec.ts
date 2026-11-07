@@ -18,7 +18,6 @@ import {
   commentCreate,
   commentEdit,
   commentRemove,
-  fileAdd,
   stepMark,
   visitRecord,
   reactionToggle,
@@ -31,7 +30,7 @@ import {
 } from '@/lib/spaces-write'
 import { spaceLink } from '@/lib/space-ref'
 import { personOf } from '@/access'
-import { ABOUT_MAX } from '@/lib/space-rules'
+import { ABOUT_MAX, type PostFile } from '@/lib/space-rules'
 import { mentionSafelist } from '@/lib/space-members'
 import {
   mySpaces,
@@ -44,6 +43,31 @@ import {
 } from '@/lib/spaces-data'
 
 import { RUN, createTracker, lockSpacesMode, uniq, uniqEmail } from './fixtures'
+
+const appendPhoto = async ({
+  payload,
+  user,
+  post,
+  file,
+}: {
+  payload: Payload
+  user: User
+  post: number
+  file: PostFile
+}) => {
+  const current = await payload.findByID({ collection: 'space-posts', id: post, depth: 0 })
+  const result = await postEdit({ payload, user, id: post, body: current.body, files: [file] })
+  if (!result.ok) return result
+  const { docs } = await payload.find({
+    collection: 'space-files',
+    where: { post: { equals: post } },
+    sort: '-id',
+    limit: 1,
+    depth: 0,
+  })
+  expect(docs).toHaveLength(1)
+  return { ok: true as const, data: { id: docs[0]!.id } }
+}
 
 let payload: Payload
 let modeBefore: 'off' | 'trial' | 'on' = 'off'
@@ -601,7 +625,7 @@ describe('spaces write', () => {
     expect((await unread()).length).toBe(before + 1)
   })
 
-  it('fileAdd enforces count limit', async () => {
+  it('postEdit enforces the attachment count limit', async () => {
     const post = await postCreate({
       payload,
       user: student,
@@ -612,7 +636,7 @@ describe('spaces write', () => {
     expect(post.ok).toBe(true)
     if (!post.ok) return
     track('space-posts', post.data.id)
-    // Seed the four-row cap at the table: going through fileAdd would move
+    // Seed the four-row cap at the table: going through appendPhoto would move
     // bytes to the real bucket, which no test may do. The refusal itself is
     // the product behavior (the gate fires before any storage work).
     await (
@@ -620,7 +644,7 @@ describe('spaces write', () => {
     ).drizzle.execute(
       sql`insert into space_files (filename, space_id, post_id, url, mime_type, filesize) select 'probe-f' || g || '.webp', ${courseSpace.id}, ${post.data.id}, '/probe/' || g || '.webp', 'image/webp', 5 from generate_series(1, 4) g`,
     )
-    const r = await fileAdd({
+    const r = await appendPhoto({
       payload,
       user: student,
       post: post.data.id,
@@ -630,7 +654,7 @@ describe('spaces write', () => {
     if (!r.ok) expect(r.error).toBe('file-count')
   })
 
-  it('fileAdd enforces size and type', async () => {
+  it('postEdit enforces attachment size and type', async () => {
     const post = await postCreate({
       payload,
       user: student,
@@ -642,7 +666,7 @@ describe('spaces write', () => {
     if (!post.ok) return
     track('space-posts', post.data.id)
     const buf = Buffer.alloc(11 * 1024 * 1024)
-    const rSize = await fileAdd({
+    const rSize = await appendPhoto({
       payload,
       user: student,
       post: post.data.id,
@@ -654,7 +678,7 @@ describe('spaces write', () => {
       ['video/mp4', 'v.mp4'],
       ['application/pdf', 'doc.pdf'],
     ] as const) {
-      const rType = await fileAdd({
+      const rType = await appendPhoto({
         payload,
         user: student,
         post: post.data.id,
@@ -877,7 +901,7 @@ describe('spaces write', () => {
 
   it('post editing replaces attachments and saves people mentions together', async () => {
     const id = await newPost(student, community, 'Before attachments')
-    const added = await fileAdd({
+    const added = await appendPhoto({
       payload,
       user: student,
       post: id,
@@ -910,7 +934,7 @@ describe('spaces write', () => {
     const id = await newPost(student, community, 'Full post')
     const ids: number[] = []
     for (let n = 0; n < FILE_LIMITS.post; n++) {
-      const added = await fileAdd({
+      const added = await appendPhoto({
         payload,
         user: student,
         post: id,
@@ -940,7 +964,7 @@ describe('spaces write', () => {
   it('post editing refuses files from another post and leaves both posts intact', async () => {
     const id = await newPost(student, community, 'Keep my text')
     const other = await newPost(student, community, 'Other post')
-    const added = await fileAdd({
+    const added = await appendPhoto({
       payload,
       user: student,
       post: other,
@@ -966,7 +990,7 @@ describe('spaces write', () => {
 
   it('an edit upload failure preserves the old text and files', async () => {
     const id = await newPost(student, community, 'Keep the original')
-    const added = await fileAdd({
+    const added = await appendPhoto({
       payload,
       user: student,
       post: id,
@@ -1159,7 +1183,7 @@ describe('spaces write', () => {
       await commentCreate({ payload, user: student, post: postId, body: 'Late' }),
       await postEdit({ payload, user: student, id: postId, body: 'Edited late' }),
       await commentEdit({ payload, user: student, id: c.data.id, body: 'Edited late' }),
-      await fileAdd({ payload, user: student, post: postId, file: photoFile('late.png') }),
+      await appendPhoto({ payload, user: student, post: postId, file: photoFile('late.png') }),
       await reactionToggle({ payload, user: student, post: postId, reaction: 'agree', on: true }),
     ]
     for (const r of await refused()) {
@@ -1903,7 +1927,6 @@ describe('spaces write', () => {
       expect(text.match(/::session\[/g)).toHaveLength(3)
     }
 
-    // A comment names sessions too, checked the same way; an edit is checked again.
     const comment = await commentCreate({
       payload,
       user: student,

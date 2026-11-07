@@ -1,4 +1,4 @@
-import type { CalendarItem } from '@/api/calendar.api'
+import type { FocalPoint } from '@/lib/media-image'
 import { addDays, cairoDay, weekdayOf, WEEKDAYS } from '@/lib/cairo-day'
 import { POSTER_COLORS } from '@/components/arc/lib/poster-colors'
 
@@ -8,19 +8,33 @@ import { POSTER_COLORS } from '@/components/arc/lib/poster-colors'
  * Saturday, as Egypt's do.
  */
 
+export type CalendarItem = {
+  key: string
+  kind: 'course' | 'event'
+  /** A course with no weekly times is placed on its first day only. */
+  starts?: boolean
+  title: string
+  href: string | null
+  date: string
+  start?: string
+  end?: string
+  /** "Session 3", for a course meeting. */
+  session?: number
+  /** Course type (`thematic`…) or event type, for its label. */
+  type: string
+  cover?: { url: string; alt: string } & FocalPoint
+  cancelled?: boolean
+}
+
 export const CALENDAR_VIEWS = ['month', 'week', 'agenda'] as const
 export type CalendarView = (typeof CALENDAR_VIEWS)[number]
 
-/** How many days the agenda lists from its date. */
 const AGENDA_DAYS = 30
 
-/** The Saturday on or before a day. */
 export const weekStart = (day: string): string => addDays(day, -WEEKDAYS.indexOf(weekdayOf(day)))
 
-/** The first day of a day's month. */
 export const monthStart = (day: string): string => `${day.slice(0, 8)}01`
 
-/** The same day of another month, clamped to that month's length. */
 export const shiftMonth = (day: string, n: number): string => {
   const [y, m] = day.split('-').map(Number)
   const target = new Date(Date.UTC(y, m - 1 + n, 1))
@@ -29,7 +43,6 @@ export const shiftMonth = (day: string, n: number): string => {
   return target.toISOString().slice(0, 10)
 }
 
-/** The days a month view shows: whole weeks, Saturday to Friday, around the month. */
 export const monthGrid = (day: string): string[] => {
   const first = monthStart(day)
   const next = monthStart(shiftMonth(first, 1))
@@ -38,7 +51,6 @@ export const monthGrid = (day: string): string[] => {
   return days
 }
 
-/** The seven days of a day's week. */
 export const weekDays = (day: string): string[] =>
   Array.from({ length: 7 }, (_, i) => addDays(weekStart(day), i))
 

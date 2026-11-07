@@ -3,7 +3,6 @@ import { createLocalReq, type Payload, type Where } from 'payload'
 import type { User } from '@/payload-types'
 
 import type { PreviewCollection } from '@/lib/preview-url'
-export type { PreviewCollection } from '@/lib/preview-url'
 
 /** Draft cookies select a version; the current editor's access selects the documents. */
 export const previewWhere = async (

@@ -1,3 +1,4 @@
+import { localeOf } from '@/i18n/routing'
 import { pageAlternates } from '@/lib/seo'
 import { ChevronLeft, ChevronRight } from 'lucide-react'
 import type { Metadata } from 'next'
@@ -63,7 +64,7 @@ export default async function CalendarPage({ params, searchParams }: Props) {
   const { view, date } = readCalendarParams(query, today)
   const range = viewRange(view, date)
   const nu = numberingSystemOf(locale)
-  const all = await getCachedCalendarItems(locale === 'ar' ? 'ar' : 'en')
+  const all = await getCachedCalendarItems(localeOf(locale))
   const items = all.filter((i) => i.date >= range.from && i.date <= range.to)
   // In a month, the days outside it belong to its neighbours: the phone list skips them.
   const month = monthStart(date).slice(0, 7)

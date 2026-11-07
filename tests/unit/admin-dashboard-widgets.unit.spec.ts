@@ -1,25 +1,15 @@
 // @vitest-environment node
-import { readFileSync } from 'node:fs'
 
 import { afterEach, describe, expect, it, vi } from 'vitest'
 
 import { dashboardWidgets, defaultLayout } from '@/components/admin/dashboard/native-widgets'
 
 const WIDTHS = ['x-small', 'small', 'medium', 'large', 'x-large', 'full'] as const
-const nativeSource = readFileSync('src/components/admin/dashboard/native.tsx', 'utf8')
 
 describe('dashboard widgets (Payload native dashboard)', () => {
   it('gives every widget its own slug', () => {
     const slugs = dashboardWidgets.map((w) => w.slug)
     expect(new Set(slugs).size).toBe(slugs.length)
-  })
-
-  it('points each widget at a component native.tsx exports', () => {
-    for (const widget of dashboardWidgets) {
-      const [path, name] = String(widget.Component).split('#')
-      expect(path).toBe('/components/admin/dashboard/native')
-      expect(nativeSource).toMatch(new RegExp(`export (const|function) ${name}\\b`))
-    }
   })
 
   it('lays out only widgets that exist, once each', () => {

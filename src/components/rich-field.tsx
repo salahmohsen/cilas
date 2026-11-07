@@ -26,7 +26,6 @@ export interface RichFieldProps extends Omit<
   className?: string
 }
 
-/** The Arc rich text editor dressed as a field: same label, frame, states and messages as the Arc Input. */
 export const RichField = forwardRef<RichTextEditorHandle, RichFieldProps>(function RichField(
   {
     label,

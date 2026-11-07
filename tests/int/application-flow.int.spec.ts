@@ -1,5 +1,4 @@
 // @vitest-environment node
-// Boots the real config against DATABASE_URL.
 import { createLocalReq, getPayload, type Payload } from 'payload'
 import { randomBytes } from 'node:crypto'
 import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest'
@@ -40,7 +39,6 @@ let member: User
 let memberPerson: Person
 let form: Form
 let course: Course
-// One suffix per run: leftovers of an aborted run can never collide.
 const RUN = randomBytes(3).toString('hex')
 const APPLICANT_EMAIL = `flow-applicant-${RUN}@cilas.test`
 const MEMBER_EMAIL = `flow-member-${RUN}@cilas.test`

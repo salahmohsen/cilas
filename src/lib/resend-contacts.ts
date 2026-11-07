@@ -22,7 +22,6 @@ export type Contact = {
   unsubscribed: boolean
 }
 
-/** A new segment, named as the list; returns its id. */
 export const createSegment = async (name: string): Promise<string> => {
   const { ok, status, body } = await resend('/segments', {
     method: 'POST',

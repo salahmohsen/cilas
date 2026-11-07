@@ -4,7 +4,7 @@ import { useState } from 'react'
 import { useTranslations } from 'next-intl'
 
 import { Dialog, DialogContent } from '@/components/arc/dialog/dialog'
-import { voteEditAction } from '@/app/(frontend)/[locale]/spaces/actions'
+import { voteEditAction } from '@/lib/space-actions'
 
 import { PostEditForm, type PostEditContext } from './post-edit-form'
 import styles from './space.module.css'

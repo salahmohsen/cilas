@@ -31,10 +31,6 @@ export function SideCard({
   )
 }
 
-/**
- * One section: its band, then its content. `fold` makes the band a summary
- * that opens and closes the section (closed at first).
- */
 export function SideCardSection({
   label,
   labelAction,

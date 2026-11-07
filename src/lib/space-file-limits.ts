@@ -10,12 +10,10 @@ import { FILE_KINDS } from './form-files'
  */
 export const FILE_LIMITS = { post: 4 } as const
 
-/** The picker's `accept`: the photo kinds a post may carry (JPEG, PNG, WebP). */
 export const SPACE_FILE_ACCEPT = [...FILE_KINDS.image.extensions, ...FILE_KINDS.image.mime].join(
   ',',
 )
 
-/** The MIME types a space file may be: photos only. */
 export const SPACE_FILE_MIME = FILE_KINDS.image.mime
 
 const MB = 1024 * 1024

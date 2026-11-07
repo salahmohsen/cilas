@@ -31,7 +31,6 @@ export function MovieCard({
     : movie.releaseDate
   const money = (n: number) =>
     n > 0 ? format.number(n, { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }) : ''
-  // The card keeps who made it and how it is shown; the rest is in the dialog.
   const metadata = [
     [t('director'), join(movie.directors)],
     [t('writers'), join(movie.writers)],

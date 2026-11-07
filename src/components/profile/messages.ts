@@ -1,6 +1,5 @@
 import type { ProfileError } from '@/lib/profile'
 
-/** The profile form's words, listed once: the page reads them and the form's type follows. */
 export const PROFILE_MESSAGE_KEYS = [
   'public',
   'private',

@@ -13,10 +13,9 @@ import type { RsvpView } from '@/lib/spaces-data'
 
 import { EventAnswers } from './event-answers'
 import { EventCalendar } from './event-calendar'
-import type { PersonCard } from './person-hover'
+import type { PersonCard } from '@/lib/space-members'
 import styles from './space.module.css'
 
-/** The image and optional colour shared by public and Spaces event cards. */
 export type EventCover = { url: string; tone: string | null; alt?: string }
 
 /**

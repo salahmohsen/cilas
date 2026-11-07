@@ -16,8 +16,8 @@ import {
   getArticleForReading,
   getPublicationCovers,
   getRelatedArticles,
-  type Reader,
 } from '@/api/articles.api'
+import type { Reader } from '@/lib/reader'
 import { resolveCardStacks } from '@/api/card-stacks.api'
 import { getContactEmail } from '@/api/contact.api'
 import { AdminFrameOnly, OutsideAdminFrame } from '@/components/admin-frame-only'

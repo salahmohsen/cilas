@@ -1,5 +1,4 @@
 // @vitest-environment node
-// Boots the real config against DATABASE_URL.
 import { createLocalReq, getPayload, type Payload } from 'payload'
 import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest'
 
@@ -15,7 +14,6 @@ let issue: Newsletter
 let list: { id: number } | null = null
 const ADMIN = uniqEmail('newsletter-admin-probe')
 
-/** Calls a newsletter endpoint the way the sidebar buttons do. */
 const call = async (action: 'test' | 'send', user: User | null = admin) => {
   const endpoints = payload.collections.newsletters.config.endpoints as {
     path: string

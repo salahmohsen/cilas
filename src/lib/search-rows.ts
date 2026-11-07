@@ -10,12 +10,6 @@ import {
   type SearchSort,
 } from '@/lib/search-config'
 
-/**
- * The search panel's pure logic: which language of a bilingual hit to show,
- * which field to quote, and how the per-collection result lists merge into
- * one. Client-safe; no React.
- */
-
 type MatchMeta = { value?: string; matchLevel?: string }
 
 /** One Typesense hit as the InstantSearch adapter hands it over. */
@@ -34,13 +28,11 @@ export type SearchHit = {
 }
 
 export type SearchRow = {
-  /** `${collection}:${objectID}`, unique across the panel. */
   id: string
   collection: SearchCollection
   hit: SearchHit
 }
 
-/** The site language first, then the other one. */
 const localesFor = (locale: SearchLocale): SearchLocale[] => [locale, otherLocale(locale)]
 
 const matched = (meta: MatchMeta | undefined) =>
@@ -65,11 +57,9 @@ export const titleFieldOf = (row: SearchRow, locale: SearchLocale): string => {
     : own
 }
 
-/** The plain title text, in the language `titleFieldOf` picks. */
 export const titleOf = (row: SearchRow, locale: SearchLocale): string =>
   textOf(row.hit, titleFieldOf(row, locale))
 
-/** Which language a text reads in, by its script. */
 export const scriptOf = (text: string): SearchLocale => (/[؀-ۿ]/.test(text) ? 'ar' : 'en')
 
 /**
@@ -91,7 +81,6 @@ export const snippetFieldOf = (row: SearchRow, locale: SearchLocale): string | n
 
 export type Contributor = { name: string; src?: string }
 
-/** The row's contributors, each named in the site language where known. */
 export const contributorsOf = (hit: SearchHit, locale: SearchLocale): Contributor[] => {
   if (!hit.contributors) return []
   try {
@@ -140,7 +129,6 @@ export const shapeSnippet = (value: string): string => {
   return value.slice(start, end).trim()
 }
 
-/** One collection's answer, as the panel holds it. */
 export type CollectionResults = { hits: SearchHit[]; found: number }
 
 /**
@@ -199,8 +187,6 @@ const bySortKey = (
     .sort((a, b) => compareKeys(key(a), key(b)))
 }
 
-/** Merges the per-collection results, visible collections only, into the
- * panel's single list. */
 export const mergeRows = ({
   results,
   visible,

@@ -1,4 +1,4 @@
-import { type Locale } from '@/i18n/routing'
+import { localeOf } from '@/i18n/routing'
 import { pageAlternates } from '@/lib/seo'
 import config from '@payload-config'
 import type { Metadata } from 'next'
@@ -27,10 +27,7 @@ export async function generateMetadata(): Promise<Metadata> {
 export default async function GovernancePage({ params }: Props) {
   const { locale } = await params
   const t = await getTranslations('Governance')
-  const members = await getGovernance(
-    await getPayload({ config }),
-    (locale === 'ar' ? 'ar' : 'en') as Locale,
-  )
+  const members = await getGovernance(await getPayload({ config }), localeOf(locale))
   const term = (from: number | null, to: number | null) =>
     from ? (to ? localDigits(`${from}–${to}`, locale) : t('since', { year: from })) : null
 

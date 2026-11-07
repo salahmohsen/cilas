@@ -1,5 +1,4 @@
 // @vitest-environment node
-// Boots the real config against DATABASE_URL.
 import pg from 'pg'
 import { createLocalReq, getPayload, type Payload } from 'payload'
 import { afterAll, beforeAll, describe, expect, it } from 'vitest'
@@ -29,7 +28,6 @@ const create = (data: { title: string; description?: string }, req?: unknown) =>
 describe('live notification publishing', () => {
   beforeAll(async () => {
     payload = await getPayload({ config: await config })
-    // A recipient of its own, so the test needs no account in the database.
     recipient = account = (
       await payload.create({
         collection: 'users',

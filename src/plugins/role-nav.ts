@@ -39,7 +39,6 @@ const hiddenFor =
     return view === null || !VISIBLE[view].includes(slug)
   }
 
-/** Collections the menu lists first, in this order; the rest keep theirs. */
 const GROUPS: Record<string, string> = {
   'form-submissions': 'Admissions',
   enrollments: 'Admissions',
@@ -79,7 +78,6 @@ export const roleNav = (): Plugin => (config) => ({
         hidden: hiddenFor(collection.slug, collection.admin?.hidden),
       },
     }))
-    // A stable sort: listed slugs move up, everything else stays as it was.
     .sort((a, b) => rank(a.slug) - rank(b.slug)),
   globals: config.globals?.map((global) => ({
     ...global,

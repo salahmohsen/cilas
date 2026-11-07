@@ -6,7 +6,6 @@ import type { SpaceKind } from '@/lib/spaces'
 
 type Rel = number | { id: number } | null | undefined
 
-/** What a space is named by: its kind and the course, programme or name it hangs from. */
 export type SpaceRef = {
   id: number
   kind: SpaceKind
@@ -15,7 +14,6 @@ export type SpaceRef = {
   programme?: Rel
 }
 
-/** The course or programme row a space hangs from, as far as a title, a path or a lifecycle needs it. */
 export type SpaceParent = {
   id?: number
   title?: string | null
@@ -43,7 +41,6 @@ export const parentRef = (
 export const isGhostCourse = (space: SpaceRef): boolean =>
   space.kind === 'course' && parentRef(space) === null
 
-/** The course or programme row behind a space; null for a community, a ghost, or a row that is gone. */
 export const parentOf = async (
   payload: Payload,
   space: SpaceRef,
@@ -74,7 +71,6 @@ export const spaceHref = (
   return `${locale ? `/${locale}` : ''}/spaces/${space.kind}/${key}${postId == null ? '' : `/posts/${postId}`}`
 }
 
-/** A post's page by the space's real path (course or programme slug). */
 export const spaceLink = async (
   payload: Payload,
   space: SpaceRef,
@@ -82,7 +78,6 @@ export const spaceLink = async (
 ): Promise<string> =>
   spaceHref(space, await parentOf(payload, space, { select: { slug: true } }), { postId })
 
-/** What a space is called: its course or programme title, else its own name, else the community's. */
 export const spaceTitle = (
   space: SpaceRef,
   parent: Pick<SpaceParent, 'title'> | null | undefined,

@@ -1,5 +1,4 @@
 // @vitest-environment node
-// Boots the real config against DATABASE_URL and uploads to R2.
 import { copyFileSync, mkdtempSync, rmSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import path from 'node:path'
@@ -13,8 +12,6 @@ import { RUN, uniq } from './fixtures'
 
 let payload: Payload
 
-// Fixtures use the "/probemedia-" prefix and "Probe Media" names, apart from
-// the other import specs (which run against the same database).
 const P = `/probemedia-${RUN}-`
 const UPLOAD_DIR = `uploads/probemedia-${RUN}`
 const OUTLET = `Probe Media Outlet ${RUN}`

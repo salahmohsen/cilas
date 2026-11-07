@@ -40,7 +40,6 @@ export const EXCLUDED_SECTIONS = [
   INGEST_PATH.slice(1),
 ] as const
 
-/** `/en/about` becomes `/about`, `/ar` becomes `/`. A path with no language is kept as it is. */
 export const stripLocale = (pathname: string): string => {
   const path = pathname.split(/[?#]/, 1)[0] || '/'
   const segments = path.split('/').filter(Boolean)

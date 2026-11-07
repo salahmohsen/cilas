@@ -34,7 +34,6 @@
 .dash {
   color: var(--text-muted);
 }
-/* Adornments carry their own space, so an empty column costs nothing. */
 .body {
   display: grid;
   grid-template-columns: auto minmax(0, 1fr) auto;
@@ -69,7 +68,6 @@
   border-radius: var(--radius-pill);
   background: var(--control-track);
 }
-/* The fill spans the track and is revealed by a clip that follows the thumbs on the same frame. Ticks inside it are the "on" set, cut exactly at the thumb. */
 .fill {
   position: absolute;
   inset: 0;
@@ -160,7 +158,6 @@
   white-space: nowrap;
   transform-origin: 50% 100%;
 }
-/* Mark labels sit on their ticks; one at a limit keeps its outer edge inside the component. */
 .marks {
   position: relative;
   grid-area: 2 / 2;

@@ -10,7 +10,6 @@ import { NOTIFICATION_KINDS, type PreferenceKind } from '@/lib/notification-kind
  */
 export type Channel = 'email' | 'push'
 
-/** The kinds the settings page lists, in its order, with who can receive them. */
 const PREFERENCE_ORDER = [
   'reaction',
   'comment',
@@ -31,7 +30,6 @@ export const PREFERENCE_KINDS = PREFERENCE_ORDER.map((kind) => ({
   audience: NOTIFICATION_KINDS[kind].audience,
 }))
 
-/** The kinds that also send an email (src/lib/review-hooks.ts, review decisions). */
 export const EMAIL_KINDS = [
   'submitted',
   'approved',
@@ -49,7 +47,6 @@ export type NotificationPreferences = {
   push?: Partial<Record<PreferenceKind, boolean>>
 }
 
-/** What a save sends: the kinds whose switch changed, with their new value. */
 export type PreferenceChanges = NotificationPreferences
 
 const flags = <K extends string>(keys: readonly [K, ...K[]]) =>
@@ -62,13 +59,11 @@ export const preferenceChangesSchema = z
   })
   .strict()
 
-/** Reads the stored value defensively: anything that is not a refusal is ignored. */
 export const readPreferences = (raw: unknown): NotificationPreferences => {
   const parsed = preferenceChangesSchema.safeParse(raw)
   return parsed.success ? parsed.data : {}
 }
 
-/** Whether a note of this kind may use this channel for this account. */
 export const wantsChannel = (
   preferences: NotificationPreferences | null | undefined,
   channel: Channel,
@@ -78,7 +73,6 @@ export const wantsChannel = (
   return flag !== false
 }
 
-/** Applies a save to the stored value, keeping only the refusals. */
 export const mergePreferences = (
   current: NotificationPreferences | null | undefined,
   changes: PreferenceChanges,
@@ -95,7 +89,6 @@ export const mergePreferences = (
   return next
 }
 
-/** The switches the page shows for an account: every listed kind, true unless refused. */
 export const switchesOf = (
   preferences: NotificationPreferences | null | undefined,
   isAdmin: boolean,

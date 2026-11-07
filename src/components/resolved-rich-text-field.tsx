@@ -1,6 +1,6 @@
 import type { ComponentProps } from 'react'
 import { getLocale } from 'next-intl/server'
-import type { Reader } from '@/api/articles.api'
+import type { Reader } from '@/lib/reader'
 import { RichTextField } from '@/components/RichTextField'
 import { RichTextScope } from '@/components/rich-text-scope'
 

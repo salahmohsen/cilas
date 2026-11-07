@@ -21,7 +21,6 @@ export type SearchDocument = {
   id: string
   slug: string
   updatedAt: number
-  /** The cover (courses, articles) or the person's own photo. */
   coverImage: string
   /** JSON `Contributor[]`, for the row's avatars; not searched. */
   contributors: string
@@ -36,7 +35,6 @@ const asRecord = (value: unknown): Doc | null =>
 
 const asArray = (value: unknown): unknown[] => (Array.isArray(value) ? value : [])
 
-/** A populated upload's public URL, or '' when the relation stayed an id. */
 const mediaUrl = (relation: unknown): string => {
   const url = asRecord(relation)?.url
   return typeof url === 'string' ? url : ''

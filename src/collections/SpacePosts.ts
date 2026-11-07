@@ -110,7 +110,6 @@ export const SpacePosts: CollectionConfig = {
       admin: { condition: (data) => (data as { kind?: string }).kind === 'event' },
     },
     {
-      // The cover's dominant colour (#rrggbb), for the field under the photo.
       name: 'event_cover_tone',
       type: 'text',
       admin: { hidden: true },
@@ -131,7 +130,6 @@ export const SpacePosts: CollectionConfig = {
       admin: { condition: (data) => (data as { kind?: string }).kind === 'vote' },
     },
     {
-      // After this moment nobody may vote; empty keeps the vote open.
       name: 'vote_closes_at',
       label: 'Voting closes',
       type: 'date',

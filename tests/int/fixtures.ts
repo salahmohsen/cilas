@@ -8,7 +8,6 @@ import type { Payload } from 'payload'
 
 export const RUN = crypto.randomUUID().slice(0, 8)
 
-/** `base-<run>`: for slugs, legacy URL fragments and anything else unique. */
 export const uniq = (base: string): string => `${base}-${RUN}`
 
 /** `base-<run>@cilas.test`. */

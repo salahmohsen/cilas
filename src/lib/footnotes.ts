@@ -5,10 +5,6 @@ type Node = { type?: string; fields?: unknown; children?: Node[] }
 
 export type Footnote = { id: string; number: number; note: FootnoteBlock['note'] }
 
-/**
- * The footnotes of a rich text, in reading order, numbered from 1. They are
- * inline blocks (blockType `footnote`) anywhere in the tree.
- */
 export const footnotesOf = (data: { root?: Node } | null | undefined): Footnote[] => {
   const found: Footnote[] = []
   const walk = (node: Node) => {

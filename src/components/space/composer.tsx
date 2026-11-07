@@ -15,7 +15,7 @@ import { Input } from '@/components/arc/input/input'
 import { ComposerField } from './composer-field'
 import type { SessionSuggestion } from '@/components/arc/rich-text-editor/rich-text-editor'
 import SegmentedControl from '@/components/arc/segmented-control/segmented-control'
-import { postCreateAction, type SpacesWriteState } from '@/app/(frontend)/[locale]/spaces/actions'
+import { postCreateAction, type SpacesWriteState } from '@/lib/space-actions'
 import { FILE_LIMITS, SPACE_FILE_ACCEPT, UPLOAD_TOTAL_MAX } from '@/lib/space-file-limits'
 import { EVENT_TITLE_MAX, type ComposerKind } from '@/lib/space-rules'
 
@@ -40,8 +40,6 @@ const MB = 1024 * 1024
 type Me = { name: string; photo: string | null; fallbackSeed?: string }
 
 export type SessionChoice = SessionSuggestion
-
-/** The kinds this member may start here, in the order the type switch shows them. */
 
 /**
  * The only way to write a post (spec §5). Collapsed to one line so readers

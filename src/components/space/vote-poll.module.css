@@ -9,7 +9,6 @@
   font-size: var(--text-sm);
 }
 
-/* Each row is the option's track; a bar inset inside it fills to the option's share. */
 .results {
   display: grid;
   gap: var(--space-2);
@@ -87,7 +86,6 @@ button.choice:focus-visible {
   }
 }
 
-/* An empty ring or box says the row can be tapped; filled, it is the member's choice. */
 .mark {
   display: grid;
   width: 17px;
@@ -161,7 +159,6 @@ button.choice:focus-visible {
   font-size: var(--text-xs);
 }
 
-/* Everyone who chose one option, in a dialog opened from its "+N". */
 .voterList {
   display: grid;
   gap: var(--space-2);

@@ -1,16 +1,9 @@
 import { locationUrl } from '@/lib/space-event'
 import type { EventPosting, Membership, PostingLevel, SpaceKind } from '@/lib/spaces'
 
-/**
- * The rules of a space as plain functions and constants: no reads, no writes,
- * nothing that only runs on the server. The server's writes and the pages
- * enforce them, and the composer and settings forms show the same limits.
- */
-
 /** Every post kind the posts collection stores. `question` is kept for older rows. */
 export const POST_KINDS = ['discussion', 'question', 'announcement', 'event', 'vote'] as const
 
-/** The kinds the composer offers, in its order. */
 export const COMPOSER_KINDS = [
   'discussion',
   'event',
@@ -19,9 +12,7 @@ export const COMPOSER_KINDS = [
 ] as const satisfies readonly (typeof POST_KINDS)[number][]
 export type ComposerKind = (typeof COMPOSER_KINDS)[number]
 
-/** The longest custom "About this space" text, in characters. */
 export const ABOUT_MAX = 800
-/** Limits the composer shows and postCreate enforces, shared by both sides. */
 export const EVENT_LOCATION_MAX = 200
 /** An event's name fits on two lines of its card. */
 export const EVENT_TITLE_MAX = 100
@@ -34,11 +25,9 @@ const READ_ONLY_AFTER_DAYS = 14
 
 export type PostFile = { data: Buffer; mimetype: string; name: string; size: number }
 
-/** Whether a vote has stopped taking choices. */
 export const voteClosed = (closesAt: string | null | undefined, now = new Date()) =>
   !!closesAt && new Date(closesAt).getTime() <= now.getTime()
 
-/** Yes once the days since `last` reach the limit. `reopened` holds the archive open. */
 export const readOnly = (
   space: { kind: SpaceKind; reopened?: boolean | null },
   lastMeeting: string | null,
@@ -56,7 +45,6 @@ export const postingAllows = (postingLevel: PostingLevel, role: string, kind: st
   return postingLevel === 'open' || isModerator
 }
 
-/** Whether this member may start an event in this space (on top of the posting level). */
 export const eventsAllow = (events: EventPosting | null | undefined, role: string): boolean =>
   (events ?? 'members') === 'members' || role === 'moderator'
 
@@ -127,14 +115,12 @@ export const closingOf = (raw: string | null | undefined, now: Date): string | n
   return at.toISOString()
 }
 
-/** What an event or a vote adds to a post; the other kinds add nothing. */
 export type PostShape =
   | { kind: 'discussion' | 'announcement' }
   | {
       kind: 'event'
       /** `title` is the name on the card; without one the card shows the body's first line */
       event: { title?: string | null; location: string; startsAt: string; endsAt?: string | null }
-      /** One photo shown behind the event's details */
       cover?: PostFile | null
     }
   | {

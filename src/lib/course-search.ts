@@ -1,14 +1,6 @@
-/**
- * Searching and filtering the study list. Each course carries its facet
- * values (what the filters pick from) and its search words (every text it
- * has, in both languages); a query matches when each of its words occurs
- * within some word of the course.
- */
-
 import { latinDigits } from '@/lib/digits'
 import type { FocalPoint } from '@/lib/media-image'
 
-/** The filters, in the order the menu lists them; each is a URL parameter. */
 export const COURSE_FACETS = [
   'registration',
   'type',
@@ -67,11 +59,9 @@ const splitWords = (text: string): string[] =>
     .split(/[^\p{L}\p{N}]+/u)
     .filter(Boolean)
 
-/** The unique words of all the given texts, for `StudyCourse.words`. */
 export const searchWords = (texts: Array<string | null | undefined>): string =>
   [...new Set(texts.flatMap((t) => (t ? splitWords(t) : [])))].join(' ')
 
-/** True when every word of the query occurs in the course's words. */
 export const matchesQuery = (words: string, query: string): boolean => {
   const wanted = splitWords(query)
   if (!wanted.length) return true

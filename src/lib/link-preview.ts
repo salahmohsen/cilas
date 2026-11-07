@@ -8,7 +8,6 @@ import { env } from '@/env'
 import { mapsPlace, meetingService, titlePlace } from './event-place'
 import { titleKey } from './link-title'
 
-/** What a post shows for a link: the page's own title, summary and image. */
 export type LinkPreview = {
   url: string
   host: string
@@ -36,7 +35,6 @@ const MAX_ENTRIES = 500
  */
 export const MAX_PREVIEWS = 5
 
-/** The distinct outside links in a post's Markdown, in reading order; mentions (`/people/…`) are not links out. */
 export const outsideLinks = (markdown: string, max = MAX_PREVIEWS): string[] => {
   const seen = new Set<string>()
   const out: string[] = []
@@ -90,7 +88,6 @@ const decode = (text: string) =>
     .replace(/\s+/g, ' ')
     .trim()
 
-/** Reads Open Graph, Twitter and plain HTML tags from a page's head. */
 export const parseMeta = (
   html: string,
   pageUrl: string,

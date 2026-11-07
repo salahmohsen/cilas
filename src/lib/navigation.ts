@@ -20,10 +20,8 @@ export const NAV_ITEMS = [
 export type NavKey = (typeof NAV_ITEMS)[number]['key']
 export type Navigation = Record<NavKey, boolean>
 
-/** Every item shown: what the menus use before an admin has chosen. */
 export const ALL_SHOWN = Object.fromEntries(NAV_ITEMS.map(({ key }) => [key, true])) as Navigation
 
-/** The stored choices, unset ones shown. */
 export const navigationOf = (
   stored: Partial<Record<NavKey, boolean | null>> | null | undefined,
 ): Navigation =>

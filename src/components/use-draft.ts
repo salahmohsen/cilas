@@ -17,10 +17,9 @@ export function readDraft<T>(key: string): T | null {
  * Keeps a form's answers on this device while they are typed, so a closed tab
  * or a failed send loses nothing. The saved draft is passed to `onRestore`
  * once, when the form opens (a form that must have it before its first render
- * reads it with `readDraft` and leaves `onRestore` out); `draft` is what to keep as it changes (null: keep
- * nothing, and drop any saved draft). The browser's storage can be missing or refuse a write (private
- * windows, a full disk, blocked site data); a draft is only a convenience, so
- * every failure is ignored and the form works without it.
+ * reads it with `readDraft` and leaves `onRestore` out). A null draft drops
+ * the saved answers. Storage failures in private windows, on a full disk,
+ * or with blocked site data must not prevent the form from working.
  */
 export function useDraft<T>(
   key: string,
@@ -34,7 +33,7 @@ export function useDraft<T>(
   restore.current = onRestore
 
   useEffect(() => {
-    if (!enabled) return
+    if (!enabled || !restore.current) return
     const saved = readDraft<T>(key)
     if (saved) restore.current?.(saved)
   }, [key, enabled])

@@ -11,7 +11,7 @@ import type { TopComment } from '@/lib/spaces-data'
 
 import { FeedReactions } from './feed-reactions'
 import { COMMENT_EVENT } from './intro-lock'
-import type { PersonCard } from './person-hover'
+import type { PersonCard } from '@/lib/space-members'
 import type { SessionLinks } from './session-chip'
 import styles from './space.module.css'
 import { SpaceThread, type ThreadViewer } from './space-thread'

@@ -1,3 +1,4 @@
+import { localeOf } from '@/i18n/routing'
 import config from '@payload-config'
 import { notFound } from 'next/navigation'
 import { getPayload } from 'payload'
@@ -29,6 +30,6 @@ export async function PostDialogPage({ params }: { params: Promise<Params> }) {
   if (!landing) notFound()
   const loaded = await loadPost(payload, user, landing.space, postId, locale)
   if (!loaded) notFound()
-  const href = spaceHref(landing.space, { slug }, { locale: locale === 'ar' ? 'ar' : 'en', postId })
+  const href = spaceHref(landing.space, { slug }, { locale: localeOf(locale), postId })
   return <PostArticle user={user} view={loaded.view} context={loaded.context} href={href} dialog />
 }

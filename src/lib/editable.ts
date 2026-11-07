@@ -2,11 +2,6 @@ import { payloadEditable, type PayloadEditableOptions } from '@payload-inline-vi
 
 type Attrs = Record<string, string>
 
-/**
- * The visual editor's `data-pve-*` attributes, only where `on` (the admin's
- * live preview): the public page carries none. Paths are the document's data
- * paths, e.g. `sessions.2.session_title`.
- */
 export const editableIn = (on: boolean) => {
   const field = (path: string, options?: PayloadEditableOptions): Attrs =>
     on ? payloadEditable(path, options) : {}

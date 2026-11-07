@@ -35,7 +35,6 @@ export const Media: CollectionConfig = {
   ],
 
   upload: {
-    // Image sizes are processed locally before upload
     imageSizes: [
       {
         name: 'thumbnail',

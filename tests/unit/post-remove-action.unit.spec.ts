@@ -16,7 +16,7 @@ vi.mock('@/lib/reader', () => ({
 }))
 vi.mock('@/lib/spaces-write', () => ({ postRemove: mocks.remove }))
 
-import { postRemoveAction } from '@/app/(frontend)/[locale]/spaces/actions'
+import { postRemoveAction } from '@/lib/space-actions'
 
 const remove = (pathname: string) => {
   const form = new FormData()

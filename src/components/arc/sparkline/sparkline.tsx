@@ -37,13 +37,10 @@ export interface SparklineProps {
   labels?: string[]
   /** Formats a scrubbed point for the headline. Defaults to a grouped number. */
   formatValue?: (value: number, index: number) => string
-  /** A quiet neutral fill under the line. */
   area?: boolean
-  /** Pointer and keyboard scrubbing through the points. */
   interactive?: boolean
 }
 
-/** Copy that holds a number enters from the side it moved toward: a larger value rises from below, a smaller one drops from above. */
 const rise: Variants = {
   hidden: (direction: number) => ({
     opacity: 0,

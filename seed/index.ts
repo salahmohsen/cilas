@@ -34,7 +34,6 @@ const ctx = createSeedContext()
 // it was, instead of the dev seed below.
 if (hasSnapshot() && !process.argv.includes('--dev')) {
   await restoreSnapshot(payload)
-  // Accounts are not in the snapshot; the super admin is.
   await createSuperAdmin(payload)
   await payload.destroy()
   console.log('\nSEED COMPLETE (snapshot)')
@@ -46,7 +45,6 @@ if (hasSnapshot() && !process.argv.includes('--dev')) {
 // survive, so a fresh migration never leaves the admin panel unreachable.
 await createSuperAdmin(payload)
 
-// Content is wiped; user accounts are matched by email and survive.
 await resetContent(payload)
 
 // Order matters: every seeder reads ids resolved by the ones above it.
@@ -57,7 +55,6 @@ await seedProgrammes(payload, ctx)
 await seedCourses(payload, ctx)
 await linkFellows(payload, ctx) // validates that course fellows were seeded
 await seedGovernance(payload, ctx)
-// Articles and publications, from the archive (see articles.seed.ts).
 await seedArticles(payload, ctx)
 await seedPress(payload, ctx)
 await seedEvents(payload, ctx)

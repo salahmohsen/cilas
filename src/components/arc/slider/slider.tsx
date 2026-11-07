@@ -49,13 +49,11 @@ export interface SliderProps<T extends SliderValue = number> {
   marks?: (number | SliderMark)[]
   /** The closest two range thumbs may sit, in steps. */
   minStepsBetweenThumbs?: number
-  /** Formats the readout, the bubble, and the spoken value. */
   format?: (value: number) => string
   /** Show the value beside the label. The bubble over the thumb still appears while dragging or focused. */
   showValue?: boolean
   /** Accessible names for the two range thumbs. */
   thumbLabels?: [string, string]
-  /** Content beside the track, such as an icon or a mute button. */
   start?: ReactNode
   end?: ReactNode
   /** Submits the value with a form, one hidden input per thumb. */

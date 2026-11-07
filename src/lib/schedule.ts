@@ -33,7 +33,6 @@ export type Meeting = {
   cancelled?: boolean
 }
 
-/** The parts of a course session that affect its dates. */
 export type SessionDates = {
   order?: number | null
   // How many pattern meetings this session takes. Default: slots per week.
@@ -128,7 +127,6 @@ export const expandSchedule = (
   return meetings.sort(byWhen)
 }
 
-/** The last day the course actually meets, or null with no meetings. */
 export const scheduleEndDate = (
   schedule: Schedule | null | undefined,
   sessions?: SessionDates[] | null,

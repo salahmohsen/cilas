@@ -1,5 +1,4 @@
 // @vitest-environment node
-// Boots the real config against DATABASE_URL.
 import { getPayload, type CollectionSlug, type Payload, type Where } from 'payload'
 import { afterAll, beforeAll, describe, expect, it } from 'vitest'
 
@@ -11,8 +10,6 @@ import { RUN, uniq } from './fixtures'
 
 let payload: Payload
 
-// Fixtures use the "/probecontent-" prefix and "Probe Content" names, apart
-// from the other import specs.
 const P = `/probecontent-${RUN}-`
 const L = {
   pair: `${P}book.html#pair`,

@@ -11,10 +11,6 @@ import styles from './space.module.css'
 
 const fade = { duration: motionTokens.duration.instant }
 
-/**
- * The photos picked in a composer, under it: a thumbnail each, with its own
- * remove button.
- */
 export function AttachmentTray({
   files,
   onRemove,

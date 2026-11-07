@@ -1,3 +1,4 @@
+import { localeOf } from '@/i18n/routing'
 import { relId as unwrapId } from '@/lib/relation'
 import type { Payload, Where } from 'payload'
 
@@ -68,7 +69,6 @@ export const moderatorPeople = async (payload: Payload, space: Space): Promise<S
   return new Set()
 }
 
-/** One row of My spaces (spec §2): a link, an unread count, a last activity. */
 export type SpaceSummary = {
   space: Space
   /** community: the fixed label; course: the course title; cohort: the programme title */
@@ -93,7 +93,6 @@ export const coverOf = (label: { cover_image?: unknown; cover?: unknown } | null
     : null
 }
 
-/** My spaces for one signed-in member: the community, their cohorts and courses. */
 export const mySpaces = async (
   payload: Payload,
   user: null | User,
@@ -103,7 +102,7 @@ export const mySpaces = async (
   cohorts: SpaceSummary[]
   courses: SpaceSummary[]
 }> => {
-  const lang = locale === 'ar' ? 'ar' : 'en'
+  const lang = localeOf(locale)
   const settings = await spacesSettings(payload)
   if (mode(settings) === 'off') return { communities: [], cohorts: [], courses: [] }
   const ids = await readableSpaceIds(payload, user, settings)
@@ -277,7 +276,6 @@ type Reactions = { counts: ReactionCounts; mine: ReactionKind[] }
 
 const NO_REACTIONS: Reactions = { counts: {}, mine: [] }
 
-/** Reaction rows grouped by their target, with the viewer's own marked. */
 const tally = <R extends { reaction: string; account?: number | { id: number } | null }>(
   rows: R[],
   targetOf: (row: R) => number | null,
@@ -307,19 +305,14 @@ export type VoteView = {
   multiple: boolean
   anonymous: boolean
   options: { id: string; label: string; count: number; voters: Voter[] }[]
-  /** Distinct accounts with at least one choice */
   voters: number
-  /** The reader's chosen option ids */
   mine: string[]
-  /** When voting closes, if it does */
   closesAt: string | null
-  /** Past its closing time: results only */
   closed: boolean
   /** Some member holds more than one choice, so the vote must keep allowing several */
   severalHeld: boolean
 }
 
-/** The people behind some accounts, keyed by account id, as a voter list shows them. */
 const voterCards = async (
   payload: Payload,
   accounts: (number | null)[],
@@ -418,7 +411,6 @@ const voteViews = async (
   return out
 }
 
-/** The answers to an event: how many gave each, who is going, and the reader's own. */
 export type RsvpView = {
   counts: Record<RsvpStatus, number>
   going: Voter[]
@@ -473,7 +465,6 @@ const rsvpViews = async (
   return out
 }
 
-/** The parts of a course a session card reads: its sessions, their dates, and the text that sets its direction. */
 export type SessionCourse = Pick<
   Course,
   'id' | 'slug' | 'title' | 'subtitle' | 'description' | 'sessions' | 'schedule' | 'session_unit'
@@ -541,7 +532,6 @@ const sessionRead = async (
   return exists ? { state: 'hidden' } : { state: 'gone' }
 }
 
-/** Each post's own session link (the older field), seen through the one course read. */
 const sessionViews = (posts: SpacePost[], read: SessionRead | null): Map<number, SessionView> => {
   const out = new Map<number, SessionView>()
   for (const p of posts) {
@@ -586,23 +576,18 @@ export const sessionCounts = (
   return { named, counts }
 }
 
-/** One row of the space feed (spec §7): the post with its roll-up counts. */
 export type FeedRow = {
   post: SpacePost
   /** null means the post has no author — the intro post reads as CILAS */
   authorName: string | null
-  /** The author's person id, for the photo and the moderator badge */
   authorId: number | null
   commentCount: number
   /** The whole thread, oldest first, so a member replies from the feed itself */
   comments: TopComment[]
-  /** Files on the post itself, not on its comments */
   files: SpaceFileRef[]
   reactions: Reactions
   vote: VoteView | null
-  /** An event post's answers */
   rsvp: RsvpView | null
-  /** The course session the post points at, if any */
   session: SessionView | null
 }
 
@@ -617,7 +602,6 @@ export const spaceFeed = async (
   locale: 'en' | 'ar' = 'en',
 ): Promise<{
   rows: FeedRow[]
-  /** The course its posts' sessions come from; null outside a course space */
   sessions: SessionRead | null
   settings: SpacesSettings
   archived: boolean
@@ -725,7 +709,6 @@ export type PostView = {
   row: FeedRow
   files: SpaceFileRef[]
   comments: TopComment[]
-  /** The course its sessions come from; null outside a course space */
   sessions: SessionRead | null
   /** Deleted with comments: the body is gone, the thread stays (spec §3) */
   deleted: boolean
@@ -806,7 +789,6 @@ export const postThreads = async (
     if (pid == null) continue
     const entry = out.get(pid) ?? { comments: [], count: 0 }
     if (!c.deleted_at) entry.count++
-    // A deleted comment with no live replies leaves no trace in the thread.
     if (c.parent == null) {
       const replies = repliesOf.get(c.id) ?? []
       if (!c.deleted_at || replies.length) entry.comments.push({ ...node(c), replies })
@@ -949,7 +931,7 @@ export const spaceLanding = async (
       user: user ?? undefined,
       depth: 0,
       limit: 1,
-      locale: locale === 'ar' ? 'ar' : 'en',
+      locale: localeOf(locale),
       sort: 'id',
       overrideAccess: false,
       where: {
@@ -967,11 +949,10 @@ export const spaceLanding = async (
     // would fail the published filter and 404 the space.
     const { docs: rels } = await payload.find({
       collection: kind === 'course' ? 'courses' : 'programmes',
-      // One level, so the cover arrives as a file and not as an id.
       depth: 1,
       pagination: false,
       limit: 1,
-      locale: locale === 'ar' ? 'ar' : 'en',
+      locale: localeOf(locale),
       overrideAccess: true,
       where: { slug: { equals: slug }, _status: { equals: 'published' } },
     })
@@ -1000,7 +981,6 @@ export const spaceLanding = async (
   return { space, ...extra }
 }
 
-/** One moderator row of the participation summary (spec §13). */
 export type ParticipationRow = {
   personId: number
   name: string
@@ -1018,7 +998,6 @@ export type Participation = { rows: ParticipationRow[]; weeks: ParticipationWeek
 const WEEKS = 12
 const DAY = 86_400_000
 
-/** The Monday, 00:00 UTC, of the week holding the date. */
 const weekStart = (iso: string | Date): number => {
   const d = new Date(iso)
   const midnight = Date.UTC(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate())
@@ -1072,7 +1051,6 @@ export const participation = async (
       select: { account: true, last_visited_at: true },
       where: { space: { equals: spaceId } },
     }),
-    // Reactions and visits name accounts; the summary names people.
     payload.find({ collection: 'users', depth: 0, pagination: false, overrideAccess: true }),
   ])
 
@@ -1150,7 +1128,6 @@ export const participation = async (
   }
 }
 
-/** The member's own state in one space: the checklist marks, the consent stamp, the digest choice. */
 export type MemberState = {
   steps: {
     saw_privacy: boolean
@@ -1161,7 +1138,6 @@ export type MemberState = {
   } | null
   consented: boolean
   digest: 'daily' | 'weekly' | 'off' | null
-  /** When the member last opened this space, before this visit stamps it; null on a first visit */
   lastVisitedAt: string | null
 }
 
@@ -1348,12 +1324,10 @@ export const spaceEvents = async (
   }
 }
 
-/** A course's place for the space rail: the cycle's place, read through the reader's access. */
 export type CoursePlace = {
   name: string
   address: string | null
   mapUrl: string | null
-  /** The embedded map's address, centred on the place's pin when its Maps link has one. */
   embed: string | null
 }
 
@@ -1429,13 +1403,11 @@ export type RosterMember = {
   personId: number
   name: string
   photo: { url: string; alt: string } | null
-  /** The public profile path, only for a person shown on the site. */
   slug: string | null
   bio: string | null
   links: PersonLink[]
 }
 
-/** Everyone in one space, or null when the space is closed or the reader is not in it. */
 export const spaceRoster = async (
   payload: Payload,
   user: User,

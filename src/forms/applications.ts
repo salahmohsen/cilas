@@ -67,7 +67,6 @@ export const applicationFields: Field[] = [
     admin: { position: 'sidebar', readOnly: true, date: { pickerAppearance: 'dayAndTime' } },
   },
   {
-    // What accepting made or found.
     name: 'result',
     type: 'group',
     access: { create: adminOnlyField, update: adminOnlyField },
@@ -114,7 +113,6 @@ export const rolesAfterAccept = (roles: Role[], kind: TargetKind): Role[] => {
   return student ? roles : [...roles, 'non_degree_seeking']
 }
 
-/** The applicant's name and email, from the form's `name` and `email` fields. */
 export const applicantOf = (
   answers: FormSubmission['submissionData'],
 ): { name: string; email: string } | { error: string } => {
@@ -150,7 +148,6 @@ const accept = async (req: PayloadRequest, id: number): Promise<Accepted | null>
   const kind = submission.target.relationTo
   const targetId = idOf(submission.target.value)!
 
-  // The account: matched by email, never by name.
   const found = await payload.find({
     collection: 'users',
     where: { email: { equals: applicant.email } },
@@ -250,7 +247,6 @@ const accept = async (req: PayloadRequest, id: number): Promise<Accepted | null>
     ...local,
   })
 
-  // All mail is in English.
   const target = await payload.findByID({ collection: kind, id: targetId, locale: 'en', ...local })
   return {
     ...result,

@@ -24,7 +24,6 @@ export const ensureSpaceFor =
       where: { [relation]: { equals: doc.id } },
       overrideAccess: true,
     })
-    // The spaces collection adds the intro post on create (Spaces.ts).
     if (totalDocs === 0)
       await req.payload.create({
         collection: 'spaces',

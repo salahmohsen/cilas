@@ -16,7 +16,6 @@ const NOISE = [
   /\bDynamic server usage\b/i,
 ]
 
-/** Paths bots probe on every site. */
 const BOT_PATHS =
   /\/(wp-(admin|login|content|includes)|xmlrpc\.php|\.env|\.git|phpmyadmin|cgi-bin)\b|\.php\b/i
 

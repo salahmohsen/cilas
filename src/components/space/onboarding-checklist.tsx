@@ -7,17 +7,14 @@ import { useRouter } from 'next/navigation'
 import { Drawer, DrawerContent } from '@/components/arc/drawer/drawer'
 import { OnboardingChecklist as ArcChecklist } from '@/components/arc/onboarding-checklist/onboarding-checklist'
 import { ProfileForm, type ProfileMessages } from '@/components/profile/profile-form'
-import {
-  removeProfilePhotoAction,
-  saveProfileAction,
-} from '@/app/(frontend)/[locale]/profile/actions'
+import { removeProfilePhotoAction, saveProfileAction } from '@/lib/profile-actions'
 import type { ProfileView } from '@/lib/profile'
 import {
   consentAcceptAction,
   preferenceSetAction,
   stepMarkAction,
   type SpacesWriteState,
-} from '@/app/(frontend)/[locale]/spaces/actions'
+} from '@/lib/space-actions'
 
 import { COMPOSE_EVENT } from './composer'
 import { openComments } from './intro-lock'

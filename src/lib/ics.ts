@@ -19,12 +19,10 @@ export type IcsEntry = {
   cancelled?: boolean
 }
 
-/** The UTC instant of a Cairo day and `HH:MM`. */
 export const cairoToUtc = (day: string, time: string): Date => {
   const [y, m, d] = day.split('-').map(Number)
   const [h, min] = time.split(':').map(Number)
   const guess = Date.UTC(y, m - 1, d, h, min)
-  // Cairo's offset at that moment: format the guess in Cairo and compare.
   const parts = new Intl.DateTimeFormat('en-US', {
     timeZone: CAIRO,
     hourCycle: 'h23',
@@ -51,7 +49,6 @@ const stamp = (date: Date) =>
     .replace(/[-:]/g, '')
     .replace(/\.\d{3}/, '')
 
-/** Escapes text for a property value. */
 const text = (value: string) =>
   value.replace(/\\/g, '\\\\').replace(/;/g, '\\;').replace(/,/g, '\\,').replace(/\r?\n/g, '\\n')
 

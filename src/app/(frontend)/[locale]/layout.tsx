@@ -1,3 +1,4 @@
+import { localeOf } from '@/i18n/routing'
 import type { Metadata, Viewport } from 'next'
 import { NextIntlClientProvider } from 'next-intl'
 import { getLocale, getTranslations } from 'next-intl/server'
@@ -60,7 +61,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
   const [t, socials, place, list, nav] = await Promise.all([
     getTranslations('Meta'),
     getSocialLinks(),
-    getCurrentPlace(locale === 'ar' ? 'ar' : 'en'),
+    getCurrentPlace(localeOf(locale)),
     // The footer's signup shows only when there is a list to join.
     getPayload({ config }).then((payload) => newsletterList(payload)),
     getNavigation(),

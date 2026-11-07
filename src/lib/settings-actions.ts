@@ -1,5 +1,6 @@
 'use server'
 
+import { localeOf } from '@/i18n/routing'
 import config from '@payload-config'
 import { getPayload } from 'payload'
 
@@ -57,7 +58,7 @@ export async function savePushSubscriptionAction(
   try {
     await saveSubscription(await getPayload({ config }), user.id, parsed.data, {
       userAgent: (await headers()).get('user-agent'),
-      locale: locale === 'ar' ? 'ar' : 'en',
+      locale: localeOf(locale),
     })
     return { ok: true }
   } catch {

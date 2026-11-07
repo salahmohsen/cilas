@@ -1,7 +1,7 @@
 import type { CSSProperties } from 'react'
 import { getFormatter, getLocale, getTranslations } from 'next-intl/server'
 
-import type { CalendarItem } from '@/api/calendar.api'
+import type { CalendarItem } from '@/lib/calendar'
 import { Card } from '@/components/arc/card/card'
 import { DayCovers } from '@/components/calendar/day-covers'
 import { Link } from '@/i18n/navigation'

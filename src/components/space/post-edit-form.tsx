@@ -7,7 +7,7 @@ import { Check, Paperclip, Save, X } from 'lucide-react'
 
 import { ActionSwap } from '@/components/arc/action-swap/action-swap'
 import { Button } from '@/components/arc/button/button'
-import type { SpacesWriteState } from '@/app/(frontend)/[locale]/spaces/actions'
+import type { SpacesWriteState } from '@/lib/space-actions'
 import type { SpaceFileRef } from '@/lib/spaces-data'
 import { FILE_LIMITS, SPACE_FILE_ACCEPT, UPLOAD_TOTAL_MAX } from '@/lib/space-file-limits'
 import { readDraft, useDraft } from '@/components/use-draft'

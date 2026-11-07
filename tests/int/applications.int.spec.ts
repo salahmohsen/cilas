@@ -1,5 +1,4 @@
 // @vitest-environment node
-// Boots the real config against DATABASE_URL.
 import { createLocalReq, getPayload, type Payload } from 'payload'
 import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest'
 
@@ -63,7 +62,6 @@ const submit = (target: FormSubmission['target'], formId = form.id) =>
     },
   })
 
-/** Calls a decision endpoint as an admin, the way the Accept button does. */
 const decide = async (action: 'accept' | 'reject', id: number, user: User | null = admin) => {
   const endpoint = payload.collections['form-submissions'].config.endpoints
     ? (

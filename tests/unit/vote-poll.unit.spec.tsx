@@ -6,10 +6,10 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import messages from '../../messages/en.json'
 import { VotePoll } from '@/components/space/vote-poll'
 import type { VoteView, Voter } from '@/lib/spaces-data'
-import type { SpacesWriteState } from '@/app/(frontend)/[locale]/spaces/actions'
+import type { SpacesWriteState } from '@/lib/space-actions'
 
 const { save, refresh } = vi.hoisted(() => ({ save: vi.fn(), refresh: vi.fn() }))
-vi.mock('@/app/(frontend)/[locale]/spaces/actions', () => ({ voteSetAction: save }))
+vi.mock('@/lib/space-actions', () => ({ voteSetAction: save }))
 vi.mock('next/navigation', () => ({ useRouter: () => ({ refresh }) }))
 vi.mock('motion/react', async (importOriginal) => ({
   ...(await importOriginal<typeof import('motion/react')>()),

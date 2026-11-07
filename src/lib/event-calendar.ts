@@ -14,7 +14,6 @@ type Words = {
   free: string
 }
 
-/** Where the event is, in one line: the venue and its address, or the online link. */
 export const eventLocation = (event: Event, words: Pick<Words, 'online'>): string => {
   const place = typeof event.place === 'object' ? event.place : null
   const venue = event.external_venue?.name ? event.external_venue : place

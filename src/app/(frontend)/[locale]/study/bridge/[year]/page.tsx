@@ -1,3 +1,5 @@
+import { BRIDGE_PATH } from '@/lib/paths'
+import { localeOf } from '@/i18n/routing'
 import { bridgeSlugOf } from '@/lib/paths'
 import config from '@payload-config'
 import type { Metadata } from 'next'
@@ -13,11 +15,9 @@ type Props = { params: Promise<{ locale: string; year: string }> }
 
 export const revalidate = 3600
 
-const langOf = (locale: string) => (locale === 'ar' ? 'ar' : 'en')
-
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { locale, year: path } = await params
-  const year = await getBridgeYear(await getPayload({ config }), langOf(locale), {
+  const year = await getBridgeYear(await getPayload({ config }), localeOf(locale), {
     slug: bridgeSlugOf(path),
   })
   if (!year) return {}
@@ -26,7 +26,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     title,
     description: year.programme.tagline,
     image: year.cover?.url,
-    path: `/study/bridge/${path}`,
+    path: `${BRIDGE_PATH}/${path}`,
     locale,
   })
   return metadata
@@ -35,7 +35,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 /** A past Bridge year, as a record: `/study/bridge/2024-2025`. The current year lives at /study/bridge. */
 export default async function BridgeYearPage({ params }: Props) {
   const { locale, year: path } = await params
-  const lang = langOf(locale)
+  const lang = localeOf(locale)
   const slug = bridgeSlugOf(path)
   const payload = await getPayload({ config })
   const [year, years] = await Promise.all([
@@ -43,7 +43,7 @@ export default async function BridgeYearPage({ params }: Props) {
     listBridgeYears(payload, lang),
   ])
   if (!year) notFound()
-  if (years[0]?.slug === slug) redirect({ href: '/study/bridge', locale })
+  if (years[0]?.slug === slug) redirect({ href: BRIDGE_PATH, locale })
 
   return <BridgeYearView current={false} locale={locale} year={year} years={years} />
 }

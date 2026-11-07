@@ -10,12 +10,13 @@ import { Check } from 'lucide-react'
 import { AvatarGroup } from '@/components/arc/avatar-group/avatar-group'
 import { Avatar } from '@/components/arc/avatar/avatar'
 import { Dialog, DialogContent } from '@/components/arc/dialog/dialog'
-import { rsvpSetAction } from '@/app/(frontend)/[locale]/spaces/actions'
+import { rsvpSetAction } from '@/lib/space-actions'
 import { RSVP_STATUSES, type RsvpStatus } from '@/lib/space-event'
 import type { RsvpView, Voter } from '@/lib/spaces-data'
 
 import { saveErrorKey } from './composer'
-import { PersonHover, type PersonCard } from './person-hover'
+import { PersonHover } from './person-hover'
+import type { PersonCard } from '@/lib/space-members'
 import styles from './space.module.css'
 
 /** The answers as they read once the member's own answer is replaced (rsvpSet's rule). */

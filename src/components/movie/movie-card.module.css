@@ -107,7 +107,6 @@
   padding: var(--space-1) var(--space-6);
   border-bottom: 1px solid var(--poster-ink);
 }
-/* The grid's last cell: a button in the cells' own type, filling the cell. */
 .detailsCell {
   align-content: stretch;
   padding: 0;
@@ -139,7 +138,6 @@
   outline: 3px solid var(--poster-ink);
   outline-offset: -3px;
 }
-/* The dialog: plain text in the site's tokens, no card. */
 .details {
   display: grid;
   gap: var(--space-6);

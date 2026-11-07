@@ -72,7 +72,6 @@ export function PeopleWheel({
           photoWidth={32}
           radius={280}
           spacing={13}
-          // Few people: no need to show more than there are.
           visibleItems={Math.min(7, Math.max(2, Math.floor(people.length / 2)))}
         />
       </div>

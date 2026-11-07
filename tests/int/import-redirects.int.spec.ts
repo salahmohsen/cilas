@@ -1,5 +1,4 @@
 // @vitest-environment node
-// Boots the real config against DATABASE_URL.
 import { getPayload, type CollectionSlug, type Payload } from 'payload'
 import { afterAll, beforeAll, describe, expect, it } from 'vitest'
 
@@ -10,7 +9,6 @@ import { RUN, uniq } from './fixtures'
 
 let payload: Payload
 
-// Fixtures use the "/proberedirects-" prefix, apart from the other import specs.
 const P = `/proberedirects-${RUN}-`
 const L = { course: `${P}course.html`, cycle: `${P}cycle.html`, info: `${P}about.html` }
 const UPLOAD_DIR = `uploads/proberedirects-${RUN}`

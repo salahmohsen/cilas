@@ -17,7 +17,6 @@ export const withFellowRole = (roles: Role[], fellow: boolean): Role[] => {
   return rest.length > 0 ? rest : ['member']
 }
 
-/** `fellows` arrives as ids, or as populated people when depth > 0. */
 export const toPersonIds = (fellows: Array<number | { id: number }> | null | undefined): number[] =>
   (fellows ?? [])
     .map((fellow) => relId(fellow))
@@ -34,7 +33,6 @@ export const accountOf = async (payload: Payload, person: number): Promise<User 
   return (res.docs[0] as User | undefined) ?? null
 }
 
-/** Whether a person is listed on any course other than `exceptCourseId`. */
 export const teaches = async (
   payload: Payload,
   person: number,

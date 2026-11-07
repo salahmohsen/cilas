@@ -7,7 +7,6 @@ export const programmesData: ProgrammeSeed[] = [
   {
     kind: 'bridge',
     title: 'Bridge Programme 2025–2026',
-    // The two semester cycles; the academic year comes from them.
     cycles: ['fall-2025', 'spring-2026'],
     components: [
       { label: 'Core courses, fall semester', cycle: 'fall-2025', course_types: ['CORE'] },

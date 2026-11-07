@@ -1,5 +1,6 @@
 'use client'
 
+import { BRIDGE_PATH } from '@/lib/paths'
 import { useLocale, useTranslations } from 'next-intl'
 import { Heart } from 'lucide-react'
 import Image from 'next/image'
@@ -64,7 +65,7 @@ export function SiteFooter({
               ? [{ label: header('study.short'), href: href('/study?type=short') }]
               : []),
             ...(nav.bridge
-              ? [{ label: header('study.featureTitle'), href: href('/study/bridge') }]
+              ? [{ label: header('study.featureTitle'), href: href(BRIDGE_PATH) }]
               : []),
           ],
         },

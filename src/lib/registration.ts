@@ -28,16 +28,10 @@ export const registrationStatus = (
 
   const deadline = cairoDay(own?.deadline ?? parent?.deadline ?? '')
   const today = cairoDay(now)
-  // An unset or invalid deadline never closes registration.
   if (!deadline || !today) return 'open'
   return today <= deadline ? 'open' : 'closed'
 }
 
-/**
- * What a submission applies to, with its cycle (a course without its own
- * registration uses its cycle's) and whether it is open for applications now.
- * Null when the target does not exist.
- */
 export const loadApplicationTarget = async (
   payload: Payload,
   relationTo: 'programmes' | 'courses',

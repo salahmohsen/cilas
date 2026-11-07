@@ -14,7 +14,6 @@ const PUSH_SERVICE_HOSTS = [
   'notify.windows.com',
 ] as const
 
-/** Whether the address is an https address on a known push service. */
 export const isPushServiceEndpoint = (endpoint: string): boolean => {
   try {
     const url = new URL(endpoint)

@@ -22,13 +22,11 @@ import { HTTP_URL, LINKS_MAX, NAME_MAX, PHOTO_MAX_BYTES, PHOTO_TYPES } from '@/l
 
 type SocialLink = { platform: (typeof SOCIAL_PLATFORMS)[number]; url: string }
 
-/** What the profile page shows and edits: the member's own person. */
 export type ProfileView = {
   personId: number
   /** Whether the person is on the public site. Only an admin changes it. */
   visible: boolean
   name: Record<Locale, string>
-  /** The bio as Markdown, per language. */
   bio: Record<Locale, string>
   bioReadOnly?: Record<Locale, boolean>
   website: string
@@ -43,7 +41,6 @@ export type ProfileInput = {
   socialLinks: SocialLink[]
 }
 
-/** A field the page names in its error message, or the account has no person. */
 export type ProfileError = 'name' | 'bio' | 'website' | 'social' | 'name-ar' | 'photo' | 'no-person'
 
 // Same rule as the collection's own URL validator, so Payload never rejects what passes here.
@@ -104,7 +101,6 @@ const toLexical = async (payload: Payload, markdown: string) =>
 const textOf = (value: unknown, locale: Locale): string =>
   value && typeof value === 'object' ? String((value as Record<string, unknown>)[locale] ?? '') : ''
 
-/** The member's own person as the member sees it, with each bio exported to Markdown. */
 const loadOwn = async (payload: Payload, user: User, id: number) => {
   const person = await payload.findByID({
     collection: 'people',
@@ -174,7 +170,6 @@ export const saveProfile = async (
   }
   const { name, bio, website, socialLinks } = parsed.data
 
-  // Check the photo first, so a refused file never costs a write.
   // The size comes from the bytes, not from what the client claims.
   if (photo && (!PHOTO_TYPES.includes(photo.mimetype) || photo.data.length > PHOTO_MAX_BYTES)) {
     return { ok: false, error: 'photo' }

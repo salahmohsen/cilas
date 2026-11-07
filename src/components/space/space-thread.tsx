@@ -21,7 +21,7 @@ import {
   commentRemoveAction,
   reactionToggleAction,
   type SpacesWriteState,
-} from '@/app/(frontend)/[locale]/spaces/actions'
+} from '@/lib/space-actions'
 import type { NoticePart } from '@/lib/space-consent'
 import { REACTION_KINDS, type ReactionKind } from '@/lib/space-reactions'
 import type { ThreadComment, TopComment } from '@/lib/spaces-data'
@@ -31,7 +31,8 @@ import { REACTION_ICON } from './reaction-icons'
 import { LinkedText } from './linked-text'
 import { saveErrorKey } from './composer'
 import { ConsentSheet } from './consent-sheet'
-import { PersonHover, type PersonCard } from './person-hover'
+import { PersonHover } from './person-hover'
+import type { PersonCard } from '@/lib/space-members'
 import { SessionChip, useSessionName, useSessionWhen, type SessionLinks } from './session-chip'
 import styles from './space.module.css'
 

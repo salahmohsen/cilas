@@ -9,7 +9,6 @@
   white-space: nowrap;
   mask-image: linear-gradient(90deg, #000 calc(100% - 0.5em), transparent);
 }
-/* The track sizes to the letters in flow. Leaving letters are taken out of flow and positioned against it. */
 .track {
   position: relative;
   display: inline-block;

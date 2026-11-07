@@ -179,27 +179,8 @@ export function PayloadForm({
       const files = questions.flatMap((q) =>
         isFiles(q) ? goodFiles(value[q.name]).map((i) => [q.name, i.file] as const) : [],
       )
-      const send = (headers: Record<string, string>) => {
-        if (!files.length) {
-          return fetch('/api/form-submissions', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json', ...headers },
-            body: JSON.stringify(sent),
-          })
-        }
-        const body = new FormData()
-        body.set('payload', JSON.stringify(sent))
-        for (const [name, file] of files) body.append(`file:${name}`, file, file.name)
-        return fetch('/api/form-submissions/with-files', { method: 'POST', headers, body })
-      }
-      const res = spam.isBot()
-        ? new Response(null)
-        : await spam
-            .headers()
-            .then(send)
-            .catch(() => null)
-      spam.reset()
-      if (!res?.ok) {
+      const res = await spam.submit(sent, files).catch(() => undefined)
+      if (res === undefined || (res !== null && !res.ok)) {
         setFailed(true)
         return
       }

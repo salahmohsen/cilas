@@ -1,4 +1,3 @@
-/** The space-introduction template as the dashboard stores it, one language at a time. */
 export type IntroText = { title?: string | null; body?: string | null }
 
 /** Used when the dashboard leaves a field empty; the dashboard shows each as the placeholder. */

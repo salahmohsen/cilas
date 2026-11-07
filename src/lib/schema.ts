@@ -1,11 +1,4 @@
 import { hasDayPrecision } from '@/lib/schedule'
-/**
- * Structured data (schema.org JSON-LD) for pages that describe one thing:
- * the institute itself, a person, an article, a course, an event. Each page
- * embeds what it deseribes as a `Schema` script (src/components/schema.tsx),
- * so search engines can show rich results. The data comes from the fields
- * callers already hold — nothing here queries the database.
- */
 
 import { env } from '@/env'
 import { cairoDay, cairoInstant } from '@/lib/cairo-day'
@@ -16,14 +9,11 @@ import type { Article, Course, Event, Person } from '@/payload-types'
 
 const CONTEXT = 'https://schema.org'
 
-/** The header and footer's logo, as the institute's own on every schema. */
 const LOGO = '/assets/images/logo.webp'
 
-/** A relative path on the site as its absolute URL; a full URL passes through. */
 export const absoluteUrl = (path: string): string =>
   new URL(path, env.NEXT_PUBLIC_SERVER_URL).toString()
 
-/** Rich text as one line: description without the line breaks and indents. */
 const plainOf = (data: unknown): string =>
   data
     ? plainText({ data: data as { root: unknown } })
@@ -31,7 +21,6 @@ const plainOf = (data: unknown): string =>
         .trim()
     : ''
 
-/** A person as other data refers to them; a profile page's URL when it has one. */
 const personRef = (person: Person, locale: string) => {
   const page = pathOf('people', person, locale)
   return {
@@ -51,7 +40,6 @@ export const organizationSchema = ({
   description: string
   /** The address the footer shows, when the current place has one. */
   location?: { address: string; mapUrl: string | null }
-  /** The institute's social accounts. */
   sameAs: string[]
 }) => ({
   '@context': CONTEXT,
@@ -73,13 +61,11 @@ export const organizationSchema = ({
     : {}),
 })
 
-/** A stored date or timestamp as an ISO 8601 instant; null when it is no date. */
 const stamp = (value: string | null | undefined): string | undefined => {
   const date = value ? new Date(value) : null
   return date && !Number.isNaN(date.getTime()) ? date.toISOString() : undefined
 }
 
-/** The site itself, for the sticky site name in search results. */
 export const websiteSchema = ({ siteName, locale }: { siteName: string; locale: string }) => ({
   '@context': CONTEXT,
   '@type': 'WebSite',
@@ -88,7 +74,6 @@ export const websiteSchema = ({ siteName, locale }: { siteName: string; locale: 
   inLanguage: locale,
 })
 
-/** Where the page sits in the site: home, the section that lists it, it. */
 export const breadcrumbSchema = (crumbs: { name: string; path?: string | null }[]) => ({
   '@context': CONTEXT,
   '@type': 'BreadcrumbList',
@@ -100,7 +85,6 @@ export const breadcrumbSchema = (crumbs: { name: string; path?: string | null }[
   })),
 })
 
-/** A page that links out to items (the course list): each entry, in its order. */
 export const itemListSchema = (urls: string[]) =>
   urls.length < 3
     ? null // A carousel needs at least three courses to list.
@@ -110,10 +94,6 @@ export const itemListSchema = (urls: string[]) =>
         itemListElement: urls.map((url, i) => ({ '@type': 'ListItem', position: i + 1, url })),
       }
 
-/**
- * An article as its reading page shows it: its writers and cover, and the
- * date it was published (the editor's date, else the day Payload created it).
- */
 export const articleSchema = ({
   article,
   locale,
@@ -154,7 +134,6 @@ export const articleSchema = ({
   }
 }
 
-/** A person's profile page: the Person is what the page is about. */
 export const personSchema = ({ person, locale }: { person: Person; locale: string }) => {
   const bio = plainOf(person.bio)
   const photoUrl = typeof person.photo === 'object' && person.photo?.url ? person.photo.url : null
@@ -230,7 +209,6 @@ export const eventSchema = ({
       : null)
   if (!times?.startDate || !times.endDate) return null
 
-  // The price when it is set (0 is free), and the form to register elsewhere.
   const price = typeof event.pricing?.min === 'number' ? event.pricing.min : null
 
   const speakers = (event.speakers ?? [])

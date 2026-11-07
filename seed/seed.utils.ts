@@ -34,8 +34,6 @@ export const CONTENT_COLLECTIONS: CollectionSlug[] = [
   'people',
 ]
 
-/* ================================================================= lexical */
-
 const paragraph = (text: string, direction: 'ltr' | 'rtl'): LexicalChild => ({
   type: 'paragraph',
   format: '',
@@ -47,11 +45,6 @@ const paragraph = (text: string, direction: 'ltr' | 'rtl'): LexicalChild => ({
   children: [{ type: 'text', detail: 0, format: 0, mode: 'normal', style: '', text, version: 1 }],
 })
 
-/**
- * Lexical document. A string becomes a single paragraph; an array becomes one
- * paragraph per entry, which is what long-form article bodies need. Pass
- * `'rtl'` for Arabic so Lexical stores the correct text direction.
- */
 export const lexical = (
   content: string | string[],
   direction: 'ltr' | 'rtl' = 'ltr',
@@ -69,8 +62,6 @@ export const lexical = (
     },
   }
 }
-
-/* =============================================================== materials */
 
 export const material = (
   type: MaterialType,
@@ -94,7 +85,6 @@ export const prompt = (title: string, note?: string, href?: string): MaterialSee
 export const link = (title: string, href: string, note?: string): MaterialSeed =>
   material('other', title, note, href)
 
-/* ================================================================ courses */
 /**
  * A course that meets once a week from `firstDate`, one session per week. The
  * schedule is the pattern; dates come from `expandSchedule()` (ADR 0002).
@@ -113,22 +103,13 @@ export const weekly = (
   sessions,
 })
 
-/** A one-off gathering on `date`, as a one-week schedule with one slot. */
 export const once = (date: string, start: string, end: string): ScheduleSeed => ({
   start_date: date,
   weeks: 1,
   slots: [{ weekday: weekdayOf(date), start_time: start, end_time: end }],
 })
 
-/* ================================================== bibliography (shared) */
-
-/**
- * Course- or session-level bibliography entry, mirroring the schema's
- * reading/watch/listen/prompt/other select.
- */
 export const bib = ({ type, title, note, href }: MaterialSeed) => ({ type, title, note, href })
-
-/* ================================================================== upsert */
 
 export const findId = async (
   payload: Payload,
@@ -178,8 +159,6 @@ export const getOrCreateUser = async (payload: Payload, user: UserSeed): Promise
   )
 }
 
-/* ================================================================= context */
-
 export const requireId = (map: IdMap, key: string): number => {
   const id = map[key]
   if (id === undefined) {
@@ -190,8 +169,6 @@ export const requireId = (map: IdMap, key: string): number => {
 
 export const requireIds = (map: IdMap, keys: string[]): number[] =>
   keys.map((key) => requireId(map, key))
-
-/* ================================================================== reset */
 
 /**
  * The reset is a development convenience: it wipes every content collection.

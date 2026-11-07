@@ -1,5 +1,3 @@
-/** An event cover's colours: the field its details sit on is made from the photo's own colour. */
-
 const HEX = /^#([0-9a-f]{6})$/i
 
 const linear = (channel: number) => {
@@ -37,11 +35,6 @@ const FIELD_C = 0.09
 
 const round = (n: number, places = 3) => Number(n.toFixed(places))
 
-/**
- * The colour of the field under a cover, as CSS: the photo's tone kept in
- * hue, darkened into the readable band and calmed in chroma. A missing or
- * broken tone gives a neutral dark field.
- */
 export const coverField = (tone: string | null | undefined): string => {
   const lch = tone ? hexToOklch(tone) : null
   if (!lch) return 'oklch(0.3 0 0)'

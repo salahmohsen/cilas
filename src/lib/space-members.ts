@@ -10,6 +10,19 @@ import { fellowPersonIds, type CommunityAudience, type SpaceKind } from '@/lib/s
 /** Where to find a person: their website first, then each social profile. */
 export type PersonLink = { kind: 'website' | (typeof SOCIAL_PLATFORMS)[number]; url: string }
 
+/** One person as every space surface shows them: the same card wherever their name or face appears. */
+export type PersonCard = {
+  id: number
+  name: string
+  photo: string | null
+  /** Already translated, such as "Fellow" or "Member". */
+  role: string
+  bio: string | null
+  links: PersonLink[]
+  /** The public profile, when the person is shown on the site. */
+  href: string | null
+}
+
 export type SpacePersonRow = {
   accountId: number | null
   id: number

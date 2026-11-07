@@ -4,6 +4,7 @@ import { getPayload, type Payload, type PayloadRequest } from 'payload'
 import { SignJWT, decodeJwt, decodeProtectedHeader } from 'jose'
 import { Client } from 'typesense'
 import { spawnSync } from 'node:child_process'
+import { readFile } from 'node:fs/promises'
 import config from '@/payload.config'
 import type { Space, SpacePost, User } from '@/payload-types'
 import { CursorReset, inputSchema, numericId, projection } from '@/lib/private-search/model'
@@ -290,10 +291,7 @@ describe.skipIf(!disposable)('private search with real Postgres and Typesense 30
     )
   })
   it('exposes an authorized thumbnail through the existing private file route only', async () => {
-    const data = Buffer.from(
-      'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+jWZkAAAAASUVORK5CYII=',
-      'base64',
-    )
+    const data = await readFile(new URL('../fixtures/pixel.png', import.meta.url))
     const file = await payload.create({
       collection: 'space-files',
       overrideAccess: true,

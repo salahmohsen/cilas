@@ -1,14 +1,8 @@
-/** Pure sums behind the dashboard's storage widget. */
-
 type SizedDoc = {
   filesize?: number | null
   sizes?: Record<string, { filesize?: number | null } | null | undefined> | null
 }
 
-/**
- * Bytes one upload doc keeps in the bucket: the file itself plus every image
- * size variant (each variant is its own object). Nulls count as zero.
- */
 export const docBytes = (doc: SizedDoc): number => {
   let bytes = doc.filesize ?? 0
   for (const variant of Object.values(doc.sizes ?? {})) bytes += variant?.filesize ?? 0
@@ -25,7 +19,6 @@ export const BUCKET_PREFIXES = {
   spaces: 'spaces',
 } as const
 
-/** Bytes per top-level key prefix of a bucket listing; keys with no `/` go to `''`. */
 export const sumByPrefix = (
   objects: readonly { Key?: string; Size?: number }[],
 ): Record<string, number> => {

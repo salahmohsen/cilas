@@ -1,5 +1,4 @@
 // @vitest-environment node
-// Server-side: touches the database.
 import { getPayload } from 'payload'
 import type { Payload } from 'payload'
 import { afterAll, beforeAll, describe, expect, it } from 'vitest'

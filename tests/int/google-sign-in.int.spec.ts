@@ -1,5 +1,4 @@
 // @vitest-environment node
-// Boots the real config against DATABASE_URL.
 import { SignJWT } from 'jose'
 import { getFieldsToSign, getPayload, type Payload } from 'payload'
 import { addPayloadSessionToUser } from 'payload-oauth2/dist/auth-sessions'

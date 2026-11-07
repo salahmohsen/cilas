@@ -5,7 +5,7 @@ import { useTranslations } from 'next-intl'
 import { useRouter } from 'next/navigation'
 import { Reactions, type Reaction } from '@/components/arc/reactions/reactions'
 import { REACTION_ICON } from './reaction-icons'
-import { reactionToggleAction } from '@/app/(frontend)/[locale]/spaces/actions'
+import { reactionToggleAction } from '@/lib/space-actions'
 import {
   REACTION_KINDS,
   isReactionKind,

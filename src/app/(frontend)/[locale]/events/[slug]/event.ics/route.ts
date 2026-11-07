@@ -1,3 +1,4 @@
+import { localeOf } from '@/i18n/routing'
 import { detailPath } from '@/lib/paths'
 import config from '@payload-config'
 import { getTranslations } from 'next-intl/server'
@@ -17,7 +18,7 @@ export async function GET(
   { params }: { params: Promise<{ locale: string; slug: string }> },
 ) {
   const { locale, slug } = await params
-  const lang = locale === 'ar' ? 'ar' : 'en'
+  const lang = localeOf(locale)
   const payload = await getPayload({ config })
   const event = await getPublicEvent(payload, lang, slug)
   if (!event) return new Response('Not found', { status: 404 })

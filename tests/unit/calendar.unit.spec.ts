@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 
-import type { CalendarItem } from '@/api/calendar.api'
+import type { CalendarItem } from '@/lib/calendar'
 import {
   monthGrid,
   readCalendarParams,

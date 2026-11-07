@@ -54,11 +54,6 @@ export const aiLink = (id: ProviderId, prompts: string[]): string => {
   return links.find((l) => l.length <= provider.maxUrl) ?? links[links.length - 1]
 }
 
-/**
- * Fills `{name}` slots in a raw message (read with `t.raw`, so the prompt's
- * own braces and quotes need no ICU escaping). A line that is only an empty
- * slot goes.
- */
 export const fillPrompt = (template: string, values: Record<string, string>): string =>
   template
     .split('\n')
@@ -68,7 +63,6 @@ export const fillPrompt = (template: string, values: Record<string, string>): st
 
 const trim = (url: string): string => url.replace(/\/+$/, '')
 
-/** The page's llms.txt twin and the site's own, from the configured origin. */
 export const studyFiles = (origin: string, path: string) => ({
   pageUrl: `${trim(origin)}${path}`,
   pageFile: `${trim(origin)}${trim(path)}/llms.txt`,

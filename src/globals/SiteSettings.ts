@@ -4,7 +4,6 @@ import { NAV_ITEMS } from '@/lib/navigation'
 import { isAdmin } from '@/access'
 import { SOCIAL_PLATFORMS } from '@/fields/social'
 
-// Site-wide config with no collection home: contact, social links, the home page's questions.
 export const SiteSettings: GlobalConfig = {
   slug: 'site-settings',
   access: { read: isAdmin, update: isAdmin },
@@ -50,7 +49,6 @@ export const SiteSettings: GlobalConfig = {
           label: 'Navigation',
           fields: [
             {
-              // What the header and footer menus show (src/lib/navigation.ts).
               name: 'navigation',
               type: 'group',
               admin: {
@@ -86,7 +84,6 @@ export const SiteSettings: GlobalConfig = {
               ],
             },
             {
-              // The home page's "Questions people ask"; each language its own.
               name: 'faq',
               label: 'FAQ',
               type: 'array',

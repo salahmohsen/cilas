@@ -3,10 +3,7 @@
 import { useEffect, useState } from 'react'
 import { useLocale, useTranslations } from 'next-intl'
 
-import {
-  removePushSubscriptionAction,
-  savePushSubscriptionAction,
-} from '@/app/(frontend)/[locale]/settings/actions'
+import { removePushSubscriptionAction, savePushSubscriptionAction } from '@/lib/settings-actions'
 import { Button } from '@/components/arc/button/button'
 import { track } from '@/lib/analytics/track'
 import {

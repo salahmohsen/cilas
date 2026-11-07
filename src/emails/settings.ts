@@ -47,14 +47,12 @@ type Texts = {
 export type SocialLink = { platform: string; url: string; icon: string }
 
 export type EmailSettings = {
-  /** The site's origin, for links and the images in public/assets/email. */
   site: string
   logo: { url: string; alt: string }
   accent: string
   fromName: string
   replyTo: string | null
   tagline: string
-  /** The last line of a newsletter, above the footer. */
   signoff: string
   footer: string
   /** The chosen place's address and map link (Email settings → Address). */
@@ -64,7 +62,6 @@ export type EmailSettings = {
   texts: Texts
 }
 
-/** The global as stored: any field may be empty. */
 export type StoredEmailSettings = {
   logo?: unknown
   accent?: string | null

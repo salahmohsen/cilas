@@ -1,5 +1,5 @@
 import type { SOCIAL_PLATFORMS } from '@/fields/social'
-import type { Article, Course, Event, Publication, Place, User } from '@/payload-types'
+import type { Course, Event, Place, User } from '@/payload-types'
 import type { CourseType } from '@/fields/course-type'
 
 /**
@@ -20,15 +20,8 @@ export type LexicalJSON = {
   [k: string]: unknown
 }
 
-/** Strip server-managed fields so a seed reads as a plain writable document. */
 export type Draft<T> = Omit<T, 'id' | 'updatedAt' | 'createdAt'>
 
-/* ================================================================== users */
-
-/**
- * One fixture person. Every fixture person also gets a login account, keyed by
- * `email`, so local development can sign in as anyone.
- */
 export type UserSeed = {
   email: string
   name: string
@@ -167,19 +160,15 @@ export type PlaceSeed = Omit<Draft<Place>, 'description' | 'slug'> & {
 
 /* =============================================================== context */
 
-/** Resolved ids, keyed by a stable natural key (email, title, label). */
 export type IdMap = Record<string, number>
 
 export type SeedContext = {
   users: IdMap
-  /** Fixture emails, resolved to person ids. */
   people: IdMap
   cycles: IdMap
   courses: IdMap
   programmes: IdMap
-  /** Publication titles, resolved to ids. */
   publications: IdMap
-  /** Place names, resolved to ids. */
   places: IdMap
 }
 

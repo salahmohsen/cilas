@@ -62,7 +62,6 @@ export const detailPath = (
   child?: string,
 ): string => `${locale ? `/${locale}` : ''}${pagePath(collection, slug)}${child ? `/${child}` : ''}`
 
-/** The paths, per language, and the tag a change to `collection` drops from the cache. */
 export const revalidationOf = (
   collection: string,
   locales: readonly string[],
@@ -81,11 +80,12 @@ export const revalidationOf = (
   return { paths: [...paths], tag: Boolean(route?.tag) }
 }
 
-export const BRIDGE_APPLY_PATH = '/study/bridge/apply'
+export const BRIDGE_PATH = '/study/bridge'
+export const BRIDGE_APPLY_PATH = `${BRIDGE_PATH}/apply`
 
 /** A Bridge year's page: `/study/bridge/2024-2025` for `bridge-programme-2024-2025`. */
 export const bridgeYearPath = (slug: string) =>
-  `/study/bridge/${slug.replace(/^bridge-programme-/, '')}`
+  `${BRIDGE_PATH}/${slug.replace(/^bridge-programme-/, '')}`
 /** The programme slug a year's page names. */
 export const bridgeSlugOf = (year: string) => `bridge-programme-${year}`
 

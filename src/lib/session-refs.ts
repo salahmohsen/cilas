@@ -14,8 +14,8 @@ const ID = '[A-Za-z0-9_-]{1,64}'
 /** At most this many of each in one body; the server turns the rest into plain text. */
 export const SESSION_REF_MAX = { mentions: 10, blocks: 3 } as const
 
+// Arc's rich-text editor recognizes this scheme independently so it stays reusable.
 export const SESSION_HREF = 'session:'
-export const SESSION_BLOCK_HREF = 'session-block:'
 
 const mentionPattern = () => new RegExp(`\\[([^\\]\\n]*)\\]\\(${SESSION_HREF}(${ID})\\)`, 'g')
 const blockPattern = () => new RegExp(`::session\\[(${ID})\\]`, 'g')

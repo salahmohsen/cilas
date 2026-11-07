@@ -10,7 +10,6 @@ import { NOTIFICATION_KINDS, type NotificationKind } from '@/lib/notification-ki
  */
 export type NotificationActor = { id: number; name?: string; photo?: string }
 
-/** Reads one person once for the avatar snapshot. A failed read leaves the id only. */
 export const actorOf = async (
   payload: Payload,
   person: number | null | undefined,

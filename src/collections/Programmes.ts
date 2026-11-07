@@ -32,7 +32,6 @@ export const Programmes: CollectionConfig = {
     // Through /api/preview, as courses and articles: it checks the editor,
     // turns on draft mode and opens the programme's page with this draft.
     livePreview: {
-      // The page in the editor's language, so what shows is what the fields hold.
       url: previewUrl('programmes'),
     },
   },

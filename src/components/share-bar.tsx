@@ -33,7 +33,6 @@ export function ShareBar({
   file,
   email,
 }: {
-  /** The page's path, `/en/study/…`: the address is made from wherever the site is served. */
   path: string
   title: string
   /** The group's accessible name, such as "Share this course". */

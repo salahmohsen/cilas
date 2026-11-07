@@ -3,7 +3,6 @@ import type { Payload, Where } from 'payload'
 
 import type { Contact } from '@/lib/resend-contacts'
 
-/** Who a synced mailing list holds: every account that matches any line. */
 export type MembersRule = {
   everyone?: boolean | null
   roles?: string[] | null
@@ -21,7 +20,6 @@ const ids = (values: Array<number | { id: number }> | null | undefined) =>
 
 const personId = (p: unknown) => relId(p) as number | null
 
-/** The people a rule reaches through courses and programmes. */
 const peopleOf = async (payload: Payload, rule: MembersRule): Promise<number[]> => {
   const people = new Set<number>()
   const courses = ids(rule.courses)
@@ -94,7 +92,6 @@ export const memberEmails = async (payload: Payload, rule: MembersRule): Promise
   ].sort()
 }
 
-/** What a sync changes: who joins the segment and who leaves it. */
 export const segmentDiff = (wanted: string[], current: Pick<Contact, 'email'>[]) => {
   const want = new Set(wanted.map((e) => e.toLowerCase()))
   const have = new Set(current.map((c) => c.email.toLowerCase()))

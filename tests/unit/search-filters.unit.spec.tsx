@@ -125,7 +125,7 @@ describe('shared search filters', () => {
     async (privateScope) => {
       const { container } = render(<Harness privateScope={privateScope} />)
       expect(container.querySelector('select')).toBeNull()
-      const lane = within(container.querySelector('aside')!)
+      const lane = within(screen.getByRole('complementary'))
       const first = lane.getByRole('checkbox', { name: choices[0].label })
       const second = lane.getByRole('checkbox', { name: choices[1].label })
       expect(first).toBeChecked()
@@ -153,8 +153,8 @@ describe('shared search filters', () => {
   )
 
   it('disables checked zero-match spaces but keeps unchecked zero-match spaces enabled', async () => {
-    const { container } = render(<Harness />)
-    const lane = within(container.querySelector('aside')!)
+    render(<Harness />)
+    const lane = within(screen.getByRole('complementary'))
     const second = lane.getByRole('checkbox', { name: choices[1].label })
     fireEvent.click(second)
     vi.mocked(fetch).mockResolvedValue(
@@ -183,9 +183,9 @@ describe('shared search filters', () => {
     vi.mocked(fetch).mockResolvedValue(
       response({ ...page, aggregates: null, incomplete: true } as never),
     )
-    const { container } = render(<Harness />)
+    render(<Harness />)
     await settle()
-    const lane = within(container.querySelector('aside')!)
+    const lane = within(screen.getByRole('complementary'))
     expect(lane.getByRole('checkbox', { name: choices[1].label })).toBeEnabled()
     expect(lane.queryByText('0')).toBeNull()
     expect(screen.getAllByText('privateIncomplete').length).toBeGreaterThan(0)
@@ -252,7 +252,7 @@ describe('shared search filters', () => {
     expect(image).toHaveAttribute('src', '/api/space-files/file/safe.png')
     fireEvent.error(image)
     expect(container.querySelector('img')).toBeNull()
-    expect(container.querySelector('.lucide-file-text')).not.toBeNull()
+    expect(screen.getByRole('button', { name: /Current result/ })).toBeVisible()
   })
 
   it('shows the authoritative total in the shared animated header and shown-of-total footer', async () => {

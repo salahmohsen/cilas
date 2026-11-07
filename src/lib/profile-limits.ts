@@ -4,7 +4,6 @@
  * form runs in the browser.
  */
 
-/** A web address starting with http:// or https://. */
 export const HTTP_URL = /^https?:\/\/\S+$/i
 export const NAME_MAX = 120
 export const LINKS_MAX = 8

@@ -32,7 +32,6 @@ export const People: CollectionConfig = {
     },
     delete: isAdmin,
   },
-  // Its names show in the cached study list; its pages are built ahead.
   hooks: {
     afterChange: [revalidateAfterChange('people')],
     afterDelete: [revalidateAfterDelete('people')],

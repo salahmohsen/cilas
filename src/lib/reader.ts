@@ -2,7 +2,9 @@ import config from '@payload-config'
 import { headers } from 'next/headers'
 import { getPayload } from 'payload'
 
-import type { Reader } from '@/api/articles.api'
+import type { User } from '@/payload-types'
+
+export type Reader = User | null
 
 /**
  * The account signed in on this request, or null. Reads Payload's cookie, so

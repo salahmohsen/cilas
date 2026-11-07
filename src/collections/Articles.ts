@@ -57,8 +57,6 @@ export const Articles: CollectionConfig = {
     update: adminPublishes(isAdminOrOwn(ownsViaAuthors, { while: OWNER_EDITS })),
     delete: isAdminOrOwn(ownsViaAuthors, { draft: true, while: WITH_OWNER }),
   },
-  // Autosave feeds the live preview as the editor writes.
-  // Save draft shows beside autosave, so an author always has a button to press.
   versions: { drafts: { autosave: { interval: 2000, showSaveDraftButton: true } } },
   admin: {
     useAsTitle: 'title',
@@ -68,7 +66,6 @@ export const Articles: CollectionConfig = {
     // Through /api/preview, which checks the editor and turns on draft mode,
     // as courses do.
     livePreview: {
-      // The page in the editor's language, so what shows is what the fields hold.
       url: previewUrl('articles'),
     },
   },

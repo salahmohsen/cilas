@@ -7,29 +7,10 @@ import { unstable_cache } from 'next/cache'
 import { getPayload, type Payload, type Where } from 'payload'
 
 import { cairoDay } from '@/lib/cairo-day'
-import type { FocalPoint } from '@/lib/media-image'
+import type { CalendarItem } from '@/lib/calendar'
 import { PUBLIC_LISTS_TAG } from '@/lib/paths'
 import { expandSchedule, type Schedule, type SessionDates } from '@/lib/schedule'
 import type { Media } from '@/payload-types'
-
-/** One thing on the calendar: a course meeting, a course's first day, or an event. */
-export type CalendarItem = {
-  key: string
-  kind: 'course' | 'event'
-  /** A course with no weekly times is placed on its first day only. */
-  starts?: boolean
-  title: string
-  href: string | null
-  date: string
-  start?: string
-  end?: string
-  /** "Session 3", for a course meeting. */
-  session?: number
-  /** Course type (`thematic`…) or event type, for its label. */
-  type: string
-  cover?: { url: string; alt: string } & FocalPoint
-  cancelled?: boolean
-}
 
 const visible: Where = {
   and: [{ tier: { equals: 'public' } }, { _status: { equals: 'published' } }],

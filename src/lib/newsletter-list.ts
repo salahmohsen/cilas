@@ -10,7 +10,6 @@ export type ListTarget = {
   source: 'signup' | 'members'
   segmentId: string
   topicId: string | null
-  /** Who a synced list holds. */
   members: MembersRule | null
 }
 
@@ -56,7 +55,6 @@ export const newsletterList = async (
   return list ? targetOf(list) : null
 }
 
-/** A Mailing list by id, ready to send to; null when it is missing or has no segment. */
 export const mailingList = async (
   payload: Payload,
   id: number,

@@ -113,7 +113,6 @@ export function CommandPalette({
     return () => document.removeEventListener('keydown', focusShortcut)
   }, [])
 
-  // The results frame follows the list height, so filtering closes or opens the gap instead of snapping.
   useLayoutEffect(() => {
     const list = listRef.current
     if (!list) return
@@ -124,7 +123,6 @@ export function CommandPalette({
     return () => observer.disconnect()
   }, [])
 
-  // One highlight follows the active result: a spring for the pointer, a 70ms slide for arrow keys, a fade when it first appears.
   useLayoutEffect(() => {
     const node = activeId ? document.getElementById(`${inputId}-${activeId}`) : null
     if (!node) {

@@ -16,7 +16,6 @@ import styles from './space.module.css'
 
 const WEEK = 7 * 86_400_000
 
-/** At most this many cards; older pinned posts fall into the feed by their activity. */
 export const PINNED_CARDS = 6
 
 /**
@@ -66,7 +65,6 @@ const cardParts = (row: FeedRowData, link: LinkPreview | null) => {
   }
 }
 
-/** Each kind's label and icon, as the composer names them. */
 const KIND = {
   announcement: { label: 'kind_announcement', icon: Megaphone },
   event: { label: 'kind_event', icon: CalendarDays },
@@ -74,7 +72,6 @@ const KIND = {
   discussion: { label: 'kind_discussion', icon: MessageSquare },
 } as const
 
-/** A vote's first options as shares of every choice, for the card's preview. */
 const VOTE_ROWS = 3
 
 /**
@@ -97,7 +94,6 @@ export async function PinnedCards({
   context: FeedContext
   path: string
   lastVisit: string | null
-  /** Where every announcement is listed, when some did not fit in the row */
   seeAll: string | null
 }) {
   const [t, tp, format, now] = await Promise.all([
@@ -107,7 +103,6 @@ export async function PinnedCards({
     getNow(),
   ])
   const me = context.viewer.personId
-  // An event or a vote has its own box; another post's first link may give it one.
   const linked = rows.map((r) =>
     r.post.kind === 'event' || r.post.kind === 'vote'
       ? null

@@ -14,7 +14,6 @@ const root = new URL('../', import.meta.url)
 const source = readFileSync(new URL('src/components/arc/foundation.css', root), 'utf8')
 const target = fileURLToPath(new URL('src/components/admin/dashboard/arc-scope.css', root))
 
-/** Top-level rules as { prelude, body }, comments removed. */
 export const topLevelRules = (css) => {
   const text = css.replace(/\/\*[\s\S]*?\*\//g, '')
   const rules = []

@@ -9,8 +9,6 @@
 /* Cards in a profile carousel share the tallest card's height. Elsewhere a
    card is as tall as its content: a percentage height there would take the
    whole text column's height. */
-/* The card measures its frame: wide enough, it sets the photo and name in
-   one column and the bio and links beside them. */
 .frame {
   container: profile-card / inline-size;
   min-width: 0;
@@ -30,7 +28,6 @@
   display: block;
   width: 100%;
   height: 100%;
-  /* The whole avatar, never cropped. */
   object-fit: contain;
   transition: transform var(--duration-considered) var(--ease-standard);
 }
@@ -108,8 +105,6 @@
   position: relative;
   z-index: 2;
 }
-/* The name box is one link; its arrow shows on hover and keyboard focus,
-   sliding in from the start side, and flips in RTL. */
 .nameLink {
   display: flex;
   align-items: center;
@@ -165,10 +160,8 @@
     min-height: 14rem;
     aspect-ratio: auto;
     border-inline-end: 1px solid var(--poster-ink);
-    /* The photo hangs from the top of its cell, with a rule under it, instead of floating in the middle. */
     display: block;
     border-bottom: 0;
-    /* Where the photo is shorter than its cell, thin 45-degree lines in the card's ink fill the rest. */
     background:
       repeating-linear-gradient(
         45deg,
@@ -200,7 +193,6 @@
     grid-area: links;
     margin-top: 0;
   }
-  /* The name sits in the middle of its box; a spacer the arrow's size keeps it there. */
   .nameLink {
     justify-content: center;
   }

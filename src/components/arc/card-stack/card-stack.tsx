@@ -47,16 +47,12 @@ type Point = { x: number; y: number }
 type Exit = Point & { tilt: number }
 type Return = Exit & { delay: number }
 
-/** Cards rendered in the stack. The last one waits invisibly one step behind and fades in as it rises. */
 const VISIBLE = 4
-/** How far each card behind peeks out below the one in front, and how much smaller it is. */
 const PEEK = 12
 const SHRINK = 0.05
 /** How far the cards behind rise while the top card is dragged away, in stack steps. */
 const LIFT = 0.4
-/** Drag distance at which the cards behind have fully risen. */
 const LIFT_DISTANCE = 160
-/** Degrees of rotation per pixel of horizontal travel. */
 const ROTATE = 0.065
 /** A release faster than this (px/s) throws the card even when it has only moved a little. */
 const FLICK = 500
@@ -129,7 +125,6 @@ function StackCard({
   children,
 }: CardProps) {
   const cardRef = useRef<HTMLDivElement>(null)
-  // A card brought back by undo starts where it left the screen; with reduced motion it simply fades in at home.
   const travel = returnFrom && !reduced ? returnFrom : undefined
   const x = useMotionValue(travel?.x ?? 0)
   const y = useMotionValue(travel?.y ?? 0)
@@ -139,7 +134,6 @@ function StackCard({
     [x, tilt],
     ([offset = 0, sign = 0]: number[]) => offset * ROTATE * sign,
   )
-  // Depth springs toward its slot; while the top card is dragged away, the cards behind already start to rise.
   const depthTarget = useTransform(lift, (value) => depth - (depth > 0 ? value * LIFT : 0))
   const depthSpring = useSpring(depthTarget, motionTokens.spring.smooth)
   const shown = reduced ? depthTarget : depthSpring
@@ -160,7 +154,6 @@ function StackCard({
   // pausing half-risen until it lands. Grabbing it mid-flight hands the stack back to the drag.
   const homing = useRef(false)
 
-  // The top card reports how far it has travelled, so the stack behind responds to the drag and the throw.
   useEffect(() => {
     if (!interactive) return
     const update = () => {
@@ -176,7 +169,6 @@ function StackCard({
 
   useLayoutEffect(() => {
     if (decision) {
-      // A key or button can decide the card mid-drag; the throw takes over from the finger.
       drag.current = null
       homing.current = false
       cardRef.current?.removeAttribute('data-dragging')
@@ -185,10 +177,8 @@ function StackCard({
       const width = cardRef.current?.offsetWidth ?? 320
       const cx = x.get(),
         cy = y.get()
-      // Buttons and keys throw with a default flick; a drag keeps the finger's velocity.
       const velocity = fling(id) ?? { x: direction * 900, y: -120 }
       const speed = Math.hypot(velocity.x, velocity.y)
-      // Leave along the flick when it heads the chosen way, otherwise along the drag, otherwise straight out.
       let ux = velocity.x,
         uy = velocity.y
       if (speed < 200 || Math.sign(ux) !== direction) {
@@ -215,7 +205,6 @@ function StackCard({
       animate(opacity, 0, { ...fadeOut, onComplete: () => onGone(id) })
       return
     }
-    // Undo, or a first mount from where the card left: come back from there, catching any flight in progress.
     if (!wasDecided.current && settled.current) return
     wasDecided.current = false
     settled.current = true
@@ -254,7 +243,6 @@ function StackCard({
     x.stop()
     y.stop()
     homing.current = false
-    // Grabbing the top half tips the card the way the hand moves; grabbing the bottom half tips it the other way.
     if (Math.abs(x.get()) < 2) {
       const rect = event.currentTarget.getBoundingClientRect()
       tilt.set(event.clientY < rect.top + rect.height / 2 ? 1 : -1)
@@ -285,7 +273,6 @@ function StackCard({
     const velocity =
       event.type === 'pointercancel' ? { x: 0, y: 0 } : velocityOf(state.samples, event.timeStamp)
     if (onRelease(id, { x: x.get(), y: y.get() }, velocity, event.currentTarget.offsetWidth)) return
-    // Below the threshold the card springs home, keeping the release velocity so it settles instead of stopping dead.
     if (reduced) {
       x.jump(0)
       y.jump(0)

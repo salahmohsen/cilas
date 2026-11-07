@@ -12,7 +12,6 @@ export type Recipient = { id: number; email: string }
 const recipientsOf = (docs: Array<{ id: number; email?: string | null }>): Recipient[] =>
   docs.flatMap((d) => (d.email ? [{ id: d.id, email: d.email }] : []))
 
-/** Accounts that review submissions: admins and super admins. */
 export const adminRecipients = async (req: PayloadRequest): Promise<Recipient[]> => {
   const { docs } = await req.payload.find({
     collection: 'users',
@@ -25,7 +24,6 @@ export const adminRecipients = async (req: PayloadRequest): Promise<Recipient[]>
   return recipientsOf(docs)
 }
 
-/** Accounts linked to a document's owners (authors, fellows, editors); people without one get nothing. */
 export const ownerRecipients = async (
   req: PayloadRequest,
   people: number[],
@@ -75,7 +73,6 @@ export const emailRecipients = async (
   }
 }
 
-/** Sends one review notification. A failed send is logged, never thrown. */
 export const sendReviewEmail = async (
   req: PayloadRequest,
   to: string[],

@@ -67,7 +67,6 @@ export const Cycles: CollectionConfig = {
   indexes: [{ fields: ['season', 'start_year', 'place'], unique: true }],
   hooks: {
     beforeValidate: [deriveCycleIdentity],
-    // Its names show in the cached study list.
     afterChange: [revalidateAfterChange('cycles')],
     afterDelete: [revalidateAfterDelete('cycles')],
   },

@@ -23,7 +23,6 @@ export const PushSubscriptions: CollectionConfig = {
     { name: 'p256dh', type: 'text', required: true },
     { name: 'auth', type: 'text', required: true },
     { name: 'user_agent', type: 'text' },
-    // The language the device showed when it subscribed: the push title follows it.
     {
       name: 'locale',
       type: 'select',

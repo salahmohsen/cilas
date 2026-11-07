@@ -54,14 +54,12 @@ export const SEARCH_COLLECTIONS = {
 
 export type SearchCollection = keyof typeof SEARCH_COLLECTIONS
 
-/** Section order in the panel and in the facet list. */
 export const SEARCH_ORDER = [
   'courses',
   'articles',
   'people',
 ] as const satisfies readonly SearchCollection[]
 
-/** Course kinds the panel facets on, in Payload option order. */
 export const COURSE_TYPES = ['CORE', 'THEMATIC', 'LAB', 'WORKSHOP', 'SHORT'] as const
 export type CourseType = (typeof COURSE_TYPES)[number]
 

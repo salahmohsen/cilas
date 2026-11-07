@@ -1,3 +1,4 @@
+import { localeOf } from '@/i18n/routing'
 import { personAvatarSeed } from '@/lib/avatar'
 import { Suspense } from 'react'
 import { getLocale, getTranslations } from 'next-intl/server'
@@ -42,7 +43,7 @@ export async function loadPost(
 ): Promise<{ view: PostView; context: FeedContext; consented: boolean; allowed: boolean } | null> {
   const mem = await membership(payload, user, space)
   if (mem.role === 'none') return null
-  const lang = locale === 'ar' ? 'ar' : 'en'
+  const lang = localeOf(locale)
   const [view, state, { cards, byId, moderators }, rules] = await Promise.all([
     postView(payload, user, space, postId, lang),
     memberState(payload, user, space.id),

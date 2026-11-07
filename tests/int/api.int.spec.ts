@@ -1,5 +1,4 @@
 // @vitest-environment node
-// Server-side: boots the real config and opens a Postgres pool.
 import { getPayload, Payload } from 'payload'
 import config from '@/payload.config'
 

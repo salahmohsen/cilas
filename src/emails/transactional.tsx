@@ -8,7 +8,6 @@ type Mail = { subject: string; html: string; text: string }
 
 const origin = (site: string) => site.replace(/\/+$/, '')
 
-/** To an applicant an admin accepted (src/forms/applications.ts). */
 export const acceptanceMail = async (
   settings: EmailSettings,
   data: { name: string; email: string; title: string; newAccount: boolean; site: string },

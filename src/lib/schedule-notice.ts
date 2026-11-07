@@ -15,7 +15,6 @@ const LANGUAGES = [
   { locale: 'ar', messages: ar },
 ] as const
 
-/** More changes than this are summed up, so one save never makes a wall of text. */
 const LISTED = 5
 
 type CourseSession = NonNullable<Course['sessions']>[number]

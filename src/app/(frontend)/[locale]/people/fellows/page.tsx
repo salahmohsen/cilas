@@ -1,3 +1,4 @@
+import { localeOf } from '@/i18n/routing'
 import { detailPath } from '@/lib/paths'
 import { type Locale } from '@/i18n/routing'
 import { pageAlternates } from '@/lib/seo'
@@ -40,7 +41,7 @@ export async function generateMetadata(): Promise<Metadata> {
 export default async function FellowsPage({ params }: Props) {
   const { locale } = await params
   const [t, tf] = await Promise.all([getTranslations('Fellows'), getTranslations('Study.filters')])
-  const fellows = await fellowsFor(locale === 'ar' ? 'ar' : 'en')
+  const fellows = await fellowsFor(localeOf(locale))
 
   return (
     <PeoplePage

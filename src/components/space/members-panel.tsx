@@ -10,7 +10,8 @@ import { AvatarGroup } from '@/components/arc/avatar-group/avatar-group'
 import { Drawer, DrawerContent } from '@/components/arc/drawer/drawer'
 import { SearchField } from '@/components/arc/search-field/search-field'
 
-import { PersonHover, type PersonCard } from './person-hover'
+import { PersonHover } from './person-hover'
+import type { PersonCard } from '@/lib/space-members'
 import styles from './space.module.css'
 
 /** Faces in the head before the "+N" that opens the full list. */

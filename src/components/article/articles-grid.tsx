@@ -1,5 +1,5 @@
 'use client'
-import { useBlogGridLabels } from '@/lib/blog-grid-labels'
+import { useBlogGridLabels } from '@/components/blog-grid-labels'
 
 import { useLocale } from 'next-intl'
 import { useRouter } from 'next/navigation'

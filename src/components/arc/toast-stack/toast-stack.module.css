@@ -72,7 +72,6 @@
 .item[data-expanded='true'] .card {
   box-shadow: var(--shadow-floating);
 }
-/* Tucked toasts sit a step back in tone as well as scale. */
 .item[data-front='false'][data-expanded='false'] .card {
   background: var(--surface-muted);
 }
@@ -117,7 +116,6 @@
 .glyph svg {
   display: block;
 }
-/* The spinner turns only while something is loading; the icon swap is its stop. */
 .spinner {
   display: block;
   width: 15px;
@@ -204,7 +202,6 @@
     color: var(--foreground);
   }
 }
-/* Quick press, spring release. */
 .action:active,
 .close:active {
   scale: 0.96;

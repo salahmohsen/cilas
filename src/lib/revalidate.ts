@@ -16,7 +16,6 @@ const drop = (collection: string, doc: Slugged, previousDoc?: Slugged) => {
   }
 }
 
-/** Drops the cached pages and lists a saved document shows on, so the site updates at once. */
 export const revalidateAfterChange =
   (collection: string): CollectionAfterChangeHook =>
   ({ doc, previousDoc }) => {

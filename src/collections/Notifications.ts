@@ -7,10 +7,8 @@ import { publishChange, publishDelete } from '@/lib/realtime/publish'
 const KIND_VALUES: string[] = [...NOTIFICATION_KIND_NAMES]
 KIND_VALUES.splice(KIND_VALUES.indexOf('event_changed'), 0, 'question')
 
-/** Each account sees, marks and clears only its own notifications. */
 const own: Access = ({ req }) => (req.user ? { recipient: { equals: req.user.id } } : false)
 
-/** "Mark all read": every unread notification of the signed-in account. */
 const readAll: PayloadHandler = async (req) => {
   if (!req.user) return Response.json({ error: 'Sign in first.' }, { status: 401 })
   await req.payload.update({
@@ -60,13 +58,11 @@ export const Notifications: CollectionConfig = {
       access: { update: () => false },
     },
     { name: 'title', type: 'text', required: true, access: { update: () => false } },
-    // The row's detail line, written at event time (the label stays short).
     { name: 'description', type: 'text', access: { update: () => false } },
     // The actor as a snapshot (src/lib/notify.ts actorOf), so reading needs no join.
     { name: 'actor_name', type: 'text', access: { update: () => false } },
     { name: 'actor_photo', type: 'text', access: { update: () => false } },
     { name: 'link', type: 'text', access: { update: () => false } },
-    // The one thing a reader changes: when they read it.
     { name: 'read_at', type: 'date', index: true },
   ],
 }

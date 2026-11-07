@@ -6,7 +6,6 @@ import { bridgeYearPath, pathOf } from '@/lib/paths'
 import { plainText } from '@/lib/plaintext'
 import type { Article, Course, Event, Media, Person, Programme, Publication } from '@/payload-types'
 
-/** What a mention's hover card shows. */
 export type MentionPreview = {
   kind: MentionType
   title: string
@@ -16,7 +15,6 @@ export type MentionPreview = {
   image: string | null
 }
 
-/** A mention that leads somewhere: its link and its preview. */
 export type ResolvedMention = { href: string; preview: MentionPreview }
 
 const imageOf = (m: unknown) => {

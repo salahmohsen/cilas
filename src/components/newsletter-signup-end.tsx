@@ -6,7 +6,6 @@ import { getPayload } from 'payload'
 import { getNewsletterStack } from '@/api/newsletter-stack.api'
 import { NewsletterSignupSection } from '@/components/newsletter-signup-section'
 
-/** The newsletter signup that closes an article or a course; nothing when signup is not set up. */
 export async function NewsletterSignupEnd({ locale }: { locale: Locale }) {
   const [payload, t] = await Promise.all([
     getPayload({ config }),

@@ -17,7 +17,6 @@ export const REPLAY_MASK_SELECTOR = 'form, [data-analytics-mask]'
 
 type Capture = { event: string; properties?: Record<string, unknown> }
 
-/** Drops the errors that mean nothing and repeats of one, then applies the page rules. */
 export const makeBeforeSend = () => {
   const seen = new Set<string>()
   return (capture: Capture | null): Capture | null => {

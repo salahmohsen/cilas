@@ -1,4 +1,3 @@
-/** Writes the live database to seed/data/live (see snapshot.ts): `pnpm db:snapshot`. */
 import { getPayload } from 'payload'
 import { exportSnapshot } from './snapshot'
 

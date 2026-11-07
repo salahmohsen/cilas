@@ -72,10 +72,8 @@ describe('space-files media budget', () => {
     expect(file.filename).toMatch(/^[0-9a-f]{32}-probe-f-big\.webp$/)
     expect(Math.max(file.width!, file.height!)).toBe(IMAGE_EDGE)
     expect(file.filesize!).toBeLessThan(input.length)
-    // `imageSizes` would add one object per size; none is configured.
     expect((file as { sizes?: unknown }).sizes ?? {}).toEqual({})
 
-    // The object itself, read back through the storage adapter's handler.
     const collection = payload.collections['space-files']
     const handler = collection.config.upload.handlers![0]!
     const response = (await handler(await createLocalReq({}, payload), {

@@ -1,4 +1,4 @@
-import { removePushSubscriptionAction } from '@/app/(frontend)/[locale]/settings/actions'
+import { removePushSubscriptionAction } from '@/lib/settings-actions'
 import { currentSubscription } from '@/lib/push/client'
 
 /**

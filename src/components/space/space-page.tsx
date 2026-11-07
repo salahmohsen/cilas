@@ -1,3 +1,4 @@
+import { localeOf } from '@/i18n/routing'
 import { detailPath } from '@/lib/paths'
 import { personAvatarSeed } from '@/lib/avatar'
 import config from '@payload-config'
@@ -113,7 +114,7 @@ export async function SpacePage({
   // The intro post, while this member has not commented on it: the only post they read here.
   const gatedBy = (await introGates(payload, user)).get(space.id) ?? null
 
-  const lang = locale === 'ar' ? 'ar' : 'en'
+  const lang = localeOf(locale)
   const [
     t,
     tp,

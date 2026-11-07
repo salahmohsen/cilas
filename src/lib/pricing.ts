@@ -1,4 +1,3 @@
-/** The parts of a `pricingField()` group the site reads. */
 export type Pricing = {
   min?: number | null
   max?: number | null
@@ -11,10 +10,6 @@ type SetPricing = Pricing & { min: number }
 const isSet = (pricing: Pricing | null | undefined): pricing is SetPricing =>
   typeof pricing?.min === 'number'
 
-/**
- * A course's price: its own override when it sets a minimum, otherwise its
- * cycle's price for its course type.
- */
 export const pricingFor = (
   course: { course_type: string; pricing_override?: Pricing | null },
   cycle:

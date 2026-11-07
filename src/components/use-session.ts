@@ -4,7 +4,6 @@ import { useSyncExternalStore } from 'react'
 
 import { AUTH_CHANGED } from '@/lib/auth-events'
 
-/** The signed-in account, with its linked person (name and photo) when it has one. */
 type SessionUser = {
   id: number
   email: string
@@ -49,7 +48,6 @@ const subscribe = (listener: () => void) => {
     listeners.delete(listener)
     if (listeners.size > 0) return
     window.removeEventListener(AUTH_CHANGED, refresh)
-    // Nobody is listening: drop the answer and any ask still out.
     latest++
     user = null
   }

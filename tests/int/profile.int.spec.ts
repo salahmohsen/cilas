@@ -1,5 +1,4 @@
 // @vitest-environment node
-// Boots the real config against DATABASE_URL.
 import { readFile } from 'node:fs/promises'
 import { getPayload, type Payload } from 'payload'
 import { afterAll, beforeAll, describe, expect, it } from 'vitest'
@@ -13,7 +12,6 @@ import { RUN, createTracker, uniq } from './fixtures'
 let payload: Payload
 const people: number[] = []
 const { track, cleanup } = createTracker()
-// The bio tests that hold an uploaded image need a media row; they make it.
 let mediaId: number
 
 describe('profile', () => {

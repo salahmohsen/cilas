@@ -1,3 +1,4 @@
+import { BRIDGE_PATH } from '@/lib/paths'
 import { type Locale, otherLocale } from '@/i18n/routing'
 import { relId, relation as obj } from '@/lib/relation'
 import { bridgeYearPath } from '@/lib/paths'
@@ -84,7 +85,7 @@ export const getOpenNow = async (
     const href =
       p.kind === 'bridge' && p.slug
         ? years[0]?.slug === p.slug
-          ? '/study/bridge'
+          ? BRIDGE_PATH
           : bridgeYearPath(p.slug)
         : (p.registration?.url ?? null)
     if (!href) return []

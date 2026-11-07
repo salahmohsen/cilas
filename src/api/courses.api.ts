@@ -1,5 +1,5 @@
 import { siteTiers } from '@/access'
-import type { Reader } from '@/api/articles.api'
+import type { Reader } from '@/lib/reader'
 import { type Locale, otherLocale } from '@/i18n/routing'
 import { listSeparator } from '@/lib/locale-format'
 import { mediaPopulate, mediaStudyImage } from '@/lib/media-image'

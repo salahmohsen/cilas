@@ -39,17 +39,11 @@ export type SpaceLike = {
 }
 
 type SpaceFacts = {
-  /** course ids where the person is a listed fellow */
   courseFellows?: number[] | null
-  /** enrolled course ids for the person */
   enrolledCourses?: number[] | null
-  /** programmes where the person holds any membership */
   memberProgrammes?: number[] | null
-  /** programmes where the person's membership role is a residential fellow */
   fellowProgrammes?: number[] | null
-  /** whether the account has a linked person (community rule) */
   hasPerson?: boolean | null
-  /** whether the person is a fellow of any course or programme (audience `fellows`) */
   isFellow?: boolean | null
 }
 
@@ -72,7 +66,6 @@ export const spacesSettings = cache(async (payload: Payload): Promise<SpacesSett
 
 export const mode = (settings: SpacesSettings | null | undefined) => settings?.spaces_mode ?? 'off'
 
-/** Whether one space opens now, by the switch alone (spec §10). */
 export const spaceOpenOn = (space: SpaceLike, settings: SpacesSettings): boolean => {
   if (mode(settings) === 'on') return true
   if (mode(settings) === 'trial') {
@@ -110,7 +103,6 @@ const membershipOf = (
   if (isAdmin) return { role: 'moderator' }
   switch (space.kind) {
     case 'community':
-      // Admins already returned above, so `admins` lets nobody else in.
       if (space.audience === 'admins') return { role: 'none' }
       if (space.audience === 'fellows') return { role: facts.isFellow ? 'member' : 'none' }
       return { role: facts.hasPerson ? 'member' : 'none' }
@@ -132,7 +124,6 @@ const membershipOf = (
 /** Roles in a programme that make a person a fellow. */
 const FELLOW_ROLES = ['residential_fellow', 'visiting_fellow']
 
-/** A fellow is listed on any course's fellows or holds a fellow role in any programme. */
 const isFellowPerson = async (payload: Payload, personId: number): Promise<boolean> => {
   const [{ totalDocs: listed }, { totalDocs: held }] = await Promise.all([
     payload.find({
@@ -156,7 +147,6 @@ const isFellowPerson = async (payload: Payload, personId: number): Promise<boole
   return listed + held > 0
 }
 
-/** Every person who is a fellow somewhere (the member list of a `fellows` community space). */
 export const fellowPersonIds = async (payload: Payload): Promise<Set<number>> => {
   const [courses, memberships] = await Promise.all([
     payload.find({
@@ -185,12 +175,6 @@ export const fellowPersonIds = async (payload: Payload): Promise<Set<number>> =>
   return ids
 }
 
-/**
- * Gathers the facts for one person with as few queries as possible:
- * enrollments by person, programme memberships by person, and the courses
- * that list the person as a fellow. `spaces` is every space the caller asks
- * about.
- */
 const factsFor = async (
   payload: Payload,
   personId: number | null,
@@ -271,10 +255,6 @@ const factsFor = async (
   return facts
 }
 
-/**
- * Membership of one user (an account) in one space. This is the call every
- * rule and page uses.
- */
 export const membership = async (
   payload: Payload,
   user: null | { id?: number; roles?: readonly string[]; person?: unknown },
@@ -288,14 +268,11 @@ export const membership = async (
   return membershipOf(space, facts, { isAdmin })
 }
 
-/* ------------------------------------------------- Where-builders & rules */
-
 type Reader = null | { roles?: readonly string[]; person?: unknown }
 type SpaceIds = number[] | true | false
 
 type ReadState = {
   ids: SpaceIds
-  /** Space id to its intro post, for the spaces this reader has not introduced themselves in yet */
   gated: Map<number, number>
 }
 

@@ -1,5 +1,4 @@
 // @vitest-environment node
-// Boots the real config against DATABASE_URL.
 import { getPayload, type Payload } from 'payload'
 import { afterAll, beforeAll, describe, expect, it } from 'vitest'
 
@@ -13,8 +12,6 @@ import { RUN, uniq } from './fixtures'
 
 let payload: Payload
 
-// Every fixture carries the run suffix: legacy URLs, titles (so slugs), the
-// fellow and the place. A leftover from another run never collides.
 const P = `/probe-${RUN}`
 const CYCLE_URL = `${P}-fall-2031.html`
 const COURSE_URL = `${CYCLE_URL}#probe-course`

@@ -118,5 +118,3 @@ export const SpaceFiles: CollectionConfig = {
     { name: 'filename', type: 'text', required: true }, // the human name, shown in the list
   ],
 }
-
-export { SPACE_FILE_LIMIT } from '@/lib/space-file-limits'

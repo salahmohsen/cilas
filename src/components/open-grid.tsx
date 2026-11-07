@@ -1,5 +1,5 @@
 'use client'
-import { useBlogGridLabels } from '@/lib/blog-grid-labels'
+import { useBlogGridLabels } from '@/components/blog-grid-labels'
 
 import { BlogGrid, type BlogPost } from '@/components/arc/blocks/blog-grid/blog-grid'
 

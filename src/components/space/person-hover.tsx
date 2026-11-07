@@ -6,22 +6,9 @@ import type { ReactElement } from 'react'
 import { SocialIcon, SOCIAL_LABELS } from '@/components/person/social-icon'
 
 import { HoverCard, HoverCardProfile } from '@/components/arc/hover-card/hover-card'
-import type { PersonLink } from '@/lib/space-members'
+import type { PersonCard, PersonLink } from '@/lib/space-members'
 
 import styles from './space.module.css'
-
-/** One person as every space surface shows them: the same card wherever their name or face appears. */
-export type PersonCard = {
-  id: number
-  name: string
-  photo: string | null
-  /** Already translated, such as "Fellow" or "Member". */
-  role: string
-  bio: string | null
-  links: PersonLink[]
-  /** The public profile, when the person is shown on the site. */
-  href: string | null
-}
 
 /** The person's website and social profiles as one row of icons. */
 export function PersonLinks({ links }: { links: PersonLink[] }) {

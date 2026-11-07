@@ -25,7 +25,6 @@ const LEGACY_COLLECTIONS = [
 
 const httpStatus = (error: unknown) => (error as { httpStatus?: number }).httpStatus
 
-/** A Typesense filter matching these ids, backtick-quoted. */
 const idFilter = (ids: readonly string[]) => `id:[${ids.map((id) => `\`${id}\``).join(',')}]`
 
 export const createIndexer = (client: Client) => {

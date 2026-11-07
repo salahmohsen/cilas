@@ -1,4 +1,5 @@
-import { getArticleForReading, type Reader } from '@/api/articles.api'
+import { getArticleForReading } from '@/api/articles.api'
+import type { Reader } from '@/lib/reader'
 import type { Locale } from '@/i18n/routing'
 import { excerptOf } from '@/lib/articles'
 import { detailPath } from '@/lib/paths'

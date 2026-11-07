@@ -1,8 +1,3 @@
-/**
- * What a form's file question accepts (Forms → File upload), shared by the
- * page, which checks before sending, and the server, which checks again.
- */
-
 export const FILE_KINDS = {
   pdf: { label: 'PDF', extensions: ['.pdf'], mime: ['application/pdf'] },
   word: {
@@ -22,7 +17,6 @@ export const FILE_KINDS = {
 
 export type FileKind = keyof typeof FILE_KINDS
 
-/** At most this many files for a question that takes several. */
 export const MAX_FILES = 5
 /** No question may take files bigger than this, whatever its setting. */
 export const MAX_SIZE_MB = 20
@@ -49,7 +43,6 @@ export const maxBytes = (rule: FileRule) =>
 
 export const maxCount = (rule: FileRule) => (rule.multiple ? MAX_FILES : 1)
 
-/** The accepted kinds as people read them, e.g. "PDF or Word (doc, docx)". */
 export const acceptedLabel = (rule: FileRule) =>
   kindsOf(rule)
     .map((k) => FILE_KINDS[k].label)

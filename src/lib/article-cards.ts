@@ -28,7 +28,6 @@ export type ArticleCard = {
 const media = (v: unknown): Media | undefined =>
   typeof v === 'object' && v !== null && (v as Media).url ? (v as Media) : undefined
 
-/** A person's photo at byline size, when they have one. */
 const avatarOf = (p: Person | undefined): string | undefined => {
   const photo = media(p?.photo)
   return photo ? mediaThumbnail(photo) : undefined
@@ -63,7 +62,6 @@ export const toArticleCard = (
     publicationCovers?: Map<number, Media>
   },
 ): ArticleCard => {
-  // The article's own image, else its writer's photo, else its publication's cover.
   const writer = (a.authors ?? []).find((p): p is Person => typeof p === 'object' && p !== null)
   const pub = publicationOf(a)
   const image =

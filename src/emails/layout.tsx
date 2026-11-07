@@ -20,7 +20,6 @@ import { colors, font, link, mobileCss, type } from './theme'
 const INTER = 'https://fonts.gstatic.com/s/inter/v20/UcCO3FwrK3iLTeHuS_nVMrMxCp50SjIw2boKoduKmMEVu'
 const WEIGHTS = { 400: 'OKfMZg', 500: 'I6fMZg', 600: 'GKYMZg' } as const
 
-/** A grey rounded panel: every block of an email's content sits in one. */
 export function Box({ children, center = false }: { children: ReactNode; center?: boolean }) {
   return (
     <Section
@@ -52,7 +51,6 @@ export function EmailLayout({
   children,
 }: {
   settings: EmailSettings
-  /** The line mail apps show after the subject. */
   preview: string
   /** A word or two at the top right, e.g. "Newsletter". */
   kicker?: string

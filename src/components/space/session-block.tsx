@@ -5,10 +5,6 @@ import { PostSession } from './post-session'
 import type { SessionLinks } from './session-chip'
 import styles from './space.module.css'
 
-/**
- * A session placed as a block, where it sits in the text: the whole session
- * card from the live course, as an announcement showed it.
- */
 export function SessionBlock({ id, read }: { id: string; read: SessionRead | null | undefined }) {
   const view =
     read?.state === 'shown'

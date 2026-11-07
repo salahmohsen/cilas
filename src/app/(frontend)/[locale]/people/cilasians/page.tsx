@@ -1,3 +1,4 @@
+import { localeOf } from '@/i18n/routing'
 import { type Locale } from '@/i18n/routing'
 import { pageAlternates } from '@/lib/seo'
 import config from '@payload-config'
@@ -33,7 +34,7 @@ export async function generateMetadata(): Promise<Metadata> {
 export default async function CilasiansPage({ params }: Props) {
   const { locale } = await params
   const t = await getTranslations('Cilasians')
-  const people = await cilasiansFor(locale === 'ar' ? 'ar' : 'en')
+  const people = await cilasiansFor(localeOf(locale))
 
   return (
     <PeoplePage

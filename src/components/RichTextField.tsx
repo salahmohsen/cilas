@@ -22,7 +22,6 @@ import styles from './rich-text-columns.module.css'
 import { ReferenceMention, RelatedReference } from '@/components/rich-text-references'
 import { RichTextNodeLink } from '@/components/rich-text-node-link'
 
-/** The dash (or tilde) that opens a quote's source line. */
 const SOURCE_LEAD = /^\s*[—–~-]\s*/
 
 /**

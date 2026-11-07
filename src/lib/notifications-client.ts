@@ -6,10 +6,6 @@ import {
 import type { ClientNotificationEvent, StoredNotification } from '@/lib/realtime/events'
 import { tabId } from '@/lib/realtime/stream-client'
 
-/**
- * What the two bells (the site's and the admin's) share: the endpoint, the
- * calls on it and the reading of a row. A failed call gives null, never a throw.
- */
 const API = '/api/notifications'
 
 const call = (path: string, init?: RequestInit) =>

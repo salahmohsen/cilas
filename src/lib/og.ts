@@ -10,5 +10,4 @@ export const DEFAULT_OG_IMAGE = {
   alt: 'The CILAS classroom',
 }
 
-/** The page's own image when it has one, else the default. */
 export const ogImages = (url?: string | null) => (url ? [{ url }] : [DEFAULT_OG_IMAGE])

@@ -10,7 +10,6 @@
   color: var(--text-secondary);
 }
 
-/* The two names side by side where there is room for both. */
 .pair {
   display: grid;
   gap: var(--space-4);
@@ -33,7 +32,6 @@
   font-weight: 500;
 }
 
-/* Platform, then the link taking the rest of the row, then its remove button; the button stays level with the fields. */
 .linkRow {
   display: grid;
   grid-template-columns: minmax(8rem, 11rem) minmax(0, 1fr) auto;
@@ -47,7 +45,6 @@
 }
 
 .remove {
-  /* Level with the controls: below their labels. */
   margin-top: calc(var(--text-sm) * 1.5 + var(--space-2));
 }
 

@@ -4,14 +4,11 @@ import type { Payload } from 'payload'
 
 export type QueueKind = 'article' | 'course' | 'publication' | 'application'
 
-/** One thing waiting for an admin: a submission to review, or an application to decide. */
 export type QueueItem = {
   kind: QueueKind
   id: number
   title: string
-  /** Who sent it, as their names read. */
   by: string
-  /** When it was sent (its last save), ISO. */
   since: string
   href: string
 }

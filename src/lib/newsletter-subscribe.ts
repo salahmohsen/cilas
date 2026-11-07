@@ -1,10 +1,6 @@
 import { track } from '@/lib/analytics/track'
 import type { AnalyticsEvents } from '@/lib/analytics/events'
 
-/**
- * Adds an address to the newsletter (src/app/(frontend)/api/newsletter).
- * Throws on failure, which the Arc forms show as their error state.
- */
 export const subscribeToNewsletter = async (
   email: string,
   place: AnalyticsEvents['newsletter_subscribed']['place'] = 'page',

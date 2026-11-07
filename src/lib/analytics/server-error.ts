@@ -2,7 +2,6 @@ import { isBotPath, isNoisyError } from './errors'
 import { isTrackedPath, reportedPath, stripLocale } from './paths'
 import { scrubText } from './scrub'
 
-/** The parts of Next's `onRequestError` call that matter here. */
 export type RequestInfo = { path: string; method: string }
 export type ErrorContext = { routePath?: string; routeType?: string; routerKind?: string }
 
@@ -15,7 +14,6 @@ export type ServerErrorReport = {
 
 const REDACTED = '[message withheld: private route]'
 
-/** The stack's frames without its first line, which holds the message. */
 const framesOf = (stack: string | undefined) =>
   (stack ?? '')
     .split('\n')

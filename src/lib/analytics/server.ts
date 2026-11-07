@@ -3,7 +3,6 @@ import type { PostHog } from 'posthog-node'
 import { env } from '@/env'
 import { buildServerError, ErrorLimiter, type ErrorContext, type RequestInfo } from './server-error'
 
-/** The longest a failing request waits for PostHog. */
 const SEND_TIMEOUT_MS = 2500
 
 /** Not a person: the server is one fixed sender, and no profile is made for it. */

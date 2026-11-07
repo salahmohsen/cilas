@@ -1,3 +1,5 @@
+import { BRIDGE_PATH } from '@/lib/paths'
+import { localeOf } from '@/i18n/routing'
 import config from '@payload-config'
 import type { Metadata } from 'next'
 import { draftMode } from 'next/headers'
@@ -16,18 +18,16 @@ type Props = { params: Promise<{ locale: string }>; searchParams: Promise<{ prog
 // Registration open/closed is computed from today's date, so rebuild hourly.
 export const revalidate = 3600
 
-const langOf = (locale: string) => (locale === 'ar' ? 'ar' : 'en')
-
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { locale } = await params
   const t = await getTranslations({ locale, namespace: 'Bridge' })
-  const year = await getBridgeYear(await getPayload({ config }), langOf(locale))
+  const year = await getBridgeYear(await getPayload({ config }), localeOf(locale))
   const title = year?.programme.title ?? t('metaTitle')
   const description = year?.programme.tagline ?? t('metaDescription')
   return {
     title,
     description,
-    alternates: pageAlternates('/study/bridge', locale),
+    alternates: pageAlternates(BRIDGE_PATH, locale),
     openGraph: { title, description, images: ogImages(year?.cover?.url ?? undefined) },
   }
 }
@@ -39,7 +39,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
  */
 export default async function BridgePage({ params, searchParams }: Props) {
   const { locale } = await params
-  const lang = langOf(locale)
+  const lang = localeOf(locale)
   const { isEnabled: isPreview } = await draftMode()
   const previewSlug = isPreview ? (await searchParams).programme : undefined
   const payload = await getPayload({ config })

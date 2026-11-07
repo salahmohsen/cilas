@@ -46,7 +46,6 @@ export const fileUpload: Block = {
   slug: 'fileUpload',
   labels: { singular: 'File upload', plural: 'File uploads' },
   fields: [
-    // The name and label row, as the other questions have it.
     text.fields[0]!,
     description,
     {

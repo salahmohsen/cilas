@@ -25,7 +25,6 @@ export function PostSession({
 }: {
   session: SessionView
   kind: string
-  /** The post's own route; the space page is the route above it */
   postHref: string
 }) {
   const t = useTranslations('SpacePost')

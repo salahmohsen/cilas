@@ -1,9 +1,3 @@
-/**
- * The password reset flow on the site, in front of Payload's own endpoints
- * (`/api/users/forgot-password`, `/api/users/reset-password`). The forms live in
- * src/components/login; the checks and the requests are here so they can be tested.
- */
-
 export const MIN_PASSWORD = 8
 
 const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
@@ -12,7 +6,6 @@ export const isEmail = (value: string) => EMAIL.test(value.trim())
 
 export type PasswordProblem = 'tooShort' | 'mismatch'
 
-/** What is wrong with the new password, or null when it can be sent. */
 export const passwordProblem = (password: string, confirm: string): PasswordProblem | null => {
   if (password.length < MIN_PASSWORD) return 'tooShort'
   return password === confirm ? null : 'mismatch'

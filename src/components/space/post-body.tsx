@@ -5,7 +5,8 @@ import { SESSION_HREF, inlineBlocks, sessionIdsIn, splitBlocks } from '@/lib/ses
 import type { SessionRead } from '@/lib/spaces-data'
 
 import { TitledLink } from './titled-link'
-import { PersonHover, type PersonCard } from './person-hover'
+import { PersonHover } from './person-hover'
+import type { PersonCard } from '@/lib/space-members'
 import { SessionBlock } from './session-block'
 import { SessionChip, type SessionLinks } from './session-chip'
 import styles from './space.module.css'

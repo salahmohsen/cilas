@@ -15,7 +15,7 @@ import { RadioGroup } from '@/components/arc/radio-group/radio-group'
 import { Textarea } from '@/components/arc/textarea/textarea'
 import { ABOUT_MAX } from '@/lib/space-rules'
 import { RULES_MAX } from '@/lib/space-consent'
-import { spaceSettingsSetAction } from '@/app/(frontend)/[locale]/spaces/actions'
+import { spaceSettingsSetAction } from '@/lib/space-actions'
 
 import { saveErrorKey } from './composer'
 import styles from './space.module.css'
@@ -26,7 +26,6 @@ const subscribeNarrow = (notify: () => void) => {
   query.addEventListener('change', notify)
   return () => query.removeEventListener('change', notify)
 }
-/** Phones get a bottom sheet, wider screens a dialog. */
 const useNarrow = () =>
   useSyncExternalStore(
     subscribeNarrow,

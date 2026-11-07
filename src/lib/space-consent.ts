@@ -5,7 +5,6 @@
  */
 export const NOTICE_VERSION = 1
 
-/** One part of the notice: the question it answers, and the answer. */
 export type NoticePart = { title: string; text: string }
 
 export const NOTICE: Record<'en' | 'ar', NoticePart[]> = {
@@ -35,10 +34,8 @@ export const NOTICE: Record<'en' | 'ar', NoticePart[]> = {
   ],
 }
 
-/** The longest custom "Privacy and rules" text, in characters. */
 export const RULES_MAX = 3000
 
-/** The notice as editable text: one part per paragraph, its title on the first line. */
 export const rulesText = (parts: NoticePart[]): string =>
   parts.map((p) => `${p.title}\n${p.text}`).join('\n\n')
 

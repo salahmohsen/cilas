@@ -1,3 +1,4 @@
+import { localeOf } from '@/i18n/routing'
 import { detailPath } from '@/lib/paths'
 import type { Payload } from 'payload'
 import { getTranslations } from 'next-intl/server'
@@ -5,7 +6,7 @@ import { getTranslations } from 'next-intl/server'
 import { personOf } from '@/access'
 import type { Space, User } from '@/payload-types'
 import { peopleRows, staffPersonIds } from '@/lib/space-members'
-import type { PersonCard } from '@/components/space/person-hover'
+import type { PersonCard } from '@/lib/space-members'
 import { moderatorPeople, spaceRoster } from '@/lib/spaces-data'
 
 /**
@@ -20,7 +21,7 @@ export async function spacePeopleCards(
   space: Space,
   locale: string,
 ): Promise<{ cards: PersonCard[]; byId: Map<number, PersonCard>; moderators: Set<number> }> {
-  const lang = locale === 'ar' ? 'ar' : 'en'
+  const lang = localeOf(locale)
   const [t, roster, moderators, staff] = await Promise.all([
     getTranslations('Spaces'),
     spaceRoster(payload, user, space.id, lang),

@@ -22,7 +22,6 @@ export const posthogHosts = (host?: string) => {
   }
 }
 
-/** The rewrites that forward `/relay-k3/*` to PostHog (next.config.ts). Empty without a key. */
 export const ingestRewrites = (key: string | undefined, host?: string) => {
   if (!key) return []
   const { ingest, assets } = posthogHosts(host)

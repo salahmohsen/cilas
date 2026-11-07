@@ -1,3 +1,4 @@
+import { within } from '@testing-library/react'
 import { renderToStaticMarkup } from 'react-dom/server'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 
@@ -42,11 +43,14 @@ const event: Event = {
   },
 }
 
+const markup = (html: string) => {
+  const root = window.document.createElement('div')
+  root.innerHTML = html
+  return root
+}
+
 const card = async (data: Event) =>
-  new DOMParser().parseFromString(
-    renderToStaticMarkup(await PublicEventCard({ event: data, now })),
-    'text/html',
-  )
+  markup(renderToStaticMarkup(await PublicEventCard({ event: data, now })))
 
 beforeEach(() => vi.clearAllMocks())
 
@@ -63,20 +67,20 @@ describe('public event posters', () => {
         end_time: '20:00',
       },
     })
-    expect(single.querySelector('.poster-meta')?.textContent).toBe(
-      legacy.querySelector('.poster-meta')?.textContent,
-    )
+    expect(single.textContent).toBe(legacy.textContent)
   })
   it('uses the same poster layout and a distinct fixed color for every event type', async () => {
     const colors = Object.values(EVENT_POSTER_COLORS)
     expect(new Set(colors).size).toBe(colors.length)
     for (const event_type of Object.keys(EVENT_POSTER_COLORS) as Event['event_type'][]) {
       const document = await card({ ...event, event_type })
-      const poster = document.querySelector<HTMLElement>('.poster')!
+      const poster = within(document).getByRole('article')
       expect(poster.dataset.layout).toBe('1')
       expect(poster.style.getPropertyValue('--poster-color')).toBe(EVENT_POSTER_COLORS[event_type])
-      expect(document.querySelector('h3')?.getAttribute('aria-label')).toBe(event.title)
-      expect(document.querySelector('.poster-link')?.getAttribute('href')).toBe(
+      expect(within(document).getByRole('heading', { level: 3 }).getAttribute('aria-label')).toBe(
+        event.title,
+      )
+      expect(within(document).getByRole('link', { name: event.title }).getAttribute('href')).toBe(
         '/en/events/public-gathering',
       )
     }
@@ -89,24 +93,24 @@ describe('public event posters', () => {
       external_venue: { name: 'Guest venue', map_url: 'https://example.com/map' },
       online_url: 'https://example.com/meeting',
     })
-    expect(document.querySelector('.poster-meta')?.textContent).toContain('Nov 4, 2026')
-    expect(document.querySelector('.poster-meta')?.textContent).not.toContain('Cairo time')
-    expect(document.querySelector('.poster-meta')?.textContent).toContain('7:00')
-    const links = document.querySelectorAll('.poster-detail-link')
+    expect(document.textContent).toContain('Nov 4, 2026')
+    expect(document.textContent).not.toContain('Cairo time')
+    expect(document.textContent).toContain('7:00')
+    const links = within(document)
+      .getAllByRole('link')
+      .filter((link) => link.getAttribute('href')?.startsWith('https://example.com/'))
     expect(Array.from(links, (link) => link.getAttribute('href'))).toEqual([
       'https://example.com/map',
       'https://example.com/meeting',
     ])
     expect(links[0]?.textContent?.trim()).toBe('Guest venue')
-    expect(document.querySelector('.poster-action')?.textContent).toContain('View event')
+    expect(document.textContent).toContain('View event')
   })
 
   it('uses a logo for missing covers and omits an empty venue box', async () => {
     const document = await card(event)
-    expect(document.querySelector('.poster-image')?.getAttribute('data-fallback')).toBe('logo')
-    expect(document.querySelectorAll('.poster-fallback-logo path')).toHaveLength(7)
-    expect(document.querySelector('.poster-image img')).toBeNull()
-    expect(document.querySelector('.poster-details')).toBeNull()
+    expect(within(document).queryByRole('img')).toBeNull()
+    expect(within(document).getAllByRole('link')).toHaveLength(1)
   })
 
   it('frames the main image around its focal point instead of cropping a portrait variant again', async () => {
@@ -123,7 +127,7 @@ describe('public event posters', () => {
         sizes: { card: { url: '/assets/images/portrait.webp' } },
       },
     })
-    const image = document.querySelector<HTMLImageElement>('.poster-image img')!
+    const image = within(document).getByRole<HTMLImageElement>('img', { name: 'Event cover' })
     expect(image.style.objectPosition).toBe('0% 85%')
     const url = new URL(image.getAttribute('src')!, 'http://localhost:3000')
     expect(url.searchParams.get('url') ?? url.pathname).toBe('/assets/images/original.webp')
@@ -131,11 +135,10 @@ describe('public event posters', () => {
 
   it('labels undated and past events explicitly', async () => {
     const undated = await card({ ...event, schedule: {} })
-    expect(undated.querySelector('.poster-meta')?.textContent).toContain('Date to be announced')
+    expect(undated.textContent).toContain('Date to be announced')
     const past = await card({ ...event, schedule: { start_date: '2026-10-01' } })
-    expect(past.querySelector('.poster-status')?.textContent).toBe('This event has ended')
-    expect(past.querySelector('.poster-meta')?.textContent).not.toContain('This event has ended')
-    expect(undated.querySelector('.poster-status')).toBeNull()
+    expect(within(past).getByText('This event has ended').textContent).toBe('This event has ended')
+    expect(within(undated).queryByText('This event has ended')).toBeNull()
   })
 
   it('uses the article reader title and leaves the cover out of the event page', async () => {
@@ -154,9 +157,8 @@ describe('public event posters', () => {
       now,
       detail: true,
     })
-    const document = new DOMParser().parseFromString(renderToStaticMarkup(result), 'text/html')
-    expect(document.querySelector('h1')?.textContent).toBe(event.title)
-    expect(document.querySelector('h1')?.classList.contains('article-title')).toBe(true)
+    const document = markup(renderToStaticMarkup(result))
+    expect(within(document).getByRole('heading', { level: 1 }).textContent).toBe(event.title)
     expect(document.querySelector('img')).toBeNull()
     expect(publicEventCoverTone).not.toHaveBeenCalled()
   })

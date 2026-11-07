@@ -6,7 +6,7 @@ import { useRouter } from 'next/navigation'
 
 import { ActionButton } from '@/components/arc/action-button/action-button'
 import { RadioGroup } from '@/components/arc/radio-group/radio-group'
-import { preferenceSetAction } from '@/app/(frontend)/[locale]/spaces/actions'
+import { preferenceSetAction } from '@/lib/space-actions'
 
 import styles from './space.module.css'
 

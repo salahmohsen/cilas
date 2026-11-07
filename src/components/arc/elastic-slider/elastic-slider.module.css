@@ -30,7 +30,6 @@
   white-space: nowrap;
   transition: opacity var(--duration-fast) var(--ease-standard);
 }
-/* While the tag rides the thumb it carries the value, so the readout steps back instead of competing with it. */
 .root[data-tag] .readout {
   opacity: 0;
 }
@@ -70,7 +69,6 @@
   height: var(--elastic-track);
   margin-top: calc(var(--elastic-track) / -2);
 }
-/* Only the band stretches. Ticks, thumb, and tag ride along without distorting. */
 .track {
   position: absolute;
   inset: 0;
@@ -130,7 +128,6 @@
   outline: none;
   transition: box-shadow var(--duration-fast) var(--ease-standard);
 }
-/* A generous invisible hit area for fingertips. */
 .thumb::after {
   content: '';
   position: absolute;

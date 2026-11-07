@@ -4,7 +4,6 @@ import { getPayload } from 'payload'
 import { getOpenNow } from '@/api/home.api'
 import { DeadlineBar } from '@/components/deadline-bar'
 
-/** The deadline bar's data: whatever is open now with a last day to register. */
 export async function SiteDeadlines({ locale }: { locale: 'en' | 'ar' }) {
   const payload = await getPayload({ config })
   const open = await getOpenNow(payload, locale)

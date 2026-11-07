@@ -8,11 +8,9 @@
 
 const ARABIC_INDIC = '٠١٢٣٤٥٦٧٨٩'
 
-/** The numbering system a locale's own numbers use, for `Intl` formats. */
 export const numberingSystemOf = (locale: string): 'arab' | 'latn' =>
   locale === 'ar' ? 'arab' : 'latn'
 
-/** `text` with its Western digits written as `locale` writes them. */
 export const localDigits = (text: string | number, locale: string): string => {
   const s = String(text)
   return locale === 'ar' ? s.replace(/[0-9]/g, (d) => ARABIC_INDIC[Number(d)]) : s

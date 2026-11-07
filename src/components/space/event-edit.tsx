@@ -5,7 +5,7 @@ import { useTranslations } from 'next-intl'
 
 import { Dialog, DialogContent } from '@/components/arc/dialog/dialog'
 import { Input } from '@/components/arc/input/input'
-import { eventEditAction } from '@/app/(frontend)/[locale]/spaces/actions'
+import { eventEditAction } from '@/lib/space-actions'
 import { EVENT_TITLE_MAX } from '@/lib/space-rules'
 
 import { PostEditForm, type PostEditContext } from './post-edit-form'
@@ -41,7 +41,6 @@ export function EventEditDialog({
   post: number
   editor: PostEditContext
   initial: EventEditInitial
-  /** The author's own name and description */
   words: boolean
   /** The place, time and cover: not once the event is over */
   schedule: boolean

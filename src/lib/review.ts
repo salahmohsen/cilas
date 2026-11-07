@@ -46,7 +46,6 @@ export const canMove = (
   AUTHOR_MOVES[from].includes(to) ||
   (live && (LIVE_AUTHOR_MOVES[from] ?? []).includes(to))
 
-/** What an owner asks of a published document: a change, or that it come down. */
 export type ReviewRequest = 'changes' | 'removal'
 
 /** Who hears about a move: admins review submissions, authors hear decisions. */

@@ -15,7 +15,6 @@ type Environment = Pick<
   'POSTHOG_API_HOST' | 'POSTHOG_PROJECT_ID' | 'POSTHOG_PERSONAL_API_KEY'
 >
 
-/** The three settings the dashboard needs, or null (then its widgets hide). */
 export const queryConfig = (env: Partial<Environment> = serverEnv): PostHogQueryConfig | null => {
   const apiHost = env.POSTHOG_API_HOST?.trim().replace(/\/+$/, '')
   const projectId = env.POSTHOG_PROJECT_ID?.trim()

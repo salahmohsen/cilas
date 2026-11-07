@@ -53,15 +53,35 @@ export function useSpamCheck() {
 
   return {
     fields,
-    /** A filled honeypot: act as if sent, and send nothing. */
-    isBot: () => Boolean(honeypot.current?.value),
-    /** The submission's headers. Waits for the token if the check still runs. */
-    headers: async (): Promise<Record<string, string>> => {
-      if (!siteKey || !widget.current) return {}
-      const token = await widget.current.getResponsePromise(30_000)
-      return { [TURNSTILE_HEADER]: token }
+    submit: async (
+      submission: {
+        form: number
+        submissionData: { field: string; value: string }[]
+        target?: unknown
+      },
+      files: readonly (readonly [string, File])[] = [],
+    ): Promise<Response | null> => {
+      if (honeypot.current?.value) return null
+      try {
+        const headers: Record<string, string> = {}
+        if (siteKey && widget.current) {
+          headers[TURNSTILE_HEADER] = await widget.current.getResponsePromise(30_000)
+        }
+        if (!files.length) {
+          return await fetch('/api/form-submissions', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', ...headers },
+            body: JSON.stringify(submission),
+          })
+        }
+        // A token passes once, so answers and attachments travel in one request.
+        const body = new FormData()
+        body.set('payload', JSON.stringify(submission))
+        for (const [name, file] of files) body.append(`file:${name}`, file, file.name)
+        return await fetch('/api/form-submissions/with-files', { method: 'POST', headers, body })
+      } finally {
+        widget.current?.reset()
+      }
     },
-    /** A token passes once: get a new one for the next send. */
-    reset: () => widget.current?.reset(),
   }
 }

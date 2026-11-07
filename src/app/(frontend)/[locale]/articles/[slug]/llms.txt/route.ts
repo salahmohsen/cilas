@@ -1,3 +1,4 @@
+import { localeOf } from '@/i18n/routing'
 import { type Locale } from '@/i18n/routing'
 import config from '@payload-config'
 import { getPayload } from 'payload'
@@ -12,7 +13,7 @@ export const revalidate = 3600
 
 export async function GET(_request: Request, { params }: Params) {
   const { locale: raw, slug } = await params
-  const locale: Locale = raw === 'ar' ? 'ar' : 'en'
+  const locale: Locale = localeOf(raw)
   const payload = await getPayload({ config })
   const reading = await getArticleForReading(payload, slug, { locale })
   if (!reading) return new Response(null, { status: 404 })

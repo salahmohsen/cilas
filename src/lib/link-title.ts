@@ -1,8 +1,6 @@
-/** A bare address in plain text: the match ends before trailing punctuation. */
 const BARE = /(?<![(\w/])https?:\/\/[^\s<>)\]]+/g
 const TRAILING = /[.,;:!?'"]+$/
 
-/** Titles are keyed without a trailing slash, so `a.org/x` and `a.org/x/` share one. */
 export const titleKey = (url: string) => url.replace(/\/$/, '')
 
 /** The bare addresses in Markdown or plain text: not `[text](url)` targets, not mentions. */
@@ -12,7 +10,6 @@ export const bareAddresses = (text: string): string[] => {
   return out
 }
 
-/** The distinct bare addresses across a page's texts, in reading order, at most `max`. */
 export const pageAddresses = (texts: string[], max = 30): string[] => {
   const seen = new Set<string>()
   for (const text of texts)
@@ -23,7 +20,6 @@ export const pageAddresses = (texts: string[], max = 30): string[] => {
   return [...seen]
 }
 
-/** What a link shows when its page has no readable title: host and path, no scheme or `www.`. */
 export const shortAddress = (url: string, max = 48): string => {
   let text = url
   try {

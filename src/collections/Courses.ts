@@ -135,7 +135,6 @@ export const Courses: CollectionConfig = {
           label: 'Overview',
           fields: [
             {
-              // Presentational — groups identity fields without nesting them.
               label: 'Overview',
               type: 'group',
               fields: [
@@ -369,7 +368,6 @@ export const Courses: CollectionConfig = {
               },
             },
             {
-              // The label sessions get: "Week 3" or "Session 3".
               name: 'session_unit',
               type: 'select',
               required: true,
@@ -441,7 +439,6 @@ export const Courses: CollectionConfig = {
     // editor, enables draft mode, and only then redirects to the course, which
     // is what lets the page render an unpublished draft.
     livePreview: {
-      // The page in the editor's language, so what shows is what the fields hold.
       url: previewUrl('courses'),
     },
   },

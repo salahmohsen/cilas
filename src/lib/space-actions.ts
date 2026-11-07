@@ -17,7 +17,6 @@ import {
   commentRemove,
   consentAccept,
   eventEdit,
-  fileAdd,
   postCreate,
   postEdit,
   postModify,
@@ -28,7 +27,6 @@ import {
   spaceSettingsSet,
   STEP_KEYS,
   stepMark,
-  visitRecord,
   voteEdit,
   voteSet,
   type StepKey,
@@ -349,23 +347,6 @@ export async function commentRemoveAction(
   return { status: 'ok' }
 }
 
-export async function fileAddAction(
-  _prev: SpacesWriteState,
-  form: FormData,
-): Promise<SpacesWriteState> {
-  const session = await sessionOf()
-  if (!session) return err('auth')
-  const { user, payload } = session
-  const post = num(form, 'post')
-  if (!post) return err('not-found')
-  const file = (await filesOf(form))[0]
-  if (!file) return err('file-type')
-  const result = await fileAdd({ payload, user, post, file })
-  if (!result.ok) return err(result.error)
-  await revalidate()
-  return { status: 'ok' }
-}
-
 export async function reactionToggleAction(
   _prev: SpacesWriteState,
   form: FormData,
@@ -466,21 +447,6 @@ export async function consentAcceptAction(
   const { user, payload } = session
   void form
   const result = await consentAccept({ payload, user })
-  if (!result.ok) return err(result.error)
-  await revalidate()
-  return { status: 'ok' }
-}
-
-export async function visitRecordAction(
-  _prev: SpacesWriteState,
-  form: FormData,
-): Promise<SpacesWriteState> {
-  const session = await sessionOf()
-  if (!session) return err('auth')
-  const { user, payload } = session
-  const space = num(form, 'space')
-  if (!space) return err('space')
-  const result = await visitRecord({ payload, user, space })
   if (!result.ok) return err(result.error)
   await revalidate()
   return { status: 'ok' }

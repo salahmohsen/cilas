@@ -49,7 +49,6 @@
   color: var(--danger);
   stroke: var(--danger);
 }
-/* The scrubbed date is context, not a change, so it stays neutral whatever the tone. */
 .point {
   color: var(--text-secondary);
 }
@@ -116,7 +115,6 @@
   stroke: var(--border);
   stroke-width: 1;
 }
-/* The area under the line carries a faint wash of the line tone. */
 .area.area {
   fill: color-mix(in oklab, currentColor 9%, transparent);
   stroke: none;

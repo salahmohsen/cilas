@@ -11,7 +11,6 @@ type EventNode = SerializedLexicalNode & {
   fields?: unknown
 }
 
-/** Normalize the event's section outline and editor spacers without changing saved content. */
 export function eventDescription(data: SerializedEditorState): SerializedEditorState {
   const children = data.root.children as EventNode[]
   const levels = children.flatMap((node) =>

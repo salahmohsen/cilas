@@ -1,3 +1,4 @@
+import { localeOf } from '@/i18n/routing'
 import { createTranslator } from 'next-intl'
 import type { Payload } from 'payload'
 import webpush from 'web-push'
@@ -27,7 +28,6 @@ const pathOf = (link: string | null | undefined): string =>
     ? link
     : '/'
 
-/** What a stored notification carries into a push: no more than the bell shows. */
 export type PushNote = {
   id: number
   recipient: number
@@ -44,7 +44,6 @@ export type PushSubscriptionRow = {
   locale?: string | null
 }
 
-/** The one call to a push service; swapped in tests. */
 export type PushSender = (
   subscription: { endpoint: string; keys: { p256dh: string; auth: string } },
   body: string,
@@ -65,9 +64,8 @@ const send: PushSender = (subscription, body, config) =>
 
 const MESSAGES = { en, ar } as const
 
-/** The push body for one device: the kind in the device's language, then the note's own line. */
 export const pushBody = (note: PushNote, locale: string | null | undefined): string => {
-  const lang = locale === 'ar' ? 'ar' : 'en'
+  const lang = localeOf(locale)
   const t = createTranslator({
     locale: lang,
     messages: MESSAGES[lang],

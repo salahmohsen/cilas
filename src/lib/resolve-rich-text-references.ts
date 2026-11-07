@@ -7,9 +7,8 @@ import {
   walkEditorNodes,
   type RichTextReferences,
 } from '@/lib/rich-text-references'
-import type { User } from '@/payload-types'
+import type { Reader } from '@/lib/reader'
 import type { Payload } from 'payload'
-type Reader = User | null
 
 export const resolveRichTextReferences = async (
   payload: Payload,

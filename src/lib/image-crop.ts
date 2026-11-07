@@ -9,10 +9,8 @@
 export type Size = { width: number; height: number }
 export type Offset = { x: number; y: number }
 
-/** The most the photo may be zoomed past the size that just covers the frame. */
 export const MAX_ZOOM = 4
 
-/** The scale at which the photo just covers the frame. */
 export const coverScale = (image: Size, frame: Size) =>
   Math.max(frame.width / image.width, frame.height / image.height)
 
@@ -35,7 +33,6 @@ export const offsetLimit = (image: Size, frame: Size, zoom: number): Offset => {
 
 const clamp = (value: number, limit: number) => Math.min(limit, Math.max(-limit, value))
 
-/** The offset moved back inside the frame, so the photo always covers it. */
 export const clampOffset = (offset: Offset, image: Size, frame: Size, zoom: number): Offset => {
   const limit = offsetLimit(image, frame, zoom)
   return { x: clamp(offset.x, limit.x), y: clamp(offset.y, limit.y) }
@@ -106,7 +103,6 @@ export const outputSize = (ratio: number, edge: number, crop?: Size): Size => {
 
 type ImageIssue = 'type' | 'size'
 
-/** Type and size, checked before the photo is decoded. */
 export const imageIssue = (
   file: { type: string; size: number },
   accept: readonly string[],
@@ -116,7 +112,6 @@ export const imageIssue = (
   return file.size > maxSize ? 'size' : null
 }
 
-/** What a refused file is called in the message: its extension, as people know it. */
 export const fileKind = (name: string): string | null => {
   const match = /\.([a-z0-9]{1,8})$/i.exec(name)
   return match ? match[1]!.toUpperCase() : null
@@ -130,11 +125,9 @@ const KIND_NAMES: Record<string, string> = {
   'image/avif': 'AVIF',
 }
 
-/** The accepted types as people name them: PNG, JPG, WebP. */
 export const typeNames = (accept: readonly string[]) =>
   accept.map((type) => KIND_NAMES[type] ?? type.replace(/^image\//, '').toUpperCase())
 
-/** Megabytes for a message: whole numbers stay whole, the rest keep one place. */
 export const megabytes = (bytes: number) => {
   const mb = bytes / (1024 * 1024)
   return Number.isInteger(mb) ? mb : Math.max(0.1, Math.round(mb * 10) / 10)

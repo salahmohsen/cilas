@@ -2,7 +2,6 @@ import sharp from 'sharp'
 
 import { COVER_EDGE, COVER_TYPES } from './event-cover'
 
-/** What a cover upload may be: a photo of a known kind within the space file limit. */
 export const coverIssue = (
   file: { mimetype: string; size: number },
   limit: number,

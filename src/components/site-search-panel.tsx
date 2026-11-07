@@ -51,7 +51,6 @@ import {
  * the adapter, so none of it loads until a reader opens the search.
  */
 
-/** Rows each collection loads per page; Show more adds another page. */
 const PAGE_SIZE = 8
 
 const SECTION_ICONS: Record<SearchCollection, ReactNode> = {
@@ -68,7 +67,6 @@ const COURSE_TYPE_LABELS = {
   SHORT: 'typeShort',
 } as const satisfies Record<CourseType, string>
 
-/** Facet ids: one per course kind, then one per other collection. */
 const courseFacetId = (type: string) => `course:${type}`
 
 const adapter = env.NEXT_PUBLIC_TYPESENSE_API_KEY

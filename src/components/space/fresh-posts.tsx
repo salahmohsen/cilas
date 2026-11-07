@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation'
 import { useTranslations } from 'next-intl'
 
 import { Button } from '@/components/arc/button/button'
-import { spaceNewPostsAction } from '@/app/(frontend)/[locale]/spaces/actions'
+import { spaceNewPostsAction } from '@/lib/space-actions'
 
 import styles from './space.module.css'
 

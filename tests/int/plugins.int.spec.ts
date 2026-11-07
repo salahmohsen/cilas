@@ -1,5 +1,4 @@
 // @vitest-environment node
-// Boots the real config against DATABASE_URL.
 import { getPayload, type Payload } from 'payload'
 import { afterAll, beforeAll, describe, expect, it } from 'vitest'
 
@@ -11,7 +10,6 @@ import { RUN, createTracker, uniq } from './fixtures'
 
 let payload: Payload
 const { track, cleanup } = createTracker()
-// The old path the redirect answers to; unique, so the redirect never clashes.
 const OLD = `/writing-the-self-probe-${RUN}`
 
 describe('redirects and SEO', () => {

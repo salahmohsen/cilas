@@ -22,7 +22,6 @@ const DRAFT_SAVE = 'reviewDraftSave'
 const AUTOSAVE = 'reviewAutosave'
 const LIVE = 'reviewLive'
 
-/** Decisions that leave a published document as it is: the change waits, or is sent back. */
 const HELD: ReviewState[] = ['submitted', 'changes_requested', 'rejected']
 
 type Doc = {
@@ -37,12 +36,9 @@ type Doc = {
 } & Record<string, unknown>
 
 export type ReviewOptions = {
-  /** What the documents are called in messages: "article", "course", "publication". */
   noun: (typeof REVIEWED)[number]['kind']
   collection: (typeof REVIEWED)[number]['collection']
-  /** The people who own a document and hear the decisions. */
   ownersOf: (doc: Doc) => number[]
-  /** What approval adds besides publishing, e.g. an article's tier and date. */
   onApprove?: (args: { data: Doc; originalDoc?: Doc; now: Date }) => Record<string, unknown>
 }
 
@@ -125,7 +121,6 @@ const applyReview =
   ({ noun, onApprove }: ReviewOptions): CollectionBeforeChangeHook =>
   ({ data, operation, originalDoc, req }) => {
     const trusted = !req.user || isAdminUser(req.user)
-    // Set by recordDraftSave: a write to a published document, kept as a draft.
     const live = Boolean(req.context?.[LIVE])
     // On create, `originalDoc` is a duplicate's source, not this document's
     // history. On a published document it is the latest draft, if there is one.

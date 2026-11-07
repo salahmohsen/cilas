@@ -5,7 +5,7 @@ import { useTranslations } from 'next-intl'
 
 import { ActionButton } from '@/components/arc/action-button/action-button'
 import { Dialog, DialogContent } from '@/components/arc/dialog/dialog'
-import { consentAcceptAction } from '@/app/(frontend)/[locale]/spaces/actions'
+import { consentAcceptAction } from '@/lib/space-actions'
 
 import { NoticeText } from './notice-text'
 import styles from './space.module.css'

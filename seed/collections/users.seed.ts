@@ -5,7 +5,6 @@ import { getOrCreateId, getOrCreateUser, lexical } from '../seed.utils'
 import { coursesData } from './courses.seed'
 
 export const usersData: UserSeed[] = [
-  // ---- fellows (teach the courses below) ----
   {
     name: 'Karim El Dalil',
     name_ar: 'كريم الدليل',
@@ -43,7 +42,6 @@ export const usersData: UserSeed[] = [
     roles: ['fellow'],
   },
 
-  // ---- fall cycle 2025 fellows (short courses, from fall-cycle-2025) ----
   {
     name: 'Shadi Jamal',
     name_ar: 'شادي جمال',
@@ -89,7 +87,6 @@ export const usersData: UserSeed[] = [
     roles: ['fellow'],
   },
 
-  // ---- winter cycle 2026 fellows ----
   {
     name: 'Susanne Sklar',
     name_ar: 'سوزان سكلر',
@@ -137,7 +134,6 @@ export const usersData: UserSeed[] = [
     roles: ['fellow'],
   },
 
-  // ---- Pigeon Towers essayists (authors of the essay collection) ----
   {
     name: 'Surti Singh',
     name_ar: 'سورتي سينغ',
@@ -169,7 +165,6 @@ export const usersData: UserSeed[] = [
     roles: ['member'],
   },
 
-  // ---- advisors ----
   {
     name: 'Michael Brint',
     name_ar: 'مايكل برنت',
@@ -213,7 +208,6 @@ export const usersData: UserSeed[] = [
     roles: ['member'],
   },
 
-  // ---- trustees ----
   {
     name: 'Karim-Yassin Goessinger',
     name_ar: 'كريم ياسين جوسنجر',
@@ -252,7 +246,6 @@ export const usersData: UserSeed[] = [
     roles: ['member'],
   },
 
-  // ---- CILAS Translation Lab, 2016–2018 ----
   // Credited in "الترجمة بصفتها تعليمًا: أعمال مختبر الترجمة" (CILAS, 2018). Names
   // and roles as the booklet prints them (its imprint and each essay's title
   // page); Latin spellings match migration/aliases.json so the archive import
@@ -473,7 +466,6 @@ export const usersData: UserSeed[] = [
     roles: ['member'],
   },
 
-  // ---- admin ----
   {
     name: 'Salah Mohsen',
     name_ar: 'صلاح محسن',
@@ -532,7 +524,6 @@ export const seedUsers = async (payload: Payload, ctx: SeedContext): Promise<voi
   }
 }
 
-/** Fails fast if a course lists someone who was never seeded. */
 export const linkFellows = async (_payload: Payload, ctx: SeedContext): Promise<void> => {
   for (const course of coursesData) {
     for (const email of course.fellows) {

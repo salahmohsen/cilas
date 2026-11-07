@@ -1,6 +1,5 @@
 import { PeopleWheel, type WheelPerson } from '@/components/person/people-wheel'
 
-/** A people page: its title, a line about who they are, how many, and the wheel. */
 export function PeoplePage({
   title,
   intro,

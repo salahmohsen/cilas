@@ -25,7 +25,7 @@ import {
   type PostFile,
   type PostShape,
 } from '@/lib/space-rules'
-import { SPACE_FILE_LIMIT } from '@/collections/SpaceFiles'
+import { SPACE_FILE_LIMIT } from '@/lib/space-file-limits'
 import { coverIssue, prepareCover } from '@/lib/event-cover-image'
 import { placeName } from '@/lib/link-preview'
 import { cleanSessionRefs, sessionIdsIn } from '@/lib/session-refs'
@@ -87,8 +87,6 @@ const TOMBSTONE_BODY = ' '
 
 type Input<T> = { payload: Payload; user: NonNullable<User> } & T
 
-// --- Pure decision layer ---
-
 export const validateMentions = (
   body: string,
   memberIds: Set<number>,
@@ -109,8 +107,6 @@ export const validateMentions = (
   }
   return { mentioned, invalid }
 }
-
-// --- Helpers ---
 
 const idOf = (v: number | { id: number } | null | undefined) => (v == null ? null : unwrapId(v))
 
@@ -162,7 +158,6 @@ const consentOf = async (payload: Payload, user: NonNullable<User>): Promise<boo
   )
 }
 
-/** Type, size and count checks for photos joining a post that already holds `existing`. The space-files collection checks again. */
 const fileError = (files: PostFile[], existing: number): WriteError | null => {
   for (const f of files) {
     if (!(SPACE_FILE_MIME as readonly string[]).includes(f.mimetype)) return 'file-type'
@@ -192,11 +187,6 @@ const storeFile = async (
   return (created as { id: number }).id
 }
 
-/**
- * Stores every photo on a just-created post. When storage refuses one, the
- * post and its photos go and the member gets the 'upload' error, not a
- * server error.
- */
 const storeFilesOrRollback = async (
   payload: Payload,
   spaceId: number,
@@ -837,53 +827,6 @@ export const commentRemove = async (i: Input<{ id: number }>): Promise<WriteResu
     await payload.delete({ collection: 'space-comments', id, overrideAccess: true })
   }
   return { ok: true, data: true }
-}
-
-// --- fileAdd ---
-
-/** Adds one photo to a post. Comments take no files. */
-export const fileAdd = async (
-  i: Input<{ post: number; file: PostFile }>,
-): Promise<WriteResult<{ id: number }>> => {
-  const { payload, user, post: postId, file } = i
-  const doc = (await payload.findByID({
-    collection: 'space-posts',
-    id: postId,
-    depth: 0,
-    overrideAccess: true,
-  })) as {
-    space: number | { id: number }
-    author?: number | { id: number } | null
-    deleted_at?: string | null
-    locked?: boolean
-  } | null
-  if (!doc) return err('not-found')
-  const spaceId = relId(doc.space)
-  const g = await gate(payload, user, spaceId, { write: true, post: postId })
-  if (g.stop) return err((g as { error: WriteError }).error)
-  const mem = await membership(payload, user, g.space)
-  if (mem.role === 'none') return err('not-member')
-  if (doc.deleted_at) return err('not-found')
-  if (doc.locked) return err('locked')
-  const isAuthor = doc.author != null && idOf(doc.author) === personOf(user)
-  if (!isAuthor && mem.role !== 'moderator') return err('not-yours')
-  if (!(await consentOf(payload, user))) return err('consent')
-
-  const { totalDocs } = await payload.count({
-    collection: 'space-files',
-    where: { post: { equals: postId } },
-    overrideAccess: true,
-  })
-  const issue = fileError([file], totalDocs)
-  if (issue) return err(issue)
-
-  try {
-    const id = await storeFile(payload, spaceId, { post: postId }, file)
-    return { ok: true, data: { id } }
-  } catch (e) {
-    payload.logger.error({ err: e, msg: `A file for space-posts ${postId} was not stored` })
-    return err('upload')
-  }
 }
 
 // --- reactionToggle ---

@@ -3,7 +3,6 @@ import type { SerializedEditorState } from '@payloadcms/richtext-lexical/lexical
 
 import type { ColumnsBlock } from '@/payload-types'
 
-/** Markdown reads both columns in document order, without the visual layout. */
 export const flattenRichTextColumns = (data: SerializedEditorState): SerializedEditorState => ({
   ...data,
   root: {

@@ -1,3 +1,4 @@
+import { localeOf } from '@/i18n/routing'
 import type { Metadata } from 'next'
 import { getTranslations } from 'next-intl/server'
 import { Suspense } from 'react'
@@ -24,7 +25,7 @@ export async function generateMetadata({ params, searchParams }: Props): Promise
       ),
     ),
   )
-  const result = await getStudyPage(locale === 'ar' ? 'ar' : 'en', query, Number(raw.page) || 1)
+  const result = await getStudyPage(localeOf(locale), query, Number(raw.page) || 1)
   const canonicalQuery = new URLSearchParams(query)
   if (result.page > 1) canonicalQuery.set('page', String(result.page))
   return {
@@ -38,7 +39,7 @@ export async function generateMetadata({ params, searchParams }: Props): Promise
 export default async function CoursesPage({ params, searchParams }: Props) {
   const { locale } = await params
   const raw = await searchParams
-  const lang = locale === 'ar' ? 'ar' : 'en'
+  const lang = localeOf(locale)
   const t = await getTranslations('Study')
   // The search, filters and page are worked out here: the browser gets one page.
   const url = new URLSearchParams(

@@ -1,3 +1,5 @@
+import { BRIDGE_PATH } from '@/lib/paths'
+import { localeOf } from '@/i18n/routing'
 import { CAIRO } from '@/lib/cairo-day'
 import { relId } from '@/lib/relation'
 import config from '@payload-config'
@@ -32,7 +34,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
  */
 export default async function ApplyPage({ params }: Props) {
   const { locale } = await params
-  const lang = locale === 'ar' ? 'ar' : 'en'
+  const lang = localeOf(locale)
   const [t, format] = await Promise.all([getTranslations('Apply'), getFormatter()])
   const payload = await getPayload({ config })
   const year = await getBridgeYear(payload, lang)
@@ -73,7 +75,7 @@ export default async function ApplyPage({ params }: Props) {
   return (
     <div className="apply-page mx-auto w-full max-w-3xl px-4 py-10 sm:px-8 sm:py-14">
       <header className="apply-header">
-        <Link className="apply-back" href="/study/bridge">
+        <Link className="apply-back" href={BRIDGE_PATH}>
           {year.programme.title}
         </Link>
         <h1 className="course-title mt-3">{t('title')}</h1>
@@ -97,7 +99,7 @@ export default async function ApplyPage({ params }: Props) {
       {/* The questions are written in English, so they read left to right on either page. */}
       <PayloadForm
         analytics={{ kind: 'programme', id: 'bridge' }}
-        back={{ href: '/study/bridge', label: t('backTo', { title: year.programme.title }) }}
+        back={{ href: BRIDGE_PATH, label: t('backTo', { title: year.programme.title }) }}
         confirmation={confirmation}
         disabled={!open}
         form={form}

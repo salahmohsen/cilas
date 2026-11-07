@@ -52,11 +52,9 @@ export interface ToastOptions {
 }
 
 export interface ToastStackApi {
-  /** Shows a toast and returns its id. */
   toast: (options: ToastOptions) => string
   /** Morphs a toast in place: icon, copy, and height animate to the new content and its timer restarts. Pass `action: undefined` to remove the action. */
   update: (id: string, patch: Partial<Omit<ToastOptions, 'id'>>) => void
-  /** Dismisses one toast, or every toast when called without an id. */
   dismiss: (id?: string) => void
 }
 
@@ -103,15 +101,11 @@ type ToastStore = ToastStackApi & {
 }
 type Target = { y: number; scale: number; height: number; opacity: number; content: number }
 
-/** Each tucked toast shows this many pixels above the one in front of it. */
 const PEEK = 14
-/** Space between toasts when the stack is open. */
 const GAP = 12
-/** Tucked toasts shrink by this much per step back. */
 const STEP = 0.05
 /** The card's top and bottom borders, added to the measured content height. */
 const BORDER = 2
-/** A swipe this far right has faded most of the way out. */
 const SWIPE_FADE = 280
 const EMPTY: ToastRecord[] = []
 const typeLabels: Record<ToastType, string> = {

@@ -54,10 +54,6 @@ const monthOf = (date?: string | null) =>
       })
     : null
 
-/**
- * Rich text as email HTML, each block reading in its own direction: an
- * Arabic paragraph runs right to left, an English one left to right.
- */
 const richHtml = (data: unknown, references: RichTextReferences = {}) =>
   data
     ? emailRichTextHTML(data, references, env.NEXT_PUBLIC_SERVER_URL)

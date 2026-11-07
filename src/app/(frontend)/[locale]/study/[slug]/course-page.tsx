@@ -10,7 +10,7 @@ import { draftMode } from 'next/headers'
 import { notFound } from 'next/navigation'
 import { getPayload } from 'payload'
 
-import type { Reader } from '@/api/articles.api'
+import type { Reader } from '@/lib/reader'
 import { getContactEmail } from '@/api/contact.api'
 import { OutsideAdminFrame } from '@/components/admin-frame-only'
 import { NewsletterSignupEnd } from '@/components/newsletter-signup-end'

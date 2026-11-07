@@ -70,7 +70,6 @@ export function StudyList({
   const [pending, startTransition] = useTransition()
   const query = useMemo(() => readCourseQuery(new URLSearchParams(params.toString())), [params])
 
-  // Any change to the filters starts the list again at its first page.
   const navigate = (change: (next: URLSearchParams) => void, keepPage = false) => {
     const next = new URLSearchParams(params.toString())
     if (!keepPage) next.delete('page')
@@ -110,8 +109,6 @@ export function StudyList({
     else next.delete('page')
     return `${pathname}${next.size ? `?${next}` : ''}`
   }
-  // A quick change dims the list in place; a slow one gives way to rows of
-  // placeholders shaped like the rows to come.
   const slow = useSlow(pending)
 
   return (

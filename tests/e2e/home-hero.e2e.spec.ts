@@ -17,21 +17,35 @@ for (const path of ['/en', '/ar', '/en/articles']) {
   })
 }
 
-// Two short laptop screens: the copy and its numbers still fit above the fold.
+// CMS-managed copy may extend below the fold; it must stay inside the hero's clipping bounds.
 for (const size of [
   { width: 1280, height: 720 },
   { width: 1366, height: 660 },
 ]) {
-  test(`the hero ends at the fold, its numbers inside it (${size.width}×${size.height})`, async ({
+  test(`the hero contains its title and numbers (${size.width}×${size.height})`, async ({
     page,
   }) => {
     test.setTimeout(120_000)
     await page.setViewportSize(size)
+    await page.emulateMedia({ reducedMotion: 'reduce' })
     await page.goto(`${BASE}/en`, { timeout: 90_000 })
     const hero = page.locator('.home-hero')
-    const bottom = await hero.evaluate((el) => el.getBoundingClientRect().bottom)
-    expect(bottom).toBeLessThanOrEqual(await page.evaluate(() => window.innerHeight + 1))
-    await expect(hero.locator('.home-numbers')).toBeInViewport()
+    await expect(hero.getByRole('heading', { level: 1 })).toBeVisible()
+    await expect(hero.locator('.home-numbers')).toBeVisible()
+    await page.evaluate(() => document.fonts.ready)
+    const contained = await hero.evaluate((el) => {
+      const bounds = el.getBoundingClientRect()
+      return ['h1', '.home-hero-actions', '.home-numbers'].map((selector) => {
+        const content = el.querySelector(selector)!.getBoundingClientRect()
+        return (
+          content.top >= bounds.top - 1 &&
+          content.bottom <= bounds.bottom + 1 &&
+          content.left >= bounds.left - 1 &&
+          content.right <= bounds.right + 1
+        )
+      })
+    })
+    expect(contained).toEqual([true, true, true])
   })
 }
 

@@ -1,3 +1,4 @@
+import { BRIDGE_PATH } from '@/lib/paths'
 import config from '@payload-config'
 import { draftMode } from 'next/headers'
 import { headers as getHeaders } from 'next/headers.js'
@@ -6,6 +7,8 @@ import { getPayload } from 'payload'
 
 import { pathOf } from '@/lib/paths'
 import { previewWhere } from '@/lib/preview-access'
+import { isPreviewCollection } from '@/lib/preview-url'
+import { localeOf, routing } from '@/i18n/routing'
 
 /**
  * Turns on Next's draft mode and sends the admin live-preview iframe to the
@@ -23,10 +26,7 @@ export async function GET(request: Request) {
   const slug = searchParams.get('slug')
   const collection = searchParams.get('collection')
 
-  if (
-    !slug ||
-    (collection !== 'courses' && collection !== 'articles' && collection !== 'programmes')
-  ) {
+  if (!slug || !isPreviewCollection(collection)) {
     return new Response('Missing or unsupported preview target', { status: 400 })
   }
 
@@ -66,16 +66,19 @@ export async function GET(request: Request) {
   // The language being edited (live preview passes it), else the editor's
   // saved site language, else English.
   const asked = searchParams.get('locale')
-  const saved =
-    (asked === 'en' || asked === 'ar' ? asked : null) ??
-    request.headers.get('cookie')?.match(/(?:^|;\s*)NEXT_LOCALE=(en|ar)/)?.[1]
+  const saved = localeOf(
+    routing.locales.find((locale) => locale === asked) ??
+      request.headers
+        .get('cookie')
+        ?.match(new RegExp(`(?:^|;\\s*)NEXT_LOCALE=(${routing.locales.join('|')})`))?.[1],
+  )
   // A programme has no page of its own: the Bridge page shows the one it is given.
   const path =
     collection === 'programmes'
       ? 'kind' in doc && doc.kind === 'bridge'
-        ? `/${saved ?? 'en'}/study/bridge?programme=${encodeURIComponent(slug)}`
+        ? `/${saved}${BRIDGE_PATH}?programme=${encodeURIComponent(slug)}`
         : null
-      : pathOf(collection, doc, saved ?? 'en')
+      : pathOf(collection, doc, saved)
   if (!path) {
     return new Response('This document has no page', { status: 404 })
   }

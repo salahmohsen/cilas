@@ -1,3 +1,4 @@
+import { localeOf } from '@/i18n/routing'
 import { getCourse } from '@/api/courses.api'
 import { CAIRO } from '@/lib/cairo-day'
 import { detailPath } from '@/lib/paths'
@@ -9,7 +10,7 @@ import { notFound } from 'next/navigation'
 import { getPayload } from 'payload'
 import type { ReactNode } from 'react'
 
-import type { Reader } from '@/api/articles.api'
+import type { Reader } from '@/lib/reader'
 import { PayloadForm } from '@/components/forms/payload-form'
 import { ResolvedRichTextField as RichTextField } from '@/components/resolved-rich-text-field'
 import { Link } from '@/i18n/navigation'
@@ -25,7 +26,7 @@ export async function courseApplyMetadata(
 ): Promise<Metadata> {
   const t = await getTranslations({ locale, namespace: 'Apply' })
   const course = await getCourse(await getPayload({ config }), slug, {
-    locale: locale === 'ar' ? 'ar' : 'en',
+    locale: localeOf(locale),
     reader,
     depth: 1,
   })
@@ -49,7 +50,7 @@ export async function CourseApplyPage({
   slug: string
   reader: Reader
 }) {
-  const lang = locale === 'ar' ? 'ar' : 'en'
+  const lang = localeOf(locale)
   const [t, format] = await Promise.all([getTranslations('Apply'), getFormatter()])
   const payload = await getPayload({ config })
   const course = await getCourse(payload, slug, { locale: lang, reader, depth: 1 })

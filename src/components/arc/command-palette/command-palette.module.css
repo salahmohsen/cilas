@@ -121,7 +121,6 @@
     background-color var(--duration-fast) var(--ease-standard);
 }
 
-/* The frame animates to the list height; the list keeps its own scroll. */
 .resultsFrame {
   overflow: hidden;
 }
@@ -157,7 +156,6 @@
   line-height: var(--leading-body);
 }
 
-/* One line per result: the title, then its description in muted text, so the list stays short and scannable. */
 .result {
   position: relative;
   display: flex;
@@ -173,7 +171,6 @@
   text-align: left;
   cursor: pointer;
 }
-/* The active row is drawn by the shared highlight; the row itself only tints its icon and arrow. */
 .itemIcon {
   transition: color var(--duration-fast) var(--ease-standard);
 }

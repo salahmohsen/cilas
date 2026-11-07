@@ -1,3 +1,4 @@
+import { localeOf } from '@/i18n/routing'
 import { getCourse } from '@/api/courses.api'
 import { type Locale } from '@/i18n/routing'
 import config from '@payload-config'
@@ -12,7 +13,7 @@ export const revalidate = 3600
 
 export async function GET(_request: Request, { params }: Params) {
   const { locale: raw, slug } = await params
-  const locale: Locale = raw === 'ar' ? 'ar' : 'en'
+  const locale: Locale = localeOf(raw)
   const payload = await getPayload({ config })
   // The file serves what an anonymous visitor may read.
   const course = await getCourse(payload, slug, { locale, reader: null })

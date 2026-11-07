@@ -16,7 +16,7 @@ import { pushConfig } from '@/lib/push/config'
 import { readProfile } from '@/lib/profile'
 import { currentReader } from '@/lib/reader'
 
-import { removeProfilePhotoAction, saveProfileAction } from '../profile/actions'
+import { removeProfilePhotoAction, saveProfileAction } from '@/lib/profile-actions'
 
 type Props = { params: Promise<{ locale: string }> }
 

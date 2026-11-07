@@ -85,7 +85,6 @@ const connect = () => {
   })
 }
 
-/** Listens to the tab's stream; returns the removal. The last removal closes it. */
 export const subscribeNotifications = (listener: StreamListener): (() => void) => {
   listeners.add(listener)
   tagWrites()

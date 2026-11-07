@@ -25,7 +25,6 @@ const stored = (name: string): CollectionFieldSchema => ({
  */
 const ARABIC = { locale: 'ar', stem: true } as const
 
-/** The Typesense fields of one search collection. */
 export const fieldsOf = (collection: SearchCollection): CollectionFieldSchema[] => [
   stored('slug'),
   stored('coverImage'),

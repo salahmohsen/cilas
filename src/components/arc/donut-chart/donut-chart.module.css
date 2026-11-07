@@ -38,7 +38,6 @@
 .svg[data-hovering] {
   cursor: pointer;
 }
-/* The track shows only before the first sweep and when there is nothing to draw, so the gaps between segments stay the page colour. */
 .track {
   fill: none;
   stroke: var(--surface-muted);
@@ -60,7 +59,6 @@
   opacity: 0.45;
 }
 
-/* The centre reads the active segment, or the total at rest. Old and new readouts share one grid cell, so a swap never moves or resizes anything. */
 .center {
   position: absolute;
   top: 50%;
@@ -111,7 +109,6 @@
   white-space: nowrap;
 }
 
-/* Legend rows mirror the segments: hovering either lights both. */
 /* Rows carry their own 2px spacing so a row closing its height takes its gap with it; the list's negative margin drops the last one. */
 .legend {
   display: grid;
@@ -164,7 +161,6 @@
     background-color var(--duration-standard) var(--ease-standard),
     box-shadow var(--duration-standard) var(--ease-standard);
 }
-/* A hidden segment keeps its row: the dot empties to a ring and the text quiets, so it can be shown again. */
 .row[data-hidden] .dot {
   background: transparent;
 }

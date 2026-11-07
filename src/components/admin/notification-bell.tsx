@@ -12,8 +12,8 @@ import {
   markRead,
   noteText,
 } from '@/lib/notifications-client'
-import type { StoredNotification } from '@/lib/realtime/events'
-import { subscribeNotifications } from '@/lib/realtime/stream-client'
+import type { ClientNotificationEvent, StoredNotification } from '@/lib/realtime/events'
+import { useNotificationFeed } from '@/components/use-notification-feed'
 
 type Note = StoredNotification
 
@@ -47,34 +47,20 @@ export function NotificationBell() {
     if (count !== null) setUnread(count)
   }, [])
 
-  useEffect(() => {
-    if (!user) return
-    // On a timer, as every later look is: the counts arrive after the first paint.
-    const first = setTimeout(() => void load(), 0)
-    // "Mark all read" sends one event per row: look once, after the burst.
-    let soon: ReturnType<typeof setTimeout> | undefined
-    const loadSoon = () => {
-      clearTimeout(soon)
-      soon = setTimeout(() => void load(), 150)
-    }
-    const unsubscribe = subscribeNotifications({
-      event: (event) => {
-        loadSoon()
-        if (event.op !== 'created' || !event.doc || isOwnTab(event)) return
-        const { label, detail } = noteText(event.doc)
-        toast.info(label, { description: detail })
-      },
-      sync: () => void load(),
-    })
-    const back = () => document.visibilityState === 'visible' && void load()
-    document.addEventListener('visibilitychange', back)
-    return () => {
-      clearTimeout(first)
-      clearTimeout(soon)
-      unsubscribe()
-      document.removeEventListener('visibilitychange', back)
-    }
-  }, [user, load])
+  const soon = useRef<ReturnType<typeof setTimeout> | undefined>(undefined)
+  const onEvent = useCallback(
+    (event: ClientNotificationEvent) => {
+      // "Mark all read" sends one event per row: look once, after the burst.
+      clearTimeout(soon.current)
+      soon.current = setTimeout(() => void load(), 150)
+      if (event.op !== 'created' || !event.doc || isOwnTab(event)) return
+      const { label, detail } = noteText(event.doc)
+      toast.info(label, { description: detail })
+    },
+    [load],
+  )
+  useEffect(() => () => clearTimeout(soon.current), [user?.id])
+  useNotificationFeed({ load, onEvent, enabled: Boolean(user), account: user?.id })
 
   // Closes on a click outside or Escape.
   useEffect(() => {

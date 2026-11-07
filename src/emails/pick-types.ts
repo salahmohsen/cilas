@@ -44,7 +44,6 @@ export const PICK_TYPES = [
 
 export type PickType = (typeof PICK_TYPES)[number]['value']
 
-/** A stored pick as `{ relationTo, value }`, from its type and that type's field. */
 export const pickItemOf = (
   pick: Record<string, unknown>,
 ): { relationTo: PickRelation; value: unknown } | null => {

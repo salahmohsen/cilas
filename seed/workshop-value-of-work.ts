@@ -26,8 +26,6 @@ const FORM_URL = 'https://forms.gle/qaRtcGQL8CC9A6u39'
 const APPLICATION_DEADLINE = '2026-09-15'
 const COVER_FILE = '/Users/salah/Desktop/قف للمعلم! أو لا؟.docx'
 
-/* ==================================================================== people */
-
 // Ghosoun Ismail already holds a profile with EN and AR bios; only create her
 // when she is missing, and never overwrite an existing profile.
 const seedPerson = async (): Promise<number> => {
@@ -70,8 +68,6 @@ const seedPerson = async (): Promise<number> => {
   return Number(doc.id)
 }
 
-/* ==================================================================== cycles */
-
 const seedCycle = async (): Promise<number> =>
   getOrCreateId(
     payload,
@@ -93,8 +89,6 @@ const seedCycle = async (): Promise<number> =>
     console.log('cycle:', id, 'fall-2026')
     return id
   })
-
-/* ===================================================================== media */
 
 const seedCover = async (): Promise<number | null> => {
   const alt = 'Film still of an Egyptian teacher pointing at a blackboard that reads «لغة عربية»'
@@ -126,8 +120,6 @@ const seedCover = async (): Promise<number | null> => {
   console.log('media created:', doc.id)
   return Number(doc.id)
 }
-
-/* ==================================================================== course */
 
 const day = (order: number, title: string, description: string, readings: MaterialSeed[]) => ({
   order,
@@ -300,14 +292,11 @@ const seedCourse = async (cycleId: number, personId: number, coverId: number | n
   return Number(doc.id)
 }
 
-/* =====================================================================  main */
-
 const personId = await seedPerson()
 const cycleId = await seedCycle()
 const coverId = await seedCover()
 const courseId = await seedCourse(cycleId, personId, coverId)
 
-// Sanity: expanded meetings must be the four announced days.
 const course = await payload.findByID({
   collection: 'courses',
   id: courseId,

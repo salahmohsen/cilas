@@ -1,4 +1,4 @@
-import { cleanup, fireEvent, render } from '@testing-library/react'
+import { cleanup, fireEvent, render, within } from '@testing-library/react'
 import type { ReactNode } from 'react'
 import { afterEach, describe, expect, it, vi } from 'vitest'
 
@@ -49,8 +49,7 @@ const poster: PosterData = {
   action: 'Apply',
 }
 
-const image = (container: HTMLElement) =>
-  container.querySelector<HTMLImageElement>('.poster-image img')!
+const image = (container: HTMLElement) => within(container).getByRole<HTMLImageElement>('img')
 
 describe('poster image delivery', () => {
   it('opts registration cards into direct delivery at their data boundary', async () => {
@@ -77,11 +76,10 @@ describe('poster image delivery', () => {
     expect(image(container)).toHaveAttribute('srcset')
   })
 
-  it('shows the CILAS mark when the cover fails, and recovers for a different cover', () => {
+  it('removes a failed cover and recovers for a different cover', () => {
     const { container, rerender } = render(<Poster poster={poster} />)
     fireEvent.error(image(container))
-    expect(container.querySelector('.poster-image img')).toBeNull()
-    expect(container.querySelector('.poster-fallback-logo')).not.toBeNull()
+    expect(within(container).queryByRole('img')).toBeNull()
     rerender(
       <Poster
         poster={{ ...poster, image: { src: '/assets/images/new.webp', alt: 'New cover' } }}
@@ -90,10 +88,9 @@ describe('poster image delivery', () => {
     expect(image(container).getAttribute('src')).toContain('/assets/images/new.webp')
   })
 
-  it('shows the CILAS mark when a poster has no image', () => {
+  it('renders a poster without a cover when no image is available', () => {
     const { container } = render(<Poster poster={{ ...poster, image: undefined }} />)
-    expect(container.querySelector('.poster-image img')).toBeNull()
-    expect(container.querySelector('.poster-fallback-logo')).not.toBeNull()
+    expect(within(container).queryByRole('img')).toBeNull()
   })
 
   it('loads the active and next slides early and follows carousel changes including wraparound', () => {
@@ -101,7 +98,7 @@ describe('poster image delivery', () => {
     const { container, getByRole } = render(
       <PosterCarousel posters={posters} label="Registration" />,
     )
-    const images = Array.from(container.querySelectorAll<HTMLImageElement>('.poster-image img'))
+    const images = within(container).getAllByRole<HTMLImageElement>('img')
     expect(images.map((img) => img.getAttribute('loading'))).toEqual(['eager', 'eager', 'lazy'])
     expect(images.map((img) => img.getAttribute('fetchpriority'))).toEqual(['high', 'auto', 'auto'])
     fireEvent.click(getByRole('button', { name: 'Show third slide' }))

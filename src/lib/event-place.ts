@@ -1,13 +1,9 @@
-/** How an event's web address reads on its card: a meeting service, a named place, or the host. */
-
 export type MeetingService = 'zoom' | 'meet' | 'teams'
 
-/** The longest place name a post stores; a page title past it is cut. */
 export const PLACE_NAME_MAX = 120
 
 const hostOf = (url: URL) => url.hostname.toLowerCase().replace(/^www\./, '')
 
-/** The video service an address opens, or null for any other page. */
 export const meetingService = (raw: string): MeetingService | null => {
   let url: URL
   try {

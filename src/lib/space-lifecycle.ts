@@ -16,7 +16,6 @@ export const courseLastMeeting = (course: {
 
 const DAY_MS = 86_400_000
 
-/** The archive state as of now, from the space row and its course row (null outside course spaces). */
 export const archiveOf = (
   space: { kind: SpaceKind; reopened?: boolean | null },
   course: { schedule?: unknown; sessions?: unknown } | null | undefined,

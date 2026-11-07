@@ -1,5 +1,4 @@
 import type { Page } from '@playwright/test'
-import { expect } from '@playwright/test'
 
 export interface LoginOptions {
   page: Page
@@ -10,22 +9,16 @@ export interface LoginOptions {
   }
 }
 
-/**
- * Logs the user into the admin panel via the login page.
- */
 export async function login({
   page,
   serverURL = 'http://localhost:3000',
   user,
 }: LoginOptions): Promise<void> {
-  await page.goto(`${serverURL}/admin/login`)
+  await page.goto(`${serverURL}/en/login?next=%2Fadmin`)
 
-  await page.fill('#field-email', user.email)
-  await page.fill('#field-password', user.password)
-  await page.click('button[type="submit"]')
+  await page.getByRole('textbox', { name: 'Email', exact: true }).fill(user.email)
+  await page.getByLabel('Password', { exact: true }).fill(user.password)
+  await page.getByRole('button', { name: 'Sign in', exact: true }).click()
 
   await page.waitForURL(`${serverURL}/admin`)
-
-  const dashboardArtifact = page.locator('span[title="Dashboard"]')
-  await expect(dashboardArtifact).toBeVisible()
 }

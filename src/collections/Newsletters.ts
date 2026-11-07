@@ -26,7 +26,6 @@ export const Newsletters: CollectionConfig = {
     useAsTitle: 'title',
     components: { beforeListTable: ['/components/admin/subscribers-link#SubscribersLink'] },
     defaultColumns: ['title', 'issue_date', 'sent_at', '_status'],
-    // The real email, rendered from the saved draft; it reloads on each save.
     livePreview: { url: ({ data }) => `/api/email-preview?kind=newsletter&id=${data?.id ?? ''}` },
   },
   endpoints: newsletterEndpoints,

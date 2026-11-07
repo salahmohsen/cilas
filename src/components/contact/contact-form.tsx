@@ -20,7 +20,6 @@ export function ContactForm({
   formId: number
   topics: string[]
   email: string | null
-  /** In the page's gutter, as on the home page, rather than in its own width. */
   flush?: boolean
 }) {
   const t = useTranslations('Contact')
@@ -57,26 +56,17 @@ export function ContactForm({
       }}
       formExtra={spam.fields}
       onSubmit={async (message) => {
-        if (spam.isBot()) return
-        try {
-          const res = await fetch('/api/form-submissions', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json', ...(await spam.headers()) },
-            body: JSON.stringify({
-              form: formId,
-              submissionData: (['name', 'email', 'topic', 'message'] as const).map((field) => ({
-                field,
-                value: message[field],
-              })),
-            }),
-          })
-          // The section shows its failure note and keeps what was written.
-          if (!res.ok) throw new Error(`Contact form: ${res.status}`)
-          // The topic is one of the form's own labels; the message and the sender are not sent.
-          track('contact_submitted', topics.includes(message.topic) ? { topic: message.topic } : {})
-        } finally {
-          spam.reset()
-        }
+        const res = await spam.submit({
+          form: formId,
+          submissionData: (['name', 'email', 'topic', 'message'] as const).map((field) => ({
+            field,
+            value: message[field],
+          })),
+        })
+        if (!res) return
+        if (!res.ok) throw new Error(`Contact form: ${res.status}`)
+        // The topic is one of the form's own labels; the message and the sender are not sent.
+        track('contact_submitted', topics.includes(message.topic) ? { topic: message.topic } : {})
       }}
       title={t('title')}
       topics={topics}

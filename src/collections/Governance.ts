@@ -59,7 +59,6 @@ export const Governance: CollectionConfig = {
           max: 2100,
           admin: { description: 'First year on the board, e.g. 2016.', width: '50%' },
         },
-        // Empty while serving.
         { name: 'term_to', type: 'number', min: 2012, max: 2100, admin: { width: '50%' } },
       ],
     },

@@ -33,7 +33,6 @@ import { createIndexer, type Indexer } from './indexer'
 
 type Doc = Record<string, unknown> & { id: number | string }
 
-/** Per collection, the fields a record is built from. */
 const SELECT = {
   courses: {
     title: true,
@@ -69,7 +68,6 @@ const POPULATE = { people: { name: true, photo: true } }
 
 const BATCH_SIZE = 100
 
-/** Where a person shows up, per collection that credits people. */
 const worksOf = (personId: string): Partial<Record<SearchCollection, Where>> => ({
   courses: { fellows: { in: [personId] } },
   articles: {
@@ -112,7 +110,6 @@ const readPublic = async (
   return result as unknown as { docs: Doc[]; hasNextPage: boolean }
 }
 
-/** The public documents matching `where`, as search records, in batches. */
 async function* publicDocuments(
   reader: Reader,
   collection: SearchCollection,
@@ -144,7 +141,6 @@ const collect = async (batches: AsyncIterable<SearchDocument[]>) => {
 const photoId = (photo: unknown) =>
   photo != null && typeof photo === 'object' ? relId(photo) : photo
 
-/** Whether a save changed what a person's works show of them. */
 const personChanged = (doc: Doc, previous: Doc | undefined) =>
   doc.name !== previous?.name || photoId(doc.photo) !== photoId(previous?.photo)
 
@@ -167,7 +163,6 @@ const createHooks = (indexer: Indexer) => {
     )
   }
 
-  /** Re-indexes every public course and article crediting the person. */
   const refreshWorksOf = async (reader: Reader, personId: string) => {
     for (const [collection, where] of Object.entries(worksOf(personId)) as [
       SearchCollection,

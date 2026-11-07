@@ -1,5 +1,6 @@
 'use client'
 
+import { BRIDGE_PATH } from '@/lib/paths'
 import { personAvatarSeed } from '@/lib/avatar'
 
 import {
@@ -27,7 +28,6 @@ import { useSession } from '@/components/use-session'
 import { useRouter } from '@/i18n/navigation'
 import { ALL_SHOWN, type Navigation } from '@/lib/navigation'
 
-/** The site's main navigation, in the site language, with links under it. */
 export function CILASSiteHeader({ nav = ALL_SHOWN }: { nav?: Navigation }) {
   const t = useTranslations('Header')
   const locale = useLocale()
@@ -149,7 +149,7 @@ export function CILASSiteHeader({ nav = ALL_SHOWN }: { nav?: Navigation }) {
         ? {
             title: t('study.featureTitle'),
             description: t('study.featureDescription'),
-            href: href('/study/bridge'),
+            href: href(BRIDGE_PATH),
             image: { src: '/assets/images/cilas-classroom.jpg', alt: t('study.featureImageAlt') },
           }
         : undefined,

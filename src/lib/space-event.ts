@@ -1,5 +1,3 @@
-/** Rules and formats of an event post that both the server and the card share. */
-
 export const RSVP_STATUSES = ['going', 'maybe', 'not_going'] as const
 export type RsvpStatus = (typeof RSVP_STATUSES)[number]
 
@@ -24,14 +22,12 @@ export const locationUrl = (location: string | null | undefined): string | null 
   }
 }
 
-/** When the event is over: its end, or its start when it has none. */
 export const eventOver = (
   startsAt: string,
   endsAt: string | null | undefined,
   now: Date = new Date(),
 ): boolean => new Date(endsAt || startsAt).getTime() < now.getTime()
 
-/** One line of Markdown as plain text: links keep their words, marks go. */
 export const plainLine = (line: string) =>
   line
     .replace(/!?\[([^\]]*)\]\([^)]*\)/g, '$1')

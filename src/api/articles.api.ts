@@ -2,15 +2,9 @@ import { type Locale, otherLocale } from '@/i18n/routing'
 import { relId } from '@/lib/relation'
 import type { Payload, Where } from 'payload'
 
-import type { Article, Media, Publication, User } from '@/payload-types'
+import type { Article, Media, Publication } from '@/payload-types'
+import type { Reader } from '@/lib/reader'
 import { previewWhere } from '@/lib/preview-access'
-
-/**
- * Who is reading. Null is an anonymous visitor: the cached pages read as one,
- * so `community` articles never reach them. The signed-in pages pass the
- * account, and access rules then add what it may read.
- */
-export type Reader = User | null
 
 /**
  * Published articles a visitor may read, newest first. Access rules apply

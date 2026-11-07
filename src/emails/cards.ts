@@ -1,8 +1,8 @@
+import { BRIDGE_PATH } from '@/lib/paths'
 import { detailPath, pathOf } from '@/lib/paths'
 import { CAIRO } from '@/lib/cairo-day'
 import { plainText } from '@/lib/plaintext'
 
-/** One newsletter pick as the email shows it. */
 export type Card = {
   kind: 'Course' | 'Article' | 'Collection' | 'Cycle' | 'Programme' | 'Event'
   title: string
@@ -13,7 +13,6 @@ export type Card = {
   note: string | null
   /** `thumb` is the 4:3 crop (Media's `thumbnail` size), so grid cards line up. */
   image: { url: string; alt: string; thumb: string } | null
-  /** A cycle's courses, each a full card. */
   children: Card[]
   url: string
   button: string
@@ -117,7 +116,6 @@ const placeOf = (doc: Doc) => {
   return doc.online_url ? 'Online' : null
 }
 
-/** A populated pick as a card, or null when it is missing or has no page. */
 export const cardOf = (
   pick: Pick,
   note: string | null | undefined,
@@ -143,7 +141,6 @@ export const cardOf = (
         kind: 'Course',
         byline: peopleOf(doc.fellows, site),
         meta: cycleLabel(doc.cycle),
-        // The description's start, as the course page opens; else its card line.
         text:
           excerpt(doc.description, 180) ||
           (doc.summary as string | null) ||
@@ -220,7 +217,7 @@ export const cardOf = (
         meta: null,
         text: (doc.tagline as string | null) || null,
         image: imageOf(doc.cover, doc.title),
-        url: `${site}/en/study/bridge`,
+        url: `${site}/en${BRIDGE_PATH}`,
         button: labels.apply,
       }
   }

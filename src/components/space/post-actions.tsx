@@ -23,7 +23,7 @@ import {
   postModifyAction,
   postRemoveAction,
   type SpacesWriteState,
-} from '@/app/(frontend)/[locale]/spaces/actions'
+} from '@/lib/space-actions'
 
 import { PostEditForm, type PostEditContext } from './post-edit-form'
 import styles from './space.module.css'

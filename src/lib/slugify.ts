@@ -7,7 +7,6 @@
  * Arabic is romanised first and then slugified with the same rules.
  */
 
-/** Arabic letter -> Latin transliteration (simplified, omits short vowels). */
 const ARABIC_TO_LATIN: Record<string, string> = {
   // alif
   آ: 'a',
@@ -92,10 +91,6 @@ const romanizeArabic = (value: string): string =>
 /** Latin combining marks left behind by NFD decomposition (é -> e). */
 const COMBINING_MARKS = /[\u0300-\u036F]/g
 
-/**
- * Produces a URL-safe slug: lowercase, ASCII only, words joined by single
- * dashes. Latin input (including already-transliterated text) is unaffected.
- */
 export const slugify = (value: string | null | undefined): string => {
   if (!value) return ''
 

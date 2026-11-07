@@ -6,7 +6,7 @@ import { afterEach, describe, expect, it, vi } from 'vitest'
 import messages from '../../messages/en.json'
 
 vi.mock('next/navigation', () => ({ useRouter: () => ({ refresh: vi.fn() }) }))
-vi.mock('@/app/(frontend)/[locale]/spaces/actions', () => ({
+vi.mock('@/lib/space-actions', () => ({
   spaceSettingsSetAction: vi.fn(async () => ({ status: 'ok' })),
 }))
 

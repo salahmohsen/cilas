@@ -6,7 +6,7 @@ import { useLocale } from 'next-intl'
 import { useRouter } from 'next/navigation'
 import { Plus, X } from 'lucide-react'
 
-import type { PhotoState, ProfileState } from '@/app/(frontend)/[locale]/profile/actions'
+import type { PhotoState, ProfileState } from '@/lib/profile-actions'
 import { Button } from '@/components/arc/button/button'
 import { Input } from '@/components/arc/input/input'
 import { Tooltip } from '@/components/arc/tooltip/tooltip'
@@ -61,8 +61,6 @@ export function ProfileForm({ profile, messages: m, action, removePhotoAction, o
   const [bioEn, setBioEn] = useState(profile.bio.en)
   const [bioAr, setBioAr] = useState(profile.bio.ar)
   const [result, setResult] = useState<ProfileState>({ status: 'idle' })
-  // What is stored, as far as this form knows: the values a save last wrote.
-  // The settings page counts a field as changed when it differs from this.
   const [base, setBase] = useState({
     values: {
       nameEn: profile.name.en,
@@ -73,9 +71,7 @@ export function ProfileForm({ profile, messages: m, action, removePhotoAction, o
     bioEn: profile.bio.en,
     bioAr: profile.bio.ar,
   })
-  // Bumped by Discard so the editors start again from the stored bios.
   const [editorKey, setEditorKey] = useState(0)
-  // How the last submit ended, for the settings page's Save, which awaits it.
   const outcome = useRef<{ ok: boolean; message?: string } | null>(null)
   // The editor's own rendering of each stored bio, found on first use (it needs the
   // browser) and found again when the stored bio changes.

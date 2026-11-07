@@ -93,7 +93,6 @@ const confirmation = {
   ar: lexical(['شكرًا لك. وصلت رسالتك إلى سيلاس، وسنرد عليك بالبريد الإلكتروني.'], 'rtl'),
 }
 
-// The message as the form received it: every field, in a table.
 const emails = (locale: 'en' | 'ar') => [
   {
     emailTo: inbox,
@@ -124,7 +123,6 @@ const formId = await getOrCreateId(
     }),
 )
 
-// English first; the Arabic keeps the same rows (by id) and changes only their words.
 const en = await payload.update({
   collection: 'forms',
   id: formId,

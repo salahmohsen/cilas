@@ -1,6 +1,6 @@
 import { type Locale, otherLocale } from '@/i18n/routing'
 import type { Payload } from 'payload'
-import type { Reader } from '@/api/articles.api'
+import type { Reader } from '@/lib/reader'
 import { isAdminUser } from '@/access'
 
 export async function getEventPreview(payload: Payload, id: number, locale: Locale, user: Reader) {

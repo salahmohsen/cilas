@@ -5,7 +5,6 @@ import { scrubReferrer, scrubUrl } from './scrub'
 type Properties = Record<string, unknown>
 export type Capture = { event: string; properties?: Properties }
 
-/** What replaces the address of a page analytics may not see. */
 const HIDDEN_URL = '/[private]'
 
 const pathOf = (url: unknown): string | null => {
@@ -31,7 +30,6 @@ export const mayCapture = (event: string, pathname: string): boolean =>
 export const gateCapture = (capture: Capture | null): Capture | null => {
   if (!capture) return null
   const properties: Properties = { ...capture.properties }
-  // No address means PostHog could not tell: treat it as the page we are on.
   const where = pathOf(properties.$current_url) ?? (globalThis.location?.pathname || '/')
   if (!mayCapture(capture.event, where)) return null
 

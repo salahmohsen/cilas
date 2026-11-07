@@ -98,7 +98,6 @@
 .layer[data-empty] {
   color: var(--text-muted);
 }
-/* An optimistic save shows the new text at once, a little quieter until the save lands; then it settles to full strength. */
 .root[data-phase='saving'] .layer {
   opacity: 0.5;
   transition-duration: var(--duration-fast);
@@ -139,7 +138,6 @@ textarea.control {
   overflow-wrap: break-word;
 }
 
-/* The frame is the only surface: a hover tint at rest, a bordered field while editing, a soft danger wash when a save fails. */
 .frame {
   position: absolute;
   top: 0;

@@ -9,7 +9,6 @@ import {
   type NotificationEvent,
 } from './events'
 
-/** One open stream: a tab of a signed-in account. */
 export type Sink = {
   event: (event: ClientNotificationEvent) => void
   /** Events may have been missed (the listener reconnected): refetch. */

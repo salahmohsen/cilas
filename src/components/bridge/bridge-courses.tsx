@@ -1,5 +1,5 @@
 'use client'
-import { useBlogGridLabels } from '@/lib/blog-grid-labels'
+import { useBlogGridLabels } from '@/components/blog-grid-labels'
 
 import { detailPath } from '@/lib/paths'
 
@@ -9,11 +9,6 @@ import { BlogGrid, type BlogPost } from '@/components/arc/blocks/blog-grid/blog-
 import { SEASON_ICONS } from '@/components/season-icon'
 import type { Season } from '@/lib/cycle'
 
-/**
- * The Bridge year's courses as Arc's blog-grid: the semesters are the
- * filters, each card opens the course's page, and a course without a cover
- * shows its season's mark instead.
- */
 export function BridgeCourses({
   title,
   posts,
@@ -21,11 +16,8 @@ export function BridgeCourses({
   seasons,
 }: {
   title: string
-  /** Cards in the year's order: by semester, then by start. Ids are course slugs. */
   posts: BlogPost[]
-  /** Semester names, in order. */
   semesters: string[]
-  /** Course slug → its semester's season. */
   seasons: Record<string, Season>
 }) {
   const t = useTranslations('Bridge')

@@ -4,7 +4,6 @@ import type { ReactNode } from 'react'
 
 import { Dialog, DialogContent, DialogTrigger } from '@/components/arc/dialog/dialog'
 
-/** The movie's full metadata, opened from the card's foot. */
 export function MovieDetailsDialog({
   label,
   title,

@@ -1,5 +1,4 @@
 // @vitest-environment node
-// Boots the real config against DATABASE_URL.
 import { getPayload, type Payload } from 'payload'
 import { afterAll, beforeAll, describe, expect, it } from 'vitest'
 
@@ -14,8 +13,6 @@ import { RUN, uniq } from './fixtures'
 
 let payload: Payload
 
-// Fixtures avoid the "/probe-" prefix and the fall 2031 Cairo cycle of the
-// course import spec, so the two specs can run side by side.
 const P = `/probepeople-${RUN}`
 const CYCLE_URL = `${P}-spring-2032.html`
 const PROGRAMME = `Probe People Bridge ${RUN} 2031–2032`

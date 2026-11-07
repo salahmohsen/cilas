@@ -1,6 +1,5 @@
 import { WEEKDAYS, addDays, cairoDay, weekdayOf } from '@/lib/cairo-day'
 
-/** One bar or point on a dashboard chart: a Cairo day, or the week that starts on it. */
 export type TimePoint = {
   /** `YYYY-MM-DD`; for a week, its first day. */
   key: string

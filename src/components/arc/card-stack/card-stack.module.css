@@ -17,7 +17,6 @@
   height: calc(var(--card-height) + var(--stack-peek));
   outline: none;
 }
-/* Each slot scales from its bottom edge, so the cards behind show a thin, even edge below the one in front. */
 .slot {
   position: absolute;
   top: 0;
@@ -46,7 +45,6 @@
 .card:not([data-top]) {
   pointer-events: none;
 }
-/* Resting cards sit flat on their borders; a card in the hand or in flight floats and casts a shadow. */
 .card::before {
   position: absolute;
   inset: 0;
@@ -111,12 +109,10 @@
 .stamp[data-side='left'] svg {
   color: var(--text-secondary);
 }
-/* Cards returning to the back of the stack carry no verdict. */
 .card:not([data-top]):not([data-flying]) .stamp {
   visibility: hidden;
 }
 
-/* Keyboard focus on the stage outlines the top card instead of the whole stage. */
 .stage:focus-visible {
   --focus-outline-width: 0px;
 }
@@ -182,7 +178,6 @@
 .control svg {
   flex: none;
 }
-/* The approving action follows the selected accent. */
 .control[data-tone='primary'] {
   border-color: var(--accent);
   background: var(--accent);

@@ -4,7 +4,6 @@
  * Shared by the server (publish, hub, stream route) and the browser.
  */
 
-/** A row as the REST API returns it at depth 0. */
 export type StoredNotification = {
   id: number
   kind: string
@@ -28,11 +27,8 @@ export type NotificationEvent = {
   doc?: StoredNotification
 }
 
-/** The event as a tab receives it. */
 export type ClientNotificationEvent = Omit<NotificationEvent, 'recipient'>
 
-/** The Postgres channel every app instance listens on. */
 export const NOTIFICATION_CHANNEL = 'cilas_notifications'
 
-/** The request header that names the tab a change came from. */
 export const TAB_HEADER = 'x-cilas-tab'

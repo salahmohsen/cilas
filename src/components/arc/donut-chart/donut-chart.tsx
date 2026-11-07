@@ -45,14 +45,11 @@ export interface DonutChartProps {
   data: DonutChartDatum[]
   /** What the whole is, such as "Visits by source". Names the chart for assistive technology. */
   label: string
-  /** Unit after values, such as "visits". */
   unit?: string
   formatValue?: (value: number) => string
-  /** Center label at rest, above the total. */
   totalLabel?: string
   /** Diameter in pixels. The chart scales down to fit narrower containers. */
   size?: number
-  /** Ring thickness in pixels. */
   thickness?: number
   /** Segments below this share of the total join "Other". */
   groupBelow?: number
@@ -69,7 +66,6 @@ export interface DonutChartProps {
   onHiddenKeysChange?: (keys: string[]) => void
   /** What clicking a legend row does: show or hide its segment, or pin it as the selected segment. */
   legendAction?: 'toggle' | 'select'
-  /** The synced legend beside or below the ring. */
   legend?: boolean
   emptyLabel?: string
   ref?: Ref<HTMLElement>
@@ -600,7 +596,6 @@ export function DonutChart({
   const describe = (item: Slice) =>
     `${item.label}, ${format(item.value)}, ${shareText(item.value / (total || 1))}${item.members ? `. Includes ${item.members.map((member) => member.label).join(', ')}` : ''}`
 
-  // Arrow keys walk the segments, in the legend or on the ring itself when there is no legend.
   const rows = useRef<(HTMLButtonElement | null)[]>([])
   const step = (key: string, index: number, count: number) =>
     (
@@ -659,7 +654,6 @@ export function DonutChart({
       setPreview(null)
   }
 
-  // One readout per segment plus the total; the active one rolls in from the side it sits on, so moving clockwise rolls the drum forward.
   const identity = activeSlice ? activeSlice.key : total ? '__total' : '__empty'
   const readouts = [
     {

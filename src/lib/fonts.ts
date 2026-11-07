@@ -48,7 +48,6 @@ const amiri = Amiri({
   fallback: [],
 })
 
-/** The faces' variables, set once on the document. */
 export const fontVariables = [inter, plexArabic, playfairDisplay, amiri]
   .map((f) => f.variable)
   .join(' ')

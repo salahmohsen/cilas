@@ -1,7 +1,7 @@
 'use client'
 
 import { useLocale, useTranslations } from 'next-intl'
-import { useCallback, useEffect, useRef, useState, type ReactNode } from 'react'
+import { useCallback, useState, type ReactNode } from 'react'
 import { formatDistanceToNow, isYesterday } from 'date-fns'
 import {
   AtSign,
@@ -39,11 +39,10 @@ import {
   noteText,
 } from '@/lib/notifications-client'
 import type { ClientNotificationEvent, StoredNotification } from '@/lib/realtime/events'
-import { subscribeNotifications } from '@/lib/realtime/stream-client'
+import { useNotificationFeed } from '@/components/use-notification-feed'
 
 const LIMIT = 20
 
-/** The glyph each event kind shows when no actor portrait exists. */
 const GLYPHS: Record<NotificationIcon, ReactNode> = {
   'file-search': <FileSearch size={18} strokeWidth={1.7} />,
   'circle-check': <CircleCheck size={18} strokeWidth={1.7} />,
@@ -155,26 +154,7 @@ export function SiteNotifications() {
     [load, markRead, t, toItem, toast],
   )
 
-  // The stream's listener stays the same; it calls the latest handlers.
-  const handlers = useRef({ load, onEvent })
-  useEffect(() => {
-    handlers.current = { load, onEvent }
-  }, [load, onEvent])
-
-  useEffect(() => {
-    const first = setTimeout(() => void handlers.current.load(), 0)
-    const unsubscribe = subscribeNotifications({
-      event: (event) => handlers.current.onEvent(event),
-      sync: () => void handlers.current.load(),
-    })
-    const back = () => document.visibilityState === 'visible' && void handlers.current.load()
-    document.addEventListener('visibilitychange', back)
-    return () => {
-      clearTimeout(first)
-      unsubscribe()
-      document.removeEventListener('visibilitychange', back)
-    }
-  }, [])
+  useNotificationFeed({ load, onEvent })
 
   if (!items) return null
 

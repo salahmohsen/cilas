@@ -12,7 +12,6 @@ export const siteSettingsData = {
   ],
 }
 
-/** The home page's questions, in both languages, in order. */
 export const faqData: Array<Record<'en' | 'ar', { question: string; answer: string }>> = [
   {
     en: {

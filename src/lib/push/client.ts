@@ -1,9 +1,3 @@
-/**
- * The browser side of Web Push: what this device can do, and the steps of
- * turning it on. Used by the settings page and the sign-out. Nothing here
- * runs on the server.
- */
-
 export const SERVICE_WORKER_URL = '/sw.js'
 
 /** An iPhone or iPad (iPadOS 13 and later reports itself as a Mac with touch). */
@@ -25,17 +19,14 @@ export const deviceSupport = (): DeviceSupport => {
     : 'unsupported'
 }
 
-/** Registers the service worker (a second call returns the same registration). */
 export const registerServiceWorker = (): Promise<ServiceWorkerRegistration> =>
   navigator.serviceWorker.register(SERVICE_WORKER_URL, { scope: '/' })
 
-/** This device's subscription, if it has one. */
 export const currentSubscription = async (): Promise<PushSubscription | null> => {
   const registration = await navigator.serviceWorker.getRegistration('/')
   return (await registration?.pushManager.getSubscription()) ?? null
 }
 
-/** The VAPID key as the bytes `subscribe` wants. */
 export const keyBytes = (base64Url: string): Uint8Array<ArrayBuffer> => {
   const padded = base64Url.padEnd(base64Url.length + ((4 - (base64Url.length % 4)) % 4), '=')
   const raw = atob(padded.replace(/-/g, '+').replace(/_/g, '/'))

@@ -5,7 +5,6 @@
  */
 export const ALIAS = 'spaces_search'
 
-/** A generation is the alias, an underscore and 32 hex digits. */
 export const GENERATION_PATTERN = new RegExp(`^${ALIAS}_[a-f0-9]{32}$`)
 
 export const generationName = (id: string) => `${ALIAS}_${id.replaceAll('-', '')}`

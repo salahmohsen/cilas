@@ -35,7 +35,6 @@ export interface ElasticSliderProps {
   value?: number
   defaultValue?: number
   onValueChange?: (value: number) => void
-  /** Runs once a drag is released or a key changes the value. */
   onValueCommit?: (value: number) => void
   min?: number
   max?: number
@@ -44,7 +43,6 @@ export interface ElasticSliderProps {
   largeStep?: number
   /** Detents. A dragged thumb clicks into each one and holds for a few pixels before letting go. Labels print under the track. */
   marks?: (number | ElasticSliderMark)[]
-  /** Formats the readout, the bubble, and the spoken value. */
   format?: (value: number) => string
   /** Show the value beside the label. The bubble over the thumb still appears while dragging or using keys. */
   showValue?: boolean
@@ -69,7 +67,6 @@ type Drag = {
 const { spring, duration, blur } = motionTokens
 const enterEase = [...motionTokens.ease.enter] as [number, number, number, number]
 const exitEase = [...motionTokens.ease.standard] as [number, number, number, number]
-/** Motion drops velocity on time-defined springs, so anything a gesture hands off to runs the same spring written as stiffness and damping. */
 const physical = (
   { visualDuration, bounce }: { visualDuration: number; bounce: number },
   restDelta = 0.002,

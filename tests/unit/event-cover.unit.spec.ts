@@ -1,7 +1,7 @@
 import sharp from 'sharp'
 import { describe, expect, it } from 'vitest'
 
-import { SPACE_FILE_LIMIT } from '@/collections/SpaceFiles'
+import { SPACE_FILE_LIMIT } from '@/lib/space-file-limits'
 import { COVER_EDGE, coverField, hexToOklch } from '@/lib/event-cover'
 import { coverIssue, prepareCover } from '@/lib/event-cover-image'
 

@@ -4,11 +4,6 @@ import { Box, EmailLayout } from './layout'
 import type { EmailSettings } from './settings'
 import { button as buttonStyle, colors, type } from './theme'
 
-/**
- * A transactional email, after Barebone's password reset: one centred panel
- * with the sail, a heading, the paragraphs, an optional quoted note and an
- * optional button.
- */
 export function MessageEmail({
   settings,
   preview,

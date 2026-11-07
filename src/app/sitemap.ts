@@ -1,3 +1,4 @@
+import { BRIDGE_PATH } from '@/lib/paths'
 import { bridgeYearPath, pathOf } from '@/lib/paths'
 import config from '@payload-config'
 import type { MetadataRoute } from 'next'
@@ -13,7 +14,7 @@ export const revalidate = 3600
 const STATIC: SitePage[] = [
   { path: '' },
   { path: '/study' },
-  { path: '/study/bridge' },
+  { path: BRIDGE_PATH },
   { path: '/apply' },
   { path: '/articles' },
   { path: '/events' },

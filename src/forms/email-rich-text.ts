@@ -1,3 +1,4 @@
+import { localeOf } from '@/i18n/routing'
 import { relId } from '@/lib/relation'
 import type { BeforeEmail } from '@payloadcms/plugin-form-builder/types'
 import { resolveRichTextReferences } from '@/lib/resolve-rich-text-references'
@@ -15,7 +16,7 @@ export const formEmailRichText: BeforeEmail = async (emails, params) => {
     overrideAccess: false,
     depth: 1,
   })
-  const locale = req.locale === 'ar' ? 'ar' : 'en'
+  const locale = localeOf(req.locale)
   const references = await resolveRichTextReferences(req.payload, form.emails, {
     locale,
     user: null,

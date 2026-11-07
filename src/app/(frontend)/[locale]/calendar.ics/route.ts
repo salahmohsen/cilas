@@ -1,3 +1,4 @@
+import { localeOf } from '@/i18n/routing'
 import { getTranslations } from 'next-intl/server'
 
 import { getCachedCalendarItems } from '@/api/calendar.api'
@@ -10,7 +11,7 @@ import { buildIcs } from '@/lib/ics'
  */
 export async function GET(request: Request, { params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params
-  const lang = locale === 'ar' ? 'ar' : 'en'
+  const lang = localeOf(locale)
   const [t, tf] = await Promise.all([
     getTranslations({ locale: lang, namespace: 'Calendar' }),
     getTranslations({ locale: lang, namespace: 'Study.filters' }),

@@ -19,7 +19,6 @@ export const Spaces: CollectionConfig = {
   labels: { singular: 'Space', plural: 'Spaces' },
   access: {
     read: readSpaces,
-    // Course and cohort rows are made by hooks, community rows by an admin.
     create: ({ req }) => isAdminUser(req.user),
     update: ({ req }) => isAdminUser(req.user),
     delete: ({ req }) => isAdminUser(req.user),
@@ -41,7 +40,6 @@ export const Spaces: CollectionConfig = {
       access: { update: () => false }, // the kind never changes after the row exists
     },
     {
-      // Course and cohort spaces are named by their course or programme.
       name: 'name',
       label: 'Space name',
       type: 'text',
@@ -105,7 +103,6 @@ export const Spaces: CollectionConfig = {
       ] satisfies { label: string; value: EventPosting }[],
     },
     {
-      // Replaces the default "About this space" text; empty keeps the default.
       name: 'about',
       label: 'About this space',
       type: 'textarea',
@@ -113,7 +110,6 @@ export const Spaces: CollectionConfig = {
       maxLength: ABOUT_MAX,
     },
     {
-      // Replaces the site's "Privacy and rules" text in this space; empty keeps it.
       name: 'privacy_rules',
       label: 'Privacy and rules',
       type: 'textarea',
@@ -140,7 +136,6 @@ export const Spaces: CollectionConfig = {
       access: { create: () => false, update: () => false },
       admin: {
         readOnly: true,
-        // Nothing to choose on the create form: it appears once the system has set it.
         condition: (data) => Boolean(data?.introduction_post),
         description:
           'Made by the system from the Space introduction template when the space is created.',

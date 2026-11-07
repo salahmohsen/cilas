@@ -27,8 +27,6 @@ beforeAll(async () => {
       overrideAccess: true,
     })) as Person,
   )
-  // The course the document test reads: public and published, with a weekly
-  // slot and a session reading that links to the web.
   const place = track(
     'places',
     await payload.create({

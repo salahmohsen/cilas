@@ -5,7 +5,6 @@ import { linkPreview, type LinkPreview } from '@/lib/link-preview'
 import { LinkImage } from './link-image'
 import styles from './space.module.css'
 
-/** One outside link as a card: the page's image, title, summary and site. */
 export async function LinkCard({ url }: { url: string }) {
   const preview = await linkPreview(url)
   if (!preview) return null
@@ -29,10 +28,8 @@ export async function LinkCard({ url }: { url: string }) {
 
 const initial = (preview: LinkPreview) => (preview.site ?? preview.host).charAt(0).toUpperCase()
 
-/** Several links as one bordered list of one-line rows, so a post with many links stays short. */
 async function LinkList({ urls }: { urls: string[] }) {
   const t = await getTranslations('SpacePost')
-  // linkPreview never throws, so one failing page only drops its own row.
   const previews = (await Promise.all(urls.map((url) => linkPreview(url)))).filter(
     (p): p is LinkPreview => p !== null,
   )

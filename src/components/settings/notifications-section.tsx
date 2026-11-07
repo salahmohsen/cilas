@@ -3,7 +3,7 @@
 import { useId, useState } from 'react'
 import { useTranslations } from 'next-intl'
 
-import { savePreferencesAction } from '@/app/(frontend)/[locale]/settings/actions'
+import { savePreferencesAction } from '@/lib/settings-actions'
 import { Switch } from '@/components/switch'
 import { PushDevice } from '@/components/settings/push-device'
 import { SettingsGroup, SettingsRow } from '@/components/settings/settings-parts'

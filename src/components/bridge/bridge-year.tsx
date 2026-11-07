@@ -1,3 +1,4 @@
+import { BRIDGE_PATH } from '@/lib/paths'
 import { CAIRO, cairoNoon } from '@/lib/cairo-day'
 import { BRIDGE_APPLY_PATH, bridgeYearParts, bridgeYearPath } from '@/lib/paths'
 import { Clock, Hourglass, Wallet } from 'lucide-react'
@@ -39,7 +40,6 @@ export async function BridgeYearView({
   locale: string
   current: boolean
   years: Array<{ slug: string; title: string }>
-  /** In the admin's live preview: refresh on each save. */
   preview?: boolean
 }) {
   const { programme, cover, semesters } = year
@@ -200,7 +200,7 @@ export async function BridgeYearView({
                 {y.slug === programme.slug ? (
                   <span aria-current="page">{label}</span>
                 ) : (
-                  <Link href={i === 0 ? '/study/bridge' : bridgeYearPath(y.slug)}>{label}</Link>
+                  <Link href={i === 0 ? BRIDGE_PATH : bridgeYearPath(y.slug)}>{label}</Link>
                 )}
               </li>
             )
@@ -224,7 +224,7 @@ export async function BridgeYearView({
         <ShareBar
           email={email}
           label={t('share')}
-          path={`/${locale}${current ? '/study/bridge' : bridgeYearPath(programme.slug ?? '')}`}
+          path={`/${locale}${current ? BRIDGE_PATH : bridgeYearPath(programme.slug ?? '')}`}
           title={programme.title}
         />
       </div>

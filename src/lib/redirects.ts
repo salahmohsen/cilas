@@ -10,9 +10,7 @@ export const legacyCandidates = (requested: string): string[] => {
   let path = requested
   try {
     path = decodeURI(requested)
-  } catch {
-    // Malformed escapes: match the path as given.
-  }
+  } catch {}
   const bare = path.replace(/\/$/, '').replace(/\.html$/, '') || '/'
   return [...new Set([path, bare, `${bare}/`, `${bare}.html`])]
 }

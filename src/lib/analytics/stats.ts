@@ -2,10 +2,6 @@ import { pointsFromCounts, percentChange, totalOf, type TimePoint } from '@/lib/
 
 import { stripLocale } from './paths'
 
-/**
- * Turning PostHog's query rows into what the dashboard draws. Rows come from
- * HogQL as arrays of loose values; each reader coerces them once, here.
- */
 type Row = readonly unknown[]
 
 const text = (value: unknown): string => (value == null ? '' : String(value))
@@ -14,7 +10,6 @@ const count = (value: unknown): number => {
   return Number.isFinite(n) ? n : 0
 }
 
-/** The `results` array of a Query API response, or an error if the answer is not one. */
 export const parseRows = (body: unknown): Row[] => {
   const results = (body as { results?: unknown } | null)?.results
   if (!Array.isArray(results) || !results.every(Array.isArray)) {
@@ -22,8 +17,6 @@ export const parseRows = (body: unknown): Row[] => {
   }
   return results as Row[]
 }
-
-/* Traffic */
 
 export type Traffic = {
   /** The last 30 days, oldest first. */
@@ -62,7 +55,6 @@ export const trafficFrom = (rows: Row[], now = new Date()): Traffic => {
   }
 }
 
-/** One entry per Cairo day for the last year, oldest first, for the activity heatmap. */
 export const activityFrom = (rows: Row[], now = new Date()): { date: string; count: number }[] => {
   const views = new Map(rows.map(([day, v]) => [text(day), count(v)]))
   return pointsFromCounts(views, 365, now).map(({ key, value }) => ({ date: key, count: value }))
@@ -75,11 +67,8 @@ export const withOther = (list: Ranked[], keep: number, label = 'Other'): Ranked
   return [...list.slice(0, keep), { key: 'other', label, value: rest }]
 }
 
-/* Pages */
-
 export type Ranked = { key: string; label: string; value: number }
 
-/** "data-science" becomes "Data science". */
 export const slugLabel = (slug: string): string => {
   const words = decodeURIComponent(slug).replace(/[-_]+/g, ' ').trim()
   return words.charAt(0).toUpperCase() + words.slice(1)
@@ -111,7 +100,6 @@ const ranked = (
 
 const pageLabel = (path: string) => (path === '/' ? 'Home' : path)
 
-/** All page views in the last 30 days, whatever the page: the whole that the top lists share. */
 export const totalViewsOf = (rows: Row[]): number =>
   rows.reduce((sum, row) => sum + count(row[1]), 0)
 
@@ -120,7 +108,6 @@ export const topPages = (rows: Row[], limit = 8): Ranked[] =>
 
 export type Movement = { key: string; label: string; start: number; end: number }
 
-/** The busiest pages of the two periods together, with their views in each (for the slope chart). */
 export const pageMovement = (rows: Row[], limit = 8): Movement[] => {
   const now = viewsByPath(rows, 1)
   const before = viewsByPath(rows, 2)
@@ -138,7 +125,6 @@ export const pageMovement = (rows: Row[], limit = 8): Movement[] => {
 
 const LANGUAGES: Record<string, string> = { en: 'English', ar: 'Arabic' }
 
-/** Page views by site language, read from the address. */
 export const languageSplit = (rows: Row[]): Ranked[] => {
   const totals = new Map<string, number>()
   for (const row of rows) {

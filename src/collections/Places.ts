@@ -15,7 +15,6 @@ export const Places: CollectionConfig = {
     update: isAdmin,
     delete: isAdmin,
   },
-  // Its names show in the cached study list.
   hooks: {
     afterChange: [revalidateAfterChange('places')],
     afterDelete: [revalidateAfterDelete('places')],
@@ -55,7 +54,6 @@ export const Places: CollectionConfig = {
       type: 'row',
       fields: [
         { name: 'opened_year', type: 'number', min: 2012, max: 2100, admin: { width: '50%' } },
-        // Empty while in use.
         { name: 'closed_year', type: 'number', min: 2012, max: 2100, admin: { width: '50%' } },
       ],
     },
