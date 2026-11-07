@@ -37,6 +37,8 @@ import { ShareBar } from '@/components/share-bar'
 import { StudyWithAI } from '@/components/study-with-ai'
 import { ArticleCardStack } from '@/components/article/article-card-stack'
 import { ArticleCardGrid } from '@/components/article/article-card-grid'
+import { CollectionCard } from '@/components/article/collection-card'
+import { mediaImage } from '@/lib/media-image'
 import { resolveCardStacks } from '@/api/card-stacks.api'
 import { NewsletterSignupEnd } from '@/components/newsletter-signup-end'
 import { Schema } from '@/components/schema'
@@ -519,11 +521,26 @@ export async function ArticlePage({ locale: siteLocale, slug, user: reader }: Vi
             )}
 
             {collection && (
-              <CollectionList
+              <CollectionCard
+                cover={mediaImage(
+                  publicationCovers.get(collection.publication.id) ??
+                    (typeof collection.publication.cover_image === 'object'
+                      ? collection.publication.cover_image
+                      : null),
+                )}
                 current={article.id}
-                labels={{ title: t('inCollection'), current: t('readingNow') }}
+                href={`/articles?publication=${collection.publication.slug}`}
+                labels={{
+                  kicker: t('inCollection'),
+                  current: t('readingNow'),
+                  count: t('collectionCount', {
+                    count: collection.articles.length,
+                    n: localDigits(String(collection.articles.length), locale),
+                  }),
+                  all: t('collectionAll'),
+                }}
                 locale={locale}
-                publication={collection.publication}
+                title={collection.publication.title}
                 items={collection.articles.map((a) => ({
                   id: a.id,
                   title: card(a).title,
@@ -552,71 +569,6 @@ export async function ArticlePage({ locale: siteLocale, slug, user: reader }: Vi
         />
       )}
     </div>
-  )
-}
-
-/**
- * A collection's articles in their order, the open one marked: the end of
- * every article that belongs to one.
- */
-function CollectionList({
-  publication,
-  items,
-  current,
-  labels,
-  locale,
-}: {
-  publication: Publication
-  items: Array<{ id: number; title: string; authors: string; href: string }>
-  current: number
-  labels: { title: string; current: string }
-  locale: string
-}) {
-  return (
-    <nav aria-labelledby="collection-title" className="mt-6 border-t border-border pt-8">
-      <p className="text-sm text-[var(--text-muted)]">{labels.title}</p>
-      <h2 className="mt-1 text-xl font-semibold" id="collection-title">
-        <Link
-          className="underline-offset-4 hover:underline"
-          href={`/articles?publication=${publication.slug}`}
-        >
-          {publication.title}
-        </Link>
-      </h2>
-      <ol className="collection-list mt-5">
-        {items.map((item, i) => {
-          const here = item.id === current
-          const body = (
-            <>
-              <span className="collection-number">
-                {localDigits(String(i + 1).padStart(2, '0'), locale)}
-              </span>
-              <span className="min-w-0">
-                <span className="block font-medium" dir="auto">
-                  {item.title}
-                </span>
-                <span className="mt-0.5 block text-sm text-[var(--text-secondary)]">
-                  {[item.authors || null, here ? labels.current : null].filter(Boolean).join(' · ')}
-                </span>
-              </span>
-            </>
-          )
-          return (
-            <li key={item.id}>
-              {here ? (
-                <span aria-current="page" className="collection-item" data-current>
-                  {body}
-                </span>
-              ) : (
-                <Link className="collection-item" href={item.href}>
-                  {body}
-                </Link>
-              )}
-            </li>
-          )
-        })}
-      </ol>
-    </nav>
   )
 }
 

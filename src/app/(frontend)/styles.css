@@ -1319,32 +1319,204 @@ h1.article-title {
   }
 }
 
-/* A collection's contents at the end of its articles. */
-.collection-list {
+/* A collection's contents at the end of its articles, as a poster card
+   (docs/content-driven-card-layouts.md, section 7). Content sizes the card.
+   Head: the cover (when there is one) beside a paper label and the
+   collection's name on the card's colour; the name's cell takes the spare
+   height beside a taller cover. Then the articles as ruled rows (number box,
+   title and authors), the open one on the card's colour, and a strip: the
+   count on paper, the link to the whole collection in the colour. Printed,
+   so it stays ink on paper in the dark theme. */
+.collection-card-frame {
+  container: collection-card / inline-size;
   display: grid;
-  gap: 0.25rem;
+  grid-template-columns: minmax(0, 1fr);
+  margin-block-start: 2rem;
 }
-.collection-item {
+.collection-card {
+  --poster-ink: #121212;
+  --poster-paper: #ffffff;
+  --poster-color: #ffb71b;
+  --poster-pad: clamp(0.875rem, 2.2cqi, 1.5rem);
   display: flex;
-  align-items: baseline;
-  gap: 1rem;
-  border-radius: calc(var(--radius) * 2);
-  padding: 0.75rem 0.85rem;
-  transition-property: background-color;
-  transition-duration: 150ms;
+  flex-direction: column;
+  min-width: 0;
+  overflow: clip;
+  border: 1px solid var(--poster-ink);
+  border-radius: 1rem;
+  background: var(--poster-paper);
+  color: var(--poster-ink);
 }
-a.collection-item:hover {
-  background: var(--surface-muted, var(--muted));
+.collection-card a {
+  color: var(--poster-ink);
+  text-decoration: none;
 }
-.collection-item[data-current] {
-  background: var(--surface-muted, var(--muted));
+.collection-card-head {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
 }
-.collection-number {
-  flex: none;
-  min-width: 1.5rem;
-  font-size: 0.8rem;
+.collection-card-head[data-cover] {
+  grid-template-columns: min(32%, 12rem) minmax(0, 1fr);
+}
+.collection-card-cover {
+  position: relative;
+  min-height: 100%;
+  aspect-ratio: 3 / 4;
+  overflow: clip;
+  border-inline-end: 1px solid var(--poster-ink);
+}
+.collection-card-cover img {
+  object-fit: cover;
+}
+.collection-card-panel {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+.collection-card-label {
+  flex: 0 0 auto;
+  margin: 0;
+  padding: var(--poster-pad);
+  border-block-end: 1px solid var(--poster-ink);
+  font-family: var(--font-heading);
+  font-size: clamp(1rem, 2.6cqi, 1.5rem);
+  font-weight: 400;
+  line-height: 1.05;
+}
+.collection-card-title {
+  display: flex;
+  flex: 1 1 auto;
+  align-items: flex-end;
+  margin: 0;
+  padding: var(--poster-pad);
+  background: var(--poster-color);
+  font-family: var(--font-display);
+  font-size: var(--text-3xl);
+  font-weight: 400;
+  line-height: var(--leading-display);
+  letter-spacing: var(--tracking-display);
+  text-wrap: balance;
+}
+.collection-card-title:dir(rtl) {
+  line-height: 1.35;
+  letter-spacing: 0;
+}
+.collection-card-title a:hover {
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.15em;
+}
+.collection-card-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border-block-start: 1px solid var(--poster-ink);
+}
+.collection-card-list > li + li {
+  border-block-start: 1px solid var(--poster-ink);
+}
+.collection-card-item {
+  display: flex;
+  align-items: stretch;
+  min-height: 3.25rem;
+  transition: background-color var(--duration-fast) var(--ease-standard);
+}
+@media (hover: hover) and (pointer: fine) {
+  a.collection-card-item:hover {
+    background: color-mix(in oklab, var(--poster-color) 35%, var(--poster-paper));
+  }
+}
+.collection-card-item[data-current] {
+  background: var(--poster-color);
+}
+.collection-card-number {
+  display: flex;
+  flex: 0 0 3.25rem;
+  align-items: center;
+  justify-content: center;
+  border-inline-end: 1px solid var(--poster-ink);
+  font-size: 0.8125rem;
+  font-weight: 600;
   font-variant-numeric: tabular-nums;
-  color: var(--text-muted);
+}
+.collection-card-text {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  justify-content: center;
+  gap: 0.125rem;
+  min-width: 0;
+  padding: 0.75rem var(--poster-pad);
+  overflow-wrap: anywhere;
+}
+.collection-card-item-title {
+  font-family: var(--font-heading);
+  font-size: 1.0625rem;
+  line-height: 1.3;
+}
+.collection-card-authors {
+  font-size: var(--text-sm);
+  color: color-mix(in oklab, var(--poster-ink) 72%, transparent);
+}
+.collection-card-here {
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+.collection-card-strip {
+  display: grid;
+  grid-template-columns: minmax(0, auto) minmax(0, 1fr);
+  border-block-start: 1px solid var(--poster-ink);
+  font-size: clamp(0.8125rem, 1.4cqi, 0.9375rem);
+}
+.collection-card-count {
+  display: flex;
+  align-items: center;
+  padding: 0.625rem var(--poster-pad);
+  font-variant-numeric: tabular-nums;
+}
+.collection-card-action {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  min-height: 2.75rem;
+  padding: 0.625rem var(--poster-pad);
+  border-inline-start: 1px solid var(--poster-ink);
+  background: var(--poster-color);
+  font-weight: 600;
+}
+.collection-card-action svg {
+  flex: none;
+  transition: translate var(--duration-fast) var(--ease-standard);
+}
+.collection-card-action:dir(rtl) svg {
+  scale: -1 1;
+}
+.collection-card-action:hover svg,
+.collection-card-action:focus-visible svg {
+  translate: 3px 0;
+}
+.collection-card-action:dir(rtl):hover svg,
+.collection-card-action:dir(rtl):focus-visible svg {
+  translate: -3px 0;
+}
+.collection-card-item:focus-visible,
+.collection-card-action:focus-visible,
+.collection-card-title a:focus-visible {
+  outline: 3px solid var(--poster-ink);
+  outline-offset: -3px;
+}
+/* A narrow card: a narrower cover column, so the name keeps its width. */
+@container collection-card (max-width: 26rem) {
+  .collection-card-head[data-cover] {
+    grid-template-columns: min(36%, 8rem) minmax(0, 1fr);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .collection-card-item,
+  .collection-card-action svg {
+    transition: none;
+  }
 }
 
 /* ===================================================== calendar */

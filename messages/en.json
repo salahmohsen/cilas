@@ -251,6 +251,8 @@
     "backToText": "Back to the text",
     "inCollection": "In this collection",
     "readingNow": "Reading now",
+    "collectionCount": "{count, plural, one {# article} other {# articles}}",
+    "collectionAll": "The whole collection",
     "foreword": "Foreword",
     "essayOf": "{n} of {total}",
     "mentionKinds": {
