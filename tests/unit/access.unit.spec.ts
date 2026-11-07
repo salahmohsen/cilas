@@ -8,9 +8,6 @@ import {
   canProposePublication,
   canTeach,
   isAdminOrOwn,
-  isAdminOrOwnAndDraft,
-  isAdminOrOwnVersions,
-  isAdminOrOwnWhile,
   OWNER_EDITS,
   ownList,
   ownsViaAuthors,
@@ -31,7 +28,7 @@ const user = (roles: User['roles'], extra: Record<string, unknown> = {}): User =
 const run = (access: Access, u: User | null) => access({ req: { user: u } } as never)
 
 describe('isAdminOrOwnAndDraft', () => {
-  const rule = isAdminOrOwnAndDraft(ownsViaFellows, { allow: ['fellow'] })
+  const rule = isAdminOrOwn(ownsViaFellows, { allow: ['fellow'], draft: true })
 
   it('lets admins edit anything', () => {
     expect(run(rule, user(['admin']))).toBe(true)
@@ -52,7 +49,7 @@ describe('isAdminOrOwnAndDraft', () => {
   })
 
   it('refuses when ownership cannot be expressed', () => {
-    const never = isAdminOrOwnAndDraft(() => false)
+    const never = isAdminOrOwn(() => false, { draft: true })
     expect(run(never, user(['fellow']))).toBe(false)
   })
 })
@@ -129,30 +126,34 @@ describe('ownsViaAuthors', () => {
 
 describe('isAdminOrOwnVersions', () => {
   it('lets admins through', () => {
-    expect(run(isAdminOrOwnVersions(ownsViaFellows), user(['admin']))).toBe(true)
+    expect(run(isAdminOrOwn(ownsViaFellows, { versions: true }), user(['admin']))).toBe(true)
   })
 
   it('prefixes the ownership constraint for the versions table', () => {
-    expect(run(isAdminOrOwnVersions(ownsViaFellows), user(['member'], { person: 7 }))).toEqual({
+    expect(
+      run(isAdminOrOwn(ownsViaFellows, { versions: true }), user(['member'], { person: 7 })),
+    ).toEqual({
       'version.fellows': { contains: 7 },
     })
-    expect(run(isAdminOrOwnVersions(ownsViaAuthors), user(['member'], { person: 7 }))).toEqual({
+    expect(
+      run(isAdminOrOwn(ownsViaAuthors, { versions: true }), user(['member'], { person: 7 })),
+    ).toEqual({
       'version.authors': { contains: 7 },
     })
   })
 
   it('prefixes inside and/or and maps id to parent', () => {
     const owned = (): Where => ({ and: [{ id: { equals: 3 } }, { tier: { equals: 'owner' } }] })
-    expect(run(isAdminOrOwnVersions(owned), user(['member'], { person: 7 }))).toEqual({
+    expect(run(isAdminOrOwn(owned, { versions: true }), user(['member'], { person: 7 }))).toEqual({
       and: [{ parent: { equals: 3 } }, { 'version.tier': { equals: 'owner' } }],
     })
   })
 
   it('refuses anonymous and unlinked accounts', () => {
-    expect(run(isAdminOrOwnVersions(ownsViaFellows), null)).toBe(false)
-    expect(run(isAdminOrOwnVersions(ownsViaFellows), user(['fellow'], { person: null }))).toBe(
-      false,
-    )
+    expect(run(isAdminOrOwn(ownsViaFellows, { versions: true }), null)).toBe(false)
+    expect(
+      run(isAdminOrOwn(ownsViaFellows, { versions: true }), user(['fellow'], { person: null })),
+    ).toBe(false)
   })
 })
 
@@ -187,7 +188,7 @@ describe('canAuthor', () => {
 
 describe('isAdminOrOwnWhile', () => {
   const editable = { 'review.status': { in: ['draft', 'changes_requested'] } }
-  const rule = isAdminOrOwnWhile(ownsViaAuthors, editable)
+  const rule = isAdminOrOwn(ownsViaAuthors, { while: editable })
 
   it('lets admins through', () => {
     expect(run(rule, user(['admin']))).toBe(true)
@@ -339,7 +340,7 @@ describe('canTeach', () => {
 
 describe('isAdminOrOwnAndDraft while with the owner', () => {
   it('lets an owner edit only a draft still with them, not one submitted', () => {
-    const rule = isAdminOrOwnAndDraft(ownsViaFellows, { allow: ['fellow'], while: WITH_OWNER })
+    const rule = isAdminOrOwn(ownsViaFellows, { allow: ['fellow'], draft: true, while: WITH_OWNER })
     const where = run(rule, user(['fellow'], { person: 7 })) as Where
     expect(where).toEqual({
       and: [{ fellows: { contains: 7 } }, { _status: { equals: 'draft' } }, WITH_OWNER],
@@ -350,14 +351,14 @@ describe('isAdminOrOwnAndDraft while with the owner', () => {
 
 describe('OWNER_EDITS', () => {
   it('lets an owner reach their drafts and published documents; the review hooks decide', () => {
-    const rule = isAdminOrOwnWhile(ownsViaFellows, OWNER_EDITS, { allow: ['fellow'] })
+    const rule = isAdminOrOwn(ownsViaFellows, { allow: ['fellow'], while: OWNER_EDITS })
     expect(run(rule, user(['fellow'], { person: 7 }))).toEqual({
       and: [{ fellows: { contains: 7 } }, { _status: { in: ['draft', 'published'] } }],
     })
   })
 
   it('keeps the ownership path to the allowed roles', () => {
-    const rule = isAdminOrOwnWhile(ownsViaFellows, OWNER_EDITS, { allow: ['fellow'] })
+    const rule = isAdminOrOwn(ownsViaFellows, { allow: ['fellow'], while: OWNER_EDITS })
     expect(run(rule, user(['member'], { person: 7 }))).toBe(false)
   })
 })

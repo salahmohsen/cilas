@@ -3,9 +3,7 @@ import {
   adminOnlyField,
   canTeach,
   isAdminUser,
-  isAdminOrOwnAndDraft,
-  isAdminOrOwnVersions,
-  isAdminOrOwnWhile,
+  isAdminOrOwn,
   ownList,
   OWNER_EDITS,
   ownsViaFellows,
@@ -106,13 +104,13 @@ export const Courses: CollectionConfig = {
   access: {
     read: readTiers(ownsViaFellows, { drafts: true }),
     // Without this, any signed-in account reads drafts via the versions endpoint.
-    readVersions: isAdminOrOwnVersions(ownsViaFellows),
+    readVersions: isAdminOrOwn(ownsViaFellows, { versions: true }),
     // A fellow saves drafts; an admin approves a course by publishing it.
     create: adminPublishes(canTeach),
     // A fellow edits while the course is with them; submitted, it waits for the
     // admin. Published, their edits are a draft for review beside it.
-    update: adminPublishes(isAdminOrOwnWhile(ownsViaFellows, OWNER_EDITS, { allow: ['fellow'] })),
-    delete: isAdminOrOwnAndDraft(ownsViaFellows, { allow: ['fellow'], while: WITH_OWNER }),
+    update: adminPublishes(isAdminOrOwn(ownsViaFellows, { allow: ['fellow'], while: OWNER_EDITS })),
+    delete: isAdminOrOwn(ownsViaFellows, { allow: ['fellow'], draft: true, while: WITH_OWNER }),
   },
   versions: {
     drafts: {

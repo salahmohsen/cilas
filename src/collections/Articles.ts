@@ -4,9 +4,7 @@ import {
   adminPublishes,
   canAuthor,
   adminOnlyField,
-  isAdminOrOwnAndDraft,
-  isAdminOrOwnVersions,
-  isAdminOrOwnWhile,
+  isAdminOrOwn,
   isAdminUser,
   ownList,
   OWNER_EDITS,
@@ -69,15 +67,15 @@ export const Articles: CollectionConfig = {
   slug: 'articles',
   access: {
     read: readTiers(ownsViaAuthors, { drafts: true }),
-    readVersions: isAdminOrOwnVersions(ownsViaAuthors),
+    readVersions: isAdminOrOwn(ownsViaAuthors, { versions: true }),
     // Only an admin publishes: authors get Save draft and Submit for review.
     create: adminPublishes(canAuthor),
     // Authors edit or delete only while the article is with them, not once
     // submitted. `_status` alone would let them delete a submitted article,
     // and the review status alone a published one. Published, their edits are
     // a draft for review beside it.
-    update: adminPublishes(isAdminOrOwnWhile(ownsViaAuthors, OWNER_EDITS)),
-    delete: isAdminOrOwnAndDraft(ownsViaAuthors, { while: WITH_OWNER }),
+    update: adminPublishes(isAdminOrOwn(ownsViaAuthors, { while: OWNER_EDITS })),
+    delete: isAdminOrOwn(ownsViaAuthors, { draft: true, while: WITH_OWNER }),
   },
   // Autosave feeds the live preview as the editor writes.
   // Save draft shows beside autosave, so an author always has a button to press.

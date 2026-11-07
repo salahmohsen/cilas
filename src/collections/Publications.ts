@@ -3,9 +3,7 @@ import type { CollectionBeforeValidateHook, CollectionConfig } from 'payload'
 import {
   adminPublishes,
   canProposePublication,
-  isAdminOrOwnAndDraft,
-  isAdminOrOwnVersions,
-  isAdminOrOwnWhile,
+  isAdminOrOwn,
   isAdminUser,
   ownList,
   OWNER_EDITS,
@@ -55,12 +53,12 @@ export const Publications: CollectionConfig = {
   slug: 'publications',
   access: {
     read: publishedOrOwn(ownsViaEditors),
-    readVersions: isAdminOrOwnVersions(ownsViaEditors),
+    readVersions: isAdminOrOwn(ownsViaEditors, { versions: true }),
     create: adminPublishes(canProposePublication),
     // An owner edits while it is with them; submitted, it waits for the admin.
     // Published, their edits are a draft for review beside it.
-    update: adminPublishes(isAdminOrOwnWhile(ownsViaEditors, OWNER_EDITS, OWNER_ROLES)),
-    delete: isAdminOrOwnAndDraft(ownsViaEditors, { ...OWNER_ROLES, while: WITH_OWNER }),
+    update: adminPublishes(isAdminOrOwn(ownsViaEditors, { ...OWNER_ROLES, while: OWNER_EDITS })),
+    delete: isAdminOrOwn(ownsViaEditors, { ...OWNER_ROLES, draft: true, while: WITH_OWNER }),
   },
   versions: { drafts: true },
   admin: {

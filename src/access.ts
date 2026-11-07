@@ -117,26 +117,6 @@ export const canTeach: Access = ({ req }) =>
   isAdminUser(req.user) || (isFellowUser(req.user) && personOf(req.user) !== null)
 
 /**
- * Admins edit any document; everyone else only documents they own.
- * `allow` narrows who may take the ownership path — a course is editable by
- * the fellows listed on it, not by any logged-in user who happens to be linked.
- */
-export const isAdminOrOwnAndDraft =
-  (owned: Ownership, { allow, while: also }: { allow?: Role[]; while?: Where } = {}): Access =>
-  ({ req }) => {
-    if (isAdminUser(req.user)) return true
-    if (!req.user) return false
-    if (allow && !hasRole(req.user, ...allow)) return false
-
-    const owns = owned(req.user)
-    if (!owns) return false
-
-    // Every constraint must hold. `owns && { _status }` would evaluate to the
-    // second object alone and drop ownership entirely.
-    return { and: [owns, { _status: { equals: 'draft' } }, ...(also ? [also] : [])] }
-  }
-
-/**
  * Review states in which a document is still with its owner: before it is
  * submitted, or once changes are asked for. Submitted, it waits for the
  * admin unchanged, so what is approved is what was submitted.
@@ -157,28 +137,26 @@ export const WITH_OWNER: Where = { 'review.status': { in: ['draft', 'changes_req
  */
 export const OWNER_EDITS: Where = { _status: { in: ['draft', 'published'] } }
 
-/** Admins see every row; a signed-in account only the rows it owns. */
+/** Admins see every row; owners must satisfy the selected constraints. */
 export const isAdminOrOwn =
-  (owned: Ownership): Access =>
+  (
+    owned: Ownership,
+    {
+      allow,
+      while: constraint,
+      draft = false,
+      versions = false,
+    }: { allow?: Role[]; while?: Where; draft?: boolean; versions?: boolean } = {},
+  ): Access =>
   ({ req }) => {
     if (isAdminUser(req.user)) return true
-    if (!req.user) return false
-    return owned(req.user)
-  }
-
-/**
- * `isAdminOrOwn` for `readVersions`. Payload applies that rule to the versions
- * table, where every field sits under `version.` (`version.fellows`, not
- * `fellows`), so an unprefixed constraint fails with "Cannot find field".
- * `appendVersionToQueryKey` is Payload's own prefixer; it maps `id` to `parent`.
- */
-export const isAdminOrOwnVersions =
-  (owned: Ownership): Access =>
-  ({ req }) => {
-    if (isAdminUser(req.user)) return true
-    if (!req.user) return false
+    if (!req.user || (allow && !hasRole(req.user, ...allow))) return false
     const owns = owned(req.user)
-    return owns ? appendVersionToQueryKey(owns) : false
+    if (!owns) return false
+    if (versions) return appendVersionToQueryKey(owns)
+    if (draft)
+      return { and: [owns, { _status: { equals: 'draft' } }, ...(constraint ? [constraint] : [])] }
+    return constraint ? { and: [owns, constraint] } : owns
   }
 
 /**
@@ -190,21 +168,6 @@ export const canAuthor: Access = ({ req }) => {
   if (isAdminUser(req.user)) return true
   return hasRole(req.user, 'member', 'fellow', 'non_degree_seeking') && personOf(req.user) !== null
 }
-
-/**
- * Admins edit anything; an owner only while the document also matches
- * `where` (e.g. an article still with its author, not yet submitted).
- * `allow` narrows who may take the ownership path, as in `isAdminOrOwnAndDraft`.
- */
-export const isAdminOrOwnWhile =
-  (owned: Ownership, where: Where, { allow }: { allow?: Role[] } = {}): Access =>
-  ({ req }) => {
-    if (isAdminUser(req.user)) return true
-    if (!req.user) return false
-    if (allow && !hasRole(req.user, ...allow)) return false
-    const owns = owned(req.user)
-    return owns ? { and: [owns, where] } : false
-  }
 
 /**
  * Wraps an access rule so only admins may publish. Payload asks the update
@@ -299,11 +262,10 @@ export const publishedOrOwn =
 export const readTiers =
   (owned?: Ownership, { drafts = false }: { drafts?: boolean } = {}): Access =>
   ({ req }): Where | boolean => {
-    // Whoever may edit the document must be able to read it back, or the admin
-    // cannot render the draft it is currently editing.
     const published: Where = drafts ? { _status: { equals: 'published' } } : {}
 
-    if (req.user && isAdminUser(req.user) && published) return true
+    // Whoever may edit the document must be able to read it back for live preview.
+    if (req.user && isAdminUser(req.user)) return true
 
     if (!req.user) {
       return drafts
