@@ -1,3 +1,4 @@
+import { detailPath } from '@/lib/paths'
 import config from '@payload-config'
 import { getTranslations } from 'next-intl/server'
 import { getPayload } from 'payload'
@@ -21,7 +22,7 @@ export async function GET(
   const [event] = await getPublicEvents(payload, lang, slug)
   if (!event) return new Response('Not found', { status: 404 })
   const t = await getTranslations({ locale: lang, namespace: 'Events' })
-  const ics = eventIcs(event, absoluteUrl(`/${lang}/events/${event.slug}`), {
+  const ics = eventIcs(event, absoluteUrl(detailPath('events', String(event.slug), lang)), {
     speakers: t('speakers'),
     agenda: t('agenda'),
     admission: t('admission'),

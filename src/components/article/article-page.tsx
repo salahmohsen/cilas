@@ -1,3 +1,4 @@
+import { detailPath } from '@/lib/paths'
 import { type Locale } from '@/i18n/routing'
 import { relation } from '@/lib/relation'
 import config from '@payload-config'
@@ -81,7 +82,7 @@ export async function articleMetadata({ locale, slug, user }: View): Promise<Met
     description,
     openGraph: { title: metaTitle, description, type: 'article', images: ogImages(image) },
     twitter: { card: 'summary_large_image', images: ogImages(image).map((i) => i.url) },
-    alternates: pageAlternates(`/articles/${article.slug}`, locale),
+    alternates: pageAlternates(detailPath('articles', String(article.slug)), locale),
   }
 }
 

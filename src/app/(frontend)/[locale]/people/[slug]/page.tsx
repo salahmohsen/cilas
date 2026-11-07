@@ -1,3 +1,4 @@
+import { detailPath } from '@/lib/paths'
 import { type Locale } from '@/i18n/routing'
 import { otherLocale } from '@/i18n/routing'
 import { personAvatarSeed } from '@/lib/avatar'
@@ -51,7 +52,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       description,
       images: ogImages(photo).map((image) => image.url),
     },
-    alternates: pageAlternates(`/people/${person.slug}`, locale),
+    alternates: pageAlternates(detailPath('people', String(person.slug)), locale),
   }
 }
 

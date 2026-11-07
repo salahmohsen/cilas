@@ -1,3 +1,4 @@
+import { bridgeYearPath } from '@/lib/paths'
 import { CAIRO } from '@/lib/cairo-day'
 import { type Locale } from '@/i18n/routing'
 import { otherLocale } from '@/i18n/routing'
@@ -154,7 +155,7 @@ export const resolveMentionDocument = (
       // Only the Bridge has a page of its own.
       return p.kind === 'bridge' && p.slug
         ? {
-            href: `/study/bridge/${p.slug.replace(/^bridge-programme-/, '')}`,
+            href: bridgeYearPath(p.slug),
             preview: {
               kind,
               title: p.title,

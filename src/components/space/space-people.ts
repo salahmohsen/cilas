@@ -1,3 +1,4 @@
+import { detailPath } from '@/lib/paths'
 import type { Payload } from 'payload'
 import { getTranslations } from 'next-intl/server'
 
@@ -36,7 +37,7 @@ export async function spacePeopleCards(
       role: moderators.has(m.personId) ? t('fellow') : t('member'),
       bio: m.bio,
       links: m.links,
-      href: m.slug ? `/${locale}/people/${m.slug}` : null,
+      href: m.slug ? detailPath('people', String(m.slug), locale) : null,
     }))
     .sort(
       (a, b) =>
@@ -57,7 +58,7 @@ export async function spacePeopleCards(
       role: staffIds.has(p.id) ? t('team') : t('member'),
       bio: p.bio,
       links: p.links,
-      href: p.visible && p.slug ? `/${locale}/people/${p.slug}` : null,
+      href: p.visible && p.slug ? detailPath('people', String(p.slug), locale) : null,
     })
   return { cards, byId, moderators }
 }

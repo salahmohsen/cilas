@@ -1,5 +1,7 @@
 'use client'
 
+import { detailPath } from '@/lib/paths'
+
 import { useLocale, useTranslations } from 'next-intl'
 
 import { BlogGrid, type BlogPost } from '@/components/arc/blocks/blog-grid/blog-grid'
@@ -33,7 +35,7 @@ export function BridgeCourses({
     <BlogGrid
       categories={semesters}
       flush
-      getHref={(post) => `/${locale}/study/${post.id}`}
+      getHref={(post) => detailPath('courses', String(post.id), locale)}
       header={false}
       imageFallback={(post) => {
         const Icon = SEASON_ICONS[seasons[post.id]!]

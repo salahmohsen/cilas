@@ -1,3 +1,4 @@
+import { detailPath } from '@/lib/paths'
 import { type Locale } from '@/i18n/routing'
 import { otherLocale } from '@/i18n/routing'
 import config from '@payload-config'
@@ -94,7 +95,7 @@ export const getCalendarItems = async (
     const base = {
       kind: 'course' as const,
       title: c.title,
-      href: `/study/${c.slug}`,
+      href: detailPath('courses', String(c.slug)),
       type: c.course_type.toLowerCase(),
       cover: coverOf(c.cover_image),
     }
@@ -124,7 +125,7 @@ export const getCalendarItems = async (
     const base = {
       kind: 'event' as const,
       title: e.title,
-      href: `/events/${e.slug}`,
+      href: detailPath('events', String(e.slug)),
       cover: coverOf(e.cover_image),
       type: e.event_type ?? 'event',
     }

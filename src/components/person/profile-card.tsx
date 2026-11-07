@@ -1,3 +1,4 @@
+import { detailPath } from '@/lib/paths'
 import type { CSSProperties, ReactNode } from 'react'
 import { ArrowRight } from 'lucide-react'
 import { useLocale, useTranslations } from 'next-intl'
@@ -57,7 +58,10 @@ export function ProfileCard({
         </div>
         <h3 className={styles.name} dir="auto">
           {/* The whole name box is the link; its arrow shows on hover and keyboard focus. */}
-          <a className={`poster-link ${styles.nameLink}`} href={`/${locale}/people/${person.slug}`}>
+          <a
+            className={`poster-link ${styles.nameLink}`}
+            href={detailPath('people', String(person.slug), locale)}
+          >
             <span className={styles.nameText}>
               {person.name}
               {role ? <span className={styles.role}>{role}</span> : null}

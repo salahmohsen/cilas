@@ -1,3 +1,4 @@
+import { detailPath } from '@/lib/paths'
 import { listSeparator } from '@/lib/locale-format'
 import { CAIRO, cairoNoon } from '@/lib/cairo-day'
 import {
@@ -110,7 +111,7 @@ export async function PublicEventCard({
         <Poster
           poster={{
             id: `event-${event.id}`,
-            href: `/${locale}/events/${event.slug}`,
+            href: detailPath('events', String(event.slug), locale),
             layout: 1,
             color: EVENT_POSTER_COLORS[event.event_type],
             label: types(event.event_type),

@@ -1,10 +1,11 @@
+import { bridgeYearPath, BRIDGE_APPLY_PATH, bridgeYearParts } from '@/lib/paths'
 import { CAIRO, cairoNoon } from '@/lib/cairo-day'
 import { Clock, Hourglass, Wallet } from 'lucide-react'
 import Image from 'next/image'
 import { getFormatter, getTranslations } from 'next-intl/server'
 import type { ReactNode } from 'react'
 
-import { bridgeYearPath, type BridgeYear } from '@/api/programmes.api'
+import { type BridgeYear } from '@/api/programmes.api'
 import { getContactEmail } from '@/api/contact.api'
 import type { BlogPost } from '@/components/arc/blocks/blog-grid/blog-grid'
 import { BridgeCourses } from '@/components/bridge/bridge-courses'
@@ -76,7 +77,7 @@ export async function BridgeYearView({
       : null
   // Where the sticky Apply leads, as the details' own button does (RegisterBar).
   const stickyApply =
-    !current || !open ? null : viaForm ? `/${locale}/study/bridge/apply` : applyUrl
+    !current || !open ? null : viaForm ? `/${locale}${BRIDGE_APPLY_PATH}` : applyUrl
   const plan = programme.pricing?.payment_plans?.[0]
   const instalments = plan?.installments ?? []
 
@@ -161,7 +162,7 @@ export async function BridgeYearView({
 
   // Where the page's own Apply leads: the site form, or wherever registration points.
   // Once registration has closed, the form's page still shows the questions.
-  const applyHref = viaForm ? `/${locale}/study/bridge/apply` : applyUrl
+  const applyHref = viaForm ? `/${locale}${BRIDGE_APPLY_PATH}` : applyUrl
   const sideApply = current ? (
     <SideCardApply
       applyLabel={open ? tc('apply') : ta('questions')}
@@ -176,7 +177,7 @@ export async function BridgeYearView({
 
   // A year by its span, and its city when it was not Cairo: «2019–2020 Alexandria».
   const yearLabel = (slug: string) => {
-    const [, span = slug, place] = /^bridge-programme-(\d{4}-\d{4})(?:-(.+))?$/.exec(slug) ?? []
+    const { span, place } = bridgeYearParts(slug)
     return {
       span: localDigits(span.replace('-', '–'), locale),
       place: place === 'alexandria' ? t('alexandria') : null,

@@ -1,3 +1,4 @@
+import { detailPath } from '@/lib/paths'
 import { personAvatarSeed } from '@/lib/avatar'
 import config from '@payload-config'
 import { getTranslations } from 'next-intl/server'
@@ -429,7 +430,7 @@ export async function SpacePage({
   const actions = (
     <SpaceHeadActions
       cell={!course}
-      coursePage={course ? `/${locale}/study/${course.slug}` : null}
+      coursePage={course ? detailPath('courses', String(course.slug), locale) : null}
       rail={rail}
       participation={numbers}
       now={renderedAt}
@@ -499,7 +500,11 @@ export async function SpacePage({
                     {ts('ai')}
                     <AIInstructions />
                   </span>
-                  <StudyWithAI kind="course" path={`/${locale}/study/${course.slug}`} size="sm" />
+                  <StudyWithAI
+                    kind="course"
+                    path={detailPath('courses', String(course.slug), locale)}
+                    size="sm"
+                  />
                 </div>
               )}
               {actions}

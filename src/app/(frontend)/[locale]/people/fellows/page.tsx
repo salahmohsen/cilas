@@ -1,3 +1,4 @@
+import { detailPath } from '@/lib/paths'
 import { type Locale } from '@/i18n/routing'
 import { pageAlternates } from '@/lib/seo'
 import config from '@payload-config'
@@ -54,7 +55,7 @@ export default async function FellowsPage({ params }: Props) {
           return {
             key: c.slug,
             title: c.title,
-            href: `/study/${c.slug}`,
+            href: detailPath('courses', String(c.slug)),
             ...(c.season && c.year
               ? { sub: `${tf(`seasons.${c.season}`)} ${localDigits(c.year, locale)}` }
               : {}),

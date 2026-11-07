@@ -29,3 +29,25 @@ export const pathOf = (
   const path = pagePath(collection, doc.slug)
   return path && locale ? `/${locale}${path}` : path
 }
+
+/** A known public route, including optional child pages. */
+export const detailPath = (
+  collection: 'courses' | 'articles' | 'events' | 'people',
+  slug: string,
+  locale?: string,
+  child?: string,
+): string => `${locale ? `/${locale}` : ''}${pagePath(collection, slug)}${child ? `/${child}` : ''}`
+
+export const BRIDGE_APPLY_PATH = '/study/bridge/apply'
+
+/** A Bridge year's page: `/study/bridge/2024-2025` for `bridge-programme-2024-2025`. */
+export const bridgeYearPath = (slug: string) =>
+  `/study/bridge/${slug.replace(/^bridge-programme-/, '')}`
+/** The programme slug a year's page names. */
+export const bridgeSlugOf = (year: string) => `bridge-programme-${year}`
+
+/** The span and optional city encoded in a Bridge programme slug. */
+export const bridgeYearParts = (slug: string) => {
+  const [, span = slug, place] = /^bridge-programme-(\d{4}-\d{4})(?:-(.+))?$/.exec(slug) ?? []
+  return { span, place }
+}

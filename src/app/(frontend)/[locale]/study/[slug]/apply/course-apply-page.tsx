@@ -1,3 +1,4 @@
+import { detailPath } from '@/lib/paths'
 import { CAIRO } from '@/lib/cairo-day'
 import { otherLocale } from '@/i18n/routing'
 import { relId } from '@/lib/relation'
@@ -121,7 +122,7 @@ export async function CourseApplyPage({
     <RichTextField className="article-prose" data={form.confirmationMessage} />
   ) : null
 
-  const back = `/study/${course.slug}`
+  const back = detailPath('courses', String(course.slug))
   return (
     <div className="apply-page mx-auto w-full max-w-3xl px-4 py-10 sm:px-8 sm:py-14">
       <header className="apply-header">

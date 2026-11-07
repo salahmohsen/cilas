@@ -1,3 +1,4 @@
+import { detailPath } from '@/lib/paths'
 import { type Locale } from '@/i18n/routing'
 import config from '@payload-config'
 import { notFound } from 'next/navigation'
@@ -32,8 +33,13 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   return {
     title,
     description,
-    alternates: pageAlternates(`/events/${event.slug}`, locale),
-    openGraph: { title, description, url: `/${locale}/events/${event.slug}`, images },
+    alternates: pageAlternates(detailPath('events', String(event.slug)), locale),
+    openGraph: {
+      title,
+      description,
+      url: detailPath('events', String(event.slug), locale),
+      images,
+    },
     twitter: {
       card: 'summary_large_image',
       title,

@@ -1,8 +1,9 @@
+import { bridgeYearPath } from '@/lib/paths'
 import config from '@payload-config'
 import type { MetadataRoute } from 'next'
 import { getPayload } from 'payload'
 
-import { bridgeYearPath, listBridgeYears } from '@/api/programmes.api'
+import { listBridgeYears } from '@/api/programmes.api'
 import { env } from '@/env'
 import { pathOf } from '@/lib/paths'
 import { sitemapEntries, type SitePage } from '@/lib/sitemap'

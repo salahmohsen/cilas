@@ -1,3 +1,4 @@
+import { detailPath } from '@/lib/paths'
 import type { Plugin } from 'payload'
 import { DEFAULT_SETTINGS_GLOBAL_SLUG, llmsTxtPlugin } from 'payload-plugin-llms-txt'
 import type { LlmsTxtPluginOptions } from 'payload-plugin-llms-txt'
@@ -23,14 +24,14 @@ export const llmsOptions: LlmsTxtPluginOptions = {
       label: 'Courses',
       descriptionField: ['summary', 'subtitle', 'meta.description'],
       contentField: 'description',
-      urlPath: (doc) => `/en/study/${doc.slug}`,
+      urlPath: (doc) => detailPath('courses', String(doc.slug), 'en'),
     },
     {
       slug: 'articles',
       label: 'Articles',
       descriptionField: ['meta.description'],
       contentField: 'body',
-      urlPath: (doc) => `/en/articles/${doc.slug}`,
+      urlPath: (doc) => detailPath('articles', String(doc.slug), 'en'),
     },
     {
       slug: 'people',
@@ -39,7 +40,7 @@ export const llmsOptions: LlmsTxtPluginOptions = {
       contentField: 'bio',
       // People have no drafts; hidden people are kept out by access.
       publishedOnly: false,
-      urlPath: (doc) => `/en/people/${doc.slug}`,
+      urlPath: (doc) => detailPath('people', String(doc.slug), 'en'),
     },
   ],
 }

@@ -1,3 +1,4 @@
+import { detailPath } from '@/lib/paths'
 import { CAIRO, cairoNoon } from '@/lib/cairo-day'
 import { type Locale } from '@/i18n/routing'
 import { ArrowLeft } from 'lucide-react'
@@ -45,7 +46,7 @@ export async function EventPage({
   const crumbs = breadcrumbSchema([
     { name: tm('siteName'), path: `/${locale}` },
     { name: t('title'), path: `/${locale}/events` },
-    { name: event.title, path: `/${locale}/events/${event.slug}` },
+    { name: event.title, path: detailPath('events', String(event.slug), locale) },
   ])
   const now = new Date()
   const timing = eventTiming(event, now)
@@ -154,7 +155,7 @@ export async function EventPage({
               <h2 id="event-share">{share('heading')}</h2>
               <div className={styles.shareActions}>
                 <ShareBar
-                  path={`/${locale}/events/${event.slug}`}
+                  path={detailPath('events', String(event.slug), locale)}
                   title={event.title}
                   label={share('event')}
                 />

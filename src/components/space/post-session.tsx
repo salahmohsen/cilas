@@ -1,3 +1,4 @@
+import { detailPath } from '@/lib/paths'
 import { useLocale, useTranslations } from 'next-intl'
 import { MessagesSquare } from 'lucide-react'
 
@@ -69,7 +70,7 @@ export function PostSession({
       </span>
       <StudyWithAI
         kind="course"
-        path={`/${locale}/study/${course.slug}`}
+        path={detailPath('courses', String(course.slug), locale)}
         label={ts('aiSession')}
         size="sm"
         session={{

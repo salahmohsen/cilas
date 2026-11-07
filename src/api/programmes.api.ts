@@ -43,12 +43,6 @@ export type BridgeYear = {
   semesters: Array<{ cycle: Cycle; parts: ProgrammePart[] }>
 }
 
-/** A Bridge year's page: `/study/bridge/2024-2025` for `bridge-programme-2024-2025`. */
-export const bridgeYearPath = (slug: string) =>
-  `/study/bridge/${slug.replace(/^bridge-programme-/, '')}`
-/** The programme slug a year's page names. */
-export const bridgeSlugOf = (year: string) => `bridge-programme-${year}`
-
 /** The published Bridge years, latest first: the first is the current one. */
 export const listBridgeYears = async (payload: Payload, locale: Locale) => {
   const { docs } = await payload.find({

@@ -1,3 +1,4 @@
+import { detailPath } from '@/lib/paths'
 import { relId as unwrapId } from '@/lib/relation'
 import { relId } from '@/lib/relation'
 import type { Payload, Where } from 'payload'
@@ -101,7 +102,7 @@ export const validateMentions = (
   while ((match = regex.exec(body)) !== null) {
     const idStr = match[1]
     const id = Number(idStr)
-    const path = `/people/${idStr}`
+    const path = detailPath('people', String(idStr))
     if (!Number.isNaN(id) && memberIds.has(id)) {
       if (!mentioned.includes(id)) mentioned.push(id)
     } else {

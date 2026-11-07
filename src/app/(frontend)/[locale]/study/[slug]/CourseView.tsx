@@ -1,3 +1,4 @@
+import { detailPath } from '@/lib/paths'
 import { listSeparator } from '@/lib/locale-format'
 import { personAvatarSeed } from '@/lib/avatar'
 import {
@@ -118,7 +119,7 @@ export const CourseView: React.FC<{
     ? null
     : method === 'form'
       ? siteForm
-        ? `/${locale}/study/${course.slug}/apply`
+        ? detailPath('courses', String(course.slug), locale, 'apply')
         : null
       : (course.registration?.url ?? null)
 
@@ -288,7 +289,7 @@ export const CourseView: React.FC<{
                       <Link
                         aria-hidden
                         className="fellow-card-photo"
-                        href={`/people/${person.slug}`}
+                        href={detailPath('people', String(person.slug))}
                         tabIndex={-1}
                       >
                         {photo ? (
@@ -308,7 +309,10 @@ export const CourseView: React.FC<{
                       <div className="fellow-card-main">
                         <div className="fellow-card-panel">
                           {/* The whole name box is the link to the profile; the arrow shows on hover and keyboard focus. */}
-                          <Link className="fellow-card-name-link" href={`/people/${person.slug}`}>
+                          <Link
+                            className="fellow-card-name-link"
+                            href={detailPath('people', String(person.slug))}
+                          >
                             {/* The poster titles' entrance: each line rises in when the card is in view. */}
                             <div className="fellow-card-name" dir={textDirection(person.name)}>
                               <InViewTitle
@@ -427,7 +431,7 @@ export const CourseView: React.FC<{
         <div className="side-card-body side-card-flush side-card-scroll">
           <ShareBar
             label={ts('course')}
-            path={`/${locale}/study/${course.slug}`}
+            path={detailPath('courses', String(course.slug), locale)}
             title={course.title}
             email={email}
           />
@@ -435,7 +439,7 @@ export const CourseView: React.FC<{
       </SideCardSection>
       <SideCardSection label={ts('aiHeading')} labelAction={<AIInstructions />}>
         <div className="side-card-body side-card-flush">
-          <StudyWithAI kind="course" path={`/${locale}/study/${course.slug}`} />
+          <StudyWithAI kind="course" path={detailPath('courses', String(course.slug), locale)} />
         </div>
       </SideCardSection>
     </SideCard>
@@ -643,7 +647,7 @@ export const CourseView: React.FC<{
           <ul className="mt-6 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {related.slice(0, RELATED_SHOWN).map((r) => (
               <li key={r.id}>
-                <Link className="course-related group" href={`/study/${r.slug}`}>
+                <Link className="course-related group" href={detailPath('courses', String(r.slug))}>
                   <span className="course-related-image">
                     {r.image ? (
                       // eslint-disable-next-line @next/next/no-img-element

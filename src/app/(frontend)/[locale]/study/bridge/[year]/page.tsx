@@ -1,9 +1,10 @@
+import { bridgeSlugOf } from '@/lib/paths'
 import config from '@payload-config'
 import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import { getPayload } from 'payload'
 
-import { bridgeSlugOf, getBridgeYear, listBridgeYears } from '@/api/programmes.api'
+import { getBridgeYear, listBridgeYears } from '@/api/programmes.api'
 import { BridgeYearView } from '@/components/bridge/bridge-year'
 import { redirect } from '@/i18n/navigation'
 import { ogImages } from '@/lib/og'

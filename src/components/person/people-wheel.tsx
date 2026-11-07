@@ -1,5 +1,7 @@
 'use client'
 
+import { detailPath } from '@/lib/paths'
+
 import { useLocale, useTranslations } from 'next-intl'
 import { useState, type ReactNode } from 'react'
 
@@ -78,7 +80,10 @@ export function PeopleWheel({
       <section aria-live="polite" className="min-w-0">
         <p className="text-sm text-[var(--text-muted)]">{person.eyebrow}</p>
         <h2 className="mt-1 text-2xl font-semibold tracking-tight rtl:tracking-normal" dir="auto">
-          <Link className="underline-offset-4 hover:underline" href={`/people/${person.slug}`}>
+          <Link
+            className="underline-offset-4 hover:underline"
+            href={detailPath('people', String(person.slug))}
+          >
             {person.name}
           </Link>
         </h2>
@@ -125,7 +130,7 @@ export function PeopleWheel({
 
         <Link
           className="mt-6 inline-flex h-9 items-center rounded-full px-4 text-sm shadow-[0_0_0_1px_var(--border)] hover:bg-[var(--surface-muted)]"
-          href={`/people/${person.slug}`}
+          href={detailPath('people', String(person.slug))}
         >
           {t('profile')}
         </Link>

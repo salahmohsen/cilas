@@ -1,3 +1,4 @@
+import { detailPath } from '@/lib/paths'
 import { listSeparator } from '@/lib/locale-format'
 import { type Locale } from '@/i18n/routing'
 import { otherLocale } from '@/i18n/routing'
@@ -196,7 +197,7 @@ export const getStudyCourses = async (
 
       return {
         id: c.id,
-        href: `/${locale}/study/${c.slug}`,
+        href: detailPath('courses', String(c.slug), locale),
         title: c.title,
         sublabel: [typeLabel(type), cycleLabel].filter(Boolean).join(' · '),
         description:

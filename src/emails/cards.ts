@@ -1,3 +1,4 @@
+import { detailPath } from '@/lib/paths'
 import { CAIRO } from '@/lib/cairo-day'
 import { plainText } from '@/lib/plaintext'
 
@@ -69,7 +70,8 @@ const peopleOf = (people: unknown, site: string): Person[] =>
       ? [
           {
             name: p.name,
-            url: p.slug && p.visible !== false ? `${site}/en/people/${p.slug}` : null,
+            url:
+              p.slug && p.visible !== false ? `${site}${detailPath('people', p.slug, 'en')}` : null,
           },
         ]
       : [],

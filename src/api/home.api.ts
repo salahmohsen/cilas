@@ -1,3 +1,4 @@
+import { bridgeYearPath } from '@/lib/paths'
 import { listSeparator } from '@/lib/locale-format'
 import { type Locale } from '@/i18n/routing'
 import { otherLocale } from '@/i18n/routing'
@@ -6,7 +7,7 @@ import { relation as obj } from '@/lib/relation'
 import type { Payload, Where } from 'payload'
 
 import { siteTiers } from '@/access'
-import { bridgeYearPath, listBridgeYears } from '@/api/programmes.api'
+import { listBridgeYears } from '@/api/programmes.api'
 import { getStudyIndex } from '@/api/study-index'
 import { registrationStatus } from '@/lib/registration'
 import { mediaImage, type MediaImage } from '@/lib/media-image'

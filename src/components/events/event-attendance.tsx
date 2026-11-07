@@ -1,3 +1,4 @@
+import { detailPath } from '@/lib/paths'
 import { CAIRO, cairoNoon } from '@/lib/cairo-day'
 import { getFormatter, getTranslations } from 'next-intl/server'
 import { ArrowDown, ArrowUpRight } from 'lucide-react'
@@ -64,7 +65,7 @@ export async function EventAttendance({
         <ArrowDown size={16} aria-hidden />
       </RegisterLink>
     ) : null
-  const pageUrl = absoluteUrl(`/${locale}/events/${event.slug}`)
+  const pageUrl = absoluteUrl(detailPath('events', String(event.slug), locale))
   const words = {
     speakers: t('speakers'),
     agenda: t('agenda'),
@@ -78,7 +79,11 @@ export async function EventAttendance({
   const calendar =
     timing.status === 'upcoming' ? (
       <div className="side-card-dropdown">
-        <EventCalendar google={google} ics={`/${locale}/events/${event.slug}/event.ics`} labelled />
+        <EventCalendar
+          google={google}
+          ics={detailPath('events', String(event.slug), locale, 'event.ics')}
+          labelled
+        />
       </div>
     ) : null
   // Registration that was set up but is not open (and the event is not over).

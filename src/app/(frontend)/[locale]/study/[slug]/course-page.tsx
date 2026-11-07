@@ -1,3 +1,4 @@
+import { detailPath } from '@/lib/paths'
 import { otherLocale } from '@/i18n/routing'
 import { relId } from '@/lib/relation'
 import config from '@payload-config'
@@ -72,7 +73,7 @@ export async function courseMetadata(
   return {
     title,
     description,
-    alternates: pageAlternates(`/study/${course.slug}`, locale),
+    alternates: pageAlternates(detailPath('courses', String(course.slug)), locale),
     openGraph: { title, description, images: ogImages(imageUrl) },
     twitter: { card: 'summary_large_image', images: ogImages(imageUrl).map((i) => i.url) },
   }

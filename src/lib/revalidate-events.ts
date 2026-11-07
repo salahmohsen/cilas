@@ -1,3 +1,4 @@
+import { detailPath } from '@/lib/paths'
 import { revalidatePath, revalidateTag } from 'next/cache'
 import type { CollectionAfterChangeHook, CollectionAfterDeleteHook } from 'payload'
 import { routing } from '@/i18n/routing'
@@ -9,7 +10,7 @@ const invalidate = (doc: { slug?: string }, previousDoc?: { slug?: string }) => 
       for (const path of ['', '/events', '/calendar', '/signed-in'])
         revalidatePath(`/${locale}${path}`)
       for (const slug of new Set([doc.slug, previousDoc?.slug]))
-        if (slug) revalidatePath(`/${locale}/events/${slug}`)
+        if (slug) revalidatePath(detailPath('events', String(slug), locale))
     }
     revalidatePath('/sitemap.xml')
     revalidateTag(COURSES_TAG, 'max')

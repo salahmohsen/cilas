@@ -1,3 +1,4 @@
+import { detailPath } from '@/lib/paths'
 import { personAvatarSeed } from '@/lib/avatar'
 import { Avatar } from '@/components/arc/avatar/avatar'
 import { Link } from '@/i18n/navigation'
@@ -13,7 +14,7 @@ export function PersonLink({ person, className }: { person: Person; className?: 
   return (
     <Link
       className={className ?? 'underline-offset-4 hover:underline'}
-      href={`/people/${person.slug}`}
+      href={detailPath('people', String(person.slug))}
     >
       {person.name}
     </Link>
@@ -40,7 +41,10 @@ export function ContributorList({
       <ul className="space-y-3">
         {contributors.map(({ person, role }) => (
           <li key={`${person.id}-${role}`}>
-            <Link className="group flex items-center gap-3" href={`/people/${person.slug}`}>
+            <Link
+              className="group flex items-center gap-3"
+              href={detailPath('people', String(person.slug))}
+            >
               <Avatar
                 fallbackSeed={personAvatarSeed(person.id)}
                 name={person.name}
@@ -67,7 +71,7 @@ export function ContributorRows({ contributors }: { contributors: Contributor[] 
     <ul className="side-card-people">
       {contributors.map(({ person, role }) => (
         <li key={`${person.id}-${role}`}>
-          <Link href={`/people/${person.slug}`}>
+          <Link href={detailPath('people', String(person.slug))}>
             <Avatar
               fallbackSeed={personAvatarSeed(person.id)}
               name={person.name}
