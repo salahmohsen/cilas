@@ -54,7 +54,7 @@ import { articleSchema, absoluteUrl, breadcrumbSchema } from '@/lib/schema'
 import { ogImages } from '@/lib/og'
 import { pathOf } from '@/lib/paths'
 import { pageAlternates } from '@/lib/seo'
-import type { Article, Media, Person, Publication } from '@/payload-types'
+import type { Article, Media, Person } from '@/payload-types'
 
 const isObject = <T,>(v: unknown): v is T => typeof v === 'object' && v !== null
 
