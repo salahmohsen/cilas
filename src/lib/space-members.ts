@@ -5,7 +5,7 @@ import type { Payload } from 'payload'
 import type { SOCIAL_PLATFORMS } from '@/fields/social'
 import { ENROLLED } from '@/lib/list-members'
 import { plainText } from '@/lib/plaintext'
-import { fellowPersonIds, type CommunityAudience } from '@/lib/spaces'
+import { fellowPersonIds, type CommunityAudience, type SpaceKind } from '@/lib/spaces'
 
 /** Where to find a person: their website first, then each social profile. */
 export type PersonLink = { kind: 'website' | (typeof SOCIAL_PLATFORMS)[number]; url: string }
@@ -41,7 +41,7 @@ export const mentionSafelist = async (payload: Payload, spaceId: number): Promis
     depth: 0,
     overrideAccess: true,
   })) as {
-    kind: 'community' | 'cohort' | 'course'
+    kind: SpaceKind
     course?: number | { id: number } | null
     programme?: number | { id: number } | null
     audience?: CommunityAudience | null

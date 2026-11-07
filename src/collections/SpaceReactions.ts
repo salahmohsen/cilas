@@ -1,6 +1,7 @@
 import type { CollectionConfig, Where } from 'payload'
 
 import { isAdminUser, personOf } from '@/access'
+import { REACTION_KINDS, REACTION_LABELS } from '@/lib/space-reactions'
 import { contentWhere } from '@/lib/spaces'
 
 /**
@@ -11,15 +12,6 @@ import { contentWhere } from '@/lib/spaces'
  * reaction) triple is unique by its own index, so the Postgres NULL trick
  * (two rows matching when the other field is NULL) cannot double a reaction.
  */
-export const REACTIONS: Array<{ value: string; label: string }> = [
-  { label: 'Like', value: 'agree' },
-  { label: 'Thank you', value: 'thank_you' },
-  { label: 'Celebrate', value: 'celebrate' },
-  { label: 'Insightful', value: 'insightful' },
-  { label: 'Same question', value: 'same_question' },
-  { label: 'Boost', value: 'rocket' },
-]
-
 export const SpaceReactions: CollectionConfig = {
   slug: 'space-reactions',
   labels: { singular: 'Reaction', plural: 'Reactions' },
@@ -49,7 +41,12 @@ export const SpaceReactions: CollectionConfig = {
     },
     { name: 'post', type: 'relationship', relationTo: 'space-posts', index: true },
     { name: 'comment', type: 'relationship', relationTo: 'space-comments', index: true },
-    { name: 'reaction', type: 'select', required: true, options: REACTIONS },
+    {
+      name: 'reaction',
+      type: 'select',
+      required: true,
+      options: REACTION_KINDS.map((value) => ({ value, label: REACTION_LABELS[value] })),
+    },
   ],
   indexes: [
     { fields: ['account', 'post', 'reaction'], unique: true },
