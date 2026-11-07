@@ -1,5 +1,6 @@
 import { postgresAdapter } from '@payloadcms/db-postgres'
 import { lexicalEditor } from '@payloadcms/richtext-lexical'
+import { BUCKET_PREFIXES } from '@/lib/storage-usage'
 import { emailEditorFeatures } from '@/lexical/email-features'
 import { formEmailRichText } from '@/forms/email-rich-text'
 import path from 'path'
@@ -78,14 +79,14 @@ const storage = s3Storage({
   collections: {
     media: {
       disableLocalStorage: true, // Recommended for production
-      prefix: 'media', // Optional prefix for uploaded files
+      prefix: BUCKET_PREFIXES.media, // Optional prefix for uploaded files
       // No local fallback: disableLocalStorage means nothing else to serve from.
       generateFileURL: ({ filename, prefix }) =>
         `${env.R2_PUBLIC_URL.replace(/\/+$/, '')}/${prefix}/${encodeURIComponent(filename)}`,
     },
     // Applicants' files: no public URL; Payload serves them to admins only.
-    'submission-files': { disableLocalStorage: true, prefix: 'applications' },
-    'space-files': { disableLocalStorage: true, prefix: 'spaces' },
+    'submission-files': { disableLocalStorage: true, prefix: BUCKET_PREFIXES.submissions },
+    'space-files': { disableLocalStorage: true, prefix: BUCKET_PREFIXES.spaces },
   },
   bucket: env.R2_BUCKET,
   config: {

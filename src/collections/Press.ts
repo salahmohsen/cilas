@@ -2,7 +2,7 @@ import type { CollectionConfig } from 'payload'
 
 import { anyone, isAdmin } from '@/access'
 import { LANGUAGE_OPTIONS } from '@/fields/language'
-import { httpUrl } from '@/fields/validators'
+import { httpUrl, optionalHttpUrl } from '@/fields/validators'
 import { importFields } from '@/fields/import'
 
 /** Coverage of CILAS by an outside outlet (CONTEXT.md). */
@@ -63,7 +63,7 @@ export const Press: CollectionConfig = {
             {
               name: 'url',
               type: 'text',
-              validate: (value: unknown) => (value ? httpUrl(value) : true),
+              validate: optionalHttpUrl,
               admin: { width: '50%', placeholder: 'https://…' },
             },
           ],

@@ -8,7 +8,7 @@ import {
 import { text } from 'payload/shared'
 
 import { REGISTRATION_METHODS } from '@/lib/registration'
-import { httpUrl } from './validators'
+import { httpUrl, optionalHttpUrl } from './validators'
 
 const METHOD_LABELS: Record<(typeof REGISTRATION_METHODS)[number], string> = {
   form: 'Site form',
@@ -91,7 +91,7 @@ export const registrationField = (): NamedGroupField => ({
       validate: ((value, options) => {
         const base = text(value, options)
         if (base !== true) return base
-        return value ? httpUrl(value) : true
+        return optionalHttpUrl(value)
       }) satisfies TextFieldSingleValidation,
       admin: {
         condition: (_, sibling) => sibling?.method === 'external',

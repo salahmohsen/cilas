@@ -233,7 +233,6 @@ export const Courses: CollectionConfig = {
               type: 'relationship',
               relationTo: 'cycles',
               required: true,
-              admin: {},
             },
             {
               name: 'location',

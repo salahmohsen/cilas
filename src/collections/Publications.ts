@@ -19,7 +19,7 @@ import type { Publication } from '@/payload-types'
 import { creditsField } from '@/fields/credits'
 import { reviewFields } from '@/fields/review'
 import { slugField } from '@/fields/slug'
-import { httpUrl } from '@/fields/validators'
+import { optionalHttpUrl } from '@/fields/validators'
 import { importFields } from '@/fields/import'
 import { lastEditedByField, stampLastEditor } from '@/fields/last-edited-by'
 
@@ -102,7 +102,6 @@ export const Publications: CollectionConfig = {
                 { label: 'Research', value: 'research' },
                 { label: 'Other', value: 'other' },
               ],
-              admin: {},
             },
           ],
         },
@@ -127,7 +126,6 @@ export const Publications: CollectionConfig = {
               type: 'relationship',
               relationTo: 'people',
               hasMany: true,
-              admin: {},
             },
             creditsField(),
             {
@@ -149,7 +147,7 @@ export const Publications: CollectionConfig = {
                   // A link to the designed print edition, e.g. a Wayback copy. No file is stored.
                   name: 'print_edition_url',
                   type: 'text',
-                  validate: (value: unknown) => (value ? httpUrl(value) : true),
+                  validate: optionalHttpUrl,
                 },
               ],
             },

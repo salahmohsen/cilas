@@ -176,7 +176,6 @@ export const Articles: CollectionConfig = {
               relationTo: 'people',
               hasMany: true,
               required: true,
-              admin: {},
             },
             creditsField(),
             {

@@ -1,7 +1,7 @@
 import type { CollectionConfig } from 'payload'
 
 import { slugField } from '@/fields/slug'
-import { httpUrl } from '@/fields/validators'
+import { optionalHttpUrl } from '@/fields/validators'
 import { anyone, isAdmin } from '../access'
 import { importFields } from '@/fields/import'
 import {
@@ -51,7 +51,7 @@ export const Places: CollectionConfig = {
       name: 'map_url',
       label: 'Google Maps link',
       type: 'text',
-      validate: (value: unknown) => (value ? httpUrl(value) : true),
+      validate: optionalHttpUrl,
       admin: { description: 'Shown with the address, e.g. in the emails’ footer.' },
     },
     {

@@ -5,12 +5,10 @@ import { pricingField } from '@/fields/pricing'
 import { registrationField } from '@/fields/registration'
 import { scheduleField, timeRangeFields } from '@/fields/schedule'
 import { slugField } from '@/fields/slug'
-import { httpUrl } from '@/fields/validators'
+import { optionalHttpUrl } from '@/fields/validators'
 import { revalidateEventAfterChange, revalidateEventAfterDelete } from '@/lib/revalidate-events'
 import { importFields } from '@/fields/import'
 import { lastEditedByField, stampLastEditor } from '@/fields/last-edited-by'
-
-const optionalUrl = (value: unknown) => (value ? httpUrl(value) : true)
 
 /**
  * A gathering that is not a course (CONTEXT.md). Its dates come from the same
@@ -105,7 +103,6 @@ export const Events: CollectionConfig = {
                 { label: 'Visit', value: 'visit' },
                 { label: 'Other', value: 'other' },
               ],
-              admin: {},
             },
             {
               name: 'speakers',
@@ -144,10 +141,10 @@ export const Events: CollectionConfig = {
                   fields: [
                     { name: 'name', type: 'text', localized: true },
                     { name: 'address', type: 'text', localized: true },
-                    { name: 'map_url', type: 'text', validate: optionalUrl },
+                    { name: 'map_url', type: 'text', validate: optionalHttpUrl },
                   ],
                 },
-                { name: 'online_url', type: 'text', validate: optionalUrl },
+                { name: 'online_url', type: 'text', validate: optionalHttpUrl },
               ],
             },
             {
@@ -184,9 +181,8 @@ export const Events: CollectionConfig = {
               name: 'programme',
               type: 'relationship',
               relationTo: 'programmes',
-              admin: {},
             },
-            { name: 'course', type: 'relationship', relationTo: 'courses', admin: {} },
+            { name: 'course', type: 'relationship', relationTo: 'courses' },
           ],
         },
       ],

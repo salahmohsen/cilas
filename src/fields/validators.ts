@@ -5,6 +5,8 @@ export const httpUrl = (value: unknown): true | string =>
     ? true
     : 'Enter a full URL starting with https:// or http://'
 
+export const optionalHttpUrl = (value: unknown): true | string => (value ? httpUrl(value) : true)
+
 const TIME = /^([01]\d|2[0-3]):[0-5]\d$/
 
 export const timeOfDay = (value: unknown): true | string =>
