@@ -24,7 +24,7 @@ import { slugField } from '@/fields/slug'
 import { grantFellow, revokeIfUnteaching, toPersonIds } from '@/lib/fellow-role'
 import { reviewHooks } from '@/lib/review-hooks'
 import { announceScheduleChanges } from '@/lib/schedule-notice'
-import { ensureSpaceForCourse } from '@/lib/space-hooks'
+import { ensureSpaceFor } from '@/lib/space-hooks'
 import type {
   CollectionAfterChangeHook,
   CollectionAfterDeleteHook,
@@ -491,7 +491,7 @@ export const Courses: CollectionConfig = {
       ...courseReview.afterChange,
       propagateFellowRole,
       revalidateCoursesAfterChange,
-      ensureSpaceForCourse,
+      ensureSpaceFor('course'),
       announceScheduleChanges,
     ],
     afterDelete: [revokeDeletedCourseFellows, revalidateCoursesAfterDelete],

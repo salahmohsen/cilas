@@ -70,17 +70,17 @@ export const eventParts = (post: Named): { title: string; description: string } 
   return { title, description: rest }
 }
 
+/** A name for a calendar entry or a notice, at most 80 characters; the fallback when it is empty. */
+const shortName = (title: string, fallback: string): string =>
+  title ? (title.length > 80 ? `${title.slice(0, 79)}…` : title) : fallback
+
 /** An event's name for a calendar entry or a notice, at most 80 characters. */
-export const eventName = (post: Named, fallback: string): string => {
-  const { title } = eventParts(post)
-  return title ? (title.length > 80 ? `${title.slice(0, 79)}…` : title) : fallback
-}
+export const eventName = (post: Named, fallback: string): string =>
+  shortName(eventParts(post).title, fallback)
 
 /** The first line of the post as plain text, for a calendar entry's title. */
-export const eventTitle = (body: string, fallback: string): string => {
-  const line = eventSplit(body).title
-  return line ? (line.length > 80 ? `${line.slice(0, 79)}…` : line) : fallback
-}
+export const eventTitle = (body: string, fallback: string): string =>
+  shortName(eventSplit(body).title, fallback)
 
 const stamp = (iso: string) =>
   new Date(iso)

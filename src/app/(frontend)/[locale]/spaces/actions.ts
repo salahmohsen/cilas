@@ -48,6 +48,13 @@ const err = (error: WriteError | 'auth' | 'failed'): SpacesWriteState => ({
   error,
 })
 
+/** The signed-in account and the payload client behind every action; null without an account. */
+const sessionOf = async () => {
+  const user = await currentReader()
+  if (!user || user.collection !== 'users') return null
+  return { user, payload: await getPayload({ config }) }
+}
+
 const text = (form: FormData, key: string) => String(form.get(key) ?? '')
 
 const num = (form: FormData, key: string): number | null => {
@@ -63,8 +70,6 @@ const parseBool = (raw: FormDataEntryValue | null): boolean | undefined => {
   if (v === 'false' || v === '0') return false
   return undefined
 }
-
-const bool = (form: FormData, key: string): boolean | undefined => parseBool(form.get(key))
 
 const filesOf = async (form: FormData): Promise<PostFile[]> =>
   Promise.all(
@@ -113,7 +118,7 @@ const eventTimesOf = (form: FormData): { startsAt: string; endsAt: string | null
 }
 
 /** When a vote closes, from its Cairo day and time: null for never, undefined when they name no real moment. */
-const closingOf = (form: FormData): string | null | undefined => {
+const closesAtOf = (form: FormData): string | null | undefined => {
   const day = text(form, 'closes_day')
   if (!day) return null
   return cairoInstant(day, text(form, 'closes_time') || '23:45') ?? undefined
@@ -138,15 +143,15 @@ const shapeOf = (form: FormData): PostShape | null => {
         : null
     }
     case 'vote': {
-      const closesAt = closingOf(form)
+      const closesAt = closesAtOf(form)
       return closesAt === undefined
         ? null
         : {
             kind: 'vote',
             vote: {
               options: form.getAll('option').map((o) => String(o)),
-              multiple: bool(form, 'multiple') ?? false,
-              anonymous: bool(form, 'anonymous') ?? false,
+              multiple: parseBool(form.get('multiple')) ?? false,
+              anonymous: parseBool(form.get('anonymous')) ?? false,
               closesAt,
             },
           }
@@ -160,15 +165,15 @@ export async function postCreateAction(
   _prev: SpacesWriteState,
   form: FormData,
 ): Promise<SpacesWriteState> {
-  const user = await currentReader()
-  if (!user || user.collection !== 'users') return err('auth')
+  const session = await sessionOf()
+  if (!session) return err('auth')
+  const { user, payload } = session
   const space = num(form, 'space')
   if (!space) return err('space')
   const shape = shapeOf(form)
   if (!shape) return err(text(form, 'kind') === 'vote' ? 'vote' : 'event')
   if (shape.kind === 'event') shape.cover = await coverOf(form)
   const files = await filesOf(form)
-  const payload = await getPayload({ config })
   const result = await postCreate({
     payload,
     user,
@@ -191,11 +196,11 @@ export async function postEditAction(
   _prev: SpacesWriteState,
   form: FormData,
 ): Promise<SpacesWriteState> {
-  const user = await currentReader()
-  if (!user || user.collection !== 'users') return err('auth')
+  const session = await sessionOf()
+  if (!session) return err('auth')
+  const { user, payload } = session
   const id = num(form, 'post')
   if (!id) return err('not-found')
-  const payload = await getPayload({ config })
   const result = await postEdit({
     payload,
     user,
@@ -212,11 +217,12 @@ export async function voteEditAction(
   _prev: SpacesWriteState,
   form: FormData,
 ): Promise<SpacesWriteState> {
-  const user = await currentReader()
-  if (!user || user.collection !== 'users') return err('auth')
+  const session = await sessionOf()
+  if (!session) return err('auth')
+  const { user, payload } = session
   const id = num(form, 'post')
   if (!id) return err('not-found')
-  const closesAt = closingOf(form)
+  const closesAt = closesAtOf(form)
   if (closesAt === undefined) return err('vote')
   // Each option is sent as "id|label"; a new option has an empty id.
   const options = form.getAll('option').map((raw) => {
@@ -224,7 +230,6 @@ export async function voteEditAction(
     const bar = value.indexOf('|')
     return { id: value.slice(0, bar) || null, label: value.slice(bar + 1) }
   })
-  const payload = await getPayload({ config })
   const result = await voteEdit({
     ...(await attachmentChangesOf(form)),
     payload,
@@ -232,8 +237,8 @@ export async function voteEditAction(
     id,
     body: text(form, 'body'),
     options,
-    multiple: bool(form, 'multiple') ?? false,
-    anonymous: bool(form, 'anonymous') ?? false,
+    multiple: parseBool(form.get('multiple')) ?? false,
+    anonymous: parseBool(form.get('anonymous')) ?? false,
     closesAt,
   })
   if (!result.ok) return err(result.error)
@@ -245,18 +250,20 @@ export async function postRemoveAction(
   _prev: SpacesWriteState,
   form: FormData,
 ): Promise<SpacesWriteState> {
-  const user = await currentReader()
-  if (!user || user.collection !== 'users') return err('auth')
+  const session = await sessionOf()
+  if (!session) return err('auth')
+  const { user, payload } = session
   const id = num(form, 'post')
   if (!id) return err('not-found')
-  const payload = await getPayload({ config })
   const result = await postRemove({ payload, user, id })
   if (!result.ok) return err(result.error)
   await revalidate()
   // Leave the deleted post before revalidation renders its now-missing route.
   // Only accept a local post route for this post, never an arbitrary return URL.
   const match = text(form, 'pathname').match(
-    /^\/(en|ar)\/spaces\/(community|course|cohort)\/([^/?#]+)\/posts\/(\d+)$/,
+    new RegExp(
+      `^/(${routing.locales.join('|')})/spaces/(community|course|cohort)/([^/?#]+)/posts/(\\d+)$`,
+    ),
   )
   if (match && Number(match[4]) === id) {
     redirect(`/${match[1]}/spaces/${match[2]}/${match[3]}`, 'replace')
@@ -268,18 +275,18 @@ export async function postModifyAction(
   _prev: SpacesWriteState,
   form: FormData,
 ): Promise<SpacesWriteState> {
-  const user = await currentReader()
-  if (!user || user.collection !== 'users') return err('auth')
+  const session = await sessionOf()
+  if (!session) return err('auth')
+  const { user, payload } = session
   const id = num(form, 'post')
   if (!id) return err('not-found')
-  const payload = await getPayload({ config })
   const result = await postModify({
     payload,
     user,
     id,
-    pinned: bool(form, 'pinned'),
-    pinnedFull: bool(form, 'pinnedFull'),
-    locked: bool(form, 'locked'),
+    pinned: parseBool(form.get('pinned')),
+    pinnedFull: parseBool(form.get('pinnedFull')),
+    locked: parseBool(form.get('locked')),
   })
   if (!result.ok) return err(result.error)
   await revalidate()
@@ -290,11 +297,11 @@ export async function commentCreateAction(
   _prev: SpacesWriteState,
   form: FormData,
 ): Promise<SpacesWriteState> {
-  const user = await currentReader()
-  if (!user || user.collection !== 'users') return err('auth')
+  const session = await sessionOf()
+  if (!session) return err('auth')
+  const { user, payload } = session
   const post = num(form, 'post')
   if (!post) return err('not-found')
-  const payload = await getPayload({ config })
   const result = await commentCreate({
     payload,
     user,
@@ -316,11 +323,11 @@ export async function commentEditAction(
   _prev: SpacesWriteState,
   form: FormData,
 ): Promise<SpacesWriteState> {
-  const user = await currentReader()
-  if (!user || user.collection !== 'users') return err('auth')
+  const session = await sessionOf()
+  if (!session) return err('auth')
+  const { user, payload } = session
   const id = num(form, 'comment')
   if (!id) return err('not-found')
-  const payload = await getPayload({ config })
   const result = await commentEdit({ payload, user, id, body: text(form, 'body') })
   if (!result.ok) return err(result.error)
   await revalidate()
@@ -331,11 +338,11 @@ export async function commentRemoveAction(
   _prev: SpacesWriteState,
   form: FormData,
 ): Promise<SpacesWriteState> {
-  const user = await currentReader()
-  if (!user || user.collection !== 'users') return err('auth')
+  const session = await sessionOf()
+  if (!session) return err('auth')
+  const { user, payload } = session
   const id = num(form, 'comment')
   if (!id) return err('not-found')
-  const payload = await getPayload({ config })
   const result = await commentRemove({ payload, user, id })
   if (!result.ok) return err(result.error)
   await revalidate()
@@ -346,13 +353,13 @@ export async function fileAddAction(
   _prev: SpacesWriteState,
   form: FormData,
 ): Promise<SpacesWriteState> {
-  const user = await currentReader()
-  if (!user || user.collection !== 'users') return err('auth')
+  const session = await sessionOf()
+  if (!session) return err('auth')
+  const { user, payload } = session
   const post = num(form, 'post')
   if (!post) return err('not-found')
   const file = (await filesOf(form))[0]
   if (!file) return err('file-type')
-  const payload = await getPayload({ config })
   const result = await fileAdd({ payload, user, post, file })
   if (!result.ok) return err(result.error)
   await revalidate()
@@ -363,12 +370,12 @@ export async function reactionToggleAction(
   _prev: SpacesWriteState,
   form: FormData,
 ): Promise<SpacesWriteState> {
-  const user = await currentReader()
-  if (!user || user.collection !== 'users') return err('auth')
+  const session = await sessionOf()
+  if (!session) return err('auth')
+  const { user, payload } = session
   const post = num(form, 'post')
   const comment = num(form, 'comment')
   if (!post && !comment) return err('not-found')
-  const payload = await getPayload({ config })
   const result = await reactionToggle({
     payload,
     user,
@@ -387,11 +394,11 @@ export async function voteSetAction(
   _prev: SpacesWriteState,
   form: FormData,
 ): Promise<SpacesWriteState> {
-  const user = await currentReader()
-  if (!user || user.collection !== 'users') return err('auth')
+  const session = await sessionOf()
+  if (!session) return err('auth')
+  const { user, payload } = session
   const post = num(form, 'post')
   if (!post) return err('not-found')
-  const payload = await getPayload({ config })
   const result = await voteSet({
     payload,
     user,
@@ -407,13 +414,13 @@ export async function rsvpSetAction(
   _prev: SpacesWriteState,
   form: FormData,
 ): Promise<SpacesWriteState> {
-  const user = await currentReader()
-  if (!user || user.collection !== 'users') return err('auth')
+  const session = await sessionOf()
+  if (!session) return err('auth')
+  const { user, payload } = session
   const post = num(form, 'post')
   if (!post) return err('not-found')
   const answer = text(form, 'status')
   if (answer !== '' && !isRsvpStatus(answer)) return err('rsvp')
-  const payload = await getPayload({ config })
   const result = await rsvpSet({ payload, user, post, status: answer === '' ? null : answer })
   if (!result.ok) return err(result.error)
   await revalidate()
@@ -424,13 +431,13 @@ export async function eventEditAction(
   _prev: SpacesWriteState,
   form: FormData,
 ): Promise<SpacesWriteState> {
-  const user = await currentReader()
-  if (!user || user.collection !== 'users') return err('auth')
+  const session = await sessionOf()
+  if (!session) return err('auth')
+  const { user, payload } = session
   const id = num(form, 'post')
   if (!id) return err('not-found')
   const times = eventTimesOf(form)
   if (!times) return err('event')
-  const payload = await getPayload({ config })
   const cover = text(form, 'cover_remove') === '1' ? null : ((await coverOf(form)) ?? undefined)
   const result = await eventEdit({
     ...(await attachmentChangesOf(form)),
@@ -454,10 +461,10 @@ export async function consentAcceptAction(
   _prev: SpacesWriteState,
   form: FormData,
 ): Promise<SpacesWriteState> {
-  const user = await currentReader()
-  if (!user || user.collection !== 'users') return err('auth')
+  const session = await sessionOf()
+  if (!session) return err('auth')
+  const { user, payload } = session
   void form
-  const payload = await getPayload({ config })
   const result = await consentAccept({ payload, user })
   if (!result.ok) return err(result.error)
   await revalidate()
@@ -468,11 +475,11 @@ export async function visitRecordAction(
   _prev: SpacesWriteState,
   form: FormData,
 ): Promise<SpacesWriteState> {
-  const user = await currentReader()
-  if (!user || user.collection !== 'users') return err('auth')
+  const session = await sessionOf()
+  if (!session) return err('auth')
+  const { user, payload } = session
   const space = num(form, 'space')
   if (!space) return err('space')
-  const payload = await getPayload({ config })
   const result = await visitRecord({ payload, user, space })
   if (!result.ok) return err(result.error)
   await revalidate()
@@ -483,14 +490,20 @@ export async function stepMarkAction(
   _prev: SpacesWriteState,
   form: FormData,
 ): Promise<SpacesWriteState> {
-  const user = await currentReader()
-  if (!user || user.collection !== 'users') return err('auth')
+  const session = await sessionOf()
+  if (!session) return err('auth')
+  const { user, payload } = session
   const space = num(form, 'space')
   if (!space) return err('space')
   const step = text(form, 'step') as StepKey
   if (!STEP_KEYS.includes(step)) return err('not-found')
-  const payload = await getPayload({ config })
-  const result = await stepMark({ payload, user, space, step, value: bool(form, 'value') ?? true })
+  const result = await stepMark({
+    payload,
+    user,
+    space,
+    step,
+    value: parseBool(form.get('value')) ?? true,
+  })
   if (!result.ok) return err(result.error)
   await revalidate()
   return { status: 'ok' }
@@ -500,10 +513,10 @@ export async function preferenceSetAction(
   _prev: SpacesWriteState,
   form: FormData,
 ): Promise<SpacesWriteState> {
-  const user = await currentReader()
-  if (!user || user.collection !== 'users') return err('auth')
+  const session = await sessionOf()
+  if (!session) return err('auth')
+  const { user, payload } = session
   const digest = text(form, 'digest') as 'daily' | 'weekly' | 'off'
-  const payload = await getPayload({ config })
   const result = await preferenceSet({ payload, user, digest })
   if (!result.ok) return err(result.error)
   await revalidate()
@@ -514,8 +527,9 @@ export async function spaceSettingsSetAction(
   _prev: SpacesWriteState,
   form: FormData,
 ): Promise<SpacesWriteState> {
-  const user = await currentReader()
-  if (!user || user.collection !== 'users') return err('auth')
+  const session = await sessionOf()
+  if (!session) return err('auth')
+  const { user, payload } = session
   const space = num(form, 'space')
   if (!space) return err('space')
   const posting = text(form, 'posting') || undefined
@@ -524,7 +538,6 @@ export async function spaceSettingsSetAction(
   const about = form.has('about') ? text(form, 'about') : undefined
   const rules = form.has('rules') ? text(form, 'rules') : undefined
   const locale = text(form, 'locale') === 'ar' ? 'ar' : 'en'
-  const payload = await getPayload({ config })
   const result = await spaceSettingsSet({
     payload,
     user,
@@ -547,10 +560,9 @@ export async function spaceSettingsSetAction(
  * caller cannot read counts zero.
  */
 export async function spaceNewPostsAction(space: number, since: string): Promise<number> {
-  const user = await currentReader()
-  if (!user || user.collection !== 'users' || !Number.isFinite(space)) return 0
-  if (Number.isNaN(Date.parse(since))) return 0
-  const payload = await getPayload({ config })
+  const session = await sessionOf()
+  if (!session || !Number.isFinite(space) || Number.isNaN(Date.parse(since))) return 0
+  const { user, payload } = session
   const person = personOf(user)
   const { totalDocs } = await payload.count({
     collection: 'space-posts',

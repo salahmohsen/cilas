@@ -6,7 +6,7 @@ import { pricingField } from '@/fields/pricing'
 import { registrationField } from '@/fields/registration'
 import { slugField } from '@/fields/slug'
 import { importFields } from '@/fields/import'
-import { ensureSpaceForProgramme } from '@/lib/space-hooks'
+import { ensureSpaceFor } from '@/lib/space-hooks'
 
 /**
  * A path through several cycles that people join as a cohort. Its courses are
@@ -185,5 +185,5 @@ export const Programmes: CollectionConfig = {
       ],
     },
   ],
-  hooks: { afterChange: [ensureSpaceForProgramme] },
+  hooks: { afterChange: [ensureSpaceFor('cohort')] },
 }

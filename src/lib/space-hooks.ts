@@ -10,54 +10,29 @@ import type { Course, Programme } from '@/payload-types'
  * published course never makes a second space. The community space is the
  * seed's to create (seed/collections/spaces.seed.ts).
  */
-export const ensureSpaceForCourse: CollectionAfterChangeHook<Course> = async ({
-  doc,
-  req,
-  previousDoc,
-}) => {
-  if (doc._status !== 'published') return
-  if (previousDoc?._status === 'published') return
-  const noSpace = await req.payload.count({
-    collection: 'spaces',
-    where: { course: { equals: doc.id } },
-    overrideAccess: true,
-  })
-  if (noSpace.totalDocs === 0) await createSpace(req.payload, req, 'course', { course: doc.id })
-}
-
-export const ensureSpaceForProgramme: CollectionAfterChangeHook<Programme> = async ({
-  doc,
-  req,
-  previousDoc,
-}) => {
-  if (doc._status !== 'published') return
-  if (previousDoc?._status === 'published') return
-  // Only Bridge cohort spaces for now (spec: not Women's Studies or
-  // Residency yet; the rule allows them later).
-  if (doc.kind !== 'bridge') return
-  const noSpace = await req.payload.count({
-    collection: 'spaces',
-    where: { programme: { equals: doc.id } },
-    overrideAccess: true,
-  })
-  if (noSpace.totalDocs === 0) await createSpace(req.payload, req, 'cohort', { programme: doc.id })
-}
-
-const createSpace = async (
-  payload: Payload,
-  req: Parameters<CollectionAfterChangeHook<Course>>[0]['req'],
-  kind: 'course' | 'cohort',
-  rel: { course?: number; programme?: number },
-) => {
-  const space = await payload.create({
-    collection: 'spaces',
-    data: { kind, ...rel } as never,
-    overrideAccess: true,
-    req,
-  })
-  // The spaces collection adds the intro post on create (Spaces.ts).
-  return space
-}
+export const ensureSpaceFor =
+  (kind: 'course' | 'cohort'): CollectionAfterChangeHook<Course | Programme> =>
+  async ({ doc, req, previousDoc }) => {
+    if (doc._status !== 'published') return
+    if (previousDoc?._status === 'published') return
+    // Only Bridge cohort spaces for now (spec: not Women's Studies or
+    // Residency yet; the rule allows them later).
+    if (kind === 'cohort' && (doc as Programme).kind !== 'bridge') return
+    const relation = kind === 'course' ? 'course' : 'programme'
+    const { totalDocs } = await req.payload.count({
+      collection: 'spaces',
+      where: { [relation]: { equals: doc.id } },
+      overrideAccess: true,
+    })
+    // The spaces collection adds the intro post on create (Spaces.ts).
+    if (totalDocs === 0)
+      await req.payload.create({
+        collection: 'spaces',
+        data: { kind, [relation]: doc.id } as never,
+        overrideAccess: true,
+        req,
+      })
+  }
 
 /**
  * Copies the introduction template (both languages, as it reads now) into a
