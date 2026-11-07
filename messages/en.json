@@ -556,8 +556,7 @@
       "gemini": "Gemini",
       "grok": "Grok",
       "chatgpt": "ChatGPT",
-      "zai": "Z.ai",
-      "mistral": "Mistral"
+      "zai": "Z.ai"
     },
     "aiSession": "Discuss this session with AI"
   },

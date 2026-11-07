@@ -14,8 +14,6 @@
  * - `https://grok.com/?q=` prefills Grok
  * - `https://chat.z.ai/?q=` prefills Z.ai (GLM, open weights), signed out
  *   too (2026-11)
- * - `https://chat.mistral.ai/chat?q=` prefills Mistral; a signed-out visitor
- *   signs in first and the prompt waits for them (2026-11)
  * When one drifts, the assistant simply opens without the prefill.
  *
  * `maxUrl` is the longest link we hand each one, measured 2026-10-25:
@@ -29,16 +27,13 @@
  *   Both sit behind Cloudflare, which refuses a URI over 32 KB. 20,000.
  * - chat.z.ai answered 200 at 7,449 characters and 414 at 12,402, so
  *   7,000 (2026-11-07).
- * - chat.mistral.ai answered 200 at 9,805 characters and 431 at 12,253,
- *   and a signed-in browser spends some of that header on cookies, so
- *   8,000 (2026-11-07).
  * Arabic text grows six times when encoded, so an Arabic prompt meets these
  * limits long before an English one does.
  */
 
 export type StudyKind = 'course' | 'article' | 'session'
 
-export type ProviderId = 'claude' | 'gemini' | 'grok' | 'chatgpt' | 'zai' | 'mistral'
+export type ProviderId = 'claude' | 'gemini' | 'grok' | 'chatgpt' | 'zai'
 
 export const providers: Array<{ id: ProviderId; maxUrl: number; href: (q: string) => string }> = [
   { id: 'claude', maxUrl: 20_000, href: (q) => `https://claude.ai/new?q=${q}` },
@@ -50,7 +45,6 @@ export const providers: Array<{ id: ProviderId; maxUrl: number; href: (q: string
   { id: 'grok', maxUrl: 6_000, href: (q) => `https://grok.com/?q=${q}` },
   { id: 'chatgpt', maxUrl: 20_000, href: (q) => `https://chatgpt.com/?q=${q}` },
   { id: 'zai', maxUrl: 7_000, href: (q) => `https://chat.z.ai/?q=${q}` },
-  { id: 'mistral', maxUrl: 8_000, href: (q) => `https://chat.mistral.ai/chat?q=${q}` },
 ]
 
 /**
