@@ -77,7 +77,7 @@ export function SubmitForReview() {
 
   if (live)
     return (
-      <div style={{ display: 'grid', gap: '0.5rem', marginBlock: '0 1rem' }}>
+      <div className="cilas-admin-stack cilas-admin-stack--flush">
         <p className="field-description">
           {status === 'changes_requested'
             ? 'Changes were asked for: see the editor’s note, then submit again.'
@@ -105,7 +105,7 @@ export function SubmitForReview() {
     )
 
   return (
-    <div style={{ display: 'grid', gap: '0.5rem', marginBlock: '0 1rem' }}>
+    <div className="cilas-admin-stack cilas-admin-stack--flush">
       {status === 'changes_requested' ? (
         <p className="field-description">
           Changes were asked for: see the editor’s note, then submit again.
@@ -183,7 +183,7 @@ function AdminDecision() {
 
   if (request === 'removal')
     return (
-      <div style={{ display: 'grid', gap: '0.5rem', marginBlock: '0 1rem' }}>
+      <div className="cilas-admin-stack cilas-admin-stack--flush">
         <p className="field-description">
           The owner asks for this to come off the site. Removing it unpublishes it and gives it back
           to them as a draft. To decline, write the editor’s note below first.
@@ -208,7 +208,7 @@ function AdminDecision() {
     )
 
   return (
-    <div style={{ display: 'grid', gap: '0.5rem', marginBlock: '0 1rem' }}>
+    <div className="cilas-admin-stack cilas-admin-stack--flush">
       <p className="field-description">
         {request === 'changes'
           ? 'Changes to the published version, submitted for review. The site shows the published one until you approve.'

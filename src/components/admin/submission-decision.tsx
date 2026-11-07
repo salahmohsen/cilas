@@ -10,6 +10,8 @@ import {
 } from '@payloadcms/ui'
 import { useState } from 'react'
 
+import { postAction } from './post-action'
+
 /**
  * Accept and Reject on an application (src/forms/applications.ts). Accepting
  * finds or makes the applicant's account and hidden person, gives them a
@@ -48,17 +50,12 @@ export function SubmissionDecision() {
 
   const run = async (action: 'accept' | 'reject') => {
     setBusy(true)
-    const res = await fetch(`/api/form-submissions/${id}/${action}`, {
-      method: 'POST',
-      credentials: 'include',
-    }).catch(() => null)
-    const body = (await res?.json().catch(() => null)) as {
-      error?: string
-      emailed?: boolean
-    } | null
-    if (!res?.ok) {
+    const { ok, body } = await postAction<{ emailed?: boolean }>(
+      `/api/form-submissions/${id}/${action}`,
+      'The decision failed. Try again.',
+    )
+    if (!ok) {
       setBusy(false)
-      toast.error(body?.error ?? 'The decision failed. Try again.')
       return
     }
     if (action === 'accept' && body?.emailed === false) {
@@ -69,7 +66,7 @@ export function SubmissionDecision() {
   }
 
   return (
-    <div style={{ display: 'grid', gap: '0.5rem', marginBlock: '1rem' }}>
+    <div className="cilas-admin-stack">
       <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
         <Button
           buttonStyle="primary"

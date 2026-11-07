@@ -3,6 +3,8 @@
 import { Button, toast, useDocumentInfo, useFormModified } from '@payloadcms/ui'
 import { useState } from 'react'
 
+import { postAction } from './post-action'
+
 /** "Sync now" on a synced mailing list (src/collections/MailingLists.ts). */
 export function SyncListButton() {
   const { id } = useDocumentInfo()
@@ -11,22 +13,14 @@ export function SyncListButton() {
 
   const sync = async () => {
     setBusy(true)
-    const res = await fetch(`/api/mailing-lists/${id}/sync`, {
-      method: 'POST',
-      credentials: 'include',
-    }).catch(() => null)
-    const body = (await res?.json().catch(() => null)) as {
-      error?: string
+    const { ok, body } = await postAction<{
       members?: number
       added?: number
       removed?: number
       failed?: number
-    } | null
+    }>(`/api/mailing-lists/${id}/sync`, 'The sync failed. Try again.')
     setBusy(false)
-    if (!res?.ok) {
-      toast.error(body?.error ?? 'The sync failed. Try again.')
-      return
-    }
+    if (!ok) return
     const failed = body?.failed ? `, ${body.failed} failed` : ''
     toast.success(
       `${body?.members} members: ${body?.added} added, ${body?.removed} removed${failed}.`,
@@ -36,7 +30,7 @@ export function SyncListButton() {
   }
 
   return (
-    <div style={{ display: 'grid', gap: '0.5rem', marginBlock: '1rem' }}>
+    <div className="cilas-admin-stack">
       <Button buttonStyle="secondary" disabled={busy || modified} margin={false} onClick={sync}>
         {busy ? 'Syncing…' : 'Sync now'}
       </Button>

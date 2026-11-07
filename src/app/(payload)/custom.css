@@ -156,3 +156,19 @@
 :root:has(.arc-scope .modular-dashboard) .app-header__step-nav-wrapper {
   display: flex;
 }
+
+/* The stack of notes and buttons a document-sidebar field renders. */
+.cilas-admin-stack {
+  display: grid;
+  gap: 0.5rem;
+  margin-block: 1rem;
+}
+.cilas-admin-stack--flush {
+  margin-block: 0 1rem;
+}
+
+/* The bordered box of the admin pages built here. */
+.cilas-admin-box {
+  border: 1px solid var(--theme-elevation-150);
+  border-radius: 6px;
+}

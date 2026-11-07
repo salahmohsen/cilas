@@ -7,14 +7,13 @@ import Link from 'next/link'
 export function SubscribersLink() {
   return (
     <div
+      className="cilas-admin-box"
       style={{
         display: 'flex',
         flexWrap: 'wrap',
         gap: '8px 16px',
         alignItems: 'center',
         justifyContent: 'space-between',
-        border: '1px solid var(--theme-elevation-150)',
-        borderRadius: '6px',
         padding: '12px 16px',
         margin: '0 0 16px',
       }}

@@ -13,11 +13,7 @@ const KINDS: Record<QueueKind, string> = {
   application: 'Application',
 }
 
-const box = {
-  border: '1px solid var(--theme-elevation-150)',
-  borderRadius: '6px',
-  padding: '16px 20px',
-} as const
+const box = { padding: '16px 20px' } as const
 const muted = { color: 'var(--theme-elevation-500)' } as const
 const cell = {
   padding: '10px 12px',
@@ -81,7 +77,11 @@ export async function ReviewQueueWidget({
   if (!isAdminUser(user)) return null
   const items = await getReviewQueue(payload)
   return (
-    <section aria-labelledby="review-queue-title" style={{ ...box, margin: '0 0 24px' }}>
+    <section
+      aria-labelledby="review-queue-title"
+      className="cilas-admin-box"
+      style={{ ...box, margin: '0 0 24px' }}
+    >
       <div
         style={{
           display: 'flex',

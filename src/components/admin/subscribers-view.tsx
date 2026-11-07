@@ -15,11 +15,7 @@ import {
 
 import { SubscribersTable } from './subscribers-table'
 
-const box = {
-  border: '1px solid var(--theme-elevation-150)',
-  borderRadius: '6px',
-  padding: '16px',
-} as const
+const box = { padding: '16px' } as const
 
 /**
  * Admin → Subscribers: the newsletter list, read live from Resend (ADR 0005),
@@ -74,6 +70,7 @@ export async function SubscribersView({
         return (
           <Link
             aria-current={current ? 'page' : undefined}
+            className="cilas-admin-box"
             href={`/admin/subscribers?list=${l.id}`}
             key={l.id}
             style={{
@@ -131,15 +128,15 @@ export async function SubscribersView({
           margin: '20px 0',
         }}
       >
-        <div style={box}>
+        <div className="cilas-admin-box" style={box}>
           <div style={{ fontSize: '28px', fontWeight: 600 }}>{subscribed}</div>
           <div>Subscribed</div>
         </div>
-        <div style={box}>
+        <div className="cilas-admin-box" style={box}>
           <div style={{ fontSize: '28px', fontWeight: 600 }}>{contacts.length - subscribed}</div>
           <div>Unsubscribed</div>
         </div>
-        <div style={box}>
+        <div className="cilas-admin-box" style={box}>
           <div style={{ fontSize: '28px', fontWeight: 600 }}>
             {total} / {FREE_CONTACT_LIMIT}
           </div>
@@ -171,7 +168,10 @@ export async function SubscribersView({
         </div>
       </div>
       {near ? (
-        <p style={{ ...box, borderColor: 'var(--theme-warning-500, #d97706)' }}>
+        <p
+          className="cilas-admin-box"
+          style={{ ...box, borderColor: 'var(--theme-warning-500, #d97706)' }}
+        >
           Near the free plan’s limit. Above {FREE_CONTACT_LIMIT} stored contacts Resend refuses to
           send newsletters until the plan is upgraded. You can delete long-unsubscribed contacts in
           Resend, or export the list to Mailchimp.

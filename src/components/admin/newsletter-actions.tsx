@@ -11,6 +11,8 @@ import {
 } from '@payloadcms/ui'
 import { useState } from 'react'
 
+import { postAction } from './post-action'
+
 /** "Send test to me" and "Send to the list" on a newsletter issue (src/forms/newsletter-send.ts). */
 export function NewsletterActions() {
   const { id } = useDocumentInfo()
@@ -24,16 +26,12 @@ export function NewsletterActions() {
 
   const call = async (action: 'test' | 'send') => {
     setBusy(true)
-    const res = await fetch(`/api/newsletters/${id}/${action}`, {
-      method: 'POST',
-      credentials: 'include',
-    }).catch(() => null)
-    const body = (await res?.json().catch(() => null)) as { error?: string; to?: string } | null
+    const { ok, body } = await postAction<{ to?: string }>(
+      `/api/newsletters/${id}/${action}`,
+      'Sending failed. Try again.',
+    )
     setBusy(false)
-    if (!res?.ok) {
-      toast.error(body?.error ?? 'Sending failed. Try again.')
-      return
-    }
+    if (!ok) return
     if (action === 'test') {
       toast.success(`Test sent to ${body?.to}.`)
       return
@@ -44,7 +42,7 @@ export function NewsletterActions() {
 
   const slug = `newsletter-send-${id}`
   return (
-    <div style={{ display: 'grid', gap: '0.5rem', marginBlock: '1rem' }}>
+    <div className="cilas-admin-stack">
       {modified ? (
         <p className="field-description">Save first: tests and sends use the saved issue.</p>
       ) : null}

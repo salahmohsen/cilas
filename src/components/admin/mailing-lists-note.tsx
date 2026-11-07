@@ -6,13 +6,12 @@ const muted = { color: 'var(--theme-elevation-600)', margin: 0, lineHeight: 1.6 
 export function MailingListsNote() {
   return (
     <div
+      className="cilas-admin-box"
       style={{
         display: 'grid',
         gap: '12px',
         maxWidth: '640px',
         margin: '8px 0 24px',
-        border: '1px solid var(--theme-elevation-150)',
-        borderRadius: '6px',
         padding: '20px',
       }}
     >
