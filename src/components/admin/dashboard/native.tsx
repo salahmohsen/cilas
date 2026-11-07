@@ -22,6 +22,7 @@ import {
   TrafficOverTime,
   TrafficSources,
   Visitors,
+  WebVitals,
 } from './widgets/analytics'
 import { ApplicationsByOutcome, ApplicationsPerDay, OpenApplications } from './widgets/applications'
 import { ActiveSpaces, CommunityActivity } from './widgets/community'
@@ -73,6 +74,7 @@ const RENDER: Record<WidgetSlug, (props: NativeProps) => Promise<ReactNode>> = {
   audience: Audience,
   'visitor-goals': Goals,
   'courses-and-events': TopCoursesAndEvents,
+  'web-vitals': WebVitals,
   'posthog-usage': FreePlanUsage,
   'daily-activity': DailyActivity,
   'media-storage': MediaStorage,

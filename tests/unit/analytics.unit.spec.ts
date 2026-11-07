@@ -166,6 +166,148 @@ describe('the last gate before an event leaves', () => {
     })
   })
 
+  it('cleans every address PostHog adds, not only the current one', () => {
+    const out = gateCapture({
+      event: '$pageview',
+      properties: {
+        $current_url: 'https://ci-las.org/en/about',
+        $session_entry_url: 'https://ci-las.org/en/reset?token=SECRET',
+        $session_entry_pathname: '/en/reset',
+        $session_entry_referrer: 'https://www.google.com/search?q=private',
+        $session_entry_ph_keyword: 'private',
+        $prev_pageview_pathname: '/en/spaces/my-space/posts/42',
+        $prev_pageview_duration: 3,
+        $initial_current_url: 'https://ci-las.org/en/people/jane-doe?x=1',
+        $external_click_url: 'https://partner.org/page?email=a@b.c',
+        $sdk_debug_replay_url_trigger_status: 'pending',
+      },
+    })
+    expect(out?.properties).toEqual({
+      $current_url: 'https://ci-las.org/en/about',
+      $session_entry_referrer: 'https://www.google.com/search',
+      $prev_pageview_duration: 3,
+      $initial_current_url: 'https://ci-las.org/en/people/[person]',
+      $external_click_url: 'https://partner.org/page',
+      $sdk_debug_replay_url_trigger_status: 'pending',
+    })
+  })
+
+  it('drops a referrer from a private page of the site', () => {
+    const out = gateCapture({
+      event: '$pageview',
+      properties: {
+        $current_url: 'https://ci-las.org/en/about',
+        $referrer: 'https://ci-las.org/en/spaces/my-space',
+        $referring_domain: 'ci-las.org',
+      },
+    })
+    expect(out?.properties).toEqual({
+      $current_url: 'https://ci-las.org/en/about',
+      $referring_domain: 'ci-las.org',
+    })
+  })
+
+  it('keeps a public page of the site as referrer, without its query', () => {
+    const out = gateCapture({
+      event: '$pageview',
+      properties: {
+        $current_url: 'https://ci-las.org/en/about',
+        $prev_pageview_pathname: '/en/people/jane-doe',
+        $referrer: 'https://ci-las.org/en/study?q=x',
+      },
+    })
+    expect(out?.properties).toMatchObject({
+      $prev_pageview_pathname: '/en/people/[person]',
+      $referrer: 'https://ci-las.org/en/study',
+    })
+  })
+
+  it('sends an anywhere event with no address of any kind', () => {
+    const out = gateCapture({
+      event: 'login',
+      properties: {
+        $current_url: 'https://ci-las.org/en/login',
+        $session_entry_url: 'https://ci-las.org/en/about?utm_source=x',
+        $session_entry_ph_keyword: 'cilas',
+        $prev_pageview_pathname: '/en/about',
+        $prev_pageview_duration: 3,
+        method: 'password',
+      },
+    })
+    expect(out?.properties).toEqual({
+      $current_url: '/[private]',
+      $pathname: '/[private]',
+      method: 'password',
+    })
+  })
+
+  it('removes secrets and emails from a browser error message', () => {
+    const out = gateCapture({
+      event: '$exception',
+      properties: {
+        $current_url: 'https://ci-las.org/en/about',
+        $exception_list: [
+          { type: 'Error', value: 'GET /api/x?token=abc failed for reader@example.org' },
+        ],
+      },
+    })
+    expect(out?.properties?.$exception_list).toEqual([
+      { type: 'Error', value: 'GET /api/x?token=[removed] failed for [email]' },
+    ])
+  })
+
+  it('cleans the addresses nested in a web vital', () => {
+    const out = gateCapture({
+      event: '$web_vitals',
+      properties: {
+        $current_url: 'https://ci-las.org/en/people/jane-doe?ref=x&token=abc',
+        $web_vitals_LCP_value: 1800,
+        $web_vitals_LCP_event: {
+          name: 'LCP',
+          value: 1800,
+          $current_url: 'https://ci-las.org/en/people/jane-doe?ref=x&token=abc',
+          navigationURL: 'https://ci-las.org/en/people/jane-doe?token=abc',
+          attribution: {
+            target: 'main > img',
+            url: 'https://ci-las.org/api/media/file/jane-doe.jpg?w=800',
+            timeToFirstByte: 120,
+          },
+        },
+        $web_vitals_INP_event: {
+          name: 'INP',
+          attribution: { url: 'https://cdn.example.org/font.woff2?v=2' },
+        },
+      },
+    })
+    expect(out?.properties).toEqual({
+      $current_url: 'https://ci-las.org/en/people/[person]?ref=x',
+      $web_vitals_LCP_value: 1800,
+      $web_vitals_LCP_event: {
+        name: 'LCP',
+        value: 1800,
+        $current_url: 'https://ci-las.org/en/people/[person]?ref=x',
+        navigationURL: 'https://ci-las.org/en/people/[person]',
+        attribution: { target: 'main > img', timeToFirstByte: 120 },
+      },
+      $web_vitals_INP_event: {
+        name: 'INP',
+        attribution: { url: 'https://cdn.example.org/font.woff2' },
+      },
+    })
+  })
+
+  it('drops a web vital measured on a private page', () => {
+    expect(
+      gateCapture({
+        event: '$web_vitals',
+        properties: {
+          $current_url: 'https://ci-las.org/en/spaces/my-space',
+          $web_vitals_LCP_value: 1,
+        },
+      }),
+    ).toBeNull()
+  })
+
   it('does not change what it was given', () => {
     const input = { event: '$pageview', properties: { $current_url: 'https://a.b/en?x=1' } }
     gateCapture(input)
@@ -273,6 +415,10 @@ describe('what the browser is set to do', () => {
     expect(config.disable_surveys).toBe(true)
     expect(config.disable_session_recording).toBe(true)
     expect(config.respect_dnt).toBe(true)
+  })
+
+  it('measures web vitals, but never the network in recordings', () => {
+    expect(config.capture_performance).toEqual({ web_vitals: true, network_timing: false })
   })
 
   it("uses PostHog's recommended defaults and puts its scripts in head", () => {

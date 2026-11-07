@@ -270,6 +270,61 @@ export const errorsFrom = (rows: Row[]): ErrorCount => {
   }
 }
 
+/* Web vitals */
+
+/**
+ * The four metrics PostHog measures, in the order the dashboard shows them
+ * (the three Core Web Vitals first), with Google's "good" limit for each.
+ * Milliseconds, except CLS, which has no unit.
+ */
+export const WEB_VITALS = [
+  { key: 'LCP', label: 'Largest paint (LCP)', good: 2500, unit: 'ms' },
+  { key: 'INP', label: 'Response to input (INP)', good: 200, unit: 'ms' },
+  { key: 'CLS', label: 'Layout shift (CLS)', good: 0.1, unit: 'score' },
+  { key: 'FCP', label: 'First paint (FCP)', good: 1800, unit: 'ms' },
+] as const
+
+/** Google's pass mark: a metric passes when this share of page loads is good. */
+export const WEB_VITALS_PASS = 75
+
+export type WebVital = {
+  key: (typeof WEB_VITALS)[number]['key']
+  label: string
+  /** Page loads that reported this metric. */
+  loads: number
+  /** Share of those loads within Google's "good" limit, 0 to 100. */
+  goodShare: number
+  /** The 75th percentile, written for people: "2.1 s", "180 ms", "0.05". */
+  p75: string
+}
+
+const formatVital = (value: number, unit: 'ms' | 'score'): string => {
+  if (unit === 'score') return value.toFixed(2)
+  return value < 1000 ? `${Math.round(value)} ms` : `${(value / 1000).toFixed(1)} s`
+}
+
+/**
+ * One row: for each metric in `WEB_VITALS` order, `[loads, good loads, p75]`.
+ * A metric no page load reported is left out.
+ */
+export const webVitalsFrom = (rows: Row[]): WebVital[] => {
+  const row = rows[0] ?? []
+  return WEB_VITALS.flatMap(({ key, label, unit }, i) => {
+    const loads = count(row[i * 3])
+    if (loads === 0) return []
+    const good = Math.min(count(row[i * 3 + 1]), loads)
+    return [
+      {
+        key,
+        label,
+        loads,
+        goodShare: Math.round((good / loads) * 100),
+        p75: formatVital(count(row[i * 3 + 2]), unit),
+      },
+    ]
+  })
+}
+
 /* The free plan's monthly allowance */
 
 /** Free plan limits per month (https://posthog.com/pricing). */
