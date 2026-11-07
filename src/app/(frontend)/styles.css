@@ -2116,6 +2116,11 @@ h1.article-title {
   border: 1px solid var(--cal-rule);
   border-radius: 1rem;
 }
+/* On dark, a full-strength frame is a flat white line around the dialog's
+   list: it takes the soft rule its rows already use. */
+:is(.dark, [data-theme='dark']) .cal-slots {
+  border-color: var(--cal-rule-soft);
+}
 .cal-slot {
   grid-template-columns: minmax(0, 1fr) auto 6rem;
 }
@@ -4157,12 +4162,18 @@ h3 {
   }
 }
 
-/* Pointing at (or tabbing to) a day, or at a row in the week, the agenda or the quick look, turns the
-   whole item card the palette yellow. */
+/* Pointing at (or tabbing to) a day turns the whole day cell, under its cover, the palette yellow;
+   pointing at a row in the week, the agenda or the quick look turns that row yellow. */
+.cal-day:has(.cal-day-card),
 .cal-item,
 .cal-slot {
   transition-property: background-color;
   transition-duration: 150ms;
+}
+.cal-day:has(.cal-day-card):hover,
+.cal-day:has(.cal-day-card button:focus-visible) {
+  background-color: #ffb71b;
+  color: #121212;
 }
 .cal-day:hover .cal-item,
 .cal-day:has(button:focus-visible) .cal-item,
@@ -4171,20 +4182,27 @@ h3 {
   background-color: #ffb71b;
   color: #121212;
 }
+.cal-day:has(.cal-day-card):hover .cal-more,
+.cal-day:has(.cal-day-card button:focus-visible) .cal-more,
 .cal-day:hover .cal-item :is(.cal-item-when, .cal-item-title),
 .cal-slot:hover :is(.cal-item-when, .cal-slot-title, .cal-slot-note),
 .cal-week .cal-item:hover :is(.cal-item-when, .cal-item-title) {
   color: #121212;
 }
 @media (prefers-reduced-motion: reduce) {
+  .cal-day,
   .cal-item,
   .cal-slot {
     transition: none;
   }
 }
-/* Today is ringed whole, as well as its number inverted. */
+/* Today is the palette yellow, its number inverted, its text dark on the yellow. */
 .cal-day[data-today],
 .cal-week-day[data-today] {
-  outline: 2px solid var(--foreground);
-  outline-offset: -2px;
+  background-color: #ffb71b;
+  color: #121212;
+}
+.cal-day[data-today] :is(.cal-item-when, .cal-item-title, .cal-more),
+.cal-week-day[data-today] :is(.cal-item-when, .cal-item-title, .cal-agenda-when) {
+  color: #121212;
 }
