@@ -8,7 +8,8 @@ import type {
 
 import { isAdminUser, personOf } from '@/access'
 import { canMove, notifyOn, type ReviewRequest, type ReviewState } from '@/lib/review'
-import { actorOf, notify, type NotificationKind } from '@/lib/notify'
+import { actorOf, notify } from '@/lib/notify'
+import type { NotificationKind } from '@/lib/notification-kinds'
 import {
   adminRecipients,
   emailRecipients,

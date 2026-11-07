@@ -1,6 +1,11 @@
 import type { Access, CollectionConfig, PayloadHandler } from 'payload'
 
+import { NOTIFICATION_KIND_NAMES } from '@/lib/notification-kinds'
 import { publishChange, publishDelete } from '@/lib/realtime/publish'
+
+/** The stored kinds: the registry's, and `question`, which older rows hold, in its place before `event_changed`. */
+const KIND_VALUES: string[] = [...NOTIFICATION_KIND_NAMES]
+KIND_VALUES.splice(KIND_VALUES.indexOf('event_changed'), 0, 'question')
 
 /** Each account sees, marks and clears only its own notifications. */
 const own: Access = ({ req }) => (req.user ? { recipient: { equals: req.user.id } } : false)
@@ -48,23 +53,7 @@ export const Notifications: CollectionConfig = {
       name: 'kind',
       type: 'select',
       required: true,
-      options: [
-        'submitted',
-        'approved',
-        'changes_requested',
-        'rejected',
-        'removed',
-        'application',
-        'mention',
-        'comment',
-        'reply',
-        'reaction',
-        'announcement',
-        'moderation',
-        'report',
-        'question',
-        'event_changed',
-      ].map((value) => ({
+      options: KIND_VALUES.map((value) => ({
         value,
         label: value.replace('_', ' '),
       })),

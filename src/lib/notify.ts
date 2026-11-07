@@ -1,43 +1,7 @@
 import type { Payload } from 'payload'
 
-export type NotificationKind =
-  | 'submitted'
-  | 'approved'
-  | 'changes_requested'
-  | 'rejected'
-  | 'removed'
-  | 'application'
-  | 'mention'
-  | 'comment'
-  | 'reply'
-  | 'reaction'
-  | 'announcement'
-  | 'moderation'
-  | 'report'
-  | 'event_changed'
-
-/**
- * The short name of each event. The bells show this (translated by kind on the
- * site) and keep a stored `title` only when the row was written before the
- * registry was, so the row text always reads as short label with context in
- * `description`.
- */
-export const EVENT_NAMES: Record<NotificationKind, string> = {
-  submitted: 'Review requested',
-  approved: 'Approved',
-  changes_requested: 'Changes requested',
-  rejected: 'Rejected',
-  removed: 'Removed',
-  application: 'New application',
-  mention: 'Mentioned you',
-  comment: 'New comment',
-  reply: 'New reply',
-  reaction: 'New reaction',
-  announcement: 'New announcement',
-  moderation: 'Moderation issue',
-  report: 'New report',
-  event_changed: 'Event changed',
-}
+import type { ReactionKind } from '@/lib/space-reactions'
+import { NOTIFICATION_KINDS, type NotificationKind } from '@/lib/notification-kinds'
 
 /**
  * The person an event belongs to, as a snapshot: name and photo are read once
@@ -69,7 +33,7 @@ export const actorOf = async (
 }
 
 /** What each reaction reads as in a sentence: "liked", "thanked you for", and so on. */
-const REACTION_VERB: Record<string, string> = {
+const REACTION_VERB: Record<ReactionKind, string> = {
   agree: 'liked',
   thank_you: 'thanked you for',
   celebrate: 'celebrated',
@@ -85,7 +49,7 @@ export const reactionNote = (i: {
   target: 'post' | 'comment'
   context: string
 }): string =>
-  `${i.actor ?? 'Someone'} ${REACTION_VERB[i.reaction] ?? 'reacted to'} your ${i.target} in ${i.context}`
+  `${i.actor ?? 'Someone'} ${REACTION_VERB[i.reaction as ReactionKind] ?? 'reacted to'} your ${i.target} in ${i.context}`
 
 /**
  * Leaves a notification for each account, beside the email it gets. A failed
@@ -109,7 +73,7 @@ export const notify = async (
         data: {
           recipient,
           kind: note.kind,
-          title: EVENT_NAMES[note.kind],
+          title: NOTIFICATION_KINDS[note.kind].name,
           description: note.description,
           link: note.link,
           actor_name: note.actor?.name,

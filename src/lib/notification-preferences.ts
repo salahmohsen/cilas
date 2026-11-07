@@ -1,6 +1,6 @@
 import { z } from 'zod'
 
-import type { NotificationKind } from '@/lib/notify'
+import { NOTIFICATION_KINDS, type PreferenceKind } from '@/lib/notification-kinds'
 
 /**
  * What an account wants to hear about, per kind and per channel. Stored on the
@@ -10,23 +10,26 @@ import type { NotificationKind } from '@/lib/notify'
  */
 export type Channel = 'email' | 'push'
 
-/** The kinds the settings page lists, with who can receive them. */
-export const PREFERENCE_KINDS = [
-  { kind: 'reaction', audience: 'all' },
-  { kind: 'comment', audience: 'all' },
-  { kind: 'reply', audience: 'all' },
-  { kind: 'mention', audience: 'all' },
-  { kind: 'announcement', audience: 'all' },
-  { kind: 'event_changed', audience: 'all' },
-  { kind: 'approved', audience: 'all' },
-  { kind: 'changes_requested', audience: 'all' },
-  { kind: 'rejected', audience: 'all' },
-  { kind: 'removed', audience: 'all' },
-  { kind: 'submitted', audience: 'admins' },
-  { kind: 'application', audience: 'admins' },
-] as const satisfies ReadonlyArray<{ kind: NotificationKind; audience: 'all' | 'admins' }>
+/** The kinds the settings page lists, in its order, with who can receive them. */
+const PREFERENCE_ORDER = [
+  'reaction',
+  'comment',
+  'reply',
+  'mention',
+  'announcement',
+  'event_changed',
+  'approved',
+  'changes_requested',
+  'rejected',
+  'removed',
+  'submitted',
+  'application',
+] as const satisfies readonly PreferenceKind[]
 
-export type PreferenceKind = (typeof PREFERENCE_KINDS)[number]['kind']
+export const PREFERENCE_KINDS = PREFERENCE_ORDER.map((kind) => ({
+  kind,
+  audience: NOTIFICATION_KINDS[kind].audience,
+}))
 
 /** The kinds that also send an email (src/lib/review-hooks.ts, review decisions). */
 export const EMAIL_KINDS = [

@@ -4,27 +4,18 @@ import { toast, useAuth } from '@payloadcms/ui'
 import { Bell } from 'lucide-react'
 import { useCallback, useEffect, useId, useRef, useState } from 'react'
 
-import { EVENT_NAMES, type NotificationKind } from '@/lib/notify'
-import { subscribeNotifications, tabId } from '@/lib/realtime/stream-client'
+import {
+  countUnread,
+  isOwnTab,
+  loadNotifications,
+  markAllRead,
+  markRead,
+  noteText,
+} from '@/lib/notifications-client'
+import type { StoredNotification } from '@/lib/realtime/events'
+import { subscribeNotifications } from '@/lib/realtime/stream-client'
 
-type Note = {
-  id: number
-  kind?: string
-  title: string
-  description?: string | null
-  link?: string | null
-  read_at?: string | null
-  createdAt: string
-}
-
-/** Rows written before the registry keep their old sentence as the detail line. */
-const labelOf = (note: Note) =>
-  note.kind && note.kind in EVENT_NAMES ? EVENT_NAMES[note.kind as NotificationKind] : note.title
-const detailOf = (note: Note) =>
-  note.description ??
-  (note.title === labelOf(note) || note.title.startsWith('{') ? undefined : note.title)
-
-const API = '/api/notifications'
+type Note = StoredNotification
 
 const ago = (iso: string) => {
   const minutes = Math.floor((Date.now() - new Date(iso).getTime()) / 60_000)
@@ -51,16 +42,9 @@ export function NotificationBell() {
   const box = useRef<HTMLDivElement>(null)
 
   const load = useCallback(async () => {
-    const [list, count] = await Promise.all([
-      fetch(`${API}?limit=12&depth=0&sort=-createdAt`, { credentials: 'include' }).then((r) =>
-        r.ok ? r.json() : null,
-      ),
-      fetch(`${API}?limit=0&depth=0&where[read_at][exists]=false`, { credentials: 'include' }).then(
-        (r) => (r.ok ? r.json() : null),
-      ),
-    ]).catch(() => [null, null])
-    if (list) setNotes(list.docs as Note[])
-    if (count) setUnread(count.totalDocs as number)
+    const [list, count] = await Promise.all([loadNotifications(12), countUnread()])
+    if (list) setNotes(list)
+    if (count !== null) setUnread(count)
   }, [])
 
   useEffect(() => {
@@ -76,9 +60,9 @@ export function NotificationBell() {
     const unsubscribe = subscribeNotifications({
       event: (event) => {
         loadSoon()
-        if (event.op !== 'created' || !event.doc || event.origin === tabId()) return
-        const note = event.doc as Note
-        toast.info(labelOf(note), { description: detailOf(note) })
+        if (event.op !== 'created' || !event.doc || isOwnTab(event)) return
+        const { label, detail } = noteText(event.doc)
+        toast.info(label, { description: detail })
       },
       sync: () => void load(),
     })
@@ -108,19 +92,12 @@ export function NotificationBell() {
   if (!user) return null
 
   const go = async (note: Note) => {
-    if (!note.read_at) {
-      await fetch(`${API}/${note.id}`, {
-        method: 'PATCH',
-        credentials: 'include',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ read_at: new Date().toISOString() }),
-      }).catch(() => null)
-    }
+    if (!note.read_at) await markRead(note.id, true)
     if (note.link) window.location.assign(note.link)
     else void load()
   }
   const readAll = async () => {
-    await fetch(`${API}/read-all`, { method: 'POST', credentials: 'include' }).catch(() => null)
+    await markAllRead()
     void load()
   }
 
@@ -216,58 +193,63 @@ export function NotificationBell() {
           </div>
           {notes.length ? (
             <ul style={{ listStyle: 'none', margin: 0, padding: 0 }}>
-              {notes.map((n) => (
-                <li key={n.id}>
-                  <button
-                    onClick={() => void go(n)}
-                    style={{
-                      display: 'grid',
-                      gridTemplateColumns: '8px 1fr auto',
-                      gap: 10,
-                      alignItems: 'baseline',
-                      width: '100%',
-                      padding: '10px 14px',
-                      border: 0,
-                      borderBottom: '1px solid var(--theme-elevation-100)',
-                      background: 'none',
-                      color: 'inherit',
-                      textAlign: 'start',
-                      cursor: 'pointer',
-                    }}
-                    type="button"
-                  >
-                    <span
-                      aria-label={n.read_at ? undefined : 'Unread'}
+              {notes.map((n) => {
+                const { label, detail } = noteText(n)
+                return (
+                  <li key={n.id}>
+                    <button
+                      onClick={() => void go(n)}
                       style={{
-                        width: 8,
-                        height: 8,
-                        borderRadius: 999,
-                        background: n.read_at ? 'transparent' : 'var(--theme-success-500, #16a34a)',
+                        display: 'grid',
+                        gridTemplateColumns: '8px 1fr auto',
+                        gap: 10,
+                        alignItems: 'baseline',
+                        width: '100%',
+                        padding: '10px 14px',
+                        border: 0,
+                        borderBottom: '1px solid var(--theme-elevation-100)',
+                        background: 'none',
+                        color: 'inherit',
+                        textAlign: 'start',
+                        cursor: 'pointer',
                       }}
-                    />
-                    <span dir="auto" style={{ fontWeight: n.read_at ? 400 : 600 }}>
-                      {labelOf(n)}
-                      {detailOf(n) ? (
-                        <span
-                          dir="auto"
-                          style={{
-                            display: 'block',
-                            fontSize: 12,
-                            fontWeight: 400,
-                            color: 'var(--theme-elevation-500)',
-                            marginTop: 2,
-                          }}
-                        >
-                          {detailOf(n)}
-                        </span>
-                      ) : null}
-                    </span>
-                    <span style={{ color: 'var(--theme-elevation-500)', fontSize: 12 }}>
-                      {ago(n.createdAt)}
-                    </span>
-                  </button>
-                </li>
-              ))}
+                      type="button"
+                    >
+                      <span
+                        aria-label={n.read_at ? undefined : 'Unread'}
+                        style={{
+                          width: 8,
+                          height: 8,
+                          borderRadius: 999,
+                          background: n.read_at
+                            ? 'transparent'
+                            : 'var(--theme-success-500, #16a34a)',
+                        }}
+                      />
+                      <span dir="auto" style={{ fontWeight: n.read_at ? 400 : 600 }}>
+                        {label}
+                        {detail ? (
+                          <span
+                            dir="auto"
+                            style={{
+                              display: 'block',
+                              fontSize: 12,
+                              fontWeight: 400,
+                              color: 'var(--theme-elevation-500)',
+                              marginTop: 2,
+                            }}
+                          >
+                            {detail}
+                          </span>
+                        ) : null}
+                      </span>
+                      <span style={{ color: 'var(--theme-elevation-500)', fontSize: 12 }}>
+                        {ago(n.createdAt)}
+                      </span>
+                    </button>
+                  </li>
+                )
+              })}
             </ul>
           ) : (
             <p style={{ margin: 0, padding: '16px 14px', color: 'var(--theme-elevation-500)' }}>

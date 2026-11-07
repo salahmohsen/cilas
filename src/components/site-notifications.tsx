@@ -26,56 +26,40 @@ import {
 } from '@/components/arc/notification-center/notification-center'
 import { useToastStack } from '@/components/arc/toast-stack/toast-stack'
 import { localDigits } from '@/lib/digits'
-import { EVENT_NAMES, type NotificationKind } from '@/lib/notify'
+import {
+  isNotificationKind,
+  NOTIFICATION_KINDS,
+  type NotificationIcon,
+} from '@/lib/notification-kinds'
+import {
+  dismiss,
+  isOwnTab,
+  loadNotifications,
+  markRead as saveRead,
+  noteText,
+} from '@/lib/notifications-client'
 import type { ClientNotificationEvent, StoredNotification } from '@/lib/realtime/events'
-import { subscribeNotifications, tabId } from '@/lib/realtime/stream-client'
-
-type Stored = StoredNotification & { kind: NotificationKind }
+import { subscribeNotifications } from '@/lib/realtime/stream-client'
 
 const LIMIT = 20
 
-const API = '/api/notifications'
-const TONES: Record<NotificationKind, NotificationItem['tone']> = {
-  submitted: 'info',
-  application: 'info',
-  approved: 'success',
-  changes_requested: 'warning',
-  rejected: 'warning',
-  removed: 'info',
-  mention: 'info',
-  comment: 'info',
-  reply: 'info',
-  reaction: 'info',
-  announcement: 'info',
-  moderation: 'warning',
-  report: 'warning',
-  event_changed: 'info',
-}
-
 /** The glyph each event kind shows when no actor portrait exists. */
-const ICONS: Record<NotificationKind, ReactNode> = {
-  submitted: <FileSearch size={18} strokeWidth={1.7} />,
-  approved: <CircleCheck size={18} strokeWidth={1.7} />,
-  changes_requested: <PenLine size={18} strokeWidth={1.7} />,
-  rejected: <CircleX size={18} strokeWidth={1.7} />,
-  removed: <Trash2 size={18} strokeWidth={1.7} />,
-  application: <UserPlus size={18} strokeWidth={1.7} />,
-  mention: <AtSign size={18} strokeWidth={1.7} />,
-  comment: <MessageCircle size={18} strokeWidth={1.7} />,
+const GLYPHS: Record<NotificationIcon, ReactNode> = {
+  'file-search': <FileSearch size={18} strokeWidth={1.7} />,
+  'circle-check': <CircleCheck size={18} strokeWidth={1.7} />,
+  'pen-line': <PenLine size={18} strokeWidth={1.7} />,
+  'circle-x': <CircleX size={18} strokeWidth={1.7} />,
+  trash: <Trash2 size={18} strokeWidth={1.7} />,
+  'user-plus': <UserPlus size={18} strokeWidth={1.7} />,
+  'at-sign': <AtSign size={18} strokeWidth={1.7} />,
+  'message-circle': <MessageCircle size={18} strokeWidth={1.7} />,
   reply: <Reply size={18} strokeWidth={1.7} />,
-  reaction: <Heart size={18} strokeWidth={1.7} />,
-  announcement: <Megaphone size={18} strokeWidth={1.7} />,
-  moderation: <Shield size={18} strokeWidth={1.7} />,
-  report: <Flag size={18} strokeWidth={1.7} />,
-  event_changed: <CalendarClock size={18} strokeWidth={1.7} />,
+  heart: <Heart size={18} strokeWidth={1.7} />,
+  megaphone: <Megaphone size={18} strokeWidth={1.7} />,
+  shield: <Shield size={18} strokeWidth={1.7} />,
+  flag: <Flag size={18} strokeWidth={1.7} />,
+  'calendar-clock': <CalendarClock size={18} strokeWidth={1.7} />,
 }
-
-const call = (path: string, init?: RequestInit) =>
-  fetch(`${API}${path}`, {
-    credentials: 'include',
-    headers: { 'Content-Type': 'application/json' },
-    ...init,
-  }).catch(() => null)
 
 const relativeTime = (date: Date) => {
   if (isYesterday(date)) return 'Yesterday'
@@ -106,14 +90,9 @@ export function SiteNotifications() {
   const [items, setItems] = useState<NotificationItem[] | null>(null)
 
   const toItem = useCallback(
-    (n: Stored): NotificationItem => {
-      // The kind carries the short label; rows written before the registry
-      // keep their old sentence as the detail line instead of the title.
-      const known = n.kind in EVENT_NAMES
-      const label = known ? t(`kinds.${n.kind}`) : n.title
-      const detail =
-        n.description ??
-        (!known || n.title === EVENT_NAMES[n.kind] || n.title.startsWith('{') ? undefined : n.title)
+    (n: StoredNotification): NotificationItem => {
+      const kind = isNotificationKind(n.kind) ? NOTIFICATION_KINDS[n.kind] : null
+      const { label, detail } = noteText(n, (k) => t(`kinds.${k}`))
       return {
         id: String(n.id),
         title: label,
@@ -122,10 +101,10 @@ export function SiteNotifications() {
           n.actor_name || n.actor_photo
             ? { name: n.actor_name ?? '', photo: n.actor_photo ?? '' }
             : undefined,
-        icon: known ? ICONS[n.kind] : undefined,
+        icon: kind ? GLYPHS[kind.icon] : undefined,
         time: relativeTime(new Date(n.createdAt)),
         read: Boolean(n.read_at),
-        tone: TONES[n.kind],
+        tone: kind?.tone,
         href: n.link ?? undefined,
       }
     },
@@ -133,18 +112,12 @@ export function SiteNotifications() {
   )
 
   const load = useCallback(async () => {
-    const res = await call(`?limit=${LIMIT}&depth=0&sort=-createdAt`)
-    if (!res?.ok) return
-    const { docs } = (await res.json()) as { docs: Stored[] }
-    setItems(docs.map(toItem))
+    const docs = await loadNotifications(LIMIT)
+    if (docs) setItems(docs.map(toItem))
   }, [toItem])
 
   const markRead = useCallback(
-    (item: NotificationItem, read: boolean) =>
-      void call(`/${item.id}`, {
-        method: 'PATCH',
-        body: JSON.stringify({ read_at: read ? new Date().toISOString() : null }),
-      }),
+    (item: NotificationItem, read: boolean) => void saveRead(item.id, read),
     [],
   )
 
@@ -157,13 +130,13 @@ export function SiteNotifications() {
       }
       // Too big for one database message: the row comes from the API instead.
       if (!event.doc) return void load()
-      const item = toItem(event.doc as Stored)
+      const item = toItem(event.doc)
       if (event.op === 'updated') {
         setItems((list) => list?.map((entry) => (entry.id === id ? item : entry)) ?? list)
         return
       }
       setItems((list) => [item, ...(list ?? []).filter((entry) => entry.id !== id)].slice(0, LIMIT))
-      if (event.origin === tabId()) return
+      if (isOwnTab(event)) return
       toast({
         type: item.tone ?? 'info',
         title: item.title,
@@ -209,7 +182,7 @@ export function SiteNotifications() {
     <NotificationCenter
       label={t('label')}
       notifications={items}
-      onDismiss={(item) => void call(`/${item.id}`, { method: 'DELETE' })}
+      onDismiss={(item) => void dismiss(item.id)}
       onOpenItem={(item) => markRead(item, true)}
       onReadChange={markRead}
       text={{

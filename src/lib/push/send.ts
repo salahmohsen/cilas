@@ -3,7 +3,7 @@ import type { Payload } from 'payload'
 import webpush from 'web-push'
 
 import { readPreferences, wantsChannel } from '@/lib/notification-preferences'
-import { EVENT_NAMES, type NotificationKind } from '@/lib/notify'
+import { isNotificationKind } from '@/lib/notification-kinds'
 import { pushConfig, type PushConfig } from '@/lib/push/config'
 import ar from '../../../messages/ar.json'
 import en from '../../../messages/en.json'
@@ -73,8 +73,7 @@ export const pushBody = (note: PushNote, locale: string | null | undefined): str
     messages: MESSAGES[lang],
     namespace: 'Notifications.kinds',
   })
-  const known = note.kind in EVENT_NAMES
-  const title = known ? t(note.kind as NotificationKind) : 'CILAS'
+  const title = isNotificationKind(note.kind) ? t(note.kind) : 'CILAS'
   const make = (description: string | null | undefined) =>
     JSON.stringify({
       title,
