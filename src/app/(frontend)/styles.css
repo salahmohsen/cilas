@@ -253,14 +253,14 @@
     color: var(--foreground);
   }
 
-  /* Section heads in the title faces: a ruled head, then smaller ones. */
+  /* Section heads in the title faces, with no rule above them, then smaller ones. */
   & :where(h2, h3, h4) {
     font-family: var(--font-heading);
     font-weight: 500;
     letter-spacing: -0.01em;
   }
   & :where(h2) {
-    @apply mt-14 border-t border-foreground pt-4 text-[1.6rem];
+    @apply mt-14 text-[1.6rem];
   }
   & :where(h3) {
     @apply mt-10 text-[1.3rem];
@@ -1462,6 +1462,9 @@ h1.article-title {
   padding: 0;
   list-style: none;
   border-block-start: 1px solid var(--poster-ink);
+}
+.collection-card-label + .collection-card-list {
+  border-block-start: 0;
 }
 .collection-card-list > li + li {
   border-block-start: 1px solid var(--poster-ink);

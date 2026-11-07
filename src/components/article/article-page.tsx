@@ -228,7 +228,15 @@ export async function ArticlePage({ locale: siteLocale, slug, user: reader }: Vi
     : localDigits(yearOf(article), locale)
   const hasContents = sections.length >= 3
 
-  // The side card: its collection, who made it, its sections, and the text size.
+  const articlePath = pathOf('articles', article, locale) ?? ''
+  const printEdition = pub?.print_edition_url
+    ? { href: pub.print_edition_url, label: t('printEdition'), kind: 'print' as const }
+    : undefined
+  const aiSteps = tShare.raw('aiSteps') as string[]
+
+  // The side card: its collection, who made it, its sections, and the text
+  // size; on wide screens also sharing and Discuss it with AI, which narrow
+  // screens keep at the end of the text.
   const sideCard = (narrow: boolean) => (
     <SideCard>
       {collection && (
@@ -278,6 +286,31 @@ export async function ArticlePage({ locale: siteLocale, slug, user: reader }: Vi
       <SideCardSection label={t('textSize')}>
         <TextSize cells target="article-text" />
       </SideCardSection>
+      {!narrow && (
+        <>
+          <SideCardSection label={tShare('heading')}>
+            <div className="side-card-body side-card-center side-card-scroll">
+              <ShareBar
+                email={email}
+                file={printEdition}
+                label={tShare('article')}
+                path={articlePath}
+                title={title}
+              />
+            </div>
+          </SideCardSection>
+          <SideCardSection label={tShare('aiHeading')}>
+            <div className="side-card-body side-card-center">
+              <StudyWithAI kind="article" path={articlePath} />
+              <ol className="grid list-inside list-decimal gap-1 text-xs leading-relaxed side-card-muted">
+                {aiSteps.map((step) => (
+                  <li key={step}>{step}</li>
+                ))}
+              </ol>
+            </div>
+          </SideCardSection>
+        </>
+      )}
     </SideCard>
   )
 
@@ -437,6 +470,7 @@ export async function ArticlePage({ locale: siteLocale, slug, user: reader }: Vi
                             dir={isRtl(locale) ? 'rtl' : 'ltr'}
                             items={stack.items}
                             label={stack.label}
+                            locale={locale}
                           />
                         )
                       },
@@ -493,23 +527,19 @@ export async function ArticlePage({ locale: siteLocale, slug, user: reader }: Vi
               )}
             </div>
 
-            {/* Tools at the end of the text. */}
+            {/* Tools at the end of the text; on wide screens they are in the side card. */}
             <section
               aria-labelledby="article-share"
-              className="mt-2 grid gap-3 border-t border-border pt-6"
+              className="mt-2 grid gap-3 border-t border-border pt-6 xl:hidden"
             >
               <h2 className="font-sans text-sm text-[var(--text-muted)]" id="article-share">
                 {tShare('heading')}
               </h2>
               <ShareBar
                 email={email}
-                file={
-                  pub?.print_edition_url
-                    ? { href: pub.print_edition_url, label: t('printEdition'), kind: 'print' }
-                    : undefined
-                }
+                file={printEdition}
                 label={tShare('article')}
-                path={pathOf('articles', article, locale) ?? ''}
+                path={articlePath}
                 title={title}
               />
             </section>
@@ -517,14 +547,14 @@ export async function ArticlePage({ locale: siteLocale, slug, user: reader }: Vi
             {/* Taking it with AI, its own section at the tools' spacing. */}
             <section
               aria-labelledby="article-ai"
-              className="mt-6 grid gap-3 border-t border-border pt-6"
+              className="mt-6 grid gap-3 border-t border-border pt-6 xl:hidden"
             >
               <h2 className="font-sans text-sm text-[var(--text-muted)]" id="article-ai">
                 {tShare('aiHeading')}
               </h2>
-              <StudyWithAI kind="article" path={pathOf('articles', article, locale) ?? ''} />
+              <StudyWithAI kind="article" path={articlePath} />
               <ol className="grid gap-1 list-decimal list-inside text-xs leading-relaxed text-[var(--text-muted)]">
-                {(tShare.raw('aiSteps') as string[]).map((step) => (
+                {aiSteps.map((step) => (
                   <li key={step}>{step}</li>
                 ))}
               </ol>
