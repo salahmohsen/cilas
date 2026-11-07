@@ -214,6 +214,7 @@ export function CourseSyllabus({
       defaultOpen={firstBodyId ? [firstBodyId] : []}
       openAll={editable}
       containerAttrs={pe.container('sessions')}
+      digits={(value) => localDigits(value, locale)}
       className={className}
     />
   )

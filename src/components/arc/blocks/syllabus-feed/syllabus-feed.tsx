@@ -18,9 +18,8 @@ import {
   type Variants,
 } from 'motion/react'
 import { Check, ChevronDown } from 'lucide-react'
-import { useLocale, useTranslations } from 'next-intl'
+import { useTranslations } from 'next-intl'
 
-import { latinDigits, localDigits } from '@/lib/digits'
 import { motionTokens } from '../../lib/motion-tokens'
 import { defaultSyllabusProps } from './syllabus-feed-data'
 import styles from './syllabus-feed.module.css'
@@ -90,6 +89,8 @@ export interface SyllabusFeedProps {
   openAll?: boolean
   /** The visual editor's container marks for the list itself, spread onto it. */
   containerAttrs?: Attrs
+  /** Writes a number in the reader's digits, such as Arabic-Indic ones. Defaults to plain digits. */
+  digits?: (value: number) => string
   className?: string
 }
 
@@ -117,21 +118,27 @@ const rise: Variants = {
   }),
 }
 
-const asNumber = (value: string): number => Number(latinDigits(value))
-
 /** A count whose digits roll over in place, so numbers glide rather than jump. */
-function RollingNumber({ value, reduce }: { value: string; reduce: boolean }) {
+function RollingNumber({
+  value,
+  digits,
+  reduce,
+}: {
+  value: number
+  digits: (value: number) => string
+  reduce: boolean
+}) {
   const [state, setState] = useState({ value, direction: 1 })
   if (state.value !== value)
     setState({
       value,
-      direction: asNumber(value) > asNumber(state.value) ? 1 : -1,
+      direction: value > state.value ? 1 : -1,
     })
   return (
     <span className={styles.roll}>
       <AnimatePresence mode="popLayout" initial={false} custom={state.direction}>
         <motion.span
-          key={value}
+          key={digits(value)}
           custom={state.direction}
           variants={roll}
           initial="enter"
@@ -139,7 +146,7 @@ function RollingNumber({ value, reduce }: { value: string; reduce: boolean }) {
           exit="exit"
           transition={reduce ? instant : motionTokens.spring.snappy}
         >
-          {value}
+          {digits(value)}
         </motion.span>
       </AnimatePresence>
     </span>
@@ -407,10 +414,10 @@ export function SyllabusFeed({
   defaultOpen,
   openAll = false,
   containerAttrs,
+  digits = String,
   className,
 }: SyllabusFeedProps) {
   const t = useTranslations('Course')
-  const locale = useLocale()
   const uid = useId()
   const reduce = useReducedMotion() ?? false
   const [filters, setFilters] = useState<FilterState>({ activity: [], material: [] })
@@ -580,8 +587,8 @@ export function SyllabusFeed({
   const layout: Transition = reduce ? instant : motionTokens.spring.smooth
 
   const shownLabel = !anySelected
-    ? `${localDigits(shownCount, locale)} ${wordThis(shownCount)}`
-    : `${localDigits(shownCount, locale)} ${t('feedOf')} ${localDigits(total, locale)} ${wordThis(total)}`
+    ? `${digits(shownCount)} ${wordThis(shownCount)}`
+    : `${digits(shownCount)} ${t('feedOf')} ${digits(total)} ${wordThis(total)}`
 
   return (
     <section
@@ -610,7 +617,7 @@ export function SyllabusFeed({
               >
                 <Chip
                   facet={facet}
-                  count={localDigits(facet.count, locale)}
+                  count={digits(facet.count)}
                   on={filters[facet.group].includes(facet.id)}
                   onToggle={() => toggle(facet)}
                   reduce={reduce}
@@ -641,7 +648,7 @@ export function SyllabusFeed({
           </div>
           <p className={styles.shown} aria-hidden="true">
             <motion.span className={styles.shownCount} layout="position" transition={layout}>
-              <RollingNumber value={localDigits(shownCount, locale)} reduce={reduce} />
+              <RollingNumber value={shownCount} digits={digits} reduce={reduce} />
             </motion.span>
             <AnimatePresence mode="popLayout" initial={false}>
               <motion.span
@@ -653,7 +660,7 @@ export function SyllabusFeed({
               >
                 {!anySelected
                   ? wordThis(shownCount)
-                  : `${t('feedOf')} ${localDigits(total, locale)} ${wordThis(total)}`}
+                  : `${t('feedOf')} ${digits(total)} ${wordThis(total)}`}
               </motion.span>
             </AnimatePresence>
           </p>
@@ -682,10 +689,7 @@ export function SyllabusFeed({
               </AnimatePresence>
             </span>
             <motion.span className={styles.monthCount} layout="position" transition={layout}>
-              <RollingNumber
-                value={localDigits(current?.items.length ?? 0, locale)}
-                reduce={reduce}
-              />
+              <RollingNumber value={current?.items.length ?? 0} digits={digits} reduce={reduce} />
               <span>{wordThis(current?.items.length ?? 0)}</span>
             </motion.span>
           </div>
