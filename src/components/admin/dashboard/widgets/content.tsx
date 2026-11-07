@@ -12,6 +12,7 @@ import type { Event } from '@/payload-types'
 
 import { cachedStat } from '../cached'
 import styles from '../dashboard.module.css'
+import { formatDay, plural } from '../format'
 import { WidgetCard } from '../widget-card'
 
 const PIPELINE = [
@@ -40,8 +41,6 @@ const pipeline = () =>
       }),
     ),
   )
-
-const plural = (n: number, one: string, many = `${one}s`) => `${n} ${n === 1 ? one : many}`
 
 export async function PublishedCourses() {
   const courses = (await pipeline()).find((row) => row.slug === 'courses')
@@ -81,14 +80,6 @@ const upcoming = async () => {
     })
     .sort((a, b) => a.sortKey.localeCompare(b.sortKey))
 }
-
-const dayFormat = new Intl.DateTimeFormat('en-US', {
-  timeZone: 'UTC',
-  month: 'short',
-  day: 'numeric',
-  year: 'numeric',
-})
-const formatDay = (day: string) => dayFormat.format(new Date(`${day}T00:00:00Z`))
 
 export async function UpcomingEventsCount() {
   const next = await upcoming()

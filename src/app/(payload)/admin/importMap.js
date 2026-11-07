@@ -70,38 +70,7 @@ import { SubscribersView as SubscribersView_82e10948fdeb08928ce643cc0b1632a7 } f
 import { ReviewQueueView as ReviewQueueView_5ad28f33e67910b7fd7d6503bf8c6322 } from '../../../components/admin/review-queue'
 import { DashboardView as DashboardView_30ab6a8fe8b58dbb3d774c6a70c4dfd0 } from '../../../components/admin/dashboard/dashboard-view'
 import { VisualEditorView as VisualEditorView_0dcc31907b7bffb0624a38194b3c7196 } from 'payload-inline-visual-editor/rsc'
-import { QuickActionsWidget as QuickActionsWidget_436edcd5bbee540043551d770d33a9e2 } from '../../../components/admin/dashboard/native'
-import { OpenApplicationsWidget as OpenApplicationsWidget_436edcd5bbee540043551d770d33a9e2 } from '../../../components/admin/dashboard/native'
-import { EnrollmentsInProgressWidget as EnrollmentsInProgressWidget_436edcd5bbee540043551d770d33a9e2 } from '../../../components/admin/dashboard/native'
-import { PublishedCoursesWidget as PublishedCoursesWidget_436edcd5bbee540043551d770d33a9e2 } from '../../../components/admin/dashboard/native'
-import { UpcomingEventsCountWidget as UpcomingEventsCountWidget_436edcd5bbee540043551d770d33a9e2 } from '../../../components/admin/dashboard/native'
-import { ApplicationsPerDayWidget as ApplicationsPerDayWidget_436edcd5bbee540043551d770d33a9e2 } from '../../../components/admin/dashboard/native'
-import { ApplicationsByOutcomeWidget as ApplicationsByOutcomeWidget_436edcd5bbee540043551d770d33a9e2 } from '../../../components/admin/dashboard/native'
-import { EnrollmentsByStageWidget as EnrollmentsByStageWidget_436edcd5bbee540043551d770d33a9e2 } from '../../../components/admin/dashboard/native'
-import { EnrollmentsOverTimeWidget as EnrollmentsOverTimeWidget_436edcd5bbee540043551d770d33a9e2 } from '../../../components/admin/dashboard/native'
-import { AccountsByRoleWidget as AccountsByRoleWidget_436edcd5bbee540043551d770d33a9e2 } from '../../../components/admin/dashboard/native'
-import { NewAccountsWidget as NewAccountsWidget_436edcd5bbee540043551d770d33a9e2 } from '../../../components/admin/dashboard/native'
-import { CommunityActivityWidget as CommunityActivityWidget_436edcd5bbee540043551d770d33a9e2 } from '../../../components/admin/dashboard/native'
-import { VisitorsWidget as VisitorsWidget_436edcd5bbee540043551d770d33a9e2 } from '../../../components/admin/dashboard/native'
-import { PageViewsWidget as PageViewsWidget_436edcd5bbee540043551d770d33a9e2 } from '../../../components/admin/dashboard/native'
-import { SiteErrorsWidget as SiteErrorsWidget_436edcd5bbee540043551d770d33a9e2 } from '../../../components/admin/dashboard/native'
-import { TrafficWidget as TrafficWidget_436edcd5bbee540043551d770d33a9e2 } from '../../../components/admin/dashboard/native'
-import { ApplyFunnelWidget as ApplyFunnelWidget_436edcd5bbee540043551d770d33a9e2 } from '../../../components/admin/dashboard/native'
-import { TopPagesWidget as TopPagesWidget_436edcd5bbee540043551d770d33a9e2 } from '../../../components/admin/dashboard/native'
-import { PageMovementWidget as PageMovementWidget_436edcd5bbee540043551d770d33a9e2 } from '../../../components/admin/dashboard/native'
-import { TrafficSourcesWidget as TrafficSourcesWidget_436edcd5bbee540043551d770d33a9e2 } from '../../../components/admin/dashboard/native'
-import { AudienceWidget as AudienceWidget_436edcd5bbee540043551d770d33a9e2 } from '../../../components/admin/dashboard/native'
-import { GoalsWidget as GoalsWidget_436edcd5bbee540043551d770d33a9e2 } from '../../../components/admin/dashboard/native'
-import { CoursesAndEventsWidget as CoursesAndEventsWidget_436edcd5bbee540043551d770d33a9e2 } from '../../../components/admin/dashboard/native'
-import { FreePlanUsageWidget as FreePlanUsageWidget_436edcd5bbee540043551d770d33a9e2 } from '../../../components/admin/dashboard/native'
-import { DailyActivityWidget as DailyActivityWidget_436edcd5bbee540043551d770d33a9e2 } from '../../../components/admin/dashboard/native'
-import { MediaStorageWidget as MediaStorageWidget_436edcd5bbee540043551d770d33a9e2 } from '../../../components/admin/dashboard/native'
-import { NewsletterUsageWidget as NewsletterUsageWidget_436edcd5bbee540043551d770d33a9e2 } from '../../../components/admin/dashboard/native'
-import { WaitingForReviewWidget as WaitingForReviewWidget_436edcd5bbee540043551d770d33a9e2 } from '../../../components/admin/dashboard/native'
-import { UpcomingEventsWidget as UpcomingEventsWidget_436edcd5bbee540043551d770d33a9e2 } from '../../../components/admin/dashboard/native'
-import { ActiveSpacesWidget as ActiveSpacesWidget_436edcd5bbee540043551d770d33a9e2 } from '../../../components/admin/dashboard/native'
-import { ContentPipelineWidget as ContentPipelineWidget_436edcd5bbee540043551d770d33a9e2 } from '../../../components/admin/dashboard/native'
-import { RecentChangesWidget as RecentChangesWidget_436edcd5bbee540043551d770d33a9e2 } from '../../../components/admin/dashboard/native'
+import { DashboardWidget as DashboardWidget_436edcd5bbee540043551d770d33a9e2 } from '../../../components/admin/dashboard/native'
 import { CollectionCards as CollectionCards_f9c02e79a4aed9a3924487c0cd4cafb1 } from '@payloadcms/next/rsc'
 import { S3ClientUploadHandler as S3ClientUploadHandler_f97aa6c64367fa259c5bc0567239ef24 } from '@payloadcms/storage-s3/client'
 
@@ -179,38 +148,7 @@ export const importMap = {
   "/components/admin/review-queue#ReviewQueueView": ReviewQueueView_5ad28f33e67910b7fd7d6503bf8c6322,
   "/components/admin/dashboard/dashboard-view#DashboardView": DashboardView_30ab6a8fe8b58dbb3d774c6a70c4dfd0,
   "payload-inline-visual-editor/rsc#VisualEditorView": VisualEditorView_0dcc31907b7bffb0624a38194b3c7196,
-  "/components/admin/dashboard/native#QuickActionsWidget": QuickActionsWidget_436edcd5bbee540043551d770d33a9e2,
-  "/components/admin/dashboard/native#OpenApplicationsWidget": OpenApplicationsWidget_436edcd5bbee540043551d770d33a9e2,
-  "/components/admin/dashboard/native#EnrollmentsInProgressWidget": EnrollmentsInProgressWidget_436edcd5bbee540043551d770d33a9e2,
-  "/components/admin/dashboard/native#PublishedCoursesWidget": PublishedCoursesWidget_436edcd5bbee540043551d770d33a9e2,
-  "/components/admin/dashboard/native#UpcomingEventsCountWidget": UpcomingEventsCountWidget_436edcd5bbee540043551d770d33a9e2,
-  "/components/admin/dashboard/native#ApplicationsPerDayWidget": ApplicationsPerDayWidget_436edcd5bbee540043551d770d33a9e2,
-  "/components/admin/dashboard/native#ApplicationsByOutcomeWidget": ApplicationsByOutcomeWidget_436edcd5bbee540043551d770d33a9e2,
-  "/components/admin/dashboard/native#EnrollmentsByStageWidget": EnrollmentsByStageWidget_436edcd5bbee540043551d770d33a9e2,
-  "/components/admin/dashboard/native#EnrollmentsOverTimeWidget": EnrollmentsOverTimeWidget_436edcd5bbee540043551d770d33a9e2,
-  "/components/admin/dashboard/native#AccountsByRoleWidget": AccountsByRoleWidget_436edcd5bbee540043551d770d33a9e2,
-  "/components/admin/dashboard/native#NewAccountsWidget": NewAccountsWidget_436edcd5bbee540043551d770d33a9e2,
-  "/components/admin/dashboard/native#CommunityActivityWidget": CommunityActivityWidget_436edcd5bbee540043551d770d33a9e2,
-  "/components/admin/dashboard/native#VisitorsWidget": VisitorsWidget_436edcd5bbee540043551d770d33a9e2,
-  "/components/admin/dashboard/native#PageViewsWidget": PageViewsWidget_436edcd5bbee540043551d770d33a9e2,
-  "/components/admin/dashboard/native#SiteErrorsWidget": SiteErrorsWidget_436edcd5bbee540043551d770d33a9e2,
-  "/components/admin/dashboard/native#TrafficWidget": TrafficWidget_436edcd5bbee540043551d770d33a9e2,
-  "/components/admin/dashboard/native#ApplyFunnelWidget": ApplyFunnelWidget_436edcd5bbee540043551d770d33a9e2,
-  "/components/admin/dashboard/native#TopPagesWidget": TopPagesWidget_436edcd5bbee540043551d770d33a9e2,
-  "/components/admin/dashboard/native#PageMovementWidget": PageMovementWidget_436edcd5bbee540043551d770d33a9e2,
-  "/components/admin/dashboard/native#TrafficSourcesWidget": TrafficSourcesWidget_436edcd5bbee540043551d770d33a9e2,
-  "/components/admin/dashboard/native#AudienceWidget": AudienceWidget_436edcd5bbee540043551d770d33a9e2,
-  "/components/admin/dashboard/native#GoalsWidget": GoalsWidget_436edcd5bbee540043551d770d33a9e2,
-  "/components/admin/dashboard/native#CoursesAndEventsWidget": CoursesAndEventsWidget_436edcd5bbee540043551d770d33a9e2,
-  "/components/admin/dashboard/native#FreePlanUsageWidget": FreePlanUsageWidget_436edcd5bbee540043551d770d33a9e2,
-  "/components/admin/dashboard/native#DailyActivityWidget": DailyActivityWidget_436edcd5bbee540043551d770d33a9e2,
-  "/components/admin/dashboard/native#MediaStorageWidget": MediaStorageWidget_436edcd5bbee540043551d770d33a9e2,
-  "/components/admin/dashboard/native#NewsletterUsageWidget": NewsletterUsageWidget_436edcd5bbee540043551d770d33a9e2,
-  "/components/admin/dashboard/native#WaitingForReviewWidget": WaitingForReviewWidget_436edcd5bbee540043551d770d33a9e2,
-  "/components/admin/dashboard/native#UpcomingEventsWidget": UpcomingEventsWidget_436edcd5bbee540043551d770d33a9e2,
-  "/components/admin/dashboard/native#ActiveSpacesWidget": ActiveSpacesWidget_436edcd5bbee540043551d770d33a9e2,
-  "/components/admin/dashboard/native#ContentPipelineWidget": ContentPipelineWidget_436edcd5bbee540043551d770d33a9e2,
-  "/components/admin/dashboard/native#RecentChangesWidget": RecentChangesWidget_436edcd5bbee540043551d770d33a9e2,
+  "/components/admin/dashboard/native#DashboardWidget": DashboardWidget_436edcd5bbee540043551d770d33a9e2,
   "@payloadcms/next/rsc#CollectionCards": CollectionCards_f9c02e79a4aed9a3924487c0cd4cafb1,
   "@payloadcms/storage-s3/client#S3ClientUploadHandler": S3ClientUploadHandler_f97aa6c64367fa259c5bc0567239ef24
 }

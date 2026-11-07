@@ -6,7 +6,7 @@ import { queryConfig, runQuery } from '@/lib/analytics/posthog-query'
 import { STATS_TAG } from './cached'
 
 /** How long a PostHog answer is reused. Every admin shares it. */
-export const POSTHOG_CACHE_SECONDS = 600
+const POSTHOG_CACHE_SECONDS = 600
 
 /** The analytics widgets show only when the three PostHog settings are there. */
 export const analyticsConfigured = (): boolean => queryConfig() !== null

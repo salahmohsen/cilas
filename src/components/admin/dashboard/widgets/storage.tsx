@@ -6,6 +6,7 @@ import { FREE_CONTACT_LIMIT, accountContactCount } from '@/lib/resend-contacts'
 import { BUCKET_PREFIXES, sumByPrefix, sumDocBytes } from '@/lib/storage-usage'
 
 import { cachedStat } from '../cached'
+import { megabytes } from '../format'
 import { WidgetCard } from '../widget-card'
 
 /**
@@ -13,10 +14,6 @@ import { WidgetCard } from '../widget-card'
  * not a limit: uploads keep working past it, and R2 only starts to bill.
  */
 const MEDIA_BUDGET_MB = 10_240
-
-const MB = 1024 * 1024
-
-const round = (bytes: number) => Math.round((bytes / MB) * 10) / 10
 
 /**
  * What the database says, per upload collection. Counts every image size
@@ -96,9 +93,9 @@ export async function MediaStorage() {
       <UsageMeter
         label="Uploads in the database"
         segments={[
-          { id: 'media', label: 'Media', value: round(db.media) },
-          { id: 'spaces', label: 'Spaces photos', value: round(db.spaces) },
-          { id: 'submissions', label: 'Submissions', value: round(db.submissions) },
+          { id: 'media', label: 'Media', value: megabytes(db.media) },
+          { id: 'spaces', label: 'Spaces photos', value: megabytes(db.spaces) },
+          { id: 'submissions', label: 'Submissions', value: megabytes(db.submissions) },
         ]}
         limit={MEDIA_BUDGET_MB}
         unit="MB"
@@ -108,21 +105,21 @@ export async function MediaStorage() {
         <UsageMeter
           label="Bucket total (R2)"
           segments={[
-            { id: 'media', label: 'Media', value: round(bucket[BUCKET_PREFIXES.media] ?? 0) },
+            { id: 'media', label: 'Media', value: megabytes(bucket[BUCKET_PREFIXES.media] ?? 0) },
             {
               id: 'spaces',
               label: 'Spaces photos',
-              value: round(bucket[BUCKET_PREFIXES.spaces] ?? 0),
+              value: megabytes(bucket[BUCKET_PREFIXES.spaces] ?? 0),
             },
             {
               id: 'submissions',
               label: 'Submissions',
-              value: round(bucket[BUCKET_PREFIXES.submissions] ?? 0),
+              value: megabytes(bucket[BUCKET_PREFIXES.submissions] ?? 0),
             },
             {
               id: 'other',
               label: 'Other',
-              value: round(
+              value: megabytes(
                 bucketTotal -
                   (bucket[BUCKET_PREFIXES.media] ?? 0) -
                   (bucket[BUCKET_PREFIXES.spaces] ?? 0) -

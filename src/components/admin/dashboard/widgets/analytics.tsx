@@ -31,10 +31,9 @@ import {
 import { env } from '@/env'
 
 import styles from '../dashboard.module.css'
+import { formatNumber } from '../format'
 import { posthogLink, posthogRows } from '../posthog'
 import { WidgetCard } from '../widget-card'
-
-const number = new Intl.NumberFormat('en-US')
 
 const PERIOD = 'Last 30 days'
 const VISITOR_NOTE =
@@ -59,7 +58,7 @@ function RankedList({ items, total, unit }: { items: Ranked[]; total: number; un
       {items.map((item) => (
         <li key={item.key} className={styles.rankedRow}>
           <Progress label={item.label} max={Math.max(total, 1)} showValue value={item.value} />
-          <span className={styles.rankedCount}>{number.format(item.value)}</span>
+          <span className={styles.rankedCount}>{formatNumber(item.value)}</span>
         </li>
       ))}
     </ul>
@@ -79,7 +78,7 @@ export async function Visitors() {
         interactive
         label="Visitors a day"
         labels={traffic.visitors.map((p) => p.label)}
-        value={number.format(traffic.visitorsTotal)}
+        value={formatNumber(traffic.visitorsTotal)}
       />
     </WidgetCard>
   )
@@ -96,7 +95,7 @@ export async function PageViews() {
         interactive
         label="Page views a day"
         labels={traffic.views.map((p) => p.label)}
-        value={number.format(traffic.viewsTotal)}
+        value={formatNumber(traffic.viewsTotal)}
       />
     </WidgetCard>
   )
@@ -297,7 +296,7 @@ export async function ApplyFunnel() {
           {steps.map((step) => (
             <li key={step.key} className={styles.rankedRow}>
               <Progress label={step.label} max={first} showValue value={step.visitors} />
-              <span className={styles.rankedCount}>{number.format(step.visitors)}</span>
+              <span className={styles.rankedCount}>{formatNumber(step.visitors)}</span>
             </li>
           ))}
         </ul>
@@ -315,7 +314,7 @@ export async function Goals() {
           <li key={goal.key} className={styles.row}>
             <span className={styles.rowMain}>{goal.label}</span>
             <span className={styles.rowMeta}>
-              {number.format(goal.current)}
+              {formatNumber(goal.current)}
               {goal.change ? ` (${goal.change})` : ''}
             </span>
           </li>
