@@ -39,7 +39,9 @@ An allowlist decides (`src/lib/analytics/paths.ts`). A page counts only if its f
 
 Why: these pages show posts, comments, names, emails and tokens. No page view, recording or error is sent from them.
 
-One gate (`src/lib/analytics/policy.ts`, PostHog's `before_send`) checks every event, whatever raised it, and drops it if the page is excluded. It also removes the query string and hash from addresses.
+One gate (`src/lib/analytics/policy.ts`, PostHog's `before_send`) checks every event, whatever raised it, and drops it if the page is excluded. On the events it keeps, it cleans every property that holds an address, found by its name (ending in `_url`, `pathname` or `referrer`), not only `$current_url`. PostHog adds its own: the page a visit started on (`$session_entry_url`, `$session_entry_referrer`) and the page before (`$prev_pageview_pathname`). An address on this site is dropped when its page is excluded, and otherwise loses its query, its hash and a person's name. An address on another site keeps only its origin and path. A search engine keyword (`$session_entry_ph_keyword`) is dropped. A browser error message is cleaned of emails and secrets, as a server error message is.
+
+`tests/unit/analytics-sdk.unit.spec.ts` runs the real posthog-js with the site's settings and checks what leaves after the gate. Run it after each posthog-js upgrade: a new SDK can add properties.
 
 The two exceptions are `login` and `push_enabled`. They happen on pages that are otherwise excluded (the login and settings pages). They are sent with no address (`/[private]`), no referrer and no other property.
 
