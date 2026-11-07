@@ -5,6 +5,7 @@ import { useTranslations } from 'next-intl'
 import { BlogCardBody } from '@/components/arc/blocks/blog-grid/blog-grid'
 import styles from '@/components/arc/blocks/blog-grid/blog-grid.module.css'
 import { Carousel } from '@/components/arc/carousel/carousel'
+import { CilasLogo } from '@/components/cilas-logo'
 import type { ArticleCard } from '@/lib/article-cards'
 
 /**
@@ -40,7 +41,10 @@ export function HomeArticles({ posts, title }: { posts: ArticleCard[]; title: st
       >
         {posts.map((post) => (
           <a className={styles.card} dir="auto" href={post.href} key={post.id}>
-            <BlogCardBody post={post} />
+            <BlogCardBody
+              imageFallback={() => <CilasLogo className="article-fallback-logo" />}
+              post={post}
+            />
           </a>
         ))}
       </Carousel>
