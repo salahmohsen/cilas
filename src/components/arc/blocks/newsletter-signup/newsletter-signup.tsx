@@ -564,7 +564,12 @@ export const NewsletterSignup = forwardRef<HTMLElement, NewsletterSignupProps>(
           >
             <span className={styles.labels}>
               {Object.keys(labels).map((key) => (
-                <span key={key} className={styles.sizer} aria-hidden="true">
+                <span
+                  key={key}
+                  className={styles.sizer}
+                  data-current={key === labelKey ? '' : undefined}
+                  aria-hidden="true"
+                >
                   {key === 'done' ? (
                     <>
                       <span className={styles.check} />

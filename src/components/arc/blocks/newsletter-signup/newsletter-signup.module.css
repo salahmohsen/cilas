@@ -638,6 +638,13 @@
     white-space: normal;
   }
 }
+/* Where the field is short of room, the button is only as wide as its current
+   label, not its longest one. */
+@container signup (max-width: 420px) {
+  .submit .sizer:not([data-current]) {
+    display: none;
+  }
+}
 /* On narrow phones the field and the button separate and stack, both full width. */
 @container signup (max-width: 300px) {
   .pill {
