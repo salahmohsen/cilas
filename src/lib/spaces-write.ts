@@ -7,6 +7,7 @@ import { archivedNow } from '@/lib/space-lifecycle'
 import { parentOf, spaceLink, spaceTitle } from '@/lib/space-ref'
 import { mentionSafelist, spacePeople } from '@/lib/space-members'
 import { actorOf, notify, reactionNote } from '@/lib/notify'
+import { setSpaceEmail } from '@/lib/space-email-prefs'
 import { spacesSettings, mode, spaceOpenOn, membership, introGates } from '@/lib/spaces'
 import { FILE_LIMITS, SPACE_FILE_MIME } from '@/lib/space-file-limits'
 import { NOTICE_VERSION, RULES_MAX } from '@/lib/space-consent'
@@ -1455,30 +1456,11 @@ export const stepMark = async (
 // --- preferenceSet ---
 
 export const preferenceSet = async (
-  i: Input<{ digest: 'daily' | 'weekly' | 'off' }>,
+  i: Input<{ digest: 'daily' | 'weekly' | 'off'; locale?: 'en' | 'ar' }>,
 ): Promise<WriteResult<true>> => {
-  const { payload, user, digest } = i
-  const { docs } = await payload.find({
-    collection: 'space-preferences',
-    where: { account: { equals: user.id } },
-    overrideAccess: true,
-    pagination: false,
-    limit: 1,
-  })
-  if (docs.length > 0) {
-    await payload.update({
-      collection: 'space-preferences',
-      id: (docs[0] as { id: number }).id,
-      data: { digest } as never,
-      overrideAccess: true,
-    })
-  } else {
-    await payload.create({
-      collection: 'space-preferences',
-      data: { account: user.id, digest } as never,
-      overrideAccess: true,
-    })
-  }
+  const { payload, user, digest, locale } = i
+  if (!['daily', 'weekly', 'off'].includes(digest)) return err('not-found')
+  await setSpaceEmail(payload, user.id, { digest, locale })
   const { docs: spaces } = await payload.find({
     collection: 'spaces',
     where: { kind: { equals: 'community' } },

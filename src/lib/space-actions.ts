@@ -3,12 +3,14 @@
 import config from '@payload-config'
 import { revalidatePath } from 'next/cache'
 import { redirect } from 'next/navigation'
+import { after } from 'next/server'
 import { getPayload } from 'payload'
 
 import { personOf } from '@/access'
 import { routing } from '@/i18n/routing'
 import { cairoInstant } from '@/lib/cairo-day'
 import { currentReader } from '@/lib/reader'
+import { sendAnnouncementEmails } from '@/lib/space-email'
 import { isRsvpStatus } from '@/lib/space-event'
 import type { PostFile, PostShape } from '@/lib/space-rules'
 import {
@@ -186,6 +188,14 @@ export async function postCreateAction(
   if (!result) return err('failed')
   if (!result.ok) return err(result.error)
   await result.notify?.()
+  // Mailing every member is slow, so it runs once the answer has gone out.
+  if (shape.kind === 'announcement') {
+    after(() =>
+      sendAnnouncementEmails(payload, result.data.id).catch((error) =>
+        payload.logger.error({ err: error, msg: 'Announcement emails failed' }),
+      ),
+    )
+  }
   await revalidate()
   return { status: 'ok' }
 }
@@ -483,7 +493,9 @@ export async function preferenceSetAction(
   if (!session) return err('auth')
   const { user, payload } = session
   const digest = text(form, 'digest') as 'daily' | 'weekly' | 'off'
-  const result = await preferenceSet({ payload, user, digest })
+  const lang = text(form, 'locale')
+  const locale = lang === 'ar' || lang === 'en' ? lang : undefined
+  const result = await preferenceSet({ payload, user, digest, locale })
   if (!result.ok) return err(result.error)
   await revalidate()
   return { status: 'ok' }

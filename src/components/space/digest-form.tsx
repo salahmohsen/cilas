@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { useTranslations } from 'next-intl'
+import { useLocale, useTranslations } from 'next-intl'
 import { useRouter } from 'next/navigation'
 
 import { ActionButton } from '@/components/arc/action-button/action-button'
@@ -13,6 +13,7 @@ import styles from './space.module.css'
 /** The account's email digest, one choice for every space. */
 export function DigestForm({ digest }: { digest: 'daily' | 'weekly' | 'off' | null }) {
   const t = useTranslations('SpaceChecklist')
+  const locale = useLocale()
   const router = useRouter()
   const [choice, setChoice] = useState<string>(digest ?? 'weekly')
   return (
@@ -36,6 +37,7 @@ export function DigestForm({ digest }: { digest: 'daily' | 'weekly' | 'off' | nu
           onAction={async () => {
             const form = new FormData()
             form.set('digest', choice)
+            form.set('locale', locale)
             const result = await preferenceSetAction({ status: 'ok' }, form)
             if (result.status === 'error') throw new Error(result.error)
             router.refresh()

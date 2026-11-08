@@ -48,6 +48,7 @@ export function EmailLayout({
   preview,
   kicker,
   unsubscribe,
+  lang = 'en',
   children,
 }: {
   settings: EmailSettings
@@ -56,10 +57,12 @@ export function EmailLayout({
   kicker?: string
   /** The unsubscribe link's target; leave out for transactional mail. */
   unsubscribe?: string
+  /** The email's language; Arabic mail reads right to left. */
+  lang?: 'en' | 'ar'
   children: ReactNode
 }) {
   return (
-    <Html lang="en" dir="ltr">
+    <Html lang={lang} dir={lang === 'ar' ? 'rtl' : 'ltr'}>
       <Head>
         {Object.entries(WEIGHTS).map(([weight, file]) => (
           <Font
