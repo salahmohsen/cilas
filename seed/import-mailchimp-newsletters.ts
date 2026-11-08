@@ -1,4 +1,5 @@
 import { readFileSync } from 'node:fs'
+import { randomUUID } from 'node:crypto'
 import { basename } from 'node:path'
 
 import { getPayload } from 'payload'
@@ -19,8 +20,11 @@ const { default: config } = await import('../src/payload.config')
  */
 
 type Run = { t: string; b: boolean; i: boolean; a: string | null }
-type Text = { k: 'p' | 'h'; runs: Run[]; text: string }
-type Img = { k: 'img'; src: string; alt: string }
+type Text =
+  | { k: 'p' | 'h'; runs: Run[]; text: string }
+  | { k: 'hr' }
+  | { k: 'inline'; src: string; alt: string }
+type Img = { k: 'img'; src: string; alt: string; caption?: string | null; body?: Text[] }
 type Pick = { k: 'pick'; course: number; note: string | null }
 type Section =
   | { t: 'text'; x: Text[] }
@@ -35,6 +39,7 @@ type Plan = {
   slug: string
   cover: string | null
   preheader: string | null
+  cover_caption: string | null
   body: Text[]
   sections: Section[]
 }
@@ -55,7 +60,11 @@ const payload: Payload = await getPayload({ config })
 const rtl = (text: string) =>
   (text.match(/[؀-ۿ]/g)?.length ?? 0) > (text.match(/[a-z]/gi)?.length ?? 0)
 
-const safeUrl = (url: string | null) => (url && /^(https?:|mailto:)/.test(url) ? url : null)
+// Some old emails double the scheme: "http://   http://youtu.be/...".
+const safeUrl = (raw: string | null) => {
+  const url = raw?.replace(/^https?:\/\/[\s ]*(?=https?:\/\/)/, '').trim()
+  return url && /^(https?:|mailto:)/.test(url) && !/\s/.test(url) ? url : null
+}
 
 const textNode = (run: Run) => ({
   type: 'text',
@@ -89,39 +98,63 @@ const inline = (runs: Run[], direction: 'ltr' | 'rtl') => {
   return nodes
 }
 
-const richText = (items: Text[]): NonNullable<Newsletter['body']> => {
-  const direction = rtl(items.map((item) => item.text).join(' ')) ? 'rtl' : 'ltr'
+const mediaIds = new Map<string, number>()
+
+const nodeOf = (item: Text) => {
+  if (item.k === 'hr') return { type: 'horizontalrule', version: 1 }
+  if (item.k === 'inline') {
+    return {
+      type: 'upload',
+      id: randomUUID().replaceAll('-', '').slice(0, 24),
+      version: 3,
+      format: '',
+      fields: null,
+      relationTo: 'media',
+      value: mediaIds.get(item.src),
+    }
+  }
+  const own = rtl(item.text) ? 'rtl' : 'ltr'
+  const base = {
+    format: '',
+    indent: 0,
+    version: 1,
+    direction: own,
+    children: inline(item.runs, own),
+  }
+  return item.k === 'h'
+    ? { ...base, type: 'heading', tag: 'h2' }
+    : { ...base, type: 'paragraph', textFormat: 0, textStyle: '' }
+}
+
+const withMedia = async (items: Text[], title: string) => {
+  for (const item of items) if (item.k === 'inline') await mediaFor(item.src, item.alt || title)
+  // An image whose file failed to download has no id: drop it rather than save a broken node.
+  return items.filter((item) => item.k !== 'inline' || mediaIds.has(item.src))
+}
+
+const richText = async (raw: Text[], title: string): Promise<NonNullable<Newsletter['body']>> => {
+  const items = await withMedia(raw, title)
+  const words = items.flatMap((item) => ('text' in item ? [item.text] : [])).join(' ')
   return {
     root: {
       type: 'root',
       format: '',
       indent: 0,
       version: 1,
-      direction,
-      children: items.map((item) => {
-        const own = rtl(item.text) ? 'rtl' : 'ltr'
-        const base = {
-          format: '',
-          indent: 0,
-          version: 1,
-          direction: own,
-          children: inline(item.runs, own),
-        }
-        return item.k === 'h'
-          ? { ...base, type: 'heading', tag: 'h2' }
-          : { ...base, type: 'paragraph', textFormat: 0, textStyle: '' }
-      }),
+      direction: rtl(words) ? 'rtl' : 'ltr',
+      children: items.map(nodeOf),
     },
   } as unknown as NonNullable<Newsletter['body']>
 }
 
-const mediaIds = new Map<string, number>()
-
-const mediaFor = async (src: string, alt: string): Promise<number | null> => {
+/** A caption is the image's description, so it replaces the alt; otherwise an existing alt stays. */
+const mediaFor = async (
+  src: string,
+  alt: string,
+  caption?: string | null,
+): Promise<number | null> => {
   const path = files[src]
   if (!path) return null
-  const known = mediaIds.get(src)
-  if (known) return known
   const filename = basename(path)
   const found = await payload.find({
     collection: 'media',
@@ -130,22 +163,33 @@ const mediaFor = async (src: string, alt: string): Promise<number | null> => {
     limit: 1,
     overrideAccess: true,
   })
-  const id =
-    found.docs[0]?.id ??
-    (
-      await payload.create({
-        collection: 'media',
-        data: { alt },
-        filePath: path,
-        overrideAccess: true,
-      })
-    ).id
+  const doc = found.docs[0]
+  const id = doc
+    ? doc.id
+    : (
+        await payload.create({
+          collection: 'media',
+          data: { alt: caption || alt },
+          filePath: path,
+          overrideAccess: true,
+        })
+      ).id
+  if (doc && caption && doc.alt !== caption) {
+    await payload.update({
+      collection: 'media',
+      id: doc.id,
+      data: { alt: caption },
+      overrideAccess: true,
+    })
+  }
   mediaIds.set(src, Number(id))
   return Number(id)
 }
 
 const sectionOf = async (section: Section, title: string) => {
-  if (section.t === 'text') return { blockType: 'text' as const, body: richText(section.x) }
+  if (section.t === 'text') {
+    return { blockType: 'text' as const, body: await richText(section.x, title) }
+  }
   if (section.t === 'picks') {
     return {
       blockType: 'picks' as const,
@@ -158,8 +202,15 @@ const sectionOf = async (section: Section, title: string) => {
   }
   if (section.t === 'image') {
     const [img] = section.x
-    const image = img ? await mediaFor(img.src, img.alt || title) : null
-    return image ? { blockType: 'image' as const, image } : null
+    if (!img) return null
+    const image = await mediaFor(img.src, img.alt || title, img.caption)
+    if (!image) return null
+    return {
+      blockType: 'image' as const,
+      image,
+      caption: img.caption ?? null,
+      body: img.body?.length ? await richText(img.body, title) : null,
+    }
   }
   const images: { image: number }[] = []
   for (const img of section.x) {
@@ -181,9 +232,12 @@ for (const plan of plans) {
   }
   const data = {
     _status: 'draft' as const,
-    body: plan.body.length ? richText(plan.body) : undefined,
+    body: plan.body.length ? await richText(plan.body, plan.title) : undefined,
     sections,
-    cover_image: plan.cover ? await mediaFor(plan.cover, plan.title) : undefined,
+    cover_image: plan.cover
+      ? await mediaFor(plan.cover, plan.title, plan.cover_caption)
+      : undefined,
+    cover_caption: plan.cover_caption,
     sent_at: new Date(plan.date).toISOString(),
     ...(plan.preheader ? { preheader: plan.preheader } : {}),
   }
@@ -208,7 +262,10 @@ for (const plan of plans) {
       overrideAccess: true,
     })
     const found = existing.docs[0]
-    if (found && found._status !== 'draft') throw new Error(`${plan.slug} is published.`)
+    // Issue 56 was published by hand and asked to be fixed; it stays published.
+    if (found && found._status !== 'draft' && key !== 'mc:0')
+      throw new Error(`${plan.slug} is published.`)
+    if (found?._status === 'published') data._status = 'published' as never
     if (found) await payload.update({ collection: 'newsletters', id: found.id, data, ...write })
     else
       await payload.create({
