@@ -382,7 +382,8 @@ export const CourseView: React.FC<{
       />
     </div>
   )
-  const sideCard = (withPeople: boolean) => (
+  const coursePath = detailPath('courses', String(course.slug), locale)
+  const sideCard = (wide: boolean) => (
     <SideCard color={POSTER_COLORS[0]} label={t('details')}>
       <SideCardSection label={t('details')}>
         {facts.length ? (
@@ -401,7 +402,7 @@ export const CourseView: React.FC<{
           </dl>
         ) : null}
       </SideCardSection>
-      {withPeople && fellows.length ? (
+      {wide && fellows.length ? (
         <div {...pe('fellows')}>
           <SideCardSection label={t('taughtBy')}>
             <ContributorRows
@@ -410,7 +411,7 @@ export const CourseView: React.FC<{
           </SideCardSection>
         </div>
       ) : null}
-      {withPeople && counts.length ? (
+      {wide && counts.length ? (
         <SideCardSection label={t('materials')}>
           <ul className="side-card-facts">
             {counts.map(({ type, count }) => {
@@ -427,21 +428,20 @@ export const CourseView: React.FC<{
           </ul>
         </SideCardSection>
       ) : null}
-      <SideCardSection label={ts('heading')}>
-        <div className="side-card-body side-card-flush side-card-scroll">
-          <ShareBar
-            label={ts('course')}
-            path={detailPath('courses', String(course.slug), locale)}
-            title={course.title}
-            email={email}
-          />
-        </div>
-      </SideCardSection>
-      <SideCardSection label={ts('aiHeading')} labelAction={<AIInstructions />}>
-        <div className="side-card-body side-card-flush">
-          <StudyWithAI kind="course" path={detailPath('courses', String(course.slug), locale)} />
-        </div>
-      </SideCardSection>
+      {wide ? (
+        <>
+          <SideCardSection label={ts('heading')}>
+            <div className="side-card-body side-card-flush side-card-scroll">
+              <ShareBar label={ts('course')} path={coursePath} title={course.title} email={email} />
+            </div>
+          </SideCardSection>
+          <SideCardSection label={ts('aiHeading')} labelAction={<AIInstructions />}>
+            <div className="side-card-body side-card-flush">
+              <StudyWithAI kind="course" path={coursePath} />
+            </div>
+          </SideCardSection>
+        </>
+      ) : null}
     </SideCard>
   )
 
@@ -607,6 +607,29 @@ export const CourseView: React.FC<{
               </div>
             </section>
           ) : null}
+          {/* Narrow screens: sharing and AI come after the course, as on an article. */}
+          <section
+            aria-labelledby="course-share"
+            className="mt-12 grid gap-3 border-t border-border pt-6 lg:hidden"
+          >
+            <h2 className="font-sans text-sm text-[var(--text-muted)]" id="course-share">
+              {ts('heading')}
+            </h2>
+            <ShareBar label={ts('course')} path={coursePath} title={course.title} email={email} />
+          </section>
+          <section
+            aria-labelledby="course-ai"
+            className="mt-6 grid gap-3 border-t border-border pt-6 lg:hidden"
+          >
+            <h2
+              className="flex items-center justify-between gap-2 font-sans text-sm text-[var(--text-muted)]"
+              id="course-ai"
+            >
+              {ts('aiHeading')}
+              <AIInstructions />
+            </h2>
+            <StudyWithAI kind="course" path={coursePath} />
+          </section>
           {after}
         </article>
 
