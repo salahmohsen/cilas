@@ -26,6 +26,7 @@ export type Section = Row &
         > | null
       }
     | { blockType: 'text'; body?: unknown }
+    | { blockType: 'image'; image?: Media; caption?: string | null }
     | {
         blockType: 'gallery'
         heading?: string | null
@@ -285,6 +286,31 @@ function Picks({
   )
 }
 
+/** One image across the full width, with its caption. */
+function SingleImage({ section, pe, path }: SectionProps<'image'>) {
+  const image = urlOf(section.image)
+  if (!image && !pe.on) return null
+  const caption = section.caption?.trim()
+  return (
+    <Box>
+      {image ? (
+        <Img
+          src={image.url}
+          alt={image.alt}
+          width={552}
+          style={{ display: 'block', width: '100%', borderRadius: '10px' }}
+          {...pe(`${path}.image`)}
+        />
+      ) : null}
+      {caption ? (
+        <Text dir="auto" style={{ ...type[13], margin: '8px 0 0' }} {...pe(`${path}.caption`)}>
+          {caption}
+        </Text>
+      ) : null}
+    </Box>
+  )
+}
+
 /** Images in a grid of two or three columns, each with its caption. */
 function Gallery({ section, pe, path }: SectionProps<'gallery'>) {
   const columns = section.columns === '3' ? 3 : 2
@@ -456,6 +482,8 @@ export function NewsletterEmail({
               switch (section.blockType) {
                 case 'picks':
                   return <Picks section={section} settings={settings} pe={pe} path={path} />
+                case 'image':
+                  return <SingleImage section={section} pe={pe} path={path} />
                 case 'gallery':
                   return <Gallery section={section} pe={pe} path={path} />
                 case 'quote':

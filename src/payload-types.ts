@@ -1806,6 +1806,13 @@ export interface Newsletter {
             blockType: 'picks';
           }
         | {
+            image: number | Media;
+            caption?: string | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'image';
+          }
+        | {
             heading?: string | null;
             columns?: ('2' | '3') | null;
             images?:
@@ -3607,6 +3614,14 @@ export interface NewslettersSelect<T extends boolean = true> {
                     note?: T;
                     id?: T;
                   };
+              id?: T;
+              blockName?: T;
+            };
+        image?:
+          | T
+          | {
+              image?: T;
+              caption?: T;
               id?: T;
               blockName?: T;
             };

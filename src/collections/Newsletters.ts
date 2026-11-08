@@ -120,6 +120,14 @@ export const Newsletters: CollectionConfig = {
                   ],
                 },
                 {
+                  slug: 'image',
+                  labels: { singular: 'Image', plural: 'Images' },
+                  fields: [
+                    { name: 'image', type: 'upload', relationTo: 'media', required: true },
+                    { name: 'caption', type: 'text' },
+                  ],
+                },
+                {
                   slug: 'gallery',
                   labels: { singular: 'Gallery', plural: 'Galleries' },
                   fields: [
