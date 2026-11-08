@@ -1217,7 +1217,6 @@
     "saveError_intro": "Comment on the intro post first. The rest of this space opens after that.",
     "saveError_intro_post": "The intro post stays open: it cannot be locked or deleted.",
     "voteTapSingle": "Tap an option to vote. Tap your choice again to take it back.",
-    "voteTapMultiple": "Tap each option you choose. Tap a choice again to take it back.",
     "voteOptionLabel": "{option}, {percent}%",
     "voteClosedError": "Voting on this has closed.",
     "voteClosed": "Closed {when}",

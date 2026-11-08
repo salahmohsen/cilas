@@ -138,16 +138,17 @@ export function VotePoll({
       })
     : null
   const shownList = view.options.find((o) => o.id === listed)
+  const showHint = open && !view.multiple
 
   return (
     <section
       className={styles.poll}
-      aria-labelledby={open ? `${id}-label` : undefined}
-      aria-label={open ? undefined : t('voteResults')}
+      aria-labelledby={showHint ? `${id}-label` : undefined}
+      aria-label={showHint ? undefined : t('voteResults')}
     >
-      {open && (
+      {showHint && (
         <p id={`${id}-label`} className={styles.hint}>
-          {t(view.multiple ? 'voteTapMultiple' : 'voteTapSingle')}
+          {t('voteTapSingle')}
         </p>
       )}
       <ul className={styles.results}>
