@@ -118,15 +118,26 @@
 
 .barText {
   display: flex;
-  align-items: baseline;
+  align-items: center;
   gap: var(--space-2);
   margin: 0;
   font-size: var(--text-sm);
+  line-height: 1;
 }
 
 .barCount {
+  display: inline-flex;
   font-weight: 500;
   font-variant-numeric: tabular-nums;
+}
+
+/* The counter is a display figure by default; here it is a number in a sentence, in the body font at its size. */
+.barCount > * {
+  font-family: var(--font-body);
+  font-size: inherit;
+  font-weight: inherit;
+  letter-spacing: inherit;
+  line-height: 1;
 }
 
 .barActions {
