@@ -1,5 +1,5 @@
 <div align="center">
-  <img width="92" height="157" src="public/assets/images/logo.webp" alt="CILAS logo">
+  <img width="140" height="140" src="docs/assets/cilas-logo-white-on-dark.svg" alt="CILAS logo">
   <h1>CILAS<br/> Cairo Institute of Liberal Arts and Sciences</h1>
   <br>
 </div>
@@ -10,11 +10,28 @@ During my one-year enrollment in the Bridge Programme at CILAS, I experienced a 
 
 Inspired by this powerful educational model, I am now driven to contribute to CILAS and similar forward-thinking institutions through the development of a comprehensive Education Management System. This platform aims to empower administrators to operate the institute with greater efficiency while, more crucially, providing students with a robust digital environment to share ideas, collaborate, and meaningfully engage with our complex world.
 
-CILAS brings the institute’s public website, content management, applications, and private learning community into one bilingual platform. The current application runs on Payload CMS and PostgreSQL; the earlier standalone Drizzle application is preserved on [`backup/legacy-drizzle`](https://github.com/salahmohsen/cilas/tree/backup/legacy-drizzle).
+CILAS brings the institute’s public website, content management, applications, and private learning community into one bilingual platform. It runs on Next.js, Payload CMS, and PostgreSQL.
+
+## Demo
+
+[![CILAS demo: home page, open registration, and upcoming events](docs/demo/cilas-demo.gif)](docs/demo/cilas-demo.mp4)
+
+**[Watch the full walkthrough](docs/demo/cilas-demo.mp4).** It runs the real app on a sanitized copy of the production catalogue.
+
+| Chapter     | What it shows                                                                                                                                                 |
+| ----------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Public site | Home page, open registration, events, course archive, course pages, Bridge Programme, calendar, search, people, articles, AI study prompts, dark mode, Arabic |
+| Applying    | A Bridge application filled in and submitted through a CMS-built form                                                                                         |
+| Spaces      | Course feed, reactions, comments, a new post, event RSVP, notifications, settings                                                                             |
+| Moderation  | A fellow's pin, lock, and remove actions                                                                                                                      |
+| CMS         | Dashboard, review queue, accepting the application, courses, events, newsletters, people, Spaces, site settings                                               |
+
+> [!NOTE]
+> In the demo copy, account emails are replaced, and registration deadlines and event dates are moved forward so that registration is open on recording day, and a test course is removed. See [`scripts/demo`](scripts/demo) to record it again.
 
 ## Features
 
-The features below describe the implementation on `main`. Email, search, Google sign-in, movie metadata, and Spaces availability depend on their configuration.
+Email, search, Google sign-in, movie metadata, and Spaces availability depend on their configuration.
 
 ### Courses and programmes
 
@@ -51,7 +68,7 @@ The features below describe the implementation on `main`. Email, search, Google 
 - Feature articles on the homepage and record authors, translation credits, tags, and related articles or publications.
 - Edit rich text with columns, person profiles, movie cards, image galleries, related content, and mentions. The movie picker can retrieve metadata through TMDB when configured.
 - Use draft versions, autosave, responsive live previews, and inline visual editing for supported content.
-- Manage media uploads, image sizes, focal points, SEO metadata, and legacy URL redirects.
+- Manage media uploads, image sizes, focal points, SEO metadata, and URL redirects.
 
 ### Public events
 
@@ -137,7 +154,7 @@ docker compose up -d db
 
 Configure the required `R2_*` variables for a development bucket or follow the [local object storage guide](docs/local-object-storage.md) for the existing R2-to-RustFS workflow. Uploads have no local filesystem fallback. Keep `media/*` publicly readable while `spaces/*` and `applications/*` remain private.
 
-The root Compose file also contains old template services; use the `db` service explicitly. Use a disposable local database for development and tests.
+Use the `db` service explicitly, because the root Compose file also defines other services. Use a disposable local database for development and tests.
 
 Schema changes use explicit migrations (`push: false`). Apply them before starting an initialized development installation:
 
@@ -185,13 +202,8 @@ Database-backed tests require a dedicated local database and the appropriate fix
 
 - [Domain language](CONTEXT.md) and [architecture decisions](docs/adr/).
 - [Archive migration and imports](migration/README.md).
+- [Research notes and reports](docs/research/).
 - [Local object storage](docs/local-object-storage.md).
 - [Private Spaces search operations](docs/private-spaces-search-operations.md) and [verification](docs/private-spaces-search-verification.md).
 - [Production deployment and previews](docs/production-deployment.md).
 - [Public Typesense upgrades](docs/public-typesense-upgrade.md).
-
-## Continuing the original roadmap
-
-Course enrollment, role-based permissions, reviewed member writing, course discussions, notifications, and responsive layouts now have implementations. Automatic completion certificates remain future work.
-
-The introduction and motivation above come from the [legacy README](https://github.com/salahmohsen/cilas/blob/backup/legacy-drizzle/README.md); its original feature checklist has been updated to describe the current CMS and Spaces system.
