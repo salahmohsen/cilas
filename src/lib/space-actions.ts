@@ -338,6 +338,7 @@ export async function commentEditAction(
   if (!id) return err('not-found')
   const result = await commentEdit({ payload, user, id, body: text(form, 'body') })
   if (!result.ok) return err(result.error)
+  await result.notify?.()
   await revalidate()
   return { status: 'ok' }
 }

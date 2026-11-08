@@ -111,6 +111,20 @@ export const validateMentions = (
 
 const idOf = (v: number | { id: number } | null | undefined) => (v == null ? null : unwrapId(v))
 
+/** The accounts of the people named, without those already told about this comment. */
+const mentionTargets = async (payload: Payload, people: number[], skip: Set<number>) => {
+  if (people.length === 0) return []
+  const { docs } = await payload.find({
+    collection: 'users',
+    where: { person: { in: people } },
+    depth: 0,
+    overrideAccess: true,
+    pagination: false,
+    limit: 10000,
+  })
+  return docs.map((u) => (u as { id: number }).id).filter((id) => !skip.has(id))
+}
+
 const err = <E extends WriteError>(error: E): WriteResult<never> => ({ ok: false, error })
 
 const gate = async (
@@ -652,6 +666,8 @@ export const commentCreate = async (
   const notifyFn = async () => {
     const actor = await actorOf(payload, personOf(user))
     const context = await spaceNameOf(payload, space)
+    // One note per person: the writer gets none, and a mention never repeats a comment or reply note.
+    const told = new Set<number>([user.id])
     if (!parent && (postData as { author?: number | { id: number } | null }).author) {
       const authorId =
         typeof (postData as { author: number | { id: number } | null }).author === 'object'
@@ -668,6 +684,7 @@ export const commentCreate = async (
       const commentTargets = users
         .map((u) => (u as { id: number }).id)
         .filter((id) => id !== user.id)
+      commentTargets.forEach((id) => told.add(id))
       await notify(payload, commentTargets, {
         kind: 'comment',
         description: `${actor?.name ?? 'Someone'} commented on your post in ${context}`,
@@ -695,6 +712,7 @@ export const commentCreate = async (
         const replyTargets = users
           .map((u) => (u as { id: number }).id)
           .filter((id) => id !== user.id)
+        replyTargets.forEach((id) => told.add(id))
         await notify(payload, replyTargets, {
           kind: 'reply',
           description: `${actor?.name ?? 'Someone'} replied to your comment in ${context}`,
@@ -703,25 +721,14 @@ export const commentCreate = async (
         })
       }
     }
-    const mentionedIds = mentioned.mentioned
-    if (mentionedIds.length > 0) {
-      const { docs: users } = await payload.find({
-        collection: 'users',
-        depth: 0,
-        overrideAccess: true,
-        pagination: false,
-        limit: 10000,
-      })
-      const accountIds = users
-        .filter((u) => mentionedIds.includes(personOf(u) ?? -1))
-        .map((u) => (u as { id: number }).id)
+    const accountIds = await mentionTargets(payload, mentioned.mentioned, told)
+    if (accountIds.length > 0)
       await notify(payload, accountIds, {
         kind: 'mention',
         description: `${actor?.name ?? 'Someone'} mentioned you in ${context}`,
         link: await spaceLink(payload, space, postId),
         actor,
       })
-    }
   }
 
   return { ok: true, data: { id: commentId }, notify: notifyFn }
@@ -742,6 +749,7 @@ export const commentEdit = async (
     space: number | { id: number }
     post: number | { id: number }
     author: number | { id: number } | null
+    body?: string | null
     deleted_at?: string | null
   } | null
   if (!comment) return err('not-found')
@@ -764,7 +772,8 @@ export const commentEdit = async (
 
   const body = await sessionSafeBody(payload, g.space, i.body, { blocks: false })
   if (!body.trim()) return err('session')
-  const mentioned = validateMentions(body, await mentionSafelist(payload, spaceId))
+  const safelist = await mentionSafelist(payload, spaceId)
+  const mentioned = validateMentions(body, safelist)
   if (mentioned.invalid.length > 0) return err('mention')
 
   await payload.update({
@@ -773,7 +782,23 @@ export const commentEdit = async (
     data: { body, edited_at: new Date().toISOString() } as never,
     overrideAccess: true,
   })
-  return { ok: true, data: true }
+
+  // Only people this edit adds: fixing a typo must not ring everyone again.
+  const before = validateMentions(comment.body ?? '', safelist).mentioned
+  const added = mentioned.mentioned.filter((person) => !before.includes(person))
+  const notifyFn = async () => {
+    const accountIds = await mentionTargets(payload, added, new Set([user.id]))
+    if (accountIds.length === 0) return
+    const actor = await actorOf(payload, personOf(user))
+    await notify(payload, accountIds, {
+      kind: 'mention',
+      description: `${actor?.name ?? 'Someone'} mentioned you in ${await spaceNameOf(payload, g.space)}`,
+      link: await spaceLink(payload, g.space, idOf(comment.post)!),
+      actor,
+    })
+  }
+
+  return { ok: true, data: true, notify: notifyFn }
 }
 
 // --- commentRemove ---

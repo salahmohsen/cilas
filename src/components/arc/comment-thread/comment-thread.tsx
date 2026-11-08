@@ -554,6 +554,8 @@ interface ComposerProps {
   onSubmit: (body: string, mentions: CommentAuthor[]) => void
   /** Mentions already in `initial`, in order. */
   initialMentions?: CommentAuthor[]
+  /** Starts an empty field with "@Name". The text goes again if the person changes before anything else is typed. */
+  prefill?: CommentAuthor | null
   onCancel?: () => void
   leading?: ReactNode
   trailing?: ReactNode
@@ -576,6 +578,7 @@ function Composer({
   people,
   initial = '',
   initialMentions,
+  prefill = null,
   placeholder,
   submitLabel,
   autoFocus,
@@ -606,6 +609,15 @@ function Composer({
   const [text, setText] = useState(initial)
   // Picked people, kept in the order their "@Name" appears in the text.
   const [picked, setPicked] = useState<CommentAuthor[]>(initialMentions ?? [])
+  const [filled, setFilled] = useState(prefill)
+  if (prefill !== filled) {
+    setFilled(prefill)
+    // A draft the person wrote stays; only an empty field or the untouched "@Name" changes.
+    if (text.trim() === '' || (filled && text === `@${filled.name} `)) {
+      setText(prefill ? `@${prefill.name} ` : '')
+      setPicked(prefill ? [prefill] : [])
+    }
+  }
   const { topics, label: topicsLabel } = useContext(TopicsContext)
   const [query, setQuery] = useState<{ start: number; term: string; marker: '@' | '#' } | null>(
     null,
@@ -906,7 +918,11 @@ export const CommentThread = forwardRef<HTMLElement, CommentThreadProps>(functio
   const [internalResolved, setInternalResolved] = useState(defaultResolved)
   const isResolved = resolved ?? internalResolved
   const [ui, setUi] = useState<Ui>({ editing: null, confirming: null, picker: null, collapsed: {} })
-  const [replyTo, setReplyTo] = useState<{ id: string; name: string } | null>(null)
+  const [replyTo, setReplyTo] = useState<{
+    id: string
+    name: string
+    mention?: CommentAuthor
+  } | null>(null)
   const [focusKey, setFocusKey] = useState(0)
 
   const mentionable = useMemo(
@@ -1292,7 +1308,15 @@ export const CommentThread = forwardRef<HTMLElement, CommentThreadProps>(functio
                                     type="button"
                                     className={styles.action}
                                     onClick={() => {
-                                      setReplyTo({ id: comment.id, name: comment.author.name })
+                                      setReplyTo({
+                                        id: comment.id,
+                                        name: comment.author.name,
+                                        // This reply will sit under the parent, so the name keeps who it answers.
+                                        mention:
+                                          depth >= maxDepth && comment.author.id !== currentUser.id
+                                            ? mentionable.find((p) => p.id === comment.author.id)
+                                            : undefined,
+                                      })
                                       setFocusKey((key) => key + 1)
                                     }}
                                   >
@@ -1513,6 +1537,7 @@ export const CommentThread = forwardRef<HTMLElement, CommentThreadProps>(functio
                       mentionsLabel={t.mentions}
                       focusKey={focusKey + (composerFocusKey ?? 0)}
                       onSubmit={addReply}
+                      prefill={replyTo?.mention ?? null}
                       onCancel={replyTo ? () => setReplyTo(null) : undefined}
                       leading={<Avatar author={currentUser} />}
                       trailing={composerExtra}

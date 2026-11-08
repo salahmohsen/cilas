@@ -492,6 +492,56 @@ describe('spaces write', () => {
     expect(forB).toHaveLength(1)
     expect(forB[0]!.link).toBe(`/spaces/course/${COURSE_SLUG}/posts/${post.data.id}`)
 
+    // An edit tells only the people it adds.
+    const edited = await commentEdit({
+      payload,
+      user: student,
+      id: comment.data.id,
+      body: `Hello [@Probe Twin](/people/${b.person}) and [@Probe Twin](/people/${a.person})`,
+    })
+    expect(edited.ok).toBe(true)
+    if (!edited.ok) return
+    await edited.notify?.()
+    expect(await notesOf(a.account)).toHaveLength(1)
+    expect(await notesOf(b.account)).toHaveLength(1)
+
+    // Naming yourself rings nobody.
+    const self = await commentCreate({
+      payload,
+      user: student,
+      post: post.data.id,
+      body: `Note to [@Me](/people/${personOf(student)})`,
+    })
+    expect(self.ok).toBe(true)
+    if (!self.ok) return
+    track('space-comments', self.data.id)
+    await self.notify?.()
+    expect(await notesOf(student)).toHaveLength(0)
+
+    // Replied to and mentioned at once is one note, the reply.
+    const fellowMentions = (await notesOf(fellow)).length
+    const top = await commentCreate({
+      payload,
+      user: fellow,
+      post: post.data.id,
+      body: 'QA top comment',
+    })
+    expect(top.ok).toBe(true)
+    if (!top.ok) return
+    track('space-comments', top.data.id)
+    const reply = await commentCreate({
+      payload,
+      user: student,
+      post: post.data.id,
+      parent: top.data.id,
+      body: `Yes [@Fellow](/people/${personOf(fellow)})`,
+    })
+    expect(reply.ok).toBe(true)
+    if (!reply.ok) return
+    track('space-comments', reply.data.id)
+    await reply.notify?.()
+    expect(await notesOf(fellow)).toHaveLength(fellowMentions)
+
     const community_ = await postCreate({
       payload,
       user: student,
@@ -1127,7 +1177,7 @@ describe('spaces write', () => {
 
     await pause()
     const top = await commentCreate({ payload, user: fellow, post: older, body: 'Wakes it up' })
-    expect(top.ok).toBe(true)
+    expect(top).toMatchObject({ ok: true })
     if (!top.ok) return
     track('space-comments', top.data.id)
     expect(await order()).toEqual([older, newest, middle])
@@ -1321,7 +1371,7 @@ describe('spaces write', () => {
   it('commentRemove tombstones a comment that has replies', async () => {
     const postId = await newPost(student, community, 'Thread')
     const top = await commentCreate({ payload, user: student, post: postId, body: 'Top' })
-    expect(top.ok).toBe(true)
+    expect(top).toMatchObject({ ok: true })
     if (!top.ok) return
     track('space-comments', top.data.id)
     const reply = await commentCreate({
@@ -1387,7 +1437,7 @@ describe('spaces write', () => {
   it('postView: the thread for members, null for strangers and for another space', async () => {
     const postId = await newPost(student, courseSpace, 'Thread for the post page')
     const top = await commentCreate({ payload, user: student, post: postId, body: 'Top' })
-    expect(top.ok).toBe(true)
+    expect(top).toMatchObject({ ok: true })
     if (!top.ok) return
     track('space-comments', top.data.id)
     const reply = await commentCreate({
