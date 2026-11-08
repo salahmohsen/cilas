@@ -64,7 +64,7 @@ The features below describe the implementation on `main`. Email, search, Google 
 - Compose newsletters in the CMS, preview their email content, and send through Resend.
 - Manage mailing lists backed by Resend segments, public newsletter signup, and subscriber CSV export.
 - Receive in-app notifications for editorial decisions, applications, mentions, replies, announcements, and Space event changes.
-- Keep daily, weekly, or off digest preferences. Scheduled digest delivery remains future work.
+- Keep daily, weekly, or off digest preferences, or stop all space email in Settings. Digests go out at 16:00 Cairo time (weekly on Sunday) and announcements at once, from `POST /api/cron/spaces`, which a schedule calls hourly with `CRON_SECRET`. The same job purges content deleted more than 30 days ago.
 
 ### Spaces
 
@@ -192,6 +192,6 @@ Database-backed tests require a dedicated local database and the appropriate fix
 
 ## Continuing the original roadmap
 
-Course enrollment, role-based permissions, reviewed member writing, course discussions, notifications, and responsive layouts now have implementations. Automatic completion certificates and scheduled Space email digests remain future work.
+Course enrollment, role-based permissions, reviewed member writing, course discussions, notifications, and responsive layouts now have implementations. Automatic completion certificates remain future work.
 
 The introduction and motivation above come from the [legacy README](https://github.com/salahmohsen/cilas/blob/backup/legacy-drizzle/README.md); its original feature checklist has been updated to describe the current CMS and Spaces system.
