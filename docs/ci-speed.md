@@ -96,7 +96,7 @@ fixtures 14s, containers 12s, browser 11s, install and setup about 25s.
 
 - Pull requests only. Pushes to `main` never skip anything, so `deploy-production` is unchanged.
 - "Docs-only" means every changed file (and every old name of a renamed file) is under
-  `docs/`, `todos/`, `reports/`, `research_notes/`, or is a top-level `*.md` file. Anything else,
+  `docs/`, `todos/`, or is a top-level `*.md` file. Anything else,
   including `.github/`, `src/`, `package.json` and `*.md` inside `src/`, runs everything.
 - The gate fails open. A failed API call, an empty file list, or 3000+ files sets `docs_only=false`.
   If the `changes` job itself fails, `security` and `production-smoke` still run

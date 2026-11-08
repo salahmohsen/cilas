@@ -38,7 +38,7 @@ jobs:
               --jq '.[] | .filename, (.previous_filename // empty)') \
             && [ -n "$files" ] && [ "$(printf '%s\n' "$files" | wc -l)" -lt 3000 ]; then
             # Documentation folders and top-level Markdown files only.
-            if ! printf '%s\n' "$files" | grep -qvE '^(docs|todos|reports|research_notes)/|^[A-Za-z0-9_.-]+\.md$'; then
+            if ! printf '%s\n' "$files" | grep -qvE '^(docs|todos)/|^[A-Za-z0-9_.-]+\.md$'; then
               docs_only=true
             fi
           fi
