@@ -42,6 +42,9 @@
 .root[data-flush] .comment {
   padding-inline: 0;
 }
+.root[data-flush] .comment[data-fresh] {
+  box-shadow: 0 0 0 4px var(--surface-muted);
+}
 /* The rail stays under the parent's avatar once the comment loses its side padding. */
 .root[data-flush] .replies {
   margin-left: 14px;
@@ -162,6 +165,12 @@
   gap: 10px;
   padding: 10px;
   border-radius: 16px;
+  transition:
+    background-color var(--duration-standard) var(--ease-standard),
+    box-shadow var(--duration-standard) var(--ease-standard);
+}
+.comment[data-fresh] {
+  background: var(--surface-muted);
 }
 .avatar {
   display: inline-grid;
@@ -452,6 +461,8 @@
   display: grid;
 }
 .field {
+  /* Room for the site header above, and the "Replying to" line. */
+  scroll-margin-block: 96px;
   width: 100%;
   min-height: 38px;
   max-height: 160px;

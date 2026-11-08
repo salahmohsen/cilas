@@ -52,6 +52,7 @@ import { Composer } from './composer'
 import { sessionOptions } from './session-options'
 import { EventList } from './event-list'
 import { FeedFilter, FeedFilterMenu, SpaceFeedFilters } from './feed-filter'
+import { StableOrder } from './stable-order'
 import { FeedRow, type FeedContext } from './feed-row'
 import { FreshPosts } from './fresh-posts'
 import { IntroLock } from './intro-lock'
@@ -641,16 +642,18 @@ export async function SpacePage({
                     {pinned.map((r, i) => (
                       <div key={r.post.id}>{row(r, i + 1)}</div>
                     ))}
-                    {visible.map((r, i) => (
-                      <div key={r.post.id} className={styles.column}>
-                        {i === firstSeen && i > 0 && (
-                          <p className={styles.divider} role="separator">
-                            {t('newSince')}
-                          </p>
-                        )}
-                        {row(r, pinned.length + i + 1)}
-                      </div>
-                    ))}
+                    <StableOrder scope={[view, bySession, byKind, byAuthor].join('|')}>
+                      {visible.map((r, i) => (
+                        <div key={r.post.id} className={styles.column}>
+                          {i === firstSeen && i > 0 && (
+                            <p className={styles.divider} role="separator">
+                              {t('newSince')}
+                            </p>
+                          )}
+                          {row(r, pinned.length + i + 1)}
+                        </div>
+                      ))}
+                    </StableOrder>
                   </div>
                 </>
               )}

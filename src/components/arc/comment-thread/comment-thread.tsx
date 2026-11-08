@@ -646,6 +646,26 @@ function Composer({
     if (!node) return
     node.focus({ preventScroll: true })
     node.setSelectionRange(node.value.length, node.value.length)
+    const behavior = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+      ? 'auto'
+      : 'smooth'
+    // Does nothing when the field is already in view.
+    node.scrollIntoView({ block: 'nearest', behavior })
+    const viewport = window.visualViewport
+    if (!viewport) return
+    // A phone's keyboard opens after the focus and can cover the field.
+    const onResize = () => {
+      const bottom = viewport.offsetTop + viewport.height
+      if (document.activeElement === node && node.getBoundingClientRect().bottom > bottom)
+        node.scrollIntoView({ block: 'center', behavior })
+    }
+    viewport.addEventListener('resize', onResize)
+    const stop = () => viewport.removeEventListener('resize', onResize)
+    const timer = setTimeout(stop, 1000)
+    return () => {
+      clearTimeout(timer)
+      stop()
+    }
   }, [autoFocus, focusKey])
 
   const readQuery = (value: string, caret: number) => {
@@ -924,6 +944,9 @@ export const CommentThread = forwardRef<HTMLElement, CommentThreadProps>(functio
     mention?: CommentAuthor
   } | null>(null)
   const [focusKey, setFocusKey] = useState(0)
+  // By text, not id: a refresh gives the new comment its saved id while it is still marked.
+  const [fresh, setFresh] = useState<string | null>(null)
+  const freshTimer = useRef<ReturnType<typeof setTimeout>>(undefined)
 
   const mentionable = useMemo(
     () => people ?? [...authorsOf(list, new Map([[currentUser.id, currentUser]])).values()],
@@ -956,6 +979,28 @@ export const CommentThread = forwardRef<HTMLElement, CommentThreadProps>(functio
     )
   }
 
+  /** A new comment can land far from the composer: show it, and mark it for a moment. */
+  const revealNew = (id: string, body: string) =>
+    requestAnimationFrame(() =>
+      requestAnimationFrame(() => {
+        const node = rootRef.current?.querySelector(`[data-comment-id="${id}"]`)
+        if (!node) return
+        const covered = window.innerHeight - (window.visualViewport?.height ?? window.innerHeight)
+        const observer = new IntersectionObserver(
+          ([entry]) => {
+            observer.disconnect()
+            if (entry?.isIntersecting) return
+            node.scrollIntoView({ block: 'center', behavior: reduced ? 'auto' : 'smooth' })
+            setFresh(body)
+            clearTimeout(freshTimer.current)
+            freshTimer.current = setTimeout(() => setFresh(null), 1600)
+          },
+          { rootMargin: `-80px 0px -${Math.max(0, covered)}px 0px` },
+        )
+        observer.observe(node)
+      }),
+    )
+
   const addReply = (body: string, mentions: CommentAuthor[]) => {
     const comment: ThreadComment = {
       id: newId(),
@@ -980,6 +1025,7 @@ export const CommentThread = forwardRef<HTMLElement, CommentThreadProps>(functio
       setUi((current) => ({ ...current, collapsed: { ...current.collapsed, [parentId!]: false } }))
     commit(next, { type: 'reply', comment, parentId })
     setReplyTo(null)
+    revealNew(comment.id, body)
   }
 
   const edit = (id: string, body: string, mentions: CommentAuthor[]) => {
@@ -1067,6 +1113,8 @@ export const CommentThread = forwardRef<HTMLElement, CommentThreadProps>(functio
       <motion.li key={comment.id} className={styles.item} {...grow}>
         <article
           className={styles.comment}
+          data-comment-id={comment.id}
+          data-fresh={(mine && comment.body === fresh) || undefined}
           aria-label={
             comment.deleted ? t.deletedComment : `${comment.author.name}, ${comment.createdAt}`
           }

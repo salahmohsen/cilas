@@ -2,6 +2,7 @@
 
 import type { NoticePart } from '@/lib/space-consent'
 import { useEffect, useRef, useState } from 'react'
+import { flushSync } from 'react-dom'
 import { useTranslations } from 'next-intl'
 import { useRouter } from 'next/navigation'
 import { Check, Paperclip, Send } from 'lucide-react'
@@ -73,11 +74,23 @@ export function Composer({
   const [announce, setAnnounce] = useState('')
   const [asking, setAsking] = useState(false)
   const router = useRouter()
+  const box = useRef<HTMLDivElement>(null)
   const where = () => (window.matchMedia(PHONE).matches ? 'sheet' : 'inline')
   const start = () => (consented ? setOpen(where()) : setAsking(true))
 
   useEffect(() => {
-    const onCompose = () => (consented ? setOpen(where()) : setAsking(true))
+    const onCompose = () => {
+      if (!consented) return setAsking(true)
+      const place = where()
+      setOpen(place)
+      if (place !== 'inline') return
+      const behavior = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+        ? 'auto'
+        : 'smooth'
+      requestAnimationFrame(() =>
+        requestAnimationFrame(() => box.current?.scrollIntoView({ block: 'start', behavior })),
+      )
+    }
     window.addEventListener(COMPOSE_EVENT, onCompose)
     return () => window.removeEventListener(COMPOSE_EVENT, onCompose)
   }, [consented])
@@ -98,14 +111,26 @@ export function Composer({
       sessions={sessions}
       onCancel={() => setOpen(null)}
       onPublished={() => {
-        setOpen(null)
+        // The form folds instead of vanishing, so the feed does not jump up by its height.
+        const node = box.current
+        const from = node?.offsetHeight ?? 0
+        flushSync(() => setOpen(null))
+        const to = node?.offsetHeight ?? 0
+        if (node && from !== to && !window.matchMedia('(prefers-reduced-motion: reduce)').matches)
+          node.animate(
+            [
+              { height: `${from}px`, overflow: 'hidden' },
+              { height: `${to}px`, overflow: 'hidden' },
+            ],
+            { duration: 280, easing: 'cubic-bezier(0.2, 0, 0, 1)' },
+          )
         setAnnounce(t('published'))
       }}
     />
   )
 
   return (
-    <div id="composer">
+    <div id="composer" ref={box} className={styles.composerAnchor}>
       <p role="status" className="sr-only">
         {announce}
       </p>

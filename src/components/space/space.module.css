@@ -1628,6 +1628,10 @@
 }
 
 /* The thread under a post, from the feed or the post page. */
+.composerAnchor {
+  scroll-margin-top: var(--space-24);
+}
+
 .threadWrap {
   display: grid;
   gap: var(--space-2);
