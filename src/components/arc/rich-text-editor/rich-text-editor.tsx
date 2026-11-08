@@ -1406,7 +1406,8 @@ export const RichTextEditor = forwardRef<RichTextEditorHandle, RichTextEditorPro
       emit()
       reportHistory()
       if (start.autoFocus) {
-        editor.focus()
+        // A sheet is still below the screen here; scrolling to it would throw the page off.
+        editor.focus({ preventScroll: true })
         writeOffsets(editor, null)
       }
     }, [emit, fromMarkdown, load, reportHistory])

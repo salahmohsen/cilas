@@ -19,13 +19,13 @@
   position: fixed;
   z-index: 51;
   right: 0;
-  bottom: calc(var(--sheet-extension) * -1);
+  bottom: calc(var(--sheet-keyboard, 0px) - var(--sheet-extension));
   left: 0;
   display: flex;
   flex-direction: column;
   width: min(100%, 36rem);
   height: calc(var(--sheet-max) * 100vh + var(--sheet-extension));
-  height: calc(var(--sheet-max) * 100dvh + var(--sheet-extension));
+  height: calc(var(--sheet-max) * var(--sheet-viewport, 100dvh) + var(--sheet-extension));
   margin-inline: auto;
   overflow: hidden;
   padding-bottom: calc(var(--sheet-extension) + env(safe-area-inset-bottom, 0px));

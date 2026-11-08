@@ -57,6 +57,8 @@ type Drag = {
 
 /** Extra surface below the viewport, so an upward stretch never shows a gap under the sheet. */
 const EXTENSION = 160
+/** Less than this between the page and what is visible is a browser toolbar, not a keyboard. */
+const KEYBOARD_MIN = 100
 /** Enough travel below the edge to hide the floating shadow as well as the sheet. */
 const CLOSED_GAP = 40
 /** How far a release coasts, in seconds of its velocity, before the nearest detent is chosen. */
@@ -121,6 +123,18 @@ export function BottomSheet({
       </AnimatePresence>
     </DialogPrimitive.Root>
   )
+}
+
+/**
+ * Where a sheet belongs while the on-screen keyboard is open, or null when it is not. iOS keeps the page
+ * full height behind the keyboard and may slide it up, so only the visual viewport says what can be seen.
+ */
+export const keyboardFit = (
+  pageHeight: number,
+  view: { height: number; offsetTop: number; scale: number },
+): { height: number; lift: number } | null => {
+  if (view.scale > 1.01 || pageHeight - view.height <= KEYBOARD_MIN) return null
+  return { height: view.height, lift: Math.max(0, pageHeight - view.height - view.offsetTop) }
 }
 
 function Sheet({
@@ -288,6 +302,30 @@ function Sheet({
     observer.observe(sheet)
     return () => observer.disconnect()
   }, [go, height, offset, y])
+
+  // The sheet stays on top of the keyboard. The resize observer above then keeps it on its detent.
+  useEffect(() => {
+    const sheet = sheetRef.current
+    const view = window.visualViewport
+    if (!sheet || !view) return
+    const sync = () => {
+      const fit = keyboardFit(window.innerHeight, view)
+      if (fit) {
+        sheet.style.setProperty('--sheet-viewport', `${fit.height}px`)
+        sheet.style.setProperty('--sheet-keyboard', `${fit.lift}px`)
+      } else {
+        sheet.style.removeProperty('--sheet-viewport')
+        sheet.style.removeProperty('--sheet-keyboard')
+      }
+    }
+    sync()
+    view.addEventListener('resize', sync)
+    view.addEventListener('scroll', sync)
+    return () => {
+      view.removeEventListener('resize', sync)
+      view.removeEventListener('scroll', sync)
+    }
+  }, [])
 
   const beginDrag = useCallback(
     (clientY: number, time: number) => {
