@@ -208,6 +208,7 @@ export interface Config {
     audience: AudienceWidget;
     'visitor-goals': VisitorGoalsWidget;
     'courses-and-events': CoursesAndEventsWidget;
+    'web-vitals': WebVitalsWidget;
     'posthog-usage': PosthogUsageWidget;
     'daily-activity': DailyActivityWidget;
     'media-storage': MediaStorageWidget;
@@ -4817,6 +4818,16 @@ export interface VisitorGoalsWidget {
  * via the `definition` "courses-and-events_widget".
  */
 export interface CoursesAndEventsWidget {
+  data?: {
+    [k: string]: unknown;
+  };
+  width: 'x-small' | 'small' | 'medium' | 'large' | 'x-large' | 'full';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "web-vitals_widget".
+ */
+export interface WebVitalsWidget {
   data?: {
     [k: string]: unknown;
   };
