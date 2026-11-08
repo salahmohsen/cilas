@@ -26,7 +26,7 @@ const subscribeNarrow = (notify: () => void) => {
   query.addEventListener('change', notify)
   return () => query.removeEventListener('change', notify)
 }
-const useNarrow = () =>
+export const useNarrow = () =>
   useSyncExternalStore(
     subscribeNarrow,
     () => window.matchMedia(NARROW).matches,

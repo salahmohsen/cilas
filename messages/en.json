@@ -1302,6 +1302,7 @@
     "failed": "That did not work. Try again."
   },
   "Participation": {
+    "close": "Close",
     "title": "Participation",
     "member": "Member",
     "posts": "Posts",
