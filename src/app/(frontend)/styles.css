@@ -332,6 +332,12 @@
   @apply leading-[1.9];
 }
 
+/* After the rule above, which would otherwise size notes as body text. */
+.article-prose--notes:where([dir='rtl'] *) {
+  font-size: calc(1.05rem * var(--reading-scale, 1));
+  @apply leading-[1.7];
+}
+
 /* Article reader (Arc blog-grid layout): the opening lead and title. */
 .article-lead {
   margin: 0;
@@ -375,21 +381,40 @@ h1.article-title:where([dir='rtl'] *, [dir='rtl']) {
   gap: 0.75rem;
   & li {
     display: grid;
-    grid-template-columns: 1.75rem minmax(0, 1fr) auto;
+    /* Number over back arrow in one narrow rail, so the note keeps the width. */
+    grid-template-columns: 1.75rem minmax(0, 1fr);
+    column-gap: 0.5rem;
     align-items: baseline;
+  }
+  & .article-prose--notes {
+    grid-column: 2;
+    grid-row: 1 / span 2;
   }
   & li:target {
     background: var(--surface-muted);
     border-radius: 0.75rem;
   }
   & .footnote-number {
-    font-family: var(--font-mono);
+    grid-column: 1;
+    grid-row: 1;
+    font-family: var(--font-sans);
     font-size: 0.8rem;
     color: var(--text-muted);
   }
   & .footnote-back {
+    position: relative;
+    grid-column: 1;
+    grid-row: 2;
+    justify-self: start;
+    align-self: start;
     color: var(--text-muted);
     text-decoration: none;
+    /* A 44px touch area around the 16px arrow. */
+    &::after {
+      content: '';
+      position: absolute;
+      inset: -14px;
+    }
   }
 }
 

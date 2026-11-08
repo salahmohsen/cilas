@@ -4,6 +4,7 @@ import { RichText, type JSXConvertersFunction } from '@payloadcms/richtext-lexic
 import React from 'react'
 
 import { FootnoteMark } from '@/components/article/footnote'
+import { localDigits } from '@/lib/digits'
 import { ProfileCard } from '@/components/person/profile-card'
 import { ProfileColumns } from '@/components/person/profile-columns'
 import { MovieCard } from '@/components/movie/movie-card'
@@ -45,6 +46,8 @@ export const RichTextField: React.FC<{
   className?: string
   footnotes?: Footnote[]
   footnoteLabel?: string
+  /** The language whose digits the footnote marks are written in. */
+  footnoteLocale?: string
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   blocks?: Record<string, (fields: any) => React.ReactNode>
   /** As `blocks`, for inline blocks other than footnotes (the article page's mentions). */
@@ -61,6 +64,7 @@ export const RichTextField: React.FC<{
   className,
   footnotes = [],
   footnoteLabel = 'Note',
+  footnoteLocale = 'en',
   blocks = {},
   inlineBlocks = {},
   plain = false,
@@ -94,6 +98,7 @@ export const RichTextField: React.FC<{
         inlineBlocks={inlineBlocks}
         footnotes={footnotes}
         footnoteLabel={footnoteLabel}
+        footnoteLocale={footnoteLocale}
       />
     ))
     if (profileCarousel) {
@@ -195,7 +200,14 @@ export const RichTextField: React.FC<{
       ),
       footnote: ({ node }: { node: SerializedInlineBlockNode<FootnoteBlock> }) => {
         const f = footnotes.find((x) => x.id === node.fields.id)
-        return f ? <FootnoteMark label={footnoteLabel} note={f.note} number={f.number} /> : null
+        return f ? (
+          <FootnoteMark
+            label={footnoteLabel}
+            note={f.note}
+            number={f.number}
+            shown={localDigits(f.number, footnoteLocale)}
+          />
+        ) : null
       },
     },
   })

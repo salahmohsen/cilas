@@ -4,7 +4,7 @@ import { currentReader } from '@/lib/reader'
 import { isRelation as isObject } from '@/lib/relation'
 import config from '@payload-config'
 import { VisualEditing } from '@payload-inline-visual-editor/react'
-import { ArrowLeft, ArrowUpRight, Languages } from 'lucide-react'
+import { ArrowLeft, ArrowUp, ArrowUpRight, Languages } from 'lucide-react'
 import { getFormatter, getTranslations } from 'next-intl/server'
 import { draftMode } from 'next/headers'
 import { notFound } from 'next/navigation'
@@ -478,6 +478,7 @@ export async function ArticlePage({ locale: siteLocale, slug, user: reader }: Vi
                     className="article-prose"
                     data={text}
                     footnoteLabel={t('footnote')}
+                    footnoteLocale={contentLocale}
                     footnotes={footnotes}
                   />
                 </div>
@@ -495,8 +496,11 @@ export async function ArticlePage({ locale: siteLocale, slug, user: reader }: Vi
                   </h2>
                   <ol className="article-footnotes">
                     {footnotes.map((f) => (
-                      <li id={`fn-${f.number}`} key={f.id}>
-                        <span className="footnote-number">{f.number}</span>
+                      // dir="auto": the number and arrow sit on the side where the note starts.
+                      <li dir="auto" id={`fn-${f.number}`} key={f.id}>
+                        <span className="footnote-number">
+                          {localDigits(f.number, contentLocale)}
+                        </span>
                         <RichTextField
                           user={user}
                           className="article-prose article-prose--notes"
@@ -507,7 +511,7 @@ export async function ArticlePage({ locale: siteLocale, slug, user: reader }: Vi
                           className="footnote-back"
                           href={`#fnref-${f.number}`}
                         >
-                          ↩
+                          <ArrowUp className="size-4" />
                         </a>
                       </li>
                     ))}

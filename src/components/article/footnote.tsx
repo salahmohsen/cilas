@@ -15,10 +15,13 @@ import { RichTextNodeLink } from '@/components/rich-text-node-link'
  */
 export function FootnoteMark({
   number,
+  shown,
   note,
   label,
 }: {
   number: number
+  /** The number as the text's language writes it. */
+  shown: string
   note: FootnoteBlock['note']
   label: string
 }) {
@@ -27,7 +30,7 @@ export function FootnoteMark({
       content={
         <div className="footnote-card max-w-[22rem] text-sm leading-relaxed">
           <p className="mb-1 font-mono text-[0.68rem] tracking-[0.14em] text-[var(--text-muted)] uppercase rtl:tracking-normal">
-            {label} {number}
+            {label} {shown}
           </p>
           <RichText
             className="[&_a]:underline [&_a]:underline-offset-2 [&_p]:m-0"
@@ -56,7 +59,7 @@ export function FootnoteMark({
         href={`#fn-${number}`}
         id={`fnref-${number}`}
       >
-        <sup>{number}</sup>
+        <sup>{shown}</sup>
       </a>
     </HoverCard>
   )
