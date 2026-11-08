@@ -1,11 +1,13 @@
 import { cleanup, fireEvent, render, screen } from '@testing-library/react'
 import { NextIntlClientProvider } from 'next-intl'
-import { afterEach, describe, expect, it } from 'vitest'
+import { afterEach, describe, expect, it, vi } from 'vitest'
 
 import { RichTextField } from '@/components/RichTextField'
 import { moviePosterUrl } from '@/lib/movie'
 import { movie } from '../fixtures/movie'
 import messages from '../../messages/en.json'
+
+vi.mock('@/lib/use-narrow', () => ({ useNarrow: () => false }))
 
 afterEach(cleanup)
 const data = (value: unknown, subtitleLanguages?: string[]) => ({

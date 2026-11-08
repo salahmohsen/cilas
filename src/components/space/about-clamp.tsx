@@ -3,8 +3,8 @@
 import { useRef, useState } from 'react'
 import type { ReactNode } from 'react'
 import { useTranslations } from 'next-intl'
-import { Dialog, DialogContent } from '@/components/arc/dialog/dialog'
 import { ExpandableText } from '@/components/arc/expandable-text/expandable-text'
+import { ResponsiveDialog } from '@/components/responsive-dialog'
 
 import styles from './space.module.css'
 
@@ -23,19 +23,19 @@ export function AboutClamp({ text, children }: { text: string; children: ReactNo
       <ExpandableText lines={LINES} moreLabel={tp('readMore')} onMore={() => setOpen(true)}>
         {children}
       </ExpandableText>
-      <Dialog open={open} onOpenChange={setOpen}>
-        {/* The button is not a Radix trigger, so focus would fall to the body on close. */}
-        <DialogContent
-          title={t('aboutSpace')}
-          className={styles.aboutDialog}
-          onCloseAutoFocus={(event) => {
-            event.preventDefault()
-            root.current?.querySelector('button')?.focus()
-          }}
-        >
-          {children}
-        </DialogContent>
-      </Dialog>
+      {/* The button is not a Radix trigger, so focus would fall to the body on close. */}
+      <ResponsiveDialog
+        open={open}
+        onOpenChange={setOpen}
+        title={t('aboutSpace')}
+        className={styles.aboutDialog}
+        onCloseAutoFocus={(event) => {
+          event.preventDefault()
+          root.current?.querySelector('button')?.focus()
+        }}
+      >
+        {children}
+      </ResponsiveDialog>
     </div>
   )
 }

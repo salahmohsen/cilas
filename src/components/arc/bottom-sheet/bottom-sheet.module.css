@@ -187,7 +187,7 @@
   }
 }
 
-.sheet[data-bare] {
+.sheet[data-fit] {
   height: auto;
   max-height: calc(var(--sheet-max) * 100vh + var(--sheet-extension));
   max-height: calc(var(--sheet-max) * var(--sheet-viewport, 100dvh) + var(--sheet-extension));

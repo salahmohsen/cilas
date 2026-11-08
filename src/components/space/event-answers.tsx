@@ -9,7 +9,7 @@ import { Check } from 'lucide-react'
 
 import { AvatarGroup } from '@/components/arc/avatar-group/avatar-group'
 import { Avatar } from '@/components/arc/avatar/avatar'
-import { Dialog, DialogContent } from '@/components/arc/dialog/dialog'
+import { ResponsiveDialog } from '@/components/responsive-dialog'
 import { rsvpSetAction } from '@/lib/space-actions'
 import { RSVP_STATUSES, type RsvpStatus } from '@/lib/space-event'
 import type { RsvpView, Voter } from '@/lib/spaces-data'
@@ -159,23 +159,21 @@ export function EventAnswers({
           />
         </div>
       )}
-      <Dialog open={listOpen} onOpenChange={setListOpen}>
-        <DialogContent title={t('rsvpGoingList')}>
-          <ul className={styles.rsvpList}>
-            {view.going.map((v) => (
-              <li key={v.personId}>
-                <Avatar
-                  fallbackSeed={personAvatarSeed(v.personId)}
-                  name={v.name}
-                  size="sm"
-                  src={v.photo ?? undefined}
-                />
-                <span dir="auto">{v.name}</span>
-              </li>
-            ))}
-          </ul>
-        </DialogContent>
-      </Dialog>
+      <ResponsiveDialog open={listOpen} onOpenChange={setListOpen} title={t('rsvpGoingList')}>
+        <ul className={styles.rsvpList}>
+          {view.going.map((v) => (
+            <li key={v.personId}>
+              <Avatar
+                fallbackSeed={personAvatarSeed(v.personId)}
+                name={v.name}
+                size="sm"
+                src={v.photo ?? undefined}
+              />
+              <span dir="auto">{v.name}</span>
+            </li>
+          ))}
+        </ul>
+      </ResponsiveDialog>
       {error && (
         <p className={styles.error} role="alert">
           {error}

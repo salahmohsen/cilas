@@ -35,6 +35,7 @@ export function CollectionDialog({
     return (
       <BottomSheet
         bare
+        fit
         className="collection-sheet"
         closeLabel={closeLabel}
         detents={[0.85]}

@@ -12,7 +12,7 @@ import { Check } from 'lucide-react'
 
 import { Avatar } from '@/components/arc/avatar/avatar'
 import { AvatarGroup } from '@/components/arc/avatar-group/avatar-group'
-import { Dialog, DialogContent } from '@/components/arc/dialog/dialog'
+import { ResponsiveDialog } from '@/components/responsive-dialog'
 import { motionTokens } from '@/components/arc/lib/motion-tokens'
 import { numberingSystemOf } from '@/lib/digits'
 import { voteSetAction } from '@/lib/space-actions'
@@ -85,6 +85,8 @@ export function VotePoll({
   const [error, setError] = useState<string | null>(null)
   const [status, setStatus] = useState('')
   const [listed, setListed] = useState<string | null>(null)
+  // Apart from `listed`, so the voters stay in view while the list closes.
+  const [listOpen, setListOpen] = useState(false)
   const open = !disabled && !view.closed
 
   const submit = (options: string[]) => {
@@ -227,7 +229,10 @@ export function VotePoll({
                     wrap={(member, face) => (
                       <PersonHover person={cardOf(people, member)}>{face}</PersonHover>
                     )}
-                    onOverflowClick={() => setListed(o.id)}
+                    onOverflowClick={() => {
+                      setListed(o.id)
+                      setListOpen(true)
+                    }}
                   />
                 </span>
               )}
@@ -254,36 +259,36 @@ export function VotePoll({
       <p role="status" className="sr-only">
         {status}
       </p>
-      <Dialog open={shownList != null} onOpenChange={(next) => !next && setListed(null)}>
-        <DialogContent
-          title={shownList ? t('voteChosenBy', { option: shownList.label }) : ''}
-          description={shownList ? t('voteVoters', { count: shownList.count }) : undefined}
-        >
-          <ul className={styles.voterList}>
-            {shownList?.voters.map((v) => (
-              <li key={v.personId} className={styles.voterRow}>
-                <Avatar
-                  fallbackSeed={personAvatarSeed(v.personId)}
-                  name={v.name}
-                  src={v.photo ?? undefined}
-                  size="sm"
-                />
-                <PersonHover
-                  person={cardOf(people, {
-                    id: v.personId,
-                    name: v.name,
-                    src: v.photo ?? undefined,
-                  })}
-                >
-                  <button type="button" className={styles.voterName}>
-                    <bdi>{v.name}</bdi>
-                  </button>
-                </PersonHover>
-              </li>
-            ))}
-          </ul>
-        </DialogContent>
-      </Dialog>
+      <ResponsiveDialog
+        open={listOpen && shownList != null}
+        onOpenChange={setListOpen}
+        title={shownList ? t('voteChosenBy', { option: shownList.label }) : ''}
+        description={shownList ? t('voteVoters', { count: shownList.count }) : undefined}
+      >
+        <ul className={styles.voterList}>
+          {shownList?.voters.map((v) => (
+            <li key={v.personId} className={styles.voterRow}>
+              <Avatar
+                fallbackSeed={personAvatarSeed(v.personId)}
+                name={v.name}
+                src={v.photo ?? undefined}
+                size="sm"
+              />
+              <PersonHover
+                person={cardOf(people, {
+                  id: v.personId,
+                  name: v.name,
+                  src: v.photo ?? undefined,
+                })}
+              >
+                <button type="button" className={styles.voterName}>
+                  <bdi>{v.name}</bdi>
+                </button>
+              </PersonHover>
+            </li>
+          ))}
+        </ul>
+      </ResponsiveDialog>
     </section>
   )
 }

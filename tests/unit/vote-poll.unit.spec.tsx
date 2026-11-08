@@ -15,6 +15,7 @@ vi.mock('motion/react', async (importOriginal) => ({
   ...(await importOriginal<typeof import('motion/react')>()),
   AnimatePresence: ({ children }: { children: ReactNode }) => children,
 }))
+vi.mock('@/lib/use-narrow', () => ({ useNarrow: () => false }))
 vi.mock('@/components/space/composer', () => ({ saveErrorKey: () => 'saveError_failed' }))
 vi.mock('@/components/space/person-hover', () => ({
   PersonHover: ({ children }: { children: ReactElement }) => children,

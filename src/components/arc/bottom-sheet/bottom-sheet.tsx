@@ -43,11 +43,12 @@ export interface BottomSheetProps {
   onDetentChange?: (index: number) => void
   closeLabel?: string
   className?: string
-  /**
-   * For content with its own title and close control: the sheet shows only the grabber above it,
-   * and with a single detent is as tall as the content, up to that detent. The title stays for screen readers.
-   */
+  /** For content with its own title and close control: the sheet shows only the grabber above it. The title stays for screen readers. */
   bare?: boolean
+  /** With a single detent: the sheet is as tall as its content, up to that detent. */
+  fit?: boolean
+  /** Runs as focus returns on close; prevent it to send focus elsewhere when there is no trigger. */
+  onCloseAutoFocus?: (event: Event) => void
   children: ReactNode
 }
 
@@ -151,6 +152,8 @@ function Sheet({
   closeLabel = 'Close',
   className,
   bare = false,
+  fit = false,
+  onCloseAutoFocus,
   children,
   onDismiss,
 }: Omit<BottomSheetProps, 'trigger' | 'open' | 'defaultOpen' | 'onOpenChange'> & {
@@ -592,6 +595,7 @@ function Sheet({
         asChild
         forceMount
         {...(description ? {} : { 'aria-describedby': undefined })}
+        onCloseAutoFocus={onCloseAutoFocus}
         onOpenAutoFocus={(event) => {
           event.preventDefault()
           sheetRef.current?.focus({ preventScroll: true })
@@ -608,6 +612,7 @@ function Sheet({
           style={style}
           data-expanded={expanded ? '' : undefined}
           data-bare={bare ? '' : undefined}
+          data-fit={fit ? '' : undefined}
           onKeyDown={sheetKey}
         >
           <div

@@ -10,6 +10,7 @@ import type { RichTextReferences } from '@/lib/rich-text-references'
 import messages from '../../messages/en.json'
 import { movie } from '../fixtures/movie'
 
+vi.mock('@/lib/use-narrow', () => ({ useNarrow: () => false }))
 vi.mock('@/components/resolved-rich-text-field', () => ({
   ResolvedRichTextField: (props: ComponentProps<typeof RichTextField>) => (
     <RichTextField {...props} />

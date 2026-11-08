@@ -2,7 +2,7 @@
 
 import type { ReactNode } from 'react'
 
-import { Dialog, DialogContent, DialogTrigger } from '@/components/arc/dialog/dialog'
+import { ResponsiveDialog } from '@/components/responsive-dialog'
 
 export function MovieDetailsDialog({
   label,
@@ -18,13 +18,16 @@ export function MovieDetailsDialog({
   children: ReactNode
 }) {
   return (
-    <Dialog>
-      <DialogTrigger className={className} type="button">
-        {label}
-      </DialogTrigger>
-      <DialogContent closeLabel={closeLabel} title={title}>
-        {children}
-      </DialogContent>
-    </Dialog>
+    <ResponsiveDialog
+      closeLabel={closeLabel}
+      title={title}
+      trigger={
+        <button className={className} type="button">
+          {label}
+        </button>
+      }
+    >
+      {children}
+    </ResponsiveDialog>
   )
 }
