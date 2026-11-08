@@ -290,6 +290,7 @@ export function SpaceThread({
   return (
     <div className={styles.threadWrap}>
       <CommentThread
+        flush
         comments={shown}
         showHeader={!preview && limit == null}
         listHeader={

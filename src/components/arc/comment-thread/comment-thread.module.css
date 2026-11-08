@@ -19,6 +19,37 @@
 .root[data-resolved] {
   border-radius: 22px;
 }
+.root[data-flush] {
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+}
+/* With no padding around the composer, a plain hidden overflow would cut its focus ring. */
+.root[data-flush] .autoHeight {
+  overflow: clip;
+  overflow-clip-margin: 4px;
+  border-radius: 0;
+}
+.root[data-flush] .header {
+  padding-inline: 0;
+}
+.root[data-flush] .list {
+  padding-inline: 0;
+}
+.root[data-flush] .list:first-child {
+  padding-top: 0;
+}
+.root[data-flush] .comment {
+  padding-inline: 0;
+}
+/* The rail stays under the parent's avatar once the comment loses its side padding. */
+.root[data-flush] .replies {
+  margin-left: 14px;
+}
+.root[data-flush] .composerArea {
+  padding-inline: 0;
+  padding-bottom: 0;
+}
 .autoHeight {
   overflow: hidden;
   border-radius: inherit;

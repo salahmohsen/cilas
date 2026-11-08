@@ -266,6 +266,8 @@ export interface CommentThreadProps {
   composerFocusKey?: number
   /** The new-comment composer's send and extra buttons float inside the field as icons, leaving the text the full width. */
   inlineActions?: boolean
+  /** Drops the panel's border, background and side padding, for a thread that sits inside another card. */
+  flush?: boolean
   className?: string
 }
 
@@ -890,6 +892,7 @@ export const CommentThread = forwardRef<HTMLElement, CommentThreadProps>(functio
     composerAttachments,
     composerFocusKey,
     inlineActions,
+    flush,
     className,
   },
   forwardedRef,
@@ -1403,6 +1406,7 @@ export const CommentThread = forwardRef<HTMLElement, CommentThreadProps>(functio
         ref={rootRef}
         className={[styles.root, className].filter(Boolean).join(' ')}
         data-resolved={isResolved || undefined}
+        data-flush={flush || undefined}
         aria-label={t.thread}
       >
         <AutoHeight reduced={reduced} morphKey={isResolved ? 'resolved' : 'thread'}>
