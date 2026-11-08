@@ -41,6 +41,11 @@ export const Newsletters: CollectionConfig = {
       admin: { position: 'sidebar', date: { pickerAppearance: 'dayOnly' } },
     },
     { name: 'cover_image', type: 'upload', relationTo: 'media', admin: { position: 'sidebar' } },
+    {
+      name: 'cover_caption',
+      type: 'text',
+      admin: { position: 'sidebar', description: 'Shown under the cover image.' },
+    },
     ...importFields(),
     {
       type: 'tabs',
@@ -124,7 +129,17 @@ export const Newsletters: CollectionConfig = {
                   labels: { singular: 'Image', plural: 'Images' },
                   fields: [
                     { name: 'image', type: 'upload', relationTo: 'media', required: true },
-                    { name: 'caption', type: 'text' },
+                    {
+                      name: 'caption',
+                      type: 'text',
+                      admin: { description: 'Shown under the image.' },
+                    },
+                    {
+                      name: 'body',
+                      type: 'richText',
+                      editor: lexicalEditor({ features: emailEditorFeatures }),
+                      admin: { description: 'Text that belongs to this image, under the caption.' },
+                    },
                   ],
                 },
                 {

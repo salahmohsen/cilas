@@ -1752,6 +1752,10 @@ export interface Newsletter {
   slug: string;
   issue_date: string;
   cover_image?: (number | null) | Media;
+  /**
+   * Shown under the cover image.
+   */
+  cover_caption?: string | null;
   legacy_url?: string | null;
   /**
    * The line mail apps show after the subject. Empty: the title.
@@ -1807,7 +1811,28 @@ export interface Newsletter {
           }
         | {
             image: number | Media;
+            /**
+             * Shown under the image.
+             */
             caption?: string | null;
+            /**
+             * Text that belongs to this image, under the caption.
+             */
+            body?: {
+              root: {
+                type: string;
+                children: {
+                  type: any;
+                  version: number;
+                  [k: string]: unknown;
+                }[];
+                direction: ('ltr' | 'rtl') | null;
+                format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+                indent: number;
+                version: number;
+              };
+              [k: string]: unknown;
+            } | null;
             id?: string | null;
             blockName?: string | null;
             blockType: 'image';
@@ -3591,6 +3616,7 @@ export interface NewslettersSelect<T extends boolean = true> {
   slug?: T;
   issue_date?: T;
   cover_image?: T;
+  cover_caption?: T;
   legacy_url?: T;
   preheader?: T;
   body?: T;
@@ -3622,6 +3648,7 @@ export interface NewslettersSelect<T extends boolean = true> {
           | {
               image?: T;
               caption?: T;
+              body?: T;
               id?: T;
               blockName?: T;
             };

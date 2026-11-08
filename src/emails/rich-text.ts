@@ -116,6 +116,15 @@ export const emailRichTextHTML = (
   const root = walk(flattened.root as unknown as Node)[0]
   return convertLexicalToHTML({
     data: { root } as unknown as SerializedEditorState,
-    converters: ({ defaultConverters }) => ({ ...defaultConverters, unknown: () => '' }),
+    converters: ({ defaultConverters }) => ({
+      ...defaultConverters,
+      unknown: () => '',
+      upload: ({ node }) => {
+        const media = node.value as { url?: string | null; alt?: string | null } | number
+        if (typeof media !== 'object' || !media?.url) return ''
+        const alt = (media.alt ?? '').replace(/"/g, '&quot;')
+        return `<img src="${media.url}" alt="${alt}" width="552" style="display:block;width:100%;max-width:100%;height:auto;border-radius:10px;margin:20px 0" />`
+      },
+    }),
   })
 }

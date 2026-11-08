@@ -26,7 +26,7 @@ export type Section = Row &
         > | null
       }
     | { blockType: 'text'; body?: unknown }
-    | { blockType: 'image'; image?: Media; caption?: string | null }
+    | { blockType: 'image'; image?: Media; caption?: string | null; body?: unknown }
     | {
         blockType: 'gallery'
         heading?: string | null
@@ -42,6 +42,7 @@ export type Issue = {
   preheader?: string | null
   issue_date?: string | null
   cover_image?: unknown
+  cover_caption?: string | null
   body?: unknown
   sections?: Section[] | null
 }
@@ -286,11 +287,17 @@ function Picks({
   )
 }
 
-/** One image across the full width, with its caption. */
-function SingleImage({ section, pe, path }: SectionProps<'image'>) {
+/** One image across the full width, its caption, and the text that belongs to it. */
+function SingleImage({
+  section,
+  pe,
+  path,
+  references,
+}: SectionProps<'image'> & { references?: RichTextReferences }) {
   const image = urlOf(section.image)
   if (!image && !pe.on) return null
   const caption = section.caption?.trim()
+  const html = richHtml(section.body, references)
   return (
     <Box>
       {image ? (
@@ -306,6 +313,13 @@ function SingleImage({ section, pe, path }: SectionProps<'image'>) {
         <Text dir="auto" style={{ ...type[13], margin: '8px 0 0' }} {...pe(`${path}.caption`)}>
           {caption}
         </Text>
+      ) : null}
+      {html ? (
+        <div
+          style={{ ...type[16], marginTop: '20px' }}
+          {...pe(`${path}.body`)}
+          dangerouslySetInnerHTML={{ __html: html }}
+        />
       ) : null}
     </Box>
   )
@@ -450,19 +464,30 @@ export function NewsletterEmail({
       >
         <Box>
           {cover ? (
-            <Img
-              className="m-img"
-              src={cover.url}
-              alt={cover.alt}
-              width={552}
-              style={{
-                display: 'block',
-                width: '100%',
-                borderRadius: '12px',
-                marginBottom: '32px',
-              }}
-              {...pe('cover_image')}
-            />
+            <>
+              <Img
+                className="m-img"
+                src={cover.url}
+                alt={cover.alt}
+                width={552}
+                style={{
+                  display: 'block',
+                  width: '100%',
+                  borderRadius: '12px',
+                  marginBottom: issue.cover_caption ? '8px' : '32px',
+                }}
+                {...pe('cover_image')}
+              />
+              {issue.cover_caption ? (
+                <Text
+                  dir="auto"
+                  style={{ ...type[13], margin: '0 0 32px' }}
+                  {...pe('cover_caption')}
+                >
+                  {issue.cover_caption}
+                </Text>
+              ) : null}
+            </>
           ) : null}
           <Heading as="h1" dir="auto" style={{ ...type[32], margin: '0 0 16px' }} {...pe('title')}>
             {issue.title}
@@ -483,7 +508,14 @@ export function NewsletterEmail({
                 case 'picks':
                   return <Picks section={section} settings={settings} pe={pe} path={path} />
                 case 'image':
-                  return <SingleImage section={section} pe={pe} path={path} />
+                  return (
+                    <SingleImage
+                      section={section}
+                      pe={pe}
+                      path={path}
+                      references={issue.references}
+                    />
+                  )
                 case 'gallery':
                   return <Gallery section={section} pe={pe} path={path} />
                 case 'quote':
