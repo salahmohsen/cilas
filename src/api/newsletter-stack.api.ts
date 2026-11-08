@@ -35,55 +35,141 @@ const storyOf = (relationTo: string, doc: unknown): NewsletterStory | null => {
   }
 }
 
-/** An issue's picks, in order, as the stories on its card. */
-const storiesOf = (issue: Newsletter): NewsletterStory[] =>
+const picksOf = (issue: Newsletter) =>
   (issue.sections ?? []).flatMap((section) =>
     section.blockType === 'picks'
       ? (section.items ?? []).flatMap((pick) => {
           const item = pickItemOf(pick as Record<string, unknown>)
-          const story = item ? storyOf(item.relationTo, item.value) : null
-          return story ? [story] : []
+          return item ? [item] : []
         })
       : [],
   )
 
+type Group = 'cycles' | 'publications'
+type GroupStories = Record<Group, Map<number, NewsletterStory[]>>
+
+const isGroup = (relationTo: string): relationTo is Group =>
+  relationTo === 'cycles' || relationTo === 'publications'
+
+const idOf = (value: unknown): number | null => {
+  const id = typeof value === 'object' ? (value as { id?: unknown } | null)?.id : value
+  return typeof id === 'number' ? id : null
+}
+
+/** The stories inside every cycle and article collection picked in these issues. */
+const groupStories = async (
+  payload: Payload,
+  issues: Newsletter[],
+  read: { locale: Locale; fallbackLocale: Locale; overrideAccess: false },
+): Promise<GroupStories> => {
+  const ids = (group: Group) => [
+    ...new Set(
+      issues.flatMap(picksOf).flatMap(({ relationTo, value }) => {
+        const id = relationTo === group ? idOf(value) : null
+        return id === null ? [] : [id]
+      }),
+    ),
+  ]
+  const cycleIds = ids('cycles')
+  const publicationIds = ids('publications')
+  const [courses, publications] = await Promise.all([
+    cycleIds.length
+      ? payload.find({
+          collection: 'courses',
+          where: {
+            and: [
+              { cycle: { in: cycleIds } },
+              { _status: { equals: 'published' } },
+              { tier: { equals: 'public' } },
+            ],
+          },
+          sort: 'title',
+          depth: 1,
+          pagination: false,
+          select: { title: true, cover_image: true, cycle: true },
+          ...read,
+        })
+      : null,
+    publicationIds.length
+      ? payload.find({
+          collection: 'publications',
+          where: { id: { in: publicationIds } },
+          depth: 2,
+          pagination: false,
+          select: { articles: true },
+          ...read,
+        })
+      : null,
+  ])
+
+  const cycles = new Map<number, NewsletterStory[]>()
+  for (const course of courses?.docs ?? []) {
+    const cycle = idOf(course.cycle)
+    const story = storyOf('courses', course)
+    if (cycle !== null && story) cycles.set(cycle, [...(cycles.get(cycle) ?? []), story])
+  }
+  const collections = new Map(
+    (publications?.docs ?? []).map((publication) => [
+      publication.id,
+      (publication.articles ?? []).flatMap((article) => {
+        const open =
+          typeof article === 'object' &&
+          article._status === 'published' &&
+          article.tier === 'public'
+        const story = open ? storyOf('articles', article) : null
+        return story ? [story] : []
+      }),
+    ]),
+  )
+  return { cycles, publications: collections }
+}
+
+/** An issue's picks, in order, as the stories on its card. A cycle or an article collection shows what it holds. */
+const storiesOf = (issue: Newsletter, groups: GroupStories): NewsletterStory[] =>
+  picksOf(issue).flatMap(({ relationTo, value }) => {
+    const id = isGroup(relationTo) ? idOf(value) : null
+    const members = isGroup(relationTo) && id !== null ? groups[relationTo].get(id) : undefined
+    if (members?.length) return members
+    const story = storyOf(relationTo, value)
+    return story ? [story] : []
+  })
+
 /**
- * The stack the newsletter signup shows: the last published issues, newest
- * first, and the next one, which holds the newest articles. Null when signup
- * is not set up (no list in Email settings): then there is no form to show.
- * `publication` is null when no issue is out yet: the form shows alone.
+ * The stack the newsletter signup shows: the newest public issue in full, and
+ * only the numbers of what surrounds it. The issues behind it show just a top
+ * edge, so nothing else is sent to the browser. An issue is public when it
+ * went to the signup list; an empty "Send to" means that list. Null when
+ * signup is not set up: then there is no form to show. `publication` is null
+ * when no public issue is out yet: the form shows alone.
  */
 export const getNewsletterStack = async (
   payload: Payload,
   locale: Locale,
   labels: { name: string; next: string; nextSubject: string },
 ): Promise<{ publication: NewsletterPublication | null } | null> => {
-  if (!(await newsletterList(payload))) return null
+  const list = await newsletterList(payload)
+  if (!list) return null
   const read = {
     locale,
     fallbackLocale: otherLocale(locale) as Locale,
-    overrideAccess: false,
+    overrideAccess: false as const,
   }
-  const [issues, latest] = await Promise.all([
-    payload.find({
-      collection: 'newsletters',
-      where: { _status: { equals: 'published' } },
-      sort: '-issue_date',
-      depth: 2,
-      limit: 3,
-      ...read,
-    }),
-    payload.find({
-      collection: 'articles',
-      where: { and: [{ _status: { equals: 'published' } }, { tier: { equals: 'public' } }] },
-      sort: '-published_date',
-      depth: 1,
-      limit: 3,
-      select: { title: true, cover_image: true, body: true },
-      ...read,
-    }),
-  ])
-  if (!issues.docs.length) return { publication: null }
+  const issues = await payload.find({
+    collection: 'newsletters',
+    where: {
+      and: [
+        { _status: { equals: 'published' } },
+        { or: [{ send_to: { exists: false } }, { send_to: { equals: list.id } }] },
+      ],
+    },
+    sort: '-issue_date',
+    depth: 2,
+    limit: 1,
+    ...read,
+  })
+  const latest = issues.docs[0]
+  if (!latest) return { publication: null }
+  const groups = await groupStories(payload, [latest], read)
 
   const day = (iso: string) =>
     new Date(iso).toLocaleDateString(locale === 'ar' ? 'ar-EG' : 'en-GB', {
@@ -92,21 +178,28 @@ export const getNewsletterStack = async (
       year: 'numeric',
       timeZone: CAIRO,
     })
-  // Numbered by their order among the published issues: the newest is the count.
-  const recent: NewsletterIssue[] = issues.docs.map((issue, i) => ({
-    number: issues.totalDocs - i,
-    date: day(issue.issue_date),
-    subject: issue.title,
-    stories: storiesOf(issue),
-  }))
+  // Numbered by their order among the public issues: the newest is the count.
+  const newest = issues.totalDocs
+  const sheet = (number: number): NewsletterIssue => ({
+    number,
+    date: '',
+    subject: '',
+    stories: [],
+  })
+  const recent: NewsletterIssue[] = [
+    {
+      number: newest,
+      date: day(latest.issue_date),
+      subject: latest.title,
+      stories: storiesOf(latest, groups),
+    },
+    ...Array.from({ length: Math.min(newest - 1, 2) }, (_, i) => sheet(newest - 1 - i)),
+  ]
   const upcoming: NewsletterIssue = {
-    number: issues.totalDocs + 1,
+    number: newest + 1,
     date: labels.next,
     subject: labels.nextSubject,
-    stories: latest.docs.flatMap((a) => {
-      const story = storyOf('articles', a)
-      return story ? [story] : []
-    }),
+    stories: [],
   }
   return { publication: { name: labels.name, upcoming, recent } }
 }

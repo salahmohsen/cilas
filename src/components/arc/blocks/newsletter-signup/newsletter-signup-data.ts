@@ -17,7 +17,7 @@ export interface NewsletterIssue {
   /** Send date as it should read, such as "Friday, September 25". */
   date: string
   subject: string
-  /** Up to three stories. */
+  /** Three fit on the card; more scroll inside it. */
   stories: NewsletterStory[]
 }
 

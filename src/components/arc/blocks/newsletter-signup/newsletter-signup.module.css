@@ -166,10 +166,16 @@
 }
 .stories {
   display: grid;
+  align-content: start;
   gap: 10px;
+  min-height: calc(3 * 44px + 2 * 10px);
   margin: 0;
   padding: 0;
   list-style: none;
+}
+/* Exactly three rows, so a long list scrolls and the card keeps its height. */
+.storiesViewport {
+  max-height: calc(3 * 44px + 2 * 10px);
 }
 .story {
   display: grid;

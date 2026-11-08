@@ -16,6 +16,7 @@ import { AnimatePresence, motion, useAnimate, useReducedMotion } from 'motion/re
 import type { Variants } from 'motion/react'
 import { ArrowRight } from 'lucide-react'
 import AnimatedCounter from '../../animated-counter/animated-counter'
+import { ScrollArea } from '../../scroll-area/scroll-area'
 import SegmentedControl from '../../segmented-control/segmented-control'
 import { Switch } from '../../switch/switch'
 import { motionTokens } from '../../lib/motion-tokens'
@@ -99,6 +100,8 @@ const TextContext = createContext<NewsletterText>(DEFAULT_TEXT)
 const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/
 /** How far each issue behind the front one peeks out above it. */
 const STEP = 12
+/** The rows `.storiesViewport` is sized to; more than this and the list scrolls. */
+const VISIBLE_STORIES = 3
 
 function validate(value: string, text: NewsletterText): Problem | null {
   const email = value.trim()
@@ -155,6 +158,33 @@ function Swap({
 /** One issue: masthead, recipient line, subject, and three stories with thumbnails. */
 function IssueCard({ issue, name, to }: { issue: NewsletterIssue; name: string; to?: string }) {
   const text = useContext(TextContext)
+  const stories = (
+    <ul className={styles.stories}>
+      {issue.stories.map((story, index) => (
+        <li key={`${index}-${story.title}`} className={styles.story}>
+          {story.image ? (
+            <Image
+              className={styles.thumb}
+              src={story.image}
+              alt=""
+              width={88}
+              height={88}
+              sizes="44px"
+              style={story.imageStyle}
+            />
+          ) : (
+            <span className={styles.thumb} aria-hidden="true" />
+          )}
+          <span className={styles.storyTitle} dir="auto">
+            {story.title}
+          </span>
+          {story.minutes ? (
+            <span className={styles.minutes}>{text.minutes(story.minutes)}</span>
+          ) : null}
+        </li>
+      ))}
+    </ul>
+  )
   return (
     <>
       <header className={styles.issueHead}>
@@ -175,31 +205,16 @@ function IssueCard({ issue, name, to }: { issue: NewsletterIssue; name: string; 
       <h3 className={styles.subject} dir="auto">
         {issue.subject}
       </h3>
-      <ul className={styles.stories}>
-        {issue.stories.slice(0, 3).map((story) => (
-          <li key={story.title} className={styles.story}>
-            {story.image ? (
-              <Image
-                className={styles.thumb}
-                src={story.image}
-                alt=""
-                width={88}
-                height={88}
-                sizes="44px"
-                style={story.imageStyle}
-              />
-            ) : (
-              <span className={styles.thumb} aria-hidden="true" />
-            )}
-            <span className={styles.storyTitle} dir="auto">
-              {story.title}
-            </span>
-            {story.minutes ? (
-              <span className={styles.minutes}>{text.minutes(story.minutes)}</span>
-            ) : null}
-          </li>
-        ))}
-      </ul>
+      {issue.stories.length > VISIBLE_STORIES ? (
+        <ScrollArea
+          label={text.issueLabel(name, issue.number)}
+          viewportClassName={styles.storiesViewport}
+        >
+          {stories}
+        </ScrollArea>
+      ) : (
+        stories
+      )}
     </>
   )
 }
@@ -257,6 +272,7 @@ function IssueStack({
               className={styles.issue}
               data-depth={depth}
               aria-hidden={depth > 0 ? true : undefined}
+              inert={depth > 0}
               aria-label={depth === 0 ? text.issueLabel(publication.name, issue.number) : undefined}
               custom={placement}
               variants={stackVariants}
