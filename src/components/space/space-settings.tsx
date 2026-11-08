@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useSyncExternalStore } from 'react'
+import { useState } from 'react'
 import type { ReactNode } from 'react'
 import { useLocale, useTranslations } from 'next-intl'
 import { useRouter } from 'next/navigation'
@@ -16,22 +16,10 @@ import { Textarea } from '@/components/arc/textarea/textarea'
 import { ABOUT_MAX } from '@/lib/space-rules'
 import { RULES_MAX } from '@/lib/space-consent'
 import { spaceSettingsSetAction } from '@/lib/space-actions'
+import { useNarrow } from '@/lib/use-narrow'
 
 import { saveErrorKey } from './composer'
 import styles from './space.module.css'
-
-const NARROW = '(max-width: 719px)'
-const subscribeNarrow = (notify: () => void) => {
-  const query = window.matchMedia(NARROW)
-  query.addEventListener('change', notify)
-  return () => query.removeEventListener('change', notify)
-}
-export const useNarrow = () =>
-  useSyncExternalStore(
-    subscribeNarrow,
-    () => window.matchMedia(NARROW).matches,
-    () => false,
-  )
 
 /** Moderators only (spec §11): the posting level, who starts events, the About and Privacy and rules texts, and reopening an archived course space. */
 export function SpaceSettings({

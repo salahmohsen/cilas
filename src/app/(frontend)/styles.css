@@ -1404,6 +1404,30 @@ h1.article-title {
   width: min(calc(100vw - var(--space-8)), 40rem);
   border-radius: 1rem;
 }
+/* On phones, the bottom sheet: printed paper like the card, which runs edge
+   to edge. The articles scroll between the head and the strip. */
+.collection-sheet[role='dialog'] {
+  --border-strong: rgb(18 18 18 / 0.25);
+  background: #ffffff;
+  color: #121212;
+}
+.collection-sheet .collection-card {
+  border-inline: 0;
+  border-block-end: 0;
+  border-radius: 0;
+}
+.collection-sheet .collection-card-head,
+.collection-sheet .collection-card-strip {
+  position: sticky;
+  z-index: 1;
+  background: var(--poster-paper);
+}
+.collection-sheet .collection-card-head {
+  top: 0;
+}
+.collection-sheet .collection-card-strip {
+  bottom: 0;
+}
 /* The side card's row that opens it: the name and count on paper, the
    card's colour on hover, an arrow at the end. */
 .side-card-collection {

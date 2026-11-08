@@ -43,6 +43,11 @@ export interface BottomSheetProps {
   onDetentChange?: (index: number) => void
   closeLabel?: string
   className?: string
+  /**
+   * For content with its own title and close control: the sheet shows only the grabber above it,
+   * and with a single detent is as tall as the content, up to that detent. The title stays for screen readers.
+   */
+  bare?: boolean
   children: ReactNode
 }
 
@@ -145,6 +150,7 @@ function Sheet({
   onDetentChange,
   closeLabel = 'Close',
   className,
+  bare = false,
   children,
   onDismiss,
 }: Omit<BottomSheetProps, 'trigger' | 'open' | 'defaultOpen' | 'onOpenChange'> & {
@@ -601,6 +607,7 @@ function Sheet({
           className={[styles.sheet, className].filter(Boolean).join(' ')}
           style={style}
           data-expanded={expanded ? '' : undefined}
+          data-bare={bare ? '' : undefined}
           onKeyDown={sheetKey}
         >
           <div
@@ -621,19 +628,23 @@ function Sheet({
             >
               <span className={styles.grabberBar} aria-hidden="true" />
             </button>
-            <div className={styles.headRow}>
-              <div className={styles.headText}>
-                <DialogPrimitive.Title className={styles.title}>{title}</DialogPrimitive.Title>
-                {description ? (
-                  <DialogPrimitive.Description className={styles.description}>
-                    {description}
-                  </DialogPrimitive.Description>
-                ) : null}
+            {bare ? (
+              <DialogPrimitive.Title className={styles.srOnly}>{title}</DialogPrimitive.Title>
+            ) : (
+              <div className={styles.headRow}>
+                <div className={styles.headText}>
+                  <DialogPrimitive.Title className={styles.title}>{title}</DialogPrimitive.Title>
+                  {description ? (
+                    <DialogPrimitive.Description className={styles.description}>
+                      {description}
+                    </DialogPrimitive.Description>
+                  ) : null}
+                </div>
+                <DialogPrimitive.Close className={styles.close} aria-label={closeLabel}>
+                  <X size={16} strokeWidth={1.75} aria-hidden="true" />
+                </DialogPrimitive.Close>
               </div>
-              <DialogPrimitive.Close className={styles.close} aria-label={closeLabel}>
-                <X size={16} strokeWidth={1.75} aria-hidden="true" />
-              </DialogPrimitive.Close>
-            </div>
+            )}
           </div>
           <div ref={bodyRef} className={styles.body} onWheel={bodyWheel} onFocus={bodyFocus}>
             {children}

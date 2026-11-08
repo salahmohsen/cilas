@@ -10,7 +10,7 @@ import { MetricCard } from '@/components/arc/metric-card/metric-card'
 import { SortableDataTable } from '@/components/arc/sortable-data-table/sortable-data-table'
 import type { Participation } from '@/lib/spaces-data'
 
-import { useNarrow } from './space-settings'
+import { useNarrow } from '@/lib/use-narrow'
 import styles from './space.module.css'
 
 /**

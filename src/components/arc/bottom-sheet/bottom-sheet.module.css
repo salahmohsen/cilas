@@ -187,6 +187,18 @@
   }
 }
 
+.sheet[data-bare] {
+  height: auto;
+  max-height: calc(var(--sheet-max) * 100vh + var(--sheet-extension));
+  max-height: calc(var(--sheet-max) * var(--sheet-viewport, 100dvh) + var(--sheet-extension));
+}
+.sheet[data-bare] .header {
+  padding: var(--space-2) 0 var(--space-1);
+}
+.sheet[data-bare] .body {
+  padding: 0;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .header::after,
   .grabberBar,
