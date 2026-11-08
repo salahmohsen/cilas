@@ -245,10 +245,13 @@
   color: var(--text-muted);
   font-size: var(--text-sm);
 }
-/* The credit: its own line under the copyright row, quieter than it. */
+/* The credit: its own line under the copyright row, quieter than it. A
+   signature, so it stays on the left on right-to-left pages too. */
 .credit {
   flex-basis: 100%;
+  align-self: stretch;
   margin: 0;
+  text-align: left;
   color: var(--text-muted);
   font-size: var(--text-xs);
 }

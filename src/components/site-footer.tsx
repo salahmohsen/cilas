@@ -118,16 +118,16 @@ export function SiteFooter({
       }
       // Not translated: a signature, the same on every page.
       credit={
-        <span dir="ltr" lang="en">
+        <span className="footer-signature" dir="ltr" lang="en">
           Made with{' '}
           <Heart
             aria-label="love"
-            className="inline-block size-3 -translate-y-px fill-current text-red-500"
+            className="footer-signature-heart inline-block size-3 -translate-y-px fill-current text-red-500"
             role="img"
           />{' '}
           by{' '}
           <a
-            className="underline-offset-4 hover:underline"
+            className="footer-signature-name"
             href="https://salahmohsen.com"
             rel="noopener"
             target="_blank"
