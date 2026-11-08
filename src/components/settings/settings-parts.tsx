@@ -42,15 +42,18 @@ export function SettingsRow({
   id,
   label,
   hint,
+  stacked = false,
   children,
 }: {
   id: string
   label: string
   hint?: string
+  /** Puts the control under the words, for a control too wide to sit beside them. */
+  stacked?: boolean
   children: ReactNode
 }) {
   return (
-    <li className={styles.row}>
+    <li className={stacked ? `${styles.row} ${styles.rowStacked}` : styles.row}>
       <div className={styles.rowText}>
         <p id={`${id}-label`} className={styles.rowLabel}>
           {label}

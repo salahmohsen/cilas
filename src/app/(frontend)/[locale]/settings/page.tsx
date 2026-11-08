@@ -5,7 +5,7 @@ import { redirect } from 'next/navigation'
 import { getPayload } from 'payload'
 import { Bell, UserRound } from 'lucide-react'
 
-import { isAdminUser } from '@/access'
+import { isAdminUser, personOf } from '@/access'
 import { profileMessages } from '@/components/profile/load-messages'
 import { ProfileForm } from '@/components/profile/profile-form'
 import { NotificationsSection } from '@/components/settings/notifications-section'
@@ -15,6 +15,8 @@ import { switchesOf, readPreferences } from '@/lib/notification-preferences'
 import { pushConfig } from '@/lib/push/config'
 import { readProfile } from '@/lib/profile'
 import { currentReader } from '@/lib/reader'
+import { loadPrefs } from '@/lib/space-email-prefs'
+import { mode, spacesSettings } from '@/lib/spaces'
 
 import { removeProfilePhotoAction, saveProfileAction } from '@/lib/profile-actions'
 
@@ -36,6 +38,15 @@ export default async function SettingsPage({ params }: Props) {
   const profile = await readProfile(await getPayload({ config }), user)
   const messages = await profileMessages()
   const push = pushConfig()
+  const payload = await getPayload({ config })
+  // The space email choices show only where spaces exist for this account.
+  const spaceEmail =
+    personOf(user) !== null && mode(await spacesSettings(payload)) !== 'off'
+      ? await loadPrefs(payload, [user.id]).then((rows) => {
+          const row = rows.get(user.id)
+          return { stopped: row?.stopped ?? false, digest: row?.digest ?? 'weekly' }
+        })
+      : null
 
   return (
     <div className="mx-auto max-w-4xl px-4 py-12">
@@ -77,6 +88,7 @@ export default async function SettingsPage({ params }: Props) {
                     isAdminUser(user),
                   )}
                   pushPublicKey={push?.publicKey ?? null}
+                  spaceEmail={spaceEmail}
                 />
               </>
             ),

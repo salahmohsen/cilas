@@ -815,7 +815,16 @@
         "label": "New applications",
         "hint": "Someone applies to a course or programme. Shown to admins."
       }
-    }
+    },
+    "spaceGroup": "Spaces",
+    "spaceHint": "Email from the spaces you belong to. The bell and device alerts are set below and are not changed here.",
+    "spaceEmailLabel": "Email from spaces",
+    "spaceEmailHint": "Digests and announcements from every space. Turn it off to stop them all; your digest choice is kept.",
+    "spaceDigestLabel": "Email digest",
+    "spaceDigestHint": "What you missed in your spaces, only when there is something new. Sent at 16:00 Cairo time.",
+    "spaceDaily": "Every day",
+    "spaceWeekly": "Every Sunday",
+    "spaceDigestOff": "No digest"
   },
   "Login": {
     "metaTitle": "Sign in — CILAS",
@@ -1258,8 +1267,8 @@
     "digest": "Choose your email digest",
     "hide": "Hide",
     "progress": "<done></done> of {total} done",
-    "daily": "Daily",
-    "weekly": "Weekly",
+    "daily": "Daily at 16:00 Cairo time",
+    "weekly": "Weekly, Sundays at 16:00 Cairo time",
     "off": "No email",
     "save": "Save",
     "saveDigest": "Save digest",

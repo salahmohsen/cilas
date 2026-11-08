@@ -12,6 +12,8 @@ import {
 import { pushConfig } from '@/lib/push/config'
 import { removeSubscription, saveSubscription, subscriptionSchema } from '@/lib/push/subscriptions'
 import { currentReader } from '@/lib/reader'
+import { setSpaceEmail } from '@/lib/space-email-prefs'
+import * as z from 'zod'
 import { headers } from 'next/headers'
 
 export type SettingsResult = { ok: true } | { ok: false; error: 'auth' | 'invalid' | 'failed' }
@@ -38,6 +40,37 @@ export async function savePreferencesAction(changes: unknown): Promise<SettingsR
         ),
       },
       overrideAccess: true,
+    })
+    return { ok: true }
+  } catch {
+    return { ok: false, error: 'failed' }
+  }
+}
+
+const spaceEmailSchema = z
+  .object({
+    stopped: z.boolean().optional(),
+    digest: z.enum(['daily', 'weekly', 'off']).optional(),
+  })
+  .strict()
+
+/**
+ * Saves the account's space email choices (Settings → Notifications): the one
+ * switch that stops every space email, and the digest frequency, which stays
+ * saved while the switch is off. Bell and push notifications are not touched.
+ */
+export async function saveSpaceEmailAction(
+  changes: unknown,
+  locale: string,
+): Promise<SettingsResult> {
+  const user = await currentReader()
+  if (!user) return { ok: false, error: 'auth' }
+  const parsed = spaceEmailSchema.safeParse(changes)
+  if (!parsed.success) return { ok: false, error: 'invalid' }
+  try {
+    await setSpaceEmail(await getPayload({ config }), user.id, {
+      ...parsed.data,
+      locale: localeOf(locale),
     })
     return { ok: true }
   } catch {
