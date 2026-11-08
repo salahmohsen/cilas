@@ -1804,6 +1804,15 @@ export interface Newsletter {
   send_to?: (number | null) | MailingList;
   sent_at?: string | null;
   broadcast_id?: string | null;
+  stats?:
+    | {
+        [k: string]: unknown;
+      }
+    | unknown[]
+    | string
+    | number
+    | boolean
+    | null;
   updatedAt: string;
   createdAt: string;
   _status?: ('draft' | 'published') | null;
@@ -3543,6 +3552,7 @@ export interface NewslettersSelect<T extends boolean = true> {
   send_to?: T;
   sent_at?: T;
   broadcast_id?: T;
+  stats?: T;
   updatedAt?: T;
   createdAt?: T;
   _status?: T;

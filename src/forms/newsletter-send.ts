@@ -7,6 +7,7 @@ import { newsletterMail } from '@/emails/newsletter'
 import { getEmailSettings } from '@/emails/settings'
 import { env } from '@/env'
 import { sendBroadcast } from '@/lib/broadcast'
+import { fetchBroadcastStats, type BroadcastStats } from '@/lib/broadcast-stats'
 import { syncList } from '@/lib/list-sync'
 import { LIST_OFF, mailingList, newsletterList } from '@/lib/newsletter-list'
 import { accountContactCount, FREE_CONTACT_LIMIT } from '@/lib/resend-contacts'
@@ -106,7 +107,42 @@ const send = guarded(async (req, id) => {
   return Response.json({ ok: true, broadcastId })
 })
 
+/**
+ * Resend's numbers for this issue's send. Resend keeps them for a limited time,
+ * so each good answer is saved on the issue, without a new version, and the
+ * saved copy answers once Resend has nothing left or is unreachable.
+ */
+const stats = guarded(async (req, id) => {
+  const issue = await req.payload.findByID({
+    collection: 'newsletters',
+    id,
+    depth: 0,
+    overrideAccess: true,
+    req,
+  })
+  if (!issue.broadcast_id || !issue.sent_at) return Response.json({ stats: null })
+  const saved = (issue.stats ?? null) as BroadcastStats | null
+  let fresh: BroadcastStats
+  try {
+    fresh = await fetchBroadcastStats(issue.broadcast_id, issue.sent_at)
+  } catch (error) {
+    if (!saved) throw error
+    req.payload.logger.warn({ err: error, msg: `Newsletter ${id}: showing saved statistics` })
+    return Response.json({ stats: saved })
+  }
+  if (!fresh.sent) return Response.json({ stats: saved })
+  await req.payload.db.updateOne({
+    collection: 'newsletters',
+    id,
+    data: { stats: fresh },
+    req,
+    returning: false,
+  })
+  return Response.json({ stats: fresh })
+})
+
 export const newsletterEndpoints = [
   { path: '/:id/test', method: 'post' as const, handler: test },
   { path: '/:id/send', method: 'post' as const, handler: send },
+  { path: '/:id/stats', method: 'get' as const, handler: stats },
 ]

@@ -1,0 +1,48 @@
+.stats {
+  display: grid;
+  gap: var(--space-6);
+  padding-block: var(--space-4);
+}
+.metrics {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: var(--space-4);
+}
+.split {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: var(--space-6);
+  align-items: start;
+}
+.rates {
+  display: grid;
+  gap: var(--space-4);
+}
+.heading {
+  margin: 0 0 var(--space-3);
+  font-size: var(--text-sm);
+  font-weight: 500;
+}
+.links {
+  display: grid;
+  gap: var(--space-2);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-size: var(--text-sm);
+}
+.link {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--space-4);
+}
+.url {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.note {
+  margin: 0;
+  color: var(--text-muted);
+  font-size: var(--text-xs);
+}

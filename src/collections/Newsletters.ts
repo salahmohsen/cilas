@@ -107,6 +107,19 @@ export const Newsletters: CollectionConfig = {
               admin: { readOnly: true, date: { pickerAppearance: 'dayAndTime' } },
             },
             { name: 'broadcast_id', type: 'text', admin: { readOnly: true } },
+            { name: 'stats', type: 'json', admin: { hidden: true } },
+          ],
+        },
+        {
+          label: 'Statistics',
+          fields: [
+            {
+              name: 'statistics',
+              type: 'ui',
+              admin: {
+                components: { Field: '/components/admin/newsletter-stats#NewsletterStats' },
+              },
+            },
           ],
         },
       ],
