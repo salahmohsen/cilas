@@ -14,21 +14,26 @@ export const LegacyRelationshipFeatureClient: typeof RelationshipFeatureClient =
   }
 }
 
+// Saved issues may hold these two, and the email links them; they are not offered for new content.
+const NOT_OFFERED = /personProfile|movie/
+
 export const EmailBlocksFeatureClient: typeof BlocksFeatureClient = (props) => {
   const provider = BlocksFeatureClient(props)
   const native = provider.feature
+  type Group = { items: { key: string }[] }
+  const offered = <G extends Group>(groups: G[] = []): G[] =>
+    groups.map((group) => ({
+      ...group,
+      items: group.items.filter((item) => !NOT_OFFERED.test(item.key)),
+    }))
   return {
     ...provider,
     feature: (args) => {
       const feature = typeof native === 'function' ? native(args) : native
       return {
         ...feature,
-        slashMenu: {
-          groups: feature.slashMenu?.groups?.filter((group) => group.key !== 'blocks') ?? [],
-        },
-        toolbarFixed: {
-          groups: feature.toolbarFixed?.groups?.filter((group) => group.key !== 'blocks') ?? [],
-        },
+        slashMenu: { groups: offered(feature.slashMenu?.groups) },
+        toolbarFixed: { groups: offered(feature.toolbarFixed?.groups) },
       }
     },
   }

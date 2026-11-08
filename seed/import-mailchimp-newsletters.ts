@@ -12,25 +12,17 @@ const { default: config } = await import('../src/payload.config')
 
 /**
  * One-off: fills newsletter drafts from the old Mailchimp campaigns.
- * Existing drafts are updated by id, keeping title, date, slug and
- * legacy_url; campaigns with no draft become new drafts, matched by slug.
- * Nothing is published or sent. Safe to run again.
+ * Existing issues keep their title, date, slug, legacy_url and status;
+ * campaigns with no issue become new drafts, matched by slug. Nothing is
+ * sent. Safe to run again.
  *
- *   npx tsx seed/import-mailchimp-newsletters.ts <plan.json> <imagemap.json> [only-keys]
+ *   npx tsx seed/import-mailchimp-newsletters.ts <plan.json> <imagemap.json> <layout-dir> [only-keys]
  */
 
 type Run = { t: string; b: boolean; i: boolean; a: string | null }
-type Text =
-  | { k: 'p' | 'h'; runs: Run[]; text: string }
-  | { k: 'hr' }
-  | { k: 'inline'; src: string; alt: string }
-type Img = { k: 'img'; src: string; alt: string; caption?: string | null; body?: Text[] }
-type Pick = { k: 'pick'; course: number; note: string | null }
-type Section =
-  | { t: 'text'; x: Text[] }
-  | { t: 'gallery'; x: Img[] }
-  | { t: 'image'; x: Img[] }
-  | { t: 'picks'; x: Pick[] }
+type Img = { src: string; alt: string; caption?: string | null }
+type Pick = { course: number; note: string | null }
+type Text = { k: 'p' | 'h'; runs: Run[]; text: string }
 type Plan = {
   kind: 'mc' | 'draft'
   key: number
@@ -40,19 +32,37 @@ type Plan = {
   cover: string | null
   preheader: string | null
   cover_caption: string | null
-  body: Text[]
-  sections: Section[]
 }
 
-const [planPath, mapPath, only] = process.argv.slice(2)
-if (!planPath || !mapPath) throw new Error('Pass the plan and the image map.')
-if (!process.env.R2_PUBLIC_URL?.startsWith('https://pub-'))
-  throw new Error('Not the production bucket.')
+type LayoutItem =
+  | { kind: 'paragraph' | 'heading'; runs: Run[]; text: string }
+  | ({ kind: 'image' } & Img)
+  | ({ kind: 'pick' } & Pick)
+  | { kind: 'divider' }
+type LayoutEntry =
+  | number
+  | { figure: number; caption?: number[] }
+  | { gallery: number[]; columns: number }
+  | { columns: number[][]; ratio: string }
+  | { quote: number; attribution?: string }
+type Layout = { items: LayoutItem[]; sections: { items: LayoutEntry[] }[] }
+
+/** One thing a body can hold, ready to become a node. */
+type Item =
+  | Text
+  | { k: 'figure'; img: Img }
+  | { k: 'gallery'; images: Img[]; columns: number }
+  | { k: 'picks'; picks: Pick[] }
+  | { k: 'columns'; columns: Item[][]; ratio: string }
+  | { k: 'quote'; text: string; attribution?: string }
+
+const [planPath, mapPath, layoutDir, only] = process.argv.slice(2)
+if (!planPath || !mapPath || !layoutDir) throw new Error('Pass the plan, image map and layouts.')
 
 const plans = JSON.parse(readFileSync(planPath, 'utf8')) as Plan[]
 const files = JSON.parse(readFileSync(mapPath, 'utf8')) as Record<string, string>
 const wanted = only ? new Set(only.split(',')) : null
-// Already published in production as "Join CILAS's Spring semester of 2026".
+// Already in the archive as "Join CILAS's Spring semester of 2026".
 const skip = new Set(['mc:1'])
 
 const payload: Payload = await getPayload({ config })
@@ -66,6 +76,8 @@ const safeUrl = (raw: string | null) => {
   return url && /^(https?:|mailto:)/.test(url) && !/\s/.test(url) ? url : null
 }
 
+const nodeId = () => randomUUID().replaceAll('-', '').slice(0, 24)
+
 const textNode = (run: Run) => ({
   type: 'text',
   text: run.t,
@@ -76,13 +88,12 @@ const textNode = (run: Run) => ({
   version: 1,
 })
 
-const inline = (runs: Run[], direction: 'ltr' | 'rtl') => {
-  const clean = runs.filter((run) => run.t.length)
-  const nodes: unknown[] = []
-  for (const run of clean) {
-    const url = safeUrl(run.a)
-    nodes.push(
-      url
+const inline = (runs: Run[], direction: 'ltr' | 'rtl') =>
+  runs
+    .filter((run) => run.t.length)
+    .map((run) => {
+      const url = safeUrl(run.a)
+      return url
         ? {
             type: 'link',
             fields: { linkType: 'custom', url, newTab: true },
@@ -92,73 +103,22 @@ const inline = (runs: Run[], direction: 'ltr' | 'rtl') => {
             direction,
             children: [textNode(run)],
           }
-        : textNode(run),
-    )
-  }
-  return nodes
-}
+        : textNode(run)
+    })
 
 const mediaIds = new Map<string, number>()
 
-const nodeOf = (item: Text) => {
-  if (item.k === 'hr') return { type: 'horizontalrule', version: 1 }
-  if (item.k === 'inline') {
-    return {
-      type: 'upload',
-      id: randomUUID().replaceAll('-', '').slice(0, 24),
-      version: 3,
-      format: '',
-      fields: null,
-      relationTo: 'media',
-      value: mediaIds.get(item.src),
-    }
-  }
-  const own = rtl(item.text) ? 'rtl' : 'ltr'
-  const base = {
-    format: '',
-    indent: 0,
-    version: 1,
-    direction: own,
-    children: inline(item.runs, own),
-  }
-  return item.k === 'h'
-    ? { ...base, type: 'heading', tag: 'h2' }
-    : { ...base, type: 'paragraph', textFormat: 0, textStyle: '' }
-}
-
-const withMedia = async (items: Text[], title: string) => {
-  for (const item of items) if (item.k === 'inline') await mediaFor(item.src, item.alt || title)
-  // An image whose file failed to download has no id: drop it rather than save a broken node.
-  return items.filter((item) => item.k !== 'inline' || mediaIds.has(item.src))
-}
-
-const richText = async (raw: Text[], title: string): Promise<NonNullable<Newsletter['body']>> => {
-  const items = await withMedia(raw, title)
-  const words = items.flatMap((item) => ('text' in item ? [item.text] : [])).join(' ')
-  return {
-    root: {
-      type: 'root',
-      format: '',
-      indent: 0,
-      version: 1,
-      direction: rtl(words) ? 'rtl' : 'ltr',
-      children: items.map(nodeOf),
-    },
-  } as unknown as NonNullable<Newsletter['body']>
-}
-
 /** A caption is the image's description, so it replaces the alt; otherwise an existing alt stays. */
-const mediaFor = async (
-  src: string,
-  alt: string,
-  caption?: string | null,
-): Promise<number | null> => {
+const mediaFor = async (src: string, alt: string, caption?: string | null) => {
   const path = files[src]
   if (!path) return null
-  const filename = basename(path)
+  const known = mediaIds.get(src)
+  if (known && !caption) return known
   const found = await payload.find({
     collection: 'media',
-    where: { filename: { equals: filename } },
+    // Stored names are rewritten (mc-abc.jpg becomes mc-abc-1.webp), so match the stem.
+    where: { filename: { like: basename(path).replace(/\.[^.]+$/, '') } },
+    sort: 'id',
     depth: 0,
     limit: 1,
     overrideAccess: true,
@@ -186,96 +146,234 @@ const mediaFor = async (
   return Number(id)
 }
 
-const sectionOf = async (section: Section, title: string) => {
-  if (section.t === 'text') {
-    return { blockType: 'text' as const, body: await richText(section.x, title) }
-  }
-  if (section.t === 'picks') {
-    return {
-      blockType: 'picks' as const,
-      items: section.x.map((pick) => ({
-        type: 'course' as const,
-        course: pick.course,
-        note: pick.note,
-      })),
+const block = (fields: Record<string, unknown>) => ({
+  type: 'block',
+  version: 2,
+  format: '',
+  fields: { id: nodeId(), blockName: '', ...fields },
+})
+
+const richText = (children: unknown[], words: string) => ({
+  root: {
+    type: 'root',
+    format: '',
+    indent: 0,
+    version: 1,
+    direction: rtl(words) ? 'rtl' : 'ltr',
+    children,
+  },
+})
+
+const nodeFor = async (item: Item, title: string): Promise<unknown> => {
+  switch (item.k) {
+    case 'figure': {
+      const image = await mediaFor(item.img.src, item.img.alt || title, item.img.caption)
+      return image
+        ? block({ blockType: 'newsletterImage', image, caption: item.img.caption ?? null })
+        : null
+    }
+    case 'gallery': {
+      const images = []
+      for (const img of item.images) {
+        const image = await mediaFor(img.src, img.alt || title, img.caption)
+        if (image) images.push({ id: nodeId(), image, caption: img.caption ?? null })
+      }
+      return images.length
+        ? block({ blockType: 'gallery', columnCount: String(item.columns), images })
+        : null
+    }
+    case 'picks':
+      return block({
+        blockType: 'newsletterPicks',
+        items: item.picks.map((pick) => ({
+          id: nodeId(),
+          type: 'course',
+          course: pick.course,
+          note: pick.note,
+        })),
+      })
+    case 'quote':
+      return block({
+        blockType: 'newsletterQuote',
+        text: item.text,
+        attribution: item.attribution ?? null,
+      })
+    case 'columns': {
+      const fields: Record<string, unknown> = {}
+      const names = ['first', 'second', 'third']
+      for (const [i, column] of item.columns.entries()) {
+        const children = await nodesFor(column, title)
+        fields[names[i] as string] = richText(children, wordsOf(column))
+      }
+      return block({
+        blockType: 'columns',
+        columnCount: String(item.columns.length),
+        ratio: item.ratio,
+        ...fields,
+      })
+    }
+    default: {
+      const direction = rtl(item.text) ? 'rtl' : 'ltr'
+      const base = {
+        format: '',
+        indent: 0,
+        version: 1,
+        direction,
+        children: inline(item.runs, direction),
+      }
+      return item.k === 'h'
+        ? { ...base, type: 'heading', tag: 'h2' }
+        : { ...base, type: 'paragraph', textFormat: 0, textStyle: '' }
     }
   }
-  if (section.t === 'image') {
-    const [img] = section.x
-    if (!img) return null
-    const image = await mediaFor(img.src, img.alt || title, img.caption)
-    if (!image) return null
-    return {
-      blockType: 'image' as const,
-      image,
-      caption: img.caption ?? null,
-      body: img.body?.length ? await richText(img.body, title) : null,
-    }
-  }
-  const images: { image: number }[] = []
-  for (const img of section.x) {
-    const image = await mediaFor(img.src, img.alt || title)
-    if (image) images.push({ image })
-  }
-  return images.length ? { blockType: 'gallery' as const, columns: '2' as const, images } : null
 }
+
+const wordsOf = (items: Item[]) =>
+  items.flatMap((item) => ('text' in item ? [item.text] : [])).join(' ')
+
+const nodesFor = async (items: Item[], title: string) => {
+  const nodes = []
+  for (const item of items) {
+    const node = await nodeFor(item, title)
+    if (node) nodes.push(node)
+  }
+  return nodes
+}
+
+const textOf = (item: LayoutItem | undefined) => (item && 'text' in item ? item.text : '')
+
+const itemFor = (layout: Layout, id: number, inColumn: boolean): Item | null => {
+  const item = layout.items[id]
+  if (!item || item.kind === 'divider' || item.kind === 'pick') return null
+  if (item.kind === 'image') {
+    // A column's editor has no Image block, so one image there is a one-column gallery.
+    return inColumn ? { k: 'gallery', images: [item], columns: 1 } : { k: 'figure', img: item }
+  }
+  return { k: item.kind === 'heading' ? 'h' : 'p', runs: item.runs, text: item.text }
+}
+
+const entryItems = (layout: Layout, entries: LayoutEntry[]): Item[] => {
+  const out: Item[] = []
+  for (const entry of entries) {
+    if (typeof entry === 'number') {
+      const item = layout.items[entry]
+      if (item?.kind === 'pick') {
+        const last = out.at(-1)
+        if (last?.k === 'picks') last.picks.push(item)
+        else out.push({ k: 'picks', picks: [item] })
+      } else {
+        const built = itemFor(layout, entry, false)
+        if (built) out.push(built)
+      }
+    } else if ('figure' in entry) {
+      const img = layout.items[entry.figure] as Img
+      const written = (entry.caption ?? []).map((id) => textOf(layout.items[id])).join(' ')
+      out.push({ k: 'figure', img: { ...img, caption: written || img.caption } })
+    } else if ('gallery' in entry) {
+      out.push({
+        k: 'gallery',
+        images: entry.gallery.map((id) => layout.items[id] as Img),
+        columns: entry.columns,
+      })
+    } else if ('columns' in entry) {
+      out.push({
+        k: 'columns',
+        ratio: entry.ratio,
+        columns: entry.columns.map((column) =>
+          column.flatMap((id) => {
+            const built = itemFor(layout, id, true)
+            return built ? [built] : []
+          }),
+        ),
+      })
+    } else {
+      out.push({
+        k: 'quote',
+        text: textOf(layout.items[entry.quote]),
+        attribution: entry.attribution,
+      })
+    }
+  }
+  return out
+}
+
+const sectionsOf = async (plan: Plan) => {
+  const layout = JSON.parse(
+    readFileSync(`${layoutDir}/${plan.kind}-${plan.key}.layout.json`, 'utf8'),
+  ) as Layout
+  const sections = []
+  for (const section of layout.sections) {
+    const items = entryItems(layout, section.items)
+    const children = await nodesFor(items, plan.title)
+    if (children.length) sections.push({ body: richText(children, wordsOf(items)) })
+  }
+  return sections as unknown as NonNullable<Newsletter['sections']>
+}
+
+const coverCaption = (text: string | null) =>
+  text
+    ? (richText(
+        [
+          {
+            type: 'paragraph',
+            version: 1,
+            format: '',
+            indent: 0,
+            direction: rtl(text) ? 'rtl' : 'ltr',
+            textFormat: 0,
+            textStyle: '',
+            children: [textNode({ t: text, b: false, i: false, a: null })],
+          },
+        ],
+        text,
+      ) as unknown as Newsletter['cover_caption'])
+    : null
 
 let done = 0
 for (const plan of plans) {
   const key = `${plan.kind}:${plan.key}`
   if (skip.has(key) || (wanted && !wanted.has(key))) continue
 
-  const sections = []
-  for (const section of plan.sections) {
-    const built = await sectionOf(section, plan.title)
-    if (built) sections.push(built)
-  }
   const data = {
-    _status: 'draft' as const,
-    body: plan.body.length ? await richText(plan.body, plan.title) : undefined,
-    sections,
-    cover_image: plan.cover
-      ? await mediaFor(plan.cover, plan.title, plan.cover_caption)
-      : undefined,
-    cover_caption: plan.cover_caption,
+    sections: await sectionsOf(plan),
+    cover_image: plan.cover ? await mediaFor(plan.cover, plan.title, null) : undefined,
+    cover_caption: coverCaption(plan.cover_caption),
     sent_at: new Date(plan.date).toISOString(),
     ...(plan.preheader ? { preheader: plan.preheader } : {}),
   }
 
-  // draft: false writes the main row as well as a version; _status keeps it a draft.
+  // draft: false writes the main row as well as a version; _status keeps what the issue is.
   const write = { draft: false, locale: 'en' as const, overrideAccess: true }
-  if (plan.kind === 'draft') {
-    const current = await payload.findByID({
+  const { docs } = await payload.find({
+    collection: 'newsletters',
+    where: plan.kind === 'draft' ? { id: { equals: plan.key } } : { slug: { equals: plan.slug } },
+    depth: 0,
+    limit: 1,
+    overrideAccess: true,
+  })
+  const found = docs[0]
+  if (found) {
+    await payload.update({
       collection: 'newsletters',
-      id: plan.key,
-      depth: 0,
-      overrideAccess: true,
+      id: found.id,
+      data: { ...data, _status: found._status ?? 'draft' },
+      ...write,
     })
-    if (current._status !== 'draft') throw new Error(`Issue ${plan.key} is not a draft.`)
-    await payload.update({ collection: 'newsletters', id: plan.key, data, ...write })
   } else {
-    const existing = await payload.find({
+    await payload.create({
       collection: 'newsletters',
-      where: { slug: { equals: plan.slug } },
-      depth: 0,
-      limit: 1,
-      overrideAccess: true,
+      data: {
+        ...data,
+        _status: 'draft',
+        title: plan.title,
+        slug: plan.slug,
+        issue_date: plan.date,
+      },
+      ...write,
     })
-    const found = existing.docs[0]
-    // Issue 56 was published by hand and asked to be fixed; it stays published.
-    if (found && found._status !== 'draft' && key !== 'mc:0')
-      throw new Error(`${plan.slug} is published.`)
-    if (found?._status === 'published') data._status = 'published' as never
-    if (found) await payload.update({ collection: 'newsletters', id: found.id, data, ...write })
-    else
-      await payload.create({
-        collection: 'newsletters',
-        data: { ...data, title: plan.title, slug: plan.slug, issue_date: plan.date },
-        ...write,
-      })
   }
   done += 1
-  console.log(`done ${key} ${plan.title}: ${sections.length} sections`)
+  console.log(`done ${key} ${plan.title}: ${data.sections.length} sections`)
 }
 
 console.log(`finished ${done}, media ${mediaIds.size}`)

@@ -14,6 +14,17 @@ import { DEFAULT_TEXTS, fill, paragraphs, withDefaults } from '@/emails/settings
 import { acceptanceMail, resetMail, reviewMail } from '@/emails/transactional'
 import { sendBroadcast } from '@/lib/broadcast'
 
+const bodyOf = (intro: { root: { children: unknown[] } }, ...blocks: Record<string, unknown>[]) => [
+  {
+    body: {
+      root: {
+        type: 'root',
+        children: [...intro.root.children, ...blocks.map((fields) => ({ type: 'block', fields }))],
+      },
+    },
+  },
+]
+
 describe('fill', () => {
   it('puts values into {placeholders} and leaves unknown ones', () => {
     expect(fill('Dear {name}, see {title}. {other}', { name: 'Mona', title: 'Bridge' })).toBe(
@@ -217,10 +228,10 @@ describe('newsletterMail', () => {
       {
         title: 'October at CILAS',
         preheader: 'Two new courses',
-        body: paragraph('مرحبا بكم في سيلاس'),
-        sections: [
+        sections: bodyOf(
+          paragraph('مرحبا بكم في سيلاس'),
           {
-            blockType: 'picks',
+            blockType: 'newsletterPicks',
             items: [
               {
                 type: 'course',
@@ -261,14 +272,14 @@ describe('newsletterMail', () => {
           },
           {
             blockType: 'gallery',
-            columns: '3',
+            columnCount: '3',
             images: [
               { image: { url: 'https://cdn.test/a.jpg', alt: 'A' }, caption: 'يوم في سيلاس' },
               { image: 4 },
             ],
           },
-          { blockType: 'quote', text: 'Learning is a commons.', attribution: 'A fellow' },
-        ],
+          { blockType: 'newsletterQuote', text: 'Learning is a commons.', attribution: 'A fellow' },
+        ),
       },
       settings,
       { unsubscribe: '{{{RESEND_UNSUBSCRIBE_URL}}}' },

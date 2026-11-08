@@ -23,7 +23,7 @@ const guarded =
     try {
       return await run(req, id)
     } catch (error) {
-      req.payload.logger.error({ err: error, msg: `Newsletter ${id} failed to send` })
+      req.payload.logger.error({ err: error, msg: `Newsletter ${id} request failed` })
       return Response.json({ error: (error as Error).message }, { status: 502 })
     }
   }

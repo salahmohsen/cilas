@@ -11,6 +11,7 @@ import { Mention } from '@/blocks/mention'
 import { CardStack } from '@/blocks/card-stack'
 import { Footnote } from '@/blocks/footnote'
 import { RelatedContent } from '@/blocks/related-content'
+import { NewsletterImage, NewsletterPicks, NewsletterQuote } from '@/blocks/newsletter-blocks'
 
 const withClient = <P, S, C>(
   provider: FeatureProviderServer<P, S, C>,
@@ -40,7 +41,9 @@ export const contentBlocksFeature = (kind: 'default' | 'article' | 'email') =>
       PersonProfile,
       Movie,
       Gallery,
-      ...(kind === 'email' ? [] : [RelatedContent]),
+      ...(kind === 'email'
+        ? [NewsletterImage, NewsletterPicks, NewsletterQuote]
+        : [RelatedContent]),
     ],
     inlineBlocks: [...(kind === 'article' ? [Footnote] : []), Mention],
   })

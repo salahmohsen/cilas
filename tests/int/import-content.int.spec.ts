@@ -334,7 +334,7 @@ describe('publishing content import', () => {
       })
     ).docs[0]
     expect(issue._status).toBe('draft')
-    expect(plain(issue.body)).toContain('Dear friends.')
+    expect(plain(issue.sections?.[0]?.body)).toContain('Dear friends.')
   })
 
   it('creates nothing new on a second run', async () => {

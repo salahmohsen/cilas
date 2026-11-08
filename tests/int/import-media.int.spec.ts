@@ -305,8 +305,8 @@ describe('importMedia', () => {
       draft: true,
       overrideAccess: true,
     })
-    expect(JSON.stringify(issue.docs[0].body)).toContain(docs[0].url as string)
-    expect(JSON.stringify(issue.docs[0].body)).not.toContain('ci-las.org')
+    expect(JSON.stringify(issue.docs[0].sections)).toContain(docs[0].url as string)
+    expect(JSON.stringify(issue.docs[0].sections)).not.toContain('ci-las.org')
 
     const head = await fetch(docs[0].url as string, { method: 'HEAD' })
     expect(head.status).toBe(200)

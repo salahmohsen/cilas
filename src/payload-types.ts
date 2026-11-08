@@ -1755,16 +1755,7 @@ export interface Newsletter {
   /**
    * Shown under the cover image.
    */
-  cover_caption?: string | null;
-  legacy_url?: string | null;
-  /**
-   * The line mail apps show after the subject. Empty: the title.
-   */
-  preheader?: string | null;
-  /**
-   * The intro, above the picks.
-   */
-  body?: {
+  cover_caption?: {
     root: {
       type: string;
       children: {
@@ -1779,109 +1770,33 @@ export interface Newsletter {
     };
     [k: string]: unknown;
   } | null;
+  legacy_url?: string | null;
   /**
-   * After the intro, in this order. Keep the email short: Gmail cuts emails over about 100 KB, so use 8 picks or fewer and a few gallery images.
+   * The line mail apps show after the subject. Empty: the title.
+   */
+  preheader?: string | null;
+  /**
+   * Each section is one card in the email. Press / in its body to add columns, images, galleries, picks or a quote.
    */
   sections?:
-    | (
-        | {
-            heading?: string | null;
-            items?:
-              | {
-                  /**
-                   * Choose the type first; the next field lists only that type.
-                   */
-                  type: 'course' | 'article' | 'publication' | 'cycle' | 'event' | 'programme';
-                  course?: (number | null) | Course;
-                  article?: (number | null) | Article;
-                  publication?: (number | null) | Publication;
-                  cycle?: (number | null) | Cycle;
-                  event?: (number | null) | Event;
-                  programme?: (number | null) | Programme;
-                  /**
-                   * One line under the card, e.g. “Applications close 3 Nov”.
-                   */
-                  note?: string | null;
-                  id?: string | null;
-                }[]
-              | null;
-            id?: string | null;
-            blockName?: string | null;
-            blockType: 'picks';
-          }
-        | {
-            image: number | Media;
-            /**
-             * Shown under the image.
-             */
-            caption?: string | null;
-            /**
-             * Text that belongs to this image, under the caption.
-             */
-            body?: {
-              root: {
-                type: string;
-                children: {
-                  type: any;
-                  version: number;
-                  [k: string]: unknown;
-                }[];
-                direction: ('ltr' | 'rtl') | null;
-                format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
-                indent: number;
-                version: number;
-              };
+    | {
+        body?: {
+          root: {
+            type: string;
+            children: {
+              type: any;
+              version: number;
               [k: string]: unknown;
-            } | null;
-            id?: string | null;
-            blockName?: string | null;
-            blockType: 'image';
-          }
-        | {
-            heading?: string | null;
-            columns?: ('2' | '3') | null;
-            images?:
-              | {
-                  image: number | Media;
-                  caption?: string | null;
-                  id?: string | null;
-                }[]
-              | null;
-            id?: string | null;
-            blockName?: string | null;
-            blockType: 'gallery';
-          }
-        | {
-            text: string;
-            /**
-             * Who said it, e.g. “Ghosoun Ismail, fellow”.
-             */
-            attribution?: string | null;
-            id?: string | null;
-            blockName?: string | null;
-            blockType: 'quote';
-          }
-        | {
-            body: {
-              root: {
-                type: string;
-                children: {
-                  type: any;
-                  version: number;
-                  [k: string]: unknown;
-                }[];
-                direction: ('ltr' | 'rtl') | null;
-                format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
-                indent: number;
-                version: number;
-              };
-              [k: string]: unknown;
-            };
-            id?: string | null;
-            blockName?: string | null;
-            blockType: 'text';
-          }
-      )[]
+            }[];
+            direction: ('ltr' | 'rtl') | null;
+            format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+            indent: number;
+            version: number;
+          };
+          [k: string]: unknown;
+        } | null;
+        id?: string | null;
+      }[]
     | null;
   /**
    * Empty: the signup list. A synced list is brought up to date just before sending.
@@ -1892,6 +1807,98 @@ export interface Newsletter {
   updatedAt: string;
   createdAt: string;
   _status?: ('draft' | 'published') | null;
+}
+/**
+ * Who newsletters go to. Each list is a segment in Resend; a person on several lists counts once toward the plan’s contacts.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "mailing-lists".
+ */
+export interface MailingList {
+  id: number;
+  name: string;
+  /**
+   * Signup form: visitors join from the site. Synced from members: CILAS accounts, picked below; people without an account are left out.
+   */
+  source: 'signup' | 'members';
+  /**
+   * An account joins when it matches any of these.
+   */
+  members?: {
+    everyone?: boolean | null;
+    /**
+     * Every account with one of these roles, e.g. all fellows.
+     */
+    roles?: ('super_admin' | 'admin' | 'fellow' | 'member' | 'non_degree_seeking')[] | null;
+    courses?: (number | Course)[] | null;
+    course_people?: ('students' | 'fellows')[] | null;
+    /**
+     * Everyone with a place in the programme: students and resident fellows of a Bridge cohort.
+     */
+    programmes?: (number | Programme)[] | null;
+    users?: (number | User)[] | null;
+  };
+  /**
+   * Empty: a segment is made in Resend on save. Paste one to use a segment you have.
+   */
+  segment_id?: string | null;
+  /**
+   * Optional: the kind of email this list gets (Resend → Contacts → Topics). People who opt out of the topic are skipped, and keep their other lists.
+   */
+  topic_id?: string | null;
+  member_count?: number | null;
+  last_synced?: string | null;
+  sync_note?: string | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "redirects".
+ */
+export interface Redirect {
+  id: number;
+  from: string;
+  to?: {
+    type?: ('reference' | 'custom') | null;
+    reference?:
+      | ({
+          relationTo: 'courses';
+          value: number | Course;
+        } | null)
+      | ({
+          relationTo: 'cycles';
+          value: number | Cycle;
+        } | null)
+      | ({
+          relationTo: 'programmes';
+          value: number | Programme;
+        } | null)
+      | ({
+          relationTo: 'publications';
+          value: number | Publication;
+        } | null)
+      | ({
+          relationTo: 'articles';
+          value: number | Article;
+        } | null)
+      | ({
+          relationTo: 'events';
+          value: number | Event;
+        } | null)
+      | ({
+          relationTo: 'press';
+          value: number | Press;
+        } | null)
+      | ({
+          relationTo: 'people';
+          value: number | Person;
+        } | null);
+    url?: string | null;
+  };
+  type: '301' | '302';
+  updatedAt: string;
+  createdAt: string;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -2075,98 +2082,6 @@ export interface Event {
   updatedAt: string;
   createdAt: string;
   _status?: ('draft' | 'published') | null;
-}
-/**
- * Who newsletters go to. Each list is a segment in Resend; a person on several lists counts once toward the plan’s contacts.
- *
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "mailing-lists".
- */
-export interface MailingList {
-  id: number;
-  name: string;
-  /**
-   * Signup form: visitors join from the site. Synced from members: CILAS accounts, picked below; people without an account are left out.
-   */
-  source: 'signup' | 'members';
-  /**
-   * An account joins when it matches any of these.
-   */
-  members?: {
-    everyone?: boolean | null;
-    /**
-     * Every account with one of these roles, e.g. all fellows.
-     */
-    roles?: ('super_admin' | 'admin' | 'fellow' | 'member' | 'non_degree_seeking')[] | null;
-    courses?: (number | Course)[] | null;
-    course_people?: ('students' | 'fellows')[] | null;
-    /**
-     * Everyone with a place in the programme: students and resident fellows of a Bridge cohort.
-     */
-    programmes?: (number | Programme)[] | null;
-    users?: (number | User)[] | null;
-  };
-  /**
-   * Empty: a segment is made in Resend on save. Paste one to use a segment you have.
-   */
-  segment_id?: string | null;
-  /**
-   * Optional: the kind of email this list gets (Resend → Contacts → Topics). People who opt out of the topic are skipped, and keep their other lists.
-   */
-  topic_id?: string | null;
-  member_count?: number | null;
-  last_synced?: string | null;
-  sync_note?: string | null;
-  updatedAt: string;
-  createdAt: string;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "redirects".
- */
-export interface Redirect {
-  id: number;
-  from: string;
-  to?: {
-    type?: ('reference' | 'custom') | null;
-    reference?:
-      | ({
-          relationTo: 'courses';
-          value: number | Course;
-        } | null)
-      | ({
-          relationTo: 'cycles';
-          value: number | Cycle;
-        } | null)
-      | ({
-          relationTo: 'programmes';
-          value: number | Programme;
-        } | null)
-      | ({
-          relationTo: 'publications';
-          value: number | Publication;
-        } | null)
-      | ({
-          relationTo: 'articles';
-          value: number | Article;
-        } | null)
-      | ({
-          relationTo: 'events';
-          value: number | Event;
-        } | null)
-      | ({
-          relationTo: 'press';
-          value: number | Press;
-        } | null)
-      | ({
-          relationTo: 'people';
-          value: number | Person;
-        } | null);
-    url?: string | null;
-  };
-  type: '301' | '302';
-  updatedAt: string;
-  createdAt: string;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -3619,69 +3534,11 @@ export interface NewslettersSelect<T extends boolean = true> {
   cover_caption?: T;
   legacy_url?: T;
   preheader?: T;
-  body?: T;
   sections?:
     | T
     | {
-        picks?:
-          | T
-          | {
-              heading?: T;
-              items?:
-                | T
-                | {
-                    type?: T;
-                    course?: T;
-                    article?: T;
-                    publication?: T;
-                    cycle?: T;
-                    event?: T;
-                    programme?: T;
-                    note?: T;
-                    id?: T;
-                  };
-              id?: T;
-              blockName?: T;
-            };
-        image?:
-          | T
-          | {
-              image?: T;
-              caption?: T;
-              body?: T;
-              id?: T;
-              blockName?: T;
-            };
-        gallery?:
-          | T
-          | {
-              heading?: T;
-              columns?: T;
-              images?:
-                | T
-                | {
-                    image?: T;
-                    caption?: T;
-                    id?: T;
-                  };
-              id?: T;
-              blockName?: T;
-            };
-        quote?:
-          | T
-          | {
-              text?: T;
-              attribution?: T;
-              id?: T;
-              blockName?: T;
-            };
-        text?:
-          | T
-          | {
-              body?: T;
-              id?: T;
-              blockName?: T;
-            };
+        body?: T;
+        id?: T;
       };
   send_to?: T;
   sent_at?: T;
@@ -5444,6 +5301,63 @@ export interface ColumnsBlock {
   id?: string | null;
   blockName?: string | null;
   blockType: 'columns';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "NewsletterImageBlock".
+ */
+export interface NewsletterImageBlock {
+  image: number | Media;
+  /**
+   * Shown under the image.
+   */
+  caption?: string | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'newsletterImage';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "NewsletterPicksBlock".
+ */
+export interface NewsletterPicksBlock {
+  heading?: string | null;
+  items?:
+    | {
+        /**
+         * Choose the type first; the next field lists only that type.
+         */
+        type: 'course' | 'article' | 'publication' | 'cycle' | 'event' | 'programme';
+        course?: (number | null) | Course;
+        article?: (number | null) | Article;
+        publication?: (number | null) | Publication;
+        cycle?: (number | null) | Cycle;
+        event?: (number | null) | Event;
+        programme?: (number | null) | Programme;
+        /**
+         * One line under the card, e.g. “Applications close 3 Nov”.
+         */
+        note?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'newsletterPicks';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "NewsletterQuoteBlock".
+ */
+export interface NewsletterQuoteBlock {
+  text: string;
+  /**
+   * Who said it, e.g. “Ghosoun Ismail, fellow”.
+   */
+  attribution?: string | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'newsletterQuote';
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema

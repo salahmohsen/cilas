@@ -7,6 +7,7 @@ import type {
   NewsletterPublication,
   NewsletterStory,
 } from '@/components/arc/blocks/newsletter-signup/newsletter-signup-data'
+import { fillPicks, picksIn } from '@/emails/issue'
 import { pickItemOf } from '@/emails/pick-types'
 import { readingMinutes } from '@/lib/articles'
 import { newsletterList } from '@/lib/newsletter-list'
@@ -36,14 +37,10 @@ const storyOf = (relationTo: string, doc: unknown): NewsletterStory | null => {
 }
 
 const picksOf = (issue: Newsletter) =>
-  (issue.sections ?? []).flatMap((section) =>
-    section.blockType === 'picks'
-      ? (section.items ?? []).flatMap((pick) => {
-          const item = pickItemOf(pick as Record<string, unknown>)
-          return item ? [item] : []
-        })
-      : [],
-  )
+  picksIn(issue.sections).flatMap((pick) => {
+    const item = pickItemOf(pick)
+    return item ? [item] : []
+  })
 
 type Group = 'cycles' | 'publications'
 type GroupStories = Record<Group, Map<number, NewsletterStory[]>>
@@ -163,12 +160,13 @@ export const getNewsletterStack = async (
       ],
     },
     sort: '-issue_date',
-    depth: 2,
+    depth: 0,
     limit: 1,
     ...read,
   })
   const latest = issues.docs[0]
   if (!latest) return { publication: null }
+  await fillPicks(payload, latest.sections, read)
   const groups = await groupStories(payload, [latest], read)
 
   const day = (iso: string) =>

@@ -2,6 +2,7 @@ import { CAIRO } from '@/lib/cairo-day'
 import { emailRichTextHTML } from './rich-text'
 import type { RichTextReferences } from '@/lib/rich-text-references'
 import { env } from '@/env'
+import type { ReactNode } from 'react'
 import { Column, Heading, Img, Link, Row, Section, Text } from 'react-email'
 
 import { cardOf, type Card, type Person } from './cards'
@@ -16,25 +17,7 @@ type Media = { url?: string | null; alt?: string | null } | number | null | unde
 
 type Row = { id?: string | null }
 
-export type Section = Row &
-  (
-    | {
-        blockType: 'picks'
-        heading?: string | null
-        items?: Array<
-          Row & Record<string, unknown> & { type?: string | null; note?: string | null }
-        > | null
-      }
-    | { blockType: 'text'; body?: unknown }
-    | { blockType: 'image'; image?: Media; caption?: string | null; body?: unknown }
-    | {
-        blockType: 'gallery'
-        heading?: string | null
-        columns?: '2' | '3' | null
-        images?: Array<Row & { image?: Media; caption?: string | null }> | null
-      }
-    | { blockType: 'quote'; text?: string | null; attribution?: string | null }
-  )
+export type Section = Row & { body?: unknown }
 
 export type Issue = {
   references?: RichTextReferences
@@ -42,8 +25,7 @@ export type Issue = {
   preheader?: string | null
   issue_date?: string | null
   cover_image?: unknown
-  cover_caption?: string | null
-  body?: unknown
+  cover_caption?: unknown
   sections?: Section[] | null
 }
 
@@ -236,166 +218,124 @@ function CourseGrid({ cards }: { cards: Card[] }) {
   )
 }
 
-type SectionProps<K extends Section['blockType']> = {
-  section: Extract<Section, { blockType: K }>
-  pe: Editable
-  /** The section's data path, e.g. `sections.0`. */
-  path: string
-}
+type EmailNode = { type: string; children?: EmailNode[]; fields?: Record<string, unknown> }
+type BodyContext = { settings: EmailSettings; references?: RichTextReferences; title: string }
+type BlockProps = BodyContext & { fields: Record<string, unknown> }
 
-function Picks({
-  section,
-  settings,
-  pe,
-  path,
-}: SectionProps<'picks'> & { settings: EmailSettings }) {
+/** The visual editor selects a whole section, so nothing inside a body is marked. */
+const unmarked = editableIn(false)
+
+function Picks({ fields, settings }: BlockProps) {
   const t = settings.texts.newsletter
   const labels = { site: settings.site, read: t.read, apply: t.apply }
-  // Each card keeps its place in the data, for the editor.
-  const cards = (section.items ?? []).flatMap((p, at) => {
+  const items = (fields.items ?? []) as Array<
+    Row & Record<string, unknown> & { note?: string | null }
+  >
+  const cards = items.flatMap((p) => {
     const item = pickItemOf(p)
     const card = item ? cardOf(item, p.note, labels) : null
-    return card ? [{ card, at, id: p.id }] : []
+    return card ? [{ card, id: p.id }] : []
   })
-  if (!cards.length && !pe.on) return null
+  if (!cards.length) return null
+  const heading = fields.heading as string | null | undefined
   return (
-    <Box>
-      <Heading
-        as="h2"
-        dir="auto"
-        style={{ ...type[28], margin: '0 0 32px' }}
-        {...pe(`${path}.heading`)}
-      >
-        {section.heading || t.in_this_issue}
-      </Heading>
-      <Section
-        {...pe.container(`${path}.items`)}
-        style={cards.length ? undefined : { minHeight: '48px' }}
-      >
-        {cards.map(({ card, at, id }, i) => (
-          <StackedCard
-            key={`${card.url}${at}`}
-            card={card}
-            last={i === cards.length - 1}
-            pe={pe}
-            path={`${path}.items.${at}`}
-            id={id}
-          />
-        ))}
-      </Section>
-    </Box>
+    <Section>
+      {heading ? (
+        <Heading as="h2" dir="auto" style={{ ...type[28], margin: '0 0 32px' }}>
+          {heading}
+        </Heading>
+      ) : null}
+      {cards.map(({ card, id }, i) => (
+        <StackedCard
+          key={`${card.url}${i}`}
+          card={card}
+          last={i === cards.length - 1}
+          pe={unmarked}
+          path=""
+          id={id}
+        />
+      ))}
+    </Section>
   )
 }
 
-/** One image across the full width, its caption, and the text that belongs to it. */
-function SingleImage({
-  section,
-  pe,
-  path,
-  references,
-}: SectionProps<'image'> & { references?: RichTextReferences }) {
-  const image = urlOf(section.image)
-  if (!image && !pe.on) return null
-  const caption = section.caption?.trim()
-  const html = richHtml(section.body, references)
+/** What reads under an image: its caption, else its alt. An alt that only repeats the issue title says nothing. */
+const textUnder = (caption: string | null | undefined, alt: string | undefined, title: string) => {
+  const own = caption?.trim()
+  if (own) return own
+  const described = alt?.trim()
+  return described && described !== title.trim() ? described : null
+}
+
+function BodyImage({ fields, title }: BlockProps) {
+  const image = urlOf(fields.image as Media)
+  if (!image) return null
+  const caption = textUnder(fields.caption as string | null | undefined, image.alt, title)
   return (
-    <Box>
-      {image ? (
-        <Img
-          src={image.url}
-          alt={image.alt}
-          width={552}
-          style={{ display: 'block', width: '100%', borderRadius: '10px' }}
-          {...pe(`${path}.image`)}
-        />
-      ) : null}
+    <>
+      <Img
+        src={image.url}
+        alt={image.alt}
+        width={552}
+        style={{ display: 'block', width: '100%', borderRadius: '10px' }}
+      />
       {caption ? (
-        <Text dir="auto" style={{ ...type[13], margin: '8px 0 0' }} {...pe(`${path}.caption`)}>
+        <Text dir="auto" style={{ ...type[13], margin: '8px 0 0' }}>
           {caption}
         </Text>
       ) : null}
-      {html ? (
-        <div
-          style={{ ...type[16], marginTop: '20px' }}
-          {...pe(`${path}.body`)}
-          dangerouslySetInnerHTML={{ __html: html }}
-        />
-      ) : null}
-    </Box>
+    </>
   )
 }
 
-/** Images in a grid of two or three columns, each with its caption. */
-function Gallery({ section, pe, path }: SectionProps<'gallery'>) {
-  const columns = section.columns === '3' ? 3 : 2
-  const images = (section.images ?? []).flatMap((i, at) => {
+function Gallery({ fields }: BlockProps) {
+  const columns = Math.min(Math.max(Number(fields.columnCount ?? 2), 1), 4)
+  const rows_ = (fields.images ?? []) as Array<{ image?: Media; caption?: string | null }>
+  const images = rows_.flatMap((i) => {
     const image = urlOf(i.image)
-    return image ? [{ ...image, caption: i.caption?.trim() || null, at, id: i.id }] : []
+    return image ? [{ ...image, caption: i.caption?.trim() || null }] : []
   })
-  if (!images.length && !pe.on) return null
   const rows: (typeof images)[] = []
   for (let i = 0; i < images.length; i += columns) rows.push(images.slice(i, i + columns))
-  const width = `${Math.floor(100 / columns)}%`
   return (
-    <Box>
-      {section.heading ? (
-        <Heading
-          as="h2"
-          dir="auto"
-          style={{ ...type[28], margin: '0 0 28px' }}
-          {...pe(`${path}.heading`)}
-        >
-          {section.heading}
-        </Heading>
-      ) : null}
-      <Section
-        {...pe.container(`${path}.images`)}
-        style={images.length ? undefined : { minHeight: '48px' }}
-      >
-        {rows.map((row, r) => (
-          <Row key={r} style={{ marginBottom: r === rows.length - 1 ? 0 : '16px' }}>
-            {Array.from({ length: columns }, (_, c) => {
-              const image = row[c]
-              return (
-                <Column
-                  key={c}
-                  className={columns === 3 ? 'm-col' : undefined}
-                  style={{ width, verticalAlign: 'top', padding: '0 6px' }}
-                  {...(image ? pe(`${path}.images.${image.at}`, { row: { id: image.id } }) : {})}
-                >
-                  {image ? (
-                    <>
-                      <Img
-                        src={image.url}
-                        alt={image.alt}
-                        width={columns === 3 ? 172 : 264}
-                        style={{ display: 'block', width: '100%', borderRadius: '10px' }}
-                      />
-                      {image.caption ? (
-                        <Text
-                          dir="auto"
-                          style={{ ...type[13], margin: '8px 0 0' }}
-                          {...pe(`${path}.images.${image.at}.caption`)}
-                        >
-                          {image.caption}
-                        </Text>
-                      ) : null}
-                    </>
-                  ) : null}
-                </Column>
-              )
-            })}
-          </Row>
-        ))}
-      </Section>
-    </Box>
+    <>
+      {rows.map((row, r) => (
+        <Row key={r} style={{ marginBottom: r === rows.length - 1 ? 0 : '16px' }}>
+          {row.map((image, c) => (
+            <Column
+              key={c}
+              className={columns >= 3 ? 'm-col' : undefined}
+              style={{
+                width: `${Math.floor(100 / row.length)}%`,
+                verticalAlign: 'top',
+                padding: '0 6px',
+              }}
+            >
+              <Img
+                src={image.url}
+                alt={image.alt}
+                width={Math.floor(552 / row.length)}
+                style={{ display: 'block', width: '100%', borderRadius: '10px' }}
+              />
+              {image.caption ? (
+                <Text dir="auto" style={{ ...type[13], margin: '8px 0 0' }}>
+                  {image.caption}
+                </Text>
+              ) : null}
+            </Column>
+          ))}
+        </Row>
+      ))}
+    </>
   )
 }
 
-function Quote({ section, pe, path }: SectionProps<'quote'>) {
-  if (!section.text?.trim()) return null
+function Quote({ fields }: BlockProps) {
+  const text = (fields.text as string | null | undefined)?.trim()
+  if (!text) return null
+  const attribution = fields.attribution as string | null | undefined
   return (
-    <Box center>
+    <Section style={{ textAlign: 'center' }}>
       <Text
         dir="auto"
         style={{
@@ -405,35 +345,94 @@ function Quote({ section, pe, path }: SectionProps<'quote'>) {
           maxWidth: '460px',
           whiteSpace: 'pre-line',
         }}
-        {...pe(`${path}.text`)}
       >
-        “{section.text.trim()}”
+        “{text}”
       </Text>
-      {section.attribution ? (
-        <Text dir="auto" style={{ ...type[13], margin: '20px 0 0' }} {...pe(`${path}.attribution`)}>
-          {section.attribution}
+      {attribution ? (
+        <Text dir="auto" style={{ ...type[13], margin: '20px 0 0' }}>
+          {attribution}
         </Text>
       ) : null}
-    </Box>
+    </Section>
   )
 }
 
-function TextSection({
-  section,
-  pe,
-  path,
-  references,
-}: SectionProps<'text'> & { references?: RichTextReferences }) {
-  const html = richHtml(section.body, references)
-  return html ? (
-    <Box>
-      <div
-        style={{ ...type[16] }}
-        {...pe(`${path}.body`)}
-        dangerouslySetInnerHTML={{ __html: html }}
-      />
-    </Box>
-  ) : null
+const COLUMN_WIDTHS: Record<string, string[]> = {
+  oneThird: ['33%', '67%'],
+  twoThirds: ['67%', '33%'],
+}
+
+function Columns({ fields, ...context }: BlockProps) {
+  const count = Number(fields.columnCount ?? 2)
+  const widths = (count === 2 && COLUMN_WIDTHS[String(fields.ratio)]) || null
+  return (
+    <Row>
+      {['first', 'second', 'third', 'fourth'].slice(0, count).map((key, i) => (
+        <Column
+          key={key}
+          className="m-col"
+          style={{
+            width: widths?.[i] ?? `${Math.floor(100 / count)}%`,
+            verticalAlign: 'top',
+            padding: '0 8px',
+          }}
+        >
+          <RichBody data={fields[key]} {...context} />
+        </Column>
+      ))}
+    </Row>
+  )
+}
+
+/** Every block a body can draw itself. Anything else goes through the rich text converter. */
+const BODY_BLOCKS: Record<string, (props: BlockProps) => ReactNode> = {
+  columns: Columns,
+  gallery: Gallery,
+  newsletterImage: BodyImage,
+  newsletterPicks: Picks,
+  newsletterQuote: Quote,
+}
+
+const blockOf = (node: EmailNode) => {
+  const Draw = node.type === 'block' ? BODY_BLOCKS[String(node.fields?.blockType)] : undefined
+  return Draw ? { Draw, fields: node.fields as Record<string, unknown> } : null
+}
+
+/** A body in document order: runs of text between the blocks that draw themselves. */
+function RichBody({ data, ...context }: BodyContext & { data: unknown }) {
+  const root = (data as { root?: EmailNode } | null | undefined)?.root
+  const parts: ReactNode[] = []
+  let run: EmailNode[] = []
+  const margin = () => ({ marginTop: parts.length ? '24px' : 0 })
+  const flush = () => {
+    if (!run.length) return
+    const html = richHtml({ root: { ...root, children: run } }, context.references)
+    run = []
+    if (html.trim()) {
+      parts.push(
+        <div
+          key={parts.length}
+          style={{ ...type[16], ...margin() }}
+          dangerouslySetInnerHTML={{ __html: html }}
+        />,
+      )
+    }
+  }
+  for (const node of root?.children ?? []) {
+    const block = blockOf(node)
+    if (!block) {
+      run.push(node)
+      continue
+    }
+    flush()
+    parts.push(
+      <Section key={parts.length} style={margin()}>
+        <block.Draw fields={block.fields} {...context} />
+      </Section>,
+    )
+  }
+  flush()
+  return <>{parts}</>
 }
 
 export function NewsletterEmail({
@@ -449,8 +448,12 @@ export function NewsletterEmail({
   editId?: number
 }) {
   const pe = editableIn(editId !== undefined)
-  const intro = richHtml(issue.body, issue.references)
   const cover = urlOf(issue.cover_image as Media)
+  const coverRich = richHtml(issue.cover_caption, issue.references).replace(
+    /<p /g,
+    '<p style="margin:0" ',
+  )
+  const coverCaption = coverRich ? null : textUnder(null, cover?.alt, issue.title)
   const month = monthOf(issue.issue_date)
   return (
     <EmailLayout
@@ -474,17 +477,19 @@ export function NewsletterEmail({
                   display: 'block',
                   width: '100%',
                   borderRadius: '12px',
-                  marginBottom: issue.cover_caption ? '8px' : '32px',
+                  marginBottom: coverRich || coverCaption ? '8px' : '32px',
                 }}
                 {...pe('cover_image')}
               />
-              {issue.cover_caption ? (
-                <Text
-                  dir="auto"
+              {coverRich ? (
+                <div
                   style={{ ...type[13], margin: '0 0 32px' }}
                   {...pe('cover_caption')}
-                >
-                  {issue.cover_caption}
+                  dangerouslySetInnerHTML={{ __html: coverRich }}
+                />
+              ) : coverCaption ? (
+                <Text dir="auto" style={{ ...type[13], margin: '0 0 32px' }}>
+                  {coverCaption}
                 </Text>
               ) : null}
             </>
@@ -492,53 +497,22 @@ export function NewsletterEmail({
           <Heading as="h1" dir="auto" style={{ ...type[32], margin: '0 0 16px' }} {...pe('title')}>
             {issue.title}
           </Heading>
-          {intro ? (
-            <div
-              style={{ ...type[16] }}
-              {...pe('body')}
-              dangerouslySetInnerHTML={{ __html: intro }}
-            />
-          ) : null}
         </Box>
         <Section {...pe.container('sections')}>
           {(issue.sections ?? []).map((section, i) => {
             const path = `sections.${i}`
-            const body = (() => {
-              switch (section.blockType) {
-                case 'picks':
-                  return <Picks section={section} settings={settings} pe={pe} path={path} />
-                case 'image':
-                  return (
-                    <SingleImage
-                      section={section}
-                      pe={pe}
-                      path={path}
-                      references={issue.references}
-                    />
-                  )
-                case 'gallery':
-                  return <Gallery section={section} pe={pe} path={path} />
-                case 'quote':
-                  return <Quote section={section} pe={pe} path={path} />
-                case 'text':
-                  return (
-                    <TextSection
-                      section={section}
-                      pe={pe}
-                      path={path}
-                      references={issue.references}
-                    />
-                  )
-                default:
-                  return null
-              }
-            })()
             return (
-              <Section
-                key={section.id ?? i}
-                {...pe(path, { row: { id: section.id, blockType: section.blockType } })}
-              >
-                {body}
+              <Section key={section.id ?? i} {...pe(path, { row: { id: section.id } })}>
+                <Box>
+                  <div {...pe(`${path}.body`)}>
+                    <RichBody
+                      data={section.body}
+                      settings={settings}
+                      references={issue.references}
+                      title={issue.title}
+                    />
+                  </div>
+                </Box>
               </Section>
             )
           })}

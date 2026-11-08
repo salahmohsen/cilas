@@ -1,4 +1,4 @@
-import type { CollectionConfig, Field } from 'payload'
+import type { CollectionConfig } from 'payload'
 import { lexicalEditor } from '@payloadcms/richtext-lexical'
 import { emailEditorFeatures } from '@/lexical/email-features'
 
@@ -6,7 +6,6 @@ import { isAdmin, publishedOrAdmin } from '@/access'
 import { slugField } from '@/fields/slug'
 import { importFields } from '@/fields/import'
 import { newsletterEndpoints } from '@/forms/newsletter-send'
-import { PICK_TYPES } from '@/emails/pick-types'
 
 /**
  * The archive of issues CILAS has sent. Subscribers live in Resend Audiences,
@@ -43,7 +42,8 @@ export const Newsletters: CollectionConfig = {
     { name: 'cover_image', type: 'upload', relationTo: 'media', admin: { position: 'sidebar' } },
     {
       name: 'cover_caption',
-      type: 'text',
+      type: 'richText',
+      editor: lexicalEditor({ features: emailEditorFeatures }),
       admin: { position: 'sidebar', description: 'Shown under the cover image.' },
     },
     ...importFields(),
@@ -61,135 +61,21 @@ export const Newsletters: CollectionConfig = {
               },
             },
             {
-              name: 'body',
-              type: 'richText',
-              editor: lexicalEditor({ features: emailEditorFeatures }),
-              localized: true,
-              admin: { description: 'The intro, above the picks.' },
-            },
-            {
               name: 'sections',
-              type: 'blocks',
+              type: 'array',
+              labels: { singular: 'Section', plural: 'Sections' },
+              defaultValue: [{}],
+              minRows: 1,
               admin: {
                 description:
-                  'After the intro, in this order. Keep the email short: Gmail cuts emails over about 100 KB, so use 8 picks or fewer and a few gallery images.',
+                  'Each section is one card in the email. Press / in its body to add columns, images, galleries, picks or a quote.',
+                initCollapsed: false,
               },
-              blocks: [
+              fields: [
                 {
-                  slug: 'picks',
-                  labels: { singular: 'Picks', plural: 'Picks' },
-                  fields: [
-                    { name: 'heading', type: 'text', admin: { placeholder: 'In this issue' } },
-                    {
-                      name: 'items',
-                      type: 'array',
-                      labels: { singular: 'Pick', plural: 'Picks' },
-                      fields: [
-                        {
-                          name: 'type',
-                          type: 'select',
-                          required: true,
-                          defaultValue: 'course',
-                          options: PICK_TYPES.map(({ value, label }) => ({ value, label })),
-                          admin: {
-                            description:
-                              'Choose the type first; the next field lists only that type.',
-                          },
-                        },
-                        // One field per type, shown for its type only: a short list to search.
-                        ...PICK_TYPES.map(({ value, label, relationTo, filter }): Field => ({
-                          name: value,
-                          label,
-                          type: 'relationship',
-                          relationTo,
-                          ...(filter ? { filterOptions: () => filter } : {}),
-                          admin: { condition: (_, sibling) => sibling?.type === value },
-                          validate: (
-                            v: unknown,
-                            { siblingData }: { siblingData: Record<string, unknown> },
-                          ) =>
-                            siblingData?.type !== value || v
-                              ? true
-                              : `Choose the ${label.toLowerCase()}.`,
-                        })),
-                        {
-                          name: 'note',
-                          type: 'text',
-                          admin: {
-                            description:
-                              'One line under the card, e.g. “Applications close 3 Nov”.',
-                          },
-                        },
-                      ],
-                    },
-                  ],
-                },
-                {
-                  slug: 'image',
-                  labels: { singular: 'Image', plural: 'Images' },
-                  fields: [
-                    { name: 'image', type: 'upload', relationTo: 'media', required: true },
-                    {
-                      name: 'caption',
-                      type: 'text',
-                      admin: { description: 'Shown under the image.' },
-                    },
-                    {
-                      name: 'body',
-                      type: 'richText',
-                      editor: lexicalEditor({ features: emailEditorFeatures }),
-                      admin: { description: 'Text that belongs to this image, under the caption.' },
-                    },
-                  ],
-                },
-                {
-                  slug: 'gallery',
-                  labels: { singular: 'Gallery', plural: 'Galleries' },
-                  fields: [
-                    { name: 'heading', type: 'text' },
-                    {
-                      name: 'columns',
-                      type: 'select',
-                      defaultValue: '2',
-                      options: [
-                        { label: '2 columns', value: '2' },
-                        { label: '3 columns (one column on phones)', value: '3' },
-                      ],
-                    },
-                    {
-                      name: 'images',
-                      type: 'array',
-                      minRows: 1,
-                      fields: [
-                        { name: 'image', type: 'upload', relationTo: 'media', required: true },
-                        { name: 'caption', type: 'text' },
-                      ],
-                    },
-                  ],
-                },
-                {
-                  slug: 'quote',
-                  labels: { singular: 'Quote', plural: 'Quotes' },
-                  fields: [
-                    { name: 'text', type: 'textarea', required: true },
-                    {
-                      name: 'attribution',
-                      type: 'text',
-                      admin: { description: 'Who said it, e.g. “Ghosoun Ismail, fellow”.' },
-                    },
-                  ],
-                },
-                {
-                  slug: 'text',
-                  labels: { singular: 'Text', plural: 'Texts' },
-                  fields: [
-                    {
-                      name: 'body',
-                      type: 'richText',
-                      required: true,
-                      editor: lexicalEditor({ features: emailEditorFeatures }),
-                    },
-                  ],
+                  name: 'body',
+                  type: 'richText',
+                  editor: lexicalEditor({ features: emailEditorFeatures }),
                 },
               ],
             },

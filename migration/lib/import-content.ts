@@ -528,7 +528,7 @@ export const importContent = async (
         title: n.title_en,
         slug: slugify(n.title_en),
         issue_date: n.issue_date,
-        ...(rich(n.blocks_en, 'ltr') ? { body: rich(n.blocks_en, 'ltr') } : {}),
+        ...(rich(n.blocks_en, 'ltr') ? { sections: [{ body: rich(n.blocks_en, 'ltr') }] } : {}),
         legacy_url: n.legacy_url,
         _status: 'draft',
       },
