@@ -59,6 +59,7 @@ import * as migration_20261108_085903_newsletter_image_block from './20261108_08
 import * as migration_20261108_093702_newsletter_image_body_cover_caption from './20261108_093702_newsletter_image_body_cover_caption';
 import * as migration_20261108_101909_newsletter_sections from './20261108_101909_newsletter_sections';
 import * as migration_20261108_111343_newsletter_stats from './20261108_111343_newsletter_stats';
+import * as migration_20261108_141105_space_email_cron from './20261108_141105_space_email_cron';
 
 export const migrations = [
   {
@@ -364,6 +365,11 @@ export const migrations = [
   {
     up: migration_20261108_111343_newsletter_stats.up,
     down: migration_20261108_111343_newsletter_stats.down,
-    name: '20261108_111343_newsletter_stats'
+    name: '20261108_111343_newsletter_stats',
+  },
+  {
+    up: migration_20261108_141105_space_email_cron.up,
+    down: migration_20261108_141105_space_email_cron.down,
+    name: '20261108_141105_space_email_cron'
   },
 ];

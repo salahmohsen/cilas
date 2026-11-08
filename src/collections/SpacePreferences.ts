@@ -1,8 +1,10 @@
 import type { CollectionConfig } from 'payload'
 
 /**
- * One row per account (spec §8): the digest choice, daily by default; the
- * sending job arrives in step 3 and reads this.
+ * One row per account (spec §8): the digest choice, weekly by default (an
+ * account with no row counts as weekly), the account-wide stop for every
+ * space email, and when the last digest was claimed. The sender is
+ * src/lib/space-digest.ts; it creates the row on a first digest.
  */
 export const SpacePreferences: CollectionConfig = {
   slug: 'space-preferences',
@@ -31,12 +33,36 @@ export const SpacePreferences: CollectionConfig = {
       label: 'Email digest',
       type: 'select',
       required: true,
-      defaultValue: 'daily',
+      defaultValue: 'weekly',
       options: [
-        { label: 'Daily at 08:00 Cairo', value: 'daily' },
-        { label: 'Weekly', value: 'weekly' },
+        { label: 'Daily at 16:00 Cairo', value: 'daily' },
+        { label: 'Weekly, Sunday at 16:00 Cairo', value: 'weekly' },
         { label: 'Off', value: 'off' },
       ],
+    },
+    {
+      // Stops digests and announcement emails for every space at once. The
+      // digest choice above stays, so turning email back on restores it.
+      name: 'stop_all_email',
+      label: 'Stop all space email',
+      type: 'checkbox',
+      defaultValue: false,
+    },
+    {
+      // The language the member last saved here; the digest follows it.
+      name: 'locale',
+      type: 'select',
+      options: [
+        { label: 'English', value: 'en' },
+        { label: 'Arabic', value: 'ar' },
+      ],
+    },
+    {
+      // Claimed before a digest is sent, so a retry or an overlapping run
+      // cannot send it twice (src/lib/space-digest.ts).
+      name: 'digest_sent_at',
+      type: 'date',
+      admin: { readOnly: true },
     },
   ],
   indexes: [{ fields: ['account'], unique: true }],

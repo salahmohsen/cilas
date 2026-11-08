@@ -169,7 +169,7 @@ export const SpacePosts: CollectionConfig = {
     },
     { name: 'locked', type: 'checkbox', defaultValue: false },
     {
-      // Set by the action that mailed the announcement (mailing lands in step 3).
+      // Claimed by sendAnnouncementEmails (src/lib/space-email.ts) before it mails, so an announcement goes out once.
       name: 'announcement_email_sent',
       label: 'Announcement emailed',
       type: 'checkbox',

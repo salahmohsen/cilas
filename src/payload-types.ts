@@ -2325,6 +2325,9 @@ export interface SpacePreference {
   id: number;
   account: number | User;
   digest: 'daily' | 'weekly' | 'off';
+  stop_all_email?: boolean | null;
+  locale?: ('en' | 'ar') | null;
+  digest_sent_at?: string | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -4006,6 +4009,9 @@ export interface SpaceVisitsSelect<T extends boolean = true> {
 export interface SpacePreferencesSelect<T extends boolean = true> {
   account?: T;
   digest?: T;
+  stop_all_email?: T;
+  locale?: T;
+  digest_sent_at?: T;
   updatedAt?: T;
   createdAt?: T;
 }

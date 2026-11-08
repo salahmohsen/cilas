@@ -17,7 +17,7 @@ export const SpaceVisits: CollectionConfig = {
     create: () => false,
     update: ({ req }) =>
       req.user ? { account: { equals: (req.user as { id: number }).id } } : false,
-    delete: () => false, // retention handled with the purge in step 3
+    delete: () => false, // rows hold a timestamp and checklist marks, no content: the 30-day purge leaves them
   },
   admin: { hidden: true },
   fields: [

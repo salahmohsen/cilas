@@ -60,6 +60,10 @@ export const env = createEnv({
       .regex(/^(mailto:\S+@\S+|https:\/\/\S+)$/)
       .optional(),
 
+    // Optional: the secret the Dokploy schedule sends as a Bearer token to
+    // POST /api/cron/spaces (digests, purge). Without it the route refuses.
+    CRON_SECRET: z.string().min(32).optional(),
+
     PRIVATE_SPACES_SEARCH: z.enum(['true', 'false']).default('false'),
     PRIVATE_SPACES_SEARCH_KEYS_VERIFIED: z.enum(['true', 'false']).default('false'),
     TYPESENSE_PRIVATE_SEARCH_KEY: z.string().min(1).optional(),
