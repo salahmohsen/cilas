@@ -110,7 +110,13 @@ export function arabicVisualWord(word: string): string {
       break
     }
     if (match.index > 0) runs.push(rest.slice(0, match.index))
-    runs.push([...join(match[0])].reverse().join(''))
+    runs.push(
+      [...join(match[0])]
+        .reverse()
+        .join('')
+        // Arabic digits read left to right, inside right-to-left text too.
+        .replace(/[٠-٩۰-۹]+/g, (digits) => [...digits].reverse().join('')),
+    )
     rest = rest.slice(match.index + match[0].length)
   }
   return runs

@@ -15,8 +15,9 @@ import { arabicVisualWord } from '@/lib/arabic-visual'
  * poster's look (src/components/home/poster.tsx): ink rules, paper cells and
  * the posters' yellow. One column holds what it is and the title on the
  * yellow; the other holds the page's image (its SEO image, else its cover),
- * or the CILAS boat when it has none. No description: it rarely fits, and
- * Satori cannot be trusted to cut it well. A strip runs along
+ * or the CILAS boat when it has none. Only a route that names a description
+ * shows one, in the image's place: page descriptions rarely fit, and Satori
+ * cannot be trusted to cut them well. A strip runs along
  * the foot: the mark, the site's address and the action. Arabic mirrors it.
  */
 
@@ -30,6 +31,7 @@ const TEXT_COLUMN = 500
 // The label's cell: its line and padding, and the rule under it.
 const LABEL = 40 * 1.2 + PAD * 2 + 2
 const IMAGE = { width: SIZE.width - TEXT_COLUMN, height: SIZE.height - STRIP }
+const DESCRIPTION_SIZE = 34
 
 // Satori (behind ImageResponse) reads TTF, not WOFF2. It shapes Arabic with
 // the first font of the family and crashes on the Latin fonts' and Amiri's
@@ -66,6 +68,8 @@ export type CardWords = {
   label?: string
   /** The strip's last cell: what the link does ("Read"). */
   action: string
+  /** Shown in the image's place. */
+  description?: string
 }
 
 /** The page's own title, without the " — CILAS" the tab title carries; the logo says it. */
@@ -144,6 +148,7 @@ function Words({
   fontSize,
   lineHeight,
   lines,
+  column = TEXT_COLUMN,
 }: {
   text: string
   latin: string
@@ -151,11 +156,12 @@ function Words({
   fontSize: number
   lineHeight: number
   lines: number
+  column?: number
 }) {
   const rtl = isArabic(text)
   // About how many letters the lines hold, so a longer text ends in "…"
   // rather than at the cell's edge.
-  const perLine = Math.floor((TEXT_COLUMN - PAD * 2) / (fontSize * (rtl ? 0.46 : 0.52)))
+  const perLine = Math.floor((column - PAD * 2) / (fontSize * (rtl ? 0.46 : 0.52)))
   const words = clip(text, perLine * lines)
     .split(' ')
     .reduce<string[]>((runs, word) => {
@@ -275,9 +281,20 @@ export async function ogCard(metadata: Metadata, words: CardWords) {
             alignItems: 'center',
             justifyContent: 'center',
             overflow: 'hidden',
+            padding: words.description ? PAD : 0,
           }}
         >
-          {image ? (
+          {words.description ? (
+            <Words
+              arabic="Arabic"
+              column={IMAGE.width}
+              fontSize={DESCRIPTION_SIZE}
+              latin="Text"
+              lineHeight={1.4}
+              lines={Math.floor((IMAGE.height - PAD * 2) / (DESCRIPTION_SIZE * 1.4))}
+              text={words.description}
+            />
+          ) : image ? (
             // eslint-disable-next-line @next/next/no-img-element
             <img alt="" height={IMAGE.height} src={image} width={IMAGE.width} />
           ) : (

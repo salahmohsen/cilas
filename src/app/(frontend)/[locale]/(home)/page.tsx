@@ -1,6 +1,6 @@
 import type { Metadata } from 'next'
 
-import { HomePage, homeMetadata } from './home-page'
+import { HomePage, homeMetadata } from '../home-page'
 
 // What is open changes with deadlines: worked out again every five minutes.
 export const revalidate = 300
