@@ -60,6 +60,7 @@ import * as migration_20261108_093702_newsletter_image_body_cover_caption from '
 import * as migration_20261108_101909_newsletter_sections from './20261108_101909_newsletter_sections';
 import * as migration_20261108_111343_newsletter_stats from './20261108_111343_newsletter_stats';
 import * as migration_20261108_141105_space_email_cron from './20261108_141105_space_email_cron';
+import * as migration_20261109_110023_mcp_api_keys from './20261109_110023_mcp_api_keys';
 
 export const migrations = [
   {
@@ -370,6 +371,11 @@ export const migrations = [
   {
     up: migration_20261108_141105_space_email_cron.up,
     down: migration_20261108_141105_space_email_cron.down,
-    name: '20261108_141105_space_email_cron'
+    name: '20261108_141105_space_email_cron',
+  },
+  {
+    up: migration_20261109_110023_mcp_api_keys.up,
+    down: migration_20261109_110023_mcp_api_keys.down,
+    name: '20261109_110023_mcp_api_keys'
   },
 ];
