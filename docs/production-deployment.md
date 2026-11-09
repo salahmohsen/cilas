@@ -61,7 +61,7 @@ Set this **runtime** variable in Dokploy, on production and on every preview:
 | ---------------------- | ---------------------------------------- | ------------------------------------------------------------------------------------------------------------- |
 | `PMOAUTH_TOKEN_PEPPER` | 32 or more characters, from a generator. | Generate once with `openssl rand -hex 32`. Keep it; a new value ends every connection (people connect again). |
 
-A production server refuses to start without it (`src/env.ts`). A build, the
+A production server refuses to start without it (`src/instrumentation.ts`). A build, the
 Docker build stage and `payload migrate` need no value: they load the
 configuration but never make a token, and use a placeholder. Do not pass it as a
 build argument.

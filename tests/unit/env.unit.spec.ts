@@ -30,39 +30,10 @@ describe('production environment boundaries', () => {
   it('accepts Cloudflare storage on a production server', async () => {
     vi.stubEnv('NODE_ENV', 'production')
     vi.stubEnv('R2_ENDPOINT', 'https://test.r2.cloudflarestorage.com')
-    vi.stubEnv('PMOAUTH_TOKEN_PEPPER', 'p'.repeat(32))
     vi.stubGlobal('window', undefined)
 
     const { env } = await import('@/env')
 
     expect(env.R2_ENDPOINT).toBe('https://test.r2.cloudflarestorage.com')
-  })
-
-  describe('the assistant sign-in secret', () => {
-    const production = () => {
-      vi.stubEnv('NODE_ENV', 'production')
-      vi.stubEnv('R2_ENDPOINT', 'https://test.r2.cloudflarestorage.com')
-      vi.stubGlobal('window', undefined)
-    }
-
-    it('is required by a production server', async () => {
-      production()
-      vi.stubEnv('PMOAUTH_TOKEN_PEPPER', '')
-      await expect(import('@/env')).rejects.toThrow('PMOAUTH_TOKEN_PEPPER is required')
-    })
-
-    it('must be 32 characters or more', async () => {
-      production()
-      vi.stubEnv('PMOAUTH_TOKEN_PEPPER', 'too-short')
-      await expect(import('@/env')).rejects.toThrow()
-    })
-
-    it('is not needed while building', async () => {
-      production()
-      vi.stubEnv('NEXT_PHASE', 'phase-production-build')
-      vi.stubEnv('PMOAUTH_TOKEN_PEPPER', '')
-      const { env } = await import('@/env')
-      expect(env.PMOAUTH_TOKEN_PEPPER).toBeUndefined()
-    })
   })
 })

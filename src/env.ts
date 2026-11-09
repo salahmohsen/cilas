@@ -61,8 +61,9 @@ export const env = createEnv({
       .optional(),
 
     // Hashes the tokens that let Claude and ChatGPT sign in to the admin
-    // (src/plugins/mcp/oauth.ts). The server will not start in production
-    // without 32 or more characters. A build needs none. Generate: openssl rand -hex 32
+    // (src/plugins/mcp/oauth.ts). A production server will not start without
+    // 32 or more characters (src/instrumentation.ts). A build needs none.
+    // Generate: openssl rand -hex 32
     PMOAUTH_TOKEN_PEPPER: z.string().min(32).optional(),
 
     // Optional: the secret the Dokploy schedule sends as a Bearer token to
@@ -153,13 +154,4 @@ if (typeof window === 'undefined' && process.env.NODE_ENV === 'production') {
   if (storage.protocol !== 'https:' || !storage.hostname.endsWith('.r2.cloudflarestorage.com')) {
     throw new Error('Production storage must use a Cloudflare R2 HTTPS endpoint')
   }
-}
-
-if (
-  typeof window === 'undefined' &&
-  process.env.NODE_ENV === 'production' &&
-  process.env.NEXT_PHASE !== 'phase-production-build' &&
-  !env.PMOAUTH_TOKEN_PEPPER
-) {
-  throw new Error('PMOAUTH_TOKEN_PEPPER is required in production: 32 or more characters.')
 }

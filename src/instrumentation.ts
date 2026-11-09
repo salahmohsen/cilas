@@ -1,5 +1,12 @@
 import type { Instrumentation } from 'next'
 
+/** A production server refuses to start without the assistant sign-in secret. */
+export async function register() {
+  if (process.env.NEXT_RUNTIME !== 'nodejs') return
+  const { assertAssistantSecret } = await import('@/plugins/mcp/pepper')
+  assertAssistantSecret()
+}
+
 /**
  * Server errors go to PostHog's error tracking (docs/analytics.md). Without a
  * key nothing loads. The Node runtime only: the Edge runtime has no PostHog
