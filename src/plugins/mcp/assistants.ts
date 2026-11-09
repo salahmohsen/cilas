@@ -43,7 +43,7 @@ export const ASSISTANTS: readonly Assistant[] = [
     steps: [
       'Open Customize, then Connectors. On a Team or Enterprise plan, an Owner opens Organization settings, then Connectors.',
       'Choose Add custom connector. On a Team or Enterprise plan, choose Add, then Custom.',
-      'Paste the address you copied. Leave the OAuth fields empty.',
+      'Paste the address you copied. Leave the advanced settings empty.',
       'Click Add, then Connect.',
       'Sign in to CILAS if asked. On the CILAS page, read what Claude can do and click Allow.',
     ],

@@ -5,32 +5,48 @@ import type { AdminViewServerProps } from 'payload'
 
 import { isAdminUser } from '@/access'
 import { env } from '@/env'
+import { ASSISTANTS, mcpServerUrl } from '@/plugins/mcp/assistants'
 
-const muted = { color: 'var(--theme-elevation-500)' } as const
-const box = { padding: '16px 20px', margin: '0 0 24px' } as const
-const code = {
-  display: 'block',
-  padding: '12px 16px',
-  overflowX: 'auto',
-  whiteSpace: 'pre',
-  background: 'var(--theme-elevation-100)',
-  borderRadius: '4px',
-  fontSize: '13px',
-} as const
+import styles from './ai-access-guide.module.css'
+import { CopyButton } from './copy-button'
+
+const EXAMPLES = [
+  {
+    title: 'A course',
+    text: 'Make a course draft called “Reading the City” in the Fall 2026 cycle. It is a Thematic course taught by Dina Hassan. The description is below, in English and in Arabic.\n\n[paste the description here]',
+  },
+  {
+    title: 'An article',
+    text: 'Make an article draft from the text below. The author is Omar Khaled. Add the tags “urban life” and “memory”.\n\n[paste the article here]',
+  },
+  {
+    title: 'A form linked to a course',
+    text: 'Make a registration form for the course “Reading the City”. Ask why they want to join and which days they can attend. Link it to that course.',
+  },
+] as const
+
+const PANEL_LINKS = [
+  { href: '/admin/collections/courses', label: 'Courses' },
+  { href: '/admin/collections/articles', label: 'Articles' },
+  { href: '/admin/collections/forms', label: 'Forms' },
+  { href: '/admin/reviews', label: 'Reviews waiting' },
+] as const
 
 function Section({ title, children }: { title: string; children: React.ReactNode }) {
   return (
-    <section className="cilas-admin-box" style={box}>
-      <h2 style={{ margin: '0 0 8px', fontSize: '18px' }}>{title}</h2>
+    <section className={styles.section}>
+      <h2>{title}</h2>
       {children}
     </section>
   )
 }
 
 /**
- * Admin → AI access guide: what the feature does, how to make a key, how to
- * connect an assistant, and what to keep safe. For administrators who are not
- * developers. The tools and limits named here are those of src/plugins/mcp.
+ * Admin → Connect an AI assistant. The one place an administrator sets this up,
+ * for people who are not developers: copy one address, paste it into Claude or
+ * ChatGPT, sign in to CILAS, click Allow. The assistants, their steps and the
+ * callbacks CILAS accepts come from one table (src/plugins/mcp/assistants.ts).
+ * What the assistant can do is set in src/plugins/mcp.
  */
 export async function AiAccessGuideView({
   initPageResult,
@@ -38,20 +54,7 @@ export async function AiAccessGuideView({
   searchParams,
   user,
 }: AdminViewServerProps) {
-  const endpoint = `${env.NEXT_PUBLIC_SERVER_URL.replace(/\/$/, '')}/api/mcp`
-  const desktopConfig = JSON.stringify(
-    {
-      mcpServers: {
-        cilas: {
-          command: 'npx',
-          args: ['-y', 'mcp-remote', endpoint, '--header', 'Authorization: Bearer YOUR-KEY'],
-        },
-      },
-    },
-    null,
-    2,
-  )
-  const claudeCode = `claude mcp add --transport http cilas ${endpoint} \\\n  --header "Authorization: Bearer YOUR-KEY"`
+  const address = mcpServerUrl(env.NEXT_PUBLIC_SERVER_URL)
 
   return (
     <DefaultTemplate
@@ -65,133 +68,161 @@ export async function AiAccessGuideView({
       visibleEntities={initPageResult.visibleEntities}
     >
       <Gutter>
-        <h1 style={{ margin: '24px 0 8px' }}>AI access guide</h1>
-        {/* Custom views are not protected by Payload's access rules. */}
-        {!isAdminUser(user) ? (
-          <p>Only admins can use AI access.</p>
-        ) : (
-          <>
-            <p style={{ ...muted, marginTop: 0 }}>
-              <Link href="/admin/collections/payload-mcp-api-keys">← Your keys</Link>
-            </p>
+        <main className={styles.page}>
+          <h1 className={styles.title}>Connect an AI assistant</h1>
+          {/* Custom views are not protected by Payload's access rules. */}
+          {!isAdminUser(user) ? (
+            <p>Only administrators can connect an AI assistant.</p>
+          ) : (
+            <>
+              <div className={styles.lede}>
+                <p>
+                  Connect Claude or ChatGPT to CILAS, and ask it in plain words to write the first
+                  draft of a course, an article or a registration form. It saves the draft here, so
+                  you do not copy text between pages.
+                </p>
+                <p>
+                  <strong>Nothing goes live.</strong> A person reads each draft in this admin and
+                  publishes it. The assistant cannot publish, delete anything or change who can read
+                  a page. It never sees applications, emails or who enrolled.
+                </p>
+              </div>
 
-            <Section title="What it does">
-              <p style={{ marginTop: 0 }}>
-                You connect an AI assistant, such as Claude, to this site. Then you ask it, in plain
-                words, to make things for you. It can:
-              </p>
-              <ul>
-                <li>write a first draft of a course, in English and Arabic,</li>
-                <li>write a first draft of an article, in English and Arabic,</li>
-                <li>
-                  make a registration form and link it to a course, with no copying between pages.
-                </li>
-              </ul>
-              <p>
-                It saves time on first drafts. <strong>No course or article goes live.</strong> The
-                assistant only makes drafts of them. A person has to open each draft here, read it,
-                and publish it. The assistant cannot publish, delete, or change who may read a page.
-                A new form has no draft state: anyone with its address can read it, but no live page
-                links to it until a person publishes the course.
-              </p>
-              <p style={{ marginBottom: 0 }}>
-                It can also look things up, such as cycles, teachers and existing courses, so it
-                does not make a duplicate. It sees only names, titles and ids. It never sees emails,
-                applications or who enrolled.
-              </p>
-            </Section>
+              <Section title="Connect">
+                <p>
+                  <strong>1. Copy this address.</strong>
+                </p>
+                <div className={styles.address}>
+                  <input
+                    className={styles.addressField}
+                    readOnly
+                    value={address}
+                    aria-label="Address to paste into the assistant"
+                  />
+                  <CopyButton text={address} label="Copy address" what="the CILAS address" />
+                </div>
+                <p>
+                  <strong>2. Paste it into your assistant.</strong> Follow the steps for the one you
+                  use.
+                </p>
+                <div className={styles.assistants}>
+                  {ASSISTANTS.map((assistant) => (
+                    <div key={assistant.id} className={styles.assistant}>
+                      <h3>{assistant.name}</h3>
+                      <p className={styles.muted}>{assistant.plans}</p>
+                      <ol>
+                        {assistant.steps.map((step) => (
+                          <li key={step}>{step}</li>
+                        ))}
+                      </ol>
+                      <p>{assistant.after}</p>
+                      <a
+                        className={styles.link}
+                        href={assistant.settingsUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        {assistant.settingsLabel} ↗
+                      </a>
+                    </div>
+                  ))}
+                </div>
+                <p style={{ marginBlockStart: '1rem' }}>
+                  <strong>3. Sign in and allow.</strong> When CILAS asks, sign in with your own
+                  administrator account and click <strong>Allow</strong>. The assistant then works
+                  as you, and a person who is not an administrator cannot connect.
+                </p>
+              </Section>
 
-            <Section title="1. Make a key">
-              <ol style={{ marginTop: 0 }}>
-                <li>
-                  Open{' '}
-                  <Link href="/admin/collections/payload-mcp-api-keys/create">
-                    AI access → Create new
+              <Section title="Ask for what you need">
+                <p>Copy an example, change the names, and send it to your assistant.</p>
+                {EXAMPLES.map((example) => (
+                  <div key={example.title} className={styles.example}>
+                    <h3>{example.title}</h3>
+                    <p className={styles.exampleText}>{example.text}</p>
+                    <CopyButton text={example.text} label="Copy example" what={example.title} />
+                  </div>
+                ))}
+                <p className={styles.muted}>
+                  The assistant first checks that the course or article does not exist yet. It gives
+                  you a link to each draft. It cannot set a schedule, a cover image or a footnote:
+                  add those in the draft.
+                </p>
+              </Section>
+
+              <Section title="Review and publish">
+                <ol>
+                  <li>Open the link the assistant gave you, or find the draft in its list.</li>
+                  <li>Read everything, in both languages, and fix what is wrong.</li>
+                  <li>Publish it as you always do. Until then, no one else can see it.</li>
+                </ol>
+                <div className={styles.links}>
+                  {PANEL_LINKS.map(({ href, label }) => (
+                    <Link key={href} className={styles.link} href={href}>
+                      {label}
+                    </Link>
+                  ))}
+                </div>
+                <p className={styles.muted}>
+                  If the assistant links a form to a course that is already published, the live page
+                  does not change. The link waits in a draft beside it. Publish that draft when you
+                  are ready.
+                </p>
+              </Section>
+
+              <Section title="Connected assistants">
+                <p>
+                  Each person who connects appears in{' '}
+                  <Link href="/admin/collections/oauth-tokens">Connected assistants</Link>, under
+                  Site.
+                </p>
+                <ul>
+                  <li>
+                    <strong>To disconnect one person:</strong> open Connected assistants, tick their
+                    row, and choose Delete. The assistant stops working at once. They can connect
+                    again later.
+                  </li>
+                  <li>
+                    <strong>To switch off Claude or ChatGPT for everyone:</strong> open{' '}
+                    <Link href="/admin/collections/oauth-clients">Assistant apps</Link>, open it,
+                    and untick “Allowed to connect”.
+                  </li>
+                  <li>
+                    A connection ends by itself after 30 days without use. Then connect again.
+                  </li>
+                  <li>
+                    If someone stops being an administrator, their assistant stops working at once.
+                  </li>
+                </ul>
+                <div className={styles.links}>
+                  <Link className={styles.link} href="/admin/collections/oauth-tokens">
+                    Connected assistants
                   </Link>
-                  .
-                </li>
-                <li>Give the key a label, for example “Claude on my laptop”.</li>
-                <li>
-                  Generate the API key. Copy the key and save it somewhere safe before you save the
-                  page. The site stores it in a form it cannot show again, so if you lose it, make a
-                  new key.
-                </li>
-              </ol>
-              <p style={{ marginBottom: 0 }}>
-                The key works as you. If an admin takes your admin role away, the key stops working
-                at once. Any admin can see the list of keys and delete one, for example after
-                someone leaves. No one can read a key after it is saved.
-              </p>
-            </Section>
+                  <Link className={styles.link} href="/admin/collections/oauth-clients">
+                    Assistant apps
+                  </Link>
+                </div>
+              </Section>
 
-            <Section title="2. Connect your assistant">
-              <p style={{ marginTop: 0 }}>
-                The address of the server is <strong>{endpoint}</strong>. Replace YOUR-KEY with the
-                key you copied.
-              </p>
-              <h3 style={{ fontSize: '15px' }}>Claude Desktop</h3>
-              <p>
-                Open Settings → Developer → Edit config, add this, save, and restart Claude. It
-                needs Node.js on your computer, because it runs a small helper called mcp-remote.
-              </p>
-              <code style={code}>{desktopConfig}</code>
-              <h3 style={{ fontSize: '15px' }}>Claude Code</h3>
-              <p>Run this once in a terminal:</p>
-              <code style={code}>{claudeCode}</code>
-            </Section>
-
-            <Section title="3. Ask for what you need">
-              <p style={{ marginTop: 0 }}>Examples of what to say:</p>
-              <ul style={{ marginBottom: 0 }}>
-                <li>“Make a course draft for the Fall 2026 cycle called ‘Reading the City’.”</li>
-                <li>
-                  “Here is the syllabus text. Make a Thematic course draft taught by Dina Hassan.
-                  English and Arabic are below.”
-                </li>
-                <li>“Make an article draft from this essay. The author is Omar Khaled.”</li>
-                <li>
-                  “Make a registration form for the Reading the City course. Ask why they want to
-                  join and which days they can attend.”
-                </li>
-              </ul>
-              <p style={{ marginBottom: 0 }}>
-                The assistant checks for an existing course first. It tells you the link to each
-                draft. Anything it cannot set, such as the schedule, the cover image or a footnote,
-                you add in the admin.
-              </p>
-            </Section>
-
-            <Section title="4. Review and publish">
-              <ol style={{ marginTop: 0 }}>
-                <li>Open the link the assistant gave you, or find the draft in its list.</li>
-                <li>Read everything, in both languages. Fix what is wrong.</li>
-                <li>
-                  Publish it as you always do. Courses and articles stay hidden until you publish.
-                </li>
-              </ol>
-              <p style={{ marginBottom: 0 }}>
-                If a form is linked to a course that is already published, the live page does not
-                change. The link waits in a draft beside it. Publish that draft when you are ready.
-              </p>
-            </Section>
-
-            <Section title="Keep it safe">
-              <ul style={{ margin: 0 }}>
-                <li>Do not share a key. Treat it like your password.</li>
-                <li>
-                  If you lose a key, or think someone has it, delete it here at once. Make a new
-                  one.
-                </li>
-                <li>Keys do not expire. Delete the ones you no longer use.</li>
-                <li>
-                  Do not use the key in an AI assistant that also has email or sending tools. A
-                  document or web page it reads could trick it into sending things.
-                </li>
-                <li>Check every draft before you publish it.</li>
-              </ul>
-            </Section>
-          </>
-        )}
+              <Section title="Keep it safe">
+                <ul style={{ margin: 0 }}>
+                  <li>Check every draft before you publish it.</li>
+                  <li>
+                    A new form can be read by anyone who has its address, but no page links to it
+                    until a person publishes the course.
+                  </li>
+                  <li>
+                    Do not paste instructions you got from strangers, such as text from a document
+                    or an email you do not trust. The assistant may follow them.
+                  </li>
+                  <li>
+                    If a phone or computer with a connected assistant is lost, disconnect it here.
+                  </li>
+                </ul>
+              </Section>
+            </>
+          )}
+        </main>
       </Gutter>
     </DefaultTemplate>
   )

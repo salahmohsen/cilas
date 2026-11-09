@@ -13,6 +13,7 @@ const CREATE = [
   { href: '/admin/collections/events/create', label: 'New event' },
   { href: '/admin/collections/courses/create', label: 'New course' },
   { href: '/admin/collections/media', label: 'Media library' },
+  { href: '/admin/ai-access', label: 'Connect an AI assistant' },
 ] as const
 
 type Tile = { label: string; count: number | null; href?: string }
@@ -72,7 +73,7 @@ export async function QuickActions({ payload, user }: { payload: Payload; user: 
           </div>
         )
       })}
-      <nav aria-label="Create" className={styles.create}>
+      <nav aria-label="Shortcuts" className={styles.create}>
         {CREATE.map(({ href, label }) => (
           <Link key={href} href={href} className={styles.pill}>
             {label}
