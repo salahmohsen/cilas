@@ -4,25 +4,12 @@ import { ToolInputError } from '../errors'
 import { adminUrl } from '../references'
 import { COURSE_TYPES, id, localizedText } from '../schemas'
 import { draftShape } from '../field-registry'
-import { validateCourse, writeDraft, unmappedSchema } from '../draft-write'
+import { writeDraft, unmappedSchema } from '../draft-write'
+import { validateCourse } from '../course-validation'
+import { draftInputError } from '../draft-result'
 import { adminTool } from '../tool'
-import type { RegistrationInput, ToolContext } from '../types'
+import type { ToolContext } from '../types'
 
-/** How a registration choice is stored; `inherit` leaves the field empty. */
-export const registrationData = (registration: RegistrationInput) => {
-  switch (registration.method) {
-    case 'inherit':
-      return undefined
-    case 'form':
-      return { method: 'form' as const, form: registration.form }
-    case 'external':
-      return { method: 'external' as const, url: registration.url }
-    case 'closed':
-      return { method: 'closed' as const }
-  }
-}
-
-/** The course that already has this web address, if any (live or draft). */
 const courseWithSlug = async ({ payload, req }: ToolContext, slug: string) =>
   (
     await payload.find({
@@ -91,6 +78,7 @@ export const createCourseDraftTool = adminTool({
   name: 'create_course_draft',
   description:
     'Create a course draft with structured schedule and course flow. Never publishes. Read cilas://guides/course first.',
+  inputError: draftInputError,
   shape: {
     ...courseShape,
     title: localizedText('Course title', 200),
@@ -118,6 +106,7 @@ export const updateCourseDraftTool = adminTool({
   name: 'update_course_draft',
   description:
     'Correct an existing course draft by id. Omitted fields stay unchanged. Null clears optional fields; arrays replace the whole field. A published course gets a draft beside its unchanged live version.',
+  inputError: draftInputError,
   shape: { ...courseShape, id: id('course'), source_unmapped: unmappedSchema },
   run: async ({ id, ...input }, ctx) => writeDraft('courses', input, ctx, id),
 })

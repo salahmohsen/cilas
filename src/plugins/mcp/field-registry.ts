@@ -21,7 +21,6 @@ const SYSTEM_FIELDS = {
   '*.blockName': 'Auto-generated block label',
 } as const
 
-/** Collection field shapes: localized leaves use { en?, ar? }; rich text uses Markdown. */
 export const FIELD_REGISTRY = {
   courses: {
     fields: Courses.fields,
