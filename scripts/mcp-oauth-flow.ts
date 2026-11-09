@@ -389,7 +389,14 @@ try {
 
   // The MCP endpoint.
   const list = await (await mcp(pair.access_token, 'tools/list')).text()
-  const names = ['lookup', 'create_course_draft', 'create_article_draft', 'create_form_and_link']
+  const names = [
+    'lookup',
+    'create_course_draft',
+    'create_article_draft',
+    'create_form_and_link',
+    'update_course_draft',
+    'update_article_draft',
+  ]
   check(
     'tools/list shows the four tools',
     names.every((name) => list.includes(`"${name}"`)),

@@ -1,3 +1,4 @@
+import { FIELD_REGISTRY } from './field-registry'
 import { COURSE_TYPE_OPTIONS } from '@/fields/course-type'
 import {
   LOCATION_OPTIONS,
@@ -18,67 +19,42 @@ export const GUIDE_URIS = {
   form: 'cilas://guides/form',
 } as const
 
+const contract = (collection: 'courses' | 'articles') => {
+  const entry = FIELD_REGISTRY[collection]
+  return `Accepted field paths (all nested shapes and allowed values are in the tool schema):\n${entry.accepted.map((path) => `- \`${path}\``).join('\n')}\n\nExcluded:\n${Object.entries(
+    entry.excluded,
+  )
+    .map(([path, reason]) => `- \`${path}\`: ${reason}`)
+    .join('\n')}`
+}
+const writingRules = `Extract every source field before calling a tool. Never put schedule, dates, prices or fellows in description text. Find all relationship ids with lookup; media lookup returns existing media ids. Do not invent ids. Report conflicts and ask the person before saving. Use update tools to correct an existing draft instead of creating a duplicate. Omitted fields stay unchanged; explicit null clears an optional field; arrays replace the whole field (keep row ids to retain other-language text). Localized leaves use { en?, ar? }; rich text leaves take Markdown. Do not translate without permission. Include any unmappable source facts in source_unmapped: [{ field, reason }]. State every not_saved and needs_human_review result; say incomplete plainly when returned. Always give admin_url and say a person must review and publish.`
+
 export const courseGuide = (): string => `# Course drafts
+Tools: create_course_draft and update_course_draft (id required for update).
+${writingRules}
+Look up existing courses, the cycle, fellows and any form first.
+Required on create: title.en, cycle, course_type.
+Course types:\n${list(COURSE_TYPE_OPTIONS)}
+Locations:\n${list(LOCATION_OPTIONS)}
+Teaching languages:\n${list(TEACHING_LANGUAGE_OPTIONS)}
+Session units:\n${list(SESSION_UNIT_OPTIONS)}
 
-Tool: \`create_course_draft\`. The result is always a draft. A person publishes it in the admin.
-
-## Before you call it
-1. \`lookup\` kind \`courses\` with the title, to find a duplicate (drafts show too).
-2. \`lookup\` kind \`cycles\` to find the cycle id (required).
-3. \`lookup\` kind \`people\` for each teacher (fellows). Never invent an id.
-
-## Fields
-- \`title\`: \`{ en, ar? }\`. English is required.
-- \`subtitle\`, \`summary\`, \`epigraph\`, \`language_note\`: optional \`{ en?, ar? }\` text.
-- \`description\`: \`{ en?, ar? }\` Markdown. Headings, lists, quotes, bold, italic and links (https, http, mailto) work. Footnotes do not (see the article guide).
-- \`slug\` (leave it out): the last part of the course's web address. It is made from the title. If another course already has that address (the same title in another cycle), the cycle's name is added, and the result says so. A \`slug\` you give is used exactly, or refused if taken.
-- \`course_type\` (required):
-${list(COURSE_TYPE_OPTIONS)}
-- \`cycle\` (required): a cycle id.
-- \`fellows\`: person ids.
-- \`session_unit\`:
-${list(SESSION_UNIT_OPTIONS)}
-- \`teaching_languages\`:
-${list(TEACHING_LANGUAGE_OPTIONS)}
-- \`location\`:
-${list(LOCATION_OPTIONS)}
-- \`registration\`, one of:
-  - \`{ "method": "inherit" }\`: use the cycle's setting (default).
-  - \`{ "method": "form", "form": <form id> }\`: a site form. Make one with \`create_form_and_link\`.
-  - \`{ "method": "external", "url": "https://…" }\`
-  - \`{ "method": "closed" }\`
-  (The site's methods are: ${REGISTRATION_METHODS.join(', ')}; inherit means none is set.)
-
-## Not covered
-Schedule, sessions, bibliography, price and cover image. Tell the user to add them in the admin.
-
-## After
-Give the user the link from the result (\`admin_url\`) and say a person must review and publish.
+Schedule shape: { start_date, start_precision: "day" | "week", weeks, slots: [{ weekday, start_time, end_time }], note: { en?, ar? } }. Times are 24-hour HH:MM in Africa/Cairo. Dates come from the shared expansion (ADR 0002); do not materialize generated dates into sessions. A start date must match one of the weekly slots unless precision is week. Conflicting dates and weekdays must be clarified with the person. Session dates, when explicitly supplied, replace the generated dates for that session and are saved as supplied.
+Sessions use order, session_title (localized), meetings, cancelled, description (localized Markdown), dates [{date,start_time,end_time}], bibliography [{type,title,href,note}], and activities [{kind,description}].
+There is no per-session delivery mode or place. Save a source delivery split in localized schedule.note, set course-level location (e.g. ["HYBRID"]), and tell the person the split is saved only as a note and needs human review.
+Registration uses method (${REGISTRATION_METHODS.join(', ')}), form, url, deadline. Null method inherits the cycle; no "inherit" enum. Applicant questions are real blocks with blockType and the fields in the schema; never add them to external registration.
+Pricing override uses min/max, EGP currency, localized note, need_based_deductions and payment_plans [{label,installments:[{amount}]}].
+${contract('courses')}
 `
 
 export const articleGuide = (): string => `# Article drafts
-
-Tool: \`create_article_draft\`. The result is always a draft. A person publishes it in the admin.
-
-## Before you call it
-1. \`lookup\` kind \`articles\` with the title, to find a duplicate.
-2. \`lookup\` kind \`people\` for each author (at least one). Never invent an id.
-
-## Fields
-- \`title\`: \`{ en, ar? }\`. English is required.
-- \`body\`: \`{ en?, ar? }\` Markdown. Headings, lists, quotes, bold, italic and links (https, http, mailto) work.
-- \`authors\`: person ids.
-- \`tags\`: short topic words.
-- \`requested_tier\`: \`community\` or \`public\`. Only a request; the editor decides.
-- \`translation\`: for a translated article only. \`original_language\` is one of:
-${list(LANGUAGE_OPTIONS)}
-  with optional \`original_title\` and \`original_url\`.
-
-## Footnotes
-Footnotes on the site are inline blocks. Markdown such as \`[^1]\` is not converted: it stays as plain text. Do not write footnote markers. Put sources in the text, or tell the user to add footnotes in the admin.
-
-## Not covered
-Cover image, credits, related articles, featured, and publication date. Articles are not linked to courses.
+Tools: create_article_draft and update_article_draft (id required for update).
+${writingRules}
+Look up existing articles and all authors first. Required on create: title.en and at least one author id.
+Body Markdown becomes the real article body. Use [^1] and [^1]: note text for real inline footnotes, separately in each locale. Missing, duplicate or unreferenced definitions are refused. Mentions are preserved as text or links; do not infer a person from an ambiguous name.
+Tags use [{tag:"topic"}]. Credits use [{role, label:{en?,ar?}, people:[id]}]. Related articles use ids. Translation includes original_language, original_title, original_authors, original_url, original_source, and localized note.
+Original languages:\n${list(LANGUAGE_OPTIONS)}
+${contract('articles')}
 `
 
 export const formGuide = (): string => `# Registration forms

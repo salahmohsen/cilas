@@ -79,7 +79,10 @@ export async function AiAccessGuideView({
                 <p>
                   Connect Claude or ChatGPT to CILAS, and ask it in plain words to write the first
                   draft of a course, an article or a registration form. It saves the draft here, so
-                  you do not copy text between pages.
+                  you do not copy text between pages. It can also correct an existing course or
+                  article draft, save schedules and course flow, and add article footnotes, credits
+                  and relationships. It reports what was saved and what needs your review. Delivery
+                  changes between sessions are kept as a schedule note.
                 </p>
                 <p>
                   <strong>Nothing goes live.</strong> A person reads each draft in this admin and
