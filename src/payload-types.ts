@@ -103,6 +103,10 @@ export interface Config {
     exports: Export;
     imports: Import;
     'payload-mcp-api-keys': PayloadMcpApiKey;
+    'oauth-clients': OauthClient;
+    'oauth-auth-codes': OauthAuthCode;
+    'oauth-tokens': OauthToken;
+    'oauth-csrf-nonces': OauthCsrfNonce;
     'payload-kv': PayloadKv;
     'payload-jobs': PayloadJob;
     'payload-locked-documents': PayloadLockedDocument;
@@ -162,6 +166,10 @@ export interface Config {
     exports: ExportsSelect<false> | ExportsSelect<true>;
     imports: ImportsSelect<false> | ImportsSelect<true>;
     'payload-mcp-api-keys': PayloadMcpApiKeysSelect<false> | PayloadMcpApiKeysSelect<true>;
+    'oauth-clients': OauthClientsSelect<false> | OauthClientsSelect<true>;
+    'oauth-auth-codes': OauthAuthCodesSelect<false> | OauthAuthCodesSelect<true>;
+    'oauth-tokens': OauthTokensSelect<false> | OauthTokensSelect<true>;
+    'oauth-csrf-nonces': OauthCsrfNoncesSelect<false> | OauthCsrfNoncesSelect<true>;
     'payload-kv': PayloadKvSelect<false> | PayloadKvSelect<true>;
     'payload-jobs': PayloadJobsSelect<false> | PayloadJobsSelect<true>;
     'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>;
@@ -2528,6 +2536,127 @@ export interface PayloadMcpApiKey {
   collection: 'payload-mcp-api-keys';
 }
 /**
+ * Claude and ChatGPT as they are registered here. Switch one off to stop every person using it, without deleting anything.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "oauth-clients".
+ */
+export interface OauthClient {
+  id: number;
+  /**
+   * UUID assigned at registration. Immutable.
+   */
+  clientId: string;
+  /**
+   * Human-readable name shown on the consent screen.
+   */
+  clientName?: string | null;
+  /**
+   * Allowed redirect URIs. Exact-match enforced on every authorize request.
+   */
+  redirectUris: {
+    uri: string;
+    id?: string | null;
+  }[];
+  grantTypes?: ('authorization_code' | 'refresh_token')[] | null;
+  responseTypes?: 'code'[] | null;
+  tokenEndpointAuthMethod?: 'none' | null;
+  softwareId?: string | null;
+  softwareVersion?: string | null;
+  /**
+   * Deactivated clients cannot start new authorization flows.
+   */
+  isActive?: boolean | null;
+  /**
+   * Updated on each successful token exchange.
+   */
+  lastUsedAt?: string | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "oauth-auth-codes".
+ */
+export interface OauthAuthCode {
+  id: number;
+  /**
+   * HMAC-SHA-256 hash of the authorization code plaintext.
+   */
+  codeHash: string;
+  clientId: string;
+  userId: string;
+  redirectUri: string;
+  scope?: string | null;
+  codeChallenge: string;
+  codeChallengeMethod: 'S256';
+  expiresAt: string;
+  /**
+   * Set when the code is exchanged. Null means it has not been used.
+   */
+  consumedAt?: string | null;
+}
+/**
+ * Each row is one person signed in to one assistant. To disconnect, delete the row: the assistant stops working at once, and the person can connect again.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "oauth-tokens".
+ */
+export interface OauthToken {
+  id: number;
+  /**
+   * The CILAS account the assistant acts as.
+   */
+  person?: string | null;
+  assistant?: string | null;
+  /**
+   * HMAC-SHA-256 hash of the token plaintext. Never store plaintext.
+   */
+  tokenHash: string;
+  tokenType: 'access' | 'refresh';
+  clientId: string;
+  userId: string;
+  scope?: string | null;
+  /**
+   * MCPAccessSettings-compatible capability flags granted at consent.
+   */
+  capabilities?:
+    | {
+        [k: string]: unknown;
+      }
+    | unknown[]
+    | string
+    | number
+    | boolean
+    | null;
+  expiresAt: string;
+  /**
+   * Set when the token is explicitly revoked or a refresh token family is invalidated.
+   */
+  revokedAt?: string | null;
+  /**
+   * Updated (best-effort) on each successful validation.
+   */
+  lastUsedAt?: string | null;
+  /**
+   * ID of the refresh token this token replaced. Used to trace the rotation family.
+   */
+  parentTokenId?: string | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "oauth-csrf-nonces".
+ */
+export interface OauthCsrfNonce {
+  id: number;
+  nonceHash: string;
+  userId: string;
+  expiresAt: string;
+  consumedAt?: string | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "payload-kv".
  */
@@ -4243,6 +4372,74 @@ export interface PayloadMcpApiKeysSelect<T extends boolean = true> {
   apiKey?: T;
   apiKeyIndex?: T;
   hasAPIKey?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "oauth-clients_select".
+ */
+export interface OauthClientsSelect<T extends boolean = true> {
+  clientId?: T;
+  clientName?: T;
+  redirectUris?:
+    | T
+    | {
+        uri?: T;
+        id?: T;
+      };
+  grantTypes?: T;
+  responseTypes?: T;
+  tokenEndpointAuthMethod?: T;
+  softwareId?: T;
+  softwareVersion?: T;
+  isActive?: T;
+  lastUsedAt?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "oauth-auth-codes_select".
+ */
+export interface OauthAuthCodesSelect<T extends boolean = true> {
+  codeHash?: T;
+  clientId?: T;
+  userId?: T;
+  redirectUri?: T;
+  scope?: T;
+  codeChallenge?: T;
+  codeChallengeMethod?: T;
+  expiresAt?: T;
+  consumedAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "oauth-tokens_select".
+ */
+export interface OauthTokensSelect<T extends boolean = true> {
+  person?: T;
+  assistant?: T;
+  tokenHash?: T;
+  tokenType?: T;
+  clientId?: T;
+  userId?: T;
+  scope?: T;
+  capabilities?: T;
+  expiresAt?: T;
+  revokedAt?: T;
+  lastUsedAt?: T;
+  parentTokenId?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "oauth-csrf-nonces_select".
+ */
+export interface OauthCsrfNoncesSelect<T extends boolean = true> {
+  nonceHash?: T;
+  userId?: T;
+  expiresAt?: T;
+  consumedAt?: T;
+  updatedAt?: T;
+  createdAt?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
