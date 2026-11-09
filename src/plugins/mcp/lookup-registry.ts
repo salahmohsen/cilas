@@ -71,6 +71,9 @@ export type LookupRow = {
   id: number
   title: string
   slug?: string
+  /** What is live: `published`, or `draft` when it was never published. */
   status?: 'draft' | 'published'
-  admin_path: string
+  /** Said only of a published record that has a newer draft waiting. */
+  state?: string
+  admin_url: string
 }

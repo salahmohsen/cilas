@@ -1,5 +1,7 @@
 import type { CollectionSlug } from 'payload'
 
+import { env } from '@/env'
+
 import { ToolInputError } from './errors'
 import type { ToolContext } from './types'
 
@@ -36,5 +38,6 @@ export const assertExist = async (
   }
 }
 
-export const adminPath = (collection: string, id: number): string =>
-  `/admin/collections/${collection}/${id}`
+/** The full address of a record in the admin, so the person can click it. */
+export const adminUrl = (collection: string, id: number): string =>
+  `${env.NEXT_PUBLIC_SERVER_URL.replace(/\/+$/, '')}/admin/collections/${collection}/${id}`

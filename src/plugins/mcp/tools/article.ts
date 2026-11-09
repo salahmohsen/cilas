@@ -3,7 +3,7 @@ import { z } from 'zod/v3'
 import type { Article } from '@/payload-types'
 
 import { markdownToLexical } from '../markdown'
-import { adminPath, assertExist } from '../references'
+import { adminUrl, assertExist } from '../references'
 import { httpUrlText, id, localizedText, markdownText, ORIGINAL_LANGUAGES } from '../schemas'
 import { adminTool } from '../tool'
 import { inTransaction } from '../transaction'
@@ -12,7 +12,7 @@ import type { CreatedDraft } from '../types'
 export const createArticleDraftTool = adminTool({
   name: 'create_article_draft',
   description:
-    'Create an article as a DRAFT. It is never published: a person must review it in the admin and publish it. Look up the authors first and use their real ids. Give the Arabic version when the user gives it. Returns the draft id and its admin path.',
+    'Create an article as a DRAFT. It is never published: a person must review it in the admin and publish it. Look up the authors first and use their real ids. Give the Arabic version when the user gives it. Returns the draft id and a link to it in the admin.',
   shape: {
     title: localizedText('The article title', 200),
     body: markdownText('The article text'),
@@ -84,7 +84,7 @@ export const createArticleDraftTool = adminTool({
       id: article.id,
       slug: article.slug,
       status: 'draft',
-      admin_path: adminPath('articles', article.id),
+      admin_url: adminUrl('articles', article.id),
       locales: hasArabic ? ['en', 'ar'] : ['en'],
       notes: [
         'Not published. A person must review the draft and publish it in the admin.',

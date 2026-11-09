@@ -4,11 +4,12 @@ import type { Form } from '@/payload-types'
 
 import { ToolInputError } from '../errors'
 import { questionSchema, type Question } from '../form-questions'
-import { adminPath, assertExist } from '../references'
+import { adminUrl, assertExist } from '../references'
 import { markdownToLexical } from '../markdown'
 import { id, localizedText, optionalLocalizedText } from '../schemas'
 import { adminTool } from '../tool'
 import { inTransaction } from '../transaction'
+import type { ToolContext } from '../types'
 
 type Locale = 'en' | 'ar'
 
@@ -31,10 +32,35 @@ const blockFor = (question: Question, locale: Locale) => ({
     : {}),
 })
 
+/** `like` has no escape of its own, so `%` and `_` would match anything. */
+const plain = (text: string) => text.replace(/[%_\\]/g, ' ').trim()
+
+/** A form that already has this English title, found even when the case differs. */
+const formTitled = async ({ payload, req }: ToolContext, title: string) => {
+  const { docs } = await payload.find({
+    collection: 'forms',
+    where: { title: { like: plain(title) } },
+    limit: 25,
+    depth: 0,
+    locale: 'en',
+    fallbackLocale: false,
+    select: { title: true },
+    overrideAccess: true,
+    req,
+  })
+  const wanted = title.trim().toLowerCase()
+  return docs.find(
+    (doc) =>
+      String(doc.title ?? '')
+        .trim()
+        .toLowerCase() === wanted,
+  )
+}
+
 export const createFormAndLinkTool = adminTool({
   name: 'create_form_and_link',
   description:
-    'Create a registration form, and optionally link it to a course. Every form already asks name and email first, so do not add them. A published course is never changed: the link is saved as a draft beside the live page, and a person publishes it. Cycles cannot be linked because they have no drafts. Returns the form id and, when linked, the course draft.',
+    'Create a registration form, and optionally link it to a course. Every form already asks name and email first, so do not add them. A published course is never changed: the link is saved as a draft beside the live page, and a person publishes it. Cycles cannot be linked because they have no drafts. Returns the form id and a link to it, and, when linked, the course draft. A form with the same English title is refused unless create_another is true.',
   shape: {
     title: localizedText('The form title', 200),
     questions: z
@@ -44,6 +70,12 @@ export const createFormAndLinkTool = adminTool({
       .describe('The questions after name and email, in order.'),
     confirmation_message: optionalLocalizedText('The thank-you message after sending', 500),
     submit_button_label: z.string().trim().max(60).optional().describe('The submit button text.'),
+    create_another: z
+      .boolean()
+      .default(false)
+      .describe(
+        'Leave this out. A form with the same English title is refused, because a repeated request would make a second form. Set it to true only if the user really wants two forms with the same title.',
+      ),
     link: z
       .object({
         target: z
@@ -66,6 +98,14 @@ export const createFormAndLinkTool = adminTool({
     if (repeated)
       throw new ToolInputError(`Two questions are named "${repeated}". Names must be unique.`)
     if (input.link) await assertExist(ctx, 'courses', [input.link.id], 'Course')
+    if (!input.create_another) {
+      const same = await formTitled(ctx, input.title.en)
+      if (same) {
+        throw new ToolInputError(
+          `A form called "${input.title.en}" already exists: form ${same.id} (${adminUrl('forms', Number(same.id))}). Nothing was created. It may be from an earlier attempt: tell the user, and ask them to check it and its course link. To make another form with the same title on purpose, call this again with create_another set to true.`,
+        )
+      }
+    }
 
     const hasArabic = Boolean(
       input.title.ar ||
@@ -166,13 +206,13 @@ export const createFormAndLinkTool = adminTool({
     })
 
     return {
-      form: { id: outcome.form.id, admin_path: adminPath('forms', outcome.form.id) },
+      form: { id: outcome.form.id, admin_url: adminUrl('forms', outcome.form.id) },
       ...(outcome.course
         ? {
             linked_course: {
               id: outcome.course.id,
               status: 'draft',
-              admin_path: adminPath('courses', outcome.course.id),
+              admin_url: adminUrl('courses', outcome.course.id),
             },
           }
         : {}),

@@ -31,6 +31,7 @@ Tool: \`create_course_draft\`. The result is always a draft. A person publishes 
 - \`title\`: \`{ en, ar? }\`. English is required.
 - \`subtitle\`, \`summary\`, \`epigraph\`, \`language_note\`: optional \`{ en?, ar? }\` text.
 - \`description\`: \`{ en?, ar? }\` Markdown. Headings, lists, quotes, bold, italic and links (https, http, mailto) work. Footnotes do not (see the article guide).
+- \`slug\` (leave it out): the last part of the course's web address. It is made from the title. If another course already has that address (the same title in another cycle), the cycle's name is added, and the result says so. A \`slug\` you give is used exactly, or refused if taken.
 - \`course_type\` (required):
 ${list(COURSE_TYPE_OPTIONS)}
 - \`cycle\` (required): a cycle id.
@@ -52,7 +53,7 @@ ${list(LOCATION_OPTIONS)}
 Schedule, sessions, bibliography, price and cover image. Tell the user to add them in the admin.
 
 ## After
-Give the user the admin path from the result and say a person must review and publish.
+Give the user the link from the result (\`admin_url\`) and say a person must review and publish.
 `
 
 export const articleGuide = (): string => `# Article drafts
@@ -93,6 +94,9 @@ Each question has \`name\` (machine name, lower case, unique), \`label\` (\`{ en
 
 File uploads, country and state menus, and text blocks are not available here.
 
+## One form per title
+A form with the same English title as an existing one is refused, and the answer names it: a repeated request would otherwise make a second form. Tell the user, and ask them to check the first one. Only if they really want two with the same title, call again with \`create_another: true\`.
+
 ## Linking
 \`link: { target: "course", id }\` sets the course's registration to this form.
 - A draft course stays a draft.
@@ -100,5 +104,5 @@ File uploads, country and state menus, and text blocks are not available here.
 - A cycle cannot be linked here: it has no drafts, so it would change at once. Say so and tell the user to do it in the admin.
 
 ## Not covered
-The emails a form sends, redirects, and the confirmation text. An admin sets these.
+The emails a form sends and where it redirects. An admin sets these. The thank-you message can be given; a default is used if not.
 `

@@ -2483,19 +2483,19 @@ export interface PayloadMcpApiKey {
   description?: string | null;
   'payload-mcp-tool'?: {
     /**
-     * Find existing records and their ids: cycles, programmes, courses, articles, forms or people. Use it before creating anything, to find ids and to avoid a duplicate (drafts are included for courses and articles). Returns only id, title or name, slug and status.
+     * Find existing records and their ids: cycles, programmes, courses, articles, forms or people. Use it before creating anything, to find ids and to avoid a duplicate (drafts are included for courses and articles). Returns only id, title or name, slug, status and a link. A published course or article that has a newer draft is shown as published, with a note.
      */
     lookup?: boolean | null;
     /**
-     * Create a course as a DRAFT. It is never published: a person must review it in the admin and publish it. Look up the cycle and any fellows first and use their real ids. Give Arabic text when the user gives it. Returns the draft id and its admin path.
+     * Create a course as a DRAFT. It is never published: a person must review it in the admin and publish it. Look up the cycle and any fellows first and use their real ids. Give Arabic text when the user gives it. Returns the draft id and a link to it in the admin.
      */
     createCourseDraft?: boolean | null;
     /**
-     * Create an article as a DRAFT. It is never published: a person must review it in the admin and publish it. Look up the authors first and use their real ids. Give the Arabic version when the user gives it. Returns the draft id and its admin path.
+     * Create an article as a DRAFT. It is never published: a person must review it in the admin and publish it. Look up the authors first and use their real ids. Give the Arabic version when the user gives it. Returns the draft id and a link to it in the admin.
      */
     createArticleDraft?: boolean | null;
     /**
-     * Create a registration form, and optionally link it to a course. Every form already asks name and email first, so do not add them. A published course is never changed: the link is saved as a draft beside the live page, and a person publishes it. Cycles cannot be linked because they have no drafts. Returns the form id and, when linked, the course draft.
+     * Create a registration form, and optionally link it to a course. Every form already asks name and email first, so do not add them. A published course is never changed: the link is saved as a draft beside the live page, and a person publishes it. Cycles cannot be linked because they have no drafts. Returns the form id and a link to it, and, when linked, the course draft. A form with the same English title is refused unless create_another is true.
      */
     createFormAndLink?: boolean | null;
   };

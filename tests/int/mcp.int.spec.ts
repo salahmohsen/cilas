@@ -288,7 +288,7 @@ describe('admin-only MCP server', () => {
       expect(isError, text).toBe(false)
       courseId = track('courses', json).id
       expect(json.status).toBe('draft')
-      expect(json.admin_path).toBe(`/admin/collections/courses/${courseId}`)
+      expect(json.admin_url).toBe(`http://localhost:3000/admin/collections/courses/${courseId}`)
       expect(json.locales).toEqual(['en', 'ar'])
 
       const live = await payload.findByID({
@@ -536,7 +536,7 @@ describe('admin-only MCP server', () => {
   })
 
   describe('lookup', () => {
-    const allowed = new Set(['id', 'title', 'slug', 'status', 'admin_path'])
+    const allowed = new Set(['id', 'title', 'slug', 'status', 'state', 'admin_url'])
 
     it.each(['cycles', 'programmes', 'courses', 'articles', 'forms', 'people'])(
       'returns only safe fields for %s',
@@ -557,6 +557,171 @@ describe('admin-only MCP server', () => {
       )
       const byArabic = await call('lookup', admin, { kind: 'courses', query: 'دورة الاختبار' })
       expect(byArabic.json.results.length).toBeGreaterThan(0)
+    })
+  })
+
+  describe('create_form_and_link retries', () => {
+    const questions = [{ type: 'text', name: 'why', label: { en: 'Why?' } }]
+
+    it('refuses a second form with the same English title and names the first', async () => {
+      const title = uniq('Retry form')
+      const first = await call('create_form_and_link', admin, { title: { en: title }, questions })
+      expect(first.isError, first.text).toBe(false)
+      const formId = track('forms', first.json.form).id
+      expect(first.json.form.admin_url).toBe(
+        `http://localhost:3000/admin/collections/forms/${formId}`,
+      )
+
+      const again = await call('create_form_and_link', admin, {
+        title: { en: title.toUpperCase() },
+        questions,
+      })
+      expect(again.isError).toBe(true)
+      expect(again.text).toContain(`form ${formId}`)
+      expect(again.text).toContain('create_another')
+      const count = await payload.count({
+        collection: 'forms',
+        where: { title: { equals: title } },
+        locale: 'en',
+        overrideAccess: true,
+      })
+      expect(count.totalDocs).toBe(1)
+    })
+
+    it('makes another when it is asked for on purpose', async () => {
+      const title = uniq('Twin form')
+      const first = await call('create_form_and_link', admin, { title: { en: title }, questions })
+      track('forms', first.json.form)
+      const second = await call('create_form_and_link', admin, {
+        title: { en: title },
+        questions,
+        create_another: true,
+      })
+      expect(second.isError, second.text).toBe(false)
+      track('forms', second.json.form)
+      expect(second.json.form.id).not.toBe(first.json.form.id)
+    })
+  })
+
+  describe('create_course_draft web address', () => {
+    const base = { course_type: 'CORE', registration: { method: 'closed' } }
+
+    it('gives a second course with the same title a different address, and says so', async () => {
+      const title = uniq('Same Title')
+      const other = track(
+        'cycles',
+        await payload.create({
+          collection: 'cycles',
+          data: {
+            season: 'spring',
+            start_year: 2080 + Math.floor(Math.random() * 9),
+            place: (
+              await payload.find({ collection: 'places', limit: 1, depth: 0, overrideAccess: true })
+            ).docs[0]!.id,
+          },
+          overrideAccess: true,
+        }),
+      )
+      const first = await call('create_course_draft', admin, {
+        ...base,
+        title: { en: title },
+        cycle: cycleId,
+      })
+      expect(first.isError, first.text).toBe(false)
+      track('courses', first.json)
+      const second = await call('create_course_draft', admin, {
+        ...base,
+        title: { en: title },
+        cycle: other.id,
+      })
+      expect(second.isError, second.text).toBe(false)
+      track('courses', second.json)
+      expect(second.json.slug).not.toBe(first.json.slug)
+      expect(second.json.slug).toContain(String(first.json.slug))
+      expect(second.json.notes.join(' ')).toMatch(/Another course already used the web address/)
+    })
+
+    it('keeps an address the admin chose, or says it is taken', async () => {
+      const slug = uniq('chosen-address')
+      const first = await call('create_course_draft', admin, {
+        ...base,
+        title: { en: uniq('Chosen') },
+        cycle: cycleId,
+        slug,
+      })
+      expect(first.isError, first.text).toBe(false)
+      track('courses', first.json)
+      expect(first.json.slug).toBe(slug)
+      const clash = await call('create_course_draft', admin, {
+        ...base,
+        title: { en: uniq('Other title') },
+        cycle: cycleId,
+        slug,
+      })
+      expect(clash.isError).toBe(true)
+      expect(clash.text).toContain(`"${slug}" is already used by course ${first.json.id}`)
+    })
+  })
+
+  describe('lookup shows what is live', () => {
+    it('shows a live course with a waiting draft as published, with a note', async () => {
+      const title = uniq('Live with draft')
+      const course = track(
+        'courses',
+        await payload.create({
+          collection: 'courses',
+          data: {
+            _status: 'published',
+            title,
+            slug: uniq('live-with-draft'),
+            course_type: 'CORE',
+            cycle: cycleId,
+            tier: 'public',
+            registration: { method: 'closed' },
+          } as never,
+          user: { ...admin, collection: 'users' } as never,
+          overrideAccess: true,
+        }),
+      )
+      await payload.update({
+        collection: 'courses',
+        id: course.id,
+        draft: true,
+        data: { _status: 'draft', title: `${title} (new draft)` } as never,
+        overrideAccess: true,
+      })
+      const { json } = await call('lookup', admin, { kind: 'courses', query: title })
+      const row = json.results.find((r: { id: number }) => r.id === course.id)
+      expect(row.status).toBe('published')
+      expect(row.state).toMatch(/newer draft is waiting/)
+    })
+
+    it('shows a course that was never published as a draft, with no note', async () => {
+      const { json } = await call('lookup', admin, { kind: 'courses', query: 'Mcp Course' })
+      const row = json.results.find((r: { status?: string }) => r.status)
+      expect(row.status).toBe('draft')
+      expect(row).not.toHaveProperty('state')
+    })
+
+    it('prefers a title in either language, so an empty English one does not hide the Arabic', async () => {
+      const arabic = `دورة ${uniq('arabic-only')}`
+      const person = track(
+        'people',
+        await payload.create({
+          collection: 'people',
+          data: { name: 'Name En', slug: uniq('arabic-only-person') },
+          overrideAccess: true,
+        }),
+      )
+      await payload.update({
+        collection: 'people',
+        id: person.id,
+        locale: 'ar',
+        data: { name: arabic },
+        overrideAccess: true,
+      })
+      const { json } = await call('lookup', admin, { kind: 'people', query: arabic })
+      expect(json.results.find((r: { id: number }) => r.id === person.id).title).toBeTruthy()
     })
   })
 })

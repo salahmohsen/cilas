@@ -11,7 +11,6 @@ import type {
   Config,
   Endpoint,
   Field,
-  Payload,
   PayloadRequest,
   Plugin,
   Where,

@@ -29,7 +29,8 @@ export type Localized = { en: string; ar?: string }
 export type CreatedDraft = {
   id: number
   status: 'draft'
-  admin_path: string
+  /** The full address in the admin, which the person clicks to review the draft. */
+  admin_url: string
   locales: Array<'en' | 'ar'>
   notes: string[]
 }

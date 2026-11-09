@@ -1,9 +1,11 @@
 import { z } from 'zod/v3'
 
+import { slugify } from '@/lib/slugify'
 import type { Course } from '@/payload-types'
 
+import { ToolInputError } from '../errors'
 import { markdownToLexical } from '../markdown'
-import { adminPath, assertExist } from '../references'
+import { adminUrl, assertExist } from '../references'
 import {
   COURSE_TYPES,
   id,
@@ -17,7 +19,7 @@ import {
 } from '../schemas'
 import { adminTool } from '../tool'
 import { inTransaction } from '../transaction'
-import type { CreatedDraft, Localized, RegistrationInput } from '../types'
+import type { CreatedDraft, Localized, RegistrationInput, ToolContext } from '../types'
 
 type Locale = 'en' | 'ar'
 type Side<T> = Partial<Record<Locale, T>>
@@ -54,10 +56,72 @@ export const registrationData = (registration: RegistrationInput) => {
   }
 }
 
+/** The course that already has this web address, if any (live or draft). */
+const courseWithSlug = async ({ payload, req }: ToolContext, slug: string) =>
+  (
+    await payload.find({
+      collection: 'courses',
+      where: { slug: { equals: slug } },
+      limit: 1,
+      depth: 0,
+      draft: false,
+      select: { title: true },
+      locale: 'en',
+      fallbackLocale: false,
+      overrideAccess: true,
+      req,
+    })
+  ).docs[0]
+
+const MAX_SLUG = 100
+
+/**
+ * The web address of a new course. An admin who gave one gets exactly it, or
+ * is told it is taken. Otherwise it comes from the title, and when another
+ * course (say the same title in another cycle) already has it, the cycle's
+ * name is added, then a number. No one has to know what a slug is.
+ */
+const chooseSlug = async (
+  ctx: ToolContext,
+  title: string,
+  cycle: number,
+  wanted: string | undefined,
+): Promise<{ slug: string; changed: boolean }> => {
+  if (wanted) {
+    const slug = slugify(wanted).slice(0, MAX_SLUG)
+    if (!slug) throw new ToolInputError('That web address has no usable letters. Give another.')
+    const taken = await courseWithSlug(ctx, slug)
+    if (taken) {
+      throw new ToolInputError(
+        `The web address "${slug}" is already used by course ${taken.id} (${adminUrl('courses', Number(taken.id))}). Nothing was created. Give a different slug, or leave it out and one is made from the title.`,
+      )
+    }
+    return { slug, changed: false }
+  }
+  const base = slugify(title).slice(0, MAX_SLUG) || 'course'
+  if (!(await courseWithSlug(ctx, base))) return { slug: base, changed: false }
+  const found = await ctx.payload.findByID({
+    collection: 'cycles',
+    id: cycle,
+    depth: 0,
+    select: { slug: true },
+    overrideAccess: true,
+    req: ctx.req,
+  })
+  const withCycle = found.slug ? `${base}-${found.slug}`.slice(0, MAX_SLUG) : base
+  for (let attempt = 1; attempt <= 20; attempt += 1) {
+    const slug = attempt === 1 ? withCycle : `${withCycle}-${attempt}`
+    if (slug !== base && !(await courseWithSlug(ctx, slug))) return { slug, changed: true }
+  }
+  throw new ToolInputError(
+    'Could not find a free web address from the title. Give a slug of your own.',
+  )
+}
+
 export const createCourseDraftTool = adminTool({
   name: 'create_course_draft',
   description:
-    'Create a course as a DRAFT. It is never published: a person must review it in the admin and publish it. Look up the cycle and any fellows first and use their real ids. Give Arabic text when the user gives it. Returns the draft id and its admin path.',
+    'Create a course as a DRAFT. It is never published: a person must review it in the admin and publish it. Look up the cycle and any fellows first and use their real ids. Give Arabic text when the user gives it. Returns the draft id and a link to it in the admin.',
   shape: {
     title: localizedText('The course title', 200),
     subtitle: optionalLocalizedText('A second line under the title', 200),
@@ -82,6 +146,14 @@ export const createCourseDraftTool = adminTool({
     location: z.array(z.enum(LOCATIONS)).optional().describe('Where it meets.'),
     language_note: optionalLocalizedText('A note on mixed languages', 200),
     registration: registrationSchema.default({ method: 'inherit' }),
+    slug: z
+      .string()
+      .trim()
+      .max(MAX_SLUG)
+      .optional()
+      .describe(
+        'The last part of the course’s web address. Leave it out: it is made from the title, and made different from other courses that have the same title.',
+      ),
   },
   run: async (input, ctx) => {
     const { payload, req, user } = ctx
@@ -90,6 +162,13 @@ export const createCourseDraftTool = adminTool({
     if (input.registration.method === 'form') {
       await assertExist(ctx, 'forms', [input.registration.form], 'Form')
     }
+
+    const { slug, changed: slugChanged } = await chooseSlug(
+      ctx,
+      input.title.en,
+      input.cycle,
+      input.slug,
+    )
 
     const description = {
       en: input.description?.en
@@ -115,6 +194,7 @@ export const createCourseDraftTool = adminTool({
         draft: true,
         data: {
           _status: 'draft',
+          slug,
           ...textFor('en', input),
           ...(description.en ? { description: description.en } : {}),
           course_type: input.course_type,
@@ -154,7 +234,7 @@ export const createCourseDraftTool = adminTool({
       id: course.id,
       slug: course.slug,
       status: 'draft',
-      admin_path: adminPath('courses', course.id),
+      admin_url: adminUrl('courses', course.id),
       locales: hasArabic ? ['en', 'ar'] : ['en'],
       notes: [
         'Not published. A person must review the draft and publish it in the admin.',
@@ -162,6 +242,11 @@ export const createCourseDraftTool = adminTool({
           ? 'Registration follows the cycle.'
           : `Registration is set to ${input.registration.method}.`,
         'No schedule or sessions yet; add them in the admin.',
+        ...(slugChanged
+          ? [
+              `Another course already used the web address from the title, so this one is "${slug}". A person can change it in the draft.`,
+            ]
+          : []),
       ],
     }
     return result
