@@ -168,7 +168,11 @@ describe('admin-only MCP server', () => {
         })
         return endpoint.handler(req)
       }
-      await expect(send(null, 'tools/list')).rejects.toThrow()
+      const unauthorized = await send(null, 'tools/list')
+      expect(unauthorized.status).toBe(401)
+      expect(unauthorized.headers.get('www-authenticate')).toMatch(
+        /resource_metadata="[^"]+\/\.well-known\/oauth-protected-resource"/,
+      )
 
       const owner = await mcpAccount('endpoint-owner', ['admin'])
       const secret = crypto.randomUUID()

@@ -400,7 +400,7 @@ export default buildConfig({
       },
     }),
     // AI assistants make drafts through /api/mcp (src/plugins/mcp). Admins only.
-    adminMcp(),
+    ...adminMcp(),
     // What each role sees in the admin nav. Last, so it covers plugin collections.
     roleNav(),
   ],

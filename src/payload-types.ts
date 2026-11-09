@@ -2462,7 +2462,7 @@ export interface Import {
   focalY?: number | null;
 }
 /**
- * Keys that let an AI assistant make course and article drafts. A person always publishes.
+ * For developers: a key lets a program make course and article drafts. Administrators connect Claude or ChatGPT instead, from the AI assistants guide.
  *
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "payload-mcp-api-keys".

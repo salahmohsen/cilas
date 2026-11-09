@@ -5,6 +5,16 @@ import { routing } from './i18n/routing'
 
 const intl = createMiddleware(routing)
 
+/**
+ * Discovery for Claude and ChatGPT: the two documents live at the site's root
+ * (RFC 8414, RFC 9728) and Payload serves them under /api. This is what the
+ * OAuth plugin's own middleware does; its other rewrite (a bare-host POST)
+ * stays off, because the address an admin pastes is /api/mcp. Clients may also
+ * ask for the resource document under the server's path.
+ */
+const PRM_FOR_MCP = '/.well-known/oauth-protected-resource/api/mcp'
+const WELL_KNOWN_OAUTH = /^\/\.well-known\/oauth-(authorization-server|protected-resource)$/
+
 /** Old Weebly pages (`/x.html`) and uploads, handled by the legacy catch-all. */
 const LEGACY = /\.html$|^\/uploads\//
 
@@ -45,6 +55,16 @@ const loginFor = (request: NextRequest) => {
  */
 export default function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl
+  if (pathname === PRM_FOR_MCP) {
+    const url = request.nextUrl.clone()
+    url.pathname = '/api/.well-known/oauth-protected-resource'
+    return NextResponse.rewrite(url)
+  }
+  if (WELL_KNOWN_OAUTH.test(pathname)) {
+    const url = request.nextUrl.clone()
+    url.pathname = `/api${pathname}`
+    return NextResponse.rewrite(url)
+  }
   // next.config.ts turns Next's trailing-slash redirect off (PostHog needs
   // that); this keeps it for the site's pages: /en/about/ is /en/about.
   if (pathname.length > 1 && pathname.endsWith('/')) {
@@ -89,6 +109,9 @@ export const config = {
   matcher: [
     '/((?!api|admin|relay-k3|_next|_vercel|.*\\.(?:ico|png|jpe?g|gif|svg|webp|avif|css|js|map|txt|xml|json|webmanifest|woff2?|pdf)$).*)',
     '/uploads/:path*',
+    '/.well-known/oauth-authorization-server',
+    '/.well-known/oauth-protected-resource',
+    '/.well-known/oauth-protected-resource/api/mcp',
     '/admin/login',
     '/admin/forgot',
     '/admin/forgot-password',

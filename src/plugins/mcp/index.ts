@@ -1,7 +1,9 @@
-import { mcpPlugin } from '@payloadcms/plugin-mcp'
+import { mcpPlugin, type MCPPluginConfig } from '@payloadcms/plugin-mcp'
+import type { Plugin } from 'payload'
 
 import { overrideApiKeyCollection } from './api-keys'
 import { SERVER_INSTRUCTIONS } from './instructions'
+import { oauthMcp, siteUrl } from './oauth'
 import { PROMPTS } from './prompts'
 import { RESOURCES } from './resources'
 import { createArticleDraftTool } from './tools/article'
@@ -21,9 +23,12 @@ export const MCP_TOOLS = [
  * none of the plugin's: the default find, create, update and delete tools can
  * change live pages, override locks, edit in bulk, and read a course's
  * enrollments. Experimental tools stay off.
+ *
+ * Administrators connect Claude or ChatGPT with OAuth (./oauth.ts). API keys
+ * stay for developers. The OAuth plugin must get this same object.
  */
-export const adminMcp = () =>
-  mcpPlugin({
+export const adminMcp = (): Plugin[] => {
+  const options: MCPPluginConfig = {
     collections: {},
     globals: {},
     overrideApiKeyCollection,
@@ -36,4 +41,7 @@ export const adminMcp = () =>
         serverInfo: { name: 'CILAS admin', version: '1.0.0' },
       },
     },
-  })
+  }
+  const oauth = oauthMcp(options, siteUrl())
+  return [mcpPlugin(options), ...oauth]
+}
