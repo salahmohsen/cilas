@@ -9,7 +9,7 @@ import type { CollectionSlug } from 'payload'
 type LookupSource = {
   collection: CollectionSlug
   /** The field shown as the row's title and matched by the text query. */
-  titleField: 'title' | 'name'
+  titleField: 'title' | 'name' | 'alt'
   /** Localized titles are matched in both languages so a duplicate in either shows. */
   localized: boolean
   /** Courses and articles keep drafts, and an admin must see them to avoid duplicates. */
@@ -18,6 +18,7 @@ type LookupSource = {
 }
 
 export const LOOKUP_REGISTRY = {
+  media: { collection: 'media', titleField: 'alt', localized: true, drafts: false, hasSlug: false },
   cycles: {
     collection: 'cycles',
     titleField: 'title',

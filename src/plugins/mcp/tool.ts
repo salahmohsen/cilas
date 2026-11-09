@@ -35,7 +35,7 @@ export const adminTool = <Shape extends z.ZodRawShape>(spec: AdminToolSpec<Shape
   parameters: spec.shape as unknown as PluginTool['parameters'],
   handler: async (rawInput, req) => {
     if (!req.user || !isAdminUser(req.user)) return fail(NOT_ADMIN)
-    const parsed = z.object(spec.shape).safeParse(rawInput)
+    const parsed = z.object(spec.shape).strict().safeParse(rawInput)
     if (!parsed.success) {
       return fail(
         `Invalid input: ${parsed.error.issues

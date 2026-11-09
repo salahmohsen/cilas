@@ -1,4 +1,4 @@
-import type { Access, CollectionBeforeDeleteHook, CollectionConfig } from 'payload'
+import type { Access, CollectionBeforeDeleteHook, CollectionConfig, Field } from 'payload'
 
 import { hasRole, isAdmin } from '@/access'
 
@@ -42,6 +42,31 @@ export const deleteOwnersAiKeys: CollectionBeforeDeleteHook = async ({ id, req }
  * The `user` field stays bound to the creator, so no one can issue a key that
  * acts as someone else.
  */
+const draftUpdateFlags = (fields: Field[]): Field[] =>
+  fields.map((field) => {
+    if ('name' in field && ['updateCourseDraft', 'updateArticleDraft'].includes(field.name!)) {
+      const source = field.name === 'updateCourseDraft' ? 'createCourseDraft' : 'createArticleDraft'
+      // Virtual aliases keep existing API keys compatible without adding database columns.
+      return {
+        ...field,
+        virtual: true,
+        admin: {
+          ...field.admin,
+          readOnly: true,
+          description: 'Uses the corresponding create-draft permission.',
+        },
+        hooks: { afterRead: [({ siblingData }) => Boolean(siblingData?.[source])] },
+      } as Field
+    }
+    if ('fields' in field) return { ...field, fields: draftUpdateFlags(field.fields) } as Field
+    if (field.type === 'tabs')
+      return {
+        ...field,
+        tabs: field.tabs.map((tab) => ({ ...tab, fields: draftUpdateFlags(tab.fields) })),
+      }
+    return field
+  })
+
 export const overrideApiKeyCollection = (collection: CollectionConfig): CollectionConfig => ({
   ...collection,
   labels: { singular: 'AI access key', plural: 'AI access' },
@@ -71,6 +96,6 @@ export const overrideApiKeyCollection = (collection: CollectionConfig): Collecti
       type: 'ui',
       admin: { components: { Field: AI_ACCESS_LINK } },
     },
-    ...collection.fields,
+    ...draftUpdateFlags(collection.fields),
   ],
 })

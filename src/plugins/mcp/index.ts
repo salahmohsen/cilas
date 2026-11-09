@@ -6,8 +6,8 @@ import { SERVER_INSTRUCTIONS } from './instructions'
 import { oauthMcp, siteUrl } from './oauth'
 import { PROMPTS } from './prompts'
 import { RESOURCES } from './resources'
-import { createArticleDraftTool } from './tools/article'
-import { createCourseDraftTool } from './tools/course'
+import { createArticleDraftTool, updateArticleDraftTool } from './tools/article'
+import { createCourseDraftTool, updateCourseDraftTool } from './tools/course'
 import { createFormAndLinkTool } from './tools/form'
 import { lookupTool } from './tools/lookup'
 
@@ -16,10 +16,12 @@ export const MCP_TOOLS = [
   createCourseDraftTool,
   createArticleDraftTool,
   createFormAndLinkTool,
+  updateCourseDraftTool,
+  updateArticleDraftTool,
 ]
 
 /**
- * An admin-only MCP server at /api/mcp. It has four tools of its own and
+ * An admin-only MCP server at /api/mcp. It has six tools of its own and
  * none of the plugin's: the default find, create, update and delete tools can
  * change live pages, override locks, edit in bulk, and read a course's
  * enrollments. Experimental tools stay off.

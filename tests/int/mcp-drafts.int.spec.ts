@@ -1,0 +1,285 @@
+// @vitest-environment node
+import { createLocalReq, getPayload, type Payload } from 'payload'
+import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest'
+import config from '@/payload.config'
+import { MCP_TOOLS } from '@/plugins/mcp'
+import { expandSchedule } from '@/lib/schedule'
+import { footnotesOf } from '@/lib/footnotes'
+import { createTracker, uniq, uniqEmail } from './fixtures'
+
+const { track, cleanup } = createTracker()
+let payload: Payload
+let admin: import('@/payload-types').User
+let cycle: number
+let person: number
+async function call(name: string, data: Record<string, unknown>) {
+  const req = await createLocalReq({ user: { ...admin, collection: 'users' } as never }, payload)
+  const result = (await MCP_TOOLS.find((tool) => tool.name === name)!.handler(
+    data,
+    req,
+    {},
+  )) as import('@/plugins/mcp/types').ToolResult
+  const text = result.content[0]!.text as string
+  return { ...result, text, json: result.isError ? null : JSON.parse(text) }
+}
+const schedule = {
+  start_date: '2024-09-22',
+  start_precision: 'day',
+  weeks: 8,
+  slots: [{ weekday: 'sun', start_time: '17:30', end_time: '20:00' }],
+  note: { en: 'First 4 online, last 4 offline', ar: 'أول أربع جلسات عبر الإنترنت وآخر أربع حضوريًا' },
+}
+const courseInput = () => ({
+  title: { en: uniq('MCP schedule'), ar: 'دورة تجريبية' },
+  cycle,
+  course_type: 'THEMATIC',
+  location: ['HYBRID'],
+  schedule,
+  sessions: Array.from({ length: 8 }, (_, i) => ({
+    order: i + 1,
+    session_title: { en: `Session ${i + 1}`, ar: `جلسة ${i + 1}` },
+    description: { en: 'Reading and discussion', ar: 'قراءة ومناقشة' },
+  })),
+})
+
+describe('complete MCP draft writes', () => {
+  beforeAll(async () => {
+    payload = await getPayload({ config: await config })
+    admin = track(
+      'users',
+      await payload.create({
+        collection: 'users',
+        data: { email: uniqEmail('drafts-admin'), password: crypto.randomUUID(), roles: ['admin'] },
+      }),
+    )
+    person = track(
+      'people',
+      await payload.create({
+        collection: 'people',
+        data: { name: uniq('MCP author'), slug: uniq('mcp-author') },
+      }),
+    ).id
+    const place = (await payload.find({ collection: 'places', limit: 1 })).docs[0]!
+    cycle = track(
+      'cycles',
+      await payload.create({
+        collection: 'cycles',
+        data: { season: 'fall', start_year: 2088, place: place.id },
+      }),
+    ).id
+  })
+  afterAll(async () => {
+    vi.restoreAllMocks()
+    await cleanup(payload)
+    await payload.destroy()
+  })
+
+  it('refuses Saturday/Sunday conflict before creating anything; saves corrected schedule and bilingual nested flow', async () => {
+    const input = courseInput()
+    const before = await payload.count({ collection: 'courses' })
+    const refused = await call('create_course_draft', {
+      ...input,
+      schedule: { ...schedule, start_date: '2024-09-21' },
+    })
+    expect(refused.isError).toBe(true)
+    expect(refused.text).toMatch(/2024-09-21.*sat.*sun/)
+    expect((await payload.count({ collection: 'courses' })).totalDocs).toBe(before.totalDocs)
+    const result = await call('create_course_draft', input)
+    expect(result.isError, result.text).toBeFalsy()
+    const id = track('courses', result.json).id
+    for (const locale of ['en', 'ar'] as const) {
+      const course = await payload.findByID({
+        collection: 'courses',
+        id,
+        draft: true,
+        locale,
+        depth: 0,
+        fallbackLocale: false,
+      })
+      expect(course.sessions).toHaveLength(8)
+      expect(course.location).toEqual(['HYBRID'])
+      expect(course.schedule?.note).toBe(schedule.note[locale])
+      expect(course.sessions![0]!.session_title).toBe(input.sessions[0]!.session_title[locale])
+      const meetings = expandSchedule(course.schedule, course.sessions)
+      expect(meetings).toHaveLength(8)
+      expect(meetings.map((m) => m.date)).toEqual([
+        '2024-09-22',
+        '2024-09-29',
+        '2024-10-06',
+        '2024-10-13',
+        '2024-10-20',
+        '2024-10-27',
+        '2024-11-03',
+        '2024-11-10',
+      ])
+      expect(meetings.every((m) => m.start_time === '17:30' && m.end_time === '20:00')).toBe(true)
+    }
+  })
+
+  it('preserves explicit session dates; validates pricing, times and conditional applicant questions', async () => {
+    const input = courseInput()
+    const dates = [{ date: '2024-09-25', start_time: '18:00', end_time: '21:00' }]
+    const result = await call('create_course_draft', { ...input, sessions: [{ order: 1, dates }] })
+    expect(result.isError, result.text).toBeFalsy()
+    const id = track('courses', result.json).id
+    const course = await payload.findByID({ collection: 'courses', id, draft: true })
+    expect(expandSchedule(course.schedule, course.sessions)[0]).toMatchObject({
+      date: '2024-09-25',
+      start_time: '18:00',
+      end_time: '21:00',
+    })
+    for (const changes of [
+      { pricing_override: { min: 10, max: 5 } },
+      {
+        schedule: {
+          ...schedule,
+          slots: [{ weekday: 'sun', start_time: '25:00', end_time: '20:00' }],
+        },
+      },
+      {
+        registration: { method: 'external', url: 'https://example.org' },
+        applicant_questions: [{ blockType: 'text', name: 'why', label: { en: 'Why?' } }],
+      },
+    ])
+      expect((await call('update_course_draft', { id, ...changes })).isError).toBe(true)
+  })
+
+  it('stores real footnotes in both locales and every article relationship shape', async () => {
+    const input = {
+      title: { en: uniq('MCP footnotes'), ar: 'مقالة تجريبية' },
+      authors: [person],
+      body: {
+        en: 'Text[^n].\n\n[^n]: A **real** note with [a link](https://example.org).',
+        ar: 'نص[^n].\n\n[^n]: ملاحظة حقيقية.',
+      },
+      credits: [
+        { role: 'translator', people: [person], label: { en: 'Translation', ar: 'ترجمة' } },
+      ],
+      tags: [{ tag: 'test' }],
+      translation: {
+        original_language: 'en',
+        original_authors: [person],
+        original_source: 'Source',
+        note: { en: 'Original', ar: 'الأصل' },
+      },
+    }
+    const result = await call('create_article_draft', input)
+    expect(result.isError, result.text).toBeFalsy()
+    const id = track('articles', result.json).id
+    for (const locale of ['en', 'ar'] as const) {
+      const article = await payload.findByID({
+        collection: 'articles',
+        id,
+        draft: true,
+        locale,
+        depth: 0,
+        fallbackLocale: false,
+      })
+      const notes = footnotesOf(article.body)
+      expect(notes).toHaveLength(1)
+      expect(JSON.stringify(notes[0]!.note)).toContain(locale === 'en' ? 'real' : 'حقيقية')
+      expect(article.credits![0]!.label).toBe(input.credits[0]!.label[locale])
+      expect(article.credits![0]!.people).toEqual([person])
+      expect(article.translation?.note).toBe(input.translation.note[locale])
+    }
+  })
+
+  it.each(['courses', 'articles'] as const)(
+    'updates %s beside a published version without changing any live locale',
+    async (collection) => {
+      const result = await call(
+        collection === 'courses' ? 'create_course_draft' : 'create_article_draft',
+        collection === 'courses'
+          ? courseInput()
+          : {
+              title: { en: uniq('MCP live'), ar: 'حي' },
+              authors: [person],
+              body: { en: 'Original', ar: 'الأصل' },
+            },
+      )
+      expect(result.isError, result.text).toBeFalsy()
+      const id = track(collection, result.json).id
+      await payload.update({
+        collection,
+        id,
+        data: { _status: 'published', tier: 'public' } as never,
+      })
+      const read = () =>
+        Promise.all(
+          (['en', 'ar'] as const).map((locale) =>
+            payload.findByID({
+              collection,
+              id,
+              draft: false,
+              locale,
+              depth: 0,
+              fallbackLocale: false,
+            }),
+          ),
+        )
+      const before = await read()
+      const update = await call(
+        collection === 'courses' ? 'update_course_draft' : 'update_article_draft',
+        { id, title: { en: 'Changed draft', ar: 'مسودة معدلة' } },
+      )
+      expect(update.isError, update.text).toBeFalsy()
+      expect(await read()).toEqual(before)
+      expect((await payload.findByID({ collection, id, draft: true })).title).toBe('Changed draft')
+    },
+  )
+
+  it('keeps omitted fields, clears explicitly and reports unmapped source facts as incomplete', async () => {
+    const result = await call('create_course_draft', {
+      ...courseInput(),
+      summary: { en: 'Keep this', ar: 'احتفظ' },
+    })
+    expect(result.isError, result.text).toBeFalsy()
+    const id = track('courses', result.json).id
+    const update = await call('update_course_draft', {
+      id,
+      summary: { en: null },
+      source_unmapped: [{ field: 'source_extra', reason: 'No destination' }],
+    })
+    expect(update.isError, update.text).toBeFalsy()
+    expect(update.json.completeness).toBe('incomplete')
+    expect(update.json.fields.not_saved).toEqual([
+      { field: 'source_extra', reason: 'No destination' },
+    ])
+    expect(
+      (
+        await payload.findByID({
+          collection: 'courses',
+          id,
+          draft: true,
+          locale: 'en',
+          fallbackLocale: false,
+        })
+      ).summary,
+    ).toBeNull()
+    expect(
+      (
+        await payload.findByID({
+          collection: 'courses',
+          id,
+          draft: true,
+          locale: 'ar',
+          fallbackLocale: false,
+        })
+      ).summary,
+    ).toBe('احتفظ')
+  })
+
+  it('rolls back both locale writes when the second write fails', async () => {
+    const count = (await payload.count({ collection: 'articles' })).totalDocs
+    const update = vi
+      .spyOn(payload, 'update')
+      .mockRejectedValueOnce(new Error('Arabic write failed'))
+    const result = await call('create_article_draft', {
+      title: { en: uniq('atomic'), ar: 'ذري' },
+      authors: [person],
+    })
+    update.mockRestore()
+    expect(result.isError).toBe(true)
+    expect((await payload.count({ collection: 'articles' })).totalDocs).toBe(count)
+  })
+})

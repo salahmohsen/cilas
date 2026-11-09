@@ -410,7 +410,7 @@ describe('assistants connect with OAuth', () => {
       expect(days).toBeLessThan(30.1)
     })
 
-    it('sees the four tools, three prompts and three guides, and can use a tool', async () => {
+    it('sees the six tools, three prompts and three guides, and can use a tool', async () => {
       const { pair } = await connect(admin)
       const tools = await mcp(pair.access_token, 'tools/list')
       expect(names(tools.result, 'tools').sort()).toEqual([
@@ -418,6 +418,8 @@ describe('assistants connect with OAuth', () => {
         'create_course_draft',
         'create_form_and_link',
         'lookup',
+        'update_article_draft',
+        'update_course_draft',
       ])
       const prompts = await mcp(pair.access_token, 'prompts/list')
       expect(names(prompts.result, 'prompts').sort()).toEqual([

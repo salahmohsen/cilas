@@ -2,6 +2,7 @@
 import { createLocalReq, getPayload, type Payload, type PayloadRequest } from 'payload'
 import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest'
 
+import { footnotesOf } from '@/lib/footnotes'
 import { MCP_TOOLS } from '@/plugins/mcp'
 import { NOT_ADMIN } from '@/plugins/mcp/tool'
 import config from '@/payload.config'
@@ -158,10 +159,12 @@ describe('admin-only MCP server', () => {
         'create_course_draft',
         'create_form_and_link',
         'lookup',
+        'update_article_draft',
+        'update_course_draft',
       ])
     })
 
-    it('answers tools/list over the endpoint with the same four and refuses no key', async () => {
+    it('answers tools/list over the endpoint with the same six and refuses no key', async () => {
       const endpoint = payload.config.endpoints.find(
         (e) => e.path === '/mcp' && e.method === 'post',
       )!
@@ -211,6 +214,8 @@ describe('admin-only MCP server', () => {
       const listing = await (await send(`Bearer ${secret}`, 'tools/list')).text()
       for (const name of [
         'lookup',
+        'update_article_draft',
+        'update_course_draft',
         'create_course_draft',
         'create_article_draft',
         'create_form_and_link',
@@ -356,7 +361,7 @@ describe('admin-only MCP server', () => {
         cycle: 999_999_999,
       })
       expect(result.isError).toBe(true)
-      expect(result.text).toMatch(/Cycle 999999999 not found/)
+      expect(result.text).toMatch(/cycle 999999999 not found/)
     })
 
     it('leaves nothing behind when the Arabic step fails', async () => {
@@ -494,7 +499,7 @@ describe('admin-only MCP server', () => {
         title: { en: uniq('Mcp Article'), ar: 'مقال' },
         body: { en: 'First paragraph with a note.[^1]\n\n[^1]: The note text.', ar: 'فقرة' },
         authors: [personId],
-        tags: ['probe'],
+        tags: [{ tag: 'probe' }],
         requested_tier: 'public',
       })
       expect(isError, text).toBe(false)
@@ -518,20 +523,10 @@ describe('admin-only MCP server', () => {
         depth: 0,
         overrideAccess: true,
       })
-      // Footnotes are inline blocks on the site; Markdown markers are not converted.
-      const paragraphs = (
-        en.body as unknown as {
-          root: {
-            children: Array<{ type: string; children: Array<{ type: string; text?: string }> }>
-          }
-        }
-      ).root.children
-      expect(paragraphs.map((p) => p.type)).toEqual(['paragraph', 'paragraph'])
-      expect(paragraphs[0]!.children.map((c) => c.text).join('')).toBe(
-        'First paragraph with a note.[^1]',
-      )
-      expect(paragraphs[1]!.children[0]!.text).toBe('[^1]: The note text.')
-      expect(json.notes.join(' ')).toMatch(/not real footnotes/)
+      const notes = footnotesOf(en.body)
+      expect(notes).toHaveLength(1)
+      expect(JSON.stringify(notes[0]!.note)).toContain('The note text.')
+      expect(json.fields.saved).toContain('body.en')
     })
   })
 

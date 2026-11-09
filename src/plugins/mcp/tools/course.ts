@@ -1,46 +1,12 @@
 import { z } from 'zod/v3'
-
 import { slugify } from '@/lib/slugify'
-import type { Course } from '@/payload-types'
-
 import { ToolInputError } from '../errors'
-import { markdownToLexical } from '../markdown'
-import { adminUrl, assertExist } from '../references'
-import {
-  COURSE_TYPES,
-  id,
-  LOCATIONS,
-  localizedText,
-  markdownText,
-  optionalLocalizedText,
-  registrationSchema,
-  SESSION_UNITS,
-  TEACHING_LANGUAGES,
-} from '../schemas'
+import { adminUrl } from '../references'
+import { COURSE_TYPES, id, localizedText } from '../schemas'
+import { draftShape } from '../field-registry'
+import { validateCourse, writeDraft, unmappedSchema } from '../draft-write'
 import { adminTool } from '../tool'
-import { inTransaction } from '../transaction'
-import type { CreatedDraft, Localized, RegistrationInput, ToolContext } from '../types'
-
-type Locale = 'en' | 'ar'
-type Side<T> = Partial<Record<Locale, T>>
-
-/** The per-language text fields of a course, for one language. */
-const textFor = (
-  locale: Locale,
-  input: {
-    title: Localized
-    subtitle?: Side<string>
-    summary?: Side<string>
-    epigraph?: Side<string>
-    language_note?: Side<string>
-  },
-) => ({
-  ...(input.title[locale] ? { title: input.title[locale] } : {}),
-  ...(input.subtitle?.[locale] ? { subtitle: input.subtitle[locale] } : {}),
-  ...(input.summary?.[locale] ? { summary: input.summary[locale] } : {}),
-  ...(input.epigraph?.[locale] ? { epigraph: input.epigraph[locale] } : {}),
-  ...(input.language_note?.[locale] ? { language_note: input.language_note[locale] } : {}),
-})
+import type { RegistrationInput, ToolContext } from '../types'
 
 /** How a registration choice is stored; `inherit` leaves the field empty. */
 export const registrationData = (registration: RegistrationInput) => {
@@ -68,7 +34,8 @@ const courseWithSlug = async ({ payload, req }: ToolContext, slug: string) =>
       select: { title: true },
       locale: 'en',
       fallbackLocale: false,
-      overrideAccess: true,
+      overrideAccess: false,
+      user: req.user,
       req,
     })
   ).docs[0]
@@ -105,7 +72,8 @@ const chooseSlug = async (
     id: cycle,
     depth: 0,
     select: { slug: true },
-    overrideAccess: true,
+    overrideAccess: false,
+    user: ctx.user,
     req: ctx.req,
   })
   const withCycle = found.slug ? `${base}-${found.slug}`.slice(0, MAX_SLUG) : base
@@ -118,137 +86,38 @@ const chooseSlug = async (
   )
 }
 
+const courseShape = draftShape('courses')
 export const createCourseDraftTool = adminTool({
   name: 'create_course_draft',
   description:
-    'Create a course as a DRAFT. It is never published: a person must review it in the admin and publish it. Look up the cycle and any fellows first and use their real ids. Give Arabic text when the user gives it. Returns the draft id and a link to it in the admin.',
+    'Create a course draft with structured schedule and course flow. Never publishes. Read cilas://guides/course first.',
   shape: {
-    title: localizedText('The course title', 200),
-    subtitle: optionalLocalizedText('A second line under the title', 200),
-    summary: optionalLocalizedText('One line for cards and search results', 300),
-    epigraph: optionalLocalizedText('A short quote or question shown before the description', 300),
-    description: markdownText('The course description'),
-    course_type: z
-      .enum(COURSE_TYPES)
-      .describe(
-        'The kind of course. Core, Thematic and Lab count toward the Bridge; Workshop and Short do not.',
-      ),
-    cycle: id('the cycle the course belongs to'),
-    fellows: z.array(id('a person who teaches it')).max(10).default([]).describe('Who teaches it.'),
-    session_unit: z
-      .enum(SESSION_UNITS)
-      .default('session')
-      .describe('Whether the page numbers its sessions as sessions or as weeks.'),
-    teaching_languages: z
-      .array(z.enum(TEACHING_LANGUAGES))
-      .optional()
-      .describe('The languages it is taught in.'),
-    location: z.array(z.enum(LOCATIONS)).optional().describe('Where it meets.'),
-    language_note: optionalLocalizedText('A note on mixed languages', 200),
-    registration: registrationSchema.default({ method: 'inherit' }),
-    slug: z
-      .string()
-      .trim()
-      .max(MAX_SLUG)
-      .optional()
-      .describe(
-        'The last part of the course’s web address. Leave it out: it is made from the title, and made different from other courses that have the same title.',
-      ),
+    ...courseShape,
+    title: localizedText('Course title', 200),
+    course_type: z.enum(COURSE_TYPES),
+    cycle: id('cycle'),
+    source_unmapped: unmappedSchema,
   },
   run: async (input, ctx) => {
-    const { payload, req, user } = ctx
-    await assertExist(ctx, 'cycles', [input.cycle], 'Cycle')
-    await assertExist(ctx, 'people', input.fellows, 'Person')
-    if (input.registration.method === 'form') {
-      await assertExist(ctx, 'forms', [input.registration.form], 'Form')
-    }
-
-    const { slug, changed: slugChanged } = await chooseSlug(
+    validateCourse(input)
+    const { slug, changed } = await chooseSlug(
       ctx,
       input.title.en,
       input.cycle,
-      input.slug,
+      (input as Record<string, unknown>).slug as string | undefined,
     )
-
-    const description = {
-      en: input.description?.en
-        ? await markdownToLexical(payload, 'default', input.description.en)
-        : undefined,
-      ar: input.description?.ar
-        ? await markdownToLexical(payload, 'default', input.description.ar)
-        : undefined,
-    }
-    const hasArabic = Boolean(
-      input.title.ar ||
-      input.subtitle?.ar ||
-      input.summary?.ar ||
-      input.epigraph?.ar ||
-      input.language_note?.ar ||
-      description.ar,
-    )
-
-    const course = await inTransaction(req, async () => {
-      const created = await payload.create({
-        collection: 'courses',
-        locale: 'en',
-        draft: true,
-        data: {
-          _status: 'draft',
-          slug,
-          ...textFor('en', input),
-          ...(description.en ? { description: description.en } : {}),
-          course_type: input.course_type,
-          cycle: input.cycle,
-          fellows: input.fellows,
-          session_unit: input.session_unit,
-          ...(input.teaching_languages ? { teaching_languages: input.teaching_languages } : {}),
-          ...(input.location ? { location: input.location } : {}),
-          ...(registrationData(input.registration)
-            ? { registration: registrationData(input.registration) }
-            : {}),
-        } as unknown as Omit<Course, 'id' | 'createdAt' | 'updatedAt' | 'sizes'>,
-        overrideAccess: false,
-        user,
-        req,
-      })
-      if (hasArabic) {
-        await payload.update({
-          collection: 'courses',
-          id: created.id,
-          locale: 'ar',
-          draft: true,
-          data: {
-            _status: 'draft',
-            ...textFor('ar', input),
-            ...(description.ar ? { description: description.ar } : {}),
-          } as never,
-          overrideAccess: false,
-          user,
-          req,
-        })
-      }
-      return created
-    })
-
-    const result: CreatedDraft & { slug?: string | null } = {
-      id: course.id,
-      slug: course.slug,
-      status: 'draft',
-      admin_url: adminUrl('courses', course.id),
-      locales: hasArabic ? ['en', 'ar'] : ['en'],
-      notes: [
-        'Not published. A person must review the draft and publish it in the admin.',
-        input.registration.method === 'inherit'
-          ? 'Registration follows the cycle.'
-          : `Registration is set to ${input.registration.method}.`,
-        'No schedule or sessions yet; add them in the admin.',
-        ...(slugChanged
-          ? [
-              `Another course already used the web address from the title, so this one is "${slug}". A person can change it in the draft.`,
-            ]
-          : []),
-      ],
-    }
+    const result = await writeDraft('courses', { ...input, slug }, ctx)
+    if (changed)
+      result.notes.push(
+        `Another course already used the web address from the title, so this one is "${slug}".`,
+      )
     return result
   },
+})
+export const updateCourseDraftTool = adminTool({
+  name: 'update_course_draft',
+  description:
+    'Correct an existing course draft by id. Omitted fields stay unchanged. Null clears optional fields; arrays replace the whole field. A published course gets a draft beside its unchanged live version.',
+  shape: { ...courseShape, id: id('course'), source_unmapped: unmappedSchema },
+  run: async ({ id, ...input }, ctx) => writeDraft('courses', input, ctx, id),
 })

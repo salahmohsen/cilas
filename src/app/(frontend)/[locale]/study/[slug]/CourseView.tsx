@@ -402,6 +402,11 @@ export const CourseView: React.FC<{
           </dl>
         ) : null}
       </SideCardSection>
+      {course.schedule?.note ? (
+        <p className="side-card-muted whitespace-pre-line" {...pe('schedule.note')}>
+          {course.schedule.note}
+        </p>
+      ) : null}
       {wide && fellows.length ? (
         <div {...pe('fellows')}>
           <SideCardSection label={t('taughtBy')}>

@@ -2487,17 +2487,25 @@ export interface PayloadMcpApiKey {
      */
     lookup?: boolean | null;
     /**
-     * Create a course as a DRAFT. It is never published: a person must review it in the admin and publish it. Look up the cycle and any fellows first and use their real ids. Give Arabic text when the user gives it. Returns the draft id and a link to it in the admin.
+     * Create a course draft with structured schedule and course flow. Never publishes. Read cilas://guides/course first.
      */
     createCourseDraft?: boolean | null;
     /**
-     * Create an article as a DRAFT. It is never published: a person must review it in the admin and publish it. Look up the authors first and use their real ids. Give the Arabic version when the user gives it. Returns the draft id and a link to it in the admin.
+     * Create an article draft with Markdown body, real footnotes, credits, translation and relationships. Never publishes. Read cilas://guides/article first.
      */
     createArticleDraft?: boolean | null;
     /**
      * Create a registration form, and optionally link it to a course. Every form already asks name and email first, so do not add them. A published course is never changed: the link is saved as a draft beside the live page, and a person publishes it. Cycles cannot be linked because they have no drafts. Returns the form id and a link to it, and, when linked, the course draft. A form with the same English title is refused unless create_another is true.
      */
     createFormAndLink?: boolean | null;
+    /**
+     * Uses the corresponding create-draft permission.
+     */
+    updateCourseDraft?: boolean | null;
+    /**
+     * Uses the corresponding create-draft permission.
+     */
+    updateArticleDraft?: boolean | null;
   };
   'payload-mcp-resource'?: {
     /**
@@ -4351,6 +4359,8 @@ export interface PayloadMcpApiKeysSelect<T extends boolean = true> {
         createCourseDraft?: T;
         createArticleDraft?: T;
         createFormAndLink?: T;
+        updateCourseDraft?: T;
+        updateArticleDraft?: T;
       };
   'payload-mcp-resource'?:
     | T
