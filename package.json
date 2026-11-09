@@ -46,6 +46,7 @@
     "@payloadcms/next": "3.91.0",
     "@payloadcms/plugin-form-builder": "3.91.0",
     "@payloadcms/plugin-import-export": "3.91.0",
+    "@payloadcms/plugin-mcp": "3.91.0",
     "@payloadcms/plugin-redirects": "3.91.0",
     "@payloadcms/plugin-seo": "3.91.0",
     "@payloadcms/richtext-lexical": "3.91.0",
