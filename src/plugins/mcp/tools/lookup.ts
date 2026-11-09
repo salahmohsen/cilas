@@ -7,8 +7,8 @@ import { adminTool } from '../tool'
 
 const MAX_LIMIT = 25
 
-/** `like` has no escape of its own, so `%` and `_` would match anything. */
-const cleanQuery = (query: string) => query.replace(/[%_\\]/g, ' ').trim()
+/** Keep user punctuation literal in the database's substring pattern. */
+const cleanQuery = (query: string) => query.trim().replace(/[\\%_]/g, '\\$&')
 
 export const lookupTool = adminTool({
   name: 'lookup',
@@ -38,7 +38,7 @@ export const lookupTool = adminTool({
     type Seen = { titles: Partial<Record<'en' | 'ar', string>>; slug?: string; latest?: string }
     const seen = new Map<number, Seen>()
     for (const locale of locales) {
-      const where: Where = text ? { [source.titleField]: { like: text } } : {}
+      const where: Where = text ? { [source.titleField]: { contains: text } } : {}
       const result = await payload.find({
         collection: source.collection,
         where,

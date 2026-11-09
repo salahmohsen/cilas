@@ -183,9 +183,10 @@ export async function AiAccessGuideView({
                     again later.
                   </li>
                   <li>
-                    <strong>To switch off Claude or ChatGPT for everyone:</strong> open{' '}
-                    <Link href="/admin/collections/oauth-clients">Assistant apps</Link>, open it,
-                    and untick “Allowed to connect”.
+                    <strong>To disable a registered app:</strong> open{' '}
+                    <Link href="/admin/collections/oauth-clients">Assistant apps</Link>, open its
+                    row, and untick “Allowed to connect”. This stops connections using that row.
+                    Other registrations keep working, and people can register the assistant again.
                   </li>
                   <li>
                     A connection ends by itself after 30 days without use. Then connect again.

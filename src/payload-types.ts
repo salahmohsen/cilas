@@ -2536,7 +2536,7 @@ export interface PayloadMcpApiKey {
   collection: 'payload-mcp-api-keys';
 }
 /**
- * Claude and ChatGPT as they are registered here. Switch one off to stop every person using it, without deleting anything.
+ * Each row is a separate registration of Claude or ChatGPT. Switching it off stops connections using that row. Other registrations keep working, and new registrations are still allowed.
  *
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "oauth-clients".

@@ -134,6 +134,8 @@
   },
   "pnpm": {
     "overrides": {
+      "@payloadcms/plugin-mcp>@modelcontextprotocol/sdk": "1.32.2",
+      "@payloadcms/plugin-mcp>zod": "4.6.6",
       "source-map-js@<1.2.2": "^1.2.2",
       "systeminformation@<5.33.16": "^5.33.18",
       "dompurify@<3.4.16": "^3.4.17",

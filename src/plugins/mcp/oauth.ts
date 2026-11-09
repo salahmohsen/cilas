@@ -6,6 +6,7 @@ import {
 import type { MCPAccessSettings, MCPPluginConfig } from '@payloadcms/plugin-mcp'
 import type {
   CollectionAfterDeleteHook,
+  CollectionAfterChangeHook,
   CollectionConfig,
   CollectionSlug,
   Config,
@@ -22,6 +23,7 @@ import { env } from '@/env'
 import { assistantForCallback, mcpServerUrl, type Assistant } from './assistants'
 import { renderConsentPage, renderRefusalPage } from './consent-page'
 import { AI_ACCESS_LINK } from './paths'
+import { withAssistantLock } from './lock'
 
 /** Names in the shape the plugin uses for its per-key switches. */
 const camelCase = (name: string): string =>
@@ -197,7 +199,15 @@ const guardConsent =
     if (typeof body.resource === 'string' && body.resource && !sameUrl(body.resource, mcpUrl)) {
       return oauthError(400, 'invalid_target', 'The resource is not this CILAS server.')
     }
-    return original(req)
+    const nonce = body.csrf_nonce
+    return typeof nonce === 'string'
+      ? withAssistantLock(
+          req.payload,
+          `consent:${nonce}`,
+          () => oauthError(400, 'invalid_request', 'This approval is already being processed.'),
+          () => original(req),
+        )
+      : original(req)
   }
 
 const guardToken =
@@ -207,7 +217,23 @@ const guardToken =
     if (typeof body.resource === 'string' && body.resource && !sameUrl(body.resource, mcpUrl)) {
       return oauthError(400, 'invalid_target', 'The resource is not this CILAS server.')
     }
-    return original(req)
+    const clientId = body.client_id
+    return typeof clientId === 'string'
+      ? withAssistantLock(
+          req.payload,
+          `oauth-client:${clientId}`,
+          () => {
+            const response = oauthError(
+              503,
+              'temporarily_unavailable',
+              'Another sign-in operation is in progress. Try again shortly.',
+            )
+            response.headers.set('Retry-After', '1')
+            return response
+          },
+          () => original(req),
+        )
+      : original(req)
   }
 
 /** Names this server as the resource, as the pasted address, which is what clients compare. */
@@ -235,9 +261,37 @@ const deleteTokens = (req: PayloadRequest, where: Where) =>
 /** When a refresh row goes, every token of that connection goes with it, at once. */
 const disconnectWholeConnection: CollectionAfterDeleteHook = async ({ doc, req }) => {
   if (doc.tokenType !== 'refresh') return
-  await deleteTokens(req, {
-    and: [{ clientId: { equals: doc.clientId } }, { userId: { equals: doc.userId } }],
-  })
+  await withAssistantLock(
+    req.payload,
+    `oauth-client:${doc.clientId}`,
+    () => {
+      throw new Error('The assistant is renewing its sign-in. Please try disconnecting it again.')
+    },
+    () =>
+      deleteTokens(req, {
+        and: [{ clientId: { equals: doc.clientId } }, { userId: { equals: doc.userId } }],
+      }),
+  )
+}
+
+/** Retention cleanup bypasses the manual-disconnect hook, even for rotated rows. */
+const sweepTokenHistory: CollectionAfterChangeHook = async ({ doc, operation, req }) => {
+  if (operation === 'create') {
+    await deleteTokens(req, {
+      expiresAt: { less_than: new Date(Date.now() - 30 * 86400000).toISOString() },
+    })
+  }
+  return doc
+}
+
+const tokenChangeHooks = (collection: CollectionConfig): CollectionAfterChangeHook[] => {
+  const hooks = collection.hooks?.afterChange ?? []
+  // Version 0.5.1 installs [cascadeRevokeAccessTokens, sweepExpiredTokens].
+  // Function names are minified in production, so identify the pinned layout.
+  if (hooks.length !== 2) {
+    throw new Error('OAuth token cleanup hook changed; review the pinned OAuth plugin integration.')
+  }
+  return [hooks[0]!, sweepTokenHistory]
 }
 
 /** A deleted account leaves no working token, code or form token behind. */
@@ -252,12 +306,21 @@ const deleteOwnersOAuth: CollectionAfterDeleteHook = async ({ id, req }) => {
 /** Removing an assistant app removes the sign-ins made through it. */
 const deleteClientsTokens: CollectionAfterDeleteHook = async ({ doc, req }) => {
   const where: Where = { clientId: { equals: String(doc.clientId) } }
-  await deleteTokens(req, where)
-  await req.payload.db.deleteMany({
-    collection: 'oauth-auth-codes' as CollectionSlug,
-    where,
-    req,
-  })
+  await withAssistantLock(
+    req.payload,
+    `oauth-client:${doc.clientId}`,
+    () => {
+      throw new Error('The assistant is renewing its sign-in. Please try deleting the app again.')
+    },
+    async () => {
+      await deleteTokens(req, where)
+      await req.payload.db.deleteMany({
+        collection: 'oauth-auth-codes' as CollectionSlug,
+        where,
+        req,
+      })
+    },
+  )
 }
 
 const hide = (fields: Field[], names: string[]): Field[] =>
@@ -287,7 +350,7 @@ const asAssistantApps = (collection: CollectionConfig): CollectionConfig => ({
     // roleNav runs before the OAuth plugins (plugin order), so it cannot hide these.
     hidden: ({ user }) => !isAdminUser(user),
     description:
-      'Claude and ChatGPT as they are registered here. Switch one off to stop every person using it, without deleting anything.',
+      'Each row is a separate registration of Claude or ChatGPT. Switching it off stops connections using that row. Other registrations keep working, and new registrations are still allowed.',
     components: { ...collection.admin?.components, beforeList: [AI_ACCESS_LINK] },
   },
   // Only on/off is the admin's to change: a changed address would send the
@@ -401,6 +464,7 @@ const asConnectedAssistants = (collection: CollectionConfig): CollectionConfig =
   ],
   hooks: {
     ...collection.hooks,
+    afterChange: tokenChangeHooks(collection),
     afterDelete: [...(collection.hooks?.afterDelete ?? []), disconnectWholeConnection],
   },
 })

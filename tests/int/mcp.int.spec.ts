@@ -563,6 +563,25 @@ describe('admin-only MCP server', () => {
   describe('create_form_and_link retries', () => {
     const questions = [{ type: 'text', name: 'why', label: { en: 'Why?' } }]
 
+    it('preserves punctuation in duplicate checks and lookup, including concurrent retries', async () => {
+      const title = `Fall_2026%\\${Date.now()}`
+      const results = await Promise.all(
+        Array.from({ length: 4 }, () =>
+          call('create_form_and_link', admin, { title: { en: title }, questions }),
+        ),
+      )
+      const created = results.filter((result) => !result.isError)
+      for (const result of created) track('forms', result.json.form)
+      expect(created).toHaveLength(1)
+      const retry = await call('create_form_and_link', admin, { title: { en: title }, questions })
+      expect(retry.isError).toBe(true)
+      expect(retry.text).toContain('already exists')
+      const found = await call('lookup', admin, { kind: 'forms', query: title })
+      expect(found.json.results.map((result: { id: number }) => result.id)).toContain(
+        created[0]!.json.form.id,
+      )
+    })
+
     it('refuses a second form with the same English title and names the first', async () => {
       const title = uniq('Retry form')
       const first = await call('create_form_and_link', admin, { title: { en: title }, questions })

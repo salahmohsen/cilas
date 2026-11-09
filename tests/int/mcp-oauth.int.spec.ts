@@ -2,7 +2,7 @@
 import { createHash, randomBytes } from 'node:crypto'
 
 import { createLocalReq, getPayload, type Payload, type PayloadRequest } from 'payload'
-import { afterAll, beforeAll, describe, expect, it } from 'vitest'
+import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest'
 
 import config from '@/payload.config'
 import type { User } from '@/payload-types'
@@ -134,8 +134,8 @@ const codes = async () =>
 type Pair = { access_token: string; refresh_token: string; expires_in: number }
 
 /** Register, authorize, allow and exchange: a connected assistant. */
-const connect = async (user: User, callback = CLAUDE) => {
-  const { body } = await register(callback)
+const connect = async (user: User, callback = CLAUDE, existingClientId?: string) => {
+  const body = existingClientId ? { client_id: existingClientId } : (await register(callback)).body
   const { verifier, challenge } = pkce()
   const page = await authorize(user, body.client_id!, callback, challenge)
   const html = await page.text()
@@ -461,6 +461,193 @@ describe('assistants connect with OAuth', () => {
       expect(names(tools.result, 'tools')).toEqual(['lookup'])
       const prompts = await mcp(secret, 'prompts/list')
       expect(names(prompts.result, 'prompts')).not.toContain('new_course')
+    })
+
+    it('allows only one simultaneous consent, code exchange and refresh', async () => {
+      const { body } = await register(CLAUDE)
+      const { verifier, challenge } = pkce()
+      const page = await authorize(admin, body.client_id!, CLAUDE, challenge)
+      const consentData = { ...hidden(await page.text()), decision: 'approve' }
+      const approvals = await Promise.all(
+        Array.from({ length: 4 }, () =>
+          call('/oauth/consent', 'post', { user: admin, data: { ...consentData } }),
+        ),
+      )
+      const approved = approvals.filter(
+        (response) =>
+          response.status === 302 &&
+          new URL(response.headers.get('location')!).searchParams.has('code'),
+      )
+      expect(approved).toHaveLength(1)
+      const code = new URL(approved[0]!.headers.get('location')!).searchParams.get('code')!
+      const exchanges = await Promise.all(
+        Array.from({ length: 4 }, () =>
+          call('/oauth/token', 'post', {
+            data: {
+              grant_type: 'authorization_code',
+              code,
+              client_id: body.client_id,
+              redirect_uri: CLAUDE,
+              code_verifier: verifier,
+              resource: MCP,
+            },
+          }),
+        ),
+      )
+      const successful = exchanges.filter((response) => response.status === 200)
+      expect(successful).toHaveLength(1)
+      const pair = (await successful[0]!.json()) as Pair
+      const rotations = await Promise.all(
+        Array.from({ length: 4 }, () =>
+          call('/oauth/token', 'post', {
+            data: {
+              grant_type: 'refresh_token',
+              refresh_token: pair.refresh_token,
+              client_id: body.client_id,
+            },
+          }),
+        ),
+      )
+      expect(rotations.filter((response) => response.status === 200)).toHaveLength(1)
+    })
+
+    it('keeps current tokens when token creation sweeps expired refresh history', async () => {
+      const { pair, clientId } = await connect(admin)
+      await payload.create({
+        collection: 'oauth-tokens',
+        data: {
+          tokenHash: randomBytes(32).toString('hex'),
+          tokenType: 'refresh',
+          clientId,
+          userId: String(admin.id),
+          expiresAt: new Date(Date.now() - 90 * 86400000).toISOString(),
+          revokedAt: new Date().toISOString(),
+        },
+        overrideAccess: true,
+      })
+      const response = await call('/oauth/token', 'post', {
+        data: {
+          grant_type: 'refresh_token',
+          refresh_token: pair.refresh_token,
+          client_id: clientId,
+        },
+      })
+      expect(response.status).toBe(200)
+      const next = (await response.json()) as Pair
+      expect((await mcp(next.access_token, 'tools/list')).status).toBe(200)
+    })
+
+    it('disconnects even when the selected row was rotated since the admin opened it', async () => {
+      const { pair, clientId } = await connect(admin)
+      const rows = await payload.find({
+        collection: 'oauth-tokens',
+        where: { and: [{ clientId: { equals: clientId } }, { tokenType: { equals: 'refresh' } }] },
+        overrideAccess: true,
+      })
+      const response = await call('/oauth/token', 'post', {
+        data: {
+          grant_type: 'refresh_token',
+          refresh_token: pair.refresh_token,
+          client_id: clientId,
+        },
+      })
+      expect(response.status).toBe(200)
+      const next = (await response.json()) as Pair
+      await payload.delete({
+        collection: 'oauth-tokens',
+        id: rows.docs[0]!.id,
+        overrideAccess: true,
+      })
+      expect((await mcp(next.access_token, 'tools/list')).status).toBe(401)
+    })
+
+    it('rolls back disconnect during refresh, then disconnects the replacement pair', async () => {
+      const { pair, clientId } = await connect(admin)
+      const other = await connect(admin, CLAUDE, clientId)
+      const rows = await payload.find({
+        collection: 'oauth-tokens',
+        where: { and: [{ clientId: { equals: clientId } }, { tokenType: { equals: 'refresh' } }] },
+        overrideAccess: true,
+      })
+      let announce!: () => void
+      let resume!: () => void
+      const entered = new Promise<void>((resolve) => {
+        announce = resolve
+      })
+      const paused = new Promise<void>((resolve) => {
+        resume = resolve
+      })
+      const create = payload.create.bind(payload)
+      const spy = vi.spyOn(payload, 'create').mockImplementation(async (options) => {
+        if (
+          options.collection === 'oauth-tokens' &&
+          (options.data as { tokenType?: string }).tokenType === 'access'
+        ) {
+          announce()
+          await paused
+        }
+        return create(options)
+      })
+      const rotation = call('/oauth/token', 'post', {
+        data: {
+          grant_type: 'refresh_token',
+          refresh_token: pair.refresh_token,
+          client_id: clientId,
+        },
+      })
+      try {
+        await entered
+        const contended = await call('/oauth/token', 'post', {
+          data: {
+            grant_type: 'refresh_token',
+            refresh_token: other.pair.refresh_token,
+            client_id: clientId,
+          },
+        })
+        expect(contended.status).toBe(503)
+        expect(contended.headers.get('Retry-After')).toBe('1')
+        expect((await contended.json()).error).toBe('temporarily_unavailable')
+        await expect(
+          payload.delete({
+            collection: 'oauth-tokens',
+            id: rows.docs[0]!.id,
+            overrideAccess: true,
+          }),
+        ).rejects.toThrow('try disconnecting')
+        expect(
+          (
+            await payload.findByID({
+              collection: 'oauth-tokens',
+              id: rows.docs[0]!.id,
+              overrideAccess: true,
+            })
+          ).id,
+        ).toBe(rows.docs[0]!.id)
+      } finally {
+        resume()
+        spy.mockRestore()
+      }
+      const response = await rotation
+      expect(response.status).toBe(200)
+      const next = (await response.json()) as Pair
+      expect((await mcp(next.access_token, 'tools/list')).status).toBe(200)
+      expect(
+        (
+          await call('/oauth/token', 'post', {
+            data: {
+              grant_type: 'refresh_token',
+              refresh_token: other.pair.refresh_token,
+              client_id: clientId,
+            },
+          })
+        ).status,
+      ).toBe(200)
+      await payload.delete({
+        collection: 'oauth-tokens',
+        id: rows.docs[0]!.id,
+        overrideAccess: true,
+      })
+      expect((await mcp(next.access_token, 'tools/list')).status).toBe(401)
     })
 
     it('refreshes, and the old refresh token stops', async () => {
