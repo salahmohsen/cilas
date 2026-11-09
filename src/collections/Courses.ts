@@ -13,6 +13,11 @@ import {
 } from '@/access'
 import { bibliographyField } from '@/fields/bibliography'
 import { COURSE_TYPE_OPTIONS } from '@/fields/course-type'
+import {
+  LOCATION_OPTIONS,
+  SESSION_UNIT_OPTIONS,
+  TEACHING_LANGUAGE_OPTIONS,
+} from '@/fields/course-options'
 import { pricingField } from '@/fields/pricing'
 import { registrationField } from '@/fields/registration'
 import { courseQuestionBlocks } from '@/forms/form-fields'
@@ -203,11 +208,7 @@ export const Courses: CollectionConfig = {
               name: 'location',
               type: 'select',
               hasMany: true,
-              options: [
-                { label: 'Offline', value: 'OFFLINE' },
-                { label: 'Online', value: 'ONLINE' },
-                { label: 'Hybrid', value: 'HYBRID' },
-              ],
+              options: [...LOCATION_OPTIONS],
               admin: {
                 description: 'Offline (in person), Online, or Hybrid (both at once).',
               },
@@ -216,10 +217,7 @@ export const Courses: CollectionConfig = {
               name: 'teaching_languages',
               type: 'select',
               hasMany: true,
-              options: [
-                { label: 'Arabic', value: 'ar' },
-                { label: 'English', value: 'en' },
-              ],
+              options: [...TEACHING_LANGUAGE_OPTIONS],
               admin: {
                 description:
                   'Languages the course is taught in. Mixed use goes in the language note.',
@@ -372,10 +370,7 @@ export const Courses: CollectionConfig = {
               type: 'select',
               required: true,
               defaultValue: 'session',
-              options: [
-                { label: 'Session', value: 'session' },
-                { label: 'Week', value: 'week' },
-              ],
+              options: [...SESSION_UNIT_OPTIONS],
               admin: {
                 description: 'How sessions are numbered on the page: “Week 3” or “Session 3”.',
               },
