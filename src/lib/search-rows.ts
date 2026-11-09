@@ -131,6 +131,21 @@ export const shapeSnippet = (value: string): string => {
 
 export type CollectionResults = { hits: SearchHit[]; found: number }
 
+/** Public and community articles as one result: alternating, so each index's best stay near the top. */
+export const withCommunity = (
+  articles?: CollectionResults,
+  community?: CollectionResults,
+): CollectionResults | undefined => {
+  if (!articles || !community) return articles ?? community
+  const hits: SearchHit[] = []
+  const depth = Math.max(articles.hits.length, community.hits.length)
+  for (let at = 0; at < depth; at++) {
+    if (articles.hits[at]) hits.push(articles.hits[at])
+    if (community.hits[at]) hits.push(community.hits[at])
+  }
+  return { hits, found: articles.found + community.found }
+}
+
 /**
  * Best match as one list, not blocks per collection: a person whose name
  * equals the query leads; the content collections round-robin, so each

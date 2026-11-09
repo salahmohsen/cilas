@@ -126,7 +126,8 @@ const peopleOf = (collection: SearchCollection, doc: Doc): Doc[] => {
         : []
   return relations.flatMap(asArray).flatMap((person): Doc[] => {
     const record = asRecord(person)
-    return record ? [record] : []
+    // Only the community index reads `visible`: a public read has no hidden people.
+    return record && record.visible !== false ? [record] : []
   })
 }
 

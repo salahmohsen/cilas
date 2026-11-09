@@ -1,6 +1,6 @@
 import type { Client } from 'typesense'
 
-import type { SearchCollection } from '@/lib/search-config'
+import { collectionOfIndex, type SearchIndex } from '@/lib/search-config'
 
 import type { SearchDocument } from './documents'
 import { fieldsOf, physicalNameOf } from './schema'
@@ -64,11 +64,7 @@ export const createIndexer = (client: Client) => {
   /** Points the alias at `target`, then drops every other physical
    * generation of the collection and the real collection an older indexer
    * kept under the alias's own name. */
-  const pointAlias = async (
-    collection: SearchCollection,
-    target: string,
-    existing: Set<string>,
-  ) => {
+  const pointAlias = async (collection: SearchIndex, target: string, existing: Set<string>) => {
     if ((await aliasTarget(collection)) !== target) {
       if (existing.has(collection)) await client.collections(collection).delete()
       await client.aliases().upsert(collection, { collection_name: target })
@@ -80,21 +76,23 @@ export const createIndexer = (client: Client) => {
   }
 
   return {
-    upsert: (collection: SearchCollection, documents: SearchDocument[]) =>
+    upsert: (collection: SearchIndex, documents: SearchDocument[]) =>
       importInto(collection, documents),
 
-    remove: (collection: SearchCollection, ids: readonly string[]) => removeFrom(collection, ids),
+    remove: (collection: SearchIndex, ids: readonly string[]) => removeFrom(collection, ids),
 
     /**
      * Fills the collection's current schema generation with `batches`,
      * prunes records the batches no longer produce, and swaps the alias
      * over. Search keeps reading the previous generation until the swap.
      */
-    rebuild: async (collection: SearchCollection, batches: AsyncIterable<SearchDocument[]>) => {
+    rebuild: async (collection: SearchIndex, batches: AsyncIterable<SearchDocument[]>) => {
       const target = physicalNameOf(collection)
       const existing = new Set((await client.collections().retrieve()).map((entry) => entry.name))
       if (!existing.has(target)) {
-        await client.collections().create({ name: target, fields: fieldsOf(collection) })
+        await client
+          .collections()
+          .create({ name: target, fields: fieldsOf(collectionOfIndex(collection)) })
       }
       const kept = new Set<string>()
       for await (const batch of batches) {

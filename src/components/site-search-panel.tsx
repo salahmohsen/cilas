@@ -25,6 +25,7 @@ import { SearchResults, type SearchFacet } from '@/components/search-results'
 import { clientEnv as env } from '@/env.client'
 import { pathOf } from '@/lib/paths'
 import {
+  COMMUNITY_INDEX,
   COURSE_TYPES,
   SEARCH_COLLECTIONS,
   SEARCH_LOCALES,
@@ -39,6 +40,7 @@ import {
 import {
   isSearchLocale,
   mergeRows,
+  withCommunity,
   type CollectionResults,
   type SearchHit,
   type SearchRow,
@@ -69,42 +71,77 @@ const COURSE_TYPE_LABELS = {
 
 const courseFacetId = (type: string) => `course:${type}`
 
-const adapter = env.NEXT_PUBLIC_TYPESENSE_API_KEY
-  ? new TypesenseInstantsearchAdapter({
-      server: {
-        apiKey: env.NEXT_PUBLIC_TYPESENSE_API_KEY,
-        // The edge sometimes takes longer than the 5s default to answer.
-        connectionTimeoutSeconds: 15,
-        nodes: [
-          {
-            host: env.NEXT_PUBLIC_TYPESENSE_HOST,
-            port: env.NEXT_PUBLIC_TYPESENSE_PORT,
-            protocol: env.NEXT_PUBLIC_TYPESENSE_PROTOCOL,
-          },
-        ],
-      },
-      collectionSpecificSearchParameters: Object.fromEntries(
-        SEARCH_ORDER.map((collection) => {
-          const { title } = SEARCH_COLLECTIONS[collection]
-          return [
-            collection,
-            {
-              ...searchParametersOf(collection),
-              // One typo per word: two turn near-miss Arabic names into
-              // false hits.
-              num_typos: 1,
-              // Only titles need their full value; full-body highlighting
-              // would put the whole essay in every hit.
-              highlight_full_fields: SEARCH_LOCALES.map((locale) =>
-                localizedField(title, locale),
-              ).join(','),
-              highlight_affix_num_tokens: 30,
-            },
-          ]
-        }),
+const searchParameters = (collection: SearchCollection) => ({
+  ...searchParametersOf(collection),
+  // One typo per word: two turn near-miss Arabic names into false hits.
+  num_typos: 1,
+  // Only titles need their full value; full-body highlighting would put the
+  // whole essay in every hit.
+  highlight_full_fields: SEARCH_LOCALES.map((locale) =>
+    localizedField(SEARCH_COLLECTIONS[collection].title, locale),
+  ).join(','),
+  highlight_affix_num_tokens: 30,
+})
+
+const adapterFor = (apiKey: string) =>
+  new TypesenseInstantsearchAdapter({
+    server: {
+      apiKey,
+      // The edge sometimes takes longer than the 5s default to answer.
+      connectionTimeoutSeconds: 15,
+      nodes: [
+        {
+          host: env.NEXT_PUBLIC_TYPESENSE_HOST,
+          port: env.NEXT_PUBLIC_TYPESENSE_PORT,
+          protocol: env.NEXT_PUBLIC_TYPESENSE_PROTOCOL,
+        },
+      ],
+    },
+    collectionSpecificSearchParameters: {
+      ...Object.fromEntries(
+        SEARCH_ORDER.map((collection) => [collection, searchParameters(collection)]),
       ),
-    })
+      [COMMUNITY_INDEX]: searchParameters('articles'),
+    },
+  })
+
+const adapter = env.NEXT_PUBLIC_TYPESENSE_API_KEY
+  ? adapterFor(env.NEXT_PUBLIC_TYPESENSE_API_KEY)
   : null
+
+type CommunitySession = { id: number; adapter: ReturnType<typeof adapterFor> }
+
+/** A signed-in reader's search of community articles; null for everyone else.
+ * The key lasts minutes, so it is renewed a minute before it ends. */
+function useCommunitySession() {
+  const [session, setSession] = useState<CommunitySession | null>(null)
+  useEffect(() => {
+    let active = true
+    let renewal: ReturnType<typeof setTimeout> | undefined
+    const load = async () => {
+      const response = await fetch('/api/community-search-key', {
+        method: 'POST',
+        credentials: 'same-origin',
+        cache: 'no-store',
+      }).catch(() => null)
+      const body = (response?.ok ? await response.json().catch(() => null) : null) as {
+        key?: string | null
+        expiresIn?: number
+      } | null
+      if (!active) return
+      if (!body?.key) return setSession(null)
+      const next = adapterFor(body.key)
+      setSession((previous) => ({ id: (previous?.id ?? 0) + 1, adapter: next }))
+      renewal = setTimeout(() => void load(), Math.max((body.expiresIn ?? 120) - 60, 30) * 1000)
+    }
+    void load()
+    return () => {
+      active = false
+      clearTimeout(renewal)
+    }
+  }, [])
+  return session
+}
 
 /** Feeds the panel's own field into InstantSearch, debounced; fewer than
  * two letters browse everything instead of matching noise. */
@@ -165,6 +202,7 @@ export function SearchPanel({ onClose }: { onClose: () => void }) {
   const router = useRouter()
 
   const { state: privateState, epoch } = usePrivateSpaces()
+  const community = useCommunitySession()
   const [scope, setScope] = useState('public')
   const privateActive = scope === 'spaces'
   const privateFilters = useSearchFilters(
@@ -236,6 +274,19 @@ export function SearchPanel({ onClose }: { onClose: () => void }) {
     [setReported],
   )
 
+  const results = useMemo(
+    () =>
+      Object.fromEntries(
+        SEARCH_ORDER.map((collection) => [
+          collection,
+          collection === 'articles'
+            ? withCommunity(reported.articles, reported[COMMUNITY_INDEX])
+            : reported[collection],
+        ]),
+      ),
+    [reported],
+  ) as Partial<Record<SearchCollection, CollectionResults>>
+
   const hiddenTypes = COURSE_TYPES.filter((type) => hidden.has(courseFacetId(type)))
   const visible = useCallback(
     (collection: SearchCollection) =>
@@ -258,15 +309,10 @@ export function SearchPanel({ onClose }: { onClose: () => void }) {
       ...SEARCH_ORDER.filter((collection) => collection !== 'courses').map((collection) => ({
         id: collection,
         label: t(collection === 'articles' ? 'typeArticles' : 'typePeople'),
-        found: reported[collection]?.found ?? 0,
+        found: results[collection]?.found ?? 0,
       })),
     ]
-  }, [reported, t])
-
-  const results = useMemo(
-    () => Object.fromEntries(SEARCH_ORDER.map((collection) => [collection, reported[collection]])),
-    [reported],
-  ) as Partial<Record<SearchCollection, CollectionResults>>
+  }, [reported, results, t])
 
   const rows = useMemo(
     () => mergeRows({ results, visible, sort, query: term, locale }),
@@ -312,6 +358,23 @@ export function SearchPanel({ onClose }: { onClose: () => void }) {
       aria-modal="true"
       aria-label={t('fieldLabel')}
     >
+      {community && (
+        <InstantSearch
+          key={community.id}
+          searchClient={community.adapter.searchClient}
+          future={{ preserveSharedStateOnUnmount: true }}
+        >
+          <QueryRefiner term={privateActive ? '' : term} />
+          <Index
+            key={sort}
+            indexId={COMMUNITY_INDEX}
+            indexName={indexNameOf(COMMUNITY_INDEX, sort, locale)}
+          >
+            <Configure hitsPerPage={PAGE_SIZE * pages} />
+            <ResultsReporter collection={COMMUNITY_INDEX} onResults={onResults} />
+          </Index>
+        </InstantSearch>
+      )}
       <InstantSearch
         searchClient={adapter!.searchClient}
         future={{ preserveSharedStateOnUnmount: true }}

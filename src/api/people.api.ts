@@ -4,7 +4,7 @@ import { plainText } from '@/lib/plaintext'
 import { relId } from '@/lib/relation'
 import type { Payload } from 'payload'
 
-import type { Article, Course, Person } from '@/payload-types'
+import type { Article, Course, Person, User } from '@/payload-types'
 
 /**
  * A person as a visitor sees them. Name and bio fall back to the other
@@ -111,6 +111,39 @@ export const getContributions = async (
   }
 
   return { written, credited, taught: courses.docs }
+}
+
+/** Published `community` articles a person wrote or is credited on, as this reader may read them. */
+export const getCommunityWriting = async (
+  payload: Payload,
+  personId: number,
+  locale: Locale,
+  user: User,
+): Promise<Article[]> => {
+  const { docs } = await payload.find({
+    collection: 'articles',
+    where: {
+      and: [
+        { tier: { equals: 'community' } },
+        { _status: { equals: 'published' } },
+        {
+          or: [
+            { authors: { in: [personId] } },
+            { 'translation.original_authors': { in: [personId] } },
+            { 'credits.people': { in: [personId] } },
+          ],
+        },
+      ],
+    },
+    sort: '-published_date',
+    locale,
+    fallbackLocale: otherLocale(locale),
+    overrideAccess: false,
+    user,
+    depth: 2,
+    limit: 100,
+  })
+  return docs
 }
 
 export type FellowCourse = {

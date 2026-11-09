@@ -10,11 +10,11 @@ const LEGACY = /\.html$|^\/uploads\//
 
 /**
  * The pages that show `community` work to a signed-in reader: home and Open
- * for registration (what is open), the articles, and a course with its
- * application. The Bridge has its own pages under /study and stays cached.
+ * for registration (what is open), the articles, a person's page, and a
+ * course with its application. The Bridge has its own pages under /study and stays cached.
  */
 const SIGNED_IN =
-  /^\/(en|ar)((?:\/articles(?:\/[^/]+)?|\/apply|\/study\/(?!bridge(?:\/|$))[^/]+(?:\/apply)?)?)\/?$/
+  /^\/(en|ar)((?:\/articles(?:\/[^/]+)?|\/people\/[^/]+|\/apply|\/study\/(?!bridge(?:\/|$))[^/]+(?:\/apply)?)?)\/?$/
 
 /** Payload's login cookie (no `cookiePrefix` is set). */
 const SESSION_COOKIE = 'payload-token'

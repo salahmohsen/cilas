@@ -54,6 +54,18 @@ export const SEARCH_COLLECTIONS = {
 
 export type SearchCollection = keyof typeof SEARCH_COLLECTIONS
 
+/**
+ * Published `community` articles, in an index of their own: the browser's
+ * public key cannot read it. Signed-in readers search it with a short-lived
+ * key from /api/community-search-key.
+ */
+export const COMMUNITY_INDEX = 'community_articles'
+export type SearchIndex = SearchCollection | typeof COMMUNITY_INDEX
+
+/** The collection whose schema and documents an index holds. */
+export const collectionOfIndex = (index: SearchIndex): SearchCollection =>
+  index === COMMUNITY_INDEX ? 'articles' : index
+
 export const SEARCH_ORDER = [
   'courses',
   'articles',
@@ -89,7 +101,7 @@ export const sortTitleField = (locale: SearchLocale): string => localizedField('
  * current schema.
  */
 export const indexNameOf = (
-  collection: SearchCollection,
+  collection: SearchIndex,
   sort: SearchSort,
   locale: SearchLocale,
 ): string => {

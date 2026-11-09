@@ -5,9 +5,11 @@ import type { CollectionFieldSchema } from 'typesense/lib/Typesense/Collection'
 import {
   SEARCH_COLLECTIONS,
   SEARCH_LOCALES,
+  collectionOfIndex,
   localizedField,
   sortTitleField,
   type SearchCollection,
+  type SearchIndex,
 } from '@/lib/search-config'
 
 /** Stored for display only: returned with each hit, never searched. */
@@ -52,9 +54,9 @@ export const fieldsOf = (collection: SearchCollection): CollectionFieldSchema[] 
  * its schema: a schema change builds a fresh collection beside the live
  * one, and search keeps answering until the alias swaps over.
  */
-export const physicalNameOf = (collection: SearchCollection): string => {
+export const physicalNameOf = (index: SearchIndex): string => {
   const hash = createHash('sha1')
-    .update(JSON.stringify(fieldsOf(collection)))
+    .update(JSON.stringify(fieldsOf(collectionOfIndex(index))))
     .digest('hex')
-  return `${collection}_${hash.slice(0, 8)}`
+  return `${index}_${hash.slice(0, 8)}`
 }

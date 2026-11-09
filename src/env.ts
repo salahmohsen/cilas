@@ -72,6 +72,8 @@ export const env = createEnv({
     TYPESENSE_PRIVATE_PORT: z.coerce.number().optional(),
     TYPESENSE_PRIVATE_PROTOCOL: z.enum(['http', 'https']).optional(),
     TYPESENSE_API_KEY: z.string().min(1).optional(),
+    // Search-only, for community_articles alone: signed-in readers get keys derived from it.
+    TYPESENSE_COMMUNITY_SEARCH_KEY: z.string().min(1).optional(),
     TYPESENSE_HOST: z.string().default('localhost'),
     TYPESENSE_PORT: z.coerce.number().default(8108),
     TYPESENSE_PROTOCOL: z.enum(['http', 'https']).default('http'),
