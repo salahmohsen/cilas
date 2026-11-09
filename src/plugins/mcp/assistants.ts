@@ -81,5 +81,3 @@ export const assistantForCallbacks = (uris: unknown): Assistant | undefined => {
   const first = owners[0]
   return first && owners.every((owner) => owner?.id === first.id) ? first : undefined
 }
-
-export { mcpServerUrl } from './paths'

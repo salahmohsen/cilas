@@ -20,10 +20,9 @@ import type {
 import { isAdmin, isAdminUser } from '@/access'
 
 import { assistantForCallback, assistantForCallbacks } from './assistants'
-import { mcpServerUrl } from './paths'
+import { AI_ACCESS_LINK, mcpServerUrl } from './paths'
 import { allowToolsWithoutPepper } from './pepper'
 import { renderConsentPage, renderRefusalPage } from './consent-page'
-import { AI_ACCESS_LINK } from './paths'
 import { withAssistantLock } from './lock'
 
 /** Names in the shape the plugin uses for its per-key switches. */

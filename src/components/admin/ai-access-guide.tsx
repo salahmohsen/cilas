@@ -5,7 +5,8 @@ import type { AdminViewServerProps } from 'payload'
 
 import { isAdminUser } from '@/access'
 import { env } from '@/env'
-import { ASSISTANTS, mcpServerUrl } from '@/plugins/mcp/assistants'
+import { ASSISTANTS } from '@/plugins/mcp/assistants'
+import { mcpServerUrl } from '@/plugins/mcp/paths'
 
 import styles from './ai-access-guide.module.css'
 import { CopyButton } from './copy-button'
