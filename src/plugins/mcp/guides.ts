@@ -51,7 +51,7 @@ export const articleGuide = (): string => `# Article drafts
 Tools: create_article_draft and update_article_draft (id required for update).
 ${writingRules}
 Look up existing articles and all authors first. Required on create: title.en and at least one author id.
-Body Markdown becomes the real article body. Use [^1] and [^1]: note text for real inline footnotes, separately in each locale. Missing, duplicate or unreferenced definitions are refused. Mentions are preserved as text or links; do not infer a person from an ambiguous name.
+Body Markdown becomes the real article body. Use [^1] and [^1]: note text for real inline footnotes, separately in each locale. Missing, duplicate or unreferenced definitions are refused. An explicit same-site link becomes a mention only when its canonical URL identifies exactly one accessible record. Other names and links stay unchanged; do not infer a person from an ambiguous name.
 Tags use [{tag:"topic"}]. Credits use [{role, label:{en?,ar?}, people:[id]}]. Related articles use ids. Translation includes original_language, original_title, original_authors, original_url, original_source, and localized note.
 Original languages:\n${list(LANGUAGE_OPTIONS)}
 ${contract('articles')}

@@ -261,6 +261,8 @@ describe('admin-only MCP server', () => {
       ['lookup', { kind: 'courses' }],
       ['create_course_draft', { title: { en: 'x' }, course_type: 'CORE', cycle: 1 }],
       ['create_article_draft', { title: { en: 'x' }, authors: [1] }],
+      ['update_course_draft', { id: 1, title: { en: 'x' } }],
+      ['update_article_draft', { id: 1, title: { en: 'x' } }],
       [
         'create_form_and_link',
         { title: { en: 'x' }, questions: [{ type: 'text', name: 'q', label: { en: 'Q' } }] },
@@ -629,9 +631,17 @@ describe('admin-only MCP server', () => {
           data: {
             season: 'spring',
             start_year: 2080 + Math.floor(Math.random() * 9),
-            place: (
-              await payload.find({ collection: 'places', limit: 1, depth: 0, overrideAccess: true })
-            ).docs[0]!.id,
+            place: track(
+              'places',
+              await payload.create({
+                collection: 'places',
+                data: {
+                  name: uniq('MCP alternate place'),
+                  slug: uniq('mcp-alternate-place'),
+                  city: uniq('MCP alternate city'),
+                },
+              }),
+            ).id,
           },
           overrideAccess: true,
         }),
@@ -673,7 +683,9 @@ describe('admin-only MCP server', () => {
         slug,
       })
       expect(clash.isError).toBe(true)
-      expect(clash.text).toContain(`"${slug}" is already used by course ${first.json.id}`)
+      expect(JSON.parse(clash.text).message).toContain(
+        `"${slug}" is already used by course ${first.json.id}`,
+      )
     })
   })
 

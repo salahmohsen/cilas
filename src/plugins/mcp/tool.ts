@@ -35,9 +35,24 @@ export const adminTool = <Shape extends z.ZodRawShape>(spec: AdminToolSpec<Shape
   parameters: spec.shape as unknown as PluginTool['parameters'],
   handler: async (rawInput, req) => {
     if (!req.user || !isAdminUser(req.user)) return fail(NOT_ADMIN)
+    const failedInput = (message: string) =>
+      spec.name.endsWith('_draft')
+        ? {
+            ...succeed({
+              completeness: 'incomplete',
+              message,
+              fields: {
+                saved: [],
+                not_saved: [{ field: 'input', reason: message }],
+                needs_human_review: [],
+              },
+            }),
+            isError: true,
+          }
+        : fail(message)
     const parsed = z.object(spec.shape).strict().safeParse(rawInput)
     if (!parsed.success) {
-      return fail(
+      return failedInput(
         `Invalid input: ${parsed.error.issues
           .map((issue) => `${issue.path.join('.') || 'input'}: ${issue.message}`)
           .join('; ')}`,
@@ -47,7 +62,7 @@ export const adminTool = <Shape extends z.ZodRawShape>(spec: AdminToolSpec<Shape
       return succeed(await spec.run(parsed.data, { req, payload: req.payload, user: req.user }))
     } catch (error) {
       req.payload.logger.error({ err: error, msg: `MCP tool ${spec.name} failed` })
-      return fail(describeError(error))
+      return failedInput(describeError(error))
     }
   },
 })

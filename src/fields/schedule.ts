@@ -5,7 +5,7 @@ import { WEEKDAYS } from '@/lib/cairo-day'
 import { scheduleEndDate, type Schedule, type SessionDates } from '@/lib/schedule'
 import { endAfterStart, timeOfDay } from './validators'
 
-const WEEKDAY_LABELS: Record<(typeof WEEKDAYS)[number], string> = {
+export const WEEKDAY_LABELS: Record<(typeof WEEKDAYS)[number], string> = {
   sat: 'Saturday',
   sun: 'Sunday',
   mon: 'Monday',

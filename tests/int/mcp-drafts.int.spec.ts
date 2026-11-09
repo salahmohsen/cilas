@@ -2,6 +2,7 @@
 import { createLocalReq, getPayload, type Payload } from 'payload'
 import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest'
 import config from '@/payload.config'
+import { env } from '@/env'
 import { MCP_TOOLS } from '@/plugins/mcp'
 import { expandSchedule } from '@/lib/schedule'
 import { footnotesOf } from '@/lib/footnotes'
@@ -93,7 +94,7 @@ describe('complete MCP draft writes', () => {
       schedule: { ...schedule, start_date: '2024-09-21' },
     })
     expect(refused.isError).toBe(true)
-    expect(refused.text).toMatch(/2024-09-21.*sat.*sun/)
+    expect(refused.text).toMatch(/2024-09-21.*Saturday.*Sunday/)
     expect((await payload.count({ collection: 'courses' })).totalDocs).toBe(before.totalDocs)
     const result = await call('create_course_draft', input)
     expect(result.isError, result.text).toBeFalsy()
@@ -288,6 +289,121 @@ describe('complete MCP draft writes', () => {
         })
       ).summary,
     ).toBe('احتفظ')
+  })
+
+  it('fills cover, bibliography, questions, pricing, registration and SEO with their real nested shapes', async () => {
+    const media = (await payload.find({ collection: 'media', limit: 1, depth: 0 })).docs[0]!
+    expect(media).toBeDefined()
+    const input = {
+      ...courseInput(),
+      cover_image: media.id,
+      syllabus_tentative: true,
+      bibliography: [
+        {
+          type: 'reading',
+          title: { en: 'Reading', ar: 'قراءة' },
+          href: 'https://example.org/reading',
+          note: { en: 'Pages 1–5', ar: 'صفحات' },
+        },
+      ],
+      facilitator_note: { en: 'Bring a pen', ar: 'أحضر قلمًا' },
+      content_warning: { en: 'Sensitive text' },
+      registration: { method: 'closed', deadline: '2024-09-20' },
+      applicant_questions: [
+        {
+          blockType: 'textarea',
+          name: 'motivation',
+          label: { en: 'Why?', ar: 'لماذا؟' },
+          minWords: 10,
+          image: media.id,
+          required: true,
+        },
+      ],
+      pricing_override: {
+        min: 100,
+        max: 200,
+        currency: 'EGP',
+        need_based_deductions: true,
+        note: { en: 'Sliding scale', ar: 'حسب القدرة' },
+        payment_plans: [
+          {
+            label: { en: 'Two payments', ar: 'دفعتان' },
+            installments: [{ amount: 50 }, { amount: 50 }],
+          },
+        ],
+      },
+      meta: {
+        title: { en: 'SEO title', ar: 'عنوان البحث' },
+        description: { en: 'Search description' },
+        image: { en: media.id },
+      },
+    }
+    const result = await call('create_course_draft', input)
+    expect(result.isError, result.text).toBeFalsy()
+    const id = track('courses', result.json).id
+    for (const locale of ['en', 'ar'] as const) {
+      const course = await payload.findByID({
+        collection: 'courses',
+        id,
+        draft: true,
+        locale,
+        depth: 0,
+        fallbackLocale: false,
+      })
+      expect(course.cover_image).toBe(media.id)
+      expect(course.syllabus_tentative).toBe(true)
+      expect(course.bibliography![0]!.href).toBe('https://example.org/reading')
+      expect(course.bibliography![0]!.title).toBe(input.bibliography[0]!.title[locale])
+      expect(course.applicant_questions![0]).toMatchObject({
+        blockType: 'textarea',
+        name: 'motivation',
+        label: input.applicant_questions[0]!.label[locale],
+        minWords: 10,
+        image: media.id,
+      })
+      expect(course.pricing_override?.payment_plans![0]!.label).toBe(
+        input.pricing_override.payment_plans[0]!.label[locale],
+      )
+      expect(
+        course.pricing_override?.payment_plans![0]!.installments?.map((i) => i.amount),
+      ).toEqual([50, 50])
+      expect(course.meta?.title).toBe(input.meta.title[locale])
+    }
+    expect((await call('update_course_draft', { id, pricing_override: { max: 50 } })).isError).toBe(
+      true,
+    )
+    const clear = await call('update_course_draft', { id, facilitator_note: null })
+    expect(clear.isError, clear.text).toBeFalsy()
+    for (const locale of ['en', 'ar'] as const)
+      expect(
+        (
+          await payload.findByID({
+            collection: 'courses',
+            id,
+            draft: true,
+            locale,
+            fallbackLocale: false,
+          })
+        ).facilitator_note,
+      ).toBeNull()
+  })
+
+  it('converts only explicit unambiguous article mention links', async () => {
+    const author = await payload.findByID({ collection: 'people', id: person, depth: 0 })
+    const origin = env.NEXT_PUBLIC_SERVER_URL.replace(/\/$/, '')
+    const result = await call('create_article_draft', {
+      title: { en: uniq('mentions') },
+      authors: [person],
+      body: {
+        en: `[Known author](${origin}/en/people/${author.slug}) and ambiguous Name and [missing](${origin}/en/people/no-such-person-${crypto.randomUUID()}).`,
+      },
+    })
+    expect(result.isError, result.text).toBeFalsy()
+    const id = track('articles', result.json).id
+    const article = await payload.findByID({ collection: 'articles', id, draft: true, depth: 0 })
+    expect(JSON.stringify(article.body)).toContain('"blockType":"mention"')
+    expect(JSON.stringify(article.body)).toContain('ambiguous Name')
+    expect(JSON.stringify(article.body)).toContain('no-such-person-')
   })
 
   it('rolls back both locale writes when the second write fails', async () => {

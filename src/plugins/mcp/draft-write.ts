@@ -1,11 +1,13 @@
 import { z } from 'zod/v3'
 import { randomUUID } from 'node:crypto'
 import type { Field } from 'payload'
+import { WEEKDAY_LABELS } from '@/fields/schedule'
 import { cairoDay, weekdayOf } from '@/lib/cairo-day'
 import { expandSchedule, type Schedule } from '@/lib/schedule'
 import { timeOfDay, endAfterStart, httpUrl } from '@/fields/validators'
 import { ToolInputError } from './errors'
 import { fieldsFor, flattenFields, type DraftCollection } from './field-registry'
+import { resolveArticleMentions } from './article-mentions'
 import { markdownToLexical } from './markdown'
 import { adminUrl, assertExist } from './references'
 import { inTransaction } from './transaction'
@@ -30,7 +32,7 @@ export function validateCourse(input: Data) {
     const weekday = weekdayOf(day)
     if (!s.slots.some((slot) => slot.weekday === weekday))
       throw new ToolInputError(
-        `Schedule conflict: start date ${day} is ${weekday}, but weekly slots specify ${s.slots.map((slot) => slot.weekday).join(', ')}. Ask the person which is correct. Nothing was saved.`,
+        `Schedule conflict: start date ${day} is ${WEEKDAY_LABELS[weekday]}, but weekly slots specify ${s.slots.map((slot) => WEEKDAY_LABELS[slot.weekday]).join(', ')}. Ask the person which is correct. Nothing was saved.`,
       )
   }
   for (const row of [
@@ -79,9 +81,10 @@ async function prepare(
       result[name] = null
       continue
     }
-    if (field.type === 'richText')
+    if (field.type === 'richText') {
       value = await markdownToLexical(ctx.payload, name === 'body' ? 'article' : 'default', value)
-    else if (field.type === 'array')
+      if (name === 'body') value = await resolveArticleMentions(value, ctx)
+    } else if (field.type === 'array')
       value = await Promise.all(
         value.map(async (row: Data) => ({
           ...(await prepare(field.fields, row, ctx, locale)),
@@ -138,6 +141,10 @@ function hasArabic(value: unknown): boolean {
   )
 }
 
+const hasNull = (value: unknown): boolean =>
+  value === null ||
+  Boolean(value && typeof value === 'object' && Object.values(value).some(hasNull))
+
 const suppliedPaths = (value: unknown, prefix = ''): string[] => {
   if (value === null || typeof value !== 'object') return [prefix]
   const entries = Object.entries(value).filter(
@@ -160,7 +167,8 @@ export async function writeDraft(
   for (const [name, value] of Object.entries(input))
     if (name !== 'source_unmapped') assignIds(value)
   const en = await prepare(fields, input, ctx, 'en')
-  const ar = hasArabic(input) ? await prepare(fields, input, ctx, 'ar') : undefined
+  const ar =
+    hasArabic(input) || hasNull(input) ? await prepare(fields, input, ctx, 'ar') : undefined
   const { payload, req, user } = ctx
   const doc = await inTransaction(req, async () => {
     if (documentId && collection === 'courses') {
@@ -177,7 +185,12 @@ export async function writeDraft(
         ...current,
         ...en,
         schedule: en.schedule === null ? null : { ...current.schedule, ...en.schedule },
-        registration: { ...current.registration, ...en.registration },
+        registration:
+          en.registration === null ? null : { ...current.registration, ...en.registration },
+        pricing_override:
+          en.pricing_override === null
+            ? null
+            : { ...current.pricing_override, ...en.pricing_override },
       })
     }
     const options = {

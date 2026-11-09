@@ -101,7 +101,6 @@ const leafSchema = (field: Field, collection: DraftCollection, path: string): z.
             blockType: z.literal(block.slug),
             ...shapeFor(block.fields, collection, `${path}.${block.slug}`),
             id: z.string().optional(),
-            blockName: z.string().nullable().optional(),
           })
           .strict(),
       )

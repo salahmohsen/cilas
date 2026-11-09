@@ -398,12 +398,12 @@ try {
     'update_article_draft',
   ]
   check(
-    'tools/list shows the four tools',
+    'tools/list shows the six tools',
     names.every((name) => list.includes(`"${name}"`)),
     list.slice(0, 200),
   )
   const listed = toolNames(list)
-  check('tools/list shows nothing else', listed.length === 4, listed.join(', '))
+  check('tools/list shows nothing else', listed.length === names.length, listed.join(', '))
   const prompts = await (await mcp(pair.access_token, 'prompts/list')).text()
   check(
     'prompts/list shows the three prompts',
