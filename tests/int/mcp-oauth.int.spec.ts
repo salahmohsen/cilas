@@ -519,6 +519,22 @@ describe('assistants connect with OAuth', () => {
       expect((await mcp(pair.access_token, 'tools/list')).status).toBe(401)
     })
 
+    it('stops at once, and leaves no sign-in, when the assistant app is deleted', async () => {
+      const { pair, clientId } = await connect(admin)
+      await payload.delete({
+        collection: 'oauth-clients' as never,
+        where: { clientId: { equals: clientId } },
+        overrideAccess: true,
+      })
+      expect((await mcp(pair.access_token, 'tools/list')).status).toBe(401)
+      const left = await payload.count({
+        collection: 'oauth-tokens' as never,
+        where: { clientId: { equals: clientId } },
+        overrideAccess: true,
+      })
+      expect(left.totalDocs).toBe(0)
+    })
+
     it('stops at once when the account is no longer an admin', async () => {
       const temp = await account('demoted', ['admin'])
       const { pair } = await connect(temp)

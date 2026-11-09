@@ -249,6 +249,17 @@ const deleteOwnersOAuth: CollectionAfterDeleteHook = async ({ id, req }) => {
   }
 }
 
+/** Removing an assistant app removes the sign-ins made through it. */
+const deleteClientsTokens: CollectionAfterDeleteHook = async ({ doc, req }) => {
+  const where: Where = { clientId: { equals: String(doc.clientId) } }
+  await deleteTokens(req, where)
+  await req.payload.db.deleteMany({
+    collection: 'oauth-auth-codes' as CollectionSlug,
+    where,
+    req,
+  })
+}
+
 const hide = (fields: Field[], names: string[]): Field[] =>
   fields.map((field) =>
     'name' in field && names.includes(field.name)
@@ -288,6 +299,7 @@ const asAssistantApps = (collection: CollectionConfig): CollectionConfig => ({
   ),
   hooks: {
     ...collection.hooks,
+    afterDelete: [...(collection.hooks?.afterDelete ?? []), deleteClientsTokens],
     beforeValidate: [
       ...(collection.hooks?.beforeValidate ?? []),
       // Whatever created the row, its callbacks are ours and its name is ours.
