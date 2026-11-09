@@ -9,6 +9,11 @@ import { ASSISTANTS } from '@/plugins/mcp/assistants'
 import { mcpServerUrl } from '@/plugins/mcp/paths'
 
 import styles from './ai-access-guide.module.css'
+import { Accordion } from '@/components/arc/accordion/accordion'
+import { Alert } from '@/components/arc/alert/alert'
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/arc/tabs/tabs'
+
+import './dashboard/arc-scope.css'
 import { CopyButton } from './copy-button'
 
 const EXAMPLES = [
@@ -62,7 +67,7 @@ export async function AiAccessGuideView({
       visibleEntities={initPageResult.visibleEntities}
     >
       <Gutter>
-        <main className={styles.page}>
+        <main className={`arc-scope ${styles.page}`}>
           <h1 className={styles.title}>Connect an AI assistant</h1>
           {/* Custom views are not protected by Payload's access rules. */}
           {!isAdminUser(user) ? (
@@ -78,11 +83,11 @@ export async function AiAccessGuideView({
                   and relationships. It reports what was saved and what needs your review. It can
                   save a separate delivery mode for each session.
                 </p>
-                <p>
-                  <strong>Nothing goes live.</strong> A person reads each draft in this admin and
-                  publishes it. The assistant cannot publish, delete anything or change who can read
-                  a page. It never sees applications, emails or who enrolled.
-                </p>
+                <Alert tone="info" title="Nothing goes live">
+                  A person reads each draft in this admin and publishes it. The assistant cannot
+                  publish, delete anything or change who can read a page. It never sees
+                  applications, emails or who enrolled.
+                </Alert>
               </div>
 
               <Section title="Connect">
@@ -102,9 +107,16 @@ export async function AiAccessGuideView({
                   <strong>2. Paste it into your assistant.</strong> Follow the steps for the one you
                   use.
                 </p>
-                <div className={styles.assistants}>
+                <Tabs defaultValue={ASSISTANTS[0].id}>
+                  <TabsList aria-label="Assistant setup">
+                    {ASSISTANTS.map((assistant) => (
+                      <TabsTrigger key={assistant.id} value={assistant.id}>
+                        {assistant.name}
+                      </TabsTrigger>
+                    ))}
+                  </TabsList>
                   {ASSISTANTS.map((assistant) => (
-                    <div key={assistant.id} className={styles.assistant}>
+                    <TabsContent key={assistant.id} value={assistant.id}>
                       <h3>{assistant.name}</h3>
                       <p className={styles.muted}>{assistant.plans}</p>
                       <ol>
@@ -121,9 +133,9 @@ export async function AiAccessGuideView({
                       >
                         {assistant.settingsLabel} ↗
                       </a>
-                    </div>
+                    </TabsContent>
                   ))}
-                </div>
+                </Tabs>
                 <p style={{ marginBlockStart: '1rem' }}>
                   <strong>3. Sign in and allow.</strong> When CILAS asks, sign in with your own
                   administrator account and click <strong>Allow</strong>. The assistant then works
@@ -168,38 +180,53 @@ export async function AiAccessGuideView({
               </Section>
 
               <Section title="Connected assistants">
-                <p>
-                  Each person who connects appears in{' '}
-                  <Link href="/admin/collections/oauth-tokens">Connected assistants</Link>, under
-                  Site.
-                </p>
-                <ul>
-                  <li>
-                    <strong>To disconnect one person:</strong> open Connected assistants, tick their
-                    row, and choose Delete. The assistant stops working at once. They can connect
-                    again later.
-                  </li>
-                  <li>
-                    <strong>To disable a registered app:</strong> open{' '}
-                    <Link href="/admin/collections/oauth-clients">Assistant apps</Link>, open its
-                    row, and untick “Allowed to connect”. This stops connections using that row.
-                    Other registrations keep working, and people can register the assistant again.
-                  </li>
-                  <li>
-                    A connection ends by itself after 30 days without use. Then connect again.
-                  </li>
-                  <li>
-                    If someone stops being an administrator, their assistant stops working at once.
-                  </li>
-                </ul>
-                <div className={styles.links}>
-                  <Link className={styles.link} href="/admin/collections/oauth-tokens">
-                    Connected assistants
-                  </Link>
-                  <Link className={styles.link} href="/admin/collections/oauth-clients">
-                    Assistant apps
-                  </Link>
-                </div>
+                <Accordion
+                  defaultOpen={-1}
+                  items={[
+                    {
+                      title: 'Connected assistants',
+                      content: (
+                        <div className={styles.prose}>
+                          <p>
+                            Each person who connects appears in{' '}
+                            <Link href="/admin/collections/oauth-tokens">Connected assistants</Link>
+                            , under Site.
+                          </p>
+                          <ul>
+                            <li>
+                              <strong>To disconnect one person:</strong> open Connected assistants,
+                              tick their row, and choose Delete. The assistant stops working at
+                              once. They can connect again later.
+                            </li>
+                            <li>
+                              <strong>To disable a registered app:</strong> open{' '}
+                              <Link href="/admin/collections/oauth-clients">Assistant apps</Link>,
+                              open its row, and untick “Allowed to connect”. This stops connections
+                              using that row. Other registrations keep working, and people can
+                              register the assistant again.
+                            </li>
+                            <li>
+                              A connection ends by itself after 30 days without use. Then connect
+                              again.
+                            </li>
+                            <li>
+                              If someone stops being an administrator, their assistant stops working
+                              at once.
+                            </li>
+                          </ul>
+                          <div className={styles.links}>
+                            <Link className={styles.link} href="/admin/collections/oauth-tokens">
+                              Connected assistants
+                            </Link>
+                            <Link className={styles.link} href="/admin/collections/oauth-clients">
+                              Assistant apps
+                            </Link>
+                          </div>
+                        </div>
+                      ),
+                    },
+                  ]}
+                />
               </Section>
 
               <Section title="Keep it safe">

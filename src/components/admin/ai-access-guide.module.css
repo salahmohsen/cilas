@@ -2,63 +2,68 @@
    follow the admin. Logical properties keep it right in a right-to-left admin. */
 
 .page {
+  min-inline-size: 0;
+  font-size: var(--text-base);
+  --control-height-sm: 44px;
   max-inline-size: 52rem;
   padding-block: 1.5rem 3rem;
-  color: var(--theme-text);
+  color: var(--foreground);
 }
 
 .title {
   margin: 0 0 0.5rem;
-  font-size: 1.75rem;
+  font-size: var(--text-2xl);
   line-height: 1.2;
 }
 
 .lede {
   margin: 0 0 1.5rem;
-  font-size: 1.05rem;
+  font-size: var(--text-base);
   line-height: 1.55;
 }
 
-.lede p {
+.lede > p {
   margin: 0 0 0.75rem;
 }
 
 .section {
   margin: 0 0 1.5rem;
   padding: 1.25rem 1.5rem;
-  border: 1px solid var(--theme-elevation-150);
+  border: 1px solid var(--border);
   border-radius: 6px;
-  background: var(--theme-elevation-0);
+  background: var(--surface);
 }
 
-.section h2 {
+.section > h2 {
   margin: 0 0 0.75rem;
-  font-size: 1.2rem;
+  font-size: var(--text-lg);
 }
 
-.section h3 {
+.section :where(h3) {
   margin: 0 0 0.5rem;
-  font-size: 1.05rem;
+  font-size: var(--text-base);
 }
 
-.section p {
+.section > p,
+.prose p,
+.assistant p {
   margin: 0 0 0.75rem;
   line-height: 1.55;
 }
 
-.section ul,
-.section ol {
+.section :where(ul),
+.section :where(ol) {
   margin: 0 0 0.75rem;
   padding-inline-start: 1.4rem;
   line-height: 1.55;
 }
 
-.section li {
+.section :where(li) {
   margin-block-end: 0.35rem;
 }
 
 .muted {
-  color: var(--theme-elevation-600);
+  color: var(--text-secondary);
 }
 
 .address {
@@ -73,13 +78,13 @@
   flex: 1 1 16rem;
   min-inline-size: 0;
   padding: 0.6rem 0.8rem;
-  border: 1px solid var(--theme-elevation-250);
+  border: 1px solid var(--border-strong);
   border-radius: 4px;
-  background: var(--theme-elevation-50);
-  color: var(--theme-text);
+  background: var(--surface-muted);
+  color: var(--foreground);
   font: inherit;
   font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
-  font-size: 0.95rem;
+  font-size: var(--text-sm);
   overflow-wrap: anywhere;
 }
 
@@ -89,19 +94,19 @@
   align-items: center;
   min-block-size: 2.5rem;
   padding: 0.4rem 1rem;
-  border: 1px solid var(--theme-elevation-250);
+  border: 1px solid var(--border-strong);
   border-radius: 4px;
-  background: var(--theme-elevation-100);
-  color: var(--theme-text);
+  background: var(--surface-muted);
+  color: var(--foreground);
   font: inherit;
-  font-weight: 600;
+  font-weight: 500;
   text-decoration: none;
   cursor: pointer;
 }
 
 .copy:hover,
 .link:hover {
-  background: var(--theme-elevation-150);
+  background: var(--border);
 }
 
 .copy.copied {
@@ -113,25 +118,8 @@
 .link:focus-visible,
 .section a:focus-visible,
 .addressField:focus-visible {
-  outline: 2px solid var(--theme-text);
+  outline: 2px solid var(--foreground);
   outline-offset: 2px;
-}
-
-.assistants {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(min(100%, 20rem), 1fr));
-  gap: 1rem;
-}
-
-.assistant {
-  padding: 1rem 1.25rem;
-  border: 1px solid var(--theme-elevation-150);
-  border-radius: 6px;
-  background: var(--theme-elevation-50);
-}
-
-.assistant ol {
-  margin-block-end: 0.75rem;
 }
 
 .example {
@@ -141,8 +129,8 @@
 .exampleText {
   margin: 0 0 0.5rem;
   padding: 0.75rem 1rem;
-  border-inline-start: 3px solid var(--theme-elevation-250);
-  background: var(--theme-elevation-50);
+  border-inline-start: 3px solid var(--border-strong);
+  background: var(--surface-muted);
   white-space: pre-wrap;
   overflow-wrap: anywhere;
 }
@@ -174,4 +162,8 @@
     inline-size: 100%;
     justify-content: center;
   }
+}
+
+.page :where(h1, h2, h3, strong) {
+  font-weight: 500;
 }
