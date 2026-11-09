@@ -284,7 +284,8 @@ describe('the application flow, from the questions to the enrollment', () => {
     await payload.update({
       collection: 'courses',
       id: course.id,
-      data: { registration: { method: 'form', form: form.id } },
+      // Applications go only to a course that is on the site.
+      data: { registration: { method: 'form', form: form.id }, _status: 'published' },
       overrideAccess: true,
     })
   })

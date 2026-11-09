@@ -11,6 +11,7 @@ import type { ReactNode } from 'react'
 
 import { getBridgeYear } from '@/api/programmes.api'
 import { PayloadForm } from '@/components/forms/payload-form'
+import { publicForm } from '@/forms/public-form'
 import { ResolvedRichTextField as RichTextField } from '@/components/resolved-rich-text-field'
 import { Link } from '@/i18n/navigation'
 import { numberingSystemOf } from '@/lib/digits'
@@ -42,13 +43,15 @@ export default async function ApplyPage({ params }: Props) {
   const formRef = registration?.form
   if (!year || !formRef) notFound()
 
-  const form: Form = await payload.findByID({
-    collection: 'forms',
-    id: relId(formRef),
-    depth: 1,
-    locale: lang,
-    fallbackLocale: 'en',
-  })
+  const form = publicForm(
+    await payload.findByID({
+      collection: 'forms',
+      id: relId(formRef),
+      depth: 1,
+      locale: lang,
+      fallbackLocale: 'en',
+    }),
+  )
 
   const open = registrationStatus(registration) === 'open'
   const deadline = registration?.deadline

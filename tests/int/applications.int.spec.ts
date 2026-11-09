@@ -2,6 +2,7 @@
 import { createLocalReq, getPayload, type Payload } from 'payload'
 import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest'
 
+import { TURNSTILE_VERIFIED } from '@/lib/turnstile'
 import config from '@/payload.config'
 import type { Form, FormSubmission, Programme, User } from '@/payload-types'
 
@@ -236,5 +237,43 @@ describe('accepting an application', () => {
     const res = await decide('accept', submission.id)
     expect(res.status).toBe(400)
     expect((await res.json()).error).toMatch(/name/)
+  })
+
+  it('refuses, from outside, a target that was never published, and accepts it once published', async () => {
+    const draft = await payload.create({
+      collection: 'programmes',
+      data: {
+        title: 'Unpublished probe',
+        kind: 'residency',
+        registration: { method: 'form', form: form.id },
+      },
+      draft: true,
+    })
+    const fromOutside = () =>
+      payload.create({
+        collection: 'form-submissions',
+        data: {
+          form: form.id,
+          target: { relationTo: 'programmes', value: draft.id },
+          submissionData: [
+            { field: 'name', value: APPLICANT },
+            { field: 'email', value: EMAIL },
+          ],
+        },
+        context: { [TURNSTILE_VERIFIED]: true },
+        req: { payloadAPI: 'REST' } as never,
+      })
+    try {
+      await expect(fromOutside()).rejects.toThrow(/not open for applications/)
+      await payload.update({
+        collection: 'programmes',
+        id: draft.id,
+        data: { _status: 'published' },
+      })
+      await expect(fromOutside()).resolves.toMatchObject({ status: 'new' })
+    } finally {
+      await payload.delete({ collection: 'form-submissions', where: { form: { equals: form.id } } })
+      await payload.delete({ collection: 'programmes', id: draft.id }).catch(() => undefined)
+    }
   })
 })

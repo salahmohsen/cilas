@@ -61,7 +61,7 @@ import type {
 import { s3Storage } from '@payloadcms/storage-s3'
 import { payloadTheme } from 'payload-theme'
 
-import { anyone, isAdmin } from './access'
+import { adminOnlyField, anyone, isAdmin } from './access'
 import { env } from './env'
 import { defaultEditorFeatures } from './lexical/default-features'
 import { pathOf } from './lib/paths'
@@ -285,6 +285,8 @@ export default buildConfig({
             'name' in field && field.name === 'emails' && 'fields' in field
               ? {
                   ...field,
+                  // Notification addresses: anyone may read a form, only admins these.
+                  access: { ...field.access, read: adminOnlyField },
                   fields: field.fields.map((child) =>
                     child.type === 'richText'
                       ? { ...child, editor: lexicalEditor({ features: emailEditorFeatures }) }

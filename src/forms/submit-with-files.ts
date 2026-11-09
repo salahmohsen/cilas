@@ -67,6 +67,7 @@ export const submitWithFiles: PayloadHandler = async (req) => {
       sent.target.value,
     )
     if (loaded && !loaded.open) return fail('Applications are closed.')
+    if (loaded && !loaded.published) return fail('Applications are closed.')
   }
 
   const questions = await fileQuestionsOf(req, sent)

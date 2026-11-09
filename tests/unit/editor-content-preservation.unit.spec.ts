@@ -104,6 +104,7 @@ describe('form email substitutions', () => {
     )
     expect(mail.html).toContain('&lt;script&gt;bad&lt;/script&gt; 42')
     expect(mail.html).not.toContain('href="javascript:')
-    expect(findByID).toHaveBeenCalledWith(expect.objectContaining({ overrideAccess: false }))
+    // The emails are admin-only fields, so the server reads them as itself.
+    expect(findByID).toHaveBeenCalledWith(expect.objectContaining({ overrideAccess: true }))
   })
 })

@@ -13,7 +13,9 @@ export const formEmailRichText: BeforeEmail = async (emails, params) => {
     collection: 'forms',
     id: formId,
     req,
-    overrideAccess: false,
+    // The notification emails are admin-only fields; this runs on the server and
+    // their content never leaves it.
+    overrideAccess: true,
     depth: 1,
   })
   const locale = localeOf(req.locale)

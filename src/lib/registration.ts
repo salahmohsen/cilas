@@ -44,5 +44,7 @@ export const loadApplicationTarget = async (
   if (!target) return null
   const cycle = 'cycle' in target && typeof target.cycle === 'object' ? target.cycle : null
   const open = registrationStatus(target.registration, cycle?.registration) === 'open'
-  return { target, cycle, open }
+  // A draft that was never published is not on the site, so nothing can apply to it.
+  const published = target._status === 'published'
+  return { target, cycle, open, published }
 }

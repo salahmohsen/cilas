@@ -13,6 +13,7 @@ import styles from '@/components/events/events.module.css'
 import { PublicEventCard } from '@/components/events/public-event-card'
 import { UpcomingEvents } from '@/components/events/upcoming-events'
 import { PayloadForm } from '@/components/forms/payload-form'
+import { publicForm } from '@/forms/public-form'
 import { PROFILE_COLORS, ProfileCard } from '@/components/person/profile-card'
 import { ResolvedRichTextField as RichTextField } from '@/components/resolved-rich-text-field'
 import { RichTextField as PlainRichText } from '@/components/RichTextField'
@@ -51,7 +52,10 @@ export async function EventPage({
   ])
   const now = new Date()
   const timing = eventTiming(event, now)
-  const form = typeof event.registration?.form === 'object' ? event.registration.form : null
+  const form =
+    typeof event.registration?.form === 'object' && event.registration.form
+      ? publicForm(event.registration.form)
+      : null
   const open =
     timing.status !== 'past' && registrationStatus(event.registration, null, now) === 'open'
   const meetings = isOnCalendar(event.schedule) ? expandSchedule(event.schedule) : []

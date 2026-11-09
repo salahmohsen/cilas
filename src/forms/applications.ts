@@ -103,6 +103,11 @@ export const checkTarget: CollectionBeforeChangeHook = async ({ data, operation,
   if (req.payloadAPI !== 'local' && !loaded?.open) {
     throw new APIError('This is not open for applications.', 400)
   }
+  // An unpublished course or programme has no page, but its id and form are
+  // easy to guess; its form is readable, so the API must refuse it too.
+  if (req.payloadAPI !== 'local' && !loaded?.published) {
+    throw new APIError('This is not open for applications.', 400)
+  }
   return data
 }
 

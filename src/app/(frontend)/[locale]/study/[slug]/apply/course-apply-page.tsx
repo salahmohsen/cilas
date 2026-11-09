@@ -12,6 +12,7 @@ import type { ReactNode } from 'react'
 
 import type { Reader } from '@/lib/reader'
 import { PayloadForm } from '@/components/forms/payload-form'
+import { publicForm } from '@/forms/public-form'
 import { ResolvedRichTextField as RichTextField } from '@/components/resolved-rich-text-field'
 import { Link } from '@/i18n/navigation'
 import { numberingSystemOf } from '@/lib/digits'
@@ -61,20 +62,22 @@ export async function CourseApplyPage({
   const formRef = course.registration?.form ?? cycle?.registration?.form
   if (method !== 'form' || !formRef) notFound()
 
-  const shared: Form = await payload.findByID({
-    collection: 'forms',
-    id: relId(formRef),
-    depth: 1,
-    locale: lang,
-    fallbackLocale: 'en',
-  })
+  const shared = publicForm(
+    await payload.findByID({
+      collection: 'forms',
+      id: relId(formRef),
+      depth: 1,
+      locale: lang,
+      fallbackLocale: 'en',
+    }),
+  )
   // The course's own questions after the form's. Their names take a prefix,
   // so none can overwrite an answer to the shared form.
   const extra = (course.applicant_questions ?? []).map((q) => ({
     ...q,
     name: `course_${q.name}`,
   })) as unknown as NonNullable<Form['fields']>
-  const form: Form = { ...shared, fields: [...(shared.fields ?? []), ...extra] }
+  const form = { ...shared, fields: [...(shared.fields ?? []), ...extra] }
 
   const open = registrationStatus(course.registration, cycle?.registration) === 'open'
   const deadlineDay = course.registration?.deadline ?? cycle?.registration?.deadline
