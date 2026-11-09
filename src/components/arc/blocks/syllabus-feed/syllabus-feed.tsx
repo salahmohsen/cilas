@@ -51,7 +51,7 @@ export type SyllabusEntry = {
   date?: { label: string; iso?: string }
   title: string
   /** One line under the title: its unit, its meetings, its counts. */
-  meta?: { unit?: string; meetings?: SyllabusMeeting[]; extra?: string[] }
+  meta?: { unit?: string; meetings?: SyllabusMeeting[]; extra?: ReactNode[] }
   cancelled?: boolean
   /** Activity kinds carried by the session, for the chips. */
   activities: string[]

@@ -81,8 +81,8 @@ export async function AiAccessGuideView({
                   draft of a course, an article or a registration form. It saves the draft here, so
                   you do not copy text between pages. It can also correct an existing course or
                   article draft, save schedules and course flow, and add article footnotes, credits
-                  and relationships. It reports what was saved and what needs your review. Delivery
-                  changes between sessions are kept as a schedule note.
+                  and relationships. It reports what was saved and what needs your review. It can
+                  save a separate delivery mode for each session.
                 </p>
                 <p>
                   <strong>Nothing goes live.</strong> A person reads each draft in this admin and

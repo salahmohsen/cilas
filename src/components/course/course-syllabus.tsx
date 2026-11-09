@@ -135,7 +135,19 @@ function useSyllabusEntries(
           date: dayLabel(m.date),
           time: localDigits(`${m.start_time}–${m.end_time}`, locale),
         })),
-        extra: materials.length ? [t('materialCount', { count: materials.length })] : undefined,
+        extra:
+          session.delivery || materials.length
+            ? [
+                ...(session.delivery
+                  ? [
+                      <span key="delivery" {...pe(`sessions.${at}.delivery`)}>
+                        {t(`delivery.${session.delivery}`)}
+                      </span>,
+                    ]
+                  : []),
+                ...(materials.length ? [t('materialCount', { count: materials.length })] : []),
+              ]
+            : undefined,
       },
       cancelled: Boolean(session.cancelled),
       activities: [...new Set(activities.map((a) => a.kind))],

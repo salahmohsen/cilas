@@ -37,6 +37,7 @@ const courseInput = () => ({
   schedule,
   sessions: Array.from({ length: 8 }, (_, i) => ({
     order: i + 1,
+    delivery: i < 4 ? 'ONLINE' : 'OFFLINE',
     session_title: { en: `Session ${i + 1}`, ar: `جلسة ${i + 1}` },
     description: { en: 'Reading and discussion', ar: 'قراءة ومناقشة' },
   })),
@@ -59,7 +60,17 @@ describe('complete MCP draft writes', () => {
         data: { name: uniq('MCP author'), slug: uniq('mcp-author') },
       }),
     ).id
-    const place = (await payload.find({ collection: 'places', limit: 1 })).docs[0]!
+    const place = track(
+      'places',
+      await payload.create({
+        collection: 'places',
+        data: {
+          name: uniq('MCP draft place'),
+          slug: uniq('mcp-draft-place'),
+          city: uniq('MCP draft city'),
+        },
+      }),
+    )
     cycle = track(
       'cycles',
       await payload.create({
@@ -97,6 +108,16 @@ describe('complete MCP draft writes', () => {
         fallbackLocale: false,
       })
       expect(course.sessions).toHaveLength(8)
+      expect(course.sessions!.map((session) => session.delivery)).toEqual([
+        'ONLINE',
+        'ONLINE',
+        'ONLINE',
+        'ONLINE',
+        'OFFLINE',
+        'OFFLINE',
+        'OFFLINE',
+        'OFFLINE',
+      ])
       expect(course.location).toEqual(['HYBRID'])
       expect(course.schedule?.note).toBe(schedule.note[locale])
       expect(course.sessions![0]!.session_title).toBe(input.sessions[0]!.session_title[locale])

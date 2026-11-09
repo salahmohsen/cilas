@@ -281,6 +281,15 @@ export const Courses: CollectionConfig = {
                         },
                       ],
                     },
+                    {
+                      name: 'delivery',
+                      type: 'select',
+                      options: [...LOCATION_OPTIONS],
+                      admin: {
+                        description:
+                          'How this session meets. Leave empty to follow the course location.',
+                      },
+                    },
                     { name: 'description', type: 'richText', localized: true },
                     {
                       name: 'dates',

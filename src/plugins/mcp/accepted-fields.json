@@ -18,6 +18,7 @@
     "sessions.session_title",
     "sessions.meetings",
     "sessions.cancelled",
+    "sessions.delivery",
     "sessions.description",
     "sessions.dates",
     "sessions.dates.date",

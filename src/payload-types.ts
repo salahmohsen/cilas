@@ -936,6 +936,10 @@ export interface Course {
          * The session will not take place: marked as cancelled on the page and left off the calendar.
          */
         cancelled?: boolean | null;
+        /**
+         * How this session meets. Leave empty to follow the course location.
+         */
+        delivery?: ('OFFLINE' | 'ONLINE' | 'HYBRID') | null;
         description?: {
           root: {
             type: string;
@@ -3246,6 +3250,7 @@ export interface CoursesSelect<T extends boolean = true> {
         session_title?: T;
         meetings?: T;
         cancelled?: T;
+        delivery?: T;
         description?: T;
         dates?:
           | T

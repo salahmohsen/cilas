@@ -338,6 +338,7 @@
     "since": "{count, plural, one {# course} other {# courses}} since {year}"
   },
   "Course": {
+    "delivery": { "OFFLINE": "In person", "ONLINE": "Online", "HYBRID": "Hybrid" },
     "details": "Course details",
     "cycle": "Cycle",
     "starts": "Starts",

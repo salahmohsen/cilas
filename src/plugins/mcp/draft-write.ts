@@ -223,15 +223,6 @@ export async function writeDraft(
       not_saved: raw.source_unmapped ?? [],
       needs_human_review: [
         { field: '_status', reason: 'A person must review and publish this draft.' },
-        ...(input.schedule?.note
-          ? [
-              {
-                field: 'schedule.note',
-                reason:
-                  'Any per-session delivery split is saved only as a note; check it against the source. There is no structured session delivery field.',
-              },
-            ]
-          : []),
       ],
     },
     notes: ['Not published. A person must review and publish.'],
