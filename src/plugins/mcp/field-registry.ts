@@ -147,11 +147,7 @@ const leafSchema = (field: Field, collection: DraftCollection, path: string): z.
   )
   return 'required' in field && field.required ? schema : schema.nullable().optional()
 }
-export const shapeFor = (
-  fields: Field[],
-  collection: DraftCollection,
-  prefix = '',
-): z.ZodRawShape =>
+const shapeFor = (fields: Field[], collection: DraftCollection, prefix = ''): z.ZodRawShape =>
   Object.fromEntries(
     flattenFields(fields).flatMap((field) => {
       if (!('name' in field) || !field.name) return []

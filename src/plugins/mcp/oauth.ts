@@ -44,7 +44,7 @@ const allOn = (names: ReadonlyArray<{ name: string }>): Record<string, boolean> 
  * Call it after `payloadMcpOAuth()` (which installs `overrideAuth`) and before
  * the plugins run (which copy the options), as `oauthMcp` does.
  */
-export const grantOAuthCustomAccess = (options: MCPPluginConfig): void => {
+const grantOAuthCustomAccess = (options: MCPPluginConfig): void => {
   const previous = options.overrideAuth
   if (!previous) throw new Error('payloadMcpOAuth must run before grantOAuthCustomAccess')
   options.overrideAuth = async (req, getDefaultMcpAccessSettings) => {
@@ -88,7 +88,7 @@ const readBody = async (req: PayloadRequest): Promise<Record<string, unknown>> =
 
 const sameUrl = (a: string, b: string) => a.replace(/\/+$/, '') === b.replace(/\/+$/, '')
 
-export const mayConnect = (user: PayloadRequest['user']): boolean =>
+const mayConnect = (user: PayloadRequest['user']): boolean =>
   Boolean(user && user.collection === 'users' && isAdminUser(user))
 
 const NOT_ADMIN_TEXT =

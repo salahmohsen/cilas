@@ -29,12 +29,6 @@ const courseWithSlug = async ({ payload, req }: ToolContext, slug: string) =>
 
 const MAX_SLUG = 100
 
-/**
- * The web address of a new course. An admin who gave one gets exactly it, or
- * is told it is taken. Otherwise it comes from the title, and when another
- * course (say the same title in another cycle) already has it, the cycle's
- * name is added, then a number. No one has to know what a slug is.
- */
 const chooseSlug = async (
   ctx: ToolContext,
   title: string,

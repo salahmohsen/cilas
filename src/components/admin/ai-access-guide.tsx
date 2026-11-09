@@ -41,13 +41,6 @@ function Section({ title, children }: { title: string; children: React.ReactNode
   )
 }
 
-/**
- * Admin → Connect an AI assistant. The one place an administrator sets this up,
- * for people who are not developers: copy one address, paste it into Claude or
- * ChatGPT, sign in to CILAS, click Allow. The assistants, their steps and the
- * callbacks CILAS accepts come from one table (src/plugins/mcp/assistants.ts).
- * What the assistant can do is set in src/plugins/mcp.
- */
 export async function AiAccessGuideView({
   initPageResult,
   params,

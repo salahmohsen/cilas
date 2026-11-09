@@ -1,20 +1,25 @@
 import { z } from 'zod/v3'
 
-import { formFields } from '@/forms/form-fields'
+import type { formFields } from '@/forms/form-fields'
 
 import { localizedText, optionalLocalizedText } from './schemas'
 
 /**
  * The question types the AI may add. Name and email are always asked first
  * (ensureNameEmail), and file uploads, messages and the rest are left to an
- * admin. Each type is checked against the form builder's own block list.
+ * admin.
  */
-export const TEXT_QUESTION_TYPES = ['text', 'textarea', 'number', 'checkbox'] as const
-export const CHOICE_QUESTION_TYPES = ['select', 'radio', 'checkboxGroup'] as const
-export const QUESTION_TYPES = [...TEXT_QUESTION_TYPES, ...CHOICE_QUESTION_TYPES] as const
-
-export const questionTypesAreKnown = (): boolean =>
-  QUESTION_TYPES.every((type) => type in formFields)
+export const TEXT_QUESTION_TYPES = [
+  'text',
+  'textarea',
+  'number',
+  'checkbox',
+] as const satisfies readonly (keyof typeof formFields)[]
+export const CHOICE_QUESTION_TYPES = [
+  'select',
+  'radio',
+  'checkboxGroup',
+] as const satisfies readonly (keyof typeof formFields)[]
 
 /** `name` and `email` are the form's own; the hook would drop a second one. */
 export const RESERVED_QUESTION_NAMES = ['name', 'email']
