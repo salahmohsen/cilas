@@ -110,7 +110,8 @@ const leafSchema = (field: Field, collection: DraftCollection, path: string): z.
     if (field.hasMany) schema = field.required ? z.array(schema).min(1) : z.array(schema)
   } else if (field.type === 'relationship' || field.type === 'upload') {
     schema = z.number().int().positive()
-    if ('hasMany' in field && field.hasMany) schema = z.array(schema)
+    if ('hasMany' in field && field.hasMany)
+      schema = field.required ? z.array(schema).min(1) : z.array(schema)
   } else if (field.type === 'number') {
     let number = z.number().finite()
     if (field.min !== undefined) number = number.min(field.min)
@@ -120,7 +121,13 @@ const leafSchema = (field: Field, collection: DraftCollection, path: string): z.
   else if (field.type === 'date')
     schema = z
       .string()
-      .refine((v) => /^\d{4}-\d{2}-\d{2}(T.*)?$/.test(v) && cairoDay(v) !== null, 'Use an ISO date')
+      .refine(
+        (v) =>
+          /^\d{4}-\d{2}-\d{2}(T.*)?$/.test(v) &&
+          cairoDay(v.slice(0, 10)) !== null &&
+          cairoDay(v) !== null,
+        'Use an ISO date with a valid calendar day',
+      )
   else
     schema =
       'required' in field && field.required

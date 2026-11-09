@@ -83,10 +83,11 @@ export async function AiAccessGuideView({
                   and relationships. It reports what was saved and what needs your review. It can
                   save a separate delivery mode for each session.
                 </p>
-                <Alert tone="info" title="Nothing goes live">
-                  A person reads each draft in this admin and publishes it. The assistant cannot
-                  publish, delete anything or change who can read a page. It never sees
-                  applications, emails or who enrolled.
+                <Alert tone="info" title="Course and article drafts need your review">
+                  A person reads each course or article draft in this admin and publishes it. A new
+                  form is readable by anyone who has its address. The assistant cannot publish,
+                  delete anything or change who can read a page. It never sees applications, emails
+                  or who enrolled.
                 </Alert>
               </div>
 
@@ -166,7 +167,10 @@ export async function AiAccessGuideView({
                 <ol>
                   <li>Open the link the assistant gave you, or find the draft in its list.</li>
                   <li>Read everything, in both languages, and fix what is wrong.</li>
-                  <li>Publish it as you always do. Until then, no one else can see it.</li>
+                  <li>
+                    Publish the course or article as you always do. Its draft stays unpublished
+                    until then. Forms are readable by address as soon as they are created.
+                  </li>
                 </ol>
                 <div className={styles.links}>
                   {PANEL_LINKS.map(({ href, label }) => (

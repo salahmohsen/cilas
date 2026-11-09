@@ -166,6 +166,71 @@ describe('complete MCP draft writes', () => {
       expect((await call('update_course_draft', { id, ...changes })).isError).toBe(true)
   })
 
+  it.each([
+    'Literal code: `[^n]` and `[example](javascript:example)`',
+    'Escaped: \\[^n]',
+    '~~~~\n[^n]: literal code\n```\n~~~~',
+  ])('preserves literal footnote examples: %s', async (body) => {
+    const result = await call('create_article_draft', {
+      title: { en: uniq(`Literal footnote ${crypto.randomUUID()}`) },
+      authors: [person],
+      body: { en: body },
+    })
+    expect(result.isError, result.text).toBeFalsy()
+    const id = track('articles', result.json).id
+    const article = await payload.findByID({ collection: 'articles', id, draft: true, depth: 0 })
+    expect(JSON.stringify(article.body)).toContain('[^n]')
+    expect(footnotesOf(article.body)).toHaveLength(0)
+  })
+
+  it('rejects rolled-over timestamps without creating a course', async () => {
+    const before = await payload.count({ collection: 'courses' })
+    for (const start_date of ['2026-02-30T12:00:00Z', '2026-04-31T10:00:00+02:00']) {
+      const result = await call('create_course_draft', {
+        ...courseInput(),
+        schedule: { ...schedule, start_date },
+      })
+      expect(result.isError, result.text).toBe(true)
+      expect(result.text).toContain('valid calendar day')
+    }
+    expect((await payload.count({ collection: 'courses' })).totalDocs).toBe(before.totalDocs)
+  })
+
+  it('retains authors when a correction tries to remove all required authors', async () => {
+    const result = await call('create_article_draft', {
+      title: { en: uniq('Required author') },
+      authors: [person],
+      body: { en: 'Text' },
+    })
+    const id = track('articles', result.json).id
+    const update = await call('update_article_draft', { id, authors: [] })
+    expect(update.isError).toBe(true)
+    const article = await payload.findByID({ collection: 'articles', id, draft: true, depth: 0 })
+    expect(article.authors).toEqual([person])
+  })
+
+  it('uses Markdown label semantics for real footnotes and refuses unsafe reference links', async () => {
+    const result = await call('create_article_draft', {
+      title: { en: uniq('Markdown notes') },
+      authors: [person],
+      body: { en: 'Text[^N].\n\n[^n]: A real note.' },
+    })
+    expect(result.isError, result.text).toBeFalsy()
+    const id = track('articles', result.json).id
+    const article = await payload.findByID({ collection: 'articles', id, draft: true, depth: 0 })
+    expect(footnotesOf(article.body)).toHaveLength(1)
+    const bad = await call('update_article_draft', {
+      id,
+      body: { en: '[unsafe][link]\n\n[link]: javascript:example' },
+    })
+    expect(bad.isError).toBe(true)
+    expect(
+      JSON.stringify(
+        (await payload.findByID({ collection: 'articles', id, draft: true, depth: 0 })).body,
+      ),
+    ).toBe(JSON.stringify(article.body))
+  })
+
   it('stores real footnotes in both locales and every article relationship shape', async () => {
     const input = {
       title: { en: uniq('MCP footnotes'), ar: 'مقالة تجريبية' },

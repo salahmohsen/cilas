@@ -4,6 +4,7 @@
   min-inline-size: 0;
   font-size: var(--text-base);
   --control-height-sm: 44px;
+  --control-height-lg: 44px;
   max-inline-size: 52rem;
   padding-block: 1.5rem 3rem;
   color: var(--foreground);
@@ -91,7 +92,7 @@
 .link {
   display: inline-flex;
   align-items: center;
-  min-block-size: 2.5rem;
+  min-block-size: var(--control-height-sm);
   padding: 0.4rem 1rem;
   border: 1px solid var(--border-strong);
   border-radius: 4px;

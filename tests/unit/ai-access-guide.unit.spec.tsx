@@ -64,7 +64,8 @@ describe('the AI assistants guide', () => {
   it('tells an administrator what it does, and that a person publishes', async () => {
     const text = textOf(await render(['admin']))
     expect(text).toContain('Connect an AI assistant')
-    expect(text).toContain('Nothing goes live')
+    expect(text).toContain('Course and article drafts need your review')
+    expect(text).toContain('A new form is readable by anyone who has its address')
     expect(text).toMatch(/publishes it/)
   })
 
