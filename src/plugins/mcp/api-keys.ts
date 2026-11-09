@@ -1,15 +1,25 @@
 import type { Access, CollectionBeforeDeleteHook, CollectionConfig } from 'payload'
 
-import { isAdmin, isAdminUser } from '@/access'
+import { hasRole, isAdmin } from '@/access'
 
 import { AI_ACCESS_LINK } from './paths'
 
+const isSuperAdmin = (user: Parameters<typeof hasRole>[0]) => hasRole(user, 'super_admin')
+
 /**
- * Change or unlock only your own key, and only while you are an admin. The
- * plugin's default lets any account manage its own keys.
+ * Keys are for developers: only a super admin makes one. Administrators
+ * connect Claude or ChatGPT with OAuth instead, so they never see this
+ * collection in the panel (but may still remove a key a developer left).
  */
-const ownKeyAsAdmin: Access = ({ req }) =>
-  req.user && req.user.collection === 'users' && isAdminUser(req.user)
+const superAdminOnly: Access = ({ req }) =>
+  Boolean(req.user && req.user.collection === 'users' && isSuperAdmin(req.user))
+
+/**
+ * Change or unlock only your own key, and only while you are a super admin.
+ * The plugin's default lets any account manage its own keys.
+ */
+const ownKeyAsSuperAdmin: Access = ({ req }) =>
+  req.user && req.user.collection === 'users' && isSuperAdmin(req.user)
     ? { user: { equals: req.user.id } }
     : false
 
@@ -37,19 +47,19 @@ export const overrideApiKeyCollection = (collection: CollectionConfig): Collecti
   labels: { singular: 'AI access key', plural: 'AI access' },
   access: {
     ...collection.access,
-    create: isAdmin,
+    create: superAdminOnly,
     // Any admin must be able to remove a key a former admin left behind.
     read: isAdmin,
-    update: ownKeyAsAdmin,
+    update: ownKeyAsSuperAdmin,
     delete: isAdmin,
-    unlock: ownKeyAsAdmin,
+    unlock: ownKeyAsSuperAdmin,
   },
   admin: {
     ...collection.admin,
     group: 'Site',
-    hidden: ({ user }) => !isAdminUser(user),
+    hidden: ({ user }) => !isSuperAdmin(user),
     description:
-      'Keys that let an AI assistant make course and article drafts. A person always publishes.',
+      'For developers: a key lets a program make course and article drafts. Administrators connect Claude or ChatGPT instead, from the AI assistants guide.',
     components: {
       ...collection.admin?.components,
       beforeList: [AI_ACCESS_LINK],

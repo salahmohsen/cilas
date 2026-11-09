@@ -35,6 +35,7 @@ const mcpAccount = async (label: string, roles: User['roles']) =>
 
 describe('admin-only MCP server', () => {
   let admin: User
+  let superAdmin: User
   let member: User
   let cycleId: number
   let personId: number
@@ -52,6 +53,7 @@ describe('admin-only MCP server', () => {
         })) as unknown as User,
       )
     admin = await account('admin', ['admin'])
+    superAdmin = await account('super', ['super_admin'])
     member = await account('member', ['member'])
     personId = track(
       'people',
@@ -86,52 +88,66 @@ describe('admin-only MCP server', () => {
     await payload.destroy()
   })
 
-  describe('keys', () => {
-    it('refuses a member a key and lets an admin make one', async () => {
-      await expect(
-        payload.create({
-          collection: 'payload-mcp-api-keys',
-          data: { label: 'member' } as never,
-          user: { ...member, collection: 'users' } as never,
-          overrideAccess: false,
-        }),
-      ).rejects.toThrow()
-      const key = await payload.create({
+  describe('keys (for developers)', () => {
+    const asUser = (user: User) => ({ ...user, collection: 'users' }) as never
+    const create = (user: User, label: string) =>
+      payload.create({
         collection: 'payload-mcp-api-keys',
-        data: { label: 'admin', enableAPIKey: true, apiKey: crypto.randomUUID() } as never,
-        user: { ...admin, collection: 'users' } as never,
+        data: { label, enableAPIKey: true, apiKey: crypto.randomUUID() } as never,
+        user: asUser(user),
         overrideAccess: false,
       })
+
+    it('lets only a super admin make a key, bound to themselves', async () => {
+      await expect(create(member, 'member')).rejects.toThrow()
+      await expect(create(admin, 'admin')).rejects.toThrow()
+      const key = await create(superAdmin, 'super')
       keys.push(key.id)
-      const user = key.user
-      expect(typeof user === 'object' ? user.id : user).toBe(admin.id)
+      const owner = key.user
+      expect(typeof owner === 'object' ? owner.id : owner).toBe(superAdmin.id)
     })
 
     it('shows keys to any admin without the secret, and hides them from others', async () => {
-      const other = track(
-        'users',
-        (await payload.create({
-          collection: 'users',
-          data: { email: uniqEmail('mcp-other'), password: crypto.randomUUID(), roles: ['admin'] },
-          overrideAccess: true,
-        })) as unknown as User,
-      )
-      const asOther = await payload.find({
+      const asAdmin = await payload.find({
         collection: 'payload-mcp-api-keys',
-        user: { ...other, collection: 'users' } as never,
+        user: asUser(admin),
         overrideAccess: false,
       })
-      const seen = asOther.docs.find((d) => d.id === keys[0])
+      const seen = asAdmin.docs.find((d) => d.id === keys[0])
       expect(seen).toBeDefined()
       expect(seen).not.toHaveProperty('apiKey')
       expect(seen).not.toHaveProperty('apiKeyIndex')
       await expect(
         payload.find({
           collection: 'payload-mcp-api-keys',
-          user: { ...member, collection: 'users' } as never,
+          user: asUser(member),
           overrideAccess: false,
         }),
       ).rejects.toThrow()
+    })
+
+    it('lets any admin delete a key a developer left', async () => {
+      const key = await create(superAdmin, 'to delete')
+      await payload.delete({
+        collection: 'payload-mcp-api-keys',
+        id: key.id,
+        user: asUser(admin),
+        overrideAccess: false,
+      })
+      const left = await payload.count({
+        collection: 'payload-mcp-api-keys',
+        where: { id: { equals: key.id } },
+        overrideAccess: true,
+      })
+      expect(left.totalDocs).toBe(0)
+    })
+
+    it('hides the collection from the panel of everyone but a super admin', () => {
+      const hidden = payload.config.collections.find((c) => c.slug === 'payload-mcp-api-keys')!
+        .admin.hidden as (args: { user: unknown }) => boolean
+      expect(hidden({ user: { roles: ['admin'] } })).toBe(true)
+      expect(hidden({ user: { roles: ['member'] } })).toBe(true)
+      expect(hidden({ user: { roles: ['super_admin'] } })).toBe(false)
     })
   })
 

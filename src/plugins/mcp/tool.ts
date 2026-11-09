@@ -9,7 +9,7 @@ import type { MCPPluginConfig } from '@payloadcms/plugin-mcp'
 type PluginTool = NonNullable<NonNullable<MCPPluginConfig['mcp']>['tools']>[number]
 
 export const NOT_ADMIN =
-  'Access denied. The account that owns this key is not an administrator any more. Ask a current administrator to create a new key.'
+  'Access denied. The CILAS account behind this connection is not an administrator any more. Ask a current administrator to connect the assistant again.'
 
 const text = (value: unknown): ToolResult => ({
   content: [
@@ -22,8 +22,8 @@ export const fail = (message: string): ToolResult => ({ ...text(message), isErro
 
 /**
  * Builds a plugin tool that refuses anyone but a current admin. The plugin
- * loads the key's owner on every request, so a demoted owner loses access at
- * once, even though the key itself is still valid.
+ * loads the account behind a connection or key on every request, so a demoted
+ * account loses access at once, even though the connection is still valid.
  *
  * The tools use zod's v3 API (`zod/v3`), as the plugin does. A zod 4 schema
  * keeps `.describe()` text in a registry that the MCP SDK's own copy of zod
