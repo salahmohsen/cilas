@@ -1,6 +1,7 @@
 # Source only for disposable search verification. No .env or remote credentials.
 export DATABASE_URL=postgres://search_test:disposable@localhost:55439/cilas_search_test
 export PAYLOAD_SECRET=local-disposable-private-search-test-secret
+export PMOAUTH_TOKEN_PEPPER=disposable-test-pepper-not-a-secret-0000
 export R2_BUCKET=local-test R2_ACCESS_KEY_ID=local-test R2_SECRET_ACCESS_KEY=local-test
 export R2_ENDPOINT=http://127.0.0.1:19000 R2_PUBLIC_URL=http://127.0.0.1:19000/local-test
 export TYPESENSE_HOST=127.0.0.1 TYPESENSE_PORT=18109 TYPESENSE_PROTOCOL=http

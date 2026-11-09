@@ -49,3 +49,34 @@ pnpm test:production
 The fixture script refuses any database URL other than `cilas_ci` on localhost
 port 55440. Use Node 22, matching CI and the deployment image. Give it a separate
 Postgres service so concurrent development builds cannot exhaust its connections.
+
+## Connecting Claude and ChatGPT
+
+Administrators connect Claude or ChatGPT to the admin with OAuth
+(`src/plugins/mcp`). The guide an admin reads is at `/admin/ai-access`.
+
+Set this **runtime** variable in Dokploy, on production and on every preview:
+
+| Variable               | Value                                    | Notes                                                                                                         |
+| ---------------------- | ---------------------------------------- | ------------------------------------------------------------------------------------------------------------- |
+| `PMOAUTH_TOKEN_PEPPER` | 32 or more characters, from a generator. | Generate once with `openssl rand -hex 32`. Keep it; a new value ends every connection (people connect again). |
+
+A production server refuses to start without it (`src/env.ts`). A build, the
+Docker build stage and `payload migrate` need no value: they load the
+configuration but never make a token, and use a placeholder. Do not pass it as a
+build argument.
+
+The OAuth issuer is the public site address, `NEXT_PUBLIC_SERVER_URL`. It must be
+`https://` in production. The address an admin pastes into Claude or ChatGPT is
+`<NEXT_PUBLIC_SERVER_URL>/api/mcp`.
+
+Only the callbacks in `src/plugins/mcp/assistants.ts` may register. Add an
+assistant there, not in the plugin.
+
+Check the flow against a running server and a disposable database (it makes and
+removes a few accounts, and refuses any database that is not on localhost):
+
+```sh
+DATABASE_URL=postgres://…@localhost:5433/<disposable> pnpm dev
+DATABASE_URL=postgres://…@localhost:5433/<disposable> pnpm tsx scripts/mcp-oauth-flow.ts
+```

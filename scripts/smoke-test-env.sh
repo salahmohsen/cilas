@@ -1,5 +1,6 @@
 export DATABASE_URL=postgres://cilas:dev@localhost:55440/cilas_ci
 export PAYLOAD_SECRET=disposable-ci-smoke-test-secret
+export PMOAUTH_TOKEN_PEPPER=disposable-test-pepper-not-a-secret-0000
 export R2_BUCKET=ci-smoke R2_ACCESS_KEY_ID=ci-smoke R2_SECRET_ACCESS_KEY=ci-smoke
 export R2_ENDPOINT=https://ci.r2.cloudflarestorage.com R2_PUBLIC_URL=https://ci.example.com
 export R2_REGION=auto NEXT_PUBLIC_SERVER_URL=http://localhost:3000
