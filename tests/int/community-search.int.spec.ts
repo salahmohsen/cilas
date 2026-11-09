@@ -2,8 +2,9 @@
 import { afterAll, beforeAll, describe, expect, it } from 'vitest'
 import { Client } from 'typesense'
 
-import { communitySearchKey } from '@/lib/community-search'
+import { communityParentKey, communitySearchKey } from '@/lib/community-search'
 import { COMMUNITY_INDEX } from '@/lib/search-config'
+import { createIndexer } from '@/plugins/typesense/indexer'
 import { fieldsOf, physicalNameOf } from '@/plugins/typesense/schema'
 
 const disposable =
@@ -54,14 +55,10 @@ describe.skipIf(!disposable)('community search keys against real Typesense', () 
       actions: ['documents:search'],
       collections: ['^(courses|articles|people)(_[0-9a-f]{8})?$'],
     })
-    const parentDoc = await admin.keys().create({
-      description: 'test community parent',
-      actions: ['documents:search'],
-      collections: ['^community_articles(_[0-9a-f]{8})?$'],
-    })
-    created.push(publicDoc.id, parentDoc.id)
+    created.push(publicDoc.id)
     publicKey = publicDoc.value as string
-    parentKey = parentDoc.value as string
+    parentKey = communityParentKey('disposable-search-test-key')
+    await createIndexer(admin).ensureCommunityKey(parentKey)
   })
 
   afterAll(async () => {
@@ -78,6 +75,16 @@ describe.skipIf(!disposable)('community search keys against real Typesense', () 
       .collections(physical)
       .delete()
       .catch(() => undefined)
+  })
+
+  it('registers the derived key once, for search only', async () => {
+    await createIndexer(admin).ensureCommunityKey(parentKey)
+    const { keys } = await admin.keys().retrieve()
+    const ours = keys.filter((key) => key.description === 'CILAS community articles search')
+    expect(ours).toHaveLength(1)
+    expect(ours[0].actions).toEqual(['documents:search'])
+    expect(ours[0].collections).toEqual(['^community_articles(_[0-9a-f]{8})?$'])
+    created.push(ours[0].id)
   })
 
   it('refuses the public browser key', async () => {

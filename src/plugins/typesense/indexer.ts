@@ -1,6 +1,6 @@
 import type { Client } from 'typesense'
 
-import { collectionOfIndex, type SearchIndex } from '@/lib/search-config'
+import { COMMUNITY_INDEX, collectionOfIndex, type SearchIndex } from '@/lib/search-config'
 
 import type { SearchDocument } from './documents'
 import { fieldsOf, physicalNameOf } from './schema'
@@ -22,6 +22,8 @@ const LEGACY_COLLECTIONS = [
   'events',
   'governance',
 ]
+
+const COMMUNITY_KEY_DESCRIPTION = 'CILAS community articles search'
 
 const httpStatus = (error: unknown) => (error as { httpStatus?: number }).httpStatus
 
@@ -103,6 +105,23 @@ export const createIndexer = (client: Client) => {
       await removeFrom(target, stale)
       await pointAlias(collection, target, existing)
       return { indexed: kept.size, removed: stale.length }
+    },
+
+    /** Registers the search-only key for community articles, replacing one left by an older admin key. */
+    ensureCommunityKey: async (value: string) => {
+      const { keys } = await client.keys().retrieve()
+      const ours = keys.filter((key) => key.description === COMMUNITY_KEY_DESCRIPTION)
+      const prefix = value.slice(0, 4)
+      for (const key of ours) {
+        if (key.value_prefix !== prefix) await client.keys(key.id).delete()
+      }
+      if (ours.some((key) => key.value_prefix === prefix)) return
+      await client.keys().create({
+        description: COMMUNITY_KEY_DESCRIPTION,
+        actions: ['documents:search'],
+        collections: [`^${COMMUNITY_INDEX}(_[0-9a-f]{8})?$`],
+        value,
+      })
     },
 
     dropLegacy: async () => {

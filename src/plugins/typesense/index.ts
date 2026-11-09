@@ -11,6 +11,7 @@ import type {
 import { Client } from 'typesense'
 
 import { env } from '@/env'
+import { communityParentKey } from '@/lib/community-search'
 import {
   COMMUNITY_INDEX,
   SEARCH_COLLECTIONS,
@@ -246,6 +247,13 @@ export const createHooks = (indexer: Indexer) => {
 
 /** Rebuilds every search collection, one at a time, logging each. */
 const syncAll = async (payload: Payload, indexer: Indexer) => {
+  try {
+    if (env.TYPESENSE_API_KEY && !env.TYPESENSE_COMMUNITY_SEARCH_KEY) {
+      await indexer.ensureCommunityKey(communityParentKey(env.TYPESENSE_API_KEY))
+    }
+  } catch (error) {
+    payload.logger.error({ err: error }, '[typesense] failed to register the community search key')
+  }
   try {
     await indexer.dropLegacy()
   } catch (error) {

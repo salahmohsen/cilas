@@ -1,6 +1,10 @@
 import { describe, expect, it, vi } from 'vitest'
 
-import { COMMUNITY_KEY_SECONDS, communitySearchKey } from '@/lib/community-search'
+import {
+  COMMUNITY_KEY_SECONDS,
+  communityParentKey,
+  communitySearchKey,
+} from '@/lib/community-search'
 import { COMMUNITY_INDEX } from '@/lib/search-config'
 import { withCommunity, type SearchHit } from '@/lib/search-rows'
 import { accessFor, createHooks } from '@/plugins/typesense'
@@ -94,6 +98,12 @@ describe('keeping the indexes correct', () => {
 })
 
 describe('the signed-in search key', () => {
+  it('derives a stable parent key that is not the admin key', () => {
+    expect(communityParentKey('admin')).toBe(communityParentKey('admin'))
+    expect(communityParentKey('admin')).not.toContain('admin')
+    expect(communityParentKey('admin')).not.toBe(communityParentKey('other'))
+  })
+
   it('carries its own end time', () => {
     const now = Date.UTC(2026, 10, 9)
     const { key, expiresIn } = communitySearchKey('parent-search-key', now)

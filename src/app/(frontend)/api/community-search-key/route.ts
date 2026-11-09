@@ -2,7 +2,7 @@ import config from '@payload-config'
 import { getPayload } from 'payload'
 
 import { env } from '@/env'
-import { communitySearchKey } from '@/lib/community-search'
+import { communityParentKey, communitySearchKey } from '@/lib/community-search'
 
 export const dynamic = 'force-dynamic'
 
@@ -13,7 +13,9 @@ const reply = (body: unknown) =>
 
 /** A signed-in reader's key for searching community articles; for anyone else, no key. */
 export async function POST(request: Request) {
-  const parent = env.TYPESENSE_COMMUNITY_SEARCH_KEY
+  const parent =
+    env.TYPESENSE_COMMUNITY_SEARCH_KEY ??
+    (env.TYPESENSE_API_KEY ? communityParentKey(env.TYPESENSE_API_KEY) : undefined)
   if (!parent) return reply({ key: null })
   const payload = await getPayload({ config })
   const { user } = await payload.auth({ headers: new Headers(request.headers) })
