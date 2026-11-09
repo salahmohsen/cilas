@@ -26,6 +26,13 @@ const call = async (name: string, user: User, args: Record<string, unknown>) => 
   return { isError: Boolean(output.isError), text, json: output.isError ? null : JSON.parse(text) }
 }
 
+const mcpAccount = async (label: string, roles: User['roles']) =>
+  (await payload.create({
+    collection: 'users',
+    data: { email: uniqEmail(`mcp-${label}`), password: crypto.randomUUID(), roles },
+    overrideAccess: true,
+  })) as unknown as User
+
 describe('admin-only MCP server', () => {
   let admin: User
   let member: User
@@ -100,7 +107,7 @@ describe('admin-only MCP server', () => {
       expect(typeof user === 'object' ? user.id : user).toBe(admin.id)
     })
 
-    it('hides a key from another account and from a demoted owner', async () => {
+    it('shows keys to any admin without the secret, and hides them from others', async () => {
       const other = track(
         'users',
         (await payload.create({
@@ -114,7 +121,10 @@ describe('admin-only MCP server', () => {
         user: { ...other, collection: 'users' } as never,
         overrideAccess: false,
       })
-      expect(asOther.docs.map((d) => d.id)).not.toContain(keys[0])
+      const seen = asOther.docs.find((d) => d.id === keys[0])
+      expect(seen).toBeDefined()
+      expect(seen).not.toHaveProperty('apiKey')
+      expect(seen).not.toHaveProperty('apiKeyIndex')
       await expect(
         payload.find({
           collection: 'payload-mcp-api-keys',
@@ -139,7 +149,11 @@ describe('admin-only MCP server', () => {
       const endpoint = payload.config.endpoints.find(
         (e) => e.path === '/mcp' && e.method === 'post',
       )!
-      const send = async (authorization: string | null, method: string) => {
+      const send = async (
+        authorization: string | null,
+        method: string,
+        params: Record<string, unknown> = {},
+      ) => {
         const req = await requestFor(admin)
         const headers = new Headers({
           'content-type': 'application/json',
@@ -150,11 +164,70 @@ describe('admin-only MCP server', () => {
           url: 'http://localhost:3000/api/mcp',
           method: 'POST',
           headers,
-          body: JSON.stringify({ jsonrpc: '2.0', id: 1, method, params: {} }),
+          body: JSON.stringify({ jsonrpc: '2.0', id: 1, method, params }),
         })
         return endpoint.handler(req)
       }
       await expect(send(null, 'tools/list')).rejects.toThrow()
+
+      const owner = await mcpAccount('endpoint-owner', ['admin'])
+      const secret = crypto.randomUUID()
+      await payload.create({
+        collection: 'payload-mcp-api-keys',
+        data: {
+          user: owner.id,
+          label: 'endpoint test',
+          enableAPIKey: true,
+          apiKey: secret,
+          'payload-mcp-tool': {
+            lookup: true,
+            createCourseDraft: true,
+            createArticleDraft: true,
+            createFormAndLink: true,
+          },
+        } as never,
+        overrideAccess: true,
+      })
+      const listing = await (await send(`Bearer ${secret}`, 'tools/list')).text()
+      for (const name of [
+        'lookup',
+        'create_course_draft',
+        'create_article_draft',
+        'create_form_and_link',
+      ]) {
+        expect(listing).toContain(`"${name}"`)
+      }
+      expect(listing).not.toMatch(/"(find|create|update|delete)[A-Z]/)
+
+      await payload.update({
+        collection: 'users',
+        id: owner.id,
+        data: { roles: ['member'] },
+        overrideAccess: true,
+      })
+      const refused = await (
+        await send(`Bearer ${secret}`, 'tools/call', {
+          name: 'lookup',
+          arguments: { kind: 'cycles' },
+        })
+      ).text()
+      expect(refused).toContain('not an administrator any more')
+    })
+
+    it('removes the keys of a deleted account', async () => {
+      const owner = await mcpAccount('deleted-owner', ['admin'])
+      const key = await payload.create({
+        collection: 'payload-mcp-api-keys',
+        data: { user: owner.id, label: 'to remove' } as never,
+        overrideAccess: true,
+      })
+      await payload.delete({ collection: 'users', id: owner.id, overrideAccess: true })
+      const left = await payload.find({
+        collection: 'payload-mcp-api-keys',
+        where: { id: { equals: key.id } },
+        overrideAccess: true,
+      })
+      expect(left.totalDocs).toBe(0)
     })
   })
 

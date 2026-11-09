@@ -40,10 +40,6 @@ export async function down({ db, payload, req }: MigrateDownArgs): Promise<void>
   await db.execute(sql`
    ALTER TABLE "payload_mcp_api_keys" DISABLE ROW LEVEL SECURITY;
   DROP TABLE "payload_mcp_api_keys" CASCADE;
-  ALTER TABLE "payload_locked_documents_rels" DROP CONSTRAINT "payload_locked_documents_rels_payload_mcp_api_keys_fk";
-  
-  ALTER TABLE "payload_preferences_rels" DROP CONSTRAINT "payload_preferences_rels_payload_mcp_api_keys_fk";
-  
   DROP INDEX "payload_locked_documents_rels_payload_mcp_api_keys_id_idx";
   DROP INDEX "payload_preferences_rels_payload_mcp_api_keys_id_idx";
   ALTER TABLE "payload_locked_documents_rels" DROP COLUMN "payload_mcp_api_keys_id";

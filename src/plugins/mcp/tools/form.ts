@@ -133,6 +133,7 @@ export const createFormAndLinkTool = adminTool({
           id: input.link.id,
           draft: true,
           depth: 0,
+          locale: 'en',
           select: { registration: true, _status: true },
           overrideAccess: false,
           user,
@@ -149,6 +150,8 @@ export const createFormAndLinkTool = adminTool({
           collection: 'courses',
           id: input.link.id,
           draft: true,
+          overrideLock: false,
+          locale: 'en',
           data: {
             _status: 'draft',
             registration: { ...current.registration, method: 'form', form: form.id },

@@ -24,8 +24,7 @@ export const fail = (message: string): ToolResult => ({ ...text(message), isErro
  * Builds a plugin tool that refuses anyone but a current admin. The plugin
  * loads the key's owner on every request, so a demoted owner loses access at
  * once, even though the key itself is still valid.
- */
-/**
+ *
  * The tools use zod's v3 API (`zod/v3`), as the plugin does. A zod 4 schema
  * keeps `.describe()` text in a registry that the MCP SDK's own copy of zod
  * cannot see, so the AI client would lose every parameter description.
@@ -47,6 +46,7 @@ export const adminTool = <Shape extends z.ZodRawShape>(spec: AdminToolSpec<Shape
     try {
       return succeed(await spec.run(parsed.data, { req, payload: req.payload, user: req.user }))
     } catch (error) {
+      req.payload.logger.error({ err: error, msg: `MCP tool ${spec.name} failed` })
       return fail(describeError(error))
     }
   },

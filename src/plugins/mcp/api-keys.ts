@@ -1,17 +1,30 @@
-import type { Access, CollectionConfig } from 'payload'
+import type { Access, CollectionBeforeDeleteHook, CollectionConfig } from 'payload'
 
 import { isAdmin, isAdminUser } from '@/access'
 
 import { AI_ACCESS_LINK } from './paths'
 
 /**
- * Read, change, delete and unlock only your own key, and only while you are
- * an admin. The plugin's default lets any account manage its own keys.
+ * Change or unlock only your own key, and only while you are an admin. The
+ * plugin's default lets any account manage its own keys.
  */
 const ownKeyAsAdmin: Access = ({ req }) =>
   req.user && req.user.collection === 'users' && isAdminUser(req.user)
     ? { user: { equals: req.user.id } }
     : false
+
+/**
+ * A key's user column is NOT NULL, so Payload's own clean-up of the relation
+ * would refuse the delete.
+ */
+export const deleteOwnersAiKeys: CollectionBeforeDeleteHook = async ({ id, req }) => {
+  await req.payload.delete({
+    collection: 'payload-mcp-api-keys',
+    where: { user: { equals: id } },
+    overrideAccess: true,
+    req,
+  })
+}
 
 /**
  * The plugin's key collection, as CILAS shows it. The group and the hidden
@@ -25,9 +38,10 @@ export const overrideApiKeyCollection = (collection: CollectionConfig): Collecti
   access: {
     ...collection.access,
     create: isAdmin,
-    read: ownKeyAsAdmin,
+    // Any admin must be able to remove a key a former admin left behind.
+    read: isAdmin,
     update: ownKeyAsAdmin,
-    delete: ownKeyAsAdmin,
+    delete: isAdmin,
     unlock: ownKeyAsAdmin,
   },
   admin: {

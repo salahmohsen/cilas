@@ -18,7 +18,7 @@ export const describeError = (error: unknown): string => {
         .map((e) => (e.path ? `${e.path}: ${e.message}` : e.message))
         .join('; ')}`
     }
-    return error.message
+    if (error.status < 500) return error.message
   }
-  return error instanceof Error ? `Unexpected error: ${error.message}` : 'Unexpected error.'
+  return 'The site could not finish this request. Try once more, then tell the user.'
 }

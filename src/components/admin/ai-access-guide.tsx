@@ -88,9 +88,11 @@ export async function AiAccessGuideView({
                 </li>
               </ul>
               <p>
-                It saves time on first drafts. <strong>Nothing goes live.</strong> The assistant
-                only makes drafts. A person has to open each draft here, read it, and publish it.
-                The assistant cannot publish, delete, or change who may read a page.
+                It saves time on first drafts. <strong>No course or article goes live.</strong> The
+                assistant only makes drafts of them. A person has to open each draft here, read it,
+                and publish it. The assistant cannot publish, delete, or change who may read a page.
+                A new form has no draft state: anyone with its address can read it, but no live page
+                links to it until a person publishes the course.
               </p>
               <p style={{ marginBottom: 0 }}>
                 It can also look things up, such as cycles, teachers and existing courses, so it
@@ -110,14 +112,15 @@ export async function AiAccessGuideView({
                 </li>
                 <li>Give the key a label, for example “Claude on my laptop”.</li>
                 <li>
-                  Switch on the API key and generate it. Copy the key and save it somewhere safe
-                  before you save the page. The site stores it in a form it cannot show again, so if
-                  you lose it, make a new key.
+                  Generate the API key. Copy the key and save it somewhere safe before you save the
+                  page. The site stores it in a form it cannot show again, so if you lose it, make a
+                  new key.
                 </li>
               </ol>
               <p style={{ marginBottom: 0 }}>
                 The key works as you. If an admin takes your admin role away, the key stops working
-                at once. You see only your own keys.
+                at once. Any admin can see the list of keys and delete one, for example after
+                someone leaves. No one can read a key after it is saved.
               </p>
             </Section>
 
