@@ -1,5 +1,4 @@
-/* The AI assistants guide. Colours come from Payload's theme, so light and dark
-   follow the admin. Logical properties keep it right in a right-to-left admin. */
+/* Arc tokens are scoped to this page and follow Payload's data-theme. */
 
 .page {
   min-inline-size: 0;
@@ -39,7 +38,8 @@
   font-size: var(--text-lg);
 }
 
-.section :where(h3) {
+.assistant > h3,
+.example > h3 {
   margin: 0 0 0.5rem;
   font-size: var(--text-base);
 }
