@@ -5,10 +5,9 @@ import { LOOKUP_KINDS, LOOKUP_REGISTRY, type LookupRow } from '../lookup-registr
 import { adminUrl } from '../references'
 import { adminTool } from '../tool'
 
-const MAX_LIMIT = 25
+import { literalSubstring } from '../query'
 
-/** Keep user punctuation literal in the database's substring pattern. */
-const cleanQuery = (query: string) => query.trim().replace(/[\\%_]/g, '\\$&')
+const MAX_LIMIT = 25
 
 export const lookupTool = adminTool({
   name: 'lookup',
@@ -31,10 +30,9 @@ export const lookupTool = adminTool({
   },
   run: async ({ kind, query, limit }, { payload, req, user }) => {
     const source = LOOKUP_REGISTRY[kind]
-    const text = query ? cleanQuery(query) : ''
+    const text = query ? literalSubstring(query) : ''
     const locales = source.localized ? (['en', 'ar'] as const) : (['en'] as const)
 
-    // The newest version of each record, in each language it matched.
     type Seen = { titles: Partial<Record<'en' | 'ar', string>>; slug?: string; latest?: string }
     const seen = new Map<number, Seen>()
     for (const locale of locales) {
@@ -93,7 +91,6 @@ export const lookupTool = adminTool({
       const pending = isLive && entry.latest === 'draft'
       return {
         id,
-        // Prefer English, but an empty English title must not hide a real Arabic one.
         title: entry.titles.en ?? entry.titles.ar ?? '',
         ...(entry.slug ? { slug: entry.slug } : {}),
         ...(source.drafts

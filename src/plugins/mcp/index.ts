@@ -3,7 +3,8 @@ import type { Plugin } from 'payload'
 
 import { overrideApiKeyCollection } from './api-keys'
 import { SERVER_INSTRUCTIONS } from './instructions'
-import { oauthMcp, siteUrl } from './oauth'
+import { oauthMcp } from './oauth'
+import { env } from '@/env'
 import { PROMPTS } from './prompts'
 import { RESOURCES } from './resources'
 import { createArticleDraftTool, updateArticleDraftTool } from './tools/article'
@@ -44,6 +45,6 @@ export const adminMcp = (): Plugin[] => {
       },
     },
   }
-  const oauth = oauthMcp(options, siteUrl())
+  const oauth = oauthMcp(options, env.NEXT_PUBLIC_SERVER_URL.replace(/\/+$/, ''))
   return [mcpPlugin(options), ...oauth]
 }

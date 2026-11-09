@@ -1,3 +1,4 @@
+import type { PayloadRequest } from 'payload'
 import { isAdminUser } from '@/access'
 import type { MCPPluginConfig } from '@payloadcms/plugin-mcp'
 
@@ -17,18 +18,10 @@ const guide = (
   uri,
   description,
   mimeType: 'text/markdown',
-  handler: (requested: URL) => {
-    // The plugin inserts `req` after the URL: (uri, req, extra).
+  // The plugin inserts req after the URL: (uri, req, extra).
+  handler: (requested: URL, req: PayloadRequest) => {
+    if (!isAdminUser(req?.user)) throw new Error('Access denied. Administrators only.')
     return { contents: [{ uri: requested.href, text: body() }] }
-  },
-})
-
-const adminOnly = (resource: PluginResource): PluginResource => ({
-  ...resource,
-  handler: (...args: unknown[]) => {
-    const req = args[1] as { user?: unknown }
-    if (!isAdminUser(req?.user as never)) throw new Error('Access denied. Administrators only.')
-    return resource.handler(...args)
   },
 })
 
@@ -54,4 +47,4 @@ export const RESOURCES: PluginResource[] = [
     'How to describe a registration form and link it to a course.',
     formGuide,
   ),
-].map(adminOnly)
+]

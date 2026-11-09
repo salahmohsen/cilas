@@ -17,7 +17,7 @@ export const questionTypesAreKnown = (): boolean =>
   QUESTION_TYPES.every((type) => type in formFields)
 
 /** `name` and `email` are the form's own; the hook would drop a second one. */
-const RESERVED = ['name', 'email']
+export const RESERVED_QUESTION_NAMES = ['name', 'email']
 
 const questionName = z
   .string()
@@ -25,7 +25,10 @@ const questionName = z
     /^[a-z][a-z0-9_]{0,39}$/,
     'Use lower-case letters, digits and underscores, starting with a letter (e.g. motivation).',
   )
-  .refine((name) => !RESERVED.includes(name), 'name and email are asked by every form already.')
+  .refine(
+    (name) => !RESERVED_QUESTION_NAMES.includes(name),
+    'name and email are asked by every form already.',
+  )
   .describe('A short machine name, e.g. motivation. Unique in the form.')
 
 const common = {

@@ -18,9 +18,10 @@ import type {
 } from 'payload'
 
 import { isAdmin, isAdminUser } from '@/access'
-import { env } from '@/env'
 
-import { assistantForCallback, mcpServerUrl, type Assistant } from './assistants'
+import { assistantForCallback, assistantForCallbacks } from './assistants'
+import { mcpServerUrl } from './paths'
+import { allowToolsWithoutPepper } from './pepper'
 import { renderConsentPage, renderRefusalPage } from './consent-page'
 import { AI_ACCESS_LINK } from './paths'
 import { withAssistantLock } from './lock'
@@ -50,7 +51,6 @@ export const grantOAuthCustomAccess = (options: MCPPluginConfig): void => {
     const settings: MCPAccessSettings = await previous(req, getDefaultMcpAccessSettings)
     const bearer = req.headers.get('authorization')?.replace(/^Bearer\s+/i, '')
     if (!bearer?.startsWith('pmoauth_')) return settings
-    // Someone who stopped being an admin loses the connection at once.
     if (!isAdminUser(settings.user)) throw new OAuthInvalidTokenError()
     return {
       ...settings,
@@ -88,7 +88,6 @@ const readBody = async (req: PayloadRequest): Promise<Record<string, unknown>> =
 
 const sameUrl = (a: string, b: string) => a.replace(/\/+$/, '') === b.replace(/\/+$/, '')
 
-/** A person who may connect an assistant: a signed-in administrator account. */
 export const mayConnect = (user: PayloadRequest['user']): boolean =>
   Boolean(user && user.collection === 'users' && isAdminUser(user))
 
@@ -112,17 +111,13 @@ const redirectWithError = (
 
 type Guards = { issuer: string; mcpUrl: string }
 
-/** Only Claude and ChatGPT may register, and the name shown is ours, not theirs. */
 const guardRegister =
   (original: Handler): Handler =>
   async (req) => {
     const body = await readBody(req)
     const uris = body.redirect_uris
-    const owners = Array.isArray(uris)
-      ? uris.map((uri) => (typeof uri === 'string' ? assistantForCallback(uri) : undefined))
-      : []
-    const first = owners[0]
-    if (!first || owners.some((owner) => owner?.id !== first.id)) {
+    const first = assistantForCallbacks(uris)
+    if (!first) {
       return oauthError(
         400,
         'invalid_redirect_uri',
@@ -187,7 +182,6 @@ const guardAuthorize =
     return page
   }
 
-/** Allow only repeats the sign-in page's checks, so a posted form cannot skip them. */
 const guardConsent =
   ({ mcpUrl }: Guards, original: Handler): Handler =>
   async (req) => {
@@ -236,7 +230,6 @@ const guardToken =
       : original(req)
   }
 
-/** Names this server as the resource, as the pasted address, which is what clients compare. */
 const guardResourceMetadata =
   ({ mcpUrl }: Guards, original: Handler): Handler =>
   async (req) => {
@@ -258,7 +251,6 @@ const guardResourceMetadata =
 const deleteTokens = (req: PayloadRequest, where: Where) =>
   req.payload.db.deleteMany({ collection: 'oauth-tokens' as CollectionSlug, where, req })
 
-/** When a refresh row goes, every token of that connection goes with it, at once. */
 const disconnectWholeConnection: CollectionAfterDeleteHook = async ({ doc, req }) => {
   if (doc.tokenType !== 'refresh') return
   await withAssistantLock(
@@ -274,7 +266,6 @@ const disconnectWholeConnection: CollectionAfterDeleteHook = async ({ doc, req }
   )
 }
 
-/** Retention cleanup bypasses the manual-disconnect hook, even for rotated rows. */
 const sweepTokenHistory: CollectionAfterChangeHook = async ({ doc, operation, req }) => {
   if (operation === 'create') {
     await deleteTokens(req, {
@@ -294,7 +285,6 @@ const tokenChangeHooks = (collection: CollectionConfig): CollectionAfterChangeHo
   return [hooks[0]!, sweepTokenHistory]
 }
 
-/** A deleted account leaves no working token, code or form token behind. */
 const deleteOwnersOAuth: CollectionAfterDeleteHook = async ({ id, req }) => {
   const where: Where = { userId: { equals: String(id) } }
   await deleteTokens(req, where)
@@ -303,7 +293,6 @@ const deleteOwnersOAuth: CollectionAfterDeleteHook = async ({ id, req }) => {
   }
 }
 
-/** Removing an assistant app removes the sign-ins made through it. */
 const deleteClientsTokens: CollectionAfterDeleteHook = async ({ doc, req }) => {
   const where: Where = { clientId: { equals: String(doc.clientId) } }
   await withAssistantLock(
@@ -365,13 +354,11 @@ const asAssistantApps = (collection: CollectionConfig): CollectionConfig => ({
     afterDelete: [...(collection.hooks?.afterDelete ?? []), deleteClientsTokens],
     beforeValidate: [
       ...(collection.hooks?.beforeValidate ?? []),
-      // Whatever created the row, its callbacks are ours and its name is ours.
       ({ data, operation }) => {
         if (operation !== 'create' || !data) return data
         const uris = ((data.redirectUris ?? []) as Array<{ uri?: string }>).map((r) => r.uri ?? '')
-        const owners = uris.map((uri) => assistantForCallback(uri))
-        const first: Assistant | undefined = owners[0]
-        if (!first || owners.some((owner) => owner?.id !== first.id)) {
+        const first = assistantForCallbacks(uris)
+        if (!first) {
           throw new Error('Only Claude and ChatGPT can be registered.')
         }
         return { ...data, clientName: first.name }
@@ -390,7 +377,6 @@ const asConnectedAssistants = (collection: CollectionConfig): CollectionConfig =
     defaultColumns: ['person', 'assistant', 'expiresAt'],
     description:
       'Each row is one person signed in to one assistant. To disconnect, delete the row: the assistant stops working at once, and the person can connect again.',
-    // One row per connection: the long-lived sign-in, not its short access tokens.
     baseListFilter: (): Where => ({
       and: [
         { tokenType: { equals: 'refresh' } },
@@ -518,26 +504,6 @@ export const hardenMcpOAuth = (siteUrl: string): Plugin => {
   return Object.assign(harden, { order: 30 })
 }
 
-/**
- * The plugin refuses to load without a 32-character pepper unless NODE_ENV is
- * development or test. `next build`, `payload migrate` and `generate:types`
- * also load the config, and none of them ever makes a token (the Docker build
- * stage even runs the migrations). They get a placeholder. The running server
- * (NODE_ENV=production, not building) never does: it needs the real secret,
- * and src/env.ts refuses to start without it.
- */
-const PLACEHOLDER_PEPPER = 'placeholder-for-tools-that-make-no-tokens-0000000000'
-export const allowToolsWithoutPepper = (): void => {
-  if (process.env.PMOAUTH_TOKEN_PEPPER) return
-  const serving =
-    process.env.NODE_ENV === 'production' && process.env.NEXT_PHASE !== 'phase-production-build'
-  if (!serving) process.env.PMOAUTH_TOKEN_PEPPER = PLACEHOLDER_PEPPER
-}
-
-/**
- * Registers OAuth for the MCP options, both plugins sharing the one object.
- * Returns the plugins in the order they must run.
- */
 export const oauthMcp = (mcpOptions: MCPPluginConfig, siteUrl: string): Plugin[] => {
   allowToolsWithoutPepper()
   const options: PayloadMcpOAuthConfig = {
@@ -552,5 +518,3 @@ export const oauthMcp = (mcpOptions: MCPPluginConfig, siteUrl: string): Plugin[]
   grantOAuthCustomAccess(mcpOptions)
   return [oauth, hardenMcpOAuth(siteUrl)]
 }
-
-export const siteUrl = (): string => env.NEXT_PUBLIC_SERVER_URL.replace(/\/+$/, '')

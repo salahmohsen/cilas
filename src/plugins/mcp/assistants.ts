@@ -13,20 +13,14 @@
  */
 export type Assistant = {
   id: 'claude' | 'chatgpt'
-  /** What the consent page and the guide call it. */
   name: string
-  /** Exact redirect addresses. */
   callbacks: readonly string[]
   /** Redirect addresses that end in an id OpenAI chooses per connection. */
   callbackPatterns: readonly RegExp[]
-  /** Where the admin adds the connector. */
   settingsUrl: string
   settingsLabel: string
-  /** Who can add it, in plain words. */
   plans: string
-  /** Short numbered steps, each one action. */
   steps: readonly string[]
-  /** A note after the steps. */
   after: string
 }
 
@@ -72,7 +66,6 @@ export const ASSISTANTS: readonly Assistant[] = [
   },
 ]
 
-/** The assistant that owns a redirect address, or undefined for any other. */
 export const assistantForCallback = (redirectUri: string): Assistant | undefined =>
   ASSISTANTS.find(
     (assistant) =>
@@ -80,5 +73,13 @@ export const assistantForCallback = (redirectUri: string): Assistant | undefined
       assistant.callbackPatterns.some((pattern) => pattern.test(redirectUri)),
   )
 
-/** The address an admin pastes into the assistant. */
-export const mcpServerUrl = (siteUrl: string): string => `${siteUrl.replace(/\/+$/, '')}/api/mcp`
+export const assistantForCallbacks = (uris: unknown): Assistant | undefined => {
+  if (!Array.isArray(uris) || !uris.length) return undefined
+  const owners = uris.map((uri) =>
+    typeof uri === 'string' ? assistantForCallback(uri) : undefined,
+  )
+  const first = owners[0]
+  return first && owners.every((owner) => owner?.id === first.id) ? first : undefined
+}
+
+export { mcpServerUrl } from './paths'

@@ -38,6 +38,5 @@ export const assertExist = async (
   }
 }
 
-/** The full address of a record in the admin, so the person can click it. */
 export const adminUrl = (collection: string, id: number): string =>
   `${env.NEXT_PUBLIC_SERVER_URL.replace(/\/+$/, '')}/admin/collections/${collection}/${id}`

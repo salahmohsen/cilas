@@ -3,7 +3,7 @@ import { z } from 'zod/v3'
 import type { Form } from '@/payload-types'
 
 import { ToolInputError } from '../errors'
-import { questionSchema, type Question } from '../form-questions'
+import { questionSchema, RESERVED_QUESTION_NAMES, type Question } from '../form-questions'
 import { adminUrl, assertExist } from '../references'
 import { markdownToLexical } from '../markdown'
 import { id, localizedText, optionalLocalizedText } from '../schemas'
@@ -14,7 +14,6 @@ import type { ToolContext } from '../types'
 
 type Locale = 'en' | 'ar'
 
-/** One question as a form-builder block, in one language. */
 const blockFor = (question: Question, locale: Locale) => ({
   blockType: question.type,
   name: question.name,
@@ -33,21 +32,20 @@ const blockFor = (question: Question, locale: Locale) => ({
     : {}),
 })
 
-/** `like` has no escape of its own, so `%` and `_` would match anything. */
-const plain = (text: string) => text.trim().replace(/[\\%_]/g, '\\$&')
+import { literalSubstring } from '../query'
 
-/** A form that already has this English title, found even when the case differs. */
 const formTitled = async ({ payload, req }: ToolContext, title: string) => {
   const { docs } = await payload.find({
     collection: 'forms',
-    where: { title: { contains: plain(title) } },
+    where: { title: { contains: literalSubstring(title) } },
     limit: 0,
     pagination: false,
     depth: 0,
     locale: 'en',
     fallbackLocale: false,
     select: { title: true },
-    overrideAccess: true,
+    overrideAccess: false,
+    user: req.user,
     req,
   })
   const wanted = title.trim().toLowerCase()
@@ -157,7 +155,9 @@ export const createFormAndLinkTool = adminTool({
           if (hasArabic) {
             // The ids keep each row, so the English text stays beside the Arabic.
             const saved = (form.fields ?? []).filter((b) => b.blockType !== 'message')
-            const own = saved.filter((b) => !('name' in b) || !['name', 'email'].includes(b.name))
+            const own = saved.filter(
+              (b) => !('name' in b) || !RESERVED_QUESTION_NAMES.includes(b.name),
+            )
             await payload.update({
               collection: 'forms',
               id: form.id,

@@ -148,8 +148,8 @@ export async function AiAccessGuideView({
                 ))}
                 <p className={styles.muted}>
                   The assistant first checks that the course or article does not exist yet. It gives
-                  you a link to each draft. It cannot set a schedule, a cover image or a footnote:
-                  add those in the draft.
+                  you a link to each draft. Review its schedule, cover image and footnotes in the
+                  draft before publishing.
                 </p>
               </Section>
 

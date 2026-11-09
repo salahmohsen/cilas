@@ -67,14 +67,11 @@ export type LookupKind = keyof typeof LOOKUP_REGISTRY
 
 export const LOOKUP_KINDS = Object.keys(LOOKUP_REGISTRY) as [LookupKind, ...LookupKind[]]
 
-/** What a row of the answer may hold. */
 export type LookupRow = {
   id: number
   title: string
   slug?: string
-  /** What is live: `published`, or `draft` when it was never published. */
   status?: 'draft' | 'published'
-  /** Said only of a published record that has a newer draft waiting. */
   state?: string
   admin_url: string
 }
