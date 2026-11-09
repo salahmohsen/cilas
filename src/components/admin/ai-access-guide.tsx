@@ -110,8 +110,9 @@ export async function AiAccessGuideView({
                 </li>
                 <li>Give the key a label, for example “Claude on my laptop”.</li>
                 <li>
-                  Click the button that makes a new API key. The key appears once. Copy it, then
-                  save. Later pages do not show it again; if you lose it, make a new key.
+                  Switch on the API key and generate it. Copy the key and save it somewhere safe
+                  before you save the page. The site stores it in a form it cannot show again, so if
+                  you lose it, make a new key.
                 </li>
               </ol>
               <p style={{ marginBottom: 0 }}>

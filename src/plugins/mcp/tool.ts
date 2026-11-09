@@ -1,4 +1,4 @@
-import { z } from 'zod'
+import { z } from 'zod/v3'
 
 import { isAdminUser } from '@/access'
 
@@ -25,7 +25,11 @@ export const fail = (message: string): ToolResult => ({ ...text(message), isErro
  * loads the key's owner on every request, so a demoted owner loses access at
  * once, even though the key itself is still valid.
  */
-/** The plugin types its parameters with zod 3; the MCP SDK it uses accepts zod 4 shapes too. */
+/**
+ * The tools use zod's v3 API (`zod/v3`), as the plugin does. A zod 4 schema
+ * keeps `.describe()` text in a registry that the MCP SDK's own copy of zod
+ * cannot see, so the AI client would lose every parameter description.
+ */
 export const adminTool = <Shape extends z.ZodRawShape>(spec: AdminToolSpec<Shape>): PluginTool => ({
   name: spec.name,
   description: spec.description,

@@ -1,5 +1,5 @@
 import type { Payload, PayloadRequest, TypedUser } from 'payload'
-import type { z } from 'zod'
+import type { z } from 'zod/v3'
 
 /** What the plugin expects a tool handler to return. */
 export type ToolResult = {

@@ -1,5 +1,5 @@
 import type { Where } from 'payload'
-import { z } from 'zod'
+import { z } from 'zod/v3'
 
 import { LOOKUP_KINDS, LOOKUP_REGISTRY, type LookupRow } from '../lookup-registry'
 import { adminPath } from '../references'

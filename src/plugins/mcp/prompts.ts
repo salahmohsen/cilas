@@ -1,4 +1,4 @@
-import { z } from 'zod'
+import { z } from 'zod/v3'
 
 import { isAdminUser } from '@/access'
 import type { MCPPluginConfig } from '@payloadcms/plugin-mcp'

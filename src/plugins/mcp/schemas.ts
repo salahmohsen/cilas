@@ -1,4 +1,4 @@
-import { z } from 'zod'
+import { z } from 'zod/v3'
 
 import { COURSE_TYPE_OPTIONS } from '@/fields/course-type'
 import {
