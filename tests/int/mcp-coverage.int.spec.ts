@@ -12,6 +12,7 @@ describe('MCP field coverage of the real sanitized collection config', () => {
       const fields = (await config).collections.find((c) => c.slug === collection)!.fields
       expect(uncoveredFields(collection, fields, accepted[collection])).toEqual([])
       const array = flattenFields(fields).find((field) => field.type === 'array')!
+      expect(array?.type).toBe('array')
       if ('fields' in array) {
         array.fields.push({ name: 'dummy_nested_field', type: 'text' })
         try {

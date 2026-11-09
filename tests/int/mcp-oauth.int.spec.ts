@@ -6,7 +6,7 @@ import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest'
 
 import config from '@/payload.config'
 import type { User } from '@/payload-types'
-import { mcpServerUrl } from '@/plugins/mcp/assistants'
+import { mcpServerUrl } from '@/plugins/mcp/paths'
 
 import { createTracker, uniqEmail } from './fixtures'
 

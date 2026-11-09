@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest'
 
-import { ASSISTANTS, assistantForCallback, mcpServerUrl } from '@/plugins/mcp/assistants'
+import { ASSISTANTS, assistantForCallback, assistantForCallbacks } from '@/plugins/mcp/assistants'
+import { mcpServerUrl } from '@/plugins/mcp/paths'
 
 describe('the assistants an admin may connect', () => {
   it('lists Claude and ChatGPT only', () => {
@@ -34,13 +35,21 @@ describe('the assistants an admin may connect', () => {
     expect(assistantForCallback(uri)).toBeUndefined()
   })
 
-  it('has short numbered steps, a settings link and a plan note for each', () => {
-    for (const assistant of ASSISTANTS) {
-      expect(assistant.steps.length).toBeGreaterThanOrEqual(4)
-      expect(assistant.steps.length).toBeLessThanOrEqual(8)
-      expect(assistant.settingsUrl).toMatch(/^https:\/\//)
-      expect(assistant.plans.length).toBeGreaterThan(20)
+  it('refuses mixed, empty and malformed registration callback sets', () => {
+    const claude = 'https://claude.ai/api/mcp/auth_callback'
+    const chatgpt = 'https://chatgpt.com/connector_platform_oauth_redirect'
+    for (const callbacks of [
+      [],
+      null,
+      [claude, chatgpt],
+      [claude, 'https://evil.example'],
+      [claude, 42],
+    ]) {
+      expect(assistantForCallbacks(callbacks)).toBeUndefined()
     }
+    expect(assistantForCallbacks([chatgpt, 'https://chatgpt.com/connector/oauth/abc'])?.name).toBe(
+      'ChatGPT',
+    )
   })
 
   it('has no word an admin would not know', () => {
