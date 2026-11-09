@@ -71,6 +71,8 @@ import { googleAuth } from './plugins/google-auth'
 import { llmsTxt } from './plugins/llms'
 import { visualEditor } from 'payload-inline-visual-editor'
 import { roleNav } from './plugins/role-nav'
+import { adminMcp } from './plugins/mcp'
+import { AI_ACCESS_VIEW } from './plugins/mcp/paths'
 import { typesenseSearch } from './plugins/typesense'
 
 const filename = fileURLToPath(import.meta.url)
@@ -162,6 +164,8 @@ export default buildConfig({
           Component: '/components/admin/review-queue#ReviewQueueView',
           path: '/reviews',
         },
+        // Admin → AI access guide: reached from the AI access list.
+        aiAccess: { Component: AI_ACCESS_VIEW, path: '/ai-access' },
       },
       // The top bar: links to Reviews and Subscribers for admins, then the
       // notifications bell (src/collections/Notifications.ts). payload-theme
@@ -242,6 +246,16 @@ export default buildConfig({
   secret: env.PAYLOAD_SECRET,
   typescript: {
     outputFile: path.resolve(dirname, 'payload-types.ts'),
+    schema: [
+      // The AI access keys are an auth collection, so Payload would type
+      // `req.user` as `User | PayloadMcpApiKey`. No request is ever signed in
+      // as a key: Payload leaves that collection out of its API key login, and
+      // the MCP plugin signs in the key's owner, a `users` account.
+      ({ jsonSchema }) => ({
+        ...jsonSchema,
+        properties: { ...jsonSchema.properties, user: { $ref: '#/definitions/users' } },
+      }),
+    ],
   },
   db: postgresAdapter({
     pool: {
@@ -385,6 +399,8 @@ export default buildConfig({
         newsletters: { blockOps: { add: true, duplicate: true, remove: true, move: true } },
       },
     }),
+    // AI assistants make drafts through /api/mcp (src/plugins/mcp). Admins only.
+    adminMcp(),
     // What each role sees in the admin nav. Last, so it covers plugin collections.
     roleNav(),
   ],

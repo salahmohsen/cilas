@@ -55,6 +55,7 @@ import { ExportPreview as ExportPreview_cdf7e044479f899a31f804427d568b36 } from 
 import { ExportSaveButton as ExportSaveButton_cdf7e044479f899a31f804427d568b36 } from '@payloadcms/plugin-import-export/rsc'
 import { ImportPreview as ImportPreview_cdf7e044479f899a31f804427d568b36 } from '@payloadcms/plugin-import-export/rsc'
 import { ImportSaveButton as ImportSaveButton_cdf7e044479f899a31f804427d568b36 } from '@payloadcms/plugin-import-export/rsc'
+import { AiAccessLink as AiAccessLink_8197fd3eede87fb83f5e9b9d09552556 } from '../../../components/admin/ai-access-link'
 import { MailingListsNote as MailingListsNote_982ef07d70d1f99a8bc95a2e0421396d } from '../../../components/admin/mailing-lists-note'
 import { Nav as Nav_f436cf2a4719114d9e44505773a04007 } from 'payload-theme/client'
 import { AdminIcon as AdminIcon_78c6b9411a3b5197e36221642877758f } from '../../../components/admin/brand/admin-logo'
@@ -69,6 +70,7 @@ import { ThemeProvider as ThemeProvider_f436cf2a4719114d9e44505773a04007 } from 
 import { ListQuickActions as ListQuickActions_f436cf2a4719114d9e44505773a04007 } from 'payload-theme/client'
 import { SubscribersView as SubscribersView_82e10948fdeb08928ce643cc0b1632a7 } from '../../../components/admin/subscribers-view'
 import { ReviewQueueView as ReviewQueueView_5ad28f33e67910b7fd7d6503bf8c6322 } from '../../../components/admin/review-queue'
+import { AiAccessGuideView as AiAccessGuideView_052b04071a970816feedca90704adf89 } from '../../../components/admin/ai-access-guide'
 import { DashboardView as DashboardView_30ab6a8fe8b58dbb3d774c6a70c4dfd0 } from '../../../components/admin/dashboard/dashboard-view'
 import { VisualEditorView as VisualEditorView_0dcc31907b7bffb0624a38194b3c7196 } from 'payload-inline-visual-editor/rsc'
 import { DashboardWidget as DashboardWidget_436edcd5bbee540043551d770d33a9e2 } from '../../../components/admin/dashboard/native'
@@ -134,6 +136,7 @@ export const importMap = {
   "@payloadcms/plugin-import-export/rsc#ExportSaveButton": ExportSaveButton_cdf7e044479f899a31f804427d568b36,
   "@payloadcms/plugin-import-export/rsc#ImportPreview": ImportPreview_cdf7e044479f899a31f804427d568b36,
   "@payloadcms/plugin-import-export/rsc#ImportSaveButton": ImportSaveButton_cdf7e044479f899a31f804427d568b36,
+  "/components/admin/ai-access-link#AiAccessLink": AiAccessLink_8197fd3eede87fb83f5e9b9d09552556,
   "/components/admin/mailing-lists-note#MailingListsNote": MailingListsNote_982ef07d70d1f99a8bc95a2e0421396d,
   "payload-theme/client#Nav": Nav_f436cf2a4719114d9e44505773a04007,
   "/components/admin/brand/admin-logo#AdminIcon": AdminIcon_78c6b9411a3b5197e36221642877758f,
@@ -148,6 +151,7 @@ export const importMap = {
   "payload-theme/client#ListQuickActions": ListQuickActions_f436cf2a4719114d9e44505773a04007,
   "/components/admin/subscribers-view#SubscribersView": SubscribersView_82e10948fdeb08928ce643cc0b1632a7,
   "/components/admin/review-queue#ReviewQueueView": ReviewQueueView_5ad28f33e67910b7fd7d6503bf8c6322,
+  "/components/admin/ai-access-guide#AiAccessGuideView": AiAccessGuideView_052b04071a970816feedca90704adf89,
   "/components/admin/dashboard/dashboard-view#DashboardView": DashboardView_30ab6a8fe8b58dbb3d774c6a70c4dfd0,
   "payload-inline-visual-editor/rsc#VisualEditorView": VisualEditorView_0dcc31907b7bffb0624a38194b3c7196,
   "/components/admin/dashboard/native#DashboardWidget": DashboardWidget_436edcd5bbee540043551d770d33a9e2,

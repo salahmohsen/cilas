@@ -1,0 +1,49 @@
+import { z } from 'zod'
+
+import { isAdminUser } from '@/access'
+
+import { describeError } from './errors'
+import type { AdminToolSpec, ToolResult } from './types'
+import type { MCPPluginConfig } from '@payloadcms/plugin-mcp'
+
+type PluginTool = NonNullable<NonNullable<MCPPluginConfig['mcp']>['tools']>[number]
+
+export const NOT_ADMIN =
+  'Access denied. The account that owns this key is not an administrator any more. Ask a current administrator to create a new key.'
+
+const text = (value: unknown): ToolResult => ({
+  content: [
+    { type: 'text', text: typeof value === 'string' ? value : JSON.stringify(value, null, 2) },
+  ],
+})
+
+export const succeed = (value: unknown): ToolResult => text(value)
+export const fail = (message: string): ToolResult => ({ ...text(message), isError: true })
+
+/**
+ * Builds a plugin tool that refuses anyone but a current admin. The plugin
+ * loads the key's owner on every request, so a demoted owner loses access at
+ * once, even though the key itself is still valid.
+ */
+/** The plugin types its parameters with zod 3; the MCP SDK it uses accepts zod 4 shapes too. */
+export const adminTool = <Shape extends z.ZodRawShape>(spec: AdminToolSpec<Shape>): PluginTool => ({
+  name: spec.name,
+  description: spec.description,
+  parameters: spec.shape as unknown as PluginTool['parameters'],
+  handler: async (rawInput, req) => {
+    if (!req.user || !isAdminUser(req.user)) return fail(NOT_ADMIN)
+    const parsed = z.object(spec.shape).safeParse(rawInput)
+    if (!parsed.success) {
+      return fail(
+        `Invalid input: ${parsed.error.issues
+          .map((issue) => `${issue.path.join('.') || 'input'}: ${issue.message}`)
+          .join('; ')}`,
+      )
+    }
+    try {
+      return succeed(await spec.run(parsed.data, { req, payload: req.payload, user: req.user }))
+    } catch (error) {
+      return fail(describeError(error))
+    }
+  },
+})
