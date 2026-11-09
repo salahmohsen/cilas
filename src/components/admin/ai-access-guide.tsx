@@ -14,7 +14,7 @@ import { Alert } from '@/components/arc/alert/alert'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/arc/tabs/tabs'
 
 import './dashboard/arc-scope.css'
-import { CopyButton } from './copy-button'
+import { AddressCopy, ExampleCopy } from './ai-access-copy'
 
 const EXAMPLES = [
   {
@@ -94,15 +94,7 @@ export async function AiAccessGuideView({
                 <p>
                   <strong>1. Copy this address.</strong>
                 </p>
-                <div className={styles.address}>
-                  <input
-                    className={styles.addressField}
-                    readOnly
-                    value={address}
-                    aria-label="Address to paste into the assistant"
-                  />
-                  <CopyButton text={address} label="Copy address" what="the CILAS address" />
-                </div>
+                <AddressCopy address={address} />
                 <p>
                   <strong>2. Paste it into your assistant.</strong> Follow the steps for the one you
                   use.
@@ -116,7 +108,11 @@ export async function AiAccessGuideView({
                     ))}
                   </TabsList>
                   {ASSISTANTS.map((assistant) => (
-                    <TabsContent key={assistant.id} value={assistant.id}>
+                    <TabsContent
+                      key={assistant.id}
+                      value={assistant.id}
+                      className={styles.assistant}
+                    >
                       <h3>{assistant.name}</h3>
                       <p className={styles.muted}>{assistant.plans}</p>
                       <ol>
@@ -145,13 +141,20 @@ export async function AiAccessGuideView({
 
               <Section title="Ask for what you need">
                 <p>Copy an example, change the names, and send it to your assistant.</p>
-                {EXAMPLES.map((example) => (
-                  <div key={example.title} className={styles.example}>
-                    <h3>{example.title}</h3>
-                    <p className={styles.exampleText}>{example.text}</p>
-                    <CopyButton text={example.text} label="Copy example" what={example.title} />
-                  </div>
-                ))}
+                <Tabs defaultValue={EXAMPLES[0].title}>
+                  <TabsList aria-label="Example prompts">
+                    {EXAMPLES.map((example) => (
+                      <TabsTrigger key={example.title} value={example.title}>
+                        {example.title}
+                      </TabsTrigger>
+                    ))}
+                  </TabsList>
+                  {EXAMPLES.map((example) => (
+                    <TabsContent key={example.title} value={example.title}>
+                      <ExampleCopy title={example.title} text={example.text} />
+                    </TabsContent>
+                  ))}
+                </Tabs>
                 <p className={styles.muted}>
                   The assistant first checks that the course or article does not exist yet. It gives
                   you a link to each draft. Review its schedule, cover image and footnotes in the
