@@ -381,39 +381,38 @@ h1.article-title:where([dir='rtl'] *, [dir='rtl']) {
   gap: 0.75rem;
   & li {
     display: grid;
-    /* Number over back arrow in one narrow rail, so the note keeps the width. */
+    /* The number, which links back to the text, in one narrow rail. */
     grid-template-columns: 1.75rem minmax(0, 1fr);
     column-gap: 0.5rem;
     align-items: baseline;
   }
   & .article-prose--notes {
     grid-column: 2;
-    grid-row: 1 / span 2;
   }
   & li:target {
     background: var(--surface-muted);
     border-radius: 0.75rem;
   }
   & .footnote-number {
+    position: relative;
     grid-column: 1;
-    grid-row: 1;
+    justify-self: start;
     font-family: var(--font-sans);
     font-size: 0.8rem;
     color: var(--text-muted);
-  }
-  & .footnote-back {
-    position: relative;
-    grid-column: 1;
-    grid-row: 2;
-    justify-self: start;
-    align-self: start;
-    color: var(--text-muted);
     text-decoration: none;
-    /* A 44px touch area around the 16px arrow. */
+    @media (hover: hover) {
+      &:hover {
+        color: var(--foreground);
+        text-decoration: underline;
+        text-underline-offset: 2px;
+      }
+    }
+    /* A touch area of about 44px around the small number. */
     &::after {
       content: '';
       position: absolute;
-      inset: -14px;
+      inset: -14px -16px;
     }
   }
 }

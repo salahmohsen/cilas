@@ -4,7 +4,7 @@ import { currentReader } from '@/lib/reader'
 import { isRelation as isObject } from '@/lib/relation'
 import config from '@payload-config'
 import { VisualEditing } from '@payload-inline-visual-editor/react'
-import { ArrowLeft, ArrowUp, ArrowUpRight, Languages } from 'lucide-react'
+import { ArrowLeft, ArrowUpRight, Languages } from 'lucide-react'
 import { getFormatter, getTranslations } from 'next-intl/server'
 import { draftMode } from 'next/headers'
 import { notFound } from 'next/navigation'
@@ -496,23 +496,20 @@ export async function ArticlePage({ locale: siteLocale, slug, user: reader }: Vi
                   </h2>
                   <ol className="article-footnotes">
                     {footnotes.map((f) => (
-                      // dir="auto": the number and arrow sit on the side where the note starts.
+                      // dir="auto": the number sits on the side where the note starts.
                       <li dir="auto" id={`fn-${f.number}`} key={f.id}>
-                        <span className="footnote-number">
+                        <a
+                          aria-label={`${t('backToText')} (${localDigits(f.number, contentLocale)})`}
+                          className="footnote-number"
+                          href={`#fnref-${f.number}`}
+                        >
                           {localDigits(f.number, contentLocale)}
-                        </span>
+                        </a>
                         <RichTextField
                           user={user}
                           className="article-prose article-prose--notes"
                           data={f.note}
                         />
-                        <a
-                          aria-label={t('backToText')}
-                          className="footnote-back"
-                          href={`#fnref-${f.number}`}
-                        >
-                          <ArrowUp className="size-4" />
-                        </a>
                       </li>
                     ))}
                   </ol>
