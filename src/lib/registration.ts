@@ -1,4 +1,4 @@
-import { NotFound, type Payload, type PayloadRequest } from 'payload'
+import { courseRegistrationMode } from '@/lib/course-registration'
 
 import { cairoDay } from '@/lib/cairo-day'
 import { pricingFor } from '@/lib/pricing'
@@ -40,7 +40,7 @@ export const courseRegistration = (
   cycle?: Pick<Cycle, 'registration' | 'pricing'> | null,
   now: Date = new Date(),
 ) => {
-  const mode = course.registration?.mode ?? 'follow_cycle'
+  const mode = courseRegistrationMode(course.registration)
   const source = mode === 'follow_cycle' ? cycle?.registration : course.registration
   const method = mode === 'closed' ? 'closed' : (source?.method ?? null)
   const formId = mode === 'closed' ? null : (relId(source?.form) ?? null)
@@ -61,26 +61,4 @@ export const courseRegistration = (
       cycle,
     ),
   }
-}
-
-export const loadApplicationTarget = async (
-  payload: Payload,
-  relationTo: 'programmes' | 'courses' | 'cycles',
-  id: number,
-  req?: PayloadRequest,
-) => {
-  const target = await payload
-    .findByID({ collection: relationTo, id, depth: 1, overrideAccess: true, req })
-    .catch((error: unknown) => {
-      if (error instanceof NotFound) return null
-      throw error
-    })
-  if (!target) return null
-  const cycle = 'cycle' in target && typeof target.cycle === 'object' ? target.cycle : null
-  const registration = 'course_type' in target ? courseRegistration(target, cycle) : null
-  const open = (registration?.status ?? registrationStatus(target.registration)) === 'open'
-  const formId = registration ? registration.formId : relId(target.registration?.form)
-  const published =
-    relationTo === 'cycles' || ('_status' in target && target._status === 'published')
-  return { target, cycle, open, published, formId }
 }

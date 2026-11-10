@@ -1,3 +1,5 @@
+import { resolveApplicationTarget } from '@/forms/application-target'
+import type { Reader } from '@/lib/reader'
 import { describe, expect, it } from 'vitest'
 
 import { checkApplication } from '@/forms/application-validation'
@@ -44,11 +46,11 @@ const choice = (data: Partial<ApplicationChoice> = {}): ApplicationChoice => ({
   answers: [{ name: 'reason', label: 'Client label', value: 'To write' }],
   ...data,
 })
-const check = (courses = [course()], choices = [choice()], reader: unknown = null) =>
+const check = (courses = [course()], choices = [choice()], reader: Reader = null) =>
   checkApplication(
     { form: 20, target: { relationTo: 'cycles', value: 10 }, choices },
     {
-      destination: { target: cycle, cycle: null, open: true, published: true, formId: 20 },
+      destination: resolveApplicationTarget({ kind: 'cycles', target: cycle }),
       courses,
     },
     reader,
@@ -70,7 +72,9 @@ describe('cycle application validation', () => {
   })
 
   it('allows community courses to a signed-in reader', () => {
-    expect(check([course({ tier: 'community' })], [choice()], { id: 4 })).toHaveProperty('choices')
+    expect(
+      check([course({ tier: 'community' })], [choice()], { id: 4 } as NonNullable<Reader>),
+    ).toHaveProperty('choices')
   })
 
   it('requires an answer only for a chosen course', () => {
@@ -133,7 +137,7 @@ describe('cycle application validation', () => {
       checkApplication(
         { form: 99, target: { relationTo: 'cycles', value: 10 }, choices: [choice()] },
         {
-          destination: { target: cycle, cycle: null, open: true, published: true, formId: 20 },
+          destination: resolveApplicationTarget({ kind: 'cycles', target: cycle }),
           courses: [course()],
         },
       ),
@@ -170,7 +174,7 @@ it('refuses a course target with empty choices even for local creation', () => {
     checkApplication(
       { form: 20, target: { relationTo: 'courses', value: target.id }, choices: [] },
       {
-        destination: { target, cycle, open: true, published: true, formId: 20 },
+        destination: resolveApplicationTarget({ kind: 'courses', target }, cycle),
         courses: [target],
       },
       null,

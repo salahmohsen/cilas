@@ -1,3 +1,4 @@
+import { courseRegistrationMode } from '@/lib/course-registration'
 import { z } from 'zod/v3'
 import { randomUUID } from 'node:crypto'
 import type { Field } from 'payload'
@@ -175,7 +176,9 @@ export async function writeDraft(
         registration: {
           ...current.registration,
           ...en.registration,
-          mode: en.registration?.mode ?? current.registration?.mode ?? 'follow_cycle',
+          mode: courseRegistrationMode({
+            mode: en.registration?.mode ?? current.registration?.mode,
+          }),
         },
         pricing_override:
           en.pricing_override === null

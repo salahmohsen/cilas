@@ -1,9 +1,9 @@
 import type { Payload } from 'payload'
 import { isAdminUser } from '@/access'
 import { localeOf } from '@/i18n/routing'
-import { courseRegistration } from '@/lib/registration'
+import { resolveApplicationTarget } from './application-target'
 import { relId } from '@/lib/relation'
-import type { User } from '@/payload-types'
+import type { Course, Cycle, User } from '@/payload-types'
 import { applicationContext } from './application-context'
 
 export async function fullFormPreview(
@@ -23,14 +23,17 @@ export async function fullFormPreview(
     overrideAccess: false,
     user,
   })
-  const cycleId = 'course_type' in target ? relId(target.cycle) : null
+  const cycleId = kind === 'courses' ? relId((target as Course).cycle) : null
   const cycle = cycleId
     ? await payload.findByID({ collection: 'cycles', id: cycleId, depth: 0 })
     : null
-  const formId =
-    'course_type' in target
-      ? courseRegistration(target, cycle).formId
-      : relId(target.registration?.form)
+  const context = resolveApplicationTarget(
+    kind === 'courses'
+      ? { kind, target: target as Course }
+      : { kind: 'cycles', target: target as Cycle },
+    cycle,
+  )
+  const { formId } = context
   if (!formId) return null
   const form = await payload.findByID({
     collection: 'forms',
@@ -44,6 +47,6 @@ export async function fullFormPreview(
   return {
     form,
     title: target.title,
-    application: await applicationContext(payload, target, localeOf(locale), user),
+    application: await applicationContext(payload, context, localeOf(locale), user),
   }
 }

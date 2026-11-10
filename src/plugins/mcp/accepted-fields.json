@@ -123,7 +123,6 @@
     "pricing_override.options",
     "pricing_override.options.amount",
     "pricing_override.options.default",
-    "pricing_override.currency",
     "pricing_override.note",
     "pricing_override.need_based_deductions",
     "meta",

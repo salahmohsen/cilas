@@ -1,4 +1,4 @@
-import { copyRegistrationTemplate, registrationFormField } from '@/forms/templates'
+import { copyRegistrationTemplate } from '@/forms/templates'
 import { tierField } from '@/fields/tier'
 import { previewUrl } from '@/lib/preview-url'
 import { addSelfAs } from '@/lib/review-ownership'
@@ -22,8 +22,8 @@ import {
   TEACHING_LANGUAGE_OPTIONS,
 } from '@/fields/course-options'
 import { contributionField } from '@/fields/pricing'
-import { validateDestination } from '@/fields/registration'
-import { optionalHttpUrl } from '@/fields/validators'
+import { validateCourseDestination, registrationDestinationFields } from '@/fields/registration'
+import { isPublishing } from '@/lib/course-registration'
 import { courseQuestionBlocks } from '@/forms/form-fields'
 import { scheduleField, timeRangeFields } from '@/fields/schedule'
 import { reviewFields } from '@/fields/review'
@@ -37,8 +37,6 @@ import type {
   CollectionAfterDeleteHook,
   CollectionConfig,
   Condition,
-  SelectFieldSingleValidation,
-  TextFieldSingleValidation,
 } from 'payload'
 import { ValidationError } from 'payload'
 import type { Course } from '@/payload-types'
@@ -441,7 +439,7 @@ export const Courses: CollectionConfig = {
               name: 'registration',
               type: 'group',
               ...adminSettings,
-              hooks: { beforeChange: [validateDestination] },
+              hooks: { beforeChange: [validateCourseDestination] },
               fields: [
                 {
                   name: 'mode',
@@ -463,44 +461,7 @@ export const Courses: CollectionConfig = {
                     description: 'The last day to register, in Cairo.',
                   },
                 },
-                {
-                  name: 'method',
-                  type: 'select',
-                  options: [
-                    { label: 'Site form', value: 'form' },
-                    { label: 'External link', value: 'external' },
-                  ],
-                  admin: { condition: (_, sibling) => sibling?.mode === 'own' },
-                  validate: ((value, { siblingData }) =>
-                    (siblingData as Course['registration'])?.mode !== 'own' ||
-                    value === 'form' ||
-                    value === 'external' ||
-                    'Choose a registration method.') satisfies SelectFieldSingleValidation,
-                },
-                registrationFormField(),
-                {
-                  name: 'url',
-                  type: 'text',
-                  validate: ((value, { siblingData }) =>
-                    (siblingData as Course['registration'])?.mode === 'own' &&
-                    (siblingData as Course['registration'])?.method === 'external'
-                      ? optionalHttpUrl(value)
-                      : true) satisfies TextFieldSingleValidation,
-                  admin: {
-                    condition: (_, sibling) =>
-                      sibling?.mode === 'own' && sibling?.method === 'external',
-                    placeholder: 'https://…',
-                  },
-                },
-                {
-                  name: 'deadline',
-                  type: 'date',
-                  admin: {
-                    condition: (_, sibling) => sibling?.mode === 'own',
-                    date: { pickerAppearance: 'dayOnly' },
-                    description: 'The last day to register, in Cairo.',
-                  },
-                },
+                ...registrationDestinationFields(true),
               ],
             },
             {
@@ -566,7 +527,7 @@ export const Courses: CollectionConfig = {
       ...(courseReview.beforeChange ?? []),
       ({ data, originalDoc }) => {
         const cycle = data.cycle === undefined ? originalDoc?.cycle : data.cycle
-        if (!cycle && (data._status === 'published' || data.review?.status === 'approved')) {
+        if (!cycle && isPublishing(data)) {
           throw new ValidationError({
             errors: [{ path: 'cycle', message: 'Choose a cycle before approving or publishing.' }],
           })

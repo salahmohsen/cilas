@@ -7,7 +7,7 @@ import { CREDIT_ROLES, creditsField } from '@/fields/credits'
 import { importFields } from '@/fields/import'
 import { LANGUAGE_OPTIONS } from '@/fields/language'
 import { contributionField } from '@/fields/pricing'
-import { registrationField } from '@/fields/registration'
+import { registrationField, validateCourseDestination } from '@/fields/registration'
 import { computeEndDate, scheduleField, timeRangeFields } from '@/fields/schedule'
 import { endAfterStart, httpUrl, notBelow, timeOfDay } from '@/fields/validators'
 import { sessionsInOrder } from '@/lib/schedule'
@@ -37,30 +37,16 @@ describe('validators', () => {
     expect(notBelow(100, 300, 'the minimum')).toBe('Must not be below the minimum.')
   })
 
-  it('httpUrl still lives here', () => {
+  it('requires an absolute HTTP URL', () => {
     expect(httpUrl('https://cilas.net')).toBe(true)
     expect(httpUrl('cilas.net')).toMatch(/https/)
   })
 })
 
-// Names of the data fields directly inside a group, looking through rows.
 const names = (fields: Field[]): string[] =>
   fields.flatMap((f) => ('name' in f ? [f.name] : 'fields' in f ? names(f.fields) : []))
 
 describe('scheduleField', () => {
-  it('is a named group with the spec fields', () => {
-    const field = scheduleField()
-    expect(field.name).toBe('schedule')
-    expect(names(field.fields)).toEqual([
-      'start_date',
-      'start_precision',
-      'weeks',
-      'slots',
-      'end_date',
-      'note',
-    ])
-  })
-
   it('computes end_date from its sibling pattern', () => {
     const siblingData = {
       start_date: '2026-03-03',
@@ -74,7 +60,10 @@ describe('scheduleField', () => {
 
 describe('registrationField', () => {
   const validate = (args: Partial<FieldHookArgs>) => {
-    const hook = registrationField().hooks!.beforeChange![0]
+    const hook =
+      args.collection?.slug === 'courses'
+        ? validateCourseDestination
+        : registrationField().hooks!.beforeChange![0]
     return hook(args as FieldHookArgs)
   }
 

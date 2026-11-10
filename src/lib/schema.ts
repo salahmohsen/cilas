@@ -1,3 +1,4 @@
+import { CURRENCY, defaultAmountOf } from '@/lib/pricing'
 import { hasDayPrecision } from '@/lib/schedule'
 
 import { env } from '@/env'
@@ -209,7 +210,7 @@ export const eventSchema = ({
       : null)
   if (!times?.startDate || !times.endDate) return null
 
-  const price = event.pricing?.options?.find((option) => option.default)?.amount ?? null
+  const price = defaultAmountOf(event.pricing) ?? null
 
   const speakers = (event.speakers ?? [])
     .flatMap((s) => (typeof s.person === 'object' ? [s.person] : []))
@@ -250,7 +251,7 @@ export const eventSchema = ({
           offers: {
             '@type': 'Offer',
             price,
-            priceCurrency: event.pricing?.currency ?? 'EGP',
+            priceCurrency: CURRENCY,
             ...(event.registration?.url ? { url: absoluteUrl(event.registration.url) } : {}),
           },
         }

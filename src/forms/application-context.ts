@@ -1,43 +1,31 @@
 import type { Payload } from 'payload'
 import { courseRegistration } from '@/lib/registration'
-import { relId } from '@/lib/relation'
-import type { Course, Cycle } from '@/payload-types'
+import type { Reader } from '@/lib/reader'
 import type { ApplicationContext } from './application-choices'
+import type { ApplicationTarget } from './application-target'
 import { openCoursesInCycle } from './open-courses'
 
 export async function applicationContext(
   payload: Payload,
-  context: Course | Cycle,
+  context: ApplicationTarget,
   locale: 'en' | 'ar',
-  reader: unknown = null,
+  reader: Reader = null,
 ): Promise<ApplicationContext> {
-  const course = 'course_type' in context ? (context as Course) : null
-  const own = course?.registration?.mode === 'own'
-  const cycleId = course ? relId(course.cycle) : context.id
-  const cycle = cycleId
-    ? await payload.findByID({ collection: 'cycles', id: cycleId, depth: 0 })
-    : null
-  const available = own
-    ? [course!]
-    : cycle
-      ? await openCoursesInCycle(payload, cycle.id, reader)
-      : []
-  const courses = await Promise.all(
-    available.map(async (item) => {
-      const localized = await payload.findByID({
-        collection: 'courses',
-        id: item.id,
-        locale,
-        fallbackLocale: 'en',
-        depth: 0,
-      })
-      return {
-        id: localized.id,
-        title: localized.title,
-        questions: localized.applicant_questions ?? [],
-        contribution: courseRegistration(localized, cycle).price,
-      }
-    }),
-  )
-  return { courses, initialCourse: course?.id, selectable: !own }
+  const course = context.kind === 'courses' ? context.target : null
+  const available =
+    context.own && course
+      ? [course]
+      : context.cycle
+        ? await openCoursesInCycle(payload, context.cycle, reader, locale)
+        : []
+  return {
+    courses: available.map((item) => ({
+      id: item.id,
+      title: item.title,
+      questions: item.applicant_questions ?? [],
+      contribution: courseRegistration(item, context.cycle).price,
+    })),
+    initialCourse: course?.id,
+    selectable: !context.own,
+  }
 }

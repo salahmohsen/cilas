@@ -43,13 +43,6 @@ export const contributionField = ({
         { name: 'default', type: 'checkbox', defaultValue: false },
       ],
     },
-    {
-      name: 'currency',
-      type: 'select',
-      defaultValue: 'EGP',
-      options: [{ label: 'EGP', value: 'EGP' }],
-      admin: { hidden: true },
-    },
     { name: 'note', type: 'text', localized: true },
     {
       name: 'need_based_deductions',

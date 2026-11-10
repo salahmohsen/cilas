@@ -253,7 +253,6 @@ const seedCourse = async (cycleId: number, personId: number, coverId: number) =>
           { amount: 2500, default: true },
           { amount: 3000, default: false },
         ],
-        currency: 'EGP',
         note: 'Sliding scale — please choose the tier that best fits your current budget: 2,500 / 2,750 / 3,000 EGP. All tiers include the same level of instruction, professional tracing-paper prints, chemicals, papers, artworks, and exhibition curation; all materials are yours to keep and reuse.',
       },
       location: ['OFFLINE'],

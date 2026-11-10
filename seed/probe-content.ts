@@ -310,7 +310,6 @@ const pricing = {
     { amount: 2500, default: true },
     { amount: 3000, default: false },
   ],
-  currency: 'EGP',
   note: 'Sliding scale: choose the tier that fits your budget.',
   need_based_deductions: true,
 }

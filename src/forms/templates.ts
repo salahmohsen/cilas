@@ -1,8 +1,15 @@
-import { ValidationError, type CollectionBeforeValidateHook, type RelationshipField } from 'payload'
+import {
+  ValidationError,
+  type CollectionBeforeValidateHook,
+  type Condition,
+  type RelationshipField,
+} from 'payload'
 
 import { relId } from '@/lib/relation'
 
-export const registrationFormField = (): RelationshipField => ({
+export const registrationFormField = (
+  condition: Condition = (_, sibling) => sibling?.method === 'form',
+): RelationshipField => ({
   name: 'form',
   type: 'relationship',
   relationTo: 'forms',
@@ -10,8 +17,7 @@ export const registrationFormField = (): RelationshipField => ({
   admin: {
     description:
       'A form copied from a template can be edited freely. Changes do not affect the template or other copies.',
-    condition: (_, sibling) =>
-      sibling?.method === 'form' && (!('mode' in sibling) || sibling.mode === 'own'),
+    condition,
   },
   hooks: {
     beforeValidate: [

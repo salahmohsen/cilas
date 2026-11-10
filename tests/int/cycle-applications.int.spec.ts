@@ -192,10 +192,10 @@ describe('cycle applications and approval', () => {
         },
       }),
     )
-    expect((await openCoursesInCycle(payload, cycle.id)).map((c) => c.id).sort()).toEqual(
+    expect((await openCoursesInCycle(payload, cycle)).map((c) => c.id).sort()).toEqual(
       [writing.id, film.id].sort(),
     )
-    expect((await openCoursesInCycle(payload, cycle.id, admin)).map((c) => c.id).sort()).toEqual(
+    expect((await openCoursesInCycle(payload, cycle, admin)).map((c) => c.id).sort()).toEqual(
       [writing.id, film.id, community.id].sort(),
     )
     await payload.update({
@@ -204,7 +204,7 @@ describe('cycle applications and approval', () => {
       data: { registration: { mode: 'follow_cycle', close_early: '2020-01-01' } },
     })
     expect(
-      (await openCoursesInCycle(payload, cycle.id, admin)).some((c) => c.id === community.id),
+      (await openCoursesInCycle(payload, cycle, admin)).some((c) => c.id === community.id),
     ).toBe(false)
   })
 

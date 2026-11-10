@@ -1,4 +1,4 @@
-import { contributionLabel } from '@/lib/pricing'
+import { contributionLabel, formatAmount } from '@/lib/pricing'
 import { BRIDGE_PATH } from '@/lib/paths'
 import { CAIRO, cairoNoon } from '@/lib/cairo-day'
 import { BRIDGE_APPLY_PATH, bridgeYearParts, bridgeYearPath } from '@/lib/paths'
@@ -60,20 +60,12 @@ export async function BridgeYearView({
   const open = registrationStatus(programme.registration) === 'open'
   const viaForm = programme.registration?.method === 'form' && Boolean(programme.registration.form)
   const applyUrl = open && !viaForm ? (programme.registration?.url ?? null) : null
-  const money = (amount: number) =>
-    format.number(amount, {
-      style: 'currency',
-      currency: 'EGP',
-      maximumFractionDigits: 0,
-      numberingSystem: numberingSystemOf(locale),
-    })
-  const price = contributionLabel(programme.pricing)
+  const price = contributionLabel(programme.pricing, { locale })
   const stickyApply =
     !current || !open ? null : viaForm ? `/${locale}${BRIDGE_APPLY_PATH}` : applyUrl
   const plan = programme.pricing?.payment_plans?.[0]
   const instalments = plan?.installments ?? []
 
-  // The year's courses as cards, semester by semester; a course drawn by two parts shows once.
   const day = (iso: string) =>
     format.dateTime(cairoNoon(iso), {
       day: 'numeric',
@@ -135,7 +127,7 @@ export async function BridgeYearView({
                     {t('plan', {
                       label: plan.label,
                       count: instalments.length,
-                      amount: money(instalments[0]!.amount),
+                      amount: formatAmount(instalments[0]!.amount, locale),
                     })}
                   </span>
                 ) : null}
@@ -221,10 +213,6 @@ export async function BridgeYearView({
     </SideCardSection>
   )
 
-  // As on a course page, the side column is one card, shown twice: the facts
-  // under the cover on narrow screens (the rest closes the page), all of it
-  // beside the text on wide ones. Beside the current year, who can apply comes
-  // first; on a past year, the other years do.
   const detailsSection =
     facts.length || !current ? (
       <SideCardSection label={t('details')}>
@@ -308,8 +296,6 @@ export async function BridgeYearView({
               />
             )}
           </figure>
-
-          {/* Narrow screens: the details come before the text. */}
           <div className="mt-10 grid gap-6 lg:hidden">
             <div id="bridge-apply-mobile">{sideApply}</div>
             {detailsSection ? sideCard('top') : null}
@@ -332,8 +318,6 @@ export async function BridgeYearView({
               />
             </section>
           ) : null}
-
-          {/* Narrow screens: the rest of the side column closes the page. */}
           <div className="mt-14 lg:hidden">{sideCard('rest')}</div>
         </article>
 

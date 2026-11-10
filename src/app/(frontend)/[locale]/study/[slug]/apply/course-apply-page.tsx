@@ -12,7 +12,7 @@ import type { Reader } from '@/lib/reader'
 import { RenderedForm } from '@/components/forms/rendered-form'
 import { Link } from '@/i18n/navigation'
 import { numberingSystemOf } from '@/lib/digits'
-import { courseRegistration } from '@/lib/registration'
+import { resolveApplicationTarget } from '@/forms/application-target'
 import { applicationContext } from '@/forms/application-context'
 import type { Cycle } from '@/payload-types'
 
@@ -48,9 +48,10 @@ export async function CourseApplyPage({
   if (!course) notFound()
 
   const cycle = typeof course.cycle === 'object' ? (course.cycle as Cycle | null) : null
-  const registration = courseRegistration(course, cycle)
-  const { method, formId } = registration
-  if (method !== 'form' || !formId) notFound()
+  const context = resolveApplicationTarget({ kind: 'courses', target: course }, cycle)
+  const { registration, formId, submitTarget } = context
+  const { method } = registration
+  if (method !== 'form' || !formId || !submitTarget) notFound()
 
   const shared = await payload.findByID({
     collection: 'forms',
@@ -59,9 +60,9 @@ export async function CourseApplyPage({
     locale: lang,
     fallbackLocale: 'en',
   })
-  const application = await applicationContext(payload, course, lang, reader)
+  const application = await applicationContext(payload, context, lang, reader)
 
-  const open = registration.status === 'open'
+  const open = context.open
   const deadlineDay = registration.deadline
   const deadline = deadlineDay
     ? format.dateTime(new Date(deadlineDay), {
@@ -94,11 +95,7 @@ export async function CourseApplyPage({
         back={{ href: back, label: t('backTo', { title: course.title }) }}
         disabled={!open}
         form={shared}
-        target={
-          course.registration?.mode === 'own'
-            ? { relationTo: 'courses', value: course.id }
-            : { relationTo: 'cycles', value: cycle!.id }
-        }
+        target={submitTarget}
         application={application}
       />
     </div>

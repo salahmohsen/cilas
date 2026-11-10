@@ -1,6 +1,7 @@
+import { loadApplicationTarget } from '@/forms/application-target'
 import { describe, expect, it, vi } from 'vitest'
 
-import { courseRegistration, registrationStatus, loadApplicationTarget } from '@/lib/registration'
+import { courseRegistration, registrationStatus } from '@/lib/registration'
 
 const lateOnDeadline = new Date('2026-03-01T21:59:59.999Z')
 const midnight = new Date('2026-03-01T22:00:00Z')

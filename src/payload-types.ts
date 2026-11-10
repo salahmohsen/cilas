@@ -773,7 +773,6 @@ export interface Programme {
           id?: string | null;
         }[]
       | null;
-    currency?: 'EGP' | null;
     note?: string | null;
     need_based_deductions?: boolean | null;
     /**
@@ -1261,7 +1260,6 @@ export interface Course {
           id?: string | null;
         }[]
       | null;
-    currency?: 'EGP' | null;
     note?: string | null;
     need_based_deductions?: boolean | null;
   };
@@ -1369,7 +1367,6 @@ export interface Cycle {
                 id?: string | null;
               }[]
             | null;
-          currency?: 'EGP' | null;
           note?: string | null;
           need_based_deductions?: boolean | null;
         };
@@ -2069,7 +2066,6 @@ export interface Event {
           id?: string | null;
         }[]
       | null;
-    currency?: 'EGP' | null;
     note?: string | null;
     need_based_deductions?: boolean | null;
   };
@@ -3446,7 +3442,6 @@ export interface CoursesSelect<T extends boolean = true> {
               default?: T;
               id?: T;
             };
-        currency?: T;
         note?: T;
         need_based_deductions?: T;
       };
@@ -3497,7 +3492,6 @@ export interface CyclesSelect<T extends boolean = true> {
                     default?: T;
                     id?: T;
                   };
-              currency?: T;
               note?: T;
               need_based_deductions?: T;
             };
@@ -3575,7 +3569,6 @@ export interface ProgrammesSelect<T extends boolean = true> {
               default?: T;
               id?: T;
             };
-        currency?: T;
         note?: T;
         need_based_deductions?: T;
         payment_plans?:
@@ -4031,7 +4024,6 @@ export interface EventsSelect<T extends boolean = true> {
               default?: T;
               id?: T;
             };
-        currency?: T;
         note?: T;
         need_based_deductions?: T;
       };

@@ -1,7 +1,18 @@
+import { numberingSystemOf } from '@/lib/digits'
+
+export const CURRENCY = 'EGP'
+export const amountsOf = (contribution: Contribution | null | undefined) =>
+  [...new Set(contribution?.options?.map((o) => o.amount) ?? [])].sort((a, b) => a - b)
+export const defaultAmountOf = (contribution: Contribution | null | undefined) =>
+  contribution?.options?.find((o) => o.default)?.amount
+const formatNumber = (n: number, locale: string) =>
+  new Intl.NumberFormat(locale, { numberingSystem: numberingSystemOf(locale) }).format(n)
+export const formatAmount = (n: number, locale: string) =>
+  `${formatNumber(n, locale)} ${locale === 'ar' ? 'ج.م' : CURRENCY}`
+
 export type Contribution = {
   options?: { amount: number; default?: boolean | null }[] | null
   note?: string | null
-  currency?: 'EGP' | null
   need_based_deductions?: boolean | null
 }
 
@@ -31,11 +42,10 @@ export const pricingFor = (
   return pricing?.options?.length ? pricing : null
 }
 
-const amount = new Intl.NumberFormat('en-US')
-
 export const contributionLabel = (
   contribution: Contribution | null | undefined,
   display: {
+    locale?: string
     amount?: (value: number) => string
     currency?: string
     free?: string
@@ -43,12 +53,13 @@ export const contributionLabel = (
   } = {},
 ): string | null => {
   if (!contribution?.options?.length) return null
-  const amounts = contribution.options.map((option) => option.amount)
-  const low = Math.min(...amounts)
-  const high = Math.max(...amounts)
+  const amounts = amountsOf(contribution)
+  const low = amounts[0]
+  const high = amounts[amounts.length - 1]
   if (low === 0 && high === 0) return display.free ?? 'Free'
-  const format = display.amount ?? ((value: number) => amount.format(value))
+  const format =
+    display.amount ?? ((value: number) => formatNumber(value, display.locale ?? 'en-US'))
   const range = low === high ? format(low) : `${format(low)}–${format(high)}`
-  const currency = display.currency ?? 'EGP'
+  const currency = display.currency ?? CURRENCY
   return display.currencyPosition === 'after' ? `${range} ${currency}` : `${currency} ${range}`
 }

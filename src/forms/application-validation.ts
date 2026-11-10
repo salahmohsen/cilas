@@ -1,4 +1,6 @@
-import { courseRegistration, loadApplicationTarget } from '@/lib/registration'
+import { courseRegistration } from '@/lib/registration'
+import { loadApplicationTarget } from './application-target'
+import type { Reader } from '@/lib/reader'
 import { relId } from '@/lib/relation'
 import type { Course, Cycle } from '@/payload-types'
 import { APIError, type PayloadRequest } from 'payload'
@@ -15,7 +17,7 @@ type Loaded = {
 export const checkApplication = (
   input: ApplicationInput,
   loaded: Loaded,
-  reader: unknown = null,
+  reader: Reader = null,
   local = false,
   now: Date = new Date(),
 ): { choices: ApplicationChoice[] } | { error: string } => {
@@ -152,7 +154,12 @@ export const validateApplication = async (
         })
       ).docs
     : []
-  const checked = checkApplication(input, { destination, courses }, req.user, local)
+  const checked = checkApplication(
+    input,
+    { destination, courses },
+    req.user?.collection === 'users' ? req.user : null,
+    local,
+  )
   if ('error' in checked) throw new APIError(checked.error, 400)
   return checked.choices.map((choice) => ({
     ...choice,

@@ -295,7 +295,6 @@ const afterEn = await payload.update({
     pricing: {
       ...programme.pricing,
       options: [{ amount: 30000, default: true }],
-      currency: 'EGP',
       need_based_deductions: true,
       note: en.paymentNote,
       payment_plans: [

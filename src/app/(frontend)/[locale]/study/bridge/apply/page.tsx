@@ -1,7 +1,7 @@
 import { BRIDGE_PATH } from '@/lib/paths'
 import { localeOf } from '@/i18n/routing'
 import { CAIRO } from '@/lib/cairo-day'
-import { relId } from '@/lib/relation'
+import { resolveApplicationTarget } from '@/forms/application-target'
 import config from '@payload-config'
 import type { Metadata } from 'next'
 import { getFormatter, getTranslations } from 'next-intl/server'
@@ -12,7 +12,6 @@ import { getBridgeYear } from '@/api/programmes.api'
 import { RenderedForm } from '@/components/forms/rendered-form'
 import { Link } from '@/i18n/navigation'
 import { numberingSystemOf } from '@/lib/digits'
-import { registrationStatus } from '@/lib/registration'
 
 type Props = { params: Promise<{ locale: string }> }
 
@@ -35,19 +34,21 @@ export default async function ApplyPage({ params }: Props) {
   const [t, format] = await Promise.all([getTranslations('Apply'), getFormatter()])
   const payload = await getPayload({ config })
   const year = await getBridgeYear(payload, lang)
-  const registration = year?.programme.registration
-  const formRef = registration?.form
-  if (!year || !formRef) notFound()
+  if (!year) notFound()
+  const { registration, formId, open, submitTarget } = resolveApplicationTarget({
+    kind: 'programmes',
+    target: year.programme,
+  })
+  if (!formId || !submitTarget) notFound()
 
   const form = await payload.findByID({
     collection: 'forms',
-    id: relId(formRef),
+    id: formId,
     depth: 1,
     locale: lang,
     fallbackLocale: 'en',
   })
 
-  const open = registrationStatus(registration) === 'open'
   const deadline = registration?.deadline
     ? format.dateTime(new Date(registration.deadline), {
         day: 'numeric',
@@ -67,7 +68,6 @@ export default async function ApplyPage({ params }: Props) {
         <h1 className="course-title mt-3">{t('title')}</h1>
       </header>
 
-      {/* Before the questions only: hidden once the application is sent (see .apply-intro). */}
       <div className="apply-intro">
         <p className="course-status" data-open={open || undefined}>
           {open
@@ -89,7 +89,7 @@ export default async function ApplyPage({ params }: Props) {
         disabled={!open}
         form={form}
         lang="en"
-        target={{ relationTo: 'programmes', value: year.programme.id }}
+        target={submitTarget}
       />
     </div>
   )

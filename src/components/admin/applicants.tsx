@@ -1,3 +1,4 @@
+import { CURRENCY } from '@/lib/pricing'
 import { DefaultTemplate } from '@payloadcms/next/templates'
 import { Gutter } from '@payloadcms/ui'
 import Link from 'next/link'
@@ -115,7 +116,7 @@ export async function ApplicantsView({
                 {viewer?.kind === 'admin' && (
                   <>
                     <p>
-                      {t.amount}: {c.amount ?? ''} EGP
+                      {t.amount}: {c.amount ?? ''} {CURRENCY}
                     </p>
                     <p>
                       {t.reduction}: {c.need_reduction ? t.yes : t.no}

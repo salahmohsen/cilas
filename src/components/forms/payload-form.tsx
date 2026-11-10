@@ -8,11 +8,10 @@ import { Fragment, useEffect, useMemo, useRef, useState, type ReactNode } from '
 import { Badge } from '@/components/arc/badge/badge'
 import { ElasticSlider } from '@/components/arc/elastic-slider/elastic-slider'
 import { localDigits } from '@/lib/digits'
+import { amountsOf, defaultAmountOf, formatAmount } from '@/lib/pricing'
 import {
   amountKey,
-  amountsOf,
   courseField,
-  defaultAmount,
   reductionKey,
   selectedKey,
   type ApplicationContext,
@@ -176,7 +175,7 @@ export function PayloadForm({
             [selectedKey]: application.initialCourse ? [String(application.initialCourse)] : [],
             ...Object.fromEntries(
               application.courses.flatMap((c) => [
-                [amountKey(c.id), String(defaultAmount(c) ?? '')],
+                [amountKey(c.id), String(defaultAmountOf(c.contribution) ?? '')],
                 [reductionKey(c.id), false],
               ]),
             ),
@@ -521,8 +520,7 @@ export function PayloadForm({
     ) : isQuestion(block) ? (
       renderQuestion(block)
     ) : null
-  const money = (amount: number) =>
-    amount === 0 ? t('free') : t('amountEGP', { amount: localDigits(amount, locale) })
+  const money = (amount: number) => (amount === 0 ? t('free') : formatAmount(amount, locale))
 
   return (
     <form
@@ -572,7 +570,10 @@ export function PayloadForm({
                             if (!on) {
                               for (const q of c.questions)
                                 api.deleteField(courseField(c.id, q.name))
-                              api.setFieldValue(amountKey(c.id), String(defaultAmount(c) ?? ''))
+                              api.setFieldValue(
+                                amountKey(c.id),
+                                String(defaultAmountOf(c.contribution) ?? ''),
+                              )
                               api.setFieldValue(reductionKey(c.id), false)
                             }
                             field.handleChange(
@@ -595,7 +596,7 @@ export function PayloadForm({
               .filter((b) => !isQuestion(b) || (b.name !== 'name' && b.name !== 'email'))
               .map(renderBlock)}
             {chosen.map((c) => {
-              const amounts = amountsOf(c)
+              const amounts = amountsOf(c.contribution)
               return (
                 <section className="grid min-w-0 gap-6" key={c.id} aria-label={c.title}>
                   <div>

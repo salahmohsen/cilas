@@ -249,7 +249,7 @@ describe('the payload form', () => {
       />,
     )
     const slider = screen.getByRole('slider')
-    expect(slider).toHaveAttribute('aria-valuetext', 'amountEGP')
+    expect(slider).toHaveAttribute('aria-valuetext', '350 EGP')
     expect(slider).toHaveAttribute('aria-valuenow', '1')
     fireEvent.keyDown(slider, { key: 'ArrowRight' })
     expect(slider).toHaveAttribute('aria-valuenow', '2')
@@ -318,7 +318,7 @@ describe('the payload form', () => {
       />,
     )
     expect(screen.queryByRole('slider')).toBeNull()
-    expect(screen.getByText(amount === 0 ? /free/ : /amountEGP/)).toBeVisible()
+    expect(screen.getByText(amount === 0 ? /free/ : /100 EGP/)).toBeVisible()
     expect(screen.queryByRole('checkbox', { name: 'Writing' })).toBeNull()
   })
 

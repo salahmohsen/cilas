@@ -1,6 +1,13 @@
 import { describe, expect, it } from 'vitest'
 
-import { contributionLabel, pricingFor, validateContributionOptions } from '@/lib/pricing'
+import {
+  amountsOf,
+  defaultAmountOf,
+  formatAmount,
+  contributionLabel,
+  pricingFor,
+  validateContributionOptions,
+} from '@/lib/pricing'
 
 const cycle = {
   pricing: [
@@ -110,5 +117,23 @@ it('labels unsorted options by their extrema and preserves localized words', () 
   expect(contributionLabel({ options: [{ amount: 0 }] }, { free: 'مجاني' })).toBe('مجاني')
   expect(contributionLabel(contribution, { currency: 'ج.م', currencyPosition: 'after' })).toBe(
     '1,500–3,500 ج.م',
+  )
+})
+
+it('sorts unique contributions without mutating them and keeps the chosen default', () => {
+  const contribution = {
+    options: [{ amount: 900 }, { amount: 350, default: true }, { amount: 100 }, { amount: 350 }],
+  }
+  expect(amountsOf(contribution)).toEqual([100, 350, 900])
+  expect(defaultAmountOf(contribution)).toBe(350)
+  expect(contribution.options[0].amount).toBe(900)
+  expect(amountsOf(null)).toEqual([])
+  expect(defaultAmountOf(null)).toBeUndefined()
+})
+it('formats Arabic money and the Bridge contribution with Arabic digits', () => {
+  expect(formatAmount(30000, 'ar')).toBe('٣٠٬٠٠٠ ج.م')
+  expect(formatAmount(30000, 'en')).toBe('30,000 EGP')
+  expect(contributionLabel({ options: [{ amount: 30000, default: true }] }, { locale: 'ar' })).toBe(
+    'EGP ٣٠٬٠٠٠',
   )
 })
