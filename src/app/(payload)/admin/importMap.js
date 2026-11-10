@@ -1,7 +1,6 @@
 import { SubmissionChoices as SubmissionChoices_825d586e877d28329934d6c10f2f8703 } from '../../../components/admin/submission-choices'
 import { CoursesCell as CoursesCell_825d586e877d28329934d6c10f2f8703 } from '../../../components/admin/submission-choices'
 import { SubmissionDecision as SubmissionDecision_eee555a74fc1831b93e9205174d718a0 } from '../../../components/admin/submission-decision'
-import { SubmissionEnrollments as SubmissionEnrollments_3fb62a23d28bb71318ad151fca64b38c } from '../../../components/admin/submission-enrollments'
 import { ExportListMenuItem as ExportListMenuItem_cdf7e044479f899a31f804427d568b36 } from '@payloadcms/plugin-import-export/rsc'
 import { RscEntryLexicalCell as RscEntryLexicalCell_44fe37237e0ebf4470c9990d8cb7b07e } from '@payloadcms/richtext-lexical/rsc'
 import { RscEntryLexicalField as RscEntryLexicalField_44fe37237e0ebf4470c9990d8cb7b07e } from '@payloadcms/richtext-lexical/rsc'
@@ -30,6 +29,7 @@ import { BoldFeatureClient as BoldFeatureClient_e70f5e05f09f93e00b997edb1ef0c864
 import { ItalicFeatureClient as ItalicFeatureClient_e70f5e05f09f93e00b997edb1ef0c864 } from '@payloadcms/richtext-lexical/client'
 import { BoolCell as BoolCell_f436cf2a4719114d9e44505773a04007 } from 'payload-theme/client'
 import { EmailBlocksFeatureClient as EmailBlocksFeatureClient_00a2df3a8033428e8bac947916459878 } from '../../../lexical/legacy-features.client'
+import { CourseApplicants as CourseApplicants_790724bc9e120a628731f1789ae767f9 } from '../../../components/admin/applicants'
 import { FullFormPreview as FullFormPreview_6ef3535fb057c60d7e95ebd6192b5fc8 } from '../../../components/admin/full-form-preview'
 import { SubmitForReview as SubmitForReview_e717629fbfc51f9c28c9696160243a2b } from '../../../components/admin/submit-for-review'
 import { SlugField as SlugField_2b8867833a34864a02ddf429b0728a40 } from '@payloadcms/next/client'
@@ -74,6 +74,7 @@ import { ImportExportProvider as ImportExportProvider_cdf7e044479f899a31f804427d
 import { AvatarProvider as AvatarProvider_37fe5310e1c82b2fade6b239ca4c79e5 } from 'payload-theme/rsc'
 import { ThemeProvider as ThemeProvider_f436cf2a4719114d9e44505773a04007 } from 'payload-theme/client'
 import { ListQuickActions as ListQuickActions_f436cf2a4719114d9e44505773a04007 } from 'payload-theme/client'
+import { ApplicantsView as ApplicantsView_790724bc9e120a628731f1789ae767f9 } from '../../../components/admin/applicants'
 import { SubscribersView as SubscribersView_82e10948fdeb08928ce643cc0b1632a7 } from '../../../components/admin/subscribers-view'
 import { ReviewQueueView as ReviewQueueView_5ad28f33e67910b7fd7d6503bf8c6322 } from '../../../components/admin/review-queue'
 import { AiAccessGuideView as AiAccessGuideView_052b04071a970816feedca90704adf89 } from '../../../components/admin/ai-access-guide'
@@ -88,7 +89,6 @@ export const importMap = {
   "/components/admin/submission-choices#SubmissionChoices": SubmissionChoices_825d586e877d28329934d6c10f2f8703,
   "/components/admin/submission-choices#CoursesCell": CoursesCell_825d586e877d28329934d6c10f2f8703,
   "/components/admin/submission-decision#SubmissionDecision": SubmissionDecision_eee555a74fc1831b93e9205174d718a0,
-  "/components/admin/submission-enrollments#SubmissionEnrollments": SubmissionEnrollments_3fb62a23d28bb71318ad151fca64b38c,
   "@payloadcms/plugin-import-export/rsc#ExportListMenuItem": ExportListMenuItem_cdf7e044479f899a31f804427d568b36,
   "@payloadcms/richtext-lexical/rsc#RscEntryLexicalCell": RscEntryLexicalCell_44fe37237e0ebf4470c9990d8cb7b07e,
   "@payloadcms/richtext-lexical/rsc#RscEntryLexicalField": RscEntryLexicalField_44fe37237e0ebf4470c9990d8cb7b07e,
@@ -117,6 +117,7 @@ export const importMap = {
   "@payloadcms/richtext-lexical/client#ItalicFeatureClient": ItalicFeatureClient_e70f5e05f09f93e00b997edb1ef0c864,
   "payload-theme/client#BoolCell": BoolCell_f436cf2a4719114d9e44505773a04007,
   "/lexical/legacy-features.client#EmailBlocksFeatureClient": EmailBlocksFeatureClient_00a2df3a8033428e8bac947916459878,
+  "/components/admin/applicants#CourseApplicants": CourseApplicants_790724bc9e120a628731f1789ae767f9,
   "/components/admin/full-form-preview#FullFormPreview": FullFormPreview_6ef3535fb057c60d7e95ebd6192b5fc8,
   "/components/admin/submit-for-review#SubmitForReview": SubmitForReview_e717629fbfc51f9c28c9696160243a2b,
   "@payloadcms/next/client#SlugField": SlugField_2b8867833a34864a02ddf429b0728a40,
@@ -161,6 +162,7 @@ export const importMap = {
   "payload-theme/rsc#AvatarProvider": AvatarProvider_37fe5310e1c82b2fade6b239ca4c79e5,
   "payload-theme/client#ThemeProvider": ThemeProvider_f436cf2a4719114d9e44505773a04007,
   "payload-theme/client#ListQuickActions": ListQuickActions_f436cf2a4719114d9e44505773a04007,
+  "/components/admin/applicants#ApplicantsView": ApplicantsView_790724bc9e120a628731f1789ae767f9,
   "/components/admin/subscribers-view#SubscribersView": SubscribersView_82e10948fdeb08928ce643cc0b1632a7,
   "/components/admin/review-queue#ReviewQueueView": ReviewQueueView_5ad28f33e67910b7fd7d6503bf8c6322,
   "/components/admin/ai-access-guide#AiAccessGuideView": AiAccessGuideView_052b04071a970816feedca90704adf89,

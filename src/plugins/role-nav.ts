@@ -1,7 +1,7 @@
 import type { Plugin } from 'payload'
 import { REVIEWED } from '@/lib/reviewed-collections'
 
-import { adminViewOf, type AdminView } from '@/access'
+import { adminViewOf, isAdminUser, isFellowUser, type AdminView } from '@/access'
 
 /**
  * The collections each non-admin panel shows. Everything else, globals
@@ -89,3 +89,6 @@ export const roleNav = (): Plugin => (config) => ({
     },
   })),
 })
+
+export const showApplicants = (user: Parameters<typeof adminViewOf>[0]) =>
+  isAdminUser(user) || isFellowUser(user)

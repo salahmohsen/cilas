@@ -336,15 +336,13 @@ export interface FormSubmission {
     user?: (number | null) | User;
     person?: (number | null) | Person;
     membership?: (number | null) | Membership;
-    enrollment?: (number | null) | Enrollment;
-    enrollments?:
+    enrollments?: (number | Enrollment)[] | null;
+    enrollment_outcomes?:
       | {
-          [k: string]: unknown;
-        }
-      | unknown[]
-      | string
-      | number
-      | boolean
+          enrollment: number | Enrollment;
+          created?: boolean | null;
+          id?: string | null;
+        }[]
       | null;
   };
   updatedAt: string;
@@ -2976,8 +2974,14 @@ export interface FormSubmissionsSelect<T extends boolean = true> {
         user?: T;
         person?: T;
         membership?: T;
-        enrollment?: T;
         enrollments?: T;
+        enrollment_outcomes?:
+          | T
+          | {
+              enrollment?: T;
+              created?: T;
+              id?: T;
+            };
       };
   updatedAt?: T;
   createdAt?: T;

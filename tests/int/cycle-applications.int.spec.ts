@@ -240,8 +240,9 @@ describe('cycle applications and approval', () => {
     const response = await accept(submission.id)
     expect(response && (await response.json())).toEqual({ ok: true, emailed: true })
     const result = await trackApplicant(submission)
-    expect(result.decided.result?.enrollments).toEqual([
-      expect.objectContaining({ course: writing.id, title: writing.title, created: true }),
+    expect(result.decided.result?.enrollments).toEqual([result.enrollments[0].id])
+    expect(result.decided.result?.enrollment_outcomes).toEqual([
+      expect.objectContaining({ enrollment: result.enrollments[0].id, created: true }),
     ])
     expect(result.enrollments).toEqual([
       expect.objectContaining({
@@ -273,10 +274,16 @@ describe('cycle applications and approval', () => {
     const reused = await trackApplicant(again)
     expect(reused.enrollments.map((e) => e.course).sort()).toEqual([writing.id, film.id].sort())
     expect(reused.person).toBe(result.person)
-    expect(reused.decided.result?.enrollments).toEqual(
+    expect(reused.decided.result?.enrollment_outcomes).toEqual(
       expect.arrayContaining([
-        expect.objectContaining({ course: writing.id, created: false }),
-        expect.objectContaining({ course: film.id, created: true }),
+        expect.objectContaining({
+          enrollment: reused.enrollments.find((e) => e.course === writing.id)!.id,
+          created: false,
+        }),
+        expect.objectContaining({
+          enrollment: reused.enrollments.find((e) => e.course === film.id)!.id,
+          created: true,
+        }),
       ]),
     )
     const bothMail = vi.mocked(payload.sendEmail).mock.calls.at(-1)![0]

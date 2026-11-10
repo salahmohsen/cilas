@@ -109,19 +109,28 @@ export const applicationFields: Field[] = [
   {
     name: 'result',
     type: 'group',
-    access: { create: adminOnlyField, update: adminOnlyField },
+    access: { read: adminOnlyField, create: adminOnlyField, update: adminOnlyField },
     admin: { position: 'sidebar', readOnly: true },
     fields: [
       { name: 'user', type: 'relationship', relationTo: 'users' },
       { name: 'person', type: 'relationship', relationTo: 'people' },
       { name: 'membership', type: 'relationship', relationTo: 'memberships' },
-      { name: 'enrollment', type: 'relationship', relationTo: 'enrollments' },
       {
         name: 'enrollments',
-        type: 'json',
-        admin: {
-          components: { Field: '/components/admin/submission-enrollments#SubmissionEnrollments' },
-        },
+        type: 'relationship',
+        relationTo: 'enrollments',
+        hasMany: true,
+        access: { read: adminOnlyField },
+      },
+      {
+        name: 'enrollment_outcomes',
+        label: 'Enrollment outcomes',
+        type: 'array',
+        access: { read: adminOnlyField },
+        fields: [
+          { name: 'enrollment', type: 'relationship', relationTo: 'enrollments', required: true },
+          { name: 'created', type: 'checkbox' },
+        ],
       },
     ],
   },
@@ -165,8 +174,8 @@ type Accepted = {
   user: number
   person: number
   membership?: number
-  enrollment?: number
-  enrollments?: { course: number; title: string; enrollment: number; created: boolean }[]
+  enrollments?: number[]
+  enrollment_outcomes?: { enrollment: number; created: boolean }[]
   /** For the email, sent once the transaction commits. */
   mail: { name: string; email: string; title: string; newAccount: boolean; site: string }
 }
@@ -255,6 +264,7 @@ const accept = async (req: PayloadRequest, id: number): Promise<Accepted | null>
       ).id
   } else {
     result.enrollments = []
+    result.enrollment_outcomes = []
     for (const courseId of courseIds) {
       const { docs } = await payload.find({
         collection: 'enrollments',
@@ -285,14 +295,8 @@ const accept = async (req: PayloadRequest, id: number): Promise<Accepted | null>
             ...local,
           })
         ).id
-      const course = await payload.findByID({ collection: 'courses', id: courseId, ...local })
-      result.enrollments.push({
-        course: courseId,
-        title: course.title,
-        enrollment: enrollmentId,
-        created: !enrollment,
-      })
-      if (kind === 'courses') result.enrollment = enrollmentId
+      result.enrollments.push(enrollmentId)
+      result.enrollment_outcomes.push({ enrollment: enrollmentId, created: !enrollment })
     }
   }
 

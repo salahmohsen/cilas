@@ -325,15 +325,10 @@ describe('the application flow, from the questions to the enrollment', () => {
     expect(decided.result).toEqual({
       user: docs[0].id,
       person: person!.id,
-      enrollment: enrollments.docs[0].id,
       membership: null,
-      enrollments: [
-        {
-          course: course.id,
-          title: course.title,
-          enrollment: enrollments.docs[0].id,
-          created: true,
-        },
+      enrollments: [enrollments.docs[0].id],
+      enrollment_outcomes: [
+        expect.objectContaining({ enrollment: enrollments.docs[0].id, created: true }),
       ],
     })
     expect(payload.sendEmail).toHaveBeenCalledWith(expect.objectContaining({ to: APPLICANT_EMAIL }))

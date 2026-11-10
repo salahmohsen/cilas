@@ -128,6 +128,14 @@ export const Courses: CollectionConfig = {
   },
   fields: [
     {
+      name: 'applicants',
+      type: 'ui',
+      admin: {
+        position: 'sidebar',
+        components: { Field: '/components/admin/applicants#CourseApplicants' },
+      },
+    },
+    {
       name: 'fullFormPreview',
       type: 'ui',
       admin: {
