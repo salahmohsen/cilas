@@ -1,4 +1,5 @@
 import { test, expect } from '@playwright/test'
+import { formScreenshot } from '../helpers/formScreenshot'
 import { applicationFixture, removeApplicationFixture } from '../helpers/applicationFixture'
 
 let fixture: Awaited<ReturnType<typeof applicationFixture>>
@@ -9,7 +10,9 @@ test.afterAll(async () => {
   if (fixture) await removeApplicationFixture(fixture)
 })
 
-test('applies to two cycle courses with separate answers and contributions', async ({ page }) => {
+test('applies to two cycle courses with separate answers and contributions', async ({
+  page,
+}, testInfo) => {
   test.setTimeout(90_000)
   const [writing, film] = fixture.courses
   await page.goto(
@@ -32,6 +35,8 @@ test('applies to two cycle courses with separate answers and contributions', asy
     .getByRole('region', { name: 'Writing', exact: true })
     .getByRole('checkbox', { name: 'I need a lower contribution' })
     .check()
+  await formScreenshot(page, testInfo.outputPath('application.png'))
+  await expect(page.locator('[data-issues-open]')).toHaveCount(0)
   await page.getByRole('button', { name: /submit|send/i }).click()
   await expect(page.getByRole('status').filter({ hasText: /sent/i })).toBeVisible({
     timeout: 40_000,

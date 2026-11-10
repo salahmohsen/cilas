@@ -30,7 +30,6 @@ export interface ElasticSliderMark {
 }
 
 export interface ElasticSliderProps {
-  /** Visible label; it also names the thumb. */
   label: string
   value?: number
   defaultValue?: number
@@ -49,9 +48,9 @@ export interface ElasticSliderProps {
   /** Icons at either end. The one on the side being pulled past its limit is pushed outward with the track. */
   startIcon?: ReactNode
   endIcon?: ReactNode
-  /** Submits the value with a form. */
   name?: string
   disabled?: boolean
+  dir?: 'ltr' | 'rtl'
   className?: string
 }
 
@@ -114,11 +113,6 @@ const bubbleEnter = {
   filter: { duration: duration.fast, ease: enterEase },
 }
 
-/**
- * A single value slider made of something that gives. The thumb swells under the finger, the track stretches like rubber past either
- * end and springs back with the release velocity, a value tag hangs off the thumb and sways with its speed, and marks act as detents
- * the thumb clicks into. Arrows, Shift+arrows, PageUp, PageDown, Home, and End work as in a native range input.
- */
 export function ElasticSlider({
   label,
   value,
@@ -137,7 +131,15 @@ export function ElasticSlider({
   name,
   disabled,
   className,
+  dir,
 }: ElasticSliderProps) {
+  const rootRef = useRef<HTMLDivElement>(null)
+  const [inheritedRtl, setInheritedRtl] = useState(false)
+  useLayoutEffect(() => {
+    if (rootRef.current) setInheritedRtl(getComputedStyle(rootRef.current).direction === 'rtl')
+  }, [dir])
+  const rtl = dir ? dir === 'rtl' : inheritedRtl
+  const direction = rtl ? -1 : 1
   const reduced = useReducedMotion() ?? false
   const labelId = useId()
   const step = stepProp > 0 ? stepProp : 1
@@ -179,26 +181,27 @@ export function ElasticSlider({
   const over = useMotionValue(0)
   const press = useMotionValue(0)
   const shown = useTransform(() => pos.get() + lag.get())
-  const thumbX = useTransform(shown, (at) => `${at - 100}%`)
-  const clipPath = useTransform(
-    shown,
-    (at) => `inset(0 ${(100 - clamp(at, 0, 100)).toFixed(3)}% 0 0 round 999px)`,
+  const thumbX = useTransform(shown, (at) => `${(rtl ? 100 - at : at) - 100}%`)
+  const clipPath = useTransform(shown, (at) =>
+    rtl
+      ? `inset(0 0 0 ${(100 - clamp(at, 0, 100)).toFixed(3)}% round 999px)`
+      : `inset(0 ${(100 - clamp(at, 0, 100)).toFixed(3)}% 0 0 round 999px)`,
   )
-  // Stretch: the track grows away from its anchored end and thins as it does, like a band pulled tight. A press thickens it a little.
   const scaleX = useTransform(over, (px) => 1 + Math.abs(px) / width.current)
-  const originX = useTransform(over, (px) => (px < 0 ? 1 : 0))
+  const originX = useTransform(over, (px) => (px * direction < 0 ? 1 : 0))
   const scaleY = useTransform(
     () => (1 + press.get() * 0.45) * (1 - (Math.abs(over.get()) / STRETCH) * 0.32),
   )
-  const startShift = useTransform(over, (px) => Math.min(0, px))
-  const endShift = useTransform(over, (px) => Math.max(0, px))
-  // The tag trails the thumb on a soft spring, so it lags more the faster the thumb moves, and swings on its tail with that speed.
+  const startShift = useTransform(over, (px) => Math.min(0, px) * direction)
+  const endShift = useTransform(over, (px) => Math.max(0, px) * direction)
   const trailed = useSpring(shown, { stiffness: 420, damping: 30, mass: 0.7 })
   const bubbleAt = reduced ? shown : trailed
-  const bubbleX = useTransform(bubbleAt, (at) => `${at - 100}%`)
+  const bubbleX = useTransform(bubbleAt, (at) => `${(rtl ? 100 - at : at) - 100}%`)
+  const physicalOver = useTransform(over, (px) => px * direction)
+  const physicalBubbleAt = useTransform(bubbleAt, (at) => (rtl ? 100 - at : at))
   const speed = useVelocity(trailed)
   const rotate = useTransform(speed, (velocity) =>
-    reduced ? 0 : clamp((-velocity / 100) * width.current * 0.009, -11, 11),
+    reduced ? 0 : clamp(((-velocity * direction) / 100) * width.current * 0.009, -11, 11),
   )
 
   const emit = (next: number) => {
@@ -208,7 +211,6 @@ export function ElasticSlider({
     onValueChange?.(next)
   }
 
-  // Values from outside a drag (keys, props) spring the thumb to their place from wherever it is on screen.
   useLayoutEffect(() => {
     latest.current = current
     const target = pct(current)
@@ -231,7 +233,6 @@ export function ElasticSlider({
   }, [])
   useEffect(() => () => window.clearTimeout(lingerTimer.current), [])
 
-  /** A detent answers with a small pop of its tick and, where the device supports it, a short tap of vibration. */
   function pulse(mark: number, haptic: boolean) {
     const node = tickRefs.current.get(mark)
     if (node && !reduced) animate(node, { scale: [1, 2.1, 1] }, { duration: 0.34, ease: enterEase })
@@ -283,7 +284,8 @@ export function ElasticSlider({
     const rect = trackRef.current?.getBoundingClientRect()
     if (!rect) return
     width.current = rect.width || 1
-    const at = ((event.clientX - rect.left) / width.current) * 100
+    const physicalAt = ((event.clientX - rect.left) / width.current) * 100
+    const at = rtl ? 100 - physicalAt : physicalAt
     const grabbed = !!(event.target as HTMLElement).closest('[data-thumb]')
     event.currentTarget.setPointerCapture(event.pointerId)
     const from = pos.get() + lag.get()
@@ -312,7 +314,8 @@ export function ElasticSlider({
     if (!state || state.pointer !== event.pointerId) return
     const rect = trackRef.current?.getBoundingClientRect()
     if (!rect) return
-    follow(state, ((event.clientX - rect.left) / (rect.width || 1)) * 100, event.timeStamp)
+    const at = ((event.clientX - rect.left) / (rect.width || 1)) * 100
+    follow(state, rtl ? 100 - at : at, event.timeStamp)
   }
   function onPointerEnd(event: PointerEvent<HTMLDivElement>) {
     const state = drag.current
@@ -352,9 +355,9 @@ export function ElasticSlider({
     const now = latest.current
     const large = largeStep ?? Math.max(step, snap(min + span / 10) - min)
     const moves: Record<string, number> = {
-      ArrowRight: step,
+      ArrowRight: step * direction,
       ArrowUp: step,
-      ArrowLeft: -step,
+      ArrowLeft: -step * direction,
       ArrowDown: -step,
       PageUp: large,
       PageDown: -large,
@@ -389,6 +392,8 @@ export function ElasticSlider({
 
   return (
     <div
+      ref={rootRef}
+      dir={dir}
       className={[styles.root, className].filter(Boolean).join(' ')}
       data-disabled={disabled || undefined}
       data-dragging={dragging || undefined}
@@ -435,7 +440,7 @@ export function ElasticSlider({
                   }}
                   className={styles.tick}
                   data-on={mark.value <= current || undefined}
-                  style={{ left: `${pct(mark.value)}%` }}
+                  style={{ left: `${rtl ? 100 - pct(mark.value) : pct(mark.value)}%` }}
                 />
               ))}
           </div>
@@ -443,7 +448,7 @@ export function ElasticSlider({
             <motion.div className={styles.layer} style={{ x: bubbleX }}>
               <motion.span
                 className={styles.bubbleAnchor}
-                style={{ x: over, '--at': bubbleAt } as MotionStyle}
+                style={{ x: physicalOver, '--at': physicalBubbleAt } as MotionStyle}
               >
                 <AnimatePresence>
                   {bubble && (
@@ -468,7 +473,7 @@ export function ElasticSlider({
               </motion.span>
             </motion.div>
             <motion.div className={styles.layer} style={{ x: thumbX }}>
-              <motion.div className={styles.shift} style={{ x: over }}>
+              <motion.div className={styles.shift} style={{ x: physicalOver }}>
                 <motion.div
                   ref={thumbRef}
                   role="slider"
@@ -504,8 +509,14 @@ export function ElasticSlider({
                 key={mark.value}
                 className={styles.markLabel}
                 data-on={mark.value === current || undefined}
-                data-edge={mark.value === min ? 'start' : mark.value === max ? 'end' : undefined}
-                style={{ left: `${pct(mark.value)}%` }}
+                data-edge={
+                  mark.value === (rtl ? max : min)
+                    ? 'start'
+                    : mark.value === (rtl ? min : max)
+                      ? 'end'
+                      : undefined
+                }
+                style={{ left: `${rtl ? 100 - pct(mark.value) : pct(mark.value)}%` }}
                 onClick={() => {
                   if (disabled || mark.value === latest.current) return
                   emit(mark.value)
