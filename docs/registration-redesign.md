@@ -72,6 +72,12 @@ type Application = {
 
 Problems found in the current code, grouped under the fix that removes them.
 
+Step 4 implementation (2026-11-10): `src/forms/templates.ts` owns registration form selection and copying. Collection hooks copy the matching default before destination validation, in the same transaction. A Bridge year is a new programme with `kind: bridge`. Cycles and Bridge years copy only at creation; courses also copy when changing to own site-form registration. Payload's duplicate operation preserves every template locale, including nested labels, confirmations and emails; form titles are not localized. The shared registration relationship excludes templates and rejects them server-side even for drafts. Seeds fill all three defaults after snapshot restore or before development entities are seeded.
+
+Migration verification: `20261110_140348_registration_templates` was generated with the Payload CLI, applied successfully to a throwaway copy of `cilas_dev`, and checked for the new table and checkbox column. The copy was dropped and the dev database migrated.
+
+Problems solved: new intakes needed hand-made forms; registration selectors could offer reusable templates as live forms; copying fields by hand could lose localized content or drift between entity types.
+
 Step 3 implementation (2026-11-10): courseRegistration selects one complete destination by mode and caps the cycle deadline with close_early. Course-specific registration fields replace the shared field; the shared destination hook validates the resolver output. Admin-only write access protects registration, contribution and cycle without removing public read data. The cycle requirement runs after review transitions, so both approval and direct publication enforce it, while drafts remain nullable. Step 9 is included in the same schema migration. Archive imports explicitly use closed mode and retain their historical link in url. The migration drops the obsolete archived-link columns; rollback cannot recover those links or close_early.
 
 Migration verification: a throwaway copy of cilas_dev contained 310 courses (300 empty methods, 10 external) and 3,750 versions (3,671 empty, 79 external). After migration: 300/3,671 follow_cycle, 10/79 own, 0/0 closed (courses/versions); close_early remains empty. The copy was dropped and the dev database migrated.

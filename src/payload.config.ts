@@ -38,6 +38,7 @@ import { SpaceConsents } from './collections/SpaceConsents'
 import { SpaceVisits } from './collections/SpaceVisits'
 import { SpacePreferences } from './collections/SpacePreferences'
 import { Publications } from './collections/Publications'
+import { RegistrationDefaults } from './globals/RegistrationDefaults'
 import { SiteSettings } from './globals/SiteSettings'
 import { EmailSettings } from './globals/EmailSettings'
 import { SpaceIntroduction } from './globals/SpaceIntroduction'
@@ -227,7 +228,7 @@ export default buildConfig({
     SpaceVotes,
     SpaceRsvps,
   ],
-  globals: [SiteSettings, EmailSettings, SpaceIntroduction, SpaceRules],
+  globals: [RegistrationDefaults, SiteSettings, EmailSettings, SpaceIntroduction, SpaceRules],
   localization: {
     locales: [
       { label: 'English', code: 'en' },
@@ -281,14 +282,26 @@ export default buildConfig({
     formBuilderPlugin({
       beforeEmail: formEmailRichText,
       fields: formFields,
-      // The forms themselves, with their emails and redirects, are admin work.
       formOverrides: {
-        fields: ({ defaultFields }) =>
-          defaultFields.map((field) =>
+        admin: {
+          defaultColumns: ['title', 'template', 'updatedAt'],
+        },
+        fields: ({ defaultFields }) => [
+          {
+            name: 'template',
+            type: 'checkbox',
+            label: 'Template',
+            defaultValue: false,
+            admin: {
+              position: 'sidebar',
+              description:
+                'A template is copied when a new cycle, Bridge year or course with its own registration needs a form. Editing it later does not change copies.',
+            },
+          },
+          ...defaultFields.map((field) =>
             'name' in field && field.name === 'emails' && 'fields' in field
               ? {
                   ...field,
-                  // Notification addresses: anyone may read a form, only admins these.
                   access: { ...field.access, read: adminOnlyField },
                   fields: field.fields.map((child) =>
                     child.type === 'richText'
@@ -298,17 +311,14 @@ export default buildConfig({
                 }
               : field,
           ),
+        ],
         access: { read: anyone, create: isAdmin, update: isAdmin, delete: isAdmin },
-        // Any form asks name and email first; no admin deletes or renames them.
         hooks: { beforeChange: [ensureNameEmail] },
       },
-      // Applications are read by admins only; anyone may send one.
       formSubmissionOverrides: {
         access: { read: isAdmin, update: isAdmin, delete: isAdmin },
         admin: { defaultColumns: ['form', 'target', 'status', 'createdAt'] },
-        // Applications: admins accept or reject them from the submission.
         fields: ({ defaultFields }) => [...defaultFields, ...applicationFields],
-        // Applications (accept, reject) and the submissions that carry files.
         endpoints: [
           ...applicationEndpoints,
           { path: '/with-files', method: 'post', handler: submitWithFiles },
@@ -391,7 +401,6 @@ export default buildConfig({
     // articles and people. Off without TYPESENSE_API_KEY (builds, tests).
     typesenseSearch(),
     googleAuth(),
-    // /llms.txt and /llms-full.txt for language models (src/plugins/llms.ts).
     llmsTxt(),
     // Click-to-edit in live preview, and a full-screen editor at
     // /admin/visual-editor/:collection/:id. The pages mark their fields

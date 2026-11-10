@@ -1,3 +1,4 @@
+import { copyRegistrationTemplate } from '@/forms/templates'
 import { previewUrl } from '@/lib/preview-url'
 import type { CollectionConfig } from 'payload'
 
@@ -187,5 +188,5 @@ export const Programmes: CollectionConfig = {
       ],
     },
   ],
-  hooks: { afterChange: [ensureSpaceFor('cohort')] },
+  hooks: { beforeValidate: [copyRegistrationTemplate], afterChange: [ensureSpaceFor('cohort')] },
 }

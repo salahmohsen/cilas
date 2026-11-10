@@ -1,3 +1,4 @@
+import { copyRegistrationTemplate } from '@/forms/templates'
 import { relId } from '@/lib/relation'
 import type { CollectionBeforeValidateHook, CollectionConfig } from 'payload'
 
@@ -66,7 +67,7 @@ export const Cycles: CollectionConfig = {
   // One intake per season, year and place (ADR 0003, ADR 0007).
   indexes: [{ fields: ['season', 'start_year', 'place'], unique: true }],
   hooks: {
-    beforeValidate: [deriveCycleIdentity],
+    beforeValidate: [deriveCycleIdentity, copyRegistrationTemplate],
     afterChange: [revalidateAfterChange('cycles')],
     afterDelete: [revalidateAfterDelete('cycles')],
   },

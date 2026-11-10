@@ -1,3 +1,4 @@
+import { seedRegistrationDefaults } from './collections/registration-defaults.seed'
 import { getPayload } from 'payload'
 import type { Payload } from 'payload'
 import { createSeedContext } from './seed.type'
@@ -34,6 +35,7 @@ const ctx = createSeedContext()
 // it was, instead of the dev seed below.
 if (hasSnapshot() && !process.argv.includes('--dev')) {
   await restoreSnapshot(payload)
+  await seedRegistrationDefaults(payload)
   await createSuperAdmin(payload)
   await payload.destroy()
   console.log('\nSEED COMPLETE (snapshot)')
@@ -50,6 +52,7 @@ await resetContent(payload)
 // Order matters: every seeder reads ids resolved by the ones above it.
 await seedUsers(payload, ctx)
 await seedPlaces(payload, ctx)
+await seedRegistrationDefaults(payload)
 await seedCycles(payload, ctx)
 await seedProgrammes(payload, ctx)
 await seedCourses(payload, ctx)

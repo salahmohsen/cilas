@@ -34,7 +34,12 @@ describe('redirects and SEO', () => {
       'cycles',
       await payload.create({
         collection: 'cycles',
-        data: { season: 'spring', start_year: 2031, place: place.id },
+        data: {
+          season: 'spring',
+          start_year: 2031,
+          place: place.id,
+          registration: { method: 'closed' },
+        },
         overrideAccess: true,
       }),
     )
@@ -54,7 +59,6 @@ describe('redirects and SEO', () => {
         overrideAccess: true,
       }),
     )
-    // The SEO test writes an Arabic title, which the course must already have.
     await payload.update({
       collection: 'courses',
       id: course.id,

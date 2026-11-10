@@ -65,6 +65,7 @@ import * as migration_20261109_114307_mcp_oauth from './20261109_114307_mcp_oaut
 import * as migration_20261109_141655_session_delivery from './20261109_141655_session_delivery';
 import * as migration_20261110_133714_contribution_options from './20261110_133714_contribution_options';
 import * as migration_20261110_135213_course_registration_modes from './20261110_135213_course_registration_modes';
+import * as migration_20261110_140348_registration_templates from './20261110_140348_registration_templates';
 
 export const migrations = [
   {
@@ -400,6 +401,11 @@ export const migrations = [
   {
     up: migration_20261110_135213_course_registration_modes.up,
     down: migration_20261110_135213_course_registration_modes.down,
-    name: '20261110_135213_course_registration_modes'
+    name: '20261110_135213_course_registration_modes',
+  },
+  {
+    up: migration_20261110_140348_registration_templates.up,
+    down: migration_20261110_140348_registration_templates.down,
+    name: '20261110_140348_registration_templates'
   },
 ];

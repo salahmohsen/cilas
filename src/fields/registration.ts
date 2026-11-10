@@ -1,3 +1,4 @@
+import { registrationFormField } from '@/forms/templates'
 import { relId } from '@/lib/relation'
 import {
   ValidationError,
@@ -100,12 +101,7 @@ export const registrationField = (): NamedGroupField => ({
       type: 'select',
       options: REGISTRATION_METHODS.map((value) => ({ label: METHOD_LABELS[value], value })),
     },
-    {
-      name: 'form',
-      type: 'relationship',
-      relationTo: 'forms',
-      admin: { condition: (_, sibling) => sibling?.method === 'form' },
-    },
+    registrationFormField(),
     {
       name: 'url',
       type: 'text',
@@ -127,7 +123,6 @@ export const registrationField = (): NamedGroupField => ({
         description: 'The last day to register, in Cairo.',
       },
     },
-    // The old Weebly or Google Forms link, kept for the record.
     { name: 'archived_registration_url', type: 'text', admin: { hidden: true } },
   ],
 })

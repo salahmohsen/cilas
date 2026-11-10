@@ -181,6 +181,7 @@ export interface Config {
   };
   fallbackLocale: ('false' | 'none' | 'null') | false | null | ('en' | 'ar') | ('en' | 'ar')[];
   globals: {
+    'registration-defaults': RegistrationDefault;
     'site-settings': SiteSetting;
     'email-settings': EmailSetting;
     'space-introduction': SpaceIntroduction;
@@ -188,6 +189,7 @@ export interface Config {
     'llms-txt-settings': LlmsTxtSetting;
   };
   globalsSelect: {
+    'registration-defaults': RegistrationDefaultsSelect<false> | RegistrationDefaultsSelect<true>;
     'site-settings': SiteSettingsSelect<false> | SiteSettingsSelect<true>;
     'email-settings': EmailSettingsSelect<false> | EmailSettingsSelect<true>;
     'space-introduction': SpaceIntroductionSelect<false> | SpaceIntroductionSelect<true>;
@@ -323,6 +325,10 @@ export interface FormSubmission {
  */
 export interface Form {
   id: number;
+  /**
+   * A template is copied when a new cycle, Bridge year or course with its own registration needs a form. Editing it later does not change copies.
+   */
+  template?: boolean | null;
   title: string;
   fields?:
     | (
@@ -719,6 +725,9 @@ export interface Programme {
   } | null;
   registration?: {
     method?: ('form' | 'external' | 'closed') | null;
+    /**
+     * A form copied from a template can be edited freely. Changes do not affect the template or other copies.
+     */
     form?: (number | null) | Form;
     url?: string | null;
     /**
@@ -1049,6 +1058,9 @@ export interface Course {
      */
     close_early?: string | null;
     method?: ('form' | 'external') | null;
+    /**
+     * A form copied from a template can be edited freely. Changes do not affect the template or other copies.
+     */
     form?: (number | null) | Form;
     url?: string | null;
     /**
@@ -1300,6 +1312,9 @@ export interface Cycle {
   academic_year?: string | null;
   registration?: {
     method?: ('form' | 'external' | 'closed') | null;
+    /**
+     * A form copied from a template can be edited freely. Changes do not affect the template or other copies.
+     */
     form?: (number | null) | Form;
     url?: string | null;
     /**
@@ -2006,6 +2021,9 @@ export interface Event {
     | null;
   registration?: {
     method?: ('form' | 'external' | 'closed') | null;
+    /**
+     * A form copied from a template can be edited freely. Changes do not affect the template or other copies.
+     */
     form?: (number | null) | Form;
     url?: string | null;
     /**
@@ -2946,6 +2964,7 @@ export interface MembershipsSelect<T extends boolean = true> {
  * via the `definition` "forms_select".
  */
 export interface FormsSelect<T extends boolean = true> {
+  template?: T;
   title?: T;
   fields?:
     | T
@@ -4433,6 +4452,18 @@ export interface PayloadMigrationsSelect<T extends boolean = true> {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "registration-defaults".
+ */
+export interface RegistrationDefault {
+  id: number;
+  cycle_template?: (number | null) | Form;
+  bridge_template?: (number | null) | Form;
+  workshop_template?: (number | null) | Form;
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "site-settings".
  */
 export interface SiteSetting {
@@ -4626,6 +4657,18 @@ export interface LlmsTxtSetting {
   introOverride?: string | null;
   updatedAt?: string | null;
   createdAt?: string | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "registration-defaults_select".
+ */
+export interface RegistrationDefaultsSelect<T extends boolean = true> {
+  cycle_template?: T;
+  bridge_template?: T;
+  workshop_template?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema

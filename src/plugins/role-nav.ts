@@ -60,6 +60,7 @@ const GROUPS: Record<string, string> = {
   redirects: 'Site',
   'site-settings': 'Site',
   'email-settings': 'Site',
+  'registration-defaults': 'Site',
 }
 
 const FIRST = Object.keys(GROUPS)

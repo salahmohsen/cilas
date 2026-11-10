@@ -123,7 +123,13 @@ describe('space email', () => {
     track('places', place.id)
     const cycle = await payload.create({
       collection: 'cycles',
-      data: { season: 'spring', start_year: 2032, place: place.id, start_date: '2032-03-04' },
+      data: {
+        season: 'spring',
+        start_year: 2032,
+        place: place.id,
+        start_date: '2032-03-04',
+        registration: { method: 'closed' },
+      },
       overrideAccess: true,
     })
     track('cycles', cycle.id)

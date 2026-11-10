@@ -1,3 +1,4 @@
+import { copyRegistrationTemplate, registrationFormField } from '@/forms/templates'
 import { tierField } from '@/fields/tier'
 import { previewUrl } from '@/lib/preview-url'
 import { addSelfAs } from '@/lib/review-ownership'
@@ -459,15 +460,7 @@ export const Courses: CollectionConfig = {
                     value === 'external' ||
                     'Choose a registration method.') satisfies SelectFieldSingleValidation,
                 },
-                {
-                  name: 'form',
-                  type: 'relationship',
-                  relationTo: 'forms',
-                  admin: {
-                    condition: (_, sibling) =>
-                      sibling?.mode === 'own' && sibling?.method === 'form',
-                  },
-                },
+                registrationFormField(),
                 {
                   name: 'url',
                   type: 'text',
@@ -551,7 +544,7 @@ export const Courses: CollectionConfig = {
   },
   hooks: {
     beforeOperation: courseReview.beforeOperation,
-    beforeValidate: [addSelfAs('fellows')],
+    beforeValidate: [addSelfAs('fellows'), copyRegistrationTemplate],
     beforeChange: [
       ...(courseReview.beforeChange ?? []),
       ({ data, originalDoc }) => {
