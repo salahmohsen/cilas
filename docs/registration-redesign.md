@@ -73,6 +73,10 @@ type Application = {
 
 Problems found in the current code, grouped under the fix that removes them.
 
+Step 4b implementation (2026-11-10): the existing preview URL and authorization endpoint accept forms by ID. The admin Preview button opens `/{locale}/forms/preview?form={id}` for forms and templates. The page authenticates every request and checks the collection's edit access independently of the draft cookie. Its query-based target leaves the same page available for cycle/course context in step 7; no context handling is built yet. `RenderedForm` owns message-block rendering, confirmation rendering and `publicForm` sanitization for the course, Bridge and preview pages. `PayloadForm` preview mode guards both submit handlers, disables the submit button, and skips spam widgets, analytics and draft persistence. No schema changes.
+
+Problems solved: forms had no admin preview; duplicating the apply render path would let preview drift from public forms; a draft cookie alone cannot authorize a private preview; disabling only a button leaves other submission paths active.
+
 Step 4 implementation (2026-11-10): `src/forms/templates.ts` owns registration form selection and copying. Collection hooks copy the matching default before destination validation, in the same transaction. A Bridge year is a new programme with `kind: bridge`. Cycles and Bridge years copy only at creation; courses also copy when changing to own site-form registration. Payload's duplicate operation preserves every template locale, including nested labels, confirmations and emails; form titles are not localized. The shared registration relationship excludes templates and rejects them server-side even for drafts. Seeds fill all three defaults after snapshot restore or before development entities are seeded.
 
 Migration verification: `20261110_140348_registration_templates` was generated with the Payload CLI, applied successfully to a throwaway copy of `cilas_dev`, and checked for the new table and checkbox column. The copy was dropped and the dev database migrated.

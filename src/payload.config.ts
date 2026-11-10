@@ -45,6 +45,7 @@ import { SpaceIntroduction } from './globals/SpaceIntroduction'
 import { SpaceRules } from './globals/SpaceRules'
 import { resendAdapter } from '@payloadcms/email-resend'
 import { formBuilderPlugin } from '@payloadcms/plugin-form-builder'
+import { previewUrl } from '@/lib/preview-url'
 import { importExportPlugin } from '@payloadcms/plugin-import-export'
 import { ensureNameEmail, formFields } from './forms/form-fields'
 import { notifyNewApplication } from './forms/notify-application'
@@ -285,6 +286,8 @@ export default buildConfig({
       formOverrides: {
         admin: {
           defaultColumns: ['title', 'template', 'updatedAt'],
+          livePreview: { url: previewUrl('forms') },
+          preview: (data, { locale }) => previewUrl('forms')({ data, locale: { code: locale } }),
         },
         fields: ({ defaultFields }) => [
           {

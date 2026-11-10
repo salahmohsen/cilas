@@ -7,16 +7,12 @@ import type { Metadata } from 'next'
 import { getFormatter, getTranslations } from 'next-intl/server'
 import { notFound } from 'next/navigation'
 import { getPayload } from 'payload'
-import type { ReactNode } from 'react'
 
 import { getBridgeYear } from '@/api/programmes.api'
-import { PayloadForm } from '@/components/forms/payload-form'
-import { publicForm } from '@/forms/public-form'
-import { ResolvedRichTextField as RichTextField } from '@/components/resolved-rich-text-field'
+import { RenderedForm } from '@/components/forms/rendered-form'
 import { Link } from '@/i18n/navigation'
 import { numberingSystemOf } from '@/lib/digits'
 import { registrationStatus } from '@/lib/registration'
-import type { Form } from '@/payload-types'
 
 type Props = { params: Promise<{ locale: string }> }
 
@@ -43,15 +39,13 @@ export default async function ApplyPage({ params }: Props) {
   const formRef = registration?.form
   if (!year || !formRef) notFound()
 
-  const form = publicForm(
-    await payload.findByID({
-      collection: 'forms',
-      id: relId(formRef),
-      depth: 1,
-      locale: lang,
-      fallbackLocale: 'en',
-    }),
-  )
+  const form = await payload.findByID({
+    collection: 'forms',
+    id: relId(formRef),
+    depth: 1,
+    locale: lang,
+    fallbackLocale: 'en',
+  })
 
   const open = registrationStatus(registration) === 'open'
   const deadline = registration?.deadline
@@ -63,17 +57,6 @@ export default async function ApplyPage({ params }: Props) {
         numberingSystem: numberingSystemOf(locale),
       })
     : null
-
-  // The form's text blocks and its confirmation, rendered here and handed to the form.
-  const notes: Record<string, ReactNode> = {}
-  for (const block of form.fields ?? []) {
-    if (block.blockType === 'message' && block.message && block.id) {
-      notes[block.id] = <RichTextField className="article-prose" data={block.message} />
-    }
-  }
-  const confirmation = form.confirmationMessage ? (
-    <RichTextField className="article-prose" data={form.confirmationMessage} />
-  ) : null
 
   return (
     <div className="apply-page mx-auto w-full max-w-3xl px-4 py-10 sm:px-8 sm:py-14">
@@ -100,14 +83,12 @@ export default async function ApplyPage({ params }: Props) {
       </div>
 
       {/* The questions are written in English, so they read left to right on either page. */}
-      <PayloadForm
+      <RenderedForm
         analytics={{ kind: 'programme', id: 'bridge' }}
         back={{ href: BRIDGE_PATH, label: t('backTo', { title: year.programme.title }) }}
-        confirmation={confirmation}
         disabled={!open}
         form={form}
         lang="en"
-        notes={notes}
         target={{ relationTo: 'programmes', value: year.programme.id }}
       />
     </div>

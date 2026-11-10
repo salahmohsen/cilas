@@ -35,7 +35,6 @@ const emptyFor = (q: Question): Answer =>
       ? false
       : ''
 const isFiles = (q: Question) => q.blockType === 'fileUpload'
-/** The files a question holds that passed the picker's checks. */
 const goodFiles = (value: Answer | undefined) =>
   Array.isArray(value)
     ? (value as FileUploadItem[]).filter((i) => typeof i === 'object' && !i.error)
@@ -87,6 +86,7 @@ export function PayloadForm({
   back,
   lang,
   disabled = false,
+  preview = false,
   target,
   analytics,
 }: {
@@ -102,6 +102,7 @@ export function PayloadForm({
   lang?: string
   /** The questions are shown to read, not to answer (applications closed). */
   disabled?: boolean
+  preview?: boolean
 }) {
   const t = useTranslations('Forms')
   const blocks = form.fields ?? []
@@ -124,7 +125,6 @@ export function PayloadForm({
     () => (!disabled && session?.email ? { name: sessionName, email: session.email } : null),
     [disabled, session?.email, sessionName],
   )
-  /** A question the account fills: email always signed in, name with a person. */
   const locked = (q: Question) =>
     Boolean(me) && (q.name === 'email' || (q.name === 'name' && Boolean(me?.name)))
 
@@ -155,7 +155,6 @@ export function PayloadForm({
   // Answers as the admin reads them: the chosen options' labels, not their values.
   const readable = (q: Question, value: Answer): string => {
     const label = (v: string) => optionsOf(q).find((o) => o.value === v)?.label ?? v
-    // Files: the server writes their download links in.
     if (isFiles(q)) return ''
     if (Array.isArray(value)) return (value as string[]).map(label).join(', ')
     if (typeof value === 'boolean') return value ? 'Yes' : 'No'
@@ -165,6 +164,7 @@ export function PayloadForm({
   const api = useForm({
     defaultValues: Object.fromEntries(questions.map((q) => [q.name, emptyFor(q)])) as Values,
     onSubmit: async ({ value }) => {
+      if (preview || disabled) return
       setFailed(false)
       const sent = {
         form: form.id,
@@ -210,7 +210,7 @@ export function PayloadForm({
   // what a signed-in account holds (its identity, not a draft).
   const skip = me ? [...givenNames.split('\n'), ...fileNames.split('\n')] : fileNames.split('\n')
   const { clear: clearDraft } = useDraft<Values>(draftKey, {
-    enabled: !disabled,
+    enabled: !disabled && !preview,
     draft: sent
       ? null
       : Object.fromEntries(
@@ -461,14 +461,14 @@ export function PayloadForm({
       noValidate
       // The first time someone enters a field: they have started. Nothing they type is sent.
       onFocusCapture={() => {
-        if (!analytics || disabled || started.current) return
+        if (!analytics || disabled || preview || started.current) return
         started.current = true
         track('apply_started', analytics)
       }}
       onSubmit={(e) => {
         e.preventDefault()
         e.stopPropagation()
-        api.handleSubmit()
+        if (!preview && !disabled) api.handleSubmit()
       }}
     >
       <div ref={top} />
@@ -499,8 +499,15 @@ export function PayloadForm({
         })}
       </fieldset>
 
-      {disabled ? null : spam.fields}
-      {disabled ? null : (
+      {disabled || preview ? null : spam.fields}
+      {preview ? (
+        <div className="payload-form-actions">
+          <button className="course-apply payload-form-submit" disabled type="submit">
+            {form.submitButtonLabel ?? t('submit')}
+          </button>
+          <p className="payload-form-status">{t('preview')}</p>
+        </div>
+      ) : disabled ? null : (
         <api.Subscribe
           selector={(s) =>
             [s.isSubmitting, s.submissionAttempts, s.errors.length, s.fieldMeta] as const

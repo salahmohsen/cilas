@@ -1,5 +1,5 @@
 // @vitest-environment jsdom
-import { cleanup, fireEvent, render, screen, waitFor } from '@testing-library/react'
+import { act, cleanup, fireEvent, render, screen, waitFor } from '@testing-library/react'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 
 import { PayloadForm } from '@/components/forms/payload-form'
@@ -67,6 +67,18 @@ describe('the payload form', () => {
   afterEach(() => {
     vi.unstubAllGlobals()
     cleanup()
+  })
+
+  it('never posts from preview, including a programmatic form submit', async () => {
+    const { container } = render(<PayloadForm confirmation={null} form={formOf([])} preview />)
+    const name = await screen.findByRole('textbox', { name: /Name/ })
+    await waitFor(() => expect(name).toHaveValue('Mona Adel'))
+    expect(screen.getByRole('button', { name: /submit/i })).toBeDisabled()
+    expect(screen.getByText('preview')).toBeInTheDocument()
+    await act(async () => {
+      fireEvent.submit(container.querySelector('form')!)
+    })
+    expect(sent.filter((request) => request.method === 'POST')).toEqual([])
   })
 
   it('renders a select question as a dropdown, not a text input', async () => {

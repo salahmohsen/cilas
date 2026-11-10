@@ -7,12 +7,9 @@ import type { Metadata } from 'next'
 import { getFormatter, getTranslations } from 'next-intl/server'
 import { notFound } from 'next/navigation'
 import { getPayload } from 'payload'
-import type { ReactNode } from 'react'
 
 import type { Reader } from '@/lib/reader'
-import { PayloadForm } from '@/components/forms/payload-form'
-import { publicForm } from '@/forms/public-form'
-import { ResolvedRichTextField as RichTextField } from '@/components/resolved-rich-text-field'
+import { RenderedForm } from '@/components/forms/rendered-form'
 import { Link } from '@/i18n/navigation'
 import { numberingSystemOf } from '@/lib/digits'
 import { courseRegistration } from '@/lib/registration'
@@ -60,15 +57,13 @@ export async function CourseApplyPage({
   const { method, formId } = registration
   if (method !== 'form' || !formId) notFound()
 
-  const shared = publicForm(
-    await payload.findByID({
-      collection: 'forms',
-      id: formId,
-      depth: 1,
-      locale: lang,
-      fallbackLocale: 'en',
-    }),
-  )
+  const shared = await payload.findByID({
+    collection: 'forms',
+    id: formId,
+    depth: 1,
+    locale: lang,
+    fallbackLocale: 'en',
+  })
   // The course's own questions after the form's. Their names take a prefix,
   // so none can overwrite an answer to the shared form.
   const extra = (course.applicant_questions ?? []).map((q) => ({
@@ -89,16 +84,6 @@ export async function CourseApplyPage({
       })
     : null
 
-  const notes: Record<string, ReactNode> = {}
-  for (const block of form.fields ?? []) {
-    if (block.blockType === 'message' && block.message && block.id) {
-      notes[block.id] = <RichTextField className="article-prose" data={block.message} />
-    }
-  }
-  const confirmation = form.confirmationMessage ? (
-    <RichTextField className="article-prose" data={form.confirmationMessage} />
-  ) : null
-
   const back = detailPath('courses', String(course.slug))
   return (
     <div className="apply-page mx-auto w-full max-w-3xl px-4 py-10 sm:px-8 sm:py-14">
@@ -116,13 +101,11 @@ export async function CourseApplyPage({
         </p>
       </div>
 
-      <PayloadForm
+      <RenderedForm
         analytics={{ kind: 'course', id: course.slug }}
         back={{ href: back, label: t('backTo', { title: course.title }) }}
-        confirmation={confirmation}
         disabled={!open}
         form={form}
-        notes={notes}
         target={{ relationTo: 'courses', value: course.id }}
       />
     </div>

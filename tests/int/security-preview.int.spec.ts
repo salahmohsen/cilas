@@ -12,16 +12,21 @@ vi.mock('next/headers.js', () => ({
   draftMode: async () => ({ enable }),
 }))
 vi.mock('next/navigation', () => ({
+  notFound: () => {
+    throw new Error('notFound')
+  },
   redirect: (url: string) => {
     throw new Error(`redirect:${url}`)
   },
 }))
+vi.mock('@/components/forms/rendered-form', () => ({ RenderedForm: () => null }))
 
 import config from '@/payload.config'
 import { getArticleForReading } from '@/api/articles.api'
 import { getBridgeYear } from '@/api/programmes.api'
 import type { User } from '@/payload-types'
 import { GET } from '@/app/(frontend)/api/preview/route'
+import FormPreviewPage from '@/app/(frontend)/[locale]/forms/preview/page'
 
 import { uniq } from './fixtures'
 
@@ -36,12 +41,39 @@ describe('draft preview authorization', () => {
   let article: number
   let programme: number
   let course: number
+  let form: number
   let owner: User
   let stranger: User
   const admin = { id: -1, collection: 'users', roles: ['admin'] } as User
 
   beforeAll(async () => {
     payload = await getPayload({ config })
+    form = (
+      await payload.create({
+        collection: 'forms',
+        data: {
+          title: 'Preview template',
+          template: true,
+          fields: [],
+          confirmationMessage: {
+            root: {
+              type: 'root',
+              version: 1,
+              direction: 'ltr',
+              format: '',
+              indent: 0,
+              children: [
+                {
+                  type: 'paragraph',
+                  version: 1,
+                  children: [{ type: 'text', version: 1, text: 'Received' }],
+                },
+              ],
+            },
+          },
+        },
+      })
+    ).id
     person = (
       await payload.create({
         collection: 'people',
@@ -94,6 +126,7 @@ describe('draft preview authorization', () => {
   })
 
   afterAll(async () => {
+    if (form) await payload.delete({ collection: 'forms', id: form })
     if (course) await payload.delete({ collection: 'courses', id: course })
     if (programme) await payload.delete({ collection: 'programmes', id: programme })
     if (article) await payload.delete({ collection: 'articles', id: article })
@@ -182,5 +215,31 @@ describe('draft preview authorization', () => {
       GET(new Request(`http://localhost/api/preview?collection=courses&slug=${COURSE_SLUG}`)),
     ).rejects.toThrow(`redirect:/en/study/${COURSE_SLUG}`)
     expect(enable).toHaveBeenCalledOnce()
+  })
+
+  it.each([null, 'member', 'fellow'])('refuses form previews for %s', async (role) => {
+    vi.spyOn(payload, 'auth').mockResolvedValue({
+      user: role ? { ...owner, roles: [role] } : null,
+    } as Awaited<ReturnType<Payload['auth']>>)
+    const response = await GET(
+      new Request(`http://localhost/api/preview?collection=forms&id=${form}`),
+    )
+    expect(response.status).toBe(403)
+    expect(enable).not.toHaveBeenCalled()
+    await expect(
+      FormPreviewPage({
+        params: Promise.resolve({ locale: 'en' }),
+        searchParams: Promise.resolve({ form: String(form) }),
+      }),
+    ).rejects.toThrow('notFound')
+  })
+
+  it.each(['en', 'ar'])('opens the form template preview in %s for an admin', async (locale) => {
+    vi.spyOn(payload, 'auth').mockResolvedValue({ user: admin } as Awaited<
+      ReturnType<Payload['auth']>
+    >)
+    await expect(
+      GET(new Request(`http://localhost/api/preview?collection=forms&id=${form}&locale=${locale}`)),
+    ).rejects.toThrow(`redirect:/${locale}/forms/preview?form=${form}`)
   })
 })

@@ -25,8 +25,9 @@ export async function GET(request: Request) {
   const { searchParams } = new URL(request.url)
   const slug = searchParams.get('slug')
   const collection = searchParams.get('collection')
+  const target = collection === 'forms' ? searchParams.get('id') : slug
 
-  if (!slug || !isPreviewCollection(collection)) {
+  if (!target || !isPreviewCollection(collection)) {
     return new Response('Missing or unsupported preview target', { status: 400 })
   }
 
@@ -46,7 +47,7 @@ export async function GET(request: Request) {
 
   const { docs } = await payload.find({
     collection,
-    where: { and: [{ slug: { equals: slug } }, canUpdate] },
+    where: { and: [{ [collection === 'forms' ? 'id' : 'slug']: { equals: target } }, canUpdate] },
     limit: 1,
     depth: 0,
     overrideAccess: false,
@@ -62,7 +63,6 @@ export async function GET(request: Request) {
   const draft = await draftMode()
   draft.enable()
 
-  // pathOf, not a hand-built path: the course route has moved before.
   // The language being edited (live preview passes it), else the editor's
   // saved site language, else English.
   const asked = searchParams.get('locale')
@@ -74,11 +74,13 @@ export async function GET(request: Request) {
   )
   // A programme has no page of its own: the Bridge page shows the one it is given.
   const path =
-    collection === 'programmes'
-      ? 'kind' in doc && doc.kind === 'bridge'
-        ? `/${saved}${BRIDGE_PATH}?programme=${encodeURIComponent(slug)}`
-        : null
-      : pathOf(collection, doc, saved)
+    collection === 'forms'
+      ? `/${saved}/forms/preview?form=${doc.id}`
+      : collection === 'programmes'
+        ? 'kind' in doc && doc.kind === 'bridge'
+          ? `/${saved}${BRIDGE_PATH}?programme=${encodeURIComponent(target)}`
+          : null
+        : pathOf(collection, { slug: target }, saved)
   if (!path) {
     return new Response('This document has no page', { status: 404 })
   }

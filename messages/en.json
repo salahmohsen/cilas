@@ -585,6 +585,7 @@
     "alexandria": "Alexandria"
   },
   "Forms": {
+    "preview": "Preview: submitting is turned off",
     "sent": "Application sent",
     "optional": "optional",
     "required": "This question needs an answer.",
