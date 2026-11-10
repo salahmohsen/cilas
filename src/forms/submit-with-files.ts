@@ -6,7 +6,8 @@ import { relId } from '@/lib/relation'
 import type { FormSubmission } from '@/payload-types'
 import { checkTurnstile, TURNSTILE_VERIFIED } from '@/lib/turnstile'
 import { PUBLIC_APPLICATION_SUBMISSION, validateApplication } from './application-validation'
-import { choiceFileField, type ApplicationInput } from './application-input'
+import type { ApplicationInput } from './application-input'
+import { choiceField } from './application-choices'
 
 type FileQuestion = FileRule & { blockType: 'fileUpload'; name: string; required?: boolean | null }
 type Sent = ApplicationInput & {
@@ -50,7 +51,7 @@ const fileQuestionsOf = async (req: PayloadRequest, sent: Sent): Promise<FileAns
     for (const question of course.applicant_questions ?? []) {
       if (question.blockType !== 'fileUpload') continue
       questions.push({
-        key: choiceFileField(course.id, question.name),
+        key: choiceField(course.id, question.name),
         question,
         set: (value) => {
           choice.answers = [

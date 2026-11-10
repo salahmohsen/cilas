@@ -8,5 +8,3 @@ export type ApplicationInput = {
   choices?: ApplicationChoice[] | null
   submissionData?: FormSubmission['submissionData']
 }
-
-export const choiceFileField = (course: number, name: string): string => `choice:${course}:${name}`

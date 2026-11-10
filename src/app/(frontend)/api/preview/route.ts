@@ -7,7 +7,7 @@ import { getPayload } from 'payload'
 
 import { pathOf } from '@/lib/paths'
 import { previewWhere } from '@/lib/preview-access'
-import { isPreviewCollection } from '@/lib/preview-url'
+import { isPreviewCollection, PREVIEW_TARGET_FIELDS } from '@/lib/preview-url'
 import { localeOf, routing } from '@/i18n/routing'
 
 /**
@@ -23,11 +23,11 @@ import { localeOf, routing } from '@/i18n/routing'
 export async function GET(request: Request) {
   const payload = await getPayload({ config })
   const { searchParams } = new URL(request.url)
-  const slug = searchParams.get('slug')
   const collection = searchParams.get('collection')
-  const target = collection === 'forms' ? searchParams.get('id') : slug
-
-  if (!target || !isPreviewCollection(collection)) {
+  const target = isPreviewCollection(collection)
+    ? searchParams.get(PREVIEW_TARGET_FIELDS[collection])
+    : null
+  if (!isPreviewCollection(collection) || !target) {
     return new Response('Missing or unsupported preview target', { status: 400 })
   }
 
@@ -47,7 +47,7 @@ export async function GET(request: Request) {
 
   const { docs } = await payload.find({
     collection,
-    where: { and: [{ [collection === 'forms' ? 'id' : 'slug']: { equals: target } }, canUpdate] },
+    where: { and: [{ [PREVIEW_TARGET_FIELDS[collection]]: { equals: target } }, canUpdate] },
     limit: 1,
     depth: 0,
     overrideAccess: false,

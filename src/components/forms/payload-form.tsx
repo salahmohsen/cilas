@@ -11,7 +11,7 @@ import { localDigits } from '@/lib/digits'
 import { amountsOf, defaultAmountOf, formatAmount } from '@/lib/pricing'
 import {
   amountKey,
-  courseField,
+  choiceField,
   reductionKey,
   selectedKey,
   type ApplicationContext,
@@ -116,7 +116,7 @@ export function PayloadForm({
   const questionsFor = (value: Values) => [
     ...sharedQuestions,
     ...selectedCourses(value).flatMap((c) =>
-      c.questions.map((q) => ({ ...q, name: courseField(c.id, q.name) }) as Question),
+      c.questions.map((q) => ({ ...q, name: choiceField(c.id, q.name) }) as Question),
     ),
   ]
   const draftKey = `cilas-form-${form.id}`
@@ -204,7 +204,7 @@ export function PayloadForm({
                   name: q.name,
                   value: readable(
                     q as Question,
-                    value[courseField(c.id, q.name)] ?? emptyFor(q as Question),
+                    value[choiceField(c.id, q.name)] ?? emptyFor(q as Question),
                   ),
                 })),
               })),
@@ -569,7 +569,7 @@ export function PayloadForm({
                             const ids = field.state.value as string[]
                             if (!on) {
                               for (const q of c.questions)
-                                api.deleteField(courseField(c.id, q.name))
+                                api.deleteField(choiceField(c.id, q.name))
                               api.setFieldValue(
                                 amountKey(c.id),
                                 String(defaultAmountOf(c.contribution) ?? ''),
@@ -606,7 +606,7 @@ export function PayloadForm({
                   </div>
                   {c.questions.length ? <p>{t('extraQuestions')}</p> : null}
                   {c.questions.map((q) =>
-                    renderQuestion({ ...q, name: courseField(c.id, q.name) } as Question),
+                    renderQuestion({ ...q, name: choiceField(c.id, q.name) } as Question),
                   )}
                   {amounts.length > 1 ? (
                     <api.Field name={amountKey(c.id)}>

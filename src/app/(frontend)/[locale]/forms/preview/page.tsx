@@ -2,12 +2,13 @@ import config from '@payload-config'
 import type { Metadata } from 'next'
 import { headers } from 'next/headers'
 import { notFound } from 'next/navigation'
-import { getPayload } from 'payload'
+import { getPayload, type Payload, type Where } from 'payload'
 
 import { RenderedForm } from '@/components/forms/rendered-form'
 import { localeOf } from '@/i18n/routing'
 import { fullFormPreview } from '@/forms/preview-context'
 import { previewWhere } from '@/lib/preview-access'
+import type { Form, User } from '@/payload-types'
 
 export const metadata: Metadata = { robots: { index: false, follow: false } }
 
@@ -25,23 +26,28 @@ export default async function FormPreviewPage({
 
   const query = await searchParams
   const { locale } = await params
-  if (query.context) {
-    const preview = await fullFormPreview(payload, user, query.context, Number(query.id), locale)
-    if (!preview) notFound()
-    return (
-      <div className="apply-page mx-auto w-full max-w-3xl px-4 py-10 sm:px-8 sm:py-14">
-        <h1 className="course-title mb-8">{preview.title}</h1>
-        <RenderedForm
-          form={preview.form}
-          application={preview.application}
-          lang={localeOf(locale)}
-          preview
-        />
-      </div>
-    )
-  }
-  const { form: id } = query
-  if (!id) notFound()
+  const preview = query.context
+    ? await fullFormPreview(payload, user, query.context, Number(query.id), locale)
+    : await ownFormPreview(payload, user, canUpdate, query.form, locale)
+  if (!preview) notFound()
+  const { title, form, application } = preview
+
+  return (
+    <div className="apply-page mx-auto w-full max-w-3xl px-4 py-10 sm:px-8 sm:py-14">
+      <h1 className="course-title mb-8">{title}</h1>
+      <RenderedForm form={form} application={application} lang={localeOf(locale)} preview />
+    </div>
+  )
+}
+
+async function ownFormPreview(
+  payload: Payload,
+  user: User | null,
+  canUpdate: Where,
+  id: string | undefined,
+  locale: string,
+): Promise<{ title: string; form: Form; application?: undefined } | null> {
+  if (!id) return null
   const { docs } = await payload.find({
     collection: 'forms',
     where: { and: [{ id: { equals: id } }, canUpdate] },
@@ -53,12 +59,5 @@ export default async function FormPreviewPage({
     user,
   })
   const form = docs[0]
-  if (!form) notFound()
-
-  return (
-    <div className="apply-page mx-auto w-full max-w-3xl px-4 py-10 sm:px-8 sm:py-14">
-      <h1 className="course-title mb-8">{form.title}</h1>
-      <RenderedForm form={form} lang={localeOf(locale)} preview />
-    </div>
-  )
+  return form ? { title: form.title, form } : null
 }

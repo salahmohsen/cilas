@@ -15,6 +15,6 @@ export type ApplicationContext = {
 }
 
 export const selectedKey = '$courses'
-export { choiceFileField as courseField } from '@/forms/application-input'
+export const choiceField = (course: number, name: string) => `choice:${course}:${name}`
 export const amountKey = (id: number) => `$amount:${id}`
 export const reductionKey = (id: number) => `$reduction:${id}`
