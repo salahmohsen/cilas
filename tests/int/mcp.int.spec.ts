@@ -290,7 +290,7 @@ describe('admin-only MCP server', () => {
         fellows: [personId],
         teaching_languages: ['ar', 'en'],
         location: ['ONLINE'],
-        registration: { method: 'closed' },
+        registration: { mode: 'closed' },
       })
       expect(isError, text).toBe(false)
       courseId = track('courses', json).id
@@ -352,7 +352,7 @@ describe('admin-only MCP server', () => {
         english.description as { root: { children: Array<{ type: string }> } }
       ).root.children.map((c) => c.type)
       expect(types).toEqual(expect.arrayContaining(['heading', 'paragraph', 'list']))
-      expect(english.registration?.method).toBe('closed')
+      expect(english.registration?.mode).toBe('closed')
       expect(english.cycle).toBe(cycleId)
     })
 
@@ -403,7 +403,7 @@ describe('admin-only MCP server', () => {
             course_type: 'CORE',
             cycle: cycleId,
             tier: 'public',
-            registration: { method: 'closed' },
+            registration: { mode: 'closed' },
           } as never,
           user: { ...admin, collection: 'users' } as never,
           overrideAccess: true,
@@ -441,7 +441,7 @@ describe('admin-only MCP server', () => {
         overrideAccess: true,
       })
       expect(live._status).toBe('published')
-      expect(live.registration?.method).toBe('closed')
+      expect(live.registration?.mode).toBe('closed')
       expect(live.registration?.form ?? null).toBeNull()
 
       const draft = await payload.findByID({
@@ -620,7 +620,7 @@ describe('admin-only MCP server', () => {
   })
 
   describe('create_course_draft web address', () => {
-    const base = { course_type: 'CORE', registration: { method: 'closed' } }
+    const base = { course_type: 'CORE', registration: { mode: 'closed' } }
 
     it('gives a second course with the same title a different address, and says so', async () => {
       const title = uniq('Same Title')
@@ -703,7 +703,7 @@ describe('admin-only MCP server', () => {
             course_type: 'CORE',
             cycle: cycleId,
             tier: 'public',
-            registration: { method: 'closed' },
+            registration: { mode: 'closed' },
           } as never,
           user: { ...admin, collection: 'users' } as never,
           overrideAccess: true,

@@ -6,7 +6,6 @@ import {
   TEACHING_LANGUAGE_OPTIONS,
 } from '@/fields/course-options'
 import { LANGUAGE_OPTIONS } from '@/fields/language'
-import { REGISTRATION_METHODS } from '@/lib/registration'
 
 import { CHOICE_QUESTION_TYPES, TEXT_QUESTION_TYPES } from './form-questions'
 
@@ -33,7 +32,7 @@ export const courseGuide = (): string => `# Course drafts
 Tools: create_course_draft and update_course_draft (id required for update).
 ${writingRules}
 Look up existing courses, the cycle, fellows and any form first.
-Required on create: title.en, cycle, course_type.
+Required on create: title.en, course_type. Cycle is optional for drafts and required at approval or publication.
 Course types:\n${list(COURSE_TYPE_OPTIONS)}
 Locations:\n${list(LOCATION_OPTIONS)}
 Teaching languages:\n${list(TEACHING_LANGUAGE_OPTIONS)}
@@ -42,7 +41,7 @@ Session units:\n${list(SESSION_UNIT_OPTIONS)}
 Schedule shape: { start_date, start_precision: "day" | "week", weeks, slots: [{ weekday, start_time, end_time }], note: { en?, ar? } }. Times are 24-hour HH:MM in Africa/Cairo. Dates come from the shared expansion (ADR 0002); do not materialize generated dates into sessions. A start date must match one of the weekly slots unless precision is week. Conflicting dates and weekdays must be clarified with the person. Session dates, when explicitly supplied, replace the generated dates for that session and are saved as supplied.
 Sessions use order, session_title (localized), meetings, cancelled, description (localized Markdown), dates [{date,start_time,end_time}], bibliography [{type,title,href,note}], and activities [{kind,description}].
 For a per-session delivery split, set sessions[].delivery to ONLINE, OFFLINE or HYBRID using the same values as course location. Empty delivery inherits the course-level location. When sessions differ, set course location to ["HYBRID"]. Use schedule.note for additional schedule notes.
-Registration uses method (${REGISTRATION_METHODS.join(', ')}), form, url, deadline. Empty registration fields use the cycle values, as resolved by courseRegistration(); no "inherit" enum. Applicant questions are real blocks with blockType and the fields in the schema; never add them to external registration.
+Registration uses mode: follow_cycle (default), own, or closed. follow_cycle uses the cycle destination and deadline, with optional close_early (last day in Cairo). own uses method (form or external), form or url, and deadline without cycle fallback. closed takes no applications. Applicant questions are real blocks with blockType and the fields in the schema; they are unused with external registration.
 Contribution override uses options [{amount,default}] with nonnegative EGP amounts and exactly one default when options exist, localized note and need_based_deductions. Payment plans are available only on programmes.
 ${contract('courses')}
 `
@@ -74,7 +73,7 @@ File uploads, country and state menus, and text blocks are not available here.
 A form with the same English title as an existing one is refused, and the answer names it: a repeated request would otherwise make a second form. Tell the user, and ask them to check the first one. Only if they really want two with the same title, call again with \`create_another: true\`.
 
 ## Linking
-\`link: { target: "course", id }\` sets the course's registration to this form.
+\`link: { target: "course", id }\` sets the course to own registration using this form.
 - A draft course stays a draft.
 - A published course is not touched: the link is saved as a draft beside the live page, and a person publishes it.
 - A cycle cannot be linked here: it has no drafts, so it would change at once. Say so and tell the user to do it in the admin.

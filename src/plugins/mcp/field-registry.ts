@@ -36,7 +36,6 @@ export const FIELD_REGISTRY = {
       effective_settings: 'Admin UI',
       enrollments: 'Join',
       'schedule.end_date': 'Computed by the shared schedule expansion',
-      'registration.archived_registration_url': 'Import provenance',
       'meta.overview': 'Admin UI',
       'meta.preview': 'Admin UI',
     },

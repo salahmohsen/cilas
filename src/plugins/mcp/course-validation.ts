@@ -33,13 +33,13 @@ export function validateCourse(input: Data) {
     throw new ToolInputError('schedule.start_date is not a real date')
   if (s) expandSchedule(s, input.sessions)
   validate(validateContributionOptions(input.pricing_override?.options), 'pricing_override.options')
-  if (input.registration?.method === 'form' && !input.registration.form)
+  const own = input.registration?.mode === 'own'
+  if (own && !['form', 'external'].includes(input.registration.method))
+    throw new ToolInputError('registration.method: Choose form or external for own registration.')
+  if (own && input.registration?.method === 'form' && !input.registration.form)
     throw new ToolInputError('registration.form: Choose a registration form.')
-  if (input.registration?.method === 'external' && !input.registration.url)
+  if (own && input.registration?.method === 'external' && !input.registration.url)
     throw new ToolInputError('registration.url: Enter the external registration URL.')
-  if (input.registration?.url) validate(httpUrl(input.registration.url), 'registration.url')
-  if (input.registration?.method === 'external' && input.applicant_questions?.length)
-    throw new ToolInputError(
-      'Applicant questions are not used with external registration. Remove them or choose a site form.',
-    )
+  if (own && input.registration?.method === 'external' && input.registration?.url)
+    validate(httpUrl(input.registration.url), 'registration.url')
 }

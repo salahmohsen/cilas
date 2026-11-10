@@ -23,6 +23,8 @@ async function prepare(
   input: Data,
   ctx: ToolContext,
   locale: 'en' | 'ar',
+  validateFields = true,
+  data: Data = input,
 ): Promise<Data> {
   const result: Data = {}
   for (const field of flattenFields(fields)) {
@@ -31,6 +33,15 @@ async function prepare(
     let value = input[name]
     if (value === undefined) continue
     const localized = 'localized' in field && field.localized
+    const shouldValidate =
+      validateFields &&
+      (!field.admin?.condition ||
+        field.admin.condition(data, input, {
+          user: ctx.user,
+          blockData: input,
+          operation: 'update',
+          path: [name],
+        }))
     if (localized && value !== null) {
       if (value[locale] === undefined) continue
       value = value[locale]
@@ -45,17 +56,25 @@ async function prepare(
     } else if (field.type === 'array')
       value = await Promise.all(
         value.map(async (row: Data) => ({
-          ...(await prepare(field.fields, row, ctx, locale)),
+          ...(await prepare(field.fields, row, ctx, locale, shouldValidate, data)),
           id: row.id,
         })),
       )
-    else if ('fields' in field) value = await prepare(field.fields, value, ctx, locale)
+    else if ('fields' in field)
+      value = await prepare(field.fields, value, ctx, locale, shouldValidate, data)
     else if (field.type === 'blocks')
       value = await Promise.all(
         value.map(async (row: Data) => {
           const block = field.blocks.find((b) => typeof b !== 'string' && b.slug === row.blockType)
           return {
-            ...(await prepare(typeof block === 'object' ? block.fields : [], row, ctx, locale)),
+            ...(await prepare(
+              typeof block === 'object' ? block.fields : [],
+              row,
+              ctx,
+              locale,
+              shouldValidate,
+              data,
+            )),
             id: row.id,
             blockType: row.blockType,
           }
@@ -69,7 +88,7 @@ async function prepare(
         name,
       )
     }
-    if ('validate' in field && typeof field.validate === 'function') {
+    if (shouldValidate && 'validate' in field && typeof field.validate === 'function') {
       const valid = await field.validate(
         value as never,
         { data: input, siblingData: result, req: ctx.req, operation: 'update' } as never,
@@ -123,27 +142,41 @@ export async function writeDraft(
   const fields = fieldsFor(collection)
   for (const [name, value] of Object.entries(input))
     if (name !== 'source_unmapped') assignIds(value)
-  const en = await prepare(fields, input, ctx, 'en')
-  const ar =
-    hasArabic(input) || hasNull(input) ? await prepare(fields, input, ctx, 'ar') : undefined
   const { payload, req, user } = ctx
+  let ar: Data | undefined
   const doc = await inTransaction(req, async () => {
-    if (documentId && collection === 'courses') {
-      const current = await payload.findByID({
-        collection,
-        id: documentId,
-        draft: true,
-        depth: 0,
-        overrideAccess: false,
-        req,
-        user,
-      })
+    const current =
+      documentId && collection === 'courses'
+        ? await payload.findByID({
+            collection,
+            id: documentId,
+            draft: true,
+            depth: 0,
+            overrideAccess: false,
+            req,
+            user,
+          })
+        : null
+    const data = {
+      ...current,
+      ...input,
+      registration: { ...current?.registration, ...input.registration },
+    }
+    const en = await prepare(fields, input, ctx, 'en', true, data)
+    ar =
+      hasArabic(input) || hasNull(input)
+        ? await prepare(fields, input, ctx, 'ar', true, data)
+        : undefined
+    if (current) {
       validateCourse({
         ...current,
         ...en,
         schedule: en.schedule === null ? null : { ...current.schedule, ...en.schedule },
-        registration:
-          en.registration === null ? null : { ...current.registration, ...en.registration },
+        registration: {
+          ...current.registration,
+          ...en.registration,
+          mode: en.registration?.mode ?? current.registration?.mode ?? 'follow_cycle',
+        },
         pricing_override:
           en.pricing_override === null
             ? null

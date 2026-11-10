@@ -285,7 +285,7 @@ describe('the application flow, from the questions to the enrollment', () => {
       collection: 'courses',
       id: course.id,
       // Applications go only to a course that is on the site.
-      data: { registration: { method: 'form', form: form.id }, _status: 'published' },
+      data: { registration: { mode: 'own', method: 'form', form: form.id }, _status: 'published' },
       overrideAccess: true,
     })
   })
@@ -404,7 +404,9 @@ describe('the application flow, from the questions to the enrollment', () => {
     await payload.update({
       collection: 'courses',
       id: course.id,
-      data: { registration: { method: 'form', form: form.id, deadline: '2020-01-01' } },
+      data: {
+        registration: { mode: 'own', method: 'form', form: form.id, deadline: '2020-01-01' },
+      },
       overrideAccess: true,
     })
 
@@ -420,7 +422,7 @@ describe('the application flow, from the questions to the enrollment', () => {
     await payload.update({
       collection: 'courses',
       id: course.id,
-      data: { registration: { method: 'form', form: form.id, deadline: null } },
+      data: { registration: { mode: 'own', method: 'form', form: form.id, deadline: null } },
       overrideAccess: true,
     })
     const after = await restCreate('late@cilas.test', [{ field: 'track', value: 'Film' }])

@@ -263,6 +263,7 @@ const seedCourse = async (cycleId: number, personId: number, coverId: number | n
       sessions,
       session_unit: 'session',
       registration: {
+        mode: 'own',
         method: 'external',
         url: FORM_URL,
         deadline: APPLICATION_DEADLINE,

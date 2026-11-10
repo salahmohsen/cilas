@@ -167,12 +167,19 @@ describe('complete MCP draft writes', () => {
           slots: [{ weekday: 'sun', start_time: '25:00', end_time: '20:00' }],
         },
       },
-      {
-        registration: { method: 'external', url: 'https://example.org' },
-        applicant_questions: [{ blockType: 'text', name: 'why', label: { en: 'Why?' } }],
-      },
     ])
       expect((await call('update_course_draft', { id, ...changes })).isError).toBe(true)
+    const external = await call('update_course_draft', {
+      id,
+      registration: { mode: 'own', method: 'external', url: 'https://example.org' },
+      applicant_questions: [{ blockType: 'text', name: 'unused' }],
+    })
+    expect(external.isError, external.text).toBeFalsy()
+    const questionsOnly = await call('update_course_draft', {
+      id,
+      applicant_questions: [{ blockType: 'text', name: 'still-unused' }],
+    })
+    expect(questionsOnly.isError, questionsOnly.text).toBeFalsy()
   })
 
   it.each([
@@ -298,7 +305,11 @@ describe('complete MCP draft writes', () => {
       await payload.update({
         collection,
         id,
-        data: { _status: 'published', tier: 'public' } as never,
+        data: {
+          _status: 'published',
+          tier: 'public',
+          ...(collection === 'courses' ? { registration: { mode: 'closed' } } : {}),
+        } as never,
       })
       const read = () =>
         Promise.all(
@@ -382,7 +393,7 @@ describe('complete MCP draft writes', () => {
       ],
       facilitator_note: { en: 'Bring a pen', ar: 'أحضر قلمًا' },
       content_warning: { en: 'Sensitive text' },
-      registration: { method: 'closed', deadline: '2024-09-20' },
+      registration: { mode: 'closed', deadline: '2024-09-20' },
       applicant_questions: [
         {
           blockType: 'textarea',

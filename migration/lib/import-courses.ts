@@ -268,7 +268,7 @@ export const importCourses = async (
         schedule: c.schedule,
         // English paragraphs here; Arabic ones go to the `ar` locale below.
         description: rich(splitLocales(c.description).en),
-        ...(c.register_url ? { registration: { archived_registration_url: c.register_url } } : {}),
+        registration: { mode: 'closed', ...(c.register_url ? { url: c.register_url } : {}) },
         legacy_url: c.legacy_url,
         _status: 'draft',
       },

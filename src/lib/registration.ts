@@ -40,10 +40,16 @@ export const courseRegistration = (
   cycle?: Pick<Cycle, 'registration' | 'pricing'> | null,
   now: Date = new Date(),
 ) => {
-  const method = course.registration?.method ?? cycle?.registration?.method ?? null
-  const formId = relId(course.registration?.form ?? cycle?.registration?.form) ?? null
-  const url = course.registration?.url ?? cycle?.registration?.url ?? null
-  const deadline = cairoDay(course.registration?.deadline ?? cycle?.registration?.deadline ?? '')
+  const mode = course.registration?.mode ?? 'follow_cycle'
+  const source = mode === 'follow_cycle' ? cycle?.registration : course.registration
+  const method = mode === 'closed' ? 'closed' : (source?.method ?? null)
+  const formId = mode === 'closed' ? null : (relId(source?.form) ?? null)
+  const url = mode === 'closed' ? null : (source?.url ?? null)
+  const sourceDeadline = cairoDay(source?.deadline ?? '')
+  const closeEarly =
+    mode === 'follow_cycle' ? cairoDay(course.registration?.close_early ?? '') : null
+  const deadline =
+    closeEarly && (!sourceDeadline || closeEarly < sourceDeadline) ? closeEarly : sourceDeadline
   return {
     status: registrationStatus({ method, deadline }, now),
     method,

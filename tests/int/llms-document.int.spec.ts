@@ -54,6 +54,7 @@ beforeAll(async () => {
         session_unit: 'session',
         tier: 'public',
         cycle: cycle.id,
+        registration: { mode: 'closed' },
         _status: 'published',
         schedule: {
           start_date: '2031-03-04',

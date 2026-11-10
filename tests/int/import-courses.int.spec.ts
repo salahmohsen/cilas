@@ -78,7 +78,7 @@ describe('archive course import', () => {
     })
     expect(docs).toHaveLength(1)
     expect(docs[0]).toMatchObject({ _status: 'published', tier: 'public' })
-    expect(docs[0].registration?.archived_registration_url).toBe('https://forms.gle/probe')
+    expect(docs[0].registration?.url).toBe('https://forms.gle/probe')
     expect((docs[0].fellows as Array<{ name: string }>).map((f) => f.name)).toEqual([FELLOW])
   })
 

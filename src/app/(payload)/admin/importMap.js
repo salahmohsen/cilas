@@ -29,6 +29,7 @@ import { EmailBlocksFeatureClient as EmailBlocksFeatureClient_00a2df3a8033428e8b
 import { SubmitForReview as SubmitForReview_e717629fbfc51f9c28c9696160243a2b } from '../../../components/admin/submit-for-review'
 import { BoolCell as BoolCell_f436cf2a4719114d9e44505773a04007 } from 'payload-theme/client'
 import { SlugField as SlugField_2b8867833a34864a02ddf429b0728a40 } from '@payloadcms/next/client'
+import { CourseCycle as CourseCycle_466d382d61b726658127d89553298bbd } from '../../../components/admin/course-cycle'
 import { CourseSettings as CourseSettings_bd4aa61b33730a12752d095c95c3d51a } from '../../../components/admin/course-settings'
 import { OverviewComponent as OverviewComponent_a8a977ebc872c5d5ea7ee689724c0860 } from '@payloadcms/plugin-seo/client'
 import { MetaTitleComponent as MetaTitleComponent_a8a977ebc872c5d5ea7ee689724c0860 } from '@payloadcms/plugin-seo/client'
@@ -111,6 +112,7 @@ export const importMap = {
   "/components/admin/submit-for-review#SubmitForReview": SubmitForReview_e717629fbfc51f9c28c9696160243a2b,
   "payload-theme/client#BoolCell": BoolCell_f436cf2a4719114d9e44505773a04007,
   "@payloadcms/next/client#SlugField": SlugField_2b8867833a34864a02ddf429b0728a40,
+  "/components/admin/course-cycle#CourseCycle": CourseCycle_466d382d61b726658127d89553298bbd,
   "/components/admin/course-settings#CourseSettings": CourseSettings_bd4aa61b33730a12752d095c95c3d51a,
   "@payloadcms/plugin-seo/client#OverviewComponent": OverviewComponent_a8a977ebc872c5d5ea7ee689724c0860,
   "@payloadcms/plugin-seo/client#MetaTitleComponent": MetaTitleComponent_a8a977ebc872c5d5ea7ee689724c0860,

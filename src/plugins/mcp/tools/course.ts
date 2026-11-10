@@ -32,7 +32,7 @@ const MAX_SLUG = 100
 const chooseSlug = async (
   ctx: ToolContext,
   title: string,
-  cycle: number,
+  cycle: number | undefined,
   wanted: string | undefined,
 ): Promise<{ slug: string; changed: boolean }> => {
   if (wanted) {
@@ -48,16 +48,18 @@ const chooseSlug = async (
   }
   const base = slugify(title).slice(0, MAX_SLUG) || 'course'
   if (!(await courseWithSlug(ctx, base))) return { slug: base, changed: false }
-  const found = await ctx.payload.findByID({
-    collection: 'cycles',
-    id: cycle,
-    depth: 0,
-    select: { slug: true },
-    overrideAccess: false,
-    user: ctx.user,
-    req: ctx.req,
-  })
-  const withCycle = found.slug ? `${base}-${found.slug}`.slice(0, MAX_SLUG) : base
+  const found = cycle
+    ? await ctx.payload.findByID({
+        collection: 'cycles',
+        id: cycle,
+        depth: 0,
+        select: { slug: true },
+        overrideAccess: false,
+        user: ctx.user,
+        req: ctx.req,
+      })
+    : null
+  const withCycle = found?.slug ? `${base}-${found.slug}`.slice(0, MAX_SLUG) : base
   for (let attempt = 1; attempt <= 20; attempt += 1) {
     const slug = attempt === 1 ? withCycle : `${withCycle}-${attempt}`
     if (slug !== base && !(await courseWithSlug(ctx, slug))) return { slug, changed: true }
@@ -77,7 +79,7 @@ export const createCourseDraftTool = adminTool({
     ...courseShape,
     title: localizedText('Course title', 200),
     course_type: z.enum(COURSE_TYPES),
-    cycle: id('cycle'),
+    cycle: id('cycle').optional(),
     source_unmapped: unmappedSchema,
   },
   run: async (input, ctx) => {

@@ -718,14 +718,11 @@ export interface Programme {
     [k: string]: unknown;
   } | null;
   registration?: {
-    /**
-     * Leave empty on a course to use its cycle's.
-     */
     method?: ('form' | 'external' | 'closed') | null;
     form?: (number | null) | Form;
     url?: string | null;
     /**
-     * The last day to register, in Cairo. Empty on a course uses its cycle's.
+     * The last day to register, in Cairo.
      */
     deadline?: string | null;
     archived_registration_url?: string | null;
@@ -901,7 +898,7 @@ export interface Course {
    * Core, Thematic and Lab courses count toward the Bridge; Workshop and Short courses do not.
    */
   course_type: 'CORE' | 'THEMATIC' | 'LAB' | 'WORKSHOP' | 'SHORT';
-  cycle: number | Cycle;
+  cycle?: (number | null) | Cycle;
   /**
    * Offline (in person), Online, or Hybrid (both at once).
    */
@@ -1046,17 +1043,18 @@ export interface Course {
     note?: string | null;
   };
   registration?: {
+    mode: 'follow_cycle' | 'own' | 'closed';
     /**
-     * Leave empty on a course to use its cycle's.
+     * The last day to register, in Cairo.
      */
-    method?: ('form' | 'external' | 'closed') | null;
+    close_early?: string | null;
+    method?: ('form' | 'external') | null;
     form?: (number | null) | Form;
     url?: string | null;
     /**
-     * The last day to register, in Cairo. Empty on a course uses its cycle's.
+     * The last day to register, in Cairo.
      */
     deadline?: string | null;
-    archived_registration_url?: string | null;
   };
   /**
    * Extra questions for this course, asked after the website form’s own. They go live when an admin publishes the course. Not used when applications go to an external link, such as a Google Form.
@@ -1301,14 +1299,11 @@ export interface Cycle {
   start_date?: string | null;
   academic_year?: string | null;
   registration?: {
-    /**
-     * Leave empty on a course to use its cycle's.
-     */
     method?: ('form' | 'external' | 'closed') | null;
     form?: (number | null) | Form;
     url?: string | null;
     /**
-     * The last day to register, in Cairo. Empty on a course uses its cycle's.
+     * The last day to register, in Cairo.
      */
     deadline?: string | null;
     archived_registration_url?: string | null;
@@ -2010,14 +2005,11 @@ export interface Event {
       }[]
     | null;
   registration?: {
-    /**
-     * Leave empty on a course to use its cycle's.
-     */
     method?: ('form' | 'external' | 'closed') | null;
     form?: (number | null) | Form;
     url?: string | null;
     /**
-     * The last day to register, in Cairo. Empty on a course uses its cycle's.
+     * The last day to register, in Cairo.
      */
     deadline?: string | null;
     archived_registration_url?: string | null;
@@ -3238,11 +3230,12 @@ export interface CoursesSelect<T extends boolean = true> {
   registration?:
     | T
     | {
+        mode?: T;
+        close_early?: T;
         method?: T;
         form?: T;
         url?: T;
         deadline?: T;
-        archived_registration_url?: T;
       };
   applicant_questions?:
     | T

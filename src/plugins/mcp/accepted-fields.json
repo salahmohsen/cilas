@@ -51,6 +51,8 @@
     "schedule.slots.end_time",
     "schedule.note",
     "registration",
+    "registration.mode",
+    "registration.close_early",
     "registration.method",
     "registration.form",
     "registration.url",

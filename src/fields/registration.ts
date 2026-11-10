@@ -16,7 +16,7 @@ const METHOD_LABELS: Record<(typeof REGISTRATION_METHODS)[number], string> = {
   closed: 'Closed',
 }
 
-const validateDestination: FieldHook = async ({
+export const validateDestination: FieldHook = async ({
   value,
   originalDoc,
   data,
@@ -24,15 +24,24 @@ const validateDestination: FieldHook = async ({
   collection,
   req,
 }) => {
-  if (data?._status === 'draft' && data?.review?.status !== 'submitted') return value
-  const own = { ...originalDoc?.registration, ...value }
-  const previous = originalDoc?.registration
   const publishing = data?._status === 'published' || data?.review?.status === 'approved'
-  const changed = ['method', 'form', 'url'].some((key) => own[key] !== previous?.[key])
+  if (data?._status === 'draft' && !publishing && data?.review?.status !== 'submitted') return value
+  const own = { ...originalDoc?.registration, ...value }
+  if (
+    collection?.slug === 'courses' &&
+    own.mode === 'own' &&
+    !['form', 'external'].includes(own.method)
+  ) {
+    throw new ValidationError({
+      errors: [{ path: 'registration.method', message: 'Choose a registration method.' }],
+    })
+  }
+  const previous = originalDoc?.registration
+  const changed = ['mode', 'method', 'form', 'url'].some((key) => own[key] !== previous?.[key])
   if (operation === 'update' && !changed && data?.cycle === originalDoc?.cycle && !publishing)
     return value
   let parent
-  const cycle = data?.cycle ?? originalDoc?.cycle
+  const cycle = data?.cycle === undefined ? originalDoc?.cycle : data.cycle
   const cycleId = relId(cycle)
   if (collection?.slug === 'courses' && cycleId) {
     parent = await req.payload.findByID({
@@ -43,8 +52,26 @@ const validateDestination: FieldHook = async ({
       overrideAccess: false,
     })
   }
-  const resolved = courseRegistration({ registration: own }, parent)
+  const resolved =
+    collection?.slug === 'courses'
+      ? courseRegistration({ registration: own }, parent)
+      : { method: own.method, formId: relId(own.form), url: own.url }
   const method = resolved.method
+  if (
+    collection?.slug === 'courses' &&
+    (own.mode ?? 'follow_cycle') === 'follow_cycle' &&
+    publishing &&
+    !method
+  ) {
+    throw new ValidationError({
+      errors: [
+        {
+          path: 'registration.mode',
+          message: 'Set up registration on the cycle before publishing.',
+        },
+      ],
+    })
+  }
   const field = method === 'form' ? 'form' : method === 'external' ? 'url' : null
   const destination = field === 'form' ? resolved.formId : field === 'url' ? resolved.url : null
   if (field && (!destination || (field === 'url' && httpUrl(destination) !== true))) {
@@ -54,8 +81,8 @@ const validateDestination: FieldHook = async ({
           path: `registration.${field}`,
           message:
             field === 'form'
-              ? 'Choose a registration form, or inherit one from the cycle.'
-              : 'Enter the external registration URL, or inherit one from the cycle.',
+              ? 'Choose a registration form on the course or its cycle.'
+              : 'Enter the external registration URL on the course or its cycle.',
         },
       ],
     })
@@ -63,10 +90,6 @@ const validateDestination: FieldHook = async ({
   return value
 }
 
-/**
- * How people apply. Whether it is open now comes from `registrationStatus()`,
- * never from a stored flag.
- */
 export const registrationField = (): NamedGroupField => ({
   name: 'registration',
   type: 'group',
@@ -76,7 +99,6 @@ export const registrationField = (): NamedGroupField => ({
       name: 'method',
       type: 'select',
       options: REGISTRATION_METHODS.map((value) => ({ label: METHOD_LABELS[value], value })),
-      admin: { description: "Leave empty on a course to use its cycle's." },
     },
     {
       name: 'form',
@@ -102,7 +124,7 @@ export const registrationField = (): NamedGroupField => ({
       type: 'date',
       admin: {
         date: { pickerAppearance: 'dayOnly' },
-        description: "The last day to register, in Cairo. Empty on a course uses its cycle's.",
+        description: 'The last day to register, in Cairo.',
       },
     },
     // The old Weebly or Google Forms link, kept for the record.

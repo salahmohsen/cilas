@@ -72,6 +72,12 @@ type Application = {
 
 Problems found in the current code, grouped under the fix that removes them.
 
+Step 3 implementation (2026-11-10): courseRegistration selects one complete destination by mode and caps the cycle deadline with close_early. Course-specific registration fields replace the shared field; the shared destination hook validates the resolver output. Admin-only write access protects registration, contribution and cycle without removing public read data. The cycle requirement runs after review transitions, so both approval and direct publication enforce it, while drafts remain nullable. Step 9 is included in the same schema migration. Archive imports explicitly use closed mode and retain their historical link in url. The migration drops the obsolete archived-link columns; rollback cannot recover those links or close_early.
+
+Migration verification: a throwaway copy of cilas_dev contained 310 courses (300 empty methods, 10 external) and 3,750 versions (3,671 empty, 79 external). After migration: 300/3,671 follow_cycle, 10/79 own, 0/0 closed (courses/versions); close_early remains empty. The copy was dropped and the dev database migrated.
+
+Problems solved: implicit per-field inheritance mixed unrelated destinations; fellows could write financial and registration settings; drafts required a cycle before an admin could assign one.
+
 Step 1 implementation (2026-11-10): `courseRegistration(course, cycle)` owns per-field registration inheritance and delegates price selection to `pricingFor`. Readers consume the resolved status, destination, Cairo deadline day and price. The destination validator still validates independently of open status. Public external links retain their existing course-owned URL behavior; changing inherited external links belongs to a separate behavior change. llms.txt now reads its price note from the selected price, so a cycle price cannot display an unrelated override note. No schema or migration changes.
 
 Step 2 implementation (2026-11-10): `contributionField()` owns the suggested options and uses the same exactly-one-default validator as MCP. Only programmes opt into payment plans. `contributionLabel()` owns amount selection and range formatting for every display, with translated calendar/event words supplied by their callers. JSON-LD reads the default option. Existing group names (`pricing` and `pricing_override`) stay in place for this step. The migration converts documents and draft versions before dropping min/max, retains max-only legacy values as a default, and restores extrema on rollback; discarded non-programme payment plans cannot be recovered by rollback.
@@ -112,13 +118,13 @@ Each step ends with a check before the next starts.
 
 1. Resolver. Move every consumer in the decision log to `courseRegistration()`. Check that the course page, apply page, open page, study index and llms.txt render the same as before.
 2. Contribution shape on cycles, courses, programmes and events. Payment plans on programmes only. The migration counts course plans first, then turns `min` into the default option and `max` into a second option. Check that old prices render correctly.
-3. Course registration modes, fellow visibility, external hides site-form fields, cycle required at publish. Check as a fellow and as an admin.
+3. Course registration modes, fellow visibility, external hides site-form fields, cycle required at publish, and data migration of existing courses to modes (step 9 merged here). Compare document and version counts before and after. Check as a fellow and as an admin.
 4. Templates and the Registration defaults global, with automatic copies. Check by creating a cycle, a Bridge year and an `own` course.
 5. Application shape with `choices`, and server checks on submit (open courses only, required questions of ticked courses only, amount must be one of the options). Tests cover closed, close-early and `own` courses.
 6. Form page: course ticks, a Badge and questions per course, the contribution slider. Check in the browser.
 7. Admin: full-form preview, per-course accepted ticks, enrollments without duplicates, the email. Check by approving one application with one course unticked.
 8. Fellow applicants page. Check that a fellow sees only their course's answers.
-9. Data migration of existing courses to modes. Compare counts before and after.
+9. Merged into step 3: data migration of existing courses to modes.
 
 Migrations: the agent writes them and asks before it applies them.
 

@@ -14,6 +14,8 @@ export function CourseSettings() {
   const values = useFormFields(([fields]) => ({
     cycle: fields.cycle?.value as number | null,
     course_type: fields.course_type?.value as string,
+    mode: fields['registration.mode']?.value as NonNullable<Course['registration']>['mode'],
+    close_early: fields['registration.close_early']?.value as string | null,
     method: fields['registration.method']?.value as RegistrationMethod | null,
     form: fields['registration.form']?.value as number | null,
     url: fields['registration.url']?.value as string | null,
@@ -61,7 +63,9 @@ export function CourseSettings() {
     {
       course_type: values.course_type,
       registration: {
-        method: values.method,
+        mode: values.mode,
+        close_early: values.close_early,
+        method: values.method as 'form' | 'external' | null,
         form: values.form,
         url: values.url,
         deadline: values.deadline,
@@ -90,8 +94,11 @@ export function CourseSettings() {
       <strong>Effective settings · {cycle.title}</strong>
       <p>
         Registration: {destination}
-        {!values.method ? ' · inherited from cycle' : ''}
+        {values.mode === 'follow_cycle' ? ' · inherited from cycle' : ''}
       </p>
+      {values.mode === 'follow_cycle' && method === 'external' && (
+        <p>The cycle uses an external link. Questions for applicants are not used.</p>
+      )}
       <p>
         Deadline:{' '}
         {deadline

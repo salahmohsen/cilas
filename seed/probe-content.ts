@@ -434,6 +434,7 @@ await upsert('courses', 'probe-full-course', {
     note: 'Hybrid for the first four weeks, then in person only.',
   },
   registration: {
+    mode: 'own',
     method: 'external',
     url: 'https://example.com/apply',
     deadline: '2026-12-01T12:00:00.000Z',

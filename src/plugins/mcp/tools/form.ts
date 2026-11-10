@@ -210,7 +210,12 @@ export const createFormAndLinkTool = adminTool({
               locale: 'en',
               data: {
                 _status: 'draft',
-                registration: { ...current.registration, method: 'form', form: form.id },
+                registration: {
+                  ...current.registration,
+                  mode: 'own',
+                  method: 'form',
+                  form: form.id,
+                },
               },
               overrideAccess: false,
               user,

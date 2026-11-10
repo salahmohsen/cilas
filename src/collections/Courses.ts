@@ -3,6 +3,8 @@ import { previewUrl } from '@/lib/preview-url'
 import { addSelfAs } from '@/lib/review-ownership'
 import {
   adminPublishes,
+  adminOnlyField,
+  isAdminUser,
   canTeach,
   isAdminOrOwn,
   ownList,
@@ -19,7 +21,8 @@ import {
   TEACHING_LANGUAGE_OPTIONS,
 } from '@/fields/course-options'
 import { contributionField } from '@/fields/pricing'
-import { registrationField } from '@/fields/registration'
+import { validateDestination } from '@/fields/registration'
+import { optionalHttpUrl } from '@/fields/validators'
 import { courseQuestionBlocks } from '@/forms/form-fields'
 import { scheduleField, timeRangeFields } from '@/fields/schedule'
 import { reviewFields } from '@/fields/review'
@@ -32,7 +35,11 @@ import type {
   CollectionAfterChangeHook,
   CollectionAfterDeleteHook,
   CollectionConfig,
+  Condition,
+  SelectFieldSingleValidation,
+  TextFieldSingleValidation,
 } from 'payload'
+import { ValidationError } from 'payload'
 import type { Course } from '@/payload-types'
 import { importFields } from '@/fields/import'
 import { revalidateAfterChange, revalidateAfterDelete } from '@/lib/revalidate'
@@ -73,6 +80,16 @@ export const propagateFellowRole: CollectionAfterChangeHook<Course> = async ({
 /** A fellow submits a course; an admin approves (publishes) it, asks for changes or declines. */
 const courseNoun = 'course' as const
 const courseReview = reviewHooks(courseNoun)
+
+const adminSettings = {
+  access: { create: adminOnlyField, update: adminOnlyField },
+  admin: {
+    condition: ((_, __, { user }) => isAdminUser(user)) satisfies Condition,
+  },
+}
+
+const showApplicantQuestions = (data: Partial<Course>) =>
+  !(data.registration?.mode === 'own' && data.registration?.method === 'external')
 
 /** afterChange never fires for a delete, so revocation needs its own hook. */
 export const revokeDeletedCourseFellows: CollectionAfterDeleteHook<Course> = async ({
@@ -202,7 +219,8 @@ export const Courses: CollectionConfig = {
               label: 'Cycle',
               type: 'relationship',
               relationTo: 'cycles',
-              required: true,
+              access: { create: adminOnlyField, update: adminOnlyField },
+              admin: { components: { Field: '/components/admin/course-cycle#CourseCycle' } },
             },
             {
               name: 'location',
@@ -389,13 +407,92 @@ export const Courses: CollectionConfig = {
         { label: 'Schedule', fields: [scheduleField()] },
         {
           label: 'Applications and contribution',
+          admin: {
+            condition: (data, _, { user }) => isAdminUser(user) || showApplicantQuestions(data),
+          },
           fields: [
             {
               name: 'effective_settings',
               type: 'ui',
-              admin: { components: { Field: '/components/admin/course-settings#CourseSettings' } },
+              admin: {
+                ...adminSettings.admin,
+                components: { Field: '/components/admin/course-settings#CourseSettings' },
+              },
             },
-            registrationField(),
+            {
+              name: 'registration',
+              type: 'group',
+              ...adminSettings,
+              hooks: { beforeChange: [validateDestination] },
+              fields: [
+                {
+                  name: 'mode',
+                  type: 'select',
+                  required: true,
+                  defaultValue: 'follow_cycle',
+                  options: [
+                    { label: 'Follow cycle form', value: 'follow_cycle' },
+                    { label: 'Own registration', value: 'own' },
+                    { label: 'Closed', value: 'closed' },
+                  ],
+                },
+                {
+                  name: 'close_early',
+                  type: 'date',
+                  admin: {
+                    condition: (_, sibling) => sibling?.mode === 'follow_cycle',
+                    date: { pickerAppearance: 'dayOnly' },
+                    description: 'The last day to register, in Cairo.',
+                  },
+                },
+                {
+                  name: 'method',
+                  type: 'select',
+                  options: [
+                    { label: 'Site form', value: 'form' },
+                    { label: 'External link', value: 'external' },
+                  ],
+                  admin: { condition: (_, sibling) => sibling?.mode === 'own' },
+                  validate: ((value, { siblingData }) =>
+                    (siblingData as Course['registration'])?.mode !== 'own' ||
+                    value === 'form' ||
+                    value === 'external' ||
+                    'Choose a registration method.') satisfies SelectFieldSingleValidation,
+                },
+                {
+                  name: 'form',
+                  type: 'relationship',
+                  relationTo: 'forms',
+                  admin: {
+                    condition: (_, sibling) =>
+                      sibling?.mode === 'own' && sibling?.method === 'form',
+                  },
+                },
+                {
+                  name: 'url',
+                  type: 'text',
+                  validate: ((value, { siblingData }) =>
+                    (siblingData as Course['registration'])?.mode === 'own' &&
+                    (siblingData as Course['registration'])?.method === 'external'
+                      ? optionalHttpUrl(value)
+                      : true) satisfies TextFieldSingleValidation,
+                  admin: {
+                    condition: (_, sibling) =>
+                      sibling?.mode === 'own' && sibling?.method === 'external',
+                    placeholder: 'https://…',
+                  },
+                },
+                {
+                  name: 'deadline',
+                  type: 'date',
+                  admin: {
+                    condition: (_, sibling) => sibling?.mode === 'own',
+                    date: { pickerAppearance: 'dayOnly' },
+                    description: 'The last day to register, in Cairo.',
+                  },
+                },
+              ],
+            },
             {
               name: 'applicant_questions',
               label: 'Questions for applicants',
@@ -403,19 +500,24 @@ export const Courses: CollectionConfig = {
               blocks: courseQuestionBlocks(),
               labels: { singular: 'Question', plural: 'Questions' },
               admin: {
-                // A website form only: an external link (a Google Form) asks its own.
-                condition: (data) => data?.registration?.method !== 'external',
+                condition: showApplicantQuestions,
                 description:
                   'Extra questions for this course, asked after the website form’s own. They go live when an admin publishes the course. Not used when applications go to an external link, such as a Google Form.',
               },
             },
-            contributionField({
-              name: 'pricing_override',
-              label: 'Contribution override',
-              dbName: 'course_price',
-              description:
-                'Leave options empty to use the contribution for this course type from its cycle.',
-            }),
+            {
+              ...contributionField({
+                name: 'pricing_override',
+                label: 'Contribution override',
+                dbName: 'course_price',
+              }),
+              ...adminSettings,
+              admin: {
+                ...adminSettings.admin,
+                description:
+                  'Leave options empty to use the contribution for this course type from its cycle.',
+              },
+            },
           ],
         },
         {
@@ -450,7 +552,19 @@ export const Courses: CollectionConfig = {
   hooks: {
     beforeOperation: courseReview.beforeOperation,
     beforeValidate: [addSelfAs('fellows')],
-    beforeChange: [...(courseReview.beforeChange ?? []), stampLastEditor],
+    beforeChange: [
+      ...(courseReview.beforeChange ?? []),
+      ({ data, originalDoc }) => {
+        const cycle = data.cycle === undefined ? originalDoc?.cycle : data.cycle
+        if (!cycle && (data._status === 'published' || data.review?.status === 'approved')) {
+          throw new ValidationError({
+            errors: [{ path: 'cycle', message: 'Choose a cycle before approving or publishing.' }],
+          })
+        }
+        return data
+      },
+      stampLastEditor,
+    ],
     afterChange: [
       ...courseReview.afterChange,
       propagateFellowRole,
