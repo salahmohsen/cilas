@@ -1,13 +1,11 @@
 'use client'
 
-import { useAuth, useDocumentInfo, useLocale } from '@payloadcms/ui'
-import { isAdminUser } from '@/access'
+import { useDocumentInfo, useLocale } from '@payloadcms/ui'
 
 export function FullFormPreview() {
   const { id, collectionSlug } = useDocumentInfo()
   const locale = useLocale()
-  const { user } = useAuth()
-  if (!id || !isAdminUser(user)) return null
+  if (!id) return null
   return (
     <a
       className="btn btn--style-secondary"

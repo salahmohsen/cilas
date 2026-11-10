@@ -1,3 +1,4 @@
+import { isAdminUser } from '@/access'
 import { copyRegistrationTemplate } from '@/forms/templates'
 import { relId } from '@/lib/relation'
 import type { CollectionBeforeValidateHook, CollectionConfig } from 'payload'
@@ -79,6 +80,7 @@ export const Cycles: CollectionConfig = {
       type: 'ui',
       admin: {
         position: 'sidebar',
+        condition: (_, __, { user }) => isAdminUser(user),
         components: { Field: '/components/admin/full-form-preview#FullFormPreview' },
       },
     },

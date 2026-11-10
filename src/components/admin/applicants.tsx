@@ -1,9 +1,12 @@
-import { CURRENCY } from '@/lib/pricing'
+import { ApplicantsFilter } from './applicants-filter'
+import { formatAmount } from '@/lib/pricing'
 import { DefaultTemplate } from '@payloadcms/next/templates'
-import { Gutter } from '@payloadcms/ui'
+import { Gutter, Pill } from '@payloadcms/ui'
 import Link from 'next/link'
 import type { AdminViewServerProps, FieldServerComponent } from 'payload'
 import { applicantsFor, applicantViewer } from '@/forms/applicants'
+
+const statusPill = { new: 'light', accepted: 'success', rejected: 'error' } as const
 
 const copy = (ar: boolean) =>
   ar
@@ -11,7 +14,6 @@ const copy = (ar: boolean) =>
         title: 'المتقدمون',
         all: 'كل المقررات',
         submitted: 'تاريخ التقديم',
-        status: 'الحالة',
         shared: 'الإجابات المشتركة',
         accepted: 'مقبول',
         yes: 'نعم',
@@ -21,12 +23,12 @@ const copy = (ar: boolean) =>
         empty: 'لا توجد طلبات.',
         filter: 'تصفية',
         course: 'المقرر',
+        statuses: { new: 'جديد', accepted: 'مقبول', rejected: 'مرفوض' },
       }
     : {
         title: 'Applicants',
         all: 'All courses',
         submitted: 'Submitted',
-        status: 'Status',
         shared: 'Shared answers',
         accepted: 'Accepted',
         yes: 'Yes',
@@ -36,6 +38,7 @@ const copy = (ar: boolean) =>
         empty: 'No applications.',
         filter: 'Filter',
         course: 'Course',
+        statuses: { new: 'New', accepted: 'Accepted', rejected: 'Rejected' },
       }
 
 export async function ApplicantsView({
@@ -46,9 +49,10 @@ export async function ApplicantsView({
 }: AdminViewServerProps) {
   const req = initPageResult.req
   const ar = req.i18n.language === 'ar'
+  const lang = ar ? 'ar' : 'en'
   const t = copy(ar)
   const viewer = applicantViewer(user)
-  const data = await applicantsFor(req.payload, viewer, ar ? 'ar' : 'en')
+  const data = await applicantsFor(req.payload, viewer, lang)
   const selected = Number(searchParams?.course) || null
   const applications = selected
     ? data.applications.filter((a) => a.choices.some((c) => c.course === selected))
@@ -64,43 +68,39 @@ export async function ApplicantsView({
       user={user}
       visibleEntities={initPageResult.visibleEntities}
     >
-      <Gutter>
+      <Gutter className="cilas-applicants">
         <h1>{t.title}</h1>
-        <form action="/admin/applicants">
-          <label>
-            {t.course}{' '}
-            <select name="course" defaultValue={selected || ''}>
-              <option value="">{t.all}</option>
-              {data.courses.map((c) => (
-                <option key={c.id} value={c.id}>
-                  {c.title} ({c.count})
-                </option>
-              ))}
-            </select>
-          </label>{' '}
-          <button type="submit">{t.filter}</button>
-        </form>
+        <ApplicantsFilter
+          courses={data.courses}
+          selected={selected}
+          all={t.all}
+          label={t.course}
+          submit={t.filter}
+        />
         {!applications.length && <p>{t.empty}</p>}
         {applications.map((a) => (
-          <article key={a.id} className="cilas-admin-box" style={{ padding: 20, marginTop: 20 }}>
-            <h2>{a.name}</h2>
-            <p>{a.email}</p>
-            <p>
-              {t.submitted}: {new Date(a.submitted).toLocaleDateString(ar ? 'ar-EG' : 'en-GB')} ·{' '}
-              {t.status}:{' '}
-              {ar ? { new: 'جديد', accepted: 'مقبول', rejected: 'مرفوض' }[a.status] : a.status}
+          <article key={a.id} className="cilas-applicant-card">
+            <header className="cilas-applicant-card__header">
+              <div>
+                <h2>{a.name}</h2>
+                <p>{a.email}</p>
+              </div>
+              <Pill pillStyle={statusPill[a.status]}>{t.statuses[a.status]}</Pill>
+            </header>
+            <p className="cilas-applicant-card__meta">
+              {t.submitted}: {new Date(a.submitted).toLocaleDateString(ar ? 'ar-EG' : 'en-GB')}
             </p>
             <h3>{t.shared}</h3>
             <dl>
               {a.answers.map((answer, i) => (
                 <div key={i}>
                   <dt>{answer.label}</dt>
-                  <dd style={{ whiteSpace: 'pre-wrap' }}>{answer.value}</dd>
+                  <dd>{answer.value}</dd>
                 </div>
               ))}
             </dl>
             {a.choices.map((c) => (
-              <section key={c.course}>
+              <section key={c.course} className="cilas-applicant-choice">
                 <h3>{c.title}</h3>
                 <p>
                   {t.accepted}: {c.accepted ? t.yes : t.no}
@@ -109,14 +109,14 @@ export async function ApplicantsView({
                   {c.answers.map((answer, i) => (
                     <div key={i}>
                       <dt>{answer.label}</dt>
-                      <dd style={{ whiteSpace: 'pre-wrap' }}>{answer.value}</dd>
+                      <dd>{answer.value}</dd>
                     </div>
                   ))}
                 </dl>
                 {viewer?.kind === 'admin' && (
                   <>
                     <p>
-                      {t.amount}: {c.amount ?? ''} {CURRENCY}
+                      {t.amount}: {c.amount == null ? '' : formatAmount(c.amount, lang)}
                     </p>
                     <p>
                       {t.reduction}: {c.need_reduction ? t.yes : t.no}

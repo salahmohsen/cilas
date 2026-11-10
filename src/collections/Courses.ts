@@ -139,6 +139,7 @@ export const Courses: CollectionConfig = {
       type: 'ui',
       admin: {
         position: 'sidebar',
+        condition: (_, __, { user }) => isAdminUser(user),
         components: { Field: '/components/admin/full-form-preview#FullFormPreview' },
       },
     },
@@ -236,7 +237,6 @@ export const Courses: CollectionConfig = {
               type: 'relationship',
               relationTo: 'cycles',
               access: { create: adminOnlyField, update: adminOnlyField },
-              admin: { components: { Field: '/components/admin/course-cycle#CourseCycle' } },
             },
             {
               name: 'location',
