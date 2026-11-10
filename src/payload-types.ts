@@ -755,7 +755,7 @@ export interface Programme {
   registration?: {
     method?: ('form' | 'external' | 'closed') | null;
     /**
-     * A form copied from a template can be edited freely. Changes do not affect the template or other copies.
+     * For a Bridge year: Leave empty to use a copy of the Bridge template from Registration defaults. You can edit the copy freely; the template stays unchanged.
      */
     form?: (number | null) | Form;
     url?: string | null;
@@ -1087,7 +1087,7 @@ export interface Course {
     close_early?: string | null;
     method?: ('form' | 'external') | null;
     /**
-     * A form copied from a template can be edited freely. Changes do not affect the template or other copies.
+     * Leave empty to use a copy of the workshop template from Registration defaults. You can edit the copy freely; the template stays unchanged.
      */
     form?: (number | null) | Form;
     url?: string | null;
@@ -1340,7 +1340,7 @@ export interface Cycle {
   registration?: {
     method?: ('form' | 'external' | 'closed') | null;
     /**
-     * A form copied from a template can be edited freely. Changes do not affect the template or other copies.
+     * Leave empty to use a copy of the cycle template from Registration defaults. You can edit the copy freely; the template stays unchanged.
      */
     form?: (number | null) | Form;
     url?: string | null;
@@ -2047,9 +2047,6 @@ export interface Event {
     | null;
   registration?: {
     method?: ('form' | 'external' | 'closed') | null;
-    /**
-     * A form copied from a template can be edited freely. Changes do not affect the template or other copies.
-     */
     form?: (number | null) | Form;
     url?: string | null;
     /**

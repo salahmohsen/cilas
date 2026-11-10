@@ -1,4 +1,4 @@
-import { registrationFormField } from '@/forms/templates'
+import { registrationFormField, type FormHelp } from '@/forms/templates'
 import { relId } from '@/lib/relation'
 import {
   ValidationError,
@@ -31,6 +31,7 @@ const checkDestination = (
   method: string | null | undefined,
   form: unknown,
   url: string | null | undefined,
+  missingForm: string,
 ) => {
   const field = method === 'form' ? 'form' : method === 'external' ? 'url' : null
   const destination = field === 'form' ? form : url
@@ -39,77 +40,79 @@ const checkDestination = (
       errors: [
         {
           path: `registration.${field}`,
-          message:
-            field === 'form'
-              ? 'Choose a registration form on the course or its cycle.'
-              : 'Enter the external registration URL on the course or its cycle.',
+          message: field === 'form' ? missingForm : 'Enter the external registration URL.',
         },
       ],
     })
   }
 }
 
-export const validateDestination: FieldHook = async ({ value, originalDoc, data, operation }) => {
-  if (!publishingOrSubmitted(data)) return value
-  const own = { ...originalDoc?.registration, ...value }
-  if (
-    operation === 'update' &&
-    ['method', 'form', 'url'].every((key) => own[key] === originalDoc?.registration?.[key]) &&
-    !isPublishing(data)
-  )
+const validateDestination =
+  (missingForm: string): FieldHook =>
+  async ({ value, originalDoc, data, operation }) => {
+    if (!publishingOrSubmitted(data)) return value
+    const own = { ...originalDoc?.registration, ...value }
+    if (
+      operation === 'update' &&
+      ['method', 'form', 'url'].every((key) => own[key] === originalDoc?.registration?.[key]) &&
+      !isPublishing(data)
+    )
+      return value
+    checkDestination(own.method, relId(own.form), own.url, missingForm)
     return value
-  checkDestination(own.method, relId(own.form), own.url)
-  return value
-}
+  }
 
-export const validateCourseDestination: FieldHook = async ({
-  value,
-  originalDoc,
-  data,
-  operation,
-  req,
-}) => {
-  if (!publishingOrSubmitted(data)) return value
-  const own = { ...originalDoc?.registration, ...value }
-  const method = validateCourseMethod(own)
-  if (method !== true)
-    throw new ValidationError({ errors: [{ path: 'registration.method', message: method }] })
-  const changed = ['mode', 'method', 'form', 'url'].some(
-    (key) => own[key] !== originalDoc?.registration?.[key],
-  )
-  if (
-    operation === 'update' &&
-    !changed &&
-    data?.cycle === originalDoc?.cycle &&
-    !isPublishing(data)
-  )
-    return value
-  const cycleId = relId(data?.cycle === undefined ? originalDoc?.cycle : data.cycle)
-  const cycle = cycleId
-    ? await req.payload.findByID({
-        collection: 'cycles',
-        id: cycleId,
-        depth: 0,
-        req,
-        overrideAccess: false,
+export const validateCourseDestination =
+  (help: FormHelp): FieldHook =>
+  async ({ value, originalDoc, data, operation, req }) => {
+    if (!publishingOrSubmitted(data)) return value
+    const own = { ...originalDoc?.registration, ...value }
+    const method = validateCourseMethod(own)
+    if (method !== true)
+      throw new ValidationError({ errors: [{ path: 'registration.method', message: method }] })
+    const changed = ['mode', 'method', 'form', 'url'].some(
+      (key) => own[key] !== originalDoc?.registration?.[key],
+    )
+    if (
+      operation === 'update' &&
+      !changed &&
+      data?.cycle === originalDoc?.cycle &&
+      !isPublishing(data)
+    )
+      return value
+    const cycleId = relId(data?.cycle === undefined ? originalDoc?.cycle : data.cycle)
+    const cycle = cycleId
+      ? await req.payload.findByID({
+          collection: 'cycles',
+          id: cycleId,
+          depth: 0,
+          req,
+          overrideAccess: false,
+        })
+      : null
+    const resolved = courseRegistration({ registration: own }, cycle)
+    if (courseRegistrationMode(own) === 'follow_cycle' && isPublishing(data) && !resolved.method) {
+      throw new ValidationError({
+        errors: [
+          {
+            path: 'registration.mode',
+            message: 'Set up registration on the cycle before publishing.',
+          },
+        ],
       })
-    : null
-  const resolved = courseRegistration({ registration: own }, cycle)
-  if (courseRegistrationMode(own) === 'follow_cycle' && isPublishing(data) && !resolved.method) {
-    throw new ValidationError({
-      errors: [
-        {
-          path: 'registration.mode',
-          message: 'Set up registration on the cycle before publishing.',
-        },
-      ],
-    })
+    }
+    checkDestination(
+      resolved.method,
+      resolved.formId,
+      resolved.url,
+      courseRegistrationMode(own) === 'own'
+        ? help.missing
+        : 'Choose a registration form on the cycle.',
+    )
+    return value
   }
-  checkDestination(resolved.method, resolved.formId, resolved.url)
-  return value
-}
 
-export const registrationDestinationFields = (course = false): Field[] => [
+export const registrationDestinationFields = (help: FormHelp, course = false): Field[] => [
   {
     name: 'method',
     type: 'select',
@@ -131,6 +134,7 @@ export const registrationDestinationFields = (course = false): Field[] => [
   registrationFormField(
     (_, sibling) =>
       sibling?.method === 'form' && (!course || courseRegistrationMode(sibling) === 'own'),
+    help.description,
   ),
   {
     name: 'url',
@@ -162,12 +166,12 @@ export const registrationDestinationFields = (course = false): Field[] => [
   },
 ]
 
-export const registrationField = (): NamedGroupField => ({
+export const registrationField = (help: FormHelp): NamedGroupField => ({
   name: 'registration',
   type: 'group',
-  hooks: { beforeChange: [validateDestination] },
+  hooks: { beforeChange: [validateDestination(help.missing)] },
   fields: [
-    ...registrationDestinationFields(),
+    ...registrationDestinationFields(help),
     { name: 'archived_registration_url', type: 'text', admin: { hidden: true } },
   ],
 })

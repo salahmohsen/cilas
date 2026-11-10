@@ -1,4 +1,4 @@
-import { copyRegistrationTemplate } from '@/forms/templates'
+import { copyRegistrationTemplate, templateFormHelp } from '@/forms/templates'
 import { tierField } from '@/fields/tier'
 import { previewUrl } from '@/lib/preview-url'
 import { addSelfAs } from '@/lib/review-ownership'
@@ -44,6 +44,8 @@ import { importFields } from '@/fields/import'
 import { deleteOwnedSpaces } from '@/lib/space-delete'
 import { revalidateAfterChange, revalidateAfterDelete } from '@/lib/revalidate'
 import { lastEditedByField, stampLastEditor } from '@/fields/last-edited-by'
+
+const WORKSHOP_FORM_HELP = templateFormHelp('workshop template')
 
 /**
  * `courses.fellows` lists people, but the `fellow` role lives on the account
@@ -439,7 +441,7 @@ export const Courses: CollectionConfig = {
               name: 'registration',
               type: 'group',
               ...adminSettings,
-              hooks: { beforeChange: [validateCourseDestination] },
+              hooks: { beforeChange: [validateCourseDestination(WORKSHOP_FORM_HELP)] },
               fields: [
                 {
                   name: 'mode',
@@ -461,7 +463,7 @@ export const Courses: CollectionConfig = {
                     description: 'The last day to register, in Cairo.',
                   },
                 },
-                ...registrationDestinationFields(true),
+                ...registrationDestinationFields(WORKSHOP_FORM_HELP, true),
               ],
             },
             {

@@ -1,5 +1,5 @@
 import { isAdminUser } from '@/access'
-import { copyRegistrationTemplate } from '@/forms/templates'
+import { copyRegistrationTemplate, templateFormHelp } from '@/forms/templates'
 import { relId } from '@/lib/relation'
 import type { CollectionBeforeValidateHook, CollectionConfig } from 'payload'
 
@@ -67,10 +67,7 @@ export const Cycles: CollectionConfig = {
   // One intake per season, year and place (ADR 0003, ADR 0007).
   indexes: [{ fields: ['season', 'start_year', 'place'], unique: true }],
   hooks: {
-    beforeValidate: [
-      deriveCycleIdentity,
-      copyRegistrationTemplate('cycle_template', (_, operation) => operation === 'create'),
-    ],
+    beforeValidate: [deriveCycleIdentity, copyRegistrationTemplate('cycle_template', () => true)],
     afterChange: [revalidateAfterChange('cycles')],
     afterDelete: [revalidateAfterDelete('cycles')],
   },
@@ -142,7 +139,7 @@ export const Cycles: CollectionConfig = {
         },
       ],
     },
-    registrationField(),
+    registrationField(templateFormHelp('cycle template')),
     {
       name: 'pricing',
       label: 'Contributions',

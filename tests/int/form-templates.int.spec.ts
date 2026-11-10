@@ -288,7 +288,7 @@ describe('registration templates', () => {
     expect(relId(again.registration?.form)).toBe(id)
   })
 
-  it('does not copy for a non-Bridge programme or on a later cycle/programme update', async () => {
+  it('does not copy for a non-Bridge programme', async () => {
     defaults(template)
     const programme = track(
       'programmes',
@@ -305,11 +305,55 @@ describe('registration templates', () => {
       }),
     )
     expect(programme.registration?.form).toBeFalsy()
+  })
+
+  it('copies when an admin switches a saved cycle or Bridge year to an empty site form', async () => {
+    const admin = track(
+      'users',
+      await payload.create({
+        collection: 'users',
+        data: {
+          email: `${uniq('template-admin')}@cilas.test`,
+          password: crypto.randomUUID(),
+          roles: ['admin'],
+        } as never,
+      }),
+    )
+    const asAdmin = { user: { ...admin, collection: 'users' } as never, overrideAccess: false }
     defaults(null)
     const bridge = await create('programmes')
     const cycle = await create('cycles', undefined, 'closed')
+    await expect(
+      payload.update({
+        collection: 'cycles',
+        context: { [REGISTRATION_DEFAULTS]: registrationDefaults },
+        id: cycle.id,
+        data: { registration: { method: 'form' } },
+        ...asAdmin,
+      }),
+    ).rejects.toMatchObject({
+      data: {
+        errors: [
+          {
+            path: 'registration.form',
+            message: 'Choose a form, or set a cycle template in Registration defaults.',
+          },
+        ],
+      },
+    })
+
     defaults(template)
-    expect(
+    const switched = await payload.update({
+      collection: 'cycles',
+      context: { [REGISTRATION_DEFAULTS]: registrationDefaults },
+      id: cycle.id,
+      data: { registration: { method: 'form', form: null } },
+      ...asAdmin,
+    })
+    const copy = relId(switched.registration?.form)!
+    track('forms', copy)
+    expect(copy).not.toBe(template)
+    const bridgeCopy = relId(
       (
         await payload.update({
           collection: 'programmes',
@@ -317,17 +361,12 @@ describe('registration templates', () => {
           id: bridge.id,
           draft: true,
           data: {},
+          ...asAdmin,
         })
       ).registration?.form,
-    ).toBeFalsy()
-    await expect(
-      payload.update({
-        collection: 'cycles',
-        context: { [REGISTRATION_DEFAULTS]: registrationDefaults },
-        id: cycle.id,
-        data: { registration: { method: 'form' } },
-      }),
-    ).rejects.toThrow(/form/i)
+    )!
+    track('forms', bridgeCopy)
+    expect(bridgeCopy).not.toBe(bridgeTemplate)
   })
 
   it('rolls back the copied form when the parent cannot be published', async () => {

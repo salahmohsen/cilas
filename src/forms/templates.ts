@@ -9,18 +9,24 @@ import {
 import { relId } from '@/lib/relation'
 import type { Form, RegistrationDefault } from '@/payload-types'
 
+/** What the Form field says, and the error when a site form has none. */
+export type FormHelp = { description?: string; missing: string }
+
+/** The help for a place whose empty form is filled from a template in Registration defaults. */
+export const templateFormHelp = (template: string, when = ''): FormHelp => ({
+  description: `${when}Leave empty to use a copy of the ${template} from Registration defaults. You can edit the copy freely; the template stays unchanged.`,
+  missing: `Choose a form, or set a ${template} in Registration defaults.`,
+})
+
 export const registrationFormField = (
-  condition: Condition = (_, sibling) => sibling?.method === 'form',
+  condition: Condition,
+  description: string | undefined,
 ): RelationshipField => ({
   name: 'form',
   type: 'relationship',
   relationTo: 'forms',
   filterOptions: { template: { not_equals: true } },
-  admin: {
-    description:
-      'A form copied from a template can be edited freely. Changes do not affect the template or other copies.',
-    condition,
-  },
+  admin: { description, condition },
   hooks: {
     beforeValidate: [
       async ({ value, req }) => {
@@ -89,16 +95,13 @@ export const copyDefaultTemplate = async (
 export const copyRegistrationTemplate =
   (
     key: keyof TemplateDefaults,
-    applies: (
-      entity: Entity,
-      operation: Parameters<CollectionBeforeValidateHook>[0]['operation'],
-    ) => boolean,
+    applies: (entity: Entity) => boolean,
   ): CollectionBeforeValidateHook =>
-  async ({ data, originalDoc, operation, req }) => {
+  async ({ data, originalDoc, req }) => {
     if (!data) return data
     const entity = { ...originalDoc, ...data }
     const registration = { ...originalDoc?.registration, ...data.registration }
-    if (!applies({ ...entity, registration }, operation)) return data
+    if (!applies({ ...entity, registration })) return data
     if (registration.method !== 'form' || relId(registration.form)) return data
     const copy = await copyDefaultTemplate(req, key, `${entity.title} application`)
     if (copy) data.registration = { ...registration, form: copy.id }

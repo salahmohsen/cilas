@@ -73,6 +73,24 @@ type Application = {
 
 Problems found in the current code, grouped under the fix that removes them.
 
+Round D (2026-11-10). Each fix is listed above the problems it solves.
+
+`create_form_and_link` reads the course's mode first. A `follow_cycle` course is refused unless `link.switch_to_own` is set; the refusal names the cycle and points to `applicant_questions` with `update_course_draft`. The form guide, course guide and `new_form_for_course` prompt say the same. A new form is a copy made by `copyDefaultTemplate` (the one copier in `src/forms/templates.ts`, also used by the collection hooks); the given questions follow the template's. Without a workshop template the result says so. The lookup registry names the records each kind may return (`only`), and forms exclude templates.
+
+Problems solved: linking silently took a course out of its cycle form; assistant forms ignored the workshop template; lookup offered templates as linkable forms.
+
+`useSpamCheck().submit` returns `sent | bot | spam-check-failed | network | refused(error)`. `failureMessage` turns a failure into each form's own sentence. A failed or unloaded Turnstile now says to reload; a refusal without a reason says the server failed; only a failed request mentions the connection. The contact section accepts `{ failed }` from its submit handler.
+
+Problems solved: a Turnstile failure threw, the form caught it as `undefined` and blamed the visitor's connection; `null` meant "bot" by convention.
+
+`src/forms/question-name.ts` owns the one machine-name rule (`QUESTION_NAME`) and the generator. `nameQuestions` names each new question once from its English label (`question_<id>` for an Arabic-only label, `_2` for a repeat) and gives each new option a value the same way (`option_<id>`). A saved name or value, matched by row id, never changes. Form and course hooks run it before validation and refuse a given name that breaks the rule, for drafts too. The `name` and option `value` fields are hidden in the admin and marked `custom.generated`, so the MCP schema treats them as optional. Forms save option values; `answerText` in `src/forms/answer-text.ts` shows the current option label everywhere answers are read (admin submission view, choice cards, applicants view, form emails), and falls back to the saved text. Migrations `20261110_202109_question_machine_names` and `20261110_203134_option_machine_values` normalize old names and values with the same steps. On dev they changed 1 course question and 2 of its versions, and 5 form option values; 0 saved answers referred to them. Both passed on a dump/restore copy (with planted answers, which moved with them) before dev.
+
+Problems solved: admins typed machine names such as "a question from test course one "; the MCP had its own name rule; option values were free text; answers stored option labels, so a relabel could not be shown.
+
+`registrationFormField` takes its description from the caller, and `registrationField` and `validateCourseDestination` take a `FormHelp` (`templateFormHelp` for cycles, Bridge years and own courses; a plain message for events). Cycles and Bridge years copy their template whenever a site form is left empty, not only at creation, so the description is true. With no template set the error says to choose a form or set that template.
+
+Problems solved: switching a saved cycle to "Site form" with the form empty failed with "registration.form" invalid, because the copy ran only at creation; the error blamed "the course or its cycle" on a cycle; the field did not say an empty form uses a template. A brand-new cycle and the picker filter did not reproduce on this code through REST and the admin UI as an admin: the copy was made and no template was offered.
+
 Untangle round C (2026-11-10). Each fix is listed above the problems it solves.
 
 `src/forms/applications.ts` is split into three modules. `application-fields.ts` holds the submission fields. `application-decision.ts` holds accept, reject and their endpoints. `applicant.ts` holds `applicantOf` and `rolesAfterAccept`. `checkTarget` moved next to `validateApplication`, the function it wraps. `TargetKind` and `idOf` are removed.

@@ -154,7 +154,10 @@ export const Events: CollectionConfig = {
         },
         {
           label: 'Registration and contribution',
-          fields: [registrationField(), contributionField({ dbName: 'event_price' })],
+          fields: [
+            registrationField({ missing: 'Choose a registration form.' }),
+            contributionField({ dbName: 'event_price' }),
+          ],
         },
         {
           label: 'Relationships',

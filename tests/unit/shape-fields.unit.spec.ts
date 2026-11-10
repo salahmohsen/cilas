@@ -58,12 +58,14 @@ describe('scheduleField', () => {
   })
 })
 
+const help = { missing: 'Choose a form.' }
+
 describe('registrationField', () => {
   const validate = (args: Partial<FieldHookArgs>) => {
     const hook =
       args.collection?.slug === 'courses'
-        ? validateCourseDestination
-        : registrationField().hooks!.beforeChange![0]
+        ? validateCourseDestination(help)
+        : registrationField(help).hooks!.beforeChange![0]!
     return hook(args as FieldHookArgs)
   }
 
@@ -246,7 +248,7 @@ describe('validate closures in the configs', () => {
     ).resolves.not.toBe(true)
   })
 
-  const url = find(registrationField().fields, 'url')
+  const url = find(registrationField(help).fields, 'url')
 
   it('registration url allows empty and rejects a bare domain', () => {
     expect(check(url, '', {})).toBe(true)

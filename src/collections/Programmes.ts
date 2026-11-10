@@ -1,4 +1,4 @@
-import { copyRegistrationTemplate } from '@/forms/templates'
+import { copyRegistrationTemplate, templateFormHelp } from '@/forms/templates'
 import { previewUrl } from '@/lib/preview-url'
 import type { CollectionConfig } from 'payload'
 
@@ -182,7 +182,7 @@ export const Programmes: CollectionConfig = {
         {
           label: 'Applications and contribution',
           fields: [
-            registrationField(),
+            registrationField(templateFormHelp('Bridge template', 'For a Bridge year: ')),
             contributionField({ dbName: 'programme_price', paymentPlans: true }),
           ],
         },
@@ -191,10 +191,7 @@ export const Programmes: CollectionConfig = {
   ],
   hooks: {
     beforeValidate: [
-      copyRegistrationTemplate(
-        'bridge_template',
-        (programme, operation) => operation === 'create' && programme.kind === 'bridge',
-      ),
+      copyRegistrationTemplate('bridge_template', (programme) => programme.kind === 'bridge'),
     ],
     afterChange: [ensureSpaceFor('cohort')],
     beforeDelete: [deleteOwnedSpaces('programme')],
