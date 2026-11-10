@@ -66,7 +66,10 @@ export const Cycles: CollectionConfig = {
   // One intake per season, year and place (ADR 0003, ADR 0007).
   indexes: [{ fields: ['season', 'start_year', 'place'], unique: true }],
   hooks: {
-    beforeValidate: [deriveCycleIdentity, copyRegistrationTemplate],
+    beforeValidate: [
+      deriveCycleIdentity,
+      copyRegistrationTemplate('cycle_template', (_, operation) => operation === 'create'),
+    ],
     afterChange: [revalidateAfterChange('cycles')],
     afterDelete: [revalidateAfterDelete('cycles')],
   },

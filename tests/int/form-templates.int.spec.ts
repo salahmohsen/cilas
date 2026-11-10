@@ -1,15 +1,17 @@
 // @vitest-environment node
-import { getPayload, type Payload } from 'payload'
+import { getPayload, createLocalReq, initTransaction, killTransaction, type Payload } from 'payload'
 import { afterAll, beforeAll, describe, expect, it } from 'vitest'
 import config from '@/payload.config'
 import type { RegistrationDefault } from '@/payload-types'
 import { relId } from '@/lib/relation'
+import { REGISTRATION_DEFAULTS } from '@/forms/templates'
 import { createTracker, uniq } from './fixtures'
 import { seedRegistrationDefaults } from '../../seed/collections/registration-defaults.seed'
 
 const { track, cleanup } = createTracker()
 let payload: Payload
-let original: RegistrationDefault
+let registrationDefaults: Partial<RegistrationDefault> = {}
+let shared: RegistrationDefault
 let template: number
 let bridgeTemplate: number
 let workshopTemplate: number
@@ -26,15 +28,13 @@ const message = (text: string) => ({
     children: [{ type: 'paragraph', version: 1, children: [{ type: 'text', version: 1, text }] }],
   },
 })
-const defaults = (id: number | null) =>
-  payload.updateGlobal({
-    slug: 'registration-defaults',
-    data: {
-      cycle_template: id,
-      bridge_template: id === template ? bridgeTemplate : id,
-      workshop_template: id === template ? workshopTemplate : id,
-    },
-  })
+const defaults = (id: number | null) => {
+  registrationDefaults = {
+    cycle_template: id,
+    bridge_template: id === template ? bridgeTemplate : id,
+    workshop_template: id === template ? workshopTemplate : id,
+  }
+}
 const create = async (
   kind: 'cycles' | 'programmes' | 'courses',
   form?: number,
@@ -47,6 +47,7 @@ const create = async (
       kind,
       await payload.create({
         collection: kind,
+        context: { [REGISTRATION_DEFAULTS]: registrationDefaults },
         data: { season: 'fall', start_year: 2040 + sequence, place, registration },
       }),
     )
@@ -55,6 +56,7 @@ const create = async (
       kind,
       await payload.create({
         collection: kind,
+        context: { [REGISTRATION_DEFAULTS]: registrationDefaults },
         draft: true,
         data: { title, slug: title, kind: 'bridge', registration },
       }),
@@ -63,6 +65,7 @@ const create = async (
     kind,
     await payload.create({
       collection: kind,
+      context: { [REGISTRATION_DEFAULTS]: registrationDefaults },
       draft: true,
       data: {
         title,
@@ -80,7 +83,7 @@ const create = async (
 describe('registration templates', () => {
   beforeAll(async () => {
     payload = await getPayload({ config })
-    original = await payload.findGlobal({ slug: 'registration-defaults', depth: 0 })
+    shared = await payload.findGlobal({ slug: 'registration-defaults', depth: 0 })
     place = track(
       'places',
       await payload.create({
@@ -156,21 +159,13 @@ describe('registration templates', () => {
     ).id
   })
   afterAll(async () => {
-    await payload.updateGlobal({
-      slug: 'registration-defaults',
-      data: {
-        cycle_template: relId(original.cycle_template),
-        bridge_template: relId(original.bridge_template),
-        workshop_template: relId(original.workshop_template),
-      },
-    })
     await cleanup(payload)
     await payload.destroy()
   })
 
   for (const kind of ['cycles', 'programmes', 'courses'] as const) {
     it(`${kind}: copies once, preserving locales and keeping later template edits separate`, async () => {
-      await defaults(template)
+      defaults(template)
       const entity = await create(kind)
       const id = relId(entity.registration?.form)!
       track('forms', id)
@@ -198,7 +193,12 @@ describe('registration templates', () => {
       expect(arabic.fields?.[2]).toMatchObject({ label: 'سبب التقديم' })
       expect(arabic.confirmationMessage).toEqual(message('وصل الطلب'))
       expect(arabic.emails?.[0].subject).toBe('طلب جديد')
-      const again = await payload.update({ collection: kind, id: entity.id, data: {} })
+      const again = await payload.update({
+        collection: kind,
+        context: { [REGISTRATION_DEFAULTS]: registrationDefaults },
+        id: entity.id,
+        data: {},
+      })
       expect(relId(again.registration?.form)).toBe(id)
       expect(
         (await payload.find({ collection: 'forms', where: { title: { equals: copy.title } } }))
@@ -221,23 +221,38 @@ describe('registration templates', () => {
       })
     })
     it(`${kind}: keeps a selected form and leaves an empty default alone`, async () => {
-      await defaults(template)
-      const before = await payload.count({ collection: 'forms' })
+      defaults(template)
+      const before = await payload.count({
+        collection: 'forms',
+        where: { title: { contains: uniq('') } },
+      })
       expect(relId((await create(kind, existing)).registration?.form)).toBe(existing)
-      expect((await payload.count({ collection: 'forms' })).totalDocs).toBe(before.totalDocs)
-      await defaults(null)
+      expect(
+        (await payload.count({ collection: 'forms', where: { title: { contains: uniq('') } } }))
+          .totalDocs,
+      ).toBe(before.totalDocs)
+      defaults(null)
       if (kind === 'cycles') await expect(create(kind)).rejects.toThrow(/form/i)
       else expect((await create(kind)).registration?.form).toBeFalsy()
-      expect((await payload.count({ collection: 'forms' })).totalDocs).toBe(before.totalDocs)
+      expect(
+        (await payload.count({ collection: 'forms', where: { title: { contains: uniq('') } } }))
+          .totalDocs,
+      ).toBe(before.totalDocs)
     })
     it(`${kind}: does not copy for closed registration`, async () => {
-      await defaults(template)
-      const before = await payload.count({ collection: 'forms' })
+      defaults(template)
+      const before = await payload.count({
+        collection: 'forms',
+        where: { title: { contains: uniq('') } },
+      })
       expect((await create(kind, undefined, 'closed')).registration?.form).toBeFalsy()
-      expect((await payload.count({ collection: 'forms' })).totalDocs).toBe(before.totalDocs)
+      expect(
+        (await payload.count({ collection: 'forms', where: { title: { contains: uniq('') } } }))
+          .totalDocs,
+      ).toBe(before.totalDocs)
     })
     it(`${kind}: refuses a template as its registration form, including drafts`, async () => {
-      await defaults(null)
+      defaults(null)
       await expect(create(kind, template)).rejects.toMatchObject({
         data: {
           errors: [
@@ -252,10 +267,11 @@ describe('registration templates', () => {
   }
 
   it('copies when a course changes to own form registration, and merges partial updates', async () => {
-    await defaults(template)
+    defaults(template)
     const course = await create('courses', undefined, 'closed')
     const updated = await payload.update({
       collection: 'courses',
+      context: { [REGISTRATION_DEFAULTS]: registrationDefaults },
       id: course.id,
       data: { registration: { mode: 'own', method: 'form' } },
     })
@@ -265,6 +281,7 @@ describe('registration templates', () => {
     expect(id).not.toBe(template)
     const again = await payload.update({
       collection: 'courses',
+      context: { [REGISTRATION_DEFAULTS]: registrationDefaults },
       id: course.id,
       data: { registration: { deadline: '2099-01-01' } },
     })
@@ -272,11 +289,12 @@ describe('registration templates', () => {
   })
 
   it('does not copy for a non-Bridge programme or on a later cycle/programme update', async () => {
-    await defaults(template)
+    defaults(template)
     const programme = track(
       'programmes',
       await payload.create({
         collection: 'programmes',
+        context: { [REGISTRATION_DEFAULTS]: registrationDefaults },
         draft: true,
         data: {
           title: uniq('Residency'),
@@ -287,17 +305,25 @@ describe('registration templates', () => {
       }),
     )
     expect(programme.registration?.form).toBeFalsy()
-    await defaults(null)
+    defaults(null)
     const bridge = await create('programmes')
     const cycle = await create('cycles', undefined, 'closed')
-    await defaults(template)
+    defaults(template)
     expect(
-      (await payload.update({ collection: 'programmes', id: bridge.id, draft: true, data: {} }))
-        .registration?.form,
+      (
+        await payload.update({
+          collection: 'programmes',
+          context: { [REGISTRATION_DEFAULTS]: registrationDefaults },
+          id: bridge.id,
+          draft: true,
+          data: {},
+        })
+      ).registration?.form,
     ).toBeFalsy()
     await expect(
       payload.update({
         collection: 'cycles',
+        context: { [REGISTRATION_DEFAULTS]: registrationDefaults },
         id: cycle.id,
         data: { registration: { method: 'form' } },
       }),
@@ -305,11 +331,15 @@ describe('registration templates', () => {
   })
 
   it('rolls back the copied form when the parent cannot be published', async () => {
-    await defaults(template)
-    const before = await payload.count({ collection: 'forms' })
+    defaults(template)
+    const before = await payload.count({
+      collection: 'forms',
+      where: { title: { contains: uniq('') } },
+    })
     await expect(
       payload.create({
         collection: 'courses',
+        context: { [REGISTRATION_DEFAULTS]: registrationDefaults },
         data: {
           title: uniq('Invalid publication'),
           slug: uniq('invalid-publication'),
@@ -321,7 +351,10 @@ describe('registration templates', () => {
         },
       }),
     ).rejects.toThrow(/cycle/i)
-    expect((await payload.count({ collection: 'forms' })).totalDocs).toBe(before.totalDocs)
+    expect(
+      (await payload.count({ collection: 'forms', where: { title: { contains: uniq('') } } }))
+        .totalDocs,
+    ).toBe(before.totalDocs)
   })
 
   it('refuses templates on event registration too', async () => {
@@ -346,7 +379,9 @@ describe('registration templates', () => {
   })
 
   it('rejects non-template defaults and denies public access', async () => {
-    await expect(defaults(existing)).rejects.toThrow()
+    await expect(
+      payload.updateGlobal({ slug: 'registration-defaults', data: { cycle_template: existing } }),
+    ).rejects.toThrow()
     await expect(
       payload.findGlobal({ slug: 'registration-defaults', overrideAccess: false }),
     ).rejects.toThrow()
@@ -385,26 +420,30 @@ describe('registration templates', () => {
   })
 
   it('seeds three usable templates and reuses them on a second seed', async () => {
-    const before = await payload.find({
-      collection: 'forms',
-      where: { template: { equals: true } },
-      pagination: false,
-    })
-    await seedRegistrationDefaults(payload)
-    const seeded = await payload.findGlobal({ slug: 'registration-defaults', depth: 0 })
-    for (const key of ['cycle_template', 'bridge_template', 'workshop_template'] as const) {
-      const id = relId(seeded[key])!
-      if (!before.docs.some((form) => form.id === id)) track('forms', id)
-      const form = await payload.findByID({ collection: 'forms', id })
-      expect(form.template).toBe(true)
-      expect(form.fields?.length).toBeGreaterThan(2)
+    const req = await createLocalReq({}, payload)
+    await initTransaction(req)
+    try {
+      await seedRegistrationDefaults(payload, req)
+      const seeded = await payload.findGlobal({ slug: 'registration-defaults', depth: 0, req })
+      for (const key of ['cycle_template', 'bridge_template', 'workshop_template'] as const) {
+        const id = relId(seeded[key])!
+        const form = await payload.findByID({ collection: 'forms', id, req })
+        expect(form.template).toBe(true)
+        expect(form.fields?.length).toBeGreaterThan(2)
+      }
+      await seedRegistrationDefaults(payload, req)
+      const again = await payload.findGlobal({ slug: 'registration-defaults', depth: 0, req })
+      expect([again.cycle_template, again.bridge_template, again.workshop_template]).toEqual([
+        seeded.cycle_template,
+        seeded.bridge_template,
+        seeded.workshop_template,
+      ])
+    } finally {
+      await killTransaction(req)
     }
-    await seedRegistrationDefaults(payload)
-    const again = await payload.findGlobal({ slug: 'registration-defaults', depth: 0 })
-    expect([again.cycle_template, again.bridge_template, again.workshop_template]).toEqual([
-      seeded.cycle_template,
-      seeded.bridge_template,
-      seeded.workshop_template,
-    ])
+  })
+
+  it('never writes the shared registration defaults', async () => {
+    expect(await payload.findGlobal({ slug: 'registration-defaults', depth: 0 })).toEqual(shared)
   })
 })

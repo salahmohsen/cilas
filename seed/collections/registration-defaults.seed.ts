@@ -1,4 +1,4 @@
-import type { Payload } from 'payload'
+import type { Payload, PayloadRequest } from 'payload'
 
 const templates = [
   { key: 'cycle_template', title: 'Cycle application template' },
@@ -6,11 +6,15 @@ const templates = [
   { key: 'workshop_template', title: 'Workshop application template' },
 ] as const
 
-export const seedRegistrationDefaults = async (payload: Payload): Promise<void> => {
+export const seedRegistrationDefaults = async (
+  payload: Payload,
+  req?: PayloadRequest,
+): Promise<void> => {
   const defaults: Record<string, number> = {}
   for (const { key, title } of templates) {
     const { docs } = await payload.find({
       collection: 'forms',
+      req,
       where: { and: [{ title: { equals: title } }, { template: { equals: true } }] },
       limit: 1,
       depth: 0,
@@ -19,6 +23,7 @@ export const seedRegistrationDefaults = async (payload: Payload): Promise<void> 
       docs[0] ??
       (await payload.create({
         collection: 'forms',
+        req,
         data: {
           title,
           template: true,
@@ -58,5 +63,5 @@ export const seedRegistrationDefaults = async (payload: Payload): Promise<void> 
       }))
     defaults[key] = form.id
   }
-  await payload.updateGlobal({ slug: 'registration-defaults', data: defaults })
+  await payload.updateGlobal({ slug: 'registration-defaults', data: defaults, req })
 }

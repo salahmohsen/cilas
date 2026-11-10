@@ -522,7 +522,13 @@ export const Courses: CollectionConfig = {
   },
   hooks: {
     beforeOperation: courseReview.beforeOperation,
-    beforeValidate: [addSelfAs('fellows'), copyRegistrationTemplate],
+    beforeValidate: [
+      addSelfAs('fellows'),
+      copyRegistrationTemplate(
+        'workshop_template',
+        (course) => course.registration?.mode === 'own',
+      ),
+    ],
     beforeChange: [
       ...(courseReview.beforeChange ?? []),
       ({ data, originalDoc }) => {

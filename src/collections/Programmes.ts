@@ -190,7 +190,12 @@ export const Programmes: CollectionConfig = {
     },
   ],
   hooks: {
-    beforeValidate: [copyRegistrationTemplate],
+    beforeValidate: [
+      copyRegistrationTemplate(
+        'bridge_template',
+        (programme, operation) => operation === 'create' && programme.kind === 'bridge',
+      ),
+    ],
     afterChange: [ensureSpaceFor('cohort')],
     beforeDelete: [deleteOwnedSpaces('programme')],
   },
