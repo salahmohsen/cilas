@@ -67,6 +67,7 @@ import * as migration_20261110_133714_contribution_options from './20261110_1337
 import * as migration_20261110_135213_course_registration_modes from './20261110_135213_course_registration_modes';
 import * as migration_20261110_140348_registration_templates from './20261110_140348_registration_templates';
 import * as migration_20261110_160334_application_choices from './20261110_160334_application_choices';
+import * as migration_20261110_163833 from './20261110_163833';
 
 export const migrations = [
   {
@@ -412,6 +413,11 @@ export const migrations = [
   {
     up: migration_20261110_160334_application_choices.up,
     down: migration_20261110_160334_application_choices.down,
-    name: '20261110_160334_application_choices'
+    name: '20261110_160334_application_choices',
+  },
+  {
+    up: migration_20261110_163833.up,
+    down: migration_20261110_163833.down,
+    name: '20261110_163833'
   },
 ];

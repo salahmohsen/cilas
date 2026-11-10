@@ -13,7 +13,7 @@ import { RenderedForm } from '@/components/forms/rendered-form'
 import { Link } from '@/i18n/navigation'
 import { numberingSystemOf } from '@/lib/digits'
 import { courseRegistration } from '@/lib/registration'
-import { openCoursesInCycle } from '@/forms/open-courses'
+import { applicationContext } from '@/forms/application-context'
 import type { Cycle } from '@/payload-types'
 
 export async function courseApplyMetadata(
@@ -59,24 +59,7 @@ export async function CourseApplyPage({
     locale: lang,
     fallbackLocale: 'en',
   })
-  const own = course.registration?.mode === 'own'
-  const available = own ? [course] : await openCoursesInCycle(payload, cycle!.id, reader)
-  const courses = await Promise.all(
-    available.map(async (item) => {
-      const localized = await payload.findByID({
-        collection: 'courses',
-        id: item.id,
-        locale: lang,
-        depth: 1,
-      })
-      return {
-        id: localized.id,
-        title: localized.title,
-        questions: localized.applicant_questions ?? [],
-        contribution: courseRegistration(localized, cycle).price,
-      }
-    }),
-  )
+  const application = await applicationContext(payload, course, lang, reader)
 
   const open = registration.status === 'open'
   const deadlineDay = registration.deadline
@@ -116,7 +99,7 @@ export async function CourseApplyPage({
             ? { relationTo: 'courses', value: course.id }
             : { relationTo: 'cycles', value: cycle!.id }
         }
-        application={{ courses, initialCourse: course.id, selectable: !own }}
+        application={application}
       />
     </div>
   )

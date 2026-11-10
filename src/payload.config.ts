@@ -320,7 +320,7 @@ export default buildConfig({
       },
       formSubmissionOverrides: {
         access: { read: isAdmin, update: isAdmin, delete: isAdmin },
-        admin: { defaultColumns: ['form', 'target', 'status', 'createdAt'] },
+        admin: { defaultColumns: ['form', 'courses', 'target', 'status', 'createdAt'] },
         fields: ({ defaultFields }) => [...defaultFields, ...applicationFields],
         endpoints: [
           ...applicationEndpoints,

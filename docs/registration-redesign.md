@@ -153,3 +153,13 @@ Each step ends with a check before the next starts.
 Migrations: the agent writes them and asks before it applies them.
 
 Every step follows the untangle rules in `AGENTS.md`. In the files each step touches, it also removes comments that only restate the code, and removes or fixes tests that would not catch a real bug. Test cleanup comes last in each step, after the step's own checks pass.
+
+Step 7 implementation (2026-11-10): `src/forms/application-choices.ts` owns the shared context types and choice keys, so server loaders do not import the UI layer. `application-context.ts` loads the same eligible, localized course options for the public application and the existing form preview. `preview-context.ts` restricts contextual previews to admins; cycle previews start without a course selected, while course previews select that course. The admin submission array uses saved answer labels and Payload's native accepted fields. Approval saves those fields before deciding, and the result stores an enrollment summary so created and existing records remain distinguishable after reload. A virtual Courses column uses the same choice view data; the underlying `choices.course` relationship remains available for filtering. Legacy shared answers and the singular enrollment relationship remain visible.
+
+Problems solved: full-form previews could drift from the applicant form; raw choice arrays obscured answer labels; unsaved accepted ticks could disagree with the decision endpoint; the singular result could not explain multiple enrollments or distinguish reused records.
+
+ElasticSlider now resolves inherited direction in the component and maps its physical coordinates, fill, marks, overshoot and horizontal keys accordingly. Its numeric order remains ascending. Browser inspection found unchecked checkboxes had a false checked state and invisible mark, with hover changing only the border. No checkbox state change was needed.
+
+Migration verification: `20261110_163833` was generated with the Payload CLI through `expect`. It adds `form_submissions.result_enrollments` as JSON. It passed on a dump/restore copy of dev, preserving the five submissions in that copy, before application to dev. The throwaway database was removed.
+
+The step 6 Next issue was a hydration mismatch caused by screenshot caret hiding, confirmed in `/tmp/step6-dev.log`: inputs acquired `caret-color: transparent` before React hydrated. Playwright adds that inline style during screenshot preparation. `tests/helpers/formScreenshot.ts` preserves the caret instead, and the application e2e checks that capture leaves no Next issue badge. No hydration-warning suppression was added.

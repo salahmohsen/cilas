@@ -10,7 +10,7 @@ export type CourseOption = {
 
 export type ApplicationContext = {
   courses: CourseOption[]
-  initialCourse: number
+  initialCourse?: number
   selectable: boolean
 }
 

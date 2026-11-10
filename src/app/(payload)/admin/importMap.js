@@ -1,4 +1,7 @@
+import { SubmissionChoices as SubmissionChoices_825d586e877d28329934d6c10f2f8703 } from '../../../components/admin/submission-choices'
+import { CoursesCell as CoursesCell_825d586e877d28329934d6c10f2f8703 } from '../../../components/admin/submission-choices'
 import { SubmissionDecision as SubmissionDecision_eee555a74fc1831b93e9205174d718a0 } from '../../../components/admin/submission-decision'
+import { SubmissionEnrollments as SubmissionEnrollments_3fb62a23d28bb71318ad151fca64b38c } from '../../../components/admin/submission-enrollments'
 import { ExportListMenuItem as ExportListMenuItem_cdf7e044479f899a31f804427d568b36 } from '@payloadcms/plugin-import-export/rsc'
 import { RscEntryLexicalCell as RscEntryLexicalCell_44fe37237e0ebf4470c9990d8cb7b07e } from '@payloadcms/richtext-lexical/rsc'
 import { RscEntryLexicalField as RscEntryLexicalField_44fe37237e0ebf4470c9990d8cb7b07e } from '@payloadcms/richtext-lexical/rsc'
@@ -27,6 +30,7 @@ import { BoldFeatureClient as BoldFeatureClient_e70f5e05f09f93e00b997edb1ef0c864
 import { ItalicFeatureClient as ItalicFeatureClient_e70f5e05f09f93e00b997edb1ef0c864 } from '@payloadcms/richtext-lexical/client'
 import { BoolCell as BoolCell_f436cf2a4719114d9e44505773a04007 } from 'payload-theme/client'
 import { EmailBlocksFeatureClient as EmailBlocksFeatureClient_00a2df3a8033428e8bac947916459878 } from '../../../lexical/legacy-features.client'
+import { FullFormPreview as FullFormPreview_6ef3535fb057c60d7e95ebd6192b5fc8 } from '../../../components/admin/full-form-preview'
 import { SubmitForReview as SubmitForReview_e717629fbfc51f9c28c9696160243a2b } from '../../../components/admin/submit-for-review'
 import { SlugField as SlugField_2b8867833a34864a02ddf429b0728a40 } from '@payloadcms/next/client'
 import { CourseCycle as CourseCycle_466d382d61b726658127d89553298bbd } from '../../../components/admin/course-cycle'
@@ -81,7 +85,10 @@ import { S3ClientUploadHandler as S3ClientUploadHandler_f97aa6c64367fa259c5bc056
 
 /** @type import('payload').ImportMap */
 export const importMap = {
+  "/components/admin/submission-choices#SubmissionChoices": SubmissionChoices_825d586e877d28329934d6c10f2f8703,
+  "/components/admin/submission-choices#CoursesCell": CoursesCell_825d586e877d28329934d6c10f2f8703,
   "/components/admin/submission-decision#SubmissionDecision": SubmissionDecision_eee555a74fc1831b93e9205174d718a0,
+  "/components/admin/submission-enrollments#SubmissionEnrollments": SubmissionEnrollments_3fb62a23d28bb71318ad151fca64b38c,
   "@payloadcms/plugin-import-export/rsc#ExportListMenuItem": ExportListMenuItem_cdf7e044479f899a31f804427d568b36,
   "@payloadcms/richtext-lexical/rsc#RscEntryLexicalCell": RscEntryLexicalCell_44fe37237e0ebf4470c9990d8cb7b07e,
   "@payloadcms/richtext-lexical/rsc#RscEntryLexicalField": RscEntryLexicalField_44fe37237e0ebf4470c9990d8cb7b07e,
@@ -110,6 +117,7 @@ export const importMap = {
   "@payloadcms/richtext-lexical/client#ItalicFeatureClient": ItalicFeatureClient_e70f5e05f09f93e00b997edb1ef0c864,
   "payload-theme/client#BoolCell": BoolCell_f436cf2a4719114d9e44505773a04007,
   "/lexical/legacy-features.client#EmailBlocksFeatureClient": EmailBlocksFeatureClient_00a2df3a8033428e8bac947916459878,
+  "/components/admin/full-form-preview#FullFormPreview": FullFormPreview_6ef3535fb057c60d7e95ebd6192b5fc8,
   "/components/admin/submit-for-review#SubmitForReview": SubmitForReview_e717629fbfc51f9c28c9696160243a2b,
   "@payloadcms/next/client#SlugField": SlugField_2b8867833a34864a02ddf429b0728a40,
   "/components/admin/course-cycle#CourseCycle": CourseCycle_466d382d61b726658127d89553298bbd,

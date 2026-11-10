@@ -17,6 +17,7 @@ import { env } from '@/env'
 import { getEmailSettings } from '@/emails/settings'
 import { acceptanceMail } from '@/emails/transactional'
 import { createPerson } from '@/lib/create-person'
+import { submissionChoices } from '@/forms/submission-view'
 import { PUBLIC_APPLICATION_SUBMISSION, validateApplication } from '@/forms/application-validation'
 import type { FormSubmission } from '@/payload-types'
 
@@ -34,11 +35,12 @@ export const applicationFields: Field[] = [
   {
     name: 'choices',
     type: 'array',
+    admin: { components: { Field: '/components/admin/submission-choices#SubmissionChoices' } },
     access: { update: adminOnlyField },
     fields: [
       { name: 'course', type: 'relationship', relationTo: 'courses', required: true },
       { name: 'amount', type: 'number' },
-      { name: 'need_reduction', type: 'checkbox' },
+      { name: 'need_reduction', label: 'Needs a reduction', type: 'checkbox' },
       {
         name: 'answers',
         type: 'array',
@@ -55,6 +57,26 @@ export const applicationFields: Field[] = [
         access: { create: adminOnlyField, update: adminOnlyField },
       },
     ],
+  },
+  {
+    name: 'courses',
+    label: 'Courses',
+    type: 'text',
+    virtual: true,
+    admin: {
+      hidden: true,
+      disableListFilter: true,
+      components: { Cell: '/components/admin/submission-choices#CoursesCell' },
+    },
+    hooks: {
+      afterRead: [
+        async ({ data, req }) => {
+          return (await submissionChoices(req.payload, data?.choices, req))
+            .map((c) => c.title)
+            .join(', ')
+        },
+      ],
+    },
   },
   {
     name: 'status',
@@ -79,6 +101,7 @@ export const applicationFields: Field[] = [
   },
   {
     name: 'decided_at',
+    label: 'Decided at',
     type: 'date',
     access: { create: adminOnlyField, update: adminOnlyField },
     admin: { position: 'sidebar', readOnly: true, date: { pickerAppearance: 'dayAndTime' } },
@@ -93,6 +116,13 @@ export const applicationFields: Field[] = [
       { name: 'person', type: 'relationship', relationTo: 'people' },
       { name: 'membership', type: 'relationship', relationTo: 'memberships' },
       { name: 'enrollment', type: 'relationship', relationTo: 'enrollments' },
+      {
+        name: 'enrollments',
+        type: 'json',
+        admin: {
+          components: { Field: '/components/admin/submission-enrollments#SubmissionEnrollments' },
+        },
+      },
     ],
   },
 ]
@@ -104,11 +134,6 @@ const idOf = (value: unknown): number | null => {
 
 export const checkTarget: CollectionBeforeChangeHook = async ({ data, operation, req }) => {
   if (operation !== 'create') return data
-  // The page hides the button at the deadline; this repeats the rule where
-  // the API cannot skip it. Local callers (seeds, backfills) may still add
-  // one, the way they may add a historic submission at all.
-  // An unpublished course or programme has no page, but its id and form are
-  // easy to guess; its form is readable, so the API must refuse it too.
   data.choices = await validateApplication(
     req,
     data,
@@ -141,6 +166,7 @@ type Accepted = {
   person: number
   membership?: number
   enrollment?: number
+  enrollments?: { course: number; title: string; enrollment: number; created: boolean }[]
   /** For the email, sent once the transaction commits. */
   mail: { name: string; email: string; title: string; newAccount: boolean; site: string }
 }
@@ -180,10 +206,6 @@ const accept = async (req: PayloadRequest, id: number): Promise<Accepted | null>
   let user = found.docs[0]
   const newAccount = !user
   let result: Omit<Accepted, 'mail'>
-  // The person: the account's own, or a new hidden one named from the
-  // application. The name comes from the answer, not the email — the Users
-  // hook would name one from the email, so it is created here first, linked
-  // into the same write.
   if (!user) {
     const personId = await createPerson(req, applicant.name)
     user = await payload.create({
@@ -232,6 +254,7 @@ const accept = async (req: PayloadRequest, id: number): Promise<Accepted | null>
         })
       ).id
   } else {
+    result.enrollments = []
     for (const courseId of courseIds) {
       const { docs } = await payload.find({
         collection: 'enrollments',
@@ -262,6 +285,13 @@ const accept = async (req: PayloadRequest, id: number): Promise<Accepted | null>
             ...local,
           })
         ).id
+      const course = await payload.findByID({ collection: 'courses', id: courseId, ...local })
+      result.enrollments.push({
+        course: courseId,
+        title: course.title,
+        enrollment: enrollmentId,
+        created: !enrollment,
+      })
       if (kind === 'courses') result.enrollment = enrollmentId
     }
   }

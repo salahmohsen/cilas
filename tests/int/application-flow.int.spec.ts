@@ -7,14 +7,6 @@ import config from '@/payload.config'
 import { TURNSTILE_VERIFIED } from '@/lib/turnstile'
 import type { Course, Form, FormSubmission, Person, User } from '@/payload-types'
 
-/**
- * The whole application flow: a fellow writes a course's application
- * questions, an admin makes the registration form (name and email in every
- * form, not removable), an anonymous applicant answers by the options' labels,
- * and an admin's acceptance makes or finds the account, links a person and
- * enrolls them.
- */
-
 type Tracked =
   | 'forms'
   | 'form-submissions'
@@ -46,7 +38,6 @@ const ADMIN_EMAIL = `flow-admin-${RUN}@cilas.test`
 const FELLOW_EMAIL = `flow-fellow-${RUN}@cilas.test`
 const personSlug = (name: string) => `${name.replace(/\s+/g, '-').toLowerCase()}-${RUN}`
 
-/** The form builder requires a confirmation message. */
 const thanks = {
   root: {
     type: 'root',
@@ -118,7 +109,6 @@ const restCreate = async (
   } as never) as unknown as FormSubmission
 }
 
-/** Calls a decision endpoint as an admin, the way the Accept button does. */
 const decide = async (action: 'accept' | 'reject', id: number) => {
   const endpoint = (
     payload.collections['form-submissions'].config.endpoints as {
@@ -253,14 +243,12 @@ describe('the application flow, from the questions to the enrollment', () => {
     track('forms', form)
 
     const first = form.fields ?? []
-    // Nothing was built yet, and the two default questions stand there.
     expect(first.map((b) => [b.blockType, (b as { name?: string }).name])).toEqual([
       ['text', 'name'],
       ['email', 'email'],
     ])
     expect(first.every((b) => (b as { required?: boolean }).required === true)).toBe(true)
 
-    // An admin deleting or renaming them leaves the form as it was.
     const renamed = (await payload.update({
       collection: 'forms',
       id: form.id,
@@ -280,7 +268,6 @@ describe('the application flow, from the questions to the enrollment', () => {
     expect(after.slice(0, 2)).toEqual(['name', 'email'])
     expect(after.length).toBe(3)
 
-    // The course registers through the form.
     await payload.update({
       collection: 'courses',
       id: course.id,
@@ -340,6 +327,14 @@ describe('the application flow, from the questions to the enrollment', () => {
       person: person!.id,
       enrollment: enrollments.docs[0].id,
       membership: null,
+      enrollments: [
+        {
+          course: course.id,
+          title: course.title,
+          enrollment: enrollments.docs[0].id,
+          created: true,
+        },
+      ],
     })
     expect(payload.sendEmail).toHaveBeenCalledWith(expect.objectContaining({ to: APPLICANT_EMAIL }))
   })
@@ -410,7 +405,6 @@ describe('the application flow, from the questions to the enrollment', () => {
       overrideAccess: true,
     })
 
-    // Through the API the submission is refused, whatever the page sent.
     await expect(restCreate(APPLICANT_EMAIL)).rejects.toThrow(/not open/)
 
     // A local caller (a seed, a backfill) may still add a historic one.
@@ -418,7 +412,6 @@ describe('the application flow, from the questions to the enrollment', () => {
     track('form-submissions', backfilled)
     expect(backfilled.status).toBe('new')
 
-    // The deadline lifted, the same API submission goes through.
     await payload.update({
       collection: 'courses',
       id: course.id,
@@ -431,5 +424,4 @@ describe('the application flow, from the questions to the enrollment', () => {
   })
 })
 
-/** The cycle created in beforeAll; the course must name one. */
 const cycleId = () => created.find((t) => t.collection === 'cycles')!.id

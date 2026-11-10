@@ -127,6 +127,14 @@ export const Courses: CollectionConfig = {
     },
   },
   fields: [
+    {
+      name: 'fullFormPreview',
+      type: 'ui',
+      admin: {
+        position: 'sidebar',
+        components: { Field: '/components/admin/full-form-preview#FullFormPreview' },
+      },
+    },
     lastEditedByField,
     {
       label: 'Review',

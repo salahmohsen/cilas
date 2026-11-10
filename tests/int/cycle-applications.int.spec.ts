@@ -171,7 +171,6 @@ describe('cycle applications and approval', () => {
   })
   afterAll(async () => {
     vi.restoreAllMocks()
-    // Required course relationships must be removed before their courses.
     await payload.delete({ collection: 'form-submissions', where: { form: { equals: form.id } } })
     await cleanup(payload)
     await payload.destroy()
@@ -241,6 +240,9 @@ describe('cycle applications and approval', () => {
     const response = await accept(submission.id)
     expect(response && (await response.json())).toEqual({ ok: true, emailed: true })
     const result = await trackApplicant(submission)
+    expect(result.decided.result?.enrollments).toEqual([
+      expect.objectContaining({ course: writing.id, title: writing.title, created: true }),
+    ])
     expect(result.enrollments).toEqual([
       expect.objectContaining({
         course: writing.id,
@@ -271,6 +273,12 @@ describe('cycle applications and approval', () => {
     const reused = await trackApplicant(again)
     expect(reused.enrollments.map((e) => e.course).sort()).toEqual([writing.id, film.id].sort())
     expect(reused.person).toBe(result.person)
+    expect(reused.decided.result?.enrollments).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({ course: writing.id, created: false }),
+        expect.objectContaining({ course: film.id, created: true }),
+      ]),
+    )
     const bothMail = vi.mocked(payload.sendEmail).mock.calls.at(-1)![0]
     expect(bothMail.text).toContain(writing.title)
     expect(bothMail.text).toContain(film.title)

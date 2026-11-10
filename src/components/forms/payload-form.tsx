@@ -16,7 +16,7 @@ import {
   reductionKey,
   selectedKey,
   type ApplicationContext,
-} from './application-choices'
+} from '@/forms/application-choices'
 
 import { Checkbox } from '@/components/arc/checkbox/checkbox'
 import { FileUpload, type FileUploadItem } from '@/components/arc/file-upload/file-upload'
@@ -173,7 +173,7 @@ export function PayloadForm({
       ...Object.fromEntries(sharedQuestions.map((q) => [q.name, emptyFor(q)])),
       ...(application
         ? {
-            [selectedKey]: [String(application.initialCourse)],
+            [selectedKey]: application.initialCourse ? [String(application.initialCourse)] : [],
             ...Object.fromEntries(
               application.courses.flatMap((c) => [
                 [amountKey(c.id), String(defaultAmount(c) ?? '')],

@@ -329,6 +329,7 @@ export interface FormSubmission {
         id?: string | null;
       }[]
     | null;
+  courses?: string | null;
   status?: ('new' | 'accepted' | 'rejected') | null;
   decided_at?: string | null;
   result?: {
@@ -336,6 +337,15 @@ export interface FormSubmission {
     person?: (number | null) | Person;
     membership?: (number | null) | Membership;
     enrollment?: (number | null) | Enrollment;
+    enrollments?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
   };
   updatedAt: string;
   createdAt: string;
@@ -2957,6 +2967,7 @@ export interface FormSubmissionsSelect<T extends boolean = true> {
         accepted?: T;
         id?: T;
       };
+  courses?: T;
   status?: T;
   decided_at?: T;
   result?:
@@ -2966,6 +2977,7 @@ export interface FormSubmissionsSelect<T extends boolean = true> {
         person?: T;
         membership?: T;
         enrollment?: T;
+        enrollments?: T;
       };
   updatedAt?: T;
   createdAt?: T;

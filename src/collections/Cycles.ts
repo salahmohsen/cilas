@@ -50,7 +50,6 @@ export const deriveCycleIdentity: CollectionBeforeValidateHook = async ({
   }
 }
 
-/** One intake of courses in a season, start year and place (CONTEXT.md). */
 export const Cycles: CollectionConfig = {
   slug: 'cycles',
   access: {
@@ -72,6 +71,14 @@ export const Cycles: CollectionConfig = {
     afterDelete: [revalidateAfterDelete('cycles')],
   },
   fields: [
+    {
+      name: 'fullFormPreview',
+      type: 'ui',
+      admin: {
+        position: 'sidebar',
+        components: { Field: '/components/admin/full-form-preview#FullFormPreview' },
+      },
+    },
     { name: 'title', type: 'text', admin: { readOnly: true } },
     {
       name: 'slug',
