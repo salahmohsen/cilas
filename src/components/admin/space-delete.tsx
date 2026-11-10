@@ -6,7 +6,7 @@ import {
   PopupList,
   toast,
   useDocumentInfo,
-  useDocumentTitle,
+  useFormFields,
   useModal,
 } from '@payloadcms/ui'
 import { useRouter } from 'next/navigation'
@@ -39,7 +39,7 @@ const contentLine = (c: SpaceContentCounts): string => {
  */
 export function SpaceDeleteMenuItem() {
   const { id } = useDocumentInfo()
-  const { title } = useDocumentTitle()
+  const spaceName = useFormFields(([fields]) => fields.name?.value)
   const { openModal, closeModal } = useModal()
   const router = useRouter()
   const [summary, setSummary] = useState<Summary | null>(null)
@@ -48,7 +48,8 @@ export function SpaceDeleteMenuItem() {
 
   if (!id) return null
   const slug = `space-delete-${id}`
-  const name = (title || '').trim()
+  // Only community spaces have a name; any other space is confirmed by its ID.
+  const name = (typeof spaceName === 'string' && spaceName.trim()) || `Space ${id}`
 
   const open = async () => {
     setSummary(null)
