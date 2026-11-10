@@ -1,7 +1,9 @@
 import createMiddleware from 'next-intl/middleware'
 import { NextResponse, type NextRequest } from 'next/server'
 
+import { clientEnv } from './env.client'
 import { routing } from './i18n/routing'
+import { relayRequest } from './lib/analytics/hosts'
 
 const intl = createMiddleware(routing)
 
@@ -54,7 +56,14 @@ const loginFor = (request: NextRequest) => {
  * under the visitor's language for the catch-all route to look up.
  */
 export default function proxy(request: NextRequest) {
-  const { pathname } = request.nextUrl
+  const { pathname, search } = request.nextUrl
+  const relay = relayRequest(
+    pathname + search,
+    request.headers,
+    clientEnv.NEXT_PUBLIC_POSTHOG_KEY,
+    process.env.NEXT_PUBLIC_POSTHOG_HOST,
+  )
+  if (relay) return NextResponse.rewrite(relay.url, { request: { headers: relay.headers } })
   if (pathname === PRM_FOR_MCP) {
     const url = request.nextUrl.clone()
     url.pathname = '/api/.well-known/oauth-protected-resource'
@@ -101,13 +110,14 @@ export default function proxy(request: NextRequest) {
 }
 
 export const config = {
-  // Everything except Payload (/admin, /api), the analytics forwarding
-  // (/relay-k3, which must never be redirected to a language), Next internals and static files
+  // Everything except Payload (/admin, /api), Next internals and static files
   // (the web app manifest included: it is not under a locale); `.html` pages
-  // and `/uploads/...` are let through for the legacy lookup, and the
-  // admin's login, forgot and reset pages to send them to the site's own.
+  // and `/uploads/...` are let through for the legacy lookup, the analytics
+  // relay to forward it, and the admin's login, forgot and reset pages to
+  // send them to the site's own.
   matcher: [
     '/((?!api|admin|relay-k3|_next|_vercel|.*\\.(?:ico|png|jpe?g|gif|svg|webp|avif|css|js|map|txt|xml|json|webmanifest|woff2?|pdf)$).*)',
+    '/relay-k3/:path*',
     '/uploads/:path*',
     '/.well-known/oauth-authorization-server',
     '/.well-known/oauth-protected-resource',

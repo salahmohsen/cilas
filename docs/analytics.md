@@ -1,6 +1,6 @@
 # Analytics (PostHog)
 
-CILAS uses PostHog (EU Cloud, free plan) as its only analytics tool. There is no Google Analytics. It counts visits to the public pages, a few actions, errors, and a small sample of recorded visits. It sets no cookie and stores nothing in the browser, so the site needs no consent banner.
+CILAS uses PostHog (EU Cloud, free plan) as its only analytics tool. There is no Google Analytics. It counts visits to the public pages, a few actions and errors. It runs in PostHog's cookieless mode: it sets no cookie and stores nothing in a visitor's browser, so the site needs no consent banner.
 
 Without the keys the site builds and runs as before, loads no analytics code, makes no request to PostHog, and the dashboard widgets are hidden.
 
@@ -13,7 +13,6 @@ Automatic events, on public pages only:
 | `$pageview`   | A page loads, or the address changes without a reload | Path and campaign tags (`utm_*`, `ref`) only. Referrer is cut to origin and path. A person's name in `/people/<name>` is replaced by `[person]`.                                        |
 | `$exception`  | An unhandled browser error                            | Known noise is dropped (cancelled requests, extensions, `ResizeObserver`). One page load sends at most 5, and one of each kind.                                                         |
 | `$web_vitals` | A page has loaded and been used                       | LCP, CLS, FCP and INP, sent together about 5 seconds after the numbers are ready. Addresses nested in the event (`navigationURL`, the attribution's `url`) are cleaned like the others. |
-| `$snapshot`   | A session recording (10% of visits)                   | Only while on a public page. All form text and inputs are masked.                                                                                                                       |
 
 Events the site sends itself, through `track()` (`src/lib/analytics/track.ts`). Properties are public labels, never text a person typed:
 
@@ -38,7 +37,7 @@ An allowlist decides (`src/lib/analytics/paths.ts`). A page counts only if its f
 - `/admin` and `/api`.
 - Any path with a `preview` segment.
 
-Why: these pages show posts, comments, names, emails and tokens. No page view, recording or error is sent from them.
+Why: these pages show posts, comments, names, emails and tokens. No page view or error is sent from them.
 
 One gate (`src/lib/analytics/policy.ts`, PostHog's `before_send`) checks every event, whatever raised it, and drops it if the page is excluded. On the events it keeps, it cleans every property that holds an address, found by its name (ending in `url`, `pathname` or `referrer`, in any letter case), not only `$current_url`. It also looks inside nested objects, as the `$web_vitals_*_event` objects of a web vital. PostHog adds its own: the page a visit started on (`$session_entry_url`, `$session_entry_referrer`) and the page before (`$prev_pageview_pathname`). An address on this site is dropped when its page is excluded, and otherwise loses its query, its hash and a person's name. An address on another site keeps only its origin and path. A search engine keyword (`$session_entry_ph_keyword`) is dropped. A browser error message is cleaned of emails and secrets, as a server error message is.
 
@@ -46,34 +45,36 @@ One gate (`src/lib/analytics/policy.ts`, PostHog's `before_send`) checks every e
 
 The two exceptions are `login` and `push_enabled`. They happen on pages that are otherwise excluded (the login and settings pages). They are sent with no address (`/[private]`), no referrer and no other property.
 
-Never done: `posthog.identify`, autocapture, page-leave events, heart beats, heat maps, feature flags, surveys, network capture in recordings (`network_timing: false`).
+Never done: `posthog.identify`, autocapture, page-leave events, heart beats, heat maps, feature flags, surveys, session recordings (cookieless mode cannot record).
 
 ## Cookieless
 
-`persistence: 'memory'`: PostHog keeps its state in the page only. No cookie, no `localStorage`, no `sessionStorage`. `person_profiles: 'identified_only'` and no one is identified, so no person profile is made. `respect_dnt` is on.
+`cookieless_mode: 'always'` in `src/lib/analytics/client.ts`, and "Cookieless server hash mode" on in the PostHog project (Settings, Web analytics). The browser stores nothing: no cookie, no `localStorage`, no `sessionStorage`. PostHog makes each event's `distinct_id` on its servers from a hash of the project, the IP, the user agent, the host and a salt that it deletes each day. It removes the IP before it stores the event. `person_profiles: 'identified_only'` and no one is identified, so no person profile is made. `respect_dnt` is on.
 
-What this means for the numbers: a new page load is a new visitor. Someone who reloads, or comes back tomorrow, counts again. "Visitors" is therefore "visits", and a little higher than real people. Page navigation inside the site (no reload) stays one visitor. The dashboard says this on the Traffic widget.
+What this means for the numbers: a visitor is one person on one day. Reloads, new tabs and other pages on the same day stay one visitor. Someone who comes back on another day counts again, so a 30-day "Visitors" total is a count of person-days. Two people on the same network with the same browser version on the same day count as one. The dashboard says this on the Visitors and Traffic widgets.
+
+The hash needs the visitor's real IP. See the relay below: without it, every visitor shares one IP and one hash.
+
+Cookieless mode removes the IP before GeoIP runs, so events have no country. The Audience widget shows the browser's time zone (`$timezone`) in its place.
+
+Session recording cannot run in this mode (posthog-js 1.444 throws if it starts), so it is off in the client and in the project.
+
+### Staff devices
+
+A device that opens `/admin` gets one `localStorage` flag, `cilas:staff-device` (`isStaffDevice` in `client.ts`). Analytics never starts on that device again, so the team's own visits are not counted. It is the only thing analytics stores, and only on staff devices. To count a staff device again, clear the flag in the browser's site data.
 
 ## How events reach PostHog
 
-The browser sends to the site's own address, `/relay-k3/*` (`INGEST_PATH` in `src/lib/analytics/hosts.ts`). `next.config.ts` forwards it to PostHog: `static` and `array` to `eu-assets.i.posthog.com`, the rest to `eu.i.posthog.com`. Ad blockers that list `posthog.com` do not break it. The path name is arbitrary on purpose; PostHog advises against obvious names.
+The browser sends to the site's own address, `/relay-k3/*` (`INGEST_PATH` in `src/lib/analytics/hosts.ts`). `src/proxy.ts` forwards it to PostHog with `relayRequest`: `static` and `array` to `eu-assets.i.posthog.com`, the rest to `eu.i.posthog.com`.
+
+The relay changes two headers. It sets `X-Forwarded-For` to the visitor's IP from Cloudflare's `cf-connecting-ip` (else the first address already in `X-Forwarded-For`). Without this, PostHog saw the address of the proxy in front of the Next server (`10.0.1.191`), so GeoIP found nothing and the cookieless hash would join all visitors. It also removes the `cookie` header, so the site's cookies, the login cookie among them, never reach PostHog. Ad blockers that list `posthog.com` do not break it. The path name is arbitrary on purpose; PostHog advises against obvious names.
 
 Related settings:
 
 - `skipTrailingSlashRedirect: true` is needed because PostHog paths end in a slash. `src/proxy.ts` puts the redirect back for the site's own pages (`/en/about/` goes to `/en/about`).
-- The proxy matcher in `src/proxy.ts` skips `relay-k3`, so the language redirect never touches it.
+- The relay is handled first in `src/proxy.ts`, before the language and trailing-slash redirects.
 - The site sets no Content-Security-Policy, so nothing else is needed. If one is added, allow `'self'` for `script-src`, `connect-src` and `worker-src blob:` (the recorder).
 - `robots.txt` disallows `/relay-k3/`.
-- The relay passes traffic through the site server. Recordings are the largest part, which is one reason only 10% are recorded.
-
-## Session recording
-
-- Sampled at 10% of page loads, decided in the browser (`REPLAY_SAMPLE_RATE` in `src/lib/analytics/client.ts`).
-- Starts and stops with the page: it stops as soon as the address changes to an excluded page.
-- `maskAllInputs: true`, and all text inside a `<form>` or an element with `data-analytics-mask` is masked. That covers the application, newsletter and contact forms.
-- PostHog's 2026-08-30 defaults make a recording shorter than the project's minimum duration be dropped.
-
-Set these once in PostHog (Project settings, Session replay), because the key in the site cannot: minimum duration 5 seconds, and "Discard client IP data" on in the project settings if you want no IP-based location kept.
 
 ## Web vitals
 
@@ -85,21 +86,21 @@ The client setting turns them on; the project toggle is not needed. See them on 
 
 The admin dashboard home shows these widgets (`src/components/admin/dashboard/widgets/analytics.tsx`), all built from Arc charts. They are in the default layout only when the three server settings below are set, and they can be added, moved or removed like the others. Reset layout works as before.
 
-| Widget                   | Arc component         | Data                                                                            |
-| ------------------------ | --------------------- | ------------------------------------------------------------------------------- |
-| Visitors, Page views     | Sparkline             | Daily counts for 30 days, change against the 30 days before                     |
-| Site errors              | Metric card           | `$exception` events, last 7 days                                                |
-| Traffic                  | Line chart            | Page views and visitors per day                                                 |
-| Application funnel       | Progress              | Viewed an apply page, `apply_started`, `apply_submitted`                        |
-| Top pages                | Progress              | Page views by path, both languages added together                               |
-| Page movement            | Slope chart           | The busiest pages, now against the 30 days before                               |
-| Where visitors come from | Waffle chart          | `utm_source`, else referring domain; the site itself is dropped                 |
-| Audience                 | Donut chart, Progress | Language, device, country                                                       |
-| What visitors do         | list                  | The six own events above, with change                                           |
-| Courses and events       | Progress              | Views of `/study/<slug>` and `/events/<slug>`                                   |
-| Web vitals               | Gauge                 | Share of page loads rated good for LCP, INP, CLS, FCP, with p75                 |
-| PostHog free plan        | Usage meter           | This month's events (errors left out), errors and recordings against the limits |
-| Daily activity           | Activity heatmap      | Page views per day for a year                                                   |
+| Widget                   | Arc component         | Data                                                                |
+| ------------------------ | --------------------- | ------------------------------------------------------------------- |
+| Visitors, Page views     | Sparkline             | Daily counts for 30 days, change against the 30 days before         |
+| Site errors              | Metric card           | `$exception` events, last 7 days                                    |
+| Traffic                  | Line chart            | Page views and visitors per day                                     |
+| Application funnel       | Progress              | Viewed an apply page, `apply_started`, `apply_submitted`            |
+| Top pages                | Progress              | Page views by path, both languages added together                   |
+| Page movement            | Slope chart           | The busiest pages, now against the 30 days before                   |
+| Where visitors come from | Waffle chart          | `utm_source`, else referring domain; the site itself is dropped     |
+| Audience                 | Donut chart, Progress | Language, device, browser time zone                                 |
+| What visitors do         | list                  | The six own events above, with change                               |
+| Courses and events       | Progress              | Views of `/study/<slug>` and `/events/<slug>`                       |
+| Web vitals               | Gauge                 | Share of page loads rated good for LCP, INP, CLS, FCP, with p75     |
+| PostHog free plan        | Usage meter           | This month's events (errors left out) and errors against the limits |
+| Daily activity           | Activity heatmap      | Page views per day for a year                                       |
 
 The Arc Pro funnel chart is not used (no licence); the funnel is built from Progress bars.
 
@@ -125,9 +126,9 @@ The two `NEXT_PUBLIC_*` values are inlined into the browser code at build time, 
 
 ## Staying on the free plan
 
-Free limits per month (check https://posthog.com/pricing before relying on them): 1,000,000 events, 5,000 session recordings, 1,000,000 flag requests, 100,000 exceptions. No payment method is on the account, so PostHog stops counting at the limit; nothing is charged.
+Free limits per month (check https://posthog.com/pricing before relying on them): 1,000,000 events, 1,000,000 flag requests, 100,000 exceptions. No payment method is on the account, so PostHog stops counting at the limit; nothing is charged.
 
-How the design stays far below them: no autocapture, no page-leave, no heart beats; a page view is one event; web vitals add about 30% of the page view count (PostHog's average); the own events fire once per action; recordings are 10% and dropped when short; exceptions are limited per page load and per server process; bots are filtered by PostHog; feature flags are not evaluated.
+How the design stays far below them: no autocapture, no page-leave, no heart beats; a page view is one event; web vitals add about 30% of the page view count (PostHog's average); the own events fire once per action; exceptions are limited per page load and per server process; bots are filtered by PostHog; feature flags are not evaluated.
 
 To check usage: the "PostHog free plan" widget on the dashboard, or PostHog's Billing page (Organization settings). The widget counts the calendar month, which is close to PostHog's billing period.
 
@@ -151,6 +152,7 @@ Rotate it at once if it was ever pasted into a chat, a log or a commit.
 
 ## Known limits
 
-- The HogQL was checked against a mock of the Query API, not against live PostHog, by tests and a local run. Run `pnpm analytics:check` after the first deploy.
-- The relay passes through Traefik and the Next server. If PostHog requests fail with 400 or 503 in production, see PostHog's "Next.js rewrites" troubleshooting.
+- Run `pnpm analytics:check` after changing a query. A wrong column fails at PostHog, and a widget that fails shows nothing, so a mock-only test does not catch it. The old recordings meter read `min_first_timestamp`, a column that does not exist, and was hidden for this reason.
+- The visitor IP comes from Cloudflare's `cf-connecting-ip`. A request that reaches the server without Cloudflare can set its own `X-Forwarded-For` and so its own cookieless hash. This only affects counts.
+- Counts before the cookieless switch (November 2026) are page loads, not visitors, and include staff visits.
 - Bots that do not set a recognised user agent can still count as visitors.

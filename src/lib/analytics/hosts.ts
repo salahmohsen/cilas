@@ -22,12 +22,29 @@ export const posthogHosts = (host?: string) => {
   }
 }
 
-export const ingestRewrites = (key: string | undefined, host?: string) => {
-  if (!key) return []
+/**
+ * Where a relay request goes, and with which headers, or null when the path is
+ * not the relay or analytics is off. PostHog reads the visitor's address from
+ * `X-Forwarded-For`, but behind Cloudflare and Traefik that header names the
+ * proxy (10.0.1.191 in production), which broke GeoIP and would make every
+ * visitor share one cookieless hash. Cloudflare's `cf-connecting-ip` is the
+ * visitor. The site's cookies, the login among them, never leave. `path`
+ * keeps its query string, which PostHog uses.
+ */
+export const relayRequest = (
+  path: string,
+  incoming: Headers,
+  key: string | undefined,
+  host?: string,
+): { url: string; headers: Headers } | null => {
+  if (!key || !path.startsWith(`${INGEST_PATH}/`)) return null
   const { ingest, assets } = posthogHosts(host)
-  return [
-    { source: `${INGEST_PATH}/static/:path*`, destination: `${assets}/static/:path*` },
-    { source: `${INGEST_PATH}/array/:path*`, destination: `${assets}/array/:path*` },
-    { source: `${INGEST_PATH}/:path*`, destination: `${ingest}/:path*` },
-  ]
+  const rest = path.slice(INGEST_PATH.length)
+  const origin = /^\/(static|array)\//.test(rest) ? assets : ingest
+  const headers = new Headers(incoming)
+  headers.delete('cookie')
+  const visitor =
+    incoming.get('cf-connecting-ip') ?? incoming.get('x-forwarded-for')?.split(',')[0]?.trim()
+  if (visitor) headers.set('x-forwarded-for', visitor)
+  return { url: `${origin}${rest}`, headers }
 }

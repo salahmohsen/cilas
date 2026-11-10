@@ -163,13 +163,14 @@ export const deviceSplit = (rows: Row[]): Ranked[] => {
 }
 
 /** Rows are `[country, visitors]`. */
-export const topCountries = (rows: Row[], limit = 6): Ranked[] => {
+/** Rows are `[IANA time zone, visitors]`; each is shown by its city, as Cairo for Africa/Cairo. */
+export const topTimeZones = (rows: Row[], limit = 6): Ranked[] => {
   const totals = new Map<string, number>()
-  for (const [country, visitors] of rows) {
-    const name = text(country).trim()
+  for (const [zone, visitors] of rows) {
+    const name = text(zone).trim()
     if (name && name !== 'null') totals.set(name, (totals.get(name) ?? 0) + count(visitors))
   }
-  return ranked(totals, limit, (name) => name)
+  return ranked(totals, limit, (name) => name.split('/').pop()!.replaceAll('_', ' '))
 }
 
 /* Referrers */
@@ -328,28 +329,15 @@ export const webVitalsFrom = (rows: Row[]): WebVital[] => {
 /* The free plan's monthly allowance */
 
 /** Free plan limits per month (https://posthog.com/pricing). */
-export const FREE_LIMITS = { events: 1_000_000, recordings: 5_000, errors: 100_000 } as const
+export const FREE_LIMITS = { events: 1_000_000, errors: 100_000 } as const
 
 export type Usage = { key: keyof typeof FREE_LIMITS; label: string; used: number; limit: number }
 
-/**
- * `usage` is `[events, errors]` and `recordings` is `[recordings]`, both since
- * the start of the month. Recordings are optional: if that query fails the
- * meter is left out rather than the whole widget.
- */
-export const usageFrom = (usage: Row[], recordings: Row[] | null): Usage[] => {
+/** `usage` is one row, `[events, errors]`, since the start of the month. */
+export const usageFrom = (usage: Row[]): Usage[] => {
   const [events, errors] = usage[0] ?? []
-  const meters: Usage[] = [
+  return [
     { key: 'events', label: 'Events', used: count(events), limit: FREE_LIMITS.events },
     { key: 'errors', label: 'Errors', used: count(errors), limit: FREE_LIMITS.errors },
   ]
-  if (recordings) {
-    meters.push({
-      key: 'recordings',
-      label: 'Recordings',
-      used: count(recordings[0]?.[0]),
-      limit: FREE_LIMITS.recordings,
-    })
-  }
-  return meters
 }

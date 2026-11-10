@@ -18,7 +18,7 @@ import {
   goalsFrom,
   languageSplit,
   pageMovement,
-  topCountries,
+  topTimeZones,
   topCourses,
   topEvents,
   topPages,
@@ -40,7 +40,7 @@ import { WidgetCard } from '../widget-card'
 
 const PERIOD = 'Last 30 days'
 const VISITOR_NOTE =
-  'Each page load counts as a visitor: the site keeps no cookie to tell people apart.'
+  'A visitor is one person on one day. Without cookies, a person who comes back on another day counts again. Staff devices are not counted.'
 
 const openIn = (path: string, label = 'Open in PostHog') => {
   const href = posthogLink(path)
@@ -225,10 +225,10 @@ export async function TrafficSources() {
 }
 
 export async function Audience() {
-  const [pages, devices, countries] = await Promise.all([
+  const [pages, devices, timeZones] = await Promise.all([
     posthogRows('pages'),
     posthogRows('devices'),
-    posthogRows('countries'),
+    posthogRows('timeZones'),
   ])
   const donut = (items: Ranked[], label: string, total: string) => (
     <DonutChart
@@ -258,10 +258,10 @@ export async function Audience() {
           {donut(deviceSplit(devices), 'Visitors by device', 'Visitors')}
         </div>
         <div>
-          <h3 className={styles.subhead}>Country</h3>
+          <h3 className={styles.subhead}>Time zone</h3>
           <RankedList
-            items={topCountries(countries)}
-            total={countries.reduce((sum, row) => sum + Number(row[1] ?? 0), 0)}
+            items={topTimeZones(timeZones)}
+            total={timeZones.reduce((sum, row) => sum + Number(row[1] ?? 0), 0)}
             unit="visitors"
           />
         </div>
@@ -378,10 +378,7 @@ export async function WebVitals() {
 }
 
 export async function FreePlanUsage() {
-  const [usage, recordings] = await Promise.all([
-    posthogRows('usage'),
-    posthogRows('recordings').catch(() => null),
-  ])
+  const usage = await posthogRows('usage')
   return (
     <WidgetCard
       title="PostHog free plan"
@@ -389,7 +386,7 @@ export async function FreePlanUsage() {
       action={openIn('settings/organization-billing', 'Billing')}
     >
       <div className={styles.meters}>
-        {usageFrom(usage, recordings).map((meter) => (
+        {usageFrom(usage).map((meter) => (
           <UsageMeter
             key={meter.key}
             label={meter.label}

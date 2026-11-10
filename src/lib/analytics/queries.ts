@@ -56,13 +56,16 @@ export const QUERIES = {
     GROUP BY device
     ORDER BY visitors DESC`,
 
-  /** `[country, visitors]`, 30 days. */
-  countries: `
-    SELECT toString(properties.$geoip_country_name) AS country,
+  /**
+   * `[time zone, visitors]`, 30 days. The browser's time zone stands in for
+   * the country: PostHog strips the IP from a cookieless event before GeoIP.
+   */
+  timeZones: `
+    SELECT toString(properties.$timezone) AS time_zone,
            count(DISTINCT distinct_id) AS visitors
     FROM events
     WHERE event = '$pageview' AND timestamp >= now() - INTERVAL 30 DAY
-    GROUP BY country
+    GROUP BY time_zone
     ORDER BY visitors DESC
     LIMIT 20`,
 
@@ -109,12 +112,6 @@ export const QUERIES = {
     SELECT countIf(event != '$exception') AS event_count, countIf(event = '$exception') AS error_count
     FROM events
     WHERE timestamp >= toStartOfMonth(now())`,
-
-  /** One row: `[recordings]` since the start of this month. */
-  recordings: `
-    SELECT count() AS recordings
-    FROM session_replay_events
-    WHERE min_first_timestamp >= toStartOfMonth(now())`,
 } as const
 
 export type QueryName = keyof typeof QUERIES
