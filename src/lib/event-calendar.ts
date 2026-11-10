@@ -1,3 +1,4 @@
+import { contributionLabel } from '@/lib/pricing'
 import { cairoDay, cairoInstant } from '@/lib/cairo-day'
 import { buildIcs, type IcsEntry } from '@/lib/ics'
 import { plainText } from '@/lib/plaintext'
@@ -32,12 +33,11 @@ const eventDetails = (event: Event, url: string, words: Words): string => {
       typeof person === 'object' && person ? [role ? `${person.name} (${role})` : person.name] : [],
     )
     .join(', ')
-  const price =
-    event.pricing?.min != null
-      ? event.pricing.min === 0 && !event.pricing.max
-        ? words.free
-        : `${event.pricing.min}${event.pricing.max ? `–${event.pricing.max}` : ''} ${words.egp}`
-      : null
+  const price = contributionLabel(event.pricing, {
+    free: words.free,
+    currency: words.egp,
+    currencyPosition: 'after',
+  })
   return [
     event.description ? plainText({ data: event.description }).trim() : null,
     speakers ? `${words.speakers}: ${speakers}` : null,

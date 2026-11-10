@@ -93,7 +93,10 @@ describe('event attendance calendar', () => {
 
 describe('event attendance section', () => {
   it('shows the price, and registration that is set up but closed', async () => {
-    const priced = await render({ ...event, pricing: { min: 100 } } as Event)
+    const priced = await render({
+      ...event,
+      pricing: { options: [{ amount: 100, default: true }] },
+    } as Event)
     expect(priced.body.textContent).toContain('Attendance')
     expect(priced.body.textContent).toContain('100')
     const closed = await render({

@@ -18,7 +18,7 @@ import {
   SESSION_UNIT_OPTIONS,
   TEACHING_LANGUAGE_OPTIONS,
 } from '@/fields/course-options'
-import { pricingField } from '@/fields/pricing'
+import { contributionField } from '@/fields/pricing'
 import { registrationField } from '@/fields/registration'
 import { courseQuestionBlocks } from '@/forms/form-fields'
 import { scheduleField, timeRangeFields } from '@/fields/schedule'
@@ -388,7 +388,7 @@ export const Courses: CollectionConfig = {
         },
         { label: 'Schedule', fields: [scheduleField()] },
         {
-          label: 'Applications and pricing',
+          label: 'Applications and contribution',
           fields: [
             {
               name: 'effective_settings',
@@ -409,11 +409,12 @@ export const Courses: CollectionConfig = {
                   'Extra questions for this course, asked after the website form’s own. They go live when an admin publishes the course. Not used when applications go to an external link, such as a Google Form.',
               },
             },
-            pricingField({
+            contributionField({
               name: 'pricing_override',
-              label: 'Price override',
+              label: 'Contribution override',
               dbName: 'course_price',
-              description: 'Only when this course costs something other than its cycle’s price.',
+              description:
+                'Leave options empty to use the contribution for this course type from its cycle.',
             }),
           ],
         },

@@ -27,7 +27,7 @@ const event = {
   },
   external_venue: { name: 'Venue', address: 'Street 1' },
   speakers: [{ person: { id: 1, name: 'Ada' }, role: 'Moderator' }],
-  pricing: { min: 0 },
+  pricing: { options: [{ amount: 0, default: true }] },
 } as unknown as Event
 
 describe('event calendar', () => {

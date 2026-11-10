@@ -3,7 +3,7 @@ import type { CollectionConfig } from 'payload'
 
 import { isAdmin, publishedOrAdmin } from '@/access'
 import { COURSE_TYPE_OPTIONS } from '@/fields/course-type'
-import { pricingField } from '@/fields/pricing'
+import { contributionField } from '@/fields/pricing'
 import { registrationField } from '@/fields/registration'
 import { slugField } from '@/fields/slug'
 import { importFields } from '@/fields/import'
@@ -178,8 +178,11 @@ export const Programmes: CollectionConfig = {
           ],
         },
         {
-          label: 'Applications and pricing',
-          fields: [registrationField(), pricingField({ dbName: 'programme_price' })],
+          label: 'Applications and contribution',
+          fields: [
+            registrationField(),
+            contributionField({ dbName: 'programme_price', paymentPlans: true }),
+          ],
         },
       ],
     },

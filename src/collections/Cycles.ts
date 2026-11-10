@@ -3,7 +3,7 @@ import type { CollectionBeforeValidateHook, CollectionConfig } from 'payload'
 
 import { anyone, isAdmin } from '@/access'
 import { COURSE_TYPE_OPTIONS } from '@/fields/course-type'
-import { pricingField } from '@/fields/pricing'
+import { contributionField } from '@/fields/pricing'
 import { registrationField } from '@/fields/registration'
 import { academicYear, cycleTitle, SEASONS, type Season } from '@/lib/cycle'
 import { slugify } from '@/lib/slugify'
@@ -132,8 +132,9 @@ export const Cycles: CollectionConfig = {
     registrationField(),
     {
       name: 'pricing',
+      label: 'Contributions',
       type: 'array',
-      admin: { description: 'One price per group of course types.' },
+      admin: { description: 'Contribution options for each group of course types.' },
       fields: [
         {
           name: 'course_types',
@@ -141,9 +142,9 @@ export const Cycles: CollectionConfig = {
           hasMany: true,
           required: true,
           options: [...COURSE_TYPE_OPTIONS],
-          admin: { description: 'Which course types this price is for, e.g. Thematic and Lab.' },
+          admin: { description: 'Course types that share these contribution options.' },
         },
-        pricingField({ dbName: 'cycle_price' }),
+        contributionField({ dbName: 'cycle_price' }),
       ],
     },
     {

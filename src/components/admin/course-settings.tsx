@@ -1,11 +1,13 @@
 'use client'
 
+import { reduceFieldsToValues } from 'payload/shared'
+
 import { CAIRO } from '@/lib/cairo-day'
 
 import { useFormFields } from '@payloadcms/ui'
 import { useEffect, useState } from 'react'
-import type { Cycle } from '@/payload-types'
-import { priceLabel } from '@/lib/pricing'
+import type { Course, Cycle } from '@/payload-types'
+import { contributionLabel } from '@/lib/pricing'
 import { courseRegistration, type RegistrationMethod } from '@/lib/registration'
 
 export function CourseSettings() {
@@ -16,8 +18,9 @@ export function CourseSettings() {
     form: fields['registration.form']?.value as number | null,
     url: fields['registration.url']?.value as string | null,
     deadline: fields['registration.deadline']?.value as string | null,
-    min: fields['pricing_override.min']?.value as number | null,
-    max: fields['pricing_override.max']?.value as number | null,
+    contribution: (
+      reduceFieldsToValues(fields, true) as { pricing_override?: Course['pricing_override'] }
+    ).pricing_override,
   }))
   const [loaded, setLoaded] = useState<{ id: number; cycle?: Cycle; error?: boolean } | null>(null)
   useEffect(() => {
@@ -39,7 +42,7 @@ export function CourseSettings() {
   if (!values.cycle)
     return (
       <p className="field-description">
-        Choose a cycle to see inherited application settings and pricing.
+        Choose a cycle to see inherited application settings and contribution.
       </p>
     )
   if (loaded?.id !== values.cycle) return <p role="status">Loading cycle settings…</p>
@@ -63,7 +66,7 @@ export function CourseSettings() {
         url: values.url,
         deadline: values.deadline,
       },
-      pricing_override: { min: values.min, max: values.max },
+      pricing_override: values.contribution,
     },
     cycle,
   )
@@ -99,8 +102,8 @@ export function CourseSettings() {
           : 'No deadline'}
       </p>
       <p>
-        Price: {priceLabel(price) ?? 'Not set'}
-        {values.min == null ? ' · inherited from cycle' : ' · course override'}
+        Contribution: {contributionLabel(price) ?? 'Not set'}
+        {!values.contribution?.options?.length ? ' · inherited from cycle' : ' · course override'}
       </p>
     </aside>
   )

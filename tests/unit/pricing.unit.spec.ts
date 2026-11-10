@@ -1,30 +1,52 @@
 import { describe, expect, it } from 'vitest'
 
-import { priceLabel, pricingFor } from '@/lib/pricing'
+import { contributionLabel, pricingFor, validateContributionOptions } from '@/lib/pricing'
 
 const cycle = {
   pricing: [
-    { course_types: ['THEMATIC', 'LAB'], pricing: { min: 1500, max: 2000 } },
-    { course_types: ['WORKSHOP'], pricing: { min: 800 } },
+    {
+      course_types: ['THEMATIC', 'LAB'],
+      pricing: {
+        options: [
+          { amount: 1500, default: true },
+          { amount: 2000, default: false },
+        ],
+      },
+    },
+    { course_types: ['WORKSHOP'], pricing: { options: [{ amount: 800, default: true }] } },
   ],
 }
 
 describe('pricingFor', () => {
   it("uses the cycle's price for the course type", () => {
-    expect(pricingFor({ course_type: 'LAB' }, cycle)).toEqual({ min: 1500, max: 2000 })
-    expect(pricingFor({ course_type: 'WORKSHOP' }, cycle)).toEqual({ min: 800 })
+    expect(pricingFor({ course_type: 'LAB' }, cycle)).toEqual({
+      options: [
+        { amount: 1500, default: true },
+        { amount: 2000, default: false },
+      ],
+    })
+    expect(pricingFor({ course_type: 'WORKSHOP' }, cycle)).toEqual({
+      options: [{ amount: 800, default: true }],
+    })
   })
 
-  it("prefers the course's own override when it has a minimum", () => {
-    expect(pricingFor({ course_type: 'LAB', pricing_override: { min: 0 } }, cycle)).toEqual({
-      min: 0,
+  it("prefers the course's own override when it has options", () => {
+    expect(
+      pricingFor(
+        { course_type: 'LAB', pricing_override: { options: [{ amount: 0, default: true }] } },
+        cycle,
+      ),
+    ).toEqual({
+      options: [{ amount: 0, default: true }],
     })
   })
 
   it('ignores an empty override', () => {
-    expect(pricingFor({ course_type: 'LAB', pricing_override: { min: null } }, cycle)).toEqual({
-      min: 1500,
-      max: 2000,
+    expect(pricingFor({ course_type: 'LAB', pricing_override: { options: [] } }, cycle)).toEqual({
+      options: [
+        { amount: 1500, default: true },
+        { amount: 2000, default: false },
+      ],
     })
   })
 
@@ -34,19 +56,59 @@ describe('pricingFor', () => {
   })
 })
 
-describe('priceLabel', () => {
+describe('contributionLabel', () => {
   it('shows a single price or a range in EGP', () => {
-    expect(priceLabel({ min: 800 })).toBe('EGP 800')
-    expect(priceLabel({ min: 1500, max: 2000 })).toBe('EGP 1,500–2,000')
-    expect(priceLabel({ min: 1500, max: 1500 })).toBe('EGP 1,500')
+    expect(contributionLabel({ options: [{ amount: 800, default: true }] })).toBe('EGP 800')
+    expect(
+      contributionLabel({
+        options: [
+          { amount: 1500, default: true },
+          { amount: 2000, default: false },
+        ],
+      }),
+    ).toBe('EGP 1,500–2,000')
+    expect(
+      contributionLabel({
+        options: [
+          { amount: 1500, default: true },
+          { amount: 1500, default: false },
+        ],
+      }),
+    ).toBe('EGP 1,500')
   })
 
   it('calls a zero price free', () => {
-    expect(priceLabel({ min: 0 })).toBe('Free')
+    expect(contributionLabel({ options: [{ amount: 0, default: true }] })).toBe('Free')
   })
 
-  it('is null without a minimum', () => {
-    expect(priceLabel({ min: null })).toBeNull()
-    expect(priceLabel(null)).toBeNull()
+  it('is null without options', () => {
+    expect(contributionLabel({ options: [] })).toBeNull()
+    expect(contributionLabel(null)).toBeNull()
   })
+})
+
+describe('contribution defaults', () => {
+  it('allows unset or empty options for inheritance', () => {
+    expect(validateContributionOptions(undefined)).toBe(true)
+    expect(validateContributionOptions(null)).toBe(true)
+    expect(validateContributionOptions([])).toBe(true)
+  })
+
+  it('requires exactly one default regardless of its position or amount', () => {
+    expect(validateContributionOptions([{ default: false }, { default: true }])).toBe(true)
+    expect(validateContributionOptions([{ default: true }])).toBe(true)
+    expect(validateContributionOptions([{ default: false }])).not.toBe(true)
+    expect(validateContributionOptions([{}, {}])).not.toBe(true)
+    expect(validateContributionOptions([{ default: true }, { default: true }])).not.toBe(true)
+  })
+})
+
+it('labels unsorted options by their extrema and preserves localized words', () => {
+  const contribution = { options: [{ amount: 3500 }, { amount: 2000 }, { amount: 1500 }] }
+  expect(contributionLabel(contribution)).toBe('EGP 1,500–3,500')
+  expect(contributionLabel({ options: [{ amount: 0 }, { amount: 800 }] })).toBe('EGP 0–800')
+  expect(contributionLabel({ options: [{ amount: 0 }] }, { free: 'مجاني' })).toBe('مجاني')
+  expect(contributionLabel(contribution, { currency: 'ج.م', currencyPosition: 'after' })).toBe(
+    '1,500–3,500 ج.م',
+  )
 })

@@ -2,7 +2,7 @@ import { tierField } from '@/fields/tier'
 import type { CollectionConfig } from 'payload'
 
 import { isAdmin, readTiers } from '@/access'
-import { pricingField } from '@/fields/pricing'
+import { contributionField } from '@/fields/pricing'
 import { registrationField } from '@/fields/registration'
 import { scheduleField, timeRangeFields } from '@/fields/schedule'
 import { slugField } from '@/fields/slug'
@@ -153,8 +153,8 @@ export const Events: CollectionConfig = {
           ],
         },
         {
-          label: 'Registration and pricing',
-          fields: [registrationField(), pricingField({ dbName: 'event_price' })],
+          label: 'Registration and contribution',
+          fields: [registrationField(), contributionField({ dbName: 'event_price' })],
         },
         {
           label: 'Relationships',

@@ -12,7 +12,10 @@ const cycle = {
     deadline: '2026-03-01',
   },
   pricing: [
-    { course_types: ['THEMATIC' as const], pricing: { min: 1500, note: 'Cycle contribution' } },
+    {
+      course_types: ['THEMATIC' as const],
+      pricing: { options: [{ amount: 1500, default: true }], note: 'Cycle contribution' },
+    },
   ],
 }
 
@@ -27,7 +30,7 @@ describe('courseRegistration', () => {
           url: 'https://course.example/apply',
           deadline: '2026-04-01',
         },
-        pricing_override: { min: 0, note: 'Free workshop' },
+        pricing_override: { options: [{ amount: 0, default: true }], note: 'Free workshop' },
       },
       cycle,
       midnight,
@@ -38,7 +41,7 @@ describe('courseRegistration', () => {
       formId: 9,
       url: 'https://course.example/apply',
       deadline: '2026-04-01',
-      price: { min: 0, note: 'Free workshop' },
+      price: { options: [{ amount: 0, default: true }], note: 'Free workshop' },
     })
   })
 
@@ -52,7 +55,7 @@ describe('courseRegistration', () => {
           url: null,
           deadline: null,
         },
-        pricing_override: { min: null, note: 'Unused override' },
+        pricing_override: { options: [], note: 'Unused override' },
       },
       cycle,
       lateOnDeadline,
@@ -63,7 +66,7 @@ describe('courseRegistration', () => {
       formId: 7,
       url: 'https://cycle.example/apply',
       deadline: '2026-03-01',
-      price: { min: 1500, note: 'Cycle contribution' },
+      price: { options: [{ amount: 1500, default: true }], note: 'Cycle contribution' },
     })
     expect(
       courseRegistration({ registration: { method: 'external' } }, cycle, lateOnDeadline),

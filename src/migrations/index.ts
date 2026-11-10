@@ -63,6 +63,7 @@ import * as migration_20261108_141105_space_email_cron from './20261108_141105_s
 import * as migration_20261109_110023_mcp_api_keys from './20261109_110023_mcp_api_keys';
 import * as migration_20261109_114307_mcp_oauth from './20261109_114307_mcp_oauth';
 import * as migration_20261109_141655_session_delivery from './20261109_141655_session_delivery';
+import * as migration_20261110_133714_contribution_options from './20261110_133714_contribution_options';
 
 export const migrations = [
   {
@@ -388,6 +389,11 @@ export const migrations = [
   {
     up: migration_20261109_141655_session_delivery.up,
     down: migration_20261109_141655_session_delivery.down,
-    name: '20261109_141655_session_delivery'
+    name: '20261109_141655_session_delivery',
+  },
+  {
+    up: migration_20261110_133714_contribution_options.up,
+    down: migration_20261110_133714_contribution_options.down,
+    name: '20261110_133714_contribution_options'
   },
 ];

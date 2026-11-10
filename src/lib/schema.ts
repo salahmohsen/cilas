@@ -209,7 +209,7 @@ export const eventSchema = ({
       : null)
   if (!times?.startDate || !times.endDate) return null
 
-  const price = typeof event.pricing?.min === 'number' ? event.pricing.min : null
+  const price = event.pricing?.options?.find((option) => option.default)?.amount ?? null
 
   const speakers = (event.speakers ?? [])
     .flatMap((s) => (typeof s.person === 'object' ? [s.person] : []))

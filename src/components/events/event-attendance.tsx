@@ -1,3 +1,4 @@
+import { contributionLabel } from '@/lib/pricing'
 import { CAIRO, cairoNoon, cairoInstant } from '@/lib/cairo-day'
 import { detailPath } from '@/lib/paths'
 import { getFormatter, getTranslations } from 'next-intl/server'
@@ -39,12 +40,12 @@ export async function EventAttendance({
   const open = timing.status !== 'past' && registrationStatus(event.registration, now) === 'open'
   const registrationUrl = locationUrl(event.registration?.url)
   const hasForm = typeof event.registration?.form === 'object' && event.registration.form !== null
-  const price =
-    event.pricing?.min != null
-      ? event.pricing.min === 0 && !event.pricing.max
-        ? t('free')
-        : `${format.number(event.pricing.min)}${event.pricing.max ? `–${format.number(event.pricing.max)}` : ''} ${t('egp')}`
-      : null
+  const price = contributionLabel(event.pricing, {
+    free: t('free'),
+    currency: t('egp'),
+    currencyPosition: 'after',
+    amount: (value) => format.number(value),
+  })
   const register =
     open && event.registration?.method === 'external' && registrationUrl ? (
       <RegisterLink

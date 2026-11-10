@@ -26,7 +26,7 @@ export const programmesData: ProgrammeSeed[] = [
     self_directed_study: true,
     requirements: 'High school completed. A Bachelor’s degree is recommended but not required.',
     pricing: {
-      min: 18000,
+      options: [{ amount: 18000, default: true }],
       need_based_deductions: true,
       payment_plans: [
         {

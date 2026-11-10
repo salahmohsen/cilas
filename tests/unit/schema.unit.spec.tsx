@@ -24,6 +24,23 @@ const dataFor = (overrides: Partial<Event> = {}) =>
   eventSchema({ event: { ...event, ...overrides }, locale: 'ar', siteName: 'CILAS' })
 
 describe('event structured data', () => {
+  it('offers the default contribution, even when it is not the lowest amount', () => {
+    expect(
+      dataFor({
+        pricing: {
+          options: [
+            { amount: 800, default: false },
+            { amount: 1500, default: true },
+          ],
+        },
+      }),
+    ).toMatchObject({ offers: { price: 1500, priceCurrency: 'EGP' } })
+    expect(dataFor({ pricing: { options: [{ amount: 0, default: true }] } })).toMatchObject({
+      offers: { price: 0 },
+    })
+    expect(dataFor({ pricing: { options: [] } })).not.toHaveProperty('offers')
+  })
+
   it('uses single-event times without an agenda beside Cairo DST changes', () => {
     for (const [day, utc] of [
       ['2026-10-29', '19:30'],

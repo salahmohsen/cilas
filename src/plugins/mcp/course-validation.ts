@@ -1,3 +1,4 @@
+import { validateContributionOptions } from '@/lib/pricing'
 import type { z } from 'zod/v3'
 import { WEEKDAY_LABELS } from '@/fields/schedule'
 import { cairoDay, weekdayOf } from '@/lib/cairo-day'
@@ -31,9 +32,7 @@ export function validateCourse(input: Data) {
   if (s && s.start_date && !cairoDay(s.start_date))
     throw new ToolInputError('schedule.start_date is not a real date')
   if (s) expandSchedule(s, input.sessions)
-  const pricing = input.pricing_override
-  if (pricing?.min != null && pricing?.max != null && pricing.max < pricing.min)
-    throw new ToolInputError('pricing_override.max must not be below min')
+  validate(validateContributionOptions(input.pricing_override?.options), 'pricing_override.options')
   if (input.registration?.method === 'form' && !input.registration.form)
     throw new ToolInputError('registration.form: Choose a registration form.')
   if (input.registration?.method === 'external' && !input.registration.url)

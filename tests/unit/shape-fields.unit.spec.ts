@@ -6,7 +6,7 @@ import { COURSE_TYPE_OPTIONS } from '@/fields/course-type'
 import { CREDIT_ROLES, creditsField } from '@/fields/credits'
 import { importFields } from '@/fields/import'
 import { LANGUAGE_OPTIONS } from '@/fields/language'
-import { pricingField } from '@/fields/pricing'
+import { contributionField } from '@/fields/pricing'
 import { registrationField } from '@/fields/registration'
 import { computeEndDate, scheduleField, timeRangeFields } from '@/fields/schedule'
 import { endAfterStart, httpUrl, notBelow, timeOfDay } from '@/fields/validators'
@@ -132,27 +132,15 @@ describe('registrationField', () => {
   })
 })
 
-describe('pricingField', () => {
-  it('is named pricing by default, with the spec fields', () => {
-    const field = pricingField()
-    expect(field.name).toBe('pricing')
-    expect(names(field.fields)).toEqual([
-      'min',
-      'max',
-      'currency',
-      'note',
-      'need_based_deductions',
-      'payment_plans',
-    ])
-  })
-
-  it('takes another name, for a course override', () => {
-    expect(pricingField({ name: 'pricing_override' }).name).toBe('pricing_override')
+describe('contributionField payment plans', () => {
+  it('exposes payment plans only when explicitly enabled', () => {
+    expect(names(contributionField().fields)).not.toContain('payment_plans')
+    expect(names(contributionField({ paymentPlans: true }).fields)).toContain('payment_plans')
   })
 })
 
-describe('pricingField dbName', () => {
-  const arrays = (field: ReturnType<typeof pricingField>) => {
+describe('contributionField dbName', () => {
+  const arrays = (field: ReturnType<typeof contributionField>) => {
     const plans = field.fields.find((f) => 'name' in f && f.name === 'payment_plans')
     if (!plans || plans.type !== 'array') throw new Error('no payment_plans')
     const items = plans.fields.find((f) => 'name' in f && f.name === 'installments')
@@ -161,15 +149,11 @@ describe('pricingField dbName', () => {
   }
 
   it('gives the arrays short table names when asked', () => {
-    const { plans, items } = arrays(pricingField({ dbName: 'course_price' }))
-    expect(plans.dbName).toBe('course_price_plans')
-    expect(items.dbName).toBe('course_price_plan_items')
-  })
-
-  it('leaves them unset by default', () => {
-    const { plans, items } = arrays(pricingField())
-    expect(plans.dbName).toBeUndefined()
-    expect(items.dbName).toBeUndefined()
+    const { plans, items } = arrays(
+      contributionField({ dbName: 'programme_price', paymentPlans: true }),
+    )
+    expect(plans.dbName).toBe('programme_price_plans')
+    expect(items.dbName).toBe('programme_price_plan_items')
   })
 })
 
@@ -254,16 +238,23 @@ describe('validate closures in the configs', () => {
     expect(check(endTime, '21:00', { start_time: '19:00' })).toBe(true)
   })
 
-  const max = find(pricingField().fields, 'max')
-
-  it('max below min is rejected', () => {
-    expect(check(max, 100, { min: 300 })).toMatch(/minimum/)
-    expect(check(max, 500, { min: 300 })).toBe(true)
-    expect(check(max, undefined, { min: 300 })).toBe(true)
-  })
-
-  it('max keeps the built-in number rules', () => {
-    expect(check(max, -500, {})).not.toBe(true)
+  const contributionOptions = find(contributionField().fields, 'options')
+  it('validates contribution defaults through the configured field', async () => {
+    await expect(check(contributionOptions, [], {})).resolves.toBe(true)
+    await expect(check(contributionOptions, [{ amount: 0, default: true }], {})).resolves.toBe(true)
+    await expect(
+      check(contributionOptions, [{ amount: 800, default: false }], {}),
+    ).resolves.not.toBe(true)
+    await expect(
+      check(
+        contributionOptions,
+        [
+          { amount: 0, default: true },
+          { amount: 800, default: true },
+        ],
+        {},
+      ),
+    ).resolves.not.toBe(true)
   })
 
   const url = find(registrationField().fields, 'url')

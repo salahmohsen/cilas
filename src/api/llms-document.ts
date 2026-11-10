@@ -23,7 +23,7 @@ import { flattenRichTextColumns } from '@/lib/flatten-rich-text-columns'
 import { footnotesOf } from '@/lib/footnotes'
 import { type ResolvedMention } from '@/lib/mentions'
 import { pathOf } from '@/lib/paths'
-import { priceLabel } from '@/lib/pricing'
+import { contributionLabel } from '@/lib/pricing'
 import { courseRegistration } from '@/lib/registration'
 import { resolveRichTextReferences } from '@/lib/resolve-rich-text-references'
 import { referenceKey, type RichTextReferences } from '@/lib/rich-text-references'
@@ -386,7 +386,7 @@ export const courseDocument = async (
   const meetingsLine = slotLines.length ? `${slotLines.join(listSeparator(locale))} (Cairo)` : null
 
   const registration = courseRegistration(course, cycle)
-  const price = priceLabel(registration.price)
+  const price = contributionLabel(registration.price)
   const priceNote = registration.price?.note || null
   const registrationOpen = registration.status === 'open'
 

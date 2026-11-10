@@ -151,7 +151,16 @@ describe('complete MCP draft writes', () => {
       end_time: '21:00',
     })
     for (const changes of [
-      { pricing_override: { min: 10, max: 5 } },
+      { pricing_override: { options: [{ amount: 10, default: false }] } },
+      { pricing_override: { options: [{ amount: -1, default: true }] } },
+      {
+        pricing_override: {
+          options: [
+            { amount: 10, default: true },
+            { amount: 20, default: true },
+          ],
+        },
+      },
       {
         schedule: {
           ...schedule,
@@ -385,17 +394,12 @@ describe('complete MCP draft writes', () => {
         },
       ],
       pricing_override: {
-        min: 100,
-        max: 200,
-        currency: 'EGP',
+        options: [
+          { amount: 100, default: true },
+          { amount: 200, default: false },
+        ],
         need_based_deductions: true,
         note: { en: 'Sliding scale', ar: 'حسب القدرة' },
-        payment_plans: [
-          {
-            label: { en: 'Two payments', ar: 'دفعتان' },
-            installments: [{ amount: 50 }, { amount: 50 }],
-          },
-        ],
       },
       meta: {
         title: { en: 'SEO title', ar: 'عنوان البحث' },
@@ -426,17 +430,18 @@ describe('complete MCP draft writes', () => {
         minWords: 10,
         image: media.id,
       })
-      expect(course.pricing_override?.payment_plans![0]!.label).toBe(
-        input.pricing_override.payment_plans[0]!.label[locale],
-      )
-      expect(
-        course.pricing_override?.payment_plans![0]!.installments?.map((i) => i.amount),
-      ).toEqual([50, 50])
+      expect(course.pricing_override?.options).toMatchObject(input.pricing_override.options)
+      expect(course.pricing_override?.note).toBe(input.pricing_override.note[locale])
       expect(course.meta?.title).toBe(input.meta.title[locale])
     }
-    expect((await call('update_course_draft', { id, pricing_override: { max: 50 } })).isError).toBe(
-      true,
-    )
+    expect(
+      (
+        await call('update_course_draft', {
+          id,
+          pricing_override: { options: [{ amount: 50, default: false }] },
+        })
+      ).isError,
+    ).toBe(true)
     const clear = await call('update_course_draft', { id, facilitator_note: null })
     expect(clear.isError, clear.text).toBeFalsy()
     for (const locale of ['en', 'ar'] as const)

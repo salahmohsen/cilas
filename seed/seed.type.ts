@@ -69,7 +69,7 @@ export type ProgrammeSeed = {
   self_directed_study?: boolean
   requirements?: string
   pricing?: {
-    min: number
+    options: { amount: number; default: boolean }[]
     need_based_deductions?: boolean
     payment_plans?: Array<{ label: string; installments: Array<{ amount: number }> }>
   }

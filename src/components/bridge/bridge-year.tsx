@@ -1,3 +1,4 @@
+import { contributionLabel } from '@/lib/pricing'
 import { BRIDGE_PATH } from '@/lib/paths'
 import { CAIRO, cairoNoon } from '@/lib/cairo-day'
 import { BRIDGE_APPLY_PATH, bridgeYearParts, bridgeYearPath } from '@/lib/paths'
@@ -57,25 +58,16 @@ export async function BridgeYearView({
   const cycleName = (cycle: Cycle) =>
     `${tf(`seasons.${cycle.season}`)} ${localDigits(cycle.start_year, locale)}`
   const open = registrationStatus(programme.registration) === 'open'
-  // Applying through the site's own form leads to its page; otherwise to wherever registration points.
   const viaForm = programme.registration?.method === 'form' && Boolean(programme.registration.form)
   const applyUrl = open && !viaForm ? (programme.registration?.url ?? null) : null
-  // Fees in the page's own currency format: EGP 18,000, or ١٨٬٠٠٠ ج.م.
-  const pricing = programme.pricing
   const money = (amount: number) =>
     format.number(amount, {
       style: 'currency',
-      currency: pricing?.currency ?? 'EGP',
+      currency: 'EGP',
       maximumFractionDigits: 0,
       numberingSystem: numberingSystemOf(locale),
     })
-  const price =
-    typeof pricing?.min === 'number'
-      ? typeof pricing.max === 'number' && pricing.max > pricing.min
-        ? `${money(pricing.min)}–${money(pricing.max)}`
-        : money(pricing.min)
-      : null
-  // Where the sticky Apply leads, as the details' own button does (RegisterBar).
+  const price = contributionLabel(programme.pricing)
   const stickyApply =
     !current || !open ? null : viaForm ? `/${locale}${BRIDGE_APPLY_PATH}` : applyUrl
   const plan = programme.pricing?.payment_plans?.[0]
@@ -160,7 +152,6 @@ export async function BridgeYearView({
       : []),
   ]
 
-  // Where the page's own Apply leads: the site form, or wherever registration points.
   // Once registration has closed, the form's page still shows the questions.
   const applyHref = viaForm ? `/${locale}${BRIDGE_APPLY_PATH}` : applyUrl
   const sideApply = current ? (
@@ -175,7 +166,6 @@ export async function BridgeYearView({
     />
   ) : null
 
-  // A year by its span, and its city when it was not Cairo: «2019–2020 Alexandria».
   const yearLabel = (slug: string) => {
     const { span, place } = bridgeYearParts(slug)
     return {

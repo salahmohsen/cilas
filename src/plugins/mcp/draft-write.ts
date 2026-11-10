@@ -147,7 +147,14 @@ export async function writeDraft(
         pricing_override:
           en.pricing_override === null
             ? null
-            : { ...current.pricing_override, ...en.pricing_override },
+            : {
+                ...current.pricing_override,
+                ...en.pricing_override,
+                options:
+                  en.pricing_override?.options === undefined
+                    ? current.pricing_override?.options
+                    : en.pricing_override.options,
+              },
       })
     }
     const options = {

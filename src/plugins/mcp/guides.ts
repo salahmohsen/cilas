@@ -43,7 +43,7 @@ Schedule shape: { start_date, start_precision: "day" | "week", weeks, slots: [{ 
 Sessions use order, session_title (localized), meetings, cancelled, description (localized Markdown), dates [{date,start_time,end_time}], bibliography [{type,title,href,note}], and activities [{kind,description}].
 For a per-session delivery split, set sessions[].delivery to ONLINE, OFFLINE or HYBRID using the same values as course location. Empty delivery inherits the course-level location. When sessions differ, set course location to ["HYBRID"]. Use schedule.note for additional schedule notes.
 Registration uses method (${REGISTRATION_METHODS.join(', ')}), form, url, deadline. Empty registration fields use the cycle values, as resolved by courseRegistration(); no "inherit" enum. Applicant questions are real blocks with blockType and the fields in the schema; never add them to external registration.
-Pricing override uses min/max, EGP currency, localized note, need_based_deductions and payment_plans [{label,installments:[{amount}]}].
+Contribution override uses options [{amount,default}] with nonnegative EGP amounts and exactly one default when options exist, localized note and need_based_deductions. Payment plans are available only on programmes.
 ${contract('courses')}
 `
 

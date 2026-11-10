@@ -106,7 +106,10 @@ describe('llms-document', () => {
         pricing: [
           {
             course_types: [course.course_type],
-            pricing: { min: 1500, note: 'Cycle contribution note' },
+            pricing: {
+              options: [{ amount: 1500, default: true }],
+              note: 'Cycle contribution note',
+            },
           },
         ],
       },

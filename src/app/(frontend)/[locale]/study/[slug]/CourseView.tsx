@@ -42,7 +42,7 @@ import { localDigits, numberingSystemOf, timeDir } from '@/lib/digits'
 import { editableIn } from '@/lib/editable'
 import { focalPointStyle } from '@/lib/media-image'
 import { POSTER_COLORS } from '@/components/arc/lib/poster-colors'
-import { priceLabel } from '@/lib/pricing'
+import { contributionLabel } from '@/lib/pricing'
 import { courseRegistration } from '@/lib/registration'
 import { expandSchedule, sessionsInOrder } from '@/lib/schedule'
 import { textDirection } from '@/lib/text-direction'
@@ -112,7 +112,7 @@ export const CourseView: React.FC<{
   const meetings = expandSchedule(course.schedule, course.sessions)
   const firstMeeting = meetings.find((m) => !m.cancelled)
   const registration = courseRegistration(course, cycle)
-  const price = priceLabel(registration.price)
+  const price = contributionLabel(registration.price)
   const open = registration.status === 'open'
   const { method, formId: siteForm, url } = registration
   const applyUrl = !open

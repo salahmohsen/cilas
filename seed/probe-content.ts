@@ -306,18 +306,13 @@ const upsert = async (
 }
 
 const pricing = {
-  min: 2500,
-  max: 3000,
+  options: [
+    { amount: 2500, default: true },
+    { amount: 3000, default: false },
+  ],
   currency: 'EGP',
   note: 'Sliding scale: choose the tier that fits your budget.',
   need_based_deductions: true,
-  payment_plans: [
-    { label: 'Two instalments', installments: [{ amount: 1500 }, { amount: 1500 }] },
-    {
-      label: 'Three instalments',
-      installments: [{ amount: 1000 }, { amount: 1000 }, { amount: 1000 }],
-    },
-  ],
 }
 
 await upsert('events', 'probe-full-event', {

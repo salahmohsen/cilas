@@ -731,22 +731,15 @@ export interface Programme {
     archived_registration_url?: string | null;
   };
   pricing?: {
-    /**
-     * The price in EGP; with a maximum it reads as a range, e.g. 2,500–3,000.
-     */
-    min?: number | null;
-    /**
-     * Leave empty for a single price.
-     */
-    max?: number | null;
+    options?:
+      | {
+          amount: number;
+          default?: boolean | null;
+          id?: string | null;
+        }[]
+      | null;
     currency?: 'EGP' | null;
-    /**
-     * Anything the price needs said, e.g. “Sliding scale: choose the tier that fits your budget.”
-     */
     note?: string | null;
-    /**
-     * Tick when people who can’t pay the full price may ask for a reduction.
-     */
     need_based_deductions?: boolean | null;
     /**
      * Ways to pay in instalments, e.g. “Three payments” of 10,000 each.
@@ -1219,41 +1212,19 @@ export interface Course {
       )[]
     | null;
   /**
-   * Only when this course costs something other than its cycle’s price.
+   * Leave options empty to use the contribution for this course type from its cycle.
    */
   pricing_override?: {
-    /**
-     * The price in EGP; with a maximum it reads as a range, e.g. 2,500–3,000.
-     */
-    min?: number | null;
-    /**
-     * Leave empty for a single price.
-     */
-    max?: number | null;
-    currency?: 'EGP' | null;
-    /**
-     * Anything the price needs said, e.g. “Sliding scale: choose the tier that fits your budget.”
-     */
-    note?: string | null;
-    /**
-     * Tick when people who can’t pay the full price may ask for a reduction.
-     */
-    need_based_deductions?: boolean | null;
-    /**
-     * Ways to pay in instalments, e.g. “Three payments” of 10,000 each.
-     */
-    payment_plans?:
+    options?:
       | {
-          label: string;
-          installments?:
-            | {
-                amount: number;
-                id?: string | null;
-              }[]
-            | null;
+          amount: number;
+          default?: boolean | null;
           id?: string | null;
         }[]
       | null;
+    currency?: 'EGP' | null;
+    note?: string | null;
+    need_based_deductions?: boolean | null;
   };
   enrollments?: {
     docs?: (number | Enrollment)[];
@@ -1343,47 +1314,25 @@ export interface Cycle {
     archived_registration_url?: string | null;
   };
   /**
-   * One price per group of course types.
+   * Contribution options for each group of course types.
    */
   pricing?:
     | {
         /**
-         * Which course types this price is for, e.g. Thematic and Lab.
+         * Course types that share these contribution options.
          */
         course_types: ('CORE' | 'THEMATIC' | 'LAB' | 'WORKSHOP' | 'SHORT')[];
         pricing?: {
-          /**
-           * The price in EGP; with a maximum it reads as a range, e.g. 2,500–3,000.
-           */
-          min?: number | null;
-          /**
-           * Leave empty for a single price.
-           */
-          max?: number | null;
-          currency?: 'EGP' | null;
-          /**
-           * Anything the price needs said, e.g. “Sliding scale: choose the tier that fits your budget.”
-           */
-          note?: string | null;
-          /**
-           * Tick when people who can’t pay the full price may ask for a reduction.
-           */
-          need_based_deductions?: boolean | null;
-          /**
-           * Ways to pay in instalments, e.g. “Three payments” of 10,000 each.
-           */
-          payment_plans?:
+          options?:
             | {
-                label: string;
-                installments?:
-                  | {
-                      amount: number;
-                      id?: string | null;
-                    }[]
-                  | null;
+                amount: number;
+                default?: boolean | null;
                 id?: string | null;
               }[]
             | null;
+          currency?: 'EGP' | null;
+          note?: string | null;
+          need_based_deductions?: boolean | null;
         };
         id?: string | null;
       }[]
@@ -2074,38 +2023,16 @@ export interface Event {
     archived_registration_url?: string | null;
   };
   pricing?: {
-    /**
-     * The price in EGP; with a maximum it reads as a range, e.g. 2,500–3,000.
-     */
-    min?: number | null;
-    /**
-     * Leave empty for a single price.
-     */
-    max?: number | null;
-    currency?: 'EGP' | null;
-    /**
-     * Anything the price needs said, e.g. “Sliding scale: choose the tier that fits your budget.”
-     */
-    note?: string | null;
-    /**
-     * Tick when people who can’t pay the full price may ask for a reduction.
-     */
-    need_based_deductions?: boolean | null;
-    /**
-     * Ways to pay in instalments, e.g. “Three payments” of 10,000 each.
-     */
-    payment_plans?:
+    options?:
       | {
-          label: string;
-          installments?:
-            | {
-                amount: number;
-                id?: string | null;
-              }[]
-            | null;
+          amount: number;
+          default?: boolean | null;
           id?: string | null;
         }[]
       | null;
+    currency?: 'EGP' | null;
+    note?: string | null;
+    need_based_deductions?: boolean | null;
   };
   /**
    * The event this one is part of.
@@ -3445,23 +3372,16 @@ export interface CoursesSelect<T extends boolean = true> {
   pricing_override?:
     | T
     | {
-        min?: T;
-        max?: T;
+        options?:
+          | T
+          | {
+              amount?: T;
+              default?: T;
+              id?: T;
+            };
         currency?: T;
         note?: T;
         need_based_deductions?: T;
-        payment_plans?:
-          | T
-          | {
-              label?: T;
-              installments?:
-                | T
-                | {
-                    amount?: T;
-                    id?: T;
-                  };
-              id?: T;
-            };
       };
   enrollments?: T;
   meta?:
@@ -3503,23 +3423,16 @@ export interface CyclesSelect<T extends boolean = true> {
         pricing?:
           | T
           | {
-              min?: T;
-              max?: T;
+              options?:
+                | T
+                | {
+                    amount?: T;
+                    default?: T;
+                    id?: T;
+                  };
               currency?: T;
               note?: T;
               need_based_deductions?: T;
-              payment_plans?:
-                | T
-                | {
-                    label?: T;
-                    installments?:
-                      | T
-                      | {
-                          amount?: T;
-                          id?: T;
-                        };
-                    id?: T;
-                  };
             };
         id?: T;
       };
@@ -3588,8 +3501,13 @@ export interface ProgrammesSelect<T extends boolean = true> {
   pricing?:
     | T
     | {
-        min?: T;
-        max?: T;
+        options?:
+          | T
+          | {
+              amount?: T;
+              default?: T;
+              id?: T;
+            };
         currency?: T;
         note?: T;
         need_based_deductions?: T;
@@ -4039,23 +3957,16 @@ export interface EventsSelect<T extends boolean = true> {
   pricing?:
     | T
     | {
-        min?: T;
-        max?: T;
+        options?:
+          | T
+          | {
+              amount?: T;
+              default?: T;
+              id?: T;
+            };
         currency?: T;
         note?: T;
         need_based_deductions?: T;
-        payment_plans?:
-          | T
-          | {
-              label?: T;
-              installments?:
-                | T
-                | {
-                    amount?: T;
-                    id?: T;
-                  };
-              id?: T;
-            };
       };
   series?: T;
   programme?: T;
