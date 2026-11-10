@@ -15,6 +15,7 @@ CILAS runs one application form per cycle. Applicants choose one or more courses
 - **Apply link.** It stays on each course page (`/study/[slug]/apply`). There is no cycle apply page. A `follow_cycle` course opens its cycle's form with the course already ticked. The applicant can tick any other open course in the same cycle. An `own` course opens its own form.
 - **External registration.** When the method is external, every field that needs the site form (form, applicant questions, course list) is hidden and not required. This applies to cycles, courses, programmes and events.
 - **Course questions** stay on the course (`applicant_questions`), not in the form. The site adds them to the form when it renders the form. The cycle has a "Preview full form" button that shows the merged form.
+- **Form preview.** One admin preview page renders a form with the same component as the public page, with submit turned off. Opened from a form or template, it shows the form's own questions. Opened from a cycle or course, it shows the full form a visitor sees.
 - **Contribution.** One shape everywhere: a list of suggested amounts, with exactly one default. Payment plans exist only on programmes. A course's contribution comes from its override, or else from its cycle by course type. The form reads this at render time and stores none of it.
 - **Contribution slider.** The form shows the amounts as marks on `ElasticSlider` (`src/components/arc/elastic-slider`), sorted from lowest to highest, and starts on the default. The slider stops only at those amounts. One amount shows as text without a slider. An amount of 0 shows "Free".
 - **Form templates.** A form can be marked as a template. Admins can edit templates at any time. A "Registration defaults" global names the cycle, Bridge and workshop templates. A new cycle, a new Bridge year, and a course switched to `own` each get a copy of the matching template. Later template edits do not change copies.
@@ -126,9 +127,10 @@ Each step ends with a check before the next starts.
 2. Contribution shape on cycles, courses, programmes and events. Payment plans on programmes only. The migration counts course plans first, then turns `min` into the default option and `max` into a second option. Check that old prices render correctly.
 3. Course registration modes, fellow visibility, external hides site-form fields, cycle required at publish, and data migration of existing courses to modes (step 9 merged here). Compare document and version counts before and after. Check as a fellow and as an admin.
 4. Templates and the Registration defaults global, with automatic copies. Check by creating a cycle, a Bridge year and an `own` course.
+   4b. Form preview: a Preview button on forms and templates opens the shared preview page with the form's own questions. Check in the browser.
 5. Application shape with `choices`, and server checks on submit (open courses only, required questions of ticked courses only, amount must be one of the options). Tests cover closed, close-early and `own` courses.
 6. Form page: course ticks, a Badge and questions per course, the contribution slider. Check in the browser.
-7. Admin: full-form preview, per-course accepted ticks, enrollments without duplicates, the email. Check by approving one application with one course unticked.
+7. Admin: full-form preview from cycles and courses (the step 4b page with context), per-course accepted ticks, enrollments without duplicates, the email. Check by approving one application with one course unticked.
 8. Fellow applicants page. Check that a fellow sees only their course's answers.
 9. Merged into step 3: data migration of existing courses to modes.
 
