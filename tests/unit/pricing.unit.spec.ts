@@ -64,33 +64,36 @@ describe('pricingFor', () => {
 })
 
 describe('contributionLabel', () => {
-  it('shows a single price or a range in EGP', () => {
-    expect(contributionLabel({ options: [{ amount: 800, default: true }] })).toBe('EGP 800')
+  it('shows a single price or a range with the currency after it', () => {
+    expect(contributionLabel({ options: [{ amount: 800, default: true }] })).toBe('800 EGP')
     expect(
-      contributionLabel({
-        options: [
-          { amount: 1500, default: true },
-          { amount: 2000, default: false },
-        ],
-      }),
-    ).toBe('EGP 1,500–2,000')
-    expect(
-      contributionLabel({
-        options: [
-          { amount: 1500, default: true },
-          { amount: 1500, default: false },
-        ],
-      }),
-    ).toBe('EGP 1,500')
+      contributionLabel({ options: [{ amount: 3500 }, { amount: 2000 }, { amount: 1500 }] }),
+    ).toBe('1,500–3,500 EGP')
+    expect(contributionLabel({ options: [{ amount: 0 }, { amount: 800 }] })).toBe('0–800 EGP')
   })
 
-  it('calls a zero price free', () => {
+  it("calls a zero price free, in the caller's words", () => {
     expect(contributionLabel({ options: [{ amount: 0, default: true }] })).toBe('Free')
+    expect(contributionLabel({ options: [{ amount: 0 }] }, { free: 'مجانًا' })).toBe('مجانًا')
   })
 
   it('is null without options', () => {
     expect(contributionLabel({ options: [] })).toBeNull()
     expect(contributionLabel(null)).toBeNull()
+  })
+})
+
+describe('currency label by locale', () => {
+  it.each([
+    ['en', '30,000 EGP', '1,500–3,500 EGP'],
+    ['ar', '٣٠٬٠٠٠ ج.م', '١٬٥٠٠–٣٬٥٠٠ ج.م'],
+    ['ar-u-nu-latn', '30,000 ج.م', '1,500–3,500 ج.م'],
+  ])('%s', (locale, single, range) => {
+    expect(formatAmount(30000, locale)).toBe(single)
+    expect(contributionLabel({ options: [{ amount: 30000 }] }, { locale })).toBe(single)
+    expect(contributionLabel({ options: [{ amount: 3500 }, { amount: 1500 }] }, { locale })).toBe(
+      range,
+    )
   })
 })
 
@@ -110,16 +113,6 @@ describe('contribution defaults', () => {
   })
 })
 
-it('labels unsorted options by their extrema and preserves localized words', () => {
-  const contribution = { options: [{ amount: 3500 }, { amount: 2000 }, { amount: 1500 }] }
-  expect(contributionLabel(contribution)).toBe('EGP 1,500–3,500')
-  expect(contributionLabel({ options: [{ amount: 0 }, { amount: 800 }] })).toBe('EGP 0–800')
-  expect(contributionLabel({ options: [{ amount: 0 }] }, { free: 'مجاني' })).toBe('مجاني')
-  expect(contributionLabel(contribution, { currency: 'ج.م', currencyPosition: 'after' })).toBe(
-    '1,500–3,500 ج.م',
-  )
-})
-
 it('sorts unique contributions without mutating them and keeps the chosen default', () => {
   const contribution = {
     options: [{ amount: 900 }, { amount: 350, default: true }, { amount: 100 }, { amount: 350 }],
@@ -129,11 +122,4 @@ it('sorts unique contributions without mutating them and keeps the chosen defaul
   expect(contribution.options[0].amount).toBe(900)
   expect(amountsOf(null)).toEqual([])
   expect(defaultAmountOf(null)).toBeUndefined()
-})
-it('formats Arabic money and the Bridge contribution with Arabic digits', () => {
-  expect(formatAmount(30000, 'ar')).toBe('٣٠٬٠٠٠ ج.م')
-  expect(formatAmount(30000, 'en')).toBe('30,000 EGP')
-  expect(contributionLabel({ options: [{ amount: 30000, default: true }] }, { locale: 'ar' })).toBe(
-    'EGP ٣٠٬٠٠٠',
-  )
 })

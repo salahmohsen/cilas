@@ -28,7 +28,7 @@ export async function GET(
     agenda: t('agenda'),
     admission: t('admission'),
     online: t('online'),
-    egp: t('egp'),
+    locale: lang,
     free: t('free'),
   })
   if (!ics) return new Response('This event has no date yet.', { status: 404 })

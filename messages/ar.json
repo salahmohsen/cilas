@@ -590,7 +590,6 @@
     "extraQuestions": "أسئلة إضافية لهذا المقرر",
     "contribution": "المساهمة",
     "free": "مجاني",
-    "amountEGP": "{amount} جنيه مصري",
     "needReduction": "أحتاج إلى مساهمة أقل",
     "preview": "معاينة: الإرسال متوقف",
     "sent": "أُرسل طلبك",
@@ -1534,7 +1533,6 @@
     "registrationClosed": "التسجيل مغلق.",
     "speakers": "المتحدثون",
     "agenda": "البرنامج",
-    "free": "مجانًا",
-    "egp": "جنيه مصري"
+    "free": "مجانًا"
   }
 }

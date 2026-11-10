@@ -11,7 +11,7 @@ type Words = {
   agenda: string
   admission: string
   online: string
-  egp: string
+  locale: string
   free: string
 }
 
@@ -33,10 +33,10 @@ const eventDetails = (event: Event, url: string, words: Words): string => {
       typeof person === 'object' && person ? [role ? `${person.name} (${role})` : person.name] : [],
     )
     .join(', ')
+  // A calendar entry keeps Western digits (see digits.ts) in the page's language.
   const price = contributionLabel(event.pricing, {
     free: words.free,
-    currency: words.egp,
-    currencyPosition: 'after',
+    locale: `${words.locale}-u-nu-latn`,
   })
   return [
     event.description ? plainText({ data: event.description }).trim() : null,

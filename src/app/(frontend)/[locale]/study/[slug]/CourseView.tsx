@@ -112,7 +112,7 @@ export const CourseView: React.FC<{
   const meetings = expandSchedule(course.schedule, course.sessions)
   const firstMeeting = meetings.find((m) => !m.cancelled)
   const registration = courseRegistration(course, cycle)
-  const price = contributionLabel(registration.price)
+  const price = contributionLabel(registration.price, { locale })
   const open = registration.status === 'open'
   const { method, formId: siteForm, url } = registration
   const applyUrl = !open

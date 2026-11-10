@@ -8,7 +8,7 @@ const words = {
   agenda: 'Agenda',
   admission: 'Attendance',
   online: 'Online',
-  egp: 'EGP',
+  locale: 'en',
   free: 'Free',
 }
 const event = {
@@ -38,6 +38,12 @@ describe('event calendar', () => {
     expect(entry!.description).toContain('Speakers: Ada (Moderator)')
     expect(entry!.description).toContain('Attendance: Free')
     expect(entry!.description).toContain('https://cilas.org/en/events/screening')
+  })
+
+  it("prices an Arabic entry in the page's currency with Western digits", () => {
+    const paid = { ...event, pricing: { options: [{ amount: 1500, default: true }] } } as Event
+    const [entry] = eventEntries(paid, 'u', { ...words, admission: 'الحضور', locale: 'ar' })
+    expect(entry!.description).toContain('الحضور: 1,500 ج.م')
   })
 
   it('makes an all-day entry for a date without a time, and nothing for an undated event', () => {

@@ -386,7 +386,7 @@ export const courseDocument = async (
   const meetingsLine = slotLines.length ? `${slotLines.join(listSeparator(locale))} (Cairo)` : null
 
   const registration = courseRegistration(course, cycle)
-  const price = contributionLabel(registration.price)
+  const price = contributionLabel(registration.price, { locale })
   const priceNote = registration.price?.note || null
   const registrationOpen = registration.status === 'open'
 

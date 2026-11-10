@@ -116,7 +116,7 @@ describe('llms-document', () => {
       },
     }
     const md = documentToMarkdown(await courseDocument(payload, priced, 'en'))
-    expect(md).toContain('EGP 1,500')
+    expect(md).toContain('1,500 EGP')
     expect(md).toContain('Cycle contribution note')
     expect(md).not.toContain('Unused course note')
   })

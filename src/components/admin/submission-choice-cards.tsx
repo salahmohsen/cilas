@@ -1,6 +1,6 @@
 'use client'
 
-import { CURRENCY } from '@/lib/pricing'
+import { formatAmount } from '@/lib/pricing'
 import { CheckboxField, FieldPathContext } from '@payloadcms/ui'
 import type { submissionChoices } from '@/forms/submission-view'
 
@@ -26,7 +26,8 @@ export function SubmissionChoiceCards({
             <a href={choice.href}>{choice.title}</a>
           </h3>
           <p>
-            Contribution: {choice.amount == null ? 'Not specified' : `${choice.amount} ${CURRENCY}`}
+            Contribution:{' '}
+            {choice.amount == null ? 'Not specified' : formatAmount(choice.amount, 'en')}
           </p>
           <p>Needs a reduction: {choice.need_reduction ? 'Yes' : 'No'}</p>
           <dl>

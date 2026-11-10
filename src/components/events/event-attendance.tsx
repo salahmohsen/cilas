@@ -40,12 +40,7 @@ export async function EventAttendance({
   const open = timing.status !== 'past' && registrationStatus(event.registration, now) === 'open'
   const registrationUrl = locationUrl(event.registration?.url)
   const hasForm = typeof event.registration?.form === 'object' && event.registration.form !== null
-  const price = contributionLabel(event.pricing, {
-    free: t('free'),
-    currency: t('egp'),
-    currencyPosition: 'after',
-    amount: (value) => format.number(value),
-  })
+  const price = contributionLabel(event.pricing, { free: t('free'), locale })
   const register =
     open && event.registration?.method === 'external' && registrationUrl ? (
       <RegisterLink
@@ -70,7 +65,7 @@ export async function EventAttendance({
     agenda: t('agenda'),
     admission: t('admission'),
     online: t('online'),
-    egp: t('egp'),
+    locale,
     free: t('free'),
   }
   const google = eventGoogleUrl(event, timing.meeting, pageUrl, words)

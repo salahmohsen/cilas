@@ -4,13 +4,14 @@ import { reduceFieldsToValues } from 'payload/shared'
 
 import { CAIRO } from '@/lib/cairo-day'
 
-import { useFormFields } from '@payloadcms/ui'
+import { useFormFields, useLocale } from '@payloadcms/ui'
 import { useEffect, useState } from 'react'
 import type { Course, Cycle } from '@/payload-types'
 import { contributionLabel } from '@/lib/pricing'
 import { courseRegistration, type RegistrationMethod } from '@/lib/registration'
 
 export function CourseSettings() {
+  const locale = useLocale()
   const values = useFormFields(([fields]) => ({
     cycle: fields.cycle?.value as number | null,
     course_type: fields.course_type?.value as string,
@@ -109,7 +110,7 @@ export function CourseSettings() {
           : 'No deadline'}
       </p>
       <p>
-        Contribution: {contributionLabel(price) ?? 'Not set'}
+        Contribution: {contributionLabel(price, { locale: locale.code }) ?? 'Not set'}
         {!values.contribution?.options?.length ? ' · inherited from cycle' : ' · course override'}
       </p>
     </aside>

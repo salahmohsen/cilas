@@ -1,5 +1,6 @@
 import { numberingSystemOf } from '@/lib/digits'
 
+/** ISO 4217 code, for machine-readable data. People read `formatAmount`. */
 export const CURRENCY = 'EGP'
 export const amountsOf = (contribution: Contribution | null | undefined) =>
   [...new Set(contribution?.options?.map((o) => o.amount) ?? [])].sort((a, b) => a - b)
@@ -7,8 +8,10 @@ export const defaultAmountOf = (contribution: Contribution | null | undefined) =
   contribution?.options?.find((o) => o.default)?.amount
 const formatNumber = (n: number, locale: string) =>
   new Intl.NumberFormat(locale, { numberingSystem: numberingSystemOf(locale) }).format(n)
+const currencyLabel = (locale: string) => (locale.startsWith('ar') ? 'ج.م' : CURRENCY)
+const withCurrency = (amount: string, locale: string) => `${amount} ${currencyLabel(locale)}`
 export const formatAmount = (n: number, locale: string) =>
-  `${formatNumber(n, locale)} ${locale === 'ar' ? 'ج.م' : CURRENCY}`
+  withCurrency(formatNumber(n, locale), locale)
 
 export type Contribution = {
   options?: { amount: number; default?: boolean | null }[] | null
@@ -44,22 +47,16 @@ export const pricingFor = (
 
 export const contributionLabel = (
   contribution: Contribution | null | undefined,
-  display: {
-    locale?: string
-    amount?: (value: number) => string
-    currency?: string
-    free?: string
-    currencyPosition?: 'before' | 'after'
-  } = {},
+  { locale = 'en', free = 'Free' }: { locale?: string; free?: string } = {},
 ): string | null => {
   if (!contribution?.options?.length) return null
   const amounts = amountsOf(contribution)
   const low = amounts[0]
   const high = amounts[amounts.length - 1]
-  if (low === 0 && high === 0) return display.free ?? 'Free'
-  const format =
-    display.amount ?? ((value: number) => formatNumber(value, display.locale ?? 'en-US'))
-  const range = low === high ? format(low) : `${format(low)}–${format(high)}`
-  const currency = display.currency ?? CURRENCY
-  return display.currencyPosition === 'after' ? `${range} ${currency}` : `${currency} ${range}`
+  if (low === 0 && high === 0) return free
+  const range =
+    low === high
+      ? formatNumber(low, locale)
+      : `${formatNumber(low, locale)}–${formatNumber(high, locale)}`
+  return withCurrency(range, locale)
 }

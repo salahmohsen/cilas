@@ -590,7 +590,6 @@
     "extraQuestions": "Extra questions for this course",
     "contribution": "Contribution",
     "free": "Free",
-    "amountEGP": "{amount} EGP",
     "needReduction": "I need a lower contribution",
     "preview": "Preview: submitting is turned off",
     "sent": "Application sent",
@@ -1534,7 +1533,6 @@
     "registrationClosed": "Registration is closed.",
     "speakers": "Speakers",
     "agenda": "Programme",
-    "free": "Free",
-    "egp": "EGP"
+    "free": "Free"
   }
 }
