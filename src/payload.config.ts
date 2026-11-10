@@ -47,7 +47,7 @@ import { resendAdapter } from '@payloadcms/email-resend'
 import { formBuilderPlugin } from '@payloadcms/plugin-form-builder'
 import { previewUrl } from '@/lib/preview-url'
 import { importExportPlugin } from '@payloadcms/plugin-import-export'
-import { ensureNameEmail, formFields } from './forms/form-fields'
+import { ensureNameEmail, formFields, nameNewFormQuestions } from './forms/form-fields'
 import { notifyNewApplication } from './forms/notify-application'
 import { submitWithFiles } from './forms/submit-with-files'
 import { applicationEndpoints } from './forms/application-decision'
@@ -327,7 +327,7 @@ export default buildConfig({
           update: isAdmin,
           delete: isAdmin,
         },
-        hooks: { beforeChange: [ensureNameEmail] },
+        hooks: { beforeValidate: [nameNewFormQuestions], beforeChange: [ensureNameEmail] },
       },
       formSubmissionOverrides: {
         access: { read: isAdmin, update: isAdmin, delete: isAdmin },

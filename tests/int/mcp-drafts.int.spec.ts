@@ -177,7 +177,7 @@ describe('complete MCP draft writes', () => {
     expect(external.isError, external.text).toBeFalsy()
     const questionsOnly = await call('update_course_draft', {
       id,
-      applicant_questions: [{ blockType: 'text', name: 'still-unused' }],
+      applicant_questions: [{ blockType: 'text', name: 'still_unused' }],
     })
     expect(questionsOnly.isError, questionsOnly.text).toBeFalsy()
   })

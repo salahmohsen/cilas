@@ -1,12 +1,13 @@
 import { z } from 'zod/v3'
 
+import { nameQuestions } from '@/forms/question-name'
 import { copyDefaultTemplate } from '@/forms/templates'
 import { courseRegistrationMode } from '@/lib/course-registration'
 import { relId } from '@/lib/relation'
 import type { Form } from '@/payload-types'
 
 import { ToolInputError } from '../errors'
-import { questionSchema, type Question } from '../form-questions'
+import { questionSchema, RESERVED_QUESTION_NAMES, type Question } from '../form-questions'
 import { adminUrl, assertExist } from '../references'
 import { markdownToLexical } from '../markdown'
 import { id, localizedText, optionalLocalizedText } from '../schemas'
@@ -18,7 +19,7 @@ import type { ToolContext } from '../types'
 
 type Locale = 'en' | 'ar'
 
-const blockFor = (question: Question, locale: Locale) => ({
+const blockFor = (question: Question & { name: string }, locale: Locale) => ({
   blockType: question.type,
   name: question.name,
   required: question.required,
@@ -27,9 +28,8 @@ const blockFor = (question: Question, locale: Locale) => ({
   ...('options' in question
     ? {
         options: question.options.map((option) => ({
-          // The value is the English text in both languages, so answers match.
+          value: option.value,
           // A choice needs a label in every language, so a missing one shows English.
-          value: option.en,
           label: option[locale] ?? option.en,
         })),
       }
@@ -163,7 +163,7 @@ export const createFormAndLinkTool = adminTool({
             'A cycle cannot be linked from here: a cycle has no drafts, so a change would go live at once. Nothing was created. Link the form to the cycle in the admin, or link it to a course instead.',
           )
         }
-        const names = input.questions.map((question) => question.name)
+        const names = input.questions.flatMap((question) => (question.name ? [question.name] : []))
         const repeated = names.find((name, index) => names.indexOf(name) !== index)
         if (repeated)
           throw new ToolInputError(`Two questions are named "${repeated}". Names must be unique.`)
@@ -212,12 +212,38 @@ export const createFormAndLinkTool = adminTool({
           const taken = templateBlocks.map(blockName).filter((name) => names.includes(name ?? ''))
           if (taken.length) {
             throw new ToolInputError(
-              `The workshop template already asks ${taken.map((n) => `"${n}"`).join(', ')}. Nothing was created. Give those questions other names, or leave them out.`,
+              `The workshop template already asks ${taken.map((n) => `"${n}"`).join(', ')}. Nothing was created. Give those questions other names, leave their names out, or leave the questions out.`,
             )
           }
+          const named = nameQuestions(
+            input.questions.map((q) => ({
+              name: q.name,
+              label: q.label.en,
+              options:
+                'options' in q ? q.options.map((o) => ({ value: o.value, label: o.en })) : null,
+            })),
+            {
+              reserved: [
+                ...RESERVED_QUESTION_NAMES,
+                ...templateBlocks.flatMap((b) => blockName(b) ?? []),
+              ],
+            },
+          )
+          const questions = input.questions.map((q, i) => ({
+            ...q,
+            name: named[i]!.name!,
+            ...('options' in q
+              ? {
+                  options: q.options.map((o, j) => ({
+                    ...o,
+                    value: named[i]!.options![j]!.value!,
+                  })),
+                }
+              : {}),
+          }))
           const data = {
             title: input.title.en,
-            fields: [...templateBlocks, ...input.questions.map((q) => blockFor(q, 'en'))],
+            fields: [...templateBlocks, ...questions.map((q) => blockFor(q, 'en'))],
             ...(input.submit_button_label ? { submitButtonLabel: input.submit_button_label } : {}),
             ...(confirmation
               ? { confirmationType: 'message', confirmationMessage: confirmation }
@@ -257,7 +283,7 @@ export const createFormAndLinkTool = adminTool({
             const thanks =
               input.confirmation_message?.ar ??
               (arabic.confirmationMessage ? undefined : 'شكرًا لك. وصلنا طلبك.')
-            const byName = new Map(input.questions.map((q) => [q.name, q]))
+            const byName = new Map(questions.map((q) => [q.name, q]))
             await payload.update({
               collection: 'forms',
               id: form.id,

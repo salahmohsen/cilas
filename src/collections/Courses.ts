@@ -24,7 +24,7 @@ import {
 import { contributionField } from '@/fields/pricing'
 import { validateCourseDestination, registrationDestinationFields } from '@/fields/registration'
 import { isPublishing } from '@/lib/course-registration'
-import { courseQuestionBlocks } from '@/forms/form-fields'
+import { courseQuestionBlocks, nameNewQuestions } from '@/forms/form-fields'
 import { scheduleField, timeRangeFields } from '@/fields/schedule'
 import { reviewFields } from '@/fields/review'
 import { slugField } from '@/fields/slug'
@@ -469,6 +469,7 @@ export const Courses: CollectionConfig = {
               label: 'Questions for applicants',
               type: 'blocks',
               blocks: courseQuestionBlocks(),
+              hooks: { beforeValidate: [nameNewQuestions] },
               labels: { singular: 'Question', plural: 'Questions' },
               admin: {
                 condition: showApplicantQuestions,

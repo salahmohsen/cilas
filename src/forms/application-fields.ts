@@ -12,6 +12,11 @@ export const applicationFields: Field[] = [
     admin: { position: 'sidebar', readOnly: true, description: 'What the applicant applied to.' },
   },
   {
+    name: 'answersView',
+    type: 'ui',
+    admin: { components: { Field: '/components/admin/submission-choices#SubmissionAnswers' } },
+  },
+  {
     name: 'choices',
     type: 'array',
     admin: { components: { Field: '/components/admin/submission-choices#SubmissionChoices' } },

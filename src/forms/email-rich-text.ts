@@ -5,6 +5,8 @@ import { resolveRichTextReferences } from '@/lib/resolve-rich-text-references'
 import { emailRichTextHTML } from '@/emails/rich-text'
 import { env } from '@/env'
 
+import { answerTexts } from './answer-text'
+
 export const formEmailRichText: BeforeEmail = async (emails, params) => {
   const { data, req } = params
   const formId = relId(data?.form)
@@ -23,10 +25,11 @@ export const formEmailRichText: BeforeEmail = async (emails, params) => {
     locale,
     user: null,
   })
+  const text = answerTexts(form.fields)
   const values = new Map<string, string>(
     (data?.submissionData ?? []).map((row: { field: string; value: unknown }) => [
       row.field,
-      String(row.value ?? ''),
+      text(row.field, String(row.value ?? '')),
     ]),
   )
   const doc = 'doc' in params ? (params.doc as { id?: unknown } | undefined) : undefined

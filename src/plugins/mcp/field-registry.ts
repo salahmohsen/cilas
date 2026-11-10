@@ -34,6 +34,8 @@ export const FIELD_REGISTRY = {
       legacy_url: 'Import provenance',
       generateSlug: 'Auto-generated slug control',
       effective_settings: 'Admin UI',
+      applicants: 'Admin UI',
+      fullFormPreview: 'Admin UI',
       enrollments: 'Join',
       'schedule.end_date': 'Computed by the shared schedule expansion',
       'meta.overview': 'Admin UI',
@@ -87,7 +89,12 @@ export const excludedField = (collection: DraftCollection, path: string): boolea
     key.startsWith('*.') ? path.endsWith(key.slice(1)) : path === key || path.startsWith(`${key}.`),
   )
 
+/** Required, unless the collection makes the value when it is left out. */
+const inputRequired = (field: Field) =>
+  'required' in field && Boolean(field.required) && field.custom?.generated !== true
+
 const leafSchema = (field: Field, collection: DraftCollection, path: string): z.ZodTypeAny => {
+  const required = inputRequired(field)
   let schema: z.ZodTypeAny
   if ('fields' in field) schema = z.object(shapeFor(field.fields, collection, path)).strict()
   else if (field.type === 'blocks') {
@@ -106,11 +113,11 @@ const leafSchema = (field: Field, collection: DraftCollection, path: string): z.
   } else if (field.type === 'select') {
     const choices = field.options.map((o) => (typeof o === 'string' ? o : String(o.value)))
     schema = z.enum(choices as [string, ...string[]])
-    if (field.hasMany) schema = field.required ? z.array(schema).min(1) : z.array(schema)
+    if (field.hasMany) schema = required ? z.array(schema).min(1) : z.array(schema)
   } else if (field.type === 'relationship' || field.type === 'upload') {
     schema = z.number().int().positive()
     if ('hasMany' in field && field.hasMany)
-      schema = field.required ? z.array(schema).min(1) : z.array(schema)
+      schema = required ? z.array(schema).min(1) : z.array(schema)
   } else if (field.type === 'number') {
     let number = z.number().finite()
     if (field.min !== undefined) number = number.min(field.min)
@@ -128,14 +135,13 @@ const leafSchema = (field: Field, collection: DraftCollection, path: string): z.
         'Use an ISO date with a valid calendar day',
       )
   else
-    schema =
-      'required' in field && field.required
-        ? z
-            .string()
-            .trim()
-            .min(1)
-            .max(field.type === 'richText' ? 60000 : 10000)
-        : z.string().max(field.type === 'richText' ? 60000 : 10000)
+    schema = required
+      ? z
+          .string()
+          .trim()
+          .min(1)
+          .max(field.type === 'richText' ? 60000 : 10000)
+      : z.string().max(field.type === 'richText' ? 60000 : 10000)
   if (field.type === 'array')
     schema = z.array(
       z.object({ ...shapeFor(field.fields, collection, path), id: z.string().optional() }).strict(),
@@ -145,13 +151,13 @@ const leafSchema = (field: Field, collection: DraftCollection, path: string): z.
       .object({ en: schema.nullable().optional(), ar: schema.nullable().optional() })
       .strict()
       .refine(
-        (value) => !('required' in field && field.required) || value.en != null || value.ar != null,
+        (value) => !required || value.en != null || value.ar != null,
         'Supply at least one language',
       )
   schema = schema.describe(
     `${path}${field.type === 'richText' ? ': Markdown' : ''}${'localized' in field && field.localized ? '; localized { en?, ar? }' : ''}. ${field.admin && 'description' in field.admin && typeof field.admin.description === 'string' ? field.admin.description : ''}`,
   )
-  return 'required' in field && field.required ? schema : schema.nullable().optional()
+  return required ? schema : schema.nullable().optional()
 }
 const shapeFor = (fields: Field[], collection: DraftCollection, prefix = ''): z.ZodRawShape =>
   Object.fromEntries(

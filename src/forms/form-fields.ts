@@ -1,10 +1,18 @@
 import { fields as builtIn } from '@payloadcms/plugin-form-builder'
-import type { Block, CollectionBeforeChangeHook, Field, TextField } from 'payload'
+import type {
+  Block,
+  CollectionBeforeChangeHook,
+  CollectionBeforeValidateHook,
+  Field,
+  FieldHook,
+  TextField,
+} from 'payload'
+import { ValidationError } from 'payload'
 
 import { DEFAULT_SIZE_MB, FILE_KINDS, MAX_FILES, MAX_SIZE_MB } from '@/lib/form-files'
 import type { Form } from '@/payload-types'
 
-import { QUESTION_NAME, QUESTION_NAME_RULE, toQuestionName } from './question-name'
+import { nameQuestions, QUESTION_NAME, QUESTION_NAME_RULE } from './question-name'
 
 /**
  * The form builder's fields as CILAS's forms use them. Questions carry a help
@@ -15,39 +23,62 @@ import { QUESTION_NAME, QUESTION_NAME_RULE, toQuestionName } from './question-na
 
 type BuiltIn = (typeof builtIn)[keyof typeof builtIn]
 
-const nameFrom = (value: unknown, sibling: unknown) =>
-  String(value ?? '') || toQuestionName(String((sibling as { label?: unknown })?.label ?? ''))
-
-/** An empty name is made from the label, so an admin only writes the question. */
+/** Made once by nameQuestions from the label; an admin never sees or types it. */
 const questionName: TextField = {
   name: 'name',
   type: 'text',
-  label: 'Machine name',
-  // Saved names are never empty. The validate below lets an empty one through
-  // the admin form while the label can make it; the hook fills it on save.
   required: true,
-  admin: { description: 'The key answers are saved under. Leave empty to make it from the label.' },
-  hooks: { beforeValidate: [({ value, siblingData }) => nameFrom(value, siblingData) || value] },
-  validate: (value: unknown, { siblingData }: { siblingData: unknown }) => {
-    const name = nameFrom(value, siblingData)
-    if (!name) return 'Enter a machine name, or an English label to make one from.'
-    return QUESTION_NAME.test(name) || QUESTION_NAME_RULE
-  },
+  admin: { hidden: true },
+  // The value the assistant gives may be left out: nameQuestions makes it.
+  custom: { generated: true },
 }
 
-const withQuestionName = (fields: Field[]): Field[] =>
-  fields.map((f) =>
-    'name' in f && f.name === 'name'
-      ? questionName
-      : f.type === 'row'
-        ? { ...f, fields: withQuestionName(f.fields) }
-        : f,
-  )
+/**
+ * Names new questions and refuses a given name that breaks the rule. This
+ * runs for drafts too, which skip field validation.
+ */
+const named = <B extends Parameters<typeof nameQuestions>[0][number]>(
+  path: string,
+  ...args: Parameters<typeof nameQuestions<B>>
+): B[] => {
+  const blocks = nameQuestions(...args)
+  const errors = blocks.flatMap((b, i) => [
+    ...(b.name && !QUESTION_NAME.test(b.name)
+      ? [{ path: `${path}.${i}.name`, message: QUESTION_NAME_RULE }]
+      : []),
+    ...(b.options ?? []).flatMap((o, j) =>
+      o.value && !QUESTION_NAME.test(o.value)
+        ? [{ path: `${path}.${i}.options.${j}.value`, message: QUESTION_NAME_RULE }]
+        : [],
+    ),
+  ])
+  if (errors.length) throw new ValidationError({ errors })
+  return blocks
+}
+
+/** Made once by nameQuestions from the option's label; an admin sees only the label. */
+const optionValue: TextField = {
+  name: 'value',
+  type: 'text',
+  required: true,
+  admin: { hidden: true },
+  custom: { generated: true },
+}
+
+const withMachineNames = (fields: Field[], inOptions = false): Field[] =>
+  fields.map((f) => {
+    if ('name' in f && f.name === 'name' && !inOptions) return questionName
+    if ('name' in f && f.name === 'value' && inOptions) return optionValue
+    if (f.type === 'row') return { ...f, fields: withMachineNames(f.fields, inOptions) }
+    if (f.type === 'array' && f.name === 'options')
+      return { ...f, fields: withMachineNames(f.fields, true) }
+    return f
+  })
 
 /** The plugin gives some fields as blocks and some as functions that make one. */
 const block = (b: BuiltIn): Block => {
   const base = typeof b === 'function' ? b() : b
-  return { ...base, fields: withQuestionName(base.fields) }
+  return { ...base, fields: withMachineNames(base.fields) }
 }
 
 const description: Field = {
@@ -189,3 +220,21 @@ export const ensureNameEmail: CollectionBeforeChangeHook<Form> = ({ data }) => (
     ),
   ],
 })
+
+/** Names a form's new questions. `name` and `email` stay the default questions'. */
+export const nameNewFormQuestions: CollectionBeforeValidateHook<Form> = ({ data, originalDoc }) =>
+  data?.fields
+    ? {
+        ...data,
+        fields: named('fields', data.fields, {
+          saved: originalDoc?.fields ?? [],
+          reserved: nameEmailBlocks.map((b) => b.name),
+        }),
+      }
+    : data
+
+/** Names a course's new applicant questions. */
+export const nameNewQuestions: FieldHook = ({ value, originalDoc }) =>
+  Array.isArray(value)
+    ? named('applicant_questions', value, { saved: originalDoc?.applicant_questions ?? [] })
+    : value

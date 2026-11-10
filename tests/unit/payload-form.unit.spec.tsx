@@ -95,7 +95,7 @@ describe('the payload form', () => {
     expect(screen.queryByRole('textbox', { name: /Track/ })).toBeNull()
   })
 
-  it('sends the chosen option as its label, like the radio answers', async () => {
+  it('saves the chosen option as its value', async () => {
     render(<PayloadForm confirmation={null} form={formOf([selectBlock as never])} />)
     const trigger = await screen.findByRole('combobox', { name: /Track/ })
     fireEvent.keyDown(trigger, { key: 'Enter' })
@@ -119,7 +119,7 @@ describe('the payload form', () => {
     }
     expect(body.submissionData.find((a) => a.field === 'track')).toEqual({
       field: 'track',
-      value: 'Film', // the option's label, not its raw value.
+      value: 'film',
     })
   })
 

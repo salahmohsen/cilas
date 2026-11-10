@@ -159,12 +159,12 @@ export function PayloadForm({
     return undefined
   }
 
-  const readable = (q: Question, value: Answer): string => {
-    const label = (v: string) => optionsOf(q).find((o) => o.value === v)?.label ?? v
+  /** Choices are saved as option values; readers show their labels (answerText). */
+  const saved = (q: Question, value: Answer): string => {
     if (isFiles(q)) return ''
-    if (Array.isArray(value)) return (value as string[]).map(label).join(', ')
+    if (Array.isArray(value)) return (value as string[]).join(', ')
     if (typeof value === 'boolean') return value ? 'Yes' : 'No'
-    return q.blockType === 'radio' || q.blockType === 'select' ? label(value) : value
+    return value
   }
 
   const api = useForm({
@@ -188,7 +188,7 @@ export function PayloadForm({
       const questions = questionsFor(value)
       const answers = sharedQuestions.map((q) => ({
         field: q.name,
-        value: readable(q, value[q.name] ?? emptyFor(q)),
+        value: saved(q, value[q.name] ?? emptyFor(q)),
       }))
       const sent = {
         form: form.id,
@@ -202,7 +202,7 @@ export function PayloadForm({
                 need_reduction: Boolean(value[reductionKey(c.id)]),
                 answers: c.questions.map((q) => ({
                   name: q.name,
-                  value: readable(
+                  value: saved(
                     q as Question,
                     value[choiceField(c.id, q.name)] ?? emptyFor(q as Question),
                   ),

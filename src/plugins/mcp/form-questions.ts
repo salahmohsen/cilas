@@ -32,10 +32,12 @@ const questionName = z
     (name) => !RESERVED_QUESTION_NAMES.includes(name),
     'name and email are asked by every form already.',
   )
-  .describe('A short machine name, e.g. motivation. Unique in the form.')
+  .describe(
+    'Leave out: a name is made from the English label. If given, a short machine name, e.g. motivation, unique in the form.',
+  )
 
 const common = {
-  name: questionName,
+  name: questionName.optional(),
   label: localizedText('The question', 200),
   description: optionalLocalizedText('Help text under the question', 400),
   required: z.boolean().default(false).describe('Whether an answer is required.'),
@@ -49,10 +51,20 @@ export const questionSchema = z.discriminatedUnion('type', [
       .describe('select: a menu. radio: one choice. checkboxGroup: several.'),
     ...common,
     options: z
-      .array(localizedText('A choice', 120))
+      .array(
+        localizedText('A choice', 120).extend({
+          value: z
+            .string()
+            .regex(QUESTION_NAME, QUESTION_NAME_RULE)
+            .optional()
+            .describe(
+              'Leave out: a value is made from the English text. Answers are saved as this value.',
+            ),
+        }),
+      )
       .min(2)
       .max(30)
-      .describe('The choices, in order. The English text is the stored value.'),
+      .describe('The choices, in order.'),
   }),
 ])
 

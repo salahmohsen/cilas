@@ -3,6 +3,8 @@ import type { Payload, TypedUser } from 'payload'
 import { isAdminUser, isFellowUser, personOf } from '@/access'
 import { relId } from '@/lib/relation'
 
+import { answerTexts } from './answer-text'
+
 export type ApplicantViewer = { kind: 'admin' } | { kind: 'fellow'; person: number }
 
 export function applicantViewer(user?: TypedUser | null): ApplicantViewer | null {
@@ -51,24 +53,24 @@ export async function applicantsFor(
           depth: 0,
           locale,
         })
+        const fields = form.fields ?? []
         return [
           id,
-          new Map(
-            (form.fields ?? []).flatMap((f) =>
-              'name' in f
-                ? [
-                    [
-                      f.name,
-                      'label' in f && typeof f.label === 'string' ? f.label : f.name,
-                    ] as const,
-                  ]
-                : [],
+          {
+            labels: new Map(
+              fields.flatMap((f) =>
+                'name' in f
+                  ? [[f.name, 'label' in f && typeof f.label === 'string' ? f.label : f.name]]
+                  : [],
+              ),
             ),
-          ),
+            text: answerTexts(fields),
+          },
         ] as const
       }),
     ),
   )
+  const courseText = new Map(courses.map((c) => [c.id, answerTexts(c.applicant_questions)]))
   const applications = submissions.flatMap((s) => {
     const choices = (s.choices ?? [])
       .filter((c) => own.has(Number(relId(c.course))))
@@ -76,7 +78,10 @@ export async function applicantsFor(
         course: Number(relId(c.course)),
         title: own.get(Number(relId(c.course)))!.title,
         accepted: c.accepted === true,
-        answers: (c.answers ?? []).map((a) => ({ label: a.label || a.name, value: a.value || '' })),
+        answers: (c.answers ?? []).map((a) => ({
+          label: a.label || a.name,
+          value: courseText.get(Number(relId(c.course)))!(a.name, a.value || ''),
+        })),
         ...(admin ? { amount: c.amount, need_reduction: c.need_reduction } : {}),
       }))
     if (!choices.length) return []
@@ -88,10 +93,13 @@ export async function applicantsFor(
         email: answer('email'),
         submitted: s.createdAt,
         status: s.status || 'new',
-        answers: (s.submissionData ?? []).map((a) => ({
-          label: forms.get(Number(relId(s.form)))?.get(a.field) || a.field,
-          value: a.value,
-        })),
+        answers: (s.submissionData ?? []).map((a) => {
+          const form = forms.get(Number(relId(s.form)))
+          return {
+            label: form?.labels.get(a.field) || a.field,
+            value: form ? form.text(a.field, a.value) : a.value,
+          }
+        }),
         choices,
       },
     ]

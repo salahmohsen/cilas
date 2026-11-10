@@ -7,7 +7,7 @@ import { type MigrateUpArgs, type MigrateDownArgs, sql } from '@payloadcms/db-po
  */
 export async function up({ db }: MigrateUpArgs): Promise<void> {
   await db.execute(sql`
-    CREATE FUNCTION pg_temp.question_name(raw text) RETURNS text LANGUAGE sql AS $f$
+    CREATE OR REPLACE FUNCTION pg_temp.question_name(raw text) RETURNS text LANGUAGE sql AS $f$
       SELECT rtrim(left(CASE WHEN w ~ '^[0-9]' THEN 'q_' || w ELSE w END, 40), '_')
       FROM (SELECT trim(both '_' from regexp_replace(lower(raw), '[^a-z0-9]+', '_', 'g')) AS w) s
     $f$;

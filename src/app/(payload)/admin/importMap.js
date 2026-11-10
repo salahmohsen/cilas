@@ -1,3 +1,4 @@
+import { SubmissionAnswers as SubmissionAnswers_825d586e877d28329934d6c10f2f8703 } from '../../../components/admin/submission-choices'
 import { SubmissionChoices as SubmissionChoices_825d586e877d28329934d6c10f2f8703 } from '../../../components/admin/submission-choices'
 import { CoursesCell as CoursesCell_825d586e877d28329934d6c10f2f8703 } from '../../../components/admin/submission-choices'
 import { SubmissionDecision as SubmissionDecision_eee555a74fc1831b93e9205174d718a0 } from '../../../components/admin/submission-decision'
@@ -86,6 +87,7 @@ import { S3ClientUploadHandler as S3ClientUploadHandler_f97aa6c64367fa259c5bc056
 
 /** @type import('payload').ImportMap */
 export const importMap = {
+  "/components/admin/submission-choices#SubmissionAnswers": SubmissionAnswers_825d586e877d28329934d6c10f2f8703,
   "/components/admin/submission-choices#SubmissionChoices": SubmissionChoices_825d586e877d28329934d6c10f2f8703,
   "/components/admin/submission-choices#CoursesCell": CoursesCell_825d586e877d28329934d6c10f2f8703,
   "/components/admin/submission-decision#SubmissionDecision": SubmissionDecision_eee555a74fc1831b93e9205174d718a0,

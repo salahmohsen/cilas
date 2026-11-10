@@ -41,7 +41,7 @@ Session units:\n${list(SESSION_UNIT_OPTIONS)}
 Schedule shape: { start_date, start_precision: "day" | "week", weeks, slots: [{ weekday, start_time, end_time }], note: { en?, ar? } }. Times are 24-hour HH:MM in Africa/Cairo. Dates come from the shared expansion (ADR 0002); do not materialize generated dates into sessions. A start date must match one of the weekly slots unless precision is week. Conflicting dates and weekdays must be clarified with the person. Session dates, when explicitly supplied, replace the generated dates for that session and are saved as supplied.
 Sessions use order, session_title (localized), meetings, cancelled, description (localized Markdown), dates [{date,start_time,end_time}], bibliography [{type,title,href,note}], and activities [{kind,description}].
 For a per-session delivery split, set sessions[].delivery to ONLINE, OFFLINE or HYBRID using the same values as course location. Empty delivery inherits the course-level location. When sessions differ, set course location to ["HYBRID"]. Use schedule.note for additional schedule notes.
-Registration uses mode: follow_cycle (default), own, or closed. follow_cycle uses the cycle destination and deadline, with optional close_early (last day in Cairo). own uses method (form or external), form or url, and deadline without cycle fallback. closed takes no applications. Applicant questions are real blocks with blockType and the fields in the schema; they are unused with external registration. To ask more questions for a follow_cycle course, add them to applicant_questions: the site adds them to the cycle form for applicants who choose this course. Do not make a form for it.
+Registration uses mode: follow_cycle (default), own, or closed. follow_cycle uses the cycle destination and deadline, with optional close_early (last day in Cairo). own uses method (form or external), form or url, and deadline without cycle fallback. closed takes no applications. Applicant questions are real blocks with blockType and the fields in the schema; leave their name and option values out, and the course makes them once from the English labels. They are unused with external registration. To ask more questions for a follow_cycle course, add them to applicant_questions: the site adds them to the cycle form for applicants who choose this course. Do not make a form for it.
 Contribution override uses options [{amount,default}] with nonnegative EGP amounts and exactly one default when options exist, localized note and need_based_deductions. Payment plans are available only on programmes.
 ${contract('courses')}
 `
@@ -63,14 +63,14 @@ Tool: \`create_form_and_link\`.
 Every form asks **name** and **email** first. Do not add them; a question called \`name\` or \`email\` is refused.
 
 ## Questions
-Each question has \`name\` (machine name, lower case, unique), \`label\` (\`{ en, ar? }\`), optional \`description\` and \`required\`.
+Each question has \`label\` (\`{ en, ar? }\`), optional \`description\` and \`required\`. Leave \`name\` out: the form makes it from the English label, or \`question_<id>\` for an Arabic-only label, and adds \`_2\` to a repeated one. A given name must use lower-case letters, digits and underscores, start with a letter, and be unique.
 - \`type\` text-like (${TEXT_QUESTION_TYPES.join(', ')}): the answer is typed or ticked.
-- \`type\` choice (${CHOICE_QUESTION_TYPES.join(', ')}): also give \`options\`, each \`{ en, ar? }\`. select is a menu, radio is one choice, checkboxGroup is several.
+- \`type\` choice (${CHOICE_QUESTION_TYPES.join(', ')}): also give \`options\`, each \`{ en, ar? }\`. select is a menu, radio is one choice, checkboxGroup is several. Leave each option's \`value\` out: it is made once from the English text, like a name, and answers are saved as it. People always see the option's text.
 
 File uploads, country and state menus, and text blocks are not available here.
 
 ## Template
-A new form is a copy of the workshop template named in Registration defaults. The template's questions, emails and thank-you message come with it, and the questions given come after the template's. A question with the same name as one of the template's is refused. If no workshop template is set, the form has only name, email and the questions given, and the result says so. Lookup never returns templates.
+A new form is a copy of the workshop template named in Registration defaults. The template's questions, emails and thank-you message come with it, and the questions given come after the template's. A given name that one of the template's questions already has is refused. If no workshop template is set, the form has only name, email and the questions given, and the result says so. Lookup never returns templates.
 
 ## One form per title
 A form with the same English title as an existing one is refused, and the answer names it: a repeated request would otherwise make a second form. Tell the user, and ask them to check the first one. Only if they really want two with the same title, call again with \`create_another: true\`.

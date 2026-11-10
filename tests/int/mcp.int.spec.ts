@@ -619,7 +619,6 @@ describe('admin-only MCP server', () => {
             questions: [
               {
                 type: 'radio',
-                name: 'days',
                 label: { en: 'Days', ar: 'الأيام' },
                 options: [{ en: 'Weekdays', ar: 'أيام الأسبوع' }, { en: 'Weekends' }],
               },
@@ -644,11 +643,12 @@ describe('admin-only MCP server', () => {
         const blocks = (form.fields ?? []) as unknown as Array<{
           name: string
           label: Record<string, string>
-          options?: Array<{ label: Record<string, string> }>
+          options?: Array<{ label: Record<string, string>; value: string }>
         }>
         expect(blocks.map((b) => b.name)).toEqual(['name', 'email', 'city', 'days'])
         expect(blocks[2]!.label).toEqual({ en: 'City', ar: 'المدينة' })
         expect(blocks[3]!.label).toEqual({ en: 'Days', ar: 'الأيام' })
+        expect(blocks[3]!.options!.map((o) => o.value)).toEqual(['weekdays', 'weekends'])
         expect(blocks[3]!.options!.map((o) => o.label)).toEqual([
           { en: 'Weekdays', ar: 'أيام الأسبوع' },
           { en: 'Weekends', ar: 'Weekends' },

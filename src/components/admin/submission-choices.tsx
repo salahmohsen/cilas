@@ -1,11 +1,31 @@
-import type { ArrayFieldServerComponent } from 'payload'
-import { submissionChoices } from '@/forms/submission-view'
+import type { ArrayFieldServerComponent, UIFieldServerComponent } from 'payload'
+import { readableAnswers, readableChoices } from '@/forms/submission-view'
 import { SubmissionChoiceCards } from './submission-choice-cards'
 
 export const SubmissionChoices: ArrayFieldServerComponent = async ({ data, path, req }) => {
-  const choices = await submissionChoices(req, data.choices)
+  const choices = await readableChoices(req, data.choices)
   return (
     <SubmissionChoiceCards choices={choices} path={path} decided={data.status === 'accepted'} />
+  )
+}
+
+export const SubmissionAnswers: UIFieldServerComponent = async ({ data, req }) => {
+  const answers = await readableAnswers(req, data?.form, data?.submissionData)
+  if (!answers.length) return null
+  return (
+    <section aria-label="Answers" className="cilas-admin-stack">
+      <h2>Answers</h2>
+      <dl>
+        {answers.map((answer) => (
+          <div key={answer.id ?? answer.label}>
+            <dt>
+              <strong>{answer.label}</strong>
+            </dt>
+            <dd style={{ whiteSpace: 'pre-wrap' }}>{answer.value || 'No answer'}</dd>
+          </div>
+        ))}
+      </dl>
+    </section>
   )
 }
 

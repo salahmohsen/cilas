@@ -72,6 +72,7 @@ import * as migration_20261110_180434_application_enrollment_results from './202
 import * as migration_20261110_182457_backfill_course_choices from './20261110_182457_backfill_course_choices';
 import * as migration_20261110_183648_fixed_contribution_currency from './20261110_183648_fixed_contribution_currency';
 import * as migration_20261110_202109_question_machine_names from './20261110_202109_question_machine_names';
+import * as migration_20261110_203134_option_machine_values from './20261110_203134_option_machine_values';
 
 export const migrations = [
   {
@@ -442,6 +443,11 @@ export const migrations = [
   {
     up: migration_20261110_202109_question_machine_names.up,
     down: migration_20261110_202109_question_machine_names.down,
-    name: '20261110_202109_question_machine_names'
+    name: '20261110_202109_question_machine_names',
+  },
+  {
+    up: migration_20261110_203134_option_machine_values.up,
+    down: migration_20261110_203134_option_machine_values.down,
+    name: '20261110_203134_option_machine_values'
   },
 ];
