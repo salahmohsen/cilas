@@ -24,6 +24,11 @@ const nextConfig: NextConfig = {
   // for a free database connection, and passed the 60-second default; Next
   // then rendered them again. Later pages take well under a second.
   staticPageGenerationTimeout: 180,
+  // The Docker build on Dokploy only runs after CI passed `pnpm typecheck` and
+  // `pnpm build` for the same commit, so it skips the repeated check.
+  typescript: {
+    ignoreBuildErrors: process.env.SKIP_BUILD_TYPECHECK === 'true',
+  },
   // The profile form sends a photo of up to 5 MB; a space post or comment up
   // to 36 MB of files (src/lib/space-file-limits.ts). The default limit is 1 MB.
   experimental: {
