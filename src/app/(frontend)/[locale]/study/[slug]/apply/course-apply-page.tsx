@@ -31,12 +31,6 @@ export async function courseApplyMetadata(
     : {}
 }
 
-/**
- * Applying to a course through its site form: its own, or its cycle's, then
- * the course's own questions (Questions for applicants). The submission names
- * the course, so an admin can accept it into an enrollment. `reader` is null
- * on the cached page; the signed-in page passes the account (`community` courses).
- */
 export async function CourseApplyPage({
   locale,
   slug,
@@ -94,7 +88,6 @@ export async function CourseApplyPage({
         <h1 className="course-title mt-3">{t('courseTitle', { title: course.title })}</h1>
       </header>
 
-      {/* Before the questions only: hidden once the application is sent (see .apply-intro). */}
       <div className="apply-intro">
         <p className="course-status" data-open={open || undefined}>
           {open ? (deadline ? t('deadline', { date: deadline }) : null) : t('courseClosed')}
@@ -106,7 +99,20 @@ export async function CourseApplyPage({
         back={{ href: back, label: t('backTo', { title: course.title }) }}
         disabled={!open}
         form={form}
-        target={{ relationTo: 'courses', value: course.id }}
+        target={
+          course.registration?.mode === 'own'
+            ? { relationTo: 'courses', value: course.id }
+            : { relationTo: 'cycles', value: cycle!.id }
+        }
+        courseChoice={
+          course.registration?.mode === 'own'
+            ? undefined
+            : {
+                course: course.id,
+                amount: registration.price?.options?.find((option) => option.default)?.amount,
+                questionNames: (course.applicant_questions ?? []).map((q) => q.name),
+              }
+        }
       />
     </div>
   )

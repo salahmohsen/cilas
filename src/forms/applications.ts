@@ -17,20 +17,44 @@ import { env } from '@/env'
 import { getEmailSettings } from '@/emails/settings'
 import { acceptanceMail } from '@/emails/transactional'
 import { createPerson } from '@/lib/create-person'
-import { loadApplicationTarget } from '@/lib/registration'
+import { PUBLIC_APPLICATION_SUBMISSION, validateApplication } from '@/forms/application-validation'
 import type { FormSubmission } from '@/payload-types'
 
-export type TargetKind = 'programmes' | 'courses'
+export type TargetKind = 'programmes' | 'courses' | 'cycles'
 
 export const applicationFields: Field[] = [
   {
-    // Set by the apply page; checked against the target's form on create.
     name: 'target',
     type: 'relationship',
-    relationTo: ['programmes', 'courses'],
+    relationTo: ['programmes', 'courses', 'cycles'],
     index: true,
     access: { update: adminOnlyField },
     admin: { position: 'sidebar', readOnly: true, description: 'What the applicant applied to.' },
+  },
+  {
+    name: 'choices',
+    type: 'array',
+    access: { update: adminOnlyField },
+    fields: [
+      { name: 'course', type: 'relationship', relationTo: 'courses', required: true },
+      { name: 'amount', type: 'number' },
+      { name: 'need_reduction', type: 'checkbox' },
+      {
+        name: 'answers',
+        type: 'array',
+        fields: [
+          { name: 'name', type: 'text', required: true },
+          { name: 'label', type: 'text' },
+          { name: 'value', type: 'textarea' },
+        ],
+      },
+      {
+        name: 'accepted',
+        type: 'checkbox',
+        defaultValue: true,
+        access: { create: adminOnlyField, update: adminOnlyField },
+      },
+    ],
   },
   {
     name: 'status',
@@ -79,24 +103,17 @@ const idOf = (value: unknown): number | null => {
 }
 
 export const checkTarget: CollectionBeforeChangeHook = async ({ data, operation, req }) => {
-  if (operation !== 'create' || !data.target) return data
-  const { relationTo, value } = data.target as { relationTo: TargetKind; value: unknown }
-  const id = idOf(value)
-  const loaded = id === null ? null : await loadApplicationTarget(req.payload, relationTo, id, req)
-  if (!loaded || idOf(loaded.formId) !== idOf(data.form)) {
-    throw new APIError('This form is not the registration form of what it names.', 400)
-  }
+  if (operation !== 'create') return data
   // The page hides the button at the deadline; this repeats the rule where
   // the API cannot skip it. Local callers (seeds, backfills) may still add
   // one, the way they may add a historic submission at all.
-  if (req.payloadAPI !== 'local' && !loaded?.open) {
-    throw new APIError('This is not open for applications.', 400)
-  }
   // An unpublished course or programme has no page, but its id and form are
   // easy to guess; its form is readable, so the API must refuse it too.
-  if (req.payloadAPI !== 'local' && !loaded?.published) {
-    throw new APIError('This is not open for applications.', 400)
-  }
+  data.choices = await validateApplication(
+    req,
+    data,
+    req.payloadAPI === 'local' && !req.context[PUBLIC_APPLICATION_SUBMISSION],
+  )
   return data
 }
 
@@ -134,12 +151,25 @@ const accept = async (req: PayloadRequest, id: number): Promise<Accepted | null>
   const submission = await payload.findByID({ collection: 'form-submissions', id, ...local })
   if (submission.status === 'accepted') return null
   if (!submission.target)
-    throw new APIError('This submission is not for a programme or a course.', 400)
+    throw new APIError('This submission is not for a programme, cycle or course.', 400)
   const applicant = applicantOf(submission.submissionData)
   if ('error' in applicant) throw new APIError(applicant.error, 400)
 
   const kind = submission.target.relationTo
   const targetId = idOf(submission.target.value)!
+  const courseIds =
+    kind === 'programmes'
+      ? []
+      : submission.choices?.length
+        ? submission.choices
+            .filter((choice) => choice.accepted === true)
+            .map((choice) => idOf(choice.course)!)
+        : kind === 'courses'
+          ? [targetId]
+          : []
+  if (kind !== 'programmes' && !courseIds.length) {
+    throw new APIError('Accept at least one course before approving this application.', 400)
+  }
 
   const found = await payload.find({
     collection: 'users',
@@ -202,35 +232,38 @@ const accept = async (req: PayloadRequest, id: number): Promise<Accepted | null>
         })
       ).id
   } else {
-    const { docs } = await payload.find({
-      collection: 'enrollments',
-      where: { and: [{ person: { equals: result.person } }, { course: { equals: targetId } }] },
-      limit: 1,
-      ...local,
-    })
-    const enrollment = docs[0]
-    if (enrollment?.status === 'applied') {
-      await payload.update({
+    for (const courseId of courseIds) {
+      const { docs } = await payload.find({
         collection: 'enrollments',
-        id: enrollment.id,
-        data: { status: 'accepted' },
+        where: { and: [{ person: { equals: result.person } }, { course: { equals: courseId } }] },
+        limit: 1,
         ...local,
       })
-    }
-    result.enrollment =
-      enrollment?.id ??
-      (
-        await payload.create({
+      const enrollment = docs[0]
+      if (enrollment?.status === 'applied') {
+        await payload.update({
           collection: 'enrollments',
-          data: {
-            person: result.person,
-            course: targetId,
-            status: 'accepted',
-            source: 'registration_form',
-          },
+          id: enrollment.id,
+          data: { status: 'accepted' },
           ...local,
         })
-      ).id
+      }
+      const enrollmentId =
+        enrollment?.id ??
+        (
+          await payload.create({
+            collection: 'enrollments',
+            data: {
+              person: result.person,
+              course: courseId,
+              status: 'accepted',
+              source: 'registration_form',
+            },
+            ...local,
+          })
+        ).id
+      if (kind === 'courses') result.enrollment = enrollmentId
+    }
   }
 
   await payload.update({
@@ -240,10 +273,18 @@ const accept = async (req: PayloadRequest, id: number): Promise<Accepted | null>
     ...local,
   })
 
-  const target = await payload.findByID({ collection: kind, id: targetId, locale: 'en', ...local })
+  const titles =
+    kind === 'programmes'
+      ? [(await payload.findByID({ collection: kind, id: targetId, locale: 'en', ...local })).title]
+      : await Promise.all(
+          courseIds.map(
+            async (id) =>
+              (await payload.findByID({ collection: 'courses', id, locale: 'en', ...local })).title,
+          ),
+        )
   return {
     ...result,
-    mail: { ...applicant, title: target.title ?? '', newAccount, site: env.NEXT_PUBLIC_SERVER_URL },
+    mail: { ...applicant, title: titles.join(', '), newAccount, site: env.NEXT_PUBLIC_SERVER_URL },
   }
 }
 

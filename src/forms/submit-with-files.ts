@@ -1,51 +1,75 @@
-import type { PayloadHandler, PayloadRequest } from 'payload'
+import { APIError, type PayloadHandler, type PayloadRequest } from 'payload'
 
 import { env } from '@/env'
 import { fileAllowed, maxBytes, maxCount, type FileRule } from '@/lib/form-files'
-import { loadApplicationTarget } from '@/lib/registration'
+import { relId } from '@/lib/relation'
+import type { FormSubmission } from '@/payload-types'
 import { checkTurnstile, TURNSTILE_VERIFIED } from '@/lib/turnstile'
+import { PUBLIC_APPLICATION_SUBMISSION, validateApplication } from './application-validation'
+import { choiceFileField, type ApplicationInput } from './application-input'
 
 type FileQuestion = FileRule & { blockType: 'fileUpload'; name: string; required?: boolean | null }
-type Sent = {
+type Sent = ApplicationInput & {
   form: number
-  target?: { relationTo: 'courses' | 'programmes'; value: number }
   submissionData: Array<{ field: string; value: string }>
 }
+type FileAnswer = { key: string; question: FileQuestion; set: (value: string) => void }
 
 const fail = (error: string, status = 400) => Response.json({ error }, { status })
 
-/** The file questions a submission may answer: the form's, then a course's own, prefixed. */
-const fileQuestionsOf = async (req: PayloadRequest, sent: Sent): Promise<FileQuestion[]> => {
-  const local = { depth: 0, overrideAccess: true } as const
-  const form = await req.payload
-    .findByID({ collection: 'forms', id: sent.form, ...local })
-    .catch(() => null)
-  if (!form) return []
-  const own = (form.fields ?? []).filter(
-    (b) => b.blockType === 'fileUpload',
-  ) as unknown as FileQuestion[]
-  if (sent.target?.relationTo !== 'courses') return own
-  const course = await req.payload
-    .findByID({ collection: 'courses', id: sent.target.value, ...local })
-    .catch(() => null)
-  const extra = ((course?.applicant_questions ?? []) as unknown as FileQuestion[])
-    .filter((q) => q.blockType === 'fileUpload')
-    .map((q) => ({ ...q, name: `course_${q.name}` }))
-  return [...own, ...extra]
+const fileQuestionsOf = async (req: PayloadRequest, sent: Sent): Promise<FileAnswer[]> => {
+  const local = { depth: 0, overrideAccess: true, req } as const
+  const form = await req.payload.findByID({ collection: 'forms', id: sent.form, ...local })
+  const shared = (form.fields ?? []).filter((q) => q.blockType === 'fileUpload') as FileQuestion[]
+  const sharedAnswer = (key: string, question: FileQuestion): FileAnswer => ({
+    key,
+    question,
+    set: (value) => {
+      sent.submissionData = [
+        ...sent.submissionData.filter((a) => a.field !== key),
+        { field: key, value },
+      ]
+    },
+  })
+  const questions = shared.map((q) => sharedAnswer(q.name, q))
+  for (const choice of sent.choices ?? []) {
+    const course = await req.payload.findByID({
+      collection: 'courses',
+      id: relId(choice.course),
+      ...local,
+    })
+    for (const question of course.applicant_questions ?? []) {
+      if (question.blockType !== 'fileUpload') continue
+      questions.push({
+        key: choiceFileField(course.id, question.name),
+        question,
+        set: (value) => {
+          choice.answers = [
+            ...(choice.answers ?? []).filter((a) => a.name !== question.name),
+            { name: question.name, value },
+          ]
+        },
+      })
+    }
+  }
+  // Existing own-course pages and historic clients still send prefixed course answers.
+  if (!sent.choices?.length && sent.target?.relationTo === 'courses') {
+    const course = await req.payload.findByID({
+      collection: 'courses',
+      id: Number(sent.target.value),
+      ...local,
+    })
+    for (const q of course.applicant_questions ?? []) {
+      if (q.blockType === 'fileUpload') questions.push(sharedAnswer(`course_${q.name}`, q))
+    }
+  }
+  return questions
 }
 
-/**
- * A form submission with files, in one multipart request: the Turnstile
- * check runs once (a token passes only once, so files cannot go ahead on
- * their own), each file is checked against its question (kind, size, how
- * many), stored privately, and the answer becomes its download links. If
- * anything fails, the stored files are removed again.
- */
 export const submitWithFiles: PayloadHandler = async (req) => {
   if (!(await checkTurnstile(req, env.TURNSTILE_SECRET_KEY))) {
     return fail('The spam check failed. Reload the page and try again.', 403)
   }
-
   const data = await (req as unknown as Request).formData().catch(() => null)
   const sent = (() => {
     try {
@@ -54,50 +78,46 @@ export const submitWithFiles: PayloadHandler = async (req) => {
       return null
     }
   })()
-  if (!data || !sent?.form || !Array.isArray(sent.submissionData))
+  if (
+    !data ||
+    !sent?.form ||
+    !Array.isArray(sent.submissionData) ||
+    (sent.choices != null && !Array.isArray(sent.choices))
+  )
     return fail('The form could not be read.')
-
-  // The same closed-registration rule the plain submissions' hook applies.
-  // This endpoint writes through the Local API, which that hook skips, so
-  // the rule repeats here, and before any file row exists to clean up.
-  if (sent.target) {
-    const loaded = await loadApplicationTarget(
-      req.payload,
-      sent.target.relationTo,
-      sent.target.value,
-    )
-    if (loaded && !loaded.open) return fail('Applications are closed.')
-    if (loaded && !loaded.published) return fail('Applications are closed.')
-  }
-
-  const questions = await fileQuestionsOf(req, sent)
-  const files = new Map<string, File[]>()
-  for (const [key, value] of data.entries()) {
-    if (!key.startsWith('file:') || typeof value === 'string') continue
-    const name = key.slice(5)
-    files.set(name, [...(files.get(name) ?? []), value])
-  }
-  for (const name of files.keys()) {
-    if (!questions.some((q) => q.name === name)) return fail(`No question “${name}” takes files.`)
-  }
-  for (const q of questions) {
-    const sentFiles = files.get(q.name) ?? []
-    if (q.required && !sentFiles.length) return fail(`“${q.name}” needs a file.`)
-    if (sentFiles.length > maxCount(q)) return fail(`Too many files for “${q.name}”.`)
-    for (const f of sentFiles) {
-      if (f.size > maxBytes(q)) return fail(`“${f.name}” is too large.`)
-      if (!fileAllowed(q, f)) return fail(`“${f.name}” is not a kind of file this question takes.`)
-    }
-  }
 
   const stored: number[] = []
   try {
-    const links = new Map<string, string[]>()
-    for (const [name, list] of files) {
-      for (const f of list) {
+    const questions = await fileQuestionsOf(req, sent)
+    const files = new Map<string, File[]>()
+    for (const [key, value] of data.entries()) {
+      if (!key.startsWith('file:') || typeof value === 'string') continue
+      const name = key.slice(5)
+      files.set(name, [...(files.get(name) ?? []), value])
+    }
+    for (const name of files.keys()) {
+      if (!questions.some((q) => q.key === name)) return fail(`No question “${name}” takes files.`)
+    }
+    for (const { key, question, set } of questions) {
+      const sentFiles = files.get(key) ?? []
+      if (question.required && !sentFiles.length) return fail(`“${question.name}” needs a file.`)
+      if (sentFiles.length > maxCount(question))
+        return fail(`Too many files for “${question.name}”.`)
+      for (const f of sentFiles) {
+        if (f.size > maxBytes(question)) return fail(`“${f.name}” is too large.`)
+        if (!fileAllowed(question, f))
+          return fail(`“${f.name}” is not a kind of file this question takes.`)
+      }
+      // Validate required answers before storing anything; client download links are never trusted.
+      set(sentFiles.length ? 'pending upload' : '')
+    }
+    await validateApplication(req, sent)
+    for (const { key, set } of questions) {
+      const links: string[] = []
+      for (const f of files.get(key) ?? []) {
         const doc = await req.payload.create({
           collection: 'submission-files',
-          data: { field: name },
+          data: { field: key },
           file: {
             data: Buffer.from(await f.arrayBuffer()),
             mimetype: f.type,
@@ -105,28 +125,38 @@ export const submitWithFiles: PayloadHandler = async (req) => {
             size: f.size,
           },
           overrideAccess: true,
+          req,
         })
         stored.push(doc.id)
-        const url = `${env.NEXT_PUBLIC_SERVER_URL.replace(/\/+$/, '')}${doc.url}`
-        links.set(name, [...(links.get(name) ?? []), url])
+        links.push(`${env.NEXT_PUBLIC_SERVER_URL.replace(/\/+$/, '')}${doc.url}`)
       }
+      set(links.join('\n'))
     }
-    const submissionData = sent.submissionData.map((a) =>
-      links.has(a.field) ? { field: a.field, value: links.get(a.field)!.join('\n') } : a,
-    )
     await req.payload.create({
       collection: 'form-submissions',
-      data: { form: sent.form, target: sent.target, submissionData },
-      context: { [TURNSTILE_VERIFIED]: true },
+      data: {
+        form: sent.form,
+        target: sent.target as FormSubmission['target'],
+        choices: sent.choices,
+        submissionData: sent.submissionData,
+      },
+      context: { [TURNSTILE_VERIFIED]: true, [PUBLIC_APPLICATION_SUBMISSION]: true },
+      req,
     })
     return Response.json({ ok: true }, { status: 201 })
   } catch (error) {
     for (const id of stored) {
       await req.payload
-        .delete({ collection: 'submission-files', id, overrideAccess: true })
-        .catch(() => {})
+        .delete({ collection: 'submission-files', id, overrideAccess: true, req })
+        .catch((cleanupError) =>
+          req.payload.logger.error({
+            err: cleanupError,
+            msg: `Could not remove submission file ${id}`,
+          }),
+        )
     }
+    if (error instanceof APIError) return fail(error.message, error.status)
     req.payload.logger.error({ err: error, msg: 'A form submission with files failed' })
-    return fail((error as Error).message || 'The form could not be sent.', 500)
+    return fail('The form could not be sent. Your answers are still here; please try again.', 500)
   }
 }

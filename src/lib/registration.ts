@@ -65,7 +65,7 @@ export const courseRegistration = (
 
 export const loadApplicationTarget = async (
   payload: Payload,
-  relationTo: 'programmes' | 'courses',
+  relationTo: 'programmes' | 'courses' | 'cycles',
   id: number,
   req?: PayloadRequest,
 ) => {
@@ -77,7 +77,7 @@ export const loadApplicationTarget = async (
   const registration = 'course_type' in target ? courseRegistration(target, cycle) : null
   const open = (registration?.status ?? registrationStatus(target.registration)) === 'open'
   const formId = registration ? registration.formId : relId(target.registration?.form)
-  // A draft that was never published is not on the site, so nothing can apply to it.
-  const published = target._status === 'published'
+  const published =
+    relationTo === 'cycles' || ('_status' in target && target._status === 'published')
   return { target, cycle, open, published, formId }
 }

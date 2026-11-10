@@ -307,7 +307,28 @@ export interface FormSubmission {
     | ({
         relationTo: 'courses';
         value: number | Course;
+      } | null)
+    | ({
+        relationTo: 'cycles';
+        value: number | Cycle;
       } | null);
+  choices?:
+    | {
+        course: number | Course;
+        amount?: number | null;
+        need_reduction?: boolean | null;
+        answers?:
+          | {
+              name: string;
+              label?: string | null;
+              value?: string | null;
+              id?: string | null;
+            }[]
+          | null;
+        accepted?: boolean | null;
+        id?: string | null;
+      }[]
+    | null;
   status?: ('new' | 'accepted' | 'rejected') | null;
   decided_at?: string | null;
   result?: {
@@ -2919,6 +2940,23 @@ export interface FormSubmissionsSelect<T extends boolean = true> {
         id?: T;
       };
   target?: T;
+  choices?:
+    | T
+    | {
+        course?: T;
+        amount?: T;
+        need_reduction?: T;
+        answers?:
+          | T
+          | {
+              name?: T;
+              label?: T;
+              value?: T;
+              id?: T;
+            };
+        accepted?: T;
+        id?: T;
+      };
   status?: T;
   decided_at?: T;
   result?:

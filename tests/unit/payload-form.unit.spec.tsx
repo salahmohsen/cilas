@@ -21,7 +21,6 @@ vi.mock('@/i18n/navigation', () => ({
   ),
 }))
 
-/** A form as the apply page sends it: the two defaults first (name, email), then questions. */
 const formOf = (fields: NonNullable<Form['fields']>): Form =>
   ({
     id: 7,
@@ -125,6 +124,73 @@ describe('the payload form', () => {
     })
     expect(name).toHaveValue('Mona Adel')
     expect(email).toHaveValue('mona@example.com')
+  })
+
+  it('serializes the existing course page as a cycle choice', async () => {
+    render(
+      <PayloadForm
+        confirmation={null}
+        form={formOf([{ blockType: 'text', name: 'course_reason', label: 'Why this course?' }])}
+        target={{ relationTo: 'cycles', value: 10 }}
+        courseChoice={{ course: 11, amount: 100, questionNames: ['reason'] }}
+      />,
+    )
+    await waitFor(() =>
+      expect(screen.getByRole('textbox', { name: /Name/ })).toHaveValue('Mona Adel'),
+    )
+    fireEvent.change(screen.getByRole('textbox', { name: /Why this course/ }), {
+      target: { value: 'To learn' },
+    })
+    fireEvent.click(screen.getByRole('button', { name: /submit/i }))
+    await waitFor(() => expect(sent.some((s) => s.method === 'POST')).toBe(true))
+    const body = JSON.parse(String(sent.find((s) => s.method === 'POST')!.body))
+    expect(body).toMatchObject({
+      target: { relationTo: 'cycles', value: 10 },
+      choices: [{ course: 11, amount: 100, answers: [{ name: 'reason', value: 'To learn' }] }],
+      submissionData: [
+        { field: 'name', value: 'Mona Adel' },
+        { field: 'email', value: 'mona@example.com' },
+      ],
+    })
+    expect(body.submissionData).toHaveLength(2)
+  })
+
+  it('shows an actionable server error and keeps the answers for correction', async () => {
+    vi.stubGlobal(
+      'fetch',
+      vi.fn(async (input: RequestInfo | URL) =>
+        String(input).startsWith('/api/users/me')
+          ? new Response(
+              JSON.stringify({
+                user: { email: 'mona@example.com', person: { name: 'Mona Adel' } },
+              }),
+            )
+          : new Response(
+              JSON.stringify({
+                errors: [{ message: 'Writing is no longer open for applications.' }],
+              }),
+              { status: 400 },
+            ),
+      ),
+    )
+    render(
+      <PayloadForm
+        confirmation={null}
+        form={formOf([{ blockType: 'text', name: 'reason', label: 'Your reason' }])}
+      />,
+    )
+    await waitFor(() =>
+      expect(screen.getByRole('textbox', { name: /Name/ })).toHaveValue('Mona Adel'),
+    )
+    fireEvent.change(screen.getByRole('textbox', { name: /Your reason/ }), {
+      target: { value: 'Keep this answer' },
+    })
+    fireEvent.click(screen.getByRole('button', { name: /submit/i }))
+    expect(
+      await screen.findByText('Writing is no longer open for applications.'),
+    ).toBeInTheDocument()
+    expect(screen.getByRole('textbox', { name: /Your reason/ })).toHaveValue('Keep this answer')
+    expect(screen.getByRole('button', { name: /submit/i })).toBeEnabled()
   })
 
   it('asks the questions open to write in when nobody is signed in', async () => {

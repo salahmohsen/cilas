@@ -14,6 +14,7 @@ import { Textarea } from '@/components/arc/textarea/textarea'
 import { useSpamCheck } from '@/components/forms/spam-check'
 import { useDraft } from '@/components/use-draft'
 import { useSession } from '@/components/use-session'
+import { choiceFileField } from '@/forms/application-input'
 import { isRtl } from '@/i18n/routing'
 import { Link } from '@/i18n/navigation'
 import { track } from '@/lib/analytics/track'
@@ -45,7 +46,6 @@ const fieldId = (name: string) => `field-${name}`
 // An address in help text, without the punctuation that ends its sentence.
 const URL_PATTERN = /(https?:\/\/[^\s<>"]*[^\s<>".,;:!?)\]])/g
 
-/** Help text as written, its web addresses made into links that open in a new tab. */
 function Linked({ text }: { text: string }) {
   return (
     <>
@@ -88,15 +88,15 @@ export function PayloadForm({
   disabled = false,
   preview = false,
   target,
+  courseChoice,
   analytics,
 }: {
   form: Form
   notes?: Record<string, ReactNode>
   confirmation: ReactNode
   back?: { href: string; label: string }
-  /** What the applicant applies to; admins accept the submission into it. */
-  target?: { relationTo: 'programmes' | 'courses'; value: number }
-  /** What the counters call this application: a course or programme and its public slug. */
+  target?: { relationTo: 'programmes' | 'courses' | 'cycles'; value: number }
+  courseChoice?: { course: number; amount?: number; questionNames: string[] }
   analytics?: { kind: 'course' | 'programme'; id: string }
   /** The questions' language, when it is not the page's. */
   lang?: string
@@ -109,16 +109,11 @@ export function PayloadForm({
   const questions = blocks.filter(isQuestion)
   const draftKey = `cilas-form-${form.id}`
   const [sent, setSent] = useState(false)
-  const [failed, setFailed] = useState(false)
+  const [failed, setFailed] = useState<string | null>(null)
   const top = useRef<HTMLDivElement>(null)
   const spam = useSpamCheck()
   const started = useRef(false)
 
-  /**
-   * Who is signed in, so their name and email fill the two default questions
-   * and lock them. The ask comes back only with a session cookie, like the
-   * site header's account menu.
-   */
   const session = useSession()
   const sessionName = typeof session?.person === 'object' ? (session.person?.name ?? null) : null
   const me = useMemo(
@@ -165,23 +160,51 @@ export function PayloadForm({
     defaultValues: Object.fromEntries(questions.map((q) => [q.name, emptyFor(q)])) as Values,
     onSubmit: async ({ value }) => {
       if (preview || disabled) return
-      setFailed(false)
+      setFailed(null)
+      const answers = questions.map((q) => ({
+        field: q.name,
+        value: readable(q, value[q.name] ?? emptyFor(q)),
+      }))
+      const courseAnswer = (name: string) =>
+        courseChoice?.questionNames.includes(name.replace(/^course_/, '')) &&
+        name.startsWith('course_')
       const sent = {
         form: form.id,
         target,
-        submissionData: questions.map((q) => ({
-          field: q.name,
-          value: readable(q, value[q.name] ?? emptyFor(q)),
-        })),
+        submissionData: courseChoice ? answers.filter((a) => !courseAnswer(a.field)) : answers,
+        ...(courseChoice
+          ? {
+              choices: [
+                {
+                  course: courseChoice.course,
+                  amount: courseChoice.amount,
+                  answers: answers
+                    .filter((a) => courseAnswer(a.field))
+                    .map((a) => ({ name: a.field.slice(7), value: a.value })),
+                },
+              ],
+            }
+          : {}),
       }
       // With files, answers and files go in one request: the spam check's
       // token passes once (src/forms/submit-with-files.ts).
       const files = questions.flatMap((q) =>
-        isFiles(q) ? goodFiles(value[q.name]).map((i) => [q.name, i.file] as const) : [],
+        isFiles(q)
+          ? goodFiles(value[q.name]).map(
+              (i) =>
+                [
+                  courseChoice && courseAnswer(q.name)
+                    ? choiceFileField(courseChoice.course, q.name.slice(7))
+                    : q.name,
+                  i.file,
+                ] as const,
+            )
+          : [],
       )
       const res = await spam.submit(sent, files).catch(() => undefined)
       if (res === undefined || (res !== null && !res.ok)) {
-        setFailed(true)
+        const body = res ? await res.json().catch(() => null) : null
+        setFailed(body?.error ?? body?.errors?.[0]?.message ?? t('failed'))
         return
       }
       clearDraft()
@@ -201,7 +224,6 @@ export function PayloadForm({
     .filter(isFiles)
     .map((q) => q.name)
     .join('\n')
-  /** The default questions an account holds, as one string for the effects. */
   const givenNames = questions
     .filter((q) => q.name === 'email' || q.name === 'name')
     .map((q) => q.name)
@@ -459,7 +481,6 @@ export function PayloadForm({
       dir={lang ? (isRtl(lang) ? 'rtl' : 'ltr') : undefined}
       lang={lang}
       noValidate
-      // The first time someone enters a field: they have started. Nothing they type is sent.
       onFocusCapture={() => {
         if (!analytics || disabled || preview || started.current) return
         started.current = true
@@ -526,7 +547,7 @@ export function PayloadForm({
                 </button>
                 <p aria-live="polite" className="payload-form-status">
                   {failed ? (
-                    <span className="payload-form-error">{t('failed')}</span>
+                    <span className="payload-form-error">{failed}</span>
                   ) : tried > 0 && gaps > 0 ? (
                     <span className="payload-form-error">{t('fix', { count: gaps })}</span>
                   ) : (
