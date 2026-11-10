@@ -80,16 +80,19 @@ RUN case "$RUN_DATABASE_MIGRATIONS" in \
     *) echo "RUN_DATABASE_MIGRATIONS must be true or false" >&2; exit 1 ;; \
   esac
 
-# Keep compiler work between source changes on the same Dokploy builder.
-RUN --mount=type=cache,id=cilas-next,target=/app/.next/cache,sharing=locked \
-  if [ -f yarn.lock ]; then yarn run build; \
-  elif [ -f package-lock.json ]; then npm run build; \
-  elif [ -f pnpm-lock.yaml ]; then pnpm run build; \
-  else echo "Lockfile not found." && exit 1; \
-  fi
+# CI typechecks and builds each commit before it asks Dokploy to deploy it.
+ARG SKIP_BUILD_TYPECHECK=true
+ENV SKIP_BUILD_TYPECHECK=$SKIP_BUILD_TYPECHECK
 
-# Scheduled maintenance cannot rely on the web server's dependency trace.
-RUN node scripts/build-search-maintenance.mjs
+# Keep compiler work between source changes on the same Dokploy builder.
+# Scheduled maintenance cannot rely on the web server's dependency trace, so
+# it is packaged separately; it reads only source and node_modules, so it runs
+# alongside the build and either failure fails this step.
+RUN --mount=type=cache,id=cilas-next,target=/app/.next/cache,sharing=locked \
+  node scripts/build-search-maintenance.mjs & maintenance=$!; \
+  pnpm run build; build=$?; \
+  wait "$maintenance"; maintenance=$?; \
+  [ "$build" -eq 0 ] && [ "$maintenance" -eq 0 ]
 
 # Production image, copy all the files and run next
 FROM base AS runner
