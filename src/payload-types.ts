@@ -2462,7 +2462,7 @@ export interface PayloadMcpApiKey {
      */
     createArticleDraft?: boolean | null;
     /**
-     * Create a registration form, and optionally link it to a course. Every form already asks name and email first, so do not add them. A published course is never changed: the link is saved as a draft beside the live page, and a person publishes it. Cycles cannot be linked because they have no drafts. Returns the form id and a link to it, and, when linked, the course draft. A form with the same English title is refused unless create_another is true.
+     * Create a registration form, and optionally link it to a course. The form starts as a copy of the workshop template in Registration defaults, and the questions given come after the template's. Every form already asks name and email first, so do not add them. A course that follows its cycle is refused unless link.switch_to_own is true: give it applicant_questions with update_course_draft instead. A published course is never changed: the link is saved as a draft beside the live page, and a person publishes it. Cycles cannot be linked because they have no drafts. Returns the form id and a link to it, and, when linked, the course draft. A form with the same English title is refused unless create_another is true.
      */
     createFormAndLink?: boolean | null;
     /**
@@ -2498,7 +2498,7 @@ export interface PayloadMcpApiKey {
      */
     newArticle?: boolean | null;
     /**
-     * Make a registration form and link it to a course as a draft.
+     * Add registration questions to a course: on the course when it follows its cycle, or in a new linked form when it has its own registration.
      */
     newFormForCourse?: boolean | null;
   };

@@ -1,4 +1,4 @@
-import type { CollectionSlug } from 'payload'
+import type { CollectionSlug, Where } from 'payload'
 
 /**
  * One entry per kind the lookup tool can search. Each names the collection,
@@ -15,6 +15,8 @@ type LookupSource = {
   /** Courses and articles keep drafts, and an admin must see them to avoid duplicates. */
   drafts: boolean
   hasSlug: boolean
+  /** The records of this kind a lookup may return. */
+  only?: Where
 }
 
 export const LOOKUP_REGISTRY = {
@@ -53,6 +55,8 @@ export const LOOKUP_REGISTRY = {
     localized: true,
     drafts: false,
     hasSlug: false,
+    // A template cannot be linked; create_form_and_link copies the workshop one.
+    only: { template: { not_equals: true } },
   },
   people: {
     collection: 'people',

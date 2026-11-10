@@ -36,7 +36,12 @@ export const lookupTool = adminTool({
     type Seen = { titles: Partial<Record<'en' | 'ar', string>>; slug?: string; latest?: string }
     const seen = new Map<number, Seen>()
     for (const locale of locales) {
-      const where: Where = text ? { [source.titleField]: { contains: text } } : {}
+      const where: Where = {
+        and: [
+          ...(text ? [{ [source.titleField]: { contains: text } }] : []),
+          ...('only' in source ? [source.only] : []),
+        ],
+      }
       const result = await payload.find({
         collection: source.collection,
         where,

@@ -49,12 +49,13 @@ export const PROMPTS: PluginPrompt[] = [
   adminPrompt({
     name: 'new_form_for_course',
     title: 'New registration form for a course',
-    description: 'Make a registration form and link it to a course as a draft.',
+    description:
+      'Add registration questions to a course: on the course when it follows its cycle, or in a new linked form when it has its own registration.',
     argsSchema: {
       course: brief.describe('The course title.'),
       questions: brief.describe('The questions to ask, if you know them.'),
     },
     build: ({ course, questions }) =>
-      `Read ${GUIDE_URIS.form}. Use lookup to find the course (${course ?? 'ask me which'}). Make a form with create_form_and_link and link it to that course. Name and email are asked already. If the course is published, say the link is a draft beside the live page that a person must publish.\n\nQuestions:\n${questions ?? '(suggest a few and ask me)'}`,
+      `Read ${GUIDE_URIS.form}. Use lookup to find the course (${course ?? 'ask me which'}), then check its registration mode. If it follows its cycle (follow_cycle, the default), do not make a form: add the questions to its applicant_questions with update_course_draft, and tell me they appear in the cycle form for applicants who choose this course. If its mode is own or closed, make a form with create_form_and_link and link it to that course. The form starts from the workshop template, so do not repeat the template's questions. Name and email are asked already. If the course is published, say the change is a draft beside the live page that a person must publish.\n\nQuestions:\n${questions ?? '(suggest a few and ask me)'}`,
   }),
 ]

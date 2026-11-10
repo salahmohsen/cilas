@@ -41,7 +41,7 @@ Session units:\n${list(SESSION_UNIT_OPTIONS)}
 Schedule shape: { start_date, start_precision: "day" | "week", weeks, slots: [{ weekday, start_time, end_time }], note: { en?, ar? } }. Times are 24-hour HH:MM in Africa/Cairo. Dates come from the shared expansion (ADR 0002); do not materialize generated dates into sessions. A start date must match one of the weekly slots unless precision is week. Conflicting dates and weekdays must be clarified with the person. Session dates, when explicitly supplied, replace the generated dates for that session and are saved as supplied.
 Sessions use order, session_title (localized), meetings, cancelled, description (localized Markdown), dates [{date,start_time,end_time}], bibliography [{type,title,href,note}], and activities [{kind,description}].
 For a per-session delivery split, set sessions[].delivery to ONLINE, OFFLINE or HYBRID using the same values as course location. Empty delivery inherits the course-level location. When sessions differ, set course location to ["HYBRID"]. Use schedule.note for additional schedule notes.
-Registration uses mode: follow_cycle (default), own, or closed. follow_cycle uses the cycle destination and deadline, with optional close_early (last day in Cairo). own uses method (form or external), form or url, and deadline without cycle fallback. closed takes no applications. Applicant questions are real blocks with blockType and the fields in the schema; they are unused with external registration.
+Registration uses mode: follow_cycle (default), own, or closed. follow_cycle uses the cycle destination and deadline, with optional close_early (last day in Cairo). own uses method (form or external), form or url, and deadline without cycle fallback. closed takes no applications. Applicant questions are real blocks with blockType and the fields in the schema; they are unused with external registration. To ask more questions for a follow_cycle course, add them to applicant_questions: the site adds them to the cycle form for applicants who choose this course. Do not make a form for it.
 Contribution override uses options [{amount,default}] with nonnegative EGP amounts and exactly one default when options exist, localized note and need_based_deductions. Payment plans are available only on programmes.
 ${contract('courses')}
 `
@@ -69,15 +69,20 @@ Each question has \`name\` (machine name, lower case, unique), \`label\` (\`{ en
 
 File uploads, country and state menus, and text blocks are not available here.
 
+## Template
+A new form is a copy of the workshop template named in Registration defaults. The template's questions, emails and thank-you message come with it, and the questions given come after the template's. A question with the same name as one of the template's is refused. If no workshop template is set, the form has only name, email and the questions given, and the result says so. Lookup never returns templates.
+
 ## One form per title
 A form with the same English title as an existing one is refused, and the answer names it: a repeated request would otherwise make a second form. Tell the user, and ask them to check the first one. Only if they really want two with the same title, call again with \`create_another: true\`.
 
 ## Linking
-\`link: { target: "course", id }\` sets the course to own registration using this form.
+First read the course's registration mode.
+- \`follow_cycle\` (the default): applicants choose the course in its cycle's form. Do not make a form. Add the questions to the course's \`applicant_questions\` with \`update_course_draft\`. Linking is refused, because it would take the course out of the cycle form. Only if the user wants the course to leave the cycle form, set \`link.switch_to_own: true\`.
+- \`own\` or \`closed\`: \`link: { target: "course", id }\` sets the course to own registration using this form.
 - A draft course stays a draft.
 - A published course is not touched: the link is saved as a draft beside the live page, and a person publishes it.
 - A cycle cannot be linked here: it has no drafts, so it would change at once. Say so and tell the user to do it in the admin.
 
 ## Not covered
-The emails a form sends and where it redirects. An admin sets these. The thank-you message can be given; a default is used if not.
+Emails and redirects beyond the template's. An admin sets these. The thank-you message can be given; otherwise the template's, or a default, is used.
 `

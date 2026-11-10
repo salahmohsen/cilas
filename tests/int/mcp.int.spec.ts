@@ -2,6 +2,7 @@
 import { createLocalReq, getPayload, type Payload, type PayloadRequest } from 'payload'
 import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest'
 
+import { REGISTRATION_DEFAULTS } from '@/forms/templates'
 import { footnotesOf } from '@/lib/footnotes'
 import { MCP_TOOLS } from '@/plugins/mcp'
 import { NOT_ADMIN } from '@/plugins/mcp/tool'
@@ -21,8 +22,18 @@ const tool = (name: string) => MCP_TOOLS.find((t) => t.name === name)!
 const requestFor = (user: User): Promise<PayloadRequest> =>
   createLocalReq({ user: { ...user, collection: 'users' } as never }, payload)
 
-const call = async (name: string, user: User, args: Record<string, unknown>) => {
-  const output = (await tool(name).handler(args, await requestFor(user), {})) as ToolOutput
+const NO_TEMPLATES = { cycle_template: null, bridge_template: null, workshop_template: null }
+
+/** Calls a tool as `user`. Registration defaults come from `defaults`, never the shared global. */
+const call = async (
+  name: string,
+  user: User,
+  args: Record<string, unknown>,
+  defaults: Record<string, number | null> = NO_TEMPLATES,
+) => {
+  const req = await requestFor(user)
+  req.context[REGISTRATION_DEFAULTS] = defaults
+  const output = (await tool(name).handler(args, req, {})) as ToolOutput
   const text = output.content[0]!.text
   return { isError: Boolean(output.isError), text, json: output.isError ? null : JSON.parse(text) }
 }
@@ -483,6 +494,218 @@ describe('admin-only MCP server', () => {
         overrideAccess: true,
       })
       expect(found.totalDocs).toBe(0)
+    })
+
+    describe('a course that follows its cycle', () => {
+      let made = 0
+      const followingCourse = async () =>
+        track(
+          'courses',
+          await payload.create({
+            collection: 'courses',
+            draft: true,
+            data: {
+              title: uniq(`Cycle course ${++made}`),
+              slug: uniq(`cycle-course-${made}`),
+              course_type: 'CORE',
+              cycle: cycleId,
+              registration: { mode: 'follow_cycle' },
+            } as never,
+            overrideAccess: true,
+          }),
+        )
+      const draftOf = (id: number) =>
+        payload.findByID({
+          collection: 'courses',
+          id,
+          draft: true,
+          depth: 0,
+          overrideAccess: true,
+        })
+
+      it('is refused, names the cycle and points to applicant questions', async () => {
+        const course = await followingCourse()
+        const cycle = await payload.findByID({ collection: 'cycles', id: cycleId, depth: 0 })
+        const title = uniq('Cycle course form')
+        const result = await call('create_form_and_link', admin, {
+          title: { en: title },
+          questions: [{ type: 'text', name: 'why', label: { en: 'Why?' } }],
+          link: { target: 'course', id: course.id },
+        })
+        expect(result.isError).toBe(true)
+        expect(result.text).toContain(`"${cycle.title}"`)
+        expect(result.text).toContain('applicant_questions')
+        expect(result.text).toContain('switch_to_own')
+        const forms = await payload.count({
+          collection: 'forms',
+          where: { title: { equals: title } },
+          overrideAccess: true,
+        })
+        expect(forms.totalDocs).toBe(0)
+        expect((await draftOf(course.id)).registration?.mode).toBe('follow_cycle')
+      })
+
+      it('switches to own registration when asked to', async () => {
+        const course = await followingCourse()
+        const result = await call('create_form_and_link', admin, {
+          title: { en: uniq('Own course form') },
+          questions: [{ type: 'text', name: 'why', label: { en: 'Why?' } }],
+          link: { target: 'course', id: course.id, switch_to_own: true },
+        })
+        expect(result.isError, result.text).toBe(false)
+        const formId = track('forms', result.json.form).id
+        const draft = await draftOf(course.id)
+        expect(draft.registration?.mode).toBe('own')
+        expect(draft.registration?.form).toBe(formId)
+      })
+    })
+
+    describe('with a workshop template', () => {
+      let templateId: number
+
+      beforeAll(async () => {
+        const template = track(
+          'forms',
+          await payload.create({
+            collection: 'forms',
+            locale: 'en',
+            data: {
+              title: uniq('Mcp workshop template'),
+              template: true,
+              fields: [{ blockType: 'text', name: 'city', label: 'City', required: true }],
+              confirmationType: 'message',
+              confirmationMessage: {
+                root: {
+                  type: 'root',
+                  version: 1,
+                  direction: 'ltr',
+                  format: '',
+                  indent: 0,
+                  children: [
+                    {
+                      type: 'paragraph',
+                      version: 1,
+                      children: [{ type: 'text', version: 1, text: 'Template thanks' }],
+                    },
+                  ],
+                },
+              },
+            } as never,
+            overrideAccess: true,
+          }),
+        )
+        templateId = template.id
+        const [city] = (template.fields ?? []).filter((b) => 'name' in b && b.name === 'city')
+        await payload.update({
+          collection: 'forms',
+          id: templateId,
+          locale: 'ar',
+          data: {
+            confirmationMessage: template.confirmationMessage,
+            fields: (template.fields ?? []).map((b) =>
+              b.id === city!.id ? { ...b, label: 'المدينة' } : b,
+            ),
+          } as never,
+          overrideAccess: true,
+        })
+      })
+
+      it('copies the template and puts the questions after its own', async () => {
+        const result = await call(
+          'create_form_and_link',
+          admin,
+          {
+            title: { en: uniq('Templated form'), ar: 'نموذج' },
+            questions: [
+              {
+                type: 'radio',
+                name: 'days',
+                label: { en: 'Days', ar: 'الأيام' },
+                options: [{ en: 'Weekdays', ar: 'أيام الأسبوع' }, { en: 'Weekends' }],
+              },
+            ],
+          },
+          { ...NO_TEMPLATES, workshop_template: templateId },
+        )
+        expect(result.isError, result.text).toBe(false)
+        const formId = track('forms', result.json.form).id
+        expect(formId).not.toBe(templateId)
+        expect(result.json.notes[0]).toContain('workshop template')
+
+        const form = await payload.findByID({
+          collection: 'forms',
+          id: formId,
+          locale: 'all',
+          depth: 0,
+          overrideAccess: true,
+        })
+        expect(form.template).toBe(false)
+        expect(JSON.stringify(form.confirmationMessage)).toContain('Template thanks')
+        const blocks = (form.fields ?? []) as unknown as Array<{
+          name: string
+          label: Record<string, string>
+          options?: Array<{ label: Record<string, string> }>
+        }>
+        expect(blocks.map((b) => b.name)).toEqual(['name', 'email', 'city', 'days'])
+        expect(blocks[2]!.label).toEqual({ en: 'City', ar: 'المدينة' })
+        expect(blocks[3]!.label).toEqual({ en: 'Days', ar: 'الأيام' })
+        expect(blocks[3]!.options!.map((o) => o.label)).toEqual([
+          { en: 'Weekdays', ar: 'أيام الأسبوع' },
+          { en: 'Weekends', ar: 'Weekends' },
+        ])
+
+        const template = await payload.findByID({
+          collection: 'forms',
+          id: templateId,
+          depth: 0,
+          overrideAccess: true,
+        })
+        expect((template.fields ?? []).map((b) => ('name' in b ? b.name : null))).toEqual([
+          'name',
+          'email',
+          'city',
+        ])
+      })
+
+      it('refuses a question the template already asks', async () => {
+        const result = await call(
+          'create_form_and_link',
+          admin,
+          {
+            title: { en: uniq('Clashing form') },
+            questions: [{ type: 'text', name: 'city', label: { en: 'City' } }],
+          },
+          { ...NO_TEMPLATES, workshop_template: templateId },
+        )
+        expect(result.isError).toBe(true)
+        expect(result.text).toContain('"city"')
+      })
+
+      it('is never returned by lookup', async () => {
+        const template = await payload.findByID({
+          collection: 'forms',
+          id: templateId,
+          depth: 0,
+          overrideAccess: true,
+        })
+        const found = await call('lookup', admin, {
+          kind: 'forms',
+          query: template.title,
+          limit: 25,
+        })
+        expect(found.isError, found.text).toBe(false)
+        expect(found.json.results).toEqual([])
+      })
+    })
+
+    it('says so when no workshop template is set', async () => {
+      const result = await call('create_form_and_link', admin, {
+        title: { en: uniq('Plain form') },
+        questions: [{ type: 'text', name: 'why', label: { en: 'Why?' } }],
+      })
+      expect(result.isError, result.text).toBe(false)
+      track('forms', result.json.form)
+      expect(result.json.notes[0]).toContain('No workshop template is set')
     })
 
     it('refuses name and email as questions', async () => {
