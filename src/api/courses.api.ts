@@ -14,7 +14,7 @@ import { COURSE_TYPE_OPTIONS } from '@/fields/course-type'
 import { searchWords, type StudyCourse } from '@/lib/course-search'
 import { SEASONS } from '@/lib/cycle'
 import { localDigits } from '@/lib/digits'
-import { registrationStatus } from '@/lib/registration'
+import { courseRegistration } from '@/lib/registration'
 import { slugify } from '@/lib/slugify'
 import type { Course, Cycle, Media, Person, Place } from '@/payload-types'
 
@@ -68,7 +68,6 @@ const plain = (data: unknown): string =>
     ? plainText({ data: data as Parameters<typeof plainText>[0]['data'] })
     : ''
 
-/** Every text a course has in one locale: what the search reads. */
 const courseTexts = (c: Course): string[] => [
   c.title,
   c.subtitle ?? '',
@@ -154,7 +153,8 @@ export const getStudyCourses = async (
       const description = c.summary || c.subtitle || plain(c.description) || undefined
 
       // Open or closed today; the index is rebuilt every few minutes, so it follows deadlines.
-      const registration = registrationStatus(c.registration, cycle?.registration)
+      const resolved = courseRegistration(c, cycle)
+      const registration = resolved.status
       const facets: StudyCourse['facets'] = {
         registration: [
           {
@@ -209,9 +209,7 @@ export const getStudyCourses = async (
             : description,
         ...mediaStudyImage(cover),
         startDate: c.schedule?.start_date ?? cycle?.start_date ?? `${cycle?.start_year ?? 0}`,
-        ...((c.registration?.deadline ?? cycle?.registration?.deadline)
-          ? { deadline: (c.registration?.deadline ?? cycle?.registration?.deadline)!.slice(0, 10) }
-          : {}),
+        ...(resolved.deadline ? { deadline: resolved.deadline } : {}),
         facets,
         words: searchWords([
           ...courseTexts(c),
@@ -289,7 +287,6 @@ export const getCourseForReading = async (
 
   if (!course) return undefined
 
-  // The other published courses of the same cycle, for the end of the page.
   const cycleId = relId(course.cycle) ?? undefined
   const { docs: siblings } = cycleId
     ? await payload.find({

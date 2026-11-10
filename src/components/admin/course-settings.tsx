@@ -5,13 +5,14 @@ import { CAIRO } from '@/lib/cairo-day'
 import { useFormFields } from '@payloadcms/ui'
 import { useEffect, useState } from 'react'
 import type { Cycle } from '@/payload-types'
-import { priceLabel, pricingFor } from '@/lib/pricing'
+import { priceLabel } from '@/lib/pricing'
+import { courseRegistration, type RegistrationMethod } from '@/lib/registration'
 
 export function CourseSettings() {
   const values = useFormFields(([fields]) => ({
     cycle: fields.cycle?.value as number | null,
     course_type: fields.course_type?.value as string,
-    method: fields['registration.method']?.value as string | null,
+    method: fields['registration.method']?.value as RegistrationMethod | null,
     form: fields['registration.form']?.value as number | null,
     url: fields['registration.url']?.value as string | null,
     deadline: fields['registration.deadline']?.value as string | null,
@@ -47,9 +48,25 @@ export function CourseSettings() {
       <p role="status">Could not load the cycle settings. Check the cycle before publishing.</p>
     )
   const cycle = loaded.cycle
-  const method = values.method ?? cycle.registration?.method
-  const form = values.form ?? cycle.registration?.form
-  const url = values.url ?? cycle.registration?.url
+  const {
+    method,
+    formId: form,
+    url,
+    deadline,
+    price,
+  } = courseRegistration(
+    {
+      course_type: values.course_type,
+      registration: {
+        method: values.method,
+        form: values.form,
+        url: values.url,
+        deadline: values.deadline,
+      },
+      pricing_override: { min: values.min, max: values.max },
+    },
+    cycle,
+  )
   const destination =
     method === 'form'
       ? form
@@ -58,11 +75,6 @@ export function CourseSettings() {
       : method === 'external'
         ? url || 'Missing external URL'
         : 'Closed'
-  const deadline = values.deadline ?? cycle.registration?.deadline
-  const price = pricingFor(
-    { course_type: values.course_type, pricing_override: { min: values.min, max: values.max } },
-    cycle,
-  )
   return (
     <aside
       style={{

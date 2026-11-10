@@ -23,8 +23,8 @@ import { flattenRichTextColumns } from '@/lib/flatten-rich-text-columns'
 import { footnotesOf } from '@/lib/footnotes'
 import { type ResolvedMention } from '@/lib/mentions'
 import { pathOf } from '@/lib/paths'
-import { priceLabel, pricingFor } from '@/lib/pricing'
-import { registrationStatus, type Registration } from '@/lib/registration'
+import { priceLabel } from '@/lib/pricing'
+import { courseRegistration } from '@/lib/registration'
 import { resolveRichTextReferences } from '@/lib/resolve-rich-text-references'
 import { referenceKey, type RichTextReferences } from '@/lib/rich-text-references'
 import { expandSchedule, sessionsInOrder } from '@/lib/schedule'
@@ -385,11 +385,10 @@ export const courseDocument = async (
     )
   const meetingsLine = slotLines.length ? `${slotLines.join(listSeparator(locale))} (Cairo)` : null
 
-  const price = priceLabel(pricingFor(course, cycle))
-  const priceNote = course.pricing_override?.note || null
-  const registration = course.registration as Registration | null
-  const registrationOpen =
-    registrationStatus(registration, cycle?.registration as Registration | null) === 'open'
+  const registration = courseRegistration(course, cycle)
+  const price = priceLabel(registration.price)
+  const priceNote = registration.price?.note || null
+  const registrationOpen = registration.status === 'open'
 
   const facts = factsList([
     [locale === 'ar' ? 'النوع' : 'Type', typeLabel(course.course_type)],
@@ -414,10 +413,10 @@ export const courseDocument = async (
       locale === 'ar' ? 'السعر' : 'Price',
       price ? `${price}${priceNote ? ` — ${priceNote}` : ''}` : null,
     ],
-    [t.registerDeadline, registration?.deadline ?? cycle?.registration?.deadline ?? null],
+    [t.registerDeadline, registration.deadline],
     [
       locale === 'ar' ? 'التقديم' : 'Apply',
-      registrationOpen && registration?.method === 'external' && registration.url
+      registrationOpen && registration.method === 'external' && registration.url
         ? registration.url
         : null,
     ],

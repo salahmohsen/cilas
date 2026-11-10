@@ -7,7 +7,7 @@ import {
 } from 'payload'
 import { text } from 'payload/shared'
 
-import { REGISTRATION_METHODS } from '@/lib/registration'
+import { courseRegistration, REGISTRATION_METHODS } from '@/lib/registration'
 import { httpUrl, optionalHttpUrl } from './validators'
 
 const METHOD_LABELS: Record<(typeof REGISTRATION_METHODS)[number], string> = {
@@ -35,19 +35,18 @@ const validateDestination: FieldHook = async ({
   const cycle = data?.cycle ?? originalDoc?.cycle
   const cycleId = relId(cycle)
   if (collection?.slug === 'courses' && cycleId) {
-    parent = (
-      await req.payload.findByID({
-        collection: 'cycles',
-        id: cycleId,
-        depth: 0,
-        req,
-        overrideAccess: false,
-      })
-    ).registration
+    parent = await req.payload.findByID({
+      collection: 'cycles',
+      id: cycleId,
+      depth: 0,
+      req,
+      overrideAccess: false,
+    })
   }
-  const method = own.method ?? parent?.method
+  const resolved = courseRegistration({ registration: own }, parent)
+  const method = resolved.method
   const field = method === 'form' ? 'form' : method === 'external' ? 'url' : null
-  const destination = field ? (own[field] ?? parent?.[field]) : null
+  const destination = field === 'form' ? resolved.formId : field === 'url' ? resolved.url : null
   if (field && (!destination || (field === 'url' && httpUrl(destination) !== true))) {
     throw new ValidationError({
       errors: [

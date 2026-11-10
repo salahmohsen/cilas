@@ -1,6 +1,9 @@
 import type { Payload, PayloadRequest } from 'payload'
 
 import { cairoDay } from '@/lib/cairo-day'
+import { pricingFor } from '@/lib/pricing'
+import { relId } from '@/lib/relation'
+import type { Course, Cycle } from '@/payload-types'
 
 export const REGISTRATION_METHODS = ['form', 'external', 'closed'] as const
 export type RegistrationMethod = (typeof REGISTRATION_METHODS)[number]
@@ -13,23 +16,45 @@ export type Registration = {
 
 export type RegistrationStatus = 'open' | 'closed'
 
-/**
- * Whether people can register now. Each field falls back to the parent
- * (a course's cycle) when the item leaves it empty. The deadline day stays
- * open until midnight in Cairo.
- */
+/** The deadline day stays open until midnight in Cairo. */
 export const registrationStatus = (
-  own: Registration | null | undefined,
-  parent?: Registration | null,
+  registration: Registration | null | undefined,
   now: Date = new Date(),
 ): RegistrationStatus => {
-  const method = own?.method ?? parent?.method
+  const method = registration?.method
   if (!method || method === 'closed') return 'closed'
-
-  const deadline = cairoDay(own?.deadline ?? parent?.deadline ?? '')
+  const deadline = cairoDay(registration?.deadline ?? '')
   const today = cairoDay(now)
   if (!deadline || !today) return 'open'
   return today <= deadline ? 'open' : 'closed'
+}
+
+type RegistrationCourse = {
+  course_type?: string
+  registration?: Course['registration']
+  pricing_override?: Course['pricing_override']
+}
+
+export const courseRegistration = (
+  course: RegistrationCourse,
+  cycle?: Pick<Cycle, 'registration' | 'pricing'> | null,
+  now: Date = new Date(),
+) => {
+  const method = course.registration?.method ?? cycle?.registration?.method ?? null
+  const formId = relId(course.registration?.form ?? cycle?.registration?.form) ?? null
+  const url = course.registration?.url ?? cycle?.registration?.url ?? null
+  const deadline = cairoDay(course.registration?.deadline ?? cycle?.registration?.deadline ?? '')
+  return {
+    status: registrationStatus({ method, deadline }, now),
+    method,
+    formId,
+    url,
+    deadline,
+    price: pricingFor(
+      { course_type: course.course_type ?? '', pricing_override: course.pricing_override },
+      cycle,
+    ),
+  }
 }
 
 export const loadApplicationTarget = async (
@@ -43,8 +68,10 @@ export const loadApplicationTarget = async (
     .catch(() => null)
   if (!target) return null
   const cycle = 'cycle' in target && typeof target.cycle === 'object' ? target.cycle : null
-  const open = registrationStatus(target.registration, cycle?.registration) === 'open'
+  const registration = 'course_type' in target ? courseRegistration(target, cycle) : null
+  const open = (registration?.status ?? registrationStatus(target.registration)) === 'open'
+  const formId = registration ? registration.formId : relId(target.registration?.form)
   // A draft that was never published is not on the site, so nothing can apply to it.
   const published = target._status === 'published'
-  return { target, cycle, open, published }
+  return { target, cycle, open, published, formId }
 }

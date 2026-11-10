@@ -1,4 +1,5 @@
 export type Pricing = {
+  note?: string | null
   min?: number | null
   max?: number | null
   currency?: string | null
@@ -26,7 +27,6 @@ export const pricingFor = (
 
 const amount = new Intl.NumberFormat('en-US')
 
-/** "EGP 1,500–2,000", "EGP 800", "Free", or null when unpriced. */
 export const priceLabel = (pricing: Pricing | null | undefined): string | null => {
   if (!isSet(pricing)) return null
   const { min, max } = pricing

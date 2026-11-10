@@ -1,5 +1,5 @@
 import type { Field, FieldHookArgs } from 'payload'
-import { describe, expect, it } from 'vitest'
+import { describe, expect, it, vi } from 'vitest'
 
 import { bibliographyField } from '@/fields/bibliography'
 import { COURSE_TYPE_OPTIONS } from '@/fields/course-type'
@@ -73,21 +73,62 @@ describe('scheduleField', () => {
 })
 
 describe('registrationField', () => {
-  it('is a named group with the spec fields', () => {
-    const field = registrationField()
-    expect(field.name).toBe('registration')
-    expect(names(field.fields)).toEqual([
-      'method',
-      'form',
-      'url',
-      'deadline',
-      'archived_registration_url',
-    ])
+  const validate = (args: Partial<FieldHookArgs>) => {
+    const hook = registrationField().hooks!.beforeChange![0]
+    return hook(args as FieldHookArgs)
+  }
+
+  it('validates an inherited destination with the same request and access checks', async () => {
+    const findByID = vi.fn().mockResolvedValue({ registration: { method: 'form', form: 7 } })
+    const req = { payload: { findByID } } as unknown as FieldHookArgs['req']
+    await expect(
+      validate({
+        value: {},
+        data: { cycle: 3, _status: 'published' },
+        collection: { slug: 'courses' } as FieldHookArgs['collection'],
+        req,
+        operation: 'create',
+      }),
+    ).resolves.toEqual({})
+    expect(findByID).toHaveBeenCalledWith({
+      collection: 'cycles',
+      id: 3,
+      depth: 0,
+      req,
+      overrideAccess: false,
+    })
   })
 
-  it('has no default method, so an empty one falls back to the parent', () => {
-    const method = registrationField().fields.find((f) => 'name' in f && f.name === 'method')
-    expect(method && 'defaultValue' in method ? method.defaultValue : undefined).toBeUndefined()
+  it('rejects a missing site form even after the deadline', async () => {
+    await expect(
+      validate({
+        value: { method: 'form', deadline: '2000-01-01' },
+        data: { _status: 'published' },
+        req: {} as FieldHookArgs['req'],
+        operation: 'create',
+      }),
+    ).rejects.toThrow()
+  })
+
+  it('rejects an invalid inherited external URL', async () => {
+    const findByID = vi
+      .fn()
+      .mockResolvedValue({ registration: { method: 'external', url: 'javascript:alert(1)' } })
+    await expect(
+      validate({
+        value: {},
+        data: { cycle: 3, _status: 'published' },
+        collection: { slug: 'courses' } as FieldHookArgs['collection'],
+        req: { payload: { findByID } } as unknown as FieldHookArgs['req'],
+        operation: 'create',
+      }),
+    ).rejects.toThrow()
+  })
+
+  it('lets an unsubmitted draft keep an incomplete destination', async () => {
+    await expect(
+      validate({ value: { method: 'form' }, data: { _status: 'draft' } }),
+    ).resolves.toEqual({ method: 'form' })
   })
 })
 

@@ -36,8 +36,7 @@ export async function EventAttendance({
   const mapUrl = locationUrl(venue?.map_url)
   const embed = venue ? await mapEmbedUrl({ address: venue.address || null, mapUrl }, locale) : null
   const online = locationUrl(event.online_url)
-  const open =
-    timing.status !== 'past' && registrationStatus(event.registration, null, now) === 'open'
+  const open = timing.status !== 'past' && registrationStatus(event.registration, now) === 'open'
   const registrationUrl = locationUrl(event.registration?.url)
   const hasForm = typeof event.registration?.form === 'object' && event.registration.form !== null
   const price =

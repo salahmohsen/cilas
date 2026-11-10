@@ -42,8 +42,8 @@ import { localDigits, numberingSystemOf, timeDir } from '@/lib/digits'
 import { editableIn } from '@/lib/editable'
 import { focalPointStyle } from '@/lib/media-image'
 import { POSTER_COLORS } from '@/components/arc/lib/poster-colors'
-import { priceLabel, pricingFor } from '@/lib/pricing'
-import { registrationStatus } from '@/lib/registration'
+import { priceLabel } from '@/lib/pricing'
+import { courseRegistration } from '@/lib/registration'
 import { expandSchedule, sessionsInOrder } from '@/lib/schedule'
 import { textDirection } from '@/lib/text-direction'
 import type { Course, Media, Person, Place } from '@/payload-types'
@@ -111,18 +111,17 @@ export const CourseView: React.FC<{
   const sessions = sessionsInOrder(course.sessions ?? [])
   const meetings = expandSchedule(course.schedule, course.sessions)
   const firstMeeting = meetings.find((m) => !m.cancelled)
-  const price = priceLabel(pricingFor(course, cycle))
-  const open = registrationStatus(course.registration, cycle?.registration) === 'open'
-  // A site form opens the course's apply page; an external link opens in a new tab.
-  const method = course.registration?.method ?? cycle?.registration?.method
-  const siteForm = course.registration?.form ?? cycle?.registration?.form
+  const registration = courseRegistration(course, cycle)
+  const price = priceLabel(registration.price)
+  const open = registration.status === 'open'
+  const { method, formId: siteForm, url } = registration
   const applyUrl = !open
     ? null
     : method === 'form'
       ? siteForm
         ? detailPath('courses', String(course.slug), locale, 'apply')
         : null
-      : (course.registration?.url ?? null)
+      : url
 
   /** "Tue 3 Mar". Days are Cairo calendar days, so format them in UTC. */
   const dayLabel = (day: string, weekday: 'short' | 'long' = 'short'): string =>
@@ -136,7 +135,6 @@ export const CourseView: React.FC<{
   const weekdayName = (day: string): string =>
     format.dateTime(new Date(`${day}T00:00:00Z`), { weekday: 'long', timeZone: 'UTC' })
 
-  // Every material, for the sidebar's count by kind.
   const allMaterials = [
     ...sessions.flatMap((s) => s.bibliography ?? []),
     ...(course.bibliography ?? []),
@@ -146,7 +144,6 @@ export const CourseView: React.FC<{
     count: allMaterials.filter((m) => m.type === type).length,
   })).filter((c) => c.count > 0)
 
-  // The weekly meeting time, from the first meeting of each slot.
   const slots = (course.schedule?.slots ?? []).flatMap((slot) => {
     const first = meetings.find(
       (m) =>
@@ -235,14 +232,7 @@ export const CourseView: React.FC<{
       : []),
   ]
 
-  // Who teaches it: the fellows' note to the class, then one card per fellow
-  // with their whole bio. Cards size to their content (no shared height);
-  // each card picks its composition from its own width.
   const note = course.facilitator_note?.trim()
-  // The card's foot is one ruled row: the note's label (an icon box and the
-  // words) under the photo, then View profile in the card's colour across the
-  // text column. The note's words follow on paper. With several fellows the
-  // note is its own card after theirs, with an empty cell in the action's place.
   const noteDir = note ? textDirection(note) : 'ltr'
   const noteHead = (
     <span className="fellow-card-hazard-head">
@@ -262,7 +252,6 @@ export const CourseView: React.FC<{
     </blockquote>
   ) : null
   const noteInCard = fellows.length === 1
-  // One palette colour per card, in turn, as on the posters.
   const cardColors = (index: number) =>
     ({ '--poster-color': POSTER_COLORS[index % POSTER_COLORS.length] }) as React.CSSProperties
   const fellowsSection =
@@ -308,12 +297,10 @@ export const CourseView: React.FC<{
                       </Link>
                       <div className="fellow-card-main">
                         <div className="fellow-card-panel">
-                          {/* The whole name box is the link to the profile; the arrow shows on hover and keyboard focus. */}
                           <Link
                             className="fellow-card-name-link"
                             href={detailPath('people', String(person.slug))}
                           >
-                            {/* The poster titles' entrance: each line rises in when the card is in view. */}
                             <div className="fellow-card-name" dir={textDirection(person.name)}>
                               <InViewTitle
                                 as="h3"
@@ -559,7 +546,6 @@ export const CourseView: React.FC<{
             />
           ) : null}
 
-          {/* Narrow screens: the facts and the fellows come before the text. */}
           <div className="mt-10 grid gap-6 lg:hidden">
             <div id="course-apply-mobile">{applyCard}</div>
             {sideCard(false)}
@@ -612,7 +598,6 @@ export const CourseView: React.FC<{
               </div>
             </section>
           ) : null}
-          {/* Narrow screens: sharing and AI come after the course, as on an article. */}
           <section
             aria-labelledby="course-share"
             className="mt-12 grid gap-3 border-t border-border pt-6 lg:hidden"

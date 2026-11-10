@@ -72,6 +72,8 @@ type Application = {
 
 Problems found in the current code, grouped under the fix that removes them.
 
+Step 1 implementation (2026-11-10): `courseRegistration(course, cycle)` owns per-field registration inheritance and delegates price selection to `pricingFor`. Readers consume the resolved status, destination, Cairo deadline day and price. The destination validator still validates independently of open status. Public external links retain their existing course-owned URL behavior; changing inherited external links belongs to a separate behavior change. llms.txt now reads its price note from the selected price, so a cycle price cannot display an unrelated override note. No schema or migration changes.
+
 - **One resolver, `courseRegistration(course, cycle, reader)`, returns status, apply link, deadline, form and contribution.** Every reader of registration or price calls it. The "empty field inherits the cycle" rule then lives in one place, and the mode field replaces it.
   - `src/app/(frontend)/[locale]/study/[slug]/CourseView.tsx:115` repeats `course.registration?.X ?? cycle?.registration?.X` for method, form and URL, and builds the apply link itself.
   - `src/app/(frontend)/[locale]/study/[slug]/apply/course-apply-page.tsx:61` repeats the same fallbacks for method, form and deadline.

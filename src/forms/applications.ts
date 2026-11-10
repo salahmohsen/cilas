@@ -20,13 +20,6 @@ import { createPerson } from '@/lib/create-person'
 import { loadApplicationTarget } from '@/lib/registration'
 import type { FormSubmission } from '@/payload-types'
 
-/**
- * Applications: form submissions for a programme or a course. An admin
- * accepts one from the submission, which finds or makes the applicant's
- * account and person, and gives them a membership (programme) or an
- * enrollment (course).
- */
-
 export type TargetKind = 'programmes' | 'courses'
 
 export const applicationFields: Field[] = [
@@ -85,16 +78,12 @@ const idOf = (value: unknown): number | null => {
   return typeof id === 'number' ? id : null
 }
 
-/** A submission names a target only when that target registers through this form. */
 export const checkTarget: CollectionBeforeChangeHook = async ({ data, operation, req }) => {
   if (operation !== 'create' || !data.target) return data
   const { relationTo, value } = data.target as { relationTo: TargetKind; value: unknown }
   const id = idOf(value)
   const loaded = id === null ? null : await loadApplicationTarget(req.payload, relationTo, id, req)
-  const { target, cycle } = loaded ?? { target: null, cycle: null }
-  // A course without its own form uses its cycle's.
-  const form = target?.registration?.form ?? cycle?.registration?.form
-  if (!target || idOf(form) !== idOf(data.form)) {
+  if (!loaded || idOf(loaded.formId) !== idOf(data.form)) {
     throw new APIError('This form is not the registration form of what it names.', 400)
   }
   // The page hides the button at the deadline; this repeats the rule where
@@ -111,7 +100,6 @@ export const checkTarget: CollectionBeforeChangeHook = async ({ data, operation,
   return data
 }
 
-/** The roles an account gets for an acceptance. Existing roles stay. */
 export const rolesAfterAccept = (roles: Role[], kind: TargetKind): Role[] => {
   if (kind === 'programmes') return roles.includes('member') ? roles : [...roles, 'member']
   const student = roles.includes('member') || roles.includes('non_degree_seeking')
@@ -272,7 +260,6 @@ const reject = async (req: PayloadRequest, id: number): Promise<null> => {
   return null
 }
 
-/** One decision in one transaction: everything is made, or nothing is. */
 const decide =
   (run: (req: PayloadRequest, id: number) => Promise<Accepted | null>): PayloadHandler =>
   async (req) => {

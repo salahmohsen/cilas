@@ -4,7 +4,7 @@ import { afterAll, beforeAll, describe, expect, it } from 'vitest'
 
 import config from '@/payload.config'
 import { courseDocument, articleDocument, documentToMarkdown } from '@/api/llms-document'
-import type { Course, Person } from '@/payload-types'
+import type { Course, Cycle, Person } from '@/payload-types'
 
 import { RUN, createTracker, uniq } from './fixtures'
 
@@ -95,6 +95,26 @@ describe('llms-document', () => {
     expect(md).toContain('Readings')
     expect(md).toContain('http')
     expect(md).not.toContain('[object Object]')
+  })
+
+  it('prints the note belonging to the inherited cycle price', async () => {
+    const priced = {
+      ...course,
+      pricing_override: { note: 'Unused course note' },
+      cycle: {
+        ...(course.cycle as Cycle),
+        pricing: [
+          {
+            course_types: [course.course_type],
+            pricing: { min: 1500, note: 'Cycle contribution note' },
+          },
+        ],
+      },
+    }
+    const md = documentToMarkdown(await courseDocument(payload, priced, 'en'))
+    expect(md).toContain('EGP 1,500')
+    expect(md).toContain('Cycle contribution note')
+    expect(md).not.toContain('Unused course note')
   })
 
   it('article doc contains body text, footnote endnote, mention as link', async () => {

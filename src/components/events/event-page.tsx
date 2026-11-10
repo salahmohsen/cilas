@@ -56,8 +56,7 @@ export async function EventPage({
     typeof event.registration?.form === 'object' && event.registration.form
       ? publicForm(event.registration.form)
       : null
-  const open =
-    timing.status !== 'past' && registrationStatus(event.registration, null, now) === 'open'
+  const open = timing.status !== 'past' && registrationStatus(event.registration, now) === 'open'
   const meetings = isOnCalendar(event.schedule) ? expandSchedule(event.schedule) : []
   const date = (day: string) =>
     format.dateTime(cairoNoon(day), { dateStyle: 'full', timeZone: CAIRO })

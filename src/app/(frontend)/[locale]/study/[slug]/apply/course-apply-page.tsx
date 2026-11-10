@@ -2,7 +2,6 @@ import { localeOf } from '@/i18n/routing'
 import { getCourse } from '@/api/courses.api'
 import { CAIRO } from '@/lib/cairo-day'
 import { detailPath } from '@/lib/paths'
-import { relId } from '@/lib/relation'
 import config from '@payload-config'
 import type { Metadata } from 'next'
 import { getFormatter, getTranslations } from 'next-intl/server'
@@ -16,10 +15,9 @@ import { publicForm } from '@/forms/public-form'
 import { ResolvedRichTextField as RichTextField } from '@/components/resolved-rich-text-field'
 import { Link } from '@/i18n/navigation'
 import { numberingSystemOf } from '@/lib/digits'
-import { registrationStatus } from '@/lib/registration'
+import { courseRegistration } from '@/lib/registration'
 import type { Cycle, Form } from '@/payload-types'
 
-/** Shared by the cached page and the signed-in one. */
 export async function courseApplyMetadata(
   locale: string,
   slug: string,
@@ -58,14 +56,14 @@ export async function CourseApplyPage({
   if (!course) notFound()
 
   const cycle = typeof course.cycle === 'object' ? (course.cycle as Cycle | null) : null
-  const method = course.registration?.method ?? cycle?.registration?.method
-  const formRef = course.registration?.form ?? cycle?.registration?.form
-  if (method !== 'form' || !formRef) notFound()
+  const registration = courseRegistration(course, cycle)
+  const { method, formId } = registration
+  if (method !== 'form' || !formId) notFound()
 
   const shared = publicForm(
     await payload.findByID({
       collection: 'forms',
-      id: relId(formRef),
+      id: formId,
       depth: 1,
       locale: lang,
       fallbackLocale: 'en',
@@ -79,8 +77,8 @@ export async function CourseApplyPage({
   })) as unknown as NonNullable<Form['fields']>
   const form = { ...shared, fields: [...(shared.fields ?? []), ...extra] }
 
-  const open = registrationStatus(course.registration, cycle?.registration) === 'open'
-  const deadlineDay = course.registration?.deadline ?? cycle?.registration?.deadline
+  const open = registration.status === 'open'
+  const deadlineDay = registration.deadline
   const deadline = deadlineDay
     ? format.dateTime(new Date(deadlineDay), {
         day: 'numeric',
@@ -91,7 +89,6 @@ export async function CourseApplyPage({
       })
     : null
 
-  // The form's text blocks and its confirmation, rendered here and handed to the form.
   const notes: Record<string, ReactNode> = {}
   for (const block of form.fields ?? []) {
     if (block.blockType === 'message' && block.message && block.id) {
