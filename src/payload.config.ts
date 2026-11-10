@@ -384,6 +384,25 @@ export default buildConfig({
         tagline: 'Sign in to manage courses, people and the site.',
       },
     }),
+    // The list rows' Edit and Delete buttons: ours honour delete access and
+    // send spaces to their delete dialog (src/components/admin/list-row-actions.tsx).
+    (incoming) => {
+      const providers = incoming.admin?.components?.providers ?? []
+      const swapped = providers.map((p) =>
+        p === 'payload-theme/client#ListQuickActions'
+          ? '/components/admin/list-row-actions#ListRowActions'
+          : p,
+      )
+      if (!swapped.includes('/components/admin/list-row-actions#ListRowActions'))
+        throw new Error('payload-theme no longer adds ListQuickActions; update the swap.')
+      return {
+        ...incoming,
+        admin: {
+          ...incoming.admin,
+          components: { ...incoming.admin?.components, providers: swapped },
+        },
+      }
+    },
     // The admin home: statistics for admins, the theme's cards for everyone
     // else. After payloadTheme(), which sets the same slot.
     adminDashboard(),

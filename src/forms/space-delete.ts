@@ -26,11 +26,13 @@ const summary = guarded(async (req, id) => {
     depth: 0,
     overrideAccess: true,
     req,
-    select: { kind: true, course: true, programme: true },
+    select: { kind: true, name: true, course: true, programme: true },
   })
+  // The dialog asks for this name; a space with no name is confirmed by its ID.
+  const name = (typeof space.name === 'string' && space.name.trim()) || `Space ${id}`
   const blocked = spaceDeleteBlock(space)
-  if (blocked) return Response.json({ blocked })
-  return Response.json({ counts: await countSpaceContent(req.payload, id, req) })
+  if (blocked) return Response.json({ name, blocked })
+  return Response.json({ name, counts: await countSpaceContent(req.payload, id, req) })
 })
 
 /**

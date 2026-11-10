@@ -1,22 +1,14 @@
 'use client'
 
-import {
-  Button,
-  Modal,
-  PopupList,
-  toast,
-  useDocumentInfo,
-  useFormFields,
-  useModal,
-} from '@payloadcms/ui'
+import { Button, Modal, PopupList, toast, useDocumentInfo, useModal } from '@payloadcms/ui'
 import { useRouter } from 'next/navigation'
-import { useState } from 'react'
+import { useCallback, useState } from 'react'
 
 import type { SpaceContentCounts } from '@/lib/space-delete'
 
 import { postAction } from './post-action'
 
-type Summary = { counts?: SpaceContentCounts; blocked?: string; error?: string }
+type Summary = { name?: string; counts?: SpaceContentCounts; blocked?: string; error?: string }
 
 const plural = (n: number, one: string, many = `${one}s`) => `${n} ${n === 1 ? one : many}`
 
@@ -32,38 +24,39 @@ const contentLine = (c: SpaceContentCounts): string => {
   return `${parts.slice(0, -1).join(', ')} and ${parts.at(-1)}`
 }
 
+const MODAL_SLUG = 'space-delete'
+
 /**
- * "Delete space" in the document's menu (the stock delete is closed, see
- * src/collections/Spaces.ts). Shows what goes with the space, and asks for
- * its name before the delete runs (src/forms/space-delete.ts).
+ * The space delete dialog: shows what goes with the space, and asks for its
+ * name before the delete runs (src/forms/space-delete.ts). `open(id)` starts
+ * it; used by the document menu below and by the list's row actions
+ * (src/components/admin/list-row-actions.tsx).
  */
-export function SpaceDeleteMenuItem() {
-  const { id } = useDocumentInfo()
-  const spaceName = useFormFields(([fields]) => fields.name?.value)
+export function useSpaceDeleteDialog(onDeleted: () => void) {
   const { openModal, closeModal } = useModal()
-  const router = useRouter()
+  const [id, setId] = useState<number | string | null>(null)
   const [summary, setSummary] = useState<Summary | null>(null)
   const [typed, setTyped] = useState('')
   const [busy, setBusy] = useState(false)
 
-  if (!id) return null
-  const slug = `space-delete-${id}`
-  // Only community spaces have a name; any other space is confirmed by its ID.
-  const name = (typeof spaceName === 'string' && spaceName.trim()) || `Space ${id}`
+  const open = useCallback(
+    async (spaceId: number | string) => {
+      setId(spaceId)
+      setSummary(null)
+      setTyped('')
+      openModal(MODAL_SLUG)
+      const res = await fetch(`/api/spaces/${spaceId}/delete-summary`, {
+        credentials: 'include',
+      }).catch(() => null)
+      const body = (await res?.json().catch(() => null)) as Summary | null
+      setSummary(res?.ok && body ? body : { error: body?.error ?? 'Could not count the content.' })
+    },
+    [openModal],
+  )
 
-  const open = async () => {
-    setSummary(null)
-    setTyped('')
-    openModal(slug)
-    const res = await fetch(`/api/spaces/${id}/delete-summary`, { credentials: 'include' }).catch(
-      () => null,
-    )
-    const body = (await res?.json().catch(() => null)) as Summary | null
-    setSummary(res?.ok && body ? body : { error: body?.error ?? 'Could not count the content.' })
-  }
-
+  const name = summary?.name ?? ''
   const close = () => {
-    if (!busy) closeModal(slug)
+    if (!busy) closeModal(MODAL_SLUG)
   }
 
   const confirm = async () => {
@@ -71,73 +64,87 @@ export function SpaceDeleteMenuItem() {
     const { ok } = await postAction(`/api/spaces/${id}/delete`, 'The delete failed. Try again.')
     setBusy(false)
     if (!ok) return
-    closeModal(slug)
+    closeModal(MODAL_SLUG)
     toast.success(`Deleted “${name}”.`)
-    router.push('/admin/collections/spaces')
+    onDeleted()
   }
 
-  const ready = Boolean(summary?.counts) && typed.trim() === name && !busy
+  const ready = Boolean(summary?.counts) && name !== '' && typed.trim() === name && !busy
+  const inputId = `${MODAL_SLUG}-name`
 
-  return (
-    <>
-      <PopupList.Button onClick={open}>Delete space</PopupList.Button>
-      <Modal className="confirmation-modal" closeOnBlur={false} slug={slug}>
-        <div className="confirmation-modal__wrapper">
-          <div className="confirmation-modal__content">
-            <h1>Delete “{name}”?</h1>
-            {!summary ? (
-              <p>Counting what is in this space…</p>
-            ) : summary.blocked ? (
-              <p>{summary.blocked}</p>
-            ) : summary.error ? (
-              <p>{summary.error}</p>
-            ) : summary.counts ? (
-              <>
-                <p>
-                  This permanently deletes the space and everything in it:{' '}
-                  {contentLine(summary.counts)}. Members lose access, and their notifications about
-                  this space go too. You cannot undo this.
-                </p>
-                <label className="cilas-admin-stack" htmlFor={`${slug}-name`}>
-                  <span>
-                    Type <strong>{name}</strong> to confirm.
-                  </span>
-                  <input
-                    autoComplete="off"
-                    className="cilas-space-delete-input"
-                    disabled={busy}
-                    id={`${slug}-name`}
-                    onChange={(e) => setTyped(e.target.value)}
-                    value={typed}
-                  />
-                </label>
-              </>
-            ) : null}
-          </div>
-          <div className="confirmation-modal__controls">
+  const modal = (
+    <Modal className="confirmation-modal" closeOnBlur={false} slug={MODAL_SLUG}>
+      <div className="confirmation-modal__wrapper">
+        <div className="confirmation-modal__content">
+          <h1>{name ? `Delete “${name}”?` : 'Delete this space?'}</h1>
+          {!summary ? (
+            <p>Counting what is in this space…</p>
+          ) : summary.blocked ? (
+            <p>{summary.blocked}</p>
+          ) : summary.error ? (
+            <p>{summary.error}</p>
+          ) : summary.counts ? (
+            <>
+              <p>
+                This permanently deletes the space and everything in it:{' '}
+                {contentLine(summary.counts)}. Members lose access, and their notifications about
+                this space go too. You cannot undo this.
+              </p>
+              <label className="cilas-admin-stack" htmlFor={inputId}>
+                <span>
+                  Type <strong>{name}</strong> to confirm.
+                </span>
+                <input
+                  autoComplete="off"
+                  className="cilas-space-delete-input"
+                  disabled={busy}
+                  id={inputId}
+                  onChange={(e) => setTyped(e.target.value)}
+                  value={typed}
+                />
+              </label>
+            </>
+          ) : null}
+        </div>
+        <div className="confirmation-modal__controls">
+          <Button
+            buttonStyle="secondary"
+            disabled={busy}
+            onClick={close}
+            size="large"
+            type="button"
+          >
+            Cancel
+          </Button>
+          {summary?.counts ? (
             <Button
-              buttonStyle="secondary"
-              disabled={busy}
-              onClick={close}
+              buttonStyle="error"
+              disabled={!ready}
+              onClick={confirm}
               size="large"
               type="button"
             >
-              Cancel
+              {busy ? 'Deleting…' : 'Delete space'}
             </Button>
-            {summary?.counts ? (
-              <Button
-                buttonStyle="error"
-                disabled={!ready}
-                onClick={confirm}
-                size="large"
-                type="button"
-              >
-                {busy ? 'Deleting…' : 'Delete space'}
-              </Button>
-            ) : null}
-          </div>
+          ) : null}
         </div>
-      </Modal>
+      </div>
+    </Modal>
+  )
+
+  return { open, modal }
+}
+
+/** "Delete space" in the document's menu (the stock delete is closed, see src/collections/Spaces.ts). */
+export function SpaceDeleteMenuItem() {
+  const { id } = useDocumentInfo()
+  const router = useRouter()
+  const { open, modal } = useSpaceDeleteDialog(() => router.push('/admin/collections/spaces'))
+  if (!id) return null
+  return (
+    <>
+      <PopupList.Button onClick={() => void open(id)}>Delete space</PopupList.Button>
+      {modal}
     </>
   )
 }

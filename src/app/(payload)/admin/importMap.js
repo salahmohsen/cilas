@@ -69,7 +69,7 @@ import { LoginHero as LoginHero_37fe5310e1c82b2fade6b239ca4c79e5 } from 'payload
 import { ImportExportProvider as ImportExportProvider_cdf7e044479f899a31f804427d568b36 } from '@payloadcms/plugin-import-export/rsc'
 import { AvatarProvider as AvatarProvider_37fe5310e1c82b2fade6b239ca4c79e5 } from 'payload-theme/rsc'
 import { ThemeProvider as ThemeProvider_f436cf2a4719114d9e44505773a04007 } from 'payload-theme/client'
-import { ListQuickActions as ListQuickActions_f436cf2a4719114d9e44505773a04007 } from 'payload-theme/client'
+import { ListRowActions as ListRowActions_90f75c5e95ced277ac99e83a22593bcf } from '../../../components/admin/list-row-actions'
 import { SubscribersView as SubscribersView_82e10948fdeb08928ce643cc0b1632a7 } from '../../../components/admin/subscribers-view'
 import { ReviewQueueView as ReviewQueueView_5ad28f33e67910b7fd7d6503bf8c6322 } from '../../../components/admin/review-queue'
 import { AiAccessGuideView as AiAccessGuideView_052b04071a970816feedca90704adf89 } from '../../../components/admin/ai-access-guide'
@@ -152,7 +152,7 @@ export const importMap = {
   "@payloadcms/plugin-import-export/rsc#ImportExportProvider": ImportExportProvider_cdf7e044479f899a31f804427d568b36,
   "payload-theme/rsc#AvatarProvider": AvatarProvider_37fe5310e1c82b2fade6b239ca4c79e5,
   "payload-theme/client#ThemeProvider": ThemeProvider_f436cf2a4719114d9e44505773a04007,
-  "payload-theme/client#ListQuickActions": ListQuickActions_f436cf2a4719114d9e44505773a04007,
+  "/components/admin/list-row-actions#ListRowActions": ListRowActions_90f75c5e95ced277ac99e83a22593bcf,
   "/components/admin/subscribers-view#SubscribersView": SubscribersView_82e10948fdeb08928ce643cc0b1632a7,
   "/components/admin/review-queue#ReviewQueueView": ReviewQueueView_5ad28f33e67910b7fd7d6503bf8c6322,
   "/components/admin/ai-access-guide#AiAccessGuideView": AiAccessGuideView_052b04071a970816feedca90704adf89,
