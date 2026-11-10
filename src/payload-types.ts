@@ -362,6 +362,9 @@ export interface Form {
   fields?:
     | (
         | {
+            /**
+             * The key answers are saved under. Leave empty to make it from the label.
+             */
             name: string;
             label?: string | null;
             width?: number | null;
@@ -385,6 +388,9 @@ export interface Form {
             blockType: 'country';
           }
         | {
+            /**
+             * The key answers are saved under. Leave empty to make it from the label.
+             */
             name: string;
             label?: string | null;
             width?: number | null;
@@ -418,6 +424,9 @@ export interface Form {
             blockType: 'message';
           }
         | {
+            /**
+             * The key answers are saved under. Leave empty to make it from the label.
+             */
             name: string;
             label?: string | null;
             width?: number | null;
@@ -432,6 +441,9 @@ export interface Form {
             blockType: 'number';
           }
         | {
+            /**
+             * The key answers are saved under. Leave empty to make it from the label.
+             */
             name: string;
             label?: string | null;
             width?: number | null;
@@ -463,6 +475,9 @@ export interface Form {
             blockType: 'state';
           }
         | {
+            /**
+             * The key answers are saved under. Leave empty to make it from the label.
+             */
             name: string;
             label?: string | null;
             width?: number | null;
@@ -477,6 +492,9 @@ export interface Form {
             blockType: 'text';
           }
         | {
+            /**
+             * The key answers are saved under. Leave empty to make it from the label.
+             */
             name: string;
             label?: string | null;
             width?: number | null;
@@ -499,6 +517,9 @@ export interface Form {
             blockType: 'textarea';
           }
         | {
+            /**
+             * The key answers are saved under. Leave empty to make it from the label.
+             */
             name: string;
             label?: string | null;
             width?: number | null;
@@ -520,6 +541,9 @@ export interface Form {
             blockType: 'radio';
           }
         | {
+            /**
+             * The key answers are saved under. Leave empty to make it from the label.
+             */
             name: string;
             label?: string | null;
             width?: number | null;
@@ -541,6 +565,9 @@ export interface Form {
             blockType: 'checkboxGroup';
           }
         | {
+            /**
+             * The key answers are saved under. Leave empty to make it from the label.
+             */
             name: string;
             label?: string | null;
             /**
@@ -1102,6 +1129,9 @@ export interface Course {
   applicant_questions?:
     | (
         | {
+            /**
+             * The key answers are saved under. Leave empty to make it from the label.
+             */
             name: string;
             label?: string | null;
             width?: number | null;
@@ -1116,6 +1146,9 @@ export interface Course {
             blockType: 'text';
           }
         | {
+            /**
+             * The key answers are saved under. Leave empty to make it from the label.
+             */
             name: string;
             label?: string | null;
             width?: number | null;
@@ -1138,6 +1171,9 @@ export interface Course {
             blockType: 'textarea';
           }
         | {
+            /**
+             * The key answers are saved under. Leave empty to make it from the label.
+             */
             name: string;
             label?: string | null;
             width?: number | null;
@@ -1159,6 +1195,9 @@ export interface Course {
             blockType: 'radio';
           }
         | {
+            /**
+             * The key answers are saved under. Leave empty to make it from the label.
+             */
             name: string;
             label?: string | null;
             width?: number | null;
@@ -1180,6 +1219,9 @@ export interface Course {
             blockType: 'checkboxGroup';
           }
         | {
+            /**
+             * The key answers are saved under. Leave empty to make it from the label.
+             */
             name: string;
             label?: string | null;
             width?: number | null;
@@ -1194,6 +1236,9 @@ export interface Course {
             blockType: 'checkbox';
           }
         | {
+            /**
+             * The key answers are saved under. Leave empty to make it from the label.
+             */
             name: string;
             label?: string | null;
             width?: number | null;
@@ -1216,6 +1261,9 @@ export interface Course {
             blockType: 'select';
           }
         | {
+            /**
+             * The key answers are saved under. Leave empty to make it from the label.
+             */
             name: string;
             label?: string | null;
             width?: number | null;
@@ -1230,6 +1278,9 @@ export interface Course {
             blockType: 'number';
           }
         | {
+            /**
+             * The key answers are saved under. Leave empty to make it from the label.
+             */
             name: string;
             label?: string | null;
             /**

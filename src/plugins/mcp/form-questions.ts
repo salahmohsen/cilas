@@ -1,6 +1,7 @@
 import { z } from 'zod/v3'
 
 import type { formFields } from '@/forms/form-fields'
+import { QUESTION_NAME, QUESTION_NAME_RULE } from '@/forms/question-name'
 
 import { localizedText, optionalLocalizedText } from './schemas'
 
@@ -26,10 +27,7 @@ export const RESERVED_QUESTION_NAMES = ['name', 'email']
 
 const questionName = z
   .string()
-  .regex(
-    /^[a-z][a-z0-9_]{0,39}$/,
-    'Use lower-case letters, digits and underscores, starting with a letter (e.g. motivation).',
-  )
+  .regex(QUESTION_NAME, QUESTION_NAME_RULE)
   .refine(
     (name) => !RESERVED_QUESTION_NAMES.includes(name),
     'name and email are asked by every form already.',

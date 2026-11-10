@@ -1,8 +1,10 @@
 import { fields as builtIn } from '@payloadcms/plugin-form-builder'
-import type { Block, CollectionBeforeChangeHook, Field } from 'payload'
+import type { Block, CollectionBeforeChangeHook, Field, TextField } from 'payload'
 
 import { DEFAULT_SIZE_MB, FILE_KINDS, MAX_FILES, MAX_SIZE_MB } from '@/lib/form-files'
 import type { Form } from '@/payload-types'
+
+import { QUESTION_NAME, QUESTION_NAME_RULE, toQuestionName } from './question-name'
 
 /**
  * The form builder's fields as CILAS's forms use them. Questions carry a help
@@ -12,8 +14,41 @@ import type { Form } from '@/payload-types'
  */
 
 type BuiltIn = (typeof builtIn)[keyof typeof builtIn]
+
+const nameFrom = (value: unknown, sibling: unknown) =>
+  String(value ?? '') || toQuestionName(String((sibling as { label?: unknown })?.label ?? ''))
+
+/** An empty name is made from the label, so an admin only writes the question. */
+const questionName: TextField = {
+  name: 'name',
+  type: 'text',
+  label: 'Machine name',
+  // Saved names are never empty. The validate below lets an empty one through
+  // the admin form while the label can make it; the hook fills it on save.
+  required: true,
+  admin: { description: 'The key answers are saved under. Leave empty to make it from the label.' },
+  hooks: { beforeValidate: [({ value, siblingData }) => nameFrom(value, siblingData) || value] },
+  validate: (value: unknown, { siblingData }: { siblingData: unknown }) => {
+    const name = nameFrom(value, siblingData)
+    if (!name) return 'Enter a machine name, or an English label to make one from.'
+    return QUESTION_NAME.test(name) || QUESTION_NAME_RULE
+  },
+}
+
+const withQuestionName = (fields: Field[]): Field[] =>
+  fields.map((f) =>
+    'name' in f && f.name === 'name'
+      ? questionName
+      : f.type === 'row'
+        ? { ...f, fields: withQuestionName(f.fields) }
+        : f,
+  )
+
 /** The plugin gives some fields as blocks and some as functions that make one. */
-const block = (b: BuiltIn): Block => (typeof b === 'function' ? b() : b)
+const block = (b: BuiltIn): Block => {
+  const base = typeof b === 'function' ? b() : b
+  return { ...base, fields: withQuestionName(base.fields) }
+}
 
 const description: Field = {
   name: 'description',
