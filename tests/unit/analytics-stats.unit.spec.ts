@@ -13,11 +13,11 @@ import {
   pageMovement,
   parseRows,
   slugLabel,
-  topCountries,
   topCourses,
   topEvents,
   topPages,
   topReferrers,
+  topTimeZones,
   trafficFrom,
   usageFrom,
   webVitalsFrom,
@@ -139,16 +139,18 @@ describe('audience', () => {
     ])
   })
 
-  it('skips visitors with no country', () => {
+  it('names each time zone by its city and skips visitors with none', () => {
     expect(
-      topCountries([
-        ['Egypt', 5],
+      topTimeZones([
+        ['Africa/Cairo', 5],
         [null, 9],
-        ['Germany', 2],
+        ['America/Los_Angeles', 2],
+        ['UTC', 1],
       ]),
     ).toEqual([
-      { key: 'Egypt', label: 'Egypt', value: 5 },
-      { key: 'Germany', label: 'Germany', value: 2 },
+      { key: 'Africa/Cairo', label: 'Cairo', value: 5 },
+      { key: 'America/Los_Angeles', label: 'Los Angeles', value: 2 },
+      { key: 'UTC', label: 'UTC', value: 1 },
     ])
   })
 })
@@ -227,17 +229,12 @@ describe('goals and errors', () => {
 })
 
 describe('the free plan allowance', () => {
-  it('measures events and errors, and recordings when they could be read', () => {
-    const meters = usageFrom([[250_000, 40]], [[300]])
+  it('measures events and errors', () => {
+    const meters = usageFrom([[250_000, 40]])
     expect(meters.map((m) => [m.key, m.used, m.limit])).toEqual([
       ['events', 250_000, FREE_LIMITS.events],
       ['errors', 40, FREE_LIMITS.errors],
-      ['recordings', 300, FREE_LIMITS.recordings],
     ])
-  })
-
-  it('leaves recordings out when that query failed', () => {
-    expect(usageFrom([[1, 0]], null).map((m) => m.key)).toEqual(['events', 'errors'])
   })
 })
 
@@ -274,6 +271,17 @@ describe('web vitals', () => {
 describe('the HogQL', () => {
   it('counts errors apart from the events the free plan counts', () => {
     expect(QUERIES.usage).toContain("countIf(event != '$exception') AS event_count")
+  })
+
+  it('places visitors by the browser time zone, since a cookieless event has no IP', () => {
+    expect(QUERIES.timeZones).toContain('properties.$timezone')
+    expect(Object.values(QUERIES).join('\n')).not.toContain('$geoip')
+  })
+
+  it('reads only the events table', () => {
+    for (const query of Object.values(QUERIES)) {
+      expect(query).toMatch(/FROM events\b/)
+    }
   })
 
   it('uses the free plan only through named, bounded windows', () => {

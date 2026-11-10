@@ -2,7 +2,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 
 import { routing } from '@/i18n/routing'
 import { isBotPath, isNoisyError } from '@/lib/analytics/errors'
-import { INGEST_PATH, posthogHosts, ingestRewrites } from '@/lib/analytics/hosts'
+import { INGEST_PATH, posthogHosts, relayRequest } from '@/lib/analytics/hosts'
 import {
   EXCLUDED_SECTIONS,
   TRACKED_SECTIONS,
@@ -12,7 +12,7 @@ import {
 } from '@/lib/analytics/paths'
 import { gateCapture, mayCapture } from '@/lib/analytics/policy'
 import { scrubReferrer, scrubText, scrubUrl } from '@/lib/analytics/scrub'
-import { makeBeforeSend, makeRecordingSync, posthogConfig } from '@/lib/analytics/client'
+import { STAFF_FLAG, isStaffDevice, makeBeforeSend, posthogConfig } from '@/lib/analytics/client'
 import { setSender, track } from '@/lib/analytics/track'
 
 describe('which pages analytics may see', () => {
@@ -405,7 +405,7 @@ describe('what the browser is set to do', () => {
   const config = posthogConfig()
 
   it('is cookieless and captures nothing on its own', () => {
-    expect(config.persistence).toBe('memory')
+    expect(config.cookieless_mode).toBe('always')
     expect(config.person_profiles).toBe('identified_only')
     expect(config.autocapture).toBe(false)
     expect(config.capture_pageleave).toBe(false)
@@ -417,7 +417,7 @@ describe('what the browser is set to do', () => {
     expect(config.respect_dnt).toBe(true)
   })
 
-  it('measures web vitals, but never the network in recordings', () => {
+  it('measures web vitals, but never the network', () => {
     expect(config.capture_performance).toEqual({ web_vitals: true, network_timing: false })
   })
 
@@ -426,29 +426,46 @@ describe('what the browser is set to do', () => {
     expect(config.external_scripts_inject_target).toBe('head')
   })
 
-  it('goes through the site and masks the forms in recordings', () => {
+  it('goes through the site', () => {
     expect(config.api_host).toBe(INGEST_PATH)
-    expect(config.session_recording).toMatchObject({ maskAllInputs: true })
-    expect(config.session_recording?.maskTextSelector).toContain('form')
+  })
+})
+
+describe('staff devices', () => {
+  const storage = () => {
+    const values = new Map<string, string>()
+    return {
+      getItem: (key: string) => values.get(key) ?? null,
+      setItem: (key: string, value: string) => void values.set(key, value),
+    }
+  }
+
+  it('counts a device that never opened the admin panel', () => {
+    expect(isStaffDevice(storage(), '/en/about')).toBe(false)
   })
 
-  it('starts and stops the recorder as pages change', () => {
-    const recorder = { startSessionRecording: vi.fn(), stopSessionRecording: vi.fn() }
-    const sync = makeRecordingSync(recorder, true)
-    sync('/en/about')
-    sync('/en/articles')
-    expect(recorder.startSessionRecording).toHaveBeenCalledTimes(1)
-    sync('/en/spaces')
-    expect(recorder.stopSessionRecording).toHaveBeenCalledTimes(1)
-    sync('/en/login')
-    expect(recorder.stopSessionRecording).toHaveBeenCalledTimes(1)
+  it('stops counting a device from the moment it opens the admin panel', () => {
+    const local = storage()
+    expect(isStaffDevice(local, '/admin')).toBe(true)
+    expect(local.getItem(STAFF_FLAG)).toBe('1')
+    expect(isStaffDevice(local, '/en/about')).toBe(true)
   })
 
-  it('never records an unsampled visit', () => {
-    const recorder = { startSessionRecording: vi.fn(), stopSessionRecording: vi.fn() }
-    const sync = makeRecordingSync(recorder, false)
-    sync('/en/about')
-    expect(recorder.startSessionRecording).not.toHaveBeenCalled()
+  it('does not take a page that only starts with the word for the admin panel', () => {
+    expect(isStaffDevice(storage(), '/administration')).toBe(false)
+  })
+
+  it('counts the device when the browser blocks storage', () => {
+    const blocked = {
+      getItem: () => {
+        throw new Error('blocked')
+      },
+      setItem: () => {
+        throw new Error('blocked')
+      },
+    }
+    expect(isStaffDevice(blocked, '/en/about')).toBe(false)
+    expect(isStaffDevice(blocked, '/admin')).toBe(true)
   })
 })
 
@@ -465,25 +482,78 @@ describe('PostHog hosts', () => {
     expect(posthogHosts('').ingest).toBe('https://eu.i.posthog.com')
   })
 
-  it('forwards the relay path only when a key is set, assets first', () => {
-    expect(ingestRewrites(undefined)).toEqual([])
-    const rules = ingestRewrites('phc_x')
-    expect(rules.map((r) => r.source)).toEqual([
-      `${INGEST_PATH}/static/:path*`,
-      `${INGEST_PATH}/array/:path*`,
-      `${INGEST_PATH}/:path*`,
-    ])
-    expect(rules[0]?.destination).toBe('https://eu-assets.i.posthog.com/static/:path*')
-    expect(rules[2]?.destination).toBe('https://eu.i.posthog.com/:path*')
+  const visit = (headers: Record<string, string>) => new Headers(headers)
+
+  it('forwards the relay path only when a key is set, assets to the assets host', () => {
+    const headers = visit({})
+    expect(relayRequest(`${INGEST_PATH}/i/v0/e/`, headers, undefined)).toBeNull()
+    expect(relayRequest('/en/about', headers, 'phc_x')).toBeNull()
+    expect(relayRequest(`${INGEST_PATH}/i/v0/e/`, headers, 'phc_x')?.url).toBe(
+      'https://eu.i.posthog.com/i/v0/e/',
+    )
+    expect(relayRequest(`${INGEST_PATH}/static/array.js`, headers, 'phc_x')?.url).toBe(
+      'https://eu-assets.i.posthog.com/static/array.js',
+    )
+    expect(relayRequest(`${INGEST_PATH}/array/phc_x/config.js`, headers, 'phc_x')?.url).toBe(
+      'https://eu-assets.i.posthog.com/array/phc_x/config.js',
+    )
+  })
+
+  it("hands PostHog the visitor's own address, not the address of the proxy in front of the site", () => {
+    const relayed = relayRequest(
+      `${INGEST_PATH}/i/v0/e/`,
+      visit({ 'cf-connecting-ip': '156.215.195.207', 'x-forwarded-for': '10.0.1.191' }),
+      'phc_x',
+    )
+    expect(relayed?.headers.get('x-forwarded-for')).toBe('156.215.195.207')
+  })
+
+  it('keeps the first forwarded address when the site is reached without Cloudflare', () => {
+    const relayed = relayRequest(
+      `${INGEST_PATH}/i/v0/e/`,
+      visit({ 'x-forwarded-for': '203.0.113.9, 10.0.1.191' }),
+      'phc_x',
+    )
+    expect(relayed?.headers.get('x-forwarded-for')).toBe('203.0.113.9')
+  })
+
+  it("never sends the site's cookies, the login among them, to PostHog", () => {
+    const relayed = relayRequest(
+      `${INGEST_PATH}/i/v0/e/`,
+      visit({ cookie: 'payload-token=secret; NEXT_LOCALE=en', 'content-type': 'text/plain' }),
+      'phc_x',
+    )
+    expect(relayed?.headers.has('cookie')).toBe(false)
+    expect(relayed?.headers.get('content-type')).toBe('text/plain')
   })
 })
 
 describe('the locale proxy', () => {
-  it('leaves the relay path alone, so a language redirect never reaches PostHog', async () => {
-    const { config } = await import('@/proxy')
-    const matcher = new RegExp(`^${config.matcher[0]}$`)
-    expect(matcher.test(`${INGEST_PATH}/e/`)).toBe(false)
-    expect(matcher.test(`${INGEST_PATH}/static/recorder.js`)).toBe(false)
-    expect(matcher.test('/en/about')).toBe(true)
+  afterEach(() => {
+    vi.unstubAllEnvs()
+    vi.resetModules()
+  })
+
+  it("relays analytics to PostHog with the visitor's address and no cookies", async () => {
+    vi.stubEnv('NEXT_PUBLIC_POSTHOG_KEY', 'phc_x')
+    vi.resetModules()
+    const { default: proxy, config } = await import('@/proxy')
+    const { NextRequest } = await import('next/server')
+    expect(
+      config.matcher.some((m) =>
+        new RegExp(`^${m.replace(':path*', '.*')}$`).test(`${INGEST_PATH}/i/v0/e/`),
+      ),
+    ).toBe(true)
+    const response = proxy(
+      new NextRequest(`https://ci-las.test${INGEST_PATH}/i/v0/e/`, {
+        method: 'POST',
+        headers: { 'cf-connecting-ip': '156.215.195.207', cookie: 'payload-token=secret' },
+      }),
+    )
+    expect(response.headers.get('x-middleware-rewrite')).toBe('https://eu.i.posthog.com/i/v0/e/')
+    expect(response.headers.get('x-middleware-request-x-forwarded-for')).toBe('156.215.195.207')
+    expect(response.headers.get('x-middleware-override-headers')?.split(',')).not.toContain(
+      'cookie',
+    )
   })
 })
