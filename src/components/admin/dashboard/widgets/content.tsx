@@ -2,12 +2,15 @@ import { Cog } from 'lucide-react'
 import Link from 'next/link'
 import type { Payload } from 'payload'
 
+import { ROLE_OPTIONS } from '@/access'
 import { Avatar } from '@/components/arc/avatar/avatar'
 import { EmptyState } from '@/components/arc/empty-state/empty-state'
+import { HoverCardProfile } from '@/components/arc/hover-card/hover-card'
 import { MetricCard } from '@/components/arc/metric-card/metric-card'
 import { Timeline } from '@/components/arc/timeline/timeline'
 import { CAIRO } from '@/lib/cairo-day'
 import { eventTiming } from '@/lib/events'
+import { mediaPopulate, mediaThumbnail } from '@/lib/media-image'
 import type { Event } from '@/payload-types'
 
 import { cachedStat } from '../cached'
@@ -137,11 +140,15 @@ export async function UpcomingEvents() {
   )
 }
 
-type Editor = { id: number; name: string; photo: string | null }
+type Editor = { id: number; name: string; email: string; roles: string; photo: string | null }
 type Change = {
   id: string
   title: string
+  /** The admin page that edits it. */
+  href: string
   collection: string
+  status: 'draft' | 'published' | null
+  cover: string | null
   at: string
   /** Who saved it last; null for a save before the editor was recorded. */
   by: Editor | null
@@ -153,8 +160,9 @@ const editorsOf = async (payload: Payload, ids: number[]): Promise<Map<number, E
   const { docs } = await payload.find({
     collection: 'users',
     where: { id: { in: ids } },
-    select: { email: true, person: true },
-    populate: { people: { name: true, photo: true }, media: { url: true } },
+    select: { email: true, person: true, roles: true },
+    // The storage hook builds `url` from `filename` and `prefix`; without them it is null.
+    populate: { people: { name: true, photo: true }, media: { ...mediaPopulate, sizes: true } },
     pagination: false,
     depth: 2,
     overrideAccess: true,
@@ -162,28 +170,44 @@ const editorsOf = async (payload: Payload, ids: number[]): Promise<Map<number, E
   return new Map(
     docs.map((user) => {
       const person = typeof user.person === 'object' ? user.person : null
-      const photo = typeof person?.photo === 'object' ? (person.photo?.url ?? null) : null
-      return [user.id, { id: user.id, name: person?.name || user.email.split('@')[0], photo }]
+      const photo =
+        typeof person?.photo === 'object' ? (mediaThumbnail(person.photo) ?? null) : null
+      const roles = (user.roles ?? [])
+        .map((role) => ROLE_OPTIONS.find((option) => option.value === role)?.label ?? role)
+        .join(', ')
+      const name = person?.name || user.email.split('@')[0]
+      return [user.id, { id: user.id, name, email: user.email, roles, photo }]
     }),
   )
 }
 
 const recent = () =>
-  cachedStat<Change[]>('recent-changes-v2', async (payload) => {
+  cachedStat<Change[]>('recent-changes-v4', async (payload) => {
     const lists = await Promise.all(
       PIPELINE.map(async ({ slug, label }) => {
         const { docs } = await payload.find({
           collection: slug,
-          select: { title: true, updatedAt: true, last_edited_by: true },
+          select: {
+            title: true,
+            updatedAt: true,
+            last_edited_by: true,
+            cover_image: true,
+            _status: true,
+          },
+          populate: { media: { ...mediaPopulate, sizes: true } },
           sort: '-updatedAt',
           limit: 8,
-          depth: 0,
+          depth: 1,
           overrideAccess: true,
         })
         return docs.map((doc) => ({
           id: `${slug}-${doc.id}`,
           title: doc.title,
+          href: `/admin/collections/${slug}/${doc.id}`,
           collection: label,
+          status: doc._status ?? null,
+          cover:
+            typeof doc.cover_image === 'object' ? (mediaThumbnail(doc.cover_image) ?? null) : null,
           at: doc.updatedAt,
           editorId: typeof doc.last_edited_by === 'number' ? doc.last_edited_by : null,
         }))
@@ -202,6 +226,24 @@ const recent = () =>
     }))
   })
 
+/** The hover preview of an edited item: its cover, kind and state, and title. */
+function ChangeCard({ change }: { change: Change }) {
+  const state =
+    change.status === 'published' ? 'Published' : change.status === 'draft' ? 'Draft' : null
+  return (
+    <div className={styles.preview}>
+      {change.cover && (
+        // eslint-disable-next-line @next/next/no-img-element -- an R2 thumbnail in the admin
+        <img className={styles.previewCover} src={change.cover} alt="" decoding="async" />
+      )}
+      <p className={styles.previewKind}>{[change.collection, state].filter(Boolean).join(' · ')}</p>
+      <p className={styles.previewTitle} dir="auto">
+        {change.title}
+      </p>
+    </div>
+  )
+}
+
 export async function RecentChanges() {
   const changes = await recent()
   return (
@@ -217,15 +259,27 @@ export async function RecentChanges() {
           now={Date.now()}
           timeZone={CAIRO}
           maxHeight={360}
-          events={changes.map(({ id, title, collection, at, by }) => ({
-            id,
-            at,
-            actor: by?.name ?? 'System',
-            actorHref: by ? `/admin/collections/users/${by.id}` : undefined,
-            title: `edited ${title}`,
-            meta: collection,
-            icon: by ? (
-              <Avatar name={by.name} src={by.photo ?? undefined} size="sm" />
+          cardClassName="arc-scope"
+          events={changes.map((change) => ({
+            id: change.id,
+            at: change.at,
+            actor: change.by?.name ?? 'System',
+            actorHref: change.by ? `/admin/collections/users/${change.by.id}` : undefined,
+            actorCard: change.by ? (
+              <HoverCardProfile
+                name={change.by.name}
+                role={change.by.roles || undefined}
+                avatar={change.by.photo ?? undefined}
+                meta={change.by.email}
+              />
+            ) : undefined,
+            title: 'edited',
+            subject: change.title,
+            subjectHref: change.href,
+            subjectCard: <ChangeCard change={change} />,
+            meta: change.collection,
+            icon: change.by ? (
+              <Avatar name={change.by.name} src={change.by.photo ?? undefined} size="sm" />
             ) : (
               <Cog size={14} aria-hidden />
             ),

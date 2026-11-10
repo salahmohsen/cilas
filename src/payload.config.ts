@@ -127,6 +127,9 @@ export default buildConfig({
     : undefined,
   admin: {
     user: Users.slug,
+    // The linked person's photo in payload-theme's user block (the theme's own
+    // `avatar: { field }` reads only the account, which has no photo).
+    avatar: { Component: '/components/admin/admin-avatar#AdminAvatar' },
     // The browser tab and link previews: CILAS, not Payload. Open Graph images
     // are off (the admin is private); the defaults would say "Payload App".
     meta: {

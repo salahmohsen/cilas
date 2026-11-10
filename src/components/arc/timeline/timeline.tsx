@@ -15,6 +15,7 @@ import type { CSSProperties, KeyboardEvent, ReactNode } from 'react'
 import { AnimatePresence, motion, useReducedMotion } from 'motion/react'
 import type { Transition } from 'motion/react'
 import { ChevronDown } from 'lucide-react'
+import { HoverCard } from '../hover-card/hover-card'
 import { motionTokens } from '../lib/motion-tokens'
 import styles from './timeline.module.css'
 
@@ -26,8 +27,16 @@ export interface TimelineEvent {
   actor?: string
   /** Makes the actor a link, such as the person's profile. CILAS addition; not in the Arc registry. */
   actorHref?: string
+  /** Previews the actor on hover or focus. CILAS addition; not in the Arc registry. */
+  actorCard?: ReactNode
   /** What happened, completing the actor: "merged Checkout redesign into main". */
   title: string
+  /** What it happened to, after the title in the foreground color: "edited" + "Checkout redesign". CILAS addition. */
+  subject?: string
+  /** Makes the subject a link. CILAS addition. */
+  subjectHref?: string
+  /** Previews the subject on hover or focus. CILAS addition. */
+  subjectCard?: ReactNode
   /** Short context under the title, such as a pull request or a build. */
   meta?: string
   /** Revealed in place when the row is expanded. Rows without detail are not interactive. */
@@ -63,6 +72,8 @@ export interface TimelineProps {
   defaultExpanded?: string[]
   /** Heading level for the day labels. */
   headingLevel?: 2 | 3 | 4 | 5 | 6
+  /** Class for the hover cards, which render outside the feed: a token scope such as `arc-scope`. CILAS addition. */
+  cardClassName?: string
   className?: string
 }
 
@@ -175,6 +186,36 @@ function relative(time: number, now: number) {
   return { short: `${hours}h`, long: `${hours} ${hours === 1 ? 'hour' : 'hours'} ago` }
 }
 
+/** The actor or subject of a row: foreground text, a link with an href, and a hover card with a card. */
+function Named({
+  text,
+  href,
+  card,
+  cardClassName,
+}: {
+  text: string
+  href?: string
+  card?: ReactNode
+  cardClassName?: string
+}) {
+  const name = href ? (
+    <a className={`${styles.actor} ${styles.actorLink}`} href={href}>
+      {text}
+    </a>
+  ) : (
+    <span className={styles.actor} tabIndex={card ? 0 : undefined}>
+      {text}
+    </span>
+  )
+  return card ? (
+    <HoverCard content={card} side="top" className={cardClassName}>
+      {name}
+    </HoverCard>
+  ) : (
+    name
+  )
+}
+
 /** A day's section. A new day opens from nothing and pushes the older days down; it clips only while it grows. */
 function DaySection({
   id,
@@ -225,6 +266,7 @@ function TimelineRow({
   onToggle,
   timeLabel,
   timeFull,
+  cardClassName,
 }: {
   row: Row
   last: boolean
@@ -232,6 +274,7 @@ function TimelineRow({
   onToggle: () => void
   timeLabel: string
   timeFull: string
+  cardClassName?: string
 }) {
   const clock = useContext(RevealClock)!
   const { reduced } = clock
@@ -336,16 +379,25 @@ function TimelineRow({
         >
           <span className={styles.text}>
             <span className={styles.title}>
-              {row.actor &&
-                (row.actorHref ? (
-                  <a className={`${styles.actor} ${styles.actorLink}`} href={row.actorHref}>
-                    {row.actor}
-                  </a>
-                ) : (
-                  <span className={styles.actor}>{row.actor}</span>
-                ))}
+              {row.actor && (
+                <Named
+                  text={row.actor}
+                  href={row.actorHref}
+                  card={row.actorCard}
+                  cardClassName={cardClassName}
+                />
+              )}
               {row.actor ? ' ' : ''}
               {row.title}
+              {row.subject ? ' ' : ''}
+              {row.subject && (
+                <Named
+                  text={row.subject}
+                  href={row.subjectHref}
+                  card={row.subjectCard}
+                  cardClassName={cardClassName}
+                />
+              )}
             </span>
             {row.meta && <span className={styles.meta}>{row.meta}</span>}
           </span>
@@ -423,6 +475,7 @@ export function Timeline({
   scrollToNew = true,
   defaultExpanded = [],
   headingLevel = 3,
+  cardClassName,
   className,
 }: TimelineProps) {
   const reduced = useReducedMotionSafe()
@@ -445,7 +498,7 @@ export function Timeline({
       set: new Set(events.map((event) => event.id)),
       fresh: new Set([...known.fresh, ...added.map((event) => event.id)]),
       announcement: added.length
-        ? `New update: ${added.map((event) => [event.actor, event.title].filter(Boolean).join(' ')).join('. ')}`
+        ? `New update: ${added.map((event) => [event.actor, event.title, event.subject].filter(Boolean).join(' ')).join('. ')}`
         : known.announcement,
     })
   }
@@ -628,6 +681,7 @@ export function Timeline({
                             expanded={expanded.has(row.id)}
                             onToggle={() => toggle(row.id)}
                             timeLabel={time.short}
+                            cardClassName={cardClassName}
                             timeFull={
                               today
                                 ? `${time.long}, ${formats.full.format(new Date(row.time))}`
