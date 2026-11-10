@@ -26,7 +26,7 @@ export const QUERY_TIMEOUT_MS = 5000
 
 /**
  * Runs one HogQL query and returns its rows. Throws on a timeout, a failed
- * status or an answer of the wrong shape; the caller hides the widget. The
+ * status or an answer of the wrong shape; the widget then says PostHog failed. The
  * error text names the status only: never the key, never PostHog's body.
  */
 export const runQuery = async (

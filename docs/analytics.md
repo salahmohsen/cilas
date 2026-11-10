@@ -51,7 +51,7 @@ Never done: `posthog.identify`, autocapture, page-leave events, heart beats, hea
 
 `cookieless_mode: 'always'` in `src/lib/analytics/client.ts`, and "Cookieless server hash mode" on in the PostHog project (Settings, Web analytics). The browser stores nothing: no cookie, no `localStorage`, no `sessionStorage`. PostHog makes each event's `distinct_id` on its servers from a hash of the project, the IP, the user agent, the host and a salt that it deletes each day. It removes the IP before it stores the event. `person_profiles: 'identified_only'` and no one is identified, so no person profile is made. `respect_dnt` is on.
 
-What this means for the numbers: a visitor is one person on one day. Reloads, new tabs and other pages on the same day stay one visitor. Someone who comes back on another day counts again, so a 30-day "Visitors" total is a count of person-days. Two people on the same network with the same browser version on the same day count as one. The dashboard says this on the Visitors and Traffic widgets.
+What this means for the numbers: a visitor is one person on one day. Reloads, new tabs and other pages on the same day stay one visitor. Someone who comes back on another day counts again, so a 30-day "Visitors" total is a count of person-days. Two people on the same network with the same browser version on the same day count as one. The dashboard explains this behind the info icon (a hover card) on the Visitors, Traffic, Where visitors come from, Audience and Application funnel widgets. Use `info` on `WidgetCard` for any longer note.
 
 The hash needs the visitor's real IP. See the relay below: without it, every visitor shares one IP and one hash.
 
@@ -106,7 +106,7 @@ The Arc Pro funnel chart is not used (no licence); the funnel is built from Prog
 
 How the data arrives: the server posts HogQL to `POST {POSTHOG_API_HOST}/api/projects/{id}/query/` with the personal key as a bearer token (`src/lib/analytics/posthog-query.ts`, queries in `queries.ts`). Timeout 5 seconds. Each answer is cached for 10 minutes for all admins (`unstable_cache`, tag `admin-stats`). The key stays on the server.
 
-If PostHog is slow, fails, or the settings are missing, the widget shows nothing (the log holds the status, never the key). Other widgets are not affected.
+Without the settings, the analytics widgets are not shown. If PostHog is slow or fails, each widget shows "Could not load from PostHog" (the log holds the status, never the key). Other widgets are not affected.
 
 To check the queries against the real project: `pnpm analytics:check` (needs the three server settings; prints row counts only).
 
@@ -152,7 +152,7 @@ Rotate it at once if it was ever pasted into a chat, a log or a commit.
 
 ## Known limits
 
-- Run `pnpm analytics:check` after changing a query. A wrong column fails at PostHog, and a widget that fails shows nothing, so a mock-only test does not catch it. The old recordings meter read `min_first_timestamp`, a column that does not exist, and was hidden for this reason.
+- Run `pnpm analytics:check` after changing a query. A wrong column fails only at PostHog, so a mock-only test does not catch it. The old recordings meter read `min_first_timestamp`, a column that does not exist, and stayed hidden because failed widgets then showed nothing.
 - The visitor IP comes from Cloudflare's `cf-connecting-ip`. A request that reaches the server without Cloudflare can set its own `X-Forwarded-For` and so its own cookieless hash. This only affects counts.
 - Counts before the cookieless switch (November 2026) are page loads, not visitors, and include staff visits.
 - Bots that do not set a recognised user agent can still count as visitors.

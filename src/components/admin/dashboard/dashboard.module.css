@@ -25,6 +25,39 @@
   color: var(--foreground);
 }
 
+.cardTitleRow {
+  display: flex;
+  align-items: center;
+  gap: 0.125rem;
+}
+
+/* A 14px icon in a 28px target; the negative margin keeps the title line height. */
+.infoTrigger {
+  display: inline-grid;
+  place-items: center;
+  flex: none;
+  width: 28px;
+  height: 28px;
+  margin-block: -0.375rem;
+  padding: 0;
+  border: 0;
+  border-radius: var(--radius-pill);
+  background: transparent;
+  color: var(--text-secondary);
+  cursor: help;
+}
+
+.infoTrigger:hover {
+  color: var(--foreground);
+}
+
+.cardInfo {
+  max-width: 18rem;
+  margin: 0;
+  font-size: var(--text-sm);
+  line-height: var(--leading-body);
+}
+
 .cardNote {
   margin: 0.25rem 0 0;
   font-size: var(--text-sm);
