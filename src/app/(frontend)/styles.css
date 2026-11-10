@@ -1116,6 +1116,11 @@ h1.article-title {
   line-height: 1.6;
   color: var(--text-secondary);
 }
+/* An admin may write a description in the other language from the page's. */
+.payload-form-description :is(p, li) {
+  unicode-bidi: plaintext;
+  text-align: start;
+}
 /* Each row is a 44px target; the square, not its target, lines up with the question's edge. */
 .payload-form-options {
   display: grid;
