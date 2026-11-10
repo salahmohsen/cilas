@@ -7,7 +7,7 @@ export interface RadioGroupProps {
   label: string
   /** Keeps the legend for screen readers only, when a heading nearby already names the group. */
   labelHidden?: boolean
-  options: { value: string; label: string; description?: string }[]
+  options: { value: string; label: string; description?: import('react').ReactNode }[]
   value: string
   onValueChange: (value: string) => void
   name?: string
@@ -108,9 +108,9 @@ export function RadioGroup({
     >
       <legend className={labelHidden ? 'sr-only' : undefined}>{label}</legend>
       {description ? (
-        <p className={styles.description} id={`${id}-description`}>
+        <div className={styles.description} id={`${id}-description`}>
           {description}
-        </p>
+        </div>
       ) : null}
       <div ref={listRef} className={styles.options}>
         <span ref={highlightRef} className={styles.highlight} aria-hidden="true" />

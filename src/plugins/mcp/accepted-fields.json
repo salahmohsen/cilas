@@ -128,7 +128,12 @@
     "meta",
     "meta.title",
     "meta.description",
-    "meta.image"
+    "meta.image",
+    "applicant_questions.phone.name",
+    "applicant_questions.phone.label",
+    "applicant_questions.phone.description",
+    "applicant_questions.phone.required",
+    "applicant_questions.phone.defaultCountry"
   ],
   "articles": [
     "title",

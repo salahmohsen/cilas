@@ -29,6 +29,7 @@ import { UnderlineFeatureClient as UnderlineFeatureClient_e70f5e05f09f93e00b997e
 import { BoldFeatureClient as BoldFeatureClient_e70f5e05f09f93e00b997edb1ef0c864 } from '@payloadcms/richtext-lexical/client'
 import { ItalicFeatureClient as ItalicFeatureClient_e70f5e05f09f93e00b997edb1ef0c864 } from '@payloadcms/richtext-lexical/client'
 import { BoolCell as BoolCell_f436cf2a4719114d9e44505773a04007 } from 'payload-theme/client'
+import { FixedToolbarFeatureClient as FixedToolbarFeatureClient_e70f5e05f09f93e00b997edb1ef0c864 } from '@payloadcms/richtext-lexical/client'
 import { EmailBlocksFeatureClient as EmailBlocksFeatureClient_00a2df3a8033428e8bac947916459878 } from '../../../lexical/legacy-features.client'
 import { CourseApplicants as CourseApplicants_790724bc9e120a628731f1789ae767f9 } from '../../../components/admin/applicants'
 import { FullFormPreview as FullFormPreview_6ef3535fb057c60d7e95ebd6192b5fc8 } from '../../../components/admin/full-form-preview'
@@ -41,7 +42,6 @@ import { MetaDescriptionComponent as MetaDescriptionComponent_a8a977ebc872c5d5ea
 import { MetaImageComponent as MetaImageComponent_a8a977ebc872c5d5ea7ee689724c0860 } from '@payloadcms/plugin-seo/client'
 import { PreviewComponent as PreviewComponent_a8a977ebc872c5d5ea7ee689724c0860 } from '@payloadcms/plugin-seo/client'
 import { VisualEditorController as VisualEditorController_3a8e3d5bdeeaec64e402b668680114ed } from 'payload-inline-visual-editor/client'
-import { FixedToolbarFeatureClient as FixedToolbarFeatureClient_e70f5e05f09f93e00b997edb1ef0c864 } from '@payloadcms/richtext-lexical/client'
 import { NewsletterActions as NewsletterActions_b0970b01e42603472424e6e40dd0fd9e } from '../../../components/admin/newsletter-actions'
 import { NewsletterStats as NewsletterStats_fdb33d0393a3d579112339a67c8ca7a7 } from '../../../components/admin/newsletter-stats'
 import { SubscribersLink as SubscribersLink_8812e7bc4e59e86dbe460c3e3c68a83f } from '../../../components/admin/subscribers-link'
@@ -118,6 +118,7 @@ export const importMap = {
   "@payloadcms/richtext-lexical/client#BoldFeatureClient": BoldFeatureClient_e70f5e05f09f93e00b997edb1ef0c864,
   "@payloadcms/richtext-lexical/client#ItalicFeatureClient": ItalicFeatureClient_e70f5e05f09f93e00b997edb1ef0c864,
   "payload-theme/client#BoolCell": BoolCell_f436cf2a4719114d9e44505773a04007,
+  "@payloadcms/richtext-lexical/client#FixedToolbarFeatureClient": FixedToolbarFeatureClient_e70f5e05f09f93e00b997edb1ef0c864,
   "/lexical/legacy-features.client#EmailBlocksFeatureClient": EmailBlocksFeatureClient_00a2df3a8033428e8bac947916459878,
   "/components/admin/applicants#CourseApplicants": CourseApplicants_790724bc9e120a628731f1789ae767f9,
   "/components/admin/full-form-preview#FullFormPreview": FullFormPreview_6ef3535fb057c60d7e95ebd6192b5fc8,
@@ -130,7 +131,6 @@ export const importMap = {
   "@payloadcms/plugin-seo/client#MetaImageComponent": MetaImageComponent_a8a977ebc872c5d5ea7ee689724c0860,
   "@payloadcms/plugin-seo/client#PreviewComponent": PreviewComponent_a8a977ebc872c5d5ea7ee689724c0860,
   "payload-inline-visual-editor/client#VisualEditorController": VisualEditorController_3a8e3d5bdeeaec64e402b668680114ed,
-  "@payloadcms/richtext-lexical/client#FixedToolbarFeatureClient": FixedToolbarFeatureClient_e70f5e05f09f93e00b997edb1ef0c864,
   "/components/admin/newsletter-actions#NewsletterActions": NewsletterActions_b0970b01e42603472424e6e40dd0fd9e,
   "/components/admin/newsletter-stats#NewsletterStats": NewsletterStats_fdb33d0393a3d579112339a67c8ca7a7,
   "/components/admin/subscribers-link#SubscribersLink": SubscribersLink_8812e7bc4e59e86dbe460c3e3c68a83f,

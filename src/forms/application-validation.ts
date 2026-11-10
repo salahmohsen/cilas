@@ -1,3 +1,4 @@
+import { isValidPhoneNumber, PHONE_NUMBER_ERROR } from '@/lib/phone'
 import type { CollectionBeforeChangeHook } from 'payload'
 import { courseRegistration } from '@/lib/registration'
 import { loadApplicationTarget } from './application-target'
@@ -84,6 +85,8 @@ export const checkApplication = (
       if (answer.value != null && typeof answer.value !== 'string') {
         return { error: `Answer “${question.label ?? question.name}” for ${course.title} again.` }
       }
+      if (question.blockType === 'phone' && answer.value && !isValidPhoneNumber(answer.value))
+        return { error: PHONE_NUMBER_ERROR }
       names.add(answer.name)
       snapshots.push({
         name: answer.name,
@@ -131,6 +134,12 @@ export const validateApplication = async (
     req,
   })
   if (form.template) throw new APIError('A template cannot receive submissions.', 400)
+  for (const question of form.fields ?? []) {
+    if (question.blockType !== 'phone') continue
+    const value = input.submissionData?.find((a) => a.field === question.name)?.value
+    if ((question.required && !value) || (value && !isValidPhoneNumber(value)))
+      throw new APIError(PHONE_NUMBER_ERROR, 400)
+  }
   const kind = input.target?.relationTo
   if (kind && !['cycles', 'courses', 'programmes'].includes(kind)) {
     throw new APIError('Choose what you are applying to.', 400)

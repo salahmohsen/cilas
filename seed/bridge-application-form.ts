@@ -1,4 +1,5 @@
 import path from 'path'
+import { questionDescription } from '../src/migrations/lib/question-description'
 import { getPayload } from 'payload'
 import type { Payload } from 'payload'
 
@@ -66,7 +67,14 @@ const lexical = (paragraphs: string[]) => ({
 })
 
 const text = (name: string, label: string, description?: string, required = true) =>
-  ({ blockType: 'text', name, label, description, required, width: 100 }) as Fields[number]
+  ({
+    blockType: 'text',
+    name,
+    label,
+    description: description ? questionDescription(description) : undefined,
+    required,
+    width: 100,
+  }) as Fields[number]
 const long = (
   name: string,
   label: string,
@@ -77,7 +85,7 @@ const long = (
     blockType: 'textarea',
     name,
     label,
-    description,
+    description: description ? questionDescription(description) : undefined,
     required: true,
     width: 100,
     ...extra,
@@ -202,8 +210,9 @@ const fields: Fields = [
     label: 'Last but not least',
     required: true,
     width: 100,
-    description:
+    description: questionDescription(
       'Tell us about your schedule preference and confirm your commitment to attending 80% of classes ready and keen to share your ideas and questions as well as to take turns at framing and moderating discussions.',
+    ),
     options: [
       {
         label:

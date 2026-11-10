@@ -19,12 +19,19 @@ import type { ToolContext } from '../types'
 
 type Locale = 'en' | 'ar'
 
-const blockFor = (question: Question & { name: string }, locale: Locale) => ({
+const blockFor = async (
+  payload: ToolContext['payload'],
+  question: Question & { name: string },
+  locale: Locale,
+) => ({
   blockType: question.type,
   name: question.name,
   required: question.required,
+  ...(question.type === 'phone' ? { defaultCountry: question.defaultCountry } : {}),
   ...(question.label[locale] ? { label: question.label[locale] } : {}),
-  ...(question.description?.[locale] ? { description: question.description[locale] } : {}),
+  ...(question.description?.[locale]
+    ? { description: await markdownToLexical(payload, 'question', question.description[locale]) }
+    : {}),
   ...('options' in question
     ? {
         options: question.options.map((option) => ({
@@ -243,7 +250,10 @@ export const createFormAndLinkTool = adminTool({
           }))
           const data = {
             title: input.title.en,
-            fields: [...templateBlocks, ...questions.map((q) => blockFor(q, 'en'))],
+            fields: [
+              ...templateBlocks,
+              ...(await Promise.all(questions.map((q) => blockFor(payload, q, 'en')))),
+            ],
             ...(input.submit_button_label ? { submitButtonLabel: input.submit_button_label } : {}),
             ...(confirmation
               ? { confirmationType: 'message', confirmationMessage: confirmation }
@@ -293,22 +303,24 @@ export const createFormAndLinkTool = adminTool({
                 ...(thanks
                   ? { confirmationMessage: await markdownToLexical(payload, 'default', thanks) }
                   : {}),
-                fields: (arabic.fields ?? []).map((block) => {
-                  const question = byName.get(blockName(block) ?? '')
-                  if (!question) return block
-                  const translated = blockFor(question, 'ar')
-                  const rows = 'options' in block ? (block.options ?? []) : []
-                  return {
-                    ...block,
-                    ...translated,
-                    ...(translated.options
-                      ? {
-                          options: translated.options.map((o, i) => ({ ...o, id: rows[i]?.id })),
-                        }
-                      : {}),
-                    id: block.id,
-                  }
-                }),
+                fields: await Promise.all(
+                  (arabic.fields ?? []).map(async (block) => {
+                    const question = byName.get(blockName(block) ?? '')
+                    if (!question) return block
+                    const translated = await blockFor(payload, question, 'ar')
+                    const rows = 'options' in block ? (block.options ?? []) : []
+                    return {
+                      ...block,
+                      ...translated,
+                      ...(translated.options
+                        ? {
+                            options: translated.options.map((o, i) => ({ ...o, id: rows[i]?.id })),
+                          }
+                        : {}),
+                      id: block.id,
+                    }
+                  }),
+                ),
               } as never,
               overrideAccess: false,
               user,

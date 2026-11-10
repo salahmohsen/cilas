@@ -52,7 +52,15 @@ async function prepare(
       continue
     }
     if (field.type === 'richText') {
-      value = await markdownToLexical(ctx.payload, name === 'body' ? 'article' : 'default', value)
+      value = await markdownToLexical(
+        ctx.payload,
+        name === 'body'
+          ? 'article'
+          : !!input.blockType && name === 'description'
+            ? 'question'
+            : 'default',
+        value,
+      )
       if (name === 'body') value = await resolveArticleMentions(value, ctx)
     } else if (field.type === 'array')
       value = await Promise.all(

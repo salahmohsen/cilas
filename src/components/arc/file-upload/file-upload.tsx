@@ -26,7 +26,7 @@ export interface FileUploadProps {
   accept?: string
   disabled?: boolean
   label?: string
-  description?: string
+  description?: import('react').ReactNode
   multiple?: boolean
   maxSize?: number
   value?: FileUploadItem[]
@@ -491,7 +491,7 @@ export function FileUpload({
               </Swap>
             </AnimatePresence>
           </strong>
-          <span id={`${inputId}-description`}>{description}</span>
+          <div id={`${inputId}-description`}>{description}</div>
         </span>
         <span className={styles.browse}>Browse</span>
       </div>

@@ -10,7 +10,7 @@ import styles from './checkbox.module.css'
 
 export interface CheckboxProps extends ComponentPropsWithoutRef<typeof CheckboxPrimitive.Root> {
   label?: string
-  description?: string
+  description?: import('react').ReactNode
 }
 
 /** Both marks share three points, so the check morphs into the dash and back instead of swapping. */
@@ -47,7 +47,11 @@ export const Checkbox = forwardRef<ElementRef<typeof CheckboxPrimitive.Root>, Ch
           checked={state}
           onCheckedChange={change}
           className={[styles.box, className].filter(Boolean).join(' ')}
-          aria-describedby={description ? `${controlId}-description` : undefined}
+          aria-describedby={
+            [props['aria-describedby'], description ? `${controlId}-description` : '']
+              .filter(Boolean)
+              .join(' ') || undefined
+          }
           aria-label={props['aria-label'] ?? (label ? undefined : 'Checkbox')}
         >
           <span className={styles.visual} aria-hidden="true">
@@ -87,7 +91,7 @@ export const Checkbox = forwardRef<ElementRef<typeof CheckboxPrimitive.Root>, Ch
         {label || description ? (
           <div className={styles.copy}>
             {label ? <label htmlFor={controlId}>{label}</label> : null}
-            {description ? <span id={`${controlId}-description`}>{description}</span> : null}
+            {description ? <div id={`${controlId}-description`}>{description}</div> : null}
           </div>
         ) : null}
       </div>

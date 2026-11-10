@@ -3,8 +3,11 @@
 import { useForm, useSelector, type AnyFieldApi } from '@tanstack/react-form'
 import { Check } from 'lucide-react'
 import { useLocale, useTranslations } from 'next-intl'
-import { Fragment, useEffect, useMemo, useRef, useState, type ReactNode } from 'react'
+import { useEffect, useMemo, useRef, useState, type ReactNode } from 'react'
 
+import { RichTextField } from '@/components/RichTextField'
+import { PhoneInput } from '@/components/arc/phone-input/phone-input'
+import { isValidPhoneNumber, PHONE_NUMBER_ERROR } from '@/lib/phone'
 import { Badge } from '@/components/arc/badge/badge'
 import { ElasticSlider } from '@/components/arc/elastic-slider/elastic-slider'
 import { localDigits } from '@/lib/digits'
@@ -53,31 +56,6 @@ const goodFiles = (value: Answer | undefined) =>
     : []
 const optionsOf = (q: Question) => ('options' in q && q.options ? q.options : [])
 const fieldId = (name: string) => `field-${name}`
-
-// An address in help text, without the punctuation that ends its sentence.
-const URL_PATTERN = /(https?:\/\/[^\s<>"]*[^\s<>".,;:!?)\]])/g
-
-function Linked({ text }: { text: string }) {
-  return (
-    <>
-      {text.split(URL_PATTERN).map((part, i) =>
-        i % 2 ? (
-          <a
-            className="payload-form-link"
-            href={part}
-            key={i}
-            rel="noopener noreferrer"
-            target="_blank"
-          >
-            {part.replace(/^https?:\/\/(www\.)?/, '').replace(/\/$/, '')}
-          </a>
-        ) : (
-          <Fragment key={i}>{part}</Fragment>
-        ),
-      )}
-    </>
-  )
-}
 
 export function PayloadForm({
   form,
@@ -150,6 +128,7 @@ export function PayloadForm({
           ? t('pickOne')
           : t('required')
         : undefined
+    if (q.blockType === 'phone' && !isValidPhoneNumber(String(value))) return PHONE_NUMBER_ERROR
     if (q.blockType === 'email' && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(String(value)))
       return t('email')
     if (q.blockType === 'textarea' && q.minWords) {
@@ -309,8 +288,32 @@ export function PayloadForm({
 
   const render = (q: Question, field: AnyFieldApi) => {
     const error = errorOf(field)
-    const description = ('description' in q && q.description) || undefined
+    const description =
+      'description' in q && q.description ? (
+        <RichTextField
+          data={q.description}
+          plain
+          className="article-prose payload-form-description"
+        />
+      ) : undefined
     switch (q.blockType) {
+      case 'phone':
+        return (
+          <>
+            <PhoneInput
+              id={fieldId(q.name)}
+              label={label(q)}
+              defaultCountry={q.defaultCountry ?? 'EG'}
+              value={String(field.state.value ?? '')}
+              onValueChange={(value) => field.handleChange(value)}
+              onBlur={field.handleBlur}
+              required={Boolean(q.required)}
+              error={error}
+              aria-describedby={description ? `${fieldId(q.name)}-description` : undefined}
+            />
+            {description ? <div id={`${fieldId(q.name)}-description`}>{description}</div> : null}
+          </>
+        )
       case 'fileUpload': {
         const items = (field.state.value as FileUploadItem[]) ?? []
         const help = t('fileHelp', {
@@ -321,7 +324,12 @@ export function PayloadForm({
           <div id={fieldId(q.name)} tabIndex={-1}>
             <FileUpload
               accept={acceptAttribute(q)}
-              description={description ? `${description} ${help}` : help}
+              description={
+                <>
+                  {description}
+                  <span>{help}</span>
+                </>
+              }
               label={label(q)}
               maxSize={maxBytes(q)}
               multiple={maxCount(q) > 1}
@@ -345,11 +353,7 @@ export function PayloadForm({
         const lead =
           description || image?.url ? (
             <>
-              {description ? (
-                <p className="whitespace-pre-line">
-                  <Linked text={description} />
-                </p>
-              ) : null}
+              {description ? <div>{description}</div> : null}
               {image?.url ? (
                 // eslint-disable-next-line @next/next/no-img-element
                 <img
@@ -390,7 +394,7 @@ export function PayloadForm({
       case 'radio':
         return (
           <RadioGroup
-            description={description ? <Linked text={description} /> : undefined}
+            description={description}
             error={error}
             label={label(q)}
             name={q.name}
@@ -405,7 +409,14 @@ export function PayloadForm({
         const chosen = (field.state.value as string[]) ?? []
         return (
           <fieldset
-            aria-describedby={error ? `${fieldId(q.name)}-error` : undefined}
+            aria-describedby={
+              [
+                description ? `${fieldId(q.name)}-description` : '',
+                error ? `${fieldId(q.name)}-error` : '',
+              ]
+                .filter(Boolean)
+                .join(' ') || undefined
+            }
             aria-invalid={error ? true : undefined}
             className="payload-form-group"
             onBlur={(e) => {
@@ -413,11 +424,7 @@ export function PayloadForm({
             }}
           >
             <legend>{label(q)}</legend>
-            {description ? (
-              <p className="payload-form-description">
-                <Linked text={description} />
-              </p>
-            ) : null}
+            {description ? <div id={`${fieldId(q.name)}-description`}>{description}</div> : null}
             <div className="payload-form-options">
               {optionsOf(q).map((o, i) => (
                 <Checkbox
@@ -464,7 +471,12 @@ export function PayloadForm({
         return (
           <Checkbox
             checked={Boolean(field.state.value)}
-            description={error ?? description}
+            description={
+              <>
+                {description}
+                {error ? <span role="alert">{error}</span> : null}
+              </>
+            }
             id={fieldId(q.name)}
             label={label(q)}
             onCheckedChange={(on) => field.handleChange(on === true)}
@@ -475,13 +487,7 @@ export function PayloadForm({
           <Input
             disabled={locked(q)}
             error={error}
-            lead={
-              description ? (
-                <p>
-                  <Linked text={description} />
-                </p>
-              ) : undefined
-            }
+            lead={description ? <div>{description}</div> : undefined}
             id={fieldId(q.name)}
             inputMode={
               q.blockType === 'number' ? 'decimal' : q.blockType === 'email' ? 'email' : undefined

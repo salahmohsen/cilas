@@ -183,3 +183,12 @@ it('refuses a course target with empty choices even for local creation', () => {
     ),
   ).toEqual({ error: 'Choose only Writing on this application.' })
 })
+
+it('refuses an invalid course phone answer', () => {
+  expect(
+    check(
+      [course({ applicant_questions: [{ blockType: 'phone', name: 'phone' }] })],
+      [choice({ answers: [{ name: 'phone', value: '+201001234567890' }] })],
+    ),
+  ).toEqual({ error: 'Enter a valid phone number with its country code.' })
+})

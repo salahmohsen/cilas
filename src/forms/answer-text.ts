@@ -1,5 +1,7 @@
+import { formatPhoneNumber } from '@/lib/phone'
+
 type Option = { label?: string | null; value?: string | null }
-type Question = { name?: string | null; options?: readonly Option[] | null }
+type Question = { blockType?: string; name?: string | null; options?: readonly Option[] | null }
 
 /**
  * A saved answer as people read it: each option value becomes its option's
@@ -8,6 +10,7 @@ type Question = { name?: string | null; options?: readonly Option[] | null }
  * it was saved.
  */
 export const answerText = (question: Question | undefined, value: string): string => {
+  if (question?.blockType === 'phone') return formatPhoneNumber(value)
   const labels = new Map(
     (question?.options ?? []).flatMap((o) => (o.value ? [[o.value, o.label || o.value]] : [])),
   )
@@ -21,7 +24,6 @@ export const answerText = (question: Question | undefined, value: string): strin
   )
 }
 
-/** `answerText` for answers saved under the names of `questions`. */
 export const answerTexts = (questions: readonly unknown[] | null | undefined) => {
   const byName = new Map(
     ((questions ?? []) as Question[]).flatMap((q) => (q.name ? [[q.name, q]] : [])),

@@ -1,3 +1,6 @@
+import { lexicalEditor } from '@payloadcms/richtext-lexical'
+import { questionDescriptionFeatures } from '@/lexical/question-description-features'
+import { PHONE_COUNTRIES } from '@/lib/phone'
 import { fields as builtIn } from '@payloadcms/plugin-form-builder'
 import type {
   Block,
@@ -23,7 +26,6 @@ import { nameQuestions, QUESTION_NAME, QUESTION_NAME_RULE } from './question-nam
 
 type BuiltIn = (typeof builtIn)[keyof typeof builtIn]
 
-/** Made once by nameQuestions from the label; an admin never sees or types it. */
 const questionName: TextField = {
   name: 'name',
   type: 'text',
@@ -56,7 +58,6 @@ const named = <B extends Parameters<typeof nameQuestions>[0][number]>(
   return blocks
 }
 
-/** Made once by nameQuestions from the option's label; an admin sees only the label. */
 const optionValue: TextField = {
   name: 'value',
   type: 'text',
@@ -83,7 +84,8 @@ const block = (b: BuiltIn): Block => {
 
 const description: Field = {
   name: 'description',
-  type: 'textarea',
+  type: 'richText',
+  editor: lexicalEditor({ features: questionDescriptionFeatures }),
   localized: true,
   admin: { description: 'Help text under the question.' },
 }
@@ -147,6 +149,23 @@ export const fileUpload: Block = {
   ],
 }
 
+export const phone: Block = {
+  slug: 'phone',
+  labels: { singular: 'Phone', plural: 'Phones' },
+  fields: [
+    questionName,
+    { name: 'label', type: 'text', localized: true },
+    description,
+    { name: 'required', type: 'checkbox' },
+    {
+      name: 'defaultCountry',
+      type: 'select',
+      defaultValue: 'EG',
+      options: PHONE_COUNTRIES.map((c) => ({ value: c.iso, label: c.name })),
+    },
+  ],
+}
+
 /**
  * The questions a course may add to its application (Courses →
  * applicant_questions): the answer fields, without email (the form asks it)
@@ -160,10 +179,14 @@ export const courseQuestionBlocks = (): Block[] => [
   formFields.checkbox,
   formFields.select,
   formFields.number,
+  phone,
   fileUpload,
 ]
 
 export const formFields = {
+  phone,
+  country: withDescription(builtIn.country),
+  state: withDescription(builtIn.state),
   text: withDescription(builtIn.text),
   textarea: withDescription(builtIn.textarea, [
     {
@@ -233,7 +256,6 @@ export const nameNewFormQuestions: CollectionBeforeValidateHook<Form> = ({ data,
       }
     : data
 
-/** Names a course's new applicant questions. */
 export const nameNewQuestions: FieldHook = ({ value, originalDoc }) =>
   Array.isArray(value)
     ? named('applicant_questions', value, { saved: originalDoc?.applicant_questions ?? [] })

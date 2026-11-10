@@ -1,3 +1,4 @@
+import { PHONE_COUNTRIES } from '@/lib/phone'
 import { z } from 'zod/v3'
 
 import type { formFields } from '@/forms/form-fields'
@@ -39,11 +40,22 @@ const questionName = z
 const common = {
   name: questionName.optional(),
   label: localizedText('The question', 200),
-  description: optionalLocalizedText('Help text under the question', 400),
+  description: optionalLocalizedText('Markdown help text under the question', 400),
   required: z.boolean().default(false).describe('Whether an answer is required.'),
 }
 
 export const questionSchema = z.discriminatedUnion('type', [
+  z.object({
+    type: z.literal('phone'),
+    ...common,
+    defaultCountry: z
+      .string()
+      .refine(
+        (value) => PHONE_COUNTRIES.some((c) => c.iso === value),
+        'Choose a supported ISO country code.',
+      )
+      .default('EG'),
+  }),
   z.object({ type: z.enum(TEXT_QUESTION_TYPES).describe('The kind of answer.'), ...common }),
   z.object({
     type: z

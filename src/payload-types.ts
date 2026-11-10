@@ -370,7 +370,21 @@ export interface Form {
             /**
              * Help text under the question.
              */
-            description?: string | null;
+            description?: {
+              root: {
+                type: string;
+                children: {
+                  type: any;
+                  version: number;
+                  [k: string]: unknown;
+                }[];
+                direction: ('ltr' | 'rtl') | null;
+                format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+                indent: number;
+                version: number;
+              };
+              [k: string]: unknown;
+            } | null;
             id?: string | null;
             blockName?: string | null;
             blockType: 'checkbox';
@@ -380,6 +394,24 @@ export interface Form {
             label?: string | null;
             width?: number | null;
             required?: boolean | null;
+            /**
+             * Help text under the question.
+             */
+            description?: {
+              root: {
+                type: string;
+                children: {
+                  type: any;
+                  version: number;
+                  [k: string]: unknown;
+                }[];
+                direction: ('ltr' | 'rtl') | null;
+                format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+                indent: number;
+                version: number;
+              };
+              [k: string]: unknown;
+            } | null;
             id?: string | null;
             blockName?: string | null;
             blockType: 'country';
@@ -392,7 +424,21 @@ export interface Form {
             /**
              * Help text under the question.
              */
-            description?: string | null;
+            description?: {
+              root: {
+                type: string;
+                children: {
+                  type: any;
+                  version: number;
+                  [k: string]: unknown;
+                }[];
+                direction: ('ltr' | 'rtl') | null;
+                format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+                indent: number;
+                version: number;
+              };
+              [k: string]: unknown;
+            } | null;
             id?: string | null;
             blockName?: string | null;
             blockType: 'email';
@@ -426,7 +472,21 @@ export interface Form {
             /**
              * Help text under the question.
              */
-            description?: string | null;
+            description?: {
+              root: {
+                type: string;
+                children: {
+                  type: any;
+                  version: number;
+                  [k: string]: unknown;
+                }[];
+                direction: ('ltr' | 'rtl') | null;
+                format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+                indent: number;
+                version: number;
+              };
+              [k: string]: unknown;
+            } | null;
             id?: string | null;
             blockName?: string | null;
             blockType: 'number';
@@ -448,7 +508,21 @@ export interface Form {
             /**
              * Help text under the question.
              */
-            description?: string | null;
+            description?: {
+              root: {
+                type: string;
+                children: {
+                  type: any;
+                  version: number;
+                  [k: string]: unknown;
+                }[];
+                direction: ('ltr' | 'rtl') | null;
+                format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+                indent: number;
+                version: number;
+              };
+              [k: string]: unknown;
+            } | null;
             id?: string | null;
             blockName?: string | null;
             blockType: 'select';
@@ -458,6 +532,24 @@ export interface Form {
             label?: string | null;
             width?: number | null;
             required?: boolean | null;
+            /**
+             * Help text under the question.
+             */
+            description?: {
+              root: {
+                type: string;
+                children: {
+                  type: any;
+                  version: number;
+                  [k: string]: unknown;
+                }[];
+                direction: ('ltr' | 'rtl') | null;
+                format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+                indent: number;
+                version: number;
+              };
+              [k: string]: unknown;
+            } | null;
             id?: string | null;
             blockName?: string | null;
             blockType: 'state';
@@ -471,7 +563,21 @@ export interface Form {
             /**
              * Help text under the question.
              */
-            description?: string | null;
+            description?: {
+              root: {
+                type: string;
+                children: {
+                  type: any;
+                  version: number;
+                  [k: string]: unknown;
+                }[];
+                direction: ('ltr' | 'rtl') | null;
+                format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+                indent: number;
+                version: number;
+              };
+              [k: string]: unknown;
+            } | null;
             id?: string | null;
             blockName?: string | null;
             blockType: 'text';
@@ -485,7 +591,21 @@ export interface Form {
             /**
              * Help text under the question.
              */
-            description?: string | null;
+            description?: {
+              root: {
+                type: string;
+                children: {
+                  type: any;
+                  version: number;
+                  [k: string]: unknown;
+                }[];
+                direction: ('ltr' | 'rtl') | null;
+                format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+                indent: number;
+                version: number;
+              };
+              [k: string]: unknown;
+            } | null;
             /**
              * An image the question asks about, shown above the answer.
              */
@@ -497,6 +617,85 @@ export interface Form {
             id?: string | null;
             blockName?: string | null;
             blockType: 'textarea';
+          }
+        | {
+            name: string;
+            label?: string | null;
+            /**
+             * Help text under the question.
+             */
+            description?: {
+              root: {
+                type: string;
+                children: {
+                  type: any;
+                  version: number;
+                  [k: string]: unknown;
+                }[];
+                direction: ('ltr' | 'rtl') | null;
+                format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+                indent: number;
+                version: number;
+              };
+              [k: string]: unknown;
+            } | null;
+            required?: boolean | null;
+            defaultCountry?:
+              | (
+                  | 'US'
+                  | 'CA'
+                  | 'MX'
+                  | 'BR'
+                  | 'AR'
+                  | 'CO'
+                  | 'CL'
+                  | 'PE'
+                  | 'GB'
+                  | 'IE'
+                  | 'FR'
+                  | 'DE'
+                  | 'ES'
+                  | 'IT'
+                  | 'PT'
+                  | 'NL'
+                  | 'BE'
+                  | 'CH'
+                  | 'AT'
+                  | 'SE'
+                  | 'NO'
+                  | 'DK'
+                  | 'FI'
+                  | 'PL'
+                  | 'CZ'
+                  | 'GR'
+                  | 'UA'
+                  | 'TR'
+                  | 'IL'
+                  | 'AE'
+                  | 'SA'
+                  | 'EG'
+                  | 'NG'
+                  | 'KE'
+                  | 'ZA'
+                  | 'IN'
+                  | 'PK'
+                  | 'CN'
+                  | 'JP'
+                  | 'KR'
+                  | 'TW'
+                  | 'HK'
+                  | 'SG'
+                  | 'PH'
+                  | 'ID'
+                  | 'TH'
+                  | 'VN'
+                  | 'AU'
+                  | 'NZ'
+                )
+              | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'phone';
           }
         | {
             name: string;
@@ -514,7 +713,21 @@ export interface Form {
             /**
              * Help text under the question.
              */
-            description?: string | null;
+            description?: {
+              root: {
+                type: string;
+                children: {
+                  type: any;
+                  version: number;
+                  [k: string]: unknown;
+                }[];
+                direction: ('ltr' | 'rtl') | null;
+                format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+                indent: number;
+                version: number;
+              };
+              [k: string]: unknown;
+            } | null;
             id?: string | null;
             blockName?: string | null;
             blockType: 'radio';
@@ -535,7 +748,21 @@ export interface Form {
             /**
              * Help text under the question.
              */
-            description?: string | null;
+            description?: {
+              root: {
+                type: string;
+                children: {
+                  type: any;
+                  version: number;
+                  [k: string]: unknown;
+                }[];
+                direction: ('ltr' | 'rtl') | null;
+                format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+                indent: number;
+                version: number;
+              };
+              [k: string]: unknown;
+            } | null;
             id?: string | null;
             blockName?: string | null;
             blockType: 'checkboxGroup';
@@ -546,7 +773,21 @@ export interface Form {
             /**
              * Help text under the question.
              */
-            description?: string | null;
+            description?: {
+              root: {
+                type: string;
+                children: {
+                  type: any;
+                  version: number;
+                  [k: string]: unknown;
+                }[];
+                direction: ('ltr' | 'rtl') | null;
+                format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+                indent: number;
+                version: number;
+              };
+              [k: string]: unknown;
+            } | null;
             /**
              * The kinds of file allowed.
              */
@@ -1110,7 +1351,21 @@ export interface Course {
             /**
              * Help text under the question.
              */
-            description?: string | null;
+            description?: {
+              root: {
+                type: string;
+                children: {
+                  type: any;
+                  version: number;
+                  [k: string]: unknown;
+                }[];
+                direction: ('ltr' | 'rtl') | null;
+                format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+                indent: number;
+                version: number;
+              };
+              [k: string]: unknown;
+            } | null;
             id?: string | null;
             blockName?: string | null;
             blockType: 'text';
@@ -1124,7 +1379,21 @@ export interface Course {
             /**
              * Help text under the question.
              */
-            description?: string | null;
+            description?: {
+              root: {
+                type: string;
+                children: {
+                  type: any;
+                  version: number;
+                  [k: string]: unknown;
+                }[];
+                direction: ('ltr' | 'rtl') | null;
+                format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+                indent: number;
+                version: number;
+              };
+              [k: string]: unknown;
+            } | null;
             /**
              * An image the question asks about, shown above the answer.
              */
@@ -1153,7 +1422,21 @@ export interface Course {
             /**
              * Help text under the question.
              */
-            description?: string | null;
+            description?: {
+              root: {
+                type: string;
+                children: {
+                  type: any;
+                  version: number;
+                  [k: string]: unknown;
+                }[];
+                direction: ('ltr' | 'rtl') | null;
+                format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+                indent: number;
+                version: number;
+              };
+              [k: string]: unknown;
+            } | null;
             id?: string | null;
             blockName?: string | null;
             blockType: 'radio';
@@ -1174,7 +1457,21 @@ export interface Course {
             /**
              * Help text under the question.
              */
-            description?: string | null;
+            description?: {
+              root: {
+                type: string;
+                children: {
+                  type: any;
+                  version: number;
+                  [k: string]: unknown;
+                }[];
+                direction: ('ltr' | 'rtl') | null;
+                format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+                indent: number;
+                version: number;
+              };
+              [k: string]: unknown;
+            } | null;
             id?: string | null;
             blockName?: string | null;
             blockType: 'checkboxGroup';
@@ -1188,7 +1485,21 @@ export interface Course {
             /**
              * Help text under the question.
              */
-            description?: string | null;
+            description?: {
+              root: {
+                type: string;
+                children: {
+                  type: any;
+                  version: number;
+                  [k: string]: unknown;
+                }[];
+                direction: ('ltr' | 'rtl') | null;
+                format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+                indent: number;
+                version: number;
+              };
+              [k: string]: unknown;
+            } | null;
             id?: string | null;
             blockName?: string | null;
             blockType: 'checkbox';
@@ -1210,7 +1521,21 @@ export interface Course {
             /**
              * Help text under the question.
              */
-            description?: string | null;
+            description?: {
+              root: {
+                type: string;
+                children: {
+                  type: any;
+                  version: number;
+                  [k: string]: unknown;
+                }[];
+                direction: ('ltr' | 'rtl') | null;
+                format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+                indent: number;
+                version: number;
+              };
+              [k: string]: unknown;
+            } | null;
             id?: string | null;
             blockName?: string | null;
             blockType: 'select';
@@ -1224,7 +1549,21 @@ export interface Course {
             /**
              * Help text under the question.
              */
-            description?: string | null;
+            description?: {
+              root: {
+                type: string;
+                children: {
+                  type: any;
+                  version: number;
+                  [k: string]: unknown;
+                }[];
+                direction: ('ltr' | 'rtl') | null;
+                format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+                indent: number;
+                version: number;
+              };
+              [k: string]: unknown;
+            } | null;
             id?: string | null;
             blockName?: string | null;
             blockType: 'number';
@@ -1235,7 +1574,100 @@ export interface Course {
             /**
              * Help text under the question.
              */
-            description?: string | null;
+            description?: {
+              root: {
+                type: string;
+                children: {
+                  type: any;
+                  version: number;
+                  [k: string]: unknown;
+                }[];
+                direction: ('ltr' | 'rtl') | null;
+                format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+                indent: number;
+                version: number;
+              };
+              [k: string]: unknown;
+            } | null;
+            required?: boolean | null;
+            defaultCountry?:
+              | (
+                  | 'US'
+                  | 'CA'
+                  | 'MX'
+                  | 'BR'
+                  | 'AR'
+                  | 'CO'
+                  | 'CL'
+                  | 'PE'
+                  | 'GB'
+                  | 'IE'
+                  | 'FR'
+                  | 'DE'
+                  | 'ES'
+                  | 'IT'
+                  | 'PT'
+                  | 'NL'
+                  | 'BE'
+                  | 'CH'
+                  | 'AT'
+                  | 'SE'
+                  | 'NO'
+                  | 'DK'
+                  | 'FI'
+                  | 'PL'
+                  | 'CZ'
+                  | 'GR'
+                  | 'UA'
+                  | 'TR'
+                  | 'IL'
+                  | 'AE'
+                  | 'SA'
+                  | 'EG'
+                  | 'NG'
+                  | 'KE'
+                  | 'ZA'
+                  | 'IN'
+                  | 'PK'
+                  | 'CN'
+                  | 'JP'
+                  | 'KR'
+                  | 'TW'
+                  | 'HK'
+                  | 'SG'
+                  | 'PH'
+                  | 'ID'
+                  | 'TH'
+                  | 'VN'
+                  | 'AU'
+                  | 'NZ'
+                )
+              | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'phone';
+          }
+        | {
+            name: string;
+            label?: string | null;
+            /**
+             * Help text under the question.
+             */
+            description?: {
+              root: {
+                type: string;
+                children: {
+                  type: any;
+                  version: number;
+                  [k: string]: unknown;
+                }[];
+                direction: ('ltr' | 'rtl') | null;
+                format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+                indent: number;
+                version: number;
+              };
+              [k: string]: unknown;
+            } | null;
             /**
              * The kinds of file allowed.
              */
@@ -3036,6 +3468,7 @@ export interface FormsSelect<T extends boolean = true> {
               label?: T;
               width?: T;
               required?: T;
+              description?: T;
               id?: T;
               blockName?: T;
             };
@@ -3096,6 +3529,7 @@ export interface FormsSelect<T extends boolean = true> {
               label?: T;
               width?: T;
               required?: T;
+              description?: T;
               id?: T;
               blockName?: T;
             };
@@ -3122,6 +3556,17 @@ export interface FormsSelect<T extends boolean = true> {
               description?: T;
               image?: T;
               minWords?: T;
+              id?: T;
+              blockName?: T;
+            };
+        phone?:
+          | T
+          | {
+              name?: T;
+              label?: T;
+              description?: T;
+              required?: T;
+              defaultCountry?: T;
               id?: T;
               blockName?: T;
             };
@@ -3412,6 +3857,17 @@ export interface CoursesSelect<T extends boolean = true> {
               defaultValue?: T;
               required?: T;
               description?: T;
+              id?: T;
+              blockName?: T;
+            };
+        phone?:
+          | T
+          | {
+              name?: T;
+              label?: T;
+              description?: T;
+              required?: T;
+              defaultCountry?: T;
               id?: T;
               blockName?: T;
             };

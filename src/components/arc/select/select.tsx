@@ -14,7 +14,7 @@ export interface SelectProps extends Omit<
   'children'
 > {
   label: string
-  description?: string
+  description?: import('react').ReactNode
   placeholder?: string
   id?: string
   className?: string

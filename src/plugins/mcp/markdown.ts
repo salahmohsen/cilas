@@ -1,3 +1,4 @@
+import { questionDescriptionFeatures } from '@/lexical/question-description-features'
 import { randomUUID } from 'node:crypto'
 import { convertMarkdownToLexical, editorConfigFactory } from '@payloadcms/richtext-lexical'
 import type { SerializedEditorState } from '@payloadcms/richtext-lexical/lexical'
@@ -14,7 +15,7 @@ const processor = unified().use(remarkParse).use(remarkGfm).use(remarkStringify)
 type MarkdownNode =
   | ReturnType<typeof processor.parse>
   | ReturnType<typeof processor.parse>['children'][number]
-export type MarkdownTarget = 'default' | 'article'
+export type MarkdownTarget = 'default' | 'article' | 'question'
 
 export const markdownToLexical = async (
   payload: Payload,
@@ -61,9 +62,14 @@ export const markdownToLexical = async (
       })
     return node
   }
-  const editorConfig = await (target === 'article'
-    ? editorConfigFactory.fromFeatures({ config: payload.config, features: articleBodyFeatures })
-    : editorConfigFactory.default({ config: payload.config }))
+  const editorConfig = await (target === 'question'
+    ? editorConfigFactory.fromFeatures({
+        config: payload.config,
+        features: questionDescriptionFeatures,
+      })
+    : target === 'article'
+      ? editorConfigFactory.fromFeatures({ config: payload.config, features: articleBodyFeatures })
+      : editorConfigFactory.default({ config: payload.config }))
   if (target !== 'article') return convertMarkdownToLexical({ editorConfig, markdown })
   const state = convertMarkdownToLexical({
     editorConfig,
