@@ -2,7 +2,10 @@ import type { CollectionConfig } from 'payload'
 
 import { isAdminUser } from '@/access'
 import { readSpaces } from '@/lib/spaces'
+import { spaceDeleteEndpoints } from '@/forms/space-delete'
+import { deleteSpaceBells, deleteSpaceContent } from '@/lib/space-delete'
 import { addIntroPost } from '@/lib/space-hooks'
+import { spaceDisplayName } from '@/lib/space-display-name'
 import { ABOUT_MAX } from '@/lib/space-rules'
 import { RULES_MAX } from '@/lib/space-consent'
 import type { CommunityAudience, EventPosting, PostingLevel, SpaceKind } from '@/lib/spaces'
@@ -21,11 +24,18 @@ export const Spaces: CollectionConfig = {
     read: readSpaces,
     create: ({ req }) => isAdminUser(req.user),
     update: ({ req }) => isAdminUser(req.user),
-    delete: ({ req }) => isAdminUser(req.user),
+    // Closed so the panel's stock delete never shows: admins delete through
+    // the "Delete space" dialog (src/forms/space-delete.ts), which shows what
+    // goes with the space first.
+    delete: () => false,
   },
+  endpoints: spaceDeleteEndpoints,
   admin: {
     group: 'Community',
-    defaultColumns: ['kind', 'course', 'programme', 'posting', 'reopened', 'updatedAt'],
+    components: {
+      edit: { editMenuItems: ['/components/admin/space-delete#SpaceDeleteMenuItem'] },
+    },
+    defaultColumns: ['display_name', 'kind', 'posting', 'reopened', 'updatedAt'],
   },
   fields: [
     {
@@ -141,8 +151,24 @@ export const Spaces: CollectionConfig = {
           'Made by the system from the Space introduction template when the space is created.',
       },
     },
+    {
+      // The list's "Name" column for every kind: a community's own name, or
+      // the title of the course or programme the space belongs to. Virtual,
+      // so it never goes stale when a course is renamed.
+      name: 'display_name',
+      label: 'Name',
+      type: 'text',
+      virtual: true,
+      // Worked out on read: Payload turns off sorting for a virtual column, and
+      // filtering is turned off here.
+      admin: { readOnly: true, condition: () => false, disableListFilter: true },
+      hooks: { afterRead: [spaceDisplayName] },
+    },
   ],
   hooks: {
+    // Child rows hold space_id NOT NULL, so their content goes first.
+    beforeDelete: [({ id, req }) => deleteSpaceContent(req, Number(id))],
+    afterDelete: [({ id, req }) => deleteSpaceBells(req, Number(id))],
     afterChange: [
       // However the space is made (a course or programme going live, or by hand
       // here), a course or cohort space opens with its intro post and its gate.

@@ -172,3 +172,14 @@
   border: 1px solid var(--theme-elevation-150);
   border-radius: 6px;
 }
+
+/* The name box in the "Delete space" dialog (src/components/admin/space-delete.tsx). */
+.cilas-space-delete-input {
+  width: 100%;
+  padding: 0.5rem 0.75rem;
+  border: 1px solid var(--theme-elevation-150);
+  border-radius: var(--style-radius-s);
+  background: var(--theme-input-bg);
+  color: var(--theme-text);
+  font: inherit;
+}

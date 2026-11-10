@@ -182,7 +182,7 @@ const editorsOf = async (payload: Payload, ids: number[]): Promise<Map<number, E
 }
 
 const recent = () =>
-  cachedStat<Change[]>('recent-changes-v4', async (payload) => {
+  cachedStat<Change[]>('recent-changes-v5', async (payload) => {
     const lists = await Promise.all(
       PIPELINE.map(async ({ slug, label }) => {
         const { docs } = await payload.find({
@@ -194,7 +194,7 @@ const recent = () =>
             cover_image: true,
             _status: true,
           },
-          populate: { media: { ...mediaPopulate, sizes: true } },
+          populate: { media: { ...mediaPopulate, sizes: true }, users: { email: true } },
           sort: '-updatedAt',
           limit: 8,
           depth: 1,
@@ -209,7 +209,11 @@ const recent = () =>
           cover:
             typeof doc.cover_image === 'object' ? (mediaThumbnail(doc.cover_image) ?? null) : null,
           at: doc.updatedAt,
-          editorId: typeof doc.last_edited_by === 'number' ? doc.last_edited_by : null,
+          // `depth: 1` (for the cover) populates the editor too; only its id is needed here.
+          editorId:
+            typeof doc.last_edited_by === 'object'
+              ? (doc.last_edited_by?.id ?? null)
+              : (doc.last_edited_by ?? null),
         }))
       }),
     )
