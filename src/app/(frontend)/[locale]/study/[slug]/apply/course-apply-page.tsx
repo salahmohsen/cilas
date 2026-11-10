@@ -13,7 +13,8 @@ import { RenderedForm } from '@/components/forms/rendered-form'
 import { Link } from '@/i18n/navigation'
 import { numberingSystemOf } from '@/lib/digits'
 import { courseRegistration } from '@/lib/registration'
-import type { Cycle, Form } from '@/payload-types'
+import { openCoursesInCycle } from '@/forms/open-courses'
+import type { Cycle } from '@/payload-types'
 
 export async function courseApplyMetadata(
   locale: string,
@@ -58,13 +59,24 @@ export async function CourseApplyPage({
     locale: lang,
     fallbackLocale: 'en',
   })
-  // The course's own questions after the form's. Their names take a prefix,
-  // so none can overwrite an answer to the shared form.
-  const extra = (course.applicant_questions ?? []).map((q) => ({
-    ...q,
-    name: `course_${q.name}`,
-  })) as unknown as NonNullable<Form['fields']>
-  const form = { ...shared, fields: [...(shared.fields ?? []), ...extra] }
+  const own = course.registration?.mode === 'own'
+  const available = own ? [course] : await openCoursesInCycle(payload, cycle!.id, reader)
+  const courses = await Promise.all(
+    available.map(async (item) => {
+      const localized = await payload.findByID({
+        collection: 'courses',
+        id: item.id,
+        locale: lang,
+        depth: 1,
+      })
+      return {
+        id: localized.id,
+        title: localized.title,
+        questions: localized.applicant_questions ?? [],
+        contribution: courseRegistration(localized, cycle).price,
+      }
+    }),
+  )
 
   const open = registration.status === 'open'
   const deadlineDay = registration.deadline
@@ -98,21 +110,13 @@ export async function CourseApplyPage({
         analytics={{ kind: 'course', id: course.slug }}
         back={{ href: back, label: t('backTo', { title: course.title }) }}
         disabled={!open}
-        form={form}
+        form={shared}
         target={
           course.registration?.mode === 'own'
             ? { relationTo: 'courses', value: course.id }
             : { relationTo: 'cycles', value: cycle!.id }
         }
-        courseChoice={
-          course.registration?.mode === 'own'
-            ? undefined
-            : {
-                course: course.id,
-                amount: registration.price?.options?.find((option) => option.default)?.amount,
-                questionNames: (course.applicant_questions ?? []).map((q) => q.name),
-              }
-        }
+        application={{ courses, initialCourse: course.id, selectable: !own }}
       />
     </div>
   )

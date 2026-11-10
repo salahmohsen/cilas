@@ -48,6 +48,15 @@ describe('the payload form', () => {
   let sent: { url: string; body: unknown; method: string }[] = []
 
   beforeEach(() => {
+    vi.stubGlobal(
+      'ResizeObserver',
+      class {
+        observe() {}
+        unobserve() {}
+        disconnect() {}
+      },
+    )
+    localStorage.clear()
     sent = []
     // jsdom draws nothing to scroll; Radix's list scrolls to the chosen item.
     Element.prototype.scrollIntoView = () => {}
@@ -130,9 +139,20 @@ describe('the payload form', () => {
     render(
       <PayloadForm
         confirmation={null}
-        form={formOf([{ blockType: 'text', name: 'course_reason', label: 'Why this course?' }])}
+        form={formOf([])}
         target={{ relationTo: 'cycles', value: 10 }}
-        courseChoice={{ course: 11, amount: 100, questionNames: ['reason'] }}
+        application={{
+          initialCourse: 11,
+          selectable: true,
+          courses: [
+            {
+              id: 11,
+              title: 'Writing',
+              questions: [{ blockType: 'text', name: 'reason', label: 'Why this course?' }],
+              contribution: { options: [{ amount: 100, default: true }] },
+            },
+          ],
+        }}
       />,
     )
     await waitFor(() =>
@@ -153,6 +173,153 @@ describe('the payload form', () => {
       ],
     })
     expect(body.submissionData).toHaveLength(2)
+  })
+
+  it('drops required course answers on untick and starts again empty', async () => {
+    render(
+      <PayloadForm
+        confirmation={null}
+        form={formOf([])}
+        application={{
+          initialCourse: 11,
+          selectable: true,
+          courses: [
+            { id: 11, title: 'Writing', questions: [], contribution: null },
+            {
+              id: 12,
+              title: 'Film',
+              questions: [
+                { blockType: 'text', name: 'reason', label: 'Why film?', required: true },
+              ],
+              contribution: null,
+            },
+          ],
+        }}
+      />,
+    )
+    fireEvent.click(screen.getByRole('checkbox', { name: 'Film' }))
+    await waitFor(() =>
+      expect(screen.getByRole('textbox', { name: /Name/ })).toHaveValue('Mona Adel'),
+    )
+    fireEvent.click(screen.getByRole('button', { name: /submit/i }))
+    await waitFor(() =>
+      expect(screen.getByRole('textbox', { name: 'Why film?' })).toHaveAttribute(
+        'aria-invalid',
+        'true',
+      ),
+    )
+    expect(sent.some((s) => s.method === 'POST')).toBe(false)
+    fireEvent.change(screen.getByRole('textbox', { name: 'Why film?' }), {
+      target: { value: 'Discard me' },
+    })
+    fireEvent.click(screen.getByRole('checkbox', { name: 'Film' }))
+    expect(screen.queryByRole('textbox', { name: 'Why film?' })).toBeNull()
+    fireEvent.click(screen.getByRole('checkbox', { name: 'Film' }))
+    expect(screen.getByRole('textbox', { name: 'Why film?' })).toHaveValue('')
+    fireEvent.click(screen.getByRole('checkbox', { name: 'Film' }))
+    await waitFor(() =>
+      expect(screen.getByRole('textbox', { name: /Name/ })).toHaveValue('Mona Adel'),
+    )
+    fireEvent.click(screen.getByRole('button', { name: /submit/i }))
+    await waitFor(() => expect(sent.some((s) => s.method === 'POST')).toBe(true))
+    expect(JSON.parse(String(sent.find((s) => s.method === 'POST')!.body)).choices).toEqual([
+      { course: 11, need_reduction: false, answers: [] },
+    ])
+  })
+
+  it('starts at the admin default and snaps uneven contribution amounts with keys', async () => {
+    render(
+      <PayloadForm
+        confirmation={null}
+        form={formOf([])}
+        application={{
+          initialCourse: 11,
+          selectable: false,
+          courses: [
+            {
+              id: 11,
+              title: 'Writing',
+              questions: [],
+              contribution: {
+                options: [{ amount: 900 }, { amount: 100 }, { amount: 350, default: true }],
+              },
+            },
+          ],
+        }}
+      />,
+    )
+    const slider = screen.getByRole('slider')
+    expect(slider).toHaveAttribute('aria-valuetext', 'amountEGP')
+    expect(slider).toHaveAttribute('aria-valuenow', '1')
+    fireEvent.keyDown(slider, { key: 'ArrowRight' })
+    expect(slider).toHaveAttribute('aria-valuenow', '2')
+    await waitFor(() =>
+      expect(screen.getByRole('textbox', { name: /Name/ })).toHaveValue('Mona Adel'),
+    )
+    fireEvent.click(screen.getByRole('button', { name: /submit/i }))
+    await waitFor(() => expect(sent.some((s) => s.method === 'POST')).toBe(true))
+    expect(JSON.parse(String(sent.find((s) => s.method === 'POST')!.body)).choices[0].amount).toBe(
+      900,
+    )
+  })
+
+  it('restores course selection, answers and contributions from the device draft', async () => {
+    const application = {
+      initialCourse: 11,
+      selectable: true,
+      courses: [
+        { id: 11, title: 'Writing', questions: [], contribution: null },
+        {
+          id: 12,
+          title: 'Film',
+          questions: [{ blockType: 'text' as const, name: 'reason', label: 'Why film?' }],
+          contribution: {
+            options: [{ amount: 100, default: true }, { amount: 900 }],
+            need_based_deductions: true,
+          },
+        },
+      ],
+    }
+    const view = render(
+      <PayloadForm confirmation={null} form={formOf([])} application={application} />,
+    )
+    fireEvent.click(screen.getByRole('checkbox', { name: 'Film' }))
+    fireEvent.change(screen.getByRole('textbox', { name: /Why film/ }), {
+      target: { value: 'Keep my answer' },
+    })
+    fireEvent.keyDown(screen.getByRole('slider'), { key: 'End' })
+    fireEvent.click(screen.getByRole('checkbox', { name: 'needReduction' }))
+    await waitFor(() => expect(localStorage.getItem('cilas-form-7')).toContain('Keep my answer'))
+    view.unmount()
+    render(<PayloadForm confirmation={null} form={formOf([])} application={application} />)
+    expect(screen.getByRole('checkbox', { name: 'Film' })).toBeChecked()
+    expect(screen.getByRole('textbox', { name: /Why film/ })).toHaveValue('Keep my answer')
+    expect(screen.getByRole('slider')).toHaveAttribute('aria-valuenow', '1')
+    expect(screen.getByRole('checkbox', { name: 'needReduction' })).toBeChecked()
+  })
+
+  it.each([100, 0])('shows a single contribution of %s without a slider', (amount) => {
+    render(
+      <PayloadForm
+        confirmation={null}
+        form={formOf([])}
+        application={{
+          initialCourse: 11,
+          selectable: false,
+          courses: [
+            {
+              id: 11,
+              title: 'Writing',
+              questions: [],
+              contribution: { options: [{ amount, default: true }] },
+            },
+          ],
+        }}
+      />,
+    )
+    expect(screen.queryByRole('slider')).toBeNull()
+    expect(screen.getByText(amount === 0 ? /free/ : /amountEGP/)).toBeVisible()
+    expect(screen.queryByRole('checkbox', { name: 'Writing' })).toBeNull()
   })
 
   it('shows an actionable server error and keeps the answers for correction', async () => {

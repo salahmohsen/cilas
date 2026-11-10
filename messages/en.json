@@ -585,6 +585,13 @@
     "alexandria": "Alexandria"
   },
   "Forms": {
+    "courses": "Choose courses",
+    "chooseCourse": "Choose at least one course.",
+    "extraQuestions": "Extra questions for this course",
+    "contribution": "Contribution",
+    "free": "Free",
+    "amountEGP": "{amount} EGP",
+    "needReduction": "I need a lower contribution",
     "preview": "Preview: submitting is turned off",
     "sent": "Application sent",
     "optional": "optional",

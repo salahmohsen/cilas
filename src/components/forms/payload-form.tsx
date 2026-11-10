@@ -2,8 +2,21 @@
 
 import { useForm, useSelector, type AnyFieldApi } from '@tanstack/react-form'
 import { Check } from 'lucide-react'
-import { useTranslations } from 'next-intl'
+import { useLocale, useTranslations } from 'next-intl'
 import { Fragment, useEffect, useMemo, useRef, useState, type ReactNode } from 'react'
+
+import { Badge } from '@/components/arc/badge/badge'
+import { ElasticSlider } from '@/components/arc/elastic-slider/elastic-slider'
+import { localDigits } from '@/lib/digits'
+import {
+  amountKey,
+  amountsOf,
+  courseField,
+  defaultAmount,
+  reductionKey,
+  selectedKey,
+  type ApplicationContext,
+} from './application-choices'
 
 import { Checkbox } from '@/components/arc/checkbox/checkbox'
 import { FileUpload, type FileUploadItem } from '@/components/arc/file-upload/file-upload'
@@ -14,7 +27,6 @@ import { Textarea } from '@/components/arc/textarea/textarea'
 import { useSpamCheck } from '@/components/forms/spam-check'
 import { useDraft } from '@/components/use-draft'
 import { useSession } from '@/components/use-session'
-import { choiceFileField } from '@/forms/application-input'
 import { isRtl } from '@/i18n/routing'
 import { Link } from '@/i18n/navigation'
 import { track } from '@/lib/analytics/track'
@@ -68,17 +80,6 @@ function Linked({ text }: { text: string }) {
   )
 }
 
-/**
- * A form built in the admin (Payload's form builder), answered here: each
- * question with its help text, essays with their image and a word count, and
- * the answers sent as a form submission. Mistakes show once a question is
- * left or a send is tried; sending with gaps moves to the first one. The
- * answers stay on the device until they are sent, so a long application
- * survives a closed tab.
- *
- * `notes` holds what the server rendered for the form's text blocks (by block
- * id) and `confirmation` the message shown once sent, closed by a link `back`.
- */
 export function PayloadForm({
   form,
   notes = {},
@@ -88,7 +89,7 @@ export function PayloadForm({
   disabled = false,
   preview = false,
   target,
-  courseChoice,
+  application,
   analytics,
 }: {
   form: Form
@@ -96,7 +97,7 @@ export function PayloadForm({
   confirmation: ReactNode
   back?: { href: string; label: string }
   target?: { relationTo: 'programmes' | 'courses' | 'cycles'; value: number }
-  courseChoice?: { course: number; amount?: number; questionNames: string[] }
+  application?: ApplicationContext
   analytics?: { kind: 'course' | 'programme'; id: string }
   /** The questions' language, when it is not the page's. */
   lang?: string
@@ -105,8 +106,20 @@ export function PayloadForm({
   preview?: boolean
 }) {
   const t = useTranslations('Forms')
+  const locale = useLocale()
   const blocks = form.fields ?? []
-  const questions = blocks.filter(isQuestion)
+  const sharedQuestions = blocks.filter(isQuestion)
+  const selectedCourses = (value: Values) =>
+    application?.courses.filter(
+      (c) =>
+        !application.selectable || ((value[selectedKey] as string[]) ?? []).includes(String(c.id)),
+    ) ?? []
+  const questionsFor = (value: Values) => [
+    ...sharedQuestions,
+    ...selectedCourses(value).flatMap((c) =>
+      c.questions.map((q) => ({ ...q, name: courseField(c.id, q.name) }) as Question),
+    ),
+  ]
   const draftKey = `cilas-form-${form.id}`
   const [sent, setSent] = useState(false)
   const [failed, setFailed] = useState<string | null>(null)
@@ -147,7 +160,6 @@ export function PayloadForm({
     return undefined
   }
 
-  // Answers as the admin reads them: the chosen options' labels, not their values.
   const readable = (q: Question, value: Answer): string => {
     const label = (v: string) => optionsOf(q).find((o) => o.value === v)?.label ?? v
     if (isFiles(q)) return ''
@@ -157,49 +169,51 @@ export function PayloadForm({
   }
 
   const api = useForm({
-    defaultValues: Object.fromEntries(questions.map((q) => [q.name, emptyFor(q)])) as Values,
+    defaultValues: {
+      ...Object.fromEntries(sharedQuestions.map((q) => [q.name, emptyFor(q)])),
+      ...(application
+        ? {
+            [selectedKey]: [String(application.initialCourse)],
+            ...Object.fromEntries(
+              application.courses.flatMap((c) => [
+                [amountKey(c.id), String(defaultAmount(c) ?? '')],
+                [reductionKey(c.id), false],
+              ]),
+            ),
+          }
+        : {}),
+    } as Values,
     onSubmit: async ({ value }) => {
       if (preview || disabled) return
       setFailed(null)
-      const answers = questions.map((q) => ({
+      const questions = questionsFor(value)
+      const answers = sharedQuestions.map((q) => ({
         field: q.name,
         value: readable(q, value[q.name] ?? emptyFor(q)),
       }))
-      const courseAnswer = (name: string) =>
-        courseChoice?.questionNames.includes(name.replace(/^course_/, '')) &&
-        name.startsWith('course_')
       const sent = {
         form: form.id,
         target,
-        submissionData: courseChoice ? answers.filter((a) => !courseAnswer(a.field)) : answers,
-        ...(courseChoice
+        submissionData: answers,
+        ...(application
           ? {
-              choices: [
-                {
-                  course: courseChoice.course,
-                  amount: courseChoice.amount,
-                  answers: answers
-                    .filter((a) => courseAnswer(a.field))
-                    .map((a) => ({ name: a.field.slice(7), value: a.value })),
-                },
-              ],
+              choices: selectedCourses(value).map((c) => ({
+                course: c.id,
+                amount: value[amountKey(c.id)] === '' ? undefined : Number(value[amountKey(c.id)]),
+                need_reduction: Boolean(value[reductionKey(c.id)]),
+                answers: c.questions.map((q) => ({
+                  name: q.name,
+                  value: readable(
+                    q as Question,
+                    value[courseField(c.id, q.name)] ?? emptyFor(q as Question),
+                  ),
+                })),
+              })),
             }
           : {}),
       }
-      // With files, answers and files go in one request: the spam check's
-      // token passes once (src/forms/submit-with-files.ts).
       const files = questions.flatMap((q) =>
-        isFiles(q)
-          ? goodFiles(value[q.name]).map(
-              (i) =>
-                [
-                  courseChoice && courseAnswer(q.name)
-                    ? choiceFileField(courseChoice.course, q.name.slice(7))
-                    : q.name,
-                  i.file,
-                ] as const,
-            )
-          : [],
+        isFiles(q) ? goodFiles(value[q.name]).map((i) => [q.name, i.file] as const) : [],
       )
       const res = await spam.submit(sent, files).catch(() => undefined)
       if (res === undefined || (res !== null && !res.ok)) {
@@ -213,13 +227,16 @@ export function PayloadForm({
       top.current?.scrollIntoView({ behavior: 'smooth', block: 'start' })
     },
     onSubmitInvalid: ({ formApi }) => {
-      const first = questions.find((q) => formApi.getFieldMeta(q.name)?.errors.length)
+      const first = questionsFor(formApi.state.values).find(
+        (q) => formApi.getFieldMeta(q.name)?.errors.length,
+      )
       if (first) document.getElementById(fieldId(first.name))?.focus()
     },
   })
 
   const values = useSelector(api.store, (s) => s.values)
-  // As one string, so the effect below sees it change only when the questions do.
+  const questions = questionsFor(values)
+  const chosen = selectedCourses(values)
   const fileNames = questions
     .filter(isFiles)
     .map((q) => q.name)
@@ -228,8 +245,6 @@ export function PayloadForm({
     .filter((q) => q.name === 'email' || q.name === 'name')
     .map((q) => q.name)
     .join('\n')
-  // Files cannot be kept on the device; the rest of the answers are, except
-  // what a signed-in account holds (its identity, not a draft).
   const skip = me ? [...givenNames.split('\n'), ...fileNames.split('\n')] : fileNames.split('\n')
   const { clear: clearDraft } = useDraft<Values>(draftKey, {
     enabled: !disabled && !preview,
@@ -239,14 +254,24 @@ export function PayloadForm({
           Object.entries(values).filter(([name]) => !skip.includes(name) && name !== ''),
         ),
     onRestore: (saved) => {
-      for (const q of questions)
-        if (q.name in saved && !isFiles(q))
-          api.setFieldValue(q.name, saved[q.name]!, { dontUpdateMeta: true })
+      const restored = { ...api.state.values, ...saved }
+      const allowed = new Set(
+        questionsFor(restored)
+          .filter((q) => !isFiles(q))
+          .map((q) => q.name),
+      )
+      if (application) {
+        allowed.add(selectedKey)
+        for (const c of application.courses) {
+          allowed.add(amountKey(c.id))
+          allowed.add(reductionKey(c.id))
+        }
+      }
+      for (const [name, value] of Object.entries(saved))
+        if (allowed.has(name)) api.setFieldValue(name, value, { dontUpdateMeta: true })
     },
   })
 
-  // When the identity arrives it wins over any draft: the account's answers
-  // are set and nothing of theirs sits in the draft on a shared device.
   useEffect(() => {
     if (me) {
       if (givenNames.includes('email')) api.setFieldValue('email', me.email)
@@ -475,6 +500,30 @@ export function PayloadForm({
     }
   }
 
+  const renderQuestion = (q: Question) => (
+    <api.Field
+      key={q.name}
+      name={q.name}
+      validators={{
+        onBlur: ({ value }) => check(q, value ?? emptyFor(q)),
+        onChange: ({ value }) => check(q, value ?? emptyFor(q)),
+        onSubmit: ({ value }) => check(q, value ?? emptyFor(q)),
+      }}
+    >
+      {(field) => <div className="payload-form-question">{render(q, field)}</div>}
+    </api.Field>
+  )
+  const renderBlock = (block: Block, i: number) =>
+    block.blockType === 'message' ? (
+      <div className="payload-form-note" key={block.id ?? i}>
+        {notes[block.id ?? ''] ?? null}
+      </div>
+    ) : isQuestion(block) ? (
+      renderQuestion(block)
+    ) : null
+  const money = (amount: number) =>
+    amount === 0 ? t('free') : t('amountEGP', { amount: localDigits(amount, locale) })
+
   return (
     <form
       className="payload-form"
@@ -494,30 +543,119 @@ export function PayloadForm({
     >
       <div ref={top} />
       <fieldset className="payload-form-questions" disabled={disabled}>
-        {blocks.map((block, i) => {
-          if (block.blockType === 'message') {
-            return (
-              <div className="payload-form-note" key={block.id ?? i}>
-                {notes[block.id ?? ''] ?? null}
-              </div>
-            )
-          }
-          if (!isQuestion(block)) return null
-          const q = block
-          return (
-            <api.Field
-              key={q.id ?? q.name}
-              name={q.name}
-              validators={{
-                onBlur: ({ value }) => check(q, value),
-                onChange: ({ value }) => check(q, value),
-                onSubmit: ({ value }) => check(q, value),
-              }}
-            >
-              {(field) => <div className="payload-form-question">{render(q, field)}</div>}
-            </api.Field>
-          )
-        })}
+        {application ? (
+          <>
+            {sharedQuestions
+              .filter((q) => q.name === 'name' || q.name === 'email')
+              .map(renderQuestion)}
+            {application.selectable ? (
+              <api.Field
+                name={selectedKey}
+                validators={{
+                  onChange: ({ value }) =>
+                    (value as string[]).length ? undefined : t('chooseCourse'),
+                  onSubmit: ({ value }) =>
+                    (value as string[]).length ? undefined : t('chooseCourse'),
+                }}
+              >
+                {(field) => (
+                  <fieldset className="payload-form-group">
+                    <legend>{t('courses')}</legend>
+                    <div className="payload-form-options">
+                      {application.courses.map((c) => (
+                        <Checkbox
+                          key={c.id}
+                          label={c.title}
+                          checked={chosen.some((x) => x.id === c.id)}
+                          onCheckedChange={(on) => {
+                            const ids = field.state.value as string[]
+                            if (!on) {
+                              for (const q of c.questions)
+                                api.deleteField(courseField(c.id, q.name))
+                              api.setFieldValue(amountKey(c.id), String(defaultAmount(c) ?? ''))
+                              api.setFieldValue(reductionKey(c.id), false)
+                            }
+                            field.handleChange(
+                              on ? [...ids, String(c.id)] : ids.filter((id) => id !== String(c.id)),
+                            )
+                          }}
+                        />
+                      ))}
+                    </div>
+                    {errorOf(field) ? (
+                      <p className="payload-form-error" role="alert">
+                        {errorOf(field)}
+                      </p>
+                    ) : null}
+                  </fieldset>
+                )}
+              </api.Field>
+            ) : null}
+            {blocks
+              .filter((b) => !isQuestion(b) || (b.name !== 'name' && b.name !== 'email'))
+              .map(renderBlock)}
+            {chosen.map((c) => {
+              const amounts = amountsOf(c)
+              return (
+                <section className="grid min-w-0 gap-6" key={c.id} aria-label={c.title}>
+                  <div>
+                    <Badge>
+                      <span className="whitespace-normal">{c.title}</span>
+                    </Badge>
+                  </div>
+                  {c.questions.length ? <p>{t('extraQuestions')}</p> : null}
+                  {c.questions.map((q) =>
+                    renderQuestion({ ...q, name: courseField(c.id, q.name) } as Question),
+                  )}
+                  {amounts.length > 1 ? (
+                    <api.Field name={amountKey(c.id)}>
+                      {(field) => (
+                        <div className="overflow-x-clip">
+                          <ElasticSlider
+                            label={t('contribution')}
+                            disabled={disabled}
+                            min={0}
+                            max={amounts.length - 1}
+                            step={1}
+                            value={Math.max(0, amounts.indexOf(Number(field.state.value)))}
+                            marks={amounts.map((amount, i) => ({
+                              value: i,
+                              label: localDigits(amount, locale),
+                            }))}
+                            format={(index) => money(amounts[index]!)}
+                            onValueChange={(index) => field.handleChange(String(amounts[index]))}
+                          />
+                        </div>
+                      )}
+                    </api.Field>
+                  ) : amounts.length === 1 ? (
+                    <p>
+                      {t('contribution')}: {money(amounts[0]!)}
+                    </p>
+                  ) : null}
+                  {c.contribution?.need_based_deductions ? (
+                    <api.Field name={reductionKey(c.id)}>
+                      {(field) => (
+                        <Checkbox
+                          label={t('needReduction')}
+                          checked={Boolean(field.state.value)}
+                          onCheckedChange={(on) => field.handleChange(on === true)}
+                        />
+                      )}
+                    </api.Field>
+                  ) : null}
+                  {c.contribution?.note ? (
+                    <p className="payload-form-description whitespace-pre-line">
+                      {c.contribution.note}
+                    </p>
+                  ) : null}
+                </section>
+              )
+            })}
+          </>
+        ) : (
+          blocks.map(renderBlock)
+        )}
       </fieldset>
 
       {disabled || preview ? null : spam.fields}

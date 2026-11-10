@@ -585,6 +585,13 @@
     "alexandria": "الإسكندرية"
   },
   "Forms": {
+    "courses": "اختر المقررات",
+    "chooseCourse": "اختر مقرراً واحداً على الأقل.",
+    "extraQuestions": "أسئلة إضافية لهذا المقرر",
+    "contribution": "المساهمة",
+    "free": "مجاني",
+    "amountEGP": "{amount} جنيه مصري",
+    "needReduction": "أحتاج إلى مساهمة أقل",
     "preview": "معاينة: الإرسال متوقف",
     "sent": "أُرسل طلبك",
     "optional": "اختياري",
