@@ -89,7 +89,7 @@ const RENDER: Record<WidgetSlug, (props: NativeProps) => Promise<ReactNode>> = {
 
 /**
  * PostHog widgets (`analytics`): nothing at all without the PostHog settings,
- * and nothing (rather than an error card) when PostHog is slow or fails.
+ * and "Could not load from PostHog" when PostHog is slow or fails.
  */
 export function DashboardWidget({ req, user, widgetSlug }: NativeProps & { widgetSlug: string }) {
   const entry = dashboardEntries.find((candidate) => candidate.slug === widgetSlug)
@@ -99,7 +99,7 @@ export function DashboardWidget({ req, user, widgetSlug }: NativeProps & { widge
     <Isolated
       title={entry.title ?? entry.label}
       render={() => render({ req, user })}
-      quiet={entry.analytics}
+      source={entry.analytics ? 'PostHog' : undefined}
     />
   )
 }

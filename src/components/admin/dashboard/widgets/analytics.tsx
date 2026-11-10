@@ -40,7 +40,7 @@ import { WidgetCard } from '../widget-card'
 
 const PERIOD = 'Last 30 days'
 const VISITOR_NOTE =
-  'A visitor is one person on one day. Without cookies, a person who comes back on another day counts again. Staff devices are not counted.'
+  'A visitor is one person on one day. The site sets no cookies, so a person who comes back on another day counts again, and a 30-day total counts each day of a visit. Devices that opened the admin panel are not counted.'
 
 const openIn = (path: string, label = 'Open in PostHog') => {
   const href = posthogLink(path)
@@ -73,7 +73,7 @@ function RankedList({ items, total, unit }: { items: Ranked[]; total: number; un
 export async function Visitors() {
   const traffic = trafficFrom(await posthogRows('daily'))
   return (
-    <WidgetCard title="Visitors" description={PERIOD}>
+    <WidgetCard title="Visitors" description={PERIOD} info={VISITOR_NOTE}>
       <Sparkline
         area
         change={traffic.visitorsChange ?? undefined}
@@ -108,7 +108,7 @@ export async function TrafficOverTime() {
   const traffic = trafficFrom(await posthogRows('daily'))
   const axis = thinAxis(traffic.views, 5)
   return (
-    <WidgetCard title="Traffic" description={`${PERIOD}. ${VISITOR_NOTE}`}>
+    <WidgetCard title="Traffic" description={PERIOD} info={VISITOR_NOTE}>
       <LineChart
         categoryLabel="Day"
         data={axis.map((point, i) => ({
@@ -211,6 +211,7 @@ export async function TrafficSources() {
     <WidgetCard
       title="Where visitors come from"
       description={`${PERIOD}. Campaign tags (utm_source) count as the source.`}
+      info={VISITOR_NOTE}
     >
       {sources.length === 0 ? (
         <EmptyState
@@ -247,7 +248,11 @@ export async function Audience() {
     />
   )
   return (
-    <WidgetCard title="Audience" description={PERIOD}>
+    <WidgetCard
+      title="Audience"
+      description={PERIOD}
+      info={`${VISITOR_NOTE} The time zone comes from the browser. In cookieless mode, PostHog removes the IP address before it can find a country.`}
+    >
       <div className={styles.pair}>
         <div>
           <h3 className={styles.subhead}>Language</h3>
@@ -288,6 +293,7 @@ export async function ApplyFunnel() {
     <WidgetCard
       title="Application funnel"
       description={`${PERIOD}. Share of the visitors who opened an application page.`}
+      info={VISITOR_NOTE}
     >
       {first === 0 ? (
         <EmptyState

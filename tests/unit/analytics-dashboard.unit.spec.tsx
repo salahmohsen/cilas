@@ -74,15 +74,26 @@ describe('analytics widgets', () => {
   })
 })
 
+describe('widget notes', () => {
+  it('keeps what a visitor means behind an info button, not in the card text', async () => {
+    rows.current.funnel = [['viewed', 10]]
+    render(await ApplyFunnel())
+    const info = screen.getByRole('button', { name: 'About Application funnel' })
+    expect(info).toBeInTheDocument()
+    expect(screen.queryByText(/one person on one day/)).not.toBeInTheDocument()
+  })
+})
+
 describe('a failing PostHog', () => {
   const failing = async () => {
     throw new Error('PostHog query failed with status 500')
   }
 
-  it('hides a quiet widget and leaves nothing behind', async () => {
+  it('says PostHog failed, and logs only the message, never the key', async () => {
     const spy = vi.spyOn(console, 'error').mockImplementation(() => {})
-    const { container } = render(await Guarded({ title: 'Traffic', render: failing, quiet: true }))
-    expect(container).toBeEmptyDOMElement()
+    render(await Guarded({ title: 'Traffic', render: failing, source: 'PostHog' }))
+    expect(screen.getByRole('heading', { name: 'Traffic' })).toBeInTheDocument()
+    expect(screen.getByText('Could not load from PostHog')).toBeInTheDocument()
     expect(spy.mock.calls[0]?.[1]).toBe('PostHog query failed with status 500')
     spy.mockRestore()
   })

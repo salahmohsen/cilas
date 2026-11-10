@@ -6,28 +6,33 @@ import { Skeleton } from '@/components/arc/skeleton/skeleton'
 import styles from './dashboard.module.css'
 import { WidgetCard } from './widget-card'
 
-/** A widget that fails shows a quiet message and leaves the rest of the page alone. */
+/**
+ * A widget that fails says so and leaves the rest of the page alone. `source`
+ * names an outside service the data comes from, as PostHog; only its error
+ * message is logged, which never holds the key.
+ */
 export async function Guarded({
   title,
   render,
-  quiet = false,
+  source,
 }: {
   title: string
   render: () => Promise<ReactNode>
-  /** On a failure show nothing, not a message: for a source that may be off or slow (analytics). */
-  quiet?: boolean
+  source?: string
 }) {
   try {
     return await render()
   } catch (error) {
     console.error(
       `Dashboard widget "${title}" failed`,
-      quiet && error instanceof Error ? error.message : error,
+      source && error instanceof Error ? error.message : error,
     )
-    if (quiet) return null
     return (
       <WidgetCard title={title}>
-        <EmptyState title="Could not load" description="Reload the page to try again." />
+        <EmptyState
+          title={source ? `Could not load from ${source}` : 'Could not load'}
+          description="Reload the page to try again."
+        />
       </WidgetCard>
     )
   }
@@ -37,11 +42,11 @@ export async function Guarded({
 export function Isolated({
   title,
   render,
-  quiet = false,
+  source,
 }: {
   title: string
   render: () => Promise<ReactNode>
-  quiet?: boolean
+  source?: string
 }) {
   return (
     <Suspense
@@ -51,7 +56,7 @@ export function Isolated({
         </div>
       }
     >
-      <Guarded title={title} render={render} quiet={quiet} />
+      <Guarded title={title} render={render} source={source} />
     </Suspense>
   )
 }
