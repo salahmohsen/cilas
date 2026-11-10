@@ -7,6 +7,7 @@ import { pricingField } from '@/fields/pricing'
 import { registrationField } from '@/fields/registration'
 import { slugField } from '@/fields/slug'
 import { importFields } from '@/fields/import'
+import { deleteOwnedSpaces } from '@/lib/space-delete'
 import { ensureSpaceFor } from '@/lib/space-hooks'
 
 /**
@@ -184,5 +185,8 @@ export const Programmes: CollectionConfig = {
       ],
     },
   ],
-  hooks: { afterChange: [ensureSpaceFor('cohort')] },
+  hooks: {
+    afterChange: [ensureSpaceFor('cohort')],
+    beforeDelete: [deleteOwnedSpaces('programme')],
+  },
 }

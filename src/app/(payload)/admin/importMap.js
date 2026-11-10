@@ -42,6 +42,7 @@ import { NewsletterStats as NewsletterStats_fdb33d0393a3d579112339a67c8ca7a7 } f
 import { SubscribersLink as SubscribersLink_8812e7bc4e59e86dbe460c3e3c68a83f } from '../../../components/admin/subscribers-link'
 import { SyncListButton as SyncListButton_349ee99818603183cd08a332839d03c9 } from '../../../components/admin/sync-list-button'
 import { MediaListToggle as MediaListToggle_f436cf2a4719114d9e44505773a04007 } from 'payload-theme/client'
+import { SpaceDeleteMenuItem as SpaceDeleteMenuItem_fe373f97965e49e7953f966d24057638 } from '../../../components/admin/space-delete'
 import { FormatField as FormatField_cdf7e044479f899a31f804427d568b36 } from '@payloadcms/plugin-import-export/rsc'
 import { LimitField as LimitField_cdf7e044479f899a31f804427d568b36 } from '@payloadcms/plugin-import-export/rsc'
 import { Page as Page_cdf7e044479f899a31f804427d568b36 } from '@payloadcms/plugin-import-export/rsc'
@@ -124,6 +125,7 @@ export const importMap = {
   "/components/admin/subscribers-link#SubscribersLink": SubscribersLink_8812e7bc4e59e86dbe460c3e3c68a83f,
   "/components/admin/sync-list-button#SyncListButton": SyncListButton_349ee99818603183cd08a332839d03c9,
   "payload-theme/client#MediaListToggle": MediaListToggle_f436cf2a4719114d9e44505773a04007,
+  "/components/admin/space-delete#SpaceDeleteMenuItem": SpaceDeleteMenuItem_fe373f97965e49e7953f966d24057638,
   "@payloadcms/plugin-import-export/rsc#FormatField": FormatField_cdf7e044479f899a31f804427d568b36,
   "@payloadcms/plugin-import-export/rsc#LimitField": LimitField_cdf7e044479f899a31f804427d568b36,
   "@payloadcms/plugin-import-export/rsc#Page": Page_cdf7e044479f899a31f804427d568b36,

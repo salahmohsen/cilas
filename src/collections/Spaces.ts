@@ -2,6 +2,8 @@ import type { CollectionConfig } from 'payload'
 
 import { isAdminUser } from '@/access'
 import { readSpaces } from '@/lib/spaces'
+import { spaceDeleteEndpoints } from '@/forms/space-delete'
+import { deleteSpaceBells, deleteSpaceContent } from '@/lib/space-delete'
 import { addIntroPost } from '@/lib/space-hooks'
 import { ABOUT_MAX } from '@/lib/space-rules'
 import { RULES_MAX } from '@/lib/space-consent'
@@ -21,10 +23,17 @@ export const Spaces: CollectionConfig = {
     read: readSpaces,
     create: ({ req }) => isAdminUser(req.user),
     update: ({ req }) => isAdminUser(req.user),
-    delete: ({ req }) => isAdminUser(req.user),
+    // Closed so the panel's stock delete never shows: admins delete through
+    // the "Delete space" dialog (src/forms/space-delete.ts), which shows what
+    // goes with the space first.
+    delete: () => false,
   },
+  endpoints: spaceDeleteEndpoints,
   admin: {
     group: 'Community',
+    components: {
+      edit: { editMenuItems: ['/components/admin/space-delete#SpaceDeleteMenuItem'] },
+    },
     defaultColumns: ['kind', 'course', 'programme', 'posting', 'reopened', 'updatedAt'],
   },
   fields: [
@@ -143,6 +152,9 @@ export const Spaces: CollectionConfig = {
     },
   ],
   hooks: {
+    // Child rows hold space_id NOT NULL, so their content goes first.
+    beforeDelete: [({ id, req }) => deleteSpaceContent(req, Number(id))],
+    afterDelete: [({ id, req }) => deleteSpaceBells(req, Number(id))],
     afterChange: [
       // However the space is made (a course or programme going live, or by hand
       // here), a course or cohort space opens with its intro post and its gate.

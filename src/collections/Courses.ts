@@ -35,6 +35,7 @@ import type {
 } from 'payload'
 import type { Course } from '@/payload-types'
 import { importFields } from '@/fields/import'
+import { deleteOwnedSpaces } from '@/lib/space-delete'
 import { revalidateAfterChange, revalidateAfterDelete } from '@/lib/revalidate'
 import { lastEditedByField, stampLastEditor } from '@/fields/last-edited-by'
 
@@ -457,6 +458,7 @@ export const Courses: CollectionConfig = {
       ensureSpaceFor('course'),
       announceScheduleChanges,
     ],
+    beforeDelete: [deleteOwnedSpaces('course')],
     afterDelete: [revokeDeletedCourseFellows, revalidateAfterDelete('courses')],
   },
 }
