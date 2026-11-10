@@ -26,6 +26,9 @@ it('copies old single-course and JSON results into relationships and typed outco
     data: {
       form: f.form.id,
       target: { relationTo: 'courses', value: f.courses[0].id },
+      choices: [
+        { course: f.courses[0].id, amount: 100, answers: [{ name: 'reason', value: 'Migration' }] },
+      ],
       submissionData: [
         { field: 'name', value: 'Migration applicant' },
         { field: 'email', value: 'migration@cilas.test' },

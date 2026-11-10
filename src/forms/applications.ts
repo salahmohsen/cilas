@@ -192,16 +192,9 @@ const accept = async (req: PayloadRequest, id: number): Promise<Accepted | null>
 
   const kind = submission.target.relationTo
   const targetId = idOf(submission.target.value)!
-  const courseIds =
-    kind === 'programmes'
-      ? []
-      : submission.choices?.length
-        ? submission.choices
-            .filter((choice) => choice.accepted === true)
-            .map((choice) => idOf(choice.course)!)
-        : kind === 'courses'
-          ? [targetId]
-          : []
+  const courseIds = (submission.choices ?? [])
+    .filter((choice) => choice.accepted === true)
+    .map((choice) => idOf(choice.course)!)
   if (kind !== 'programmes' && !courseIds.length) {
     throw new APIError('Accept at least one course before approving this application.', 400)
   }

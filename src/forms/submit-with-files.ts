@@ -33,11 +33,20 @@ const fileQuestionsOf = async (req: PayloadRequest, sent: Sent): Promise<FileAns
   })
   const questions = shared.map((q) => sharedAnswer(q.name, q))
   for (const choice of sent.choices ?? []) {
+    const id = relId(choice?.course)
+    if (typeof id !== 'number' || !Number.isSafeInteger(id) || id <= 0)
+      throw new APIError('Choose a valid course and try submitting again.', 400)
     const course = await req.payload.findByID({
       collection: 'courses',
-      id: relId(choice.course),
+      id,
+      disableErrors: true,
       ...local,
     })
+    if (!course)
+      throw new APIError(
+        'One of your chosen courses is no longer available. Choose courses again.',
+        400,
+      )
     for (const question of course.applicant_questions ?? []) {
       if (question.blockType !== 'fileUpload') continue
       questions.push({
@@ -50,17 +59,6 @@ const fileQuestionsOf = async (req: PayloadRequest, sent: Sent): Promise<FileAns
           ]
         },
       })
-    }
-  }
-  // Existing own-course pages and historic clients still send prefixed course answers.
-  if (!sent.choices?.length && sent.target?.relationTo === 'courses') {
-    const course = await req.payload.findByID({
-      collection: 'courses',
-      id: Number(sent.target.value),
-      ...local,
-    })
-    for (const q of course.applicant_questions ?? []) {
-      if (q.blockType === 'fileUpload') questions.push(sharedAnswer(`course_${q.name}`, q))
     }
   }
   return questions

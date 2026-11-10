@@ -1,7 +1,7 @@
 // @vitest-environment node
 import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest'
 vi.mock('server-only', () => ({}))
-import { applicantsForFellow } from '@/forms/applicants'
+import { applicantsFor, applicantViewer } from '@/forms/applicants'
 import { applicationFixture, removeApplicationFixture } from '../helpers/applicationFixture'
 import { handleEndpoints, type TypedUser } from 'payload'
 
@@ -47,6 +47,7 @@ beforeAll(async () => {
     { field: 'name', value: 'Applicant' },
     { field: 'email', value: 'applicant@cilas.test' },
     { field: 'shared', value: 'Shared reply' },
+    { field: 'payment_interests', value: 'Ordinary shared answer' },
   ]
   const choice = (index: number) => ({
     course: f.courses[index].id,
@@ -83,12 +84,14 @@ beforeAll(async () => {
       data: {
         form: f.form.id,
         target: { relationTo: 'courses', value: f.courses[0].id },
-        submissionData: [
-          ...identity,
-          { field: 'course_reason', value: 'Legacy own answer' },
-          { field: 'amount', value: 'Secret amount' },
-          { field: 'course_amount', value: 'Secret legacy amount' },
+        choices: [
+          {
+            course: f.courses[0].id,
+            amount: 900,
+            answers: [{ name: 'reason', value: 'Legacy own answer' }],
+          },
         ],
+        submissionData: [...identity],
       },
     })
   ).id
@@ -108,8 +111,8 @@ afterAll(async () => {
   await removeApplicationFixture(f)
 })
 describe('fellow applicants projection', () => {
-  it('returns only taught choices and saved answers, with legacy applications and course counts', async () => {
-    const result = await applicantsForFellow(f.payload, fellow)
+  it('returns only taught choices and saved answers, with course applications and course counts', async () => {
+    const result = await applicantsFor(f.payload, applicantViewer(fellow))
     expect(result.courses).toEqual([{ id: f.courses[0].id, title: 'Writing', count: 2 }])
     expect(result.applications.map((a) => a.id).sort()).toEqual([mixed, legacy].sort())
     const application = result.applications.find((a) => a.id === mixed)!
@@ -117,7 +120,10 @@ describe('fellow applicants projection', () => {
       name: 'Applicant',
       email: 'applicant@cilas.test',
       status: 'new',
-      answers: expect.arrayContaining([{ label: 'Your interests', value: 'Shared reply' }]),
+      answers: expect.arrayContaining([
+        { label: 'Your interests', value: 'Shared reply' },
+        { label: 'payment_interests', value: 'Ordinary shared answer' },
+      ]),
       choices: [
         {
           course: f.courses[0].id,
@@ -128,23 +134,19 @@ describe('fellow applicants projection', () => {
       ],
     })
     expect(application.submitted).toMatch(/^\d{4}-/)
-    const serialized = JSON.stringify(result)
-    for (const secret of [
-      'Foreign private answer',
-      'Film',
-      'amount',
-      'need_reduction',
-      'Secret amount',
-      'Secret legacy amount',
-    ])
-      expect(serialized).not.toContain(secret)
+    for (const a of result.applications) {
+      for (const c of a.choices) {
+        expect(Object.keys(c).sort()).toEqual(['accepted', 'answers', 'course', 'title'])
+        expect(c.course).toBe(f.courses[0].id)
+      }
+    }
     expect(result.applications.find((a) => a.id === legacy)?.choices[0].answers).toContainEqual({
-      label: 'Changed question',
+      label: 'Why writing?',
       value: 'Legacy own answer',
     })
   })
   it('gives admins all courses, choices and financial fields', async () => {
-    const result = await applicantsForFellow(f.payload, admin)
+    const result = await applicantsFor(f.payload, applicantViewer(admin))
     expect(result.applications.find((a) => a.id === foreign)).toBeDefined()
     expect(result.applications.find((a) => a.id === mixed)?.choices).toMatchObject([
       { amount: 900, need_reduction: true },
@@ -154,7 +156,10 @@ describe('fellow applicants projection', () => {
   })
   it('returns nothing for members, anonymous users and unlinked fellows', async () => {
     for (const user of [member, undefined, { ...fellow, person: null }])
-      expect(await applicantsForFellow(f.payload, user)).toEqual({ courses: [], applications: [] })
+      expect(await applicantsFor(f.payload, applicantViewer(user))).toEqual({
+        courses: [],
+        applications: [],
+      })
   })
   it('refuses an authenticated fellow through the REST handler', async () => {
     const login = await f.payload.login({

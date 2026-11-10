@@ -2,7 +2,7 @@ import { DefaultTemplate } from '@payloadcms/next/templates'
 import { Gutter } from '@payloadcms/ui'
 import Link from 'next/link'
 import type { AdminViewServerProps, FieldServerComponent } from 'payload'
-import { applicantsForFellow } from '@/forms/applicants'
+import { applicantsFor, applicantViewer } from '@/forms/applicants'
 
 const copy = (ar: boolean) =>
   ar
@@ -46,7 +46,8 @@ export async function ApplicantsView({
   const req = initPageResult.req
   const ar = req.i18n.language === 'ar'
   const t = copy(ar)
-  const data = await applicantsForFellow(req.payload, user, ar ? 'ar' : 'en')
+  const viewer = applicantViewer(user)
+  const data = await applicantsFor(req.payload, viewer, ar ? 'ar' : 'en')
   const selected = Number(searchParams?.course) || null
   const applications = selected
     ? data.applications.filter((a) => a.choices.some((c) => c.course === selected))
@@ -111,7 +112,7 @@ export async function ApplicantsView({
                     </div>
                   ))}
                 </dl>
-                {'amount' in c && (
+                {viewer?.kind === 'admin' && (
                   <>
                     <p>
                       {t.amount}: {c.amount ?? ''} EGP
@@ -132,12 +133,27 @@ export async function ApplicantsView({
 
 export const CourseApplicants: FieldServerComponent = async ({ data, req }) => {
   if (!data.id) return null
-  const result = await applicantsForFellow(req.payload, req.user)
-  const course = result.courses.find((c) => c.id === Number(data.id))
-  if (!course) return null
+  const viewer = applicantViewer(req.user)
+  if (!viewer) return null
+  const course = await req.payload.findByID({
+    collection: 'courses',
+    id: Number(data.id),
+    depth: 0,
+    overrideAccess: true,
+  })
+  if (
+    viewer.kind === 'fellow' &&
+    !course.fellows?.some((f) => (typeof f === 'number' ? f : f.id) === viewer.person)
+  )
+    return null
+  const { totalDocs } = await req.payload.count({
+    collection: 'form-submissions',
+    where: { 'choices.course': { equals: course.id } },
+    overrideAccess: true,
+  })
   return (
     <Link href={`/admin/applicants?course=${course.id}`}>
-      {copy(req.i18n.language === 'ar').title} ({course.count})
+      {copy(req.i18n.language === 'ar').title} ({totalDocs})
     </Link>
   )
 }

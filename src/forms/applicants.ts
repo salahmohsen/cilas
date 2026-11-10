@@ -1,19 +1,23 @@
 import 'server-only'
-import type { Payload, TypedUser, Where } from 'payload'
+import type { Payload, TypedUser } from 'payload'
 import { isAdminUser, isFellowUser, personOf } from '@/access'
 import { relId } from '@/lib/relation'
 
-const financialAnswer = (name: string) =>
-  /amount|contribution|reduction|pricing|payment/i.test(name)
+export type ApplicantViewer = { kind: 'admin' } | { kind: 'fellow'; person: number }
 
-export async function applicantsForFellow(
+export function applicantViewer(user?: TypedUser | null): ApplicantViewer | null {
+  if (isAdminUser(user)) return { kind: 'admin' }
+  const person = personOf(user)
+  return isFellowUser(user) && person !== null ? { kind: 'fellow', person } : null
+}
+
+export async function applicantsFor(
   payload: Payload,
-  user?: TypedUser | null,
+  viewer: ApplicantViewer | null,
   locale: 'en' | 'ar' = 'en',
 ) {
-  const admin = isAdminUser(user)
-  const person = personOf(user)
-  if (!admin && (!isFellowUser(user) || person === null)) return { courses: [], applications: [] }
+  if (!viewer) return { courses: [], applications: [] }
+  const admin = viewer.kind === 'admin'
   const courses = (
     await payload.find({
       collection: 'courses',
@@ -21,18 +25,12 @@ export async function applicantsForFellow(
       depth: 0,
       pagination: false,
       locale,
-      ...(admin ? {} : { where: { fellows: { contains: person } } }),
+      ...(viewer.kind === 'fellow' ? { where: { fellows: { contains: viewer.person } } } : {}),
     })
   ).docs
   const ids = courses.map((c) => c.id)
   if (!ids.length) return { courses: [], applications: [] }
   const own = new Map(courses.map((c) => [c.id, c]))
-  const where: Where = {
-    or: [
-      { 'choices.course': { in: ids } },
-      { and: [{ 'target.relationTo': { equals: 'courses' } }, { 'target.value': { in: ids } }] },
-    ],
-  }
   const submissions = (
     await payload.find({
       collection: 'form-submissions',
@@ -40,7 +38,7 @@ export async function applicantsForFellow(
       depth: 0,
       pagination: false,
       sort: '-createdAt',
-      where,
+      where: { 'choices.course': { in: ids } },
     })
   ).docs
   const forms = new Map(
@@ -72,10 +70,6 @@ export async function applicantsForFellow(
     ),
   )
   const applications = submissions.flatMap((s) => {
-    const legacy =
-      !s.choices?.length && s.target?.relationTo === 'courses'
-        ? own.get(Number(relId(s.target.value)))
-        : undefined
     const choices = (s.choices ?? [])
       .filter((c) => own.has(Number(relId(c.course))))
       .map((c) => ({
@@ -85,20 +79,6 @@ export async function applicantsForFellow(
         answers: (c.answers ?? []).map((a) => ({ label: a.label || a.name, value: a.value || '' })),
         ...(admin ? { amount: c.amount, need_reduction: c.need_reduction } : {}),
       }))
-    if (legacy)
-      choices.push({
-        course: legacy.id,
-        title: legacy.title,
-        accepted: s.status === 'accepted',
-        answers: (s.submissionData ?? [])
-          .filter((a) => a.field.startsWith('course_') && (admin || !financialAnswer(a.field)))
-          .map((a) => ({
-            label:
-              legacy.applicant_questions?.find((q) => 'name' in q && q.name === a.field.slice(7))
-                ?.label || a.field.slice(7),
-            value: a.value,
-          })),
-      })
     if (!choices.length) return []
     const answer = (field: string) => s.submissionData?.find((a) => a.field === field)?.value || ''
     return [
@@ -108,12 +88,10 @@ export async function applicantsForFellow(
         email: answer('email'),
         submitted: s.createdAt,
         status: s.status || 'new',
-        answers: (s.submissionData ?? [])
-          .filter((a) => !a.field.startsWith('course_') && (admin || !financialAnswer(a.field)))
-          .map((a) => ({
-            label: forms.get(Number(relId(s.form)))?.get(a.field) || a.field,
-            value: a.value,
-          })),
+        answers: (s.submissionData ?? []).map((a) => ({
+          label: forms.get(Number(relId(s.form)))?.get(a.field) || a.field,
+          value: a.value,
+        })),
         choices,
       },
     ]

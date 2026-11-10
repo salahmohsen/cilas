@@ -76,10 +76,15 @@ const submit = (email: string, data: { field: string; value: string }[]) =>
     data: {
       form: form.id,
       target: { relationTo: 'courses', value: course.id },
+      choices: [
+        {
+          course: course.id,
+          answers: data.map((a) => ({ name: a.field, value: a.value })),
+        },
+      ],
       submissionData: [
         { field: 'name', value: 'Mona Farid' },
         { field: 'email', value: email },
-        ...data,
       ],
     },
   })
@@ -89,7 +94,7 @@ const submit = (email: string, data: { field: string; value: string }[]) =>
  * submission: the spam check already ran where the request came from. */
 const restCreate = async (
   email: string,
-  data: { field: string; value: string }[] = [],
+  data: { field: string; value: string }[] = [{ field: 'track', value: 'Film' }],
 ): Promise<FormSubmission> => {
   const req = await createLocalReq({ user: undefined }, payload)
   ;(req as { payloadAPI?: string }).payloadAPI = 'REST'
@@ -98,10 +103,15 @@ const restCreate = async (
     data: {
       form: form.id,
       target: { relationTo: 'courses', value: course.id },
+      choices: [
+        {
+          course: course.id,
+          answers: data.map((a) => ({ name: a.field, value: a.value })),
+        },
+      ],
       submissionData: [
         { field: 'name', value: 'Mona Farid' },
         { field: 'email', value: email },
-        ...data,
       ],
     },
     context: { [TURNSTILE_VERIFIED]: true },
@@ -280,7 +290,7 @@ describe('the application flow, from the questions to the enrollment', () => {
   it('an anonymous applicant applies; the acceptance makes the account and enrolls', async () => {
     const submission = await submit(APPLICANT_EMAIL, [
       { field: 'track', value: 'Anthropology' }, // the label selects it on site
-      { field: 'course_years', value: '3' },
+      { field: 'years', value: '3' },
     ])
     track('form-submissions', submission)
     expect(submission.status).toBe('new')
@@ -341,7 +351,7 @@ describe('the application flow, from the questions to the enrollment', () => {
     })
     const submission = await submit(MEMBER_EMAIL.toUpperCase(), [
       { field: 'track', value: 'Film' },
-      { field: 'course_years', value: '1' },
+      { field: 'years', value: '1' },
     ])
     track('form-submissions', submission)
 
@@ -374,7 +384,7 @@ describe('the application flow, from the questions to the enrollment', () => {
   })
 
   it('an admin rejects a new submission, and only a new one', async () => {
-    const submission = await submit('second@cilas.test', [])
+    const submission = await submit('second@cilas.test', [{ field: 'track', value: 'Film' }])
     track('form-submissions', submission)
     const res = await decide('reject', submission.id)
     expect(res.status).toBe(200)
@@ -403,7 +413,7 @@ describe('the application flow, from the questions to the enrollment', () => {
     await expect(restCreate(APPLICANT_EMAIL)).rejects.toThrow(/not open/)
 
     // A local caller (a seed, a backfill) may still add a historic one.
-    const backfilled = await submit('backfill@cilas.test', [])
+    const backfilled = await submit('backfill@cilas.test', [{ field: 'track', value: 'Film' }])
     track('form-submissions', backfilled)
     expect(backfilled.status).toBe('new')
 

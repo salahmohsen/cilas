@@ -56,6 +56,7 @@ const submit = (target: FormSubmission['target'], formId = form.id) =>
     data: {
       form: formId,
       target,
+      choices: target?.relationTo === 'courses' ? [{ course: Number(target.value) }] : [],
       submissionData: [
         { field: 'name', value: APPLICANT },
         { field: 'email', value: EMAIL.toUpperCase() },

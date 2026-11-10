@@ -50,7 +50,7 @@ export const checkApplication = (
     if (!local && (course.registration?.mode !== 'own' || course.registration?.method !== 'form')) {
       return { error: `${course.title} is no longer open for applications through this form.` }
     }
-    if (choices.length > 1 || (choices.length === 1 && relId(choices[0]?.course) !== course.id)) {
+    if (choices.length !== 1 || relId(choices[0]?.course) !== course.id) {
       return { error: `Choose only ${course.title} on this application.` }
     }
   }
@@ -120,6 +120,14 @@ export const validateApplication = async (
   input: ApplicationInput,
   local = false,
 ): Promise<ApplicationChoice[]> => {
+  const form = await req.payload.findByID({
+    collection: 'forms',
+    id: Number(relId(input.form)),
+    depth: 0,
+    overrideAccess: true,
+    req,
+  })
+  if (form.template) throw new APIError('A template cannot receive submissions.', 400)
   const kind = input.target?.relationTo
   if (kind && !['cycles', 'courses', 'programmes'].includes(kind)) {
     throw new APIError('Choose what you are applying to.', 400)

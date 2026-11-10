@@ -137,11 +137,17 @@ describe('cycle application validation', () => {
           courses: [course()],
         },
       ),
-    ).toHaveProperty('error')
+    ).toHaveProperty(
+      'error',
+      'This form is not the registration form of what it names. Reload the application page.',
+    )
   })
 
   it('allows need-based deductions only when the resolved price enables them', () => {
-    expect(check([course()], [choice({ need_reduction: true })])).toHaveProperty('error')
+    expect(check([course()], [choice({ need_reduction: true })])).toHaveProperty(
+      'error',
+      'Writing does not offer need-based deductions.',
+    )
     expect(
       check(
         [
@@ -156,4 +162,20 @@ describe('cycle application validation', () => {
       ),
     ).toHaveProperty('choices')
   })
+})
+
+it('refuses a course target with empty choices even for local creation', () => {
+  const target = course({ registration: { mode: 'own', method: 'form', form: 20 } })
+  expect(
+    checkApplication(
+      { form: 20, target: { relationTo: 'courses', value: target.id }, choices: [] },
+      {
+        destination: { target, cycle, open: true, published: true, formId: 20 },
+        courses: [target],
+      },
+      null,
+      true,
+      now,
+    ),
+  ).toEqual({ error: 'Choose only Writing on this application.' })
 })

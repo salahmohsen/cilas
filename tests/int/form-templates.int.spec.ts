@@ -359,6 +359,31 @@ describe('registration templates', () => {
     ).rejects.toThrow()
   })
 
+  it('hides templates from anonymous reads while keeping live forms public', async () => {
+    const result = await payload.find({
+      collection: 'forms',
+      overrideAccess: false,
+      where: { id: { in: [template, existing] } },
+    })
+    expect(result.docs.map((f) => f.id)).toEqual([existing])
+  })
+
+  it.each([false, true])('refuses template submissions with target: %s', async (withTarget) => {
+    await expect(
+      payload.create({
+        collection: 'form-submissions',
+        data: {
+          form: template,
+          ...(withTarget ? { target: { relationTo: 'courses' as const, value: 1 } } : {}),
+          submissionData: [
+            { field: 'name', value: 'Applicant' },
+            { field: 'email', value: 'a@cilas.test' },
+          ],
+        },
+      }),
+    ).rejects.toThrow('A template cannot receive submissions.')
+  })
+
   it('seeds three usable templates and reuses them on a second seed', async () => {
     const before = await payload.find({
       collection: 'forms',

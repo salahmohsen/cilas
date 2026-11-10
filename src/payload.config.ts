@@ -319,7 +319,12 @@ export default buildConfig({
               : field,
           ),
         ],
-        access: { read: anyone, create: isAdmin, update: isAdmin, delete: isAdmin },
+        access: {
+          read: (args) => isAdmin(args) || { template: { not_equals: true } },
+          create: isAdmin,
+          update: isAdmin,
+          delete: isAdmin,
+        },
         hooks: { beforeChange: [ensureNameEmail] },
       },
       formSubmissionOverrides: {

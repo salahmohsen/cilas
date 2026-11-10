@@ -1,4 +1,4 @@
-import type { Payload, PayloadRequest } from 'payload'
+import { NotFound, type Payload, type PayloadRequest } from 'payload'
 
 import { cairoDay } from '@/lib/cairo-day'
 import { pricingFor } from '@/lib/pricing'
@@ -71,7 +71,10 @@ export const loadApplicationTarget = async (
 ) => {
   const target = await payload
     .findByID({ collection: relationTo, id, depth: 1, overrideAccess: true, req })
-    .catch(() => null)
+    .catch((error: unknown) => {
+      if (error instanceof NotFound) return null
+      throw error
+    })
   if (!target) return null
   const cycle = 'cycle' in target && typeof target.cycle === 'object' ? target.cycle : null
   const registration = 'course_type' in target ? courseRegistration(target, cycle) : null

@@ -308,28 +308,18 @@ describe('cycle applications and approval', () => {
     ).rejects.toThrow(/no longer open/)
   })
 
-  it('still accepts a legacy single-course application with prefixed answers', async () => {
-    const submission = track(
-      'form-submissions',
-      await payload.create({
+  it('refuses a course target without a choice, including local creates', async () => {
+    await expect(
+      payload.create({
         collection: 'form-submissions',
         data: {
           form: form.id,
           target: { relationTo: 'courses', value: writing.id },
-          submissionData: [
-            ...identity(uniqEmail('old-course')),
-            { field: 'course_reason', value: 'To write' },
-          ],
+          submissionData: identity(),
+          choices: [],
         },
       }),
-    )
-    expect(submission.submissionData).toContainEqual(
-      expect.objectContaining({ field: 'course_reason', value: 'To write' }),
-    )
-    expect((await accept(submission.id))?.status).toBe(200)
-    expect((await trackApplicant(submission)).enrollments).toEqual([
-      expect.objectContaining({ course: writing.id, status: 'accepted' }),
-    ])
+    ).rejects.toThrow(`Choose only ${writing.title} on this application.`)
   })
 
   it('validates cycle choices in multipart submissions too', async () => {
@@ -372,5 +362,24 @@ describe('cycle applications and approval', () => {
       'error',
       `${own.title} is no longer open for applications.`,
     )
+    for (const course of ['bad-id', -1, null, 999999999]) {
+      data.set(
+        'payload',
+        JSON.stringify({
+          form: form.id,
+          submissionData: identity(),
+          target: { relationTo: 'cycles', value: cycle.id },
+          choices: [{ course }],
+        }),
+      )
+      const invalid = await submitWithFiles(req)
+      expect(invalid.status).toBe(400)
+      expect(await invalid.json()).toEqual({
+        error:
+          course === 999999999
+            ? 'One of your chosen courses is no longer available. Choose courses again.'
+            : 'Choose a valid course and try submitting again.',
+      })
+    }
   })
 })
