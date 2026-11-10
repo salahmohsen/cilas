@@ -23,7 +23,7 @@ import { Input } from '@/components/arc/input/input'
 import { RadioGroup } from '@/components/arc/radio-group/radio-group'
 import { Select } from '@/components/arc/select/select'
 import { Textarea } from '@/components/arc/textarea/textarea'
-import { useSpamCheck } from '@/components/forms/spam-check'
+import { failureMessage, looksSent, useSpamCheck } from '@/components/forms/spam-check'
 import { useDraft } from '@/components/use-draft'
 import { useSession } from '@/components/use-session'
 import { isRtl } from '@/i18n/routing'
@@ -214,10 +214,9 @@ export function PayloadForm({
       const files = questions.flatMap((q) =>
         isFiles(q) ? goodFiles(value[q.name]).map((i) => [q.name, i.file] as const) : [],
       )
-      const res = await spam.submit(sent, files).catch(() => undefined)
-      if (res === undefined || (res !== null && !res.ok)) {
-        const body = res ? await res.json().catch(() => null) : null
-        setFailed(body?.error ?? body?.errors?.[0]?.message ?? t('failed'))
+      const result = await spam.submit(sent, files)
+      if (!looksSent(result)) {
+        setFailed(failureMessage(result, t))
         return
       }
       clearDraft()

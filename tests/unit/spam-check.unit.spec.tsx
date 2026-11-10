@@ -1,7 +1,7 @@
 import { cleanup, render, renderHook } from '@testing-library/react'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 
-import { useSpamCheck } from '@/components/forms/spam-check'
+import { failureMessage, useSpamCheck } from '@/components/forms/spam-check'
 import { TURNSTILE_HEADER } from '@/lib/turnstile'
 
 const widget = vi.hoisted(() => ({ token: vi.fn(), reset: vi.fn() }))
@@ -37,7 +37,7 @@ afterEach(() => {
 describe('guarded form submission', () => {
   it('sends JSON with its token and renews the token afterward', async () => {
     const { spam } = mount()
-    expect((await spam.submit(submission))?.ok).toBe(true)
+    expect(await spam.submit(submission)).toEqual({ kind: 'sent' })
     expect(fetch).toHaveBeenCalledWith('/api/form-submissions', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', [TURNSTILE_HEADER]: 'verified-token' },
@@ -49,7 +49,7 @@ describe('guarded form submission', () => {
   it('sends answers and files together under a single token', async () => {
     const { spam } = mount()
     const file = new File(['hello'], 'note.txt', { type: 'text/plain' })
-    await spam.submit(submission, [['attachment', file]])
+    expect(await spam.submit(submission, [['attachment', file]])).toEqual({ kind: 'sent' })
     expect(fetch).toHaveBeenCalledTimes(1)
     const [url, init] = vi.mocked(fetch).mock.calls[0]!
     expect(url).toBe('/api/form-submissions/with-files')
@@ -58,24 +58,58 @@ describe('guarded form submission', () => {
     expect(JSON.parse(String(body.get('payload')))).toEqual(submission)
     expect((body.get('file:attachment') as File).name).toBe('note.txt')
     expect(widget.token).toHaveBeenCalledTimes(1)
-    expect(widget.reset).toHaveBeenCalledTimes(1)
   })
 
-  it('returns fake success to a honeypot without sending anything', async () => {
+  it('names a bot without sending anything', async () => {
     const { spam, container } = mount()
     container.querySelector<HTMLInputElement>('input[name="website"]')!.value = 'bot'
-    expect(await spam.submit(submission)).toBeNull()
+    expect(await spam.submit(submission)).toEqual({ kind: 'bot' })
     expect(fetch).not.toHaveBeenCalled()
     expect(widget.token).not.toHaveBeenCalled()
   })
 
-  it('renews the token after token or network failures', async () => {
+  it('names a failed spam check without sending, and renews the token', async () => {
     const { spam } = mount()
-    widget.token.mockRejectedValueOnce(new Error('challenge failed'))
-    await expect(spam.submit(submission)).rejects.toThrow('challenge failed')
+    widget.token.mockRejectedValueOnce(new Error('Timeout'))
+    expect(await spam.submit(submission)).toEqual({ kind: 'spam-check-failed' })
     expect(fetch).not.toHaveBeenCalled()
-    vi.mocked(fetch).mockRejectedValueOnce(new Error('offline'))
-    await expect(spam.submit(submission)).rejects.toThrow('offline')
-    expect(widget.reset).toHaveBeenCalledTimes(2)
+    expect(widget.reset).toHaveBeenCalledTimes(1)
+  })
+
+  it('names a network failure', async () => {
+    const { spam } = mount()
+    vi.mocked(fetch).mockRejectedValueOnce(new TypeError('Failed to fetch'))
+    expect(await spam.submit(submission)).toEqual({ kind: 'network' })
+    expect(widget.reset).toHaveBeenCalledTimes(1)
+  })
+
+  it('passes on the server’s reason for a refusal', async () => {
+    const { spam } = mount()
+    vi.mocked(fetch).mockResolvedValueOnce(
+      Response.json({ errors: [{ message: 'This course is closed.' }] }, { status: 400 }),
+    )
+    expect(await spam.submit(submission)).toEqual({
+      kind: 'refused',
+      error: 'This course is closed.',
+    })
+  })
+
+  it('names a refusal without a reason', async () => {
+    const { spam } = mount()
+    vi.mocked(fetch).mockResolvedValueOnce(new Response('Bad gateway', { status: 502 }))
+    expect(await spam.submit(submission)).toEqual({ kind: 'refused', error: null })
+  })
+})
+
+describe('failure messages', () => {
+  const t = (key: string) => `<${key}>`
+
+  it.each([
+    [{ kind: 'spam-check-failed' } as const, '<spamCheckFailed>'],
+    [{ kind: 'network' } as const, '<failed>'],
+    [{ kind: 'refused', error: null } as const, '<serverFailed>'],
+    [{ kind: 'refused', error: 'This course is closed.' } as const, 'This course is closed.'],
+  ])('shows %j as %s', (result, message) => {
+    expect(failureMessage(result, t)).toBe(message)
   })
 })

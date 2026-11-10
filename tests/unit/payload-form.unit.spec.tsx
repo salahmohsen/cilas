@@ -360,6 +360,26 @@ describe('the payload form', () => {
     expect(screen.getByRole('button', { name: /submit/i })).toBeEnabled()
   })
 
+  it('says the server failed when it refuses without a reason', async () => {
+    vi.stubGlobal(
+      'fetch',
+      vi.fn(async (input: RequestInfo | URL) =>
+        String(input).startsWith('/api/users/me')
+          ? new Response(JSON.stringify({ user: null }))
+          : new Response('Bad gateway', { status: 502 }),
+      ),
+    )
+    render(<PayloadForm confirmation={null} form={formOf([])} />)
+    fireEvent.change(screen.getByRole('textbox', { name: /Name/ }), {
+      target: { value: 'Mona Adel' },
+    })
+    fireEvent.change(screen.getByRole('textbox', { name: /Email/ }), {
+      target: { value: 'mona@example.com' },
+    })
+    fireEvent.click(screen.getByRole('button', { name: /submit/i }))
+    expect(await screen.findByText('serverFailed')).toBeInTheDocument()
+  })
+
   it('asks the questions open to write in when nobody is signed in', async () => {
     vi.stubGlobal(
       'fetch',

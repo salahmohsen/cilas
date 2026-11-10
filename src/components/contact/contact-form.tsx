@@ -3,7 +3,7 @@
 import { useTranslations } from 'next-intl'
 
 import { ContactSection } from '@/components/arc/blocks/contact-section/contact-section'
-import { useSpamCheck } from '@/components/forms/spam-check'
+import { failureMessage, looksSent, useSpamCheck } from '@/components/forms/spam-check'
 import { track } from '@/lib/analytics/track'
 
 /**
@@ -56,15 +56,15 @@ export function ContactForm({
       }}
       formExtra={spam.fields}
       onSubmit={async (message) => {
-        const res = await spam.submit({
+        const result = await spam.submit({
           form: formId,
           submissionData: (['name', 'email', 'topic', 'message'] as const).map((field) => ({
             field,
             value: message[field],
           })),
         })
-        if (!res) return
-        if (!res.ok) throw new Error(`Contact form: ${res.status}`)
+        if (!looksSent(result)) return { failed: failureMessage(result, t) }
+        if (result.kind === 'bot') return
         // The topic is one of the form's own labels; the message and the sender are not sent.
         track('contact_submitted', topics.includes(message.topic) ? { topic: message.topic } : {})
       }}

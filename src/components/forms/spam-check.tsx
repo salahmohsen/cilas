@@ -60,28 +60,65 @@ export function useSpamCheck() {
         target?: unknown
       },
       files: readonly (readonly [string, File])[] = [],
-    ): Promise<Response | null> => {
-      if (honeypot.current?.value) return null
+    ): Promise<SubmitResult> => {
+      if (honeypot.current?.value) return { kind: 'bot' }
       try {
         const headers: Record<string, string> = {}
-        if (siteKey && widget.current) {
-          headers[TURNSTILE_HEADER] = await widget.current.getResponsePromise(30_000)
+        if (siteKey) {
+          const token = await widget.current?.getResponsePromise(30_000).catch(() => null)
+          if (!token) return { kind: 'spam-check-failed' }
+          headers[TURNSTILE_HEADER] = token
         }
-        if (!files.length) {
-          return await fetch('/api/form-submissions', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json', ...headers },
-            body: JSON.stringify(submission),
-          })
+        let res: Response
+        try {
+          if (files.length) {
+            // A token passes once, so answers and attachments travel in one request.
+            const body = new FormData()
+            body.set('payload', JSON.stringify(submission))
+            for (const [name, file] of files) body.append(`file:${name}`, file, file.name)
+            res = await fetch('/api/form-submissions/with-files', { method: 'POST', headers, body })
+          } else {
+            res = await fetch('/api/form-submissions', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json', ...headers },
+              body: JSON.stringify(submission),
+            })
+          }
+        } catch {
+          return { kind: 'network' }
         }
-        // A token passes once, so answers and attachments travel in one request.
-        const body = new FormData()
-        body.set('payload', JSON.stringify(submission))
-        for (const [name, file] of files) body.append(`file:${name}`, file, file.name)
-        return await fetch('/api/form-submissions/with-files', { method: 'POST', headers, body })
+        if (res.ok) return { kind: 'sent' }
+        const body = await res.json().catch(() => null)
+        return { kind: 'refused', error: body?.error ?? body?.errors?.[0]?.message ?? null }
       } finally {
         widget.current?.reset()
       }
     },
   }
+}
+
+/**
+ * What became of a submission. `bot` means the honeypot was filled: nothing
+ * was sent, and the form shows success so the bot learns nothing.
+ */
+export type SubmitResult =
+  | { kind: 'sent' }
+  | { kind: 'bot' }
+  | { kind: 'spam-check-failed' }
+  | { kind: 'network' }
+  | { kind: 'refused'; error: string | null }
+
+type Failure = Exclude<SubmitResult, { kind: 'sent' } | { kind: 'bot' }>
+
+/** True when the visitor should see the form as sent. */
+export const looksSent = (result: SubmitResult): result is { kind: 'sent' } | { kind: 'bot' } =>
+  result.kind === 'sent' || result.kind === 'bot'
+
+/** The sentence a form shows for a failure, from its own messages. */
+export const failureMessage = (
+  result: Failure,
+  t: (key: 'failed' | 'spamCheckFailed' | 'serverFailed') => string,
+): string => {
+  if (result.kind === 'refused') return result.error ?? t('serverFailed')
+  return result.kind === 'spam-check-failed' ? t('spamCheckFailed') : t('failed')
 }

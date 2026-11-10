@@ -113,7 +113,8 @@ export interface ContactSectionProps {
   /** Topics offered in the form. */
   topics?: string[]
   /** Called with a valid message. Reject to keep the form and show an error; resolve to show the confirmation. */
-  onSubmit?: (message: ContactMessage) => void | Promise<void>
+  /** Resolves with `{ failed }` to show that sentence instead of the generic failure. */
+  onSubmit?: (message: ContactMessage) => void | Promise<void | { failed: string }>
   channels?: ContactChannel[]
   /** Selected channel (controlled). */
   channel?: string
@@ -420,7 +421,14 @@ function ContactForm({
       message: values.message.trim(),
     }
     try {
-      await (onSubmit ? onSubmit(payload) : new Promise((resolve) => setTimeout(resolve, 1100)))
+      const outcome = await (onSubmit
+        ? onSubmit(payload)
+        : new Promise<void>((resolve) => setTimeout(resolve, 1100)))
+      if (outcome) {
+        setPhase('editing')
+        setFailure(outcome.failed)
+        return
+      }
       setSentTo({ name: payload.name.split(/\s+/)[0]!, email: payload.email })
       setPhase('sent')
     } catch {
