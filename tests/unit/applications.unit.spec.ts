@@ -2,7 +2,7 @@ import type { Access } from 'payload'
 import { describe, expect, it } from 'vitest'
 
 import { readPeople } from '@/access'
-import { applicantOf, rolesAfterAccept } from '@/forms/applications'
+import { applicantOf, rolesAfterAccept } from '@/forms/applicant'
 
 const answers = (pairs: Record<string, string>) =>
   Object.entries(pairs).map(([field, value]) => ({ field, value }))

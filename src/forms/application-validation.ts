@@ -1,3 +1,4 @@
+import type { CollectionBeforeChangeHook } from 'payload'
 import { courseRegistration } from '@/lib/registration'
 import { loadApplicationTarget } from './application-target'
 import type { Reader } from '@/lib/reader'
@@ -165,4 +166,14 @@ export const validateApplication = async (
     ...choice,
     accepted: local ? (choice.accepted ?? true) : true,
   }))
+}
+
+export const checkTarget: CollectionBeforeChangeHook = async ({ data, operation, req }) => {
+  if (operation !== 'create') return data
+  data.choices = await validateApplication(
+    req,
+    data,
+    req.payloadAPI === 'local' && !req.context[PUBLIC_APPLICATION_SUBMISSION],
+  )
+  return data
 }

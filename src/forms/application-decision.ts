@@ -1,4 +1,4 @@
-import { adminOnlyField, isAdminUser, personOf, type Role } from '@/access'
+import { isAdminUser, personOf } from '@/access'
 import { relId } from '@/lib/relation'
 import { randomBytes } from 'node:crypto'
 
@@ -7,8 +7,6 @@ import {
   commitTransaction,
   initTransaction,
   killTransaction,
-  type CollectionBeforeChangeHook,
-  type Field,
   type PayloadHandler,
   type PayloadRequest,
 } from 'payload'
@@ -17,158 +15,8 @@ import { env } from '@/env'
 import { getEmailSettings } from '@/emails/settings'
 import { acceptanceMail } from '@/emails/transactional'
 import { createPerson } from '@/lib/create-person'
-import { submissionChoices } from '@/forms/submission-view'
-import { PUBLIC_APPLICATION_SUBMISSION, validateApplication } from '@/forms/application-validation'
-import type { FormSubmission } from '@/payload-types'
-
-export type TargetKind = 'programmes' | 'courses' | 'cycles'
-
-export const applicationFields: Field[] = [
-  {
-    name: 'target',
-    type: 'relationship',
-    relationTo: ['programmes', 'courses', 'cycles'],
-    index: true,
-    access: { update: adminOnlyField },
-    admin: { position: 'sidebar', readOnly: true, description: 'What the applicant applied to.' },
-  },
-  {
-    name: 'choices',
-    type: 'array',
-    admin: { components: { Field: '/components/admin/submission-choices#SubmissionChoices' } },
-    access: { update: adminOnlyField },
-    fields: [
-      { name: 'course', type: 'relationship', relationTo: 'courses', required: true },
-      { name: 'amount', type: 'number' },
-      { name: 'need_reduction', label: 'Needs a reduction', type: 'checkbox' },
-      {
-        name: 'answers',
-        type: 'array',
-        fields: [
-          { name: 'name', type: 'text', required: true },
-          { name: 'label', type: 'text' },
-          { name: 'value', type: 'textarea' },
-        ],
-      },
-      {
-        name: 'accepted',
-        type: 'checkbox',
-        defaultValue: true,
-        access: { create: adminOnlyField, update: adminOnlyField },
-      },
-    ],
-  },
-  {
-    name: 'courses',
-    label: 'Courses',
-    type: 'text',
-    virtual: true,
-    admin: {
-      hidden: true,
-      disableListFilter: true,
-      components: { Cell: '/components/admin/submission-choices#CoursesCell' },
-    },
-    hooks: {
-      afterRead: [
-        async ({ data, req }) => {
-          return (await submissionChoices(req.payload, data?.choices, req))
-            .map((c) => c.title)
-            .join(', ')
-        },
-      ],
-    },
-  },
-  {
-    name: 'status',
-    type: 'select',
-    defaultValue: 'new',
-    index: true,
-    options: [
-      { label: 'New', value: 'new' },
-      { label: 'Accepted', value: 'accepted' },
-      { label: 'Rejected', value: 'rejected' },
-    ],
-    access: { create: adminOnlyField, update: adminOnlyField },
-    admin: { position: 'sidebar', readOnly: true },
-  },
-  {
-    name: 'decision',
-    type: 'ui',
-    admin: {
-      position: 'sidebar',
-      components: { Field: '/components/admin/submission-decision#SubmissionDecision' },
-    },
-  },
-  {
-    name: 'decided_at',
-    label: 'Decided at',
-    type: 'date',
-    access: { create: adminOnlyField, update: adminOnlyField },
-    admin: { position: 'sidebar', readOnly: true, date: { pickerAppearance: 'dayAndTime' } },
-  },
-  {
-    name: 'result',
-    type: 'group',
-    access: { read: adminOnlyField, create: adminOnlyField, update: adminOnlyField },
-    admin: { position: 'sidebar', readOnly: true },
-    fields: [
-      { name: 'user', type: 'relationship', relationTo: 'users' },
-      { name: 'person', type: 'relationship', relationTo: 'people' },
-      { name: 'membership', type: 'relationship', relationTo: 'memberships' },
-      {
-        name: 'enrollments',
-        type: 'relationship',
-        relationTo: 'enrollments',
-        hasMany: true,
-        access: { read: adminOnlyField },
-      },
-      {
-        name: 'enrollment_outcomes',
-        label: 'Enrollment outcomes',
-        type: 'array',
-        access: { read: adminOnlyField },
-        fields: [
-          { name: 'enrollment', type: 'relationship', relationTo: 'enrollments', required: true },
-          { name: 'created', type: 'checkbox' },
-        ],
-      },
-    ],
-  },
-]
-
-const idOf = (value: unknown): number | null => {
-  const id = relId(value)
-  return typeof id === 'number' ? id : null
-}
-
-export const checkTarget: CollectionBeforeChangeHook = async ({ data, operation, req }) => {
-  if (operation !== 'create') return data
-  data.choices = await validateApplication(
-    req,
-    data,
-    req.payloadAPI === 'local' && !req.context[PUBLIC_APPLICATION_SUBMISSION],
-  )
-  return data
-}
-
-export const rolesAfterAccept = (roles: Role[], kind: TargetKind): Role[] => {
-  if (kind === 'programmes') return roles.includes('member') ? roles : [...roles, 'member']
-  const student = roles.includes('member') || roles.includes('non_degree_seeking')
-  return student ? roles : [...roles, 'non_degree_seeking']
-}
-
-export const applicantOf = (
-  answers: FormSubmission['submissionData'],
-): { name: string; email: string } | { error: string } => {
-  const answer = (field: string) => answers?.find((a) => a.field === field)?.value?.trim() ?? ''
-  const name = answer('name')
-  const email = answer('email').toLowerCase()
-  if (!name) return { error: 'The submission has no "name" answer.' }
-  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-    return { error: 'The submission has no valid "email" answer.' }
-  }
-  return { name, email }
-}
+import { courseTitles } from './course-titles'
+import { applicantOf, rolesAfterAccept } from './applicant'
 
 type Accepted = {
   user: number
@@ -191,10 +39,10 @@ const accept = async (req: PayloadRequest, id: number): Promise<Accepted | null>
   if ('error' in applicant) throw new APIError(applicant.error, 400)
 
   const kind = submission.target.relationTo
-  const targetId = idOf(submission.target.value)!
+  const targetId = relId(submission.target.value)!
   const courseIds = (submission.choices ?? [])
     .filter((choice) => choice.accepted === true)
-    .map((choice) => idOf(choice.course)!)
+    .map((choice) => relId(choice.course)!)
   if (kind !== 'programmes' && !courseIds.length) {
     throw new APIError('Accept at least one course before approving this application.', 400)
   }
@@ -303,12 +151,7 @@ const accept = async (req: PayloadRequest, id: number): Promise<Accepted | null>
   const titles =
     kind === 'programmes'
       ? [(await payload.findByID({ collection: kind, id: targetId, locale: 'en', ...local })).title]
-      : await Promise.all(
-          courseIds.map(
-            async (id) =>
-              (await payload.findByID({ collection: 'courses', id, locale: 'en', ...local })).title,
-          ),
-        )
+      : await courseTitles(req, courseIds, 'en').then((t) => courseIds.map((id) => t.get(id)))
   return {
     ...result,
     mail: { ...applicant, title: titles.join(', '), newAccount, site: env.NEXT_PUBLIC_SERVER_URL },

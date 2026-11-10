@@ -1,7 +1,8 @@
+import { courseTitles } from './course-titles'
 import { relId } from '@/lib/relation'
 import type { CollectionAfterChangeHook } from 'payload'
 
-import { applicantOf } from '@/forms/applications'
+import { applicantOf } from '@/forms/applicant'
 import { notify } from '@/lib/notify'
 import { adminRecipients } from '@/lib/review-mail'
 import type { FormSubmission } from '@/payload-types'
@@ -19,17 +20,9 @@ export const notifyNewApplication: CollectionAfterChangeHook = async ({ doc, ope
   let title = target?.title ?? relationTo
   if (relationTo === 'cycles') {
     const ids = ((doc as FormSubmission).choices ?? []).map((choice) => relId(choice.course))
-    const { docs: courses } = await req.payload.find({
-      collection: 'courses',
-      where: { id: { in: ids } },
-      select: { title: true },
-      depth: 0,
-      limit: 0,
-      overrideAccess: true,
-      req,
-    })
+    const titles = await courseTitles(req, ids)
     title = ids
-      .map((id) => courses.find((course) => course.id === id)?.title)
+      .map((id) => titles.get(id))
       .filter(Boolean)
       .join(', ')
   }

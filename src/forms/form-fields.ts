@@ -125,7 +125,7 @@ export const formFields = {
 
 /**
  * The two answers every form asks first (ensureNameEmail): who the person is,
- * and the address an acceptance mails. Acceptance (src/forms/applications.ts)
+ * and the address an acceptance mails. Acceptance (src/forms/application-decision.ts)
  * reads exactly these field names, so no form can exist without them and no
  * admin can delete or rename them.
  */

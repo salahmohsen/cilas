@@ -1,4 +1,5 @@
 // @vitest-environment node
+import { createLocalReq } from 'payload'
 import { afterAll, beforeAll, describe, expect, it } from 'vitest'
 import { applicationFixture, removeApplicationFixture } from '../helpers/applicationFixture'
 import { fullFormPreview } from '@/forms/preview-context'
@@ -84,7 +85,7 @@ describe('application preview and review data', () => {
         applicant_questions: [{ ...courses[0].applicant_questions![0], label: 'Changed question' }],
       },
     })
-    const view = await submissionChoices(payload, saved.choices)
+    const view = await submissionChoices(await createLocalReq({}, payload), saved.choices)
     expect(view).toMatchObject([
       {
         title: 'Writing',
