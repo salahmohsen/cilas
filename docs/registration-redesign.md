@@ -73,6 +73,42 @@ type Application = {
 
 Problems found in the current code, grouped under the fix that removes them.
 
+Untangle round C (2026-11-10). Each fix is listed above the problems it solves.
+
+`src/forms/applications.ts` is split into three modules. `application-fields.ts` holds the submission fields. `application-decision.ts` holds accept, reject and their endpoints. `applicant.ts` holds `applicantOf` and `rolesAfterAccept`. `checkTarget` moved next to `validateApplication`, the function it wraps. `TargetKind` and `idOf` are removed.
+
+Problems solved: the new-application notice imported the whole acceptance module (transactions, mail, user creation) to read two answers. An exported type and an ID helper had no users.
+
+`src/forms/course-titles.ts` looks up course titles with one `id in` query. The submission view, the new-application notice and the acceptance email use it, and each keeps the order of its choices.
+
+Problems solved: the virtual `courses` column ran one `findByID` per choice for every list row. The notice and the email each looked up titles in a different way.
+
+`choiceField` in `application-choices.ts` is the one name for the `choice:<id>:<name>` key. The form and the multipart parser both import it.
+
+Problems solved: the same key had two names (`courseField` as an alias of `choiceFileField`). It was defined in the server input types module, and the client re-exported it.
+
+The form preview page resolves `{ title, form, application }` from the contextual or the own-form source, then renders once. `PREVIEW_TARGET_FIELDS` in `src/lib/preview-url.ts` names the field each collection uses in a preview link. The link builder, the preview route and the live preview list read it.
+
+Problems solved: the page had two copies of its shell. "Forms use the ID, other collections use the slug" was written as a conditional in both the route and the link builder.
+
+`copyRegistrationTemplate(key, applies)` makes a hook for each collection. Each collection names its template and its rule. A cycle copies at creation. A Bridge programme copies at creation. A course copies whenever it is in `own` mode. The shared rule "only for site-form registration with no form yet" stays in the hook.
+
+Problems solved: one nested ternary chose the template from the collection slug, the operation and the kind. Courses also repeated a "became own form" transition test. The no-form check already covers it. As a result, an `own` course whose form was cleared now gets a new copy, where before it failed validation.
+
+The course `cycle` field has no custom component. `access.update: adminOnlyField` already makes Payload render it read-only for a fellow (`relationship--read-only`, input disabled). This was seen in the browser. The full-form preview button is hidden by `admin.condition` on the field. The preview page keeps its own admin check as the guard.
+
+Problems solved: a client component repeated a rule that field access already enforces. The preview button did a role check on the client.
+
+`src/lib/pricing.ts` is the only place that chooses the currency label: "EGP" in English and "ج.م" in Arabic. `formatAmount` and `contributionLabel` both put the label after the number. `contributionLabel` takes only `locale` and `free`. Calendar entries ask for the page language with Western digits (`<locale>-u-nu-latn`). JSON-LD keeps the ISO code. The unused `egp` and `amountEGP` messages are removed.
+
+Problems solved: Arabic prices showed "EGP" while payment plans showed "ج.م". Events and calendars passed a translated currency word ("جنيه مصري"). Callers chose where the currency went and how numbers were formatted. English course and Bridge prices now read "30,000 EGP", the same as payment plans and the contribution slider.
+
+The template copy hook reads the defaults from `req.context[REGISTRATION_DEFAULTS]` when a caller supplies them, and from the global otherwise. The template spec supplies its defaults this way and never writes the global. Its seed test runs inside a transaction that it rolls back. A final test checks that the global is unchanged.
+
+Problems solved: the integration specs raced on the shared `registration-defaults` global, so round B had to run them one at a time.
+
+Verification for round C: typecheck and lint passed (only older warnings). All 1,247 unit tests passed. The ten integration specs passed together with ten workers, 74 tests in 26 seconds against 183 seconds of total test time. A second parallel run also passed. The application e2e passed against a temporary webpack dev server with Turnstile keys empty for that process only. Browser checks as a fellow showed the read-only cycle field, no full-form preview button, and the applicants view in light and dark themes. The Arabic Bridge page showed `٣٠٬٠٠٠ ج.م` and no "EGP". The dev `registration-defaults` global was empty from an earlier race, so the seed function pointed it back at the existing templates. Test data was removed and checked with SQL.
+
 Review fixes 3–5 (2026-11-10): `src/forms/application-target.ts` owns the explicitly tagged course, cycle and programme application target and returns its loaded cycle, form, availability, publication status, ownership and submission destination. The course and Bridge application pages, contextual preview and submission validator share it. `loadApplicationTarget` moved out of `lib`; registration rules there now have no database I/O. Application context receives the resolved target and uses one localized cycle-course query instead of fetching each course again. Readers are typed as `Reader`.
 
 Problems solved: entity kind depended on the presence of `course_type`; three callers selected forms independently; cycle reads and course localization queries repeated; the apply page reconstructed its submission destination and asserted a cycle existed.
