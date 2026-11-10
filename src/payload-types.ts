@@ -2228,6 +2228,7 @@ export interface Space {
    * Made by the system from the Space introduction template when the space is created.
    */
   introduction_post?: (number | null) | SpacePost;
+  display_name?: string | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -4137,6 +4138,7 @@ export interface SpacesSelect<T extends boolean = true> {
   privacy_rules?: T;
   reopened?: T;
   introduction_post?: T;
+  display_name?: T;
   updatedAt?: T;
   createdAt?: T;
 }

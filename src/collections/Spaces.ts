@@ -5,6 +5,7 @@ import { readSpaces } from '@/lib/spaces'
 import { spaceDeleteEndpoints } from '@/forms/space-delete'
 import { deleteSpaceBells, deleteSpaceContent } from '@/lib/space-delete'
 import { addIntroPost } from '@/lib/space-hooks'
+import { spaceDisplayName } from '@/lib/space-display-name'
 import { ABOUT_MAX } from '@/lib/space-rules'
 import { RULES_MAX } from '@/lib/space-consent'
 import type { CommunityAudience, EventPosting, PostingLevel, SpaceKind } from '@/lib/spaces'
@@ -34,7 +35,7 @@ export const Spaces: CollectionConfig = {
     components: {
       edit: { editMenuItems: ['/components/admin/space-delete#SpaceDeleteMenuItem'] },
     },
-    defaultColumns: ['kind', 'course', 'programme', 'posting', 'reopened', 'updatedAt'],
+    defaultColumns: ['display_name', 'kind', 'posting', 'reopened', 'updatedAt'],
   },
   fields: [
     {
@@ -149,6 +150,19 @@ export const Spaces: CollectionConfig = {
         description:
           'Made by the system from the Space introduction template when the space is created.',
       },
+    },
+    {
+      // The list's "Name" column for every kind: a community's own name, or
+      // the title of the course or programme the space belongs to. Virtual,
+      // so it never goes stale when a course is renamed.
+      name: 'display_name',
+      label: 'Name',
+      type: 'text',
+      virtual: true,
+      // Worked out on read: Payload turns off sorting for a virtual column, and
+      // filtering is turned off here.
+      admin: { readOnly: true, condition: () => false, disableListFilter: true },
+      hooks: { afterRead: [spaceDisplayName] },
     },
   ],
   hooks: {
