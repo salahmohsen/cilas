@@ -1026,9 +1026,64 @@ h1.article-title {
   gap: 1.5rem;
   margin-block: 1.5rem 3rem;
 }
-/* Once sent, what came before the questions has done its job. */
-.apply-page:has(.payload-form-sent) .apply-intro {
+/* Once sent, what came before the questions has done its job. The page title names one course, but a cycle form can send several, so the sent heading stands alone. */
+.apply-page:has(.payload-form-sent) :is(.apply-intro, .apply-header) {
   display: none;
+}
+/* One bordered card per chosen course: its cover under a dark layer, its name on top, its questions below. */
+.apply-course-card {
+  display: grid;
+  min-width: 0;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-panel);
+}
+.apply-course-cover {
+  position: relative;
+  display: grid;
+  align-items: end;
+  min-height: 7rem;
+  padding: var(--space-5);
+  border-block-end: 1px solid var(--border);
+  background: var(--surface);
+}
+.apply-course-cover[data-image] {
+  min-height: 10rem;
+  isolation: isolate;
+  color: white;
+}
+.apply-course-cover img {
+  position: absolute;
+  inset: 0;
+  z-index: -2;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.apply-course-cover[data-image]::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: color-mix(in oklab, black 55%, transparent);
+}
+.apply-course-cover h3 {
+  font-size: 1.25rem;
+  font-weight: 500;
+  line-height: 1.3;
+  text-wrap: balance;
+}
+.apply-course-body {
+  display: grid;
+  min-width: 0;
+  gap: var(--space-6);
+  padding: var(--space-5);
+}
+/* The thumb and its halo reach past the rail's ends; give them room before the clip that stops the elastic stretch from scrolling the page. */
+.apply-course-slider {
+  margin-inline: calc(var(--space-3) * -1);
+  padding-inline: var(--space-3);
+  overflow-x: clip;
 }
 .apply-notes {
   display: grid;
@@ -1174,10 +1229,16 @@ h1.article-title {
   max-width: 62ch;
   padding-block: 1rem 2rem;
 }
+.payload-form-sent-title {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
 .payload-form-sent-mark {
   display: grid;
-  width: 2.5rem;
-  height: 2.5rem;
+  flex: none;
+  width: 2rem;
+  height: 2rem;
   place-items: center;
   border-radius: 999px;
   background: color-mix(in oklab, oklch(0.65 0.15 150) 16%, transparent);

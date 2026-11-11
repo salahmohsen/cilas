@@ -1,9 +1,11 @@
+import type { MediaImage } from '@/lib/media-image'
 import type { Contribution } from '@/lib/pricing'
 import type { Course } from '@/payload-types'
 
 export type CourseOption = {
   id: number
   title: string
+  cover?: MediaImage
   questions: NonNullable<Course['applicant_questions']>
   contribution: Contribution | null
 }

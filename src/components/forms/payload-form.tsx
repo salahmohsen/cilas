@@ -1,16 +1,16 @@
 'use client'
 
 import { useForm, useSelector, type AnyFieldApi } from '@tanstack/react-form'
-import { Check } from 'lucide-react'
+import { Check, Flower2, Sprout } from 'lucide-react'
 import { useLocale, useTranslations } from 'next-intl'
 import { useEffect, useMemo, useRef, useState, type ReactNode } from 'react'
 
 import { RichTextField } from '@/components/RichTextField'
 import { PhoneInput } from '@/components/arc/phone-input/phone-input'
 import { isValidPhoneNumber, PHONE_NUMBER_ERROR } from '@/lib/phone'
-import { Badge } from '@/components/arc/badge/badge'
 import { ElasticSlider } from '@/components/arc/elastic-slider/elastic-slider'
 import { localDigits } from '@/lib/digits'
+import { focalPointStyle } from '@/lib/media-image'
 import { amountsOf, defaultAmountOf, formatAmount } from '@/lib/pricing'
 import {
   amountKey,
@@ -270,10 +270,12 @@ export function PayloadForm({
         ref={top}
         role="status"
       >
-        <span aria-hidden className="payload-form-sent-mark">
-          <Check size={20} strokeWidth={2} />
-        </span>
-        <h2 id="payload-form-sent">{t('sent')}</h2>
+        <h2 id="payload-form-sent" className="payload-form-sent-title">
+          <span aria-hidden className="payload-form-sent-mark">
+            <Check size={18} strokeWidth={2} />
+          </span>
+          {t('sent')}
+        </h2>
         {confirmation}
         {back ? (
           <Link className="bridge-link" href={back.href}>
@@ -603,58 +605,72 @@ export function PayloadForm({
             {chosen.map((c) => {
               const amounts = amountsOf(c.contribution)
               return (
-                <section className="grid min-w-0 gap-6" key={c.id} aria-label={c.title}>
-                  <div>
-                    <Badge>
-                      <span className="whitespace-normal">{c.title}</span>
-                    </Badge>
-                  </div>
-                  {c.questions.length ? <p>{t('extraQuestions')}</p> : null}
-                  {c.questions.map((q) =>
-                    renderQuestion({ ...q, name: choiceField(c.id, q.name) } as Question),
-                  )}
-                  {amounts.length > 1 ? (
-                    <api.Field name={amountKey(c.id)}>
-                      {(field) => (
-                        <div className="overflow-x-clip">
-                          <ElasticSlider
-                            label={t('contribution')}
-                            disabled={disabled}
-                            min={0}
-                            max={amounts.length - 1}
-                            step={1}
-                            value={Math.max(0, amounts.indexOf(Number(field.state.value)))}
-                            marks={amounts.map((amount, i) => ({
-                              value: i,
-                              label: localDigits(amount, locale),
-                            }))}
-                            format={(index) => money(amounts[index]!)}
-                            onValueChange={(index) => field.handleChange(String(amounts[index]))}
+                <section
+                  className="apply-course-card"
+                  key={c.id}
+                  aria-labelledby={`apply-course-${c.id}`}
+                >
+                  <header className="apply-course-cover" data-image={c.cover ? '' : undefined}>
+                    {c.cover ? (
+                      // eslint-disable-next-line @next/next/no-img-element
+                      <img
+                        src={c.cover.src}
+                        alt=""
+                        loading="lazy"
+                        style={focalPointStyle(c.cover)}
+                      />
+                    ) : null}
+                    <h3 id={`apply-course-${c.id}`}>{c.title}</h3>
+                  </header>
+                  <div className="apply-course-body">
+                    {c.questions.map((q) =>
+                      renderQuestion({ ...q, name: choiceField(c.id, q.name) } as Question),
+                    )}
+                    {amounts.length > 1 ? (
+                      <api.Field name={amountKey(c.id)}>
+                        {(field) => (
+                          <div className="apply-course-slider">
+                            <ElasticSlider
+                              startIcon={<Sprout size={18} aria-hidden />}
+                              endIcon={<Flower2 size={18} aria-hidden />}
+                              label={t('contribution')}
+                              disabled={disabled}
+                              min={0}
+                              max={amounts.length - 1}
+                              step={1}
+                              value={Math.max(0, amounts.indexOf(Number(field.state.value)))}
+                              marks={amounts.map((amount, i) => ({
+                                value: i,
+                                label: localDigits(amount, locale),
+                              }))}
+                              format={(index) => money(amounts[index]!)}
+                              onValueChange={(index) => field.handleChange(String(amounts[index]))}
+                            />
+                          </div>
+                        )}
+                      </api.Field>
+                    ) : amounts.length === 1 ? (
+                      <p>
+                        {t('contribution')}: {money(amounts[0]!)}
+                      </p>
+                    ) : null}
+                    {c.contribution?.need_based_deductions ? (
+                      <api.Field name={reductionKey(c.id)}>
+                        {(field) => (
+                          <Checkbox
+                            label={t('needReduction')}
+                            checked={Boolean(field.state.value)}
+                            onCheckedChange={(on) => field.handleChange(on === true)}
                           />
-                        </div>
-                      )}
-                    </api.Field>
-                  ) : amounts.length === 1 ? (
-                    <p>
-                      {t('contribution')}: {money(amounts[0]!)}
-                    </p>
-                  ) : null}
-                  {c.contribution?.need_based_deductions ? (
-                    <api.Field name={reductionKey(c.id)}>
-                      {(field) => (
-                        <Checkbox
-                          label={t('needReduction')}
-                          checked={Boolean(field.state.value)}
-                          onCheckedChange={(on) => field.handleChange(on === true)}
-                        />
-                      )}
-                    </api.Field>
-                  ) : null}
-                  {c.contribution?.note ? (
-                    <p className="payload-form-description whitespace-pre-line">
-                      {c.contribution.note}
-                    </p>
-                  ) : null}
+                        )}
+                      </api.Field>
+                    ) : null}
+                    {c.contribution?.note ? (
+                      <p className="payload-form-description whitespace-pre-line">
+                        {c.contribution.note}
+                      </p>
+                    ) : null}
+                  </div>
                 </section>
               )
             })}
