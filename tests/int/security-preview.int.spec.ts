@@ -34,11 +34,13 @@ const OWNER_SLUG = uniq('security-preview-owner')
 const ARTICLE_SLUG = uniq('security-private-preview')
 const PROGRAMME_SLUG = uniq('security-private-programme')
 const COURSE_SLUG = uniq('security-private-course')
+const PUBLIC_SLUG = uniq('security-public-article')
 
 describe('draft preview authorization', () => {
   let payload: Payload
   let person: number
   let article: number
+  let publicArticle: number
   let programme: number
   let course: number
   let form: number
@@ -94,6 +96,19 @@ describe('draft preview authorization', () => {
         },
       })
     ).id
+    publicArticle = (
+      await payload.create({
+        collection: 'articles',
+        data: {
+          title: 'Public article',
+          slug: PUBLIC_SLUG,
+          authors: [person],
+          tier: 'public',
+          review: { status: 'approved' },
+          _status: 'published',
+        },
+      })
+    ).id
     programme = (
       await payload.create({
         collection: 'programmes',
@@ -130,6 +145,7 @@ describe('draft preview authorization', () => {
     if (course) await payload.delete({ collection: 'courses', id: course })
     if (programme) await payload.delete({ collection: 'programmes', id: programme })
     if (article) await payload.delete({ collection: 'articles', id: article })
+    if (publicArticle) await payload.delete({ collection: 'articles', id: publicArticle })
     if (person) await payload.delete({ collection: 'people', id: person })
     await payload?.destroy()
   })
@@ -165,6 +181,24 @@ describe('draft preview authorization', () => {
         )?.article.id,
       ).toBe(article)
     }
+  })
+
+  it('reads a published article as published when the draft cookie outlives the preview', async () => {
+    for (const user of [null, stranger]) {
+      const reading = await getArticleForReading(payload, PUBLIC_SLUG, {
+        locale: 'en',
+        preview: true,
+        user,
+      })
+      expect(reading?.article.id).toBe(publicArticle)
+      expect(reading?.draft).toBe(false)
+    }
+    const own = await getArticleForReading(payload, PUBLIC_SLUG, {
+      locale: 'en',
+      preview: true,
+      user: owner,
+    })
+    expect(own?.draft).toBe(true)
   })
 
   it('refuses anonymous programme previews', async () => {

@@ -68,15 +68,15 @@ type View = { locale: string; slug: string; user: Reader }
  */
 export async function ArticlePage({ locale: siteLocale, slug, user: reader }: View) {
   const locale = siteLocale as Locale
-  const { isEnabled: preview } = await draftMode()
-  const user = preview ? await currentReader() : reader
-  // In the admin's live preview, mark the fields for the visual editor.
-  const pe = editableIn(preview)
+  const { isEnabled: draftCookie } = await draftMode()
+  const user = draftCookie ? await currentReader() : reader
   const payload = await getPayload({ config })
 
-  const reading = await getArticleForReading(payload, slug, { locale, preview, user })
+  const reading = await getArticleForReading(payload, slug, { locale, preview: draftCookie, user })
   if (!reading) notFound()
-  const { article, contentLocale, body, title, other } = reading
+  const { article, contentLocale, body, title, other, draft: preview } = reading
+  // In the admin's live preview, mark the fields for the visual editor.
+  const pe = editableIn(preview)
 
   const publicationCovers = await getPublicationCovers(payload)
   // The institute's email, the share bar's mail recipient.

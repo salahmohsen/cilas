@@ -63,50 +63,54 @@ export type ArticleReading = {
   hasOther: boolean
   /** The same article read in the other language (names missing here are there). */
   other?: Article
+  /** Whether this is the latest draft: draft mode, and the reader may edit the article. */
+  draft: boolean
 }
 
 /**
  * One article as a visitor reads it. The page stays in the site language;
  * when the article has no text in it, its body (and title) come from its
- * content language. In preview (draft mode) the latest draft is read with
- * the editor's update constraint; access rules also apply, so a `community` article
- * opens only for a signed-in reader.
+ * content language. In preview (draft mode) an article the reader may edit is
+ * read as its latest draft; any other article reads as published, because the
+ * draft-mode cookie outlives the preview that set it. Access rules also apply,
+ * so a `community` article opens only for a signed-in reader.
  */
 export const getArticleForReading = async (
   payload: Payload,
   slug: string,
   { locale, preview = false, user = null }: { locale: Locale; preview?: boolean; user?: Reader },
 ): Promise<ArticleReading | undefined> => {
-  const scope = preview ? await previewWhere(payload, 'articles', user) : null
-  if (scope === false) return undefined
-  const read = (l: Locale) =>
+  const scope = preview ? await previewWhere(payload, 'articles', user) : false
+  const read = (l: Locale, draft: boolean) =>
     payload
       .find({
         collection: 'articles',
-        where: preview
-          ? { and: [{ slug: { equals: slug } }, scope ?? {}] }
+        where: draft
+          ? { and: [{ slug: { equals: slug } }, scope || {}] }
           : { and: [{ slug: { equals: slug } }, { _status: { equals: 'published' } }] },
         limit: 1,
         depth: 2,
         locale: l,
         fallbackLocale: false,
-        draft: preview,
+        draft,
         // The Local API skips access rules unless told otherwise.
         overrideAccess: false,
-        // A preview reads no joins (security audit 2026-10-29); a visitor's
+        // A draft read gets no joins (security audit 2026-10-29); a published
         // read keeps them, so the page knows the article's collection.
-        ...(preview ? { joins: false as const } : {}),
+        ...(draft ? { joins: false as const } : {}),
         user,
       })
       .then((r) => r.docs[0])
 
-  const article = await read(locale)
+  const editable = scope === false ? undefined : await read(locale, true)
+  const draft = editable !== undefined
+  const article = editable ?? (await read(locale, false))
   if (!article) return undefined
-  // A preview reads no joins, so it looks the article's publications up under
+  // A draft read gets no joins, so it looks the article's publications up under
   // the same access rules: the page still finds its collection.
-  if (preview) article.publications = await publicationsOf(payload, article.id, locale, user)
+  if (draft) article.publications = await publicationsOf(payload, article.id, locale, user)
   const other = otherLocale(locale)
-  const inOther = await read(other)
+  const inOther = await read(other, draft)
 
   if (hasBody(article)) {
     return {
@@ -116,6 +120,7 @@ export const getArticleForReading = async (
       title: article.title,
       hasOther: hasBody(inOther),
       other: inOther,
+      draft,
     }
   }
   if (inOther && hasBody(inOther)) {
@@ -126,6 +131,7 @@ export const getArticleForReading = async (
       title: article.title || inOther.title,
       hasOther: false,
       other: inOther,
+      draft,
     }
   }
   return {
@@ -135,6 +141,7 @@ export const getArticleForReading = async (
     title: article.title || inOther?.title || '',
     hasOther: false,
     other: inOther,
+    draft,
   }
 }
 

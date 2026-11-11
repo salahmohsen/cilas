@@ -110,7 +110,7 @@ export async function CoursePage({
   // The institute's email, the share bar's mail recipient.
   const email = await getContactEmail()
 
-  if (!isPreview) {
+  if (!previewCourse) {
     // The course as data a search engine reads; the admin's preview skips it.
     const [tm, ts] = await Promise.all([getTranslations('Meta'), getTranslations('Study')])
     const schema = courseSchema({

@@ -258,32 +258,42 @@ export const getCourseForReading = async (
   slug: string,
   { locale, reader, preview = false }: { locale: Locale; reader: Reader; preview?: boolean },
 ) => {
-  const scope = preview ? await previewWhere(payload, 'courses', reader) : null
-  if (scope === false) return undefined
+  // Draft mode outlives the preview that set it: a course the reader may not
+  // edit reads as published.
+  const scope = preview ? await previewWhere(payload, 'courses', reader) : false
+  const readEditable = async (where: Where, draft: boolean): Promise<Course | undefined> =>
+    (
+      await payload.find({
+        collection: 'courses',
+        // The admin's preview shows any course; the site only what the reader may see.
+        where: { and: [{ slug: { equals: slug } }, where] },
+        limit: 1,
+        // Must match the `depth` given to `useLivePreview` in CourseLivePreview,
+        // or populated relationships will not survive the live merge.
+        depth: 2,
+        // Joins are admin views (a course's enrollments, a cycle's courses); never
+        // ship them to the page, where a previewing fellow would see assessments.
+        joins: false,
+        overrideAccess: false,
+        user: reader,
+        draft,
+        // A course without text in the site language shows its own (CONTEXT.md).
+        locale: locale as 'en' | 'ar',
+        fallbackLocale: otherLocale(locale),
+      })
+    ).docs[0]
+  const editable = scope === false ? undefined : await readEditable(scope, false)
+  /*
+   * `draft: true` is what returns the in-progress version. It reads from the
+   * versions table, and a document that has never been saved as a draft has
+   * no row there: the published document is the only record. So fall back to
+   * the plain read, otherwise previewing any freshly published course 404s
+   * until something triggers a version write.
+   */
+  const previewCourse =
+    scope === false || !editable ? undefined : ((await readEditable(scope, true)) ?? editable)
 
-  const docs = preview
-    ? (
-        await payload.find({
-          collection: 'courses',
-          // The admin's preview shows any course; the site only what the reader may see.
-          where: { and: [{ slug: { equals: slug } }, scope ?? {}] },
-          limit: 1,
-          // Must match the `depth` given to `useLivePreview` in CourseLivePreview,
-          // or populated relationships will not survive the live merge.
-          depth: 2,
-          // Joins are admin views (a course's enrollments, a cycle's courses); never
-          // ship them to the page, where a previewing fellow would see assessments.
-          joins: false,
-          overrideAccess: false,
-          user: reader,
-          // A course without text in the site language shows its own (CONTEXT.md).
-          locale: locale as 'en' | 'ar',
-          fallbackLocale: otherLocale(locale),
-        })
-      ).docs
-    : [await getCourse(payload, slug, { locale, reader })]
-
-  const course: Course | undefined = docs[0]
+  const course = editable ?? (await getCourse(payload, slug, { locale, reader }))
 
   if (!course) return undefined
 
@@ -311,26 +321,5 @@ export const getCourseForReading = async (
         fallbackLocale: otherLocale(locale),
       })
     : { docs: [] }
-  if (!preview) return { course, siblings, previewCourse: undefined }
-  /*
-   * In preview, `draft: true` is what returns the in-progress version. It reads
-   * from the versions table, and a document that has never been saved as a draft
-   * has no row there — the published document is the only record. So fall back
-   * to the published read, otherwise previewing any freshly published course
-   * 404s until something triggers a version write.
-   */
-  const { docs: drafts } = await payload.find({
-    collection: 'courses',
-    where: { and: [{ slug: { equals: slug } }, scope ?? {}] },
-    limit: 1,
-    depth: 2,
-    joins: false,
-    overrideAccess: false,
-    user: reader,
-    draft: true,
-    locale: locale as 'en' | 'ar',
-    fallbackLocale: otherLocale(locale),
-  })
-
-  return { course, siblings, previewCourse: drafts[0] ?? course }
+  return { course, siblings, previewCourse }
 }

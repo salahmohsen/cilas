@@ -71,19 +71,20 @@ export const getBridgeYear = async (
   locale: Locale,
   { slug, draft = false, user = null }: { slug?: string; draft?: boolean; user?: User | null } = {},
 ): Promise<BridgeYear | null> => {
-  const scope = draft ? await previewWhere(payload, 'programmes', user) : null
-  if (scope === false) return null
+  // Draft mode outlives the preview that set it: a reader who may not edit
+  // programmes reads the published year.
+  const scope = draft ? await previewWhere(payload, 'programmes', user) : false
+  const drafting = scope !== false
   const { docs } = await payload.find({
     collection: 'programmes',
     where: {
       and: [
         { kind: { equals: 'bridge' } },
         ...(slug ? [{ slug: { equals: slug } }] : []),
-        ...(draft ? [] : [{ _status: { equals: 'published' } }]),
-        ...(scope ? [scope] : []),
+        ...(drafting ? [scope] : [{ _status: { equals: 'published' } }]),
       ],
     },
-    draft,
+    draft: drafting,
     user,
     overrideAccess: false,
     sort: '-slug',

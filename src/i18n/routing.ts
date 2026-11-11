@@ -9,6 +9,9 @@ export const routing = defineRouting({
   locales: ['en', 'ar'],
   defaultLocale: 'en',
   localePrefix: 'always',
+  // Pages declare their own hreflang links (src/lib/seo.ts). The middleware's
+  // Link header builds them from the proxied http:// request and disagrees.
+  alternateLinks: false,
 })
 
 export type Locale = (typeof routing.locales)[number]
