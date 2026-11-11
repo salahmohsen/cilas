@@ -30,6 +30,25 @@ export const getPublishedArticles = async (
     user,
   })
 
+/** The publications listing an article, shaped as its `publications` join. */
+const publicationsOf = async (
+  payload: Payload,
+  id: number,
+  locale: Locale,
+  user: Reader,
+): Promise<Article['publications']> => {
+  const { docs } = await payload.find({
+    collection: 'publications',
+    where: { articles: { equals: id } },
+    depth: 1,
+    pagination: false,
+    locale,
+    overrideAccess: false,
+    user,
+  })
+  return { docs, hasNextPage: false, totalDocs: docs.length }
+}
+
 const hasBody = (a?: Pick<Article, 'body'> | null): boolean =>
   Boolean(a?.body?.root?.children?.length)
 
@@ -83,6 +102,9 @@ export const getArticleForReading = async (
 
   const article = await read(locale)
   if (!article) return undefined
+  // A preview reads no joins, so it looks the article's publications up under
+  // the same access rules: the page still finds its collection.
+  if (preview) article.publications = await publicationsOf(payload, article.id, locale, user)
   const other = otherLocale(locale)
   const inOther = await read(other)
 
