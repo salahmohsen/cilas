@@ -219,7 +219,9 @@
   margin: calc(var(--space-6) * -1) calc(var(--space-6) * -1) 0;
 }
 .detail .media .tile:first-child {
-  min-block-size: 7rem;
+  /* The close button sits over the first tile: its title starts below it. */
+  align-items: flex-end;
+  padding-block-start: 4.5rem;
 }
 .detail .tile {
   color: white;
