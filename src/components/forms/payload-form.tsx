@@ -408,7 +408,7 @@ export function PayloadForm({
                         style={focalPointStyle(c.cover)}
                       />
                     ) : null}
-                    <h3 id={`apply-course-${c.id}`}>{c.title}</h3>
+                    <h2 id={`apply-course-${c.id}`}>{c.title}</h2>
                   </header>
                   <div className="apply-course-body">
                     {c.questions.map((q) =>

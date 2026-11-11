@@ -1026,9 +1026,17 @@ h1.article-title {
   gap: 1.5rem;
   margin-block: 1.5rem 3rem;
 }
-/* Once sent, what came before the questions has done its job. The page title names one course, but a cycle form can send several, so the sent heading stands alone. */
-.apply-page:has(.payload-form-sent) :is(.apply-intro, .apply-header) {
+/* Once sent, what came before the questions has done its job. The page title names one course, but a cycle form can send several, so the sent heading stands alone on screen. The title stays for screen readers as the page's one h1. */
+.apply-page:has(.payload-form-sent) :is(.apply-intro, .apply-back) {
   display: none;
+}
+.apply-page:has(.payload-form-sent) .apply-header {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
 }
 /* One bordered card per chosen course: its cover under a dark layer, its name on top, its questions below. */
 .apply-course-card {
@@ -1067,7 +1075,7 @@ h1.article-title {
   z-index: -1;
   background: color-mix(in oklab, black 55%, transparent);
 }
-.apply-course-cover h3 {
+.apply-course-cover h2 {
   font-size: 1.25rem;
   font-weight: 500;
   line-height: 1.3;

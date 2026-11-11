@@ -85,12 +85,12 @@ function ApplicantCard({
       <ExpandableCard title={a.name || t.untitled} description={a.email}>
         <div className={styles.details}>
           <section className={styles.fields} aria-label={t.shared}>
-            <h3>{t.shared}</h3>
+            <h2>{t.shared}</h2>
             <PayloadAnswers fields={a.fields} answers={a.answers} />
           </section>
           {a.choices.map((c) => (
             <section key={c.course} className={styles.fields} aria-label={c.title}>
-              <h3>{c.title}</h3>
+              <h2>{c.title}</h2>
               <p>
                 {t.approved}: {c.accepted ? t.yes : t.no}
               </p>
@@ -191,6 +191,14 @@ function ApplicantCard({
   )
 }
 
+/** The toolbar's chips carry option labels, so two options must never share one. Only a repeated label gets its id. */
+const distinctLabels = <T extends { value: string; label: string }>(options: T[]) =>
+  options.map((o) =>
+    options.some((x) => x !== o && x.label === o.label)
+      ? { ...o, label: `${o.label} (${o.value})` }
+      : o,
+  )
+
 export function ApplicantsError({ ar }: { ar: boolean }) {
   const router = useRouter()
   const [pending, startTransition] = useTransition()
@@ -236,11 +244,9 @@ export function ApplicantsGrid({
     {
       id: 'course',
       label: t.course,
-      options: data.courses.map((c) => ({
-        value: String(c.id),
-        label: `${c.title} (${c.id})`,
-        hint: c.count,
-      })),
+      options: distinctLabels(
+        data.courses.map((c) => ({ value: String(c.id), label: c.title, hint: c.count })),
+      ),
     },
     {
       id: 'status',
@@ -250,7 +256,7 @@ export function ApplicantsGrid({
     {
       id: 'cycle',
       label: t.cycle,
-      options: [...cycles].map(([value, label]) => ({ value, label: `${label} (${value})` })),
+      options: distinctLabels([...cycles].map(([value, label]) => ({ value, label }))),
     },
     ...(admin
       ? [
@@ -293,7 +299,7 @@ export function ApplicantsGrid({
       ))}
       <ApplicantsFilter fields={fields} values={values} onChange={change} ar={ar} />
       <p role="status" className={styles.count}>
-        {pending ? t.loading : `${applications.length} / ${data.applications.length}`}
+        {pending ? t.loading : t.showing(applications.length, data.applications.length)}
       </p>
       {applications.length ? (
         <div className={styles.grid}>

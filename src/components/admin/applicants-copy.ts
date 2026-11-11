@@ -32,6 +32,7 @@ export const applicantsCopy = (ar: boolean) =>
         noMatches: 'لا توجد طلبات مطابقة',
         noMatchesBody: 'امسح التصفيات لرؤية كل الطلبات.',
         loading: 'جارٍ تحميل الطلبات',
+        showing: (shown: number, total: number) => `عرض ${shown} من ${total} طلب`,
         loadError: 'تعذر تحميل الطلبات',
         retry: 'إعادة المحاولة',
         failed: 'تعذر حفظ القرار. حاول مرة أخرى.',
@@ -71,6 +72,8 @@ export const applicantsCopy = (ar: boolean) =>
         noMatches: 'No matching applications',
         noMatchesBody: 'Clear the filters to see all applications.',
         loading: 'Loading applications',
+        showing: (shown: number, total: number) =>
+          `Showing ${shown} of ${total} ${total === 1 ? 'application' : 'applications'}`,
         loadError: 'Could not load applications',
         retry: 'Try again',
         failed: 'Could not save the decision. Try again.',

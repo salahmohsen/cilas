@@ -79,7 +79,7 @@
   border-block-start: 1px solid var(--border);
   padding-block-start: var(--space-6);
 }
-.fields h3 {
+.fields h2 {
   margin: 0;
   font-size: var(--text-base);
   font-weight: 500;
