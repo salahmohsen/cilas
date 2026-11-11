@@ -17,7 +17,6 @@
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(min(100%, 22rem), 1fr));
   gap: var(--space-6);
-  align-items: start;
 }
 .grid > * {
   min-inline-size: 0;
@@ -63,8 +62,11 @@
   white-space: nowrap;
 }
 /* The card. Its media holds up to three course tiles at one height; more tiles make it taller. */
+/* Cards in a row are as tall as the tallest: the media takes the extra height, so each name, email and button line up. */
 .card {
   display: grid;
+  grid-template-rows: 1fr auto;
+  block-size: 100%;
   overflow: hidden;
   border: 1px solid var(--border);
   border-radius: var(--radius-surface);
