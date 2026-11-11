@@ -76,11 +76,14 @@ export function DecisionDialog({
         }}
       >
         <Alert tone="info" title={t.whatNext}>
-          <ul className={styles.effects}>
+          {/* Alert wraps its children in a paragraph, so the list is spans with list roles. */}
+          <span className={styles.effects} role="list">
             {effects.map((line) => (
-              <li key={line}>{line}</li>
+              <span key={line} role="listitem">
+                {line}
+              </span>
             ))}
-          </ul>
+          </span>
         </Alert>
         {error && <Alert tone="danger" title={error} />}
         <div className={styles.actions}>

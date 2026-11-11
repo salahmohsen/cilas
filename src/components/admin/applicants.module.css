@@ -173,8 +173,11 @@
 .effects {
   display: grid;
   gap: var(--space-2);
-  margin: 0;
-  padding-inline-start: var(--space-5);
+}
+.effects > span {
+  display: list-item;
+  list-style: disc;
+  margin-inline-start: var(--space-5);
 }
 .srOnly {
   position: absolute;
@@ -188,11 +191,26 @@
 .detail {
   width: min(calc(100vw - var(--space-8)), 56rem);
   padding: 0;
+  --dialog-close-background: rgba(0, 0, 0, 0.55);
+  --dialog-close-border: rgba(255, 255, 255, 0.35);
+  --dialog-close-hover: rgba(0, 0, 0, 0.75);
+  --dialog-close-color: white;
+  color: var(--foreground);
+}
+/* The dialog body pads its children. The tiles run edge to edge, and the first is tall enough to clear the close button. */
+.detail .media {
+  margin: calc(var(--space-6) * -1) calc(var(--space-6) * -1) 0;
+}
+.detail .tile:first-child {
+  min-block-size: 7rem;
+}
+.detail .tile {
+  color: white;
 }
 .review {
   display: grid;
   gap: var(--space-8);
-  padding: var(--space-6);
+  padding-block-start: var(--space-6);
   font-size: var(--text-base);
   line-height: var(--leading-body);
 }

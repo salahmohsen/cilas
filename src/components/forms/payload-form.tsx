@@ -377,6 +377,7 @@ export function PayloadForm({
   return (
     <form
       className="payload-form"
+      data-review={review ? '' : undefined}
       dir={lang ? (isRtl(lang) ? 'rtl' : 'ltr') : undefined}
       lang={lang}
       noValidate

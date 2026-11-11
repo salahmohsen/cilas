@@ -152,3 +152,11 @@
   font-size: 0.8125rem;
   color: var(--danger, oklch(0.58 0.2 25));
 }
+
+/* A saved application is read, not edited: keep the answers at full strength although every control is locked. */
+.payload-form[data-review] :is(input, textarea):disabled {
+  cursor: default;
+  opacity: 1;
+  color: var(--foreground);
+  -webkit-text-fill-color: var(--foreground);
+}
