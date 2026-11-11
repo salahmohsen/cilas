@@ -5,6 +5,8 @@ import { DEFAULT_TEXTS } from '@/emails/settings'
 
 const HINTS: Record<string, string> = {
   acceptance: 'Placeholders: {name}, {email}, {title}.',
+  rejection:
+    'Placeholders: {name}, {email}, {title}. Sent when one course of an application is rejected.',
   review: 'Placeholder: {title}.',
   reset: 'Placeholder: {email}.',
   newsletter: 'Button and link labels in newsletter issues.',
@@ -12,6 +14,7 @@ const HINTS: Record<string, string> = {
 
 const LABELS: Record<string, string> = {
   acceptance: 'Application accepted',
+  rejection: 'Application rejected',
   review: 'Article review',
   reset: 'Password reset',
   newsletter: 'Newsletter',

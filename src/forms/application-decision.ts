@@ -13,51 +13,41 @@ import {
 
 import { env } from '@/env'
 import { getEmailSettings } from '@/emails/settings'
-import { acceptanceMail } from '@/emails/transactional'
+import { acceptanceMail, rejectionMail } from '@/emails/transactional'
 import { createPerson } from '@/lib/create-person'
 import { courseTitles } from './course-titles'
 import { applicantOf, rolesAfterAccept } from './applicant'
+import { deriveStatus } from './application-status'
 
-type Accepted = {
-  user: number
-  person: number
-  membership?: number
-  enrollments?: number[]
-  enrollment_outcomes?: { enrollment: number; created: boolean }[]
-  /** For the email, sent once the transaction commits. */
-  mail: { name: string; email: string; title: string; newAccount: boolean; site: string }
+type Kind = 'programmes' | 'courses' | 'cycles'
+type Applicant = { name: string; email: string }
+
+/** What a decision leaves for the caller, once its transaction has committed. */
+type Done = {
+  /** When the submission or course was decided. */
+  decided: string
+  mail: {
+    to: Applicant
+    title: string
+    kind: 'accepted' | 'rejected'
+    newAccount: boolean
+  } | null
 }
 
-const accept = async (req: PayloadRequest, id: number): Promise<Accepted | null> => {
+const local = (req: PayloadRequest) => ({ req, overrideAccess: true, depth: 0 }) as const
+
+/** The account and person an acceptance gives the applicant. Made on the first acceptance, found after. */
+const ensureAccount = async (req: PayloadRequest, applicant: Applicant, kind: Kind) => {
   const { payload } = req
-  const local = { req, overrideAccess: true, depth: 0 } as const
-  const submission = await payload.findByID({ collection: 'form-submissions', id, ...local })
-  if (submission.status === 'accepted') return null
-  if (!submission.target)
-    throw new APIError('This submission is not for a programme, cycle or course.', 400)
-  const applicant = applicantOf(submission.submissionData)
-  if ('error' in applicant) throw new APIError(applicant.error, 400)
-
-  const kind = submission.target.relationTo
-  const targetId = relId(submission.target.value)!
-  const courseIds = (submission.choices ?? [])
-    .filter((choice) => choice.accepted === true)
-    .map((choice) => relId(choice.course)!)
-  if (kind !== 'programmes' && !courseIds.length) {
-    throw new APIError('Accept at least one course before approving this application.', 400)
-  }
-
   const found = await payload.find({
     collection: 'users',
     where: { email: { equals: applicant.email } },
     limit: 1,
-    ...local,
+    ...local(req),
   })
   let user = found.docs[0]
-  const newAccount = !user
-  let result: Omit<Accepted, 'mail'>
   if (!user) {
-    const personId = await createPerson(req, applicant.name)
+    const person = await createPerson(req, applicant.name)
     user = await payload.create({
       collection: 'users',
       data: {
@@ -65,123 +55,196 @@ const accept = async (req: PayloadRequest, id: number): Promise<Accepted | null>
         // Nobody knows it: they sign in with Google or set one by reset.
         password: randomBytes(24).toString('base64url'),
         roles: rolesAfterAccept([], kind),
-        person: personId,
+        person,
       },
-      ...local,
+      ...local(req),
     })
-    result = { user: user.id, person: personId }
-  } else {
-    let personId = personOf(user)
-    if (personId === null) {
-      personId = await createPerson(req, applicant.name)
-      await payload.update({
-        collection: 'users',
-        id: user.id,
-        data: { person: personId },
-        ...local,
-      })
-    }
-    result = { user: user.id, person: personId }
-    const roles = rolesAfterAccept(user.roles, kind)
-    if (roles.length !== user.roles.length) {
-      user = await payload.update({ collection: 'users', id: user.id, data: { roles }, ...local })
-    }
+    return { user: user.id, person, newAccount: true }
   }
-  if (kind === 'programmes') {
-    const { docs } = await payload.find({
-      collection: 'memberships',
-      where: { and: [{ person: { equals: result.person } }, { programme: { equals: targetId } }] },
-      limit: 1,
-      ...local,
-    })
-    result.membership =
-      docs[0]?.id ??
-      (
-        await payload.create({
-          collection: 'memberships',
-          data: { person: result.person, programme: targetId, role: 'student' },
-          ...local,
-        })
-      ).id
-  } else {
-    result.enrollments = []
-    result.enrollment_outcomes = []
-    for (const courseId of courseIds) {
-      const { docs } = await payload.find({
-        collection: 'enrollments',
-        where: { and: [{ person: { equals: result.person } }, { course: { equals: courseId } }] },
-        limit: 1,
-        ...local,
-      })
-      const enrollment = docs[0]
-      if (enrollment?.status === 'applied') {
-        await payload.update({
-          collection: 'enrollments',
-          id: enrollment.id,
-          data: { status: 'accepted' },
-          ...local,
-        })
-      }
-      const enrollmentId =
-        enrollment?.id ??
-        (
-          await payload.create({
-            collection: 'enrollments',
-            data: {
-              person: result.person,
-              course: courseId,
-              status: 'accepted',
-              source: 'registration_form',
-            },
-            ...local,
-          })
-        ).id
-      result.enrollments.push(enrollmentId)
-      result.enrollment_outcomes.push({ enrollment: enrollmentId, created: !enrollment })
-    }
+  let person = personOf(user)
+  if (person === null) {
+    person = await createPerson(req, applicant.name)
+    await payload.update({ collection: 'users', id: user.id, data: { person }, ...local(req) })
   }
+  const roles = rolesAfterAccept(user.roles, kind)
+  if (roles.length !== user.roles.length) {
+    await payload.update({ collection: 'users', id: user.id, data: { roles }, ...local(req) })
+  }
+  return { user: user.id, person, newAccount: false }
+}
 
+/** The person's accepted enrollment in the course: an applied one is accepted, a missing one is made. */
+const enrollAccepted = async (req: PayloadRequest, person: number, course: number) => {
+  const { payload } = req
+  const { docs } = await payload.find({
+    collection: 'enrollments',
+    where: { and: [{ person: { equals: person } }, { course: { equals: course } }] },
+    limit: 1,
+    ...local(req),
+  })
+  const enrollment = docs[0]
+  if (enrollment?.status === 'applied') {
+    await payload.update({
+      collection: 'enrollments',
+      id: enrollment.id,
+      data: { status: 'accepted' },
+      ...local(req),
+    })
+  }
+  const id =
+    enrollment?.id ??
+    (
+      await payload.create({
+        collection: 'enrollments',
+        data: { person, course, status: 'accepted', source: 'registration_form' },
+        ...local(req),
+      })
+    ).id
+  return { enrollment: id, created: !enrollment }
+}
+
+const applicantOrThrow = (answers: Parameters<typeof applicantOf>[0]): Applicant => {
+  const applicant = applicantOf(answers)
+  if ('error' in applicant) throw new APIError(applicant.error, 400)
+  return applicant
+}
+
+/** Accepts a programme application as a whole: a membership. Course applications are decided per course. */
+const acceptProgramme = async (req: PayloadRequest, id: number): Promise<Done | null> => {
+  const { payload } = req
+  const submission = await payload.findByID({ collection: 'form-submissions', id, ...local(req) })
+  if (submission.status === 'accepted') return null
+  if (submission.target?.relationTo !== 'programmes')
+    throw new APIError('Decide each course of this application on its own.', 400)
+  const applicant = applicantOrThrow(submission.submissionData)
+  const programme = relId(submission.target.value)!
+  const account = await ensureAccount(req, applicant, 'programmes')
+  const { docs } = await payload.find({
+    collection: 'memberships',
+    where: { and: [{ person: { equals: account.person } }, { programme: { equals: programme } }] },
+    limit: 1,
+    ...local(req),
+  })
+  const membership =
+    docs[0]?.id ??
+    (
+      await payload.create({
+        collection: 'memberships',
+        data: { person: account.person, programme, role: 'student' },
+        ...local(req),
+      })
+    ).id
+  const decided = new Date().toISOString()
   await payload.update({
     collection: 'form-submissions',
     id,
-    data: { status: 'accepted', decided_at: new Date().toISOString(), result },
-    ...local,
+    data: {
+      status: 'accepted',
+      decided_at: decided,
+      result: { user: account.user, person: account.person, membership },
+    },
+    ...local(req),
   })
-
-  const titles =
-    kind === 'programmes'
-      ? [(await payload.findByID({ collection: kind, id: targetId, locale: 'en', ...local })).title]
-      : await courseTitles(req, courseIds, 'en').then((t) => courseIds.map((id) => t.get(id)))
+  const { title } = await payload.findByID({
+    collection: 'programmes',
+    id: programme,
+    locale: 'en',
+    ...local(req),
+  })
   return {
-    ...result,
-    mail: { ...applicant, title: titles.join(', '), newAccount, site: env.NEXT_PUBLIC_SERVER_URL },
+    decided,
+    mail: { to: applicant, title, kind: 'accepted', newAccount: account.newAccount },
   }
 }
 
-const reject = async (req: PayloadRequest, id: number): Promise<null> => {
-  const local = { req, overrideAccess: true, depth: 0 } as const
-  const submission = await req.payload.findByID({ collection: 'form-submissions', id, ...local })
+const rejectProgramme = async (req: PayloadRequest, id: number): Promise<Done> => {
+  const submission = await req.payload.findByID({
+    collection: 'form-submissions',
+    id,
+    ...local(req),
+  })
   if (submission.status !== 'new') throw new APIError('Only a new submission can be rejected.', 400)
+  if (submission.target?.relationTo !== 'programmes')
+    throw new APIError('Decide each course of this application on its own.', 400)
+  const decided = new Date().toISOString()
   await req.payload.update({
     collection: 'form-submissions',
     id,
-    data: { status: 'rejected', decided_at: new Date().toISOString() },
-    ...local,
+    data: { status: 'rejected', decided_at: decided },
+    ...local(req),
   })
-  return null
+  return { decided, mail: null }
+}
+
+/**
+ * Decides one course of an application. The first acceptance makes the
+ * account; each one enrolls the applicant in that course. A rejection only
+ * records the decision (an enrollment has no rejected status). Either way the
+ * submission's status follows from all its decisions (application-status.ts).
+ */
+const decideCourse = async (
+  req: PayloadRequest,
+  id: number,
+  course: number,
+  verdict: 'accepted' | 'rejected',
+): Promise<Done> => {
+  const { payload } = req
+  const submission = await payload.findByID({ collection: 'form-submissions', id, ...local(req) })
+  const choices = submission.choices ?? []
+  const choice = choices.find((c) => relId(c.course) === course)
+  if (!submission.target || submission.target.relationTo === 'programmes' || !choice)
+    throw new APIError('This application has no such course.', 404)
+  if ((choice.decision ?? 'pending') !== 'pending')
+    throw new APIError('This course already has a decision.', 400)
+  const applicant = applicantOrThrow(submission.submissionData)
+
+  const decided = new Date().toISOString()
+  let result = {}
+  let newAccount = false
+  if (verdict === 'accepted') {
+    const account = await ensureAccount(req, applicant, submission.target.relationTo)
+    newAccount = account.newAccount
+    const outcome = await enrollAccepted(req, account.person, course)
+    const prior = submission.result
+    result = {
+      result: {
+        user: account.user,
+        person: account.person,
+        membership: relId(prior?.membership) ?? undefined,
+        enrollments: [
+          ...new Set([...(prior?.enrollments ?? []).map((e) => relId(e)!), outcome.enrollment]),
+        ],
+        enrollment_outcomes: [
+          ...(prior?.enrollment_outcomes ?? []).map((o) => ({
+            enrollment: relId(o.enrollment)!,
+            created: o.created ?? false,
+          })),
+          outcome,
+        ],
+      },
+    }
+  }
+  const next = choices.map((c) =>
+    c === choice ? { ...c, decision: verdict, decided_at: decided } : c,
+  )
+  await payload.update({
+    collection: 'form-submissions',
+    id,
+    data: { choices: next, ...deriveStatus(next), ...result },
+    ...local(req),
+  })
+  const title = (await courseTitles(req, [course], 'en')).get(course) ?? ''
+  return { decided, mail: { to: applicant, title, kind: verdict, newAccount } }
 }
 
 const decide =
-  (run: (req: PayloadRequest, id: number) => Promise<Accepted | null>): PayloadHandler =>
+  (run: (req: PayloadRequest) => Promise<Done | null>): PayloadHandler =>
   async (req) => {
     if (!isAdminUser(req.user)) return Response.json({ error: 'Admins only.' }, { status: 403 })
-    const id = Number(req.routeParams?.id)
-    if (!Number.isInteger(id))
-      return Response.json({ error: 'No such submission.' }, { status: 404 })
     const owns = await initTransaction(req)
-    let done: Accepted | null
+    let done: Done | null
     try {
-      done = await run(req, id)
+      done = await run(req)
       if (owns) await commitTransaction(req)
     } catch (error) {
       if (owns) await killTransaction(req)
@@ -189,24 +252,60 @@ const decide =
         return Response.json({ error: error.message }, { status: error.status })
       throw error
     }
-    // After the commit, so a failed send never undoes the acceptance.
-    let emailed = false
-    if (done) {
+    if (!done) return Response.json({ ok: true, emailed: null })
+    // After the commit, so a failed send never undoes the decision.
+    let emailed: boolean | null = null
+    const { mail } = done
+    if (mail) {
       try {
-        const mail = await acceptanceMail(await getEmailSettings(req.payload, req), done.mail)
-        await req.payload.sendEmail({ to: done.mail.email, ...mail })
+        const settings = await getEmailSettings(req.payload, req)
+        const message =
+          mail.kind === 'accepted'
+            ? await acceptanceMail(settings, {
+                ...mail.to,
+                title: mail.title,
+                newAccount: mail.newAccount,
+                site: env.NEXT_PUBLIC_SERVER_URL,
+              })
+            : await rejectionMail(settings, { ...mail.to, title: mail.title })
+        await req.payload.sendEmail({ to: mail.to.email, ...message })
         emailed = true
       } catch (error) {
+        emailed = false
         req.payload.logger.error({
           err: error,
-          msg: `Acceptance email for submission ${id} failed`,
+          msg: `Email for a ${mail.kind} decision on submission ${req.routeParams?.id} failed`,
         })
       }
     }
-    return Response.json({ ok: true, emailed })
+    return Response.json({ ok: true, emailed, decided: done.decided })
   }
 
+const param = (req: PayloadRequest, name: string) => {
+  const value = Number(req.routeParams?.[name])
+  if (!Number.isInteger(value)) throw new APIError('No such submission.', 404)
+  return value
+}
+
 export const applicationEndpoints = [
-  { path: '/:id/accept', method: 'post' as const, handler: decide(accept) },
-  { path: '/:id/reject', method: 'post' as const, handler: decide(reject) },
+  {
+    path: '/:id/accept',
+    method: 'post' as const,
+    handler: decide((req) => acceptProgramme(req, param(req, 'id'))),
+  },
+  {
+    path: '/:id/reject',
+    method: 'post' as const,
+    handler: decide((req) => rejectProgramme(req, param(req, 'id'))),
+  },
+  {
+    path: '/:id/courses/:course/accept',
+    method: 'post' as const,
+    handler: decide((req) => decideCourse(req, param(req, 'id'), param(req, 'course'), 'accepted')),
+  },
+  {
+    path: '/:id/courses/:course/reject',
+    method: 'post' as const,
+    handler: decide((req) => decideCourse(req, param(req, 'id'), param(req, 'course'), 'rejected')),
+  },
 ]

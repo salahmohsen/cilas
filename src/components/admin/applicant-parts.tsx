@@ -1,15 +1,19 @@
 'use client'
 
 import Image from 'next/image'
+import type { ReactNode } from 'react'
 import { Mail } from 'lucide-react'
 import { Badge, type BadgeTone } from '@/components/arc/badge/badge'
+import type { ChoiceDecision } from '@/forms/application-status'
 import type { Applicant } from '@/forms/applicants'
 import { focalPointStyle } from '@/lib/media-image'
 import { applicantsCopy } from './applicants-copy'
 import styles from './applicants.module.css'
 
-const tones: Record<Applicant['status'], BadgeTone> = {
-  new: 'warning',
+type Choice = Applicant['choices'][number]
+
+const tones: Record<ChoiceDecision, BadgeTone> = {
+  pending: 'warning',
   accepted: 'success',
   rejected: 'danger',
 }
@@ -18,20 +22,12 @@ const tones: Record<Applicant['status'], BadgeTone> = {
 const day = (iso: string, ar: boolean) =>
   new Date(iso).toLocaleDateString(ar ? 'ar-EG' : 'en-GB', { timeZone: 'Africa/Cairo' })
 
-/** The status, with the decision date once the application is decided. */
-export function StatusBadge({
-  application: a,
-  ar,
-  withDate = false,
-}: {
-  application: Pick<Applicant, 'status' | 'decided'>
-  ar: boolean
-  withDate?: boolean
-}) {
-  const label = applicantsCopy(ar).statuses[a.status]
+/** One course's decision, with its date once it is decided. */
+export function DecisionBadge({ choice, ar }: { choice: Choice; ar: boolean }) {
+  const label = applicantsCopy(ar).decisions[choice.decision]
   return (
-    <Badge tone={tones[a.status]}>
-      {withDate && a.decided ? `${label} · ${day(a.decided, ar)}` : label}
+    <Badge tone={tones[choice.decision]}>
+      {choice.decided ? `${label} · ${day(choice.decided, ar)}` : label}
     </Badge>
   )
 }
@@ -45,25 +41,53 @@ export function EmailLine({ email }: { email: string }) {
   )
 }
 
-/** One tile per course: its cover under a dark layer, its title on top. Three tiles fill the media height; more make it taller. */
-export function CourseTiles({ choices, ar }: { choices: Applicant['choices']; ar: boolean }) {
+/**
+ * A course over its cover under a dark layer: the title on the left, `children`
+ * (a badge or the decision buttons) on the right.
+ */
+export function CourseTile({
+  choice: c,
+  ar,
+  className,
+  children,
+}: {
+  choice: Choice
+  ar: boolean
+  className?: string
+  children?: ReactNode
+}) {
   const t = applicantsCopy(ar)
+  return (
+    <div
+      className={[styles.tile, className].filter(Boolean).join(' ')}
+      data-image={c.cover ? '' : undefined}
+    >
+      {c.cover ? (
+        <Image
+          src={c.cover.src}
+          alt=""
+          fill
+          sizes="(max-width: 700px) 100vw, 640px"
+          style={focalPointStyle(c.cover)}
+        />
+      ) : null}
+      <div className={styles.tileRow}>
+        <span className={styles.tileTitle}>{c.title}</span>
+        {children}
+      </div>
+      {c.cover ? null : <span className={styles.srOnly}>{t.noCover}</span>}
+    </div>
+  )
+}
+
+/** One tile per course, each with its decision. Three tiles fill the media height; more make it taller. */
+export function CourseTiles({ choices, ar }: { choices: Choice[]; ar: boolean }) {
   return (
     <div className={styles.media} data-count={choices.length}>
       {choices.map((c) => (
-        <div className={styles.tile} data-image={c.cover ? '' : undefined} key={c.course}>
-          {c.cover ? (
-            <Image
-              src={c.cover.src}
-              alt=""
-              fill
-              sizes="(max-width: 700px) 100vw, 640px"
-              style={focalPointStyle(c.cover)}
-            />
-          ) : null}
-          <span className={styles.tileTitle}>{c.title}</span>
-          {c.cover ? null : <span className={styles.srOnly}>{t.noCover}</span>}
-        </div>
+        <CourseTile key={c.course} choice={c} ar={ar}>
+          <DecisionBadge choice={c} ar={ar} />
+        </CourseTile>
       ))}
     </div>
   )

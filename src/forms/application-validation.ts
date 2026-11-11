@@ -171,9 +171,11 @@ export const validateApplication = async (
     local,
   )
   if ('error' in checked) throw new APIError(checked.error, 400)
+  // Whoever submits, every course waits for its decision (application-decision.ts).
   return checked.choices.map((choice) => ({
     ...choice,
-    accepted: local ? (choice.accepted ?? true) : true,
+    decision: 'pending' as const,
+    decided_at: null,
   }))
 }
 

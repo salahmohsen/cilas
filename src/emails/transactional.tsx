@@ -32,6 +32,26 @@ export const acceptanceMail = async (
   return { subject, ...rendered }
 }
 
+/** Sent when one course of an application is rejected. Kind and plain; no button. */
+export const rejectionMail = async (
+  settings: EmailSettings,
+  data: { name: string; email: string; title: string },
+): Promise<Mail> => {
+  const t = settings.texts.rejection
+  const values = { name: data.name, email: data.email, title: data.title }
+  const subject = fill(t.subject, values)
+  const rendered = await renderEmail(
+    <MessageEmail
+      settings={settings}
+      preview={subject}
+      heading={subject}
+      kicker="Admissions"
+      paragraphs={paragraphs(fill(t.body, values))}
+    />,
+  )
+  return { subject, ...rendered }
+}
+
 type ReviewKey = 'submitted' | 'approved' | 'changes_requested' | 'rejected'
 const REVIEW_KEYS: ReviewKey[] = ['submitted', 'approved', 'changes_requested', 'rejected']
 

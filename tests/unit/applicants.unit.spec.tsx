@@ -37,53 +37,46 @@ beforeEach(() => {
   vi.clearAllMocks()
 })
 
+const choice = (
+  course: number,
+  title: string,
+  extra: Partial<ApplicantsData['applications'][0]['choices'][0]> = {},
+) => ({
+  course,
+  title,
+  decision: 'pending' as const,
+  decided: null,
+  fields: [],
+  answers: [],
+  cycle: { id: 7 + course, title: 'Fall' },
+  cover: undefined,
+  contribution: null,
+  need_reduction: course === 2,
+  amount: 100,
+  ...extra,
+})
+const application = (choices: ReturnType<typeof choice>[]): ApplicantsData['applications'][0] => ({
+  id: 10,
+  name: 'Applicant',
+  email: 'a@example.test',
+  submitted: '2026-11-01T12:00:00Z',
+  status: 'new',
+  decided: null,
+  target: 'courses',
+  formId: 1,
+  fields: [],
+  answers: [],
+  choices,
+})
+const courses = [
+  { id: 1, title: 'Writing', count: 1 },
+  { id: 2, title: 'History', count: 1 },
+]
 const data: ApplicantsData = {
-  courses: [
-    { id: 1, title: 'Writing', count: 1 },
-    { id: 2, title: 'History', count: 1 },
-  ],
-  applications: [
-    {
-      id: 10,
-      name: 'Applicant',
-      email: 'a@example.test',
-      submitted: '2026-11-01T12:00:00Z',
-      status: 'new',
-      canAccept: true,
-      decided: null,
-      target: 'courses',
-      formId: 1,
-      fields: [],
-      answers: [],
-      choices: [
-        {
-          course: 1,
-          title: 'Writing',
-          accepted: true,
-          fields: [],
-          answers: [],
-          cycle: { id: 7, title: 'Fall' },
-          cover: undefined,
-          contribution: null,
-          need_reduction: false,
-          amount: 100,
-        },
-        {
-          course: 2,
-          title: 'History',
-          accepted: true,
-          fields: [],
-          answers: [],
-          cycle: { id: 8, title: 'Spring' },
-          cover: undefined,
-          contribution: null,
-          need_reduction: true,
-          amount: 50,
-        },
-      ],
-    },
-  ],
+  courses,
+  applications: [application([choice(1, 'Writing'), choice(2, 'History')])],
 }
+const single: ApplicantsData = { courses, applications: [application([choice(1, 'Writing')])] }
 
 const view = (ui: ReactNode) =>
   render(ui, {
@@ -94,9 +87,13 @@ const view = (ui: ReactNode) =>
     ),
   })
 const slow = { timeout: 3000 }
-/** Accept asks first: open the dialog, read what follows, confirm. */
-async function accept() {
-  fireEvent.click(screen.getByRole('button', { name: 'Accept' }))
+const respond = (body: object, ok = true) =>
+  vi.stubGlobal('fetch', vi.fn().mockResolvedValue({ ok, json: async () => body }))
+const done = { ok: true, emailed: true, decided: '2026-11-11T10:00:00Z' }
+const open = () => fireEvent.click(screen.getByRole('button', { name: 'Review' }))
+/** A decision asks first: open the dialog, read what follows, confirm. */
+async function accept(label: string) {
+  fireEvent.click(screen.getByRole('button', { name: label }))
   const dialog = screen.getByRole('dialog')
   expect(within(dialog).getByText(/An email goes to a@example.test/)).toBeTruthy()
   fireEvent.click(within(dialog).getByRole('button', { name: 'Accept' }))
@@ -126,22 +123,67 @@ describe('applicant review', () => {
     expect(navigation.push).toHaveBeenCalledWith('/admin/applicants?locale=ar', { scroll: false })
   })
 
-  it('requires rejection confirmation and keeps API failures visible for retry', async () => {
-    const fetcher = vi.fn().mockResolvedValue({
-      ok: false,
-      json: async () => ({ error: 'Decision unavailable. Retry.' }),
-    })
-    vi.stubGlobal('fetch', fetcher)
+  it('shows one status per course on the card and one Review button, no decision buttons', () => {
     view(<ApplicantsGrid data={data} ar={false} admin />)
-    fireEvent.click(screen.getByRole('button', { name: 'Reject' }))
-    expect(fetcher).not.toHaveBeenCalled()
+    expect(screen.getByRole('heading', { level: 2, name: 'Applications' })).toBeTruthy()
+    expect(screen.getAllByText('Pending')).toHaveLength(2)
+    expect(screen.getByText('a@example.test')).toBeTruthy()
+    expect(screen.getByText('Writing')).toBeTruthy()
+    expect(screen.getByText('History')).toBeTruthy()
+    expect(screen.getAllByRole('button', { name: 'Review' })).toHaveLength(1)
+    expect(screen.queryByRole('button', { name: /^(Accept|Reject)/ })).toBeNull()
+  })
+
+  it('shows each course’s decision and date on its tile', () => {
+    const decided = application([
+      choice(1, 'Writing', { decision: 'accepted', decided: '2026-11-11T10:00:00Z' }),
+      choice(2, 'History', { decision: 'rejected', decided: '2026-11-10T10:00:00Z' }),
+    ])
+    view(<ApplicantsGrid data={{ courses, applications: [decided] }} ar={false} admin={false} />)
+    expect(screen.getByText('Accepted · 11/11/2026')).toBeTruthy()
+    expect(screen.getByText('Rejected · 10/11/2026')).toBeTruthy()
+  })
+
+  it('opens the application from the name or the Review button', async () => {
+    view(<ApplicantsGrid data={data} ar={false} admin />)
+    fireEvent.click(screen.getByRole('button', { name: 'Applicant: Writing, History' }))
+    expect(await screen.findByRole('button', { name: 'Close' })).toBeTruthy()
+  })
+
+  it('gives one course Reject and Accept in the detail', () => {
+    view(<ApplicantsGrid data={single} ar={false} admin />)
+    open()
+    expect(screen.getByRole('button', { name: 'Reject: Writing' })).toBeTruthy()
+    expect(screen.getByRole('button', { name: 'Accept: Writing' })).toBeTruthy()
+  })
+
+  it('lists several courses with their own actions, and a badge once decided', () => {
+    const mixed = application([
+      choice(1, 'Writing'),
+      choice(2, 'History', { decision: 'accepted', decided: '2026-11-11T10:00:00Z' }),
+    ])
+    view(<ApplicantsGrid data={{ courses, applications: [mixed] }} ar={false} admin />)
+    open()
+    const list = screen.getByRole('list', { name: 'Course' })
+    expect(within(list).getAllByRole('listitem')).toHaveLength(2)
+    expect(within(list).getByRole('button', { name: 'Accept: Writing' })).toBeTruthy()
+    expect(within(list).queryByRole('button', { name: 'Accept: History' })).toBeNull()
+    expect(within(list).getByText('Accepted · 11/11/2026')).toBeTruthy()
+  })
+
+  it('asks before rejecting one course and keeps API failures visible for retry', async () => {
+    respond({ error: 'Decision unavailable. Retry.' }, false)
+    view(<ApplicantsGrid data={data} ar={false} admin />)
+    open()
+    fireEvent.click(screen.getByRole('button', { name: 'Reject: History' }))
+    expect(fetch).not.toHaveBeenCalledWith(expect.stringContaining('/courses/'), expect.anything())
     const dialog = screen.getByRole('dialog')
     expect(within(dialog).getByText('What happens next')).toBeTruthy()
-    expect(within(dialog).getByText(/No email goes to a@example.test/)).toBeTruthy()
+    expect(within(dialog).getByText(/A kind email goes to a@example.test/)).toBeTruthy()
     fireEvent.click(within(dialog).getByRole('button', { name: 'Reject' }))
     await waitFor(() =>
-      expect(fetcher).toHaveBeenCalledWith(
-        '/api/form-submissions/10/reject',
+      expect(fetch).toHaveBeenCalledWith(
+        '/api/form-submissions/10/courses/2/reject',
         expect.objectContaining({ method: 'POST' }),
       ),
     )
@@ -149,66 +191,55 @@ describe('applicant review', () => {
     expect(screen.getByRole('dialog')).toBeTruthy()
   })
 
-  it('returns focus to the Reject button when the dialog is cancelled', async () => {
+  it('returns focus to the button when the dialog is cancelled', async () => {
     view(<ApplicantsGrid data={data} ar={false} admin />)
-    const reject = screen.getByRole('button', { name: 'Reject' })
+    open()
+    const reject = screen.getByRole('button', { name: 'Reject: Writing' })
     fireEvent.click(reject)
     fireEvent.click(within(screen.getByRole('dialog')).getByRole('button', { name: 'Cancel' }))
     await waitFor(() => expect(document.activeElement).toBe(reject))
   })
 
-  it('updates a pending filter immediately after acceptance', async () => {
+  it('shows one accepted course while the other waits, and the application stays pending', async () => {
     navigation.search = 'status=new'
-    vi.stubGlobal(
-      'fetch',
-      vi.fn().mockResolvedValue({ ok: true, json: async () => ({ ok: true, emailed: true }) }),
-    )
+    respond(done)
     view(<ApplicantsGrid data={data} ar={false} admin />)
-    await accept()
+    open()
+    await accept('Accept: Writing')
+    expect(await screen.findAllByText('Accepted · 11/11/2026', {}, slow)).not.toHaveLength(0)
+    expect(fetch).toHaveBeenCalledWith(
+      '/api/form-submissions/10/courses/1/accept',
+      expect.objectContaining({ method: 'POST' }),
+    )
+    expect(screen.queryByText('No matching applications')).toBeNull()
+  })
+
+  it('updates a pending filter once the last course is decided', async () => {
+    navigation.search = 'status=new'
+    respond(done)
+    view(<ApplicantsGrid data={single} ar={false} admin />)
+    open()
+    await accept('Accept: Writing')
     expect(await screen.findByText('No matching applications', {}, slow)).toBeTruthy()
   })
 
   it('keeps email delivery warnings visible after a status filter removes the card', async () => {
     navigation.search = 'status=new'
-    vi.stubGlobal(
-      'fetch',
-      vi.fn().mockResolvedValue({ ok: true, json: async () => ({ ok: true, emailed: false }) }),
-    )
-    view(<ApplicantsGrid data={data} ar={false} admin />)
-    await accept()
+    respond({ ...done, emailed: false })
+    view(<ApplicantsGrid data={single} ar={false} admin />)
+    open()
+    await accept('Accept: Writing')
     expect(await screen.findByText('No matching applications', {}, slow)).toBeTruthy()
     expect(
-      screen.getByText('Accepted, but the email did not send. Contact the applicant directly.'),
+      screen.getByText(
+        'The decision is saved, but the email did not send. Contact the applicant directly.',
+      ),
     ).toBeTruthy()
-  })
-
-  it('shows the status above the name and opens the application', async () => {
-    view(<ApplicantsGrid data={data} ar={false} admin />)
-    expect(screen.getByRole('heading', { level: 2, name: 'Applications' })).toBeTruthy()
-    expect(screen.getAllByText(/Pending/).length).toBeGreaterThan(0)
-    expect(screen.getByText('a@example.test')).toBeTruthy()
-    // One tile per course.
-    expect(screen.getByText('Writing')).toBeTruthy()
-    expect(screen.getByText('History')).toBeTruthy()
-    fireEvent.click(screen.getByRole('button', { name: 'Applicant: Writing, History' }))
-    expect(await screen.findByRole('button', { name: 'Close' })).toBeTruthy()
-  })
-
-  it('shows the decision date in the status once decided', async () => {
-    const decided: ApplicantsData = {
-      ...data,
-      applications: [
-        { ...data.applications[0], status: 'accepted', decided: '2026-11-11T10:00:00Z' },
-      ],
-    }
-    view(<ApplicantsGrid data={decided} ar={false} admin={false} />)
-    fireEvent.click(screen.getByRole('button', { name: 'Applicant: Writing, History' }))
-    expect(await screen.findByText('Accepted · 11/11/2026')).toBeTruthy()
   })
 
   it('does not show mutation controls to fellows', () => {
     view(<ApplicantsGrid data={data} ar={false} admin={false} />)
-    expect(screen.queryByRole('button', { name: 'Accept' })).toBeNull()
-    expect(screen.queryByRole('button', { name: 'Reject' })).toBeNull()
+    open()
+    expect(screen.queryByRole('button', { name: /^(Accept|Reject)/ })).toBeNull()
   })
 })

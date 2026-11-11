@@ -162,7 +162,7 @@ describe('accepting an application', () => {
 
     const res = await decide('accept', submission.id)
     expect(res.status).toBe(200)
-    expect(await res.json()).toEqual({ ok: true, emailed: true })
+    expect(await res.json()).toMatchObject({ ok: true, emailed: true })
     expect(payload.sendEmail).toHaveBeenCalledWith(expect.objectContaining({ to: EMAIL }))
 
     const { docs } = await payload.find({

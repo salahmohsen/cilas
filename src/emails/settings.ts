@@ -16,6 +16,10 @@ export const DEFAULT_TEXTS = {
     existing_account: 'Sign in with your CILAS account as usual.',
     button: 'Sign in',
   },
+  rejection: {
+    subject: 'Your application to {title}',
+    body: 'Dear {name},\n\nThank you for applying to {title}. We read every application with care. We are sorry that we cannot offer you a place this time.\n\nYou are welcome to apply to our future courses.',
+  },
   review: {
     submitted_subject: 'Submitted for review: {title}',
     submitted: '“{title}” was submitted for review.',

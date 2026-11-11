@@ -1,23 +1,18 @@
 'use client'
 
 import { formatAmount } from '@/lib/pricing'
-import { CheckboxField, FieldPathContext } from '@payloadcms/ui'
 import type { submissionChoices } from '@/forms/submission-view'
 
 export function SubmissionChoiceCards({
   choices,
-  path,
-  decided,
 }: {
   choices: Awaited<ReturnType<typeof submissionChoices>>
-  path: string
-  decided: boolean
 }) {
   if (!choices.length) return null
   return (
     <section aria-label="Course choices" className="cilas-admin-stack">
       <h2>Course choices</h2>
-      {choices.map((choice, i) => (
+      {choices.map((choice) => (
         <article
           key={choice.id ?? choice.course}
           style={{ border: '1px solid var(--theme-elevation-150)', padding: 16 }}
@@ -40,17 +35,12 @@ export function SubmissionChoiceCards({
               </div>
             ))}
           </dl>
-          <FieldPathContext value={`${path}.${i}.accepted`}>
-            <CheckboxField
-              readOnly={decided}
-              field={{
-                name: 'accepted',
-                type: 'checkbox',
-                label: `Accept ${choice.title}`,
-              }}
-              path={`${path}.${i}.accepted`}
-            />
-          </FieldPathContext>
+          <p>
+            Decision: {choice.decision ?? 'pending'}
+            {choice.decided_at
+              ? ` on ${new Date(choice.decided_at).toLocaleDateString('en-GB')}`
+              : ''}
+          </p>
         </article>
       ))}
     </section>

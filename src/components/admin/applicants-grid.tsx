@@ -1,9 +1,7 @@
 'use client'
 
-import Link from 'next/link'
 import { usePathname, useRouter, useSearchParams } from 'next/navigation'
-import { X } from 'lucide-react'
-import { useRef, useState, useTransition, type MouseEvent, type RefObject } from 'react'
+import { useState, useTransition } from 'react'
 import { Alert } from '@/components/arc/alert/alert'
 import { Button } from '@/components/arc/button/button'
 import { EmptyState } from '@/components/arc/empty-state/empty-state'
@@ -12,48 +10,30 @@ import type { Applicant, ApplicantsData } from '@/forms/applicants'
 import { ApplicantsFilter, applicantFilterKeys } from './applicants-filter'
 import { applicantsCopy } from './applicants-copy'
 import { ApplicantDetail } from './applicant-detail'
-import { DecisionDialog, type Decision } from './applicant-decision-dialog'
-import { CourseTiles, EmailLine, StatusBadge } from './applicant-parts'
+import { withDecision } from './applicant-decide'
+import { CourseTiles, EmailLine } from './applicant-parts'
 import styles from './applicants.module.css'
 
 function ApplicantCard({
   application: a,
   ar,
   admin,
-  fallbackFocus,
-  onStatusChange,
+  onDecided,
 }: {
   application: Applicant
   ar: boolean
   admin: boolean
-  fallbackFocus: RefObject<HTMLElement | null>
-  onStatusChange: (id: number, status: Applicant['status'], emailFailed: boolean) => void
+  onDecided: (application: Applicant, emailFailed: boolean) => void
 }) {
   const t = applicantsCopy(ar)
-  const [decision, setDecision] = useState<Decision | null>(null)
   const [detail, setDetail] = useState(false)
-  const opener = useRef<HTMLElement | null>(null)
   const name = a.name || t.untitled
-  const ask = (next: Decision) => (e: MouseEvent<HTMLElement>) => {
-    opener.current = e.currentTarget
-    setDecision(next)
-  }
-  const decide = async (action: Decision): Promise<boolean> => {
-    const response = await fetch(`/api/form-submissions/${a.id}/${action}`, {
-      method: 'POST',
-      credentials: 'same-origin',
-    })
-    const body = await response.json()
-    if (!response.ok || body.ok !== true) throw new Error(body.error || t.failed)
-    return action === 'accept' && body.emailed === false
-  }
   return (
     <div className={styles.applicant}>
       <article className={styles.card}>
         <CourseTiles choices={a.choices} ar={ar} />
         <div className={styles.cardBody}>
           <h3 className={styles.cardTitle}>
-            <StatusBadge application={a} ar={ar} />
             <button
               type="button"
               className={styles.open}
@@ -66,26 +46,11 @@ function ApplicantCard({
           <p className={styles.cardDescription}>
             <EmailLine email={a.email} />
           </p>
-          {admin && (
-            <div className={styles.cardFooter}>
-              <Button
-                variant="danger"
-                disabled={a.status !== 'new'}
-                onClick={ask('reject')}
-                className={styles.reject}
-              >
-                <X size={16} strokeWidth={1.75} aria-hidden />
-                {t.reject}
-              </Button>
-              <Button
-                className={styles.accept}
-                disabled={a.status === 'accepted' || !a.canAccept}
-                onClick={ask('accept')}
-              >
-                {a.status === 'accepted' ? t.statuses.accepted : t.accept}
-              </Button>
-            </div>
-          )}
+          <div className={styles.cardFooter}>
+            <Button className={styles.accept} onClick={() => setDetail(true)}>
+              {t.review}
+            </Button>
+          </div>
         </div>
       </article>
       <ApplicantDetail
@@ -94,32 +59,10 @@ function ApplicantCard({
         admin={admin}
         open={detail}
         onOpenChange={setDetail}
+        onDecided={(course, decision, result) =>
+          onDecided(withDecision(a, course, decision, result.decided), result.emailFailed)
+        }
       />
-      {admin && (
-        <DecisionDialog
-          application={a}
-          decision={decision}
-          ar={ar}
-          onClose={() => setDecision(null)}
-          decide={decide}
-          onDone={(done, emailFailed) => {
-            setDecision(null)
-            onStatusChange(a.id, done === 'accept' ? 'accepted' : 'rejected', emailFailed)
-          }}
-          returnFocus={() => {
-            // A decided card leaves its button disabled or unmounted (status filter): fall back to the list summary.
-            const button = opener.current
-            return button?.isConnected && !(button as HTMLButtonElement).disabled
-              ? button
-              : fallbackFocus.current
-          }}
-        />
-      )}
-      {admin && !a.canAccept && a.status !== 'accepted' && (
-        <p className={styles.note}>
-          {t.noApproved} <Link href={`/admin/collections/form-submissions/${a.id}`}>{t.edit}</Link>
-        </p>
-      )}
     </div>
   )
 }
@@ -164,11 +107,9 @@ export function ApplicantsGrid({
   const router = useRouter()
   const [pending, startTransition] = useTransition()
   const values = new URLSearchParams(search.toString())
-  const summary = useRef<HTMLParagraphElement>(null)
   const [emailWarnings, setEmailWarnings] = useState<number[]>([])
-  const [decisions, setDecisions] = useState<Record<number, Pick<Applicant, 'status' | 'decided'>>>(
-    {},
-  )
+  // Applications decided on this page, as the server now has them.
+  const [decided, setDecided] = useState<Record<number, Applicant>>({})
   const cycles = new Map(
     data.applications.flatMap((a) =>
       a.choices.flatMap((c) =>
@@ -216,7 +157,7 @@ export function ApplicantsGrid({
   }
   const applications = data.applications.filter(
     (a) =>
-      (!values.get('status') || (decisions[a.id]?.status ?? a.status) === values.get('status')) &&
+      (!values.get('status') || (decided[a.id] ?? a).status === values.get('status')) &&
       a.choices.some(
         (c) =>
           (!values.get('course') || String(c.course) === values.get('course')) &&
@@ -234,7 +175,7 @@ export function ApplicantsGrid({
         </Alert>
       ))}
       <ApplicantsFilter fields={fields} values={values} onChange={change} ar={ar} />
-      <p role="status" tabIndex={-1} ref={summary} className={styles.count}>
+      <p role="status" className={styles.count}>
         {pending ? t.loading : t.showing(applications.length, data.applications.length)}
       </p>
       {applications.length ? (
@@ -244,17 +185,13 @@ export function ApplicantsGrid({
             {applications.map((a) => (
               <ApplicantCard
                 key={a.id}
-                application={{ ...a, ...decisions[a.id] }}
+                application={decided[a.id] ?? a}
                 ar={ar}
                 admin={admin}
-                fallbackFocus={summary}
-                onStatusChange={(id, status, emailFailed) => {
-                  setDecisions((current) => ({
-                    ...current,
-                    [id]: { status, decided: new Date().toISOString() },
-                  }))
+                onDecided={(next, emailFailed) => {
+                  setDecided((current) => ({ ...current, [a.id]: next }))
                   if (emailFailed)
-                    setEmailWarnings((current) => [...current.filter((value) => value !== id), id])
+                    setEmailWarnings((current) => [...current.filter((id) => id !== a.id), a.id])
                 }}
               />
             ))}

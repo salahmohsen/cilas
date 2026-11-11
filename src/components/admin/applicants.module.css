@@ -100,7 +100,17 @@
 .tile + .tile {
   border-block-start: 1px solid rgba(255, 255, 255, 0.5);
 }
+.tileRow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2) var(--space-3);
+  inline-size: 100%;
+}
 .tileTitle {
+  flex: 1 1 auto;
+  min-inline-size: 0;
   font-size: var(--text-base);
   font-weight: 500;
   line-height: var(--leading-body);
@@ -201,7 +211,7 @@
 .detail .media {
   margin: calc(var(--space-6) * -1) calc(var(--space-6) * -1) 0;
 }
-.detail .tile:first-child {
+.detail .media .tile:first-child {
   min-block-size: 7rem;
 }
 .detail .tile {
@@ -231,18 +241,32 @@
 .review :global(.payload-form-question) {
   font-size: inherit;
 }
-.approval {
-  display: grid;
-  gap: var(--space-3);
+/* Several courses: one rounded card, a row each, the actions in the row. */
+.courseList {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-surface);
+}
+.courseList li + li {
   border-block-start: 1px solid var(--border);
-  padding-block-start: var(--space-6);
 }
-.approval h3 {
-  margin: 0;
-  font-size: var(--text-base);
-  font-weight: 500;
+.courseRow {
+  min-block-size: 5rem;
+  align-items: center;
 }
-.approval ul {
-  margin: 0;
-  padding-inline-start: var(--space-5);
+.decisionButtons {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+.decisionButtons > button {
+  min-block-size: 44px;
+}
+/* The row sits on a dark layer: the primary button gets a light edge so it stays visible. */
+.courseRow .accept {
+  flex: none;
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.55);
 }

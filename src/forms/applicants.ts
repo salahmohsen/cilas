@@ -5,6 +5,7 @@ import { relId } from '@/lib/relation'
 
 import { mediaImage, mediaPopulate } from '@/lib/media-image'
 import { courseRegistration } from '@/lib/registration'
+import type { ChoiceDecision } from './application-status'
 
 export type ApplicantViewer = { kind: 'admin' } | { kind: 'fellow'; person: number }
 
@@ -91,7 +92,8 @@ export async function applicantsFor(
         return {
           course: course.id,
           title: course.title,
-          accepted: c.accepted === true,
+          decision: (c.decision ?? 'pending') as ChoiceDecision,
+          decided: c.decided_at ?? null,
           cover: mediaImage(typeof course.cover_image === 'object' ? course.cover_image : null),
           cycle: cycle ? { id: cycle.id, title: cycle.title } : null,
           fields: withRetired(course.applicant_questions ?? [], answers),
@@ -122,9 +124,6 @@ export async function applicantsFor(
         decided: s.decided_at ?? null,
         target: s.target?.relationTo ?? null,
         formId: Number(relId(s.form)),
-        canAccept:
-          Boolean(s.target) &&
-          (s.target?.relationTo === 'programmes' || choices.some((c) => c.accepted)),
         fields: withRetired(formFields, answers),
         answers,
         choices,

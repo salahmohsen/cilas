@@ -6,7 +6,7 @@ import { isAdminUser } from '@/access'
 import { issueForEmail } from '@/emails/issue'
 import { newsletterMail } from '@/emails/newsletter'
 import { getEmailSettings } from '@/emails/settings'
-import { acceptanceMail, resetMail, reviewMail } from '@/emails/transactional'
+import { acceptanceMail, rejectionMail, resetMail, reviewMail } from '@/emails/transactional'
 import { env } from '@/env'
 
 const escapeAttr = (html: string) => html.replace(/&/g, '&amp;').replace(/"/g, '&quot;')
@@ -40,6 +40,7 @@ export async function GET(request: Request) {
     const sample = { name: 'Mona Adel', email: 'mona@example.com', site }
     const mails = await Promise.all([
       acceptanceMail(settings, { ...sample, title: 'The Bridge Programme 2026', newAccount: true }),
+      rejectionMail(settings, { ...sample, title: 'The Bridge Programme 2026' }),
       reviewMail(
         settings,
         'changes_requested',

@@ -27,14 +27,14 @@ function fixture() {
               choices: [
                 {
                   course: 1,
-                  accepted: true,
+                  decision: 'pending',
                   amount: 100,
                   need_reduction: true,
                   answers: [{ name: 'why', label: 'Saved label', value: 'Own answer' }],
                 },
                 {
                   course: 2,
-                  accepted: true,
+                  decision: 'pending',
                   amount: 200,
                   need_reduction: true,
                   answers: [{ name: 'why', label: 'Private', value: 'Another fellow answer' }],

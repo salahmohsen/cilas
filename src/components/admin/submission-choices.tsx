@@ -2,11 +2,8 @@ import type { ArrayFieldServerComponent, UIFieldServerComponent } from 'payload'
 import { readableAnswers, readableChoices } from '@/forms/submission-view'
 import { SubmissionChoiceCards } from './submission-choice-cards'
 
-export const SubmissionChoices: ArrayFieldServerComponent = async ({ data, path, req }) => {
-  const choices = await readableChoices(req, data.choices)
-  return (
-    <SubmissionChoiceCards choices={choices} path={path} decided={data.status === 'accepted'} />
-  )
+export const SubmissionChoices: ArrayFieldServerComponent = async ({ data, req }) => {
+  return <SubmissionChoiceCards choices={await readableChoices(req, data.choices)} />
 }
 
 export const SubmissionAnswers: UIFieldServerComponent = async ({ data, req }) => {

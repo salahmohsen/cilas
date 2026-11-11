@@ -325,7 +325,8 @@ export interface FormSubmission {
               id?: string | null;
             }[]
           | null;
-        accepted?: boolean | null;
+        decision?: ('pending' | 'accepted' | 'rejected') | null;
+        decided_at?: string | null;
         id?: string | null;
       }[]
     | null;
@@ -3388,7 +3389,8 @@ export interface FormSubmissionsSelect<T extends boolean = true> {
               value?: T;
               id?: T;
             };
-        accepted?: T;
+        decision?: T;
+        decided_at?: T;
         id?: T;
       };
   courses?: T;
@@ -5078,6 +5080,13 @@ export interface EmailSetting {
       button?: string | null;
     };
     /**
+     * Placeholders: {name}, {email}, {title}. Sent when one course of an application is rejected. Leave a field empty to use the text shown in it.
+     */
+    rejection?: {
+      subject?: string | null;
+      body?: string | null;
+    };
+    /**
      * Placeholder: {title}. Leave a field empty to use the text shown in it.
      */
     review?: {
@@ -5248,6 +5257,12 @@ export interface EmailSettingsSelect<T extends boolean = true> {
               new_account?: T;
               existing_account?: T;
               button?: T;
+            };
+        rejection?:
+          | T
+          | {
+              subject?: T;
+              body?: T;
             };
         review?:
           | T

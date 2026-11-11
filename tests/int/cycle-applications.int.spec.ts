@@ -33,7 +33,7 @@ const choices = (): NonNullable<FormSubmission['choices']> => [
   {
     course: writing.id,
     amount: 100,
-    accepted: false,
+    decision: 'accepted',
     answers: [{ name: 'reason', label: 'Untrusted', value: 'To write' }],
   },
   { course: film.id, amount: 100, answers: [] },
@@ -61,11 +61,11 @@ const submit = async (data: Partial<FormSubmission> = {}) =>
       depth: 0,
     }),
   )
-const accept = async (id: number) => {
+const accept = async (id: number, course: number) => {
   const endpoints = payload.collections['form-submissions'].config.endpoints
-  const endpoint = endpoints && endpoints.find((e) => e.path === '/:id/accept')!
+  const endpoint = endpoints && endpoints.find((e) => e.path === '/:id/courses/:course/accept')!
   const req = await createLocalReq({ user: admin }, payload)
-  req.routeParams = { id: String(id) }
+  req.routeParams = { id: String(id), course: String(course) }
   if (!endpoint) throw new Error('Accept endpoint missing')
   return endpoint.handler(req)
 }
@@ -211,8 +211,8 @@ describe('cycle applications and approval', () => {
   it('saves normalized choices and enrolls only the accepted course, once', async () => {
     const submission = await submit()
     expect(submission.choices).toMatchObject([
-      { course: writing.id, accepted: true, answers: [{ label: 'Why writing?' }] },
-      { course: film.id, accepted: true },
+      { course: writing.id, decision: 'pending', answers: [{ label: 'Why writing?' }] },
+      { course: film.id, decision: 'pending' },
     ])
     const notifications = await payload.find({
       collection: 'notifications',
@@ -224,21 +224,9 @@ describe('cycle applications and approval', () => {
         (n) => n.description?.includes(writing.title) && n.description.includes(film.title),
       ),
     ).toBe(true)
-    await payload.update({
-      collection: 'form-submissions',
-      id: submission.id,
-      data: {
-        choices: submission.choices!.map((c) => ({
-          ...c,
-          accepted: relId(c.course) === writing.id,
-        })),
-      },
-      user: admin,
-      overrideAccess: false,
-    })
     vi.mocked(payload.sendEmail).mockClear()
-    const response = await accept(submission.id)
-    expect(response && (await response.json())).toEqual({ ok: true, emailed: true })
+    const response = await accept(submission.id, writing.id)
+    expect(response && (await response.json())).toMatchObject({ ok: true, emailed: true })
     const result = await trackApplicant(submission)
     expect(result.decided.result?.enrollments).toEqual([result.enrollments[0].id])
     expect(result.decided.result?.enrollment_outcomes).toEqual([
@@ -258,7 +246,8 @@ describe('cycle applications and approval', () => {
     const mail = vi.mocked(payload.sendEmail).mock.calls.at(-1)![0]
     expect(mail.text).toContain(writing.title)
     expect(mail.text).not.toContain(film.title)
-    expect((await accept(submission.id))?.status).toBe(200)
+    // Film still waits, and the same course is not decided twice.
+    expect((await accept(submission.id, writing.id))?.status).toBe(400)
     expect(
       (
         await payload.find({
@@ -270,7 +259,8 @@ describe('cycle applications and approval', () => {
     expect(payload.sendEmail).toHaveBeenCalledTimes(1)
 
     const again = await submit({ submissionData: identity(email) })
-    expect((await accept(again.id))?.status).toBe(200)
+    expect((await accept(again.id, writing.id))?.status).toBe(200)
+    expect((await accept(again.id, film.id))?.status).toBe(200)
     const reused = await trackApplicant(again)
     expect(reused.enrollments.map((e) => e.course).sort()).toEqual([writing.id, film.id].sort())
     expect(reused.person).toBe(result.person)
@@ -287,7 +277,7 @@ describe('cycle applications and approval', () => {
       ]),
     )
     const bothMail = vi.mocked(payload.sendEmail).mock.calls.at(-1)![0]
-    expect(bothMail.text).toContain(writing.title)
+    // One email per course, each naming its course.
     expect(bothMail.text).toContain(film.title)
   })
 
@@ -344,7 +334,7 @@ describe('cycle applications and approval', () => {
     })
     expect(saved.docs[0].choices?.[0]).toMatchObject({
       course: writing.id,
-      accepted: true,
+      decision: 'pending',
       answers: [{ label: 'Why writing?' }],
     })
     data.set(

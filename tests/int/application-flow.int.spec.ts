@@ -119,15 +119,17 @@ const restCreate = async (
   } as never) as unknown as FormSubmission
 }
 
-const decide = async (action: 'accept' | 'reject', id: number) => {
+/** One course's decision when `courseId` is given, the whole submission's (programmes) otherwise. */
+const decide = async (action: 'accept' | 'reject', id: number, courseId?: number) => {
+  const path = courseId ? `/:id/courses/:course/${action}` : `/:id/${action}`
   const endpoint = (
     payload.collections['form-submissions'].config.endpoints as {
       path: string
       handler: (req: never) => Promise<Response>
     }[]
-  ).find((e) => e.path === `/:id/${action}`)!
+  ).find((e) => e.path === path)!
   const req = await createLocalReq({ user: admin }, payload)
-  req.routeParams = { id: String(id) }
+  req.routeParams = { id: String(id), ...(courseId ? { course: String(courseId) } : {}) }
   return endpoint.handler(req as never)
 }
 
@@ -295,9 +297,13 @@ describe('the application flow, from the questions to the enrollment', () => {
     track('form-submissions', submission)
     expect(submission.status).toBe('new')
 
-    const res = await decide('accept', submission.id)
+    const res = await decide('accept', submission.id, course.id)
     expect(res.status).toBe(200)
-    expect(await res.json()).toEqual({ ok: true, emailed: true })
+    expect(await res.json()).toEqual({
+      ok: true,
+      emailed: true,
+      decided: expect.stringMatching(/^\d{4}-/),
+    })
 
     const { docs } = await payload.find({
       collection: 'users',
@@ -332,6 +338,8 @@ describe('the application flow, from the questions to the enrollment', () => {
       overrideAccess: true,
     })
     expect(decided.status).toBe('accepted')
+    expect(decided.choices?.[0]).toMatchObject({ decision: 'accepted' })
+    expect(decided.choices?.[0]?.decided_at).toBe(decided.decided_at)
     expect(decided.result).toEqual({
       user: docs[0].id,
       person: person!.id,
@@ -355,10 +363,9 @@ describe('the application flow, from the questions to the enrollment', () => {
     ])
     track('form-submissions', submission)
 
-    const res = await decide('accept', submission.id)
+    const res = await decide('accept', submission.id, course.id)
     expect(res.status).toBe(200)
-    const body = (await res.json()) as { ok: boolean }
-    expect(body).toEqual({ ok: true, emailed: true })
+    expect(await res.json()).toMatchObject({ ok: true, emailed: true })
 
     const after = await payload.find({
       collection: 'users',
@@ -383,11 +390,14 @@ describe('the application flow, from the questions to the enrollment', () => {
     track('enrollments', enrollments.docs[0] as unknown as { id: number })
   })
 
-  it('an admin rejects a new submission, and only a new one', async () => {
-    const submission = await submit('second@cilas.test', [{ field: 'track', value: 'Film' }])
+  it('an admin rejects a course once, and the applicant gets a kind email and no account', async () => {
+    const address = `rejected-${RUN}@cilas.test`
+    const submission = await submit(address, [{ field: 'track', value: 'Film' }])
     track('form-submissions', submission)
-    const res = await decide('reject', submission.id)
+    vi.mocked(payload.sendEmail).mockClear()
+    const res = await decide('reject', submission.id, course.id)
     expect(res.status).toBe(200)
+    expect(await res.json()).toMatchObject({ ok: true, emailed: true })
     const rejected = await payload.findByID({
       collection: 'form-submissions',
       id: submission.id,
@@ -395,9 +405,104 @@ describe('the application flow, from the questions to the enrollment', () => {
     })
     expect(rejected.status).toBe('rejected')
     expect(rejected.decided_at).toBeTruthy()
+    expect(rejected.choices?.[0]).toMatchObject({ decision: 'rejected' })
+    expect(payload.sendEmail).toHaveBeenCalledWith(
+      expect.objectContaining({ to: address, subject: 'Your application to Flow Course' }),
+    )
+    const users = await payload.find({ collection: 'users', where: { email: { equals: address } } })
+    expect(users.totalDocs).toBe(0)
 
-    const again = await decide('reject', submission.id)
-    expect(again.status).toBe(400)
+    expect((await decide('reject', submission.id, course.id)).status).toBe(400)
+    expect((await decide('accept', submission.id, course.id)).status).toBe(400)
+  })
+
+  it('decides the courses of one application on their own; the status follows the last decision', async () => {
+    const address = `two-${RUN}@cilas.test`
+    const other = track(
+      'courses',
+      (await payload.create({
+        collection: 'courses',
+        data: {
+          title: 'Second Flow Course',
+          slug: `flow-second-${RUN}`,
+          course_type: 'THEMATIC',
+          session_unit: 'session',
+          tier: 'owner',
+          cycle: cycleId(),
+          schedule: { start_date: '2031-03-04', weeks: 1, slots: [] },
+          sessions: [{ order: 1 }],
+        } as never,
+        overrideAccess: true,
+      })) as unknown as Course,
+    )
+    await payload.update({
+      collection: 'cycles',
+      id: cycleId(),
+      data: { registration: { method: 'form', form: form.id } },
+      overrideAccess: true,
+    })
+    const submission = track(
+      'form-submissions',
+      (await payload.create({
+        collection: 'form-submissions',
+        data: {
+          form: form.id,
+          target: { relationTo: 'cycles', value: cycleId() },
+          choices: [
+            { course: course.id, answers: [{ name: 'track', value: 'Film' }] },
+            { course: other.id, answers: [] },
+          ],
+          submissionData: [
+            { field: 'name', value: 'Mona Farid' },
+            { field: 'email', value: address },
+          ],
+        },
+        context: { [TURNSTILE_VERIFIED]: true },
+      } as never)) as unknown as FormSubmission,
+    )
+    const read = () =>
+      payload.findByID({ collection: 'form-submissions', id: submission.id, overrideAccess: true })
+    vi.mocked(payload.sendEmail).mockClear()
+
+    // A course application is not decided as a whole.
+    expect((await decide('accept', submission.id)).status).toBe(400)
+
+    expect((await decide('accept', submission.id, course.id)).status).toBe(200)
+    let now = await read()
+    expect(now.status).toBe('new')
+    expect(now.decided_at).toBeNull()
+    expect(now.choices?.map((c) => c.decision)).toEqual(['accepted', 'pending'])
+    expect(payload.sendEmail).toHaveBeenLastCalledWith(
+      expect.objectContaining({ to: address, subject: 'You are accepted to Flow Course' }),
+    )
+    const user = (
+      await payload.find({ collection: 'users', where: { email: { equals: address } }, depth: 0 })
+    ).docs[0]!
+    track('users', user as unknown as { id: number })
+    const enrolled = () =>
+      payload.find({
+        collection: 'enrollments',
+        where: { person: { equals: user.person } },
+        depth: 0,
+        overrideAccess: true,
+      })
+    const first = await enrolled()
+    expect(first.docs.map((e) => e.course)).toEqual([course.id])
+    first.docs.forEach((e) => track('enrollments', e))
+
+    expect((await decide('reject', submission.id, other.id)).status).toBe(200)
+    now = await read()
+    expect(now.status).toBe('accepted')
+    expect(now.choices?.map((c) => c.decision)).toEqual(['accepted', 'rejected'])
+    expect(now.decided_at).toBe(now.choices?.[1]?.decided_at)
+    expect(payload.sendEmail).toHaveBeenLastCalledWith(
+      expect.objectContaining({ to: address, subject: 'Your application to Second Flow Course' }),
+    )
+    // The rejection enrolls no one, and the result keeps the first acceptance.
+    expect((await enrolled()).docs.map((e) => e.course)).toEqual([course.id])
+    expect(now.result?.enrollments).toHaveLength(1)
+    expect((await decide('accept', submission.id, other.id)).status).toBe(400)
+    expect((await decide('accept', submission.id, 999999)).status).toBe(404)
   })
 
   it('the deadline closes the API too, not only the page, until it is lifted', async () => {

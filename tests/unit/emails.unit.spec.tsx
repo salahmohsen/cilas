@@ -11,7 +11,7 @@ import { MessageEmail } from '@/emails/message'
 import { newsletterMail } from '@/emails/newsletter'
 import { renderEmail } from '@/emails/render'
 import { DEFAULT_TEXTS, fill, paragraphs, withDefaults } from '@/emails/settings'
-import { acceptanceMail, resetMail, reviewMail } from '@/emails/transactional'
+import { acceptanceMail, rejectionMail, resetMail, reviewMail } from '@/emails/transactional'
 import { sendBroadcast } from '@/lib/broadcast'
 
 const bodyOf = (intro: { root: { children: unknown[] } }, ...blocks: Record<string, unknown>[]) => [
@@ -112,6 +112,18 @@ describe('transactional mails', () => {
     )
     expect(mail.subject).toBe('Welcome, Mona!')
     expect(mail.html).toContain('Sign in with your CILAS account as usual.')
+  })
+
+  it('tells a rejected applicant kindly, names the course and has no button', async () => {
+    const mail = await rejectionMail(settings, {
+      name: 'Mona',
+      email: 'mona@example.com',
+      title: 'Bridge 2026',
+    })
+    expect(mail.subject).toBe('Your application to Bridge 2026')
+    expect(mail.text).toContain('Dear Mona')
+    expect(mail.text).toContain('We are sorry that we cannot offer you a place this time.')
+    expect(mail.html).not.toContain('/en/login')
   })
 
   it('adds the editor’s note only where the state carries one', async () => {

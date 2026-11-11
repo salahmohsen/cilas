@@ -53,7 +53,7 @@ beforeAll(async () => {
     course: f.courses[index].id,
     amount: 900,
     need_reduction: true,
-    accepted: true,
+    decision: 'pending' as const,
     answers: [{ name: 'reason', value: index ? 'Foreign private answer' : 'Own saved answer' }],
   })
   mixed = (
@@ -128,7 +128,7 @@ describe('fellow applicants projection', () => {
         {
           course: f.courses[0].id,
           title: 'Writing',
-          accepted: true,
+          decision: 'pending',
           answers: [{ name: 'reason', label: 'Why writing?', value: 'Own saved answer' }],
         },
       ],
@@ -137,11 +137,13 @@ describe('fellow applicants projection', () => {
     for (const a of result.applications) {
       for (const c of a.choices) {
         expect(Object.keys(c).sort()).toEqual([
-          'accepted',
           'answers',
+          'contribution',
           'course',
           'cover',
           'cycle',
+          'decided',
+          'decision',
           'fields',
           'title',
         ])

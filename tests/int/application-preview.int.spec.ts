@@ -92,7 +92,7 @@ describe('application preview and review data', () => {
         href: `/admin/collections/courses/${courses[0].id}`,
         amount: 350,
         need_reduction: true,
-        accepted: true,
+        decision: 'pending',
         answers: [{ label: 'Why writing?', value: 'To write' }],
       },
     ])

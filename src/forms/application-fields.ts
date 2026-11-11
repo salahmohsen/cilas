@@ -1,5 +1,6 @@
 import { adminOnlyField } from '@/access'
 import type { Field } from 'payload'
+import { CHOICE_DECISIONS } from './application-status'
 import { submissionChoices } from './submission-view'
 
 export const applicationFields: Field[] = [
@@ -35,10 +36,22 @@ export const applicationFields: Field[] = [
         ],
       },
       {
-        name: 'accepted',
-        type: 'checkbox',
-        defaultValue: true,
+        name: 'decision',
+        type: 'select',
+        defaultValue: 'pending',
+        options: CHOICE_DECISIONS.map((value) => ({
+          value,
+          label: value[0]!.toUpperCase() + value.slice(1),
+        })),
         access: { create: adminOnlyField, update: adminOnlyField },
+        admin: { readOnly: true },
+      },
+      {
+        name: 'decided_at',
+        label: 'Decided at',
+        type: 'date',
+        access: { create: adminOnlyField, update: adminOnlyField },
+        admin: { readOnly: true, date: { pickerAppearance: 'dayAndTime' } },
       },
     ],
   },
