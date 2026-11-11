@@ -6,11 +6,10 @@ import { usePathname, useRouter, useSearchParams } from 'next/navigation'
 import { useRef, useState, useTransition } from 'react'
 import { ActionButton } from '@/components/arc/action-button/action-button'
 import { Alert } from '@/components/arc/alert/alert'
-import { Badge } from '@/components/arc/badge/badge'
 import { Button } from '@/components/arc/button/button'
-import { Dialog, DialogClose, DialogContent, DialogTrigger } from '@/components/arc/dialog/dialog'
+import { Card } from '@/components/arc/card/card'
+import { Dialog, DialogClose, DialogContent } from '@/components/arc/dialog/dialog'
 import { EmptyState } from '@/components/arc/empty-state/empty-state'
-import { ExpandableCard } from '@/components/arc/expandable-card/expandable-card'
 import type { FilterField } from '@/components/arc/filter-toolbar/filter-toolbar'
 import { PayloadAnswers } from '@/components/forms/payload-question'
 import type { Applicant, ApplicantsData } from '@/forms/applicants'
@@ -67,127 +66,126 @@ function ApplicantCard({
       setBusy(false)
     }
   }
+  const actions = admin ? (
+    <div className={styles.actions}>
+      <ActionButton
+        label={status === 'accepted' ? t.statuses.accepted : t.accept}
+        pendingLabel={t.accepting}
+        successLabel={t.statuses.accepted}
+        resetAfterMs={0}
+        disabled={status === 'accepted' || !a.canAccept || (busy && confirm)}
+        onAction={() => run('accept')}
+      />
+      <Button
+        variant="secondary"
+        disabled={status !== 'new' || busy}
+        onClick={() => setConfirm(true)}
+      >
+        {status === 'rejected' ? t.statuses.rejected : t.reject}
+      </Button>
+    </div>
+  ) : undefined
+  const date = new Date(a.submitted).toLocaleDateString(ar ? 'ar-EG' : 'en-GB', {
+    timeZone: 'Africa/Cairo',
+  })
   return (
-    <article className={styles.applicant}>
-      <span className={styles.cover}>
-        {cover ? (
-          <Image
-            src={cover.url}
-            alt={cover.alt}
-            fill
-            sizes="(max-width: 700px) 100vw, 480px"
-            style={focalPointStyle(cover)}
-          />
-        ) : (
-          <span>{t.noCover}</span>
-        )}
-      </span>
-      <ExpandableCard title={a.name || t.untitled} description={a.email}>
-        <div className={styles.details}>
-          <section className={styles.fields} aria-label={t.shared}>
-            <h2>{t.shared}</h2>
-            <PayloadAnswers fields={a.fields} answers={a.answers} />
-          </section>
-          {a.choices.map((c) => (
-            <section key={c.course} className={styles.fields} aria-label={c.title}>
-              <h2>{c.title}</h2>
-              <p>
-                {t.approved}: {c.accepted ? t.yes : t.no}
-              </p>
-              <PayloadAnswers fields={c.fields} answers={c.answers} />
-              {admin && (
-                <>
-                  <p>
-                    {t.amount}: {c.amount == null ? t.no : formatAmount(c.amount, ar ? 'ar' : 'en')}
-                  </p>
-                  <p>
-                    {t.reduction}: {c.need_reduction ? t.yes : t.no}
-                  </p>
-                </>
-              )}
+    <div className={styles.applicant}>
+      <Card
+        title={a.name || t.untitled}
+        description={a.email}
+        meta={a.choices.map((c) => c.title).join(ar ? '، ' : ', ')}
+        status={`${t.statuses[status]} · ${date}`}
+        closeLabel={t.close}
+        media={
+          <span className={styles.cover}>
+            {cover ? (
+              <Image
+                src={cover.url}
+                alt={cover.alt}
+                fill
+                sizes="(max-width: 700px) 100vw, 480px"
+                style={focalPointStyle(cover)}
+              />
+            ) : (
+              t.noCover
+            )}
+          </span>
+        }
+        action={actions}
+        details={
+          <div className={styles.details}>
+            <section className={styles.fields} aria-label={t.shared}>
+              <h3>{t.shared}</h3>
+              <PayloadAnswers fields={a.fields} answers={a.answers} />
             </section>
-          ))}
-          {admin && <Link href={`/admin/collections/form-submissions/${a.id}`}>{t.edit}</Link>}
-        </div>
-      </ExpandableCard>
-      <div className={styles.summary}>
-        <div className={styles.meta}>
-          <Badge
-            tone={status === 'accepted' ? 'success' : status === 'rejected' ? 'danger' : 'neutral'}
-          >
-            {t.statuses[status]}
-          </Badge>
-          <time dateTime={a.submitted}>
-            {new Date(a.submitted).toLocaleDateString(ar ? 'ar-EG' : 'en-GB', {
-              timeZone: 'Africa/Cairo',
-            })}
-          </time>
-        </div>
-        <p>{a.choices.map((c) => c.title).join(ar ? '، ' : ', ')}</p>
-        {admin && (
-          <div className={styles.actions}>
-            <ActionButton
-              label={status === 'accepted' ? t.statuses.accepted : t.accept}
-              pendingLabel={t.accepting}
-              successLabel={t.statuses.accepted}
-              resetAfterMs={0}
-              disabled={status === 'accepted' || !a.canAccept || (busy && confirm)}
-              onAction={() => run('accept')}
-            />
-            <Dialog
-              open={confirm}
-              onOpenChange={(open) => {
-                if (!running.current) setConfirm(open)
-              }}
-            >
-              <DialogTrigger asChild>
-                <Button variant="secondary" disabled={status !== 'new' || busy}>
-                  {status === 'rejected' ? t.statuses.rejected : t.reject}
-                </Button>
-              </DialogTrigger>
-              <DialogContent
-                className={`arc-scope ${styles.dialog}`}
-                dir={ar ? 'rtl' : 'ltr'}
-                title={t.rejectTitle}
-                description={`${a.name || t.untitled}. ${t.rejectBody}`}
-                closeLabel={t.close}
-                onEscapeKeyDown={(e) => {
-                  if (busy) e.preventDefault()
-                }}
-                onPointerDownOutside={(e) => {
-                  if (busy) e.preventDefault()
-                }}
-              >
-                {error && <Alert tone="danger" title={error} />}
-                <div className={styles.actions}>
-                  <DialogClose asChild>
-                    <Button variant="secondary" disabled={busy}>
-                      {t.cancel}
-                    </Button>
-                  </DialogClose>
-                  <ActionButton
-                    label={t.reject}
-                    pendingLabel={t.rejecting}
-                    successLabel={t.statuses.rejected}
-                    onAction={() => run('reject')}
-                  />
-                </div>
-              </DialogContent>
-            </Dialog>
+            {a.choices.map((c) => (
+              <section key={c.course} className={styles.fields} aria-label={c.title}>
+                <h3>{c.title}</h3>
+                <p>
+                  {t.approved}: {c.accepted ? t.yes : t.no}
+                </p>
+                <PayloadAnswers fields={c.fields} answers={c.answers} />
+                {admin && (
+                  <>
+                    <p>
+                      {t.amount}:{' '}
+                      {c.amount == null ? t.no : formatAmount(c.amount, ar ? 'ar' : 'en')}
+                    </p>
+                    <p>
+                      {t.reduction}: {c.need_reduction ? t.yes : t.no}
+                    </p>
+                  </>
+                )}
+              </section>
+            ))}
+            {admin && <Link href={`/admin/collections/form-submissions/${a.id}`}>{t.edit}</Link>}
           </div>
-        )}
-        {admin && !a.canAccept && status !== 'accepted' && (
-          <p>
-            {t.noApproved}{' '}
-            <Link href={`/admin/collections/form-submissions/${a.id}`}>{t.edit}</Link>
-          </p>
-        )}
-        {error && !confirm && <Alert tone="danger" title={error} />}
-        <span role="status" className={styles.srOnly}>
-          {t.statuses[status]}
-        </span>
-      </div>
-    </article>
+        }
+      />
+      {admin && (
+        <Dialog
+          open={confirm}
+          onOpenChange={(open) => {
+            if (!running.current) setConfirm(open)
+          }}
+        >
+          <DialogContent
+            className={`arc-scope ${styles.dialog}`}
+            dir={ar ? 'rtl' : 'ltr'}
+            title={t.rejectTitle}
+            description={`${a.name || t.untitled}. ${t.rejectBody}`}
+            closeLabel={t.close}
+            onEscapeKeyDown={(e) => {
+              if (busy) e.preventDefault()
+            }}
+            onPointerDownOutside={(e) => {
+              if (busy) e.preventDefault()
+            }}
+          >
+            {error && <Alert tone="danger" title={error} />}
+            <div className={styles.actions}>
+              <DialogClose asChild>
+                <Button variant="secondary" disabled={busy}>
+                  {t.cancel}
+                </Button>
+              </DialogClose>
+              <ActionButton
+                label={t.reject}
+                pendingLabel={t.rejecting}
+                successLabel={t.statuses.rejected}
+                onAction={() => run('reject')}
+              />
+            </div>
+          </DialogContent>
+        </Dialog>
+      )}
+      {admin && !a.canAccept && status !== 'accepted' && (
+        <p className={styles.note}>
+          {t.noApproved} <Link href={`/admin/collections/form-submissions/${a.id}`}>{t.edit}</Link>
+        </p>
+      )}
+      {error && !confirm && <Alert tone="danger" title={error} />}
+    </div>
   )
 }
 
@@ -302,22 +300,25 @@ export function ApplicantsGrid({
         {pending ? t.loading : t.showing(applications.length, data.applications.length)}
       </p>
       {applications.length ? (
-        <div className={styles.grid}>
-          {applications.map((a) => (
-            <ApplicantCard
-              key={a.id}
-              application={{ ...a, status: decisions[a.id] ?? a.status }}
-              ar={ar}
-              admin={admin}
-              selectedCourse={values.get('course')}
-              onStatusChange={(id, status, emailFailed) => {
-                setDecisions((current) => ({ ...current, [id]: status }))
-                if (emailFailed)
-                  setEmailWarnings((current) => [...current.filter((value) => value !== id), id])
-              }}
-            />
-          ))}
-        </div>
+        <>
+          <h2 className={styles.srOnly}>{t.list}</h2>
+          <div className={styles.grid}>
+            {applications.map((a) => (
+              <ApplicantCard
+                key={a.id}
+                application={{ ...a, status: decisions[a.id] ?? a.status }}
+                ar={ar}
+                admin={admin}
+                selectedCourse={values.get('course')}
+                onStatusChange={(id, status, emailFailed) => {
+                  setDecisions((current) => ({ ...current, [id]: status }))
+                  if (emailFailed)
+                    setEmailWarnings((current) => [...current.filter((value) => value !== id), id])
+                }}
+              />
+            ))}
+          </div>
+        </>
       ) : (
         <EmptyState
           title={data.applications.length ? t.noMatches : t.empty}

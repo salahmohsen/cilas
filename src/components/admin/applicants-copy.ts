@@ -39,6 +39,7 @@ export const applicantsCopy = (ar: boolean) =>
         emailFailed: 'تم القبول، لكن تعذر إرسال البريد. تواصل مع المتقدم مباشرة.',
         untitled: 'متقدم بدون اسم',
         noCover: 'لا توجد صورة للمقرر',
+        list: 'قائمة الطلبات',
       }
     : {
         title: 'Applicants',
@@ -80,4 +81,5 @@ export const applicantsCopy = (ar: boolean) =>
         emailFailed: 'Accepted, but the email did not send. Contact the applicant directly.',
         untitled: 'Unnamed applicant',
         noCover: 'No course cover',
+        list: 'Applications',
       }

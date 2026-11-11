@@ -147,6 +147,21 @@ describe('applicant review', () => {
     ).toBeTruthy()
   })
 
+  it('shows status and keeps decisions out of the card open trigger', async () => {
+    vi.stubGlobal(
+      'fetch',
+      vi.fn().mockResolvedValue({ ok: true, json: async () => ({ ok: true, emailed: true }) }),
+    )
+    render(<ApplicantsGrid data={data} ar={false} admin />)
+    expect(screen.getByRole('heading', { level: 2, name: 'Applications' })).toBeTruthy()
+    expect(screen.getAllByText(/Pending/).length).toBeGreaterThan(0)
+    fireEvent.click(screen.getByRole('button', { name: 'Accept' }))
+    await waitFor(() => expect(screen.getByRole('button', { name: /Accepted/ })).toBeTruthy())
+    expect(screen.queryByRole('button', { name: 'Close' })).toBeNull()
+    fireEvent.click(screen.getByRole('button', { name: 'Applicant' }))
+    expect(await screen.findByRole('button', { name: 'Close' })).toBeTruthy()
+  })
+
   it('does not show mutation controls to fellows', () => {
     render(<ApplicantsGrid data={data} ar={false} admin={false} />)
     expect(screen.queryByRole('button', { name: 'Accept' })).toBeNull()
