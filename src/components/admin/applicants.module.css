@@ -205,7 +205,8 @@
   white-space: nowrap;
 }
 /* The application dialog is wide: an admin reads a whole application in it. */
-.detail {
+/* [role='dialog'] outranks Arc's single-class .content, so the width wins in every CSS chunk order. */
+.detail[role='dialog'] {
   width: min(calc(100vw - var(--space-8)), 56rem);
   padding: 0;
   --dialog-close-background: rgba(0, 0, 0, 0.55);
