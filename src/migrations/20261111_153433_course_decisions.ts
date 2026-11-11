@@ -19,6 +19,7 @@ export async function up({ db, payload, req }: MigrateUpArgs): Promise<void> {
   ALTER TABLE "form_submissions_choices" DROP COLUMN "accepted";`)
 }
 
+// Lossy: pending choices come back as accepted = true, and the per-course decision dates are lost.
 export async function down({ db, payload, req }: MigrateDownArgs): Promise<void> {
   await db.execute(sql`
    ALTER TABLE "form_submissions_choices" ADD COLUMN "accepted" boolean DEFAULT true;
