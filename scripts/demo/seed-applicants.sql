@@ -15,6 +15,13 @@ FROM (VALUES (139), (70), (97), (86)) AS c(id), users u
 WHERE u.email = 'sala7.mohsen@gmail.com'
   AND NOT EXISTS (SELECT 1 FROM courses_rels r WHERE r.parent_id = c.id AND r.path = 'fellows' AND r.people_id = u.person_id);
 
+-- Courses keep drafts: the admin and the access rules read the latest version, so it gets the fellow too.
+INSERT INTO _courses_v_rels ("order", parent_id, path, people_id)
+SELECT 9, v.id, 'version.fellows', u.person_id
+FROM _courses_v v, users u
+WHERE v.latest AND v.parent_id IN (139, 70, 97, 86) AND u.email = 'sala7.mohsen@gmail.com'
+  AND NOT EXISTS (SELECT 1 FROM _courses_v_rels r WHERE r.parent_id = v.id AND r.path = 'version.fellows' AND r.people_id = u.person_id);
+
 -- Clean up an earlier run.
 DELETE FROM form_submissions WHERE id BETWEEN 9100 AND 9199;
 
