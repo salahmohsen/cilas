@@ -64,7 +64,11 @@ const submit = (target: FormSubmission['target'], formId = form.id) =>
     },
   })
 
-const decide = async (action: 'accept' | 'reject', id: number, user: User | null = admin) => {
+const decide = async (
+  action: 'accept' | 'reject' | 'reopen',
+  id: number,
+  user: User | null = admin,
+) => {
   const endpoint = payload.collections['form-submissions'].config.endpoints
     ? (
         payload.collections['form-submissions'].config.endpoints as {
@@ -216,7 +220,14 @@ describe('accepting an application', () => {
   it('rejects without making anything, and only admins decide', async () => {
     const submission = await submit({ relationTo: 'programmes', value: programme.id })
     expect((await decide('accept', submission.id, null)).status).toBe(403)
+    vi.mocked(payload.sendEmail).mockClear()
     expect((await decide('reject', submission.id)).status).toBe(200)
+    expect(payload.sendEmail).toHaveBeenCalledWith(
+      expect.objectContaining({
+        to: EMAIL,
+        subject: expect.stringContaining('Your application to'),
+      }),
+    )
     const after = await payload.findByID({
       collection: 'form-submissions',
       id: submission.id,
@@ -224,6 +235,12 @@ describe('accepting an application', () => {
     })
     expect(after.status).toBe('rejected')
     expect(after.result?.user).toBeFalsy()
+    // A rejected programme application can be reopened; an accepted one cannot.
+    expect((await decide('reopen', submission.id)).status).toBe(200)
+    expect(
+      (await payload.findByID({ collection: 'form-submissions', id: submission.id, depth: 0 }))
+        .status,
+    ).toBe('new')
   })
 
   it('reports a submission without a name or email', async () => {

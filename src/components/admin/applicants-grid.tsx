@@ -26,12 +26,14 @@ function ApplicantCard({
   onDecided: (application: Applicant, emailFailed: boolean) => void
 }) {
   const t = applicantsCopy(ar)
-  const [detail, setDetail] = useState(false)
+  const search = useSearchParams()
+  // A link from the review queue or a notification opens its application.
+  const [detail, setDetail] = useState(search.get('application') === String(a.id))
   const name = a.name || t.untitled
   return (
     <div className={styles.applicant}>
       <article className={styles.card}>
-        <CourseTiles choices={a.choices} ar={ar} />
+        <CourseTiles application={a} ar={ar} />
         <div className={styles.cardBody}>
           <h3 className={styles.cardTitle}>
             <button
@@ -60,7 +62,7 @@ function ApplicantCard({
         open={detail}
         onOpenChange={setDetail}
         onDecided={(course, decision, result) =>
-          onDecided(withDecision(a, course, decision, result.decided), result.emailFailed)
+          onDecided(withDecision(a, course, decision, result), result.emailFailed)
         }
       />
     </div>
@@ -110,6 +112,12 @@ export function ApplicantsGrid({
   const [emailWarnings, setEmailWarnings] = useState<number[]>([])
   // Applications decided on this page, as the server now has them.
   const [decided, setDecided] = useState<Record<number, Applicant>>({})
+  // Fresh data from the server replaces what this page changed.
+  const [seen, setSeen] = useState(data)
+  if (seen !== data) {
+    setSeen(data)
+    setDecided({})
+  }
   const cycles = new Map(
     data.applications.flatMap((a) =>
       a.choices.flatMap((c) =>
@@ -155,18 +163,31 @@ export function ApplicantsGrid({
     else next.delete(id)
     startTransition(() => router.push(`${pathname}?${next}`, { scroll: false }))
   }
-  const applications = data.applications.filter(
-    (a) =>
-      (!values.get('status') || (decided[a.id] ?? a).status === values.get('status')) &&
-      a.choices.some(
-        (c) =>
-          (!values.get('course') || String(c.course) === values.get('course')) &&
-          (!values.get('cycle') || String(c.cycle?.id) === values.get('cycle')) &&
-          (!admin ||
-            !values.get('reduction') ||
-            Boolean(c.need_reduction) === (values.get('reduction') === 'yes')),
-      ),
-  )
+  const wanted = values.get('status')
+  const applications = data.applications.filter((a) => {
+    const app = decided[a.id] ?? a
+    // A programme application has no courses: only the status filter can match it.
+    if (app.programme)
+      return (
+        !values.get('course') &&
+        !values.get('cycle') &&
+        !values.get('reduction') &&
+        (!wanted || app.status === wanted)
+      )
+    return app.choices.some(
+      (c) =>
+        (!values.get('course') || String(c.course) === values.get('course')) &&
+        (!values.get('cycle') || String(c.cycle?.id) === values.get('cycle')) &&
+        (!admin ||
+          !values.get('reduction') ||
+          Boolean(c.need_reduction) === (values.get('reduction') === 'yes')) &&
+        // With a course chosen, the status is that course's; else the application's.
+        (!wanted ||
+          (values.get('course')
+            ? c.decision === (wanted === 'new' ? 'pending' : wanted)
+            : app.status === wanted)),
+    )
+  })
   return (
     <div className={styles.body} aria-busy={pending}>
       {emailWarnings.map((id) => (

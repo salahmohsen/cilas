@@ -7,7 +7,7 @@ import { Button } from '@/components/arc/button/button'
 import { Dialog, DialogClose, DialogContent } from '@/components/arc/dialog/dialog'
 import type { Applicant } from '@/forms/applicants'
 import { applicantsCopy } from './applicants-copy'
-import type { Decision, DecisionResult } from './applicant-decide'
+import type { Decision, DecisionResult, Entry } from './applicant-decide'
 import styles from './applicants.module.css'
 
 /** How long the success state stays on the button before the dialog closes. */
@@ -28,12 +28,12 @@ export function DecisionDialog({
 }: {
   application: Applicant
   /** The course and decision to confirm; null while the dialog is closed. */
-  ask: { course: Applicant['choices'][number]; decision: Decision } | null
+  ask: { entry: Entry; decision: Decision } | null
   ar: boolean
   onClose: () => void
   /** Sends the decision and says whether the applicant's email failed. Rejects with the reason when the decision fails. */
-  decide: (course: number, decision: Decision) => Promise<DecisionResult>
-  onDone: (course: number, decision: Decision, result: DecisionResult) => void
+  decide: (entry: Entry, decision: Decision) => Promise<DecisionResult>
+  onDone: (entry: Entry, decision: Decision, result: DecisionResult) => void
   returnFocus: () => HTMLElement | null
 }) {
   const t = applicantsCopy(ar)
@@ -43,9 +43,37 @@ export function DecisionDialog({
   const [shown, setShown] = useState<NonNullable<typeof ask> | null>(null)
   if (ask && ask !== shown) setShown(ask)
   const name = a.name || t.untitled
-  const accepting = shown?.decision === 'accept'
-  const course = shown?.course.title ?? ''
-  const effects = accepting ? t.acceptEffects(a.email, course) : t.rejectEffects(a.email, course)
+  const kind =
+    shown?.decision === 'reopen' ? 'reopen' : shown?.decision === 'accept' ? 'accept' : 'reject'
+  const title = shown?.entry.title ?? ''
+  const programme = shown?.entry.course === null
+  const was = shown?.entry.decision === 'accepted' ? 'accepted' : 'rejected'
+  const copy = {
+    accept: {
+      heading: t.acceptTitle(title),
+      body: t.acceptBody(name, title),
+      effects: t.acceptEffects(a.email, title, programme),
+      label: t.accept,
+      pending: t.accepting,
+      done: t.decisions.accepted,
+    },
+    reject: {
+      heading: t.rejectTitle(title),
+      body: t.rejectBody(name, title),
+      effects: t.rejectEffects(a.email, title, programme),
+      label: t.reject,
+      pending: t.rejecting,
+      done: t.decisions.rejected,
+    },
+    reopen: {
+      heading: t.reopenTitle(title),
+      body: t.reopenBody(name, title),
+      effects: t.reopenEffects(title, was, programme),
+      label: t.reopen,
+      pending: t.reopening,
+      done: t.reopened,
+    },
+  }[kind]
   return (
     <Dialog
       open={ask !== null}
@@ -56,8 +84,8 @@ export function DecisionDialog({
       <DialogContent
         className={`arc-scope ${styles.dialog}`}
         dir={ar ? 'rtl' : 'ltr'}
-        title={accepting ? t.acceptTitle(course) : t.rejectTitle(course)}
-        description={accepting ? t.acceptBody(name, course) : t.rejectBody(name, course)}
+        title={copy.heading}
+        description={copy.body}
         closeLabel={t.close}
         onCloseAutoFocus={(e) => {
           e.preventDefault()
@@ -73,7 +101,7 @@ export function DecisionDialog({
         <Alert tone="info" title={t.whatNext}>
           {/* Alert wraps its children in a paragraph, so the list is spans with list roles. */}
           <span className={styles.effects} role="list">
-            {effects.map((line) => (
+            {copy.effects.map((line) => (
               <span key={line} role="listitem">
                 {line}
               </span>
@@ -88,23 +116,23 @@ export function DecisionDialog({
             </Button>
           </DialogClose>
           <ActionButton
-            label={accepting ? t.accept : t.reject}
-            pendingLabel={accepting ? t.accepting : t.rejecting}
-            successLabel={accepting ? t.decisions.accepted : t.decisions.rejected}
+            label={copy.label}
+            pendingLabel={copy.pending}
+            successLabel={copy.done}
             resetAfterMs={0}
-            onAction={() => send(shown!.course.course, shown!.decision)}
+            onAction={() => send(shown!.entry, shown!.decision)}
           />
         </div>
       </DialogContent>
     </Dialog>
   )
 
-  async function send(course: number, next: Decision) {
+  async function send(entry: Entry, next: Decision) {
     setBusy(true)
     setError('')
     let result: DecisionResult
     try {
-      result = await decide(course, next)
+      result = await decide(entry, next)
     } catch (e) {
       setError(e instanceof Error ? e.message : t.failed)
       setBusy(false)
@@ -112,7 +140,7 @@ export function DecisionDialog({
     }
     window.setTimeout(() => {
       setBusy(false)
-      onDone(course, next, result)
+      onDone(entry, next, result)
     }, SUCCESS_MS)
   }
 }

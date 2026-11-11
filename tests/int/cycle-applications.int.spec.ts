@@ -216,7 +216,7 @@ describe('cycle applications and approval', () => {
     ])
     const notifications = await payload.find({
       collection: 'notifications',
-      where: { link: { equals: `/admin/collections/form-submissions/${submission.id}` } },
+      where: { link: { equals: `/admin/applicants?application=${submission.id}` } },
     })
     for (const notification of notifications.docs) track('notifications', notification)
     expect(

@@ -46,6 +46,7 @@ const choice = (
   title,
   decision: 'pending' as const,
   decided: null,
+  emailFailed: false,
   fields: [],
   answers: [],
   cycle: { id: 7 + course, title: 'Fall' },
@@ -63,6 +64,7 @@ const application = (choices: ReturnType<typeof choice>[]): ApplicantsData['appl
   status: 'new',
   decided: null,
   target: 'courses',
+  programme: null,
   formId: 1,
   fields: [],
   answers: [],
@@ -235,6 +237,87 @@ describe('applicant review', () => {
         'The decision is saved, but the email did not send. Contact the applicant directly.',
       ),
     ).toBeTruthy()
+  })
+
+  it('marks a decision whose email did not go out, and sends it again', async () => {
+    const failed = application([
+      choice(1, 'Writing', {
+        decision: 'accepted',
+        decided: '2026-11-11T10:00:00Z',
+        emailFailed: true,
+      }),
+    ])
+    respond({ ok: true, emailed: true, decided: null })
+    view(<ApplicantsGrid data={{ courses, applications: [failed] }} ar={false} admin />)
+    expect(screen.getAllByText('Email not sent').length).toBeGreaterThan(0)
+    open()
+    fireEvent.click(screen.getByRole('button', { name: 'Send email again: Writing' }))
+    await waitFor(() =>
+      expect(fetch).toHaveBeenCalledWith(
+        '/api/form-submissions/10/courses/1/resend',
+        expect.objectContaining({ method: 'POST' }),
+      ),
+    )
+    await waitFor(() => expect(screen.queryAllByText('Email not sent')).toHaveLength(0))
+  })
+
+  it('reopens a decided course after confirming, and it waits again', async () => {
+    const decided = application([
+      choice(1, 'Writing', { decision: 'rejected', decided: '2026-11-11T10:00:00Z' }),
+    ])
+    respond({ ok: true, emailed: null, decided: null })
+    view(<ApplicantsGrid data={{ courses, applications: [decided] }} ar={false} admin />)
+    open()
+    fireEvent.click(screen.getByRole('button', { name: 'Reopen: Writing' }))
+    const dialog = screen.getByRole('dialog')
+    expect(within(dialog).getByText(/No email goes out/)).toBeTruthy()
+    fireEvent.click(within(dialog).getByRole('button', { name: 'Reopen' }))
+    await waitFor(() =>
+      expect(fetch).toHaveBeenCalledWith(
+        '/api/form-submissions/10/courses/1/reopen',
+        expect.objectContaining({ method: 'POST' }),
+      ),
+    )
+    expect(await screen.findByRole('button', { name: 'Accept: Writing' }, slow)).toBeTruthy()
+  })
+
+  it('decides a programme application as a whole', async () => {
+    const programme = {
+      ...application([]),
+      target: 'programmes' as const,
+      programme: {
+        id: 5,
+        title: 'Bridge programme',
+        cover: undefined,
+        decision: 'pending' as const,
+        decided: null,
+        emailFailed: false,
+      },
+    }
+    respond(done)
+    view(<ApplicantsGrid data={{ courses, applications: [programme] }} ar={false} admin />)
+    expect(screen.getByText('Bridge programme')).toBeTruthy()
+    open()
+    fireEvent.click(screen.getByRole('button', { name: 'Accept: Bridge programme' }))
+    const dialog = screen.getByRole('dialog')
+    expect(within(dialog).getByText(/A membership in Bridge programme/)).toBeTruthy()
+    fireEvent.click(within(dialog).getByRole('button', { name: 'Accept' }))
+    await waitFor(() =>
+      expect(fetch).toHaveBeenCalledWith(
+        '/api/form-submissions/10/accept',
+        expect.objectContaining({ method: 'POST' }),
+      ),
+    )
+  })
+
+  it('filters by the chosen course’s decision, not the whole application’s', () => {
+    navigation.search = 'status=new&course=1'
+    const mixed = application([
+      choice(1, 'Writing', { decision: 'accepted', decided: '2026-11-11T10:00:00Z' }),
+      choice(2, 'History'),
+    ])
+    view(<ApplicantsGrid data={{ courses, applications: [mixed] }} ar={false} admin />)
+    expect(screen.getByText('No matching applications')).toBeTruthy()
   })
 
   it('does not show mutation controls to fellows', () => {

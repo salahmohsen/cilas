@@ -5,7 +5,7 @@ import { relId } from '@/lib/relation'
 
 import { mediaImage, mediaPopulate } from '@/lib/media-image'
 import { courseRegistration } from '@/lib/registration'
-import type { ChoiceDecision } from './application-status'
+import { deriveStatus, type ChoiceDecision } from './application-status'
 
 export type ApplicantViewer = { kind: 'admin' } | { kind: 'fellow'; person: number }
 
@@ -51,7 +51,8 @@ export async function applicantsFor(
     })
   ).docs
   const ids = courses.map((c) => c.id)
-  if (!ids.length) return { courses: [], applications: [] }
+  // An admin also reviews programme applications, which have no courses.
+  if (!ids.length && !admin) return { courses: [], applications: [] }
   const own = new Map(courses.map((c) => [c.id, c]))
   const submissions = (
     await payload.find({
@@ -60,9 +61,39 @@ export async function applicantsFor(
       depth: 0,
       pagination: false,
       sort: '-createdAt',
-      where: { 'choices.course': { in: ids } },
+      where: admin
+        ? {
+            or: [
+              ...(ids.length ? [{ 'choices.course': { in: ids } }] : []),
+              { 'target.relationTo': { equals: 'programmes' } },
+            ],
+          }
+        : { 'choices.course': { in: ids } },
     })
   ).docs
+  const programmeIds = [
+    ...new Set(
+      submissions.flatMap((s) =>
+        s.target?.relationTo === 'programmes' ? [Number(relId(s.target.value))] : [],
+      ),
+    ),
+  ]
+  const programmes = new Map(
+    (programmeIds.length
+      ? (
+          await payload.find({
+            collection: 'programmes',
+            overrideAccess: true,
+            depth: 1,
+            populate: { media: mediaPopulate },
+            pagination: false,
+            where: { id: { in: programmeIds } },
+            locale,
+          })
+        ).docs
+      : []
+    ).map((p) => [p.id, p]),
+  )
   const forms = new Map(
     await Promise.all(
       [...new Set(submissions.map((s) => Number(relId(s.form))))].map(async (id) => {
@@ -94,6 +125,7 @@ export async function applicantsFor(
           title: course.title,
           decision: (c.decision ?? 'pending') as ChoiceDecision,
           decided: c.decided_at ?? null,
+          emailFailed: c.email_failed === true,
           cover: mediaImage(typeof course.cover_image === 'object' ? course.cover_image : null),
           cycle: cycle ? { id: cycle.id, title: cycle.title } : null,
           fields: withRetired(course.applicant_questions ?? [], answers),
@@ -103,7 +135,9 @@ export async function applicantsFor(
           ...(admin ? { amount: c.amount, need_reduction: c.need_reduction } : {}),
         }
       })
-    if (!choices.length) return []
+    const programme =
+      s.target?.relationTo === 'programmes' ? programmes.get(Number(relId(s.target.value))) : null
+    if (!choices.length && !programme) return []
     const formFields = forms.get(Number(relId(s.form))) ?? []
     const answers = (s.submissionData ?? []).map((a) => {
       const question = formFields.find((q) => 'name' in q && q.name === a.field)
@@ -120,9 +154,27 @@ export async function applicantsFor(
         name: answer('name'),
         email: answer('email'),
         submitted: s.createdAt,
-        status: s.status || 'new',
-        decided: s.decided_at ?? null,
+        // A fellow sees only their courses, so their status follows those decisions.
+        ...(admin
+          ? { status: s.status || 'new', decided: s.decided_at ?? null }
+          : (() => {
+              const own = deriveStatus(
+                choices.map((c) => ({ decision: c.decision, decided_at: c.decided })),
+              )
+              return { status: own.status, decided: own.decided_at }
+            })()),
         target: s.target?.relationTo ?? null,
+        /** A programme application is decided as a whole: its decision is the application's. */
+        programme: programme
+          ? {
+              id: programme.id,
+              title: programme.title,
+              cover: mediaImage(typeof programme.cover === 'object' ? programme.cover : null),
+              decision: (s.status === 'new' || !s.status ? 'pending' : s.status) as ChoiceDecision,
+              decided: s.decided_at ?? null,
+              emailFailed: s.email_failed === true,
+            }
+          : null,
         formId: Number(relId(s.form)),
         fields: withRetired(formFields, answers),
         answers,

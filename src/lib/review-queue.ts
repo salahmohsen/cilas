@@ -92,7 +92,7 @@ export const getReviewQueue = async (payload: Payload): Promise<QueueItem[]> => 
         title: `Application to ${what}`,
         by: name ?? '',
         since: s.createdAt,
-        href: `/admin/collections/form-submissions/${s.id}`,
+        href: `/admin/applicants?application=${s.id}`,
       }
     })
   return [...reviewed.flat(), ...sent].sort((a, b) => a.since.localeCompare(b.since))

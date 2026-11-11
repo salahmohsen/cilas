@@ -81,6 +81,7 @@ export const Enrollments: CollectionConfig = {
         { label: 'Confirmed (paid)', value: 'confirmed' },
         { label: 'Completed', value: 'completed' },
         { label: 'Withdrawn', value: 'withdrawn' },
+        { label: 'Rejected', value: 'rejected' },
       ],
     },
     {

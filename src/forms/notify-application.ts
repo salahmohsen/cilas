@@ -39,7 +39,7 @@ export const notifyNewApplication: CollectionAfterChangeHook = async ({ doc, ope
       description: applicantName
         ? `${applicantName} applied to “${title}”`
         : `An application to “${title}”`,
-      link: `/admin/collections/form-submissions/${doc.id}`,
+      link: `/admin/applicants?application=${doc.id}`,
     },
   )
 

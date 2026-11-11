@@ -144,6 +144,7 @@ describe('fellow applicants projection', () => {
           'cycle',
           'decided',
           'decision',
+          'emailFailed',
           'fields',
           'title',
         ])

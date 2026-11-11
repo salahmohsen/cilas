@@ -1,3 +1,5 @@
+import type { CollectionBeforeChangeHook } from 'payload'
+
 export const CHOICE_DECISIONS = ['pending', 'accepted', 'rejected'] as const
 export type ChoiceDecision = (typeof CHOICE_DECISIONS)[number]
 export type SubmissionStatus = 'new' | 'accepted' | 'rejected'
@@ -27,4 +29,14 @@ export function deriveStatus(choices: readonly Decided[]): {
     status: choices.some((c) => c.decision === 'accepted') ? 'accepted' : 'rejected',
     decided_at: last,
   }
+}
+
+/**
+ * Keeps `status` and `decided_at` true to the course decisions whenever the
+ * choices are saved, so an edit made outside the decision endpoints cannot
+ * leave them behind.
+ */
+export const syncStatus: CollectionBeforeChangeHook = ({ data, operation }) => {
+  if (operation !== 'update' || !Array.isArray(data.choices) || !data.choices.length) return data
+  return { ...data, ...deriveStatus(data.choices) }
 }

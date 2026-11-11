@@ -53,6 +53,14 @@ export const applicationFields: Field[] = [
         access: { create: adminOnlyField, update: adminOnlyField },
         admin: { readOnly: true, date: { pickerAppearance: 'dayAndTime' } },
       },
+      {
+        name: 'email_failed',
+        label: 'Decision email failed',
+        type: 'checkbox',
+        defaultValue: false,
+        access: { create: adminOnlyField, update: adminOnlyField },
+        admin: { readOnly: true },
+      },
     ],
   },
   {
@@ -100,6 +108,14 @@ export const applicationFields: Field[] = [
     type: 'date',
     access: { create: adminOnlyField, update: adminOnlyField },
     admin: { position: 'sidebar', readOnly: true, date: { pickerAppearance: 'dayAndTime' } },
+  },
+  {
+    name: 'email_failed',
+    label: 'Decision email failed',
+    type: 'checkbox',
+    defaultValue: false,
+    access: { create: adminOnlyField, update: adminOnlyField },
+    admin: { position: 'sidebar', readOnly: true, description: 'Programme decisions only.' },
   },
   {
     name: 'result',

@@ -120,7 +120,11 @@ const restCreate = async (
 }
 
 /** One course's decision when `courseId` is given, the whole submission's (programmes) otherwise. */
-const decide = async (action: 'accept' | 'reject', id: number, courseId?: number) => {
+const decide = async (
+  action: 'accept' | 'reject' | 'reopen' | 'resend',
+  id: number,
+  courseId?: number,
+) => {
   const path = courseId ? `/:id/courses/:course/${action}` : `/:id/${action}`
   const endpoint = (
     payload.collections['form-submissions'].config.endpoints as {
@@ -503,6 +507,138 @@ describe('the application flow, from the questions to the enrollment', () => {
     expect(now.result?.enrollments).toHaveLength(1)
     expect((await decide('accept', submission.id, other.id)).status).toBe(400)
     expect((await decide('accept', submission.id, 999999)).status).toBe(404)
+  })
+
+  it('marks a waiting enrollment rejected, undoes a decision, and accepts a rejected one again', async () => {
+    const address = `undo-${RUN}@cilas.test`
+    const submission = track(
+      'form-submissions',
+      await submit(address, [{ field: 'track', value: 'Film' }]),
+    )
+    const person = track(
+      'people',
+      await payload.create({
+        collection: 'people',
+        data: { name: 'Undo Probe', slug: personSlug('undo-probe'), visible: false },
+        overrideAccess: true,
+      }),
+    )
+    track(
+      'users',
+      (await payload.create({
+        collection: 'users',
+        data: {
+          email: address,
+          password: 'probe-password-1',
+          roles: ['member'],
+          person: person.id,
+        },
+      })) as unknown as { id: number },
+    )
+    const waiting = track(
+      'enrollments',
+      (await payload.create({
+        collection: 'enrollments',
+        data: { person: person.id, course: course.id, status: 'applied' },
+        overrideAccess: true,
+      } as never)) as unknown as { id: number },
+    )
+    const status = async () =>
+      (await payload.findByID({ collection: 'enrollments', id: waiting.id, overrideAccess: true }))
+        .status
+    const choice = async () =>
+      await payload.findByID({
+        collection: 'form-submissions',
+        id: submission.id,
+        overrideAccess: true,
+      })
+
+    expect((await decide('reopen', submission.id, course.id)).status).toBe(400)
+    expect((await decide('reject', submission.id, course.id)).status).toBe(200)
+    expect(await status()).toBe('rejected')
+
+    expect((await decide('reopen', submission.id, course.id)).status).toBe(200)
+    expect(await status()).toBe('applied')
+    let now = await choice()
+    expect(now.status).toBe('new')
+    expect(now.decided_at).toBeNull()
+    expect(now.choices?.[0]).toMatchObject({ decision: 'pending', decided_at: null })
+
+    expect((await decide('accept', submission.id, course.id)).status).toBe(200)
+    expect(await status()).toBe('accepted')
+    now = await choice()
+    expect(now.status).toBe('accepted')
+
+    // Paid enrollments are never moved by an undo.
+    await payload.update({
+      collection: 'enrollments',
+      id: waiting.id,
+      data: { status: 'confirmed' },
+      overrideAccess: true,
+    })
+    expect((await decide('reopen', submission.id, course.id)).status).toBe(400)
+    expect(await status()).toBe('confirmed')
+  })
+
+  it('decides one course once when two requests arrive together', async () => {
+    const address = `race-${RUN}@cilas.test`
+    const submission = track(
+      'form-submissions',
+      await submit(address, [{ field: 'track', value: 'Film' }]),
+    )
+    vi.mocked(payload.sendEmail).mockClear()
+    const answers = await Promise.all([
+      decide('accept', submission.id, course.id),
+      decide('accept', submission.id, course.id),
+    ])
+    expect(answers.map((r) => r.status).sort()).toEqual([200, 400])
+    expect(payload.sendEmail).toHaveBeenCalledTimes(1)
+    const user = (
+      await payload.find({ collection: 'users', where: { email: { equals: address } }, depth: 0 })
+    ).docs[0]!
+    track('users', user as unknown as { id: number })
+    const enrolled = await payload.find({
+      collection: 'enrollments',
+      where: { person: { equals: user.person } },
+      overrideAccess: true,
+      depth: 0,
+    })
+    enrolled.docs.forEach((e) => track('enrollments', e))
+    expect(enrolled.totalDocs).toBe(1)
+  })
+
+  it('records a failed email, and sends it again', async () => {
+    const address = `mailfail-${RUN}@cilas.test`
+    const submission = track(
+      'form-submissions',
+      await submit(address, [{ field: 'track', value: 'Film' }]),
+    )
+    vi.mocked(payload.sendEmail).mockRejectedValueOnce(new Error('smtp down'))
+    const first = await decide('reject', submission.id, course.id)
+    expect(await first.json()).toMatchObject({ ok: true, emailed: false })
+    const read = async () =>
+      (
+        await payload.findByID({
+          collection: 'form-submissions',
+          id: submission.id,
+          overrideAccess: true,
+        })
+      ).choices?.[0]
+    expect(await read()).toMatchObject({ decision: 'rejected', email_failed: true })
+
+    vi.mocked(payload.sendEmail).mockClear()
+    const again = await decide('resend', submission.id, course.id)
+    expect(await again.json()).toMatchObject({ ok: true, emailed: true })
+    expect(payload.sendEmail).toHaveBeenCalledWith(
+      expect.objectContaining({ to: address, subject: 'Your application to Flow Course' }),
+    )
+    expect((await read())?.email_failed).toBe(false)
+    // Nothing to send for a course that waits.
+    const waiting = track(
+      'form-submissions',
+      await submit(`wait-${RUN}@cilas.test`, [{ field: 'track', value: 'Film' }]),
+    )
+    expect((await decide('resend', waiting.id, course.id)).status).toBe(400)
   })
 
   it('the deadline closes the API too, not only the page, until it is lifted', async () => {

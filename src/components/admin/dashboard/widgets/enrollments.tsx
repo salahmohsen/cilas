@@ -43,6 +43,7 @@ const STAGES = [
   { key: 'confirmed', label: 'Confirmed', color: 'var(--series-3)' },
   { key: 'completed', label: 'Completed', color: 'var(--series-4)' },
   { key: 'withdrawn', label: 'Withdrawn', color: 'var(--danger)' },
+  { key: 'rejected', label: 'Rejected', color: 'var(--warning)' },
 ] as const satisfies readonly { key: Row['status']; label: string; color: string }[]
 
 export async function EnrollmentsByStage() {

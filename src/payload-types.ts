@@ -327,12 +327,17 @@ export interface FormSubmission {
           | null;
         decision?: ('pending' | 'accepted' | 'rejected') | null;
         decided_at?: string | null;
+        email_failed?: boolean | null;
         id?: string | null;
       }[]
     | null;
   courses?: string | null;
   status?: ('new' | 'accepted' | 'rejected') | null;
   decided_at?: string | null;
+  /**
+   * Programme decisions only.
+   */
+  email_failed?: boolean | null;
   result?: {
     user?: (number | null) | User;
     person?: (number | null) | Person;
@@ -1880,7 +1885,7 @@ export interface Enrollment {
   id: number;
   person: number | Person;
   course: number | Course;
-  status: 'applied' | 'accepted' | 'confirmed' | 'completed' | 'withdrawn';
+  status: 'applied' | 'accepted' | 'confirmed' | 'completed' | 'withdrawn' | 'rejected';
   /**
    * Which group they attend, e.g. "evening".
    */
@@ -3391,11 +3396,13 @@ export interface FormSubmissionsSelect<T extends boolean = true> {
             };
         decision?: T;
         decided_at?: T;
+        email_failed?: T;
         id?: T;
       };
   courses?: T;
   status?: T;
   decided_at?: T;
+  email_failed?: T;
   result?:
     | T
     | {

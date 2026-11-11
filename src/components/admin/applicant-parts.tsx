@@ -6,11 +6,10 @@ import { Mail } from 'lucide-react'
 import { Badge, type BadgeTone } from '@/components/arc/badge/badge'
 import type { ChoiceDecision } from '@/forms/application-status'
 import type { Applicant } from '@/forms/applicants'
+import { entriesOf, type Entry } from './applicant-decide'
 import { focalPointStyle } from '@/lib/media-image'
 import { applicantsCopy } from './applicants-copy'
 import styles from './applicants.module.css'
-
-type Choice = Applicant['choices'][number]
 
 const tones: Record<ChoiceDecision, BadgeTone> = {
   pending: 'warning',
@@ -22,13 +21,17 @@ const tones: Record<ChoiceDecision, BadgeTone> = {
 const day = (iso: string, ar: boolean) =>
   new Date(iso).toLocaleDateString(ar ? 'ar-EG' : 'en-GB', { timeZone: 'Africa/Cairo' })
 
-/** One course's decision, with its date once it is decided. */
-export function DecisionBadge({ choice, ar }: { choice: Choice; ar: boolean }) {
-  const label = applicantsCopy(ar).decisions[choice.decision]
+/** A decision, with its date once it is decided, and a mark when its email did not go out. */
+export function DecisionBadge({ entry, ar }: { entry: Entry; ar: boolean }) {
+  const t = applicantsCopy(ar)
+  const label = t.decisions[entry.decision]
   return (
-    <Badge tone={tones[choice.decision]}>
-      {choice.decided ? `${label} · ${day(choice.decided, ar)}` : label}
-    </Badge>
+    <span className={styles.badges}>
+      <Badge tone={tones[entry.decision]}>
+        {entry.decided ? `${label} · ${day(entry.decided, ar)}` : label}
+      </Badge>
+      {entry.emailFailed ? <Badge tone="danger">{t.emailNotSent}</Badge> : null}
+    </span>
   )
 }
 
@@ -46,12 +49,12 @@ export function EmailLine({ email }: { email: string }) {
  * (a badge or the decision buttons) on the right.
  */
 export function CourseTile({
-  choice: c,
+  entry: c,
   ar,
   className,
   children,
 }: {
-  choice: Choice
+  entry: Entry
   ar: boolean
   className?: string
   children?: ReactNode
@@ -80,13 +83,14 @@ export function CourseTile({
   )
 }
 
-/** One tile per course, each with its decision. Three tiles fill the media height; more make it taller. */
-export function CourseTiles({ choices, ar }: { choices: Choice[]; ar: boolean }) {
+/** One tile per course (or the programme), each with its decision. Three tiles fill the media height; more make it taller. */
+export function CourseTiles({ application, ar }: { application: Applicant; ar: boolean }) {
+  const entries = entriesOf(application)
   return (
-    <div className={styles.media} data-count={choices.length}>
-      {choices.map((c) => (
-        <CourseTile key={c.course} choice={c} ar={ar}>
-          <DecisionBadge choice={c} ar={ar} />
+    <div className={styles.media} data-count={entries.length}>
+      {entries.map((e) => (
+        <CourseTile key={e.key} entry={e} ar={ar}>
+          <DecisionBadge entry={e} ar={ar} />
         </CourseTile>
       ))}
     </div>

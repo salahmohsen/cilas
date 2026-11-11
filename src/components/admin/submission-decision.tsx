@@ -61,8 +61,10 @@ export function SubmissionDecision() {
       setBusy(false)
       return
     }
-    if (action === 'accept' && body?.emailed === false) {
-      toast.warning('Accepted, but the email did not send. Contact the applicant yourself.')
+    if (body?.emailed === false) {
+      toast.warning(
+        'The decision is saved, but the email did not send. Send it again in Applicants.',
+      )
     }
     window.location.reload()
   }
@@ -106,7 +108,12 @@ export function SubmissionDecision() {
       <ConfirmationModal
         modalSlug={slug('reject')}
         heading="Reject this application?"
-        body={<p>This marks it rejected. It makes nothing and sends no email.</p>}
+        body={
+          <p>
+            This marks it rejected and emails {email || 'the applicant'} kindly. It makes no account
+            and no membership.
+          </p>
+        }
         confirmLabel="Reject"
         confirmingLabel="Rejecting…"
         onConfirm={() => run('reject')}
