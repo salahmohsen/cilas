@@ -121,26 +121,35 @@ describe('fellow applicants projection', () => {
       email: 'applicant@cilas.test',
       status: 'new',
       answers: expect.arrayContaining([
-        { label: 'Your interests', value: 'Shared reply' },
-        { label: 'payment_interests', value: 'Ordinary shared answer' },
+        { name: 'shared', label: 'Your interests', value: 'Shared reply' },
+        { name: 'payment_interests', label: 'payment_interests', value: 'Ordinary shared answer' },
       ]),
       choices: [
         {
           course: f.courses[0].id,
           title: 'Writing',
           accepted: true,
-          answers: [{ label: 'Why writing?', value: 'Own saved answer' }],
+          answers: [{ name: 'reason', label: 'Why writing?', value: 'Own saved answer' }],
         },
       ],
     })
     expect(application.submitted).toMatch(/^\d{4}-/)
     for (const a of result.applications) {
       for (const c of a.choices) {
-        expect(Object.keys(c).sort()).toEqual(['accepted', 'answers', 'course', 'title'])
+        expect(Object.keys(c).sort()).toEqual([
+          'accepted',
+          'answers',
+          'course',
+          'cover',
+          'cycle',
+          'fields',
+          'title',
+        ])
         expect(c.course).toBe(f.courses[0].id)
       }
     }
     expect(result.applications.find((a) => a.id === legacy)?.choices[0].answers).toContainEqual({
+      name: 'reason',
       label: 'Why writing?',
       value: 'Legacy own answer',
     })

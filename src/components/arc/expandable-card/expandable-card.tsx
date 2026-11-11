@@ -26,6 +26,8 @@ export interface ExpandableCardProps extends Omit<
 > {
   title: string
   description?: string
+  media?: ReactNode
+  summary?: ReactNode
   children: ReactNode
   defaultExpanded?: boolean
   /** Collapsed width cap in px. The card is centered and never wider than its container. Fills the container when omitted. */
@@ -99,6 +101,8 @@ function RollingText({ text, reduced }: { text: string; reduced: boolean }) {
 export function ExpandableCard({
   title,
   description,
+  media,
+  summary,
   children,
   defaultExpanded = false,
   width,
@@ -187,6 +191,7 @@ export function ExpandableCard({
           aria-controls={panelId}
           onClick={() => toggle(!expanded)}
         >
+          {media}
           <span className={styles.copy}>
             <strong>{title}</strong>
             {description && (
@@ -204,6 +209,7 @@ export function ExpandableCard({
             <NavArrowDown width={18} height={18} aria-hidden="true" />
           </motion.span>
         </button>
+        {summary}
         {/* The panel stays mounted so a second click mid-animation reverses from where it is; inert keeps closed details out of reach. */}
         <motion.div
           id={panelId}

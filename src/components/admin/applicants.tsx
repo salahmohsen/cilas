@@ -1,45 +1,33 @@
-import { ApplicantsFilter } from './applicants-filter'
-import { formatAmount } from '@/lib/pricing'
+import { Suspense } from 'react'
 import { DefaultTemplate } from '@payloadcms/next/templates'
-import { Gutter, Pill } from '@payloadcms/ui'
+import { Gutter } from '@payloadcms/ui'
 import Link from 'next/link'
-import type { AdminViewServerProps, FieldServerComponent } from 'payload'
-import { applicantsFor, applicantViewer } from '@/forms/applicants'
+import type { AdminViewServerProps, FieldServerComponent, Payload } from 'payload'
+import { applicantsFor, applicantViewer, type ApplicantViewer } from '@/forms/applicants'
+import { Skeleton } from '@/components/arc/skeleton/skeleton'
+import { ApplicantsGrid, ApplicantsError } from './applicants-grid'
+import { applicantsCopy } from './applicants-copy'
+import styles from './applicants.module.css'
+import './dashboard/arc-scope.css'
 
-const statusPill = { new: 'light', accepted: 'success', rejected: 'error' } as const
-
-const copy = (ar: boolean) =>
-  ar
-    ? {
-        title: 'المتقدمون',
-        all: 'كل المقررات',
-        submitted: 'تاريخ التقديم',
-        shared: 'الإجابات المشتركة',
-        accepted: 'مقبول',
-        yes: 'نعم',
-        no: 'لا',
-        amount: 'المساهمة',
-        reduction: 'يحتاج إلى تخفيض',
-        empty: 'لا توجد طلبات.',
-        filter: 'تصفية',
-        course: 'المقرر',
-        statuses: { new: 'جديد', accepted: 'مقبول', rejected: 'مرفوض' },
-      }
-    : {
-        title: 'Applicants',
-        all: 'All courses',
-        submitted: 'Submitted',
-        shared: 'Shared answers',
-        accepted: 'Accepted',
-        yes: 'Yes',
-        no: 'No',
-        amount: 'Contribution',
-        reduction: 'Needs a reduction',
-        empty: 'No applications.',
-        filter: 'Filter',
-        course: 'Course',
-        statuses: { new: 'New', accepted: 'Accepted', rejected: 'Rejected' },
-      }
+async function Applications({
+  payload,
+  viewer,
+  ar,
+}: {
+  payload: Payload
+  viewer: ApplicantViewer | null
+  ar: boolean
+}) {
+  let data
+  try {
+    data = await applicantsFor(payload, viewer, ar ? 'ar' : 'en')
+  } catch (error) {
+    payload.logger.error({ err: error, msg: 'Could not load applicants' })
+    return <ApplicantsError ar={ar} />
+  }
+  return <ApplicantsGrid data={data} ar={ar} admin={viewer?.kind === 'admin'} />
+}
 
 export async function ApplicantsView({
   initPageResult,
@@ -49,14 +37,7 @@ export async function ApplicantsView({
 }: AdminViewServerProps) {
   const req = initPageResult.req
   const ar = req.i18n.language === 'ar'
-  const lang = ar ? 'ar' : 'en'
-  const t = copy(ar)
-  const viewer = applicantViewer(user)
-  const data = await applicantsFor(req.payload, viewer, lang)
-  const selected = Number(searchParams?.course) || null
-  const applications = selected
-    ? data.applications.filter((a) => a.choices.some((c) => c.course === selected))
-    : data.applications
+  const t = applicantsCopy(ar)
   return (
     <DefaultTemplate
       i18n={req.i18n}
@@ -68,65 +49,25 @@ export async function ApplicantsView({
       user={user}
       visibleEntities={initPageResult.visibleEntities}
     >
-      <Gutter className="cilas-applicants">
-        <h1>{t.title}</h1>
-        <ApplicantsFilter
-          courses={data.courses}
-          selected={selected}
-          all={t.all}
-          label={t.course}
-          submit={t.filter}
-        />
-        {!applications.length && <p>{t.empty}</p>}
-        {applications.map((a) => (
-          <article key={a.id} className="cilas-applicant-card">
-            <header className="cilas-applicant-card__header">
-              <div>
-                <h2>{a.name}</h2>
-                <p>{a.email}</p>
+      <Gutter>
+        <div
+          className={`arc-scope ${styles.page}`}
+          dir={ar ? 'rtl' : 'ltr'}
+          lang={ar ? 'ar' : 'en'}
+        >
+          <h1>{t.title}</h1>
+          <Suspense
+            fallback={
+              <div className={styles.grid} aria-busy="true">
+                {[0, 1, 2].map((id) => (
+                  <Skeleton key={id} lines={5} label={t.loading} />
+                ))}
               </div>
-              <Pill pillStyle={statusPill[a.status]}>{t.statuses[a.status]}</Pill>
-            </header>
-            <p className="cilas-applicant-card__meta">
-              {t.submitted}: {new Date(a.submitted).toLocaleDateString(ar ? 'ar-EG' : 'en-GB')}
-            </p>
-            <h3>{t.shared}</h3>
-            <dl>
-              {a.answers.map((answer, i) => (
-                <div key={i}>
-                  <dt>{answer.label}</dt>
-                  <dd>{answer.value}</dd>
-                </div>
-              ))}
-            </dl>
-            {a.choices.map((c) => (
-              <section key={c.course} className="cilas-applicant-choice">
-                <h3>{c.title}</h3>
-                <p>
-                  {t.accepted}: {c.accepted ? t.yes : t.no}
-                </p>
-                <dl>
-                  {c.answers.map((answer, i) => (
-                    <div key={i}>
-                      <dt>{answer.label}</dt>
-                      <dd>{answer.value}</dd>
-                    </div>
-                  ))}
-                </dl>
-                {viewer?.kind === 'admin' && (
-                  <>
-                    <p>
-                      {t.amount}: {c.amount == null ? '' : formatAmount(c.amount, lang)}
-                    </p>
-                    <p>
-                      {t.reduction}: {c.need_reduction ? t.yes : t.no}
-                    </p>
-                  </>
-                )}
-              </section>
-            ))}
-          </article>
-        ))}
+            }
+          >
+            <Applications payload={req.payload} viewer={applicantViewer(user)} ar={ar} />
+          </Suspense>
+        </div>
       </Gutter>
     </DefaultTemplate>
   )
@@ -154,7 +95,7 @@ export const CourseApplicants: FieldServerComponent = async ({ data, req }) => {
   })
   return (
     <Link href={`/admin/applicants?course=${course.id}`}>
-      {copy(req.i18n.language === 'ar').title} ({totalDocs})
+      {applicantsCopy(req.i18n.language === 'ar').title} ({totalDocs})
     </Link>
   )
 }

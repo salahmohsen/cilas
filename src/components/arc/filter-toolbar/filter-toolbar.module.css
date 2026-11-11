@@ -264,7 +264,7 @@
   height: 28px;
   flex: none;
   place-items: center;
-  margin-left: -6px;
+  margin-inline-start: -6px;
   padding: 0;
   border: 0;
   border-radius: var(--radius-pill);
@@ -335,7 +335,7 @@
   font: inherit;
   font-size: var(--text-sm);
   letter-spacing: var(--tracking-body);
-  text-align: left;
+  text-align: start;
   cursor: pointer;
   outline: none;
   -webkit-tap-highlight-color: transparent;
@@ -373,7 +373,7 @@
 }
 .hint {
   min-width: 2ch;
-  text-align: right;
+  text-align: end;
 }
 .check {
   display: inline-flex;

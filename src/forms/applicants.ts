@@ -3,7 +3,8 @@ import type { Payload, TypedUser } from 'payload'
 import { isAdminUser, isFellowUser, personOf } from '@/access'
 import { relId } from '@/lib/relation'
 
-import { answerTexts } from './answer-text'
+import { mediaCover, mediaPopulate } from '@/lib/media-image'
+import type { Form } from '@/payload-types'
 
 export type ApplicantViewer = { kind: 'admin' } | { kind: 'fellow'; person: number }
 
@@ -24,7 +25,8 @@ export async function applicantsFor(
     await payload.find({
       collection: 'courses',
       overrideAccess: true,
-      depth: 0,
+      depth: 1,
+      populate: { media: mediaPopulate, cycles: { title: true } },
       pagination: false,
       locale,
       ...(viewer.kind === 'fellow' ? { where: { fellows: { contains: viewer.person } } } : {}),
@@ -50,40 +52,35 @@ export async function applicantsFor(
           collection: 'forms',
           id,
           overrideAccess: true,
-          depth: 0,
+          depth: 1,
+          populate: { media: mediaPopulate },
           locale,
         })
-        const fields = form.fields ?? []
-        return [
-          id,
-          {
-            labels: new Map(
-              fields.flatMap((f) =>
-                'name' in f
-                  ? [[f.name, 'label' in f && typeof f.label === 'string' ? f.label : f.name]]
-                  : [],
-              ),
-            ),
-            text: answerTexts(fields),
-          },
-        ] as const
+        return [id, form.fields ?? []] as const
       }),
     ),
   )
-  const courseText = new Map(courses.map((c) => [c.id, answerTexts(c.applicant_questions)]))
   const applications = submissions.flatMap((s) => {
     const choices = (s.choices ?? [])
       .filter((c) => own.has(Number(relId(c.course))))
-      .map((c) => ({
-        course: Number(relId(c.course)),
-        title: own.get(Number(relId(c.course)))!.title,
-        accepted: c.accepted === true,
-        answers: (c.answers ?? []).map((a) => ({
-          label: a.label || a.name,
-          value: courseText.get(Number(relId(c.course)))!(a.name, a.value || ''),
-        })),
-        ...(admin ? { amount: c.amount, need_reduction: c.need_reduction } : {}),
-      }))
+      .map((c) => {
+        const course = own.get(Number(relId(c.course)))!
+        const cycle = typeof course.cycle === 'object' ? course.cycle : null
+        return {
+          course: course.id,
+          title: course.title,
+          accepted: c.accepted === true,
+          cover: mediaCover(typeof course.cover_image === 'object' ? course.cover_image : null),
+          cycle: cycle ? { id: cycle.id, title: cycle.title } : null,
+          fields: (course.applicant_questions ?? []) as Form['fields'],
+          answers: (c.answers ?? []).map((a) => ({
+            name: a.name,
+            label: a.label || a.name,
+            value: a.value || '',
+          })),
+          ...(admin ? { amount: c.amount, need_reduction: c.need_reduction } : {}),
+        }
+      })
     if (!choices.length) return []
     const answer = (field: string) => s.submissionData?.find((a) => a.field === field)?.value || ''
     return [
@@ -93,11 +90,18 @@ export async function applicantsFor(
         email: answer('email'),
         submitted: s.createdAt,
         status: s.status || 'new',
+        canAccept:
+          Boolean(s.target) &&
+          (s.target?.relationTo === 'programmes' || choices.some((c) => c.accepted)),
+        fields: forms.get(Number(relId(s.form))) ?? [],
         answers: (s.submissionData ?? []).map((a) => {
-          const form = forms.get(Number(relId(s.form)))
+          const question = forms
+            .get(Number(relId(s.form)))
+            ?.find((q) => 'name' in q && q.name === a.field)
           return {
-            label: form?.labels.get(a.field) || a.field,
-            value: form ? form.text(a.field, a.value) : a.value,
+            name: a.field,
+            label: question && 'label' in question ? question.label || a.field : a.field,
+            value: a.value,
           }
         }),
         choices,
@@ -113,3 +117,6 @@ export async function applicantsFor(
     applications,
   }
 }
+
+export type ApplicantsData = Awaited<ReturnType<typeof applicantsFor>>
+export type Applicant = ApplicantsData['applications'][number]

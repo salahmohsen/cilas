@@ -22,6 +22,7 @@
 }
 /* The card clips the header to its corners, so the header's hover fill never changes shape while the card opens or closes. */
 .trigger {
+  flex-wrap: wrap;
   display: flex;
   width: 100%;
   min-height: 64px;
@@ -33,7 +34,7 @@
   background: transparent;
   color: var(--foreground);
   font: inherit;
-  text-align: left;
+  text-align: start;
   cursor: pointer;
   -webkit-tap-highlight-color: transparent;
   transition: background-color var(--duration-fast) var(--ease-standard);
@@ -50,6 +51,8 @@
   background: var(--surface-muted);
 }
 .copy {
+  flex: 1;
+  overflow-wrap: anywhere;
   min-width: 0;
 }
 .copy strong {
@@ -70,7 +73,8 @@
 }
 .word {
   display: inline-block;
-  white-space: pre;
+  white-space: pre-wrap;
+  max-inline-size: 100%;
 }
 .srOnly {
   position: absolute;
