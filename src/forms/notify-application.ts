@@ -1,10 +1,12 @@
 import { courseTitles } from './course-titles'
+import { fellowNoticesFor, type CourseFellows } from './application-recipients'
 import { relId } from '@/lib/relation'
-import type { CollectionAfterChangeHook } from 'payload'
+import type { CollectionAfterChangeHook, PayloadRequest } from 'payload'
 
 import { applicantOf } from '@/forms/applicant'
 import { notify } from '@/lib/notify'
-import { adminRecipients } from '@/lib/review-mail'
+import { toPersonIds } from '@/lib/fellow-role'
+import { adminRecipients, ownerRecipients } from '@/lib/review-mail'
 import type { FormSubmission } from '@/payload-types'
 
 export const notifyNewApplication: CollectionAfterChangeHook = async ({ doc, operation, req }) => {
@@ -40,5 +42,52 @@ export const notifyNewApplication: CollectionAfterChangeHook = async ({ doc, ope
       link: `/admin/collections/form-submissions/${doc.id}`,
     },
   )
+
+  const courseIds = [
+    ...new Set(
+      ((doc as FormSubmission).choices ?? [])
+        .map((choice) => Number(relId(choice.course)))
+        .filter(Number.isFinite),
+    ),
+  ]
+  const courses = await fellowCourses(req, courseIds)
+  const notices = fellowNoticesFor(
+    admins.map((a) => a.id),
+    courses,
+  )
+  for (const { course, users } of notices) {
+    await notify(req.payload, users, {
+      kind: 'application',
+      description: applicantName
+        ? `${applicantName} applied to “${course.title}”`
+        : `An application to “${course.title}”`,
+      link: `/admin/applicants?course=${course.id}`,
+    })
+  }
   return doc
+}
+
+const fellowCourses = async (req: PayloadRequest, ids: number[]): Promise<CourseFellows[]> => {
+  if (!ids.length) return []
+  try {
+    const { docs } = await req.payload.find({
+      collection: 'courses',
+      where: { id: { in: ids } },
+      select: { title: true, fellows: true },
+      depth: 0,
+      pagination: false,
+      overrideAccess: true,
+      req,
+    })
+    return await Promise.all(
+      docs.map(async (course) => ({
+        id: course.id,
+        title: course.title,
+        fellowUsers: (await ownerRecipients(req, toPersonIds(course.fellows))).map((u) => u.id),
+      })),
+    )
+  } catch (error) {
+    req.payload.logger.error({ err: error, msg: 'Fellows not found for application notices' })
+    return []
+  }
 }
