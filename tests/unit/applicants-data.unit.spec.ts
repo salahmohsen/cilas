@@ -2,7 +2,7 @@
 import { describe, expect, it, vi } from 'vitest'
 import type { Payload } from 'payload'
 vi.mock('server-only', () => ({}))
-import { applicantsFor } from '@/forms/applicants'
+import { applicantsFor, withRetired } from '@/forms/applicants'
 
 function fixture() {
   const course = {
@@ -55,7 +55,7 @@ describe('applicant data projection', () => {
     const result = await applicantsFor(payload, { kind: 'admin' })
     expect(find).toHaveBeenCalledWith(expect.objectContaining({ collection: 'courses', depth: 1 }))
     expect(result.applications[0].choices[0]).toMatchObject({
-      cover: { url: '/cover.jpg', alt: 'Cover', focalX: 30 },
+      cover: { src: '/cover.jpg', alt: 'Cover', focalX: 30 },
       cycle: { id: 7, title: 'Fall' },
       amount: 100,
       need_reduction: true,
@@ -80,5 +80,16 @@ describe('applicant data projection', () => {
     const { payload, find } = fixture()
     expect(await applicantsFor(payload, null)).toEqual({ courses: [], applications: [] })
     expect(find).not.toHaveBeenCalled()
+  })
+  it('keeps an answer to a removed question as a text question', () => {
+    const fields = [{ blockType: 'text', name: 'kept' }]
+    const shown = withRetired(fields, [
+      { name: 'kept', label: 'Kept' },
+      { name: 'removed', label: 'Removed question' },
+    ])
+    expect(shown).toEqual([
+      { blockType: 'text', name: 'kept' },
+      { blockType: 'textarea', name: 'removed', label: 'Removed question' },
+    ])
   })
 })

@@ -3,8 +3,8 @@ import type { Payload, TypedUser } from 'payload'
 import { isAdminUser, isFellowUser, personOf } from '@/access'
 import { relId } from '@/lib/relation'
 
-import { mediaCover, mediaPopulate } from '@/lib/media-image'
-import type { Form } from '@/payload-types'
+import { mediaImage, mediaPopulate } from '@/lib/media-image'
+import { courseRegistration } from '@/lib/registration'
 
 export type ApplicantViewer = { kind: 'admin' } | { kind: 'fellow'; person: number }
 
@@ -13,6 +13,20 @@ export function applicantViewer(user?: TypedUser | null): ApplicantViewer | null
   const person = personOf(user)
   return isFellowUser(user) && person !== null ? { kind: 'fellow', person } : null
 }
+
+/**
+ * The questions an application is shown with. An answer whose question was
+ * since removed from the form stays visible, as a plain text question.
+ */
+export const withRetired = <T extends { blockType: string }>(
+  questions: T[],
+  answers: { name: string; label: string }[],
+): T[] => [
+  ...questions,
+  ...answers
+    .filter((a) => !questions.some((q) => 'name' in q && q.name === a.name))
+    .map((a) => ({ blockType: 'textarea', name: a.name, label: a.label }) as unknown as T),
+]
 
 export async function applicantsFor(
   payload: Payload,
@@ -26,7 +40,10 @@ export async function applicantsFor(
       collection: 'courses',
       overrideAccess: true,
       depth: 1,
-      populate: { media: mediaPopulate, cycles: { title: true } },
+      populate: {
+        media: mediaPopulate,
+        cycles: { title: true, registration: true, pricing: true },
+      },
       pagination: false,
       locale,
       ...(viewer.kind === 'fellow' ? { where: { fellows: { contains: viewer.person } } } : {}),
@@ -66,22 +83,34 @@ export async function applicantsFor(
       .map((c) => {
         const course = own.get(Number(relId(c.course)))!
         const cycle = typeof course.cycle === 'object' ? course.cycle : null
+        const answers = (c.answers ?? []).map((a) => ({
+          name: a.name,
+          label: a.label || a.name,
+          value: a.value || '',
+        }))
         return {
           course: course.id,
           title: course.title,
           accepted: c.accepted === true,
-          cover: mediaCover(typeof course.cover_image === 'object' ? course.cover_image : null),
+          cover: mediaImage(typeof course.cover_image === 'object' ? course.cover_image : null),
           cycle: cycle ? { id: cycle.id, title: cycle.title } : null,
-          fields: (course.applicant_questions ?? []) as Form['fields'],
-          answers: (c.answers ?? []).map((a) => ({
-            name: a.name,
-            label: a.label || a.name,
-            value: a.value || '',
-          })),
+          fields: withRetired(course.applicant_questions ?? [], answers),
+          answers,
+          // Contributions are for admins: a fellow's view has no amounts to show.
+          contribution: admin ? courseRegistration(course, cycle).price : null,
           ...(admin ? { amount: c.amount, need_reduction: c.need_reduction } : {}),
         }
       })
     if (!choices.length) return []
+    const formFields = forms.get(Number(relId(s.form))) ?? []
+    const answers = (s.submissionData ?? []).map((a) => {
+      const question = formFields.find((q) => 'name' in q && q.name === a.field)
+      return {
+        name: a.field,
+        label: question && 'label' in question ? question.label || a.field : a.field,
+        value: a.value,
+      }
+    })
     const answer = (field: string) => s.submissionData?.find((a) => a.field === field)?.value || ''
     return [
       {
@@ -90,20 +119,14 @@ export async function applicantsFor(
         email: answer('email'),
         submitted: s.createdAt,
         status: s.status || 'new',
+        decided: s.decided_at ?? null,
+        target: s.target?.relationTo ?? null,
+        formId: Number(relId(s.form)),
         canAccept:
           Boolean(s.target) &&
           (s.target?.relationTo === 'programmes' || choices.some((c) => c.accepted)),
-        fields: forms.get(Number(relId(s.form))) ?? [],
-        answers: (s.submissionData ?? []).map((a) => {
-          const question = forms
-            .get(Number(relId(s.form)))
-            ?.find((q) => 'name' in q && q.name === a.field)
-          return {
-            name: a.field,
-            label: question && 'label' in question ? question.label || a.field : a.field,
-            value: a.value,
-          }
-        }),
+        fields: withRetired(formFields, answers),
+        answers,
         choices,
       },
     ]

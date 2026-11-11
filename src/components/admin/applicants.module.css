@@ -8,8 +8,7 @@
   font-weight: 500;
   margin: 0 0 var(--space-6);
 }
-.body,
-.details {
+.body {
   display: grid;
   gap: var(--space-6);
   min-inline-size: 0;
@@ -27,20 +26,8 @@
   display: grid;
   gap: var(--space-4);
   min-inline-size: 0;
+  height: 100%;
 }
-.cover {
-  position: relative;
-  display: grid;
-  inline-size: 100%;
-  place-items: center;
-  aspect-ratio: 16 / 9;
-  color: var(--text-muted);
-  font-size: var(--text-sm);
-}
-.cover img {
-  object-fit: cover;
-}
-.details p,
 .note {
   margin: 0;
   font-size: var(--text-sm);
@@ -54,52 +41,6 @@
 }
 .actions > button {
   min-block-size: 44px;
-}
-.fields {
-  display: grid;
-  gap: var(--space-4);
-  min-inline-size: 0;
-}
-.fields + .fields {
-  border-block-start: 1px solid var(--border);
-  padding-block-start: var(--space-6);
-}
-.fields h3 {
-  margin: 0;
-  font-size: var(--text-base);
-  font-weight: 500;
-  overflow-wrap: anywhere;
-}
-.fields :global(.payload-form-image) {
-  max-inline-size: 100%;
-  block-size: auto;
-  border-radius: var(--radius-control);
-}
-/* Each answer: its question, small and muted, over the answer in reading size. */
-.fields :global(.payload-answers) {
-  display: grid;
-  gap: var(--space-4);
-  margin: 0;
-}
-.fields :global(.payload-answers) > div {
-  display: grid;
-  gap: var(--space-1);
-  min-inline-size: 0;
-}
-.fields :global(.payload-answers) dt {
-  color: var(--text-muted);
-  font-size: var(--text-xs);
-}
-.fields :global(.payload-answers) dd {
-  margin: 0;
-  color: var(--foreground);
-  font-size: var(--text-sm);
-  line-height: var(--leading-body);
-  white-space: pre-line;
-  overflow-wrap: anywhere;
-}
-.fields :global(.payload-answers) dd[data-empty] {
-  color: var(--text-muted);
 }
 .count {
   margin: 0;
@@ -121,11 +62,169 @@
   clip-path: inset(50%);
   white-space: nowrap;
 }
-/* The quick look holds a whole application: wider than Arc's default, its
-   cover a short band so the answers start above the fold. */
-.quickLook {
-  width: min(calc(100vw - var(--space-8)), 44rem);
+/* The card. Its media holds up to three course tiles at one height; more tiles make it taller. */
+.card {
+  display: grid;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-surface);
+  background: var(--surface-raised);
 }
-.quickLook .cover {
-  aspect-ratio: 16 / 5;
+.media {
+  display: flex;
+  flex-direction: column;
+  min-block-size: 12rem;
+}
+.tile {
+  position: relative;
+  display: flex;
+  flex: 1 0 4rem;
+  align-items: flex-end;
+  padding: var(--space-3) var(--space-4);
+  isolation: isolate;
+  overflow: hidden;
+  background: var(--neutral-10);
+  color: white;
+}
+.tile img {
+  z-index: -2;
+  object-fit: cover;
+}
+.tile[data-image]::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: color-mix(in oklab, black 55%, transparent);
+}
+.tile + .tile {
+  border-block-start: 1px solid rgba(255, 255, 255, 0.5);
+}
+.tileTitle {
+  font-size: var(--text-base);
+  font-weight: 500;
+  line-height: var(--leading-body);
+  overflow-wrap: anywhere;
+  text-wrap: balance;
+}
+.cardBody {
+  position: relative;
+  display: grid;
+  gap: var(--space-3);
+  padding: var(--space-5);
+}
+.cardTitle {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-2);
+  margin: 0;
+  font-size: var(--text-lg);
+  font-weight: 500;
+}
+/* The name opens the application. Its box stretches over the whole card. */
+.open {
+  all: unset;
+  cursor: pointer;
+  overflow-wrap: anywhere;
+}
+.open::after {
+  content: '';
+  position: absolute;
+  inset: calc(var(--card-media, 12rem) * -1) 0 0 0;
+}
+.open:focus-visible::after {
+  outline: 2px solid var(--accent);
+  outline-offset: -2px;
+}
+.cardDescription {
+  margin: 0;
+  color: var(--text-secondary);
+  font-size: var(--text-sm);
+}
+.email {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  min-inline-size: 0;
+  overflow-wrap: anywhere;
+}
+.email svg {
+  flex: none;
+}
+.cardFooter {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  gap: var(--space-3);
+  margin-block-start: var(--space-2);
+  max-height: 44px;
+  margin-top: auto;
+}
+.cardFooter > button {
+  min-block-size: 44px;
+}
+.accept {
+  flex: 1;
+}
+.reject {
+  gap: var(--space-2);
+}
+.effects {
+  display: grid;
+  gap: var(--space-2);
+  margin: 0;
+  padding-inline-start: var(--space-5);
+}
+.srOnly {
+  position: absolute;
+  inline-size: 1px;
+  block-size: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+/* The application dialog is wide: an admin reads a whole application in it. */
+.detail {
+  width: min(calc(100vw - var(--space-8)), 56rem);
+  padding: 0;
+}
+.review {
+  display: grid;
+  gap: var(--space-8);
+  padding: var(--space-6);
+  font-size: var(--text-base);
+  line-height: var(--leading-body);
+}
+.heading {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-2);
+}
+.heading h2 {
+  margin: 0;
+  font-size: var(--text-2xl);
+  font-weight: 500;
+}
+.review :global(.payload-form) {
+  font-size: var(--text-base);
+}
+.review :global(.payload-form-question) {
+  font-size: inherit;
+}
+.approval {
+  display: grid;
+  gap: var(--space-3);
+  border-block-start: 1px solid var(--border);
+  padding-block-start: var(--space-6);
+}
+.approval h3 {
+  margin: 0;
+  font-size: var(--text-base);
+  font-weight: 500;
+}
+.approval ul {
+  margin: 0;
+  padding-inline-start: var(--space-5);
 }

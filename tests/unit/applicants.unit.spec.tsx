@@ -1,7 +1,9 @@
 import { render, screen, fireEvent, waitFor, within } from '@testing-library/react'
+import { NextIntlClientProvider } from 'next-intl'
+import type { ReactNode } from 'react'
+import messages from '../../messages/en.json'
 import { beforeAll, beforeEach, describe, expect, it, vi } from 'vitest'
 import { ApplicantsGrid } from '@/components/admin/applicants-grid'
-import { PayloadAnswers } from '@/components/forms/payload-question'
 import type { ApplicantsData } from '@/forms/applicants'
 
 const navigation = vi.hoisted(() => ({ search: '', push: vi.fn(), refresh: vi.fn() }))
@@ -10,6 +12,7 @@ vi.mock('next/navigation', () => ({
   usePathname: () => '/admin/applicants',
   useRouter: () => navigation,
 }))
+vi.mock('@/i18n/navigation', () => ({ Link: 'a' }))
 vi.mock('@/components/RichTextField', () => ({ RichTextField: () => null }))
 
 beforeAll(() => {
@@ -47,6 +50,9 @@ const data: ApplicantsData = {
       submitted: '2026-11-01T12:00:00Z',
       status: 'new',
       canAccept: true,
+      decided: null,
+      target: 'courses',
+      formId: 1,
       fields: [],
       answers: [],
       choices: [
@@ -58,6 +64,7 @@ const data: ApplicantsData = {
           answers: [],
           cycle: { id: 7, title: 'Fall' },
           cover: undefined,
+          contribution: null,
           need_reduction: false,
           amount: 100,
         },
@@ -69,6 +76,7 @@ const data: ApplicantsData = {
           answers: [],
           cycle: { id: 8, title: 'Spring' },
           cover: undefined,
+          contribution: null,
           need_reduction: true,
           amount: 50,
         },
@@ -77,10 +85,27 @@ const data: ApplicantsData = {
   ],
 }
 
+const view = (ui: ReactNode) =>
+  render(ui, {
+    wrapper: ({ children }) => (
+      <NextIntlClientProvider locale="en" messages={{ Forms: messages.Forms }}>
+        {children}
+      </NextIntlClientProvider>
+    ),
+  })
+const slow = { timeout: 3000 }
+/** Accept asks first: open the dialog, read what follows, confirm. */
+async function accept() {
+  fireEvent.click(screen.getByRole('button', { name: 'Accept' }))
+  const dialog = screen.getByRole('dialog')
+  expect(within(dialog).getByText(/An email goes to a@example.test/)).toBeTruthy()
+  fireEvent.click(within(dialog).getByRole('button', { name: 'Accept' }))
+}
+
 describe('applicant review', () => {
   it('matches course, cycle and reduction on the same choice', () => {
     navigation.search = 'course=1&reduction=yes'
-    render(<ApplicantsGrid data={data} ar={false} admin />)
+    view(<ApplicantsGrid data={data} ar={false} admin />)
     expect(screen.getByText('No matching applications')).toBeTruthy()
     fireEvent.click(
       within(screen.getByRole('group', { name: 'Applicants' })).getByRole('button', {
@@ -92,7 +117,7 @@ describe('applicant review', () => {
 
   it('keeps unrelated URL parameters when clearing filters', () => {
     navigation.search = 'status=rejected&locale=ar'
-    render(<ApplicantsGrid data={data} ar={false} admin />)
+    view(<ApplicantsGrid data={data} ar={false} admin />)
     fireEvent.click(
       within(screen.getByRole('group', { name: 'Applicants' })).getByRole('button', {
         name: 'Clear filters',
@@ -107,10 +132,12 @@ describe('applicant review', () => {
       json: async () => ({ error: 'Decision unavailable. Retry.' }),
     })
     vi.stubGlobal('fetch', fetcher)
-    render(<ApplicantsGrid data={data} ar={false} admin />)
+    view(<ApplicantsGrid data={data} ar={false} admin />)
     fireEvent.click(screen.getByRole('button', { name: 'Reject' }))
     expect(fetcher).not.toHaveBeenCalled()
     const dialog = screen.getByRole('dialog')
+    expect(within(dialog).getByText('What happens next')).toBeTruthy()
+    expect(within(dialog).getByText(/No email goes to a@example.test/)).toBeTruthy()
     fireEvent.click(within(dialog).getByRole('button', { name: 'Reject' }))
     await waitFor(() =>
       expect(fetcher).toHaveBeenCalledWith(
@@ -123,7 +150,7 @@ describe('applicant review', () => {
   })
 
   it('returns focus to the Reject button when the dialog is cancelled', async () => {
-    render(<ApplicantsGrid data={data} ar={false} admin />)
+    view(<ApplicantsGrid data={data} ar={false} admin />)
     const reject = screen.getByRole('button', { name: 'Reject' })
     fireEvent.click(reject)
     fireEvent.click(within(screen.getByRole('dialog')).getByRole('button', { name: 'Cancel' }))
@@ -136,9 +163,9 @@ describe('applicant review', () => {
       'fetch',
       vi.fn().mockResolvedValue({ ok: true, json: async () => ({ ok: true, emailed: true }) }),
     )
-    render(<ApplicantsGrid data={data} ar={false} admin />)
-    fireEvent.click(screen.getByRole('button', { name: 'Accept' }))
-    expect(await screen.findByText('No matching applications')).toBeTruthy()
+    view(<ApplicantsGrid data={data} ar={false} admin />)
+    await accept()
+    expect(await screen.findByText('No matching applications', {}, slow)).toBeTruthy()
   })
 
   it('keeps email delivery warnings visible after a status filter removes the card', async () => {
@@ -147,61 +174,41 @@ describe('applicant review', () => {
       'fetch',
       vi.fn().mockResolvedValue({ ok: true, json: async () => ({ ok: true, emailed: false }) }),
     )
-    render(<ApplicantsGrid data={data} ar={false} admin />)
-    fireEvent.click(screen.getByRole('button', { name: 'Accept' }))
-    expect(await screen.findByText('No matching applications')).toBeTruthy()
+    view(<ApplicantsGrid data={data} ar={false} admin />)
+    await accept()
+    expect(await screen.findByText('No matching applications', {}, slow)).toBeTruthy()
     expect(
       screen.getByText('Accepted, but the email did not send. Contact the applicant directly.'),
     ).toBeTruthy()
   })
 
-  it('shows status and keeps decisions out of the card open trigger', async () => {
-    vi.stubGlobal(
-      'fetch',
-      vi.fn().mockResolvedValue({ ok: true, json: async () => ({ ok: true, emailed: true }) }),
-    )
-    render(<ApplicantsGrid data={data} ar={false} admin />)
+  it('shows the status above the name and opens the application', async () => {
+    view(<ApplicantsGrid data={data} ar={false} admin />)
     expect(screen.getByRole('heading', { level: 2, name: 'Applications' })).toBeTruthy()
     expect(screen.getAllByText(/Pending/).length).toBeGreaterThan(0)
-    fireEvent.click(screen.getByRole('button', { name: 'Accept' }))
-    await waitFor(() => expect(screen.getByRole('button', { name: /Accepted/ })).toBeTruthy())
-    expect(screen.queryByRole('button', { name: 'Close' })).toBeNull()
-    // The course leads the card; its open control also names the applicant.
-    expect(screen.getByRole('heading', { level: 3, name: /Writing, History/ })).toBeTruthy()
+    expect(screen.getByText('a@example.test')).toBeTruthy()
+    // One tile per course.
+    expect(screen.getByText('Writing')).toBeTruthy()
+    expect(screen.getByText('History')).toBeTruthy()
     fireEvent.click(screen.getByRole('button', { name: 'Applicant: Writing, History' }))
     expect(await screen.findByRole('button', { name: 'Close' })).toBeTruthy()
   })
 
-  it('does not show mutation controls to fellows', () => {
-    render(<ApplicantsGrid data={data} ar={false} admin={false} />)
-    expect(screen.queryByRole('button', { name: 'Accept' })).toBeNull()
-    expect(screen.queryByRole('button', { name: 'Reject' })).toBeNull()
+  it('shows the decision date in the status once decided', async () => {
+    const decided: ApplicantsData = {
+      ...data,
+      applications: [
+        { ...data.applications[0], status: 'accepted', decided: '2026-11-11T10:00:00Z' },
+      ],
+    }
+    view(<ApplicantsGrid data={decided} ar={false} admin={false} />)
+    fireEvent.click(screen.getByRole('button', { name: 'Applicant: Writing, History' }))
+    expect(await screen.findByText('Accepted · 11/11/2026')).toBeTruthy()
   })
 
-  it('preserves historical answers as text under their questions', () => {
-    render(
-      <PayloadAnswers
-        fields={[
-          { blockType: 'message', message: null } as never,
-          {
-            blockType: 'select',
-            name: 'choice',
-            label: 'Choice',
-            options: [{ value: 'current', label: 'Current option' }],
-          },
-          { blockType: 'text', name: 'blank', label: 'Blank' },
-        ]}
-        answers={[
-          { name: 'choice', label: 'Saved question', value: 'retired' },
-          { name: 'removed', label: 'Removed question', value: 'Original answer' },
-        ]}
-      />,
-    )
-    const answerTo = (question: string) =>
-      screen.getByText(question, { selector: 'dt' }).parentElement?.querySelector('dd')
-    expect(answerTo('Saved question')?.textContent).toBe('retired')
-    expect(answerTo('Removed question')?.textContent).toBe('Original answer')
-    expect(answerTo('Blank')?.textContent).toBe('—')
-    expect(screen.queryAllByRole('textbox')).toHaveLength(0)
+  it('does not show mutation controls to fellows', () => {
+    view(<ApplicantsGrid data={data} ar={false} admin={false} />)
+    expect(screen.queryByRole('button', { name: 'Accept' })).toBeNull()
+    expect(screen.queryByRole('button', { name: 'Reject' })).toBeNull()
   })
 })

@@ -3,7 +3,10 @@ import { DefaultTemplate } from '@payloadcms/next/templates'
 import { Button, Gutter } from '@payloadcms/ui'
 import type { AdminViewServerProps, FieldServerComponent, Payload } from 'payload'
 import { applicantsFor, applicantViewer, type ApplicantViewer } from '@/forms/applicants'
+import messagesEn from '../../../messages/en.json'
+import messagesAr from '../../../messages/ar.json'
 import { Skeleton } from '@/components/arc/skeleton/skeleton'
+import { ApplicantsIntl } from './applicants-intl'
 import { ApplicantsGrid, ApplicantsError } from './applicants-grid'
 import { applicantsCopy } from './applicants-copy'
 import styles from './applicants.module.css'
@@ -64,7 +67,13 @@ export async function ApplicantsView({
               </div>
             }
           >
-            <Applications payload={req.payload} viewer={applicantViewer(user)} ar={ar} />
+            {/* The applications show the public form, which reads its text from next-intl. */}
+            <ApplicantsIntl
+              locale={ar ? 'ar' : 'en'}
+              messages={(ar ? messagesAr : messagesEn).Forms}
+            >
+              <Applications payload={req.payload} viewer={applicantViewer(user)} ar={ar} />
+            </ApplicantsIntl>
           </Suspense>
         </div>
       </Gutter>

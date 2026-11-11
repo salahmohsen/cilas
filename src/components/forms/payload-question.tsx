@@ -11,7 +11,6 @@ import { RadioGroup } from '@/components/arc/radio-group/radio-group'
 import { Select } from '@/components/arc/select/select'
 import { Textarea } from '@/components/arc/textarea/textarea'
 import { acceptAttribute, acceptedLabel, maxBytes, maxCount } from '@/lib/form-files'
-import { answerText } from '@/forms/answer-text'
 import type { Form, Media } from '@/payload-types'
 
 export type Block = NonNullable<Form['fields']>[number]
@@ -257,57 +256,4 @@ export function PayloadQuestion({
         />
       )
   }
-}
-
-/**
- * Saved answers for a reviewer: each question's label over what was answered,
- * with the question's image when it asks about one. The form's instructions
- * (messages, descriptions) are for applicants and are left out.
- */
-export function PayloadAnswers({
-  fields = [],
-  answers,
-}: {
-  fields?: Form['fields']
-  answers: { name: string; label: string; value: string }[]
-}) {
-  const questions = (fields ?? []).filter((q): q is Question => q.blockType !== 'message')
-  const known = new Set(questions.map((q) => q.name))
-  const rows: Question[] = [
-    ...questions,
-    ...answers
-      .filter((a) => !known.has(a.name))
-      .map((a) => ({ blockType: 'textarea' as const, name: a.name, label: a.label })),
-  ]
-  return (
-    <dl className="payload-answers">
-      {rows.map((q, i) => {
-        const answer = answers.find((a) => a.name === q.name)
-        const value = answerText(q, answer?.value ?? '')
-        const image = 'image' in q && typeof q.image === 'object' ? q.image : null
-        return (
-          <div key={`${q.name}:${i}`}>
-            <dt>{answer?.label || q.label || q.name}</dt>
-            {image?.url ? (
-              <dd>
-                <Image
-                  width={image.width || 800}
-                  height={image.height || 600}
-                  sizes="auto, min(34rem, calc(100vw - 2rem))"
-                  style={{ height: 'auto' }}
-                  alt={image.alt ?? ''}
-                  src={image.url}
-                  className="payload-form-image"
-                  loading="lazy"
-                />
-              </dd>
-            ) : null}
-            <dd dir="auto" data-empty={value ? undefined : ''}>
-              {value || '—'}
-            </dd>
-          </div>
-        )
-      })}
-    </dl>
-  )
 }

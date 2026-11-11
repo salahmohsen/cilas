@@ -7,6 +7,7 @@ import { Check, Flower2, Sprout } from 'lucide-react'
 import { useLocale, useTranslations } from 'next-intl'
 import { useEffect, useMemo, useRef, useState, type ReactNode } from 'react'
 
+import './payload-form.css'
 import { isValidPhoneNumber, PHONE_NUMBER_ERROR } from '@/lib/phone'
 import { ElasticSlider } from '@/components/arc/elastic-slider/elastic-slider'
 import { localDigits } from '@/lib/digits'
@@ -49,6 +50,60 @@ const emptyFor = (q: Question): Answer =>
       ? false
       : ''
 const isFiles = (q: Question) => q.blockType === 'fileUpload'
+/** Choices are saved as option values; readers show their labels (answerText). */
+const serialize = (q: Question, value: Answer): string => {
+  if (isFiles(q)) return ''
+  if (Array.isArray(value)) return (value as string[]).join(', ')
+  if (typeof value === 'boolean') return value ? 'Yes' : 'No'
+  return value
+}
+/** The inverse of `serialize`: a saved answer back into what its control holds. */
+const deserialize = (q: Question, text: string | null | undefined): Answer =>
+  isFiles(q)
+    ? []
+    : q.blockType === 'checkboxGroup'
+      ? (text ?? '').split(', ').filter(Boolean)
+      : q.blockType === 'checkbox'
+        ? text === 'Yes'
+        : (text ?? '')
+
+/** A saved application, to show in the form with every control read-only. */
+export type Review = {
+  answers: { name: string; value?: string | null }[]
+  choices: {
+    course: number
+    amount?: number | null
+    need_reduction?: boolean | null
+    answers: { name: string; value?: string | null }[]
+  }[]
+}
+
+const reviewValues = (
+  shared: Question[],
+  application: ApplicationContext | undefined,
+  review: Review,
+): Values => {
+  const text = (list: Review['answers'], name: string) => list.find((a) => a.name === name)?.value
+  const values: Values = Object.fromEntries(
+    shared.map((q) => [q.name, deserialize(q, text(review.answers, q.name))]),
+  )
+  if (!application) return values
+  values[selectedKey] = review.choices.map((c) => String(c.course))
+  for (const course of application.courses) {
+    const choice = review.choices.find((c) => c.course === course.id)
+    values[amountKey(course.id)] = String(
+      choice?.amount ?? defaultAmountOf(course.contribution) ?? '',
+    )
+    values[reductionKey(course.id)] = Boolean(choice?.need_reduction)
+    for (const q of course.questions)
+      values[choiceField(course.id, q.name)] = deserialize(
+        q as Question,
+        choice ? text(choice.answers, q.name) : '',
+      )
+  }
+  return values
+}
+
 const goodFiles = (value: Answer | undefined) =>
   Array.isArray(value)
     ? (value as FileUploadItem[]).filter((i) => typeof i === 'object' && !i.error)
@@ -60,15 +115,16 @@ export function PayloadForm({
   confirmation,
   back,
   lang,
-  disabled = false,
+  disabled: closed = false,
+  review,
   preview = false,
   target,
   application,
   analytics,
 }: {
-  form: Form
+  form: Pick<Form, 'id' | 'fields' | 'submitButtonLabel'>
   notes?: Record<string, ReactNode>
-  confirmation: ReactNode
+  confirmation?: ReactNode
   back?: { href: string; label: string }
   target?: { relationTo: 'programmes' | 'courses' | 'cycles'; value: number }
   application?: ApplicationContext
@@ -77,10 +133,13 @@ export function PayloadForm({
   lang?: string
   /** The questions are shown to read, not to answer (applications closed). */
   disabled?: boolean
+  /** A saved application: its answers fill the form, and every control is read-only. */
+  review?: Review
   preview?: boolean
 }) {
   const t = useTranslations('Forms')
   const locale = useLocale()
+  const disabled = closed || Boolean(review)
   const blocks = form.fields ?? []
   const sharedQuestions = blocks.filter(isQuestion)
   const selectedCourses = (value: Values) =>
@@ -135,36 +194,30 @@ export function PayloadForm({
     return undefined
   }
 
-  /** Choices are saved as option values; readers show their labels (answerText). */
-  const saved = (q: Question, value: Answer): string => {
-    if (isFiles(q)) return ''
-    if (Array.isArray(value)) return (value as string[]).join(', ')
-    if (typeof value === 'boolean') return value ? 'Yes' : 'No'
-    return value
-  }
-
   const api = useForm({
-    defaultValues: {
-      ...Object.fromEntries(sharedQuestions.map((q) => [q.name, emptyFor(q)])),
-      ...(application
-        ? {
-            [selectedKey]: application.initialCourse ? [String(application.initialCourse)] : [],
-            ...Object.fromEntries(
-              application.courses.flatMap((c) => [
-                [amountKey(c.id), String(defaultAmountOf(c.contribution) ?? '')],
-                [reductionKey(c.id), false],
-              ]),
-            ),
-          }
-        : {}),
-    } as Values,
+    defaultValues: (review
+      ? reviewValues(sharedQuestions, application, review)
+      : {
+          ...Object.fromEntries(sharedQuestions.map((q) => [q.name, emptyFor(q)])),
+          ...(application
+            ? {
+                [selectedKey]: application.initialCourse ? [String(application.initialCourse)] : [],
+                ...Object.fromEntries(
+                  application.courses.flatMap((c) => [
+                    [amountKey(c.id), String(defaultAmountOf(c.contribution) ?? '')],
+                    [reductionKey(c.id), false],
+                  ]),
+                ),
+              }
+            : {}),
+        }) as Values,
     onSubmit: async ({ value }) => {
       if (preview || disabled) return
       setFailed(null)
       const questions = questionsFor(value)
       const answers = sharedQuestions.map((q) => ({
         field: q.name,
-        value: saved(q, value[q.name] ?? emptyFor(q)),
+        value: serialize(q, value[q.name] ?? emptyFor(q)),
       }))
       const sent = {
         form: form.id,
@@ -178,7 +231,7 @@ export function PayloadForm({
                 need_reduction: Boolean(value[reductionKey(c.id)]),
                 answers: c.questions.map((q) => ({
                   name: q.name,
-                  value: saved(
+                  value: serialize(
                     q as Question,
                     value[choiceField(c.id, q.name)] ?? emptyFor(q as Question),
                   ),
@@ -311,9 +364,11 @@ export function PayloadForm({
   )
   const renderBlock = (block: Block, i: number) =>
     block.blockType === 'message' ? (
-      <div className="payload-form-note" key={block.id ?? i}>
-        {notes[block.id ?? ''] ?? null}
-      </div>
+      review ? null : (
+        <div className="payload-form-note" key={block.id ?? i}>
+          {notes[block.id ?? ''] ?? null}
+        </div>
+      )
     ) : isQuestion(block) ? (
       renderQuestion(block)
     ) : null

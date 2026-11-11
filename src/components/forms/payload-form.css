@@ -1,0 +1,154 @@
+/* One bordered card per chosen course: its cover under a dark layer, its name on top, its questions below. */
+.apply-course-card {
+  display: grid;
+  min-width: 0;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-panel);
+}
+.apply-course-cover {
+  position: relative;
+  display: grid;
+  align-items: end;
+  min-height: 7rem;
+  padding: var(--space-5);
+  border-block-end: 1px solid var(--border);
+  background: var(--surface);
+}
+.apply-course-cover[data-image] {
+  min-height: 10rem;
+  isolation: isolate;
+  color: white;
+}
+.apply-course-cover img {
+  position: absolute;
+  inset: 0;
+  z-index: -2;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.apply-course-cover[data-image]::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: color-mix(in oklab, black 55%, transparent);
+}
+.apply-course-cover h2 {
+  font-size: 1.25rem;
+  font-weight: 500;
+  line-height: 1.3;
+  text-wrap: balance;
+}
+.apply-course-body {
+  display: grid;
+  min-width: 0;
+  gap: var(--space-6);
+  padding: var(--space-5);
+}
+/* The thumb and its halo reach past the rail's ends; give them room before the clip that stops the elastic stretch from scrolling the page. */
+.apply-course-slider {
+  margin-inline: calc(var(--space-3) * -1);
+  padding-inline: var(--space-3);
+  overflow-x: clip;
+}
+.payload-form-questions {
+  display: grid;
+  gap: 2.5rem;
+  min-width: 0;
+  border: 0;
+  margin: 0;
+  padding: 0;
+}
+.payload-form-question {
+  display: grid;
+  gap: 0.75rem;
+  min-width: 0;
+}
+.payload-form-note {
+  border-top: 1px solid var(--border);
+  padding-top: 2rem;
+}
+/* A note between questions reads as a quiet aside, its first line its title. */
+.payload-form-note .article-prose {
+  font-size: 0.9375rem;
+  line-height: 1.6;
+  color: var(--text-secondary);
+}
+.payload-form-note .article-prose > p:first-child {
+  margin-bottom: 0.25rem;
+  font-weight: 600;
+  color: var(--text-primary, var(--foreground));
+}
+/* Links in help text: underlined, so they read as links inside quiet text. */
+.payload-form-link {
+  color: var(--text-primary, var(--foreground));
+  text-decoration: underline;
+  text-decoration-color: color-mix(in oklab, currentColor 35%, transparent);
+  text-underline-offset: 3px;
+  overflow-wrap: anywhere;
+}
+.payload-form-link:hover {
+  text-decoration-color: currentColor;
+}
+.payload-form-image {
+  width: 100%;
+  max-width: 34rem;
+  border-radius: calc(var(--radius) * 2);
+  outline: 1px solid oklch(0 0 0 / 0.1);
+  outline-offset: -1px;
+}
+.dark .payload-form-image,
+[data-theme='dark'] .payload-form-image {
+  outline-color: oklch(1 0 0 / 0.1);
+}
+.payload-form-count {
+  margin-top: -0.25rem;
+  font-size: 0.8125rem;
+  font-variant-numeric: tabular-nums;
+  color: var(--text-muted);
+}
+.payload-form-count[data-short] {
+  color: var(--text-secondary);
+}
+.payload-form-group {
+  display: grid;
+  gap: 0;
+  min-width: 0;
+  border: 0;
+  margin: 0;
+  padding: 0;
+}
+.payload-form-group legend {
+  margin-bottom: 0.5rem;
+  font-size: var(--text-sm, 0.875rem);
+  font-weight: 500;
+}
+.payload-form-description {
+  margin-top: -0.25rem;
+  font-size: 0.875rem;
+  line-height: 1.6;
+  color: var(--text-secondary);
+}
+/* An admin may write a description in the other language from the page's. */
+.payload-form-description :is(p, li) {
+  unicode-bidi: plaintext;
+  text-align: start;
+}
+/* Each row is a 44px target; the square, not its target, lines up with the question's edge. */
+.payload-form-options {
+  display: grid;
+  margin-top: 0.25rem;
+  margin-inline-start: calc((var(--control-height-md) - 18px) / -2);
+}
+.payload-form-description + .payload-form-options {
+  margin-top: 0.5rem;
+}
+.payload-form-group .payload-form-error {
+  margin-top: 0.5rem;
+}
+.payload-form-error {
+  font-size: 0.8125rem;
+  color: var(--danger, oklch(0.58 0.2 25));
+}

@@ -1,214 +1,125 @@
 'use client'
 
-import Image from 'next/image'
 import Link from 'next/link'
 import { usePathname, useRouter, useSearchParams } from 'next/navigation'
-import { useRef, useState, useTransition, type RefObject } from 'react'
-import { ActionButton } from '@/components/arc/action-button/action-button'
+import { X } from 'lucide-react'
+import { useRef, useState, useTransition, type MouseEvent, type RefObject } from 'react'
 import { Alert } from '@/components/arc/alert/alert'
 import { Button } from '@/components/arc/button/button'
-import { Card } from '@/components/arc/card/card'
-import { Dialog, DialogClose, DialogContent } from '@/components/arc/dialog/dialog'
 import { EmptyState } from '@/components/arc/empty-state/empty-state'
 import type { FilterField } from '@/components/arc/filter-toolbar/filter-toolbar'
-import { PayloadAnswers } from '@/components/forms/payload-question'
 import type { Applicant, ApplicantsData } from '@/forms/applicants'
-import { focalPointStyle } from '@/lib/media-image'
-import { formatAmount } from '@/lib/pricing'
 import { ApplicantsFilter, applicantFilterKeys } from './applicants-filter'
 import { applicantsCopy } from './applicants-copy'
+import { ApplicantDetail } from './applicant-detail'
+import { DecisionDialog, type Decision } from './applicant-decision-dialog'
+import { CourseTiles, EmailLine, StatusBadge } from './applicant-parts'
 import styles from './applicants.module.css'
 
 function ApplicantCard({
   application: a,
   ar,
   admin,
-  selectedCourse,
   fallbackFocus,
   onStatusChange,
 }: {
   application: Applicant
   ar: boolean
   admin: boolean
-  selectedCourse: string | null
   fallbackFocus: RefObject<HTMLElement | null>
   onStatusChange: (id: number, status: Applicant['status'], emailFailed: boolean) => void
 }) {
   const t = applicantsCopy(ar)
-  const status = a.status
-  const [busy, setBusy] = useState(false)
-  const running = useRef(false)
-  const [error, setError] = useState('')
-  const [confirm, setConfirm] = useState(false)
+  const [decision, setDecision] = useState<Decision | null>(null)
+  const [detail, setDetail] = useState(false)
   const opener = useRef<HTMLElement | null>(null)
-  const choice = a.choices.find((c) => String(c.course) === selectedCourse) ?? a.choices[0]
-  const cover = choice?.cover
   const name = a.name || t.untitled
-  // The course leads: the chosen one (the filter's, else the first), then any others.
-  const courses = [choice, ...a.choices.filter((c) => c !== choice)]
-    .flatMap((c) => (c ? [c.title] : []))
-    .join(ar ? '، ' : ', ')
-  const run = async (action: 'accept' | 'reject') => {
-    if (running.current) return
-    running.current = true
-    setBusy(true)
-    setError('')
-    try {
-      const response = await fetch(`/api/form-submissions/${a.id}/${action}`, {
-        method: 'POST',
-        credentials: 'same-origin',
-      })
-      const body = await response.json()
-      if (!response.ok || body.ok !== true) throw new Error(body.error || t.failed)
-      if (action === 'reject') setConfirm(false)
-      onStatusChange(
-        a.id,
-        action === 'accept' ? 'accepted' : 'rejected',
-        action === 'accept' && body.emailed === false,
-      )
-    } catch (error) {
-      setError(error instanceof Error ? error.message : t.failed)
-      throw error
-    } finally {
-      running.current = false
-      setBusy(false)
-    }
+  const ask = (next: Decision) => (e: MouseEvent<HTMLElement>) => {
+    opener.current = e.currentTarget
+    setDecision(next)
   }
-  const actions = admin ? (
-    <div className={styles.actions}>
-      <ActionButton
-        label={status === 'accepted' ? t.statuses.accepted : t.accept}
-        pendingLabel={t.accepting}
-        successLabel={t.statuses.accepted}
-        resetAfterMs={0}
-        disabled={status === 'accepted' || !a.canAccept || (busy && confirm)}
-        onAction={() => run('accept')}
-      />
-      <Button
-        variant="secondary"
-        disabled={status !== 'new' || busy}
-        onClick={(e) => {
-          opener.current = e.currentTarget
-          setConfirm(true)
-        }}
-      >
-        {status === 'rejected' ? t.statuses.rejected : t.reject}
-      </Button>
-    </div>
-  ) : undefined
-  const date = new Date(a.submitted).toLocaleDateString(ar ? 'ar-EG' : 'en-GB', {
-    timeZone: 'Africa/Cairo',
-  })
+  const decide = async (action: Decision): Promise<boolean> => {
+    const response = await fetch(`/api/form-submissions/${a.id}/${action}`, {
+      method: 'POST',
+      credentials: 'same-origin',
+    })
+    const body = await response.json()
+    if (!response.ok || body.ok !== true) throw new Error(body.error || t.failed)
+    return action === 'accept' && body.emailed === false
+  }
   return (
     <div className={styles.applicant}>
-      <Card
-        title={courses}
-        triggerLabel={`${name}: ${courses}`}
-        description={name}
-        meta={a.email}
-        status={`${t.statuses[status]} · ${date}`}
-        closeLabel={t.close}
-        panelClassName={`arc-scope ${styles.quickLook}`}
-        media={
-          <span className={styles.cover}>
-            {cover ? (
-              <Image
-                src={cover.url}
-                alt={cover.alt}
-                fill
-                sizes="(max-width: 700px) 100vw, 480px"
-                style={focalPointStyle(cover)}
-              />
-            ) : (
-              t.noCover
-            )}
-          </span>
-        }
-        action={actions}
-        details={
-          <div className={styles.details}>
-            <section className={styles.fields} aria-label={t.shared}>
-              <h3>{t.shared}</h3>
-              <PayloadAnswers fields={a.fields} answers={a.answers} />
-            </section>
-            {a.choices.map((c) => (
-              <section key={c.course} className={styles.fields} aria-label={c.title}>
-                <h3>{c.title}</h3>
-                <p>
-                  {t.approved}: {c.accepted ? t.yes : t.no}
-                </p>
-                <PayloadAnswers fields={c.fields} answers={c.answers} />
-                {admin && (
-                  <>
-                    <p>
-                      {t.amount}:{' '}
-                      {c.amount == null ? t.no : formatAmount(c.amount, ar ? 'ar' : 'en')}
-                    </p>
-                    <p>
-                      {t.reduction}: {c.need_reduction ? t.yes : t.no}
-                    </p>
-                  </>
-                )}
-              </section>
-            ))}
-            {admin && <Link href={`/admin/collections/form-submissions/${a.id}`}>{t.edit}</Link>}
-          </div>
-        }
+      <article className={styles.card}>
+        <CourseTiles choices={a.choices} ar={ar} />
+        <div className={styles.cardBody}>
+          <h3 className={styles.cardTitle}>
+            <StatusBadge application={a} ar={ar} />
+            <button
+              type="button"
+              className={styles.open}
+              aria-label={`${name}: ${a.choices.map((c) => c.title).join(', ')}`}
+              onClick={() => setDetail(true)}
+            >
+              {name}
+            </button>
+          </h3>
+          <p className={styles.cardDescription}>
+            <EmailLine email={a.email} />
+          </p>
+          {admin && (
+            <div className={styles.cardFooter}>
+              <Button
+                variant="danger"
+                disabled={a.status !== 'new'}
+                onClick={ask('reject')}
+                className={styles.reject}
+              >
+                <X size={16} strokeWidth={1.75} aria-hidden />
+                {t.reject}
+              </Button>
+              <Button
+                className={styles.accept}
+                disabled={a.status === 'accepted' || !a.canAccept}
+                onClick={ask('accept')}
+              >
+                {a.status === 'accepted' ? t.statuses.accepted : t.accept}
+              </Button>
+            </div>
+          )}
+        </div>
+      </article>
+      <ApplicantDetail
+        application={a}
+        ar={ar}
+        admin={admin}
+        open={detail}
+        onOpenChange={setDetail}
       />
       {admin && (
-        <Dialog
-          open={confirm}
-          onOpenChange={(open) => {
-            if (!running.current) setConfirm(open)
+        <DecisionDialog
+          application={a}
+          decision={decision}
+          ar={ar}
+          onClose={() => setDecision(null)}
+          decide={decide}
+          onDone={(done, emailFailed) => {
+            setDecision(null)
+            onStatusChange(a.id, done === 'accept' ? 'accepted' : 'rejected', emailFailed)
           }}
-        >
-          <DialogContent
-            className={`arc-scope ${styles.dialog}`}
-            dir={ar ? 'rtl' : 'ltr'}
-            title={t.rejectTitle}
-            description={`${name}. ${t.rejectBody}`}
-            closeLabel={t.close}
-            onCloseAutoFocus={(e) => {
-              // Reject has no DialogTrigger, so return focus here. A rejected card leaves its button
-              // disabled or unmounted (status filter), so fall back to the list summary.
-              e.preventDefault()
-              const button = opener.current
-              const target =
-                button?.isConnected && !(button as HTMLButtonElement).disabled
-                  ? button
-                  : fallbackFocus.current
-              target?.focus()
-            }}
-            onEscapeKeyDown={(e) => {
-              if (busy) e.preventDefault()
-            }}
-            onPointerDownOutside={(e) => {
-              if (busy) e.preventDefault()
-            }}
-          >
-            {error && <Alert tone="danger" title={error} />}
-            <div className={styles.actions}>
-              <DialogClose asChild>
-                <Button variant="secondary" disabled={busy}>
-                  {t.cancel}
-                </Button>
-              </DialogClose>
-              <ActionButton
-                label={t.reject}
-                pendingLabel={t.rejecting}
-                successLabel={t.statuses.rejected}
-                onAction={() => run('reject')}
-              />
-            </div>
-          </DialogContent>
-        </Dialog>
+          returnFocus={() => {
+            // A decided card leaves its button disabled or unmounted (status filter): fall back to the list summary.
+            const button = opener.current
+            return button?.isConnected && !(button as HTMLButtonElement).disabled
+              ? button
+              : fallbackFocus.current
+          }}
+        />
       )}
-      {admin && !a.canAccept && status !== 'accepted' && (
+      {admin && !a.canAccept && a.status !== 'accepted' && (
         <p className={styles.note}>
           {t.noApproved} <Link href={`/admin/collections/form-submissions/${a.id}`}>{t.edit}</Link>
         </p>
       )}
-      {error && !confirm && <Alert tone="danger" title={error} />}
     </div>
   )
 }
@@ -255,7 +166,9 @@ export function ApplicantsGrid({
   const values = new URLSearchParams(search.toString())
   const summary = useRef<HTMLParagraphElement>(null)
   const [emailWarnings, setEmailWarnings] = useState<number[]>([])
-  const [decisions, setDecisions] = useState<Record<number, Applicant['status']>>({})
+  const [decisions, setDecisions] = useState<Record<number, Pick<Applicant, 'status' | 'decided'>>>(
+    {},
+  )
   const cycles = new Map(
     data.applications.flatMap((a) =>
       a.choices.flatMap((c) =>
@@ -303,7 +216,7 @@ export function ApplicantsGrid({
   }
   const applications = data.applications.filter(
     (a) =>
-      (!values.get('status') || (decisions[a.id] ?? a.status) === values.get('status')) &&
+      (!values.get('status') || (decisions[a.id]?.status ?? a.status) === values.get('status')) &&
       a.choices.some(
         (c) =>
           (!values.get('course') || String(c.course) === values.get('course')) &&
@@ -331,13 +244,15 @@ export function ApplicantsGrid({
             {applications.map((a) => (
               <ApplicantCard
                 key={a.id}
-                application={{ ...a, status: decisions[a.id] ?? a.status }}
+                application={{ ...a, ...decisions[a.id] }}
                 ar={ar}
                 admin={admin}
-                selectedCourse={values.get('course')}
                 fallbackFocus={summary}
                 onStatusChange={(id, status, emailFailed) => {
-                  setDecisions((current) => ({ ...current, [id]: status }))
+                  setDecisions((current) => ({
+                    ...current,
+                    [id]: { status, decided: new Date().toISOString() },
+                  }))
                   if (emailFailed)
                     setEmailWarnings((current) => [...current.filter((value) => value !== id), id])
                 }}
