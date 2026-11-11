@@ -9,6 +9,30 @@ import { applicantsCopy } from './applicants-copy'
 
 export const applicantFilterKeys = ['course', 'status', 'cycle', 'reduction'] as const
 
+/** With no `status` in the URL the list shows pending applications. `status=all` shows every one. */
+export const defaultStatus = 'new'
+export const allStatuses = 'all'
+
+/** The URL's filters with the default filled in, so the page and the chips show what is applied. */
+export function effectiveFilters(search: URLSearchParams) {
+  const values = new URLSearchParams(search)
+  if (!values.get('status')) values.set('status', defaultStatus)
+  return values
+}
+
+/** The status the list is narrowed to, or null for all. */
+export const statusWanted = (values: URLSearchParams) => {
+  const status = values.get('status')
+  return status && status !== allStatuses ? status : null
+}
+
+/**
+ * Whether an application is listed. The one the URL names (`?application=`, from the
+ * review queue and notifications) is always listed, so its link opens it whatever its status.
+ */
+export const isListed = (id: number, values: URLSearchParams, matches: boolean) =>
+  matches || String(id) === values.get('application')
+
 export function ApplicantsFilter({
   fields,
   values,

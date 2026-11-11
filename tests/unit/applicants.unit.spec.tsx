@@ -126,6 +126,7 @@ describe('applicant review', () => {
   })
 
   it('shows one status per course on the card and one Review button, no decision buttons', () => {
+    navigation.search = 'status=all'
     view(<ApplicantsGrid data={data} ar={false} admin />)
     expect(screen.getByRole('heading', { level: 2, name: 'Applications' })).toBeTruthy()
     expect(screen.getAllByText('Pending')).toHaveLength(2)
@@ -137,6 +138,7 @@ describe('applicant review', () => {
   })
 
   it('shows each course’s decision and date on its tile', () => {
+    navigation.search = 'status=all'
     const decided = application([
       choice(1, 'Writing', { decision: 'accepted', decided: '2026-11-11T10:00:00Z' }),
       choice(2, 'History', { decision: 'rejected', decided: '2026-11-10T10:00:00Z' }),
@@ -222,7 +224,7 @@ describe('applicant review', () => {
     view(<ApplicantsGrid data={single} ar={false} admin />)
     open()
     await accept('Accept: Writing')
-    expect(await screen.findByText('No matching applications', {}, slow)).toBeTruthy()
+    expect(await screen.findByText('Nothing to review', {}, slow)).toBeTruthy()
   })
 
   it('keeps email delivery warnings visible after a status filter removes the card', async () => {
@@ -231,7 +233,7 @@ describe('applicant review', () => {
     view(<ApplicantsGrid data={single} ar={false} admin />)
     open()
     await accept('Accept: Writing')
-    expect(await screen.findByText('No matching applications', {}, slow)).toBeTruthy()
+    expect(await screen.findByText('Nothing to review', {}, slow)).toBeTruthy()
     expect(
       screen.getByText(
         'The decision is saved, but the email did not send. Contact the applicant directly.',
@@ -318,6 +320,75 @@ describe('applicant review', () => {
     ])
     view(<ApplicantsGrid data={{ courses, applications: [mixed] }} ar={false} admin />)
     expect(screen.getByText('No matching applications')).toBeTruthy()
+  })
+
+  describe('default status', () => {
+    const decidedApp = (id = 10) => ({
+      ...application([
+        choice(1, 'Writing', { decision: 'accepted', decided: '2026-11-11T10:00:00Z' }),
+      ]),
+      id,
+      name: 'Decided person',
+      status: 'accepted' as const,
+    })
+    const mixedList: ApplicantsData = {
+      courses,
+      applications: [application([choice(1, 'Writing')]), decidedApp(11)],
+    }
+
+    it('lists pending applications when no status is in the URL, with Pending shown as the filter', () => {
+      view(<ApplicantsGrid data={mixedList} ar={false} admin />)
+      expect(screen.getAllByRole('button', { name: 'Review' })).toHaveLength(1)
+      expect(screen.getByText('Showing 1 of 2 applications')).toBeTruthy()
+      const toolbar = screen.getByRole('group', { name: 'Applicants' })
+      expect(within(toolbar).getAllByText('Pending').length).toBeGreaterThan(0)
+      expect(within(toolbar).queryByText('No filters applied')).toBeNull()
+    })
+
+    it('shows every application for status=all', () => {
+      navigation.search = 'status=all'
+      view(<ApplicantsGrid data={mixedList} ar={false} admin />)
+      expect(screen.getAllByRole('button', { name: 'Review' })).toHaveLength(2)
+    })
+
+    it('applies the same default to a fellow, from their own courses', () => {
+      view(<ApplicantsGrid data={mixedList} ar={false} admin={false} />)
+      expect(screen.getAllByRole('button', { name: 'Review' })).toHaveLength(1)
+    })
+
+    it('uses the course’s decision for the default when a course is chosen', () => {
+      navigation.search = 'course=1'
+      const mixed = application([
+        choice(1, 'Writing', { decision: 'accepted', decided: '2026-11-11T10:00:00Z' }),
+        choice(2, 'History'),
+      ])
+      view(<ApplicantsGrid data={{ courses, applications: [mixed] }} ar={false} admin />)
+      expect(screen.getByText('No matching applications')).toBeTruthy()
+    })
+
+    it('removing the Pending chip shows all; removing All goes back to Pending', () => {
+      view(<ApplicantsGrid data={mixedList} ar={false} admin />)
+      fireEvent.click(screen.getByRole('button', { name: /^Remove/ }))
+      expect(navigation.push).toHaveBeenCalledWith('/admin/applicants?status=all', {
+        scroll: false,
+      })
+    })
+
+    it('says nothing is pending and offers all applications', () => {
+      view(<ApplicantsGrid data={{ courses, applications: [decidedApp()] }} ar={false} admin />)
+      expect(screen.getByText('Nothing to review')).toBeTruthy()
+      fireEvent.click(screen.getByRole('button', { name: 'Show all applications' }))
+      expect(navigation.push).toHaveBeenCalledWith('/admin/applicants?status=all', {
+        scroll: false,
+      })
+    })
+
+    it('opens a decided application named by ?application= although the default hides it', () => {
+      navigation.search = 'application=11'
+      view(<ApplicantsGrid data={mixedList} ar={false} admin />)
+      expect(screen.getByText('Showing 2 of 2 applications')).toBeTruthy()
+      expect(screen.getByRole('dialog', { name: /Decided person/ })).toBeTruthy()
+    })
   })
 
   it('does not show mutation controls to fellows', () => {

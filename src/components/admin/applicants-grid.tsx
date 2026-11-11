@@ -7,7 +7,14 @@ import { Button } from '@/components/arc/button/button'
 import { EmptyState } from '@/components/arc/empty-state/empty-state'
 import type { FilterField } from '@/components/arc/filter-toolbar/filter-toolbar'
 import type { Applicant, ApplicantsData } from '@/forms/applicants'
-import { ApplicantsFilter, applicantFilterKeys } from './applicants-filter'
+import {
+  ApplicantsFilter,
+  allStatuses,
+  applicantFilterKeys,
+  effectiveFilters,
+  isListed,
+  statusWanted,
+} from './applicants-filter'
 import { applicantsCopy } from './applicants-copy'
 import { ApplicantDetail } from './applicant-detail'
 import { withDecision } from './applicant-decide'
@@ -108,7 +115,7 @@ export function ApplicantsGrid({
   const pathname = usePathname()
   const router = useRouter()
   const [pending, startTransition] = useTransition()
-  const values = new URLSearchParams(search.toString())
+  const values = effectiveFilters(new URLSearchParams(search.toString()))
   const [emailWarnings, setEmailWarnings] = useState<number[]>([])
   // Applications decided on this page, as the server now has them.
   const [decided, setDecided] = useState<Record<number, Applicant>>({})
@@ -136,7 +143,10 @@ export function ApplicantsGrid({
     {
       id: 'status',
       label: t.status,
-      options: Object.entries(t.statuses).map(([value, label]) => ({ value, label })),
+      options: [
+        ...Object.entries(t.statuses).map(([value, label]) => ({ value, label })),
+        { value: allStatuses, label: t.allStatuses },
+      ],
     },
     {
       id: 'cycle',
@@ -160,12 +170,14 @@ export function ApplicantsGrid({
     const next = new URLSearchParams(search.toString())
     if (!id) applicantFilterKeys.forEach((key) => next.delete(key))
     else if (value) next.set(id, value)
+    // Status always applies: removing Pending shows all, removing All goes back to Pending.
+    else if (id === 'status' && values.get('status') !== allStatuses)
+      next.set('status', allStatuses)
     else next.delete(id)
     startTransition(() => router.push(`${pathname}?${next}`, { scroll: false }))
   }
-  const wanted = values.get('status')
-  const applications = data.applications.filter((a) => {
-    const app = decided[a.id] ?? a
+  const wanted = statusWanted(values)
+  const matches = (app: Applicant) => {
     // A programme application has no courses: only the status filter can match it.
     if (app.programme)
       return (
@@ -187,7 +199,12 @@ export function ApplicantsGrid({
             ? c.decision === (wanted === 'new' ? 'pending' : wanted)
             : app.status === wanted)),
     )
-  })
+  }
+  const applications = data.applications.filter((a) =>
+    isListed(a.id, values, matches(decided[a.id] ?? a)),
+  )
+  const otherFilters = applicantFilterKeys.some((key) => key !== 'status' && values.has(key))
+  const nothingPending = data.applications.length > 0 && wanted === 'new' && !otherFilters
   return (
     <div className={styles.body} aria-busy={pending}>
       {emailWarnings.map((id) => (
@@ -220,10 +237,22 @@ export function ApplicantsGrid({
         </>
       ) : (
         <EmptyState
-          title={data.applications.length ? t.noMatches : t.empty}
-          description={data.applications.length ? t.noMatchesBody : t.emptyBody}
+          title={
+            nothingPending ? t.nothingPending : data.applications.length ? t.noMatches : t.empty
+          }
+          description={
+            nothingPending
+              ? t.nothingPendingBody
+              : data.applications.length
+                ? t.noMatchesBody
+                : t.emptyBody
+          }
           action={
-            fields.some((f) => values.has(f.id)) ? (
+            nothingPending ? (
+              <Button variant="secondary" onClick={() => change('status', allStatuses)}>
+                {t.showAll}
+              </Button>
+            ) : data.applications.length ? (
               <Button variant="secondary" onClick={() => change()}>
                 {t.clear}
               </Button>
