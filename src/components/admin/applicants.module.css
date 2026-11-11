@@ -23,6 +23,11 @@
 .grid > * {
   min-inline-size: 0;
 }
+.applicant {
+  display: grid;
+  gap: var(--space-4);
+  min-inline-size: 0;
+}
 .cover {
   position: relative;
   display: flex;

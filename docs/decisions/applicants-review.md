@@ -8,7 +8,7 @@ Regions: Arc filter toolbar, expandable card grid, shared form questions, reject
 
 - Extract `PayloadQuestion` from the public form and give it a read-only view. Both forms and applicant details use the same question metadata and help text. Saved labels and values remain available when questions or options change.
   - Problem: A separate admin answer layout would drift from the application form and could lose historical answers.
-- Add media and summary slots to the installed expandable card. Media belongs to its expansion trigger; actions remain outside the trigger and details retain the existing morph and reduced-motion handling.
+- Compose the cover and decision actions around the installed expandable card. Actions remain outside the trigger and details retain the existing morph and reduced-motion handling.
   - Problem: Nesting action buttons inside a clickable card creates invalid interaction semantics. Nesting cards duplicates surfaces.
 - Keep the existing guarded accept/reject endpoints, course approvals, transactions and email behavior. Surface failed email delivery separately from a failed decision.
   - Problem: A new mutation would duplicate enrollment rules and could report a committed acceptance as a failure.
