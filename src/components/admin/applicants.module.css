@@ -258,7 +258,7 @@
   border-radius: var(--radius-surface);
 }
 .courseList li + li {
-  border-block-start: 1px solid var(--border);
+  border-block-start: 1px solid rgba(255, 255, 255, 0.5);
 }
 .courseRow {
   min-block-size: 5rem;
