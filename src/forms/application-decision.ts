@@ -13,6 +13,7 @@ import {
 } from 'payload'
 
 import { env } from '@/env'
+import { localeOf, type Locale } from '@/i18n/routing'
 import { getEmailSettings } from '@/emails/settings'
 import { acceptanceMail, rejectionMail } from '@/emails/transactional'
 import { createPerson } from '@/lib/create-person'
@@ -25,7 +26,14 @@ type Kind = 'programmes' | 'courses' | 'cycles'
 type Applicant = { name: string; email: string }
 type Verdict = 'accepted' | 'rejected'
 
-type Mail = { to: Applicant; title: string; kind: Verdict; newAccount: boolean }
+type Mail = {
+  to: Applicant
+  title: string
+  kind: Verdict
+  newAccount: boolean
+  /** The language the applicant used on the form. */
+  locale: Locale
+}
 
 /** What a decision leaves for the caller, once its transaction has committed. */
 type Done = {
@@ -189,18 +197,23 @@ const programmeOf = (submission: FormSubmission) => {
   return relId(submission.target.value)!
 }
 
-const programmeTitle = async (req: PayloadRequest, id: number) =>
+/** The language of a submission's emails. Rows from before the field was added read as English. */
+const mailLocale = (submission: FormSubmission): Locale => localeOf(submission.locale)
+
+/** The title in the applicant's language, or the English one where there is no translation. */
+const programmeTitle = async (req: PayloadRequest, id: number, locale: Locale) =>
   (
     await req.payload.findByID({
       collection: 'programmes',
       id,
-      locale: 'en',
+      locale,
+      fallbackLocale: 'en',
       ...local(req),
     })
   ).title
 
-const courseTitle = async (req: PayloadRequest, id: number) =>
-  (await courseTitles(req, [id], 'en')).get(id) ?? ''
+const courseTitle = async (req: PayloadRequest, id: number, locale: Locale) =>
+  (await courseTitles(req, [id], locale)).get(id) ?? ''
 
 /** Accepts a programme application as a whole: a membership. Course applications are decided per course. */
 const acceptProgramme = async (req: PayloadRequest, id: number): Promise<Done | null> => {
@@ -241,9 +254,10 @@ const acceptProgramme = async (req: PayloadRequest, id: number): Promise<Done | 
     scope: null,
     mail: {
       to: applicant,
-      title: await programmeTitle(req, programme),
+      title: await programmeTitle(req, programme, mailLocale(submission)),
       kind: 'accepted',
       newAccount: account.newAccount,
+      locale: mailLocale(submission),
     },
   }
 }
@@ -265,9 +279,10 @@ const rejectProgramme = async (req: PayloadRequest, id: number): Promise<Done> =
     scope: null,
     mail: {
       to: applicant,
-      title: await programmeTitle(req, programme),
+      title: await programmeTitle(req, programme, mailLocale(submission)),
       kind: 'rejected',
       newAccount: false,
+      locale: mailLocale(submission),
     },
   }
 }
@@ -346,7 +361,13 @@ const decideCourse = async (
   return {
     decided,
     scope: course,
-    mail: { to: applicant, title: await courseTitle(req, course), kind: verdict, newAccount },
+    mail: {
+      to: applicant,
+      title: await courseTitle(req, course, mailLocale(submission)),
+      kind: verdict,
+      newAccount,
+      locale: mailLocale(submission),
+    },
   }
 }
 
@@ -389,17 +410,23 @@ const resendMail = async (
     throw new APIError('There is no decision to send an email for.', 400)
   const title =
     course === null
-      ? await programmeTitle(req, programmeOf(submission))
-      : await courseTitle(req, course)
+      ? await programmeTitle(req, programmeOf(submission), mailLocale(submission))
+      : await courseTitle(req, course, mailLocale(submission))
   return {
     decided: null,
     scope: course,
-    mail: { to: applicant, title, kind: verdict, newAccount: false },
+    mail: {
+      to: applicant,
+      title,
+      kind: verdict,
+      newAccount: false,
+      locale: mailLocale(submission),
+    },
   }
 }
 
 const sendMail = async (req: PayloadRequest, mail: Mail) => {
-  const settings = await getEmailSettings(req.payload, req)
+  const settings = await getEmailSettings(req.payload, req, mail.locale)
   const message =
     mail.kind === 'accepted'
       ? await acceptanceMail(settings, {
@@ -407,8 +434,9 @@ const sendMail = async (req: PayloadRequest, mail: Mail) => {
           title: mail.title,
           newAccount: mail.newAccount,
           site: env.NEXT_PUBLIC_SERVER_URL,
+          locale: mail.locale,
         })
-      : await rejectionMail(settings, { ...mail.to, title: mail.title })
+      : await rejectionMail(settings, { ...mail.to, title: mail.title, locale: mail.locale })
   await req.payload.sendEmail({ to: mail.to.email, ...message })
 }
 

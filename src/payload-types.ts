@@ -297,6 +297,10 @@ export interface FormSubmission {
       }[]
     | null;
   /**
+   * The site language the applicant used. Decision emails go out in it. Empty: English.
+   */
+  locale?: ('en' | 'ar') | null;
+  /**
    * What the applicant applied to.
    */
   target?:
@@ -3379,6 +3383,7 @@ export interface FormSubmissionsSelect<T extends boolean = true> {
         value?: T;
         id?: T;
       };
+  locale?: T;
   target?: T;
   choices?:
     | T
@@ -5077,7 +5082,7 @@ export interface EmailSetting {
   footer?: string | null;
   texts?: {
     /**
-     * Placeholders: {name}, {email}, {title}. Leave a field empty to use the text shown in it.
+     * Placeholders: {name}, {email}, {title}. Leave a field empty to use the text shown in it. Empty Arabic text: the English text is sent.
      */
     acceptance?: {
       subject?: string | null;
@@ -5087,7 +5092,7 @@ export interface EmailSetting {
       button?: string | null;
     };
     /**
-     * Placeholders: {name}, {email}, {title}. Sent when one course of an application is rejected. Leave a field empty to use the text shown in it.
+     * Placeholders: {name}, {email}, {title}. Sent when one course of an application is rejected. Leave a field empty to use the text shown in it. Empty Arabic text: the English text is sent.
      */
     rejection?: {
       subject?: string | null;

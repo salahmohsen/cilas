@@ -222,6 +222,7 @@ export function PayloadForm({
       const sent = {
         form: form.id,
         target,
+        locale,
         submissionData: answers,
         ...(application
           ? {

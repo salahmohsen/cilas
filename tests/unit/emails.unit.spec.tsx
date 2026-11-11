@@ -126,6 +126,38 @@ describe('transactional mails', () => {
     expect(mail.html).not.toContain('/en/login')
   })
 
+  it('sends an Arabic application email right to left, with the Arabic title and login', async () => {
+    const mail = await acceptanceMail(
+      withDefaults({ texts: { acceptance: { subject: 'مرحبا {name}، قُبلت في {title}' } } }),
+      { name: 'Mona', email: 'm@x.co', title: 'جسر', newAccount: false, site, locale: 'ar' },
+    )
+    expect(mail.html).toContain('lang="ar"')
+    expect(mail.html).toContain('dir="rtl"')
+    expect(mail.html).toContain('href="https://ci-las.org/ar/login"')
+    expect(mail.html).toContain('القبول')
+    // Names and titles are isolated, so they keep their own direction.
+    expect(mail.subject).toBe('مرحبا \u2068Mona\u2069، قُبلت في \u2068جسر\u2069')
+  })
+
+  it('falls back to the English text where the Arabic one is empty', async () => {
+    const rejection = await rejectionMail(withDefaults({ texts: { rejection: { subject: '' } } }), {
+      name: 'Mona',
+      email: 'm@x.co',
+      title: 'جسر',
+      locale: 'ar',
+    })
+    expect(rejection.subject).toBe('Your application to \u2068جسر\u2069')
+    expect(rejection.html).toContain('dir="rtl"')
+    expect(rejection.html).not.toContain('/ar/login')
+  })
+
+  it('keeps English mail left to right when no language is given', async () => {
+    const mail = await rejectionMail(settings, { name: 'Mona', email: 'm@x.co', title: 'Bridge' })
+    expect(mail.html).toContain('lang="en"')
+    expect(mail.html).toContain('dir="ltr"')
+    expect(mail.subject).toBe('Your application to Bridge')
+  })
+
   it('adds the editor’s note only where the state carries one', async () => {
     const asked = await reviewMail(settings, 'changes_requested', 'Essay', 'Shorten it')
     expect(asked.subject).toBe('Changes requested: Essay')

@@ -76,6 +76,7 @@ import * as migration_20261110_203134_option_machine_values from './20261110_203
 import * as migration_20261110_215430_phone_question_rich_descriptions from './20261110_215430_phone_question_rich_descriptions';
 import * as migration_20261111_153433_course_decisions from './20261111_153433_course_decisions';
 import * as migration_20261111_161510_applicant_review_gaps from './20261111_161510_applicant_review_gaps';
+import * as migration_20261111_171103_email_texts_localized from './20261111_171103_email_texts_localized';
 
 export const migrations = [
   {
@@ -466,6 +467,11 @@ export const migrations = [
   {
     up: migration_20261111_161510_applicant_review_gaps.up,
     down: migration_20261111_161510_applicant_review_gaps.down,
-    name: '20261111_161510_applicant_review_gaps'
+    name: '20261111_161510_applicant_review_gaps',
+  },
+  {
+    up: migration_20261111_171103_email_texts_localized.up,
+    down: migration_20261111_171103_email_texts_localized.down,
+    name: '20261111_171103_email_texts_localized',
   },
 ];

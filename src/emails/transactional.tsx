@@ -1,3 +1,4 @@
+import type { Locale } from '@/i18n/routing'
 import type { ReviewState } from '@/lib/review'
 
 import { MessageEmail } from './message'
@@ -8,12 +9,34 @@ type Mail = { subject: string; html: string; text: string }
 
 const origin = (site: string) => site.replace(/\/+$/, '')
 
+/** The word at the top right of an application email. */
+const ADMISSIONS: Record<Locale, string> = { en: 'Admissions', ar: 'القبول' }
+
+/**
+ * Wraps each value in Unicode isolates in an Arabic email, so a Latin name or
+ * title keeps its own direction inside right-to-left text (the UI uses <bdi>).
+ * The text parts are plain strings, so the isolates stand in for the tag.
+ */
+const isolated = (values: Record<string, string>, locale: Locale): Record<string, string> =>
+  locale === 'ar'
+    ? Object.fromEntries(Object.entries(values).map(([k, v]) => [k, `\u2068${v}\u2069`]))
+    : values
+
 export const acceptanceMail = async (
   settings: EmailSettings,
-  data: { name: string; email: string; title: string; newAccount: boolean; site: string },
+  data: {
+    name: string
+    email: string
+    title: string
+    newAccount: boolean
+    site: string
+    /** The applicant's language; `settings` holds the texts in it. */
+    locale?: Locale
+  },
 ): Promise<Mail> => {
+  const locale = data.locale ?? 'en'
   const t = settings.texts.acceptance
-  const values = { name: data.name, email: data.email, title: data.title }
+  const values = isolated({ name: data.name, email: data.email, title: data.title }, locale)
   const subject = fill(t.subject, values)
   const body = [
     ...paragraphs(fill(t.body, values)),
@@ -24,9 +47,10 @@ export const acceptanceMail = async (
       settings={settings}
       preview={subject}
       heading={subject}
-      kicker="Admissions"
+      kicker={ADMISSIONS[locale]}
+      lang={locale}
       paragraphs={body}
-      button={{ label: t.button, url: `${origin(data.site)}/en/login` }}
+      button={{ label: t.button, url: `${origin(data.site)}/${locale}/login` }}
     />,
   )
   return { subject, ...rendered }
@@ -35,17 +59,19 @@ export const acceptanceMail = async (
 /** Sent when one course of an application is rejected. Kind and plain; no button. */
 export const rejectionMail = async (
   settings: EmailSettings,
-  data: { name: string; email: string; title: string },
+  data: { name: string; email: string; title: string; locale?: Locale },
 ): Promise<Mail> => {
+  const locale = data.locale ?? 'en'
   const t = settings.texts.rejection
-  const values = { name: data.name, email: data.email, title: data.title }
+  const values = isolated({ name: data.name, email: data.email, title: data.title }, locale)
   const subject = fill(t.subject, values)
   const rendered = await renderEmail(
     <MessageEmail
       settings={settings}
       preview={subject}
       heading={subject}
-      kicker="Admissions"
+      kicker={ADMISSIONS[locale]}
+      lang={locale}
       paragraphs={paragraphs(fill(t.body, values))}
     />,
   )

@@ -20,23 +20,32 @@ const LABELS: Record<string, string> = {
   newsletter: 'Newsletter',
 }
 
+/** Emails to applicants go out in the language the applicant used. */
+const LOCALIZED = ['acceptance', 'rejection']
+
 /** One group per email; each field shows its default and is used when empty. */
 const textGroups: Field[] = Object.entries(DEFAULT_TEXTS).map(([group, fields]) => ({
   name: group,
   label: LABELS[group],
   type: 'group',
-  admin: { description: `${HINTS[group]} Leave a field empty to use the text shown in it.` },
+  admin: {
+    description: `${HINTS[group]} Leave a field empty to use the text shown in it.${
+      LOCALIZED.includes(group) ? ' Empty Arabic text: the English text is sent.' : ''
+    }`,
+  },
   fields: Object.entries(fields).map(([name, fallback]): Field => {
     const long = fallback.length > 60
+    const localized = LOCALIZED.includes(group)
     return long
-      ? { name, type: 'textarea', admin: { placeholder: fallback, rows: 4 } }
-      : { name, type: 'text', admin: { placeholder: fallback } }
+      ? { name, type: 'textarea', localized, admin: { placeholder: fallback, rows: 4 } }
+      : { name, type: 'text', localized, admin: { placeholder: fallback } }
   }),
 }))
 
 /**
  * How CILAS's emails look and what they say: the newsletter and every
- * transactional email. English only. Open the live preview to see the
+ * transactional email. The texts of the application emails come in English
+ * and Arabic; the rest is English. Open the live preview to see the
  * transactional emails with sample data.
  */
 export const EmailSettings: GlobalConfig = {

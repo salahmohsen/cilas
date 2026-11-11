@@ -12,6 +12,7 @@ export function MessageEmail({
   paragraphs,
   note,
   button,
+  lang,
 }: {
   settings: EmailSettings
   preview: string
@@ -20,9 +21,11 @@ export function MessageEmail({
   paragraphs: string[]
   note?: { label: string; text: string } | null
   button?: { label: string; url: string } | null
+  /** The email's language; Arabic reads right to left. */
+  lang?: 'en' | 'ar'
 }) {
   return (
-    <EmailLayout settings={settings} preview={preview} kicker={kicker}>
+    <EmailLayout settings={settings} preview={preview} kicker={kicker} lang={lang}>
       <Box center>
         <Section style={{ marginBottom: '12px' }}>
           <Img

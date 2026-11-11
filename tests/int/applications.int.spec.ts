@@ -50,12 +50,17 @@ const thanks = {
   },
 } as never
 
-const submit = (target: FormSubmission['target'], formId = form.id) =>
+const submit = (
+  target: FormSubmission['target'],
+  formId = form.id,
+  locale?: FormSubmission['locale'],
+) =>
   payload.create({
     collection: 'form-submissions',
     data: {
       form: formId,
       target,
+      locale,
       choices: target?.relationTo === 'courses' ? [{ course: Number(target.value) }] : [],
       submissionData: [
         { field: 'name', value: APPLICANT },
@@ -65,7 +70,7 @@ const submit = (target: FormSubmission['target'], formId = form.id) =>
   })
 
 const decide = async (
-  action: 'accept' | 'reject' | 'reopen',
+  action: 'accept' | 'reject' | 'reopen' | 'resend',
   id: number,
   user: User | null = admin,
 ) => {
@@ -241,6 +246,80 @@ describe('accepting an application', () => {
       (await payload.findByID({ collection: 'form-submissions', id: submission.id, depth: 0 }))
         .status,
     ).toBe('new')
+  })
+
+  it('sends the decision emails in the language the applicant used', async () => {
+    const arTitle = 'إقامة تجريبية'
+    const arSubject = 'مرحبا بك في {title}'
+    await payload.update({
+      collection: 'programmes',
+      id: programme.id,
+      data: { title: arTitle },
+      locale: 'ar',
+    })
+    const before = await payload.findGlobal({
+      slug: 'email-settings',
+      locale: 'ar',
+      fallbackLocale: false,
+    })
+    await payload.updateGlobal({
+      slug: 'email-settings',
+      locale: 'ar',
+      data: { texts: { acceptance: { subject: arSubject }, rejection: { subject: '' } } },
+    })
+    try {
+      const sent = () =>
+        vi.mocked(payload.sendEmail).mock.calls.at(-1)![0] as {
+          subject: string
+          html: string
+        }
+
+      const accepted = await submit(
+        { relationTo: 'programmes', value: programme.id },
+        form.id,
+        'ar',
+      )
+      expect(accepted.locale).toBe('ar')
+      vi.mocked(payload.sendEmail).mockClear()
+      expect((await decide('accept', accepted.id)).status).toBe(200)
+      expect(sent().subject).toContain('مرحبا بك في')
+      expect(sent().subject).toContain(arTitle)
+      expect(sent().html).toContain('lang="ar"')
+      expect(sent().html).toContain('dir="rtl"')
+      expect(sent().html).toContain('/ar/login')
+
+      // The same email again, in Arabic too.
+      vi.mocked(payload.sendEmail).mockClear()
+      expect((await decide('resend', accepted.id)).status).toBe(200)
+      expect(sent().subject).toContain('مرحبا بك في')
+
+      // No Arabic rejection text: the English one is sent, with the Arabic title.
+      const rejected = await submit(
+        { relationTo: 'programmes', value: programme.id },
+        form.id,
+        'ar',
+      )
+      vi.mocked(payload.sendEmail).mockClear()
+      expect((await decide('reject', rejected.id)).status).toBe(200)
+      expect(sent().subject).toBe(`Your application to \u2068${arTitle}\u2069`)
+      expect(sent().html).toContain('dir="rtl"')
+
+      // An application in English, or from before the language was kept, stays English.
+      const english = await submit({ relationTo: 'programmes', value: programme.id })
+      expect(english.locale).toBe('en')
+      vi.mocked(payload.sendEmail).mockClear()
+      expect((await decide('accept', english.id)).status).toBe(200)
+      expect(sent().subject).toContain('Probe residency')
+      expect(sent().subject).not.toContain('مرحبا')
+      expect(sent().html).toContain('lang="en"')
+      expect(sent().html).toContain('/en/login')
+    } finally {
+      await payload.updateGlobal({
+        slug: 'email-settings',
+        locale: 'ar',
+        data: { texts: { acceptance: { subject: before.texts?.acceptance?.subject ?? '' } } },
+      })
+    }
   })
 
   it('reports a submission without a name or email', async () => {

@@ -5,6 +5,22 @@ import { submissionChoices } from './submission-view'
 
 export const applicationFields: Field[] = [
   {
+    name: 'locale',
+    label: 'Language',
+    type: 'select',
+    options: [
+      { label: 'English', value: 'en' },
+      { label: 'Arabic', value: 'ar' },
+    ],
+    access: { update: adminOnlyField },
+    admin: {
+      position: 'sidebar',
+      readOnly: true,
+      description:
+        'The site language the applicant used. Decision emails go out in it. Empty: English.',
+    },
+  },
+  {
     name: 'target',
     type: 'relationship',
     relationTo: ['programmes', 'courses', 'cycles'],

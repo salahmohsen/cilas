@@ -53,6 +53,7 @@ import { submitWithFiles } from './forms/submit-with-files'
 import { applicationEndpoints } from './forms/application-decision'
 import { applicationFields } from './forms/application-fields'
 import { checkTarget } from './forms/application-validation'
+import { setSubmissionLocale } from './forms/submission-locale'
 import { syncStatus } from './forms/application-status'
 import { requireTurnstile } from './forms/spam-check'
 import { redirectsPlugin } from '@payloadcms/plugin-redirects'
@@ -339,6 +340,7 @@ export default buildConfig({
           { path: '/with-files', method: 'post', handler: submitWithFiles },
         ],
         hooks: {
+          beforeValidate: [setSubmissionLocale],
           beforeChange: [requireTurnstile(env.TURNSTILE_SECRET_KEY), checkTarget, syncStatus],
           afterChange: [notifyNewApplication],
         },

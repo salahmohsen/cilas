@@ -1,6 +1,7 @@
 import type { Payload, PayloadRequest } from 'payload'
 
 import { env } from '@/env'
+import type { Locale } from '@/i18n/routing'
 
 /**
  * What every email reads from the Email settings global, with a default for
@@ -145,10 +146,25 @@ export const withDefaults = (
   }
 }
 
-/** The global, read past access, with defaults filled in and the site's social links. */
-export const getEmailSettings = async (payload: Payload, req?: PayloadRequest) => {
+/**
+ * The global, read past access, with defaults filled in and the site's social
+ * links. `locale` picks the language of the application emails' texts; an
+ * empty Arabic text reads as the English one (Payload's locale fallback).
+ */
+export const getEmailSettings = async (
+  payload: Payload,
+  req?: PayloadRequest,
+  locale: Locale = 'en',
+) => {
   const [stored, site] = await Promise.all([
-    payload.findGlobal({ slug: 'email-settings', depth: 1, overrideAccess: true, req }),
+    payload.findGlobal({
+      slug: 'email-settings',
+      depth: 1,
+      overrideAccess: true,
+      req,
+      locale,
+      fallbackLocale: 'en',
+    }),
     payload.findGlobal({ slug: 'site-settings', depth: 0, overrideAccess: true, req }),
   ])
   return withDefaults(stored as StoredEmailSettings, {

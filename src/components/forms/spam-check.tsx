@@ -58,6 +58,8 @@ export function useSpamCheck() {
         form: number
         submissionData: { field: string; value: string }[]
         target?: unknown
+        /** The site language the form was shown in; the server checks it. */
+        locale?: string
       },
       files: readonly (readonly [string, File])[] = [],
     ): Promise<SubmitResult> => {

@@ -2,6 +2,7 @@ import { APIError, type PayloadHandler, type PayloadRequest } from 'payload'
 
 import { env } from '@/env'
 import { fileAllowed, maxBytes, maxCount, type FileRule } from '@/lib/form-files'
+import { localeOf } from '@/i18n/routing'
 import { relId } from '@/lib/relation'
 import type { FormSubmission } from '@/payload-types'
 import { checkTurnstile, TURNSTILE_VERIFIED } from '@/lib/turnstile'
@@ -11,6 +12,7 @@ import { choiceField } from './application-choices'
 
 type FileQuestion = FileRule & { blockType: 'fileUpload'; name: string; required?: boolean | null }
 type Sent = ApplicationInput & {
+  locale?: unknown
   form: number
   submissionData: Array<{ field: string; value: string }>
 }
@@ -136,6 +138,7 @@ export const submitWithFiles: PayloadHandler = async (req) => {
       data: {
         form: sent.form,
         target: sent.target as FormSubmission['target'],
+        locale: localeOf(sent.locale),
         choices: sent.choices,
         submissionData: sent.submissionData,
       },
