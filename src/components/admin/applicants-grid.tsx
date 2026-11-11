@@ -3,7 +3,7 @@
 import Image from 'next/image'
 import Link from 'next/link'
 import { usePathname, useRouter, useSearchParams } from 'next/navigation'
-import { useRef, useState, useTransition } from 'react'
+import { useRef, useState, useTransition, type RefObject } from 'react'
 import { ActionButton } from '@/components/arc/action-button/action-button'
 import { Alert } from '@/components/arc/alert/alert'
 import { Button } from '@/components/arc/button/button'
@@ -24,12 +24,14 @@ function ApplicantCard({
   ar,
   admin,
   selectedCourse,
+  fallbackFocus,
   onStatusChange,
 }: {
   application: Applicant
   ar: boolean
   admin: boolean
   selectedCourse: string | null
+  fallbackFocus: RefObject<HTMLElement | null>
   onStatusChange: (id: number, status: Applicant['status'], emailFailed: boolean) => void
 }) {
   const t = applicantsCopy(ar)
@@ -38,6 +40,7 @@ function ApplicantCard({
   const running = useRef(false)
   const [error, setError] = useState('')
   const [confirm, setConfirm] = useState(false)
+  const opener = useRef<HTMLElement | null>(null)
   const choice = a.choices.find((c) => String(c.course) === selectedCourse) ?? a.choices[0]
   const cover = choice?.cover
   const run = async (action: 'accept' | 'reject') => {
@@ -79,7 +82,10 @@ function ApplicantCard({
       <Button
         variant="secondary"
         disabled={status !== 'new' || busy}
-        onClick={() => setConfirm(true)}
+        onClick={(e) => {
+          opener.current = e.currentTarget
+          setConfirm(true)
+        }}
       >
         {status === 'rejected' ? t.statuses.rejected : t.reject}
       </Button>
@@ -155,6 +161,17 @@ function ApplicantCard({
             title={t.rejectTitle}
             description={`${a.name || t.untitled}. ${t.rejectBody}`}
             closeLabel={t.close}
+            onCloseAutoFocus={(e) => {
+              // Reject has no DialogTrigger, so return focus here. A rejected card leaves its button
+              // disabled or unmounted (status filter), so fall back to the list summary.
+              e.preventDefault()
+              const button = opener.current
+              const target =
+                button?.isConnected && !(button as HTMLButtonElement).disabled
+                  ? button
+                  : fallbackFocus.current
+              target?.focus()
+            }}
             onEscapeKeyDown={(e) => {
               if (busy) e.preventDefault()
             }}
@@ -229,6 +246,7 @@ export function ApplicantsGrid({
   const router = useRouter()
   const [pending, startTransition] = useTransition()
   const values = new URLSearchParams(search.toString())
+  const summary = useRef<HTMLParagraphElement>(null)
   const [emailWarnings, setEmailWarnings] = useState<number[]>([])
   const [decisions, setDecisions] = useState<Record<number, Applicant['status']>>({})
   const cycles = new Map(
@@ -296,7 +314,7 @@ export function ApplicantsGrid({
         </Alert>
       ))}
       <ApplicantsFilter fields={fields} values={values} onChange={change} ar={ar} />
-      <p role="status" className={styles.count}>
+      <p role="status" tabIndex={-1} ref={summary} className={styles.count}>
         {pending ? t.loading : t.showing(applications.length, data.applications.length)}
       </p>
       {applications.length ? (
@@ -310,6 +328,7 @@ export function ApplicantsGrid({
                 ar={ar}
                 admin={admin}
                 selectedCourse={values.get('course')}
+                fallbackFocus={summary}
                 onStatusChange={(id, status, emailFailed) => {
                   setDecisions((current) => ({ ...current, [id]: status }))
                   if (emailFailed)

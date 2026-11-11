@@ -122,6 +122,14 @@ describe('applicant review', () => {
     expect(screen.getByRole('dialog')).toBeTruthy()
   })
 
+  it('returns focus to the Reject button when the dialog is cancelled', async () => {
+    render(<ApplicantsGrid data={data} ar={false} admin />)
+    const reject = screen.getByRole('button', { name: 'Reject' })
+    fireEvent.click(reject)
+    fireEvent.click(within(screen.getByRole('dialog')).getByRole('button', { name: 'Cancel' }))
+    await waitFor(() => expect(document.activeElement).toBe(reject))
+  })
+
   it('updates a pending filter immediately after acceptance', async () => {
     navigation.search = 'status=new'
     vi.stubGlobal(
