@@ -61,6 +61,8 @@ export function PayloadQuestion({
           <Image
             width={image.width || 800}
             height={image.height || 600}
+            sizes="auto, min(34rem, calc(100vw - 2rem))"
+            style={{ height: 'auto' }}
             alt={image.alt ?? ''}
             src={image.url}
             className="payload-form-image"
@@ -138,8 +140,11 @@ export function PayloadQuestion({
           <>
             {description ? <div>{description}</div> : null}
             {image?.url ? (
-              // eslint-disable-next-line @next/next/no-img-element
-              <img
+              <Image
+                width={image.width || 800}
+                height={image.height || 600}
+                sizes="auto, min(34rem, calc(100vw - 2rem))"
+                style={{ height: 'auto' }}
                 alt={image.alt ?? ''}
                 className="payload-form-image"
                 loading="lazy"

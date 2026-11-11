@@ -38,8 +38,6 @@ export type PosterData = {
   /** What kind of thing it is, with its icon: its own box at the start of the credit row. */
   tag?: { icon: ReactNode; text: string }
   image?: MediaImage
-  /** Prepared images can be served directly without another server-side transform. */
-  imageDelivery?: 'direct'
   /** The strip's coloured cell: a line or two; the time left to a deadline (YYYY-MM-DD) gets the cell after it. */
   meta: { lines: string[]; deadline?: string; status?: string }
   /** The strip's white cell: when and where, the reading time. */
@@ -66,7 +64,6 @@ export function Poster({
     credit,
     tag,
     image,
-    imageDelivery,
     meta,
     details,
     action,
@@ -88,9 +85,8 @@ export function Poster({
           fill
           loading={imageLoading}
           fetchPriority={imageFetchPriority}
-          sizes="(min-width: 90rem) 53rem, (min-width: 48rem) 62vw, 100vw"
+          sizes="auto, (min-width: 90rem) 44.64rem, (min-width: 64rem) min(44.64rem, calc(57.04vw - 2.852rem)), (min-width: 40rem) calc(62vw - 1.86rem), (min-width: 36rem) calc(62vw - 1.24rem), calc(100vw - 2rem)"
           src={image.src}
-          unoptimized={imageDelivery === 'direct'}
           onError={() => setFailedSource(image.src)}
           style={focalPointStyle(image)}
         />

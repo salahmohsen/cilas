@@ -1,6 +1,5 @@
 import type { MentionType } from '@/blocks/mention'
 import { CAIRO } from '@/lib/cairo-day'
-import { mediaThumbnail } from '@/lib/media-image'
 import { bridgeYearPath, pathOf } from '@/lib/paths'
 
 import { plainText } from '@/lib/plaintext'
@@ -20,7 +19,7 @@ export type ResolvedMention = { href: string; preview: MentionPreview }
 const imageOf = (m: unknown) => {
   const media = m as Media | null
   if (!media || typeof media !== 'object') return null
-  return mediaThumbnail(media) ?? null
+  return media.url ?? null
 }
 const names = (people: unknown) =>
   ((people as Array<Person | number> | null | undefined) ?? [])

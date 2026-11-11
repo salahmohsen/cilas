@@ -36,7 +36,6 @@ export async function openPosters(items: OpenItem[], locale: string): Promise<Po
     title: item.title,
     credit: item.fellows?.length ? t('with', { names: item.fellows.join(and) }) : undefined,
     image: item.image,
-    imageDelivery: 'direct',
     meta: item.deadline
       ? { lines: [t('closesOn', { date: day(item.deadline) })], deadline: item.deadline }
       : { lines: [t('noDeadline')] },

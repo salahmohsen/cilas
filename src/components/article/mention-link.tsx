@@ -1,5 +1,7 @@
 'use client'
 
+import Image from 'next/image'
+
 import { HoverCard, HoverCardProfile } from '@/components/arc/hover-card/hover-card'
 import { Link } from '@/i18n/navigation'
 
@@ -25,7 +27,11 @@ export function MentionLink({
   const content =
     preview.kind === 'person' ? (
       <HoverCardProfile
-        avatar={preview.image ?? undefined}
+        avatar={
+          preview.image ? (
+            <Image src={preview.image} alt="" width={48} height={48} sizes="48px" />
+          ) : undefined
+        }
         bio={preview.text ?? undefined}
         name={preview.title}
         role={kindLabel}
@@ -33,13 +39,16 @@ export function MentionLink({
     ) : (
       <div className="grid max-w-[20rem] gap-2 text-sm leading-relaxed">
         {preview.image ? (
-          // eslint-disable-next-line @next/next/no-img-element
-          <img
-            alt=""
-            className="aspect-[4/3] w-full rounded-md object-cover"
-            decoding="async"
-            src={preview.image}
-          />
+          <span className="relative aspect-[4/3] w-full overflow-hidden rounded-md">
+            <Image
+              fill
+              sizes="auto, 20rem"
+              alt=""
+              className="aspect-[4/3] w-full rounded-md object-cover"
+              decoding="async"
+              src={preview.image}
+            />
+          </span>
         ) : null}
         <p className="text-xs text-(--text-secondary)">
           {[kindLabel, preview.meta].filter(Boolean).join(' · ')}

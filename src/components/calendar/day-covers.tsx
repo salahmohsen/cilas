@@ -1,5 +1,7 @@
 'use client'
 
+import Image from 'next/image'
+
 import { useEffect, useRef, useState } from 'react'
 
 import type { FocalPoint } from '@/lib/media-image'
@@ -76,8 +78,13 @@ export function DayCovers({ covers }: { covers: Cover[] }) {
           const cover = covers[faces[face]!]!
           return (
             <div className="cal-covers-face" data-face={face} key={face}>
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img alt="" decoding="async" src={cover.url} style={focalPointStyle(cover)} />
+              <Image
+                fill
+                sizes="auto, (min-width: 90rem) 12rem, 14vw"
+                alt=""
+                src={cover.url}
+                style={focalPointStyle(cover)}
+              />
             </div>
           )
         })}

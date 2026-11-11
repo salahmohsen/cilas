@@ -1,13 +1,18 @@
 'use client'
 
 import { useState, type ReactNode } from 'react'
+import Image from 'next/image'
 
 function ResultImage({ src, fallback }: { src: string; fallback: ReactNode }) {
   const [failed, setFailed] = useState(false)
   return failed ? (
     fallback
   ) : (
-    <img
+    <Image
+      width={48}
+      height={48}
+      sizes="48px"
+      unoptimized={src.startsWith('/api/space-files/')}
       src={src}
       alt=""
       loading="lazy"

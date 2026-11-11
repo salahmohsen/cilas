@@ -1,3 +1,4 @@
+import Image from 'next/image'
 import { personAvatarSeed } from '@/lib/avatar'
 import { listSeparator } from '@/lib/locale-format'
 import { detailPath } from '@/lib/paths'
@@ -282,8 +283,14 @@ export const CourseView: React.FC<{
                         tabIndex={-1}
                       >
                         {photo ? (
-                          // eslint-disable-next-line @next/next/no-img-element
-                          <img
+                          <Image
+                            width={
+                              typeof person.photo === 'object' ? person.photo?.width || 800 : 800
+                            }
+                            height={
+                              typeof person.photo === 'object' ? person.photo?.height || 600 : 600
+                            }
+                            sizes="auto, (min-width: 72rem) 18rem, (min-width: 64rem) calc(100vw - 28.5rem), (min-width: 48rem) 18rem, calc(100vw - 2rem)"
                             alt=""
                             loading="lazy"
                             src={photo}
@@ -534,12 +541,13 @@ export const CourseView: React.FC<{
           </header>
 
           {cover?.url ? (
-            // eslint-disable-next-line @next/next/no-img-element
-            <img
+            <Image
+              preload
+              sizes="(min-width: 90rem) 61.5rem, (min-width: 64rem) calc(100vw - 28.5rem), (min-width: 40rem) calc(100vw - 3rem), calc(100vw - 2rem)"
               alt={cover.alt ?? ''}
               className="course-cover mt-8"
-              width={cover.width ?? undefined}
-              height={cover.height ?? undefined}
+              width={cover.width || 800}
+              height={cover.height || 600}
               src={cover.url}
               style={focalPointStyle(cover)}
               {...pe('cover_image')}

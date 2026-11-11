@@ -1,5 +1,7 @@
 'use client'
 
+import Image from 'next/image'
+
 import { useForm, useSelector, type AnyFieldApi } from '@tanstack/react-form'
 import { Check, Flower2, Sprout } from 'lucide-react'
 import { useLocale, useTranslations } from 'next-intl'
@@ -400,8 +402,9 @@ export function PayloadForm({
                 >
                   <header className="apply-course-cover" data-image={c.cover ? '' : undefined}>
                     {c.cover ? (
-                      // eslint-disable-next-line @next/next/no-img-element
-                      <img
+                      <Image
+                        fill
+                        sizes="auto, (min-width: 48rem) 42rem, calc(100vw - 2rem)"
                         src={c.cover.src}
                         alt=""
                         loading="lazy"

@@ -1,5 +1,7 @@
 'use client'
 
+import Image from 'next/image'
+
 import {
   ArrowUpRight,
   BookOpenText,
@@ -77,8 +79,9 @@ export function CourseRows({ rows, start }: { rows: StudyRow[]; start: number })
         <li className="course-row" data-cover={row.image ? '' : undefined} key={row.id}>
           {row.image ? (
             <span aria-hidden className="course-row-cover">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
+              <Image
+                fill
+                sizes="auto, (min-width: 90rem) 85rem, (min-width: 64rem) calc(100vw - 5rem), (min-width: 40rem) calc(100vw - 3rem), calc(100vw - 2rem)"
                 alt=""
                 decoding="async"
                 loading="lazy"

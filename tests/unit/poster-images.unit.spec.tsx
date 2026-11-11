@@ -43,7 +43,6 @@ const poster: PosterData = {
     focalX: 20,
     focalY: 70,
   },
-  imageDelivery: 'direct',
   meta: { lines: [] },
   details: [],
   action: 'Apply',
@@ -52,26 +51,26 @@ const poster: PosterData = {
 const image = (container: HTMLElement) => within(container).getByRole<HTMLImageElement>('img')
 
 describe('poster image delivery', () => {
-  it('opts registration cards into direct delivery at their data boundary', async () => {
+  it('optimizes original registration images at their data boundary', async () => {
     const [registration] = await openPosters(
       [{ kind: 'course', title: 'Course', href: '/study/course', image: poster.image }],
       'en',
     )
     const { container } = render(<Poster poster={registration} />)
-    expect(image(container)).toHaveAttribute('src', poster.image!.src)
-    expect(image(container)).not.toHaveAttribute('srcset')
+    expect(new URL(image(container).src).searchParams.get('url')).toBe(poster.image!.src)
+    expect(image(container)).toHaveAttribute('srcset')
   })
 
-  it('serves prepared registration images without the optimizer while preserving their focal point', () => {
+  it('optimizes registration images while preserving their focal point', () => {
     const { container } = render(<Poster poster={poster} />)
-    expect(image(container).getAttribute('src')).toBe(poster.image!.src)
-    expect(image(container)).not.toHaveAttribute('srcset')
+    expect(new URL(image(container).src).searchParams.get('url')).toBe(poster.image!.src)
+    expect(image(container)).toHaveAttribute('srcset')
     expect(image(container).style.objectPosition).toBe('20% 70%')
     expect(image(container)).toHaveAttribute('alt', 'Course artwork')
   })
 
   it('retains responsive optimization for other posters', () => {
-    const { container } = render(<Poster poster={{ ...poster, imageDelivery: undefined }} />)
+    const { container } = render(<Poster poster={poster} />)
     expect(image(container).getAttribute('src')).toContain('/_next/image?')
     expect(image(container)).toHaveAttribute('srcset')
   })
@@ -85,7 +84,7 @@ describe('poster image delivery', () => {
         poster={{ ...poster, image: { src: '/assets/images/new.webp', alt: 'New cover' } }}
       />,
     )
-    expect(image(container).getAttribute('src')).toContain('/assets/images/new.webp')
+    expect(new URL(image(container).src).searchParams.get('url')).toBe('/assets/images/new.webp')
   })
 
   it('renders a poster without a cover when no image is available', () => {

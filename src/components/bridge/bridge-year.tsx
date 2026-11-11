@@ -275,22 +275,21 @@ export async function BridgeYearView({
           <figure className="bridge-figure">
             {/* A media cover comes from the storage host, as on course pages; the default is the site's own. */}
             {cover?.url ? (
-              // eslint-disable-next-line @next/next/no-img-element
-              <img
+              <Image
+                sizes="auto, (min-width: 90rem) 61.5rem, (min-width: 64rem) calc(100vw - 28.5rem), (min-width: 40rem) calc(100vw - 3rem), calc(100vw - 2rem)"
                 alt={cover.alt ?? ''}
                 className="course-cover"
-                height={cover.height ?? undefined}
+                height={cover.height || 600}
                 src={cover.url}
                 style={focalPointStyle(cover)}
-                width={cover.width ?? undefined}
+                width={cover.width || 800}
               />
             ) : (
               <Image
                 alt={t('metaTitle')}
                 className="course-cover"
                 height={1536}
-                priority
-                sizes="(min-width: 64rem) 46rem, 100vw"
+                sizes="auto, (min-width: 90rem) 61.5rem, (min-width: 64rem) calc(100vw - 28.5rem), (min-width: 40rem) calc(100vw - 3rem), calc(100vw - 2rem)"
                 src="/assets/images/cilas-classroom.jpg"
                 width={2048}
               />

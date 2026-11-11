@@ -1,3 +1,4 @@
+import Image from 'next/image'
 import type { CSSProperties } from 'react'
 import { getFormatter, getLocale, getTranslations } from 'next-intl/server'
 
@@ -197,14 +198,17 @@ function Slot({ item, labels }: { item: CalendarItem; labels: Labels }) {
         </span>
       ) : null}
       {item.cover ? (
-        // eslint-disable-next-line @next/next/no-img-element
-        <img
-          alt=""
-          className="cal-slot-cover"
-          loading="lazy"
-          src={item.cover.url}
-          style={focalPointStyle(item.cover)}
-        />
+        <span className="cal-slot-cover relative overflow-hidden">
+          <Image
+            fill
+            sizes="6rem"
+            alt=""
+            className="object-cover"
+            loading="lazy"
+            src={item.cover.url}
+            style={focalPointStyle(item.cover)}
+          />
+        </span>
       ) : null}
     </li>
   )
@@ -254,14 +258,17 @@ export async function WeekView({
                 style={{ '--tone': toneOf(item) } as CSSProperties}
               >
                 {item.cover ? (
-                  // eslint-disable-next-line @next/next/no-img-element
-                  <img
-                    alt=""
-                    className="cal-item-cover"
-                    loading="lazy"
-                    src={item.cover.url}
-                    style={focalPointStyle(item.cover)}
-                  />
+                  <span className="cal-item-cover relative overflow-hidden">
+                    <Image
+                      fill
+                      sizes="auto, (min-width: 90rem) 12rem, (min-width: 48rem) 14vw, calc(100vw - 2rem)"
+                      alt=""
+                      className="object-cover"
+                      loading="lazy"
+                      src={item.cover.url}
+                      style={focalPointStyle(item.cover)}
+                    />
+                  </span>
                 ) : null}
                 <span className="cal-item-type">
                   <span aria-hidden className="cal-dot" />

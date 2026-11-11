@@ -249,7 +249,8 @@ describe('shared search filters', () => {
     expect(screen.getByText('<script>plain text</script>')).toBeInTheDocument()
     expect(container.querySelector('script')).toBeNull()
     const image = container.querySelector('img')!
-    expect(image).toHaveAttribute('src', '/api/space-files/file/safe.png')
+    expect(new URL(image.src).pathname).toBe('/api/space-files/file/safe.png')
+    expect(image).not.toHaveAttribute('srcset')
     fireEvent.error(image)
     expect(container.querySelector('img')).toBeNull()
     expect(screen.getByRole('button', { name: /Current result/ })).toBeVisible()

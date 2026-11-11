@@ -1,5 +1,7 @@
 'use client'
 
+import Image from 'next/image'
+
 /**
  * Componentry's Orbit Card Stack (componentry.dev/docs/components/orbit-card-stack),
  * adapted: cards are links, colours come from the site's tokens so both
@@ -59,8 +61,9 @@ function Portrait({ item }: { item: OrbitStackItem }) {
   return (
     <div className="relative flex aspect-[1.36] w-full overflow-hidden rounded-[1.15rem] bg-[var(--surface-muted,var(--muted))] outline outline-1 -outline-offset-1 outline-black/10 dark:outline-white/10">
       {item.image ? (
-        // eslint-disable-next-line @next/next/no-img-element
-        <img
+        <Image
+          fill
+          sizes="auto, min(calc(78vw - 2rem), 19rem)"
           alt={item.imageAlt ?? ''}
           className="h-full w-full object-cover"
           src={item.image}
