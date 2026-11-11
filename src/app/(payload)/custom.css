@@ -183,3 +183,17 @@
   color: var(--theme-text);
   font: inherit;
 }
+
+/* A sidebar ui field that is one action (applicants, full form preview):
+   its own full-width row, like the fields around it. */
+.sidebar-action {
+  display: flex;
+  margin-block-end: var(--base);
+}
+.sidebar-action .btn {
+  flex: 1;
+  margin: 0;
+}
+.sidebar-action .btn__content {
+  justify-content: center;
+}

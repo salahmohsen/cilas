@@ -1,7 +1,6 @@
 import { Suspense } from 'react'
 import { DefaultTemplate } from '@payloadcms/next/templates'
-import { Gutter } from '@payloadcms/ui'
-import Link from 'next/link'
+import { Button, Gutter } from '@payloadcms/ui'
 import type { AdminViewServerProps, FieldServerComponent, Payload } from 'payload'
 import { applicantsFor, applicantViewer, type ApplicantViewer } from '@/forms/applicants'
 import { Skeleton } from '@/components/arc/skeleton/skeleton'
@@ -94,8 +93,16 @@ export const CourseApplicants: FieldServerComponent = async ({ data, req }) => {
     overrideAccess: true,
   })
   return (
-    <Link href={`/admin/applicants?course=${course.id}`}>
-      {applicantsCopy(req.i18n.language === 'ar').title} ({totalDocs})
-    </Link>
+    <div className="sidebar-action">
+      <Button
+        buttonStyle="secondary"
+        el="link"
+        margin={false}
+        size="medium"
+        to={`/admin/applicants?course=${course.id}`}
+      >
+        {applicantsCopy(req.i18n.language === 'ar').title} ({totalDocs})
+      </Button>
+    </div>
   )
 }

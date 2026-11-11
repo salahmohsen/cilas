@@ -166,7 +166,9 @@ describe('applicant review', () => {
     fireEvent.click(screen.getByRole('button', { name: 'Accept' }))
     await waitFor(() => expect(screen.getByRole('button', { name: /Accepted/ })).toBeTruthy())
     expect(screen.queryByRole('button', { name: 'Close' })).toBeNull()
-    fireEvent.click(screen.getByRole('button', { name: 'Applicant' }))
+    // The course leads the card; its open control also names the applicant.
+    expect(screen.getByRole('heading', { level: 3, name: /Writing, History/ })).toBeTruthy()
+    fireEvent.click(screen.getByRole('button', { name: 'Applicant: Writing, History' }))
     expect(await screen.findByRole('button', { name: 'Close' })).toBeTruthy()
   })
 
@@ -176,16 +178,18 @@ describe('applicant review', () => {
     expect(screen.queryByRole('button', { name: 'Reject' })).toBeNull()
   })
 
-  it('preserves historical answers and renders every answer read only', () => {
+  it('preserves historical answers as text under their questions', () => {
     render(
       <PayloadAnswers
         fields={[
+          { blockType: 'message', message: null } as never,
           {
             blockType: 'select',
             name: 'choice',
             label: 'Choice',
             options: [{ value: 'current', label: 'Current option' }],
           },
+          { blockType: 'text', name: 'blank', label: 'Blank' },
         ]}
         answers={[
           { name: 'choice', label: 'Saved question', value: 'retired' },
@@ -193,9 +197,11 @@ describe('applicant review', () => {
         ]}
       />,
     )
-    expect(screen.getByLabelText('Saved question')).toHaveProperty('value', 'retired')
-    expect(screen.getByLabelText('Removed question')).toHaveProperty('value', 'Original answer')
-    for (const input of screen.getAllByRole('textbox'))
-      expect(input).toHaveProperty('readOnly', true)
+    const answerTo = (question: string) =>
+      screen.getByText(question, { selector: 'dt' }).parentElement?.querySelector('dd')
+    expect(answerTo('Saved question')?.textContent).toBe('retired')
+    expect(answerTo('Removed question')?.textContent).toBe('Original answer')
+    expect(answerTo('Blank')?.textContent).toBe('—')
+    expect(screen.queryAllByRole('textbox')).toHaveLength(0)
   })
 })

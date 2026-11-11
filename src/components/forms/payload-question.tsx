@@ -28,7 +28,6 @@ export function PayloadQuestion({
   label,
   t,
   locked = false,
-  readOnly,
 }: {
   q: Question
   field: {
@@ -39,10 +38,8 @@ export function PayloadQuestion({
   error?: string
   label: (q: Question) => string
   locked?: boolean
-} & (
-  | { readOnly: true; t?: never }
-  | { readOnly?: false; t: ReturnType<typeof useTranslations<'Forms'>> }
-)) {
+  t: ReturnType<typeof useTranslations<'Forms'>>
+}) {
   const description =
     'description' in q && q.description ? (
       <RichTextField
@@ -51,36 +48,6 @@ export function PayloadQuestion({
         className="article-prose payload-form-description"
       />
     ) : undefined
-  if (readOnly) {
-    const value = answerText(q, String(field.state.value ?? ''))
-    const image = 'image' in q && typeof q.image === 'object' ? q.image : null
-    const lead = (
-      <>
-        {description}
-        {image?.url ? (
-          <Image
-            width={image.width || 800}
-            height={image.height || 600}
-            sizes="auto, min(34rem, calc(100vw - 2rem))"
-            style={{ height: 'auto' }}
-            alt={image.alt ?? ''}
-            src={image.url}
-            className="payload-form-image"
-            loading="lazy"
-          />
-        ) : null}
-      </>
-    )
-    return (
-      <Textarea
-        label={label(q)}
-        lead={lead}
-        value={value}
-        readOnly
-        rows={q.blockType === 'textarea' ? 5 : 2}
-      />
-    )
-  }
   switch (q.blockType) {
     case 'phone':
       return (
@@ -292,9 +259,11 @@ export function PayloadQuestion({
   }
 }
 
-const ignoreChange = () => {}
-
-/** Same question layout as the public form, with saved values and no form side effects. */
+/**
+ * Saved answers for a reviewer: each question's label over what was answered,
+ * with the question's image when it asks about one. The form's instructions
+ * (messages, descriptions) are for applicants and are left out.
+ */
 export function PayloadAnswers({
   fields = [],
   answers,
@@ -302,33 +271,43 @@ export function PayloadAnswers({
   fields?: Form['fields']
   answers: { name: string; label: string; value: string }[]
 }) {
-  const known = new Set((fields ?? []).flatMap((q) => ('name' in q ? [q.name] : [])))
-  const blocks: Block[] = [
-    ...(fields ?? []),
+  const questions = (fields ?? []).filter((q): q is Question => q.blockType !== 'message')
+  const known = new Set(questions.map((q) => q.name))
+  const rows: Question[] = [
+    ...questions,
     ...answers
       .filter((a) => !known.has(a.name))
       .map((a) => ({ blockType: 'textarea' as const, name: a.name, label: a.label })),
   ]
   return (
-    <>
-      {blocks.map((q, i) => {
-        if (q.blockType === 'message')
-          return <RichTextField key={q.id ?? i} data={q.message} plain />
+    <dl className="payload-answers">
+      {rows.map((q, i) => {
         const answer = answers.find((a) => a.name === q.name)
+        const value = answerText(q, answer?.value ?? '')
+        const image = 'image' in q && typeof q.image === 'object' ? q.image : null
         return (
-          <PayloadQuestion
-            key={`${q.name}:${i}`}
-            q={q}
-            readOnly
-            label={(q) => answer?.label || q.label || q.name}
-            field={{
-              state: { value: answer?.value ?? '' },
-              handleChange: ignoreChange,
-              handleBlur: ignoreChange,
-            }}
-          />
+          <div key={`${q.name}:${i}`}>
+            <dt>{answer?.label || q.label || q.name}</dt>
+            {image?.url ? (
+              <dd>
+                <Image
+                  width={image.width || 800}
+                  height={image.height || 600}
+                  sizes="auto, min(34rem, calc(100vw - 2rem))"
+                  style={{ height: 'auto' }}
+                  alt={image.alt ?? ''}
+                  src={image.url}
+                  className="payload-form-image"
+                  loading="lazy"
+                />
+              </dd>
+            ) : null}
+            <dd dir="auto" data-empty={value ? undefined : ''}>
+              {value || '—'}
+            </dd>
+          </div>
         )
       })}
-    </>
+    </dl>
   )
 }

@@ -43,6 +43,11 @@ function ApplicantCard({
   const opener = useRef<HTMLElement | null>(null)
   const choice = a.choices.find((c) => String(c.course) === selectedCourse) ?? a.choices[0]
   const cover = choice?.cover
+  const name = a.name || t.untitled
+  // The course leads: the chosen one (the filter's, else the first), then any others.
+  const courses = [choice, ...a.choices.filter((c) => c !== choice)]
+    .flatMap((c) => (c ? [c.title] : []))
+    .join(ar ? '، ' : ', ')
   const run = async (action: 'accept' | 'reject') => {
     if (running.current) return
     running.current = true
@@ -97,11 +102,13 @@ function ApplicantCard({
   return (
     <div className={styles.applicant}>
       <Card
-        title={a.name || t.untitled}
-        description={a.email}
-        meta={a.choices.map((c) => c.title).join(ar ? '، ' : ', ')}
+        title={courses}
+        triggerLabel={`${name}: ${courses}`}
+        description={name}
+        meta={a.email}
         status={`${t.statuses[status]} · ${date}`}
         closeLabel={t.close}
+        panelClassName={`arc-scope ${styles.quickLook}`}
         media={
           <span className={styles.cover}>
             {cover ? (
@@ -159,7 +166,7 @@ function ApplicantCard({
             className={`arc-scope ${styles.dialog}`}
             dir={ar ? 'rtl' : 'ltr'}
             title={t.rejectTitle}
-            description={`${a.name || t.untitled}. ${t.rejectBody}`}
+            description={`${name}. ${t.rejectBody}`}
             closeLabel={t.close}
             onCloseAutoFocus={(e) => {
               // Reject has no DialogTrigger, so return focus here. A rejected card leaves its button

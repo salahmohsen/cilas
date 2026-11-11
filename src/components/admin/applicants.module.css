@@ -16,7 +16,7 @@
 }
 .grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(min(100%, 22rem), 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 22rem), 1fr));
   gap: var(--space-6);
   align-items: start;
 }
@@ -64,7 +64,7 @@
   border-block-start: 1px solid var(--border);
   padding-block-start: var(--space-6);
 }
-.fields h2 {
+.fields h3 {
   margin: 0;
   font-size: var(--text-base);
   font-weight: 500;
@@ -73,9 +73,33 @@
 .fields :global(.payload-form-image) {
   max-inline-size: 100%;
   block-size: auto;
+  border-radius: var(--radius-control);
 }
-.fields :global(.payload-form-description) {
+/* Each answer: its question, small and muted, over the answer in reading size. */
+.fields :global(.payload-answers) {
+  display: grid;
+  gap: var(--space-4);
+  margin: 0;
+}
+.fields :global(.payload-answers) > div {
+  display: grid;
+  gap: var(--space-1);
+  min-inline-size: 0;
+}
+.fields :global(.payload-answers) dt {
+  color: var(--text-muted);
+  font-size: var(--text-xs);
+}
+.fields :global(.payload-answers) dd {
+  margin: 0;
+  color: var(--foreground);
   font-size: var(--text-sm);
+  line-height: var(--leading-body);
+  white-space: pre-line;
+  overflow-wrap: anywhere;
+}
+.fields :global(.payload-answers) dd[data-empty] {
+  color: var(--text-muted);
 }
 .count {
   margin: 0;
@@ -96,4 +120,12 @@
   overflow: hidden;
   clip-path: inset(50%);
   white-space: nowrap;
+}
+/* The quick look holds a whole application: wider than Arc's default, its
+   cover a short band so the answers start above the fold. */
+.quickLook {
+  width: min(calc(100vw - var(--space-8)), 44rem);
+}
+.quickLook .cover {
+  aspect-ratio: 16 / 5;
 }

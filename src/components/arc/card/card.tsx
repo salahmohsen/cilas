@@ -30,6 +30,8 @@ export interface CardProps extends HTMLAttributes<HTMLElement> {
   triggerLabel?: string
   /** The close control's accessible name, for other languages. */
   closeLabel?: string
+  /** A class for the quick look's panel. It portals to the body, so a page that scopes Arc's tokens (`arc-scope`) passes that class here. */
+  panelClassName?: string
   open?: boolean
   defaultOpen?: boolean
   onOpenChange?: (open: boolean) => void
@@ -135,6 +137,7 @@ export function Card({
   panelTitle,
   triggerLabel,
   closeLabel = 'Close quick look',
+  panelClassName,
   open: openProp,
   defaultOpen = false,
   onOpenChange,
@@ -326,7 +329,7 @@ export function Card({
                 {...(description ? {} : { 'aria-describedby': undefined })}
               >
                 <motion.div
-                  className={styles.panel}
+                  className={[styles.panel, panelClassName].filter(Boolean).join(' ')}
                   data-framer-portal-id={group}
                   data-returning={returning || undefined}
                   layoutScroll
