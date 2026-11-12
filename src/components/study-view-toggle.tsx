@@ -1,12 +1,11 @@
 'use client'
 
-import { LayoutGrid, List } from 'lucide-react'
 import { useTranslations } from 'next-intl'
 
-import { ExpandingButtonGroup } from '@/components/arc/expanding-button-group/expanding-button-group'
+import SegmentedControl from '@/components/arc/segmented-control/segmented-control'
 import { type StudyView } from '@/lib/study-view'
 
-/** Switches the study list between its list and its grid. */
+/** Switches the study list between its list and its grid. One press switches, on every input type. */
 export function StudyViewToggle({
   onChange,
   view,
@@ -16,15 +15,15 @@ export function StudyViewToggle({
 }) {
   const t = useTranslations('Study.filters')
   return (
-    <ExpandingButtonGroup
+    <SegmentedControl
       className="study-view-toggle"
-      defaultExpanded={view}
-      items={[
-        { id: 'list', label: t('viewList'), icon: <List aria-hidden /> },
-        { id: 'grid', label: t('viewGrid'), icon: <LayoutGrid aria-hidden /> },
-      ]}
       label={t('view')}
-      onAction={(id) => onChange(id as StudyView)}
+      onValueChange={(value) => onChange(value as StudyView)}
+      options={[
+        { value: 'list', label: t('viewList') },
+        { value: 'grid', label: t('viewGrid') },
+      ]}
+      value={view}
     />
   )
 }

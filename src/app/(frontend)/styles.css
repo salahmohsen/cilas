@@ -2271,8 +2271,8 @@ h1.article-title {
   justify-content: flex-end;
 }
 @media (pointer: coarse) {
-  .study-view-toggle [data-ebg-item] {
-    height: 44px;
+  .study-view-toggle button {
+    min-height: 44px;
     min-width: 44px;
   }
 }
