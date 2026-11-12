@@ -28,10 +28,39 @@ const contract = (collection: 'courses' | 'articles') => {
 }
 const writingRules = `Extract every source field before calling a tool. Never put schedule, dates, prices or fellows in description text. Find all relationship ids with lookup; media lookup returns existing media ids. Do not invent ids. Report conflicts and ask the person before saving. Use update tools to correct an existing draft instead of creating a duplicate. Omitted fields stay unchanged; explicit null clears an optional field; arrays replace the whole field (keep row ids to retain other-language text). Localized leaves use { en?, ar? }; rich text leaves take Markdown. Do not translate without permission. Include any unmappable source facts in source_unmapped: [{ field, reason }]. State every not_saved and needs_human_review result; say incomplete plainly when returned. Always give admin_url and say a person must review and publish.`
 
+/** How to read a long source, such as a PDF the person attached. Shared by both guides. */
+const documentRules = `## From a document
+People often attach a PDF or paste a long document. Read all of it before you call a tool. Then put each part in the field the map below gives it, not in the main text. Every fact goes in one field only. A fact with no field goes in source_unmapped with the reason. After saving, list which parts of the document went to which fields, so the person can check them.`
+
 export const courseGuide = (): string => `# Course drafts
 Tools: create_course_draft and update_course_draft (id required for update).
 ${writingRules}
 Look up existing courses, the cycle, fellows and any form first.
+
+${documentRules}
+
+| In the document | Field |
+| --- | --- |
+| Course name | title |
+| Second line or tagline under the name | subtitle |
+| One-sentence pitch | summary |
+| Opening quote or question | epigraph |
+| About, overview, aims, why this course | description: prose only. No dates, times, fees, teachers, reading lists or week-by-week plan |
+| Teachers, fellows, facilitators | fellows: ids from lookup. Their biographies belong to the person record, not the course: put them in source_unmapped |
+| Week-by-week or session-by-session plan | sessions: one row per session, in order. Its topic is session_title, its text is description |
+| Readings for one session | that session's bibliography |
+| Assignments, exercises, field visits for one session | that session's activities |
+| General reading list for the whole course | bibliography |
+| Start date, weekdays, times, number of weeks | schedule |
+| In person, online or both | location; a session that differs uses sessions[].delivery |
+| Teaching languages | teaching_languages; mixed use goes in language_note |
+| Fees, contribution, discounts, scholarships | pricing_override |
+| How and when to apply, deadline, application link | registration |
+| Questions applicants must answer | applicant_questions |
+| What to bring, attendance, how work is assessed | facilitator_note |
+| Sensitive material | content_warning |
+| "The syllabus may change" | syllabus_tentative: true |
+| Images | cover_image only with a media id from lookup. You cannot upload an image: say so |
 Required on create: title.en, course_type. Cycle is optional for drafts and required at approval or publication.
 Course types:\n${list(COURSE_TYPE_OPTIONS)}
 Locations:\n${list(LOCATION_OPTIONS)}
@@ -50,6 +79,21 @@ export const articleGuide = (): string => `# Article drafts
 Tools: create_article_draft and update_article_draft (id required for update).
 ${writingRules}
 Look up existing articles and all authors first. Required on create: title.en and at least one author id.
+
+${documentRules}
+
+| In the document | Field |
+| --- | --- |
+| Title | title |
+| Author byline | authors: ids from lookup. Never write the byline into body |
+| Main text | body, with its headings, quotes and lists in Markdown. Leave out the title, byline, notes and credits |
+| Footnotes or endnotes | real footnotes in body: [^1] in the text and [^1]: note text, in each locale |
+| Translator, editor, photographer, illustrator | credits: one row per role, people from lookup |
+| "Translated from", the original title, author and source | translation |
+| Keywords or topics | tags |
+| Short abstract or teaser | meta.description |
+| Other articles it names on this site | related_articles: ids from lookup |
+| Images | cover_image only with a media id from lookup. You cannot upload an image: say so |
 Body Markdown becomes the real article body. Use [^1] and [^1]: note text for real inline footnotes, separately in each locale. Missing, duplicate or unreferenced definitions are refused. An explicit same-site link becomes a mention only when its canonical URL identifies exactly one accessible record. Other names and links stay unchanged; do not infer a person from an ambiguous name.
 Tags use [{tag:"topic"}]. Credits use [{role, label:{en?,ar?}, people:[id]}]. Related articles use ids. Translation includes original_language, original_title, original_authors, original_url, original_source, and localized note.
 Original languages:\n${list(LANGUAGE_OPTIONS)}
