@@ -169,7 +169,10 @@ export function EmailPreview({ email, path }: { email: EmailId; path: string }) 
   }
 
   return (
-    <section className={styles.preview} aria-label={`Preview: ${entry.label}`}>
+    <section
+      className={`${styles.preview} email-texts-preview`}
+      aria-label={`Preview: ${entry.label}`}
+    >
       <div className={styles.toolbar}>
         {versions.length > 1 ? (
           <div className={styles.versions} role="group" aria-label="Version">

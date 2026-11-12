@@ -61,7 +61,31 @@
 .frame {
   inline-size: 100%;
   block-size: 760px;
+  max-block-size: calc(100vh - var(--doc-controls-height, 0px) - 10rem);
+  min-block-size: 28rem;
   border: 1px solid var(--theme-elevation-150);
   border-radius: 4px;
   background: #fff;
+}
+
+/* Wide screens: the fields on the left, the preview on the right, in view
+   while the fields scroll. Payload renders each field as a direct child of
+   the group's .render-fields, so the preview takes the second column. */
+@media (min-width: 1100px) {
+  :global(.email-texts-group) :global(.render-fields) {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr);
+    column-gap: 2rem;
+    align-items: start;
+  }
+  :global(.email-texts-group) :global(.render-fields) > * {
+    grid-column: 1;
+  }
+  :global(.email-texts-group) :global(.render-fields) > :global(.email-texts-preview) {
+    grid-column: 2;
+    grid-row: 1 / span 40;
+    position: sticky;
+    inset-block-start: calc(var(--doc-controls-height, 0px) + 1rem);
+    margin-block: 0;
+  }
 }
