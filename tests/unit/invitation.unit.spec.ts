@@ -3,7 +3,13 @@
 import type { PayloadRequest } from 'payload'
 import { describe, expect, it, vi } from 'vitest'
 
-import { INVITATION_DAYS, invitationEndpoints, inviteMany, setPasswordLink } from '@/lib/invitation'
+import {
+  BULK_INVITES_PER_DAY,
+  INVITATION_DAYS,
+  invitationEndpoints,
+  inviteMany,
+  setPasswordLink,
+} from '@/lib/invitation'
 
 const [create, many, resend] = invitationEndpoints
 
@@ -145,6 +151,20 @@ describe('inviting many accounts', () => {
     await vi.runAllTimersAsync()
     expect(await done).toEqual({ sent: [1], skipped: [], failed: [], limited: [2, 3] })
     expect(payload.sendEmail).toHaveBeenCalledTimes(2)
+    vi.useRealTimers()
+  })
+
+  it('keeps the rest of the day for other emails', async () => {
+    vi.useFakeTimers({ toFake: ['setTimeout'] })
+    const { req, payload } = requestOf({})
+    payload.count.mockResolvedValueOnce({ totalDocs: BULK_INVITES_PER_DAY - 1 })
+    payload.find.mockResolvedValueOnce({
+      docs: [account(1), account(2, { roles: ['admin'] }), account(3)],
+    })
+    const done = inviteMany(req, [1, 2, 3], 'en', false)
+    await vi.runAllTimersAsync()
+    expect(await done).toEqual({ sent: [1], skipped: [2], failed: [], limited: [3] })
+    expect(payload.sendEmail).toHaveBeenCalledOnce()
     vi.useRealTimers()
   })
 })

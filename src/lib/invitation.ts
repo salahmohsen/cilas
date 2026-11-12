@@ -90,6 +90,14 @@ export const markInvited = (req: PayloadRequest, email: string) =>
 /** At most this many accounts in one request; the Users list sends a larger selection in parts. */
 export const INVITE_BATCH = 25
 
+/**
+ * Bulk invitations a day, counted from "Invited on" since midnight UTC, when
+ * Resend's day starts. Resend's free plan sends 100 transactional emails a
+ * day in all, so this keeps 20 for resets, decisions, reviews and digests.
+ * Raise it on a paid plan.
+ */
+export const BULK_INVITES_PER_DAY = 80
+
 /** Resend's rate is 2 requests a second. */
 const SEND_GAP_MS = 600
 
@@ -103,9 +111,9 @@ type BatchResult = {
 }
 
 /**
- * Invites the accounts in `ids`, one at a time, in one language. It stops
- * when Resend answers 429 (the free plan's 100 emails a day, or its rate),
- * and lists the accounts not tried, so the admin can send them later.
+ * Invites the accounts in `ids`, one at a time, in one language. It stops at
+ * BULK_INVITES_PER_DAY, or when Resend answers 429 (its daily limit or its
+ * rate), and lists the accounts not tried, so the admin can send them later.
  */
 export const inviteMany = async (
   req: PayloadRequest,
@@ -123,16 +131,30 @@ export const inviteMany = async (
     req,
   })
   const recent = Date.now() - INVITATION_DAYS * DAY
+  const midnight = new Date()
+  midnight.setUTCHours(0, 0, 0, 0)
+  const { totalDocs: today } = await req.payload.count({
+    collection: 'users',
+    where: { invited_at: { greater_than_equal: midnight.toISOString() } },
+    overrideAccess: true,
+    req,
+  })
+  let left = BULK_INVITES_PER_DAY - today
   for (const [i, user] of docs.entries()) {
     const invited = user.invited_at ? Date.parse(user.invited_at) : 0
     if (isAdminUser(user) || (!again && invited > recent)) {
       result.skipped.push(user.id)
       continue
     }
+    if (left <= 0) {
+      result.limited.push(user.id)
+      continue
+    }
     const person = typeof user.person === 'object' ? user.person : null
     try {
       await sendInvitation(req, { email: user.email, name: person?.name || user.email }, locale)
       result.sent.push(user.id)
+      left--
     } catch (error) {
       if ((error as { status?: number }).status === 429) {
         result.limited.push(...docs.slice(i).map((u) => u.id))

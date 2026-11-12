@@ -117,7 +117,7 @@ const MANY = {
     skipped: (n: number) => `${n} skipped: admins, or invited recently.`,
     failed: (n: number) => `${n} failed. Try them again.`,
     limited: (n: number) =>
-      `${n} not sent: the email service's daily limit is reached. Filter by "Invited on" and send them tomorrow.`,
+      `${n} not sent: today's limit for invitations is reached. It keeps some of the day's emails for password resets and decisions. Filter by "Invited on" and send them tomorrow.`,
     error: 'The invitations did not go out. Try again.',
     english: 'English',
     arabic: 'Arabic',
@@ -136,7 +136,7 @@ const MANY = {
     skipped: (n: number) => `تُخطي ${n}: مشرفون أو دُعوا مؤخرًا.`,
     failed: (n: number) => `فشل ${n}. حاول مرة أخرى.`,
     limited: (n: number) =>
-      `لم تُرسل ${n}: بلغت خدمة البريد حدها اليومي. صفِّ حسب «تاريخ الدعوة» وأرسلها غدًا.`,
+      `لم تُرسل ${n}: بلغت الدعوات حدها اليومي. يبقى جزء من رسائل اليوم لإعادة تعيين كلمات المرور والقرارات. صفِّ حسب «تاريخ الدعوة» وأرسلها غدًا.`,
     error: 'لم تُرسل الدعوات. حاول مرة أخرى.',
     english: 'الإنجليزية',
     arabic: 'العربية',

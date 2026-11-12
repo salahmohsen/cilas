@@ -19,3 +19,5 @@ Job: A new account sets its own password from a link in its first email, without
 - It stops when Resend answers 429 and reports who was not tried. The free plan sends 100 transactional emails a day, so a large list goes out over several days.
 - `invited_at` ("Invited on", read-only, a list column) is set whenever a set-password link goes out: an invitation or an acceptance for a new account. A batch skips admins and accounts invited within the link's life, unless the admin asks to send again.
   - Problem: Without it, the admin cannot see who still needs an invitation after a daily limit, and could invite the same people twice.
+- Bulk invitations stop at `BULK_INVITES_PER_DAY` (80), counted from "Invited on" since midnight UTC, when Resend's day starts.
+  - Problem: The free plan's 100 emails a day are for all transactional email. A large batch would use them all, and password resets, decision emails and digests would fail until the next day.
