@@ -2,7 +2,7 @@ import { render, screen, fireEvent, waitFor, within } from '@testing-library/rea
 import { NextIntlClientProvider } from 'next-intl'
 import type { ReactNode } from 'react'
 import messages from '../../messages/en.json'
-import { beforeAll, beforeEach, describe, expect, it, vi } from 'vitest'
+import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { ApplicantsGrid } from '@/components/admin/applicants-grid'
 import type { ApplicantsData } from '@/forms/applicants'
 
@@ -15,7 +15,7 @@ vi.mock('next/navigation', () => ({
 vi.mock('@/i18n/navigation', () => ({ Link: 'a' }))
 vi.mock('@/components/RichTextField', () => ({ RichTextField: () => null }))
 
-beforeAll(() => {
+beforeEach(() => {
   vi.stubGlobal(
     'ResizeObserver',
     class {

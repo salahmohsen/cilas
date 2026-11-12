@@ -5,7 +5,7 @@
  * and reads what the gate would let leave the browser.
  */
 import posthog from 'posthog-js'
-import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest'
+import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest'
 
 import { posthogConfig } from '@/lib/analytics/client'
 
@@ -17,9 +17,15 @@ describe('what the real PostHog sends after the gate', () => {
   const seen: Capture[] = []
   const sent: Capture[] = []
 
-  beforeAll(() => {
+  // Each test: the config unstubs globals after every test.
+  const stubNetwork = () => {
     vi.stubGlobal('fetch', vi.fn().mockResolvedValue(new Response('{}')))
     vi.stubGlobal('navigator', { ...navigator, sendBeacon: vi.fn(() => true) })
+  }
+  beforeEach(stubNetwork)
+
+  beforeAll(() => {
+    stubNetwork()
     vi.spyOn(console, 'log').mockImplementation(() => {})
     Object.defineProperty(document, 'referrer', {
       configurable: true,

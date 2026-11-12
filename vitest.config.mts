@@ -11,6 +11,9 @@ export default defineConfig({
     // comfortably exceeds vitest's 10s default on a remote database.
     hookTimeout: 120_000,
     testTimeout: 120_000,
+    // Unit tests share one process (--no-isolate), so a stubbed global such as
+    // fetch would otherwise reach the files that run after it. Stub in beforeEach.
+    unstubGlobals: true,
     include: [
       'tests/unit/**/*.unit.spec.ts',
       'tests/unit/**/*.unit.spec.tsx',
