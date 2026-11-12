@@ -1,5 +1,5 @@
 'use client'
-/* eslint-disable @next/next/no-img-element -- plain images keep the block portable outside Next.js. */
+/* eslint-disable @next/next/no-img-element -- the 24px author avatar stays a plain image; post images use next/image. */
 
 import { useEffect, useId, useLayoutEffect, useRef, useState } from 'react'
 import type { MouseEvent, ReactNode } from 'react'
@@ -12,11 +12,19 @@ import {
   useReducedMotion,
 } from 'motion/react'
 import { ArrowLeft, ChevronLeft, ChevronRight } from 'lucide-react'
+import Image from 'next/image'
 import { motionTokens } from '../../lib/motion-tokens'
 import { activatePage, pageNavigation } from '../../lib/page-navigation'
 import { blogCategories, blogPosts } from './blog-grid-data'
 import type { BlogPost } from './blog-grid-data'
 import styles from './blog-grid.module.css'
+
+/* A card's image width: a third of the 1180px page, two columns under 900px
+   of container, one under 680px (blog-grid.module.css). The featured card's
+   image takes 1.35 of 2.35 parts of the row. */
+const CARD_IMAGE_SIZES =
+  '(min-width: 74rem) 380px, (min-width: 57rem) 33vw, (min-width: 43rem) 50vw, 100vw'
+const FEATURED_IMAGE_SIZES = '(min-width: 74rem) 680px, (min-width: 43rem) 58vw, 100vw'
 
 export type { BlogAuthor, BlogPost } from './blog-grid-data'
 
@@ -229,10 +237,12 @@ export function BlogCardBody({
           className={styles.imageFrame}
           data-image-sizing={imageSizing}
         >
-          <img
+          <Image
             className={styles.image}
             src={post.image.src}
             alt={post.image.alt}
+            fill
+            sizes={featured ? FEATURED_IMAGE_SIZES : CARD_IMAGE_SIZES}
             style={{ objectPosition: `${post.image.focalX ?? 50}% ${post.image.focalY ?? 50}%` }}
             loading={eager ? 'eager' : 'lazy'}
           />
@@ -449,10 +459,12 @@ export function BlogGrid({
                     // The fade's own transition wins when motion is reduced.
                     {...(reduced ? enterFade(true) : { transition: morph })}
                   >
-                    <img
+                    <Image
                       className={styles.image}
                       src={reading.image.src}
                       alt={reading.image.alt}
+                      fill
+                      sizes="(min-width: 48rem) 760px, 100vw"
                       style={{
                         objectPosition: `${reading.image.focalX ?? 50}% ${reading.image.focalY ?? 50}%`,
                       }}

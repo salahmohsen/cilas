@@ -534,24 +534,24 @@ h1.article-title {
   margin-inline: auto;
 }
 
-.course-cover {
+/* A page's cover (src/components/cover-image.tsx), whole, never cropped: the
+   column's width, until the height cap makes a tall poster narrower. */
+.cover-image {
+  --cover-max-height: min(75svh, 40rem);
   display: block;
-  /* The whole image, never cropped: a tall poster shrinks to fit the
-     height cap instead of filling the column. */
-  width: auto;
-  max-width: 100%;
+  width: min(100%, calc(var(--cover-max-height) * var(--cover-ratio)));
   height: auto;
-  max-height: min(75svh, 40rem);
+  aspect-ratio: var(--cover-ratio);
   margin-inline: auto;
-  object-fit: contain;
+  object-fit: cover;
   border-radius: calc(var(--radius) * 2);
 }
-.course-cover,
+.cover-image,
 .course-related-image img {
   outline: 1px solid oklch(0 0 0 / 0.1);
   outline-offset: -1px;
 }
-.dark .course-cover,
+.dark .cover-image,
 .dark .course-related-image img {
   outline-color: oklch(1 0 0 / 0.1);
 }
@@ -1282,6 +1282,7 @@ h1.article-title {
   display: block;
 }
 .course-related-image {
+  position: relative;
   display: grid;
   aspect-ratio: 4 / 3;
   place-items: center;
@@ -4060,15 +4061,13 @@ h3 {
   background: var(--foreground);
 }
 
-/* An article's cover shows whole, at its own proportions: Arc's reader crops
-   it to 16:9. A tall one stops at three quarters of the screen, contained. */
+/* An article's cover shows whole (.cover-image): Arc's reader frame would
+   crop it to 16:9 behind a muted panel. */
 .article-cover.article-cover {
+  overflow: visible;
   aspect-ratio: auto;
-}
-.article-cover .article-cover-image.article-cover-image {
-  height: auto;
-  max-height: 75vh;
-  object-fit: contain;
+  border-radius: 0;
+  background: none;
 }
 
 /* The theme toggle's reveal: the new theme grows in a circle from the button

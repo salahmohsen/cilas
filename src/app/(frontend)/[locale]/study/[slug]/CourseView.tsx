@@ -1,4 +1,5 @@
 import Image from 'next/image'
+import { COVER_SIZES, CoverImage } from '@/components/cover-image'
 import { personAvatarSeed } from '@/lib/avatar'
 import { listSeparator } from '@/lib/locale-format'
 import { detailPath } from '@/lib/paths'
@@ -541,15 +542,15 @@ export const CourseView: React.FC<{
           </header>
 
           {cover?.url ? (
-            <Image
+            <CoverImage
               preload
-              sizes="(min-width: 90rem) 61.5rem, (min-width: 64rem) calc(100vw - 28.5rem), (min-width: 40rem) calc(100vw - 3rem), calc(100vw - 2rem)"
+              sizes={COVER_SIZES}
               alt={cover.alt ?? ''}
-              className="course-cover mt-8"
+              className="mt-8"
               width={cover.width || 800}
               height={cover.height || 600}
+              focal={cover}
               src={cover.url}
-              style={focalPointStyle(cover)}
               {...pe('cover_image')}
             />
           ) : null}
@@ -673,10 +674,10 @@ export const CourseView: React.FC<{
                 <Link className="course-related group" href={detailPath('courses', String(r.slug))}>
                   <span className="course-related-image">
                     {r.image ? (
-                      // eslint-disable-next-line @next/next/no-img-element
-                      <img
+                      <Image
                         alt={r.image.alt}
-                        loading="lazy"
+                        fill
+                        sizes="(min-width: 90rem) 27rem, (min-width: 64rem) calc((100vw - 7rem) / 3), (min-width: 40rem) calc((100vw - 4.5rem) / 2), calc(100vw - 2rem)"
                         src={r.image.url}
                         style={focalPointStyle(r.image)}
                       />

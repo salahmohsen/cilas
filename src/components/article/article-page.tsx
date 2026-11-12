@@ -1,5 +1,4 @@
-import Image from 'next/image'
-import { focalPointStyle } from '@/lib/media-image'
+import { CoverImage } from '@/components/cover-image'
 import { isRtl, type Locale } from '@/i18n/routing'
 import { pathOf } from '@/lib/paths'
 import { currentReader } from '@/lib/reader'
@@ -429,14 +428,13 @@ export async function ArticlePage({ locale: siteLocale, slug, user: reader }: Vi
 
             {cover?.url && (
               <div className={`${grid.readerImage} article-cover`} {...pe('cover_image')}>
-                <Image
+                <CoverImage
                   width={cover.width || 800}
                   height={cover.height || 600}
                   preload
                   sizes="(min-width: 51rem) 760px, calc(100vw - 2rem)"
-                  style={focalPointStyle(cover)}
+                  focal={cover}
                   alt={cover.alt}
-                  className={`${grid.image} article-cover-image`}
                   src={cover.url}
                 />
               </div>

@@ -4,7 +4,7 @@ import { CAIRO, cairoNoon } from '@/lib/cairo-day'
 import { BRIDGE_APPLY_PATH, bridgeYearParts, bridgeYearPath } from '@/lib/paths'
 import { Clock, Hourglass, Wallet } from 'lucide-react'
 import { getFormatter, getTranslations } from 'next-intl/server'
-import Image from 'next/image'
+import { COVER_SIZES, CoverImage } from '@/components/cover-image'
 import type { ReactNode } from 'react'
 
 import { getContactEmail } from '@/api/contact.api'
@@ -19,7 +19,6 @@ import { SideCard, SideCardApply, SideCardSection } from '@/components/side-card
 import { Link } from '@/i18n/navigation'
 import type { Season } from '@/lib/cycle'
 import { localDigits, numberingSystemOf } from '@/lib/digits'
-import { focalPointStyle } from '@/lib/media-image'
 import { POSTER_COLORS } from '@/components/arc/lib/poster-colors'
 import { registrationStatus } from '@/lib/registration'
 import type { Cycle } from '@/payload-types'
@@ -275,23 +274,21 @@ export async function BridgeYearView({
           <figure className="bridge-figure">
             {/* A media cover comes from the storage host, as on course pages; the default is the site's own. */}
             {cover?.url ? (
-              <Image
+              <CoverImage
                 preload
-                sizes="(min-width: 90rem) 61.5rem, (min-width: 64rem) calc(100vw - 28.5rem), (min-width: 40rem) calc(100vw - 3rem), calc(100vw - 2rem)"
+                sizes={COVER_SIZES}
                 alt={cover.alt ?? ''}
-                className="course-cover"
+                focal={cover}
                 height={cover.height || 600}
                 src={cover.url}
-                style={focalPointStyle(cover)}
                 width={cover.width || 800}
               />
             ) : (
-              <Image
+              <CoverImage
                 preload
                 alt={t('metaTitle')}
-                className="course-cover"
                 height={1536}
-                sizes="(min-width: 90rem) 61.5rem, (min-width: 64rem) calc(100vw - 28.5rem), (min-width: 40rem) calc(100vw - 3rem), calc(100vw - 2rem)"
+                sizes={COVER_SIZES}
                 src="/assets/images/cilas-classroom.jpg"
                 width={2048}
               />
