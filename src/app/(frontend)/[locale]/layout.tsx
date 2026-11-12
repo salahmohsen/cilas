@@ -19,7 +19,7 @@ import { getCurrentPlace } from '@/api/place.api'
 import { CILASSiteHeader } from '@/components/site-header'
 import { Schema } from '@/components/schema'
 import { ThemeProvider } from '@/components/theme-provider'
-import { DirectionProvider } from '@base-ui/react/direction-provider'
+import { DirectionProvider } from '@radix-ui/react-direction'
 import { isRtl, routing } from '@/i18n/routing'
 import { env } from '@/env'
 import { fontVariables } from '@/lib/fonts'
@@ -92,7 +92,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
         />
         <ThemeProvider>
           <NextIntlClientProvider>
-            <DirectionProvider direction={direction}>
+            <DirectionProvider dir={direction}>
               <SiteToasts rtl={direction === 'rtl'}>
                 {/* Open deadlines, across the whole width, above the header. */}
                 <SiteDeadlines locale={locale as 'en' | 'ar'} />
