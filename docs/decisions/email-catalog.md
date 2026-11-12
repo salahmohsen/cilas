@@ -10,7 +10,7 @@ Job: Let an admin see and change the text of every email the system sends, one e
   - Problem: Their text was fixed in `space-mail.tsx`, so an admin could not change it.
 - Texts resolve as: saved text in the reader's language, its default in that language, the saved English text, the English default. Payload's own locale fallback is off for this read.
   - Problem: With Payload's fallback, an English change would replace the Arabic default for Arabic readers.
-- Each email is a collapsible section in Texts with its placeholders (click to copy), its fields and a preview of the texts as typed, one version at a time, and a test send to the signed-in admin. The preview is `POST /api/email-preview`, admins only.
+- Each email is a collapsible section in the Emails tab (it was "Texts") with its placeholders (click to copy), its fields and a preview of the texts as typed, one version at a time, and a test send to the signed-in admin. The preview is `POST /api/email-preview`, admins only.
   - Problem: One page showed four emails at once, and only after saving, so it was hard to see which field changed which line.
 - A field with text has a "Use default" button. The default shows in grey in the empty field, in the language being edited.
   - Problem: Once a field has text, its default is hidden, so "clear it to reset" does not show what the reset gives.

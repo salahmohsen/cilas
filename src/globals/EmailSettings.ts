@@ -55,7 +55,7 @@ const textSections: Field[] = EMAIL_IDS.map((id): Field => {
 
 /**
  * How CILAS's emails look and what they say: the newsletter and every email
- * the system sends (src/emails/catalog.ts). Each email in Texts has its own
+ * the system sends (src/emails/catalog.ts). Each email in the Emails tab has its own
  * preview with sample data.
  */
 export const EmailSettings: GlobalConfig = {
@@ -147,7 +147,7 @@ export const EmailSettings: GlobalConfig = {
           ],
         },
         {
-          label: 'Texts',
+          label: 'Emails',
           fields: [{ name: 'texts', type: 'group', label: false, fields: textSections }],
         },
       ],
