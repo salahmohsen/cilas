@@ -442,6 +442,9 @@ export default buildConfig({
     // /admin/visual-editor/:collection/:id. The pages mark their fields
     // (src/lib/editable.ts); sessions can be added and reordered on the page.
     visualEditor({
+      // Without this, every global with a Live Preview URL gets "Edit on page".
+      // Email settings has one, but its preview marks no fields, so it never connects.
+      globals: {},
       collections: {
         courses: { blockOps: { add: true, duplicate: true, remove: true, move: true } },
         articles: true,
