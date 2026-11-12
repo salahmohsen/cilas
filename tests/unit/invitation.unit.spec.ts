@@ -5,6 +5,7 @@ import { ValidationError } from 'payload'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 
 import {
+  announceAcceptance,
   BULK_INVITES_PER_DAY,
   hasSignedIn,
   INVITATION_DAYS,
@@ -225,6 +226,55 @@ describe('signing in', () => {
     await run('update', { id: 9, activated_at: null })
     expect(payload.update).toHaveBeenCalledOnce()
     expect(payload.update).toHaveBeenCalledWith(expect.objectContaining({ id: 9 }))
+  })
+})
+
+describe('accepting an invitation', () => {
+  type Doc = Parameters<typeof announceAcceptance>[0]['doc']
+  const invited = {
+    id: 42,
+    email: 'mona@example.com',
+    person: 7,
+    invited_at: '2026-11-01T00:00:00.000Z',
+  } as unknown as Doc
+  const run = (doc: Doc, previousDoc: Doc, operation: 'create' | 'update' = 'update') => {
+    const { req, payload } = requestOf({})
+    payload.find.mockResolvedValue({
+      docs: [
+        { id: 1, email: 'admin@example.com' },
+        { id: 42, email: 'mona@example.com' },
+      ],
+    })
+    payload.findByID.mockResolvedValue({ id: 7, name: 'Mona', photo: null } as never)
+    const hook = announceAcceptance as unknown as (args: object) => Promise<unknown>
+    return hook({ doc, previousDoc, operation, req }).then(() =>
+      payload.create.mock.calls.map(
+        ([args]) => args as unknown as { data: Record<string, unknown> },
+      ),
+    )
+  }
+
+  it('tells the other admins when an invited account first signs in', async () => {
+    const notes = await run({ ...invited, activated_at: '2026-11-12T00:00:00.000Z' }, invited)
+    expect(notes).toHaveLength(1)
+    expect(notes[0]!.data).toMatchObject({
+      recipient: 1,
+      kind: 'joined',
+      description: 'Mona accepted the invitation',
+      link: '/admin/collections/users/42',
+      actor_name: 'Mona',
+    })
+  })
+
+  it('counts a first Google sign-in', async () => {
+    expect(await run({ ...invited, sub: 'google-1' }, invited)).toHaveLength(1)
+  })
+
+  it('stays quiet for later sign-ins and for accounts nobody invited', async () => {
+    const active = { ...invited, activated_at: '2026-11-12T00:00:00.000Z' }
+    expect(await run({ ...active, sub: 'google-1' }, active)).toHaveLength(0)
+    const uninvited = { ...active, invited_at: null }
+    expect(await run(uninvited, { ...uninvited, activated_at: null })).toHaveLength(0)
   })
 })
 

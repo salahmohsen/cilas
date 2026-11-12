@@ -6,7 +6,13 @@ import { resetMail } from '@/emails/transactional'
 import { env } from '@/env'
 import { teaches, withFellowRole } from '@/lib/fellow-role'
 import { createPerson } from '@/lib/create-person'
-import { INVITATION_DAYS, INVITE_BATCH, invitationEndpoints, markActivated } from '@/lib/invitation'
+import {
+  announceAcceptance,
+  INVITATION_DAYS,
+  INVITE_BATCH,
+  invitationEndpoints,
+  markActivated,
+} from '@/lib/invitation'
 import { deleteOwnersAiKeys } from '@/plugins/mcp/api-keys'
 
 import type { User } from '@/payload-types'
@@ -128,6 +134,7 @@ export const Users: CollectionConfig = {
   },
   hooks: {
     beforeChange: [ensurePerson, syncFellowRoleOnLink],
+    afterChange: [announceAcceptance],
     beforeDelete: [deleteOwnersAiKeys],
     afterOperation: [markActivated],
   },

@@ -30,6 +30,12 @@ export const NOTIFICATION_KINDS = {
     icon: 'calendar-clock',
     audience: 'all',
   },
+  joined: {
+    name: 'Invitation accepted',
+    tone: 'success',
+    icon: 'user-check',
+    audience: 'admins',
+  },
 } as const satisfies Record<
   string,
   {

@@ -23,6 +23,7 @@ const PREFERENCE_ORDER = [
   'removed',
   'submitted',
   'application',
+  'joined',
 ] as const satisfies readonly PreferenceKind[]
 
 export const PREFERENCE_KINDS = PREFERENCE_ORDER.map((kind) => ({

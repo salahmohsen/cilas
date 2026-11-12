@@ -826,6 +826,10 @@
       "application": {
         "label": "New applications",
         "hint": "Someone applies to a course or programme. Shown to admins."
+      },
+      "joined": {
+        "label": "Accepted invitations",
+        "hint": "An invited person signs in for the first time. Shown to admins."
       }
     },
     "spaceGroup": "Spaces",
@@ -948,7 +952,8 @@
       "announcement": "New announcement",
       "moderation": "Moderation issue",
       "report": "New report",
-      "event_changed": "Event changed"
+      "event_changed": "Event changed",
+      "joined": "Invitation accepted"
     }
   },
   "Spaces": {

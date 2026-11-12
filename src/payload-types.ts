@@ -2694,7 +2694,8 @@ export interface Notification {
     | 'moderation'
     | 'report'
     | 'question'
-    | 'event_changed';
+    | 'event_changed'
+    | 'joined';
   title: string;
   description?: string | null;
   actor_name?: string | null;

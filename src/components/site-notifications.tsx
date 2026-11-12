@@ -17,6 +17,7 @@ import {
   Reply,
   Shield,
   Trash2,
+  UserCheck,
   UserPlus,
 } from 'lucide-react'
 
@@ -58,6 +59,7 @@ const GLYPHS: Record<NotificationIcon, ReactNode> = {
   shield: <Shield size={18} strokeWidth={1.7} />,
   flag: <Flag size={18} strokeWidth={1.7} />,
   'calendar-clock': <CalendarClock size={18} strokeWidth={1.7} />,
+  'user-check': <UserCheck size={18} strokeWidth={1.7} />,
 }
 
 const relativeTime = (date: Date) => {

@@ -2,6 +2,7 @@ import { randomBytes } from 'node:crypto'
 
 import {
   ValidationError,
+  type CollectionAfterChangeHook,
   type CollectionAfterOperationHook,
   type Endpoint,
   type PayloadRequest,
@@ -14,7 +15,9 @@ import { invitationMail } from '@/emails/transactional'
 import { env } from '@/env'
 import type { Locale } from '@/i18n/routing'
 import { createPerson } from '@/lib/create-person'
+import { actorOf, notify } from '@/lib/notify'
 import { isEmail } from '@/lib/password-reset'
+import { adminRecipients } from '@/lib/review-mail'
 import { wait } from '@/lib/resend'
 import type { User } from '@/payload-types'
 
@@ -56,6 +59,31 @@ export const markActivated: CollectionAfterOperationHook<'users'> = async ({
       )
   }
   return result
+}
+
+/**
+ * Users' afterChange: tells the admins when an invited account signs in for
+ * the first time, by password (`activated_at`) or by Google (`sub`). The
+ * account itself is not told, even when it is an admin.
+ */
+export const announceAcceptance: CollectionAfterChangeHook<User> = async ({
+  doc,
+  previousDoc,
+  operation,
+  req,
+}) => {
+  if (operation !== 'update' || !doc.invited_at) return doc
+  if (!hasSignedIn(doc) || hasSignedIn(previousDoc)) return doc
+  const admins = (await adminRecipients(req)).map((a) => a.id).filter((id) => id !== doc.id)
+  const person = typeof doc.person === 'object' ? doc.person?.id : doc.person
+  const actor = await actorOf(req.payload, person)
+  await notify(req.payload, admins, {
+    kind: 'joined',
+    description: `${actor?.name || doc.email} accepted the invitation`,
+    link: `/admin/collections/users/${doc.id}`,
+    actor,
+  })
+  return doc
 }
 
 /**
