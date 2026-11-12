@@ -1,53 +1,35 @@
-import { Gutter } from '@payloadcms/ui'
-import { DefaultTemplate } from '@payloadcms/next/templates'
-import type { AdminViewServerProps } from 'payload'
+import Link from 'next/link'
+import type { AdminViewServerProps, Payload } from 'payload'
 
 import { isAdminUser } from '@/access'
-import Link from 'next/link'
-
-import { LIST_OFF, mailingList, newsletterList, type ListTarget } from '@/lib/newsletter-list'
+import { Alert } from '@/components/arc/alert/alert'
+import { MetricCard } from '@/components/arc/metric-card/metric-card'
+import { mailingList, newsletterList, type ListTarget } from '@/lib/newsletter-list'
 import {
   accountContactCount,
+  CONTACT_WARN_AT,
   FREE_CONTACT_LIMIT,
   listContacts,
   type Contact,
 } from '@/lib/resend-contacts'
 
+import { adminLanguage, ArcAdminView } from './arc-admin-view'
+import { ContactsMeter } from './contacts-meter'
+import { subscribersCopy } from './subscribers-copy'
 import { SubscribersTable } from './subscribers-table'
+import styles from './subscribers.module.css'
 
-const box = { padding: '16px' } as const
-
-/**
- * Admin → Subscribers: the newsletter list, read live from Resend (ADR 0005),
- * with the free plan's contact limit and CSV exports for Mailchimp.
- */
-export async function SubscribersView({
-  initPageResult,
-  params,
-  searchParams,
-  user,
-}: AdminViewServerProps) {
-  const template = (children: React.ReactNode) => (
-    <DefaultTemplate
-      i18n={initPageResult.req.i18n}
-      locale={initPageResult.locale}
-      params={params}
-      payload={initPageResult.req.payload}
-      permissions={initPageResult.permissions}
-      searchParams={searchParams}
-      user={user}
-      visibleEntities={initPageResult.visibleEntities}
-    >
-      <Gutter>
-        <h1 style={{ margin: '24px 0 8px' }}>Subscribers</h1>
-        {children}
-      </Gutter>
-    </DefaultTemplate>
-  )
-
-  // Custom views are not protected by Payload's access rules.
-  if (!isAdminUser(user)) return template(<p>Only admins can see the newsletter list.</p>)
-  const payload = initPageResult.req.payload
+async function Subscribers({
+  payload,
+  asked,
+  ar,
+}: {
+  payload: Payload
+  /** The Mailing list in `?list=`; without it, the signup list. */
+  asked: number
+  ar: boolean
+}) {
+  const t = subscribersCopy(ar)
   const { docs: lists } = await payload.find({
     collection: 'mailing-lists',
     sort: 'name',
@@ -55,44 +37,31 @@ export async function SubscribersView({
     pagination: false,
     overrideAccess: true,
   })
-  // ?list=<id> picks a Mailing list; without it, the signup list.
-  const asked = Number(new URLSearchParams(searchParams as Record<string, string>).get('list'))
   const list: ListTarget | null = asked
     ? await mailingList(payload, asked)
     : await newsletterList(payload)
-  const tabs = lists.length > 1 && (
-    <nav
-      aria-label="Mailing lists"
-      style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', margin: '16px 0' }}
-    >
-      {lists.map((l) => {
-        const current = l.id === list?.id
-        return (
-          <Link
-            aria-current={current ? 'page' : undefined}
-            className="cilas-admin-box"
-            href={`/admin/subscribers?list=${l.id}`}
-            key={l.id}
-            style={{
-              ...box,
-              padding: '6px 12px',
-              fontWeight: current ? 600 : 400,
-              background: current ? 'var(--theme-elevation-100)' : undefined,
-              textDecoration: 'none',
-            }}
-          >
-            {l.name}
-          </Link>
-        )
-      })}
+  const switcher = lists.length > 1 && (
+    <nav aria-label={t.lists} className={styles.lists}>
+      {lists.map((l) => (
+        <Link
+          aria-current={l.id === list?.id ? 'page' : undefined}
+          href={`/admin/subscribers?list=${l.id}`}
+          key={l.id}
+          dir="auto"
+        >
+          {l.name}
+        </Link>
+      ))}
     </nav>
   )
   if (!list)
-    return template(
+    return (
       <>
-        {tabs}
-        <p>{LIST_OFF}</p>
-      </>,
+        {switcher}
+        <Alert tone="info" title={t.offTitle}>
+          {t.offBody}
+        </Alert>
+      </>
     )
 
   let contacts: Contact[]
@@ -100,81 +69,58 @@ export async function SubscribersView({
   try {
     ;[contacts, stored] = await Promise.all([listContacts(list.segmentId), accountContactCount()])
   } catch (error) {
-    return template(<p>Resend did not answer: {(error as Error).message}</p>)
+    return (
+      <Alert tone="danger" title={t.errorTitle}>
+        {(error as Error).message}
+      </Alert>
+    )
   }
 
   const subscribed = contacts.filter((c) => !c.unsubscribed).length
   const total = stored ?? contacts.length
-  const share = Math.min(100, Math.round((total / FREE_CONTACT_LIMIT) * 100))
-  const near = total >= FREE_CONTACT_LIMIT * 0.9
-
-  return template(
+  return (
     <>
-      <p style={{ color: 'var(--theme-elevation-500)', marginTop: 0 }}>
-        {list.source === 'members'
-          ? `${list.name}: synced from CILAS accounts (Mailing lists). `
-          : `${list.name}: the signup list. `}
-        The list lives in Resend; people unsubscribe from the link in each newsletter.
+      <p className={styles.intro}>
+        {list.source === 'members' ? t.membersList(list.name) : t.signupList(list.name)}{' '}
+        {t.livesInResend}
       </p>
-      {tabs}
-      <div
-        style={{
-          display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))',
-          gap: '12px',
-          margin: '20px 0',
-        }}
-      >
-        <div className="cilas-admin-box" style={box}>
-          <div style={{ fontSize: '28px', fontWeight: 600 }}>{subscribed}</div>
-          <div>Subscribed</div>
-        </div>
-        <div className="cilas-admin-box" style={box}>
-          <div style={{ fontSize: '28px', fontWeight: 600 }}>{contacts.length - subscribed}</div>
-          <div>Unsubscribed</div>
-        </div>
-        <div className="cilas-admin-box" style={box}>
-          <div style={{ fontSize: '28px', fontWeight: 600 }}>
-            {total} / {FREE_CONTACT_LIMIT}
-          </div>
-          <div>Contacts stored, of the free plan’s limit</div>
-          <div
-            role="meter"
-            aria-label="Contacts stored, of the free plan's limit"
-            aria-valuemin={0}
-            aria-valuemax={FREE_CONTACT_LIMIT}
-            aria-valuenow={total}
-            style={{
-              height: '6px',
-              borderRadius: '3px',
-              background: 'var(--theme-elevation-100)',
-              marginTop: '10px',
-            }}
-          >
-            <div
-              style={{
-                width: `${share}%`,
-                height: '100%',
-                borderRadius: '3px',
-                background: near
-                  ? 'var(--theme-warning-500, #d97706)'
-                  : 'var(--theme-success-500, #16a34a)',
-              }}
-            />
-          </div>
-        </div>
+      {switcher}
+      <div className={styles.metrics}>
+        <MetricCard label={t.subscribed} value={subscribed} context={t.subscribedContext} />
+        <MetricCard
+          label={t.unsubscribed}
+          value={contacts.length - subscribed}
+          context={t.unsubscribedContext}
+        />
       </div>
-      {near ? (
-        <p
-          className="cilas-admin-box"
-          style={{ ...box, borderColor: 'var(--theme-warning-500, #d97706)' }}
-        >
-          Near the free plan’s limit. Above {FREE_CONTACT_LIMIT} stored contacts Resend refuses to
-          send newsletters until the plan is upgraded. You can delete long-unsubscribed contacts in
-          Resend, or export the list to Mailchimp.
-        </p>
+      <ContactsMeter total={total} ar={ar} />
+      {total >= FREE_CONTACT_LIMIT * CONTACT_WARN_AT ? (
+        <Alert tone="warning" title={t.nearTitle}>
+          {t.nearBody(FREE_CONTACT_LIMIT)}
+        </Alert>
       ) : null}
-      <SubscribersTable contacts={contacts} list={list.id} />
-    </>,
+      <SubscribersTable contacts={contacts} list={list.id} ar={ar} />
+    </>
+  )
+}
+
+/**
+ * Admin → Subscribers: the newsletter list, read live from Resend (ADR 0005),
+ * with the free plan's contact limit and CSV exports for Mailchimp.
+ */
+export function SubscribersView(view: AdminViewServerProps) {
+  const req = view.initPageResult.req
+  const language = adminLanguage(req)
+  const ar = language === 'ar'
+  const asked = Number(new URLSearchParams(view.searchParams as Record<string, string>).get('list'))
+  return (
+    <ArcAdminView
+      view={view}
+      language={language}
+      title={subscribersCopy(ar).title}
+      allowed={isAdminUser(view.user)}
+    >
+      <Subscribers payload={req.payload} asked={asked} ar={ar} />
+    </ArcAdminView>
   )
 }

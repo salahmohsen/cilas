@@ -7,7 +7,10 @@ export type QueueKind = (typeof REVIEWED)[number]['kind']
 export type QueueItem = {
   kind: QueueKind
   id: number
-  title: string
+  /** Null when the document has no title yet. */
+  title: string | null
+  /** The owner asks to take the document off the site, not to publish a change. */
+  removal: boolean
   by: string
   since: string
   href: string
@@ -58,12 +61,11 @@ export const getReviewQueue = async (payload: Payload): Promise<QueueItem[]> => 
       }
       for (const d of docs) waiting.set(d.id, d as unknown as Record<string, unknown>)
       return [...waiting.values()].map((d): QueueItem => {
-        const title = (d.title as string | null | undefined) || `Untitled ${kind}`
-        const removal = (d.review as { request?: string } | null)?.request === 'removal'
         return {
           kind,
           id: d.id as number,
-          title: removal ? `Remove from the site: ${title}` : title,
+          title: (d.title as string | null | undefined) || null,
+          removal: (d.review as { request?: string } | null)?.request === 'removal',
           by: namesOf(d[owners]),
           since: d.updatedAt as string,
           href: `/admin/collections/${collection}/${d.id}`,

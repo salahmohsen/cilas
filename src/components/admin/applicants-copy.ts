@@ -1,5 +1,4 @@
-/** Wraps a name, title or address so it keeps its own direction inside Arabic text. */
-const iso = (text: string) => `\u2068${text}\u2069`
+import { isolate as iso } from '@/lib/bidi'
 
 export const applicantsCopy = (ar: boolean) =>
   ar

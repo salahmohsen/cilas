@@ -80,7 +80,11 @@ const RENDER: Record<WidgetSlug, (props: NativeProps) => Promise<ReactNode>> = {
   'media-storage': MediaStorage,
   'newsletter-usage': NewsletterUsage,
   'waiting-for-review': async ({ req, user }) =>
-    ReviewQueueWidget({ payload: req.payload as Payload, user }),
+    ReviewQueueWidget({
+      payload: req.payload as Payload,
+      user,
+      ar: req.i18n.language === 'ar',
+    }),
   'upcoming-events': UpcomingEvents,
   'active-spaces': ActiveSpaces,
   'content-pipeline': ContentPipeline,

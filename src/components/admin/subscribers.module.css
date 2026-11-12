@@ -1,0 +1,55 @@
+.intro,
+.note {
+  margin: 0;
+  color: var(--text-secondary);
+}
+.note {
+  font-size: var(--text-sm);
+}
+.lists {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+.lists a {
+  display: inline-flex;
+  align-items: center;
+  min-block-size: 44px;
+  padding-inline: var(--space-4);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-pill);
+  background: var(--surface);
+  color: var(--foreground);
+  text-decoration: none;
+}
+.lists a:hover {
+  background: var(--surface-muted);
+}
+.lists a[aria-current='page'] {
+  border-color: var(--foreground);
+  font-weight: 500;
+}
+.metrics {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 14rem), 1fr));
+  gap: var(--space-4);
+}
+.list {
+  display: grid;
+  gap: var(--space-3);
+  min-inline-size: 0;
+}
+.toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-3);
+}
+.toolbar > :first-child {
+  flex: 1 1 16rem;
+}
+.exports {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}

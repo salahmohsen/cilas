@@ -338,7 +338,7 @@ describe('publishing', () => {
       const queued = (await getReviewQueue(payload)).find(
         (i) => i.kind === 'article' && i.id === liveId,
       )
-      expect(queued?.title).toBe('Remove from the site: Live Probe, shorter')
+      expect(queued).toMatchObject({ title: 'Live Probe, shorter', removal: true })
 
       await payload.update({
         collection: 'articles',

@@ -1,8 +1,9 @@
 import { ListObjectsV2Command, S3Client } from '@aws-sdk/client-s3'
 
 import { UsageMeter } from '@/components/arc/usage-meter/usage-meter'
+import { ContactsMeter } from '@/components/admin/contacts-meter'
 import { env } from '@/env'
-import { FREE_CONTACT_LIMIT, accountContactCount } from '@/lib/resend-contacts'
+import { accountContactCount } from '@/lib/resend-contacts'
 import { BUCKET_PREFIXES, sumByPrefix, sumDocBytes } from '@/lib/storage-usage'
 
 import { cachedStat } from '../cached'
@@ -149,13 +150,7 @@ export async function NewsletterUsage() {
   if (total === null) return null
   return (
     <WidgetCard title="Newsletter contacts" description="Against the free Resend plan">
-      <UsageMeter
-        label="Newsletter contacts"
-        segments={[{ id: 'contacts', label: 'Contacts', value: total }]}
-        limit={FREE_CONTACT_LIMIT}
-        unit="contacts"
-        decimals={0}
-      />
+      <ContactsMeter total={total} ar={false} />
     </WidgetCard>
   )
 }

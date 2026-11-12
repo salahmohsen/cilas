@@ -1,19 +1,9 @@
-/* Arc tokens are scoped to this page and follow Payload's data-theme. */
-
 .page {
   min-inline-size: 0;
   font-size: var(--text-base);
   --control-height-sm: 44px;
   --control-height-lg: 44px;
   max-inline-size: 52rem;
-  padding-block: 1.5rem 3rem;
-  color: var(--foreground);
-}
-
-.title {
-  margin: 0 0 0.5rem;
-  font-size: var(--text-2xl);
-  line-height: 1.2;
 }
 
 .lede {

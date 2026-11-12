@@ -1,113 +1,121 @@
 'use client'
 
-import { Button } from '@payloadcms/ui'
 import { useMemo, useState } from 'react'
 
+import { Badge } from '@/components/arc/badge/badge'
+import { Button } from '@/components/arc/button/button'
+import { EmptyState } from '@/components/arc/empty-state/empty-state'
+import { SearchField } from '@/components/arc/search-field/search-field'
+import {
+  SortableDataTable,
+  type DataColumn,
+} from '@/components/arc/sortable-data-table/sortable-data-table'
 import type { Contact } from '@/lib/resend-contacts'
 
-const cell = {
-  padding: '8px 12px',
-  borderBottom: '1px solid var(--theme-elevation-100)',
-  textAlign: 'start',
-} as const
+import { subscribersCopy } from './subscribers-copy'
+import styles from './subscribers.module.css'
 
-/** The list with a search box and the two CSV downloads (/api/subscribers/export). */
-export function SubscribersTable({ contacts, list }: { contacts: Contact[]; list: number | null }) {
-  const listQuery = list ? `list=${list}` : ''
+type Row = {
+  id: string
+  email: string
+  name: string
+  /** ISO date: sorts in time order. */
+  since: string
+  status: string
+  unsubscribed: boolean
+}
+
+/** The list with a search field and the two CSV downloads (/api/subscribers/export). */
+export function SubscribersTable({
+  contacts,
+  list,
+  ar,
+}: {
+  contacts: Contact[]
+  list: number
+  ar: boolean
+}) {
+  const t = subscribersCopy(ar)
   const [query, setQuery] = useState('')
+  const rows = useMemo(
+    () =>
+      contacts.map((c): Row => ({
+        id: c.id,
+        email: c.email,
+        name: [c.first_name, c.last_name].filter(Boolean).join(' '),
+        since: c.created_at,
+        status: c.unsubscribed ? t.unsubscribed : t.subscribed,
+        unsubscribed: c.unsubscribed,
+      })),
+    [contacts, t.subscribed, t.unsubscribed],
+  )
   const shown = useMemo(() => {
     const q = query.trim().toLowerCase()
-    const sorted = [...contacts].sort((a, b) => b.created_at.localeCompare(a.created_at))
-    return q
-      ? sorted.filter((c) =>
-          [c.email, c.first_name, c.last_name].some((v) => v?.toLowerCase().includes(q)),
-        )
-      : sorted
-  }, [contacts, query])
+    return q ? rows.filter((r) => [r.email, r.name].some((v) => v.toLowerCase().includes(q))) : rows
+  }, [rows, query])
+
+  if (!contacts.length) return <EmptyState title={t.emptyTitle} description={t.emptyBody} />
+
+  const download = (all: boolean) => () =>
+    window.location.assign(`/api/subscribers/export?${all ? 'all=1&' : ''}list=${list}`)
+  const columns: DataColumn<Row>[] = [
+    {
+      key: 'email',
+      label: t.columns.email,
+      sortable: true,
+      render: (value) => <span dir="ltr">{String(value)}</span>,
+    },
+    {
+      key: 'name',
+      label: t.columns.name,
+      sortable: true,
+      render: (value) => <span dir="auto">{String(value) || t.noName}</span>,
+    },
+    {
+      key: 'since',
+      label: t.columns.since,
+      sortable: true,
+      render: (value) => <time dateTime={String(value)}>{t.date(String(value))}</time>,
+    },
+    {
+      key: 'status',
+      label: t.columns.status,
+      sortable: true,
+      render: (value, row) => (
+        <Badge tone={row.unsubscribed ? 'neutral' : 'success'} size="sm">
+          {String(value)}
+        </Badge>
+      ),
+    },
+  ]
 
   return (
-    <>
-      <div
-        style={{
-          display: 'flex',
-          flexWrap: 'wrap',
-          gap: '8px',
-          alignItems: 'center',
-          margin: '8px 0 16px',
-        }}
-      >
-        <input
-          aria-label="Search subscribers"
-          placeholder="Search by email or name"
+    <section className={styles.list} aria-label={t.caption}>
+      <div className={styles.toolbar}>
+        <SearchField
+          label={t.search}
+          labelHidden
+          placeholder={t.searchPlaceholder}
           value={query}
-          onChange={(e) => setQuery(e.target.value)}
-          style={{
-            flex: '1 1 240px',
-            padding: '8px 12px',
-            border: '1px solid var(--theme-elevation-150)',
-            borderRadius: '4px',
-            background: 'var(--theme-input-bg)',
-            color: 'inherit',
-          }}
+          onValueChange={setQuery}
         />
-        <Button
-          buttonStyle="primary"
-          el="anchor"
-          margin={false}
-          url={`/api/subscribers/export${listQuery ? `?${listQuery}` : ''}`}
-        >
-          Export for Mailchimp (CSV)
-        </Button>
-        <Button
-          buttonStyle="secondary"
-          el="anchor"
-          margin={false}
-          url={`/api/subscribers/export?all=1${listQuery ? `&${listQuery}` : ''}`}
-        >
-          Export everyone, with status
-        </Button>
+        <div className={styles.exports}>
+          <Button onClick={download(false)}>{t.exportMailchimp}</Button>
+          <Button variant="secondary" onClick={download(true)}>
+            {t.exportAll}
+          </Button>
+        </div>
       </div>
-      <p style={{ color: 'var(--theme-elevation-500)', margin: '0 0 12px' }}>
-        The Mailchimp file has only subscribed people: Mailchimp imports need their consent.
-      </p>
-      <div style={{ overflowX: 'auto' }}>
-        <table style={{ width: '100%', borderCollapse: 'collapse' }}>
-          <thead>
-            <tr>
-              <th style={cell}>Email</th>
-              <th style={cell}>Name</th>
-              <th style={cell}>Since</th>
-              <th style={cell}>Status</th>
-            </tr>
-          </thead>
-          <tbody>
-            {shown.map((c) => (
-              <tr key={c.id}>
-                <td style={cell}>{c.email}</td>
-                <td style={cell} dir="auto">
-                  {[c.first_name, c.last_name].filter(Boolean).join(' ') || '—'}
-                </td>
-                <td style={cell}>{c.created_at.slice(0, 10)}</td>
-                <td
-                  style={{
-                    ...cell,
-                    color: c.unsubscribed ? 'var(--theme-elevation-500)' : 'inherit',
-                  }}
-                >
-                  {c.unsubscribed ? 'Unsubscribed' : 'Subscribed'}
-                </td>
-              </tr>
-            ))}
-            {shown.length ? null : (
-              <tr>
-                <td colSpan={4} style={{ ...cell, color: 'var(--theme-elevation-500)' }}>
-                  {contacts.length ? 'No one matches the search.' : 'No one has subscribed yet.'}
-                </td>
-              </tr>
-            )}
-          </tbody>
-        </table>
-      </div>
-    </>
+      <p className={styles.note}>{t.exportNote}</p>
+      <SortableDataTable
+        rows={shown}
+        columns={columns}
+        rowKey="id"
+        caption={t.caption}
+        itemName={t.itemName}
+        emptyMessage={t.noMatch}
+        defaultSort={{ key: 'since', direction: 'desc' }}
+      />
+    </section>
   )
 }

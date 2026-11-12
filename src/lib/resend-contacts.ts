@@ -13,6 +13,9 @@ import { resend, wait } from '@/lib/resend'
  */
 export const FREE_CONTACT_LIMIT = 1000
 
+/** Share of FREE_CONTACT_LIMIT at which the admin warns that the list is almost full. */
+export const CONTACT_WARN_AT = 0.9
+
 export type Contact = {
   id: string
   email: string
