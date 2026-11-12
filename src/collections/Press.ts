@@ -8,6 +8,7 @@ import { importFields } from '@/fields/import'
 /** Coverage of CILAS by an outside outlet (CONTEXT.md). */
 export const Press: CollectionConfig = {
   slug: 'press',
+  labels: { singular: 'Press item', plural: 'Press' },
   access: {
     read: anyone,
     create: isAdmin,

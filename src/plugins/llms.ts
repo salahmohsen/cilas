@@ -45,14 +45,14 @@ export const llmsOptions: LlmsTxtPluginOptions = {
   ],
 }
 
-/** The plugin, with its settings global editable by admins only and kept with Site. */
+/** The plugin, with its settings global editable by admins only. Its sidebar group is in src/plugins/role-nav.ts. */
 export const llmsTxt = (): Plugin => (config) => {
   const next = llmsTxtPlugin(llmsOptions)(config) as typeof config
   return {
     ...next,
     globals: next.globals?.map((g) =>
       g.slug === DEFAULT_SETTINGS_GLOBAL_SLUG
-        ? { ...g, admin: { ...g.admin, group: 'Site' }, access: { ...g.access, update: isAdmin } }
+        ? { ...g, label: 'AI site summary', access: { ...g.access, update: isAdmin } }
         : g,
     ),
   }

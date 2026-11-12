@@ -6,6 +6,7 @@ import { importFields } from '@/fields/import'
 /** Board of advisors and board of trustees, one row per person per term. */
 export const Governance: CollectionConfig = {
   slug: 'governance',
+  labels: { singular: 'Governance member', plural: 'Governance' },
   admin: {
     hidden: ({ user }) => !hasRole(user, 'super_admin'),
     defaultColumns: ['person', 'role', 'term_from', 'term_to'],

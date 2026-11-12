@@ -6,6 +6,7 @@ import { SOCIAL_PLATFORMS } from '@/fields/social'
 
 export const SiteSettings: GlobalConfig = {
   slug: 'site-settings',
+  label: 'Site settings',
   access: { read: isAdmin, update: isAdmin },
   fields: [
     {

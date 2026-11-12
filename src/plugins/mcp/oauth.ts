@@ -1,3 +1,4 @@
+import { AI_GROUP } from '@/plugins/role-nav'
 import {
   OAuthInvalidTokenError,
   payloadMcpOAuth,
@@ -334,7 +335,7 @@ const asAssistantApps = (collection: CollectionConfig): CollectionConfig => ({
   labels: { singular: 'Assistant app', plural: 'Assistant apps' },
   admin: {
     ...collection.admin,
-    group: 'Site',
+    group: AI_GROUP,
     // roleNav runs before the OAuth plugins (plugin order), so it cannot hide these.
     hidden: ({ user }) => !isAdminUser(user),
     description:
@@ -371,7 +372,7 @@ const asConnectedAssistants = (collection: CollectionConfig): CollectionConfig =
   labels: { singular: 'Connected assistant', plural: 'Connected assistants' },
   admin: {
     ...collection.admin,
-    group: 'Site',
+    group: AI_GROUP,
     hidden: ({ user }) => !isAdminUser(user),
     defaultColumns: ['person', 'assistant', 'expiresAt'],
     description:

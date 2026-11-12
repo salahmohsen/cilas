@@ -1,3 +1,4 @@
+import { AI_GROUP } from '@/plugins/role-nav'
 import type { Access, CollectionBeforeDeleteHook, CollectionConfig, Field } from 'payload'
 
 import { hasRole, isAdmin } from '@/access'
@@ -81,7 +82,7 @@ export const overrideApiKeyCollection = (collection: CollectionConfig): Collecti
   },
   admin: {
     ...collection.admin,
-    group: 'Site',
+    group: AI_GROUP,
     hidden: ({ user }) => !isSuperAdmin(user),
     description:
       'For developers: a key lets a program make course and article drafts. Administrators connect Claude or ChatGPT instead, from the AI assistants guide.',

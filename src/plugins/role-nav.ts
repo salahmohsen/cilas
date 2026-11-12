@@ -39,33 +39,35 @@ const hiddenFor =
     return view === null || !VISIBLE[view].includes(slug)
   }
 
-const GROUPS: Record<string, string> = {
-  'form-submissions': 'Admissions',
-  enrollments: 'Admissions',
-  memberships: 'Admissions',
-  forms: 'Admissions',
-  courses: 'Teaching',
-  cycles: 'Teaching',
-  programmes: 'Teaching',
-  places: 'Teaching',
-  articles: 'Publishing',
-  publications: 'Publishing',
-  press: 'Publishing',
-  newsletters: 'Communications',
-  'mailing-lists': 'Communications',
-  people: 'People',
-  users: 'People',
-  governance: 'People',
-  media: 'Site',
-  redirects: 'Site',
-  'site-settings': 'Site',
-  'email-settings': 'Site',
-  'registration-defaults': 'Site',
-}
+/**
+ * The admin sidebar, in order: each group and its entries. The theme lists a
+ * group's collections first, then its globals, so each list is written that way.
+ * Groups appear in the order of their first collection.
+ */
+const NAV: [group: string, slugs: string[]][] = [
+  ['Admissions', ['forms', 'form-submissions', 'enrollments', 'memberships']],
+  ['Teaching', ['courses', 'programmes', 'cycles', 'places']],
+  ['Publishing', ['articles', 'publications', 'events', 'press']],
+  ['Community', ['spaces', 'space-posts', 'space-comments', 'space-introduction', 'space-rules']],
+  ['Communications', ['newsletters', 'mailing-lists']],
+  ['People', ['people', 'users', 'governance']],
+  ['Site', ['media', 'redirects', 'site-settings', 'email-settings', 'registration-defaults']],
+  ['AI', ['llms-txt-settings']],
+]
 
-const FIRST = Object.keys(GROUPS)
+/**
+ * The AI group's collections come from plugins that run after this one
+ * (src/plugins/mcp), so they name the group themselves.
+ */
+export const AI_GROUP = 'AI'
 
-const rank = (slug: string) => (FIRST.includes(slug) ? FIRST.indexOf(slug) : FIRST.length)
+const GROUPS: Record<string, string> = Object.fromEntries(
+  NAV.flatMap(([group, slugs]) => slugs.map((slug) => [slug, group])),
+)
+
+const ORDER = NAV.flatMap(([, slugs]) => slugs)
+
+const rank = (slug: string) => (ORDER.includes(slug) ? ORDER.indexOf(slug) : ORDER.length)
 
 /** Last in `plugins`, so it also covers the collections other plugins add. */
 export const roleNav = (): Plugin => (config) => ({
@@ -80,14 +82,16 @@ export const roleNav = (): Plugin => (config) => ({
       },
     }))
     .sort((a, b) => rank(a.slug) - rank(b.slug)),
-  globals: config.globals?.map((global) => ({
-    ...global,
-    admin: {
-      ...global.admin,
-      ...(GROUPS[global.slug] ? { group: GROUPS[global.slug] } : {}),
-      hidden: hiddenFor(global.slug, global.admin?.hidden),
-    },
-  })),
+  globals: config.globals
+    ?.map((global) => ({
+      ...global,
+      admin: {
+        ...global.admin,
+        ...(GROUPS[global.slug] ? { group: GROUPS[global.slug] } : {}),
+        hidden: hiddenFor(global.slug, global.admin?.hidden),
+      },
+    }))
+    .sort((a, b) => rank(a.slug) - rank(b.slug)),
 })
 
 export const showApplicants = (user: Parameters<typeof adminViewOf>[0]) =>

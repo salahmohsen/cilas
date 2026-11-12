@@ -337,6 +337,7 @@ export default buildConfig({
         hooks: { beforeValidate: [nameNewFormQuestions], beforeChange: [ensureNameEmail] },
       },
       formSubmissionOverrides: {
+        labels: { singular: 'Form submission', plural: 'Form submissions' },
         access: { read: isAdmin, update: isAdmin, delete: isAdmin },
         admin: { defaultColumns: ['form', 'courses', 'target', 'status', 'createdAt'] },
         fields: ({ defaultFields }) => [...defaultFields, ...applicationFields],

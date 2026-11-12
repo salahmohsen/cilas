@@ -68,17 +68,21 @@ export interface Config {
   };
   blocks: {};
   collections: {
+    forms: Form;
     'form-submissions': FormSubmission;
     enrollments: Enrollment;
     memberships: Membership;
-    forms: Form;
     courses: Course;
-    cycles: Cycle;
     programmes: Programme;
+    cycles: Cycle;
     places: Place;
     articles: Article;
     publications: Publication;
+    events: Event;
     press: Press;
+    spaces: Space;
+    'space-posts': SpacePost;
+    'space-comments': SpaceComment;
     newsletters: Newsletter;
     'mailing-lists': MailingList;
     people: Person;
@@ -86,13 +90,9 @@ export interface Config {
     governance: Governance;
     media: Media;
     redirects: Redirect;
-    events: Event;
     'submission-files': SubmissionFile;
     notifications: Notification;
     'push-subscriptions': PushSubscription;
-    spaces: Space;
-    'space-posts': SpacePost;
-    'space-comments': SpaceComment;
     'space-files': SpaceFile;
     'space-reactions': SpaceReaction;
     'space-consents': SpaceConsent;
@@ -131,17 +131,21 @@ export interface Config {
     };
   };
   collectionsSelect: {
+    forms: FormsSelect<false> | FormsSelect<true>;
     'form-submissions': FormSubmissionsSelect<false> | FormSubmissionsSelect<true>;
     enrollments: EnrollmentsSelect<false> | EnrollmentsSelect<true>;
     memberships: MembershipsSelect<false> | MembershipsSelect<true>;
-    forms: FormsSelect<false> | FormsSelect<true>;
     courses: CoursesSelect<false> | CoursesSelect<true>;
-    cycles: CyclesSelect<false> | CyclesSelect<true>;
     programmes: ProgrammesSelect<false> | ProgrammesSelect<true>;
+    cycles: CyclesSelect<false> | CyclesSelect<true>;
     places: PlacesSelect<false> | PlacesSelect<true>;
     articles: ArticlesSelect<false> | ArticlesSelect<true>;
     publications: PublicationsSelect<false> | PublicationsSelect<true>;
+    events: EventsSelect<false> | EventsSelect<true>;
     press: PressSelect<false> | PressSelect<true>;
+    spaces: SpacesSelect<false> | SpacesSelect<true>;
+    'space-posts': SpacePostsSelect<false> | SpacePostsSelect<true>;
+    'space-comments': SpaceCommentsSelect<false> | SpaceCommentsSelect<true>;
     newsletters: NewslettersSelect<false> | NewslettersSelect<true>;
     'mailing-lists': MailingListsSelect<false> | MailingListsSelect<true>;
     people: PeopleSelect<false> | PeopleSelect<true>;
@@ -149,13 +153,9 @@ export interface Config {
     governance: GovernanceSelect<false> | GovernanceSelect<true>;
     media: MediaSelect<false> | MediaSelect<true>;
     redirects: RedirectsSelect<false> | RedirectsSelect<true>;
-    events: EventsSelect<false> | EventsSelect<true>;
     'submission-files': SubmissionFilesSelect<false> | SubmissionFilesSelect<true>;
     notifications: NotificationsSelect<false> | NotificationsSelect<true>;
     'push-subscriptions': PushSubscriptionsSelect<false> | PushSubscriptionsSelect<true>;
-    spaces: SpacesSelect<false> | SpacesSelect<true>;
-    'space-posts': SpacePostsSelect<false> | SpacePostsSelect<true>;
-    'space-comments': SpaceCommentsSelect<false> | SpaceCommentsSelect<true>;
     'space-files': SpaceFilesSelect<false> | SpaceFilesSelect<true>;
     'space-reactions': SpaceReactionsSelect<false> | SpaceReactionsSelect<true>;
     'space-consents': SpaceConsentsSelect<false> | SpaceConsentsSelect<true>;
@@ -181,19 +181,19 @@ export interface Config {
   };
   fallbackLocale: ('false' | 'none' | 'null') | false | null | ('en' | 'ar') | ('en' | 'ar')[];
   globals: {
-    'registration-defaults': RegistrationDefault;
-    'site-settings': SiteSetting;
-    'email-settings': EmailSetting;
     'space-introduction': SpaceIntroduction;
     'space-rules': SpaceRule;
+    'site-settings': SiteSetting;
+    'email-settings': EmailSetting;
+    'registration-defaults': RegistrationDefault;
     'llms-txt-settings': LlmsTxtSetting;
   };
   globalsSelect: {
-    'registration-defaults': RegistrationDefaultsSelect<false> | RegistrationDefaultsSelect<true>;
-    'site-settings': SiteSettingsSelect<false> | SiteSettingsSelect<true>;
-    'email-settings': EmailSettingsSelect<false> | EmailSettingsSelect<true>;
     'space-introduction': SpaceIntroductionSelect<false> | SpaceIntroductionSelect<true>;
     'space-rules': SpaceRulesSelect<false> | SpaceRulesSelect<true>;
+    'site-settings': SiteSettingsSelect<false> | SiteSettingsSelect<true>;
+    'email-settings': EmailSettingsSelect<false> | EmailSettingsSelect<true>;
+    'registration-defaults': RegistrationDefaultsSelect<false> | RegistrationDefaultsSelect<true>;
     'llms-txt-settings': LlmsTxtSettingsSelect<false> | LlmsTxtSettingsSelect<true>;
   };
   locale: 'en' | 'ar';
@@ -281,82 +281,6 @@ export interface PayloadMcpApiKeyAuthOperations {
     email: string;
     password: string;
   };
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "form-submissions".
- */
-export interface FormSubmission {
-  id: number;
-  form: number | Form;
-  submissionData?:
-    | {
-        field: string;
-        value: string;
-        id?: string | null;
-      }[]
-    | null;
-  /**
-   * The site language the applicant used. Decision emails go out in it. Empty: English.
-   */
-  locale?: ('en' | 'ar') | null;
-  /**
-   * What the applicant applied to.
-   */
-  target?:
-    | ({
-        relationTo: 'programmes';
-        value: number | Programme;
-      } | null)
-    | ({
-        relationTo: 'courses';
-        value: number | Course;
-      } | null)
-    | ({
-        relationTo: 'cycles';
-        value: number | Cycle;
-      } | null);
-  choices?:
-    | {
-        course: number | Course;
-        amount?: number | null;
-        need_reduction?: boolean | null;
-        answers?:
-          | {
-              name: string;
-              label?: string | null;
-              value?: string | null;
-              id?: string | null;
-            }[]
-          | null;
-        decision?: ('pending' | 'accepted' | 'rejected') | null;
-        decided_at?: string | null;
-        email_failed?: boolean | null;
-        id?: string | null;
-      }[]
-    | null;
-  courses?: string | null;
-  status?: ('new' | 'accepted' | 'rejected') | null;
-  decided_at?: string | null;
-  /**
-   * Programme decisions only.
-   */
-  email_failed?: boolean | null;
-  result?: {
-    user?: (number | null) | User;
-    person?: (number | null) | Person;
-    membership?: (number | null) | Membership;
-    enrollments?: (number | Enrollment)[] | null;
-    enrollment_outcomes?:
-      | {
-          enrollment: number | Enrollment;
-          created?: boolean | null;
-          id?: string | null;
-        }[]
-      | null;
-  };
-  updatedAt: string;
-  createdAt: string;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -902,6 +826,82 @@ export interface Media {
       filename?: string | null;
     };
   };
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "form-submissions".
+ */
+export interface FormSubmission {
+  id: number;
+  form: number | Form;
+  submissionData?:
+    | {
+        field: string;
+        value: string;
+        id?: string | null;
+      }[]
+    | null;
+  /**
+   * The site language the applicant used. Decision emails go out in it. Empty: English.
+   */
+  locale?: ('en' | 'ar') | null;
+  /**
+   * What the applicant applied to.
+   */
+  target?:
+    | ({
+        relationTo: 'programmes';
+        value: number | Programme;
+      } | null)
+    | ({
+        relationTo: 'courses';
+        value: number | Course;
+      } | null)
+    | ({
+        relationTo: 'cycles';
+        value: number | Cycle;
+      } | null);
+  choices?:
+    | {
+        course: number | Course;
+        amount?: number | null;
+        need_reduction?: boolean | null;
+        answers?:
+          | {
+              name: string;
+              label?: string | null;
+              value?: string | null;
+              id?: string | null;
+            }[]
+          | null;
+        decision?: ('pending' | 'accepted' | 'rejected') | null;
+        decided_at?: string | null;
+        email_failed?: boolean | null;
+        id?: string | null;
+      }[]
+    | null;
+  courses?: string | null;
+  status?: ('new' | 'accepted' | 'rejected') | null;
+  decided_at?: string | null;
+  /**
+   * Programme decisions only.
+   */
+  email_failed?: boolean | null;
+  result?: {
+    user?: (number | null) | User;
+    person?: (number | null) | Person;
+    membership?: (number | null) | Membership;
+    enrollments?: (number | Enrollment)[] | null;
+    enrollment_outcomes?:
+      | {
+          enrollment: number | Enrollment;
+          created?: boolean | null;
+          id?: string | null;
+        }[]
+      | null;
+  };
+  updatedAt: string;
+  createdAt: string;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -2159,6 +2159,163 @@ export interface Publication {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "events".
+ */
+export interface Event {
+  id: number;
+  last_edited_by?: (number | null) | User;
+  tier: 'owner' | 'community' | 'public';
+  title: string;
+  /**
+   * When enabled, the slug will auto-generate from the title field on save and autosave.
+   */
+  generateSlug?: boolean | null;
+  slug: string;
+  /**
+   * Used on event cards. Add images to the description editor to show them on the event page.
+   */
+  cover_image?: (number | null) | Media;
+  legacy_url?: string | null;
+  description?: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  event_type:
+    | 'talk'
+    | 'panel'
+    | 'book_discussion'
+    | 'reading_group'
+    | 'screening'
+    | 'performance'
+    | 'music'
+    | 'exhibition'
+    | 'open_day'
+    | 'workshop'
+    | 'residency'
+    | 'visit'
+    | 'other';
+  speakers?:
+    | {
+        person: number | Person;
+        role?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  schedule?: {
+    /**
+     * A screening or talk needs only one date and time. Agenda segments are optional.
+     */
+    mode?: ('single' | 'recurring') | null;
+    start_date?: string | null;
+    /**
+     * Week only keeps it off the calendar.
+     */
+    start_precision?: ('day' | 'week') | null;
+    /**
+     * How long it runs, e.g. 8. With the start date it sets the end date.
+     */
+    weeks?: number | null;
+    /**
+     * 24-hour Cairo time. Leave both empty if only the date is known.
+     */
+    start_time?: string | null;
+    /**
+     * 24-hour Cairo time. Leave both empty if only the date is known.
+     */
+    end_time?: string | null;
+    /**
+     * Weekly meeting times, in Cairo time.
+     */
+    slots?:
+      | {
+          weekday: 'sat' | 'sun' | 'mon' | 'tue' | 'wed' | 'thu' | 'fri';
+          start_time: string;
+          end_time: string;
+          id?: string | null;
+        }[]
+      | null;
+    /**
+     * Worked out from the schedule.
+     */
+    end_date?: string | null;
+    /**
+     * One-off exceptions, e.g. "hybrid for the first 6 weeks, then online".
+     */
+    note?: string | null;
+  };
+  place?: (number | null) | Place;
+  /**
+   * Only when it is not at a CILAS place.
+   */
+  external_venue?: {
+    name?: string | null;
+    address?: string | null;
+    map_url?: string | null;
+  };
+  online_url?: string | null;
+  /**
+   * Only for named segments within the event, such as a screening followed by a discussion. Set the event’s own date and time in When; no agenda is needed.
+   */
+  agenda?:
+    | {
+        start_time: string;
+        end_time: string;
+        title: string;
+        id?: string | null;
+      }[]
+    | null;
+  registration?: {
+    method?: ('form' | 'external' | 'closed') | null;
+    form?: (number | null) | Form;
+    url?: string | null;
+    /**
+     * The last day to register, in Cairo.
+     */
+    deadline?: string | null;
+    archived_registration_url?: string | null;
+  };
+  pricing?: {
+    options?:
+      | {
+          amount: number;
+          default?: boolean | null;
+          id?: string | null;
+        }[]
+      | null;
+    note?: string | null;
+    need_based_deductions?: boolean | null;
+  };
+  /**
+   * The event this one is part of.
+   */
+  series?: (number | null) | Event;
+  programme?: (number | null) | Programme;
+  course?: (number | null) | Course;
+  meta?: {
+    title?: string | null;
+    description?: string | null;
+    /**
+     * Maximum upload file size: 12MB. Recommended file size for images is <500KB.
+     */
+    image?: (number | null) | Media;
+  };
+  updatedAt: string;
+  createdAt: string;
+  _status?: ('draft' | 'published') | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "press".
  */
 export interface Press {
@@ -2199,6 +2356,118 @@ export interface Press {
   }[];
   excerpt?: string | null;
   legacy_url?: string | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "spaces".
+ */
+export interface Space {
+  id: number;
+  kind: 'community' | 'cohort' | 'course';
+  /**
+   * For example “Tech community”. Empty shows “Community”.
+   */
+  name?: string | null;
+  /**
+   * A fellow is listed on a course or holds a fellow role in a programme.
+   */
+  audience?: ('all' | 'fellows' | 'admins') | null;
+  course?: (number | null) | Course;
+  programme?: (number | null) | Programme;
+  posting?: ('open' | 'members_comment' | 'fellows_only') | null;
+  events?: ('members' | 'moderators') | null;
+  about?: string | null;
+  /**
+   * Empty uses the text from Community › Privacy and rules. One part per paragraph: a title on the first line, the answer under it.
+   */
+  privacy_rules?: string | null;
+  /**
+   * Reopens a course space archived 2 weeks after its last meeting.
+   */
+  reopened?: boolean | null;
+  /**
+   * Made by the system from the Space introduction template when the space is created.
+   */
+  introduction_post?: (number | null) | SpacePost;
+  display_name?: string | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "space-posts".
+ */
+export interface SpacePost {
+  id: number;
+  space: number | Space;
+  author?: (number | null) | Person;
+  kind: 'discussion' | 'question' | 'announcement' | 'event' | 'vote';
+  body: string;
+  event_title?: string | null;
+  event_location?: string | null;
+  event_starts_at?: string | null;
+  event_ends_at?: string | null;
+  event_place?: string | null;
+  event_cover?: (number | null) | SpaceFile;
+  event_cover_tone?: string | null;
+  vote_options?:
+    | {
+        label: string;
+        id?: string | null;
+      }[]
+    | null;
+  vote_multiple?: boolean | null;
+  vote_closes_at?: string | null;
+  vote_anonymous?: boolean | null;
+  course_session?: string | null;
+  pinned?: boolean | null;
+  pinned_full?: boolean | null;
+  locked?: boolean | null;
+  announcement_email_sent?: boolean | null;
+  edited_at?: string | null;
+  last_activity_at?: string | null;
+  deleted_at?: string | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "space-files".
+ */
+export interface SpaceFile {
+  id: number;
+  space: number | Space;
+  post?: (number | null) | SpacePost;
+  comment?: (number | null) | SpaceComment;
+  prefix?: string | null;
+  _objectKey?: string | null;
+  updatedAt: string;
+  createdAt: string;
+  url?: string | null;
+  thumbnailURL?: string | null;
+  filename: string;
+  mimeType?: string | null;
+  filesize?: number | null;
+  width?: number | null;
+  height?: number | null;
+  focalX?: number | null;
+  focalY?: number | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "space-comments".
+ */
+export interface SpaceComment {
+  id: number;
+  space: number | Space;
+  post: number | SpacePost;
+  parent?: (number | null) | SpaceComment;
+  author?: (number | null) | Person;
+  body: string;
+  edited_at?: string | null;
+  deleted_at?: string | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -2375,163 +2644,6 @@ export interface Redirect {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "events".
- */
-export interface Event {
-  id: number;
-  last_edited_by?: (number | null) | User;
-  tier: 'owner' | 'community' | 'public';
-  title: string;
-  /**
-   * When enabled, the slug will auto-generate from the title field on save and autosave.
-   */
-  generateSlug?: boolean | null;
-  slug: string;
-  /**
-   * Used on event cards. Add images to the description editor to show them on the event page.
-   */
-  cover_image?: (number | null) | Media;
-  legacy_url?: string | null;
-  description?: {
-    root: {
-      type: string;
-      children: {
-        type: any;
-        version: number;
-        [k: string]: unknown;
-      }[];
-      direction: ('ltr' | 'rtl') | null;
-      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
-      indent: number;
-      version: number;
-    };
-    [k: string]: unknown;
-  } | null;
-  event_type:
-    | 'talk'
-    | 'panel'
-    | 'book_discussion'
-    | 'reading_group'
-    | 'screening'
-    | 'performance'
-    | 'music'
-    | 'exhibition'
-    | 'open_day'
-    | 'workshop'
-    | 'residency'
-    | 'visit'
-    | 'other';
-  speakers?:
-    | {
-        person: number | Person;
-        role?: string | null;
-        id?: string | null;
-      }[]
-    | null;
-  schedule?: {
-    /**
-     * A screening or talk needs only one date and time. Agenda segments are optional.
-     */
-    mode?: ('single' | 'recurring') | null;
-    start_date?: string | null;
-    /**
-     * Week only keeps it off the calendar.
-     */
-    start_precision?: ('day' | 'week') | null;
-    /**
-     * How long it runs, e.g. 8. With the start date it sets the end date.
-     */
-    weeks?: number | null;
-    /**
-     * 24-hour Cairo time. Leave both empty if only the date is known.
-     */
-    start_time?: string | null;
-    /**
-     * 24-hour Cairo time. Leave both empty if only the date is known.
-     */
-    end_time?: string | null;
-    /**
-     * Weekly meeting times, in Cairo time.
-     */
-    slots?:
-      | {
-          weekday: 'sat' | 'sun' | 'mon' | 'tue' | 'wed' | 'thu' | 'fri';
-          start_time: string;
-          end_time: string;
-          id?: string | null;
-        }[]
-      | null;
-    /**
-     * Worked out from the schedule.
-     */
-    end_date?: string | null;
-    /**
-     * One-off exceptions, e.g. "hybrid for the first 6 weeks, then online".
-     */
-    note?: string | null;
-  };
-  place?: (number | null) | Place;
-  /**
-   * Only when it is not at a CILAS place.
-   */
-  external_venue?: {
-    name?: string | null;
-    address?: string | null;
-    map_url?: string | null;
-  };
-  online_url?: string | null;
-  /**
-   * Only for named segments within the event, such as a screening followed by a discussion. Set the event’s own date and time in When; no agenda is needed.
-   */
-  agenda?:
-    | {
-        start_time: string;
-        end_time: string;
-        title: string;
-        id?: string | null;
-      }[]
-    | null;
-  registration?: {
-    method?: ('form' | 'external' | 'closed') | null;
-    form?: (number | null) | Form;
-    url?: string | null;
-    /**
-     * The last day to register, in Cairo.
-     */
-    deadline?: string | null;
-    archived_registration_url?: string | null;
-  };
-  pricing?: {
-    options?:
-      | {
-          amount: number;
-          default?: boolean | null;
-          id?: string | null;
-        }[]
-      | null;
-    note?: string | null;
-    need_based_deductions?: boolean | null;
-  };
-  /**
-   * The event this one is part of.
-   */
-  series?: (number | null) | Event;
-  programme?: (number | null) | Programme;
-  course?: (number | null) | Course;
-  meta?: {
-    title?: string | null;
-    description?: string | null;
-    /**
-     * Maximum upload file size: 12MB. Recommended file size for images is <500KB.
-     */
-    image?: (number | null) | Media;
-  };
-  updatedAt: string;
-  createdAt: string;
-  _status?: ('draft' | 'published') | null;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "submission-files".
  */
 export interface SubmissionFile {
@@ -2598,118 +2710,6 @@ export interface PushSubscription {
   auth: string;
   user_agent?: string | null;
   locale?: ('en' | 'ar') | null;
-  updatedAt: string;
-  createdAt: string;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "spaces".
- */
-export interface Space {
-  id: number;
-  kind: 'community' | 'cohort' | 'course';
-  /**
-   * For example “Tech community”. Empty shows “Community”.
-   */
-  name?: string | null;
-  /**
-   * A fellow is listed on a course or holds a fellow role in a programme.
-   */
-  audience?: ('all' | 'fellows' | 'admins') | null;
-  course?: (number | null) | Course;
-  programme?: (number | null) | Programme;
-  posting?: ('open' | 'members_comment' | 'fellows_only') | null;
-  events?: ('members' | 'moderators') | null;
-  about?: string | null;
-  /**
-   * Empty uses the text from Community › Privacy and rules. One part per paragraph: a title on the first line, the answer under it.
-   */
-  privacy_rules?: string | null;
-  /**
-   * Reopens a course space archived 2 weeks after its last meeting.
-   */
-  reopened?: boolean | null;
-  /**
-   * Made by the system from the Space introduction template when the space is created.
-   */
-  introduction_post?: (number | null) | SpacePost;
-  display_name?: string | null;
-  updatedAt: string;
-  createdAt: string;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "space-posts".
- */
-export interface SpacePost {
-  id: number;
-  space: number | Space;
-  author?: (number | null) | Person;
-  kind: 'discussion' | 'question' | 'announcement' | 'event' | 'vote';
-  body: string;
-  event_title?: string | null;
-  event_location?: string | null;
-  event_starts_at?: string | null;
-  event_ends_at?: string | null;
-  event_place?: string | null;
-  event_cover?: (number | null) | SpaceFile;
-  event_cover_tone?: string | null;
-  vote_options?:
-    | {
-        label: string;
-        id?: string | null;
-      }[]
-    | null;
-  vote_multiple?: boolean | null;
-  vote_closes_at?: string | null;
-  vote_anonymous?: boolean | null;
-  course_session?: string | null;
-  pinned?: boolean | null;
-  pinned_full?: boolean | null;
-  locked?: boolean | null;
-  announcement_email_sent?: boolean | null;
-  edited_at?: string | null;
-  last_activity_at?: string | null;
-  deleted_at?: string | null;
-  updatedAt: string;
-  createdAt: string;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "space-files".
- */
-export interface SpaceFile {
-  id: number;
-  space: number | Space;
-  post?: (number | null) | SpacePost;
-  comment?: (number | null) | SpaceComment;
-  prefix?: string | null;
-  _objectKey?: string | null;
-  updatedAt: string;
-  createdAt: string;
-  url?: string | null;
-  thumbnailURL?: string | null;
-  filename: string;
-  mimeType?: string | null;
-  filesize?: number | null;
-  width?: number | null;
-  height?: number | null;
-  focalX?: number | null;
-  focalY?: number | null;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "space-comments".
- */
-export interface SpaceComment {
-  id: number;
-  space: number | Space;
-  post: number | SpacePost;
-  parent?: (number | null) | SpaceComment;
-  author?: (number | null) | Person;
-  body: string;
-  edited_at?: string | null;
-  deleted_at?: string | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -3191,6 +3191,10 @@ export interface PayloadLockedDocument {
   id: number;
   document?:
     | ({
+        relationTo: 'forms';
+        value: number | Form;
+      } | null)
+    | ({
         relationTo: 'form-submissions';
         value: number | FormSubmission;
       } | null)
@@ -3203,20 +3207,16 @@ export interface PayloadLockedDocument {
         value: number | Membership;
       } | null)
     | ({
-        relationTo: 'forms';
-        value: number | Form;
-      } | null)
-    | ({
         relationTo: 'courses';
         value: number | Course;
       } | null)
     | ({
-        relationTo: 'cycles';
-        value: number | Cycle;
-      } | null)
-    | ({
         relationTo: 'programmes';
         value: number | Programme;
+      } | null)
+    | ({
+        relationTo: 'cycles';
+        value: number | Cycle;
       } | null)
     | ({
         relationTo: 'places';
@@ -3231,8 +3231,24 @@ export interface PayloadLockedDocument {
         value: number | Publication;
       } | null)
     | ({
+        relationTo: 'events';
+        value: number | Event;
+      } | null)
+    | ({
         relationTo: 'press';
         value: number | Press;
+      } | null)
+    | ({
+        relationTo: 'spaces';
+        value: number | Space;
+      } | null)
+    | ({
+        relationTo: 'space-posts';
+        value: number | SpacePost;
+      } | null)
+    | ({
+        relationTo: 'space-comments';
+        value: number | SpaceComment;
       } | null)
     | ({
         relationTo: 'newsletters';
@@ -3263,10 +3279,6 @@ export interface PayloadLockedDocument {
         value: number | Redirect;
       } | null)
     | ({
-        relationTo: 'events';
-        value: number | Event;
-      } | null)
-    | ({
         relationTo: 'submission-files';
         value: number | SubmissionFile;
       } | null)
@@ -3277,18 +3289,6 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'push-subscriptions';
         value: number | PushSubscription;
-      } | null)
-    | ({
-        relationTo: 'spaces';
-        value: number | Space;
-      } | null)
-    | ({
-        relationTo: 'space-posts';
-        value: number | SpacePost;
-      } | null)
-    | ({
-        relationTo: 'space-comments';
-        value: number | SpaceComment;
       } | null)
     | ({
         relationTo: 'space-files';
@@ -3373,89 +3373,6 @@ export interface PayloadMigration {
   batch?: number | null;
   updatedAt: string;
   createdAt: string;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "form-submissions_select".
- */
-export interface FormSubmissionsSelect<T extends boolean = true> {
-  form?: T;
-  submissionData?:
-    | T
-    | {
-        field?: T;
-        value?: T;
-        id?: T;
-      };
-  locale?: T;
-  target?: T;
-  choices?:
-    | T
-    | {
-        course?: T;
-        amount?: T;
-        need_reduction?: T;
-        answers?:
-          | T
-          | {
-              name?: T;
-              label?: T;
-              value?: T;
-              id?: T;
-            };
-        decision?: T;
-        decided_at?: T;
-        email_failed?: T;
-        id?: T;
-      };
-  courses?: T;
-  status?: T;
-  decided_at?: T;
-  email_failed?: T;
-  result?:
-    | T
-    | {
-        user?: T;
-        person?: T;
-        membership?: T;
-        enrollments?: T;
-        enrollment_outcomes?:
-          | T
-          | {
-              enrollment?: T;
-              created?: T;
-              id?: T;
-            };
-      };
-  updatedAt?: T;
-  createdAt?: T;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "enrollments_select".
- */
-export interface EnrollmentsSelect<T extends boolean = true> {
-  person?: T;
-  course?: T;
-  status?: T;
-  slot?: T;
-  assessment?: T;
-  source?: T;
-  updatedAt?: T;
-  createdAt?: T;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "memberships_select".
- */
-export interface MembershipsSelect<T extends boolean = true> {
-  person?: T;
-  programme?: T;
-  role?: T;
-  title?: T;
-  legacy_url?: T;
-  updatedAt?: T;
-  createdAt?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -3660,6 +3577,89 @@ export interface FormsSelect<T extends boolean = true> {
         message?: T;
         id?: T;
       };
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "form-submissions_select".
+ */
+export interface FormSubmissionsSelect<T extends boolean = true> {
+  form?: T;
+  submissionData?:
+    | T
+    | {
+        field?: T;
+        value?: T;
+        id?: T;
+      };
+  locale?: T;
+  target?: T;
+  choices?:
+    | T
+    | {
+        course?: T;
+        amount?: T;
+        need_reduction?: T;
+        answers?:
+          | T
+          | {
+              name?: T;
+              label?: T;
+              value?: T;
+              id?: T;
+            };
+        decision?: T;
+        decided_at?: T;
+        email_failed?: T;
+        id?: T;
+      };
+  courses?: T;
+  status?: T;
+  decided_at?: T;
+  email_failed?: T;
+  result?:
+    | T
+    | {
+        user?: T;
+        person?: T;
+        membership?: T;
+        enrollments?: T;
+        enrollment_outcomes?:
+          | T
+          | {
+              enrollment?: T;
+              created?: T;
+              id?: T;
+            };
+      };
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "enrollments_select".
+ */
+export interface EnrollmentsSelect<T extends boolean = true> {
+  person?: T;
+  course?: T;
+  status?: T;
+  slot?: T;
+  assessment?: T;
+  source?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "memberships_select".
+ */
+export interface MembershipsSelect<T extends boolean = true> {
+  person?: T;
+  programme?: T;
+  role?: T;
+  title?: T;
+  legacy_url?: T;
   updatedAt?: T;
   createdAt?: T;
 }
@@ -3930,58 +3930,6 @@ export interface CoursesSelect<T extends boolean = true> {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "cycles_select".
- */
-export interface CyclesSelect<T extends boolean = true> {
-  title?: T;
-  slug?: T;
-  season?: T;
-  start_year?: T;
-  place?: T;
-  start_date?: T;
-  academic_year?: T;
-  registration?:
-    | T
-    | {
-        method?: T;
-        form?: T;
-        url?: T;
-        deadline?: T;
-        archived_registration_url?: T;
-      };
-  pricing?:
-    | T
-    | {
-        course_types?: T;
-        pricing?:
-          | T
-          | {
-              options?:
-                | T
-                | {
-                    amount?: T;
-                    default?: T;
-                    id?: T;
-                  };
-              note?: T;
-              need_based_deductions?: T;
-            };
-        id?: T;
-      };
-  courses?: T;
-  legacy_url?: T;
-  meta?:
-    | T
-    | {
-        title?: T;
-        description?: T;
-        image?: T;
-      };
-  updatedAt?: T;
-  createdAt?: T;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "programmes_select".
  */
 export interface ProgrammesSelect<T extends boolean = true> {
@@ -4065,6 +4013,58 @@ export interface ProgrammesSelect<T extends boolean = true> {
   updatedAt?: T;
   createdAt?: T;
   _status?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "cycles_select".
+ */
+export interface CyclesSelect<T extends boolean = true> {
+  title?: T;
+  slug?: T;
+  season?: T;
+  start_year?: T;
+  place?: T;
+  start_date?: T;
+  academic_year?: T;
+  registration?:
+    | T
+    | {
+        method?: T;
+        form?: T;
+        url?: T;
+        deadline?: T;
+        archived_registration_url?: T;
+      };
+  pricing?:
+    | T
+    | {
+        course_types?: T;
+        pricing?:
+          | T
+          | {
+              options?:
+                | T
+                | {
+                    amount?: T;
+                    default?: T;
+                    id?: T;
+                  };
+              note?: T;
+              need_based_deductions?: T;
+            };
+        id?: T;
+      };
+  courses?: T;
+  legacy_url?: T;
+  meta?:
+    | T
+    | {
+        title?: T;
+        description?: T;
+        image?: T;
+      };
+  updatedAt?: T;
+  createdAt?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -4199,6 +4199,100 @@ export interface PublicationsSelect<T extends boolean = true> {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "events_select".
+ */
+export interface EventsSelect<T extends boolean = true> {
+  last_edited_by?: T;
+  tier?: T;
+  title?: T;
+  generateSlug?: T;
+  slug?: T;
+  cover_image?: T;
+  legacy_url?: T;
+  description?: T;
+  event_type?: T;
+  speakers?:
+    | T
+    | {
+        person?: T;
+        role?: T;
+        id?: T;
+      };
+  schedule?:
+    | T
+    | {
+        mode?: T;
+        start_date?: T;
+        start_precision?: T;
+        weeks?: T;
+        start_time?: T;
+        end_time?: T;
+        slots?:
+          | T
+          | {
+              weekday?: T;
+              start_time?: T;
+              end_time?: T;
+              id?: T;
+            };
+        end_date?: T;
+        note?: T;
+      };
+  place?: T;
+  external_venue?:
+    | T
+    | {
+        name?: T;
+        address?: T;
+        map_url?: T;
+      };
+  online_url?: T;
+  agenda?:
+    | T
+    | {
+        start_time?: T;
+        end_time?: T;
+        title?: T;
+        id?: T;
+      };
+  registration?:
+    | T
+    | {
+        method?: T;
+        form?: T;
+        url?: T;
+        deadline?: T;
+        archived_registration_url?: T;
+      };
+  pricing?:
+    | T
+    | {
+        options?:
+          | T
+          | {
+              amount?: T;
+              default?: T;
+              id?: T;
+            };
+        note?: T;
+        need_based_deductions?: T;
+      };
+  series?: T;
+  programme?: T;
+  course?: T;
+  meta?:
+    | T
+    | {
+        title?: T;
+        description?: T;
+        image?: T;
+      };
+  updatedAt?: T;
+  createdAt?: T;
+  _status?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "press_select".
  */
 export interface PressSelect<T extends boolean = true> {
@@ -4230,6 +4324,77 @@ export interface PressSelect<T extends boolean = true> {
       };
   excerpt?: T;
   legacy_url?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "spaces_select".
+ */
+export interface SpacesSelect<T extends boolean = true> {
+  kind?: T;
+  name?: T;
+  audience?: T;
+  course?: T;
+  programme?: T;
+  posting?: T;
+  events?: T;
+  about?: T;
+  privacy_rules?: T;
+  reopened?: T;
+  introduction_post?: T;
+  display_name?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "space-posts_select".
+ */
+export interface SpacePostsSelect<T extends boolean = true> {
+  space?: T;
+  author?: T;
+  kind?: T;
+  body?: T;
+  event_title?: T;
+  event_location?: T;
+  event_starts_at?: T;
+  event_ends_at?: T;
+  event_place?: T;
+  event_cover?: T;
+  event_cover_tone?: T;
+  vote_options?:
+    | T
+    | {
+        label?: T;
+        id?: T;
+      };
+  vote_multiple?: T;
+  vote_closes_at?: T;
+  vote_anonymous?: T;
+  course_session?: T;
+  pinned?: T;
+  pinned_full?: T;
+  locked?: T;
+  announcement_email_sent?: T;
+  edited_at?: T;
+  last_activity_at?: T;
+  deleted_at?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "space-comments_select".
+ */
+export interface SpaceCommentsSelect<T extends boolean = true> {
+  space?: T;
+  post?: T;
+  parent?: T;
+  author?: T;
+  body?: T;
+  edited_at?: T;
+  deleted_at?: T;
   updatedAt?: T;
   createdAt?: T;
 }
@@ -4421,100 +4586,6 @@ export interface RedirectsSelect<T extends boolean = true> {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "events_select".
- */
-export interface EventsSelect<T extends boolean = true> {
-  last_edited_by?: T;
-  tier?: T;
-  title?: T;
-  generateSlug?: T;
-  slug?: T;
-  cover_image?: T;
-  legacy_url?: T;
-  description?: T;
-  event_type?: T;
-  speakers?:
-    | T
-    | {
-        person?: T;
-        role?: T;
-        id?: T;
-      };
-  schedule?:
-    | T
-    | {
-        mode?: T;
-        start_date?: T;
-        start_precision?: T;
-        weeks?: T;
-        start_time?: T;
-        end_time?: T;
-        slots?:
-          | T
-          | {
-              weekday?: T;
-              start_time?: T;
-              end_time?: T;
-              id?: T;
-            };
-        end_date?: T;
-        note?: T;
-      };
-  place?: T;
-  external_venue?:
-    | T
-    | {
-        name?: T;
-        address?: T;
-        map_url?: T;
-      };
-  online_url?: T;
-  agenda?:
-    | T
-    | {
-        start_time?: T;
-        end_time?: T;
-        title?: T;
-        id?: T;
-      };
-  registration?:
-    | T
-    | {
-        method?: T;
-        form?: T;
-        url?: T;
-        deadline?: T;
-        archived_registration_url?: T;
-      };
-  pricing?:
-    | T
-    | {
-        options?:
-          | T
-          | {
-              amount?: T;
-              default?: T;
-              id?: T;
-            };
-        note?: T;
-        need_based_deductions?: T;
-      };
-  series?: T;
-  programme?: T;
-  course?: T;
-  meta?:
-    | T
-    | {
-        title?: T;
-        description?: T;
-        image?: T;
-      };
-  updatedAt?: T;
-  createdAt?: T;
-  _status?: T;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "submission-files_select".
  */
 export interface SubmissionFilesSelect<T extends boolean = true> {
@@ -4560,77 +4631,6 @@ export interface PushSubscriptionsSelect<T extends boolean = true> {
   auth?: T;
   user_agent?: T;
   locale?: T;
-  updatedAt?: T;
-  createdAt?: T;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "spaces_select".
- */
-export interface SpacesSelect<T extends boolean = true> {
-  kind?: T;
-  name?: T;
-  audience?: T;
-  course?: T;
-  programme?: T;
-  posting?: T;
-  events?: T;
-  about?: T;
-  privacy_rules?: T;
-  reopened?: T;
-  introduction_post?: T;
-  display_name?: T;
-  updatedAt?: T;
-  createdAt?: T;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "space-posts_select".
- */
-export interface SpacePostsSelect<T extends boolean = true> {
-  space?: T;
-  author?: T;
-  kind?: T;
-  body?: T;
-  event_title?: T;
-  event_location?: T;
-  event_starts_at?: T;
-  event_ends_at?: T;
-  event_place?: T;
-  event_cover?: T;
-  event_cover_tone?: T;
-  vote_options?:
-    | T
-    | {
-        label?: T;
-        id?: T;
-      };
-  vote_multiple?: T;
-  vote_closes_at?: T;
-  vote_anonymous?: T;
-  course_session?: T;
-  pinned?: T;
-  pinned_full?: T;
-  locked?: T;
-  announcement_email_sent?: T;
-  edited_at?: T;
-  last_activity_at?: T;
-  deleted_at?: T;
-  updatedAt?: T;
-  createdAt?: T;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "space-comments_select".
- */
-export interface SpaceCommentsSelect<T extends boolean = true> {
-  space?: T;
-  post?: T;
-  parent?: T;
-  author?: T;
-  body?: T;
-  edited_at?: T;
-  deleted_at?: T;
   updatedAt?: T;
   createdAt?: T;
 }
@@ -4971,14 +4971,33 @@ export interface PayloadMigrationsSelect<T extends boolean = true> {
   createdAt?: T;
 }
 /**
+ * The first post of each new course and cohort space. Edits change only spaces made after them. Leave a field empty to use the text shown in it.
+ *
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "registration-defaults".
+ * via the `definition` "space-introduction".
  */
-export interface RegistrationDefault {
+export interface SpaceIntroduction {
   id: number;
-  cycle_template?: (number | null) | Form;
-  bridge_template?: (number | null) | Form;
-  workshop_template?: (number | null) | Form;
+  title?: string | null;
+  /**
+   * Markdown: **bold**, *italic*, lists and links.
+   */
+  body?: string | null;
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
+ * Shown in every space and accepted before a first post. Leave it empty to use the text shown in it. A fellow can replace it for one space in its settings.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "space-rules".
+ */
+export interface SpaceRule {
+  id: number;
+  /**
+   * One part per paragraph: a short title on the first line, the answer under it.
+   */
+  privacy_rules?: string | null;
   updatedAt?: string | null;
   createdAt?: string | null;
 }
@@ -5148,33 +5167,14 @@ export interface EmailSetting {
   createdAt?: string | null;
 }
 /**
- * The first post of each new course and cohort space. Edits change only spaces made after them. Leave a field empty to use the text shown in it.
- *
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "space-introduction".
+ * via the `definition` "registration-defaults".
  */
-export interface SpaceIntroduction {
+export interface RegistrationDefault {
   id: number;
-  title?: string | null;
-  /**
-   * Markdown: **bold**, *italic*, lists and links.
-   */
-  body?: string | null;
-  updatedAt?: string | null;
-  createdAt?: string | null;
-}
-/**
- * Shown in every space and accepted before a first post. Leave it empty to use the text shown in it. A fellow can replace it for one space in its settings.
- *
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "space-rules".
- */
-export interface SpaceRule {
-  id: number;
-  /**
-   * One part per paragraph: a short title on the first line, the answer under it.
-   */
-  privacy_rules?: string | null;
+  cycle_template?: (number | null) | Form;
+  bridge_template?: (number | null) | Form;
+  workshop_template?: (number | null) | Form;
   updatedAt?: string | null;
   createdAt?: string | null;
 }
@@ -5196,12 +5196,21 @@ export interface LlmsTxtSetting {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "registration-defaults_select".
+ * via the `definition` "space-introduction_select".
  */
-export interface RegistrationDefaultsSelect<T extends boolean = true> {
-  cycle_template?: T;
-  bridge_template?: T;
-  workshop_template?: T;
+export interface SpaceIntroductionSelect<T extends boolean = true> {
+  title?: T;
+  body?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "space-rules_select".
+ */
+export interface SpaceRulesSelect<T extends boolean = true> {
+  privacy_rules?: T;
   updatedAt?: T;
   createdAt?: T;
   globalType?: T;
@@ -5353,21 +5362,12 @@ export interface EmailSettingsSelect<T extends boolean = true> {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "space-introduction_select".
+ * via the `definition` "registration-defaults_select".
  */
-export interface SpaceIntroductionSelect<T extends boolean = true> {
-  title?: T;
-  body?: T;
-  updatedAt?: T;
-  createdAt?: T;
-  globalType?: T;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "space-rules_select".
- */
-export interface SpaceRulesSelect<T extends boolean = true> {
-  privacy_rules?: T;
+export interface RegistrationDefaultsSelect<T extends boolean = true> {
+  cycle_template?: T;
+  bridge_template?: T;
+  workshop_template?: T;
   updatedAt?: T;
   createdAt?: T;
   globalType?: T;
