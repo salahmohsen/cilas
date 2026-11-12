@@ -3,9 +3,9 @@
 import type { PayloadRequest } from 'payload'
 import { describe, expect, it, vi } from 'vitest'
 
-import { INVITATION_DAYS, invitationEndpoints, setPasswordLink } from '@/lib/invitation'
+import { INVITATION_DAYS, invitationEndpoints, inviteMany, setPasswordLink } from '@/lib/invitation'
 
-const [create, resend] = invitationEndpoints
+const [create, many, resend] = invitationEndpoints
 
 /** A request with a Payload that records what it was asked to do. */
 const requestOf = (
@@ -21,6 +21,8 @@ const requestOf = (
     findGlobal: vi.fn(async () => ({})),
     forgotPassword: vi.fn(async () => 'token-1'),
     sendEmail: vi.fn(async (_mail: { to: string; html: string }) => undefined),
+    update: vi.fn(async () => ({ docs: [] })),
+    find: vi.fn(async () => ({ docs: [] as unknown[] })),
     logger: { error: vi.fn() },
   }
   const req = {
@@ -96,5 +98,53 @@ describe('setPasswordLink', () => {
     const { req, payload } = requestOf({})
     payload.forgotPassword.mockResolvedValueOnce(null as unknown as string)
     await expect(setPasswordLink(req, 'x@y.co', 'en')).rejects.toThrow('No account')
+  })
+})
+
+describe('inviting many accounts', () => {
+  const account = (id: number, extra: Record<string, unknown> = {}) => ({
+    id,
+    email: `p${id}@example.com`,
+    roles: ['member'],
+    person: { name: `Person ${id}` },
+    ...extra,
+  })
+
+  it('refuses more than one part at a time', async () => {
+    const ids = Array.from({ length: 26 }, (_, i) => i + 1)
+    expect((await many!.handler(requestOf({ ids }).req)).status).toBe(400)
+  })
+
+  it('skips admins and people invited recently, and records each one sent', async () => {
+    vi.useFakeTimers({ toFake: ['setTimeout'] })
+    const { req, payload } = requestOf({})
+    payload.find.mockResolvedValueOnce({
+      docs: [
+        account(1),
+        account(2, { roles: ['admin'] }),
+        account(3, { invited_at: new Date().toISOString() }),
+      ],
+    })
+    const done = inviteMany(req, [1, 2, 3], 'en', false)
+    await vi.runAllTimersAsync()
+    expect(await done).toEqual({ sent: [1], skipped: [2, 3], failed: [], limited: [] })
+    expect(payload.update).toHaveBeenCalledWith(
+      expect.objectContaining({ where: { email: { equals: 'p1@example.com' } } }),
+    )
+    vi.useRealTimers()
+  })
+
+  it('stops at the daily limit and lists who was not tried', async () => {
+    vi.useFakeTimers({ toFake: ['setTimeout'] })
+    const { req, payload } = requestOf({})
+    payload.find.mockResolvedValueOnce({ docs: [account(1), account(2), account(3)] })
+    payload.sendEmail
+      .mockResolvedValueOnce(undefined)
+      .mockRejectedValueOnce(Object.assign(new Error('quota'), { status: 429 }))
+    const done = inviteMany(req, [1, 2, 3], 'ar', false)
+    await vi.runAllTimersAsync()
+    expect(await done).toEqual({ sent: [1], skipped: [], failed: [], limited: [2, 3] })
+    expect(payload.sendEmail).toHaveBeenCalledTimes(2)
+    vi.useRealTimers()
   })
 })

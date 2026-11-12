@@ -6,7 +6,7 @@ import { resetMail } from '@/emails/transactional'
 import { env } from '@/env'
 import { teaches, withFellowRole } from '@/lib/fellow-role'
 import { createPerson } from '@/lib/create-person'
-import { INVITATION_DAYS, invitationEndpoints } from '@/lib/invitation'
+import { INVITATION_DAYS, INVITE_BATCH, invitationEndpoints } from '@/lib/invitation'
 import { deleteOwnersAiKeys } from '@/plugins/mcp/api-keys'
 
 import type { User } from '@/payload-types'
@@ -96,9 +96,17 @@ export const Users: CollectionConfig = {
   slug: 'users',
   admin: {
     useAsTitle: 'email',
-    defaultColumns: ['email', 'person', 'roles'],
+    defaultColumns: ['email', 'person', 'roles', 'invited_at'],
     // Admin → Invite someone (src/components/admin/invite-view.tsx).
-    components: { beforeListTable: ['/components/admin/invite-buttons#InviteLink'] },
+    components: {
+      beforeListTable: [
+        '/components/admin/invite-buttons#InviteLink',
+        {
+          path: '/components/admin/invite-buttons#InviteSelected',
+          clientProps: { batch: INVITE_BATCH, days: INVITATION_DAYS },
+        },
+      ],
+    },
   },
   // Invite someone, or send a new set-password link (src/lib/invitation.ts).
   endpoints: invitationEndpoints,
@@ -132,6 +140,20 @@ export const Users: CollectionConfig = {
       index: true,
       access: { read: adminOnlyField, create: () => false, update: () => false },
       admin: { readOnly: true, position: 'sidebar', description: 'Set by Google sign-in.' },
+    },
+    {
+      // When the account last got a set-password link: an invitation, or an
+      // acceptance email for a new account (src/lib/invitation.ts).
+      name: 'invited_at',
+      label: 'Invited on',
+      type: 'date',
+      access: { create: () => false, update: () => false },
+      admin: {
+        position: 'sidebar',
+        readOnly: true,
+        date: { pickerAppearance: 'dayAndTime' },
+        description: 'Set when an invitation goes out.',
+      },
     },
     {
       // Sends the account a new set-password link (src/lib/invitation.ts).

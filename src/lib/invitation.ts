@@ -10,6 +10,7 @@ import { env } from '@/env'
 import type { Locale } from '@/i18n/routing'
 import { createPerson } from '@/lib/create-person'
 import { isEmail } from '@/lib/password-reset'
+import { wait } from '@/lib/resend'
 import type { User } from '@/payload-types'
 
 /** How long a set-password link from an invitation works. A reset link keeps Payload's hour. */
@@ -72,6 +73,77 @@ export const sendInvitation = async (
     locale,
   })
   await req.payload.sendEmail({ to: to.email, ...mail })
+  await markInvited(req, to.email)
+}
+
+/** Records that a set-password link went out, for the Users list's "Invited on". */
+export const markInvited = (req: PayloadRequest, email: string) =>
+  req.payload.update({
+    collection: 'users',
+    where: { email: { equals: email } },
+    data: { invited_at: new Date().toISOString() },
+    overrideAccess: true,
+    depth: 0,
+    req,
+  })
+
+/** At most this many accounts in one request; the Users list sends a larger selection in parts. */
+export const INVITE_BATCH = 25
+
+/** Resend's rate is 2 requests a second. */
+const SEND_GAP_MS = 600
+
+type BatchResult = {
+  sent: number[]
+  /** Admins, and accounts invited within the link's life, unless `again`. */
+  skipped: number[]
+  failed: number[]
+  /** Resend refused for its limit: nothing after this was tried. */
+  limited: number[]
+}
+
+/**
+ * Invites the accounts in `ids`, one at a time, in one language. It stops
+ * when Resend answers 429 (the free plan's 100 emails a day, or its rate),
+ * and lists the accounts not tried, so the admin can send them later.
+ */
+export const inviteMany = async (
+  req: PayloadRequest,
+  ids: number[],
+  locale: Locale,
+  again: boolean,
+): Promise<BatchResult> => {
+  const result: BatchResult = { sent: [], skipped: [], failed: [], limited: [] }
+  const { docs } = await req.payload.find({
+    collection: 'users',
+    where: { id: { in: ids } },
+    depth: 1,
+    limit: ids.length,
+    overrideAccess: true,
+    req,
+  })
+  const recent = Date.now() - INVITATION_DAYS * DAY
+  for (const [i, user] of docs.entries()) {
+    const invited = user.invited_at ? Date.parse(user.invited_at) : 0
+    if (isAdminUser(user) || (!again && invited > recent)) {
+      result.skipped.push(user.id)
+      continue
+    }
+    const person = typeof user.person === 'object' ? user.person : null
+    try {
+      await sendInvitation(req, { email: user.email, name: person?.name || user.email }, locale)
+      result.sent.push(user.id)
+    } catch (error) {
+      if ((error as { status?: number }).status === 429) {
+        result.limited.push(...docs.slice(i).map((u) => u.id))
+        break
+      }
+      req.payload.logger.error({ err: error, msg: `Invitation to user ${user.id} failed` })
+      result.failed.push(user.id)
+    }
+    await wait(SEND_GAP_MS)
+  }
+  return result
 }
 
 type InviteBody = { email?: string; name?: string; roles?: string[]; locale?: string }
@@ -113,6 +185,23 @@ export const invitationEndpoints: Endpoint[] = [
         req.payload.logger.error({ err: error, msg: `Invitation to user ${user} failed` })
         return Response.json({ id: user, emailed: false })
       }
+    },
+  },
+  {
+    path: '/invite-many',
+    method: 'post',
+    handler: async (req) => {
+      if (!isAdminUser(req.user)) return Response.json({ error: 'Admins only.' }, { status: 403 })
+      const body = ((await req.json?.().catch(() => null)) ?? {}) as InviteBody & {
+        ids?: unknown
+        again?: boolean
+      }
+      const ids = Array.isArray(body.ids) ? body.ids.filter(Number.isInteger) : []
+      if (!ids.length || ids.length > INVITE_BATCH)
+        return Response.json({ error: `Send 1 to ${INVITE_BATCH} accounts.` }, { status: 400 })
+      return Response.json(
+        await inviteMany(req, ids as number[], localeOf(body.locale), body.again === true),
+      )
     },
   },
   {

@@ -14,3 +14,8 @@ Job: A new account sets its own password from a link in its first email, without
 - Admin → Invite someone (`/admin/invite`, in `ArcAdminView`): email, name, roles and the email's language. `POST /api/users/invite` makes the account and sends the invitation. A failed email keeps the account and says so.
 - Each account's sidebar has "Send a new link" (`POST /api/users/:id/invite`). A new token replaces the older one.
   - Problem: Without it, a person whose link expired, or whose email did not arrive, needed an admin to set a password by hand.
+- Users list → select rows → "Invite N people" (`POST /api/users/invite-many`, `inviteMany`). One language per batch. The browser sends the selection in parts of `INVITE_BATCH` (25), about 2 a second, so no request runs long; "select all" across pages reads the ids of the whole query.
+  - Problem: At launch many existing users need invitations, and one at a time does not scale.
+- It stops when Resend answers 429 and reports who was not tried. The free plan sends 100 transactional emails a day, so a large list goes out over several days.
+- `invited_at` ("Invited on", read-only, a list column) is set whenever a set-password link goes out: an invitation or an acceptance for a new account. A batch skips admins and accounts invited within the link's life, unless the admin asks to send again.
+  - Problem: Without it, the admin cannot see who still needs an invitation after a daily limit, and could invite the same people twice.

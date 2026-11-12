@@ -1732,6 +1732,10 @@ export interface User {
    * Set by Google sign-in.
    */
   sub?: string | null;
+  /**
+   * Set when an invitation goes out.
+   */
+  invited_at?: string | null;
   person?: (number | null) | Person;
   notification_preferences?:
     | {
@@ -4314,6 +4318,7 @@ export interface PeopleSelect<T extends boolean = true> {
  */
 export interface UsersSelect<T extends boolean = true> {
   sub?: T;
+  invited_at?: T;
   person?: T;
   notification_preferences?: T;
   roles?: T;

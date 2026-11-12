@@ -197,3 +197,11 @@
 .sidebar-action .btn__content {
   justify-content: center;
 }
+
+/* Users list: the bar that invites the selected accounts (src/components/admin/invite-buttons.tsx). */
+.cilas-invite-bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem 1rem;
+}

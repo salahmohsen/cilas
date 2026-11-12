@@ -48,6 +48,7 @@ import { SubscribersLink as SubscribersLink_8812e7bc4e59e86dbe460c3e3c68a83f } f
 import { SyncListButton as SyncListButton_349ee99818603183cd08a332839d03c9 } from '../../../components/admin/sync-list-button'
 import { SendInvitation as SendInvitation_5b0bd38bce1e4c846b8bd84d83fdf329 } from '../../../components/admin/invite-buttons'
 import { InviteLink as InviteLink_5b0bd38bce1e4c846b8bd84d83fdf329 } from '../../../components/admin/invite-buttons'
+import { InviteSelected as InviteSelected_5b0bd38bce1e4c846b8bd84d83fdf329 } from '../../../components/admin/invite-buttons'
 import { MediaListToggle as MediaListToggle_f436cf2a4719114d9e44505773a04007 } from 'payload-theme/client'
 import { SpaceDeleteMenuItem as SpaceDeleteMenuItem_fe373f97965e49e7953f966d24057638 } from '../../../components/admin/space-delete'
 import { FormatField as FormatField_cdf7e044479f899a31f804427d568b36 } from '@payloadcms/plugin-import-export/rsc'
@@ -143,6 +144,7 @@ export const importMap = {
   "/components/admin/sync-list-button#SyncListButton": SyncListButton_349ee99818603183cd08a332839d03c9,
   "/components/admin/invite-buttons#SendInvitation": SendInvitation_5b0bd38bce1e4c846b8bd84d83fdf329,
   "/components/admin/invite-buttons#InviteLink": InviteLink_5b0bd38bce1e4c846b8bd84d83fdf329,
+  "/components/admin/invite-buttons#InviteSelected": InviteSelected_5b0bd38bce1e4c846b8bd84d83fdf329,
   "payload-theme/client#MediaListToggle": MediaListToggle_f436cf2a4719114d9e44505773a04007,
   "/components/admin/space-delete#SpaceDeleteMenuItem": SpaceDeleteMenuItem_fe373f97965e49e7953f966d24057638,
   "@payloadcms/plugin-import-export/rsc#FormatField": FormatField_cdf7e044479f899a31f804427d568b36,

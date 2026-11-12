@@ -79,6 +79,7 @@ import * as migration_20261111_161510_applicant_review_gaps from './20261111_161
 import * as migration_20261111_171103_email_texts_localized from './20261111_171103_email_texts_localized';
 import * as migration_20261112_101018_space_email_texts from './20261112_101018_space_email_texts';
 import * as migration_20261112_102955_invitation_email_texts from './20261112_102955_invitation_email_texts';
+import * as migration_20261112_104514_users_invited_at from './20261112_104514_users_invited_at';
 
 export const migrations = [
   {
@@ -484,6 +485,11 @@ export const migrations = [
   {
     up: migration_20261112_102955_invitation_email_texts.up,
     down: migration_20261112_102955_invitation_email_texts.down,
-    name: '20261112_102955_invitation_email_texts'
+    name: '20261112_102955_invitation_email_texts',
+  },
+  {
+    up: migration_20261112_104514_users_invited_at.up,
+    down: migration_20261112_104514_users_invited_at.down,
+    name: '20261112_104514_users_invited_at'
   },
 ];

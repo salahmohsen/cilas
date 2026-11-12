@@ -1,6 +1,7 @@
 'use client'
 
-import { Button, useAuth, useDocumentInfo, useTranslation } from '@payloadcms/ui'
+import { Button, useAuth, useDocumentInfo, useSelection, useTranslation } from '@payloadcms/ui'
+import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 
 import { isAdminUser } from '@/access'
@@ -97,6 +98,192 @@ export function SendInvitation({ days }: { days: number }) {
           {status}
         </p>
       ) : null}
+    </div>
+  )
+}
+
+const MANY = {
+  en: {
+    selected: (n: number) => `${n} selected`,
+    language: 'Email language',
+    again: (days: number) => `Also people invited in the last ${days} days`,
+    invite: (n: number) => `Invite ${n} ${n === 1 ? 'person' : 'people'}`,
+    confirm: (n: number, lang: string) =>
+      `Send ${n} ${n === 1 ? 'invitation' : 'invitations'} in ${lang}? Each person gets a link to set a password.`,
+    send: 'Send',
+    cancel: 'Cancel',
+    progress: (done: number, total: number) => `Sending ${done} of ${total}…`,
+    sent: (n: number) => `${n} sent.`,
+    skipped: (n: number) => `${n} skipped: admins, or invited recently.`,
+    failed: (n: number) => `${n} failed. Try them again.`,
+    limited: (n: number) =>
+      `${n} not sent: the email service's daily limit is reached. Filter by "Invited on" and send them tomorrow.`,
+    error: 'The invitations did not go out. Try again.',
+    english: 'English',
+    arabic: 'Arabic',
+  },
+  ar: {
+    selected: (n: number) => `${n} محدد`,
+    language: 'لغة الرسالة',
+    again: (days: number) => `وأيضًا من دُعوا خلال آخر ${days} أيام`,
+    invite: (n: number) => `دعوة ${n}`,
+    confirm: (n: number, lang: string) =>
+      `إرسال ${n} دعوة باللغة ${lang}؟ يصل كل شخص رابط لاختيار كلمة المرور.`,
+    send: 'إرسال',
+    cancel: 'إلغاء',
+    progress: (done: number, total: number) => `جارٍ إرسال ${done} من ${total}…`,
+    sent: (n: number) => `أُرسلت ${n}.`,
+    skipped: (n: number) => `تُخطي ${n}: مشرفون أو دُعوا مؤخرًا.`,
+    failed: (n: number) => `فشل ${n}. حاول مرة أخرى.`,
+    limited: (n: number) =>
+      `لم تُرسل ${n}: بلغت خدمة البريد حدها اليومي. صفِّ حسب «تاريخ الدعوة» وأرسلها غدًا.`,
+    error: 'لم تُرسل الدعوات. حاول مرة أخرى.',
+    english: 'الإنجليزية',
+    arabic: 'العربية',
+  },
+}
+
+type Totals = { sent: number; skipped: number; failed: number; limited: number }
+
+/**
+ * Users list: invites the selected accounts. Sends them in parts of `batch`
+ * (POST /api/users/invite-many), shows the progress, and stops when the
+ * email service's daily limit is reached.
+ */
+export function InviteSelected({ batch, days }: { batch: number; days: number }) {
+  const { user } = useAuth()
+  const { i18n } = useTranslation()
+  const router = useRouter()
+  const { count, selectAll, getSelectedIds, getQueryParams } = useSelection()
+  const t = MANY[i18n.language === 'ar' ? 'ar' : 'en']
+  const [language, setLanguage] = useState<'en' | 'ar'>(i18n.language === 'ar' ? 'ar' : 'en')
+  const [again, setAgain] = useState(false)
+  const [step, setStep] = useState<'idle' | 'confirm' | 'sending'>('idle')
+  const [progress, setProgress] = useState({ done: 0, total: 0 })
+  const [totals, setTotals] = useState<Totals | null>(null)
+  const [error, setError] = useState(false)
+  if (!isAdminUser(user) || (!count && !totals)) return null
+
+  /** Every selected id: on all pages when "select all" covers the whole query. */
+  const selectedIds = async (): Promise<number[]> => {
+    // Payload's SelectAllStatus.AllAvailable; the enum is not exported to clients.
+    if (selectAll !== 'allAvailable') return getSelectedIds().map(Number)
+    const res = await fetch(`/api/users${getQueryParams()}&limit=0&depth=0&select[id]=true`, {
+      credentials: 'include',
+    })
+    const body = (await res.json()) as { docs: { id: number }[] }
+    return body.docs.map((d) => d.id)
+  }
+
+  const run = async () => {
+    setStep('sending')
+    setError(false)
+    const sum: Totals = { sent: 0, skipped: 0, failed: 0, limited: 0 }
+    try {
+      const ids = await selectedIds()
+      setProgress({ done: 0, total: ids.length })
+      for (let i = 0; i < ids.length; i += batch) {
+        const part = ids.slice(i, i + batch)
+        const res = await fetch('/api/users/invite-many', {
+          method: 'POST',
+          credentials: 'include',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ ids: part, locale: language, again }),
+        })
+        if (!res.ok) throw new Error(String(res.status))
+        const r = (await res.json()) as Record<keyof Totals, number[]>
+        sum.sent += r.sent.length
+        sum.skipped += r.skipped.length
+        sum.failed += r.failed.length
+        sum.limited += r.limited.length
+        setProgress({ done: Math.min(i + batch, ids.length), total: ids.length })
+        if (r.limited.length) {
+          sum.limited += ids.length - (i + part.length)
+          break
+        }
+      }
+    } catch {
+      setError(true)
+    }
+    setTotals(sum)
+    setStep('idle')
+    router.refresh()
+  }
+
+  const lang = language === 'ar' ? t.arabic : t.english
+  return (
+    <div
+      className="cilas-admin-stack cilas-admin-stack--flush"
+      role="region"
+      aria-label={t.invite(count)}
+    >
+      {count ? (
+        <div className="cilas-invite-bar">
+          <strong>{t.selected(count)}</strong>
+          <label>
+            {t.language}{' '}
+            <select
+              value={language}
+              disabled={step !== 'idle'}
+              onChange={(e) => setLanguage(e.target.value === 'ar' ? 'ar' : 'en')}
+            >
+              <option value="en">English</option>
+              <option value="ar">العربية</option>
+            </select>
+          </label>
+          <label>
+            <input
+              type="checkbox"
+              checked={again}
+              disabled={step !== 'idle'}
+              onChange={(e) => setAgain(e.target.checked)}
+            />{' '}
+            {t.again(days)}
+          </label>
+          {step === 'idle' ? (
+            <Button
+              buttonStyle="secondary"
+              margin={false}
+              size="small"
+              onClick={() => setStep('confirm')}
+            >
+              {t.invite(count)}
+            </Button>
+          ) : null}
+        </div>
+      ) : null}
+      {step === 'confirm' ? (
+        <div className="cilas-invite-bar">
+          <span>{t.confirm(count, lang)}</span>
+          <Button buttonStyle="primary" margin={false} size="small" onClick={run}>
+            {t.send}
+          </Button>
+          <Button
+            buttonStyle="secondary"
+            margin={false}
+            size="small"
+            onClick={() => setStep('idle')}
+          >
+            {t.cancel}
+          </Button>
+        </div>
+      ) : null}
+      <div role="status">
+        {step === 'sending' ? <p>{t.progress(progress.done, progress.total)}</p> : null}
+        {totals && step === 'idle' ? (
+          <p>
+            {[
+              t.sent(totals.sent),
+              totals.skipped ? t.skipped(totals.skipped) : '',
+              totals.failed ? t.failed(totals.failed) : '',
+              totals.limited ? t.limited(totals.limited) : '',
+              error ? t.error : '',
+            ]
+              .filter(Boolean)
+              .join(' ')}
+          </p>
+        ) : null}
+      </div>
     </div>
   )
 }

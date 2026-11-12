@@ -16,7 +16,7 @@ import { localeOf, type Locale } from '@/i18n/routing'
 import { getEmailSettings } from '@/emails/settings'
 import { acceptanceMail, rejectionMail } from '@/emails/transactional'
 import { createPerson } from '@/lib/create-person'
-import { createAccount, INVITATION_DAYS, setPasswordLink } from '@/lib/invitation'
+import { createAccount, INVITATION_DAYS, markInvited, setPasswordLink } from '@/lib/invitation'
 import type { FormSubmission } from '@/payload-types'
 import { courseTitles } from './course-titles'
 import { applicantOf, rolesAfterAccept } from './applicant'
@@ -437,6 +437,7 @@ const sendMail = async (req: PayloadRequest, mail: Mail) => {
         })
       : await rejectionMail(settings, { ...mail.to, title: mail.title, locale: mail.locale })
   await req.payload.sendEmail({ to: mail.to.email, ...message })
+  if (mail.newAccount) await markInvited(req, mail.to.email)
 }
 
 /** Records on the application whether its decision email went out, so the admin can see it and send it again. */
