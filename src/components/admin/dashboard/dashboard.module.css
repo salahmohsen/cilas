@@ -75,61 +75,102 @@
   text-decoration: underline;
 }
 
-/* Quick actions */
+/* Quick actions: count tiles, then create buttons, then go-to links. Tiles and
+   buttons share one height and one radius. */
 .actions {
-  display: flex;
-  flex-wrap: wrap;
+  --action-radius: 1rem;
+  display: grid;
   gap: 0.75rem;
+}
+
+.tiles,
+.links {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(10rem, 1fr));
+  gap: 0.75rem;
+}
+.links {
+  gap: 0.5rem;
 }
 
 .tile {
   display: grid;
-  gap: 0.125rem;
-  min-width: 11rem;
-  padding: 0.875rem 1.125rem;
+  grid-template-columns: minmax(0, 1fr) auto;
+  grid-template-areas: 'count icon' 'label label';
+  align-items: center;
+  gap: 0.125rem 0.5rem;
+  min-height: 4.5rem;
+  padding: 0.875rem 1rem;
   border: 1px solid var(--border);
-  border-radius: var(--radius-panel);
+  border-radius: var(--action-radius);
   background: var(--surface);
   color: var(--foreground);
   text-decoration: none;
   box-shadow: var(--shadow-resting);
 }
-a.tile:hover {
+.tile:hover {
   border-color: var(--border-strong);
   background: var(--surface-raised);
 }
+/* Something waits: a warning edge, nothing louder. */
+.tile[data-attention] {
+  border-color: color-mix(in oklab, var(--warning) 55%, var(--border));
+}
+.tileIcon {
+  grid-area: icon;
+  color: var(--text-secondary);
+}
+.tile[data-attention] .tileIcon {
+  color: var(--warning);
+}
 .tileCount {
+  grid-area: count;
   font-size: var(--text-2xl);
   font-weight: 500;
   font-variant-numeric: tabular-nums;
   line-height: 1.1;
 }
-.tileLabel {
-  font-size: var(--text-sm);
+/* Zero, or no count yet: calm. */
+.tile:not([data-attention]) .tileCount {
   color: var(--text-secondary);
 }
-
-.create {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem;
+.tileLabel {
+  grid-area: label;
+  font-size: var(--text-sm);
+  color: var(--text-secondary);
 }
 
 .pill {
   display: inline-flex;
   align-items: center;
+  gap: 0.5rem;
   min-height: var(--control-height-sm);
-  padding-inline: 1rem;
+  padding-inline: 0.875rem;
   border: 1px solid var(--border);
-  border-radius: var(--radius-pill);
+  border-radius: var(--action-radius);
   background: var(--surface);
   color: var(--foreground);
   font-size: var(--text-sm);
   text-decoration: none;
 }
+.pill svg {
+  flex: none;
+}
+/* Links that only go somewhere: quieter than the buttons that create. */
+.pill[data-kind='go'] {
+  border-color: var(--border-subtle);
+  background: transparent;
+  color: var(--text-secondary);
+}
 .pill:hover {
   border-color: var(--border-strong);
   background: var(--surface-muted);
+  color: var(--foreground);
+}
+@media (pointer: coarse) {
+  .pill {
+    min-height: 2.75rem;
+  }
 }
 
 /* Keyboard focus only, and only inside the dashboard. */
