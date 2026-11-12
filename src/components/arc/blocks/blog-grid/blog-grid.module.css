@@ -473,6 +473,26 @@
   }
 }
 
+/* A loading card's image frame (blog-grid-skeleton.tsx): Arc's skeleton tone and pulse. */
+.imageFrame[data-skeleton] {
+  background: color-mix(in oklab, var(--border-strong) 38%, var(--surface));
+  animation: blog-skeleton-pulse 1.8s var(--ease-in-out) 11 both;
+}
+@keyframes blog-skeleton-pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.52;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .imageFrame[data-skeleton] {
+    animation: none;
+  }
+}
+
 /* A post without an image keeps its frame, holding what the page gives it. */
 .imageFrame[data-fallback] {
   display: grid;

@@ -14,15 +14,19 @@ import {
 } from '@/components/arc/filter-toolbar/filter-toolbar'
 import { Pagination } from '@/components/arc/pagination/pagination'
 import { Skeleton } from '@/components/arc/skeleton/skeleton'
+import { BlogGridSkeleton } from '@/components/arc/blocks/blog-grid/blog-grid-skeleton'
 import { CourseRows } from '@/components/course-rows'
 import { COURSE_FACETS, readCourseQuery, type CourseFacet } from '@/lib/course-search'
 import { StudyViewToggle } from '@/components/study-view-toggle'
 import { localDigits } from '@/lib/digits'
 import { readStudyView, STUDY_VIEW_PARAM, type StudyView } from '@/lib/study-view'
 
+/** The cards a loading grid shows before the page's own count is known: two rows of three. */
+const GRID_SKELETON_CARDS = 6
+
 /** The grid is its own chunk: the list, the default, never loads it. */
 const StudyGrid = dynamic(() => import('@/components/study-grid').then((m) => m.StudyGrid), {
-  loading: () => <div aria-hidden className="study-grid-loading" />,
+  loading: () => <BlogGridSkeleton count={GRID_SKELETON_CARDS} flush />,
 })
 
 /**
@@ -194,7 +198,9 @@ export function StudyList({
           ref={listRef}
           style={{ opacity: pending && !slow ? 0.55 : 1 }}
         >
-          {slow && view === 'list' ? (
+          {slow && view === 'grid' ? (
+            <BlogGridSkeleton count={Math.max(result.rows.length, GRID_SKELETON_CARDS)} flush />
+          ) : slow ? (
             // The "Searching…" line above speaks for the wait; these are only seen.
             <ol aria-hidden className="course-rows">
               {Array.from({ length: Math.max(result.rows.length, 6) }, (_, i) => (

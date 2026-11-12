@@ -16,6 +16,8 @@ export interface Segment {
   value: string
   label: string
   /** Optional content after the label, such as a badge. */ accessory?: ReactNode
+  /** Shown in place of the label, which then names the button for screen readers and in its tooltip. */
+  icon?: ReactNode
 }
 export interface SegmentedControlProps {
   options: Segment[]
@@ -119,6 +121,9 @@ export default function SegmentedControl({
               className={styles.button}
               type="button"
               data-value={option.value}
+              data-icon-only={option.icon ? '' : undefined}
+              aria-label={option.icon ? option.label : undefined}
+              title={option.icon ? option.label : undefined}
               aria-pressed={value === option.value}
               tabIndex={index === selectedIndex ? 0 : -1}
               onClick={() => onValueChange(option.value)}
@@ -136,7 +141,7 @@ export default function SegmentedControl({
                 />
               )}
               <span className={styles.label}>
-                {option.label}
+                {option.icon ?? option.label}
                 {option.accessory}
               </span>
             </button>

@@ -2277,14 +2277,6 @@ h1.article-title {
     min-width: 44px;
   }
 }
-/* A course cover in the grid's card frame: the frame sets the 3:2 box. */
-.study-grid-cover {
-  object-fit: cover;
-}
-/* Holds the grid's place while its code comes, so the page does not jump. */
-.study-grid-loading {
-  min-height: 60vh;
-}
 
 .course-rows {
   border-top: 1px solid var(--border);
