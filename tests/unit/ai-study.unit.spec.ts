@@ -2,7 +2,15 @@ import { describe, expect, it } from 'vitest'
 
 import ar from '../../messages/ar.json'
 import en from '../../messages/en.json'
-import { aiLink, fillPrompt, providers, studyFiles } from '@/lib/ai-study'
+import {
+  aiLink,
+  fillPrompt,
+  promptProblem,
+  providers,
+  STUDY_KINDS,
+  STUDY_TIERS,
+  studyFiles,
+} from '@/lib/ai-study'
 
 const origin = 'https://cilas.salahmohsen.com'
 const limitOf = (id: string) => providers.find((p) => p.id === id)!.maxUrl
@@ -71,4 +79,21 @@ describe('study prompts', () => {
       }
     })
   }
+
+  it('accepts every default prompt, in both languages, under the rules for edited ones', () => {
+    for (const messages of [en, ar])
+      for (const kind of STUDY_KINDS)
+        for (const tier of STUDY_TIERS)
+          expect(promptProblem(kind, messages.StudyPrompt[kind][tier]), `${kind}.${tier}`).toBe(
+            null,
+          )
+  })
+
+  it('refuses an edited prompt with an unknown placeholder or without the two files', () => {
+    expect(promptProblem('course', 'Read {pageFile} and {siteFile}. {session}')).toMatch(
+      /\{session\} is not a placeholder here/,
+    )
+    expect(promptProblem('session', 'Read {pageFile} and {siteFile}. {session}')).toBe(null)
+    expect(promptProblem('article', 'Read {pageFile}.')).toMatch(/Keep \{siteFile\}/)
+  })
 })

@@ -1,0 +1,73 @@
+/* AI → Study prompts: inside Payload's form, so Payload's theme variables, except the Arc meter. */
+.about {
+  display: grid;
+  gap: 0.25rem;
+  margin-block-end: 1rem;
+  color: var(--theme-elevation-650);
+}
+.about p {
+  margin: 0;
+}
+.hint {
+  margin: 0;
+  font-size: 0.8125rem;
+  color: var(--theme-elevation-650);
+}
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.375rem;
+  margin-block: 0.25rem;
+}
+.chip {
+  min-block-size: 32px;
+  padding-inline: 0.625rem;
+  border: 1px solid var(--theme-elevation-150);
+  border-radius: 999px;
+  background: var(--theme-elevation-50);
+  color: var(--theme-text);
+  font: inherit;
+  font-family: var(--font-mono, monospace);
+  font-size: 0.8125rem;
+  cursor: pointer;
+}
+.chip:hover {
+  background: var(--theme-elevation-100);
+}
+.field {
+  margin-block-end: 1.5rem;
+}
+.toolbar {
+  display: flex;
+  gap: 0.5rem;
+  margin-block: -0.5rem 0.5rem;
+}
+.meter {
+  display: grid;
+  gap: 0.375rem;
+  padding: 0.75rem 1rem;
+  border: 1px solid var(--theme-elevation-150);
+  border-radius: 6px;
+  background: transparent;
+}
+.providers {
+  display: grid;
+  gap: 0.25rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.providers li {
+  display: grid;
+  grid-template-columns: 6rem 1fr auto;
+  align-items: center;
+  gap: 0.75rem;
+  font-size: 0.8125rem;
+}
+.name {
+  color: var(--theme-text);
+}
+.count {
+  color: var(--theme-elevation-650);
+  font-variant-numeric: tabular-nums;
+}

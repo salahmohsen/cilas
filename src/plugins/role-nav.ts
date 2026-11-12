@@ -52,7 +52,7 @@ const NAV: [group: string, slugs: string[]][] = [
   ['Communications', ['newsletters', 'mailing-lists']],
   ['People', ['people', 'users', 'governance']],
   ['Site', ['media', 'redirects', 'site-settings', 'email-settings', 'registration-defaults']],
-  ['AI', ['llms-txt-settings']],
+  ['AI', ['llms-txt-settings', 'study-prompts']],
 ]
 
 /**

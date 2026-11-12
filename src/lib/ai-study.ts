@@ -73,3 +73,37 @@ export const studyFiles = (origin: string, path: string) => ({
   pageFile: `${trim(origin)}${trim(path)}/llms.txt`,
   siteFile: `${trim(origin)}/llms.txt`,
 })
+
+/** The cache tag of the prompts an admin saved; dropped when they save again. */
+export const STUDY_PROMPTS_TAG = 'study-prompts'
+
+/** The prompts of each kind, from the fullest to the shortest. */
+export const STUDY_KINDS = ['course', 'article', 'session'] as const satisfies StudyKind[]
+export const STUDY_TIERS = ['full', 'compact', 'short'] as const
+export type StudyTier = (typeof STUDY_TIERS)[number]
+
+/** The {placeholders} each kind's prompts may use. */
+export const STUDY_VARIABLES: Record<StudyKind, readonly string[]> = {
+  course: ['pageUrl', 'pageFile', 'siteFile'],
+  article: ['pageUrl', 'pageFile', 'siteFile'],
+  session: ['pageUrl', 'pageFile', 'siteFile', 'course', 'session', 'readings'],
+}
+
+/** Every prompt hands the assistant the page's llms.txt and the site's. */
+const REQUIRED_VARIABLES = ['pageFile', 'siteFile'] as const
+
+/** Why an edited prompt cannot be saved, or null when it can. */
+export const promptProblem = (kind: StudyKind, text: string): string | null => {
+  const used = [...text.matchAll(/\{(\w+)\}/g)].map((match) => match[1]!)
+  const allowed = STUDY_VARIABLES[kind]
+  const unknown = used.find((name) => !allowed.includes(name))
+  if (unknown)
+    return `{${unknown}} is not a placeholder here. This prompt can use ${allowed.map((name) => `{${name}}`).join(', ')}.`
+  const missing = REQUIRED_VARIABLES.filter((name) => !used.includes(name))
+  if (missing.length)
+    return `Keep ${missing.map((name) => `{${name}}`).join(' and ')}: the assistant reads the page and the site from them.`
+  return null
+}
+
+/** The length of the link that hands `prompt` to a provider. */
+export const linkLength = (id: ProviderId, prompt: string): number => aiLink(id, [prompt]).length

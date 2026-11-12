@@ -5,6 +5,7 @@ import { notFound } from 'next/navigation'
 import * as rootParams from 'next/root-params'
 
 import { numberingSystemOf } from '@/lib/digits'
+import { withSavedPrompts } from '@/lib/study-prompts'
 
 import { routing } from './routing'
 
@@ -25,7 +26,10 @@ export default getRequestConfig(async ({ locale: override, requestLocale }) => {
 
   return {
     locale,
-    messages: (await import(`../../messages/${locale}.json`)).default,
+    messages: await withSavedPrompts(
+      (await import(`../../messages/${locale}.json`)).default,
+      locale,
+    ),
     timeZone: CAIRO,
     formats: {
       dateTime: {

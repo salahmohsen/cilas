@@ -69,6 +69,8 @@ import { MailingListsNote as MailingListsNote_982ef07d70d1f99a8bc95a2e0421396d }
 import { EmailAbout as EmailAbout_6bcb4a4c3809b0d0280c82995bf75670 } from '../../../components/admin/email-texts'
 import { EmailTextField as EmailTextField_6bcb4a4c3809b0d0280c82995bf75670 } from '../../../components/admin/email-texts'
 import { EmailPreview as EmailPreview_6bcb4a4c3809b0d0280c82995bf75670 } from '../../../components/admin/email-texts'
+import { StudyPromptAbout as StudyPromptAbout_15a2f13c17381b685531c7212a14f3a9 } from '../../../components/admin/study-prompt-field'
+import { StudyPromptField as StudyPromptField_15a2f13c17381b685531c7212a14f3a9 } from '../../../components/admin/study-prompt-field'
 import { AdminAvatar as AdminAvatar_9ddec54c21bde8cbcf53bced882a39c9 } from '../../../components/admin/admin-avatar'
 import { Nav as Nav_f436cf2a4719114d9e44505773a04007 } from 'payload-theme/client'
 import { AdminIcon as AdminIcon_78c6b9411a3b5197e36221642877758f } from '../../../components/admin/brand/admin-logo'
@@ -165,6 +167,8 @@ export const importMap = {
   "/components/admin/email-texts#EmailAbout": EmailAbout_6bcb4a4c3809b0d0280c82995bf75670,
   "/components/admin/email-texts#EmailTextField": EmailTextField_6bcb4a4c3809b0d0280c82995bf75670,
   "/components/admin/email-texts#EmailPreview": EmailPreview_6bcb4a4c3809b0d0280c82995bf75670,
+  "/components/admin/study-prompt-field#StudyPromptAbout": StudyPromptAbout_15a2f13c17381b685531c7212a14f3a9,
+  "/components/admin/study-prompt-field#StudyPromptField": StudyPromptField_15a2f13c17381b685531c7212a14f3a9,
   "/components/admin/admin-avatar#AdminAvatar": AdminAvatar_9ddec54c21bde8cbcf53bced882a39c9,
   "payload-theme/client#Nav": Nav_f436cf2a4719114d9e44505773a04007,
   "/components/admin/brand/admin-logo#AdminIcon": AdminIcon_78c6b9411a3b5197e36221642877758f,

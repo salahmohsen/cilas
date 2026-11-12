@@ -189,6 +189,7 @@ export interface Config {
     'email-settings': EmailSetting;
     'registration-defaults': RegistrationDefault;
     'llms-txt-settings': LlmsTxtSetting;
+    'study-prompts': StudyPrompt;
   };
   globalsSelect: {
     'space-introduction': SpaceIntroductionSelect<false> | SpaceIntroductionSelect<true>;
@@ -197,6 +198,7 @@ export interface Config {
     'email-settings': EmailSettingsSelect<false> | EmailSettingsSelect<true>;
     'registration-defaults': RegistrationDefaultsSelect<false> | RegistrationDefaultsSelect<true>;
     'llms-txt-settings': LlmsTxtSettingsSelect<false> | LlmsTxtSettingsSelect<true>;
+    'study-prompts': StudyPromptsSelect<false> | StudyPromptsSelect<true>;
   };
   locale: 'en' | 'ar';
   widgets: {
@@ -5218,6 +5220,59 @@ export interface LlmsTxtSetting {
   createdAt?: string | null;
 }
 /**
+ * The prompt each "Study with AI" button hands the assistant. Switch the language at the top of the page to edit the Arabic prompts.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "study-prompts".
+ */
+export interface StudyPrompt {
+  id: number;
+  course?: {
+    /**
+     * Used when its link fits the assistant.
+     */
+    full?: string | null;
+    /**
+     * Used when the full prompt makes the link too long for the assistant.
+     */
+    compact?: string | null;
+    /**
+     * Used when the compact prompt is too long too. Arabic links are about six times longer, so Arabic readers on Grok and Z.ai often get this one.
+     */
+    short?: string | null;
+  };
+  article?: {
+    /**
+     * Used when its link fits the assistant.
+     */
+    full?: string | null;
+    /**
+     * Used when the full prompt makes the link too long for the assistant.
+     */
+    compact?: string | null;
+    /**
+     * Used when the compact prompt is too long too. Arabic links are about six times longer, so Arabic readers on Grok and Z.ai often get this one.
+     */
+    short?: string | null;
+  };
+  session?: {
+    /**
+     * Used when its link fits the assistant.
+     */
+    full?: string | null;
+    /**
+     * Used when the full prompt makes the link too long for the assistant.
+     */
+    compact?: string | null;
+    /**
+     * Used when the compact prompt is too long too. Arabic links are about six times longer, so Arabic readers on Grok and Z.ai often get this one.
+     */
+    short?: string | null;
+  };
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "space-introduction_select".
  */
@@ -5394,6 +5449,36 @@ export interface RegistrationDefaultsSelect<T extends boolean = true> {
 export interface LlmsTxtSettingsSelect<T extends boolean = true> {
   enabled?: T;
   introOverride?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "study-prompts_select".
+ */
+export interface StudyPromptsSelect<T extends boolean = true> {
+  course?:
+    | T
+    | {
+        full?: T;
+        compact?: T;
+        short?: T;
+      };
+  article?:
+    | T
+    | {
+        full?: T;
+        compact?: T;
+        short?: T;
+      };
+  session?:
+    | T
+    | {
+        full?: T;
+        compact?: T;
+        short?: T;
+      };
   updatedAt?: T;
   createdAt?: T;
   globalType?: T;

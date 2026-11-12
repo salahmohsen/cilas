@@ -44,6 +44,7 @@ import { SiteSettings } from './globals/SiteSettings'
 import { EmailSettings } from './globals/EmailSettings'
 import { SpaceIntroduction } from './globals/SpaceIntroduction'
 import { SpaceRules } from './globals/SpaceRules'
+import { StudyPrompts } from './globals/StudyPrompts'
 import { resendAdapter } from '@payloadcms/email-resend'
 import { formBuilderPlugin } from '@payloadcms/plugin-form-builder'
 import { previewUrl } from '@/lib/preview-url'
@@ -244,7 +245,14 @@ export default buildConfig({
     SpaceRsvps,
     InvitationLog,
   ],
-  globals: [RegistrationDefaults, SiteSettings, EmailSettings, SpaceIntroduction, SpaceRules],
+  globals: [
+    RegistrationDefaults,
+    SiteSettings,
+    EmailSettings,
+    SpaceIntroduction,
+    SpaceRules,
+    StudyPrompts,
+  ],
   localization: {
     locales: [
       { label: 'English', code: 'en' },
