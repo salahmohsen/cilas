@@ -29,7 +29,8 @@ const render = async (roles: string[], assistantName?: string) => {
   cleanup()
   const view = await AiAccessGuideView({
     initPageResult: {
-      req: { i18n: {}, payload: {} },
+      // The live connections list reads the tokens; no assistant is connected here.
+      req: { i18n: {}, payload: { find: async () => ({ docs: [] }), logger: { error() {} } } },
       locale: { code: 'en' },
       permissions: {},
       visibleEntities: {},

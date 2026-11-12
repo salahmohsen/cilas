@@ -39,6 +39,8 @@ describe('media image framing', () => {
     )
     const document = new DOMParser().parseFromString(html, 'text/html')
     expect(document.querySelector('img')?.style.objectPosition).toBe('0% 90%')
-    expect(document.querySelector('img')?.getAttribute('src')).toBe('/original.webp')
+    // The card loads through next/image, so the source sits in the optimizer URL.
+    const src = new URL(document.querySelector('img')?.getAttribute('src') ?? '', 'http://x')
+    expect(src.searchParams.get('url')).toBe('/original.webp')
   })
 })
