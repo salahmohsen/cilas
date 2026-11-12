@@ -158,7 +158,11 @@ export const sendAnnouncementEmails = async (
     if (stopped || author || !u.email) counts.skipped++
     return !stopped && !author && Boolean(u.email)
   })
-  const emailSettings = await getEmailSettings(payload)
+  // The texts follow each reader's language (src/emails/catalog.ts).
+  const [settingsEn, settingsAr] = await Promise.all([
+    getEmailSettings(payload, undefined, 'en'),
+    getEmailSettings(payload, undefined, 'ar'),
+  ])
   const text = clip(post.body, 600)
 
   counts.failed += await paced(recipients, async (user) => {
@@ -179,7 +183,7 @@ export const sendAnnouncementEmails = async (
       }
       const lang = prefs.get(user.id)?.locale ?? 'en'
       const meta = await spaceMeta(payload, metas, space, lang)
-      const mail = await announcementMail(emailSettings, {
+      const mail = await announcementMail(lang === 'ar' ? settingsAr : settingsEn, {
         lang,
         space: meta.name,
         text,

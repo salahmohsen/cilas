@@ -5,16 +5,15 @@ import { getPayload } from 'payload'
 import { isAdminUser } from '@/access'
 import { issueForEmail } from '@/emails/issue'
 import { newsletterMail } from '@/emails/newsletter'
-import { getEmailSettings } from '@/emails/settings'
-import { acceptanceMail, rejectionMail, resetMail, reviewMail } from '@/emails/transactional'
+import { EMAILS, type EmailId, type VersionOf } from '@/emails/catalog'
+import { sampleMail } from '@/emails/samples'
+import { getEmailSettings, readEmailSettings, withDefaults } from '@/emails/settings'
 import { env } from '@/env'
 
-const escapeAttr = (html: string) => html.replace(/&/g, '&amp;').replace(/"/g, '&quot;')
-
 /**
- * Admin-only email previews for the live-preview pane: a newsletter issue
- * (its latest draft) or every transactional email with sample data. The
- * script reloads the page when Payload saves, as RefreshRouteOnSave does.
+ * Admin-only preview of a newsletter issue (its latest draft) for the
+ * live-preview pane. The script reloads the page when Payload saves, as
+ * RefreshRouteOnSave does. Email settings previews use POST, below.
  */
 export async function GET(request: Request) {
   const payload = await getPayload({ config })
@@ -37,25 +36,7 @@ export async function GET(request: Request) {
     html = (await newsletterMail(issue, settings, { unsubscribe: '#unsubscribe', editId: id })).html
     editor = 'sdk'
   } else {
-    const sample = { name: 'Mona Adel', email: 'mona@example.com', site }
-    const mails = await Promise.all([
-      acceptanceMail(settings, { ...sample, title: 'The Bridge Programme 2026', newAccount: true }),
-      rejectionMail(settings, { ...sample, title: 'The Bridge Programme 2026' }),
-      reviewMail(
-        settings,
-        'changes_requested',
-        'On translation',
-        'Please shorten the second part.',
-      ),
-      resetMail(settings, { email: sample.email, token: 'sample-token', site }),
-    ])
-    html = `<!doctype html><html lang="en"><body style="margin:0;background:#f3f4f6">${mails
-      .map(
-        (m) =>
-          `<h2 style="font:600 14px system-ui;margin:24px 16px 8px">${m.subject.replace(/</g, '&lt;')}</h2>` +
-          `<iframe title="${escapeAttr(m.subject)}" style="width:100%;height:900px;border:0" srcdoc="${escapeAttr(m.html)}"></iframe>`,
-      )
-      .join('')}</body></html>`
+    return new Response('Unknown preview.', { status: 404 })
   }
 
   const origin = JSON.stringify(site.replace(/\/+$/, ''))
@@ -78,4 +59,53 @@ export async function GET(request: Request) {
   return new Response(page, {
     headers: { 'Content-Type': 'text/html; charset=utf-8', 'Cache-Control': 'no-store' },
   })
+}
+
+type PreviewRequest = {
+  email: EmailId
+  version: string
+  locale: 'en' | 'ar'
+  /** The email's texts as typed, saved or not. Empty: the default. */
+  texts: Record<string, string | null>
+  /** Send it to the signed-in admin instead of returning it. */
+  send?: boolean
+}
+
+/**
+ * One email of Email settings with sample data and the texts as typed, for
+ * the preview beside its fields, or sent to the admin as a test.
+ */
+export async function POST(request: Request) {
+  const payload = await getPayload({ config })
+  const { user } = await payload.auth({ headers: await getHeaders() })
+  if (!user || !isAdminUser(user)) return Response.json({ error: 'Admins only' }, { status: 403 })
+
+  const body = (await request.json().catch(() => null)) as PreviewRequest | null
+  const entry = body && Object.hasOwn(EMAILS, body.email) ? EMAILS[body.email] : null
+  if (!body || !entry || !Object.hasOwn(entry.versions, body.version))
+    return Response.json({ error: 'Unknown email.' }, { status: 400 })
+  const locale = entry.localized && body.locale === 'ar' ? 'ar' : 'en'
+
+  const { stored, ...rest } = await readEmailSettings(payload, undefined, locale)
+  const settings = withDefaults(
+    { ...stored, texts: { ...stored.texts, [body.email]: body.texts ?? {} } },
+    { site: env.NEXT_PUBLIC_SERVER_URL, ...rest },
+  )
+  const mail = await sampleMail(body.email, body.version as VersionOf<EmailId>, {
+    payload,
+    settings,
+    locale,
+  })
+  if (!mail)
+    return Response.json({ error: 'There is no newsletter issue to show yet.' }, { status: 404 })
+  if (body.send) {
+    await payload.sendEmail({
+      to: user.email,
+      subject: `[Test] ${mail.subject}`,
+      html: mail.html,
+      text: mail.text,
+    })
+    return Response.json({ sent: user.email })
+  }
+  return Response.json({ subject: mail.subject, html: mail.html })
 }

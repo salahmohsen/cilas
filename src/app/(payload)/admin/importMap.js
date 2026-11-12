@@ -63,6 +63,9 @@ import { ImportPreview as ImportPreview_cdf7e044479f899a31f804427d568b36 } from 
 import { ImportSaveButton as ImportSaveButton_cdf7e044479f899a31f804427d568b36 } from '@payloadcms/plugin-import-export/rsc'
 import { AiAccessLink as AiAccessLink_8197fd3eede87fb83f5e9b9d09552556 } from '../../../components/admin/ai-access-link'
 import { MailingListsNote as MailingListsNote_982ef07d70d1f99a8bc95a2e0421396d } from '../../../components/admin/mailing-lists-note'
+import { EmailAbout as EmailAbout_6bcb4a4c3809b0d0280c82995bf75670 } from '../../../components/admin/email-texts'
+import { EmailTextField as EmailTextField_6bcb4a4c3809b0d0280c82995bf75670 } from '../../../components/admin/email-texts'
+import { EmailPreview as EmailPreview_6bcb4a4c3809b0d0280c82995bf75670 } from '../../../components/admin/email-texts'
 import { AdminAvatar as AdminAvatar_9ddec54c21bde8cbcf53bced882a39c9 } from '../../../components/admin/admin-avatar'
 import { Nav as Nav_f436cf2a4719114d9e44505773a04007 } from 'payload-theme/client'
 import { AdminIcon as AdminIcon_78c6b9411a3b5197e36221642877758f } from '../../../components/admin/brand/admin-logo'
@@ -152,6 +155,9 @@ export const importMap = {
   "@payloadcms/plugin-import-export/rsc#ImportSaveButton": ImportSaveButton_cdf7e044479f899a31f804427d568b36,
   "/components/admin/ai-access-link#AiAccessLink": AiAccessLink_8197fd3eede87fb83f5e9b9d09552556,
   "/components/admin/mailing-lists-note#MailingListsNote": MailingListsNote_982ef07d70d1f99a8bc95a2e0421396d,
+  "/components/admin/email-texts#EmailAbout": EmailAbout_6bcb4a4c3809b0d0280c82995bf75670,
+  "/components/admin/email-texts#EmailTextField": EmailTextField_6bcb4a4c3809b0d0280c82995bf75670,
+  "/components/admin/email-texts#EmailPreview": EmailPreview_6bcb4a4c3809b0d0280c82995bf75670,
   "/components/admin/admin-avatar#AdminAvatar": AdminAvatar_9ddec54c21bde8cbcf53bced882a39c9,
   "payload-theme/client#Nav": Nav_f436cf2a4719114d9e44505773a04007,
   "/components/admin/brand/admin-logo#AdminIcon": AdminIcon_78c6b9411a3b5197e36221642877758f,

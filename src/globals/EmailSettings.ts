@@ -1,60 +1,65 @@
 import type { Field, GlobalConfig } from 'payload'
 
 import { isAdmin } from '@/access'
-import { DEFAULT_TEXTS } from '@/emails/settings'
+import { EMAIL_IDS, EMAILS } from '@/emails/catalog'
 
-const HINTS: Record<string, string> = {
-  acceptance: 'Placeholders: {name}, {email}, {title}.',
-  rejection:
-    'Placeholders: {name}, {email}, {title}. Sent when one course of an application is rejected.',
-  review: 'Placeholder: {title}.',
-  reset: 'Placeholder: {email}.',
-  newsletter: 'Button and link labels in newsletter issues.',
-}
-
-const LABELS: Record<string, string> = {
-  acceptance: 'Application accepted',
-  rejection: 'Application rejected',
-  review: 'Article review',
-  reset: 'Password reset',
-  newsletter: 'Newsletter',
-}
-
-/** Emails to applicants go out in the language the applicant used. */
-const LOCALIZED = ['acceptance', 'rejection']
-
-/** One group per email; each field shows its default and is used when empty. */
-const textGroups: Field[] = Object.entries(DEFAULT_TEXTS).map(([group, fields]) => ({
-  name: group,
-  label: LABELS[group],
-  type: 'group',
-  admin: {
-    description: `${HINTS[group]} Leave a field empty to use the text shown in it.${
-      LOCALIZED.includes(group) ? ' Empty Arabic text: the English text is sent.' : ''
-    }`,
-  },
-  fields: Object.entries(fields).map(([name, fallback]): Field => {
-    const long = fallback.length > 60
-    const localized = LOCALIZED.includes(group)
-    return long
-      ? { name, type: 'textarea', localized, admin: { placeholder: fallback, rows: 4 } }
-      : { name, type: 'text', localized, admin: { placeholder: fallback } }
-  }),
-}))
+const TEXTS = '/components/admin/email-texts'
 
 /**
- * How CILAS's emails look and what they say: the newsletter and every
- * transactional email. The texts of the application emails come in English
- * and Arabic; the rest is English. Open the live preview to see the
- * transactional emails with sample data.
+ * One collapsible section per email of the catalog: when it goes out and its
+ * placeholders, its texts (empty: the default, shown in grey), and a preview
+ * of the texts as typed. The group keeps each text at texts.<email>.<field>.
+ */
+const textSections: Field[] = EMAIL_IDS.map((id): Field => {
+  const email = EMAILS[id]
+  const part = (name: string, component: string): Field => ({
+    name,
+    type: 'ui',
+    admin: { components: { Field: { path: `${TEXTS}#${component}`, clientProps: { email: id } } } },
+  })
+  return {
+    type: 'collapsible',
+    label: email.label,
+    admin: { initCollapsed: true },
+    fields: [
+      {
+        name: id,
+        type: 'group',
+        label: false,
+        fields: [
+          part('about', 'EmailAbout'),
+          ...Object.entries(email.texts.en).map(([name, fallback]): Field => {
+            const input = { path: `${TEXTS}#EmailTextField`, clientProps: { email: id } }
+            return fallback.length > 60
+              ? {
+                  name,
+                  type: 'textarea',
+                  localized: email.localized,
+                  admin: { rows: 4, components: { Field: input } },
+                }
+              : {
+                  name,
+                  type: 'text',
+                  localized: email.localized,
+                  admin: { components: { Field: input } },
+                }
+          }),
+          part('preview', 'EmailPreview'),
+        ],
+      },
+    ],
+  }
+})
+
+/**
+ * How CILAS's emails look and what they say: the newsletter and every email
+ * the system sends (src/emails/catalog.ts). Each email in Texts has its own
+ * preview with sample data.
  */
 export const EmailSettings: GlobalConfig = {
   slug: 'email-settings',
   label: 'Email settings',
-  admin: {
-    group: 'Site',
-    livePreview: { url: '/api/email-preview?kind=messages' },
-  },
+  admin: { group: 'Site' },
   access: { read: isAdmin, update: isAdmin },
   fields: [
     {
@@ -139,7 +144,10 @@ export const EmailSettings: GlobalConfig = {
             },
           ],
         },
-        { label: 'Texts', fields: [{ name: 'texts', type: 'group', fields: textGroups }] },
+        {
+          label: 'Texts',
+          fields: [{ name: 'texts', type: 'group', label: false, fields: textSections }],
+        },
       ],
     },
   ],

@@ -3,51 +3,17 @@ import type { Payload, PayloadRequest } from 'payload'
 import { env } from '@/env'
 import type { Locale } from '@/i18n/routing'
 
+import { defaultTexts, EMAIL_IDS, EMAILS, type EmailId, type Texts } from './catalog'
+
 /**
  * What every email reads from the Email settings global, with a default for
  * each empty field. Texts carry {placeholders} that `fill` replaces.
  */
 
-export const DEFAULT_TEXTS = {
-  acceptance: {
-    subject: 'You are accepted to {title}',
-    body: 'Dear {name},\n\nYou are accepted to {title}.',
-    new_account:
-      'We made a CILAS account for {email}. To sign in, use “Continue with Google” if this is a Google address. If not, choose “Forgot password?” to set a password.',
-    existing_account: 'Sign in with your CILAS account as usual.',
-    button: 'Sign in',
-  },
-  rejection: {
-    subject: 'Your application to {title}',
-    body: 'Dear {name},\n\nThank you for applying to {title}. We read every application with care. We are sorry that we cannot offer you a place this time.\n\nYou are welcome to apply to our future courses.',
-  },
-  review: {
-    submitted_subject: 'Submitted for review: {title}',
-    submitted: '“{title}” was submitted for review.',
-    approved_subject: 'Published: {title}',
-    approved: '“{title}” was approved and is now published.',
-    changes_requested_subject: 'Changes requested: {title}',
-    changes_requested: '“{title}” needs changes before it can be published.',
-    rejected_subject: 'Not accepted: {title}',
-    rejected: '“{title}” was not accepted for publication.',
-    note_label: 'Note from the editor',
-  },
-  reset: {
-    subject: 'Reset your CILAS password',
-    body: 'Someone asked to reset the password for {email}. To choose a new password, use the button below. If this was not you, ignore this email: your password stays the same.',
-    button: 'Choose a new password',
-  },
-  newsletter: {
-    in_this_issue: 'In this issue',
-    read: 'Read more',
-    apply: 'Apply',
-    unsubscribe: 'Unsubscribe',
-  },
-} as const
-
-type Texts = {
-  [K in keyof typeof DEFAULT_TEXTS]: { [F in keyof (typeof DEFAULT_TEXTS)[K]]: string }
-}
+/** The English default of every text, by email (src/emails/catalog.ts). */
+export const DEFAULT_TEXTS = Object.fromEntries(
+  EMAIL_IDS.map((id) => [id, EMAILS[id].texts.en]),
+) as { [K in EmailId]: (typeof EMAILS)[K]['texts']['en'] }
 
 export type SocialLink = { platform: string; url: string; icon: string }
 
@@ -104,17 +70,39 @@ const addressOf = (place: unknown): EmailSettings['address'] | null => {
 
 export const withDefaults = (
   stored: StoredEmailSettings,
-  { site = 'https://ci-las.org', social = [] }: { site?: string; social?: StoredSocial } = {},
+  {
+    site = 'https://ci-las.org',
+    social = [],
+    locale = 'en',
+    fallback,
+  }: {
+    site?: string
+    social?: StoredSocial
+    /** The language of the texts in `stored`. */
+    locale?: Locale
+    /** The English settings, read when `stored` is in another language. */
+    fallback?: StoredEmailSettings
+  } = {},
 ): EmailSettings => {
   const origin = site.replace(/\/+$/, '')
+  // Saved text in the reader's language, then its default, then the saved
+  // English text, then the English default. An email without Arabic defaults
+  // thus sends the admin's English text to an Arabic reader, as before.
+  const savedIn = (from: StoredEmailSettings | undefined, id: EmailId) =>
+    (from?.texts as Record<string, Record<string, string | null> | null> | null | undefined)?.[id]
   const texts = {} as Record<string, Record<string, string>>
-  for (const [group, fields] of Object.entries(DEFAULT_TEXTS)) {
-    const saved = (stored.texts as Record<string, Record<string, string | null> | null> | null)?.[
-      group
-    ]
-    texts[group] = {}
-    for (const [field, fallback] of Object.entries(fields)) {
-      texts[group][field] = saved?.[field]?.trim() || fallback
+  for (const id of EMAIL_IDS) {
+    const own = savedIn(stored, id)
+    const english = savedIn(fallback, id)
+    const localDefaults = defaultTexts(id, locale)
+    const englishDefaults = defaultTexts(id, 'en')
+    texts[id] = {}
+    for (const field of Object.keys(englishDefaults)) {
+      texts[id][field] =
+        own?.[field]?.trim() ||
+        (localDefaults !== englishDefaults ? localDefaults[field] : '') ||
+        english?.[field]?.trim() ||
+        englishDefaults[field]!
     }
   }
   const logo = stored.logo as { url?: string | null; alt?: string | null } | null | undefined
@@ -147,30 +135,44 @@ export const withDefaults = (
 }
 
 /**
- * The global, read past access, with defaults filled in and the site's social
- * links. `locale` picks the language of the application emails' texts; an
- * empty Arabic text reads as the English one (Payload's locale fallback).
+ * The stored global in `locale` (past access), the English one beside it,
+ * and the site's social links: what `withDefaults` builds the settings from.
+ */
+export const readEmailSettings = async (
+  payload: Payload,
+  req?: PayloadRequest,
+  locale: Locale = 'en',
+) => {
+  const read = (lang: Locale) =>
+    payload.findGlobal({
+      slug: 'email-settings',
+      depth: 1,
+      overrideAccess: true,
+      req,
+      locale: lang,
+      // No Payload fallback: withDefaults puts the Arabic defaults before the English text.
+      fallbackLocale: false,
+    }) as Promise<StoredEmailSettings>
+  const [stored, fallback, site] = await Promise.all([
+    read(locale),
+    locale === 'en' ? undefined : read('en'),
+    payload.findGlobal({ slug: 'site-settings', depth: 0, overrideAccess: true, req }),
+  ])
+  return { stored, fallback, social: site.social_links as StoredSocial, locale }
+}
+
+/**
+ * The global with defaults filled in and the site's social links. `locale`
+ * picks the language of the localized emails' texts (src/emails/catalog.ts);
+ * see `withDefaults` for what an empty text reads as.
  */
 export const getEmailSettings = async (
   payload: Payload,
   req?: PayloadRequest,
   locale: Locale = 'en',
 ) => {
-  const [stored, site] = await Promise.all([
-    payload.findGlobal({
-      slug: 'email-settings',
-      depth: 1,
-      overrideAccess: true,
-      req,
-      locale,
-      fallbackLocale: 'en',
-    }),
-    payload.findGlobal({ slug: 'site-settings', depth: 0, overrideAccess: true, req }),
-  ])
-  return withDefaults(stored as StoredEmailSettings, {
-    site: env.NEXT_PUBLIC_SERVER_URL,
-    social: site.social_links,
-  })
+  const { stored, ...rest } = await readEmailSettings(payload, req, locale)
+  return withDefaults(stored, { site: env.NEXT_PUBLIC_SERVER_URL, ...rest })
 }
 
 /** Replaces each {key} with its value; unknown keys stay as written. */

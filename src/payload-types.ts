@@ -5081,9 +5081,6 @@ export interface EmailSetting {
    */
   footer?: string | null;
   texts?: {
-    /**
-     * Placeholders: {name}, {email}, {title}. Leave a field empty to use the text shown in it. Empty Arabic text: the English text is sent.
-     */
     acceptance?: {
       subject?: string | null;
       body?: string | null;
@@ -5091,16 +5088,10 @@ export interface EmailSetting {
       existing_account?: string | null;
       button?: string | null;
     };
-    /**
-     * Placeholders: {name}, {email}, {title}. Sent when one course of an application is rejected. Leave a field empty to use the text shown in it. Empty Arabic text: the English text is sent.
-     */
     rejection?: {
       subject?: string | null;
       body?: string | null;
     };
-    /**
-     * Placeholder: {title}. Leave a field empty to use the text shown in it.
-     */
     review?: {
       submitted_subject?: string | null;
       submitted?: string | null;
@@ -5112,17 +5103,28 @@ export interface EmailSetting {
       rejected?: string | null;
       note_label?: string | null;
     };
-    /**
-     * Placeholder: {email}. Leave a field empty to use the text shown in it.
-     */
     reset?: {
       subject?: string | null;
       body?: string | null;
       button?: string | null;
     };
-    /**
-     * Button and link labels in newsletter issues. Leave a field empty to use the text shown in it.
-     */
+    spaces?: {
+      kicker?: string | null;
+      digest_subject_one?: string | null;
+      digest_subject_other?: string | null;
+      digest_heading?: string | null;
+      mentions?: string | null;
+      replies?: string | null;
+      posts?: string | null;
+      more?: string | null;
+      digest_button?: string | null;
+      announcement_subject?: string | null;
+      announcement_heading?: string | null;
+      announcement_button?: string | null;
+      why?: string | null;
+      manage?: string | null;
+      stop?: string | null;
+    };
     newsletter?: {
       in_this_issue?: string | null;
       read?: string | null;
@@ -5295,6 +5297,25 @@ export interface EmailSettingsSelect<T extends boolean = true> {
               subject?: T;
               body?: T;
               button?: T;
+            };
+        spaces?:
+          | T
+          | {
+              kicker?: T;
+              digest_subject_one?: T;
+              digest_subject_other?: T;
+              digest_heading?: T;
+              mentions?: T;
+              replies?: T;
+              posts?: T;
+              more?: T;
+              digest_button?: T;
+              announcement_subject?: T;
+              announcement_heading?: T;
+              announcement_button?: T;
+              why?: T;
+              manage?: T;
+              stop?: T;
             };
         newsletter?:
           | T

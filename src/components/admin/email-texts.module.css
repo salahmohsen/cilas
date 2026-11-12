@@ -1,0 +1,67 @@
+/* Email settings → Texts: inside Payload's form, so Payload's theme variables. */
+.about {
+  display: grid;
+  gap: 0.25rem;
+  margin-block-end: 1rem;
+  color: var(--theme-elevation-650);
+}
+.about p {
+  margin: 0;
+}
+.hint {
+  font-size: 0.8125rem;
+}
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.375rem;
+  margin-block: 0.25rem;
+}
+.chip {
+  min-block-size: 32px;
+  padding-inline: 0.625rem;
+  border: 1px solid var(--theme-elevation-150);
+  border-radius: 999px;
+  background: var(--theme-elevation-50);
+  color: var(--theme-text);
+  font: inherit;
+  font-family: var(--font-mono, monospace);
+  font-size: 0.8125rem;
+  cursor: pointer;
+}
+.chip:hover {
+  background: var(--theme-elevation-100);
+}
+.text {
+  position: relative;
+}
+.reset {
+  margin-block: -0.5rem 1rem;
+}
+.preview {
+  display: grid;
+  gap: 0.5rem;
+  margin-block: 0.5rem 1.5rem;
+}
+.toolbar,
+.versions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+}
+.subject {
+  margin: 0;
+  font-weight: 600;
+}
+.status {
+  margin: 0;
+  color: var(--theme-elevation-650);
+}
+.frame {
+  inline-size: 100%;
+  block-size: 760px;
+  border: 1px solid var(--theme-elevation-150);
+  border-radius: 4px;
+  background: #fff;
+}
