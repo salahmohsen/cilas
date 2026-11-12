@@ -50,7 +50,7 @@ type NativeProps = { req: PayloadRequest; user: TypedUser }
 /** Each widget's content, by slug. The ones that need the signed-in admin read `req` and `user`. */
 const RENDER: Record<WidgetSlug, (props: NativeProps) => Promise<ReactNode>> = {
   'quick-actions': async ({ req, user }) => (
-    <QuickActions payload={req.payload as Payload} user={user} />
+    <QuickActions user={user} language={req.i18n.language} />
   ),
   'open-applications': OpenApplications,
   'enrollments-in-progress': EnrollmentsInProgress,

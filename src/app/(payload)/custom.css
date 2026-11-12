@@ -144,9 +144,60 @@
   background: color-mix(in srgb, var(--theme-elevation-500) 10%, transparent);
   color: var(--theme-text);
 }
+/* Narrow screens: the inline links give way to one menu button. */
+.cilas-work-menu {
+  display: none;
+  position: relative;
+  margin-inline-end: 8px;
+}
+.cilas-work-menu__button {
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  border: 1px solid var(--theme-elevation-150);
+  border-radius: 999px;
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+}
+.cilas-work-menu__button:hover,
+.cilas-work-menu__button:focus-visible {
+  background: color-mix(in srgb, var(--theme-elevation-500) 10%, transparent);
+}
+.cilas-work-menu__panel {
+  position: absolute;
+  inset-block-start: calc(100% + 6px);
+  inset-inline-end: 0;
+  z-index: 20;
+  display: grid;
+  min-width: 14rem;
+  padding: 6px;
+  border: 1px solid var(--theme-elevation-150);
+  border-radius: var(--pt-radius-ctl, 8px);
+  background: var(--theme-bg);
+  box-shadow: 0 8px 24px color-mix(in srgb, black 18%, transparent);
+}
+.cilas-work-menu__panel a {
+  display: flex;
+  align-items: center;
+  min-height: 44px;
+  padding-inline: 12px;
+  border-radius: var(--pt-radius-ctl, 8px);
+  color: var(--theme-text);
+  font-size: 14px;
+  text-decoration: none;
+}
+.cilas-work-menu__panel a:hover,
+.cilas-work-menu__panel a:focus-visible {
+  background: color-mix(in srgb, var(--theme-elevation-500) 10%, transparent);
+}
 @media (max-width: 700px) {
   .cilas-work-links {
     display: none;
+  }
+  .cilas-work-menu {
+    display: block;
   }
 }
 
@@ -155,6 +206,28 @@
    admin home only (the dashboard wrapper is `.arc-scope`). */
 :root:has(.arc-scope .modular-dashboard) .app-header__step-nav-wrapper {
   display: flex;
+}
+/* Keep that dropdown on one line: its control wraps the chevron under the
+   label on a narrow header and grows taller than the bar. */
+:root:has(.arc-scope .modular-dashboard) .dashboard-breadcrumb-select .rs__control {
+  flex-wrap: nowrap;
+  align-items: center;
+  min-height: 0;
+  padding-block: 0;
+  white-space: nowrap;
+}
+:root:has(.arc-scope .modular-dashboard) .app-header__step-nav-wrapper,
+:root:has(.arc-scope .modular-dashboard) .app-header__step-nav {
+  align-items: center;
+  max-height: 100%;
+  min-width: 0;
+}
+/* Very narrow header: the chevron alone opens the menu (its box keeps the
+   title "Dashboard"), so the label is never cut to a stub. */
+@media (max-width: 480px) {
+  :root:has(.arc-scope .modular-dashboard) .dashboard-breadcrumb-select .rs__single-value {
+    display: none;
+  }
 }
 
 /* The stack of notes and buttons a document-sidebar field renders. */
