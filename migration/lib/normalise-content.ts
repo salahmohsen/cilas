@@ -95,6 +95,9 @@ export const licenseOf = (text: string | null): LicenseValue | null => {
   return null
 }
 
+/** Whether `host` is `domain` or one of its subdomains. */
+const onDomain = (host: string, domain: string) => host === domain || host.endsWith(`.${domain}`)
+
 const OUTLETS: Array<[domain: string, name: string]> = [
   ['madamasr.com', 'Mada Masr'],
   ['opendemocracy.net', 'OpenDemocracy'],
@@ -119,10 +122,10 @@ export const outletFromUrl = (url: string): string | null => {
   } catch {
     return null
   }
-  const hosts = host.endsWith('appspot.com') ? [first, host] : [host]
+  const hosts = onDomain(host, 'appspot.com') ? [first, host] : [host]
   for (const h of hosts) {
     for (const [domain, name] of OUTLETS) {
-      if (h === domain || h.endsWith(`.${domain}`)) return name
+      if (onDomain(h, domain)) return name
     }
   }
   return null

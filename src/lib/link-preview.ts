@@ -5,6 +5,7 @@ import { isIP } from 'node:net'
 import { Agent } from 'undici'
 
 import { env } from '@/env'
+import { decodeEntities } from '@/lib/html-entities'
 import { mapsPlace, meetingService, titlePlace } from './event-place'
 import { titleKey } from './link-title'
 
@@ -77,16 +78,7 @@ export const isPublicAddress = (address: string): boolean => {
   return false
 }
 
-const decode = (text: string) =>
-  text
-    .replace(/&amp;/g, '&')
-    .replace(/&lt;/g, '<')
-    .replace(/&gt;/g, '>')
-    .replace(/&quot;/g, '"')
-    .replace(/&#0?39;|&apos;/g, "'")
-    .replace(/&#(\d+);/g, (_, n: string) => String.fromCodePoint(Number(n)))
-    .replace(/\s+/g, ' ')
-    .trim()
+const decode = (text: string) => decodeEntities(text).replace(/\s+/g, ' ').trim()
 
 export const parseMeta = (
   html: string,

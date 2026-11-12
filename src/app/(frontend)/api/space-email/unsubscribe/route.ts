@@ -2,6 +2,7 @@ import config from '@payload-config'
 import { getPayload } from 'payload'
 
 import { env } from '@/env'
+import { escapeHtml } from '@/lib/html-entities'
 import { setSpaceEmail } from '@/lib/space-email-prefs'
 import { verifyUnsubscribeToken } from '@/lib/space-email-token'
 
@@ -37,8 +38,6 @@ const TEXT = {
   },
 } as const
 
-const escape = (text: string) => text.replace(/[&<>"']/g, (c) => `&#${c.charCodeAt(0)};`)
-
 const page = (lang: Lang, state: 'confirm' | 'done' | 'bad', action: string, status = 200) => {
   const t = TEXT[lang]
   const title = t[`${state}Title` as const]
@@ -46,8 +45,8 @@ const page = (lang: Lang, state: 'confirm' | 'done' | 'bad', action: string, sta
   const settings = `${env.NEXT_PUBLIC_SERVER_URL.replace(/\/+$/, '')}/${lang}/settings#notifications`
   const control =
     state === 'confirm'
-      ? `<form method="post" action="${escape(action)}"><button type="submit">${t.confirmButton}</button></form>`
-      : `<a href="${escape(settings)}">${t.settings}</a>`
+      ? `<form method="post" action="${escapeHtml(action)}"><button type="submit">${t.confirmButton}</button></form>`
+      : `<a href="${escapeHtml(settings)}">${t.settings}</a>`
   const html = `<!doctype html>
 <html lang="${lang}" dir="${lang === 'ar' ? 'rtl' : 'ltr'}">
 <head>

@@ -155,7 +155,8 @@
       "qs@>=6.7.0 <6.16.1": "^6.16.1",
       "graphql-scalars@<2.0.1": "^2.0.1",
       "follow-redirects@<1.16.2": "^1.16.2",
-      "glob@>=9.0.0 <14.0.2": "^14.0.3"
+      "glob@>=9.0.0 <14.0.2": "^14.0.3",
+      "@ts-morph/common>minimatch": "^11.0.8"
     },
     "onlyBuiltDependencies": [
       "@parcel/watcher@2.6.0",
@@ -166,11 +167,6 @@
     "patchedDependencies": {
       "deepmerge@4.3.1": "patches/deepmerge@4.3.1.patch",
       "payload-theme@0.10.0": "patches/payload-theme@0.10.0.patch"
-    },
-    "auditConfig": {
-      "ignoreGhsas": [
-        "GHSA-g3hv-75wg-m249"
-      ]
     }
   }
 }

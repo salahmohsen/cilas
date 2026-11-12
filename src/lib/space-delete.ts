@@ -3,6 +3,7 @@ import { APIError } from 'payload'
 
 import { parentOf, parentRef, spaceHref } from '@/lib/space-ref'
 import type { SpaceKind } from '@/lib/spaces'
+import { escapeRegExp } from '@/lib/regexp'
 
 /** What deleting a space takes with it, shown in the admin dialog before it runs. */
 export type SpaceContentCounts = {
@@ -125,8 +126,6 @@ export const deleteSpaceContent = async (req: PayloadRequest, id: number): Promi
   await payload.delete({ collection: 'space-posts', ...opts })
 }
 
-const escape = (s: string) => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
-
 /**
  * The spaces collection's afterDelete: bell rows name a space only in their
  * link, with or without a language prefix. Runs once the space row is gone,
@@ -136,7 +135,7 @@ export const deleteSpaceBells = async (req: PayloadRequest, id: number): Promise
   const href = req.context[bellsKey(id)]
   if (typeof href !== 'string') return
   await req.payload.db.pool.query(`DELETE FROM notifications WHERE link ~ $1`, [
-    `^(/(en|ar))?${escape(href)}([/?#].*)?$`,
+    `^(/(en|ar))?${escapeRegExp(href)}([/?#].*)?$`,
   ])
 }
 

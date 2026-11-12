@@ -10,6 +10,7 @@ vi.mock('@payloadcms/ui', () => ({
 }))
 
 import { AiAccessGuideView } from '@/components/admin/ai-access-guide'
+import { decodeEntities } from '@/lib/html-entities'
 import { ASSISTANTS } from '@/plugins/mcp/assistants'
 
 beforeEach(() => {
@@ -53,12 +54,7 @@ const render = async (roles: string[], assistantName?: string) => {
   return container.innerHTML
 }
 
-const textOf = (html: string) =>
-  html
-    .replace(/<[^>]+>/g, ' ')
-    .replace(/&amp;/g, '&')
-    .replace(/&#x27;/g, "'")
-    .replace(/\s+/g, ' ')
+const textOf = (html: string) => decodeEntities(html.replace(/<[^>]+>/g, ' ')).replace(/\s+/g, ' ')
 
 describe('the AI assistants guide', () => {
   it('tells an administrator what it does, and that a person publishes', async () => {

@@ -12,6 +12,8 @@ import { createHash, randomBytes } from 'node:crypto'
 
 import { getPayload, type Payload } from 'payload'
 
+import { decodeEntities } from '../src/lib/html-entities'
+
 const BASE = (process.env.BASE_URL ?? 'http://localhost:3000').replace(/\/$/, '')
 const MCP = `${BASE}/api/mcp`
 const CLAUDE_CALLBACK = 'https://claude.ai/api/mcp/auth_callback'
@@ -83,7 +85,7 @@ const authorizeUrl = (clientId: string, callback: string, challenge: string, ext
 const hiddenFields = (html: string): Record<string, string> => {
   const fields: Record<string, string> = {}
   for (const match of html.matchAll(/<input type="hidden" name="([^"]+)" value="([^"]*)">/g)) {
-    fields[match[1]!] = match[2]!.replace(/&amp;/g, '&').replace(/&quot;/g, '"')
+    fields[match[1]!] = decodeEntities(match[2]!)
   }
   return fields
 }

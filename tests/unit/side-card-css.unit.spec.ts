@@ -1,6 +1,8 @@
 import { readFileSync } from 'node:fs'
 import { describe, expect, it } from 'vitest'
 
+import { escapeRegExp } from '@/lib/regexp'
+
 // Every side-card and apply-card class a component uses must have a rule in
 // styles.css. A wide replace in that file once deleted the registration card's
 // and the course facts' rules, and the side card rendered unstyled.
@@ -25,7 +27,7 @@ describe('side card styles', () => {
     )
     expect(used.size).toBeGreaterThan(10)
     const missing = [...used].filter(
-      (name) => !new RegExp(`\\.${name.replace(/-/g, '\\-')}(?![\\w-])`).test(css),
+      (name) => !new RegExp(`\\.${escapeRegExp(name)}(?![\\w-])`).test(css),
     )
     expect(missing).toEqual([])
   })

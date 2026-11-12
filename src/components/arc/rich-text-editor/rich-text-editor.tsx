@@ -72,11 +72,15 @@ const safeUrl = (url: string) =>
   SESSION_HREF.test(url) ||
   SESSION_BLOCK_HREF.test(url)
 
-/** Adds a scheme to bare domains so `example.com/docs` becomes a working link. */
+/**
+ * Adds a scheme to bare domains so `example.com/docs` becomes a working link.
+ * A link the editor would not keep (`javascript:`, `data:`) comes back empty.
+ */
 export function normalizeUrl(input: string) {
   const url = input.trim()
   if (!url) return ''
-  if (/^[a-z][a-z\d+.-]*:/i.test(url) || url.startsWith('/') || url.startsWith('#')) return url
+  if (/^[a-z][a-z\d+.-]*:/i.test(url) || url.startsWith('/') || url.startsWith('#'))
+    return safeUrl(url) ? url : ''
   if (/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(url)) return `mailto:${url}`
   return `https://${url}`
 }

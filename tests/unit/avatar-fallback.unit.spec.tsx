@@ -57,7 +57,7 @@ describe('local Beam fallback', () => {
     expect(svg).toContain('viewBox="0 0 36 36"')
     expect(svg).toContain('<path')
     expect(svg).not.toContain('person:42')
-    expect(svg).not.toMatch(/<script|<image|https?:\/\/(?!www.w3.org)/)
+    expect(svg).not.toMatch(/<script|<image|https?:\/\/(?!www\.w3\.org\/)/)
     expect(renderToString(<AvatarFallback seed="" />)).toBe(
       renderToString(<AvatarFallback seed="anonymous" />),
     )

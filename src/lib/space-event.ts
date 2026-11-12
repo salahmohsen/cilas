@@ -108,7 +108,7 @@ export const googleCalendarUrl = (event: CalendarEvent): string => {
 }
 
 const escapeText = (value: string) =>
-  value.replace(/\\/g, '\\\\').replace(/;/g, '\;').replace(/,/g, '\\,').replace(/\r?\n/g, '\\n')
+  value.replace(/\\/g, '\\\\').replace(/;/g, '\\;').replace(/,/g, '\\,').replace(/\r?\n/g, '\\n')
 
 /** RFC 5545 §3.1: lines fold at 75 octets, the continuation starting with one space. */
 const fold = (line: string): string => {

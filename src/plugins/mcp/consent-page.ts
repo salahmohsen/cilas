@@ -1,14 +1,8 @@
 import { LOGO, LOGO_VIEWBOX } from '@/components/home/home-scene-logo'
 
-import type { Assistant } from './assistants'
+import { escapeHtml } from '@/lib/html-entities'
 
-const escape = (value: string): string =>
-  value
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;')
-    .replace(/'/g, '&#x27;')
+import type { Assistant } from './assistants'
 
 const mark = `<svg aria-hidden="true" focusable="false" viewBox="${LOGO_VIEWBOX}" fill="currentColor" fill-rule="evenodd" width="28" height="48">${LOGO.map((shape) => `<path d="${shape.d}"/>`).join('')}</svg>`
 
@@ -50,7 +44,7 @@ const headers = {
 }
 
 const shell = (title: string, body: string): string =>
-  `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="color-scheme" content="light dark"><meta name="robots" content="noindex"><title>${escape(title)}</title><style>${STYLE}</style></head><body><main><div class="brand">${mark}<span>CILAS</span></div>${body}</main></body></html>`
+  `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="color-scheme" content="light dark"><meta name="robots" content="noindex"><title>${escapeHtml(title)}</title><style>${STYLE}</style></head><body><main><div class="brand">${mark}<span>CILAS</span></div>${body}</main></body></html>`
 
 export const consentTitle = (assistant: Assistant) => `Let ${assistant.name} work on CILAS`
 
@@ -64,7 +58,6 @@ export const extractForm = (pluginHtml: string): string | null => {
     .replace(/>\s*Deny\s*</, '>Do not allow<')
     .replace(/class="btn btn-approve"/, 'class="allow"')
     .replace(/class="btn btn-deny"/, 'class="deny"')
-    .replace(/<div class="actions">/, '<div class="actions">')
 }
 
 export const renderConsentPage = ({
@@ -87,9 +80,9 @@ export const renderConsentPage = ({
       status: 500,
     })
   }
-  const body = `<h1>${escape(consentTitle(assistant))}?</h1>
-<p>You are signed in as <strong>${escape(email)}</strong>. If you click Allow, ${escape(assistant.name)} can work on the CILAS website as you.</p>
-<div class="box"><h2>${escape(assistant.name)} will be able to</h2><ul>
+  const body = `<h1>${escapeHtml(consentTitle(assistant))}?</h1>
+<p>You are signed in as <strong>${escapeHtml(email)}</strong>. If you click Allow, ${escapeHtml(assistant.name)} can work on the CILAS website as you.</p>
+<div class="box"><h2>${escapeHtml(assistant.name)} will be able to</h2><ul>
 <li>look up courses, articles, forms and people (names and titles only, never emails or applications),</li>
 <li>make a draft of a course or an article,</li>
 <li>make a registration form and link it to a draft of a course.</li></ul></div>
@@ -98,7 +91,7 @@ export const renderConsentPage = ({
 <li>see applications, emails or who enrolled.</li></ul>
 <p class="muted">A person has to read each draft and publish it.</p></div>
 ${form}
-<p class="muted">After you choose, you go back to ${escape(redirectHost)}. You can disconnect ${escape(assistant.name)} at any time: open Connected assistants in the CILAS admin and delete the row.</p>`
+<p class="muted">After you choose, you go back to ${escapeHtml(redirectHost)}. You can disconnect ${escapeHtml(assistant.name)} at any time: open Connected assistants in the CILAS admin and delete the row.</p>`
   return new Response(shell(consentTitle(assistant), body), { status: 200, headers })
 }
 
@@ -111,8 +104,8 @@ export const renderRefusalPage = ({
   reason: string
   status: number
 }): Response => {
-  const body = `<h1 class="warn">${escape(assistant.name)} cannot be connected</h1>
-<p>${escape(reason)}</p>
+  const body = `<h1 class="warn">${escapeHtml(assistant.name)} cannot be connected</h1>
+<p>${escapeHtml(reason)}</p>
 <div class="actions"><a class="btn" href="/admin">Go to the CILAS admin</a></div>`
   return new Response(shell(`${assistant.name} cannot be connected`, body), { status, headers })
 }

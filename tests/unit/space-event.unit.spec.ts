@@ -92,7 +92,7 @@ describe('calendar entries', () => {
     expect(ics).toContain('UID:space-post-7@cilas.org\r\n')
     expect(ics).toContain('DTSTART:20261101T160000Z\r\n')
     expect(ics).toContain('DTEND:20261101T183000Z\r\n')
-    expect(ics).toContain('LOCATION:Room 2\; Zamalek\r\n')
+    expect(ics).toContain('LOCATION:Room 2\\; Zamalek\r\n')
     expect(ics.split('\r\n').every((l) => Buffer.byteLength(l) <= 75)).toBe(true)
   })
   it('folds a long line at 75 octets', () => {

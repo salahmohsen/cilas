@@ -36,7 +36,7 @@ export function SiteFooter({
   return (
     <ArcSiteFooter
       brand={{
-        name: header('brand').replace('\n', ' '),
+        name: header('brand').replace(/\n/g, ' '),
         href: href(''),
         mark: (
           <Image

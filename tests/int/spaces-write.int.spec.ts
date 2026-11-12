@@ -86,7 +86,9 @@ let cohortSpace: Space
 // Saving an event reads its place name from the web; the tests stay offline.
 vi.mock('@/lib/link-preview', async (original) => ({
   ...(await original<typeof import('@/lib/link-preview')>()),
-  placeName: vi.fn(async (url: string) => (url.includes('example.org') ? 'Example room' : null)),
+  placeName: vi.fn(async (url: string) =>
+    new URL(url).hostname === 'example.org' ? 'Example room' : null,
+  ),
 }))
 
 const introOf = (space: Space) => {
