@@ -1,12 +1,32 @@
 /* AI → Study prompts: inside Payload's form, so Payload's theme variables, except the Arc meter. */
 .about {
+  /* A header row of its own above the section's prompts, whatever layout holds it. */
   display: grid;
-  gap: 0.25rem;
-  margin-block-end: 1rem;
-  color: var(--theme-elevation-650);
+  gap: 0.625rem;
+  grid-column: 1 / -1;
+  flex: 1 0 100%;
+  inline-size: 100%;
+  margin-block-end: 1.5rem;
+  padding-block-end: 1rem;
+  border-block-end: 1px solid var(--theme-elevation-100);
 }
 .about p {
   margin: 0;
+}
+.lead {
+  color: var(--theme-text);
+  font-size: 1rem;
+  line-height: 1.5;
+}
+.placeholders {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+}
+.label {
+  color: var(--theme-elevation-650);
+  font-size: 0.8125rem;
 }
 .hint {
   margin: 0;
@@ -17,7 +37,6 @@
   display: flex;
   flex-wrap: wrap;
   gap: 0.375rem;
-  margin-block: 0.25rem;
 }
 .chip {
   min-block-size: 32px;

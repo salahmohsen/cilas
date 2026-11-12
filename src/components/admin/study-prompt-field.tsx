@@ -59,26 +59,35 @@ export function StudyPromptAbout({ kind }: { kind: StudyKind }) {
     }
   }
   return (
-    <div className={styles.about}>
-      <p>
+    <header className={styles.about}>
+      <p className={styles.lead}>
         Each button opens the assistant with the longest of these prompts that its link can carry.
         An empty field uses the default, shown in grey.
       </p>
-      <div className={styles.chips} aria-label="Placeholders">
-        {STUDY_VARIABLES[kind].map((name) => {
-          const token = `{${name}}`
-          return (
-            <button key={name} type="button" className={styles.chip} onClick={() => copy(token)}>
-              {copied === token ? 'Copied' : token}
-            </button>
-          )
-        })}
+      <div className={styles.placeholders}>
+        <span className={styles.label}>Placeholders</span>
+        <div className={styles.chips}>
+          {STUDY_VARIABLES[kind].map((name) => {
+            const token = `{${name}}`
+            return (
+              <button
+                key={name}
+                type="button"
+                className={styles.chip}
+                aria-label={`Copy ${token}`}
+                onClick={() => copy(token)}
+              >
+                {copied === token ? 'Copied' : token}
+              </button>
+            )
+          })}
+        </div>
       </div>
       <p className={styles.hint}>
         {'{pageFile}'} and {'{siteFile}'} must stay: the assistant reads the page and the site from
         them. A line that holds only an empty placeholder is left out.
       </p>
-    </div>
+    </header>
   )
 }
 
