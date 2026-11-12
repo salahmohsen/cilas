@@ -1,6 +1,7 @@
 import type { Payload, PayloadRequest, Where } from 'payload'
 import { APIError } from 'payload'
 
+import { type DeleteGroup, group } from '@/lib/delete-summary'
 import { parentOf, parentRef, spaceHref } from '@/lib/space-ref'
 import type { SpaceKind } from '@/lib/spaces'
 import { escapeRegExp } from '@/lib/regexp'
@@ -65,6 +66,16 @@ export const countSpaceContent = async (
   ])
   return { posts, comments, files, reactions, votes, rsvps }
 }
+
+/** The counts as delete dialog groups (src/lib/delete-summary.ts). */
+export const spaceContentGroups = (c: SpaceContentCounts): DeleteGroup[] => [
+  group('posts', c.posts, []),
+  group('comments', c.comments, []),
+  group('files', c.files, []),
+  group('reactions', c.reactions, []),
+  group('votes', c.votes, []),
+  group('RSVPs', c.rsvps, []),
+]
 
 /**
  * The spaces collection's beforeDelete: removes everything that hangs on the

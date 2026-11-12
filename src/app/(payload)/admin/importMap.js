@@ -42,7 +42,7 @@ import { MetaDescriptionComponent as MetaDescriptionComponent_a8a977ebc872c5d5ea
 import { MetaImageComponent as MetaImageComponent_a8a977ebc872c5d5ea7ee689724c0860 } from '@payloadcms/plugin-seo/client'
 import { PreviewComponent as PreviewComponent_a8a977ebc872c5d5ea7ee689724c0860 } from '@payloadcms/plugin-seo/client'
 import { VisualEditorController as VisualEditorController_3a8e3d5bdeeaec64e402b668680114ed } from 'payload-inline-visual-editor/client'
-import { SpaceDeleteMenuItem as SpaceDeleteMenuItem_fe373f97965e49e7953f966d24057638 } from '../../../components/admin/space-delete'
+import { DeleteMenuItem as DeleteMenuItem_cc7ced45580b96a7bafbf456f075acd8 } from '../../../components/admin/delete-dialog'
 import { NewsletterActions as NewsletterActions_b0970b01e42603472424e6e40dd0fd9e } from '../../../components/admin/newsletter-actions'
 import { NewsletterStats as NewsletterStats_fdb33d0393a3d579112339a67c8ca7a7 } from '../../../components/admin/newsletter-stats'
 import { SubscribersLink as SubscribersLink_8812e7bc4e59e86dbe460c3e3c68a83f } from '../../../components/admin/subscribers-link'
@@ -140,7 +140,7 @@ export const importMap = {
   "@payloadcms/plugin-seo/client#MetaImageComponent": MetaImageComponent_a8a977ebc872c5d5ea7ee689724c0860,
   "@payloadcms/plugin-seo/client#PreviewComponent": PreviewComponent_a8a977ebc872c5d5ea7ee689724c0860,
   "payload-inline-visual-editor/client#VisualEditorController": VisualEditorController_3a8e3d5bdeeaec64e402b668680114ed,
-  "/components/admin/space-delete#SpaceDeleteMenuItem": SpaceDeleteMenuItem_fe373f97965e49e7953f966d24057638,
+  "/components/admin/delete-dialog#DeleteMenuItem": DeleteMenuItem_cc7ced45580b96a7bafbf456f075acd8,
   "/components/admin/newsletter-actions#NewsletterActions": NewsletterActions_b0970b01e42603472424e6e40dd0fd9e,
   "/components/admin/newsletter-stats#NewsletterStats": NewsletterStats_fdb33d0393a3d579112339a67c8ca7a7,
   "/components/admin/subscribers-link#SubscribersLink": SubscribersLink_8812e7bc4e59e86dbe460c3e3c68a83f,

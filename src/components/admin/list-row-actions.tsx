@@ -4,7 +4,7 @@ import { toast, useAuth, useConfig, useTranslation } from '@payloadcms/ui'
 import { useRouter } from 'next/navigation'
 import { type ReactNode, useEffect, useRef } from 'react'
 
-import { useSpaceDeleteDialog } from './space-delete'
+import { DIALOG_DELETE, type DialogDeleteSlug, useDeleteDialog } from './delete-dialog'
 
 const CELL_CLASS = 'pt-actions-cell'
 const ARM_TIMEOUT = 2600
@@ -18,8 +18,9 @@ const TRASH_SVG =
  * ListQuickActions (swapped in src/payload.config.ts). The theme's version
  * shows Delete on every row and calls the stock REST delete, so a collection
  * whose delete is closed got "An unknown error has occurred". Here Delete
- * shows only where the user may delete, and a space opens the space delete
- * dialog (its content counts and name check) instead of the stock delete.
+ * shows only where the user may delete, and a space or a course opens the
+ * delete dialog (what goes with it, and a name check) instead of the stock
+ * delete.
  * Same markup and classes as the theme, so its styles apply.
  */
 export function ListRowActions({ children }: { children?: ReactNode }) {
@@ -27,11 +28,11 @@ export function ListRowActions({ children }: { children?: ReactNode }) {
   const { permissions } = useAuth()
   const { t } = useTranslation()
   const router = useRouter()
-  const spaceDelete = useSpaceDeleteDialog(() => router.refresh())
+  const dialogDelete = useDeleteDialog(() => router.refresh())
   // The decorator reads the dialog through a ref so it does not rebuild the
   // cells each time the dialog's state changes.
-  const openSpaceDelete = useRef(spaceDelete.open)
-  openSpaceDelete.current = spaceDelete.open
+  const openDialogDelete = useRef(dialogDelete.open)
+  openDialogDelete.current = dialogDelete.open
 
   useEffect(() => {
     const apiBase = `${config.serverURL || ''}${config.routes.api}`
@@ -91,10 +92,13 @@ export function ListRowActions({ children }: { children?: ReactNode }) {
       })
       td.append(edit)
 
-      if (slug === 'spaces') {
-        // The stock delete is closed for spaces; the dialog has its own confirm.
+      if ((DIALOG_DELETE as readonly string[]).includes(slug)) {
+        // The stock delete is closed here; the dialog checks who may delete.
         const del = trashButton()
-        del.addEventListener('click', () => void openSpaceDelete.current(id))
+        del.addEventListener(
+          'click',
+          () => void openDialogDelete.current(slug as DialogDeleteSlug, id),
+        )
         td.append(del)
         return td
       }
@@ -148,7 +152,7 @@ export function ListRowActions({ children }: { children?: ReactNode }) {
   return (
     <>
       {children}
-      {spaceDelete.modal}
+      {dialogDelete.modal}
     </>
   )
 }

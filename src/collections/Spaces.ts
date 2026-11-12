@@ -33,7 +33,14 @@ export const Spaces: CollectionConfig = {
   admin: {
     group: 'Community',
     components: {
-      edit: { editMenuItems: ['/components/admin/space-delete#SpaceDeleteMenuItem'] },
+      edit: {
+        editMenuItems: [
+          {
+            path: '/components/admin/delete-dialog#DeleteMenuItem',
+            clientProps: { collection: 'spaces' },
+          },
+        ],
+      },
     },
     defaultColumns: ['display_name', 'kind', 'posting', 'reopened', 'updatedAt'],
   },

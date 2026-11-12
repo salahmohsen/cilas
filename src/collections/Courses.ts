@@ -1,6 +1,8 @@
 import { copyRegistrationTemplate, templateFormHelp } from '@/forms/templates'
 import { tierField } from '@/fields/tier'
 import { previewUrl } from '@/lib/preview-url'
+import { courseDeleteSummary, deleteCourseDependents } from '@/lib/course-delete'
+import { blockedUnless, deleteEndpoints } from '@/forms/delete-endpoints'
 import { addSelfAs } from '@/lib/review-ownership'
 import {
   adminPublishes,
@@ -105,6 +107,13 @@ export const revokeDeletedCourseFellows: CollectionAfterDeleteHook<Course> = asy
   return doc
 }
 
+/** Who may delete a course: an admin, or a fellow their own draft. */
+const deleteCourse = isAdminOrOwn(ownsViaFellows, {
+  allow: ['fellow'],
+  draft: true,
+  while: WITH_OWNER,
+})
+
 export const Courses: CollectionConfig = {
   slug: 'courses',
   access: {
@@ -116,8 +125,15 @@ export const Courses: CollectionConfig = {
     // A fellow edits while the course is with them; submitted, it waits for the
     // admin. Published, their edits are a draft for review beside it.
     update: adminPublishes(isAdminOrOwn(ownsViaFellows, { allow: ['fellow'], while: OWNER_EDITS })),
-    delete: isAdminOrOwn(ownsViaFellows, { allow: ['fellow'], draft: true, while: WITH_OWNER }),
+    // Closed so the panel's stock delete never shows: a course is deleted
+    // through the delete dialog, which lists what goes with it first
+    // (src/forms/delete-endpoints.ts).
+    delete: () => false,
   },
+  endpoints: deleteEndpoints('courses', {
+    summarize: courseDeleteSummary,
+    blocked: blockedUnless('courses', deleteCourse, 'You can delete only your own draft courses.'),
+  }),
   versions: {
     drafts: {
       autosave: {
@@ -512,6 +528,16 @@ export const Courses: CollectionConfig = {
 
   admin: {
     useAsTitle: 'title',
+    components: {
+      edit: {
+        editMenuItems: [
+          {
+            path: '/components/admin/delete-dialog#DeleteMenuItem',
+            clientProps: { collection: 'courses' },
+          },
+        ],
+      },
+    },
     defaultColumns: ['title', 'cycle', 'course_type', 'review.status', 'tier'],
     // A fellow lists the courses they teach, not every public one.
     baseFilter: ownList(ownsViaFellows),
@@ -552,7 +578,7 @@ export const Courses: CollectionConfig = {
       ensureSpaceFor('course'),
       announceScheduleChanges,
     ],
-    beforeDelete: [deleteOwnedSpaces('course')],
+    beforeDelete: [deleteOwnedSpaces('course'), deleteCourseDependents],
     afterDelete: [revokeDeletedCourseFellows, revalidateAfterDelete('courses')],
   },
 }

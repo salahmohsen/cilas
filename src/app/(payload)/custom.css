@@ -173,8 +173,19 @@
   border-radius: 6px;
 }
 
-/* The name box in the "Delete space" dialog (src/components/admin/space-delete.tsx). */
-.cilas-space-delete-input {
+/* The delete dialog (src/components/admin/delete-dialog.tsx): what goes, and the name box. */
+.cilas-delete-groups {
+  margin: 0 0 1rem;
+  padding-inline-start: 1.25rem;
+  max-height: 16rem;
+  overflow-y: auto;
+}
+
+.cilas-delete-groups li + li {
+  margin-top: 0.25rem;
+}
+
+.cilas-delete-input {
   width: 100%;
   padding: 0.5rem 0.75rem;
   border: 1px solid var(--theme-elevation-150);
