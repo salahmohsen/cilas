@@ -10,7 +10,6 @@ const KINDS: Record<QueueKind, string> = {
   article: 'Article',
   course: 'Course',
   publication: 'Publication',
-  application: 'Application',
 }
 
 const box = { padding: '16px 20px' } as const
@@ -104,7 +103,7 @@ export async function ReviewQueueWidget({
   )
 }
 
-/** Admin → Reviews: everything submitted for review and every open application. */
+/** Admin → Reviews: every article, course and publication submitted for review. */
 export async function ReviewQueueView({
   initPageResult,
   params,
@@ -132,8 +131,8 @@ export async function ReviewQueueView({
         ) : (
           <>
             <p style={{ ...muted, marginTop: 0 }}>
-              Articles, courses and publications submitted for review, and applications not yet
-              accepted or rejected. The oldest first.
+              Articles, courses and publications submitted for review. The oldest first.
+              Applications are on the <Link href="/admin/applicants">Applicants</Link> page.
             </p>
             {items.length ? <QueueTable items={items} /> : <p>Nothing waits for you.</p>}
           </>

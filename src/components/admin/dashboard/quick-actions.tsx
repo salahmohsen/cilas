@@ -6,6 +6,7 @@ import { accountContactCount } from '@/lib/resend-contacts'
 import { env } from '@/env'
 
 import { cachedStat } from './cached'
+import { openApplicationCount } from './widgets/applications'
 import styles from './dashboard.module.css'
 
 const CREATE = [
@@ -44,13 +45,15 @@ const unread = (payload: Payload, user: TypedUser) =>
 
 /** The top row: where admins act first, with live counts, then the create links. */
 export async function QuickActions({ payload, user }: { payload: Payload; user: TypedUser }) {
-  const [review, contacts, notifications] = await Promise.all([
+  const [review, applications, contacts, notifications] = await Promise.all([
     waiting().catch(() => null),
+    openApplicationCount().catch(() => null),
     subscribers(),
     unread(payload, user),
   ])
   const tiles: Tile[] = [
-    { label: 'Reviews and applications waiting', count: review, href: '/admin/reviews' },
+    { label: 'Reviews waiting', count: review, href: '/admin/reviews' },
+    { label: 'Applications waiting', count: applications, href: '/admin/applicants' },
     { label: 'Newsletter subscribers', count: contacts, href: '/admin/subscribers' },
     { label: 'Unread notifications', count: notifications },
   ]

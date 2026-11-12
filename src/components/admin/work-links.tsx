@@ -13,7 +13,7 @@ export function WorkLinks({ user, req }: { user?: TypedUser | null; req?: Payloa
       </Link>
       {isAdminUser(user) && (
         <>
-          <Link href="/admin/reviews">Reviews and applications</Link>
+          <Link href="/admin/reviews">Reviews</Link>
           <Link href="/admin/subscribers">Newsletter subscribers</Link>
         </>
       )}

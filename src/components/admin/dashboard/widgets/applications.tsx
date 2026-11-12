@@ -10,7 +10,7 @@ type Application = { createdAt: string; status: string }
 
 /**
  * Applications are form submissions that name a target; contact messages have
- * none (the same rule as the review queue, src/lib/review-queue.ts).
+ * none.
  */
 const applications = () =>
   cachedStat<Application[]>('applications', async (payload) => {
@@ -26,6 +26,11 @@ const applications = () =>
       .map((s) => ({ createdAt: s.createdAt, status: s.status ?? 'new' }))
   })
 
+const isOpen = (a: Application) => a.status === 'new'
+
+/** Applications not yet accepted or rejected: they wait on Admin → Applicants. */
+export const openApplicationCount = async () => (await applications()).filter(isOpen).length
+
 export async function OpenApplications() {
   const all = await applications()
   const stamps = all.map((a) => a.createdAt)
@@ -33,7 +38,7 @@ export async function OpenApplications() {
   return (
     <MetricCard
       label="Open applications"
-      value={all.filter((a) => a.status === 'new').length}
+      value={all.filter(isOpen).length}
       context={`${recent} received in the last 30 days`}
       change={periodChange(stamps, 30) ?? undefined}
     />
