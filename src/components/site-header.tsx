@@ -150,7 +150,10 @@ export function CILASSiteHeader({ nav = ALL_SHOWN }: { nav?: Navigation }) {
             title: t('study.featureTitle'),
             description: t('study.featureDescription'),
             href: href(BRIDGE_PATH),
-            image: { src: '/assets/images/cilas-classroom.jpg', alt: t('study.featureImageAlt') },
+            image: {
+              src: '/assets/images/bridge-studio-drawing.webp',
+              alt: t('study.featureImageAlt'),
+            },
           }
         : undefined,
     },
