@@ -6,6 +6,7 @@ import { getLocale, getTranslations } from 'next-intl/server'
 import { getPayload } from 'payload'
 
 import { getGovernance } from '@/api/people.api'
+import { requirePeoplePage } from '@/api/people-pages.api'
 import { PeoplePage } from '@/components/person/people-page'
 import { localDigits } from '@/lib/digits'
 
@@ -25,6 +26,7 @@ export async function generateMetadata(): Promise<Metadata> {
 
 /** The advisors and trustees on a wheel. */
 export default async function GovernancePage({ params }: Props) {
+  await requirePeoplePage('governance')
   const { locale } = await params
   const t = await getTranslations('Governance')
   const members = await getGovernance(await getPayload({ config }), localeOf(locale))

@@ -26,9 +26,9 @@ import { forgetThisDevice } from '@/lib/push/forget'
 import { SiteSearch } from '@/components/site-search'
 import { useSession } from '@/components/use-session'
 import { useRouter } from '@/i18n/navigation'
-import { ALL_SHOWN, type Navigation } from '@/lib/navigation'
+import { ALL_ON, livePeoplePages, type PeoplePages } from '@/lib/people-pages'
 
-export function CILASSiteHeader({ nav = ALL_SHOWN }: { nav?: Navigation }) {
+export function CILASSiteHeader({ peoplePages = ALL_ON }: { peoplePages?: PeoplePages }) {
   const t = useTranslations('Header')
   const locale = useLocale()
   const router = useRouter()
@@ -101,6 +101,13 @@ export function CILASSiteHeader({ nav = ALL_SHOWN }: { nav?: Navigation }) {
     }
   }, [])
 
+  const people = livePeoplePages(peoplePages).map(({ key, path }) => ({
+    value: key,
+    label: t(`people.${key}`),
+    href: href(path),
+    description: t(`people.${key}Description`),
+  }))
+
   const items = [
     {
       value: 'study',
@@ -108,124 +115,73 @@ export function CILASSiteHeader({ nav = ALL_SHOWN }: { nav?: Navigation }) {
       href: href('/study'),
       icon: BookOpen,
       links: [
-        ...(nav.thematic
-          ? [
-              {
-                label: t('study.thematic'),
-                href: href('/study?type=thematic'),
-                description: t('study.thematicDescription'),
-              },
-            ]
-          : []),
-        ...(nav.labs
-          ? [
-              {
-                label: t('study.labs'),
-                href: href('/study?type=lab'),
-                description: t('study.labsDescription'),
-              },
-            ]
-          : []),
-        ...(nav.workshops
-          ? [
-              {
-                label: t('study.workshops'),
-                href: href('/study?type=workshop'),
-                description: t('study.workshopsDescription'),
-              },
-            ]
-          : []),
-        ...(nav.short
-          ? [
-              {
-                label: t('study.short'),
-                href: href('/study?type=short'),
-                description: t('study.shortDescription'),
-              },
-            ]
-          : []),
+        {
+          label: t('study.thematic'),
+          href: href('/study?type=thematic'),
+          description: t('study.thematicDescription'),
+        },
+        {
+          label: t('study.labs'),
+          href: href('/study?type=lab'),
+          description: t('study.labsDescription'),
+        },
+        {
+          label: t('study.workshops'),
+          href: href('/study?type=workshop'),
+          description: t('study.workshopsDescription'),
+        },
+        {
+          label: t('study.short'),
+          href: href('/study?type=short'),
+          description: t('study.shortDescription'),
+        },
       ],
-      feature: nav.bridge
-        ? {
-            title: t('study.featureTitle'),
-            description: t('study.featureDescription'),
-            href: href(BRIDGE_PATH),
-            image: {
-              src: '/assets/images/bridge-studio-drawing.webp',
-              alt: t('study.featureImageAlt'),
+      feature: {
+        title: t('study.featureTitle'),
+        description: t('study.featureDescription'),
+        href: href(BRIDGE_PATH),
+        image: {
+          src: '/assets/images/bridge-studio-drawing.webp',
+          alt: t('study.featureImageAlt'),
+        },
+      },
+    },
+    // People opens a menu of the pages that are on; one page stands in for it.
+    ...(people.length === 1
+      ? [{ ...people[0], icon: Users }]
+      : people.length
+        ? [
+            {
+              value: 'people',
+              label: t('people.label'),
+              href: href('/people'),
+              icon: Users,
+              links: people,
             },
-          }
-        : undefined,
+          ]
+        : []),
+    {
+      value: 'articles',
+      label: t('articles.label'),
+      href: href('/articles'),
+      icon: Newspaper,
+      description: t('articles.description'),
+    },
+    // The header has the room, so events and the calendar are top-level items.
+    {
+      value: 'events',
+      label: t('events.label'),
+      href: href('/events'),
+      icon: Ticket,
+      description: t('events.description'),
     },
     {
-      value: 'people',
-      label: t('people.label'),
-      href: href('/people'),
-      icon: Users,
-      links: [
-        ...(nav.fellows
-          ? [
-              {
-                label: t('people.fellows'),
-                href: href('/people/fellows'),
-                description: t('people.fellowsDescription'),
-              },
-            ]
-          : []),
-        ...(nav.cilasians
-          ? [
-              {
-                label: t('people.cilasians'),
-                href: href('/people/cilasians'),
-                description: t('people.cilasiansDescription'),
-              },
-            ]
-          : []),
-        ...(nav.governance
-          ? [
-              {
-                label: t('people.governance'),
-                href: href('/governance'),
-                description: t('people.governanceDescription'),
-              },
-            ]
-          : []),
-      ],
+      value: 'calendar',
+      label: t('calendar.label'),
+      href: href('/calendar'),
+      icon: Calendar,
+      description: t('calendar.description'),
     },
-    ...(nav.articles
-      ? [
-          {
-            value: 'articles',
-            label: t('articles.label'),
-            href: href('/articles'),
-            icon: Newspaper,
-            description: t('articles.description'),
-          },
-        ]
-      : []),
-    // The header has the room, so events and the calendar are top-level items.
-    ...(nav.events
-      ? [
-          {
-            value: 'events',
-            label: t('events.label'),
-            href: href('/events'),
-            icon: Ticket,
-            description: t('events.description'),
-          },
-        ]
-      : []),
-    ...(nav.calendar
-      ? [
-          {
-            value: 'calendar',
-            label: t('calendar.label'),
-            href: href('/calendar'),
-            icon: Calendar,
-            description: t('calendar.description'),
-          },
-        ]
-      : []),
     ...(spaces
       ? [{ value: 'spaces', label: t('spaces.label'), href: href('/spaces'), icon: MessagesSquare }]
       : []),

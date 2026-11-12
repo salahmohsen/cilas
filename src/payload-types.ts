@@ -5049,20 +5049,12 @@ export interface SiteSetting {
       }[]
     | null;
   /**
-   * Untick an item to take it out of the header and footer menus. Its page stays reachable by link.
+   * Turn a page off to take it off the site: its address shows not found, and the header, footer and sitemap leave it out. With one page on, the header shows it in place of People. With none on, People leaves the header.
    */
-  navigation?: {
-    thematic?: boolean | null;
-    labs?: boolean | null;
-    workshops?: boolean | null;
-    short?: boolean | null;
-    bridge?: boolean | null;
+  people_pages?: {
     fellows?: boolean | null;
     cilasians?: boolean | null;
     governance?: boolean | null;
-    articles?: boolean | null;
-    events?: boolean | null;
-    calendar?: boolean | null;
   };
   hero?: {
     /**
@@ -5263,20 +5255,12 @@ export interface SiteSettingsSelect<T extends boolean = true> {
         url?: T;
         id?: T;
       };
-  navigation?:
+  people_pages?:
     | T
     | {
-        thematic?: T;
-        labs?: T;
-        workshops?: T;
-        short?: T;
-        bridge?: T;
         fellows?: T;
         cilasians?: T;
         governance?: T;
-        articles?: T;
-        events?: T;
-        calendar?: T;
       };
   hero?:
     | T

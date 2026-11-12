@@ -81,6 +81,7 @@ import * as migration_20261112_101018_space_email_texts from './20261112_101018_
 import * as migration_20261112_102955_invitation_email_texts from './20261112_102955_invitation_email_texts';
 import * as migration_20261112_104514_users_invited_at from './20261112_104514_users_invited_at';
 import * as migration_20261112_111101_invitation_log_and_sign_in from './20261112_111101_invitation_log_and_sign_in';
+import * as migration_20261112_113621_people_pages from './20261112_113621_people_pages';
 
 export const migrations = [
   {
@@ -496,6 +497,11 @@ export const migrations = [
   {
     up: migration_20261112_111101_invitation_log_and_sign_in.up,
     down: migration_20261112_111101_invitation_log_and_sign_in.down,
-    name: '20261112_111101_invitation_log_and_sign_in'
+    name: '20261112_111101_invitation_log_and_sign_in',
+  },
+  {
+    up: migration_20261112_113621_people_pages.up,
+    down: migration_20261112_113621_people_pages.down,
+    name: '20261112_113621_people_pages'
   },
 ];

@@ -8,6 +8,7 @@ import { unstable_cache } from 'next/cache'
 import { getPayload } from 'payload'
 
 import { getCilasians } from '@/api/people.api'
+import { requirePeoplePage } from '@/api/people-pages.api'
 import { PeoplePage } from '@/components/person/people-page'
 import { PUBLIC_LISTS_TAG } from '@/lib/paths'
 
@@ -32,6 +33,7 @@ export async function generateMetadata(): Promise<Metadata> {
 
 /** CILASians on a wheel: the students and resident fellows of each cohort, the newest first. */
 export default async function CilasiansPage({ params }: Props) {
+  await requirePeoplePage('cilasians')
   const { locale } = await params
   const t = await getTranslations('Cilasians')
   const people = await cilasiansFor(localeOf(locale))

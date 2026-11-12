@@ -7,7 +7,8 @@ import React from 'react'
 import '@/components/arc/foundation.css'
 import '../styles.css'
 import { SiteDeadlines } from '@/components/site-deadlines'
-import { getNavigation, getSocialLinks } from '@/api/social.api'
+import { getPeoplePages } from '@/api/people-pages.api'
+import { getSocialLinks } from '@/api/social.api'
 import { SiteFooter } from '@/components/site-footer'
 import { PushRegistrar } from '@/components/push/push-registrar'
 import { SiteToasts } from '@/components/site-toasts'
@@ -57,13 +58,13 @@ export async function generateMetadata(): Promise<Metadata> {
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
   const locale = await getLocale()
   const direction = isRtl(locale) ? 'rtl' : 'ltr'
-  const [t, socials, place, list, nav] = await Promise.all([
+  const [t, socials, place, list, peoplePages] = await Promise.all([
     getTranslations('Meta'),
     getSocialLinks(),
     getCurrentPlace(localeOf(locale)),
     // The footer's signup shows only when there is a list to join.
     getPayload({ config }).then((payload) => newsletterList(payload)),
-    getNavigation(),
+    getPeoplePages(),
   ])
 
   return (
@@ -95,14 +96,14 @@ export default async function RootLayout({ children }: { children: React.ReactNo
               <SiteToasts rtl={direction === 'rtl'}>
                 {/* Open deadlines, across the whole width, above the header. */}
                 <SiteDeadlines locale={locale as 'en' | 'ar'} />
-                <CILASSiteHeader nav={nav} />
+                <CILASSiteHeader peoplePages={peoplePages} />
                 {/* Only when VAPID keys are set; the worker then registers after sign-in. */}
                 {pushConfig() && <PushRegistrar />}
                 <main className="mx-auto min-h-[60vh] max-w-page">{children}</main>
                 {/* The same width as the page content. */}
                 <div className="mx-auto max-w-page">
                   <SiteFooter
-                    nav={nav}
+                    peoplePages={peoplePages}
                     newsletter={Boolean(list)}
                     place={place}
                     socials={socials}

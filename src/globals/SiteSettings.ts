@@ -1,6 +1,8 @@
+import { revalidatePath } from 'next/cache'
 import type { Field, GlobalConfig } from 'payload'
 
-import { NAV_ITEMS } from '@/lib/navigation'
+import { routing } from '@/i18n/routing'
+import { PEOPLE_PAGES } from '@/lib/people-pages'
 import { isAdmin } from '@/access'
 import { SOCIAL_PLATFORMS } from '@/fields/social'
 
@@ -8,6 +10,19 @@ export const SiteSettings: GlobalConfig = {
   slug: 'site-settings',
   label: 'Site settings',
   access: { read: isAdmin, update: isAdmin },
+  hooks: {
+    // Every page's layout reads these settings (header, footer, people pages).
+    afterChange: [
+      ({ doc }) => {
+        try {
+          for (const locale of routing.locales) revalidatePath(`/${locale}`, 'layout')
+        } catch {
+          // Seed and import scripts have no Next cache, and this call throws there.
+        }
+        return doc
+      },
+    ],
+  },
   fields: [
     {
       type: 'tabs',
@@ -47,16 +62,17 @@ export const SiteSettings: GlobalConfig = {
           ],
         },
         {
-          label: 'Navigation',
+          label: 'People pages',
           fields: [
             {
-              name: 'navigation',
+              name: 'people_pages',
+              label: 'People pages',
               type: 'group',
               admin: {
                 description:
-                  'Untick an item to take it out of the header and footer menus. Its page stays reachable by link.',
+                  'Turn a page off to take it off the site: its address shows not found, and the header, footer and sitemap leave it out. With one page on, the header shows it in place of People. With none on, People leaves the header.',
               },
-              fields: NAV_ITEMS.map(({ key, label }): Field => ({
+              fields: PEOPLE_PAGES.map(({ key, label }): Field => ({
                 name: key,
                 label,
                 type: 'checkbox',

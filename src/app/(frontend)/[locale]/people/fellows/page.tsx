@@ -9,6 +9,7 @@ import { unstable_cache } from 'next/cache'
 import { getPayload } from 'payload'
 
 import { getFellows } from '@/api/people.api'
+import { requirePeoplePage } from '@/api/people-pages.api'
 import { PeoplePage } from '@/components/person/people-page'
 import { SEASON_ICONS } from '@/components/season-icon'
 import type { Season } from '@/lib/cycle'
@@ -39,6 +40,7 @@ export async function generateMetadata(): Promise<Metadata> {
 
 /** CILAS's fellows on a wheel: everyone who has taught here, the most recent first. */
 export default async function FellowsPage({ params }: Props) {
+  await requirePeoplePage('fellows')
   const { locale } = await params
   const [t, tf] = await Promise.all([getTranslations('Fellows'), getTranslations('Study.filters')])
   const fellows = await fellowsFor(localeOf(locale))

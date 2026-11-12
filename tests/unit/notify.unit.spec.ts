@@ -30,12 +30,11 @@ describe('notify', () => {
   })
 })
 
-describe('navigationOf', () => {
-  it('shows every item unless an admin unticked it', async () => {
-    const { navigationOf } = await import('@/lib/navigation')
-    const nav = navigationOf({ governance: false, calendar: null })
-    expect(nav.governance).toBe(false)
-    expect(nav.calendar).toBe(true)
-    expect(nav.articles).toBe(true)
+describe('peoplePagesOf', () => {
+  it('keeps every page on unless an admin turned it off', async () => {
+    const { livePeoplePages, peoplePagesOf } = await import('@/lib/people-pages')
+    const on = peoplePagesOf({ governance: false, fellows: null })
+    expect(on).toEqual({ fellows: true, cilasians: true, governance: false })
+    expect(livePeoplePages(on).map((p) => p.key)).toEqual(['fellows', 'cilasians'])
   })
 })

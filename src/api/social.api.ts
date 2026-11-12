@@ -1,7 +1,6 @@
 import { getPayload } from 'payload'
 
 import config from '@/payload.config'
-import { navigationOf, type Navigation } from '@/lib/navigation'
 import type { SOCIAL_PLATFORMS } from '@/fields/social'
 
 export type SocialLink = { platform: (typeof SOCIAL_PLATFORMS)[number]; url: string }
@@ -14,12 +13,4 @@ export const getSocialLinks = async (): Promise<SocialLink[]> => {
   return (settings?.social_links ?? []).flatMap((s) =>
     s.platform && s.url ? [{ platform: s.platform, url: s.url }] : [],
   )
-}
-
-/** What the header and footer menus show (Site settings → Navigation). */
-export const getNavigation = async (): Promise<Navigation> => {
-  const payload = await getPayload({ config })
-  // A failed read (say, before its migration) shows every item.
-  const settings = await payload.findGlobal({ slug: 'site-settings', depth: 0 }).catch(() => null)
-  return navigationOf(settings?.navigation)
 }

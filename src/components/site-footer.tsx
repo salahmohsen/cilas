@@ -8,7 +8,7 @@ import Image from 'next/image'
 import { siCreativecommons } from 'simple-icons'
 
 import type { Place } from '@/api/place.api'
-import { ALL_SHOWN, type Navigation } from '@/lib/navigation'
+import { ALL_ON, livePeoplePages, type PeoplePages } from '@/lib/people-pages'
 import { subscribeToNewsletter } from '@/lib/newsletter-subscribe'
 import type { SocialLink } from '@/api/social.api'
 import { SiteFooter as ArcSiteFooter } from '@/components/arc/blocks/site-footer/site-footer'
@@ -19,14 +19,14 @@ export function SiteFooter({
   socials = [],
   place = null,
   newsletter = true,
-  nav = ALL_SHOWN,
+  peoplePages = ALL_ON,
 }: {
   socials?: SocialLink[]
   place?: Place | null
   /** Whether signup is set up (a signup Mailing list and the Resend key); off, the form is left out. */
   newsletter?: boolean
-  /** What the menus show (Site settings → Navigation). */
-  nav?: Navigation
+  /** Which people pages are on (Site settings → People pages). */
+  peoplePages?: PeoplePages
 }) {
   const t = useTranslations('Footer')
   const header = useTranslations('Header')
@@ -54,41 +54,28 @@ export function SiteFooter({
           title: header('study.label'),
           links: [
             { label: t('allCourses'), href: href('/study') },
-            ...(nav.thematic
-              ? [{ label: header('study.thematic'), href: href('/study?type=thematic') }]
-              : []),
-            ...(nav.labs ? [{ label: header('study.labs'), href: href('/study?type=lab') }] : []),
-            ...(nav.workshops
-              ? [{ label: header('study.workshops'), href: href('/study?type=workshop') }]
-              : []),
-            ...(nav.short
-              ? [{ label: header('study.short'), href: href('/study?type=short') }]
-              : []),
-            ...(nav.bridge
-              ? [{ label: header('study.featureTitle'), href: href(BRIDGE_PATH) }]
-              : []),
+            { label: header('study.thematic'), href: href('/study?type=thematic') },
+            { label: header('study.labs'), href: href('/study?type=lab') },
+            { label: header('study.workshops'), href: href('/study?type=workshop') },
+            { label: header('study.short'), href: href('/study?type=short') },
+            { label: header('study.featureTitle'), href: href(BRIDGE_PATH) },
           ],
         },
         {
           title: header('people.label'),
           links: [
-            ...(nav.fellows
-              ? [{ label: header('people.fellows'), href: href('/people/fellows') }]
-              : []),
-            ...(nav.cilasians
-              ? [{ label: header('people.cilasians'), href: href('/people/cilasians') }]
-              : []),
-            ...(nav.governance
-              ? [{ label: header('people.governance'), href: href('/governance') }]
-              : []),
+            ...livePeoplePages(peoplePages).map(({ key, path }) => ({
+              label: header(`people.${key}`),
+              href: href(path),
+            })),
           ],
         },
         {
           title: t('explore'),
           links: [
-            ...(nav.articles ? [{ label: t('articles'), href: href('/articles') }] : []),
-            ...(nav.events ? [{ label: t('events'), href: href('/events') }] : []),
-            ...(nav.calendar ? [{ label: t('calendar'), href: href('/calendar') }] : []),
+            { label: t('articles'), href: href('/articles') },
+            { label: t('events'), href: href('/events') },
+            { label: t('calendar'), href: href('/calendar') },
           ],
         },
         {
