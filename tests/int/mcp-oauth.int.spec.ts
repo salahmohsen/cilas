@@ -4,9 +4,11 @@ import { createHash, randomBytes } from 'node:crypto'
 import { createLocalReq, getPayload, type Payload, type PayloadRequest } from 'payload'
 import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest'
 
+import { decodeEntities } from '@/lib/html-entities'
 import config from '@/payload.config'
 import type { User } from '@/payload-types'
 import { mcpServerUrl } from '@/plugins/mcp/paths'
+import { AI_GROUP } from '@/plugins/role-nav'
 
 import { createTracker, uniqEmail } from './fixtures'
 
@@ -124,7 +126,7 @@ const hidden = (html: string): Record<string, string> =>
   Object.fromEntries(
     [...html.matchAll(/<input type="hidden" name="([^"]+)" value="([^"]*)">/g)].map((m) => [
       m[1]!,
-      m[2]!.replace(/&amp;/g, '&'),
+      decodeEntities(m[2]!),
     ]),
   )
 
@@ -760,9 +762,9 @@ describe('assistants connect with OAuth', () => {
   describe('in the admin panel', () => {
     const collection = (slug: string) => payload.config.collections.find((c) => c.slug === slug)!
 
-    it.each(['oauth-clients', 'oauth-tokens'])('puts %s under Site, for admins only', (slug) => {
+    it.each(['oauth-clients', 'oauth-tokens'])('puts %s under AI, for admins only', (slug) => {
       const { admin: panel } = collection(slug)
-      expect(panel.group).toBe('Site')
+      expect(panel.group).toBe(AI_GROUP)
       const isHidden = panel.hidden as (args: { user: unknown }) => boolean
       expect(isHidden({ user: { roles: ['admin'] } })).toBe(false)
       expect(isHidden({ user: { roles: ['super_admin'] } })).toBe(false)
