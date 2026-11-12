@@ -1,11 +1,13 @@
 // @vitest-environment node
 
 import type { TypedUser } from 'payload'
-import { describe, expect, it } from 'vitest'
+import { describe, expect, it, vi } from 'vitest'
+
+vi.mock('server-only', () => ({}))
 
 import { workViewsFor } from '@/components/admin/work-views'
 
-const as = (...roles: string[]) => ({ roles }) as unknown as TypedUser
+const as = (...roles: string[]) => ({ roles, person: 7 }) as unknown as TypedUser
 
 describe('work views (top bar and dashboard tiles)', () => {
   it('shows admins Applicants, Reviews and Subscribers', () => {
@@ -18,6 +20,11 @@ describe('work views (top bar and dashboard tiles)', () => {
 
   it('shows fellows Applicants only', () => {
     expect(workViewsFor(as('fellow')).map((v) => v.key)).toEqual(['applicants'])
+  })
+
+  it('hides Applicants from a fellow with no linked person', () => {
+    const unlinked = { roles: ['fellow'] } as unknown as TypedUser
+    expect(workViewsFor(unlinked)).toEqual([])
   })
 
   it('shows nobody else any view', () => {

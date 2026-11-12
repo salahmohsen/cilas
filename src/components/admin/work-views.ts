@@ -1,7 +1,7 @@
 import type { TypedUser } from 'payload'
 
 import { isAdminUser } from '@/access'
-import { showApplicants } from '@/plugins/role-nav'
+import { applicantViewer } from '@/forms/applicants'
 
 export type WorkViewKey = 'applicants' | 'reviews' | 'subscribers'
 
@@ -14,7 +14,7 @@ export type WorkView = { key: WorkViewKey; href: string; label: string }
  */
 export function workViewsFor(user: TypedUser | null | undefined, language?: string): WorkView[] {
   const views: WorkView[] = []
-  if (showApplicants(user)) {
+  if (applicantViewer(user)) {
     views.push({
       key: 'applicants',
       href: '/admin/applicants',

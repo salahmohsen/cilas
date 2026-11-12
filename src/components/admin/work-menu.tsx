@@ -12,6 +12,7 @@ export function WorkMenu({ views }: { views: WorkView[] }) {
   const [open, setOpen] = useState(false)
   const panel = useId()
   const box = useRef<HTMLDivElement>(null)
+  const trigger = useRef<HTMLButtonElement>(null)
   const pathname = usePathname()
 
   // The header stays mounted across pages, so close the list on every move.
@@ -20,7 +21,11 @@ export function WorkMenu({ views }: { views: WorkView[] }) {
   useEffect(() => {
     if (!open) return
     const away = (e: MouseEvent) => !box.current?.contains(e.target as Node) && setOpen(false)
-    const esc = (e: KeyboardEvent) => e.key === 'Escape' && setOpen(false)
+    const esc = (e: KeyboardEvent) => {
+      if (e.key !== 'Escape') return
+      setOpen(false)
+      trigger.current?.focus()
+    }
     document.addEventListener('mousedown', away)
     document.addEventListener('keydown', esc)
     return () => {
@@ -37,6 +42,7 @@ export function WorkMenu({ views }: { views: WorkView[] }) {
         aria-label="Admin work"
         className="cilas-work-menu__button"
         onClick={() => setOpen((o) => !o)}
+        ref={trigger}
         type="button"
       >
         <LayoutList aria-hidden size={16} />
