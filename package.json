@@ -79,7 +79,7 @@
     "payload-inline-visual-editor": "1.0.1",
     "payload-oauth2": "^1.0.21",
     "payload-plugin-llms-txt": "0.2.0",
-    "payload-theme": "^0.9.4",
+    "payload-theme": "^0.10.0",
     "pg": "8.20.0",
     "posthog-js": "^1.444.0",
     "posthog-node": "^5.61.1",
@@ -111,6 +111,7 @@
     "@testing-library/react": "16.3.0",
     "@types/jsdom": "^30.0.0",
     "@types/node": "22.19.9",
+    "@types/opentype.js": "^1.3.10",
     "@types/pg": "8.20.0",
     "@types/react": "19.2.14",
     "@types/react-dom": "19.2.3",
@@ -121,6 +122,7 @@
     "jose": "5.10.0",
     "jsdom": "28.0.0",
     "lefthook": "2.2.2",
+    "opentype.js": "1.3.4",
     "oxfmt": "^0.75.0",
     "oxlint": "^1.90.0",
     "postcss": "^8.5.28",
@@ -162,7 +164,8 @@
       "unrs-resolver"
     ],
     "patchedDependencies": {
-      "deepmerge@4.3.1": "patches/deepmerge@4.3.1.patch"
+      "deepmerge@4.3.1": "patches/deepmerge@4.3.1.patch",
+      "payload-theme@0.10.0": "patches/payload-theme@0.10.0.patch"
     },
     "auditConfig": {
       "ignoreGhsas": [

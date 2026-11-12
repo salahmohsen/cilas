@@ -1,0 +1,72 @@
+diff --git a/dist/components/Nav/index.js b/dist/components/Nav/index.js
+index af53972dcbb2a7bffa82d9f5f282004e67ea051b..245b47a563ec2107f04dfb3ecadb5d2d5df34bbc 100644
+--- a/dist/components/Nav/index.js
++++ b/dist/components/Nav/index.js
+@@ -253,9 +253,9 @@ export const Nav = ()=>{
+                 ref: navRef,
+                 children: [
+                     /*#__PURE__*/ _jsx(Link, {
+-                        "aria-label": i18n.t('general:dashboard'),
++                        "aria-label": theme?.logoLink?.label ?? i18n.t('general:dashboard'),
+                         className: "pt-nav__logo",
+-                        href: adminRoute,
++                        href: theme?.logoLink?.href ?? adminRoute,
+                         prefetch: false,
+                         children: logoIsImage ? logoIsPair ? /*#__PURE__*/ _jsxs(React.Fragment, {
+                             children: [
+diff --git a/dist/options.d.ts b/dist/options.d.ts
+index e5f0ef5bab3582b9e9b12541c4f3d324f6a0ecfe..850128b6d9cac30fe88f7052f5fb247ff27e4a80 100644
+--- a/dist/options.d.ts
++++ b/dist/options.d.ts
+@@ -151,6 +151,15 @@ export interface PayloadThemeOptions {
+      * (`32` → `32px`); a string is used as-is (`'2.5rem'`). @default 26px
+      */
+     logoHeight?: number | string;
++    /**
++     * Where the sidebar logo links, and its accessible name: for example the
++     * public site (`{ href: '/', label: 'Website' }`). Omit to link to the
++     * admin dashboard.
++     */
++    logoLink?: {
++        href: string;
++        label: string;
++    };
+     /** Small mark/favicon for collapsed nav and login. Same shape as `logo`. */
+     icon?: ThemeAsset;
+     /**
+@@ -218,6 +227,11 @@ export interface ResolvedThemeConfig {
+         dark: string;
+         light: string;
+     };
++    /** Where the sidebar logo links; null links to the admin dashboard. */
++    logoLink: null | {
++        href: string;
++        label: string;
++    };
+     /** Avatar source, or null when the `avatar` option is omitted. */
+     avatar: null | ResolvedAvatar;
+     nav: {
+diff --git a/dist/options.js b/dist/options.js
+index 78f516e7c15550cb2a36b1090503652c6e3febd6..6efb91d134fef02de372eef7b6b1738dc62e1701 100644
+--- a/dist/options.js
++++ b/dist/options.js
+@@ -208,6 +208,8 @@ const DEFAULT_WIDGET_WIDTH = 'half';
+     }
+     const logo = normalizeAsset(options.logo, 'logo');
+     const icon = normalizeAsset(options.icon, 'icon');
++    const logoLink = options.logoLink ?? null;
++    assert(logoLink === null || typeof logoLink === 'object' && typeof logoLink.href === 'string' && logoLink.href.trim() !== '' && typeof logoLink.label === 'string' && logoLink.label.trim() !== '', `logoLink must be an object like { href: '/', label: 'Website' }.`);
+     const avatar = normalizeAvatar(options.avatar);
+     const widgets = normalizeWidgets(options.dashboard?.widgets);
+     const loginHeading = options.login?.heading;
+@@ -248,6 +250,10 @@ const DEFAULT_WIDGET_WIDTH = 'half';
+             },
+             logo,
+             icon,
++            logoLink: logoLink && {
++                href: logoLink.href,
++                label: logoLink.label
++            },
+             avatar,
+             nav: {
+                 icons

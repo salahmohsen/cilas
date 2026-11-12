@@ -3,8 +3,8 @@ import { CilasLogo } from '@/components/cilas-logo'
 /**
  * The CILAS mark for Payload's own logo slots (`admin.components.graphics`).
  * Inline SVG in `currentColor`, so it follows the admin's light and dark
- * themes. payload-theme draws the sidebar and login logos itself, from the
- * files in public/assets/admin (see payloadTheme() in src/payload.config.ts).
+ * themes. payload-theme draws the sidebar wordmark and login logo itself, from
+ * the files in public/assets/admin (scripts/build-admin-brand.ts).
  */
 export function AdminLogo() {
   return (
