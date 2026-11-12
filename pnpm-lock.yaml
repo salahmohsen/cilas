@@ -168,7 +168,7 @@ importers:
         specifier: 0.2.0
         version: 0.2.0(d99777f2d9323c457fa08b6b8f38ce6b)
       payload-theme:
-        specifier: ^0.10.0
+        specifier: 0.10.0
         version: 0.10.0(patch_hash=afda4ba793cb216f6c2f967ab51cc81e9a7ccbbd51f67fc5791563c592e0ce81)(d6ffcc1aa4c7a9f3f4eb9acb615e8c3a)
       pg:
         specifier: 8.20.0

@@ -1,4 +1,5 @@
 import type { Locale } from '@/i18n/routing'
+import { isolate } from '@/lib/bidi'
 import type { ReviewState } from '@/lib/review'
 
 import { MessageEmail } from './message'
@@ -16,13 +17,13 @@ const ADMISSIONS: Record<Locale, string> = { en: 'Admissions', ar: 'القبول
 const ACCOUNT: Record<Locale, string> = { en: 'Account', ar: 'الحساب' }
 
 /**
- * Wraps each value in Unicode isolates in an Arabic email, so a Latin name or
- * title keeps its own direction inside right-to-left text (the UI uses <bdi>).
- * The text parts are plain strings, so the isolates stand in for the tag.
+ * Isolates each value in an Arabic email, so a Latin name or title keeps its
+ * own direction inside right-to-left text (the UI uses <bdi>). The text parts
+ * are plain strings, so the isolates stand in for the tag.
  */
 const isolated = (values: Record<string, string>, locale: Locale): Record<string, string> =>
   locale === 'ar'
-    ? Object.fromEntries(Object.entries(values).map(([k, v]) => [k, `\u2068${v}\u2069`]))
+    ? Object.fromEntries(Object.entries(values).map(([k, v]) => [k, isolate(v)]))
     : values
 
 export const acceptanceMail = async (
@@ -34,11 +35,9 @@ export const acceptanceMail = async (
     /** For a new account: its set-password link (src/lib/invitation.ts). */
     setPassword: { url: string; days: number } | null
     site: string
-    /** The applicant's language; `settings` holds the texts in it. */
-    locale?: Locale
   },
 ): Promise<Mail> => {
-  const locale = data.locale ?? 'en'
+  const { locale } = settings
   const t = settings.texts.acceptance
   const values = {
     ...isolated({ name: data.name, email: data.email, title: data.title }, locale),
@@ -70,9 +69,9 @@ export const acceptanceMail = async (
 /** A new account, made by an admin: a link to set its password (src/lib/invitation.ts). */
 export const invitationMail = async (
   settings: EmailSettings,
-  data: { name: string; email: string; url: string; days: number; locale?: Locale },
+  data: { name: string; email: string; url: string; days: number },
 ): Promise<Mail> => {
-  const locale = data.locale ?? 'en'
+  const { locale } = settings
   const t = settings.texts.invitation
   const values = {
     ...isolated({ name: data.name, email: data.email }, locale),
@@ -96,9 +95,9 @@ export const invitationMail = async (
 /** Sent when one course of an application is rejected. Kind and plain; no button. */
 export const rejectionMail = async (
   settings: EmailSettings,
-  data: { name: string; email: string; title: string; locale?: Locale },
+  data: { name: string; email: string; title: string },
 ): Promise<Mail> => {
-  const locale = data.locale ?? 'en'
+  const { locale } = settings
   const t = settings.texts.rejection
   const values = isolated({ name: data.name, email: data.email, title: data.title }, locale)
   const subject = fill(t.subject, values)

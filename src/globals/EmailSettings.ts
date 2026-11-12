@@ -26,8 +26,6 @@ const textSections: Field[] = EMAIL_IDS.map((id): Field => {
         name: id,
         type: 'group',
         label: false,
-        // Two columns: the fields, and the preview beside them (email-texts.module.css).
-        admin: { className: 'email-texts-group' },
         fields: [
           part('about', 'EmailAbout'),
           ...Object.entries(email.texts.en).map(([name, fallback]): Field => {

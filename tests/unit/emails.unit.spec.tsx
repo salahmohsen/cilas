@@ -120,7 +120,6 @@ describe('transactional mails', () => {
       email: 'mona@example.com',
       url: 'https://ci-las.org/ar/welcome/abc',
       days: 7,
-      locale: 'ar',
     })
     expect(mail.subject).toBe('حسابك في سيلاس')
     expect(mail.html).toContain('dir="rtl"')
@@ -151,8 +150,11 @@ describe('transactional mails', () => {
 
   it('sends an Arabic application email right to left, with the Arabic title and login', async () => {
     const mail = await acceptanceMail(
-      withDefaults({ texts: { acceptance: { subject: 'مرحبا {name}، قُبلت في {title}' } } }),
-      { name: 'Mona', email: 'm@x.co', title: 'جسر', setPassword: null, site, locale: 'ar' },
+      withDefaults(
+        { texts: { acceptance: { subject: 'مرحبا {name}، قُبلت في {title}' } } },
+        { locale: 'ar' },
+      ),
+      { name: 'Mona', email: 'm@x.co', title: 'جسر', setPassword: null, site },
     )
     expect(mail.html).toContain('lang="ar"')
     expect(mail.html).toContain('dir="rtl"')
@@ -162,14 +164,12 @@ describe('transactional mails', () => {
     expect(mail.subject).toBe('مرحبا \u2068Mona\u2069، قُبلت في \u2068جسر\u2069')
   })
 
-  it('falls back to the English text where the Arabic one is empty', async () => {
-    const rejection = await rejectionMail(withDefaults({ texts: { rejection: { subject: '' } } }), {
-      name: 'Mona',
-      email: 'm@x.co',
-      title: 'جسر',
-      locale: 'ar',
-    })
-    expect(rejection.subject).toBe('Your application to \u2068جسر\u2069')
+  it('uses the Arabic default where the Arabic text is empty', async () => {
+    const rejection = await rejectionMail(
+      withDefaults({ texts: { rejection: { subject: '' } } }, { locale: 'ar' }),
+      { name: 'Mona', email: 'm@x.co', title: 'جسر' },
+    )
+    expect(rejection.subject).toBe('طلبك للالتحاق بـ\u2068جسر\u2069')
     expect(rejection.html).toContain('dir="rtl"')
     expect(rejection.html).not.toContain('/ar/login')
   })

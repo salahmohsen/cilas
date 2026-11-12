@@ -34,6 +34,7 @@ export const EXCLUDED_SECTIONS = [
   'login',
   'forgot',
   'reset',
+  'welcome',
   'signed-in',
   'admin',
   'api',

@@ -21,3 +21,17 @@ Job: A new account sets its own password from a link in its first email, without
   - Problem: Without it, the admin cannot see who still needs an invitation after a daily limit, and could invite the same people twice.
 - Bulk invitations stop at `BULK_INVITES_PER_DAY` (80), counted from "Invited on" since midnight UTC, when Resend's day starts.
   - Problem: The free plan's 100 emails a day are for all transactional email. A large batch would use them all, and password resets, decision emails and digests would fail until the next day.
+
+## After review
+
+- Every set-password email is a row in the invitation log (`invitation-log`), and the 80-a-day limit counts rows since midnight UTC. Single sends and acceptance emails count too.
+  - Problem: Counting accounts by "Invited on" let the same people be invited again without the count going up.
+- `activated_at` ("First signed in") is set by Users' `afterOperation` on the first `login` or `resetPassword`. With Google's `sub`, `hasSignedIn` says an account is in use. The migration fills it from existing sessions and Google ids.
+  - Problem: A re-sent acceptance email said "sign in as usual" to an account that had no password, and a bulk invite reached people who already used their account.
+- The acceptance email decides from the account itself: an account that has not signed in gets a fresh set-password link, on the first send and on every send again.
+- Everything takes the user id, not the email.
+- A 429 gets one retry after 1.5 seconds; a second 429 is the day's limit.
+  - Problem: Resend's rate limit also answers 429, and the admin was told to wait for the next day.
+- A failure to record an invitation is logged, not thrown: the email is out, and a retry would send it twice.
+- The texts say that a failed send stops the older link, and that people who signed in are skipped.
+- Parts of 10 (a few seconds each), so no request runs near a proxy timeout.

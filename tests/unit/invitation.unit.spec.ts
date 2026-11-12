@@ -1,33 +1,42 @@
 // @vitest-environment node
 // React Email renders with react-dom/server, which needs Node's streams.
 import type { PayloadRequest } from 'payload'
-import { describe, expect, it, vi } from 'vitest'
+import { ValidationError } from 'payload'
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 
 import {
   BULK_INVITES_PER_DAY,
+  hasSignedIn,
   INVITATION_DAYS,
   invitationEndpoints,
   inviteMany,
+  markActivated,
   setPasswordLink,
 } from '@/lib/invitation'
 
 const [create, many, resend] = invitationEndpoints
 
+type Mail = { to: string; html: string }
+const refused = () => Object.assign(new Error('429'), { status: 429 })
+
 /** A request with a Payload that records what it was asked to do. */
 const requestOf = (
   body: Record<string, unknown>,
-  { roles = ['admin'], users = 0 }: { roles?: string[]; users?: number } = {},
+  { roles = ['admin'], users = 0, sentToday = 0 } = {},
 ) => {
   const payload = {
-    count: vi.fn(async () => ({ totalDocs: users })),
+    count: vi.fn(async ({ collection }: { collection: string }) => ({
+      totalDocs: collection === 'invitation-log' ? sentToday : users,
+    })),
     create: vi.fn(async ({ collection }: { collection: string }) => ({
       id: collection === 'people' ? 7 : 42,
     })),
+    delete: vi.fn(async () => ({})),
     findByID: vi.fn(async () => ({ id: 42, email: 'mona@example.com', person: { name: 'Mona' } })),
     findGlobal: vi.fn(async () => ({})),
     forgotPassword: vi.fn(async () => 'token-1'),
-    sendEmail: vi.fn(async (_mail: { to: string; html: string }) => undefined),
-    update: vi.fn(async () => ({ docs: [] })),
+    sendEmail: vi.fn(async (_mail: Mail) => undefined),
+    update: vi.fn(async () => ({})),
     find: vi.fn(async () => ({ docs: [] as unknown[] })),
     logger: { error: vi.fn() },
   }
@@ -41,6 +50,15 @@ const requestOf = (
 }
 
 const valid = { email: 'Mona@Example.com ', name: 'Mona Adel', roles: ['member'], locale: 'ar' }
+
+beforeEach(() => vi.useFakeTimers({ toFake: ['setTimeout'] }))
+afterEach(() => vi.useRealTimers())
+
+/** Runs a call that waits between sends, with the waits skipped. */
+const settled = async <T>(promise: Promise<T> | T) => {
+  await vi.runAllTimersAsync()
+  return promise
+}
 
 describe('inviting someone', () => {
   it('refuses a person who is not an admin', async () => {
@@ -60,20 +78,23 @@ describe('inviting someone', () => {
   })
 
   it('refuses an address that already has an account', async () => {
-    const res = await create!.handler(requestOf(valid, { users: 1 }).req)
-    expect(res.status).toBe(409)
+    expect((await create!.handler(requestOf(valid, { users: 1 }).req)).status).toBe(409)
   })
 
-  it('makes the account and sends a seven-day link in the chosen language', async () => {
+  it('removes the new person when the address was taken a moment ago', async () => {
     const { req, payload } = requestOf(valid)
-    const res = await create!.handler(req)
-    expect(await res.json()).toEqual({ id: 42, emailed: true })
-    expect(payload.create).toHaveBeenCalledWith(
-      expect.objectContaining({
-        collection: 'users',
-        data: expect.objectContaining({ email: 'mona@example.com', roles: ['member'], person: 7 }),
-      }),
+    payload.create
+      .mockResolvedValueOnce({ id: 7 })
+      .mockRejectedValueOnce(new ValidationError({ errors: [{ message: 'taken', path: 'email' }] }))
+    expect((await create!.handler(req)).status).toBe(409)
+    expect(payload.delete).toHaveBeenCalledWith(
+      expect.objectContaining({ collection: 'people', id: 7 }),
     )
+  })
+
+  it('makes the account, sends a seven-day link in the chosen language and logs it', async () => {
+    const { req, payload } = requestOf(valid)
+    expect(await (await settled(create!.handler(req))).json()).toEqual({ id: 42, emailed: true })
     expect(payload.forgotPassword).toHaveBeenCalledWith(
       expect.objectContaining({
         data: { email: 'mona@example.com' },
@@ -84,26 +105,43 @@ describe('inviting someone', () => {
     const mail = payload.sendEmail.mock.calls[0]![0]
     expect(mail.to).toBe('mona@example.com')
     expect(mail.html).toContain('/ar/welcome/token-1')
+    expect(payload.update).toHaveBeenCalledWith(
+      expect.objectContaining({ collection: 'users', id: 42 }),
+    )
+    expect(payload.create).toHaveBeenCalledWith(
+      expect.objectContaining({ collection: 'invitation-log', data: { user: 42 } }),
+    )
+  })
+
+  it('tries once more after a 429 from the rate limit', async () => {
+    const { req, payload } = requestOf(valid)
+    payload.sendEmail.mockRejectedValueOnce(refused())
+    expect(await (await settled(create!.handler(req))).json()).toEqual({ id: 42, emailed: true })
+    expect(payload.sendEmail).toHaveBeenCalledTimes(2)
   })
 
   it('keeps the account when the email fails, and says so', async () => {
     const { req, payload } = requestOf(valid)
-    payload.sendEmail.mockRejectedValueOnce(new Error('down'))
-    expect(await (await create!.handler(req)).json()).toEqual({ id: 42, emailed: false })
+    payload.sendEmail.mockRejectedValue(new Error('down'))
+    expect(await (await settled(create!.handler(req))).json()).toEqual({ id: 42, emailed: false })
   })
 
-  it('sends a new link to an existing account', async () => {
+  it('counts the email as sent when only its record fails', async () => {
+    const { req, payload } = requestOf(valid)
+    payload.update.mockRejectedValueOnce(new Error('db'))
+    expect(await (await settled(create!.handler(req))).json()).toEqual({ id: 42, emailed: true })
+    expect(payload.logger.error).toHaveBeenCalled()
+  })
+
+  it('sends a new link to an existing account, and names the daily limit', async () => {
     const { req, payload } = requestOf({ locale: 'en' })
-    expect(await (await resend!.handler(req)).json()).toEqual({ sent: 'mona@example.com' })
-    expect(payload.sendEmail).toHaveBeenCalledOnce()
-  })
-})
-
-describe('setPasswordLink', () => {
-  it('refuses an address with no account', async () => {
-    const { req, payload } = requestOf({})
-    payload.forgotPassword.mockResolvedValueOnce(null as unknown as string)
-    await expect(setPasswordLink(req, 'x@y.co', 'en')).rejects.toThrow('No account')
+    expect(await (await settled(resend!.handler(req))).json()).toEqual({
+      sent: 'mona@example.com',
+    })
+    payload.sendEmail.mockRejectedValue(refused())
+    const res = await settled(resend!.handler(req))
+    expect(res.status).toBe(429)
+    expect(await res.json()).toEqual({ error: 'limit' })
   })
 })
 
@@ -117,54 +155,85 @@ describe('inviting many accounts', () => {
   })
 
   it('refuses more than one part at a time', async () => {
-    const ids = Array.from({ length: 26 }, (_, i) => i + 1)
+    const ids = Array.from({ length: 11 }, (_, i) => i + 1)
     expect((await many!.handler(requestOf({ ids }).req)).status).toBe(400)
   })
 
-  it('skips admins and people invited recently, and records each one sent', async () => {
-    vi.useFakeTimers({ toFake: ['setTimeout'] })
+  it('skips admins, people who signed in, and people invited recently', async () => {
     const { req, payload } = requestOf({})
     payload.find.mockResolvedValueOnce({
       docs: [
         account(1),
         account(2, { roles: ['admin'] }),
         account(3, { invited_at: new Date().toISOString() }),
+        account(4, { activated_at: '2026-01-01T00:00:00Z' }),
+        account(5, { sub: 'google-id' }),
       ],
     })
-    const done = inviteMany(req, [1, 2, 3], 'en', false)
-    await vi.runAllTimersAsync()
-    expect(await done).toEqual({ sent: [1], skipped: [2, 3], failed: [], limited: [] })
-    expect(payload.update).toHaveBeenCalledWith(
-      expect.objectContaining({ where: { email: { equals: 'p1@example.com' } } }),
-    )
-    vi.useRealTimers()
+    expect(await settled(inviteMany(req, [1, 2, 3, 4, 5], 'en', false))).toEqual({
+      sent: [1],
+      skipped: [2, 3, 4, 5],
+      failed: [],
+      limited: [],
+    })
   })
 
-  it('stops at the daily limit and lists who was not tried', async () => {
-    vi.useFakeTimers({ toFake: ['setTimeout'] })
+  it('counts emails, not accounts: a person sent again today counts again', async () => {
+    const { req, payload } = requestOf({}, { sentToday: BULK_INVITES_PER_DAY - 1 })
+    payload.find.mockResolvedValueOnce({ docs: [account(1), account(2), account(3)] })
+    expect(await settled(inviteMany(req, [1, 2, 3], 'en', true))).toEqual({
+      sent: [1],
+      skipped: [],
+      failed: [],
+      limited: [2, 3],
+    })
+    expect(payload.count).toHaveBeenCalledWith(
+      expect.objectContaining({ collection: 'invitation-log' }),
+    )
+  })
+
+  it('stops at the daily limit of the email service after one retry', async () => {
     const { req, payload } = requestOf({})
     payload.find.mockResolvedValueOnce({ docs: [account(1), account(2), account(3)] })
     payload.sendEmail
       .mockResolvedValueOnce(undefined)
-      .mockRejectedValueOnce(Object.assign(new Error('quota'), { status: 429 }))
-    const done = inviteMany(req, [1, 2, 3], 'ar', false)
-    await vi.runAllTimersAsync()
-    expect(await done).toEqual({ sent: [1], skipped: [], failed: [], limited: [2, 3] })
-    expect(payload.sendEmail).toHaveBeenCalledTimes(2)
-    vi.useRealTimers()
+      .mockRejectedValueOnce(refused())
+      .mockRejectedValueOnce(refused())
+    expect(await settled(inviteMany(req, [1, 2, 3], 'ar', false))).toEqual({
+      sent: [1],
+      skipped: [],
+      failed: [],
+      limited: [2, 3],
+    })
+    expect(payload.sendEmail).toHaveBeenCalledTimes(3)
+  })
+})
+
+describe('signing in', () => {
+  it('knows an account is in use from a password sign-in or Google', () => {
+    expect(hasSignedIn({ activated_at: null, sub: null })).toBe(false)
+    expect(hasSignedIn({ activated_at: '2026-01-01T00:00:00Z', sub: null })).toBe(true)
+    expect(hasSignedIn({ activated_at: null, sub: 'g' })).toBe(true)
   })
 
-  it('keeps the rest of the day for other emails', async () => {
-    vi.useFakeTimers({ toFake: ['setTimeout'] })
+  it('records the first sign-in and the first password from a link, once', async () => {
     const { req, payload } = requestOf({})
-    payload.count.mockResolvedValueOnce({ totalDocs: BULK_INVITES_PER_DAY - 1 })
-    payload.find.mockResolvedValueOnce({
-      docs: [account(1), account(2, { roles: ['admin'] }), account(3)],
-    })
-    const done = inviteMany(req, [1, 2, 3], 'en', false)
-    await vi.runAllTimersAsync()
-    expect(await done).toEqual({ sent: [1], skipped: [2], failed: [], limited: [3] })
-    expect(payload.sendEmail).toHaveBeenCalledOnce()
-    vi.useRealTimers()
+    const run = (operation: string, user: Record<string, unknown>) =>
+      markActivated({ operation, result: { user }, req } as never)
+    await run('resetPassword', { id: 9, activated_at: null })
+    await run('login', { id: 9, activated_at: '2026-01-01T00:00:00Z' })
+    await run('update', { id: 9, activated_at: null })
+    expect(payload.update).toHaveBeenCalledOnce()
+    expect(payload.update).toHaveBeenCalledWith(expect.objectContaining({ id: 9 }))
+  })
+})
+
+describe('setPasswordLink', () => {
+  it('refuses an address with no account', async () => {
+    const { req, payload } = requestOf({})
+    payload.forgotPassword.mockResolvedValueOnce(null as unknown as string)
+    await expect(setPasswordLink(req, { id: 3, email: 'x@y.co' }, 'en')).rejects.toThrow(
+      'no account',
+    )
   })
 })

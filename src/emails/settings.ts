@@ -18,6 +18,8 @@ export const DEFAULT_TEXTS = Object.fromEntries(
 export type SocialLink = { platform: string; url: string; icon: string }
 
 export type EmailSettings = {
+  /** The language of `texts`, and of every email built from these settings. */
+  locale: Locale
   site: string
   logo: { url: string; alt: string }
   accent: string
@@ -74,39 +76,30 @@ export const withDefaults = (
     site = 'https://ci-las.org',
     social = [],
     locale = 'en',
-    fallback,
   }: {
     site?: string
     social?: StoredSocial
-    /** The language of the texts in `stored`. */
+    /** The language `stored` was read in: the emails built from these settings use it. */
     locale?: Locale
-    /** The English settings, read when `stored` is in another language. */
-    fallback?: StoredEmailSettings
   } = {},
 ): EmailSettings => {
   const origin = site.replace(/\/+$/, '')
-  // Saved text in the reader's language, then its default, then the saved
-  // English text, then the English default. An email without Arabic defaults
-  // thus sends the admin's English text to an Arabic reader, as before.
-  const savedIn = (from: StoredEmailSettings | undefined, id: EmailId) =>
-    (from?.texts as Record<string, Record<string, string | null> | null> | null | undefined)?.[id]
+  // The admin's text in this language, else this language's default. A
+  // localized email has Arabic defaults (src/emails/catalog.ts), so an English
+  // edit never replaces the Arabic text.
   const texts = {} as Record<string, Record<string, string>>
   for (const id of EMAIL_IDS) {
-    const own = savedIn(stored, id)
-    const english = savedIn(fallback, id)
-    const localDefaults = defaultTexts(id, locale)
-    const englishDefaults = defaultTexts(id, 'en')
+    const saved = (stored.texts as Record<string, Record<string, unknown> | null> | null)?.[id]
+    const defaults = defaultTexts(id, locale)
     texts[id] = {}
-    for (const field of Object.keys(englishDefaults)) {
-      texts[id][field] =
-        own?.[field]?.trim() ||
-        (localDefaults !== englishDefaults ? localDefaults[field] : '') ||
-        english?.[field]?.trim() ||
-        englishDefaults[field]!
+    for (const [field, fallback] of Object.entries(defaults)) {
+      const own = saved?.[field]
+      texts[id][field] = (typeof own === 'string' && own.trim()) || fallback
     }
   }
   const logo = stored.logo as { url?: string | null; alt?: string | null } | null | undefined
   return {
+    locale,
     site: origin,
     logo:
       logo && typeof logo === 'object' && logo.url
@@ -135,30 +128,27 @@ export const withDefaults = (
 }
 
 /**
- * The stored global in `locale` (past access), the English one beside it,
- * and the site's social links: what `withDefaults` builds the settings from.
+ * The stored global in `locale` (past access) and the site's social links:
+ * what `withDefaults` builds the settings from.
  */
 export const readEmailSettings = async (
   payload: Payload,
   req?: PayloadRequest,
   locale: Locale = 'en',
 ) => {
-  const read = (lang: Locale) =>
+  const [stored, site] = await Promise.all([
     payload.findGlobal({
       slug: 'email-settings',
       depth: 1,
       overrideAccess: true,
       req,
-      locale: lang,
-      // No Payload fallback: withDefaults puts the Arabic defaults before the English text.
+      locale,
+      // No Payload fallback: an empty text reads as this language's default.
       fallbackLocale: false,
-    }) as Promise<StoredEmailSettings>
-  const [stored, fallback, site] = await Promise.all([
-    read(locale),
-    locale === 'en' ? undefined : read('en'),
+    }) as Promise<StoredEmailSettings>,
     payload.findGlobal({ slug: 'site-settings', depth: 0, overrideAccess: true, req }),
   ])
-  return { stored, fallback, social: site.social_links as StoredSocial, locale }
+  return { stored, social: site.social_links as StoredSocial, locale }
 }
 
 /**

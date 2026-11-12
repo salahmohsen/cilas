@@ -79,7 +79,7 @@
     "payload-inline-visual-editor": "1.0.1",
     "payload-oauth2": "^1.0.21",
     "payload-plugin-llms-txt": "0.2.0",
-    "payload-theme": "^0.10.0",
+    "payload-theme": "0.10.0",
     "pg": "8.20.0",
     "posthog-js": "^1.444.0",
     "posthog-node": "^5.61.1",

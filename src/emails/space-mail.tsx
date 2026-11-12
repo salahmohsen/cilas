@@ -66,7 +66,6 @@ function ItemList({ title, items }: { title: string; items: MailItem[] }) {
 }
 
 export type DigestMailData = {
-  lang: Lang
   mentions: MailItem[]
   replies: MailItem[]
   posts: MailItem[]
@@ -77,7 +76,7 @@ export type DigestMailData = {
   unsubscribe: string
 }
 
-/** `settings` must be read in `data.lang`: the texts come from it. */
+/** In the language of `settings`. */
 export const digestMail = async (settings: EmailSettings, data: DigestMailData) => {
   const t = settings.texts.spaces
   const count = data.mentions.length + data.replies.length + data.posts.length + data.more
@@ -85,7 +84,7 @@ export const digestMail = async (settings: EmailSettings, data: DigestMailData) 
     count: String(count),
   })
   const rendered = await renderEmail(
-    <EmailLayout settings={settings} preview={subject} kicker={t.kicker} lang={data.lang}>
+    <EmailLayout settings={settings} preview={subject} kicker={t.kicker} lang={settings.locale}>
       <Box>
         <Heading as="h1" style={{ ...type[28], margin: '0 0 24px', textAlign: 'center' }}>
           {t.digest_heading}
@@ -111,7 +110,6 @@ export const digestMail = async (settings: EmailSettings, data: DigestMailData) 
 }
 
 export type AnnouncementMailData = {
-  lang: Lang
   space: string
   /** A clip of the announcement, as plain text. */
   text: string
@@ -120,12 +118,12 @@ export type AnnouncementMailData = {
   unsubscribe: string
 }
 
-/** `settings` must be read in `data.lang`: the texts come from it. */
+/** In the language of `settings`. */
 export const announcementMail = async (settings: EmailSettings, data: AnnouncementMailData) => {
   const t = settings.texts.spaces
   const subject = fill(t.announcement_subject, { space: data.space })
   const rendered = await renderEmail(
-    <EmailLayout settings={settings} preview={subject} kicker={t.kicker} lang={data.lang}>
+    <EmailLayout settings={settings} preview={subject} kicker={t.kicker} lang={settings.locale}>
       <Box>
         <Heading as="h1" style={{ ...type[28], margin: '0 0 24px', textAlign: 'center' }}>
           {fill(t.announcement_heading, { space: data.space })}

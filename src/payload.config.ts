@@ -10,6 +10,7 @@ import { fileURLToPath } from 'url'
 import sharp from 'sharp'
 
 import { Users } from './collections/Users'
+import { InvitationLog } from './collections/InvitationLog'
 import { PushSubscriptions } from './collections/PushSubscriptions'
 import { People } from './collections/People'
 import { Memberships } from './collections/Memberships'
@@ -241,6 +242,7 @@ export default buildConfig({
     SpacePreferences,
     SpaceVotes,
     SpaceRsvps,
+    InvitationLog,
   ],
   globals: [RegistrationDefaults, SiteSettings, EmailSettings, SpaceIntroduction, SpaceRules],
   localization: {

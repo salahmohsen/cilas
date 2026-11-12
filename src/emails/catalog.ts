@@ -4,9 +4,23 @@ import type { Locale } from '@/i18n/routing'
  * Every email CILAS sends on its own, in one place. The Email settings
  * fields, their help, the preview and the test send all come from here, so a
  * new email is added once. Texts carry {placeholders} that `fill` replaces.
- * `texts.en` is the default; `texts.ar`, where given, is the Arabic default.
- * A `localized` email goes out in its reader's language.
+ * `texts.en` is the English default. A `localized` email goes out in its
+ * reader's language and has Arabic defaults in `texts.ar`.
  */
+type Texts_ = Record<string, string>
+
+/** A localized email has Arabic defaults for every English one; others are English only. */
+type CatalogEntry = {
+  label: string
+  when: string
+  to: string
+  placeholders: readonly string[]
+  versions: Record<string, string>
+} & (
+  | { localized: true; texts: { en: Texts_; ar: Texts_ } }
+  | { localized: false; texts: { en: Texts_ } }
+)
+
 export const EMAILS = {
   acceptance: {
     label: 'Application accepted',
@@ -24,6 +38,15 @@ export const EMAILS = {
         new_account_button: 'Set your password',
         existing_account: 'Sign in with your CILAS account as usual.',
         button: 'Sign in',
+      },
+      ar: {
+        subject: 'قُبلت في {title}',
+        body: 'عزيزي/عزيزتي {name}،\n\nيسعدنا قبولك في {title}.',
+        new_account:
+          'أنشأنا لك حسابًا في سيلاس بالبريد {email}. اختر كلمة المرور من الزر أدناه. يعمل الرابط لمدة {days} أيام. إذا كان {email} حساب Google، يمكنك أيضًا استخدام «المتابعة باستخدام Google».',
+        new_account_button: 'اختر كلمة المرور',
+        existing_account: 'سجّل الدخول بحسابك في سيلاس كالمعتاد.',
+        button: 'تسجيل الدخول',
       },
     },
   },
@@ -60,6 +83,10 @@ export const EMAILS = {
       en: {
         subject: 'Your application to {title}',
         body: 'Dear {name},\n\nThank you for applying to {title}. We read every application with care. We are sorry that we cannot offer you a place this time.\n\nYou are welcome to apply to our future courses.',
+      },
+      ar: {
+        subject: 'طلبك للالتحاق بـ{title}',
+        body: 'عزيزي/عزيزتي {name}،\n\nشكرًا لتقديمك على {title}. نقرأ كل طلب بعناية. يؤسفنا أننا لا نستطيع أن نقدم لك مكانًا هذه المرة.\n\nنرحب بتقديمك على مقرراتنا القادمة.',
       },
     },
   },
@@ -164,7 +191,7 @@ export const EMAILS = {
       },
     },
   },
-} as const
+} as const satisfies Record<string, CatalogEntry>
 
 export type EmailId = keyof typeof EMAILS
 export type VersionOf<K extends EmailId> = keyof (typeof EMAILS)[K]['versions'] & string

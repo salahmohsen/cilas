@@ -1,7 +1,5 @@
 import type { Payload } from 'payload'
 
-import type { Locale } from '@/i18n/routing'
-
 import type { EmailId, VersionOf } from './catalog'
 import { issueForEmail } from './issue'
 import { newsletterMail } from './newsletter'
@@ -18,15 +16,14 @@ import {
 } from './transactional'
 
 type Mail = { subject: string; html: string; text: string }
-type Sample<K extends EmailId> = (
-  context: { payload: Payload; settings: EmailSettings; locale: Locale },
-  version: VersionOf<K>,
-) => Promise<Mail | null>
+/** `settings` are read in the language of the sample. */
+type Context = { payload: Payload; settings: EmailSettings }
+type Sample<K extends EmailId> = (context: Context, version: VersionOf<K>) => Promise<Mail | null>
 
 const person = { name: 'Mona Adel', email: 'mona@example.com' }
 const course = 'The Bridge Programme 2026'
-const sampleLink = (settings: EmailSettings, locale: Locale) => ({
-  url: `${settings.site}/${locale}/welcome/sample-token`,
+const sampleLink = (settings: EmailSettings) => ({
+  url: `${settings.site}/${settings.locale}/welcome/sample-token`,
   days: INVITATION_DAYS,
 })
 
@@ -35,18 +32,15 @@ const sampleLink = (settings: EmailSettings, locale: Locale) => ({
  * send in Email settings. The type asks for every email of the catalog.
  */
 const SAMPLES: { [K in EmailId]: Sample<K> } = {
-  acceptance: ({ settings, locale }, version) =>
+  acceptance: ({ settings }, version) =>
     acceptanceMail(settings, {
       ...person,
       title: course,
-      setPassword: version === 'new_account' ? sampleLink(settings, locale) : null,
+      setPassword: version === 'new_account' ? sampleLink(settings) : null,
       site: settings.site,
-      locale,
     }),
-  invitation: ({ settings, locale }) =>
-    invitationMail(settings, { ...person, ...sampleLink(settings, locale), locale }),
-  rejection: ({ settings, locale }) =>
-    rejectionMail(settings, { ...person, title: course, locale }),
+  invitation: ({ settings }) => invitationMail(settings, { ...person, ...sampleLink(settings) }),
+  rejection: ({ settings }) => rejectionMail(settings, { ...person, title: course }),
   review: ({ settings }, version) =>
     reviewMail(
       settings,
@@ -59,7 +53,8 @@ const SAMPLES: { [K in EmailId]: Sample<K> } = {
     ),
   reset: ({ settings }) =>
     resetMail(settings, { email: person.email, token: 'sample-token', site: settings.site }),
-  spaces: ({ settings, locale }, version) => {
+  spaces: ({ settings }, version) => {
+    const { locale } = settings
     const links = {
       settingsUrl: `${settings.site}/${locale}/account`,
       unsubscribe: '#unsubscribe',
@@ -68,7 +63,6 @@ const SAMPLES: { [K in EmailId]: Sample<K> } = {
     const post = (text: string) => ({ space, text, url: `${settings.site}/${locale}/spaces` })
     return version === 'digest'
       ? digestMail(settings, {
-          lang: locale,
           mentions: [
             post(
               locale === 'ar'
@@ -83,7 +77,6 @@ const SAMPLES: { [K in EmailId]: Sample<K> } = {
           ...links,
         })
       : announcementMail(settings, {
-          lang: locale,
           space,
           text:
             locale === 'ar'
@@ -110,8 +103,5 @@ const SAMPLES: { [K in EmailId]: Sample<K> } = {
 }
 
 /** One email with sample data; null when there is nothing to show (no newsletter yet). */
-export const sampleMail = <K extends EmailId>(
-  id: K,
-  version: VersionOf<K>,
-  context: { payload: Payload; settings: EmailSettings; locale: Locale },
-) => (SAMPLES[id] as Sample<K>)(context, version)
+export const sampleMail = <K extends EmailId>(id: K, version: VersionOf<K>, context: Context) =>
+  (SAMPLES[id] as Sample<K>)(context, version)

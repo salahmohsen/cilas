@@ -16,7 +16,13 @@ import { localeOf, type Locale } from '@/i18n/routing'
 import { getEmailSettings } from '@/emails/settings'
 import { acceptanceMail, rejectionMail } from '@/emails/transactional'
 import { createPerson } from '@/lib/create-person'
-import { createAccount, INVITATION_DAYS, markInvited, setPasswordLink } from '@/lib/invitation'
+import {
+  createAccount,
+  hasSignedIn,
+  INVITATION_DAYS,
+  recordInvitation,
+  setPasswordLink,
+} from '@/lib/invitation'
 import type { FormSubmission } from '@/payload-types'
 import { courseTitles } from './course-titles'
 import { applicantOf, rolesAfterAccept } from './applicant'
@@ -30,7 +36,6 @@ type Mail = {
   to: Applicant
   title: string
   kind: Verdict
-  newAccount: boolean
   /** The language the applicant used on the form. */
   locale: Locale
 }
@@ -81,7 +86,7 @@ const ensureAccount = async (req: PayloadRequest, applicant: Applicant, kind: Ki
       name: applicant.name,
       roles: rolesAfterAccept([], kind),
     })
-    return { ...made, newAccount: true }
+    return made
   }
   let person = personOf(user)
   if (person === null) {
@@ -92,7 +97,7 @@ const ensureAccount = async (req: PayloadRequest, applicant: Applicant, kind: Ki
   if (roles.length !== user.roles.length) {
     await payload.update({ collection: 'users', id: user.id, data: { roles }, ...local(req) })
   }
-  return { user: user.id, person, newAccount: false }
+  return { user: user.id, person }
 }
 
 const enrollmentOf = async (req: PayloadRequest, person: number, course: number) =>
@@ -250,7 +255,6 @@ const acceptProgramme = async (req: PayloadRequest, id: number): Promise<Done | 
       to: applicant,
       title: await programmeTitle(req, programme, mailLocale(submission)),
       kind: 'accepted',
-      newAccount: account.newAccount,
       locale: mailLocale(submission),
     },
   }
@@ -275,7 +279,6 @@ const rejectProgramme = async (req: PayloadRequest, id: number): Promise<Done> =
       to: applicant,
       title: await programmeTitle(req, programme, mailLocale(submission)),
       kind: 'rejected',
-      newAccount: false,
       locale: mailLocale(submission),
     },
   }
@@ -317,10 +320,8 @@ const decideCourse = async (
 
   const decided = new Date().toISOString()
   let result = {}
-  let newAccount = false
   if (verdict === 'accepted') {
     const account = await ensureAccount(req, applicant, kind)
-    newAccount = account.newAccount
     const outcome = await enrollAccepted(req, account.person, course)
     const prior = submission.result
     result = {
@@ -359,7 +360,6 @@ const decideCourse = async (
       to: applicant,
       title: await courseTitle(req, course, mailLocale(submission)),
       kind: verdict,
-      newAccount,
       locale: mailLocale(submission),
     },
   }
@@ -413,31 +413,42 @@ const resendMail = async (
       to: applicant,
       title,
       kind: verdict,
-      newAccount: false,
       locale: mailLocale(submission),
     },
   }
 }
 
+/**
+ * The decision email. An acceptance to an account that has not signed in yet
+ * (made by this or an earlier acceptance) carries a fresh set-password link,
+ * on the first send and on every send again.
+ */
 const sendMail = async (req: PayloadRequest, mail: Mail) => {
   const settings = await getEmailSettings(req.payload, req, mail.locale)
-  const message =
-    mail.kind === 'accepted'
-      ? await acceptanceMail(settings, {
-          ...mail.to,
-          title: mail.title,
-          setPassword: mail.newAccount
-            ? {
-                url: await setPasswordLink(req, mail.to.email, mail.locale),
-                days: INVITATION_DAYS,
-              }
-            : null,
-          site: env.NEXT_PUBLIC_SERVER_URL,
-          locale: mail.locale,
-        })
-      : await rejectionMail(settings, { ...mail.to, title: mail.title, locale: mail.locale })
+  if (mail.kind === 'rejected') {
+    const message = await rejectionMail(settings, { ...mail.to, title: mail.title })
+    await req.payload.sendEmail({ to: mail.to.email, ...message })
+    return
+  }
+  const account = (
+    await req.payload.find({
+      collection: 'users',
+      where: { email: { equals: mail.to.email } },
+      limit: 1,
+      ...local(req),
+    })
+  ).docs[0]
+  const invitee = account && !hasSignedIn(account) ? { id: account.id, email: account.email } : null
+  const message = await acceptanceMail(settings, {
+    ...mail.to,
+    title: mail.title,
+    setPassword: invitee
+      ? { url: await setPasswordLink(req, invitee, mail.locale), days: INVITATION_DAYS }
+      : null,
+    site: env.NEXT_PUBLIC_SERVER_URL,
+  })
   await req.payload.sendEmail({ to: mail.to.email, ...message })
-  if (mail.newAccount) await markInvited(req, mail.to.email)
+  if (invitee) await recordInvitation(req, invitee.id)
 }
 
 /** Records on the application whether its decision email went out, so the admin can see it and send it again. */

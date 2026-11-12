@@ -22,7 +22,6 @@ describe('the email catalog', () => {
     const mail = await sampleMail(id as EmailId, version as VersionOf<EmailId>, {
       payload,
       settings,
-      locale,
     })
     expect(mail?.subject).toBeTruthy()
     expect(mail?.html).toContain('<html')
@@ -33,42 +32,41 @@ describe('the email catalog', () => {
     const mail = await sampleMail('newsletter', 'latest', {
       payload,
       settings: withDefaults({}),
-      locale: 'en',
     })
     expect(mail).toBeNull()
   })
 })
 
 describe('the language of the texts', () => {
-  it('uses the Arabic default before the admin’s English text', () => {
-    const s = withDefaults(
-      {},
-      { locale: 'ar', fallback: { texts: { spaces: { stop: 'Stop it all' } } } },
-    )
-    expect(s.texts.spaces.stop).toBe(EMAILS.spaces.texts.ar.stop)
+  it('gives every localized email an Arabic text for each English one', () => {
+    for (const id of EMAIL_IDS) {
+      const email = EMAILS[id]
+      if (email.localized)
+        expect(Object.keys(email.texts.ar).sort()).toEqual(Object.keys(email.texts.en).sort())
+    }
   })
 
-  it('uses the admin’s English text where an email has no Arabic default', () => {
-    const s = withDefaults(
-      {},
-      { locale: 'ar', fallback: { texts: { acceptance: { button: 'Log in' } } } },
-    )
-    expect(s.texts.acceptance.button).toBe('Log in')
+  it('uses the Arabic default where the Arabic text is empty', () => {
+    const s = withDefaults({ texts: { acceptance: { button: ' ' } } }, { locale: 'ar' })
+    expect(s.texts.acceptance.button).toBe(EMAILS.acceptance.texts.ar.button)
+    expect(s.locale).toBe('ar')
   })
 
-  it('keeps the admin’s Arabic text first', () => {
-    const s = withDefaults(
-      { texts: { spaces: { stop: 'أوقف' } } },
-      { locale: 'ar', fallback: { texts: { spaces: { stop: 'Stop it all' } } } },
-    )
+  it('keeps the admin’s own text', () => {
+    const s = withDefaults({ texts: { spaces: { stop: 'أوقف' } } }, { locale: 'ar' })
     expect(s.texts.spaces.stop).toBe('أوقف')
+  })
+
+  it('ignores a text that is not a string', () => {
+    const s = withDefaults({ texts: { reset: { subject: 42 as unknown as string } } })
+    expect(s.texts.reset.subject).toBe(EMAILS.reset.texts.en.subject)
   })
 
   it('writes the digest subject for one item and for many', async () => {
     const settings = withDefaults({})
-    const one = await sampleMail('spaces', 'announcement', { payload, settings, locale: 'en' })
+    const one = await sampleMail('spaces', 'announcement', { payload, settings })
     expect(one?.subject).toBe('Announcement in Writing workshop')
-    const digest = await sampleMail('spaces', 'digest', { payload, settings, locale: 'en' })
+    const digest = await sampleMail('spaces', 'digest', { payload, settings })
     expect(digest?.subject).toBe('Your CILAS spaces: 5 new items')
   })
 })

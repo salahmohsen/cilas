@@ -8,8 +8,11 @@ Job: Let an admin see and change the text of every email the system sends, one e
   - Problem: Defaults, labels, hints and the list of localized emails were four maps that had to change together, and the preview had a fifth list. The two space emails were in none of them.
 - The space digest and announcement read their texts from Email settings, in English and Arabic, with Arabic defaults. The digest subject has one field for one item and one for many.
   - Problem: Their text was fixed in `space-mail.tsx`, so an admin could not change it.
-- Texts resolve as: saved text in the reader's language, its default in that language, the saved English text, the English default. Payload's own locale fallback is off for this read.
-  - Problem: With Payload's fallback, an English change would replace the Arabic default for Arabic readers.
+- Every localized email has Arabic defaults, and the catalog's type requires them. A text resolves as the saved text in the reader's language, else that language's default. Payload's own locale fallback is off for this read.
+  - Problem: With Payload's fallback, or with an English step in the chain, an English edit would replace the Arabic text for Arabic readers, and the grey placeholder would not show what is sent.
+- `EmailSettings` carries its `locale`, and every email builder takes its language from it.
+  - Problem: Callers passed the language twice (to the settings and to the builder); a mismatch sent English text in a right-to-left layout.
+- Each email is a collapsible section in the Emails tab. The preview sits beside the fields through `:has()` on Payload's field container, with the rows it spans set from the catalog; without that markup the page keeps one column.
 - Each email is a collapsible section in the Emails tab (it was "Texts") with its placeholders (click to copy), its fields and a preview of the texts as typed, one version at a time, and a test send to the signed-in admin. The preview is `POST /api/email-preview`, admins only.
   - Problem: One page showed four emails at once, and only after saving, so it was hard to see which field changed which line.
 - A field with text has a "Use default" button. The default shows in grey in the empty field, in the language being edited.

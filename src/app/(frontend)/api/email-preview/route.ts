@@ -94,7 +94,6 @@ export async function POST(request: Request) {
   const mail = await sampleMail(body.email, body.version as VersionOf<EmailId>, {
     payload,
     settings,
-    locale,
   })
   if (!mail)
     return Response.json({ error: 'There is no newsletter issue to show yet.' }, { status: 404 })

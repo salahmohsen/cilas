@@ -184,7 +184,6 @@ export const sendAnnouncementEmails = async (
       const lang = prefs.get(user.id)?.locale ?? 'en'
       const meta = await spaceMeta(payload, metas, space, lang)
       const mail = await announcementMail(lang === 'ar' ? settingsAr : settingsEn, {
-        lang,
         space: meta.name,
         text,
         url: postUrl(meta, space, postId, lang),

@@ -70,20 +70,21 @@
 
 /* Wide screens: the fields on the left, the preview on the right, in view
    while the fields scroll. Payload renders each field as a direct child of
-   the group's .render-fields, so the preview takes the second column. */
+   the group's .render-fields; the preview gives the number of rows it spans.
+   Without :has() or that markup, the page keeps one column. */
 @media (min-width: 1100px) {
-  :global(.email-texts-group) :global(.render-fields) {
+  :global(.render-fields):has(> .preview) {
     display: grid;
     grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr);
     column-gap: 2rem;
     align-items: start;
   }
-  :global(.email-texts-group) :global(.render-fields) > * {
+  :global(.render-fields):has(> .preview) > * {
     grid-column: 1;
   }
-  :global(.email-texts-group) :global(.render-fields) > :global(.email-texts-preview) {
+  :global(.render-fields) > .preview {
     grid-column: 2;
-    grid-row: 1 / span 40;
+    grid-row: 1 / span var(--rows);
     position: sticky;
     inset-block-start: calc(var(--doc-controls-height, 0px) + 1rem);
     margin-block: 0;

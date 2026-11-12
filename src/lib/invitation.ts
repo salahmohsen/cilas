@@ -1,6 +1,11 @@
 import { randomBytes } from 'node:crypto'
 
-import type { Endpoint, PayloadRequest } from 'payload'
+import {
+  ValidationError,
+  type CollectionAfterOperationHook,
+  type Endpoint,
+  type PayloadRequest,
+} from 'payload'
 
 import { isAdminUser, ROLE_OPTIONS } from '@/access'
 
@@ -18,81 +23,180 @@ export const INVITATION_DAYS = 7
 
 const DAY = 86_400_000
 
+/** An account to invite: its id, and the address its email goes to. */
+export type Invitee = { id: number; email: string }
+
+/**
+ * Whether the account has signed in: with a password (`activated_at`, set by
+ * `markActivated`) or with Google (`sub`). Such an account needs no invitation.
+ */
+export const hasSignedIn = (user: Pick<User, 'activated_at' | 'sub'>) =>
+  Boolean(user.activated_at || user.sub)
+
+/** Users' afterOperation: the first sign-in, or the first password set from a link. */
+export const markActivated: CollectionAfterOperationHook<'users'> = async ({
+  operation,
+  result,
+  req,
+}) => {
+  if (operation !== 'login' && operation !== 'resetPassword') return result
+  const user = (result as { user?: Pick<User, 'id' | 'activated_at'> } | undefined)?.user
+  if (user && !user.activated_at) {
+    await req.payload
+      .update({
+        collection: 'users',
+        id: user.id,
+        data: { activated_at: new Date().toISOString() },
+        overrideAccess: true,
+        depth: 0,
+        req,
+      })
+      .catch((err) =>
+        req.payload.logger.error({ err, msg: `Sign-in of user ${user.id} not recorded` }),
+      )
+  }
+  return result
+}
+
 /**
  * A link to /<locale>/welcome/<token>, where a new account sets its password.
  * The token is Payload's reset token, made without Payload's email and with a
  * longer life: `users` sets no expiration of its own, so this one applies.
+ * A new token replaces the account's older one.
  */
-export const setPasswordLink = async (req: PayloadRequest, email: string, locale: Locale) => {
+export const setPasswordLink = async (req: PayloadRequest, invitee: Invitee, locale: Locale) => {
   const token = await req.payload.forgotPassword({
     collection: 'users',
-    data: { email },
+    data: { email: invitee.email },
     disableEmail: true,
     expiration: INVITATION_DAYS * DAY,
     req,
   })
-  if (!token) throw new Error(`No account has the address ${email}.`)
+  if (!token) throw new Error(`User ${invitee.id} has no account to reset.`)
   return `${env.NEXT_PUBLIC_SERVER_URL.replace(/\/+$/, '')}/${locale}/welcome/${token}`
+}
+
+/**
+ * Records that a set-password link went out: "Invited on" for the Users list,
+ * and a line in the invitation log for the daily count. A failure here is
+ * logged, not thrown: the email is out, and a retry would send it twice.
+ */
+export const recordInvitation = async (req: PayloadRequest, user: number) => {
+  try {
+    await req.payload.update({
+      collection: 'users',
+      id: user,
+      data: { invited_at: new Date().toISOString() },
+      overrideAccess: true,
+      depth: 0,
+      req,
+    })
+    await req.payload.create({
+      collection: 'invitation-log',
+      data: { user },
+      overrideAccess: true,
+      depth: 0,
+      req,
+    })
+  } catch (err) {
+    req.payload.logger.error({ err, msg: `Invitation to user ${user} sent but not recorded` })
+  }
+}
+
+/** Invitation emails sent since midnight UTC, when Resend's day starts. */
+export const invitationsToday = async (req: PayloadRequest) => {
+  const midnight = new Date()
+  midnight.setUTCHours(0, 0, 0, 0)
+  const { totalDocs } = await req.payload.count({
+    collection: 'invitation-log',
+    where: { createdAt: { greater_than_equal: midnight.toISOString() } },
+    overrideAccess: true,
+    req,
+  })
+  return totalDocs
 }
 
 /**
  * A new account and its hidden person. It gets a password nobody knows: the
  * person sets their own from the link in their email, or signs in with Google.
+ * If the account cannot be made (its address was taken a moment ago), the
+ * person is removed again.
  */
 export const createAccount = async (
   req: PayloadRequest,
   data: { email: string; name: string; roles: User['roles'] },
 ) => {
   const person = await createPerson(req, data.name)
-  const user = await req.payload.create({
-    collection: 'users',
-    data: {
-      email: data.email,
-      password: randomBytes(24).toString('base64url'),
-      roles: data.roles,
-      person,
-    },
-    overrideAccess: true,
-    depth: 0,
-    req,
-  })
-  return { user: user.id, person }
+  try {
+    const user = await req.payload.create({
+      collection: 'users',
+      data: {
+        email: data.email,
+        password: randomBytes(24).toString('base64url'),
+        roles: data.roles,
+        person,
+      },
+      overrideAccess: true,
+      depth: 0,
+      req,
+    })
+    return { user: user.id, person }
+  } catch (error) {
+    await req.payload.delete({ collection: 'people', id: person, overrideAccess: true, req })
+    throw error
+  }
 }
 
-/** The invitation email, with a fresh set-password link. */
+/** Resend answers 429 for its rate (2 a second) and for its daily limit. */
+const isRefused = (error: unknown) => (error as { status?: number }).status === 429
+
+/** Wait before the one retry after a 429: long enough for the rate limit to pass. */
+const RETRY_MS = 1500
+
+/**
+ * Sends an email, and once more after a 429 that came from the rate limit. A
+ * second 429 means the day's limit: it is thrown, with status 429.
+ */
+const sendOnce = async (
+  req: PayloadRequest,
+  message: Parameters<PayloadRequest['payload']['sendEmail']>[0],
+) => {
+  try {
+    await req.payload.sendEmail(message)
+  } catch (error) {
+    if (!isRefused(error)) throw error
+    await wait(RETRY_MS)
+    await req.payload.sendEmail(message)
+  }
+}
+
+/**
+ * The invitation email, with a fresh set-password link. The new link replaces
+ * the older one, so if the send fails the older link no longer works either.
+ */
 export const sendInvitation = async (
   req: PayloadRequest,
-  to: { email: string; name: string },
+  invitee: Invitee & { name: string },
   locale: Locale,
 ) => {
   const settings = await getEmailSettings(req.payload, req, locale)
   const mail = await invitationMail(settings, {
-    ...to,
-    url: await setPasswordLink(req, to.email, locale),
+    name: invitee.name,
+    email: invitee.email,
+    url: await setPasswordLink(req, invitee, locale),
     days: INVITATION_DAYS,
-    locale,
   })
-  await req.payload.sendEmail({ to: to.email, ...mail })
-  await markInvited(req, to.email)
+  await sendOnce(req, { to: invitee.email, ...mail })
+  await recordInvitation(req, invitee.id)
 }
 
-/** Records that a set-password link went out, for the Users list's "Invited on". */
-export const markInvited = (req: PayloadRequest, email: string) =>
-  req.payload.update({
-    collection: 'users',
-    where: { email: { equals: email } },
-    data: { invited_at: new Date().toISOString() },
-    overrideAccess: true,
-    depth: 0,
-    req,
-  })
-
-/** At most this many accounts in one request; the Users list sends a larger selection in parts. */
-export const INVITE_BATCH = 25
+/** At most this many accounts in one request (a few seconds of sending); the list sends more in parts. */
+export const INVITE_BATCH = 10
 
 /**
- * Bulk invitations a day, counted from "Invited on" since midnight UTC, when
- * Resend's day starts. Resend's free plan sends 100 transactional emails a
+ * Bulk invitations a day, counted in the invitation log since midnight UTC,
+ * when Resend's day starts. Every invitation email counts, single ones and
+ * acceptance emails too. Resend's free plan sends 100 transactional emails a
  * day in all, so this keeps 20 for resets, decisions, reviews and digests.
  * Raise it on a paid plan.
  */
@@ -103,17 +207,24 @@ const SEND_GAP_MS = 600
 
 type BatchResult = {
   sent: number[]
-  /** Admins, and accounts invited within the link's life, unless `again`. */
+  /** Admins, accounts that have signed in, and accounts invited within the link's life, unless `again`. */
   skipped: number[]
   failed: number[]
-  /** Resend refused for its limit: nothing after this was tried. */
+  /** Not tried: today's invitations are used up, or Resend refused for its daily limit. */
   limited: number[]
+}
+
+/** Who a batch passes over: admins, people who signed in, and recent invitations unless `again`. */
+const skips = (user: User, again: boolean) => {
+  const recent = Date.now() - INVITATION_DAYS * DAY
+  const invited = user.invited_at ? Date.parse(user.invited_at) : 0
+  return isAdminUser(user) || hasSignedIn(user) || (!again && invited > recent)
 }
 
 /**
  * Invites the accounts in `ids`, one at a time, in one language. It stops at
- * BULK_INVITES_PER_DAY, or when Resend answers 429 (its daily limit or its
- * rate), and lists the accounts not tried, so the admin can send them later.
+ * BULK_INVITES_PER_DAY or at Resend's daily limit, and lists the accounts not
+ * tried, so the admin can send them later.
  */
 export const inviteMany = async (
   req: PayloadRequest,
@@ -130,19 +241,9 @@ export const inviteMany = async (
     overrideAccess: true,
     req,
   })
-  const recent = Date.now() - INVITATION_DAYS * DAY
-  const midnight = new Date()
-  midnight.setUTCHours(0, 0, 0, 0)
-  const { totalDocs: today } = await req.payload.count({
-    collection: 'users',
-    where: { invited_at: { greater_than_equal: midnight.toISOString() } },
-    overrideAccess: true,
-    req,
-  })
-  let left = BULK_INVITES_PER_DAY - today
-  for (const [i, user] of docs.entries()) {
-    const invited = user.invited_at ? Date.parse(user.invited_at) : 0
-    if (isAdminUser(user) || (!again && invited > recent)) {
+  let left = BULK_INVITES_PER_DAY - (await invitationsToday(req))
+  for (const user of docs) {
+    if (skips(user, again)) {
       result.skipped.push(user.id)
       continue
     }
@@ -152,13 +253,18 @@ export const inviteMany = async (
     }
     const person = typeof user.person === 'object' ? user.person : null
     try {
-      await sendInvitation(req, { email: user.email, name: person?.name || user.email }, locale)
+      await sendInvitation(
+        req,
+        { id: user.id, email: user.email, name: person?.name || user.email },
+        locale,
+      )
       result.sent.push(user.id)
       left--
     } catch (error) {
-      if ((error as { status?: number }).status === 429) {
-        result.limited.push(...docs.slice(i).map((u) => u.id))
-        break
+      if (isRefused(error)) {
+        left = 0
+        result.limited.push(user.id)
+        continue
       }
       req.payload.logger.error({ err: error, msg: `Invitation to user ${user.id} failed` })
       result.failed.push(user.id)
@@ -199,9 +305,16 @@ export const invitationEndpoints: Endpoint[] = [
       })
       if (totalDocs) return Response.json({ error: 'exists' }, { status: 409 })
 
-      const { user } = await createAccount(req, { email, name, roles })
+      let user: number
       try {
-        await sendInvitation(req, { email, name }, localeOf(body.locale))
+        ;({ user } = await createAccount(req, { email, name, roles }))
+      } catch (error) {
+        if (error instanceof ValidationError)
+          return Response.json({ error: 'exists' }, { status: 409 })
+        throw error
+      }
+      try {
+        await sendInvitation(req, { id: user, email, name }, localeOf(body.locale))
         return Response.json({ id: user, emailed: true })
       } catch (error) {
         req.payload.logger.error({ err: error, msg: `Invitation to user ${user} failed` })
@@ -245,13 +358,16 @@ export const invitationEndpoints: Endpoint[] = [
       try {
         await sendInvitation(
           req,
-          { email: user.email, name: person?.name || user.email },
+          { id: user.id, email: user.email, name: person?.name || user.email },
           localeOf(body.locale),
         )
         return Response.json({ sent: user.email })
       } catch (error) {
         req.payload.logger.error({ err: error, msg: `Invitation to user ${user.id} failed` })
-        return Response.json({ error: 'The email did not go out.' }, { status: 502 })
+        return Response.json(
+          { error: isRefused(error) ? 'limit' : 'failed' },
+          { status: isRefused(error) ? 429 : 502 },
+        )
       }
     },
   },

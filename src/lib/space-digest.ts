@@ -233,7 +233,6 @@ const mailFor = async (
     )
   const unsubscribe = unsubscribeUrl(user.id, lang)
   const mail = await digestMail(await getEmailSettings(payload, undefined, lang), {
-    lang,
     mentions: await items(content.mentions),
     replies: await items(content.replies),
     posts: await items(content.posts),

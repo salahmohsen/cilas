@@ -107,7 +107,7 @@ export function InviteForm({ ar }: { ar: boolean }) {
         {ROLE_OPTIONS.map((option) => (
           <Checkbox
             key={option.value}
-            label={option.label}
+            label={t.roleNames[option.value] ?? option.label}
             checked={roles.includes(option.value)}
             onCheckedChange={(on) => toggle(option.value, on === true)}
           />

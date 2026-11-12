@@ -9,7 +9,7 @@ import {
   useLocale,
 } from '@payloadcms/ui'
 import type { TextareaFieldClientProps, TextFieldClientProps } from 'payload'
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState, type CSSProperties } from 'react'
 
 import { defaultTexts, EMAILS, type EmailId } from '@/emails/catalog'
 
@@ -170,8 +170,10 @@ export function EmailPreview({ email, path }: { email: EmailId; path: string }) 
 
   return (
     <section
-      className={`${styles.preview} email-texts-preview`}
+      className={styles.preview}
       aria-label={`Preview: ${entry.label}`}
+      // The rows it spans beside the fields: about, then one per text (email-texts.module.css).
+      style={{ '--rows': Object.keys(entry.texts.en).length + 1 } as CSSProperties}
     >
       <div className={styles.toolbar}>
         {versions.length > 1 ? (

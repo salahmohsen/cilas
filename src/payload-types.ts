@@ -100,6 +100,7 @@ export interface Config {
     'space-preferences': SpacePreference;
     'space-votes': SpaceVote;
     'space-rsvps': SpaceRsvp;
+    'invitation-log': InvitationLog;
     exports: Export;
     imports: Import;
     'payload-mcp-api-keys': PayloadMcpApiKey;
@@ -163,6 +164,7 @@ export interface Config {
     'space-preferences': SpacePreferencesSelect<false> | SpacePreferencesSelect<true>;
     'space-votes': SpaceVotesSelect<false> | SpaceVotesSelect<true>;
     'space-rsvps': SpaceRsvpsSelect<false> | SpaceRsvpsSelect<true>;
+    'invitation-log': InvitationLogSelect<false> | InvitationLogSelect<true>;
     exports: ExportsSelect<false> | ExportsSelect<true>;
     imports: ImportsSelect<false> | ImportsSelect<true>;
     'payload-mcp-api-keys': PayloadMcpApiKeysSelect<false> | PayloadMcpApiKeysSelect<true>;
@@ -1733,6 +1735,10 @@ export interface User {
    */
   sub?: string | null;
   /**
+   * Empty: has not signed in with a password yet.
+   */
+  activated_at?: string | null;
+  /**
    * Set when an invitation goes out.
    */
   invited_at?: string | null;
@@ -2798,6 +2804,16 @@ export interface SpaceRsvp {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "invitation-log".
+ */
+export interface InvitationLog {
+  id: number;
+  user?: (number | null) | User;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "exports".
  */
 export interface Export {
@@ -3317,6 +3333,10 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'space-rsvps';
         value: number | SpaceRsvp;
+      } | null)
+    | ({
+        relationTo: 'invitation-log';
+        value: number | InvitationLog;
       } | null)
     | ({
         relationTo: 'payload-mcp-api-keys';
@@ -4483,6 +4503,7 @@ export interface PeopleSelect<T extends boolean = true> {
  */
 export interface UsersSelect<T extends boolean = true> {
   sub?: T;
+  activated_at?: T;
   invited_at?: T;
   person?: T;
   notification_preferences?: T;
@@ -4730,6 +4751,15 @@ export interface SpaceRsvpsSelect<T extends boolean = true> {
   account?: T;
   post?: T;
   status?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "invitation-log_select".
+ */
+export interface InvitationLogSelect<T extends boolean = true> {
+  user?: T;
   updatedAt?: T;
   createdAt?: T;
 }
@@ -5762,6 +5792,7 @@ export interface TaskCreateCollectionExport {
       | 'space-preferences'
       | 'space-votes'
       | 'space-rsvps'
+      | 'invitation-log'
       | 'forms'
       | 'form-submissions'
       | 'exports'

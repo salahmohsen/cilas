@@ -6,7 +6,7 @@ import { resetMail } from '@/emails/transactional'
 import { env } from '@/env'
 import { teaches, withFellowRole } from '@/lib/fellow-role'
 import { createPerson } from '@/lib/create-person'
-import { INVITATION_DAYS, INVITE_BATCH, invitationEndpoints } from '@/lib/invitation'
+import { INVITATION_DAYS, INVITE_BATCH, invitationEndpoints, markActivated } from '@/lib/invitation'
 import { deleteOwnersAiKeys } from '@/plugins/mcp/api-keys'
 
 import type { User } from '@/payload-types'
@@ -129,6 +129,7 @@ export const Users: CollectionConfig = {
   hooks: {
     beforeChange: [ensurePerson, syncFellowRoleOnLink],
     beforeDelete: [deleteOwnersAiKeys],
+    afterOperation: [markActivated],
   },
   fields: [
     {
@@ -140,6 +141,20 @@ export const Users: CollectionConfig = {
       index: true,
       access: { read: adminOnlyField, create: () => false, update: () => false },
       admin: { readOnly: true, position: 'sidebar', description: 'Set by Google sign-in.' },
+    },
+    {
+      // The first sign-in with a password, or the first password set from a
+      // link (markActivated). With `sub` (Google), it says the account is in use.
+      name: 'activated_at',
+      label: 'First signed in',
+      type: 'date',
+      access: { create: () => false, update: () => false },
+      admin: {
+        position: 'sidebar',
+        readOnly: true,
+        date: { pickerAppearance: 'dayAndTime' },
+        description: 'Empty: has not signed in with a password yet.',
+      },
     },
     {
       // When the account last got a set-password link: an invitation, or an

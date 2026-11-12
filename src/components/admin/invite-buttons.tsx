@@ -22,34 +22,11 @@ export function InviteLink() {
   )
 }
 
-const SEND = {
-  en: {
-    label: 'Set-password link',
-    help: (days: number) =>
-      `Sends a new link to set the password. It works for ${days} days and replaces older links.`,
-    button: 'Send a new link',
-    sending: 'Sending…',
-    language: 'Email language',
-    failed: 'The email did not go out. Try again.',
-    sent: (email: string) => `Sent to ${email}.`,
-  },
-  ar: {
-    label: 'رابط كلمة المرور',
-    help: (days: number) =>
-      `يرسل رابطًا جديدًا لاختيار كلمة المرور. يعمل ${days} أيام ويلغي الروابط السابقة.`,
-    button: 'إرسال رابط جديد',
-    sending: 'جارٍ الإرسال…',
-    language: 'لغة الرسالة',
-    failed: 'لم تُرسل الرسالة. حاول مرة أخرى.',
-    sent: (email: string) => `أُرسلت إلى ${email}.`,
-  },
-}
-
 /** A user's sidebar: sends them a new set-password link (src/lib/invitation.ts). */
 export function SendInvitation({ days }: { days: number }) {
   const { id } = useDocumentInfo()
   const { i18n } = useTranslation()
-  const t = SEND[i18n.language === 'ar' ? 'ar' : 'en']
+  const t = inviteCopy(i18n.language === 'ar').send
   const [language, setLanguage] = useState<'en' | 'ar'>(i18n.language === 'ar' ? 'ar' : 'en')
   const [status, setStatus] = useState<'idle' | 'sending' | string>('idle')
   if (!id) return null
@@ -63,8 +40,10 @@ export function SendInvitation({ days }: { days: number }) {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ locale: language }),
       })
-      const body = (await res.json().catch(() => ({}))) as { sent?: string }
-      setStatus(res.ok && body.sent ? t.sent(body.sent) : t.failed)
+      const body = (await res.json().catch(() => ({}))) as { sent?: string; error?: string }
+      setStatus(
+        res.ok && body.sent ? t.sent(body.sent) : body.error === 'limit' ? t.limit : t.failed,
+      )
     } catch {
       setStatus(t.failed)
     }
@@ -102,47 +81,6 @@ export function SendInvitation({ days }: { days: number }) {
   )
 }
 
-const MANY = {
-  en: {
-    selected: (n: number) => `${n} selected`,
-    language: 'Email language',
-    again: (days: number) => `Also people invited in the last ${days} days`,
-    invite: (n: number) => `Invite ${n} ${n === 1 ? 'person' : 'people'}`,
-    confirm: (n: number, lang: string) =>
-      `Send ${n} ${n === 1 ? 'invitation' : 'invitations'} in ${lang}? Each person gets a link to set a password.`,
-    send: 'Send',
-    cancel: 'Cancel',
-    progress: (done: number, total: number) => `Sending ${done} of ${total}…`,
-    sent: (n: number) => `${n} sent.`,
-    skipped: (n: number) => `${n} skipped: admins, or invited recently.`,
-    failed: (n: number) => `${n} failed. Try them again.`,
-    limited: (n: number) =>
-      `${n} not sent: today's limit for invitations is reached. It keeps some of the day's emails for password resets and decisions. Filter by "Invited on" and send them tomorrow.`,
-    error: 'The invitations did not go out. Try again.',
-    english: 'English',
-    arabic: 'Arabic',
-  },
-  ar: {
-    selected: (n: number) => `${n} محدد`,
-    language: 'لغة الرسالة',
-    again: (days: number) => `وأيضًا من دُعوا خلال آخر ${days} أيام`,
-    invite: (n: number) => `دعوة ${n}`,
-    confirm: (n: number, lang: string) =>
-      `إرسال ${n} دعوة باللغة ${lang}؟ يصل كل شخص رابط لاختيار كلمة المرور.`,
-    send: 'إرسال',
-    cancel: 'إلغاء',
-    progress: (done: number, total: number) => `جارٍ إرسال ${done} من ${total}…`,
-    sent: (n: number) => `أُرسلت ${n}.`,
-    skipped: (n: number) => `تُخطي ${n}: مشرفون أو دُعوا مؤخرًا.`,
-    failed: (n: number) => `فشل ${n}. حاول مرة أخرى.`,
-    limited: (n: number) =>
-      `لم تُرسل ${n}: بلغت الدعوات حدها اليومي. يبقى جزء من رسائل اليوم لإعادة تعيين كلمات المرور والقرارات. صفِّ حسب «تاريخ الدعوة» وأرسلها غدًا.`,
-    error: 'لم تُرسل الدعوات. حاول مرة أخرى.',
-    english: 'الإنجليزية',
-    arabic: 'العربية',
-  },
-}
-
 type Totals = { sent: number; skipped: number; failed: number; limited: number }
 
 /**
@@ -155,7 +93,7 @@ export function InviteSelected({ batch, days }: { batch: number; days: number })
   const { i18n } = useTranslation()
   const router = useRouter()
   const { count, selectAll, getSelectedIds, getQueryParams } = useSelection()
-  const t = MANY[i18n.language === 'ar' ? 'ar' : 'en']
+  const t = inviteCopy(i18n.language === 'ar').many
   const [language, setLanguage] = useState<'en' | 'ar'>(i18n.language === 'ar' ? 'ar' : 'en')
   const [again, setAgain] = useState(false)
   const [step, setStep] = useState<'idle' | 'confirm' | 'sending'>('idle')
