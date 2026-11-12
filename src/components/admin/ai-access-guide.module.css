@@ -133,3 +133,24 @@
 .page :where(h1, h2, h3, strong) {
   font-weight: 500;
 }
+
+.disconnect {
+  margin-block-start: 1rem;
+}
+
+.cellLink {
+  color: var(--foreground);
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+  overflow-wrap: anywhere;
+}
+
+.safe {
+  margin: 0;
+  padding-inline-start: 1.2rem;
+  line-height: 1.55;
+}
+
+.safe > li + li {
+  margin-block-start: 0.35rem;
+}

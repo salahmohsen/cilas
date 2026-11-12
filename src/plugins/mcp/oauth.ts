@@ -367,6 +367,15 @@ const asAssistantApps = (collection: CollectionConfig): CollectionConfig => ({
   },
 })
 
+/** One live connection: a refresh token that is not revoked and has not ended. */
+export const activeConnections = (): Where => ({
+  and: [
+    { tokenType: { equals: 'refresh' } },
+    { revokedAt: { equals: null } },
+    { expiresAt: { greater_than: new Date().toISOString() } },
+  ],
+})
+
 const asConnectedAssistants = (collection: CollectionConfig): CollectionConfig => ({
   ...collection,
   labels: { singular: 'Connected assistant', plural: 'Connected assistants' },
@@ -377,13 +386,7 @@ const asConnectedAssistants = (collection: CollectionConfig): CollectionConfig =
     defaultColumns: ['person', 'assistant', 'expiresAt'],
     description:
       'Each row is one person signed in to one assistant. To disconnect, delete the row: the assistant stops working at once, and the person can connect again.',
-    baseListFilter: (): Where => ({
-      and: [
-        { tokenType: { equals: 'refresh' } },
-        { revokedAt: { equals: null } },
-        { expiresAt: { greater_than: new Date().toISOString() } },
-      ],
-    }),
+    baseListFilter: activeConnections,
     components: { ...collection.admin?.components, beforeList: [AI_ACCESS_LINK] },
   },
   fields: [
