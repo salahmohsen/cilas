@@ -145,7 +145,7 @@ describe('the AI assistants guide', () => {
 
   it('refuses a person who is not an administrator', async () => {
     const text = textOf(await render(['member']))
-    expect(text).toContain('Only administrators can connect an AI assistant.')
+    expect(text).toContain('You do not have access to this page.')
     expect(text).not.toContain('Copy address')
   })
 })
