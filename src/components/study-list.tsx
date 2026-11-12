@@ -1,6 +1,7 @@
 'use client'
 
 import { useLocale, useTranslations } from 'next-intl'
+import dynamic from 'next/dynamic'
 import { usePathname, useRouter, useSearchParams } from 'next/navigation'
 import { useEffect, useMemo, useRef, useState, useTransition, type ReactNode } from 'react'
 
@@ -15,7 +16,14 @@ import { Pagination } from '@/components/arc/pagination/pagination'
 import { Skeleton } from '@/components/arc/skeleton/skeleton'
 import { CourseRows } from '@/components/course-rows'
 import { COURSE_FACETS, readCourseQuery, type CourseFacet } from '@/lib/course-search'
+import { StudyViewToggle } from '@/components/study-view-toggle'
 import { localDigits } from '@/lib/digits'
+import { readStudyView, STUDY_VIEW_PARAM, type StudyView } from '@/lib/study-view'
+
+/** The grid is its own chunk: the list, the default, never loads it. */
+const StudyGrid = dynamic(() => import('@/components/study-grid').then((m) => m.StudyGrid), {
+  loading: () => <div aria-hidden className="study-grid-loading" />,
+})
 
 /**
  * True once `active` has lasted `delay` ms, and then for at least `min` ms, so
@@ -69,6 +77,18 @@ export function StudyList({
   const params = useSearchParams()
   const [pending, startTransition] = useTransition()
   const query = useMemo(() => readCourseQuery(new URLSearchParams(params.toString())), [params])
+
+  const view = readStudyView(params)
+  // The view is the same page of rows drawn another way, so it changes the URL
+  // alone: no request, no data fetch, and Next keeps `useSearchParams` in step.
+  const setView = (next: StudyView) => {
+    if (next === view) return
+    const search = new URLSearchParams(params.toString())
+    if (next === 'grid') search.set(STUDY_VIEW_PARAM, next)
+    else search.delete(STUDY_VIEW_PARAM)
+    const qs = search.toString()
+    window.history.replaceState(null, '', qs ? `${pathname}?${qs}` : pathname)
+  }
 
   const navigate = (change: (next: URLSearchParams) => void, keepPage = false) => {
     const next = new URLSearchParams(params.toString())
@@ -163,45 +183,55 @@ export function StudyList({
         </div>
       </header>
 
-      <div
-        aria-busy={pending || undefined}
-        className="scroll-mt-28 transition-opacity duration-150"
-        ref={listRef}
-        style={{ opacity: pending && !slow ? 0.55 : 1 }}
-      >
-        {slow ? (
-          // The "Searching…" line above speaks for the wait; these are only seen.
-          <ol aria-hidden className="course-rows">
-            {Array.from({ length: Math.max(result.rows.length, 6) }, (_, i) => (
-              <li className="course-row course-row-skeleton" key={i}>
-                <span className="course-row-number" />
-                <Skeleton lines={2} />
-              </li>
-            ))}
-          </ol>
-        ) : result.rows.length ? (
-          <>
-            <CourseRows rows={result.rows} start={(result.page - 1) * pageSize + 1} />
-            {result.pageCount > 1 ? (
-              // Pages run left to right in either language, like the calendar's arrows.
-              <div className="mt-8 flex justify-center" dir="ltr">
-                <Pagination
-                  getPageHref={pageHref}
-                  formatNumber={(n) => localDigits(n, locale)}
-                  label={t('pages')}
-                  nextLabel={t('nextPage')}
-                  onPageChange={goToPage}
-                  page={result.page}
-                  pageCount={result.pageCount}
-                  pageLabel={(n) => t('page', { n })}
-                  previousLabel={t('previousPage')}
-                />
-              </div>
-            ) : null}
-          </>
-        ) : (
-          <EmptyState description={t('emptyText')} title={t('empty')} />
-        )}
+      <div className="flex flex-col gap-5">
+        <div className="study-view-bar">
+          <StudyViewToggle onChange={setView} view={view} />
+        </div>
+
+        <div
+          aria-busy={pending || undefined}
+          className="scroll-mt-28 transition-opacity duration-150"
+          ref={listRef}
+          style={{ opacity: pending && !slow ? 0.55 : 1 }}
+        >
+          {slow && view === 'list' ? (
+            // The "Searching…" line above speaks for the wait; these are only seen.
+            <ol aria-hidden className="course-rows">
+              {Array.from({ length: Math.max(result.rows.length, 6) }, (_, i) => (
+                <li className="course-row course-row-skeleton" key={i}>
+                  <span className="course-row-number" />
+                  <Skeleton lines={2} />
+                </li>
+              ))}
+            </ol>
+          ) : result.rows.length ? (
+            <>
+              {view === 'grid' ? (
+                <StudyGrid label={title} rows={result.rows} />
+              ) : (
+                <CourseRows rows={result.rows} start={(result.page - 1) * pageSize + 1} />
+              )}
+              {result.pageCount > 1 ? (
+                // Pages run left to right in either language, like the calendar's arrows.
+                <div className="mt-8 flex justify-center" dir="ltr">
+                  <Pagination
+                    getPageHref={pageHref}
+                    formatNumber={(n) => localDigits(n, locale)}
+                    label={t('pages')}
+                    nextLabel={t('nextPage')}
+                    onPageChange={goToPage}
+                    page={result.page}
+                    pageCount={result.pageCount}
+                    pageLabel={(n) => t('page', { n })}
+                    previousLabel={t('previousPage')}
+                  />
+                </div>
+              ) : null}
+            </>
+          ) : (
+            <EmptyState description={t('emptyText')} title={t('empty')} />
+          )}
+        </div>
       </div>
     </section>
   )

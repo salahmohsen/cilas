@@ -329,6 +329,9 @@
       "nextPage": "Next page",
       "page": "Page {n}",
       "viewCourse": "View course",
+      "view": "View",
+      "viewList": "List",
+      "viewGrid": "Grid",
       "registration": {
         "open": "Open",
         "closed": "Closed"

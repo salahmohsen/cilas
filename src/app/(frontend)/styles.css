@@ -2264,6 +2264,27 @@ h1.article-title {
 
 /* ===================================================== course list */
 
+/* The view switch sits at the list's end, over its first row. On a touch
+   screen its buttons grow to the 44px a finger needs. */
+.study-view-bar {
+  display: flex;
+  justify-content: flex-end;
+}
+@media (pointer: coarse) {
+  .study-view-toggle [data-ebg-item] {
+    height: 44px;
+    min-width: 44px;
+  }
+}
+/* A course cover in the grid's card frame: the frame sets the 3:2 box. */
+.study-grid-cover {
+  object-fit: cover;
+}
+/* Holds the grid's place while its code comes, so the page does not jump. */
+.study-grid-loading {
+  min-height: 60vh;
+}
+
 .course-rows {
   border-top: 1px solid var(--border);
 }

@@ -329,6 +329,9 @@
       "nextPage": "الصفحة التالية",
       "page": "الصفحة {n, number, digits}",
       "viewCourse": "صفحة المقرر",
+      "view": "طريقة العرض",
+      "viewList": "قائمة",
+      "viewGrid": "شبكة",
       "registration": {
         "open": "مفتوح",
         "closed": "مغلق"
