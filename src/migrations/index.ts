@@ -78,6 +78,7 @@ import * as migration_20261111_153433_course_decisions from './20261111_153433_c
 import * as migration_20261111_161510_applicant_review_gaps from './20261111_161510_applicant_review_gaps';
 import * as migration_20261111_171103_email_texts_localized from './20261111_171103_email_texts_localized';
 import * as migration_20261112_101018_space_email_texts from './20261112_101018_space_email_texts';
+import * as migration_20261112_102955_invitation_email_texts from './20261112_102955_invitation_email_texts';
 
 export const migrations = [
   {
@@ -478,6 +479,11 @@ export const migrations = [
   {
     up: migration_20261112_101018_space_email_texts.up,
     down: migration_20261112_101018_space_email_texts.down,
-    name: '20261112_101018_space_email_texts'
+    name: '20261112_101018_space_email_texts',
+  },
+  {
+    up: migration_20261112_102955_invitation_email_texts.up,
+    down: migration_20261112_102955_invitation_email_texts.down,
+    name: '20261112_102955_invitation_email_texts'
   },
 ];

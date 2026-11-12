@@ -168,6 +168,11 @@ export default buildConfig({
           Component: '/components/admin/applicants#ApplicantsView',
           path: '/applicants',
         },
+        // Admin → Invite someone: reached from the Users list.
+        invite: {
+          Component: '/components/admin/invite-view#InviteView',
+          path: '/invite',
+        },
         subscribers: {
           Component: '/components/admin/subscribers-view#SubscribersView',
           path: '/subscribers',

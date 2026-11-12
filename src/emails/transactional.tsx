@@ -12,6 +12,9 @@ const origin = (site: string) => site.replace(/\/+$/, '')
 /** The word at the top right of an application email. */
 const ADMISSIONS: Record<Locale, string> = { en: 'Admissions', ar: 'القبول' }
 
+/** The word at the top right of an account email. */
+const ACCOUNT: Record<Locale, string> = { en: 'Account', ar: 'الحساب' }
+
 /**
  * Wraps each value in Unicode isolates in an Arabic email, so a Latin name or
  * title keeps its own direction inside right-to-left text (the UI uses <bdi>).
@@ -28,7 +31,8 @@ export const acceptanceMail = async (
     name: string
     email: string
     title: string
-    newAccount: boolean
+    /** For a new account: its set-password link (src/lib/invitation.ts). */
+    setPassword: { url: string; days: number } | null
     site: string
     /** The applicant's language; `settings` holds the texts in it. */
     locale?: Locale
@@ -36,11 +40,14 @@ export const acceptanceMail = async (
 ): Promise<Mail> => {
   const locale = data.locale ?? 'en'
   const t = settings.texts.acceptance
-  const values = isolated({ name: data.name, email: data.email, title: data.title }, locale)
+  const values = {
+    ...isolated({ name: data.name, email: data.email, title: data.title }, locale),
+    days: String(data.setPassword?.days ?? ''),
+  }
   const subject = fill(t.subject, values)
   const body = [
     ...paragraphs(fill(t.body, values)),
-    fill(data.newAccount ? t.new_account : t.existing_account, values),
+    fill(data.setPassword ? t.new_account : t.existing_account, values),
   ]
   const rendered = await renderEmail(
     <MessageEmail
@@ -50,7 +57,37 @@ export const acceptanceMail = async (
       kicker={ADMISSIONS[locale]}
       lang={locale}
       paragraphs={body}
-      button={{ label: t.button, url: `${origin(data.site)}/${locale}/login` }}
+      button={
+        data.setPassword
+          ? { label: t.new_account_button, url: data.setPassword.url }
+          : { label: t.button, url: `${origin(data.site)}/${locale}/login` }
+      }
+    />,
+  )
+  return { subject, ...rendered }
+}
+
+/** A new account, made by an admin: a link to set its password (src/lib/invitation.ts). */
+export const invitationMail = async (
+  settings: EmailSettings,
+  data: { name: string; email: string; url: string; days: number; locale?: Locale },
+): Promise<Mail> => {
+  const locale = data.locale ?? 'en'
+  const t = settings.texts.invitation
+  const values = {
+    ...isolated({ name: data.name, email: data.email }, locale),
+    days: String(data.days),
+  }
+  const subject = fill(t.subject, values)
+  const rendered = await renderEmail(
+    <MessageEmail
+      settings={settings}
+      preview={subject}
+      heading={subject}
+      kicker={ACCOUNT[locale]}
+      lang={locale}
+      paragraphs={[...paragraphs(fill(t.body, values)), fill(t.google, values)]}
+      button={{ label: t.button, url: data.url }}
     />,
   )
   return { subject, ...rendered }
@@ -129,7 +166,7 @@ export const resetMail = async (
       settings={settings}
       preview={subject}
       heading={subject}
-      kicker="Account"
+      kicker={ACCOUNT.en}
       paragraphs={paragraphs(fill(t.body, { email: data.email }))}
       button={{ label: t.button, url: `${origin(data.site)}/admin/reset/${data.token}` }}
     />,

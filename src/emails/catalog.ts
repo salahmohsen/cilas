@@ -13,16 +13,39 @@ export const EMAILS = {
     when: 'Sent when an admin accepts one course of an application.',
     to: 'The applicant, in the language they applied in.',
     localized: true,
-    placeholders: ['name', 'email', 'title'],
+    placeholders: ['name', 'email', 'title', 'days'],
     versions: { new_account: 'New account', existing_account: 'Existing account' },
     texts: {
       en: {
         subject: 'You are accepted to {title}',
         body: 'Dear {name},\n\nYou are accepted to {title}.',
         new_account:
-          'We made a CILAS account for {email}. To sign in, use “Continue with Google” if this is a Google address. If not, choose “Forgot password?” to set a password.',
+          'We made a CILAS account for {email}. Use the button below to set your password. The link works for {days} days. If {email} is a Google address, you can also use “Continue with Google”.',
+        new_account_button: 'Set your password',
         existing_account: 'Sign in with your CILAS account as usual.',
         button: 'Sign in',
+      },
+    },
+  },
+  invitation: {
+    label: 'Invitation',
+    when: 'Sent when an admin invites someone from Users, or sends them a new link.',
+    to: 'The new account, in the language the admin chooses.',
+    localized: true,
+    placeholders: ['name', 'email', 'days'],
+    versions: { invitation: 'Invitation' },
+    texts: {
+      en: {
+        subject: 'Your CILAS account',
+        body: 'Dear {name},\n\nWe made a CILAS account for you at {email}. To start, set your password with the button below. The link works for {days} days.',
+        google: 'If {email} is a Google address, you can also use “Continue with Google”.',
+        button: 'Set your password',
+      },
+      ar: {
+        subject: 'حسابك في سيلاس',
+        body: 'عزيزي/عزيزتي {name}،\n\nأنشأنا لك حسابًا في سيلاس بالبريد {email}. للبدء، اختر كلمة المرور من الزر أدناه. يعمل الرابط لمدة {days} أيام.',
+        google: 'إذا كان {email} حساب Google، يمكنك أيضًا استخدام «المتابعة باستخدام Google».',
+        button: 'اختر كلمة المرور',
       },
     },
   },

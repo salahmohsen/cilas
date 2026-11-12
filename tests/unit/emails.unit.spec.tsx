@@ -11,7 +11,13 @@ import { MessageEmail } from '@/emails/message'
 import { newsletterMail } from '@/emails/newsletter'
 import { renderEmail } from '@/emails/render'
 import { DEFAULT_TEXTS, fill, paragraphs, withDefaults } from '@/emails/settings'
-import { acceptanceMail, rejectionMail, resetMail, reviewMail } from '@/emails/transactional'
+import {
+  acceptanceMail,
+  invitationMail,
+  rejectionMail,
+  resetMail,
+  reviewMail,
+} from '@/emails/transactional'
 import { sendBroadcast } from '@/lib/broadcast'
 
 const bodyOf = (intro: { root: { children: unknown[] } }, ...blocks: Record<string, unknown>[]) => [
@@ -92,23 +98,40 @@ describe('transactional mails', () => {
   const settings = withDefaults({})
   const site = 'https://ci-las.org/'
 
-  it('tells a new account how to sign in', async () => {
+  it('gives a new account a link to set its password', async () => {
     const mail = await acceptanceMail(settings, {
       name: 'Mona',
       email: 'mona@example.com',
       title: 'Bridge 2026',
-      newAccount: true,
+      setPassword: { url: 'https://ci-las.org/en/welcome/abc', days: 7 },
       site,
     })
     expect(mail.subject).toBe('You are accepted to Bridge 2026')
     expect(mail.html).toContain('We made a CILAS account for mona@example.com')
-    expect(mail.html).toContain('href="https://ci-las.org/en/login"')
+    expect(mail.html).toContain('The link works for 7 days.')
+    expect(mail.html).toContain('href="https://ci-las.org/en/welcome/abc"')
+    expect(mail.html).toContain('Set your password')
+    expect(mail.html).not.toContain('Forgot password')
+  })
+
+  it('invites a new account in Arabic with its link', async () => {
+    const mail = await invitationMail(withDefaults({}, { locale: 'ar' }), {
+      name: 'Mona',
+      email: 'mona@example.com',
+      url: 'https://ci-las.org/ar/welcome/abc',
+      days: 7,
+      locale: 'ar',
+    })
+    expect(mail.subject).toBe('حسابك في سيلاس')
+    expect(mail.html).toContain('dir="rtl"')
+    expect(mail.html).toContain('href="https://ci-las.org/ar/welcome/abc"')
+    expect(mail.text).toContain('7 أيام')
   })
 
   it('uses the admin’s own text', async () => {
     const mail = await acceptanceMail(
       withDefaults({ texts: { acceptance: { subject: 'Welcome, {name}!' } } }),
-      { name: 'Mona', email: 'm@x.co', title: 'T', newAccount: false, site },
+      { name: 'Mona', email: 'm@x.co', title: 'T', setPassword: null, site },
     )
     expect(mail.subject).toBe('Welcome, Mona!')
     expect(mail.html).toContain('Sign in with your CILAS account as usual.')
@@ -129,7 +152,7 @@ describe('transactional mails', () => {
   it('sends an Arabic application email right to left, with the Arabic title and login', async () => {
     const mail = await acceptanceMail(
       withDefaults({ texts: { acceptance: { subject: 'مرحبا {name}، قُبلت في {title}' } } }),
-      { name: 'Mona', email: 'm@x.co', title: 'جسر', newAccount: false, site, locale: 'ar' },
+      { name: 'Mona', email: 'm@x.co', title: 'جسر', setPassword: null, site, locale: 'ar' },
     )
     expect(mail.html).toContain('lang="ar"')
     expect(mail.html).toContain('dir="rtl"')

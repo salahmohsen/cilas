@@ -7,7 +7,15 @@ import { issueForEmail } from './issue'
 import { newsletterMail } from './newsletter'
 import type { EmailSettings } from './settings'
 import { announcementMail, digestMail } from './space-mail'
-import { acceptanceMail, rejectionMail, resetMail, reviewMail } from './transactional'
+import { INVITATION_DAYS } from '@/lib/invitation'
+
+import {
+  acceptanceMail,
+  invitationMail,
+  rejectionMail,
+  resetMail,
+  reviewMail,
+} from './transactional'
 
 type Mail = { subject: string; html: string; text: string }
 type Sample<K extends EmailId> = (
@@ -17,6 +25,10 @@ type Sample<K extends EmailId> = (
 
 const person = { name: 'Mona Adel', email: 'mona@example.com' }
 const course = 'The Bridge Programme 2026'
+const sampleLink = (settings: EmailSettings, locale: Locale) => ({
+  url: `${settings.site}/${locale}/welcome/sample-token`,
+  days: INVITATION_DAYS,
+})
 
 /**
  * Each email of the catalog with sample data, for the preview and the test
@@ -27,10 +39,12 @@ const SAMPLES: { [K in EmailId]: Sample<K> } = {
     acceptanceMail(settings, {
       ...person,
       title: course,
-      newAccount: version === 'new_account',
+      setPassword: version === 'new_account' ? sampleLink(settings, locale) : null,
       site: settings.site,
       locale,
     }),
+  invitation: ({ settings, locale }) =>
+    invitationMail(settings, { ...person, ...sampleLink(settings, locale), locale }),
   rejection: ({ settings, locale }) =>
     rejectionMail(settings, { ...person, title: course, locale }),
   review: ({ settings }, version) =>

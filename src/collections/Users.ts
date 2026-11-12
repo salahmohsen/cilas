@@ -6,6 +6,7 @@ import { resetMail } from '@/emails/transactional'
 import { env } from '@/env'
 import { teaches, withFellowRole } from '@/lib/fellow-role'
 import { createPerson } from '@/lib/create-person'
+import { INVITATION_DAYS, invitationEndpoints } from '@/lib/invitation'
 import { deleteOwnersAiKeys } from '@/plugins/mcp/api-keys'
 
 import type { User } from '@/payload-types'
@@ -96,7 +97,11 @@ export const Users: CollectionConfig = {
   admin: {
     useAsTitle: 'email',
     defaultColumns: ['email', 'person', 'roles'],
+    // Admin → Invite someone (src/components/admin/invite-view.tsx).
+    components: { beforeListTable: ['/components/admin/invite-buttons#InviteLink'] },
   },
+  // Invite someone, or send a new set-password link (src/lib/invitation.ts).
+  endpoints: invitationEndpoints,
   auth: {
     forgotPassword: {
       generateEmailHTML: resetPasswordEmail,
@@ -127,6 +132,21 @@ export const Users: CollectionConfig = {
       index: true,
       access: { read: adminOnlyField, create: () => false, update: () => false },
       admin: { readOnly: true, position: 'sidebar', description: 'Set by Google sign-in.' },
+    },
+    {
+      // Sends the account a new set-password link (src/lib/invitation.ts).
+      name: 'invitation',
+      type: 'ui',
+      admin: {
+        position: 'sidebar',
+        condition: (_, __, { user }) => isAdminUser(user),
+        components: {
+          Field: {
+            path: '/components/admin/invite-buttons#SendInvitation',
+            clientProps: { days: INVITATION_DAYS },
+          },
+        },
+      },
     },
     {
       // At most one account per person.

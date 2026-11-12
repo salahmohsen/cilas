@@ -1,6 +1,5 @@
 import { isAdminUser, personOf } from '@/access'
 import { relId } from '@/lib/relation'
-import { randomBytes } from 'node:crypto'
 import { sql } from '@payloadcms/db-postgres'
 
 import {
@@ -17,6 +16,7 @@ import { localeOf, type Locale } from '@/i18n/routing'
 import { getEmailSettings } from '@/emails/settings'
 import { acceptanceMail, rejectionMail } from '@/emails/transactional'
 import { createPerson } from '@/lib/create-person'
+import { createAccount, INVITATION_DAYS, setPasswordLink } from '@/lib/invitation'
 import type { FormSubmission } from '@/payload-types'
 import { courseTitles } from './course-titles'
 import { applicantOf, rolesAfterAccept } from './applicant'
@@ -73,21 +73,15 @@ const ensureAccount = async (req: PayloadRequest, applicant: Applicant, kind: Ki
     limit: 1,
     ...local(req),
   })
-  let user = found.docs[0]
+  const user = found.docs[0]
   if (!user) {
-    const person = await createPerson(req, applicant.name)
-    user = await payload.create({
-      collection: 'users',
-      data: {
-        email: applicant.email,
-        // Nobody knows it: they sign in with Google or set one by reset.
-        password: randomBytes(24).toString('base64url'),
-        roles: rolesAfterAccept([], kind),
-        person,
-      },
-      ...local(req),
+    // The acceptance email carries the link to set its password.
+    const made = await createAccount(req, {
+      email: applicant.email,
+      name: applicant.name,
+      roles: rolesAfterAccept([], kind),
     })
-    return { user: user.id, person, newAccount: true }
+    return { ...made, newAccount: true }
   }
   let person = personOf(user)
   if (person === null) {
@@ -432,7 +426,12 @@ const sendMail = async (req: PayloadRequest, mail: Mail) => {
       ? await acceptanceMail(settings, {
           ...mail.to,
           title: mail.title,
-          newAccount: mail.newAccount,
+          setPassword: mail.newAccount
+            ? {
+                url: await setPasswordLink(req, mail.to.email, mail.locale),
+                days: INVITATION_DAYS,
+              }
+            : null,
           site: env.NEXT_PUBLIC_SERVER_URL,
           locale: mail.locale,
         })

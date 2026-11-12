@@ -5085,7 +5085,14 @@ export interface EmailSetting {
       subject?: string | null;
       body?: string | null;
       new_account?: string | null;
+      new_account_button?: string | null;
       existing_account?: string | null;
+      button?: string | null;
+    };
+    invitation?: {
+      subject?: string | null;
+      body?: string | null;
+      google?: string | null;
       button?: string | null;
     };
     rejection?: {
@@ -5269,7 +5276,16 @@ export interface EmailSettingsSelect<T extends boolean = true> {
               subject?: T;
               body?: T;
               new_account?: T;
+              new_account_button?: T;
               existing_account?: T;
+              button?: T;
+            };
+        invitation?:
+          | T
+          | {
+              subject?: T;
+              body?: T;
+              google?: T;
               button?: T;
             };
         rejection?:

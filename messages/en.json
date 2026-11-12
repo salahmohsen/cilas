@@ -882,6 +882,14 @@
     "hidePassword": "Hide password",
     "back": "Back to sign in"
   },
+  "Welcome": {
+    "metaTitle": "Set your password — CILAS",
+    "title": "Welcome to CILAS",
+    "intro": "Choose a password for your new CILAS account.",
+    "password": "Password",
+    "confirm": "Repeat the password",
+    "invalid": "This link has expired or was already used. We can send a new one to your email."
+  },
   "NewsletterSignup": {
     "title": "Get the CILAS newsletter",
     "description": "New courses, open calls and articles from CILAS, in your inbox.",

@@ -46,6 +46,8 @@ import { NewsletterActions as NewsletterActions_b0970b01e42603472424e6e40dd0fd9e
 import { NewsletterStats as NewsletterStats_fdb33d0393a3d579112339a67c8ca7a7 } from '../../../components/admin/newsletter-stats'
 import { SubscribersLink as SubscribersLink_8812e7bc4e59e86dbe460c3e3c68a83f } from '../../../components/admin/subscribers-link'
 import { SyncListButton as SyncListButton_349ee99818603183cd08a332839d03c9 } from '../../../components/admin/sync-list-button'
+import { SendInvitation as SendInvitation_5b0bd38bce1e4c846b8bd84d83fdf329 } from '../../../components/admin/invite-buttons'
+import { InviteLink as InviteLink_5b0bd38bce1e4c846b8bd84d83fdf329 } from '../../../components/admin/invite-buttons'
 import { MediaListToggle as MediaListToggle_f436cf2a4719114d9e44505773a04007 } from 'payload-theme/client'
 import { SpaceDeleteMenuItem as SpaceDeleteMenuItem_fe373f97965e49e7953f966d24057638 } from '../../../components/admin/space-delete'
 import { FormatField as FormatField_cdf7e044479f899a31f804427d568b36 } from '@payloadcms/plugin-import-export/rsc'
@@ -79,6 +81,7 @@ import { AvatarProvider as AvatarProvider_37fe5310e1c82b2fade6b239ca4c79e5 } fro
 import { ThemeProvider as ThemeProvider_f436cf2a4719114d9e44505773a04007 } from 'payload-theme/client'
 import { ListRowActions as ListRowActions_90f75c5e95ced277ac99e83a22593bcf } from '../../../components/admin/list-row-actions'
 import { ApplicantsView as ApplicantsView_790724bc9e120a628731f1789ae767f9 } from '../../../components/admin/applicants'
+import { InviteView as InviteView_d9e2652fce852d89f8f7965b9c43c378 } from '../../../components/admin/invite-view'
 import { SubscribersView as SubscribersView_82e10948fdeb08928ce643cc0b1632a7 } from '../../../components/admin/subscribers-view'
 import { ReviewQueueView as ReviewQueueView_5ad28f33e67910b7fd7d6503bf8c6322 } from '../../../components/admin/review-queue'
 import { AiAccessGuideView as AiAccessGuideView_052b04071a970816feedca90704adf89 } from '../../../components/admin/ai-access-guide'
@@ -138,6 +141,8 @@ export const importMap = {
   "/components/admin/newsletter-stats#NewsletterStats": NewsletterStats_fdb33d0393a3d579112339a67c8ca7a7,
   "/components/admin/subscribers-link#SubscribersLink": SubscribersLink_8812e7bc4e59e86dbe460c3e3c68a83f,
   "/components/admin/sync-list-button#SyncListButton": SyncListButton_349ee99818603183cd08a332839d03c9,
+  "/components/admin/invite-buttons#SendInvitation": SendInvitation_5b0bd38bce1e4c846b8bd84d83fdf329,
+  "/components/admin/invite-buttons#InviteLink": InviteLink_5b0bd38bce1e4c846b8bd84d83fdf329,
   "payload-theme/client#MediaListToggle": MediaListToggle_f436cf2a4719114d9e44505773a04007,
   "/components/admin/space-delete#SpaceDeleteMenuItem": SpaceDeleteMenuItem_fe373f97965e49e7953f966d24057638,
   "@payloadcms/plugin-import-export/rsc#FormatField": FormatField_cdf7e044479f899a31f804427d568b36,
@@ -171,6 +176,7 @@ export const importMap = {
   "payload-theme/client#ThemeProvider": ThemeProvider_f436cf2a4719114d9e44505773a04007,
   "/components/admin/list-row-actions#ListRowActions": ListRowActions_90f75c5e95ced277ac99e83a22593bcf,
   "/components/admin/applicants#ApplicantsView": ApplicantsView_790724bc9e120a628731f1789ae767f9,
+  "/components/admin/invite-view#InviteView": InviteView_d9e2652fce852d89f8f7965b9c43c378,
   "/components/admin/subscribers-view#SubscribersView": SubscribersView_82e10948fdeb08928ce643cc0b1632a7,
   "/components/admin/review-queue#ReviewQueueView": ReviewQueueView_5ad28f33e67910b7fd7d6503bf8c6322,
   "/components/admin/ai-access-guide#AiAccessGuideView": AiAccessGuideView_052b04071a970816feedca90704adf89,
