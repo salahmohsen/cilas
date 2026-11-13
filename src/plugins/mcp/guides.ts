@@ -47,12 +47,14 @@ ${documentRules}
 | Opening quote or question | epigraph |
 | About, overview, aims, why this course | description: prose only. No dates, times, fees, teachers, reading lists or week-by-week plan |
 | Teachers, fellows, facilitators | fellows: ids from lookup. Their biographies belong to the person record, not the course: put them in source_unmapped |
-| Week-by-week or session-by-session plan | sessions: one row per session, in order. Its topic is session_title, its text is description |
+| Week-by-week or session-by-session plan | syllabus: one row per session, in order. Its topic is title, its text is description |
 | Readings for one session | that session's bibliography |
 | Assignments, exercises, field visits for one session | that session's activities |
 | General reading list for the whole course | bibliography |
-| Start date, weekdays, times, number of weeks | schedule |
-| In person, online or both | location; a session that differs uses sessions[].delivery |
+| Dates and times of each session | that session's meetings: one row per meeting |
+| A start date or a number of weeks, with no dates for the sessions | announced |
+| Words about timing the dates cannot say ("hybrid for the first 6 weeks") | timing_note |
+| In person, online or both | location; a session that differs uses syllabus[].delivery |
 | Teaching languages | teaching_languages; mixed use goes in language_note |
 | Fees, contribution, discounts, scholarships | pricing_override |
 | How and when to apply, deadline, application link | registration |
@@ -67,9 +69,10 @@ Locations:\n${list(LOCATION_OPTIONS)}
 Teaching languages:\n${list(TEACHING_LANGUAGE_OPTIONS)}
 Session units:\n${list(SESSION_UNIT_OPTIONS)}
 
-Schedule shape: { start_date, start_precision: "day" | "week", weeks, slots: [{ weekday, start_time, end_time }], note: { en?, ar? } }. Times are 24-hour HH:MM in Africa/Cairo. Dates come from the shared expansion (ADR 0002); do not materialize generated dates into sessions. A start date must match one of the weekly slots unless precision is week. Conflicting dates and weekdays must be clarified with the person. Session dates, when explicitly supplied, replace the generated dates for that session and are saved as supplied.
-Sessions use order, session_title (localized), meetings, cancelled, description (localized Markdown), dates [{date,start_time,end_time}], bibliography [{type,title,href,note}], and activities [{kind,description}].
-For a per-session delivery split, set sessions[].delivery to ONLINE, OFFLINE or HYBRID using the same values as course location. Empty delivery inherits the course-level location. When sessions differ, set course location to ["HYBRID"]. Use schedule.note for additional schedule notes.
+Sessions are the course's syllabus: syllabus [{ title (localized), meetings [{ date, start_time, end_time }], delivery, description (localized Markdown), bibliography [{type,title,href,note}], activities [{kind,description}], cancelled }]. Each session holds its own meetings; there is no weekly pattern. A meeting's date is a Cairo day, YYYY-MM-DD; start_time and end_time are 24-hour HH:MM in Africa/Cairo, the end after the start; leave both times out for an all-day meeting. Write out every meeting: for "Tuesdays 19:00-21:00 for 8 weeks from 3 March", give 8 sessions with one meeting each, a week apart. A session that meets twice a week (a "week" of a course) has two meetings. The dates must agree with the weekdays the source names; if they do not, ask the person. A session with no known date has no meetings. Sessions are ordered by their first meeting, and those with no meeting by their place in the list. Leave title out to show "Session 3" or "Week 3" by session_unit.
+syllabus replaces the course's whole list: give a session's id (syllabus_ids in the last result, in the same order) to keep and change it; a session left out is deleted. A course's sessions have no drafts of their own: they are written with a draft course and hidden while it is a draft. On a published course, syllabus is refused, because a change would be public at once: tell the person to edit the sessions in the admin.
+announced { start_day, weeks } is only for a course with no meeting yet: the day it was announced to start (YYYY-MM-DD) and how many weeks it runs. Once a session has a meeting, the meetings say this; do not give both.
+For a per-session delivery split, set syllabus[].delivery to ONLINE, OFFLINE or HYBRID using the same values as course location. Empty delivery inherits the course-level location. When sessions differ, set course location to ["HYBRID"]. Use timing_note for additional timing notes.
 Registration uses mode: follow_cycle (default), own, or closed. follow_cycle uses the cycle destination and deadline, with optional close_early (last day in Cairo). own uses method (form or external), form or url, and deadline without cycle fallback. closed takes no applications. Applicant questions are real blocks with blockType and the fields in the schema; leave their name and option values out, and the course makes them once from the English labels. Phone blocks use blockType phone and defaultCountry (a supported ISO code, default EG). Every question description takes localized Markdown: bold, italic, links, paragraphs and lists. They are unused with external registration. To ask more questions for a follow_cycle course, add them to applicant_questions: the site adds them to the cycle form for applicants who choose this course. Do not make a form for it.
 Contribution override uses options [{amount,default}] with nonnegative EGP amounts and exactly one default when options exist, localized note and need_based_deductions. Payment plans are available only on programmes.
 ${contract('courses')}

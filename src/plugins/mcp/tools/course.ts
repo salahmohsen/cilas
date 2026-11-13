@@ -73,7 +73,7 @@ const courseShape = draftShape('courses')
 export const createCourseDraftTool = adminTool({
   name: 'create_course_draft',
   description:
-    'Create a course draft with structured schedule and course flow. Never publishes. Read cilas://guides/course first.',
+    'Create a course draft with its sessions (syllabus) and their meetings. Never publishes. Read cilas://guides/course first.',
   inputError: draftInputError,
   shape: {
     ...courseShape,
@@ -101,7 +101,7 @@ export const createCourseDraftTool = adminTool({
 export const updateCourseDraftTool = adminTool({
   name: 'update_course_draft',
   description:
-    'Correct an existing course draft by id. Omitted fields stay unchanged. Null clears optional fields; arrays replace the whole field. A published course gets a draft beside its unchanged live version.',
+    "Correct an existing course draft by id. Omitted fields stay unchanged. Null clears optional fields; arrays replace the whole field, and syllabus replaces the course's sessions. A published course gets a draft beside its unchanged live version; its sessions cannot be changed here.",
   inputError: draftInputError,
   shape: { ...courseShape, id: id('course'), source_unmapped: unmappedSchema },
   run: async ({ id, ...input }, ctx) => writeDraft('courses', input, ctx, id),

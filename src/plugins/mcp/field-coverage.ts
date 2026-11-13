@@ -1,5 +1,5 @@
 import type { Field } from 'payload'
-import { flattenFields, excludedField, type DraftCollection } from './field-registry'
+import { flattenFields, excludedField, joinedFields, type DraftCollection } from './field-registry'
 
 export const fieldPaths = (fields: Field[], prefix = ''): string[] =>
   flattenFields(fields).flatMap((field) => {
@@ -8,6 +8,7 @@ export const fieldPaths = (fields: Field[], prefix = ''): string[] =>
     return [
       path,
       ...('fields' in field ? fieldPaths(field.fields, path) : []),
+      ...fieldPaths(joinedFields(field) ?? [], path),
       ...(field.type === 'blocks'
         ? field.blocks.flatMap((block) =>
             typeof block === 'string' ? [] : fieldPaths(block.fields, `${path}.${block.slug}`),
