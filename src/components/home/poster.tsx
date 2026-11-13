@@ -96,8 +96,7 @@ export function Poster({
   const strip = (
     <div className="poster-strip">
       <span className="poster-mark">
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img alt="" draggable={false} src="/assets/images/logo.webp" />
+        <Image alt="" draggable={false} src="/assets/images/logo.webp" width={64} height={109} />
       </span>
       <span className="poster-meta">
         {meta.lines.map((line) => (

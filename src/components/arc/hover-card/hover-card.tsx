@@ -21,6 +21,7 @@ import {
   useReducedMotion,
 } from 'motion/react'
 import { motionTokens } from '../lib/motion-tokens'
+import { ArcImage } from '../lib/arc-provider'
 import styles from './hover-card.module.css'
 
 const OPEN_DELAY = 500
@@ -330,9 +331,8 @@ function Portrait({ src }: { src: string }) {
     const node = image.current
     if (node && !node.complete) node.dataset.loading = ''
   }, [src])
-  // eslint-disable-next-line @next/next/no-img-element -- registry components stay framework agnostic; pass next/image through `avatar` instead.
   return (
-    <img
+    <ArcImage
       ref={image}
       src={src}
       alt=""

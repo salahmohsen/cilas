@@ -377,6 +377,7 @@ export function WheelCarousel({
                     fallbackSeed={selectedItem.fallbackSeed ?? selectedItem.label}
                     alt={selectedItem.imageAlt ?? selectedItem.label}
                     className="h-full w-full object-cover"
+                    sizes="(min-width: 1024px) 560px, 100vw"
                     style={focalPointStyle(selectedItem.imageFocalPoint)}
                     draggable={false}
                   />

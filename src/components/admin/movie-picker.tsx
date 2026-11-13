@@ -1,6 +1,7 @@
 'use client'
 
 import { useField, useLocale } from '@payloadcms/ui'
+import Image from 'next/image'
 import type { JSONFieldClientProps } from 'payload'
 import { useEffect, useId, useRef, useState } from 'react'
 
@@ -94,8 +95,7 @@ export function MoviePicker({ path, readOnly }: JSONFieldClientProps) {
             <li key={movie.id}>
               <button type="button" disabled={readOnly || busy} onClick={() => void load(movie.id)}>
                 {moviePosterUrl(movie.posterPath) && (
-                  // eslint-disable-next-line @next/next/no-img-element
-                  <img src={moviePosterUrl(movie.posterPath)} alt="" loading="lazy" />
+                  <Image src={moviePosterUrl(movie.posterPath)!} alt="" width={40} height={60} />
                 )}
                 <span>
                   {movie.title} {movie.releaseDate ? `(${movie.releaseDate.slice(0, 4)})` : ''}

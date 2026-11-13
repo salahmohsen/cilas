@@ -1,5 +1,4 @@
 'use client'
-/* eslint-disable @next/next/no-img-element -- the 24px author avatar stays a plain image; post images use next/image. */
 
 import { useEffect, useId, useLayoutEffect, useRef, useState } from 'react'
 import type { MouseEvent, ReactNode } from 'react'
@@ -17,6 +16,7 @@ import { motionTokens } from '../../lib/motion-tokens'
 import { activatePage, pageNavigation } from '../../lib/page-navigation'
 import { blogCategories, blogPosts } from './blog-grid-data'
 import type { BlogPost } from './blog-grid-data'
+import { ArcImage } from '../../lib/arc-provider'
 import styles from './blog-grid.module.css'
 
 /* A card's image width: a third of the 1180px page, two columns under 900px
@@ -184,7 +184,7 @@ function Byline({ post }: { post: BlogPost }) {
       {named && (
         <>
           {post.author.avatar ? (
-            <img
+            <ArcImage
               className={styles.avatar}
               src={post.author.avatar}
               alt=""

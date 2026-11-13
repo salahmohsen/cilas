@@ -1,4 +1,5 @@
 import { Cog } from 'lucide-react'
+import Image from 'next/image'
 import Link from 'next/link'
 import type { Payload } from 'payload'
 
@@ -237,8 +238,14 @@ function ChangeCard({ change }: { change: Change }) {
   return (
     <div className={styles.preview}>
       {change.cover && (
-        // eslint-disable-next-line @next/next/no-img-element -- an R2 thumbnail in the admin
-        <img className={styles.previewCover} src={change.cover} alt="" decoding="async" />
+        <Image
+          className={styles.previewCover}
+          src={change.cover}
+          alt=""
+          width={256}
+          height={192}
+          sizes="256px"
+        />
       )}
       <p className={styles.previewKind}>{[change.collection, state].filter(Boolean).join(' · ')}</p>
       <p className={styles.previewTitle} dir="auto">

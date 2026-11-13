@@ -45,6 +45,8 @@ const nextConfig: NextConfig = {
         port: r2.port,
         pathname: `${r2.pathname.replace(/\/$/, '')}/**`,
       },
+      // Movie posters (src/lib/movie.ts).
+      { protocol: 'https', hostname: 'image.tmdb.org', pathname: '/t/p/**' },
     ],
     localPatterns: [
       {

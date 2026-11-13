@@ -1,3 +1,4 @@
+import Image from 'next/image'
 import type { Payload, TypedUser } from 'payload'
 
 import { personOf } from '@/access'
@@ -36,8 +37,8 @@ export async function AdminAvatar({ payload, user }: { payload: Payload; user?: 
           .catch(() => null)
   const photo = typeof person?.photo === 'object' ? mediaThumbnail(person.photo) : undefined
   if (photo) {
-    // eslint-disable-next-line @next/next/no-img-element -- an R2 URL in Payload's admin
-    return <img src={photo} alt="" />
+    // The theme shows it at 28 to 32px; two sizes cover 1x and 2x screens.
+    return <Image src={photo} alt="" width={32} height={32} />
   }
   const email = typeof user?.email === 'string' ? user.email : ''
   return (

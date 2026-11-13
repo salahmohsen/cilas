@@ -117,12 +117,11 @@ describe('local Beam fallback', () => {
     expect(screen.getByRole('img', { name: '1 more members' })).toBeInTheDocument()
   })
 
-  it('recovers a failed portrait, clears srcSet, and accepts a new upload or removal', () => {
+  it('recovers a failed portrait and accepts a new upload or removal', () => {
     const onError = vi.fn()
     const { container, rerender } = render(
       <AvatarImage
         src="/bad.jpg"
-        srcSet="/bad@2.jpg 2x"
         fallbackSeed={seed}
         alt="Person"
         onError={onError}
@@ -135,13 +134,12 @@ describe('local Beam fallback', () => {
     fireEvent.error(image)
     expect(container.querySelector('img')).toBeNull()
     expect(portrait(container.querySelector('svg'))).toBe(fallback())
-    expect(container.querySelector('svg')).not.toHaveAttribute('srcSet')
     expect(container.querySelector('svg')).toHaveAttribute('aria-label', 'Person')
     expect(container.querySelector('svg')).toHaveAttribute('width', '48')
     expect(onError).toHaveBeenCalledOnce()
-    rerender(<AvatarImage src="/good.jpg" fallbackSeed={seed} />)
+    rerender(<AvatarImage src="/good.jpg" fallbackSeed={seed} sizes="48px" />)
     expect(container.querySelector('img')).toHaveAttribute('src', '/good.jpg')
-    rerender(<AvatarImage fallbackSeed={seed} />)
+    rerender(<AvatarImage fallbackSeed={seed} sizes="48px" />)
     expect(portrait(container.querySelector('svg'))).toBe(fallback())
   })
 
@@ -179,7 +177,7 @@ describe('local Beam fallback', () => {
     const tree = (
       <div data-theme={theme}>
         <Avatar name="Person" fallbackSeed={seed} />
-        <AvatarImage fallbackSeed={seed} />
+        <AvatarImage fallbackSeed={seed} sizes="48px" />
       </div>
     )
     const html = renderToString(tree)

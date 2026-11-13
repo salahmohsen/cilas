@@ -22,6 +22,7 @@ import { AnimatePresence, animate, motion, useMotionValue, useReducedMotion } fr
 import type { Transition, Variants } from 'motion/react'
 import { Check, ChevronRight, CornerDownRight, RotateCcw, Send, SmilePlus, X } from 'lucide-react'
 import { motionTokens } from '../lib/motion-tokens'
+import { ArcImage } from '../lib/arc-provider'
 import styles from './comment-thread.module.css'
 
 export interface CommentAuthor {
@@ -372,8 +373,7 @@ function Avatar({ author, size = 28 }: { author: CommentAuthor; size?: number })
       />
     )
   return author.avatar ? (
-    // eslint-disable-next-line @next/next/no-img-element
-    <img
+    <ArcImage
       className={styles.avatar}
       src={author.avatar}
       alt=""

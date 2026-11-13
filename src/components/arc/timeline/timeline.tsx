@@ -17,6 +17,7 @@ import type { Transition } from 'motion/react'
 import { ChevronDown } from 'lucide-react'
 import { HoverCard } from '../hover-card/hover-card'
 import { motionTokens } from '../lib/motion-tokens'
+import { ArcImage } from '../lib/arc-provider'
 import styles from './timeline.module.css'
 
 export interface TimelineEvent {
@@ -329,9 +330,8 @@ function TimelineRow({
         animate={shown ? { scale: 1, opacity: 1 } : undefined}
         transition={pop}
       >
-        {/* eslint-disable-next-line @next/next/no-img-element -- registry components stay framework agnostic */}
         {row.avatar ? (
-          <img src={row.avatar} alt="" width={28} height={28} decoding="async" />
+          <ArcImage src={row.avatar} alt="" width={28} height={28} sizes="28px" decoding="async" />
         ) : (
           row.icon
         )}

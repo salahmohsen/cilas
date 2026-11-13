@@ -17,6 +17,7 @@ import { AnimatePresence, motion, useReducedMotion } from 'motion/react'
 import type { PanInfo, Transition, Variants } from 'motion/react'
 import { ChevronDown, LoaderCircle, LogOut, Monitor, Moon, Sun, SunMoon } from 'lucide-react'
 import { motionTokens } from '../lib/motion-tokens'
+import { ArcImage } from '../lib/arc-provider'
 import styles from './user-menu.module.css'
 
 export type UserStatus = 'available' | 'busy' | 'away'
@@ -45,7 +46,6 @@ export interface UserMenuUser {
   plan?: string
   fallbackSeed?: string
   avatarSrc?: string
-  avatarSrcSet?: string
 }
 export interface UserMenuItem {
   label: string
@@ -174,9 +174,9 @@ function Portrait({ user }: { user: UserMenuUser }) {
     return (
       <AvatarImage
         src={user.avatarSrc}
-        srcSet={user.avatarSrcSet}
         fallbackSeed={user.fallbackSeed}
         className={styles.portrait}
+        sizes="34px"
         draggable={false}
       />
     )
@@ -190,12 +190,12 @@ function Portrait({ user }: { user: UserMenuUser }) {
     return <span className={`${styles.portrait} ${styles.initials}`}>{initials}</span>
   }
   return (
-    // eslint-disable-next-line @next/next/no-img-element -- registry components stay framework agnostic; pass optimized URLs as avatarSrc and avatarSrcSet.
-    <img
+    <ArcImage
       className={styles.portrait}
       src={user.avatarSrc}
-      srcSet={user.avatarSrcSet}
       alt=""
+      fill
+      sizes="34px"
       decoding="async"
       draggable={false}
       onError={() => setFailed(user.avatarSrc)}
