@@ -1304,10 +1304,18 @@ h1.article-title {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  transition: scale 300ms cubic-bezier(0.2, 0, 0, 1);
+  /* Rests in grayscale, like the blog grid's cards; color comes back on hover or keyboard focus. */
+  filter: grayscale(1);
+  transition:
+    scale 300ms cubic-bezier(0.2, 0, 0, 1),
+    filter var(--duration-considered) var(--ease-standard);
 }
 .course-related:hover .course-related-image img {
   scale: 1.03;
+  filter: none;
+}
+.course-related:focus-visible .course-related-image img {
+  filter: none;
 }
 @media (prefers-reduced-motion: reduce) {
   .course-related-image img,

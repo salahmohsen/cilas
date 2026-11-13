@@ -151,7 +151,17 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
-  transition: transform var(--duration-considered) var(--ease-standard);
+  transition:
+    transform var(--duration-considered) var(--ease-standard),
+    filter var(--duration-considered) var(--ease-standard);
+}
+/* Card images rest in grayscale and take their color back on hover or keyboard focus. The reader's image stays in color. */
+.imageFrame .image {
+  filter: grayscale(1);
+}
+.card:focus-visible .image,
+.featured:focus-visible .image {
+  filter: none;
 }
 .cardBody {
   display: grid;
@@ -252,6 +262,7 @@
   .card:hover .image,
   .featured:hover .image {
     transform: scale(1.03);
+    filter: none;
   }
   .card:hover .cardTitle {
     color: var(--text-secondary);
