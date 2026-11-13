@@ -59,3 +59,6 @@ typesense-data
 
 # ADR 0011 fill: old session row ID -> new session ID (scripts/migrate-course-sessions.ts)
 /course-sessions-map.json
+
+# Snapshots of reader output (scripts/snapshot-course-readers.ts)
+/.snapshots/
