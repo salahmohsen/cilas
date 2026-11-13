@@ -1330,17 +1330,8 @@ export interface Course {
     | null;
   schedule?: {
     start_date?: string | null;
-    /**
-     * Week only keeps it off the calendar.
-     */
     start_precision?: ('day' | 'week') | null;
-    /**
-     * How long it runs, e.g. 8. With the start date it sets the end date.
-     */
     weeks?: number | null;
-    /**
-     * Weekly meeting times, in Cairo time.
-     */
     slots?:
       | {
           weekday: 'sat' | 'sun' | 'mon' | 'tue' | 'wed' | 'thu' | 'fri';
@@ -1349,13 +1340,7 @@ export interface Course {
           id?: string | null;
         }[]
       | null;
-    /**
-     * Worked out from the schedule.
-     */
     end_date?: string | null;
-    /**
-     * One-off exceptions, e.g. "hybrid for the first 6 weeks, then online".
-     */
     note?: string | null;
   };
   registration?: {

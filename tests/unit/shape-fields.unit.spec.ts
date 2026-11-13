@@ -163,26 +163,6 @@ describe('computeEndDate on update', () => {
   it('lets new values override the stored ones', () => {
     expect(run({ siblingData: { weeks: 3 }, previousSiblingDoc })).toBe('2026-03-17')
   })
-
-  it('skips a cancelled last session from data.sessions', () => {
-    const data = {
-      sessions: [
-        { order: 1, meetings: 1 },
-        { order: 2, meetings: 1, cancelled: true },
-      ],
-    }
-    expect(run({ siblingData: {}, previousSiblingDoc, data })).toBe('2026-03-03')
-  })
-
-  it('falls back to originalDoc.sessions when data has none', () => {
-    const originalDoc = {
-      sessions: [
-        { order: 1, meetings: 1 },
-        { order: 2, meetings: 1, cancelled: true },
-      ],
-    }
-    expect(run({ siblingData: {}, previousSiblingDoc, data: {}, originalDoc })).toBe('2026-03-03')
-  })
 })
 
 describe('validate closures in the configs', () => {

@@ -3,7 +3,7 @@ import { tierField } from '@/fields/tier'
 import { previewUrl } from '@/lib/preview-url'
 import { courseDeleteSummary, deleteCourseDependents } from '@/lib/course-delete'
 import { courseDays } from '@/lib/course-days'
-import { cairoDay } from '@/lib/cairo-day'
+import { cairoDay, WEEKDAYS } from '@/lib/cairo-day'
 import { blockedUnless, deleteEndpoints } from '@/forms/delete-endpoints'
 import { addSelfAs } from '@/lib/review-ownership'
 import {
@@ -30,7 +30,7 @@ import { contributionField } from '@/fields/pricing'
 import { validateCourseDestination, registrationDestinationFields } from '@/fields/registration'
 import { isPublishing } from '@/lib/course-registration'
 import { courseQuestionBlocks, nameNewQuestions } from '@/forms/form-fields'
-import { scheduleField, timeRangeFields } from '@/fields/schedule'
+import { timeRangeFields } from '@/fields/schedule'
 import { reviewFields } from '@/fields/review'
 import { slugField } from '@/fields/slug'
 import { grantFellow, revokeIfUnteaching, toPersonIds } from '@/lib/fellow-role'
@@ -486,8 +486,33 @@ export const Courses: CollectionConfig = {
                 activitiesField(),
               ],
             },
-            // The old pattern (ADR 0011). Hidden like the old array above.
-            { ...scheduleField(), admin: { hidden: true, readOnly: true } },
+            {
+              // The old pattern (ADR 0011). Hidden like the old array above, and
+              // frozen: no hook works out its end date any more.
+              name: 'schedule',
+              type: 'group',
+              admin: { hidden: true, readOnly: true },
+              fields: [
+                { name: 'start_date', type: 'date' },
+                {
+                  name: 'start_precision',
+                  type: 'select',
+                  defaultValue: 'day',
+                  options: ['day', 'week'],
+                },
+                { name: 'weeks', type: 'number' },
+                {
+                  name: 'slots',
+                  type: 'array',
+                  fields: [
+                    { name: 'weekday', type: 'select', required: true, options: [...WEEKDAYS] },
+                    ...timeRangeFields(),
+                  ],
+                },
+                { name: 'end_date', type: 'date' },
+                { name: 'note', type: 'textarea', localized: true },
+              ],
+            },
           ],
         },
         {
