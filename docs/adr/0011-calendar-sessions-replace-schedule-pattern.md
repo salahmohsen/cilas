@@ -53,7 +53,8 @@ sessions                     new collection: what is taught, and when
 course
   syllabus                   join field (course → sessions), shown in the Sessions tab
   timing_note                localized free text, from today's schedule note
-  first_day, last_day        read-only, kept up to date from its sessions' meetings
+  first_day, last_day        read-only, kept up to date from its sessions' meetings (else its announced start)
+  announced                  start_day (YYYY-MM-DD), weeks: used only while no meeting is held
   session_unit, syllabus_tentative, course bibliography, notes   unchanged
 ```
 
@@ -72,9 +73,10 @@ course
 
 ### Summary text and weeks (worked out, never typed)
 
-- **Regular** (every week has the same weekdays and times): "Tuesdays, 7–9pm", "Tuesdays and Thursdays, 7–9pm", plus "8 weeks".
+- **Regular** (every week has the same weekdays and times; the last week may end early): "Tuesdays, 7–9pm", "Tuesdays and Thursdays, 7–9pm", plus "8 weeks".
 - **Not regular**: the first and last day and the count, for example "12 sessions, 3 March – 28 April". The syllabus lists each session with its own dates.
-- **Weeks** = the calendar weeks from the first to the last meeting. Not stored, not typed.
+- **Weeks** = the 7-day periods from the first meeting to the last. Not stored, not typed. Only the calendar view lays out Saturday-to-Friday weeks.
+- **Announced timing**: a course with no meeting held may have an announced start day and weeks, typed in the admin. The meetings replace it as soon as one is held.
 - `timing_note` stays for words the dates cannot say ("hybrid for the first 6 weeks").
 
 ### The admin
@@ -124,7 +126,7 @@ Every course moves to the new model, published and draft. We test on the local c
    - each session row becomes a session document with the same content and the meetings it has today; its description is converted to Markdown;
    - **courses with weekly times but no sessions (41)** and **pattern meetings after the last session (18)**: the pattern still makes those meetings, but no session holds them. The script makes new sessions for them by today's default rule, one session for each week of slots (with one slot a week, one session per meeting). Their title is empty, so the page shows "Session N" or "Week N";
    - sessions with no meeting (7 courses) stay unscheduled, in their old order;
-   - courses with a start date but no meeting at all get one all-day meeting on that day, on their first session (a new one if none). That is the 63 with no slots plus 12 with slots but no `weeks` (75);
+   - **courses the pattern gives no meeting** keep their start date and `weeks` as the course's `announced` timing (`announced.start_day`, `announced.weeks`; 101 courses), not as a meeting. Readers use it only while no meeting is held (`courseTiming` in `lib/meetings.ts`): lists show the start and the weeks, the calendar marks the start, and `first_day` is the announced start with no `last_day`;
    - the schedule note moves to `timing_note`;
    - **courses with weekly times the pattern cannot place** (no start date or no `weeks`, 55 courses): first, 37 of them get the start date and length found on the old site, written into the old `schedule` group (`scripts/apply-archive-start-dates.ts`, see `docs/research/2026-11-course-start-dates.md`), so their times become real meetings. The other 18 get no meeting for their times. A language with no note gets the times as words in `timing_note` ("Tuesday, 19:00–21:00", "الثلاثاء، ١٩:٠٠–٢١:٠٠"); a written note stays unchanged;
    - **a published course with a pending draft** (295, 406 and 409 today) is filled from the draft: its sessions and schedule go live, because sessions have no drafts. The draft's other fields stay pending;
@@ -277,6 +279,18 @@ Each step ships to the dev copy on its own, and the site works after it.
 None now.
 
 ## Decision log
+
+Fix: a course with no meeting keeps its old start date and weeks as an announced timing (`course.announced`), read by one rule (`courseTiming`): meetings when one is held, else the announced start and weeks, and no last day.
+
+- The fill gave the 69 courses with a start date but no meeting one all-day meeting on that day, on their first session or on a new one (30). The site then showed a meeting nobody held: "Session 1" on the calendar and in the feed, a dated first syllabus row, `Meetings: 1` in `llms`, a "Starts" fact on the page and "1 week" on cards.
+- 101 courses have a start date or a typed `weeks` and no meeting. The old cards showed the typed weeks ("10 weeks"); the fill dropped them.
+- A course page still shows "Starts" only from a meeting, as before: the announced start is a list and calendar fact.
+- No last day from a start and a length: a length in weeks says how long a course runs, not on which day it ends, and the old site showed no end for these courses.
+
+Fix: weeks are 7-day periods counted from the first meeting; a course is regular when every period has the same weekdays and times, the last one perhaps ending early.
+
+- Saturday-to-Friday weeks split a course that meets Thursday and Saturday from a Thursday (296): each pair fell in two weeks, so the page lost "Meets" and the card said 3 weeks for 2.
+- The calendar view still lays out Saturday weeks: that is how Egypt reads a week, not how long a course runs.
 
 Fix: start dates and lengths from the old site go into the old `schedule` group first, by one rule (`scripts/archive-start-dates.ts`); the fill then reads them like any other date.
 

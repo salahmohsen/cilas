@@ -1,5 +1,6 @@
 import type { Payload } from 'payload'
 
+import type { Announced } from '../src/lib/meetings'
 import { fillSource, type Localized, type OldCourse, type Versioned } from './course-sessions-plan'
 
 /**
@@ -11,20 +12,22 @@ export type CourseSource = {
   course: OldCourse &
     Versioned & {
       timing_note?: Localized<string>
+      announced?: Announced | null
       first_day?: string | null
       last_day?: string | null
     }
   /** What the fill plans from: the course row, or its latest draft. */
   source: OldCourse
   /** The latest version, which a publish copies over the course row. */
-  latest: { id: number; timing_note: Localized<string> } | null
+  latest: { id: number; timing_note: Localized<string>; announced: Announced | null } | null
   fromDraft: boolean
 }
 
 type Version = {
   id: number
   parent: number
-  version: Omit<OldCourse, 'id'> & Versioned & { timing_note?: Localized<string> }
+  version: Omit<OldCourse, 'id'> &
+    Versioned & { timing_note?: Localized<string>; announced?: Announced | null }
 }
 
 export const loadCourseSources = async (payload: Payload): Promise<CourseSource[]> => {
@@ -39,6 +42,7 @@ export const loadCourseSources = async (payload: Payload): Promise<CourseSource[
       schedule: true,
       sessions: true,
       timing_note: true,
+      announced: true,
       first_day: true,
       last_day: true,
       _status: true,
@@ -63,7 +67,13 @@ export const loadCourseSources = async (payload: Payload): Promise<CourseSource[
     return {
       course,
       source,
-      latest: latest ? { id: latest.id, timing_note: latest.version.timing_note ?? null } : null,
+      latest: latest
+        ? {
+            id: latest.id,
+            timing_note: latest.version.timing_note ?? null,
+            announced: latest.version.announced ?? null,
+          }
+        : null,
       fromDraft: source !== course,
     }
   })

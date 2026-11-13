@@ -16,6 +16,8 @@
 their old schedule changed (`apply-archive-start-dates.ts`); it stops before
 any write when a space post names one of those sessions, by its old row ID
 or its new ID.
+ * The announced timing (a course's old start day and weeks, when the pattern
+ * gives it no meeting) is set on the course and its latest version every run.
  * Each course is written in one transaction. Then
  * `scripts/verify-course-sessions.ts` checks the result.
  */
@@ -23,6 +25,8 @@ import { existsSync, readFileSync, renameSync, writeFileSync } from 'node:fs'
 import { resolve } from 'node:path'
 import { createLocalReq, getPayload } from 'payload'
 
+import { storeCourseDays } from '../src/lib/course-days'
+import type { Announced } from '../src/lib/meetings'
 import { sessionIdsIn } from '../src/lib/session-refs'
 import config from '../src/payload.config'
 import { inTransaction } from '../src/plugins/mcp/transaction'
@@ -91,7 +95,7 @@ const counts = {
   deleted: 0,
   sessions: 0,
   untitled: 0,
-  startDays: 0,
+  announced: 0,
   timesInNote: 0,
   fromDrafts: [] as number[],
 }
@@ -120,6 +124,24 @@ const storeTimingNote = async (course: number, version: number | null, note: Loc
         [locale, parent, text],
       )
     }
+}
+
+/**
+ * The announced timing on the course row and on its latest version, set
+ * (not merged) every run, so a course that gains meetings loses it again.
+ */
+const storeAnnounced = async (course: number, version: number | null, a: Announced | null) => {
+  const values = [a?.start_day ?? null, a?.weeks ?? null]
+  await payload.db.pool.query(
+    `UPDATE courses SET announced_start_day = $2, announced_weeks = $3 WHERE id = $1`,
+    [course, ...values],
+  )
+  if (version !== null)
+    await payload.db.pool.query(
+      `UPDATE _courses_v SET version_announced_start_day = $2, version_announced_weeks = $3
+         WHERE id = $1`,
+      [version, ...values],
+    )
 }
 
 /**
@@ -180,13 +202,19 @@ for (const { course, source, latest, fromDraft } of await loadCourseSources(payl
   if (fromDraft) counts.fromDrafts.push(course.id)
   if (JSON.stringify(plan.timingNote) !== JSON.stringify(source.schedule?.note ?? null))
     counts.timesInNote++
-  if (apply) await storeTimingNote(course.id, latest?.id ?? null, plan.timingNote)
+  if (plan.announced) counts.announced++
+  if (apply) {
+    await storeTimingNote(course.id, latest?.id ?? null, plan.timingNote)
+    await storeAnnounced(course.id, latest?.id ?? null, plan.announced)
+  }
   const { totalDocs: existing } = await payload.count({
     collection: 'sessions',
     where: { course: { equals: course.id } },
     overrideAccess: true,
   })
   const replaced = refilling.get(course.id) ?? []
+  // The first and last day follow the announced timing too, when no meeting is held.
+  if (apply) await storeCourseDays(await createLocalReq({}, payload), course.id)
   if (existing > 0 && !replaced.length) {
     counts.skipped++
     const unmapped = plan.sessions.filter((s) => s.from && !(s.from in map))
@@ -202,7 +230,6 @@ for (const { course, source, latest, fromDraft } of await loadCourseSources(payl
   counts.deleted += replaced.length
   counts.sessions += plan.sessions.length
   counts.untitled += plan.sessions.filter((s) => !s.from).length
-  if (plan.startDay) counts.startDays++
   if (!apply || (!plan.sessions.length && !replaced.length)) continue
 
   const req = await createLocalReq({}, payload)

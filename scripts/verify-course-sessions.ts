@@ -7,12 +7,12 @@
  * - Meetings: the new `meetingsOf` equals today's `expandSchedule`, meeting
  *   by meeting (day, times, cancelled), and each meeting sits in the session
  *   made from the old row that held it, or in a new untitled one when no row
- *   held it. A course with a start date and no meeting expects one all-day
- *   meeting on that day.
+ *   held it. A course with no meeting gets none: its old start date and
+ *   weeks are its announced timing.
  * - Content: each old row's session has the same title, delivery, cancelled,
  *   materials and activities, and its description as Markdown.
- * - The course's timing note (on the course and its latest version), first
- *   day and last day.
+ * - The course's timing note and announced timing (on the course and its
+ *   latest version), first day and last day (`courseTiming`).
  *
  * It reads each course as the fill did (`loadCourseSources`): a published
  * course with a newer pending draft is checked against the draft.
@@ -25,7 +25,13 @@ import { resolve } from 'node:path'
 import { getPayload } from 'payload'
 
 import config from '../src/payload.config'
-import { byWhen, firstDay, lastDay, meetingsOf, sessionsInOrder } from '../src/lib/meetings'
+import {
+  byWhen,
+  courseTiming,
+  meetingsOf,
+  sessionsInOrder,
+  type Announced,
+} from '../src/lib/meetings'
 import { expandSchedule, sessionsInOrder as rowsInOrder } from '../src/lib/schedule'
 import type { Session } from '../src/payload-types'
 import { planCourseSessions, type Localized, type OldRow } from './course-sessions-plan'
@@ -91,6 +97,10 @@ const activities = (list: unknown) =>
     description: both(r.description as Localized<string>),
   }))
 
+/** A stored announced group, null when it holds nothing (Payload reads an empty group as nulls). */
+const announcedOf = (a: Announced | null | undefined): Announced | null =>
+  a?.start_day || a?.weeks ? { start_day: a.start_day ?? null, weeks: a.weeks ?? null } : null
+
 type Entry = {
   date: string
   start_time: string | null
@@ -127,23 +137,13 @@ for (const { course, source, latest } of courses) {
     row ? (map[row.id] ?? -1) : 'untitled'
 
   // Meetings.
-  const expected: Entry[] = plan.startDay
-    ? [
-        {
-          date: plan.startDay,
-          start_time: null,
-          end_time: null,
-          cancelled: false,
-          owner: ownerOfRow(rows[0]),
-        },
-      ]
-    : expandSchedule(source.schedule, source.sessions).map((m) => ({
-        date: m.date,
-        start_time: m.start_time,
-        end_time: m.end_time,
-        cancelled: !!m.cancelled,
-        owner: m.session === undefined ? 'untitled' : ownerOfRow(rows[m.session - 1]),
-      }))
+  const expected: Entry[] = expandSchedule(source.schedule, source.sessions).map((m) => ({
+    date: m.date,
+    start_time: m.start_time,
+    end_time: m.end_time,
+    cancelled: !!m.cancelled,
+    owner: m.session === undefined ? 'untitled' : ownerOfRow(rows[m.session - 1]),
+  }))
   const ordered = sessionsInOrder(sessions)
   const actual: Entry[] = meetingsOf(sessions).map((m) => {
     const id = ordered[m.session - 1]!.id
@@ -206,11 +206,15 @@ for (const { course, source, latest } of courses) {
     fail('timing note differs from the plan')
   if (latest && !same(both(plan.timingNote), both(latest.timing_note)))
     fail(`timing note of the latest version (${latest.id}) differs from the plan`)
-  const held = expected.filter((m) => !m.cancelled)
-  if ((course.first_day ?? null) !== firstDay(held) || (course.last_day ?? null) !== lastDay(held))
+  if (!same(plan.announced, announcedOf(course.announced)))
     fail(
-      `first/last day ${course.first_day}–${course.last_day}, expected ${firstDay(held)}–${lastDay(held)}`,
+      `announced ${JSON.stringify(course.announced)}, expected ${JSON.stringify(plan.announced)}`,
     )
+  if (latest && !same(plan.announced, announcedOf(latest.announced)))
+    fail(`announced timing of the latest version (${latest.id}) differs from the plan`)
+  const { first, last } = courseTiming(expected, plan.announced)
+  if ((course.first_day ?? null) !== first || (course.last_day ?? null) !== last)
+    fail(`first/last day ${course.first_day}–${course.last_day}, expected ${first}–${last}`)
 }
 
 console.log(

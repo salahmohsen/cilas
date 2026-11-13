@@ -134,51 +134,53 @@ describe('planCourseSessions', () => {
     expect(sessions[0]).toMatchObject({ cancelled: true, meetings: [at('2026-03-03')] })
   })
 
-  it('puts an all-day meeting on the first session for a start date with no slots', () => {
+  it('keeps a start date and weeks with no slots as the announced timing, not a meeting', () => {
     const result = plan({
       schedule: { start_date: '2026-03-02T22:00:00.000Z', weeks: 4 },
       sessions: [row('a', { order: 2 }), row('b', { order: 1 })],
     })
-    expect(result.startDay).toBe('2026-03-03')
-    expect(result.sessions.map((s) => [s.from, s.meetings])).toEqual([
-      ['b', [{ date: '2026-03-03', start_time: null, end_time: null }]],
-      ['a', []],
+    expect(result.announced).toEqual({ start_day: '2026-03-03', weeks: 4 })
+    expect(result.sessions.map((s) => [s.from, s.position, s.meetings])).toEqual([
+      ['b', 0, []],
+      ['a', 1, []],
     ])
   })
 
-  it('makes a session for the start date when there is none', () => {
+  it('makes no session for a start date when there is no row', () => {
     const result = plan({ schedule: { start_date: '2026-03-03' }, sessions: [] })
-    expect(result.sessions).toEqual([
-      expect.objectContaining({
-        from: null,
-        position: 0,
-        meetings: [{ date: '2026-03-03', start_time: null, end_time: null }],
-      }),
-    ])
+    expect(result.sessions).toEqual([])
+    expect(result.announced).toEqual({ start_day: '2026-03-03', weeks: null })
   })
 
-  it('adds no start-day meeting when a row already has dates', () => {
+  it('keeps typed weeks with no start date as the announced weeks', () => {
+    expect(plan({ schedule: { weeks: 10 }, sessions: [] }).announced).toEqual({
+      start_day: null,
+      weeks: 10,
+    })
+  })
+
+  it('announces nothing when a row already has dates', () => {
     const result = plan({
-      schedule: { start_date: '2026-03-03' },
+      schedule: { start_date: '2026-03-03', weeks: 6 },
       sessions: [
         row('a', { dates: [{ date: '2026-03-05', start_time: '10:00', end_time: '12:00' }] }),
       ],
     })
-    expect(result.startDay).toBeNull()
+    expect(result.announced).toBeNull()
     expect(result.sessions[0]?.meetings).toEqual([at('2026-03-05', '10:00', '12:00')])
   })
 
-  it('makes no meeting from slots with no start date', () => {
+  it('makes no meeting from slots with no start date, and announces their weeks', () => {
     expect(plan({ schedule: { weeks: 4, slots: [tuesdays] }, sessions: [] })).toMatchObject({
       sessions: [],
-      startDay: null,
+      announced: { start_day: null, weeks: 4 },
     })
   })
 
   it('makes nothing for a course with no schedule and no sessions', () => {
     expect(plan({ schedule: null, sessions: null })).toEqual({
       sessions: [],
-      startDay: null,
+      announced: null,
       timingNote: null,
     })
   })
@@ -253,13 +255,12 @@ describe('planCourseSessions', () => {
   })
 
   it('writes slots the pattern cannot place into the note: a start date with no weeks', () => {
-    const { timingNote, sessions } = plan({
+    const { timingNote, sessions, announced } = plan({
       schedule: { start_date: '2026-03-03', slots: [tuesdays] },
     })
     expect(timingNote).toEqual({ en: 'Tuesday, 19:00–21:00', ar: 'الثلاثاء، ١٩:٠٠–٢١:٠٠' })
-    expect(sessions.map((s) => s.meetings)).toEqual([
-      [{ date: '2026-03-03', start_time: null, end_time: null }],
-    ])
+    expect(sessions).toEqual([])
+    expect(announced).toEqual({ start_day: '2026-03-03', weeks: null })
   })
 
   it('leaves slots out of the timing note when the pattern places them', () => {
