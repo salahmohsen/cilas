@@ -8,13 +8,15 @@ import { cleanupTestUser, seedTestUser, testUser } from '../helpers/seedUser'
 
 /**
  * The calendar in a course's Sessions tab (ADR 0011, plan "The calendar
- * component", unit 5). It works on a course made for the run and removes it
- * after, so no real course changes. The two meetings are in 2034, so the
- * calendar opens on their week whatever day the test runs.
+ * component"). It works on a course made for the run and removes it after, so
+ * no real course changes. The two meetings are in 2034, so the calendar opens
+ * on their week whatever day the test runs. Each test starts from the same
+ * one session.
  */
 const BASE = 'http://localhost:3000'
 const FIRST = '2034-10-05'
 const SECOND = '2034-10-12'
+const SAVE = 'Save schedule'
 
 const { track, cleanup } = createTracker()
 let payload: Payload
@@ -53,6 +55,21 @@ const unsaved = (text: string | RegExp) => calendar().getByRole('status').filter
 /** A block of the grid, by the title in its spoken name. */
 const block = (title: string) =>
   calendar().locator(`[data-span-id][aria-label*="${title}"]`).first()
+
+const saveButton = () => calendar().getByRole('button', { name: SAVE, exact: true })
+
+/** The save bar is gone: the save came back. (While it saves, its button says "Saving".) */
+const barGone = () =>
+  expect(calendar().getByRole('button', { name: 'Cancel', exact: true })).toHaveCount(0)
+
+/** Right-click a block and choose an action of its menu. */
+const choose = async (target: ReturnType<typeof block>, action: string) => {
+  await target.click({ button: 'right' })
+  await page.getByRole('menuitem', { name: action, exact: true }).click()
+  await expect(page.getByRole('menu')).toBeHidden()
+}
+
+const thursday = () => block('E2E first session, Thursday, October 5')
 
 test.describe('course calendar', () => {
   // A cold dev server compiles the admin on the first visit.
@@ -94,6 +111,16 @@ test.describe('course calendar', () => {
         overrideAccess: true,
       }),
     ).id
+    page = await (await browser.newContext()).newPage()
+    await login({ page, user: testUser })
+  })
+
+  test.beforeEach(async () => {
+    await payload.delete({
+      collection: 'sessions',
+      where: { course: { equals: course } },
+      overrideAccess: true,
+    })
     session = (
       await payload.create({
         collection: 'sessions',
@@ -108,9 +135,6 @@ test.describe('course calendar', () => {
         overrideAccess: true,
       })
     ).id
-
-    page = await (await browser.newContext()).newPage()
-    await login({ page, user: testUser })
   })
 
   test.afterAll(async () => {
@@ -125,7 +149,9 @@ test.describe('course calendar', () => {
     expect(before).toHaveLength(2)
 
     await openSessionsTab()
-    await page.getByRole('button', { name: 'Edit', exact: true }).click()
+    // The calendar is always in edit mode for someone who may edit: no Edit button.
+    await expect(calendar().getByRole('button', { name: 'Edit', exact: true })).toHaveCount(0)
+    await expect(saveButton()).toHaveCount(0)
 
     await calendar()
       .getByRole('button', { name: /^Add a block on/ })
@@ -135,8 +161,9 @@ test.describe('course calendar', () => {
     await page.keyboard.press('ArrowDown')
     await expect(unsaved('2 unsaved changes')).toBeVisible()
 
-    await calendar().getByRole('button', { name: 'Save', exact: true }).click()
+    await saveButton().click()
     await expect(unsaved(/unsaved change/)).toHaveCount(0)
+    await barGone()
 
     const after = await meetingsOf()
     expect(after).toHaveLength(3)
@@ -151,10 +178,82 @@ test.describe('course calendar', () => {
     await expect(calendar().locator('[data-span-id][aria-label^="Session "]')).toHaveCount(1)
   })
 
+  test('Add meeting puts a block on the next day, which a drag moves, and Save stores it', async () => {
+    await openSessionsTab()
+    await choose(thursday(), 'Add meeting')
+    const added = block('E2E first session, Friday, October 6')
+    await expect(added).toHaveAccessibleName(/Unsaved/)
+    await expect(unsaved('1 unsaved change')).toBeVisible()
+
+    const box = (await added.boundingBox())!
+    const x = box.x + box.width / 2
+    const y = box.y + box.height / 2
+    await page.mouse.move(x, y)
+    await page.mouse.down()
+    await page.mouse.move(x, y + 70, { steps: 10 })
+    await page.mouse.up()
+    await expect(unsaved('1 unsaved change')).toBeVisible()
+
+    await saveButton().click()
+    await barGone()
+
+    const meetings = (await sessionsOf()).find((s) => s.id === session)!.meetings ?? []
+    expect(meetings).toHaveLength(3)
+    const friday = meetings.find((m) => m.date === '2034-10-06')!
+    expect(friday.start_time).not.toBe('19:00')
+    expect(friday.start_time! > '19:00').toBe(true)
+  })
+
+  test('New session next week copies all the meetings a week later, with no title', async () => {
+    await openSessionsTab()
+    // The two meetings are in different weeks; both are copied.
+    await choose(thursday(), 'New session next week')
+    await expect(unsaved('1 unsaved change')).toBeVisible()
+    await saveButton().click()
+    await barGone()
+
+    const sessions = await sessionsOf()
+    expect(sessions).toHaveLength(2)
+    const copy = sessions.find((s) => s.id !== session)!
+    expect(copy.title ?? '').toBe('')
+    expect(
+      (copy.meetings ?? []).map((m) => `${m.date} ${m.start_time}-${m.end_time}`).sort(),
+    ).toEqual(['2034-10-12 19:00-21:00', '2034-10-19 19:00-21:00'])
+    expect(await meetingsOf()).toHaveLength(4)
+  })
+
+  test('Delete meeting removes one meeting on Save, and the session stays', async () => {
+    await openSessionsTab()
+    await choose(thursday(), 'Delete meeting')
+    await expect(
+      calendar().getByRole('button', { name: /^Restore E2E first session/ }),
+    ).toBeVisible()
+    await saveButton().click()
+    await barGone()
+
+    const sessions = await sessionsOf()
+    expect(sessions.map((s) => s.id)).toEqual([session])
+    expect((sessions[0]!.meetings ?? []).map((m) => m.date)).toEqual([SECOND])
+  })
+
+  test('a session with no meeting left shows in Unscheduled, with its content', async () => {
+    await openSessionsTab()
+    await choose(thursday(), 'Delete meeting')
+    await calendar().getByRole('button', { name: 'Next week' }).click()
+    await choose(block('E2E first session, Thursday, October 12'), 'Delete meeting')
+    await saveButton().click()
+    await barGone()
+
+    expect((await sessionsOf()).map((s) => s.title)).toEqual(['E2E first session'])
+    await openSessionsTab()
+    await expect(
+      calendar().getByRole('group', { name: 'Unscheduled' }).getByText('E2E first session'),
+    ).toBeVisible()
+  })
+
   test('cancelling leaves the database as it was', async () => {
     const before = await meetingsOf()
     await openSessionsTab()
-    await page.getByRole('button', { name: 'Edit', exact: true }).click()
     await calendar()
       .getByRole('button', { name: /^Add a block on/ })
       .first()
@@ -162,14 +261,65 @@ test.describe('course calendar', () => {
     await expect(unsaved('1 unsaved change')).toBeVisible()
     await calendar().getByRole('button', { name: 'Cancel', exact: true }).click()
     await expect(unsaved(/unsaved change/)).toHaveCount(0)
+    await barGone()
     expect(await meetingsOf()).toEqual(before)
   })
 
-  test('a block opens the session in the drawer', async () => {
+  test('leaving the page warns while calendar changes are unsaved, and not after Cancel', async () => {
+    await openSessionsTab()
+    // What the browser asks of a page before a reload or a closed tab.
+    const asked = () =>
+      page.evaluate(() => {
+        const event = new Event('beforeunload', { cancelable: true })
+        window.dispatchEvent(event)
+        return event.defaultPrevented
+      })
+    expect(await asked()).toBe(false)
+
+    await calendar()
+      .getByRole('button', { name: /^Add a block on/ })
+      .first()
+      .click()
+    await expect(unsaved('1 unsaved change')).toBeVisible()
+    expect(await asked()).toBe(true)
+
+    // A link inside the admin opens Payload's own confirmation.
+    const link = page.locator('a[href$="/admin/collections/courses"]').first()
+    // The nav is off screen at this width, so send the click to the link itself.
+    await link.dispatchEvent('click')
+    const modal = page.getByRole('dialog').filter({ hasText: 'Leave without saving' })
+    await expect(modal).toBeVisible()
+    await modal.getByRole('button', { name: 'Stay on this page' }).click()
+    await expect(modal).toBeHidden()
+    await expect(page).toHaveURL(new RegExp(`/admin/collections/courses/${course}`))
+
+    await calendar().getByRole('button', { name: 'Cancel', exact: true }).click()
+    expect(await asked()).toBe(false)
+  })
+
+  test('a block opens the session in the drawer, and focus comes back', async () => {
     await openSessionsTab()
     await block('E2E first session').click({ timeout: 15_000 })
     await expect(page.locator('.doc-drawer')).toBeVisible()
     await expect(page.locator('.doc-drawer #field-title')).toHaveValue('E2E first session')
+    await page.keyboard.press('Escape')
+    await expect(page.locator('.doc-drawer')).toBeHidden()
+    await expect(block('E2E first session')).toBeFocused()
+  })
+
+  test('the menu opens the drawer with Open, from the keyboard, and Escape returns focus', async () => {
+    await openSessionsTab()
+    await block('E2E first session').focus({ timeout: 15_000 })
+    await page.keyboard.press('Shift+F10')
+    await expect(page.getByRole('menu')).toBeVisible()
+    await expect(page.getByRole('menuitem', { name: 'Open', exact: true })).toBeFocused()
+    await page.keyboard.press('Escape')
+    await expect(page.getByRole('menu')).toBeHidden()
+    await expect(block('E2E first session')).toBeFocused()
+
+    await page.keyboard.press('ContextMenu')
+    await page.keyboard.press('Enter')
+    await expect(page.locator('.doc-drawer')).toBeVisible()
     await page.keyboard.press('Escape')
     await expect(page.locator('.doc-drawer')).toBeHidden()
     await expect(block('E2E first session')).toBeFocused()

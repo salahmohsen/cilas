@@ -1,7 +1,7 @@
 'use client'
 
 import { createMenuController } from '@ui-sdk/react/menu'
-import { useId, useMemo, useRef, useState } from 'react'
+import { useEffect, useId, useMemo, useRef, useState } from 'react'
 
 import SegmentedControl from '@/components/arc/segmented-control/segmented-control'
 import type { CalendarChange, CalendarItem } from '@/lib/calendar-items'
@@ -34,7 +34,12 @@ type Shared = {
 
 export type CalendarProps = Shared &
   (
-    | { mode: 'view'; onSave?: undefined; newItemKind?: undefined }
+    | {
+        mode: 'view'
+        onSave?: undefined
+        newItemKind?: undefined
+        onUnsavedChange?: undefined
+      }
     | {
         mode: 'edit'
         /**
@@ -44,8 +49,13 @@ export type CalendarProps = Shared &
         onSave: (
           changes: CalendarChange[],
         ) => void | CalendarItem[] | Promise<void | CalendarItem[]>
-        /** What a block drawn on an empty slot becomes. Without it, nothing can be drawn. */
+        /** What an item made on the page becomes. Without it, nothing can be drawn or copied. */
         newItemKind?: string
+        /**
+         * How many changes wait for a Save, each time that changes, and 0 when
+         * the calendar leaves the page. A host warns before leaving while it is above 0.
+         */
+        onUnsavedChange?: (count: number) => void
       }
   )
 
@@ -61,6 +71,7 @@ export function Calendar({
   mode,
   onSave,
   newItemKind,
+  onUnsavedChange,
 }: CalendarProps) {
   const editable = mode === 'edit'
   const frame = useRef<HTMLDivElement>(null)
@@ -104,6 +115,20 @@ export function Calendar({
     scope: frame,
     range,
   })
+
+  const unsavedCount = useRef(onUnsavedChange)
+  useEffect(() => {
+    unsavedCount.current = onUnsavedChange
+  })
+  useEffect(() => {
+    unsavedCount.current?.(session.changes.length)
+  }, [session.changes.length])
+  useEffect(
+    () => () => {
+      unsavedCount.current?.(0)
+    },
+    [],
+  )
 
   const allDay = useMemo(() => allDayBlocks(session.items, days), [session.items, days])
   const legend = useMemo(() => legendOf(session.items), [session.items])

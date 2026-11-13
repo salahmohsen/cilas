@@ -32,6 +32,8 @@ export const calendarAdminText = (language: AdminLanguage, messages: CalendarAdm
         addedNextDay: (day) => t('addedMeeting', { day }),
         copiedNextWeek: (day) => t('madeSessionNextWeek', { day }),
       },
+      // The course form has its own Save; this one saves the sessions.
+      save: t('saveSchedule'),
     }),
     /** A plain sentence for a save that did not happen. */
     errorText: (error: CalendarSaveError): string => {

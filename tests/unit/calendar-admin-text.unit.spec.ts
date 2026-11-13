@@ -33,9 +33,27 @@ describe('calendarAdminText', () => {
 
   it('builds the calendar labels from the shared translations', () => {
     const { labels } = calendarAdminText('en', en)
-    expect(labels.save).toBe('Save')
     expect(labels.kind('session')).toBe('Sessions')
     expect(labels.newItem).toBe('New session')
+  })
+
+  it('names the Save button and the block menu in both languages', () => {
+    const english = calendarAdminText('en', en).labels
+    expect(english.save).toBe('Save schedule')
+    expect(english.menu).toMatchObject({
+      open: 'Open',
+      addNextDay: 'Add meeting',
+      copyNextWeek: 'New session next week',
+      deleteBlock: 'Delete meeting',
+    })
+    const arabic = calendarAdminText('ar', ar).labels
+    expect(arabic.save).toBe('حفظ الجدول')
+    expect(arabic.menu).toMatchObject({
+      open: 'فتح',
+      addNextDay: 'إضافة موعد',
+      copyNextWeek: 'جلسة جديدة في الأسبوع التالي',
+      deleteBlock: 'حذف الموعد',
+    })
   })
 
   it('has the same CalendarAdmin keys in English and Arabic', () => {

@@ -18,6 +18,7 @@ import {
   type CalendarAdminMessages,
 } from './calendar-admin-text'
 import styles from './course-calendar.module.css'
+import { LeaveWarning } from './leave-warning'
 import { SessionDrawer } from './session-drawer'
 
 type Props = {
@@ -48,8 +49,10 @@ class SaveRefused extends Error {}
 
 /**
  * The calendar in the course's Sessions tab. It shows the course's sessions,
- * lets the people who may edit them draw, move and delete meetings, and
+ * lets the people who may edit them draw, move, copy and delete meetings, and
  * opens Payload's drawer on the session that a block or a tray item names.
+ * Its changes save with its own Save schedule button, not with the course:
+ * sessions are not drafts, so they are not tied to the course's Save.
  */
 export function CourseCalendar({ courseId, language, messages }: Props) {
   const { code: locale } = useLocale()
@@ -59,7 +62,7 @@ export function CourseCalendar({ courseId, language, messages }: Props) {
   )
 
   const [loaded, setLoaded] = useState<Loaded>({ status: 'loading' })
-  const [editing, setEditing] = useState(false)
+  const [unsaved, setUnsaved] = useState(0)
   const [opened, setOpened] = useState<{ id: number; returnTo: string | null } | null>(null)
   const frame = useRef<HTMLDivElement>(null)
   const latest = useRef(0)
@@ -95,6 +98,7 @@ export function CourseCalendar({ courseId, language, messages }: Props) {
     )
     if (!result.ok) throw new SaveRefused(errorText(result.error))
     setLoaded({ status: 'ready', items: result.items, canEdit: true })
+    return result.items
   }
 
   const open = (itemId: string) => {
@@ -120,17 +124,6 @@ export function CourseCalendar({ courseId, language, messages }: Props) {
     <section className={styles.root} aria-label={t('heading')} ref={frame}>
       <header className={styles.header}>
         <h3 className={styles.title}>{t('heading')}</h3>
-        {loaded.status === 'ready' && loaded.canEdit ? (
-          <Button
-            type="button"
-            variant="secondary"
-            size="sm"
-            aria-pressed={editing}
-            onClick={() => setEditing((on) => !on)}
-          >
-            {editing ? t('done') : t('edit')}
-          </Button>
-        ) : null}
       </header>
 
       {loaded.status === 'loading' ? (
@@ -153,11 +146,18 @@ export function CourseCalendar({ courseId, language, messages }: Props) {
           locale={language}
           day={openingDay(loaded.items)}
           onOpen={open}
-          {...(editing
-            ? { mode: 'edit' as const, onSave: save, newItemKind: 'session' }
+          {...(loaded.canEdit
+            ? {
+                mode: 'edit' as const,
+                onSave: save,
+                newItemKind: 'session',
+                onUnsavedChange: setUnsaved,
+              }
             : { mode: 'view' as const })}
         />
       )}
+
+      <LeaveWarning active={unsaved > 0} />
 
       {opened ? (
         <SessionDrawer

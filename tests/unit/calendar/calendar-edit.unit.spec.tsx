@@ -41,11 +41,13 @@ type Save = (changes: CalendarChange[]) => void | Promise<void>
 function Host({
   onSave,
   onOpen = vi.fn(),
+  onUnsavedChange,
   kind = 'session',
   locale = 'en',
 }: {
   onSave: Save
   onOpen?: (itemId: string, blockId: string | null) => void
+  onUnsavedChange?: (count: number) => void
   kind?: string
   locale?: string
 }) {
@@ -60,6 +62,7 @@ function Host({
       newItemKind={kind || undefined}
       onOpen={onOpen}
       onSave={onSave}
+      onUnsavedChange={onUnsavedChange}
     />
   )
 }
@@ -122,6 +125,31 @@ describe('edit mode', () => {
       },
     ])
     await waitFor(() => expect(screen.queryByRole('button', { name: 'Save' })).toBeNull())
+  })
+
+  it('tells the host how many changes wait, and 0 after Save, Cancel and when it leaves', async () => {
+    const onUnsavedChange = vi.fn()
+    const view = edit({ onSave: vi.fn(), onUnsavedChange })
+    expect(onUnsavedChange).toHaveBeenLastCalledWith(0)
+
+    week3().focus()
+    fireEvent.keyDown(week3(), { key: 'ArrowDown' })
+    expect(onUnsavedChange).toHaveBeenLastCalledWith(1)
+    fireEvent.click(screen.getByRole('button', { name: 'Add a block on Sunday, November 15' }))
+    expect(onUnsavedChange).toHaveBeenLastCalledWith(2)
+
+    fireEvent.click(screen.getByRole('button', { name: 'Cancel' }))
+    expect(onUnsavedChange).toHaveBeenLastCalledWith(0)
+
+    fireEvent.keyDown(week3(), { key: 'ArrowDown' })
+    expect(onUnsavedChange).toHaveBeenLastCalledWith(1)
+    fireEvent.click(save())
+    await waitFor(() => expect(onUnsavedChange).toHaveBeenLastCalledWith(0))
+
+    fireEvent.keyDown(week3(), { key: 'ArrowDown' })
+    expect(onUnsavedChange).toHaveBeenLastCalledWith(1)
+    view.unmount()
+    expect(onUnsavedChange).toHaveBeenLastCalledWith(0)
   })
 
   it('keeps focus on a block that moves to another day', () => {

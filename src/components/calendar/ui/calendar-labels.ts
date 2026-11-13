@@ -72,6 +72,8 @@ export type CalendarLabels = {
 export type CalendarHostLabels = {
   kind: CalendarLabels['kind']
   newItem: string
+  /** What the Save button says, when "Save" would be unclear beside another Save on the page. */
+  save?: string
   /** What the block menu's actions are called. Without it the calendar has no block menu. */
   menu?: Pick<
     CalendarMenuLabels,
@@ -85,7 +87,7 @@ export type CalendarTranslator = ReturnType<typeof useTranslations<'CalendarUi'>
 /** Every label, from the shared translations. The site and the admin both build theirs here. */
 export const calendarLabelsFrom = (
   t: CalendarTranslator,
-  { kind, newItem, menu }: CalendarHostLabels,
+  { kind, newItem, menu, save }: CalendarHostLabels,
 ): CalendarLabels => ({
   name: t('name'),
   cairoTime: t('cairoTime'),
@@ -110,7 +112,7 @@ export const calendarLabelsFrom = (
   deleted: t('deleted'),
   restore: t('restore'),
   restoreName: ({ title, day, time }) => t('restoreName', { title, day, time }),
-  save: t('save'),
+  save: save ?? t('save'),
   saving: t('saving'),
   cancelEdits: t('cancelEdits'),
   changes: (count) => t('changes', { count }),

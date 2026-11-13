@@ -564,8 +564,6 @@
     "session": "Sessions",
     "newSession": "New session",
     "heading": "Calendar",
-    "edit": "Edit",
-    "done": "Done editing",
     "loading": "Loading the calendar",
     "loadFailed": "The calendar could not load.",
     "retry": "Try again",
