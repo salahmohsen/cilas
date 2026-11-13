@@ -280,6 +280,18 @@ describe('summary', () => {
     expect(summary([...list, at('2026-03-17')])).toMatchObject({ kind: 'weekly', weeks: 3 })
   })
 
+  it('reads one full week and a short one as dates, not weekly (course 295)', () => {
+    // Sat 22, Mon 24, Thu 27, Fri 28 August, then Sat 29: a five-day workshop.
+    const list = [
+      at('2026-08-22', '18:00', '22:00'),
+      at('2026-08-24', '18:00', '22:00'),
+      at('2026-08-27', '15:00', '19:00'),
+      at('2026-08-28', '17:00', '21:00'),
+      at('2026-08-29', '18:00', '22:00'),
+    ]
+    expect(summary(list)).toMatchObject({ kind: 'dates', first: '2026-08-22', last: '2026-08-29' })
+  })
+
   it('reads a last week that skips its first day as dates', () => {
     // Tuesdays and Thursdays for two weeks, then a Thursday only.
     const list = [at('2026-03-03'), at('2026-03-05'), at('2026-03-10'), at('2026-03-12')]

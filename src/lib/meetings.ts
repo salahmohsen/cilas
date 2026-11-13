@@ -147,11 +147,14 @@ export const summary = (
   const periods: string[][] = Array.from({ length: span }, () => [])
   for (const m of list) periods[periodOf(first.date, m.date)]!.push(weeklyKey(m))
   const [shape, ...rest] = periods
-  // Every week the same weekdays and times; the last may end early, part way through.
+  // Every week the same weekdays and times; the last may end early, part way
+  // through. At least two full weeks, so one week and a short one is no pattern.
+  const full = (keys: string[]) => keys.join('|') === shape!.join('|')
+  const ending = rest.at(-1) ?? []
   const regular =
-    span > 1 &&
-    rest.slice(0, -1).every((keys) => keys.join('|') === shape!.join('|')) &&
-    rest.at(-1)!.every((key, i) => key === shape![i])
+    rest.slice(0, -1).every(full) &&
+    ending.every((key, i) => key === shape![i]) &&
+    periods.filter(full).length >= 2
 
   if (regular) {
     const firstWeek = list.filter((m) => periodOf(first.date, m.date) === 0)
