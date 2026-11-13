@@ -6,7 +6,11 @@ import { PUBLIC_LISTS_TAG, revalidationOf } from '@/lib/paths'
 
 type Slugged = { slug?: string | null }
 
-const drop = (collection: string, doc: Slugged, previousDoc?: Slugged) => {
+/**
+ * Drops what a document shows on the public site from the cache: its page
+ * (under the current and the previous slug), its lists and their tag.
+ */
+export const revalidateDocument = (collection: string, doc: Slugged, previousDoc?: Slugged) => {
   const { paths, tag } = revalidationOf(collection, routing.locales, doc, previousDoc)
   try {
     for (const path of paths) revalidatePath(path)
@@ -19,13 +23,13 @@ const drop = (collection: string, doc: Slugged, previousDoc?: Slugged) => {
 export const revalidateAfterChange =
   (collection: string): CollectionAfterChangeHook =>
   ({ doc, previousDoc }) => {
-    drop(collection, doc, previousDoc)
+    revalidateDocument(collection, doc, previousDoc)
     return doc
   }
 
 export const revalidateAfterDelete =
   (collection: string): CollectionAfterDeleteHook =>
   ({ doc }) => {
-    drop(collection, doc)
+    revalidateDocument(collection, doc)
     return doc
   }
