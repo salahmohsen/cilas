@@ -173,11 +173,17 @@ describe('weeks', () => {
     expect(weeks(tuesdays(8))).toBe(8)
   })
 
-  it('counts calendar weeks that start on Saturday', () => {
-    // Friday 6 March and Saturday 7 March are in two different weeks.
-    expect(weeks([at('2026-03-06'), at('2026-03-07')])).toBe(2)
-    // Saturday 28 February to Friday 6 March is one week.
-    expect(weeks([at('2026-02-28'), at('2026-03-06')])).toBe(1)
+  it('counts 7-day weeks from the first meeting, not Saturday weeks', () => {
+    // Friday 6 March and Saturday 7 March fall in one week from the Friday.
+    expect(weeks([at('2026-03-06'), at('2026-03-07')])).toBe(1)
+    // Thursday 5 March to Wednesday 11 March is one week; Thursday 12 March starts the second.
+    expect(weeks([at('2026-03-05'), at('2026-03-11')])).toBe(1)
+    expect(weeks([at('2026-03-05'), at('2026-03-12')])).toBe(2)
+  })
+
+  it('counts a Thursday and Saturday course from a Thursday as one week a pair (course 296)', () => {
+    const list = [at('2026-03-05'), at('2026-03-07'), at('2026-03-12'), at('2026-03-14')]
+    expect(weeks(list)).toBe(2)
   })
 
   it('counts weeks with no meeting inside the span', () => {
@@ -243,10 +249,39 @@ describe('summary', () => {
     })
   })
 
-  it('starts the week on Saturday, so Saturday and Monday meetings are one week', () => {
+  it('counts weeks from the first meeting, so Saturday and Monday meetings are one week', () => {
     // Sat 28 Feb + Mon 2 Mar, then Sat 7 Mar + Mon 9 Mar.
     const list = [at('2026-02-28'), at('2026-03-02'), at('2026-03-07'), at('2026-03-09')]
     expect(summary(list)).toMatchObject({ kind: 'weekly', weeks: 2 })
+  })
+
+  it('reads Thursday and Saturday from a Thursday as weekly, not split by Saturday (course 296)', () => {
+    const list = [
+      at('2026-03-05', '17:00', '21:00'),
+      at('2026-03-07', '17:00', '21:00'),
+      at('2026-03-12', '17:00', '21:00'),
+      at('2026-03-14', '17:00', '21:00'),
+    ]
+    expect(summary(list)).toEqual({
+      kind: 'weekly',
+      times: [
+        { weekday: 'thu', start_time: '17:00', end_time: '21:00' },
+        { weekday: 'sat', start_time: '17:00', end_time: '21:00' },
+      ],
+      weeks: 2,
+    })
+  })
+
+  it('reads a last week that ends early as weekly', () => {
+    // Tuesdays and Thursdays for two weeks, then one last Tuesday.
+    const list = [at('2026-03-03'), at('2026-03-05'), at('2026-03-10'), at('2026-03-12')]
+    expect(summary([...list, at('2026-03-17')])).toMatchObject({ kind: 'weekly', weeks: 3 })
+  })
+
+  it('reads a last week that skips its first day as dates', () => {
+    // Tuesdays and Thursdays for two weeks, then a Thursday only.
+    const list = [at('2026-03-03'), at('2026-03-05'), at('2026-03-10'), at('2026-03-12')]
+    expect(summary([...list, at('2026-03-19')])).toMatchObject({ kind: 'dates' })
   })
 
   it('reads all-day weekly meetings as weekly with no times', () => {

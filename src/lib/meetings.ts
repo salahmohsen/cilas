@@ -1,4 +1,4 @@
-import { addDays, WEEKDAYS, weekdayOf, type Weekday } from '@/lib/cairo-day'
+import { weekdayOf, type Weekday } from '@/lib/cairo-day'
 
 /**
  * The one place course times are read (ADR 0011, replacing ADR 0002's
@@ -81,20 +81,26 @@ export const firstDay = (meetings: readonly MaybeCancelled[]): string | null =>
 export const lastDay = (meetings: readonly MaybeCancelled[]): string | null =>
   held(meetings).at(-1)?.date ?? null
 
-/** The Saturday that starts the Egyptian week a day falls in. */
-const weekStart = (day: string): string => addDays(day, -WEEKDAYS.indexOf(weekdayOf(day)))
-
 const daysBetween = (from: string, to: string): number =>
   Math.round((Date.parse(`${to}T00:00:00Z`) - Date.parse(`${from}T00:00:00Z`)) / 86_400_000)
 
 /**
- * How many calendar weeks (Saturday to Friday) the meetings span, from the
- * first to the last one not cancelled. Zero with no meeting.
+ * The 7-day period a day falls in, counted from `first`: 0 for `first` and
+ * the six days after it. A course's weeks run from its first meeting, not
+ * from Saturday: a course that meets Thursday and Saturday from a Thursday
+ * meets once a week on each day, while a Saturday-to-Friday week would split
+ * each pair. Only the calendar view lays out Saturday weeks (`lib/calendar.ts`).
+ */
+const periodOf = (first: string, day: string): number => Math.floor(daysBetween(first, day) / 7)
+
+/**
+ * How many weeks the meetings span: 7-day periods from the first meeting not
+ * cancelled to the last one. Zero with no meeting.
  */
 export const weeks = (meetings: readonly MaybeCancelled[]): number => {
   const first = firstDay(meetings)
   const last = lastDay(meetings)
-  return first && last ? Math.floor(daysBetween(weekStart(first), last) / 7) + 1 : 0
+  return first && last ? periodOf(first, last) + 1 : 0
 }
 
 /** The first meeting not cancelled on or after `today` (a Cairo day), or null. */
@@ -112,7 +118,8 @@ export type WeeklyTime = {
 
 /**
  * What a course page says about when a course meets. `weekly` when every
- * week from the first to the last meeting has the same weekdays and times
+ * week (`weeks`: 7 days from the first meeting) has the same weekdays and
+ * times, the last week perhaps ending early
  * ("Tuesdays and Thursdays, 7–9pm, 8 weeks"); else `dates`, the count of
  * sessions and the first and last day ("12 sessions, 3 March – 28 April").
  * Data, not words: the page formats it in its own language.
@@ -137,15 +144,17 @@ export const summary = (
   if (!first || !last) return null
 
   const span = weeks(list)
-  const byWeek = new Map<string, string[]>()
-  for (const m of list) {
-    const week = weekStart(m.date)
-    byWeek.set(week, [...(byWeek.get(week) ?? []), weeklyKey(m)])
-  }
-  const shapes = new Set([...byWeek.values()].map((keys) => keys.join('|')))
+  const periods: string[][] = Array.from({ length: span }, () => [])
+  for (const m of list) periods[periodOf(first.date, m.date)]!.push(weeklyKey(m))
+  const [shape, ...rest] = periods
+  // Every week the same weekdays and times; the last may end early, part way through.
+  const regular =
+    span > 1 &&
+    rest.slice(0, -1).every((keys) => keys.join('|') === shape!.join('|')) &&
+    rest.at(-1)!.every((key, i) => key === shape![i])
 
-  if (span > 1 && byWeek.size === span && shapes.size === 1) {
-    const firstWeek = list.filter((m) => weekStart(m.date) === weekStart(first.date))
+  if (regular) {
+    const firstWeek = list.filter((m) => periodOf(first.date, m.date) === 0)
     return {
       kind: 'weekly',
       times: firstWeek.map((m) => ({
