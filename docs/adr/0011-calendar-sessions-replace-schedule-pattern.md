@@ -244,6 +244,18 @@ The [untangle rules](../../AGENTS.md) apply to every step. The aim: a typical ch
 - **No special cases.** No `if (kind === 'event')` outside the adapters. No swallowed errors: a failed save shows the error and keeps the unsaved changes.
 - **Tests at the seams:** `lib/meetings.ts` (pure, many cases), each adapter (document → items → change → document), the action (access and transaction), the outbox (grouping), the component (keyboard and ARIA from ui-sdk's testing kit).
 
+## Browser agents (WebMCP), a later phase
+
+[WebMCP](https://ui-sdk.dev/docs/agents/connect-an-agent/webmcp) lets the AI agent built into a browser (today: ChatGPT's built-in browser; a draft web standard) read and use ui-sdk components on the page the person has open, as that person. An admin could say "add eight Tuesday sessions, 7–9pm, from 3 March" or "move every session after the 10th one week later", and watch the calendar do it.
+
+- **What it needs:** an `agent` key on the calendar primitive that lists its actions, one `createAgent()` bridge, and `registerTools()`. In a browser without WebMCP, `registerTools` does nothing.
+- **Agents change only unsaved edits.** The calendar's agent actions are `createBlock`, `moveBlock`, `resizeBlock` and `cancelBlock`, in edit mode only. They change the page, not the database. **Save** carries `data-agent-confirm`, so only the person saves. No delete action is offered to agents.
+- **Same path as people.** The agent drives the component, the component calls `saveCalendarChanges`, and the collections' access rules decide. Nothing new on the server.
+- **Untrusted text.** Session titles and descriptions are written by fellows and can contain text that tries to steer the admin's agent. The bridge's `allow` refuses every action outside the calendar, and the person's Save is the last check.
+- **Where:** the admin and the course space, in edit mode. Not for visitors of the public calendar.
+- **How it relates to our MCP server:** the MCP plugin lets assistants write courses on the server, without a page, through drafts and review. WebMCP is help on the page the person is looking at. Both end in the same collections and rules.
+- **When:** after step 5, once the calendar is stable. It is a few lines in the component and one bridge per host, so it does not change the design now. The only thing to do now is to give every calendar control a name, which accessibility needs anyway.
+
 ## Order of work
 
 1. **Courses:** sessions collection with Markdown descriptions, migration, verify, readers.
@@ -253,6 +265,7 @@ The [untangle rules](../../AGENTS.md) apply to every step. The aim: a typical ch
 5. **Public calendar** redesign with admin edit mode.
 6. **Events.**
 7. **Remove** the old fields and the pattern code, after everything is polished.
+8. **Browser agents (WebMCP)** for the admin and space calendars.
 
 Each step ships to the dev copy on its own, and the site works after it.
 
@@ -320,6 +333,11 @@ Fix: one server action saves every change in one transaction, with the user's ow
 - Fellows and admins edit from the admin, the space and the public calendar.
 - The access rules must live in the collections, not in the UI.
 - A save of ten changes must not half succeed.
+
+Fix: browser agents get only unsaved calendar edits; the person saves.
+
+- WebMCP agents act as the signed-in person.
+- Fellows' text on the page can try to steer the agent.
 
 Fix: collection hooks write schedule changes to an outbox; the worker posts and notifies per space and batch.
 
