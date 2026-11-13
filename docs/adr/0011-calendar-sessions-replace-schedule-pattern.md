@@ -63,6 +63,7 @@ course
 - **A session can have several meetings.** 20 courses meet twice a week and their session is a week ("Week 3" = Tuesday and Thursday). The calendar shows each meeting as a block, and every block opens its session.
 - **Order comes from time.** Sessions sort by their first meeting. Sessions with no meeting sort by the hidden `position`, after the placed ones, and show in the "Unscheduled" tray. Nobody types an order.
 - **Times stay Cairo wall-clock.** The rule from 0002 stays: no UTC instants, so changes to Egypt's daylight-saving rules do not move a meeting.
+- **Dates in code are Temporal values.** A meeting's day is a `Temporal.PlainDate` and its times are `Temporal.PlainTime`, as the strings are stored. When a meeting needs an instant (the ICS feed, "next meeting" from now, showing the time to a visitor in another zone), it becomes a `Temporal.ZonedDateTime` in the IANA zone `Africa/Cairo`, never a fixed offset, with `disambiguation: 'compatible'` for the hour Egypt's daylight-saving change skips or repeats. No `Date` built from a hand-made ISO string such as `${day}T00:00:00Z`. Node on the server has `Temporal`; the browser calendar loads `temporal-polyfill` only where `Temporal` is missing (Safari). Source: the modern-web-guidance guides `capture-location-agnostic-data` and `coordinate-global-events`.
 - **`first_day` and `last_day` are stored on the course.** Lists sort and filter by start date today (`courses.api`, `programmes.api`, `people.api`, article cards, email cards, spaces). A session afterChange (and afterDelete) hook writes the course's two fields straight to its row (`lib/course-days.ts`), so readers do not query sessions; the course's own beforeChange recomputes them on every course save, so its versions carry them too. Both are `YYYY-MM-DD` text, like `meetings.date`.
 - **One module reads time.** `src/lib/meetings.ts` replaces `src/lib/schedule.ts` for courses. It gives `sessionsOf(course)`, `meetingsOf(course)`, `nextMeeting`, `firstDay`, `lastDay`, `weeks` and the summary. 0002's rule "one function makes every date" stays true.
 - **Deleting a course deletes its sessions.** In the course's beforeDelete (`deleteCourseDependents`), with its enrollments: `sessions.course_id` is required, so the database refuses to delete a course that still has sessions.
@@ -358,6 +359,12 @@ Fix: summary and weeks are worked out from the meetings.
 
 - Admins should not type what the dates already say.
 - 235 courses store `weeks` by hand today.
+
+Fix: dates in code are Temporal plain values, and instants are `ZonedDateTime` in `Africa/Cairo`.
+
+- A `Date` is an instant; a day stored as one drifts for viewers west of UTC.
+- Ten files build `Date` values from hand-made `T00:00:00Z` strings to format days.
+- Egypt changes its clocks, so a fixed offset is wrong for part of the year.
 
 Fix: one module, `lib/meetings.ts`, reads time.
 
