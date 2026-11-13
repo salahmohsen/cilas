@@ -345,7 +345,6 @@
     "details": "Course details",
     "cycle": "Cycle",
     "starts": "Starts",
-    "weekOf": "Week of {date}",
     "meets": "Meets",
     "length": "Length",
     "sessions": "{count, plural, one {# session} other {# sessions}}",

@@ -1,6 +1,7 @@
 import ReactMarkdown, { defaultUrlTransform } from 'react-markdown'
 import remarkGfm from 'remark-gfm'
 
+import { MARKDOWN_ELEMENTS } from '@/lib/markdown-elements'
 import { SESSION_HREF, inlineBlocks, sessionIdsIn, splitBlocks } from '@/lib/session-refs'
 import type { SessionRead } from '@/lib/spaces-data'
 
@@ -19,24 +20,6 @@ import styles from './space.module.css'
  * sits with dir="auto". A session mention reads as a chip in its sentence; a
  * session block, alone in its paragraph, as the whole session card.
  */
-const ALLOWED = [
-  'p',
-  'h1',
-  'h2',
-  'h3',
-  'ul',
-  'ol',
-  'li',
-  'blockquote',
-  'pre',
-  'code',
-  'hr',
-  'strong',
-  'em',
-  'del',
-  'a',
-  'br',
-] as const
 
 export type PostBodyProps = {
   body: string
@@ -56,7 +39,7 @@ export const PostBody = ({ body, people, titles, sessions }: PostBodyProps) => {
     <ReactMarkdown
       key={key}
       remarkPlugins={[remarkGfm]}
-      allowedElements={[...ALLOWED]}
+      allowedElements={[...MARKDOWN_ELEMENTS]}
       unwrapDisallowed={false}
       urlTransform={keepSessions}
       components={{

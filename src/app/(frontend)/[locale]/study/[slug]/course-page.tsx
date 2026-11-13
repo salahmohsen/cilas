@@ -12,6 +12,7 @@ import { getPayload } from 'payload'
 
 import type { Reader } from '@/lib/reader'
 import { getContactEmail } from '@/api/contact.api'
+import { getCourseSessions } from '@/api/sessions.api'
 import { OutsideAdminFrame } from '@/components/admin-frame-only'
 import { NewsletterSignupEnd } from '@/components/newsletter-signup-end'
 import { RefreshRouteOnSave } from '@/components/RefreshRouteOnSave'
@@ -86,6 +87,10 @@ export async function CoursePage({
   })
   if (!reading) notFound()
   const { course, siblings, previewCourse } = reading
+  const sessions =
+    (await getCourseSessions(payload, [course.id], { locale: locale as Locale, reader })).get(
+      course.id,
+    ) ?? []
   const related: RelatedCourse[] = siblings.map((c) => {
     const cover = typeof c.cover_image === 'object' ? (c.cover_image as Media | null) : null
     return {
@@ -129,7 +134,13 @@ export async function CoursePage({
       <>
         <Schema data={schema ? [schema, crumb] : [crumb]} />
         <RichTextScope data={course} locale={locale} user={reader}>
-          <CourseView after={newsletter} course={course} email={email} related={related} />
+          <CourseView
+            after={newsletter}
+            course={course}
+            email={email}
+            related={related}
+            sessions={sessions}
+          />
         </RichTextScope>
       </>
     )
@@ -144,6 +155,7 @@ export async function CoursePage({
           email={email}
           initialData={previewCourse ?? course}
           related={related}
+          sessions={sessions}
         />
       </RichTextScope>
     </>

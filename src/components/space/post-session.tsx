@@ -11,6 +11,7 @@ import { sessionsInOrder } from '@/lib/schedule'
 import { SESSION_CARD_KINDS } from '@/lib/space-rules'
 import type { SessionView } from '@/lib/spaces-data'
 
+import { oldSyllabus } from './old-syllabus'
 import styles from './space.module.css'
 
 /**
@@ -84,6 +85,7 @@ export function PostSession({
   return (
     <CourseSession
       course={course}
+      sessions={oldSyllabus(course)}
       session={session.session}
       label={t('sessionLabel')}
       footer={ai}

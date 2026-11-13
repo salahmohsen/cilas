@@ -4,7 +4,6 @@ import { personAvatarSeed } from '@/lib/avatar'
 import { listSeparator } from '@/lib/locale-format'
 import { detailPath } from '@/lib/paths'
 import { isRelation as isObject } from '@/lib/relation'
-import { hasDayPrecision } from '@/lib/schedule'
 import {
   ArrowLeft,
   ArrowRight,
@@ -27,6 +26,7 @@ import {
   MATERIAL_ORDER,
   MaterialList,
   directionOf,
+  syllabusOf,
   textOf,
 } from '@/components/course/course-syllabus'
 import { EditorFields, labelOf } from '@/components/editor-fields'
@@ -38,7 +38,6 @@ import { ShareBar } from '@/components/share-bar'
 import { SideCard, SideCardApply, SideCardSection } from '@/components/side-card'
 import { StudyWithAI } from '@/components/study-with-ai'
 import { Link } from '@/i18n/navigation'
-import { weekdayOf as cairoWeekday } from '@/lib/cairo-day'
 import type { Season } from '@/lib/cycle'
 import { localDigits, numberingSystemOf, timeDir } from '@/lib/digits'
 import { editableIn } from '@/lib/editable'
@@ -46,9 +45,10 @@ import { focalPointStyle } from '@/lib/media-image'
 import { POSTER_COLORS } from '@/components/arc/lib/poster-colors'
 import { contributionLabel } from '@/lib/pricing'
 import { courseRegistration } from '@/lib/registration'
-import { expandSchedule, sessionsInOrder } from '@/lib/schedule'
+import { firstDay, summary } from '@/lib/meetings'
+import { weekdayName } from '@/lib/meeting-text'
 import { textDirection } from '@/lib/text-direction'
-import type { Course, Media, Person, Place } from '@/payload-types'
+import type { Course, Media, Person, Place, Session } from '@/payload-types'
 
 import { RegisterBar } from '@/components/course/RegisterBar'
 import { newTab } from '@/lib/new-tab'
@@ -76,6 +76,8 @@ const RELATED_SHOWN = 6
  */
 export const CourseView: React.FC<{
   course: Course
+  /** Its sessions, in any order (`api/sessions.api.ts`). */
+  sessions: readonly Session[]
   related?: RelatedCourse[]
   /** In the admin's live preview: mark fields for the visual editor. */
   editable?: boolean
@@ -83,7 +85,7 @@ export const CourseView: React.FC<{
   after?: React.ReactNode
   /** The institute's info address (Site settings), the share bar's mail recipient. */
   email?: string | null
-}> = ({ course, related = [], editable = false, after, email }) => {
+}> = ({ course, sessions, related = [], editable = false, after, email }) => {
   const pe = editableIn(editable)
   const t = useTranslations('Course')
   const tf = useTranslations('Study.filters')
@@ -110,9 +112,10 @@ export const CourseView: React.FC<{
   const dir = directionOf(`${course.title} ${course.subtitle ?? ''} ${textOf(course.description)}`)
   const lang = dir === 'rtl' ? 'ar' : 'en'
 
-  const sessions = sessionsInOrder(course.sessions ?? [])
-  const meetings = expandSchedule(course.schedule, course.sessions)
-  const firstMeeting = meetings.find((m) => !m.cancelled)
+  const syllabus = syllabusOf(sessions, course.session_unit)
+  const meetings = syllabus.flatMap((s) => s.meetings)
+  const starts = firstDay(meetings)
+  const when = summary(meetings)
   const registration = courseRegistration(course, cycle)
   const price = contributionLabel(registration.price, { locale })
   const open = registration.status === 'open'
@@ -134,8 +137,6 @@ export const CourseView: React.FC<{
       timeZone: 'UTC',
       numberingSystem: numberingSystemOf(locale),
     })
-  const weekdayName = (day: string): string =>
-    format.dateTime(new Date(`${day}T00:00:00Z`), { weekday: 'long', timeZone: 'UTC' })
 
   const allMaterials = [
     ...sessions.flatMap((s) => s.bibliography ?? []),
@@ -146,35 +147,29 @@ export const CourseView: React.FC<{
     count: allMaterials.filter((m) => m.type === type).length,
   })).filter((c) => c.count > 0)
 
-  const slots = (course.schedule?.slots ?? []).flatMap((slot) => {
-    const first = meetings.find(
-      (m) =>
-        !m.cancelled && cairoWeekday(m.date) === slot.weekday && m.start_time === slot.start_time,
-    )
-    return first
-      ? [
-          {
-            day: weekdayName(first.date),
-            time: localDigits(`${slot.start_time}–${slot.end_time}`, locale),
-          },
-        ]
+  // The weekly times; none when the course does not meet at the same times every week.
+  const slots =
+    when?.kind === 'weekly'
+      ? when.times.map((time) => ({
+          day: weekdayName(time.weekday, locale),
+          time: time.start_time
+            ? localDigits([time.start_time, time.end_time].filter(Boolean).join('–'), locale)
+            : null,
+        }))
       : []
-  })
   const comma = listSeparator(locale)
 
   const facts: Array<{ icon: LucideIcon; label: string; value: React.ReactNode; path: string }> = [
     ...(cycleLabel && SeasonIcon
       ? [{ icon: SeasonIcon, label: t('cycle'), value: cycleLabel, path: 'cycle' }]
       : []),
-    ...(firstMeeting
+    ...(starts
       ? [
           {
             icon: CalendarDays,
             label: t('starts'),
-            path: 'schedule',
-            value: !hasDayPrecision(course.schedule)
-              ? t('weekOf', { date: dayLabel(firstMeeting.date) })
-              : dayLabel(firstMeeting.date, 'long'),
+            path: 'syllabus',
+            value: dayLabel(starts, 'long'),
           },
         ]
       : []),
@@ -183,15 +178,19 @@ export const CourseView: React.FC<{
           {
             icon: Clock,
             label: t('meets'),
-            path: 'schedule.slots',
+            path: 'syllabus',
             // A slot a line; the time held in its digits' direction, so it never reads backwards.
             value: slots.map(({ day, time }) => (
               <span className="block" key={`${day}${time}`}>
                 {day}
-                {comma}
-                <span className="whitespace-nowrap tabular-nums" dir={timeDir(locale)}>
-                  {time}
-                </span>
+                {time ? (
+                  <>
+                    {comma}
+                    <span className="whitespace-nowrap tabular-nums" dir={timeDir(locale)}>
+                      {time}
+                    </span>
+                  </>
+                ) : null}
               </span>
             )),
           },
@@ -397,9 +396,9 @@ export const CourseView: React.FC<{
           </dl>
         ) : null}
       </SideCardSection>
-      {course.schedule?.note ? (
-        <p className="side-card-muted whitespace-pre-line" {...pe('schedule.note')}>
-          {course.schedule.note}
+      {course.timing_note ? (
+        <p className="side-card-muted whitespace-pre-line" {...pe('timing_note')}>
+          {course.timing_note}
         </p>
       ) : null}
       {wide && fellows.length ? (
@@ -591,9 +590,14 @@ export const CourseView: React.FC<{
 
           {fellowsSection}
 
-          {sessions.length ? (
+          {syllabus.length ? (
             <div className="mt-12">
-              <CourseSyllabus className="course-flow" course={course} editable={editable} />
+              <CourseSyllabus
+                className="course-flow"
+                course={course}
+                editable={editable}
+                sessions={syllabus}
+              />
             </div>
           ) : null}
 

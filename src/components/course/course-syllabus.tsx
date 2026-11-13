@@ -22,11 +22,11 @@ import {
   type SyllabusEntry,
   type SyllabusGroup,
 } from '@/components/arc/blocks/syllabus-feed/syllabus-feed'
-import { RichTextField } from '@/components/RichTextField'
+import { SessionMarkdown } from '@/components/course/session-markdown'
 import { localDigits, numberingSystemOf } from '@/lib/digits'
 import { editableIn, type Editable } from '@/lib/editable'
-import { expandSchedule, sessionsInOrder } from '@/lib/schedule'
-import type { Course } from '@/payload-types'
+import { numberedSessions, type NumberedSession } from '@/lib/meetings'
+import type { Course, Session } from '@/payload-types'
 
 export type Material = NonNullable<Course['bibliography']>[number]
 type MaterialType = Material['type']
@@ -41,9 +41,8 @@ export const MATERIAL_ICONS: Record<MaterialType, LucideIcon> = {
 }
 export const MATERIAL_ORDER: MaterialType[] = ['reading', 'watch', 'listen', 'prompt', 'other']
 
-type ActivityKind = NonNullable<
-  NonNullable<Course['sessions']>[number]['activities']
->[number]['kind']
+type Activity = NonNullable<Session['activities']>[number]
+type ActivityKind = Activity['kind']
 
 /** What happens in the session: talked over, visited, practised, watched together, presented. */
 const ACTIVITY_ICONS: Record<ActivityKind, LucideIcon> = {
@@ -72,11 +71,50 @@ export const directionOf = (text: string): 'rtl' | 'ltr' => {
   return arabic >= latin ? 'rtl' : 'ltr'
 }
 
-/** The parts of a course its syllabus reads. */
+/** The parts of a course its syllabus reads, besides its sessions. */
 export type SyllabusCourse = Pick<
   Course,
-  'title' | 'subtitle' | 'description' | 'sessions' | 'schedule' | 'session_unit'
+  'title' | 'subtitle' | 'description' | 'syllabus_tentative'
 >
+
+/**
+ * One session as the syllabus shows it, whichever store holds it: the
+ * course page reads the sessions collection, a course space still the old
+ * array (plan "Move course readers to sessions", unit 4).
+ */
+export type SyllabusSession = {
+  id: string
+  title?: string | null
+  cancelled?: boolean | null
+  delivery?: Session['delivery']
+  /** Its text, rendered by the caller. */
+  description?: ReactNode
+  bibliography?: Material[] | null
+  activities?: Activity[] | null
+}
+
+/** A course's sessions from the collection, numbered and dated, as its syllabus reads them. */
+export const syllabusOf = (
+  sessions: readonly Session[],
+  unit: Course['session_unit'],
+): NumberedSession<SyllabusSession>[] =>
+  numberedSessions(sessions, unit).map((n) => ({
+    ...n,
+    session: {
+      id: String(n.session.id),
+      title: n.session.title,
+      cancelled: n.session.cancelled,
+      delivery: n.session.delivery,
+      description: n.session.description ? (
+        <SessionMarkdown
+          className="article-prose article-prose--notes"
+          text={n.session.description}
+        />
+      ) : null,
+      bibliography: n.session.bibliography,
+      activities: n.session.activities,
+    },
+  }))
 
 /**
  * Each session as a syllabus entry: its first meeting, its month, its facet
@@ -85,18 +123,15 @@ export type SyllabusCourse = Pick<
  */
 function useSyllabusEntries(
   course: SyllabusCourse,
-  editable: boolean,
+  sessions: readonly NumberedSession<SyllabusSession>[],
   decorate?: (entry: SyllabusEntry, index: number) => SyllabusEntry,
 ): SyllabusEntry[] {
-  const pe = editableIn(editable)
   const t = useTranslations('Course')
   const format = useFormatter()
   const locale = useLocale()
 
   const dir = directionOf(`${course.title} ${course.subtitle ?? ''} ${textOf(course.description)}`)
   const lang = dir === 'rtl' ? 'ar' : 'en'
-  const sessions = sessionsInOrder(course.sessions ?? [])
-  const meetings = expandSchedule(course.schedule, course.sessions)
 
   /** "Tue 3 Mar". Days are Cairo calendar days, so format them in UTC. */
   const dayLabel = (day: string): string =>
@@ -107,44 +142,29 @@ function useSyllabusEntries(
       timeZone: 'UTC',
       numberingSystem: numberingSystemOf(locale),
     })
-  const unitLabel = (n: number) =>
-    course.session_unit === 'week' ? t('week', { number: n }) : t('session', { number: n })
 
-  return sessions.map((session, i) => {
-    // Sessions show in their `order`; the editor needs their place in the data.
-    const at = Math.max(
-      0,
-      (course.sessions ?? []).findIndex((s) => s.id === session.id),
-    )
-    const own = meetings.filter((m) => m.session === i + 1)
+  return sessions.map(({ session, number, unit, meetings, day }, i) => {
+    const unitLabel = t(unit, { number })
     const materials = session.bibliography ?? []
     const activities = session.activities ?? []
     const hasBody = Boolean(session.description || materials.length || activities.length)
-    const first = own.find((m) => !m.cancelled) ?? own[0]
-    const date = first?.date
     const entry: SyllabusEntry = {
-      id: String(session.id ?? `session-${i}`),
+      id: session.id,
       // A session with no announced date closes the list, under its own group.
-      month: date ? date.slice(0, 7) : '',
-      no: localDigits(String(i + 1), locale),
-      ...(date ? { date: { label: dayLabel(date), iso: date } } : {}),
-      title: session.session_title || unitLabel(i + 1),
+      month: day ? day.slice(0, 7) : '',
+      no: localDigits(String(number), locale),
+      ...(day ? { date: { label: dayLabel(day), iso: day } } : {}),
+      title: session.title || unitLabel,
       meta: {
-        unit: session.session_title ? unitLabel(i + 1) : undefined,
-        meetings: own.map((m) => ({
-          date: dayLabel(m.date),
-          time: localDigits(`${m.start_time}–${m.end_time}`, locale),
-        })),
+        unit: session.title ? unitLabel : undefined,
+        meetings: meetings.map((m) => {
+          const hours = [m.start_time, m.end_time].filter(Boolean).join('–')
+          return { date: dayLabel(m.date), ...(hours ? { time: localDigits(hours, locale) } : {}) }
+        }),
         extra:
           session.delivery || materials.length
             ? [
-                ...(session.delivery
-                  ? [
-                      <span key="delivery" {...pe(`sessions.${at}.delivery`)}>
-                        {t(`delivery.${session.delivery}`)}
-                      </span>,
-                    ]
-                  : []),
+                ...(session.delivery ? [t(`delivery.${session.delivery}`)] : []),
                 ...(materials.length ? [t('materialCount', { count: materials.length })] : []),
               ]
             : undefined,
@@ -152,22 +172,7 @@ function useSyllabusEntries(
       cancelled: Boolean(session.cancelled),
       activities: [...new Set(activities.map((a) => a.kind))],
       materials: [...new Set(materials.map((m) => m.type))],
-      body:
-        hasBody || editable ? (
-          <SessionBody
-            session={session}
-            at={at}
-            pe={pe}
-            editable={editable}
-            dir={dir}
-            lang={lang}
-          />
-        ) : undefined,
-      attrs: {
-        row: pe(`sessions.${at}`, { row: { id: session.id } }),
-        title: pe(`sessions.${at}.session_title`),
-        meta: pe(`sessions.${at}.dates`),
-      },
+      body: hasBody ? <SessionBody session={session} dir={dir} lang={lang} /> : undefined,
     }
     return decorate ? decorate(entry, i) : entry
   })
@@ -175,19 +180,21 @@ function useSyllabusEntries(
 
 /**
  * The course's flow, session by session: the one syllabus the course page and
- * the course space both show. The visual editor's marks travel as plain data
- * into the client component.
+ * the course space both show. Sessions are edited in their own documents,
+ * not on the page, so only the course's own line carries an editor mark.
  *
  * `decorate` lets a caller change an entry (a space adds counts to it) without
  * copying how the entries are built.
  */
 export function CourseSyllabus({
   course,
+  sessions,
   editable = false,
   decorate,
   className,
 }: {
-  course: Course
+  course: SyllabusCourse
+  sessions: readonly NumberedSession<SyllabusSession>[]
   editable?: boolean
   decorate?: (entry: SyllabusEntry, index: number) => SyllabusEntry
   className?: string
@@ -196,7 +203,7 @@ export function CourseSyllabus({
   const t = useTranslations('Course')
   const format = useFormatter()
   const locale = useLocale()
-  const entries = useSyllabusEntries(course, editable, decorate)
+  const entries = useSyllabusEntries(course, sessions, decorate)
   if (!entries.length) return null
 
   const monthName = (month: string, width: 'long' | 'short') =>
@@ -225,7 +232,6 @@ export function CourseSyllabus({
       headerAttrs={course.syllabus_tentative ? { subtitle: pe('syllabus_tentative') } : undefined}
       defaultOpen={firstBodyId ? [firstBodyId] : []}
       openAll={editable}
-      containerAttrs={pe.container('sessions')}
       numberingSystem={numberingSystemOf(locale)}
       className={className}
     />
@@ -239,19 +245,21 @@ export function CourseSyllabus({
  */
 export function CourseSession({
   course,
+  sessions,
   session,
   label,
   footer,
 }: {
   course: SyllabusCourse
-  /** The id of one row of the course's sessions */
+  sessions: readonly NumberedSession<SyllabusSession>[]
+  /** The id of the session to show */
   session: string
   /** What the card is named for assistive tech */
   label: string
   /** Closes the card's details, after the materials and activities */
   footer?: ReactNode
 }) {
-  const entry = useSyllabusEntries(course, false).find((e) => e.id === session)
+  const entry = useSyllabusEntries(course, sessions).find((e) => e.id === session)
   if (!entry) return null
   const body =
     footer && !entry.cancelled ? (
@@ -265,23 +273,13 @@ export function CourseSession({
   return <SyllabusSession entry={{ ...entry, body }} label={label} />
 }
 
-/**
- * One session's own text, materials and activities — the syllabus feed
- * opens it. The same markup the number-only list rendered; it now sits in
- * months' own panel.
- */
+/** One session's own text, materials and activities: the syllabus feed opens it. */
 function SessionBody({
   session,
-  at,
-  pe,
-  editable,
   dir,
   lang,
 }: {
-  session: NonNullable<Course['sessions']>[number]
-  at: number
-  pe: Editable
-  editable?: boolean
+  session: SyllabusSession
   dir: 'ltr' | 'rtl'
   lang: string
 }) {
@@ -290,35 +288,13 @@ function SessionBody({
   const activities = session.activities ?? []
   return (
     <div className="grid gap-5" dir={dir} lang={lang}>
-      {session.description ? (
-        <div {...pe(`sessions.${at}.description`)}>
-          <RichTextField
-            className="article-prose article-prose--notes"
-            data={session.description}
-          />
-        </div>
-      ) : editable ? (
-        // Something to double-click while the session has no text yet.
-        <p
-          className="text-sm text-(--text-muted)"
-          dir="ltr"
-          lang="en"
-          {...pe(`sessions.${at}.description`)}
-        >
-          Description
-        </p>
-      ) : null}
-      {materials.length || editable ? (
-        <MaterialList items={materials} path={`sessions.${at}.bibliography`} pe={pe} />
-      ) : null}
-      {activities.length || editable ? (
+      {session.description ?? null}
+      {materials.length ? <MaterialList items={materials} path="" pe={editableIn(false)} /> : null}
+      {activities.length ? (
         <div>
           <p className="text-xs text-(--text-muted)">{t('activities')}</p>
           {/* Laid out as the materials are: the kind's icon in its own column. */}
-          <ul
-            className={`mt-2 grid gap-2.5 ${activities.length ? '' : 'min-h-8'}`}
-            {...pe.container(`sessions.${at}.activities`)}
-          >
+          <ul className="mt-2 grid gap-2.5">
             {activities.map((a, j) => {
               const Icon = ACTIVITY_ICONS[a.kind] ?? Shapes
               return (
@@ -326,9 +302,6 @@ function SessionBody({
                   className="grid grid-cols-[1.25rem_1fr] gap-x-3 text-sm leading-snug"
                   dir="auto"
                   key={a.id ?? j}
-                  {...pe(`sessions.${at}.activities.${j}`, {
-                    row: { id: a.id },
-                  })}
                 >
                   <Icon
                     aria-hidden

@@ -345,7 +345,6 @@
     "details": "تفاصيل المقرر",
     "cycle": "الدورة",
     "starts": "يبدأ",
-    "weekOf": "أسبوع {date}",
     "meets": "المواعيد",
     "length": "المدة",
     "sessions": "{count, plural, zero {لا جلسات} one {جلسة واحدة} two {جلستان} few {{count, number, digits} جلسات} many {{count, number, digits} جلسة} other {{count, number, digits} جلسة}}",

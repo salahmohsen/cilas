@@ -7,7 +7,7 @@ import React from 'react'
 import { CourseView, type RelatedCourse } from './CourseView'
 import { useInAdminFrame } from '@/components/admin-frame-only'
 import { clientEnv as env } from '@/env.client'
-import type { Course } from '@/payload-types'
+import type { Course, Session } from '@/payload-types'
 
 /**
  * Live-preview wrapper around `CourseView`, per
@@ -23,10 +23,12 @@ import type { Course } from '@/payload-types'
  */
 export const CourseLivePreview: React.FC<{
   initialData: Course
+  /** The course's sessions as saved: they are separate documents, so the preview does not merge them. */
+  sessions: readonly Session[]
   related?: RelatedCourse[]
   after?: React.ReactNode
   email?: string | null
-}> = ({ initialData, related, after, email }) => {
+}> = ({ initialData, sessions, related, after, email }) => {
   const { data } = useLivePreview<Course>({
     initialData,
     // Read from env, not `window.location.origin`: these pages are statically
@@ -42,7 +44,14 @@ export const CourseLivePreview: React.FC<{
   return (
     <>
       {inAdmin ? <VisualEditing draft serverURL={env.NEXT_PUBLIC_SERVER_URL} /> : null}
-      <CourseView after={after} course={data} editable={inAdmin} email={email} related={related} />
+      <CourseView
+        after={after}
+        course={data}
+        editable={inAdmin}
+        email={email}
+        related={related}
+        sessions={sessions}
+      />
     </>
   )
 }

@@ -49,6 +49,7 @@ import { visitRecord } from '@/lib/spaces-write'
 
 import { AboutClamp } from './about-clamp'
 import { Composer } from './composer'
+import { oldSyllabus } from './old-syllabus'
 import { sessionOptions } from './session-options'
 import { EventList } from './event-list'
 import { FeedFilter, FeedFilterMenu, SpaceFeedFilters } from './feed-filter'
@@ -576,6 +577,7 @@ export async function SpacePage({
             course.sessions?.length ? (
               <CourseSyllabus
                 course={course}
+                sessions={oldSyllabus(course)}
                 decorate={(entry) => {
                   const count = linked.get(entry.id) ?? 0
                   if (!count) return entry

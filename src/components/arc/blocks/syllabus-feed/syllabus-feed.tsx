@@ -39,7 +39,8 @@ import styles from './syllabus-feed.module.css'
 
 type Attrs = Record<string, string>
 
-export type SyllabusMeeting = { date: string; time: string }
+/** A meeting's day, and its hours unless it lasts all day. */
+export type SyllabusMeeting = { date: string; time?: string }
 
 export type SyllabusEntry = {
   id: string
@@ -256,9 +257,13 @@ function EntryHead({ entry, alone = false }: { entry: SyllabusEntry; alone?: boo
                   <span key={`date${i}`} className={[styles.part, styles.date].join(' ')}>
                     {meeting.date}
                   </span>,
-                  <span key={`time${i}`} className={[styles.part, styles.clock].join(' ')}>
-                    {meeting.time}
-                  </span>,
+                  ...(meeting.time
+                    ? [
+                        <span key={`time${i}`} className={[styles.part, styles.clock].join(' ')}>
+                          {meeting.time}
+                        </span>,
+                      ]
+                    : []),
                 )
               for (const [i, line] of (entry.meta!.extra ?? []).entries())
                 segments.push(
