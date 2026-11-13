@@ -1,9 +1,8 @@
-import { execFileSync } from 'node:child_process'
-
 import { expect, test, type Page } from '@playwright/test'
 
 import type { Course, Cycle, Session } from '../../src/payload-types.js'
 import { login } from '../helpers/login'
+import { cleanupTestUser, seedTestUser, testUser } from '../helpers/seedUser'
 
 /**
  * Saving a course from the admin form keeps its data (ADR 0011, plan "Move
@@ -19,11 +18,6 @@ import { login } from '../helpers/login'
  */
 const BASE = 'http://localhost:3000'
 const MARK = ' (e2e save check)'
-const user = { email: `e2e-${crypto.randomUUID()}@cilas.test`, password: 'test' }
-const adminUser = (action: 'create' | 'delete') =>
-  execFileSync('pnpm', ['tsx', 'tests/helpers/admin-user.ts', action, user.email, user.password], {
-    stdio: 'inherit',
-  })
 
 type Localized = Omit<Course, 'subtitle'> & { subtitle: Record<string, string | null> }
 
@@ -72,9 +66,9 @@ test.describe('course admin save', () => {
   let subtitle: string
 
   test.beforeAll(async ({ browser }) => {
-    adminUser('create')
+    await seedTestUser()
     page = await (await browser.newContext()).newPage()
-    await login({ page, user })
+    await login({ page, user: testUser })
 
     const where = [
       'where[_status][equals]=published',
@@ -117,7 +111,7 @@ test.describe('course admin save', () => {
 
   test.afterAll(async () => {
     await page?.context().close()
-    adminUser('delete')
+    await cleanupTestUser()
   })
 
   test('publishing keeps the old fields, the sessions and the days', async () => {

@@ -1,6 +1,13 @@
 import { defineConfig, devices } from '@playwright/test'
 
 import 'dotenv/config'
+import { register } from 'tsx/esm/api'
+
+// Playwright's own loader refuses JSON imports without an import attribute
+// (`with { type: 'json' }`), which the Payload config's modules do not use.
+// tsx's loader accepts them. Registering it here, before the specs load,
+// covers every way of starting Playwright, not only the package script.
+register()
 
 export default defineConfig({
   testDir: './tests/e2e',
