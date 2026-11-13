@@ -9,10 +9,12 @@ import { siteTiers } from '@/access'
 import { listBridgeYears } from '@/api/programmes.api'
 import { getStudyIndex } from '@/api/study-index'
 import { registrationStatus } from '@/lib/registration'
+import { HERO_SCENES, isHeroScene } from '@/lib/hero-scenes'
 import { mediaImage, type MediaImage } from '@/lib/media-image'
 import type { Article, Media, Press } from '@/payload-types'
 
-export const getHomeHeroDescription = async (payload: Payload, locale: Locale) => {
+/** The hero's description in this language, and the scene it stands on. */
+export const getHomeHero = async (payload: Payload, locale: Locale) => {
   const settings = await payload.findGlobal({
     slug: 'site-settings',
     depth: 0,
@@ -20,7 +22,11 @@ export const getHomeHeroDescription = async (payload: Payload, locale: Locale) =
     fallbackLocale: false,
     select: { hero: true },
   })
-  return settings.hero?.description?.trim() ?? ''
+  const scene = settings.hero?.scene
+  return {
+    description: settings.hero?.description?.trim() ?? '',
+    scene: isHeroScene(scene) ? scene : HERO_SCENES[0].value,
+  }
 }
 
 /** Something people can register for today: a programme or a course. */

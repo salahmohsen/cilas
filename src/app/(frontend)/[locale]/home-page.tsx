@@ -14,7 +14,7 @@ import { getContactForm } from '@/api/contact.api'
 import { getHomeFaq } from '@/api/faq.api'
 import {
   getHomeArticles,
-  getHomeHeroDescription,
+  getHomeHero,
   getHomeStats,
   getOpenNow,
   getPressOutlets,
@@ -23,6 +23,7 @@ import { FaqSection } from '@/components/arc/blocks/faq-section/faq-section'
 import { LogoMarquee } from '@/components/arc/blocks/logo-marquee/logo-marquee'
 import { ContactForm } from '@/components/contact/contact-form'
 import { ArticlesGrid } from '@/components/article/articles-grid'
+import { CrowdScene } from '@/components/home/crowd-scene'
 import { HomeHero } from '@/components/home/home-hero'
 import { HomeScene } from '@/components/home/home-scene'
 import { HomeArticles } from '@/components/home/home-articles'
@@ -62,7 +63,7 @@ export async function HomePage({ locale, reader }: { locale: string; reader: Rea
     outlets,
     contact,
     faq,
-    heroDescription,
+    hero,
     signup,
     events,
     tEvents,
@@ -78,7 +79,7 @@ export async function HomePage({ locale, reader }: { locale: string; reader: Rea
     getPressOutlets(payload, locale as Locale),
     getContactForm(payload, locale as Locale),
     getHomeFaq(payload, locale as Locale),
-    getHomeHeroDescription(payload, locale as Locale),
+    getHomeHero(payload, locale as Locale),
     newsletterList(payload),
     getPublicEvents(payload, locale as Locale),
     getTranslations('Events'),
@@ -103,7 +104,9 @@ export async function HomePage({ locale, reader }: { locale: string; reader: Rea
     <>
       <HomeHero
         locale={locale}
-        scene={<HomeScene />}
+        // The felucca's boat stands in for the logo's mark; the crowd shows the mark by the name.
+        mark={hero.scene === 'crowd'}
+        scene={hero.scene === 'crowd' ? <CrowdScene /> : <HomeScene />}
         numbers={{
           title: t('statsTitle'),
           stats: [
@@ -116,14 +119,16 @@ export async function HomePage({ locale, reader }: { locale: string; reader: Rea
           open.length
             ? { label: t('seeOpen'), href: '/#open' }
             : {
-                label: t('seeOpen'),
+                // Nothing to register for: the archive of past courses instead.
+                label: t('exploreArchive'),
+                href: '/study',
                 note: t('noneOpen'),
                 // To the footer's signup, which shows only when there is a list.
                 ...(signup ? { link: { label: t('noneOpenLink'), href: '#newsletter' } } : {}),
               }
         }
         secondary={{ label: t('readArticles'), href: '/articles' }}
-        text={heroDescription}
+        text={hero.description}
         // The institute's name, as the header writes it, line break and all.
         title={tHeader('brand')}
         who={t.raw('heroWho') as string[]}

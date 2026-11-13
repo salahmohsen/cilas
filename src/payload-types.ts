@@ -5059,7 +5059,11 @@ export interface SiteSetting {
     cilasians?: boolean | null;
     governance?: boolean | null;
   };
-  hero?: {
+  hero: {
+    /**
+     * The drawing the home page opens on, in both languages.
+     */
+    scene: 'felucca' | 'crowd';
     /**
      * Shown below the institute name on the home page. Leave blank to hide the description for this language.
      */
@@ -5321,6 +5325,7 @@ export interface SiteSettingsSelect<T extends boolean = true> {
   hero?:
     | T
     | {
+        scene?: T;
         description?: T;
       };
   faq?:

@@ -1,7 +1,7 @@
 import { getTranslations } from 'next-intl/server'
 import { getPayload } from 'payload'
 
-import { getHomeHeroDescription } from '@/api/home.api'
+import { getHomeHero } from '@/api/home.api'
 import type { Locale } from '@/i18n/routing'
 import { ogCardRoute } from '@/lib/og-card'
 import config from '@/payload.config'
@@ -20,7 +20,7 @@ const card = ogCardRoute(
   },
   async (locale) => ({
     ...siteCardWords(locale),
-    description: await getHomeHeroDescription(await getPayload({ config }), locale as Locale),
+    description: (await getHomeHero(await getPayload({ config }), locale as Locale)).description,
   }),
 )
 

@@ -1,0 +1,42 @@
+/* Behind the hero's copy, edge to edge; the crowd walks along its foot. */
+.scene {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  overflow: hidden;
+  /* CrowdScene reads the drawing's ink here and its paper from the canvas.
+     Light: black ink in the text colour on the page's own white. */
+  color: var(--foreground);
+  pointer-events: none;
+}
+.crowd {
+  color: var(--background);
+}
+/* Dark: the drawing keeps its light and dark, toned to the page: the paper
+   a soft light, the ink the page's dark, so hair and coats stay dark and the
+   people do not turn into a negative. */
+:global(.dark) .scene {
+  color: var(--background);
+}
+:global(.dark) .crowd {
+  color: color-mix(in oklab, var(--foreground) 82%, var(--background));
+}
+/* --water comes from .home-hero: the band the crowd walks in. */
+.crowd {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: var(--water);
+  opacity: 0;
+  transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.crowd[data-ready] {
+  opacity: 1;
+}
+@media (prefers-reduced-motion: reduce) {
+  .crowd {
+    transition: none;
+  }
+}

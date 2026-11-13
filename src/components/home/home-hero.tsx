@@ -13,13 +13,14 @@ import {
 } from 'react'
 
 import { TextMorph } from '@/components/arc/text-morph/text-morph'
+import { CilasLogo } from '@/components/cilas-logo'
 import { HomeNumbers, type HomeStat } from '@/components/home/home-numbers'
 import { Link } from '@/i18n/navigation'
 import { scrollToSection } from '@/lib/scroll-to-section'
 
 type Action = { label: string; href: string }
-/** The main action while it can't be taken: its label, and why, with where to go instead. */
-type Closed = { label: string; note: string; link?: Action }
+/** The main action, with a note under it when it needs one: what is going on, and a link to read on. */
+type Primary = Action & { note?: string; link?: Action }
 
 /** How long each audience stays before the next takes its place. */
 const STEP = 2400
@@ -130,18 +131,20 @@ export function HomeHero({
   secondary,
   numbers,
   scene,
+  mark,
   locale,
 }: {
   /** Broken into lines at each newline. */
   title: string
   text: string
   who: string[]
-  /** Unavailable: the button shows but does nothing, and the note says why. */
-  primary: Action | Closed
+  primary: Primary
   secondary: Action
   numbers: { title: string; stats: HomeStat[] }
   /** The drawing behind it all (HomeScene), rendered on the server. */
   scene: ReactNode
+  /** The logo's mark before the name, as in the header; off when the scene's boat stands in for it. */
+  mark: boolean
   locale: string
 }) {
   const reduced = useReducedMotion()
@@ -213,20 +216,35 @@ export function HomeHero({
       <script dangerouslySetInnerHTML={{ __html: OFFSET_NOW }} />
       {scene}
       <div className="home-hero-inner">
-        <h1 className="home-hero-title" id="home-title" ref={titleRef}>
-          {title.split('\n').map((line, i) => (
-            // Each line rises out of its own mask, one after the other.
-            <span className="home-hero-line" key={line} style={{ '--line': i } as CSSProperties}>
-              {i > 0 ? ' ' : null}
-              <span>{line}</span>
+        {/* The name and the text under it share one width, the name's: the text ends where the name does. */}
+        <div className="home-hero-head">
+          <h1
+            className="home-hero-title"
+            data-mark={mark ? '' : undefined}
+            id="home-title"
+            ref={titleRef}
+          >
+            {mark ? <CilasLogo className="home-hero-mark" /> : null}
+            <span className="home-hero-name">
+              {title.split('\n').map((line, i) => (
+                // Each line rises out of its own mask, one after the other.
+                <span
+                  className="home-hero-line"
+                  key={line}
+                  style={{ '--line': i } as CSSProperties}
+                >
+                  {i > 0 ? ' ' : null}
+                  <span>{line}</span>
+                </span>
+              ))}
             </span>
-          ))}
-        </h1>
-        {text ? (
-          <p className="home-hero-text home-hero-rise" style={step(0)}>
-            {text}
-          </p>
-        ) : null}
+          </h1>
+          {text ? (
+            <p className="home-hero-text home-hero-rise" style={step(0)}>
+              {text}
+            </p>
+          ) : null}
+        </div>
         {/* Read once, whole, by screen readers; the moving line is for the eye. */}
         <p className="sr-only">{who.join(listSeparator(locale))}</p>
         <p aria-hidden className="home-hero-who home-hero-rise" style={step(1)}>
@@ -253,38 +271,26 @@ export function HomeHero({
           )}
         </p>
         <div className="home-hero-actions home-hero-rise" style={step(2)}>
-          {'href' in primary ? (
-            <Link
-              className="home-action"
-              data-primary
-              href={primary.href}
-              onClick={(event) => {
-                // A section on this page: scroll there on every click, not only
-                // the first (the same hash again is no navigation).
-                const hash = primary.href.split('#')[1]
-                if (hash && scrollToSection(hash, { reduced: Boolean(reduced) }))
-                  event.preventDefault()
-              }}
-            >
-              {primary.label}
-            </Link>
-          ) : (
-            // aria-disabled rather than disabled: it stays reachable, so keyboard and screen-reader users meet the note too.
-            <button
-              aria-describedby="home-hero-note"
-              aria-disabled
-              className="home-action"
-              data-primary
-              type="button"
-            >
-              {primary.label}
-            </button>
-          )}
+          <Link
+            aria-describedby={primary.note ? 'home-hero-note' : undefined}
+            className="home-action"
+            data-primary
+            href={primary.href}
+            onClick={(event) => {
+              // A section on this page: scroll there on every click, not only
+              // the first (the same hash again is no navigation).
+              const hash = primary.href.split('#')[1]
+              if (hash && scrollToSection(hash, { reduced: Boolean(reduced) }))
+                event.preventDefault()
+            }}
+          >
+            {primary.label}
+          </Link>
           <Link className="home-action" href={secondary.href}>
             {secondary.label}
           </Link>
         </div>
-        {'note' in primary ? (
+        {primary.note ? (
           <p className="home-hero-note home-hero-rise" id="home-hero-note" style={step(3)}>
             {primary.note}
             {primary.link ? (

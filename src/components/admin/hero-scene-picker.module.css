@@ -1,0 +1,60 @@
+.picker {
+  margin: 0 0 24px;
+  border: 0;
+  padding: 0;
+}
+.picker legend {
+  margin-bottom: 8px;
+  padding: 0;
+}
+.options {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 16px;
+}
+.option {
+  position: relative;
+  display: grid;
+  gap: 8px;
+  border: 1px solid var(--theme-elevation-150);
+  border-radius: 6px;
+  padding: 8px;
+  cursor: pointer;
+  transition: border-color 0.15s ease;
+}
+.option:hover {
+  border-color: var(--theme-elevation-400);
+}
+.option:has(input:checked) {
+  border-color: var(--theme-text);
+  box-shadow: 0 0 0 1px var(--theme-text);
+}
+.option:has(input:focus-visible) {
+  outline: 2px solid var(--theme-success-500);
+  outline-offset: 2px;
+}
+.option:has(input:disabled) {
+  cursor: default;
+  opacity: 0.6;
+}
+.option input {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+.option img {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 16 / 9;
+  border-radius: 4px;
+  background: var(--theme-elevation-50);
+  object-fit: cover;
+}
+.label {
+  font-weight: 500;
+}
+.note {
+  font-weight: 400;
+  color: var(--theme-elevation-500);
+}

@@ -2,6 +2,7 @@ import { revalidatePath } from 'next/cache'
 import type { Field, GlobalConfig } from 'payload'
 
 import { routing } from '@/i18n/routing'
+import { HERO_SCENES } from '@/lib/hero-scenes'
 import { PEOPLE_PAGES } from '@/lib/people-pages'
 import { isAdmin } from '@/access'
 import { SOCIAL_PLATFORMS } from '@/fields/social'
@@ -89,6 +90,17 @@ export const SiteSettings: GlobalConfig = {
               label: 'Hero',
               type: 'group',
               fields: [
+                {
+                  name: 'scene',
+                  type: 'select',
+                  required: true,
+                  defaultValue: HERO_SCENES[0].value,
+                  options: HERO_SCENES.map(({ value, label }) => ({ value, label })),
+                  admin: {
+                    description: 'The drawing the home page opens on, in both languages.',
+                    components: { Field: '/components/admin/hero-scene-picker#HeroScenePicker' },
+                  },
+                },
                 {
                   name: 'description',
                   type: 'textarea',

@@ -3133,10 +3133,27 @@ article.article-reader .article-prose {
     padding-bottom: calc(var(--water) + 5rem);
   }
 }
+/* The crowd (CrowdScene) walks a taller band than the sea. Its far people
+   stand in the band's top sixth, where few are, so the copy may end over
+   them, and no boat rides up into it. */
+.home-hero:has([data-scene='crowd']) {
+  --water: clamp(8rem, 22svh, 13rem);
+}
+.home-hero:has([data-scene='crowd']) .home-hero-inner {
+  padding-bottom: calc(var(--water) * 0.85 + var(--hero-gap));
+}
 .home-hero .home-hero-title {
   color: inherit;
   font-family: var(--font-heading);
-  font-size: clamp(2.25rem, min(6vw, 8svh), 5.25rem);
+  /* The name's longest line is about 11em, 13em with the mark before it
+     (in Arabic, 6em and 8.5em): on a narrow screen the size follows the
+     width, so the name stays on its two lines. */
+  --name-width: 11;
+  font-size: clamp(
+    1.25rem,
+    min(8svh, (100vw - 2 * var(--page-gutter)) / var(--name-width)),
+    5.25rem
+  );
   font-weight: 400;
   line-height: 1.02;
   letter-spacing: -0.025em;
@@ -3151,12 +3168,72 @@ article.article-reader .article-prose {
 .home-hero-line > span {
   display: block;
 }
+/* With the crowd, the name carries the logo's mark before it, as the
+   header's brand does: the mark two lines tall, centred on them. */
+.home-hero-title[data-mark] {
+  --name-width: 13.2;
+  display: flex;
+  align-items: center;
+  gap: 0.3em;
+}
+.home-hero-mark {
+  flex: none;
+  width: auto;
+  height: 1.95em;
+  /* It rocks about its keel. */
+  transform-origin: 50% 95%;
+}
+.home-hero-name {
+  display: block;
+}
+@media (prefers-reduced-motion: no-preference) {
+  /* It rises in with the name and rides the water in its place: it rocks
+     about its keel and bobs, each a smooth swing to and fro, at periods out
+     of step, so it never stops and never quite repeats. The bob moves
+     transform, the rise translate, so the two never fight. */
+  .home-hero-mark {
+    animation:
+      home-rise 0.9s cubic-bezier(0.16, 1, 0.3, 1) 0.1s both,
+      home-mark-rock 4.4s ease-in-out -2.2s infinite alternate,
+      home-mark-bob 3.1s ease-in-out -1.55s infinite alternate;
+  }
+}
+@keyframes home-mark-rock {
+  from {
+    rotate: -1.4deg;
+  }
+  to {
+    rotate: 1.4deg;
+  }
+}
+@keyframes home-mark-bob {
+  from {
+    transform: translateY(-0.025em);
+  }
+  to {
+    transform: translateY(0.025em);
+  }
+}
+[dir='rtl'] .home-hero-title {
+  --name-width: 6.2;
+}
+[dir='rtl'] .home-hero-title[data-mark] {
+  --name-width: 8.6;
+}
 [dir='rtl'] .home-hero-title {
   line-height: 1.5;
   letter-spacing: 0;
 }
+/* As wide as the name, no wider than the page: the text takes that width
+   and adds none of its own (contain), so it ends where the name does. */
+.home-hero-head {
+  display: grid;
+  gap: var(--hero-gap);
+  width: fit-content;
+  max-width: 100%;
+}
 .home-hero-text {
-  max-width: 46ch;
+  contain: inline-size;
   font-size: clamp(1rem, 1.6vw, 1.175rem);
   line-height: 1.6;
   color: var(--muted-foreground);
@@ -3251,8 +3328,9 @@ article.article-reader .article-prose {
   }
 }
 
-/* On the home page the hero carries the institute's name and its boat, so
-   the header's brand, mark and name, stays hidden until that name has
+/* On the home page the hero carries the institute's name and its mark (the
+   felucca scene's boat, or the mark beside the name), so the header's brand,
+   mark and name, stays hidden until that name has
    scrolled up under it (HomeHero sets data-brand-shown), then rises back in.
    :has() decides on the first paint, so the brand never shows and then hides.
    Hidden, it is also out of the tab order and the accessibility tree:
@@ -4029,17 +4107,9 @@ h3 {
   }
 }
 
-/* The hero's main action while nothing is open: shown, not usable, and the
-   note beneath says why and where to go instead. */
-.home-action[aria-disabled='true'] {
-  cursor: not-allowed;
-  opacity: 0.55;
-}
-.home-action[aria-disabled='true']:active {
-  scale: 1;
-}
+/* Under the hero's main action while nothing is open: why, and where to
+   hear when it opens. */
 .home-hero-note {
-  max-width: 46ch;
   font-size: 0.9375rem;
   line-height: 1.5;
   color: var(--muted-foreground);
@@ -4048,9 +4118,6 @@ h3 {
   color: var(--foreground);
   text-decoration: underline;
   text-underline-offset: 3px;
-}
-.home-action[data-primary][aria-disabled='true']:hover {
-  background: var(--foreground);
 }
 
 /* An article's cover shows whole (.cover-image): Arc's reader frame would
