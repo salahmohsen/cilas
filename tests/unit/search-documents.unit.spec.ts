@@ -35,19 +35,30 @@ describe('lexicalText', () => {
 })
 
 describe('syllabusText', () => {
-  it('reads sessions, activities and bibliographies once, in order', () => {
+  it('reads sessions in time order, then activities and bibliographies, each line once', () => {
     const course = {
-      sessions: [
-        {
-          session_title: 'Reading Plato',
-          description: richText(paragraph(text('Book one'))),
-          activities: [{ description: 'Walk' }],
-          bibliography: [{ title: 'Republic', note: 'Chapter 1' }],
-        },
-      ],
+      syllabus: {
+        docs: [
+          { title: 'Reading Aristotle', meetings: [{ date: '2026-03-10' }] },
+          {
+            title: 'Reading Plato',
+            description: 'Book one',
+            meetings: [{ date: '2026-03-03' }],
+            activities: [{ description: 'Walk' }],
+            bibliography: [{ title: 'Republic', note: 'Chapter 1' }],
+          },
+        ],
+      },
       bibliography: [{ title: 'Republic' }, { title: 'Laws' }],
     }
-    expect(syllabusText(course)).toBe('Reading Plato\nBook one\nWalk\nRepublic\nChapter 1\nLaws')
+    expect(syllabusText(course)).toBe(
+      'Reading Plato\nBook one\nWalk\nRepublic\nChapter 1\nReading Aristotle\nLaws',
+    )
+  })
+
+  it('reads nothing of a course with no session', () => {
+    expect(syllabusText({ syllabus: { docs: [] } })).toBe('')
+    expect(syllabusText({})).toBe('')
   })
 })
 
@@ -85,7 +96,7 @@ describe('toSearchDocument', () => {
     cover_image: { url: 'https://cdn/cover.webp' },
     title: 'Reading Plato',
     fellows: [person(1, 'Iman Mersal')],
-    sessions: [{ session_title: 'Shared title' }],
+    syllabus: { docs: [{ title: 'Shared title' }] },
   }
 
   it('folds both language copies into one record', () => {

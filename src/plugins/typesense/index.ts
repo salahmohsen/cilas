@@ -50,7 +50,7 @@ const SELECT = {
     summary: true,
     epigraph: true,
     description: true,
-    sessions: true,
+    syllabus: true,
     bibliography: true,
   },
   articles: {

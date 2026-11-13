@@ -7,6 +7,7 @@ import {
   type SearchLocale,
 } from '@/lib/search-config'
 import { flattenRichTextColumns } from '@/lib/flatten-rich-text-columns'
+import { sessionsInOrder, type SessionTimes } from '@/lib/meetings'
 import type { SerializedEditorState } from '@payloadcms/richtext-lexical/lexical'
 
 /**
@@ -100,11 +101,13 @@ export const syllabusText = (course: Doc): string => {
       push(entry?.note)
     }
   }
-  for (const session of asArray(course.sessions).map(asRecord)) {
-    push(session?.session_title)
-    push(session?.description)
-    for (const activity of asArray(session?.activities).map(asRecord)) push(activity?.description)
-    pushBibliography(session?.bibliography)
+  // The sessions come through the course's `syllabus` join (ADR 0011).
+  const sessions = asArray(asRecord(course.syllabus)?.docs).flatMap((s) => asRecord(s) ?? [])
+  for (const session of sessionsInOrder(sessions as Array<Doc & SessionTimes>)) {
+    push(session.title)
+    push(session.description)
+    for (const activity of asArray(session.activities).map(asRecord)) push(activity?.description)
+    pushBibliography(session.bibliography)
   }
   pushBibliography(course.bibliography)
   return lines.join('\n')
