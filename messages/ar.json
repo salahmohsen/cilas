@@ -1451,19 +1451,6 @@
     "minimal": "اقرأ {pageFile} وناقشه معي بروح التعلّم في سيلاس: ابدأ بالأسئلة لا بالمحاضرة، واستمع إلى انطباعي قبل أن تشرح. أجب باللغة التي أكتب بها.",
     "readings": "قراءات الجلسة: {list}"
   },
-  "ScheduleNotice": {
-    "title": "تغيّر الجدول",
-    "session": "الجلسة {number}",
-    "week": "الأسبوع {number}",
-    "cancelled": "أُلغيت {name}. وكانت في {when}.",
-    "cancelledNoDate": "أُلغيت {name}.",
-    "restored": "عادت {name} إلى الجدول: {when}.",
-    "restoredNoDate": "عادت {name} إلى الجدول.",
-    "moved": "انتقلت {name} من {from} إلى {to}.",
-    "dated": "تلتقي {name} الآن في {to}.",
-    "more": "{count, plural, zero {} one {وتغيير آخر واحد. راجع المنهج.} two {وتغييران آخران. راجع المنهج.} few {و{count} تغييرات أخرى. راجع المنهج.} many {و{count} تغييرًا آخر. راجع المنهج.} other {و{count} تغيير آخر. راجع المنهج.}}",
-    "notification": "تغيّر في جدول {space}"
-  },
   "ImageUpload": {
     "avatarLabel": "صورة الملف الشخصي",
     "avatarUpload": "رفع صورة الملف الشخصي",
