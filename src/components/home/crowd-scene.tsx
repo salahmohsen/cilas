@@ -7,12 +7,18 @@ import styles from './crowd-scene.module.css'
 /**
  * The sheet of Open Peeps (openpeeps.com) the crowd is cut from: 15 people a
  * row, 7 rows. Adapted from Skiper UI's crowd canvas (skiper-ui.com/v1/skiper39),
- * itself after codepen.io/zadvorsky/pen/xxwbBQV.
+ * itself after codepen.io/zadvorsky/pen/xxwbBQV. Twelve places hold people cut
+ * from Open Peeps' standing figures at the same scale, in place of the four
+ * holding a knife, the five with fangs and extra eyes, two people the sheet
+ * had twice, and the bearded man in a headband.
  */
 const SHEET = { src: '/assets/images/crowd-peeps.png', columns: 15, rows: 7 }
 
-/** People on the sheet who never walk in the crowd, by place (row by row from 0): the four holding a knife. */
-const LEFT_OUT = new Set([17, 72, 92, 100])
+/** Every person's place on the sheet. */
+const PEOPLE = Array.from({ length: SHEET.columns * SHEET.rows }, (_, i) => ({
+  column: i % SHEET.columns,
+  row: Math.floor(i / SHEET.columns),
+}))
 
 /**
  * A person's height against the band: as in the original, where a 324px
@@ -131,7 +137,6 @@ export function CrowdScene() {
     let stage = { w: 0, h: 0 }
     /** A person's size on the stage. */
     let size = { w: 0, h: 0 }
-    const pool: { column: number; row: number }[] = []
     let crowd: Peep[] = []
 
     const enter = (anywhere: boolean): Peep => {
@@ -142,7 +147,7 @@ export function CrowdScene() {
       // to 46% above it, most near the foot (an ease-in of a random).
       const rise = size.h * (100 / 324 - (250 / 324) * Math.random() ** 2)
       return {
-        ...pool[(Math.random() * pool.length) | 0],
+        ...PEOPLE[(Math.random() * PEOPLE.length) | 0],
         direction,
         x: anywhere ? random(from, to) : from,
         y: stage.h - size.h + rise,
@@ -256,9 +261,6 @@ export function CrowdScene() {
     const sizes = new ResizeObserver(() => tinted && resize())
     const seen = new IntersectionObserver(([entry]) => (entry.isIntersecting ? play() : pause()))
     image.onload = () => {
-      for (let i = 0; i < SHEET.columns * SHEET.rows; i++)
-        if (!LEFT_OUT.has(i))
-          pool.push({ column: i % SHEET.columns, row: Math.floor(i / SHEET.columns) })
       retint()
       resize()
       canvas.dataset.ready = ''
