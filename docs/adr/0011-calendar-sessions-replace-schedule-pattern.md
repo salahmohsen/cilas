@@ -1,6 +1,6 @@
 # 0011. Course sessions are a collection, placed on a calendar; the schedule pattern goes
 
-Proposed, 2026-11-13. Supersedes [0002](0002-schedule-pattern-drives-session-dates.md) for courses and events.
+Accepted, 2026-11-13. Supersedes [0002](0002-schedule-pattern-drives-session-dates.md) for courses and events.
 
 This ADR is a working draft. It covers courses, events, the course space calendar and the public calendar. The open questions are near the end.
 
@@ -159,7 +159,7 @@ Payload's own editor (Lexical) stores JSON, not Markdown. It can convert both wa
 
 ## One calendar component, five places
 
-The calendar is one generic component in `components/calendar/`. It knows nothing about courses, events or posts.
+The calendar is one generic component in `components/calendar/ui/`. It knows nothing about courses, events or posts.
 
 ```
 items: { id, kind, title, tone, cancelled?, blocks: { id, date, start_time?, end_time? }[] }[]
@@ -238,7 +238,7 @@ The [untangle rules](../../AGENTS.md) apply to every step. The aim: a typical ch
 
 - **One source of each rule.** Every date rule lives in `lib/meetings.ts`; every shape of `meetings[]` in `fields/meetings.ts`; every "who may edit" in the collections' access. No copy in a component or an action.
 - **The component knows no domain.** It takes items and gives changes. Courses, events and posts enter only through `lib/calendar-sources.ts`. A new kind (a cycle deadline, later) is one new adapter.
-- **One feature, one folder where it can.** Calendar UI in `components/calendar/`; the space's calendar tab and post next to the other space components.
+- **One feature, one folder where it can.** The generic calendar in `components/calendar/ui/`, the public page's parts beside it in `components/calendar/`; the space's calendar tab and post next to the other space components.
 - **No order the callers must know.** Notices come from the collection hooks, not from each write path. Grouping comes from the batch ID, not from call order.
 - **No pass-through wrappers, no options nothing uses.** The calendar component has only the props the five places need.
 - **No special cases.** No `if (kind === 'event')` outside the adapters. No swallowed errors: a failed save shows the error and keeps the unsaved changes.

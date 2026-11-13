@@ -123,6 +123,12 @@ importers:
       '@tanstack/react-form':
         specifier: 1.33.5
         version: 1.33.5(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
+      '@ui-sdk/core':
+        specifier: 0.1.0-beta.1
+        version: 0.1.0-beta.1
+      '@ui-sdk/react':
+        specifier: 0.1.0-beta.1
+        version: 0.1.0-beta.1(@types/react@19.2.14)(@ui-sdk/core@0.1.0-beta.1)(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
       boring-avatars:
         specifier: ^2.0.4
         version: 2.0.4(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
@@ -3179,6 +3185,20 @@ packages:
     resolution: {integrity: sha512-oUGp+Rep/hqMhPunyinsALUwSlzHINSxitifPiSaeqoKOKD2OlR9NE3TaPqwsl4NlGslsOSUXI1JotWQzpYCPg==}
     engines: {node: '>=16.20.0'}
     hasBin: true
+
+  '@ui-sdk/core@0.1.0-beta.1':
+    resolution: {integrity: sha512-sWsZW8RN6Gviir7REQYuDIafm9hierHQE31OJ+2g+1Pp3lDVKp/dk0+0dxFvqOQRmBveRvlE9FiARgNlQ9dMFw==}
+
+  '@ui-sdk/react@0.1.0-beta.1':
+    resolution: {integrity: sha512-7wcUsZI+WoG2uo3N+PHrWntk97qI9ez2cUrHV9H507FiL118Pi4tuhWUCMDtWwEUCNQLybpBm1QRLkEXVOPAUg==}
+    peerDependencies:
+      '@types/react': '>=19.2.10'
+      '@ui-sdk/core': ^0.1.0-beta.1
+      react: '>=19'
+      react-dom: '>=19'
+    peerDependenciesMeta:
+      '@types/react':
+        optional: true
 
   '@ungap/structured-clone@1.4.0':
     resolution: {integrity: sha512-1mEZtMKPM09vDmQt5y7YvmN2+DFTP7Tg0EWXdic8/C6VRnpb33e4ghisCIE3WZjsE2N8mf+QV1Zqh7ZFYLWInQ==}
@@ -9533,6 +9553,16 @@ snapshots:
       '@typescript/native-preview-linux-x64': 7.0.0-dev.20260707.2
       '@typescript/native-preview-win32-arm64': 7.0.0-dev.20260707.2
       '@typescript/native-preview-win32-x64': 7.0.0-dev.20260707.2
+
+  '@ui-sdk/core@0.1.0-beta.1': {}
+
+  '@ui-sdk/react@0.1.0-beta.1(@types/react@19.2.14)(@ui-sdk/core@0.1.0-beta.1)(react-dom@19.2.6(react@19.2.6))(react@19.2.6)':
+    dependencies:
+      '@ui-sdk/core': 0.1.0-beta.1
+      react: 19.2.6
+      react-dom: 19.2.6(react@19.2.6)
+    optionalDependencies:
+      '@types/react': 19.2.14
 
   '@ungap/structured-clone@1.4.0': {}
 

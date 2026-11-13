@@ -3,6 +3,8 @@
 This project uses the Payload CMS skill at `.agents/skills/payload/`.
 Start with `.agents/skills/payload/SKILL.md` for a quick reference, then see `.agents/skills/payload/reference/` for detailed docs.
 
+The calendar uses ui-sdk (ADR 0011). Before you change `src/components/calendar/ui/`, read the ui-sdk skill at `.agents/skills/ui-sdk/SKILL.md`. It links to the copy inside `@ui-sdk/core`, so it matches the installed version. Only `src/components/calendar/ui/` may import `@ui-sdk/*`; the lint rule `no-restricted-imports` enforces it.
+
 ## Code structure (untangle rules)
 
 Apply these to every change, not only to refactors. Before you write code, ask one question of each piece you touch: **should these pieces change together?** There are three ways to get it wrong.
