@@ -1,5 +1,6 @@
 import { localeOf } from '@/i18n/routing'
 import { getCourse } from '@/api/courses.api'
+import { getCourseSessions } from '@/api/sessions.api'
 import { type Locale } from '@/i18n/routing'
 import config from '@payload-config'
 import { getPayload } from 'payload'
@@ -19,7 +20,10 @@ export async function GET(_request: Request, { params }: Params) {
   const course = await getCourse(payload, slug, { locale, reader: null })
   if (!course) return new Response(null, { status: 404 })
 
-  const markdown = await documentToMarkdown(await courseDocument(payload, course, locale))
+  const sessions = await getCourseSessions(payload, [course.id], { locale, reader: null })
+  const markdown = await documentToMarkdown(
+    await courseDocument(payload, course, sessions.get(course.id) ?? [], locale),
+  )
   return new Response(markdown, {
     headers: { 'content-type': 'text/plain; charset=utf-8' },
   })

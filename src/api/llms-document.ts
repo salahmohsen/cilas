@@ -27,8 +27,8 @@ import { contributionLabel } from '@/lib/pricing'
 import { courseRegistration } from '@/lib/registration'
 import { resolveRichTextReferences } from '@/lib/resolve-rich-text-references'
 import { referenceKey, type RichTextReferences } from '@/lib/rich-text-references'
-import { expandSchedule, sessionsInOrder } from '@/lib/schedule'
-import type { Article, Course, Person, Publication } from '@/payload-types'
+import { firstDay, lastDay, numberedSessions, summary } from '@/lib/meetings'
+import type { Article, Course, Person, Publication, Session } from '@/payload-types'
 
 /**
  * The per-page llms.txt twin: the page's content as one structured markdown
@@ -365,25 +365,28 @@ const articleBodyToMarkdown = async (
 export const courseDocument = async (
   payload: Payload,
   course: Course,
+  /** Its sessions, in any order (`api/sessions.api.ts`). */
+  sessions: readonly Session[],
   locale: Locale,
 ): Promise<LlmsDocument> => {
   const references = await resolveRichTextReferences(payload, course, { locale, user: null })
   const l = contextOf(locale)
   const t = labelsOf(locale)
   const cycle = typeof course.cycle === 'object' ? course.cycle : null
-  const meetings = expandSchedule(course.schedule, course.sessions ?? [])
-
-  const slotLines = (course.schedule?.slots ?? [])
-    .filter((slot) =>
-      meetings.some(
-        (m) => !m.cancelled && m.start_time === slot.start_time && m.end_time === slot.end_time,
-      ),
-    )
-    .map(
-      (slot) =>
-        `${WEEKDAY_LABELS[slot.weekday]?.[locale] ?? slot.weekday} ${slot.start_time}–${slot.end_time}`,
-    )
-  const meetingsLine = slotLines.length ? `${slotLines.join(listSeparator(locale))} (Cairo)` : null
+  const syllabus = numberedSessions(sessions, course.session_unit)
+  const meetings = syllabus.flatMap((s) => s.meetings)
+  const when = summary(meetings)
+  const hours = (m: { start_time?: string | null; end_time?: string | null }) =>
+    [m.start_time, m.end_time].filter(Boolean).join('–')
+  // A weekly course says its weekly times; any other lists each session's dates.
+  const meetingsLine =
+    when?.kind === 'weekly'
+      ? `${when.times
+          .map((time) =>
+            [WEEKDAY_LABELS[time.weekday][locale], hours(time)].filter(Boolean).join(' '),
+          )
+          .join(listSeparator(locale))} (Cairo)`
+      : null
 
   const registration = courseRegistration(course, cycle)
   const price = contributionLabel(registration.price, { locale })
@@ -393,9 +396,10 @@ export const courseDocument = async (
   const facts = factsList([
     [locale === 'ar' ? 'النوع' : 'Type', typeLabel(course.course_type)],
     ['Cycle', cycle?.title ?? null],
-    [locale === 'ar' ? 'تبدأ' : 'Starts', course.schedule?.start_date ?? null],
-    [locale === 'ar' ? 'تنتهي' : 'Ends', course.schedule?.end_date || null],
+    [locale === 'ar' ? 'تبدأ' : 'Starts', firstDay(meetings)],
+    [locale === 'ar' ? 'تنتهي' : 'Ends', lastDay(meetings)],
     [locale === 'ar' ? 'اللقاءات' : 'Meets', meetingsLine],
+    [locale === 'ar' ? 'ملاحظة المواعيد' : 'Timing note', course.timing_note || null],
     [
       locale === 'ar' ? 'المكان' : 'Location',
       (course.location ?? [])
@@ -449,37 +453,34 @@ export const courseDocument = async (
     }),
   )
 
-  const unitWord = course.session_unit === 'week' ? t.week : t.session
-  const sessionBlocks = await Promise.all(
-    sessionsInOrder(course.sessions ?? []).map(async (session, index) => {
-      const number = index + 1
-      const title = session.session_title || `${unitWord} ${number}`
-      const heading = `### ${title.replaceAll('#', '').trim()}${session.cancelled ? ` (${t.cancelled})` : ''}`
-      const count = meetings.filter((m) => !m.cancelled && m.session === number).length
-      const extraDates = (session.dates ?? [])
-        .map((d) => `${d.date} ${d.start_time}–${d.end_time}`)
-        .join(listSeparator(locale))
-      const descriptionMarkdown = await toMarkdown(payload, session.description, l, references)
-      const activities = bulletList(
-        (session.activities ?? []).map(
-          (a) => `${a.kind}${a.description ? ` — ${a.description}` : ''}`,
-        ),
-      )
-      const readings = bulletList(
-        (session.bibliography ?? []).map((item) => bibliographyLine(item, locale) ?? null),
-      )
-      return [
-        heading,
-        `${t.meetings}: ${count}`,
-        ...(extraDates ? [`Dates: ${extraDates}`] : []),
-        descriptionMarkdown,
-        activities ? `${t.activities}\n${activities}` : null,
-        readings ? `${t.readings}\n${readings}` : null,
-      ]
-        .filter(Boolean)
-        .join('\n\n')
-    }),
-  )
+  const sessionBlocks = syllabus.map(({ session, number, unit, meetings: own }) => {
+    const title = session.title || `${unit === 'week' ? t.week : t.session} ${number}`
+    const heading = `### ${title.replaceAll('#', '').trim()}${session.cancelled ? ` (${t.cancelled})` : ''}`
+    const count = own.filter((m) => !m.cancelled).length
+    const dates =
+      when?.kind === 'weekly'
+        ? ''
+        : own.map((m) => [m.date, hours(m)].filter(Boolean).join(' ')).join(listSeparator(locale))
+    const activities = bulletList(
+      (session.activities ?? []).map(
+        (a) => `${a.kind}${a.description ? ` — ${a.description}` : ''}`,
+      ),
+    )
+    const readings = bulletList(
+      (session.bibliography ?? []).map((item) => bibliographyLine(item, locale) ?? null),
+    )
+    return [
+      heading,
+      `${t.meetings}: ${count}`,
+      ...(dates ? [`Dates: ${dates}`] : []),
+      // Stored as Markdown (ADR 0011).
+      session.description?.trim() || null,
+      activities ? `${t.activities}\n${activities}` : null,
+      readings ? `${t.readings}\n${readings}` : null,
+    ]
+      .filter(Boolean)
+      .join('\n\n')
+  })
 
   const courseBibliography = bulletList(
     (course.bibliography ?? []).map((item) => bibliographyLine(item, locale) ?? null),

@@ -4,13 +4,15 @@ import { afterAll, beforeAll, describe, expect, it } from 'vitest'
 
 import config from '@/payload.config'
 import { courseDocument, articleDocument, documentToMarkdown } from '@/api/llms-document'
-import type { Course, Cycle, Person } from '@/payload-types'
+import { getCourseSessions } from '@/api/sessions.api'
+import type { Course, Cycle, Person, Session } from '@/payload-types'
 
 import { RUN, createTracker, uniq } from './fixtures'
 
 let payload: Payload
 let person: Person
 let course: Course
+let sessions: Session[]
 const { track, cleanup } = createTracker()
 
 const note = (text: string) => ({
@@ -56,25 +58,33 @@ beforeAll(async () => {
         cycle: cycle.id,
         registration: { mode: 'closed' },
         _status: 'published',
-        schedule: {
-          start_date: '2031-03-04',
-          weeks: 2,
-          slots: [{ weekday: 'tue', start_time: '18:00', end_time: '20:00' }],
-        },
-        sessions: [
-          {
-            order: 1,
-            session_title: 'First session',
-            bibliography: [
-              { type: 'reading', title: 'A reading', href: 'https://example.org/reading' },
-            ],
-          },
-          { order: 2, session_title: 'Second session' },
-        ],
       },
       overrideAccess: true,
     }),
   )
+  for (const [title, date, bibliography] of [
+    [
+      'First session',
+      '2031-03-04',
+      [{ type: 'reading', title: 'A reading', href: 'https://example.org/reading' }],
+    ],
+    ['Second session', '2031-03-11', []],
+  ] as const)
+    track(
+      'sessions',
+      await payload.create({
+        collection: 'sessions',
+        data: {
+          course: made.id,
+          title,
+          meetings: [{ date, start_time: '18:00', end_time: '20:00' }],
+          bibliography: [...bibliography],
+        },
+        overrideAccess: true,
+      }),
+    )
+  sessions =
+    (await getCourseSessions(payload, [made.id], { locale: 'en', reader: null })).get(made.id) ?? []
   course = (await payload.findByID({
     collection: 'courses',
     id: made.id,
@@ -89,10 +99,14 @@ afterAll(async () => {
 })
 
 describe('llms-document', () => {
-  it('course doc contains schedule slot, syllabus heading, bibliography absolute url, no object dump', async () => {
-    const doc = await courseDocument(payload, course, 'en')
+  it("course doc contains its sessions' dates and weekly time, syllabus headings, bibliography absolute url, no object dump", async () => {
+    const doc = await courseDocument(payload, course, sessions, 'en')
     const md = documentToMarkdown(doc)
-    expect(md).toMatch(/\d{2}:\d{2}–\d{2}:\d{2}.*Cairo/)
+    expect(md).toContain('**Starts:** 2031-03-04')
+    expect(md).toContain('**Ends:** 2031-03-11')
+    expect(md).toContain('**Meets:** Tuesday 18:00–20:00 (Cairo)')
+    expect(md).toContain('### First session')
+    expect(md).toContain('### Second session')
     expect(md).toContain('Readings')
     expect(md).toContain('http')
     expect(md).not.toContain('[object Object]')
@@ -115,7 +129,7 @@ describe('llms-document', () => {
         ],
       },
     }
-    const md = documentToMarkdown(await courseDocument(payload, priced, 'en'))
+    const md = documentToMarkdown(await courseDocument(payload, priced, sessions, 'en'))
     expect(md).toContain('1,500 EGP')
     expect(md).toContain('Cycle contribution note')
     expect(md).not.toContain('Unused course note')
