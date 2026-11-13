@@ -1,0 +1,2406 @@
+[
+  {
+    "id": 4,
+    "slug": "almtrjm-faala-mqdma-fy-drasat-altrjma",
+    "title_en": "المترجم فاعلًا: مقدمة في دراسات الترجمة",
+    "title_ar": "المترجم فاعلًا: مقدمة في دراسات الترجمة",
+    "slots": [
+      {
+        "weekday": "thu",
+        "start": "10:00",
+        "end": "13:00"
+      },
+      {
+        "weekday": "thu",
+        "start": "17:00",
+        "end": "20:00"
+      }
+    ],
+    "cycle": "winter-2019-alexandria",
+    "db_start_date": null,
+    "db_weeks": 12,
+    "db_sessions": 0,
+    "start_date": "2019-01-31",
+    "start_weekday": "thu",
+    "weekday_matches_slot": true,
+    "precision": "week",
+    "start_confidence": "medium",
+    "start_basis": "No date on the course page. Date derived: first slot weekday in the week of Jan 31 2019 (cycle start in DB is 2019-01-31, a Thursday).",
+    "length": {
+      "weeks": 12
+    },
+    "length_confidence": "medium",
+    "confidence": "medium",
+    "evidence": [
+      {
+        "file": "migration/raw/weebly-zip-2025-04-23/2018-2019-cilas-alex-thematic-courses-and-labs.html",
+        "quote": "Thematic courses begin the week of January 31th and end the week of May 4th."
+      },
+      {
+        "file": "migration/raw/weebly-zip-2025-04-23/2018-2019-cilas-alex-thematic-courses-and-labs.html",
+        "quote": "Thematic courses are of a duration of twelve weeks with three class hours per week."
+      }
+    ],
+    "notes": "Term page: 12 weeks, week of Jan 31 to week of May 4 (that span is 13 calendar weeks; the page says 12).",
+    "week_anchor": "2019-01-31"
+  },
+  {
+    "id": 5,
+    "slug": "the-turn-of-time-colonising-egypt-and-the-social-and-cultural-changes-it-imposed",
+    "title_en": "The Turn of Time: “Colonising Egypt” and the Social and Cultural Changes it Imposed",
+    "title_ar": "\"فترة من الزمن\": \"استعمار مصر\" وما أحدثه من تغيرات اجتماعية وثقافية",
+    "slots": [
+      {
+        "weekday": "sun",
+        "start": "11:00",
+        "end": "14:00"
+      },
+      {
+        "weekday": "sun",
+        "start": "17:30",
+        "end": "20:30"
+      }
+    ],
+    "cycle": "spring-2018-cairo",
+    "db_start_date": null,
+    "db_weeks": 10,
+    "db_sessions": 0,
+    "start_date": "2018-04-01",
+    "start_weekday": "sun",
+    "weekday_matches_slot": true,
+    "precision": "week",
+    "start_confidence": "medium",
+    "start_basis": "No date on the course page. Date derived: first slot weekday in the week of Apr 1 2018 (cycle start in DB is 2018-04-01). The English term text says \"March 1st\" but the Arabic text and the 10-week length say April 1 (Mar 1 is a typo).",
+    "length": {
+      "weeks": 10
+    },
+    "length_confidence": "medium",
+    "confidence": "medium",
+    "evidence": [
+      {
+        "file": "migration/raw/weebly-zip-2025-04-23/2017-2018-third-trimester.html",
+        "quote": "الدورات النوعية تبدأ في اسبوع ١ أبريل و تنتهي في اسبوع ٧ يونيو"
+      },
+      {
+        "file": "migration/raw/weebly-zip-2025-04-23/2017-2018-third-trimester.html",
+        "quote": "Thematic courses begin the week of March 1st and end the week of June 7th."
+      },
+      {
+        "file": "migration/raw/weebly-zip-2025-04-23/2017-2018-third-trimester.html",
+        "quote": "Thematic courses are of a duration of ten weeks with two and half class hours per week."
+      }
+    ],
+    "notes": "Term window: week of Apr 1 to week of Jun 7 = 10 weeks.",
+    "week_anchor": "2018-04-01"
+  },
+  {
+    "id": 6,
+    "slug": "mkhtbr-sylas-lltrjma-aldwra-alrabaa-fy-aliskndrya",
+    "title_en": "مختبر سيلاس للترجمة: الدورة الرابعة في الإسكندرية",
+    "title_ar": "مختبر سيلاس للترجمة: الدورة الرابعة في الإسكندرية",
+    "slots": [
+      {
+        "weekday": "fri",
+        "start": "10:00",
+        "end": "13:00"
+      },
+      {
+        "weekday": "fri",
+        "start": "17:00",
+        "end": "20:00"
+      }
+    ],
+    "cycle": "winter-2019-alexandria",
+    "db_start_date": null,
+    "db_weeks": null,
+    "db_sessions": 0,
+    "start_date": "2019-02-01",
+    "start_weekday": "fri",
+    "weekday_matches_slot": true,
+    "precision": "week",
+    "start_confidence": "medium",
+    "start_basis": "No date on the course page. Date derived: first slot weekday in the week of Jan 31 2019 (cycle start in DB is 2019-01-31, a Thursday).",
+    "length": {
+      "weeks": 12
+    },
+    "length_confidence": "medium",
+    "confidence": "medium",
+    "evidence": [
+      {
+        "file": "migration/raw/weebly-zip-2025-04-23/2018-2019-cilas-alex-thematic-courses-and-labs.html",
+        "quote": "Thematic courses begin the week of January 31th and end the week of May 4th."
+      },
+      {
+        "file": "migration/raw/weebly-zip-2025-04-23/2018-2019-cilas-alex-thematic-courses-and-labs.html",
+        "quote": "Thematic courses are of a duration of twelve weeks with three class hours per week."
+      }
+    ],
+    "notes": "Term page: 12 weeks, week of Jan 31 to week of May 4 (that span is 13 calendar weeks; the page says 12).",
+    "week_anchor": "2019-01-31"
+  },
+  {
+    "id": 7,
+    "slug": "africa-since-independence",
+    "title_en": "Africa since Independence",
+    "title_ar": null,
+    "slots": [
+      {
+        "weekday": "tue",
+        "start": "16:00",
+        "end": "19:00"
+      }
+    ],
+    "cycle": "spring-2014-cairo",
+    "db_start_date": null,
+    "db_weeks": null,
+    "db_sessions": 0,
+    "start_date": null,
+    "start_weekday": null,
+    "weekday_matches_slot": null,
+    "precision": null,
+    "start_confidence": null,
+    "start_basis": null,
+    "length": null,
+    "length_confidence": null,
+    "confidence": "none",
+    "evidence": [
+      {
+        "file": "migration/raw/weebly-zip-2025-04-23/2013-2014.html",
+        "quote": "Africa since Independence"
+      }
+    ],
+    "notes": "2013-2014 page is a weekly timetable (Tue 4 pm to 7 pm) with no dates and no length. Cycle has no start date in DB. Searched: 2013-2014.html, own course description, flows, docs, mirror."
+  },
+  {
+    "id": 24,
+    "slug": "inhabit-belonging-to-bodies-and-lands",
+    "title_en": "Inhabit: Belonging to Bodies and Lands",
+    "title_ar": null,
+    "slots": [
+      {
+        "weekday": "sat",
+        "start": "17:30",
+        "end": "19:30"
+      }
+    ],
+    "cycle": "spring-2023-cairo",
+    "db_start_date": null,
+    "db_weeks": null,
+    "db_sessions": 0,
+    "start_date": "2023-02-11",
+    "start_weekday": "sat",
+    "weekday_matches_slot": true,
+    "precision": "week",
+    "start_confidence": "medium",
+    "start_basis": "Page gives a start WEEK (5 Feb 2023 is a Sunday). First Saturday in that week is 2023-02-11.",
+    "length": null,
+    "length_confidence": null,
+    "confidence": "medium",
+    "evidence": [
+      {
+        "file": "migration/raw/weebly-zip-2025-04-23/2023-cilas-cairo-hybrid-spring-semester.html",
+        "quote": "Inhabit: Belonging to Bodies and Lands Start date is the week of 5th of February, On Saturdays at 17:30-19:30 online."
+      }
+    ],
+    "notes": "Flow (description-inhabit) has no week count. Page says nothing on length.",
+    "week_anchor": "2023-02-05"
+  },
+  {
+    "id": 30,
+    "slug": "anthropology-and-storytelling-along-the-waters-edge",
+    "title_en": "Anthropology and Storytelling Along the Water’s Edge",
+    "title_ar": null,
+    "slots": [
+      {
+        "weekday": "wed",
+        "start": "17:00",
+        "end": "20:00"
+      }
+    ],
+    "cycle": "spring-2024-cairo",
+    "db_start_date": "2024-05-01",
+    "db_weeks": null,
+    "db_sessions": 0,
+    "start_date": "2024-05-01",
+    "start_weekday": "wed",
+    "weekday_matches_slot": true,
+    "precision": "day",
+    "start_confidence": "high",
+    "start_basis": null,
+    "length": null,
+    "length_confidence": null,
+    "confidence": "medium",
+    "evidence": [
+      {
+        "file": "migration/raw/weebly-zip-2025-04-23/82032024-cilas-cairo-spring-semester8203.html",
+        "quote": "Anthropology and Storytelling Along the Water’s Edge OFFLINE, Every Wednesday at 5 pm, starting date is 1st of May"
+      }
+    ],
+    "notes": "Page says \"Every Wednesday\" with no end. Flow (flow-writing-water-cilas-2) says the group workshops \"on weekly\" basis; no week count. DB has 0 sessions."
+  },
+  {
+    "id": 36,
+    "slug": "mkhtbr-albhth-althany-altarykh-alshfhy-ahya-aliskndrya",
+    "title_en": "مختبر البحث الثاني - التأريخ الشفهي: أحياء الإسكندرية",
+    "title_ar": "مختبر البحث الثاني - التأريخ الشفهي: أحياء الإسكندرية",
+    "slots": [
+      {
+        "weekday": "fri",
+        "start": "13:00",
+        "end": "16:00"
+      }
+    ],
+    "cycle": "winter-2020-alexandria",
+    "db_start_date": null,
+    "db_weeks": null,
+    "db_sessions": 0,
+    "start_date": "2020-01-31",
+    "start_weekday": "fri",
+    "weekday_matches_slot": true,
+    "precision": "week",
+    "start_confidence": "low",
+    "start_basis": "No date on the course page. The English term text says \"begin the week of January 30th\" (cycle start in DB 2020-01-30, Thursday); the Arabic text says the term starts 7 February. Date derived from the English text.",
+    "length": {
+      "weeks": 11
+    },
+    "length_confidence": "low",
+    "confidence": "low",
+    "evidence": [
+      {
+        "file": "migration/raw/weebly-zip-2025-04-23/2019-2020-cilas-alex-second-semester.html",
+        "quote": "Thematic courses and labs begin the week of January 30th and end the week of April 13th."
+      },
+      {
+        "file": "migration/raw/weebly-zip-2025-04-23/2019-2020-cilas-alex-second-semester.html",
+        "quote": "المساقات النوعية والمختبرات تبدأ في 7 فبراير و تنتهي في 13 إبريل"
+      },
+      {
+        "file": "migration/raw/weebly-zip-2025-04-23/2019-2020-cilas-alex-second-semester.html",
+        "quote": "Thematic courses and labs are of a duration of eleven weeks with between two class hours and half and three class hours per week."
+      },
+      {
+        "file": "migration/raw/weebly-zip-2025-04-23/2019-2020-cilas-alex-second-semester.html",
+        "quote": "المساقات النوعية والمختبرات مدتها عشرة أسابيع"
+      }
+    ],
+    "notes": "English term text: 11 weeks (Jan 30 to Apr 13). Arabic term text: 10 weeks (Feb 7 to Apr 13). Alternative first meeting from the Arabic start: 2020-02-07. Term was cut by the spring 2020 lockdown in practice; the page does not say.",
+    "alt_start_date": "2020-02-07",
+    "week_anchor": "2020-01-30"
+  },
+  {
+    "id": 42,
+    "slug": "bicycle-diaries",
+    "title_en": "Bicycle Diaries",
+    "title_ar": null,
+    "slots": [
+      {
+        "weekday": "fri",
+        "start": "10:00",
+        "end": "12:30"
+      }
+    ],
+    "cycle": "spring-2016-cairo",
+    "db_start_date": null,
+    "db_weeks": null,
+    "db_sessions": 0,
+    "start_date": "2016-04-01",
+    "start_weekday": "fri",
+    "weekday_matches_slot": true,
+    "precision": "week",
+    "start_confidence": "medium",
+    "start_basis": "No date on the course page. Date derived: first slot weekday in the first week of the trimester window (Sun Mar 27 2016). Cycle start in DB is also 2016-03-27.",
+    "length": {
+      "weeks": 10
+    },
+    "length_confidence": "medium",
+    "confidence": "medium",
+    "evidence": [
+      {
+        "file": "migration/raw/weebly-zip-2025-04-23/2015-2016-third-trimester.html",
+        "quote": "in trimester three of the academic year 2015-2016 (March 27th to June 3rd, 2016)"
+      },
+      {
+        "file": "migration/raw/weebly-zip-2025-04-23/2015-2016-third-trimester.html",
+        "quote": "thematic courses are of a duration of ten weeks with two and half class hours per week."
+      }
+    ],
+    "notes": "Trimester runs Mar 27 to Jun 3 2016, which is 10 weeks from the first week to the week of Jun 3.",
+    "week_anchor": "2016-03-27"
+  },
+  {
+    "id": 43,
+    "slug": "biomimicry-natures-genius-inspiring-solutions-all-around-us",
+    "title_en": "Biomimicry: Nature's genius inspiring solutions all around us.",
+    "title_ar": "محاكاة الطبيعة: الحلول الملهمة من عبقرية الطبيعة من حولنا",
+    "slots": [
+      {
+        "weekday": "tue",
+        "start": "10:00",
+        "end": "12:30"
+      }
+    ],
+    "cycle": "winter-2017-cairo",
+    "db_start_date": null,
+    "db_weeks": null,
+    "db_sessions": 0,
+    "start_date": "2017-01-17",
+    "start_weekday": "tue",
+    "weekday_matches_slot": true,
+    "precision": "week",
+    "start_confidence": "medium",
+    "start_basis": "No date on the course page. Date derived: first slot weekday in the week of Jan 15 2017 (the cycle start in DB is 2017-01-15).",
+    "length": {
+      "weeks": 10
+    },
+    "length_confidence": "medium",
+    "confidence": "medium",
+    "evidence": [
+      {
+        "file": "migration/raw/weebly-zip-2025-04-23/2016-2017-second-trimester.html",
+        "quote": "Thematic courses begin the week of January 15th and end the week of March 23rd."
+      },
+      {
+        "file": "migration/raw/weebly-zip-2025-04-23/2016-2017-second-trimester.html",
+        "quote": "Thematic courses are of a duration of ten weeks with two and half class hours per week."
+      }
+    ],
+    "notes": "Term window: week of Jan 15 to week of Mar 23 = 10 weeks.",
+    "week_anchor": "2017-01-15"
+  },
+  {
+    "id": 48,
+    "slug": "classical-chinese-philosophies",
+    "title_en": "Classical Chinese Philosophies",
+    "title_ar": null,
+    "slots": [
+      {
+        "weekday": "wed",
+        "start": "10:00",
+        "end": "13:00"
+      },
+      {
+        "weekday": "wed",
+        "start": "17:30",
+        "end": "20:30"
+      }
+    ],
+    "cycle": "winter-2018-cairo",
+    "db_start_date": null,
+    "db_weeks": 9,
+    "db_sessions": 9,
+    "start_date": "2018-01-10",
+    "start_weekday": "wed",
+    "weekday_matches_slot": true,
+    "precision": "week",
+    "start_confidence": "medium",
+    "start_basis": "No date on the course page. Date derived: first slot weekday in the week of Jan 7 2018 (cycle start in DB is 2018-01-07).",
+    "length": {
+      "weeks": 10,
+      "meetings": 9
+    },
+    "length_confidence": "medium",
+    "confidence": "medium",
+    "evidence": [
+      {
+        "file": "migration/raw/weebly-zip-2025-04-23/2017-2018-second-trimester.html",
+        "quote": "Thematic courses begin the week of January 7th and end the week of March 17th."
+      },
+      {
+        "file": "migration/raw/weebly-zip-2025-04-23/classical-chinese-philosophies.html",
+        "quote": "Session One:"
+      },
+      {
+        "file": "migration/raw/weebly-zip-2025-04-23/classical-chinese-philosophies.html",
+        "quote": "Session Nine:"
+      },
+      {
+        "file": "migration/raw/weebly-zip-2025-04-23/2017-2018-second-trimester.html",
+        "quote": "Thematic courses are of a duration of ten weeks with two and half class hours per week."
+      }
+    ],
+    "notes": "Term window: week of Jan 7 to week of Mar 17 = 10 weeks. The course page lists nine sessions (\"Session One\" to \"Session Nine\") while the term page says ten weeks; DB has 9 weeks and 9 sessions. Use 9 meetings.",
+    "week_anchor": "2018-01-07"
+  },
+  {
+    "id": 49,
+    "slug": "egyptian-nationalism-from-1919-to-the-present",
+    "title_en": "Egyptian Nationalism from 1919 to the Present",
+    "title_ar": null,
+    "slots": [
+      {
+        "weekday": "wed",
+        "start": "17:30",
+        "end": "20:00"
+      },
+      {
+        "weekday": "thu",
+        "start": "10:00",
+        "end": "12:30"
+      }
+    ],
+    "cycle": "winter-2017-cairo",
+    "db_start_date": null,
+    "db_weeks": null,
+    "db_sessions": 0,
+    "start_date": "2017-01-18",
+    "start_weekday": "wed",
+    "weekday_matches_slot": true,
+    "precision": "week",
+    "start_confidence": "medium",
+    "start_basis": "No date on the course page. Date derived: first slot weekday in the week of Jan 15 2017 (the cycle start in DB is 2017-01-15).",
+    "length": {
+      "weeks": 10
+    },
+    "length_confidence": "medium",
+    "confidence": "medium",
+    "evidence": [
+      {
+        "file": "migration/raw/weebly-zip-2025-04-23/2016-2017-second-trimester.html",
+        "quote": "Thematic courses begin the week of January 15th and end the week of March 23rd."
+      },
+      {
+        "file": "migration/raw/weebly-zip-2025-04-23/2016-2017-second-trimester.html",
+        "quote": "Thematic courses are of a duration of ten weeks with two and half class hours per week."
+      }
+    ],
+    "notes": "Term window: week of Jan 15 to week of Mar 23 = 10 weeks. Slots are Wed evening and Thu morning; the earliest is Wed.",
+    "week_anchor": "2017-01-15"
+  },
+  {
+    "id": 50,
+    "slug": "el-rihla-literature-and-re-thinking-egypts-histories",
+    "title_en": "el rihla: literature and re-thinking Egypt's histories",
+    "title_ar": null,
+    "slots": [
+      {
+        "weekday": "thu",
+        "start": "10:00",
+        "end": "12:30"
+      },
+      {
+        "weekday": "thu",
+        "start": "17:30",
+        "end": "20:00"
+      }
+    ],
+    "cycle": "winter-2016-cairo",
+    "db_start_date": "2016-01-07",
+    "db_weeks": null,
+    "db_sessions": 0,
+    "start_date": "2016-01-07",
+    "start_weekday": "thu",
+    "weekday_matches_slot": true,
+    "precision": "day",
+    "start_confidence": "high",
+    "start_basis": null,
+    "length": {
+      "weeks": 10
+    },
+    "length_confidence": "medium",
+    "confidence": "medium",
+    "evidence": [
+      {
+        "file": "migration/raw/weebly-zip-2025-04-23/el-rihla-literature-and-re-thinking-the-histories-of-egypt.html",
+        "quote": "thursdays at CILAS starting January 7th, 2016"
+      },
+      {
+        "file": "migration/raw/weebly-zip-2025-04-23/2015-2016-second-trimester.html",
+        "quote": "Thematic courses are of a duration of ten weeks with two and half class hours per week."
+      }
+    ],
+    "notes": "Date on own page. Length from the term page (10 weeks); the term page says \"some begin the week of January 3rd and end the week of March 12th\", which fits Jan 7 + 10 weeks."
+  },
+  {
+    "id": 51,
+    "slug": "elites-in-history-society-and-politics",
+    "title_en": "elites in history, society, and politics",
+    "title_ar": null,
+    "slots": [
+      {
+        "weekday": "wed",
+        "start": "17:30",
+        "end": "20:00"
+      }
+    ],
+    "cycle": "spring-2016-cairo",
+    "db_start_date": null,
+    "db_weeks": null,
+    "db_sessions": 0,
+    "start_date": "2016-03-30",
+    "start_weekday": "wed",
+    "weekday_matches_slot": true,
+    "precision": "week",
+    "start_confidence": "medium",
+    "start_basis": "No date on the course page. Date derived: first slot weekday in the first week of the trimester window (Sun Mar 27 2016). Cycle start in DB is also 2016-03-27.",
+    "length": {
+      "weeks": 10
+    },
+    "length_confidence": "medium",
+    "confidence": "medium",
+    "evidence": [
+      {
+        "file": "migration/raw/weebly-zip-2025-04-23/2015-2016-third-trimester.html",
+        "quote": "in trimester three of the academic year 2015-2016 (March 27th to June 3rd, 2016)"
+      },
+      {
+        "file": "migration/raw/weebly-zip-2025-04-23/2015-2016-third-trimester.html",
+        "quote": "thematic courses are of a duration of ten weeks with two and half class hours per week."
+      }
+    ],
+    "notes": "Trimester runs Mar 27 to Jun 3 2016, which is 10 weeks from the first week to the week of Jun 3.",
+    "week_anchor": "2016-03-27"
+  },
+  {
+    "id": 53,
+    "slug": "encountering-the-state",
+    "title_en": "Encountering the State: Anthropological Perspectives",
+    "title_ar": null,
+    "slots": [
+      {
+        "weekday": "sun",
+        "start": "18:00",
+        "end": "20:30"
+      }
+    ],
+    "cycle": "winter-2020-alexandria",
+    "db_start_date": null,
+    "db_weeks": null,
+    "db_sessions": 0,
+    "start_date": "2020-02-02",
+    "start_weekday": "sun",
+    "weekday_matches_slot": true,
+    "precision": "week",
+    "start_confidence": "low",
+    "start_basis": "No date on the course page. The English term text says \"begin the week of January 30th\" (cycle start in DB 2020-01-30, Thursday); the Arabic text says the term starts 7 February. Date derived from the English text.",
+    "length": {
+      "weeks": 11
+    },
+    "length_confidence": "low",
+    "confidence": "low",
+    "evidence": [
+      {
+        "file": "migration/raw/weebly-zip-2025-04-23/2019-2020-cilas-alex-second-semester.html",
+        "quote": "Thematic courses and labs begin the week of January 30th and end the week of April 13th."
+      },
+      {
+        "file": "migration/raw/weebly-zip-2025-04-23/2019-2020-cilas-alex-second-semester.html",
+        "quote": "المساقات النوعية والمختبرات تبدأ في 7 فبراير و تنتهي في 13 إبريل"
+      },
+      {
+        "file": "migration/raw/weebly-zip-2025-04-23/2019-2020-cilas-alex-second-semester.html",
+        "quote": "Thematic courses and labs are of a duration of eleven weeks with between two class hours and half and three class hours per week."
+      },
+      {
+        "file": "migration/raw/weebly-zip-2025-04-23/2019-2020-cilas-alex-second-semester.html",
+        "quote": "المساقات النوعية والمختبرات مدتها عشرة أسابيع"
+      }
+    ],
+    "notes": "English term text: 11 weeks (Jan 30 to Apr 13). Arabic term text: 10 weeks (Feb 7 to Apr 13). Alternative first meeting from the Arabic start: 2020-02-09. Term was cut by the spring 2020 lockdown in practice; the page does not say.",
+    "alt_start_date": "2020-02-09",
+    "week_anchor": "2020-01-30"
+  },
+  {
+    "id": 54,
+    "slug": "every-cook-can-govern",
+    "title_en": "Every cook can govern",
+    "title_ar": null,
+    "slots": [
+      {
+        "weekday": "thu",
+        "start": "18:00",
+        "end": "20:30"
+      }
+    ],
+    "cycle": "winter-2020-alexandria",
+    "db_start_date": null,
+    "db_weeks": null,
+    "db_sessions": 0,
+    "start_date": "2020-01-30",
+    "start_weekday": "thu",
+    "weekday_matches_slot": true,
+    "precision": "week",
+    "start_confidence": "low",
+    "start_basis": "No date on the course page. The English term text says \"begin the week of January 30th\" (cycle start in DB 2020-01-30, Thursday); the Arabic text says the term starts 7 February. Date derived from the English text.",
+    "length": {
+      "weeks": 11
+    },
+    "length_confidence": "low",
+    "confidence": "low",
+    "evidence": [
+      {
+        "file": "migration/raw/weebly-zip-2025-04-23/2019-2020-cilas-alex-second-semester.html",
+        "quote": "Thematic courses and labs begin the week of January 30th and end the week of April 13th."
+      },
+      {
+        "file": "migration/raw/weebly-zip-2025-04-23/2019-2020-cilas-alex-second-semester.html",
+        "quote": "المساقات النوعية والمختبرات تبدأ في 7 فبراير و تنتهي في 13 إبريل"
+      },
+      {
+        "file": "migration/raw/weebly-zip-2025-04-23/2019-2020-cilas-alex-second-semester.html",
+        "quote": "Thematic courses and labs are of a duration of eleven weeks with between two class hours and half and three class hours per week."
+      },
+      {
+        "file": "migration/raw/weebly-zip-2025-04-23/2019-2020-cilas-alex-second-semester.html",
+        "quote": "المساقات النوعية والمختبرات مدتها عشرة أسابيع"
+      }
+    ],
+    "notes": "English term text: 11 weeks (Jan 30 to Apr 13). Arabic term text: 10 weeks (Feb 7 to Apr 13). Alternative first meeting from the Arabic start: 2020-02-13. Term was cut by the spring 2020 lockdown in practice; the page does not say.",
+    "alt_start_date": "2020-02-13",
+    "week_anchor": "2020-01-30"
+  },
+  {
+    "id": 78,
+    "slug": "enlightenment-to-the-death-of-god-a-philosophical-journey",
+    "title_en": "Enlightenment to the Death of God: A Philosophical Journey",
+    "title_ar": null,
+    "slots": [
+      {
+        "weekday": "wed",
+        "start": "18:00",
+        "end": "20:30"
+      }
+    ],
+    "cycle": "fall-2024-cairo",
+    "db_start_date": "2024-09-25",
+    "db_weeks": null,
+    "db_sessions": 0,
+    "start_date": "2024-09-25",
+    "start_weekday": "wed",
+    "weekday_matches_slot": true,
+    "precision": "day",
+    "start_confidence": "high",
+    "start_basis": null,
+    "length": null,
+    "length_confidence": null,
+    "confidence": "medium",
+    "evidence": [
+      {
+        "file": "migration/raw/weebly-zip-2025-04-23/fall-cycle-2024.html",
+        "quote": "Enlightenment to the Death of God: A Philosophical Journey Offline, Wednesdays 6pm – 8:30pm, starting from the 25th of September"
+      }
+    ],
+    "notes": "No week count on the page or in the flow. The cycle sibling \"Story as participative enquiry\" has 8 sessions (4 online + 4 offline); that is not this course."
+  },
+  {
+    "id": 87,
+    "slug": "city-cinema",
+    "title_en": "CITY & CINEMA",
+    "title_ar": null,
+    "slots": [
+      {
+        "weekday": "wed",
+        "start": "18:00",
+        "end": "20:00"
+      }
+    ],
+    "cycle": "fall-2022-cairo",
+    "db_start_date": null,
+    "db_weeks": 8,
+    "db_sessions": 8,
+    "start_date": "2022-09-28",
+    "start_weekday": "wed",
+    "weekday_matches_slot": true,
+    "precision": "week",
+    "start_confidence": "low",
+    "start_basis": "The thematic page gives no start date. Date derived from the cycle start in DB (2022-09-24, a Saturday): first slot weekday on or after it. The labs page of the same cycle says the labs begin the week of Sep 24. In fall 2021 the labs began Sep 12 but the thematic courses began Sep 21 to 27, so thematic courses can start later than the cycle start.",
+    "length": {
+      "weeks": 8
+    },
+    "length_confidence": "high",
+    "confidence": "low",
+    "evidence": [
+      {
+        "file": "migration/raw/weebly-zip-2025-04-23/fall-labs-2022.html",
+        "quote": "The labs will begin the week of September 24th."
+      },
+      {
+        "file": "migration/raw/weebly-zip-2025-04-23/fall-cycle-courses-2022.html",
+        "quote": "CILAS is inviting applications to its online/offline Fall course cycle until Sep 18th 2022."
+      },
+      {
+        "file": "migration/raw/flows/the-city-and-the-cinema-flow/text.txt",
+        "quote": "WEEK TWO: RAILWAY"
+      },
+      {
+        "file": "migration/raw/flows/the-city-and-the-cinema-flow/text.txt",
+        "quote": "WEEK EIGHT: UNIVERSITY"
+      }
+    ],
+    "notes": "Flow has weekly headings up to WEEK EIGHT.",
+    "week_anchor": "2022-09-24"
+  },
+  {
+    "id": 88,
+    "slug": "the-modern-and-the-mediterranean-the-age-of-enlightenment-in-europe-and-the-middle-east",
+    "title_en": "The Modern and the Mediterranean: The Age of Enlightenment in Europe and the Middle East",
+    "title_ar": null,
+    "slots": [
+      {
+        "weekday": "mon",
+        "start": "10:00",
+        "end": "12:00"
+      }
+    ],
+    "cycle": "fall-2022-cairo",
+    "db_start_date": null,
+    "db_weeks": 8,
+    "db_sessions": 8,
+    "start_date": "2022-09-26",
+    "start_weekday": "mon",
+    "weekday_matches_slot": true,
+    "precision": "week",
+    "start_confidence": "low",
+    "start_basis": "The thematic page gives no start date. Date derived from the cycle start in DB (2022-09-24, a Saturday): first slot weekday on or after it. The labs page of the same cycle says the labs begin the week of Sep 24. In fall 2021 the labs began Sep 12 but the thematic courses began Sep 21 to 27, so thematic courses can start later than the cycle start.",
+    "length": {
+      "weeks": 8
+    },
+    "length_confidence": "medium",
+    "confidence": "low",
+    "evidence": [
+      {
+        "file": "migration/raw/weebly-zip-2025-04-23/fall-labs-2022.html",
+        "quote": "The labs will begin the week of September 24th."
+      },
+      {
+        "file": "migration/raw/weebly-zip-2025-04-23/fall-cycle-courses-2022.html",
+        "quote": "CILAS is inviting applications to its online/offline Fall course cycle until Sep 18th 2022."
+      },
+      {
+        "file": "migration/raw/flows/the-modern-and-the-mediterranean/text.txt",
+        "quote": "8. Counter Enlightenments across the Mediterranean"
+      }
+    ],
+    "notes": "Flow lists 8 numbered topics.",
+    "week_anchor": "2022-09-24"
+  },
+  {
+    "id": 89,
+    "slug": "vocabularies-of-grief",
+    "title_en": "Vocabularies of Grief",
+    "title_ar": null,
+    "slots": [
+      {
+        "weekday": "tue",
+        "start": "18:00",
+        "end": "20:00"
+      }
+    ],
+    "cycle": "fall-2022-cairo",
+    "db_start_date": null,
+    "db_weeks": 6,
+    "db_sessions": 6,
+    "start_date": "2022-09-27",
+    "start_weekday": "tue",
+    "weekday_matches_slot": true,
+    "precision": "week",
+    "start_confidence": "low",
+    "start_basis": "The thematic page gives no start date. Date derived from the cycle start in DB (2022-09-24, a Saturday): first slot weekday on or after it. The labs page of the same cycle says the labs begin the week of Sep 24. In fall 2021 the labs began Sep 12 but the thematic courses began Sep 21 to 27, so thematic courses can start later than the cycle start.",
+    "length": {
+      "weeks": 6
+    },
+    "length_confidence": "high",
+    "confidence": "low",
+    "evidence": [
+      {
+        "file": "migration/raw/weebly-zip-2025-04-23/fall-labs-2022.html",
+        "quote": "The labs will begin the week of September 24th."
+      },
+      {
+        "file": "migration/raw/weebly-zip-2025-04-23/fall-cycle-courses-2022.html",
+        "quote": "CILAS is inviting applications to its online/offline Fall course cycle until Sep 18th 2022."
+      },
+      {
+        "file": "migration/raw/flows/vocabularies-of-grief-2/text.txt",
+        "quote": "Week 6: A disruption in time"
+      }
+    ],
+    "notes": "Flow has Week 1 to Week 6.",
+    "week_anchor": "2022-09-24"
+  },
+  {
+    "id": 90,
+    "slug": "womens-writing-and-the-literary-canon",
+    "title_en": "Women's Writing and the Literary Canon",
+    "title_ar": null,
+    "slots": [
+      {
+        "weekday": "wed",
+        "start": "18:00",
+        "end": "20:00"
+      }
+    ],
+    "cycle": "fall-2022-cairo",
+    "db_start_date": null,
+    "db_weeks": null,
+    "db_sessions": 8,
+    "start_date": "2022-09-28",
+    "start_weekday": "wed",
+    "weekday_matches_slot": true,
+    "precision": "week",
+    "start_confidence": "low",
+    "start_basis": "The thematic page gives no start date. Date derived from the cycle start in DB (2022-09-24, a Saturday): first slot weekday on or after it. The labs page of the same cycle says the labs begin the week of Sep 24. In fall 2021 the labs began Sep 12 but the thematic courses began Sep 21 to 27, so thematic courses can start later than the cycle start.",
+    "length": {
+      "weeks": 8
+    },
+    "length_confidence": "high",
+    "confidence": "low",
+    "evidence": [
+      {
+        "file": "migration/raw/weebly-zip-2025-04-23/fall-labs-2022.html",
+        "quote": "The labs will begin the week of September 24th."
+      },
+      {
+        "file": "migration/raw/weebly-zip-2025-04-23/fall-cycle-courses-2022.html",
+        "quote": "CILAS is inviting applications to its online/offline Fall course cycle until Sep 18th 2022."
+      },
+      {
+        "file": "migration/raw/flows/womens-writing-flow-docx/text.txt",
+        "quote": "Week 8 – Conclusions and Final Projects Presentations"
+      }
+    ],
+    "notes": "Flow has Week 1 to Week 8.",
+    "week_anchor": "2022-09-24"
+  },
+  {
+    "id": 92,
+    "slug": "feminist-pedagogy-lab",
+    "title_en": "FEMINIST PEDAGOGY LAB",
+    "title_ar": null,
+    "slots": [
+      {
+        "weekday": "thu",
+        "start": "17:30",
+        "end": "20:00"
+      }
+    ],
+    "cycle": "fall-2022-cairo",
+    "db_start_date": null,
+    "db_weeks": 12,
+    "db_sessions": 12,
+    "start_date": "2022-09-29",
+    "start_weekday": "thu",
+    "weekday_matches_slot": true,
+    "precision": "week",
+    "start_confidence": "medium",
+    "start_basis": "Labs page: \"begin the week of September 24th\". Date derived: first Thursday on or after Sep 24 2022.",
+    "length": {
+      "weeks": 12
+    },
+    "length_confidence": "high",
+    "confidence": "medium",
+    "evidence": [
+      {
+        "file": "migration/raw/weebly-zip-2025-04-23/fall-labs-2022.html",
+        "quote": "The labs will begin the week of September 24th."
+      },
+      {
+        "file": "migration/raw/weebly-zip-2025-04-23/fall-labs-2022.html",
+        "quote": "Lab seasons are of a duration of twelve weeks"
+      },
+      {
+        "file": "migration/raw/flows/cilas-course-flow-feminist-pedagogy-lab-2/text.txt",
+        "quote": "Week 12 - Closing session"
+      }
+    ],
+    "notes": "Labs page and flow both say 12 weeks.",
+    "week_anchor": "2022-09-24"
+  },
+  {
+    "id": 99,
+    "slug": "mkhtbr-alwsait-kyf-tryd-an-tra-mlahzat-ala-swrtna-aldhatya-almtshzya",
+    "title_en": "مختبر الوسائط - كيف تريد أن تُرى؟: ملاحظات على صورتنا الذاتية المتشظية",
+    "title_ar": "مختبر الوسائط - كيف تريد أن تُرى؟: ملاحظات على صورتنا الذاتية المتشظية",
+    "slots": [
+      {
+        "weekday": "sat",
+        "start": "11:00",
+        "end": "14:00"
+      }
+    ],
+    "cycle": "winter-2020-alexandria",
+    "db_start_date": null,
+    "db_weeks": null,
+    "db_sessions": 0,
+    "start_date": "2020-02-01",
+    "start_weekday": "sat",
+    "weekday_matches_slot": true,
+    "precision": "week",
+    "start_confidence": "low",
+    "start_basis": "No date on the course page. The English term text says \"begin the week of January 30th\" (cycle start in DB 2020-01-30, Thursday); the Arabic text says the term starts 7 February. Date derived from the English text.",
+    "length": {
+      "weeks": 11
+    },
+    "length_confidence": "low",
+    "confidence": "low",
+    "evidence": [
+      {
+        "file": "migration/raw/weebly-zip-2025-04-23/2019-2020-cilas-alex-second-semester.html",
+        "quote": "Thematic courses and labs begin the week of January 30th and end the week of April 13th."
+      },
+      {
+        "file": "migration/raw/weebly-zip-2025-04-23/2019-2020-cilas-alex-second-semester.html",
+        "quote": "المساقات النوعية والمختبرات تبدأ في 7 فبراير و تنتهي في 13 إبريل"
+      },
+      {
+        "file": "migration/raw/weebly-zip-2025-04-23/2019-2020-cilas-alex-second-semester.html",
+        "quote": "Thematic courses and labs are of a duration of eleven weeks with between two class hours and half and three class hours per week."
+      },
+      {
+        "file": "migration/raw/weebly-zip-2025-04-23/2019-2020-cilas-alex-second-semester.html",
+        "quote": "المساقات النوعية والمختبرات مدتها عشرة أسابيع"
+      }
+    ],
+    "notes": "English term text: 11 weeks (Jan 30 to Apr 13). Arabic term text: 10 weeks (Feb 7 to Apr 13). Alternative first meeting from the Arabic start: 2020-02-08. Term was cut by the spring 2020 lockdown in practice; the page does not say.",
+    "alt_start_date": "2020-02-08",
+    "week_anchor": "2020-01-30"
+  },
+  {
+    "id": 102,
+    "slug": "the-weapon-of-theory-critical-thought-and-social-change",
+    "title_en": "“The Weapon of Theory”: Critical Thought and Social Change",
+    "title_ar": null,
+    "slots": [
+      {
+        "weekday": "sun",
+        "start": "10:00",
+        "end": "12:30"
+      },
+      {
+        "weekday": "sun",
+        "start": "17:30",
+        "end": "20:00"
+      }
+    ],
+    "cycle": "winter-2018-cairo",
+    "db_start_date": null,
+    "db_weeks": null,
+    "db_sessions": 11,
+    "start_date": "2018-01-07",
+    "start_weekday": "sun",
+    "weekday_matches_slot": true,
+    "precision": "week",
+    "start_confidence": "medium",
+    "start_basis": "No date on the course page. Date derived: first slot weekday in the week of Jan 7 2018 (cycle start in DB is 2018-01-07).",
+    "length": {
+      "weeks": 10
+    },
+    "length_confidence": "medium",
+    "confidence": "medium",
+    "evidence": [
+      {
+        "file": "migration/raw/weebly-zip-2025-04-23/2017-2018-second-trimester.html",
+        "quote": "Thematic courses begin the week of January 7th and end the week of March 17th."
+      },
+      {
+        "file": "migration/raw/weebly-zip-2025-04-23/2017-2018-second-trimester.html",
+        "quote": "Thematic courses are of a duration of ten weeks with two and half class hours per week."
+      }
+    ],
+    "notes": "Term window: week of Jan 7 to week of Mar 17 = 10 weeks.",
+    "week_anchor": "2018-01-07"
+  },
+  {
+    "id": 103,
+    "slug": "libertarian-economics-and-alternative-model-building",
+    "title_en": "Libertarian Economics and Alternative Model-Building",
+    "title_ar": "البناء التخيلي للمجتمع: اﻹقتصادات التحررية وتصور النماذج البديلة",
+    "slots": [
+      {
+        "weekday": "thu",
+        "start": "10:00",
+        "end": "13:00"
+      },
+      {
+        "weekday": "thu",
+        "start": "17:30",
+        "end": "20:30"
+      }
+    ],
+    "cycle": "spring-2018-cairo",
+    "db_start_date": null,
+    "db_weeks": 10,
+    "db_sessions": 10,
+    "start_date": "2018-04-05",
+    "start_weekday": "thu",
+    "weekday_matches_slot": true,
+    "precision": "week",
+    "start_confidence": "medium",
+    "start_basis": "No date on the course page. Date derived: first slot weekday in the week of Apr 1 2018 (cycle start in DB is 2018-04-01). The English term text says \"March 1st\" but the Arabic text and the 10-week length say April 1 (Mar 1 is a typo).",
+    "length": {
+      "weeks": 10
+    },
+    "length_confidence": "medium",
+    "confidence": "medium",
+    "evidence": [
+      {
+        "file": "migration/raw/weebly-zip-2025-04-23/2017-2018-third-trimester.html",
+        "quote": "الدورات النوعية تبدأ في اسبوع ١ أبريل و تنتهي في اسبوع ٧ يونيو"
+      },
+      {
+        "file": "migration/raw/weebly-zip-2025-04-23/2017-2018-third-trimester.html",
+        "quote": "Thematic courses begin the week of March 1st and end the week of June 7th."
+      },
+      {
+        "file": "migration/raw/weebly-zip-2025-04-23/2017-2018-third-trimester.html",
+        "quote": "Thematic courses are of a duration of ten weeks with two and half class hours per week."
+      }
+    ],
+    "notes": "Term window: week of Apr 1 to week of Jun 7 = 10 weeks.",
+    "week_anchor": "2018-04-01"
+  },
+  {
+    "id": 104,
+    "slug": "literary-representations-of-the-urban-global-south",
+    "title_en": "literary representations of the urban global south",
+    "title_ar": null,
+    "slots": [
+      {
+        "weekday": "mon",
+        "start": "10:00",
+        "end": "12:30"
+      },
+      {
+        "weekday": "mon",
+        "start": "17:30",
+        "end": "20:00"
+      }
+    ],
+    "cycle": "winter-2016-cairo",
+    "db_start_date": "2016-01-11",
+    "db_weeks": null,
+    "db_sessions": 0,
+    "start_date": "2016-01-11",
+    "start_weekday": "mon",
+    "weekday_matches_slot": true,
+    "precision": "day",
+    "start_confidence": "high",
+    "start_basis": null,
+    "length": {
+      "weeks": 10
+    },
+    "length_confidence": "medium",
+    "confidence": "medium",
+    "evidence": [
+      {
+        "file": "migration/raw/weebly-zip-2025-04-23/literary-representations-of-the-urban-global-south.html",
+        "quote": "mondays at CILAS starting January 11th, 2016"
+      },
+      {
+        "file": "migration/raw/weebly-zip-2025-04-23/2015-2016-second-trimester.html",
+        "quote": "Thematic courses are of a duration of ten weeks with two and half class hours per week."
+      }
+    ],
+    "notes": "Date on own page. Length from the term page (10 weeks). Jan 11 + 10 weeks ends the week of Mar 13, one week after the term page end of \"week of March 12th\"; keep 10 weeks."
+  },
+  {
+    "id": 105,
+    "slug": "mafish-faiydah-a-case-study-on-myth-and-silenced-voices",
+    "title_en": "Mafish Faiydah? A Case Study on Myth and Silenced Voices",
+    "title_ar": null,
+    "slots": [
+      {
+        "weekday": "sun",
+        "start": "10:00",
+        "end": "13:00"
+      },
+      {
+        "weekday": "sun",
+        "start": "17:30",
+        "end": "20:30"
+      }
+    ],
+    "cycle": "spring-2018-cairo",
+    "db_start_date": null,
+    "db_weeks": 10,
+    "db_sessions": 10,
+    "start_date": "2018-04-01",
+    "start_weekday": "sun",
+    "weekday_matches_slot": true,
+    "precision": "week",
+    "start_confidence": "medium",
+    "start_basis": "No date on the course page. Date derived: first slot weekday in the week of Apr 1 2018 (cycle start in DB is 2018-04-01). The English term text says \"March 1st\" but the Arabic text and the 10-week length say April 1 (Mar 1 is a typo).",
+    "length": {
+      "weeks": 10
+    },
+    "length_confidence": "medium",
+    "confidence": "medium",
+    "evidence": [
+      {
+        "file": "migration/raw/weebly-zip-2025-04-23/2017-2018-third-trimester.html",
+        "quote": "الدورات النوعية تبدأ في اسبوع ١ أبريل و تنتهي في اسبوع ٧ يونيو"
+      },
+      {
+        "file": "migration/raw/weebly-zip-2025-04-23/2017-2018-third-trimester.html",
+        "quote": "Thematic courses begin the week of March 1st and end the week of June 7th."
+      },
+      {
+        "file": "migration/raw/weebly-zip-2025-04-23/2017-2018-third-trimester.html",
+        "quote": "Thematic courses are of a duration of ten weeks with two and half class hours per week."
+      }
+    ],
+    "notes": "Term window: week of Apr 1 to week of Jun 7 = 10 weeks.",
+    "week_anchor": "2018-04-01"
+  },
+  {
+    "id": 106,
+    "slug": "matte-msr-tropicalia",
+    "title_en": "Matte مصر Tropicália",
+    "title_ar": null,
+    "slots": [
+      {
+        "weekday": "thu",
+        "start": "10:00",
+        "end": "13:00"
+      },
+      {
+        "weekday": "thu",
+        "start": "17:00",
+        "end": "20:00"
+      }
+    ],
+    "cycle": "winter-2019-alexandria",
+    "db_start_date": null,
+    "db_weeks": null,
+    "db_sessions": 0,
+    "start_date": "2019-01-31",
+    "start_weekday": "thu",
+    "weekday_matches_slot": true,
+    "precision": "week",
+    "start_confidence": "medium",
+    "start_basis": "No date on the course page. Date derived: first slot weekday in the week of Jan 31 2019 (cycle start in DB is 2019-01-31, a Thursday).",
+    "length": {
+      "weeks": 12
+    },
+    "length_confidence": "medium",
+    "confidence": "medium",
+    "evidence": [
+      {
+        "file": "migration/raw/weebly-zip-2025-04-23/2018-2019-cilas-alex-thematic-courses-and-labs.html",
+        "quote": "Thematic courses begin the week of January 31th and end the week of May 4th."
+      },
+      {
+        "file": "migration/raw/weebly-zip-2025-04-23/2018-2019-cilas-alex-thematic-courses-and-labs.html",
+        "quote": "Thematic courses are of a duration of twelve weeks with three class hours per week."
+      }
+    ],
+    "notes": "Term page: 12 weeks, week of Jan 31 to week of May 4 (that span is 13 calendar weeks; the page says 12).",
+    "week_anchor": "2019-01-31"
+  },
+  {
+    "id": 111,
+    "slug": "my-body-is-my-body",
+    "title_en": "My Body is my Body",
+    "title_ar": null,
+    "slots": [
+      {
+        "weekday": "mon",
+        "start": "17:30",
+        "end": "20:00"
+      }
+    ],
+    "cycle": "winter-2018-cairo",
+    "db_start_date": null,
+    "db_weeks": 10,
+    "db_sessions": 10,
+    "start_date": "2018-01-08",
+    "start_weekday": "mon",
+    "weekday_matches_slot": true,
+    "precision": "week",
+    "start_confidence": "medium",
+    "start_basis": "No date on the course page. Date derived: first slot weekday in the week of Jan 7 2018 (cycle start in DB is 2018-01-07).",
+    "length": {
+      "weeks": 10
+    },
+    "length_confidence": "medium",
+    "confidence": "medium",
+    "evidence": [
+      {
+        "file": "migration/raw/weebly-zip-2025-04-23/2017-2018-second-trimester.html",
+        "quote": "Thematic courses begin the week of January 7th and end the week of March 17th."
+      },
+      {
+        "file": "migration/raw/weebly-zip-2025-04-23/2017-2018-second-trimester.html",
+        "quote": "Thematic courses are of a duration of ten weeks with two and half class hours per week."
+      }
+    ],
+    "notes": "Term window: week of Jan 7 to week of Mar 17 = 10 weeks.",
+    "week_anchor": "2018-01-07"
+  },
+  {
+    "id": 122,
+    "slug": "pedagogical-lab",
+    "title_en": "Pedagogical Lab: An Act of Re-imagination and Reclamation of what matters in education",
+    "title_ar": "مختبر التربية: محاولة لإعادة تخيل واستعادة ما يهمنا في التعليم",
+    "slots": [
+      {
+        "weekday": "mon",
+        "start": "18:00",
+        "end": "20:30"
+      }
+    ],
+    "cycle": "winter-2020-alexandria",
+    "db_start_date": null,
+    "db_weeks": null,
+    "db_sessions": 0,
+    "start_date": "2020-02-03",
+    "start_weekday": "mon",
+    "weekday_matches_slot": true,
+    "precision": "week",
+    "start_confidence": "low",
+    "start_basis": "No date on the course page. The English term text says \"begin the week of January 30th\" (cycle start in DB 2020-01-30, Thursday); the Arabic text says the term starts 7 February. Date derived from the English text.",
+    "length": {
+      "weeks": 11
+    },
+    "length_confidence": "low",
+    "confidence": "low",
+    "evidence": [
+      {
+        "file": "migration/raw/weebly-zip-2025-04-23/2019-2020-cilas-alex-second-semester.html",
+        "quote": "Thematic courses and labs begin the week of January 30th and end the week of April 13th."
+      },
+      {
+        "file": "migration/raw/weebly-zip-2025-04-23/2019-2020-cilas-alex-second-semester.html",
+        "quote": "المساقات النوعية والمختبرات تبدأ في 7 فبراير و تنتهي في 13 إبريل"
+      },
+      {
+        "file": "migration/raw/weebly-zip-2025-04-23/2019-2020-cilas-alex-second-semester.html",
+        "quote": "Thematic courses and labs are of a duration of eleven weeks with between two class hours and half and three class hours per week."
+      },
+      {
+        "file": "migration/raw/weebly-zip-2025-04-23/2019-2020-cilas-alex-second-semester.html",
+        "quote": "المساقات النوعية والمختبرات مدتها عشرة أسابيع"
+      }
+    ],
+    "notes": "English term text: 11 weeks (Jan 30 to Apr 13). Arabic term text: 10 weeks (Feb 7 to Apr 13). Alternative first meeting from the Arabic start: 2020-02-10. Term was cut by the spring 2020 lockdown in practice; the page does not say.",
+    "alt_start_date": "2020-02-10",
+    "week_anchor": "2020-01-30"
+  },
+  {
+    "id": 135,
+    "slug": "research-lab-post-captialism",
+    "title_en": "مختبر البحث الأول - مستقبلات ما بعد رأسمالية: الحياة والسياسة",
+    "title_ar": "مختبر البحث الأول - مستقبلات ما بعد رأسمالية: الحياة والسياسة",
+    "slots": [
+      {
+        "weekday": "sat",
+        "start": "14:30",
+        "end": "17:30"
+      }
+    ],
+    "cycle": "winter-2020-alexandria",
+    "db_start_date": null,
+    "db_weeks": null,
+    "db_sessions": 0,
+    "start_date": "2020-02-01",
+    "start_weekday": "sat",
+    "weekday_matches_slot": true,
+    "precision": "week",
+    "start_confidence": "low",
+    "start_basis": "No date on the course page. The English term text says \"begin the week of January 30th\" (cycle start in DB 2020-01-30, Thursday); the Arabic text says the term starts 7 February. Date derived from the English text.",
+    "length": {
+      "weeks": 11
+    },
+    "length_confidence": "low",
+    "confidence": "low",
+    "evidence": [
+      {
+        "file": "migration/raw/weebly-zip-2025-04-23/2019-2020-cilas-alex-second-semester.html",
+        "quote": "Thematic courses and labs begin the week of January 30th and end the week of April 13th."
+      },
+      {
+        "file": "migration/raw/weebly-zip-2025-04-23/2019-2020-cilas-alex-second-semester.html",
+        "quote": "المساقات النوعية والمختبرات تبدأ في 7 فبراير و تنتهي في 13 إبريل"
+      },
+      {
+        "file": "migration/raw/weebly-zip-2025-04-23/2019-2020-cilas-alex-second-semester.html",
+        "quote": "Thematic courses and labs are of a duration of eleven weeks with between two class hours and half and three class hours per week."
+      },
+      {
+        "file": "migration/raw/weebly-zip-2025-04-23/2019-2020-cilas-alex-second-semester.html",
+        "quote": "المساقات النوعية والمختبرات مدتها عشرة أسابيع"
+      }
+    ],
+    "notes": "English term text: 11 weeks (Jan 30 to Apr 13). Arabic term text: 10 weeks (Feb 7 to Apr 13). Alternative first meeting from the Arabic start: 2020-02-08. Term was cut by the spring 2020 lockdown in practice; the page does not say.",
+    "alt_start_date": "2020-02-08",
+    "week_anchor": "2020-01-30"
+  },
+  {
+    "id": 137,
+    "slug": "social-determinants-of-health",
+    "title_en": "Social Determinants of Health",
+    "title_ar": "المحددات الاجتماعية للصحة",
+    "slots": [
+      {
+        "weekday": "wed",
+        "start": "17:30",
+        "end": "20:30"
+      }
+    ],
+    "cycle": "spring-2018-cairo",
+    "db_start_date": null,
+    "db_weeks": 10,
+    "db_sessions": 9,
+    "start_date": "2018-04-04",
+    "start_weekday": "wed",
+    "weekday_matches_slot": true,
+    "precision": "week",
+    "start_confidence": "medium",
+    "start_basis": "No date on the course page. Date derived: first slot weekday in the week of Apr 1 2018 (cycle start in DB is 2018-04-01). The English term text says \"March 1st\" but the Arabic text and the 10-week length say April 1 (Mar 1 is a typo).",
+    "length": {
+      "weeks": 10
+    },
+    "length_confidence": "medium",
+    "confidence": "medium",
+    "evidence": [
+      {
+        "file": "migration/raw/weebly-zip-2025-04-23/2017-2018-third-trimester.html",
+        "quote": "الدورات النوعية تبدأ في اسبوع ١ أبريل و تنتهي في اسبوع ٧ يونيو"
+      },
+      {
+        "file": "migration/raw/weebly-zip-2025-04-23/2017-2018-third-trimester.html",
+        "quote": "Thematic courses begin the week of March 1st and end the week of June 7th."
+      },
+      {
+        "file": "migration/raw/weebly-zip-2025-04-23/2017-2018-third-trimester.html",
+        "quote": "Thematic courses are of a duration of ten weeks with two and half class hours per week."
+      }
+    ],
+    "notes": "Term window: week of Apr 1 to week of Jun 7 = 10 weeks.",
+    "week_anchor": "2018-04-01"
+  },
+  {
+    "id": 138,
+    "slug": "sound-thinking-a-seminar-of-auditory-praxis",
+    "title_en": "Sound Thinking: A Seminar of Auditory Praxis",
+    "title_ar": "التفكير الصوتي: حلقة دراسية في التطبيقات العملية السمعية",
+    "slots": [
+      {
+        "weekday": "sun",
+        "start": "17:30",
+        "end": "20:00"
+      }
+    ],
+    "cycle": "winter-2017-cairo",
+    "db_start_date": null,
+    "db_weeks": null,
+    "db_sessions": 0,
+    "start_date": "2017-01-15",
+    "start_weekday": "sun",
+    "weekday_matches_slot": true,
+    "precision": "week",
+    "start_confidence": "medium",
+    "start_basis": "No date on the course page. Date derived: first slot weekday in the week of Jan 15 2017 (the cycle start in DB is 2017-01-15).",
+    "length": {
+      "weeks": 10
+    },
+    "length_confidence": "medium",
+    "confidence": "medium",
+    "evidence": [
+      {
+        "file": "migration/raw/weebly-zip-2025-04-23/2016-2017-second-trimester.html",
+        "quote": "Thematic courses begin the week of January 15th and end the week of March 23rd."
+      },
+      {
+        "file": "migration/raw/weebly-zip-2025-04-23/2016-2017-second-trimester.html",
+        "quote": "Thematic courses are of a duration of ten weeks with two and half class hours per week."
+      }
+    ],
+    "notes": "Term window: week of Jan 15 to week of Mar 23 = 10 weeks.",
+    "week_anchor": "2017-01-15"
+  },
+  {
+    "id": 150,
+    "slug": "reading-feminism-writing-to-live",
+    "title_en": "Reading Feminism/Writing To Live",
+    "title_ar": null,
+    "slots": [
+      {
+        "weekday": "mon",
+        "start": "18:00",
+        "end": "20:00"
+      }
+    ],
+    "cycle": "spring-2022-cairo",
+    "db_start_date": "2022-02-14",
+    "db_weeks": null,
+    "db_sessions": 12,
+    "start_date": "2022-02-14",
+    "start_weekday": "mon",
+    "weekday_matches_slot": true,
+    "precision": "week",
+    "start_confidence": "medium",
+    "start_basis": "Page gives a start WEEK (13 Feb 2022 is a Sunday), not a day. First Monday in that week is 2022-02-14.",
+    "length": {
+      "meetings": 12
+    },
+    "length_confidence": "medium",
+    "confidence": "medium",
+    "evidence": [
+      {
+        "file": "migration/raw/weebly-zip-2025-04-23/spring-2022.html",
+        "quote": "Reading Feminism/Writing To Live Mondays 6-8pm, Hybrid Start week is 13th February"
+      },
+      {
+        "file": "migration/raw/flows/reading-feminism-writing-to-live/text.txt",
+        "quote": "12 Hope"
+      },
+      {
+        "file": "migration/raw/flows/reading-feminism-writing-to-live/text.txt",
+        "quote": "1 Put Every Word On Trial For Its Life"
+      }
+    ],
+    "notes": "Flow has 12 numbered sessions plus a \"Break\" line between 6 and 7. Weeks vs meetings not stated; the break may add one calendar week.",
+    "week_anchor": "2022-02-13"
+  },
+  {
+    "id": 151,
+    "slug": "the-space-lab-navigating-the-larger-african-urban-world",
+    "title_en": "The Space Lab: Navigating the Larger African Urban World",
+    "title_ar": null,
+    "slots": [
+      {
+        "weekday": "thu",
+        "start": "18:00",
+        "end": "20:00"
+      }
+    ],
+    "cycle": "spring-2022-cairo",
+    "db_start_date": "2022-02-17",
+    "db_weeks": null,
+    "db_sessions": 11,
+    "start_date": "2022-02-17",
+    "start_weekday": "thu",
+    "weekday_matches_slot": true,
+    "precision": "day",
+    "start_confidence": "high",
+    "start_basis": null,
+    "length": {
+      "weeks": 12,
+      "meetings": 12
+    },
+    "length_confidence": "high",
+    "confidence": "high",
+    "evidence": [
+      {
+        "file": "migration/raw/weebly-zip-2025-04-23/spring-2022.html",
+        "quote": "The Space Lab: Navigating the Larger African Urban World Thursday 6-8pm, offline The start date is the 17th of February"
+      },
+      {
+        "file": "migration/raw/flows/the-space-lab-navigating-the-larger-african-urban-world-flow/text.txt",
+        "quote": "Session 12 Crisis and Urban Future"
+      }
+    ],
+    "notes": "Flow has Session 1 to 12 (sessions 5 and 6 share one heading, so 12 headings, 11 distinct topics). DB has 11 sessions; the flow supports 12."
+  },
+  {
+    "id": 152,
+    "slug": "approaching-performativity-and-culture-in-modern-egypt",
+    "title_en": "Approaching Performativity and Culture in Modern Egypt",
+    "title_ar": null,
+    "slots": [
+      {
+        "weekday": "sat",
+        "start": "18:00",
+        "end": "20:00"
+      }
+    ],
+    "cycle": "spring-2022-cairo",
+    "db_start_date": "2022-06-11",
+    "db_weeks": null,
+    "db_sessions": 0,
+    "start_date": "2022-06-05",
+    "start_weekday": "sun",
+    "weekday_matches_slot": false,
+    "precision": "day",
+    "start_confidence": "low",
+    "start_basis": null,
+    "length": null,
+    "length_confidence": null,
+    "confidence": "low",
+    "evidence": [
+      {
+        "file": "migration/raw/weebly-zip-2025-04-23/spring-cycle-20221.html",
+        "quote": "Approaching Performativity and Culture in Modern Egypt Saturdays 6-8pm, offline. Starts June 5th"
+      }
+    ],
+    "notes": "Page says \"Starts June 5th\", but 5 June 2022 is a Sunday and the slot is Saturday. Not corrected. If June 5 is the start WEEK, the first Saturday is 2022-06-11 (the value already in the DB). No flow or length found.",
+    "alt_start_date": "2022-06-11"
+  },
+  {
+    "id": 153,
+    "slug": "intercessing-with-artistic-research",
+    "title_en": "Intercessing with artistic research",
+    "title_ar": null,
+    "slots": [
+      {
+        "weekday": "tue",
+        "start": "10:00",
+        "end": "12:00"
+      }
+    ],
+    "cycle": "spring-2022-cairo",
+    "db_start_date": null,
+    "db_weeks": null,
+    "db_sessions": 7,
+    "start_date": "2022-05-17",
+    "start_weekday": "tue",
+    "weekday_matches_slot": true,
+    "precision": "week",
+    "start_confidence": "low",
+    "start_basis": "No start date for this course. The cycle start in DB (2022-02-02) belongs to the spring SEMESTER and cannot be used: this cycle took applications until May 11. Its one dated sibling (Making the Strange Familiar, id 155) starts Tue 17 May 2022. Date is the first slot weekday in the week of Sun 15 May 2022. A guess.",
+    "length": {
+      "meetings": 7
+    },
+    "length_confidence": "high",
+    "confidence": "low",
+    "evidence": [
+      {
+        "file": "migration/raw/weebly-zip-2025-04-23/spring-cycle-20221.html",
+        "quote": "CILAS is inviting applications to its online/offline spring course cycle until May 11th 2022."
+      },
+      {
+        "file": "migration/raw/flows/sohayla-fieldwork-course-flow/text.txt",
+        "quote": "Session 1 – Tuesday May 17th (What is Anthropology?)"
+      },
+      {
+        "file": "migration/raw/flows/flow-intercessing-flow-with-artistic-research-c-ledesert/text.txt",
+        "quote": "Session 7: fabulation II"
+      }
+    ],
+    "notes": "Flow has Session 1 to 7.",
+    "week_anchor": "2022-05-15"
+  },
+  {
+    "id": 154,
+    "slug": "is-she-tough-enough",
+    "title_en": "Is she tough enough?",
+    "title_ar": null,
+    "slots": [
+      {
+        "weekday": "thu",
+        "start": "11:00",
+        "end": "13:00"
+      }
+    ],
+    "cycle": "spring-2022-cairo",
+    "db_start_date": null,
+    "db_weeks": 8,
+    "db_sessions": 8,
+    "start_date": "2022-05-19",
+    "start_weekday": "thu",
+    "weekday_matches_slot": true,
+    "precision": "week",
+    "start_confidence": "low",
+    "start_basis": "No start date for this course. The cycle start in DB (2022-02-02) belongs to the spring SEMESTER and cannot be used: this cycle took applications until May 11. Its one dated sibling (Making the Strange Familiar, id 155) starts Tue 17 May 2022. Date is the first slot weekday in the week of Sun 15 May 2022. A guess.",
+    "length": {
+      "weeks": 8
+    },
+    "length_confidence": "high",
+    "confidence": "low",
+    "evidence": [
+      {
+        "file": "migration/raw/weebly-zip-2025-04-23/spring-cycle-20221.html",
+        "quote": "CILAS is inviting applications to its online/offline spring course cycle until May 11th 2022."
+      },
+      {
+        "file": "migration/raw/flows/sohayla-fieldwork-course-flow/text.txt",
+        "quote": "Session 1 – Tuesday May 17th (What is Anthropology?)"
+      },
+      {
+        "file": "migration/raw/flows/is-she-tough-enough/text.txt",
+        "quote": "Week 8 : Concluding brainstorming"
+      }
+    ],
+    "notes": "Flow has Week 1 to 8. Page: last two classes online.",
+    "week_anchor": "2022-05-15"
+  },
+  {
+    "id": 156,
+    "slug": "the-shadow-of-carl-schmitt",
+    "title_en": "The Shadow of Carl Schmitt",
+    "title_ar": null,
+    "slots": [
+      {
+        "weekday": "thu",
+        "start": "18:00",
+        "end": "20:00"
+      }
+    ],
+    "cycle": "spring-2022-cairo",
+    "db_start_date": null,
+    "db_weeks": 7,
+    "db_sessions": 7,
+    "start_date": "2022-05-19",
+    "start_weekday": "thu",
+    "weekday_matches_slot": true,
+    "precision": "week",
+    "start_confidence": "low",
+    "start_basis": "No start date for this course. The cycle start in DB (2022-02-02) belongs to the spring SEMESTER and cannot be used: this cycle took applications until May 11. Its one dated sibling (Making the Strange Familiar, id 155) starts Tue 17 May 2022. Date is the first slot weekday in the week of Sun 15 May 2022. A guess.",
+    "length": {
+      "meetings": 7
+    },
+    "length_confidence": "high",
+    "confidence": "low",
+    "evidence": [
+      {
+        "file": "migration/raw/weebly-zip-2025-04-23/spring-cycle-20221.html",
+        "quote": "CILAS is inviting applications to its online/offline spring course cycle until May 11th 2022."
+      },
+      {
+        "file": "migration/raw/flows/sohayla-fieldwork-course-flow/text.txt",
+        "quote": "Session 1 – Tuesday May 17th (What is Anthropology?)"
+      },
+      {
+        "file": "migration/raw/flows/2022-the-shadow-of-carl-schmitt-on-questions-of-legality-and-legitimacy-course-flow/text.txt",
+        "quote": "Session 07: Case study"
+      }
+    ],
+    "notes": "Flow has Session 01 to 07.",
+    "week_anchor": "2022-05-15"
+  },
+  {
+    "id": 157,
+    "slug": "the-threshold-of-fire-incendiarism-hysteria-and-civilization",
+    "title_en": "The Threshold of Fire: Incendiarism, Hysteria, and Civilization",
+    "title_ar": null,
+    "slots": [
+      {
+        "weekday": "sun",
+        "start": "18:00",
+        "end": "20:00"
+      }
+    ],
+    "cycle": "spring-2022-cairo",
+    "db_start_date": null,
+    "db_weeks": 6,
+    "db_sessions": 6,
+    "start_date": "2022-05-15",
+    "start_weekday": "sun",
+    "weekday_matches_slot": true,
+    "precision": "week",
+    "start_confidence": "low",
+    "start_basis": "No start date for this course. The cycle start in DB (2022-02-02) belongs to the spring SEMESTER and cannot be used: this cycle took applications until May 11. Its one dated sibling (Making the Strange Familiar, id 155) starts Tue 17 May 2022. Date is the first slot weekday in the week of Sun 15 May 2022. A guess.",
+    "length": {
+      "weeks": 6
+    },
+    "length_confidence": "high",
+    "confidence": "low",
+    "evidence": [
+      {
+        "file": "migration/raw/weebly-zip-2025-04-23/spring-cycle-20221.html",
+        "quote": "CILAS is inviting applications to its online/offline spring course cycle until May 11th 2022."
+      },
+      {
+        "file": "migration/raw/flows/sohayla-fieldwork-course-flow/text.txt",
+        "quote": "Session 1 – Tuesday May 17th (What is Anthropology?)"
+      },
+      {
+        "file": "migration/raw/flows/fire-course/text.txt",
+        "quote": "Week VI: Fire Otherwise"
+      }
+    ],
+    "notes": "Flow has Week I to VI.",
+    "week_anchor": "2022-05-15"
+  },
+  {
+    "id": 158,
+    "slug": "the-whatness-of-cinematic-urbanism",
+    "title_en": "The Whatness of Cinematic Urbanism",
+    "title_ar": null,
+    "slots": [
+      {
+        "weekday": "mon",
+        "start": "18:00",
+        "end": "20:00"
+      }
+    ],
+    "cycle": "spring-2022-cairo",
+    "db_start_date": null,
+    "db_weeks": 7,
+    "db_sessions": 7,
+    "start_date": "2022-05-16",
+    "start_weekday": "mon",
+    "weekday_matches_slot": true,
+    "precision": "week",
+    "start_confidence": "low",
+    "start_basis": "No start date for this course. The cycle start in DB (2022-02-02) belongs to the spring SEMESTER and cannot be used: this cycle took applications until May 11. Its one dated sibling (Making the Strange Familiar, id 155) starts Tue 17 May 2022. Date is the first slot weekday in the week of Sun 15 May 2022. A guess.",
+    "length": {
+      "weeks": 11
+    },
+    "length_confidence": "low",
+    "confidence": "low",
+    "evidence": [
+      {
+        "file": "migration/raw/weebly-zip-2025-04-23/spring-cycle-20221.html",
+        "quote": "CILAS is inviting applications to its online/offline spring course cycle until May 11th 2022."
+      },
+      {
+        "file": "migration/raw/flows/sohayla-fieldwork-course-flow/text.txt",
+        "quote": "Session 1 – Tuesday May 17th (What is Anthropology?)"
+      },
+      {
+        "file": "migration/raw/flows/cilas-preliminary-course-outline/text.txt",
+        "quote": "Weeks 9, 10, & 11: Small Workshop"
+      }
+    ],
+    "notes": "Preliminary outline runs to week 11 (weeks 5-7 and 9-11 are grouped), but DB has 7 sessions. Conflict; the outline is a \"preliminary\" version.",
+    "week_anchor": "2022-05-15"
+  },
+  {
+    "id": 159,
+    "slug": "towards-a-history-of-islamicate-print",
+    "title_en": "Towards a History of Islamicate Print",
+    "title_ar": null,
+    "slots": [
+      {
+        "weekday": "wed",
+        "start": "18:00",
+        "end": "20:00"
+      }
+    ],
+    "cycle": "spring-2022-cairo",
+    "db_start_date": null,
+    "db_weeks": 8,
+    "db_sessions": 8,
+    "start_date": "2022-05-18",
+    "start_weekday": "wed",
+    "weekday_matches_slot": true,
+    "precision": "week",
+    "start_confidence": "low",
+    "start_basis": "No start date for this course. The cycle start in DB (2022-02-02) belongs to the spring SEMESTER and cannot be used: this cycle took applications until May 11. Its one dated sibling (Making the Strange Familiar, id 155) starts Tue 17 May 2022. Date is the first slot weekday in the week of Sun 15 May 2022. A guess.",
+    "length": {
+      "weeks": 8
+    },
+    "length_confidence": "high",
+    "confidence": "low",
+    "evidence": [
+      {
+        "file": "migration/raw/weebly-zip-2025-04-23/spring-cycle-20221.html",
+        "quote": "CILAS is inviting applications to its online/offline spring course cycle until May 11th 2022."
+      },
+      {
+        "file": "migration/raw/flows/sohayla-fieldwork-course-flow/text.txt",
+        "quote": "Session 1 – Tuesday May 17th (What is Anthropology?)"
+      },
+      {
+        "file": "migration/raw/flows/cilas-elashmawy-course-flow/text.txt",
+        "quote": "Week 8: Conclusions and Final Presentations"
+      }
+    ],
+    "notes": "Flow has Week 1 to 8.",
+    "week_anchor": "2022-05-15"
+  },
+  {
+    "id": 195,
+    "slug": "allgha-walhjaj-alqanwny-fy-mshahd-almhakmat-fy-alsynma-almsrya-nzra-ala-alskhrya",
+    "title_en": "اللغة والحِجاج القانوني في مشاهد المحاكمات في السينما المصرية - نظرة على السخرية",
+    "title_ar": "اللغة والحِجاج القانوني في مشاهد المحاكمات في السينما المصرية - نظرة على السخرية",
+    "slots": [
+      {
+        "weekday": "wed",
+        "start": "18:00",
+        "end": "20:00"
+      }
+    ],
+    "cycle": "spring-2022-cairo",
+    "db_start_date": "2022-02-16",
+    "db_weeks": null,
+    "db_sessions": 0,
+    "start_date": "2022-02-16",
+    "start_weekday": "wed",
+    "weekday_matches_slot": true,
+    "precision": "week",
+    "start_confidence": "medium",
+    "start_basis": "Arabic page: \"start week is 13 February\" (a Sunday). First Wednesday in that week is 2022-02-16. Course is on the spring-semester page, same week as its siblings.",
+    "length": null,
+    "length_confidence": null,
+    "confidence": "medium",
+    "evidence": [
+      {
+        "file": "migration/raw/weebly-zip-2025-04-23/spring-semester-2022.html",
+        "quote": "أسبوع البداية هو 13 من شهر فبراير"
+      }
+    ],
+    "notes": "Flow says \"في كل لقاء أسبوعي\" (each weekly meeting) but gives no count. Sibling courses on the same page run 12 weeks.",
+    "week_anchor": "2022-02-13"
+  },
+  {
+    "id": 210,
+    "slug": "confronting-modernity-art-politics-religion-and-science",
+    "title_en": "Confronting Modernity: Art, Politics, Religion and Science",
+    "title_ar": null,
+    "slots": [
+      {
+        "weekday": "sun",
+        "start": "18:00",
+        "end": "20:30"
+      }
+    ],
+    "cycle": "spring-2025-cairo",
+    "db_start_date": "2025-01-19",
+    "db_weeks": null,
+    "db_sessions": 13,
+    "start_date": "2025-01-19",
+    "start_weekday": "sun",
+    "weekday_matches_slot": true,
+    "precision": "day",
+    "start_confidence": "high",
+    "start_basis": null,
+    "length": {
+      "meetings": 13
+    },
+    "length_confidence": "medium",
+    "confidence": "medium",
+    "evidence": [
+      {
+        "file": "migration/raw/weebly-zip-2025-04-23/spring-semester-2025.html",
+        "quote": "Confronting Modernity: Art, Politics, Religion and Science. Sundays, 6 pm-8:30 pm, Offline Start Date: 19th of January"
+      },
+      {
+        "file": "migration/raw/flows/confronting-modernity-syllabus-docx/text.txt",
+        "quote": "Session 12: Madness and Civilization"
+      },
+      {
+        "file": "migration/raw/flows/confronting-modernity-syllabus-docx/text.txt",
+        "quote": "Session 14: Prince of Networks"
+      }
+    ],
+    "notes": "Syllabus lists 13 session headings, numbered 1 to 12 then 14 (no 13). DB has 13 sessions. Use 13 meetings; check with the course owner whether a 14th exists."
+  },
+  {
+    "id": 216,
+    "slug": "history-and-in-anthropology",
+    "title_en": "History and/in Anthropology?",
+    "title_ar": null,
+    "slots": [
+      {
+        "weekday": "tue",
+        "start": "18:00",
+        "end": "20:30"
+      }
+    ],
+    "cycle": "spring-2026-cairo",
+    "db_start_date": "2026-04-28",
+    "db_weeks": null,
+    "db_sessions": 3,
+    "start_date": "2026-04-28",
+    "start_weekday": "tue",
+    "weekday_matches_slot": true,
+    "precision": "day",
+    "start_confidence": "high",
+    "start_basis": null,
+    "length": {
+      "weeks_range": [10, 12]
+    },
+    "length_confidence": "medium",
+    "confidence": "medium",
+    "evidence": [
+      {
+        "file": "migration/raw/mirror/pages/spring-semester-2026.html",
+        "quote": "History and/in Anthropology? Tuesdays, 6 pm-8:30 pm, Offline Start Date: 28th of April"
+      },
+      {
+        "file": "migration/raw/flows/history-anthropology-cilas-2nd-term-2026-1/text.txt",
+        "quote": "In the course of 10-12 weeks"
+      }
+    ],
+    "notes": "Flow: 10-12 weeks in three units. DB has 3 sessions, which are probably the units."
+  },
+  {
+    "id": 224,
+    "slug": "allab-balarshyf-maml-bhthy-ibdaay",
+    "title_en": "اللعب بالأرشيف: معمل بحثي إبداعي",
+    "title_ar": "اللعب بالأرشيف: معمل بحثي إبداعي",
+    "slots": [
+      {
+        "weekday": "mon",
+        "start": "18:00",
+        "end": "20:30"
+      }
+    ],
+    "cycle": "spring-2025-cairo",
+    "db_start_date": "2025-01-20",
+    "db_weeks": null,
+    "db_sessions": 0,
+    "start_date": "2025-01-20",
+    "start_weekday": "mon",
+    "weekday_matches_slot": true,
+    "precision": "day",
+    "start_confidence": "high",
+    "start_basis": null,
+    "length": {
+      "weeks_range": [10, 12]
+    },
+    "length_confidence": "medium",
+    "confidence": "medium",
+    "evidence": [
+      {
+        "file": "migration/raw/weebly-zip-2025-04-23/spring-semester-labs-2025.html",
+        "quote": "اللعب بالأرشيف: معمل بحثي إبداعي Mondays, 6 pm to 8:30 Start Date: 20th of January"
+      },
+      {
+        "file": "migration/raw/weebly-zip-2025-04-23/spring-semester-labs-2025.html",
+        "quote": "Lab seasons are of a duration of ten to twelve weeks"
+      },
+      {
+        "file": "migration/raw/flows/allab-balarshyf-maml-bhthy-ibdaay/text.txt",
+        "quote": "يستمر المعمل حتى منتصف شهر رمضان ثم نتوقف لمدة أسبوعين"
+      }
+    ],
+    "notes": "Labs page: 10 to 12 weeks. Flow: runs to mid-Ramadan, pauses 2 weeks, returns after Eid for final rehearsals and a show. No exact count."
+  },
+  {
+    "id": 242,
+    "slug": "the-death-of-the-political",
+    "title_en": "The Death of the Political?",
+    "title_ar": null,
+    "slots": [
+      {
+        "weekday": "sun",
+        "start": "18:00",
+        "end": "20:00"
+      }
+    ],
+    "cycle": "summer-2022-cairo",
+    "db_start_date": null,
+    "db_weeks": 6,
+    "db_sessions": 6,
+    "start_date": "2022-07-24",
+    "start_weekday": "sun",
+    "weekday_matches_slot": true,
+    "precision": "week",
+    "start_confidence": "medium",
+    "start_basis": "The course block gives no date; its five siblings on the same page all say \"Start date: the week of 23th of July\" (cycle start in DB 2022-07-23, Saturday). First Sunday on or after it is 2022-07-24.",
+    "length": {
+      "weeks": 6
+    },
+    "length_confidence": "high",
+    "confidence": "medium",
+    "evidence": [
+      {
+        "file": "migration/raw/weebly-zip-2025-04-23/summer-2022.html",
+        "quote": "Start date: the week of 23th of July"
+      },
+      {
+        "file": "migration/raw/weebly-zip-2025-04-23/summer-2022.html",
+        "quote": "CILAS is inviting applications to its online/offline Summer course cycle until July 15th 2022."
+      },
+      {
+        "file": "migration/raw/flows/the-death-of-the-political-course/text.txt",
+        "quote": "Week 6 – Reframing the political and restoring public faith in democracy"
+      }
+    ],
+    "notes": "Flow has Week 1 to 6.",
+    "week_anchor": "2022-07-23"
+  },
+  {
+    "id": 247,
+    "slug": "the-death-of-nature",
+    "title_en": "the death of Nature",
+    "title_ar": null,
+    "slots": [
+      {
+        "weekday": "sat",
+        "start": "10:00",
+        "end": "13:00"
+      }
+    ],
+    "cycle": "winter-2016-cairo",
+    "db_start_date": "2016-01-09",
+    "db_weeks": null,
+    "db_sessions": 0,
+    "start_date": "2016-01-09",
+    "start_weekday": "sat",
+    "weekday_matches_slot": true,
+    "precision": "day",
+    "start_confidence": "high",
+    "start_basis": null,
+    "length": {
+      "weeks": 10
+    },
+    "length_confidence": "medium",
+    "confidence": "medium",
+    "evidence": [
+      {
+        "file": "migration/raw/weebly-zip-2025-04-23/the-death-of-nature.html",
+        "quote": "saturdays at CILAS and beyond starting January 9th, 2016"
+      },
+      {
+        "file": "migration/raw/weebly-zip-2025-04-23/2015-2016-second-trimester.html",
+        "quote": "Thematic courses are of a duration of ten weeks with two and half class hours per week."
+      }
+    ],
+    "notes": "Date on own page. Length from the term page (10 weeks); Jan 9 + 9 weeks = Mar 12, the term page end date."
+  },
+  {
+    "id": 261,
+    "slug": "visions-of-the-arab-between-orientalism-orientalism-in-reverse",
+    "title_en": "Visions of the Arab: Between Orientalism & Orientalism in Reverse",
+    "title_ar": "رؤى العرب: بين الاستشراق والاستشراق معكوسًا",
+    "slots": [
+      {
+        "weekday": "tue",
+        "start": "10:00",
+        "end": "12:30"
+      },
+      {
+        "weekday": "tue",
+        "start": "17:30",
+        "end": "20:00"
+      }
+    ],
+    "cycle": "spring-2017-cairo",
+    "db_start_date": null,
+    "db_weeks": null,
+    "db_sessions": 0,
+    "start_date": "2017-04-11",
+    "start_weekday": "tue",
+    "weekday_matches_slot": true,
+    "precision": "week",
+    "start_confidence": "medium",
+    "start_basis": "No date on the course page. Date derived: first Tuesday in the week of Apr 9 2017 (cycle start in DB is 2017-04-09).",
+    "length": {
+      "weeks": 10
+    },
+    "length_confidence": "medium",
+    "confidence": "medium",
+    "evidence": [
+      {
+        "file": "migration/raw/weebly-zip-2025-04-23/2016-2017-third-trimester.html",
+        "quote": "Thematic courses begin the week of April 9th and end the week of June 15th."
+      },
+      {
+        "file": "migration/raw/weebly-zip-2025-04-23/2016-2017-third-trimester.html",
+        "quote": "Thematic courses are of a duration of ten weeks with two and half class hours per week."
+      }
+    ],
+    "notes": "Term window: week of Apr 9 to week of Jun 15 = 10 weeks.",
+    "week_anchor": "2017-04-09"
+  },
+  {
+    "id": 262,
+    "slug": "visual-anthropology-film-as-a-tool-for-research",
+    "title_en": "Visual Anthropology: Film as a tool for research",
+    "title_ar": null,
+    "slots": [
+      {
+        "weekday": "thu",
+        "start": "10:00",
+        "end": "12:30"
+      },
+      {
+        "weekday": "thu",
+        "start": "17:30",
+        "end": "20:00"
+      }
+    ],
+    "cycle": "winter-2018-cairo",
+    "db_start_date": null,
+    "db_weeks": 10,
+    "db_sessions": 10,
+    "start_date": "2018-01-11",
+    "start_weekday": "thu",
+    "weekday_matches_slot": true,
+    "precision": "week",
+    "start_confidence": "medium",
+    "start_basis": "No date on the course page. Date derived: first slot weekday in the week of Jan 7 2018 (cycle start in DB is 2018-01-07).",
+    "length": {
+      "weeks": 10
+    },
+    "length_confidence": "medium",
+    "confidence": "medium",
+    "evidence": [
+      {
+        "file": "migration/raw/weebly-zip-2025-04-23/2017-2018-second-trimester.html",
+        "quote": "Thematic courses begin the week of January 7th and end the week of March 17th."
+      },
+      {
+        "file": "migration/raw/weebly-zip-2025-04-23/2017-2018-second-trimester.html",
+        "quote": "Thematic courses are of a duration of ten weeks with two and half class hours per week."
+      }
+    ],
+    "notes": "Term window: week of Jan 7 to week of Mar 17 = 10 weeks.",
+    "week_anchor": "2018-01-07"
+  },
+  {
+    "id": 263,
+    "slug": "voice-of-the-artist",
+    "title_en": "Voice of the Artist",
+    "title_ar": null,
+    "slots": [
+      {
+        "weekday": "thu",
+        "start": "10:00",
+        "end": "14:30"
+      },
+      {
+        "weekday": "thu",
+        "start": "17:30",
+        "end": "20:30"
+      }
+    ],
+    "cycle": "winter-2018-cairo",
+    "db_start_date": null,
+    "db_weeks": 10,
+    "db_sessions": 10,
+    "start_date": "2018-01-11",
+    "start_weekday": "thu",
+    "weekday_matches_slot": true,
+    "precision": "week",
+    "start_confidence": "medium",
+    "start_basis": "No date on the course page. Date derived: first slot weekday in the week of Jan 7 2018 (cycle start in DB is 2018-01-07).",
+    "length": {
+      "weeks": 10
+    },
+    "length_confidence": "medium",
+    "confidence": "medium",
+    "evidence": [
+      {
+        "file": "migration/raw/weebly-zip-2025-04-23/2017-2018-second-trimester.html",
+        "quote": "Thematic courses begin the week of January 7th and end the week of March 17th."
+      },
+      {
+        "file": "migration/raw/weebly-zip-2025-04-23/2017-2018-second-trimester.html",
+        "quote": "Thematic courses are of a duration of ten weeks with two and half class hours per week."
+      }
+    ],
+    "notes": "Term window: week of Jan 7 to week of Mar 17 = 10 weeks.",
+    "week_anchor": "2018-01-07"
+  },
+  {
+    "id": 265,
+    "slug": "we-are-what-we-eat",
+    "title_en": "We are what we eat",
+    "title_ar": "نحن والطعام: مدخل نقدي لإستهلاك الطعام في مصر",
+    "slots": [
+      {
+        "weekday": "mon",
+        "start": "10:00",
+        "end": "12:30"
+      },
+      {
+        "weekday": "mon",
+        "start": "17:30",
+        "end": "20:00"
+      }
+    ],
+    "cycle": "winter-2017-cairo",
+    "db_start_date": null,
+    "db_weeks": null,
+    "db_sessions": 0,
+    "start_date": "2017-01-16",
+    "start_weekday": "mon",
+    "weekday_matches_slot": true,
+    "precision": "week",
+    "start_confidence": "medium",
+    "start_basis": "No date on the course page. Date derived: first slot weekday in the week of Jan 15 2017 (the cycle start in DB is 2017-01-15).",
+    "length": {
+      "weeks": 10
+    },
+    "length_confidence": "medium",
+    "confidence": "medium",
+    "evidence": [
+      {
+        "file": "migration/raw/weebly-zip-2025-04-23/2016-2017-second-trimester.html",
+        "quote": "Thematic courses begin the week of January 15th and end the week of March 23rd."
+      },
+      {
+        "file": "migration/raw/weebly-zip-2025-04-23/2016-2017-second-trimester.html",
+        "quote": "Thematic courses are of a duration of ten weeks with two and half class hours per week."
+      }
+    ],
+    "notes": "Term window: week of Jan 15 to week of Mar 23 = 10 weeks.",
+    "week_anchor": "2017-01-15"
+  },
+  {
+    "id": 274,
+    "slug": "the-politics-of-language-and-alphabets-history-power-and-community",
+    "title_en": "The Politics of Language and Alphabets: History, Power, and Community",
+    "title_ar": null,
+    "slots": [
+      {
+        "weekday": "sun",
+        "start": "18:00",
+        "end": "20:00"
+      }
+    ],
+    "cycle": "winter-2022-cairo",
+    "db_start_date": null,
+    "db_weeks": 8,
+    "db_sessions": 8,
+    "start_date": "2022-01-09",
+    "start_weekday": "sun",
+    "weekday_matches_slot": true,
+    "precision": "week",
+    "start_confidence": "medium",
+    "start_basis": "\"Second week of January\" with Sunday meetings and applications open until Wed Jan 5: first Sunday of the second week is Jan 9 2022. Not a stated day.",
+    "length": {
+      "weeks": 8
+    },
+    "length_confidence": "high",
+    "confidence": "medium",
+    "evidence": [
+      {
+        "file": "migration/raw/weebly-zip-2025-04-23/winter-2022.html",
+        "quote": "Start Date: second week of January, Sundays (online), at 6-8 pm"
+      },
+      {
+        "file": "migration/raw/weebly-zip-2025-04-23/winter-2022.html",
+        "quote": "CILAS is inviting applications to its online/offline Winter course cycle until January 5th 2022."
+      },
+      {
+        "file": "migration/raw/flows/the-politics-of-language-and-alphabets-course-flow/text.txt",
+        "quote": "Week 8: English, the Latin Script, and Information Technologies"
+      }
+    ],
+    "notes": "Flow has Week 1 to 8. Cycle has no start date in DB.",
+    "week_anchor": "2022-01-09"
+  },
+  {
+    "id": 293,
+    "slug": "mkhtbr-altrjma-ant-wana-wnzrya-altrjma",
+    "title_en": "مختبر الترجمة: أنت وأنا ونظرية الترجمة",
+    "title_ar": "مختبر الترجمة: أنت وأنا ونظرية الترجمة",
+    "slots": [
+      {
+        "weekday": "fri",
+        "start": "17:30",
+        "end": "20:30"
+      }
+    ],
+    "cycle": "winter-2020-alexandria",
+    "db_start_date": null,
+    "db_weeks": null,
+    "db_sessions": 0,
+    "start_date": "2020-01-31",
+    "start_weekday": "fri",
+    "weekday_matches_slot": true,
+    "precision": "week",
+    "start_confidence": "low",
+    "start_basis": "No date on the course page. The English term text says \"begin the week of January 30th\" (cycle start in DB 2020-01-30, Thursday); the Arabic text says the term starts 7 February. Date derived from the English text.",
+    "length": {
+      "weeks": 11
+    },
+    "length_confidence": "low",
+    "confidence": "low",
+    "evidence": [
+      {
+        "file": "migration/raw/weebly-zip-2025-04-23/2019-2020-cilas-alex-second-semester.html",
+        "quote": "Thematic courses and labs begin the week of January 30th and end the week of April 13th."
+      },
+      {
+        "file": "migration/raw/weebly-zip-2025-04-23/2019-2020-cilas-alex-second-semester.html",
+        "quote": "المساقات النوعية والمختبرات تبدأ في 7 فبراير و تنتهي في 13 إبريل"
+      },
+      {
+        "file": "migration/raw/weebly-zip-2025-04-23/2019-2020-cilas-alex-second-semester.html",
+        "quote": "Thematic courses and labs are of a duration of eleven weeks with between two class hours and half and three class hours per week."
+      },
+      {
+        "file": "migration/raw/weebly-zip-2025-04-23/2019-2020-cilas-alex-second-semester.html",
+        "quote": "المساقات النوعية والمختبرات مدتها عشرة أسابيع"
+      }
+    ],
+    "notes": "English term text: 11 weeks (Jan 30 to Apr 13). Arabic term text: 10 weeks (Feb 7 to Apr 13). Alternative first meeting from the Arabic start: 2020-02-07. Term was cut by the spring 2020 lockdown in practice; the page does not say.",
+    "alt_start_date": "2020-02-07",
+    "week_anchor": "2020-01-30"
+  },
+  {
+    "id": 294,
+    "slug": "youth-madness",
+    "title_en": "Youth Madness",
+    "title_ar": "جنون الشباب: مقدمة في الدراسات السينمائية",
+    "slots": [
+      {
+        "weekday": "sun",
+        "start": "18:00",
+        "end": "20:30"
+      }
+    ],
+    "cycle": "winter-2020-alexandria",
+    "db_start_date": null,
+    "db_weeks": null,
+    "db_sessions": 0,
+    "start_date": "2020-02-02",
+    "start_weekday": "sun",
+    "weekday_matches_slot": true,
+    "precision": "week",
+    "start_confidence": "low",
+    "start_basis": "No date on the course page. The English term text says \"begin the week of January 30th\" (cycle start in DB 2020-01-30, Thursday); the Arabic text says the term starts 7 February. Date derived from the English text.",
+    "length": {
+      "weeks": 11
+    },
+    "length_confidence": "low",
+    "confidence": "low",
+    "evidence": [
+      {
+        "file": "migration/raw/weebly-zip-2025-04-23/2019-2020-cilas-alex-second-semester.html",
+        "quote": "Thematic courses and labs begin the week of January 30th and end the week of April 13th."
+      },
+      {
+        "file": "migration/raw/weebly-zip-2025-04-23/2019-2020-cilas-alex-second-semester.html",
+        "quote": "المساقات النوعية والمختبرات تبدأ في 7 فبراير و تنتهي في 13 إبريل"
+      },
+      {
+        "file": "migration/raw/weebly-zip-2025-04-23/2019-2020-cilas-alex-second-semester.html",
+        "quote": "Thematic courses and labs are of a duration of eleven weeks with between two class hours and half and three class hours per week."
+      },
+      {
+        "file": "migration/raw/weebly-zip-2025-04-23/2019-2020-cilas-alex-second-semester.html",
+        "quote": "المساقات النوعية والمختبرات مدتها عشرة أسابيع"
+      }
+    ],
+    "notes": "English term text: 11 weeks (Jan 30 to Apr 13). Arabic term text: 10 weeks (Feb 7 to Apr 13). Alternative first meeting from the Arabic start: 2020-02-09. Term was cut by the spring 2020 lockdown in practice; the page does not say.",
+    "alt_start_date": "2020-02-09",
+    "week_anchor": "2020-01-30"
+  },
+  {
+    "id": 297,
+    "slug": "ywmyat-draja-skndrya",
+    "title_en": "يوميات دراجة سكندرية",
+    "title_ar": "يوميات دراجة سكندرية",
+    "slots": [
+      {
+        "weekday": "sat",
+        "start": "18:00",
+        "end": "20:30"
+      }
+    ],
+    "cycle": "winter-2020-alexandria",
+    "db_start_date": null,
+    "db_weeks": null,
+    "db_sessions": 0,
+    "start_date": "2020-02-01",
+    "start_weekday": "sat",
+    "weekday_matches_slot": true,
+    "precision": "week",
+    "start_confidence": "low",
+    "start_basis": "No date on the course page. The English term text says \"begin the week of January 30th\" (cycle start in DB 2020-01-30, Thursday); the Arabic text says the term starts 7 February. Date derived from the English text.",
+    "length": {
+      "weeks": 11
+    },
+    "length_confidence": "low",
+    "confidence": "low",
+    "evidence": [
+      {
+        "file": "migration/raw/weebly-zip-2025-04-23/2019-2020-cilas-alex-second-semester.html",
+        "quote": "Thematic courses and labs begin the week of January 30th and end the week of April 13th."
+      },
+      {
+        "file": "migration/raw/weebly-zip-2025-04-23/2019-2020-cilas-alex-second-semester.html",
+        "quote": "المساقات النوعية والمختبرات تبدأ في 7 فبراير و تنتهي في 13 إبريل"
+      },
+      {
+        "file": "migration/raw/weebly-zip-2025-04-23/2019-2020-cilas-alex-second-semester.html",
+        "quote": "Thematic courses and labs are of a duration of eleven weeks with between two class hours and half and three class hours per week."
+      },
+      {
+        "file": "migration/raw/weebly-zip-2025-04-23/2019-2020-cilas-alex-second-semester.html",
+        "quote": "المساقات النوعية والمختبرات مدتها عشرة أسابيع"
+      }
+    ],
+    "notes": "English term text: 11 weeks (Jan 30 to Apr 13). Arabic term text: 10 weeks (Feb 7 to Apr 13). Alternative first meeting from the Arabic start: 2020-02-08. Term was cut by the spring 2020 lockdown in practice; the page does not say.",
+    "alt_start_date": "2020-02-08",
+    "week_anchor": "2020-01-30"
+  }
+]
