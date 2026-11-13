@@ -218,6 +218,8 @@ describe('Add meeting', () => {
     expect(added).toHaveAccessibleName('Week 3, Wednesday, November 18, 19:00 to 21:00, Unsaved')
     expect(status()).toContain('1 unsaved change')
     expect(status()).toContain('Added a meeting on Wednesday, November 18')
+    // Shown too, since the block can be on a day or week that is not in view.
+    expect(screen.getByText('Added a meeting on Wednesday, November 18')).toBeVisible()
 
     fireEvent.click(saved())
     await waitFor(() => expect(onSave).toHaveBeenCalledTimes(1))

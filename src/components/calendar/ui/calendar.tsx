@@ -170,6 +170,7 @@ export function Calendar({
     const block = session.working.find((candidate) => candidate.id === blockId)
     if (!block || !blockMenu) return
     menuTarget.current = blockId
+    setTold('')
     switch (action) {
       case 'open':
         // The host puts focus back on the block when its dialog closes, so the block has it now.
@@ -338,6 +339,7 @@ export function Calendar({
             count={session.changes.length}
             saving={session.saving}
             error={session.error}
+            note={session.changes.length ? told : undefined}
             onSave={session.save}
             onCancel={session.cancel}
           />

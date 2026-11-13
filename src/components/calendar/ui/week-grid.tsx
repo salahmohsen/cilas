@@ -178,6 +178,21 @@ export function WeekGrid({
                           }
                         : undefined
                     }
+                    onContextMenu={
+                      menu && !block.deleted
+                        ? (event) => {
+                            // A keyboard's context menu event has no point: it opens at the block.
+                            event.preventDefault()
+                            void menu.open({
+                              payload: block.id,
+                              anchor:
+                                event.button === 2
+                                  ? { x: event.clientX, y: event.clientY }
+                                  : event.currentTarget,
+                            })
+                          }
+                        : undefined
+                    }
                     render={
                       menu && !block.deleted ? (
                         <MenuContextTrigger

@@ -525,6 +525,11 @@
   justify-content: space-between;
   gap: var(--space-3);
 }
+.barNote {
+  margin: 0;
+  color: var(--text-secondary);
+  font-size: var(--text-sm);
+}
 .barCount {
   margin: 0;
   font-weight: 500;
@@ -534,16 +539,17 @@
   gap: var(--space-2);
 }
 
-/* The "⋯" is a pointer's way to the block menu; the keyboard has Shift+F10 and the Menu key. */
+/* The "⋯" is a pointer's way to the block menu; the keyboard has Shift+F10 and the Menu key.
+   Sizes are in px: Payload's admin sets its own root font size, so rem would shrink them. */
 .more {
   position: absolute;
-  inset-block-start: 0.125rem;
-  inset-inline-end: 0.125rem;
+  inset-block-start: 2px;
+  inset-inline-end: 2px;
   z-index: 1;
   display: none;
   place-items: center;
-  inline-size: 1.25rem;
-  block-size: 1.25rem;
+  inline-size: 22px;
+  block-size: 22px;
   border: 1px solid var(--tone-line);
   border-radius: var(--radius-pill);
   background: var(--surface);
@@ -560,17 +566,18 @@
 }
 @media (pointer: coarse) {
   .more {
-    inline-size: 1.5rem;
-    block-size: 1.5rem;
+    inline-size: 32px;
+    block-size: 32px;
   }
 }
 
+/* A popover at the pointer or the block. Rows are 48px on touch. */
 .menu {
   box-sizing: border-box;
-  min-inline-size: 12rem;
-  max-inline-size: calc(100vw - 1rem);
+  min-inline-size: 200px;
+  max-inline-size: calc(100vw - 24px);
   margin: 0;
-  padding: 0.25rem;
+  padding: 4px;
   border: 1px solid var(--border);
   border-radius: var(--radius-panel);
   background: var(--surface-raised);
@@ -580,12 +587,18 @@
 .menuItem {
   display: flex;
   align-items: center;
-  min-block-size: 2.25rem;
+  min-block-size: 36px;
   padding-inline: var(--space-3);
-  border-radius: calc(var(--radius-panel) - 0.25rem);
+  border-radius: calc(var(--radius-panel) - 4px);
   font-size: var(--text-sm);
   cursor: pointer;
   user-select: none;
+  -webkit-user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}
+/* The fill marks the item; the global keyboard ring would clip against the popover edge. */
+.menuItem:focus-visible {
+  outline: none;
 }
 .menuItem[data-highlighted] {
   background: var(--surface-muted);
@@ -598,9 +611,15 @@
   color: var(--danger);
 }
 .menuSeparator {
-  margin-block: 0.25rem;
+  margin-block: 4px;
   border: 0;
   border-block-start: 1px solid var(--border);
+}
+@media (pointer: coarse) {
+  .menuItem {
+    min-block-size: 48px;
+    font-size: var(--text-base, 1rem);
+  }
 }
 
 @media (prefers-reduced-motion: no-preference) {

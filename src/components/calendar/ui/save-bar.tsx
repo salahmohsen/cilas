@@ -8,16 +8,24 @@ type Props = {
   count: number
   saving: boolean
   error: Error | null
+  /** What the last menu action did, since its block may be on a day or week not in view. */
+  note?: string
   onSave: () => void
   onCancel: () => void
 }
 
-export function SaveBar({ labels, count, saving, error, onSave, onCancel }: Props) {
+export function SaveBar({ labels, count, saving, error, note, onSave, onCancel }: Props) {
   return (
     <div className={styles.bar}>
       {error ? (
         <p role="alert" className={styles.error}>
           {labels.saveFailed} {error.message}
+        </p>
+      ) : null}
+      {note ? (
+        // The status region of the calendar says it aloud already.
+        <p aria-hidden className={styles.barNote}>
+          {note}
         </p>
       ) : null}
       <div className={styles.barRow}>

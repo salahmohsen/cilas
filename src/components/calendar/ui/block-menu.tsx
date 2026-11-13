@@ -45,7 +45,7 @@ export function BlockMenu({ controller, labels, titleOf, entriesOf, onAction, fi
         if (blockId !== undefined) onAction(value as BlockAction, blockId)
       }}
     >
-      <MenuContent<string> className={styles.menu} finalFocus={finalFocus}>
+      <MenuContent<string> className={styles.menu} collisionPadding={12} finalFocus={finalFocus}>
         {({ payload }) => {
           const blockId = payload ?? ''
           const entries = entriesOf(blockId)
