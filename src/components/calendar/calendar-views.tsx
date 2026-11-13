@@ -6,7 +6,15 @@ import type { CalendarItem } from '@/lib/calendar'
 import { Card } from '@/components/arc/card/card'
 import { DayCovers } from '@/components/calendar/day-covers'
 import { Link } from '@/i18n/navigation'
-import { monthGrid, monthStart, summariseDay, toneOf, TYPE_ORDER, weekDays } from '@/lib/calendar'
+import {
+  monthGrid,
+  monthStart,
+  summariseDay,
+  toneColor,
+  toneOf,
+  TYPE_ORDER,
+  weekDays,
+} from '@/lib/calendar'
 import { localDigits, numberingSystemOf, timeDir } from '@/lib/digits'
 import { focalPointStyle } from '@/lib/media-image'
 
@@ -116,7 +124,7 @@ export async function MonthView({
                             className="cal-item"
                             data-cancelled={item.cancelled || undefined}
                             key={item.key}
-                            style={{ '--tone': toneOf(item) } as CSSProperties}
+                            style={{ '--tone': toneColor(toneOf(item)) } as CSSProperties}
                           >
                             <span className="cal-item-type">
                               <span aria-hidden className="cal-dot" />
@@ -173,7 +181,7 @@ function Slot({ item, labels }: { item: CalendarItem; labels: Labels }) {
     <li
       className="cal-slot"
       data-cancelled={item.cancelled || undefined}
-      style={{ '--tone': toneOf(item) } as CSSProperties}
+      style={{ '--tone': toneColor(toneOf(item)) } as CSSProperties}
     >
       <span className="cal-item-type">
         <span aria-hidden className="cal-dot" />
@@ -255,7 +263,7 @@ export async function WeekView({
                 className="cal-item"
                 data-cancelled={item.cancelled || undefined}
                 key={item.key}
-                style={{ '--tone': toneOf(item) } as CSSProperties}
+                style={{ '--tone': toneColor(toneOf(item)) } as CSSProperties}
               >
                 {item.cover ? (
                   <span className="cal-item-cover relative overflow-hidden">
@@ -344,7 +352,7 @@ export function CalendarLegend({
   return (
     <ul aria-label={label} className="cal-head-legend">
       {entries.map(({ item }) => (
-        <li key={item.key} style={{ '--tone': toneOf(item) } as CSSProperties}>
+        <li key={item.key} style={{ '--tone': toneColor(toneOf(item)) } as CSSProperties}>
           <span aria-hidden className="cal-dot" />
           {labels.type(item)}
         </li>

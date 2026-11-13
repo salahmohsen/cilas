@@ -7,7 +7,7 @@ import {
   type Announced,
   type SessionTimes,
 } from '@/lib/meetings'
-import { POSTER_COLORS } from '@/components/arc/lib/poster-colors'
+import type { CalendarTone } from '@/lib/calendar-items'
 
 /**
  * The calendar page's dates: which days a month, week or agenda shows.
@@ -160,35 +160,36 @@ export const summariseDay = (items: CalendarItem[]) => {
   }
 }
 
-const [YELLOW, BLUE, PINK, GREEN] = POSTER_COLORS as unknown as [string, string, string, string]
-
 /**
- * One poster colour per kind of course or event, so a day reads by colour at
+ * One tone per kind of course or event, so a day reads by colour at
  * a glance: the programme's own courses (core, thematic, lab), the short
  * formats, and events grouped by what they are (talks, arts, visits).
  */
-const TYPE_TONES: Record<string, string> = {
-  core: YELLOW,
-  thematic: BLUE,
-  lab: GREEN,
-  workshop: PINK,
-  short: PINK,
-  talk: BLUE,
-  panel: BLUE,
-  book_discussion: BLUE,
-  reading_group: BLUE,
-  screening: YELLOW,
-  performance: YELLOW,
-  music: YELLOW,
-  exhibition: YELLOW,
-  open_day: GREEN,
-  residency: GREEN,
-  visit: GREEN,
+const TYPE_TONES: Record<string, CalendarTone> = {
+  core: 'yellow',
+  thematic: 'blue',
+  lab: 'green',
+  workshop: 'pink',
+  short: 'pink',
+  talk: 'blue',
+  panel: 'blue',
+  book_discussion: 'blue',
+  reading_group: 'blue',
+  screening: 'yellow',
+  performance: 'yellow',
+  music: 'yellow',
+  exhibition: 'yellow',
+  open_day: 'green',
+  residency: 'green',
+  visit: 'green',
 }
 
 /** Every known type, courses first, in the order a legend lists them. */
 export const TYPE_ORDER = Object.keys(TYPE_TONES)
 
-/** The colour of an item's type; a type with none yet falls back to a neutral rule. */
-export const toneOf = (item: Pick<CalendarItem, 'type'>): string =>
-  TYPE_TONES[item.type] ?? 'var(--border-strong, var(--border))'
+/** The tone of an item's type; a type with none yet is neutral. */
+export const toneOf = (item: Pick<CalendarItem, 'type'>): CalendarTone =>
+  TYPE_TONES[item.type] ?? 'neutral'
+
+/** The CSS colour of a tone, from the tokens the calendar component uses. */
+export const toneColor = (tone: CalendarTone): string => `var(--calendar-${tone})`

@@ -1,6 +1,5 @@
 import { describe, expect, it } from 'vitest'
 
-import { toneOf } from '@/lib/calendar'
 import { CalendarSaveFailure, meetingsAfter, sessionItems } from '@/lib/calendar-sources'
 import type { Session } from '@/payload-types'
 
@@ -45,7 +44,7 @@ describe('sessionItems', () => {
       id: '1',
       kind: 'session',
       title: 'First',
-      tone: toneOf({ type: 'thematic' }),
+      tone: 'blue',
       cancelled: true,
       version: '2034-02-02T10:00:00.000Z',
       blocks: [

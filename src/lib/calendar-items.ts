@@ -7,6 +7,14 @@
  * a block with no times is all day.
  */
 
+/**
+ * The colours an item can have. The component draws each from the
+ * `--calendar-<tone>` tokens in `foundation.css`; a host picks a name and
+ * never a colour.
+ */
+export const CALENDAR_TONES = ['yellow', 'blue', 'pink', 'green', 'neutral'] as const
+export type CalendarTone = (typeof CALENDAR_TONES)[number]
+
 export type CalendarBlock = {
   id: string
   date: string
@@ -18,7 +26,7 @@ export type CalendarItem = {
   id: string
   kind: string
   title: string
-  tone: string
+  tone: CalendarTone
   cancelled: boolean
   /** The item's `updatedAt` when it was loaded; a save from an older one fails. */
   version: string

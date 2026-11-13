@@ -13,7 +13,7 @@ import en from '../../../messages/en.json'
 const item = (
   id: string,
   title: string,
-  tone: string,
+  tone: CalendarItem['tone'],
   blocks: CalendarItem['blocks'],
   extra: Partial<CalendarItem> = {},
 ): CalendarItem => ({

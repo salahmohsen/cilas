@@ -7,6 +7,7 @@ import {
   readCalendarParams,
   shiftMonth,
   summariseDay,
+  toneColor,
   toneOf,
   viewRange,
   weekDays,
@@ -104,10 +105,14 @@ describe('summariseDay', () => {
 })
 
 describe('toneOf', () => {
-  it('gives a course and an event type their poster colour, and an unknown type a neutral one', () => {
-    expect(toneOf({ type: 'core' })).toBe('#ffb71b')
-    expect(toneOf({ type: 'talk' })).toBe('#1782ea')
-    expect(toneOf({ type: 'something-new' })).toContain('--border')
+  it('gives a course and an event type a named tone, and an unknown type the neutral one', () => {
+    expect(toneOf({ type: 'core' })).toBe('yellow')
+    expect(toneOf({ type: 'talk' })).toBe('blue')
+    expect(toneOf({ type: 'something-new' })).toBe('neutral')
+  })
+
+  it('draws a tone from the calendar tokens', () => {
+    expect(toneColor('pink')).toBe('var(--calendar-pink)')
   })
 })
 
