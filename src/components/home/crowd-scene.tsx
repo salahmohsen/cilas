@@ -25,8 +25,8 @@ const DENSITY = 8
 
 /** One person on the sheet, and where and how they walk. */
 type Peep = {
-  sx: number
-  sy: number
+  column: number
+  row: number
   /** Walking right (1) or left (-1); the drawing faces right. */
   direction: 1 | -1
   x: number
@@ -77,6 +77,34 @@ function tint(image: HTMLImageElement, ink: string, paper: string) {
 }
 
 /**
+ * The tinted sheet cut to the size each person is drawn at, `cell` device px
+ * a person, once facing right and once facing left. Every frame draws from
+ * these, so a frame copies small pixels one to one: drawing from the full
+ * sheet (3600px wide, kept on the CPU for tint's reads) cost iOS Safari about
+ * 400ms a frame.
+ */
+function cast(tinted: HTMLCanvasElement, cell: { w: number; h: number }) {
+  const from = { w: tinted.width / SHEET.columns, h: tinted.height / SHEET.rows }
+  const facing = (direction: 1 | -1) => {
+    const sheet = document.createElement('canvas')
+    sheet.width = cell.w * SHEET.columns
+    sheet.height = cell.h * SHEET.rows
+    const ctx = sheet.getContext('2d')
+    if (!ctx) return sheet
+    ctx.imageSmoothingQuality = 'high'
+    for (let row = 0; row < SHEET.rows; row++)
+      for (let column = 0; column < SHEET.columns; column++) {
+        // A left-facing person keeps their place on the sheet, mirrored in it.
+        const x = direction === 1 ? column * cell.w : (column + 1) * cell.w
+        ctx.setTransform(direction, 0, 0, 1, x, row * cell.h)
+        ctx.drawImage(tinted, column * from.w, row * from.h, from.w, from.h, 0, 0, cell.w, cell.h)
+      }
+    return sheet
+  }
+  return { 1: facing(1), [-1]: facing(-1) } as Record<1 | -1, HTMLCanvasElement>
+}
+
+/**
  * A crowd of people walking past along the hero's foot, both ways, each at
  * their own pace, packed as in the original: most stand low, cut by the
  * frame's foot; the few who stand higher are always behind those in front,
@@ -94,12 +122,16 @@ export function CrowdScene() {
     const still = window.matchMedia('(prefers-reduced-motion: reduce)').matches
 
     const image = new Image()
-    let sheet: HTMLCanvasElement | null = null
+    /** The sheet in the theme's colours, full size: cut again on a resize. */
+    let tinted: HTMLCanvasElement | null = null
+    /** The sheet cut to stage size, by the way a person faces (see cast). */
+    let sheets: Record<1 | -1, HTMLCanvasElement> | null = null
+    /** A person's cell on `sheets`, in device px. */
     let cell = { w: 0, h: 0 }
     let stage = { w: 0, h: 0 }
     /** A person's size on the stage. */
     let size = { w: 0, h: 0 }
-    const pool: { sx: number; sy: number }[] = []
+    const pool: { column: number; row: number }[] = []
     let crowd: Peep[] = []
 
     const enter = (anywhere: boolean): Peep => {
@@ -129,18 +161,36 @@ export function CrowdScene() {
       const ratio = window.devicePixelRatio || 1
       ctx.setTransform(ratio, 0, 0, ratio, 0, 0)
       ctx.clearRect(0, 0, stage.w, stage.h)
-      if (!sheet) return
+      if (!sheets) return
       const bob = size.h * 0.03
       for (const peep of crowd) {
         // Up and down twice a second, eased at the top and the foot of each step.
         const phase = (peep.t / 0.25) % 2
         const lift = bob * (0.5 - 0.5 * Math.cos(Math.PI * (phase < 1 ? phase : 2 - phase)))
-        ctx.save()
-        ctx.translate(peep.x + (peep.direction === -1 ? size.w : 0), peep.y - lift)
-        ctx.scale(peep.direction, 1)
-        ctx.drawImage(sheet, peep.sx, peep.sy, cell.w, cell.h, 0, 0, size.w, size.h)
-        ctx.restore()
+        ctx.drawImage(
+          sheets[peep.direction],
+          peep.column * cell.w,
+          peep.row * cell.h,
+          cell.w,
+          cell.h,
+          peep.x,
+          peep.y - lift,
+          size.w,
+          size.h,
+        )
       }
+    }
+
+    /** Cut the tinted sheet to the stage's person size, at most the drawing's own. */
+    const recast = () => {
+      if (!tinted) return
+      const ratio = window.devicePixelRatio || 1
+      const scale = Math.min(1, (size.h * ratio) / (image.naturalHeight / SHEET.rows))
+      cell = {
+        w: Math.max(1, Math.round((image.naturalWidth / SHEET.columns) * scale)),
+        h: Math.max(1, Math.round((image.naturalHeight / SHEET.rows) * scale)),
+      }
+      sheets = cast(tinted, cell)
     }
 
     const resize = () => {
@@ -148,7 +198,9 @@ export function CrowdScene() {
       stage = { w: canvas.clientWidth, h: canvas.clientHeight }
       canvas.width = Math.round(stage.w * ratio)
       canvas.height = Math.round(stage.h * ratio)
-      size = { h: stage.h * HEIGHT, w: stage.h * HEIGHT * (cell.w / cell.h) }
+      const h = stage.h * HEIGHT
+      size = { h, w: h * (image.naturalWidth / SHEET.columns / (image.naturalHeight / SHEET.rows)) }
+      recast()
       fill()
       draw()
     }
@@ -184,9 +236,13 @@ export function CrowdScene() {
 
     // Ink and paper as the stylesheet sets them for this theme (see
     // crowd-scene.module.css); read again on a change of theme.
-    const paint = () => {
+    const retint = () => {
       const ink = getComputedStyle(canvas.parentElement ?? canvas).color
-      sheet = tint(image, ink, getComputedStyle(canvas).color)
+      tinted = tint(image, ink, getComputedStyle(canvas).color)
+    }
+    const paint = () => {
+      retint()
+      recast()
       draw()
     }
     // The theme's colours ease in over a moment: paint at once, and again once settled.
@@ -197,17 +253,13 @@ export function CrowdScene() {
       settle = window.setTimeout(paint, 600)
     })
 
-    const sizes = new ResizeObserver(() => sheet && resize())
+    const sizes = new ResizeObserver(() => tinted && resize())
     const seen = new IntersectionObserver(([entry]) => (entry.isIntersecting ? play() : pause()))
     image.onload = () => {
-      cell = { w: image.naturalWidth / SHEET.columns, h: image.naturalHeight / SHEET.rows }
       for (let i = 0; i < SHEET.columns * SHEET.rows; i++)
         if (!LEFT_OUT.has(i))
-          pool.push({
-            sx: (i % SHEET.columns) * cell.w,
-            sy: Math.floor(i / SHEET.columns) * cell.h,
-          })
-      paint()
+          pool.push({ column: i % SHEET.columns, row: Math.floor(i / SHEET.columns) })
+      retint()
       resize()
       canvas.dataset.ready = ''
       theme.observe(document.documentElement, {
