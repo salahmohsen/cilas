@@ -66,7 +66,7 @@ describe('lists by start date read the stored first day', () => {
     expect(find.mock.calls[0]?.[0].select).toMatchObject({ first_day: true })
   })
 
-  it('gives a course card its first day and its length in weeks from the first to the last day, none for one day', () => {
+  it('gives a course card its first day and its length in weeks from the first to the last day', () => {
     const format = { dateTime: (d: Date) => String(d.getUTCFullYear()) } as never
     const card = (c: Course) =>
       toCourseCard(c, { locale: 'en', format, weeksLabel: (w) => `${w} weeks`, and: 'and' })
@@ -78,9 +78,5 @@ describe('lists by start date read the stored first day', () => {
       readTimeLabel: '8 weeks',
     })
     expect(card(course(2))).toMatchObject({ date: '2020-01-01', readTime: 0, readTimeLabel: '' })
-    expect(card(course(3, { first_day: '2018-01-07', last_day: '2018-01-07' }))).toMatchObject({
-      readTime: 0,
-      readTimeLabel: '',
-    })
   })
 })

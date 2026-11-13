@@ -104,12 +104,9 @@ export const toCourseCard = (
   const fellows = (c.fellows ?? []).filter((p): p is Person => typeof p === 'object' && p !== null)
   const image = media(c.cover_image)
   const date = c.first_day ?? cycle?.start_date ?? c.createdAt
-  // `weeks` reads only the first and last day, which the course stores. A
-  // course that meets on one day has no length in weeks.
+  // `weeks` reads only the first and last day, which the course stores.
   const length =
-    c.first_day && c.last_day && c.first_day !== c.last_day
-      ? weeks([{ date: c.first_day }, { date: c.last_day }])
-      : 0
+    c.first_day && c.last_day ? weeks([{ date: c.first_day }, { date: c.last_day }]) : 0
   return {
     id: String(c.id),
     href: pathOf('courses', c, locale) ?? '#',
