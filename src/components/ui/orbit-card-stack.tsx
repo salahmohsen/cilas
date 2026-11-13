@@ -6,14 +6,15 @@ import Image from 'next/image'
  * Componentry's Orbit Card Stack (componentry.dev/docs/components/orbit-card-stack),
  * adapted: cards are links, colours come from the site's tokens so both
  * themes work, motion comes from `motion/react` (already a dependency), the
- * fan follows the reading direction, and a card without an image shows its
- * initials on a plain surface instead of the drawn portrait.
+ * fan follows the reading direction, and a card without an image shows the
+ * CILAS logo on a plain surface instead of the drawn portrait.
  */
 
 import { ArrowUpRight } from 'lucide-react'
 import { useReducedMotion } from 'motion/react'
 import { type CSSProperties, type FocusEvent, useMemo, useRef, useState } from 'react'
 
+import { CilasLogo } from '@/components/cilas-logo'
 import { Link } from '@/i18n/navigation'
 import { cn } from '@/lib/utils'
 import { focalPointStyle, type FocalPoint } from '@/lib/media-image'
@@ -28,7 +29,6 @@ export interface OrbitStackItem {
   image?: string
   imageAlt?: string
   imageFocalPoint?: FocalPoint
-  initials?: string
   /** The footer line, e.g. its place in a series. */
   stat?: string
 }
@@ -48,15 +48,6 @@ interface OrbitCardStackProps {
 const inRange = (index: number, length: number) =>
   Math.min(Math.max(0, index), Math.max(0, length - 1))
 
-const initialsFor = (item: OrbitStackItem) =>
-  item.initials ??
-  item.name
-    .split(/\s+/)
-    .map((part) => part.at(0))
-    .join('')
-    .slice(0, 2)
-    .toUpperCase()
-
 function Portrait({ item }: { item: OrbitStackItem }) {
   return (
     <div className="relative flex aspect-[1.36] w-full overflow-hidden rounded-[1.15rem] bg-[var(--surface-muted,var(--muted))] outline outline-1 -outline-offset-1 outline-black/10 dark:outline-white/10">
@@ -70,9 +61,7 @@ function Portrait({ item }: { item: OrbitStackItem }) {
           style={focalPointStyle(item.imageFocalPoint)}
         />
       ) : (
-        <span className="m-auto font-heading text-5xl text-[var(--text-muted)]">
-          {initialsFor(item)}
-        </span>
+        <CilasLogo className="article-fallback-logo m-auto" />
       )}
     </div>
   )
