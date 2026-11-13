@@ -160,3 +160,64 @@ export const summary = (
   const sessions = new Set(list.map((m, i) => m.session ?? `meeting ${i}`)).size
   return { kind: 'dates', sessions, first: first.date, last: last.date }
 }
+
+/** What a course calls one session: "Session 3" or "Week 3" (`course.session_unit`). */
+export type SessionUnit = 'session' | 'week'
+
+export const sessionUnitOf = (value: string | null | undefined): SessionUnit =>
+  value === 'week' ? 'week' : 'session'
+
+/**
+ * A session in its course's order. `number` counts from 1 and counts
+ * cancelled sessions too, so a cancelled session keeps its place. `meetings`
+ * are its own, in time order. `day` is its first meeting not cancelled
+ * (else its first): the day the syllabus and a space post show for it.
+ */
+export type NumberedSession<T> = {
+  session: T
+  number: number
+  unit: SessionUnit
+  meetings: CourseMeeting[]
+  day: string | null
+}
+
+/** The course's sessions in order, each with its number, unit, meetings and day. */
+export const numberedSessions = <T extends SessionTimes>(
+  sessions: readonly T[],
+  unit: string | null | undefined,
+): NumberedSession<T>[] => {
+  const meetings = meetingsOf(sessions)
+  return sessionsInOrder(sessions).map((session, index) => {
+    const own = meetings.filter((m) => m.session === index + 1)
+    return {
+      session,
+      number: index + 1,
+      unit: sessionUnitOf(unit),
+      meetings: own,
+      day: (own.find((m) => !m.cancelled) ?? own[0])?.date ?? null,
+    }
+  })
+}
+
+/**
+ * The session the course meets for next: the one with the first meeting not
+ * cancelled on or after `today` (a Cairo day). Null after the last one.
+ */
+export const upcomingSession = <T>(
+  sessions: readonly NumberedSession<T>[],
+  today: string,
+): NumberedSession<T> | null => {
+  const next = nextMeeting(
+    sessions.flatMap((s) => s.meetings),
+    today,
+  )
+  return next ? (sessions.find((s) => s.number === next.session) ?? null) : null
+}
+
+/**
+ * A meeting's stable name within what it belongs to (`owner`, e.g. a
+ * session ID): its day and start time. It stays the same when other meetings
+ * are added or moved, so a calendar app updates the entry, not a copy.
+ */
+export const meetingKey = (owner: string | number, m: Meeting): string =>
+  `${owner}-${m.date}-${m.start_time ? m.start_time.replace(':', '') : 'day'}`

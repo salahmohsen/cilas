@@ -2,6 +2,7 @@
 import { getPayload, type Payload } from 'payload'
 import { afterAll, beforeAll, describe, expect, it } from 'vitest'
 
+import { getCourseSessions } from '@/api/sessions.api'
 import config from '@/payload.config'
 import type { User } from '@/payload-types'
 
@@ -114,6 +115,28 @@ beforeAll(async () => {
 afterAll(async () => {
   await cleanup(payload)
   await payload.destroy()
+})
+
+describe('getCourseSessions', () => {
+  it('gives each course its sessions in time order, as the reader may see them', async () => {
+    const earlier = await session(published, '2034-10-05')
+    const ids = (list: { id: number }[] | undefined) => list?.map((s) => s.id)
+
+    const anyone = await getCourseSessions(payload, [published, draftOnly], {
+      locale: 'en',
+      reader: null,
+    })
+    expect(ids(anyone.get(published))).toEqual([earlier, publishedSession])
+    expect(ids(anyone.get(draftOnly))).toEqual([])
+
+    const ownFellow = await getCourseSessions(payload, [draftOnly], {
+      locale: 'en',
+      reader: fellow,
+    })
+    expect(ids(ownFellow.get(draftOnly))).toEqual([draftSession])
+
+    await payload.delete({ collection: 'sessions', id: earlier, overrideAccess: true })
+  })
 })
 
 describe('sessions', () => {
