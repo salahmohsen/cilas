@@ -1,5 +1,5 @@
 import type { SOCIAL_PLATFORMS } from '@/fields/social'
-import type { Course, Event, Place, User } from '@/payload-types'
+import type { Course, Event, Place, Session, User } from '@/payload-types'
 import type { CourseType } from '@/fields/course-type'
 
 /**
@@ -87,22 +87,36 @@ export type MaterialSeed = {
   href?: string | null
 }
 
-type SessionDraft = NonNullable<Draft<Course>['sessions']>[number]
-
-export type SessionSeed = Omit<SessionDraft, 'description' | 'bibliography'> & {
+/** A session document of a seeded course (ADR 0011), in English. */
+export type SessionSeed = Partial<
+  Omit<Draft<Session>, 'course' | 'position' | 'bibliography' | 'title'>
+> & {
+  title?: string
+  /** Markdown. */
   description?: string
   bibliography?: MaterialSeed[]
+  /** Arabic title, written in a follow-up `locale: 'ar'` update. */
+  title_ar?: string
 }
 
 export type ScheduleSeed = NonNullable<Draft<Course>['schedule']>
 
 export type CourseSeed = Omit<
   Draft<Course>,
-  'description' | 'sessions' | 'fellows' | 'cycle' | 'slug' | 'schedule' | 'session_unit'
+  | 'description'
+  | 'sessions'
+  | 'syllabus'
+  | 'fellows'
+  | 'cycle'
+  | 'slug'
+  | 'schedule'
+  | 'session_unit'
+  | 'first_day'
+  | 'last_day'
 > & {
   description?: string
+  /** Written as session documents of the course. */
   sessions?: SessionSeed[]
-  schedule?: ScheduleSeed
   /** Defaults to `session`. */
   session_unit?: Course['session_unit']
   /** User emails, resolved to user ids. */

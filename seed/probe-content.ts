@@ -1,6 +1,9 @@
 import { config as loadEnv } from 'dotenv'
 import { getPayload } from 'payload'
 
+import type { SessionSeed } from './seed.type'
+import { replaceSessions } from './seed.utils'
+
 /**
  * Dev only: one English event and one course with every field filled, so a
  * designer can see each element the event and course pages can render.
@@ -303,6 +306,7 @@ const upsert = async (
   console.log(
     `${collection}: ${doc.id} /en/${collection === 'events' ? 'events' : 'study'}/${slug}`,
   )
+  return Number(doc.id)
 }
 
 const pricing = {
@@ -357,11 +361,9 @@ await upsert('events', 'probe-full-event', {
   ...(otherCourse ? { course: otherCourse } : {}),
 })
 
-const session = (order: number, extra: Record<string, unknown> = {}) => ({
-  order,
-  session_title: `Session ${order}: a title for this meeting`,
-  meetings: 1,
-  description: short(LOREM),
+const session = (order: number, extra: Partial<SessionSeed> = {}): SessionSeed => ({
+  title: `Session ${order}: a title for this meeting`,
+  description: LOREM,
   bibliography: [
     {
       type: 'reading',
@@ -381,7 +383,9 @@ const session = (order: number, extra: Record<string, unknown> = {}) => ({
   ...extra,
 })
 
-await upsert('courses', 'probe-full-course', {
+const evening = (date: string) => ({ date, start_time: '18:00', end_time: '20:30' })
+
+const probeCourse = await upsert('courses', 'probe-full-course', {
   title: 'Probe: a course with every field filled, and a title long enough to wrap',
   slug: 'probe-full-course',
   tier: 'public',
@@ -397,18 +401,6 @@ await upsert('courses', 'probe-full-course', {
   location: ['OFFLINE', 'ONLINE'],
   teaching_languages: ['en', 'ar'],
   language_note: 'Readings in Arabic, discussion in either.',
-  sessions: [
-    session(1),
-    session(2, { meetings: 2 }),
-    session(3, { cancelled: true }),
-    session(4, {
-      dates: [
-        { date: '2027-01-20T12:00:00.000Z', start_time: '10:00', end_time: '13:00' },
-        { date: '2027-01-22T12:00:00.000Z', start_time: '16:00', end_time: '19:00' },
-      ],
-    }),
-    session(5),
-  ],
   bibliography: [
     {
       type: 'reading',
@@ -423,15 +415,7 @@ await upsert('courses', 'probe-full-course', {
   content_warning: 'Discusses violence and loss in some of the readings.',
   syllabus_tentative: true,
   session_unit: 'week',
-  schedule: {
-    start_date: '2026-12-06T12:00:00.000Z',
-    weeks: 8,
-    slots: [
-      { weekday: 'sun', start_time: '18:00', end_time: '20:30' },
-      { weekday: 'wed', start_time: '18:00', end_time: '20:30' },
-    ],
-    note: 'Hybrid for the first four weeks, then in person only.',
-  },
+  timing_note: 'Hybrid for the first four weeks, then in person only.',
   registration: {
     mode: 'own',
     method: 'external',
@@ -440,5 +424,20 @@ await upsert('courses', 'probe-full-course', {
   },
   pricing_override: pricing,
 })
+
+// One of each kind: a weekly meeting, two meetings in a week, a cancelled
+// session, meetings off the weekly times, and one with no meeting yet.
+await replaceSessions(payload, probeCourse, [
+  session(1, { meetings: [evening('2026-12-06')] }),
+  session(2, { meetings: [evening('2026-12-13'), evening('2026-12-16')] }),
+  session(3, { meetings: [evening('2026-12-20')], cancelled: true }),
+  session(4, {
+    meetings: [
+      { date: '2027-01-20', start_time: '10:00', end_time: '13:00' },
+      { date: '2027-01-22', start_time: '16:00', end_time: '19:00' },
+    ],
+  }),
+  session(5),
+])
 
 process.exit(0)

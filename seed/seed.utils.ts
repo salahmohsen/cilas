@@ -86,22 +86,36 @@ export const link = (title: string, href: string, note?: string): MaterialSeed =
   material('other', title, note, href)
 
 /**
- * A course that meets once a week from `firstDate`, one session per week. The
- * schedule is the pattern; dates come from `expandSchedule()` (ADR 0002).
+ * Makes the course's sessions (ADR 0011), in the given order, in place of
+ * any it has: each holds its own meetings. An Arabic title is written in a
+ * follow-up `locale: 'ar'` update.
  */
-export const weekly = (
-  firstDate: string,
-  start: string,
-  end: string,
+export const replaceSessions = async (
+  payload: Payload,
+  course: number,
   sessions: SessionSeed[],
-): { schedule: ScheduleSeed; sessions: SessionSeed[] } => ({
-  schedule: {
-    start_date: firstDate,
-    weeks: sessions.length,
-    slots: [{ weekday: weekdayOf(firstDate), start_time: start, end_time: end }],
-  },
-  sessions,
-})
+): Promise<void> => {
+  await payload.delete({
+    collection: 'sessions',
+    where: { course: { equals: course } },
+    overrideAccess: true,
+  })
+  for (const [position, { title_ar, bibliography, ...session }] of sessions.entries()) {
+    const { id } = await payload.create({
+      collection: 'sessions',
+      data: { ...session, course, position, bibliography: (bibliography ?? []).map(bib) },
+      overrideAccess: true,
+    })
+    if (title_ar)
+      await payload.update({
+        collection: 'sessions',
+        id,
+        data: { title: title_ar },
+        locale: 'ar',
+        overrideAccess: true,
+      })
+  }
+}
 
 export const once = (date: string, start: string, end: string): ScheduleSeed => ({
   start_date: date,
