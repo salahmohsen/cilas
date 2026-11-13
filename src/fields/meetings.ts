@@ -46,7 +46,8 @@ export const meetingsField = (): ArrayField => ({
   type: 'array',
   labels: { singular: 'Meeting', plural: 'Meetings' },
   admin: {
-    description: 'Cairo time. Leave both times empty for an all-day meeting.',
+    description:
+      'When it meets, in Cairo time: one row a meeting. Leave both times empty for an all-day meeting.',
   },
   fields: [
     {
@@ -54,6 +55,7 @@ export const meetingsField = (): ArrayField => ({
       fields: [
         {
           name: 'date',
+          label: 'Day',
           type: 'text',
           required: true,
           index: true,
@@ -62,12 +64,14 @@ export const meetingsField = (): ArrayField => ({
         },
         {
           name: 'start_time',
+          label: 'Starts',
           type: 'text',
           validate: meetingCheck('start_time'),
           admin: { width: '30%', placeholder: '19:00' },
         },
         {
           name: 'end_time',
+          label: 'Ends',
           type: 'text',
           validate: meetingCheck('end_time'),
           admin: { width: '30%', placeholder: '21:00' },

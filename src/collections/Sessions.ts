@@ -121,13 +121,22 @@ export const Sessions: CollectionConfig = {
       access: { update: adminOnlyField },
       admin: { position: 'sidebar' },
     },
-    { name: 'title', type: 'text', localized: true },
     {
       name: 'cancelled',
       type: 'checkbox',
       admin: {
+        position: 'sidebar',
         description:
           'The session will not take place: marked as cancelled on the page and left off the calendar.',
+      },
+    },
+    {
+      name: 'title',
+      type: 'text',
+      localized: true,
+      admin: {
+        description:
+          'Leave empty to show it as “Session 3” or “Week 3”, by the course’s numbering.',
       },
     },
     meetingsField(),
@@ -144,6 +153,10 @@ export const Sessions: CollectionConfig = {
       name: 'description',
       type: 'textarea',
       localized: true,
+      admin: {
+        description: 'What the session covers. Markdown: **bold**, *italic*, lists, links.',
+        rows: 6,
+      },
     },
     bibliographyField(),
     activitiesField(),
