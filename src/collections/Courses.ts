@@ -2,6 +2,7 @@ import { copyRegistrationTemplate, templateFormHelp } from '@/forms/templates'
 import { tierField } from '@/fields/tier'
 import { previewUrl } from '@/lib/preview-url'
 import { courseDeleteSummary, deleteCourseDependents } from '@/lib/course-delete'
+import { courseDays } from '@/lib/course-days'
 import { blockedUnless, deleteEndpoints } from '@/forms/delete-endpoints'
 import { addSelfAs } from '@/lib/review-ownership'
 import {
@@ -16,6 +17,7 @@ import {
   readTiers,
   WITH_OWNER,
 } from '@/access'
+import { activitiesField } from '@/fields/activities'
 import { bibliographyField } from '@/fields/bibliography'
 import { COURSE_TYPE_OPTIONS } from '@/fields/course-type'
 import {
@@ -39,6 +41,7 @@ import type {
   CollectionAfterDeleteHook,
   CollectionConfig,
   Condition,
+  Field,
 } from 'payload'
 import { ValidationError } from 'payload'
 import type { Course } from '@/payload-types'
@@ -107,6 +110,9 @@ export const revokeDeletedCourseFellows: CollectionAfterDeleteHook<Course> = asy
   return doc
 }
 
+/** Who reads a course; its sessions follow it (collections/Sessions.ts). */
+export const readCourse = readTiers(ownsViaFellows, { drafts: true })
+
 /** Who may delete a course: an admin, or a fellow their own draft. */
 const deleteCourse = isAdminOrOwn(ownsViaFellows, {
   allow: ['fellow'],
@@ -117,7 +123,7 @@ const deleteCourse = isAdminOrOwn(ownsViaFellows, {
 export const Courses: CollectionConfig = {
   slug: 'courses',
   access: {
-    read: readTiers(ownsViaFellows, { drafts: true }),
+    read: readCourse,
     // Without this, any signed-in account reads drafts via the versions endpoint.
     readVersions: isAdminOrOwn(ownsViaFellows, { versions: true }),
     // A fellow saves drafts; an admin approves a course by publishing it.
@@ -367,26 +373,7 @@ export const Courses: CollectionConfig = {
                       ],
                     },
                     bibliographyField(),
-                    {
-                      name: 'activities',
-                      type: 'array',
-                      fields: [
-                        {
-                          name: 'kind',
-                          type: 'select',
-                          required: true,
-                          options: [
-                            { label: 'Discussion', value: 'discussion' },
-                            { label: 'Field visit', value: 'field_visit' },
-                            { label: 'Exercise', value: 'exercise' },
-                            { label: 'Screening', value: 'screening' },
-                            { label: 'Presentation', value: 'presentation' },
-                            { label: 'Other', value: 'other' },
-                          ],
-                        },
-                        { name: 'description', type: 'textarea', localized: true },
-                      ],
-                    },
+                    activitiesField(),
                   ],
                 },
                 bibliographyField('Course bibliography (all sessions)'),
@@ -439,6 +426,37 @@ export const Courses: CollectionConfig = {
           ],
         },
         { label: 'Schedule', fields: [scheduleField()] },
+        {
+          // ADR 0011. Replaces "Course flow" and "Schedule" once readers move off them.
+          label: 'Sessions',
+          fields: [
+            {
+              // Not `sessions`: the old array still holds that name until it is removed.
+              name: 'syllabus',
+              type: 'join',
+              collection: 'sessions',
+              on: 'course',
+              defaultLimit: 0,
+              admin: { allowCreate: true, defaultColumns: ['title', 'cancelled'] },
+            },
+            {
+              name: 'timing_note',
+              type: 'textarea',
+              localized: true,
+              admin: {
+                description:
+                  'What the dates cannot say, e.g. "hybrid for the first 6 weeks, then online".',
+              },
+            },
+            ...(['first_day', 'last_day'] as const).map((name): Field => ({
+              name,
+              type: 'text',
+              index: true,
+              // Kept from the sessions' meetings (lib/course-days.ts).
+              admin: { readOnly: true, hidden: true },
+            })),
+          ],
+        },
         {
           label: 'Applications and contribution',
           admin: {
@@ -570,6 +588,8 @@ export const Courses: CollectionConfig = {
         return data
       },
       stampLastEditor,
+      async ({ data, originalDoc, req }) =>
+        originalDoc?.id ? { ...data, ...(await courseDays(req, originalDoc.id)) } : data,
     ],
     afterChange: [
       ...courseReview.afterChange,

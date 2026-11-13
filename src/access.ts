@@ -300,3 +300,27 @@ export const siteTiers = (reader: unknown): SiteTier[] =>
  * never be published by them. Publishing stays an admin action.
  */
 export const adminOnlyField: FieldAccess = ({ req }) => isAdminUser(req.user)
+
+/* ======================================================== through a relation */
+
+const prefixWhere = (where: Where, field: string): Where =>
+  Object.fromEntries(
+    Object.entries(where).map(([key, value]) =>
+      key === 'and' || key === 'or'
+        ? [key, (value as Where[]).map((w) => prefixWhere(w, field))]
+        : [`${field}.${key}`, value],
+    ),
+  )
+
+/**
+ * The rule of a related document, applied through the relationship: a
+ * session follows its course, so a session is read or edited by whoever may
+ * read or edit `course`. The constraints the rule returns are moved under
+ * `field`. Not for `create`, which Payload asks with no document to query.
+ */
+export const throughRelation =
+  (field: string, access: Access): Access =>
+  async (args) => {
+    const result = await access(args)
+    return typeof result === 'boolean' ? result : prefixWhere(result, field)
+  }

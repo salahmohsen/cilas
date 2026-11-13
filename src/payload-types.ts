@@ -90,6 +90,7 @@ export interface Config {
     governance: Governance;
     media: Media;
     redirects: Redirect;
+    sessions: Session;
     'submission-files': SubmissionFile;
     notifications: Notification;
     'push-subscriptions': PushSubscription;
@@ -116,6 +117,7 @@ export interface Config {
   };
   collectionsJoins: {
     courses: {
+      syllabus: 'sessions';
       enrollments: 'enrollments';
     };
     cycles: {
@@ -154,6 +156,7 @@ export interface Config {
     governance: GovernanceSelect<false> | GovernanceSelect<true>;
     media: MediaSelect<false> | MediaSelect<true>;
     redirects: RedirectsSelect<false> | RedirectsSelect<true>;
+    sessions: SessionsSelect<false> | SessionsSelect<true>;
     'submission-files': SubmissionFilesSelect<false> | SubmissionFilesSelect<true>;
     notifications: NotificationsSelect<false> | NotificationsSelect<true>;
     'push-subscriptions': PushSubscriptionsSelect<false> | PushSubscriptionsSelect<true>;
@@ -1334,6 +1337,17 @@ export interface Course {
      */
     note?: string | null;
   };
+  syllabus?: {
+    docs?: (number | Session)[];
+    hasNextPage?: boolean;
+    totalDocs?: number;
+  };
+  /**
+   * What the dates cannot say, e.g. "hybrid for the first 6 weeks, then online".
+   */
+  timing_note?: string | null;
+  first_day?: string | null;
+  last_day?: string | null;
   registration?: {
     mode: 'follow_cycle' | 'own' | 'closed';
     /**
@@ -1890,6 +1904,60 @@ export interface Place {
       }[]
     | null;
   legacy_url?: string | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "sessions".
+ */
+export interface Session {
+  id: number;
+  course: number | Course;
+  title?: string | null;
+  /**
+   * The session will not take place: marked as cancelled on the page and left off the calendar.
+   */
+  cancelled?: boolean | null;
+  /**
+   * Cairo time. Leave both times empty for an all-day meeting.
+   */
+  meetings?:
+    | {
+        date: string;
+        start_time?: string | null;
+        end_time?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  /**
+   * How this session meets. Leave empty to follow the course location.
+   */
+  delivery?: ('OFFLINE' | 'ONLINE' | 'HYBRID') | null;
+  description?: string | null;
+  bibliography?:
+    | {
+        type: 'reading' | 'watch' | 'listen' | 'prompt' | 'other';
+        title?: string | null;
+        /**
+         * A link to the text, video or recording, if it is online.
+         */
+        href?: string | null;
+        /**
+         * Author, year or pages, e.g. “Arendt, 1958, ch. 2”.
+         */
+        note?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  activities?:
+    | {
+        kind: 'discussion' | 'field_visit' | 'exercise' | 'screening' | 'presentation' | 'other';
+        description?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  position?: number | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -3298,6 +3366,10 @@ export interface PayloadLockedDocument {
         value: number | Redirect;
       } | null)
     | ({
+        relationTo: 'sessions';
+        value: number | Session;
+      } | null)
+    | ({
         relationTo: 'submission-files';
         value: number | SubmissionFile;
       } | null)
@@ -3780,6 +3852,10 @@ export interface CoursesSelect<T extends boolean = true> {
         end_date?: T;
         note?: T;
       };
+  syllabus?: T;
+  timing_note?: T;
+  first_day?: T;
+  last_day?: T;
   registration?:
     | T
     | {
@@ -4605,6 +4681,44 @@ export interface RedirectsSelect<T extends boolean = true> {
         url?: T;
       };
   type?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "sessions_select".
+ */
+export interface SessionsSelect<T extends boolean = true> {
+  course?: T;
+  title?: T;
+  cancelled?: T;
+  meetings?:
+    | T
+    | {
+        date?: T;
+        start_time?: T;
+        end_time?: T;
+        id?: T;
+      };
+  delivery?: T;
+  description?: T;
+  bibliography?:
+    | T
+    | {
+        type?: T;
+        title?: T;
+        href?: T;
+        note?: T;
+        id?: T;
+      };
+  activities?:
+    | T
+    | {
+        kind?: T;
+        description?: T;
+        id?: T;
+      };
+  position?: T;
   updatedAt?: T;
   createdAt?: T;
 }
@@ -5843,6 +5957,7 @@ export interface TaskCreateCollectionExport {
       | 'memberships'
       | 'media'
       | 'courses'
+      | 'sessions'
       | 'enrollments'
       | 'programmes'
       | 'cycles'

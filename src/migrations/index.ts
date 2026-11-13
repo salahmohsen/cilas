@@ -85,6 +85,7 @@ import * as migration_20261112_113621_people_pages from './20261112_113621_peopl
 import * as migration_20261112_113833_notification_joined from './20261112_113833_notification_joined';
 import * as migration_20261112_115346_study_prompts from './20261112_115346_study_prompts';
 import * as migration_20261112_232756_home_hero_scene from './20261112_232756_home_hero_scene';
+import * as migration_20261113_085854_course_sessions_collection from './20261113_085854_course_sessions_collection';
 
 export const migrations = [
   {
@@ -520,6 +521,11 @@ export const migrations = [
   {
     up: migration_20261112_232756_home_hero_scene.up,
     down: migration_20261112_232756_home_hero_scene.down,
-    name: '20261112_232756_home_hero_scene'
+    name: '20261112_232756_home_hero_scene',
+  },
+  {
+    up: migration_20261113_085854_course_sessions_collection.up,
+    down: migration_20261113_085854_course_sessions_collection.down,
+    name: '20261113_085854_course_sessions_collection'
   },
 ];

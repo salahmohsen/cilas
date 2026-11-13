@@ -18,6 +18,7 @@ import {
   publishedOrOwn,
   readEnrollments,
   readTiers,
+  throughRelation,
   WITH_OWNER,
 } from '@/access'
 import type { User } from '@/payload-types'
@@ -360,5 +361,30 @@ describe('OWNER_EDITS', () => {
   it('keeps the ownership path to the allowed roles', () => {
     const rule = isAdminOrOwn(ownsViaFellows, { allow: ['fellow'], while: OWNER_EDITS })
     expect(run(rule, user(['member'], { person: 7 }))).toBe(false)
+  })
+})
+
+describe('throughRelation', () => {
+  const via = throughRelation('course', readTiers(ownsViaFellows, { drafts: true }))
+
+  it('passes a yes or no through', async () => {
+    expect(await via({ req: { user: user(['admin']) } } as never)).toBe(true)
+  })
+
+  it('moves every constraint under the relationship, inside and/or too', async () => {
+    expect(await via({ req: { user: null } } as never)).toEqual({
+      and: [{ 'course.tier': { equals: 'public' } }, { 'course._status': { equals: 'published' } }],
+    })
+    expect(await via({ req: { user: user(['fellow'], { person: 3 }) } } as never)).toEqual({
+      or: [
+        {
+          and: [
+            { 'course.tier': { in: ['community', 'public'] } },
+            { 'course._status': { equals: 'published' } },
+          ],
+        },
+        { 'course.fellows': { contains: 3 } },
+      ],
+    })
   })
 })

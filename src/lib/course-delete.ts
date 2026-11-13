@@ -91,7 +91,16 @@ export const courseDeleteSummary = async (req: PayloadRequest, id: number) => {
     req,
     select: { title: true },
   })
-  const [enrollments, applications, spaces] = await Promise.all([
+  const [sessions, enrollments, applications, spaces] = await Promise.all([
+    req.payload.find({
+      collection: 'sessions',
+      where: { course: { equals: id } },
+      depth: 0,
+      limit: 8,
+      overrideAccess: true,
+      req,
+      select: { title: true },
+    }),
     enrollmentsOf(req, id),
     applicationsFor(req, id),
     req.payload.find({
@@ -130,6 +139,11 @@ export const courseDeleteSummary = async (req: PayloadRequest, id: number) => {
     name: (typeof course.title === 'string' && course.title.trim()) || `Course ${id}`,
     noun: 'course',
     deletes: nonEmpty([
+      group(
+        'sessions',
+        sessions.totalDocs,
+        sessions.docs.map((s) => s.title || `Session ${s.id}`),
+      ),
       group('enrollments', enrollments.length, enrollments.map(personName)),
       group(
         'applications for this course only',
@@ -160,7 +174,7 @@ export const courseDeleteSummary = async (req: PayloadRequest, id: number) => {
  * The courses collection's beforeDelete: removes the rows that hold the
  * course with `course_id NOT NULL` and `ON DELETE set null`, which the
  * database would otherwise refuse ("An unknown error has occurred"). Runs in
- * the delete's transaction (`req`). Enrollments and applications only for
+ * the delete's transaction (`req`). Sessions, enrollments and applications only for
  * this course go; other applications lose this course's choice. Rows that
  * may hold no course (events, publications, mailing lists) clear their link
  * in the database.
@@ -173,6 +187,12 @@ export const deleteCourseDependents = async ({
   req: PayloadRequest
 }): Promise<void> => {
   const course = Number(id)
+  await req.payload.delete({
+    collection: 'sessions',
+    where: { course: { equals: course } },
+    overrideAccess: true,
+    req,
+  })
   await req.payload.delete({
     collection: 'enrollments',
     where: { course: { equals: course } },
