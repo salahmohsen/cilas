@@ -252,9 +252,19 @@ describe('planCourseSessions', () => {
     expect(dated.sessions.map((s) => s.meetings)).toEqual([[at('2026-03-03')], [at('2026-03-10')]])
   })
 
-  it('leaves slots out of the timing note when the course has a start date', () => {
+  it('writes slots the pattern cannot place into the note: a start date with no weeks', () => {
+    const { timingNote, sessions } = plan({
+      schedule: { start_date: '2026-03-03', slots: [tuesdays] },
+    })
+    expect(timingNote).toEqual({ en: 'Tuesday, 19:00–21:00', ar: 'الثلاثاء، ١٩:٠٠–٢١:٠٠' })
+    expect(sessions.map((s) => s.meetings)).toEqual([
+      [{ date: '2026-03-03', start_time: null, end_time: null }],
+    ])
+  })
+
+  it('leaves slots out of the timing note when the pattern places them', () => {
     expect(
-      plan({ schedule: { start_date: '2026-03-03', slots: [tuesdays] } }).timingNote,
+      plan({ schedule: { start_date: '2026-03-03', weeks: 1, slots: [tuesdays] } }).timingNote,
     ).toBeNull()
   })
 })

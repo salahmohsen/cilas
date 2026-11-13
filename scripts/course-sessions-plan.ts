@@ -111,8 +111,9 @@ const timesOf = ({ date, start_time, end_time }: Meeting): Meeting => ({
  * - Rows with no meeting keep their old order through `position`.
  * - A start date with no meeting at all becomes one all-day meeting on the
  *   first session, or on a new one when there is none.
- * - Weekly times with no start date make no meeting; they become words in
- *   the timing note of each language with no note (`timingNoteOf`).
+ * - Weekly times the pattern cannot place (no start date or no weeks) make
+ *   no meeting; they become words in the timing note of each language with
+ *   no note (`timingNoteOf`).
  */
 export const planCourseSessions = (
   course: OldCourse,
@@ -158,14 +159,13 @@ export const planCourseSessions = (
 
 /**
  * The schedule note, or, in a language whose note is empty, the weekly times
- * in words when the course has times but no start date, so no meeting holds
- * them. A person wrote the note; it already says what they meant, so the
- * words never go over it.
+ * in words when the pattern places none of them (no start date or no weeks),
+ * so no meeting holds them. A person wrote the note; it already says what
+ * they meant, so the words never go over it.
  */
 const timingNoteOf = (schedule: OldCourse['schedule']): Localized<string> => {
   const note = schedule?.note
-  // The pattern needs a start date to place a slot.
-  const slots = schedule?.start_date ? [] : (schedule?.slots ?? [])
+  const slots = expandSchedule(schedule).length ? [] : (schedule?.slots ?? [])
   if (!slots.length) return note ?? null
   const out: Partial<Record<Locale, string>> = {}
   for (const locale of LOCALES) out[locale] = note?.[locale] || weeklyTimesText(slots, locale)
