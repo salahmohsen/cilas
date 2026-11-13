@@ -6,7 +6,7 @@ import { useMemo } from 'react'
 import { calendarLabelsFrom, type CalendarHostLabels, type CalendarLabels } from './calendar-labels'
 
 /** The calendar's words from `messages/*.json` (`CalendarUi`). */
-export function useCalendarLabels({ kind, newItem }: CalendarHostLabels): CalendarLabels {
+export function useCalendarLabels({ kind, newItem, menu }: CalendarHostLabels): CalendarLabels {
   const t = useTranslations('CalendarUi')
-  return useMemo(() => calendarLabelsFrom(t, { kind, newItem }), [t, kind, newItem])
+  return useMemo(() => calendarLabelsFrom(t, { kind, newItem, menu }), [t, kind, newItem, menu])
 }

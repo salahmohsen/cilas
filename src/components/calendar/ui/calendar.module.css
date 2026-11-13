@@ -534,6 +534,75 @@
   gap: var(--space-2);
 }
 
+/* The "⋯" is a pointer's way to the block menu; the keyboard has Shift+F10 and the Menu key. */
+.more {
+  position: absolute;
+  inset-block-start: 0.125rem;
+  inset-inline-end: 0.125rem;
+  z-index: 1;
+  display: none;
+  place-items: center;
+  inline-size: 1.25rem;
+  block-size: 1.25rem;
+  border: 1px solid var(--tone-line);
+  border-radius: var(--radius-pill);
+  background: var(--surface);
+  color: var(--foreground);
+}
+.block:focus .more,
+.block[data-selected] .more {
+  display: grid;
+}
+@media (hover: hover) {
+  .block:hover .more {
+    display: grid;
+  }
+}
+@media (pointer: coarse) {
+  .more {
+    inline-size: 1.5rem;
+    block-size: 1.5rem;
+  }
+}
+
+.menu {
+  box-sizing: border-box;
+  min-inline-size: 12rem;
+  max-inline-size: calc(100vw - 1rem);
+  margin: 0;
+  padding: 0.25rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-panel);
+  background: var(--surface-raised);
+  color: var(--foreground);
+  box-shadow: var(--shadow-floating);
+}
+.menuItem {
+  display: flex;
+  align-items: center;
+  min-block-size: 2.25rem;
+  padding-inline: var(--space-3);
+  border-radius: calc(var(--radius-panel) - 0.25rem);
+  font-size: var(--text-sm);
+  cursor: pointer;
+  user-select: none;
+}
+.menuItem[data-highlighted] {
+  background: var(--surface-muted);
+}
+.menuItem[data-disabled] {
+  opacity: 0.45;
+  cursor: default;
+}
+.menuItem[data-danger] {
+  color: var(--danger);
+}
+.menuSeparator {
+  margin-block: 0.25rem;
+  border: 0;
+  border-block-start: 1px solid var(--border);
+}
+
 @media (prefers-reduced-motion: no-preference) {
   .block {
     transition: box-shadow var(--duration-fast) var(--ease-standard);

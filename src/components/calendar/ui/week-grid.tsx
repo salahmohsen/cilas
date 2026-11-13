@@ -1,4 +1,5 @@
-import { Plus, RotateCcw } from 'lucide-react'
+import { MenuContextTrigger, type MenuController } from '@ui-sdk/react/menu'
+import { Ellipsis, Plus, RotateCcw } from 'lucide-react'
 import type { CSSProperties } from 'react'
 
 import { timeDir } from '@/lib/digits'
@@ -31,6 +32,8 @@ type Props = {
   newTone: string
   /** Set when a day's "+" can draw a new item. */
   onDraw?: (day: string) => void
+  /** Set when blocks have a menu: it opens on right-click, long press, Shift+F10 and the Menu key. */
+  menu?: MenuController<string>
   /** The id of the text that says how to edit. */
   hintId: string
   onOpen: (itemId: string, blockId: string | null) => void
@@ -53,6 +56,7 @@ export function WeekGrid({
   nameOf,
   newTone,
   onDraw,
+  menu,
   hintId,
   onOpen,
 }: Props) {
@@ -156,6 +160,33 @@ export function WeekGrid({
                     data-unsaved={edited ? '' : undefined}
                     data-deleted={block.deleted ? '' : undefined}
                     data-selected={block.id === selectedId ? '' : undefined}
+                    onKeyDown={
+                      menu && !block.deleted
+                        ? (event) => {
+                            // Not every browser turns these keys into a context menu event.
+                            if (
+                              event.key !== 'ContextMenu' &&
+                              !(event.shiftKey && event.key === 'F10')
+                            )
+                              return
+                            event.preventDefault()
+                            void menu.open({
+                              payload: block.id,
+                              anchor: event.currentTarget,
+                              focus: 'first',
+                            })
+                          }
+                        : undefined
+                    }
+                    render={
+                      menu && !block.deleted ? (
+                        <MenuContextTrigger
+                          controller={menu}
+                          payload={block.id}
+                          render={<button />}
+                        />
+                      ) : undefined
+                    }
                   >
                     {editable && !block.deleted ? (
                       <span className={styles.edge} data-span-edge="start" aria-hidden />
@@ -178,6 +209,11 @@ export function WeekGrid({
                     </span>
                     {editable && !block.deleted ? (
                       <span className={styles.edge} data-span-edge="end" aria-hidden />
+                    ) : null}
+                    {menu && !block.deleted ? (
+                      <span className={styles.more} data-block-menu aria-hidden>
+                        <Ellipsis size={14} />
+                      </span>
                     ) : null}
                   </WeekSpans.Span>
                 )

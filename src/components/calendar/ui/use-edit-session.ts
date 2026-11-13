@@ -1,11 +1,12 @@
 'use client'
 
 import type { ChangeDetails, SpanAction, SpansReason } from '@ui-sdk/core'
-import { useEffect, useMemo, useRef, useState, type RefObject } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState, type RefObject } from 'react'
 
 import type { CalendarChange, CalendarItem } from '@/lib/calendar-items'
 
 import { changesOf, keepDeleted, restoreBlock, unsavedIdsOf } from './calendar-edits'
+import { addDays } from './calendar-time'
 import {
   DEFAULT_MINUTES,
   firstFreeStart,
@@ -59,17 +60,26 @@ export function useEditSession({ items, newItemKind, onSave, scope, range }: Opt
   )
   const unsaved = useMemo(() => unsavedIdsOf(base, working), [base, working])
 
+  /** The block to put focus on, or the "+" or day it was on when the block is gone. */
+  const focusable = useCallback(
+    (target: FocusTarget) => {
+      const el = scope.current
+      return (
+        el?.querySelector<HTMLElement>(`[data-span-id="${CSS.escape(target.id)}"]`) ??
+        el?.querySelector<HTMLElement>(`[data-add="${target.track}"]`) ??
+        el?.querySelector<HTMLElement>(`[data-track="${target.track}"]`) ??
+        null
+      )
+    },
+    [scope],
+  )
+
   useEffect(() => {
     const target = focusTarget.current
     if (!target) return
     focusTarget.current = null
-    const el = scope.current
-    const found =
-      el?.querySelector<HTMLElement>(`[data-span-id="${CSS.escape(target.id)}"]`) ??
-      el?.querySelector<HTMLElement>(`[data-add="${target.track}"]`) ??
-      el?.querySelector<HTMLElement>(`[data-track="${target.track}"]`)
-    found?.focus()
-  }, [working, scope])
+    focusable(target)?.focus()
+  }, [working, focusable])
 
   const add = (block: TimedBlock) => {
     focusTarget.current = { id: block.id, track: block.track }
@@ -124,6 +134,45 @@ export function useEditSession({ items, newItemKind, onSave, scope, range }: Opt
       )
       add(newBlock(itemId, track, from, from + DEFAULT_MINUTES))
     },
+
+    /** The same time on the next day, on the block's item. Returns the new block. */
+    addNextDay(id: string): TimedBlock | null {
+      const block = working.find((candidate) => candidate.id === id)
+      if (!block) return null
+      const copy = newBlock(block.itemId, addDays(block.track, 1), block.start, block.end)
+      setWorking((blocks) => [...blocks, copy])
+      return copy
+    },
+
+    /** A new item with all the live blocks of this block's item, 7 days later. Returns its blocks. */
+    copyNextWeek(id: string): TimedBlock[] {
+      const block = working.find((candidate) => candidate.id === id)
+      if (!block) return []
+      const itemId = newItemId()
+      const copies = working
+        .filter((candidate) => candidate.itemId === block.itemId && !candidate.deleted)
+        .map((live) => newBlock(itemId, addDays(live.track, 7), live.start, live.end))
+      setWorking((blocks) => [...blocks, ...copies])
+      return copies
+    },
+
+    /** Delete one block: a loaded one stays as a ghost, one made on the page is gone. */
+    removeBlock(id: string) {
+      const track = working.find((block) => block.id === id)?.track
+      if (!track) return
+      focusTarget.current = { id, track }
+      setWorking((blocks) =>
+        keepDeleted(
+          blocks,
+          blocks.filter((block) => block.id !== id),
+          id,
+          base,
+        ),
+      )
+    },
+
+    /** Where focus goes when the block menu closes: the block, or what is left of it. */
+    focusable,
 
     restore(id: string) {
       focusTarget.current = { id, track: working.find((block) => block.id === id)?.track ?? '' }

@@ -22,7 +22,17 @@ export const calendarAdminText = (language: AdminLanguage, messages: CalendarAdm
   const t = createTranslator({ locale: language, messages, namespace: 'CalendarAdmin' })
   return {
     t,
-    labels: calendarLabelsFrom(ui, { kind: () => t('session'), newItem: t('newSession') }),
+    labels: calendarLabelsFrom(ui, {
+      kind: () => t('session'),
+      newItem: t('newSession'),
+      menu: {
+        addNextDay: t('addMeeting'),
+        copyNextWeek: t('newSessionNextWeek'),
+        deleteBlock: t('deleteMeeting'),
+        addedNextDay: (day) => t('addedMeeting', { day }),
+        copiedNextWeek: (day) => t('madeSessionNextWeek', { day }),
+      },
+    }),
     /** A plain sentence for a save that did not happen. */
     errorText: (error: CalendarSaveError): string => {
       switch (error.code) {

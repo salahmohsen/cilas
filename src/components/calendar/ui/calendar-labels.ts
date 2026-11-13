@@ -1,5 +1,20 @@
 import type { useTranslations } from 'next-intl'
 
+/** The words of a block's menu. A host that gives none gets no menu. */
+export type CalendarMenuLabels = {
+  /** The menu's name: "Actions for Week 3". */
+  name: (title: string) => string
+  open: string
+  /** Adds a block to the same item, at the same time on the next day. */
+  addNextDay: string
+  /** Makes a new item with all the blocks of this one, a week later. */
+  copyNextWeek: string
+  deleteBlock: string
+  /** What screen readers hear after the first two, since the new block may be in another week. */
+  addedNextDay: (day: string) => string
+  copiedNextWeek: (day: string) => string
+}
+
 /**
  * Every word the calendar shows. The host supplies them: the site from
  * `messages/*.json` through `calendarLabelsFrom`. The component holds no copy of its own.
@@ -47,6 +62,8 @@ export type CalendarLabels = {
   addBlock: (day: string) => string
   /** The menu that puts an unscheduled item on a day, the keyboard's way to place it. */
   placeOnDay: string
+  /** The block menu: right-click, the "⋯" on a block, Shift+F10 or the Menu key. */
+  menu?: CalendarMenuLabels
   /** What screen readers hear after an edit. */
   announce: (type: 'draw' | 'move' | 'resize' | 'delete' | 'cancel', label: string) => string
 }
@@ -55,6 +72,11 @@ export type CalendarLabels = {
 export type CalendarHostLabels = {
   kind: CalendarLabels['kind']
   newItem: string
+  /** What the block menu's actions are called. Without it the calendar has no block menu. */
+  menu?: Pick<
+    CalendarMenuLabels,
+    'addNextDay' | 'copyNextWeek' | 'deleteBlock' | 'addedNextDay' | 'copiedNextWeek'
+  >
 }
 
 /** The `CalendarUi` namespace of `messages/*.json`, from `useTranslations` or `createTranslator`. */
@@ -63,7 +85,7 @@ export type CalendarTranslator = ReturnType<typeof useTranslations<'CalendarUi'>
 /** Every label, from the shared translations. The site and the admin both build theirs here. */
 export const calendarLabelsFrom = (
   t: CalendarTranslator,
-  { kind, newItem }: CalendarHostLabels,
+  { kind, newItem, menu }: CalendarHostLabels,
 ): CalendarLabels => ({
   name: t('name'),
   cairoTime: t('cairoTime'),
@@ -96,5 +118,10 @@ export const calendarLabelsFrom = (
   editHint: t('editHint'),
   addBlock: (day) => t('addBlock', { day }),
   placeOnDay: t('placeOnDay'),
+  menu: menu && {
+    ...menu,
+    name: (title) => t('menuName', { title }),
+    open: t('menuOpen'),
+  },
   announce: (type, label) => t('announce', { type, label }),
 })

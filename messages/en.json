@@ -553,9 +553,11 @@
     "cancelEdits": "Cancel",
     "changes": "{count, plural, one {# unsaved change} other {# unsaved changes}}",
     "saveFailed": "The changes were not saved. They are still here.",
-    "editHint": "Draw on an empty slot to add a block. Drag a block to move it and its edge to resize it. With the keyboard, use the arrow keys to move, Shift and the arrow keys to resize, and Delete to remove.",
+    "editHint": "Draw on an empty slot to add a block. Drag a block to move it and its edge to resize it. With the keyboard, use the arrow keys to move, Shift and the arrow keys to resize, and Delete to remove. For more actions, right-click a block, or press Shift+F10 or the Menu key on it.",
     "addBlock": "Add a block on {day}",
     "placeOnDay": "Place on day",
+    "menuName": "Actions for {title}",
+    "menuOpen": "Open",
     "announce": "{type, select, draw {Added} move {Moved} resize {Resized} delete {Deleted} cancel {Cancelled the change to} other {}} {label}"
   },
   "CalendarAdmin": {
@@ -568,6 +570,12 @@
     "loadFailed": "The calendar could not load.",
     "retry": "Try again",
     "unsavedCourse": "Save the course first. Then you can add sessions on a calendar here.",
+    "addMeeting": "Add meeting",
+    "newSessionNextWeek": "New session next week",
+    "deleteMeeting": "Delete meeting",
+    "addedMeeting": "Added a meeting on {day}",
+    "madeSessionNextWeek": "Made a new session starting {day}",
+    "saveSchedule": "Save schedule",
     "errors": {
       "unauthenticated": "Sign in again to save.",
       "forbidden": "You may not change these sessions.",

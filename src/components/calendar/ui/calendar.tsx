@@ -1,11 +1,13 @@
 'use client'
 
+import { createMenuController } from '@ui-sdk/react/menu'
 import { useId, useMemo, useRef, useState } from 'react'
 
 import SegmentedControl from '@/components/arc/segmented-control/segmented-control'
 import type { CalendarChange, CalendarItem } from '@/lib/calendar-items'
 
-import { blockNamer } from './block-names'
+import { BlockMenu, type BlockAction, type BlockMenuEntry } from './block-menu'
+import { blockNamer, longDay } from './block-names'
 import { allDayBlocks, hourRange, legendOf, timedBlocks } from './calendar-model'
 import type { CalendarLabels } from './calendar-labels'
 import { CalendarToolbar } from './calendar-toolbar'
@@ -67,6 +69,9 @@ export function Calendar({
   const now = useNow()
   const [hour12, setHour12] = useHour12()
   const [selectedId, setSelectedId] = useState<string | null>(null)
+  const [menu] = useState(() => createMenuController<string>())
+  const [told, setTold] = useState('')
+  const menuTarget = useRef<string | null>(null)
 
   const [start, setStart] = useState(() => weekStartOf(day ?? cairoNow().date))
   const [selectedIndex, setSelectedIndex] = useState(() =>
@@ -123,6 +128,57 @@ export function Calendar({
     [session.items, labels, locale, hour12, session.unsaved],
   )
 
+  const blockMenu = labels.menu
+  const entriesOf = (blockId: string): BlockMenuEntry[] => {
+    const block = session.working.find((candidate) => candidate.id === blockId)
+    if (!block) return []
+    const entries: BlockMenuEntry[] = [{ action: 'open', disabled: !itemIds.has(block.itemId) }]
+    if (editable) {
+      entries.push({ action: 'add-next-day' })
+      if (newItemKind) entries.push({ action: 'copy-next-week' })
+      entries.push({ action: 'delete' })
+    }
+    return entries
+  }
+
+  const runBlockAction = (action: BlockAction, blockId: string) => {
+    const block = session.working.find((candidate) => candidate.id === blockId)
+    if (!block || !blockMenu) return
+    menuTarget.current = blockId
+    switch (action) {
+      case 'open':
+        // The host puts focus back on the block when its dialog closes, so the block has it now.
+        session.focusable({ id: blockId, track: block.track })?.focus()
+        onOpen(block.itemId, block.blockId)
+        break
+      case 'add-next-day': {
+        const copy = session.addNextDay(blockId)
+        if (copy) {
+          menuTarget.current = copy.id
+          setTold(blockMenu.addedNextDay(longDay(copy.track, locale)))
+        }
+        break
+      }
+      case 'copy-next-week': {
+        const [first] = session
+          .copyNextWeek(blockId)
+          .toSorted((a, b) => a.track.localeCompare(b.track))
+        if (first) setTold(blockMenu.copiedNextWeek(longDay(first.track, locale)))
+        break
+      }
+      case 'delete':
+        session.removeBlock(blockId)
+        break
+    }
+  }
+
+  const menuFocus = () => {
+    const wanted = menuTarget.current ?? menu.getPayload() ?? null
+    menuTarget.current = null
+    const block = session.working.find((candidate) => candidate.id === wanted)
+    return wanted && block ? session.focusable({ id: wanted, track: block.track }) : null
+  }
+
   return (
     <div className={styles.root} role="group" aria-label={labels.name}>
       <WeekSpans.Root
@@ -144,6 +200,8 @@ export function Calendar({
         message={({ type, label }) => labels.announce(type, label)}
         onPress={(block, event) => {
           if (block.deleted) return session.restore(block.id)
+          const more = (event?.target as Element | null | undefined)?.closest('[data-block-menu]')
+          if (more) return void menu.open({ payload: block.id, anchor: more })
           const touch = (event as PointerEvent | undefined)?.pointerType === 'touch'
           if (editable && touch && selectedId !== block.id) return setSelectedId(block.id)
           if (itemIds.has(block.itemId)) onOpen(block.itemId, block.blockId)
@@ -211,6 +269,7 @@ export function Calendar({
           nameOf={nameOf}
           newTone={newTone}
           onDraw={newItemKind ? session.drawOnDay : undefined}
+          menu={blockMenu ? menu : undefined}
           hintId={hintId}
           onOpen={onOpen}
         />
@@ -228,8 +287,25 @@ export function Calendar({
         ) : null}
 
         <p role="status" className={styles.srOnly}>
-          {session.changes.length ? labels.changes(session.changes.length) : ''}
+          {told}
+          {session.changes.length ? ` ${labels.changes(session.changes.length)}` : ''}
         </p>
+
+        {blockMenu ? (
+          <BlockMenu
+            controller={menu}
+            labels={blockMenu}
+            titleOf={(blockId) => {
+              const block = session.working.find((candidate) => candidate.id === blockId)
+              return (
+                session.items.find((item) => item.id === block?.itemId)?.title ?? labels.newItem
+              )
+            }}
+            entriesOf={entriesOf}
+            onAction={runBlockAction}
+            finalFocus={menuFocus}
+          />
+        ) : null}
 
         {editable && (session.changes.length || session.error) ? (
           <SaveBar
