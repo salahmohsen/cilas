@@ -1,6 +1,11 @@
 import { describe, expect, it } from 'vitest'
 
-import { planCourseSessions, type OldCourse, type OldRow } from '../../scripts/course-sessions-plan'
+import {
+  fillSource,
+  planCourseSessions,
+  type OldCourse,
+  type OldRow,
+} from '../../scripts/course-sessions-plan'
 
 // A stand-in for convertLexicalToMarkdown: the fixture's "Lexical" is { md }.
 const toMarkdown = (lexical: unknown) => (lexical as { md: string }).md
@@ -163,8 +168,8 @@ describe('planCourseSessions', () => {
     expect(result.sessions[0]?.meetings).toEqual([at('2026-03-05', '10:00', '12:00')])
   })
 
-  it('makes nothing from slots with no start date', () => {
-    expect(plan({ schedule: { weeks: 4, slots: [tuesdays] }, sessions: [] })).toEqual({
+  it('makes no meeting from slots with no start date', () => {
+    expect(plan({ schedule: { weeks: 4, slots: [tuesdays] }, sessions: [] })).toMatchObject({
       sessions: [],
       startDay: null,
     })
@@ -174,6 +179,7 @@ describe('planCourseSessions', () => {
     expect(plan({ schedule: null, sessions: null })).toEqual({
       sessions: [],
       startDay: null,
+      timingNote: null,
     })
   })
 
@@ -210,5 +216,55 @@ describe('planCourseSessions', () => {
     expect(() =>
       plan({ schedule: { start_date: '2026-03-03', start_precision: 'week' }, sessions: [] }),
     ).toThrow(/week-only/)
+  })
+
+  it('keeps the schedule note as the timing note', () => {
+    const note = { en: 'Hybrid', ar: 'هجين' }
+    expect(
+      plan({ schedule: { start_date: '2026-03-03', weeks: 1, slots: [tuesdays], note } })
+        .timingNote,
+    ).toEqual(note)
+  })
+
+  it('writes slots with no start date into the timing note, before the note', () => {
+    const { timingNote } = plan({
+      schedule: { slots: [tuesdays, thursdays], note: { en: 'Online only' } },
+    })
+    expect(timingNote).toEqual({
+      en: 'Tuesday, 19:00–21:00; Thursday, 18:00–20:00\nOnline only',
+      ar: 'الثلاثاء، ١٩:٠٠–٢١:٠٠؛ الخميس، ١٨:٠٠–٢٠:٠٠',
+    })
+  })
+
+  it('leaves slots out of the timing note when the course has a start date', () => {
+    expect(
+      plan({ schedule: { start_date: '2026-03-03', slots: [tuesdays] } }).timingNote,
+    ).toBeNull()
+  })
+})
+
+describe('fillSource', () => {
+  type Doc = { id: string; _status: 'draft' | 'published'; updatedAt: string }
+  const published: Doc = { id: 'published', _status: 'published', updatedAt: '2026-05-01' }
+
+  it('reads the latest draft when it was saved after the published course', () => {
+    const draft: Doc = { id: 'draft', _status: 'draft', updatedAt: '2026-06-01' }
+    expect(fillSource(published, draft)).toBe(draft)
+  })
+
+  it('reads the published course when the latest version is the published one', () => {
+    expect(fillSource(published, { ...published, id: 'version' })).toBe(published)
+    expect(fillSource(published, null)).toBe(published)
+  })
+
+  it('reads the published course over an older draft', () => {
+    const draft: Doc = { id: 'draft', _status: 'draft', updatedAt: '2026-04-01' }
+    expect(fillSource(published, draft)).toBe(published)
+  })
+
+  it('reads a course never published as it is', () => {
+    const course: Doc = { id: 'course', _status: 'draft', updatedAt: '2026-05-01' }
+    const draft: Doc = { id: 'draft', _status: 'draft', updatedAt: '2026-06-01' }
+    expect(fillSource(course, draft)).toBe(course)
   })
 })

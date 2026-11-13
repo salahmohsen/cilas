@@ -1,4 +1,5 @@
 import { cairoDay } from '../src/lib/cairo-day'
+import { weeklyTimesText } from '../src/lib/meeting-text'
 import type { Meeting } from '../src/lib/meetings'
 import {
   expandSchedule,
@@ -29,9 +30,28 @@ export type OldRow = SessionDates & {
 
 export type OldCourse = {
   id: number
-  schedule?: Schedule | null
+  schedule?: (Schedule & { note?: Localized<string> }) | null
   sessions?: OldRow[] | null
 }
+
+/** A course or course version as the fill reads it: its data and its status. */
+export type Versioned = {
+  _status?: 'draft' | 'published' | null
+  updatedAt?: string | null
+}
+
+/**
+ * Which data of a course the fill reads: the latest version when it is a
+ * draft saved after the published course, else the course itself. Sessions
+ * have no drafts, so a pending draft's sessions and schedule go live; a
+ * fellow's pending syllabus change is not lost.
+ */
+export const fillSource = <T extends Versioned>(course: T, latest: T | null | undefined): T =>
+  course._status === 'published' &&
+  latest?._status === 'draft' &&
+  (latest.updatedAt ?? '') > (course.updatedAt ?? '')
+    ? latest
+    : course
 
 export type PlannedSession = {
   /** The old row's ID, or null for a session the pattern needs but no row held. */
@@ -50,6 +70,11 @@ export type Plan = {
   sessions: PlannedSession[]
   /** The day of the all-day meeting a course with a start date but no times gets, else null. */
   startDay: string | null
+  /**
+   * The course's `timing_note`: the schedule note, after the weekly times in
+   * words when the course has times but no start date, so no meeting holds them.
+   */
+  timingNote: Localized<string>
 }
 
 const LOCALES: Locale[] = ['en', 'ar']
@@ -94,6 +119,8 @@ const timesOf = ({ date, start_time, end_time }: Meeting): Meeting => ({
  * - Rows with no meeting keep their old order through `position`.
  * - A start date with no meeting at all becomes one all-day meeting on the
  *   first session, or on a new one when there is none.
+ * - Weekly times with no start date make no meeting; they become words at
+ *   the start of the timing note.
  */
 export const planCourseSessions = (
   course: OldCourse,
@@ -133,5 +160,17 @@ export const planCourseSessions = (
   return {
     sessions: sessions.map((s, position) => ({ ...s, position })),
     startDay,
+    timingNote: timingNoteOf(schedule),
   }
+}
+
+const timingNoteOf = (schedule: OldCourse['schedule']): Localized<string> => {
+  const note = schedule?.note
+  // The pattern needs a start date to place a slot.
+  const slots = schedule?.start_date ? [] : (schedule?.slots ?? [])
+  if (!slots.length) return note ?? null
+  const out: Partial<Record<Locale, string>> = {}
+  for (const locale of LOCALES)
+    out[locale] = [weeklyTimesText(slots, locale), note?.[locale]].filter(Boolean).join('\n')
+  return out
 }

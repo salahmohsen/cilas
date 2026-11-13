@@ -11,9 +11,11 @@
  *   meeting on that day.
  * - Content: each old row's session has the same title, delivery, cancelled,
  *   materials and activities, and its description as Markdown.
- * - The course's timing note, first day and last day.
- * - A published course with a pending draft whose schedule or sessions
- *   differ: the fill used the published data, so that is a difference.
+ * - The course's timing note (on the course and its latest version), first
+ *   day and last day.
+ *
+ * It reads each course as the fill did (`loadCourseSources`): a published
+ * course with a newer pending draft is checked against the draft.
  *
  * Lists every new untitled session. Exits non-zero on any other difference.
  */
@@ -26,13 +28,9 @@ import config from '../src/payload.config'
 import { byWhen, firstDay, lastDay, meetingsOf, sessionsInOrder } from '../src/lib/meetings'
 import { expandSchedule, sessionsInOrder as rowsInOrder } from '../src/lib/schedule'
 import type { Session } from '../src/payload-types'
-import {
-  planCourseSessions,
-  type Localized,
-  type OldCourse,
-  type OldRow,
-} from './course-sessions-plan'
+import { planCourseSessions, type Localized, type OldRow } from './course-sessions-plan'
 import { lexicalToMarkdown } from './course-sessions-markdown'
+import { loadCourseSources } from './course-sessions-source'
 
 const i = process.argv.indexOf('--map')
 const mapPath = resolve(i === -1 ? 'course-sessions-map.json' : process.argv[i + 1]!)
@@ -42,12 +40,6 @@ const payload = await getPayload({ config })
 const toMarkdown = await lexicalToMarkdown(payload)
 
 type Row = Record<string, unknown>
-type Course = OldCourse & {
-  schedule?: OldCourse['schedule'] & { note?: Localized<string> }
-  timing_note?: Localized<string>
-  first_day?: string | null
-  last_day?: string | null
-}
 
 /** Missing, undefined and null are the same; so are the two languages' absent values. */
 const clean = (value: unknown): unknown =>
@@ -113,29 +105,12 @@ const sorted = (list: Entry[]) =>
 const differences: string[] = []
 const untitled: Array<{ course: number; session: number; meetings: string[] }> = []
 
-const pendingDrafts = new Set(
-  (
-    await payload.db.pool.query<{ id: number }>(
-      `SELECT c.id FROM courses c JOIN _courses_v v ON v.parent_id = c.id AND v.latest
-         WHERE c._status = 'published' AND v.version__status = 'draft'`,
-    )
-  ).rows.map((r) => r.id),
-)
+const courses = await loadCourseSources(payload)
 
-const { docs } = await payload.find({
-  collection: 'courses',
-  locale: 'all',
-  depth: 0,
-  pagination: false,
-  overrideAccess: true,
-  sort: 'id',
-  select: { schedule: true, sessions: true, timing_note: true, first_day: true, last_day: true },
-})
-
-for (const course of docs as unknown as Course[]) {
+for (const { course, source, latest } of courses) {
   const fail = (message: string) => differences.push(`Course ${course.id}: ${message}`)
-  const rows: OldRow[] = rowsInOrder(course.sessions ?? [])
-  const plan = planCourseSessions(course, toMarkdown)
+  const rows: OldRow[] = rowsInOrder(source.sessions ?? [])
+  const plan = planCourseSessions(source, toMarkdown)
   const sessions = (
     await payload.find({
       collection: 'sessions',
@@ -162,7 +137,7 @@ for (const course of docs as unknown as Course[]) {
           owner: ownerOfRow(rows[0]),
         },
       ]
-    : expandSchedule(course.schedule, course.sessions).map((m) => ({
+    : expandSchedule(source.schedule, source.sessions).map((m) => ({
         date: m.date,
         start_time: m.start_time,
         end_time: m.end_time,
@@ -227,35 +202,20 @@ for (const course of docs as unknown as Course[]) {
   }
 
   // The course's own fields.
-  if (!same(both(course.schedule?.note), both(course.timing_note)))
-    fail('timing note differs from the schedule note')
+  if (!same(both(plan.timingNote), both(course.timing_note)))
+    fail('timing note differs from the plan')
+  if (latest && !same(both(plan.timingNote), both(latest.timing_note)))
+    fail(`timing note of the latest version (${latest.id}) differs from the plan`)
   const held = expected.filter((m) => !m.cancelled)
   if ((course.first_day ?? null) !== firstDay(held) || (course.last_day ?? null) !== lastDay(held))
     fail(
       `first/last day ${course.first_day}–${course.last_day}, expected ${firstDay(held)}–${lastDay(held)}`,
     )
-
-  // A pending draft the fill did not read.
-  if (pendingDrafts.has(course.id)) {
-    const draft = (await payload.findByID({
-      collection: 'courses',
-      id: course.id,
-      draft: true,
-      locale: 'all',
-      depth: 0,
-      overrideAccess: true,
-      select: { schedule: true, sessions: true },
-    })) as unknown as Course
-    if (!same(draft.schedule, course.schedule) || !same(draft.sessions, course.sessions))
-      fail(
-        'its pending draft has a different schedule or sessions; the fill used the published one',
-      )
-  }
 }
 
 console.log(
   JSON.stringify(
-    { courses: docs.length, untitledSessions: untitled.length, untitled, differences },
+    { courses: courses.length, untitledSessions: untitled.length, untitled, differences },
     null,
     2,
   ),
