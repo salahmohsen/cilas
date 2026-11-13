@@ -1,6 +1,7 @@
 // @vitest-environment node
 import { getPayload, type Payload } from 'payload'
 import { afterAll, beforeAll, describe, expect, it } from 'vitest'
+import { REGISTRATION_DEFAULTS } from '@/forms/templates'
 import config from '@/payload.config'
 import type { User } from '@/payload-types'
 import { createTracker, uniq } from './fixtures'
@@ -164,6 +165,9 @@ describe('course registration and fellow fields', () => {
           collection: 'courses',
           id: courseId,
           data: { cycle: cycleId, registration, _status: 'published' },
+          // No default template: an empty form must be refused, not filled
+          // from the template the database names in Registration defaults.
+          context: { [REGISTRATION_DEFAULTS]: {} },
         }),
       ).rejects.toThrow()
     }
