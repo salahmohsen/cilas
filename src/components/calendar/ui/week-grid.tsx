@@ -13,7 +13,6 @@ import { WeekSpans } from './week-spans'
 
 type Props = {
   items: CalendarItem[]
-  blocks: TimedBlock[]
   allDay: AllDayBlock[]
   days: string[]
   range: { min: number; max: number }
@@ -39,7 +38,6 @@ type Props = {
 
 export function WeekGrid({
   items,
-  blocks,
   allDay,
   days,
   range,
@@ -140,59 +138,63 @@ export function WeekGrid({
           data-selected={index === selectedIndex ? '' : undefined}
           style={{ '--hours': hours.length } as CSSProperties}
         >
-          {blocks
-            .filter((block) => block.track === day)
-            .map((block) => {
-              const item = block.itemId ? itemById.get(block.itemId) : undefined
-              const title = item?.title ?? labels.newItem
-              const edited = unsaved.has(block.id)
-              return (
-                <WeekSpans.Span
-                  key={block.id}
-                  value={block.id}
-                  className={styles.block}
-                  aria-label={nameOf(block)}
-                  aria-describedby={editable && !block.deleted ? hintId : undefined}
-                  data-tone={item?.tone ?? newTone}
-                  data-cancelled={item?.cancelled ? '' : undefined}
-                  data-unsaved={edited ? '' : undefined}
-                  data-deleted={block.deleted ? '' : undefined}
-                  data-selected={block.id === selectedId ? '' : undefined}
-                >
-                  {editable && !block.deleted ? (
-                    <span className={styles.edge} data-span-edge="start" aria-hidden />
-                  ) : null}
-                  <span className={styles.body}>
-                    <span className={styles.title} dir="auto">
-                      {title}
-                    </span>
-                    <span className={styles.time} dir={timeDir(locale)}>
-                      {formatMinutes(block.start, locale, hour12)}–
-                      {formatMinutes(block.end, locale, hour12)}
-                    </span>
-                    {block.deleted ? (
-                      <span className={styles.state}>
-                        <RotateCcw aria-hidden size={12} /> {labels.restore}
-                      </span>
-                    ) : item?.cancelled ? (
-                      <span className={styles.state}>{labels.cancelled}</span>
+          {({ spans }) => (
+            <>
+              {spans.map((block) => {
+                const item = block.itemId ? itemById.get(block.itemId) : undefined
+                const title = item?.title ?? labels.newItem
+                const edited = unsaved.has(block.id)
+                return (
+                  <WeekSpans.Span
+                    key={block.id}
+                    value={block.id}
+                    className={styles.block}
+                    aria-label={nameOf(block)}
+                    aria-describedby={editable && !block.deleted ? hintId : undefined}
+                    data-tone={item?.tone ?? newTone}
+                    data-cancelled={item?.cancelled ? '' : undefined}
+                    data-unsaved={edited ? '' : undefined}
+                    data-deleted={block.deleted ? '' : undefined}
+                    data-selected={block.id === selectedId ? '' : undefined}
+                  >
+                    {editable && !block.deleted ? (
+                      <span className={styles.edge} data-span-edge="start" aria-hidden />
                     ) : null}
-                  </span>
-                  {editable && !block.deleted ? (
-                    <span className={styles.edge} data-span-edge="end" aria-hidden />
-                  ) : null}
-                </WeekSpans.Span>
-              )
-            })}
-          {now && now.date === day && now.minutes >= range.min && now.minutes <= range.max ? (
-            <div
-              className={styles.now}
-              aria-hidden
-              style={
-                { '--now': (now.minutes - range.min) / (range.max - range.min) } as CSSProperties
-              }
-            />
-          ) : null}
+                    <span className={styles.body}>
+                      <span className={styles.title} dir="auto">
+                        {title}
+                      </span>
+                      <span className={styles.time} dir={timeDir(locale)}>
+                        {formatMinutes(block.start, locale, hour12)}–
+                        {formatMinutes(block.end, locale, hour12)}
+                      </span>
+                      {block.deleted ? (
+                        <span className={styles.state}>
+                          <RotateCcw aria-hidden size={12} /> {labels.restore}
+                        </span>
+                      ) : item?.cancelled ? (
+                        <span className={styles.state}>{labels.cancelled}</span>
+                      ) : null}
+                    </span>
+                    {editable && !block.deleted ? (
+                      <span className={styles.edge} data-span-edge="end" aria-hidden />
+                    ) : null}
+                  </WeekSpans.Span>
+                )
+              })}
+              {now && now.date === day && now.minutes >= range.min && now.minutes <= range.max ? (
+                <div
+                  className={styles.now}
+                  aria-hidden
+                  style={
+                    {
+                      '--now': (now.minutes - range.min) / (range.max - range.min),
+                    } as CSSProperties
+                  }
+                />
+              ) : null}
+            </>
+          )}
         </WeekSpans.Track>
       ))}
     </div>

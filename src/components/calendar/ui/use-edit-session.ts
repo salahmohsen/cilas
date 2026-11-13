@@ -18,7 +18,8 @@ type Options = {
   items: CalendarItem[]
   /** What a block drawn on an empty slot becomes. Without it nothing can be drawn. */
   newItemKind?: string
-  onSave?: (changes: CalendarChange[]) => void | Promise<void>
+  /** May return the items as saved, which replace the ones shown. */
+  onSave?: (changes: CalendarChange[]) => void | CalendarItem[] | Promise<void | CalendarItem[]>
   /** The calendar's element, searched for the block to put focus back on. */
   scope: RefObject<HTMLElement | null>
   range: { min: number; max: number }
@@ -30,16 +31,19 @@ type FocusTarget = { id: string; track: string }
  * The blocks as the viewer is editing them, against the blocks as loaded.
  * Nothing leaves the page until `save` sends every change at once; `cancel`
  * drops them all. Loading new items drops them too, since they were made
- * against the old ones.
+ * against the old ones. A save that returns the saved items shows those, so
+ * the next save carries their new versions.
  */
 export function useEditSession({ items, newItemKind, onSave, scope, range }: Options) {
   const itemsKey = useMemo(() => JSON.stringify(items), [items])
   const [loadedKey, setLoadedKey] = useState(itemsKey)
+  const [current, setCurrent] = useState(items)
   const [base, setBase] = useState(() => timedBlocks(items))
   const [working, setWorking] = useState(base)
   if (loadedKey !== itemsKey) {
     const fresh = timedBlocks(items)
     setLoadedKey(itemsKey)
+    setCurrent(items)
     setBase(fresh)
     setWorking(fresh)
   }
@@ -49,8 +53,8 @@ export function useEditSession({ items, newItemKind, onSave, scope, range }: Opt
   const focusTarget = useRef<FocusTarget | null>(null)
 
   const changes = useMemo(
-    () => changesOf({ items, base, working, newItemKind }),
-    [items, base, working, newItemKind],
+    () => changesOf({ items: current, base, working, newItemKind }),
+    [current, base, working, newItemKind],
   )
   const unsaved = useMemo(() => unsavedIdsOf(base, working), [base, working])
 
@@ -77,6 +81,8 @@ export function useEditSession({ items, newItemKind, onSave, scope, range }: Opt
   }
 
   return {
+    /** The items as loaded or as last saved. */
+    items: current,
     working,
     changes,
     unsaved,
@@ -132,8 +138,9 @@ export function useEditSession({ items, newItemKind, onSave, scope, range }: Opt
       setSaving(true)
       setError(null)
       try {
-        await onSave?.(changes)
-        const saved = working.filter((block) => !block.deleted)
+        const fresh = await onSave?.(changes)
+        if (fresh) setCurrent(fresh)
+        const saved = fresh ? timedBlocks(fresh) : working.filter((block) => !block.deleted)
         setBase(saved)
         setWorking(saved)
       } catch (failure) {

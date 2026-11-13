@@ -35,8 +35,13 @@ export type CalendarProps = Shared &
     | { mode: 'view'; onSave?: undefined; newItemKind?: undefined }
     | {
         mode: 'edit'
-        /** Gets every change at once. Reject to keep them and show why. */
-        onSave: (changes: CalendarChange[]) => void | Promise<void>
+        /**
+         * Gets every change at once. Reject to keep them and show why. Return
+         * the items as saved to show them, with their new versions.
+         */
+        onSave: (
+          changes: CalendarChange[],
+        ) => void | CalendarItem[] | Promise<void | CalendarItem[]>
         /** What a block drawn on an empty slot becomes. Without it, nothing can be drawn. */
         newItemKind?: string
       }
@@ -95,14 +100,16 @@ export function Calendar({
     range,
   })
 
-  const allDay = useMemo(() => allDayBlocks(items, days), [items, days])
-  const legend = useMemo(() => legendOf(items), [items])
+  const allDay = useMemo(() => allDayBlocks(session.items, days), [session.items, days])
+  const legend = useMemo(() => legendOf(session.items), [session.items])
   const newTone = legend.find((entry) => entry.kind === newItemKind)?.tone ?? 'neutral'
   const placedIds = new Set(
     session.working.flatMap((block) => (block.deleted ? [] : [block.itemId])),
   )
-  const unscheduled = items.filter((item) => item.blocks.length === 0 && !placedIds.has(item.id))
-  const anyCancelled = items.some((item) => item.cancelled)
+  const unscheduled = session.items.filter(
+    (item) => item.blocks.length === 0 && !placedIds.has(item.id),
+  )
+  const anyCancelled = session.items.some((item) => item.cancelled)
 
   const rangeLabel = labels.range(
     formatDay(days[0]!, locale, { day: 'numeric', month: 'short' }),
@@ -110,8 +117,8 @@ export function Calendar({
   )
 
   const nameOf = useMemo(
-    () => blockNamer({ items, labels, locale, hour12, unsaved: session.unsaved }),
-    [items, labels, locale, hour12, session.unsaved],
+    () => blockNamer({ items: session.items, labels, locale, hour12, unsaved: session.unsaved }),
+    [session.items, labels, locale, hour12, session.unsaved],
   )
 
   return (
@@ -186,8 +193,7 @@ export function Calendar({
         </div>
 
         <WeekGrid
-          items={items}
-          blocks={session.working}
+          items={session.items}
           allDay={allDay}
           days={days}
           range={range}

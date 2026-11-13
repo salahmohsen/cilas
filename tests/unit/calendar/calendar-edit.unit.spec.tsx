@@ -196,6 +196,32 @@ describe('edit mode', () => {
     await waitFor(() => expect(screen.queryByRole('alert')).toBeNull())
   })
 
+  it('shows the items a save returns, so the next save carries their new versions', async () => {
+    const saved: CalendarItem[] = items.map((entry) =>
+      entry.id === 'week-3'
+        ? {
+            ...entry,
+            version: 'v-week-3-saved',
+            blocks: [{ id: 'tue', date: '2026-11-17', start_time: '19:15', end_time: '21:00' }],
+          }
+        : entry,
+    )
+    const onSave = vi.fn().mockResolvedValueOnce(saved).mockResolvedValue(undefined)
+    edit({ onSave })
+    week3().focus()
+    fireEvent.keyDown(week3(), { key: 'ArrowDown' })
+    fireEvent.click(save())
+    await waitFor(() => expect(screen.queryByRole('button', { name: 'Save' })).toBeNull())
+    expect(week3()).toHaveAccessibleName('Week 3, Tuesday, November 17, 19:15 to 21:00')
+
+    fireEvent.keyDown(week3(), { key: 'ArrowDown' })
+    fireEvent.click(save())
+    await waitFor(() => expect(onSave).toHaveBeenCalledTimes(2))
+    expect(onSave.mock.calls[1]![0]).toEqual([
+      expect.objectContaining({ op: 'move-block', version: 'v-week-3-saved', start_time: '19:30' }),
+    ])
+  })
+
   it('draws from the "+" of a day: a block of a new item in the first free hour', async () => {
     const onSave = vi.fn()
     edit({ onSave })
@@ -313,6 +339,69 @@ describe('edit mode', () => {
     ).toBeInTheDocument()
     fireEvent.click(screen.getByRole('button', { name: 'حفظ' }))
     await waitFor(() => expect(onSave).toHaveBeenCalledTimes(1))
+  })
+})
+
+describe('dragging a block to another day', () => {
+  // jsdom has no layout: seven days 100px wide, 1px a minute over the grid's hours.
+  const layout = () =>
+    vi.spyOn(HTMLElement.prototype, 'getBoundingClientRect').mockImplementation(function (
+      this: HTMLElement,
+    ) {
+      const track = this.closest<HTMLElement>('[data-track]')
+      const days = [...document.querySelectorAll<HTMLElement>('[data-track]')].map(
+        (el) => el.dataset.track,
+      )
+      const index = Math.max(0, days.indexOf(track?.dataset.track))
+      if (this === track) return new DOMRect(index * 100, 0, 100, 780)
+      const style = this.getAttribute('style') ?? ''
+      const percent = (name: string) =>
+        Number(new RegExp(`${name}:\\s*([\\d.]+)%`).exec(style)?.[1] ?? 0)
+      return new DOMRect(
+        index * 100,
+        (percent('top') * 780) / 100,
+        100,
+        (percent('height') * 780) / 100,
+      )
+    })
+
+  it('draws the block in the day under the pointer while it moves, not only on drop', async () => {
+    layout()
+    const dayAt = (x: number) =>
+      document.querySelectorAll<HTMLElement>('[data-track]')[Math.floor(x / 100)] ?? null
+    document.elementFromPoint = (x) => dayAt(x)
+    document.elementsFromPoint = (x) => [dayAt(x)].filter((el): el is HTMLElement => el !== null)
+    edit({ onSave: vi.fn() })
+    const block = () => screen.getByRole('button', { name: /^Studio lab/ })
+    const dayOf = () => block().closest('[data-track]')!.getAttribute('data-track')
+    expect(dayOf()).toBe('2026-11-14')
+
+    const pointer = (type: string, x: number, y: number, buttons = 1) =>
+      fireEvent(
+        type === 'pointerdown' ? block() : document,
+        new PointerEvent(type, {
+          bubbles: true,
+          pointerId: 1,
+          pointerType: 'mouse',
+          isPrimary: true,
+          button: 0,
+          buttons,
+          clientX: x,
+          clientY: y,
+        }),
+      )
+    const frame = () =>
+      act(() => new Promise<void>((resolve) => requestAnimationFrame(() => resolve())))
+    pointer('pointerdown', 20, 60)
+    pointer('pointermove', 120, 80)
+    await frame()
+    pointer('pointermove', 320, 80)
+    await frame()
+    expect(block()).toHaveAttribute('data-dragging')
+    expect(dayOf()).toBe('2026-11-17')
+    pointer('pointerup', 320, 80, 0)
+    await frame()
+    expect(block()).toHaveAccessibleName(/^Studio lab, Tuesday, November 17.*Unsaved$/)
   })
 })
 

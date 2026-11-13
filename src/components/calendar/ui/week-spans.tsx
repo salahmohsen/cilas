@@ -85,8 +85,11 @@ const weekSpans = definePrimitive({
   },
   slots: (slot) => ({
     root: slot({}),
-    track: slot<{ value: string }>({
+    track: slot<{ value: string }, { spans: TimedBlock[] }>({
       props: { value: 'string' },
+      // The day's blocks as they show now, the drag's draft included, so a block
+      // dragged to another day is drawn in that day while the pointer moves.
+      state: (state, { api, key }) => ({ spans: api.spans.spansOn(state, key) }),
       bind: (el, { api, key }) => api.spans.bindTrack(el, key),
       on: {
         pointerdown: (event, { api, key }) => api.spans.trackPointerdown(event, key),
