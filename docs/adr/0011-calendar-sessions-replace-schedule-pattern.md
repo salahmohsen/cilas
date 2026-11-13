@@ -125,6 +125,8 @@ Every course moves to the new model, published and draft. We test on the local c
    - sessions with no meeting (7 courses) stay unscheduled, in their old order;
    - courses with a start date but no meeting at all get one all-day meeting on that day, on their first session (a new one if none). That is the 63 with no slots plus 12 with slots but no `weeks` (75);
    - the schedule note moves to `timing_note`;
+   - **courses with weekly times but no start date (43)** get no meeting. Their times are written as words at the start of `timing_note`, in each language ("Tuesday, 19:00–21:00", "الثلاثاء، ١٩:٠٠–٢١:٠٠"), before the old note;
+   - **a published course with a pending draft** (295, 406 and 409 today) is filled from the draft: its sessions and schedule go live, because sessions have no drafts. The draft's other fields stay pending;
    - a map from old row ID to new session ID updates the 8 space posts.
 3. **Verify** with a script: for every course, the new `meetingsOf` equals the old `expandSchedule`, meeting by meeting; every session's content is the same; every space post points to a session of its own course. The run must show zero differences, except the new sessions, which it lists.
 4. **Move the readers** one area at a time to `lib/meetings.ts`. The site works after each step.
@@ -271,10 +273,21 @@ Each step ships to the dev copy on its own, and the site works after it.
 
 ## Open questions
 
-- **Slots with no start date (43 courses).** The pattern makes no meeting without a start date, so these courses get no meeting and no session times. Their weekdays and times exist only in the old `schedule` group and go when it is removed. Keep them as words in `timing_note` ("Tuesdays, 19:00–21:00"), or let them go?
-- **Pending drafts (3 published courses: 295, 406, 409).** The fill reads the published course. The verify script fails for a course whose pending draft has a different schedule or sessions, so a fellow's pending syllabus change is not lost silently. Publish or discard those drafts before the fill.
+None now.
 
 ## Decision log
+
+Fix: weekly times with no start date become words at the start of `timing_note`, written by `lib/meeting-text.ts`.
+
+- 43 courses have weekly slots but no start date. The pattern makes no meeting for them, so the times live only in the old `schedule` group and go when it is removed.
+- The words must read as the course page writes weekdays and times in each language (the weekday's full name, the page's digits), and the summary will need the same words: one formatter, not a copy per caller.
+
+Fix: the fill and the verify read a course's latest version when it is a draft over the published course (`fillSource`, one loader for both scripts).
+
+- 3 published courses (295, 406, 409) have a newer pending draft. Filling from the published data loses a fellow's pending syllabus change without a word.
+- Sessions have no drafts, so the draft's sessions go live. The draft's other fields stay pending.
+- "Newer" is Payload's `latest` flag, not `updatedAt`: a session save writes the course row (`first_day`, `last_day`), which moves its `updatedAt` past the draft's. The first rule compared times and a second fill run read the published course.
+- The verify script must compare against the data the fill used.
 
 Fix: the join on courses is named `syllabus`.
 
