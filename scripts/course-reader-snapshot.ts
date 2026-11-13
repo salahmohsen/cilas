@@ -99,11 +99,66 @@ export const onlyAdds = (before: unknown, after: unknown): boolean => {
 }
 
 /**
+ * A session's name as a reader shows it ("Session 3", "Week 3", "الجلسة ٣",
+ * "الأسبوع ٣"), with the " · " the feed puts before it.
+ */
+const SESSION_LABEL = /(?: · )?(?:Session|Week|الجلسة|الأسبوع) [0-9٠-٩]+/g
+
+/** A count of sessions or weeks, as the course page's length says it in either language. */
+const SESSION_COUNT =
+  /[0-9٠-٩]+ (?:sessions?|weeks?|جلسات|جلسة|أسابيع|أسبوعًا|أسبوع)|جلسة واحدة|جلستان|أسبوع واحد|أسبوعان/g
+
+/** Whether `after` is `before` with a session's name added, or its session count changed. */
+const labelOrCount = (before: string, after: string): boolean => {
+  if (after.replace(SESSION_LABEL, '') === before) return true
+  const counted = before.replace(SESSION_COUNT, '#')
+  return counted !== before && counted === after.replace(SESSION_COUNT, '#')
+}
+
+/**
+ * Whether `after` has the lines of `before`, each unchanged or changed only
+ * by `labelOrCount`, and no other line. A meeting the pattern made after the
+ * last old session showed with no session; it now belongs to a new session
+ * and shows its name, and the page counts the new sessions. The feed sorts
+ * its lines, so a line is matched wherever it went.
+ */
+export const onlyLabels = (before: unknown, after: unknown): boolean => {
+  const was = linesOf(before)
+  const now = linesOf(after)
+  if (was.length !== now.length) return false
+  const left = [...now]
+  for (const line of was) {
+    const at = left.findIndex((n) => n === line || labelOrCount(line, n))
+    if (at === -1) return false
+    left.splice(at, 1)
+  }
+  return true
+}
+
+/** Hand-typed list markers at the start of a line ("- ", "2. "), which became Markdown lists. */
+const LIST_MARKER = /^(?:- |\d+\. )/gm
+
+/**
+ * Whether the search text `after` is `before` with its hand-typed list
+ * markers gone, the same words in the same order. A description converted to
+ * Markdown turned them into list items; the index keeps the words, not the
+ * syntax. The index lists each line once, so a line that matches an earlier
+ * one once its marker is gone is listed once.
+ */
+export const onlyListMarkers = (before: unknown, after: unknown): boolean => {
+  if (typeof before !== 'string' || typeof after !== 'string' || before === after) return false
+  const lines = before.replace(LIST_MARKER, '').split('\n')
+  return lines.filter((line, i) => lines.indexOf(line) === i).join('\n') === after
+}
+
+/**
  * Whether the plan expects `reader` to change from `before` to `after` for
  * this course. Course by course, reader by reader: an archive-dated course
  * may change anywhere; a course with new untitled sessions may gain lines
- * where sessions are listed or counted, and change no line it had; an
- * undated course's note may change only where the note shows.
+ * where sessions are listed or counted, or name or count those sessions in
+ * lines it had, and change nothing else; the search text may lose
+ * hand-typed list markers; an undated course's note may change only where
+ * the note shows.
  */
 export const classify = (
   reader: string,
@@ -118,6 +173,13 @@ export const classify = (
       verdict: 'EXPECTED',
       reason: `${meta.newSessions} new untitled session(s) (389), lines added only`,
     }
+  if (meta.newSessions > 0 && SESSION_READERS.has(reader) && onlyLabels(before, after))
+    return {
+      verdict: 'EXPECTED',
+      reason: `${meta.newSessions} new untitled session(s): pattern meetings now named or counted`,
+    }
+  if (reader === 'search.syllabus' && onlyListMarkers(before, after))
+    return { verdict: 'EXPECTED', reason: 'hand-typed list markers became Markdown lists (3)' }
   if (meta.undatedWords && NOTE_READERS.has(reader))
     return { verdict: 'EXPECTED', reason: 'weekly times as words in the timing note (18)' }
   return { verdict: 'UNEXPECTED', reason: 'not in the plan' }

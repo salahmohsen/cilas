@@ -8,6 +8,8 @@ import {
   icsByCourse,
   llmsTimes,
   onlyAdds,
+  onlyLabels,
+  onlyListMarkers,
   toDays,
   type CourseMeta,
   type Snapshot,
@@ -51,6 +53,23 @@ describe('classify', () => {
     expect(classify('calendar.ics', meta, ['b', 'a'], ['a', 'b', 'c']).verdict).toBe('UNEXPECTED')
   })
 
+  it('expects a course with new sessions to name or count them in its lines, and nothing else', () => {
+    const meta = { ...plain, newSessions: 7 }
+    const before = { en: ['DESCRIPTION:Lab | DTSTART:20150328'] }
+    const after = { en: ['DESCRIPTION:Lab · Session 3 | DTSTART:20150328'] }
+    expect(classify('calendar.ics', meta, before, after).verdict).toBe('EXPECTED')
+    expect(
+      classify('page.facts', meta, ['Length: 3 sessions'], ['Length: 10 sessions']).verdict,
+    ).toBe('EXPECTED')
+    expect(classify('calendar.ics', plain, before, after).verdict).toBe('UNEXPECTED')
+    expect(classify('list.articleCards', meta, ['3 weeks'], ['8 weeks']).verdict).toBe('UNEXPECTED')
+  })
+
+  it('expects search text to lose hand-typed list markers, in any course', () => {
+    expect(classify('search.syllabus', plain, 'A\n- B', 'A\nB').verdict).toBe('EXPECTED')
+    expect(classify('page.note', plain, 'A\n- B', 'A\nB').verdict).toBe('UNEXPECTED')
+  })
+
   it('expects the timing note of an undated course to change only where the note shows', () => {
     const meta = { ...plain, undatedWords: true }
     expect(classify('page.note', meta, [], ['x']).verdict).toBe('EXPECTED')
@@ -60,6 +79,58 @@ describe('classify', () => {
   it('expects nothing of other courses, nor of a course the base does not know', () => {
     expect(classify('page.facts', plain, [], ['x']).verdict).toBe('UNEXPECTED')
     expect(classify('page.facts', undefined, [], ['x']).verdict).toBe('UNEXPECTED')
+  })
+})
+
+describe('onlyLabels', () => {
+  const ics = (description: string, day: string) =>
+    `DESCRIPTION:${description} | DTEND:${day}T150000Z | DTSTART:${day}T110000Z | SUMMARY:A`
+
+  it('accepts a feed line that gains its session, wherever the sorted feed moved it', () => {
+    const before = [ics('Lab', '20150328'), ics('Lab', '20150404')]
+    const after = [ics('Lab · Session 10', '20150404'), ics('Lab · Session 9', '20150328')]
+    expect(onlyLabels(before, after)).toBe(true)
+    expect(onlyLabels([ics('مختبر', '1')], [ics('مختبر · الجلسة ١', '1')])).toBe(true)
+  })
+
+  it('accepts a month line that gains its session, and a changed session count', () => {
+    expect(
+      onlyLabels(
+        ['28SaturdayMarch 2015 | 13:00 |  | '],
+        ['28SaturdayMarch 2015 | 13:00 | Session 3 | '],
+      ),
+    ).toBe(true)
+    expect(onlyLabels({ en: ['Length: 3 sessions'] }, { en: ['Length: 12 sessions'] })).toBe(true)
+    expect(onlyLabels({ ar: ['المدة: ٣ جلسات'] }, { ar: ['المدة: ١٢ جلسة'] })).toBe(true)
+    expect(onlyLabels(['المدة: ٦ أسابيع'], ['المدة: ٨ أسابيع'])).toBe(true)
+  })
+
+  it('refuses any other change, a renamed session, an added or dropped line', () => {
+    expect(onlyLabels([ics('Lab', '20150328')], [ics('Lab · Session 1', '20150329')])).toBe(false)
+    expect(onlyLabels([ics('Lab · Session 2', '1')], [ics('Lab · Session 3', '1')])).toBe(false)
+    expect(onlyLabels(['Starts: Sunday, Jan 7'], ['Starts: Sunday, Jan 8'])).toBe(false)
+    expect(onlyLabels(['Day 3'], ['Day 12'])).toBe(false)
+    expect(onlyLabels(['a'], ['a', 'Session 2'])).toBe(false)
+    expect(onlyLabels(['a', 'b'], ['a'])).toBe(false)
+  })
+})
+
+describe('onlyListMarkers', () => {
+  it('accepts search text whose hand-typed list markers are gone, words in the same order', () => {
+    expect(onlyListMarkers('Title\n1. One\n2. Two\n- Three', 'Title\nOne\nTwo\nThree')).toBe(true)
+  })
+
+  it('lists a line once when it matches an earlier one without its marker', () => {
+    expect(
+      onlyListMarkers('Recap\n- Presentations\nPresentations\nEnd', 'Recap\nPresentations\nEnd'),
+    ).toBe(true)
+  })
+
+  it('refuses a lost word, a new order, a marker inside a line, and no change', () => {
+    expect(onlyListMarkers('- One\n- Two', 'One')).toBe(false)
+    expect(onlyListMarkers('- One\n- Two', 'Two\nOne')).toBe(false)
+    expect(onlyListMarkers('A - B', 'A B')).toBe(false)
+    expect(onlyListMarkers('One', 'One')).toBe(false)
   })
 })
 
