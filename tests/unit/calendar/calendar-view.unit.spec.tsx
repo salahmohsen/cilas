@@ -63,7 +63,7 @@ function Host({
   onOpen: (itemId: string, blockId: string | null) => void
   locale: string
 }) {
-  const labels = useCalendarLabels(kind)
+  const labels = useCalendarLabels({ kind, newItem: 'New session' })
   return (
     <Calendar
       items={items}
@@ -150,7 +150,7 @@ describe('the week view', () => {
   it('says a block is cancelled in words, in its name and on its face', () => {
     view()
     const film = screen.getByRole('button', {
-      name: 'Film night, Friday, November 20, 17:00 to 18:30, cancelled',
+      name: 'Film night, Friday, November 20, 17:00 to 18:30, Cancelled',
     })
     expect(within(film).getByText('Cancelled')).toBeInTheDocument()
     expect(screen.getByRole('list', { name: 'Colour key' })).toHaveTextContent('Cancelled')

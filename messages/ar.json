@@ -542,7 +542,21 @@
     "unscheduled": "غير مجدولة",
     "range": "من {from} إلى {to}",
     "timeRange": "من {start} إلى {end}",
-    "blockName": "{title}، {day}، {time}{cancelled, select, true {، أُلغيت} other {}}"
+    "blockName": "{title}، {day}، {time}{hasStatus, select, true {، {status}} other {}}",
+    "newItem": "عنصر جديد",
+    "unsaved": "غير محفوظ",
+    "deleted": "محذوفة",
+    "restore": "استعادة",
+    "restoreName": "استعادة {title}، {day}، {time}",
+    "save": "حفظ",
+    "saving": "جارٍ الحفظ",
+    "cancelEdits": "إلغاء",
+    "changes": "{count, plural, one {تغيير واحد غير محفوظ} two {تغييران غير محفوظين} few {{count, number, digits} تغييرات غير محفوظة} other {{count, number, digits} تغييرًا غير محفوظ}}",
+    "saveFailed": "لم تُحفظ التغييرات. ما زالت هنا.",
+    "editHint": "ارسم على خانة فارغة لإضافة كتلة. اسحب الكتلة لتحريكها واسحب حافتها لتغيير طولها. بلوحة المفاتيح: الأسهم للتحريك، وShift مع الأسهم لتغيير الطول، وDelete للحذف.",
+    "addBlock": "أضف كتلة يوم {day}",
+    "placeOnDay": "ضع في يوم",
+    "announce": "{type, select, draw {أُضيفت} move {نُقلت} resize {غُيّر طول} delete {حُذفت} cancel {أُلغي التغيير في} other {}} {label}"
   },
   "Select": {
     "search": "بحث",

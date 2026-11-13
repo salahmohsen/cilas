@@ -120,7 +120,7 @@
   },
   "overrides": [
     {
-      "files": ["src/components/calendar/ui/**"],
+      "files": ["src/components/calendar/ui/**", "tests/unit/calendar/**"],
       "rules": {
         "no-restricted-imports": "off"
       }

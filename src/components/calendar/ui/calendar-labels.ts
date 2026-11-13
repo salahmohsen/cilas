@@ -24,6 +24,28 @@ export type CalendarLabels = {
   range: (from: string, to: string) => string
   /** "19:00 to 21:00" */
   timeRange: (start: string, end: string) => string
-  /** A block's spoken name: title, day, time, and "Cancelled" when it is. */
-  blockName: (parts: { title: string; day: string; time: string; cancelled: boolean }) => string
+  /** A block's spoken name. `status` is "" or what it is now: "Cancelled and unsaved". */
+  blockName: (parts: { title: string; day: string; time: string; status: string }) => string
+
+  /** The title of an item drawn on an empty slot, until the host names it. */
+  newItem: string
+  unsaved: string
+  deleted: string
+  /** The word on a ghost. */
+  restore: string
+  /** A ghost's spoken name, which starts with `restore`. */
+  restoreName: (parts: { title: string; day: string; time: string }) => string
+  save: string
+  saving: string
+  cancelEdits: string
+  changes: (count: number) => string
+  saveFailed: string
+  /** How to draw, move, resize and delete, with the mouse and the keyboard. */
+  editHint: string
+  /** The "+" on a day's header. */
+  addBlock: (day: string) => string
+  /** The menu that puts an unscheduled item on a day, the keyboard's way to place it. */
+  placeOnDay: string
+  /** What screen readers hear after an edit. */
+  announce: (type: 'draw' | 'move' | 'resize' | 'delete' | 'cancel', label: string) => string
 }

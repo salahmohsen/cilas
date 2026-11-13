@@ -1,23 +1,27 @@
 'use client'
 
-import { useMemo, useRef, useState } from 'react'
+import { useId, useMemo, useRef, useState } from 'react'
 
 import SegmentedControl from '@/components/arc/segmented-control/segmented-control'
-import type { CalendarItem } from '@/lib/calendar-items'
+import type { CalendarChange, CalendarItem } from '@/lib/calendar-items'
 
+import { blockNamer } from './block-names'
 import { allDayBlocks, hourRange, legendOf, timedBlocks } from './calendar-model'
 import type { CalendarLabels } from './calendar-labels'
 import { CalendarToolbar } from './calendar-toolbar'
 import { addDays, cairoNow, formatDay, weekOf, weekStartOf } from './calendar-time'
 import styles from './calendar.module.css'
+import { SaveBar } from './save-bar'
+import { UnscheduledTray } from './unscheduled-tray'
+import { useEditSession } from './use-edit-session'
 import { useHour12 } from './use-hour12'
 import { useNarrow } from './use-narrow'
 import { useNow } from './use-now'
 import { WeekGrid } from './week-grid'
+import { WeekSpans } from './week-spans'
 
-export type CalendarProps = {
+type Shared = {
   items: CalendarItem[]
-  mode: 'view' | 'edit'
   labels: CalendarLabels
   locale: string
   /** Any Cairo day of the week to open on; today by default. */
@@ -26,13 +30,38 @@ export type CalendarProps = {
   onOpen: (itemId: string, blockId: string | null) => void
 }
 
+export type CalendarProps = Shared &
+  (
+    | { mode: 'view'; onSave?: undefined; newItemKind?: undefined }
+    | {
+        mode: 'edit'
+        /** Gets every change at once. Reject to keep them and show why. */
+        onSave: (changes: CalendarChange[]) => void | Promise<void>
+        /** What a block drawn on an empty slot becomes. Without it, nothing can be drawn. */
+        newItemKind?: string
+      }
+  )
+
+const STEP = 15
 const indexOfDay = (days: string[], day: string) => Math.max(0, days.indexOf(day))
 
-export function Calendar({ items, labels, locale, day, onOpen }: CalendarProps) {
+export function Calendar({
+  items,
+  labels,
+  locale,
+  day,
+  onOpen,
+  mode,
+  onSave,
+  newItemKind,
+}: CalendarProps) {
+  const editable = mode === 'edit'
   const frame = useRef<HTMLDivElement>(null)
+  const hintId = useId()
   const narrow = useNarrow(frame)
   const now = useNow()
   const [hour12, setHour12] = useHour12()
+  const [selectedId, setSelectedId] = useState<string | null>(null)
 
   const [start, setStart] = useState(() => weekStartOf(day ?? cairoNow().date))
   const [selectedIndex, setSelectedIndex] = useState(() =>
@@ -46,11 +75,33 @@ export function Calendar({ items, labels, locale, day, onOpen }: CalendarProps) 
     setSelectedIndex(indexOfDay(weekOf(next), cairoNow().date))
   }
 
-  const blocks = useMemo(() => timedBlocks(items), [items])
-  const range = useMemo(() => hourRange(blocks, days), [blocks, days])
+  // Edit mode keeps the hours it opened with, from an hour before the earliest
+  // meeting to an hour after the latest, so a drag never moves the grid.
+  const [editHours, setEditHours] = useState<{ min: number; max: number } | null>(null)
+  if (editable && !editHours) setEditHours(hourRange(timedBlocks(items), 1))
+  if (!editable && editHours) setEditHours(null)
+
+  const loaded = useMemo(() => timedBlocks(items), [items])
+  const range = useMemo(
+    () => editHours ?? hourRange(loaded.filter((block) => days.includes(block.track))),
+    [editHours, loaded, days],
+  )
+
+  const session = useEditSession({
+    items,
+    newItemKind,
+    onSave,
+    scope: frame,
+    range,
+  })
+
   const allDay = useMemo(() => allDayBlocks(items, days), [items, days])
   const legend = useMemo(() => legendOf(items), [items])
-  const unscheduled = items.filter((item) => item.blocks.length === 0)
+  const newTone = legend.find((entry) => entry.kind === newItemKind)?.tone ?? 'neutral'
+  const placedIds = new Set(
+    session.working.flatMap((block) => (block.deleted ? [] : [block.itemId])),
+  )
+  const unscheduled = items.filter((item) => item.blocks.length === 0 && !placedIds.has(item.id))
   const anyCancelled = items.some((item) => item.cancelled)
 
   const rangeLabel = labels.range(
@@ -58,9 +109,37 @@ export function Calendar({ items, labels, locale, day, onOpen }: CalendarProps) 
     formatDay(days[6]!, locale, { day: 'numeric', month: 'short', year: 'numeric' }),
   )
 
+  const nameOf = useMemo(
+    () => blockNamer({ items, labels, locale, hour12, unsaved: session.unsaved }),
+    [items, labels, locale, hour12, session.unsaved],
+  )
+
   return (
     <div className={styles.root} role="group" aria-label={labels.name}>
-      <div className={styles.frame} ref={frame}>
+      <WeekSpans.Root
+        ref={frame}
+        className={styles.frame}
+        data-mode={mode}
+        onPointerDown={(event) => {
+          if (!(event.target as Element).closest('[data-span-id]')) setSelectedId(null)
+        }}
+        spans={session.working}
+        onSpansChange={session.onSpansChange}
+        editable={editable}
+        tracks={narrow ? [days[selectedIndex]!] : days}
+        min={range.min}
+        max={range.max}
+        step={STEP}
+        create={session.draw}
+        label={nameOf}
+        message={({ type, label }) => labels.announce(type, label)}
+        onPress={(block, event) => {
+          if (block.deleted) return session.restore(block.id)
+          const touch = (event as PointerEvent | undefined)?.pointerType === 'touch'
+          if (editable && touch && selectedId !== block.id) return setSelectedId(block.id)
+          if (block.itemId) onOpen(block.itemId, block.blockId)
+        }}
+      >
         <CalendarToolbar
           labels={labels}
           range={rangeLabel}
@@ -88,6 +167,12 @@ export function Calendar({ items, labels, locale, day, onOpen }: CalendarProps) 
           </ul>
         ) : null}
 
+        {editable ? (
+          <p className={styles.hint} id={hintId}>
+            {labels.editHint}
+          </p>
+        ) : null}
+
         <div className={styles.switcher}>
           <SegmentedControl
             label={labels.daySwitcher}
@@ -102,10 +187,9 @@ export function Calendar({ items, labels, locale, day, onOpen }: CalendarProps) 
 
         <WeekGrid
           items={items}
-          blocks={blocks}
+          blocks={session.working}
           allDay={allDay}
           days={days}
-          tracks={narrow ? [days[selectedIndex]!] : days}
           range={range}
           selectedIndex={selectedIndex}
           todayIndex={todayIndex}
@@ -113,31 +197,43 @@ export function Calendar({ items, labels, locale, day, onOpen }: CalendarProps) 
           labels={labels}
           locale={locale}
           hour12={hour12}
+          editable={editable}
+          unsaved={session.unsaved}
+          selectedId={selectedId}
+          nameOf={nameOf}
+          newTone={newTone}
+          onDraw={newItemKind ? session.drawOnDay : undefined}
+          hintId={hintId}
           onOpen={onOpen}
         />
 
         {unscheduled.length ? (
-          <div className={styles.tray} role="group" aria-labelledby="calendar-unscheduled">
-            <p className={styles.trayTitle} id="calendar-unscheduled">
-              {labels.unscheduled}
-            </p>
-            <ul className={styles.trayList}>
-              {unscheduled.map((item) => (
-                <li key={item.id}>
-                  <button
-                    type="button"
-                    className={styles.trayItem}
-                    data-tone={item.tone}
-                    onClick={() => onOpen(item.id, null)}
-                  >
-                    {item.title}
-                  </button>
-                </li>
-              ))}
-            </ul>
-          </div>
+          <UnscheduledTray
+            items={unscheduled}
+            days={days}
+            editable={editable}
+            labels={labels}
+            locale={locale}
+            onOpen={onOpen}
+            onPlace={session.place}
+          />
         ) : null}
-      </div>
+
+        <p role="status" className={styles.srOnly}>
+          {session.changes.length ? labels.changes(session.changes.length) : ''}
+        </p>
+
+        {editable && (session.changes.length || session.error) ? (
+          <SaveBar
+            labels={labels}
+            count={session.changes.length}
+            saving={session.saving}
+            error={session.error}
+            onSave={session.save}
+            onCancel={session.cancel}
+          />
+        ) : null}
+      </WeekSpans.Root>
     </div>
   )
 }

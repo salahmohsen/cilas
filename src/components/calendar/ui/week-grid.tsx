@@ -1,22 +1,21 @@
-import { useCallback, type CSSProperties } from 'react'
+import { Plus, RotateCcw } from 'lucide-react'
+import type { CSSProperties } from 'react'
 
 import { timeDir } from '@/lib/digits'
 import type { CalendarItem } from '@/lib/calendar-items'
 
 import type { AllDayBlock, TimedBlock } from './calendar-model'
 import type { CalendarLabels } from './calendar-labels'
+import { longDay } from './block-names'
 import { formatDay, formatMinutes } from './calendar-time'
 import styles from './calendar.module.css'
 import { WeekSpans } from './week-spans'
-
-const STEP = 15
 
 type Props = {
   items: CalendarItem[]
   blocks: TimedBlock[]
   allDay: AllDayBlock[]
   days: string[]
-  tracks: string[]
   range: { min: number; max: number }
   selectedIndex: number
   todayIndex: number
@@ -24,6 +23,17 @@ type Props = {
   labels: CalendarLabels
   locale: string
   hour12: boolean
+  editable: boolean
+  unsaved: Set<string>
+  selectedId: string | null
+  /** A block's spoken name. */
+  nameOf: (block: TimedBlock) => string
+  /** The tone of a block of an item that does not exist yet. */
+  newTone: string
+  /** Set when a day's "+" can draw a new item. */
+  onDraw?: (day: string) => void
+  /** The id of the text that says how to edit. */
+  hintId: string
   onOpen: (itemId: string, blockId: string | null) => void
 }
 
@@ -32,7 +42,6 @@ export function WeekGrid({
   blocks,
   allDay,
   days,
-  tracks,
   range,
   selectedIndex,
   todayIndex,
@@ -40,44 +49,21 @@ export function WeekGrid({
   labels,
   locale,
   hour12,
+  editable,
+  unsaved,
+  selectedId,
+  nameOf,
+  newTone,
+  onDraw,
+  hintId,
   onOpen,
 }: Props) {
   const itemById = new Map(items.map((item) => [item.id, item]))
   const hours = Array.from({ length: (range.max - range.min) / 60 }, (_, i) => range.min + i * 60)
-  const dayLong = (day: string) =>
-    formatDay(day, locale, { weekday: 'long', day: 'numeric', month: 'long' })
-  const timeOf = (block: TimedBlock) =>
-    labels.timeRange(
-      formatMinutes(block.start, locale, hour12),
-      formatMinutes(block.end, locale, hour12),
-    )
-
-  const nameOf = useCallback(
-    (block: TimedBlock) => {
-      const item = itemById.get(block.itemId)
-      return labels.blockName({
-        title: item?.title ?? '',
-        day: dayLong(block.track),
-        time: timeOf(block),
-        cancelled: item?.cancelled ?? false,
-      })
-    },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [items, labels, locale, hour12],
-  )
+  const dayLong = (day: string) => longDay(day, locale)
 
   return (
-    <WeekSpans.Root
-      className={styles.grid}
-      spans={blocks}
-      editable={false}
-      tracks={tracks}
-      min={range.min}
-      max={range.max}
-      step={STEP}
-      label={nameOf}
-      onOpen={(block) => onOpen(block.itemId, block.blockId)}
-    >
+    <div className={styles.grid}>
       <div className={styles.corner}>{labels.cairoTime}</div>
       {days.map((day, index) => (
         <div
@@ -89,6 +75,17 @@ export function WeekGrid({
         >
           <span className={styles.dayName}>{formatDay(day, locale, { weekday: 'short' })}</span>
           <span className={styles.dayNumber}>{formatDay(day, locale, { day: 'numeric' })}</span>
+          {editable && onDraw ? (
+            <button
+              type="button"
+              className={styles.add}
+              data-add={day}
+              aria-label={labels.addBlock(dayLong(day))}
+              onClick={() => onDraw(day)}
+            >
+              <Plus aria-hidden size={14} />
+            </button>
+          ) : null}
         </div>
       ))}
 
@@ -113,7 +110,7 @@ export function WeekGrid({
                   title: item.title,
                   day: dayLong(day),
                   time: labels.allDay,
-                  cancelled: item.cancelled,
+                  status: item.cancelled ? labels.cancelled : '',
                 })}
                 onClick={() => onOpen(item.id, blockId)}
               >
@@ -137,6 +134,8 @@ export function WeekGrid({
           role="group"
           aria-label={dayLong(day)}
           className={styles.track}
+          tabIndex={-1}
+          data-track={day}
           data-day={index}
           data-selected={index === selectedIndex ? '' : undefined}
           style={{ '--hours': hours.length } as CSSProperties}
@@ -144,25 +143,43 @@ export function WeekGrid({
           {blocks
             .filter((block) => block.track === day)
             .map((block) => {
-              const item = itemById.get(block.itemId)
+              const item = block.itemId ? itemById.get(block.itemId) : undefined
+              const title = item?.title ?? labels.newItem
+              const edited = unsaved.has(block.id)
               return (
                 <WeekSpans.Span
                   key={block.id}
                   value={block.id}
                   className={styles.block}
                   aria-label={nameOf(block)}
-                  data-tone={item?.tone}
+                  aria-describedby={editable && !block.deleted ? hintId : undefined}
+                  data-tone={item?.tone ?? newTone}
                   data-cancelled={item?.cancelled ? '' : undefined}
+                  data-unsaved={edited ? '' : undefined}
+                  data-deleted={block.deleted ? '' : undefined}
+                  data-selected={block.id === selectedId ? '' : undefined}
                 >
-                  <span className={styles.title} dir="auto">
-                    {item?.title}
+                  {editable && !block.deleted ? (
+                    <span className={styles.edge} data-span-edge="start" aria-hidden />
+                  ) : null}
+                  <span className={styles.body}>
+                    <span className={styles.title} dir="auto">
+                      {title}
+                    </span>
+                    <span className={styles.time} dir={timeDir(locale)}>
+                      {formatMinutes(block.start, locale, hour12)}–
+                      {formatMinutes(block.end, locale, hour12)}
+                    </span>
+                    {block.deleted ? (
+                      <span className={styles.state}>
+                        <RotateCcw aria-hidden size={12} /> {labels.restore}
+                      </span>
+                    ) : item?.cancelled ? (
+                      <span className={styles.state}>{labels.cancelled}</span>
+                    ) : null}
                   </span>
-                  <span className={styles.time} dir={timeDir(locale)}>
-                    {formatMinutes(block.start, locale, hour12)}–
-                    {formatMinutes(block.end, locale, hour12)}
-                  </span>
-                  {item?.cancelled ? (
-                    <span className={styles.state}>{labels.cancelled}</span>
+                  {editable && !block.deleted ? (
+                    <span className={styles.edge} data-span-edge="end" aria-hidden />
                   ) : null}
                 </WeekSpans.Span>
               )
@@ -178,6 +195,6 @@ export function WeekGrid({
           ) : null}
         </WeekSpans.Track>
       ))}
-    </WeekSpans.Root>
+    </div>
   )
 }

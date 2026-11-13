@@ -8,9 +8,12 @@ import {
   type ChangeDetails,
   type SpanAction,
   type SpansDraft,
+  type SpansMessage,
   type SpansReason,
+  type StateOf,
 } from '@ui-sdk/core'
-import { createParts } from '@ui-sdk/react/primitive'
+import { createParts, usePart, usePrimitive, type PartProps } from '@ui-sdk/react/primitive'
+import { createContext, use, type ReactNode } from 'react'
 
 import type { TimedBlock } from './calendar-model'
 
@@ -25,9 +28,12 @@ type WeekSpansOptions = {
   min: number
   max: number
   step: number
+  /** Makes the block a press on an empty stretch of a day starts to draw, or null for none. */
   create?: (span: { track: string; start: number; end: number }) => TimedBlock | null
   label: (block: TimedBlock) => string
-  onOpen: (block: TimedBlock) => void
+  message: (message: SpansMessage<TimedBlock>) => string
+  /** A block was pressed: a click, or Enter or Space on it. */
+  onPress: (block: TimedBlock, event: Event | undefined) => void
 }
 
 type WeekSpansState = { spans: TimedBlock[]; draft: SpansDraft<TimedBlock> | null }
@@ -44,7 +50,8 @@ const weekSpans = definePrimitive({
     step: 'number',
     create: 'callback',
     label: 'callback',
-    onOpen: 'callback',
+    message: 'callback',
+    onPress: 'callback',
   },
   controlled: ['spans'],
   state: (options: WeekSpansOptions): WeekSpansState => ({ spans: options.spans, draft: null }),
@@ -62,16 +69,17 @@ const weekSpans = definePrimitive({
       step: () => options().step,
       minSize: () => options().step * 2,
       tracks: () => options().tracks,
-      disabled: () => !options().editable,
+      disabled: (span) => !options().editable || Boolean(span.deleted),
       create: (span) => options().create?.(span) ?? null,
       label: (block) => options().label(block),
+      message: (message) => options().message(message),
       createAutoScroll: false,
     })
     return {
       spans,
-      open: (id: string) => {
+      press: (id: string, event?: Event) => {
         const block = context.store.get().spans.find((candidate) => candidate.id === id)
-        if (block) options().onOpen(block)
+        if (block) options().onPress(block, event)
       },
     }
   },
@@ -96,7 +104,7 @@ const weekSpans = definePrimitive({
           style: block ? api.spans.spanStyle(block, lanes?.get(key)) : undefined,
         }
       },
-      press: ({ api, key }) => api.open(key),
+      press: ({ api, key }, event) => api.press(key, event),
       bind: (el, { api, key }) => api.spans.bindSpan(el, key),
       on: {
         pointerdown: (event, { api, key }) => api.spans.spanPointerdown(event, key),
@@ -108,6 +116,54 @@ const weekSpans = definePrimitive({
   }),
 })
 
-const WeekSpans = createParts(weekSpans, { root: 'div', track: 'div', span: 'button' })
+type Api = ReturnType<typeof usePrimitive<typeof weekSpans>>['api']
 
-export { WeekSpans, type WeekSpansOptions }
+const ApiContext = createContext<Api | null>(null)
+
+/** The span editor's api, for what lives beside the grid, like the tray that drops onto it. */
+export function useWeekSpansApi(): Api {
+  const api = use(ApiContext)
+  if (!api) throw new Error('useWeekSpansApi needs a WeekSpans.Root above it')
+  return api
+}
+
+type RootProps = WeekSpansOptions &
+  Omit<PartProps<'div', StateOf<typeof weekSpans, 'root'>>, keyof WeekSpansOptions> & {
+    children?: ReactNode
+  }
+
+function Root({
+  spans,
+  onSpansChange,
+  editable,
+  tracks,
+  min,
+  max,
+  step,
+  create,
+  label,
+  message,
+  onPress,
+  ...props
+}: RootProps) {
+  const handle = usePrimitive(weekSpans, {
+    spans,
+    onSpansChange,
+    editable,
+    tracks,
+    min,
+    max,
+    step,
+    create,
+    label,
+    message,
+    onPress,
+  })
+  return <ApiContext value={handle.api}>{usePart(handle, 'root', {}, props, 'div')}</ApiContext>
+}
+
+const parts = createParts(weekSpans, { root: 'div', track: 'div', span: 'button' })
+
+export const WeekSpans = { Root, Track: parts.Track, Span: parts.Span }
+export { weekSpans }
+export type { WeekSpansOptions }
