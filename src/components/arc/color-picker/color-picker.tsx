@@ -834,6 +834,8 @@ export function ColorPicker({
                     onKeyDown={(event) => {
                       if (event.key === 'Enter') {
                         event.preventDefault()
+                        // The Enter that confirms an IME candidate must not submit.
+                        if (event.nativeEvent.isComposing || event.keyCode === 229) return
                         if (submitDraft()) event.currentTarget.select()
                       }
                       if (event.key === 'Escape' && draft !== null) {

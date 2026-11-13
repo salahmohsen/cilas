@@ -71,6 +71,8 @@ export function MoviePicker({ path, readOnly }: JSONFieldClientProps) {
           onKeyDown={(event) => {
             if (event.key === 'Enter') {
               event.preventDefault()
+              // The Enter that confirms an IME candidate must not search.
+              if (event.nativeEvent.isComposing || event.keyCode === 229) return
               if (!busy && query.trim().length >= 2) void load()
             }
           }}

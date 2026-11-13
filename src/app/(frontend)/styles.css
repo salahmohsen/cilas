@@ -2371,7 +2371,12 @@ h1.article-title {
   white-space: nowrap;
 }
 
-/* What opening shows: hidden until then. */
+/* Lets a height animate to and from `auto`, so opening needs no guessed max-height. */
+:root {
+  interpolate-size: allow-keywords;
+}
+
+/* What opening shows: hidden until then. Browsers without interpolate-size animate max-height instead. */
 .course-row-description,
 .course-row-cta {
   max-height: 0;
@@ -2380,6 +2385,14 @@ h1.article-title {
   transition-property: max-height, opacity;
   transition-duration: 320ms;
   transition-timing-function: cubic-bezier(0.2, 0, 0, 1);
+}
+@supports (interpolate-size: allow-keywords) {
+  .course-row-description,
+  .course-row-cta {
+    height: 0;
+    max-height: none;
+    transition-property: height, opacity;
+  }
 }
 .course-row-description {
   display: -webkit-box;
@@ -2441,10 +2454,12 @@ h1.article-title {
     min-height: 17rem;
   }
   .course-row:is(:hover, :focus-within) .course-row-description {
+    height: auto;
     max-height: 6em;
     opacity: 1;
   }
   .course-row:is(:hover, :focus-within) .course-row-cta {
+    height: auto;
     max-height: 2em;
     opacity: 1;
   }
