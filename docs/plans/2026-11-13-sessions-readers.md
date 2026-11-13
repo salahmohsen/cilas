@@ -39,6 +39,8 @@ Each unit ends in a check, and the next unit starts only when that check passes.
 
 The old change notice compares the old array. After unit 6, schedule changes send no notice until ADR step 3 (the outbox). Production is in beta with no real users, so this gap is acceptable on the dev copy, and step 3 comes next.
 
+The archive importer `migration/lib/import-flows.ts` still writes the old sessions array. At ADR step 7, decide to retire it (no new cycles from the old site) or move it to sessions with `scripts/course-sessions-plan.ts`.
+
 ## Harness choices (unit 1)
 
 - **Black box where a URL exists.** The course page (side-card facts, timing note, syllabus rows, the Course node of the JSON-LD), `/<locale>/study/<slug>/llms.txt` (time facts and syllabus lines), `/<locale>/calendar.ics` (course entries without `DTSTAMP` and `UID`) and the month view's list (`?view=month&date=YYYY-MM-01`, the phone layout, every month the feed has a course in). Both locales each. These survive any change to the readers' internals.
