@@ -87,6 +87,7 @@ import * as migration_20261112_115346_study_prompts from './20261112_115346_stud
 import * as migration_20261112_232756_home_hero_scene from './20261112_232756_home_hero_scene';
 import * as migration_20261113_085854_course_sessions_collection from './20261113_085854_course_sessions_collection';
 import * as migration_20261113_140328_course_announced_timing from './20261113_140328_course_announced_timing';
+import * as migration_20261113_155502_space_post_course_session from './20261113_155502_space_post_course_session';
 
 export const migrations = [
   {
@@ -532,6 +533,11 @@ export const migrations = [
   {
     up: migration_20261113_140328_course_announced_timing.up,
     down: migration_20261113_140328_course_announced_timing.down,
-    name: '20261113_140328_course_announced_timing'
+    name: '20261113_140328_course_announced_timing',
+  },
+  {
+    up: migration_20261113_155502_space_post_course_session.up,
+    down: migration_20261113_155502_space_post_course_session.down,
+    name: '20261113_155502_space_post_course_session'
   },
 ];

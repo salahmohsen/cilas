@@ -4,14 +4,12 @@ import { MessagesSquare } from 'lucide-react'
 
 import { Alert } from '@/components/arc/alert/alert'
 import { Badge } from '@/components/arc/badge/badge'
-import { CourseSession } from '@/components/course/course-syllabus'
+import { CourseSession, syllabusOf } from '@/components/course/course-syllabus'
 import { StudyWithAI } from '@/components/study-with-ai'
 import { AIInstructions } from '@/components/ai-instructions'
-import { sessionsInOrder } from '@/lib/schedule'
 import { SESSION_CARD_KINDS } from '@/lib/space-rules'
 import type { SessionView } from '@/lib/spaces-data'
 
-import { oldSyllabus } from './old-syllabus'
 import styles from './space.module.css'
 
 /**
@@ -36,11 +34,11 @@ export function PostSession({
   if (session.state === 'gone') return <Alert tone="info" title={t('sessionGone')} />
 
   const { course } = session
-  const sessions = sessionsInOrder(course.sessions ?? [])
-  const at = sessions.findIndex((s) => s.id === session.session)
-  const row = sessions[at]
-  const unit = tc(course.session_unit === 'week' ? 'week' : 'session', { number: at + 1 })
-  const name = row?.session_title ? `${unit}: ${row.session_title}` : unit
+  const syllabus = syllabusOf(course.sessions, course.session_unit)
+  const shown = syllabus.find((s) => s.session.id === session.session)
+  const row = shown?.session
+  const unit = tc(shown?.unit ?? 'session', { number: shown?.number ?? 0 })
+  const name = row?.title ? `${unit}: ${row.title}` : unit
 
   // Only a moderator's announcement carries the whole session; a member's post, a small tag that opens the posts about it.
   if (!SESSION_CARD_KINDS.includes(kind)) {
@@ -85,7 +83,7 @@ export function PostSession({
   return (
     <CourseSession
       course={course}
-      sessions={oldSyllabus(course)}
+      sessions={syllabus}
       session={session.session}
       label={t('sessionLabel')}
       footer={ai}

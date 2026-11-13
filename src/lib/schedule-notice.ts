@@ -165,8 +165,9 @@ export const announceScheduleChanges: CollectionAfterChangeHook<Course> = async 
         author: null,
         kind: 'announcement',
         body: noticeBody(changes, doc.session_unit === 'week' ? 'week' : 'session'),
-        // A lone change points at its session, shown as the syllabus shows it.
-        ...(changes.length === 1 ? { course_session: changes[0]!.id } : {}),
+        // No `course_session` link: it names a session of the sessions
+        // collection, and this notice compares the old array's rows (plan
+        // "Move course readers to sessions": unit 6 removes this hook).
         last_activity_at: new Date().toISOString(),
       } as never,
       overrideAccess: true,

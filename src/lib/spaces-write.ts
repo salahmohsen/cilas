@@ -4,7 +4,7 @@ import type { Payload, Where } from 'payload'
 
 import { personOf } from '@/access'
 import { archivedNow } from '@/lib/space-lifecycle'
-import { parentOf, spaceLink, spaceTitle } from '@/lib/space-ref'
+import { parentOf, parentRef, spaceLink, spaceTitle } from '@/lib/space-ref'
 import { mentionSafelist, spacePeople } from '@/lib/space-members'
 import { actorOf, notify, reactionNote } from '@/lib/notify'
 import { setSpaceEmail } from '@/lib/space-email-prefs'
@@ -281,11 +281,23 @@ export const sessionSafeBody = async (
   body: string,
   options?: { blocks?: boolean },
 ): Promise<string> => {
-  if (!sessionIdsIn(body).length) return body
-  const course =
-    space.kind === 'course' ? await parentOf(payload, space, { select: { sessions: true } }) : null
-  const known = new Set((course?.sessions ?? []).flatMap((s) => (s.id ? [s.id] : [])))
-  return cleanSessionRefs(body, known, options)
+  const named = sessionIdsIn(body)
+  if (!named.length) return body
+  const course = space.kind === 'course' ? parentRef(space)?.id : undefined
+  // Only this course's sessions are known; an ID that is not a number names none.
+  const ids = named.map(Number).filter(Number.isSafeInteger)
+  const { docs } =
+    course != null && ids.length
+      ? await payload.find({
+          collection: 'sessions',
+          depth: 0,
+          pagination: false,
+          overrideAccess: true,
+          select: { course: true },
+          where: { and: [{ course: { equals: course } }, { id: { in: ids } }] },
+        })
+      : { docs: [] }
+  return cleanSessionRefs(body, new Set(docs.map((s) => String(s.id))), options)
 }
 
 export const postCreate = async (

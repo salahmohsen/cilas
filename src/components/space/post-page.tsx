@@ -5,7 +5,8 @@ import { getPayload } from 'payload'
 
 import { Alert } from '@/components/arc/alert/alert'
 import { Breadcrumb } from '@/components/arc/breadcrumb/breadcrumb'
-import type { Course, Programme, Space, User } from '@/payload-types'
+import type { SpaceLanding } from '@/lib/spaces-data'
+import type { User } from '@/payload-types'
 
 import { loadPost, PostArticle } from './post-article'
 import styles from './space.module.css'
@@ -23,7 +24,7 @@ export async function PostPage({
 }: {
   locale: string
   user: User
-  landing: { space: Space; course?: Course; programme?: Programme }
+  landing: SpaceLanding
   postId: number
   /** The space page's route; the post's own route is under it */
   spacePath: string

@@ -2504,7 +2504,7 @@ export interface SpacePost {
   vote_multiple?: boolean | null;
   vote_closes_at?: string | null;
   vote_anonymous?: boolean | null;
-  course_session?: string | null;
+  course_session?: (number | null) | Session;
   pinned?: boolean | null;
   pinned_full?: boolean | null;
   locked?: boolean | null;

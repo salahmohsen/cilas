@@ -77,11 +77,7 @@ export type SyllabusCourse = Pick<
   'title' | 'subtitle' | 'description' | 'syllabus_tentative'
 >
 
-/**
- * One session as the syllabus shows it, whichever store holds it: the
- * course page reads the sessions collection, a course space still the old
- * array (plan "Move course readers to sessions", unit 4).
- */
+/** One session as the syllabus shows it, its text already rendered (`syllabusOf`). */
 export type SyllabusSession = {
   id: string
   title?: string | null

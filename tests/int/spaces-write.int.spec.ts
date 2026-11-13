@@ -1222,11 +1222,11 @@ describe('spaces write', () => {
     track('space-comments', c.data.id)
 
     const ago = new Date(Date.now() - 30 * 86_400_000).toISOString().slice(0, 10)
-    await payload.update({
-      collection: 'courses',
-      id: course.id,
+    const last = await payload.create({
+      collection: 'sessions',
       data: {
-        sessions: [{ order: 1, dates: [{ date: ago, start_time: '18:00', end_time: '20:00' }] }],
+        course: course.id,
+        meetings: [{ date: ago, start_time: '18:00', end_time: '20:00' }],
       },
       overrideAccess: true,
     })
@@ -1264,12 +1264,7 @@ describe('spaces write', () => {
       data: { reopened: false },
       overrideAccess: true,
     })
-    await payload.update({
-      collection: 'courses',
-      id: course.id,
-      data: { sessions: [] },
-      overrideAccess: true,
-    })
+    await payload.delete({ collection: 'sessions', id: last.id, overrideAccess: true })
   })
 
   it('space-visits and space-preferences refuse REST create', async () => {
@@ -1921,18 +1916,33 @@ describe('spaces write', () => {
   })
 
   it('any member names sessions of the course with # or places them as blocks; others turn into plain text', async () => {
-    const setCourse = (data: Record<string, unknown>) =>
-      payload.update({
+    const made2 = await Promise.all(
+      ['Probe one', 'Probe two'].map((title, i) =>
+        payload.create({
+          collection: 'sessions',
+          data: { course: course.id, title, position: i + 1 },
+          overrideAccess: true,
+        }),
+      ),
+    )
+    for (const s of made2) track('sessions', s.id)
+    const [one, two] = made2.map((s) => String(s.id))
+    // A session of another course is foreign here.
+    const [otherCourse] = (
+      await payload.find({
         collection: 'courses',
-        id: course.id,
-        data: { ...data, _status: 'published' } as never,
+        where: { id: { not_equals: course.id } },
+        limit: 1,
+        depth: 0,
         overrideAccess: true,
       })
-    const updated = await setCourse({
-      sessions: [{ session_title: 'Probe one' }, { session_title: 'Probe two' }],
+    ).docs
+    const foreignSession = await payload.create({
+      collection: 'sessions',
+      data: { course: otherCourse!.id, title: 'Probe elsewhere' },
+      overrideAccess: true,
     })
-    const [one, two] = (updated.sessions ?? []).map((s) => s.id!)
-    expect(one && two).toBeTruthy()
+    track('sessions', foreignSession.id)
     const mention = (id: string, label: string) => `[#${label}](session:${id})`
     const block = (id: string) => `::session[${id}]`
     const stored = async (collection: 'space-posts' | 'space-comments', id: number) =>
@@ -2007,7 +2017,20 @@ describe('spaces write', () => {
       `QA #y ${mention(one!, '1 Probe one')}`,
     )
 
-    // A post linked by the older field still reads and counts.
+    expect(
+      await write(student, `QA probe ${mention(String(foreignSession.id), '1 Elsewhere')}`),
+    ).toMatchObject({ ok: true })
+    const foreignBody = (
+      await payload.find({
+        collection: 'space-posts',
+        where: { body: { contains: 'Elsewhere' } },
+        depth: 0,
+        overrideAccess: true,
+      })
+    ).docs.at(-1)?.body
+    expect(foreignBody).toBe('QA probe #1 Elsewhere')
+
+    // A post linked to a session reads and counts.
     const old = await payload.create({
       collection: 'space-posts',
       data: {
@@ -2015,7 +2038,7 @@ describe('spaces write', () => {
         author: personOf(fellow),
         kind: 'announcement',
         body: 'QA probe old link',
-        course_session: two,
+        course_session: Number(two),
         last_activity_at: new Date().toISOString(),
       } as never,
       overrideAccess: true,
@@ -2042,7 +2065,6 @@ describe('spaces write', () => {
     expect((await postView(payload, student, courseSpace, made.data.id))?.sessions).toEqual({
       state: 'hidden',
     })
-    await setCourse({ sessions: [] })
   })
 
   it('a schedule change posts one announcement from no author, once, and notifies the members', async () => {
@@ -2083,7 +2105,6 @@ describe('spaces write', () => {
     })
     // Adding the sessions and the schedule is not a change of a session that existed.
     expect((await notices()).length).toBe(before)
-    const [, two] = (weeks.sessions ?? []).map((s) => s.id!)
     const rows = (weeks.sessions ?? []).map((s) => ({ id: s.id!, session_title: s.session_title }))
 
     // Saving again with nothing different says nothing.
@@ -2098,7 +2119,8 @@ describe('spaces write', () => {
     track('space-posts', cancelPost.id)
     expect(cancelPost.body).toContain('Session 2 (Probe two) is cancelled')
     expect(cancelPost.body).toContain('أُلغيت الجلسة ٢')
-    expect(cancelPost.course_session).toBe(two)
+    // The old array's rows are no sessions of the collection: the notice links none.
+    expect(cancelPost.course_session ?? null).toBeNull()
     expect(cancelPost.author ?? null).toBeNull()
     const note = await payload.find({
       collection: 'notifications',

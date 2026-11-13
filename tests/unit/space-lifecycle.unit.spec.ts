@@ -5,15 +5,10 @@ import { courseLastMeeting } from '@/lib/space-lifecycle'
 import { readOnly } from '@/lib/space-rules'
 
 describe('space lifecycle (spec §11)', () => {
-  it('the last non-cancelled meeting comes last', () => {
-    const last = courseLastMeeting({
-      schedule: {
-        start_date: '2026-09-01',
-        weeks: 4,
-        slots: [{ weekday: 'tue', start_time: '18:00', end_time: '20:00' }],
-      },
-    } as never)
-    expect(last).toBe('2026-09-22')
+  it("the last meeting is the course's kept last day; none without one", () => {
+    expect(courseLastMeeting({ last_day: '2026-09-22' })).toBe('2026-09-22')
+    expect(courseLastMeeting({ last_day: null })).toBeNull()
+    expect(courseLastMeeting({})).toBeNull()
   })
 
   it('read-only two weeks after the last meeting, unless reopened; cohort and community never', () => {

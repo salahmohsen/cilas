@@ -13,6 +13,7 @@ import {
   cleanSessionRefs,
   inlineBlocks,
   mentionToken,
+  renameSessionRefs,
   sessionFacts,
   sessionIdsIn,
   splitBlocks,
@@ -70,27 +71,30 @@ describe('session tokens in a body', () => {
     expect(cleanSessionRefs(`x ${blockToken('zz')}`, new Set([A]), { blocks: false })).toBe('x')
   })
 
+  it('renames the sessions mentions and blocks name, outside code fences, labels kept', () => {
+    const body = `See [#2 Intro](session:${A}) and\n\n${blockToken(B)}\n\n\`\`\`\n${blockToken(A)}\n\`\`\``
+    const renamed = renameSessionRefs(body, (id) => (id === A ? '11' : '12'))
+    expect(renamed).toBe(
+      `See [#2 Intro](session:11) and\n\n${blockToken('12')}\n\n\`\`\`\n${blockToken(A)}\n\`\`\``,
+    )
+    expect(renameSessionRefs(renamed, (id) => id)).toBe(renamed)
+  })
+
   it('facts number and date sessions as the syllabus does, cancelled marked', () => {
     const facts = sessionFacts({
-      schedule: {
-        start_date: '2031-03-03',
-        start_precision: 'day',
-        weeks: 2,
-        slots: [{ weekday: 'mon', start_time: '18:00', end_time: '20:00' }],
-      } as never,
       sessions: [
-        { id: B, session_title: 'Two', order: 2, cancelled: true },
-        { id: A, session_title: 'One', order: 1 },
+        { id: 12, title: 'Two', cancelled: true, meetings: [{ date: '2031-03-10' }] },
+        { id: 11, title: 'One', meetings: [{ date: '2031-03-03', start_time: '18:00' }] },
       ],
     })
-    expect(facts[A]).toEqual({
+    expect(facts['11']).toEqual({
       n: 1,
       title: 'One',
       week: false,
       date: '2031-03-03',
       cancelled: false,
     })
-    expect(facts[B]).toMatchObject({ n: 2, cancelled: true })
+    expect(facts['12']).toMatchObject({ n: 2, date: '2031-03-10', cancelled: true })
   })
 })
 

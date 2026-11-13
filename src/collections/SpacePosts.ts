@@ -147,12 +147,12 @@ export const SpacePosts: CollectionConfig = {
       admin: { condition: (data) => (data as { kind?: string }).kind === 'vote' },
     },
     {
-      // The id of one row of the course's `sessions` array, not a copy: the
-      // post shows the session as the course has it now. postCreate checks
-      // who may attach one, to which kind, and that it is this course's.
+      // One of the course's sessions, not a copy: the post shows the session
+      // as the course has it now.
       name: 'course_session',
       label: 'Course session',
-      type: 'text',
+      type: 'relationship',
+      relationTo: 'sessions',
       access: { update: () => false },
       admin: {
         condition: (data) => Boolean((data as { course_session?: unknown }).course_session),

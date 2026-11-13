@@ -7,7 +7,7 @@
  *
  * A block token inside a sentence is not a block: it reads as a mention.
  */
-import { expandSchedule, sessionsInOrder, type Schedule, type SessionDates } from '@/lib/schedule'
+import { numberedSessions, type SessionTimes } from '@/lib/meetings'
 
 const ID = '[A-Za-z0-9_-]{1,64}'
 
@@ -96,6 +96,27 @@ export const sessionIdsIn = (body: string): string[] => {
 }
 
 /**
+ * The body with each session ID its mentions and blocks name replaced by
+ * `rename(id)`; tokens inside a code fence are text and stay.
+ */
+export const renameSessionRefs = (body: string, rename: (id: string) => string): string => {
+  const lines = body.split('\n')
+  const roles = lineRoles(lines.map((line) => line.replace(/\r$/, '')))
+  return lines
+    .map((line, i) =>
+      roles[i] === 'code'
+        ? line
+        : line
+            .replace(
+              mentionPattern(),
+              (_, label: string, id: string) => `[${label}](${SESSION_HREF}${rename(id)})`,
+            )
+            .replace(blockPattern(), (_, id: string) => blockToken(rename(id))),
+    )
+    .join('\n')
+}
+
+/**
  * The body as the server stores it: a session that is not one of `known`
  * turns into plain text (a mention keeps its words, a block goes), and so
  * does every mention or block past the cap. Without `blocks` (comments), a
@@ -144,25 +165,21 @@ export type SessionFact = {
 }
 
 type FactCourse = {
-  sessions?: (SessionDates & { id?: string | null; session_title?: string | null })[] | null
-  schedule?: Schedule | null
+  sessions: readonly (SessionTimes & { id: number | string; title?: string | null })[]
   session_unit?: string | null
 }
 
 /** Every session of the course by id, numbered and dated as the syllabus shows them. */
-export const sessionFacts = (course: FactCourse): Record<string, SessionFact> => {
-  const meetings = expandSchedule(course.schedule, course.sessions)
-  const out: Record<string, SessionFact> = {}
-  sessionsInOrder(course.sessions ?? []).forEach((session, i) => {
-    if (!session.id) return
-    const own = meetings.filter((m) => m.session === i + 1)
-    out[session.id] = {
-      n: i + 1,
-      title: session.session_title || null,
-      week: course.session_unit === 'week',
-      date: (own.find((m) => !m.cancelled) ?? own[0])?.date ?? null,
-      cancelled: Boolean(session.cancelled),
-    }
-  })
-  return out
-}
+export const sessionFacts = (course: FactCourse): Record<string, SessionFact> =>
+  Object.fromEntries(
+    numberedSessions(course.sessions, course.session_unit).map((n) => [
+      String(n.session.id),
+      {
+        n: n.number,
+        title: n.session.title || null,
+        week: n.unit === 'week',
+        date: n.day,
+        cancelled: Boolean(n.session.cancelled),
+      },
+    ]),
+  )

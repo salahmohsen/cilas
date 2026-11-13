@@ -34,12 +34,13 @@ import { getPayload } from 'payload'
 
 import { CAIRO } from '../src/lib/cairo-day'
 import { getStudyCourses } from '../src/api/courses.api'
+import { getCourseSessions } from '../src/api/sessions.api'
 import { getFellows } from '../src/api/people.api'
 import { getBridgeYear, listBridgeYears } from '../src/api/programmes.api'
 import { otherLocale, routing, type Locale } from '../src/i18n/routing'
 import { formatsOf } from '../src/i18n/formats'
 import { toCourseCard } from '../src/lib/article-cards'
-import { nextSession } from '../src/lib/schedule'
+import { numberedSessions, upcomingSession } from '../src/lib/meetings'
 import { sessionFacts } from '../src/lib/session-refs'
 import { courseLastMeeting } from '../src/lib/space-lifecycle'
 import config from '../src/payload.config'
@@ -355,6 +356,14 @@ const formatterOf = (locale: Locale) => createFormatter(intlOf(locale))
 const translatorOf = (locale: Locale, namespace: string) =>
   createTranslator({ ...intlOf(locale), namespace } as Parameters<typeof createTranslator>[0])
 
+/** Every course's sessions, as a course space reads them (`spaceLanding`). */
+const sessionsOf = (locale: Locale) =>
+  getCourseSessions(
+    payload,
+    courses.map((c) => c.id),
+    { locale, reader: 'all' },
+  )
+
 /**
  * One line each: the reader, the entry point it calls, and what it keeps.
  * A unit that changes an entry point's signature changes its line here.
@@ -414,23 +423,33 @@ const ENTRY_POINTS: Record<string, (locale: Locale) => Promise<Record<string, un
   // (`archiveOf` also reads Date.now(), which no caller can fix: only the last meeting is kept.)
   'space.lastMeeting': async (l) =>
     Object.fromEntries(docs[l].map((c) => [String(c.id), courseLastMeeting(c)])),
-  // components/space/space-page.tsx: the space's "next session", from TODAY.
-  'space.nextSession': async (l) =>
-    Object.fromEntries(
+  // components/space/space-page.tsx: the space's "next session", from TODAY, over the
+  // sessions `spaceLanding` loads.
+  'space.nextSession': async (l) => {
+    const sessions = await sessionsOf(l)
+    return Object.fromEntries(
       docs[l].map((c) => {
-        const next = nextSession(c.schedule, c.sessions, TODAY)
-        return [
-          String(c.id),
-          next && { n: next.index + 1, title: next.session.session_title ?? null },
-        ]
+        const next = upcomingSession(
+          numberedSessions(sessions.get(c.id) ?? [], c.session_unit),
+          TODAY,
+        )
+        return [String(c.id), next && { n: next.number, title: next.session.title ?? null }]
       }),
-    ),
+    )
+  },
   // lib/session-refs.ts sessionFacts: how a space post names and dates a session (keys are
   // session IDs, which the move changes, so the facts are kept in session order).
-  'space.sessionFacts': async (l) =>
-    Object.fromEntries(
-      docs[l].map((c) => [String(c.id), Object.values(sessionFacts(c)).sort((a, b) => a.n - b.n)]),
-    ),
+  'space.sessionFacts': async (l) => {
+    const sessions = await sessionsOf(l)
+    return Object.fromEntries(
+      docs[l].map((c) => [
+        String(c.id),
+        Object.values(
+          sessionFacts({ sessions: sessions.get(c.id) ?? [], session_unit: c.session_unit }),
+        ).sort((a, b) => a.n - b.n),
+      ]),
+    )
+  },
 }
 // Not recorded: `emails/cards.ts` and `lib/mentions.ts` show no course time today
 // (their dates are events'); `space/session-options.ts` formats `sessionFacts` through

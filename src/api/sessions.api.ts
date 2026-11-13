@@ -9,13 +9,15 @@ import type { Session } from '@/payload-types'
  * The sessions of each course, in order (ADR 0011): what `lib/meetings.ts`
  * reads to number, date and summarise them. One query for all the courses.
  * Read as `reader`: a draft course's sessions only reach its fellows and
- * admins, as its page does. Every course asked for has an entry, empty when
- * it has no session the reader may see.
+ * admins, as its page does. `'all'` reads every session, for a caller that
+ * gated the course itself (a course space's membership layer reads its
+ * course that way). Every course asked for has an entry, empty when it has
+ * no session the reader may see.
  */
 export const getCourseSessions = async (
   payload: Payload,
   courses: readonly number[],
-  { locale, reader }: { locale: Locale; reader: Reader },
+  { locale, reader }: { locale: Locale; reader: Reader | 'all' },
 ): Promise<Map<number, Session[]>> => {
   const byCourse = new Map<number, Session[]>(courses.map((id) => [id, []]))
   if (!courses.length) return byCourse
@@ -26,8 +28,7 @@ export const getCourseSessions = async (
     pagination: false,
     // A stable order to start from: `sessionsInOrder` keeps it for ties.
     sort: 'id',
-    overrideAccess: false,
-    user: reader,
+    ...(reader === 'all' ? { overrideAccess: true } : { overrideAccess: false, user: reader }),
     locale,
     fallbackLocale: otherLocale(locale),
   })
