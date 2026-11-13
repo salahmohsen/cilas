@@ -3,6 +3,7 @@ import type { getFormatter } from 'next-intl/server'
 
 import { authorNames, excerptOf, joinNames, publicationOf, readingMinutes } from '@/lib/articles'
 import { mediaImage, type MediaImage } from '@/lib/media-image'
+import { weeks } from '@/lib/meetings'
 import { pathOf } from '@/lib/paths'
 import type { Article, Course, Media, Person } from '@/payload-types'
 
@@ -102,8 +103,10 @@ export const toCourseCard = (
   const cycle = typeof c.cycle === 'object' && c.cycle ? c.cycle : null
   const fellows = (c.fellows ?? []).filter((p): p is Person => typeof p === 'object' && p !== null)
   const image = media(c.cover_image)
-  const date = c.schedule?.start_date ?? cycle?.start_date ?? c.createdAt
-  const weeks = c.schedule?.weeks ?? 0
+  const date = c.first_day ?? cycle?.start_date ?? c.createdAt
+  // `weeks` reads only the first and last day, which the course stores.
+  const length =
+    c.first_day && c.last_day ? weeks([{ date: c.first_day }, { date: c.last_day }]) : 0
   return {
     id: String(c.id),
     href: pathOf('courses', c, locale) ?? '#',
@@ -112,8 +115,8 @@ export const toCourseCard = (
     category: cycle?.title ?? '',
     date: date.slice(0, 10),
     dateLabel: format.dateTime(new Date(date), 'year'),
-    readTime: weeks,
-    readTimeLabel: weeks ? weeksLabel(weeks) : '',
+    readTime: length,
+    readTimeLabel: length ? weeksLabel(length) : '',
     author: byline(fellows, and),
     ...(image?.url ? { image: mediaImage(image) } : {}),
   }

@@ -123,7 +123,7 @@ export const getBridgeYear = async (
           summary: true,
           subtitle: true,
           description: true,
-          schedule: true,
+          first_day: true,
         },
         populate: { people: { name: true, photo: true } },
       })
@@ -141,11 +141,8 @@ export const getBridgeYear = async (
               type: c.course_type,
               excerpt: clip(c.summary || c.subtitle || plain(c.description)),
               image: mediaImage(cover) ?? null,
-              startDate: (
-                c.schedule?.start_date ??
-                cycle.start_date ??
-                `${cycle.start_year}-01-01`
-              ).slice(0, 10),
+              startDate:
+                c.first_day ?? (cycle.start_date ?? `${cycle.start_year}-01-01`).slice(0, 10),
               fellows: (c.fellows ?? []).flatMap((f) => {
                 const person = obj<Person>(f)
                 if (!person?.name) return []

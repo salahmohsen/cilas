@@ -175,7 +175,7 @@ export const getFellows = async (payload: Payload, locale: Locale): Promise<Fell
     depth: 2,
     joins: false,
     pagination: false,
-    select: { title: true, slug: true, fellows: true, cycle: true, schedule: true },
+    select: { title: true, slug: true, fellows: true, cycle: true, first_day: true },
     populate: {
       people: { name: true, slug: true, photo: true, bio: true },
       media: mediaPopulate,
@@ -194,7 +194,8 @@ export const getFellows = async (payload: Payload, locale: Locale): Promise<Fell
       title: c.title,
       season: cycle?.season ?? null,
       year: cycle?.start_year ?? null,
-      start: c.schedule?.start_date ?? cycle?.start_date ?? `${cycle?.start_year ?? 0}`,
+      // Days: the first meeting's, else the cycle's.
+      start: c.first_day ?? cycle?.start_date?.slice(0, 10) ?? `${cycle?.start_year ?? 0}`,
     }
     for (const f of c.fellows ?? []) {
       if (typeof f !== 'object' || !f?.slug) continue

@@ -6,7 +6,7 @@ import { mediaPopulate, mediaStudyImage } from '@/lib/media-image'
 import { detailPath } from '@/lib/paths'
 import { plainText } from '@/lib/plaintext'
 import { previewWhere } from '@/lib/preview-access'
-import { relation as obj, relId } from '@/lib/relation'
+import { isRelation as isObj, relation as obj, relId } from '@/lib/relation'
 import type { Payload, Where } from 'payload'
 
 import type { SiteTier } from '@/access'
@@ -16,7 +16,7 @@ import { SEASONS } from '@/lib/cycle'
 import { localDigits } from '@/lib/digits'
 import { courseRegistration } from '@/lib/registration'
 import { slugify } from '@/lib/slugify'
-import type { Course, Cycle, Media, Person, Place } from '@/payload-types'
+import type { Course, Cycle, Media, Person, Place, Session } from '@/payload-types'
 
 /**
  * What a course's relations bring along: enough to name and picture them.
@@ -46,6 +46,12 @@ const visible = (tiers: SiteTier[]): Where => ({
 })
 
 /**
+ * A course's sessions come along through its `syllabus` join, for their
+ * words; its other joins are admin views and stay behind.
+ */
+const withSessions = { enrollments: false, syllabus: { limit: 0 } } as const
+
+/**
  * Published courses in these tiers. Drafts (imported courses awaiting review
  * among them) stay off the list, matching what `/study/<slug>` will show.
  */
@@ -55,7 +61,7 @@ const getListedCourses = async (payload: Payload, locale: Locale, tiers: SiteTie
     where: visible(tiers),
     depth: 2,
     populate,
-    joins: false,
+    joins: withSessions,
     pagination: false,
     overrideAccess: true,
     locale,
@@ -77,12 +83,14 @@ const courseTexts = (c: Course): string[] => [
   c.facilitator_note ?? '',
   c.language_note ?? '',
   ...(c.fellows ?? []).map((f) => obj<Person>(f)?.name ?? ''),
-  ...(c.sessions ?? []).flatMap((s) => [
-    s.session_title ?? '',
-    plain(s.description),
-    ...(s.bibliography ?? []).flatMap((b) => [b.title ?? '', b.note ?? '']),
-    ...(s.activities ?? []).map((a) => a.description ?? ''),
-  ]),
+  ...(c.syllabus?.docs ?? [])
+    .filter(isObj<Session>)
+    .flatMap((s) => [
+      s.title ?? '',
+      s.description ?? '',
+      ...(s.bibliography ?? []).flatMap((b) => [b.title ?? '', b.note ?? '']),
+      ...(s.activities ?? []).map((a) => a.description ?? ''),
+    ]),
   ...(c.bibliography ?? []).flatMap((b) => [b.title ?? '', b.note ?? '']),
 ]
 
@@ -105,7 +113,7 @@ export const getStudyCourses = async (
       where: visible(tiers),
       depth: 1,
       populate,
-      joins: false,
+      joins: withSessions,
       pagination: false,
       overrideAccess: true,
       locale: other,
@@ -208,7 +216,8 @@ export const getStudyCourses = async (
             ? `${description.slice(0, 277).trimEnd()}…`
             : description,
         ...mediaStudyImage(cover),
-        startDate: c.schedule?.start_date ?? cycle?.start_date ?? `${cycle?.start_year ?? 0}`,
+        // Days: the first meeting's, else the cycle's.
+        startDate: c.first_day ?? cycle?.start_date?.slice(0, 10) ?? `${cycle?.start_year ?? 0}`,
         ...(resolved.deadline ? { deadline: resolved.deadline } : {}),
         facets,
         words: searchWords([
