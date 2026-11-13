@@ -47,5 +47,52 @@ Each unit ends in a check, and the next unit starts only when that check passes.
 
 ## Decision trail
 
-| Unit | Commit | Check | Result |
-| ---- | ------ | ----- | ------ |
+| Unit                  | Commit                             | Check                                                                                                | Result                                                                                                                                           |
+| --------------------- | ---------------------------------- | ---------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------ |
+| 1 Temporal and tokens | `e48c5245`                         | Unit tests of the time module; typecheck.                                                            | Pass. `temporal-polyfill` 1.0.6 is pinned. Node 22 in production has no `Temporal`, so the server uses the polyfill. 19 time tests.              |
+| 2 View mode           | `fd6307d2`, `4dd73aec`             | Render and ARIA tests.                                                                               | Pass. 17 render and ARIA tests. `4dd73aec` removes a stray copy of the prototype's span file.                                                    |
+| 3 Edit mode           | `bac1b615`, `e49338fe`             | Keyboard and ARIA tests with the ui-sdk testing kit; change-list tests.                              | Pass. 10 change-list tests, 11 ui-sdk kit tests, 16 component tests. Six injected faults were caught. `e49338fe` removes the temporary dev page. |
+| 4 Save action         | `fdaac56b`                         | Int tests for access, all or nothing and stale; adapter unit tests.                                  | Pass. 12 int tests, 6 adapter tests. The rollback and stale tests fail without the transaction.                                                  |
+| 5 Admin Sessions tab  | `228ffadb`, `289f7c33`, `8135de55` | The e2e tests in "Done means"; typecheck; lint; unit, int and old-path checks; the dev server check. | Pass. See "Unit 5" below.                                                                                                                        |
+
+## Unit 5: what was built and decided
+
+Commits, in order:
+
+- `228ffadb` fixes the tone. `CalendarItem.tone` is now a `CalendarTone` (`yellow`, `blue`, `pink`, `green`, `neutral`), exported from `lib/calendar-items.ts`. `toneOf` in `lib/calendar.ts` maps a course or event type to one name, and the adapter uses it. The old public views turn a name into a colour with `toneColor`, from the same `--calendar-*` tokens. There is one tone system. Before, the adapter gave hex colours and the component drew every block as neutral.
+- `289f7c33` adds the calendar field, and the drawer with it. The field cannot work without `onOpen`, so items 2 and 3 of the brief are one commit.
+- `8135de55` adds "Repeat weekly" to the session form.
+
+Decisions:
+
+- **Who may edit.** `loadCalendarItems` asks the sessions collection's own create access (`createSession`) for the course. It returns `canEdit` with the items. The page has no copy of the rule. The save still checks access.
+- **Labels.** The admin builds its labels from the shared `CalendarUi` messages with `calendarLabelsFrom`, the same builder as the site. Admin-only words are in a new `CalendarAdmin` namespace, in English and Arabic.
+- **Buttons.** The calendar's own buttons now have `type="button"`. Inside Payload's form, a button with no type submits the course.
+- **Draft state.** The adapter reads the course with `draft: true`, as the admin shows it. Sessions have no drafts, so a save is public at once on a published course. The Sessions tab already says so.
+- **Opening week.** The field opens on the week of the next meeting, or of the last meeting when the course is over.
+- **The drawer.** `useDocumentDrawer` fixes the document when it is called, so the field shows one `SessionDrawer` for each session it opens. Payload's drawer is not a native dialog, so the field puts focus back on the block when the drawer closes. The calendar reloads when the drawer saves, deletes or closes.
+- **Repeat weekly.** The rule is `weeklyRepeats` in `lib/meetings.ts`. The tool starts from the saved meetings and is off while the form has unsaved edits. After it adds meetings, it loads the saved ones into the form with `reset`, so a later save does not undo them. It makes 1 to 52 weeks.
+- **A new course.** A course with no id shows a note, not the calendar.
+
+### The old join list
+
+**Decision: keep it, unchanged.**
+
+The week calendar shows seven days. A course runs 8 to 12 weeks. An admin who needs to find a session by its title, see which are cancelled, or see the whole syllabus in order has to page through the weeks. The join list shows every session in one table, with its title, cancelled flag and last change. Its "Create new" button opens the full session form before any time is chosen. It also still works when the calendar cannot load.
+
+The calendar covers the rest: times, overlaps, and sessions with no meeting (the tray). So the list stays as the overview, under the calendar. We can revisit this when the course space has its own syllabus view.
+
+### Checks
+
+- `pnpm test:e2e tests/e2e/course-calendar.e2e.spec.ts`: 4 tests pass. On a test course made for the run and deleted after: draw a session and move a meeting, Save, reload, and find the meetings in the database; make a change, Cancel, and find no change; open a block and see the session drawer, then Escape puts focus back on the block; Repeat weekly adds meetings and makes sessions.
+- `pnpm typecheck`, `pnpm lint` and `oxfmt --check`: pass.
+- `pnpm test:unit`: 191 files, 1613 tests pass.
+- `pnpm test:int tests/int/save-calendar-changes.int.spec.ts tests/int/course-sessions.int.spec.ts`: 22 tests pass, 4 of them new for `loadCalendarItems`.
+- `pnpm tsx scripts/check-old-course-paths.ts`: pass.
+- Dev server, course 296 and a test course: English and Arabic, light and dark, desktop and phone width; view, edit, a save, the drawer and Repeat weekly.
+
+### Known gaps
+
+- The admin's own language is English only today: `i18n.supportedLanguages` in `payload.config.ts` lists only English. The Arabic labels show when that is turned on. They were checked with it turned on locally, then reverted.
+- The calendar does not know about a session added with the join list's "Create new". It shows it after the next reload.
+- "Done editing" drops unsaved changes without asking. The component has no way yet to tell the host that changes are waiting.
