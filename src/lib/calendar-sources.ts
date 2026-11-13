@@ -194,14 +194,15 @@ const sessionSource: CalendarSource = {
       byItem.set(change.itemId, [...(byItem.get(change.itemId) ?? []), { change, index }])
     })
     changes.forEach((change, index) => {
-      if (change.op !== 'delete-block') checkMeeting(change, index)
+      if (change.op === 'create-item') change.blocks.forEach((block) => checkMeeting(block, index))
+      else if (change.op !== 'delete-block') checkMeeting(change, index)
     })
 
     for (const change of changes) {
       if (change.op !== 'create-item') continue
       await payload.create({
         collection: 'sessions',
-        data: { course, meetings: [stored(change)] },
+        data: { course, meetings: change.blocks.map(stored) },
         ...access,
       })
     }

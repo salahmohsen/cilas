@@ -18,9 +18,15 @@ const times = {
   end_time: z.string().nullable(),
 }
 
+const newBlockSchema = z.object({ blockId: z.string(), ...times })
+
 // The page is not trusted: the types say what a change is, and this checks it.
 const changeSchema = z.discriminatedUnion('op', [
-  z.object({ op: z.literal('create-item'), kind: z.string(), blockId: z.string(), ...times }),
+  z.object({
+    op: z.literal('create-item'),
+    kind: z.string(),
+    blocks: z.tuple([newBlockSchema], newBlockSchema),
+  }),
   z.object({
     op: z.literal('add-block'),
     itemId: z.string(),

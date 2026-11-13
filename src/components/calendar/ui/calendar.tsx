@@ -102,6 +102,8 @@ export function Calendar({
 
   const allDay = useMemo(() => allDayBlocks(session.items, days), [session.items, days])
   const legend = useMemo(() => legendOf(session.items), [session.items])
+  // A block of an item made on the page has nothing to open until it is saved.
+  const itemIds = useMemo(() => new Set(session.items.map((item) => item.id)), [session.items])
   const newTone = legend.find((entry) => entry.kind === newItemKind)?.tone ?? 'neutral'
   const placedIds = new Set(
     session.working.flatMap((block) => (block.deleted ? [] : [block.itemId])),
@@ -144,7 +146,7 @@ export function Calendar({
           if (block.deleted) return session.restore(block.id)
           const touch = (event as PointerEvent | undefined)?.pointerType === 'touch'
           if (editable && touch && selectedId !== block.id) return setSelectedId(block.id)
-          if (block.itemId) onOpen(block.itemId, block.blockId)
+          if (itemIds.has(block.itemId)) onOpen(block.itemId, block.blockId)
         }}
       >
         <CalendarToolbar

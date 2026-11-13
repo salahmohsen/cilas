@@ -35,10 +35,13 @@ export type CalendarItem = {
 
 type BlockTimes = Pick<CalendarBlock, 'date' | 'start_time' | 'end_time'>
 
+/** A block made on the page. `blockId` is temporary: the item gives the block its own id when saved. */
+export type NewBlock = BlockTimes & { blockId: string }
+
 /** One edit made on the page. A Save sends every change at once. */
 export type CalendarChange =
-  /** A new item with one block: a block drawn on an empty slot. */
-  | ({ op: 'create-item'; kind: string; blockId: string } & BlockTimes)
+  /** A new item with its blocks: a block drawn on an empty slot, or a copy of an item moved in time. */
+  | { op: 'create-item'; kind: string; blocks: [NewBlock, ...NewBlock[]] }
   /** A new block on an existing item: an Unscheduled item placed on the grid. */
   | ({ op: 'add-block'; itemId: string; version: string; blockId: string } & BlockTimes)
   | ({ op: 'move-block'; itemId: string; version: string; blockId: string } & BlockTimes)

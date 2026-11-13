@@ -6,7 +6,12 @@ import {
   restoreBlock,
   unsavedIdsOf,
 } from '@/components/calendar/ui/calendar-edits'
-import { newBlock, timedBlocks, type TimedBlock } from '@/components/calendar/ui/calendar-model'
+import {
+  newBlock,
+  newItemId,
+  timedBlocks,
+  type TimedBlock,
+} from '@/components/calendar/ui/calendar-model'
 import type { CalendarItem } from '@/lib/calendar-items'
 
 const items: CalendarItem[] = [
@@ -61,21 +66,62 @@ describe('the change list of a Save', () => {
   })
 
   it('draws on an empty slot: a create-item with the host kind and no version', () => {
-    const drawn = newBlock(null, '2026-11-16', 600, 660)
+    const drawn = newBlock(newItemId(), '2026-11-16', 600, 660)
     expect(edit([...base, drawn], 'session')).toEqual([
       {
         op: 'create-item',
         kind: 'session',
-        blockId: drawn.blockId,
-        date: '2026-11-16',
-        start_time: '10:00',
-        end_time: '11:00',
+        blocks: [
+          {
+            blockId: drawn.blockId,
+            date: '2026-11-16',
+            start_time: '10:00',
+            end_time: '11:00',
+          },
+        ],
       },
     ])
   })
 
+  it('sends the blocks of one new item as one create-item, and another new item as another', () => {
+    const first = newItemId()
+    const copy = [
+      newBlock(first, '2026-11-24', 1140, 1260),
+      newBlock(first, '2026-11-26', 1140, 1260),
+    ]
+    const other = newBlock(newItemId(), '2026-11-16', 600, 660)
+    expect(edit([...base, ...copy, other], 'session')).toEqual([
+      {
+        op: 'create-item',
+        kind: 'session',
+        blocks: [
+          { blockId: copy[0]!.blockId, date: '2026-11-24', start_time: '19:00', end_time: '21:00' },
+          { blockId: copy[1]!.blockId, date: '2026-11-26', start_time: '19:00', end_time: '21:00' },
+        ],
+      },
+      {
+        op: 'create-item',
+        kind: 'session',
+        blocks: [
+          { blockId: other.blockId, date: '2026-11-16', start_time: '10:00', end_time: '11:00' },
+        ],
+      },
+    ])
+  })
+
+  it('drops a new item when its last block is deleted', () => {
+    const item = newItemId()
+    const first = newBlock(item, '2026-11-24', 1140, 1260)
+    const second = newBlock(item, '2026-11-26', 1140, 1260)
+    const working = keepDeleted([...base, first, second], [...base, first], second.id, base)
+    expect(edit(working, 'session')).toMatchObject([
+      { op: 'create-item', blocks: [{ blockId: first.blockId }] },
+    ])
+    expect(edit(keepDeleted(working, base, first.id, base), 'session')).toEqual([])
+  })
+
   it('refuses to draw when the host named no kind for new items', () => {
-    expect(() => edit([...base, newBlock(null, '2026-11-16', 600, 660)])).toThrow(/no kind/)
+    expect(() => edit([...base, newBlock(newItemId(), '2026-11-16', 600, 660)])).toThrow(/no kind/)
   })
 
   it('places an unscheduled item: an add-block with its version', () => {
@@ -109,7 +155,7 @@ describe('the change list of a Save', () => {
   })
 
   it('forgets a block made on the page when it is deleted', () => {
-    const drawn = newBlock(null, '2026-11-16', 600, 660)
+    const drawn = newBlock(newItemId(), '2026-11-16', 600, 660)
     const working = keepDeleted([...base, drawn], base, drawn.id, base)
     expect(working).toEqual(base)
     expect(edit(working, 'session')).toEqual([])
@@ -120,8 +166,8 @@ describe('the change list of a Save', () => {
     expect(edit(restoreBlock(ghosted, tue.id))).toEqual([])
   })
 
-  it('sends every kind of change in one list: creates and moves, then deletes', () => {
-    const drawn = newBlock(null, '2026-11-16', 600, 660)
+  it('sends every kind of change in one list: moves and placements, new items, then deletes', () => {
+    const drawn = newBlock(newItemId(), '2026-11-16', 600, 660)
     const placed = newBlock('week-4', '2026-11-15', 900, 960)
     const working = keepDeleted(
       [{ ...thu, start: 18 * 60 }, tue, drawn, placed],
@@ -131,8 +177,8 @@ describe('the change list of a Save', () => {
     )
     expect(edit(working, 'session').map((change) => change.op)).toEqual([
       'move-block',
-      'create-item',
       'add-block',
+      'create-item',
       'delete-block',
     ])
   })

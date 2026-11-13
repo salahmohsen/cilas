@@ -88,6 +88,14 @@ type Times = { date: string; start_time: string | null; end_time: string | null 
 const at = (date: string, start_time: string | null = '19:00', end_time: string | null = '21:00') =>
   ({ date, start_time, end_time }) satisfies Times
 
+/** A new session with these meetings, as the page sends one. */
+const newSession = (...meetings: Times[]) =>
+  ({
+    op: 'create-item',
+    kind: 'session',
+    blocks: meetings.map((meeting, i) => ({ blockId: `tmp-${i}`, ...meeting })),
+  }) as CalendarChange
+
 const makeSession = async (parent: number, ...meetings: Times[]) =>
   (
     await payload.create({
@@ -203,7 +211,7 @@ describe('saveCalendarChanges', () => {
     const known = await sessionIds(course)
 
     const result = await save([
-      { op: 'create-item', kind: 'session', blockId: 'tmp-new', ...at('2035-12-01', null, null) },
+      newSession(at('2035-12-01', null, null)),
       {
         op: 'add-block',
         itemId: String(unscheduled),
@@ -223,6 +231,36 @@ describe('saveCalendarChanges', () => {
     // The page's temporary id is not stored: the row has its own.
     expect(placed[0]!.id).not.toBe('tmp-placed')
     expect((await courseDays(course)).last_day).toBe('2035-12-08')
+  })
+
+  it('makes one session with all the meetings of a create-item with several blocks', async () => {
+    const source = await makeSession(course, at('2035-12-02'), at('2035-12-04', '10:00', '12:00'))
+    const known = await sessionIds(course)
+
+    // The two meetings of the session above, moved a week later.
+    const result = await save([newSession(at('2035-12-09'), at('2035-12-11', '10:00', '12:00'))])
+
+    expect(result.ok).toBe(true)
+    const created = (await sessionIds(course)).filter((s) => !known.includes(s))
+    expect(created).toHaveLength(1)
+    const copy = await stored(created[0]!)
+    expect(copy.meetings).toHaveLength(2)
+    expect(copy.meetings[0]).toMatchObject(at('2035-12-09'))
+    expect(copy.meetings[1]).toMatchObject(at('2035-12-11', '10:00', '12:00'))
+    expect(copy.meetings.map((m) => m.id)).not.toContain('tmp-0')
+    expect((await stored(source)).meetings).toHaveLength(2)
+  })
+
+  it('refuses a create-item with no block or with a bad block, and saves nothing', async () => {
+    const known = await sessionIds(course)
+
+    const empty = await save([{ op: 'create-item', kind: 'session', blocks: [] } as never])
+    expect(empty).toMatchObject({ ok: false, error: { code: 'invalid' } })
+
+    const bad = await save([newSession(at('2035-12-16'), at('2035-12-17', '21:00', '19:00'))])
+    expect(bad).toMatchObject({ ok: false, error: { code: 'invalid', change: 0 } })
+
+    expect(await sessionIds(course)).toEqual(known)
   })
 
   it('lets an admin delete a meeting, and leaves the session with the others', async () => {
@@ -283,7 +321,7 @@ describe('saveCalendarChanges', () => {
     const before = await stored(id)
 
     const result = await save([
-      { op: 'create-item', kind: 'session', blockId: 'tmp', ...at('2035-12-15') },
+      newSession(at('2035-12-15')),
       {
         op: 'move-block',
         itemId: String(id),
@@ -313,9 +351,7 @@ describe('saveCalendarChanges', () => {
       },
     ])
     await expect(move).resolves.toEqual({ ok: false, error: { code: 'forbidden' } })
-    const create = save([
-      { op: 'create-item', kind: 'session', blockId: 'tmp', ...at('2035-12-04') },
-    ])
+    const create = save([newSession(at('2035-12-04'))])
     await expect(create).resolves.toEqual({ ok: false, error: { code: 'forbidden' } })
 
     expect(await stored(id)).toEqual(before)
@@ -347,7 +383,7 @@ describe('saveCalendarChanges', () => {
     const blockId = before.meetings[0]!.id!
 
     const result = await save([
-      { op: 'create-item', kind: 'session', blockId: 'tmp', ...at('2035-12-17') },
+      newSession(at('2035-12-17')),
       {
         op: 'move-block',
         itemId: String(id),
@@ -376,7 +412,7 @@ describe('saveCalendarChanges', () => {
     const known = await sessionIds(course)
 
     const result = await save([
-      { op: 'create-item', kind: 'session', blockId: 'tmp', ...at('2036-01-20') },
+      newSession(at('2036-01-20')),
       {
         op: 'move-block',
         itemId: String(first),
@@ -410,7 +446,7 @@ describe('saveCalendarChanges', () => {
     const known = await sessionIds(course)
 
     const result = await save([
-      { op: 'create-item', kind: 'session', blockId: 'tmp', ...at('2036-02-17') },
+      newSession(at('2036-02-17')),
       {
         op: 'move-block',
         itemId: String(fresh),
@@ -457,7 +493,7 @@ describe('saveCalendarChanges', () => {
           version: before.version,
           blockId: before.meetings[0]!.id!,
         },
-        { op: 'create-item', kind: 'session', blockId: 'tmp', ...at('2036-03-31') },
+        newSession(at('2036-03-31')),
       ],
       days,
     )

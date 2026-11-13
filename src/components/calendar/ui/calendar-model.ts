@@ -9,26 +9,28 @@ const FALLBACK_HOURS = [9 * 60, 17 * 60] as const
 
 /**
  * A timed block as the span editor sees it: the day is the track, minutes are
- * the range. `itemId` is null for a block drawn on an empty slot, whose item
- * does not exist yet. `deleted` marks a block shown as a ghost until Save.
+ * the range. `itemId` names an item the host loaded, or an item made on the
+ * page, which does not exist until Save. `deleted` marks a block shown as a
+ * ghost until Save.
  */
 export type TimedBlock = Span & {
-  itemId: string | null
+  itemId: string
   blockId: string
   deleted?: boolean
 }
 
-export const blockKey = (itemId: string | null, blockId: string) => `${itemId ?? 'new'}/${blockId}`
+export const blockKey = (itemId: string, blockId: string) => `${itemId}/${blockId}`
 
 let created = 0
-/** A block made on the page. Its id lives until Save, so a counter is enough. */
-export const newBlock = (
-  itemId: string | null,
-  track: string,
-  start: number,
-  end: number,
-): TimedBlock => {
-  const blockId = `new-${Date.now().toString(36)}-${(created++).toString(36)}`
+/** A temporary id, for an item or block made on the page. It lives until Save, so a counter is enough. */
+const temporaryId = () => `new-${Date.now().toString(36)}-${(created++).toString(36)}`
+
+/** The id of an item made on the page. Its blocks all name it, and Save sends them as one new item. */
+export const newItemId = temporaryId
+
+/** A block made on the page, on an item that exists or on one made on the page. */
+export const newBlock = (itemId: string, track: string, start: number, end: number): TimedBlock => {
+  const blockId = temporaryId()
   return { id: blockKey(itemId, blockId), track, start, end, itemId, blockId }
 }
 

@@ -233,13 +233,18 @@ describe('edit mode', () => {
     fireEvent.click(save())
     await waitFor(() => expect(onSave).toHaveBeenCalledTimes(1))
     expect(onSave.mock.calls[0]![0]).toEqual([
-      expect.objectContaining({
+      {
         op: 'create-item',
         kind: 'session',
-        date: '2026-11-15',
-        start_time: '09:00',
-        end_time: '10:00',
-      }),
+        blocks: [
+          {
+            blockId: expect.any(String),
+            date: '2026-11-15',
+            start_time: '09:00',
+            end_time: '10:00',
+          },
+        ],
+      },
     ])
   })
 

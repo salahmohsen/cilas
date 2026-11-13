@@ -141,7 +141,7 @@ export function WeekGrid({
           {({ spans }) => (
             <>
               {spans.map((block) => {
-                const item = block.itemId ? itemById.get(block.itemId) : undefined
+                const item = itemById.get(block.itemId)
                 const title = item?.title ?? labels.newItem
                 const edited = unsaved.has(block.id)
                 return (

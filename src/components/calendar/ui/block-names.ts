@@ -25,7 +25,7 @@ export function blockNamer({ items, labels, locale, hour12, unsaved }: Context) 
   const itemById = new Map(items.map((item) => [item.id, item]))
   const states = new Intl.ListFormat(locale, { style: 'long', type: 'conjunction' })
   return (block: TimedBlock) => {
-    const item = block.itemId ? itemById.get(block.itemId) : undefined
+    const item = itemById.get(block.itemId)
     const title = item?.title ?? labels.newItem
     const day = longDay(block.track, locale)
     const time = labels.timeRange(

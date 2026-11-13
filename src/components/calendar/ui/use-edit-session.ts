@@ -10,6 +10,7 @@ import {
   DEFAULT_MINUTES,
   firstFreeStart,
   newBlock,
+  newItemId,
   timedBlocks,
   type TimedBlock,
 } from './calendar-model'
@@ -106,13 +107,13 @@ export function useEditSession({ items, newItemKind, onSave, scope, range }: Opt
     /** A press on an empty stretch of day draws a block of a new item, if the host allows new items. */
     draw: newItemKind
       ? (span: { track: string; start: number; end: number }) =>
-          newBlock(null, span.track, span.start, span.end)
+          newBlock(newItemId(), span.track, span.start, span.end)
       : undefined,
 
     /** The "+" on a day: a new item's block in the first free hour. */
     drawOnDay(track: string) {
       const { start, end } = slot(track)
-      add(newBlock(null, track, start, end))
+      add(newBlock(newItemId(), track, start, end))
     },
 
     /** An item with no block, put on a day: at `start`, or in the first free hour. */
