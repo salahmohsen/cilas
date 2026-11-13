@@ -7,6 +7,8 @@ import {
   describeChange,
   icsByCourse,
   llmsTimes,
+  onlyAdds,
+  toDays,
   type CourseMeta,
   type Snapshot,
 } from '../../scripts/course-reader-snapshot'
@@ -24,28 +26,68 @@ const snapshot = (
 ): Snapshot => ({ label: 'x', today: '2026-11-13', courses, readers })
 
 describe('classify', () => {
+  const was = { en: ['Session 1: A'] }
+  const grew = { en: ['Session 1: A', 'Session 2'] }
+
   it('expects any change in an archive-dated course', () => {
     for (const reader of ['page.facts', 'list.study', 'space.lastMeeting'])
-      expect(classify(reader, { ...plain, archiveDated: true }).verdict).toBe('EXPECTED')
+      expect(classify(reader, { ...plain, archiveDated: true }, 'a', 'b').verdict).toBe('EXPECTED')
   })
 
-  it('expects new untitled sessions where sessions are listed, never in start dates', () => {
+  it('expects new untitled sessions to add lines where sessions are listed, never in start dates', () => {
     const meta = { ...plain, newSessions: 2 }
     for (const reader of ['page.syllabus', 'calendar.ics', 'llms', 'space.sessionFacts'])
-      expect(classify(reader, meta).verdict).toBe('EXPECTED')
+      expect(classify(reader, meta, was, grew).verdict).toBe('EXPECTED')
     for (const reader of ['list.study', 'space.lastMeeting', 'page.note'])
-      expect(classify(reader, meta).verdict).toBe('UNEXPECTED')
+      expect(classify(reader, meta, was, grew).verdict).toBe('UNEXPECTED')
+  })
+
+  it('does not expect a course with new sessions to change or drop a line it had', () => {
+    const meta = { ...plain, newSessions: 1 }
+    expect(
+      classify('page.syllabus', meta, was, { en: ['Session 1: B', 'Session 2'] }).verdict,
+    ).toBe('UNEXPECTED')
+    expect(classify('page.syllabus', meta, grew, was).verdict).toBe('UNEXPECTED')
+    expect(classify('calendar.ics', meta, ['b', 'a'], ['a', 'b', 'c']).verdict).toBe('UNEXPECTED')
   })
 
   it('expects the timing note of an undated course to change only where the note shows', () => {
     const meta = { ...plain, undatedWords: true }
-    expect(classify('page.note', meta).verdict).toBe('EXPECTED')
-    expect(classify('page.syllabus', meta).verdict).toBe('UNEXPECTED')
+    expect(classify('page.note', meta, [], ['x']).verdict).toBe('EXPECTED')
+    expect(classify('page.syllabus', meta, [], ['x']).verdict).toBe('UNEXPECTED')
   })
 
   it('expects nothing of other courses, nor of a course the base does not know', () => {
-    expect(classify('page.facts', plain).verdict).toBe('UNEXPECTED')
-    expect(classify('page.facts', undefined).verdict).toBe('UNEXPECTED')
+    expect(classify('page.facts', plain, [], ['x']).verdict).toBe('UNEXPECTED')
+    expect(classify('page.facts', undefined, [], ['x']).verdict).toBe('UNEXPECTED')
+  })
+})
+
+describe('onlyAdds', () => {
+  it('accepts lines added before, between and after the old ones', () => {
+    expect(onlyAdds(['b', 'd'], ['a', 'b', 'c', 'd', 'e'])).toBe(true)
+    expect(onlyAdds(undefined, ['a'])).toBe(true)
+    expect(onlyAdds({ facts: ['x'], syllabus: [] }, { facts: ['x'], syllabus: ['### 1'] })).toBe(
+      true,
+    )
+    expect(onlyAdds('a\nb', 'a\nb\nc')).toBe(true)
+  })
+
+  it('refuses a changed, dropped or moved line, and no change at all', () => {
+    expect(onlyAdds(['a', 'b'], ['a', 'B', 'c'])).toBe(false)
+    expect(onlyAdds(['a', 'b'], ['a'])).toBe(false)
+    expect(onlyAdds(['a', 'b'], ['b', 'a', 'c'])).toBe(false)
+    expect(onlyAdds(['a'], ['a'])).toBe(false)
+    expect(onlyAdds({ status: 404 }, { facts: [] })).toBe(false)
+  })
+})
+
+describe('toDays', () => {
+  it('cuts a raw timestamp to its day, alone or ending a line', () => {
+    expect(
+      toDays({ facts: ['**Starts:** 2019-01-31T00:00:00.000Z', '**Type:** Lab'], d: 3 }),
+    ).toEqual({ facts: ['**Starts:** 2019-01-31', '**Type:** Lab'], d: 3 })
+    expect(toDays('2018-01-07T00:00:00.000Z')).toBe('2018-01-07')
   })
 })
 
@@ -74,6 +116,32 @@ describe('compareSnapshots', () => {
         reason: expect.any(String),
       },
     ])
+  })
+
+  it('expects a start date that went from a raw timestamp to the same day, and no other day', () => {
+    const base = snapshot({
+      llms: { '1': { en: { facts: ['**Starts:** 2019-01-31T00:00:00.000Z'], syllabus: [] } } },
+      'list.study': { '1': '2019-01-31T00:00:00.000Z' },
+    })
+    const head = snapshot({
+      llms: { '1': { en: { facts: ['**Starts:** 2019-01-31'], syllabus: [] } } },
+      'list.study': { '1': '2019-02-01' },
+    })
+    expect(compareSnapshots(base, head).map((d) => [d.reader, d.verdict])).toEqual([
+      ['list.study', 'UNEXPECTED'],
+      ['llms', 'EXPECTED'],
+    ])
+  })
+
+  it('judges added session lines against the base with its timestamps cut to days', () => {
+    const base = snapshot(
+      { llms: { '1': { en: { facts: ['**Starts:** 2019-01-31T00:00:00.000Z'], syllabus: [] } } } },
+      { '1': { ...plain, newSessions: 1 } },
+    )
+    const head = snapshot({
+      llms: { '1': { en: { facts: ['**Starts:** 2019-01-31'], syllabus: ['### Session 1'] } } },
+    })
+    expect(compareSnapshots(base, head).map((d) => d.verdict)).toEqual(['EXPECTED'])
   })
 
   it('flags a course or a reader missing on one side', () => {

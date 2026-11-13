@@ -50,32 +50,78 @@ const SESSION_READERS = new Set([
   'space.nextSession',
 ])
 
+const same = (a: unknown, b: unknown) => JSON.stringify(a) === JSON.stringify(b)
+
+const isRecord = (v: unknown): v is Record<string, unknown> =>
+  !!v && typeof v === 'object' && !Array.isArray(v)
+
 /** Readers that show the timing note. */
 const NOTE_READERS = new Set(['page.note', 'llms'])
 
+/** Readers that showed a start or end date as a raw timestamp (`2019-01-31T00:00:00.000Z`). */
+const DAY_READERS = new Set(['llms', 'list.study', 'list.fellows'])
+
+const TIMESTAMP = /^(.*?)(\d{4}-\d{2}-\d{2})T\d{2}:\d{2}:\d{2}(?:\.\d+)?Z$/
+
+/** A value with each raw timestamp, alone or at the end of a line, cut to its day. */
+export const toDays = (value: unknown): unknown => {
+  if (typeof value === 'string') return value.replace(TIMESTAMP, '$1$2')
+  if (Array.isArray(value)) return value.map(toDays)
+  if (isRecord(value))
+    return Object.fromEntries(Object.entries(value).map(([k, v]) => [k, toDays(v)]))
+  return value
+}
+
+/** A value as lines: a text's lines, a list's items, a record's fields (each line led by its key). */
+const linesOf = (value: unknown): string[] => {
+  if (value === null || value === undefined) return []
+  if (typeof value === 'string') return value ? value.split('\n') : []
+  if (Array.isArray(value)) return value.map((v) => (typeof v === 'string' ? v : JSON.stringify(v)))
+  if (isRecord(value))
+    return Object.entries(value).flatMap(([k, v]) =>
+      (Array.isArray(v) || typeof v === 'string' ? linesOf(v) : [JSON.stringify(v)]).map(
+        (line) => `${k}: ${line}`,
+      ),
+    )
+  return [JSON.stringify(value)]
+}
+
 /**
- * Whether the plan expects `reader` to change for this course. Course by
- * course, reader by reader: a course with new untitled sessions may change
- * wherever sessions are listed or counted, never in its start date; an
+ * Whether `after` only adds lines to `before`: every line of `before` is
+ * still there, unchanged and in the same order, and nothing else differs.
+ */
+export const onlyAdds = (before: unknown, after: unknown): boolean => {
+  const was = linesOf(before)
+  const now = linesOf(after)
+  let at = 0
+  for (const line of now) if (at < was.length && line === was[at]) at++
+  return at === was.length && now.length > was.length
+}
+
+/**
+ * Whether the plan expects `reader` to change from `before` to `after` for
+ * this course. Course by course, reader by reader: an archive-dated course
+ * may change anywhere; a course with new untitled sessions may gain lines
+ * where sessions are listed or counted, and change no line it had; an
  * undated course's note may change only where the note shows.
  */
 export const classify = (
   reader: string,
   meta: CourseMeta | undefined,
+  before: unknown,
+  after: unknown,
 ): { verdict: Verdict; reason: string } => {
   if (!meta) return { verdict: 'UNEXPECTED', reason: 'course not in the base snapshot' }
   if (meta.archiveDated) return { verdict: 'EXPECTED', reason: 'archive start date (37)' }
-  if (meta.newSessions > 0 && SESSION_READERS.has(reader))
-    return { verdict: 'EXPECTED', reason: `${meta.newSessions} new untitled session(s) (147)` }
+  if (meta.newSessions > 0 && SESSION_READERS.has(reader) && onlyAdds(before, after))
+    return {
+      verdict: 'EXPECTED',
+      reason: `${meta.newSessions} new untitled session(s) (389), lines added only`,
+    }
   if (meta.undatedWords && NOTE_READERS.has(reader))
     return { verdict: 'EXPECTED', reason: 'weekly times as words in the timing note (18)' }
   return { verdict: 'UNEXPECTED', reason: 'not in the plan' }
 }
-
-const same = (a: unknown, b: unknown) => JSON.stringify(a) === JSON.stringify(b)
-
-const isRecord = (v: unknown): v is Record<string, unknown> =>
-  !!v && typeof v === 'object' && !Array.isArray(v)
 
 /** Values per locale (`{ en, ar }`) differ locale by locale; anything else as a whole. */
 const parts = (before: unknown, after: unknown): Array<[string, unknown, unknown]> => {
@@ -112,9 +158,14 @@ export const compareSnapshots = (base: Snapshot, head: Snapshot): Difference[] =
     )
     for (const course of courses) {
       if (same(b[course], a[course])) continue
-      const { verdict, reason } = classify(reader, base.courses[course])
-      for (const [part, before, after] of parts(b[course], a[course]))
-        if (!same(before, after)) out.push({ reader, course, part, before, after, verdict, reason })
+      for (const [part, before, after] of parts(b[course], a[course])) {
+        if (same(before, after)) continue
+        const days = DAY_READERS.has(reader) ? toDays(before) : before
+        const { verdict, reason } = same(days, after)
+          ? { verdict: 'EXPECTED' as const, reason: 'raw timestamp to the same day' }
+          : classify(reader, base.courses[course], days, after)
+        out.push({ reader, course, part, before, after, verdict, reason })
+      }
     }
   }
   return out

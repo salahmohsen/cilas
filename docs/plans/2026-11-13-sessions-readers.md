@@ -13,7 +13,8 @@ Every page, feed, list, space view and AI assistant tool that shows or writes a 
 
 ## Expected changes (the only diffs the snapshot allows)
 
-- New untitled sessions (147) show as "Session N" or "Week N".
+- New untitled sessions show as "Session N" or "Week N". The database holds 389 sessions beyond the 1,606 old rows: 147 untitled from the first fill and 242 from the refill of the 37 archive-dated courses. A course with new sessions may only gain lines where sessions are listed: every line it had stays, unchanged and in order.
+- A start or end date shown as a raw timestamp (`2019-01-31T00:00:00.000Z`) may show as its day (`2019-01-31`), in `llms` and the start-date lists, when the day is the same.
 - 37 courses with archive start dates now have real meetings on the calendar and the course page.
 - 18 courses show their weekly times as words where the note was empty.
 
@@ -43,7 +44,7 @@ The old change notice compares the old array. After unit 6, schedule changes sen
 - **Spaces need no signed-in member.** Their time comes from pure functions on the course document, which the space loads with `overrideAccess`; the script loads it the same way.
 - **Not recorded.** `emails/cards.ts` and `lib/mentions.ts` show no course time today (their dates are events'). `space/session-options.ts` formats `sessionFacts` through next-intl's request context, which a script cannot give. `archiveOf` reads `Date.now()`: only the last meeting is kept.
 - **Fixed day.** The entry points get 2026-11-13. The pages cannot take a day: the parts kept do not depend on it (registration status and the month grid's "today" are left out).
-- **Classification** (`scripts/course-reader-snapshot.ts`, `classify`, unit tested), course by course and reader by reader, from the base snapshot's course facts: any change in one of the 37 archive-dated courses (`decideStartDate` on the research file); a change in a session-listing reader of a course with new sessions (sessions in the collection beyond the old rows); a change in the note readers of one of the 18 undated courses. Everything else is UNEXPECTED. The rule is per course and reader, not per line: a course with new sessions may hide another change in its syllabus.
+- **Classification** (`scripts/course-reader-snapshot.ts`, `classify`, unit tested), course by course and reader by reader, from the base snapshot's course facts: any change in one of the 37 archive-dated courses (`decideStartDate` on the research file); a change in a session-listing reader of a course with new sessions (sessions in the collection beyond the old rows) that only adds lines (`onlyAdds`: every base line still there, unchanged and in order); a change in the note readers of one of the 18 undated courses; in `llms`, `list.study` and `list.fellows`, a raw timestamp that became the same day (`toDays`). Everything else is UNEXPECTED. Hardened before unit 3: at first the rule was per course and reader, so a course with new sessions could hide another change in its syllabus.
 - **The baseline is not committed** (`.snapshots/` is ignored); it stays on the machine that ran it.
 
 ## Decision trail
