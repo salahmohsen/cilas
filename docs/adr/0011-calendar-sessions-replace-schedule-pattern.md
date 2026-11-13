@@ -84,7 +84,14 @@ course
 - One tab, **Sessions**, replaces "Course flow" and "Schedule".
 - On top: a **calendar field**, week view with hours, in the shape of the agreed design: weekdays across, hours down, blocks with title and time, a legend, a 24h/12h switch.
 - Draw on an empty slot to make a new session with one meeting. Drag a block to move it. Drag its edge to change its length. The keyboard does the same.
-- **"Repeat weekly"** in the session drawer makes the next N meetings for that session, or N new sessions, one a week. This replaces the pattern as a _tool_, not as stored data.
+- **A menu on each block** replaces "Repeat weekly". It has four actions, and it opens by right-click, by the "⋯" on a selected or focused block, by Shift+F10 or the Menu key on a focused block, and by a long press on touch. The arrow keys move in it; Escape closes it and puts focus back on the block.
+  - **Open** opens the session drawer, as a click does.
+  - **Add meeting** adds a meeting to the same session at the same time on the next day. It is an unsaved change; the person then drags it. If the next day is outside the week in view, the block shows when they go there, and the save bar says where it went.
+  - **New session next week** makes a new, untitled session with all the meetings of this one moved 7 days later. It copies times only: no title, description, materials or activities, because the next week is a new topic.
+  - **Delete meeting** removes only this meeting, as a ghost with Restore until Save. The session and its content stay; a session with no meeting left shows in Unscheduled. There is no "delete session" on the calendar: a whole session is deleted in its drawer.
+  - In view mode only Open shows.
+- **The calendar is always in edit mode** in the admin, for a person who may edit the course's sessions. There is no View and Edit switch and no "Done editing". A person who may not edit sees view mode.
+- **A separate "Save schedule" bar** shows only while calendar changes wait, with Cancel. Payload's own Save button saves the course and nothing else. Sessions are not drafts, and they are not tied to the course's Save. While changes wait, leaving the page warns: the browser's prompt on a reload or a closed tab, and Payload's own confirmation on a link inside the admin. Payload's warning reads only the course form's modified state, and marking that modified would start the course's autosave, so the calendar tells the host how many changes wait (`onUnsavedChange`) and the host warns itself.
 - Click a block (or a tray item) to open the **session drawer**: Payload's document drawer with the full session form.
 - Under the calendar: the course-wide fields that stay.
 - **The calendar field is generic.** It takes "items, each with blocks" and knows nothing about courses. Events and the course space use it later.
@@ -148,7 +155,7 @@ Every course moves to the new model, published and draft. We test on the local c
 10 events today: 5 on one date, 5 repeating. They use the same `schedule` field as courses.
 
 - **An event has meetings directly.** No sessions: an event is one thing, and its `agenda` (the programme inside a day) stays as it is. `meetings[]` comes from one shared field, `fields/meetings.ts`, which sessions use too, so the shape and its validation are written once.
-- **The "When" tab** uses the same calendar component with one item, the event. "Repeat weekly" makes the meetings of a repeating event.
+- **The "When" tab** uses the same calendar component with one item, the event. A block's "Add meeting" makes the next meeting of a repeating event.
 - **`first_day`, `last_day` and `timing_note`** on the event, as on courses. The summary and "next meeting" come from `lib/meetings.ts`.
 - **Readers:** `components/events/event-page.tsx`, `event-attendance.tsx`, `lib/events.ts`, `api/events.api.ts`, `lib/mentions.ts`, `emails/cards.ts`, `api/calendar.api.ts`, `lib/event-calendar.ts`.
 - **Migration:** the same expand-and-verify script for the 10 events.
@@ -170,12 +177,13 @@ The calendar is one generic component in `components/calendar/ui/`. It knows not
 items: { id, kind, title, tone, cancelled?, blocks: { id, date, start_time?, end_time? }[] }[]
 mode: 'view' | 'edit'                 'edit' only where the viewer may edit
 onOpen(itemId, blockId)
-onSave(changes)                       edit mode: one call with every change, or nothing on Cancel
+onSave(changes)                       edit mode: one call with every change, or nothing on Cancel; returns the saved items
+onUnsavedChange(count)                edit mode: how many changes wait, so the host can warn before leaving
 views: week (hours down, days across), day, month, agenda
 labels and direction from the host
 ```
 
-- **View and edit modes.** In edit mode a viewer draws, drags and resizes. The changes stay on the page, marked as unsaved, until **Save** sends them all at once. **Cancel** drops them. So there is no save on every drag, and no Undo toast: Cancel undoes before saving, and session versions undo after.
+- **View and edit modes.** In edit mode a viewer draws, drags and resizes, and a block has a menu when the host gives words for it (the labels hold them, so a host with none has no menu). The changes stay on the page, marked as unsaved, until **Save** sends them all at once. **Cancel** drops them. So there is no save on every drag, and no Undo toast: Cancel undoes before saving, and session versions undo after.
 - **Look:** the agreed design, in Arc tokens, light and dark. Thin grid lines, hour labels in a mono face, outlined blocks with title and time, a 24h/12h switch, a legend. Tone comes from the course or event type (`toneOf`). A cancelled meeting is hatched.
 - **Week view:** weeks start on Saturday. The hours shown run from the earliest to the latest meeting of the week. Meetings with no time go in an all-day row. Overlaps share the day's width (`stackSpans`). A line marks "now".
 - **Narrow screens (phones), in every place, the admin too:** one day at a time with a day switcher. The component decides this from its own width, so no host repeats it.
@@ -279,6 +287,14 @@ Each step ships to the dev copy on its own, and the site works after it.
 None now.
 
 ## Decision log
+
+Fix: "Repeat weekly" in the session form goes; each block has a menu instead, the admin calendar is always in edit mode, and it saves with its own "Save schedule" bar.
+
+- **Repeat weekly's two modes did not fit.** A session can hold several meetings in one week: 177 sessions in 17 courses meet twice on the same day (groups), and twice-a-week weeks are common. "The next N weeks of the last meeting" and "N new sessions with one meeting" copy neither shape.
+- **One action per week shows its result at once.** "New session next week" copies all the meetings of a session 7 days on, as one new session, so the person sees the result on the calendar and repeats it for the next week. "Add meeting" adds one meeting on the next day, which the person then drags. Neither needs a count or a mode.
+- **A new item has several blocks.** `create-item` now takes `blocks` (at least one), so a copy of a two-meeting session is one new session with two meetings, not two sessions.
+- **Sessions are not tied to the course save.** Fellows edit running courses without review, and every reader of sessions would need a draft filter if sessions were drafts of the course. So the calendar saves through its own "Save schedule" bar and Payload's Save saves the course only.
+- **The leave warning is the calendar's own.** Payload's warning takes no state besides its form, and marking the form modified would start the course's autosave. The calendar reports the count of waiting changes, and the admin warns with the same words and the same confirmation as Payload.
 
 Fix: a course with no meeting keeps its old start date and weeks as an announced timing (`course.announced`), read by one rule (`courseTiming`): meetings when one is held, else the announced start and weeks, and no last day.
 
