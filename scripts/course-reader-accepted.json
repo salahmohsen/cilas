@@ -1,0 +1,30 @@
+[
+  {
+    "base": "baseline",
+    "course": "295",
+    "reader": "page.facts",
+    "part": "en",
+    "reason": "The old \"Meets: Saturday, 18:00–22:00\" came from a wrong pattern with one slot; the five meetings fall on Saturday, Monday, Thursday, Friday and the next Saturday, and the page now lists their dates."
+  },
+  {
+    "base": "baseline",
+    "course": "295",
+    "reader": "page.facts",
+    "part": "ar",
+    "reason": "The old \"Meets: Saturday, 18:00–22:00\" came from a wrong pattern with one slot; the five meetings fall on Saturday, Monday, Thursday, Friday and the next Saturday, and the page now lists their dates."
+  },
+  {
+    "base": "baseline",
+    "course": "295",
+    "reader": "llms",
+    "part": "en",
+    "reason": "The old \"Meets: Saturday 18:00–22:00\" fact came from a wrong pattern with one slot; the syllabus lines give the five real dates."
+  },
+  {
+    "base": "baseline",
+    "course": "295",
+    "reader": "llms",
+    "part": "ar",
+    "reason": "The old \"Meets: Saturday 18:00–22:00\" fact came from a wrong pattern with one slot; the syllabus lines give the five real dates."
+  }
+]

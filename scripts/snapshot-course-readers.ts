@@ -8,7 +8,8 @@
  *
  * Writes `.snapshots/course-readers/<label>.json`. `--compare` prints the
  * differences by reader and course, each EXPECTED (the plan's "Expected
- * changes") or UNEXPECTED, and exits non-zero on any UNEXPECTED one.
+ * changes", or a reviewed entry in `course-reader-accepted.json` for that
+ * base) or UNEXPECTED, and exits non-zero on any UNEXPECTED one.
  *
  * Reads only. Needs `DATABASE_URL` set to the local dev database and a dev
  * server on `--url` over the same database. The calendar items are cached
@@ -45,6 +46,7 @@ import type { Course } from '../src/payload-types'
 import { decideStartDate, type ResearchEntry } from './archive-start-dates'
 import {
   compareSnapshots,
+  type Accepted,
   courseSlugOf,
   formatDifferences,
   icsByCourse,
@@ -54,6 +56,8 @@ import {
 } from './course-reader-snapshot'
 
 const DIR = '.snapshots/course-readers'
+/** Reviewed differences no rule covers, per base snapshot (see `Accepted`). */
+const ACCEPTED = 'scripts/course-reader-accepted.json'
 /** The day every reader that takes one is given, so two runs agree. */
 const TODAY = '2026-11-13'
 const CONCURRENCY = 4
@@ -73,7 +77,8 @@ if (baseLabel) {
   if (!headLabel) throw new Error('Usage: --compare <base> <head>')
   const read = (label: string): Snapshot => JSON.parse(readFileSync(fileOf(label), 'utf8'))
   const base = read(baseLabel)
-  const diffs = compareSnapshots(base, read(headLabel))
+  const accepted: Accepted[] = JSON.parse(readFileSync(ACCEPTED, 'utf8'))
+  const diffs = compareSnapshots(base, read(headLabel), accepted)
   console.log(formatDifferences(diffs, base))
   process.exit(diffs.some((d) => d.verdict === 'UNEXPECTED') ? 1 : 0)
 }

@@ -11,6 +11,7 @@ import {
   onlyLabels,
   onlyListMarkers,
   toDays,
+  type Accepted,
   type CourseMeta,
   type Snapshot,
 } from '../../scripts/course-reader-snapshot'
@@ -223,6 +224,48 @@ describe('compareSnapshots', () => {
       ['list.study', '2', 'UNEXPECTED'],
       ['llms', '*', 'UNEXPECTED'],
     ])
+  })
+})
+
+describe('compareSnapshots with accepted differences', () => {
+  const base = snapshot({ 'page.facts': { '1': { en: ['Meets: Saturday'], ar: ['السبت'] } } })
+  const head = snapshot({ 'page.facts': { '1': { en: ['Starts: 22 August'], ar: ['السبت'] } } })
+  const entry: Accepted = {
+    base: 'x',
+    course: '1',
+    reader: 'page.facts',
+    part: 'en',
+    reason: 'the old pattern was wrong',
+  }
+
+  it('turns the unexpected difference an entry names expected, with its reason', () => {
+    expect(compareSnapshots(base, head).map((d) => d.verdict)).toEqual(['UNEXPECTED'])
+    expect(compareSnapshots(base, head, [entry]).map((d) => [d.verdict, d.reason])).toEqual([
+      ['EXPECTED', 'accepted: the old pattern was wrong'],
+    ])
+  })
+
+  it('fails an entry that names no unexpected difference, so a stale one shows', () => {
+    for (const stale of [
+      { ...entry, part: 'ar' },
+      { ...entry, course: '2' },
+      { ...entry, reader: 'llms' },
+    ])
+      expect(
+        compareSnapshots(base, head, [entry, stale]).map((d) => [d.verdict, d.reason]),
+      ).toEqual([
+        ['EXPECTED', 'accepted: the old pattern was wrong'],
+        ['UNEXPECTED', 'stale accepted entry: the old pattern was wrong'],
+      ])
+    expect(compareSnapshots(base, structuredClone(base), [entry])).toEqual([
+      expect.objectContaining({ verdict: 'UNEXPECTED', reason: expect.stringMatching(/^stale/) }),
+    ])
+  })
+
+  it('applies only the entries reviewed against this base', () => {
+    expect(
+      compareSnapshots(base, head, [{ ...entry, base: 'other' }]).map((d) => d.verdict),
+    ).toEqual(['UNEXPECTED'])
   })
 })
 

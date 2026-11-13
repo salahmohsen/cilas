@@ -196,8 +196,63 @@ const parts = (before: unknown, after: unknown): Array<[string, unknown, unknown
   return [...new Set([...Object.keys(b), ...Object.keys(a)])].map((k) => [k, b[k], a[k]])
 }
 
-/** Every difference between two snapshots, judged against the base's course facts. */
-export const compareSnapshots = (base: Snapshot, head: Snapshot): Difference[] => {
+/**
+ * A difference a person reviewed and found correct, though no rule of the
+ * plan covers it (`scripts/course-reader-accepted.json`). It holds only
+ * against the base snapshot it was reviewed on: a new baseline starts with
+ * none.
+ */
+export type Accepted = {
+  /** The label of the base snapshot the difference was found against. */
+  base: string
+  course: string
+  reader: string
+  /** The locale (`en`, `ar`), or `` for a value with no locales. */
+  part: string
+  /** Why the new output is right, in one sentence. */
+  reason: string
+}
+
+const matches = (entry: Accepted, d: Difference) =>
+  entry.course === d.course && entry.reader === d.reader && entry.part === d.part
+
+/**
+ * The differences with the accepted entries for this base applied: an
+ * UNEXPECTED difference an entry names becomes EXPECTED with its reason. An
+ * entry that names no UNEXPECTED difference is itself UNEXPECTED, so a stale
+ * entry cannot hide a later change.
+ */
+const applyAccepted = (diffs: Difference[], base: string, accepted: Accepted[]): Difference[] => {
+  const entries = accepted.filter((e) => e.base === base)
+  const judged = diffs.map((d) => {
+    const entry = d.verdict === 'UNEXPECTED' && entries.find((e) => matches(e, d))
+    return entry ? { ...d, verdict: 'EXPECTED' as const, reason: `accepted: ${entry.reason}` } : d
+  })
+  const stale = entries
+    .filter((e) => !diffs.some((d) => d.verdict === 'UNEXPECTED' && matches(e, d)))
+    .map((e): Difference => ({
+      reader: e.reader,
+      course: e.course,
+      part: e.part,
+      before: 'accepted difference',
+      after: 'no such unexpected difference',
+      verdict: 'UNEXPECTED',
+      reason: `stale accepted entry: ${e.reason}`,
+    }))
+  return [...judged, ...stale]
+}
+
+/**
+ * Every difference between two snapshots, judged against the base's course
+ * facts and the reviewed `accepted` differences for that base.
+ */
+export const compareSnapshots = (
+  base: Snapshot,
+  head: Snapshot,
+  accepted: Accepted[] = [],
+): Difference[] => applyAccepted(rawDifferences(base, head), base.label, accepted)
+
+const rawDifferences = (base: Snapshot, head: Snapshot): Difference[] => {
   const out: Difference[] = []
   const readers = [...new Set([...Object.keys(base.readers), ...Object.keys(head.readers)])].sort()
   for (const reader of readers) {
