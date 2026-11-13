@@ -526,6 +526,24 @@
     "copyFailed": "تعذّر نسخ الرابط",
     "feedName": "سيلاس"
   },
+  "CalendarUi": {
+    "name": "التقويم",
+    "cairoTime": "توقيت القاهرة",
+    "today": "اليوم",
+    "previousWeek": "الأسبوع السابق",
+    "nextWeek": "الأسبوع التالي",
+    "daySwitcher": "اليوم",
+    "allDay": "طوال اليوم",
+    "legend": "دليل الألوان",
+    "timeFormat": "تنسيق الوقت",
+    "hours24": "٢٤ ساعة",
+    "hours12": "١٢ ساعة",
+    "cancelled": "أُلغيت",
+    "unscheduled": "غير مجدولة",
+    "range": "من {from} إلى {to}",
+    "timeRange": "من {start} إلى {end}",
+    "blockName": "{title}، {day}، {time}{cancelled, select, true {، أُلغيت} other {}}"
+  },
   "Select": {
     "search": "بحث",
     "clearSearch": "مسح البحث",

@@ -526,6 +526,24 @@
     "copyFailed": "Couldn't copy the link",
     "feedName": "CILAS"
   },
+  "CalendarUi": {
+    "name": "Calendar",
+    "cairoTime": "Cairo time",
+    "today": "Today",
+    "previousWeek": "Previous week",
+    "nextWeek": "Next week",
+    "daySwitcher": "Day",
+    "allDay": "All day",
+    "legend": "Colour key",
+    "timeFormat": "Time format",
+    "hours24": "24h",
+    "hours12": "12h",
+    "cancelled": "Cancelled",
+    "unscheduled": "Unscheduled",
+    "range": "{from} to {to}",
+    "timeRange": "{start} to {end}",
+    "blockName": "{title}, {day}, {time}{cancelled, select, true {, cancelled} other {}}"
+  },
   "Select": {
     "search": "Search",
     "clearSearch": "Clear search",
