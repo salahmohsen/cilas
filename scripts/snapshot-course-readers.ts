@@ -3,7 +3,7 @@
  * every reader of a course's time gives, for every course, so the move can
  * be checked by a diff (docs/plans/2026-11-13-sessions-readers.md).
  *
- *   pnpm tsx scripts/snapshot-course-readers.ts --label baseline [--url http://localhost:3000]
+ *   pnpm tsx scripts/snapshot-course-readers.ts --label baseline [--url http://localhost:3100]
  *   pnpm tsx scripts/snapshot-course-readers.ts --compare baseline head
  *
  * Writes `.snapshots/course-readers/<label>.json`. `--compare` prints the
@@ -11,8 +11,10 @@
  * changes", or a reviewed entry in `course-reader-accepted.json` for that
  * base) or UNEXPECTED, and exits non-zero on any UNEXPECTED one.
  *
- * Reads only. Needs `DATABASE_URL` set to the local dev database and a dev
- * server on `--url` over the same database. The calendar items are cached
+ * Reads only. Needs `DATABASE_URL` set to the local dev database and a
+ * server on `--url` (default http://localhost:3000) over the same database:
+ * a production build (`pnpm build`, then `pnpm start -p 3100`) takes about
+ * 90 seconds a run; the dev server builds each page on demand (~25 minutes). The calendar items are cached
  * (`unstable_cache` in `api/calendar.api.ts`): after a change to how they are
  * built, change the cache key or clear `.next/cache` before a run.
  *
@@ -212,9 +214,12 @@ const pageTimes = (html: string) => {
       [...document.querySelectorAll('p.side-card-muted')].map((p) => squash(p.textContent)),
     ),
   ]
-  const syllabus = [
-    ...document.querySelectorAll('[class*="syllabus-feed-module"][class*="__row"]'),
-  ].map((row) => squash(row.textContent))
+  // A session's row is its toggle button. CSS module classes read
+  // `syllabus-feed-module__<hash>__row` in dev and `<hash>_row` in a
+  // production build, so only the `_row` ending is matched.
+  const syllabus = [...document.querySelectorAll('button[aria-controls]')]
+    .filter((b) => [...b.classList].some((c) => c.endsWith('_row')))
+    .map((row) => squash(row.textContent))
   const jsonld = [...document.querySelectorAll('script[type="application/ld+json"]')]
     .flatMap(
       (s) => (JSON.parse(s.textContent ?? '{}')['@graph'] ?? []) as Record<string, unknown>[],
