@@ -34,24 +34,19 @@ export type OldCourse = {
   sessions?: OldRow[] | null
 }
 
-/** A course or course version as the fill reads it: its data and its status. */
-export type Versioned = {
-  _status?: 'draft' | 'published' | null
-  updatedAt?: string | null
-}
+/** A course or course version as the fill reads it: its status. */
+export type Versioned = { _status?: 'draft' | 'published' | null }
 
 /**
- * Which data of a course the fill reads: the latest version when it is a
- * draft saved after the published course, else the course itself. Sessions
+ * Which data of a course the fill reads: its latest version when that is a
+ * draft saved over the published course, else the course itself. Sessions
  * have no drafts, so a pending draft's sessions and schedule go live; a
- * fellow's pending syllabus change is not lost.
+ * fellow's pending syllabus change is not lost. "Latest" is Payload's flag
+ * on the newest version, not a time: a session save writes the course row
+ * (`lib/course-days.ts`), which moves the row's `updatedAt` past the draft's.
  */
 export const fillSource = <T extends Versioned>(course: T, latest: T | null | undefined): T =>
-  course._status === 'published' &&
-  latest?._status === 'draft' &&
-  (latest.updatedAt ?? '') > (course.updatedAt ?? '')
-    ? latest
-    : course
+  course._status === 'published' && latest?._status === 'draft' ? latest : course
 
 export type PlannedSession = {
   /** The old row's ID, or null for a session the pattern needs but no row held. */

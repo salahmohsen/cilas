@@ -244,27 +244,21 @@ describe('planCourseSessions', () => {
 })
 
 describe('fillSource', () => {
-  type Doc = { id: string; _status: 'draft' | 'published'; updatedAt: string }
-  const published: Doc = { id: 'published', _status: 'published', updatedAt: '2026-05-01' }
+  type Doc = { id: string; _status: 'draft' | 'published' }
+  const published: Doc = { id: 'published', _status: 'published' }
+  const draft: Doc = { id: 'draft', _status: 'draft' }
 
-  it('reads the latest draft when it was saved after the published course', () => {
-    const draft: Doc = { id: 'draft', _status: 'draft', updatedAt: '2026-06-01' }
+  it('reads the latest version when it is a draft over the published course', () => {
     expect(fillSource(published, draft)).toBe(draft)
   })
 
   it('reads the published course when the latest version is the published one', () => {
-    expect(fillSource(published, { ...published, id: 'version' })).toBe(published)
+    expect(fillSource(published, { id: 'version', _status: 'published' })).toBe(published)
     expect(fillSource(published, null)).toBe(published)
   })
 
-  it('reads the published course over an older draft', () => {
-    const draft: Doc = { id: 'draft', _status: 'draft', updatedAt: '2026-04-01' }
-    expect(fillSource(published, draft)).toBe(published)
-  })
-
   it('reads a course never published as it is', () => {
-    const course: Doc = { id: 'course', _status: 'draft', updatedAt: '2026-05-01' }
-    const draft: Doc = { id: 'draft', _status: 'draft', updatedAt: '2026-06-01' }
+    const course: Doc = { id: 'course', _status: 'draft' }
     expect(fillSource(course, draft)).toBe(course)
   })
 })

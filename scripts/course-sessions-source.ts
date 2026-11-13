@@ -24,7 +24,6 @@ export type CourseSource = {
 type Version = {
   id: number
   parent: number
-  updatedAt: string
   version: Omit<OldCourse, 'id'> & Versioned & { timing_note?: Localized<string> }
 }
 
@@ -43,7 +42,6 @@ export const loadCourseSources = async (payload: Payload): Promise<CourseSource[
       first_day: true,
       last_day: true,
       _status: true,
-      updatedAt: true,
     },
   })
   const { docs: versions } = await payload.findVersions({
@@ -60,7 +58,7 @@ export const loadCourseSources = async (payload: Payload): Promise<CourseSource[
 
   return (docs as unknown as CourseSource['course'][]).map((course) => {
     const latest = latestOf.get(course.id)
-    const draft = latest ? { ...latest.version, id: course.id, updatedAt: latest.updatedAt } : null
+    const draft = latest ? { ...latest.version, id: course.id } : null
     const source = fillSource(course, draft)
     return {
       course,
