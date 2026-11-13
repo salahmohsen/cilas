@@ -46,10 +46,10 @@ type Peep = {
 
 const random = (min: number, max: number) => min + Math.random() * (max - min)
 
-/** Any CSS colour as [r, g, b], read back through a 1px canvas. */
-function rgb(color: string): [number, number, number] {
-  const ctx = document.createElement('canvas').getContext('2d', { willReadFrequently: true })
-  if (!ctx) return [0, 0, 0]
+/** Any CSS colour as [r, g, b], read back through `ctx` (whose first pixel it overwrites). */
+function rgb(ctx: CanvasRenderingContext2D, color: string): [number, number, number] {
+  ctx.setTransform(1, 0, 0, 1, 0, 0)
+  ctx.clearRect(0, 0, 1, 1)
   ctx.fillStyle = color
   ctx.fillRect(0, 0, 1, 1)
   const [r, g, b] = ctx.getImageData(0, 0, 1, 1).data
@@ -57,20 +57,32 @@ function rgb(color: string): [number, number, number] {
 }
 
 /**
- * The sheet redrawn in two colours: its black in `ink`, its white in
- * `paper`, and every grey between them in proportion.
+ * Redraw `image` (the sheet) on `sheet` at `cell` device px a person, in two
+ * colours: its black in `ink`, its white in `paper`, and every grey between
+ * in proportion. Every frame draws from this canvas, small and on the GPU:
+ * drawing from a full-size sheet kept on the CPU cost iOS Safari about 400ms
+ * a frame. The canvas is the only copy and is reused: iOS Safari caps all
+ * canvases together (a few hundred MB) and frees old ones late, so making a
+ * new full-size copy on each paint left it with none to draw on.
  */
-function tint(image: HTMLImageElement, ink: string, paper: string) {
-  const sheet = document.createElement('canvas')
-  sheet.width = image.naturalWidth
-  sheet.height = image.naturalHeight
-  const ctx = sheet.getContext('2d', { willReadFrequently: true })
-  if (!ctx) return sheet
-  ctx.drawImage(image, 0, 0)
+function cast(
+  sheet: HTMLCanvasElement,
+  image: HTMLImageElement,
+  cell: { w: number; h: number },
+  ink: string,
+  paper: string,
+) {
+  const ctx = sheet.getContext('2d')
+  if (!ctx) return
+  // Read the colours first: setting the size below clears the canvas anyway.
+  const [ir, ig, ib] = rgb(ctx, ink)
+  const [pr, pg, pb] = rgb(ctx, paper)
+  sheet.width = cell.w * SHEET.columns
+  sheet.height = cell.h * SHEET.rows
+  ctx.imageSmoothingQuality = 'high'
+  ctx.drawImage(image, 0, 0, sheet.width, sheet.height)
   const pixels = ctx.getImageData(0, 0, sheet.width, sheet.height)
   const data = pixels.data
-  const [ir, ig, ib] = rgb(ink)
-  const [pr, pg, pb] = rgb(paper)
   for (let i = 0; i < data.length; i += 4) {
     if (!data[i + 3]) continue
     const t = 1 - (data[i] * 0.299 + data[i + 1] * 0.587 + data[i + 2] * 0.114) / 255
@@ -79,35 +91,6 @@ function tint(image: HTMLImageElement, ink: string, paper: string) {
     data[i + 2] = pb + (ib - pb) * t
   }
   ctx.putImageData(pixels, 0, 0)
-  return sheet
-}
-
-/**
- * The tinted sheet cut to the size each person is drawn at, `cell` device px
- * a person, once facing right and once facing left. Every frame draws from
- * these, so a frame copies small pixels one to one: drawing from the full
- * sheet (3600px wide, kept on the CPU for tint's reads) cost iOS Safari about
- * 400ms a frame.
- */
-function cast(tinted: HTMLCanvasElement, cell: { w: number; h: number }) {
-  const from = { w: tinted.width / SHEET.columns, h: tinted.height / SHEET.rows }
-  const facing = (direction: 1 | -1) => {
-    const sheet = document.createElement('canvas')
-    sheet.width = cell.w * SHEET.columns
-    sheet.height = cell.h * SHEET.rows
-    const ctx = sheet.getContext('2d')
-    if (!ctx) return sheet
-    ctx.imageSmoothingQuality = 'high'
-    for (let row = 0; row < SHEET.rows; row++)
-      for (let column = 0; column < SHEET.columns; column++) {
-        // A left-facing person keeps their place on the sheet, mirrored in it.
-        const x = direction === 1 ? column * cell.w : (column + 1) * cell.w
-        ctx.setTransform(direction, 0, 0, 1, x, row * cell.h)
-        ctx.drawImage(tinted, column * from.w, row * from.h, from.w, from.h, 0, 0, cell.w, cell.h)
-      }
-    return sheet
-  }
-  return { 1: facing(1), [-1]: facing(-1) } as Record<1 | -1, HTMLCanvasElement>
 }
 
 /**
@@ -128,11 +111,11 @@ export function CrowdScene() {
     const still = window.matchMedia('(prefers-reduced-motion: reduce)').matches
 
     const image = new Image()
-    /** The sheet in the theme's colours, full size: cut again on a resize. */
-    let tinted: HTMLCanvasElement | null = null
-    /** The sheet cut to stage size, by the way a person faces (see cast). */
-    let sheets: Record<1 | -1, HTMLCanvasElement> | null = null
-    /** A person's cell on `sheets`, in device px. */
+    /** The sheet at stage size in the theme's colours (see cast). */
+    const sheet = document.createElement('canvas')
+    /** What `sheet` was last cast for, so an unchanged paint costs nothing. */
+    let castFor = ''
+    /** A person's cell on `sheet`, in device px. */
     let cell = { w: 0, h: 0 }
     let stage = { w: 0, h: 0 }
     /** A person's size on the stage. */
@@ -166,36 +149,50 @@ export function CrowdScene() {
       const ratio = window.devicePixelRatio || 1
       ctx.setTransform(ratio, 0, 0, ratio, 0, 0)
       ctx.clearRect(0, 0, stage.w, stage.h)
-      if (!sheets) return
+      if (!castFor) return
       const bob = size.h * 0.03
       for (const peep of crowd) {
         // Up and down twice a second, eased at the top and the foot of each step.
         const phase = (peep.t / 0.25) % 2
         const lift = bob * (0.5 - 0.5 * Math.cos(Math.PI * (phase < 1 ? phase : 2 - phase)))
+        // The drawing faces right; a left-walker is drawn mirrored about their own middle.
+        const x = peep.direction === 1 ? peep.x : peep.x + size.w
+        ctx.setTransform(ratio * peep.direction, 0, 0, ratio, x * ratio, (peep.y - lift) * ratio)
         ctx.drawImage(
-          sheets[peep.direction],
+          sheet,
           peep.column * cell.w,
           peep.row * cell.h,
           cell.w,
           cell.h,
-          peep.x,
-          peep.y - lift,
+          0,
+          0,
           size.w,
           size.h,
         )
       }
     }
 
-    /** Cut the tinted sheet to the stage's person size, at most the drawing's own. */
-    const recast = () => {
-      if (!tinted) return
+    /**
+     * Cast the sheet for the stage's person size (at most the drawing's own)
+     * and the theme's ink and paper (crowd-scene.module.css), unless it
+     * already is: the theme watcher fires on any style change of <html>.
+     */
+    const paint = () => {
       const ratio = window.devicePixelRatio || 1
       const scale = Math.min(1, (size.h * ratio) / (image.naturalHeight / SHEET.rows))
-      cell = {
+      const next = {
         w: Math.max(1, Math.round((image.naturalWidth / SHEET.columns) * scale)),
         h: Math.max(1, Math.round((image.naturalHeight / SHEET.rows) * scale)),
       }
-      sheets = cast(tinted, cell)
+      const ink = getComputedStyle(canvas.parentElement ?? canvas).color
+      const paper = getComputedStyle(canvas).color
+      const key = `${next.w}x${next.h} ${ink} ${paper}`
+      if (key !== castFor) {
+        cell = next
+        cast(sheet, image, cell, ink, paper)
+        castFor = key
+      }
+      draw()
     }
 
     const resize = () => {
@@ -205,9 +202,8 @@ export function CrowdScene() {
       canvas.height = Math.round(stage.h * ratio)
       const h = stage.h * HEIGHT
       size = { h, w: h * (image.naturalWidth / SHEET.columns / (image.naturalHeight / SHEET.rows)) }
-      recast()
       fill()
-      draw()
+      paint()
     }
 
     let frame = 0
@@ -239,17 +235,6 @@ export function CrowdScene() {
       frame = 0
     }
 
-    // Ink and paper as the stylesheet sets them for this theme (see
-    // crowd-scene.module.css); read again on a change of theme.
-    const retint = () => {
-      const ink = getComputedStyle(canvas.parentElement ?? canvas).color
-      tinted = tint(image, ink, getComputedStyle(canvas).color)
-    }
-    const paint = () => {
-      retint()
-      recast()
-      draw()
-    }
     // The theme's colours ease in over a moment: paint at once, and again once settled.
     let settle = 0
     const theme = new MutationObserver(() => {
@@ -258,10 +243,9 @@ export function CrowdScene() {
       settle = window.setTimeout(paint, 600)
     })
 
-    const sizes = new ResizeObserver(() => tinted && resize())
+    const sizes = new ResizeObserver(() => resize())
     const seen = new IntersectionObserver(([entry]) => (entry.isIntersecting ? play() : pause()))
     image.onload = () => {
-      retint()
       resize()
       canvas.dataset.ready = ''
       theme.observe(document.documentElement, {
@@ -280,6 +264,8 @@ export function CrowdScene() {
       seen.disconnect()
       theme.disconnect()
       window.clearTimeout(settle)
+      // Give iOS Safari its canvas memory back now, not when it collects.
+      sheet.width = sheet.height = 0
     }
   }, [])
 
