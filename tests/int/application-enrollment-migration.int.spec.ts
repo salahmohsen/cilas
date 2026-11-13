@@ -4,9 +4,13 @@ import type { PostgresAdapter } from '@payloadcms/db-postgres'
 import { sql } from '@payloadcms/db-postgres'
 import { expect, it } from 'vitest'
 import { up, down } from '@/migrations/20261110_180434_application_enrollment_results'
-import { applicationFixture, removeApplicationFixture } from '../helpers/applicationFixture'
+import { scratchPayload } from '../helpers/scratchDatabase'
 
 it('copies old single-course and JSON results into relationships and typed outcomes without duplicate links', async () => {
+  // The migration changes the schema of the tables other files write to, so it
+  // runs in a database of its own.
+  const scratch = await scratchPayload()
+  const { applicationFixture } = await import('../helpers/applicationFixture')
   const f = await applicationFixture()
   const person = await f.payload.create({
     collection: 'people',
@@ -74,8 +78,6 @@ it('copies old single-course and JSON results into relationships and typed outco
     ])
   } finally {
     await f.payload.db.rollbackTransaction(transactionID)
-    await f.payload.delete({ collection: 'enrollments', id: enrollment.id })
-    await f.payload.delete({ collection: 'people', id: person.id })
-    await removeApplicationFixture(f)
+    await scratch.destroy()
   }
 })
