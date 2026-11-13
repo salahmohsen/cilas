@@ -8,7 +8,7 @@ import { plainText } from '@/lib/plaintext'
 import { expandSchedule } from '@/lib/schedule'
 import type { Article, Course, Event, Person } from '@/payload-types'
 
-const CONTEXT = 'https://schema.org'
+export const CONTEXT = 'https://schema.org'
 
 const LOGO = '/assets/images/logo.webp'
 

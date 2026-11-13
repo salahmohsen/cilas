@@ -169,4 +169,24 @@ describe('JSON-LD output', () => {
       name,
     })
   })
+
+  it('puts several items in one @graph, so the script is always a single object', () => {
+    const html = renderToStaticMarkup(
+      <Schema
+        data={[
+          { '@context': 'https://schema.org', '@type': 'Organization', name: 'CILAS' },
+          { '@context': 'https://schema.org', '@type': 'WebSite', name: 'CILAS' },
+        ]}
+      />,
+    )
+    const root = document.createElement('div')
+    root.innerHTML = html
+    expect(JSON.parse(root.querySelector('script')!.textContent!)).toEqual({
+      '@context': 'https://schema.org',
+      '@graph': [
+        { '@type': 'Organization', name: 'CILAS' },
+        { '@type': 'WebSite', name: 'CILAS' },
+      ],
+    })
+  })
 })

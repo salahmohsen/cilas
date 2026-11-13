@@ -98,11 +98,15 @@ for (const path of selected) {
         `${path} needs its ${language} alternate`,
       )
     }
+    // Each script is one object: a single item, or several under one @graph.
     const schemas = [...document.querySelectorAll('script[type="application/ld+json"]')].flatMap(
-      (script) => JSON.parse(script.textContent),
+      (script) => {
+        const data = JSON.parse(script.textContent)
+        assert.equal(data['@context'], 'https://schema.org', `Invalid JSON-LD context on ${path}`)
+        return data['@graph'] ?? [data]
+      },
     )
     for (const schema of schemas) {
-      assert.equal(schema['@context'], 'https://schema.org', `Invalid JSON-LD context on ${path}`)
       if (schema['@type'] === 'Event') {
         assert.match(path, /^\/(en|ar)\/events\/.+/, 'Event markup belongs on an event detail page')
         assert.equal(schema.url, `${origin}${path}`, 'Event URL must identify this page')
