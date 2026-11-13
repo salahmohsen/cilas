@@ -126,4 +126,9 @@ ENV PORT=3000
 
 # server.js is created by next build from the standalone output
 # https://nextjs.org/docs/pages/api-reference/next-config-js/output
-CMD HOSTNAME="0.0.0.0" node server.js
+#
+# The server has no IPv6 route, and a TCP connect to Cloudflare (the R2 bucket
+# that next/image fetches from) takes about 300ms from it. Node tries each
+# address for only 250ms by default, so most fetches failed with ETIMEDOUT.
+# Give each address 2s.
+CMD HOSTNAME="0.0.0.0" node --network-family-autoselection-attempt-timeout=2000 server.js
