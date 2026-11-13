@@ -2,6 +2,8 @@
 import { createLocalReq, getPayload, type Payload } from 'payload'
 import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest'
 
+import { EMAILS } from '@/emails/catalog'
+import { fill } from '@/emails/settings'
 import { TURNSTILE_VERIFIED } from '@/lib/turnstile'
 import config from '@/payload.config'
 import type { Form, FormSubmission, Programme, User } from '@/payload-types'
@@ -286,14 +288,15 @@ describe('accepting an application', () => {
       expect(sent().subject).toContain(arTitle)
       expect(sent().html).toContain('lang="ar"')
       expect(sent().html).toContain('dir="rtl"')
-      expect(sent().html).toContain('/ar/login')
+      // A new account gets the link that sets its password (043e60e0), not the login page.
+      expect(sent().html).toContain('/ar/welcome/')
 
       // The same email again, in Arabic too.
       vi.mocked(payload.sendEmail).mockClear()
       expect((await decide('resend', accepted.id)).status).toBe(200)
       expect(sent().subject).toContain('مرحبا بك في')
 
-      // No Arabic rejection text: the English one is sent, with the Arabic title.
+      // No saved Arabic rejection text: the catalog's Arabic default is sent (b11d1b1a), with the Arabic title.
       const rejected = await submit(
         { relationTo: 'programmes', value: programme.id },
         form.id,
@@ -301,7 +304,9 @@ describe('accepting an application', () => {
       )
       vi.mocked(payload.sendEmail).mockClear()
       expect((await decide('reject', rejected.id)).status).toBe(200)
-      expect(sent().subject).toBe(`Your application to \u2068${arTitle}\u2069`)
+      expect(sent().subject).toBe(
+        fill(EMAILS.rejection.texts.ar.subject, { title: `\u2068${arTitle}\u2069` }),
+      )
       expect(sent().html).toContain('dir="rtl"')
 
       // An application in English, or from before the language was kept, stays English.
@@ -312,7 +317,7 @@ describe('accepting an application', () => {
       expect(sent().subject).toContain('Probe residency')
       expect(sent().subject).not.toContain('مرحبا')
       expect(sent().html).toContain('lang="en"')
-      expect(sent().html).toContain('/en/login')
+      expect(sent().html).toContain('/en/welcome/')
     } finally {
       await payload.updateGlobal({
         slug: 'email-settings',
