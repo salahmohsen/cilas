@@ -2,7 +2,8 @@ import { renderToStaticMarkup } from 'react-dom/server'
 import { describe, expect, it, vi } from 'vitest'
 
 import { Schema } from '@/components/schema'
-import { courseSchema, eventSchema } from '@/lib/schema'
+import { eventSchema } from '@/lib/event-schema'
+import { courseSchema } from '@/lib/schema'
 import type { Course, Event, Person } from '@/payload-types'
 
 vi.mock('@/env', () => ({ env: { NEXT_PUBLIC_SERVER_URL: 'https://ci-las.org' } }))
