@@ -86,6 +86,7 @@ import * as migration_20261112_113833_notification_joined from './20261112_11383
 import * as migration_20261112_115346_study_prompts from './20261112_115346_study_prompts';
 import * as migration_20261112_232756_home_hero_scene from './20261112_232756_home_hero_scene';
 import * as migration_20261113_085854_course_sessions_collection from './20261113_085854_course_sessions_collection';
+import * as migration_20261113_140328_course_announced_timing from './20261113_140328_course_announced_timing';
 
 export const migrations = [
   {
@@ -526,6 +527,11 @@ export const migrations = [
   {
     up: migration_20261113_085854_course_sessions_collection.up,
     down: migration_20261113_085854_course_sessions_collection.down,
-    name: '20261113_085854_course_sessions_collection'
+    name: '20261113_085854_course_sessions_collection',
+  },
+  {
+    up: migration_20261113_140328_course_announced_timing.up,
+    down: migration_20261113_140328_course_announced_timing.down,
+    name: '20261113_140328_course_announced_timing'
   },
 ];

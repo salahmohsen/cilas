@@ -1,6 +1,12 @@
 import type { FocalPoint } from '@/lib/media-image'
 import { addDays, cairoDay, weekdayOf, WEEKDAYS } from '@/lib/cairo-day'
-import { meetingKey, numberedSessions, type SessionTimes } from '@/lib/meetings'
+import {
+  courseTiming,
+  meetingKey,
+  numberedSessions,
+  type Announced,
+  type SessionTimes,
+} from '@/lib/meetings'
 import { POSTER_COLORS } from '@/components/arc/lib/poster-colors'
 
 /**
@@ -12,6 +18,8 @@ import { POSTER_COLORS } from '@/components/arc/lib/poster-colors'
 export type CalendarItem = {
   key: string
   kind: 'course' | 'event'
+  /** A course with no meeting, placed on its announced first day only. */
+  starts?: boolean
   title: string
   href: string | null
   date: string
@@ -28,19 +36,23 @@ export type CalendarItem = {
 /** What every item of one course or event shares. */
 export type CalendarBase = Omit<
   CalendarItem,
-  'key' | 'date' | 'start' | 'end' | 'session' | 'cancelled'
+  'key' | 'date' | 'start' | 'end' | 'session' | 'cancelled' | 'starts'
 >
 
 /**
  * A course's meetings as calendar items, each with its session's number.
  * Each is named by `meetingKey`, so a calendar app that subscribed updates
- * the entry when other meetings are added or moved.
+ * the entry when other meetings are added or moved. A course with no meeting
+ * held is marked on its announced first day (`courseTiming`), if it has one.
  */
 export const courseItems = (
+  id: number,
   base: CalendarBase,
   sessions: readonly (SessionTimes & { id: number | string })[],
-): CalendarItem[] =>
-  numberedSessions(sessions, null).flatMap(({ session, number, meetings }) =>
+  announced: Announced | null | undefined,
+): CalendarItem[] => {
+  const numbered = numberedSessions(sessions, null)
+  const items = numbered.flatMap(({ session, number, meetings }) =>
     meetings.map((m): CalendarItem => ({
       ...base,
       key: `s${meetingKey(session.id, m)}`,
@@ -51,6 +63,14 @@ export const courseItems = (
       ...(m.cancelled ? { cancelled: true } : {}),
     })),
   )
+  const timing = courseTiming(
+    numbered.flatMap((s) => s.meetings),
+    announced,
+  )
+  return timing.announced && timing.first
+    ? [...items, { ...base, key: `c${id}-start`, date: timing.first, starts: true }]
+    : items
+}
 
 export const CALENDAR_VIEWS = ['month', 'week', 'agenda'] as const
 export type CalendarView = (typeof CALENDAR_VIEWS)[number]

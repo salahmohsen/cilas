@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest'
 
 import {
   byWhen,
+  courseTiming,
   firstDay,
   isAllDay,
   lastDay,
@@ -11,6 +12,7 @@ import {
   numberedSessions,
   sessionsInOrder,
   sessionUnitOf,
+  storedTiming,
   summary,
   upcomingSession,
   weeks,
@@ -337,6 +339,81 @@ describe('summary', () => {
   it('leaves cancelled meetings out of the summary', () => {
     const list = [...tuesdays(4), { ...at('2026-03-24', '10:00', '12:00'), cancelled: true }]
     expect(summary(list)).toMatchObject({ kind: 'weekly', weeks: 4 })
+  })
+})
+
+describe('courseTiming', () => {
+  const announced = { start_day: '2018-01-07', weeks: 10 }
+
+  it('reads the meetings when one is held, whatever was announced', () => {
+    expect(courseTiming(tuesdays(8), announced)).toEqual({
+      first: '2026-03-03',
+      last: '2026-04-21',
+      weeks: 8,
+      announced: false,
+    })
+  })
+
+  it('falls back to the announced start and weeks, with no last day', () => {
+    expect(courseTiming([], announced)).toEqual({
+      first: '2018-01-07',
+      last: null,
+      weeks: 10,
+      announced: true,
+    })
+    expect(courseTiming([{ ...at('2026-03-03'), cancelled: true }], announced)).toEqual({
+      first: '2018-01-07',
+      last: null,
+      weeks: 10,
+      announced: true,
+    })
+  })
+
+  it('is empty with no meeting and nothing announced', () => {
+    expect(courseTiming([], null)).toEqual({ first: null, last: null, weeks: 0, announced: true })
+    expect(courseTiming([], { start_day: null, weeks: 10 })).toEqual({
+      first: null,
+      last: null,
+      weeks: 10,
+      announced: true,
+    })
+  })
+})
+
+describe('storedTiming', () => {
+  it('reads weeks from the stored first and last day', () => {
+    expect(storedTiming({ first_day: '2026-03-05', last_day: '2026-03-14' })).toEqual({
+      first: '2026-03-05',
+      last: '2026-03-14',
+      weeks: 2,
+      announced: false,
+    })
+  })
+
+  it('reads the announced weeks when no meeting gave a last day', () => {
+    const announced = { start_day: '2018-01-07', weeks: 10 }
+    expect(storedTiming({ first_day: '2018-01-07', last_day: null, announced })).toEqual({
+      first: '2018-01-07',
+      last: null,
+      weeks: 10,
+      announced: true,
+    })
+    expect(storedTiming({ announced: { weeks: 6 } })).toEqual({
+      first: null,
+      last: null,
+      weeks: 6,
+      announced: true,
+    })
+  })
+
+  it('agrees with courseTiming for a course with meetings and one without', () => {
+    const announced = { start_day: '2018-01-07', weeks: 10 }
+    for (const meetings of [tuesdays(8), []]) {
+      const timing = courseTiming(meetings, announced)
+      expect(storedTiming({ first_day: timing.first, last_day: timing.last, announced })).toEqual(
+        timing,
+      )
+    }
   })
 })
 

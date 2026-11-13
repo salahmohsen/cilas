@@ -13,6 +13,7 @@ import { focalPointStyle } from '@/lib/media-image'
 type Labels = {
   type: (item: CalendarItem) => string
   session: (n: number) => string
+  starts: string
   more: (n: number) => string
   cancelled: string
   close: string
@@ -120,7 +121,7 @@ export async function MonthView({
                             <span className="cal-item-type">
                               <span aria-hidden className="cal-dot" />
                               {/* With a time beside it the type is the dot (the key names it). */}
-                              <span className={timeOf(item) ? 'sr-only' : undefined}>
+                              <span className={timeOf(item) || item.starts ? 'sr-only' : undefined}>
                                 {labels.type(item)}
                               </span>
                             </span>
@@ -128,6 +129,8 @@ export async function MonthView({
                               <span className="cal-item-when" dir={labels.timeDir}>
                                 {labels.digits(timeOf(item)!)}
                               </span>
+                            ) : item.starts ? (
+                              <span className="cal-item-when">{labels.starts}</span>
                             ) : null}
                             <span className="cal-item-title" dir="auto">
                               {item.title}
@@ -176,9 +179,11 @@ function Slot({ item, labels }: { item: CalendarItem; labels: Labels }) {
         <span aria-hidden className="cal-dot" />
         {labels.type(item)}
       </span>
-      {item.start ? (
-        <span className="cal-item-when" dir={labels.timeDir}>
-          {labels.digits(`${item.start}${item.end ? `–${item.end}` : ''}`)}
+      {item.start || item.starts ? (
+        <span className="cal-item-when" dir={item.start ? labels.timeDir : undefined}>
+          {item.start
+            ? labels.digits(`${item.start}${item.end ? `–${item.end}` : ''}`)
+            : labels.starts}
         </span>
       ) : null}
       <ItemTitle className="cal-slot-title" item={item} />
@@ -267,11 +272,13 @@ export async function WeekView({
                 ) : null}
                 <span className="cal-item-type">
                   <span aria-hidden className="cal-dot" />
-                  <span className={item.start ? 'sr-only' : undefined}>{labels.type(item)}</span>
+                  <span className={item.start || item.starts ? 'sr-only' : undefined}>
+                    {labels.type(item)}
+                  </span>
                 </span>
-                {item.start ? (
-                  <span className="cal-item-when" dir={labels.timeDir}>
-                    {labels.digits(item.start)}
+                {item.start || item.starts ? (
+                  <span className="cal-item-when" dir={item.start ? labels.timeDir : undefined}>
+                    {item.start ? labels.digits(item.start) : labels.starts}
                   </span>
                 ) : null}
                 <ItemTitle className="cal-item-title" item={item} />
@@ -357,6 +364,7 @@ export const calendarLabels = async (): Promise<Labels> => {
     type: (item) =>
       item.kind === 'course' ? tf(`types.${item.type}`) : t(`eventTypes.${item.type}`),
     session: (n) => t('session', { n }),
+    starts: t('starts'),
     more: (n) => t('more', { count: n }),
     cancelled: t('cancelled'),
     close: t('close'),

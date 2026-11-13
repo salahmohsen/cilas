@@ -170,6 +170,60 @@ export const summary = (
   return { kind: 'dates', sessions, first: first.date, last: last.date }
 }
 
+/**
+ * When a course was announced to start and how long it runs, as an admin
+ * typed it (`course.announced`). Meetings say this better, so it counts only
+ * while the course has no meeting held: an old course whose dates nobody
+ * recorded, or a new one whose sessions are not placed yet.
+ */
+export type Announced = {
+  start_day?: string | null
+  weeks?: number | null
+}
+
+/**
+ * A course's start, last day and length in weeks (ADR 0011). From its
+ * meetings when one is held; else its announced start and weeks, and no last
+ * day: a length typed in weeks says how long the course runs, not on which
+ * day it ends, and the old site never showed an end for these courses.
+ */
+export type CourseTiming = {
+  first: string | null
+  last: string | null
+  weeks: number
+  /** True when no meeting is held, so the timing is the announced one. */
+  announced: boolean
+}
+
+export const courseTiming = (
+  meetings: readonly MaybeCancelled[],
+  announced: Announced | null | undefined,
+): CourseTiming => {
+  const first = firstDay(meetings)
+  return first
+    ? { first, last: lastDay(meetings), weeks: weeks(meetings), announced: false }
+    : {
+        first: announced?.start_day || null,
+        last: null,
+        weeks: announced?.weeks || 0,
+        announced: true,
+      }
+}
+
+/**
+ * The same timing from what a course stores (`first_day` and `last_day`,
+ * kept by `lib/course-days.ts` from `courseTiming`), for lists that do not
+ * read sessions. A last day exists only when a meeting is held.
+ */
+export const storedTiming = (course: {
+  first_day?: string | null
+  last_day?: string | null
+  announced?: Announced | null
+}): CourseTiming =>
+  course.first_day && course.last_day
+    ? courseTiming([{ date: course.first_day }, { date: course.last_day }], null)
+    : courseTiming([], { start_day: course.first_day, weeks: course.announced?.weeks })
+
 /** What a course calls one session: "Session 3" or "Week 3" (`course.session_unit`). */
 export type SessionUnit = 'session' | 'week'
 

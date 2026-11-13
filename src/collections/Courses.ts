@@ -3,6 +3,7 @@ import { tierField } from '@/fields/tier'
 import { previewUrl } from '@/lib/preview-url'
 import { courseDeleteSummary, deleteCourseDependents } from '@/lib/course-delete'
 import { courseDays } from '@/lib/course-days'
+import { cairoDay } from '@/lib/cairo-day'
 import { blockedUnless, deleteEndpoints } from '@/forms/delete-endpoints'
 import { addSelfAs } from '@/lib/review-ownership'
 import {
@@ -448,6 +449,37 @@ export const Courses: CollectionConfig = {
                   'What the dates cannot say, e.g. "hybrid for the first 6 weeks, then online".',
               },
             },
+            {
+              name: 'announced',
+              type: 'group',
+              label: 'Announced timing',
+              admin: {
+                description:
+                  'When the course was announced to start and how long it runs. Used only while no session has a meeting: then the calendar marks its start and lists show its start and weeks. Once a session has a meeting, the meetings say this.',
+              },
+              fields: [
+                {
+                  type: 'row',
+                  fields: [
+                    {
+                      name: 'start_day',
+                      type: 'text',
+                      validate: (value: string | null | undefined) =>
+                        !value || cairoDay(value) === value
+                          ? true
+                          : 'Use a real day as YYYY-MM-DD, e.g. 2026-03-03.',
+                      admin: { width: '50%', placeholder: '2026-03-03' },
+                    },
+                    {
+                      name: 'weeks',
+                      type: 'number',
+                      min: 1,
+                      admin: { width: '50%', step: 1 },
+                    },
+                  ],
+                },
+              ],
+            },
             ...(['first_day', 'last_day'] as const).map((name): Field => ({
               name,
               type: 'text',
@@ -588,8 +620,14 @@ export const Courses: CollectionConfig = {
         return data
       },
       stampLastEditor,
-      async ({ data, originalDoc, req }) =>
-        originalDoc?.id ? { ...data, ...(await courseDays(req, originalDoc.id)) } : data,
+      async ({ data, originalDoc, req }) => ({
+        ...data,
+        ...(await courseDays(
+          req,
+          originalDoc?.id ?? null,
+          data.announced ?? originalDoc?.announced,
+        )),
+      }),
     ],
     afterChange: [
       ...courseReview.afterChange,

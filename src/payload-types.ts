@@ -1346,6 +1346,13 @@ export interface Course {
    * What the dates cannot say, e.g. "hybrid for the first 6 weeks, then online".
    */
   timing_note?: string | null;
+  /**
+   * When the course was announced to start and how long it runs. Used only while no session has a meeting: then the calendar marks its start and lists show its start and weeks. Once a session has a meeting, the meetings say this.
+   */
+  announced?: {
+    start_day?: string | null;
+    weeks?: number | null;
+  };
   first_day?: string | null;
   last_day?: string | null;
   registration?: {
@@ -3854,6 +3861,12 @@ export interface CoursesSelect<T extends boolean = true> {
       };
   syllabus?: T;
   timing_note?: T;
+  announced?:
+    | T
+    | {
+        start_day?: T;
+        weeks?: T;
+      };
   first_day?: T;
   last_day?: T;
   registration?:

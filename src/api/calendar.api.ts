@@ -23,7 +23,8 @@ const coverOf = (value: unknown): CalendarItem['cover'] => {
 
 /**
  * Everything the calendar can show, in date order: every meeting of every
- * published course (from its sessions, ADR 0011) and every public event.
+ * published course (from its sessions, ADR 0011), the announced first day
+ * of a course with no meeting, and every public event.
  */
 const getCalendarItems = async (payload: Payload, locale: Locale): Promise<CalendarItem[]> => {
   const fallbackLocale = otherLocale(locale)
@@ -34,7 +35,7 @@ const getCalendarItems = async (payload: Payload, locale: Locale): Promise<Calen
       depth: 1,
       joins: false,
       pagination: false,
-      select: { title: true, slug: true, course_type: true, cover_image: true },
+      select: { title: true, slug: true, course_type: true, cover_image: true, announced: true },
       populate: { media },
       locale,
       fallbackLocale,
@@ -60,6 +61,7 @@ const getCalendarItems = async (payload: Payload, locale: Locale): Promise<Calen
   const items: CalendarItem[] = [
     ...courses.docs.flatMap((c) =>
       courseItems(
+        c.id,
         {
           kind: 'course',
           title: c.title,
@@ -68,6 +70,7 @@ const getCalendarItems = async (payload: Payload, locale: Locale): Promise<Calen
           cover: coverOf(c.cover_image),
         },
         sessions.get(c.id) ?? [],
+        c.announced,
       ),
     ),
     ...events.docs.flatMap((e) =>
@@ -92,6 +95,6 @@ const getCalendarItems = async (payload: Payload, locale: Locale): Promise<Calen
 /** The items above, built once per language and kept until a course changes. */
 export const getCachedCalendarItems = unstable_cache(
   async (locale: Locale) => getCalendarItems(await getPayload({ config }), locale),
-  ['calendar-items-v3'],
+  ['calendar-items-v4'],
   { tags: [PUBLIC_LISTS_TAG], revalidate: 3600 },
 )

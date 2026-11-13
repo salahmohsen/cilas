@@ -27,7 +27,7 @@ import { contributionLabel } from '@/lib/pricing'
 import { courseRegistration } from '@/lib/registration'
 import { resolveRichTextReferences } from '@/lib/resolve-rich-text-references'
 import { referenceKey, type RichTextReferences } from '@/lib/rich-text-references'
-import { firstDay, lastDay, numberedSessions, summary } from '@/lib/meetings'
+import { courseTiming, numberedSessions, summary } from '@/lib/meetings'
 import type { Article, Course, Person, Publication, Session } from '@/payload-types'
 
 /**
@@ -376,6 +376,7 @@ export const courseDocument = async (
   const syllabus = numberedSessions(sessions, course.session_unit)
   const meetings = syllabus.flatMap((s) => s.meetings)
   const when = summary(meetings)
+  const timing = courseTiming(meetings, course.announced)
   const hours = (m: { start_time?: string | null; end_time?: string | null }) =>
     [m.start_time, m.end_time].filter(Boolean).join('–')
   // A weekly course says its weekly times; any other lists each session's dates.
@@ -396,8 +397,8 @@ export const courseDocument = async (
   const facts = factsList([
     [locale === 'ar' ? 'النوع' : 'Type', typeLabel(course.course_type)],
     ['Cycle', cycle?.title ?? null],
-    [locale === 'ar' ? 'تبدأ' : 'Starts', firstDay(meetings)],
-    [locale === 'ar' ? 'تنتهي' : 'Ends', lastDay(meetings)],
+    [locale === 'ar' ? 'تبدأ' : 'Starts', timing.first],
+    [locale === 'ar' ? 'تنتهي' : 'Ends', timing.last],
     [locale === 'ar' ? 'اللقاءات' : 'Meets', meetingsLine],
     [locale === 'ar' ? 'ملاحظة المواعيد' : 'Timing note', course.timing_note || null],
     [
