@@ -8,7 +8,7 @@ import { fieldsFor, flattenFields, joinedFields, type DraftCollection } from './
 import { resolveArticleMentions } from './article-mentions'
 import { markdownToLexical } from './markdown'
 import { adminUrl, assertExist } from './references'
-import { inTransaction } from './transaction'
+import { inTransaction } from '@/lib/in-transaction'
 import type { ToolContext } from './types'
 
 export const unmappedSchema = z

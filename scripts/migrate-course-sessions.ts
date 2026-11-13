@@ -29,7 +29,7 @@ import { storeCourseDays } from '../src/lib/course-days'
 import type { Announced } from '../src/lib/meetings'
 import { sessionIdsIn } from '../src/lib/session-refs'
 import config from '../src/payload.config'
-import { inTransaction } from '../src/plugins/mcp/transaction'
+import { inTransaction } from '../src/lib/in-transaction'
 import {
   planCourseSessions,
   type Locale,
