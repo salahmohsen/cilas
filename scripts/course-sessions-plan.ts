@@ -65,10 +65,7 @@ export type Plan = {
   sessions: PlannedSession[]
   /** The day of the all-day meeting a course with a start date but no times gets, else null. */
   startDay: string | null
-  /**
-   * The course's `timing_note`: the schedule note, after the weekly times in
-   * words when the course has times but no start date, so no meeting holds them.
-   */
+  /** The course's `timing_note` (`timingNoteOf`). */
   timingNote: Localized<string>
 }
 
@@ -114,8 +111,8 @@ const timesOf = ({ date, start_time, end_time }: Meeting): Meeting => ({
  * - Rows with no meeting keep their old order through `position`.
  * - A start date with no meeting at all becomes one all-day meeting on the
  *   first session, or on a new one when there is none.
- * - Weekly times with no start date make no meeting; they become words at
- *   the start of the timing note.
+ * - Weekly times with no start date make no meeting; they become words in
+ *   the timing note of each language with no note (`timingNoteOf`).
  */
 export const planCourseSessions = (
   course: OldCourse,
@@ -159,13 +156,18 @@ export const planCourseSessions = (
   }
 }
 
+/**
+ * The schedule note, or, in a language whose note is empty, the weekly times
+ * in words when the course has times but no start date, so no meeting holds
+ * them. A person wrote the note; it already says what they meant, so the
+ * words never go over it.
+ */
 const timingNoteOf = (schedule: OldCourse['schedule']): Localized<string> => {
   const note = schedule?.note
   // The pattern needs a start date to place a slot.
   const slots = schedule?.start_date ? [] : (schedule?.slots ?? [])
   if (!slots.length) return note ?? null
   const out: Partial<Record<Locale, string>> = {}
-  for (const locale of LOCALES)
-    out[locale] = [weeklyTimesText(slots, locale), note?.[locale]].filter(Boolean).join('\n')
+  for (const locale of LOCALES) out[locale] = note?.[locale] || weeklyTimesText(slots, locale)
   return out
 }

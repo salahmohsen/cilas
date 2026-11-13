@@ -226,14 +226,30 @@ describe('planCourseSessions', () => {
     ).toEqual(note)
   })
 
-  it('writes slots with no start date into the timing note, before the note', () => {
-    const { timingNote } = plan({
-      schedule: { slots: [tuesdays, thursdays], note: { en: 'Online only' } },
-    })
+  it('writes slots with no start date into the timing note when it is empty', () => {
+    const { timingNote } = plan({ schedule: { slots: [tuesdays, thursdays] } })
     expect(timingNote).toEqual({
-      en: 'Tuesday, 19:00–21:00; Thursday, 18:00–20:00\nOnline only',
+      en: 'Tuesday, 19:00–21:00; Thursday, 18:00–20:00',
       ar: 'الثلاثاء، ١٩:٠٠–٢١:٠٠؛ الخميس، ١٨:٠٠–٢٠:٠٠',
     })
+  })
+
+  it('keeps a note unchanged and writes the slots only where a language has none', () => {
+    const { timingNote } = plan({
+      schedule: { slots: [tuesdays], note: { en: 'Online only', ar: '' } },
+    })
+    expect(timingNote).toEqual({ en: 'Online only', ar: 'الثلاثاء، ١٩:٠٠–٢١:٠٠' })
+  })
+
+  it('gives a course that gets a start date its own note back, with no slot words', () => {
+    const note = { en: 'Hybrid' }
+    const undated = plan({ schedule: { slots: [tuesdays], note } }).timingNote
+    const dated = plan({
+      schedule: { start_date: '2026-03-03', weeks: 2, slots: [tuesdays], note },
+    })
+    expect(undated).toEqual({ en: 'Hybrid', ar: 'الثلاثاء، ١٩:٠٠–٢١:٠٠' })
+    expect(dated.timingNote).toEqual(note)
+    expect(dated.sessions.map((s) => s.meetings)).toEqual([[at('2026-03-03')], [at('2026-03-10')]])
   })
 
   it('leaves slots out of the timing note when the course has a start date', () => {
