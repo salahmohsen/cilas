@@ -52,7 +52,6 @@ import { SendInvitation as SendInvitation_5b0bd38bce1e4c846b8bd84d83fdf329 } fro
 import { InviteLink as InviteLink_5b0bd38bce1e4c846b8bd84d83fdf329 } from '../../../components/admin/invite-buttons'
 import { InviteSelected as InviteSelected_5b0bd38bce1e4c846b8bd84d83fdf329 } from '../../../components/admin/invite-buttons'
 import { MediaListToggle as MediaListToggle_f436cf2a4719114d9e44505773a04007 } from 'payload-theme/client'
-import { RepeatWeeklyField as RepeatWeeklyField_b05d508243a83a2419792c0f814d2ee6 } from '../../../components/admin/repeat-weekly-field'
 import { FormatField as FormatField_cdf7e044479f899a31f804427d568b36 } from '@payloadcms/plugin-import-export/rsc'
 import { LimitField as LimitField_cdf7e044479f899a31f804427d568b36 } from '@payloadcms/plugin-import-export/rsc'
 import { Page as Page_cdf7e044479f899a31f804427d568b36 } from '@payloadcms/plugin-import-export/rsc'
@@ -153,7 +152,6 @@ export const importMap = {
   "/components/admin/invite-buttons#InviteLink": InviteLink_5b0bd38bce1e4c846b8bd84d83fdf329,
   "/components/admin/invite-buttons#InviteSelected": InviteSelected_5b0bd38bce1e4c846b8bd84d83fdf329,
   "payload-theme/client#MediaListToggle": MediaListToggle_f436cf2a4719114d9e44505773a04007,
-  "/components/admin/repeat-weekly-field#RepeatWeeklyField": RepeatWeeklyField_b05d508243a83a2419792c0f814d2ee6,
   "@payloadcms/plugin-import-export/rsc#FormatField": FormatField_cdf7e044479f899a31f804427d568b36,
   "@payloadcms/plugin-import-export/rsc#LimitField": LimitField_cdf7e044479f899a31f804427d568b36,
   "@payloadcms/plugin-import-export/rsc#Page": Page_cdf7e044479f899a31f804427d568b36,

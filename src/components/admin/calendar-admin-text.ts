@@ -14,7 +14,7 @@ export type CalendarAdminMessages = {
   CalendarAdmin: (typeof en)['CalendarAdmin']
 }
 
-/** Every word the admin calendar and the "Repeat weekly" tool show, from `messages/*.json`. */
+/** Every word the admin calendar shows, from `messages/*.json`. */
 export const calendarAdminText = (language: AdminLanguage, messages: CalendarAdminMessages) => {
   // Untyped, as the site's hook is, so one label builder serves both.
   const all: AbstractIntlMessages = messages

@@ -141,11 +141,6 @@ export const Sessions: CollectionConfig = {
     },
     meetingsField(),
     {
-      name: 'repeat_weekly',
-      type: 'ui',
-      admin: { components: { Field: '/components/admin/repeat-weekly-field#RepeatWeeklyField' } },
-    },
-    {
       name: 'delivery',
       type: 'select',
       options: [...LOCATION_OPTIONS],
