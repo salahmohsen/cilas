@@ -1,0 +1,43 @@
+/**
+ * The contract between the calendar component and the code that loads and
+ * saves what it shows. The component knows no domain: courses, events and
+ * posts become items in `lib/calendar-sources.ts`, and a Save comes back as
+ * changes that `actions/save-calendar-changes.ts` writes through the same
+ * adapters. Days are Cairo `YYYY-MM-DD`; times are Cairo wall-clock `HH:MM`;
+ * a block with no times is all day.
+ */
+
+export type CalendarBlock = {
+  id: string
+  date: string
+  start_time: string | null
+  end_time: string | null
+}
+
+export type CalendarItem = {
+  id: string
+  kind: string
+  title: string
+  tone: string
+  cancelled: boolean
+  /** The item's `updatedAt` when it was loaded; a save from an older one fails. */
+  version: string
+  blocks: CalendarBlock[]
+}
+
+type BlockTimes = Pick<CalendarBlock, 'date' | 'start_time' | 'end_time'>
+
+/** One edit made on the page. A Save sends every change at once. */
+export type CalendarChange =
+  /** A new item with one block: a block drawn on an empty slot. */
+  | ({ op: 'create-item'; kind: string; blockId: string } & BlockTimes)
+  /** A new block on an existing item: an Unscheduled item placed on the grid. */
+  | ({ op: 'add-block'; itemId: string; version: string; blockId: string } & BlockTimes)
+  | ({ op: 'move-block'; itemId: string; version: string; blockId: string } & BlockTimes)
+  | { op: 'delete-block'; itemId: string; version: string; blockId: string }
+
+/** What the host passes to its save: the changes, and the parent a new item belongs to. */
+export type CalendarSave = {
+  parent: { kind: string; id: string }
+  changes: CalendarChange[]
+}
