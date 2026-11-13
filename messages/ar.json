@@ -496,7 +496,6 @@
     "nextOn": "التالي: {date}",
     "lastOn": "الأحدث: {date}",
     "session": "الجلسة {n, number, digits}",
-    "starts": "يبدأ",
     "more": "المزيد ({count, number, digits})",
     "cancelled": "أُلغيت",
     "eventTypes": {

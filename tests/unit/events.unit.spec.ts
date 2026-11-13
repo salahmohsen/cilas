@@ -1,7 +1,7 @@
 import { describe, expect, it, vi } from 'vitest'
 import type { Payload } from 'payload'
 import type { Event } from '@/payload-types'
-import { eventTiming, orderEvents, otherUpcomingEvents } from '@/lib/events'
+import { eventItems, eventTiming, orderEvents, otherUpcomingEvents } from '@/lib/events'
 import { getPublicEvents, getPublicEvent } from '@/api/events.api'
 import { pathOf } from '@/lib/paths'
 import { spaceEvents } from '@/lib/spaces-data'
@@ -139,5 +139,29 @@ describe('public event timing', () => {
       sizes: true,
       mimeType: true,
     })
+  })
+})
+
+describe('eventItems', () => {
+  const base = { kind: 'event' as const, title: 'A talk', href: '/events/a', type: 'talk' }
+
+  it('places each meeting of a dated event', () => {
+    expect(
+      eventItems(3, base, {
+        mode: 'single',
+        start_date: '2026-03-03T00:00:00.000Z',
+        start_time: '18:00',
+        end_time: '20:00',
+      }),
+    ).toEqual([{ ...base, key: 'e3-0', date: '2026-03-03', start: '18:00', end: '20:00' }])
+  })
+
+  it('places an event with no times on its day, and an event with no known day nowhere', () => {
+    expect(eventItems(3, base, { start_date: '2026-03-03T00:00:00.000Z' })).toEqual([
+      { ...base, key: 'e3-day', date: '2026-03-03' },
+    ])
+    expect(
+      eventItems(3, base, { start_date: '2026-03-03T00:00:00.000Z', start_precision: 'week' }),
+    ).toEqual([])
   })
 })

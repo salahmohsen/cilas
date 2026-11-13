@@ -1,5 +1,6 @@
 import type { FocalPoint } from '@/lib/media-image'
 import { addDays, cairoDay, weekdayOf, WEEKDAYS } from '@/lib/cairo-day'
+import { meetingKey, numberedSessions, type SessionTimes } from '@/lib/meetings'
 import { POSTER_COLORS } from '@/components/arc/lib/poster-colors'
 
 /**
@@ -11,8 +12,6 @@ import { POSTER_COLORS } from '@/components/arc/lib/poster-colors'
 export type CalendarItem = {
   key: string
   kind: 'course' | 'event'
-  /** A course with no weekly times is placed on its first day only. */
-  starts?: boolean
   title: string
   href: string | null
   date: string
@@ -25,6 +24,33 @@ export type CalendarItem = {
   cover?: { url: string; alt: string } & FocalPoint
   cancelled?: boolean
 }
+
+/** What every item of one course or event shares. */
+export type CalendarBase = Omit<
+  CalendarItem,
+  'key' | 'date' | 'start' | 'end' | 'session' | 'cancelled'
+>
+
+/**
+ * A course's meetings as calendar items, each with its session's number.
+ * Each is named by `meetingKey`, so a calendar app that subscribed updates
+ * the entry when other meetings are added or moved.
+ */
+export const courseItems = (
+  base: CalendarBase,
+  sessions: readonly (SessionTimes & { id: number | string })[],
+): CalendarItem[] =>
+  numberedSessions(sessions, null).flatMap(({ session, number, meetings }) =>
+    meetings.map((m): CalendarItem => ({
+      ...base,
+      key: `s${meetingKey(session.id, m)}`,
+      date: m.date,
+      ...(m.start_time ? { start: m.start_time } : {}),
+      ...(m.end_time ? { end: m.end_time } : {}),
+      session: number,
+      ...(m.cancelled ? { cancelled: true } : {}),
+    })),
+  )
 
 export const CALENDAR_VIEWS = ['month', 'week', 'agenda'] as const
 export type CalendarView = (typeof CALENDAR_VIEWS)[number]

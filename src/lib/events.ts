@@ -1,6 +1,31 @@
 import { cairoDay, cairoInstant } from '@/lib/cairo-day'
-import { expandSchedule, hasDayPrecision, type Meeting } from '@/lib/schedule'
+import type { CalendarBase, CalendarItem } from '@/lib/calendar'
+import { expandSchedule, hasDayPrecision, type Meeting, type Schedule } from '@/lib/schedule'
 import type { Event } from '@/payload-types'
+
+/**
+ * An event's meetings as calendar items; with no weekly times, its first
+ * day alone. Nothing for an event whose day is not known (ADR 0002).
+ */
+export const eventItems = (
+  id: number,
+  base: CalendarBase,
+  schedule: Schedule | null | undefined,
+): CalendarItem[] => {
+  if (!hasDayPrecision(schedule)) return []
+  const meetings = expandSchedule(schedule)
+  if (meetings.length)
+    return meetings.map((m, i) => ({
+      ...base,
+      key: `e${id}-${i}`,
+      date: m.date,
+      start: m.start_time,
+      end: m.end_time,
+      ...(m.cancelled ? { cancelled: true } : {}),
+    }))
+  const day = schedule?.start_date ? cairoDay(schedule.start_date) : null
+  return day ? [{ ...base, key: `e${id}-day`, date: day }] : []
+}
 
 export type EventTiming = {
   status: 'upcoming' | 'past' | 'undated'

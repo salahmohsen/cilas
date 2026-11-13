@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest'
 
 import type { CalendarItem } from '@/lib/calendar'
 import {
+  courseItems,
   monthGrid,
   readCalendarParams,
   shiftMonth,
@@ -107,5 +108,49 @@ describe('toneOf', () => {
     expect(toneOf({ type: 'core' })).toBe('#ffb71b')
     expect(toneOf({ type: 'talk' })).toBe('#1782ea')
     expect(toneOf({ type: 'something-new' })).toContain('--border')
+  })
+})
+
+describe('courseItems', () => {
+  const base = { kind: 'course' as const, title: 'A course', href: '/study/a', type: 'lab' }
+
+  it('places every meeting with its session number, cancelled ones marked, all-day ones untimed', () => {
+    const items = courseItems(base, [
+      { id: 8, meetings: [{ date: '2026-03-10', start_time: '19:00', end_time: '21:00' }] },
+      { id: 5, meetings: [{ date: '2026-03-03', start_time: '19:00', end_time: '21:00' }] },
+      { id: 9, cancelled: true, meetings: [{ date: '2026-03-17' }] },
+    ])
+    expect(items).toEqual([
+      {
+        ...base,
+        key: 's5-2026-03-03-1900',
+        date: '2026-03-03',
+        start: '19:00',
+        end: '21:00',
+        session: 1,
+      },
+      {
+        ...base,
+        key: 's8-2026-03-10-1900',
+        date: '2026-03-10',
+        start: '19:00',
+        end: '21:00',
+        session: 2,
+      },
+      { ...base, key: 's9-2026-03-17-day', date: '2026-03-17', session: 3, cancelled: true },
+    ])
+  })
+
+  it("keeps a meeting's key when another session is added before it", () => {
+    const later = { id: 8, meetings: [{ date: '2026-03-10', start_time: '19:00' }] }
+    const before = courseItems(base, [later])
+    const after = courseItems(base, [{ id: 12, meetings: [{ date: '2026-03-03' }] }, later])
+    expect(after[1]!.key).toBe(before[0]!.key)
+    expect(after[1]!.session).toBe(2)
+  })
+
+  it('places nothing for a course with no meeting', () => {
+    expect(courseItems(base, [])).toEqual([])
+    expect(courseItems(base, [{ id: 1, meetings: [] }])).toEqual([])
   })
 })
