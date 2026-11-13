@@ -35,14 +35,14 @@ describe('lexicalText', () => {
 })
 
 describe('syllabusText', () => {
-  it('reads sessions in time order, then activities and bibliographies, each line once', () => {
+  it('reads sessions in time order, their Markdown as words, then activities and bibliographies, each line once', () => {
     const course = {
       syllabus: {
         docs: [
           { title: 'Reading Aristotle', meetings: [{ date: '2026-03-10' }] },
           {
             title: 'Reading Plato',
-            description: 'Book one',
+            description: '### Book one\n\n- \\*Walk\\* *slowly*\n-\n\n<b>raw</b>',
             meetings: [{ date: '2026-03-03' }],
             activities: [{ description: 'Walk' }],
             bibliography: [{ title: 'Republic', note: 'Chapter 1' }],
@@ -52,7 +52,7 @@ describe('syllabusText', () => {
       bibliography: [{ title: 'Republic' }, { title: 'Laws' }],
     }
     expect(syllabusText(course)).toBe(
-      'Reading Plato\nBook one\nWalk\nRepublic\nChapter 1\nReading Aristotle\nLaws',
+      'Reading Plato\nBook one\n*Walk* slowly\nraw\nWalk\nRepublic\nChapter 1\nReading Aristotle\nLaws',
     )
   })
 

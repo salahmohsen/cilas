@@ -7,6 +7,7 @@ import {
   type SearchLocale,
 } from '@/lib/search-config'
 import { flattenRichTextColumns } from '@/lib/flatten-rich-text-columns'
+import { markdownText } from '@/lib/markdown-text'
 import { sessionsInOrder, type SessionTimes } from '@/lib/meetings'
 import type { SerializedEditorState } from '@payloadcms/richtext-lexical/lexical'
 
@@ -105,7 +106,8 @@ export const syllabusText = (course: Doc): string => {
   const sessions = asArray(asRecord(course.syllabus)?.docs).flatMap((s) => asRecord(s) ?? [])
   for (const session of sessionsInOrder(sessions as Array<Doc & SessionTimes>)) {
     push(session.title)
-    push(session.description)
+    // Stored as Markdown: its words, not its syntax.
+    if (typeof session.description === 'string') push(markdownText(session.description))
     for (const activity of asArray(session.activities).map(asRecord)) push(activity?.description)
     pushBibliography(session.bibliography)
   }
