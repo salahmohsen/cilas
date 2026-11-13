@@ -6,11 +6,16 @@
  *   pnpm tsx scripts/migrate-course-sessions.ts              dry run: counts only
  *   pnpm tsx scripts/migrate-course-sessions.ts --apply      writes
  *   ... --map path/to/map.json                               default ./course-sessions-map.json
+ *   ... --refill 4,5,6 (or a file of IDs)                    delete and plan these again
  *
  * A published course with a newer pending draft is filled from the draft
  * (`fillSource`). Safe to run twice: a course that already has sessions is
  * skipped, the map (old row ID → new session ID, for the space posts step) is
  * read back and only added to, and the timing notes are set, not appended.
+`--refill` deletes the named courses' sessions and fills them again, after
+their old schedule changed (`apply-archive-start-dates.ts`); it stops before
+any write when a space post names one of those sessions, by its old row ID
+or its new ID.
  * Each course is written in one transaction. Then
  * `scripts/verify-course-sessions.ts` checks the result.
  */
@@ -18,6 +23,7 @@ import { existsSync, readFileSync, renameSync, writeFileSync } from 'node:fs'
 import { resolve } from 'node:path'
 import { createLocalReq, getPayload } from 'payload'
 
+import { sessionIdsIn } from '../src/lib/session-refs'
 import config from '../src/payload.config'
 import { inTransaction } from '../src/plugins/mcp/transaction'
 import {
@@ -35,6 +41,14 @@ const arg = (name: string) => {
 }
 const apply = process.argv.includes('--apply')
 const mapPath = resolve(arg('--map') ?? 'course-sessions-map.json')
+const refillArg = arg('--refill')
+const refill = new Set(
+  (refillArg && existsSync(refillArg) ? readFileSync(refillArg, 'utf8') : (refillArg ?? ''))
+    .split(/[\s,]+/)
+    .filter(Boolean)
+    .map(Number),
+)
+if ([...refill].some((id) => !Number.isInteger(id))) throw new Error(`--refill: ${refillArg}`)
 
 const payload = await getPayload({ config })
 const toMarkdown = await lexicalToMarkdown(payload)
@@ -73,6 +87,8 @@ const saveMap = () => {
 const counts = {
   courses: 0,
   skipped: 0,
+  refilled: 0,
+  deleted: 0,
   sessions: 0,
   untitled: 0,
   startDays: 0,
@@ -106,6 +122,51 @@ const storeTimingNote = async (course: number, version: number | null, note: Loc
     }
 }
 
+/**
+ * The refilled courses' sessions, by course. Stops when a space post names
+ * one: its old row ID (`course_session`, the body tokens today) or its new
+ * ID (after the space posts step) would point at nothing.
+ */
+const toRefill = async (): Promise<Map<number, number[]>> => {
+  const out = new Map<number, number[]>()
+  if (!refill.size) return out
+  const { docs } = await payload.find({
+    collection: 'sessions',
+    where: { course: { in: [...refill] } },
+    depth: 0,
+    pagination: false,
+    overrideAccess: true,
+    select: { course: true },
+  })
+  for (const doc of docs) {
+    const course = Number(typeof doc.course === 'object' ? doc.course?.id : doc.course)
+    out.set(course, [...(out.get(course) ?? []), doc.id])
+  }
+  const ids = new Set(docs.map((d) => String(d.id)))
+  for (const [from, id] of Object.entries(map)) if (ids.has(String(id))) ids.add(from)
+  const { rows } = await payload.db.pool.query<{
+    id: number
+    course_session: string | null
+    body: string | null
+  }>(
+    `SELECT id, course_session, body FROM space_posts
+      WHERE course_session IS NOT NULL OR body ~ '(session:|::session\\[)'`,
+  )
+  const named = rows.filter(
+    (r) =>
+      (r.course_session && ids.has(r.course_session)) ||
+      sessionIdsIn(r.body ?? '').some((id) => ids.has(id)),
+  )
+  if (named.length) {
+    console.error(
+      `Stopped: space posts ${named.map((r) => r.id).join(', ')} name sessions of a course to refill.`,
+    )
+    process.exit(1)
+  }
+  return out
+}
+const refilling = await toRefill()
+
 // Each older version's timing note is its own schedule note, so restoring it
 // keeps its words. The latest version and the course row follow the plan.
 if (apply)
@@ -125,7 +186,8 @@ for (const { course, source, latest, fromDraft } of await loadCourseSources(payl
     where: { course: { equals: course.id } },
     overrideAccess: true,
   })
-  if (existing > 0) {
+  const replaced = refilling.get(course.id) ?? []
+  if (existing > 0 && !replaced.length) {
     counts.skipped++
     const unmapped = plan.sessions.filter((s) => s.from && !(s.from in map))
     if (existing !== plan.sessions.length || unmapped.length)
@@ -136,13 +198,22 @@ for (const { course, source, latest, fromDraft } of await loadCourseSources(payl
   }
 
   counts.courses++
+  if (replaced.length) counts.refilled++
+  counts.deleted += replaced.length
   counts.sessions += plan.sessions.length
   counts.untitled += plan.sessions.filter((s) => !s.from).length
   if (plan.startDay) counts.startDays++
-  if (!apply || !plan.sessions.length) continue
+  if (!apply || (!plan.sessions.length && !replaced.length)) continue
 
   const req = await createLocalReq({}, payload)
   const made = await inTransaction(req, async () => {
+    if (replaced.length)
+      await payload.delete({
+        collection: 'sessions',
+        where: { id: { in: replaced } },
+        overrideAccess: true,
+        req,
+      })
     const ids: Array<[string | null, number]> = []
     for (const s of plan.sessions) {
       const common = {
@@ -172,6 +243,8 @@ for (const { course, source, latest, fromDraft } of await loadCourseSources(payl
     }
     return ids
   })
+  const gone = new Set(replaced)
+  for (const [from, id] of Object.entries(map)) if (gone.has(id)) delete map[from]
   for (const [from, id] of made) if (from) map[from] = id
   saveMap()
 }
