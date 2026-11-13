@@ -27,8 +27,18 @@ import {
 
 import { PostEditForm, type PostEditContext } from './post-edit-form'
 import styles from './space.module.css'
-import { EventEditDialog, type EventEditInitial } from './event-edit'
-import { VoteEditDialog, type VoteEditInitial } from './vote-edit'
+import { preloadable } from '@/lib/preloadable'
+import type { EventEditInitial } from './event-edit'
+import type { VoteEditInitial } from './vote-edit'
+
+// The edit dialogs open from the post's menu; each is its own chunk, fetched
+// as the pointer or focus reaches its menu item.
+const EventEditDialog = preloadable(() => import('./event-edit').then((m) => m.EventEditDialog), {
+  name: 'EventEditDialog',
+})
+const VoteEditDialog = preloadable(() => import('./vote-edit').then((m) => m.VoteEditDialog), {
+  name: 'VoteEditDialog',
+})
 
 /**
  * `pinnedFull`: pinned whole at the top, not as a card in the carousel.
@@ -99,6 +109,7 @@ export function PostActions({
             label: event ? t('eventEdit') : vote ? t('voteEdit') : t('edit'),
             icon: <Pencil size={15} />,
             onSelect: () => setEditing(true),
+            onPreload: event ? EventEditDialog.preload : vote ? VoteEditDialog.preload : undefined,
           },
         ]
       : []),
