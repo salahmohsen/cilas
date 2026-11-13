@@ -1,7 +1,8 @@
+import type { useTranslations } from 'next-intl'
+
 /**
  * Every word the calendar shows. The host supplies them: the site from
- * `messages/*.json` through `useCalendarLabels`, the admin from its own
- * translations. The component holds no copy of its own.
+ * `messages/*.json` through `calendarLabelsFrom`. The component holds no copy of its own.
  */
 export type CalendarLabels = {
   /** Names the whole calendar for screen readers. */
@@ -49,3 +50,51 @@ export type CalendarLabels = {
   /** What screen readers hear after an edit. */
   announce: (type: 'draw' | 'move' | 'resize' | 'delete' | 'cancel', label: string) => string
 }
+
+/** The words only the host knows: what its kinds are called, and what a new item is. */
+export type CalendarHostLabels = {
+  kind: CalendarLabels['kind']
+  newItem: string
+}
+
+/** The `CalendarUi` namespace of `messages/*.json`, from `useTranslations` or `createTranslator`. */
+export type CalendarTranslator = ReturnType<typeof useTranslations<'CalendarUi'>>
+
+/** Every label, from the shared translations. The site and the admin both build theirs here. */
+export const calendarLabelsFrom = (
+  t: CalendarTranslator,
+  { kind, newItem }: CalendarHostLabels,
+): CalendarLabels => ({
+  name: t('name'),
+  cairoTime: t('cairoTime'),
+  today: t('today'),
+  previousWeek: t('previousWeek'),
+  nextWeek: t('nextWeek'),
+  daySwitcher: t('daySwitcher'),
+  allDay: t('allDay'),
+  legend: t('legend'),
+  timeFormat: t('timeFormat'),
+  hours24: t('hours24'),
+  hours12: t('hours12'),
+  cancelled: t('cancelled'),
+  unscheduled: t('unscheduled'),
+  kind,
+  range: (from, to) => t('range', { from, to }),
+  timeRange: (start, end) => t('timeRange', { start, end }),
+  blockName: ({ title, day, time, status }) =>
+    t('blockName', { title, day, time, status, hasStatus: String(status !== '') }),
+  newItem,
+  unsaved: t('unsaved'),
+  deleted: t('deleted'),
+  restore: t('restore'),
+  restoreName: ({ title, day, time }) => t('restoreName', { title, day, time }),
+  save: t('save'),
+  saving: t('saving'),
+  cancelEdits: t('cancelEdits'),
+  changes: (count) => t('changes', { count }),
+  saveFailed: t('saveFailed'),
+  editHint: t('editHint'),
+  addBlock: (day) => t('addBlock', { day }),
+  placeOnDay: t('placeOnDay'),
+  announce: (type, label) => t('announce', { type, label }),
+})

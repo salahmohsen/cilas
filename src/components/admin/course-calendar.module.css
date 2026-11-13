@@ -1,0 +1,32 @@
+/* The calendar sits in the Sessions tab, in Arc's scoped tokens (arc-scope.css). */
+/* Payload lays a tab's fields in two grid columns; its own fields span both. */
+.field {
+  grid-column: 1 / -1;
+  inline-size: 100%;
+  min-inline-size: 0;
+}
+.root {
+  display: grid;
+  /* The calendar measures its own width, so it has none to offer a content-sized column. */
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--space-4);
+  min-inline-size: 0;
+  margin-block-end: var(--space-6);
+  color: var(--foreground);
+}
+.header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+}
+.title {
+  margin: 0;
+  font-size: var(--text-lg);
+  font-weight: 500;
+}
+.note {
+  margin: 0;
+  color: var(--text-secondary);
+}

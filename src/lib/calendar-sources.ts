@@ -1,5 +1,6 @@
 import type { PayloadRequest } from 'payload'
 
+import { createSession } from '@/collections/Sessions'
 import { meetingProblem } from '@/fields/meetings'
 import type { CalendarBlock, CalendarChange, CalendarItem } from '@/lib/calendar-items'
 import { toneOf } from '@/lib/calendar'
@@ -42,6 +43,11 @@ export type CalendarContext = {
 export type CalendarSource = {
   /** The items the parent holds now. */
   load: (ctx: CalendarContext, parentId: string) => Promise<CalendarItem[]>
+  /**
+   * Whether the user may add and change this parent's items: the collections'
+   * own access, asked once so the page can offer Edit. A save still checks.
+   */
+  canEdit: (ctx: CalendarContext, parentId: string) => Promise<boolean>
   /**
    * Writes the changes with the user's own access, on `ctx.req`, so the
    * caller's transaction covers them. Throws `CalendarSaveFailure` or a
@@ -149,7 +155,8 @@ const sessionSource: CalendarSource = {
       collection: 'courses',
       id,
       depth: 0,
-      draft: false,
+      // As the admin shows the course: its latest draft, if it has one.
+      draft: true,
       select: { course_type: true, session_unit: true },
       user,
       overrideAccess: false,
@@ -166,6 +173,10 @@ const sessionSource: CalendarSource = {
       req,
     })
     return sessionItems(docs, course, untitled)
+  },
+
+  async canEdit({ req }, parentId) {
+    return (await createSession({ req, data: { course: numericId(parentId) } })) === true
   },
 
   async apply({ req, user }, parentId, changes) {
@@ -233,3 +244,17 @@ const sources: Record<string, CalendarSource> = { course: sessionSource }
 /** The adapter for a parent kind, or null when no adapter takes it. */
 export const calendarSourceOf = (parentKind: string): CalendarSource | null =>
   Object.hasOwn(sources, parentKind) ? sources[parentKind]! : null
+
+/** Payload's own refusals, and anything else a save threw, as the typed error the page shows. */
+export const calendarErrorOf = (error: unknown): CalendarSaveError => {
+  if (error instanceof CalendarSaveFailure) return error.error
+  const { status, data } = (error ?? {}) as {
+    status?: number
+    data?: { errors?: { message?: string }[] }
+  }
+  if (status === 403) return { code: 'forbidden' }
+  if (status === 400)
+    return { code: 'invalid', message: data?.errors?.[0]?.message ?? 'The change is not valid.' }
+  console.error('calendar request failed', error)
+  return { code: 'failed' }
+}

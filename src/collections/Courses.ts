@@ -298,6 +298,15 @@ export const Courses: CollectionConfig = {
           label: 'Sessions',
           fields: [
             {
+              name: 'calendar',
+              type: 'ui',
+              admin: {
+                components: {
+                  Field: '/components/admin/course-calendar-field#CourseCalendarField',
+                },
+              },
+            },
+            {
               // Not `sessions`: the old array still holds that name until it is removed.
               name: 'syllabus',
               type: 'join',

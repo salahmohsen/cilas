@@ -25,10 +25,10 @@ export function SaveBar({ labels, count, saving, error, onSave, onCancel }: Prop
           {labels.changes(count)}
         </p>
         <div className={styles.barActions}>
-          <Button variant="ghost" size="sm" onClick={onCancel} disabled={saving}>
+          <Button type="button" variant="ghost" size="sm" onClick={onCancel} disabled={saving}>
             {labels.cancelEdits}
           </Button>
-          <Button size="sm" onClick={onSave} disabled={saving} loading={saving}>
+          <Button type="button" size="sm" onClick={onSave} disabled={saving} loading={saving}>
             {saving ? labels.saving : labels.save}
           </Button>
         </div>

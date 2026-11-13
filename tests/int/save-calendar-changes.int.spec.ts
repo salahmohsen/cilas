@@ -2,6 +2,7 @@
 import { getPayload, type Payload } from 'payload'
 import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest'
 
+import { loadCalendarItems } from '@/actions/load-calendar-items'
 import { saveCalendarChanges } from '@/actions/save-calendar-changes'
 import type { CalendarChange } from '@/lib/calendar-items'
 import { currentReader } from '@/lib/reader'
@@ -480,5 +481,38 @@ describe('saveCalendarChanges', () => {
 
     expect(result).toEqual({ ok: false, error: { code: 'not-found', itemId: String(elsewhere) } })
     expect(await stored(elsewhere)).toEqual(before)
+  })
+})
+
+describe('loadCalendarItems', () => {
+  const load = (parent = course) => loadCalendarItems({ kind: 'course', id: String(parent) })
+
+  it('gives an admin the course’s sessions as items, and Edit', async () => {
+    const id = await makeSession(course, at('2036-05-05'))
+    const result = await load()
+    expect(result.ok).toBe(true)
+    if (!result.ok) return
+    expect(result.canEdit).toBe(true)
+    expect(result.items.find((i) => i.id === String(id))).toMatchObject({
+      kind: 'session',
+      tone: 'blue',
+      blocks: [{ date: '2036-05-05', start_time: '19:00', end_time: '21:00' }],
+    })
+  })
+
+  it('offers Edit to the fellow of the course and not to another course’s fellow', async () => {
+    signIn(fellow)
+    expect(await load(course)).toMatchObject({ ok: true, canEdit: true })
+    expect(await load(otherCourse)).toMatchObject({ ok: true, canEdit: false })
+  })
+
+  it('refuses a visitor', async () => {
+    signIn(null)
+    expect(await load()).toEqual({ ok: false, error: { code: 'unauthenticated' } })
+  })
+
+  it('names a parent kind it has no adapter for', async () => {
+    const result = await loadCalendarItems({ kind: 'event', id: '1' })
+    expect(result).toMatchObject({ ok: false, error: { code: 'invalid' } })
   })
 })

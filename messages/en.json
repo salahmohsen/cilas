@@ -558,6 +558,25 @@
     "placeOnDay": "Place on day",
     "announce": "{type, select, draw {Added} move {Moved} resize {Resized} delete {Deleted} cancel {Cancelled the change to} other {}} {label}"
   },
+  "CalendarAdmin": {
+    "session": "Sessions",
+    "newSession": "New session",
+    "heading": "Calendar",
+    "edit": "Edit",
+    "done": "Done editing",
+    "loading": "Loading the calendar",
+    "loadFailed": "The calendar could not load.",
+    "retry": "Try again",
+    "unsavedCourse": "Save the course first. Then you can add sessions on a calendar here.",
+    "errors": {
+      "unauthenticated": "Sign in again to save.",
+      "forbidden": "You may not change these sessions.",
+      "notFound": "A session or meeting is gone. Reload to see the latest.",
+      "stale": "Someone changed these sessions. Reload to see the latest.",
+      "invalid": "A change is not valid. {message}",
+      "failed": "Something went wrong. Try again."
+    }
+  },
   "Select": {
     "search": "Search",
     "clearSearch": "Clear search",

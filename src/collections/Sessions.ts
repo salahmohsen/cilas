@@ -33,7 +33,7 @@ const editsCourse = isAdminOrOwn(ownsViaFellows, { allow: ['fellow'] })
  * session is checked here. With no data, Payload is asking whether to show
  * the create button: a fellow may make sessions for the courses they teach.
  */
-const createSession: Access = async (args) => {
+export const createSession: Access = async (args) => {
   const { req, data } = args
   if (isAdminUser(req.user)) return true
   if (!isFellowUser(req.user)) return false

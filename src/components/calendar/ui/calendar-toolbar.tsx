@@ -28,13 +28,25 @@ export function CalendarToolbar({
   return (
     <header className={styles.header}>
       <div className={styles.nav}>
-        <Button variant="secondary" size="sm" aria-label={labels.previousWeek} onClick={onPrevious}>
+        <Button
+          type="button"
+          variant="secondary"
+          size="sm"
+          aria-label={labels.previousWeek}
+          onClick={onPrevious}
+        >
           <ChevronLeft aria-hidden size={16} className={styles.flip} />
         </Button>
-        <Button variant="secondary" size="sm" aria-label={labels.nextWeek} onClick={onNext}>
+        <Button
+          type="button"
+          variant="secondary"
+          size="sm"
+          aria-label={labels.nextWeek}
+          onClick={onNext}
+        >
           <ChevronRight aria-hidden size={16} className={styles.flip} />
         </Button>
-        <Button variant="ghost" size="sm" onClick={onToday}>
+        <Button type="button" variant="ghost" size="sm" onClick={onToday}>
           {labels.today}
         </Button>
         <p className={styles.range} aria-live="polite">
