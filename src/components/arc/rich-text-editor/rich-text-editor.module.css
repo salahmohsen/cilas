@@ -23,11 +23,6 @@
 .editor[contenteditable='false'] {
   caret-color: transparent;
 }
-.editor::selection,
-.editor *::selection {
-  background: color-mix(in oklab, var(--accent) 22%, transparent);
-}
-
 .editor > * {
   margin: 0;
 }

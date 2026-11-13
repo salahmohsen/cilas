@@ -163,6 +163,15 @@
     @apply bg-background text-foreground;
   }
 
+  /* Selected text in the page's own ink and paper, swapped: black on white
+     reads white on black, and the dark theme inverts it with its tokens.
+     The fill colour too, for text that sets one (a read-only form answer). */
+  ::selection {
+    background-color: var(--foreground);
+    color: var(--background);
+    -webkit-text-fill-color: var(--background);
+  }
+
   button:not(:disabled),
   [role='button']:not(:disabled) {
     cursor: pointer;
