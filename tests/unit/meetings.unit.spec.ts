@@ -15,6 +15,7 @@ import {
   storedTiming,
   summary,
   upcomingSession,
+  weeklyRepeats,
   weeks,
   type Meeting,
   type SessionTimes,
@@ -509,5 +510,29 @@ describe('meetingKey', () => {
     const after = numberedSessions([{ meetings: [at('2026-03-01'), at('2026-03-10')] }], null)
     const key = (s: typeof before) => meetingKey(7, s[0]!.meetings.at(-1)!)
     expect(key(after)).toBe(key(before))
+  })
+})
+
+describe('weeklyRepeats', () => {
+  it('copies the latest meeting, one week apart, with its weekday and times', () => {
+    expect(
+      weeklyRepeats([at('2026-03-03', '19:00', '21:00'), at('2026-03-10', '18:00', '20:00')], 2),
+    ).toEqual([at('2026-03-17', '18:00', '20:00'), at('2026-03-24', '18:00', '20:00')])
+  })
+
+  it('keeps an all-day meeting all day', () => {
+    expect(weeklyRepeats([allDay('2026-03-03')], 1)).toEqual([allDay('2026-03-10')])
+  })
+
+  it('crosses a month and a year end', () => {
+    expect(weeklyRepeats([at('2026-12-29')], 2).map((m) => m.date)).toEqual([
+      '2027-01-05',
+      '2027-01-12',
+    ])
+  })
+
+  it('makes nothing from no meeting or a count of zero', () => {
+    expect(weeklyRepeats([], 3)).toEqual([])
+    expect(weeklyRepeats([at('2026-03-03')], 0)).toEqual([])
   })
 })

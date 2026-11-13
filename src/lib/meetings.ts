@@ -1,4 +1,4 @@
-import { weekdayOf, type Weekday } from '@/lib/cairo-day'
+import { addDays, weekdayOf, type Weekday } from '@/lib/cairo-day'
 
 /**
  * The one place course times are read (ADR 0011, replacing ADR 0002's
@@ -287,3 +287,20 @@ export const upcomingSession = <T>(
  */
 export const meetingKey = (owner: string | number, m: Meeting): string =>
   `${owner}-${m.date}-${m.start_time ? m.start_time.replace(':', '') : 'day'}`
+
+/** The most meetings one "Repeat weekly" makes, so a typing slip cannot fill years. */
+export const MAX_REPEATS = 52
+
+/**
+ * The next `count` weekly copies of the latest meeting: the same weekday and
+ * times, one week apart. Empty when there is no meeting to copy.
+ */
+export const weeklyRepeats = (meetings: readonly Meeting[], count: number): Meeting[] => {
+  const last = [...meetings].sort(byWhen).at(-1)
+  if (!last) return []
+  return Array.from({ length: count }, (_, i) => ({
+    date: addDays(last.date, 7 * (i + 1)),
+    start_time: last.start_time || null,
+    end_time: last.end_time || null,
+  }))
+}

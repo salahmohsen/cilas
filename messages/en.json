@@ -575,6 +575,21 @@
       "stale": "Someone changed these sessions. Reload to see the latest.",
       "invalid": "A change is not valid. {message}",
       "failed": "Something went wrong. Try again."
+    },
+    "repeat": {
+      "legend": "Repeat weekly",
+      "hint": "Copies the last meeting’s weekday and times, one week apart.",
+      "count": "How many weeks",
+      "asMeetings": "Add meetings to this session",
+      "asSessions": "Make new sessions, one meeting each",
+      "go": "Repeat",
+      "going": "Repeating",
+      "saveFirst": "Save the session first. The repeat starts from the saved meetings.",
+      "needMeeting": "Add a meeting and save it first. The repeat copies the last meeting.",
+      "newSession": "Save the session first. Then you can repeat it.",
+      "doneMeetings": "{count, plural, one {Added # meeting.} other {Added # meetings.}}",
+      "doneSessions": "{count, plural, one {Made # session.} other {Made # sessions.}}",
+      "countInvalid": "Give a whole number from 1 to {max}."
     }
   },
   "Select": {

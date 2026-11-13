@@ -174,4 +174,47 @@ test.describe('course calendar', () => {
     await expect(page.locator('.doc-drawer')).toBeHidden()
     await expect(block('E2E first session')).toBeFocused()
   })
+
+  test('Repeat weekly adds the next meetings, or new sessions, one a week', async () => {
+    const stored = async () => (await sessionsOf()).find((s) => s.id === session)!
+    const latest = (meetings: { date: string }[]) =>
+      meetings
+        .map((m) => m.date)
+        .sort()
+        .at(-1)!
+    const weekAfter = (day: string, weeks: number) =>
+      new Date(Date.parse(`${day}T00:00:00Z`) + weeks * 7 * 86_400_000).toISOString().slice(0, 10)
+
+    await page.goto(`${BASE}/admin/collections/sessions/${session}`)
+    const tool = page.getByRole('group', { name: 'Repeat weekly' }).first()
+    await expect(tool).toBeVisible({ timeout: 60_000 })
+    const before = await stored()
+    const rowsBefore = await page.locator('#field-meetings .array-field__row').count()
+    const last = latest(before.meetings ?? [])
+
+    await tool.getByLabel('How many weeks').fill('2')
+    await tool.getByRole('button', { name: 'Repeat', exact: true }).click()
+    await expect(tool.getByRole('status')).toHaveText('Added 2 meetings.', { timeout: 30_000 })
+    const after = await stored()
+    expect(
+      (after.meetings ?? [])
+        .map((m) => m.date)
+        .sort()
+        .slice(-2),
+    ).toEqual([weekAfter(last, 1), weekAfter(last, 2)])
+    // The form shows the saved meetings, so a later save does not undo them.
+    await expect(page.locator('#field-meetings .array-field__row')).toHaveCount(rowsBefore + 2)
+
+    const sessionsBefore = (await sessionsOf()).length
+    await tool.getByLabel('Make new sessions, one meeting each').check()
+    await tool.getByLabel('How many weeks').fill('2')
+    await tool.getByRole('button', { name: 'Repeat', exact: true }).click()
+    await expect(tool.getByRole('status')).toHaveText('Made 2 sessions.', { timeout: 30_000 })
+    const made = (await sessionsOf()).filter((s) => s.id !== session).slice(-2)
+    expect((await sessionsOf()).length).toBe(sessionsBefore + 2)
+    expect(made.map((s) => s.meetings?.map((m) => m.date))).toEqual([
+      [weekAfter(latest(after.meetings ?? []), 1)],
+      [weekAfter(latest(after.meetings ?? []), 2)],
+    ])
+  })
 })
