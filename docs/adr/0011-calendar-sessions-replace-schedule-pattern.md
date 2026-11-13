@@ -51,7 +51,7 @@ sessions                     new collection: what is taught, and when
   position                   hidden; keeps the order of sessions with no meeting
 
 course
-  sessions                   join field (course → sessions), shown in the Sessions tab
+  syllabus                   join field (course → sessions), shown in the Sessions tab
   timing_note                localized free text, from today's schedule note
   first_day, last_day        read-only, kept up to date from its sessions' meetings
   session_unit, syllabus_tentative, course bibliography, notes   unchanged
@@ -63,9 +63,9 @@ course
 - **A session can have several meetings.** 20 courses meet twice a week and their session is a week ("Week 3" = Tuesday and Thursday). The calendar shows each meeting as a block, and every block opens its session.
 - **Order comes from time.** Sessions sort by their first meeting. Sessions with no meeting sort by the hidden `position`, after the placed ones, and show in the "Unscheduled" tray. Nobody types an order.
 - **Times stay Cairo wall-clock.** The rule from 0002 stays: no UTC instants, so changes to Egypt's daylight-saving rules do not move a meeting.
-- **`first_day` and `last_day` are stored on the course.** Lists sort and filter by start date today (`courses.api`, `programmes.api`, `people.api`, article cards, email cards, spaces). A session afterChange hook updates the course's two fields, so readers do not query sessions.
+- **`first_day` and `last_day` are stored on the course.** Lists sort and filter by start date today (`courses.api`, `programmes.api`, `people.api`, article cards, email cards, spaces). A session afterChange (and afterDelete) hook writes the course's two fields straight to its row (`lib/course-days.ts`), so readers do not query sessions; the course's own beforeChange recomputes them on every course save, so its versions carry them too. Both are `YYYY-MM-DD` text, like `meetings.date`.
 - **One module reads time.** `src/lib/meetings.ts` replaces `src/lib/schedule.ts` for courses. It gives `sessionsOf(course)`, `meetingsOf(course)`, `nextMeeting`, `firstDay`, `lastDay`, `weeks` and the summary. 0002's rule "one function makes every date" stays true.
-- **Deleting a course deletes its sessions.** An afterDelete hook on courses.
+- **Deleting a course deletes its sessions.** In the course's beforeDelete (`deleteCourseDependents`), with its enrollments: `sessions.course_id` is required, so the database refuses to delete a course that still has sessions.
 - **Who edits.** Admins edit every session. The course's fellows edit its sessions, times included, while the course is published, with no review. Members read.
 - **Sessions keep history.** Versions are on (no drafts), so an admin can see who changed what and restore a session after a harmful edit.
 
@@ -123,7 +123,7 @@ Every course moves to the new model, published and draft. We test on the local c
    - each session row becomes a session document with the same content and the meetings it has today; its description is converted to Markdown;
    - **courses with weekly times but no sessions (41)** and **pattern meetings after the last session (18)**: the pattern still makes those meetings, but no session holds them. The script makes new sessions for them by today's default rule, one session for each week of slots (with one slot a week, one session per meeting). Their title is empty, so the page shows "Session N" or "Week N";
    - sessions with no meeting (7 courses) stay unscheduled, in their old order;
-   - courses with a start date but no slots (63) get one all-day meeting on that day, on their first session (a new one if none);
+   - courses with a start date but no meeting at all get one all-day meeting on that day, on their first session (a new one if none). That is the 63 with no slots plus 12 with slots but no `weeks` (75);
    - the schedule note moves to `timing_note`;
    - a map from old row ID to new session ID updates the 8 space posts.
 3. **Verify** with a script: for every course, the new `meetingsOf` equals the old `expandSchedule`, meeting by meeting; every session's content is the same; every space post points to a session of its own course. The run must show zero differences, except the new sessions, which it lists.
@@ -154,7 +154,7 @@ Every course moves to the new model, published and draft. We test on the local c
 Payload's own editor (Lexical) stores JSON, not Markdown. It can convert both ways (`convertLexicalToMarkdown`, `convertMarkdownToLexical`). The space writes Markdown with the Arc editor, which has a toolbar for bold, italic, strike, code, links, headings, lists and quotes, plus undo.
 
 - **Session `description` is stored as Markdown.** In the admin, the field renders the **same Arc editor** as the space. So admins, fellows and the space see one toolbar and one format.
-- **Migration:** the 782 current descriptions are plain paragraphs (no images, blocks, links, lists or tables), so `convertLexicalToMarkdown` loses nothing. The verify script compares the text before and after.
+- **Migration:** the 782 current descriptions have no images, blocks, links or tables. A few have headings and lists (courses 405, 407, 410, 411), and some paragraphs start lines with "- " or "1. " by hand, which become real Markdown lists. `convertLexicalToMarkdown` keeps every word: the verify script compares the words before and after (a read-only run of the conversion on the local copy found no difference in all 782).
 - The site renders session Markdown with the same renderer as space posts.
 
 ## One calendar component, five places
@@ -271,9 +271,32 @@ Each step ships to the dev copy on its own, and the site works after it.
 
 ## Open questions
 
-None for now. New ones go here as the work finds them.
+- **Slots with no start date (43 courses).** The pattern makes no meeting without a start date, so these courses get no meeting and no session times. Their weekdays and times exist only in the old `schedule` group and go when it is removed. Keep them as words in `timing_note` ("Tuesdays, 19:00–21:00"), or let them go?
+- **Pending drafts (3 published courses: 295, 406, 409).** The fill reads the published course. The verify script fails for a course whose pending draft has a different schedule or sessions, so a fellow's pending syllabus change is not lost silently. Publish or discard those drafts before the fill.
 
 ## Decision log
+
+Fix: the join on courses is named `syllabus`.
+
+- The old array still holds the name `sessions` until the last migration, so the join cannot take it now.
+- A join has no column, but every reader written against a temporary name would change again. "Syllabus" already names a course's list of sessions on the site (the space's Syllabus tab, the search field).
+
+Fix: the course's beforeDelete deletes its sessions, not an afterDelete.
+
+- `sessions.course_id` is NOT NULL with ON DELETE set null, so the database refuses to delete a course that still has sessions.
+
+Fix: a session hook writes `first_day` and `last_day` straight to the course row; the course's beforeChange recomputes them.
+
+- `payload.update` on the course would run the review hooks and could publish a fellow's pending draft.
+- A publish copies a version over the course row, so the version must carry the days too.
+
+Fix: meeting days, `first_day` and `last_day` are `YYYY-MM-DD` text.
+
+- A Payload date field stores an instant; a Cairo day is not one, and the old `dates` needed `cairoDay()` on every read.
+
+Fix: the fill's rules are one pure function (`scripts/course-sessions-plan.ts`) that the fill and verify scripts both call.
+
+- The fill and the verify must agree on what a course becomes, and each edge case in the data table needs a test.
 
 Fix: sessions are a collection; each owns `meetings[]`; the pattern is a tool, not stored data.
 
