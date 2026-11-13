@@ -305,6 +305,8 @@ export const Courses: CollectionConfig = {
               collection: 'sessions',
               on: 'course',
               defaultLimit: 0,
+              // The order they were planned in; the page orders them by their meetings.
+              defaultSort: 'position',
               label: 'Sessions',
               admin: {
                 allowCreate: true,
@@ -315,6 +317,7 @@ export const Courses: CollectionConfig = {
             },
             {
               name: 'timing_note',
+              label: 'Timing note',
               type: 'textarea',
               localized: true,
               admin: {
@@ -336,6 +339,7 @@ export const Courses: CollectionConfig = {
                   fields: [
                     {
                       name: 'start_day',
+                      label: 'Start day',
                       type: 'text',
                       validate: (value: string | null | undefined) =>
                         !value || cairoDay(value) === value
@@ -390,6 +394,7 @@ export const Courses: CollectionConfig = {
             },
             {
               name: 'session_unit',
+              label: 'Numbering',
               type: 'select',
               required: true,
               defaultValue: 'session',
