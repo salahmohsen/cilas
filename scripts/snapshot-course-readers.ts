@@ -103,16 +103,24 @@ const pool = async <T, R>(items: readonly T[], fn: (item: T) => Promise<R>): Pro
 
 /**
  * A page and its status. A 404 is a reader's answer and is recorded; a
- * server error is not: the dev server answers 500 while it recompiles, so
- * one is asked again, and a run that still gets one stops rather than
- * record it.
+ * server error is not. The dev server answers 500 while it recompiles, and
+ * restarts its worker when it nears its memory limit, dropping what it was
+ * serving: either is asked again after a pause, and a run that still fails
+ * stops rather than record it.
  */
 const get = async (path: string, attempt = 1): Promise<{ status: number; body: string }> => {
-  const res = await fetch(`${site}${path}`, { signal: AbortSignal.timeout(180_000) })
-  if (res.status < 500)
-    return { status: res.status, body: res.status === 200 ? await res.text() : '' }
-  if (attempt < 3) return get(path, attempt + 1)
-  throw new Error(`${path} answered ${res.status} ${attempt} times`)
+  let failure: string
+  try {
+    const res = await fetch(`${site}${path}`, { signal: AbortSignal.timeout(180_000) })
+    if (res.status < 500)
+      return { status: res.status, body: res.status === 200 ? await res.text() : '' }
+    failure = `answered ${res.status}`
+  } catch (error) {
+    failure = error instanceof Error ? error.message : String(error)
+  }
+  if (attempt >= 5) throw new Error(`${path} failed ${attempt} times: ${failure}`)
+  await new Promise((done) => setTimeout(done, attempt * 10_000))
+  return get(path, attempt + 1)
 }
 
 const squash = (text: string | null | undefined) => (text ?? '').replace(/\s+/g, ' ').trim()
