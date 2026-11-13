@@ -101,3 +101,13 @@ Length: found for 49 of the 54 dated courses; not found for 24, 30, 78, 152, 195
 | 24, 30, 78, 152, 195        | length only           | Term page, flow text. Pages say "weekly" or "every Wednesday" with no count. 30 and 78 have a day-level start.                                                                                                                                                                               |
 
 Course 7 is the only course without a start. For length, 224 and 216 have a range (10 to 12 weeks) instead of one number.
+
+## Applied
+
+2026-11-13, on the local copy, by `scripts/apply-archive-start-dates.ts` (rule: `scripts/archive-start-dates.ts`, ADR 0011 decision log).
+
+- **Dated: 37 courses.** Every high and medium course, and the 9 Alexandria winter 2020 courses (low) on the English term text: week of 30 January 2020, 11 weeks (`start_date`, not `alt_start_date`). The start and length come from this JSON. A meeting count became weeks (150: 12, 210: 13). Only missing fields were written: course 48 keeps its 9 weeks.
+- **Not dated, no single length: 6 courses.** 24, 30, 78, 195 (no length found); 216, 224 (10 to 12 weeks).
+- **Not dated, low or none: 12 courses.** 7, 87, 88, 89, 90, 152, 153, 154, 156, 157, 158, 159.
+- The 18 undated courses keep their times as words in `timing_note`, only in a language with no note. 8 have an English note, kept as written (88, 152, 153, 154, 156, 157, 158, 159; their Arabic note gets the words). 10 have no note (7, 24, 30, 78, 87, 89, 90, 195, 216, 224).
+- The fill then refilled the 37 courses (`--refill`): 144 sessions deleted and made again, no space post named them. Sessions with a meeting: 1,047 before, 1,426 after (of 1,995). The verify script shows no difference.

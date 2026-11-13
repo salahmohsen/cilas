@@ -125,7 +125,7 @@ Every course moves to the new model, published and draft. We test on the local c
    - sessions with no meeting (7 courses) stay unscheduled, in their old order;
    - courses with a start date but no meeting at all get one all-day meeting on that day, on their first session (a new one if none). That is the 63 with no slots plus 12 with slots but no `weeks` (75);
    - the schedule note moves to `timing_note`;
-   - **courses with weekly times but no start date (43)** get no meeting. Their times are written as words at the start of `timing_note`, in each language ("Tuesday, 19:00–21:00", "الثلاثاء، ١٩:٠٠–٢١:٠٠"), before the old note;
+   - **courses with weekly times the pattern cannot place** (no start date or no `weeks`, 55 courses): first, 37 of them get the start date and length found on the old site, written into the old `schedule` group (`scripts/apply-archive-start-dates.ts`, see `docs/research/2026-11-course-start-dates.md`), so their times become real meetings. The other 18 get no meeting for their times. A language with no note gets the times as words in `timing_note` ("Tuesday, 19:00–21:00", "الثلاثاء، ١٩:٠٠–٢١:٠٠"); a written note stays unchanged;
    - **a published course with a pending draft** (295, 406 and 409 today) is filled from the draft: its sessions and schedule go live, because sessions have no drafts. The draft's other fields stay pending;
    - a map from old row ID to new session ID updates the 8 space posts.
 3. **Verify** with a script: for every course, the new `meetingsOf` equals the old `expandSchedule`, meeting by meeting; every session's content is the same; every space post points to a session of its own course. The run must show zero differences, except the new sessions, which it lists.
@@ -276,6 +276,27 @@ Each step ships to the dev copy on its own, and the site works after it.
 None now.
 
 ## Decision log
+
+Fix: start dates and lengths from the old site go into the old `schedule` group first, by one rule (`scripts/archive-start-dates.ts`); the fill then reads them like any other date.
+
+- 55 courses have weekly times but no start date (43) or no `weeks` (12). Their meetings exist only on the old site's pages.
+- The research proposes a start and a length for 54 of them, with a confidence. The user accepted high and medium, and the low Alexandria winter 2020 cycle on its English term text (week of 30 January, 11 weeks).
+- A course with a start but no single length (24, 30, 78, 195: none found; 216, 224: 10 to 12 weeks) stays undated. A guessed length would invent meetings.
+- The rule writes only fields a course is missing. Course 48 keeps its typed 9 weeks (research: 10 weeks, 9 meetings).
+- The old readers still read the `schedule` group until step 4, so the old site shows the same dates as the new sessions. One source, not a second list of dates in the fill.
+- The script writes with SQL on the course row and its latest version: `payload.update` runs the review hooks, which make or publish drafts.
+
+Fix: the fill takes `--refill <ids|file>`: it deletes those courses' sessions and plans them again, and stops before any write when a space post names one of them.
+
+- The 37 dated courses were filled before their dates existed. The fill skips a course that has sessions, so it could not see the change.
+- A deleted session's ID dies. A space post that names it (`course_session`, or `session:<id>` and `::session[<id>]` in its body, by old row ID or new ID) would point at nothing. None did.
+- The map from old row ID to session ID drops the deleted IDs and takes the new ones.
+
+Fix: weekly times become words only where the pattern places none of them and the language has no note; a written note is kept as it is.
+
+- The first rule wrote the words before every note. 8 of the 18 undated courses have a note, and it already says the times in a person's words ("Mondays 10-12pm, offline, except for the first class will be online."). The words doubled them.
+- A course with a start but no `weeks` (30, 78, 195, 216, 224 and 152) also gets no meeting for its times, only an all-day one on its start. The first rule tested the start date alone, so their times were lost. The rule now asks the pattern itself (`expandSchedule`), so both cases follow from one test.
+- A course that gets real dates must lose the words again: its note returns to the schedule note. The note is planned from the schedule each run, so this needs no special case.
 
 Fix: weekly times with no start date become words at the start of `timing_note`, written by `lib/meeting-text.ts`.
 
