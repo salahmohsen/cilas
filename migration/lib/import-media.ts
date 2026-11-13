@@ -175,13 +175,14 @@ export const importMedia = async (
       draft: draft && doc._status !== 'published',
     } as const
 
+    // The link sits in the issue's sections, each holding one rich-text body.
     if (job.field === 'body_pdf_link') {
-      if (!doc.body) {
+      if (!doc.sections) {
         result.skippedSet++
         continue
       }
       const hit = (url: string) => (uploadsPath(url) === job.path ? url : null)
-      const matches = rewriteLinks(doc.body, (url) => (hit(url) ? 'x' : null)).count
+      const matches = rewriteLinks(doc.sections, (url) => (hit(url) ? 'x' : null)).count
       if (!matches) {
         result.skippedSet++
         continue
@@ -191,8 +192,10 @@ export const importMedia = async (
         result.missing++
         continue
       }
-      const { tree } = rewriteLinks(doc.body, (url) => (hit(url) ? m.url : null))
-      await payload.update({ ...args, data: { body: tree } } as Parameters<Payload['update']>[0])
+      const { tree } = rewriteLinks(doc.sections, (url) => (hit(url) ? m.url : null))
+      await payload.update({ ...args, data: { sections: tree } } as Parameters<
+        Payload['update']
+      >[0])
       result.attached++
       continue
     }
