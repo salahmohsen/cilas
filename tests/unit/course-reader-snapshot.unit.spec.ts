@@ -9,7 +9,10 @@ import {
   llmsTimes,
   onlyAdds,
   onlyLabels,
+  onlyLengthGone,
   onlyListMarkers,
+  onlyRemovals,
+  onlyUnits,
   toDays,
   type Accepted,
   type CourseMeta,
@@ -329,5 +332,99 @@ describe('extractors', () => {
       facts: ['**Starts:** 2018-04-01', '**Meets:** Sunday 11:00–14:00 (Cairo)'],
       syllabus: ['The syllabus may still change.', '### Week 1', 'Meetings: 2'],
     })
+  })
+})
+
+describe('the timing removal rules', () => {
+  it('expects Week N to become Session N, and a count of weeks a count of sessions, numbers kept', () => {
+    expect(
+      onlyUnits(
+        ['1The BasicsWeek 1', '2EnergyWeek 2'],
+        ['1The BasicsSession 1', '2EnergySession 2'],
+      ),
+    ).toBe(true)
+    expect(onlyUnits(['Length: 11 weeks'], ['Length: 11 sessions'])).toBe(true)
+    expect(onlyUnits(['### Week 3', 'Meetings: 1'], ['### Session 3', 'Meetings: 1'])).toBe(true)
+    // Arabic: the label and the plural forms, in either kind of digit.
+    expect(onlyUnits(['### الأسبوع 3'], ['### الجلسة 3'])).toBe(true)
+    expect(onlyUnits(['الأسبوع ٣'], ['الجلسة ٣'])).toBe(true)
+    expect(onlyUnits(['المدة: ١١ أسبوعًا'], ['المدة: ١١ جلسة'])).toBe(true)
+    expect(onlyUnits(['المدة: ٣ أسابيع'], ['المدة: ٣ جلسات'])).toBe(true)
+    expect(onlyUnits(['المدة: أسبوعان'], ['المدة: جلستان'])).toBe(true)
+  })
+
+  it('refuses a changed number, a changed title and no change', () => {
+    expect(onlyUnits(['Length: 11 weeks'], ['Length: 12 sessions'])).toBe(false)
+    expect(onlyUnits(['Week 3: Energy'], ['Session 3: Power'])).toBe(false)
+    expect(onlyUnits(['Week 3'], ['Week 3'])).toBe(false)
+    expect(onlyUnits(['### الأسبوع 3'], ['### الجلسة 4'])).toBe(false)
+  })
+
+  it('expects lines to be removed and nothing else changed', () => {
+    expect(onlyRemovals(['Tuesday, 19:00–21:00'], [])).toBe(true)
+    expect(onlyRemovals(['a', 'b', 'c'], ['a', 'c'])).toBe(true)
+    expect(onlyRemovals(['a'], ['a'])).toBe(false)
+    expect(onlyRemovals(['a'], ['b'])).toBe(false)
+    expect(onlyRemovals(['a'], ['a', 'b'])).toBe(false)
+  })
+
+  it('expects a card to lose its length and keep its date', () => {
+    const card = { date: '2015-12-27', dateLabel: '2015', length: '10 weeks' }
+    expect(onlyLengthGone(card, { ...card, length: '' })).toBe(true)
+    expect(onlyLengthGone(card, { ...card, length: '', date: '2016-01-03' })).toBe(false)
+    expect(onlyLengthGone(card, { ...card, length: '9 weeks' })).toBe(false)
+    expect(onlyLengthGone({ ...card, length: '' }, { ...card, length: '' })).toBe(false)
+  })
+
+  it('judges each difference by its own rule, in any course', () => {
+    expect(classify('page.syllabus', plain, ['1AWeek 1'], ['1ASession 1']).reason).toMatch(/Week N/)
+    expect(classify('page.note', plain, ['Hybrid for 6 weeks'], []).verdict).toBe('EXPECTED')
+    expect(classify('page.note', plain, ['Hybrid'], ['Online']).verdict).toBe('UNEXPECTED')
+    expect(
+      classify(
+        'space.sessionFacts',
+        plain,
+        [{ n: 1, week: false, date: null }],
+        [{ n: 1, date: null }],
+      ).verdict,
+    ).toBe('EXPECTED')
+    expect(
+      classify(
+        'space.sessionFacts',
+        plain,
+        [{ n: 1, week: false, date: null }],
+        [{ n: 1, date: '2026-03-03' }],
+      ).verdict,
+    ).toBe('UNEXPECTED')
+  })
+
+  it('expects any time to change in a course that gained meetings, and nowhere else', () => {
+    for (const reader of ['calendar.ics', 'page.facts', 'list.study', 'space.lastMeeting'])
+      expect(classify(reader, { ...plain, archive: 'meetings' }, 'a', 'b').verdict).toBe('EXPECTED')
+    expect(classify('list.study', plain, 'a', 'b').verdict).toBe('UNEXPECTED')
+  })
+
+  it('expects a lost length only in a course that had only a length, and only on its card', () => {
+    const card = { date: '2015-12-27', dateLabel: '2015', length: '10 weeks' }
+    const lost = { ...plain, archive: 'weeks-lost' as const }
+    expect(classify('list.articleCards', lost, card, { ...card, length: '' }).verdict).toBe(
+      'EXPECTED',
+    )
+    expect(classify('list.articleCards', plain, card, { ...card, length: '' }).verdict).toBe(
+      'UNEXPECTED',
+    )
+    expect(classify('list.study', lost, '2015-12-27', '2016-01-03').verdict).toBe('UNEXPECTED')
+  })
+
+  it('takes what the head knows about a course (`archive`) when it compares', () => {
+    const base = snapshot({ 'calendar.ics': { '1': ['old'] } })
+    const head = snapshot(
+      { 'calendar.ics': { '1': ['new'] } },
+      { '1': { ...plain, archive: 'meetings' } },
+    )
+    expect(compareSnapshots(base, head).map((d) => d.verdict)).toEqual(['EXPECTED'])
+    expect(
+      compareSnapshots(base, snapshot({ 'calendar.ics': { '1': ['new'] } })).map((d) => d.verdict),
+    ).toEqual(['UNEXPECTED'])
   })
 })

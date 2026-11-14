@@ -14,6 +14,13 @@ export type CourseMeta = {
   undatedWords: boolean
   /** Sessions the fill made that no old row held: untitled, shown as "Session N" or "Week N". */
   newSessions: number
+  /**
+   * What the timing removal did to the course, from the head snapshot (the base
+   * cannot know): `meetings` when the old pattern gave it no meeting and
+   * `make-archive-meetings.ts` gave it approximate ones; `weeks-lost` when it
+   * had only a typed length, which no meeting replaces.
+   */
+  archive?: 'meetings' | 'weeks-lost'
 }
 
 /** One run: for each reader, what it gives for each course (by course ID). */
@@ -151,6 +158,54 @@ export const onlyListMarkers = (before: unknown, after: unknown): boolean => {
   return lines.filter((line, i) => lines.indexOf(line) === i).join('\n') === after
 }
 
+/** A session's label and a count of sessions or weeks, with the unit word replaced, numbers kept. */
+const unitFree = (value: unknown): string =>
+  (JSON.stringify(value) ?? '')
+    .replace(/(?:Week|Session) ([0-9]+)/g, '# $1')
+    .replace(/(?:الأسبوع|الجلسة) ([0-9٠-٩]+)/g, '# $1')
+    .replace(
+      /([0-9٠-٩]+) (?:weeks?|sessions?|أسابيع|أسبوعًا|أسبوع|جلسات|جلسة)(?![\u0621-\u064A])/g,
+      '$1 #',
+    )
+    .replace(/(?:جلسة|أسبوع) واحد(?:ة)?/g, '1 #')
+    .replace(/جلستان|أسبوعان/g, '2 #')
+
+/**
+ * Whether `after` is `before` with "Week N" and "N weeks" turned into "Session N" and "N sessions":
+ * every number the same. The numbering setting is gone, so every untitled session is "Session N".
+ */
+export const onlyUnits = (before: unknown, after: unknown): boolean =>
+  !same(before, after) && unitFree(before) === unitFree(after)
+
+/** A value with every property named `key` removed, at any depth. */
+const withoutKey = (value: unknown, key: string): unknown => {
+  if (Array.isArray(value)) return value.map((v) => withoutKey(v, key))
+  if (isRecord(value))
+    return Object.fromEntries(
+      Object.entries(value)
+        .filter(([k]) => k !== key)
+        .map(([k, v]) => [k, withoutKey(v, key)]),
+    )
+  return value
+}
+
+/** Whether `after` has the lines of `before` less some, the rest unchanged and in order. */
+export const onlyRemovals = (before: unknown, after: unknown): boolean => {
+  const was = linesOf(before)
+  const now = linesOf(after)
+  let at = 0
+  for (const line of was) if (at < now.length && line === now[at]) at++
+  return at === now.length && now.length < was.length
+}
+
+/** Whether a card's length ("10 weeks") is gone and its date is the same. */
+export const onlyLengthGone = (before: unknown, after: unknown): boolean =>
+  isRecord(before) &&
+  isRecord(after) &&
+  !!before.length &&
+  !after.length &&
+  same({ ...before, length: '' }, { ...after, length: '' })
+
 /**
  * Whether the plan expects `reader` to change from `before` to `after` for
  * this course. Course by course, reader by reader: an archive-dated course
@@ -167,6 +222,23 @@ export const classify = (
   after: unknown,
 ): { verdict: Verdict; reason: string } => {
   if (!meta) return { verdict: 'UNEXPECTED', reason: 'course not in the base snapshot' }
+  if (onlyUnits(before, after))
+    return { verdict: 'EXPECTED', reason: 'Week N became Session N (no numbering setting)' }
+  if (reader === 'space.sessionFacts' && same(withoutKey(before, 'week'), after))
+    return { verdict: 'EXPECTED', reason: 'the week flag is gone with the numbering setting' }
+  if (reader === 'page.note' && onlyRemovals(before, after))
+    return { verdict: 'EXPECTED', reason: 'the timing note is removed' }
+  if (
+    reader === 'list.articleCards' &&
+    meta.archive === 'weeks-lost' &&
+    onlyLengthGone(before, after)
+  )
+    return { verdict: 'EXPECTED', reason: 'a typed length with no meeting to replace it is gone' }
+  if (meta.archive === 'meetings')
+    return {
+      verdict: 'EXPECTED',
+      reason: 'archive meetings: approximate dates replace the old timing',
+    }
   if (meta.archiveDated) return { verdict: 'EXPECTED', reason: 'archive start date (37)' }
   if (meta.newSessions > 0 && SESSION_READERS.has(reader) && onlyAdds(before, after))
     return {
@@ -252,6 +324,12 @@ export const compareSnapshots = (
   accepted: Accepted[] = [],
 ): Difference[] => applyAccepted(rawDifferences(base, head), base.label, accepted)
 
+/** The base's facts about a course, with what the head snapshot knows that the base cannot. */
+const metaOf = (base: Snapshot, head: Snapshot, course: string): CourseMeta | undefined => {
+  const meta = base.courses[course]
+  return meta && { ...meta, archive: head.courses[course]?.archive }
+}
+
 const rawDifferences = (base: Snapshot, head: Snapshot): Difference[] => {
   const out: Difference[] = []
   const readers = [...new Set([...Object.keys(base.readers), ...Object.keys(head.readers)])].sort()
@@ -280,7 +358,7 @@ const rawDifferences = (base: Snapshot, head: Snapshot): Difference[] => {
         const days = DAY_READERS.has(reader) ? toDays(before) : before
         const { verdict, reason } = same(days, after)
           ? { verdict: 'EXPECTED' as const, reason: 'raw timestamp to the same day' }
-          : classify(reader, base.courses[course], days, after)
+          : classify(reader, metaOf(base, head, course), days, after)
         out.push({ reader, course, part, before, after, verdict, reason })
       }
     }

@@ -42,6 +42,7 @@ import { formatsOf } from '../src/i18n/formats'
 import { toCourseCard } from '../src/lib/article-cards'
 import { numberedSessions, upcomingSession } from '../src/lib/meetings'
 import { sessionFacts } from '../src/lib/session-refs'
+import { expandSchedule } from '../src/lib/schedule'
 import { courseLastMeeting } from '../src/lib/space-lifecycle'
 import config from '../src/payload.config'
 import { syllabusText } from '../src/plugins/typesense/documents'
@@ -164,17 +165,31 @@ const archiveDated = new Set(research.filter(dated).map((e) => e.id))
 const undated = new Set(research.filter((e) => !dated(e)).map((e) => e.id))
 
 const sessionCount = new Map<number, number>()
+const meetingCount = new Map<number, number>()
 for (const s of (
   await payload.find({
     collection: 'sessions',
     depth: 0,
     pagination: false,
-    select: { course: true },
+    select: { course: true, meetings: true },
     overrideAccess: true,
   })
 ).docs) {
   const course = typeof s.course === 'object' ? s.course.id : s.course
   sessionCount.set(course, (sessionCount.get(course) ?? 0) + 1)
+  meetingCount.set(course, (meetingCount.get(course) ?? 0) + (s.meetings?.length ?? 0))
+}
+
+/**
+ * What the timing removal did to a course (`CourseMeta.archive`): the old
+ * pattern gave it no meeting, and now it has some (made by
+ * `make-archive-meetings.ts`), or it had only a typed length, which is gone.
+ */
+const archiveOf = (c: Course): CourseMeta['archive'] => {
+  if (expandSchedule(c.schedule, c.sessions).length) return undefined
+  if ((meetingCount.get(c.id) ?? 0) > 0) return 'meetings'
+  const { weeks, start_date, slots } = c.schedule ?? {}
+  return weeks && !start_date && !slots?.length ? 'weeks-lost' : undefined
 }
 
 const meta: Record<string, CourseMeta> = Object.fromEntries(
@@ -186,6 +201,7 @@ const meta: Record<string, CourseMeta> = Object.fromEntries(
       undatedWords: undated.has(c.id),
       // The old rows each became one session; the rest are new and untitled.
       newSessions: Math.max(0, (sessionCount.get(c.id) ?? 0) - (c.sessions?.length ?? 0)),
+      archive: archiveOf(c),
     },
   ]),
 )
