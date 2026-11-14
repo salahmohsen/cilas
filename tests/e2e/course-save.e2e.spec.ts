@@ -1,6 +1,9 @@
 import { expect, test, type Page } from '@playwright/test'
+import { getPayload, type Payload } from 'payload'
 
-import type { Course, Cycle, Session } from '../../src/payload-types.js'
+import config from '../../src/payload.config.js'
+import type { Course, Session } from '../../src/payload-types.js'
+import { createTracker, uniq } from '../int/fixtures'
 import { login } from '../helpers/login'
 import { cleanupTestUser, seedTestUser, testUser } from '../helpers/seedUser'
 
@@ -10,14 +13,17 @@ import { cleanupTestUser, seedTestUser, testUser } from '../helpers/seedUser'
  * group and `sessions` array are hidden and read only; a save must leave
  * them, the course's sessions and its first and last day as they were.
  *
- * It edits a real published course of the local database: one with the old
- * pattern, old rows and sessions, a subtitle, no last editor and no draft
- * waiting. It changes the subtitle and publishes, then saves a draft, and
- * puts the subtitle back each time. Deleting the throwaway admin at the end
- * clears the last editor its saves stamped.
+ * It works on a course made for the run, with the old pattern, old rows, two
+ * sessions and a subtitle, and removes it after, so no real course changes.
+ * It changes the subtitle and publishes, then saves a draft, and puts the
+ * subtitle back each time.
  */
 const BASE = 'http://localhost:3000'
 const MARK = ' (e2e save check)'
+const SUBTITLE = 'Teaching as a case'
+
+const { track, cleanup } = createTracker()
+let payload: Payload
 
 type Localized = Omit<Course, 'subtitle'> & { subtitle: Record<string, string | null> }
 
@@ -60,58 +66,88 @@ const save = async (subtitle: string, button: 'Publish changes' | 'Save Draft') 
 }
 
 test.describe('course admin save', () => {
-  // A cold dev server compiles the admin on the first visit.
+  // The first visit to the admin is slow on a cold server.
   test.describe.configure({ mode: 'serial', timeout: 300_000 })
   let before: { published: Localized; sessions: Session[] }
   let subtitle: string
 
   test.beforeAll(async ({ browser }) => {
     await seedTestUser()
+    payload = await getPayload({ config })
+    const place = track(
+      'places',
+      await payload.create({
+        collection: 'places',
+        data: { name: 'Save e2e place', slug: uniq('save-e2e-place'), city: uniq('E2E') },
+        overrideAccess: true,
+      }),
+    ).id
+    const cycle = track(
+      'cycles',
+      await payload.create({
+        collection: 'cycles',
+        data: { season: 'fall', start_year: 2034, place, start_date: '2034-10-04' },
+        overrideAccess: true,
+      }),
+    ).id
+    course = track(
+      'courses',
+      await payload.create({
+        collection: 'courses',
+        data: {
+          title: 'Save e2e course',
+          slug: uniq('save-e2e-course'),
+          course_type: 'THEMATIC',
+          tier: 'public',
+          cycle,
+          registration: { mode: 'closed' },
+          subtitle: SUBTITLE,
+          // What a course migrated from before ADR 0011 still holds.
+          schedule: {
+            start_date: '2034-10-05T00:00:00.000Z',
+            start_precision: 'day',
+            weeks: 2,
+            slots: [{ weekday: 'thu', start_time: '19:00', end_time: '21:00' }],
+            end_date: '2034-10-12T00:00:00.000Z',
+          },
+          sessions: [
+            { order: 1, session_title: 'First', meetings: 1 },
+            { order: 2, session_title: 'Second', meetings: 1 },
+          ],
+          first_day: '2034-10-05',
+          last_day: '2034-10-12',
+          _status: 'published',
+        },
+        overrideAccess: true,
+      }),
+    )
+    for (const [title, date] of [
+      ['First', '2034-10-05'],
+      ['Second', '2034-10-12'],
+    ]) {
+      await payload.create({
+        collection: 'sessions',
+        data: {
+          course: course.id,
+          title,
+          meetings: [{ date, start_time: '19:00', end_time: '21:00' }],
+        },
+        overrideAccess: true,
+      })
+    }
     page = await (await browser.newContext()).newPage()
     await login({ page, user: testUser })
 
-    const where = [
-      'where[_status][equals]=published',
-      'where[review.status][equals]=approved',
-      'where[schedule.start_date][exists]=true',
-      'where[last_edited_by][exists]=false',
-      'where[subtitle][exists]=true',
-    ].join('&')
-    const { docs } = await api<{ docs: Course[] }>(`courses?${where}&depth=0&sort=id&limit=100`)
-    for (const doc of docs) {
-      const draft = await api<Course>(`courses/${doc.id}?depth=0&draft=true`)
-      const { totalDocs } = await api<{ totalDocs: number }>(
-        `sessions/count?where[course][equals]=${doc.id}`,
-      )
-      // A subtitle saved empty would come back as '', not as it was.
-      const fits = doc.subtitle && doc.sessions?.length && doc.schedule?.slots?.length && totalDocs
-      // An archived cycle may have no registration, and then the course cannot publish.
-      const cycle =
-        doc.registration?.mode === 'follow_cycle' && typeof doc.cycle === 'number'
-          ? await api<Cycle>(`cycles/${doc.cycle}?depth=0`)
-          : null
-      const method = cycle?.registration?.method
-      const publishable = !cycle || (method === 'form' ? !!cycle.registration?.form : !!method)
-      if (fits && publishable && draft._status === 'published') {
-        course = doc
-        break
-      }
-    }
-    expect(course, 'a publishable course with old data, sessions and no draft').toBeDefined()
     before = { published: await read(false), sessions: await sessionsOf() }
     subtitle = before.published.subtitle.en!
-    const { schedule } = before.published
-    console.log(
-      `course ${course.id}: schedule ${schedule?.start_date} to ${schedule?.end_date}, ` +
-        `${schedule?.slots?.length} slot(s), ${before.published.sessions?.length} old rows, ` +
-        `${before.sessions.length} sessions, days ${before.published.first_day} to ` +
-        `${before.published.last_day}, subtitle "${subtitle}"`,
-    )
+    expect(subtitle, 'the subtitle the course was made with').toBe(SUBTITLE)
   })
 
   test.afterAll(async () => {
     await page?.context().close()
+    await cleanup(payload)
     await cleanupTestUser()
+    await payload.destroy()
   })
 
   test('publishing keeps the old fields, the sessions and the days', async () => {
