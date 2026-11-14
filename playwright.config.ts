@@ -46,6 +46,10 @@ export default defineConfig({
   webServer: {
     command: 'pnpm dev',
     reuseExistingServer: true,
+    // The real Turnstile widget never gives a token on localhost, so the apply
+    // form waited for it and failed after 46 s. Without the keys the forms use
+    // only their honeypot (src/components/forms/spam-check.tsx).
+    env: { NEXT_PUBLIC_TURNSTILE_SITE_KEY: '', TURNSTILE_SECRET_KEY: '' },
     url: process.env.E2E_BASE_URL ?? 'http://localhost:3000',
   },
 })
