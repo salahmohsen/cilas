@@ -5,7 +5,7 @@ import { useCallback, useEffect, useMemo, useRef, useState, type RefObject } fro
 
 import type { CalendarChange, CalendarItem } from '@/lib/calendar-items'
 
-import { changesOf, keepDeleted, restoreBlock, unsavedIdsOf } from './calendar-edits'
+import { changesOf, keepDeleted, rebase, restoreBlock, unsavedIdsOf } from './calendar-edits'
 import { addDays } from './calendar-time'
 import {
   DEFAULT_MINUTES,
@@ -33,9 +33,9 @@ type FocusTarget = { id: string; track: string }
 /**
  * The blocks as the viewer is editing them, against the blocks as loaded.
  * Nothing leaves the page until `save` sends every change at once; `cancel`
- * drops them all. Loading new items drops them too, since they were made
- * against the old ones. A save that returns the saved items shows those, so
- * the next save carries their new versions.
+ * drops them all. New items from outside keep the changes to items that did
+ * not change, and drop those to items that did, which `dropped` names. A save
+ * that returns the saved items shows those, so the next save carries their new versions.
  */
 export function useEditSession({ items, newItemKind, onSave, scope, range }: Options) {
   const itemsKey = useMemo(() => JSON.stringify(items), [items])
@@ -43,13 +43,8 @@ export function useEditSession({ items, newItemKind, onSave, scope, range }: Opt
   const [current, setCurrent] = useState(items)
   const [base, setBase] = useState(() => timedBlocks(items))
   const [working, setWorking] = useState(base)
-  if (loadedKey !== itemsKey) {
-    const fresh = timedBlocks(items)
-    setLoadedKey(itemsKey)
-    setCurrent(items)
-    setBase(fresh)
-    setWorking(fresh)
-  }
+  /** The titles of items whose unsaved changes were dropped when newer items loaded. */
+  const [dropped, setDropped] = useState<string[]>([])
 
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState<Error | null>(null)
@@ -60,6 +55,22 @@ export function useEditSession({ items, newItemKind, onSave, scope, range }: Opt
     [current, base, working, newItemKind],
   )
   const unsaved = useMemo(() => unsavedIdsOf(base, working), [base, working])
+
+  // New items from outside, such as a form that saved a session. A save's own
+  // result replaces all of this when it returns, and clears the note.
+  if (loadedKey !== itemsKey) {
+    const next = rebase({
+      current,
+      items,
+      working,
+      changed: new Set(changes.flatMap((change) => ('itemId' in change ? [change.itemId] : []))),
+    })
+    setLoadedKey(itemsKey)
+    setCurrent(items)
+    setBase(next.base)
+    setWorking(next.working)
+    if (next.dropped.length) setDropped(next.dropped)
+  }
 
   /** The block to put focus on, or the "+" or day it was on when the block is gone. */
   const focusable = useCallback(
@@ -105,6 +116,8 @@ export function useEditSession({ items, newItemKind, onSave, scope, range }: Opt
     unsaved,
     saving,
     error,
+    dropped,
+    dismissDropped: () => setDropped([]),
 
     /** A drag or key changed the blocks. */
     onSpansChange(
@@ -188,6 +201,7 @@ export function useEditSession({ items, newItemKind, onSave, scope, range }: Opt
     cancel() {
       setWorking(base)
       setError(null)
+      setDropped([])
     },
 
     async save() {
@@ -196,6 +210,7 @@ export function useEditSession({ items, newItemKind, onSave, scope, range }: Opt
       try {
         const fresh = await onSave?.(changes)
         if (fresh) setCurrent(fresh)
+        setDropped([])
         const saved = fresh ? timedBlocks(fresh) : working.filter((block) => !block.deleted)
         setBase(saved)
         setWorking(saved)

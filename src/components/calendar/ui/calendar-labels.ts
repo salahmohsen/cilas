@@ -56,6 +56,9 @@ export type CalendarLabels = {
   cancelEdits: string
   changes: (count: number) => string
   saveFailed: string
+  /** Said when newly loaded items replace an item that has unsaved changes: they are gone. */
+  dropped: (titles: string) => string
+  dismiss: string
   /** How to draw, move, resize and delete, with the mouse and the keyboard. */
   editHint: string
   /** The "+" on a day's header. */
@@ -117,6 +120,8 @@ export const calendarLabelsFrom = (
   cancelEdits: t('cancelEdits'),
   changes: (count) => t('changes', { count }),
   saveFailed: t('saveFailed'),
+  dropped: (titles) => t('dropped', { titles }),
+  dismiss: t('dismiss'),
   editHint: t('editHint'),
   addBlock: (day) => t('addBlock', { day }),
   placeOnDay: t('placeOnDay'),

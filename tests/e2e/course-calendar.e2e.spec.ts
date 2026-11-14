@@ -339,6 +339,36 @@ test.describe('course calendar', () => {
     await expect(block('E2E first session')).toBeFocused()
   })
 
+  test('a save in the drawer keeps the unsaved changes of other sessions and says which it dropped', async () => {
+    await openSessionsTab()
+    // Two unsaved changes: a meeting added to the session, and a new session.
+    await choose(thursday(), 'Add meeting')
+    await calendar()
+      .getByRole('button', { name: /^Add a block on/ })
+      .first()
+      .click()
+    await expect(unsaved('2 unsaved changes')).toBeVisible()
+
+    await thursday().click()
+    const drawer = page.locator('.doc-drawer')
+    await drawer.locator('#field-title').fill('E2E first session, renamed')
+    await drawer.getByRole('button', { name: 'Save', exact: true }).first().click()
+    await expect(page.getByText(/Updated successfully/).first()).toBeVisible()
+    await page.keyboard.press('Escape')
+    await expect(drawer).toBeHidden()
+
+    // The new session stays. The saved session lost its unsaved meeting, and the bar says so.
+    await expect(unsaved('1 unsaved change')).toBeVisible()
+    await expect(
+      calendar()
+        .getByText(/unsaved changes to E2E first session, renamed were dropped/)
+        .first(),
+    ).toBeVisible()
+    await saveButton().click()
+    await barGone()
+    expect(await meetingsOf()).toHaveLength(3)
+  })
+
   test('the menu opens the drawer with Open, from the keyboard, and Escape returns focus', async () => {
     await openSessionsTab()
     await block('E2E first session').focus({ timeout: 15_000 })

@@ -3,6 +3,7 @@ import { describe, expect, it } from 'vitest'
 import {
   changesOf,
   keepDeleted,
+  rebase,
   restoreBlock,
   unsavedIdsOf,
 } from '@/components/calendar/ui/calendar-edits'
@@ -181,5 +182,91 @@ describe('the change list of a Save', () => {
       'create-item',
       'delete-block',
     ])
+  })
+})
+
+describe('carrying edits to newly loaded items', () => {
+  const moved = (block: TimedBlock): TimedBlock => ({
+    ...block,
+    start: block.start + 60,
+    end: block.end + 60,
+  })
+  const bump = (item: CalendarItem, blocks = item.blocks): CalendarItem => ({
+    ...item,
+    version: `${item.version}-b`,
+    blocks,
+  })
+
+  it('keeps the edits of items that did not change', () => {
+    const working = [moved(tue), thu]
+    const next = rebase({
+      current: items,
+      items: [items[0]!, bump(items[1]!)],
+      working,
+      changed: new Set(['week-3']),
+    })
+    expect(next.working).toEqual(working)
+    expect(next.dropped).toEqual([])
+  })
+
+  it('takes the loaded blocks of an item that changed, and names it when it had an edit', () => {
+    const changedWeek3 = bump(items[0]!, [items[0]!.blocks[0]!])
+    const next = rebase({
+      current: items,
+      items: [changedWeek3, items[1]!],
+      working: [moved(tue), thu],
+      changed: new Set(['week-3']),
+    })
+    expect(next.working).toEqual(timedBlocks([changedWeek3]))
+    expect(next.base).toEqual(timedBlocks([changedWeek3, items[1]!]))
+    expect(next.dropped).toEqual(['Week 3'])
+  })
+
+  it('names an item by its new title', () => {
+    const renamed = { ...bump(items[0]!), title: 'Week three' }
+    const next = rebase({
+      current: items,
+      items: [renamed, items[1]!],
+      working: [moved(tue), thu],
+      changed: new Set(['week-3']),
+    })
+    expect(next.dropped).toEqual(['Week three'])
+  })
+
+  it('does not name an item that changed but had no edit', () => {
+    const next = rebase({
+      current: items,
+      items: [bump(items[0]!), items[1]!],
+      working: base,
+      changed: new Set(),
+    })
+    expect(next.dropped).toEqual([])
+  })
+
+  it('drops the blocks of an item that is gone, and keeps blocks of items made on the page', () => {
+    const made = newBlock(newItemId(), '2026-11-20', 600, 660)
+    const next = rebase({
+      current: items,
+      items: [items[1]!],
+      working: [moved(tue), made],
+      changed: new Set(['week-3']),
+    })
+    expect(next.working).toEqual([made])
+    expect(next.dropped).toEqual(['Week 3'])
+  })
+
+  it('shows an item that is new', () => {
+    const extra: CalendarItem = {
+      ...items[1]!,
+      id: 'extra',
+      blocks: [{ id: 'x', date: '2026-11-18', start_time: '10:00', end_time: '11:00' }],
+    }
+    const next = rebase({
+      current: items,
+      items: [...items, extra],
+      working: base,
+      changed: new Set(),
+    })
+    expect(next.working).toEqual([...base, ...timedBlocks([extra])])
   })
 })

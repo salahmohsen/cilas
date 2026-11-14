@@ -1,6 +1,6 @@
 import type { CalendarChange, CalendarItem, NewBlock } from '@/lib/calendar-items'
 
-import type { TimedBlock } from './calendar-model'
+import { timedBlocks, type TimedBlock } from './calendar-model'
 import { toTime } from './calendar-time'
 
 const timesOf = (block: TimedBlock) => ({
@@ -113,3 +113,36 @@ export function keepDeleted(
 
 export const restoreBlock = (working: TimedBlock[], id: string): TimedBlock[] =>
   working.map((block) => (block.id === id ? { ...block, deleted: false } : block))
+
+type Rebase = {
+  /** The items the edits were made against. */
+  current: CalendarItem[]
+  /** The items as loaded now. */
+  items: CalendarItem[]
+  /** The blocks as edited, deleted ones included as ghosts. */
+  working: TimedBlock[]
+  /** The ids of the items that have an unsaved change. */
+  changed: Set<string>
+}
+
+/**
+ * The edits, carried over to newly loaded items. An item whose version moved
+ * (or that is gone) was changed somewhere else, so a change to it would fail as
+ * stale: its blocks are the loaded ones, and its title, as loaded now, is in `dropped` if the
+ * viewer had an unsaved change on it. Every other edit stays.
+ */
+export function rebase({ current, items, working, changed }: Rebase) {
+  const was = new Map(current.map((item) => [item.id, item]))
+  const now = new Map(items.map((item) => [item.id, item]))
+  const replaced = (id: string) => was.has(id) && was.get(id)!.version !== now.get(id)?.version
+  return {
+    base: timedBlocks(items),
+    working: [
+      ...working.filter((block) => !replaced(block.itemId)),
+      ...timedBlocks(items).filter((block) => !was.has(block.itemId) || replaced(block.itemId)),
+    ],
+    dropped: current
+      .filter((item) => replaced(item.id) && changed.has(item.id))
+      .map((item) => now.get(item.id)?.title ?? item.title),
+  }
+}

@@ -144,6 +144,8 @@ export function Calendar({
   )
   const anyCancelled = session.items.some((item) => item.cancelled)
 
+  const droppedNote = session.dropped.length ? labels.dropped(session.dropped.join(', ')) : ''
+
   const rangeLabel = labels.range(
     formatDay(days[0]!, locale, { day: 'numeric', month: 'short' }),
     formatDay(days[6]!, locale, { day: 'numeric', month: 'short', year: 'numeric' }),
@@ -314,6 +316,7 @@ export function Calendar({
         ) : null}
 
         <p role="status" className={styles.srOnly}>
+          {droppedNote}
           {told}
           {session.changes.length ? ` ${labels.changes(session.changes.length)}` : ''}
         </p>
@@ -334,15 +337,16 @@ export function Calendar({
           />
         ) : null}
 
-        {editable && (session.changes.length || session.error) ? (
+        {editable && (session.changes.length || session.error || droppedNote) ? (
           <SaveBar
             labels={labels}
             count={session.changes.length}
             saving={session.saving}
             error={session.error}
-            note={session.changes.length ? told : undefined}
+            note={[droppedNote, session.changes.length ? told : ''].filter(Boolean).join(' ')}
             onSave={session.save}
             onCancel={session.cancel}
+            onDismiss={session.dismissDropped}
           />
         ) : null}
       </WeekSpans.Root>
