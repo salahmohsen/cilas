@@ -9,6 +9,7 @@ import { changesOf, keepDeleted, restoreBlock, unsavedIdsOf } from './calendar-e
 import { addDays } from './calendar-time'
 import {
   DEFAULT_MINUTES,
+  DEFAULT_START_MINUTES,
   firstFreeStart,
   newBlock,
   newItemId,
@@ -87,7 +88,12 @@ export function useEditSession({ items, newItemKind, onSave, scope, range }: Opt
   }
 
   const slot = (track: string) => {
-    const start = firstFreeStart(working, track, range.min, range.max)
+    const start = firstFreeStart(
+      working,
+      track,
+      Math.max(range.min, DEFAULT_START_MINUTES),
+      range.max,
+    )
     return { start, end: Math.min(start + DEFAULT_MINUTES, range.max) }
   }
 

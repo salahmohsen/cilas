@@ -96,16 +96,17 @@ export function Calendar({
     setSelectedIndex(indexOfDay(weekOf(next), cairoNow().date))
   }
 
-  // Edit mode keeps the hours it opened with, from an hour before the earliest
-  // meeting to an hour after the latest, so a drag never moves the grid.
-  const [editHours, setEditHours] = useState<{ min: number; max: number } | null>(null)
-  if (editable && !editHours) setEditHours(hourRange(timedBlocks(items), 1))
-  if (!editable && editHours) setEditHours(null)
-
   const loaded = useMemo(() => timedBlocks(items), [items])
+  // Edit mode shows the same hours in every week, so a drag never moves the grid.
   const range = useMemo(
-    () => editHours ?? hourRange(loaded.filter((block) => days.includes(block.track))),
-    [editHours, loaded, days],
+    () =>
+      editable
+        ? hourRange('edit', loaded)
+        : hourRange(
+            'view',
+            loaded.filter((block) => days.includes(block.track)),
+          ),
+    [editable, loaded, days],
   )
 
   const session = useEditSession({

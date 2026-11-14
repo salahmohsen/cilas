@@ -251,6 +251,38 @@ test.describe('course calendar', () => {
     ).toBeVisible()
   })
 
+  test('an empty course shows 06:00 to 23:00, and a drag at 07:00 saves a 07:00 meeting', async () => {
+    await payload.delete({
+      collection: 'sessions',
+      where: { course: { equals: course } },
+      overrideAccess: true,
+    })
+    await openSessionsTab()
+    const hours = calendar().locator('[aria-hidden="true"] > span')
+    await expect(hours.first()).toHaveText('06:00')
+    await expect(hours.last()).toHaveText('23:00')
+
+    // The hours scroll in their own area. Scroll it to 06:00 so 07:00 is in reach.
+    const area = calendar().locator('[data-scroll]')
+    await area.evaluate((el) => el.scrollTo({ top: 0, behavior: 'instant' }))
+    const track = calendar().locator('[data-track]:visible').first()
+    const box = (await track.boundingBox())!
+    const hour = box.height / 18
+    const x = box.x + box.width / 2
+    const y = box.y + hour * 1.1
+    await page.mouse.move(x, y)
+    await page.mouse.down()
+    await page.mouse.move(x, y + hour * 0.9, { steps: 10 })
+    await page.mouse.up()
+    await expect(unsaved('1 unsaved change')).toBeVisible()
+
+    await saveButton().click()
+    await barGone()
+    const [created] = await sessionsOf()
+    const meeting = created!.meetings![0]!
+    expect(meeting.start_time).toBe('07:00')
+  })
+
   test('cancelling leaves the database as it was', async () => {
     const before = await meetingsOf()
     await openSessionsTab()

@@ -317,13 +317,13 @@ describe('edit mode', () => {
     ])
   })
 
-  it('fixes the hours when edit mode opens: an hour before the earliest meeting to an hour after the latest', () => {
+  it('shows 06:00 to 23:00 and keeps the hours when a block moves', () => {
     const { container } = edit({ onSave: vi.fn() })
     const hours = [...container.querySelectorAll('[aria-hidden="true"] > span')].map(
       (hour) => hour.textContent,
     )
-    expect(hours[0]).toBe('09:00')
-    expect(hours.at(-1)).toBe('21:00')
+    expect(hours[0]).toBe('06:00')
+    expect(hours.at(-1)).toBe('23:00')
     week3().focus()
     for (let step = 0; step < 4; step++) fireEvent.keyDown(week3(), { key: 'ArrowDown' })
     const after = [...container.querySelectorAll('[aria-hidden="true"] > span')].map(
@@ -446,5 +446,49 @@ describe('touch handles', () => {
     expect(coarse).toMatch(/\.block\[data-selected\] \.edge \{[^}]*block-size: 1\.75rem/)
     expect(coarse).toMatch(/\.edge \{\s*display: none;/)
     expect(css).not.toMatch(/\.track[^{]*\{[^}]*touch-action: none/)
+  })
+})
+
+describe('edit mode scroll', () => {
+  const scrolls = vi.fn()
+
+  beforeEach(() => {
+    scrolls.mockClear()
+    Element.prototype.scrollTo = scrolls as unknown as typeof Element.prototype.scrollTo
+  })
+
+  it('shows the hours in a grid that scrolls, not in view mode', () => {
+    edit({ onSave: vi.fn() })
+    // Only the day headers and the all-day row stay on top; the hours scroll under them.
+    const [head, rows] = document.querySelector('[data-scroll]')!.children
+    expect(head!.querySelector('[data-day]')).not.toBeNull()
+    expect(head!.querySelector('[data-track]')).toBeNull()
+    expect(rows!.querySelectorAll('[data-track]')).toHaveLength(7)
+  })
+
+  it('scrolls on open, instantly, and on a week change smoothly', () => {
+    edit({ onSave: vi.fn() })
+    expect(scrolls).toHaveBeenCalledTimes(1)
+    expect(scrolls).toHaveBeenLastCalledWith(expect.objectContaining({ behavior: 'instant' }))
+    fireEvent.click(screen.getByRole('button', { name: 'Next week' }))
+    expect(scrolls).toHaveBeenCalledTimes(2)
+    expect(scrolls).toHaveBeenLastCalledWith(expect.objectContaining({ behavior: 'smooth' }))
+  })
+
+  it('does not scroll smoothly when the viewer asks for less motion', () => {
+    const matchMedia = window.matchMedia
+    window.matchMedia = ((query: string) => ({
+      matches: query.includes('reduce'),
+      media: query,
+      addEventListener() {},
+      removeEventListener() {},
+    })) as unknown as typeof window.matchMedia
+    try {
+      edit({ onSave: vi.fn() })
+      fireEvent.click(screen.getByRole('button', { name: 'Next week' }))
+      expect(scrolls).toHaveBeenLastCalledWith(expect.objectContaining({ behavior: 'instant' }))
+    } finally {
+      window.matchMedia = matchMedia
+    }
   })
 })

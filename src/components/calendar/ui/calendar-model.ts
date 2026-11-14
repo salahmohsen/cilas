@@ -61,16 +61,32 @@ export const allDayBlocks = (items: CalendarItem[], days: string[]): AllDayBlock
       .map((block) => ({ item, blockId: block.id, date: block.date })),
   )
 
-/** Whole hours from the earliest start to the latest end of `blocks`, padded by `padHours` each side. */
-export const hourRange = (blocks: Span[], padHours = 0) => {
+/**
+ * The working day an edit grid always shows, so a new meeting can go at any
+ * usual time. The grid ends at midnight, so a meeting never grows it past 24:00.
+ */
+const WORKING_DAY = { min: 6 * 60, max: 24 * 60 } as const
+/** Where an empty week opens, and where the first new meeting of a day goes. */
+export const DEFAULT_START_MINUTES = 9 * 60
+
+/**
+ * The hours the grid shows, as one rule of the mode and the meetings. View mode
+ * runs from the earliest start to the latest end, in whole hours. Edit mode
+ * shows 06:00 to 24:00, and starts earlier only to hold an earlier meeting.
+ */
+export const hourRange = (mode: 'view' | 'edit', blocks: Span[]) => {
   const starts = blocks.map((block) => block.start)
   const ends = blocks.map((block) => block.end)
-  const first = Math.floor(Math.min(...(starts.length ? starts : [FALLBACK_HOURS[0]])) / 60)
-  const last = Math.ceil(Math.max(...(ends.length ? ends : [FALLBACK_HOURS[1]])) / 60)
-  return {
-    min: Math.max(0, first - padHours) * 60,
-    max: Math.min(24, last + padHours) * 60,
-  }
+  const first = Math.floor(Math.min(...(starts.length ? starts : [FALLBACK_HOURS[0]])) / 60) * 60
+  const last = Math.ceil(Math.max(...(ends.length ? ends : [FALLBACK_HOURS[1]])) / 60) * 60
+  if (mode === 'view') return { min: first, max: last }
+  return { min: Math.min(WORKING_DAY.min, first), max: WORKING_DAY.max }
+}
+
+/** Where the hours scroll to: the first meeting of the days, or 09:00 when they have none. */
+export const scrollTargetOf = (blocks: Span[], days: string[]) => {
+  const starts = blocks.filter((block) => days.includes(block.track)).map((block) => block.start)
+  return starts.length ? Math.min(...starts) : DEFAULT_START_MINUTES
 }
 
 /** One legend entry per kind, in the tone of the first item of that kind. */

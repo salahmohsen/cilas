@@ -98,9 +98,24 @@
 }
 
 .grid {
+  border-block: 1px solid var(--border);
+}
+/* The hours of an edit grid scroll in an area of fixed height, so 18 hours do
+   not make the page tall. The units are dvh, so a phone's toolbars do not hide the bottom. */
+.grid[data-scroll] {
+  block-size: clamp(22rem, 70dvh, 48rem);
+  overflow-y: auto;
+}
+.head,
+.rows {
   display: grid;
   grid-template-columns: var(--gutter) repeat(7, minmax(0, 1fr));
-  border-block: 1px solid var(--border);
+}
+.grid[data-scroll] .head {
+  position: sticky;
+  inset-block-start: 0;
+  z-index: 4;
+  background: var(--background);
 }
 
 .corner,
@@ -637,7 +652,8 @@
     --hour-size: 3.25rem;
     --gutter: 2.75rem;
   }
-  .grid {
+  .head,
+  .rows {
     grid-template-columns: var(--gutter) minmax(0, 1fr);
   }
   .grid [data-day]:not([data-selected]) {
