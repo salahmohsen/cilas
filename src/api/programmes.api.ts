@@ -120,7 +120,6 @@ export const getBridgeYear = async (
           course_type: true,
           fellows: true,
           cover_image: true,
-          summary: true,
           subtitle: true,
           description: true,
           first_day: true,
@@ -139,7 +138,7 @@ export const getBridgeYear = async (
               slug: c.slug ?? String(c.id),
               title: c.title,
               type: c.course_type,
-              excerpt: clip(c.summary || c.subtitle || plain(c.description)),
+              excerpt: clip(c.subtitle || plain(c.description)),
               image: mediaImage(cover) ?? null,
               startDate:
                 c.first_day ?? (cycle.start_date ?? `${cycle.start_year}-01-01`).slice(0, 10),

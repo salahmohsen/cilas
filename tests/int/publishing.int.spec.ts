@@ -388,7 +388,6 @@ describe('publishing', () => {
           title: 'Versions Probe',
           slug: uniq('versions-probe'),
           course_type: 'THEMATIC',
-          session_unit: 'session',
           tier: 'owner',
           cycle: cycle.id,
           fellows: [fellowPerson.id],

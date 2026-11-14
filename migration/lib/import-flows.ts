@@ -331,7 +331,6 @@ export const importFlows = async (
         collection: 'courses',
         id: course.id,
         data: {
-          session_unit: syllabus.session_unit,
           sessions: syllabus.sessions.map((s, i) => ({
             order: s.order,
             meetings: s.meetings,

@@ -44,7 +44,6 @@ const course = async (fellows: number[], status: 'draft' | 'published', cycle: n
         title: `Sessions probe ${status}`,
         slug: uniq(`sessions-probe-${status}`),
         course_type: 'THEMATIC',
-        session_unit: 'session',
         tier: 'public',
         cycle,
         fellows,

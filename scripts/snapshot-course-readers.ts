@@ -429,10 +429,7 @@ const ENTRY_POINTS: Record<string, (locale: Locale) => Promise<Record<string, un
     const sessions = await sessionsOf(l)
     return Object.fromEntries(
       docs[l].map((c) => {
-        const next = upcomingSession(
-          numberedSessions(sessions.get(c.id) ?? [], c.session_unit),
-          TODAY,
-        )
+        const next = upcomingSession(numberedSessions(sessions.get(c.id) ?? []), TODAY)
         return [String(c.id), next && { n: next.number, title: next.session.title ?? null }]
       }),
     )
@@ -444,9 +441,9 @@ const ENTRY_POINTS: Record<string, (locale: Locale) => Promise<Record<string, un
     return Object.fromEntries(
       docs[l].map((c) => [
         String(c.id),
-        Object.values(
-          sessionFacts({ sessions: sessions.get(c.id) ?? [], session_unit: c.session_unit }),
-        ).sort((a, b) => a.n - b.n),
+        Object.values(sessionFacts({ sessions: sessions.get(c.id) ?? [] })).sort(
+          (a, b) => a.n - b.n,
+        ),
       ]),
     )
   },

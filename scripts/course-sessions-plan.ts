@@ -1,6 +1,4 @@
-import { cairoDay } from '../src/lib/cairo-day'
-import { weeklyTimesText } from '../src/lib/meeting-text'
-import type { Announced, Meeting } from '../src/lib/meetings'
+import type { Meeting } from '../src/lib/meetings'
 import {
   expandSchedule,
   sessionsInOrder,
@@ -30,7 +28,7 @@ export type OldRow = SessionDates & {
 
 export type OldCourse = {
   id: number
-  schedule?: (Schedule & { note?: Localized<string> }) | null
+  schedule?: Schedule | null
   sessions?: OldRow[] | null
 }
 
@@ -63,14 +61,6 @@ export type PlannedSession = {
 
 export type Plan = {
   sessions: PlannedSession[]
-  /**
-   * The course's `announced` timing: the old start day and weeks of a course
-   * the pattern gives no meeting, else null (a course with meetings, or with
-   * neither a start nor weeks).
-   */
-  announced: Announced | null
-  /** The course's `timing_note` (`timingNoteOf`). */
-  timingNote: Localized<string>
 }
 
 const LOCALES: Locale[] = ['en', 'ar']
@@ -113,12 +103,9 @@ const timesOf = ({ date, start_time, end_time }: Meeting): Meeting => ({
  * - Pattern meetings no row holds become new untitled sessions, one per week
  *   of slots, today's default share.
  * - Rows with no meeting keep their old order through `position`.
- * - A course the pattern gives no meeting keeps its start date and weeks as
- *   its announced timing, not as a meeting: an all-day meeting on the start
- *   day would show as "Session 1", a meeting nobody held.
- * - Weekly times the pattern cannot place (no start date or no weeks) make
- *   no meeting; they become words in the timing note of each language with
- *   no note (`timingNoteOf`).
+ * - A course the pattern gives no meeting gets none here. Its old start date,
+ *   weeks and weekly times become approximate meetings in a later step
+ *   (`archive-meetings-plan.ts`), which reads the old `schedule` group.
  */
 export const planCourseSessions = (
   course: OldCourse,
@@ -147,28 +134,5 @@ export const planCourseSessions = (
   const extra = chunk(leftover, perWeek).map(untitled)
 
   const sessions = [...fromRows, ...extra]
-  const start = schedule?.start_date ? cairoDay(schedule.start_date) : null
-  const weeks = schedule?.weeks || null
-  const announced = meetings.length === 0 && (start || weeks) ? { start_day: start, weeks } : null
-
-  return {
-    sessions: sessions.map((s, position) => ({ ...s, position })),
-    announced,
-    timingNote: timingNoteOf(schedule),
-  }
-}
-
-/**
- * The schedule note, or, in a language whose note is empty, the weekly times
- * in words when the pattern places none of them (no start date or no weeks),
- * so no meeting holds them. A person wrote the note; it already says what
- * they meant, so the words never go over it.
- */
-const timingNoteOf = (schedule: OldCourse['schedule']): Localized<string> => {
-  const note = schedule?.note
-  const slots = expandSchedule(schedule).length ? [] : (schedule?.slots ?? [])
-  if (!slots.length) return note ?? null
-  const out: Partial<Record<Locale, string>> = {}
-  for (const locale of LOCALES) out[locale] = note?.[locale] || weeklyTimesText(slots, locale)
-  return out
+  return { sessions: sessions.map((s, position) => ({ ...s, position })) }
 }

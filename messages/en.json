@@ -364,7 +364,6 @@
     "contentWarning": "Content note:",
     "flow": "Course flow",
     "tentative": "The flow may change as the course goes.",
-    "week": "Week {number}",
     "session": "Session {number}",
     "cancelled": "cancelled",
     "materialCount": "{count, plural, one {# material} other {# materials}}",
@@ -495,7 +494,6 @@
     "nextOn": "Next: {date}",
     "lastOn": "Most recent: {date}",
     "session": "Session {n}",
-    "starts": "Starts",
     "more": "{count, plural, one {# more} other {# more}}",
     "cancelled": "Cancelled",
     "eventTypes": {

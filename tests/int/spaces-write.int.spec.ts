@@ -193,7 +193,6 @@ describe('spaces write', () => {
         title: 'Probe Course',
         slug: COURSE_SLUG,
         course_type: 'THEMATIC',
-        session_unit: 'session',
         tier: 'owner',
         cycle: cycle.id,
         fellows: [fellowPerson],

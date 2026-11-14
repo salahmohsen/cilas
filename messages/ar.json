@@ -364,7 +364,6 @@
     "contentWarning": "تنبيه بشأن المحتوى:",
     "flow": "مسار المقرر",
     "tentative": "قد يتغير المسار مع سير المقرر.",
-    "week": "الأسبوع {number, number, digits}",
     "session": "الجلسة {number, number, digits}",
     "cancelled": "أُلغيت",
     "materialCount": "{count, plural, zero {لا مواد} one {مادة واحدة} two {مادتان} few {{count, number, digits} مواد} many {{count, number, digits} مادة} other {{count, number, digits} مادة}}",
@@ -495,7 +494,6 @@
     "nextOn": "التالي: {date}",
     "lastOn": "الأحدث: {date}",
     "session": "الجلسة {n, number, digits}",
-    "starts": "يبدأ",
     "more": "المزيد ({count, number, digits})",
     "cancelled": "أُلغيت",
     "eventTypes": {

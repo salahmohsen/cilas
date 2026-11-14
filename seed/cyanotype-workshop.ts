@@ -225,9 +225,6 @@ const seedCourse = async (cycleId: number, personId: number, coverId: number) =>
       slug: SLUG,
       subtitle: 'Cyanotype / Blue Printing Workshop',
       description: lexical(DESCRIPTION_EN),
-      timing_note:
-        'Five days over two weeks, with varying hours; see each session for its date and time.',
-      session_unit: 'session',
       registration: {
         mode: 'own',
         method: 'external',
@@ -258,7 +255,6 @@ const seedCourse = async (cycleId: number, personId: number, coverId: number) =>
       title: TITLE_AR,
       subtitle: 'ورشة عمل السيانوتايب / الطباعة الزرقاء',
       description: lexical(DESCRIPTION_AR, 'rtl'),
-      timing_note: 'خمسة أيام على مدى أسبوعين بساعات متفاوتة؛ التاريخ والوقت لكل جلسة مذكور عندها.',
       facilitator_note: REQUIREMENTS_AR.join('\n\n'),
       pricing_override: {
         note: 'تسعيرة متدرجة — يرجى اختيار الفئة التي تناسب ميزانيتك الحالية: ٢٥٠٠ / ٢٧٥٠ / ٣٠٠٠ جنيه مصري. تشمل جميع الفئات نفس المستوى من التعليم، وطباعة الصور على الورق الشفاف، والمحاليل الكيميائية، والأوراق-الأعمال، وتنظيم المعرض؛ وكل شيء تستخدمه ملك لك ويمكن الاحتفاظ به لاستخدامات أخرى في مساحتك الخاصة.',

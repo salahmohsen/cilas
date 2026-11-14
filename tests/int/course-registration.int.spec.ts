@@ -90,9 +90,9 @@ describe('course registration and fellow fields', () => {
       draft: true,
       overrideAccess: false,
       user: fellow,
-      data: { summary: 'Updated draft' },
+      data: { subtitle: 'Updated draft' },
     })
-    expect(saved.summary).toBe('Updated draft')
+    expect(saved.subtitle).toBe('Updated draft')
   })
 
   it('discards fellow writes to cycle, registration and contribution on create and update', async () => {
@@ -143,7 +143,7 @@ describe('course registration and fellow fields', () => {
       data: {
         ...blocked,
         cycle: null,
-        summary: 'Fellow can edit',
+        subtitle: 'Fellow can edit',
         applicant_questions: [{ blockType: 'text', name: 'interest', label: 'Your interest' }],
       },
     })
@@ -151,7 +151,7 @@ describe('course registration and fellow fields', () => {
     expect(updated.registration).toEqual(adminSaved.registration)
     expect(updated.pricing_override?.options?.map(({ amount }) => amount)).toEqual([50])
     expect(updated.applicant_questions?.[0]).toMatchObject({ name: 'interest' })
-    expect(updated.summary).toBe('Fellow can edit')
+    expect(updated.subtitle).toBe('Fellow can edit')
   })
 
   it('publishes follow_cycle with an external cycle and own external without site form questions', async () => {

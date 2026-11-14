@@ -6,10 +6,10 @@
  *   pnpm tsx scripts/make-archive-meetings.ts --dry-run    counts per group, no write
  *   pnpm tsx scripts/make-archive-meetings.ts              writes
  *
- * Reads the old fields with SQL: `announced_start_day`, `announced_weeks`, the
- * frozen `schedule` group and the cycle's start date. Run it before the
- * migration that drops them. A course with a meeting is skipped, so a second
- * run changes nothing. Each course is written in one transaction, through
+ * Reads the old, frozen `schedule` group with SQL (start date, weeks, weekly
+ * slots), the research file's term starts and the cycle's start date. A
+ * course with a meeting is skipped, so a second run changes nothing; run it
+ * after `migrate-course-sessions.ts`. Each course is written in one transaction, through
  * the sessions collection, so its first and last day, caches and search
  * follow.
  */
@@ -36,14 +36,14 @@ const pool = payload.db.pool
 
 type Row = {
   id: number
-  announced_start_day: string | null
-  announced_weeks: string | null
+  schedule_start_day: string | null
   schedule_weeks: string | null
   cycle_start: Date | null
   slots: WeeklyTime[]
 }
 const { rows } = await pool.query<Row>(
-  `SELECT c.id, c.announced_start_day, c.announced_weeks, c.schedule_weeks,
+  `SELECT c.id, to_char(c.schedule_start_date AT TIME ZONE 'Africa/Cairo', 'YYYY-MM-DD') AS schedule_start_day,
+          c.schedule_weeks,
           cy.start_date AS cycle_start,
           COALESCE((SELECT json_agg(json_build_object(
                       'weekday', s.weekday, 'start_time', s.start_time, 'end_time', s.end_time)
@@ -87,8 +87,8 @@ for (const row of rows) {
   const ordered = sessionsInOrder(sessions)
   const plan = planArchiveMeetings({
     hasMeetings: sessions.some((s) => s.meetings?.length),
-    startDay: row.announced_start_day,
-    weeks: num(row.schedule_weeks) ?? num(row.announced_weeks),
+    startDay: row.schedule_start_day,
+    weeks: num(row.schedule_weeks),
     slots: row.slots,
     term: {
       research: research.get(row.id) ?? null,

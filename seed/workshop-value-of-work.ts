@@ -256,7 +256,6 @@ const seedCourse = async (cycleId: number, personId: number, coverId: number | n
       slug: SLUG,
       subtitle: 'Teaching as a Case',
       description: lexical(DESCRIPTION_EN),
-      session_unit: 'session',
       registration: {
         mode: 'own',
         method: 'external',

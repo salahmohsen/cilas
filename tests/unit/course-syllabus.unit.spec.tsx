@@ -9,10 +9,10 @@ import en from '../../messages/en.json'
 const course = { title: 'Course' } as Course
 const session = (id: number, over: Partial<Session> = {}): Session =>
   ({ id, course: 1, createdAt: '', updatedAt: '', ...over }) as Session
-const view = (sessions: Session[], unit: Course['session_unit'] = 'session') =>
+const view = (sessions: Session[]) =>
   render(
     <NextIntlClientProvider locale="en" messages={en} timeZone="Africa/Cairo">
-      <CourseSyllabus course={course} sessions={syllabusOf(sessions, unit)} />
+      <CourseSyllabus course={course} sessions={syllabusOf(sessions)} />
     </NextIntlClientProvider>,
   )
 
@@ -29,16 +29,13 @@ describe('the course syllabus from the sessions collection', () => {
   })
   afterEach(() => vi.unstubAllGlobals())
 
-  it('orders sessions by their first meeting and names an untitled one by its unit', () => {
-    const { container } = view(
-      [
-        session(1, { title: 'Later', meetings: [{ date: '2026-03-10' }] }),
-        session(2, { meetings: [{ date: '2026-03-03' }] }),
-      ],
-      'week',
-    )
+  it('orders sessions by their first meeting and names an untitled one by its number', () => {
+    const { container } = view([
+      session(1, { title: 'Later', meetings: [{ date: '2026-03-10' }] }),
+      session(2, { meetings: [{ date: '2026-03-03' }] }),
+    ])
     const titles = [...container.querySelectorAll('[class*="title"]')].map((t) => t.textContent)
-    expect(titles.filter((t) => t === 'Week 1' || t === 'Later')).toEqual(['Week 1', 'Later'])
+    expect(titles.filter((t) => t === 'Session 1' || t === 'Later')).toEqual(['Session 1', 'Later'])
   })
 
   it('shows a timed meeting with its hours and an all-day one with its day alone', () => {

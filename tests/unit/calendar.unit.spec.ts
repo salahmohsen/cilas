@@ -120,16 +120,11 @@ describe('courseItems', () => {
   const base = { kind: 'course' as const, title: 'A course', href: '/study/a', type: 'lab' }
 
   it('places every meeting with its session number, cancelled ones marked, all-day ones untimed', () => {
-    const items = courseItems(
-      7,
-      base,
-      [
-        { id: 8, meetings: [{ date: '2026-03-10', start_time: '19:00', end_time: '21:00' }] },
-        { id: 5, meetings: [{ date: '2026-03-03', start_time: '19:00', end_time: '21:00' }] },
-        { id: 9, cancelled: true, meetings: [{ date: '2026-03-17' }] },
-      ],
-      { start_day: '2026-01-01', weeks: 4 },
-    )
+    const items = courseItems(base, [
+      { id: 8, meetings: [{ date: '2026-03-10', start_time: '19:00', end_time: '21:00' }] },
+      { id: 5, meetings: [{ date: '2026-03-03', start_time: '19:00', end_time: '21:00' }] },
+      { id: 9, cancelled: true, meetings: [{ date: '2026-03-17' }] },
+    ])
     expect(items).toEqual([
       {
         ...base,
@@ -153,30 +148,14 @@ describe('courseItems', () => {
 
   it("keeps a meeting's key when another session is added before it", () => {
     const later = { id: 8, meetings: [{ date: '2026-03-10', start_time: '19:00' }] }
-    const before = courseItems(7, base, [later], null)
-    const after = courseItems(
-      7,
-      base,
-      [{ id: 12, meetings: [{ date: '2026-03-03' }] }, later],
-      null,
-    )
+    const before = courseItems(base, [later])
+    const after = courseItems(base, [{ id: 12, meetings: [{ date: '2026-03-03' }] }, later])
     expect(after[1]!.key).toBe(before[0]!.key)
     expect(after[1]!.session).toBe(2)
   })
 
-  it('places nothing for a course with no meeting and no announced start', () => {
-    expect(courseItems(7, base, [], null)).toEqual([])
-    expect(courseItems(7, base, [{ id: 1, meetings: [] }], { weeks: 10 })).toEqual([])
-  })
-
-  it('marks the announced first day of a course with no meeting held', () => {
-    const announced = { start_day: '2018-01-07', weeks: 10 }
-    const start = { ...base, key: 'c7-start', date: '2018-01-07', starts: true }
-    expect(courseItems(7, base, [{ id: 1, meetings: [] }], announced)).toEqual([start])
-    const cancelled = { id: 2, cancelled: true, meetings: [{ date: '2026-03-17' }] }
-    expect(courseItems(7, base, [cancelled], announced)).toEqual([
-      { ...base, key: 's2-2026-03-17-day', date: '2026-03-17', session: 1, cancelled: true },
-      start,
-    ])
+  it('places nothing for a course with no meeting', () => {
+    expect(courseItems(base, [])).toEqual([])
+    expect(courseItems(base, [{ id: 1, meetings: [] }])).toEqual([])
   })
 })

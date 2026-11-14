@@ -28,11 +28,7 @@ const view = (sessions: Session[], locale = 'en', editable = false) =>
       messages={locale === 'ar' ? ar : en}
       timeZone="Africa/Cairo"
     >
-      <CourseSyllabus
-        course={course}
-        sessions={syllabusOf(sessions, 'session')}
-        editable={editable}
-      />
+      <CourseSyllabus course={course} sessions={syllabusOf(sessions)} editable={editable} />
     </NextIntlClientProvider>,
   )
 describe('optional session delivery', () => {
@@ -77,7 +73,7 @@ describe('optional session delivery', () => {
       <NextIntlClientProvider locale="en" messages={en} timeZone="Africa/Cairo">
         <CourseSyllabus
           course={course}
-          sessions={syllabusOf([session(1, 'First', 'OFFLINE')], 'session')}
+          sessions={syllabusOf([session(1, 'First', 'OFFLINE')])}
           editable
         />
       </NextIntlClientProvider>,

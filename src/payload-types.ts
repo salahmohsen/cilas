@@ -1163,10 +1163,6 @@ export interface Course {
    */
   subtitle?: string | null;
   /**
-   * One line for cards and search results, e.g. “Reading Plato’s Republic in Cairo, book by book.” Leave empty to use the description’s start.
-   */
-  summary?: string | null;
-  /**
    * A short quote or question shown before the description, e.g. “What does a city remember?”
    */
   epigraph?: string | null;
@@ -1214,17 +1210,6 @@ export interface Course {
     hasNextPage?: boolean;
     totalDocs?: number;
   };
-  /**
-   * What the dates cannot say, e.g. "hybrid for the first 6 weeks, then online".
-   */
-  timing_note?: string | null;
-  /**
-   * When the course was announced to start and how long it runs. Used only while no session has a meeting: then the calendar marks its start and lists show its start and weeks. Once a session has a meeting, the meetings say this.
-   */
-  announced?: {
-    start_day?: string | null;
-    weeks?: number | null;
-  };
   bibliography?:
     | {
         type: 'reading' | 'watch' | 'listen' | 'prompt' | 'other';
@@ -1252,10 +1237,6 @@ export interface Course {
    * Tick when the fellow may still change the sessions; the page says the syllabus may change.
    */
   syllabus_tentative?: boolean | null;
-  /**
-   * How sessions are numbered on the page: “Week 3” or “Session 3”.
-   */
-  session_unit: 'session' | 'week';
   first_day?: string | null;
   last_day?: string | null;
   sessions?:
@@ -1914,7 +1895,7 @@ export interface Session {
    */
   cancelled?: boolean | null;
   /**
-   * Leave empty to show it as “Session 3” or “Week 3”, by the course’s numbering.
+   * Leave empty to show it as “Session 3”.
    */
   title?: string | null;
   /**
@@ -3779,7 +3760,6 @@ export interface CoursesSelect<T extends boolean = true> {
   slug?: T;
   legacy_url?: T;
   subtitle?: T;
-  summary?: T;
   epigraph?: T;
   description?: T;
   fellows?: T;
@@ -3789,13 +3769,6 @@ export interface CoursesSelect<T extends boolean = true> {
   teaching_languages?: T;
   language_note?: T;
   syllabus?: T;
-  timing_note?: T;
-  announced?:
-    | T
-    | {
-        start_day?: T;
-        weeks?: T;
-      };
   bibliography?:
     | T
     | {
@@ -3808,7 +3781,6 @@ export interface CoursesSelect<T extends boolean = true> {
   facilitator_note?: T;
   content_warning?: T;
   syllabus_tentative?: T;
-  session_unit?: T;
   first_day?: T;
   last_day?: T;
   sessions?:

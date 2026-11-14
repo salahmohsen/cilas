@@ -18,7 +18,7 @@ export type SessionLinks = {
 /** "Session 3", and "Session 3: Title", numbered as the syllabus numbers it. */
 export function useSessionName() {
   const t = useTranslations('Course')
-  const unitOf = (fact: SessionFact) => t(fact.week ? 'week' : 'session', { number: fact.n })
+  const unitOf = (fact: SessionFact) => t('session', { number: fact.n })
   return {
     unitOf,
     nameOf: (fact: SessionFact) => (fact.title ? `${unitOf(fact)}: ${fact.title}` : unitOf(fact)),

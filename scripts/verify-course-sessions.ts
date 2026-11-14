@@ -7,12 +7,11 @@
  * - Meetings: the new `meetingsOf` equals today's `expandSchedule`, meeting
  *   by meeting (day, times, cancelled), and each meeting sits in the session
  *   made from the old row that held it, or in a new untitled one when no row
- *   held it. A course with no meeting gets none: its old start date and
- *   weeks are its announced timing.
+ *   held it. A course the pattern gives no meeting gets none here; run this
+ *   before `make-archive-meetings.ts`, which then gives it approximate ones.
  * - Content: each old row's session has the same title, delivery, cancelled,
  *   materials and activities, and its description as Markdown.
- * - The course's timing note and announced timing (on the course and its
- *   latest version), first day and last day (`courseTiming`).
+ * - The course's first day and last day.
  *
  * It reads each course as the fill did (`loadCourseSources`): a published
  * course with a newer pending draft is checked against the draft.
@@ -25,13 +24,7 @@ import { resolve } from 'node:path'
 import { getPayload } from 'payload'
 
 import config from '../src/payload.config'
-import {
-  byWhen,
-  courseTiming,
-  meetingsOf,
-  sessionsInOrder,
-  type Announced,
-} from '../src/lib/meetings'
+import { byWhen, firstDay, lastDay, meetingsOf, sessionsInOrder } from '../src/lib/meetings'
 import { expandSchedule, sessionsInOrder as rowsInOrder } from '../src/lib/schedule'
 import type { Session } from '../src/payload-types'
 import { planCourseSessions, type Localized, type OldRow } from './course-sessions-plan'
@@ -97,10 +90,6 @@ const activities = (list: unknown) =>
     description: both(r.description as Localized<string>),
   }))
 
-/** A stored announced group, null when it holds nothing (Payload reads an empty group as nulls). */
-const announcedOf = (a: Announced | null | undefined): Announced | null =>
-  a?.start_day || a?.weeks ? { start_day: a.start_day ?? null, weeks: a.weeks ?? null } : null
-
 type Entry = {
   date: string
   start_time: string | null
@@ -117,7 +106,7 @@ const untitled: Array<{ course: number; session: number; meetings: string[] }> =
 
 const courses = await loadCourseSources(payload)
 
-for (const { course, source, latest } of courses) {
+for (const { course, source } of courses) {
   const fail = (message: string) => differences.push(`Course ${course.id}: ${message}`)
   const rows: OldRow[] = rowsInOrder(source.sessions ?? [])
   const plan = planCourseSessions(source, toMarkdown)
@@ -202,17 +191,7 @@ for (const { course, source, latest } of courses) {
   }
 
   // The course's own fields.
-  if (!same(both(plan.timingNote), both(course.timing_note)))
-    fail('timing note differs from the plan')
-  if (latest && !same(both(plan.timingNote), both(latest.timing_note)))
-    fail(`timing note of the latest version (${latest.id}) differs from the plan`)
-  if (!same(plan.announced, announcedOf(course.announced)))
-    fail(
-      `announced ${JSON.stringify(course.announced)}, expected ${JSON.stringify(plan.announced)}`,
-    )
-  if (latest && !same(plan.announced, announcedOf(latest.announced)))
-    fail(`announced timing of the latest version (${latest.id}) differs from the plan`)
-  const { first, last } = courseTiming(expected, plan.announced)
+  const [first, last] = [firstDay(expected), lastDay(expected)]
   if ((course.first_day ?? null) !== first || (course.last_day ?? null) !== last)
     fail(`first/last day ${course.first_day}–${course.last_day}, expected ${first}–${last}`)
 }

@@ -32,7 +32,6 @@ export const SEARCH_COLLECTIONS = {
       subtitle: 8,
       owner: 8,
       epigraph: 7,
-      summary: 6,
       description: 5,
       syllabus: 3,
     },

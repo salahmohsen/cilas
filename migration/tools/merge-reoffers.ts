@@ -45,7 +45,6 @@ const empty = (v: unknown) =>
 
 const LOCALIZED = [
   'subtitle',
-  'summary',
   'epigraph',
   'description',
   'facilitator_note',

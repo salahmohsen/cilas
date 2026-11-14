@@ -73,7 +73,6 @@ const makeCourse = async (fellows: number[], cycle: number) =>
           `calendar-save-${fellows.join('-') || 'none'}-${Math.random().toString(36).slice(2, 6)}`,
         ),
         course_type: 'THEMATIC',
-        session_unit: 'session',
         tier: 'public',
         cycle,
         fellows,

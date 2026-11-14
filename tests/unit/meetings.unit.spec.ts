@@ -2,7 +2,6 @@ import { describe, expect, it } from 'vitest'
 
 import {
   byWhen,
-  courseTiming,
   firstDay,
   isAllDay,
   lastDay,
@@ -11,8 +10,7 @@ import {
   nextMeeting,
   numberedSessions,
   sessionsInOrder,
-  sessionUnitOf,
-  storedTiming,
+  storedWeeks,
   summary,
   upcomingSession,
   weeks,
@@ -354,86 +352,22 @@ describe('summary', () => {
   })
 })
 
-describe('courseTiming', () => {
-  const announced = { start_day: '2018-01-07', weeks: 10 }
-
-  it('reads the meetings when one is held, whatever was announced', () => {
-    expect(courseTiming(tuesdays(8), announced)).toEqual({
-      first: '2026-03-03',
-      last: '2026-04-21',
-      weeks: 8,
-      announced: false,
-    })
+describe('storedWeeks', () => {
+  it('reads the weeks from the stored first and last day', () => {
+    expect(storedWeeks({ first_day: '2026-03-05', last_day: '2026-03-14' })).toBe(2)
+    expect(storedWeeks({ first_day: '2026-03-03', last_day: '2026-04-21' })).toBe(8)
   })
 
-  it('falls back to the announced start and weeks, with no last day', () => {
-    expect(courseTiming([], announced)).toEqual({
-      first: '2018-01-07',
-      last: null,
-      weeks: 10,
-      announced: true,
-    })
-    expect(courseTiming([{ ...at('2026-03-03'), cancelled: true }], announced)).toEqual({
-      first: '2018-01-07',
-      last: null,
-      weeks: 10,
-      announced: true,
-    })
+  it('agrees with weeks over the meetings', () => {
+    const meetings = tuesdays(8)
+    expect(storedWeeks({ first_day: firstDay(meetings), last_day: lastDay(meetings) })).toBe(
+      weeks(meetings),
+    )
   })
 
-  it('is empty with no meeting and nothing announced', () => {
-    expect(courseTiming([], null)).toEqual({ first: null, last: null, weeks: 0, announced: true })
-    expect(courseTiming([], { start_day: null, weeks: 10 })).toEqual({
-      first: null,
-      last: null,
-      weeks: 10,
-      announced: true,
-    })
-  })
-})
-
-describe('storedTiming', () => {
-  it('reads weeks from the stored first and last day', () => {
-    expect(storedTiming({ first_day: '2026-03-05', last_day: '2026-03-14' })).toEqual({
-      first: '2026-03-05',
-      last: '2026-03-14',
-      weeks: 2,
-      announced: false,
-    })
-  })
-
-  it('reads the announced weeks when no meeting gave a last day', () => {
-    const announced = { start_day: '2018-01-07', weeks: 10 }
-    expect(storedTiming({ first_day: '2018-01-07', last_day: null, announced })).toEqual({
-      first: '2018-01-07',
-      last: null,
-      weeks: 10,
-      announced: true,
-    })
-    expect(storedTiming({ announced: { weeks: 6 } })).toEqual({
-      first: null,
-      last: null,
-      weeks: 6,
-      announced: true,
-    })
-  })
-
-  it('agrees with courseTiming for a course with meetings and one without', () => {
-    const announced = { start_day: '2018-01-07', weeks: 10 }
-    for (const meetings of [tuesdays(8), []]) {
-      const timing = courseTiming(meetings, announced)
-      expect(storedTiming({ first_day: timing.first, last_day: timing.last, announced })).toEqual(
-        timing,
-      )
-    }
-  })
-})
-
-describe('sessionUnitOf', () => {
-  it('calls a session a week only when the course says so', () => {
-    expect(sessionUnitOf('week')).toBe('week')
-    expect(sessionUnitOf('session')).toBe('session')
-    expect(sessionUnitOf(null)).toBe('session')
+  it('is zero without a first and a last day', () => {
+    expect(storedWeeks({})).toBe(0)
+    expect(storedWeeks({ first_day: '2026-03-03', last_day: null })).toBe(0)
   })
 })
 
@@ -446,7 +380,7 @@ describe('numberedSessions', () => {
   ]
 
   it('numbers sessions in time order from 1, a cancelled one keeping its number', () => {
-    expect(numberedSessions(list, 'session').map((s) => [s.session.id, s.number])).toEqual([
+    expect(numberedSessions(list).map((s) => [s.session.id, s.number])).toEqual([
       ['first', 1],
       ['second', 2],
       ['third', 3],
@@ -454,37 +388,30 @@ describe('numberedSessions', () => {
     ])
   })
 
-  it('gives each session its own meetings in time order, and the unit of the course', () => {
-    const [first, second, , unplaced] = numberedSessions(list, 'week')
+  it('gives each session its own meetings in time order', () => {
+    const [first, second, , unplaced] = numberedSessions(list)
     expect(first!.meetings.map((m) => m.date)).toEqual(['2026-03-03', '2026-03-05'])
     expect(first!.meetings.every((m) => m.session === 1)).toBe(true)
     expect(second!.meetings).toEqual([{ ...at('2026-03-10'), session: 2, cancelled: true }])
     expect(unplaced!.meetings).toEqual([])
-    expect(first!.unit).toBe('week')
   })
 
   it('dates a session by its first meeting not cancelled, else its first, else none', () => {
-    const days = numberedSessions(
-      [
-        { id: 'a', meetings: [at('2026-03-03')] },
-        { id: 'b', cancelled: true, meetings: [at('2026-03-10')] },
-        { id: 'c' },
-      ],
-      null,
-    ).map((s) => s.day)
+    const days = numberedSessions([
+      { id: 'a', meetings: [at('2026-03-03')] },
+      { id: 'b', cancelled: true, meetings: [at('2026-03-10')] },
+      { id: 'c' },
+    ]).map((s) => s.day)
     expect(days).toEqual(['2026-03-03', '2026-03-10', null])
   })
 })
 
 describe('upcomingSession', () => {
-  const sessions = numberedSessions(
-    [
-      { id: 'one', meetings: [at('2026-03-03')] },
-      { id: 'two', cancelled: true, meetings: [at('2026-03-10')] },
-      { id: 'three', meetings: [at('2026-03-17'), at('2026-03-19')] },
-    ],
-    'session',
-  )
+  const sessions = numberedSessions([
+    { id: 'one', meetings: [at('2026-03-03')] },
+    { id: 'two', cancelled: true, meetings: [at('2026-03-10')] },
+    { id: 'three', meetings: [at('2026-03-17'), at('2026-03-19')] },
+  ])
 
   it('is the session of the first meeting on or after the day, skipping cancelled ones', () => {
     expect(upcomingSession(sessions, '2026-03-03')?.session.id).toBe('one')
@@ -505,8 +432,8 @@ describe('meetingKey', () => {
   })
 
   it('stays the same when other meetings of the session move', () => {
-    const before = numberedSessions([{ meetings: [at('2026-03-03'), at('2026-03-10')] }], null)
-    const after = numberedSessions([{ meetings: [at('2026-03-01'), at('2026-03-10')] }], null)
+    const before = numberedSessions([{ meetings: [at('2026-03-03'), at('2026-03-10')] }])
+    const after = numberedSessions([{ meetings: [at('2026-03-01'), at('2026-03-10')] }])
     const key = (s: typeof before) => meetingKey(7, s[0]!.meetings.at(-1)!)
     expect(key(after)).toBe(key(before))
   })

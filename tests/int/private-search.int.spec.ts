@@ -111,7 +111,6 @@ describe.skipIf(!disposable)('private search with real Postgres and Typesense 30
           title: `Search ${suffix}`,
           slug: `search-${suffix}-${run}`,
           course_type: 'THEMATIC',
-          session_unit: 'session',
           tier: 'owner',
           cycle: cycle.id,
           _status: 'published',

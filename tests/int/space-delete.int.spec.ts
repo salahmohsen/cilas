@@ -179,7 +179,6 @@ describe('space delete', () => {
         title: 'Delete Probe Course',
         slug: uniq('delete-probe-course'),
         course_type: 'THEMATIC',
-        session_unit: 'session',
         tier: 'owner',
         cycle: cycle.id,
         registration: { mode: 'closed' },

@@ -141,11 +141,7 @@ export const cardOf = (
         kind: 'Course',
         byline: peopleOf(doc.fellows, site),
         meta: cycleLabel(doc.cycle),
-        text:
-          excerpt(doc.description, 180) ||
-          (doc.summary as string | null) ||
-          (doc.subtitle as string | null) ||
-          null,
+        text: excerpt(doc.description, 180) || (doc.subtitle as string | null) || null,
         image: imageOf(doc.cover_image, doc.title),
         url: `${site}${path}`,
       }

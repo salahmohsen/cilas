@@ -157,8 +157,6 @@ export type SessionFact = {
   /** Its place in the syllabus, from 1 */
   n: number
   title: string | null
-  /** The course counts weeks rather than sessions */
-  week: boolean
   /** Its first meeting that is not cancelled, a Cairo day */
   date: string | null
   cancelled: boolean
@@ -166,18 +164,16 @@ export type SessionFact = {
 
 type FactCourse = {
   sessions: readonly (SessionTimes & { id: number | string; title?: string | null })[]
-  session_unit?: string | null
 }
 
 /** Every session of the course by id, numbered and dated as the syllabus shows them. */
 export const sessionFacts = (course: FactCourse): Record<string, SessionFact> =>
   Object.fromEntries(
-    numberedSessions(course.sessions, course.session_unit).map((n) => [
+    numberedSessions(course.sessions).map((n) => [
       String(n.session.id),
       {
         n: n.number,
         title: n.session.title || null,
-        week: n.unit === 'week',
         date: n.day,
         cancelled: Boolean(n.session.cancelled),
       },

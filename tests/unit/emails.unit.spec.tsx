@@ -201,7 +201,7 @@ describe('cardOf', () => {
   const site = 'https://ci-las.org'
   const labels = { site, read: 'Read more', apply: 'Apply' }
 
-  it('makes a course card with its cycle and summary', () => {
+  it('makes a course card with its cycle and subtitle', () => {
     const card = cardOf(
       {
         relationTo: 'courses',
@@ -209,7 +209,7 @@ describe('cardOf', () => {
           id: 1,
           title: 'Reading Plato',
           slug: 'reading-plato',
-          summary: 'Book by book.',
+          subtitle: 'Book by book.',
           cover_image: { url: 'https://cdn.test/plato.jpg', alt: 'Plato' },
           cycle: { season: 'fall', start_year: 2026 },
         },

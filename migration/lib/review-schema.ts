@@ -20,7 +20,6 @@ export const CourseReview = z.object({
     .object({
       title: z.object({ en: z.string().min(1), ar: z.string().nullable() }),
       subtitle: Localized,
-      summary: Localized,
       epigraph: Localized,
       description: Localized,
       facilitator_note: Localized,

@@ -77,7 +77,6 @@ const plain = (data: unknown): string =>
 const courseTexts = (c: Course): string[] => [
   c.title,
   c.subtitle ?? '',
-  c.summary ?? '',
   c.epigraph ?? '',
   plain(c.description),
   c.facilitator_note ?? '',
@@ -158,7 +157,7 @@ export const getStudyCourses = async (
         value: l,
         label: t(`languages.${l}`),
       }))
-      const description = c.summary || c.subtitle || plain(c.description) || undefined
+      const description = c.subtitle || plain(c.description) || undefined
 
       // Open or closed today; the index is rebuilt every few minutes, so it follows deadlines.
       const resolved = courseRegistration(c, cycle)

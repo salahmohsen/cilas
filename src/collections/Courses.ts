@@ -3,7 +3,7 @@ import { tierField } from '@/fields/tier'
 import { previewUrl } from '@/lib/preview-url'
 import { courseDeleteSummary, deleteCourseDependents } from '@/lib/course-delete'
 import { courseDays } from '@/lib/course-days'
-import { cairoDay, WEEKDAYS } from '@/lib/cairo-day'
+import { WEEKDAYS } from '@/lib/cairo-day'
 import { blockedUnless, deleteEndpoints } from '@/forms/delete-endpoints'
 import { addSelfAs } from '@/lib/review-ownership'
 import {
@@ -21,11 +21,7 @@ import {
 import { activitiesField } from '@/fields/activities'
 import { bibliographyField } from '@/fields/bibliography'
 import { COURSE_TYPE_OPTIONS } from '@/fields/course-type'
-import {
-  LOCATION_OPTIONS,
-  SESSION_UNIT_OPTIONS,
-  TEACHING_LANGUAGE_OPTIONS,
-} from '@/fields/course-options'
+import { LOCATION_OPTIONS, TEACHING_LANGUAGE_OPTIONS } from '@/fields/course-options'
 import { contributionField } from '@/fields/pricing'
 import { validateCourseDestination, registrationDestinationFields } from '@/fields/registration'
 import { isPublishing } from '@/lib/course-registration'
@@ -211,15 +207,6 @@ export const Courses: CollectionConfig = {
                   },
                 },
                 {
-                  name: 'summary',
-                  type: 'text',
-                  localized: true,
-                  admin: {
-                    description:
-                      'One line for cards and search results, e.g. “Reading Plato’s Republic in Cairo, book by book.” Leave empty to use the description’s start.',
-                  },
-                },
-                {
                   name: 'epigraph',
                   type: 'text',
                   localized: true,
@@ -323,48 +310,6 @@ export const Courses: CollectionConfig = {
                   'What is taught, and when. Open a session to edit its title, meetings and materials; Create new adds one to this course. Sessions save on their own: a change is public at once on a published course.',
               },
             },
-            {
-              name: 'timing_note',
-              label: 'Timing note',
-              type: 'textarea',
-              localized: true,
-              admin: {
-                description:
-                  'What the dates cannot say, e.g. "hybrid for the first 6 weeks, then online".',
-              },
-            },
-            {
-              name: 'announced',
-              type: 'group',
-              label: 'Announced timing',
-              admin: {
-                description:
-                  'When the course was announced to start and how long it runs. Used only while no session has a meeting: then the calendar marks its start and lists show its start and weeks. Once a session has a meeting, the meetings say this.',
-              },
-              fields: [
-                {
-                  type: 'row',
-                  fields: [
-                    {
-                      name: 'start_day',
-                      label: 'Start day',
-                      type: 'text',
-                      validate: (value: string | null | undefined) =>
-                        !value || cairoDay(value) === value
-                          ? true
-                          : 'Use a real day as YYYY-MM-DD, e.g. 2026-03-03.',
-                      admin: { width: '50%', placeholder: '2026-03-03' },
-                    },
-                    {
-                      name: 'weeks',
-                      type: 'number',
-                      min: 1,
-                      admin: { width: '50%', step: 1 },
-                    },
-                  ],
-                },
-              ],
-            },
             bibliographyField('Course bibliography (all sessions)'),
             {
               label: 'Notes',
@@ -398,17 +343,6 @@ export const Courses: CollectionConfig = {
               admin: {
                 description:
                   'Tick when the fellow may still change the sessions; the page says the syllabus may change.',
-              },
-            },
-            {
-              name: 'session_unit',
-              label: 'Numbering',
-              type: 'select',
-              required: true,
-              defaultValue: 'session',
-              options: [...SESSION_UNIT_OPTIONS],
-              admin: {
-                description: 'How sessions are numbered on the page: “Week 3” or “Session 3”.',
               },
             },
             ...(['first_day', 'last_day'] as const).map((name): Field => ({
@@ -657,11 +591,7 @@ export const Courses: CollectionConfig = {
       stampLastEditor,
       async ({ data, originalDoc, req }) => ({
         ...data,
-        ...(await courseDays(
-          req,
-          originalDoc?.id ?? null,
-          data.announced ?? originalDoc?.announced,
-        )),
+        ...(await courseDays(req, originalDoc?.id ?? null)),
       }),
     ],
     afterChange: [

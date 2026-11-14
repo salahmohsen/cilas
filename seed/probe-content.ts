@@ -392,7 +392,6 @@ const probeCourse = await upsert('courses', 'probe-full-course', {
   _status: 'published',
   cover_image: images[0],
   subtitle: 'A subtitle: an introduction to everything the page can show',
-  summary: 'One line for cards and search results.',
   epigraph: 'What does a city remember?',
   description: richBody(),
   fellows: people.slice(0, 2),
@@ -414,8 +413,6 @@ const probeCourse = await upsert('courses', 'probe-full-course', {
     'Bring an apron and a notebook; all materials are provided. Work is assessed on a final short essay.',
   content_warning: 'Discusses violence and loss in some of the readings.',
   syllabus_tentative: true,
-  session_unit: 'week',
-  timing_note: 'Hybrid for the first four weeks, then in person only.',
   registration: {
     mode: 'own',
     method: 'external',

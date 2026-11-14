@@ -135,8 +135,7 @@ export const Sessions: CollectionConfig = {
       type: 'text',
       localized: true,
       admin: {
-        description:
-          'Leave empty to show it as “Session 3” or “Week 3”, by the course’s numbering.',
+        description: 'Leave empty to show it as “Session 3”.',
       },
     },
     meetingsField(),

@@ -102,7 +102,6 @@ test.describe('course calendar', () => {
           title: 'Calendar e2e course',
           slug: uniq('calendar-e2e-course'),
           course_type: 'THEMATIC',
-          session_unit: 'session',
           tier: 'public',
           cycle,
           registration: { mode: 'closed' },

@@ -16,6 +16,16 @@
  *   (`Omit<Course, 'sessions'> & { sessions: Session[] }`) declares its own
  *   `sessions`, so it does not count.
  *
+ * - names a removed course field or its code: `timing_note`, `announced` and
+ *   `session_unit` (as an identifier or a string, such as a `select` key),
+ *   `courseTiming`, `storedTiming`, `sessionUnitOf`, `SessionUnit`,
+ *   `SESSION_UNIT_OPTIONS` or `Announced` (ADR 0011, "Fix: the timing fields
+ *   are removed"). New course content states its time with meetings alone.
+ *   The generated types no longer have these fields, so typed code cannot
+ *   read them; this catches untyped reads and a field added back;
+ * - defines a field named `summary`, `timing_note`, `announced` or
+ *   `session_unit` in the course collection (`src/collections/Courses.ts`).
+ *
  * Also lists, for the record, the scripts that still import those functions
  * (the migration's fill and verify scripts read the old fields).
  */
@@ -35,6 +45,23 @@ const NAMES = new Set([
 ])
 const FIELDS = new Set(['schedule', 'sessions'])
 const COURSE_TYPES = new Set(['Course', 'CoursesSelect'])
+
+/** Removed course fields whose names mean nothing else in `src/`, and the code that read them. */
+const REMOVED_NAMES = new Set([
+  'timing_note',
+  'announced',
+  'session_unit',
+  'courseTiming',
+  'storedTiming',
+  'sessionUnitOf',
+  'SessionUnit',
+  'SESSION_UNIT_OPTIONS',
+  'Announced',
+])
+/** Field names the course collection may no longer define (`summary` is a word other code uses). */
+const REMOVED_COURSE_FIELDS = new Set(['summary', 'timing_note', 'announced', 'session_unit'])
+const COURSES = resolve(ROOT, 'src/collections/Courses.ts')
+const SELF = resolve(ROOT, 'scripts/check-old-course-paths.ts')
 
 /** Events keep their pattern until their own phase (ADR 0011). */
 const EVENT_IMPORTS: Record<string, string[]> = {
@@ -104,7 +131,12 @@ for (const file of program.getSourceFiles()) {
   const inSrc = path.startsWith('src/')
   const inScripts = path.startsWith('scripts/')
   if (!inSrc && !inScripts) continue
-  if (file.fileName === SCHEDULE || file.fileName === TYPES || path.startsWith('src/migrations/'))
+  if (
+    file.fileName === SCHEDULE ||
+    file.fileName === TYPES ||
+    file.fileName === SELF ||
+    path.startsWith('src/migrations/')
+  )
     continue
 
   const visit = (node: ts.Node): void => {
@@ -127,6 +159,26 @@ for (const file of program.getSourceFiles()) {
         }
       }
     }
+
+    // A removed field or its code, by name, anywhere but in the Arc library, which says
+    // "announced" for screen readers (typed code cannot name the fields any more).
+    if (
+      !path.startsWith('src/components/arc/') &&
+      (ts.isIdentifier(node) || ts.isStringLiteralLike(node)) &&
+      REMOVED_NAMES.has(node.text) &&
+      !ts.isImportDeclaration(node.parent)
+    )
+      hits.push(`${where(node)} names removed ${node.text}`)
+    // A field of the course collection with a removed name.
+    if (
+      file.fileName === COURSES &&
+      ts.isPropertyAssignment(node) &&
+      ts.isIdentifier(node.name) &&
+      node.name.text === 'name' &&
+      ts.isStringLiteralLike(node.initializer) &&
+      REMOVED_COURSE_FIELDS.has(node.initializer.text)
+    )
+      hits.push(`${where(node)} defines removed course field ${node.initializer.text}`)
 
     if (inSrc) {
       // course.schedule, course?.sessions
@@ -191,4 +243,6 @@ if (hits.length) {
   for (const line of hits.sort(byPlace)) console.log(`  ${line}`)
   process.exit(1)
 }
-console.log('\nPASS: no course code in src/ imports the pattern functions or reads the old fields.')
+console.log(
+  '\nPASS: no course code in src/ imports the pattern functions, reads the old fields or names a removed timing field.',
+)

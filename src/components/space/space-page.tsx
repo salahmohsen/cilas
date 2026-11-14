@@ -177,7 +177,7 @@ export async function SpacePage({
   const descriptionText = textOf(description).replace(/\s+/g, ' ').trim()
   const defaultAbout =
     descriptionText ||
-    landing.course?.summary ||
+    landing.course?.subtitle ||
     landing.programme?.tagline ||
     (space.kind === 'community'
       ? t(
@@ -419,10 +419,7 @@ export async function SpacePage({
   )
   // After the last session there is none to show.
   const next = course
-    ? upcomingSession(
-        numberedSessions(course.sessions, course.session_unit),
-        cairoDay(new Date()) ?? '',
-      )
+    ? upcomingSession(numberedSessions(course.sessions), cairoDay(new Date()) ?? '')
     : null
   const nextId = next ? String(next.session.id) : null
   const nextCard = (titled: boolean) =>
@@ -585,7 +582,7 @@ export async function SpacePage({
             course.sessions.length ? (
               <CourseSyllabus
                 course={course}
-                sessions={syllabusOf(course.sessions, course.session_unit)}
+                sessions={syllabusOf(course.sessions)}
                 decorate={(entry) => {
                   const count = linked.get(entry.id) ?? 0
                   if (!count) return entry

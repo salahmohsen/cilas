@@ -29,7 +29,7 @@ type Source = { description?: string[]; richText?: string; image?: string }
 
 // Which of a document's own fields stand in for its SEO fields.
 const SOURCES: Record<SeoCollection, Source> = {
-  courses: { description: ['summary', 'subtitle'], image: 'cover_image' },
+  courses: { description: ['subtitle'], image: 'cover_image' },
   cycles: {},
   programmes: { description: ['tagline'], image: 'cover' },
   publications: { description: ['subtitle'], image: 'cover_image' },

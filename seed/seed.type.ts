@@ -110,15 +110,12 @@ export type CourseSeed = Omit<
   | 'cycle'
   | 'slug'
   | 'schedule'
-  | 'session_unit'
   | 'first_day'
   | 'last_day'
 > & {
   description?: string
   /** Written as session documents of the course. */
   sessions?: SessionSeed[]
-  /** Defaults to `session`. */
-  session_unit?: Course['session_unit']
   /** User emails, resolved to user ids. */
   fellows: string[]
   /** Cycle key like `fall-2025`, resolved to a cycle id. */

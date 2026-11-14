@@ -36,7 +36,7 @@ export const coursesData: CourseSeed[] = [
 
 export const seedCourses = async (payload: Payload, ctx: SeedContext): Promise<void> => {
   for (const course of coursesData) {
-    const { title_ar, description, sessions, session_unit, fellows, cycle, ...rest } = course
+    const { title_ar, description, sessions, fellows, cycle, ...rest } = course
     const existed = await findId(payload, 'courses', { title: { equals: course.title } })
 
     const id = await getOrCreateId(payload, 'courses', { title: { equals: course.title } }, () =>
@@ -49,7 +49,6 @@ export const seedCourses = async (payload: Payload, ctx: SeedContext): Promise<v
           description: description ? lexical(description) : null,
           fellows: requireIds(ctx.people, fellows),
           cycle: requireIds(ctx.cycles, [cycle])[0],
-          session_unit: session_unit ?? 'session',
           _status: 'published',
         },
         overrideAccess: true,

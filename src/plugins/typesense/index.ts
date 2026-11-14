@@ -47,7 +47,6 @@ const SELECT = {
     cover_image: true,
     fellows: true,
     subtitle: true,
-    summary: true,
     epigraph: true,
     description: true,
     syllabus: true,

@@ -217,7 +217,6 @@ describe('the application flow, from the questions to the enrollment', () => {
         title: 'Flow Course',
         slug: `flow-course-${RUN}`,
         course_type: 'THEMATIC',
-        session_unit: 'session',
         tier: 'owner',
         cycle: cycleId(),
         applicant_questions: [
@@ -430,7 +429,6 @@ describe('the application flow, from the questions to the enrollment', () => {
           title: 'Second Flow Course',
           slug: `flow-second-${RUN}`,
           course_type: 'THEMATIC',
-          session_unit: 'session',
           tier: 'owner',
           cycle: cycleId(),
           schedule: { start_date: '2031-03-04', weeks: 1, slots: [] },

@@ -27,7 +27,6 @@ type Doc = Record<string, any>
 const LOCALES: Locale[] = ['en', 'ar']
 const LOCALIZED = [
   'subtitle',
-  'summary',
   'epigraph',
   'facilitator_note',
   'content_warning',

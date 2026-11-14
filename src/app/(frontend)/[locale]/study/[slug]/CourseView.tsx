@@ -112,7 +112,7 @@ export const CourseView: React.FC<{
   const dir = directionOf(`${course.title} ${course.subtitle ?? ''} ${textOf(course.description)}`)
   const lang = dir === 'rtl' ? 'ar' : 'en'
 
-  const syllabus = syllabusOf(sessions, course.session_unit)
+  const syllabus = syllabusOf(sessions)
   const meetings = syllabus.flatMap((s) => s.meetings)
   const starts = firstDay(meetings)
   const when = summary(meetings)
@@ -201,11 +201,8 @@ export const CourseView: React.FC<{
           {
             icon: ListOrdered,
             label: t('length'),
-            path: 'session_unit',
-            value:
-              course.session_unit === 'week'
-                ? t('weeks', { count: sessions.length })
-                : t('sessions', { count: sessions.length }),
+            path: 'syllabus',
+            value: t('sessions', { count: sessions.length }),
           },
         ]
       : []),
@@ -396,11 +393,6 @@ export const CourseView: React.FC<{
           </dl>
         ) : null}
       </SideCardSection>
-      {course.timing_note ? (
-        <p className="side-card-muted whitespace-pre-line" {...pe('timing_note')}>
-          {course.timing_note}
-        </p>
-      ) : null}
       {wide && fellows.length ? (
         <div {...pe('fellows')}>
           <SideCardSection label={t('taughtBy')}>
@@ -467,7 +459,6 @@ export const CourseView: React.FC<{
             <EditorFields
               pe={pe}
               fields={[
-                { label: 'Card summary', path: 'summary', value: course.summary },
                 { label: 'Visibility', path: 'tier', value: course.tier },
                 { label: 'Slug', path: 'slug', value: course.slug },
                 {
@@ -480,7 +471,6 @@ export const CourseView: React.FC<{
                   path: 'registration.deadline',
                   value: course.registration?.deadline?.slice(0, 10),
                 },
-                { label: 'Session unit', path: 'session_unit', value: course.session_unit },
                 {
                   label: 'Syllabus tentative',
                   path: 'syllabus_tentative',

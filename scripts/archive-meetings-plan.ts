@@ -3,9 +3,8 @@ import type { Meeting, WeeklyTime } from '../src/lib/meetings'
 
 /**
  * ADR 0011, "Archive courses get approximate meetings": what meetings one old
- * course with no meeting gets, from the timing it used to carry in the
- * removed fields (`announced`, `timing_note`) and in the frozen `schedule`
- * group. Pure; `make-archive-meetings.ts` loads, calls this and writes.
+ * course with no meeting gets, from the timing the old site held in the
+ * frozen `schedule` group (start date, weeks, weekly slots). Pure; `make-archive-meetings.ts` loads, calls this and writes.
  * Delete with the old fields.
  *
  * The dates are approximate. They tell the calendar and the lists when a
@@ -30,14 +29,14 @@ export type ArchiveGroup =
   | 'nothing'
 
 /** Where the day a course starts from came from, most trusted first. */
-export type StartSource = 'announced' | 'research' | 'cycle'
+export type StartSource = 'schedule' | 'research' | 'cycle'
 
 export type ArchiveCourse = {
   /** True when any session of the course holds a meeting. */
   hasMeetings: boolean
-  /** The start day the course announced (`announced.start_day`). */
+  /** The start day in the frozen `schedule` group. */
   startDay: string | null
-  /** How many weeks it runs: the frozen `schedule.weeks`, else `announced.weeks`. */
+  /** How many weeks it runs (`schedule.weeks`). */
   weeks: number | null
   /** The old `schedule` group's weekly times. */
   slots: readonly WeeklyTime[]
@@ -70,7 +69,7 @@ const onOrAfter = (from: string, weekday: Weekday): string => {
 
 const startOf = (a: ArchiveCourse): { day: string; source: StartSource } | null => {
   const candidates: [StartSource, string | null][] = [
-    ['announced', a.startDay],
+    ['schedule', a.startDay],
     ['research', a.term.research],
     ['cycle', a.term.cycle],
   ]
@@ -125,11 +124,11 @@ const none = (group: ArchiveGroup): ArchivePlan => ({
 
 /**
  * Weekly times come first, since they say the most: they run from the day
- * the course announced, else the old site's term start, else its cycle's
+ * in its `schedule`, else the old site's term start, else its cycle's
  * start, on each slot's weekday, for `weeks` weeks (the first meeting alone
  * when no length is known). With no such day the times have no place.
- * Without weekly times, an announced start day makes one all-day meeting a
- * week on its weekday for the announced weeks, or one meeting without a
+ * Without weekly times, an start day makes one all-day meeting a
+ * week on its weekday for its weeks, or one meeting without a
  * length. Each meeting group goes on one of the course's sessions, in
  * order (a week with two slots is one session with two meetings, as the
  * model has it); groups left over become new untitled sessions.
@@ -149,7 +148,7 @@ export const planArchiveMeetings = (course: ArchiveCourse): ArchivePlan => {
 
   const { startDay: start, weeks } = course
   if (start) {
-    if (!cairoDay(start)) throw new Error(`Not a real day (announced): ${start}`)
+    if (!cairoDay(start)) throw new Error(`Not a real day (schedule): ${start}`)
     const groups = Array.from({ length: weeks || 1 }, (_, n) => [allDay(addDays(start, 7 * n))])
     return {
       group: weeks ? 'start-and-weeks' : 'start-only',

@@ -90,11 +90,8 @@ export type SyllabusSession = {
 }
 
 /** A course's sessions from the collection, numbered and dated, as its syllabus reads them. */
-export const syllabusOf = (
-  sessions: readonly Session[],
-  unit: Course['session_unit'],
-): NumberedSession<SyllabusSession>[] =>
-  numberedSessions(sessions, unit).map((n) => ({
+export const syllabusOf = (sessions: readonly Session[]): NumberedSession<SyllabusSession>[] =>
+  numberedSessions(sessions).map((n) => ({
     ...n,
     session: {
       id: String(n.session.id),
@@ -139,8 +136,8 @@ function useSyllabusEntries(
       numberingSystem: numberingSystemOf(locale),
     })
 
-  return sessions.map(({ session, number, unit, meetings, day }, i) => {
-    const unitLabel = t(unit, { number })
+  return sessions.map(({ session, number, meetings, day }, i) => {
+    const unitLabel = t('session', { number })
     const materials = session.bibliography ?? []
     const activities = session.activities ?? []
     const hasBody = Boolean(session.description || materials.length || activities.length)

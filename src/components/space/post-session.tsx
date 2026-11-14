@@ -34,10 +34,10 @@ export function PostSession({
   if (session.state === 'gone') return <Alert tone="info" title={t('sessionGone')} />
 
   const { course } = session
-  const syllabus = syllabusOf(course.sessions, course.session_unit)
+  const syllabus = syllabusOf(course.sessions)
   const shown = syllabus.find((s) => s.session.id === session.session)
   const row = shown?.session
-  const unit = tc(shown?.unit ?? 'session', { number: shown?.number ?? 0 })
+  const unit = tc('session', { number: shown?.number ?? 0 })
   const name = row?.title ? `${unit}: ${row.title}` : unit
 
   // Only a moderator's announcement carries the whole session; a member's post, a small tag that opens the posts about it.

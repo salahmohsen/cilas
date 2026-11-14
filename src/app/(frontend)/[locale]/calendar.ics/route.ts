@@ -21,7 +21,7 @@ export async function GET(request: Request, { params }: { params: Promise<{ loca
   const ics = buildIcs(
     items.map((item) => ({
       uid: `${item.key}@cilas`,
-      title: item.starts ? `${t('starts')}: ${item.title}` : item.title,
+      title: item.title,
       date: item.date,
       start: item.start,
       end: item.end,

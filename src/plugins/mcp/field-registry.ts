@@ -40,7 +40,7 @@ export const FIELD_REGISTRY = {
       enrollments: 'Join',
       sessions: 'The old sessions array, read-only until it is removed (ADR 0011): write syllabus',
       schedule:
-        'The old weekly pattern, read-only until it is removed (ADR 0011): write syllabus[].meetings, announced and timing_note',
+        'The old weekly pattern, read-only until it is removed (ADR 0011): write syllabus[].meetings',
       first_day: 'Computed from the sessions’ meetings',
       last_day: 'Computed from the sessions’ meetings',
       'syllabus.course': 'The course being written',

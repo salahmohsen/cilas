@@ -3,7 +3,7 @@ import { describe, expect, it } from 'vitest'
 import { CalendarSaveFailure, meetingsAfter, sessionItems } from '@/lib/calendar-sources'
 import type { Session } from '@/payload-types'
 
-const untitled = (unit: string, n: number) => `${unit === 'week' ? 'Week' : 'Session'} ${n}`
+const untitled = (n: number) => `Session ${n}`
 
 type Doc = Parameters<typeof sessionItems>[0][number]
 const doc = (over: Partial<Doc> & { id: number }): Doc => ({
@@ -14,7 +14,7 @@ const doc = (over: Partial<Doc> & { id: number }): Doc => ({
   updatedAt: '2034-01-01T00:00:00.000Z',
   ...over,
 })
-const course = { course_type: 'THEMATIC', session_unit: 'session' } as const
+const course = { course_type: 'THEMATIC' } as const
 
 describe('sessionItems', () => {
   it('turns a session into an item and each meeting into a block, by the course’s order', () => {
@@ -54,15 +54,15 @@ describe('sessionItems', () => {
     })
   })
 
-  it('names an untitled session by its place and the course’s unit, and keeps one with no meeting', () => {
+  it('names an untitled session by its place, and keeps one with no meeting', () => {
     const items = sessionItems(
       [doc({ id: 5, position: 1 }), doc({ id: 4, meetings: [{ id: 'x', date: '2034-10-05' }] })],
-      { ...course, session_unit: 'week' },
+      course,
       untitled,
     )
     expect(items.map((i) => [i.id, i.title, i.blocks.length])).toEqual([
-      ['4', 'Week 1', 1],
-      ['5', 'Week 2', 0],
+      ['4', 'Session 1', 1],
+      ['5', 'Session 2', 0],
     ])
   })
 })

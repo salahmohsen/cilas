@@ -80,7 +80,7 @@ export const resolveMentionDocument = (
               kind,
               title: c.title,
               meta: [names(c.fellows), cycle].filter(Boolean).join(' · ') || null,
-              text: short(c.summary || c.subtitle) || plain(c.description),
+              text: short(c.subtitle) || plain(c.description),
               image: imageOf(c.cover_image),
             },
           }

@@ -91,13 +91,13 @@ describe('planArchiveMeetings', () => {
   })
 
   describe('weekly times', () => {
-    it('runs from the announced start day at the real times, a session a week', () => {
+    it('runs from the schedule start day at the real times, a session a week', () => {
       // 2026-03-04 is a Wednesday.
       const plan = planArchiveMeetings(
         course({ slots: [wednesdays], startDay: '2026-03-04', weeks: 2, sessions: [1, 2] }),
       )
       expect(plan.group).toBe('weekly-times')
-      expect(plan.startedFrom).toEqual({ day: '2026-03-04', source: 'announced' })
+      expect(plan.startedFrom).toEqual({ day: '2026-03-04', source: 'schedule' })
       expect(plan.onSessions).toEqual([
         { session: 1, meetings: [at('2026-03-04')] },
         { session: 2, meetings: [at('2026-03-11')] },

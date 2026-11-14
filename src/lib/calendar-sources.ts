@@ -4,7 +4,7 @@ import { createSession } from '@/collections/Sessions'
 import { meetingProblem } from '@/fields/meetings'
 import type { CalendarBlock, CalendarChange, CalendarItem } from '@/lib/calendar-items'
 import { toneOf } from '@/lib/calendar'
-import { byWhen, numberedSessions, type Meeting, type SessionUnit } from '@/lib/meetings'
+import { byWhen, numberedSessions, type Meeting } from '@/lib/meetings'
 import type { Course, Session, User } from '@/payload-types'
 
 /**
@@ -36,8 +36,8 @@ export class CalendarSaveFailure extends Error {
 export type CalendarContext = {
   req: PayloadRequest
   user: User
-  /** What an untitled session is called: "Session 3" or "Week 3". */
-  untitled: (unit: SessionUnit, number: number) => string
+  /** What an untitled session is called: "Session 3". */
+  untitled: (number: number) => string
 }
 
 export type CalendarSource = {
@@ -125,26 +125,24 @@ export const sessionItems = (
     Session,
     'id' | 'title' | 'cancelled' | 'meetings' | 'position' | 'updatedAt'
   >[],
-  course: Pick<Course, 'course_type' | 'session_unit'>,
+  course: Pick<Course, 'course_type'>,
   untitled: CalendarContext['untitled'],
 ): CalendarItem[] => {
   const tone = toneOf({ type: course.course_type.toLowerCase() })
-  return numberedSessions(sessions, course.session_unit).map(
-    ({ session, number, unit }): CalendarItem => ({
-      id: String(session.id),
-      kind: 'session',
-      title: session.title || untitled(unit, number),
-      tone,
-      cancelled: Boolean(session.cancelled),
-      version: session.updatedAt,
-      blocks: [...(session.meetings ?? [])].sort(byWhen).map((m): CalendarBlock => ({
-        id: m.id ?? '',
-        date: m.date,
-        start_time: m.start_time || null,
-        end_time: m.end_time || null,
-      })),
-    }),
-  )
+  return numberedSessions(sessions).map(({ session, number }): CalendarItem => ({
+    id: String(session.id),
+    kind: 'session',
+    title: session.title || untitled(number),
+    tone,
+    cancelled: Boolean(session.cancelled),
+    version: session.updatedAt,
+    blocks: [...(session.meetings ?? [])].sort(byWhen).map((m): CalendarBlock => ({
+      id: m.id ?? '',
+      date: m.date,
+      start_time: m.start_time || null,
+      end_time: m.end_time || null,
+    })),
+  }))
 }
 
 const sessionSource: CalendarSource = {
@@ -157,7 +155,7 @@ const sessionSource: CalendarSource = {
       depth: 0,
       // As the admin shows the course: its latest draft, if it has one.
       draft: true,
-      select: { course_type: true, session_unit: true },
+      select: { course_type: true },
       user,
       overrideAccess: false,
       req,

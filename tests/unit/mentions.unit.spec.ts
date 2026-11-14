@@ -20,7 +20,7 @@ const docs: Record<string, Array<Record<string, unknown>>> = {
       title: 'Plato',
       slug: 'plato',
       _status: 'published',
-      summary: 'Book by book.',
+      subtitle: 'Book by book.',
       fellows: [{ name: 'Mona' }],
       cycle: { title: 'Fall 2026' },
     },

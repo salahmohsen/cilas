@@ -10,7 +10,7 @@ const untitledOf = async (locale: string): Promise<CalendarContext['untitled']> 
   const lang = localeOf(locale)
   const { default: messages } = await import(`../../messages/${lang}.json`)
   const t = createTranslator({ locale: lang, messages, namespace: 'Course' })
-  return (unit, number) => t(unit, { number })
+  return (number) => t('session', { number })
 }
 
 /**

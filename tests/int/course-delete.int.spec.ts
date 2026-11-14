@@ -41,7 +41,6 @@ beforeAll(async () => {
         title: 'Doomed',
         slug: `doomed-${f.suffix}`,
         course_type: 'CORE',
-        session_unit: 'week',
         cycle: f.cycle.id,
         tier: 'public',
         registration: { mode: 'follow_cycle' },

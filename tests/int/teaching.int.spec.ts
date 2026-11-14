@@ -51,7 +51,6 @@ describe('time, place and teaching', () => {
           title: 'Probe Course',
           slug: uniq('probe-course'),
           course_type: 'THEMATIC',
-          session_unit: 'session',
           tier: 'owner',
           cycle: cycleId,
         },

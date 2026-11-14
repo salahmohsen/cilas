@@ -27,16 +27,11 @@ const SUNDAYS = Array.from({ length: 8 }, (_, i) => `2024-09-${22 + 7 * i}`).map
   const [y, m, d] = day.split('-').map(Number)
   return new Date(Date.UTC(y!, m! - 1, d!)).toISOString().slice(0, 10)
 })
-const timingNote = {
-  en: 'First 4 online, last 4 offline',
-  ar: 'أول أربع جلسات عبر الإنترنت وآخر أربع حضوريًا',
-}
 const courseInput = () => ({
   title: { en: uniq('MCP sessions'), ar: 'دورة تجريبية' },
   cycle,
   course_type: 'THEMATIC',
   location: ['HYBRID'],
-  timing_note: timingNote,
   syllabus: SUNDAYS.map((date, i) => ({
     delivery: i < 4 ? 'ONLINE' : 'OFFLINE',
     title: { en: `Session ${i + 1}`, ar: `جلسة ${i + 1}` },
@@ -138,7 +133,6 @@ describe('complete MCP draft writes', () => {
         fallbackLocale: false,
       })
       expect(course.location).toEqual(['HYBRID'])
-      expect(course.timing_note).toBe(timingNote[locale])
       const sessions = await sessionsOf(id, locale, admin)
       expect(sessions.map((s) => s.id)).toEqual(result.json.syllabus_ids)
       expect(sessions.map((s) => s.title)).toEqual(input.syllabus.map((s) => s.title[locale]))
@@ -400,13 +394,13 @@ describe('complete MCP draft writes', () => {
   it('keeps omitted fields, clears explicitly and reports unmapped source facts as incomplete', async () => {
     const result = await call('create_course_draft', {
       ...courseInput(),
-      summary: { en: 'Keep this', ar: 'احتفظ' },
+      subtitle: { en: 'Keep this', ar: 'احتفظ' },
     })
     expect(result.isError, result.text).toBeFalsy()
     const id = track('courses', result.json).id
     const update = await call('update_course_draft', {
       id,
-      summary: { en: null },
+      subtitle: { en: null },
       source_unmapped: [{ field: 'source_extra', reason: 'No destination' }],
     })
     expect(update.isError, update.text).toBeFalsy()
@@ -423,7 +417,7 @@ describe('complete MCP draft writes', () => {
           locale: 'en',
           fallbackLocale: false,
         })
-      ).summary,
+      ).subtitle,
     ).toBeNull()
     expect(
       (
@@ -434,7 +428,7 @@ describe('complete MCP draft writes', () => {
           locale: 'ar',
           fallbackLocale: false,
         })
-      ).summary,
+      ).subtitle,
     ).toBe('احتفظ')
   })
 

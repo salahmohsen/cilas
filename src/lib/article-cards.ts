@@ -3,7 +3,7 @@ import type { getFormatter } from 'next-intl/server'
 
 import { authorNames, excerptOf, joinNames, publicationOf, readingMinutes } from '@/lib/articles'
 import { mediaImage, type MediaImage } from '@/lib/media-image'
-import { storedTiming } from '@/lib/meetings'
+import { storedWeeks } from '@/lib/meetings'
 import { pathOf } from '@/lib/paths'
 import type { Article, Course, Media, Person } from '@/payload-types'
 
@@ -104,12 +104,12 @@ export const toCourseCard = (
   const fellows = (c.fellows ?? []).filter((p): p is Person => typeof p === 'object' && p !== null)
   const image = media(c.cover_image)
   const date = c.first_day ?? cycle?.start_date ?? c.createdAt
-  const length = storedTiming(c).weeks
+  const length = storedWeeks(c)
   return {
     id: String(c.id),
     href: pathOf('courses', c, locale) ?? '#',
     title: c.title,
-    excerpt: c.summary ?? c.subtitle ?? '',
+    excerpt: c.subtitle ?? '',
     category: cycle?.title ?? '',
     date: date.slice(0, 10),
     dateLabel: format.dateTime(new Date(date), 'year'),

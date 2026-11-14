@@ -90,7 +90,6 @@ describe('session tokens in a body', () => {
     expect(facts['11']).toEqual({
       n: 1,
       title: 'One',
-      week: false,
       date: '2031-03-03',
       cancelled: false,
     })
