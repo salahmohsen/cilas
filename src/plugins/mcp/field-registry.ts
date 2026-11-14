@@ -37,6 +37,7 @@ export const FIELD_REGISTRY = {
       effective_settings: 'Admin UI',
       applicants: 'Admin UI',
       fullFormPreview: 'Admin UI',
+      calendar: 'Admin UI: the sessions calendar',
       enrollments: 'Join',
       sessions: 'The old sessions array, read-only until it is removed (ADR 0011): write syllabus',
       schedule:
