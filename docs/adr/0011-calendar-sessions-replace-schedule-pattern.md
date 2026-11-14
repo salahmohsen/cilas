@@ -52,10 +52,9 @@ sessions                     new collection: what is taught, and when
 
 course
   syllabus                   join field (course → sessions), shown in the Sessions tab
-  timing_note                localized free text, from today's schedule note
-  first_day, last_day        read-only, kept up to date from its sessions' meetings (else its announced start)
-  announced                  start_day (YYYY-MM-DD), weeks: used only while no meeting is held
-  session_unit, syllabus_tentative, course bibliography, notes   unchanged
+  first_day, last_day        read-only, kept up to date from its sessions' meetings
+  syllabus_tentative, course bibliography, notes   unchanged
+  (removed: timing_note, announced, session_unit, summary; see "Fix: the timing fields are removed")
 ```
 
 - **Why a collection.** Each session saves on its own, so two people who edit different sessions, or the course and a session, do not overwrite each other. Sessions get their own access rules, so fellows can later edit the sessions of their running course without the course review. Payload gives a built-in document drawer for a related document, so a click on a block opens the full session form with no custom form code. The public calendar and the space calendar become one indexed query on `sessions.meetings.date`. Space posts point to a session by a real relationship.
@@ -76,8 +75,9 @@ course
 - **Regular** (every week has the same weekdays and times; the last week may end early): "Tuesdays, 7–9pm", "Tuesdays and Thursdays, 7–9pm", plus "8 weeks".
 - **Not regular**: the first and last day and the count, for example "12 sessions, 3 March – 28 April". The syllabus lists each session with its own dates.
 - **Weeks** = the 7-day periods from the first meeting to the last. Not stored, not typed. Only the calendar view lays out Saturday-to-Friday weeks.
-- **Announced timing**: a course with no meeting held may have an announced start day and weeks, typed in the admin. The meetings replace it as soon as one is held.
-- `timing_note` stays for words the dates cannot say ("hybrid for the first 6 weeks").
+- **No announced timing and no timing note.** A course states its time with meetings alone. A course with no meeting held has no start day, no weeks and no summary of times. Words the dates cannot say ("hybrid for the first 6 weeks") go in the description or in a session's own text.
+- **Numbering.** Every untitled session is "Session N". There is no "Week N" and no setting to choose it. A session that is a week of a twice-a-week course is still one session with two meetings.
+- **No card summary.** A card, the search index, `llms` and a mention use the subtitle, then the start of the description.
 
 ### The admin
 
@@ -112,7 +112,7 @@ When a session moves, is cancelled or is restored, the **course space members** 
 
 | Area                | Files                                                                                                                                                                                                                    | Change                                                                                                   |
 | ------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | -------------------------------------------------------------------------------------------------------- |
-| Schema              | new `collections/Sessions.ts`; `collections/Courses.ts`; `fields/schedule.ts` (courses stop using it)                                                                                                                    | Sessions collection; Sessions tab with join and calendar; `timing_note`, `first_day`, `last_day`         |
+| Schema              | new `collections/Sessions.ts`; `collections/Courses.ts`; `fields/schedule.ts` (courses stop using it)                                                                                                                    | Sessions collection; Sessions tab with join and calendar; `first_day`, `last_day`                        |
 | Time module         | `lib/schedule.ts` → `lib/meetings.ts`                                                                                                                                                                                    | One reader for courses; the pattern code stays only for events until their phase                         |
 | Public course       | `study/[slug]/CourseView.tsx`, `course/course-syllabus.tsx`, `lib/schema.ts` (JSON-LD)                                                                                                                                   | Read `sessionsOf` / `meetingsOf`                                                                         |
 | Calendar and feeds  | `api/calendar.api.ts`, `lib/event-calendar.ts` (ICS), `lib/calendar.ts`                                                                                                                                                  | Query sessions by meeting date; ICS gets a stable ID for each meeting                                    |
@@ -133,16 +133,17 @@ Every course moves to the new model, published and draft. We test on the local c
    - each session row becomes a session document with the same content and the meetings it has today; its description is converted to Markdown;
    - **courses with weekly times but no sessions (41)** and **pattern meetings after the last session (18)**: the pattern still makes those meetings, but no session holds them. The script makes new sessions for them by today's default rule, one session for each week of slots (with one slot a week, one session per meeting). Their title is empty, so the page shows "Session N" or "Week N";
    - sessions with no meeting (7 courses) stay unscheduled, in their old order;
-   - **courses the pattern gives no meeting** keep their start date and `weeks` as the course's `announced` timing (`announced.start_day`, `announced.weeks`; 101 courses), not as a meeting. Readers use it only while no meeting is held (`courseTiming` in `lib/meetings.ts`): lists show the start and the weeks, the calendar marks the start, and `first_day` is the announced start with no `last_day`;
-   - the schedule note moves to `timing_note`;
-   - **courses with weekly times the pattern cannot place** (no start date or no `weeks`, 55 courses): first, 37 of them get the start date and length found on the old site, written into the old `schedule` group (`scripts/apply-archive-start-dates.ts`, see `docs/research/2026-11-course-start-dates.md`), so their times become real meetings. The other 18 get no meeting for their times. A language with no note gets the times as words in `timing_note` ("Tuesday, 19:00–21:00", "الثلاثاء، ١٩:٠٠–٢١:٠٠"); a written note stays unchanged;
+   - **courses the pattern gives no meeting** (101 courses with a start date or `weeks`) got no meeting from the fill. They first kept their start date and `weeks` as an `announced` timing; that field is removed (see "Fix: the timing fields are removed"), and `scripts/make-archive-meetings.ts` gives them approximate meetings instead, reading the frozen `schedule` group;
+   - the schedule note moved to `timing_note` first; that field is removed too, and its text goes with it;
+   - **courses with weekly times the pattern cannot place** (no start date or no `weeks`, 55 courses): first, 37 of them get the start date and length found on the old site, written into the old `schedule` group (`scripts/apply-archive-start-dates.ts`, see `docs/research/2026-11-course-start-dates.md`), so their times become real meetings. The other 18 got no meeting from the fill. They first got their times as words in `timing_note`; that field is removed, and `make-archive-meetings.ts` makes weekly meetings at those real times where a start day is known (17 of the 18; course 7 has none and loses its times);
    - **a published course with a pending draft** (295, 406 and 409 today) is filled from the draft: its sessions and schedule go live, because sessions have no drafts. The draft's other fields stay pending;
    - a map from old row ID to new session ID updates the 8 space posts.
 3. **Verify** with a script: for every course, the new `meetingsOf` equals the old `expandSchedule`, meeting by meeting; every session's content is the same; every space post points to a session of its own course. The run must show zero differences, except the new sessions, which it lists.
 4. **Move the readers** one area at a time to `lib/meetings.ts`. The site works after each step.
 5. **Admin**: the Sessions tab with the calendar field.
 6. **MCP**: tools and guides write sessions.
-7. **Keep the old fields** (schedule, the sessions array) read-only and hidden until everything is polished. Then a last migration removes them. Old course versions lose their schedule and sessions array at that point; the sessions themselves are kept.
+7. **Archive meetings, then drop the timing fields.** After the fill, `scripts/make-archive-meetings.ts` gives every course with no meeting approximate ones (see "Fix: the timing fields are removed"). Migration `20261114_072207_drop_course_timing_fields` drops `session_unit`, `announced_*`, `timing_note` and `summary` (and the `session_unit` enum types) from courses and their versions. The script reads only the frozen `schedule` group, so it runs before or after that migration.
+8. **Keep the old fields** (schedule, the sessions array) read-only and hidden until everything is polished. Then a last migration removes them. Old course versions lose their schedule and sessions array at that point; the sessions themselves are kept.
 
 ## Considered options
 
@@ -288,6 +289,19 @@ None now.
 
 ## Decision log
 
+Fix: the timing fields are removed (`timing_note`, `announced`, `session_unit`, the course `summary`); archive dates are approximate meetings. This reverses the earlier decision against invented all-day meetings, on the owner's call (2026-11-14).
+
+- **New content must not use them.** Three of the four were stopgaps for old data: `announced` held a start and a length with no meeting, `timing_note` held words the dates could not say, and `session_unit` chose "Week N". A course states its time with meetings alone, an untitled session is always "Session N", and a card falls back to the subtitle, then the start of the description (the 12 summaries are replaced this way).
+- **Archive courses get approximate meetings** (`scripts/archive-meetings-plan.ts`, one pure function, unit tested; `make-archive-meetings.ts` loads and writes, with `--dry-run`, and a second run changes nothing). A course with no meeting gets:
+  - **a start day and weeks, no weekly times (52 courses):** one all-day meeting a week on the weekday of the start day, for that many weeks, starting on the start day;
+  - **a start day only (11):** one all-day meeting on that day;
+  - **weekly times (17):** weekly meetings at the real times, each slot on its own weekday, from the first one on or after the start day, for `weeks` weeks; with no length, the first meeting only. The start day is the one in the old `schedule`, else the research file's term start, else the cycle's start date (the cycle's date is the semester start and is wrong for the six spring 2022 courses, so the research file comes first). A session holds one week, so a twice-a-week course is one session with two meetings;
+  - **a length only (24), or nothing (66):** no meeting; the length goes. **Weekly times and no start day anywhere (course 7):** no meeting; the times go.
+- **Where the meetings go.** On the course's existing sessions in their order, one group for each session (a meeting, or a week of meetings); extra groups become new untitled sessions; extra sessions stay unscheduled.
+- **The archive dates are approximate.** The week is right where the old site gave one; the weekday of a start day is trusted as written. The block menu now works on all-day meetings (Open, Add meeting, New session next week, Delete meeting), because these meetings are all day.
+- **The fill and the importers stop writing the removed fields.** The fill makes sessions only. `check-old-course-paths.ts` fails on any name of a removed field in `src/`, and on the course collection defining one.
+- **The course form's SEO fields are a tab.** A plugin listed after the SEO plugin moves its `meta` group into a last tab named SEO. The field stays `meta`: no schema change.
+
 Fix: "Repeat weekly" in the session form goes; each block has a menu instead, the admin calendar is always in edit mode, and it saves with its own "Save schedule" bar.
 
 - **Repeat weekly's two modes did not fit.** A session can hold several meetings in one week: 177 sessions in 17 courses meet twice on the same day (groups), and twice-a-week weeks are common. "The next N weeks of the last meeting" and "N new sessions with one meeting" copy neither shape.
@@ -296,7 +310,7 @@ Fix: "Repeat weekly" in the session form goes; each block has a menu instead, th
 - **Sessions are not tied to the course save.** Fellows edit running courses without review, and every reader of sessions would need a draft filter if sessions were drafts of the course. So the calendar saves through its own "Save schedule" bar and Payload's Save saves the course only.
 - **The leave warning is the calendar's own.** Payload's warning takes no state besides its form, and marking the form modified would start the course's autosave. The calendar reports the count of waiting changes, and the admin warns with the same words and the same confirmation as Payload.
 
-Fix: a course with no meeting keeps its old start date and weeks as an announced timing (`course.announced`), read by one rule (`courseTiming`): meetings when one is held, else the announced start and weeks, and no last day.
+Fix: a course with no meeting keeps its old start date and weeks as an announced timing (`course.announced`), read by one rule (`courseTiming`): meetings when one is held, else the announced start and weeks, and no last day. (Superseded by the fix at the top: the field and the rule are gone.)
 
 - The fill gave the 69 courses with a start date but no meeting one all-day meeting on that day, on their first session or on a new one (30). The site then showed a meeting nobody held: "Session 1" on the calendar and in the feed, a dated first syllabus row, `Meetings: 1` in `llms`, a "Starts" fact on the page and "1 week" on cards.
 - 101 courses have a start date or a typed `weeks` and no meeting. The old cards showed the typed weeks ("10 weeks"); the fill dropped them.
@@ -323,13 +337,13 @@ Fix: the fill takes `--refill <ids|file>`: it deletes those courses' sessions an
 - A deleted session's ID dies. A space post that names it (`course_session`, or `session:<id>` and `::session[<id>]` in its body, by old row ID or new ID) would point at nothing. None did.
 - The map from old row ID to session ID drops the deleted IDs and takes the new ones.
 
-Fix: weekly times become words only where the pattern places none of them and the language has no note; a written note is kept as it is.
+Fix: weekly times become words only where the pattern places none of them and the language has no note; a written note is kept as it is. (Superseded by the fix at the top: `timing_note` is gone.)
 
 - The first rule wrote the words before every note. 8 of the 18 undated courses have a note, and it already says the times in a person's words ("Mondays 10-12pm, offline, except for the first class will be online."). The words doubled them.
 - A course with a start but no `weeks` (30, 78, 195, 216, 224 and 152) also gets no meeting for its times, only an all-day one on its start. The first rule tested the start date alone, so their times were lost. The rule now asks the pattern itself (`expandSchedule`), so both cases follow from one test.
 - A course that gets real dates must lose the words again: its note returns to the schedule note. The note is planned from the schedule each run, so this needs no special case.
 
-Fix: weekly times with no start date become words at the start of `timing_note`, written by `lib/meeting-text.ts`.
+Fix: weekly times with no start date become words at the start of `timing_note`, written by `lib/meeting-text.ts`. (Superseded by the fix at the top: `timing_note` is gone, and `lib/meeting-text.ts` keeps only the weekday names for the course page.)
 
 - 43 courses have weekly slots but no start date. The pattern makes no meeting for them, so the times live only in the old `schedule` group and go when it is removed.
 - The words must read as the course page writes weekdays and times in each language (the weekday's full name, the page's digits), and the summary will need the same words: one formatter, not a copy per caller.
