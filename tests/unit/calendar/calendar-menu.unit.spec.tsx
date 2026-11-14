@@ -25,6 +25,15 @@ const items: CalendarItem[] = [
       { id: 'thu', date: '2026-11-19', start_time: '19:00', end_time: '21:00' },
     ],
   },
+  {
+    id: 'archive',
+    kind: 'session',
+    title: 'Archive week',
+    tone: 'blue',
+    cancelled: false,
+    version: 'v-archive',
+    blocks: [{ id: 'wed', date: '2026-11-18', start_time: null, end_time: null }],
+  },
 ]
 
 const menuWords = {
@@ -371,5 +380,108 @@ describe('the menu on a block made on the page', () => {
     await waitFor(() => expect(menu()).toBeNull())
     expect(screen.queryByRole('button', { name: /^New session, Sunday/ })).toBeNull()
     expect(screen.queryByRole('button', { name: 'Save' })).toBeNull()
+  })
+})
+
+describe('an all-day meeting', () => {
+  const allDay = () => screen.getByRole('button', { name: /^Archive week, Wednesday/ })
+  const pickAllDay = async (name: string) => {
+    fireEvent.contextMenu(allDay(), { clientX: 200, clientY: 100 })
+    await waitFor(() => expect(menu()).not.toBeNull())
+    fireEvent.click(item(name))
+    await waitFor(() => expect(menu()).toBeNull())
+  }
+
+  it('has the same four actions in edit mode, and Open alone in view mode', async () => {
+    show()
+    fireEvent.contextMenu(allDay())
+    await waitFor(() => expect(menu()).not.toBeNull())
+    expect(names()).toEqual(['Open', 'Add meeting', 'New session next week', 'Delete meeting'])
+    cleanup()
+    show({ mode: 'view' })
+    fireEvent.contextMenu(allDay())
+    await waitFor(() => expect(menu()).not.toBeNull())
+    expect(names()).toEqual(['Open'])
+  })
+
+  it('opens from the keyboard and from its "⋯", and Open opens the item', async () => {
+    const onOpen = vi.fn()
+    show({ onOpen })
+    allDay().focus()
+    fireEvent.keyDown(allDay(), { key: 'F10', shiftKey: true })
+    await waitFor(() => expect(menu()!.contains(document.activeElement)).toBe(true))
+    fireEvent.keyDown(document.activeElement!, { key: 'Escape' })
+    await waitFor(() => expect(menu()).toBeNull())
+    expect(allDay()).toHaveFocus()
+
+    fireEvent.click(allDay().querySelector('[data-block-menu]')!)
+    await waitFor(() => expect(menu()).not.toBeNull())
+    fireEvent.click(item('Open'))
+    await waitFor(() => expect(onOpen).toHaveBeenCalledExactlyOnceWith('archive', 'wed'))
+  })
+
+  it('Add meeting puts another all-day meeting on the next day, and Save sends it without times', async () => {
+    const onSave = vi.fn()
+    show({ onSave })
+    await pickAllDay('Add meeting')
+
+    const added = screen.getByRole('button', {
+      name: /^Archive week, Thursday, November 19, All day/,
+    })
+    expect(added).toHaveAccessibleName('Archive week, Thursday, November 19, All day, Unsaved')
+    expect(status()).toContain('Added a meeting on Thursday, November 19')
+    fireEvent.click(saved())
+    await waitFor(() => expect(onSave).toHaveBeenCalledTimes(1))
+    expect(onSave.mock.calls[0]![0]).toEqual([
+      {
+        op: 'add-block',
+        itemId: 'archive',
+        version: 'v-archive',
+        blockId: expect.any(String),
+        date: '2026-11-19',
+        start_time: null,
+        end_time: null,
+      },
+    ])
+  })
+
+  it('New session next week copies it, all day, into one new session', async () => {
+    const onSave = vi.fn()
+    show({ onSave })
+    await pickAllDay('New session next week')
+    expect(status()).toContain('Made a new session starting Wednesday, November 25')
+    fireEvent.click(saved())
+    await waitFor(() => expect(onSave).toHaveBeenCalledTimes(1))
+    expect(onSave.mock.calls[0]![0]).toEqual([
+      {
+        op: 'create-item',
+        kind: 'session',
+        blocks: [
+          { blockId: expect.any(String), date: '2026-11-25', start_time: null, end_time: null },
+        ],
+      },
+    ])
+  })
+
+  it('Delete meeting leaves a ghost with Restore, and Save sends one delete-block', async () => {
+    const onSave = vi.fn()
+    show({ onSave })
+    await pickAllDay('Delete meeting')
+    const ghost = screen.getByRole('button', { name: /^Restore Archive week, Wednesday/ })
+    fireEvent.click(saved())
+    await waitFor(() => expect(onSave).toHaveBeenCalledTimes(1))
+    expect(onSave.mock.calls[0]![0]).toEqual([
+      { op: 'delete-block', itemId: 'archive', version: 'v-archive', blockId: 'wed' },
+    ])
+    expect(ghost).toBeDefined()
+  })
+
+  it('Delete on the focused pill does the same, and Restore leaves no change', () => {
+    show()
+    allDay().focus()
+    fireEvent.keyDown(allDay(), { key: 'Delete' })
+    fireEvent.click(screen.getByRole('button', { name: /^Restore Archive week, Wednesday/ }))
+    expect(screen.queryByRole('button', { name: 'Save' })).toBeNull()
+    expect(allDay()).toBeInTheDocument()
   })
 })

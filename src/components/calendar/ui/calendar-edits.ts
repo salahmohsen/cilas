@@ -1,23 +1,23 @@
 import type { CalendarChange, CalendarItem, NewBlock } from '@/lib/calendar-items'
 
-import { timedBlocks, type TimedBlock } from './calendar-model'
+import { blocksOf, type EditBlock } from './calendar-model'
 import { toTime } from './calendar-time'
 
-const timesOf = (block: TimedBlock) => ({
+const timesOf = (block: EditBlock) => ({
   date: block.track,
-  start_time: toTime(block.start),
-  end_time: toTime(block.end),
+  start_time: block.allDay ? null : toTime(block.start),
+  end_time: block.allDay ? null : toTime(block.end),
 })
 
-const moved = (was: TimedBlock, now: TimedBlock) =>
+const moved = (was: EditBlock, now: EditBlock) =>
   was.track !== now.track || was.start !== now.start || was.end !== now.end
 
 type Edit = {
   items: CalendarItem[]
   /** The blocks as loaded. */
-  base: TimedBlock[]
+  base: EditBlock[]
   /** The blocks as edited, deleted ones included as ghosts. */
-  working: TimedBlock[]
+  working: EditBlock[]
   /** What an item made on the page becomes. */
   newItemKind?: string
 }
@@ -82,7 +82,7 @@ export function changesOf({ items, base, working, newItemKind }: Edit): Calendar
 }
 
 /** The live blocks that differ from what was loaded: drawn, placed or moved. */
-export function unsavedIdsOf(base: TimedBlock[], working: TimedBlock[]): Set<string> {
+export function unsavedIdsOf(base: EditBlock[], working: EditBlock[]): Set<string> {
   const before = new Map(base.map((block) => [block.id, block]))
   return new Set(
     working
@@ -101,17 +101,17 @@ export function unsavedIdsOf(base: TimedBlock[], working: TimedBlock[]): Set<str
  * on the page is simply gone.
  */
 export function keepDeleted(
-  previous: TimedBlock[],
-  next: TimedBlock[],
+  previous: EditBlock[],
+  next: EditBlock[],
   id: string,
-  base: TimedBlock[],
-): TimedBlock[] {
+  base: EditBlock[],
+): EditBlock[] {
   const removed = previous.find((block) => block.id === id)
   if (!removed || !base.some((block) => block.id === id)) return next
   return [...next, { ...removed, deleted: true }]
 }
 
-export const restoreBlock = (working: TimedBlock[], id: string): TimedBlock[] =>
+export const restoreBlock = (working: EditBlock[], id: string): EditBlock[] =>
   working.map((block) => (block.id === id ? { ...block, deleted: false } : block))
 
 type Rebase = {
@@ -120,7 +120,7 @@ type Rebase = {
   /** The items as loaded now. */
   items: CalendarItem[]
   /** The blocks as edited, deleted ones included as ghosts. */
-  working: TimedBlock[]
+  working: EditBlock[]
   /** The ids of the items that have an unsaved change. */
   changed: Set<string>
 }
@@ -136,10 +136,10 @@ export function rebase({ current, items, working, changed }: Rebase) {
   const now = new Map(items.map((item) => [item.id, item]))
   const replaced = (id: string) => was.has(id) && was.get(id)!.version !== now.get(id)?.version
   return {
-    base: timedBlocks(items),
+    base: blocksOf(items),
     working: [
       ...working.filter((block) => !replaced(block.itemId)),
-      ...timedBlocks(items).filter((block) => !was.has(block.itemId) || replaced(block.itemId)),
+      ...blocksOf(items).filter((block) => !was.has(block.itemId) || replaced(block.itemId)),
     ],
     dropped: current
       .filter((item) => replaced(item.id) && changed.has(item.id))

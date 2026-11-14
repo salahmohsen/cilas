@@ -1,14 +1,14 @@
 import { checkServer, mount } from '@ui-sdk/core/testing'
 import { afterEach, beforeAll, describe, expect, it, vi } from 'vitest'
 
-import type { TimedBlock } from '@/components/calendar/ui/calendar-model'
+import type { EditBlock } from '@/components/calendar/ui/calendar-model'
 import { weekSpans } from '@/components/calendar/ui/week-spans'
 
 declare global {
   var __UI_SDK_STRICT__: boolean | undefined
 }
 
-const block = (id: string, track: string, start: number, end: number): TimedBlock => ({
+const block = (id: string, track: string, start: number, end: number): EditBlock => ({
   id,
   track,
   start,
@@ -30,7 +30,7 @@ const options = (overrides: Record<string, unknown> = {}) => ({
   min: 0,
   max: 1440,
   step: 15,
-  label: (span: TimedBlock) => `${span.id} ${span.track} ${span.start}-${span.end}`,
+  label: (span: EditBlock) => `${span.id} ${span.track} ${span.start}-${span.end}`,
   message: ({ type, label }: { type: string; label: string }) => `${type}: ${label}`,
   onPress: vi.fn(),
   ...overrides,
@@ -43,10 +43,10 @@ afterEach(() => vi.restoreAllMocks())
 
 describe('keyboard on a block', () => {
   it('moves it by a quarter hour with the arrows along the day', async () => {
-    const changes: TimedBlock[][] = []
+    const changes: EditBlock[][] = []
     const view = mount(
       weekSpans,
-      options({ onSpansChange: (value: TimedBlock[]) => changes.push(value) }),
+      options({ onSpansChange: (value: EditBlock[]) => changes.push(value) }),
       MARKUP,
     )
     try {
@@ -63,10 +63,10 @@ describe('keyboard on a block', () => {
   })
 
   it('resizes it with Shift and the arrows', async () => {
-    const changes: TimedBlock[][] = []
+    const changes: EditBlock[][] = []
     const view = mount(
       weekSpans,
-      options({ onSpansChange: (value: TimedBlock[]) => changes.push(value) }),
+      options({ onSpansChange: (value: EditBlock[]) => changes.push(value) }),
       MARKUP,
     )
     try {
@@ -82,10 +82,10 @@ describe('keyboard on a block', () => {
   })
 
   it('moves it to the next day with the arrows across', async () => {
-    const changes: TimedBlock[][] = []
+    const changes: EditBlock[][] = []
     const view = mount(
       weekSpans,
-      options({ onSpansChange: (value: TimedBlock[]) => changes.push(value) }),
+      options({ onSpansChange: (value: EditBlock[]) => changes.push(value) }),
       MARKUP,
     )
     try {
@@ -98,11 +98,11 @@ describe('keyboard on a block', () => {
   })
 
   it('removes it with Delete and announces it by our message', async () => {
-    const calls: { value: TimedBlock[]; action: string }[] = []
+    const calls: { value: EditBlock[]; action: string }[] = []
     const view = mount(
       weekSpans,
       options({
-        onSpansChange: (value: TimedBlock[], details: { action: string }) =>
+        onSpansChange: (value: EditBlock[], details: { action: string }) =>
           calls.push({ value, action: details.action }),
       }),
       MARKUP,
@@ -171,10 +171,10 @@ describe('structure', () => {
   it('swaps the arrows across days in right to left', async () => {
     // jsdom computes `direction` only on the element that has `dir`, not below it.
     const rtl = MARKUP.replaceAll('<span value', '<span dir="rtl" value')
-    const changes: TimedBlock[][] = []
+    const changes: EditBlock[][] = []
     const view = mount(
       weekSpans,
-      options({ onSpansChange: (value: TimedBlock[]) => changes.push(value) }),
+      options({ onSpansChange: (value: EditBlock[]) => changes.push(value) }),
       rtl,
     )
     try {
@@ -222,12 +222,12 @@ describe('pointer', () => {
     const create = vi.fn((span: { track: string; start: number; end: number }) =>
       block('new', span.track, span.start, span.end),
     )
-    const changes: { value: TimedBlock[]; action: string }[] = []
+    const changes: { value: EditBlock[]; action: string }[] = []
     const view = mount(
       weekSpans,
       options({
         create,
-        onSpansChange: (value: TimedBlock[], details: { action: string }) =>
+        onSpansChange: (value: EditBlock[], details: { action: string }) =>
           changes.push({ value, action: details.action }),
       }),
       MARKUP.replace('<track value="wed"></track>', '<track value="wed" data-track="wed"></track>'),

@@ -8,13 +8,15 @@ import type { CalendarChange, CalendarItem } from '@/lib/calendar-items'
 import { changesOf, keepDeleted, rebase, restoreBlock, unsavedIdsOf } from './calendar-edits'
 import { addDays } from './calendar-time'
 import {
+  blocksOf,
+  copyBlock,
   DEFAULT_MINUTES,
   DEFAULT_START_MINUTES,
   firstFreeStart,
   newBlock,
   newItemId,
   timedBlocks,
-  type TimedBlock,
+  type EditBlock,
 } from './calendar-model'
 
 type Options = {
@@ -41,7 +43,7 @@ export function useEditSession({ items, newItemKind, onSave, scope, range }: Opt
   const itemsKey = useMemo(() => JSON.stringify(items), [items])
   const [loadedKey, setLoadedKey] = useState(itemsKey)
   const [current, setCurrent] = useState(items)
-  const [base, setBase] = useState(() => timedBlocks(items))
+  const [base, setBase] = useState(() => blocksOf(items))
   const [working, setWorking] = useState(base)
   /** The titles of items whose unsaved changes were dropped when newer items loaded. */
   const [dropped, setDropped] = useState<string[]>([])
@@ -55,6 +57,7 @@ export function useEditSession({ items, newItemKind, onSave, scope, range }: Opt
     [current, base, working, newItemKind],
   )
   const unsaved = useMemo(() => unsavedIdsOf(base, working), [base, working])
+  const timed = useMemo(() => timedBlocks(working), [working])
 
   // New items from outside, such as a form that saved a session. A save's own
   // result replaces all of this when it returns, and clears the note.
@@ -78,6 +81,7 @@ export function useEditSession({ items, newItemKind, onSave, scope, range }: Opt
       const el = scope.current
       return (
         el?.querySelector<HTMLElement>(`[data-span-id="${CSS.escape(target.id)}"]`) ??
+        el?.querySelector<HTMLElement>(`[data-allday-id="${CSS.escape(target.id)}"]`) ??
         el?.querySelector<HTMLElement>(`[data-add="${target.track}"]`) ??
         el?.querySelector<HTMLElement>(`[data-track="${target.track}"]`) ??
         null
@@ -93,14 +97,14 @@ export function useEditSession({ items, newItemKind, onSave, scope, range }: Opt
     focusable(target)?.focus()
   }, [working, focusable])
 
-  const add = (block: TimedBlock) => {
+  const add = (block: EditBlock) => {
     focusTarget.current = { id: block.id, track: block.track }
     setWorking((blocks) => [...blocks, block])
   }
 
   const slot = (track: string) => {
     const start = firstFreeStart(
-      working,
+      timedBlocks(working),
       track,
       Math.max(range.min, DEFAULT_START_MINUTES),
       range.max,
@@ -112,6 +116,8 @@ export function useEditSession({ items, newItemKind, onSave, scope, range }: Opt
     /** The items as loaded or as last saved. */
     items: current,
     working,
+    /** The timed blocks of `working`: what the span editor edits. */
+    timed,
     changes,
     unsaved,
     saving,
@@ -119,18 +125,20 @@ export function useEditSession({ items, newItemKind, onSave, scope, range }: Opt
     dropped,
     dismissDropped: () => setDropped([]),
 
-    /** A drag or key changed the blocks. */
+    /** A drag or key changed the timed blocks; the all-day ones are not the span editor's. */
     onSpansChange(
-      value: TimedBlock[],
+      value: EditBlock[],
       details: ChangeDetails<SpansReason> & { id: string; action: SpanAction },
     ) {
       const track = [...value, ...working].find((block) => block.id === details.id)?.track
       if (track && (details.reason === 'move-key' || details.action === 'delete')) {
         focusTarget.current = { id: details.id, track }
       }
-      setWorking(
-        details.action === 'delete' ? keepDeleted(working, value, details.id, base) : value,
-      )
+      const allDay = working.filter((block) => block.allDay)
+      setWorking([
+        ...allDay,
+        ...(details.action === 'delete' ? keepDeleted(timed, value, details.id, base) : value),
+      ])
     },
 
     /** A press on an empty stretch of day draws a block of a new item, if the host allows new items. */
@@ -154,23 +162,23 @@ export function useEditSession({ items, newItemKind, onSave, scope, range }: Opt
       add(newBlock(itemId, track, from, from + DEFAULT_MINUTES))
     },
 
-    /** The same time on the next day, on the block's item. Returns the new block. */
-    addNextDay(id: string): TimedBlock | null {
+    /** The same time (or all day) on the next day, on the block's item. Returns the new block. */
+    addNextDay(id: string): EditBlock | null {
       const block = working.find((candidate) => candidate.id === id)
       if (!block) return null
-      const copy = newBlock(block.itemId, addDays(block.track, 1), block.start, block.end)
+      const copy = copyBlock(block, block.itemId, addDays(block.track, 1))
       setWorking((blocks) => [...blocks, copy])
       return copy
     },
 
-    /** A new item with all the live blocks of this block's item, 7 days later. Returns its blocks. */
-    copyNextWeek(id: string): TimedBlock[] {
+    /** A new item with all the live blocks of this block's item (all-day ones too), 7 days later. Returns its blocks. */
+    copyNextWeek(id: string): EditBlock[] {
       const block = working.find((candidate) => candidate.id === id)
       if (!block) return []
       const itemId = newItemId()
       const copies = working
         .filter((candidate) => candidate.itemId === block.itemId && !candidate.deleted)
-        .map((live) => newBlock(itemId, addDays(live.track, 7), live.start, live.end))
+        .map((live) => copyBlock(live, itemId, addDays(live.track, 7)))
       setWorking((blocks) => [...blocks, ...copies])
       return copies
     },
@@ -211,7 +219,7 @@ export function useEditSession({ items, newItemKind, onSave, scope, range }: Opt
         const fresh = await onSave?.(changes)
         if (fresh) setCurrent(fresh)
         setDropped([])
-        const saved = fresh ? timedBlocks(fresh) : working.filter((block) => !block.deleted)
+        const saved = fresh ? blocksOf(fresh) : working.filter((block) => !block.deleted)
         setBase(saved)
         setWorking(saved)
       } catch (failure) {

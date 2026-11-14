@@ -8,10 +8,11 @@ import {
   unsavedIdsOf,
 } from '@/components/calendar/ui/calendar-edits'
 import {
+  blocksOf,
+  copyBlock,
   newBlock,
   newItemId,
-  timedBlocks,
-  type TimedBlock,
+  type EditBlock,
 } from '@/components/calendar/ui/calendar-model'
 import type { CalendarItem } from '@/lib/calendar-items'
 
@@ -38,11 +39,54 @@ const items: CalendarItem[] = [
     blocks: [],
   },
 ]
-const base = timedBlocks(items)
-const edit = (working: TimedBlock[], newItemKind?: string) =>
+const base = blocksOf(items)
+const edit = (working: EditBlock[], newItemKind?: string) =>
   changesOf({ items, base, working, newItemKind })
 const tue = base[0]!
 const thu = base[1]!
+
+describe('an all-day block', () => {
+  const day = [
+    {
+      ...items[1]!,
+      blocks: [{ id: 'wed', date: '2026-11-18', start_time: null, end_time: null }],
+    },
+  ]
+  const dayBase = blocksOf(day)
+
+  it('is flagged all day, and a move sends the new day with no times', () => {
+    expect(dayBase).toEqual([
+      expect.objectContaining({ id: 'week-4/wed', track: '2026-11-18', allDay: true }),
+    ])
+    const moved = { ...dayBase[0]!, track: '2026-11-20' }
+    expect(changesOf({ items: day, base: dayBase, working: [moved] })).toEqual([
+      {
+        op: 'move-block',
+        itemId: 'week-4',
+        version: 'v4',
+        blockId: 'wed',
+        date: '2026-11-20',
+        start_time: null,
+        end_time: null,
+      },
+    ])
+  })
+
+  it('is copied all day, and a new one in a new item is sent as a create-item with no times', () => {
+    const itemId = newItemId()
+    const copy = copyBlock(dayBase[0]!, itemId, '2026-11-25')
+    expect(copy).toMatchObject({ allDay: true, track: '2026-11-25', itemId })
+    expect(
+      changesOf({ items: day, base: dayBase, working: [...dayBase, copy], newItemKind: 'session' }),
+    ).toEqual([
+      {
+        op: 'create-item',
+        kind: 'session',
+        blocks: [{ blockId: copy.blockId, date: '2026-11-25', start_time: null, end_time: null }],
+      },
+    ])
+  })
+})
 
 describe('the change list of a Save', () => {
   it('is empty when nothing differs', () => {
@@ -186,7 +230,7 @@ describe('the change list of a Save', () => {
 })
 
 describe('carrying edits to newly loaded items', () => {
-  const moved = (block: TimedBlock): TimedBlock => ({
+  const moved = (block: EditBlock): EditBlock => ({
     ...block,
     start: block.start + 60,
     end: block.end + 60,
@@ -217,8 +261,8 @@ describe('carrying edits to newly loaded items', () => {
       working: [moved(tue), thu],
       changed: new Set(['week-3']),
     })
-    expect(next.working).toEqual(timedBlocks([changedWeek3]))
-    expect(next.base).toEqual(timedBlocks([changedWeek3, items[1]!]))
+    expect(next.working).toEqual(blocksOf([changedWeek3]))
+    expect(next.base).toEqual(blocksOf([changedWeek3, items[1]!]))
     expect(next.dropped).toEqual(['Week 3'])
   })
 
@@ -267,6 +311,6 @@ describe('carrying edits to newly loaded items', () => {
       working: base,
       changed: new Set(),
     })
-    expect(next.working).toEqual([...base, ...timedBlocks([extra])])
+    expect(next.working).toEqual([...base, ...blocksOf([extra])])
   })
 })

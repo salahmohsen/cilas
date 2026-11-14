@@ -8,7 +8,7 @@ import type { CalendarChange, CalendarItem } from '@/lib/calendar-items'
 
 import { BlockMenu, type BlockAction, type BlockMenuEntry } from './block-menu'
 import { blockNamer, longDay } from './block-names'
-import { allDayBlocks, hourRange, legendOf, timedBlocks } from './calendar-model'
+import { allDayBlocks, blocksOf, hourRange, legendOf, timedBlocks } from './calendar-model'
 import type { CalendarLabels } from './calendar-labels'
 import { CalendarToolbar } from './calendar-toolbar'
 import { addDays, cairoNow, formatDay, weekOf, weekStartOf } from './calendar-time'
@@ -96,7 +96,7 @@ export function Calendar({
     setSelectedIndex(indexOfDay(weekOf(next), cairoNow().date))
   }
 
-  const loaded = useMemo(() => timedBlocks(items), [items])
+  const loaded = useMemo(() => timedBlocks(blocksOf(items)), [items])
   // Edit mode shows the same hours in every week, so a drag never moves the grid.
   const range = useMemo(
     () =>
@@ -131,7 +131,7 @@ export function Calendar({
     [],
   )
 
-  const allDay = useMemo(() => allDayBlocks(session.items, days), [session.items, days])
+  const allDay = useMemo(() => allDayBlocks(session.working, days), [session.working, days])
   const legend = useMemo(() => legendOf(session.items), [session.items])
   // A block of an item made on the page has nothing to open until it is saved.
   const itemIds = useMemo(() => new Set(session.items.map((item) => item.id)), [session.items])
@@ -217,7 +217,7 @@ export function Calendar({
         onPointerDown={(event) => {
           if (!(event.target as Element).closest('[data-span-id]')) setSelectedId(null)
         }}
-        spans={session.working}
+        spans={session.timed}
         onSpansChange={session.onSpansChange}
         editable={editable}
         tracks={narrow ? [days[selectedIndex]!] : days}
@@ -301,6 +301,8 @@ export function Calendar({
           menu={blockMenu ? menu : undefined}
           hintId={hintId}
           onOpen={onOpen}
+          onRestore={session.restore}
+          onDelete={session.removeBlock}
         />
 
         {unscheduled.length ? (

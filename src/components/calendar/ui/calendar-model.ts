@@ -8,14 +8,17 @@ export const DEFAULT_MINUTES = 60
 const FALLBACK_HOURS = [9 * 60, 17 * 60] as const
 
 /**
- * A timed block as the span editor sees it: the day is the track, minutes are
- * the range. `itemId` names an item the host loaded, or an item made on the
- * page, which does not exist until Save. `deleted` marks a block shown as a
- * ghost until Save.
+ * A block as the editor holds it. A timed block is a span: the day is the
+ * track, minutes are the range. An all-day block has no times (`allDay`, with
+ * `start` and `end` 0): it sits in the all-day row and never reaches the span
+ * editor. `itemId` names an item the host loaded, or an item made on the page,
+ * which does not exist until Save. `deleted` marks a block shown as a ghost
+ * until Save.
  */
-export type TimedBlock = Span & {
+export type EditBlock = Span & {
   itemId: string
   blockId: string
+  allDay?: true
   deleted?: boolean
 }
 
@@ -29,37 +32,48 @@ const temporaryId = () => `new-${Date.now().toString(36)}-${(created++).toString
 export const newItemId = temporaryId
 
 /** A block made on the page, on an item that exists or on one made on the page. */
-export const newBlock = (itemId: string, track: string, start: number, end: number): TimedBlock => {
+export const newBlock = (itemId: string, track: string, start: number, end: number): EditBlock => {
   const blockId = temporaryId()
   return { id: blockKey(itemId, blockId), track, start, end, itemId, blockId }
 }
 
-export const timedBlocks = (items: CalendarItem[]): TimedBlock[] =>
+/** An all-day block made on the page. */
+export const newAllDayBlock = (itemId: string, track: string): EditBlock => ({
+  ...newBlock(itemId, track, 0, 0),
+  allDay: true,
+})
+
+/** A new block like `block`, on `track`, for `itemId`: the same times, or all day. */
+export const copyBlock = (block: EditBlock, itemId: string, track: string): EditBlock =>
+  block.allDay ? newAllDayBlock(itemId, track) : newBlock(itemId, track, block.start, block.end)
+
+/** Every block of the items as the editor holds them: timed ones as spans, all-day ones flagged. */
+export const blocksOf = (items: CalendarItem[]): EditBlock[] =>
   items.flatMap((item) =>
-    item.blocks.flatMap((block) => {
-      if (!block.start_time) return []
+    item.blocks.map((block): EditBlock => {
+      const common = {
+        id: blockKey(item.id, block.id),
+        track: block.date,
+        itemId: item.id,
+        blockId: block.id,
+      }
+      if (!block.start_time) return { ...common, start: 0, end: 0, allDay: true }
       const start = toMinutes(block.start_time)
-      return [
-        {
-          id: blockKey(item.id, block.id),
-          track: block.date,
-          start,
-          end: block.end_time ? toMinutes(block.end_time) : start + DEFAULT_MINUTES,
-          itemId: item.id,
-          blockId: block.id,
-        },
-      ]
+      return {
+        ...common,
+        start,
+        end: block.end_time ? toMinutes(block.end_time) : start + DEFAULT_MINUTES,
+      }
     }),
   )
 
-export type AllDayBlock = { item: CalendarItem; blockId: string; date: string }
+/** The timed blocks, which the span editor and the hours of the grid read. */
+export const timedBlocks = (blocks: EditBlock[]): EditBlock[] =>
+  blocks.filter((block) => !block.allDay)
 
-export const allDayBlocks = (items: CalendarItem[], days: string[]): AllDayBlock[] =>
-  items.flatMap((item) =>
-    item.blocks
-      .filter((block) => !block.start_time && days.includes(block.date))
-      .map((block) => ({ item, blockId: block.id, date: block.date })),
-  )
+/** The all-day blocks on the days in view, in the all-day row. */
+export const allDayBlocks = (blocks: EditBlock[], days: string[]): EditBlock[] =>
+  blocks.filter((block) => block.allDay && days.includes(block.track))
 
 /**
  * The working day an edit grid always shows, so a new meeting can go at any

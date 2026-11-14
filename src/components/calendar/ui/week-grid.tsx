@@ -1,11 +1,11 @@
 import { MenuContextTrigger, type MenuController } from '@ui-sdk/react/menu'
 import { Ellipsis, Plus, RotateCcw } from 'lucide-react'
-import { useRef, type CSSProperties } from 'react'
+import { useRef, type CSSProperties, type KeyboardEvent, type MouseEvent } from 'react'
 
 import { timeDir } from '@/lib/digits'
 import type { CalendarItem } from '@/lib/calendar-items'
 
-import { scrollTargetOf, timedBlocks, type AllDayBlock, type TimedBlock } from './calendar-model'
+import { blocksOf, scrollTargetOf, timedBlocks, type EditBlock } from './calendar-model'
 import type { CalendarLabels } from './calendar-labels'
 import { longDay } from './block-names'
 import { formatDay, formatMinutes } from './calendar-time'
@@ -15,7 +15,8 @@ import { WeekSpans } from './week-spans'
 
 type Props = {
   items: CalendarItem[]
-  allDay: AllDayBlock[]
+  /** The all-day blocks on these days, as edited. */
+  allDay: EditBlock[]
   days: string[]
   range: { min: number; max: number }
   selectedIndex: number
@@ -28,7 +29,7 @@ type Props = {
   unsaved: Set<string>
   selectedId: string | null
   /** A block's spoken name. */
-  nameOf: (block: TimedBlock) => string
+  nameOf: (block: EditBlock) => string
   /** The tone of a block of an item that does not exist yet. */
   newTone: string
   /** Set when a day's "+" can draw a new item. */
@@ -38,6 +39,10 @@ type Props = {
   /** The id of the text that says how to edit. */
   hintId: string
   onOpen: (itemId: string, blockId: string | null) => void
+  /** A deleted block was pressed: bring it back. */
+  onRestore: (id: string) => void
+  /** Delete or Backspace on an all-day block (the span editor does this for timed ones). */
+  onDelete: (id: string) => void
 }
 
 export function WeekGrid({
@@ -60,6 +65,8 @@ export function WeekGrid({
   menu,
   hintId,
   onOpen,
+  onRestore,
+  onDelete,
 }: Props) {
   const itemById = new Map(items.map((item) => [item.id, item]))
   const hours = Array.from({ length: (range.max - range.min) / 60 }, (_, i) => range.min + i * 60)
@@ -69,7 +76,7 @@ export function WeekGrid({
   const scroller = useRef<HTMLDivElement>(null)
   useScrollToWork(scroller, {
     enabled: editable,
-    minutes: scrollTargetOf(timedBlocks(items), days),
+    minutes: scrollTargetOf(timedBlocks(blocksOf(items)), days),
     range,
     week: days[0]!,
   })
@@ -111,25 +118,89 @@ export function WeekGrid({
             data-selected={index === selectedIndex ? '' : undefined}
           >
             {allDay
-              .filter((entry) => entry.date === day)
-              .map(({ item, blockId }) => (
-                <button
-                  key={`${item.id}/${blockId}`}
-                  type="button"
-                  className={styles.pill}
-                  data-tone={item.tone}
-                  data-cancelled={item.cancelled ? '' : undefined}
-                  aria-label={labels.blockName({
-                    title: item.title,
-                    day: dayLong(day),
-                    time: labels.allDay,
-                    status: item.cancelled ? labels.cancelled : '',
-                  })}
-                  onClick={() => onOpen(item.id, blockId)}
-                >
-                  {item.title}
-                </button>
-              ))}
+              .filter((block) => block.track === day)
+              .map((block) => {
+                const item = itemById.get(block.itemId)
+                const pill = {
+                  type: 'button' as const,
+                  className: styles.pill,
+                  'data-allday-id': block.id,
+                  'data-tone': item?.tone ?? newTone,
+                  'data-cancelled': item?.cancelled ? '' : undefined,
+                  'data-unsaved': unsaved.has(block.id) ? '' : undefined,
+                  'data-deleted': block.deleted ? '' : undefined,
+                  'aria-label': nameOf(block),
+                  'aria-describedby': editable && !block.deleted ? hintId : undefined,
+                  onClick: (event: MouseEvent<HTMLElement>) => {
+                    if (block.deleted) return onRestore(block.id)
+                    const more = (event.target as Element).closest('[data-block-menu]')
+                    if (menu && more) return void menu.open({ payload: block.id, anchor: more })
+                    if (item) onOpen(item.id, block.blockId)
+                  },
+                  onKeyDown: (event: KeyboardEvent<HTMLElement>) => {
+                    if (block.deleted) return
+                    // Not every browser turns these keys into a context menu event.
+                    if (
+                      menu &&
+                      (event.key === 'ContextMenu' || (event.shiftKey && event.key === 'F10'))
+                    ) {
+                      event.preventDefault()
+                      return void menu.open({
+                        payload: block.id,
+                        anchor: event.currentTarget,
+                        focus: 'first',
+                      })
+                    }
+                    if (editable && (event.key === 'Delete' || event.key === 'Backspace')) {
+                      event.preventDefault()
+                      onDelete(block.id)
+                    }
+                  },
+                  onContextMenu: (event: MouseEvent<HTMLElement>) => {
+                    if (!menu || block.deleted) return
+                    // A keyboard's context menu event has no point: it opens at the block.
+                    event.preventDefault()
+                    void menu.open({
+                      payload: block.id,
+                      anchor:
+                        event.button === 2
+                          ? { x: event.clientX, y: event.clientY }
+                          : event.currentTarget,
+                    })
+                  },
+                }
+                const body = (
+                  <>
+                    <span className={styles.pillTitle} dir="auto">
+                      {item?.title ?? labels.newItem}
+                    </span>
+                    {block.deleted ? (
+                      <span className={styles.pillState}>
+                        <RotateCcw aria-hidden size={12} /> {labels.restore}
+                      </span>
+                    ) : menu ? (
+                      <span className={styles.pillMore} data-block-menu aria-hidden>
+                        <Ellipsis size={14} />
+                      </span>
+                    ) : null}
+                  </>
+                )
+                return menu && !block.deleted ? (
+                  <MenuContextTrigger
+                    key={block.id}
+                    controller={menu}
+                    payload={block.id}
+                    render={<button />}
+                    {...pill}
+                  >
+                    {body}
+                  </MenuContextTrigger>
+                ) : (
+                  <button key={block.id} {...pill}>
+                    {body}
+                  </button>
+                )
+              })}
           </div>
         ))}
       </div>

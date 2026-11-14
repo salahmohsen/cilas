@@ -15,12 +15,12 @@ import {
 import { createParts, usePart, usePrimitive, type PartProps } from '@ui-sdk/react/primitive'
 import { createContext, use, type ReactNode } from 'react'
 
-import type { TimedBlock } from './calendar-model'
+import type { EditBlock } from './calendar-model'
 
 type WeekSpansOptions = {
-  spans: TimedBlock[]
+  spans: EditBlock[]
   onSpansChange?: (
-    spans: TimedBlock[],
+    spans: EditBlock[],
     details: ChangeDetails<SpansReason> & { id: string; action: SpanAction },
   ) => void
   editable: boolean
@@ -29,14 +29,14 @@ type WeekSpansOptions = {
   max: number
   step: number
   /** Makes the block a press on an empty stretch of a day starts to draw, or null for none. */
-  create?: (span: { track: string; start: number; end: number }) => TimedBlock | null
-  label: (block: TimedBlock) => string
-  message: (message: SpansMessage<TimedBlock>) => string
+  create?: (span: { track: string; start: number; end: number }) => EditBlock | null
+  label: (block: EditBlock) => string
+  message: (message: SpansMessage<EditBlock>) => string
   /** A block was pressed: a click, or Enter or Space on it. */
-  onPress: (block: TimedBlock, event: Event | undefined) => void
+  onPress: (block: EditBlock, event: Event | undefined) => void
 }
 
-type WeekSpansState = { spans: TimedBlock[]; draft: SpansDraft<TimedBlock> | null }
+type WeekSpansState = { spans: EditBlock[]; draft: SpansDraft<EditBlock> | null }
 
 const weekSpans = definePrimitive({
   name: 'week-spans',
@@ -59,7 +59,7 @@ const weekSpans = definePrimitive({
   api: (context) => {
     const change = createChange(context)
     const options = () => context.options() as WeekSpansOptions
-    const spans = createSpans<WeekSpansState, TimedBlock>(context, {
+    const spans = createSpans<WeekSpansState, EditBlock>(context, {
       key: 'spans',
       draft: 'draft',
       set: (value, details) => change('spans', value, details),
@@ -85,7 +85,7 @@ const weekSpans = definePrimitive({
   },
   slots: (slot) => ({
     root: slot({}),
-    track: slot<{ value: string }, { spans: TimedBlock[] }>({
+    track: slot<{ value: string }, { spans: EditBlock[] }>({
       props: { value: 'string' },
       // The day's blocks as they show now, the drag's draft included, so a block
       // dragged to another day is drawn in that day while the pointer moves.

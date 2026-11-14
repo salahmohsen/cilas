@@ -1,6 +1,6 @@
 import type { CalendarItem } from '@/lib/calendar-items'
 
-import type { TimedBlock } from './calendar-model'
+import type { EditBlock } from './calendar-model'
 import type { CalendarLabels } from './calendar-labels'
 import { formatDay, formatMinutes } from './calendar-time'
 
@@ -24,14 +24,16 @@ export const longDay = (day: string, locale: string) =>
 export function blockNamer({ items, labels, locale, hour12, unsaved }: Context) {
   const itemById = new Map(items.map((item) => [item.id, item]))
   const states = new Intl.ListFormat(locale, { style: 'long', type: 'conjunction' })
-  return (block: TimedBlock) => {
+  return (block: EditBlock) => {
     const item = itemById.get(block.itemId)
     const title = item?.title ?? labels.newItem
     const day = longDay(block.track, locale)
-    const time = labels.timeRange(
-      formatMinutes(block.start, locale, hour12),
-      formatMinutes(block.end, locale, hour12),
-    )
+    const time = block.allDay
+      ? labels.allDay
+      : labels.timeRange(
+          formatMinutes(block.start, locale, hour12),
+          formatMinutes(block.end, locale, hour12),
+        )
     if (block.deleted) return labels.restoreName({ title, day, time })
     const status = [item?.cancelled && labels.cancelled, unsaved.has(block.id) && labels.unsaved]
     return labels.blockName({
