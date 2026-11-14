@@ -1,6 +1,6 @@
 import { defineConfig, devices } from '@playwright/test'
 
-import 'dotenv/config'
+import { config as loadEnv } from 'dotenv'
 import { register } from 'tsx/esm/api'
 
 // Playwright's own loader refuses JSON imports without an import attribute
@@ -8,6 +8,17 @@ import { register } from 'tsx/esm/api'
 // tsx's loader accepts them. Registering it here, before the specs load,
 // covers every way of starting Playwright, not only the package script.
 register()
+
+// The specs open the database themselves (a test user, courses, sessions), so
+// they must read the files the server reads, in Next's order (first file
+// wins). `dotenv/config` read only `.env`, which names the production
+// database; `.env.development.local` names the local one.
+loadEnv({ path: ['.env.development.local', '.env.local', '.env'] })
+
+const { hostname: databaseHost } = new URL(process.env.DATABASE_URL ?? 'postgres://unset')
+if (!['localhost', '127.0.0.1', '[::1]'].includes(databaseHost)) {
+  throw new Error(`The e2e specs write to the database, and "${databaseHost}" is not a local host.`)
+}
 
 export default defineConfig({
   testDir: './tests/e2e',
