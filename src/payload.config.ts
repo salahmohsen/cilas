@@ -61,6 +61,7 @@ import { syncStatus } from './forms/application-status'
 import { requireTurnstile } from './forms/spam-check'
 import { redirectsPlugin } from '@payloadcms/plugin-redirects'
 import { seoPlugin } from '@payloadcms/plugin-seo'
+import { seoTabFor } from '@/lib/seo-tab'
 import type {
   GenerateDescription,
   GenerateImage,
@@ -391,6 +392,8 @@ export default buildConfig({
       generateImage,
       generateURL,
     }),
+    // The course form keeps its SEO settings in a tab of their own.
+    seoTabFor(['courses']),
     redirectsPlugin({
       collections: [
         'courses',
