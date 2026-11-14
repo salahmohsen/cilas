@@ -44,12 +44,29 @@ export default defineConfig({
     },
   ],
   webServer: {
-    command: 'pnpm dev',
+    // The production build, not `next dev`: the dev server compiles each route
+    // on its first request, and a compile stalls every other request for tens
+    // of seconds, so the specs timed out in a different place on each run.
+    // `CI` only limits the build's workers (next.config.ts). A server that is
+    // already running is reused, such as `pnpm dev` for a quick run of one spec.
+    command: 'cross-env CI=1 pnpm build && pnpm start',
     reuseExistingServer: true,
-    // The real Turnstile widget never gives a token on localhost, so the apply
-    // form waited for it and failed after 46 s. Without the keys the forms use
-    // only their honeypot (src/components/forms/spam-check.tsx).
-    env: { NEXT_PUBLIC_TURNSTILE_SITE_KEY: '', TURNSTILE_SECRET_KEY: '' },
+    timeout: 600_000,
+    // The real Turnstile widget never gives a token on localhost. Without the
+    // keys the forms use only their honeypot (src/components/forms/spam-check.tsx).
+    // The site key is part of the build, so the build needs this too.
+    //
+    // A production server refuses any storage but Cloudflare R2 (src/env.ts),
+    // so the local storage of `.env.development.local` cannot be used. The
+    // specs upload nothing; an endpoint that does not exist makes an upload
+    // fail at once, where the real keys of `.env` would reach real storage.
+    env: {
+      NEXT_PUBLIC_TURNSTILE_SITE_KEY: '',
+      TURNSTILE_SECRET_KEY: '',
+      R2_ENDPOINT: 'https://e2e.invalid.r2.cloudflarestorage.com',
+      R2_ACCESS_KEY_ID: 'e2e',
+      R2_SECRET_ACCESS_KEY: 'e2e',
+    },
     url: process.env.E2E_BASE_URL ?? 'http://localhost:3000',
   },
 })
