@@ -65,6 +65,11 @@ describe('sessionItems', () => {
       ['5', 'Session 2', 0],
     ])
   })
+
+  it('opens a draft course that has no type yet, with the neutral tone', () => {
+    const items = sessionItems([doc({ id: 1 })], { course_type: null }, untitled)
+    expect(items.map((i) => i.tone)).toEqual(['neutral'])
+  })
 })
 
 describe('meetingsAfter', () => {

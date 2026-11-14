@@ -125,10 +125,11 @@ export const sessionItems = (
     Session,
     'id' | 'title' | 'cancelled' | 'meetings' | 'position' | 'updatedAt'
   >[],
-  course: Pick<Course, 'course_type'>,
+  // The admin reads the draft, and a draft may not have its type yet.
+  course: { course_type?: Course['course_type'] | null },
   untitled: CalendarContext['untitled'],
 ): CalendarItem[] => {
-  const tone = toneOf({ type: course.course_type.toLowerCase() })
+  const tone = toneOf({ type: course.course_type?.toLowerCase() ?? '' })
   return numberedSessions(sessions).map(({ session, number }): CalendarItem => ({
     id: String(session.id),
     kind: 'session',
