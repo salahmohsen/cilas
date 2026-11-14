@@ -4,15 +4,25 @@ import { useRef, useState } from 'react'
 import { useTranslations } from 'next-intl'
 import Image from 'next/image'
 
-import { Lightbox } from '@/components/interior/lightbox'
+import { preloadable } from '@/lib/preloadable'
 import type { GalleryBlock } from '@/payload-types'
 import { focalPointStyle } from '@/lib/media-image'
 import styles from './image-gallery.module.css'
+
+// The lightbox opens from a thumbnail; its chunk is fetched as the pointer or
+// focus reaches one, and it mounts after the first click.
+const Lightbox = preloadable(
+  () => import('@/components/interior/lightbox').then((m) => m.Lightbox),
+  {
+    name: 'Lightbox',
+  },
+)
 
 export function ImageGallery({ images = [], columnCount = '3' }: GalleryBlock) {
   const t = useTranslations('Gallery')
   const [activeIndex, setActiveIndex] = useState(0)
   const [open, setOpen] = useState(false)
+  const [opened, setOpened] = useState(false)
   const thumbnails = useRef<(HTMLAnchorElement | null)[]>([])
   const originRef = useRef<HTMLElement | null>(null)
   const returnFocusRef = useRef<HTMLElement | null>(null)
@@ -59,7 +69,11 @@ export function ImageGallery({ images = [], columnCount = '3' }: GalleryBlock) {
                 returnFocusRef.current = event.currentTarget
                 setActiveIndex(index)
                 setOpen(true)
+                setOpened(true)
               }}
+              onPointerEnter={Lightbox.preload}
+              onPointerDown={Lightbox.preload}
+              onFocus={Lightbox.preload}
             >
               <Image
                 src={src}
@@ -79,20 +93,22 @@ export function ImageGallery({ images = [], columnCount = '3' }: GalleryBlock) {
           </figure>
         ))}
       </div>
-      <Lightbox
-        open={open}
-        onClose={() => setOpen(false)}
-        src={active.src}
-        alt={active.image.alt}
-        caption={active.caption}
-        width={active.image.width ?? undefined}
-        height={active.image.height ?? undefined}
-        originRef={originRef}
-        returnFocusRef={returnFocusRef}
-        position={t('position', { current: currentIndex + 1, total: shots.length })}
-        onPrevious={shots.length > 1 ? () => navigate(-1) : undefined}
-        onNext={shots.length > 1 ? () => navigate(1) : undefined}
-      />
+      {opened && (
+        <Lightbox
+          open={open}
+          onClose={() => setOpen(false)}
+          src={active.src}
+          alt={active.image.alt}
+          caption={active.caption}
+          width={active.image.width ?? undefined}
+          height={active.image.height ?? undefined}
+          originRef={originRef}
+          returnFocusRef={returnFocusRef}
+          position={t('position', { current: currentIndex + 1, total: shots.length })}
+          onPrevious={shots.length > 1 ? () => navigate(-1) : undefined}
+          onNext={shots.length > 1 ? () => navigate(1) : undefined}
+        />
+      )}
     </div>
   )
 }

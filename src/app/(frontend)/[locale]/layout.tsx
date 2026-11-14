@@ -11,6 +11,7 @@ import { getPeoplePages } from '@/api/people-pages.api'
 import { getSocialLinks } from '@/api/social.api'
 import { SiteFooter } from '@/components/site-footer'
 import { PushRegistrar } from '@/components/push/push-registrar'
+import { SiteArcProvider } from '@/components/site-arc-provider'
 import { SiteToasts } from '@/components/site-toasts'
 import config from '@payload-config'
 import { getPayload } from 'payload'
@@ -93,23 +94,25 @@ export default async function RootLayout({ children }: { children: React.ReactNo
         <ThemeProvider>
           <NextIntlClientProvider>
             <DirectionProvider dir={direction}>
-              <SiteToasts rtl={direction === 'rtl'}>
-                {/* Open deadlines, across the whole width, above the header. */}
-                <SiteDeadlines locale={locale as 'en' | 'ar'} />
-                <CILASSiteHeader peoplePages={peoplePages} />
-                {/* Only when VAPID keys are set; the worker then registers after sign-in. */}
-                {pushConfig() && <PushRegistrar />}
-                <main className="mx-auto min-h-[60vh] max-w-page">{children}</main>
-                {/* The same width as the page content. */}
-                <div className="mx-auto max-w-page">
-                  <SiteFooter
-                    peoplePages={peoplePages}
-                    newsletter={Boolean(list)}
-                    place={place}
-                    socials={socials}
-                  />
-                </div>
-              </SiteToasts>
+              <SiteArcProvider>
+                <SiteToasts rtl={direction === 'rtl'}>
+                  {/* Open deadlines, across the whole width, above the header. */}
+                  <SiteDeadlines locale={locale as 'en' | 'ar'} />
+                  <CILASSiteHeader peoplePages={peoplePages} />
+                  {/* Only when VAPID keys are set; the worker then registers after sign-in. */}
+                  {pushConfig() && <PushRegistrar />}
+                  <main className="mx-auto min-h-[60vh] max-w-page">{children}</main>
+                  {/* The same width as the page content. */}
+                  <div className="mx-auto max-w-page">
+                    <SiteFooter
+                      peoplePages={peoplePages}
+                      newsletter={Boolean(list)}
+                      place={place}
+                      socials={socials}
+                    />
+                  </div>
+                </SiteToasts>
+              </SiteArcProvider>
             </DirectionProvider>
           </NextIntlClientProvider>
         </ThemeProvider>

@@ -42,3 +42,10 @@ This version has breaking changes — APIs, conventions, and file structure may 
 This block is written and re-added by `next dev` — verify at `node_modules/next/dist/server/lib/generate-agent-files.js`. Removing it from a diff only re-creates the uncommitted change; committing it with your work keeps the tree clean.
 
 <!-- END:nextjs-agent-rules -->
+
+## Lazy client components
+
+- Use `preloadable` from `src/lib/preloadable.tsx` for client UI that shows only after a user action: dialogs, sheets, lightboxes, editors, panels. Load shape: `preloadable(() => import('./x').then((m) => m.X))`.
+- Mount it only after the action (for example `{editing && <X />}`), and call `X.preload` from the trigger's `onPointerEnter`, `onFocus` and `onPointerDown` so the chunk is ready at the click.
+- Never use it for a server component, and never for first-render content: that content must be in the server-rendered HTML (SEO).
+- `next/dynamic` stays for first-render client content that needs a loading skeleton (for example `StudyGrid` in `src/components/study-list.tsx`).

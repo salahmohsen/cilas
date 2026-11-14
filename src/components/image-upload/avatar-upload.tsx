@@ -234,7 +234,12 @@ export function AvatarUpload({ name, fallbackSeed, src, onUpload, onRemove }: Av
                 }
               >
                 {fallbackSeed ? (
-                  <AvatarImage src={photo} fallbackSeed={fallbackSeed} draggable={false} />
+                  <AvatarImage
+                    src={photo}
+                    fallbackSeed={fallbackSeed}
+                    sizes={`${SIZE}px`}
+                    draggable={false}
+                  />
                 ) : photo ? (
                   // eslint-disable-next-line @next/next/no-img-element -- a local crop or the member's stored photo
                   <img src={photo} alt="" draggable={false} />

@@ -2,11 +2,11 @@
 
 import { Search } from 'lucide-react'
 import { useTranslations } from 'next-intl'
-import dynamic from 'next/dynamic'
 import { useCallback, useEffect, useRef, useState, useSyncExternalStore } from 'react'
 import { createPortal } from 'react-dom'
 
 import { AUTH_CHANGED } from '@/lib/auth-events'
+import { preloadable } from '@/lib/preloadable'
 import { clientEnv as env } from '@/env.client'
 
 /**
@@ -20,9 +20,10 @@ import { clientEnv as env } from '@/env.client'
 
 const enabled = Boolean(env.NEXT_PUBLIC_TYPESENSE_API_KEY)
 
-const load = () => import('@/components/site-search-panel')
-const preload = () => void load()
-const SearchPanel = dynamic(() => load().then((m) => m.SearchPanel), { ssr: false })
+const SearchPanel = preloadable(
+  () => import('@/components/site-search-panel').then((m) => m.SearchPanel),
+  { name: 'SearchPanel' },
+)
 
 const noSubscription = () => () => {}
 
@@ -74,6 +75,7 @@ export function SiteSearch() {
         event.key === '/' && !event.metaKey && !event.ctrlKey && !event.altKey && !typing
       if (command || slash) {
         event.preventDefault()
+        SearchPanel.preload()
         setOpen(true)
       }
     }
@@ -104,8 +106,8 @@ export function SiteSearch() {
         className="site-control site-search-trigger"
         onClick={() => setOpen(true)}
         // Start fetching the panel as the reader heads for the button.
-        onFocus={preload}
-        onPointerEnter={preload}
+        onFocus={SearchPanel.preload}
+        onPointerEnter={SearchPanel.preload}
       >
         <Search width={16} height={16} strokeWidth={1.75} aria-hidden="true" />
         {/* From 1024px up: a field with its shortcut (src/app/(frontend)/styles.css). */}

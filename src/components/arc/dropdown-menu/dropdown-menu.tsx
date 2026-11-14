@@ -11,6 +11,8 @@ import styles from './dropdown-menu.module.css'
 export interface DropdownItem {
   label: string
   onSelect?: () => void
+  /** Called as the pointer or focus reaches or presses the item, to fetch what it opens. */
+  onPreload?: () => void
   disabled?: boolean
   icon?: ReactNode
   destructive?: boolean
@@ -195,6 +197,9 @@ export function DropdownMenu({ label, items, icon, iconOnly = false }: DropdownM
                 style={{ '--i': index } as CSSProperties}
                 disabled={item.disabled}
                 onSelect={item.onSelect}
+                onFocus={item.onPreload}
+                onPointerEnter={item.onPreload}
+                onPointerDown={item.onPreload}
               >
                 {item.icon && (
                   <span className={styles.icon} aria-hidden="true">

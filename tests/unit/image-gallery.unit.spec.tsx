@@ -1,4 +1,4 @@
-import { cleanup, fireEvent, render, screen, waitFor, within } from '@testing-library/react'
+import { act, cleanup, fireEvent, render, screen, waitFor, within } from '@testing-library/react'
 import { NextIntlClientProvider } from 'next-intl'
 import { renderToStaticMarkup } from 'react-dom/server'
 import { afterEach, describe, expect, it } from 'vitest'
@@ -93,8 +93,11 @@ describe('image gallery', () => {
     show()
     const trigger = screen.getByRole('link', { name: 'Open image: Classroom' })
     trigger.focus()
-    fireEvent.click(trigger)
-    const dialog = await screen.findByRole('dialog')
+    // The lightbox is its own chunk, fetched on the first click: await the act so the suspended mount resumes.
+    await act(async () => {
+      fireEvent.click(trigger)
+    })
+    const dialog = await screen.findByRole('dialog', {}, { timeout: 5000 })
     expect(within(dialog).getByAltText('Classroom')).toBeInTheDocument()
     fireEvent.click(within(dialog).getByRole('button', { name: 'Next image' }))
     expect(within(dialog).getByAltText('Rooftop')).toBeInTheDocument()

@@ -18,6 +18,7 @@
   height: 100%;
 }
 .photo {
+  position: relative;
   aspect-ratio: 16 / 10;
   overflow: hidden;
   border-bottom: 1px solid var(--poster-ink);

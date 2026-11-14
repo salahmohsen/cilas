@@ -1,6 +1,7 @@
 import { listSeparator } from '@/lib/locale-format'
 import { cairoNoon } from '@/lib/cairo-day'
 import { Film } from 'lucide-react'
+import Image from 'next/image'
 import type { CSSProperties } from 'react'
 import { useFormatter, useLocale, useTranslations } from 'next-intl'
 
@@ -66,8 +67,13 @@ export function MovieCard({
       <div className={styles.main}>
         <div className={styles.poster}>
           {poster ? (
-            // eslint-disable-next-line @next/next/no-img-element
-            <img src={poster} alt={movie.title} loading="lazy" />
+            <Image
+              src={poster}
+              alt={movie.title}
+              width={500}
+              height={750}
+              sizes="min(100vw, 342px)"
+            />
           ) : (
             <Film size={48} strokeWidth={1.5} aria-hidden />
           )}

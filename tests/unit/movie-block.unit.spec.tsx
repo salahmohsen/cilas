@@ -48,10 +48,9 @@ describe('movie editor blocks', () => {
   it('renders the saved film on the card and the rest of its metadata in a dialog', async () => {
     renderMovie(movie)
     expect(screen.getByRole('heading', { name: 'Faces (1968)' })).toBeInTheDocument()
-    expect(screen.getByAltText('Faces')).toHaveAttribute(
-      'src',
-      'https://image.tmdb.org/t/p/w500/poster.jpg',
-    )
+    const poster = new URL(screen.getByAltText('Faces').getAttribute('src')!, 'http://localhost')
+    expect(poster.pathname).toBe('/_next/image')
+    expect(poster.searchParams.get('url')).toBe('https://image.tmdb.org/t/p/w500/poster.jpg')
     expect(screen.getByText(movie.overview)).toBeInTheDocument()
     // Runtime, sources and attribution wait in the dialog.
     expect(screen.queryByText('130 minutes')).toBeNull()

@@ -90,12 +90,13 @@ export async function PersonPage({
 
           {/* Who they are. */}
           <header className="flex flex-col gap-6 sm:flex-row sm:items-end">
-            <div className="size-36 shrink-0 overflow-hidden rounded-[26px] bg-[var(--surface-muted)] sm:size-44">
+            <div className="relative size-36 shrink-0 overflow-hidden rounded-[26px] bg-[var(--surface-muted)] sm:size-44">
               <AvatarImage
                 src={photo?.url}
                 fallbackSeed={personAvatarSeed(person.id)}
                 alt={photo?.alt || person.name}
                 className="h-full w-full object-cover"
+                sizes="(min-width: 640px) 176px, 144px"
                 style={focalPointStyle(photo)}
               />
             </div>

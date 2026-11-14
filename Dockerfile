@@ -108,9 +108,11 @@ RUN adduser --system --uid 1001 nextjs
 # Remove this line if you do not have this folder
 COPY --from=builder /app/public ./public
 
-# Set the correct permission for prerender cache
-RUN mkdir .next
-RUN chown nextjs:nodejs .next
+# Set the correct permission for prerender cache. Production mounts a volume
+# on .next/cache/images so optimized images survive a deploy; an empty volume
+# takes this folder's owner, so the server can write to it.
+RUN mkdir -p .next/cache/images
+RUN chown -R nextjs:nodejs .next
 
 # Automatically leverage output traces to reduce image size
 # https://nextjs.org/docs/advanced-features/output-file-tracing
@@ -126,4 +128,9 @@ ENV PORT=3000
 
 # server.js is created by next build from the standalone output
 # https://nextjs.org/docs/pages/api-reference/next-config-js/output
-CMD HOSTNAME="0.0.0.0" node server.js
+#
+# The server has no IPv6 route, and a TCP connect to Cloudflare (the R2 bucket
+# that next/image fetches from) takes about 300ms from it. Node tries each
+# address for only 250ms by default, so most fetches failed with ETIMEDOUT.
+# Give each address 2s.
+CMD HOSTNAME="0.0.0.0" node --network-family-autoselection-attempt-timeout=2000 server.js
