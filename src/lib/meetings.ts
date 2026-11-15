@@ -103,6 +103,21 @@ export const weeks = (meetings: readonly MaybeCancelled[]): number => {
   return first && last ? periodOf(first, last) + 1 : 0
 }
 
+/**
+ * The course week a run of days shows, as "week of weeks": the period of
+ * the first held meeting on those days. A Saturday-to-Friday calendar week
+ * can hold the end of one course week and the start of the next; its first
+ * meeting names it. Null when none of the days has a held meeting.
+ */
+export const courseWeek = (
+  meetings: readonly MaybeCancelled[],
+  days: readonly string[],
+): { week: number; weeks: number } | null => {
+  const first = firstDay(meetings)
+  const shown = held(meetings).find((m) => days.includes(m.date))
+  return first && shown ? { week: periodOf(first, shown.date) + 1, weeks: weeks(meetings) } : null
+}
+
 /** The first meeting not cancelled on or after `today` (a Cairo day), or null. */
 export const nextMeeting = <T extends MaybeCancelled>(
   meetings: readonly T[],

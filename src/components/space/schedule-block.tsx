@@ -31,7 +31,10 @@ export function ScheduleBlock({
   const course = read?.state === 'shown' ? read.course : null
   const view = course
     ? scheduleView(
-        sessionItems(course.sessions, course, (number) => tc('session', { number })),
+        sessionItems(course.sessions, course, {
+          untitled: (number) => tc('session', { number }),
+          delivery: (value) => tc(`delivery.${value}`),
+        }),
         schedule,
       )
     : null

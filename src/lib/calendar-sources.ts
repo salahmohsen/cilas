@@ -41,6 +41,23 @@ export type CalendarContext = {
   user: User
   /** What an untitled session is called: "Session 3". */
   untitled: (number: number) => string
+  /** How a session meets, in words: "Online". */
+  delivery: (value: Delivery) => string
+}
+
+type Delivery = NonNullable<Session['delivery']>
+
+/**
+ * How a session meets: its own delivery, else the course's location. A
+ * course held both ways (more than one location) is hybrid.
+ */
+export const deliveryOf = (
+  session: Pick<Session, 'delivery'>,
+  course: Pick<Course, 'location'>,
+): Delivery | null => {
+  if (session.delivery) return session.delivery
+  const location = course.location ?? []
+  return location.length > 1 ? 'HYBRID' : (location[0] ?? null)
 }
 
 export type CalendarSource = {
@@ -133,42 +150,55 @@ export const sessionName = (
 
 /** A course's sessions as calendar items: a session is an item, a meeting its block. */
 export const sessionItems = (
-  sessions: readonly Pick<
-    Session,
-    'id' | 'title' | 'cancelled' | 'meetings' | 'position' | 'updatedAt'
-  >[],
+  sessions: readonly CalendarSession[],
   // The admin reads the draft, and a draft may not have its type yet.
-  course: { course_type?: Course['course_type'] | null },
-  untitled: CalendarContext['untitled'],
+  course: { course_type?: Course['course_type'] | null; location?: Course['location'] },
+  { untitled, delivery }: Pick<CalendarContext, 'untitled' | 'delivery'>,
 ): CalendarItem[] => {
   const tone = toneOf({ type: course.course_type?.toLowerCase() ?? '' })
-  return numberedSessions(sessions).map(({ session, number }): CalendarItem => ({
-    id: String(session.id),
-    kind: 'session',
-    title: session.title || untitled(number),
-    tone,
-    cancelled: Boolean(session.cancelled),
-    version: session.updatedAt,
-    blocks: [...(session.meetings ?? [])].sort(byWhen).map((m): CalendarBlock => ({
-      id: m.id ?? '',
-      date: m.date,
-      start_time: m.start_time || null,
-      end_time: m.end_time || null,
-    })),
-  }))
+  return numberedSessions(sessions).map(({ session, number }): CalendarItem => {
+    const meets = deliveryOf(session, { location: course.location })
+    return {
+      id: String(session.id),
+      kind: 'session',
+      title: session.title || untitled(number),
+      tone,
+      ...(meets ? { place: delivery(meets) } : {}),
+      cancelled: Boolean(session.cancelled),
+      version: session.updatedAt,
+      blocks: [...(session.meetings ?? [])].sort(byWhen).map((m): CalendarBlock => ({
+        id: m.id ?? '',
+        date: m.date,
+        start_time: m.start_time || null,
+        end_time: m.end_time || null,
+      })),
+    }
+  })
 }
+
+type CalendarSession = Pick<
+  Session,
+  'id' | 'title' | 'cancelled' | 'meetings' | 'position' | 'updatedAt' | 'delivery'
+>
 
 const courseSessions = async (
   { req, user }: CalendarContext,
   id: number,
-): Promise<Pick<Session, 'id' | 'title' | 'cancelled' | 'meetings' | 'position' | 'updatedAt'>[]> =>
+): Promise<CalendarSession[]> =>
   (
     await req.payload.find({
       collection: 'sessions',
       where: { course: { equals: id } },
       depth: 0,
       pagination: false,
-      select: { title: true, cancelled: true, meetings: true, position: true, updatedAt: true },
+      select: {
+        title: true,
+        cancelled: true,
+        meetings: true,
+        position: true,
+        updatedAt: true,
+        delivery: true,
+      },
       user,
       overrideAccess: false,
       req,
@@ -178,7 +208,14 @@ const courseSessions = async (
 /** The fields of a course that its calendar and its session drawer read. */
 export type ShownCourse = Pick<
   Course,
-  'id' | 'slug' | 'title' | 'subtitle' | 'description' | 'syllabus_tentative' | 'course_type'
+  | 'id'
+  | 'slug'
+  | 'title'
+  | 'subtitle'
+  | 'description'
+  | 'syllabus_tentative'
+  | 'course_type'
+  | 'location'
 >
 
 /**
@@ -204,6 +241,7 @@ export const shownCourse = async (
       description: true,
       syllabus_tentative: true,
       course_type: true,
+      location: true,
     },
     user,
     overrideAccess: false,
@@ -215,7 +253,7 @@ export const shownCourse = async (
 const sessionSource: CalendarSource = {
   async load(ctx, parentId) {
     const { course } = await shownCourse(ctx, parentId)
-    return sessionItems(await courseSessions(ctx, numericId(parentId)), course, ctx.untitled)
+    return sessionItems(await courseSessions(ctx, numericId(parentId)), course, ctx)
   },
 
   async names(ctx, parentId) {

@@ -10,7 +10,11 @@ import {
 } from '@/lib/calendar-sources'
 import type { Session } from '@/payload-types'
 
-const untitled = (n: number) => `Session ${n}`
+const words = {
+  untitled: (n: number) => `Session ${n}`,
+  delivery: (value: string) =>
+    ({ OFFLINE: 'In person', ONLINE: 'Online', HYBRID: 'Hybrid' })[value]!,
+}
 
 type Doc = Parameters<typeof sessionItems>[0][number]
 const doc = (over: Partial<Doc> & { id: number }): Doc => ({
@@ -44,7 +48,7 @@ describe('sessionItems', () => {
         }),
       ],
       course,
-      untitled,
+      words,
     )
     expect(items.map((i) => i.id)).toEqual(['1', '2'])
     expect(items[0]).toEqual({
@@ -65,7 +69,7 @@ describe('sessionItems', () => {
     const items = sessionItems(
       [doc({ id: 5, position: 1 }), doc({ id: 4, meetings: [{ id: 'x', date: '2034-10-05' }] })],
       course,
-      untitled,
+      words,
     )
     expect(items.map((i) => [i.id, i.title, i.blocks.length])).toEqual([
       ['4', 'Session 1', 1],
@@ -74,8 +78,24 @@ describe('sessionItems', () => {
   })
 
   it('opens a draft course that has no type yet, with the neutral tone', () => {
-    const items = sessionItems([doc({ id: 1 })], { course_type: null }, untitled)
+    const items = sessionItems([doc({ id: 1 })], { course_type: null }, words)
     expect(items.map((i) => i.tone)).toEqual(['neutral'])
+  })
+
+  it('says how a session meets: its own delivery, else the course location', () => {
+    const items = sessionItems(
+      [doc({ id: 1, delivery: 'ONLINE' }), doc({ id: 2 })],
+      { course_type: null, location: ['OFFLINE'] },
+      words,
+    )
+    expect(items.map((i) => [i.id, i.place])).toEqual([
+      ['1', 'Online'],
+      ['2', 'In person'],
+    ])
+    const both = sessionItems([doc({ id: 1 })], { location: ['OFFLINE', 'ONLINE'] }, words)
+    expect(both[0]!.place).toBe('Hybrid')
+    const none = sessionItems([doc({ id: 1 })], { location: [] }, words)
+    expect(none[0]).not.toHaveProperty('place')
   })
 })
 

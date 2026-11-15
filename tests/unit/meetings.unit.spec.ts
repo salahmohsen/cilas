@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest'
 
 import {
   byWhen,
+  courseWeek,
   firstDay,
   isAllDay,
   lastDay,
@@ -197,6 +198,37 @@ describe('weeks', () => {
 
   it('crosses a year end', () => {
     expect(weeks([at('2026-12-29'), at('2027-01-05')])).toBe(2)
+  })
+})
+
+describe('courseWeek', () => {
+  // Tuesday and Thursday from Tuesday 3 November 2026, four weeks.
+  const course = [
+    '2026-11-03',
+    '2026-11-05',
+    '2026-11-10',
+    '2026-11-12',
+    '2026-11-17',
+    '2026-11-24',
+  ].map((date) => ({ date }))
+  const saturdayWeek = (start: number) =>
+    Array.from({ length: 7 }, (_, i) => `2026-11-${String(start + i).padStart(2, '0')}`)
+
+  it('names a Saturday week by the course week of its first meeting', () => {
+    expect(courseWeek(course, saturdayWeek(7))).toEqual({ week: 2, weeks: 4 })
+    expect(courseWeek(course, ['2026-11-03'])).toEqual({ week: 1, weeks: 4 })
+    expect(courseWeek(course, saturdayWeek(21))).toEqual({ week: 4, weeks: 4 })
+  })
+
+  it('names no week for days with no held meeting', () => {
+    expect(courseWeek(course, ['2026-11-04'])).toBeNull()
+    expect(courseWeek([{ date: '2026-11-10', cancelled: true }], ['2026-11-10'])).toBeNull()
+    expect(courseWeek([], saturdayWeek(7))).toBeNull()
+  })
+
+  it('counts weeks from the first held meeting, not a cancelled one before it', () => {
+    const moved = [{ date: '2026-10-27', cancelled: true }, ...course]
+    expect(courseWeek(moved, ['2026-11-10'])).toEqual({ week: 2, weeks: 4 })
   })
 })
 

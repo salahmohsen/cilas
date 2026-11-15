@@ -483,7 +483,14 @@ const rsvpViews = async (
 /** A course with its sessions in order (`getCourseSessions`), as a course space shows them. */
 export type SessionCourse = Pick<
   Course,
-  'id' | 'slug' | 'title' | 'subtitle' | 'description' | 'syllabus_tentative' | 'course_type'
+  | 'id'
+  | 'slug'
+  | 'title'
+  | 'subtitle'
+  | 'description'
+  | 'syllabus_tentative'
+  | 'course_type'
+  | 'location'
 > & { sessions: Session[] }
 
 /**
@@ -529,6 +536,7 @@ const sessionRead = async (
       description: true,
       syllabus_tentative: true,
       course_type: true,
+      location: true,
     },
     where: { id: { equals: courseId } },
   })

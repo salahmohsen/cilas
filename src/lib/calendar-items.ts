@@ -1,4 +1,4 @@
-import { lastDay, nextMeeting } from './meetings'
+import { courseWeek, lastDay, nextMeeting } from './meetings'
 
 /**
  * The contract between the calendar component and the code that loads and
@@ -32,6 +32,8 @@ export type CalendarItem = {
   /** This item is visible in edit mode but cannot be changed there. */
   readOnly?: true
   cancelled: boolean
+  /** Where or how it meets, in words: "Online". */
+  place?: string
   /** The item's `updatedAt` when it was loaded; a save from an older one fails. */
   version: string
   blocks: CalendarBlock[]
@@ -57,13 +59,20 @@ export type CalendarSave = {
   changes: CalendarChange[]
 }
 
-/** The next meeting's day, or the last held meeting's day after the course ends. */
-export const openingDay = (items: readonly CalendarItem[], today: string): string | undefined => {
-  const meetings = items.flatMap((item) =>
+const meetingsOf = (items: readonly CalendarItem[]) =>
+  items.flatMap((item) =>
     item.blocks.map((block) => ({
       date: block.date,
       ...(item.cancelled ? { cancelled: true as const } : {}),
     })),
   )
+
+/** The next meeting's day, or the last held meeting's day after the course ends. */
+export const openingDay = (items: readonly CalendarItem[], today: string): string | undefined => {
+  const meetings = meetingsOf(items)
   return nextMeeting(meetings, today)?.date ?? lastDay(meetings) ?? undefined
 }
+
+/** The course week the days show, counted over the items' meetings (`courseWeek`). */
+export const courseWeekOf = (items: readonly CalendarItem[], days: readonly string[]) =>
+  courseWeek(meetingsOf(items), days)
