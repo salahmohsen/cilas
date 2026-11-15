@@ -1,0 +1,33 @@
+.dialog {
+  width: min(calc(100vw - var(--space-8)), 760px);
+  color: var(--foreground);
+}
+.entries {
+  display: grid;
+  gap: var(--space-6);
+}
+.entry {
+  display: grid;
+  gap: var(--space-4);
+}
+.entry + .entry {
+  padding-block-start: var(--space-6);
+  border-block-start: 1px solid var(--border);
+}
+.heading {
+  margin: 0;
+  font-size: var(--text-base);
+  font-weight: 500;
+}
+.preview {
+  margin: 0;
+}
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: var(--space-3);
+}
+.actions > button {
+  min-block-size: 44px;
+}

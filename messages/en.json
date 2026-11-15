@@ -579,9 +579,25 @@
       "unauthenticated": "Sign in again to save.",
       "forbidden": "You may not change these sessions.",
       "notFound": "A session or meeting is gone. Reload to see the latest.",
-      "stale": "Someone changed these sessions. Reload to see the latest.",
+      "stale": "Someone else changed {named, select, true {{name}} other {a session}} after the calendar loaded. Your changes are not saved.",
       "invalid": "A change is not valid. {message}",
       "failed": "Something went wrong. Try again."
+    },
+    "saveNote": "The course’s Save does not save the schedule. Use Save schedule.",
+    "reloadAndLose": "Reload and lose my changes",
+    "offer": {
+      "title": "Announce this change?",
+      "oneSpace": "The announcement goes to {space}, pinned, and every member gets a notification.",
+      "manySpaces": "Publish or skip an announcement for each space.",
+      "space": "To {space}",
+      "text": "Announcement",
+      "includeCalendar": "Include the calendar",
+      "publish": "Publish to space",
+      "publishing": "Publishing",
+      "skip": "Skip",
+      "close": "Close",
+      "publishFailed": "The announcement is not published. {reason}",
+      "failed": "The schedule is saved. The announcement could not load."
     }
   },
   "Select": {
