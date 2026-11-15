@@ -23,7 +23,8 @@ let payload: Payload
 let session: number
 let space: number
 let spacePath: string
-let modeBefore: 'off' | 'trial' | 'on' = 'off'
+/** The site's spaces mode before the run; unset until it was read. */
+let modeBefore: 'off' | 'trial' | 'on' | undefined
 let unlock: (() => Promise<void>) | undefined
 const accounts: Record<'fellow' | 'student', { email: string; password: string; id: number }> =
   {} as never
@@ -70,7 +71,7 @@ test.describe('space calendar edit mode', () => {
   test.describe.configure({ mode: 'serial', timeout: 300_000 })
 
   test.beforeAll(async ({ browser }) => {
-    // The hook makes the fixture and signs in on a cold server: more than the 30 s hook default.
+    // Playwright 1.58 starts all-hooks with the project timeout, not describe.timeout.
     test.setTimeout(300_000)
     unlock = await lockSpacesMode()
     payload = await getPayload({ config })
@@ -205,11 +206,12 @@ test.describe('space calendar edit mode', () => {
     if (session && payload)
       await payload.delete({ collection: 'sessions', id: session, overrideAccess: true })
     if (payload) {
-      await payload.updateGlobal({
-        slug: 'site-settings',
-        data: { spaces_mode: modeBefore },
-        overrideAccess: true,
-      })
+      if (modeBefore)
+        await payload.updateGlobal({
+          slug: 'site-settings',
+          data: { spaces_mode: modeBefore },
+          overrideAccess: true,
+        })
       await cleanup(payload)
       await payload.destroy()
     }
@@ -240,12 +242,16 @@ test.describe('space calendar edit mode', () => {
     await fellow.getByRole('button', { name: 'Done', exact: true }).click()
     const ask = fellow.getByRole('dialog', { name: 'Leave without saving?' })
     await expect(ask).toBeVisible()
+    await expect(ask.getByRole('button', { name: 'Close', exact: true })).toHaveCount(1)
+    await expect(ask.getByRole('button', { name: 'Stay', exact: true })).toHaveCount(1)
     await ask.getByRole('button', { name: 'Stay', exact: true }).click()
     await expect(ask).toBeHidden()
     await expect(block(fellow)).toHaveAccessibleName(/Unsaved/)
     // A tab switch asks too, and Stay keeps the tab.
     await fellow.getByRole('button', { name: 'Announcements', exact: true }).click()
     await expect(ask).toBeVisible()
+    await expect(ask.getByRole('button', { name: 'Close', exact: true })).toHaveCount(1)
+    await expect(ask.getByRole('button', { name: 'Stay', exact: true })).toHaveCount(1)
     await ask.getByRole('button', { name: 'Stay', exact: true }).click()
     await expect(ask).toBeHidden()
     expect(fellow.url()).toContain('tab=calendar')

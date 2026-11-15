@@ -27,10 +27,10 @@ import { useScheduleSave } from './use-schedule-save'
 export function SpaceCalendarEditor({
   spaceId,
   courseId,
-  items: loaded,
+  items,
   day,
   spaceHref,
-  onSaved,
+  onItems,
   onDone,
 }: {
   spaceId: string
@@ -38,8 +38,8 @@ export function SpaceCalendarEditor({
   items: CalendarItem[]
   day?: string
   spaceHref: string
-  /** A save came back with these items. */
-  onSaved: (items: CalendarItem[]) => void
+  /** The items as saved or reloaded now; the tab holds them. */
+  onItems: (items: CalendarItem[]) => void
   /** Back to view mode, with nothing left to save. */
   onDone: () => void
 }) {
@@ -67,7 +67,7 @@ export function SpaceCalendarEditor({
     [language, messages, labels],
   )
 
-  const [items, setItems] = useState(loaded)
+  const [reloadFailed, setReloadFailed] = useState(false)
   const [unsaved, setUnsaved] = useState(0)
   const [asking, setAsking] = useState<(() => void) | null>(null)
   const done = useRef<HTMLButtonElement>(null)
@@ -80,8 +80,10 @@ export function SpaceCalendarEditor({
     language,
     text,
     reload: () => {
+      setReloadFailed(false)
       void loadCalendarItems({ kind: 'space', id: spaceId }, locale).then((result) => {
-        if (result.ok) setItems(result.items)
+        if (result.ok) onItems(result.items)
+        else setReloadFailed(true)
       })
     },
   })
@@ -97,8 +99,7 @@ export function SpaceCalendarEditor({
   const save = async (changes: CalendarChange[]) => {
     // The save bar leaves with the changes, so the offer gives focus back to Done.
     const saved = await schedule.save(changes, items, () => done.current)
-    setItems(saved)
-    onSaved(saved)
+    onItems(saved)
     // The page's other server parts, like the next session beside the tab, read it again.
     router.refresh()
     return saved
@@ -114,6 +115,7 @@ export function SpaceCalendarEditor({
       </div>
 
       {schedule.failed ? <Alert tone="danger" title={text.offerFailed} /> : null}
+      {reloadFailed ? <Alert tone="danger" title={t('calendarFailed')} /> : null}
 
       <div className="contents" {...sessionTriggerProps}>
         <Calendar

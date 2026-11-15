@@ -68,6 +68,8 @@ test.describe('course schedule announcements', () => {
   test.describe.configure({ mode: 'serial', timeout: 300_000 })
 
   test.beforeAll(async ({ browser }) => {
+    // Playwright 1.58 starts all-hooks with the project timeout, not describe.timeout.
+    test.setTimeout(300_000)
     unlock = await lockSpacesMode()
     await seedTestUser()
     payload = await getPayload({ config })
@@ -172,6 +174,7 @@ test.describe('course schedule announcements', () => {
   })
 
   test.afterAll(async () => {
+    test.setTimeout(120_000)
     await page?.context().close()
     if (space) {
       const posts = await payload.find({

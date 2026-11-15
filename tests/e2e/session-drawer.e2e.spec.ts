@@ -53,6 +53,8 @@ test.describe('session drawer', () => {
   test.describe.configure({ mode: 'serial', timeout: 300_000 })
 
   test.beforeAll(async ({ browser }) => {
+    // Playwright 1.58 starts all-hooks with the project timeout, not describe.timeout.
+    test.setTimeout(300_000)
     unlock = await lockSpacesMode()
     await seedTestUser()
     payload = await getPayload({ config })
@@ -164,6 +166,7 @@ test.describe('session drawer', () => {
   })
 
   test.afterAll(async () => {
+    test.setTimeout(120_000)
     await page?.context().close()
     // Rows the run made through the app: the post's visits, and the test user's consent.
     if (space) {

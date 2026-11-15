@@ -49,7 +49,7 @@ export function SpaceCalendarTab({
         items={items}
         day={day}
         spaceHref={spaceHref}
-        onSaved={setItems}
+        onItems={setItems}
         onDone={() => {
           setEditing(false)
           requestAnimationFrame(() => edit.current?.focus())
