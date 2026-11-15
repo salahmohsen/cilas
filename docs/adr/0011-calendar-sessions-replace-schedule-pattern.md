@@ -230,6 +230,16 @@ Where the offer opens: after **Save schedule** in the admin calendar; after a sa
 - **After Save:** the prefilled announcement (see above). Open calendars update through the space's realtime channel (`lib/realtime/publish.ts`).
 - **Language:** a fellow edits the text in the space's current language.
 
+As built in step 4:
+
+- The `space` calendar source loads course sessions and space events. Events have `readOnly: true`. They open their post and cannot move in the calendar.
+- `shownCourse` reads a draft only when the person can edit sessions. Other readers get the published course.
+- `?open=<id>` opens one shared session drawer. It uses the Arc drawer on desktop and the Arc bottom sheet on phones.
+- `SpaceCalendarTab` opens `SpaceCalendarEditor` for edit mode. `useScheduleSave` saves, then `useScheduleOffer` offers the announcement. The drawer uses the same offer.
+- `lib/leave-guard.ts` is the one leave guard. It checks links, page close and navigation through `leave`. This Next version cannot ask on Back and Forward.
+- The drawer's Edit form uses TanStack Form. `saveSessionEdit` checks `updatedAt` before it saves. A stale drawer save keeps the fields and offers Reload.
+- Close found a gap. A drawer save refreshes the calendar. If that session has a pending calendar edit, the calendar drops it and names it in a notice. It does not keep the edit for a stale Save. This needs the owner's decision.
+
 ## Public calendar redesign
 
 - **Views stay** (month, week, agenda) and so do the URLs (`?view=week&date=…`). Week becomes the hours view.
