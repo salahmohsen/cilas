@@ -171,18 +171,18 @@ describe('the Calendar tab in edit mode', () => {
     fireEvent.click(screen.getByRole('button', { name: 'Done' }))
     expect(leaveDialog()).toBeNull()
     await screen.findByRole('button', { name: 'Edit' })
-    expect(block()).toHaveAccessibleName(/19:15 to 21:00/)
+    expect(block()).toHaveAccessibleName(/7:15 PM to 9 PM/)
   })
 
   it('records the current conflict behavior when a drawer refresh replaces the edited session', async () => {
     const rendered = show()
     await startEditing()
     move()
-    expect(block()).toHaveAccessibleName(/19:15 to 21:15, Unsaved/)
+    expect(block()).toHaveAccessibleName(/7:15 PM to 9:15 PM, Unsaved/)
 
     // A drawer save calls router.refresh(), which supplies these new server items.
     rendered.rerender(view('en', [session('20:00', 'v2'), event]))
-    await waitFor(() => expect(block()).toHaveAccessibleName(/20:00 to 21:00$/))
+    await waitFor(() => expect(block()).toHaveAccessibleName(/8 PM to 9 PM$/))
     expect(screen.queryByRole('button', { name: 'Save' })).toBeNull()
     expect(saveCalendarChanges).not.toHaveBeenCalled()
     expect(
@@ -203,7 +203,7 @@ describe('the Calendar tab in edit mode', () => {
     move()
     await pressSave()
     expect(await screen.findByRole('alert')).toHaveTextContent('You may not change these sessions.')
-    expect(block()).toHaveAccessibleName(/19:15 to 21:15, Unsaved/)
+    expect(block()).toHaveAccessibleName(/7:15 PM to 9:15 PM, Unsaved/)
     expect(scheduleOffers).not.toHaveBeenCalled()
     expect(screen.queryByRole('dialog', { name: 'Announce this change?' })).toBeNull()
   })
@@ -226,11 +226,11 @@ describe('the Calendar tab in edit mode', () => {
     await waitFor(() =>
       expect(loadCalendarItems).toHaveBeenCalledWith({ kind: 'space', id: '7' }, 'en'),
     )
-    await waitFor(() => expect(block()).toHaveAccessibleName(/20:00 to 21:00$/))
+    await waitFor(() => expect(block()).toHaveAccessibleName(/8 PM to 9 PM$/))
     expect(scheduleOffers).not.toHaveBeenCalled()
     fireEvent.click(screen.getByRole('button', { name: 'Done' }))
     await screen.findByRole('button', { name: 'Edit' })
-    expect(block()).toHaveAccessibleName(/20:00 to 21:00$/)
+    expect(block()).toHaveAccessibleName(/8 PM to 9 PM$/)
   })
 
   it.each(['refused', 'rejected'])('shows a failed reload (%s)', async (failure) => {
@@ -271,7 +271,7 @@ describe('the Calendar tab in edit mode', () => {
     fireEvent.click(screen.getByRole('button', { name: 'Done' }))
     fireEvent.click(await screen.findByRole('button', { name: 'Leave anyway' }))
     await screen.findByRole('button', { name: 'Edit' })
-    expect(block()).toHaveAccessibleName(/19:00 to 21:00$/)
+    expect(block()).toHaveAccessibleName(/7 PM to 9 PM$/)
     expect(saveCalendarChanges).not.toHaveBeenCalled()
   })
 

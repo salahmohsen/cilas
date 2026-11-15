@@ -58,7 +58,8 @@
   grid-template-columns: minmax(0, 1fr);
   grid-template-areas:
     'toolbar'
-    'main';
+    'main'
+    'panel';
   border: 1px solid var(--border);
   border-radius: var(--radius-surface);
   background: var(--surface);
@@ -67,12 +68,13 @@
 .main {
   grid-area: main;
   display: grid;
+  grid-template-columns: minmax(0, 1fr);
   min-inline-size: 0;
 }
 .panel {
   grid-area: panel;
   min-inline-size: 0;
-  border-inline-start: 1px solid var(--border);
+  border-block-start: 1px solid var(--border);
 }
 @container week (inline-size > 56rem) {
   .layout[data-panel] {
@@ -80,6 +82,10 @@
     grid-template-areas:
       'toolbar toolbar'
       'main panel';
+  }
+  .panel {
+    border-block-start: 0;
+    border-inline-start: 1px solid var(--border);
   }
 }
 
@@ -509,6 +515,9 @@
   .block {
     padding-inline: var(--space-1);
   }
+}
+/* A narrow block wraps its title only when it is tall enough to keep its time too. */
+@container (max-inline-size: 7.5rem) and (min-block-size: 5rem) {
   .title {
     display: -webkit-box;
     -webkit-box-orient: vertical;
@@ -803,15 +812,37 @@
 .block[data-selected] .more {
   display: grid;
 }
+/* Titles use dir="auto"; menu clearance follows the block direction instead. */
+.block:has(.more):is(:focus, [data-selected]) .title {
+  padding-right: 24px;
+}
+.block:dir(rtl):has(.more):is(:focus, [data-selected]) .title {
+  padding-right: 0;
+  padding-left: 24px;
+}
 @media (hover: hover) {
   .block:hover .more {
     display: grid;
+  }
+  .block:has(.more):hover .title {
+    padding-right: 24px;
+  }
+  .block:dir(rtl):has(.more):hover .title {
+    padding-right: 0;
+    padding-left: 24px;
   }
 }
 @media (pointer: coarse) {
   .more {
     inline-size: 32px;
     block-size: 32px;
+  }
+  .block:has(.more):is(:focus, [data-selected]) .title {
+    padding-right: 34px;
+  }
+  .block:dir(rtl):has(.more):is(:focus, [data-selected]) .title {
+    padding-right: 0;
+    padding-left: 34px;
   }
 }
 

@@ -86,9 +86,10 @@ describe('a schedule block in a post', () => {
   it('opens on the first week it names, view only, with its sessions marked', () => {
     view(schedule(['12']))
     expect(screen.getByText('Nov 14 to Nov 20, 2026')).toBeInTheDocument()
+    expect(screen.getByText('Week 2 of 6')).toBeInTheDocument()
     expect(
       screen.getByRole('button', {
-        name: 'Session 2, Tuesday, November 17, 19:00 to 21:00, Changed',
+        name: 'Session 2, Tuesday, November 17, 7 PM to 9 PM, Changed',
       }),
     ).toHaveAttribute('data-marked')
     // The course's type gives the tone, as on its page.
@@ -127,7 +128,7 @@ describe('a schedule block in a post', () => {
     }
     view(schedule(['12']), { state: 'shown', course: moved })
     expect(
-      screen.getByRole('button', { name: /^Session 1, Thursday, November 19, 17:00.*Changed$/ }),
+      screen.getByRole('button', { name: /^Session 1, Thursday, November 19, 5 PM.*Changed$/ }),
     ).toBeInTheDocument()
   })
 

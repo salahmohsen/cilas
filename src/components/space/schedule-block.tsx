@@ -29,20 +29,19 @@ export function ScheduleBlock({
   const tc = useTranslations('Course')
   if (read?.state === 'hidden') return <Alert tone="info" title={t('sessionHidden')} />
   const course = read?.state === 'shown' ? read.course : null
-  const view = course
-    ? scheduleView(
-        sessionItems(course.sessions, course, {
-          untitled: (number) => tc('session', { number }),
-          delivery: (value) => tc(`delivery.${value}`),
-        }),
-        schedule,
-      )
-    : null
+  const items = course
+    ? sessionItems(course.sessions, course, {
+        untitled: (number) => tc('session', { number }),
+        delivery: (value) => tc(`delivery.${value}`),
+      })
+    : []
+  const view = course ? scheduleView(items, schedule) : null
   if (!view || !links) return <Alert tone="info" title={t('scheduleGone')} />
   return (
     <div className={styles.sessionBlock}>
       <ScheduleCalendar
         items={view.items}
+        course={items}
         marked={schedule.ids}
         day={view.day}
         spaceHref={links.spaceHref}

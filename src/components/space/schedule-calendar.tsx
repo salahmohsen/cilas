@@ -70,8 +70,11 @@ export function ScheduleCalendar({
   day,
   spaceHref,
   action,
+  course = items,
 }: {
   items: CalendarItem[]
+  /** All of the course's items, which the course week counts; a schedule block shows only some. */
+  course?: CalendarItem[]
   marked?: string[]
   day?: string
   spaceHref: string
@@ -82,7 +85,7 @@ export function ScheduleCalendar({
   const labels = useScheduleLabels()
   const markedSet = useMemo(() => new Set(marked), [marked])
   const open = useOpenScheduleItem(items, spaceHref)
-  const weekLabel = useCourseWeek(items)
+  const weekLabel = useCourseWeek(course)
   return (
     // `contents`: the wrapper only listens, for the drawer's chunk and the block focus returns to.
     <div className="contents" {...sessionTriggerProps}>

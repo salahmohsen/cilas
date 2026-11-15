@@ -248,21 +248,23 @@ test.describe('course calendar', () => {
 
     expect((await sessionsOf()).map((s) => s.title)).toEqual(['E2E first session'])
     await openSessionsTab()
+    // The tray is in the side panel, closed at first.
+    await calendar().getByRole('button', { name: 'Side panel' }).click()
     await expect(
       calendar().getByRole('group', { name: 'Unscheduled' }).getByText('E2E first session'),
     ).toBeVisible()
   })
 
-  test('an empty course shows 06:00 to 23:00, and a drag at 07:00 saves a 07:00 meeting', async () => {
+  test('an empty course shows 6 AM to 11 PM, and a drag at 07:00 saves a 07:00 meeting', async () => {
     await payload.delete({
       collection: 'sessions',
       where: { course: { equals: course } },
       overrideAccess: true,
     })
     await openSessionsTab()
-    const hours = calendar().locator('[aria-hidden="true"] > span')
-    await expect(hours.first()).toHaveText('06:00')
-    await expect(hours.last()).toHaveText('23:00')
+    const hours = calendar().locator('[data-hour]')
+    await expect(hours.first()).toHaveText('6 AM')
+    await expect(hours.last()).toHaveText('11 PM')
 
     // The hours scroll in their own area. Scroll it to 06:00 so 07:00 is in reach.
     const area = calendar().locator('[data-scroll]')
