@@ -16,11 +16,19 @@ const codes: CalendarSaveError[] = [
 ]
 
 describe('calendarAdminText', () => {
-  it('words a stale save plainly, and every error code in both languages', () => {
+  it('names the session in a stale save, and words every error code in both languages', () => {
     const english = calendarAdminText('en', en)
-    expect(english.errorText({ code: 'stale', itemId: '1' })).toBe(
-      'Someone changed these sessions. Reload to see the latest.',
+    expect(
+      english.errorText({ code: 'stale', itemId: '1', name: 'Session 3: Reading Fanon' }),
+    ).toBe(
+      'Someone else changed Session 3: Reading Fanon after the calendar loaded. Your changes are not saved.',
     )
+    expect(english.errorText({ code: 'stale', itemId: '1' })).toBe(
+      'Someone else changed a session after the calendar loaded. Your changes are not saved.',
+    )
+    expect(
+      calendarAdminText('ar', ar).errorText({ code: 'stale', itemId: '1', name: 'الجلسة ٣' }),
+    ).toBe('غيّر شخص آخر الجلسة ٣ بعد تحميل التقويم. لم تُحفظ تغييراتك.')
     expect(english.errorText({ code: 'invalid', message: 'Use a real day.' })).toBe(
       'A change is not valid. Use a real day.',
     )
@@ -40,6 +48,9 @@ describe('calendarAdminText', () => {
   it('names the Save button and the block menu in both languages', () => {
     const english = calendarAdminText('en', en).labels
     expect(english.save).toBe('Save schedule')
+    expect(english.saveNote).toBe(
+      'The course’s Save does not save the schedule. Use Save schedule.',
+    )
     expect(english.menu).toMatchObject({
       open: 'Open',
       addNextDay: 'Add meeting',
@@ -48,6 +59,7 @@ describe('calendarAdminText', () => {
     })
     const arabic = calendarAdminText('ar', ar).labels
     expect(arabic.save).toBe('حفظ الجدول')
+    expect(arabic.saveNote).toMatch(/\p{Script=Arabic}/u)
     expect(arabic.menu).toMatchObject({
       open: 'فتح',
       addNextDay: 'إضافة موعد',

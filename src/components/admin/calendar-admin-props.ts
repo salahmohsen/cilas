@@ -9,6 +9,10 @@ export const calendarAdminProps = (
   req: PayloadRequest,
 ): { language: AdminLanguage; messages: CalendarAdminMessages } => {
   const language = req.i18n.language === 'ar' ? 'ar' : 'en'
-  const { CalendarUi, CalendarAdmin } = language === 'ar' ? ar : en
-  return { language, messages: { CalendarUi, CalendarAdmin } }
+  const { CalendarUi, CalendarAdmin, SpacePost } = language === 'ar' ? ar : en
+  // Only the post write path's error words, for a publish that fails.
+  const postErrors = Object.fromEntries(
+    Object.entries(SpacePost).filter(([key]) => key.startsWith('saveError_')),
+  )
+  return { language, messages: { CalendarUi, CalendarAdmin, SpacePost: postErrors } }
 }
