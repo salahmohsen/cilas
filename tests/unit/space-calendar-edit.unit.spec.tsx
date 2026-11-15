@@ -213,7 +213,7 @@ describe('the Calendar tab in edit mode', () => {
     move()
     fireEvent.click(screen.getByRole('button', { name: 'Done' }))
     expect(await screen.findByRole('dialog', { name: 'Leave without saving?' })).toBeInTheDocument()
-    fireEvent.click(screen.getAllByRole('button', { name: 'Stay' })[0]!)
+    fireEvent.click(screen.getByRole('button', { name: 'Stay' }))
     await waitFor(() => expect(leaveDialog()).toBeNull())
     expect(block()).toHaveAccessibleName(/Unsaved/)
 

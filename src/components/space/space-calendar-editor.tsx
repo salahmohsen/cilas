@@ -141,7 +141,7 @@ export function SpaceCalendarEditor({
         <DialogContent
           title={t('calendarLeaveTitle')}
           description={t('calendarLeaveBody')}
-          closeLabel={t('calendarLeaveStay')}
+          closeLabel={ta('offer.close')}
         >
           <div className={styles.leave}>
             <DialogClose asChild>
