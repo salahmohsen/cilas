@@ -102,6 +102,12 @@ export function useEditSession({ items, newItemKind, onSave, scope, range }: Opt
     setWorking((blocks) => [...blocks, block])
   }
 
+  /** A block that may change: one of an item that is not `readOnly`. */
+  const changeable = (id: string) => {
+    const block = working.find((candidate) => candidate.id === id)
+    return block && !block.readOnly ? block : null
+  }
+
   const slot = (track: string) => {
     const start = firstFreeStart(
       timedBlocks(working),
@@ -155,6 +161,7 @@ export function useEditSession({ items, newItemKind, onSave, scope, range }: Opt
 
     /** An item with no block, put on a day: at `start`, or in the first free hour. */
     place(itemId: string, track: string, start?: number) {
+      if (current.find((item) => item.id === itemId)?.readOnly) return
       const from = Math.max(
         range.min,
         Math.min(start ?? slot(track).start, range.max - DEFAULT_MINUTES),
@@ -164,7 +171,7 @@ export function useEditSession({ items, newItemKind, onSave, scope, range }: Opt
 
     /** The same time (or all day) on the next day, on the block's item. Returns the new block. */
     addNextDay(id: string): EditBlock | null {
-      const block = working.find((candidate) => candidate.id === id)
+      const block = changeable(id)
       if (!block) return null
       const copy = copyBlock(block, block.itemId, addDays(block.track, 1))
       setWorking((blocks) => [...blocks, copy])
@@ -173,7 +180,7 @@ export function useEditSession({ items, newItemKind, onSave, scope, range }: Opt
 
     /** A new item with all the live blocks of this block's item (all-day ones too), 7 days later. Returns its blocks. */
     copyNextWeek(id: string): EditBlock[] {
-      const block = working.find((candidate) => candidate.id === id)
+      const block = changeable(id)
       if (!block) return []
       const itemId = newItemId()
       const copies = working
@@ -185,7 +192,7 @@ export function useEditSession({ items, newItemKind, onSave, scope, range }: Opt
 
     /** Delete one block: a loaded one stays as a ghost, one made on the page is gone. */
     removeBlock(id: string) {
-      const track = working.find((block) => block.id === id)?.track
+      const track = changeable(id)?.track
       if (!track) return
       focusTarget.current = { id, track }
       setWorking((blocks) =>

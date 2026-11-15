@@ -20,6 +20,8 @@ export type EditBlock = Span & {
   blockId: string
   allDay?: true
   deleted?: boolean
+  /** The block of an item that is `readOnly`: it shows and opens, and nothing changes it. */
+  readOnly?: true
 }
 
 export const blockKey = (itemId: string, blockId: string) => `${itemId}/${blockId}`
@@ -56,6 +58,7 @@ export const blocksOf = (items: CalendarItem[]): EditBlock[] =>
         track: block.date,
         itemId: item.id,
         blockId: block.id,
+        ...(item.readOnly ? { readOnly: true as const } : {}),
       }
       if (!block.start_time) return { ...common, start: 0, end: 0, allDay: true }
       const start = toMinutes(block.start_time)

@@ -179,7 +179,7 @@ export function Calendar({
     const block = session.working.find((candidate) => candidate.id === blockId)
     if (!block) return []
     const entries: BlockMenuEntry[] = [{ action: 'open', disabled: !itemIds.has(block.itemId) }]
-    if (editable) {
+    if (editable && !block.readOnly) {
       entries.push({ action: 'add-next-day' })
       if (newItemKind) entries.push({ action: 'copy-next-week' })
       entries.push({ action: 'delete' })
@@ -250,7 +250,9 @@ export function Calendar({
           const more = (event?.target as Element | null | undefined)?.closest('[data-block-menu]')
           if (more) return void menu.open({ payload: block.id, anchor: more })
           const touch = (event as PointerEvent | undefined)?.pointerType === 'touch'
-          if (editable && touch && selectedId !== block.id) return setSelectedId(block.id)
+          // A first tap selects, to show the handles; a block with none opens at once.
+          if (editable && !block.readOnly && touch && selectedId !== block.id)
+            return setSelectedId(block.id)
           if (itemIds.has(block.itemId)) onOpen(block.itemId, block.blockId)
         }}
       >

@@ -134,7 +134,8 @@ export function WeekGrid({
                   'data-unsaved': unsaved.has(block.id) ? '' : undefined,
                   'data-deleted': block.deleted ? '' : undefined,
                   'aria-label': nameOf(block),
-                  'aria-describedby': editable && !block.deleted ? hintId : undefined,
+                  'aria-describedby':
+                    editable && !block.deleted && !block.readOnly ? hintId : undefined,
                   onClick: (event: MouseEvent<HTMLElement>) => {
                     if (block.deleted) return onRestore(block.id)
                     const more = (event.target as Element).closest('[data-block-menu]')
@@ -155,7 +156,11 @@ export function WeekGrid({
                         focus: 'first',
                       })
                     }
-                    if (editable && (event.key === 'Delete' || event.key === 'Backspace')) {
+                    if (
+                      editable &&
+                      !block.readOnly &&
+                      (event.key === 'Delete' || event.key === 'Backspace')
+                    ) {
                       event.preventDefault()
                       onDelete(block.id)
                     }
@@ -239,13 +244,14 @@ export function WeekGrid({
                   const item = itemById.get(block.itemId)
                   const title = item?.title ?? labels.newItem
                   const edited = unsaved.has(block.id)
+                  const changeable = editable && !block.deleted && !block.readOnly
                   return (
                     <WeekSpans.Span
                       key={block.id}
                       value={block.id}
                       className={styles.block}
                       aria-label={nameOf(block)}
-                      aria-describedby={editable && !block.deleted ? hintId : undefined}
+                      aria-describedby={changeable ? hintId : undefined}
                       data-tone={item?.tone ?? newTone}
                       data-cancelled={item?.cancelled ? '' : undefined}
                       data-marked={marked.has(block.itemId) ? '' : undefined}
@@ -295,7 +301,7 @@ export function WeekGrid({
                         ) : undefined
                       }
                     >
-                      {editable && !block.deleted ? (
+                      {changeable ? (
                         <span className={styles.edge} data-span-edge="start" aria-hidden />
                       ) : null}
                       <span className={styles.body}>
@@ -321,7 +327,7 @@ export function WeekGrid({
                           </span>
                         ) : null}
                       </span>
-                      {editable && !block.deleted ? (
+                      {changeable ? (
                         <span className={styles.edge} data-span-edge="end" aria-hidden />
                       ) : null}
                       {menu && !block.deleted ? (

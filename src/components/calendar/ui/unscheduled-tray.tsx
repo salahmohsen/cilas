@@ -38,7 +38,7 @@ export function UnscheduledTray({ items, days, editable, labels, locale, onOpen,
   useEffect(() => () => drag.current?.(), [])
 
   const startDrag = (item: CalendarItem, event: PointerEvent<HTMLButtonElement>) => {
-    if (!editable || event.button !== 0) return
+    if (!editable || item.readOnly || event.button !== 0) return
     const chip = event.currentTarget
     let preview: ReturnType<typeof bindDragPreview> | null = null
     let over: HTMLElement | null = null
@@ -96,7 +96,7 @@ export function UnscheduledTray({ items, days, editable, labels, locale, onOpen,
             >
               {item.title}
             </button>
-            {editable ? (
+            {editable && !item.readOnly ? (
               <DropdownMenu
                 label={labels.placeOnDay}
                 items={days.map((day) => ({
