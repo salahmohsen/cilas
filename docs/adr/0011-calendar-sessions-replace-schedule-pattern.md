@@ -299,6 +299,12 @@ None now.
 
 ## Decision log
 
+Fix: in the course space, only sessions move on the calendar; space events show but do not drag (owner, 2026-11-15, step 4). This narrows "move or resize sessions and space events" in "Course space calendar".
+
+- **Events store an instant and carry RSVP and replies.** A drag would need a second write-back path and checks for both. There are 9 space events, none in the future.
+- **They stay editable from their post.** Drag can come later if fellows ask.
+- **Also decided for step 4:** the drawer has the full Edit form in the space (not the Payload admin); open calendars do not update live yet (the stale-save message protects); the Events tab stays; cohort spaces get no Calendar tab for now. See `docs/plans/2026-11-15-course-space-calendar.md`.
+
 Fix: the owner's review of 2026-11-15 (goal: more solid, and simpler for admins, fellows and students).
 
 - **A stale save had two descriptions.** One place said the calendar reloads, another that the changes stay. Now one behavior: the changes stay, the message names the session another person changed, and one button reloads and drops them. A silent reload loses work without a word; a merge is complexity nobody asked for.

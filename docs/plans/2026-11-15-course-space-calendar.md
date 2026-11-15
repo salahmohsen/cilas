@@ -1,0 +1,46 @@
+# The course space Calendar tab, with edit mode
+
+ADR 0011, order of work step 4. Run under pstack poteto-mode ("Sequence Work into Verifiable Units").
+
+## Done means
+
+A student opens a course space, goes to the Calendar tab, and sees the course's sessions and the space's events on the week of the next meeting. A click on a session opens a drawer with the session. A fellow or an admin clicks Edit, moves, draws or resizes sessions, and saves; the step 3 announcement dialog opens. In the drawer, a fellow or an admin edits the session (title, description, materials, activities, meetings, cancelled) and saves; a change to meetings or Cancelled opens the same dialog. The check is falsifiable:
+
+1. Adapter unit tests and loader int tests: a student, a fellow of the course, a fellow of another course, an admin; space events show and are never editable.
+2. Render and ARIA tests of the tab; snapshot compare against `head-noarchive` with 0 differences.
+3. E2e: a click on a block in the tab, in the syllabus and in a post's schedule block opens the same drawer.
+4. E2e: a fellow moves a session, saves, the dialog opens; Cancel changes nothing; a student sees no Edit; leaving with unsaved changes warns.
+5. E2e: a drawer edit saves; a change to meetings or Cancelled opens the dialog; a stale save keeps the changes and offers "Reload and lose my changes".
+6. Typecheck, lint, unit, int, one cold e2e run, `CI=1 pnpm build`, snapshot compare against `head-noarchive` (delete `.next/cache/fetch-cache` first; check for left fixture courses first), screenshots: en and ar, light and dark, desktop and phone.
+
+## Owner's decisions (2026-11-15)
+
+- **Space events do not drag.** They show on the calendar in their own tone and stay editable from their post. 9 space events exist, none in the future. Drag can come later if fellows ask.
+- **The drawer has a full Edit form** in the space: title, description (Arc editor), materials, activities, meetings, cancelled. Its components come from the Arc skill, chosen for the simplest clear UI.
+- **No live update** of open calendars in this step. The stale-save message protects against overwrites.
+- **The Events tab stays** as it is, next to the Calendar tab.
+- **Cohort spaces get no Calendar tab** for now (they have no course).
+
+## Facts the design rests on (checked 2026-11-15)
+
+- `lib/calendar-sources.ts` has one adapter, `course` (sessions). There is no adapter for space events.
+- The course adapter reads the course with `draft: true`, as the admin shows it. A student must see only what the published course shows.
+- `loadCalendarItems` (`actions/load-calendar-items.ts`) returns items and `canEdit` from the adapter, which asks the sessions collection's own access.
+- Space events are `space_posts` with `event_starts_at` and `event_ends_at` (instants).
+- The schedule block (`components/space/schedule-block.tsx`) links to the session's filtered feed until the drawer exists.
+
+## Units, in order
+
+Each unit ends in a check, and the next unit starts only when that check passes. One delegate at a time in this checkout.
+
+1. **Read side.** A space parent for the calendar: the course's sessions plus the space's events (read only), and `canEdit` from the sessions collection's access, no copy of the moderator rule. Students get the published course. Check: item 1.
+2. **Calendar tab, view mode.** Next to Syllabus, server rendered, opens on the week of the next meeting (else the last). Course spaces only. Check: item 2.
+3. **Session drawer.** One session view for the drawer and the syllabus, loaded with `preloadable`. The tab, the Syllabus tab and the schedule block open it. Check: item 3.
+4. **Edit mode.** Edit and Done, save through `saveCalendarChanges`, leave warning from `onUnsavedChange`, stale save, then `scheduleChanges` and the step 3 dialog. Check: item 4.
+5. **Drawer Edit form.** Arc components (Arc skill first). Check: item 5.
+6. **Close.** Item 6 and this plan's decision trail.
+
+## Decision trail
+
+| Unit | Commit | Check | Result |
+| ---- | ------ | ----- | ------ |
