@@ -1,6 +1,6 @@
 import type { FocalPoint } from '@/lib/media-image'
 import { addDays, cairoDay, weekdayOf, WEEKDAYS } from '@/lib/cairo-day'
-import { meetingKey, numberedSessions, type SessionTimes } from '@/lib/meetings'
+import { isApproximate, meetingKey, numberedSessions, type SessionTimes } from '@/lib/meetings'
 import type { CalendarTone } from '@/lib/calendar-items'
 
 /**
@@ -23,12 +23,14 @@ export type CalendarItem = {
   type: string
   cover?: { url: string; alt: string } & FocalPoint
   cancelled?: boolean
+  /** Nobody held it on this day (`isApproximate`): shown, and left out of the feed. */
+  approximate?: boolean
 }
 
 /** What every item of one course or event shares. */
 export type CalendarBase = Omit<
   CalendarItem,
-  'key' | 'date' | 'start' | 'end' | 'session' | 'cancelled'
+  'key' | 'date' | 'start' | 'end' | 'session' | 'cancelled' | 'approximate'
 >
 
 /**
@@ -49,6 +51,7 @@ export const courseItems = (
       ...(m.end_time ? { end: m.end_time } : {}),
       session: number,
       ...(m.cancelled ? { cancelled: true } : {}),
+      ...(isApproximate(m) ? { approximate: true } : {}),
     })),
   )
 

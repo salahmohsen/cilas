@@ -154,6 +154,14 @@ describe('courseItems', () => {
     expect(after[1]!.session).toBe(2)
   })
 
+  it('marks an approximate meeting, and only that one', () => {
+    const items = courseItems(base, [
+      { id: 1, meetings: [{ date: '2026-03-03', approximate: true }] },
+      { id: 2, meetings: [{ date: '2026-03-10', approximate: false }] },
+    ])
+    expect(items.map((i) => i.approximate)).toEqual([true, undefined])
+  })
+
   it('places nothing for a course with no meeting', () => {
     expect(courseItems(base, [])).toEqual([])
     expect(courseItems(base, [{ id: 1, meetings: [] }])).toEqual([])

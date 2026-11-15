@@ -345,6 +345,7 @@
     "details": "تفاصيل المقرر",
     "cycle": "الدورة",
     "starts": "يبدأ",
+    "approximateDates": "التواريخ تقريبية",
     "meets": "المواعيد",
     "length": "المدة",
     "sessions": "{count, plural, zero {لا جلسات} one {جلسة واحدة} two {جلستان} few {{count, number, digits} جلسات} many {{count, number, digits} جلسة} other {{count, number, digits} جلسة}}",
@@ -496,6 +497,7 @@
     "session": "الجلسة {n, number, digits}",
     "more": "المزيد ({count, number, digits})",
     "cancelled": "أُلغيت",
+    "approximate": "تاريخ تقريبي",
     "eventTypes": {
       "talk": "محاضرة",
       "panel": "ندوة",

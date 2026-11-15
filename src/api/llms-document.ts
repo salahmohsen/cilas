@@ -27,7 +27,7 @@ import { contributionLabel } from '@/lib/pricing'
 import { courseRegistration } from '@/lib/registration'
 import { resolveRichTextReferences } from '@/lib/resolve-rich-text-references'
 import { referenceKey, type RichTextReferences } from '@/lib/rich-text-references'
-import { firstDay, lastDay, numberedSessions, summary } from '@/lib/meetings'
+import { firstDay, isApproximate, lastDay, numberedSessions, summary } from '@/lib/meetings'
 import type { Article, Course, Person, Publication, Session } from '@/payload-types'
 
 /**
@@ -181,6 +181,8 @@ const SECTION_LABELS = {
     activities: 'Activities',
     readings: 'Readings',
     cancelled: 'cancelled',
+    dates: 'Dates',
+    approximate: 'approximate (nobody met on exactly these days)',
     meetings: 'Meetings',
     session: 'Session',
     subtitle: 'Subtitle',
@@ -208,6 +210,8 @@ const SECTION_LABELS = {
     activities: 'في الجلسة',
     readings: 'القراءات',
     cancelled: 'أُلغيت',
+    dates: 'التواريخ',
+    approximate: 'تقريبية (لم يُعقد لقاء في هذه الأيام بالضبط)',
     meetings: 'اللقاءات',
     session: 'الجلسة',
     subtitle: 'العنوان الفرعي',
@@ -395,6 +399,8 @@ export const courseDocument = async (
     [locale === 'ar' ? 'تبدأ' : 'Starts', firstDay(meetings)],
     [locale === 'ar' ? 'تنتهي' : 'Ends', lastDay(meetings)],
     [locale === 'ar' ? 'اللقاءات' : 'Meets', meetingsLine],
+    // Said once for the course; the dates below stay as they are.
+    [t.dates, meetings.some(isApproximate) ? t.approximate : null],
     [
       locale === 'ar' ? 'المكان' : 'Location',
       (course.location ?? [])

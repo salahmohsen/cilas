@@ -44,7 +44,7 @@ import { focalPointStyle } from '@/lib/media-image'
 import { POSTER_COLORS } from '@/components/arc/lib/poster-colors'
 import { contributionLabel } from '@/lib/pricing'
 import { courseRegistration } from '@/lib/registration'
-import { firstDay, summary } from '@/lib/meetings'
+import { firstDay, isApproximate, summary } from '@/lib/meetings'
 import { weekdayName } from '@/lib/meeting-text'
 import { textDirection } from '@/lib/text-direction'
 import type { Course, Media, Person, Place, Session } from '@/payload-types'
@@ -115,6 +115,8 @@ export const CourseView: React.FC<{
   const meetings = syllabus.flatMap((s) => s.meetings)
   const starts = firstDay(meetings)
   const when = summary(meetings)
+  // Said once for the course: the facts and the syllabus show these dates as they are.
+  const approximate = meetings.some(isApproximate)
   const registration = courseRegistration(course, cycle)
   const price = contributionLabel(registration.price, { locale })
   const open = registration.status === 'open'
@@ -392,6 +394,7 @@ export const CourseView: React.FC<{
           </dl>
         ) : null}
       </SideCardSection>
+      {approximate ? <p className="side-card-muted">{t('approximateDates')}</p> : null}
       {wide && fellows.length ? (
         <div {...pe('fellows')}>
           <SideCardSection label={t('taughtBy')}>

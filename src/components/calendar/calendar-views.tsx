@@ -23,6 +23,8 @@ type Labels = {
   session: (n: number) => string
   more: (n: number) => string
   cancelled: string
+  /** The note on a meeting nobody held on that day ("Approximate date"). */
+  approximate: string
   close: string
   open: (date: string, count: number) => string
   /** A time or number the views build themselves, in the page's digits. */
@@ -177,6 +179,7 @@ function Slot({ item, labels }: { item: CalendarItem; labels: Labels }) {
   return (
     <li
       className="cal-slot"
+      data-approximate={item.approximate || undefined}
       data-cancelled={item.cancelled || undefined}
       style={{ '--tone': toneColor(toneOf(item)) } as CSSProperties}
     >
@@ -190,11 +193,12 @@ function Slot({ item, labels }: { item: CalendarItem; labels: Labels }) {
         </span>
       ) : null}
       <ItemTitle className="cal-slot-title" item={item} />
-      {item.session || item.cancelled ? (
+      {item.session || item.cancelled || item.approximate ? (
         <span className="cal-slot-note">
           {[
             item.session ? labels.session(item.session) : null,
             item.cancelled ? labels.cancelled : null,
+            item.approximate ? labels.approximate : null,
           ]
             .filter(Boolean)
             .join(' · ')}
@@ -367,6 +371,7 @@ export const calendarLabels = async (): Promise<Labels> => {
     session: (n) => t('session', { n }),
     more: (n) => t('more', { count: n }),
     cancelled: t('cancelled'),
+    approximate: t('approximate'),
     close: t('close'),
     open: (date, count) => t('openDay', { date, count }),
     digits: (text) => localDigits(text, locale),
