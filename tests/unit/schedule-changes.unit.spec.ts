@@ -130,6 +130,39 @@ describe('scheduleChanges', () => {
     expect(scheduleChanges([s3(blocks)], [s3(blocks, true)], TODAY)).toHaveLength(1)
   })
 
+  it('lists only the meetings from today on for an added or removed session', () => {
+    const past = block('p', '2026-11-10')
+    const today = block('t', '2026-11-18')
+    const later = block('l', '2026-11-25')
+    expect(scheduleChanges([], [s3([later, past, today])], TODAY)).toEqual([
+      { kind: 'item-added', itemId: '3', title: 'Session 3', blocks: [today, later] },
+    ])
+    expect(scheduleChanges([s3([past, later])], [], TODAY)).toEqual([
+      { kind: 'item-removed', itemId: '3', title: 'Session 3', blocks: [later] },
+    ])
+  })
+
+  it('keeps only the cancel when a session is cancelled and changed in one save', () => {
+    const kept = block('a', '2026-11-20')
+    const before = s3([kept, block('b', '2026-11-25'), block('c', '2026-11-27')])
+    const after = s3(
+      [block('a', '2026-11-21'), block('b', '2026-11-25'), block('d', '2026-12-02')],
+      true,
+    )
+    expect(scheduleChanges([before], [after], TODAY)).toEqual([
+      { kind: 'cancelled', itemId: '3', title: 'Session 3' },
+    ])
+  })
+
+  it('keeps the other changes when a session is restored', () => {
+    const before = s3([block('a', '2026-11-20')], true)
+    const after = s3([block('a', '2026-11-21')])
+    expect(scheduleChanges([before], [after], TODAY).map((c) => c.kind)).toEqual([
+      'restored',
+      'moved',
+    ])
+  })
+
   it('returns the changes of several items', () => {
     const a1 = item('1', 'Session 1', [block('a', '2026-11-20')])
     const a2 = item('1', 'Session 1', [block('a', '2026-11-21')])

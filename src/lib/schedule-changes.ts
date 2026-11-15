@@ -34,12 +34,13 @@ const live = (blocks: readonly CalendarBlock[], today: string): boolean =>
 const itemChanges = (
   before: CalendarItem | undefined,
   after: CalendarItem | undefined,
+  today: string,
 ): ScheduleChange[] => {
   const item = after ?? before
   if (!item) return []
   const { id: itemId, title } = item
   if (!before || !after) {
-    const blocks = [...item.blocks].sort(byWhen)
+    const blocks = item.blocks.filter((b) => b.date >= today).sort(byWhen)
     return [{ kind: after ? 'item-added' : 'item-removed', itemId, title, blocks }]
   }
 
@@ -82,10 +83,13 @@ const touched = (change: ScheduleChange): CalendarBlock[] => {
 /**
  * The changes from `before` to `after` that count: those with a meeting, old
  * or new, on `today` (a Cairo day) or later. Corrections to the past count
- * for nothing. Cancelling or restoring a session counts when it has any
- * meeting today or later. Items and blocks are matched by id; an item or
- * block made in the save has an id the other side lacks. Order: items as
- * `after` lists them, then removed items as `before` listed them.
+ * for nothing, and an added or removed session lists only its meetings from
+ * `today` on. Cancelling or restoring a session counts when it has any
+ * meeting today or later; a session cancelled in the save has that change
+ * only, since its moved or added meetings will not happen. Items and blocks
+ * are matched by id; an item or block made in the save has an id the other
+ * side lacks. Order: items as `after` lists them, then removed items as
+ * `before` listed them.
  */
 export const scheduleChanges = (
   before: readonly CalendarItem[],
@@ -99,11 +103,13 @@ export const scheduleChanges = (
   return ids.flatMap((id) => {
     const [b, a] = [was.get(id), items.get(id)]
     const sessionLive = live([...(b?.blocks ?? []), ...(a?.blocks ?? [])], today)
-    return itemChanges(b, a).filter((change) =>
+    const changes = itemChanges(b, a, today).filter((change) =>
       change.kind === 'cancelled' || change.kind === 'restored'
         ? sessionLive
         : live(touched(change), today),
     )
+    const cancelled = changes.find((change) => change.kind === 'cancelled')
+    return cancelled ? [cancelled] : changes
   })
 }
 
