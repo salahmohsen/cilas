@@ -15,7 +15,8 @@ import ar from '../../messages/ar.json'
 import en from '../../messages/en.json'
 
 const push = vi.fn()
-vi.mock('next/navigation', () => ({ useRouter: () => ({ push }) }))
+const refresh = vi.fn()
+vi.mock('next/navigation', () => ({ useRouter: () => ({ push, refresh }) }))
 vi.mock('@/actions/load-calendar-items', () => ({ loadCalendarItems: vi.fn() }))
 vi.mock('@/actions/save-calendar-changes', () => ({ saveCalendarChanges: vi.fn() }))
 vi.mock('@/actions/schedule-offers', () => ({ scheduleOffers: vi.fn() }))
@@ -117,6 +118,7 @@ beforeAll(() => {
 beforeEach(() => {
   localStorage.clear()
   push.mockReset()
+  refresh.mockReset()
   vi.useFakeTimers({ now: new Date('2026-11-15T10:00:00Z'), toFake: ['Date'] })
   vi.mocked(saveCalendarChanges)
     .mockReset()
@@ -159,6 +161,7 @@ describe('the Calendar tab in edit mode', () => {
       { courseId: '5', before: [session('19:00')], after: [session('19:15', 'v2')] },
       'en',
     )
+    expect(refresh).toHaveBeenCalledTimes(1)
     const dialog = await screen.findByRole('dialog', { name: 'Announce this change?' })
     expect(within(dialog).getByText(/Probe space/)).toBeInTheDocument()
     fireEvent.click(within(dialog).getByRole('button', { name: 'Skip' }))

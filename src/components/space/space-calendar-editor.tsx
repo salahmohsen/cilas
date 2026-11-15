@@ -99,6 +99,8 @@ export function SpaceCalendarEditor({
     const saved = await schedule.save(changes, items, () => done.current)
     setItems(saved)
     onSaved(saved)
+    // The page's other server parts, like the next session beside the tab, read it again.
+    router.refresh()
     return saved
   }
 
