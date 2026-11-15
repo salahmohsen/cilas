@@ -1345,7 +1345,13 @@
     "saveError_rules": "Privacy and rules is too long.",
     "pinAsCard": "Pin as a card",
     "pinAsFull": "Pin as a full post",
-    "lastComment": "Last comment <when></when>"
+    "lastComment": "Last comment <when></when>",
+    "sessionDrawerLoading": "Loading the session",
+    "sessionDrawerFailed": "Couldn't load the session. Try again.",
+    "sessionDrawerClose": "Close session",
+    "sessionDrawerTimes": "Times are Cairo time",
+    "sessionDrawerPosts": "Posts about this session",
+    "sessionOpen": "Open session"
   },
   "SpaceComment": {
     "write": "Comment",

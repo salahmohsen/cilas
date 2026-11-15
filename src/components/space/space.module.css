@@ -3225,3 +3225,20 @@ button.rsvpCell {
     border-bottom: 1px solid var(--poster-ink);
   }
 }
+
+/* The session drawer: the session as the syllabus shows it, then its links. */
+.sessionDrawer {
+  display: grid;
+  gap: var(--space-4);
+}
+
+.sessionDrawerActions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.sessionDrawerActions .sessionPosts {
+  margin-block-start: 0;
+}

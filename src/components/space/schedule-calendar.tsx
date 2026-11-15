@@ -8,9 +8,13 @@ import { Calendar } from '@/components/calendar/ui/calendar'
 import { useCalendarLabels } from '@/components/calendar/ui/use-calendar-labels'
 import type { CalendarItem } from '@/lib/calendar-items'
 
-import { sessionPostsHref } from './session-chip'
+import { openSession, sessionTriggerProps } from './session-drawer-host'
 
-/** The calendar of a schedule block, view only; a block opens the posts about its session, as a session chip does. */
+/**
+ * A course space's calendar, view only: the Calendar tab and a post's
+ * schedule block. A session's block opens the session drawer; a space
+ * event's block opens its post.
+ */
 export function ScheduleCalendar({
   items,
   marked = [],
@@ -33,22 +37,22 @@ export function ScheduleCalendar({
   const labels = useCalendarLabels({ kind, newItem: t('scheduleKind') })
   const markedSet = useMemo(() => new Set(marked), [marked])
   return (
-    <Calendar
-      mode="view"
-      items={items}
-      marked={markedSet}
-      day={day}
-      labels={labels}
-      locale={locale}
-      onOpen={(itemId) => {
-        const item = items.find((item) => item.id === itemId)
-        if (item)
-          router.push(
-            item.kind === 'space-event'
-              ? `${spaceHref}/posts/${item.blocks[0]!.id}`
-              : sessionPostsHref(spaceHref, itemId),
-          )
-      }}
-    />
+    // `contents`: the wrapper only listens, for the drawer's chunk and the block focus returns to.
+    <div className="contents" {...sessionTriggerProps}>
+      <Calendar
+        mode="view"
+        items={items}
+        marked={markedSet}
+        day={day}
+        labels={labels}
+        locale={locale}
+        onOpen={(itemId) => {
+          const item = items.find((item) => item.id === itemId)
+          if (!item) return
+          if (item.kind === 'space-event') router.push(`${spaceHref}/posts/${item.blocks[0]!.id}`)
+          else openSession(itemId)
+        }}
+      />
+    </div>
   )
 }

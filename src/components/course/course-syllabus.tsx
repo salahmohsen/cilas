@@ -72,25 +72,34 @@ export type SyllabusSession = {
   activities?: Activity[] | null
 }
 
+/**
+ * One numbered session as the syllabus reads it, its text rendered. The
+ * number comes from the whole course (`numberedSessions`), so a caller with
+ * one session (the session drawer) numbers it where all of them are read.
+ */
+export const syllabusSessionOf = (
+  n: NumberedSession<Session>,
+): NumberedSession<SyllabusSession> => ({
+  ...n,
+  session: {
+    id: String(n.session.id),
+    title: n.session.title,
+    cancelled: n.session.cancelled,
+    delivery: n.session.delivery,
+    description: n.session.description ? (
+      <SessionMarkdown
+        className="article-prose article-prose--notes"
+        text={n.session.description}
+      />
+    ) : null,
+    bibliography: n.session.bibliography,
+    activities: n.session.activities,
+  },
+})
+
 /** A course's sessions from the collection, numbered and dated, as its syllabus reads them. */
 export const syllabusOf = (sessions: readonly Session[]): NumberedSession<SyllabusSession>[] =>
-  numberedSessions(sessions).map((n) => ({
-    ...n,
-    session: {
-      id: String(n.session.id),
-      title: n.session.title,
-      cancelled: n.session.cancelled,
-      delivery: n.session.delivery,
-      description: n.session.description ? (
-        <SessionMarkdown
-          className="article-prose article-prose--notes"
-          text={n.session.description}
-        />
-      ) : null,
-      bibliography: n.session.bibliography,
-      activities: n.session.activities,
-    },
-  }))
+  numberedSessions(sessions).map(syllabusSessionOf)
 
 /**
  * Each session as a syllabus entry: its first meeting, its month, its facet
@@ -215,9 +224,11 @@ export function CourseSyllabus({
 }
 
 /**
- * One session of a course as its syllabus shows it, open: a post that points
- * at the session renders it from the course's live data. Null when the
- * course no longer has that session.
+ * One session of a course as its syllabus shows it, open: the one session
+ * view, for a post that points at the session and for the session drawer,
+ * from the course's live data. It shares its head and body with the
+ * syllabus's rows (`useSyllabusEntries`). Null when the course no longer has
+ * that session.
  */
 export function CourseSession({
   course,

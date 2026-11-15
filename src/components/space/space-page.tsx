@@ -51,6 +51,8 @@ import { visitRecord } from '@/lib/spaces-write'
 
 import { SpaceViews } from './space-views'
 import { SpaceCalendar } from './space-calendar'
+import { SessionLink, sessionDrawerHref } from './session-drawer-host'
+import { sessionPostsHref } from './session-chip'
 import { AboutClamp } from './about-clamp'
 import { Composer } from './composer'
 import { sessionOptions } from './session-options'
@@ -573,22 +575,35 @@ export async function SpacePage({
                 sessions={syllabusOf(course.sessions)}
                 decorate={(entry) => {
                   const count = linked.get(entry.id) ?? 0
-                  if (!count) return entry
                   return {
                     ...entry,
-                    meta: {
-                      ...entry.meta,
-                      extra: [...(entry.meta?.extra ?? []), t('sessionPostCount', { count })],
-                    },
+                    meta: count
+                      ? {
+                          ...entry.meta,
+                          extra: [...(entry.meta?.extra ?? []), t('sessionPostCount', { count })],
+                        }
+                      : entry.meta,
+                    // Every row opens, so a session with no text still reaches its drawer.
                     body: (
                       <>
                         {entry.body}
-                        <a
-                          className={styles.sessionPosts}
-                          href={`${path}?${new URLSearchParams({ session: entry.id })}`}
-                        >
-                          {t('sessionPostsSee', { count })}
-                        </a>
+                        <div className={styles.sessionDrawerActions}>
+                          <SessionLink
+                            id={entry.id}
+                            href={sessionDrawerHref(`${path}?tab=syllabus`, entry.id)}
+                            className={styles.sessionPosts}
+                          >
+                            {tp('sessionOpen')}
+                          </SessionLink>
+                          {count > 0 && (
+                            <a
+                              className={styles.sessionPosts}
+                              href={sessionPostsHref(path, entry.id)}
+                            >
+                              {t('sessionPostsSee', { count })}
+                            </a>
+                          )}
+                        </div>
                       </>
                     ),
                   }

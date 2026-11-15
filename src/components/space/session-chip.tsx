@@ -22,10 +22,11 @@ export const sessionPostsHref = (spaceHref: string, id: string) =>
 /** "Session 3", and "Session 3: Title", numbered as the syllabus numbers it. */
 export function useSessionName() {
   const t = useTranslations('Course')
-  const unitOf = (fact: SessionFact) => t('session', { number: fact.n })
+  const unitOf = (fact: Pick<SessionFact, 'n'>) => t('session', { number: fact.n })
   return {
     unitOf,
-    nameOf: (fact: SessionFact) => (fact.title ? `${unitOf(fact)}: ${fact.title}` : unitOf(fact)),
+    nameOf: (fact: Pick<SessionFact, 'n' | 'title'>) =>
+      fact.title ? `${unitOf(fact)}: ${fact.title}` : unitOf(fact),
   }
 }
 

@@ -175,23 +175,47 @@ const courseSessions = async (
     })
   ).docs
 
+/** The fields of a course that its calendar and its session drawer read. */
+export type ShownCourse = Pick<
+  Course,
+  'id' | 'slug' | 'title' | 'subtitle' | 'description' | 'syllabus_tentative' | 'course_type'
+>
+
+/**
+ * A course as this user may see it, and whether they may edit its sessions.
+ * Only editors read a pending draft; readers see the published course. Every
+ * reader of a course's sessions goes through here, so the rule is written once.
+ */
+export const shownCourse = async (
+  ctx: CalendarContext,
+  courseId: string,
+): Promise<{ course: ShownCourse; canEdit: boolean }> => {
+  const { req, user } = ctx
+  const canEdit = await sessionSource.canEdit(ctx, courseId)
+  const course = await req.payload.findByID({
+    collection: 'courses',
+    id: numericId(courseId),
+    depth: 0,
+    draft: canEdit,
+    select: {
+      slug: true,
+      title: true,
+      subtitle: true,
+      description: true,
+      syllabus_tentative: true,
+      course_type: true,
+    },
+    user,
+    overrideAccess: false,
+    req,
+  })
+  return { course, canEdit }
+}
+
 const sessionSource: CalendarSource = {
   async load(ctx, parentId) {
-    const { req, user, untitled } = ctx
-    const id = numericId(parentId)
-    const { payload } = req
-    const course = await payload.findByID({
-      collection: 'courses',
-      id,
-      depth: 0,
-      // Only editors read a pending draft; readers see the published course.
-      draft: await sessionSource.canEdit(ctx, parentId),
-      select: { course_type: true },
-      user,
-      overrideAccess: false,
-      req,
-    })
-    return sessionItems(await courseSessions(ctx, id), course, untitled)
+    const { course } = await shownCourse(ctx, parentId)
+    return sessionItems(await courseSessions(ctx, numericId(parentId)), course, ctx.untitled)
   },
 
   async names(ctx, parentId) {

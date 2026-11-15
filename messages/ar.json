@@ -1345,7 +1345,13 @@
     "saveError_rules": "نص الخصوصية والقواعد طويل جدًا.",
     "pinAsCard": "ثبّت كبطاقة",
     "pinAsFull": "ثبّت كمنشور كامل",
-    "lastComment": "آخر تعليق <when></when>"
+    "lastComment": "آخر تعليق <when></when>",
+    "sessionDrawerLoading": "جارٍ تحميل الجلسة",
+    "sessionDrawerFailed": "تعذّر تحميل الجلسة. حاول مرة أخرى.",
+    "sessionDrawerClose": "إغلاق الجلسة",
+    "sessionDrawerTimes": "المواعيد بتوقيت القاهرة",
+    "sessionDrawerPosts": "منشورات عن هذه الجلسة",
+    "sessionOpen": "فتح الجلسة"
   },
   "SpaceComment": {
     "write": "علِّق",
