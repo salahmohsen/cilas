@@ -39,6 +39,8 @@ Every calendar (admin Sessions tab, space Calendar tab, schedule block in posts,
 5. **"Week N" is the course week** in course hosts ("Week 3 of 8", from `lib/meetings.ts`). `/calendar` shows no week number.
 6. **Phones** follow the phone images: a switch with 3 days, Day and Agenda; an icon-only primary action; the panel toggle. This replaces "phones one day at a time": 3 days is the phone default (orchestrator's reading; see open points).
 
+7. **12-hour times only.** The 24h/12h switch goes; times always show in the 12-hour form ("11 AM", "10:30 – 11:30 AM"; Arabic with its own AM/PM words). Unit 1 removes the switch, `use-hour12.ts` and its labels, and keeps the time format in one place in `calendar-time.ts`.
+
 ## Open points (owner)
 
 Asked 2026-11-15, not answered yet: the desktop view switch (Month, Week, Day, and Agenda?); month view popover only; what the panel holds; the dashed outline (unsaved change?); the primary action in view mode; the order of units; the step 4 e2e specs that change; and, from the phone images, the menu button at the start of the phone toolbar, the phone default view, and the weekend shade (Friday only?).
