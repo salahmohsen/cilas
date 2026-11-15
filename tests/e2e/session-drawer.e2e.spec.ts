@@ -201,7 +201,9 @@ test.describe('session drawer', () => {
   test('the Calendar tab, the Syllabus tab and a schedule block open the same drawer', async () => {
     await page.goto(`${BASE}${spacePath}?tab=calendar`)
     const fromCalendar = await openFrom(block())
-    expect(fromCalendar).toContain(TITLE)
+    // The title is the drawer's heading (`drawer()` finds it by it); the view under it has the number and times.
+    expect(fromCalendar).not.toContain(TITLE)
+    expect(fromCalendar).toContain('Session 1')
     expect(fromCalendar).toContain('19:00–21:00')
     await expect(drawer().locator('strong')).toHaveText('closely')
     await expect(drawer().getByRole('link', { name: 'Posts about this session' })).toHaveAttribute(
