@@ -82,9 +82,9 @@ it('offers Calendar next to Syllabus only for a course and navigates with tab=ca
   expect(screen.queryByRole('button', { name: 'Syllabus' })).toBeNull()
 })
 
-it('server renders the next week and both legend kinds, even for an editor, without editing UI', async () => {
+it('server renders the next week and both legend kinds in view mode, with Edit for an editor', async () => {
   const node = wrap(
-    await SpaceCalendar({ id: 7, locale: 'en', spaceHref: '/en/spaces/course/probe' }),
+    await SpaceCalendar({ id: 7, courseId: 3, locale: 'en', spaceHref: '/en/spaces/course/probe' }),
   )
   const html = renderToString(node)
   expect(html).toContain('Nov 14 to Nov 20, 2026')
@@ -94,7 +94,7 @@ it('server renders the next week and both legend kinds, even for an editor, with
   expect(screen.getByRole('group', { name: 'Calendar' })).toBeInTheDocument()
   expect(screen.getByText(en.SpacePost.scheduleKind)).toBeInTheDocument()
   expect(screen.getByText(en.Spaces.calendarEvents)).toBeInTheDocument()
-  expect(screen.queryByRole('button', { name: /^Edit/ })).toBeNull()
+  expect(screen.getByRole('button', { name: 'Edit' })).toBeInTheDocument()
   expect(screen.queryByRole('button', { name: /Save/ })).toBeNull()
   expect(document.querySelector('[data-mode="edit"]')).toBeNull()
   window.history.replaceState(null, '', '/en/spaces/course/probe?tab=calendar')
@@ -112,14 +112,19 @@ it('opens the last meeting week after the course ends and ignores later space ev
     canEdit: false,
     items: [...items, item('space-event:99', '2027-02-01', { kind: 'space-event' })],
   })
-  render(wrap(await SpaceCalendar({ id: 7, locale: 'en', spaceHref: '/probe' })))
+  render(wrap(await SpaceCalendar({ id: 7, courseId: 3, locale: 'en', spaceHref: '/probe' })))
   expect(screen.getByText('Nov 21 to Nov 27, 2026')).toBeInTheDocument()
+  // A reader (canEdit false) gets no Edit.
+  expect(screen.queryByRole('button', { name: 'Edit' })).toBeNull()
 })
 
 it('renders Arabic calendar controls and both legend names in RTL', async () => {
   render(
     <div dir="rtl">
-      {wrap(await SpaceCalendar({ id: 7, locale: 'ar', spaceHref: '/ar/probe' }), 'ar')}
+      {wrap(
+        await SpaceCalendar({ id: 7, courseId: 3, locale: 'ar', spaceHref: '/ar/probe' }),
+        'ar',
+      )}
     </div>,
   )
   expect(screen.getByRole('group', { name: /^التقويم$/ }).closest('[dir]')).toHaveAttribute(
@@ -132,7 +137,7 @@ it('renders Arabic calendar controls and both legend names in RTL', async () => 
 
 it('shows a visible load failure', async () => {
   vi.mocked(loadCalendarItems).mockResolvedValue({ ok: false, error: { code: 'forbidden' } })
-  render(wrap(await SpaceCalendar({ id: 7, locale: 'en', spaceHref: '/probe' })))
+  render(wrap(await SpaceCalendar({ id: 7, courseId: 3, locale: 'en', spaceHref: '/probe' })))
   expect(screen.getByText(en.Spaces.calendarFailed)).toBeInTheDocument()
 })
 

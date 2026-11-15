@@ -616,7 +616,7 @@ export async function SpacePage({
               <EmptyState title={t('noSyllabus')} description={t('noSyllabusHint')} />
             )
           ) : view === 'calendar' && course ? (
-            <SpaceCalendar id={space.id} locale={locale} spaceHref={path} />
+            <SpaceCalendar id={space.id} courseId={course.id} locale={locale} spaceHref={path} />
           ) : view === 'events' ? (
             <EventList
               upcoming={events.upcoming}

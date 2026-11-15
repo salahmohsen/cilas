@@ -5,14 +5,20 @@ import { Alert } from '@/components/arc/alert/alert'
 import { openingDay } from '@/lib/calendar-items'
 import { cairoDay } from '@/lib/cairo-day'
 
-import { ScheduleCalendar } from './schedule-calendar'
+import { SpaceCalendarTab } from './space-calendar-tab'
 
+/**
+ * The Calendar tab of a course space: read on the server for everyone, with
+ * Edit for the people the sessions collection lets edit (`canEdit`).
+ */
 export async function SpaceCalendar({
   id,
+  courseId,
   locale,
   spaceHref,
 }: {
   id: number
+  courseId: number
   locale: string
   spaceHref: string
 }) {
@@ -22,8 +28,11 @@ export async function SpaceCalendar({
     return <Alert tone="danger" title={t('calendarFailed')} />
   }
   return (
-    <ScheduleCalendar
+    <SpaceCalendarTab
+      spaceId={String(id)}
+      courseId={String(courseId)}
       items={result.items}
+      canEdit={result.canEdit}
       day={openingDay(
         result.items.filter((item) => item.kind === 'session'),
         cairoDay(new Date())!,
