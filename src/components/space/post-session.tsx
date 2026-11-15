@@ -10,6 +10,7 @@ import { AIInstructions } from '@/components/ai-instructions'
 import { SESSION_CARD_KINDS } from '@/lib/space-rules'
 import type { SessionView } from '@/lib/spaces-data'
 
+import { sessionPostsHref } from './session-chip'
 import styles from './space.module.css'
 
 /**
@@ -46,7 +47,7 @@ export function PostSession({
     return (
       <a
         className={styles.sessionChip}
-        href={`${space}?${new URLSearchParams({ session: session.session })}`}
+        href={sessionPostsHref(space, session.session)}
         aria-label={t('sessionChipLabel', { name })}
         dir="auto"
       >

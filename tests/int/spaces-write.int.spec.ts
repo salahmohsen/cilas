@@ -1978,6 +1978,23 @@ describe('spaces write', () => {
       error: 'session',
     })
 
+    // A schedule block keeps only this course's sessions, one a post, none in a comment.
+    const schedule = (...ids: string[]) => `::schedule[2026-11-14+2:${ids.join(',')}]`
+    const mixed = await write(
+      fellow,
+      `QA probe\n\n${schedule(one!, String(foreignSession.id), 'nope')}\n\n${schedule(two!)}`,
+    )
+    expect(mixed.ok).toBe(true)
+    if (mixed.ok)
+      expect(await stored('space-posts', mixed.data.id)).toBe(`QA probe\n\n${schedule(one!)}`)
+    const outside = await write(admin, `QA probe\n\n${schedule(one!)}`, community.id)
+    expect(outside.ok).toBe(true)
+    if (outside.ok) expect(await stored('space-posts', outside.data.id)).toBe('QA probe')
+    expect(await write(fellow, schedule(String(foreignSession.id)))).toMatchObject({
+      ok: false,
+      error: 'session',
+    })
+
     // At most 10 mentions and 3 blocks; the rest turn into plain text.
     const many = await write(
       fellow,
@@ -2006,6 +2023,17 @@ describe('spaces write', () => {
     expect(await stored('space-comments', comment.data.id)).toBe(
       `QA ${mention(two!, '2 Probe two')} and #x`,
     )
+    const scheduleComment = await commentCreate({
+      payload,
+      user: student,
+      post: made.data.id,
+      body: `QA probe\n\n${schedule(one!)}`,
+    })
+    expect(scheduleComment.ok).toBe(true)
+    if (scheduleComment.ok) {
+      track('space-comments', scheduleComment.data.id)
+      expect(await stored('space-comments', scheduleComment.data.id)).toBe('QA probe')
+    }
     await commentEdit({
       payload,
       user: student,

@@ -28,6 +28,8 @@ type Shared = {
   locale: string
   /** Any Cairo day of the week to open on; today by default. */
   day?: string
+  /** Ids of the items to mark as changed, in words and on their face. */
+  marked?: ReadonlySet<string>
   /** A block was chosen. `blockId` is null for an item with no block. */
   onOpen: (itemId: string, blockId: string | null) => void
 }
@@ -60,6 +62,7 @@ export type CalendarProps = Shared &
   )
 
 const STEP = 15
+const NO_MARKS: ReadonlySet<string> = new Set()
 const indexOfDay = (days: string[], day: string) => Math.max(0, days.indexOf(day))
 
 export function Calendar({
@@ -67,6 +70,7 @@ export function Calendar({
   labels,
   locale,
   day,
+  marked = NO_MARKS,
   onOpen,
   mode,
   onSave,
@@ -143,6 +147,7 @@ export function Calendar({
     (item) => item.blocks.length === 0 && !placedIds.has(item.id),
   )
   const anyCancelled = session.items.some((item) => item.cancelled)
+  const anyMarked = session.items.some((item) => marked.has(item.id))
 
   const droppedNote = session.dropped.length ? labels.dropped(session.dropped.join(', ')) : ''
 
@@ -152,8 +157,16 @@ export function Calendar({
   )
 
   const nameOf = useMemo(
-    () => blockNamer({ items: session.items, labels, locale, hour12, unsaved: session.unsaved }),
-    [session.items, labels, locale, hour12, session.unsaved],
+    () =>
+      blockNamer({
+        items: session.items,
+        labels,
+        locale,
+        hour12,
+        unsaved: session.unsaved,
+        marked,
+      }),
+    [session.items, labels, locale, hour12, session.unsaved, marked],
   )
 
   const blockMenu = labels.menu
@@ -260,6 +273,12 @@ export function Calendar({
                 {labels.cancelled}
               </li>
             ) : null}
+            {anyMarked ? (
+              <li data-tone="neutral">
+                <span className={styles.swatch} data-marked aria-hidden />
+                {labels.changed}
+              </li>
+            ) : null}
           </ul>
         ) : null}
 
@@ -294,6 +313,7 @@ export function Calendar({
           hour12={hour12}
           editable={editable}
           unsaved={session.unsaved}
+          marked={marked}
           selectedId={selectedId}
           nameOf={nameOf}
           newTone={newTone}

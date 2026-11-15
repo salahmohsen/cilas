@@ -1,7 +1,8 @@
 import { describe, expect, it } from 'vitest'
 
 import type { CalendarBlock, CalendarItem } from '@/lib/calendar-items'
-import { scheduleChangeText, scheduleChanges } from '@/lib/schedule-changes'
+import { scheduleBlock, scheduleChangeText, scheduleChanges } from '@/lib/schedule-changes'
+import { scheduleLineRef } from '@/lib/session-refs'
 
 // 2026-11-18 is a Wednesday, 2026-11-20 a Friday.
 const TODAY = '2026-11-18'
@@ -86,10 +87,10 @@ describe('scheduleChanges', () => {
   it('finds a cancelled and a restored session', () => {
     const blocks = [block('a', '2026-11-20')]
     expect(scheduleChanges([s3(blocks)], [s3(blocks, true)], TODAY)).toEqual([
-      { kind: 'cancelled', itemId: '3', title: 'Session 3' },
+      { kind: 'cancelled', itemId: '3', title: 'Session 3', blocks },
     ])
     expect(scheduleChanges([s3(blocks, true)], [s3(blocks)], TODAY)).toEqual([
-      { kind: 'restored', itemId: '3', title: 'Session 3' },
+      { kind: 'restored', itemId: '3', title: 'Session 3', blocks },
     ])
   })
 
@@ -125,9 +126,12 @@ describe('scheduleChanges', () => {
     expect(move('2026-11-17', '2026-11-12')).toHaveLength(0)
   })
 
-  it('counts a cancel for a session with a meeting later, though it has also past ones', () => {
-    const blocks = [block('a', '2026-11-10'), block('b', '2026-11-20')]
-    expect(scheduleChanges([s3(blocks)], [s3(blocks, true)], TODAY)).toHaveLength(1)
+  it('counts a cancel for a session with a meeting later, and lists only that meeting', () => {
+    const later = block('b', '2026-11-20')
+    const blocks = [block('a', '2026-11-10'), later]
+    expect(scheduleChanges([s3(blocks)], [s3(blocks, true)], TODAY)).toEqual([
+      { kind: 'cancelled', itemId: '3', title: 'Session 3', blocks: [later] },
+    ])
   })
 
   it('lists only the meetings from today on for an added or removed session', () => {
@@ -150,7 +154,7 @@ describe('scheduleChanges', () => {
       true,
     )
     expect(scheduleChanges([before], [after], TODAY)).toEqual([
-      { kind: 'cancelled', itemId: '3', title: 'Session 3' },
+      { kind: 'cancelled', itemId: '3', title: 'Session 3', blocks: after.blocks },
     ])
   })
 
@@ -179,6 +183,53 @@ describe('scheduleChanges', () => {
   })
 })
 
+describe('scheduleBlock', () => {
+  it('shows the weeks from the first touched meeting to the last, with the changed sessions', () => {
+    // Wed 18 Nov is in the week of Sat 14 Nov; Tue 1 Dec in the week of Sat 28 Nov.
+    const changes = scheduleChanges(
+      [s3([block('a', '2026-11-18')]), item('5', 'Session 5', [block('c', '2026-11-26')])],
+      [s3([block('a', '2026-12-01')]), item('5', 'Session 5', [block('c', '2026-11-26')], true)],
+      TODAY,
+    )
+    const token = scheduleBlock(changes, TODAY)
+    expect(token).toBe('::schedule[2026-11-14+3:3,5]')
+    expect(scheduleLineRef(token!)).toEqual({ from: '2026-11-14', weeks: 3, ids: ['3', '5'] })
+  })
+
+  it('names one week for changes inside one Saturday week', () => {
+    const changes = scheduleChanges(
+      [s3([block('a', '2026-11-21')])],
+      [s3([block('a', '2026-11-27')])],
+      TODAY,
+    )
+    expect(scheduleBlock(changes, TODAY)).toBe('::schedule[2026-11-21+1:3]')
+  })
+
+  it('does not mark a removed session, but its meetings still set the weeks', () => {
+    const changes = scheduleChanges(
+      [s3([block('a', '2026-11-20')]), item('9', 'Session 9', [block('z', '2026-12-10')])],
+      [s3([block('a', '2026-11-21')])],
+      TODAY,
+    )
+    expect(scheduleBlock(changes, TODAY)).toBe('::schedule[2026-11-14+4:3]')
+  })
+
+  it('starts at the first week from today, not at the past start of a move', () => {
+    const changes = scheduleChanges(
+      [s3([block('a', '2026-10-01')])],
+      [s3([block('a', '2026-11-24')])],
+      TODAY,
+    )
+    expect(scheduleBlock(changes, TODAY)).toBe('::schedule[2026-11-21+1:3]')
+  })
+
+  it('gives no block when nothing is left to mark', () => {
+    expect(scheduleBlock([], TODAY)).toBeNull()
+    const removed = scheduleChanges([s3([block('a', '2026-11-20')])], [], TODAY)
+    expect(scheduleBlock(removed, TODAY)).toBeNull()
+  })
+})
+
 describe('scheduleChangeText', () => {
   const from = block('a', '2026-11-19')
   const to = block('a', '2026-11-21', '20:00', '22:00')
@@ -204,7 +255,7 @@ describe('scheduleChangeText', () => {
         { kind: 'meeting-added', itemId: '3', title: 'Session 3', block: to },
         { kind: 'item-added', itemId: '9', title: 'Session 9', blocks: [from, to] },
         { kind: 'item-removed', itemId: '8', title: 'Session 8', blocks: [from] },
-        { kind: 'restored', itemId: '5', title: 'Session 5' },
+        { kind: 'restored', itemId: '5', title: 'Session 5', blocks: [] },
       ],
       'en',
     ).split('\n')
@@ -236,8 +287,8 @@ describe('scheduleChangeText', () => {
     const text = scheduleChangeText(
       [
         { kind: 'moved', itemId: '3', title: 'الجلسة ٣', from, to },
-        { kind: 'cancelled', itemId: '5', title: 'الجلسة ٥' },
-        { kind: 'restored', itemId: '6', title: 'الجلسة ٦' },
+        { kind: 'cancelled', itemId: '5', title: 'الجلسة ٥', blocks: [] },
+        { kind: 'restored', itemId: '6', title: 'الجلسة ٦', blocks: [] },
         {
           kind: 'meeting-removed',
           itemId: '3',

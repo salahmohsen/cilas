@@ -11,6 +11,8 @@ type Context = {
   hour12: boolean
   /** Ids of the blocks that differ from what was loaded. */
   unsaved: Set<string>
+  /** Ids of the items marked as changed. */
+  marked: ReadonlySet<string>
 }
 
 export const longDay = (day: string, locale: string) =>
@@ -21,7 +23,7 @@ export const longDay = (day: string, locale: string) =>
  * it is now. The grid and the span editor's announcements share it, so a move
  * is announced by the name the block then has.
  */
-export function blockNamer({ items, labels, locale, hour12, unsaved }: Context) {
+export function blockNamer({ items, labels, locale, hour12, unsaved, marked }: Context) {
   const itemById = new Map(items.map((item) => [item.id, item]))
   const states = new Intl.ListFormat(locale, { style: 'long', type: 'conjunction' })
   return (block: EditBlock) => {
@@ -35,7 +37,11 @@ export function blockNamer({ items, labels, locale, hour12, unsaved }: Context) 
           formatMinutes(block.end, locale, hour12),
         )
     if (block.deleted) return labels.restoreName({ title, day, time })
-    const status = [item?.cancelled && labels.cancelled, unsaved.has(block.id) && labels.unsaved]
+    const status = [
+      item?.cancelled && labels.cancelled,
+      marked.has(block.itemId) && labels.changed,
+      unsaved.has(block.id) && labels.unsaved,
+    ]
     return labels.blockName({
       title,
       day,

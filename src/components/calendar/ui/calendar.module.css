@@ -96,6 +96,9 @@
 .swatch[data-cancelled] {
   background: repeating-linear-gradient(135deg, transparent 0 2px, var(--tone-hatch) 2px 3px);
 }
+.swatch[data-marked] {
+  box-shadow: 0 0 0 2px var(--foreground);
+}
 
 .grid {
   border-block: 1px solid var(--border);
@@ -314,6 +317,19 @@
       var(--tone-hatch) 0.5rem calc(0.5rem + 1px)
     ),
     var(--surface);
+}
+
+.block[data-marked],
+.pill[data-marked] {
+  box-shadow: 0 0 0 2px var(--foreground);
+}
+@media (forced-colors: active) {
+  .block[data-marked],
+  .pill[data-marked],
+  .swatch[data-marked] {
+    outline: 2px solid CanvasText;
+    outline-offset: 1px;
+  }
 }
 
 .title {

@@ -33,6 +33,8 @@ export type CalendarLabels = {
   hours24: string
   hours12: string
   cancelled: string
+  /** What a marked item is, on its face, in its name and in the legend. */
+  changed: string
   unscheduled: string
   /** What the legend calls an item kind. */
   kind: (kind: string) => string
@@ -104,6 +106,7 @@ export const calendarLabelsFrom = (
   hours24: t('hours24'),
   hours12: t('hours12'),
   cancelled: t('cancelled'),
+  changed: t('changed'),
   unscheduled: t('unscheduled'),
   kind,
   range: (from, to) => t('range', { from, to }),

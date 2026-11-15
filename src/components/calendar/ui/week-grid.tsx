@@ -27,6 +27,8 @@ type Props = {
   hour12: boolean
   editable: boolean
   unsaved: Set<string>
+  /** Ids of the items marked as changed. */
+  marked: ReadonlySet<string>
   selectedId: string | null
   /** A block's spoken name. */
   nameOf: (block: EditBlock) => string
@@ -58,6 +60,7 @@ export function WeekGrid({
   hour12,
   editable,
   unsaved,
+  marked,
   selectedId,
   nameOf,
   newTone,
@@ -127,6 +130,7 @@ export function WeekGrid({
                   'data-allday-id': block.id,
                   'data-tone': item?.tone ?? newTone,
                   'data-cancelled': item?.cancelled ? '' : undefined,
+                  'data-marked': marked.has(block.itemId) ? '' : undefined,
                   'data-unsaved': unsaved.has(block.id) ? '' : undefined,
                   'data-deleted': block.deleted ? '' : undefined,
                   'aria-label': nameOf(block),
@@ -174,6 +178,9 @@ export function WeekGrid({
                     <span className={styles.pillTitle} dir="auto">
                       {item?.title ?? labels.newItem}
                     </span>
+                    {marked.has(block.itemId) && !block.deleted ? (
+                      <span className={styles.pillState}>{labels.changed}</span>
+                    ) : null}
                     {block.deleted ? (
                       <span className={styles.pillState}>
                         <RotateCcw aria-hidden size={12} /> {labels.restore}
@@ -241,6 +248,7 @@ export function WeekGrid({
                       aria-describedby={editable && !block.deleted ? hintId : undefined}
                       data-tone={item?.tone ?? newTone}
                       data-cancelled={item?.cancelled ? '' : undefined}
+                      data-marked={marked.has(block.itemId) ? '' : undefined}
                       data-unsaved={edited ? '' : undefined}
                       data-deleted={block.deleted ? '' : undefined}
                       data-selected={block.id === selectedId ? '' : undefined}
@@ -302,8 +310,15 @@ export function WeekGrid({
                           <span className={styles.state}>
                             <RotateCcw aria-hidden size={12} /> {labels.restore}
                           </span>
-                        ) : item?.cancelled ? (
-                          <span className={styles.state}>{labels.cancelled}</span>
+                        ) : item?.cancelled || marked.has(block.itemId) ? (
+                          <span className={styles.state}>
+                            {[
+                              item?.cancelled && labels.cancelled,
+                              marked.has(block.itemId) && labels.changed,
+                            ]
+                              .filter(Boolean)
+                              .join(' · ')}
+                          </span>
                         ) : null}
                       </span>
                       {editable && !block.deleted ? (

@@ -1,9 +1,12 @@
 import { createTranslator } from 'next-intl'
 
+import { addDays } from '@/lib/cairo-day'
+import { weekStart } from '@/lib/calendar'
 import type { CalendarBlock, CalendarItem } from '@/lib/calendar-items'
 import { localDigits } from '@/lib/digits'
 import { dayLabel } from '@/lib/meeting-text'
 import { byWhen } from '@/lib/meetings'
+import { scheduleToken } from '@/lib/session-refs'
 
 import ar from '../../messages/ar.json'
 import en from '../../messages/en.json'
@@ -15,15 +18,19 @@ import en from '../../messages/en.json'
  * empty result means: offer no announcement.
  */
 
-/** One change that counts. `title` is the item's title after the change, or before it for a removed item. */
+/**
+ * One change that counts. `title` is the item's title after the change, or
+ * before it for a removed item. `blocks` are the item's meetings from today
+ * on: the ones an added, removed, cancelled or restored item touches.
+ */
 export type ScheduleChange =
   | { kind: 'moved'; itemId: string; title: string; from: CalendarBlock; to: CalendarBlock }
   | { kind: 'meeting-added'; itemId: string; title: string; block: CalendarBlock }
   | { kind: 'meeting-removed'; itemId: string; title: string; block: CalendarBlock }
   | { kind: 'item-added'; itemId: string; title: string; blocks: CalendarBlock[] }
   | { kind: 'item-removed'; itemId: string; title: string; blocks: CalendarBlock[] }
-  | { kind: 'cancelled'; itemId: string; title: string }
-  | { kind: 'restored'; itemId: string; title: string }
+  | { kind: 'cancelled'; itemId: string; title: string; blocks: CalendarBlock[] }
+  | { kind: 'restored'; itemId: string; title: string; blocks: CalendarBlock[] }
 
 const times = (b: CalendarBlock) => `${b.date} ${b.start_time ?? ''} ${b.end_time ?? ''}`
 
@@ -39,14 +46,14 @@ const itemChanges = (
   const item = after ?? before
   if (!item) return []
   const { id: itemId, title } = item
+  const blocks = item.blocks.filter((b) => b.date >= today).sort(byWhen)
   if (!before || !after) {
-    const blocks = item.blocks.filter((b) => b.date >= today).sort(byWhen)
     return [{ kind: after ? 'item-added' : 'item-removed', itemId, title, blocks }]
   }
 
   const changes: ScheduleChange[] = []
   if (before.cancelled !== after.cancelled) {
-    changes.push({ kind: after.cancelled ? 'cancelled' : 'restored', itemId, title })
+    changes.push({ kind: after.cancelled ? 'cancelled' : 'restored', itemId, title, blocks })
   }
   const was = new Map(before.blocks.map((b) => [b.id, b]))
   const now = new Map(after.blocks.map((b) => [b.id, b]))
@@ -73,20 +80,19 @@ const touched = (change: ScheduleChange): CalendarBlock[] => {
       return [change.block]
     case 'item-added':
     case 'item-removed':
-      return change.blocks
     case 'cancelled':
     case 'restored':
-      return []
+      return change.blocks
   }
 }
 
 /**
  * The changes from `before` to `after` that count: those with a meeting, old
  * or new, on `today` (a Cairo day) or later. Corrections to the past count
- * for nothing, and an added or removed session lists only its meetings from
- * `today` on. Cancelling or restoring a session counts when it has any
- * meeting today or later; a session cancelled in the save has that change
- * only, since its moved or added meetings will not happen. Items and blocks
+ * for nothing, and an added, removed, cancelled or restored session lists
+ * only its meetings from `today` on, so it counts when it has one. A session
+ * cancelled in the save has that change only, since its moved or added
+ * meetings will not happen. Items and blocks
  * are matched by id; an item or block made in the save has an id the other
  * side lacks. Order: items as `after` lists them, then removed items as
  * `before` listed them.
@@ -101,16 +107,32 @@ export const scheduleChanges = (
   const ids = [...after.map((i) => i.id), ...before.map((i) => i.id).filter((id) => !now.has(id))]
   const items = new Map(after.map((i) => [i.id, i]))
   return ids.flatMap((id) => {
-    const [b, a] = [was.get(id), items.get(id)]
-    const sessionLive = live([...(b?.blocks ?? []), ...(a?.blocks ?? [])], today)
-    const changes = itemChanges(b, a, today).filter((change) =>
-      change.kind === 'cancelled' || change.kind === 'restored'
-        ? sessionLive
-        : live(touched(change), today),
+    const changes = itemChanges(was.get(id), items.get(id), today).filter((change) =>
+      live(touched(change), today),
     )
     const cancelled = changes.find((change) => change.kind === 'cancelled')
     return cancelled ? [cancelled] : changes
   })
+}
+
+/**
+ * The announcement's schedule block: the weeks from the first meeting the
+ * changes touch on `today` or later to the last, with the changed sessions
+ * marked. A removed session is gone, so it is not marked, but its meetings
+ * still set the weeks. Null when no session is left to mark.
+ */
+export const scheduleBlock = (changes: readonly ScheduleChange[], today: string): string | null => {
+  const ids = [...new Set(changes.flatMap((c) => (c.kind === 'item-removed' ? [] : [c.itemId])))]
+  const days = changes
+    .flatMap(touched)
+    .map((b) => b.date)
+    .filter((day) => day >= today)
+    .sort()
+  const [first, last] = [days[0], days.at(-1)]
+  if (!ids.length || !first || !last) return null
+  let weeks = 1
+  for (let day = addDays(weekStart(first), 7); day <= last; day = addDays(day, 7)) weeks++
+  return scheduleToken({ from: first, weeks, ids })
 }
 
 export type ScheduleChangeLocale = 'en' | 'ar'
