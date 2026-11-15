@@ -15,7 +15,7 @@ import { AvatarUpload } from '@/components/image-upload/avatar-upload'
 import { asFile } from '@/components/image-upload/pick'
 import { sendWithProgress } from '@/components/image-upload/send'
 import { RichField } from '@/components/rich-field'
-import { bioBaseline, bioToSend } from '@/components/profile/bio'
+import { markdownBaseline, markdownToSend } from '@/components/markdown-edit'
 import type { ProfileMessages } from '@/components/profile/messages'
 import { Select } from '@/components/select'
 import { useSettingsSection } from '@/components/settings/settings-shell'
@@ -80,8 +80,8 @@ export function ProfileForm({ profile, messages: m, action, removePhotoAction, o
     const original = profile.bio[lang]
     let cached = baselines.current[lang]
     if (cached?.[0] !== original)
-      cached = baselines.current[lang] = [original, bioBaseline(original)]
-    return bioToSend(original, edited, cached[1])
+      cached = baselines.current[lang] = [original, markdownBaseline(original)]
+    return markdownToSend(original, edited, cached[1])
   }
 
   const nameEnError = (value: string) =>
