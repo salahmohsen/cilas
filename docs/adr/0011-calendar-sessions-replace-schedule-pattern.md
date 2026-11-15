@@ -309,6 +309,12 @@ None now.
 
 ## Decision log
 
+Fix: stage drawer details with calendar changes, then save both in one transaction (owner approved, 2026-11-15; step 5 decision 11).
+
+- **Two save paths can discard pending work.** In step 4, saving the drawer drops that session's unsaved calendar edits. In calendar edit mode, clicking a saved or new session will instead open our drawer's Edit form directly, in both the space and admin. Apply stages the details; Cancel discards only the current form changes. The Save bar and leave guard include staged details.
+- **One Save sends one request.** `saveScheduleEdits({ calendar, details })` applies meeting changes, details, and new sessions in one Payload transaction. A stale existing session version stops all writes. The announcement offer opens once. The generic calendar keeps meeting changes only; the host joins its detail changes at Save. Outside calendar edit mode, the form uses the same action for an immediate single-session save.
+- **Build after the details popover, before month view.** See step 5 unit 3b in `docs/plans/2026-11-15-calendar-redesign.md`. The earlier drawer-save rule remains the current implementation until that unit lands. The owner reviews each layout before the next unit starts.
+
 Fix: owner's decisions of 2026-11-15, at the close of step 4.
 
 - **A drawer save drops the calendar's unsaved changes to that session only, with a notice that names it.** The changes to other sessions stay. The admin calendar does the same since step 2 (unit 5c). The changes were made from the old version of the session and could not save; a stale save of the whole calendar would drop more.
