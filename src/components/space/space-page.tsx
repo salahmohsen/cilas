@@ -48,10 +48,11 @@ import {
   type SpaceLanding,
 } from '@/lib/spaces-data'
 import { visitRecord } from '@/lib/spaces-write'
+import { sessionDrawerHref } from '@/lib/session-drawer-url'
 
 import { SpaceViews } from './space-views'
 import { SpaceCalendar } from './space-calendar'
-import { SessionLink, sessionDrawerHref } from './session-drawer-host'
+import { SessionLink } from './session-drawer-host'
 import { sessionPostsHref } from './session-chip'
 import { AboutClamp } from './about-clamp'
 import { Composer } from './composer'

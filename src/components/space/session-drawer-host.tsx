@@ -11,16 +11,14 @@ import {
 } from 'react'
 
 import { preloadable } from '@/lib/preloadable'
+import { SESSION_PARAM, sessionDrawerHref } from '@/lib/session-drawer-url'
 
 /**
  * The session drawer: one for every surface of the spaces (the Calendar
  * tab, the Syllabus tab, a post's schedule block, a post page or dialog).
- * The open session is the `open` search param, so Back closes it and a link
- * opens it. (`session` already filters the feed to a session's posts.) It is
- * written with the History API, which Next folds into its router without a
- * server round trip.
+ * Its param (`lib/session-drawer-url.ts`) is written with the History API,
+ * which Next folds into its router without a server round trip.
  */
-export const SESSION_PARAM = 'open'
 
 const SessionDrawer = preloadable(() => import('./session-drawer').then((m) => m.SessionDrawer), {
   name: 'SessionDrawer',
@@ -50,13 +48,6 @@ export const sessionTriggerProps = {
     remember(event.target)
     SessionDrawer.preload()
   },
-}
-
-/** The current page's address with the session drawer open on `id`. */
-export const sessionDrawerHref = (href: string, id: string) => {
-  const url = new URL(href, 'http://local')
-  url.searchParams.set(SESSION_PARAM, id)
-  return `${url.pathname}${url.search}${url.hash}`
 }
 
 /** Opens the drawer on a session, as a new history entry. */

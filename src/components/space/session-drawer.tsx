@@ -42,7 +42,7 @@ export function SessionDrawer({
   onCloseFocus: () => void
 }) {
   const t = useTranslations('SpacePost')
-  const { nameOf } = useSessionName()
+  const { unitOf, nameOf } = useSessionName()
   const locale = useLocale()
   const phone = usePhone()
   // While the drawer slides out, it keeps showing the session it closed on.
@@ -65,6 +65,8 @@ export function SessionDrawer({
     result?.ok === true
       ? nameOf({ n: result.session.number, title: result.session.session.title ?? null })
       : t('scheduleKind')
+  // The card under it carries the title, so the drawer's own title is the number alone.
+  const heading = result?.ok === true ? unitOf({ n: result.session.number }) : name
 
   const body: ReactNode = !result ? (
     <div role="status">
@@ -114,7 +116,7 @@ export function SessionDrawer({
       <BottomSheet
         open={open}
         onOpenChange={onOpenChange}
-        title={name}
+        title={heading}
         description={t('sessionDrawerTimes')}
         closeLabel={t('sessionDrawerClose')}
         onCloseAutoFocus={onCloseAutoFocus}
@@ -126,7 +128,7 @@ export function SessionDrawer({
   return (
     <Drawer open={open} onOpenChange={onOpenChange}>
       <DrawerContent
-        title={name}
+        title={heading}
         description={t('sessionDrawerTimes')}
         side={locale === 'ar' ? 'left' : 'right'}
         closeLabel={t('sessionDrawerClose')}
