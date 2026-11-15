@@ -59,7 +59,7 @@ Unit 3 also does these, because the dialog opens after the save:
 - **The dialog takes a list of spaces** (one entry in the admin), each with its own text, Publish and Skip, so step 5 reuses it.
 - **Choices on unit 2's open questions:** the token is not in the editable text: the dialog shows the calendar as a preview with a checkbox "Include the calendar" (on), and Publish adds the token. The block opens on the first changed day (a small prop), so a phone shows the marked block. A block whose marked sessions all left its weeks shows a short line, not an unmarked grid. The text names a session as its number, then its title ("Session 3: Title").
 
-After step 3, as its own unit: the `approximate` flag for archive meetings (ADR 0011, Decision log, the review of 2026-11-15).
+Not done: the `approximate` flag for archive meetings. It was built and reverted (`eb95f17c`) on the owner's decision; the archive dates are a data task (ADR 0011, Decision log, the review of 2026-11-15).
 
 ## Decision trail
 
