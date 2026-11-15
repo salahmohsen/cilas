@@ -300,16 +300,17 @@ export const sessionSafeBody = async (
   return cleanSessionRefs(body, new Set(docs.map((s) => String(s.id))), options)
 }
 
-export const postCreate = async (
-  i: Input<
-    {
-      space: number
-      body: string
-      files?: PostFile[]
-    } & PostShape
-  >,
-): Promise<WriteResult<{ id: number }>> => {
-  const { payload, user, space: spaceId, kind, files } = i
+/**
+ * Whether `user` may write a new post of `kind` in the space, and the space
+ * if so: every check `postCreate` makes before it reads the body. The one
+ * rule for "may this person post an announcement here".
+ */
+const postDoor = async (
+  payload: Payload,
+  user: NonNullable<User>,
+  spaceId: number,
+  kind: PostShape['kind'],
+): Promise<WriteResult<{ space: SpaceLike }>> => {
   const g = await gate(payload, user, spaceId, { write: true, post: null })
   if (g.stop) return err(g.error)
   const space = g.space
@@ -321,6 +322,29 @@ export const postCreate = async (
   if (!postingAllows(space.posting ?? 'open', mem.role, kind)) return err('posting-level')
   if (kind === 'event' && !eventsAllow((space as { events?: EventPosting }).events, mem.role))
     return err('events')
+  return { ok: true, data: { space } }
+}
+
+/** Whether `user` may post an announcement in the space now. */
+export const mayAnnounce = async (
+  payload: Payload,
+  user: NonNullable<User>,
+  spaceId: number,
+): Promise<boolean> => (await postDoor(payload, user, spaceId, 'announcement')).ok
+
+export const postCreate = async (
+  i: Input<
+    {
+      space: number
+      body: string
+      files?: PostFile[]
+    } & PostShape
+  >,
+): Promise<WriteResult<{ id: number }>> => {
+  const { payload, user, space: spaceId, kind, files } = i
+  const door = await postDoor(payload, user, spaceId, kind)
+  if (!door.ok) return door
+  const { space } = door.data
   const extra = shapeData(i)
   if (!extra) return err(kind === 'vote' ? 'vote' : 'event')
   const body = await sessionSafeBody(payload, space, i.body)
