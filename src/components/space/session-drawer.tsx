@@ -126,9 +126,17 @@ export function SessionDrawer({
       ? result.session.session.title || unitOf({ n: result.session.number })
       : name
 
+  // Another session, or a close by any way: the drawer opens next time in view mode.
+  useEffect(() => {
+    setEditing(null)
+    setUnsaved(null)
+  }, [id])
+
+  /** Back to the view, read again: it may be older than what the form showed. */
   const stopEditing = () => {
     setEditing(null)
     setUnsaved(null)
+    setRound((n) => n + 1)
     requestAnimationFrame(() => edit.current?.focus())
   }
 
@@ -167,7 +175,6 @@ export function SessionDrawer({
       onCancel={stopEditing}
       onSaved={({ before, after }) => {
         stopEditing()
-        setRound((n) => n + 1)
         // An open Calendar tab and the page's other server parts read it again.
         router.refresh()
         offering.offer(before, after, () => edit.current)

@@ -328,6 +328,12 @@ describe('the session drawer’s Edit form', () => {
     fireEvent.click(within(dialog).getByRole('button', { name: en.SpacePost.sessionDrawerClose }))
     await waitFor(() => expect(window.location.search).toBe(''))
     expect(screen.queryByRole('dialog', { name: en.Spaces.calendarLeaveTitle })).toBeNull()
+
+    // Opened again, it shows the session, not the form it was closed on.
+    act(() => window.history.pushState(null, '', '/en/spaces/course/probe?open=13'))
+    const again = await screen.findByRole('dialog', { name: 'Reading the city' })
+    expect(await within(again).findByRole('button', { name: en.SessionEdit.edit })).toBeVisible()
+    expect(within(again).queryByRole('textbox', { name: en.SessionEdit.title })).toBeNull()
   })
 
   it('after a save, offers on the course’s items before and after it, and reads the page again', async () => {

@@ -275,7 +275,11 @@ function Fields({
     go: ts('calendarLeaveGo'),
     close: t('leaveClose'),
   })
-  useEffect(() => onUnsaved(dirty ? leaving.leave : null), [dirty, leaving.leave, onUnsaved])
+  useEffect(() => {
+    onUnsaved(dirty ? leaving.leave : null)
+    // A reload or an unmount takes the question away with these fields.
+    return () => onUnsaved(null)
+  }, [dirty, leaving.leave, onUnsaved])
 
   const attempts = useSelector(form.store, (s) => s.submissionAttempts)
   const submitting = useSelector(form.store, (s) => s.isSubmitting)
