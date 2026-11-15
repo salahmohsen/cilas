@@ -16,7 +16,7 @@ A student opens a course space, goes to the Calendar tab, and sees the course's 
 ## Owner's decisions (2026-11-15)
 
 - **Space events do not drag.** They show on the calendar in their own tone and stay editable from their post. 9 space events exist, none in the future. Drag can come later if fellows ask.
-- **The drawer has a full Edit form** in the space: title, description (Arc editor), materials, activities, meetings, cancelled. Its components come from the Arc skill, chosen for the simplest clear UI.
+- **The drawer has a full Edit form** in the space: title, description (Arc editor), materials, activities, meetings, cancelled. Its components come from the Arc skill, chosen for the simplest clear UI. The form uses TanStack Form (`@tanstack/react-form` 1.33.5, already pinned), in the pattern of `components/profile/profile-form.tsx` (array fields, `focusFirstError`). Meeting checks come from `meetingProblem` in `lib/meetings.ts`, never a copy.
 - **No live update** of open calendars in this step. The stale-save message protects against overwrites.
 - **The Events tab stays** as it is, next to the Calendar tab.
 - **Cohort spaces get no Calendar tab** for now (they have no course).
@@ -37,7 +37,7 @@ Each unit ends in a check, and the next unit starts only when that check passes.
 2. **Calendar tab, view mode.** Next to Syllabus, server rendered, opens on the week of the next meeting (else the last). Course spaces only. Check: item 2.
 3. **Session drawer.** One session view for the drawer and the syllabus, loaded with `preloadable`. The tab, the Syllabus tab and the schedule block open it. Check: item 3.
 4. **Edit mode.** Edit and Done, save through `saveCalendarChanges`, leave warning from `onUnsavedChange`, stale save, then `scheduleChanges` and the step 3 dialog. Check: item 4.
-5. **Drawer Edit form.** Arc components (Arc skill first). Check: item 5.
+5. **Drawer Edit form.** TanStack Form, Arc components (Arc skill first). Check: item 5.
 6. **Close.** Item 6 and this plan's decision trail.
 
 ## Decision trail
