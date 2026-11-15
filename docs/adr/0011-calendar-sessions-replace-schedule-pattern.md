@@ -238,7 +238,7 @@ As built in step 4:
 - `SpaceCalendarTab` opens `SpaceCalendarEditor` for edit mode. `useScheduleSave` saves, then `useScheduleOffer` offers the announcement. The drawer uses the same offer.
 - `lib/leave-guard.ts` is the one leave guard. It checks links, page close and navigation through `leave`. This Next version cannot ask on Back and Forward.
 - The drawer's Edit form uses TanStack Form. `saveSessionEdit` checks `updatedAt` before it saves. A stale drawer save keeps the fields and offers Reload.
-- Close found a gap. A drawer save refreshes the calendar. If that session has a pending calendar edit, the calendar drops it and names it in a notice. It does not keep the edit for a stale Save. This needs the owner's decision.
+- A drawer save drops only that session's unsaved calendar changes. A notice names the session. Changes to other sessions stay. The owner chose this behavior on 2026-11-15. See Decision log.
 
 ## Public calendar redesign
 
