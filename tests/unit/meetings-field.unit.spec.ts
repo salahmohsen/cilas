@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 
-import { meetingProblem } from '@/fields/meetings'
+import { meetingIssue, meetingProblem } from '@/fields/meetings'
 
 describe('meetingProblem', () => {
   it('accepts a real day, and refuses anything else', () => {
@@ -31,5 +31,16 @@ describe('meetingProblem', () => {
     expect(meetingProblem('end_time', { start_time: '19:00', end_time: '21:00' })).toBe(true)
     expect(meetingProblem('end_time', { start_time: '19:00', end_time: '19:00' })).toMatch(/after/)
     expect(meetingProblem('start_time', { start_time: '19:00', end_time: '18:00' })).toBe(true)
+  })
+})
+
+describe('meetingIssue', () => {
+  it('names each problem with a code, for a page to word', () => {
+    expect(meetingIssue('date', { date: '2026-02-30' })).toBe('day')
+    expect(meetingIssue('end_time', { start_time: '19:00', end_time: '' })).toBe('both-times')
+    expect(meetingIssue('start_time', { start_time: '7pm', end_time: '21:00' })).toBe('time')
+    expect(meetingIssue('end_time', { start_time: '21:00', end_time: '19:00' })).toBe('order')
+    expect(meetingIssue('start_time', { start_time: '21:00', end_time: '19:00' })).toBe(true)
+    expect(meetingIssue('end_time', { start_time: '19:00', end_time: '21:00' })).toBe(true)
   })
 })
