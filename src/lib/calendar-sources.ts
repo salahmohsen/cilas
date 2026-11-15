@@ -3,9 +3,12 @@ import type { PayloadRequest } from 'payload'
 import { createSession } from '@/collections/Sessions'
 import { meetingProblem } from '@/fields/meetings'
 import type { CalendarBlock, CalendarChange, CalendarItem } from '@/lib/calendar-items'
+import { cairoDay, cairoTime } from '@/lib/cairo-day'
+import { relId } from '@/lib/relation'
+import { eventParts } from '@/lib/space-event'
 import { toneOf } from '@/lib/calendar'
 import { byWhen, numberedSessions, type Meeting } from '@/lib/meetings'
-import type { Course, Session, User } from '@/payload-types'
+import type { Course, Session, SpacePost, User } from '@/payload-types'
 
 /**
  * One adapter per kind of calendar parent (ADR 0011): how its documents
@@ -22,7 +25,7 @@ export type CalendarSaveError =
   /** Someone saved the item after the page loaded it. `name` is what it is called now, when it is still there. */
   | { code: 'stale'; itemId: string; name?: string }
   /** A change is not a valid meeting, or not a change this parent takes. */
-  | { code: 'invalid'; message: string; change?: number }
+  | { code: 'invalid'; message: string; change?: number; reason?: 'no-calendar' }
   | { code: 'failed' }
 
 /** Thrown by an adapter to fail the whole save with a typed error. */
@@ -181,8 +184,8 @@ const sessionSource: CalendarSource = {
       collection: 'courses',
       id,
       depth: 0,
-      // As the admin shows the course: its latest draft, if it has one.
-      draft: true,
+      // Only editors read a pending draft; readers see the published course.
+      draft: await sessionSource.canEdit(ctx, parentId),
       select: { course_type: true },
       user,
       overrideAccess: false,
@@ -266,7 +269,101 @@ const sessionSource: CalendarSource = {
   },
 }
 
-const sources: Record<string, CalendarSource> = { course: sessionSource }
+/** Instants enter the wall-clock calendar through the shared Cairo conversion. */
+export const spaceEventItems = (
+  posts: readonly Pick<
+    SpacePost,
+    'id' | 'body' | 'event_title' | 'event_starts_at' | 'event_ends_at' | 'updatedAt'
+  >[],
+): CalendarItem[] =>
+  posts.flatMap((post) => {
+    if (!post.event_starts_at) return []
+    const date = cairoDay(post.event_starts_at)
+    if (!date) return []
+    return [
+      {
+        id: `space-event:${post.id}`,
+        kind: 'space-event',
+        title: eventParts(post).title,
+        tone: 'neutral',
+        readOnly: true,
+        cancelled: false,
+        version: post.updatedAt,
+        blocks: [
+          {
+            id: String(post.id),
+            date,
+            start_time: cairoTime(post.event_starts_at),
+            end_time: post.event_ends_at ? cairoTime(post.event_ends_at) : null,
+          },
+        ],
+      },
+    ]
+  })
+
+/** Resolve with the reader's access before composing or saving anything. */
+const spaceCourse = async ({ req, user }: CalendarContext, parentId: string): Promise<string> => {
+  const space = await req.payload.findByID({
+    collection: 'spaces',
+    id: numericId(parentId),
+    depth: 0,
+    user,
+    overrideAccess: false,
+    req,
+  })
+  const course = relId(space.course)
+  if (space.kind !== 'course' || course == null)
+    throw new CalendarSaveFailure({
+      code: 'invalid',
+      reason: 'no-calendar',
+      message: 'This space has no calendar.',
+    })
+  return String(course)
+}
+
+const spaceSource: CalendarSource = {
+  async load(ctx, parentId) {
+    const course = await spaceCourse(ctx, parentId)
+    const sessions = await sessionSource.load(ctx, course)
+    const { docs } = await ctx.req.payload.find({
+      collection: 'space-posts',
+      where: {
+        and: [
+          { space: { equals: numericId(parentId) } },
+          { event_starts_at: { exists: true } },
+          { deleted_at: { exists: false } },
+        ],
+      },
+      depth: 0,
+      pagination: false,
+      user: ctx.user,
+      overrideAccess: false,
+      req: ctx.req,
+    })
+    return [...sessions, ...spaceEventItems(docs)]
+  },
+  async canEdit(ctx, parentId) {
+    return sessionSource.canEdit(ctx, await spaceCourse(ctx, parentId))
+  },
+  async names(ctx, parentId) {
+    return sessionSource.names(ctx, await spaceCourse(ctx, parentId))
+  },
+  async apply(ctx, parentId, changes) {
+    const course = await spaceCourse(ctx, parentId)
+    // Validate the entire batch before delegating any session writes.
+    changes.forEach((change, index) => {
+      if (
+        change.op === 'create-item'
+          ? change.kind !== 'session'
+          : change.itemId.startsWith('space-event:')
+      )
+        throw invalid('Space events are edited from their post.', index)
+    })
+    return sessionSource.apply(ctx, course, changes)
+  },
+}
+
+const sources: Record<string, CalendarSource> = { course: sessionSource, space: spaceSource }
 
 /** The adapter for a parent kind, or null when no adapter takes it. */
 export const calendarSourceOf = (parentKind: string): CalendarSource | null =>

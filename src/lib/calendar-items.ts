@@ -27,6 +27,8 @@ export type CalendarItem = {
   kind: string
   title: string
   tone: CalendarTone
+  /** This item is visible in edit mode but cannot be changed there. */
+  readOnly?: true
   cancelled: boolean
   /** The item's `updatedAt` when it was loaded; a save from an older one fails. */
   version: string

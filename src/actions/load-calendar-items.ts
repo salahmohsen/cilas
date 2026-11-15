@@ -18,7 +18,9 @@ const fail = (error: CalendarSaveError): CalendarLoadResult => ({ ok: false, err
 /**
  * The items a calendar parent holds now, and whether the signed-in user may
  * edit them, read with that user's own access. A host calls it to open a
- * calendar and again to reload it after a change made elsewhere.
+ * calendar and again to reload it after a change made elsewhere. Server
+ * components use the same function. A `space` parent composes the course's
+ * calendar; `invalid` with reason `no-calendar` means the host omits its tab.
  */
 export async function loadCalendarItems(
   parent: { kind: string; id: string },
