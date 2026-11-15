@@ -182,7 +182,8 @@ beforeAll(async () => {
       overrideAccess: true,
     }),
   ).id
-})
+  // Other spaces specs hold this lock for their full run.
+}, 600_000)
 
 afterAll(async () => {
   if (payload) {
