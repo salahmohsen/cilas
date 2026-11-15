@@ -4,7 +4,7 @@ import * as z from 'zod'
 
 import type { CalendarChange, CalendarItem, CalendarSave } from '@/lib/calendar-items'
 import { calendarContext } from '@/lib/calendar-context'
-import { calendarErrorOf, calendarSourceOf, type CalendarSaveError } from '@/lib/calendar-sources'
+import { calendarSourceOf, refusalOf, type CalendarSaveError } from '@/lib/calendar-sources'
 import { inTransaction } from '@/lib/in-transaction'
 import { currentReader } from '@/lib/reader'
 
@@ -84,10 +84,6 @@ export async function saveCalendarChanges(
     })
     return { ok: true, items }
   } catch (error) {
-    const refused = calendarErrorOf(error)
-    if (refused.code !== 'stale') return fail(refused)
-    // The message names the item another person changed, as it is called now.
-    const name = (await source.names(ctx, parent.id)).get(refused.itemId)
-    return fail({ ...refused, ...(name ? { name } : {}) })
+    return fail(await refusalOf(ctx, source, parent.id, error))
   }
 }

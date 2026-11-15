@@ -405,3 +405,16 @@ export const calendarErrorOf = (error: unknown): CalendarSaveError => {
   console.error('calendar request failed', error)
   return { code: 'failed' }
 }
+
+/** A refused save as the page shows it: a stale one names the item another person changed, as it is called now. */
+export const refusalOf = async (
+  ctx: CalendarContext,
+  source: CalendarSource,
+  parentId: string,
+  error: unknown,
+): Promise<CalendarSaveError> => {
+  const refused = calendarErrorOf(error)
+  if (refused.code !== 'stale') return refused
+  const name = (await source.names(ctx, parentId)).get(refused.itemId)
+  return { ...refused, ...(name ? { name } : {}) }
+}
