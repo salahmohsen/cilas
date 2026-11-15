@@ -21,14 +21,15 @@ Every calendar (admin Sessions tab, space Calendar tab, schedule block in posts,
 
 ## Units, in order (one delegate at a time in this checkout)
 
-1. **New look, week grid** (component only; admin, space, schedule block get it). Tokens, tinted blocks (title, time, delivery), all-day bars across days, day header (short name, large date, today in a circle), muted hour labels, now line with pill and dot, weekend shade, toolbar (month, week label, Today, arrows, view switch, primary action, panel toggle). Check: component and ARIA tests; snapshot 0 differences (public page untouched); screenshots en/ar, light/dark, 1440 and 390, of the three hosts. **Gate: owner's screenshot review.**
+1. **New look, week grid** (component only; admin, space, schedule block get it). Tokens, tinted blocks (title, time, delivery), all-day bars across days, day header (short name, large date, today in a circle), muted hour labels, now line with pill and dot, weekend shade, toolbar (month, week label, Today, arrows, view switch, primary action, panel toggle). Check: component and ARIA tests; snapshot 0 differences against `head-step4b` (step 4's final snapshot) (public page untouched); screenshots en/ar, light/dark, 1440 and 390, of the three hosts. **Gate: owner's screenshot review.**
 2. **Day view, phone 3-day view and agenda view** in the component, from the switch. Check: tests; screenshots. Gate: owner's review (may join unit 1's review).
 3. **Popover.** Details everywhere; Edit opens the drawer for editors. Check: tests, e2e of the step 4 drawer specs updated; screenshots. **Gate: owner's review.**
 4. **Month view in the component.** Real rows, `createGridFocus`, chips with time in the tone, bars across days, "N more". Check: keyboard and ARIA tests; screenshots. Gate: owner's review.
 5. **`/calendar` on the component** (view mode): URLs kept, one cached range query, legend filter, popover with link to the course or event, events read only. `calendar-views.tsx` removed. Snapshot script selectors updated. Check: snapshot 0 differences; e2e; screenshots. Gate: owner's review.
 6. **Admin edit mode on `/calendar`:** rendered fresh, admin role checked on the server, Save through `saveCalendarChanges`, one dialog with a list of spaces. Check: int (access), e2e.
-7. **Stable ICS IDs for sessions** (meeting row id). Check: unit test; snapshot shows only expected UID differences, listed.
-8. **Close.** Full checks, cold e2e, snapshot, screenshots, records.
+7. **Drawer Edit form polish** (decision 10). Check: component tests (keyboard, names, dialog validation), e2e `session-edit` updated, screenshots. **Gate: owner's review.**
+8. **Stable ICS IDs for sessions** (meeting row id). Check: unit test; snapshot shows only expected UID differences, listed.
+9. **Close.** Full checks, cold e2e, snapshot, screenshots, records.
 
 ## Owner's decisions (2026-11-15)
 
@@ -37,7 +38,7 @@ Every calendar (admin Sessions tab, space Calendar tab, schedule block in posts,
 3. **No type chips.** A session takes its tone from the course type. The place line shows the delivery ("Online", or "In person: <course location>").
 4. **No work week option.**
 5. **"Week N" is the course week** in course hosts ("Week 3 of 8", from `lib/meetings.ts`). `/calendar` shows no week number.
-6. **Phones** follow the phone images: a switch with 3 days, Day and Agenda; an icon-only primary action; the panel toggle. This replaces "phones one day at a time": 3 days is the phone default (orchestrator's reading; see open points).
+6. **Phones** follow the phone images: a switch with 3 days, Day and Agenda; an icon-only primary action; the panel toggle. This replaces "phones one day at a time". The phone default is Day (see 9).
 
 7. **12-hour times only.** The 24h/12h switch goes; times always show in the 12-hour form ("11 AM", "10:30 – 11:30 AM"; Arabic with its own AM/PM words). Unit 1 removes the switch, `use-hour12.ts` and its labels, and keeps the time format in one place in `calendar-time.ts`.
 
@@ -53,6 +54,7 @@ Every calendar (admin Sessions tab, space Calendar tab, schedule block in posts,
    - Weekend shade: Friday only (Saturday is the second busiest day: 49 meetings in the last year; Friday 1).
    - Order of units as listed below. The step 4 e2e specs that click a block (`session-drawer`, `space-calendar-edit`, `session-edit`, `course-calendar`) change in unit 3: a click opens the popover, Edit opens the drawer.
    - The split buttons (decision 8) land in unit 3.
+10. **The drawer's Edit form** (owner, 2026-11-15, after a better-interface review of `session-form.tsx`): materials show as cards in a grid; a card opens a dialog with its fields (Type, Title, Note, Link; Remove, Cancel, Done; Done checks the fields, so a card never holds an invalid material); the list ends with a "+" tile with a dashed border, the same size and radius as a card, that opens the same dialog empty. All fields well aligned. Orchestrator's recommendations from the review, in the same unit: activities as the same cards (owner to confirm); meeting rows get a header line ("Meeting 2" at the start, the remove X at the end), which aligns the X and names the row (`role="group"`); Save and Cancel stay fixed at the drawer's bottom; section titles one step larger than field labels; Arabic time pickers in the 12-hour form (decision 7); the All day checkbox on the fields' edge; space instead of a line between rows.
 
 ## Decision trail
 
