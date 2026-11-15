@@ -13,6 +13,8 @@ export interface TimePickerProps {
   defaultValue?: string
   onChange?: (value: string) => void
   description?: string
+  /** Error copy under the field. Marks the trigger with data-invalid and announces through role="alert". */
+  error?: string
   placeholder?: string
   minuteStep?: 1 | 5 | 10 | 15 | 30
   format?: '12h' | '24h'
@@ -65,6 +67,7 @@ export function TimePicker({
   defaultValue = '09:00',
   onChange,
   description,
+  error,
   placeholder = 'Select a time',
   minuteStep = 15,
   format = '12h',
@@ -170,6 +173,13 @@ export function TimePicker({
           className={styles.trigger}
           disabled={disabled}
           aria-labelledby={`${labelId} ${valueId}`}
+          aria-describedby={
+            [description && `${id}-description`, error && `${id}-error`]
+              .filter(Boolean)
+              .join(' ') || undefined
+          }
+          // A button takes no aria-invalid; the error is read through aria-describedby.
+          data-invalid={error ? '' : undefined}
           aria-haspopup="listbox"
           aria-expanded={open}
           aria-controls={`${id}-listbox`}
@@ -247,7 +257,16 @@ export function TimePicker({
           )}
         </AnimatePresence>
       </div>
-      {description && <span className={styles.description}>{description}</span>}
+      {description && (
+        <span id={`${id}-description`} className={styles.description}>
+          {description}
+        </span>
+      )}
+      {error && (
+        <span id={`${id}-error`} className={styles.error} role="alert">
+          {error}
+        </span>
+      )}
     </div>
   )
 }

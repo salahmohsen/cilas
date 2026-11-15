@@ -92,8 +92,15 @@
 .trigger[aria-expanded='true'] .chevron {
   transform: rotate(180deg);
 }
-.description {
+.description,
+.error {
   font-size: var(--text-xs);
+}
+.error {
+  color: var(--danger);
+}
+.trigger[data-invalid] {
+  border-color: var(--danger);
 }
 .menu {
   position: absolute;

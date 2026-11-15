@@ -17,6 +17,8 @@ export interface DatePickerProps extends Omit<
   value?: Date
   onChange?: (date: Date | undefined) => void
   description?: string
+  /** Error copy under the field. Marks the trigger with data-invalid and announces through role="alert". */
+  error?: string
   placeholder?: string
   minDate?: Date
   maxDate?: Date
@@ -82,6 +84,7 @@ export function DatePicker({
   value,
   onChange,
   description,
+  error,
   placeholder = 'Select a date',
   minDate,
   maxDate,
@@ -98,6 +101,8 @@ export function DatePicker({
   const generatedId = useId()
   const controlId = id ?? generatedId
   const hintId = description ? `${controlId}-description` : undefined
+  const errorId = error ? `${controlId}-error` : undefined
+  const describedBy = [hintId, errorId].filter(Boolean).join(' ') || undefined
   const [open, setOpen] = useState(false)
   const [month, setMonth] = useState(monthStart(value ?? new Date()))
   const rootRef = useRef<HTMLDivElement>(null)
@@ -193,7 +198,9 @@ export function DatePicker({
           disabled={disabled}
           aria-haspopup="dialog"
           aria-expanded={open}
-          aria-describedby={hintId}
+          aria-describedby={describedBy}
+          // A button takes no aria-invalid; the error is read through aria-describedby.
+          data-invalid={error ? '' : undefined}
           className={styles.trigger}
           onClick={() => (open ? close() : show())}
           onKeyDown={onTriggerKeyDown}
@@ -326,6 +333,11 @@ export function DatePicker({
       {description && (
         <span id={hintId} className={styles.description}>
           {description}
+        </span>
+      )}
+      {error && (
+        <span id={errorId} className={styles.error} role="alert">
+          {error}
         </span>
       )}
     </div>
