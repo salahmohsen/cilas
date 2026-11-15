@@ -4,16 +4,12 @@ import { useLocale } from '@payloadcms/ui'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 
 import { loadCalendarItems } from '@/actions/load-calendar-items'
-import { saveCalendarChanges } from '@/actions/save-calendar-changes'
-import { scheduleOffers } from '@/actions/schedule-offers'
 import Button from '@/components/arc/button/button'
 import { Calendar } from '@/components/calendar/ui/calendar'
-import { CalendarSaveRefusal } from '@/components/calendar/ui/save-refusal'
+import { useScheduleSave } from '@/components/space/use-schedule-save'
 import { openingDay, type CalendarChange, type CalendarItem } from '@/lib/calendar-items'
 import type { CalendarSaveError } from '@/lib/calendar-sources'
 import { cairoDay } from '@/lib/cairo-day'
-import { preloadable } from '@/lib/preloadable'
-import type { ScheduleOffer } from '@/lib/schedule-offer'
 
 import {
   calendarAdminText,
@@ -36,17 +32,6 @@ type Loaded =
   | { status: 'failed'; error: CalendarSaveError }
   | { status: 'ready'; items: CalendarItem[]; canEdit: boolean }
 
-/** A save that did not happen, as the Error the calendar shows beside its Save button. */
-class SaveRefused extends Error {}
-
-const ScheduleOfferDialog = preloadable(
-  () => import('@/components/space/schedule-offer-dialog').then((m) => m.ScheduleOfferDialog),
-  { name: 'ScheduleOfferDialog' },
-)
-
-/** The announcements offered after a save, and where focus goes when they close. */
-type Offered = { offers: ScheduleOffer[]; returnTo: () => HTMLElement | null }
-
 /**
  * The calendar in the course's Sessions tab. It shows the course's sessions,
  * lets the people who may edit them draw, move, copy and delete meetings, and
@@ -54,14 +39,15 @@ type Offered = { offers: ScheduleOffer[]; returnTo: () => HTMLElement | null }
  * Its changes save with its own Save schedule button, not with the course:
  * sessions are not drafts, so they are not tied to the course's Save. After
  * a save that changes the schedule, here or in the session drawer, it offers
- * a prefilled announcement for the course's space (`scheduleOffers`).
+ * a prefilled announcement for the course's space (`useScheduleSave`).
  */
 export function CourseCalendar({ courseId, language, messages }: Props) {
   const { code: locale } = useLocale()
-  const { t, labels, offerLabels, errorText } = useMemo(
-    () => calendarAdminText(language, messages),
-    [language, messages],
-  )
+  const {
+    t,
+    labels,
+    save: text,
+  } = useMemo(() => calendarAdminText(language, messages), [language, messages])
 
   const [loaded, setLoaded] = useState<Loaded>({ status: 'loading' })
   const [unsaved, setUnsaved] = useState(0)
@@ -71,8 +57,6 @@ export function CourseCalendar({ courseId, language, messages }: Props) {
     /** The items when the drawer opened, to compare with after its saves. */
     before: CalendarItem[]
   } | null>(null)
-  const [offered, setOffered] = useState<Offered | null>(null)
-  const [offerFailed, setOfferFailed] = useState(false)
   const frame = useRef<HTMLDivElement>(null)
   const heading = useRef<HTMLHeadingElement>(null)
   const latest = useRef(0)
@@ -97,6 +81,15 @@ export function CourseCalendar({ courseId, language, messages }: Props) {
     void load()
   }, [load])
 
+  const schedule = useScheduleSave({
+    parent: { kind: 'course', id: courseId ?? '' },
+    courseId: courseId ?? '',
+    locale,
+    language,
+    text,
+    reload: () => void load(),
+  })
+
   if (!courseId)
     return (
       <section className={styles.root} aria-label={t('heading')}>
@@ -109,35 +102,11 @@ export function CourseCalendar({ courseId, language, messages }: Props) {
   const blockOf = (spanId: string) =>
     frame.current?.querySelector<HTMLElement>(`[data-span-id="${CSS.escape(spanId)}"]`) ?? null
 
-  /** Offers an announcement when the save changed what counts; nothing when it did not. */
-  const offer = (before: CalendarItem[], after: CalendarItem[], returnTo: Offered['returnTo']) => {
-    setOfferFailed(false)
-    scheduleOffers({ courseId, before, after }, locale).then(
-      (offers) => setOffered(offers.length ? { offers, returnTo } : null),
-      (error: unknown) => {
-        console.error('schedule offer failed', error)
-        setOfferFailed(true)
-      },
-    )
-  }
-
   const save = async (changes: CalendarChange[]) => {
-    const result = await saveCalendarChanges(
-      { parent: { kind: 'course', id: courseId }, changes },
-      locale,
-    )
-    if (!result.ok) {
-      if (result.error.code === 'stale')
-        throw new CalendarSaveRefusal(errorText(result.error), {
-          label: t('reloadAndLose'),
-          then: () => void load(),
-        })
-      throw new SaveRefused(errorText(result.error))
-    }
-    setLoaded({ status: 'ready', items: result.items, canEdit: true })
     // The bar and its Save button leave with the changes, so focus goes to the heading.
-    offer(items, result.items, () => heading.current)
-    return result.items
+    const saved = await schedule.save(changes, items, () => heading.current)
+    setLoaded({ status: 'ready', items: saved, canEdit: true })
+    return saved
   }
 
   const open = (itemId: string) => {
@@ -156,7 +125,7 @@ export function CourseCalendar({ courseId, language, messages }: Props) {
     const back = () => (returnTo ? blockOf(returnTo) : heading.current)
     if (returnTo) requestAnimationFrame(() => back()?.focus())
     const after = await load()
-    if (drawerSaved.current && after) offer(before, after, back)
+    if (drawerSaved.current && after) schedule.offer(before, after, back)
   }
 
   return (
@@ -167,9 +136,9 @@ export function CourseCalendar({ courseId, language, messages }: Props) {
         </h3>
       </header>
 
-      {offerFailed ? (
+      {schedule.failed ? (
         <p className={styles.note} role="alert">
-          {t('offer.failed')}
+          {text.offerFailed}
         </p>
       ) : null}
 
@@ -180,7 +149,7 @@ export function CourseCalendar({ courseId, language, messages }: Props) {
       ) : loaded.status === 'failed' ? (
         <div className={styles.note} role="alert">
           <p>
-            {t('loadFailed')} {errorText(loaded.error)}
+            {t('loadFailed')} {text.errorText(loaded.error)}
           </p>
           <Button type="button" variant="secondary" size="sm" onClick={() => void load()}>
             {t('retry')}
@@ -199,7 +168,7 @@ export function CourseCalendar({ courseId, language, messages }: Props) {
                 onSave: save,
                 newItemKind: 'session',
                 onUnsavedChange: setUnsaved,
-                onSaveIntent: ScheduleOfferDialog.preload,
+                onSaveIntent: schedule.preload,
               }
             : { mode: 'view' as const })}
         />
@@ -213,23 +182,14 @@ export function CourseCalendar({ courseId, language, messages }: Props) {
           id={opened.id}
           onChanged={() => {
             drawerSaved.current = true
-            ScheduleOfferDialog.preload()
+            schedule.preload()
             void load()
           }}
           onClosed={() => void closed()}
         />
       ) : null}
 
-      {offered ? (
-        <ScheduleOfferDialog
-          offers={offered.offers}
-          labels={offerLabels}
-          locale={language}
-          dir={language === 'ar' ? 'rtl' : 'ltr'}
-          onClose={() => setOffered(null)}
-          returnFocus={offered.returnTo}
-        />
-      ) : null}
+      {schedule.dialog}
     </section>
   )
 }

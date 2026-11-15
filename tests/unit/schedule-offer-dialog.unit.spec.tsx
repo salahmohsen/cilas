@@ -21,7 +21,7 @@ const { offerLabels } = calendarAdminText('en', {
   CalendarUi: en.CalendarUi,
   CalendarAdmin: en.CalendarAdmin,
   SpacePost: postErrors,
-})
+}).save
 
 const TOKEN = scheduleToken({ from: '2026-11-14', weeks: 1, ids: ['3'] })
 const TEXT = '- Session 3: Reading Fanon moves from Thu 19 Nov 19:00 to Sat 21 Nov 20:00'

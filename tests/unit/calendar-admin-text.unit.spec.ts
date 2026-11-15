@@ -19,21 +19,21 @@ describe('calendarAdminText', () => {
   it('names the session in a stale save, and words every error code in both languages', () => {
     const english = calendarAdminText('en', en)
     expect(
-      english.errorText({ code: 'stale', itemId: '1', name: 'Session 3: Reading Fanon' }),
+      english.save.errorText({ code: 'stale', itemId: '1', name: 'Session 3: Reading Fanon' }),
     ).toBe('Someone else changed Session 3: Reading Fanon after the calendar loaded.')
-    expect(english.errorText({ code: 'stale', itemId: '1' })).toBe(
+    expect(english.save.errorText({ code: 'stale', itemId: '1' })).toBe(
       'Someone else changed a session after the calendar loaded.',
     )
     expect(
-      calendarAdminText('ar', ar).errorText({ code: 'stale', itemId: '1', name: 'الجلسة ٣' }),
+      calendarAdminText('ar', ar).save.errorText({ code: 'stale', itemId: '1', name: 'الجلسة ٣' }),
     ).toBe('غيّر شخص آخر الجلسة ٣ بعد تحميل التقويم.')
-    expect(english.errorText({ code: 'invalid', message: 'Use a real day.' })).toBe(
+    expect(english.save.errorText({ code: 'invalid', message: 'Use a real day.' })).toBe(
       'A change is not valid. Use a real day.',
     )
     const arabic = calendarAdminText('ar', ar)
     for (const error of codes) {
-      expect(english.errorText(error)).not.toMatch(/^errors\./)
-      expect(arabic.errorText(error)).toMatch(/\p{Script=Arabic}/u)
+      expect(english.save.errorText(error)).not.toMatch(/^errors\./)
+      expect(arabic.save.errorText(error)).toMatch(/\p{Script=Arabic}/u)
     }
   })
 
