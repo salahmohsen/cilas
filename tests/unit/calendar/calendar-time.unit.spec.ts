@@ -4,7 +4,10 @@ import {
   addDays,
   cairoNow,
   formatDay,
-  formatMinutes,
+  formatMonths,
+  formatTime,
+  formatTimeRange,
+  isWeekend,
   toMinutes,
   toTime,
   weekOf,
@@ -102,15 +105,34 @@ describe('now in Cairo', () => {
 })
 
 describe('formatting', () => {
-  it('writes 24-hour and 12-hour times', () => {
-    expect(formatMinutes(19 * 60 + 15, 'en', false)).toBe('19:15')
-    expect(formatMinutes(9 * 60, 'en', false)).toBe('09:00')
-    expect(formatMinutes(19 * 60 + 15, 'en', true)).toBe('7:15 PM')
-    expect(formatMinutes(19 * 60, 'en', true, true)).toMatch(/^7\s?PM$/)
+  it('writes 12-hour times, with minutes only when they are not :00', () => {
+    expect(formatTime(19 * 60 + 15, 'en')).toBe('7:15 PM')
+    expect(formatTime(9 * 60, 'en')).toBe('9 AM')
+    expect(formatTime(0, 'en')).toBe('12 AM')
+    expect(formatTime(24 * 60, 'en')).toBe('12 AM')
+    expect(formatTime(12 * 60 + 30, 'en')).toBe('12:30 PM')
   })
 
-  it('writes Arabic pages in Arabic-Indic digits, as the site does', () => {
-    expect(formatMinutes(19 * 60 + 15, 'ar', false)).toBe('١٩:١٥')
+  it('says AM or PM once when a range shares it', () => {
+    expect(formatTimeRange(10 * 60 + 30, 11 * 60 + 30, 'en')).toBe('10:30 – 11:30 AM')
+    expect(formatTimeRange(12 * 60, 13 * 60, 'en')).toBe('12 – 1 PM')
+    expect(formatTimeRange(11 * 60, 12 * 60 + 30, 'en')).toBe('11 AM – 12:30 PM')
+    expect(formatTimeRange(19 * 60, 21 * 60, 'ar')).toBe('٧ – ٩ م')
+  })
+
+  it('names the month of a week, or both months across two', () => {
+    expect(formatMonths('2026-11-14', '2026-11-20', 'en')).toBe('November 2026')
+    expect(formatMonths('2026-11-28', '2026-12-04', 'en')).toBe('November – December 2026')
+    expect(formatMonths('2026-12-26', '2027-01-01', 'en')).toBe('December 2026 – January 2027')
+  })
+
+  it('shades Friday only', () => {
+    expect(['2026-11-13', '2026-11-14', '2026-11-15'].map(isWeekend)).toEqual([true, false, false])
+  })
+
+  it('writes Arabic pages in Arabic-Indic digits and AM/PM words, as the site does', () => {
+    expect(formatTime(19 * 60 + 15, 'ar')).toBe('٧:١٥ م')
+    expect(formatTime(9 * 60, 'ar')).toBe('٩ ص')
     expect(formatDay('2026-11-17', 'ar', { day: 'numeric' })).toBe('١٧')
   })
 
@@ -128,6 +150,6 @@ describe('without a native Temporal', () => {
     const time = await import('@/components/calendar/ui/calendar-time')
     expect(time.weekStartOf('2026-11-17')).toBe('2026-11-14')
     expect(time.toTime(1155)).toBe('19:15')
-    expect(time.formatMinutes(1155, 'ar', false)).toBe('١٩:١٥')
+    expect(time.formatTime(1155, 'ar')).toBe('٧:١٥ م')
   })
 })

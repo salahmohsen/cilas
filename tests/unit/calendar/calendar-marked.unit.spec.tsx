@@ -1,4 +1,4 @@
-import { render, screen, within } from '@testing-library/react'
+import { fireEvent, render, screen, within } from '@testing-library/react'
 import { NextIntlClientProvider } from 'next-intl'
 import { renderToString } from 'react-dom/server'
 import { afterEach, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest'
@@ -68,6 +68,8 @@ const view = (marked?: ReadonlySet<string>, locale = 'en') =>
   render(provided(<Host marked={marked} locale={locale} />, locale))
 
 beforeAll(() => {
+  // jsdom has no Web Animations; the side panel waits on none.
+  Element.prototype.getAnimations ??= () => []
   globalThis.ResizeObserver = class {
     observe() {}
     unobserve() {}
@@ -86,12 +88,12 @@ describe('marked items', () => {
   it('a marked block says "Changed" in its name and on its face; an unmarked one does not', () => {
     view(new Set(['s3']))
     const marked = screen.getByRole('button', {
-      name: 'Session 3, Tuesday, November 17, 19:00 to 21:00, Changed',
+      name: 'Session 3, Tuesday, November 17, 7 PM to 9 PM, Changed',
     })
     expect(marked).toHaveAttribute('data-marked')
     expect(within(marked).getByText('Changed')).toBeInTheDocument()
     const plain = screen.getByRole('button', {
-      name: 'Session 4, Thursday, November 19, 19:00 to 21:00',
+      name: 'Session 4, Thursday, November 19, 7 PM to 9 PM',
     })
     expect(plain).not.toHaveAttribute('data-marked')
     expect(within(plain).queryByText('Changed')).toBeNull()
@@ -107,10 +109,13 @@ describe('marked items', () => {
   })
 
   it('the colour key names the mark only when something is marked', () => {
+    const panel = () => fireEvent.click(screen.getByRole('button', { name: 'Side panel' }))
     const { unmount } = view(new Set(['s3']))
+    panel()
     expect(screen.getByRole('list', { name: 'Colour key' })).toHaveTextContent('Changed')
     unmount()
     view()
+    panel()
     expect(screen.getByRole('list', { name: 'Colour key' })).not.toHaveTextContent('Changed')
     expect(document.querySelector('[data-marked]')).toBeNull()
   })
@@ -126,7 +131,7 @@ describe('marked items', () => {
 
   it('renders the mark on the server', () => {
     const html = renderToString(provided(<Host marked={new Set(['s3'])} locale="en" />))
-    expect(html).toContain('Session 3, Tuesday, November 17, 19:00 to 21:00, Changed')
+    expect(html).toContain('Session 3, Tuesday, November 17, 7 PM to 9 PM, Changed')
     expect(html).toContain('data-marked')
   })
 

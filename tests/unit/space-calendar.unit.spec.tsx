@@ -1,5 +1,5 @@
 // @vitest-environment jsdom
-import { cleanup, fireEvent, render, screen } from '@testing-library/react'
+import { cleanup, fireEvent, render, screen, within } from '@testing-library/react'
 import { renderToString } from 'react-dom/server'
 import { NextIntlClientProvider } from 'next-intl'
 import { afterEach, beforeEach, expect, it, vi } from 'vitest'
@@ -91,9 +91,12 @@ it('server renders the next week and both legend kinds in view mode, with Edit f
   render(node)
   expect(loadCalendarItems).toHaveBeenCalledWith({ kind: 'space', id: '7' }, 'en')
   expect(screen.getByRole('group', { name: 'Calendar' })).toBeInTheDocument()
-  expect(screen.getByText(en.SpacePost.scheduleKind)).toBeInTheDocument()
-  expect(screen.getByText(en.Spaces.calendarEvents)).toBeInTheDocument()
-  expect(screen.getByRole('button', { name: 'Edit' })).toBeInTheDocument()
+  // The Edit button sits in the calendar's toolbar; the colour key in its side panel.
+  expect(screen.getByRole('button', { name: 'Edit' }).closest('header')).not.toBeNull()
+  fireEvent.click(screen.getByRole('button', { name: en.CalendarUi.panel }))
+  const key = screen.getByRole('list', { name: en.CalendarUi.legend })
+  expect(within(key).getByText(en.SpacePost.scheduleKind)).toBeInTheDocument()
+  expect(within(key).getByText(en.Spaces.calendarEvents)).toBeInTheDocument()
   expect(screen.queryByRole('button', { name: /Save/ })).toBeNull()
   expect(document.querySelector('[data-mode="edit"]')).toBeNull()
   window.history.replaceState(null, '', '/en/spaces/course/probe?tab=calendar')
@@ -130,8 +133,10 @@ it('renders Arabic calendar controls and both legend names in RTL', async () => 
     'dir',
     'rtl',
   )
-  expect(screen.getByText(ar.SpacePost.scheduleKind)).toBeInTheDocument()
-  expect(screen.getByText(ar.Spaces.calendarEvents)).toBeInTheDocument()
+  fireEvent.click(screen.getByRole('button', { name: ar.CalendarUi.panel }))
+  const key = screen.getByRole('list', { name: ar.CalendarUi.legend })
+  expect(within(key).getByText(ar.SpacePost.scheduleKind)).toBeInTheDocument()
+  expect(within(key).getByText(ar.Spaces.calendarEvents)).toBeInTheDocument()
 })
 
 it('shows a visible load failure', async () => {

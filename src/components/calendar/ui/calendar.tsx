@@ -1,7 +1,8 @@
 'use client'
 
+import { Collapsible, CollapsiblePanel } from '@ui-sdk/react/collapsible'
 import { createMenuController } from '@ui-sdk/react/menu'
-import { useEffect, useId, useMemo, useRef, useState } from 'react'
+import { useEffect, useId, useMemo, useRef, useState, type ReactNode } from 'react'
 
 import SegmentedControl from '@/components/arc/segmented-control/segmented-control'
 import type { CalendarChange, CalendarItem } from '@/lib/calendar-items'
@@ -11,12 +12,12 @@ import { blockNamer, longDay } from './block-names'
 import { allDayBlocks, blocksOf, hourRange, legendOf, timedBlocks } from './calendar-model'
 import type { CalendarLabels } from './calendar-labels'
 import { CalendarToolbar } from './calendar-toolbar'
-import { addDays, cairoNow, formatDay, weekOf, weekStartOf } from './calendar-time'
+import { CalendarPanel } from './calendar-panel'
+import { addDays, cairoNow, formatDay, formatMonths, weekOf, weekStartOf } from './calendar-time'
 import styles from './calendar.module.css'
 import { SaveBar } from './save-bar'
 import { UnscheduledTray } from './unscheduled-tray'
 import { useEditSession } from './use-edit-session'
-import { useHour12 } from './use-hour12'
 import { useNarrow } from './use-narrow'
 import { useNow } from './use-now'
 import { WeekGrid } from './week-grid'
@@ -32,6 +33,10 @@ type Shared = {
   marked?: ReadonlySet<string>
   /** A block was chosen. `blockId` is null for an item with no block. */
   onOpen: (itemId: string, blockId: string | null) => void
+  /** The host's name for the days shown, such as the course week "Week 3 of 8"; null for none. */
+  weekLabel?: (days: string[]) => string | null
+  /** The host's own toolbar buttons, such as Edit. */
+  action?: ReactNode
 }
 
 export type CalendarProps = Shared &
@@ -76,6 +81,8 @@ export function Calendar({
   day,
   marked = NO_MARKS,
   onOpen,
+  weekLabel,
+  action,
   mode,
   onSave,
   newItemKind,
@@ -87,7 +94,7 @@ export function Calendar({
   const hintId = useId()
   const narrow = useNarrow(frame)
   const now = useNow()
-  const [hour12, setHour12] = useHour12()
+  const [panelOpen, setPanelOpen] = useState(false)
   const [selectedId, setSelectedId] = useState<string | null>(null)
   const [menu] = useState(() => createMenuController<string>())
   const [told, setTold] = useState('')
@@ -167,11 +174,10 @@ export function Calendar({
         items: session.items,
         labels,
         locale,
-        hour12,
         unsaved: session.unsaved,
         marked,
       }),
-    [session.items, labels, locale, hour12, session.unsaved, marked],
+    [session.items, labels, locale, session.unsaved, marked],
   )
 
   const blockMenu = labels.menu
@@ -256,93 +262,115 @@ export function Calendar({
           if (itemIds.has(block.itemId)) onOpen(block.itemId, block.blockId)
         }}
       >
-        <CalendarToolbar
-          labels={labels}
-          range={rangeLabel}
-          hour12={hour12}
-          onHour12={setHour12}
-          onPrevious={() => goTo(addDays(start, -7))}
-          onNext={() => goTo(addDays(start, 7))}
-          onToday={() => goTo(weekStartOf(cairoNow().date))}
-        />
-
-        {legend.length ? (
-          <ul className={styles.legend} aria-label={labels.legend}>
-            {legend.map(({ kind, tone }) => (
-              <li key={kind} data-tone={tone}>
-                <span className={styles.swatch} aria-hidden />
-                {labels.kind(kind)}
-              </li>
-            ))}
-            {anyCancelled ? (
-              <li data-tone="neutral">
-                <span className={styles.swatch} data-cancelled aria-hidden />
-                {labels.cancelled}
-              </li>
-            ) : null}
-            {anyMarked ? (
-              <li data-tone="neutral">
-                <span className={styles.swatch} data-marked aria-hidden />
-                {labels.changed}
-              </li>
-            ) : null}
-          </ul>
-        ) : null}
-
-        {editable ? (
-          <p className={styles.hint} id={hintId}>
-            {labels.editHint}
-          </p>
-        ) : null}
-
-        <div className={styles.switcher}>
-          <SegmentedControl
-            label={labels.daySwitcher}
-            value={String(selectedIndex)}
-            onValueChange={(value) => setSelectedIndex(Number(value))}
-            options={days.map((date, index) => ({
-              value: String(index),
-              label: `${formatDay(date, locale, { weekday: 'short' })} ${formatDay(date, locale, { day: 'numeric' })}`,
-            }))}
-          />
-        </div>
-
-        <WeekGrid
-          items={session.items}
-          allDay={allDay}
-          days={days}
-          range={range}
-          selectedIndex={selectedIndex}
-          todayIndex={todayIndex}
-          now={now}
-          labels={labels}
-          locale={locale}
-          hour12={hour12}
-          editable={editable}
-          unsaved={session.unsaved}
-          marked={marked}
-          selectedId={selectedId}
-          nameOf={nameOf}
-          newTone={newTone}
-          onDraw={newItemKind ? session.drawOnDay : undefined}
-          menu={blockMenu ? menu : undefined}
-          hintId={hintId}
-          onOpen={onOpen}
-          onRestore={session.restore}
-          onDelete={session.removeBlock}
-        />
-
-        {unscheduled.length ? (
-          <UnscheduledTray
-            items={unscheduled}
-            days={days}
-            editable={editable}
+        <Collapsible
+          className={styles.layout}
+          open={panelOpen}
+          onOpenChange={setPanelOpen}
+          data-panel={panelOpen ? '' : undefined}
+        >
+          <CalendarToolbar
             labels={labels}
-            locale={locale}
-            onOpen={onOpen}
-            onPlace={session.place}
+            months={formatMonths(days[0]!, days[6]!, locale)}
+            week={weekLabel?.(days) ?? null}
+            range={rangeLabel}
+            action={action}
+            onCreate={
+              editable && newItemKind ? () => session.drawOnDay(days[selectedIndex]!) : undefined
+            }
+            onPrevious={() => goTo(addDays(start, -7))}
+            onNext={() => goTo(addDays(start, 7))}
+            onToday={() => goTo(weekStartOf(cairoNow().date))}
           />
-        ) : null}
+
+          <div className={styles.main}>
+            {editable ? (
+              <p className={styles.hint} id={hintId}>
+                {labels.editHint}
+              </p>
+            ) : null}
+
+            <div className={styles.switcher}>
+              <SegmentedControl
+                label={labels.daySwitcher}
+                value={String(selectedIndex)}
+                onValueChange={(value) => setSelectedIndex(Number(value))}
+                options={days.map((date, index) => ({
+                  value: String(index),
+                  label: `${formatDay(date, locale, { weekday: 'short' })} ${formatDay(date, locale, { day: 'numeric' })}`,
+                }))}
+              />
+            </div>
+
+            <WeekGrid
+              items={session.items}
+              allDay={allDay}
+              days={days}
+              range={range}
+              selectedIndex={selectedIndex}
+              todayIndex={todayIndex}
+              now={now}
+              labels={labels}
+              locale={locale}
+              editable={editable}
+              unsaved={session.unsaved}
+              marked={marked}
+              selectedId={selectedId}
+              nameOf={nameOf}
+              newTone={newTone}
+              onDraw={newItemKind ? session.drawOnDay : undefined}
+              menu={blockMenu ? menu : undefined}
+              hintId={hintId}
+              onOpen={onOpen}
+              onRestore={session.restore}
+              onDelete={session.removeBlock}
+            />
+          </div>
+
+          <CollapsiblePanel className={styles.panel}>
+            <CalendarPanel
+              items={session.items}
+              labels={labels}
+              locale={locale}
+              now={now}
+              onOpen={onOpen}
+            >
+              {legend.length ? (
+                <ul className={styles.legend} aria-label={labels.legend}>
+                  {legend.map(({ kind, tone }) => (
+                    <li key={kind} data-tone={tone}>
+                      <span className={styles.swatch} aria-hidden />
+                      {labels.kind(kind)}
+                    </li>
+                  ))}
+                  {anyCancelled ? (
+                    <li data-tone="neutral">
+                      <span className={styles.swatch} data-cancelled aria-hidden />
+                      {labels.cancelled}
+                    </li>
+                  ) : null}
+                  {anyMarked ? (
+                    <li data-tone="neutral">
+                      <span className={styles.swatch} data-marked aria-hidden />
+                      {labels.changed}
+                    </li>
+                  ) : null}
+                </ul>
+              ) : null}
+
+              {unscheduled.length ? (
+                <UnscheduledTray
+                  items={unscheduled}
+                  days={days}
+                  editable={editable}
+                  labels={labels}
+                  locale={locale}
+                  onOpen={onOpen}
+                  onPlace={session.place}
+                />
+              ) : null}
+            </CalendarPanel>
+          </CollapsiblePanel>
+        </Collapsible>
 
         <p role="status" className={styles.srOnly}>
           {droppedNote}

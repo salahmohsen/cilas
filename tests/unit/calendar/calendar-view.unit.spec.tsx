@@ -59,14 +59,16 @@ const kind = (value: string) => (value === 'session' ? 'Session' : 'Event')
 function Host({
   onOpen,
   locale,
+  shown = items,
 }: {
   onOpen: (itemId: string, blockId: string | null) => void
   locale: string
+  shown?: CalendarItem[]
 }) {
   const labels = useCalendarLabels({ kind, newItem: 'New session' })
   return (
     <Calendar
-      items={items}
+      items={shown}
       mode="view"
       labels={labels}
       locale={locale}
@@ -75,6 +77,8 @@ function Host({
     />
   )
 }
+
+const openPanel = (name = 'Side panel') => fireEvent.click(screen.getByRole('button', { name }))
 
 const view = (locale = 'en', onOpen = vi.fn()) =>
   render(
@@ -88,6 +92,8 @@ const view = (locale = 'en', onOpen = vi.fn()) =>
   )
 
 beforeAll(() => {
+  // jsdom has no Web Animations; the panel waits on none.
+  Element.prototype.getAnimations ??= () => []
   globalThis.ResizeObserver = class {
     observe() {}
     unobserve() {}
@@ -126,18 +132,20 @@ describe('the week view', () => {
     view()
     const tuesday = screen.getByRole('group', { name: 'Tuesday, November 17' })
     expect(within(tuesday).getByRole('button')).toHaveAccessibleName(
-      'Week 3, Tuesday, November 17, 19:00 to 21:00',
+      'Week 3, Tuesday, November 17, 7 PM to 9 PM',
     )
   })
 
   it('shows hours from the earliest start to the latest end of the week', () => {
     const { container } = view()
-    const hours = [...container.querySelectorAll('[aria-hidden="true"] > span')].map(
-      (hour) => hour.textContent,
-    )
-    expect(hours[0]).toBe('10:00')
-    expect(hours.at(-1)).toBe('20:00')
+    const hours = [...container.querySelectorAll('[data-hour]')].map((hour) => hour.textContent)
+    expect(hours[0]).toBe('10 AM')
+    expect(hours.at(-1)).toBe('8 PM')
     expect(hours).toHaveLength(11)
+    expect(container.querySelector('[data-hour]')!.parentElement).toHaveAttribute(
+      'aria-hidden',
+      'true',
+    )
   })
 
   it('puts a block with no time in the all-day row', () => {
@@ -147,17 +155,49 @@ describe('the week view', () => {
     ).toBeVisible()
   })
 
+  it('shows an item on days in a row as one all-day bar, named by its first and last day', () => {
+    const onOpen = vi.fn()
+    const allDay = (id: string, date: string) => ({ id, date, start_time: null, end_time: null })
+    render(
+      <NextIntlClientProvider locale="en" messages={en} timeZone="Africa/Cairo">
+        <Host
+          locale="en"
+          onOpen={onOpen}
+          shown={[
+            item('fair', 'Book fair', 'green', [
+              allDay('sun', '2026-11-15'),
+              allDay('mon', '2026-11-16'),
+              allDay('tue', '2026-11-17'),
+            ]),
+          ]}
+        />
+      </NextIntlClientProvider>,
+    )
+    const bar = screen.getByRole('button', { name: /^Book fair/ })
+    expect(bar).toHaveAccessibleName(
+      'Book fair, Sunday, November 15 to Tuesday, November 17, All day',
+    )
+    expect(screen.getAllByRole('button', { name: /^Book fair/ })).toHaveLength(1)
+    expect(bar.style.getPropertyValue('--from')).toBe('3')
+    expect(bar.style.getPropertyValue('--to')).toBe('6')
+    fireEvent.click(bar)
+    expect(onOpen).toHaveBeenCalledWith('fair', 'sun')
+  })
+
   it('says a block is cancelled in words, in its name and on its face', () => {
     view()
     const film = screen.getByRole('button', {
-      name: 'Film night, Friday, November 20, 17:00 to 18:30, Cancelled',
+      name: 'Film night, Friday, November 20, 5 PM to 6:30 PM, Cancelled',
     })
     expect(within(film).getByText('Cancelled')).toBeInTheDocument()
+    openPanel()
     expect(screen.getByRole('list', { name: 'Colour key' })).toHaveTextContent('Cancelled')
   })
 
-  it('lists one legend entry per kind and the unscheduled items', () => {
+  it('lists one legend entry per kind and the unscheduled items in the side panel', () => {
     view()
+    expect(screen.queryByRole('list', { name: 'Colour key' })).toBeNull()
+    openPanel()
     const legend = screen.getByRole('list', { name: 'Colour key' })
     expect(
       within(legend)
@@ -182,6 +222,7 @@ describe('the week view', () => {
     expect(block).toHaveAttribute('type', 'button')
     fireEvent.click(block)
     expect(onOpen).toHaveBeenCalledWith('week-3', 'tue')
+    openPanel()
     fireEvent.click(screen.getByRole('button', { name: 'Week 4' }))
     expect(onOpen).toHaveBeenLastCalledWith('week-4', null)
   })
@@ -205,47 +246,67 @@ describe('the week view', () => {
     fireEvent.keyDown(block, { key: 'ArrowDown' })
     fireEvent.keyDown(block, { key: 'Delete' })
     expect(
-      screen.getByRole('button', { name: /^Week 3, Tuesday.*19:00 to 21:00/ }),
+      screen.getByRole('button', { name: /^Week 3, Tuesday.*7 PM to 9 PM/ }),
     ).toBeInTheDocument()
   })
 })
 
-describe('24-hour and 12-hour times', () => {
-  it('switches the labels and keeps the choice for the viewer', () => {
+describe('the toolbar and the day headers', () => {
+  it('names the month and year, and no week when the host gives none', () => {
     view()
-    fireEvent.click(screen.getByRole('button', { name: '12h' }))
-    expect(
-      screen.getByRole('button', { name: /^Week 3, Tuesday.*7:00 PM to 9:00 PM/ }),
-    ).toBeInTheDocument()
-    expect(localStorage.getItem('calendar-hour-format')).toBe('12')
+    const heading = screen.getByText('November 2026').parentElement!
+    expect(heading).toHaveTextContent(/^November 2026$/)
   })
 
-  it('opens in 12 hours for a viewer who chose it', async () => {
-    localStorage.setItem('calendar-hour-format', '12')
+  it('shows one time format: no 24h or 12h switch, and 12-hour times on blocks', () => {
     view()
-    expect(await screen.findByRole('button', { name: /7:00 PM to 9:00 PM/ })).toBeInTheDocument()
-    expect(screen.getByRole('button', { name: '12h' })).toHaveAttribute('aria-pressed', 'true')
+    expect(screen.queryByRole('button', { name: /^(24h|12h)$/ })).toBeNull()
+    expect(screen.queryByRole('radiogroup', { name: 'Time format' })).toBeNull()
+    const tuesday = screen.getByRole('group', { name: 'Tuesday, November 17' })
+    expect(within(tuesday).getByText('7 – 9 PM')).toBeInTheDocument()
   })
 
-  it('still switches when the browser blocks storage', () => {
-    vi.spyOn(Storage.prototype, 'setItem').mockImplementation(() => {
-      throw new DOMException('blocked', 'SecurityError')
-    })
-    vi.spyOn(Storage.prototype, 'getItem').mockImplementation(() => {
-      throw new DOMException('blocked', 'SecurityError')
-    })
+  it('puts the short day name above the date, and today in its own mark', () => {
     view()
-    expect(screen.getByRole('button', { name: '24h' })).toHaveAttribute('aria-pressed', 'true')
-    fireEvent.click(screen.getByRole('button', { name: '12h' }))
-    expect(screen.getByRole('button', { name: /7:00 PM to 9:00 PM/ })).toBeInTheDocument()
-    vi.restoreAllMocks()
+    const today = document.querySelector('[data-today]')!
+    expect([...today.children].map((part) => part.textContent)).toEqual(['Tue', '17'])
+    expect(document.querySelectorAll('[data-weekend]').length).toBeGreaterThan(0)
+    for (const day of document.querySelectorAll('[data-weekend][data-day]'))
+      expect(day.getAttribute('data-day')).toBe('6')
+  })
+
+  it('opens and closes the side panel from its toggle, closed at first', () => {
+    view()
+    const toggle = screen.getByRole('button', { name: 'Side panel' })
+    expect(toggle).toHaveAttribute('aria-expanded', 'false')
+    expect(screen.queryByText('Up next')).toBeNull()
+    fireEvent.click(toggle)
+    expect(toggle).toHaveAttribute('aria-expanded', 'true')
+    expect(screen.getByText('Up next')).toBeInTheDocument()
+    fireEvent.click(toggle)
+    expect(toggle).toHaveAttribute('aria-expanded', 'false')
+    expect(screen.queryByRole('list', { name: 'Colour key' })).toBeNull()
+  })
+
+  it('names the next meeting in Up next and opens it', () => {
+    // 10:00 UTC is 12:00 in Cairo on Tuesday 17 November: Week 3 at 19:00 is next.
+    const onOpen = vi.fn()
+    view('en', onOpen)
+    openPanel()
+    const next = within(screen.getByRole('region', { name: 'Up next' })).getByRole('button')
+    expect(next).toHaveTextContent('Tue, Nov 17 · 7 – 9 PM')
+    fireEvent.click(next)
+    expect(onOpen).toHaveBeenCalledWith('week-3', 'tue')
   })
 })
 
 describe('the now line', () => {
-  it('draws it in the browser under the blocks and moves it each minute', () => {
+  it('draws it in the browser with the time at its start, and moves it each minute', () => {
     vi.useFakeTimers({ now: new Date('2026-11-17T17:30:00Z') }) // 19:30 in Cairo
     const { container } = view()
+    const tuesday = screen.getByRole('group', { name: 'Tuesday, November 17' })
+    expect(tuesday.querySelector('[style*="--now"]')).not.toBeNull()
+    expect(screen.getByText('7:30 PM').closest('[aria-hidden="true"]')).not.toBeNull()
     const line = container.querySelector<HTMLElement>('[style*="--now"]')
     expect(line).not.toBeNull()
     expect(line!.style.getPropertyValue('--now')).toBe(String((19.5 * 60 - 600) / 660))
@@ -253,6 +314,14 @@ describe('the now line', () => {
     expect(
       container.querySelector<HTMLElement>('[style*="--now"]')!.style.getPropertyValue('--now'),
     ).toBe(String((20.5 * 60 - 600) / 660))
+    expect(screen.getByText('8:30 PM')).toBeInTheDocument()
+  })
+
+  it('draws none in a week without today', () => {
+    vi.useFakeTimers({ now: new Date('2026-11-17T17:30:00Z') })
+    const { container } = view()
+    fireEvent.click(screen.getByRole('button', { name: 'Next week' }))
+    expect(container.querySelector('[style*="--now"]')).toBeNull()
   })
 
   it('is not in the markup the server sends', () => {
@@ -262,7 +331,7 @@ describe('the now line', () => {
       </NextIntlClientProvider>,
     )
     expect(html).not.toContain('--now')
-    expect(html).toContain('Week 3, Tuesday, November 17, 19:00 to 21:00')
+    expect(html).toContain('Week 3, Tuesday, November 17, 7 PM to 9 PM')
     expect(html).toContain('Studio lab')
   })
 })
@@ -278,9 +347,7 @@ describe('right to left', () => {
     )
     expect(screen.getByRole('group', { name: 'التقويم' })).toBeInTheDocument()
     const tuesday = screen.getByRole('group', { name: /^الثلاثاء/ })
-    expect(within(tuesday).getByRole('button')).toHaveAccessibleName(
-      /Week 3، .*، من ١٩:٠٠ إلى ٢١:٠٠$/,
-    )
+    expect(within(tuesday).getByRole('button')).toHaveAccessibleName(/Week 3، .*، من ٧ م إلى ٩ م$/)
     const days = [...container.querySelectorAll('[role="group"][aria-label]')]
       .map((group) => group.getAttribute('aria-label')!)
       .filter((name) => /^(السبت|الأحد|الاثنين|الثلاثاء|الأربعاء|الخميس|الجمعة)/.test(name))

@@ -56,15 +56,55 @@ const withDigits = (locale: string, options: Intl.DateTimeFormatOptions) => ({
 export const formatDay = (day: string, locale: string, options: Intl.DateTimeFormatOptions) =>
   Temporal.PlainDate.from(day).toLocaleString(locale, withDigits(locale, options))
 
-export const formatMinutes = (minutes: number, locale: string, hour12: boolean, hourOnly = false) =>
-  Temporal.PlainTime.from({
-    hour: Math.floor(minutes / 60) % 24,
-    minute: minutes % 60,
-  }).toLocaleString(
+/** Friday, the one weekend day the grid shades. Saturday is a busy teaching day. */
+export const isWeekend = (day: string): boolean => Temporal.PlainDate.from(day).dayOfWeek === 5
+
+const clockParts = (minutes: number, locale: string) =>
+  new Intl.DateTimeFormat(
     locale,
     withDigits(locale, {
-      hour: hour12 ? 'numeric' : '2-digit',
-      minute: hourOnly && hour12 ? undefined : '2-digit',
-      hourCycle: hour12 ? 'h12' : 'h23',
+      hour: 'numeric',
+      minute: minutes % 60 ? '2-digit' : undefined,
+      hourCycle: 'h12',
+      timeZone: 'UTC',
     }),
   )
+    .formatToParts(Date.UTC(1970, 0, 1, Math.floor(minutes / 60) % 24, minutes % 60))
+    // Engines differ in the space before AM and PM; one plain space keeps server and browser equal.
+    .map((part) => ({ ...part, value: part.value.replace(/\s/g, ' ') }))
+
+const join = (parts: { value: string }[]) =>
+  parts
+    .map((part) => part.value)
+    .join('')
+    .trim()
+
+/**
+ * The calendar's one time format: 12 hours, with minutes only when they are
+ * not :00. "7 PM", "7:15 PM"; Arabic pages "٧ م" in their own digits.
+ */
+export const formatTime = (minutes: number, locale: string): string =>
+  join(clockParts(minutes, locale))
+
+/** A start and an end that share AM or PM say it once: "10:30 – 11:30 AM", "11 AM – 12:30 PM". */
+export const formatTimeRange = (start: number, end: number, locale: string): string => {
+  const from = clockParts(start, locale)
+  const to = clockParts(end, locale)
+  const period = (parts: typeof from) => parts.find((part) => part.type === 'dayPeriod')?.value
+  const shared = period(from) === period(to)
+  return `${join(shared ? from.filter((part) => part.type !== 'dayPeriod') : from)} – ${join(to)}`
+}
+
+/** The month and year of a run of days: "November 2026", or "November – December 2026" across two. */
+export const formatMonths = (from: string, to: string, locale: string): string => {
+  const utc = (day: string) => {
+    const date = Temporal.PlainDate.from(day)
+    return Date.UTC(date.year, date.month - 1, date.day)
+  }
+  return new Intl.DateTimeFormat(
+    locale,
+    withDigits(locale, { month: 'long', year: 'numeric', timeZone: 'UTC' }),
+  )
+    .formatRange(utc(from), utc(to))
+    .replace(/\s/g, ' ')
+}

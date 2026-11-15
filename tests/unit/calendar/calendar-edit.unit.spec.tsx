@@ -25,7 +25,7 @@ const item = (
   ...extra,
 })
 
-// The week of Saturday 14 November 2026. Meetings run 10:00 to 21:00.
+// The week of Saturday 14 November 2026. Meetings run 10 AM to 9 PM.
 const items: CalendarItem[] = [
   item('week-3', 'Week 3', [
     { id: 'tue', date: '2026-11-17', start_time: '19:00', end_time: '21:00' },
@@ -51,7 +51,11 @@ function Host({
   kind?: string
   locale?: string
 }) {
-  const labels = useCalendarLabels({ kind: () => 'Session', newItem: 'New session' })
+  const labels = useCalendarLabels({
+    kind: () => 'Session',
+    newItem: 'New session',
+    create: 'New session',
+  })
   return (
     <Calendar
       items={items}
@@ -87,6 +91,8 @@ const status = () =>
 const save = () => screen.getByRole('button', { name: 'Save' })
 
 beforeAll(() => {
+  // jsdom has no Web Animations; the side panel waits on none.
+  Element.prototype.getAnimations ??= () => []
   globalThis.ResizeObserver = class {
     observe() {}
     unobserve() {}
@@ -108,7 +114,9 @@ describe('edit mode', () => {
     week3().focus()
     fireEvent.keyDown(week3(), { key: 'ArrowDown' })
     fireEvent.keyDown(week3(), { key: 'ArrowDown', shiftKey: true })
-    expect(week3()).toHaveAccessibleName('Week 3, Tuesday, November 17, 19:15 to 21:30, Unsaved')
+    expect(week3()).toHaveAccessibleName(
+      'Week 3, Tuesday, November 17, 7:15 PM to 9:30 PM, Unsaved',
+    )
     expect(status()).toContain('1 unsaved change')
 
     fireEvent.click(save())
@@ -171,7 +179,7 @@ describe('edit mode', () => {
     expect(ghost).toHaveAttribute('data-deleted')
     expect(within(ghost).getByText('Restore')).toBeInTheDocument()
     fireEvent.keyDown(ghost, { key: 'ArrowDown' })
-    expect(ghost).toHaveAccessibleName(/19:00 to 21:00/)
+    expect(ghost).toHaveAccessibleName(/7 PM to 9 PM/)
 
     fireEvent.click(save())
     await waitFor(() => expect(onSave).toHaveBeenCalledTimes(1))
@@ -185,7 +193,7 @@ describe('edit mode', () => {
     week3().focus()
     fireEvent.keyDown(week3(), { key: 'Delete' })
     fireEvent.click(screen.getByRole('button', { name: /^Restore Week 3/ }))
-    expect(week3()).toHaveAccessibleName('Week 3, Tuesday, November 17, 19:00 to 21:00')
+    expect(week3()).toHaveAccessibleName('Week 3, Tuesday, November 17, 7 PM to 9 PM')
     expect(screen.queryByRole('button', { name: 'Save' })).toBeNull()
   })
 
@@ -197,7 +205,7 @@ describe('edit mode', () => {
     fireEvent.keyDown(screen.getByRole('button', { name: /^Studio lab/ }), { key: 'Delete' })
     expect(status()).toContain('2 unsaved changes')
     fireEvent.click(screen.getByRole('button', { name: 'Cancel' }))
-    expect(week3()).toHaveAccessibleName('Week 3, Tuesday, November 17, 19:00 to 21:00')
+    expect(week3()).toHaveAccessibleName('Week 3, Tuesday, November 17, 7 PM to 9 PM')
     expect(screen.getByRole('button', { name: /^Studio lab/ })).toBeInTheDocument()
     expect(onSave).not.toHaveBeenCalled()
   })
@@ -215,7 +223,7 @@ describe('edit mode', () => {
     expect(await screen.findByRole('alert')).toHaveTextContent(
       'The changes were not saved. They are still here. Someone else changed Week 3.',
     )
-    expect(week3()).toHaveAccessibleName(/19:15 to 21:15, Unsaved/)
+    expect(week3()).toHaveAccessibleName(/7:15 PM to 9:15 PM, Unsaved/)
     expect(status()).toContain('1 unsaved change')
 
     fireEvent.click(save())
@@ -240,7 +248,7 @@ describe('edit mode', () => {
     fireEvent.keyDown(week3(), { key: 'ArrowDown' })
     fireEvent.click(save())
     await waitFor(() => expect(screen.queryByRole('button', { name: 'Save' })).toBeNull())
-    expect(week3()).toHaveAccessibleName('Week 3, Tuesday, November 17, 19:15 to 21:00')
+    expect(week3()).toHaveAccessibleName('Week 3, Tuesday, November 17, 7:15 PM to 9 PM')
 
     fireEvent.keyDown(week3(), { key: 'ArrowDown' })
     fireEvent.click(save())
@@ -250,12 +258,27 @@ describe('edit mode', () => {
     ])
   })
 
+  it('adds a new item from the toolbar on the day in view, marked unsaved with a dashed edge', () => {
+    edit({ onSave: vi.fn() })
+    expect(week3()).not.toHaveAttribute('data-unsaved')
+    fireEvent.click(screen.getByRole('button', { name: 'New session' }))
+    const drawn = screen.getByRole('button', { name: /^New session, Tuesday, November 17/ })
+    expect(drawn).toHaveAccessibleName('New session, Tuesday, November 17, 9 AM to 10 AM, Unsaved')
+    expect(drawn).toHaveAttribute('data-unsaved')
+    expect(drawn).toHaveFocus()
+  })
+
+  it('has no New session button without a kind for new items', () => {
+    edit({ onSave: vi.fn(), kind: '' })
+    expect(screen.queryByRole('button', { name: 'New session' })).toBeNull()
+  })
+
   it('draws from the "+" of a day: a block of a new item in the first free hour', async () => {
     const onSave = vi.fn()
     edit({ onSave })
     fireEvent.click(screen.getByRole('button', { name: 'Add a block on Sunday, November 15' }))
     const drawn = screen.getByRole('button', { name: /^New session, Sunday, November 15/ })
-    expect(drawn).toHaveAccessibleName('New session, Sunday, November 15, 09:00 to 10:00, Unsaved')
+    expect(drawn).toHaveAccessibleName('New session, Sunday, November 15, 9 AM to 10 AM, Unsaved')
     expect(drawn).toHaveFocus()
 
     fireEvent.click(save())
@@ -279,9 +302,9 @@ describe('edit mode', () => {
   it('removes a block it drew when that block is deleted, with no change left', () => {
     edit({ onSave: vi.fn() })
     fireEvent.click(screen.getByRole('button', { name: 'Add a block on Sunday, November 15' }))
-    const drawn = screen.getByRole('button', { name: /^New session/ })
+    const drawn = screen.getByRole('button', { name: /^New session, / })
     fireEvent.keyDown(drawn, { key: 'Delete' })
-    expect(screen.queryByRole('button', { name: /^New session/ })).toBeNull()
+    expect(screen.queryByRole('button', { name: /^New session, / })).toBeNull()
     expect(screen.queryByRole('button', { name: 'Save' })).toBeNull()
   })
 
@@ -293,6 +316,7 @@ describe('edit mode', () => {
   it('puts an unscheduled item on a day from its menu, as one add-block', async () => {
     const onSave = vi.fn()
     edit({ onSave })
+    fireEvent.click(screen.getByRole('button', { name: 'Side panel' }))
     const tray = screen.getByRole('group', { name: 'Unscheduled' })
     const entry = within(tray).getByRole('group', { name: 'Week 4' })
     const menu = within(entry).getByRole('button', { name: 'Place on day' })
@@ -300,7 +324,7 @@ describe('edit mode', () => {
     fireEvent.click(await screen.findByRole('menuitem', { name: 'Thursday, November 19' }))
 
     const placed = screen.getByRole('button', { name: /^Week 4, Thursday, November 19/ })
-    expect(placed).toHaveAccessibleName('Week 4, Thursday, November 19, 09:00 to 10:00, Unsaved')
+    expect(placed).toHaveAccessibleName('Week 4, Thursday, November 19, 9 AM to 10 AM, Unsaved')
     expect(screen.queryByRole('group', { name: 'Unscheduled' })).toBeNull()
 
     fireEvent.click(save())
@@ -317,18 +341,14 @@ describe('edit mode', () => {
     ])
   })
 
-  it('shows 06:00 to 23:00 and keeps the hours when a block moves', () => {
+  it('shows 6 AM to 11 PM and keeps the hours when a block moves', () => {
     const { container } = edit({ onSave: vi.fn() })
-    const hours = [...container.querySelectorAll('[aria-hidden="true"] > span')].map(
-      (hour) => hour.textContent,
-    )
-    expect(hours[0]).toBe('06:00')
-    expect(hours.at(-1)).toBe('23:00')
+    const hours = [...container.querySelectorAll('[data-hour]')].map((hour) => hour.textContent)
+    expect(hours[0]).toBe('6 AM')
+    expect(hours.at(-1)).toBe('11 PM')
     week3().focus()
     for (let step = 0; step < 4; step++) fireEvent.keyDown(week3(), { key: 'ArrowDown' })
-    const after = [...container.querySelectorAll('[aria-hidden="true"] > span')].map(
-      (hour) => hour.textContent,
-    )
+    const after = [...container.querySelectorAll('[data-hour]')].map((hour) => hour.textContent)
     expect(after).toEqual(hours)
   })
 
@@ -368,7 +388,7 @@ describe('edit mode', () => {
     fireEvent.keyDown(block, { key: 'ArrowDown' })
     expect(status()).toContain('تغيير واحد غير محفوظ')
     expect(
-      screen.getByRole('button', { name: /^Week 3.*١٩:١٥ إلى ٢١:١٥، غير محفوظ$/ }),
+      screen.getByRole('button', { name: /^Week 3.*٧:١٥ م إلى ٩:١٥ م، غير محفوظ$/ }),
     ).toBeInTheDocument()
     fireEvent.click(screen.getByRole('button', { name: 'حفظ' }))
     await waitFor(() => expect(onSave).toHaveBeenCalledTimes(1))

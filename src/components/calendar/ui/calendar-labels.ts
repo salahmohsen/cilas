@@ -29,9 +29,11 @@ export type CalendarLabels = {
   daySwitcher: string
   allDay: string
   legend: string
-  timeFormat: string
-  hours24: string
-  hours12: string
+  /** The toggle of the side panel: Up next, the colour key, Unscheduled. */
+  panel: string
+  upNext: string
+  /** The toolbar's button that adds a new item, in edit mode. Without it there is none. */
+  create?: string
   cancelled: string
   /** What a marked item is, on its face, in its name and in the legend. */
   changed: string
@@ -79,6 +81,8 @@ export type CalendarLabels = {
 export type CalendarHostLabels = {
   kind: CalendarLabels['kind']
   newItem: string
+  /** What the toolbar's add button says: "New session". */
+  create?: string
   /** What the Save button says, when "Save" would be unclear beside another Save on the page. */
   save?: string
   /** What the save bar says while changes wait, beside another Save on the page. */
@@ -96,7 +100,7 @@ export type CalendarTranslator = ReturnType<typeof useTranslations<'CalendarUi'>
 /** Every label, from the shared translations. The site and the admin both build theirs here. */
 export const calendarLabelsFrom = (
   t: CalendarTranslator,
-  { kind, newItem, menu, save, saveNote }: CalendarHostLabels,
+  { kind, newItem, create, menu, save, saveNote }: CalendarHostLabels,
 ): CalendarLabels => ({
   name: t('name'),
   cairoTime: t('cairoTime'),
@@ -106,9 +110,9 @@ export const calendarLabelsFrom = (
   daySwitcher: t('daySwitcher'),
   allDay: t('allDay'),
   legend: t('legend'),
-  timeFormat: t('timeFormat'),
-  hours24: t('hours24'),
-  hours12: t('hours12'),
+  panel: t('panel'),
+  upNext: t('upNext'),
+  create,
   cancelled: t('cancelled'),
   changed: t('changed'),
   unscheduled: t('unscheduled'),

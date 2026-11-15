@@ -1,6 +1,7 @@
 import { createTranslator, type AbstractIntlMessages } from 'next-intl'
 
 import { calendarLabelsFrom } from '@/components/calendar/ui/calendar-labels'
+import { formatsOf } from '@/i18n/formats'
 import { scheduleSaveText, type ScheduleSaveMessages } from '@/components/space/schedule-save-text'
 
 import type en from '../../../messages/en.json'
@@ -17,11 +18,13 @@ export type CalendarAdminMessages = ScheduleSaveMessages & {
 export const calendarAdminText = (language: AdminLanguage, messages: CalendarAdminMessages) => {
   // Untyped, as the site's hook is, so one label builder serves both.
   const all: AbstractIntlMessages = messages
-  const ui = createTranslator({ locale: language, messages: all, namespace: 'CalendarUi' })
-  const t = createTranslator({ locale: language, messages, namespace: 'CalendarAdmin' })
+  const formats = formatsOf(language)
+  const ui = createTranslator({ locale: language, messages: all, namespace: 'CalendarUi', formats })
+  const t = createTranslator({ locale: language, messages, namespace: 'CalendarAdmin', formats })
   const labels = calendarLabelsFrom(ui, {
     kind: () => t('session'),
     newItem: t('newSession'),
+    create: t('newSession'),
     menu: {
       addNextDay: t('addMeeting'),
       copyNextWeek: t('newSessionNextWeek'),

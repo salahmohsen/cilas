@@ -11,7 +11,7 @@ import type { CalendarChange, CalendarItem } from '@/lib/calendar-items'
 import { leave } from '@/lib/leave-guard'
 
 import { useLeaveQuestion } from './leave-question'
-import { useOpenScheduleItem, useScheduleLabels } from './schedule-calendar'
+import { useCourseWeek, useOpenScheduleItem, useScheduleLabels } from './schedule-calendar'
 import { scheduleSaveText, type ScheduleSaveMessages } from './schedule-save-text'
 import { sessionTriggerProps } from './session-drawer-host'
 import styles from './space-calendar-tab.module.css'
@@ -71,6 +71,7 @@ export function SpaceCalendarEditor({
   const [unsaved, setUnsaved] = useState(0)
   const done = useRef<HTMLButtonElement>(null)
   const open = useOpenScheduleItem(items, spaceHref)
+  const weekLabel = useCourseWeek(items)
 
   const schedule = useScheduleSave({
     parent: { kind: 'space', id: spaceId },
@@ -109,13 +110,6 @@ export function SpaceCalendarEditor({
 
   return (
     <div className={styles.tab}>
-      <div className={styles.actions}>
-        <Button ref={done} type="button" size="sm" onClick={() => leave(onDone)}>
-          <Check aria-hidden size={14} />
-          {t('calendarDone')}
-        </Button>
-      </div>
-
       {schedule.failed ? <Alert tone="danger" title={text.offerFailed} /> : null}
       {reloadFailed ? <Alert tone="danger" title={t('calendarFailed')} /> : null}
 
@@ -127,6 +121,19 @@ export function SpaceCalendarEditor({
           labels={labels}
           locale={locale}
           newItemKind="session"
+          weekLabel={weekLabel}
+          action={
+            <Button
+              ref={done}
+              type="button"
+              variant="secondary"
+              size="sm"
+              onClick={() => leave(onDone)}
+            >
+              <Check aria-hidden size={14} />
+              {t('calendarDone')}
+            </Button>
+          }
           onOpen={open}
           onSave={save}
           onUnsavedChange={setUnsaved}

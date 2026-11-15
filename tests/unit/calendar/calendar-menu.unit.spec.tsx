@@ -224,7 +224,7 @@ describe('Add meeting', () => {
     await pick('Add meeting')
 
     const added = screen.getByRole('button', { name: /^Week 3, Wednesday, November 18/ })
-    expect(added).toHaveAccessibleName('Week 3, Wednesday, November 18, 19:00 to 21:00, Unsaved')
+    expect(added).toHaveAccessibleName('Week 3, Wednesday, November 18, 7 PM to 9 PM, Unsaved')
     expect(status()).toContain('1 unsaved change')
     expect(status()).toContain('Added a meeting on Wednesday, November 18')
     // Shown too, since the block can be on a day or week that is not in view.
@@ -269,7 +269,7 @@ describe('Add meeting', () => {
     fireEvent.click(screen.getByRole('button', { name: 'Next week' }))
     expect(
       screen.getByRole('button', {
-        name: 'Week 3, Saturday, November 21, 19:00 to 21:00, Unsaved',
+        name: 'Week 3, Saturday, November 21, 7 PM to 9 PM, Unsaved',
       }),
     ).toBeInTheDocument()
   })

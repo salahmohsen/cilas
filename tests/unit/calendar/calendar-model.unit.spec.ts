@@ -1,6 +1,14 @@
 import { describe, expect, it } from 'vitest'
 
-import { hourRange, scrollTargetOf } from '@/components/calendar/ui/calendar-model'
+import {
+  allDayBars,
+  blocksOf,
+  hourRange,
+  scrollTargetOf,
+  upNext,
+} from '@/components/calendar/ui/calendar-model'
+import { weekOf } from '@/components/calendar/ui/calendar-time'
+import type { CalendarItem } from '@/lib/calendar-items'
 
 const at = (track: string, start: number, end: number) => ({
   id: `${track}-${start}`,
@@ -53,5 +61,77 @@ describe('scrollTargetOf', () => {
   })
   it('is 09:00 when the days have no meeting', () => {
     expect(scrollTargetOf([at('2026-12-01', h(7), h(8))], days)).toBe(h(9))
+  })
+})
+
+const item = (id: string, blocks: CalendarItem['blocks'], extra: Partial<CalendarItem> = {}) =>
+  ({
+    id,
+    kind: 'event',
+    title: id,
+    tone: 'blue',
+    cancelled: false,
+    version: 'v',
+    blocks,
+    ...extra,
+  }) as CalendarItem
+const allDay = (id: string, date: string) => ({ id, date, start_time: null, end_time: null })
+
+describe('allDayBars', () => {
+  const week = weekOf('2026-11-28') // Saturday 28 November to Friday 4 December, across the month end.
+  const fair = item('fair', [
+    allDay('a', '2026-11-29'),
+    allDay('b', '2026-11-30'),
+    allDay('c', '2026-12-01'),
+    allDay('e', '2026-12-03'),
+  ])
+  const trip = item('trip', [allDay('t', '2026-11-30'), allDay('u', '2026-12-01')])
+
+  it('joins an item’s days in a row into one bar across the month end, and stacks overlaps in lanes', () => {
+    const bars = allDayBars(blocksOf([fair, trip]), week, () => true)
+    expect(
+      bars.map((bar) => [bar.blocks.map((b) => b.blockId), bar.from, bar.span, bar.lane]),
+    ).toEqual([
+      [['a', 'b', 'c'], 1, 3, 0],
+      [['t', 'u'], 2, 2, 1],
+      [['e'], 5, 1, 0],
+    ])
+  })
+
+  it('keeps each block on its own when it may change on its own', () => {
+    const bars = allDayBars(blocksOf([fair]), week, (block) => block.blockId !== 'b')
+    expect(bars.map((bar) => [bar.from, bar.span])).toEqual([
+      [1, 1],
+      [2, 1],
+      [3, 1],
+      [5, 1],
+    ])
+  })
+
+  it('ends a bar at the edge of the week and leaves out days not shown', () => {
+    const edge = item('edge', [allDay('x', '2026-12-04'), allDay('y', '2026-12-05')])
+    expect(
+      allDayBars(blocksOf([edge]), week, () => true).map((bar) => [bar.from, bar.span]),
+    ).toEqual([[6, 1]])
+  })
+})
+
+describe('upNext', () => {
+  const items = [
+    item('done', [{ id: 'd', date: '2026-11-17', start_time: '09:00', end_time: '10:00' }]),
+    item('off', [{ id: 'o', date: '2026-11-17', start_time: '18:00', end_time: '19:00' }], {
+      cancelled: true,
+    }),
+    item('next', [{ id: 'n', date: '2026-11-17', start_time: '19:00', end_time: '21:00' }]),
+  ]
+
+  it('names the first held meeting that has not ended', () => {
+    const next = upNext(items, { date: '2026-11-17', minutes: 12 * 60 })
+    expect([next?.item.id, next?.id]).toEqual(['next', 'n'])
+  })
+
+  it('keeps a meeting going on now, and has none after the last', () => {
+    expect(upNext(items, { date: '2026-11-17', minutes: 20 * 60 })?.id).toBe('n')
+    expect(upNext(items, { date: '2026-11-17', minutes: 21 * 60 })).toBeNull()
   })
 })

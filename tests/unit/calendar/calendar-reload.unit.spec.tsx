@@ -82,7 +82,7 @@ describe('items that load while the viewer has unsaved changes', () => {
     }
     rerender(view([saved, second()]))
 
-    expect(block('Session one')).toHaveAccessibleName(/14:00 to 16:00$/)
+    expect(block('Session one')).toHaveAccessibleName(/2 PM to 4 PM$/)
     expect(block('Session two')).toHaveAccessibleName(/Unsaved$/)
     expect(status()).toContain('1 unsaved change')
     expect(status()).toContain(

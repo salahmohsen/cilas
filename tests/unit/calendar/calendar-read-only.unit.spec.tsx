@@ -143,7 +143,7 @@ describe('a readOnly item in edit mode', () => {
     for (const key of ['ArrowDown', 'ArrowUp', 'ArrowRight', 'ArrowLeft'])
       fireEvent.keyDown(talk(), { key })
     fireEvent.keyDown(talk(), { key: 'ArrowDown', shiftKey: true })
-    expect(talk()).toHaveAccessibleName('Open talk, Saturday, November 14, 10:00 to 12:00')
+    expect(talk()).toHaveAccessibleName('Open talk, Saturday, November 14, 10 AM to 12 PM')
     noChanges(onUnsavedChange)
 
     week3().focus()
@@ -205,7 +205,7 @@ describe('a readOnly item in edit mode', () => {
     pointer('pointerup', 320, 260, 0)
     await frame()
     expect(talk().closest('[data-track]')).toHaveAttribute('data-track', '2026-11-14')
-    expect(talk()).toHaveAccessibleName('Open talk, Saturday, November 14, 10:00 to 12:00')
+    expect(talk()).toHaveAccessibleName('Open talk, Saturday, November 14, 10 AM to 12 PM')
     noChanges(onUnsavedChange)
   })
 
@@ -249,6 +249,7 @@ describe('a readOnly item in edit mode', () => {
 
   it('cannot be placed from the Unscheduled tray', () => {
     show()
+    fireEvent.click(screen.getByRole('button', { name: 'Side panel' }))
     const tray = screen.getByRole('group', { name: 'Unscheduled' })
     expect(within(tray).getByRole('group', { name: 'Later talk' })).toBeInTheDocument()
     expect(

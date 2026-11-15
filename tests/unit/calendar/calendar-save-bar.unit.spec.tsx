@@ -118,11 +118,11 @@ describe('the save bar', () => {
     fireEvent.click(screen.getByRole('button', { name: 'Save' }))
     expect(await screen.findByRole('alert')).toHaveTextContent('Someone else changed Week 3.')
     // The changes stay on screen until the person chooses to lose them.
-    expect(block()).toHaveAccessibleName(/19:15 to 21:15, Unsaved$/)
+    expect(block()).toHaveAccessibleName(/7:15 PM to 9:15 PM, Unsaved$/)
 
     fireEvent.click(screen.getByRole('button', { name: 'Reload and lose my changes' }))
     expect(then).toHaveBeenCalledTimes(1)
-    await waitFor(() => expect(block()).toHaveAccessibleName(/19:00 to 21:00$/))
+    await waitFor(() => expect(block()).toHaveAccessibleName(/7 PM to 9 PM$/))
     expect(screen.queryByRole('alert')).toBeNull()
     expect(screen.queryByRole('button', { name: 'Save' })).toBeNull()
     expect(screen.queryByRole('button', { name: 'Dismiss' })).toBeNull()

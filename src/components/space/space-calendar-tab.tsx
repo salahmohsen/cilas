@@ -65,24 +65,28 @@ export function SpaceCalendarTab({
 
   return (
     <div className={styles.tab}>
-      {canEdit ? (
-        <div className={styles.actions}>
-          <Button
-            ref={edit}
-            type="button"
-            variant="secondary"
-            size="sm"
-            onPointerEnter={SpaceCalendarEditor.preload}
-            onFocus={SpaceCalendarEditor.preload}
-            onPointerDown={SpaceCalendarEditor.preload}
-            onClick={() => setEditing(true)}
-          >
-            <Pencil aria-hidden size={14} />
-            {t('calendarEdit')}
-          </Button>
-        </div>
-      ) : null}
-      <ScheduleCalendar items={items} day={day} spaceHref={spaceHref} />
+      <ScheduleCalendar
+        items={items}
+        day={day}
+        spaceHref={spaceHref}
+        action={
+          canEdit ? (
+            <Button
+              ref={edit}
+              type="button"
+              variant="secondary"
+              size="sm"
+              onPointerEnter={SpaceCalendarEditor.preload}
+              onFocus={SpaceCalendarEditor.preload}
+              onPointerDown={SpaceCalendarEditor.preload}
+              onClick={() => setEditing(true)}
+            >
+              <Pencil aria-hidden size={14} />
+              {t('calendarEdit')}
+            </Button>
+          ) : undefined
+        }
+      />
     </div>
   )
 }

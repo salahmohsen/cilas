@@ -2,6 +2,8 @@ import type { Span } from '@ui-sdk/core'
 
 import type { CalendarItem } from '@/lib/calendar-items'
 
+import { nextMeeting } from '@/lib/meetings'
+
 import { toMinutes } from './calendar-time'
 
 export const DEFAULT_MINUTES = 60
@@ -125,3 +127,75 @@ export const firstFreeStart = (
   }
   return min
 }
+
+/**
+ * A bar in the all-day row: one block, or the blocks of one item on
+ * consecutive days, which show as one bar across them. `from` is the index
+ * of its first day in `days`, `span` how many days it covers, `lane` its
+ * row, the first free one from the top.
+ */
+export type AllDayBar = {
+  blocks: [EditBlock, ...EditBlock[]]
+  from: number
+  span: number
+  lane: number
+}
+
+/**
+ * The all-day row of `days`. Blocks join into one bar only when `joins` says
+ * both can: a block that changes on its own (deleted, restored, unsaved, or
+ * editable) keeps its own bar, so each change has one place.
+ */
+export const allDayBars = (
+  blocks: EditBlock[],
+  days: string[],
+  joins: (block: EditBlock) => boolean,
+): AllDayBar[] => {
+  const runs: { blocks: [EditBlock, ...EditBlock[]]; from: number; span: number }[] = []
+  const sorted = blocks
+    .filter((block) => block.allDay && days.includes(block.track))
+    .toSorted((a, b) => a.track.localeCompare(b.track) || a.id.localeCompare(b.id))
+  for (const block of sorted) {
+    const at = days.indexOf(block.track)
+    const run = joins(block)
+      ? runs.find(
+          (candidate) =>
+            candidate.from + candidate.span === at &&
+            joins(candidate.blocks[0]) &&
+            candidate.blocks[0].itemId === block.itemId,
+        )
+      : undefined
+    if (run) {
+      run.blocks.push(block)
+      run.span += 1
+    } else runs.push({ blocks: [block], from: at, span: 1 })
+  }
+  const lanes: number[] = []
+  return runs.map((run) => {
+    let lane = lanes.findIndex((end) => end <= run.from)
+    if (lane === -1) lane = lanes.length
+    lanes[lane] = run.from + run.span
+    return { ...run, lane }
+  })
+}
+
+/**
+ * The next meeting from `now`: the first held block that has not ended, with
+ * its item. The rule is `nextMeeting`'s; this only drops today's ended blocks.
+ */
+export const upNext = (items: CalendarItem[], now: { date: string; minutes: number }) =>
+  nextMeeting(
+    items.flatMap((item) =>
+      item.blocks
+        .filter(
+          (block) =>
+            block.date !== now.date || !block.end_time || toMinutes(block.end_time) > now.minutes,
+        )
+        .map((block) => ({
+          ...block,
+          item,
+          ...(item.cancelled ? { cancelled: true as const } : {}),
+        })),
+    ),
+    now.date,
+  )

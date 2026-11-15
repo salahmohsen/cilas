@@ -7,7 +7,12 @@ import { loadCalendarItems } from '@/actions/load-calendar-items'
 import Button from '@/components/arc/button/button'
 import { Calendar } from '@/components/calendar/ui/calendar'
 import { useScheduleSave } from '@/components/space/use-schedule-save'
-import { openingDay, type CalendarChange, type CalendarItem } from '@/lib/calendar-items'
+import {
+  courseWeekOf,
+  openingDay,
+  type CalendarChange,
+  type CalendarItem,
+} from '@/lib/calendar-items'
 import type { CalendarSaveError } from '@/lib/calendar-sources'
 import { cairoDay } from '@/lib/cairo-day'
 
@@ -161,6 +166,10 @@ export function CourseCalendar({ courseId, language, messages }: Props) {
           labels={labels}
           locale={language}
           day={openingDay(loaded.items, cairoDay(new Date())!)}
+          weekLabel={(days) => {
+            const week = courseWeekOf(loaded.items, days)
+            return week && t('courseWeek', week)
+          }}
           onOpen={open}
           {...(loaded.canEdit
             ? {
