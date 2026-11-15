@@ -21,6 +21,12 @@ export type CourseMeta = {
    * had only a typed length, which no meeting replaces.
    */
   archive?: 'meetings' | 'weeks-lost'
+  /**
+   * The course holds a meeting marked approximate (ADR 0011, "Approximate
+   * archive meetings get a mark"). Read from the head snapshot, and only
+   * when the base had none: then the mark is what changed.
+   */
+  approximate?: boolean
 }
 
 /** One run: for each reader, what it gives for each course (by course ID). */
@@ -215,6 +221,54 @@ export const onlyLengthGone = (before: unknown, after: unknown): boolean =>
  * hand-typed list markers; an undated course's note may change only where
  * the note shows.
  */
+/** Whether `after` is `before` with exactly one line added, the rest unchanged and in order. */
+const addsOneLine = (before: unknown, after: unknown): boolean =>
+  onlyAdds(before, after) && linesOf(after).length === linesOf(before).length + 1
+
+/**
+ * Whether a month list's lines (`date | time | note | cancelled`) are the
+ * same, each with a last note part and the `approximate` mark added: the
+ * slot says "Approximate date" in the page's language.
+ */
+export const onlyApproximateMarks = (before: unknown, after: unknown): boolean => {
+  if (!Array.isArray(before) || !Array.isArray(after) || before.length !== after.length)
+    return false
+  const unmarked = after.map((line) => {
+    const parts = String(line).split(' | ')
+    if (parts.length !== 5 || parts[4] !== 'approximate') return null
+    const note = parts[2]!.split(' · ')
+    if (note.length < 2) return null
+    return [parts[0], parts[1], note.slice(0, -1).join(' · '), parts[3]].join(' | ')
+  })
+  return same([...before].sort(), [...unmarked].sort())
+}
+
+/**
+ * The approximate mark, for a course that gained it: its meetings leave the
+ * feed (all of them, or some lines), one note appears on its page and in
+ * its llms facts, and the calendar marks its slots. Nothing else may change.
+ */
+export const approximateChange = (
+  reader: string,
+  before: unknown,
+  after: unknown,
+): { verdict: Verdict; reason: string } => {
+  const expected = (reason: string) => ({ verdict: 'EXPECTED' as const, reason })
+  if (reader === 'calendar.ics' && (after === undefined || onlyRemovals(before, after)))
+    return expected('approximate meetings leave the feed')
+  if (reader === 'page.note' && addsOneLine(before, after))
+    return expected('the page says once that the dates are approximate')
+  if (reader === 'llms' && isRecord(before) && isRecord(after)) {
+    const { facts: was, ...restBefore } = before
+    const { facts: now, ...restAfter } = after
+    if (same(restBefore, restAfter) && addsOneLine(was, now))
+      return expected('llms says once that the dates are approximate')
+  }
+  if (reader === 'calendar.month' && onlyApproximateMarks(before, after))
+    return expected('the calendar marks approximate dates')
+  return { verdict: 'UNEXPECTED', reason: 'approximate course: not the mark the plan expects' }
+}
+
 export const classify = (
   reader: string,
   meta: CourseMeta | undefined,
@@ -222,6 +276,8 @@ export const classify = (
   after: unknown,
 ): { verdict: Verdict; reason: string } => {
   if (!meta) return { verdict: 'UNEXPECTED', reason: 'course not in the base snapshot' }
+  // Before the older, wider rules: on such a course, only the mark may change.
+  if (meta.approximate) return approximateChange(reader, before, after)
   if (onlyUnits(before, after))
     return { verdict: 'EXPECTED', reason: 'Week N became Session N (no numbering setting)' }
   if (reader === 'space.sessionFacts' && same(withoutKey(before, 'week'), after))
@@ -327,7 +383,15 @@ export const compareSnapshots = (
 /** The base's facts about a course, with what the head snapshot knows that the base cannot. */
 const metaOf = (base: Snapshot, head: Snapshot, course: string): CourseMeta | undefined => {
   const meta = base.courses[course]
-  return meta && { ...meta, archive: head.courses[course]?.archive }
+  const now = head.courses[course]
+  return (
+    meta && {
+      ...meta,
+      // A change the base already shows is not one this comparison judges.
+      archive: meta.archive ? undefined : now?.archive,
+      approximate: !meta.approximate && !!now?.approximate,
+    }
+  )
 }
 
 const rawDifferences = (base: Snapshot, head: Snapshot): Difference[] => {
@@ -467,7 +531,7 @@ const section = (markdown: string, headings: readonly string[]): string[] => {
 
 const LLMS_FACTS = ['Practical facts', 'معلومات عملية']
 const LLMS_SYLLABUS = ['Syllabus', 'المقرّر']
-const LLMS_TIME_FACTS = /^\*\*(Starts|Ends|Meets|تبدأ|تنتهي|اللقاءات):\*\*/
+const LLMS_TIME_FACTS = /^\*\*(Starts|Ends|Meets|Dates|تبدأ|تنتهي|اللقاءات|التواريخ):\*\*/
 const LLMS_SESSION_LINE =
   /^(### |(Meetings|اللقاءات): |Dates: |The syllabus may still change\.|قد يتغيّر المقرّر\.)/
 

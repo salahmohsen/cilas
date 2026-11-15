@@ -7,7 +7,9 @@ import {
   describeChange,
   icsByCourse,
   llmsTimes,
+  approximateChange,
   onlyAdds,
+  onlyApproximateMarks,
   onlyLabels,
   onlyLengthGone,
   onlyListMarkers,
@@ -426,5 +428,88 @@ describe('the timing removal rules', () => {
     expect(
       compareSnapshots(base, snapshot({ 'calendar.ics': { '1': ['new'] } })).map((d) => d.verdict),
     ).toEqual(['UNEXPECTED'])
+  })
+})
+
+describe('the approximate mark', () => {
+  const marked = { ...plain, approximate: true }
+  const ics = {
+    en: ['DTSTART;VALUE=DATE:20190207 Archive'],
+    ar: ['DTSTART;VALUE=DATE:20190207 أرشيف'],
+  }
+
+  it('expects a fully approximate course to leave the feed, and some lines of a mixed one', () => {
+    expect(approximateChange('calendar.ics', ics.en, undefined).verdict).toBe('EXPECTED')
+    expect(approximateChange('calendar.ics', ['a', 'b'], ['a']).verdict).toBe('EXPECTED')
+    expect(approximateChange('calendar.ics', ['a'], ['a', 'c']).verdict).toBe('UNEXPECTED')
+  })
+
+  it('expects one note on the page and one llms fact, nothing more', () => {
+    expect(approximateChange('page.note', [], ['Dates are approximate']).verdict).toBe('EXPECTED')
+    expect(approximateChange('page.note', [], ['a', 'b']).verdict).toBe('UNEXPECTED')
+    const llms = { facts: ['**Starts:** 2019-02-07'], syllabus: ['### Session 1'] }
+    const noted = { ...llms, facts: [...llms.facts, '**Dates:** approximate'] }
+    expect(approximateChange('llms', llms, noted).verdict).toBe('EXPECTED')
+    expect(approximateChange('llms', llms, { ...noted, syllabus: ['### Session 2'] }).verdict).toBe(
+      'UNEXPECTED',
+    )
+  })
+
+  it('expects each month line to gain a last note part and the mark, in any language', () => {
+    // As `monthList` joins them: day, time, note, cancelled, and the mark only when present.
+    const line = (...parts: string[]) => parts.join(' | ')
+    const before = [line('Thu 7', '', 'Session 1', ''), line('Thu 14', '19:00', 'Session 2', '')]
+    const after = [
+      line('Thu 7', '', 'Session 1 · Approximate date', '', 'approximate'),
+      line('Thu 14', '19:00', 'Session 2 · Approximate date', '', 'approximate'),
+    ]
+    expect(onlyApproximateMarks(before, after)).toBe(true)
+    expect(
+      onlyApproximateMarks(
+        [line('خ ٧', '', 'الجلسة ١', '')],
+        [line('خ ٧', '', 'الجلسة ١ · تاريخ تقريبي', '', 'approximate')],
+      ),
+    ).toBe(true)
+    // A changed day, a missing mark or a lost line is not the mark.
+    const moved = line('Thu 21', '19:00', 'Session 2 · Approximate date', '', 'approximate')
+    expect(onlyApproximateMarks(before, [after[0], moved])).toBe(false)
+    expect(
+      onlyApproximateMarks(before, [
+        after[0],
+        line('Thu 14', '19:00', 'Session 2 · Approximate date', ''),
+      ]),
+    ).toBe(false)
+    expect(onlyApproximateMarks(before, [after[0]])).toBe(false)
+  })
+
+  it('refuses any other change in a marked course, even where older rules would pass it', () => {
+    for (const reader of ['page.facts', 'page.syllabus', 'page.jsonld', 'list.study'])
+      expect(
+        classify(reader, { ...marked, archive: 'meetings', archiveDated: true }, 'a', 'b').verdict,
+      ).toBe('UNEXPECTED')
+    expect(classify('page.syllabus', marked, ['1AWeek 1'], ['1ASession 1']).verdict).toBe(
+      'UNEXPECTED',
+    )
+  })
+
+  it('judges by the mark only when the base did not have it', () => {
+    const base = snapshot(
+      { 'calendar.ics': { '1': ics }, 'page.facts': { '1': { en: ['a'] } } },
+      { '1': { ...plain, archive: 'meetings' } },
+    )
+    const head = snapshot(
+      { 'calendar.ics': {}, 'page.facts': { '1': { en: ['b'] } } },
+      { '1': { ...plain, archive: 'meetings', approximate: true } },
+    )
+    const diffs = compareSnapshots(base, head)
+    expect(diffs.find((d) => d.reader === 'calendar.ics')?.verdict).toBe('EXPECTED')
+    // The archive meetings were in the base already: no blanket rule for them.
+    expect(diffs.find((d) => d.reader === 'page.facts')?.verdict).toBe('UNEXPECTED')
+    // Both snapshots marked: the mark is not what changed.
+    const both = compareSnapshots(
+      { ...base, courses: head.courses },
+      { ...head, readers: { 'calendar.ics': {}, 'page.facts': { '1': { en: ['a'] } } } },
+    )
+    expect(both.find((d) => d.reader === 'calendar.ics')?.verdict).toBe('UNEXPECTED')
   })
 })
