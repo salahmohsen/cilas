@@ -29,7 +29,7 @@ import type { ThreadComment, TopComment } from '@/lib/spaces-data'
 import { REACTION_ICON } from './reaction-icons'
 
 import { LinkedText } from './linked-text'
-import { saveErrorKey } from './composer'
+import { saveErrorKey } from '@/lib/space-rules'
 import { ConsentSheet } from './consent-sheet'
 import { PersonHover } from './person-hover'
 import type { PersonCard } from '@/lib/space-members'

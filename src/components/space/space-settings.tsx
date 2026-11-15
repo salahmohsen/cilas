@@ -18,7 +18,7 @@ import { RULES_MAX } from '@/lib/space-consent'
 import { spaceSettingsSetAction } from '@/lib/space-actions'
 import { useNarrow } from '@/lib/use-narrow'
 
-import { saveErrorKey } from './composer'
+import { saveErrorKey } from '@/lib/space-rules'
 import styles from './space.module.css'
 
 /** Moderators only (spec §11): the posting level, who starts events, the About and Privacy and rules texts, and reopening an archived course space. */

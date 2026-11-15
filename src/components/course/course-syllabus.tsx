@@ -1,4 +1,3 @@
-import { isRelation as isObject } from '@/lib/relation'
 import {
   BookOpen,
   Clapperboard,
@@ -23,6 +22,7 @@ import {
   type SyllabusGroup,
 } from '@/components/arc/blocks/syllabus-feed/syllabus-feed'
 import { SessionMarkdown } from '@/components/course/session-markdown'
+import { courseLanguage, directionOf } from '@/lib/course-language'
 import { localDigits, numberingSystemOf } from '@/lib/digits'
 import { editableIn, type Editable } from '@/lib/editable'
 import { numberedSessions, type NumberedSession } from '@/lib/meetings'
@@ -52,23 +52,6 @@ const ACTIVITY_ICONS: Record<ActivityKind, LucideIcon> = {
   screening: Projector,
   presentation: Presentation,
   other: Shapes,
-}
-
-/** Every text in a rich-text tree, joined. */
-export const textOf = (node: unknown): string => {
-  if (!isObject<{ text?: unknown; children?: unknown[]; root?: unknown }>(node)) return ''
-  if (node.root) return textOf(node.root)
-  return [
-    typeof node.text === 'string' ? node.text : '',
-    ...(node.children ?? []).map(textOf),
-  ].join(' ')
-}
-
-/** The direction a course's own text reads in: it may be in the other language than the page. */
-export const directionOf = (text: string): 'rtl' | 'ltr' => {
-  const arabic = (text.match(/[\u0600-\u06ff]/g) ?? []).length
-  const latin = (text.match(/[A-Za-z]/g) ?? []).length
-  return arabic >= latin ? 'rtl' : 'ltr'
 }
 
 /** The parts of a course its syllabus reads, besides its sessions. */
@@ -123,8 +106,8 @@ function useSyllabusEntries(
   const format = useFormatter()
   const locale = useLocale()
 
-  const dir = directionOf(`${course.title} ${course.subtitle ?? ''} ${textOf(course.description)}`)
-  const lang = dir === 'rtl' ? 'ar' : 'en'
+  const lang = courseLanguage(course)
+  const dir = lang === 'ar' ? 'rtl' : 'ltr'
 
   /** "Tue 3 Mar". Days are Cairo calendar days, so format them in UTC. */
   const dayLabel = (day: string): string =>

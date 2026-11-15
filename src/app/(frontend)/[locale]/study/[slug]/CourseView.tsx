@@ -25,10 +25,9 @@ import {
   MATERIAL_ICONS,
   MATERIAL_ORDER,
   MaterialList,
-  directionOf,
   syllabusOf,
-  textOf,
 } from '@/components/course/course-syllabus'
+import { courseLanguage, textOf } from '@/lib/course-language'
 import { EditorFields, labelOf } from '@/components/editor-fields'
 import { AvatarFallback } from '@/components/arc/lib/avatar-fallback'
 import { ContributorRows, photoOf } from '@/components/person/contributors'
@@ -109,7 +108,7 @@ export const CourseView: React.FC<{
     : null
   const typeLabel = tf(`types.${course.course_type.toLowerCase()}`)
   const fellows = (course.fellows ?? []).filter(isObject<Person>)
-  const dir = directionOf(`${course.title} ${course.subtitle ?? ''} ${textOf(course.description)}`)
+  const dir = courseLanguage(course) === 'ar' ? 'rtl' : 'ltr'
   const lang = dir === 'rtl' ? 'ar' : 'en'
 
   const syllabus = syllabusOf(sessions)

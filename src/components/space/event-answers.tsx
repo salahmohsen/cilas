@@ -14,7 +14,7 @@ import { rsvpSetAction } from '@/lib/space-actions'
 import { RSVP_STATUSES, type RsvpStatus } from '@/lib/space-event'
 import type { RsvpView, Voter } from '@/lib/spaces-data'
 
-import { saveErrorKey } from './composer'
+import { saveErrorKey } from '@/lib/space-rules'
 import { PersonHover } from './person-hover'
 import type { PersonCard } from '@/lib/space-members'
 import styles from './space.module.css'

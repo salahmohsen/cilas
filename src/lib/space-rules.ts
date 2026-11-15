@@ -1,6 +1,9 @@
 import { locationUrl } from '@/lib/space-event'
 import type { EventPosting, Membership, PostingLevel, SpaceKind } from '@/lib/spaces'
 
+/** `not-member` → `saveError_not_member`: a renamed code fails as a missing key, never as silence. */
+export const saveErrorKey = (code: string) => `saveError_${code.replace(/-/g, '_')}`
+
 /** Every post kind the posts collection stores. `question` is kept for older rows. */
 export const POST_KINDS = ['discussion', 'question', 'announcement', 'event', 'vote'] as const
 

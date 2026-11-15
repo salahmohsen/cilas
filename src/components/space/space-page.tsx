@@ -25,12 +25,8 @@ import {
   postingAllows,
   type ComposerKind,
 } from '@/lib/space-rules'
-import {
-  CourseSyllabus,
-  directionOf,
-  syllabusOf,
-  textOf,
-} from '@/components/course/course-syllabus'
+import { CourseSyllabus, syllabusOf } from '@/components/course/course-syllabus'
+import { directionOf, textOf } from '@/lib/course-language'
 import { RichTextField } from '@/components/RichTextField'
 import { RichTextScope } from '@/components/rich-text-scope'
 import { profileMessages } from '@/components/profile/load-messages'

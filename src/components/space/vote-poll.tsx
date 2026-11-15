@@ -18,7 +18,7 @@ import { numberingSystemOf } from '@/lib/digits'
 import { voteSetAction } from '@/lib/space-actions'
 import type { VoteView, Voter } from '@/lib/spaces-data'
 
-import { saveErrorKey } from './composer'
+import { saveErrorKey } from '@/lib/space-rules'
 import { PersonHover } from './person-hover'
 import type { PersonCard } from '@/lib/space-members'
 import type { ThreadViewer } from './space-thread'
