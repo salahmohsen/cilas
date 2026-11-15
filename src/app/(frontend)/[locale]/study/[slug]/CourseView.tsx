@@ -393,8 +393,10 @@ export const CourseView: React.FC<{
             ))}
           </dl>
         ) : null}
+        {approximate ? (
+          <p className="side-card-body side-card-muted">{t('approximateDates')}</p>
+        ) : null}
       </SideCardSection>
-      {approximate ? <p className="side-card-muted">{t('approximateDates')}</p> : null}
       {wide && fellows.length ? (
         <div {...pe('fellows')}>
           <SideCardSection label={t('taughtBy')}>
