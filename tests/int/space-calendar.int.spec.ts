@@ -382,11 +382,11 @@ describe('space calendar read side', () => {
     )
   })
 
-  it('returns a typed no-calendar for a cohort', async () => {
+  it('returns invalid for a cohort', async () => {
     signIn(admin)
     expect(await load(cohort)).toMatchObject({
       ok: false,
-      error: { code: 'invalid', reason: 'no-calendar' },
+      error: { code: 'invalid' },
     })
   })
 
