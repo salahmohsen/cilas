@@ -2,7 +2,7 @@
 # To use this Dockerfile, you have to set `output: 'standalone'` in your next.config.mjs file.
 # From https://github.com/vercel/next.js/blob/canary/examples/with-docker/Dockerfile
 
-FROM node:22.17.0-alpine AS base
+FROM node:26.12.1-alpine AS base
 
 # The pnpm this repo is locked with. Corepack would fetch the latest pnpm,
 # which the corepack bundled with this Node cannot run.

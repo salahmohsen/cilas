@@ -129,7 +129,7 @@ Space files stay private and are served through authorization checks. Enrollment
 
 ## Local development
 
-Use Node.js 22, pnpm, and Docker for the local PostgreSQL service.
+Use Node.js 26.12.1 (see `.nvmrc`), pnpm, and Docker for the local PostgreSQL service.
 
 ```sh
 git clone https://github.com/salahmohsen/cilas.git
