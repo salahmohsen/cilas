@@ -717,7 +717,7 @@
     grid-template-columns: auto minmax(0, 1fr);
     justify-items: start;
     align-items: baseline;
-    row-gap: var(--space-1);
+    gap: var(--space-1);
   }
   .add {
     grid-column: 1 / -1;
