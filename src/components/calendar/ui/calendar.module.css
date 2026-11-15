@@ -710,6 +710,21 @@
   }
 }
 
+/* A week in a narrow column: each day's add button takes its own line, under the day, so it never runs into the next day's name. */
+@container week (40rem < inline-size <= 72rem) {
+  .dayHead {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    justify-items: start;
+    align-items: baseline;
+    row-gap: var(--space-1);
+  }
+  .add {
+    grid-column: 1 / -1;
+    margin-inline-start: 0;
+  }
+}
+
 @container week (max-inline-size: 40rem) {
   .frame {
     --narrow: 1;
