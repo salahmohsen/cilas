@@ -1,0 +1,276 @@
+import { expect, test, type Browser, type Locator, type Page } from '@playwright/test'
+import { getPayload, type Payload } from 'payload'
+
+import { consentAccept } from '../../src/lib/spaces-write'
+import config from '../../src/payload.config.js'
+import type { User } from '../../src/payload-types.js'
+import { createTracker, lockSpacesMode, uniq, uniqEmail } from '../int/fixtures'
+
+/**
+ * The session drawer's Edit form (ADR 0011 step 4, unit 5). A fellow of the
+ * course opens the drawer from the Calendar tab, edits the title and moves
+ * the meeting, saves, and the announcement dialog opens; the drawer and the
+ * tab show the saved session. Ticking Cancelled opens the dialog too; a
+ * change to the text alone opens none. It works on a course, space and
+ * fellow made for the run and removes them after. The meeting is in 2034, so
+ * the calendar opens on its week.
+ */
+const BASE = 'http://localhost:3000'
+const MEETING = '2034-10-05'
+const TITLE = 'E2E drawer session'
+
+const { track, cleanup } = createTracker()
+let payload: Payload
+let session: number
+let space: number
+let spacePath: string
+/** The site's spaces mode before the run; unset until it was read. */
+let modeBefore: 'off' | 'trial' | 'on' | undefined
+let unlock: (() => Promise<void>) | undefined
+let account: { email: string; password: string; id: number }
+let fellow: Page
+
+const sessionRow = () =>
+  payload.findByID({ collection: 'sessions', id: session, depth: 0, overrideAccess: true })
+
+/** A session's block in the calendar, by the title in its spoken name. */
+const block = (page: Page, title: string) =>
+  page.locator(`[data-span-id][aria-label^="${title}"]`).first()
+const drawer = (page: Page, title: string) => page.getByRole('dialog', { name: title, exact: true })
+const offer = (page: Page) => page.getByRole('dialog', { name: 'Announce this change?' })
+
+const signIn = async (browser: Browser) => {
+  const page = await (await browser.newContext()).newPage()
+  const path = `${spacePath}?tab=calendar`
+  await page.goto(`${BASE}/en/login?next=${encodeURIComponent(path)}`)
+  await page.getByRole('textbox', { name: 'Email', exact: true }).fill(account.email)
+  await page.getByLabel('Password', { exact: true }).fill(account.password)
+  await page.getByRole('button', { name: 'Sign in', exact: true }).click()
+  await page.waitForURL(`**${spacePath}?tab=calendar`, { timeout: 120_000 })
+  await expect(block(page, TITLE)).toBeVisible({ timeout: 120_000 })
+  return page
+}
+
+/** Opens the drawer on the session, from its block or by its link, then its Edit form. */
+const openForm = async (title: string, by: 'block' | 'link' = 'block') => {
+  if (by === 'block') await block(fellow, title).click()
+  else await fellow.goto(`${BASE}${spacePath}?tab=calendar&open=${session}`)
+  const panel = drawer(fellow, title)
+  await panel.getByRole('button', { name: 'Edit session', exact: true }).click()
+  await expect(panel.getByRole('textbox', { name: 'Title', exact: true })).toBeVisible({
+    timeout: 60_000,
+  })
+  return panel
+}
+
+const pickTime = async (panel: Locator, field: string, time: string) => {
+  await panel.getByRole('button', { name: new RegExp(`^${field}`) }).click()
+  // The list just closed may still be leaving; pick in this field's own list.
+  await panel
+    .getByRole('listbox', { name: `${field} options` })
+    .getByRole('option', { name: time, exact: true })
+    .click()
+}
+
+const closeDrawer = async (panel: Locator) => {
+  await panel.getByRole('button', { name: 'Close session', exact: true }).click()
+  await expect(panel).toBeHidden()
+}
+
+test.describe('session drawer Edit form', () => {
+  test.describe.configure({ mode: 'serial', timeout: 300_000 })
+
+  test.beforeAll(async ({ browser }) => {
+    // Playwright 1.58 starts all-hooks with the project timeout, not describe.timeout.
+    test.setTimeout(300_000)
+    unlock = await lockSpacesMode()
+    payload = await getPayload({ config, key: uniq('session-edit') })
+    const person = track(
+      'people',
+      await payload.create({
+        collection: 'people',
+        data: { name: 'session-edit-fellow', slug: uniq('session-edit-fellow') },
+        overrideAccess: true,
+      }),
+    ).id
+    const password = crypto.randomUUID()
+    const email = uniqEmail('session-edit-fellow')
+    const user = track(
+      'users',
+      await payload.create({
+        collection: 'users',
+        data: { email, password, roles: ['fellow'], person },
+        overrideAccess: true,
+      }),
+    ) as unknown as User
+    account = { email, password, id: user.id }
+
+    const place = track(
+      'places',
+      await payload.create({
+        collection: 'places',
+        data: {
+          name: 'Session edit e2e place',
+          slug: uniq('session-edit-place'),
+          city: uniq('E2E'),
+        },
+        overrideAccess: true,
+      }),
+    ).id
+    const cycle = track(
+      'cycles',
+      await payload.create({
+        collection: 'cycles',
+        data: { season: 'fall', start_year: 2034, place, start_date: '2034-10-04' },
+        overrideAccess: true,
+      }),
+    ).id
+    const slug = uniq('session-edit-course')
+    const course = track(
+      'courses',
+      await payload.create({
+        collection: 'courses',
+        data: {
+          title: 'Session edit e2e course',
+          slug,
+          course_type: 'THEMATIC',
+          tier: 'public',
+          cycle,
+          fellows: [person],
+          registration: { mode: 'closed' },
+          _status: 'published',
+        },
+        overrideAccess: true,
+      }),
+    ).id
+    spacePath = `/en/spaces/course/${slug}`
+    modeBefore =
+      (await payload.findGlobal({ slug: 'site-settings', overrideAccess: true })).spaces_mode ??
+      'off'
+    await payload.updateGlobal({
+      slug: 'site-settings',
+      data: { spaces_mode: 'on' },
+      overrideAccess: true,
+    })
+    const spaces = await payload.find({
+      collection: 'spaces',
+      where: { course: { equals: course } },
+      depth: 0,
+      overrideAccess: true,
+    })
+    expect(spaces.docs).toHaveLength(1)
+    space = track('spaces', spaces.docs[0]!.id)
+    await payload.update({
+      collection: 'spaces',
+      id: space,
+      data: { introduction_post: null },
+      overrideAccess: true,
+    })
+    session = (
+      await payload.create({
+        collection: 'sessions',
+        data: {
+          course,
+          title: TITLE,
+          meetings: [{ date: MEETING, start_time: '19:00', end_time: '21:00' }],
+        },
+        overrideAccess: true,
+      })
+    ).id
+    expect((await consentAccept({ payload, user })).ok).toBe(true)
+    fellow = await signIn(browser)
+  })
+
+  test.afterAll(async () => {
+    test.setTimeout(300_000)
+    await fellow?.context().close()
+    if (space && payload) {
+      for (const [collection, where] of [
+        ['space-posts', { space: { equals: space } }],
+        ['space-visits', { space: { equals: space } }],
+        ['space-consents', { account: { equals: account?.id ?? 0 } }],
+      ] as const) {
+        const rows = await payload.find({
+          collection,
+          where,
+          pagination: false,
+          overrideAccess: true,
+        })
+        for (const row of rows.docs) track(collection, row.id)
+      }
+    }
+    if (session && payload)
+      await payload.delete({ collection: 'sessions', id: session, overrideAccess: true })
+    if (payload) {
+      if (modeBefore)
+        await payload.updateGlobal({
+          slug: 'site-settings',
+          data: { spaces_mode: modeBefore },
+          overrideAccess: true,
+        })
+      await cleanup(payload)
+      await payload.destroy()
+    }
+    await unlock?.()
+  })
+
+  test('a fellow edits the title and moves the meeting; the offer opens and both views show the save', async () => {
+    const panel = await openForm(TITLE)
+    await panel.getByRole('textbox', { name: 'Title', exact: true }).fill('E2E drawer renamed')
+    await pickTime(panel, 'Starts', '8:00 PM')
+    await pickTime(panel, 'Ends', '10:00 PM')
+    await panel.getByRole('button', { name: 'Save changes', exact: true }).click()
+
+    const dialog = offer(fellow)
+    await expect(dialog).toBeVisible({ timeout: 60_000 })
+    await expect(dialog.getByText(/E2E drawer renamed moves/).first()).toBeVisible()
+    const row = await sessionRow()
+    expect(row.title).toBe('E2E drawer renamed')
+    expect(row.meetings?.[0]).toMatchObject({
+      date: MEETING,
+      start_time: '20:00',
+      end_time: '22:00',
+    })
+    await dialog.getByRole('button', { name: 'Skip', exact: true }).click()
+    await expect(dialog).toBeHidden()
+
+    // The drawer reads the session again, and the Calendar tab behind it follows the refresh.
+    const renamed = drawer(fellow, 'E2E drawer renamed')
+    await expect(renamed).toBeVisible()
+    await expect(renamed.getByText('20:00–22:00')).toBeVisible()
+    await closeDrawer(renamed)
+    await expect(block(fellow, 'E2E drawer renamed')).toHaveAccessibleName(
+      /^E2E drawer renamed, Thursday, October 5.*20:00/,
+    )
+  })
+
+  test('ticking Cancelled opens the offer', async () => {
+    const panel = await openForm('E2E drawer renamed')
+    await panel.getByRole('checkbox', { name: 'Cancelled', exact: true }).click()
+    await panel.getByRole('button', { name: 'Save changes', exact: true }).click()
+    const dialog = offer(fellow)
+    await expect(dialog).toBeVisible({ timeout: 60_000 })
+    await expect(dialog.getByText(/cancelled/).first()).toBeVisible()
+    expect((await sessionRow()).cancelled).toBe(true)
+    await dialog.getByRole('button', { name: 'Skip', exact: true }).click()
+    await expect(dialog).toBeHidden()
+    await closeDrawer(drawer(fellow, 'E2E drawer renamed'))
+  })
+
+  test('a change to the text alone opens no offer', async () => {
+    const before = (await sessionRow()).updatedAt
+    // A cancelled session may be off the calendar; its link opens the drawer.
+    const panel = await openForm('E2E drawer renamed', 'link')
+    await panel.getByRole('textbox', { name: 'Title', exact: true }).fill('E2E drawer text only')
+    await panel.getByRole('button', { name: 'Save changes', exact: true }).click()
+    const saved = drawer(fellow, 'E2E drawer text only')
+    await expect(saved.getByRole('button', { name: 'Edit session', exact: true })).toBeVisible({
+      timeout: 60_000,
+    })
+    await expect.poll(async () => (await sessionRow()).updatedAt).not.toBe(before)
+    // The offer's check has had time to answer; nothing opens.
+    await fellow.waitForTimeout(3_000)
+    await expect(offer(fellow)).toHaveCount(0)
+    await closeDrawer(saved)
+  })
+})

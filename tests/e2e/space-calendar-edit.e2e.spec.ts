@@ -183,7 +183,8 @@ test.describe('space calendar edit mode', () => {
   })
 
   test.afterAll(async () => {
-    test.setTimeout(120_000)
+    // The cleanup ran past 120 s on a loaded machine and left its rows.
+    test.setTimeout(300_000)
     await fellow?.context().close()
     if (space && payload) {
       for (const [collection, where] of [

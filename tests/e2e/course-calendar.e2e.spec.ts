@@ -266,7 +266,11 @@ test.describe('course calendar', () => {
 
     // The hours scroll in their own area. Scroll it to 06:00 so 07:00 is in reach.
     const area = calendar().locator('[data-scroll]')
-    await area.evaluate((el) => el.scrollTo({ top: 0, behavior: 'instant' }))
+    // The page scrolls the area to its top too, so 07:00 is in the viewport whatever the head's height.
+    await area.evaluate((el) => {
+      el.scrollIntoView({ block: 'start', behavior: 'instant' })
+      el.scrollTo({ top: 0, behavior: 'instant' })
+    })
     const track = calendar().locator('[data-track]:visible').first()
     const box = (await track.boundingBox())!
     const hour = box.height / 18

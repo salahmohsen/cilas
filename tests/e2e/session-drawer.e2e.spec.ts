@@ -30,7 +30,8 @@ let account: number
 let modeBefore: 'off' | 'trial' | 'on' = 'off'
 let unlock: (() => Promise<void>) | undefined
 
-const drawer = () => page.getByRole('dialog', { name: 'Session 1', exact: true })
+// The drawer's heading names the session by its title.
+const drawer = () => page.getByRole('dialog', { name: TITLE, exact: true })
 /** The one session view inside the drawer, named in full. */
 const sessionView = () => drawer().getByRole('region', { name: `Session 1: ${TITLE}` })
 const param = () => new URL(page.url()).searchParams.get('open')
