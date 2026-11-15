@@ -16,8 +16,8 @@ export type CourseMeta = {
   newSessions: number
   /**
    * What the timing removal did to the course, from the head snapshot (the base
-   * cannot know): `meetings` when the old pattern gave it no meeting and
-   * `make-archive-meetings.ts` gave it approximate ones; `weeks-lost` when it
+   * cannot know): `meetings` when the old pattern gave it no meeting and it
+   * has meetings now; `weeks-lost` when it
    * had only a typed length, which no meeting replaces.
    */
   archive?: 'meetings' | 'weeks-lost'

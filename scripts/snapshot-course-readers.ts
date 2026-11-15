@@ -182,8 +182,8 @@ for (const s of (
 
 /**
  * What the timing removal did to a course (`CourseMeta.archive`): the old
- * pattern gave it no meeting, and now it has some (made by
- * `make-archive-meetings.ts`), or it had only a typed length, which is gone.
+ * pattern gave it no meeting, and now it has some (dates from the CILAS
+ * backup, ADR 0011), or it had only a typed length, which is gone.
  */
 const archiveOf = (c: Course): CourseMeta['archive'] => {
   if (expandSchedule(c.schedule, c.sessions).length) return undefined

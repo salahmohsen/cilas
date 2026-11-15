@@ -103,9 +103,8 @@ const timesOf = ({ date, start_time, end_time }: Meeting): Meeting => ({
  * - Pattern meetings no row holds become new untitled sessions, one per week
  *   of slots, today's default share.
  * - Rows with no meeting keep their old order through `position`.
- * - A course the pattern gives no meeting gets none here. Its old start date,
- *   weeks and weekly times become approximate meetings in a later step
- *   (`archive-meetings-plan.ts`), which reads the old `schedule` group.
+ * - A course the pattern gives no meeting gets none here. Its dates come
+ *   later from the CILAS backup, as data (ADR 0011).
  */
 export const planCourseSessions = (
   course: OldCourse,

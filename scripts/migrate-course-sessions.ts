@@ -16,8 +16,8 @@
  * their old schedule changed (`apply-archive-start-dates.ts`); it stops before
  * any write when a space post names one of those sessions, by its old row ID
  * or its new ID.
- * A course the pattern gives no meeting gets none here: `make-archive-meetings.ts`
- * reads its old start date, weeks and weekly times and makes approximate ones.
+ * A course the pattern gives no meeting gets none here; its dates come later
+ * from the CILAS backup, as data (ADR 0011).
  * Each course is written in one transaction. Then
  * `scripts/verify-course-sessions.ts` checks the result.
  */

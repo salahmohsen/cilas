@@ -7,8 +7,7 @@
  * - Meetings: the new `meetingsOf` equals today's `expandSchedule`, meeting
  *   by meeting (day, times, cancelled), and each meeting sits in the session
  *   made from the old row that held it, or in a new untitled one when no row
- *   held it. A course the pattern gives no meeting gets none here; run this
- *   before `make-archive-meetings.ts`, which then gives it approximate ones.
+ *   held it. A course the pattern gives no meeting gets none here.
  * - Content: each old row's session has the same title, delivery, cancelled,
  *   materials and activities, and its description as Markdown.
  * - The course's first day and last day.
