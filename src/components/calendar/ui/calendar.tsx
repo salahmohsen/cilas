@@ -26,7 +26,7 @@ type Shared = {
   items: CalendarItem[]
   labels: CalendarLabels
   locale: string
-  /** Any Cairo day of the week to open on; today by default. */
+  /** The Cairo day to open on: its week, and that day where one day shows at a time. Today by default. */
   day?: string
   /** Ids of the items to mark as changed, in words and on their face. */
   marked?: ReadonlySet<string>
@@ -41,12 +41,14 @@ export type CalendarProps = Shared &
         onSave?: undefined
         newItemKind?: undefined
         onUnsavedChange?: undefined
+        onSaveIntent?: undefined
       }
     | {
         mode: 'edit'
         /**
-         * Gets every change at once. Reject to keep them and show why. Return
-         * the items as saved to show them, with their new versions.
+         * Gets every change at once. Reject to keep them and show why; reject
+         * with a `CalendarSaveRefusal` to also offer its way out. Return the
+         * items as saved to show them, with their new versions.
          */
         onSave: (
           changes: CalendarChange[],
@@ -58,6 +60,8 @@ export type CalendarProps = Shared &
          * the calendar leaves the page. A host warns before leaving while it is above 0.
          */
         onUnsavedChange?: (count: number) => void
+        /** The pointer or focus reached Save, so the host can load what a save shows next. */
+        onSaveIntent?: () => void
       }
   )
 
@@ -76,6 +80,7 @@ export function Calendar({
   onSave,
   newItemKind,
   onUnsavedChange,
+  onSaveIntent,
 }: CalendarProps) {
   const editable = mode === 'edit'
   const frame = useRef<HTMLDivElement>(null)
@@ -90,7 +95,7 @@ export function Calendar({
 
   const [start, setStart] = useState(() => weekStartOf(day ?? cairoNow().date))
   const [selectedIndex, setSelectedIndex] = useState(() =>
-    indexOfDay(weekOf(start), cairoNow().date),
+    indexOfDay(weekOf(start), day ?? cairoNow().date),
   )
   const days = useMemo(() => weekOf(start), [start])
   const todayIndex = now ? days.indexOf(now.date) : -1
@@ -367,7 +372,9 @@ export function Calendar({
             error={session.error}
             note={[droppedNote, session.changes.length ? told : ''].filter(Boolean).join(' ')}
             onSave={session.save}
+            onSaveIntent={onSaveIntent}
             onCancel={session.cancel}
+            onDiscard={session.cancel}
             onDismiss={session.dismissDropped}
           />
         ) : null}

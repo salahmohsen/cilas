@@ -57,6 +57,8 @@ export type CalendarLabels = {
   saving: string
   cancelEdits: string
   changes: (count: number) => string
+  /** A line in the save bar while changes wait, such as which other Save does not save them. */
+  saveNote?: string
   saveFailed: string
   /** Said when newly loaded items replace an item that has unsaved changes: they are gone. */
   dropped: (titles: string) => string
@@ -79,6 +81,8 @@ export type CalendarHostLabels = {
   newItem: string
   /** What the Save button says, when "Save" would be unclear beside another Save on the page. */
   save?: string
+  /** What the save bar says while changes wait, beside another Save on the page. */
+  saveNote?: string
   /** What the block menu's actions are called. Without it the calendar has no block menu. */
   menu?: Pick<
     CalendarMenuLabels,
@@ -92,7 +96,7 @@ export type CalendarTranslator = ReturnType<typeof useTranslations<'CalendarUi'>
 /** Every label, from the shared translations. The site and the admin both build theirs here. */
 export const calendarLabelsFrom = (
   t: CalendarTranslator,
-  { kind, newItem, menu, save }: CalendarHostLabels,
+  { kind, newItem, menu, save, saveNote }: CalendarHostLabels,
 ): CalendarLabels => ({
   name: t('name'),
   cairoTime: t('cairoTime'),
@@ -122,6 +126,7 @@ export const calendarLabelsFrom = (
   saving: t('saving'),
   cancelEdits: t('cancelEdits'),
   changes: (count) => t('changes', { count }),
+  saveNote,
   saveFailed: t('saveFailed'),
   dropped: (titles) => t('dropped', { titles }),
   dismiss: t('dismiss'),

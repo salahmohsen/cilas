@@ -11,10 +11,11 @@ export function useCalendarLabels({
   newItem,
   menu,
   save,
+  saveNote,
 }: CalendarHostLabels): CalendarLabels {
   const t = useTranslations('CalendarUi')
   return useMemo(
-    () => calendarLabelsFrom(t, { kind, newItem, menu, save }),
-    [t, kind, newItem, menu, save],
+    () => calendarLabelsFrom(t, { kind, newItem, menu, save, saveNote }),
+    [t, kind, newItem, menu, save, saveNote],
   )
 }
