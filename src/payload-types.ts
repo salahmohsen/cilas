@@ -1906,6 +1906,7 @@ export interface Session {
         date: string;
         start_time?: string | null;
         end_time?: string | null;
+        approximate?: boolean | null;
         id?: string | null;
       }[]
     | null;
@@ -4677,6 +4678,7 @@ export interface SessionsSelect<T extends boolean = true> {
         date?: T;
         start_time?: T;
         end_time?: T;
+        approximate?: T;
         id?: T;
       };
   delivery?: T;

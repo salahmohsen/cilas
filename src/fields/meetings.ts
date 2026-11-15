@@ -2,8 +2,10 @@ import type { ArrayField, TextFieldSingleValidation } from 'payload'
 import { text } from 'payload/shared'
 
 import { cairoDay } from '@/lib/cairo-day'
-import type { Meeting } from '@/lib/meetings'
+import { keepApproximate, type Meeting } from '@/lib/meetings'
 import { endAfterStart, timeOfDay } from './validators'
+
+type TimeField = Exclude<keyof Meeting, 'approximate'>
 
 /**
  * What is wrong with a meeting, or true. The one check for the shape of a
@@ -11,7 +13,7 @@ import { endAfterStart, timeOfDay } from './validators'
  * start and an end in `HH:MM`, the end after the start.
  */
 export const meetingProblem = (
-  field: keyof Meeting,
+  field: TimeField,
   meeting: Partial<Record<keyof Meeting, unknown>>,
 ): true | string => {
   const { date, start_time: start, end_time: end } = meeting
@@ -28,7 +30,7 @@ export const meetingProblem = (
 }
 
 const meetingCheck =
-  (field: keyof Meeting): TextFieldSingleValidation =>
+  (field: TimeField): TextFieldSingleValidation =>
   (value, options) => {
     // Payload's own text checks (required, length) first.
     const base = text(value, options)
@@ -48,6 +50,16 @@ export const meetingsField = (): ArrayField => ({
   admin: {
     description:
       'When it meets, in Cairo time: one row a meeting. Leave both times empty for an all-day meeting.',
+  },
+  hooks: {
+    // Every write path (the calendar, the session drawer, an AI assistant)
+    // saves through here, so an edited meeting loses `approximate` in one place.
+    beforeChange: [
+      ({ value, previousValue }) =>
+        Array.isArray(value)
+          ? keepApproximate(previousValue as Meeting[] | undefined, value)
+          : value,
+    ],
   },
   fields: [
     {
@@ -77,6 +89,15 @@ export const meetingsField = (): ArrayField => ({
           admin: { width: '30%', placeholder: '21:00' },
         },
       ],
+    },
+    {
+      // Set only by `scripts/make-archive-meetings.ts --mark-approximate`;
+      // cleared by the hook above. Hidden: a person confirms a meeting by
+      // editing its day or times, not by a checkbox.
+      name: 'approximate',
+      type: 'checkbox',
+      defaultValue: false,
+      admin: { hidden: true },
     },
   ],
 })

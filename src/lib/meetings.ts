@@ -17,6 +17,11 @@ export type Meeting = {
   date: string
   start_time?: string | null
   end_time?: string | null
+  /**
+   * Nobody held it on this day and time: `scripts/make-archive-meetings.ts`
+   * made it from an archive course's old timing. Kept by `keepApproximate`.
+   */
+  approximate?: boolean | null
 }
 
 /** What this module reads from a session document. */
@@ -28,9 +33,43 @@ export type SessionTimes = {
 }
 
 /** A meeting with the session it belongs to: 1-based, in `sessionsInOrder`. */
-export type CourseMeeting = Meeting & { session: number; cancelled?: true }
+export type CourseMeeting = Omit<Meeting, 'approximate'> & {
+  session: number
+  cancelled?: true
+  approximate?: true
+}
 
 export const isAllDay = (m: Meeting): boolean => !m.start_time && !m.end_time
+
+/**
+ * Whether nobody held the meeting at this date and time (an approximate
+ * archive meeting). The one test every reader uses: the feed and the
+ * structured data leave such meetings out; the pages show them and say once
+ * that the dates are approximate.
+ */
+export const isApproximate = (m: { approximate?: boolean | null }): boolean =>
+  m.approximate === true
+
+/** Whether the same day and times: an empty time is no time. */
+export const sameWhen = (a: Meeting, b: Meeting): boolean =>
+  a.date === b.date &&
+  (a.start_time || null) === (b.start_time || null) &&
+  (a.end_time || null) === (b.end_time || null)
+
+/**
+ * A person confirms a meeting by editing it. A meeting stays approximate
+ * only when the stored meetings (`previous`) hold an approximate one on the
+ * same day at the same times; a moved or new meeting is not. The flag that
+ * comes in is ignored: a form or an AI assistant sends back what it read.
+ */
+export const keepApproximate = <T extends Meeting>(
+  previous: readonly Meeting[] | null | undefined,
+  next: readonly T[],
+): (T & { approximate: boolean })[] =>
+  next.map((m) => ({
+    ...m,
+    approximate: (previous ?? []).some((p) => isApproximate(p) && sameWhen(p, m)),
+  }))
 
 /** By day, then start time; an all-day meeting comes first on its day. */
 export const byWhen = (a: Meeting, b: Meeting): number =>
@@ -64,6 +103,7 @@ export const meetingsOf = (sessions: readonly SessionTimes[]): CourseMeeting[] =
         end_time: m.end_time || null,
         session: index + 1,
         ...(s.cancelled ? { cancelled: true as const } : {}),
+        ...(isApproximate(m) ? { approximate: true as const } : {}),
       })),
     )
     .sort(byWhen)

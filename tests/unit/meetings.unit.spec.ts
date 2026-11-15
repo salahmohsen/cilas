@@ -4,6 +4,8 @@ import {
   byWhen,
   firstDay,
   isAllDay,
+  isApproximate,
+  keepApproximate,
   lastDay,
   meetingKey,
   meetingsOf,
@@ -436,5 +438,53 @@ describe('meetingKey', () => {
     const after = numberedSessions([{ meetings: [at('2026-03-01'), at('2026-03-10')] }])
     const key = (s: typeof before) => meetingKey(7, s[0]!.meetings.at(-1)!)
     expect(key(after)).toBe(key(before))
+  })
+})
+
+describe('approximate meetings', () => {
+  const approx = (m: Meeting): Meeting => ({ ...m, approximate: true })
+
+  it('isApproximate is true only for a meeting flagged true', () => {
+    expect(isApproximate(approx(at('2026-03-03')))).toBe(true)
+    expect(isApproximate(at('2026-03-03'))).toBe(false)
+    expect(isApproximate({ ...at('2026-03-03'), approximate: null })).toBe(false)
+  })
+
+  it('meetingsOf carries the flag to the readers', () => {
+    const list = meetingsOf([{ meetings: [approx(at('2026-03-03')), at('2026-03-10')] }])
+    expect(list.map((m) => m.approximate)).toEqual([true, undefined])
+  })
+
+  describe('keepApproximate: a person confirms a meeting by editing it', () => {
+    const stored = [approx(at('2026-03-03')), approx({ date: '2026-03-10' })]
+
+    it('keeps the flag on a meeting with the same day and times', () => {
+      const next = keepApproximate(stored, [at('2026-03-03'), { date: '2026-03-10' }])
+      expect(next.map((m) => m.approximate)).toEqual([true, true])
+    })
+
+    it('drops it from a meeting moved to another day or time', () => {
+      const next = keepApproximate(stored, [
+        at('2026-03-04'),
+        { date: '2026-03-10', start_time: '10:00', end_time: '12:00' },
+      ])
+      expect(next.map((m) => m.approximate)).toEqual([false, false])
+    })
+
+    it('never gives it to a new meeting, whatever flag comes in', () => {
+      expect(keepApproximate(stored, [approx(at('2026-03-17'))])[0]!.approximate).toBe(false)
+      expect(keepApproximate(undefined, [approx(at('2026-03-03'))])[0]!.approximate).toBe(false)
+    })
+
+    it('does not keep a flag the stored meeting did not have', () => {
+      expect(keepApproximate([at('2026-03-03')], [approx(at('2026-03-03'))])[0]!.approximate).toBe(
+        false,
+      )
+    })
+
+    it('reads an empty time as no time, so a form that sends "" keeps the flag', () => {
+      const next = keepApproximate(stored, [{ date: '2026-03-10', start_time: '', end_time: null }])
+      expect(next[0]!.approximate).toBe(true)
+    })
   })
 })

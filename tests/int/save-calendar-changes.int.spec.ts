@@ -173,6 +173,90 @@ afterAll(async () => {
   await payload.destroy()
 })
 
+/**
+ * Marks a session's meetings approximate, as the archive backfill does: with
+ * SQL, since the meetings hook keeps only flags that are stored already.
+ */
+const markApproximate = (id: number) =>
+  payload.db.pool.query('UPDATE sessions_meetings SET approximate = true WHERE _parent_id = $1', [
+    id,
+  ])
+
+describe('approximate meetings on the calendar', () => {
+  it('a moved meeting loses the flag; an untouched one keeps it', async () => {
+    const id = await makeSession(course, at('2035-11-05', null, null), at('2035-11-12', null, null))
+    await markApproximate(id)
+    const before = await stored(id)
+    expect(before.meetings.map((m) => m.approximate)).toEqual([true, true])
+    const [first, second] = before.meetings
+
+    const result = await save([
+      {
+        op: 'move-block',
+        itemId: String(id),
+        version: before.version,
+        blockId: second!.id!,
+        ...at('2035-11-13', '18:00', '20:00'),
+      },
+    ])
+
+    expect(result.ok).toBe(true)
+    const after = await stored(id)
+    expect(after.meetings.find((m) => m.id === first!.id)?.approximate).toBe(true)
+    expect(after.meetings.find((m) => m.id === second!.id)).toMatchObject({
+      ...at('2035-11-13', '18:00', '20:00'),
+      approximate: false,
+    })
+  })
+
+  it('a meeting added to an approximate session is not approximate', async () => {
+    const id = await makeSession(course, at('2035-11-19', null, null))
+    await markApproximate(id)
+    const before = await stored(id)
+
+    const result = await save([
+      {
+        op: 'add-block',
+        itemId: String(id),
+        version: before.version,
+        blockId: 'tmp-added',
+        ...at('2035-11-20', null, null),
+      },
+    ])
+
+    expect(result.ok).toBe(true)
+    const after = (await stored(id)).meetings
+    expect(after.find((m) => m.date === '2035-11-19')?.approximate).toBe(true)
+    expect(after.find((m) => m.date === '2035-11-20')?.approximate).toBe(false)
+  })
+
+  it('a save that does not name the meetings keeps them and their flags', async () => {
+    const id = await makeSession(course, at('2035-11-26', null, null))
+    await markApproximate(id)
+    await payload.update({
+      collection: 'sessions',
+      id,
+      data: { title: 'Renamed probe' },
+      overrideAccess: true,
+    })
+    const after = await stored(id)
+    expect(after.meetings).toHaveLength(1)
+    expect(after.meetings[0]).toMatchObject({ date: '2035-11-26', approximate: true })
+  })
+
+  it('a save that sends the meetings back with a flag cannot mark a meeting', async () => {
+    const id = await makeSession(course, at('2035-12-03'))
+    const before = await stored(id)
+    await payload.update({
+      collection: 'sessions',
+      id,
+      data: { meetings: before.meetings.map((m) => ({ ...m, approximate: true })) },
+      overrideAccess: true,
+    })
+    expect((await stored(id)).meetings[0]?.approximate).toBe(false)
+  })
+})
+
 describe('saveCalendarChanges', () => {
   it('lets an admin move a meeting, and keeps its row and the course’s days', async () => {
     const id = await makeSession(course, at('2035-10-05'), at('2035-10-12'))

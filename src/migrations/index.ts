@@ -89,6 +89,7 @@ import * as migration_20261113_085854_course_sessions_collection from './2026111
 import * as migration_20261113_140328_course_announced_timing from './20261113_140328_course_announced_timing';
 import * as migration_20261113_155502_space_post_course_session from './20261113_155502_space_post_course_session';
 import * as migration_20261114_072207_drop_course_timing_fields from './20261114_072207_drop_course_timing_fields';
+import * as migration_20261115_125934_add_approximate_meetings from './20261115_125934_add_approximate_meetings';
 
 export const migrations = [
   {
@@ -544,6 +545,11 @@ export const migrations = [
   {
     up: migration_20261114_072207_drop_course_timing_fields.up,
     down: migration_20261114_072207_drop_course_timing_fields.down,
-    name: '20261114_072207_drop_course_timing_fields'
+    name: '20261114_072207_drop_course_timing_fields',
+  },
+  {
+    up: migration_20261115_125934_add_approximate_meetings.up,
+    down: migration_20261115_125934_add_approximate_meetings.down,
+    name: '20261115_125934_add_approximate_meetings'
   },
 ];

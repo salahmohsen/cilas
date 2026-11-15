@@ -46,6 +46,8 @@ export const FIELD_REGISTRY = {
       last_day: 'Computed from the sessions’ meetings',
       'syllabus.course': 'The course being written',
       'syllabus.position': 'Computed from the order of syllabus',
+      'syllabus.meetings.approximate':
+        'Set by the archive script; the meetings hook clears it when a meeting is edited',
       'meta.overview': 'Admin UI',
       'meta.preview': 'Admin UI',
     },
