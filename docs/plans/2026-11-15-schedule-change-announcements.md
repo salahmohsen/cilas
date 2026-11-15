@@ -39,5 +39,6 @@ Each unit ends in a check, and the next unit starts only when that check passes.
 
 ## Decision trail
 
-| Unit | Commit | Check | Result |
-| ---- | ------ | ----- | ------ |
+| Unit | Commit     | Check                                                                                                                                                                                         | Result                                                                    |
+| ---- | ---------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------- |
+| 1    | `11a57ec4` | `tests/unit/schedule-changes.unit.spec.ts`: 18 tests. 3 faults put in (no today filter, before and after swapped, `>` for `>=`): each makes tests fail. Typecheck, lint, 197 unit files pass. | `scheduleChanges` and `scheduleChangeText` done. No UI, no action, no DB. |
