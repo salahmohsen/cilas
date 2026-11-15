@@ -3242,3 +3242,8 @@ button.rsvpCell {
 .sessionDrawerActions .sessionPosts {
   margin-block-start: 0;
 }
+
+/* In a syllabus row the links follow the session's text, as the posts link did. */
+.sessionRowActions {
+  margin-block-start: var(--space-3);
+}

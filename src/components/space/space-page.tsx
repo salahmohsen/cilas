@@ -588,7 +588,9 @@ export async function SpacePage({
                     body: (
                       <>
                         {entry.body}
-                        <div className={styles.sessionDrawerActions}>
+                        <div
+                          className={`${styles.sessionDrawerActions} ${styles.sessionRowActions}`}
+                        >
                           <SessionLink
                             id={entry.id}
                             href={sessionDrawerHref(`${path}?tab=syllabus`, entry.id)}
