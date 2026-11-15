@@ -3,6 +3,7 @@ import { getPayload, type Payload } from 'payload'
 import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest'
 
 import { loadCalendarItems } from '@/actions/load-calendar-items'
+import { loadSessionView } from '@/actions/load-session-view'
 import { saveCalendarChanges } from '@/actions/save-calendar-changes'
 import { currentReader } from '@/lib/reader'
 import config from '@/payload.config'
@@ -291,6 +292,18 @@ describe('space calendar read side', () => {
       expect(result.ok).toBe(true)
       if (result.ok)
         expect(result.items.find((item) => item.id === String(session))?.tone).toBe(tone)
+      // The session drawer follows the same rule: the draft reaches editors only.
+      const view = await loadSessionView(String(session))
+      expect(view).toMatchObject({
+        ok: true,
+        canEdit: tone === 'yellow',
+        course: {
+          title: tone === 'blue' ? 'Published calendar' : 'Pending calendar',
+          course_type: tone === 'blue' ? 'THEMATIC' : 'CORE',
+        },
+        session: { number: 1, session: { id: session, title: 'Published session' } },
+        spaceHref: expect.stringMatching(/^\/en\/spaces\/course\/space-calendar-course-0/),
+      })
     }
   })
 
@@ -340,7 +353,7 @@ describe('space calendar read side', () => {
         overrideAccess: true,
       }),
     )
-    await payload.create({
+    const hidden = await payload.create({
       collection: 'sessions',
       data: { course: draft.id, title: 'Private session' },
       overrideAccess: true,
@@ -348,6 +361,13 @@ describe('space calendar read side', () => {
     signIn(student)
     const result = await loadCalendarItems({ kind: 'course', id: String(draft.id) })
     expect(result.ok).toBe(false)
+    expect(await loadSessionView(String(hidden.id))).toEqual({ ok: false, error: 'not-found' })
+    signIn(admin)
+    expect(await loadSessionView(String(hidden.id))).toMatchObject({
+      ok: true,
+      canEdit: true,
+      course: { title: 'Unpublished calendar' },
+    })
   })
 
   it('refuses an event change in a mixed batch and saves nothing', async () => {
@@ -393,8 +413,19 @@ describe('space calendar read side', () => {
   it('requires a signed-in reader and refuses a space the reader cannot read', async () => {
     signIn(null)
     expect(await load()).toEqual({ ok: false, error: { code: 'unauthenticated' } })
+    expect(await loadSessionView(String(session))).toEqual({
+      ok: false,
+      error: 'unauthenticated',
+    })
     // A fresh account is not enrolled in the course.
     signIn((await account('space-calendar-outsider', ['member'])).user)
     expect(await load()).toMatchObject({ ok: false })
+    // The published course's page shows its sessions to anyone; its space stays closed.
+    expect(await loadSessionView(String(session))).toMatchObject({
+      ok: true,
+      canEdit: false,
+      spaceHref: null,
+    })
+    expect(await loadSessionView('not-a-number')).toEqual({ ok: false, error: 'not-found' })
   })
 })

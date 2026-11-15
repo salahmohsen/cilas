@@ -131,10 +131,14 @@ describe('a schedule block in a post', () => {
     ).toBeInTheDocument()
   })
 
-  it('opens the posts about a session, as a session chip does', () => {
+  it('opens the session drawer on the session, in place, not the feed', () => {
+    window.history.replaceState(null, '', '/en/spaces/probe/posts/5')
     view(schedule(['12']))
     fireEvent.click(screen.getByRole('button', { name: /^Session 2, Tuesday/ }))
-    expect(push).toHaveBeenCalledWith('/en/spaces/probe?session=12')
+    expect(push).not.toHaveBeenCalled()
+    expect(`${window.location.pathname}${window.location.search}`).toBe(
+      '/en/spaces/probe/posts/5?open=12',
+    )
   })
 
   it('says so in a short line when its sessions are gone or the course is not readable', () => {
