@@ -9,13 +9,16 @@
  * - a navigation the app starts in code (a tab switch, a Done button): the
  *   code calls `leave` with its way to go on.
  *
- * Back and Forward cannot be stopped. One guard holds at a time.
+ * Back and Forward cannot be stopped. The newest guard asks.
  */
 
 /** Shows the question; calls `go` when the person chooses to leave. */
 type Ask = (go: () => void) => void
 
-let asking: Ask | null = null
+type Guard = { ask: Ask; navigate: (href: string) => void }
+
+/** The guards held now; the last one asks. A form inside an editor guards over it. */
+const guards: Guard[] = []
 
 /** A click that goes to another page of this site, as its URL; null for any other click. */
 export const leavingHref = (event: MouseEvent): string | null => {
@@ -31,37 +34,42 @@ export const leavingHref = (event: MouseEvent): string | null => {
   return anchor.href
 }
 
+const onBeforeUnload = (event: BeforeUnloadEvent) => event.preventDefault()
+
+const onClick = (event: MouseEvent) => {
+  const guard = guards.at(-1)
+  const href = guard && leavingHref(event)
+  if (!guard || !href) return
+  event.preventDefault()
+  event.stopPropagation()
+  guard.ask(() => guard.navigate(href))
+}
+
 /**
  * Holds the guard until the returned function runs. `navigate` follows a
- * link the person chose to leave by, in the app's own router.
+ * link the person chose to leave by, in the app's own router. A guard taken
+ * while another holds asks first; its release gives the question back.
  */
-export function guardLeaving({
-  ask,
-  navigate,
-}: {
-  ask: Ask
-  navigate: (href: string) => void
-}): () => void {
-  const onBeforeUnload = (event: BeforeUnloadEvent) => event.preventDefault()
-  const onClick = (event: MouseEvent) => {
-    const href = leavingHref(event)
-    if (!href) return
-    event.preventDefault()
-    event.stopPropagation()
-    ask(() => navigate(href))
+export function guardLeaving(guard: Guard): () => void {
+  const entry = { ...guard }
+  if (guards.length === 0) {
+    window.addEventListener('beforeunload', onBeforeUnload)
+    document.addEventListener('click', onClick, true)
   }
-  window.addEventListener('beforeunload', onBeforeUnload)
-  document.addEventListener('click', onClick, true)
-  asking = ask
+  guards.push(entry)
   return () => {
+    const at = guards.indexOf(entry)
+    if (at === -1) return
+    guards.splice(at, 1)
+    if (guards.length > 0) return
     window.removeEventListener('beforeunload', onBeforeUnload)
     document.removeEventListener('click', onClick, true)
-    if (asking === ask) asking = null
   }
 }
 
 /** A navigation the app starts in code: it goes at once, or after the guard's question. */
 export function leave(go: () => void): void {
-  if (asking) asking(go)
+  const guard = guards.at(-1)
+  if (guard) guard.ask(go)
   else go()
 }
