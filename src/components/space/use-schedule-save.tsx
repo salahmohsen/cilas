@@ -24,30 +24,24 @@ type ReturnTo = () => HTMLElement | null
 const changeable = (items: readonly CalendarItem[]) => items.filter((item) => !item.readOnly)
 
 /**
- * The one way a host saves schedule changes and tells people (ADR 0011,
- * "Saving and telling people"): `saveCalendarChanges` on the host's parent,
- * then, when the save changed what counts (`scheduleChanges` on the server),
- * the step 3 announcement dialog for the course's spaces. A failed save
- * offers nothing; a stale one keeps the changes and offers "Reload and lose
- * my changes", which runs `reload`. The host renders `dialog` and `failed`.
+ * The offer half of a schedule save (ADR 0011, "Saving and telling people"):
+ * given the course's items before and after a save, `scheduleChanges` on the
+ * server decides what counts, and the step 3 announcement dialog opens for
+ * the course's spaces; nothing opens when nothing counts. The host renders
+ * `dialog` and `failed`.
  */
-export function useScheduleSave({
-  parent,
+export function useScheduleOffer({
   courseId,
   locale,
   language,
   text,
-  reload,
 }: {
-  /** The calendar's parent, as `saveCalendarChanges` takes it. */
-  parent: { kind: string; id: string }
   courseId: string
   /** The language the items are read in. */
   locale: string
   /** The page's language, for the dialog. */
   language: 'en' | 'ar'
   text: ScheduleSaveText
-  reload: () => void
 }) {
   const [offered, setOffered] = useState<{ offers: ScheduleOffer[]; returnTo: ReturnTo } | null>(
     null,
@@ -65,6 +59,50 @@ export function useScheduleSave({
       },
     )
   }
+
+  const dialog: ReactNode = offered ? (
+    <ScheduleOfferDialog
+      offers={offered.offers}
+      labels={text.offerLabels}
+      locale={language}
+      dir={language === 'ar' ? 'rtl' : 'ltr'}
+      onClose={() => setOffered(null)}
+      returnFocus={offered.returnTo}
+    />
+  ) : null
+
+  return {
+    offer,
+    /** Loads the dialog's code, for when Save is about to be pressed. */
+    preload: ScheduleOfferDialog.preload,
+    /** The schedule saved, and the offer could not load. */
+    failed,
+    dialog,
+  }
+}
+
+/**
+ * The one way a host saves schedule changes and tells people:
+ * `saveCalendarChanges` on the host's parent, then the offer
+ * (`useScheduleOffer`). A failed save offers nothing; a stale one keeps the
+ * changes and offers "Reload and lose my changes", which runs `reload`. The
+ * host renders `dialog` and `failed`.
+ */
+export function useScheduleSave({
+  parent,
+  reload,
+  ...offerOptions
+}: {
+  /** The calendar's parent, as `saveCalendarChanges` takes it. */
+  parent: { kind: string; id: string }
+  courseId: string
+  locale: string
+  language: 'en' | 'ar'
+  text: ScheduleSaveText
+  reload: () => void
+}) {
+  const offering = useScheduleOffer(offerOptions)
+  const { locale, text } = offerOptions
 
   /**
    * Saves `changes`; resolves to the items as saved, or rejects with what the
@@ -85,28 +123,9 @@ export function useScheduleSave({
         })
       throw new SaveRefused(text.errorText(result.error))
     }
-    offer(before, result.items, returnTo)
+    offering.offer(before, result.items, returnTo)
     return result.items
   }
 
-  const dialog: ReactNode = offered ? (
-    <ScheduleOfferDialog
-      offers={offered.offers}
-      labels={text.offerLabels}
-      locale={language}
-      dir={language === 'ar' ? 'rtl' : 'ltr'}
-      onClose={() => setOffered(null)}
-      returnFocus={offered.returnTo}
-    />
-  ) : null
-
-  return {
-    save,
-    offer,
-    /** Loads the dialog's code, for when Save is about to be pressed. */
-    preload: ScheduleOfferDialog.preload,
-    /** The schedule saved, and the offer could not load. */
-    failed,
-    dialog,
-  }
+  return { save, ...offering }
 }
