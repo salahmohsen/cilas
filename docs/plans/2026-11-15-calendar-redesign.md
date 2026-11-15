@@ -41,6 +41,8 @@ Every calendar (admin Sessions tab, space Calendar tab, schedule block in posts,
 
 7. **12-hour times only.** The 24h/12h switch goes; times always show in the 12-hour form ("11 AM", "10:30 – 11:30 AM"; Arabic with its own AM/PM words). Unit 1 removes the switch, `use-hour12.ts` and its labels, and keeps the time format in one place in `calendar-time.ts`.
 
+8. **Unscheduled sessions are split buttons** (reference `reference-split-button.png`; Arc `split-button`, already installed in `src/components/arc/split-button`). The main part shows the session and opens it (the popover, as a block does), and in edit mode is still the drag handle onto a day. The arrow part opens the menu of days to place it on (today's `placeOnDay` list). Not editable (view mode, or `readOnly`): no arrow part, the main part only. This replaces today's separate button plus `DropdownMenu` in `unscheduled-tray.tsx`. Read the component with the Arc MCP (`get_component`) before use.
+
 ## Open points (owner)
 
 Asked 2026-11-15, not answered yet: the desktop view switch (Month, Week, Day, and Agenda?); month view popover only; what the panel holds; the dashed outline (unsaved change?); the primary action in view mode; the order of units; the step 4 e2e specs that change; and, from the phone images, the menu button at the start of the phone toolbar, the phone default view, and the weekend shade (Friday only?).
