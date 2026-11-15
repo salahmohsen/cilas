@@ -579,7 +579,7 @@
       "unauthenticated": "Sign in again to save.",
       "forbidden": "You may not change these sessions.",
       "notFound": "A session or meeting is gone. Reload to see the latest.",
-      "stale": "Someone else changed {named, select, true {{name}} other {a session}} after the calendar loaded. Your changes are not saved.",
+      "stale": "Someone else changed {named, select, true {{name}} other {a session}} after the calendar loaded.",
       "invalid": "A change is not valid. {message}",
       "failed": "Something went wrong. Try again."
     },

@@ -292,7 +292,7 @@ test.describe('course schedule announcements', () => {
     })
     await saveButton().click()
     await expect(calendar().getByRole('alert')).toContainText(
-      'Session 1: E2E first session changed elsewhere',
+      'The changes were not saved. They are still here. Someone else changed Session 1: E2E first session changed elsewhere after the calendar loaded.',
     )
     await expect(unsaved('1 unsaved change')).toBeVisible()
     await expect(dialog()).toHaveCount(0)

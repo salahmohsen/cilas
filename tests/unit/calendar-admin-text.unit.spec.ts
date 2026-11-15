@@ -20,15 +20,13 @@ describe('calendarAdminText', () => {
     const english = calendarAdminText('en', en)
     expect(
       english.errorText({ code: 'stale', itemId: '1', name: 'Session 3: Reading Fanon' }),
-    ).toBe(
-      'Someone else changed Session 3: Reading Fanon after the calendar loaded. Your changes are not saved.',
-    )
+    ).toBe('Someone else changed Session 3: Reading Fanon after the calendar loaded.')
     expect(english.errorText({ code: 'stale', itemId: '1' })).toBe(
-      'Someone else changed a session after the calendar loaded. Your changes are not saved.',
+      'Someone else changed a session after the calendar loaded.',
     )
     expect(
       calendarAdminText('ar', ar).errorText({ code: 'stale', itemId: '1', name: 'الجلسة ٣' }),
-    ).toBe('غيّر شخص آخر الجلسة ٣ بعد تحميل التقويم. لم تُحفظ تغييراتك.')
+    ).toBe('غيّر شخص آخر الجلسة ٣ بعد تحميل التقويم.')
     expect(english.errorText({ code: 'invalid', message: 'Use a real day.' })).toBe(
       'A change is not valid. Use a real day.',
     )
