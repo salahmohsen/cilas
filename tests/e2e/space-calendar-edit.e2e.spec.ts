@@ -74,7 +74,7 @@ test.describe('space calendar edit mode', () => {
     // Playwright 1.58 starts all-hooks with the project timeout, not describe.timeout.
     test.setTimeout(300_000)
     unlock = await lockSpacesMode()
-    payload = await getPayload({ config })
+    payload = await getPayload({ config, key: uniq('space-calendar-edit') })
     const account = async (name: string, roles: User['roles']) => {
       const person = track(
         'people',

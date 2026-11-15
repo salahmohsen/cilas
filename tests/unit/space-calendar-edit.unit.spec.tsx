@@ -205,6 +205,34 @@ describe('the Calendar tab in edit mode', () => {
     )
     await waitFor(() => expect(block()).toHaveAccessibleName(/20:00 to 21:00$/))
     expect(scheduleOffers).not.toHaveBeenCalled()
+    fireEvent.click(screen.getByRole('button', { name: 'Done' }))
+    await screen.findByRole('button', { name: 'Edit' })
+    expect(block()).toHaveAccessibleName(/20:00 to 21:00$/)
+  })
+
+  it.each(['refused', 'rejected'])('shows a failed reload (%s)', async (failure) => {
+    vi.mocked(saveCalendarChanges).mockResolvedValue({
+      ok: false,
+      error: { code: 'stale', itemId: '3', name: 'Session 1: Week 3' },
+    })
+    if (failure === 'refused')
+      vi.mocked(loadCalendarItems).mockResolvedValue({
+        ok: false,
+        error: { code: 'unauthenticated' },
+      })
+    else vi.mocked(loadCalendarItems).mockRejectedValue(new Error('Connection lost'))
+    show()
+    await startEditing()
+    move()
+    await pressSave()
+    fireEvent.click(await screen.findByRole('button', { name: 'Reload and lose my changes' }))
+    await waitFor(() =>
+      expect(
+        screen
+          .getAllByRole('alert')
+          .some((alert) => alert.textContent?.includes(en.Spaces.calendarFailed)),
+      ).toBe(true),
+    )
   })
 
   it('asks before Done while changes wait: Stay keeps them, Leave anyway drops them', async () => {

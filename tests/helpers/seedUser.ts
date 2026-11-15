@@ -1,4 +1,4 @@
-import { getPayload } from 'payload'
+import { getPayload, type Payload } from 'payload'
 import type { User } from '../../src/payload-types.js'
 import config from '../../src/payload.config.js'
 
@@ -10,8 +10,8 @@ export const testUser = {
   roles: ['super_admin'] as User['roles'],
 }
 
-export async function seedTestUser(): Promise<void> {
-  const payload = await getPayload({ config })
+export async function seedTestUser(payload?: Payload): Promise<void> {
+  payload ??= await getPayload({ config })
 
   await payload.create({
     collection: 'users',
@@ -19,8 +19,8 @@ export async function seedTestUser(): Promise<void> {
   })
 }
 
-export async function cleanupTestUser(): Promise<void> {
-  const payload = await getPayload({ config })
+export async function cleanupTestUser(payload?: Payload): Promise<void> {
+  payload ??= await getPayload({ config })
 
   await payload.delete({
     collection: 'users',

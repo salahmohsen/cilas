@@ -81,10 +81,13 @@ export function SpaceCalendarEditor({
     text,
     reload: () => {
       setReloadFailed(false)
-      void loadCalendarItems({ kind: 'space', id: spaceId }, locale).then((result) => {
-        if (result.ok) onItems(result.items)
-        else setReloadFailed(true)
-      })
+      void loadCalendarItems({ kind: 'space', id: spaceId }, locale).then(
+        (result) => {
+          if (result.ok) onItems(result.items)
+          else setReloadFailed(true)
+        },
+        () => setReloadFailed(true),
+      )
     },
   })
 

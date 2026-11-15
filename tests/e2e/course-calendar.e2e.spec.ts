@@ -78,8 +78,8 @@ test.describe('course calendar', () => {
   test.beforeAll(async ({ browser }) => {
     // Playwright 1.58 starts all-hooks with the project timeout, not describe.timeout.
     test.setTimeout(300_000)
-    await seedTestUser()
-    payload = await getPayload({ config })
+    payload = await getPayload({ config, key: uniq('course-calendar') })
+    await seedTestUser(payload)
     const place = track(
       'places',
       await payload.create({
@@ -142,7 +142,7 @@ test.describe('course calendar', () => {
     test.setTimeout(120_000)
     await page?.context().close()
     await cleanup(payload)
-    await cleanupTestUser()
+    await cleanupTestUser(payload)
     await payload.destroy()
   })
 

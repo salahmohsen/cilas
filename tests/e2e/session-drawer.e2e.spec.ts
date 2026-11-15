@@ -56,8 +56,8 @@ test.describe('session drawer', () => {
     // Playwright 1.58 starts all-hooks with the project timeout, not describe.timeout.
     test.setTimeout(300_000)
     unlock = await lockSpacesMode()
-    await seedTestUser()
-    payload = await getPayload({ config })
+    payload = await getPayload({ config, key: uniq('session-drawer') })
+    await seedTestUser(payload)
     const place = track(
       'places',
       await payload.create({
@@ -192,7 +192,7 @@ test.describe('session drawer', () => {
       overrideAccess: true,
     })
     await cleanup(payload)
-    await cleanupTestUser()
+    await cleanupTestUser(payload)
     await payload.destroy()
     await unlock?.()
   })
