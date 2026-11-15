@@ -43,9 +43,16 @@ Every calendar (admin Sessions tab, space Calendar tab, schedule block in posts,
 
 8. **Unscheduled sessions are split buttons** (reference `reference-split-button.png`; Arc `split-button`, already installed in `src/components/arc/split-button`). The main part shows the session and opens it (the popover, as a block does), and in edit mode is still the drag handle onto a day. The arrow part opens the menu of days to place it on (today's `placeOnDay` list). Not editable (view mode, or `readOnly`): no arrow part, the main part only. This replaces today's separate button plus `DropdownMenu` in `unscheduled-tray.tsx`. Read the component with the Arc MCP (`get_component`) before use.
 
-## Open points (owner)
-
-Asked 2026-11-15, not answered yet: the desktop view switch (Month, Week, Day, and Agenda?); month view popover only; what the panel holds; the dashed outline (unsaved change?); the primary action in view mode; the order of units; the step 4 e2e specs that change; and, from the phone images, the menu button at the start of the phone toolbar, the phone default view, and the weekend shade (Friday only?).
+9. **The rest, from the orchestrator's recommendations, adopted with the owner's "start" (2026-11-15):**
+   - Desktop switch: Month / Week / Day / Agenda in every host. Phones: 3 days / Day / Agenda; **Day is the phone default** (a 3-day column is about 80 px at 390 px). URLs `?view=month|week|day|agenda` stay.
+   - Month view: popover only, no docked day panel; "N more" opens the Day view.
+   - Panel (toggle at the toolbar's end, closed by default, never open on phones): Up next, the legend filter, and the Unscheduled tray in the admin. No time zones.
+   - Dashed outline: an unsaved change in edit mode. Cancelled stays hatched.
+   - Primary action: "New session" in edit mode; Edit for editors in view mode; nothing for others.
+   - No menu button at the start of the phone toolbar (it opens Arc's left sidebar, which is excluded). No avatars on blocks.
+   - Weekend shade: Friday only (Saturday is the second busiest day: 49 meetings in the last year; Friday 1).
+   - Order of units as listed below. The step 4 e2e specs that click a block (`session-drawer`, `space-calendar-edit`, `session-edit`, `course-calendar`) change in unit 3: a click opens the popover, Edit opens the drawer.
+   - The split buttons (decision 8) land in unit 3.
 
 ## Decision trail
 
