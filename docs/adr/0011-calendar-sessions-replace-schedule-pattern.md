@@ -309,6 +309,11 @@ None now.
 
 ## Decision log
 
+Fix: owner's decisions of 2026-11-15, at the close of step 4.
+
+- **A drawer save drops the calendar's unsaved changes to that session only, with a notice that names it.** The changes to other sessions stay. The admin calendar does the same since step 2 (unit 5c). The changes were made from the old version of the session and could not save; a stale save of the whole calendar would drop more.
+- **One new look for the calendar component, in all five places** (admin, space, schedule block, public calendar), after Arc's week and month calendar screens, without their left sidebar: soft tinted blocks with title, time range and place; tinted all-day bars that span days; the short day name above a large date, today in a filled circle; small muted hour labels; a now line with a time pill; a toolbar with month and week number, Today, arrows, a Week / Work week / Day switch. A block click opens a popover editor in place (title, date, start and end times with the length, place, description, type chips, Delete, Done), as the owner's reference images show (see the step 5 plan). This replaces "outlined blocks, mono hour labels" in "One calendar component, five places". Arc's screens are Pro blocks: only the look is followed; no source is copied.
+
 Fix: in the course space, only sessions move on the calendar; space events show but do not drag (owner, 2026-11-15, step 4). This narrows "move or resize sessions and space events" in "Course space calendar".
 
 - **Events store an instant and carry RSVP and replies.** A drag would need a second write-back path and checks for both. There are 9 space events, none in the future.
