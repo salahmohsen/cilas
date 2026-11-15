@@ -1,6 +1,13 @@
-import { describe, expect, it } from 'vitest'
+import { describe, expect, it, vi } from 'vitest'
 
-import { CalendarSaveFailure, meetingsAfter, sessionItems } from '@/lib/calendar-sources'
+import {
+  CalendarSaveFailure,
+  calendarSourceOf,
+  meetingsAfter,
+  sessionItems,
+  spaceEventItems,
+  type CalendarContext,
+} from '@/lib/calendar-sources'
 import type { Session } from '@/payload-types'
 
 const untitled = (n: number) => `Session ${n}`
@@ -124,5 +131,103 @@ describe('meetingsAfter', () => {
         { change: { op: 'delete-block', itemId: '1', version: 'v', blockId: 'zz' }, index: 0 },
       ]),
     ).toThrow(CalendarSaveFailure)
+  })
+})
+
+describe('space source', () => {
+  const post = {
+    id: 12,
+    body: '# Legacy event',
+    event_title: null,
+    event_starts_at: '2026-07-15T21:30:00.000Z',
+    event_ends_at: '2026-07-15T22:30:00.000Z',
+    updatedAt: 'v',
+  }
+  it('converts summer instants across midnight to Cairo and marks events read only', () => {
+    expect(spaceEventItems([post])).toEqual([
+      {
+        id: 'space-event:12',
+        kind: 'space-event',
+        title: 'Legacy event',
+        tone: 'neutral',
+        readOnly: true,
+        cancelled: false,
+        version: 'v',
+        blocks: [{ id: '12', date: '2026-07-16', start_time: '00:30', end_time: '01:30' }],
+      },
+    ])
+  })
+  it.each([
+    ['2026-04-23T21:30:00Z', '2026-04-23', '23:30'],
+    ['2026-04-23T22:30:00Z', '2026-04-24', '01:30'],
+  ])('uses Cairo rules beside the daylight-saving jump: %s', (instant, date, time) => {
+    expect(
+      spaceEventItems([{ ...post, event_starts_at: instant, event_ends_at: null }])[0]?.blocks,
+    ).toEqual([{ id: '12', date, start_time: time, end_time: null }])
+  })
+  it('uses winter Cairo time, the event title, and preserves a missing end', () => {
+    expect(
+      spaceEventItems([
+        {
+          ...post,
+          event_title: 'Winter',
+          event_starts_at: '2026-01-15T18:00:00Z',
+          event_ends_at: null,
+        },
+      ])[0],
+    ).toMatchObject({
+      title: 'Winter',
+      blocks: [
+        {
+          date: '2026-01-15',
+          start_time: '20:00',
+          end_time: null,
+        },
+      ],
+    })
+  })
+  it('refuses every operation on an event before writing any session', async () => {
+    const create = vi.fn()
+    const ctx = {
+      req: {
+        payload: {
+          findByID: vi.fn().mockResolvedValue({ kind: 'course', course: 1 }),
+          create,
+        },
+      },
+      user: { id: 1 },
+    } as unknown as CalendarContext
+    const source = calendarSourceOf('space')!
+    for (const change of [
+      { op: 'delete-block', itemId: 'space-event:12', blockId: '12', version: 'v' },
+      {
+        op: 'move-block',
+        itemId: 'space-event:12',
+        blockId: '12',
+        version: 'v',
+        date: '2026-01-15',
+        start_time: '20:00',
+        end_time: null,
+      },
+      {
+        op: 'add-block',
+        itemId: 'space-event:12',
+        blockId: 'new',
+        version: 'v',
+        date: '2026-01-15',
+        start_time: '20:00',
+        end_time: null,
+      },
+      {
+        op: 'create-item',
+        kind: 'space-event',
+        blocks: [{ blockId: 'new', date: '2026-01-15', start_time: '20:00', end_time: null }],
+      },
+    ] as const) {
+      await expect(source.apply(ctx, '1', [change as never])).rejects.toMatchObject({
+        error: { code: 'invalid', change: 0 },
+      })
+    }
+    expect(create).not.toHaveBeenCalled()
   })
 })
