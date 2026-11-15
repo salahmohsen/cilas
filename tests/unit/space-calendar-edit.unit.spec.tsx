@@ -60,24 +60,25 @@ const siteLink = () =>
     Object.assign(document.createElement('a'), { href: '/en/spaces', textContent: 'All spaces' }),
   )
 
-const show = (locale = 'en') =>
-  render(
-    <NextIntlClientProvider
-      locale={locale}
-      messages={locale === 'ar' ? ar : en}
-      timeZone="Africa/Cairo"
-    >
-      <SpaceViews path="/en/spaces/course/probe" value="calendar" hasCourse />
-      <SpaceCalendarTab
-        spaceId="7"
-        courseId="5"
-        items={[session('19:00'), event]}
-        canEdit
-        day="2026-11-17"
-        spaceHref="/en/spaces/course/probe"
-      />
-    </NextIntlClientProvider>,
-  )
+const view = (locale = 'en', items = [session('19:00'), event]) => (
+  <NextIntlClientProvider
+    locale={locale}
+    messages={locale === 'ar' ? ar : en}
+    timeZone="Africa/Cairo"
+  >
+    <SpaceViews path="/en/spaces/course/probe" value="calendar" hasCourse />
+    <SpaceCalendarTab
+      spaceId="7"
+      courseId="5"
+      items={items}
+      canEdit
+      day="2026-11-17"
+      spaceHref="/en/spaces/course/probe"
+    />
+  </NextIntlClientProvider>
+)
+
+const show = (locale = 'en') => render(view(locale))
 
 const block = () => screen.getByRole('button', { name: /^Week 3, Tuesday/ })
 /**
@@ -171,6 +172,28 @@ describe('the Calendar tab in edit mode', () => {
     expect(leaveDialog()).toBeNull()
     await screen.findByRole('button', { name: 'Edit' })
     expect(block()).toHaveAccessibleName(/19:15 to 21:00/)
+  })
+
+  it('records the current conflict behavior when a drawer refresh replaces the edited session', async () => {
+    const rendered = show()
+    await startEditing()
+    move()
+    expect(block()).toHaveAccessibleName(/19:15 to 21:15, Unsaved/)
+
+    // A drawer save calls router.refresh(), which supplies these new server items.
+    rendered.rerender(view('en', [session('20:00', 'v2'), event]))
+    await waitFor(() => expect(block()).toHaveAccessibleName(/20:00 to 21:00$/))
+    expect(screen.queryByRole('button', { name: 'Save' })).toBeNull()
+    expect(saveCalendarChanges).not.toHaveBeenCalled()
+    expect(
+      screen
+        .getAllByRole('status')
+        .some((status) =>
+          status.textContent?.includes(
+            'Your unsaved changes to Week 3 were dropped, because it changed somewhere else.',
+          ),
+        ),
+    ).toBe(true)
   })
 
   it('keeps the changes after a failed save and offers nothing', async () => {
