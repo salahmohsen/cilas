@@ -1,16 +1,16 @@
 import { Check } from 'lucide-react'
 import { useLocale, useMessages, useTranslations } from 'next-intl'
 import { useRouter } from 'next/navigation'
-import { useEffect, useMemo, useRef, useState } from 'react'
+import { useMemo, useRef, useState } from 'react'
 
 import { loadCalendarItems } from '@/actions/load-calendar-items'
 import { Alert } from '@/components/arc/alert/alert'
 import { Button } from '@/components/arc/button/button'
-import { Dialog, DialogClose, DialogContent } from '@/components/arc/dialog/dialog'
 import { Calendar } from '@/components/calendar/ui/calendar'
 import type { CalendarChange, CalendarItem } from '@/lib/calendar-items'
-import { guardLeaving, leave } from '@/lib/leave-guard'
+import { leave } from '@/lib/leave-guard'
 
+import { useLeaveQuestion } from './leave-question'
 import { useOpenScheduleItem, useScheduleLabels } from './schedule-calendar'
 import { scheduleSaveText, type ScheduleSaveMessages } from './schedule-save-text'
 import { sessionTriggerProps } from './session-drawer-host'
@@ -69,7 +69,6 @@ export function SpaceCalendarEditor({
 
   const [reloadFailed, setReloadFailed] = useState(false)
   const [unsaved, setUnsaved] = useState(0)
-  const [asking, setAsking] = useState<(() => void) | null>(null)
   const done = useRef<HTMLButtonElement>(null)
   const open = useOpenScheduleItem(items, spaceHref)
 
@@ -91,13 +90,13 @@ export function SpaceCalendarEditor({
     },
   })
 
-  useEffect(() => {
-    if (unsaved === 0) return
-    return guardLeaving({
-      ask: (go) => setAsking(() => go),
-      navigate: (href) => router.push(href),
-    })
-  }, [unsaved, router])
+  const leaving = useLeaveQuestion(unsaved > 0, {
+    title: t('calendarLeaveTitle'),
+    body: t('calendarLeaveBody'),
+    stay: t('calendarLeaveStay'),
+    go: t('calendarLeaveGo'),
+    close: ta('offer.close'),
+  })
 
   const save = async (changes: CalendarChange[]) => {
     // The save bar leaves with the changes, so the offer gives focus back to Done.
@@ -137,37 +136,7 @@ export function SpaceCalendarEditor({
 
       {schedule.dialog}
 
-      <Dialog
-        open={asking !== null}
-        onOpenChange={(next) => {
-          if (!next) setAsking(null)
-        }}
-      >
-        <DialogContent
-          title={t('calendarLeaveTitle')}
-          description={t('calendarLeaveBody')}
-          closeLabel={ta('offer.close')}
-        >
-          <div className={styles.leave}>
-            <DialogClose asChild>
-              <Button type="button" variant="secondary" autoFocus>
-                {t('calendarLeaveStay')}
-              </Button>
-            </DialogClose>
-            <Button
-              type="button"
-              variant="danger"
-              onClick={() => {
-                const go = asking
-                setAsking(null)
-                go?.()
-              }}
-            >
-              {t('calendarLeaveGo')}
-            </Button>
-          </div>
-        </DialogContent>
-      </Dialog>
+      {leaving.dialog}
     </div>
   )
 }
