@@ -257,6 +257,33 @@ test.describe('session drawer Edit form', () => {
     await closeDrawer(drawer(fellow, 'E2E drawer renamed'))
   })
 
+  test('a stale save keeps the form values and Reload shows the current data', async () => {
+    const panel = await openForm('E2E drawer renamed', 'link')
+    const title = panel.getByRole('textbox', { name: 'Title', exact: true })
+    await title.fill('My waiting title')
+    await payload.update({
+      collection: 'sessions',
+      id: session,
+      data: { title: 'Saved elsewhere' },
+      overrideAccess: true,
+    })
+    await panel.getByRole('button', { name: 'Save changes', exact: true }).click()
+    const reload = panel.getByRole('button', { name: 'Reload and lose my changes', exact: true })
+    await expect(reload).toBeVisible({ timeout: 60_000 })
+    await expect(title).toHaveValue('My waiting title')
+    expect((await sessionRow()).title).toBe('Saved elsewhere')
+    await reload.click()
+    await expect(title).toHaveValue('Saved elsewhere', { timeout: 60_000 })
+    // Restore the title for the next serial case, through the same form.
+    await title.fill('E2E drawer renamed')
+    await panel.getByRole('button', { name: 'Save changes', exact: true }).click()
+    const saved = drawer(fellow, 'E2E drawer renamed')
+    await expect(saved.getByRole('button', { name: 'Edit session', exact: true })).toBeVisible({
+      timeout: 60_000,
+    })
+    await closeDrawer(saved)
+  })
+
   test('a change to the text alone opens no offer', async () => {
     const before = (await sessionRow()).updatedAt
     // A cancelled session may be off the calendar; its link opens the drawer.
