@@ -210,6 +210,13 @@ There is **one write path** for every place. Telling people is the saver's choic
 
 The **schedule block** (a token in the post body, like `::session[id]`) renders the calendar component, read-only, on the weeks of the change, with the changed blocks marked. It reads the current data, so it stays correct if the schedule changes again.
 
+As built in step 3:
+
+- **The token** is `::schedule[<first Saturday>+<weeks>:<session id>,…]`, alone in its paragraph, at most one in a post, never in a comment. It names weeks and sessions, never dates. The post write path checks it with the session blocks (`sessionSafeBody`): a session of another course drops out, and a block with none left goes.
+- **The language** of the text is the course's language (`courseLanguage`, the course page's own rule), and the session names load in that language. A session is named "Session 3: Title", or "Session 3" with no title.
+- **Cancel** counts by the session's meetings after the save: a cancel that also removes the session's only future meeting offers nothing. A cancelled session shows only its cancel line.
+- **Added or removed sessions** list only their meetings from today on.
+
 Where the offer opens: after **Save schedule** in the admin calendar; after a save in the session drawer that changes the meetings or the cancelled flag; later in the space calendar (step 4) and the public calendar (step 5). Scripts, seeds and saves with no person offer nothing, and a course with no space offers nothing.
 
 **Saves that publish nothing, by decision.** A skipped offer, a save by an AI assistant (MCP) and a save on the session's own admin page (not the drawer) publish no announcement. The admin or fellow writes one by hand in that case. Skip asks for no confirmation.
@@ -238,16 +245,18 @@ The [untangle rules](../../AGENTS.md) apply to every step. The aim: a typical ch
 
 ### Modules, from most stable to most volatile
 
-| Module                                                 | Holds                                                                                                                   | May import                            |
-| ------------------------------------------------------ | ----------------------------------------------------------------------------------------------------------------------- | ------------------------------------- |
-| `lib/meetings.ts`                                      | the `Meeting` type and pure rules: order, first and last day, weeks, next meeting, summary text, Cairo time             | `lib/cairo-day.ts`                    |
-| `fields/meetings.ts`                                   | the Payload field for `meetings[]` and its validation                                                                   | `lib/meetings.ts`                     |
-| `collections/Sessions.ts`                              | the collection: fields, access that follows the course, hooks                                                           | fields, `lib/*`                       |
-| `lib/schedule-changes.ts`                              | the pure rule: items before and after → the changes that count, and the announcement's prefilled text and block         | `lib/meetings.ts`, calendar items     |
-| `lib/calendar-sources.ts`                              | one adapter per kind (session, event, space event): how a document becomes calendar items, and how a change writes back | `lib/meetings.ts`, collections' types |
-| `actions/save-calendar-changes.ts`                     | the one server action: auth, transaction, call the adapters                                                             | `lib/calendar-sources.ts`             |
-| `components/calendar/`                                 | the generic component; the only code that imports ui-sdk                                                                | ui-sdk, Arc                           |
-| hosts: admin field, space tab, space post, `/calendar` | data loading and labels for one place                                                                                   | everything above                      |
+| Module                                                 | Holds                                                                                                                     | May import                            |
+| ------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------- | ------------------------------------- |
+| `lib/meetings.ts`                                      | the `Meeting` type and pure rules: order, first and last day, weeks, next meeting, summary text, Cairo time               | `lib/cairo-day.ts`                    |
+| `fields/meetings.ts`                                   | the Payload field for `meetings[]` and its validation                                                                     | `lib/meetings.ts`                     |
+| `collections/Sessions.ts`                              | the collection: fields, access that follows the course, hooks                                                             | fields, `lib/*`                       |
+| `lib/schedule-changes.ts`                              | the pure rule: items before and after → the changes that count, and the announcement's prefilled text and block           | `lib/meetings.ts`, calendar items     |
+| `lib/schedule-offer.ts`, `actions/schedule-offers.ts`  | the offer: for each space, permission (`mayAnnounce`), language (`courseLanguage`), session names, the text and the block | `lib/schedule-changes.ts`, spaces     |
+| `components/space/schedule-offer-dialog.tsx`           | the one announcement dialog, for a list of spaces; Publish goes through `postCreate`                                      | the offer, the calendar component     |
+| `lib/calendar-sources.ts`                              | one adapter per kind (session, event, space event): how a document becomes calendar items, and how a change writes back   | `lib/meetings.ts`, collections' types |
+| `actions/save-calendar-changes.ts`                     | the one server action: auth, transaction, call the adapters                                                               | `lib/calendar-sources.ts`             |
+| `components/calendar/`                                 | the generic component; the only code that imports ui-sdk                                                                  | ui-sdk, Arc                           |
+| hosts: admin field, space tab, space post, `/calendar` | data loading and labels for one place                                                                                     | everything above                      |
 
 ### Rules for this feature
 
