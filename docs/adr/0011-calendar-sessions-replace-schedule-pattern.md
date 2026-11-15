@@ -2,7 +2,7 @@
 
 Accepted, 2026-11-13. Supersedes [0002](0002-schedule-pattern-drives-session-dates.md) for courses and events.
 
-This ADR is a working draft. It covers courses, events, the course space calendar and the public calendar. The open questions are near the end.
+It covers courses, events, the course space calendar and the public calendar. The design is accepted; the Decision log records each later change, newest first.
 
 ## Context
 
@@ -91,7 +91,7 @@ course
   - **Delete meeting** removes only this meeting, as a ghost with Restore until Save. The session and its content stay; a session with no meeting left shows in Unscheduled. There is no "delete session" on the calendar: a whole session is deleted in its drawer.
   - In view mode only Open shows.
 - **The calendar is always in edit mode** in the admin, for a person who may edit the course's sessions. There is no View and Edit switch and no "Done editing". A person who may not edit sees view mode.
-- **A separate "Save schedule" bar** shows only while calendar changes wait, with Cancel. Payload's own Save button saves the course and nothing else. Sessions are not drafts, and they are not tied to the course's Save. While changes wait, leaving the page warns: the browser's prompt on a reload or a closed tab, and Payload's own confirmation on a link inside the admin. Payload's warning reads only the course form's modified state, and marking that modified would start the course's autosave, so the calendar tells the host how many changes wait (`onUnsavedChange`) and the host warns itself.
+- **A separate "Save schedule" bar** shows only while calendar changes wait, with Cancel. Payload's own Save button saves the course and nothing else. The two saves are not tied together; while schedule changes wait, the bar says that the course's Save does not save them. Sessions are not drafts, and they are not tied to the course's Save. While changes wait, leaving the page warns: the browser's prompt on a reload or a closed tab, and Payload's own confirmation on a link inside the admin. Payload's warning reads only the course form's modified state, and marking that modified would start the course's autosave, so the calendar tells the host how many changes wait (`onUnsavedChange`) and the host warns itself.
 - Click a block (or a tray item) to open the **session drawer**: Payload's document drawer with the full session form.
 - Under the calendar: the course-wide fields that stay.
 - **The calendar field is generic.** It takes "items, each with blocks" and knows nothing about courses. Events and the course space use it later.
@@ -128,10 +128,10 @@ When a session moves, is cancelled or is restored, the person who saved is offer
 
 Every course moves to the new model, published and draft. We test on the local copy of production until it is polished, then go live once.
 
-1. **Add** the `sessions` collection, the join, `timing_note`, `first_day`, `last_day`. The old fields stay.
+1. **Add** the `sessions` collection, the join, `first_day`, `last_day`. The old fields stay. (The first run also added `timing_note`; item 7 removes it.)
 2. **Fill** with a script that runs today's `expandSchedule` for every course:
    - each session row becomes a session document with the same content and the meetings it has today; its description is converted to Markdown;
-   - **courses with weekly times but no sessions (41)** and **pattern meetings after the last session (18)**: the pattern still makes those meetings, but no session holds them. The script makes new sessions for them by today's default rule, one session for each week of slots (with one slot a week, one session per meeting). Their title is empty, so the page shows "Session N" or "Week N";
+   - **courses with weekly times but no sessions (41)** and **pattern meetings after the last session (18)**: the pattern still makes those meetings, but no session holds them. The script makes new sessions for them by today's default rule, one session for each week of slots (with one slot a week, one session per meeting). Their title is empty, so the page shows "Session N";
    - sessions with no meeting (7 courses) stay unscheduled, in their old order;
    - **courses the pattern gives no meeting** (101 courses with a start date or `weeks`) got no meeting from the fill. They first kept their start date and `weeks` as an `announced` timing; that field is removed (see "Fix: the timing fields are removed"), and `scripts/make-archive-meetings.ts` gives them approximate meetings instead, reading the frozen `schedule` group;
    - the schedule note moved to `timing_note` first; that field is removed too, and its text goes with it;
@@ -157,7 +157,7 @@ Every course moves to the new model, published and draft. We test on the local c
 
 - **An event has meetings directly.** No sessions: an event is one thing, and its `agenda` (the programme inside a day) stays as it is. `meetings[]` comes from one shared field, `fields/meetings.ts`, which sessions use too, so the shape and its validation are written once.
 - **The "When" tab** uses the same calendar component with one item, the event. A block's "Add meeting" makes the next meeting of a repeating event.
-- **`first_day`, `last_day` and `timing_note`** on the event, as on courses. The summary and "next meeting" come from `lib/meetings.ts`.
+- **`first_day` and `last_day`** on the event, as on courses. No timing note: an event states its time with meetings alone, as a course does. The summary and "next meeting" come from `lib/meetings.ts`.
 - **Readers:** `components/events/event-page.tsx`, `event-attendance.tsx`, `lib/events.ts`, `api/events.api.ts`, `lib/mentions.ts`, `emails/cards.ts`, `api/calendar.api.ts`, `lib/event-calendar.ts`.
 - **Migration:** the same expand-and-verify script for the 10 events.
 - **After events move,** `fields/schedule.ts` and `lib/schedule.ts` are deleted. Nothing uses the pattern any more.
@@ -204,13 +204,15 @@ labels and direction from the host
 
 There is **one write path** for every place. Telling people is the saver's choice, offered by one rule.
 
-1. **Save.** The calendar's `onSave` calls one server action, `saveCalendarChanges(changes)`. It runs Payload with the signed-in user (`overrideAccess: false`) in **one transaction**, so the collections' access rules decide, and either all changes save or none do. Each change carries the `updatedAt` it started from; a stale one fails the whole save, and the calendar reloads. The collection hooks refresh the public cache in the same save (`revalidateDocument('courses')` drops the `courses` tag the public calendar reads).
+1. **Save.** The calendar's `onSave` calls one server action, `saveCalendarChanges(changes)`. It runs Payload with the signed-in user (`overrideAccess: false`) in **one transaction**, so the collections' access rules decide, and either all changes save or none do. Each change carries the `updatedAt` it started from; a stale one fails the whole save. The unsaved changes stay on the screen, the message names the session that another person changed, and one button, "Reload and lose my changes", loads the current schedule. There is no merge and no retry. A failed save opens no announcement. The collection hooks refresh the public cache in the same save (`revalidateDocument('courses')` drops the `courses` tag the public calendar reads).
 2. **Offer.** After a save that changes the schedule, the host compares the items before and after with one pure rule (`scheduleChanges` in `lib/schedule-changes.ts`): meetings moved, added or removed, sessions cancelled or restored. A change counts only when a meeting it touches, before or after, is today or later; archive corrections offer nothing. When something counts and the course has a space, a dialog opens with a **prefilled announcement**: a short text of the changes ("Session 3 moves from Tue 18 Nov 19:00 to Thu 20 Nov 19:00", "Session 5 is cancelled") and one **schedule block**. The person edits it and clicks **Publish to space**, or **Skip**.
 3. **Publish.** Publish makes a normal space announcement as that person, through the existing post path: it is pinned and notifies every space member. Only space moderators may post an announcement, and moderators are the admins and the course's fellows, the same people who may edit the course's sessions.
 
 The **schedule block** (a token in the post body, like `::session[id]`) renders the calendar component, read-only, on the weeks of the change, with the changed blocks marked. It reads the current data, so it stays correct if the schedule changes again.
 
 Where the offer opens: after **Save schedule** in the admin calendar; after a save in the session drawer that changes the meetings or the cancelled flag; later in the space calendar (step 4) and the public calendar (step 5). Scripts, seeds and saves with no person offer nothing, and a course with no space offers nothing.
+
+**Saves that publish nothing, by decision.** A skipped offer, a save by an AI assistant (MCP) and a save on the session's own admin page (not the drawer) publish no announcement. The admin or fellow writes one by hand in that case. Skip asks for no confirmation.
 
 ## Course space calendar
 
@@ -226,7 +228,7 @@ Where the offer opens: after **Save schedule** in the admin calendar; after a sa
 - **Views stay** (month, week, agenda) and so do the URLs (`?view=week&date=…`). Week becomes the hours view.
 - **The legend filters:** each type in the legend turns its blocks on and off.
 - **A click on a block** opens a popover (bottom sheet on phones) with the title, session number, time, place, cover and a link to the course or event.
-- **Admin edit mode.** A signed-in admin sees an Edit button. Edit mode renders the page fresh, not from the cache, and checks the admin role on the server. Admins move, resize and cancel any session or event, then Save through the same server action. For every affected course space, the admin is offered its prefilled announcement.
+- **Admin edit mode.** A signed-in admin sees an Edit button. Edit mode renders the page fresh, not from the cache, and checks the admin role on the server. Admins move, resize and cancel any session or event, then Save through the same server action. One save here can change courses in many spaces, so the admin gets **one dialog** with a list of the affected spaces, each with its prefilled announcement and its own Publish or Skip, not one dialog for each space. It is the step 3 dialog, given a list.
 - **Data:** one cached query for meetings in the range: sessions of published courses, and published events.
 - **Feeds:** the ICS feed gives each meeting a stable ID, so a moved meeting updates in people's calendars and does not make a copy.
 
@@ -254,7 +256,7 @@ The [untangle rules](../../AGENTS.md) apply to every step. The aim: a typical ch
 - **One feature, one folder where it can.** The generic calendar in `components/calendar/ui/`, the public page's parts beside it in `components/calendar/`; the space's calendar tab and post next to the other space components.
 - **No order the callers must know.** Every host that saves schedule changes calls the same `scheduleChanges` rule and opens the same announcement dialog; no host writes its own notice text.
 - **No pass-through wrappers, no options nothing uses.** The calendar component has only the props the five places need.
-- **No special cases.** No `if (kind === 'event')` outside the adapters. No swallowed errors: a failed save shows the error and keeps the unsaved changes.
+- **No special cases.** No `if (kind === 'event')` outside the adapters. No swallowed errors: a failed save shows the error and keeps the unsaved changes; a stale save also offers "Reload and lose my changes" (see "Saving and telling people").
 - **Tests at the seams:** `lib/meetings.ts` (pure, many cases), each adapter (document → items → change → document), the action (access and transaction), `scheduleChanges` (what counts, the text), the component (keyboard and ARIA from ui-sdk's testing kit).
 
 ## Browser agents (WebMCP), a later phase
@@ -287,6 +289,15 @@ Each step ships to the dev copy on its own, and the site works after it.
 None now.
 
 ## Decision log
+
+Fix: the owner's review of 2026-11-15 (goal: more solid, and simpler for admins, fellows and students).
+
+- **A stale save had two descriptions.** One place said the calendar reloads, another that the changes stay. Now one behavior: the changes stay, the message names the session another person changed, and one button reloads and drops them. A silent reload loses work without a word; a merge is complexity nobody asked for.
+- **Saves that publish nothing are a decision, not a gap:** Skip, an AI assistant's save, and the session's own admin page. The person writes an announcement by hand.
+- **Two Save buttons.** They stay separate (sessions are not drafts). The Save schedule bar says that the course's Save does not save the schedule.
+- **Approximate archive meetings get a mark** (planned as its own unit after step 3). About 80 archive courses have meetings from `make-archive-meetings.ts` that nobody held exactly, and nothing marks them in the ICS feed, JSON-LD, `llms` or the collection. They get a hidden `approximate` flag; the ICS feed and JSON-LD leave them out, and the site says "dates are approximate" where it shows them.
+- **The public calendar's announcements are one dialog** with a list of spaces (step 5), so the step 3 dialog takes a list.
+- **Old text fixed:** events have no `timing_note`; the migration no longer names `timing_note` or "Week N" as current; the header no longer says "working draft".
 
 Fix: a schedule change offers a prefilled announcement; there is no automatic post, outbox or worker (owner's decision, 2026-11-15). This replaces "collection hooks write schedule changes to an outbox" at the end of this log.
 

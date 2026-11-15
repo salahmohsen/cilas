@@ -37,6 +37,17 @@ Each unit ends in a check, and the next unit starts only when that check passes.
 3. **The offer in the admin.** The announcement dialog (Arc editor, prefilled; Publish to space; Skip) after Save schedule and after a drawer save that changes meetings or Cancelled. No space, or nothing that counts: no dialog. Run `/modern-web-guidance` first. Check: item 4, and screenshots of the dialog.
 4. **Close.** Full checks, snapshot compare on a production build, screenshots, this plan's decision trail.
 
+## Added on 2026-11-15, after the owner's review of the ADR
+
+Unit 3 also does these, because the dialog opens after the save:
+
+- **A stale save.** The unsaved changes stay; the message names the session that another person changed (the error has `itemId`, `lib/calendar-sources.ts`); one button, "Reload and lose my changes". No merge, no retry. No announcement dialog after a failed save. Check: an e2e or component test of a stale save.
+- **Two Save buttons.** While schedule changes wait, the Save schedule bar says that the course's Save does not save them. Check first what a person sees today; add only what is missing.
+- **The dialog takes a list of spaces** (one entry in the admin), each with its own text, Publish and Skip, so step 5 reuses it.
+- **Choices on unit 2's open questions:** the token is not in the editable text: the dialog shows the calendar as a preview with a checkbox "Include the calendar" (on), and Publish adds the token. The block opens on the first changed day (a small prop), so a phone shows the marked block. A block whose marked sessions all left its weeks shows a short line, not an unmarked grid. The text names a session as its number, then its title ("Session 3: Title").
+
+After step 3, as its own unit: the `approximate` flag for archive meetings (ADR 0011, Decision log, the review of 2026-11-15).
+
 ## Decision trail
 
 | Unit | Commit                             | Check                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                | Result                                                                                                                                                                   |
