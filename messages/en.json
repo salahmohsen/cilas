@@ -1598,5 +1598,15 @@
     "speakers": "Speakers",
     "agenda": "Programme",
     "free": "Free"
+  },
+  "ScheduleChanges": {
+    "moved": "{title} moves from {from} to {to}",
+    "meetingAdded": "{title} has a new meeting on {when}",
+    "meetingRemoved": "The meeting of {title} on {when} is removed",
+    "itemAdded": "A new session, {title}, meets on {when}",
+    "itemRemoved": "{title} is removed. It was to meet on {when}",
+    "cancelled": "{title} is cancelled",
+    "restored": "{title} is no longer cancelled",
+    "at": "{day} {time}"
   }
 }

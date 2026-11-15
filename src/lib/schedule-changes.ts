@@ -1,0 +1,153 @@
+import { createTranslator } from 'next-intl'
+
+import type { CalendarBlock, CalendarItem } from '@/lib/calendar-items'
+import { localDigits } from '@/lib/digits'
+import { dayLabel } from '@/lib/meeting-text'
+import { byWhen } from '@/lib/meetings'
+
+import ar from '../../messages/ar.json'
+import en from '../../messages/en.json'
+
+/**
+ * What a save of the calendar changed, as far as the people of a course need
+ * to hear it (ADR 0011, "Saving and telling people"). Pure: the caller loads
+ * the items before and after, and decides what to do with the result. An
+ * empty result means: offer no announcement.
+ */
+
+/** One change that counts. `title` is the item's title after the change, or before it for a removed item. */
+export type ScheduleChange =
+  | { kind: 'moved'; itemId: string; title: string; from: CalendarBlock; to: CalendarBlock }
+  | { kind: 'meeting-added'; itemId: string; title: string; block: CalendarBlock }
+  | { kind: 'meeting-removed'; itemId: string; title: string; block: CalendarBlock }
+  | { kind: 'item-added'; itemId: string; title: string; blocks: CalendarBlock[] }
+  | { kind: 'item-removed'; itemId: string; title: string; blocks: CalendarBlock[] }
+  | { kind: 'cancelled'; itemId: string; title: string }
+  | { kind: 'restored'; itemId: string; title: string }
+
+const times = (b: CalendarBlock) => `${b.date} ${b.start_time ?? ''} ${b.end_time ?? ''}`
+
+/** A day is a Cairo `YYYY-MM-DD`, so `>=` is the order of days. */
+const live = (blocks: readonly CalendarBlock[], today: string): boolean =>
+  blocks.some((b) => b.date >= today)
+
+const itemChanges = (
+  before: CalendarItem | undefined,
+  after: CalendarItem | undefined,
+): ScheduleChange[] => {
+  const item = after ?? before
+  if (!item) return []
+  const { id: itemId, title } = item
+  if (!before || !after) {
+    const blocks = [...item.blocks].sort(byWhen)
+    return [{ kind: after ? 'item-added' : 'item-removed', itemId, title, blocks }]
+  }
+
+  const changes: ScheduleChange[] = []
+  if (before.cancelled !== after.cancelled) {
+    changes.push({ kind: after.cancelled ? 'cancelled' : 'restored', itemId, title })
+  }
+  const was = new Map(before.blocks.map((b) => [b.id, b]))
+  const now = new Map(after.blocks.map((b) => [b.id, b]))
+  for (const block of [...after.blocks].sort(byWhen)) {
+    const from = was.get(block.id)
+    if (!from) changes.push({ kind: 'meeting-added', itemId, title, block })
+    else if (times(from) !== times(block)) {
+      changes.push({ kind: 'moved', itemId, title, from, to: block })
+    }
+  }
+  for (const block of [...before.blocks].sort(byWhen)) {
+    if (!now.has(block.id)) changes.push({ kind: 'meeting-removed', itemId, title, block })
+  }
+  return changes
+}
+
+/** The meetings a change touches, before and after. */
+const touched = (change: ScheduleChange): CalendarBlock[] => {
+  switch (change.kind) {
+    case 'moved':
+      return [change.from, change.to]
+    case 'meeting-added':
+    case 'meeting-removed':
+      return [change.block]
+    case 'item-added':
+    case 'item-removed':
+      return change.blocks
+    case 'cancelled':
+    case 'restored':
+      return []
+  }
+}
+
+/**
+ * The changes from `before` to `after` that count: those with a meeting, old
+ * or new, on `today` (a Cairo day) or later. Corrections to the past count
+ * for nothing. Cancelling or restoring a session counts when it has any
+ * meeting today or later. Items and blocks are matched by id; an item or
+ * block made in the save has an id the other side lacks. Order: items as
+ * `after` lists them, then removed items as `before` listed them.
+ */
+export const scheduleChanges = (
+  before: readonly CalendarItem[],
+  after: readonly CalendarItem[],
+  today: string,
+): ScheduleChange[] => {
+  const was = new Map(before.map((i) => [i.id, i]))
+  const now = new Set(after.map((i) => i.id))
+  const ids = [...after.map((i) => i.id), ...before.map((i) => i.id).filter((id) => !now.has(id))]
+  const items = new Map(after.map((i) => [i.id, i]))
+  return ids.flatMap((id) => {
+    const [b, a] = [was.get(id), items.get(id)]
+    const sessionLive = live([...(b?.blocks ?? []), ...(a?.blocks ?? [])], today)
+    return itemChanges(b, a).filter((change) =>
+      change.kind === 'cancelled' || change.kind === 'restored'
+        ? sessionLive
+        : live(touched(change), today),
+    )
+  })
+}
+
+export type ScheduleChangeLocale = 'en' | 'ar'
+
+/**
+ * The changes as a short Markdown list for an announcement, one bullet per
+ * change, in the language of the course page. Words come from
+ * `messages/*.json` (`ScheduleChanges`) through next-intl's server-safe
+ * translator, as the admin calendar's text does; days and times are written
+ * as the course page writes them (`meeting-text.ts`, `digits.ts`). An
+ * all-day meeting shows its day only.
+ */
+export const scheduleChangeText = (
+  changes: readonly ScheduleChange[],
+  locale: ScheduleChangeLocale,
+): string => {
+  const t = createTranslator({
+    locale,
+    messages: locale === 'ar' ? ar : en,
+    namespace: 'ScheduleChanges',
+  })
+  const list = new Intl.ListFormat(locale, { type: 'conjunction' })
+  const when = (b: CalendarBlock): string => {
+    const day = dayLabel(b.date, locale)
+    return b.start_time ? t('at', { day, time: localDigits(b.start_time, locale) }) : day
+  }
+  const line = (c: ScheduleChange): string => {
+    switch (c.kind) {
+      case 'moved':
+        return t('moved', { title: c.title, from: when(c.from), to: when(c.to) })
+      case 'meeting-added':
+        return t('meetingAdded', { title: c.title, when: when(c.block) })
+      case 'meeting-removed':
+        return t('meetingRemoved', { title: c.title, when: when(c.block) })
+      case 'item-added':
+        return t('itemAdded', { title: c.title, when: list.format(c.blocks.map(when)) })
+      case 'item-removed':
+        return t('itemRemoved', { title: c.title, when: list.format(c.blocks.map(when)) })
+      case 'cancelled':
+        return t('cancelled', { title: c.title })
+      case 'restored':
+        return t('restored', { title: c.title })
+    }
+  }
+  return changes.map((c) => `- ${line(c)}`).join('\n')
+}

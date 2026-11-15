@@ -1598,5 +1598,15 @@
     "speakers": "المتحدثون",
     "agenda": "البرنامج",
     "free": "مجانًا"
+  },
+  "ScheduleChanges": {
+    "moved": "يُنقل موعد {title} من {from} إلى {to}",
+    "meetingAdded": "أُضيف لقاء جديد إلى {title} في {when}",
+    "meetingRemoved": "أُلغي لقاء {title} المقرر في {when}",
+    "itemAdded": "جلسة جديدة بعنوان {title} تلتقي في {when}",
+    "itemRemoved": "حُذفت {title}، وكانت ستلتقي في {when}",
+    "cancelled": "أُلغيت {title}",
+    "restored": "عادت {title} إلى الجدول",
+    "at": "{day}، الساعة {time}"
   }
 }
