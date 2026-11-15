@@ -5,6 +5,8 @@ import { useSyncExternalStore } from 'react'
 import { afterEach, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest'
 
 import { loadSessionView, type SessionViewResult } from '@/actions/load-session-view'
+import { scheduleOffers } from '@/actions/schedule-offers'
+import { loadSessionEdit, saveSessionEdit, type SessionEdit } from '@/actions/session-edit'
 import {
   SessionDrawerHost,
   SessionLink,
@@ -16,6 +18,10 @@ import en from '../../messages/en.json'
 import ar from '../../messages/ar.json'
 
 vi.mock('@/actions/load-session-view', () => ({ loadSessionView: vi.fn() }))
+vi.mock('@/actions/session-edit', () => ({ loadSessionEdit: vi.fn(), saveSessionEdit: vi.fn() }))
+vi.mock('@/actions/schedule-offers', () => ({ scheduleOffers: vi.fn() }))
+vi.mock('@/actions/save-calendar-changes', () => ({ saveCalendarChanges: vi.fn() }))
+const refresh = vi.fn()
 
 // Next folds pushState and replaceState into its router; this stands in for that.
 const URL_EVENT = 'test:url'
@@ -28,6 +34,7 @@ const subscribe = (change: () => void) => {
   }
 }
 vi.mock('next/navigation', () => ({
+  useRouter: () => ({ push: vi.fn(), refresh }),
   useSearchParams: () =>
     new URLSearchParams(
       useSyncExternalStore(
@@ -102,6 +109,8 @@ beforeAll(async () => {
   // not retry a suspended render outside act() in this environment.
   sessionTriggerProps.onPointerEnter()
   await import('@/components/space/session-drawer')
+  // The Edit form's chunk too, as a pointer over Edit loads it.
+  await import('@/components/space/session-form')
   await new Promise((resolve) => setTimeout(resolve, 0))
   for (const method of ['pushState', 'replaceState'] as const) {
     const original = window.history[method].bind(window.history)
@@ -156,15 +165,16 @@ describe('the session drawer', () => {
     fireEvent.click(link)
     expect(window.location.search).toBe('?tab=syllabus&open=13')
 
-    const dialog = await screen.findByRole('dialog', { name: 'Session 3' })
+    // The heading names the session; the view under it shows its number, not its title again.
+    const dialog = await screen.findByRole('dialog', { name: 'Reading the city' })
     expect(loadSessionView).toHaveBeenCalledWith('13', 'en')
     await waitFor(() => expect(dialog.contains(document.activeElement)).toBe(true))
     expect(within(dialog).getByText(en.SpacePost.sessionDrawerTimes)).toBeInTheDocument()
 
     // The one session view: number, title, times, delivery, Markdown, materials, activities.
-    expect(
-      within(dialog).getByRole('region', { name: 'Session 3: Reading the city' }),
-    ).toHaveTextContent('Reading the city')
+    const view = within(dialog).getByRole('region', { name: 'Session 3: Reading the city' })
+    expect(view).toHaveTextContent('Session 3')
+    expect(view).not.toHaveTextContent('Reading the city')
     expect(within(dialog).getByText('19:00–21:00')).toBeInTheDocument()
     expect(within(dialog).getAllByText(en.Course.delivery.ONLINE).length).toBeGreaterThan(0)
     expect(dialog.querySelector('strong')?.textContent).toBe('slowly')
@@ -173,8 +183,8 @@ describe('the session drawer', () => {
     expect(
       within(dialog).getByRole('link', { name: en.SpacePost.sessionDrawerPosts }),
     ).toHaveAttribute('href', '/en/spaces/course/probe?session=13')
-    // Unit 5 adds Edit; nothing offers it yet.
-    expect(within(dialog).queryByRole('button', { name: /edit/i })).toBeNull()
+    // Only the people who may edit the session see Edit.
+    expect(within(dialog).queryByRole('button', { name: en.SessionEdit.edit })).toBeNull()
 
     fireEvent.keyDown(document.activeElement!, { key: 'Escape' })
     await waitFor(() => expect(window.location.search).toBe('?tab=syllabus'))
@@ -186,7 +196,7 @@ describe('the session drawer', () => {
     window.history.replaceState(null, '', '/en/spaces/course/probe?open=14')
     const length = window.history.length
     page()
-    const dialog = await screen.findByRole('dialog', { name: 'Session 4' })
+    const dialog = await screen.findByRole('dialog', { name: 'Called off' })
     expect(within(dialog).getAllByText(en.Course.cancelled).length).toBeGreaterThan(0)
     fireEvent.click(within(dialog).getByRole('button', { name: en.SpacePost.sessionDrawerClose }))
     await waitFor(() => expect(window.location.search).toBe(''))
@@ -204,7 +214,7 @@ describe('the session drawer', () => {
     window.history.replaceState(null, '', '/ar/spaces/course/probe?open=13')
     vi.mocked(loadSessionView).mockImplementation(async (id) => shown(Number(id)))
     page('ar')
-    const dialog = await screen.findByRole('dialog', { name: /^الجلسة/ })
+    const dialog = await screen.findByRole('dialog', { name: 'Reading the city' })
     expect(dialog).toHaveAttribute('data-side', 'left')
     expect(
       within(dialog).getByRole('button', { name: ar.SpacePost.sessionDrawerClose }),
@@ -215,9 +225,158 @@ describe('the session drawer', () => {
     phone = true
     window.history.replaceState(null, '', '/en/spaces/course/probe?open=13')
     page()
-    const dialog = await screen.findByRole('dialog', { name: 'Session 3' })
+    const dialog = await screen.findByRole('dialog', { name: 'Reading the city' })
     expect(dialog).not.toHaveAttribute('data-side')
     expect(screen.getByRole('button', { name: /^(Expand|Collapse) sheet$/ })).toBeInTheDocument()
     await act(async () => {})
+  })
+})
+
+const editValues = (extra: Partial<SessionEdit> = {}): SessionEdit => ({
+  title: 'Reading the city',
+  description: 'Walk **slowly**.',
+  cancelled: false,
+  meetings: [{ id: 'm13', date: '2026-11-13', start_time: '19:00', end_time: '21:00' }],
+  bibliography: [{ id: 'b1', type: 'reading', title: 'Invisible Cities', href: '', note: '' }],
+  activities: [{ id: 'a1', kind: 'discussion', description: 'In pairs' }],
+  ...extra,
+})
+
+const openForm = async (values = editValues()) => {
+  vi.mocked(loadSessionView).mockImplementation(async (id) => shown(Number(id), true))
+  vi.mocked(loadSessionEdit).mockResolvedValue({ ok: true, values, version: 'v1' })
+  window.history.replaceState(null, '', '/en/spaces/course/probe?open=13')
+  page()
+  const dialog = await screen.findByRole('dialog', { name: 'Reading the city' })
+  const edit = await within(dialog).findByRole('button', { name: en.SessionEdit.edit })
+  // The form's chunk loads from the button's pointer, before the click.
+  fireEvent.pointerEnter(edit)
+  await act(async () => {})
+  fireEvent.click(edit)
+  await within(dialog).findByRole('textbox', { name: en.SessionEdit.title })
+  return dialog
+}
+
+const save = (dialog: HTMLElement) =>
+  act(async () => {
+    fireEvent.click(within(dialog).getByRole('button', { name: en.SessionEdit.save }))
+  })
+
+describe('the session drawer’s Edit form', () => {
+  beforeEach(() => {
+    vi.mocked(saveSessionEdit).mockReset()
+    vi.mocked(scheduleOffers).mockReset().mockResolvedValue([])
+    refresh.mockReset()
+  })
+
+  it('offers Edit only to the people the session’s access lets edit', async () => {
+    vi.mocked(loadSessionView).mockImplementation(async (id) => shown(Number(id), true))
+    window.history.replaceState(null, '', '/en/spaces/course/probe?open=13')
+    page()
+    const dialog = await screen.findByRole('dialog', { name: 'Reading the city' })
+    expect(within(dialog).getByRole('button', { name: en.SessionEdit.edit })).toBeInTheDocument()
+  })
+
+  it('shows the meeting rule’s error by the end time, focuses it, and saves nothing', async () => {
+    const dialog = await openForm(
+      editValues({
+        meetings: [{ id: 'm13', date: '2026-11-13', start_time: '21:00', end_time: '19:00' }],
+      }),
+    )
+    await save(dialog)
+    const error = await within(dialog).findByText(en.SessionEdit.errors.order)
+    const ends = within(dialog).getByRole('button', { name: new RegExp(`^${en.SessionEdit.ends}`) })
+    expect(ends).toHaveAttribute('data-invalid')
+    expect(ends.getAttribute('aria-describedby')).toContain(error.id)
+    await waitFor(() => expect(document.activeElement).toBe(ends))
+    expect(saveSessionEdit).not.toHaveBeenCalled()
+  })
+
+  it('adds a meeting, asks for its day, and removes it again', async () => {
+    const dialog = await openForm()
+    fireEvent.click(within(dialog).getByRole('button', { name: en.SessionEdit.addMeeting }))
+    expect(within(dialog).getAllByText(en.SessionEdit.day)).toHaveLength(2)
+    await save(dialog)
+    expect(await within(dialog).findByText(en.SessionEdit.errors.day)).toBeInTheDocument()
+    expect(saveSessionEdit).not.toHaveBeenCalled()
+
+    fireEvent.click(within(dialog).getByRole('button', { name: 'Remove meeting 2' }))
+    vi.mocked(saveSessionEdit).mockResolvedValue({ ok: true, courseId: '1', before: [], after: [] })
+    await save(dialog)
+    expect(saveSessionEdit).toHaveBeenCalledWith(
+      { id: '13', version: 'v1', values: editValues() },
+      'en',
+    )
+  })
+
+  it('asks before a close loses changes, and closes at once with none', async () => {
+    const dialog = await openForm()
+    fireEvent.change(within(dialog).getByRole('textbox', { name: en.SessionEdit.title }), {
+      target: { value: 'Walking the city' },
+    })
+    fireEvent.click(within(dialog).getByRole('button', { name: en.SpacePost.sessionDrawerClose }))
+    const ask = await screen.findByRole('dialog', { name: en.Spaces.calendarLeaveTitle })
+    expect(window.location.search).toBe('?open=13')
+    fireEvent.click(within(ask).getByRole('button', { name: en.Spaces.calendarLeaveStay }))
+    await waitFor(() =>
+      expect(screen.queryByRole('dialog', { name: en.Spaces.calendarLeaveTitle })).toBeNull(),
+    )
+
+    fireEvent.change(within(dialog).getByRole('textbox', { name: en.SessionEdit.title }), {
+      target: { value: 'Reading the city' },
+    })
+    fireEvent.click(within(dialog).getByRole('button', { name: en.SpacePost.sessionDrawerClose }))
+    await waitFor(() => expect(window.location.search).toBe(''))
+    expect(screen.queryByRole('dialog', { name: en.Spaces.calendarLeaveTitle })).toBeNull()
+  })
+
+  it('after a save, offers on the course’s items before and after it, and reads the page again', async () => {
+    const before = [
+      {
+        id: '13',
+        kind: 'session',
+        title: 'Reading the city',
+        tone: 'yellow' as const,
+        cancelled: false,
+        version: 'v1',
+        blocks: [{ id: 'm13', date: '2026-11-13', start_time: '19:00', end_time: '21:00' }],
+      },
+    ]
+    const after = [{ ...before[0]!, cancelled: true, version: 'v2' }]
+    vi.mocked(saveSessionEdit).mockResolvedValue({ ok: true, courseId: '1', before, after })
+    const dialog = await openForm()
+    fireEvent.click(within(dialog).getByRole('checkbox', { name: en.SessionEdit.cancelled }))
+    await save(dialog)
+    await waitFor(() =>
+      expect(scheduleOffers).toHaveBeenCalledWith({ courseId: '1', before, after }, 'en'),
+    )
+    expect(refresh).toHaveBeenCalled()
+    // Back in view mode, read again.
+    expect(await within(dialog).findByRole('button', { name: en.SessionEdit.edit })).toBeVisible()
+    expect(loadSessionView).toHaveBeenCalledTimes(2)
+  })
+
+  it('keeps the changes on a stale save and offers to reload', async () => {
+    vi.mocked(saveSessionEdit).mockResolvedValue({
+      ok: false,
+      error: { code: 'stale', itemId: '13', name: 'Session 3: Reading the city' },
+    })
+    const dialog = await openForm()
+    const title = within(dialog).getByRole('textbox', { name: en.SessionEdit.title })
+    fireEvent.change(title, { target: { value: 'Mine' } })
+    await save(dialog)
+    expect(
+      await within(dialog).findByRole('button', { name: en.CalendarAdmin.reloadAndLose }),
+    ).toBeInTheDocument()
+    expect(title).toHaveValue('Mine')
+    expect(scheduleOffers).not.toHaveBeenCalled()
+  })
+
+  it('offers a retry when the session does not load', async () => {
+    vi.mocked(loadSessionView).mockResolvedValueOnce({ ok: false, error: 'failed' })
+    window.history.replaceState(null, '', '/en/spaces/course/probe?open=13')
+    page()
+    fireEvent.click(await screen.findByRole('button', { name: en.SpacePost.sessionDrawerRetry }))
+    expect(await screen.findByRole('dialog', { name: 'Reading the city' })).toBeInTheDocument()
   })
 })

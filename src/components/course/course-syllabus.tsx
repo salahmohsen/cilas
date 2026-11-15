@@ -235,6 +235,7 @@ export function CourseSession({
   sessions,
   session,
   label,
+  plain,
   footer,
 }: {
   course: SyllabusCourse
@@ -243,6 +244,8 @@ export function CourseSession({
   session: string
   /** What the card is named for assistive tech */
   label: string
+  /** No frame and no title, inside a drawer that shows the title */
+  plain?: boolean
   /** Closes the card's details, after the materials and activities */
   footer?: ReactNode
 }) {
@@ -257,7 +260,7 @@ export function CourseSession({
     ) : (
       entry.body
     )
-  return <SyllabusSession entry={{ ...entry, body }} label={label} />
+  return <SyllabusSession entry={{ ...entry, body }} label={label} plain={plain} />
 }
 
 /** One session's own text, materials and activities: the syllabus feed opens it. */

@@ -38,6 +38,12 @@ export function SpaceCalendarTab({
 }) {
   const t = useTranslations('Spaces')
   const [items, setItems] = useState(loaded)
+  // A refresh after a save elsewhere (the session drawer) brings new items from the server.
+  const [server, setServer] = useState(loaded)
+  if (loaded !== server) {
+    setServer(loaded)
+    setItems(loaded)
+  }
   const [editing, setEditing] = useState(false)
   const edit = useRef<HTMLButtonElement>(null)
 

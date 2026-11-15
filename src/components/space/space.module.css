@@ -3239,6 +3239,10 @@ button.rsvpCell {
   gap: var(--space-3);
 }
 
+.sessionDrawerRetry {
+  margin-block-start: var(--space-2);
+}
+
 .sessionDrawerActions .sessionPosts {
   margin-block-start: 0;
 }
@@ -3246,4 +3250,12 @@ button.rsvpCell {
 /* In a syllabus row the links follow the session's text, as the posts link did. */
 .sessionRowActions {
   margin-block-start: var(--space-3);
+}
+
+/* The leave question's two buttons, Stay first. */
+.leaveActions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: var(--space-3);
 }
