@@ -19,8 +19,8 @@ export type CalendarSaveError =
   | { code: 'forbidden' }
   /** An item or block is gone, or is not in the parent the save names. */
   | { code: 'not-found'; itemId: string; blockId?: string }
-  /** Someone saved the item after the page loaded it. Reload and redo. */
-  | { code: 'stale'; itemId: string }
+  /** Someone saved the item after the page loaded it. `name` is what it is called now, when it is still there. */
+  | { code: 'stale'; itemId: string; name?: string }
   /** A change is not a valid meeting, or not a change this parent takes. */
   | { code: 'invalid'; message: string; change?: number }
   | { code: 'failed' }
@@ -48,6 +48,8 @@ export type CalendarSource = {
    * own access, asked once so the page can offer Edit. A save still checks.
    */
   canEdit: (ctx: CalendarContext, parentId: string) => Promise<boolean>
+  /** What each item is called in words, in the context's language, by item id. */
+  names: (ctx: CalendarContext, parentId: string) => Promise<Map<string, string>>
   /**
    * Writes the changes with the user's own access, on `ctx.req`, so the
    * caller's transaction covers them. Throws `CalendarSaveFailure` or a
@@ -119,6 +121,13 @@ export const meetingsAfter = (
   return rows.map((row) => row.meeting)
 }
 
+/** A session in words: "Session 3: Title", or "Session 3" with no title. */
+export const sessionName = (
+  number: number,
+  title: string | null | undefined,
+  untitled: CalendarContext['untitled'],
+): string => (title ? `${untitled(number)}: ${title}` : untitled(number))
+
 /** A course's sessions as calendar items: a session is an item, a meeting its block. */
 export const sessionItems = (
   sessions: readonly Pick<
@@ -146,8 +155,26 @@ export const sessionItems = (
   }))
 }
 
+const courseSessions = async (
+  { req, user }: CalendarContext,
+  id: number,
+): Promise<Pick<Session, 'id' | 'title' | 'cancelled' | 'meetings' | 'position' | 'updatedAt'>[]> =>
+  (
+    await req.payload.find({
+      collection: 'sessions',
+      where: { course: { equals: id } },
+      depth: 0,
+      pagination: false,
+      select: { title: true, cancelled: true, meetings: true, position: true, updatedAt: true },
+      user,
+      overrideAccess: false,
+      req,
+    })
+  ).docs
+
 const sessionSource: CalendarSource = {
-  async load({ req, user, untitled }, parentId) {
+  async load(ctx, parentId) {
+    const { req, user, untitled } = ctx
     const id = numericId(parentId)
     const { payload } = req
     const course = await payload.findByID({
@@ -161,17 +188,17 @@ const sessionSource: CalendarSource = {
       overrideAccess: false,
       req,
     })
-    const { docs } = await payload.find({
-      collection: 'sessions',
-      where: { course: { equals: id } },
-      depth: 0,
-      pagination: false,
-      select: { title: true, cancelled: true, meetings: true, position: true, updatedAt: true },
-      user,
-      overrideAccess: false,
-      req,
-    })
-    return sessionItems(docs, course, untitled)
+    return sessionItems(await courseSessions(ctx, id), course, untitled)
+  },
+
+  async names(ctx, parentId) {
+    const sessions = numberedSessions(await courseSessions(ctx, numericId(parentId)))
+    return new Map(
+      sessions.map(({ session, number }) => [
+        String(session.id),
+        sessionName(number, session.title, ctx.untitled),
+      ]),
+    )
   },
 
   async canEdit({ req }, parentId) {

@@ -1299,7 +1299,7 @@
     "sessionRemoved": "حُذفت الجلسة",
     "scheduleLabel": "تغييرات الجدول",
     "scheduleKind": "جلسة",
-    "scheduleGone": "لم تعد الجلسات التي يذكرها هذا الجدول ضمن الدورة.",
+    "scheduleGone": "لم تعد الجلسات التي يذكرها هذا الجدول ضمن الدورة، أو لم تعد تلتقي في أسابيعه.",
     "sessionList": "الجلسات",
     "sessionBlocks": "الكتل والجلسات",
     "composeHint": "اكتب @ لتذكر أحدًا.",
@@ -1604,13 +1604,13 @@
     "free": "مجانًا"
   },
   "ScheduleChanges": {
-    "moved": "يُنقل موعد {title} من {from} إلى {to}",
-    "meetingAdded": "أُضيف لقاء جديد إلى {title} في {when}",
-    "meetingRemoved": "أُلغي لقاء {title} المقرر في {when}",
-    "itemAdded": "جلسة جديدة بعنوان {title} تلتقي في {when}",
-    "itemRemoved": "حُذفت {title}، وكانت ستلتقي في {when}",
-    "cancelled": "أُلغيت {title}",
-    "restored": "عادت {title} إلى الجدول",
+    "moved": "تُنقل {session} من {from} إلى {to}",
+    "meetingAdded": "أُضيف إلى {session} لقاء جديد في {when}",
+    "meetingRemoved": "أُلغي اللقاء المقرر في {when} من {session}",
+    "itemAdded": "أُضيفت {session}، وموعدها {when}",
+    "itemRemoved": "حُذفت {session}، وكان موعدها {when}",
+    "cancelled": "أُلغيت {session}",
+    "restored": "عادت {session} إلى الجدول",
     "at": "{day}، الساعة {time}"
   }
 }

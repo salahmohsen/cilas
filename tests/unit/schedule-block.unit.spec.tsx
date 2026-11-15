@@ -139,9 +139,7 @@ describe('a schedule block in a post', () => {
 
   it('says so in a short line when its sessions are gone or the course is not readable', () => {
     view(schedule(['99']))
-    expect(
-      screen.getByText('The sessions this schedule names are no longer on the course.'),
-    ).toBeInTheDocument()
+    expect(screen.getByText(en.SpacePost.scheduleGone)).toBeInTheDocument()
     expect(screen.queryByRole('group', { name: 'Calendar' })).toBeNull()
     cleanup()
     view(schedule(['12']), { state: 'hidden' })
@@ -150,5 +148,26 @@ describe('a schedule block in a post', () => {
     cleanup()
     view(schedule(['12']), null)
     expect(screen.queryByRole('group', { name: 'Calendar' })).toBeNull()
+  })
+
+  it('says so in a short line when its sessions all moved out of its weeks', () => {
+    const away = {
+      ...course,
+      sessions: [
+        session(12, 2, [{ date: '2027-01-12' }]),
+        session(13, 3, [{ date: '2026-11-24' }]),
+      ],
+    }
+    view(schedule(['12']), { state: 'shown', course: away })
+    expect(screen.getByText(en.SpacePost.scheduleGone)).toBeInTheDocument()
+    expect(screen.queryByRole('group', { name: 'Calendar' })).toBeNull()
+  })
+
+  it('opens on the week of the first day a named session meets', () => {
+    view(schedule(['13']))
+    expect(screen.getByText('Nov 21 to Nov 27, 2026')).toBeInTheDocument()
+    expect(
+      screen.getByRole('button', { name: /^Session 3, Tuesday, November 24.*Changed$/ }),
+    ).toBeInTheDocument()
   })
 })

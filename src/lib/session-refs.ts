@@ -12,8 +12,9 @@
  * A block token inside a sentence is not a block: it reads as a mention. A
  * schedule token inside a sentence is nothing.
  */
-import { cairoDay } from '@/lib/cairo-day'
+import { addDays, cairoDay } from '@/lib/cairo-day'
 import { weekStart } from '@/lib/calendar'
+import type { CalendarItem } from '@/lib/calendar-items'
 import { numberedSessions, type SessionTimes } from '@/lib/meetings'
 
 const ID = '[A-Za-z0-9_-]{1,64}'
@@ -49,6 +50,38 @@ export type ScheduleRef = { from: string; weeks: number; ids: string[] }
 /** Weeks past the most a block shows are cut off. */
 export const scheduleToken = ({ from, weeks, ids }: ScheduleRef) =>
   `::schedule[${weekStart(from)}+${Math.min(weeks, SCHEDULE_MAX_WEEKS)}:${ids.join(',')}]`
+
+/**
+ * A post body with a schedule block: the text, then the block as a paragraph
+ * of its own, since `scheduleLineRef` reads only a line with nothing else on it.
+ */
+export const withSchedule = (text: string, token: string | null): string =>
+  token ? `${text.trimEnd()}\n\n${token}` : text
+
+/**
+ * What a schedule block shows of `items`: their meetings in its weeks, and the
+ * first day a marked session meets there, which it opens on (a phone shows
+ * one day). Null when no marked session meets in its weeks any more: then
+ * there is nothing changed left to show.
+ */
+export const scheduleView = (
+  items: readonly CalendarItem[],
+  { from, weeks, ids }: ScheduleRef,
+): { items: CalendarItem[]; day: string } | null => {
+  const end = addDays(from, 7 * weeks)
+  const shown = items
+    .map((item) => ({
+      ...item,
+      blocks: item.blocks.filter((b) => b.date >= from && b.date < end),
+    }))
+    .filter((item) => item.blocks.length)
+  const marked = new Set(ids)
+  const [day] = shown
+    .filter((item) => marked.has(item.id))
+    .flatMap((item) => item.blocks.map((b) => b.date))
+    .sort()
+  return day ? { items: shown, day } : null
+}
 
 const scheduleOf = (m: RegExpExecArray | RegExpMatchArray): ScheduleRef | null => {
   const [, day, count, list] = m

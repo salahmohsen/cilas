@@ -1299,7 +1299,7 @@
     "sessionRemoved": "Session removed",
     "scheduleLabel": "Schedule changes",
     "scheduleKind": "Session",
-    "scheduleGone": "The sessions this schedule names are no longer on the course.",
+    "scheduleGone": "The sessions this schedule names are no longer on the course, or no longer meet in its weeks.",
     "sessionList": "Sessions",
     "sessionBlocks": "Blocks and sessions",
     "composeHint": "Type @ to mention someone.",
@@ -1604,13 +1604,13 @@
     "free": "Free"
   },
   "ScheduleChanges": {
-    "moved": "{title} moves from {from} to {to}",
-    "meetingAdded": "{title} has a new meeting on {when}",
-    "meetingRemoved": "The meeting of {title} on {when} is removed",
-    "itemAdded": "A new session, {title}, meets on {when}",
-    "itemRemoved": "{title} is removed. It was to meet on {when}",
-    "cancelled": "{title} is cancelled",
-    "restored": "{title} is no longer cancelled",
+    "moved": "{session} moves from {from} to {to}",
+    "meetingAdded": "{session} has a new meeting on {when}",
+    "meetingRemoved": "The meeting of {session} on {when} is removed",
+    "itemAdded": "{session} is added. It meets on {when}",
+    "itemRemoved": "{session} is removed. It was to meet on {when}",
+    "cancelled": "{session} is cancelled",
+    "restored": "{session} is no longer cancelled",
     "at": "{day} {time}"
   }
 }

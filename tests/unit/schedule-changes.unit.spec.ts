@@ -233,36 +233,42 @@ describe('scheduleBlock', () => {
 describe('scheduleChangeText', () => {
   const from = block('a', '2026-11-19')
   const to = block('a', '2026-11-21', '20:00', '22:00')
+  const names = new Map([
+    ['3', 'Session 3: Reading Fanon'],
+    ['5', 'Session 5'],
+    ['9', 'Session 9: Field notes'],
+  ])
 
-  it('writes one bullet per change in English', () => {
+  it('names each session by its number and title, one bullet per change', () => {
     const changes = scheduleChanges(
       [s3([from, block('b', '2026-11-26')]), item('5', 'Session 5', [block('c', '2026-12-03')])],
       [s3([to]), item('5', 'Session 5', [block('c', '2026-12-03')], true)],
       TODAY,
     )
-    expect(scheduleChangeText(changes, 'en')).toBe(
+    expect(scheduleChangeText(changes, 'en', names)).toBe(
       [
-        '- Session 3 moves from Thu 19 Nov 19:00 to Sat 21 Nov 20:00',
-        '- The meeting of Session 3 on Thu 26 Nov 19:00 is removed',
+        '- Session 3: Reading Fanon moves from Thu 19 Nov 19:00 to Sat 21 Nov 20:00',
+        '- The meeting of Session 3: Reading Fanon on Thu 26 Nov 19:00 is removed',
         '- Session 5 is cancelled',
       ].join('\n'),
     )
   })
 
-  it('words the other changes in English', () => {
+  it('words the other changes in English, and keeps the page title of a deleted session', () => {
     const text = scheduleChangeText(
       [
         { kind: 'meeting-added', itemId: '3', title: 'Session 3', block: to },
         { kind: 'item-added', itemId: '9', title: 'Session 9', blocks: [from, to] },
-        { kind: 'item-removed', itemId: '8', title: 'Session 8', blocks: [from] },
+        { kind: 'item-removed', itemId: '8', title: 'Old title', blocks: [from] },
         { kind: 'restored', itemId: '5', title: 'Session 5', blocks: [] },
       ],
       'en',
+      names,
     ).split('\n')
     expect(text).toEqual([
-      '- Session 3 has a new meeting on Sat 21 Nov 20:00',
-      '- A new session, Session 9, meets on Thu 19 Nov 19:00 and Sat 21 Nov 20:00',
-      '- Session 8 is removed. It was to meet on Thu 19 Nov 19:00',
+      '- Session 3: Reading Fanon has a new meeting on Sat 21 Nov 20:00',
+      '- Session 9: Field notes is added. It meets on Thu 19 Nov 19:00 and Sat 21 Nov 20:00',
+      '- Old title is removed. It was to meet on Thu 19 Nov 19:00',
       '- Session 5 is no longer cancelled',
     ])
   })
@@ -279,35 +285,45 @@ describe('scheduleChangeText', () => {
         },
       ],
       'en',
+      names,
     )
-    expect(text).toBe('- Session 3 moves from Thu 19 Nov to Sat 21 Nov')
+    expect(text).toBe('- Session 3: Reading Fanon moves from Thu 19 Nov to Sat 21 Nov')
   })
 
-  it('writes Arabic with Arabic digits', () => {
+  it('writes Arabic with Arabic digits, each verb agreeing with الجلسة', () => {
+    const ar = new Map([
+      ['3', 'الجلسة ٣: قراءة فانون'],
+      ['5', 'الجلسة ٥'],
+      ['6', 'الجلسة ٦'],
+      ['9', 'الجلسة ٩: ملاحظات'],
+      ['8', 'الجلسة ٨'],
+    ])
     const text = scheduleChangeText(
       [
-        { kind: 'moved', itemId: '3', title: 'الجلسة ٣', from, to },
-        { kind: 'cancelled', itemId: '5', title: 'الجلسة ٥', blocks: [] },
-        { kind: 'restored', itemId: '6', title: 'الجلسة ٦', blocks: [] },
-        {
-          kind: 'meeting-removed',
-          itemId: '3',
-          title: 'الجلسة ٣',
-          block: allDay('c', '2026-11-26'),
-        },
+        { kind: 'moved', itemId: '3', title: 'x', from, to },
+        { kind: 'cancelled', itemId: '5', title: 'x', blocks: [] },
+        { kind: 'restored', itemId: '6', title: 'x', blocks: [] },
+        { kind: 'meeting-removed', itemId: '3', title: 'x', block: allDay('c', '2026-11-26') },
+        { kind: 'meeting-added', itemId: '3', title: 'x', block: allDay('c', '2026-11-26') },
+        { kind: 'item-added', itemId: '9', title: 'x', blocks: [allDay('d', '2026-11-26')] },
+        { kind: 'item-removed', itemId: '8', title: 'x', blocks: [allDay('d', '2026-11-26')] },
       ],
       'ar',
+      ar,
     ).split('\n')
-    expect(text[0]).toBe(
-      '- يُنقل موعد الجلسة ٣ من الخميس، ١٩ نوفمبر، الساعة ١٩:٠٠ إلى السبت، ٢١ نوفمبر، الساعة ٢٠:٠٠',
-    )
-    expect(text[1]).toBe('- أُلغيت الجلسة ٥')
-    expect(text[2]).toBe('- عادت الجلسة ٦ إلى الجدول')
-    expect(text[3]).toBe('- أُلغي لقاء الجلسة ٣ المقرر في الخميس، ٢٦ نوفمبر')
+    expect(text).toEqual([
+      '- تُنقل الجلسة ٣: قراءة فانون من الخميس، ١٩ نوفمبر، الساعة ١٩:٠٠ إلى السبت، ٢١ نوفمبر، الساعة ٢٠:٠٠',
+      '- أُلغيت الجلسة ٥',
+      '- عادت الجلسة ٦ إلى الجدول',
+      '- أُلغي اللقاء المقرر في الخميس، ٢٦ نوفمبر من الجلسة ٣: قراءة فانون',
+      '- أُضيف إلى الجلسة ٣: قراءة فانون لقاء جديد في الخميس، ٢٦ نوفمبر',
+      '- أُضيفت الجلسة ٩: ملاحظات، وموعدها الخميس، ٢٦ نوفمبر',
+      '- حُذفت الجلسة ٨، وكان موعدها الخميس، ٢٦ نوفمبر',
+    ])
     for (const line of text) expect(line).not.toMatch(/[0-9]/)
   })
 
   it('writes nothing for no change', () => {
-    expect(scheduleChangeText([], 'en')).toBe('')
+    expect(scheduleChangeText([], 'en', names)).toBe('')
   })
 })

@@ -1,4 +1,5 @@
 import { getFormatter, getTranslations } from 'next-intl/server'
+import { sessionName } from '@/lib/calendar-sources'
 import { numberingSystemOf } from '@/lib/digits'
 import { numberedSessions } from '@/lib/meetings'
 import type { SessionCourse } from '@/lib/spaces-data'
@@ -21,10 +22,9 @@ export async function sessionOptions(
           numberingSystem: numberingSystemOf(locale),
         })
       : null
-    const name = session.title ? `${unit}: ${session.title}` : unit
     return {
       id: String(session.id),
-      label: name,
+      label: sessionName(n, session.title, (number) => t('session', { number })),
       mention: `#${n}${session.title ? ` ${session.title}` : ''}`,
       title: session.title || undefined,
       unit,

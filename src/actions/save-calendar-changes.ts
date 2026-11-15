@@ -76,14 +76,18 @@ export async function saveCalendarChanges(
   const source = calendarSourceOf(parent.kind)
   if (!source) return fail({ code: 'invalid', message: `Nothing is saved on a “${parent.kind}”.` })
 
+  const ctx = await calendarContext(user, locale)
   try {
-    const ctx = await calendarContext(user, locale)
     const items = await inTransaction(ctx.req, async () => {
       await source.apply(ctx, parent.id, changes)
       return source.load(ctx, parent.id)
     })
     return { ok: true, items }
   } catch (error) {
-    return fail(calendarErrorOf(error))
+    const refused = calendarErrorOf(error)
+    if (refused.code !== 'stale') return fail(refused)
+    // The message names the item another person changed, as it is called now.
+    const name = (await source.names(ctx, parent.id)).get(refused.itemId)
+    return fail({ ...refused, ...(name ? { name } : {}) })
   }
 }

@@ -139,15 +139,18 @@ export type ScheduleChangeLocale = 'en' | 'ar'
 
 /**
  * The changes as a short Markdown list for an announcement, one bullet per
- * change, in the language of the course page. Words come from
- * `messages/*.json` (`ScheduleChanges`) through next-intl's server-safe
- * translator, as the admin calendar's text does; days and times are written
- * as the course page writes them (`meeting-text.ts`, `digits.ts`). An
- * all-day meeting shows its day only.
+ * change, in the language of the course page. `names` holds each session's
+ * name in that language ("Session 3: Title", `sessionName`); a session
+ * deleted in the save is no longer there to name, so it keeps the title the
+ * page showed. Words come from `messages/*.json` (`ScheduleChanges`) through
+ * next-intl's server-safe translator; days and times are written as the
+ * course page writes them (`meeting-text.ts`, `digits.ts`). An all-day
+ * meeting shows its day only.
  */
 export const scheduleChangeText = (
   changes: readonly ScheduleChange[],
   locale: ScheduleChangeLocale,
+  names: ReadonlyMap<string, string>,
 ): string => {
   const t = createTranslator({
     locale,
@@ -160,21 +163,22 @@ export const scheduleChangeText = (
     return b.start_time ? t('at', { day, time: localDigits(b.start_time, locale) }) : day
   }
   const line = (c: ScheduleChange): string => {
+    const session = names.get(c.itemId) ?? c.title
     switch (c.kind) {
       case 'moved':
-        return t('moved', { title: c.title, from: when(c.from), to: when(c.to) })
+        return t('moved', { session, from: when(c.from), to: when(c.to) })
       case 'meeting-added':
-        return t('meetingAdded', { title: c.title, when: when(c.block) })
+        return t('meetingAdded', { session, when: when(c.block) })
       case 'meeting-removed':
-        return t('meetingRemoved', { title: c.title, when: when(c.block) })
+        return t('meetingRemoved', { session, when: when(c.block) })
       case 'item-added':
-        return t('itemAdded', { title: c.title, when: list.format(c.blocks.map(when)) })
+        return t('itemAdded', { session, when: list.format(c.blocks.map(when)) })
       case 'item-removed':
-        return t('itemRemoved', { title: c.title, when: list.format(c.blocks.map(when)) })
+        return t('itemRemoved', { session, when: list.format(c.blocks.map(when)) })
       case 'cancelled':
-        return t('cancelled', { title: c.title })
+        return t('cancelled', { session })
       case 'restored':
-        return t('restored', { title: c.title })
+        return t('restored', { session })
     }
   }
   return changes.map((c) => `- ${line(c)}`).join('\n')

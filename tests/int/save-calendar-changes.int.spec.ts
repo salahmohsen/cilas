@@ -462,7 +462,15 @@ describe('saveCalendarChanges', () => {
       },
     ])
 
-    expect(result).toEqual({ ok: false, error: { code: 'stale', itemId: String(old) } })
+    // The message names the session as it is called now, number and title.
+    expect(result).toEqual({
+      ok: false,
+      error: {
+        code: 'stale',
+        itemId: String(old),
+        name: expect.stringMatching(/^Session \d+: Edited meanwhile$/),
+      },
+    })
     expect(await stored(fresh)).toEqual(freshBefore)
     expect((await stored(old)).meetings).toEqual(oldBefore.meetings)
     expect(await sessionIds(course)).toEqual(known)
