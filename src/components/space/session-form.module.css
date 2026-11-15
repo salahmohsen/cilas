@@ -68,6 +68,13 @@
   color: var(--text-secondary);
 }
 
+@media (pointer: coarse) {
+  .remove {
+    min-block-size: 44px;
+    min-inline-size: 44px;
+  }
+}
+
 .alertActions {
   display: flex;
   flex-wrap: wrap;
