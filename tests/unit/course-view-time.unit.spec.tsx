@@ -106,31 +106,4 @@ describe('what the course page says about time', () => {
     expect(container.querySelector('p.side-card-muted')).toBeNull()
     expect(container.querySelector('.course-flow')).toBeNull()
   })
-
-  describe('approximate archive meetings', () => {
-    const approximate = weekly.map((s) => ({
-      ...s,
-      meetings: s.meetings!.map((m) => ({ ...m, approximate: true })),
-    }))
-    const notes = (container: HTMLElement, text: string) =>
-      [...container.querySelectorAll('p.side-card-muted')].filter((p) => p.textContent === text)
-
-    it('keeps the dates and says once, in each layout’s card, that they are approximate', () => {
-      const { rows, container } = facts(course(), approximate)
-      expect(rows[0]).toBe('Starts: Tuesday, Mar 3')
-      // One side card a layout (phone and wide); the note once in each.
-      expect(notes(container, 'Dates are approximate')).toHaveLength(2)
-      expect(notes(container.querySelector('aside')!, 'Dates are approximate')).toHaveLength(1)
-    })
-
-    it('says it in Arabic', () => {
-      expect(notes(facts(course(), approximate, 'ar').container, 'التواريخ تقريبية')).toHaveLength(
-        2,
-      )
-    })
-
-    it('says nothing for a course whose meetings were held', () => {
-      expect(facts(course(), weekly).container.querySelector('p.side-card-muted')).toBeNull()
-    })
-  })
 })

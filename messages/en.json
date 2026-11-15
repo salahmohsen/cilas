@@ -345,7 +345,6 @@
     "details": "Course details",
     "cycle": "Cycle",
     "starts": "Starts",
-    "approximateDates": "Dates are approximate",
     "meets": "Meets",
     "length": "Length",
     "sessions": "{count, plural, one {# session} other {# sessions}}",
@@ -497,7 +496,6 @@
     "session": "Session {n}",
     "more": "{count, plural, one {# more} other {# more}}",
     "cancelled": "Cancelled",
-    "approximate": "Approximate date",
     "eventTypes": {
       "talk": "Talk",
       "panel": "Panel",

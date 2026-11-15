@@ -92,6 +92,6 @@ const getCalendarItems = async (payload: Payload, locale: Locale): Promise<Calen
 /** The items above, built once per language and kept until a course changes. */
 export const getCachedCalendarItems = unstable_cache(
   async (locale: Locale) => getCalendarItems(await getPayload({ config }), locale),
-  ['calendar-items-v6'],
+  ['calendar-items-v5'],
   { tags: [PUBLIC_LISTS_TAG], revalidate: 3600 },
 )

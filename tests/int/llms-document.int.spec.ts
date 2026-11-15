@@ -111,20 +111,6 @@ describe('llms-document', () => {
     expect(md).not.toContain('[object Object]')
   })
 
-  it('says once that approximate dates are approximate, and keeps the dates', async () => {
-    const approximate = sessions.map((s) => ({
-      ...s,
-      meetings: (s.meetings ?? []).map((m) => ({ ...m, approximate: true })),
-    }))
-    const md = documentToMarkdown(await courseDocument(payload, course, approximate, 'en'))
-    expect(md.match(/\*\*Dates:\*\* approximate/g)).toHaveLength(1)
-    expect(md).toContain('**Starts:** 2031-03-04')
-    const ar = documentToMarkdown(await courseDocument(payload, course, approximate, 'ar'))
-    expect(ar).toContain('**التواريخ:** تقريبية')
-    const held = documentToMarkdown(await courseDocument(payload, course, sessions, 'en'))
-    expect(held).not.toContain('**Dates:**')
-  })
-
   it('prints the note belonging to the inherited cycle price', async () => {
     const priced = {
       ...course,

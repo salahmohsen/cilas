@@ -4,13 +4,10 @@ import { getTranslations } from 'next-intl/server'
 import { getCachedCalendarItems } from '@/api/calendar.api'
 import { env } from '@/env'
 import { buildIcs } from '@/lib/ics'
-import { isApproximate } from '@/lib/meetings'
 
 /**
  * The calendar as an iCalendar feed, in the site language: `/en/calendar.ics`
- * to download or for a calendar app to subscribe to (webcal://…). An
- * approximate meeting is left out: a calendar app shows an entry as a real
- * appointment, with no room to say that nobody met at that time.
+ * to download or for a calendar app to subscribe to (webcal://…).
  */
 export async function GET(request: Request, { params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params
@@ -22,23 +19,21 @@ export async function GET(request: Request, { params }: { params: Promise<{ loca
   const items = await getCachedCalendarItems(lang)
   const origin = env.NEXT_PUBLIC_SERVER_URL || new URL(request.url).origin
   const ics = buildIcs(
-    items
-      .filter((item) => !isApproximate(item))
-      .map((item) => ({
-        uid: `${item.key}@cilas`,
-        title: item.title,
-        date: item.date,
-        start: item.start,
-        end: item.end,
-        ...(item.href ? { url: `${origin}/${lang}${item.href}` } : {}),
-        description: [
-          item.kind === 'course' ? tf(`types.${item.type}`) : t(`eventTypes.${item.type}`),
-          item.session ? t('session', { n: item.session }) : null,
-        ]
-          .filter(Boolean)
-          .join(' · '),
-        cancelled: item.cancelled,
-      })),
+    items.map((item) => ({
+      uid: `${item.key}@cilas`,
+      title: item.title,
+      date: item.date,
+      start: item.start,
+      end: item.end,
+      ...(item.href ? { url: `${origin}/${lang}${item.href}` } : {}),
+      description: [
+        item.kind === 'course' ? tf(`types.${item.type}`) : t(`eventTypes.${item.type}`),
+        item.session ? t('session', { n: item.session }) : null,
+      ]
+        .filter(Boolean)
+        .join(' · '),
+      cancelled: item.cancelled,
+    })),
     { name: t('feedName') },
   )
   const download = new URL(request.url).searchParams.has('download')

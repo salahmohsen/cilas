@@ -40,13 +40,13 @@ import { getBridgeYear, listBridgeYears } from '../src/api/programmes.api'
 import { otherLocale, routing, type Locale } from '../src/i18n/routing'
 import { formatsOf } from '../src/i18n/formats'
 import { toCourseCard } from '../src/lib/article-cards'
-import { isApproximate, numberedSessions, upcomingSession } from '../src/lib/meetings'
+import { numberedSessions, upcomingSession } from '../src/lib/meetings'
 import { sessionFacts } from '../src/lib/session-refs'
+import { expandSchedule } from '../src/lib/schedule'
 import { courseLastMeeting } from '../src/lib/space-lifecycle'
 import config from '../src/payload.config'
 import { syllabusText } from '../src/plugins/typesense/documents'
 import type { Course } from '../src/payload-types'
-import { patternDated } from './archive-meetings-plan'
 import { decideStartDate, type ResearchEntry } from './archive-start-dates'
 import {
   compareSnapshots,
@@ -166,10 +166,6 @@ const undated = new Set(research.filter((e) => !dated(e)).map((e) => e.id))
 
 const sessionCount = new Map<number, number>()
 const meetingCount = new Map<number, number>()
-const approximate = new Set<number>()
-// Every month a course meets in, for the month lists: from the stored
-// meetings, not the feed, which leaves approximate meetings out.
-const months = new Set<string>()
 for (const s of (
   await payload.find({
     collection: 'sessions',
@@ -182,10 +178,6 @@ for (const s of (
   const course = typeof s.course === 'object' ? s.course.id : s.course
   sessionCount.set(course, (sessionCount.get(course) ?? 0) + 1)
   meetingCount.set(course, (meetingCount.get(course) ?? 0) + (s.meetings?.length ?? 0))
-  for (const m of s.meetings ?? []) {
-    months.add(m.date.slice(0, 7))
-    if (isApproximate(m)) approximate.add(course)
-  }
 }
 
 /**
@@ -194,7 +186,7 @@ for (const s of (
  * `make-archive-meetings.ts`), or it had only a typed length, which is gone.
  */
 const archiveOf = (c: Course): CourseMeta['archive'] => {
-  if (patternDated(c.schedule, c.sessions)) return undefined
+  if (expandSchedule(c.schedule, c.sessions).length) return undefined
   if ((meetingCount.get(c.id) ?? 0) > 0) return 'meetings'
   const { weeks, start_date, slots } = c.schedule ?? {}
   return weeks && !start_date && !slots?.length ? 'weeks-lost' : undefined
@@ -210,7 +202,6 @@ const meta: Record<string, CourseMeta> = Object.fromEntries(
       // The old rows each became one session; the rest are new and untitled.
       newSessions: Math.max(0, (sessionCount.get(c.id) ?? 0) - (c.sessions?.length ?? 0)),
       archive: archiveOf(c),
-      ...(approximate.has(c.id) ? { approximate: true } : {}),
     },
   ]),
 )
@@ -305,6 +296,7 @@ for (const { c, results } of pages) {
 }
 
 console.error('Calendar feed and month lists…')
+const months = new Set<string>()
 for (const l of LOCALES) {
   const feed = await get(`/${l}/calendar.ics`)
   if (feed.status !== 200) throw new Error(`/${l}/calendar.ics answered ${feed.status}`)
@@ -313,6 +305,10 @@ for (const l of LOCALES) {
     if (!id) throw new Error(`The feed names a course not in the database: ${slug}`)
     const value = (readers['calendar.ics']?.[id] ?? {}) as Record<string, string[]>
     put('calendar.ics', id, { ...value, [l]: entries })
+    for (const e of entries) {
+      const day = /DTSTART[^:]*:(\d{4})(\d{2})/.exec(e)
+      if (day) months.add(`${day[1]}-${day[2]}`)
+    }
   }
 }
 
@@ -332,8 +328,6 @@ const monthList = (html: string): Array<[string, string]> => {
         squash(slot.querySelector('.cal-item-when')?.textContent),
         squash(slot.querySelector('.cal-slot-note')?.textContent),
         slot.hasAttribute('data-cancelled') ? 'cancelled' : '',
-        // Only when marked, so other courses' lines read as before.
-        ...(slot.hasAttribute('data-approximate') ? ['approximate'] : []),
       ]
       out.push([slug, parts.join(' | ')])
     }
