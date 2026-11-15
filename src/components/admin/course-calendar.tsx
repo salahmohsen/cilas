@@ -9,10 +9,9 @@ import { scheduleOffers } from '@/actions/schedule-offers'
 import Button from '@/components/arc/button/button'
 import { Calendar } from '@/components/calendar/ui/calendar'
 import { CalendarSaveRefusal } from '@/components/calendar/ui/save-refusal'
-import type { CalendarChange, CalendarItem } from '@/lib/calendar-items'
+import { openingDay, type CalendarChange, type CalendarItem } from '@/lib/calendar-items'
 import type { CalendarSaveError } from '@/lib/calendar-sources'
 import { cairoDay } from '@/lib/cairo-day'
-import { lastDay, nextMeeting } from '@/lib/meetings'
 import { preloadable } from '@/lib/preloadable'
 import type { ScheduleOffer } from '@/lib/schedule-offer'
 
@@ -36,17 +35,6 @@ type Loaded =
   | { status: 'loading' }
   | { status: 'failed'; error: CalendarSaveError }
   | { status: 'ready'; items: CalendarItem[]; canEdit: boolean }
-
-/** The week to open on: the next meeting's, or the last one's when the course is over. */
-const openingDay = (items: CalendarItem[]): string | undefined => {
-  const meetings = items.flatMap((item) =>
-    item.blocks.map((block) => ({
-      date: block.date,
-      ...(item.cancelled ? { cancelled: true as const } : {}),
-    })),
-  )
-  return nextMeeting(meetings, cairoDay(new Date())!)?.date ?? lastDay(meetings) ?? undefined
-}
 
 /** A save that did not happen, as the Error the calendar shows beside its Save button. */
 class SaveRefused extends Error {}
@@ -203,7 +191,7 @@ export function CourseCalendar({ courseId, language, messages }: Props) {
           items={loaded.items}
           labels={labels}
           locale={language}
-          day={openingDay(loaded.items)}
+          day={openingDay(loaded.items, cairoDay(new Date())!)}
           onOpen={open}
           {...(loaded.canEdit
             ? {

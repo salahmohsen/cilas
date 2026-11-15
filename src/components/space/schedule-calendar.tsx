@@ -13,19 +13,23 @@ import { sessionPostsHref } from './session-chip'
 /** The calendar of a schedule block, view only; a block opens the posts about its session, as a session chip does. */
 export function ScheduleCalendar({
   items,
-  marked,
+  marked = [],
   day,
   spaceHref,
 }: {
   items: CalendarItem[]
-  marked: string[]
-  day: string
+  marked?: string[]
+  day?: string
   spaceHref: string
 }) {
   const t = useTranslations('SpacePost')
   const locale = useLocale()
   const router = useRouter()
-  const kind = useCallback(() => t('scheduleKind'), [t])
+  const ts = useTranslations('Spaces')
+  const kind = useCallback(
+    (value: string) => (value === 'space-event' ? ts('calendarEvents') : t('scheduleKind')),
+    [t, ts],
+  )
   const labels = useCalendarLabels({ kind, newItem: t('scheduleKind') })
   const markedSet = useMemo(() => new Set(marked), [marked])
   return (
@@ -36,7 +40,15 @@ export function ScheduleCalendar({
       day={day}
       labels={labels}
       locale={locale}
-      onOpen={(itemId) => router.push(sessionPostsHref(spaceHref, itemId))}
+      onOpen={(itemId) => {
+        const item = items.find((item) => item.id === itemId)
+        if (item)
+          router.push(
+            item.kind === 'space-event'
+              ? `${spaceHref}/posts/${item.blocks[0]!.id}`
+              : sessionPostsHref(spaceHref, itemId),
+          )
+      }}
     />
   )
 }

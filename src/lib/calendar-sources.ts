@@ -25,7 +25,7 @@ export type CalendarSaveError =
   /** Someone saved the item after the page loaded it. `name` is what it is called now, when it is still there. */
   | { code: 'stale'; itemId: string; name?: string }
   /** A change is not a valid meeting, or not a change this parent takes. */
-  | { code: 'invalid'; message: string; change?: number; reason?: 'no-calendar' }
+  | { code: 'invalid'; message: string; change?: number }
   | { code: 'failed' }
 
 /** Thrown by an adapter to fail the whole save with a typed error. */
@@ -315,7 +315,6 @@ const spaceCourse = async ({ req, user }: CalendarContext, parentId: string): Pr
   if (space.kind !== 'course' || course == null)
     throw new CalendarSaveFailure({
       code: 'invalid',
-      reason: 'no-calendar',
       message: 'This space has no calendar.',
     })
   return String(course)

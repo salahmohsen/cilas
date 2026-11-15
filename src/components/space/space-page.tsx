@@ -49,11 +49,13 @@ import {
 } from '@/lib/spaces-data'
 import { visitRecord } from '@/lib/spaces-write'
 
+import { SpaceViews } from './space-views'
+import { SpaceCalendar } from './space-calendar'
 import { AboutClamp } from './about-clamp'
 import { Composer } from './composer'
 import { sessionOptions } from './session-options'
 import { EventList } from './event-list'
-import { FeedFilter, FeedFilterMenu, SpaceFeedFilters } from './feed-filter'
+import { FeedFilterMenu, SpaceFeedFilters } from './feed-filter'
 import { StableOrder } from './stable-order'
 import { FeedRow, type FeedContext } from './feed-row'
 import { FreshPosts } from './fresh-posts'
@@ -71,7 +73,7 @@ import { SpaceRail } from './space-rail'
 import { StickyRail } from './sticky-rail'
 import styles from './space.module.css'
 
-export type SpaceTab = 'all' | 'announcements' | 'syllabus' | 'events'
+export type SpaceTab = 'all' | 'announcements' | 'syllabus' | 'calendar' | 'events'
 
 /** NN/g: "Load more" in batches, never an endless feed. */
 const BATCH = 20
@@ -247,7 +249,7 @@ export async function SpacePage({
   const course = landing.course
   const cover = coverOf(course ?? landing.programme)
   const announcements = feed.rows.filter((r) => r.post.kind === 'announcement')
-  const view = tab === 'syllabus' && !course ? 'all' : tab
+  const view = (tab === 'syllabus' || tab === 'calendar') && !course ? 'all' : tab
   // How many posts are about each session (linked, or named in the post or
   // its thread), from the rows the feed already read.
   const { named, counts: linked } = sessionCounts(feed.rows)
@@ -559,17 +561,7 @@ export async function SpacePage({
             />
           )}
           <div className={styles.feedBar}>
-            <FeedFilter
-              path={path}
-              value={view}
-              label={t('filterLabel')}
-              options={[
-                { value: 'all', label: t('all') },
-                { value: 'announcements', label: t('announcements') },
-                ...(course ? [{ value: 'syllabus', label: t('syllabus') }] : []),
-                { value: 'events', label: t('events') },
-              ]}
-            />
+            <SpaceViews path={path} value={view} hasCourse={Boolean(course)} />
             {feedFilters && <FeedFilterMenu fields={filterFields} filters={filterChips} />}
           </div>
           {/* The filters set have a row of their own under the view switch, the feed's width. */}
@@ -605,6 +597,8 @@ export async function SpacePage({
             ) : (
               <EmptyState title={t('noSyllabus')} description={t('noSyllabusHint')} />
             )
+          ) : view === 'calendar' && course ? (
+            <SpaceCalendar id={space.id} locale={locale} spaceHref={path} />
           ) : view === 'events' ? (
             <EventList
               upcoming={events.upcoming}

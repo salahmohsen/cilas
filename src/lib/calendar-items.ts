@@ -1,3 +1,5 @@
+import { lastDay, nextMeeting } from './meetings'
+
 /**
  * The contract between the calendar component and the code that loads and
  * saves what it shows. The component knows no domain: courses, events and
@@ -53,4 +55,15 @@ export type CalendarChange =
 export type CalendarSave = {
   parent: { kind: string; id: string }
   changes: CalendarChange[]
+}
+
+/** The next meeting's day, or the last held meeting's day after the course ends. */
+export const openingDay = (items: readonly CalendarItem[], today: string): string | undefined => {
+  const meetings = items.flatMap((item) =>
+    item.blocks.map((block) => ({
+      date: block.date,
+      ...(item.cancelled ? { cancelled: true as const } : {}),
+    })),
+  )
+  return nextMeeting(meetings, today)?.date ?? lastDay(meetings) ?? undefined
 }
