@@ -2,7 +2,7 @@
 import { cleanup, fireEvent, render, screen } from '@testing-library/react'
 import { renderToString } from 'react-dom/server'
 import { NextIntlClientProvider } from 'next-intl'
-import { afterEach, beforeAll, beforeEach, expect, it, vi } from 'vitest'
+import { afterEach, beforeEach, expect, it, vi } from 'vitest'
 
 import { loadCalendarItems } from '@/actions/load-calendar-items'
 import { SpaceCalendar } from '@/components/space/space-calendar'
@@ -51,14 +51,13 @@ const wrap = (children: React.ReactNode, locale = 'en') => (
     {children}
   </NextIntlClientProvider>
 )
-beforeAll(() => {
+beforeEach(() => {
+  // Each test, not once: under --no-isolate another file's environment can drop it between tests.
   globalThis.ResizeObserver = class {
     observe() {}
     unobserve() {}
     disconnect() {}
   }
-})
-beforeEach(() => {
   localStorage.clear()
   push.mockReset()
   vi.useFakeTimers({ now: new Date('2026-11-15T10:00:00Z'), toFake: ['Date'] })
