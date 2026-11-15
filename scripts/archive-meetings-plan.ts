@@ -1,5 +1,6 @@
 import { addDays, cairoDay, weekdayOf, type Weekday } from '../src/lib/cairo-day'
-import type { Meeting, WeeklyTime } from '../src/lib/meetings'
+import { isApproximate, sameWhen, type Meeting, type WeeklyTime } from '../src/lib/meetings'
+import { expandSchedule } from '../src/lib/schedule'
 
 /**
  * ADR 0011, "Archive courses get approximate meetings": what meetings one old
@@ -157,4 +158,64 @@ export const planArchiveMeetings = (course: ArchiveCourse): ArchivePlan => {
     }
   }
   return none(weeks ? 'weeks-lost' : 'nothing')
+}
+
+/**
+ * Whether the old weekly pattern gave the course meetings: the fill
+ * (`migrate-course-sessions.ts`) dated it, so `make-archive-meetings.ts` did
+ * not. The one test of which courses the archive script wrote.
+ */
+export const patternDated = (...old: Parameters<typeof expandSchedule>): boolean =>
+  expandSchedule(...old).length > 0
+
+/** A session as stored now: its id and its meeting rows. */
+export type StoredSession = {
+  id: number
+  meetings: readonly (Meeting & { id: string })[]
+}
+
+export type ApproximateMatch = {
+  /** Rows the plan made and nobody changed since, not yet marked. */
+  mark: string[]
+  /** Rows the plan made that are marked already. */
+  marked: number
+  /** Planned meetings with no stored row on that session, day and times. */
+  missing: { session: number | null; meeting: Meeting }[]
+  /** Stored rows the plan did not make, or that a person has moved since. */
+  other: { session: number; meeting: Meeting }[]
+}
+
+/**
+ * Which stored meetings of one course `make-archive-meetings.ts` made, so
+ * they can be marked approximate. `plan` is the course's plan made again,
+ * with its sessions in the order the script read them (by `position`: none
+ * had a meeting then). A planned meeting matches a stored row on the same
+ * session, day and times. A row a person moved since does not match and
+ * stays unmarked. Nothing is guessed: the rest is reported.
+ */
+export const matchArchiveMeetings = (
+  plan: ArchivePlan,
+  stored: readonly StoredSession[],
+): ApproximateMatch => {
+  const used = new Set<string>()
+  const result: ApproximateMatch = { mark: [], marked: 0, missing: [], other: [] }
+  for (const { session, meetings } of plan.onSessions) {
+    const rows = stored.find((s) => s.id === session)?.meetings ?? []
+    for (const meeting of meetings) {
+      const row = rows.find((r) => !used.has(r.id) && sameWhen(r, meeting))
+      if (!row) {
+        result.missing.push({ session, meeting })
+        continue
+      }
+      used.add(row.id)
+      if (isApproximate(row)) result.marked++
+      else result.mark.push(row.id)
+    }
+  }
+  for (const meetings of plan.newSessions)
+    for (const meeting of meetings) result.missing.push({ session: null, meeting })
+  for (const s of stored)
+    for (const row of s.meetings)
+      if (!used.has(row.id)) result.other.push({ session: s.id, meeting: row })
+  return result
 }

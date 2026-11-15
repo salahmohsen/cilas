@@ -1,6 +1,11 @@
 import { describe, expect, it } from 'vitest'
 
-import { planArchiveMeetings, type ArchiveCourse } from '../../scripts/archive-meetings-plan'
+import {
+  matchArchiveMeetings,
+  patternDated,
+  planArchiveMeetings,
+  type ArchiveCourse,
+} from '../../scripts/archive-meetings-plan'
 
 // 2026-03-03 is a Tuesday.
 const course = (extra: Partial<ArchiveCourse> = {}): ArchiveCourse => ({
@@ -185,5 +190,86 @@ describe('planArchiveMeetings', () => {
       onSessions: [],
       newSessions: [],
     })
+  })
+})
+
+describe('matchArchiveMeetings', () => {
+  // The plan as the first run made it: two sessions, one all-day meeting a week.
+  const plan = planArchiveMeetings(course({ startDay: '2026-03-03', weeks: 2, sessions: [1, 2] }))
+  const row = (id: string, date: string, extra: object = {}) => ({ id, ...day(date), ...extra })
+
+  it('marks the stored meetings the plan made, on the same session, day and times', () => {
+    const match = matchArchiveMeetings(plan, [
+      { id: 1, meetings: [row('a', '2026-03-03')] },
+      { id: 2, meetings: [row('b', '2026-03-10')] },
+    ])
+    expect(match).toEqual({ mark: ['a', 'b'], marked: 0, missing: [], other: [] })
+  })
+
+  it('leaves a meeting a person moved since unmarked, and reports it', () => {
+    const match = matchArchiveMeetings(plan, [
+      { id: 1, meetings: [row('a', '2026-03-03')] },
+      { id: 2, meetings: [row('b', '2026-03-12')] },
+    ])
+    expect(match.mark).toEqual(['a'])
+    expect(match.missing).toEqual([{ session: 2, meeting: day('2026-03-10') }])
+    expect(match.other).toEqual([{ session: 2, meeting: row('b', '2026-03-12') }])
+  })
+
+  it('does not match a meeting on another session', () => {
+    const match = matchArchiveMeetings(plan, [
+      { id: 1, meetings: [row('a', '2026-03-03'), row('b', '2026-03-10')] },
+      { id: 2, meetings: [] },
+    ])
+    expect(match.mark).toEqual(['a'])
+    expect(match.missing).toHaveLength(1)
+  })
+
+  it('changes nothing on a second run: marked rows are counted, not marked again', () => {
+    const match = matchArchiveMeetings(plan, [
+      { id: 1, meetings: [row('a', '2026-03-03', { approximate: true })] },
+      { id: 2, meetings: [row('b', '2026-03-10', { approximate: true })] },
+    ])
+    expect(match).toEqual({ mark: [], marked: 2, missing: [], other: [] })
+  })
+
+  it('compares times with an empty time as no time', () => {
+    const timed = planArchiveMeetings(
+      course({ startDay: '2026-03-03', slots: [wednesdays], weeks: 1, sessions: [1] }),
+    )
+    const match = matchArchiveMeetings(timed, [
+      { id: 1, meetings: [{ id: 'a', ...at('2026-03-04') }] },
+    ])
+    expect(match.mark).toEqual(['a'])
+    const allDay = matchArchiveMeetings(plan, [
+      { id: 1, meetings: [{ id: 'a', date: '2026-03-03', start_time: '', end_time: undefined }] },
+      { id: 2, meetings: [] },
+    ])
+    expect(allDay.mark).toEqual(['a'])
+  })
+
+  it('reports planned meetings for new sessions that are not stored', () => {
+    const match = matchArchiveMeetings(
+      planArchiveMeetings(course({ startDay: '2026-03-03', weeks: 2, sessions: [1] })),
+      [{ id: 1, meetings: [row('a', '2026-03-03')] }],
+    )
+    expect(match.missing).toEqual([{ session: null, meeting: day('2026-03-10') }])
+  })
+})
+
+describe('patternDated', () => {
+  // A course the fill dated from its weekly pattern is never one the archive
+  // script wrote, even when its plan would give the same meetings.
+  it('is true when the old pattern gives meetings, false when it gives none', () => {
+    const pattern = {
+      start_date: '2026-03-03T00:00:00.000Z',
+      weeks: 2,
+      slots: [{ weekday: 'tue' as const, start_time: '18:00', end_time: '20:00' }],
+    }
+    expect(patternDated(pattern as never, [])).toBe(true)
+    expect(patternDated({ start_date: '2026-03-03T00:00:00.000Z', weeks: 2 } as never, [])).toBe(
+      false,
+    )
+    expect(patternDated(null, null)).toBe(false)
   })
 })
