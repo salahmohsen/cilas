@@ -1,5 +1,6 @@
 .group {
   display: inline-flex;
+  max-width: 100%;
   align-items: stretch;
   border: 1px solid var(--foreground);
   border-radius: var(--radius-control);
@@ -27,6 +28,7 @@
 .primary {
   position: relative;
   display: inline-grid;
+  min-width: 0;
   min-height: var(--control-height-md);
   place-items: center;
   padding: 0 var(--space-4);
@@ -39,6 +41,7 @@
 .primarySlot {
   display: inline-flex;
   min-width: 0;
+  max-width: 100%;
   align-items: center;
 }
 .primarySlot[data-morphing] {
@@ -47,6 +50,7 @@
 .primaryContent {
   display: inline-flex;
   flex: none;
+  max-width: 100%;
   align-items: center;
   gap: var(--space-2);
   white-space: nowrap;
@@ -70,6 +74,13 @@
 }
 .glyph {
   display: inline-block;
+}
+/* A label that has not changed: whole text, cut with an ellipsis when the button is narrow. */
+.label {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 .trigger {
   display: grid;

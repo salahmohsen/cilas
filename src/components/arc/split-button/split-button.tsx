@@ -144,7 +144,7 @@ function MorphText({ text, reduced }: { text: string; reduced: boolean }) {
   // Until the label first changes it stays whole text: letters split into
   // boxes would not join, as Arabic letters must.
   if (glyphs.every((glyph) => glyph.id.startsWith('0:')))
-    return <span className={styles.glyphs}>{text}</span>
+    return <span className={styles.label}>{text}</span>
   return (
     <span className={styles.glyphs}>
       <AnimatePresence mode="popLayout" initial={false}>

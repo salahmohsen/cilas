@@ -130,9 +130,11 @@ export function SessionDrawerHost() {
       // Asked once: Back and Forward to this session open its view.
       setEditOn(editing === id ? id : null)
       editing = null
+    } else {
+      // Closed by Back: the entry this page pushed is gone.
+      pushed = false
+      setEditOn(null)
     }
-    // Closed by Back: the entry this page pushed is gone.
-    else pushed = false
   }, [id])
   if (!mounted) return null
   return (

@@ -6,9 +6,15 @@ import { createPopoverController } from '@ui-sdk/react/popover'
 import { useEffect, useMemo, useRef, useState, type ReactNode } from 'react'
 
 import SegmentedControl from '@/components/arc/segmented-control/segmented-control'
+import { useNarrow as usePhone } from '@/lib/use-narrow'
 import type { CalendarChange, CalendarItem } from '@/lib/calendar-items'
 
-import { BlockDetails, type CalendarAction, type DetailsTarget } from './block-details'
+import {
+  BlockDetails,
+  DETAILS_WIDTH,
+  type CalendarAction,
+  type DetailsTarget,
+} from './block-details'
 import { BlockMenu, type BlockAction, type BlockMenuEntry } from './block-menu'
 import { blockNamer, longDay } from './block-names'
 import {
@@ -93,11 +99,10 @@ export type CalendarProps = Shared &
   )
 
 const STEP = 15
-/** The details' width (22rem) and gap, which must fit beside a block; else they open below it. */
-const DETAILS_ROOM = 22 * 16 + 20
+/** Whether the details fit beside a block, with their gap; else they open below it. */
 const besideFits = (anchor: HTMLElement) => {
   const { left, right } = anchor.getBoundingClientRect()
-  return Math.max(left, document.documentElement.clientWidth - right) >= DETAILS_ROOM
+  return Math.max(left, document.documentElement.clientWidth - right) >= DETAILS_WIDTH + 20
 }
 const NO_MARKS: ReadonlySet<string> = new Set()
 const indexOfDay = (days: string[], day: string) => Math.max(0, days.indexOf(day))
@@ -123,6 +128,8 @@ export function Calendar({
   const editable = mode === 'edit'
   const frame = useRef<HTMLDivElement>(null)
   const narrow = useNarrow(frame)
+  // The details are a sheet on a phone screen, as the site's dialogs are, whatever the calendar's width.
+  const phone = usePhone()
   const now = useNow()
   const [panelOpen, setPanelOpen] = useState(false)
   const [selectedId, setSelectedId] = useState<string | null>(null)
@@ -530,7 +537,7 @@ export function Calendar({
             items={session.items}
             labels={labels}
             locale={locale}
-            sheet={narrow ?? false}
+            sheet={phone}
             side={detailsSide}
             actionsOf={actionsOf}
             onAction={runAction}

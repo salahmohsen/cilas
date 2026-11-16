@@ -428,7 +428,7 @@
   flex-direction: column;
   gap: 0.125rem;
   min-inline-size: 0;
-  padding: 0.25rem var(--space-2);
+  padding: 0;
   border: 1px solid transparent;
   border-radius: 0.375rem;
   background: var(--tone-fill);
@@ -442,6 +442,8 @@
   /* One ring on a focused block, over its edge, never a second shape around a dashed one. */
   --focus-outline-offset: -1px;
 }
+/* The padding is the body's: a block is its own size container, and a
+   container query styles only what is inside the container. */
 .body {
   display: flex;
   flex-direction: column;
@@ -449,6 +451,7 @@
   min-inline-size: 0;
   min-block-size: 0;
   overflow: hidden;
+  padding: 0.25rem var(--space-2);
 }
 .block[data-cancelled] {
   background:
@@ -520,13 +523,13 @@
   font-weight: 500;
   line-height: 1.2;
 }
-@container (max-inline-size: 7.5rem) {
-  .block {
+@container (max-inline-size: 8.5rem) {
+  .body {
     padding-inline: var(--space-1);
   }
 }
 /* A narrow block wraps its title only when it is tall enough to keep its time too. */
-@container (max-inline-size: 7.5rem) and (min-block-size: 5rem) {
+@container (max-inline-size: 8.5rem) and (min-block-size: 5.5rem) {
   .title {
     display: -webkit-box;
     -webkit-box-orient: vertical;
@@ -535,21 +538,21 @@
     white-space: normal;
   }
 }
-@container (max-inline-size: 5rem) {
+@container (max-inline-size: 6rem) {
   .time,
   .place,
   .state {
     display: none;
   }
 }
-@container (max-block-size: 2.25rem) {
+@container (max-block-size: 2.75rem) {
   .time,
   .place,
   .state {
     display: none;
   }
 }
-@container (max-block-size: 3.25rem) {
+@container (max-block-size: 3.75rem) {
   .place {
     display: none;
   }
@@ -559,8 +562,8 @@
 .short {
   display: none;
 }
-@container (max-inline-size: 3rem) {
-  .block {
+@container (max-inline-size: 2.25rem) {
+  .body {
     padding-inline: 0.1875rem;
   }
   .title,
@@ -769,6 +772,7 @@
 .trayEntry {
   display: flex;
   min-inline-size: 0;
+  max-inline-size: 100%;
 }
 /* The item's tone, as a dot: a square would read as a checkbox in a button. */
 .trayMark {
@@ -1149,7 +1153,7 @@
   box-sizing: border-box;
   display: grid;
   gap: var(--space-3);
-  inline-size: min(22rem, calc(100vw - 24px));
+  inline-size: min(var(--details-width), calc(100vw - 24px));
   margin: 0;
   padding: var(--space-4);
   border: 1px solid var(--border);
@@ -1160,8 +1164,8 @@
   font-size: var(--text-sm);
   transform-origin: var(--transform-origin);
   transition:
-    opacity 140ms ease,
-    transform 180ms cubic-bezier(0.2, 0.8, 0.2, 1);
+    opacity var(--duration-fast) var(--ease-standard),
+    transform var(--duration-spring) var(--ease-spring);
 }
 .details[data-starting-style],
 .details[data-ending-style] {
@@ -1173,8 +1177,11 @@
   padding-block-end: calc(var(--space-5) + env(safe-area-inset-bottom, 0px));
   border-block-end: 0;
   border-radius: var(--radius-surface) var(--radius-surface) 0 0;
-  transition: opacity 140ms ease;
+  transition: opacity var(--duration-fast) var(--ease-standard);
   --sheet-backdrop: oklch(16% 0 0 / 0.34);
+}
+:global(:root[data-theme='dark']) .details[data-presentation='sheet'] {
+  --sheet-backdrop: oklch(0% 0 0 / 0.52);
 }
 .details[data-presentation='sheet'][data-starting-style],
 .details[data-presentation='sheet'][data-ending-style] {
@@ -1191,7 +1198,7 @@
 }
 @media (prefers-reduced-motion: reduce) {
   .details {
-    transition: opacity 120ms ease;
+    transition: opacity var(--duration-fast) var(--ease-standard);
   }
   .details[data-starting-style],
   .details[data-ending-style] {

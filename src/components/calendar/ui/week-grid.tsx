@@ -14,7 +14,7 @@ import {
 } from './calendar-model'
 import type { CalendarLabels } from './calendar-labels'
 import { longDay } from './block-names'
-import { formatDay, formatTime, formatTimeRange, isWeekend } from './calendar-time'
+import { formatClock, formatDay, formatTime, formatTimeRange, isWeekend } from './calendar-time'
 import styles from './calendar.module.css'
 import type { CalendarView } from './calendar-views'
 import { useScrollToWork } from './use-scroll-to-work'
@@ -355,7 +355,7 @@ export function WeekGrid({
                           {formatTimeRange(block.start, block.end, locale)}
                         </span>
                         <span className={styles.short} dir={timeDir(locale)} aria-hidden>
-                          {formatTime(block.start, locale)}
+                          {formatClock(block.start, locale)}
                         </span>
                         {item?.place ? (
                           <span className={styles.place}>

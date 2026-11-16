@@ -6,7 +6,7 @@ import {
   type PopoverController,
 } from '@ui-sdk/react/popover'
 import { AlignLeft, Clock, MapPin, X } from 'lucide-react'
-import type { ReactNode } from 'react'
+import type { CSSProperties, ReactNode } from 'react'
 
 import { Button } from '@/components/arc/button/button'
 import { timeDir } from '@/lib/digits'
@@ -43,7 +43,7 @@ type Props = {
   items: CalendarItem[]
   labels: CalendarLabels
   locale: string
-  /** A sheet from the bottom of the screen, on a narrow calendar. */
+  /** A sheet from the bottom of the screen, on a phone. */
   sheet: boolean
   /** Beside the block, or below it when there is no room beside, as for a full-width agenda row. */
   side: 'end' | 'bottom'
@@ -52,6 +52,9 @@ type Props = {
 }
 
 const longDate = { weekday: 'long', day: 'numeric', month: 'long' } as const
+
+/** The details' width beside a block, in px: Payload's admin sets its own root font size. */
+export const DETAILS_WIDTH = 352
 
 /** A block's details in view mode: what, when, where, and the host's actions. */
 export function BlockDetails({
@@ -68,6 +71,7 @@ export function BlockDetails({
     <Popover controller={controller} presentation={sheet ? 'sheet' : 'popover'}>
       <PopoverContent<DetailsTarget>
         className={styles.details}
+        style={{ '--details-width': `${DETAILS_WIDTH}px` } as CSSProperties}
         side={side}
         align="start"
         sideOffset={8}

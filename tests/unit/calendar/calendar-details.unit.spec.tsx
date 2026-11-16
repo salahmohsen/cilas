@@ -15,8 +15,8 @@ declare global {
   var __UI_SDK_STRICT__: boolean | undefined
 }
 
-let narrow: boolean | null = false
-vi.mock('@/components/calendar/ui/use-narrow', () => ({ useNarrow: () => narrow }))
+let phone = false
+vi.mock('@/lib/use-narrow', () => ({ useNarrow: () => phone }))
 
 const item = (id: string, title: string, extra: Partial<CalendarItem>): CalendarItem => ({
   id,
@@ -103,7 +103,7 @@ beforeAll(() => {
   stubPopupDom()
 })
 beforeEach(() => {
-  narrow = false
+  phone = false
   vi.useFakeTimers({ now: new Date('2026-11-17T10:00:00Z'), toFake: ['Date'] })
 })
 afterEach(() => {
@@ -202,7 +202,7 @@ describe('a block’s details in view mode', () => {
     expect(panel).toHaveTextContent(en.CalendarUi.unscheduled)
   })
 
-  it('show as a sheet from the bottom on a narrow calendar, and as a panel on a wide one', async () => {
+  it('show as a sheet from the bottom on a phone, and as a panel on a wider screen', async () => {
     show()
     fireEvent.click(maps())
     expect(await screen.findByRole('dialog', { name: 'Maps' })).toHaveAttribute(
@@ -210,7 +210,7 @@ describe('a block’s details in view mode', () => {
       'popover',
     )
     cleanup()
-    narrow = true
+    phone = true
     show()
     fireEvent.click(screen.getByRole('button', { name: /^Maps, Tuesday/ }))
     expect(await screen.findByRole('dialog', { name: 'Maps' })).toHaveAttribute(

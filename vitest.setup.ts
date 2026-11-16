@@ -35,6 +35,22 @@ if (jsdomStorage && globalThis.localStorage === undefined) {
   Object.defineProperty(globalThis, 'localStorage', { value: jsdomStorage, configurable: true })
 }
 
+// jsdom has no matchMedia. By default no media query matches (a wide screen);
+// a test that needs a phone stubs its own.
+if (typeof window !== 'undefined' && !window.matchMedia) {
+  window.matchMedia = (query: string) =>
+    ({
+      matches: false,
+      media: query,
+      onchange: null,
+      addEventListener: () => {},
+      removeEventListener: () => {},
+      addListener: () => {},
+      removeListener: () => {},
+      dispatchEvent: () => false,
+    }) as MediaQueryList
+}
+
 // Radix FocusScope schedules `setTimeout(0)` on unmount to dispatch an
 // unmount-autofocus event. When the last test in a file unmounts an open
 // dialog in `afterEach(cleanup)`, that timer used to fire after vitest tore

@@ -89,6 +89,10 @@ const join = (parts: { value: string }[]) =>
 export const formatTime = (minutes: number, locale: string): string =>
   join(clockParts(minutes, locale))
 
+/** The clock alone, for a block too narrow for more: "10:30", "7". The hour labels beside it say AM or PM. */
+export const formatClock = (minutes: number, locale: string): string =>
+  join(clockParts(minutes, locale).filter((part) => part.type !== 'dayPeriod'))
+
 /** A start and an end that share AM or PM say it once: "10:30 – 11:30 AM", "11 AM – 12:30 PM". */
 export const formatTimeRange = (start: number, end: number, locale: string): string => {
   const from = clockParts(start, locale)

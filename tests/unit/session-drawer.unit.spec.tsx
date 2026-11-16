@@ -280,7 +280,9 @@ describe('the session drawer’s Edit form', () => {
 
   it('opens on the Edit form when asked, for an editor, and on the view for a reader', async () => {
     vi.mocked(loadSessionView).mockImplementation(async (id) => shown(Number(id), true))
-    vi.mocked(loadSessionEdit).mockResolvedValue({ ok: true, values: editValues(), version: 'v1' })
+    vi.mocked(loadSessionEdit)
+      .mockReset()
+      .mockResolvedValue({ ok: true, values: editValues(), version: 'v1' })
     page()
     act(() => openSession('13', 'edit'))
     const dialog = await screen.findByRole('dialog', { name: 'Reading the city' })
@@ -289,6 +291,15 @@ describe('the session drawer’s Edit form', () => {
     expect(
       await within(dialog).findByRole('button', { name: en.SessionEdit.edit }),
     ).toBeInTheDocument()
+    // Closed and opened again as a view: the view, not a flash of the form.
+    fireEvent.keyDown(dialog, { key: 'Escape' })
+    await waitFor(() => expect(screen.queryByRole('dialog')).toBeNull())
+    act(() => openSession('13'))
+    const again = await screen.findByRole('dialog', { name: 'Reading the city' })
+    expect(within(again).queryByRole('textbox', { name: en.SessionEdit.title })).toBeNull()
+    expect(vi.mocked(loadSessionEdit)).toHaveBeenCalledTimes(1)
+    fireEvent.keyDown(again, { key: 'Escape' })
+    await waitFor(() => expect(screen.queryByRole('dialog')).toBeNull())
     cleanup()
 
     vi.mocked(loadSessionView).mockImplementation(async (id) => shown(Number(id), false))
