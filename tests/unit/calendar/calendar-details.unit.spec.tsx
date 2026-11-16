@@ -224,7 +224,7 @@ describe('a press in edit mode', () => {
   it('opens the item at once, as before', async () => {
     const { onOpen } = show({ mode: 'edit' })
     fireEvent.click(maps())
-    expect(onOpen).toHaveBeenCalledWith('maps', 'tue')
+    expect(onOpen).toHaveBeenCalledWith('maps', 'tue', expect.objectContaining({ id: 'maps' }))
     expect(details()).toBeNull()
   })
 })

@@ -66,7 +66,9 @@ export function useEditSession({ items, newItemKind, onSave, scope, range }: Opt
       current,
       items,
       working,
-      changed: new Set(changes.flatMap((change) => ('itemId' in change ? [change.itemId] : []))),
+      changed: new Set(
+        changes.flatMap((change) => ('itemId' in change && change.itemId ? [change.itemId] : [])),
+      ),
     })
     setLoadedKey(itemsKey)
     setCurrent(items)

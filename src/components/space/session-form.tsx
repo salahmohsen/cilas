@@ -3,12 +3,9 @@ import { Plus, X } from 'lucide-react'
 import { useLocale, useTranslations } from 'next-intl'
 import { useCallback, useEffect, useRef, useState } from 'react'
 
-import {
-  loadSessionEdit,
-  saveSessionEdit,
-  type SessionEdit,
-  type SessionEditResult,
-} from '@/actions/session-edit'
+import { loadSessionEdit, type SessionEdit } from '@/actions/session-edit'
+import { saveScheduleEdits, type ScheduleEditsResult } from '@/actions/save-schedule-edits'
+import { Dialog, DialogContent, DialogClose } from '@/components/arc/dialog/dialog'
 import { Alert } from '@/components/arc/alert/alert'
 import { Button } from '@/components/arc/button/button'
 import { Checkbox } from '@/components/arc/checkbox/checkbox'
@@ -99,6 +96,13 @@ type Loaded =
  * needs fixing; the server checks it again with the collection's own rules.
  * While it holds changes, leaving asks first.
  */
+export type SessionFormStage = {
+  values: SessionEdit
+  version: string
+  apply: (values: SessionEdit) => void
+  remove: () => void
+}
+
 export function SessionForm({
   id,
   untitled,
@@ -106,18 +110,23 @@ export function SessionForm({
   onSaved,
   onCancel,
   onUnsaved,
+  stage,
+  contentLocale,
 }: {
+  contentLocale?: string
+  stage?: SessionFormStage
   id: string
   /** What the session is called with no title: "Session 3". */
   untitled: string
   /** How a refused save is worded, as every schedule save words it. */
   text: Pick<ScheduleSaveText, 'errorText' | 'reloadAndLose'>
-  onSaved: (result: Extract<SessionEditResult, { ok: true }>) => void
+  onSaved: (result: Extract<ScheduleEditsResult, { ok: true }>) => void
   onCancel: () => void
   /** While the form holds changes, the way to ask before the host closes it; null when it holds none. */
   onUnsaved: (ask: ((go: () => void) => void) | null) => void
 }) {
-  const locale = useLocale()
+  const language = useLocale()
+  const locale = contentLocale ?? language
   const t = useTranslations('SessionEdit')
   const tc = useTranslations('Course')
   const ts = useTranslations('Spaces')
@@ -125,6 +134,15 @@ export function SessionForm({
 
   const [loaded, setLoaded] = useState<Loaded>({ status: 'loading' })
   const load = useCallback(() => {
+    if (stage) {
+      setLoaded({
+        status: 'ready',
+        values: valuesOf(stage.values),
+        version: stage.version,
+        description: stage.values.description,
+      })
+      return
+    }
     setLoaded({ status: 'loading' })
     void loadSessionEdit(id, locale).then(
       (result) =>
@@ -140,7 +158,7 @@ export function SessionForm({
         ),
       () => setLoaded({ status: 'failed' }),
     )
-  }, [id, locale])
+  }, [id, locale, stage])
   useEffect(load, [load])
 
   if (loaded.status === 'loading')
@@ -169,6 +187,8 @@ export function SessionForm({
       // A reload after a stale save starts the form again from what is stored.
       key={loaded.version}
       id={id}
+      stage={stage}
+      contentLocale={locale}
       base={loaded.values}
       version={loaded.version}
       storedDescription={loaded.description}
@@ -193,6 +213,8 @@ type Words = {
 
 function Fields({
   id,
+  contentLocale,
+  stage,
   base,
   version,
   storedDescription,
@@ -206,6 +228,8 @@ function Fields({
   words: { t, tc, ts, tp },
 }: {
   id: string
+  stage?: SessionFormStage
+  contentLocale: string
   base: Values
   version: string
   storedDescription: string
@@ -213,13 +237,15 @@ function Fields({
   errorText: (error: CalendarSaveError) => string
   reloadAndLose: string
   onReload: () => void
-  onSaved: (result: Extract<SessionEditResult, { ok: true }>) => void
+  onSaved: (result: Extract<ScheduleEditsResult, { ok: true }>) => void
   onCancel: () => void
   onUnsaved: (ask: ((go: () => void) => void) | null) => void
   words: Words
 }) {
-  const locale = useLocale()
+  const locale = contentLocale
   const root = useRef<HTMLFormElement>(null)
+  const [deleting, setDeleting] = useState(false)
+  const [removing, setRemoving] = useState(false)
   const [refused, setRefused] = useState<CalendarSaveError | null>(null)
   // The editor's own rendering of the stored text, found on first edit (it needs the browser).
   const baseline = useRef<string | null>(null)
@@ -252,9 +278,15 @@ function Fields({
     defaultValues: base,
     onSubmit: async ({ value }) => {
       setRefused(null)
-      const result = await saveSessionEdit({ id, version, values: toSend(value) }, locale).catch(
-        (): SessionEditResult => ({ ok: false, error: { code: 'failed' } }),
-      )
+      if (stage) {
+        stage.apply(toSend(value))
+        return
+      }
+      const { meetings, ...values } = toSend(value)
+      const result = await saveScheduleEdits(
+        { details: [{ op: 'edit', id, version, values, meetings }] },
+        locale,
+      ).catch((): ScheduleEditsResult => ({ ok: false, error: { code: 'failed' } }))
       if (!result.ok) {
         setRefused(result.error)
         return
@@ -317,17 +349,15 @@ function Fields({
       className={styles.form}
       onSubmit={(event) => {
         event.preventDefault()
+        event.stopPropagation()
         void form.handleSubmit()
       }}
     >
-      <p className={styles.note}>{t('language')}</p>
-
       <form.Field name="title">
         {(field) => (
           <Input
             label={t('title')}
             autoFocus
-            description={t('titleHint', { name: untitled })}
             placeholder={untitled}
             dir={dir}
             value={field.state.value}
@@ -341,6 +371,7 @@ function Fields({
         {(field) => (
           <RichField
             label={t('description')}
+            placeholder=""
             dir={dir}
             defaultMarkdown={storedDescription}
             onChange={(value) => {
@@ -353,108 +384,110 @@ function Fields({
         )}
       </form.Field>
 
-      <form.Field name="meetings" mode="array">
-        {(meetings) => (
-          <fieldset className={styles.group}>
-            <legend className={styles.legend}>{t('meetings')}</legend>
-            {meetings.state.value.map((row, i) => (
-              <div key={row.key} className={styles.meeting}>
-                <form.Field name={`meetings[${i}].date`}>
-                  {(field) => (
-                    <div className={styles.day}>
-                      <DatePicker
-                        label={t('day')}
-                        placeholder={t('dayPlaceholder')}
-                        value={dateOf(field.state.value)}
-                        onChange={(date) => pick(field, date ? dayOf(date) : '')}
-                        onBlur={field.handleBlur}
-                        locale={locale}
-                        showToday
-                        error={errorOf(field)}
-                        labels={{
-                          today: tp('calendarToday'),
-                          previous: tp('calendarPrevious'),
-                          next: tp('calendarNext'),
-                          clear: tp('calendarClear'),
-                          choose: t('dayPlaceholder'),
-                          selected: (date) => tp('calendarSelected', { date }),
-                        }}
-                      />
-                    </div>
+      {!stage && (
+        <form.Field name="meetings" mode="array">
+          {(meetings) => (
+            <fieldset className={styles.group}>
+              <legend className={styles.legend}>{t('meetings')}</legend>
+              {meetings.state.value.map((row, i) => (
+                <div key={row.key} className={styles.meeting}>
+                  <form.Field name={`meetings[${i}].date`}>
+                    {(field) => (
+                      <div className={styles.day}>
+                        <DatePicker
+                          label={t('day')}
+                          placeholder={t('dayPlaceholder')}
+                          value={dateOf(field.state.value)}
+                          onChange={(date) => pick(field, date ? dayOf(date) : '')}
+                          onBlur={field.handleBlur}
+                          locale={locale}
+                          showToday
+                          error={errorOf(field)}
+                          labels={{
+                            today: tp('calendarToday'),
+                            previous: tp('calendarPrevious'),
+                            next: tp('calendarNext'),
+                            clear: tp('calendarClear'),
+                            choose: t('dayPlaceholder'),
+                            selected: (date) => tp('calendarSelected', { date }),
+                          }}
+                        />
+                      </div>
+                    )}
+                  </form.Field>
+                  <div className={styles.removeCell}>
+                    {remove(t('removeMeeting', { n: i + 1 }), () => meetings.removeValue(i))}
+                  </div>
+                  {row.allDay ? null : (
+                    <>
+                      <form.Field name={`meetings[${i}].start_time`}>
+                        {(field) => (
+                          <TimePicker
+                            className={styles.start}
+                            label={t('starts')}
+                            placeholder={t('timePlaceholder')}
+                            value={field.state.value}
+                            onChange={(time) => pick(field, time)}
+                            minuteStep={15}
+                            format={timeFormat}
+                            error={errorOf(field)}
+                          />
+                        )}
+                      </form.Field>
+                      <form.Field name={`meetings[${i}].end_time`}>
+                        {(field) => (
+                          <TimePicker
+                            className={styles.end}
+                            label={t('ends')}
+                            placeholder={t('timePlaceholder')}
+                            value={field.state.value}
+                            onChange={(time) => pick(field, time)}
+                            minuteStep={15}
+                            format={timeFormat}
+                            error={errorOf(field)}
+                          />
+                        )}
+                      </form.Field>
+                    </>
                   )}
-                </form.Field>
-                <div className={styles.removeCell}>
-                  {remove(t('removeMeeting', { n: i + 1 }), () => meetings.removeValue(i))}
+                  <form.Field name={`meetings[${i}].allDay`}>
+                    {(field) => (
+                      <div className={styles.allDay}>
+                        <Checkbox
+                          label={t('allDay')}
+                          checked={field.state.value}
+                          onCheckedChange={(on) => field.handleChange(on === true)}
+                        />
+                      </div>
+                    )}
+                  </form.Field>
                 </div>
-                {row.allDay ? null : (
-                  <>
-                    <form.Field name={`meetings[${i}].start_time`}>
-                      {(field) => (
-                        <TimePicker
-                          className={styles.start}
-                          label={t('starts')}
-                          placeholder={t('timePlaceholder')}
-                          value={field.state.value}
-                          onChange={(time) => pick(field, time)}
-                          minuteStep={15}
-                          format={timeFormat}
-                          error={errorOf(field)}
-                        />
-                      )}
-                    </form.Field>
-                    <form.Field name={`meetings[${i}].end_time`}>
-                      {(field) => (
-                        <TimePicker
-                          className={styles.end}
-                          label={t('ends')}
-                          placeholder={t('timePlaceholder')}
-                          value={field.state.value}
-                          onChange={(time) => pick(field, time)}
-                          minuteStep={15}
-                          format={timeFormat}
-                          error={errorOf(field)}
-                        />
-                      )}
-                    </form.Field>
-                  </>
-                )}
-                <form.Field name={`meetings[${i}].allDay`}>
-                  {(field) => (
-                    <div className={styles.allDay}>
-                      <Checkbox
-                        label={t('allDay')}
-                        checked={field.state.value}
-                        onCheckedChange={(on) => field.handleChange(on === true)}
-                      />
-                    </div>
-                  )}
-                </form.Field>
+              ))}
+              <div>
+                <Button
+                  type="button"
+                  variant="secondary"
+                  size="sm"
+                  onClick={() => {
+                    // A new meeting keeps the last one's times; its day is the person's to pick.
+                    const last = meetings.state.value.at(-1)
+                    meetings.pushValue({
+                      key: keyOf(),
+                      date: '',
+                      start_time: last?.start_time ?? '',
+                      end_time: last?.end_time ?? '',
+                      allDay: last?.allDay ?? false,
+                    })
+                  }}
+                >
+                  <Plus size={16} aria-hidden="true" />
+                  {t('addMeeting')}
+                </Button>
               </div>
-            ))}
-            <div>
-              <Button
-                type="button"
-                variant="secondary"
-                size="sm"
-                onClick={() => {
-                  // A new meeting keeps the last one's times; its day is the person's to pick.
-                  const last = meetings.state.value.at(-1)
-                  meetings.pushValue({
-                    key: keyOf(),
-                    date: '',
-                    start_time: last?.start_time ?? '',
-                    end_time: last?.end_time ?? '',
-                    allDay: last?.allDay ?? false,
-                  })
-                }}
-              >
-                <Plus size={16} aria-hidden="true" />
-                {t('addMeeting')}
-              </Button>
-            </div>
-          </fieldset>
-        )}
-      </form.Field>
+            </fieldset>
+          )}
+        </form.Field>
+      )}
 
       <form.Field name="bibliography" mode="array">
         {(materials) => (
@@ -497,7 +530,6 @@ function Fields({
                   {(field) => (
                     <Input
                       label={t('materialNote')}
-                      description={t('materialNoteHint')}
                       dir={dir}
                       value={field.state.value}
                       onChange={(e) => field.handleChange(e.target.value)}
@@ -605,7 +637,6 @@ function Fields({
         {(field) => (
           <Checkbox
             label={t('cancelled')}
-            description={t('cancelledHint')}
             checked={field.state.value}
             onCheckedChange={(on) => field.handleChange(on === true)}
           />
@@ -626,13 +657,55 @@ function Fields({
 
       <div className={styles.foot}>
         <Button type="submit" loading={submitting}>
-          {t('save')}
+          {t(stage ? 'apply' : 'save')}
         </Button>
-        <Button type="button" variant="secondary" onClick={() => leaving.leave(onCancel)}>
+        <Button type="button" variant="secondary" onClick={onCancel}>
           {t('cancel')}
         </Button>
       </div>
 
+      <Button type="button" variant="danger" onClick={() => setDeleting(true)}>
+        {t('deleteSession')}
+      </Button>
+      <Dialog open={deleting} onOpenChange={setDeleting}>
+        <DialogContent
+          className="arc-scope"
+          title={t('deleteTitle', { name: values.title.trim() || untitled })}
+          closeLabel={t('leaveClose')}
+        >
+          <div className={styles.alertActions}>
+            <DialogClose asChild>
+              <Button type="button" variant="secondary" autoFocus>
+                {t('cancel')}
+              </Button>
+            </DialogClose>
+            <Button
+              type="button"
+              variant="danger"
+              loading={removing}
+              onClick={async () => {
+                if (stage) {
+                  stage.remove()
+                  return
+                }
+                setRemoving(true)
+                const result = await saveScheduleEdits(
+                  { details: [{ op: 'delete', id, version }] },
+                  locale,
+                ).catch((): ScheduleEditsResult => ({ ok: false, error: { code: 'failed' } }))
+                setRemoving(false)
+                if (result.ok) onSaved(result)
+                else {
+                  setRefused(result.error)
+                  setDeleting(false)
+                }
+              }}
+            >
+              {t('deleteSession')}
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
       {leaving.dialog}
     </form>
   )

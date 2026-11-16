@@ -1,8 +1,9 @@
 import { useState, type ReactNode } from 'react'
 
-import { saveCalendarChanges } from '@/actions/save-calendar-changes'
+import { saveScheduleEdits } from '@/actions/save-schedule-edits'
 import { scheduleOffers } from '@/actions/schedule-offers'
 import { CalendarSaveRefusal } from '@/components/calendar/ui/save-refusal'
+import type { SessionDetailChange } from '@/lib/session-edit'
 import type { CalendarChange, CalendarItem } from '@/lib/calendar-items'
 import { preloadable } from '@/lib/preloadable'
 import type { ScheduleOffer } from '@/lib/schedule-offer'
@@ -83,7 +84,7 @@ export function useScheduleOffer({
 
 /**
  * The one way a host saves schedule changes and tells people:
- * `saveCalendarChanges` on the host's parent, then the offer
+ * `saveScheduleEdits` on the host's parent, then the offer
  * (`useScheduleOffer`). A failed save offers nothing; a stale one keeps the
  * changes and offers "Reload and lose my changes", which runs `reload`. The
  * host renders `dialog` and `failed`.
@@ -93,7 +94,7 @@ export function useScheduleSave({
   reload,
   ...offerOptions
 }: {
-  /** The calendar's parent, as `saveCalendarChanges` takes it. */
+  /** The parent that owns these sessions. */
   parent: { kind: string; id: string }
   courseId: string
   locale: string
@@ -113,8 +114,9 @@ export function useScheduleSave({
     changes: CalendarChange[],
     before: CalendarItem[],
     returnTo: ReturnTo,
+    details: SessionDetailChange[] = [],
   ): Promise<CalendarItem[]> => {
-    const result = await saveCalendarChanges({ parent, changes }, locale)
+    const result = await saveScheduleEdits({ calendar: { parent, changes }, details }, locale)
     if (!result.ok) {
       if (result.error.code === 'stale')
         throw new CalendarSaveRefusal(text.errorText(result.error), {

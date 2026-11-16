@@ -81,6 +81,7 @@ describe('an all-day block', () => {
     ).toEqual([
       {
         op: 'create-item',
+        itemId: expect.any(String),
         kind: 'session',
         blocks: [{ blockId: copy.blockId, date: '2026-11-25', start_time: null, end_time: null }],
       },
@@ -115,6 +116,7 @@ describe('the change list of a Save', () => {
     expect(edit([...base, drawn], 'session')).toEqual([
       {
         op: 'create-item',
+        itemId: expect.any(String),
         kind: 'session',
         blocks: [
           {
@@ -138,6 +140,7 @@ describe('the change list of a Save', () => {
     expect(edit([...base, ...copy, other], 'session')).toEqual([
       {
         op: 'create-item',
+        itemId: expect.any(String),
         kind: 'session',
         blocks: [
           { blockId: copy[0]!.blockId, date: '2026-11-24', start_time: '19:00', end_time: '21:00' },
@@ -146,6 +149,7 @@ describe('the change list of a Save', () => {
       },
       {
         op: 'create-item',
+        itemId: expect.any(String),
         kind: 'session',
         blocks: [
           { blockId: other.blockId, date: '2026-11-16', start_time: '10:00', end_time: '11:00' },
@@ -312,5 +316,13 @@ describe('carrying edits to newly loaded items', () => {
       changed: new Set(),
     })
     expect(next.working).toEqual([...base, ...blocksOf([extra])])
+  })
+})
+
+describe('a new block removed before Save', () => {
+  it('sends no create command to the database', () => {
+    const drawn = newBlock(newItemId(), '2026-11-16', 600, 660)
+    const working = keepDeleted([...base, drawn], base, drawn.id, base)
+    expect(edit(working, 'session')).toEqual([])
   })
 })

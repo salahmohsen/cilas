@@ -13,7 +13,7 @@ import { leave } from '@/lib/leave-guard'
 import { useLeaveQuestion } from './leave-question'
 import { useCourseWeek, useOpenScheduleItem, useScheduleLabels } from './schedule-calendar'
 import { scheduleSaveText, type ScheduleSaveMessages } from './schedule-save-text'
-import { sessionTriggerProps } from './session-drawer-host'
+import { useScheduleDrafts } from './use-schedule-drafts'
 import styles from './space-calendar-tab.module.css'
 import { useScheduleSave } from './use-schedule-save'
 
@@ -67,6 +67,7 @@ export function SpaceCalendarEditor({
     [language, messages, labels],
   )
 
+  const staged = useScheduleDrafts(text, locale)
   const [reloadFailed, setReloadFailed] = useState(false)
   const [unsaved, setUnsaved] = useState(0)
   const done = useRef<HTMLButtonElement>(null)
@@ -80,6 +81,7 @@ export function SpaceCalendarEditor({
     language,
     text,
     reload: () => {
+      staged.clear()
       setReloadFailed(false)
       void loadCalendarItems({ kind: 'space', id: spaceId }, locale).then(
         (result) => {
@@ -101,7 +103,8 @@ export function SpaceCalendarEditor({
 
   const save = async (changes: CalendarChange[]) => {
     // The save bar leaves with the changes, so the offer gives focus back to Done.
-    const saved = await schedule.save(changes, items, () => done.current)
+    const saved = await schedule.save(changes, items, () => done.current, staged.changes(changes))
+    staged.clear()
     onItems(saved)
     // The page's other server parts, like the next session beside the tab, read it again.
     router.refresh()
@@ -113,7 +116,12 @@ export function SpaceCalendarEditor({
       {schedule.failed ? <Alert tone="danger" title={text.offerFailed} /> : null}
       {reloadFailed ? <Alert tone="danger" title={t('calendarFailed')} /> : null}
 
-      <div className="contents" {...sessionTriggerProps}>
+      <div
+        className="contents"
+        onPointerEnter={staged.preload}
+        onPointerDown={staged.preload}
+        onFocus={staged.preload}
+      >
         <Calendar
           mode="edit"
           items={items}
@@ -134,13 +142,16 @@ export function SpaceCalendarEditor({
               {t('calendarDone')}
             </Button>
           }
-          onOpen={open}
+          drafts={staged.drafts}
+          onCancelEdits={staged.clear}
+          onOpen={(id, _block, item) => (item && !item.readOnly ? staged.open(item) : open(id))}
           onSave={save}
           onUnsavedChange={setUnsaved}
           onSaveIntent={schedule.preload}
         />
       </div>
 
+      {staged.drawer}
       {schedule.dialog}
 
       {leaving.dialog}

@@ -286,6 +286,7 @@ describe('edit mode', () => {
     expect(onSave.mock.calls[0]![0]).toEqual([
       {
         op: 'create-item',
+        itemId: expect.any(String),
         kind: 'session',
         blocks: [
           {
@@ -390,14 +391,14 @@ describe('edit mode', () => {
     expect(week3()).toHaveAttribute('data-selected')
     expect(onOpen).not.toHaveBeenCalled()
     tap()
-    expect(onOpen).toHaveBeenCalledWith('week-3', 'tue')
+    expect(onOpen).toHaveBeenCalledWith('week-3', 'tue', expect.objectContaining({ id: 'week-3' }))
   })
 
   it('opens a block at once on a mouse click', () => {
     const onOpen = vi.fn()
     edit({ onSave: vi.fn(), onOpen })
     fireEvent.click(week3())
-    expect(onOpen).toHaveBeenCalledWith('week-3', 'tue')
+    expect(onOpen).toHaveBeenCalledWith('week-3', 'tue', expect.objectContaining({ id: 'week-3' }))
     expect(week3()).not.toHaveAttribute('data-selected')
   })
 

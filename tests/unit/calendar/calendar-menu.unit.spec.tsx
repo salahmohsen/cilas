@@ -188,7 +188,11 @@ describe('using the menu', () => {
     const onOpen = vi.fn()
     show({ onOpen })
     await pick('Open')
-    expect(onOpen).toHaveBeenCalledExactlyOnceWith('week-3', 'tue')
+    expect(onOpen).toHaveBeenCalledExactlyOnceWith(
+      'week-3',
+      'tue',
+      expect.objectContaining({ id: 'week-3' }),
+    )
     expect(tuesday()).toHaveFocus()
     expect(screen.queryByRole('button', { name: 'Save' })).toBeNull()
   })
@@ -200,7 +204,13 @@ describe('using the menu', () => {
     fireEvent.keyDown(tuesday(), { key: 'ContextMenu' })
     await waitFor(() => expect(menu()!.contains(document.activeElement)).toBe(true))
     fireEvent.keyDown(document.activeElement!, { key: 'Enter' })
-    await waitFor(() => expect(onOpen).toHaveBeenCalledWith('week-3', 'tue'))
+    await waitFor(() =>
+      expect(onOpen).toHaveBeenCalledWith(
+        'week-3',
+        'tue',
+        expect.objectContaining({ id: 'week-3' }),
+      ),
+    )
   })
 })
 
@@ -275,6 +285,7 @@ describe('New session next week', () => {
     expect(onSave.mock.calls[0]![0]).toEqual([
       {
         op: 'create-item',
+        itemId: expect.any(String),
         kind: 'session',
         blocks: [
           {
@@ -294,7 +305,7 @@ describe('New session next week', () => {
     ])
   })
 
-  it('shows the new session in the next week, with its two meetings, and its block cannot be opened yet', async () => {
+  it('shows the new session in the next week, with two meetings, and lets it open', async () => {
     show()
     await pick('New session next week')
     fireEvent.click(screen.getByRole('button', { name: 'Next week' }))
@@ -302,7 +313,7 @@ describe('New session next week', () => {
 
     fireEvent.contextMenu(screen.getAllByRole('button', { name: /^New session, / })[0]!)
     await waitFor(() => expect(menu()).not.toBeNull())
-    expect(item('Open')).toHaveAttribute('aria-disabled', 'true')
+    expect(item('Open')).not.toHaveAttribute('aria-disabled', 'true')
   })
 
   it('copies the live meetings: one that is deleted is left out, one that moved is copied where it is', async () => {
@@ -356,13 +367,13 @@ describe('Delete meeting', () => {
 })
 
 describe('the menu on a block made on the page', () => {
-  it('offers Open as disabled, and Delete meeting removes the block with no change left', async () => {
+  it('offers Open for a new block, and Delete meeting removes it with no change left', async () => {
     show()
     fireEvent.click(screen.getByRole('button', { name: 'Add a block on Sunday, November 15' }))
     const drawn = screen.getByRole('button', { name: /^New session, Sunday/ })
     fireEvent.contextMenu(drawn)
     await waitFor(() => expect(menu()).not.toBeNull())
-    expect(item('Open')).toHaveAttribute('aria-disabled', 'true')
+    expect(item('Open')).not.toHaveAttribute('aria-disabled', 'true')
     fireEvent.click(item('Delete meeting'))
     await waitFor(() => expect(menu()).toBeNull())
     expect(screen.queryByRole('button', { name: /^New session, Sunday/ })).toBeNull()
@@ -404,7 +415,13 @@ describe('an all-day meeting', () => {
     fireEvent.click(allDay().querySelector('[data-block-menu]')!)
     await waitFor(() => expect(menu()).not.toBeNull())
     fireEvent.click(item('Open'))
-    await waitFor(() => expect(onOpen).toHaveBeenCalledExactlyOnceWith('archive', 'wed'))
+    await waitFor(() =>
+      expect(onOpen).toHaveBeenCalledExactlyOnceWith(
+        'archive',
+        'wed',
+        expect.objectContaining({ id: 'archive' }),
+      ),
+    )
   })
 
   it('Add meeting puts another all-day meeting on the next day, and Save sends it without times', async () => {
@@ -442,6 +459,7 @@ describe('an all-day meeting', () => {
     expect(onSave.mock.calls[0]![0]).toEqual([
       {
         op: 'create-item',
+        itemId: expect.any(String),
         kind: 'session',
         blocks: [
           { blockId: expect.any(String), date: '2026-11-25', start_time: null, end_time: null },

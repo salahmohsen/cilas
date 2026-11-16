@@ -3,6 +3,7 @@
  * testing guide's stubs). Call it before anything opens.
  */
 export const stubPopupDom = () => {
+  CSS.supports ??= () => false
   globalThis.ResizeObserver = class {
     observe() {}
     unobserve() {}

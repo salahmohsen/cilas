@@ -341,7 +341,11 @@
     "since": "{count, plural, zero {لا مقررات} one {مقرر واحد} two {مقرران} few {{count, number, digits} مقررات} many {{count, number, digits} مقررًا} other {{count, number, digits} مقرر}} منذ {year, number, digits}"
   },
   "Course": {
-    "delivery": { "OFFLINE": "حضوري", "ONLINE": "عبر الإنترنت", "HYBRID": "مدمج" },
+    "delivery": {
+      "OFFLINE": "حضوري",
+      "ONLINE": "عبر الإنترنت",
+      "HYBRID": "مدمج"
+    },
     "details": "تفاصيل المقرر",
     "cycle": "الدورة",
     "starts": "يبدأ",
@@ -1686,6 +1690,9 @@
       "both-times": "اختر وقت البدء ووقت الانتهاء، أو ضع علامة على «طوال اليوم».",
       "time": "اختر وقتًا من القائمة.",
       "order": "يجب أن يكون الانتهاء بعد البدء."
-    }
+    },
+    "apply": "تطبيق",
+    "deleteSession": "حذف الجلسة",
+    "deleteTitle": "حذف «{name}»؟"
   }
 }

@@ -1,4 +1,4 @@
-import { expect, test, type Page } from '@playwright/test'
+import { expect, test, type Page, type Request } from '@playwright/test'
 import { getPayload, type Payload } from 'payload'
 
 import config from '../../src/payload.config.js'
@@ -345,44 +345,47 @@ test.describe('course calendar', () => {
     expect(await asked()).toBe(false)
   })
 
-  test('a block opens the session in the drawer, and focus comes back', async () => {
+  test('a block opens our Edit form, and Cancel returns focus', async () => {
     await openSessionsTab()
     await block('E2E first session').click({ timeout: 15_000 })
-    await expect(page.locator('.doc-drawer')).toBeVisible()
-    await expect(page.locator('.doc-drawer #field-title')).toHaveValue('E2E first session')
-    await page.keyboard.press('Escape')
-    await expect(page.locator('.doc-drawer')).toBeHidden()
+    const drawer = page.getByRole('dialog', { name: 'E2E first session', exact: true })
+    await expect(drawer.getByRole('textbox', { name: 'Title', exact: true })).toHaveValue(
+      'E2E first session',
+    )
+    await expect(drawer.getByRole('button', { name: 'Apply', exact: true })).toBeVisible()
+    await drawer.getByRole('button', { name: 'Cancel', exact: true }).click()
+    await expect(drawer).toBeHidden()
     await expect(block('E2E first session')).toBeFocused()
   })
 
-  test('a save in the drawer keeps the unsaved changes of other sessions and says which it dropped', async () => {
+  test('Apply keeps the unsaved meetings and Save sends the title with them', async () => {
     await openSessionsTab()
-    // Two unsaved changes: a meeting added to the session, and a new session.
     await choose(thursday(), 'Add meeting')
     await calendar()
       .getByRole('button', { name: /^Add a block on/ })
       .first()
       .click()
     await expect(unsaved('2 unsaved changes')).toBeVisible()
-
+    const courseSaves: string[] = []
+    const watchCourse = (request: Request) => {
+      if (request.method() === 'PATCH' && request.url().includes('/api/courses/' + course))
+        courseSaves.push(request.url())
+    }
+    page.on('request', watchCourse)
     await thursday().click()
-    const drawer = page.locator('.doc-drawer')
-    await drawer.locator('#field-title').fill('E2E first session, renamed')
-    await drawer.getByRole('button', { name: 'Save', exact: true }).first().click()
-    await expect(page.getByText(/Updated successfully/).first()).toBeVisible()
-    await page.keyboard.press('Escape')
+    const drawer = page.getByRole('dialog', { name: 'E2E first session', exact: true })
+    await drawer
+      .getByRole('textbox', { name: 'Title', exact: true })
+      .fill('E2E first session, renamed')
+    await drawer.getByRole('button', { name: 'Apply', exact: true }).click()
     await expect(drawer).toBeHidden()
-
-    // The new session stays. The saved session lost its unsaved meeting, and the bar says so.
-    await expect(unsaved('1 unsaved change')).toBeVisible()
-    await expect(
-      calendar()
-        .getByText(/unsaved changes to E2E first session, renamed were dropped/)
-        .first(),
-    ).toBeVisible()
+    await expect(unsaved('3 unsaved changes')).toBeVisible()
+    await expect(calendar().getByText(/unsaved changes to .* were dropped/)).toHaveCount(0)
     await saveButton().click()
     await barGone()
-    expect(await meetingsOf()).toHaveLength(3)
+    expect(await meetingsOf()).toHaveLength(4)
+    expect(courseSaves).toEqual([])
+    page.off('request', watchCourse)
   })
 
   test('the menu opens the drawer with Open, from the keyboard, and Escape returns focus', async () => {
@@ -397,9 +400,9 @@ test.describe('course calendar', () => {
 
     await page.keyboard.press('ContextMenu')
     await page.keyboard.press('Enter')
-    await expect(page.locator('.doc-drawer')).toBeVisible()
+    await expect(page.getByRole('dialog', { name: 'E2E first session', exact: true })).toBeVisible()
     await page.keyboard.press('Escape')
-    await expect(page.locator('.doc-drawer')).toBeHidden()
+    await expect(page.getByRole('dialog', { name: 'E2E first session', exact: true })).toBeHidden()
     await expect(block('E2E first session')).toBeFocused()
   })
 })

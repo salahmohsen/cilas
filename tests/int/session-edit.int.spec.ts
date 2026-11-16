@@ -2,10 +2,20 @@
 import { getPayload, type Payload } from 'payload'
 import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest'
 
-import { loadSessionEdit, saveSessionEdit, type SessionEdit } from '@/actions/session-edit'
+import { loadSessionEdit, type SessionEdit } from '@/actions/session-edit'
 import { currentReader } from '@/lib/reader'
 import config from '@/payload.config'
 import type { User } from '@/payload-types'
+
+import { saveScheduleEdits } from '@/actions/save-schedule-edits'
+const saveSessionEdit = (
+  {
+    id,
+    version,
+    values: { meetings, ...values },
+  }: { id: string; version: string; values: SessionEdit },
+  locale = 'en',
+) => saveScheduleEdits({ details: [{ op: 'edit', id, version, values, meetings }] }, locale)
 
 import { createTracker, uniq, uniqEmail } from './fixtures'
 

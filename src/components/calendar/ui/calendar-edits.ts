@@ -63,9 +63,9 @@ export function changesOf({ items, base, working, newItemKind }: Edit): Calendar
     }
   }
 
-  for (const [first, ...rest] of created.values()) {
+  for (const [itemId, [first, ...rest]] of created) {
     if (!newItemKind) throw new Error('An item was made but no kind was given for new items.')
-    changes.push({ op: 'create-item', kind: newItemKind, blocks: [first!, ...rest] })
+    changes.push({ op: 'create-item', kind: newItemKind, itemId, blocks: [first!, ...rest] })
   }
 
   for (const block of working) {

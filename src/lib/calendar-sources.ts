@@ -1,4 +1,5 @@
 import type { Payload, PayloadRequest } from 'payload'
+import { sessionEditData, writeSessionEdit, type SessionDetailChange } from '@/lib/session-edit'
 
 import { localeOf } from '@/i18n/routing'
 
@@ -110,7 +111,12 @@ export type CalendarSource = {
    * caller's transaction covers them. Throws `CalendarSaveFailure` or a
    * Payload error; the caller rolls back.
    */
-  apply: (ctx: CalendarContext, parentId: string, changes: CalendarChange[]) => Promise<void>
+  apply: (
+    ctx: CalendarContext,
+    parentId: string,
+    changes: CalendarChange[],
+    details?: SessionDetailChange[],
+  ) => Promise<void>
 }
 
 type Entry = { change: CalendarChange; index: number }
@@ -321,7 +327,7 @@ const sessionSource: CalendarSource = {
     return (await createSession({ req, data: { course: numericId(parentId) } })) === true
   },
 
-  async apply({ req, user }, parentId, changes) {
+  async apply({ req, user }, parentId, changes, details = []) {
     const course = numericId(parentId)
     const { payload } = req
     const access = { user, overrideAccess: false, req } as const
@@ -340,16 +346,19 @@ const sessionSource: CalendarSource = {
       else if (change.op !== 'delete-block') checkMeeting(change, index)
     })
 
-    for (const change of changes) {
-      if (change.op !== 'create-item') continue
-      await payload.create({
-        collection: 'sessions',
-        data: { course, meetings: change.blocks.map(stored) },
-        ...access,
-      })
+    const detailById = new Map(details.map((detail) => [detail.id, detail]))
+    if (detailById.size !== details.length) throw invalid('A session is listed twice.')
+    const creations = changes.filter((change) => change.op === 'create-item')
+    const newIds = new Set(creations.flatMap((change) => (change.itemId ? [change.itemId] : [])))
+    for (const detail of details) {
+      if (newIds.has(detail.id)) {
+        if (detail.op !== 'edit' || detail.meetings)
+          throw invalid('A new session needs its calendar meetings.')
+      } else {
+        numericId(detail.id)
+        if (!byItem.has(detail.id)) byItem.set(detail.id, [])
+      }
     }
-
-    if (byItem.size === 0) return
     const { docs } = await payload.find({
       collection: 'sessions',
       where: {
@@ -360,23 +369,55 @@ const sessionSource: CalendarSource = {
       select: { meetings: true, updatedAt: true },
       ...access,
     })
-    const sessions = new Map<string, Pick<Session, 'id' | 'meetings' | 'updatedAt'>>(
-      docs.map((doc) => [String(doc.id), doc]),
-    )
-
+    const sessions = new Map(docs.map((doc) => [String(doc.id), doc]))
     for (const [itemId, entries] of byItem) {
       const session = sessions.get(itemId)
       if (!session) throw new CalendarSaveFailure({ code: 'not-found', itemId })
-      for (const { change } of entries) {
-        if (change.op !== 'create-item' && change.version !== session.updatedAt)
-          throw new CalendarSaveFailure({ code: 'stale', itemId })
-      }
-      // One update for all of a session's changes: one version, one set of hooks.
-      await payload.update({
+      const detail = detailById.get(itemId)
+      if (
+        (detail && detail.version !== session.updatedAt) ||
+        entries.some(
+          ({ change }) => change.op !== 'create-item' && change.version !== session.updatedAt,
+        )
+      )
+        throw new CalendarSaveFailure({ code: 'stale', itemId })
+      if (detail?.op === 'edit' && detail.meetings && entries.length)
+        throw invalid('Meetings must have one source in a save.')
+    }
+    for (const change of creations) {
+      const detail = change.itemId ? detailById.get(change.itemId) : undefined
+      await payload.create({
         collection: 'sessions',
-        id: session.id,
-        data: { meetings: meetingsAfter(itemId, session.meetings ?? [], entries) },
+        locale: localeOf(req.locale),
+        data: {
+          course,
+          ...sessionEditData(detail?.op === 'edit' ? detail.values : {}),
+          meetings: change.blocks.map(stored),
+        },
         ...access,
+      })
+    }
+    for (const [itemId, entries] of byItem) {
+      const session = sessions.get(itemId)!
+      const detail = detailById.get(itemId)
+      if (detail?.op === 'delete') {
+        await payload.delete({ collection: 'sessions', id: session.id, ...access })
+        continue
+      }
+      await writeSessionEdit(req, user, session.id, {
+        ...(detail?.op === 'edit' ? detail.values : {}),
+        ...(detail?.op === 'edit' && detail.meetings
+          ? { meetings: detail.meetings }
+          : entries.length
+            ? {
+                meetings: meetingsAfter(itemId, session.meetings ?? [], entries).map((m) => ({
+                  ...m,
+                  id: m.id ?? undefined,
+                  start_time: m.start_time ?? '',
+                  end_time: m.end_time ?? '',
+                })),
+              }
+            : {}),
       })
     }
   },
@@ -460,7 +501,7 @@ const spaceSource: CalendarSource = {
   async names(ctx, parentId) {
     return sessionSource.names(ctx, await spaceCourse(ctx, parentId))
   },
-  async apply(ctx, parentId, changes) {
+  async apply(ctx, parentId, changes, details) {
     const course = await spaceCourse(ctx, parentId)
     // Validate the entire batch before delegating any session writes.
     changes.forEach((change, index) => {
@@ -471,7 +512,7 @@ const spaceSource: CalendarSource = {
       )
         throw invalid('Space events are edited from their post.', index)
     })
-    return sessionSource.apply(ctx, course, changes)
+    return sessionSource.apply(ctx, course, changes, details)
   },
 }
 

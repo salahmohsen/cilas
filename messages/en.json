@@ -341,7 +341,11 @@
     "since": "{count, plural, one {# course} other {# courses}} since {year}"
   },
   "Course": {
-    "delivery": { "OFFLINE": "In person", "ONLINE": "Online", "HYBRID": "Hybrid" },
+    "delivery": {
+      "OFFLINE": "In person",
+      "ONLINE": "Online",
+      "HYBRID": "Hybrid"
+    },
     "details": "Course details",
     "cycle": "Cycle",
     "starts": "Starts",
@@ -1686,6 +1690,9 @@
       "both-times": "Choose a start and an end time, or tick All day.",
       "time": "Choose a time from the list.",
       "order": "The end must be after the start."
-    }
+    },
+    "apply": "Apply",
+    "deleteSession": "Delete session",
+    "deleteTitle": "Delete “{name}”?"
   }
 }

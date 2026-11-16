@@ -29,7 +29,7 @@ import type { CalendarLabels } from './calendar-labels'
 import { CalendarToolbar } from './calendar-toolbar'
 import { CalendarPanel } from './calendar-panel'
 import { AgendaList } from './agenda-list'
-import { cairoNow, formatDay, formatMonths, weekOf, weekStartOf } from './calendar-time'
+import { cairoNow, formatDay, formatMonths, weekOf, weekStartOf, toTime } from './calendar-time'
 import { daysOf, stepFrom, viewAt, viewsAt, type CalendarView } from './calendar-views'
 import styles from './calendar.module.css'
 import { SaveBar } from './save-bar'
@@ -54,13 +54,19 @@ type Shared = {
    * Opens an item: in edit mode, or from an action, a press on its block.
    * `blockId` is null for an item with no block.
    */
-  onOpen: (itemId: string, blockId: string | null) => void
+  onOpen: (itemId: string, blockId: string | null, item?: CalendarItem) => void
   /**
    * The actions in an item's details. With it, a press in view mode opens
    * the details at the block (a sheet on a narrow calendar); without it, a
    * press opens the item at once.
    */
   actionsOf?: (item: CalendarItem) => CalendarAction[]
+  // The host holds these changes. null stages removal of the item.
+  drafts?: ReadonlyMap<
+    string,
+    Partial<Pick<CalendarItem, 'title' | 'summary' | 'cancelled'>> | null
+  >
+  onCancelEdits?: () => void
   /** The host's name for the days shown, such as the course week "Week 3 of 8"; null for none. */
   weekLabel?: (days: string[]) => string | null
   /** The host's own toolbar buttons, such as Edit. */
@@ -119,6 +125,8 @@ export function Calendar({
   actionsOf,
   weekLabel,
   action,
+  drafts,
+  onCancelEdits,
   mode,
   onSave,
   newItemKind,
@@ -166,21 +174,93 @@ export function Calendar({
     [editable, loaded, week, days],
   )
 
-  const session = useEditSession({
+  const keepChange = (change: CalendarChange) =>
+    !('itemId' in change) || !change.itemId || drafts?.get(change.itemId) !== null
+  const edits = useEditSession({
     items,
     newItemKind,
-    onSave,
+    onSave: onSave ? (changes) => onSave(changes.filter(keepChange)) : undefined,
     scope: frame,
     range,
   })
+
+  const visible = (block: EditBlock) => drafts?.get(block.itemId) !== null
+  const session = {
+    ...edits,
+    items: [
+      ...edits.items,
+      ...[...new Set(edits.working.map((block) => block.itemId))]
+        .filter((id) => !edits.items.some((item) => item.id === id))
+        .map((id): CalendarItem => ({
+          id,
+          kind: newItemKind ?? '',
+          title: labels.newItem,
+          tone: edits.items[0]?.tone ?? 'neutral',
+          cancelled: false,
+          version: '',
+          blocks: [],
+        })),
+    ].map((item) => ({
+      ...item,
+      ...drafts?.get(item.id),
+      title: drafts?.has(item.id)
+        ? (drafts.get(item.id)?.title ?? item.caption ?? item.title)
+        : item.title,
+    })),
+    working: edits.working.filter(visible),
+    timed: edits.timed.filter(visible),
+    changes: edits.changes.filter(keepChange),
+    unsaved: new Set([
+      ...edits.unsaved,
+      ...edits.working.filter((block) => drafts?.has(block.itemId)).map((block) => block.id),
+    ]),
+  }
+  const pending =
+    session.changes.length +
+    [...(drafts?.keys() ?? [])].filter(
+      (id) =>
+        edits.items.some((item) => item.id === id) ||
+        session.working.some((block) => block.itemId === id && !block.deleted),
+    ).length
+  const cancel = () => {
+    edits.cancel()
+    onCancelEdits?.()
+  }
+  const openItem = (id: string, blockId: string | null) => {
+    const item = session.items.find((item) => item.id === id) ?? {
+      id,
+      kind: newItemKind ?? '',
+      title: labels.newItem,
+      tone: 'neutral' as const,
+      cancelled: false,
+      version: '',
+      blocks: [],
+      ...drafts?.get(id),
+    }
+    if (!editable || item.readOnly) {
+      onOpen(id, blockId)
+      return
+    }
+    onOpen(id, blockId, {
+      ...item,
+      blocks: session.working
+        .filter((block) => block.itemId === id && !block.deleted)
+        .map((block) => ({
+          id: block.blockId,
+          date: block.track,
+          start_time: block.allDay ? null : toTime(block.start),
+          end_time: block.allDay ? null : toTime(block.end),
+        })),
+    })
+  }
 
   const unsavedCount = useRef(onUnsavedChange)
   useEffect(() => {
     unsavedCount.current = onUnsavedChange
   })
   useEffect(() => {
-    unsavedCount.current?.(session.changes.length)
-  }, [session.changes.length])
+    unsavedCount.current?.(pending)
+  }, [pending])
   useEffect(
     () => () => {
       unsavedCount.current?.(0)
@@ -213,8 +293,8 @@ export function Calendar({
   const itemIds = useMemo(() => new Set(session.items.map((item) => item.id)), [session.items])
   /** A press on a block, a bar, an agenda row or an unscheduled item: its details, or the item itself. */
   const press = (itemId: string, blocks: EditBlock[], anchor: HTMLElement) => {
-    if (!itemIds.has(itemId)) return
-    if (editable || !actionsOf) return onOpen(itemId, blocks[0]?.blockId ?? null)
+    if (!editable && !itemIds.has(itemId)) return
+    if (editable || !actionsOf) return openItem(itemId, blocks[0]?.blockId ?? null)
     setDetailsSide(besideFits(anchor) ? 'end' : 'bottom')
     void details.open({ payload: { itemId, blocks, anchor }, anchor })
   }
@@ -236,7 +316,7 @@ export function Calendar({
     session.working.flatMap((block) => (block.deleted ? [] : [block.itemId])),
   )
   const unscheduled = session.items.filter(
-    (item) => item.blocks.length === 0 && !placedIds.has(item.id),
+    (item) => item.blocks.length === 0 && !placedIds.has(item.id) && drafts?.get(item.id) !== null,
   )
   const anyCancelled = session.items.some((item) => item.cancelled)
   const anyMarked = session.items.some((item) => marked.has(item.id))
@@ -296,7 +376,9 @@ export function Calendar({
   const entriesOf = (blockId: string): BlockMenuEntry[] => {
     const block = session.working.find((candidate) => candidate.id === blockId)
     if (!block) return []
-    const entries: BlockMenuEntry[] = [{ action: 'open', disabled: !itemIds.has(block.itemId) }]
+    const entries: BlockMenuEntry[] = [
+      { action: 'open', disabled: !editable && !itemIds.has(block.itemId) },
+    ]
     if (editable && !block.readOnly) {
       entries.push({ action: 'add-next-day' })
       if (newItemKind) entries.push({ action: 'copy-next-week' })
@@ -314,7 +396,7 @@ export function Calendar({
       case 'open':
         // The host puts focus back on the block when its dialog closes, so the block has it now.
         session.focusable({ id: blockId, track: block.track })?.focus()
-        onOpen(block.itemId, block.blockId)
+        openItem(block.itemId, block.blockId)
         break
       case 'add-next-day': {
         const copy = session.addNextDay(runOf(blockId).at(-1)!.id)
@@ -512,7 +594,7 @@ export function Calendar({
         <p role="status" className={styles.srOnly}>
           {droppedNote}
           {told}
-          {session.changes.length ? ` ${labels.changes(session.changes.length)}` : ''}
+          {pending ? ` ${labels.changes(pending)}` : ''}
         </p>
 
         {blockMenu ? (
@@ -544,17 +626,17 @@ export function Calendar({
           />
         ) : null}
 
-        {editable && (session.changes.length || session.error || droppedNote) ? (
+        {editable && (pending || session.error || droppedNote) ? (
           <SaveBar
             labels={labels}
-            count={session.changes.length}
+            count={pending}
             saving={session.saving}
             error={session.error}
             note={[droppedNote, session.changes.length ? told : ''].filter(Boolean).join(' ')}
             onSave={session.save}
             onSaveIntent={onSaveIntent}
-            onCancel={session.cancel}
-            onDiscard={session.cancel}
+            onCancel={cancel}
+            onDiscard={cancel}
             onDismiss={session.dismissDropped}
           />
         ) : null}

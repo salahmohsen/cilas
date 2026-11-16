@@ -1,5 +1,7 @@
 'use client'
 
+import { NextIntlClientProvider } from 'next-intl'
+import { useScheduleDrafts } from '@/components/space/use-schedule-drafts'
 import { useLocale } from '@payloadcms/ui'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 
@@ -19,7 +21,7 @@ import { cairoDay } from '@/lib/cairo-day'
 import {
   calendarAdminText,
   type AdminLanguage,
-  type CalendarAdminMessages,
+  type CalendarEditorMessages,
 } from './calendar-admin-text'
 import styles from './course-calendar.module.css'
 import { LeaveWarning } from './leave-warning'
@@ -29,7 +31,7 @@ type Props = {
   /** Null while the course has not been saved once. */
   courseId: string | null
   language: AdminLanguage
-  messages: CalendarAdminMessages
+  messages: CalendarEditorMessages
 }
 
 type Loaded =
@@ -37,16 +39,19 @@ type Loaded =
   | { status: 'failed'; error: CalendarSaveError }
   | { status: 'ready'; items: CalendarItem[]; canEdit: boolean }
 
-/**
- * The calendar in the course's Sessions tab. It shows the course's sessions,
- * lets the people who may edit them draw, move, copy and delete meetings, and
- * opens Payload's drawer on the session that a block or a tray item names.
- * Its changes save with its own Save schedule button, not with the course:
- * sessions are not drafts, so they are not tied to the course's Save. After
- * a save that changes the schedule, here or in the session drawer, it offers
- * a prefilled announcement for the course's space (`useScheduleSave`).
- */
-export function CourseCalendar({ courseId, language, messages }: Props) {
+export function CourseCalendar(props: Props) {
+  return (
+    <NextIntlClientProvider
+      locale={props.language}
+      messages={props.messages}
+      timeZone="Africa/Cairo"
+    >
+      <CourseCalendarInner {...props} />
+    </NextIntlClientProvider>
+  )
+}
+
+function CourseCalendarInner({ courseId, language, messages }: Props) {
   const { code: locale } = useLocale()
   const {
     t,
@@ -54,6 +59,7 @@ export function CourseCalendar({ courseId, language, messages }: Props) {
     save: text,
   } = useMemo(() => calendarAdminText(language, messages), [language, messages])
 
+  const staged = useScheduleDrafts(text, locale)
   const [loaded, setLoaded] = useState<Loaded>({ status: 'loading' })
   const [unsaved, setUnsaved] = useState(0)
   const [opened, setOpened] = useState<{
@@ -92,7 +98,10 @@ export function CourseCalendar({ courseId, language, messages }: Props) {
     locale,
     language,
     text,
-    reload: () => void load(),
+    reload: () => {
+      staged.clear()
+      void load()
+    },
   })
 
   if (!courseId)
@@ -109,7 +118,13 @@ export function CourseCalendar({ courseId, language, messages }: Props) {
 
   const save = async (changes: CalendarChange[]) => {
     // The bar and its Save button leave with the changes, so focus goes to the heading.
-    const saved = await schedule.save(changes, items, () => heading.current)
+    const saved = await schedule.save(
+      changes,
+      items,
+      () => heading.current,
+      staged.changes(changes),
+    )
+    staged.clear()
     setLoaded({ status: 'ready', items: saved, canEdit: true })
     return saved
   }
@@ -134,7 +149,14 @@ export function CourseCalendar({ courseId, language, messages }: Props) {
   }
 
   return (
-    <section className={styles.root} aria-label={t('heading')} ref={frame}>
+    <section
+      className={styles.root}
+      aria-label={t('heading')}
+      ref={frame}
+      onPointerEnter={staged.preload}
+      onPointerDown={staged.preload}
+      onFocus={staged.preload}
+    >
       <header className={styles.header}>
         <h3 className={styles.title} ref={heading} tabIndex={-1}>
           {t('heading')}
@@ -170,7 +192,9 @@ export function CourseCalendar({ courseId, language, messages }: Props) {
             const week = courseWeekOf(loaded.items, days)
             return week && t('courseWeek', week)
           }}
-          onOpen={open}
+          drafts={staged.drafts}
+          onCancelEdits={staged.clear}
+          onOpen={(id, _block, item) => (loaded.canEdit && item ? staged.open(item) : open(id))}
           {...(loaded.canEdit
             ? {
                 mode: 'edit' as const,
@@ -204,6 +228,7 @@ export function CourseCalendar({ courseId, language, messages }: Props) {
         />
       ) : null}
 
+      {staged.drawer}
       {schedule.dialog}
     </section>
   )

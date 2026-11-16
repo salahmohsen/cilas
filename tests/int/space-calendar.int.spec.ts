@@ -4,7 +4,9 @@ import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest'
 
 import { loadCalendarItems } from '@/actions/load-calendar-items'
 import { loadSessionView } from '@/actions/load-session-view'
-import { saveCalendarChanges } from '@/actions/save-calendar-changes'
+import { saveScheduleEdits } from '@/actions/save-schedule-edits'
+import type { CalendarSave } from '@/lib/calendar-items'
+const saveCalendarChanges = (calendar: CalendarSave) => saveScheduleEdits({ calendar, details: [] })
 import { currentReader } from '@/lib/reader'
 import config from '@/payload.config'
 import type { User } from '@/payload-types'

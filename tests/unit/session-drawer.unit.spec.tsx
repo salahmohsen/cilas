@@ -6,7 +6,8 @@ import { afterEach, beforeAll, beforeEach, describe, expect, it, vi } from 'vite
 
 import { loadSessionView, type SessionViewResult } from '@/actions/load-session-view'
 import { scheduleOffers } from '@/actions/schedule-offers'
-import { loadSessionEdit, saveSessionEdit, type SessionEdit } from '@/actions/session-edit'
+import { saveScheduleEdits } from '@/actions/save-schedule-edits'
+import { loadSessionEdit, type SessionEdit } from '@/actions/session-edit'
 import {
   SessionDrawerHost,
   SessionLink,
@@ -19,9 +20,9 @@ import en from '../../messages/en.json'
 import ar from '../../messages/ar.json'
 
 vi.mock('@/actions/load-session-view', () => ({ loadSessionView: vi.fn() }))
-vi.mock('@/actions/session-edit', () => ({ loadSessionEdit: vi.fn(), saveSessionEdit: vi.fn() }))
+vi.mock('@/actions/session-edit', () => ({ loadSessionEdit: vi.fn() }))
 vi.mock('@/actions/schedule-offers', () => ({ scheduleOffers: vi.fn() }))
-vi.mock('@/actions/save-calendar-changes', () => ({ saveCalendarChanges: vi.fn() }))
+vi.mock('@/actions/save-schedule-edits', () => ({ saveScheduleEdits: vi.fn() }))
 const refresh = vi.fn()
 
 // Next folds pushState and replaceState into its router; this stands in for that.
@@ -269,7 +270,7 @@ const save = (dialog: HTMLElement) =>
 
 describe('the session drawer’s Edit form', () => {
   beforeEach(() => {
-    vi.mocked(saveSessionEdit).mockReset()
+    vi.mocked(saveScheduleEdits).mockReset()
     vi.mocked(scheduleOffers).mockReset().mockResolvedValue([])
     refresh.mockReset()
   })
@@ -332,7 +333,7 @@ describe('the session drawer’s Edit form', () => {
     expect(ends).toHaveAttribute('data-invalid')
     expect(ends.getAttribute('aria-describedby')).toContain(error.id)
     await waitFor(() => expect(document.activeElement).toBe(ends))
-    expect(saveSessionEdit).not.toHaveBeenCalled()
+    expect(saveScheduleEdits).not.toHaveBeenCalled()
   })
 
   it('adds a meeting, asks for its day, and removes it again', async () => {
@@ -341,13 +342,23 @@ describe('the session drawer’s Edit form', () => {
     expect(within(dialog).getAllByText(en.SessionEdit.day)).toHaveLength(2)
     await save(dialog)
     expect(await within(dialog).findByText(en.SessionEdit.errors.day)).toBeInTheDocument()
-    expect(saveSessionEdit).not.toHaveBeenCalled()
+    expect(saveScheduleEdits).not.toHaveBeenCalled()
 
     fireEvent.click(within(dialog).getByRole('button', { name: 'Remove meeting 2' }))
-    vi.mocked(saveSessionEdit).mockResolvedValue({ ok: true, courseId: '1', before: [], after: [] })
+    vi.mocked(saveScheduleEdits).mockResolvedValue({ ok: true, items: [], before: [], after: [] })
     await save(dialog)
-    expect(saveSessionEdit).toHaveBeenCalledWith(
-      { id: '13', version: 'v1', values: editValues() },
+    expect(saveScheduleEdits).toHaveBeenCalledWith(
+      {
+        details: [
+          {
+            op: 'edit',
+            id: '13',
+            version: 'v1',
+            values: (({ meetings: _, ...values }) => values)(editValues()),
+            meetings: editValues().meetings,
+          },
+        ],
+      },
       'en',
     )
   })
@@ -392,7 +403,7 @@ describe('the session drawer’s Edit form', () => {
       },
     ]
     const after = [{ ...before[0]!, cancelled: true, version: 'v2' }]
-    vi.mocked(saveSessionEdit).mockResolvedValue({ ok: true, courseId: '1', before, after })
+    vi.mocked(saveScheduleEdits).mockResolvedValue({ ok: true, items: after, before, after })
     const dialog = await openForm()
     fireEvent.click(within(dialog).getByRole('checkbox', { name: en.SessionEdit.cancelled }))
     await save(dialog)
@@ -406,7 +417,7 @@ describe('the session drawer’s Edit form', () => {
   })
 
   it('keeps the changes on a stale save and offers to reload', async () => {
-    vi.mocked(saveSessionEdit).mockResolvedValue({
+    vi.mocked(saveScheduleEdits).mockResolvedValue({
       ok: false,
       error: { code: 'stale', itemId: '13', name: 'Session 3: Reading the city' },
     })

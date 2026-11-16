@@ -14,6 +14,9 @@ export type CalendarAdminMessages = ScheduleSaveMessages & {
   CalendarUi: (typeof en)['CalendarUi']
 }
 
+export type CalendarEditorMessages = CalendarAdminMessages &
+  Pick<typeof en, 'SessionEdit' | 'Spaces' | 'Course'>
+
 /** Every word the admin calendar shows, from `messages/*.json`. */
 export const calendarAdminText = (language: AdminLanguage, messages: CalendarAdminMessages) => {
   // Untyped, as the site's hook is, so one label builder serves both.
