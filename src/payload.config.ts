@@ -1,4 +1,6 @@
 import { PREVIEW_COLLECTIONS } from '@/lib/preview-url'
+import { en } from '@payloadcms/translations/languages/en'
+import { ar } from '@payloadcms/translations/languages/ar'
 import { postgresAdapter } from '@payloadcms/db-postgres'
 import { lexicalEditor } from '@payloadcms/richtext-lexical'
 import { BUCKET_PREFIXES } from '@/lib/storage-usage'
@@ -266,6 +268,7 @@ export default buildConfig({
   },
   // The few admin strings that still name Payload.
   i18n: {
+    supportedLanguages: { en, ar },
     translations: {
       en: {
         general: { payloadSettings: 'Admin settings' },
