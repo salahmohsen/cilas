@@ -61,7 +61,6 @@ export const scheduleSaveText = (
     offerLabels: {
       title: t('offer.title'),
       oneSpace: (space) => t('offer.oneSpace', { space }),
-      manySpaces: t('offer.manySpaces'),
       space: (space) => t('offer.space', { space }),
       text: t('offer.text'),
       includeCalendar: t('offer.includeCalendar'),

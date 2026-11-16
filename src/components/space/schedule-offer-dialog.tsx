@@ -20,8 +20,6 @@ export type ScheduleOfferLabels = {
   title: string
   /** Under the title when the dialog holds one space: where the announcement goes. */
   oneSpace: (space: string) => string
-  /** Under the title when it holds several. */
-  manySpaces: string
   /** An entry's heading when there are several. */
   space: (space: string) => string
   text: string
@@ -54,17 +52,15 @@ function Entry({
   offer,
   labels,
   locale,
-  heading,
+  many,
   first,
-  compact,
   onDone,
 }: {
   offer: ScheduleOffer
   labels: ScheduleOfferLabels
   locale: string
-  heading: boolean
+  many: boolean
   first: boolean
-  compact: boolean
   onDone: () => void
 }) {
   const id = useId()
@@ -92,8 +88,8 @@ function Entry({
   }
 
   return (
-    <section className={styles.entry} aria-labelledby={heading ? `${id}-heading` : undefined}>
-      {heading ? (
+    <section className={styles.entry} aria-labelledby={many ? `${id}-heading` : undefined}>
+      {many ? (
         <h3 id={`${id}-heading`} className={styles.heading}>
           {labels.space(offer.space.name)}
         </h3>
@@ -122,7 +118,7 @@ function Entry({
             <figure className={styles.preview} inert>
               <Calendar
                 mode="view"
-                view={compact ? 'agenda' : undefined}
+                view={many ? 'agenda' : undefined}
                 items={offer.preview.items}
                 marked={new Set(offer.preview.marked)}
                 day={offer.preview.day}
@@ -181,7 +177,7 @@ export function ScheduleOfferDialog({ offers, labels, locale, dir, onClose, retu
         dir={dir}
         lang={locale}
         title={labels.title}
-        description={many ? labels.manySpaces : labels.oneSpace(offers[0]?.space.name ?? '')}
+        description={many ? undefined : labels.oneSpace(offers[0]?.space.name ?? '')}
         closeLabel={labels.close}
         onPointerDownOutside={(event) => event.preventDefault()}
         onCloseAutoFocus={(event) => {
@@ -196,9 +192,8 @@ export function ScheduleOfferDialog({ offers, labels, locale, dir, onClose, retu
               offer={offer}
               labels={labels}
               locale={locale}
-              heading={many}
+              many={many}
               first={index === 0}
-              compact={many}
               onDone={() => finish(offer.space.id)}
             />
           ))}

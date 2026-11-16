@@ -575,7 +575,7 @@ const publicSource: CalendarSource = {
     const parents = new Map(docs.map((doc) => [String(doc.id), String(relId(doc.course))]))
     for (const id of ids)
       if (!parents.has(id)) throw new CalendarSaveFailure({ code: 'not-found', itemId: id })
-    for (const course of new Set(parents.values())) {
+    for (const course of new Set(ids.map((id) => parents.get(id)!))) {
       await sessionSource.apply(
         ctx,
         course,

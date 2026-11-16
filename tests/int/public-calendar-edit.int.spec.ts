@@ -227,10 +227,19 @@ describe('public calendar edit requests', () => {
       id: Number(items[1]!.id),
       data: { title: 'Changed elsewhere' },
     })
+    const writes = vi.spyOn(payload, 'update')
     const result = await saveScheduleEdits({
       calendar: { parent: parent(), changes: moves(items) },
       details: [],
     })
+    const firstWriteStarted = writes.mock.calls.some(
+      ([options]) =>
+        options.collection === 'sessions' &&
+        'id' in options &&
+        Number(options.id) === Number(items[0]!.id),
+    )
+    writes.mockRestore()
+    expect(firstWriteStarted).toBe(true)
     expect(result).toMatchObject({
       ok: false,
       error: {

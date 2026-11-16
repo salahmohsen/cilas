@@ -1,4 +1,4 @@
-import { act, cleanup, fireEvent, render, screen, within } from '@testing-library/react'
+import { act, cleanup, fireEvent, render, renderHook, screen, within } from '@testing-library/react'
 import { NextIntlClientProvider } from 'next-intl'
 import { renderToString } from 'react-dom/server'
 import { afterEach, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest'
@@ -9,6 +9,7 @@ import {
   loadedRange,
   readCalendarUrl,
 } from '@/components/calendar/calendar-url'
+import { usePublicCalendarAccess } from '@/components/calendar/use-public-calendar-access'
 import { useSession } from '@/components/use-session'
 import { publicCalendarLinks } from '@/actions/public-calendar-access'
 import { PublicCalendar } from '@/components/calendar/public-calendar'
@@ -122,6 +123,7 @@ const meetings: CalendarMeeting[] = [
     key: 'e4-0',
     item: 'e4',
     kind: 'event',
+    courseId: undefined,
     title: 'Film night',
     href: '/events/film-night',
     date: '2026-11-18',
@@ -403,4 +405,44 @@ describe('public calendar access after hydration', () => {
       expect(within(dialog).getByRole('group', { name: 'Reading the city' })).toBeInTheDocument()
     } else expect(within(dialog).queryByRole('link', { name: 'Go to space' })).toBeNull()
   })
+})
+
+it('keeps one event action when the viewer can read a course space', async () => {
+  vi.mocked(useSession).mockReturnValue({ id: 8, email: 'reader@cilas.test' })
+  vi.mocked(publicCalendarLinks).mockResolvedValue({
+    canEdit: false,
+    spaces: { '22': '/en/spaces/course/city' },
+  })
+  page()
+  await act(async () => {})
+  fireEvent.click(screen.getByRole('link', { name: /^Film night, Wednesday/ }))
+  const details = await screen.findByRole('dialog', { name: 'Film night' })
+  expect(within(details).getByRole('link', { name: 'View event' })).toBeInTheDocument()
+  expect(within(details).queryByRole('link', { name: 'Go to space' })).toBeNull()
+  expect(within(details).getAllByRole('link')).toHaveLength(1)
+})
+
+it('waits for the new language before it shows a space path', async () => {
+  vi.mocked(useSession).mockReturnValue({ id: 8, email: 'reader@cilas.test' })
+  vi.mocked(publicCalendarLinks).mockResolvedValueOnce({
+    canEdit: false,
+    spaces: { '22': '/en/spaces/course/city' },
+  })
+  let finish!: (value: Awaited<ReturnType<typeof publicCalendarLinks>>) => void
+  vi.mocked(publicCalendarLinks).mockImplementationOnce(
+    () =>
+      new Promise((resolve) => {
+        finish = resolve
+      }),
+  )
+  const { result, rerender } = renderHook(({ locale }) => usePublicCalendarAccess(['22'], locale), {
+    initialProps: { locale: 'en' },
+  })
+  await act(async () => {})
+  expect(result.current.spaces['22']).toBe('/en/spaces/course/city')
+  rerender({ locale: 'ar' })
+  expect(result.current.spaces).toEqual({})
+  await act(async () => finish({ canEdit: false, spaces: { '22': '/ar/spaces/course/city' } }))
+  expect(result.current.spaces['22']).toBe('/ar/spaces/course/city')
+  expect(publicCalendarLinks).toHaveBeenCalledTimes(2)
 })

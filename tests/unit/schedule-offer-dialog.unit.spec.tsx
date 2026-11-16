@@ -164,7 +164,7 @@ describe('the schedule offer dialog', () => {
     postCreateAction.mockResolvedValue({ status: 'ok' })
     const onClose = show([offer(7, 'Reading group'), offer(8, 'Second course')])
     const dialog = await screen.findByRole('dialog')
-    expect(dialog).toHaveAccessibleDescription(en.CalendarAdmin.offer.manySpaces)
+    expect(dialog).not.toHaveAccessibleDescription()
     const first = within(dialog).getByRole('region', { name: 'To Reading group' })
     const second = within(dialog).getByRole('region', { name: 'To Second course' })
     expect(within(first).getByRole('textbox', { name: 'Announcement' })).toBeInTheDocument()

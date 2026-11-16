@@ -585,7 +585,6 @@
     "offer": {
       "title": "Announce this change?",
       "oneSpace": "The announcement goes to {space}, pinned, and every member gets a notification.",
-      "manySpaces": "Publish or skip an announcement for each space.",
       "space": "To {space}",
       "text": "Announcement",
       "includeCalendar": "Include the calendar",

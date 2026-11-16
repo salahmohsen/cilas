@@ -55,7 +55,7 @@ export function PublicCalendarEditor({
   const done = useRef<HTMLButtonElement>(null)
   const staged = useScheduleDrafts(text, locale, (item) =>
     item.href ? (
-      <div className="px-6 pb-4">
+      <div className="pb-4">
         <ButtonGroup
           label={item.title}
           size="sm"
