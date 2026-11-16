@@ -204,7 +204,7 @@ labels and direction from the host
 
 There is **one write path** for every place. Telling people is the saver's choice, offered by one rule.
 
-1. **Save.** The calendar's `onSave` calls one server action, `saveCalendarChanges(changes)`. It runs Payload with the signed-in user (`overrideAccess: false`) in **one transaction**, so the collections' access rules decide, and either all changes save or none do. Each change carries the `updatedAt` it started from; a stale one fails the whole save. The unsaved changes stay on the screen, the message names the session that another person changed, and one button, "Reload and lose my changes", loads the current schedule. There is no merge and no retry. A failed save opens no announcement. The collection hooks refresh the public cache in the same save (`revalidateDocument('courses')` drops the `courses` tag the public calendar reads).
+1. **Save.** The calendar's `onSave` calls one server action, `saveScheduleEdits({ calendar, details })`. It runs Payload with the signed-in user (`overrideAccess: false`) in **one transaction**, so the collections' access rules decide, and either all changes save or none do. Each change carries the `updatedAt` it started from; a stale one fails the whole save. The unsaved changes stay on the screen, the message names the session that another person changed, and one button, "Reload and lose my changes", loads the current schedule. There is no merge and no retry. A failed save opens no announcement. The collection hooks refresh the public cache in the same save (`revalidateDocument('courses')` drops the `courses` tag the public calendar reads).
 2. **Offer.** After a save that changes the schedule, the host compares the items before and after with one pure rule (`scheduleChanges` in `lib/schedule-changes.ts`): meetings moved, added or removed, sessions cancelled or restored. A change counts only when a meeting it touches, before or after, is today or later; archive corrections offer nothing. When something counts and the course has a space, a dialog opens with a **prefilled announcement**: a short text of the changes ("Session 3 moves from Tue 18 Nov 19:00 to Thu 20 Nov 19:00", "Session 5 is cancelled") and one **schedule block**. The person edits it and clicks **Publish to space**, or **Skip**.
 3. **Publish.** Publish makes a normal space announcement as that person, through the existing post path: it is pinned and notifies every space member. Only space moderators may post an announcement, and moderators are the admins and the course's fellows, the same people who may edit the course's sessions.
 
@@ -237,8 +237,9 @@ As built in step 4:
 - `?open=<id>` opens one shared session drawer. It uses the Arc drawer on desktop and the Arc bottom sheet on phones.
 - `SpaceCalendarTab` opens `SpaceCalendarEditor` for edit mode. `useScheduleSave` saves, then `useScheduleOffer` offers the announcement. The drawer uses the same offer.
 - `lib/leave-guard.ts` is the one leave guard. It checks links, page close and navigation through `leave`. This Next version cannot ask on Back and Forward.
-- The drawer's Edit form uses TanStack Form. `saveSessionEdit` checks `updatedAt` before it saves. A stale drawer save keeps the fields and offers Reload.
-- A drawer save drops only that session's unsaved calendar changes. A notice names the session. Changes to other sessions stay. The owner chose this behavior on 2026-11-15. See Decision log.
+- The drawer's Edit form uses TanStack Form. `saveScheduleEdits` checks `updatedAt` before it saves. A stale drawer save keeps the fields and offers Reload.
+- An outside drawer save can drop that session's pending calendar changes. The notice names the session.
+- Decision 11 is built in unit 3b. Apply stages details in both hosts. `saveScheduleEdits` saves them with meetings in one transaction.
 
 ## Public calendar redesign
 
@@ -264,7 +265,7 @@ The [untangle rules](../../AGENTS.md) apply to every step. The aim: a typical ch
 | `lib/schedule-offer.ts`, `actions/schedule-offers.ts`  | the offer: for each space, permission (`mayAnnounce`), language (`courseLanguage`), session names, the text and the block | `lib/schedule-changes.ts`, spaces     |
 | `components/space/schedule-offer-dialog.tsx`           | the one announcement dialog, for a list of spaces; Publish goes through `postCreate`                                      | the offer, the calendar component     |
 | `lib/calendar-sources.ts`                              | one adapter per kind (session, event, space event): how a document becomes calendar items, and how a change writes back   | `lib/meetings.ts`, collections' types |
-| `actions/save-calendar-changes.ts`                     | the one server action: auth, transaction, call the adapters                                                               | `lib/calendar-sources.ts`             |
+| `actions/save-schedule-edits.ts`                       | the one server action: auth, transaction, call the adapters                                                               | `lib/calendar-sources.ts`             |
 | `components/calendar/`                                 | the generic component; the only code that imports ui-sdk                                                                  | ui-sdk, Arc                           |
 | hosts: admin field, space tab, space post, `/calendar` | data loading and labels for one place                                                                                     | everything above                      |
 
@@ -284,7 +285,7 @@ The [untangle rules](../../AGENTS.md) apply to every step. The aim: a typical ch
 
 - **What it needs:** an `agent` key on the calendar primitive that lists its actions, one `createAgent()` bridge, and `registerTools()`. In a browser without WebMCP, `registerTools` does nothing.
 - **Agents change only unsaved edits.** The calendar's agent actions are `createBlock`, `moveBlock`, `resizeBlock` and `cancelBlock`, in edit mode only. They change the page, not the database. **Save** carries `data-agent-confirm`, so only the person saves. No delete action is offered to agents.
-- **Same path as people.** The agent drives the component, the component calls `saveCalendarChanges`, and the collections' access rules decide. Nothing new on the server.
+- **Same path as people.** The agent drives the component, the component calls `saveScheduleEdits`, and the collections' access rules decide. Nothing new on the server.
 - **Untrusted text.** Session titles and descriptions are written by fellows and can contain text that tries to steer the admin's agent. The bridge's `allow` refuses every action outside the calendar, and the person's Save is the last check.
 - **Where:** the admin and the course space, in edit mode. Not for visitors of the public calendar.
 - **How it relates to our MCP server:** the MCP plugin lets assistants write courses on the server, without a page, through drafts and review. WebMCP is help on the page the person is looking at. Both end in the same collections and rules.
@@ -313,7 +314,7 @@ Fix: stage drawer details with calendar changes, then save both in one transacti
 
 - **Two save paths can discard pending work.** In step 4, saving the drawer drops that session's unsaved calendar edits. In calendar edit mode, clicking a saved or new session will instead open our drawer's Edit form directly, in both the space and admin. Apply stages the details; Cancel discards only the current form changes. The Save bar and leave guard include staged details.
 - **One Save sends one request.** `saveScheduleEdits({ calendar, details })` applies meeting changes, details, and new sessions in one Payload transaction. A stale existing session version stops all writes. The announcement offer opens once. The generic calendar keeps meeting changes only; the host joins its detail changes at Save. Outside calendar edit mode, the form uses the same action for an immediate single-session save.
-- **Build after the details popover, before month view.** See step 5 unit 3b in `docs/plans/2026-11-15-calendar-redesign.md`. The earlier drawer-save rule remains the current implementation until that unit lands. The owner reviews each layout before the next unit starts.
+- **Build after the details popover, before month view.** See step 5 unit 3b in `docs/plans/2026-11-15-calendar-redesign.md`. Built in unit 3b. The owner reviews the complete result after the overnight run.
 
 Fix: owner's decisions of 2026-11-15, at the close of step 4.
 
