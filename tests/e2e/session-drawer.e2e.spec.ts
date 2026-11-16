@@ -52,11 +52,13 @@ const openFrom = async (
   trigger: ReturnType<Page['locator']>,
   by: 'pointer' | 'keyboard' = 'pointer',
 ) => {
+  // Read first: an open drawer hides the page from the accessibility tree.
+  const isBlock = (await trigger.getAttribute('data-span-id')) !== null
   if (by === 'keyboard') {
     await trigger.focus()
     await page.keyboard.press('Enter')
   } else await trigger.click()
-  if ((await trigger.getAttribute('data-span-id')) !== null) {
+  if (isBlock) {
     await expect(details()).toBeVisible()
     await expect(details()).toHaveAccessibleName(TITLE)
     await details().getByRole('button', { name: 'Open', exact: true }).click()

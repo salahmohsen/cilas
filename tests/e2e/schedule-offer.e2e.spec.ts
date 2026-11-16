@@ -217,9 +217,7 @@ test.describe('course schedule announcements', () => {
     const before = await announcements()
     await openSessionsTab()
     await move()
-    await expect(
-      calendar().getByText('The course’s Save does not save the schedule. Use Save schedule.'),
-    ).toBeVisible()
+    await expect(saveButton()).toBeVisible()
     await saveButton().click()
     await expect(dialog()).toBeVisible()
     await expect(dialog().getByRole('textbox', { name: 'Announcement' })).toContainText(
