@@ -21,6 +21,27 @@ export const weekStartOf = (day: string): string => {
 export const addDays = (day: string, days: number): string =>
   Temporal.PlainDate.from(day).add({ days }).toString()
 
+/** The same day `months` months on, or the month's last day when it is shorter. */
+export const addMonths = (day: string, months: number): string =>
+  Temporal.PlainDate.from(day).add({ months }).toString()
+
+/** Every day of the month that holds `day`. */
+export const monthOf = (day: string): string[] => {
+  const first = Temporal.PlainDate.from(day).with({ day: 1 })
+  return Array.from({ length: first.daysInMonth }, (_, index) =>
+    first.add({ days: index }).toString(),
+  )
+}
+
+/** The weeks from Saturday that hold the days of `day`'s month: four to six rows of seven days. */
+export const monthWeeksOf = (day: string): string[][] => {
+  const days = monthOf(day)
+  const weeks: string[][] = []
+  for (let start = weekStartOf(days[0]!); start <= days.at(-1)!; start = addDays(start, 7))
+    weeks.push(weekOf(start))
+  return weeks
+}
+
 export const weekOf = (start: string): string[] =>
   Array.from({ length: 7 }, (_, index) => addDays(start, index))
 
@@ -92,6 +113,19 @@ export const formatTime = (minutes: number, locale: string): string =>
 /** The clock alone, for a block too narrow for more: "10:30", "7". The hour labels beside it say AM or PM. */
 export const formatClock = (minutes: number, locale: string): string =>
   join(clockParts(minutes, locale).filter((part) => part.type !== 'dayPeriod'))
+
+/**
+ * The shortest start time, for a month's chips: "10a", "7:30p"; Arabic keeps
+ * its own word, "١٠ ص". A Latin AM or PM shrinks to its first letter.
+ */
+export const formatShortTime = (minutes: number, locale: string): string =>
+  join(
+    clockParts(minutes, locale).map((part) =>
+      part.type === 'dayPeriod' && /^[AP]\.?M\.?$/i.test(part.value)
+        ? { ...part, value: part.value[0]!.toLowerCase() }
+        : part,
+    ),
+  ).replace(/(\d) ([ap])$/, '$1$2')
 
 /** A start and an end that share AM or PM say it once: "10:30 – 11:30 AM", "11 AM – 12:30 PM". */
 export const formatTimeRange = (start: number, end: number, locale: string): string => {
