@@ -1,3 +1,5 @@
+import { localDigits, numberingSystemOf } from '../src/lib/digits'
+
 /**
  * The pure half of `snapshot-course-readers.ts`: the snapshot's shape, how
  * two snapshots differ, and which differences the plan expects
@@ -479,3 +481,67 @@ export const llmsTimes = (markdown: string): { facts: string[]; syllabus: string
   facts: section(markdown, LLMS_FACTS).filter((l) => LLMS_TIME_FACTS.test(l)),
   syllabus: section(markdown, LLMS_SYLLABUS).filter((l) => LLMS_SESSION_LINE.test(l)),
 })
+
+/** What the month list needs to write a line as the old month page did. */
+export type MonthWords = {
+  locale: string
+  number: (value: number, options: { numberingSystem: 'arab' | 'latn' }) => string
+  dateTime: (
+    value: Date,
+    options: {
+      weekday?: 'long'
+      month?: 'long'
+      year?: 'numeric'
+      timeZone: 'UTC'
+      numberingSystem?: 'arab' | 'latn'
+    },
+  ) => string
+  cancelled: string
+}
+
+const squashText = (text: string | null | undefined) => (text ?? '').replace(/\s+/g, ' ').trim()
+
+/**
+ * A month's list (the phone layout of the month view, which the server
+ * sends with the month): each course meeting's slug and line, `date | time
+ * | note | cancelled`. The page shows 12-hour times and its own date line, so
+ * the line is written from the markup's data (`data-day`, `<time>`) in the
+ * old page's words, and the readings stay comparable with older snapshots.
+ */
+export const monthList = (document: Document, words: MonthWords): Array<[string, string]> => {
+  const nu = numberingSystemOf(words.locale)
+  const utc = (day: string) => new Date(`${day}T00:00:00Z`)
+  const dateLine = (day: string) =>
+    words.number(Number(day.slice(8)), { numberingSystem: nu }) +
+    words.dateTime(utc(day), { weekday: 'long', timeZone: 'UTC' }) +
+    words.dateTime(utc(day), {
+      month: 'long',
+      year: 'numeric',
+      timeZone: 'UTC',
+      numberingSystem: nu,
+    })
+  const out: Array<[string, string]> = []
+  for (const day of document.querySelectorAll('[data-width="narrow"] li[data-day]')) {
+    const date = dateLine(day.getAttribute('data-day')!)
+    for (const row of day.querySelectorAll('a[href]')) {
+      const slug = courseSlugOf(row.getAttribute('href'))
+      if (!slug) continue
+      const times = [...row.querySelectorAll('time')].map((t) => t.getAttribute('datetime'))
+      const cancelled = row.hasAttribute('data-cancelled')
+      const note = [
+        squashText(row.querySelector('[data-caption]')?.textContent),
+        cancelled ? words.cancelled : '',
+      ]
+      out.push([
+        slug,
+        [
+          date,
+          localDigits(times.join('–'), words.locale),
+          note.filter(Boolean).join(' · '),
+          cancelled ? 'cancelled' : '',
+        ].join(' | '),
+      ])
+    }
+  }
+  return out
+}

@@ -51,10 +51,11 @@ import { decideStartDate, type ResearchEntry } from './archive-start-dates'
 import {
   compareSnapshots,
   type Accepted,
-  courseSlugOf,
   formatDifferences,
   icsByCourse,
   llmsTimes,
+  monthList,
+  type MonthWords,
   type CourseMeta,
   type Snapshot,
 } from './course-reader-snapshot'
@@ -295,6 +296,31 @@ for (const { c, results } of pages) {
   )
 }
 
+const messages = Object.fromEntries(
+  LOCALES.map((l) => [l, JSON.parse(readFileSync(`messages/${l}.json`, 'utf8'))]),
+) as Record<Locale, Record<string, unknown>>
+// What `i18n/request.ts` gives a page, without the request.
+const intlOf = (locale: Locale) => ({
+  locale,
+  timeZone: CAIRO,
+  formats: formatsOf(locale),
+  messages: messages[locale],
+})
+const formatterOf = (locale: Locale) => createFormatter(intlOf(locale))
+const translatorOf = (locale: Locale, namespace: string) =>
+  createTranslator({ ...intlOf(locale), namespace } as Parameters<typeof createTranslator>[0])
+
+/** The old month page's words, which the month list writes its lines in. */
+const monthWords = (locale: Locale): MonthWords => {
+  const format = formatterOf(locale)
+  return {
+    locale,
+    number: (value, options) => format.number(value, options),
+    dateTime: (value, options) => format.dateTime(value, options),
+    cancelled: translatorOf(locale, 'Calendar')('cancelled'),
+  }
+}
+
 console.error('Calendar feed and month lists…')
 const months = new Set<string>()
 for (const l of LOCALES) {
@@ -312,35 +338,13 @@ for (const l of LOCALES) {
   }
 }
 
-/** A month's list (the phone layout of the month view): each course's day, time and note. */
-const monthList = (html: string): Array<[string, string]> => {
-  const { document } = new JSDOM(html).window
-  const out: Array<[string, string]> = []
-  for (const day of document.querySelectorAll(
-    'div.md\\:hidden ol.cal-agenda > li.cal-agenda-day',
-  )) {
-    const date = squash(day.querySelector('.cal-agenda-date')?.textContent)
-    for (const slot of day.querySelectorAll('li.cal-slot')) {
-      const slug = courseSlugOf(slot.querySelector('a')?.getAttribute('href'))
-      if (!slug) continue
-      const parts = [
-        date,
-        squash(slot.querySelector('.cal-item-when')?.textContent),
-        squash(slot.querySelector('.cal-slot-note')?.textContent),
-        slot.hasAttribute('data-cancelled') ? 'cancelled' : '',
-      ]
-      out.push([slug, parts.join(' | ')])
-    }
-  }
-  return out
-}
 const monthPaths = [...months]
   .sort()
   .flatMap((m) => LOCALES.map((l) => ({ l, path: `/${l}/calendar?view=month&date=${m}-01` })))
 const monthPages = await pool(monthPaths, async ({ l, path }) => {
   const res = await get(path)
   if (res.status !== 200) throw new Error(`${path} answered ${res.status}`)
-  return { l, items: monthList(res.body) }
+  return { l, items: monthList(new JSDOM(res.body).window.document, monthWords(l)) }
 })
 const month: Record<string, Record<string, string[]>> = {}
 for (const { l, items } of monthPages)
@@ -357,20 +361,6 @@ for (const [id, value] of Object.entries(month))
   )
 
 /* ------------------------------------- entry points: no URL of their own */
-
-const messages = Object.fromEntries(
-  LOCALES.map((l) => [l, JSON.parse(readFileSync(`messages/${l}.json`, 'utf8'))]),
-) as Record<Locale, Record<string, unknown>>
-// What `i18n/request.ts` gives a page, without the request.
-const intlOf = (locale: Locale) => ({
-  locale,
-  timeZone: CAIRO,
-  formats: formatsOf(locale),
-  messages: messages[locale],
-})
-const formatterOf = (locale: Locale) => createFormatter(intlOf(locale))
-const translatorOf = (locale: Locale, namespace: string) =>
-  createTranslator({ ...intlOf(locale), namespace } as Parameters<typeof createTranslator>[0])
 
 /** Every course's sessions, as a course space reads them (`spaceLanding`). */
 const sessionsOf = (locale: Locale) =>
