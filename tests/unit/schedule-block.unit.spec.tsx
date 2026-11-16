@@ -1,7 +1,7 @@
 // @vitest-environment jsdom
 import { cleanup, fireEvent, render, screen } from '@testing-library/react'
 import { NextIntlClientProvider } from 'next-intl'
-import { afterEach, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest'
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 
 import { PostBody } from '@/components/space/post-body'
 import { scheduleToken } from '@/lib/session-refs'
@@ -65,14 +65,13 @@ const view = (body: string, read: SessionRead | null = shown) =>
     </NextIntlClientProvider>,
   )
 
-beforeAll(() => {
+beforeEach(() => {
+  // Each test sets it: another file's vi.unstubAllGlobals() can remove it when files share a worker.
   globalThis.ResizeObserver = class {
     observe() {}
     unobserve() {}
     disconnect() {}
   }
-})
-beforeEach(() => {
   localStorage.clear()
   push.mockReset()
   vi.useFakeTimers({ now: new Date('2026-11-12T10:00:00Z'), toFake: ['Date'] })
