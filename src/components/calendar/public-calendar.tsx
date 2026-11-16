@@ -2,7 +2,7 @@
 
 import { useLocale, useTranslations } from 'next-intl'
 import { useRouter, useSearchParams } from 'next/navigation'
-import { useCallback, useEffect, useTransition } from 'react'
+import { useCallback, useEffect, useSyncExternalStore, useTransition } from 'react'
 
 import { Calendar } from '@/components/calendar/ui/calendar'
 import type { CalendarView } from '@/components/calendar/ui/calendar-views'
@@ -27,6 +27,18 @@ type Props = {
 
 const monthOfDay = (day: string) => day.slice(0, 7)
 
+/** Fired after the page writes its own URL, so the URL it reads is never behind. */
+const PUSHED = 'calendar:pushed'
+
+const onHistory = (change: () => void) => {
+  window.addEventListener('popstate', change)
+  window.addEventListener(PUSHED, change)
+  return () => {
+    window.removeEventListener('popstate', change)
+    window.removeEventListener(PUSHED, change)
+  }
+}
+
 /**
  * The public calendar, view only, for every visitor. Its view and day live in
  * the URL. A move within the days loaded only writes the URL; a move past them
@@ -38,10 +50,15 @@ export function PublicCalendar({ items, range, today, kinds, months }: Props) {
   const router = useRouter()
   const params = useSearchParams()
   const [, startTransition] = useTransition()
-  const { view, day } = readCalendarUrl(
-    { view: params.get('view'), date: params.get('date') },
-    today,
+  // The URL is read from the window: on a quick Back after a push, Next has not
+  // yet given `useSearchParams` the pushed URL, and the calendar would not move.
+  const search = useSyncExternalStore(
+    onHistory,
+    () => window.location.search,
+    () => `?${params.toString()}`,
   )
+  const query = new URLSearchParams(search)
+  const { view, day } = readCalendarUrl({ view: query.get('view'), date: query.get('date') }, today)
 
   const kind = useCallback((value: string) => kinds[value]?.name ?? value, [kinds])
   const labels = useCalendarLabels({ kind, newItem: '' })
@@ -62,8 +79,9 @@ export function PublicCalendar({ items, range, today, kinds, months }: Props) {
   }, [range, view, day, load])
 
   const navigate = (to: CalendarView, at: string) => {
-    if (holds(range, to, at)) window.history.pushState(null, '', calendarQuery(to, at))
-    else load(to, at)
+    if (!holds(range, to, at)) return load(to, at)
+    window.history.pushState(null, '', calendarQuery(to, at))
+    window.dispatchEvent(new Event(PUSHED))
   }
 
   // An empty month points to the nearest month that has something.

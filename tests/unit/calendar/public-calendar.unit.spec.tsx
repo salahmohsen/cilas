@@ -1,4 +1,4 @@
-import { cleanup, fireEvent, render, screen, within } from '@testing-library/react'
+import { act, cleanup, fireEvent, render, screen, within } from '@testing-library/react'
 import { NextIntlClientProvider } from 'next-intl'
 import { renderToString } from 'react-dom/server'
 import { afterEach, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest'
@@ -182,6 +182,7 @@ const kinds = (locale: 'en' | 'ar') => {
 
 const page = (locale: 'en' | 'ar' = 'en', query = '?view=week&date=2026-11-17') => {
   navigation.params = new URLSearchParams(query)
+  window.history.replaceState(null, '', `/${locale}/calendar${query}`)
   const tree = () => (
     <NextIntlClientProvider
       locale={locale}
@@ -314,13 +315,26 @@ describe('the public calendar', () => {
   })
 
   it('follows the URL when Back changes it', () => {
-    const { rerender, tree } = page()
+    page()
     expect(screen.getByRole('button', { name: 'Week' })).toHaveAttribute('aria-pressed', 'true')
-    navigation.params = new URLSearchParams('?view=day&date=2026-11-18')
-    rerender(tree())
+    window.history.pushState(null, '', '/en/calendar?view=day&date=2026-11-18')
+    act(() => {
+      window.dispatchEvent(new PopStateEvent('popstate'))
+    })
     expect(screen.getByRole('button', { name: 'Day' })).toHaveAttribute('aria-pressed', 'true')
     expect(screen.getByRole('link', { name: /^Film night, Wednesday/ })).toBeInTheDocument()
     expect(screen.queryByRole('link', { name: /^Reading the city, Tuesday/ })).toBeNull()
+  })
+
+  it('moves back on a quick Back after a switch, before the router has the new URL', () => {
+    page()
+    fireEvent.click(screen.getByRole('button', { name: 'Day' }))
+    expect(screen.getByRole('button', { name: 'Day' })).toHaveAttribute('aria-pressed', 'true')
+    window.history.replaceState(null, '', '/en/calendar?view=week&date=2026-11-17')
+    act(() => {
+      window.dispatchEvent(new PopStateEvent('popstate'))
+    })
+    expect(screen.getByRole('button', { name: 'Week' })).toHaveAttribute('aria-pressed', 'true')
   })
 
   it('points an empty month to the nearest month with something', () => {
