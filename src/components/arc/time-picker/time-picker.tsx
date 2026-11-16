@@ -18,6 +18,8 @@ export interface TimePickerProps {
   placeholder?: string
   minuteStep?: 1 | 5 | 10 | 15 | 30
   format?: '12h' | '24h'
+  /** Shows a time ("14:30") in the page's own words, in place of `format`. */
+  formatValue?: (value: string) => string
   disabled?: boolean
   className?: string
 }
@@ -71,6 +73,7 @@ export function TimePicker({
   placeholder = 'Select a time',
   minuteStep = 15,
   format = '12h',
+  formatValue,
   disabled = false,
   className,
 }: TimePickerProps) {
@@ -98,6 +101,7 @@ export function TimePicker({
     return `${pad(hour)}:${pad(minute)}`
   })
   const display = (raw: string) => {
+    if (formatValue) return formatValue(raw)
     const minutes = toMinutes(raw)
     const hour = Math.floor(minutes / 60)
     const minute = minutes % 60

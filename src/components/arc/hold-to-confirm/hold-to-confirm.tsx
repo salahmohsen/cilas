@@ -50,6 +50,8 @@ export interface HoldToConfirmProps extends Omit<
   confirmed?: boolean
   /** Reports when a hold starts and ends, for surrounding hints such as “Keep holding”. */
   onHoldChange?: (holding: boolean) => void
+  /** The hidden hint for assistive tech, for a translated interface; it gets the hold length in seconds. */
+  hint?: (seconds: string) => string
 }
 
 const enter = [...motionTokens.ease.enter] as [number, number, number, number]
@@ -204,6 +206,8 @@ export function HoldToConfirm({
   tone = 'accent',
   confirmed,
   onHoldChange,
+  hint = (seconds) =>
+    `Press and hold for ${seconds} seconds to confirm. With a keyboard, hold Space or Enter.`,
   className,
   disabled,
   ...props
@@ -216,10 +220,12 @@ export function HoldToConfirm({
   const [holding, setHolding] = useState(false)
   const progress = useMotionValue(0)
   const scale = useMotionValue(1)
-  const clipPath = useTransform(
-    progress,
-    (value) => `inset(0 ${((1 - Math.min(1, Math.max(0, value))) * 100).toFixed(3)}% 0 0)`,
-  )
+  // The fill grows from the inline start: from the right in a right-to-left page.
+  const rtl = useMotionValue(0)
+  const clipPath = useTransform([progress, rtl], ([value, end]: number[]) => {
+    const rest = `${((1 - Math.min(1, Math.max(0, value ?? 0))) * 100).toFixed(3)}%`
+    return end ? `inset(0 0 0 ${rest})` : `inset(0 ${rest} 0 0)`
+  })
   const [width, measure] = useLabelWidth(reduced)
   const source = useRef<'pointer' | 'key' | null>(null)
   const pointerType = useRef('mouse')
@@ -264,6 +270,7 @@ export function HoldToConfirm({
   /** Starts or resumes the fill from wherever it is, so a quick re-press after letting go carries on instead of starting over. */
   function begin(from: 'pointer' | 'key') {
     if (done || disabled || source.current) return
+    if (button.current) rtl.jump(getComputedStyle(button.current).direction === 'rtl' ? 1 : 0)
     source.current = from
     setHolding(true)
     onHoldChange?.(true)
@@ -368,10 +375,9 @@ export function HoldToConfirm({
           <Face icon={icon} text={text} done={done} width={width} reduced={reduced} />
         </motion.span>
       </motion.button>
-      <span
-        id={hintId}
-        className={styles.srOnly}
-      >{`Press and hold for ${seconds} seconds to confirm. With a keyboard, hold Space or Enter.`}</span>
+      <span id={hintId} className={styles.srOnly}>
+        {hint(seconds)}
+      </span>
       <span className={styles.srOnly} role="status">
         {done ? confirmedLabel : ''}
       </span>

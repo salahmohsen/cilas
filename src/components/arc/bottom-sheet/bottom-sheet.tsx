@@ -295,6 +295,17 @@ function Sheet({
     else go('closed', undefined, safeToRemove)
   }, [go, height, isPresent, offset, presence, reduced, safeToRemove, y])
 
+  // New detents from the host (a form that needs the full height) move the sheet to its stop among them.
+  const shownStops = useRef(stops)
+  useEffect(() => {
+    if (shownStops.current === stops) return
+    shownStops.current = stops
+    const stop = clamp(detentRef.current, 0, top)
+    detentRef.current = stop
+    setDetent(stop)
+    if (aim.current !== 'closed' && !drag.current) go(stop)
+  }, [go, stops, top])
+
   // A viewport change (rotation, the mobile toolbar) moves every detent. Keep the sheet on its detent, retargeting any flight.
   useEffect(() => {
     const sheet = sheetRef.current
