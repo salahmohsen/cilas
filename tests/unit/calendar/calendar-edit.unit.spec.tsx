@@ -106,6 +106,50 @@ beforeEach(() => {
 afterEach(() => vi.useRealTimers())
 
 describe('edit mode', () => {
+  it('keeps the blocks of a kind the legend hides through a move, and saves only the move', async () => {
+    const onSave = vi.fn()
+    const kinds = items.map((one) => (one.id === 'lab' ? { ...one, kind: 'lab' } : one))
+    function Kinds() {
+      const labels = useCalendarLabels({
+        kind: (value) => (value === 'lab' ? 'Lab' : 'Session'),
+        newItem: 'New session',
+      })
+      return (
+        <Calendar
+          items={kinds}
+          mode="edit"
+          labels={labels}
+          locale="en"
+          day="2026-11-17"
+          onOpen={vi.fn()}
+          onSave={onSave}
+        />
+      )
+    }
+    render(
+      <NextIntlClientProvider locale="en" messages={en} timeZone="Africa/Cairo">
+        <Kinds />
+      </NextIntlClientProvider>,
+    )
+    fireEvent.click(screen.getByRole('button', { name: 'Side panel' }))
+    const lab = within(screen.getByRole('group', { name: 'Colour key' })).getByRole('button', {
+      name: 'Lab',
+    })
+    fireEvent.click(lab)
+    expect(screen.queryByRole('button', { name: /^Studio lab/ })).toBeNull()
+
+    week3().focus()
+    fireEvent.keyDown(week3(), { key: 'ArrowDown' })
+    fireEvent.click(lab)
+    expect(screen.getByRole('button', { name: /^Studio lab, Saturday/ })).toBeInTheDocument()
+
+    fireEvent.click(save())
+    await waitFor(() => expect(onSave).toHaveBeenCalledTimes(1))
+    expect(onSave.mock.calls[0]![0]).toEqual([
+      expect.objectContaining({ op: 'move-block', itemId: 'week-3', start_time: '19:15' }),
+    ])
+  })
+
   it('moves a block from the keyboard and Save sends one move-block', async () => {
     const onSave = vi.fn()
     edit({ onSave })

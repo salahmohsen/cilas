@@ -17,7 +17,7 @@ import { longDay } from './block-names'
 import { formatClock, formatDay, formatTime, formatTimeRange, isWeekend } from './calendar-time'
 import styles from './calendar.module.css'
 import type { CalendarView } from './calendar-views'
-import { ItemPress } from './item-press'
+import { ItemPress, pressLinkOnSpace } from './item-press'
 import { useScrollToWork } from './use-scroll-to-work'
 import { WeekSpans } from './week-spans'
 
@@ -320,7 +320,9 @@ export function WeekGrid({
                                 focus: 'first',
                               })
                             }
-                          : undefined
+                          : item?.href
+                            ? pressLinkOnSpace
+                            : undefined
                       }
                       onContextMenu={
                         menu && !block.deleted

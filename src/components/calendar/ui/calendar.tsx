@@ -62,7 +62,8 @@ type Shared = {
   view?: CalendarView
   /**
    * The view and day after the person moves the calendar, for a host that
-   * keeps them, as in the URL. A new `view` or `day` from the host moves it too.
+   * keeps them, as in the URL. With it, a new `view` or `day` from the host
+   * moves the calendar; without it, they only set where it opens.
    */
   onNavigate?: (view: CalendarView, day: string) => void
   /** Ids of the items to mark as changed, in words and on their face. */
@@ -168,9 +169,10 @@ export function Calendar({
   // The day the view is about: the Day view's day, the first of 3 days, a day in the week.
   const [anchor, setAnchor] = useState(() => day ?? cairoNow().date)
   const [wanted, setWanted] = useState<CalendarView>(startView)
-  // The host's view and day lead: Back in the browser, or a link, moves the calendar.
+  // A host that keeps the view and day (it has `onNavigate`) leads: Back in the
+  // browser moves the calendar. For other hosts they only set where it opens.
   const [followed, setFollowed] = useState({ day, view: startView })
-  if (followed.day !== day || followed.view !== startView) {
+  if (onNavigate && (followed.day !== day || followed.view !== startView)) {
     setFollowed({ day, view: startView })
     if (day) setAnchor(day)
     setWanted(startView)
@@ -516,7 +518,13 @@ export function Calendar({
           if (!(event.target as Element).closest('[data-span-id]')) setSelectedId(null)
         }}
         spans={session.timed}
-        onSpansChange={session.onSpansChange}
+        onSpansChange={(value, details) =>
+          // The grid holds only the blocks that show; the ones hidden stay in the session.
+          edits.onSpansChange(
+            [...value, ...edits.timed.filter((block) => !visible(block))],
+            details,
+          )
+        }
         editable={editable}
         tracks={grid ? days : []}
         min={range.min}

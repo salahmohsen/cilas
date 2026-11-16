@@ -19,8 +19,8 @@ type Props = {
   range: DayRange
   /** Today in Cairo, as the server saw it, so the first render matches. */
   today: string
-  /** What the legend calls each kind: "Thematic course", "Talk". */
-  kinds: Record<string, string>
+  /** Each kind's name in the legend ("Thematic course") and its link's label ("View course"). */
+  kinds: Record<string, { name: string; open: string }>
   /** The months that have something, `YYYY-MM`, oldest first: the way out of an empty view. */
   months: string[]
 }
@@ -43,7 +43,7 @@ export function PublicCalendar({ items, range, today, kinds, months }: Props) {
     today,
   )
 
-  const kind = useCallback((value: string) => kinds[value] ?? value, [kinds])
+  const kind = useCallback((value: string) => kinds[value]?.name ?? value, [kinds])
   const labels = useCalendarLabels({ kind, newItem: '' })
 
   const load = useCallback(
@@ -128,18 +128,10 @@ export function PublicCalendar({ items, range, today, kinds, months }: Props) {
           const href = items.find((item) => item.id === id)?.href
           if (href) router.push(href)
         }}
-        actionsOf={(item) =>
-          item.href
-            ? [
-                {
-                  id: 'open',
-                  label: t(item.kind.startsWith('event:') ? 'viewEvent' : 'viewCourse'),
-                  href: item.href,
-                  primary: true,
-                },
-              ]
-            : []
-        }
+        actionsOf={({ href, kind }) => {
+          const open = kinds[kind]?.open
+          return href && open ? [{ id: 'open', label: open, href, primary: true }] : []
+        }}
       />
     </div>
   )

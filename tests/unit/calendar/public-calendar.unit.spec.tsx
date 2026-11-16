@@ -171,10 +171,13 @@ describe('publicItems', () => {
   })
 })
 
-const kinds = {
-  'course:core': 'Core course',
-  'course:thematic': 'Thematic course',
-  'event:screening': 'Screening',
+const kinds = (locale: 'en' | 'ar') => {
+  const words = (locale === 'ar' ? ar : en).Calendar
+  return {
+    'course:core': { name: 'Core course', open: words.viewCourse },
+    'course:thematic': { name: 'Thematic course', open: words.viewCourse },
+    'event:screening': { name: 'Screening', open: words.viewEvent },
+  }
 }
 
 const page = (locale: 'en' | 'ar' = 'en', query = '?view=week&date=2026-11-17') => {
@@ -189,7 +192,7 @@ const page = (locale: 'en' | 'ar' = 'en', query = '?view=week&date=2026-11-17') 
         items={publicItems(meetings, { locale, session: (n) => `Session ${n}` })}
         range={loadedRange(new URLSearchParams(query).get('date')!)}
         today="2026-11-17"
-        kinds={kinds}
+        kinds={kinds(locale)}
         months={['2025-03', '2026-11']}
       />
     </NextIntlClientProvider>
@@ -223,7 +226,7 @@ describe('the public calendar', () => {
           items={publicItems(meetings, { locale: 'en', session: (n) => `Session ${n}` })}
           range={loadedRange('2026-11-17')}
           today="2026-11-17"
-          kinds={kinds}
+          kinds={kinds('en')}
           months={['2026-11']}
         />
       </NextIntlClientProvider>,
@@ -249,6 +252,14 @@ describe('the public calendar', () => {
       '/en/study/reading-the-city',
     )
     expect(within(details).queryByRole('button', { name: /Edit/ })).toBeNull()
+  })
+
+  it('opens the details from the keyboard on a linked block, with Enter or Space', async () => {
+    page()
+    const block = screen.getByRole('link', { name: /^Reading the city, Tuesday/ })
+    block.focus()
+    fireEvent.keyDown(block, { key: ' ' })
+    expect(await screen.findByRole('dialog', { name: 'Reading the city' })).toBeInTheDocument()
   })
 
   it('leaves a press with a modifier key to the browser', () => {

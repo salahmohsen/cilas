@@ -46,7 +46,9 @@ export default async function CalendarPage({ params, searchParams }: Props) {
   const kinds = Object.fromEntries(
     meetings.map((m) => [
       kindOf(m),
-      m.kind === 'course' ? tf(`types.${m.type}`) : t(`eventTypes.${m.type}`),
+      m.kind === 'course'
+        ? { name: tf(`types.${m.type}`), open: t('viewCourse') }
+        : { name: t(`eventTypes.${m.type}`), open: t('viewEvent') },
     ]),
   )
 

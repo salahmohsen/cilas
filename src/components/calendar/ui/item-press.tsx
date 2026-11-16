@@ -20,6 +20,14 @@ export const pressStays = (event: Event | undefined) => {
   return true
 }
 
+/** A link takes Enter; Space presses it as it presses a button. */
+export const pressLinkOnSpace = (event: KeyboardEvent<HTMLElement>) => {
+  if (event.key !== ' ') return false
+  event.preventDefault()
+  event.currentTarget.click()
+  return true
+}
+
 type Props = Omit<HTMLAttributes<HTMLElement>, 'onClick'> & {
   /** The item's page. With it the press is a link, so the page's HTML holds it. */
   href?: string
@@ -53,14 +61,8 @@ export function ItemPress({ href, onPress, onKeyDown, children, ...rest }: Props
         event.preventDefault()
         onPress(event.currentTarget)
       }}
-      onKeyDown={(event: KeyboardEvent<HTMLAnchorElement>) => {
-        // A link takes Enter; Space presses it as it presses a button.
-        if (event.key === ' ') {
-          event.preventDefault()
-          event.currentTarget.click()
-          return
-        }
-        onKeyDown?.(event)
+      onKeyDown={(event) => {
+        if (!pressLinkOnSpace(event)) onKeyDown?.(event)
       }}
     >
       {children}

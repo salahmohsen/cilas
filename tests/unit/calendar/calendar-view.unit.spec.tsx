@@ -78,6 +78,13 @@ function Host({
   )
 }
 
+function DayHost({ day }: { day: string }) {
+  const labels = useCalendarLabels({ kind, newItem: 'New session' })
+  return (
+    <Calendar items={items} mode="view" labels={labels} locale="en" day={day} onOpen={vi.fn()} />
+  )
+}
+
 const openPanel = (name = 'Side panel') => fireEvent.click(screen.getByRole('button', { name }))
 
 const view = (locale = 'en', onOpen = vi.fn()) =>
@@ -210,6 +217,19 @@ describe('the week view', () => {
     expect(legend).toHaveTextContent('Cancelled')
     const tray = screen.getByRole('group', { name: 'Unscheduled' })
     expect(within(tray).getByRole('button', { name: 'Week 4' })).toBeInTheDocument()
+  })
+
+  it('keeps where the person moved when a host without onNavigate sends a new day', () => {
+    const labelsHost = (day: string) => (
+      <NextIntlClientProvider locale="en" messages={en} timeZone="Africa/Cairo">
+        <DayHost day={day} />
+      </NextIntlClientProvider>
+    )
+    const { rerender } = render(labelsHost('2026-11-17'))
+    fireEvent.click(screen.getByRole('button', { name: 'Next week' }))
+    expect(screen.getByRole('group', { name: 'Tuesday, November 24' })).toBeInTheDocument()
+    rerender(labelsHost('2026-11-03'))
+    expect(screen.getByRole('group', { name: 'Tuesday, November 24' })).toBeInTheDocument()
   })
 
   it('marks today in Cairo', () => {
