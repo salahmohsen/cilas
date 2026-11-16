@@ -3,7 +3,7 @@
 import { bindDrag, bindDragPreview, dragThreshold } from '@ui-sdk/core'
 import { useEffect, useId, useRef, type PointerEvent } from 'react'
 
-import DropdownMenu from '@/components/arc/dropdown-menu/dropdown-menu'
+import { SplitButton } from '@/components/arc/split-button/split-button'
 import type { CalendarItem } from '@/lib/calendar-items'
 
 import type { CalendarLabels } from './calendar-labels'
@@ -27,8 +27,9 @@ const dayUnder = (x: number, y: number) =>
   document.elementFromPoint(x, y)?.closest<HTMLElement>('[data-track]') ?? null
 
 /**
- * Items with no block. In edit mode each can be dragged onto a day, or put on
- * one from its menu, which is how the keyboard does it: ui-sdk's spans start a
+ * Items with no block, each a split button: the main part opens the item,
+ * and in edit mode is the handle that drags it onto a day; the menu part puts
+ * it on a day, which is how the keyboard does it. ui-sdk's spans start a
  * drag only from a press on a day or on a block, so the drag is `bindDrag` and
  * `bindDragPreview`, and `valueAt` turns the drop point into a time.
  */
@@ -87,25 +88,34 @@ export function UnscheduledTray({ items, days, editable, labels, locale, onOpen,
       </p>
       <ul className={styles.trayList}>
         {items.map((item) => (
-          <li key={item.id} role="group" aria-label={item.title} className={styles.trayEntry}>
-            <button
-              type="button"
-              className={styles.trayItem}
-              data-tone={item.tone}
+          <li
+            key={item.id}
+            role="group"
+            aria-label={item.title}
+            className={styles.trayEntry}
+            data-tone={item.tone}
+            data-draggable={editable && !item.readOnly ? '' : undefined}
+          >
+            <SplitButton
+              variant="secondary"
+              label={item.title}
+              icon={<span className={styles.swatch} aria-hidden />}
+              menuLabel={labels.placeOnDay}
               onClick={(event) => onOpen(item.id, event.currentTarget)}
               onPointerDown={(event) => startDrag(item, event)}
-            >
-              {item.title}
-            </button>
-            {editable && !item.readOnly ? (
-              <DropdownMenu
-                label={labels.placeOnDay}
-                items={days.map((day) => ({
-                  label: formatDay(day, locale, { weekday: 'long', day: 'numeric', month: 'long' }),
-                  onSelect: () => onPlace(item.id, day),
-                }))}
-              />
-            ) : null}
+              actions={
+                editable && !item.readOnly
+                  ? days.map((day) => ({
+                      label: formatDay(day, locale, {
+                        weekday: 'long',
+                        day: 'numeric',
+                        month: 'long',
+                      }),
+                      onSelect: () => onPlace(item.id, day),
+                    }))
+                  : []
+              }
+            />
           </li>
         ))}
       </ul>

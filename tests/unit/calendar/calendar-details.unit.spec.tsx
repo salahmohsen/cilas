@@ -194,7 +194,10 @@ describe('a block’s details in view mode', () => {
   it('open from an unscheduled item, which has no day', async () => {
     show()
     fireEvent.click(screen.getByRole('button', { name: en.CalendarUi.panel }))
-    fireEvent.click(screen.getByRole('button', { name: 'Final review' }))
+    const entry = screen.getByRole('group', { name: 'Final review' })
+    // A split button with its main part only: nothing to place in view mode.
+    expect(within(entry).getAllByRole('button')).toHaveLength(1)
+    fireEvent.click(within(entry).getByRole('button', { name: 'Final review' }))
     const panel = await screen.findByRole('dialog', { name: 'Final review' })
     expect(panel).toHaveTextContent(en.CalendarUi.unscheduled)
   })

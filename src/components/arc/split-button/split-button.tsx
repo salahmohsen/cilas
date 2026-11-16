@@ -1,7 +1,7 @@
 'use client'
 
 import { isValidElement, useEffect, useLayoutEffect, useRef, useState } from 'react'
-import type { CSSProperties, ReactNode, RefObject } from 'react'
+import type { CSSProperties, MouseEvent, PointerEvent, ReactNode, RefObject } from 'react'
 import * as DropdownPrimitive from '@radix-ui/react-dropdown-menu'
 import { AnimatePresence, animate, motion, useMotionValue, useReducedMotion } from 'motion/react'
 import type { TargetAndTransition } from 'motion/react'
@@ -18,8 +18,13 @@ export interface SplitButtonAction {
 }
 export interface SplitButtonProps {
   label: string
+  /** The menu's actions. With none, there is no menu half. */
   actions: SplitButtonAction[]
-  onClick?: () => void
+  onClick?: (event: MouseEvent<HTMLButtonElement>) => void
+  /** A press starts on the main action, such as a drag from it. */
+  onPointerDown?: (event: PointerEvent<HTMLButtonElement>) => void
+  /** Names the menu half. "<label> more actions" by default. */
+  menuLabel?: string
   disabled?: boolean
   icon?: ReactNode
   variant?: 'primary' | 'secondary'
@@ -136,6 +141,10 @@ function useGlyphs(text: string) {
 
 function MorphText({ text, reduced }: { text: string; reduced: boolean }) {
   const glyphs = useGlyphs(text)
+  // Until the label first changes it stays whole text: letters split into
+  // boxes would not join, as Arabic letters must.
+  if (glyphs.every((glyph) => glyph.id.startsWith('0:')))
+    return <span className={styles.glyphs}>{text}</span>
   return (
     <span className={styles.glyphs}>
       <AnimatePresence mode="popLayout" initial={false}>
@@ -172,6 +181,8 @@ export function SplitButton({
   label,
   actions,
   onClick,
+  onPointerDown,
+  menuLabel,
   disabled,
   icon,
   variant = 'primary',
@@ -187,7 +198,13 @@ export function SplitButton({
           .filter(Boolean)
           .join(' ')}
       >
-        <button className={styles.primary} type="button" onClick={onClick} disabled={disabled}>
+        <button
+          className={styles.primary}
+          type="button"
+          onClick={onClick}
+          onPointerDown={onPointerDown}
+          disabled={disabled}
+        >
           <motion.span className={styles.primarySlot} style={{ width }} aria-hidden="true">
             <span ref={contentRef} className={styles.primaryContent}>
               {icon ? (
@@ -213,14 +230,21 @@ export function SplitButton({
             {label}
           </span>
         </button>
-        <DropdownPrimitive.Trigger
-          className={styles.trigger}
-          type="button"
-          aria-label={`${label} more actions`}
-          disabled={disabled}
-        >
-          <ChevronDown className={styles.chevron} size={16} strokeWidth={1.75} aria-hidden="true" />
-        </DropdownPrimitive.Trigger>
+        {actions.length ? (
+          <DropdownPrimitive.Trigger
+            className={styles.trigger}
+            type="button"
+            aria-label={menuLabel ?? `${label} more actions`}
+            disabled={disabled}
+          >
+            <ChevronDown
+              className={styles.chevron}
+              size={16}
+              strokeWidth={1.75}
+              aria-hidden="true"
+            />
+          </DropdownPrimitive.Trigger>
+        ) : null}
       </div>
       <DropdownPrimitive.Portal>
         <DropdownPrimitive.Content

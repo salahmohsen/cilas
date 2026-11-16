@@ -609,16 +609,6 @@
   padding: 0;
   list-style: none;
 }
-.trayItem {
-  padding: var(--space-1) var(--space-3);
-  border: 1px dashed var(--tone-line);
-  border-radius: 0.5rem;
-  background: var(--tone-fill);
-  color: var(--tone-ink);
-  font: inherit;
-  font-weight: 500;
-  cursor: pointer;
-}
 
 .srOnly {
   position: absolute;
@@ -748,14 +738,14 @@
   }
 }
 
-.tray[data-editable] .trayItem {
-  cursor: grab;
-  touch-action: none;
-}
 .trayEntry {
   display: flex;
-  align-items: center;
-  gap: var(--space-1);
+  min-inline-size: 0;
+}
+/* The main part is the drag handle onto a day. */
+.trayEntry[data-draggable] button:first-of-type {
+  cursor: grab;
+  touch-action: none;
 }
 
 .error {
