@@ -240,7 +240,7 @@ test.describe('session drawer Edit form', () => {
     await expect(renamed.getByText('20:00–22:00')).toBeVisible()
     await closeDrawer(renamed)
     await expect(block(fellow, 'E2E drawer renamed')).toHaveAccessibleName(
-      /^E2E drawer renamed, Thursday, October 5.*20:00/,
+      /^E2E drawer renamed, Thursday, October 5, 8 PM to 10 PM/,
     )
   })
 
