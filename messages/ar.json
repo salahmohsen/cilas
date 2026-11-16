@@ -525,7 +525,7 @@
     "previous": "{span, select, day {اليوم السابق} threeDays {الأيام الثلاثة السابقة} week {الأسبوع السابق} twoWeeks {الأسبوعان السابقان} month {الشهر السابق} other {السابق}}",
     "next": "{span, select, day {اليوم التالي} threeDays {الأيام الثلاثة التالية} week {الأسبوع التالي} twoWeeks {الأسبوعان التاليان} month {الشهر التالي} other {التالي}}",
     "view": "العرض",
-    "viewName": "{view, select, month {شهر} week {أسبوع} threeDays {{count, number, digits} أيام} day {يوم} agenda {جدول الأعمال} other {}}",
+    "viewName": "{view, select, month {شهر} week {أسبوع} threeDays {{count, number, digits} أيام} day {يوم} agenda {قائمة} other {}}",
     "nothing": "{span, select, month {لا شيء مجدول هذا الشهر} week {لا شيء مجدول هذا الأسبوع} twoWeeks {لا شيء مجدول في هذين الأسبوعين} day {لا شيء مجدول في هذا اليوم} other {لا شيء مجدول في هذه الأيام}}",
     "allDay": "طوال اليوم",
     "more": "{count, number, digits} أخرى",

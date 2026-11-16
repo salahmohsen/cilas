@@ -47,23 +47,23 @@
   --danger: oklch(54% 0.21 25);
   /* Calendar tones: solid is the stripe and legend swatch, fill the block, line its edge, hatch the stripes of a cancelled one. */
   --calendar-yellow: #ffb71b;
-  --calendar-yellow-fill: color-mix(in oklab, var(--calendar-yellow) 14%, var(--surface));
+  --calendar-yellow-fill: color-mix(in oklab, var(--calendar-yellow) 22%, var(--surface));
   --calendar-yellow-line: color-mix(in oklab, var(--calendar-yellow) 55%, var(--foreground));
   --calendar-yellow-hatch: color-mix(in oklab, var(--calendar-yellow) 50%, transparent);
   --calendar-blue: #1782ea;
-  --calendar-blue-fill: color-mix(in oklab, var(--calendar-blue) 14%, var(--surface));
+  --calendar-blue-fill: color-mix(in oklab, var(--calendar-blue) 22%, var(--surface));
   --calendar-blue-line: color-mix(in oklab, var(--calendar-blue) 55%, var(--foreground));
   --calendar-blue-hatch: color-mix(in oklab, var(--calendar-blue) 50%, transparent);
   --calendar-pink: #ff7d9d;
-  --calendar-pink-fill: color-mix(in oklab, var(--calendar-pink) 14%, var(--surface));
+  --calendar-pink-fill: color-mix(in oklab, var(--calendar-pink) 22%, var(--surface));
   --calendar-pink-line: color-mix(in oklab, var(--calendar-pink) 55%, var(--foreground));
   --calendar-pink-hatch: color-mix(in oklab, var(--calendar-pink) 50%, transparent);
   --calendar-green: #12d08f;
-  --calendar-green-fill: color-mix(in oklab, var(--calendar-green) 14%, var(--surface));
+  --calendar-green-fill: color-mix(in oklab, var(--calendar-green) 22%, var(--surface));
   --calendar-green-line: color-mix(in oklab, var(--calendar-green) 55%, var(--foreground));
   --calendar-green-hatch: color-mix(in oklab, var(--calendar-green) 50%, transparent);
   --calendar-neutral: var(--border-strong);
-  --calendar-neutral-fill: var(--surface-muted);
+  --calendar-neutral-fill: color-mix(in oklab, var(--calendar-neutral) 45%, var(--surface));
   --calendar-neutral-line: var(--text-secondary);
   --calendar-neutral-hatch: color-mix(in oklab, var(--text-secondary) 45%, transparent);
   --shadow-resting: 0 1px 2px oklch(0% 0 0 / 0.035);
@@ -212,7 +212,7 @@
   --calendar-green-line: color-mix(in oklab, var(--calendar-green) 60%, var(--foreground));
   --calendar-green-hatch: color-mix(in oklab, var(--calendar-green) 50%, transparent);
   --calendar-neutral: var(--border-strong);
-  --calendar-neutral-fill: var(--surface-muted);
+  --calendar-neutral-fill: color-mix(in oklab, var(--calendar-neutral) 45%, var(--surface));
   --calendar-neutral-line: var(--text-secondary);
   --calendar-neutral-hatch: color-mix(in oklab, var(--text-secondary) 45%, transparent);
   --shadow-resting: 0 1px 2px oklch(0% 0 0 / 0.18);
