@@ -260,3 +260,36 @@ describe('an all-day item on days in a row', () => {
     expect(bars()[0]).toHaveAccessibleName(/^Field days, Monday, November 16 to Wednesday/)
   })
 })
+
+describe('an unscheduled item renamed while the calendar shows', () => {
+  function Renamed({ title }: { title: string }) {
+    const labels = useCalendarLabels({ kind: () => 'Session', newItem: 'New session' })
+    return (
+      <Calendar
+        mode="edit"
+        items={[item('review', title, {})]}
+        labels={labels}
+        locale="en"
+        day="2026-11-17"
+        onOpen={vi.fn()}
+        onSave={vi.fn()}
+      />
+    )
+  }
+  const view = (title: string) => (
+    <NextIntlClientProvider locale="en" messages={en} timeZone="Africa/Cairo">
+      <Renamed title={title} />
+    </NextIntlClientProvider>
+  )
+
+  it('shows the new title whole, to be cut with an ellipsis, not letters that morph', () => {
+    const { rerender } = render(view('Session 10'))
+    const long = 'Turing, "Computing Machinery and Intelligence" (1950)'
+    rerender(view(long))
+    const entry = screen.getByRole('group', { name: long })
+    const main = within(entry).getByRole('button', { name: long })
+    expect(main.querySelector('[class*="glyph"]')).toBeNull()
+    expect(main.querySelector('[class*="label"]')).toHaveTextContent(long)
+    expect(entry).not.toHaveTextContent('Session 10')
+  })
+})

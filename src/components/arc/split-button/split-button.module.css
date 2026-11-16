@@ -44,6 +44,8 @@
   display: inline-flex;
   min-width: 0;
   max-width: 100%;
+  /* Never wider than the button, even while letters morph; the letters may still rise and fall. */
+  overflow-x: clip;
   align-items: center;
 }
 .primarySlot[data-morphing] {

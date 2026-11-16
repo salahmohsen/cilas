@@ -97,6 +97,9 @@ export function UnscheduledTray({ items, days, editable, labels, locale, onOpen,
             data-draggable={editable && !item.readOnly ? '' : undefined}
           >
             <SplitButton
+              // A new title is a new label, not a change to morph letter by letter:
+              // the morph has no cut, and a long title would run past the row.
+              key={item.title}
               variant="secondary"
               label={item.title}
               icon={<span className={styles.trayMark} aria-hidden />}
