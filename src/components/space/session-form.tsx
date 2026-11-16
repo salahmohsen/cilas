@@ -1,31 +1,30 @@
 import { useForm, useSelector, type AnyFieldApi } from '@tanstack/react-form'
 import { Plus, X } from 'lucide-react'
 import { useLocale, useTranslations } from 'next-intl'
-import { useCallback, useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useId, useMemo, useRef, useState } from 'react'
 
 import { loadSessionEdit, type SessionEdit } from '@/actions/session-edit'
 import { saveScheduleEdits, type ScheduleEditsResult } from '@/actions/save-schedule-edits'
-import { Dialog, DialogContent, DialogClose } from '@/components/arc/dialog/dialog'
 import { Alert } from '@/components/arc/alert/alert'
 import { Button } from '@/components/arc/button/button'
 import { Checkbox } from '@/components/arc/checkbox/checkbox'
 import { DatePicker } from '@/components/arc/date-picker/date-picker'
+import { HoldToConfirm } from '@/components/arc/hold-to-confirm/hold-to-confirm'
 import { Input } from '@/components/arc/input/input'
-import { Select } from '@/components/arc/select/select'
 import { TextShimmer } from '@/components/arc/text-shimmer/text-shimmer'
-import { Textarea } from '@/components/arc/textarea/textarea'
 import { TimePicker } from '@/components/arc/time-picker/time-picker'
 import { Tooltip } from '@/components/arc/tooltip/tooltip'
 import { markdownBaseline, markdownToSend } from '@/components/markdown-edit'
+import { formatTime } from '@/components/calendar/ui/calendar-time'
 import { RichField } from '@/components/rich-field'
-import { ACTIVITY_KINDS } from '@/fields/activities'
-import { MATERIAL_TYPES } from '@/fields/bibliography'
 import { meetingIssue, type MeetingIssue } from '@/fields/meetings'
 import type { CalendarSaveError } from '@/lib/calendar-sources'
 
+import { CardList } from './card-list'
 import { dayOf } from './event-fields'
 import { useLeaveQuestion } from './leave-question'
 import type { ScheduleSaveText } from './schedule-save-text'
+import { activityKind, materialKind } from './session-cards'
 import styles from './session-form.module.css'
 
 type Keyed<T> = T & { key: string }
@@ -244,8 +243,8 @@ function Fields({
 }) {
   const locale = contentLocale
   const root = useRef<HTMLFormElement>(null)
-  const [deleting, setDeleting] = useState(false)
-  const [removing, setRemoving] = useState(false)
+  /** Held to the end: the hold button shows it is done until a refused delete resets it. */
+  const [deleted, setDeleted] = useState(false)
   const [refused, setRefused] = useState<CalendarSaveError | null>(null)
   // The editor's own rendering of the stored text, found on first edit (it needs the browser).
   const baseline = useRef<string | null>(null)
@@ -326,21 +325,32 @@ function Fields({
   }
 
   const dir = locale === 'ar' ? 'rtl' : 'ltr'
-  const timeFormat = locale === 'ar' ? '24h' : '12h'
-  const remove = (label: string, onClick: () => void) => (
-    <Tooltip content={label}>
-      <Button
-        type="button"
-        variant="ghost"
-        size="sm"
-        className={styles.remove}
-        aria-label={label}
-        onClick={onClick}
-      >
-        <X size={16} aria-hidden="true" />
-      </Button>
-    </Tooltip>
-  )
+  /** The calendar's one 12-hour form, in the page's language (decision 7). */
+  const timeOf = (value: string) => {
+    const [h = 0, m = 0] = value.split(':').map(Number)
+    return formatTime(h * 60 + m, locale)
+  }
+  const materials = useMemo(() => materialKind({ t, tc, dir }), [t, tc, dir])
+  const activities = useMemo(() => activityKind({ t, tc, dir }), [t, tc, dir])
+  const meetingId = useId()
+
+  const removeSession = async () => {
+    setDeleted(true)
+    if (stage) {
+      stage.remove()
+      return
+    }
+    setRefused(null)
+    const result = await saveScheduleEdits(
+      { details: [{ op: 'delete', id, version }] },
+      locale,
+    ).catch((): ScheduleEditsResult => ({ ok: false, error: { code: 'failed' } }))
+    if (result.ok) onSaved(result)
+    else {
+      setDeleted(false)
+      setRefused(result.error)
+    }
+  }
 
   return (
     <form
@@ -390,10 +400,32 @@ function Fields({
             <fieldset className={styles.group}>
               <legend className={styles.legend}>{t('meetings')}</legend>
               {meetings.state.value.map((row, i) => (
-                <div key={row.key} className={styles.meeting}>
+                <div
+                  key={row.key}
+                  role="group"
+                  aria-labelledby={`${meetingId}-${row.key}`}
+                  className={styles.meeting}
+                >
+                  <div className={styles.meetingHead}>
+                    <span id={`${meetingId}-${row.key}`} className={styles.meetingName}>
+                      {t('meeting', { n: i + 1 })}
+                    </span>
+                    <Tooltip content={t('removeMeeting', { n: i + 1 })}>
+                      <Button
+                        type="button"
+                        variant="ghost"
+                        size="sm"
+                        className={styles.remove}
+                        aria-label={t('removeMeeting', { n: i + 1 })}
+                        onClick={() => meetings.removeValue(i)}
+                      >
+                        <X size={16} aria-hidden="true" />
+                      </Button>
+                    </Tooltip>
+                  </div>
                   <form.Field name={`meetings[${i}].date`}>
                     {(field) => (
-                      <div className={styles.day}>
+                      <div className={styles.wide}>
                         <DatePicker
                           label={t('day')}
                           placeholder={t('dayPlaceholder')}
@@ -415,21 +447,17 @@ function Fields({
                       </div>
                     )}
                   </form.Field>
-                  <div className={styles.removeCell}>
-                    {remove(t('removeMeeting', { n: i + 1 }), () => meetings.removeValue(i))}
-                  </div>
                   {row.allDay ? null : (
                     <>
                       <form.Field name={`meetings[${i}].start_time`}>
                         {(field) => (
                           <TimePicker
-                            className={styles.start}
                             label={t('starts')}
                             placeholder={t('timePlaceholder')}
                             value={field.state.value}
                             onChange={(time) => pick(field, time)}
                             minuteStep={15}
-                            format={timeFormat}
+                            formatValue={timeOf}
                             error={errorOf(field)}
                           />
                         )}
@@ -437,13 +465,12 @@ function Fields({
                       <form.Field name={`meetings[${i}].end_time`}>
                         {(field) => (
                           <TimePicker
-                            className={styles.end}
                             label={t('ends')}
                             placeholder={t('timePlaceholder')}
                             value={field.state.value}
                             onChange={(time) => pick(field, time)}
                             minuteStep={15}
-                            format={timeFormat}
+                            formatValue={timeOf}
                             error={errorOf(field)}
                           />
                         )}
@@ -452,7 +479,7 @@ function Fields({
                   )}
                   <form.Field name={`meetings[${i}].allDay`}>
                     {(field) => (
-                      <div className={styles.allDay}>
+                      <div className={styles.wide}>
                         <Checkbox
                           label={t('allDay')}
                           checked={field.state.value}
@@ -489,146 +516,30 @@ function Fields({
         </form.Field>
       )}
 
-      <form.Field name="bibliography" mode="array">
-        {(materials) => (
+      <form.Field name="bibliography">
+        {(field) => (
           <fieldset className={styles.group}>
             <legend className={styles.legend}>{tc('materials')}</legend>
-            {materials.state.value.map((row, i) => (
-              <div key={row.key} className={styles.material}>
-                <form.Field name={`bibliography[${i}].type`}>
-                  {(field) => (
-                    <div className={styles.kind}>
-                      <Select
-                        label={t('materialType')}
-                        value={field.state.value}
-                        onValueChange={(value) =>
-                          field.handleChange(value as (typeof MATERIAL_TYPES)[number])
-                        }
-                        options={MATERIAL_TYPES.map((value) => ({
-                          value,
-                          label: tc(`materialTypes.${value}`),
-                        }))}
-                      />
-                    </div>
-                  )}
-                </form.Field>
-                <div className={styles.removeCell}>
-                  {remove(t('removeMaterial', { n: i + 1 }), () => materials.removeValue(i))}
-                </div>
-                <form.Field name={`bibliography[${i}].title`}>
-                  {(field) => (
-                    <Input
-                      label={t('materialTitle')}
-                      dir={dir}
-                      value={field.state.value}
-                      onChange={(e) => field.handleChange(e.target.value)}
-                      onBlur={field.handleBlur}
-                    />
-                  )}
-                </form.Field>
-                <form.Field name={`bibliography[${i}].note`}>
-                  {(field) => (
-                    <Input
-                      label={t('materialNote')}
-                      dir={dir}
-                      value={field.state.value}
-                      onChange={(e) => field.handleChange(e.target.value)}
-                      onBlur={field.handleBlur}
-                    />
-                  )}
-                </form.Field>
-                <form.Field name={`bibliography[${i}].href`}>
-                  {(field) => (
-                    <Input
-                      label={t('materialLink')}
-                      type="url"
-                      inputMode="url"
-                      placeholder="https://"
-                      dir="ltr"
-                      value={field.state.value}
-                      onChange={(e) => field.handleChange(e.target.value)}
-                      onBlur={field.handleBlur}
-                    />
-                  )}
-                </form.Field>
-              </div>
-            ))}
-            <div>
-              <Button
-                type="button"
-                variant="secondary"
-                size="sm"
-                onClick={() =>
-                  materials.pushValue({
-                    key: keyOf(),
-                    type: 'reading',
-                    title: '',
-                    href: '',
-                    note: '',
-                  })
-                }
-              >
-                <Plus size={16} aria-hidden="true" />
-                {t('addMaterial')}
-              </Button>
-            </div>
+            <CardList
+              kind={materials}
+              rows={field.state.value}
+              onChange={field.handleChange}
+              newKey={keyOf}
+            />
           </fieldset>
         )}
       </form.Field>
 
-      <form.Field name="activities" mode="array">
-        {(activities) => (
+      <form.Field name="activities">
+        {(field) => (
           <fieldset className={styles.group}>
             <legend className={styles.legend}>{tc('activities')}</legend>
-            {activities.state.value.map((row, i) => (
-              <div key={row.key} className={styles.activity}>
-                <form.Field name={`activities[${i}].kind`}>
-                  {(field) => (
-                    <div className={styles.kind}>
-                      <Select
-                        label={t('activityKind')}
-                        value={field.state.value}
-                        onValueChange={(value) =>
-                          field.handleChange(value as (typeof ACTIVITY_KINDS)[number])
-                        }
-                        options={ACTIVITY_KINDS.map((value) => ({
-                          value,
-                          label: tc(`activityKinds.${value}`),
-                        }))}
-                      />
-                    </div>
-                  )}
-                </form.Field>
-                <div className={styles.removeCell}>
-                  {remove(t('removeActivity', { n: i + 1 }), () => activities.removeValue(i))}
-                </div>
-                <form.Field name={`activities[${i}].description`}>
-                  {(field) => (
-                    <Textarea
-                      label={t('activityDescription')}
-                      dir={dir}
-                      rows={2}
-                      value={field.state.value}
-                      onChange={(e) => field.handleChange(e.target.value)}
-                      onBlur={field.handleBlur}
-                    />
-                  )}
-                </form.Field>
-              </div>
-            ))}
-            <div>
-              <Button
-                type="button"
-                variant="secondary"
-                size="sm"
-                onClick={() =>
-                  activities.pushValue({ key: keyOf(), kind: 'discussion', description: '' })
-                }
-              >
-                <Plus size={16} aria-hidden="true" />
-                {t('addActivity')}
-              </Button>
-            </div>
+            <CardList
+              kind={activities}
+              rows={field.state.value}
+              onChange={field.handleChange}
+              newKey={keyOf}
+            />
           </fieldset>
         )}
       </form.Field>
@@ -643,69 +554,36 @@ function Fields({
         )}
       </form.Field>
 
-      {refused ? (
-        <Alert tone="danger" title={errorText(refused)}>
-          {refused.code === 'stale' ? (
-            <div className={styles.alertActions}>
-              <Button type="button" variant="secondary" size="sm" onClick={onReload}>
-                {reloadAndLose}
-              </Button>
-            </div>
-          ) : null}
-        </Alert>
-      ) : null}
-
       <div className={styles.foot}>
-        <Button type="submit" loading={submitting}>
+        {refused ? (
+          <Alert tone="danger" title={errorText(refused)}>
+            {refused.code === 'stale' ? (
+              <div className={styles.alertActions}>
+                <Button type="button" variant="secondary" size="sm" onClick={onReload}>
+                  {reloadAndLose}
+                </Button>
+              </div>
+            ) : null}
+          </Alert>
+        ) : null}
+        <Button type="submit" loading={submitting} disabled={deleted}>
           {t(stage ? 'apply' : 'save')}
         </Button>
         <Button type="button" variant="secondary" onClick={onCancel}>
           {t('cancel')}
         </Button>
+        <hr className={styles.footRule} />
+        <HoldToConfirm
+          tone="danger"
+          className={styles.hold}
+          label={t('holdDelete')}
+          confirmedLabel={t('deleted')}
+          hint={(seconds) => t('holdHint', { seconds })}
+          confirmed={deleted}
+          disabled={submitting}
+          onConfirm={() => void removeSession()}
+        />
       </div>
-
-      <Button type="button" variant="danger" onClick={() => setDeleting(true)}>
-        {t('deleteSession')}
-      </Button>
-      <Dialog open={deleting} onOpenChange={setDeleting}>
-        <DialogContent
-          className="arc-scope"
-          title={t('deleteTitle', { name: values.title.trim() || untitled })}
-          closeLabel={t('leaveClose')}
-        >
-          <div className={styles.alertActions}>
-            <DialogClose asChild>
-              <Button type="button" variant="secondary" autoFocus>
-                {t('cancel')}
-              </Button>
-            </DialogClose>
-            <Button
-              type="button"
-              variant="danger"
-              loading={removing}
-              onClick={async () => {
-                if (stage) {
-                  stage.remove()
-                  return
-                }
-                setRemoving(true)
-                const result = await saveScheduleEdits(
-                  { details: [{ op: 'delete', id, version }] },
-                  locale,
-                ).catch((): ScheduleEditsResult => ({ ok: false, error: { code: 'failed' } }))
-                setRemoving(false)
-                if (result.ok) onSaved(result)
-                else {
-                  setRefused(result.error)
-                  setDeleting(false)
-                }
-              }}
-            >
-              {t('deleteSession')}
-            </Button>
-          </div>
-        </DialogContent>
-      </Dialog>
       {leaving.dialog}
     </form>
   )

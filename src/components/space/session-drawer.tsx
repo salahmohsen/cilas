@@ -254,7 +254,8 @@ export function SessionDrawer({
         description={t('sessionDrawerTimes')}
         closeLabel={t('sessionDrawerClose')}
         onCloseAutoFocus={onCloseAutoFocus}
-        detents={[0.6, 0.92]}
+        // The form's footer needs the full height; the view opens lower.
+        detents={isEditing ? [0.92] : [0.6, 0.92]}
       >
         {content}
       </BottomSheet>

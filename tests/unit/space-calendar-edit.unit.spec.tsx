@@ -347,6 +347,18 @@ const formValues = {
   activities: [],
   meetings: [{ id: 'a', date: '2026-11-17', start_time: '19:00', end_time: '21:00' }],
 }
+/** Holds Space on the form's delete button until the hold completes. The hold's fill runs on real time. */
+const holdToDelete = async (dialog: HTMLElement) => {
+  const hold = within(dialog).getByRole('button', { name: en.SessionEdit.holdDelete })
+  vi.useRealTimers()
+  fireEvent.keyDown(hold, { key: ' ' })
+  // Done stages the removal and closes the drawer, which may take the button away first.
+  await waitFor(
+    () => expect(!hold.isConnected || hold.getAttribute('data-state') === 'done').toBe(true),
+    { timeout: 4000 },
+  )
+  vi.useFakeTimers({ now: new Date('2026-11-15T10:00:00Z'), toFake: ['Date'] })
+}
 const openStagedForm = async (target = block()) => {
   fireEvent.pointerEnter(target)
   await import('@/components/space/schedule-edit-drawer')
@@ -433,14 +445,17 @@ describe('details staged with the calendar', () => {
     expect(scheduleOffers).toHaveBeenCalledTimes(1)
   })
 
-  it('names the session in Delete confirmation and stages removal until Save', async () => {
+  it('shows Apply in the footer, and a full hold stages the removal until Save', async () => {
     show()
     await startEditing()
     const dialog = await openStagedForm()
-    fireEvent.click(within(dialog).getByRole('button', { name: 'Delete session' }))
-    const confirm = await screen.findByRole('dialog', { name: 'Delete “Week 3”?' })
-    fireEvent.click(within(confirm).getByRole('button', { name: 'Delete session' }))
-    expect(screen.queryByRole('button', { name: /^Week 3, Tuesday/ })).toBeNull()
+    expect(within(dialog).getByRole('button', { name: en.SessionEdit.apply })).toBeInTheDocument()
+    expect(within(dialog).queryByRole('button', { name: en.SessionEdit.save })).toBeNull()
+    expect(within(dialog).queryByRole('group', { name: 'Meeting 1' })).toBeNull()
+    await holdToDelete(dialog)
+    await waitFor(() =>
+      expect(screen.queryByRole('button', { name: /^Week 3, Tuesday/ })).toBeNull(),
+    )
     expect(saveScheduleEdits).not.toHaveBeenCalled()
     await pressSave()
     await waitFor(() => expect(saveScheduleEdits).toHaveBeenCalledTimes(1))
@@ -456,10 +471,8 @@ describe('details staged with the calendar', () => {
     const added = screen.getByRole('button', { name: /^Session, Tuesday/ })
     const dialog = await openStagedForm(added)
     expect(within(dialog).getByRole('textbox', { name: en.SessionEdit.title })).toHaveValue('')
-    fireEvent.click(within(dialog).getByRole('button', { name: 'Delete session' }))
-    const confirm = await screen.findByRole('dialog', { name: 'Delete “Session”?' })
-    fireEvent.click(within(confirm).getByRole('button', { name: 'Delete session' }))
-    expect(screen.queryByRole('button', { name: 'Save' })).toBeNull()
+    await holdToDelete(dialog)
+    await waitFor(() => expect(screen.queryByRole('button', { name: 'Save' })).toBeNull())
     expect(saveScheduleEdits).not.toHaveBeenCalled()
     await waitFor(() => expect(screen.queryByRole('dialog')).toBeNull())
     move()

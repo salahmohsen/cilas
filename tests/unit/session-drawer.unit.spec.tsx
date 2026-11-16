@@ -432,6 +432,204 @@ describe('the session drawer’s Edit form', () => {
     expect(scheduleOffers).not.toHaveBeenCalled()
   })
 
+  it('shows materials and activities as cards named for assistive tech, ending with a + tile', async () => {
+    const dialog = await openForm()
+    const material = within(dialog).getByRole('button', { name: 'Edit material: Invisible Cities' })
+    expect(material).toHaveTextContent('Invisible Cities')
+    expect(
+      within(dialog).getByRole('button', { name: 'Edit activity: Discussion, In pairs' }),
+    ).toBeInTheDocument()
+    const tiles = within(dialog).getAllByRole('button', { name: /^Add (material|activity)$/ })
+    expect(tiles.map((tile) => tile.getAttribute('aria-label'))).toEqual([
+      'Add material',
+      'Add activity',
+    ])
+    // The + tile is the list's last item, after the cards.
+    const list = material.closest('ul')!
+    expect(within(list).getAllByRole('button').at(-1)).toBe(tiles[0])
+  })
+
+  it('edits a material in its dialog; Done keeps it and Save sends it', async () => {
+    const dialog = await openForm()
+    fireEvent.click(within(dialog).getByRole('button', { name: 'Edit material: Invisible Cities' }))
+    const edit = await screen.findByRole('dialog', { name: en.SessionEdit.materialTitleEdit })
+    // The first field takes focus, not the close button.
+    await waitFor(() =>
+      expect(document.activeElement).toBe(
+        within(edit).getByRole('combobox', { name: en.SessionEdit.materialType }),
+      ),
+    )
+    fireEvent.change(within(edit).getByRole('textbox', { name: en.SessionEdit.materialTitle }), {
+      target: { value: 'The Image of the City' },
+    })
+    fireEvent.change(within(edit).getByRole('textbox', { name: en.SessionEdit.materialLink }), {
+      target: { value: 'https://www.example.org/lynch' },
+    })
+    fireEvent.click(within(edit).getByRole('button', { name: en.SessionEdit.done }))
+    await waitFor(() =>
+      expect(screen.queryByRole('dialog', { name: en.SessionEdit.materialTitleEdit })).toBeNull(),
+    )
+    const card = within(dialog).getByRole('button', {
+      name: 'Edit material: The Image of the City',
+    })
+    expect(card).toHaveTextContent('example.org')
+    await waitFor(() => expect(document.activeElement).toBe(card))
+    expect(saveScheduleEdits).not.toHaveBeenCalled()
+    vi.mocked(saveScheduleEdits).mockResolvedValue({ ok: true, items: [], before: [], after: [] })
+    await save(dialog)
+    expect(vi.mocked(saveScheduleEdits).mock.calls[0]![0].details![0]).toMatchObject({
+      values: {
+        bibliography: [
+          {
+            id: 'b1',
+            type: 'reading',
+            title: 'The Image of the City',
+            href: 'https://www.example.org/lynch',
+            note: '',
+          },
+        ],
+      },
+    })
+  })
+
+  it('keeps the dialog open on an invalid material, names the fields and focuses the first', async () => {
+    const dialog = await openForm()
+    fireEvent.click(within(dialog).getByRole('button', { name: 'Edit material: Invisible Cities' }))
+    const edit = await screen.findByRole('dialog', { name: en.SessionEdit.materialTitleEdit })
+    const title = within(edit).getByRole('textbox', { name: en.SessionEdit.materialTitle })
+    fireEvent.change(title, { target: { value: '' } })
+    fireEvent.click(within(edit).getByRole('button', { name: en.SessionEdit.done }))
+    expect(await within(edit).findByText(en.SessionEdit.errors.material)).toBeInTheDocument()
+    expect(title).toHaveAttribute('aria-invalid', 'true')
+    await waitFor(() => expect(document.activeElement).toBe(title))
+
+    const link = within(edit).getByRole('textbox', { name: en.SessionEdit.materialLink })
+    fireEvent.change(link, { target: { value: 'not a link' } })
+    expect(await within(edit).findByText(en.SessionEdit.errors.link)).toBeInTheDocument()
+    // Enter in a field is Done: it checks the dialog and never submits the session form.
+    fireEvent.submit(link)
+    expect(screen.getByRole('dialog', { name: en.SessionEdit.materialTitleEdit })).toBeVisible()
+    expect(saveScheduleEdits).not.toHaveBeenCalled()
+
+    // Cancel keeps the material as it was.
+    fireEvent.click(within(edit).getByRole('button', { name: en.SessionEdit.cancel }))
+    await waitFor(() =>
+      expect(screen.queryByRole('dialog', { name: en.SessionEdit.materialTitleEdit })).toBeNull(),
+    )
+    expect(
+      within(dialog).getByRole('button', { name: 'Edit material: Invisible Cities' }),
+    ).toBeInTheDocument()
+  })
+
+  it('adds a material from the + tile, and a cancelled new one adds nothing', async () => {
+    const dialog = await openForm()
+    const add = within(dialog).getByRole('button', { name: en.SessionEdit.addMaterial })
+    fireEvent.click(add)
+    let fresh = await screen.findByRole('dialog', { name: en.SessionEdit.addMaterial })
+    expect(within(fresh).getByRole('textbox', { name: en.SessionEdit.materialTitle })).toHaveValue(
+      '',
+    )
+    expect(within(fresh).queryByRole('button', { name: en.SessionEdit.removeMaterial })).toBeNull()
+    fireEvent.click(within(fresh).getByRole('button', { name: en.SessionEdit.cancel }))
+    await waitFor(() =>
+      expect(screen.queryByRole('dialog', { name: en.SessionEdit.addMaterial })).toBeNull(),
+    )
+    expect(within(dialog).getAllByRole('button', { name: /^Edit material/ })).toHaveLength(1)
+    await waitFor(() => expect(document.activeElement).toBe(add))
+
+    fireEvent.click(add)
+    fresh = await screen.findByRole('dialog', { name: en.SessionEdit.addMaterial })
+    fireEvent.change(within(fresh).getByRole('textbox', { name: en.SessionEdit.materialLink }), {
+      target: { value: 'https://soundcloud.com/cilas/walk' },
+    })
+    fireEvent.click(within(fresh).getByRole('button', { name: en.SessionEdit.done }))
+    // A link alone is enough; the card shows its host.
+    const card = await within(dialog).findByRole('button', {
+      name: 'Edit material: soundcloud.com',
+    })
+    await waitFor(() => expect(document.activeElement).toBe(card))
+  })
+
+  it('removes a card from its dialog and gives focus to the next one or the + tile', async () => {
+    const dialog = await openForm()
+    fireEvent.click(
+      within(dialog).getByRole('button', { name: 'Edit activity: Discussion, In pairs' }),
+    )
+    const edit = await screen.findByRole('dialog', { name: en.SessionEdit.activityTitleEdit })
+    fireEvent.click(within(edit).getByRole('button', { name: en.SessionEdit.removeActivity }))
+    await waitFor(() =>
+      expect(screen.queryByRole('dialog', { name: en.SessionEdit.activityTitleEdit })).toBeNull(),
+    )
+    expect(within(dialog).queryByRole('button', { name: /^Edit activity/ })).toBeNull()
+    await waitFor(() =>
+      expect(document.activeElement).toBe(
+        within(dialog).getByRole('button', { name: en.SessionEdit.addActivity }),
+      ),
+    )
+  })
+
+  it('closes only the card dialog on Escape', async () => {
+    const dialog = await openForm()
+    fireEvent.click(within(dialog).getByRole('button', { name: 'Edit material: Invisible Cities' }))
+    const edit = await screen.findByRole('dialog', { name: en.SessionEdit.materialTitleEdit })
+    fireEvent.keyDown(edit, { key: 'Escape' })
+    await waitFor(() =>
+      expect(screen.queryByRole('dialog', { name: en.SessionEdit.materialTitleEdit })).toBeNull(),
+    )
+    expect(screen.getByRole('dialog', { name: 'Reading the city' })).toBeInTheDocument()
+    expect(within(dialog).getByRole('textbox', { name: en.SessionEdit.title })).toBeVisible()
+  })
+
+  it('names each meeting row as a group with its remove button', async () => {
+    const dialog = await openForm(
+      editValues({
+        meetings: [
+          { id: 'm13', date: '2026-11-13', start_time: '19:00', end_time: '21:00' },
+          { id: 'm20', date: '2026-11-20', start_time: '19:00', end_time: '21:00' },
+        ],
+      }),
+    )
+    const second = within(dialog).getByRole('group', { name: 'Meeting 2' })
+    expect(within(second).getByRole('button', { name: 'Remove meeting 2' })).toBeInTheDocument()
+    expect(
+      within(second).getByRole('button', { name: new RegExp(`^${en.SessionEdit.day}`) }),
+    ).toBeInTheDocument()
+    expect(
+      within(second).getByRole('checkbox', { name: en.SessionEdit.allDay }),
+    ).toBeInTheDocument()
+  })
+
+  it('shows Save changes, Cancel and a hold to delete; a full hold deletes at once', async () => {
+    const dialog = await openForm()
+    expect(within(dialog).getByRole('button', { name: en.SessionEdit.save })).toBeInTheDocument()
+    expect(within(dialog).queryByRole('button', { name: en.SessionEdit.apply })).toBeNull()
+    const hold = within(dialog).getByRole('button', { name: en.SessionEdit.holdDelete })
+    expect(hold).toHaveAccessibleDescription(en.SessionEdit.holdHint.replace('{seconds}', '1.2'))
+    // An early release deletes nothing.
+    fireEvent.keyDown(hold, { key: ' ' })
+    fireEvent.keyUp(hold, { key: ' ' })
+    await new Promise((resolve) => setTimeout(resolve, 1500))
+    expect(saveScheduleEdits).not.toHaveBeenCalled()
+
+    vi.mocked(saveScheduleEdits).mockResolvedValue({ ok: true, items: [], before: [], after: [] })
+    fireEvent.keyDown(hold, { key: ' ' })
+    await waitFor(() => expect(saveScheduleEdits).toHaveBeenCalledTimes(1), { timeout: 4000 })
+    expect(saveScheduleEdits).toHaveBeenCalledWith(
+      { details: [{ op: 'delete', id: '13', version: 'v1' }] },
+      'en',
+    )
+  })
+
+  it('rewinds the hold and shows why when a delete is refused', async () => {
+    vi.mocked(saveScheduleEdits).mockResolvedValue({ ok: false, error: { code: 'failed' } })
+    const dialog = await openForm()
+    const hold = within(dialog).getByRole('button', { name: en.SessionEdit.holdDelete })
+    fireEvent.keyDown(hold, { key: ' ' })
+    await waitFor(() => expect(saveScheduleEdits).toHaveBeenCalledTimes(1), { timeout: 4000 })
+    expect(await within(dialog).findByRole('alert')).toBeInTheDocument()
+    expect(within(dialog).getByRole('button', { name: en.SessionEdit.holdDelete })).toBeEnabled()
+  })
+
   it('offers a retry when the session does not load', async () => {
     vi.mocked(loadSessionView).mockResolvedValueOnce({ ok: false, error: 'failed' })
     window.history.replaceState(null, '', '/en/spaces/course/probe?open=13')
