@@ -7,6 +7,7 @@ import { useCalendarLabels } from '@/components/calendar/ui/use-calendar-labels'
 import type { CalendarChange, CalendarItem } from '@/lib/calendar-items'
 
 import en from '../../../messages/en.json'
+import { stubPopupDom } from '../../helpers/popup-dom'
 
 declare global {
   var __UI_SDK_STRICT__: boolean | undefined
@@ -79,21 +80,7 @@ const saved = () => screen.getByRole('button', { name: 'Save' })
 
 beforeAll(() => {
   globalThis.__UI_SDK_STRICT__ = true
-  globalThis.ResizeObserver = class {
-    observe() {}
-    unobserve() {}
-    disconnect() {}
-  }
-  HTMLElement.prototype.showPopover = function () {}
-  HTMLElement.prototype.hidePopover = function () {}
-  Element.prototype.getAnimations = () => []
-  Element.prototype.scrollIntoView = function () {}
-  Element.prototype.checkVisibility = () => true
-  document.head.append(
-    Object.assign(document.createElement('style'), {
-      textContent: '[popover] { display: block !important }',
-    }),
-  )
+  stubPopupDom()
 })
 beforeEach(() => {
   localStorage.clear()

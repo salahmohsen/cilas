@@ -48,7 +48,10 @@ export const cairoNow = (
   return { date: now.toPlainDate().toString(), minutes: now.hour * 60 + now.minute }
 }
 
-const withDigits = (locale: string, options: Intl.DateTimeFormatOptions) => ({
+const withDigits = <Options extends Intl.DateTimeFormatOptions | Intl.NumberFormatOptions>(
+  locale: string,
+  options: Options,
+) => ({
   ...options,
   numberingSystem: numberingSystemOf(locale),
 })
@@ -107,4 +110,22 @@ export const formatMonths = (from: string, to: string, locale: string): string =
   )
     .formatRange(utc(from), utc(to))
     .replace(/\s/g, ' ')
+}
+
+/**
+ * How long a block lasts: "5 hr 35 min", "45 min". Arabic spells the units
+ * out ("٥ ساعات و٣٥ دقيقة"), since its short forms are single letters.
+ */
+export const formatLength = (minutes: number, locale: string): string => {
+  const unitDisplay = locale === 'ar' ? 'long' : 'short'
+  const unit = (value: number, name: 'hour' | 'minute') =>
+    new Intl.NumberFormat(
+      locale,
+      withDigits(locale, { style: 'unit', unit: name, unitDisplay }),
+    ).format(value)
+  const parts = [
+    ...(minutes >= 60 ? [unit(Math.floor(minutes / 60), 'hour')] : []),
+    ...(minutes % 60 || minutes < 60 ? [unit(minutes % 60, 'minute')] : []),
+  ]
+  return new Intl.ListFormat(locale, { type: 'unit', style: 'narrow' }).format(parts)
 }

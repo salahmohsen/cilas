@@ -17,7 +17,8 @@ type Props = {
   editable: boolean
   labels: CalendarLabels
   locale: string
-  onOpen: (itemId: string, blockId: string | null) => void
+  /** The item's main button was pressed. */
+  onOpen: (itemId: string, anchor: HTMLElement) => void
   /** Put an item on a day: at `start` where it was dropped, or in the first free hour. */
   onPlace: (itemId: string, day: string, start?: number) => void
 }
@@ -91,7 +92,7 @@ export function UnscheduledTray({ items, days, editable, labels, locale, onOpen,
               type="button"
               className={styles.trayItem}
               data-tone={item.tone}
-              onClick={() => onOpen(item.id, null)}
+              onClick={(event) => onOpen(item.id, event.currentTarget)}
               onPointerDown={(event) => startDrag(item, event)}
             >
               {item.title}

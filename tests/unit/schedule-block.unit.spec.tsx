@@ -1,7 +1,7 @@
 // @vitest-environment jsdom
-import { cleanup, fireEvent, render, screen } from '@testing-library/react'
+import { cleanup, fireEvent, render, screen, within } from '@testing-library/react'
 import { NextIntlClientProvider } from 'next-intl'
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
+import { afterEach, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest'
 
 import { PostBody } from '@/components/space/post-body'
 import { scheduleToken } from '@/lib/session-refs'
@@ -9,6 +9,7 @@ import type { SessionCourse, SessionRead } from '@/lib/spaces-data'
 import type { Session } from '@/payload-types'
 
 import en from '../../messages/en.json'
+import { stubPopupDom } from '../helpers/popup-dom'
 
 const push = vi.fn()
 vi.mock('next/navigation', () => ({ useRouter: () => ({ push }) }))
@@ -65,6 +66,7 @@ const view = (body: string, read: SessionRead | null = shown) =>
     </NextIntlClientProvider>,
   )
 
+beforeAll(stubPopupDom)
 beforeEach(() => {
   // Each test sets it: another file's vi.unstubAllGlobals() can remove it when files share a worker.
   globalThis.ResizeObserver = class {
@@ -131,10 +133,14 @@ describe('a schedule block in a post', () => {
     ).toBeInTheDocument()
   })
 
-  it('opens the session drawer on the session, in place, not the feed', () => {
+  it('opens the session drawer from the details, in place, not the feed', async () => {
     window.history.replaceState(null, '', '/en/spaces/probe/posts/5')
     view(schedule(['12']))
     fireEvent.click(screen.getByRole('button', { name: /^Session 2, Tuesday/ }))
+    const details = await screen.findByRole('dialog', { name: 'Session 2' })
+    // A reader of a post gets no Edit here; the drawer offers it to editors.
+    expect(within(details).queryByRole('button', { name: en.Spaces.calendarEdit })).toBeNull()
+    fireEvent.click(within(details).getByRole('button', { name: en.CalendarUi.menuOpen }))
     expect(push).not.toHaveBeenCalled()
     expect(`${window.location.pathname}${window.location.search}`).toBe(
       '/en/spaces/probe/posts/5?open=12',

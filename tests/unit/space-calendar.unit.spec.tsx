@@ -2,7 +2,7 @@
 import { cleanup, fireEvent, render, screen, within } from '@testing-library/react'
 import { renderToString } from 'react-dom/server'
 import { NextIntlClientProvider } from 'next-intl'
-import { afterEach, beforeEach, expect, it, vi } from 'vitest'
+import { afterEach, beforeAll, beforeEach, expect, it, vi } from 'vitest'
 
 import { loadCalendarItems } from '@/actions/load-calendar-items'
 import { SpaceCalendar } from '@/components/space/space-calendar'
@@ -10,6 +10,7 @@ import { SpaceViews } from '@/components/space/space-views'
 import { openingDay, type CalendarItem } from '@/lib/calendar-items'
 import en from '../../messages/en.json'
 import ar from '../../messages/ar.json'
+import { stubPopupDom } from '../helpers/popup-dom'
 
 const push = vi.fn()
 vi.mock('next/navigation', () => ({
@@ -51,6 +52,7 @@ const wrap = (children: React.ReactNode, locale = 'en') => (
     {children}
   </NextIntlClientProvider>
 )
+beforeAll(stubPopupDom)
 beforeEach(() => {
   // Each test, not once: under --no-isolate another file's environment can drop it between tests.
   globalThis.ResizeObserver = class {
@@ -101,9 +103,14 @@ it('server renders the next week and both legend kinds in view mode, with Edit f
   expect(document.querySelector('[data-mode="edit"]')).toBeNull()
   window.history.replaceState(null, '', '/en/spaces/course/probe?tab=calendar')
   fireEvent.click(screen.getByRole('button', { name: /^next, Tuesday/ }))
+  const session = await screen.findByRole('dialog', { name: 'next' })
+  fireEvent.click(within(session).getByRole('button', { name: en.CalendarUi.menuOpen }))
   expect(push).not.toHaveBeenCalled()
   expect(window.location.search).toBe('?tab=calendar&open=next')
   fireEvent.click(screen.getByRole('button', { name: /^Gathering, Wednesday/ }))
+  const event = await screen.findByRole('dialog', { name: 'Gathering' })
+  expect(within(event).queryByRole('button', { name: en.Spaces.calendarEdit })).toBeNull()
+  fireEvent.click(within(event).getByRole('button', { name: en.Spaces.calendarOpenPost }))
   expect(push).toHaveBeenLastCalledWith('/en/spaces/course/probe/posts/42')
 })
 

@@ -179,7 +179,13 @@ export function CourseCalendar({ courseId, language, messages }: Props) {
                 onUnsavedChange: setUnsaved,
                 onSaveIntent: schedule.preload,
               }
-            : { mode: 'view' as const })}
+            : {
+                mode: 'view' as const,
+                // Readers who may not edit get the details first; Open shows Payload's session.
+                actionsOf: () => [
+                  { id: 'open', label: labels.menu!.open, primary: true, run: open },
+                ],
+              })}
         />
       )}
 

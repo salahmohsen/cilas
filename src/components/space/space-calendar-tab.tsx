@@ -69,6 +69,7 @@ export function SpaceCalendarTab({
         items={items}
         day={day}
         spaceHref={spaceHref}
+        canEdit={canEdit}
         action={
           canEdit ? (
             <Button

@@ -1,16 +1,18 @@
 'use client'
 
+import { ExternalLink, Pencil } from 'lucide-react'
 import { useLocale, useTranslations } from 'next-intl'
 import { useRouter } from 'next/navigation'
 import { useCallback, useMemo, type ReactNode } from 'react'
 
+import type { CalendarAction } from '@/components/calendar/ui/block-details'
 import { Calendar } from '@/components/calendar/ui/calendar'
 import type { CalendarHostLabels } from '@/components/calendar/ui/calendar-labels'
 import { useCalendarLabels } from '@/components/calendar/ui/use-calendar-labels'
 import { courseWeekOf, type CalendarItem } from '@/lib/calendar-items'
 import { leave } from '@/lib/leave-guard'
 
-import { openSession, sessionTriggerProps } from './session-drawer-host'
+import { openSession, preloadSessionEdit, sessionTriggerProps } from './session-drawer-host'
 
 /**
  * A course space calendar's words; `menu` gives edit mode its block menu
@@ -61,6 +63,46 @@ export function useOpenScheduleItem(items: CalendarItem[], spaceHref: string) {
 }
 
 /**
+ * What a block's details offer in a course space: a session opens in the
+ * drawer, and on its Edit form for the people who may edit; a space event
+ * opens its post.
+ */
+export function useScheduleActions(
+  items: CalendarItem[],
+  spaceHref: string,
+  canEdit: boolean,
+): (item: CalendarItem) => CalendarAction[] {
+  const t = useTranslations('Spaces')
+  const tc = useTranslations('CalendarUi')
+  const open = useOpenScheduleItem(items, spaceHref)
+  return (item) =>
+    item.kind === 'space-event'
+      ? [
+          {
+            id: 'open',
+            label: t('calendarOpenPost'),
+            icon: <ExternalLink aria-hidden size={14} />,
+            primary: true,
+            run: open,
+          },
+        ]
+      : [
+          ...(canEdit
+            ? [
+                {
+                  id: 'edit',
+                  label: t('calendarEdit'),
+                  icon: <Pencil aria-hidden size={14} />,
+                  preload: preloadSessionEdit,
+                  run: (id: string) => openSession(id, 'edit'),
+                },
+              ]
+            : []),
+          { id: 'open', label: tc('menuOpen'), primary: true, run: open },
+        ]
+}
+
+/**
  * A course space's calendar, view only: the Calendar tab and a post's
  * schedule block.
  */
@@ -70,6 +112,7 @@ export function ScheduleCalendar({
   day,
   spaceHref,
   action,
+  canEdit = false,
   course = items,
 }: {
   items: CalendarItem[]
@@ -80,12 +123,15 @@ export function ScheduleCalendar({
   spaceHref: string
   /** The tab's Edit button, for the people who may edit. */
   action?: ReactNode
+  /** Whether the reader may edit the sessions: their details offer Edit. */
+  canEdit?: boolean
 }) {
   const locale = useLocale()
   const labels = useScheduleLabels()
   const markedSet = useMemo(() => new Set(marked), [marked])
   const open = useOpenScheduleItem(items, spaceHref)
   const weekLabel = useCourseWeek(course)
+  const actionsOf = useScheduleActions(items, spaceHref, canEdit)
   return (
     // `contents`: the wrapper only listens, for the drawer's chunk and the block focus returns to.
     <div className="contents" {...sessionTriggerProps}>
@@ -99,6 +145,7 @@ export function ScheduleCalendar({
         weekLabel={weekLabel}
         action={action}
         onOpen={open}
+        actionsOf={actionsOf}
       />
     </div>
   )

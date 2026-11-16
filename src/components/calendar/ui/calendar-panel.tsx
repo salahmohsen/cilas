@@ -14,7 +14,7 @@ type Props = {
   now: { date: string; minutes: number } | null
   /** The colour key, and the Unscheduled tray where there is one. */
   children: ReactNode
-  onOpen: (itemId: string, blockId: string | null) => void
+  onOpen: (itemId: string, blockId: string | null, anchor: HTMLElement) => void
 }
 
 /** The side panel's content: the next meeting, then what the host puts below it. */
@@ -32,7 +32,7 @@ export function CalendarPanel({ items, labels, locale, now, children, onOpen }: 
             type="button"
             className={styles.next}
             data-tone={next.item.tone}
-            onClick={() => onOpen(next.item.id, next.id)}
+            onClick={(event) => onOpen(next.item.id, next.id, event.currentTarget)}
           >
             <span className={styles.nextTitle} dir="auto">
               {next.item.title}

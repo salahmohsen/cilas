@@ -49,7 +49,8 @@ type Props = {
   onDraw?: (day: string) => void
   /** Set when blocks have a menu: it opens on right-click, long press, Shift+F10 and the Menu key. */
   menu?: MenuController<string>
-  onOpen: (itemId: string, blockId: string | null) => void
+  /** A bar was pressed: its item, its blocks, and the bar. */
+  onPress: (itemId: string, blocks: EditBlock[], anchor: HTMLElement) => void
   /** A deleted block was pressed: bring it back. */
   onRestore: (id: string) => void
   /** Delete or Backspace on an all-day block (the span editor does this for timed ones). */
@@ -76,7 +77,7 @@ export function WeekGrid({
   newTone,
   onDraw,
   menu,
-  onOpen,
+  onPress,
   onRestore,
   onDelete,
 }: Props) {
@@ -185,7 +186,7 @@ export function WeekGrid({
                 if (block.deleted) return onRestore(block.id)
                 const more = (event.target as Element).closest('[data-block-menu]')
                 if (menu && more) return void menu.open({ payload: block.id, anchor: more })
-                if (item) onOpen(item.id, block.blockId)
+                if (item) onPress(item.id, bar.blocks, event.currentTarget)
               },
               onKeyDown: (event: KeyboardEvent<HTMLElement>) => {
                 if (block.deleted) return

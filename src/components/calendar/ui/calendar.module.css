@@ -1118,3 +1118,152 @@
 .flip:dir(rtl) {
   transform: scaleX(-1);
 }
+
+/* A block's details: a floating panel beside the block, or a sheet from the bottom on a narrow calendar. */
+.details {
+  box-sizing: border-box;
+  display: grid;
+  gap: var(--space-3);
+  inline-size: min(22rem, calc(100vw - 24px));
+  margin: 0;
+  padding: var(--space-4);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-surface);
+  background: var(--surface-raised);
+  color: var(--foreground);
+  box-shadow: var(--shadow-floating);
+  font-size: var(--text-sm);
+  transform-origin: var(--transform-origin);
+  transition:
+    opacity 140ms ease,
+    transform 180ms cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+.details[data-starting-style],
+.details[data-ending-style] {
+  opacity: 0;
+  transform: scale(0.97);
+}
+.details[data-presentation='sheet'] {
+  inline-size: min(100%, 36rem);
+  padding-block-end: calc(var(--space-5) + env(safe-area-inset-bottom, 0px));
+  border-block-end: 0;
+  border-radius: var(--radius-surface) var(--radius-surface) 0 0;
+  transition: opacity 140ms ease;
+  --sheet-backdrop: oklch(16% 0 0 / 0.34);
+}
+.details[data-presentation='sheet'][data-starting-style],
+.details[data-presentation='sheet'][data-ending-style] {
+  transform: none;
+}
+.details[data-presentation='sheet']::before {
+  content: '';
+  justify-self: center;
+  inline-size: 2.25rem;
+  block-size: 4px;
+  margin-block-end: var(--space-1);
+  border-radius: 999px;
+  background: var(--border-strong);
+}
+@media (prefers-reduced-motion: reduce) {
+  .details {
+    transition: opacity 120ms ease;
+  }
+  .details[data-starting-style],
+  .details[data-ending-style] {
+    transform: none;
+  }
+}
+.detailsHead {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: start;
+  gap: var(--space-3);
+}
+.detailsMark {
+  inline-size: 0.75rem;
+  block-size: 0.75rem;
+  margin-block-start: 0.35rem;
+  border: 1px solid var(--tone-line);
+  border-radius: 0.2rem;
+  background: var(--tone-solid);
+}
+.detailsTitle {
+  margin: 0;
+  font-size: var(--text-base);
+  font-weight: 500;
+  line-height: 1.4;
+  overflow-wrap: anywhere;
+}
+.detailsClose {
+  display: inline-grid;
+  place-items: center;
+  inline-size: 2rem;
+  block-size: 2rem;
+  margin: -0.35rem;
+  padding: 0;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  color: var(--text-secondary);
+  cursor: pointer;
+}
+.detailsClose:hover {
+  background: var(--surface-muted);
+  color: var(--foreground);
+}
+.detailsCaption {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2);
+  margin: calc(-1 * var(--space-2)) 0 0;
+  padding-inline-start: calc(0.75rem + var(--space-3));
+  color: var(--text-secondary);
+}
+.detailsCancelled {
+  padding: 0 var(--space-2);
+  border: 1px solid color-mix(in oklch, var(--danger) 45%, transparent);
+  border-radius: 999px;
+  color: var(--danger);
+  font-size: var(--text-xs);
+  line-height: 1.6;
+}
+.detailsRows {
+  display: grid;
+  gap: var(--space-3);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.detailsRows > li {
+  display: grid;
+  grid-template-columns: 1rem minmax(0, 1fr);
+  align-items: start;
+  gap: var(--space-3);
+  line-height: 1.45;
+}
+.detailsRows > li > svg {
+  margin-block-start: 0.1rem;
+  color: var(--text-secondary);
+}
+.detailsWhen {
+  display: grid;
+}
+.detailsMuted {
+  color: var(--text-secondary);
+}
+.detailsSummary {
+  display: -webkit-box;
+  overflow: hidden;
+  color: var(--text-secondary);
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+  line-clamp: 3;
+}
+.detailsActions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: var(--space-2);
+  padding-block-start: var(--space-1);
+}

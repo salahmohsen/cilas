@@ -2,14 +2,23 @@
 
 import { Collapsible, CollapsiblePanel } from '@ui-sdk/react/collapsible'
 import { createMenuController } from '@ui-sdk/react/menu'
+import { createPopoverController } from '@ui-sdk/react/popover'
 import { useEffect, useMemo, useRef, useState, type ReactNode } from 'react'
 
 import SegmentedControl from '@/components/arc/segmented-control/segmented-control'
 import type { CalendarChange, CalendarItem } from '@/lib/calendar-items'
 
+import { BlockDetails, type CalendarAction, type DetailsTarget } from './block-details'
 import { BlockMenu, type BlockAction, type BlockMenuEntry } from './block-menu'
 import { blockNamer, longDay } from './block-names'
-import { allDayBlocks, blocksOf, hourRange, legendOf, timedBlocks } from './calendar-model'
+import {
+  allDayBlocks,
+  blocksOf,
+  hourRange,
+  legendOf,
+  timedBlocks,
+  type EditBlock,
+} from './calendar-model'
 import type { CalendarLabels } from './calendar-labels'
 import { CalendarToolbar } from './calendar-toolbar'
 import { CalendarPanel } from './calendar-panel'
@@ -35,8 +44,17 @@ type Shared = {
   view?: CalendarView
   /** Ids of the items to mark as changed, in words and on their face. */
   marked?: ReadonlySet<string>
-  /** A block was chosen. `blockId` is null for an item with no block. */
+  /**
+   * Opens an item: in edit mode, or from an action, a press on its block.
+   * `blockId` is null for an item with no block.
+   */
   onOpen: (itemId: string, blockId: string | null) => void
+  /**
+   * The actions in an item's details. With it, a press in view mode opens
+   * the details at the block (a sheet on a narrow calendar); without it, a
+   * press opens the item at once.
+   */
+  actionsOf?: (item: CalendarItem) => CalendarAction[]
   /** The host's name for the days shown, such as the course week "Week 3 of 8"; null for none. */
   weekLabel?: (days: string[]) => string | null
   /** The host's own toolbar buttons, such as Edit. */
@@ -87,6 +105,7 @@ export function Calendar({
   view: startView = 'week',
   marked = NO_MARKS,
   onOpen,
+  actionsOf,
   weekLabel,
   action,
   mode,
@@ -102,6 +121,7 @@ export function Calendar({
   const [panelOpen, setPanelOpen] = useState(false)
   const [selectedId, setSelectedId] = useState<string | null>(null)
   const [menu] = useState(() => createMenuController<string>())
+  const [details] = useState(() => createPopoverController<DetailsTarget>())
   const [told, setTold] = useState('')
   const menuTarget = useRef<string | null>(null)
 
@@ -158,6 +178,25 @@ export function Calendar({
   const legend = useMemo(() => legendOf(session.items), [session.items])
   // A block of an item made on the page has nothing to open until it is saved.
   const itemIds = useMemo(() => new Set(session.items.map((item) => item.id)), [session.items])
+  /** A press on a block, a bar, an agenda row or an unscheduled item: its details, or the item itself. */
+  const press = (itemId: string, blocks: EditBlock[], anchor: HTMLElement) => {
+    if (!itemIds.has(itemId)) return
+    if (editable || !actionsOf) return onOpen(itemId, blocks[0]?.blockId ?? null)
+    void details.open({ payload: { itemId, blocks, anchor }, anchor })
+  }
+  const pressBlock = (itemId: string, blockId: string | null, anchor: HTMLElement) =>
+    press(
+      itemId,
+      session.working.filter((block) => block.itemId === itemId && block.blockId === blockId),
+      anchor,
+    )
+  const runAction = (action: CalendarAction, { itemId, blocks, anchor }: DetailsTarget) => {
+    details.close()
+    // The host's dialog gives focus back to what had it when it opened: the block.
+    if (anchor.isConnected) anchor.focus()
+    action.run(itemId, blocks[0]?.blockId ?? null)
+  }
+
   const newTone = legend.find((entry) => entry.kind === newItemKind)?.tone ?? 'neutral'
   const placedIds = new Set(
     session.working.flatMap((block) => (block.deleted ? [] : [block.itemId])),
@@ -298,7 +337,8 @@ export function Calendar({
           // A first tap selects, to show the handles; a block with none opens at once.
           if (editable && !block.readOnly && touch && selectedId !== block.id)
             return setSelectedId(block.id)
-          if (itemIds.has(block.itemId)) onOpen(block.itemId, block.blockId)
+          const anchor = session.focusable({ id: block.id, track: block.track })
+          if (anchor) press(block.itemId, [block], anchor)
         }}
       >
         <Collapsible
@@ -339,7 +379,7 @@ export function Calendar({
                   editable
                   labels={labels}
                   locale={locale}
-                  onOpen={onOpen}
+                  onOpen={(itemId, anchor) => press(itemId, [], anchor)}
                   onPlace={session.place}
                 />
               </div>
@@ -366,7 +406,7 @@ export function Calendar({
                 newTone={newTone}
                 onDraw={newItemKind ? session.drawOnDay : undefined}
                 menu={blockMenu ? menu : undefined}
-                onOpen={onOpen}
+                onPress={press}
                 onRestore={session.restore}
                 onDelete={session.removeBlock}
               />
@@ -383,7 +423,7 @@ export function Calendar({
                 nameOf={nameOf}
                 newTone={newTone}
                 empty={labels.nothing(shown.span, count)}
-                onOpen={onOpen}
+                onPress={press}
                 onRestore={session.restore}
               />
             )}
@@ -395,7 +435,7 @@ export function Calendar({
               labels={labels}
               locale={locale}
               now={now}
-              onOpen={onOpen}
+              onOpen={pressBlock}
             >
               {legend.length ? (
                 <ul className={styles.legend} aria-label={labels.legend}>
@@ -427,7 +467,7 @@ export function Calendar({
                   editable={editable}
                   labels={labels}
                   locale={locale}
-                  onOpen={onOpen}
+                  onOpen={(itemId, anchor) => press(itemId, [], anchor)}
                   onPlace={session.place}
                 />
               ) : null}
@@ -454,6 +494,18 @@ export function Calendar({
             entriesOf={entriesOf}
             onAction={runBlockAction}
             finalFocus={menuFocus}
+          />
+        ) : null}
+
+        {actionsOf && !editable ? (
+          <BlockDetails
+            controller={details}
+            items={session.items}
+            labels={labels}
+            locale={locale}
+            sheet={narrow ?? false}
+            actionsOf={actionsOf}
+            onAction={runAction}
           />
         ) : null}
 

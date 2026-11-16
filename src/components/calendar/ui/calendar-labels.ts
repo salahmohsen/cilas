@@ -43,6 +43,8 @@ export type CalendarLabels = {
   /** The toolbar's button that adds a new item, in edit mode. Without it there is none. */
   create?: string
   cancelled: string
+  /** Closes an item's details. */
+  close: string
   /** What a marked item is, on its face, in its name and in the legend. */
   changed: string
   unscheduled: string
@@ -122,6 +124,7 @@ export const calendarLabelsFrom = (
   upNext: t('upNext'),
   create,
   cancelled: t('cancelled'),
+  close: t('close'),
   changed: t('changed'),
   unscheduled: t('unscheduled'),
   kind,

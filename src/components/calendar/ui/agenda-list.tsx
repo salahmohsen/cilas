@@ -23,7 +23,8 @@ type Props = {
   newTone: string
   /** What the list says when it is empty: "Nothing scheduled this week". */
   empty: string
-  onOpen: (itemId: string, blockId: string | null) => void
+  /** A row was pressed: its item, its block, and the row. */
+  onPress: (itemId: string, blocks: EditBlock[], anchor: HTMLElement) => void
   onRestore: (id: string) => void
 }
 
@@ -43,7 +44,7 @@ export function AgendaList({
   nameOf,
   newTone,
   empty,
-  onOpen,
+  onPress,
   onRestore,
 }: Props) {
   const id = useId()
@@ -87,9 +88,9 @@ export function AgendaList({
                       data-deleted={block.deleted ? '' : undefined}
                       aria-label={nameOf(block)}
                       aria-disabled={openable ? undefined : true}
-                      onClick={() => {
+                      onClick={(event) => {
                         if (block.deleted) onRestore(block.id)
-                        else if (item) onOpen(item.id, block.blockId)
+                        else if (item) onPress(item.id, [block], event.currentTarget)
                       }}
                     >
                       <span className={styles.agendaTime} dir={timeDir(locale)}>
