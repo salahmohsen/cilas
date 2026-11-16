@@ -183,3 +183,25 @@ describe('the schedule offer dialog', () => {
     expect(postCreateAction).toHaveBeenCalledTimes(1)
   })
 })
+
+it('publishes one space and skips the other without a second dialog', async () => {
+  postCreateAction.mockResolvedValue({ status: 'ok' })
+  const onClose = show([offer(7, 'Reading group'), offer(8, 'Second course')])
+  const dialog = await screen.findByRole('dialog')
+  fireEvent.click(
+    within(screen.getByRole('region', { name: 'To Reading group' })).getByRole('button', {
+      name: 'Publish to space',
+    }),
+  )
+  await waitFor(() => expect(screen.queryByRole('region', { name: 'To Reading group' })).toBeNull())
+  expect(onClose).not.toHaveBeenCalled()
+  expect(screen.getAllByRole('dialog')).toEqual([dialog])
+  fireEvent.click(
+    within(screen.getByRole('region', { name: 'To Second course' })).getByRole('button', {
+      name: 'Skip',
+    }),
+  )
+  expect(onClose).toHaveBeenCalledTimes(1)
+  expect(postCreateAction).toHaveBeenCalledTimes(1)
+  expect(sent().space).toBe('7')
+})

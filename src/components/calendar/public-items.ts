@@ -41,6 +41,7 @@ export const publicItems = (
     order.set(id, rank(meeting))
     items.set(id, {
       id,
+      ...(meeting.courseId ? { parentId: String(meeting.courseId) } : {}),
       kind: kindOf(meeting),
       title: meeting.title,
       tone: toneOf(meeting),

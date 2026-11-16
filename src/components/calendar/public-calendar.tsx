@@ -1,19 +1,27 @@
 'use client'
 
+import { Pencil } from 'lucide-react'
 import { useLocale, useTranslations } from 'next-intl'
 import { useRouter, useSearchParams } from 'next/navigation'
-import { useCallback, useEffect, useSyncExternalStore, useTransition } from 'react'
+import { useCallback, useEffect, useMemo, useSyncExternalStore, useTransition } from 'react'
 
+import { Button } from '@/components/arc/button/button'
+import { leave } from '@/lib/leave-guard'
 import { Calendar } from '@/components/calendar/ui/calendar'
 import type { CalendarView } from '@/components/calendar/ui/calendar-views'
 import { useCalendarLabels } from '@/components/calendar/ui/use-calendar-labels'
 import { Link } from '@/i18n/navigation'
 import type { CalendarItem } from '@/lib/calendar-items'
 
+import { usePublicCalendarAccess } from './use-public-calendar-access'
+import { PublicCalendarEditor } from './public-calendar-editor'
 import { CalendarFeed, CalendarJump } from './calendar-tools'
 import { calendarQuery, holds, readCalendarUrl, viewDays, type DayRange } from './calendar-url'
 
 type Props = {
+  access?:
+    | { mode: 'view'; canEdit: boolean }
+    | { mode: 'edit'; canEdit: true; parent: { kind: string; id: string }; items: CalendarItem[] }
   /** The items of the days loaded, `range`. */
   items: CalendarItem[]
   range: DayRange
@@ -40,13 +48,21 @@ const onHistory = (change: () => void) => {
 }
 
 /**
- * The public calendar, view only, for every visitor. Its view and day live in
+ * The public calendar for visitors and admins. Its view and day live in
  * the URL. A move within the days loaded only writes the URL; a move past them
  * asks the server for the days around the new place.
  */
-export function PublicCalendar({ items, range, today, kinds, months }: Props) {
+export function PublicCalendar({ items, range, today, kinds, months, access }: Props) {
   const t = useTranslations('Calendar')
+  const ta = useTranslations('CalendarAdmin')
+  const editing = access?.mode === 'edit'
   const locale = useLocale()
+  const viewer = usePublicCalendarAccess(
+    [...items, ...(access?.mode === 'edit' ? access.items : [])].flatMap(
+      (item) => item.parentId ?? [],
+    ),
+    locale,
+  )
   const router = useRouter()
   const params = useSearchParams()
   const [, startTransition] = useTransition()
@@ -61,16 +77,32 @@ export function PublicCalendar({ items, range, today, kinds, months }: Props) {
   const { view, day } = readCalendarUrl({ view: query.get('view'), date: query.get('date') }, today)
 
   const kind = useCallback((value: string) => kinds[value]?.name ?? value, [kinds])
-  const labels = useCalendarLabels({ kind, newItem: '' })
+  const menu = useMemo(
+    () =>
+      editing
+        ? {
+            addNextDay: ta('addMeeting'),
+            copyNextWeek: ta('newSessionNextWeek'),
+            deleteBlock: ta('deleteMeeting'),
+            addedNextDay: (day: string) => ta('addedMeeting', { day }),
+            copiedNextWeek: (day: string) => ta('madeSessionNextWeek', { day }),
+          }
+        : undefined,
+    [editing, ta],
+  )
+  const labels = useCalendarLabels({ kind, newItem: '', menu })
 
   const load = useCallback(
     (to: CalendarView, at: string, replace = false) =>
       startTransition(() =>
-        router[replace ? 'replace' : 'push'](`/${locale}/calendar${calendarQuery(to, at)}`, {
-          scroll: false,
-        }),
+        router[replace ? 'replace' : 'push'](
+          `/${locale}/calendar${calendarQuery(to, at)}${editing ? '&edit=1' : ''}`,
+          {
+            scroll: false,
+          },
+        ),
       ),
-    [router, locale],
+    [router, locale, editing],
   )
 
   // Back or forward to a place the page did not load (a rare history entry): load it.
@@ -79,8 +111,8 @@ export function PublicCalendar({ items, range, today, kinds, months }: Props) {
   }, [range, view, day, load])
 
   const navigate = (to: CalendarView, at: string) => {
-    if (!holds(range, to, at)) return load(to, at)
-    window.history.pushState(null, '', calendarQuery(to, at))
+    if (!holds(range, to, at)) return leave(() => load(to, at))
+    window.history.pushState(null, '', `${calendarQuery(to, at)}${editing ? '&edit=1' : ''}`)
     window.dispatchEvent(new Event(PUSHED))
   }
 
@@ -110,7 +142,7 @@ export function PublicCalendar({ items, range, today, kinds, months }: Props) {
             years={[
               ...new Set([...months, monthOfDay(today)].map((month) => Number(month.slice(0, 4)))),
             ].toSorted()}
-            onJump={(at) => load(view, at)}
+            onJump={(at) => leave(() => load(view, at))}
           />
         </div>
         <div className="sm:hidden">
@@ -121,7 +153,7 @@ export function PublicCalendar({ items, range, today, kinds, months }: Props) {
         </div>
       </div>
 
-      {nearest ? (
+      {nearest && !editing ? (
         <p className="text-sm text-[var(--text-secondary)]">
           {t('empty')}{' '}
           <Link
@@ -134,23 +166,63 @@ export function PublicCalendar({ items, range, today, kinds, months }: Props) {
         </p>
       ) : null}
 
-      <Calendar
-        mode="view"
-        items={items}
-        labels={labels}
-        locale={locale}
-        view={view}
-        day={day}
-        onNavigate={navigate}
-        onOpen={(id) => {
-          const href = items.find((item) => item.id === id)?.href
-          if (href) router.push(href)
-        }}
-        actionsOf={({ href, kind }) => {
-          const open = kinds[kind]?.open
-          return href && open ? [{ id: 'open', label: open, href, primary: true }] : []
-        }}
-      />
+      {access?.mode === 'edit' ? (
+        <PublicCalendarEditor
+          key={`${range.from}/${range.to}`}
+          items={[...access.items, ...items]}
+          parent={access.parent}
+          labels={labels}
+          day={day}
+          view={view}
+          onNavigate={navigate}
+          spaces={viewer.spaces}
+          onDone={() =>
+            router.push(`/${locale}/calendar${calendarQuery(view, day)}`, { scroll: false })
+          }
+        />
+      ) : (
+        <Calendar
+          mode="view"
+          action={
+            viewer.canEdit ? (
+              <Button
+                type="button"
+                size="sm"
+                aria-label={t('edit')}
+                onClick={() =>
+                  router.push(`/${locale}/calendar${calendarQuery(view, day)}&edit=1`, {
+                    scroll: false,
+                  })
+                }
+              >
+                <Pencil aria-hidden size={14} />
+                <span className="hidden sm:inline">{t('edit')}</span>
+              </Button>
+            ) : undefined
+          }
+          items={items}
+          labels={labels}
+          locale={locale}
+          view={view}
+          day={day}
+          onNavigate={navigate}
+          onOpen={(id) => {
+            const href = items.find((item) => item.id === id)?.href
+            if (href) router.push(href)
+          }}
+          actionsOf={({ href, kind, parentId }) => {
+            const open = kinds[kind]?.open
+            return href && open
+              ? [
+                  { id: 'open', label: open, href, primary: true },
+                  ...(parentId && viewer.spaces[parentId]
+                    ? [{ id: 'space', label: t('goToSpace'), href: viewer.spaces[parentId]! }]
+                    : []),
+                ]
+              : []
+          }}
+        />
+      )}
     </div>
   )
 }

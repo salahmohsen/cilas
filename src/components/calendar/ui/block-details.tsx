@@ -10,6 +10,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { useEffect, type CSSProperties, type ReactNode } from 'react'
 
+import { ButtonGroup } from '@/components/arc/button-group/button-group'
 import { Button } from '@/components/arc/button/button'
 import button from '@/components/arc/button/button.module.css'
 import { timeDir } from '@/lib/digits'
@@ -187,37 +188,50 @@ export function BlockDetails({
 
               {actions.length ? (
                 <div className={styles.detailsActions}>
-                  {actions.map((action) =>
-                    action.href ? (
-                      <Link
-                        key={action.id}
-                        href={action.href}
-                        className={[
-                          button.button,
-                          button[action.primary ? 'primary' : 'secondary'],
-                          button.sm,
-                          styles.detailsLink,
-                        ].join(' ')}
-                        onClick={() => controller.close()}
-                      >
-                        {action.icon}
-                        {action.label}
-                      </Link>
-                    ) : (
-                      <Button
-                        key={action.id}
-                        type="button"
-                        size="sm"
-                        variant={action.primary ? 'primary' : 'secondary'}
-                        onPointerEnter={action.preload}
-                        onFocus={action.preload}
-                        onPointerDown={action.preload}
-                        onClick={() => onAction(action, payload)}
-                      >
-                        {action.icon}
-                        {action.label}
-                      </Button>
-                    ),
+                  {actions.length > 1 && actions.every((action) => action.href) ? (
+                    <ButtonGroup
+                      label={item.title}
+                      size="sm"
+                      items={actions.map((action) => ({
+                        id: action.id,
+                        label: action.label,
+                        href: action.href,
+                        onSelect: () => controller.close(),
+                      }))}
+                    />
+                  ) : (
+                    actions.map((action) =>
+                      action.href ? (
+                        <Link
+                          key={action.id}
+                          href={action.href}
+                          className={[
+                            button.button,
+                            button[action.primary ? 'primary' : 'secondary'],
+                            button.sm,
+                            styles.detailsLink,
+                          ].join(' ')}
+                          onClick={() => controller.close()}
+                        >
+                          {action.icon}
+                          {action.label}
+                        </Link>
+                      ) : (
+                        <Button
+                          key={action.id}
+                          type="button"
+                          size="sm"
+                          variant={action.primary ? 'primary' : 'secondary'}
+                          onPointerEnter={action.preload}
+                          onFocus={action.preload}
+                          onPointerDown={action.preload}
+                          onClick={() => onAction(action, payload)}
+                        >
+                          {action.icon}
+                          {action.label}
+                        </Button>
+                      ),
+                    )
                   )}
                 </div>
               ) : null}

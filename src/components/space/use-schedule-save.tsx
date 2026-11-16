@@ -37,7 +37,7 @@ export function useScheduleOffer({
   language,
   text,
 }: {
-  courseId: string
+  courseId?: string
   /** The language the items are read in. */
   locale: string
   /** The page's language, for the dialog. */
@@ -96,7 +96,7 @@ export function useScheduleSave({
 }: {
   /** The parent that owns these sessions. */
   parent: { kind: string; id: string }
-  courseId: string
+  courseId?: string
   locale: string
   language: 'en' | 'ar'
   text: ScheduleSaveText

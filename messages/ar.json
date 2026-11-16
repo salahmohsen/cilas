@@ -479,6 +479,9 @@
     "since": "منذ {year, number, digits}"
   },
   "Calendar": {
+    "goToSpace": "انتقل إلى المساحة",
+    "edit": "تعديل",
+    "done": "تم",
     "metaTitle": "التقويم — سيلاس",
     "title": "التقويم",
     "intro": "مواعيد مقررات سيلاس ولقاءاتها.",

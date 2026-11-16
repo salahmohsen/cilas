@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react'
+import { useMemo, useState, type ReactNode } from 'react'
 
 import type { CalendarChange, CalendarItem } from '@/lib/calendar-items'
 import { preloadable } from '@/lib/preloadable'
@@ -10,7 +10,11 @@ const ScheduleEditDrawer = preloadable(() =>
   import('./schedule-edit-drawer').then((m) => m.ScheduleEditDrawer),
 )
 
-export function useScheduleDrafts(text: ScheduleSaveText, locale: string) {
+export function useScheduleDrafts(
+  text: ScheduleSaveText,
+  locale: string,
+  actionsOf?: (item: CalendarItem) => ReactNode,
+) {
   const [details, setDetails] = useState(new Map<string, SessionDetailChange>())
   const [opened, setOpened] = useState<CalendarItem | null>(null)
   const drafts = useMemo(
@@ -50,6 +54,7 @@ export function useScheduleDrafts(text: ScheduleSaveText, locale: string) {
       <ScheduleEditDrawer
         key={opened.id}
         item={opened}
+        actions={actionsOf?.(opened)}
         detail={details.get(opened.id)}
         text={text}
         contentLocale={locale}

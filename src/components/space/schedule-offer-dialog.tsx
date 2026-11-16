@@ -56,6 +56,7 @@ function Entry({
   locale,
   heading,
   first,
+  compact,
   onDone,
 }: {
   offer: ScheduleOffer
@@ -63,6 +64,7 @@ function Entry({
   locale: string
   heading: boolean
   first: boolean
+  compact: boolean
   onDone: () => void
 }) {
   const id = useId()
@@ -120,6 +122,7 @@ function Entry({
             <figure className={styles.preview} inert>
               <Calendar
                 mode="view"
+                view={compact ? 'agenda' : undefined}
                 items={offer.preview.items}
                 marked={new Set(offer.preview.marked)}
                 day={offer.preview.day}
@@ -195,6 +198,7 @@ export function ScheduleOfferDialog({ offers, labels, locale, dir, onClose, retu
               locale={locale}
               heading={many}
               first={index === 0}
+              compact={many}
               onDone={() => finish(offer.space.id)}
             />
           ))}

@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useRef, useState, type ReactNode } from 'react'
 import { useLocale, useTranslations } from 'next-intl'
 
 import { loadSessionEdit } from '@/actions/session-edit'
@@ -15,6 +15,7 @@ import type { ScheduleSaveText } from './schedule-save-text'
 
 export function ScheduleEditDrawer({
   item,
+  actions,
   detail,
   text,
   contentLocale,
@@ -22,6 +23,7 @@ export function ScheduleEditDrawer({
   onApply,
   onDelete,
 }: {
+  actions?: ReactNode
   item: CalendarItem
   detail?: SessionDetailChange
   text: ScheduleSaveText
@@ -135,6 +137,7 @@ export function ScheduleEditDrawer({
         detents={[0.92]}
         className="arc-scope"
       >
+        {actions}
         {content}
       </BottomSheet>
     )
@@ -147,6 +150,7 @@ export function ScheduleEditDrawer({
         closeLabel={tp('sessionDrawerClose')}
         onCloseAutoFocus={onCloseAutoFocus}
       >
+        {actions}
         {content}
       </DrawerContent>
     </Drawer>

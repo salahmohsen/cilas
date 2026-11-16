@@ -9,6 +9,8 @@ import {
   loadedRange,
   readCalendarUrl,
 } from '@/components/calendar/calendar-url'
+import { useSession } from '@/components/use-session'
+import { publicCalendarLinks } from '@/actions/public-calendar-access'
 import { PublicCalendar } from '@/components/calendar/public-calendar'
 import { publicItems } from '@/components/calendar/public-items'
 import type { CalendarMeeting } from '@/lib/calendar'
@@ -20,6 +22,12 @@ import { stubPopupDom } from '../../helpers/popup-dom'
 declare global {
   var __UI_SDK_STRICT__: boolean | undefined
 }
+
+vi.mock('@/components/use-session', () => ({ useSession: vi.fn(() => null) }))
+vi.mock('@/actions/public-calendar-access', () => ({ publicCalendarLinks: vi.fn() }))
+vi.mock('@/actions/save-schedule-edits', () => ({ saveScheduleEdits: vi.fn() }))
+vi.mock('@/actions/schedule-offers', () => ({ scheduleOffers: vi.fn() }))
+vi.mock('@/actions/load-calendar-items', () => ({ loadCalendarItems: vi.fn() }))
 
 vi.mock('@/components/calendar/ui/use-narrow', () => ({ useNarrow: () => false }))
 vi.mock('@/lib/use-narrow', () => ({ useNarrow: () => false }))
@@ -92,6 +100,7 @@ const meeting = (over: Partial<CalendarMeeting>): CalendarMeeting => ({
   key: 's1-2026-11-17-1900',
   item: 's1',
   kind: 'course',
+  courseId: 22,
   title: 'Reading the city',
   href: '/study/reading-the-city',
   date: '2026-11-17',
@@ -208,6 +217,8 @@ beforeAll(() => {
 
 beforeEach(() => {
   vi.useFakeTimers({ now: new Date('2026-11-17T10:00:00Z'), toFake: ['Date'] })
+  vi.mocked(useSession).mockReturnValue(null)
+  vi.mocked(publicCalendarLinks).mockReset()
   navigation.push.mockClear()
   navigation.replace.mockClear()
   window.history.replaceState(null, '', '/en/calendar?view=week&date=2026-11-17')
@@ -347,5 +358,49 @@ describe('the public calendar', () => {
     fireEvent.click(screen.getByRole('link', { name: /^Film night/ }))
     const details = await screen.findByRole('dialog', { name: 'Film night' })
     expect(within(details).getByRole('link', { name: ar.Calendar.viewEvent })).toBeInTheDocument()
+  })
+})
+
+describe('public calendar access after hydration', () => {
+  it('sends no access request for an anonymous viewer', async () => {
+    page()
+    await act(async () => {})
+    expect(publicCalendarLinks).not.toHaveBeenCalled()
+    expect(screen.queryByRole('button', { name: 'Edit' })).toBeNull()
+  })
+
+  it('shows Edit after one admin access request and keeps the current date and view', async () => {
+    vi.mocked(useSession).mockReturnValue({ id: 8, email: 'admin@cilas.test' })
+    vi.mocked(publicCalendarLinks).mockResolvedValue({
+      canEdit: true,
+      spaces: { '22': '/en/spaces/course/city' },
+    })
+    page()
+    await act(async () => {})
+    expect(publicCalendarLinks).toHaveBeenCalledTimes(1)
+    fireEvent.click(screen.getByRole('button', { name: 'Edit' }))
+    expect(navigation.push).toHaveBeenCalledWith('/en/calendar?view=week&date=2026-11-17&edit=1', {
+      scroll: false,
+    })
+  })
+
+  it.each([true, false])('shows the course links with space access %s', async (allowed) => {
+    vi.mocked(useSession).mockReturnValue({ id: 8, email: 'reader@cilas.test' })
+    vi.mocked(publicCalendarLinks).mockResolvedValue({
+      canEdit: false,
+      spaces: allowed ? { '22': '/en/spaces/course/city' } : {},
+    })
+    const { container } = page()
+    await act(async () => {})
+    fireEvent.click(container.querySelector('a[href="/en/study/reading-the-city"]')!)
+    const dialog = await screen.findByRole('dialog')
+    expect(within(dialog).getByRole('link', { name: 'View course' })).toBeInTheDocument()
+    if (allowed) {
+      expect(within(dialog).getByRole('link', { name: 'Go to space' })).toHaveAttribute(
+        'href',
+        '/en/spaces/course/city',
+      )
+      expect(within(dialog).getByRole('group', { name: 'Reading the city' })).toBeInTheDocument()
+    } else expect(within(dialog).queryByRole('link', { name: 'Go to space' })).toBeNull()
   })
 })
