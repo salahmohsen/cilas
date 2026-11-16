@@ -99,7 +99,7 @@ export function UnscheduledTray({ items, days, editable, labels, locale, onOpen,
             <SplitButton
               variant="secondary"
               label={item.title}
-              icon={<span className={styles.swatch} aria-hidden />}
+              icon={<span className={styles.trayMark} aria-hidden />}
               menuLabel={labels.placeOnDay}
               onClick={(event) => onOpen(item.id, event.currentTarget)}
               onPointerDown={(event) => startDrag(item, event)}

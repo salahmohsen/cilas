@@ -93,6 +93,12 @@ export type CalendarProps = Shared &
   )
 
 const STEP = 15
+/** The details' width (22rem) and gap, which must fit beside a block; else they open below it. */
+const DETAILS_ROOM = 22 * 16 + 20
+const besideFits = (anchor: HTMLElement) => {
+  const { left, right } = anchor.getBoundingClientRect()
+  return Math.max(left, document.documentElement.clientWidth - right) >= DETAILS_ROOM
+}
 const NO_MARKS: ReadonlySet<string> = new Set()
 const indexOfDay = (days: string[], day: string) => Math.max(0, days.indexOf(day))
 const longDate = { day: 'numeric', month: 'short', year: 'numeric' } as const
@@ -122,6 +128,7 @@ export function Calendar({
   const [selectedId, setSelectedId] = useState<string | null>(null)
   const [menu] = useState(() => createMenuController<string>())
   const [details] = useState(() => createPopoverController<DetailsTarget>())
+  const [detailsSide, setDetailsSide] = useState<'end' | 'bottom'>('end')
   const [told, setTold] = useState('')
   const menuTarget = useRef<string | null>(null)
 
@@ -201,6 +208,7 @@ export function Calendar({
   const press = (itemId: string, blocks: EditBlock[], anchor: HTMLElement) => {
     if (!itemIds.has(itemId)) return
     if (editable || !actionsOf) return onOpen(itemId, blocks[0]?.blockId ?? null)
+    setDetailsSide(besideFits(anchor) ? 'end' : 'bottom')
     void details.open({ payload: { itemId, blocks, anchor }, anchor })
   }
   const pressBlock = (itemId: string, blockId: string | null, anchor: HTMLElement) =>
@@ -523,6 +531,7 @@ export function Calendar({
             labels={labels}
             locale={locale}
             sheet={narrow ?? false}
+            side={detailsSide}
             actionsOf={actionsOf}
             onAction={runAction}
           />

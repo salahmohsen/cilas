@@ -253,9 +253,14 @@ test.describe('course calendar', () => {
       'aria-expanded',
       'false',
     )
+    // A split button: the session, and the menu of days to place it on.
+    const entry = calendar()
+      .getByRole('group', { name: 'Unscheduled' })
+      .getByRole('group', { name: 'E2E first session' })
     await expect(
-      calendar().getByRole('group', { name: 'Unscheduled' }).getByText('E2E first session'),
+      entry.getByRole('button', { name: 'E2E first session', exact: true }),
     ).toBeVisible()
+    await expect(entry.getByRole('button', { name: 'Place on day', exact: true })).toBeVisible()
   })
 
   test('an empty course shows 6 AM to 11 PM, and a drag at 07:00 saves a 07:00 meeting', async () => {

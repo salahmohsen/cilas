@@ -770,6 +770,13 @@
   display: flex;
   min-inline-size: 0;
 }
+/* The item's tone, as a dot: a square would read as a checkbox in a button. */
+.trayMark {
+  inline-size: 0.5rem;
+  block-size: 0.5rem;
+  border-radius: 999px;
+  background: var(--tone-solid);
+}
 /* The main part is the drag handle onto a day. */
 .trayEntry[data-draggable] button:first-of-type {
   cursor: grab;

@@ -45,6 +45,8 @@ type Props = {
   locale: string
   /** A sheet from the bottom of the screen, on a narrow calendar. */
   sheet: boolean
+  /** Beside the block, or below it when there is no room beside, as for a full-width agenda row. */
+  side: 'end' | 'bottom'
   actionsOf: (item: CalendarItem) => CalendarAction[]
   onAction: (action: CalendarAction, target: DetailsTarget) => void
 }
@@ -58,6 +60,7 @@ export function BlockDetails({
   labels,
   locale,
   sheet,
+  side,
   actionsOf,
   onAction,
 }: Props) {
@@ -65,7 +68,7 @@ export function BlockDetails({
     <Popover controller={controller} presentation={sheet ? 'sheet' : 'popover'}>
       <PopoverContent<DetailsTarget>
         className={styles.details}
-        side="end"
+        side={side}
         align="start"
         sideOffset={8}
         collisionPadding={12}
