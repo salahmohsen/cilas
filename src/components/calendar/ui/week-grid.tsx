@@ -354,6 +354,9 @@ export function WeekGrid({
                         <span className={styles.time} dir={timeDir(locale)}>
                           {formatTimeRange(block.start, block.end, locale)}
                         </span>
+                        <span className={styles.short} dir={timeDir(locale)} aria-hidden>
+                          {formatTime(block.start, locale)}
+                        </span>
                         {item?.place ? (
                           <span className={styles.place}>
                             <MapPin aria-hidden size={12} strokeWidth={1.75} />

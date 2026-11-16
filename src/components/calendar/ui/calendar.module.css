@@ -439,6 +439,8 @@
   cursor: pointer;
   user-select: none;
   -webkit-user-select: none;
+  /* One ring on a focused block, over its edge, never a second shape around a dashed one. */
+  --focus-outline-offset: -1px;
 }
 .body {
   display: flex;
@@ -550,6 +552,32 @@
 @container (max-block-size: 3.25rem) {
   .place {
     display: none;
+  }
+}
+/* Too narrow for two letters of the title: the start time, cut and never an ellipsis.
+   The block's name still gives the whole title. */
+.short {
+  display: none;
+}
+@container (max-inline-size: 3rem) {
+  .block {
+    padding-inline: 0.1875rem;
+  }
+  .title,
+  .time,
+  .place,
+  .state {
+    display: none;
+  }
+  .short {
+    display: block;
+    overflow: hidden;
+    color: var(--tone-ink);
+    font-size: var(--text-xs);
+    font-variant-numeric: tabular-nums;
+    font-weight: 500;
+    line-height: 1.25;
+    white-space: nowrap;
   }
 }
 
@@ -688,8 +716,8 @@
 .edge::after {
   content: '';
   position: absolute;
-  inset-inline: calc(50% - 0.75rem);
-  block-size: 3px;
+  inset-inline: calc(50% - 0.5rem);
+  block-size: 2px;
   border-radius: var(--radius-pill);
   background: var(--text-secondary);
   opacity: 0;
@@ -703,7 +731,7 @@
 .block:hover .edge::after,
 .block:focus-visible .edge::after,
 .block[data-resizing] .edge::after {
-  opacity: 0.7;
+  opacity: 0.45;
 }
 
 /* Touch: the grid scrolls. A tap selects a block, and only a selected block
