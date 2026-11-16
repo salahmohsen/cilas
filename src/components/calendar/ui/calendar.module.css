@@ -930,6 +930,178 @@
   }
 }
 
+/* Month: weeks from Saturday. A day has its date, the bars that start on it
+   (they run across the days after it in their row), its chips and "N more". */
+.monthWide {
+  display: contents;
+}
+.monthNarrow {
+  display: none;
+}
+.month {
+  --line: 1.375rem;
+  --date-size: 1.75rem;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+}
+.monthHead,
+.monthRow {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+}
+.monthWeekday {
+  padding: var(--space-2) var(--space-2) var(--space-1);
+  border-inline-start: 1px solid var(--border-subtle);
+  color: var(--text-secondary);
+  font-size: var(--text-xs);
+}
+.monthRow {
+  border-block-start: 1px solid var(--border);
+}
+.monthWeekday:first-child,
+.monthDay:first-child {
+  border-inline-start: 0;
+}
+.monthDay {
+  --focus-outline-offset: -2px;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  min-inline-size: 0;
+  block-size: calc(var(--date-size) + var(--lines) * var(--line) + var(--space-1) + var(--space-2));
+  padding: var(--space-1) 0.25rem var(--space-2);
+  border-inline-start: 1px solid var(--border-subtle);
+}
+.monthDay[data-opens] {
+  cursor: pointer;
+}
+.monthDay[data-weekend],
+.monthWeekday[data-weekend] {
+  background-color: color-mix(in oklab, var(--surface-muted) 55%, transparent);
+}
+/* The date, and under it the room the week's bars take in every day of the row. */
+.monthDate {
+  display: grid;
+  place-items: center;
+  flex: none;
+  align-self: start;
+  min-inline-size: var(--date-size);
+  block-size: var(--date-size);
+  margin-block-end: calc(var(--lanes) * var(--line));
+  padding-inline: 0.25rem;
+  border-radius: var(--radius-pill);
+  font-size: var(--text-sm);
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+}
+.monthDay[data-outside] .monthDate {
+  color: var(--text-muted);
+}
+.monthDay[data-today] .monthDate {
+  background: var(--foreground);
+  color: var(--background);
+}
+.monthBar,
+.chip,
+.more {
+  --focus-outline-offset: -1px;
+  display: flex;
+  align-items: center;
+  gap: 0.3125rem;
+  min-inline-size: 0;
+  block-size: calc(var(--line) - 2px);
+  margin-block-end: 2px;
+  padding-inline: 0.375rem;
+  border: 1px solid transparent;
+  border-radius: 0.375rem;
+  background: none;
+  color: var(--foreground);
+  font: inherit;
+  font-size: var(--text-sm);
+  line-height: 1;
+  text-align: start;
+  cursor: pointer;
+}
+.monthBar {
+  position: absolute;
+  z-index: 1;
+  inset-block-start: calc(var(--space-1) + var(--date-size) + var(--lane) * var(--line));
+  inset-inline-start: 0.25rem;
+  inline-size: calc(var(--span) * 100% + (var(--span) - 1) * 1px - 0.5rem);
+  background: var(--tone-fill);
+  background-clip: padding-box;
+  color: var(--tone-ink);
+  font-weight: 500;
+}
+.monthBar[data-cancelled] {
+  background:
+    repeating-linear-gradient(
+      135deg,
+      transparent 0 0.3rem,
+      var(--tone-hatch) 0.3rem calc(0.3rem + 1px)
+    ),
+    var(--tone-fill);
+  background-clip: padding-box;
+}
+.chipTime {
+  flex: none;
+  color: var(--tone-ink);
+  font-variant-numeric: tabular-nums;
+}
+.monthTitle {
+  flex: 1;
+  min-inline-size: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.chip[data-cancelled] :is(.chipTime, .monthTitle) {
+  text-decoration: line-through;
+  text-decoration-color: var(--text-muted);
+}
+.chip[data-cancelled] .monthTitle {
+  color: var(--text-secondary);
+}
+.more {
+  color: var(--text-secondary);
+}
+.monthBar[data-unsaved],
+.chip[data-unsaved] {
+  border-style: dashed;
+  border-color: var(--tone-line);
+}
+.monthBar[data-deleted],
+.chip[data-deleted] {
+  border-style: dashed;
+  border-color: var(--border-strong);
+  background: var(--surface);
+  opacity: 0.75;
+}
+.monthBar[data-marked],
+.chip[data-marked] {
+  box-shadow: inset 0 0 0 2px var(--foreground);
+}
+@media (hover: hover) {
+  .chip:hover,
+  .more:hover {
+    background: var(--surface-muted);
+  }
+  .monthBar:hover {
+    border-color: var(--tone-line);
+  }
+}
+@media (forced-colors: active) {
+  .monthBar,
+  .chip[data-unsaved],
+  .chip[data-deleted] {
+    border-color: CanvasText;
+  }
+  .monthBar[data-marked],
+  .chip[data-marked] {
+    outline: 2px solid CanvasText;
+  }
+}
+
 /* Phones: the view switch on a row of its own, an icon-only add button, no side panel.
    A week (the server's first render) shows its selected day alone, as the Day view does. */
 @container week (max-inline-size: 40rem) {
@@ -970,8 +1142,12 @@
   .arrows {
     margin-inline-end: auto;
   }
-  .views[data-width='wide'] {
+  .views[data-width='wide'],
+  .monthWide {
     display: none;
+  }
+  .monthNarrow {
+    display: contents;
   }
   .views,
   .views[data-width='narrow'] {

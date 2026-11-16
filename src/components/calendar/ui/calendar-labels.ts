@@ -36,6 +36,10 @@ export type CalendarLabels = {
   /** What an agenda with nothing in it says: "Nothing scheduled this week". */
   nothing: (span: ViewSpan, count: number) => string
   allDay: string
+  /** A month day's button to its hidden items: "3 more". */
+  more: (count: number) => string
+  /** Its spoken name: "3 more on Thursday 12 November". */
+  moreName: (count: number, day: string) => string
   legend: string
   /** The toggle of the side panel: Up next, the colour key, Unscheduled. */
   panel: string
@@ -115,6 +119,8 @@ export const calendarLabelsFrom = (
   viewName: (view, count) => t('viewName', { view, count }),
   nothing: (span, count) => t('nothing', { span, count }),
   allDay: t('allDay'),
+  more: (count) => t('more', { count }),
+  moreName: (count, day) => t('moreName', { count, day }),
   legend: t('legend'),
   panel: t('panel'),
   upNext: t('upNext'),

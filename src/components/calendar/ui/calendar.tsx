@@ -29,9 +29,18 @@ import type { CalendarLabels } from './calendar-labels'
 import { CalendarToolbar } from './calendar-toolbar'
 import { CalendarPanel } from './calendar-panel'
 import { AgendaList } from './agenda-list'
-import { cairoNow, formatDay, formatMonths, weekOf, weekStartOf, toTime } from './calendar-time'
+import {
+  cairoNow,
+  formatDay,
+  formatMonths,
+  monthWeeksOf,
+  weekOf,
+  weekStartOf,
+  toTime,
+} from './calendar-time'
 import { daysOf, stepFrom, viewAt, viewsAt, type CalendarView } from './calendar-views'
 import styles from './calendar.module.css'
+import { MonthGrid } from './month-grid'
 import { SaveBar } from './save-bar'
 import { UnscheduledTray } from './unscheduled-tray'
 import { useEditSession } from './use-edit-session'
@@ -150,6 +159,11 @@ export function Calendar({
   // The day the view is about: the Day view's day, the first of 3 days, a day in the week.
   const [anchor, setAnchor] = useState(() => day ?? cairoNow().date)
   const [wanted, setWanted] = useState<CalendarView>(startView)
+  // The keyboard turned the month: the new month's grid takes focus on its anchor day, once.
+  const [monthFocus, setMonthFocus] = useState(false)
+  useEffect(() => {
+    if (monthFocus) setMonthFocus(false)
+  }, [monthFocus])
   // Before the width is known (the server's render) the wide view shows, and
   // the stylesheet shows its anchor day alone on a phone, as the Day view does.
   const shown = viewAt(wanted, narrow ?? false)
@@ -325,14 +339,22 @@ export function Calendar({
 
   const first = days[0]!
   const last = days.at(-1)!
+  const monthName = formatMonths(first, last, locale)
   const rangeLabel =
-    first === last
-      ? formatDay(first, locale, { weekday: 'long', ...longDate })
-      : labels.range(
-          formatDay(first, locale, { day: 'numeric', month: 'short' }),
-          formatDay(last, locale, longDate),
-        )
-  const count = shown.span === 'twoWeeks' ? 2 : days.length
+    shown.span === 'month'
+      ? monthName
+      : first === last
+        ? formatDay(first, locale, { weekday: 'long', ...longDate })
+        : labels.range(
+            formatDay(first, locale, { day: 'numeric', month: 'short' }),
+            formatDay(last, locale, longDate),
+          )
+  const count = shown.span === 'twoWeeks' ? 2 : shown.span === 'month' ? 1 : days.length
+  const monthWeeks = useMemo(() => monthWeeksOf(anchor), [anchor])
+  const openDay = (day: string) => {
+    setAnchor(day)
+    setWanted('day')
+  }
 
   const viewSwitch = (atNarrow: boolean) => (
     <SegmentedControl
@@ -426,6 +448,34 @@ export function Calendar({
     return wanted && block ? session.focusable({ id: wanted, track: block.track }) : null
   }
 
+  const monthGrid = (
+    <MonthGrid
+      key={days[0]}
+      days={days}
+      weeks={monthWeeks}
+      anchor={anchor}
+      focusAnchor={monthFocus}
+      name={monthName}
+      items={session.items}
+      blocks={session.working}
+      today={now?.date ?? null}
+      labels={labels}
+      locale={locale}
+      unsaved={session.unsaved}
+      marked={marked}
+      nameOf={nameOf}
+      newTone={newTone}
+      onPress={press}
+      onRestore={(blocks) => blocks.forEach((block) => session.restore(block.id))}
+      onOpenDay={openDay}
+      pressOpensDay={editable && Boolean(newItemKind)}
+      onTurn={(day) => {
+        setMonthFocus(true)
+        setAnchor(day)
+      }}
+    />
+  )
+
   return (
     <div className={styles.root} role="group" aria-label={labels.name}>
       <WeekSpans.Root
@@ -465,8 +515,8 @@ export function Calendar({
         >
           <CalendarToolbar
             labels={labels}
-            months={formatMonths(first, last, locale)}
-            week={weekLabel?.(week) ?? null}
+            months={monthName}
+            week={shown.span === 'month' ? null : (weekLabel?.(week) ?? null)}
             range={rangeLabel}
             previousLabel={labels.previous(shown.span, count)}
             nextLabel={labels.next(shown.span, count)}
@@ -526,6 +576,30 @@ export function Calendar({
                 onRestore={restoreRun}
                 onDelete={removeRun}
               />
+            ) : shown.layout === 'month' ? (
+              <>
+                <div className={styles.monthWide}>{monthGrid}</div>
+                {narrow === null ? (
+                  // The server cannot know the width: it sends the month and, for a phone, its agenda.
+                  <div className={styles.monthNarrow}>
+                    <AgendaList
+                      items={session.items}
+                      blocks={session.working}
+                      days={days}
+                      today={now?.date ?? null}
+                      labels={labels}
+                      locale={locale}
+                      unsaved={session.unsaved}
+                      marked={marked}
+                      nameOf={nameOf}
+                      newTone={newTone}
+                      empty={labels.nothing('month', 1)}
+                      onPress={press}
+                      onRestore={session.restore}
+                    />
+                  </div>
+                ) : null}
+              </>
             ) : (
               <AgendaList
                 items={session.items}

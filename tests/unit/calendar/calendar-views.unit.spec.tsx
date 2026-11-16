@@ -103,9 +103,10 @@ beforeEach(() => {
 afterEach(() => vi.useRealTimers())
 
 describe('the view switch', () => {
-  it('offers Week, Day and Agenda on a wide calendar, the week selected', () => {
+  it('offers Month, Week, Day and Agenda on a wide calendar, the week selected', () => {
     show()
     expect(options()).toEqual([
+      ['Month', 'false'],
       ['Week', 'true'],
       ['Day', 'false'],
       ['Agenda', 'false'],
@@ -115,8 +116,8 @@ describe('the view switch', () => {
 
   it('is one tab stop, and arrow keys choose and focus the next view', () => {
     show()
-    const [week, day, agenda] = within(viewSwitch()).getAllByRole('button')
-    expect([week, day, agenda].map((button) => button!.tabIndex)).toEqual([0, -1, -1])
+    const [month, week, day, agenda] = within(viewSwitch()).getAllByRole('button')
+    expect([month, week, day, agenda].map((button) => button!.tabIndex)).toEqual([-1, 0, -1, -1])
     week!.focus()
     fireEvent.keyDown(week!, { key: 'ArrowRight' })
     expect(day).toHaveFocus()
@@ -140,7 +141,7 @@ describe('the view switch', () => {
 
   it('opens in the view the host asks for', () => {
     show({ view: 'agenda' })
-    expect(options()[2]).toEqual(['Agenda', 'true'])
+    expect(options()[3]).toEqual(['Agenda', 'true'])
   })
 })
 
@@ -183,7 +184,7 @@ describe('the day and 3 days views', () => {
     pick('3 days')
     narrow = false
     rerender(tree())
-    expect(options()[0]).toEqual(['Week', 'true'])
+    expect(options()[1]).toEqual(['Week', 'true'])
     expect(shownDays()).toHaveLength(7)
   })
 })
