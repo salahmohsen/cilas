@@ -612,12 +612,15 @@ describe('the session drawer’s Edit form', () => {
     expect(saveScheduleEdits).not.toHaveBeenCalled()
 
     vi.mocked(saveScheduleEdits).mockResolvedValue({ ok: true, items: [], before: [], after: [] })
+    vi.mocked(loadSessionView).mockResolvedValue({ ok: false, error: 'not-found' })
     fireEvent.keyDown(hold, { key: ' ' })
     await waitFor(() => expect(saveScheduleEdits).toHaveBeenCalledTimes(1), { timeout: 4000 })
     expect(saveScheduleEdits).toHaveBeenCalledWith(
       { details: [{ op: 'delete', id: '13', version: 'v1' }] },
       'en',
     )
+    // Back in the view, read again: the session is gone.
+    expect(await within(dialog).findByText(en.SpacePost.sessionGone)).toBeInTheDocument()
   })
 
   it('rewinds the hold and shows why when a delete is refused', async () => {

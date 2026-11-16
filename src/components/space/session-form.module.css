@@ -97,7 +97,7 @@
 .hold {
   inline-size: 100%;
 }
-/* A field focused near the bottom stays clear of the footer. */
-.form > :not(.foot) :is(input, textarea, button) {
-  scroll-margin-block-end: 14rem;
+/* The panel that scrolls the form keeps a focused field clear of the footer. */
+:has(> .form) {
+  scroll-padding-block-end: 16rem;
 }
