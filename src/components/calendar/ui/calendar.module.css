@@ -1003,7 +1003,7 @@
 }
 .monthBar,
 .chip,
-.more {
+.monthMore {
   --focus-outline-offset: -1px;
   display: flex;
   align-items: center;
@@ -1062,7 +1062,7 @@
 .chip[data-cancelled] .monthTitle {
   color: var(--text-secondary);
 }
-.more {
+.monthMore {
   color: var(--text-secondary);
 }
 .monthBar[data-unsaved],
@@ -1083,7 +1083,7 @@
 }
 @media (hover: hover) {
   .chip:hover,
-  .more:hover {
+  .monthMore:hover {
     background: var(--surface-muted);
   }
   .monthBar:hover {

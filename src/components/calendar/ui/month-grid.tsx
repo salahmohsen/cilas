@@ -266,7 +266,7 @@ export function MonthGrid({
                   <button
                     type="button"
                     tabIndex={-1}
-                    className={styles.more}
+                    className={styles.monthMore}
                     aria-label={labels.moreName(more, long)}
                     onClick={() => onOpenDay(day)}
                     onKeyDown={inDay}
