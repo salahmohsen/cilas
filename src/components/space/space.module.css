@@ -797,6 +797,27 @@
   .wideOnly {
     display: flex;
   }
+
+  .layout[data-wide] {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .layout[data-wide] > .rail {
+    display: none;
+  }
+}
+
+/* A wide tab: the calendar takes the row; the rest keeps the reading width. */
+.layout[data-wide] > .feed {
+  max-width: none;
+}
+
+.layout[data-wide] > .feed > :not(.wideSlot) {
+  max-width: 680px;
+}
+
+.wideSlot {
+  min-width: 0;
 }
 
 .feed {

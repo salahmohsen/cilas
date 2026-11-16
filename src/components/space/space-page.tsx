@@ -528,7 +528,8 @@ export async function SpacePage({
           )}
         </article>
       </header>
-      <div className={styles.layout}>
+      {/* The Calendar tab takes the full width: its side panel's Up next stands in for the rail. */}
+      <div className={styles.layout} data-wide={view === 'calendar' ? '' : undefined}>
         <main className={styles.feed} aria-label={title}>
           {course && nextId && <div className={styles.phoneBlock}>{nextCard(true)}</div>}
           <OnboardingChecklist
@@ -616,7 +617,9 @@ export async function SpacePage({
               <EmptyState title={t('noSyllabus')} description={t('noSyllabusHint')} />
             )
           ) : view === 'calendar' && course ? (
-            <SpaceCalendar id={space.id} courseId={course.id} locale={locale} spaceHref={path} />
+            <div className={styles.wideSlot}>
+              <SpaceCalendar id={space.id} courseId={course.id} locale={locale} spaceHref={path} />
+            </div>
           ) : view === 'events' ? (
             <EventList
               upcoming={events.upcoming}
