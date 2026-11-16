@@ -35,3 +35,36 @@ describe('buildIcs', () => {
     )
   })
 })
+
+describe('session feed updates', () => {
+  it('keeps the UID, advances the version and publishes cancellation on a move', () => {
+    const entry = {
+      uid: 'session-meeting-a@cilas.org',
+      title: 'Session',
+      date: '2026-11-17',
+      updatedAt: '2026-11-17T10:00:00Z',
+    }
+    const before = buildIcs([entry], { name: 'CILAS' })
+    const after = buildIcs(
+      [
+        {
+          ...entry,
+          date: '2026-11-18',
+          start: '19:00',
+          updatedAt: '2026-11-17T10:00:02Z',
+          cancelled: true,
+        },
+      ],
+      { name: 'CILAS' },
+    )
+    expect(before).toContain(`UID:${entry.uid}\r\n`)
+    expect(after).toContain(`UID:${entry.uid}\r\n`)
+    expect(after).toContain('STATUS:CANCELLED\r\n')
+    expect(after).toContain('DTSTAMP:20261117T100002Z\r\n')
+    expect(after).toContain('LAST-MODIFIED:20261117T100002Z\r\n')
+    expect(Number(/SEQUENCE:(\d+)/.exec(after)![1])).toBeGreaterThan(
+      Number(/SEQUENCE:(\d+)/.exec(before)![1]),
+    )
+    expect(buildIcs([entry], { name: 'CILAS', now: new Date('2027-01-01') })).toBe(before)
+  })
+})

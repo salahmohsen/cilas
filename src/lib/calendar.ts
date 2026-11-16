@@ -9,8 +9,9 @@ import type { CalendarTone } from '@/lib/calendar-items'
  * `YYYY-MM-DD` Cairo days (see cairo-day.ts); weeks start on Saturday, as Egypt's do.
  */
 export type CalendarMeeting = {
-  /** The meeting's own id, the feed's UID. */
+  /** The display key, which includes the date and time. */
   key: string
+  feed?: { uid: string; updatedAt: string }
   /** The session or event it belongs to: meetings with the same `item` are one thing on the calendar. */
   item: string
   courseId?: number
@@ -33,30 +34,34 @@ export type CalendarMeeting = {
 /** What every meeting of one course or event shares. */
 export type CalendarBase = Omit<
   CalendarMeeting,
-  'key' | 'item' | 'date' | 'start' | 'end' | 'session' | 'cancelled' | 'place'
+  'feed' | 'key' | 'item' | 'date' | 'start' | 'end' | 'session' | 'cancelled' | 'place'
 >
 
-/**
- * A course's meetings, each with its session's number and place. Each is
- * named by `meetingKey`, so a calendar app that subscribed updates the
- * entry when other meetings are added or moved.
- */
+/** A course's meetings with separate display keys and stored feed identities. */
 export const courseItems = (
   base: CalendarBase,
-  sessions: readonly (SessionTimes & { id: number | string; place?: string | null })[],
+  sessions: readonly (SessionTimes & {
+    id: number | string
+    updatedAt: string
+    place?: string | null
+  })[],
 ): CalendarMeeting[] =>
   numberedSessions(sessions).flatMap(({ session, number, meetings }) =>
-    meetings.map((m): CalendarMeeting => ({
-      ...base,
-      key: `s${meetingKey(session.id, m)}`,
-      item: `s${session.id}`,
-      date: m.date,
-      ...(m.start_time ? { start: m.start_time } : {}),
-      ...(m.end_time ? { end: m.end_time } : {}),
-      session: number,
-      ...(session.place ? { place: session.place } : {}),
-      ...(m.cancelled ? { cancelled: true } : {}),
-    })),
+    meetings.map((m): CalendarMeeting => {
+      if (!m.id) throw new Error(`Session ${session.id} has a meeting without a row ID`)
+      return {
+        ...base,
+        key: `s${meetingKey(session.id, m)}`,
+        feed: { uid: `session-meeting-${m.id}@cilas.org`, updatedAt: session.updatedAt },
+        item: `s${session.id}`,
+        date: m.date,
+        ...(m.start_time ? { start: m.start_time } : {}),
+        ...(m.end_time ? { end: m.end_time } : {}),
+        session: number,
+        ...(session.place ? { place: session.place } : {}),
+        ...(m.cancelled ? { cancelled: true } : {}),
+      }
+    }),
   )
 
 export const weekStart = (day: string): string => addDays(day, -WEEKDAYS.indexOf(weekdayOf(day)))

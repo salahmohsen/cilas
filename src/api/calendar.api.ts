@@ -148,7 +148,7 @@ export const getCalendarItems = async (
 /** The meetings above, built once per language and kept until a course changes. */
 export const getCachedCalendarItems = unstable_cache(
   async (locale: Locale) => getCalendarItems(await getPayload({ config }), locale),
-  ['calendar-items-v7'],
+  ['calendar-items-v8'],
   { tags: [PUBLIC_LISTS_TAG], revalidate: 3600 },
 )
 

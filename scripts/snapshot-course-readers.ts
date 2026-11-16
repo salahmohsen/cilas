@@ -11,6 +11,10 @@
  * changes", or a reviewed entry in `course-reader-accepted.json` for that
  * base) or UNEXPECTED, and exits non-zero on any UNEXPECTED one.
  *
+ * Step 5 unit 8 accepts the first addition of session row UIDs and update metadata
+ * only when all meeting content stays equal. The compare lists each change.
+ * Later UID changes are unexpected. See `onlySessionFeedIdentity`.
+ *
  * Reads only. Needs `DATABASE_URL` set to the local dev database and a
  * server on `--url` (default http://localhost:3000) over the same database:
  * a production build (`pnpm build`, then `pnpm start -p 3100`) takes about

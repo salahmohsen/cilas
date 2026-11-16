@@ -14,6 +14,7 @@ import { weekdayOf, type Weekday } from '@/lib/cairo-day'
  * never moves a meeting.
  */
 export type Meeting = {
+  id?: string | null
   date: string
   start_time?: string | null
   end_time?: string | null
@@ -59,6 +60,7 @@ export const meetingsOf = (sessions: readonly SessionTimes[]): CourseMeeting[] =
   sessionsInOrder(sessions)
     .flatMap((s, index) =>
       (s.meetings ?? []).map((m): CourseMeeting => ({
+        ...(m.id ? { id: m.id } : {}),
         date: m.date,
         start_time: m.start_time || null,
         end_time: m.end_time || null,
@@ -246,9 +248,8 @@ export const upcomingSession = <T>(
 }
 
 /**
- * A meeting's stable name within what it belongs to (`owner`, e.g. a
- * session ID): its day and start time. It stays the same when other meetings
- * are added or moved, so a calendar app updates the entry, not a copy.
+ * A meeting's display key within its owner. A move changes this key.
+ * The feed uses the stored meeting row ID instead.
  */
 export const meetingKey = (owner: string | number, m: Meeting): string =>
   `${owner}-${m.date}-${m.start_time ? m.start_time.replace(':', '') : 'day'}`

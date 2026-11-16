@@ -283,7 +283,7 @@ describe('describeChange', () => {
 })
 
 describe('extractors', () => {
-  it('reads a course feed without the request time or the entry ID, unfolding long lines', () => {
+  it('reads a course feed with its entry ID and without the request time, unfolding long lines', () => {
     const ics = [
       'BEGIN:VCALENDAR',
       'BEGIN:VEVENT',
@@ -303,7 +303,9 @@ describe('extractors', () => {
       'END:VCALENDAR',
     ].join('\r\n')
     expect(icsByCourse(ics)).toEqual({
-      'some-course': ['DESCRIPTION:Thematic · Session 1 | DTSTART:20190131T080000Z | SUMMARY:A, B'],
+      'some-course': [
+        'DESCRIPTION:Thematic · Session 1 | DTSTART:20190131T080000Z | SUMMARY:A, B | UID:c4-0@cilas',
+      ],
     })
   })
 
@@ -426,5 +428,37 @@ describe('the timing removal rules', () => {
     expect(
       compareSnapshots(base, snapshot({ 'calendar.ics': { '1': ['new'] } })).map((d) => d.verdict),
     ).toEqual(['UNEXPECTED'])
+  })
+})
+
+describe('session feed identity compare', () => {
+  const meta = { slug: 'course', archiveDated: false, undatedWords: false, newSessions: 0 }
+  const before = ['DTSTART:20261117T100000Z | SUMMARY:Session']
+  const after = [
+    'DTSTART:20261117T100000Z | LAST-MODIFIED:20261117T090000Z | SEQUENCE:1794906000 | SUMMARY:Session | UID:session-meeting-a@cilas.org',
+  ]
+  it('lists only the first addition of session identity and version metadata as expected', () => {
+    expect(classify('calendar.ics', meta, before, after).verdict).toBe('EXPECTED')
+    expect(
+      classify(
+        'calendar.ics',
+        meta,
+        after,
+        after.map((line) => line.replace('meeting-a', 'meeting-b')),
+      ).verdict,
+    ).toBe('UNEXPECTED')
+  })
+  it('rejects a changed time, missing metadata, event IDs, duplicate IDs and removed entries', () => {
+    for (const changed of [
+      after.map((line) => line.replace('T100000Z', 'T110000Z')),
+      after.map((line) => line.replace(' | SEQUENCE:1794906000', '')),
+      after.map((line) => line.replace('session-meeting-a@cilas.org', 'e1-0@cilas')),
+      [],
+    ]) {
+      expect(classify('calendar.ics', meta, before, changed).verdict).toBe('UNEXPECTED')
+    }
+    expect(
+      classify('calendar.ics', meta, [...before, ...before], [...after, ...after]).verdict,
+    ).toBe('UNEXPECTED')
   })
 })

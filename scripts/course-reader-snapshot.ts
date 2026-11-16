@@ -208,6 +208,44 @@ export const onlyLengthGone = (before: unknown, after: unknown): boolean =>
   !after.length &&
   same({ ...before, length: '' }, { ...after, length: '' })
 
+/** Accept the first session UID metadata only. Keep all meeting content equal. */
+const onlySessionFeedIdentity = (before: unknown, after: unknown): boolean => {
+  if (
+    !Array.isArray(before) ||
+    !Array.isArray(after) ||
+    before.length !== after.length ||
+    !before.length
+  )
+    return false
+  if (
+    !before.every(
+      (line) => typeof line === 'string' && !/(?:^| \| )(UID|SEQUENCE|LAST-MODIFIED):/.test(line),
+    )
+  )
+    return false
+  const uids = new Set<string>()
+  const content: string[] = []
+  for (const line of after) {
+    if (typeof line !== 'string') return false
+    const fields = line.split(' | ')
+    const uid = fields.find((field) => /^UID:session-meeting-[^\s@]+@cilas\.org$/.test(field))
+    if (
+      !uid ||
+      uids.has(uid) ||
+      !fields.some((field) => /^SEQUENCE:\d+$/.test(field)) ||
+      !fields.some((field) => /^LAST-MODIFIED:\d{8}T\d{6}Z$/.test(field))
+    )
+      return false
+    uids.add(uid)
+    content.push(
+      fields
+        .filter((field) => field !== uid && !/^(SEQUENCE|LAST-MODIFIED):/.test(field))
+        .join(' | '),
+    )
+  }
+  return same([...before].sort(), content.sort())
+}
+
 /**
  * Whether the plan expects `reader` to change from `before` to `after` for
  * this course. Course by course, reader by reader: an archive-dated course
@@ -224,6 +262,8 @@ export const classify = (
   after: unknown,
 ): { verdict: Verdict; reason: string } => {
   if (!meta) return { verdict: 'UNEXPECTED', reason: 'course not in the base snapshot' }
+  if (reader === 'calendar.ics' && onlySessionFeedIdentity(before, after))
+    return { verdict: 'EXPECTED', reason: 'session meeting row UID and update metadata added' }
   if (onlyUnits(before, after))
     return { verdict: 'EXPECTED', reason: 'Week N became Session N (no numbering setting)' }
   if (reader === 'space.sessionFacts' && same(withoutKey(before, 'week'), after))
@@ -433,18 +473,13 @@ export const parseIcs = (ics: string): IcsEvent[] => {
 export const courseSlugOf = (url: string | null | undefined): string | null =>
   /\/study\/([^/?#]+)\/?(?:[?#]|$)/.exec(url ?? '')?.[1] ?? null
 
-/**
- * A course's entries in the feed, without what changes on every run or
- * names an entry by its place in a list: `DTSTAMP` (the time of the
- * request) and `UID` (`c<id>-<index>` today; ADR 0011 gives each meeting
- * its own). Sorted, so the order of courses in the feed does not count.
- */
+/** Course entries without request timestamps or URLs. Keep identity and version metadata for compare. */
 export const icsByCourse = (ics: string): Record<string, string[]> => {
   const out: Record<string, string[]> = {}
   for (const event of parseIcs(ics)) {
     const slug = courseSlugOf(event.URL)
     if (!slug) continue
-    const { DTSTAMP: _stamp, UID: _uid, URL: _url, ...rest } = event
+    const { DTSTAMP: _stamp, URL: _url, ...rest } = event
     ;(out[slug] ??= []).push(
       Object.entries(rest)
         .sort(([a], [b]) => a.localeCompare(b))
