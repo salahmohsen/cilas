@@ -20,6 +20,7 @@ import { blockNamer, longDay } from './block-names'
 import {
   allDayBars,
   blocksOf,
+  editState,
   hourRange,
   legendOf,
   timedBlocks,
@@ -283,10 +284,7 @@ export function Calendar({
   )
 
   const bars = useMemo(
-    () =>
-      allDayBars(session.working, days, (block) =>
-        block.deleted ? 'deleted' : session.unsaved.has(block.id) ? 'unsaved' : 'saved',
-      ),
+    () => allDayBars(session.working, days, editState(session.unsaved)),
     [session.working, session.unsaved, days],
   )
   /** The blocks a block stands for: all the days of its all-day bar, or itself. */

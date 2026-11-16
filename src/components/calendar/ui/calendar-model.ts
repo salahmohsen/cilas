@@ -124,6 +124,12 @@ export const firstFreeStart = (
   return min
 }
 
+/** A block's state, which splits an all-day bar where it changes. */
+export const editState =
+  (unsaved: ReadonlySet<string>) =>
+  (block: EditBlock): 'saved' | 'unsaved' | 'deleted' =>
+    block.deleted ? 'deleted' : unsaved.has(block.id) ? 'unsaved' : 'saved'
+
 /**
  * A bar in the all-day row: one block, or the blocks of one item on
  * consecutive days, which show as one bar across them. `from` is the index

@@ -6,9 +6,9 @@ import { timeDir } from '@/lib/digits'
 import type { CalendarItem } from '@/lib/calendar-items'
 
 import { longDay } from './block-names'
-import { allDayBars, type AllDayBar, type EditBlock } from './calendar-model'
+import { allDayBars, editState, type AllDayBar, type EditBlock } from './calendar-model'
 import type { CalendarLabels } from './calendar-labels'
-import { addDays, addMonths, formatDay, formatShortTime, isWeekend } from './calendar-time'
+import { addDays, addMonths, formatDay, formatShortTime, isWeekend, monthOf } from './calendar-time'
 import styles from './calendar.module.css'
 import { MonthFocus, type GridCell } from './month-focus'
 
@@ -95,9 +95,7 @@ export function MonthGrid({
   const rows = useMemo(
     () =>
       weeks.map((week) => {
-        const bars = allDayBars(blocks, week, (block) =>
-          block.deleted ? 'deleted' : unsaved.has(block.id) ? 'unsaved' : 'saved',
-        )
+        const bars = allDayBars(blocks, week, editState(unsaved))
         // Bars past the last line but one fold into "N more", so a day keeps a line for its chips.
         const shown = bars.filter((bar) => bar.lane < LINES - 1)
         const cells = week.map((day, col) => {
@@ -148,7 +146,9 @@ export function MonthGrid({
     if (event.altKey || event.ctrlKey || event.metaKey) return
     if (event.key === 'PageUp' || event.key === 'PageDown') {
       event.preventDefault()
-      return onTurn(addMonths(day, event.key === 'PageUp' ? -1 : 1))
+      // From the month shown, so a muted day of the month before or after turns it too.
+      const next = monthOf(addMonths(days[0]!, event.key === 'PageUp' ? -1 : 1))
+      return onTurn(next[Math.min(Number(day.slice(8)), next.length) - 1]!)
     }
     const rtl = isRTL(event.currentTarget)
     const step = {

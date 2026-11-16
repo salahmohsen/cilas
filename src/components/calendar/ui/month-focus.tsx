@@ -77,10 +77,11 @@ const monthGrid = definePrimitive({
           if (event.target === event.currentTarget && !sameCell(api.grid.active(), props))
             api.grid.focus(props, { reason: 'imperative', event })
         },
-        pointerdown: (event, { api, props }) => {
-          // A press on a chip opens it; only a press on the day itself takes the day.
-          if ((event.target as Element).closest('button')) return
-          api.grid.focus(props, { reason: 'item-press', event })
+        pointerdown: (event, { api, props, store }) => {
+          // A press on a chip keeps focus on the chip; its day still takes the tab stop.
+          if ((event.target as Element).closest('button'))
+            store.set({ active: { row: props.row, col: props.col } })
+          else api.grid.focus(props, { reason: 'item-press', event })
         },
       },
       bind: (el, { api, props }) => api.grid.bind(el, props),

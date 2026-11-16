@@ -372,7 +372,8 @@
     block-size: 28px;
   }
 }
-.pill[data-cancelled] {
+.pill[data-cancelled],
+.monthBar[data-cancelled] {
   background:
     repeating-linear-gradient(
       135deg,
@@ -384,7 +385,7 @@
 }
 
 /* Friday, the weekend day, is shaded. */
-[data-weekend]:is(.dayHead, .allDay, .track) {
+[data-weekend]:is(.dayHead, .allDay, .track, .monthWeekday, .monthDay) {
   background-color: color-mix(in oklab, var(--surface-muted) 55%, transparent);
 }
 
@@ -975,10 +976,6 @@
 .monthDay[data-opens] {
   cursor: pointer;
 }
-.monthDay[data-weekend],
-.monthWeekday[data-weekend] {
-  background-color: color-mix(in oklab, var(--surface-muted) 55%, transparent);
-}
 /* The date, and under it the room the week's bars take in every day of the row. */
 .monthDate {
   display: grid;
@@ -1032,16 +1029,6 @@
   background-clip: padding-box;
   color: var(--tone-ink);
   font-weight: 500;
-}
-.monthBar[data-cancelled] {
-  background:
-    repeating-linear-gradient(
-      135deg,
-      transparent 0 0.3rem,
-      var(--tone-hatch) 0.3rem calc(0.3rem + 1px)
-    ),
-    var(--tone-fill);
-  background-clip: padding-box;
 }
 .chipTime {
   flex: none;

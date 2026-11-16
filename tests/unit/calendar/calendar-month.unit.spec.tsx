@@ -240,6 +240,24 @@ describe('the month view', () => {
     expect(day('2026-12-14')).toHaveFocus()
   })
 
+  it('turns from the month shown, also from a muted day of another month', () => {
+    show()
+    act(() => day('2026-10-31').focus())
+    pressKey('PageDown')
+    expect(grid()).toHaveAccessibleName('December 2026')
+    expect(day('2026-12-31')).toHaveFocus()
+  })
+
+  it('moves the tab stop to the day of a chip pressed with a pointer, and arrows go on from there', () => {
+    show()
+    const chip = within(day('2026-11-14')).getByRole('button', { name: /^Studio lab/ })
+    fireEvent.pointerDown(chip)
+    act(() => chip.focus())
+    expect(day('2026-11-14').tabIndex).toBe(0)
+    pressKey('ArrowRight')
+    expect(day('2026-11-15')).toHaveFocus()
+  })
+
   it('takes focus only once after the keyboard turns the month', () => {
     show()
     act(() => day('2026-11-17').focus())
