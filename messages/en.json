@@ -585,7 +585,6 @@
       "invalid": "A change is not valid. {message}",
       "failed": "Something went wrong. Try again."
     },
-    "saveNote": "The course’s Save does not save the schedule. Use Save schedule.",
     "reloadAndLose": "Reload and lose my changes",
     "offer": {
       "title": "Announce this change?",

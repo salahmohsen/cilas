@@ -62,7 +62,6 @@ export function SaveBar({
           {note}
         </p>
       ) : null}
-      {count && labels.saveNote ? <p className={styles.barNote}>{labels.saveNote}</p> : null}
       {count ? (
         <div className={styles.barRow}>
           <p aria-hidden className={styles.barCount}>

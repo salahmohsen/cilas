@@ -46,9 +46,6 @@ describe('calendarAdminText', () => {
   it('names the Save button and the block menu in both languages', () => {
     const english = calendarAdminText('en', en).labels
     expect(english.save).toBe('Save schedule')
-    expect(english.saveNote).toBe(
-      'The course’s Save does not save the schedule. Use Save schedule.',
-    )
     expect(english.menu).toMatchObject({
       open: 'Open',
       addNextDay: 'Add meeting',
@@ -57,7 +54,6 @@ describe('calendarAdminText', () => {
     })
     const arabic = calendarAdminText('ar', ar).labels
     expect(arabic.save).toBe('حفظ الجدول')
-    expect(arabic.saveNote).toMatch(/\p{Script=Arabic}/u)
     expect(arabic.menu).toMatchObject({
       open: 'فتح',
       addNextDay: 'إضافة موعد',

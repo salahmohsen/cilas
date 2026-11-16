@@ -25,15 +25,13 @@ type Save = (changes: CalendarChange[]) => void | Promise<void>
 /** A host that can reload: `reload` swaps in the item as another person saved it. */
 function Host({
   onSave,
-  saveNote,
   onSaveIntent,
 }: {
   onSave: (reload: () => void) => Save
-  saveNote?: string
   onSaveIntent?: () => void
 }) {
   const [items, setItems] = useState([week3('v1')])
-  const labels = useCalendarLabels({ kind: () => 'Session', newItem: 'New session', saveNote })
+  const labels = useCalendarLabels({ kind: () => 'Session', newItem: 'New session' })
   return (
     <Calendar
       items={items}
@@ -75,21 +73,6 @@ beforeEach(() => {
 afterEach(() => vi.useRealTimers())
 
 describe('the save bar', () => {
-  it('shows the host’s line while changes wait, and not after Cancel', () => {
-    edit({ onSave: () => vi.fn(), saveNote: 'The course’s Save does not save the schedule.' })
-    expect(screen.queryByText('The course’s Save does not save the schedule.')).toBeNull()
-    move()
-    expect(screen.getByText('The course’s Save does not save the schedule.')).toBeVisible()
-    fireEvent.click(screen.getByRole('button', { name: 'Cancel' }))
-    expect(screen.queryByText('The course’s Save does not save the schedule.')).toBeNull()
-  })
-
-  it('shows no line when the host gives none', () => {
-    edit({ onSave: () => vi.fn() })
-    move()
-    expect(document.querySelectorAll('[class*="barNote"]')).toHaveLength(0)
-  })
-
   it('tells the host when the pointer or focus reaches Save', () => {
     const onSaveIntent = vi.fn()
     edit({ onSave: () => vi.fn(), onSaveIntent })
