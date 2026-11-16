@@ -316,16 +316,19 @@ describe('edit mode', () => {
   it('puts an unscheduled item on a day from its menu, as one add-block', async () => {
     const onSave = vi.fn()
     edit({ onSave })
-    fireEvent.click(screen.getByRole('button', { name: 'Side panel' }))
     const tray = screen.getByRole('group', { name: 'Unscheduled' })
     const entry = within(tray).getByRole('group', { name: 'Week 4' })
     const menu = within(entry).getByRole('button', { name: 'Place on day' })
-    fireEvent.pointerDown(menu, { button: 0, ctrlKey: false })
-    fireEvent.click(await screen.findByRole('menuitem', { name: 'Thursday, November 19' }))
+    menu.focus()
+    fireEvent.keyDown(menu, { key: 'Enter' })
+    const day = await screen.findByRole('menuitem', { name: 'Thursday, November 19' })
+    day.focus()
+    fireEvent.keyDown(day, { key: 'Enter' })
 
     const placed = screen.getByRole('button', { name: /^Week 4, Thursday, November 19/ })
     expect(placed).toHaveAccessibleName('Week 4, Thursday, November 19, 9 AM to 10 AM, Unsaved')
     expect(screen.queryByRole('group', { name: 'Unscheduled' })).toBeNull()
+    expect(onSave).not.toHaveBeenCalled()
 
     fireEvent.click(save())
     await waitFor(() => expect(onSave).toHaveBeenCalledTimes(1))
@@ -352,10 +355,25 @@ describe('edit mode', () => {
     expect(after).toEqual(hours)
   })
 
-  it('names how to edit and points each block at it', () => {
+  it.each(['en', 'ar'])('removes the hint and its references in %s', (locale) => {
+    const { container } = edit({ onSave: vi.fn() }, locale)
+    expect(screen.queryByText(/Draw on an empty slot|ارسم على خانة فارغة/)).toBeNull()
+    expect(screen.queryByText(/Keyboard help/)).toBeNull()
+    expect(container.querySelector('[aria-describedby]')).toBeNull()
+    expect(screen.getByRole('button', { name: /^Week 3/ })).toHaveAccessibleName(/Week 3/)
+  })
+
+  it('shows exactly one tray with the panel closed and keeps it when the panel opens', () => {
     edit({ onSave: vi.fn() })
-    const hint = screen.getByText(/^Draw on an empty slot/)
-    expect(week3()).toHaveAttribute('aria-describedby', hint.id)
+    const toggle = screen.getByRole('button', { name: 'Side panel' })
+    expect(toggle).toHaveAttribute('aria-expanded', 'false')
+    const tray = screen.getByRole('group', { name: 'Unscheduled' })
+    expect(tray).toBeVisible()
+    expect(tray.closest('[data-slot="collapsible-panel"]')).toBeNull()
+    fireEvent.click(toggle)
+    expect(toggle).toHaveAttribute('aria-expanded', 'true')
+    expect(screen.getAllByRole('group', { name: 'Unscheduled' })).toEqual([tray])
+    expect(screen.getAllByRole('button', { name: /^Week 4$/ })).toHaveLength(1)
   })
 
   it('selects a block on the first touch tap and opens it on the second', () => {

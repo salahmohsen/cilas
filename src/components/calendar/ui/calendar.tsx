@@ -2,7 +2,7 @@
 
 import { Collapsible, CollapsiblePanel } from '@ui-sdk/react/collapsible'
 import { createMenuController } from '@ui-sdk/react/menu'
-import { useEffect, useId, useMemo, useRef, useState, type ReactNode } from 'react'
+import { useEffect, useMemo, useRef, useState, type ReactNode } from 'react'
 
 import SegmentedControl from '@/components/arc/segmented-control/segmented-control'
 import type { CalendarChange, CalendarItem } from '@/lib/calendar-items'
@@ -91,7 +91,6 @@ export function Calendar({
 }: CalendarProps) {
   const editable = mode === 'edit'
   const frame = useRef<HTMLDivElement>(null)
-  const hintId = useId()
   const narrow = useNarrow(frame)
   const now = useNow()
   const [panelOpen, setPanelOpen] = useState(false)
@@ -283,10 +282,18 @@ export function Calendar({
           />
 
           <div className={styles.main}>
-            {editable ? (
-              <p className={styles.hint} id={hintId}>
-                {labels.editHint}
-              </p>
+            {editable && unscheduled.length ? (
+              <div className={styles.editTray}>
+                <UnscheduledTray
+                  items={unscheduled}
+                  days={days}
+                  editable
+                  labels={labels}
+                  locale={locale}
+                  onOpen={onOpen}
+                  onPlace={session.place}
+                />
+              </div>
             ) : null}
 
             <div className={styles.switcher}>
@@ -319,7 +326,6 @@ export function Calendar({
               newTone={newTone}
               onDraw={newItemKind ? session.drawOnDay : undefined}
               menu={blockMenu ? menu : undefined}
-              hintId={hintId}
               onOpen={onOpen}
               onRestore={session.restore}
               onDelete={session.removeBlock}
@@ -357,7 +363,7 @@ export function Calendar({
                 </ul>
               ) : null}
 
-              {unscheduled.length ? (
+              {!editable && unscheduled.length ? (
                 <UnscheduledTray
                   items={unscheduled}
                   days={days}

@@ -477,6 +477,8 @@
 }
 
 .title {
+  display: block;
+  max-inline-size: calc(100% - var(--more-room, 0px));
   color: var(--tone-ink);
   font-weight: 500;
   line-height: 1.25;
@@ -622,12 +624,9 @@
   white-space: nowrap;
 }
 
-.hint {
-  margin: 0;
-  padding: var(--space-2) var(--space-4);
+.editTray {
+  padding: var(--space-3) var(--space-4);
   border-block-end: 1px solid var(--border-subtle);
-  color: var(--text-secondary);
-  font-size: var(--text-xs);
 }
 
 .add {
@@ -812,24 +811,19 @@
 .block[data-selected] .more {
   display: grid;
 }
-/* Titles use dir="auto"; menu clearance follows the block direction instead. */
-.block:has(.more):is(:focus, [data-selected]) .title {
-  padding-right: 24px;
-}
-.block:dir(rtl):has(.more):is(:focus, [data-selected]) .title {
-  padding-right: 0;
-  padding-left: 24px;
+/* Titles use dir="auto", so their own inline end can be either side. The
+   room for the menu button comes from a narrower title box instead: a block
+   child starts at the block's inline start, so the gap is always at the
+   block's inline end, where the button sits. */
+.block:has(.more):is(:focus, [data-selected]) {
+  --more-room: 24px;
 }
 @media (hover: hover) {
   .block:hover .more {
     display: grid;
   }
-  .block:has(.more):hover .title {
-    padding-right: 24px;
-  }
-  .block:dir(rtl):has(.more):hover .title {
-    padding-right: 0;
-    padding-left: 24px;
+  .block:has(.more):hover {
+    --more-room: 24px;
   }
 }
 @media (pointer: coarse) {
@@ -837,12 +831,8 @@
     inline-size: 32px;
     block-size: 32px;
   }
-  .block:has(.more):is(:focus, [data-selected]) .title {
-    padding-right: 34px;
-  }
-  .block:dir(rtl):has(.more):is(:focus, [data-selected]) .title {
-    padding-right: 0;
-    padding-left: 34px;
+  .block:has(.more):is(:focus, [data-selected]) {
+    --more-room: 34px;
   }
 }
 

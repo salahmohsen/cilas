@@ -66,7 +66,6 @@ export type CalendarLabels = {
   dropped: (titles: string) => string
   dismiss: string
   /** How to draw, move, resize and delete, with the mouse and the keyboard. */
-  editHint: string
   /** The "+" on a day's header. */
   addBlock: (day: string) => string
   /** The menu that puts an unscheduled item on a day, the keyboard's way to place it. */
@@ -134,7 +133,6 @@ export const calendarLabelsFrom = (
   saveFailed: t('saveFailed'),
   dropped: (titles) => t('dropped', { titles }),
   dismiss: t('dismiss'),
-  editHint: t('editHint'),
   addBlock: (day) => t('addBlock', { day }),
   placeOnDay: t('placeOnDay'),
   menu: menu && {

@@ -45,7 +45,6 @@ type Props = {
   /** Set when blocks have a menu: it opens on right-click, long press, Shift+F10 and the Menu key. */
   menu?: MenuController<string>
   /** The id of the text that says how to edit. */
-  hintId: string
   onOpen: (itemId: string, blockId: string | null) => void
   /** A deleted block was pressed: bring it back. */
   onRestore: (id: string) => void
@@ -71,7 +70,6 @@ export function WeekGrid({
   newTone,
   onDraw,
   menu,
-  hintId,
   onOpen,
   onRestore,
   onDelete,
@@ -168,8 +166,6 @@ export function WeekGrid({
               'data-unsaved': unsaved.has(block.id) ? '' : undefined,
               'data-deleted': block.deleted ? '' : undefined,
               'aria-label': nameOf(block, last),
-              'aria-describedby':
-                editable && !block.deleted && !block.readOnly ? hintId : undefined,
               onClick: (event: MouseEvent<HTMLElement>) => {
                 if (block.deleted) return onRestore(block.id)
                 const more = (event.target as Element).closest('[data-block-menu]')
@@ -285,7 +281,6 @@ export function WeekGrid({
                       value={block.id}
                       className={styles.block}
                       aria-label={nameOf(block)}
-                      aria-describedby={changeable ? hintId : undefined}
                       data-tone={item?.tone ?? newTone}
                       data-cancelled={item?.cancelled ? '' : undefined}
                       data-marked={marked.has(block.itemId) ? '' : undefined}

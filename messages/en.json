@@ -553,7 +553,6 @@
     "saveFailed": "The changes were not saved. They are still here.",
     "dropped": "Your unsaved changes to {titles} were dropped, because it changed somewhere else.",
     "dismiss": "Dismiss",
-    "editHint": "Draw on an empty slot to add a block. Drag a block to move it and its edge to resize it. With the keyboard, use the arrow keys to move, Shift and the arrow keys to resize, and Delete to remove. For more actions, right-click a block, or press Shift+F10 or the Menu key on it.",
     "addBlock": "Add a block on {day}",
     "placeOnDay": "Place on day",
     "menuName": "Actions for {title}",

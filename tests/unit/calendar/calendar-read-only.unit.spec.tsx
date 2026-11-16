@@ -244,12 +244,11 @@ describe('a readOnly item in edit mode', () => {
     expect(talk()).not.toHaveAttribute('aria-describedby')
     expect(fair()).not.toHaveAttribute('aria-describedby')
     expect(week3().querySelectorAll('[data-span-edge]')).toHaveLength(2)
-    expect(week3()).toHaveAttribute('aria-describedby')
+    expect(week3()).not.toHaveAttribute('aria-describedby')
   })
 
   it('cannot be placed from the Unscheduled tray', () => {
     show()
-    fireEvent.click(screen.getByRole('button', { name: 'Side panel' }))
     const tray = screen.getByRole('group', { name: 'Unscheduled' })
     expect(within(tray).getByRole('group', { name: 'Later talk' })).toBeInTheDocument()
     expect(
