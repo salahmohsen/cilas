@@ -230,8 +230,8 @@ test.describe('session drawer Edit form', () => {
   test('a fellow edits the title and moves the meeting; the offer opens and both views show the save', async () => {
     const panel = await openForm(TITLE)
     await panel.getByRole('textbox', { name: 'Title', exact: true }).fill('E2E drawer renamed')
-    await pickTime(panel, 'Starts', '8:00 PM')
-    await pickTime(panel, 'Ends', '10:00 PM')
+    await pickTime(panel, 'Starts', '8 PM')
+    await pickTime(panel, 'Ends', '10 PM')
     await panel.getByRole('button', { name: 'Save changes', exact: true }).click()
 
     const dialog = offer(fellow)
@@ -255,6 +255,29 @@ test.describe('session drawer Edit form', () => {
     await expect(block(fellow, 'E2E drawer renamed')).toHaveAccessibleName(
       /^E2E drawer renamed, Thursday, October 5, 8 PM to 10 PM/,
     )
+  })
+
+  test('a material added from the + tile saves with the session', async () => {
+    const panel = await openForm('E2E drawer renamed')
+    await panel.getByRole('button', { name: 'Add material', exact: true }).click()
+    const dialog = fellow.getByRole('dialog', { name: 'Add material', exact: true })
+    await dialog.getByRole('textbox', { name: 'Material title', exact: true }).fill('E2E reading')
+    await dialog.getByRole('textbox', { name: 'Link', exact: true }).fill('not a link')
+    await dialog.getByRole('button', { name: 'Done', exact: true }).click()
+    await expect(dialog.getByText('Enter a full link that starts with https://')).toBeVisible()
+    await dialog.getByRole('textbox', { name: 'Link', exact: true }).fill('https://example.org/e2e')
+    await dialog.getByRole('button', { name: 'Done', exact: true }).click()
+    await expect(dialog).toBeHidden()
+    await expect(panel.getByRole('button', { name: 'Edit material: E2E reading' })).toBeFocused()
+    await panel.getByRole('button', { name: 'Save changes', exact: true }).click()
+    const saved = drawer(fellow, 'E2E drawer renamed')
+    await expect(saved.getByRole('button', { name: 'Edit session', exact: true })).toBeVisible({
+      timeout: 60_000,
+    })
+    expect((await sessionRow()).bibliography).toEqual([
+      expect.objectContaining({ title: 'E2E reading', href: 'https://example.org/e2e' }),
+    ])
+    await closeDrawer(saved)
   })
 
   test('ticking Cancelled opens the offer', async () => {
