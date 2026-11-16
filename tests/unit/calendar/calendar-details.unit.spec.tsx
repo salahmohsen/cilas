@@ -228,3 +228,35 @@ describe('a press in edit mode', () => {
     expect(details()).toBeNull()
   })
 })
+
+describe('an all-day item on days in a row', () => {
+  const bars = () => screen.getAllByRole('button', { name: /Field days/ })
+
+  it('is one bar across the days in view and in edit mode', () => {
+    show()
+    expect(bars()).toHaveLength(1)
+    expect(bars()[0]).toHaveAccessibleName(
+      /^Field days, Monday, November 16 to Wednesday, November 18, All day/,
+    )
+    cleanup()
+    show({ mode: 'edit' })
+    expect(bars()).toHaveLength(1)
+    expect(bars()[0]).toHaveAccessibleName(
+      /^Field days, Monday, November 16 to Wednesday, November 18, All day/,
+    )
+  })
+
+  it('deletes and restores as one bar in edit mode', () => {
+    show({ mode: 'edit' })
+    bars()[0]!.focus()
+    fireEvent.keyDown(bars()[0]!, { key: 'Delete' })
+    expect(bars()).toHaveLength(1)
+    expect(bars()[0]).toHaveAccessibleName(
+      /^Restore Field days, Monday, November 16 to Wednesday, November 18/,
+    )
+    expect(bars()[0]).toHaveFocus()
+    fireEvent.click(bars()[0]!)
+    expect(bars()).toHaveLength(1)
+    expect(bars()[0]).toHaveAccessibleName(/^Field days, Monday, November 16 to Wednesday/)
+  })
+})

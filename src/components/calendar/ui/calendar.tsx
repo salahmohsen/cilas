@@ -12,7 +12,7 @@ import { BlockDetails, type CalendarAction, type DetailsTarget } from './block-d
 import { BlockMenu, type BlockAction, type BlockMenuEntry } from './block-menu'
 import { blockNamer, longDay } from './block-names'
 import {
-  allDayBlocks,
+  allDayBars,
   blocksOf,
   hourRange,
   legendOf,
@@ -174,7 +174,26 @@ export function Calendar({
     [],
   )
 
-  const allDay = useMemo(() => allDayBlocks(session.working, days), [session.working, days])
+  const bars = useMemo(
+    () =>
+      allDayBars(session.working, days, (block) =>
+        block.deleted ? 'deleted' : session.unsaved.has(block.id) ? 'unsaved' : 'saved',
+      ),
+    [session.working, session.unsaved, days],
+  )
+  /** The blocks a block stands for: all the days of its all-day bar, or itself. */
+  const runOf = (blockId: string) =>
+    bars.find((bar) => bar.blocks[0].id === blockId)?.blocks ??
+    session.working.filter((block) => block.id === blockId)
+  // In reverse, so focus ends on the bar's first block, which names it.
+  const removeRun = (blockId: string) =>
+    runOf(blockId)
+      .toReversed()
+      .forEach((block) => session.removeBlock(block.id))
+  const restoreRun = (blockId: string) =>
+    runOf(blockId)
+      .toReversed()
+      .forEach((block) => session.restore(block.id))
   const legend = useMemo(() => legendOf(session.items), [session.items])
   // A block of an item made on the page has nothing to open until it is saved.
   const itemIds = useMemo(() => new Set(session.items.map((item) => item.id)), [session.items])
@@ -283,7 +302,7 @@ export function Calendar({
         onOpen(block.itemId, block.blockId)
         break
       case 'add-next-day': {
-        const copy = session.addNextDay(blockId)
+        const copy = session.addNextDay(runOf(blockId).at(-1)!.id)
         if (copy) {
           menuTarget.current = copy.id
           setTold(blockMenu.addedNextDay(longDay(copy.track, locale)))
@@ -298,7 +317,7 @@ export function Calendar({
         break
       }
       case 'delete':
-        session.removeBlock(blockId)
+        removeRun(blockId)
         break
     }
   }
@@ -390,7 +409,7 @@ export function Calendar({
                 view={shown.id}
                 week={week}
                 items={session.items}
-                allDay={allDay}
+                bars={bars}
                 days={days}
                 range={range}
                 selectedIndex={selectedIndex}
@@ -407,8 +426,8 @@ export function Calendar({
                 onDraw={newItemKind ? session.drawOnDay : undefined}
                 menu={blockMenu ? menu : undefined}
                 onPress={press}
-                onRestore={session.restore}
-                onDelete={session.removeBlock}
+                onRestore={restoreRun}
+                onDelete={removeRun}
               />
             ) : (
               <AgendaList

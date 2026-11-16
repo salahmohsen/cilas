@@ -88,7 +88,7 @@ describe('allDayBars', () => {
   const trip = item('trip', [allDay('t', '2026-11-30'), allDay('u', '2026-12-01')])
 
   it('joins an item’s days in a row into one bar across the month end, and stacks overlaps in lanes', () => {
-    const bars = allDayBars(blocksOf([fair, trip]), week, () => true)
+    const bars = allDayBars(blocksOf([fair, trip]), week, () => 'saved')
     expect(
       bars.map((bar) => [bar.blocks.map((b) => b.blockId), bar.from, bar.span, bar.lane]),
     ).toEqual([
@@ -98,8 +98,10 @@ describe('allDayBars', () => {
     ])
   })
 
-  it('keeps each block on its own when it may change on its own', () => {
-    const bars = allDayBars(blocksOf([fair]), week, (block) => block.blockId !== 'b')
+  it('splits a run where the state changes, such as an unsaved day in it', () => {
+    const bars = allDayBars(blocksOf([fair]), week, (block) =>
+      block.blockId === 'b' ? 'unsaved' : 'saved',
+    )
     expect(bars.map((bar) => [bar.from, bar.span])).toEqual([
       [1, 1],
       [2, 1],
@@ -111,7 +113,7 @@ describe('allDayBars', () => {
   it('ends a bar at the edge of the week and leaves out days not shown', () => {
     const edge = item('edge', [allDay('x', '2026-12-04'), allDay('y', '2026-12-05')])
     expect(
-      allDayBars(blocksOf([edge]), week, () => true).map((bar) => [bar.from, bar.span]),
+      allDayBars(blocksOf([edge]), week, () => 'saved').map((bar) => [bar.from, bar.span]),
     ).toEqual([[6, 1]])
   })
 })

@@ -6,7 +6,6 @@ import { timeDir } from '@/lib/digits'
 import type { CalendarItem } from '@/lib/calendar-items'
 
 import {
-  allDayBars,
   blocksOf,
   scrollTargetOf,
   timedBlocks,
@@ -27,8 +26,8 @@ type Props = {
   /** The week of the selected day, where an edit grid opens its hours. */
   week: string[]
   items: CalendarItem[]
-  /** The all-day blocks on these days, as edited. */
-  allDay: EditBlock[]
+  /** The all-day bars on these days, as edited. */
+  bars: AllDayBar[]
   days: string[]
   range: { min: number; max: number }
   selectedIndex: number
@@ -51,9 +50,9 @@ type Props = {
   menu?: MenuController<string>
   /** A bar was pressed: its item, its blocks, and the bar. */
   onPress: (itemId: string, blocks: EditBlock[], anchor: HTMLElement) => void
-  /** A deleted block was pressed: bring it back. */
+  /** A deleted bar was pressed: bring back all its days. `id` is its first block's. */
   onRestore: (id: string) => void
-  /** Delete or Backspace on an all-day block (the span editor does this for timed ones). */
+  /** Delete or Backspace on an all-day bar, all its days (the span editor does this for timed blocks). */
   onDelete: (id: string) => void
 }
 
@@ -61,7 +60,7 @@ export function WeekGrid({
   view,
   week,
   items,
-  allDay,
+  bars,
   days,
   range,
   selectedIndex,
@@ -84,7 +83,6 @@ export function WeekGrid({
   const itemById = new Map(items.map((item) => [item.id, item]))
   const hours = Array.from({ length: (range.max - range.min) / 60 }, (_, i) => range.min + i * 60)
   const dayLong = (day: string) => longDay(day, locale)
-  const bars = allDayBars(allDay, days, (block) => !editable || Boolean(block.readOnly))
   const covers = (bar: AllDayBar) =>
     selectedIndex >= bar.from && selectedIndex < bar.from + bar.span
   // A phone shows a week's selected day alone: the bars on it take lanes 1, 2, 3 there.

@@ -76,10 +76,6 @@ export const blocksOf = (items: CalendarItem[]): EditBlock[] =>
 export const timedBlocks = (blocks: EditBlock[]): EditBlock[] =>
   blocks.filter((block) => !block.allDay)
 
-/** The all-day blocks on the days in view, in the all-day row. */
-export const allDayBlocks = (blocks: EditBlock[], days: string[]): EditBlock[] =>
-  blocks.filter((block) => block.allDay && days.includes(block.track))
-
 /**
  * The working day an edit grid always shows, so a new meeting can go at any
  * usual time. The grid ends at midnight, so a meeting never grows it past 24:00.
@@ -142,14 +138,15 @@ export type AllDayBar = {
 }
 
 /**
- * The all-day row of `days`. Blocks join into one bar only when `joins` says
- * both can: a block that changes on its own (deleted, restored, unsaved, or
- * editable) keeps its own bar, so each change has one place.
+ * The all-day row of `days`. Blocks of one item on days in a row join into
+ * one bar when `stateOf` gives them the same state (saved, unsaved, deleted),
+ * so a bar is one thing to press, delete or restore, and a change splits it
+ * where the state changes.
  */
 export const allDayBars = (
   blocks: EditBlock[],
   days: string[],
-  joins: (block: EditBlock) => boolean,
+  stateOf: (block: EditBlock) => string,
 ): AllDayBar[] => {
   const runs: { blocks: [EditBlock, ...EditBlock[]]; from: number; span: number }[] = []
   const sorted = blocks
@@ -157,14 +154,12 @@ export const allDayBars = (
     .toSorted((a, b) => a.track.localeCompare(b.track) || a.id.localeCompare(b.id))
   for (const block of sorted) {
     const at = days.indexOf(block.track)
-    const run = joins(block)
-      ? runs.find(
-          (candidate) =>
-            candidate.from + candidate.span === at &&
-            joins(candidate.blocks[0]) &&
-            candidate.blocks[0].itemId === block.itemId,
-        )
-      : undefined
+    const run = runs.find(
+      (candidate) =>
+        candidate.from + candidate.span === at &&
+        candidate.blocks[0].itemId === block.itemId &&
+        stateOf(candidate.blocks[0]) === stateOf(block),
+    )
     if (run) {
       run.blocks.push(block)
       run.span += 1
