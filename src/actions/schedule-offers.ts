@@ -1,5 +1,7 @@
 'use server'
 
+import { isAdminUser } from '@/access'
+
 import config from '@payload-config'
 import { getPayload } from 'payload'
 import * as z from 'zod'
@@ -11,6 +13,7 @@ import { scheduleOffers as offersFor, type ScheduleOffer } from '@/lib/schedule-
 
 const itemSchema = z.object({
   id: z.string(),
+  parentId: z.string().optional(),
   kind: z.string(),
   title: z.string(),
   tone: z.enum(CALENDAR_TONES),
@@ -27,7 +30,7 @@ const itemSchema = z.object({
 }) satisfies z.ZodType<CalendarItem>
 
 const offerSchema = z.object({
-  courseId: z.string().regex(/^\d+$/),
+  courseId: z.string().regex(/^\d+$/).optional(),
   before: z.array(itemSchema),
   after: z.array(itemSchema),
 })
@@ -45,13 +48,23 @@ export async function scheduleOffers(
   const user = await currentReader()
   if (!user) return []
   const { courseId, before, after } = offerSchema.parse(input)
-  return offersFor({
-    payload: await getPayload({ config }),
-    user,
-    courseId: Number(courseId),
-    before,
-    after,
-    today: cairoDay(new Date())!,
-    locale,
-  })
+  if (!courseId && !isAdminUser(user)) return []
+  const payload = await getPayload({ config })
+  const courses = courseId
+    ? [courseId]
+    : [...new Set([...before, ...after].flatMap((item) => item.parentId ?? []))]
+  const offers = []
+  for (const id of courses)
+    offers.push(
+      ...(await offersFor({
+        payload,
+        user,
+        courseId: Number(id),
+        before: courseId ? before : before.filter((item) => item.parentId === id),
+        after: courseId ? after : after.filter((item) => item.parentId === id),
+        today: cairoDay(new Date())!,
+        locale,
+      })),
+    )
+  return offers
 }

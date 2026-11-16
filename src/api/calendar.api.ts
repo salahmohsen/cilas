@@ -53,7 +53,10 @@ const placesOf = async (
  * Every meeting the calendar can show, in date order: every meeting of every
  * published course (from its sessions, ADR 0011) and every public event.
  */
-const getCalendarItems = async (payload: Payload, locale: Locale): Promise<CalendarMeeting[]> => {
+export const getCalendarItems = async (
+  payload: Payload,
+  locale: Locale,
+): Promise<CalendarMeeting[]> => {
   const fallbackLocale = otherLocale(locale)
   const [courses, events, words] = await Promise.all([
     payload.find({
@@ -111,6 +114,7 @@ const getCalendarItems = async (payload: Payload, locale: Locale): Promise<Calen
       return courseItems(
         {
           kind: 'course',
+          courseId: c.id,
           title: c.title,
           href: detailPath('courses', String(c.slug)),
           type: c.course_type.toLowerCase(),
@@ -144,7 +148,7 @@ const getCalendarItems = async (payload: Payload, locale: Locale): Promise<Calen
 /** The meetings above, built once per language and kept until a course changes. */
 export const getCachedCalendarItems = unstable_cache(
   async (locale: Locale) => getCalendarItems(await getPayload({ config }), locale),
-  ['calendar-items-v6'],
+  ['calendar-items-v7'],
   { tags: [PUBLIC_LISTS_TAG], revalidate: 3600 },
 )
 

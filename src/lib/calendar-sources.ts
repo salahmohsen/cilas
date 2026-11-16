@@ -1,3 +1,5 @@
+import { detailPath } from '@/lib/paths'
+import { isAdminUser } from '@/access'
 import type { Payload, PayloadRequest } from 'payload'
 import { sessionEditData, writeSessionEdit, type SessionDetailChange } from '@/lib/session-edit'
 
@@ -516,7 +518,81 @@ const spaceSource: CalendarSource = {
   },
 }
 
-const sources: Record<string, CalendarSource> = { course: sessionSource, space: spaceSource }
+const publicCourses = (ctx: CalendarContext, parentId: string): number[] => {
+  if (!isAdminUser(ctx.user)) throw new CalendarSaveFailure({ code: 'forbidden' })
+  if (!parentId) return []
+  return parentId.split(',').map((id) => numericId(id))
+}
+
+const publicSource: CalendarSource = {
+  async load(ctx, parentId) {
+    const items: CalendarItem[] = []
+    for (const id of publicCourses(ctx, parentId)) {
+      const { course } = await shownCourse(ctx, String(id))
+      const sessions = await sessionSource.load(ctx, String(id))
+      items.push(
+        ...sessions.map((item) => ({
+          ...item,
+          parentId: String(id),
+          href: `/${localeOf(ctx.req.locale)}${detailPath('courses', String(course.slug))}`,
+          kind: `course:${course.course_type?.toLowerCase() ?? ''}`,
+          caption: [course.title, item.caption].filter(Boolean).join(' · '),
+        })),
+      )
+    }
+    return items
+  },
+  async canEdit(ctx, parentId) {
+    publicCourses(ctx, parentId)
+    return true
+  },
+  async names(ctx, parentId) {
+    const names = new Map<string, string>()
+    for (const id of publicCourses(ctx, parentId))
+      for (const [key, value] of await sessionSource.names(ctx, String(id))) names.set(key, value)
+    return names
+  },
+  async apply(ctx, parentId, changes, details = []) {
+    const courses = publicCourses(ctx, parentId)
+    if (changes.some((change) => change.op === 'create-item'))
+      throw invalid('Choose a course to create a session.')
+    const ids = [
+      ...new Set([
+        ...changes.flatMap((change) => (change.op === 'create-item' ? [] : [change.itemId])),
+        ...details.map((detail) => detail.id),
+      ]),
+    ]
+    const { docs } = await ctx.req.payload.find({
+      collection: 'sessions',
+      where: { and: [{ id: { in: ids.map((id) => numericId(id)) } }, { course: { in: courses } }] },
+      depth: 0,
+      pagination: false,
+      select: { course: true },
+      req: ctx.req,
+      user: ctx.user,
+      overrideAccess: false,
+    })
+    const parents = new Map(docs.map((doc) => [String(doc.id), String(relId(doc.course))]))
+    for (const id of ids)
+      if (!parents.has(id)) throw new CalendarSaveFailure({ code: 'not-found', itemId: id })
+    for (const course of new Set(parents.values())) {
+      await sessionSource.apply(
+        ctx,
+        course,
+        changes.filter(
+          (change) => change.op !== 'create-item' && parents.get(change.itemId) === course,
+        ),
+        details.filter((detail) => parents.get(detail.id) === course),
+      )
+    }
+  },
+}
+
+const sources: Record<string, CalendarSource> = {
+  course: sessionSource,
+  space: spaceSource,
+  public: publicSource,
+}
 
 /** The adapter for a parent kind, or null when no adapter takes it. */
 export const calendarSourceOf = (parentKind: string): CalendarSource | null =>

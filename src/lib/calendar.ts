@@ -13,6 +13,7 @@ export type CalendarMeeting = {
   key: string
   /** The session or event it belongs to: meetings with the same `item` are one thing on the calendar. */
   item: string
+  courseId?: number
   kind: 'course' | 'event'
   title: string
   href: string | null
