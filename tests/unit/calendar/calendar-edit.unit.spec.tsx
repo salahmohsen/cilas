@@ -369,9 +369,12 @@ describe('edit mode', () => {
     expect(toggle).toHaveAttribute('aria-expanded', 'false')
     const tray = screen.getByRole('group', { name: 'Unscheduled' })
     expect(tray).toBeVisible()
-    expect(tray.closest('[data-slot="collapsible-panel"]')).toBeNull()
     fireEvent.click(toggle)
     expect(toggle).toHaveAttribute('aria-expanded', 'true')
+    const panel = document.getElementById(toggle.getAttribute('aria-controls') ?? '')
+    expect(panel).not.toBeNull()
+    expect(panel).toBeVisible()
+    expect(panel!.contains(tray)).toBe(false)
     expect(screen.getAllByRole('group', { name: 'Unscheduled' })).toEqual([tray])
     expect(screen.getAllByRole('button', { name: /^Week 4$/ })).toHaveLength(1)
   })
@@ -473,6 +476,76 @@ describe('dragging a block to another day', () => {
     pointer('pointerup', 320, 80, 0)
     await frame()
     expect(block()).toHaveAccessibleName(/^Studio lab, Tuesday, November 17.*Unsaved$/)
+  })
+})
+
+describe('the Unscheduled tray with a pointer', () => {
+  it('opens Place on day with a click and places the item on the day chosen', async () => {
+    edit({ onSave: vi.fn() })
+    const entry = within(screen.getByRole('group', { name: 'Unscheduled' })).getByRole('group', {
+      name: 'Week 4',
+    })
+    const menu = within(entry).getByRole('button', { name: 'Place on day' })
+    fireEvent.pointerDown(menu, { pointerType: 'mouse', button: 0 })
+    fireEvent.pointerUp(menu, { pointerType: 'mouse', button: 0 })
+    fireEvent.click(menu)
+    fireEvent.click(await screen.findByRole('menuitem', { name: 'Friday, November 20' }))
+    expect(
+      screen.getByRole('button', { name: /^Week 4, Friday, November 20/ }),
+    ).toHaveAccessibleName('Week 4, Friday, November 20, 9 AM to 10 AM, Unsaved')
+  })
+
+  it('places an item where it is dropped on a day', async () => {
+    // jsdom has no layout: seven days 100px wide and 780px tall.
+    vi.spyOn(HTMLElement.prototype, 'getBoundingClientRect').mockImplementation(function (
+      this: HTMLElement,
+    ) {
+      const track = this.closest<HTMLElement>('[data-track]')
+      const days = [...document.querySelectorAll<HTMLElement>('[data-track]')].map(
+        (el) => el.dataset.track,
+      )
+      const index = Math.max(0, days.indexOf(track?.dataset.track))
+      return track ? new DOMRect(index * 100, 0, 100, 780) : new DOMRect(0, -100, 80, 30)
+    })
+    const dayAt = (x: number, y: number) =>
+      y < 0
+        ? null
+        : (document.querySelectorAll<HTMLElement>('[data-track]')[Math.floor(x / 100)] ?? null)
+    document.elementFromPoint = (x, y) => dayAt(x, y)
+    document.elementsFromPoint = (x, y) =>
+      [dayAt(x, y)].filter((el): el is HTMLElement => el !== null)
+    edit({ onSave: vi.fn() })
+    const chip = within(screen.getByRole('group', { name: 'Unscheduled' })).getByRole('button', {
+      name: 'Week 4',
+    })
+    const pointer = (type: string, x: number, y: number, buttons = 1) =>
+      fireEvent(
+        type === 'pointerdown' ? chip : document,
+        new PointerEvent(type, {
+          bubbles: true,
+          pointerId: 1,
+          pointerType: 'mouse',
+          isPrimary: true,
+          button: 0,
+          buttons,
+          clientX: x,
+          clientY: y,
+        }),
+      )
+    const frame = () =>
+      act(() => new Promise<void>((resolve) => requestAnimationFrame(() => resolve())))
+    pointer('pointerdown', 10, -90)
+    pointer('pointermove', 300, 100)
+    await frame()
+    pointer('pointermove', 520, 390)
+    await frame()
+    expect(document.querySelector('[data-track="2026-11-19"]')).toHaveAttribute('data-over')
+    pointer('pointerup', 520, 390, 0)
+    await frame()
+    expect(
+      screen.getByRole('button', { name: /^Week 4, Thursday, November 19/ }),
+    ).toHaveAccessibleName(/Unsaved$/)
+    expect(screen.queryByRole('group', { name: 'Unscheduled' })).toBeNull()
   })
 })
 

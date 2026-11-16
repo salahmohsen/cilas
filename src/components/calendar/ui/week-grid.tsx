@@ -17,10 +17,15 @@ import type { CalendarLabels } from './calendar-labels'
 import { longDay } from './block-names'
 import { formatDay, formatTime, formatTimeRange, isWeekend } from './calendar-time'
 import styles from './calendar.module.css'
+import type { CalendarView } from './calendar-views'
 import { useScrollToWork } from './use-scroll-to-work'
 import { WeekSpans } from './week-spans'
 
 type Props = {
+  /** The view the grid draws; at phone width the stylesheet shows a week as its selected day. */
+  view: CalendarView
+  /** The week of the selected day, where an edit grid opens its hours. */
+  week: string[]
   items: CalendarItem[]
   /** The all-day blocks on these days, as edited. */
   allDay: EditBlock[]
@@ -44,7 +49,6 @@ type Props = {
   onDraw?: (day: string) => void
   /** Set when blocks have a menu: it opens on right-click, long press, Shift+F10 and the Menu key. */
   menu?: MenuController<string>
-  /** The id of the text that says how to edit. */
   onOpen: (itemId: string, blockId: string | null) => void
   /** A deleted block was pressed: bring it back. */
   onRestore: (id: string) => void
@@ -53,6 +57,8 @@ type Props = {
 }
 
 export function WeekGrid({
+  view,
+  week,
   items,
   allDay,
   days,
@@ -90,13 +96,19 @@ export function WeekGrid({
   const scroller = useRef<HTMLDivElement>(null)
   useScrollToWork(scroller, {
     enabled: editable,
-    minutes: scrollTargetOf(timedBlocks(blocksOf(items)), days),
+    minutes: scrollTargetOf(timedBlocks(blocksOf(items)), week),
     range,
-    week: days[0]!,
+    week: week[0]!,
   })
 
   return (
-    <div className={styles.grid} ref={scroller} data-scroll={editable ? '' : undefined}>
+    <div
+      className={styles.grid}
+      ref={scroller}
+      data-scroll={editable ? '' : undefined}
+      data-view={view}
+      style={{ '--days': days.length } as CSSProperties}
+    >
       <div className={styles.head}>
         <div className={styles.dayRow}>
           <div className={styles.corner}>{labels.cairoTime}</div>

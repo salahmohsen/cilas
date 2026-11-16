@@ -13,8 +13,13 @@ type Props = {
   months: string
   /** The host's name for the week, such as "Week 3 of 8", or null. */
   week: string | null
-  /** "Nov 14 to Nov 20, 2026", said when the week changes. */
+  /** "Nov 14 to Nov 20, 2026", said when the days shown change. */
   range: string
+  /** What previous and next say, from the view: "Previous week". */
+  previousLabel: string
+  nextLabel: string
+  /** The view switch. Before the calendar knows its width, both switches, and CSS shows one. */
+  views: ReactNode
   /** The host's own buttons, such as Edit. */
   action?: ReactNode
   /** Set in edit mode when a new item can be added. */
@@ -29,6 +34,9 @@ export function CalendarToolbar({
   months,
   week,
   range,
+  previousLabel,
+  nextLabel,
+  views,
   action,
   onCreate,
   onPrevious,
@@ -53,26 +61,21 @@ export function CalendarToolbar({
             type="button"
             variant="ghost"
             size="sm"
-            aria-label={labels.previousWeek}
+            aria-label={previousLabel}
             onClick={onPrevious}
           >
             <ChevronLeft aria-hidden size={16} strokeWidth={1.75} className={styles.flip} />
           </Button>
-          <Button
-            type="button"
-            variant="ghost"
-            size="sm"
-            aria-label={labels.nextWeek}
-            onClick={onNext}
-          >
+          <Button type="button" variant="ghost" size="sm" aria-label={nextLabel} onClick={onNext}>
             <ChevronRight aria-hidden size={16} strokeWidth={1.75} className={styles.flip} />
           </Button>
         </div>
+        {views}
         {action}
         {onCreate && labels.create ? (
-          <Button type="button" size="sm" onClick={onCreate}>
+          <Button type="button" size="sm" onClick={onCreate} aria-label={labels.create}>
             <Plus aria-hidden size={16} strokeWidth={1.75} />
-            {labels.create}
+            <span className={styles.createText}>{labels.create}</span>
           </Button>
         ) : null}
         <CollapsibleTrigger

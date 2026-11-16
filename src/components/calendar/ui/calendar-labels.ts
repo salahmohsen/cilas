@@ -1,5 +1,7 @@
 import type { useTranslations } from 'next-intl'
 
+import type { CalendarView, ViewSpan } from './calendar-views'
+
 /** The words of a block's menu. A host that gives none gets no menu. */
 export type CalendarMenuLabels = {
   /** The menu's name: "Actions for Week 3". */
@@ -24,9 +26,15 @@ export type CalendarLabels = {
   name: string
   cairoTime: string
   today: string
-  previousWeek: string
-  nextWeek: string
-  daySwitcher: string
+  /** Moves back or forward by what the view shows: "Previous week", "Next day". `count` is its days or weeks. */
+  previous: (span: ViewSpan, count: number) => string
+  next: (span: ViewSpan, count: number) => string
+  /** Names the view switch. */
+  view: string
+  /** A view's name in the switch: "Week", "3 days". `count` is the days it shows. */
+  viewName: (view: CalendarView, count: number) => string
+  /** What an agenda with nothing in it says: "Nothing scheduled this week". */
+  nothing: (span: ViewSpan, count: number) => string
   allDay: string
   legend: string
   /** The toggle of the side panel: Up next, the colour key, Unscheduled. */
@@ -65,7 +73,6 @@ export type CalendarLabels = {
   /** Said when newly loaded items replace an item that has unsaved changes: they are gone. */
   dropped: (titles: string) => string
   dismiss: string
-  /** How to draw, move, resize and delete, with the mouse and the keyboard. */
   /** The "+" on a day's header. */
   addBlock: (day: string) => string
   /** The menu that puts an unscheduled item on a day, the keyboard's way to place it. */
@@ -104,9 +111,11 @@ export const calendarLabelsFrom = (
   name: t('name'),
   cairoTime: t('cairoTime'),
   today: t('today'),
-  previousWeek: t('previousWeek'),
-  nextWeek: t('nextWeek'),
-  daySwitcher: t('daySwitcher'),
+  previous: (span, count) => t('previous', { span, count }),
+  next: (span, count) => t('next', { span, count }),
+  view: t('view'),
+  viewName: (view, count) => t('viewName', { view, count }),
+  nothing: (span, count) => t('nothing', { span, count }),
   allDay: t('allDay'),
   legend: t('legend'),
   panel: t('panel'),

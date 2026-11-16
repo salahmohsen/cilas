@@ -248,8 +248,11 @@ test.describe('course calendar', () => {
 
     expect((await sessionsOf()).map((s) => s.title)).toEqual(['E2E first session'])
     await openSessionsTab()
-    // The tray is in the side panel, closed at first.
-    await calendar().getByRole('button', { name: 'Side panel' }).click()
+    // In edit mode the tray is above the grid, outside the closed side panel.
+    await expect(calendar().getByRole('button', { name: 'Side panel' })).toHaveAttribute(
+      'aria-expanded',
+      'false',
+    )
     await expect(
       calendar().getByRole('group', { name: 'Unscheduled' }).getByText('E2E first session'),
     ).toBeVisible()

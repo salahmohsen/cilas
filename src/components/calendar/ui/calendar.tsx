@@ -13,7 +13,9 @@ import { allDayBlocks, blocksOf, hourRange, legendOf, timedBlocks } from './cale
 import type { CalendarLabels } from './calendar-labels'
 import { CalendarToolbar } from './calendar-toolbar'
 import { CalendarPanel } from './calendar-panel'
-import { addDays, cairoNow, formatDay, formatMonths, weekOf, weekStartOf } from './calendar-time'
+import { AgendaList } from './agenda-list'
+import { cairoNow, formatDay, formatMonths, weekOf, weekStartOf } from './calendar-time'
+import { daysOf, stepFrom, viewAt, viewsAt, type CalendarView } from './calendar-views'
 import styles from './calendar.module.css'
 import { SaveBar } from './save-bar'
 import { UnscheduledTray } from './unscheduled-tray'
@@ -29,6 +31,8 @@ type Shared = {
   locale: string
   /** The Cairo day to open on: its week, and that day where one day shows at a time. Today by default. */
   day?: string
+  /** The view to open in, where the width has it. Without it: the week, and one day on a phone. */
+  view?: CalendarView
   /** Ids of the items to mark as changed, in words and on their face. */
   marked?: ReadonlySet<string>
   /** A block was chosen. `blockId` is null for an item with no block. */
@@ -73,12 +77,14 @@ export type CalendarProps = Shared &
 const STEP = 15
 const NO_MARKS: ReadonlySet<string> = new Set()
 const indexOfDay = (days: string[], day: string) => Math.max(0, days.indexOf(day))
+const longDate = { day: 'numeric', month: 'short', year: 'numeric' } as const
 
 export function Calendar({
   items,
   labels,
   locale,
   day,
+  view: startView = 'week',
   marked = NO_MARKS,
   onOpen,
   weekLabel,
@@ -99,17 +105,19 @@ export function Calendar({
   const [told, setTold] = useState('')
   const menuTarget = useRef<string | null>(null)
 
-  const [start, setStart] = useState(() => weekStartOf(day ?? cairoNow().date))
-  const [selectedIndex, setSelectedIndex] = useState(() =>
-    indexOfDay(weekOf(start), day ?? cairoNow().date),
-  )
-  const days = useMemo(() => weekOf(start), [start])
+  // The day the view is about: the Day view's day, the first of 3 days, a day in the week.
+  const [anchor, setAnchor] = useState(() => day ?? cairoNow().date)
+  const [wanted, setWanted] = useState<CalendarView>(startView)
+  // Before the width is known (the server's render) the wide view shows, and
+  // the stylesheet shows its anchor day alone on a phone, as the Day view does.
+  const shown = viewAt(wanted, narrow ?? false)
+  const grid = shown.layout === 'grid'
+  const days = useMemo(() => daysOf(shown.span, anchor), [shown.span, anchor])
+  // The anchor's week sets the hours, the course week and the scroll target,
+  // so they stay the same between the week, its days and a phone's first render.
+  const week = useMemo(() => weekOf(weekStartOf(anchor)), [anchor])
+  const selectedIndex = indexOfDay(days, anchor)
   const todayIndex = now ? days.indexOf(now.date) : -1
-
-  const goTo = (next: string) => {
-    setStart(next)
-    setSelectedIndex(indexOfDay(weekOf(next), cairoNow().date))
-  }
 
   const loaded = useMemo(() => timedBlocks(blocksOf(items)), [items])
   // Edit mode shows the same hours in every week, so a drag never moves the grid.
@@ -119,9 +127,9 @@ export function Calendar({
         ? hourRange('edit', loaded)
         : hourRange(
             'view',
-            loaded.filter((block) => days.includes(block.track)),
+            loaded.filter((block) => week.includes(block.track) || days.includes(block.track)),
           ),
-    [editable, loaded, days],
+    [editable, loaded, week, days],
   )
 
   const session = useEditSession({
@@ -162,10 +170,42 @@ export function Calendar({
 
   const droppedNote = session.dropped.length ? labels.dropped(session.dropped.join(', ')) : ''
 
-  const rangeLabel = labels.range(
-    formatDay(days[0]!, locale, { day: 'numeric', month: 'short' }),
-    formatDay(days[6]!, locale, { day: 'numeric', month: 'short', year: 'numeric' }),
+  const first = days[0]!
+  const last = days.at(-1)!
+  const rangeLabel =
+    first === last
+      ? formatDay(first, locale, { weekday: 'long', ...longDate })
+      : labels.range(
+          formatDay(first, locale, { day: 'numeric', month: 'short' }),
+          formatDay(last, locale, longDate),
+        )
+  const count = shown.span === 'twoWeeks' ? 2 : days.length
+
+  const viewSwitch = (atNarrow: boolean) => (
+    <SegmentedControl
+      label={labels.view}
+      value={viewAt(wanted, atNarrow).id}
+      onValueChange={(value) => setWanted(value as CalendarView)}
+      options={viewsAt(atNarrow).map((row) => ({
+        value: row.id,
+        label: labels.viewName(row.id, daysOf(row.span, anchor).length),
+      }))}
+    />
   )
+  // The server cannot know the width: it sends both switches, and the stylesheet shows one.
+  const views =
+    narrow === null ? (
+      <>
+        <div className={styles.views} data-width="wide">
+          {viewSwitch(false)}
+        </div>
+        <div className={styles.views} data-width="narrow">
+          {viewSwitch(true)}
+        </div>
+      </>
+    ) : (
+      <div className={styles.views}>{viewSwitch(narrow)}</div>
+    )
 
   const nameOf = useMemo(
     () =>
@@ -243,7 +283,7 @@ export function Calendar({
         spans={session.timed}
         onSpansChange={session.onSpansChange}
         editable={editable}
-        tracks={narrow ? [days[selectedIndex]!] : days}
+        tracks={grid ? days : []}
         min={range.min}
         max={range.max}
         step={STEP}
@@ -269,16 +309,25 @@ export function Calendar({
         >
           <CalendarToolbar
             labels={labels}
-            months={formatMonths(days[0]!, days[6]!, locale)}
-            week={weekLabel?.(days) ?? null}
+            months={formatMonths(first, last, locale)}
+            week={weekLabel?.(week) ?? null}
             range={rangeLabel}
+            previousLabel={labels.previous(shown.span, count)}
+            nextLabel={labels.next(shown.span, count)}
+            views={views}
             action={action}
             onCreate={
-              editable && newItemKind ? () => session.drawOnDay(days[selectedIndex]!) : undefined
+              editable && newItemKind
+                ? () => {
+                    // The agenda moves nothing, so a new item is drawn on its day's grid.
+                    if (!grid) setWanted('day')
+                    session.drawOnDay(anchor)
+                  }
+                : undefined
             }
-            onPrevious={() => goTo(addDays(start, -7))}
-            onNext={() => goTo(addDays(start, 7))}
-            onToday={() => goTo(weekStartOf(cairoNow().date))}
+            onPrevious={() => setAnchor(stepFrom(shown.span, anchor, -1))}
+            onNext={() => setAnchor(stepFrom(shown.span, anchor, 1))}
+            onToday={() => setAnchor(cairoNow().date)}
           />
 
           <div className={styles.main}>
@@ -286,7 +335,7 @@ export function Calendar({
               <div className={styles.editTray}>
                 <UnscheduledTray
                   items={unscheduled}
-                  days={days}
+                  days={grid ? days : week}
                   editable
                   labels={labels}
                   locale={locale}
@@ -296,40 +345,48 @@ export function Calendar({
               </div>
             ) : null}
 
-            <div className={styles.switcher}>
-              <SegmentedControl
-                label={labels.daySwitcher}
-                value={String(selectedIndex)}
-                onValueChange={(value) => setSelectedIndex(Number(value))}
-                options={days.map((date, index) => ({
-                  value: String(index),
-                  label: `${formatDay(date, locale, { weekday: 'short' })} ${formatDay(date, locale, { day: 'numeric' })}`,
-                }))}
+            {grid ? (
+              <WeekGrid
+                view={shown.id}
+                week={week}
+                items={session.items}
+                allDay={allDay}
+                days={days}
+                range={range}
+                selectedIndex={selectedIndex}
+                todayIndex={todayIndex}
+                now={now}
+                labels={labels}
+                locale={locale}
+                editable={editable}
+                unsaved={session.unsaved}
+                marked={marked}
+                selectedId={selectedId}
+                nameOf={nameOf}
+                newTone={newTone}
+                onDraw={newItemKind ? session.drawOnDay : undefined}
+                menu={blockMenu ? menu : undefined}
+                onOpen={onOpen}
+                onRestore={session.restore}
+                onDelete={session.removeBlock}
               />
-            </div>
-
-            <WeekGrid
-              items={session.items}
-              allDay={allDay}
-              days={days}
-              range={range}
-              selectedIndex={selectedIndex}
-              todayIndex={todayIndex}
-              now={now}
-              labels={labels}
-              locale={locale}
-              editable={editable}
-              unsaved={session.unsaved}
-              marked={marked}
-              selectedId={selectedId}
-              nameOf={nameOf}
-              newTone={newTone}
-              onDraw={newItemKind ? session.drawOnDay : undefined}
-              menu={blockMenu ? menu : undefined}
-              onOpen={onOpen}
-              onRestore={session.restore}
-              onDelete={session.removeBlock}
-            />
+            ) : (
+              <AgendaList
+                items={session.items}
+                blocks={session.working}
+                days={days}
+                today={now?.date ?? null}
+                labels={labels}
+                locale={locale}
+                unsaved={session.unsaved}
+                marked={marked}
+                nameOf={nameOf}
+                newTone={newTone}
+                empty={labels.nothing(shown.span, count)}
+                onOpen={onOpen}
+                onRestore={session.restore}
+              />
+            )}
           </div>
 
           <CollapsiblePanel className={styles.panel}>
@@ -366,7 +423,7 @@ export function Calendar({
               {!editable && unscheduled.length ? (
                 <UnscheduledTray
                   items={unscheduled}
-                  days={days}
+                  days={grid ? days : week}
                   editable={editable}
                   labels={labels}
                   locale={locale}
