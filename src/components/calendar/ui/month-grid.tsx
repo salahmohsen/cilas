@@ -1,6 +1,6 @@
 import { isRTL } from '@ui-sdk/core'
 import { RotateCcw } from 'lucide-react'
-import { useMemo, type CSSProperties, type KeyboardEvent, type MouseEvent } from 'react'
+import { useMemo, type CSSProperties, type KeyboardEvent } from 'react'
 
 import { timeDir } from '@/lib/digits'
 import type { CalendarItem } from '@/lib/calendar-items'
@@ -10,6 +10,7 @@ import { allDayBars, editState, type AllDayBar, type EditBlock } from './calenda
 import type { CalendarLabels } from './calendar-labels'
 import { addDays, addMonths, formatDay, formatShortTime, isWeekend, monthOf } from './calendar-time'
 import styles from './calendar.module.css'
+import { ItemPress, PRESSABLE } from './item-press'
 import { MonthFocus, type GridCell } from './month-focus'
 
 /** Lines of items a day shows under its date: bars first, then chips, the last one "N more" when they do not fit. */
@@ -50,10 +51,10 @@ type Props = {
 const byStart = (a: EditBlock, b: EditBlock) => a.start - b.start || a.end - b.end
 
 /** Keys on a day's buttons: Up and Down stay in the day, Escape goes back to it; Left and Right go on to the grid. */
-const inDay = (event: KeyboardEvent<HTMLButtonElement>) => {
+const inDay = (event: KeyboardEvent<HTMLElement>) => {
   const cell = event.currentTarget.closest<HTMLElement>('[role="gridcell"]')
   if (!cell) return
-  const buttons = [...cell.querySelectorAll<HTMLElement>('button')]
+  const buttons = [...cell.querySelectorAll<HTMLElement>(PRESSABLE)]
   const at = buttons.indexOf(event.currentTarget)
   if (event.key === 'Escape') cell.focus()
   else if (event.key === 'ArrowDown') buttons[at + 1]?.focus()
@@ -125,7 +126,7 @@ export function MonthGrid({
   const chipProps = (block: EditBlock, run: EditBlock[]) => {
     const item = itemById.get(block.itemId)
     return {
-      type: 'button' as const,
+      href: item?.href,
       tabIndex: -1,
       'data-tone': item?.tone ?? newTone,
       'data-cancelled': item?.cancelled ? '' : undefined,
@@ -133,9 +134,9 @@ export function MonthGrid({
       'data-unsaved': unsaved.has(block.id) ? '' : undefined,
       'data-deleted': block.deleted ? '' : undefined,
       'aria-disabled': item || block.deleted ? undefined : true,
-      onClick: (event: MouseEvent<HTMLButtonElement>) => {
+      onPress: (target: HTMLElement) => {
         if (block.deleted) onRestore(run)
-        else if (item) onPress(item.id, run, event.currentTarget)
+        else if (item) onPress(item.id, run, target)
       },
       onKeyDown: inDay,
     }
@@ -205,12 +206,12 @@ export function MonthGrid({
                 aria-current={day === today ? 'date' : undefined}
                 style={{ '--lanes': lanes } as CSSProperties}
                 onClick={(event) => {
-                  if (pressOpensDay && !(event.target as Element).closest('button')) onOpenDay(day)
+                  if (pressOpensDay && !(event.target as Element).closest(PRESSABLE)) onOpenDay(day)
                 }}
                 onKeyDown={(event) => {
                   const own = event.target === event.currentTarget
                   if (own && (event.key === 'Enter' || event.key === ' ' || event.key === 'F2')) {
-                    const first = event.currentTarget.querySelector<HTMLElement>('button')
+                    const first = event.currentTarget.querySelector<HTMLElement>(PRESSABLE)
                     event.preventDefault()
                     if (first) first.focus()
                     else if (pressOpensDay) onOpenDay(day)
@@ -227,7 +228,7 @@ export function MonthGrid({
                   const block = bar.blocks[0]
                   const item = itemById.get(block.itemId)
                   return (
-                    <button
+                    <ItemPress
                       key={block.id}
                       className={styles.monthBar}
                       data-allday-id={block.id}
@@ -239,13 +240,13 @@ export function MonthGrid({
                         {item?.title ?? labels.newItem}
                       </span>
                       {block.deleted ? <RotateCcw aria-hidden size={12} /> : null}
-                    </button>
+                    </ItemPress>
                   )
                 })}
                 {chips.map((block) => {
                   const item = itemById.get(block.itemId)
                   return (
-                    <button
+                    <ItemPress
                       key={block.id}
                       className={styles.chip}
                       data-block-id={block.id}
@@ -259,7 +260,7 @@ export function MonthGrid({
                         {item?.title ?? labels.newItem}
                       </span>
                       {block.deleted ? <RotateCcw aria-hidden size={12} /> : null}
-                    </button>
+                    </ItemPress>
                   )
                 })}
                 {more ? (

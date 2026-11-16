@@ -38,6 +38,10 @@ export type CalendarItem = {
   caption?: string
   /** The start of what it is about, in plain words, for a preview. */
   summary?: string
+  /** The item's own page. Its blocks are links to it, so the page's HTML holds them. */
+  href?: string
+  /** A picture of the item, for its details. `position` is a CSS `object-position`. */
+  image?: { url: string; alt: string; position?: string }
   /** The item's `updatedAt` when it was loaded; a save from an older one fails. */
   version: string
   blocks: CalendarBlock[]

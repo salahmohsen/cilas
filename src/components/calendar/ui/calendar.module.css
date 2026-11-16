@@ -199,17 +199,42 @@
 
 .legend {
   display: grid;
-  gap: var(--space-2);
-  margin: 0;
-  padding: 0;
-  list-style: none;
+  gap: 2px;
+  margin-inline: calc(var(--space-2) * -1);
   color: var(--foreground);
 }
-.legend li {
+.legendNote,
+.legendKind {
   display: flex;
   align-items: center;
   gap: var(--space-2);
+  min-block-size: 2rem;
+  padding-inline: var(--space-2);
 }
+/* A kind is a toggle: pressed shows its items. Off, its swatch empties and its name dims. */
+.legendKind {
+  border: 0;
+  border-radius: var(--radius-control);
+  background: transparent;
+  color: var(--foreground);
+  font: inherit;
+  text-align: start;
+  cursor: pointer;
+  transition: color var(--duration-fast) var(--ease-standard);
+}
+.legendKind:hover {
+  background: var(--surface-muted);
+}
+.legendKind .swatch {
+  transition: background-color var(--duration-fast) var(--ease-standard);
+}
+.legendKind[aria-pressed='false'] {
+  color: var(--text-secondary);
+}
+.legendKind[aria-pressed='false'] .swatch {
+  background: transparent;
+}
+
 .swatch {
   inline-size: 0.75rem;
   block-size: 0.75rem;
@@ -1230,6 +1255,15 @@
 .agendaRow:hover {
   background: var(--surface-muted);
 }
+/* An item with a page is a link: blocks, chips and rows keep their own look. */
+:is(.agendaRow, .chip, .monthBar, .block):is(a) {
+  box-sizing: border-box;
+  text-decoration: none;
+}
+.agendaCaption {
+  color: var(--text-secondary);
+  font-size: var(--text-xs);
+}
 .agendaRow[aria-disabled='true'] {
   cursor: default;
 }
@@ -1367,6 +1401,22 @@
   .details[data-ending-style] {
     transform: none;
   }
+}
+/* The picture runs to the panel's edges, under its rounded top corners. */
+.detailsImage {
+  position: relative;
+  aspect-ratio: 16 / 9;
+  margin: calc(var(--space-4) * -1) calc(var(--space-4) * -1) 0;
+  overflow: hidden;
+  border-start-start-radius: inherit;
+  border-start-end-radius: inherit;
+  background: var(--surface);
+}
+.detailsImage img {
+  object-fit: cover;
+}
+.detailsLink {
+  text-decoration: none;
 }
 .detailsHead {
   display: grid;

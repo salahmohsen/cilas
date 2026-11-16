@@ -6,8 +6,9 @@ import type { CalendarItem } from '@/lib/calendar-items'
 
 import type { EditBlock } from './calendar-model'
 import type { CalendarLabels } from './calendar-labels'
-import { formatDay, formatTime } from './calendar-time'
+import { formatDay, formatTime, toTime } from './calendar-time'
 import styles from './calendar.module.css'
+import { ItemPress } from './item-press'
 
 type Props = {
   items: CalendarItem[]
@@ -60,7 +61,12 @@ export function AgendaList({
       {groups.map(({ day, blocks: dayBlocks }) => {
         const headId = `${id}-${day}`
         return (
-          <li key={day} className={styles.agendaDay} data-today={day === today ? '' : undefined}>
+          <li
+            key={day}
+            className={styles.agendaDay}
+            data-day={day}
+            data-today={day === today ? '' : undefined}
+          >
             <p className={styles.agendaHead} id={headId}>
               <span className={styles.agendaDate} aria-hidden>
                 {formatDay(day, locale, { day: 'numeric' })}
@@ -78,8 +84,8 @@ export function AgendaList({
                 const openable = Boolean(item) || block.deleted
                 return (
                   <li key={block.id}>
-                    <button
-                      type="button"
+                    <ItemPress
+                      href={item?.href}
                       className={styles.agendaRow}
                       data-tone={item?.tone ?? newTone}
                       data-cancelled={item?.cancelled ? '' : undefined}
@@ -88,9 +94,9 @@ export function AgendaList({
                       data-deleted={block.deleted ? '' : undefined}
                       aria-label={nameOf(block)}
                       aria-disabled={openable ? undefined : true}
-                      onClick={(event) => {
+                      onPress={(target) => {
                         if (block.deleted) onRestore(block.id)
-                        else if (item) onPress(item.id, [block], event.currentTarget)
+                        else if (item) onPress(item.id, [block], target)
                       }}
                     >
                       <span className={styles.agendaTime} dir={timeDir(locale)}>
@@ -98,10 +104,12 @@ export function AgendaList({
                           <span>{labels.allDay}</span>
                         ) : (
                           <>
-                            <span>{formatTime(block.start, locale)}</span>
-                            <span className={styles.agendaEnd}>
+                            <time dateTime={toTime(block.start)}>
+                              {formatTime(block.start, locale)}
+                            </time>
+                            <time className={styles.agendaEnd} dateTime={toTime(block.end)}>
                               {formatTime(block.end, locale)}
-                            </span>
+                            </time>
                           </>
                         )}
                       </span>
@@ -110,6 +118,11 @@ export function AgendaList({
                         <span className={styles.agendaTitle} dir="auto">
                           {item?.title ?? labels.newItem}
                         </span>
+                        {item?.caption && item.caption !== item.title ? (
+                          <span className={styles.agendaCaption} data-caption dir="auto">
+                            {item.caption}
+                          </span>
+                        ) : null}
                         {item?.place ? (
                           <span className={styles.agendaPlace}>
                             <MapPin aria-hidden size={12} strokeWidth={1.75} />
@@ -131,7 +144,7 @@ export function AgendaList({
                           </span>
                         ) : null}
                       </span>
-                    </button>
+                    </ItemPress>
                   </li>
                 )
               })}

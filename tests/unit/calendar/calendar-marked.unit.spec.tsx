@@ -112,11 +112,11 @@ describe('marked items', () => {
     const panel = () => fireEvent.click(screen.getByRole('button', { name: 'Side panel' }))
     const { unmount } = view(new Set(['s3']))
     panel()
-    expect(screen.getByRole('list', { name: 'Colour key' })).toHaveTextContent('Changed')
+    expect(screen.getByRole('group', { name: 'Colour key' })).toHaveTextContent('Changed')
     unmount()
     view()
     panel()
-    expect(screen.getByRole('list', { name: 'Colour key' })).not.toHaveTextContent('Changed')
+    expect(screen.getByRole('group', { name: 'Colour key' })).not.toHaveTextContent('Changed')
     expect(document.querySelector('[data-marked]')).toBeNull()
   })
 

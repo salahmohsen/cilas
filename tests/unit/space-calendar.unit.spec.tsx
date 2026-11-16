@@ -96,7 +96,7 @@ it('server renders the next week and both legend kinds in view mode, with Edit f
   // The Edit button sits in the calendar's toolbar; the colour key in its side panel.
   expect(screen.getByRole('button', { name: 'Edit' }).closest('header')).not.toBeNull()
   fireEvent.click(screen.getByRole('button', { name: en.CalendarUi.panel }))
-  const key = screen.getByRole('list', { name: en.CalendarUi.legend })
+  const key = screen.getByRole('group', { name: en.CalendarUi.legend })
   expect(within(key).getByText(en.SpacePost.scheduleKind)).toBeInTheDocument()
   expect(within(key).getByText(en.Spaces.calendarEvents)).toBeInTheDocument()
   expect(screen.queryByRole('button', { name: /Save/ })).toBeNull()
@@ -147,7 +147,7 @@ it('renders Arabic calendar controls and both legend names in RTL', async () => 
     'rtl',
   )
   fireEvent.click(screen.getByRole('button', { name: ar.CalendarUi.panel }))
-  const key = screen.getByRole('list', { name: ar.CalendarUi.legend })
+  const key = screen.getByRole('group', { name: ar.CalendarUi.legend })
   expect(within(key).getByText(ar.SpacePost.scheduleKind)).toBeInTheDocument()
   expect(within(key).getByText(ar.Spaces.calendarEvents)).toBeInTheDocument()
 })

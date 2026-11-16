@@ -17,6 +17,7 @@ import { longDay } from './block-names'
 import { formatClock, formatDay, formatTime, formatTimeRange, isWeekend } from './calendar-time'
 import styles from './calendar.module.css'
 import type { CalendarView } from './calendar-views'
+import { ItemPress } from './item-press'
 import { useScrollToWork } from './use-scroll-to-work'
 import { WeekSpans } from './week-spans'
 
@@ -164,7 +165,6 @@ export function WeekGrid({
             const last = bar.blocks.at(-1)!
             const item = itemById.get(block.itemId)
             const pill = {
-              type: 'button' as const,
               className: styles.pill,
               style: {
                 '--from': bar.from + 2,
@@ -180,12 +180,6 @@ export function WeekGrid({
               'data-unsaved': unsaved.has(block.id) ? '' : undefined,
               'data-deleted': block.deleted ? '' : undefined,
               'aria-label': nameOf(block, last),
-              onClick: (event: MouseEvent<HTMLElement>) => {
-                if (block.deleted) return onRestore(block.id)
-                const more = (event.target as Element).closest('[data-block-menu]')
-                if (menu && more) return void menu.open({ payload: block.id, anchor: more })
-                if (item) onPress(item.id, bar.blocks, event.currentTarget)
-              },
               onKeyDown: (event: KeyboardEvent<HTMLElement>) => {
                 if (block.deleted) return
                 // Not every browser turns these keys into a context menu event.
@@ -222,6 +216,10 @@ export function WeekGrid({
                 })
               },
             }
+            const press = (target: HTMLElement) => {
+              if (block.deleted) onRestore(block.id)
+              else if (item) onPress(item.id, bar.blocks, target)
+            }
             const body = (
               <>
                 <span className={styles.pillTitle} dir="auto">
@@ -246,15 +244,20 @@ export function WeekGrid({
                 key={block.id}
                 controller={menu}
                 payload={block.id}
-                render={<button />}
+                render={<button type="button" />}
                 {...pill}
+                onClick={(event: MouseEvent<HTMLElement>) => {
+                  const more = (event.target as Element).closest('[data-block-menu]')
+                  if (more) void menu.open({ payload: block.id, anchor: more })
+                  else press(event.currentTarget)
+                }}
               >
                 {body}
               </MenuContextTrigger>
             ) : (
-              <button key={block.id} {...pill}>
+              <ItemPress key={block.id} href={item?.href} {...pill} onPress={press}>
                 {body}
-              </button>
+              </ItemPress>
             )
           })}
         </div>
@@ -341,6 +344,8 @@ export function WeekGrid({
                             payload={block.id}
                             render={<button />}
                           />
+                        ) : item?.href ? (
+                          <a href={item.href} draggable={false} />
                         ) : undefined
                       }
                     >

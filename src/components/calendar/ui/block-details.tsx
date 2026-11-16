@@ -6,9 +6,12 @@ import {
   type PopoverController,
 } from '@ui-sdk/react/popover'
 import { AlignLeft, Clock, MapPin, X } from 'lucide-react'
+import Image from 'next/image'
+import Link from 'next/link'
 import { useEffect, type CSSProperties, type ReactNode } from 'react'
 
 import { Button } from '@/components/arc/button/button'
+import button from '@/components/arc/button/button.module.css'
 import { timeDir } from '@/lib/digits'
 import type { CalendarItem } from '@/lib/calendar-items'
 
@@ -17,7 +20,7 @@ import type { CalendarLabels } from './calendar-labels'
 import { formatDay, formatLength, formatTimeRange } from './calendar-time'
 import styles from './calendar.module.css'
 
-/** One button of a block's details, such as Open or Edit. The host gives them. */
+/** One button of a block's details, such as Open or Edit, or a link to a page. The host gives them. */
 export type CalendarAction = {
   id: string
   label: string
@@ -26,9 +29,14 @@ export type CalendarAction = {
   primary?: boolean
   /** Loads what the action opens, from the pointer or focus reaching it. */
   preload?: () => void
-  /** `blockId` is the item's block that was pressed, or null for an item with no block. */
-  run: (itemId: string, blockId: string | null) => void
-}
+} & (
+  | {
+      /** `blockId` is the item's block that was pressed, or null for an item with no block. */
+      run: (itemId: string, blockId: string | null) => void
+      href?: undefined
+    }
+  | { href: string; run?: undefined }
+)
 
 /** What the details show: an item, and the block or run of all-day blocks pressed (none when unscheduled). */
 export type DetailsTarget = {
@@ -102,6 +110,17 @@ export function BlockDetails({
           const actions = actionsOf(item)
           return (
             <>
+              {item.image ? (
+                <div className={styles.detailsImage}>
+                  <Image
+                    fill
+                    sizes={`${DETAILS_WIDTH}px`}
+                    alt={item.image.alt}
+                    src={item.image.url}
+                    style={{ objectPosition: item.image.position }}
+                  />
+                </div>
+              ) : null}
               <div className={styles.detailsHead} data-tone={item.tone}>
                 <span className={styles.detailsMark} aria-hidden />
                 <PopoverTitle className={styles.detailsTitle} dir="auto">
@@ -168,21 +187,38 @@ export function BlockDetails({
 
               {actions.length ? (
                 <div className={styles.detailsActions}>
-                  {actions.map((action) => (
-                    <Button
-                      key={action.id}
-                      type="button"
-                      size="sm"
-                      variant={action.primary ? 'primary' : 'secondary'}
-                      onPointerEnter={action.preload}
-                      onFocus={action.preload}
-                      onPointerDown={action.preload}
-                      onClick={() => onAction(action, payload)}
-                    >
-                      {action.icon}
-                      {action.label}
-                    </Button>
-                  ))}
+                  {actions.map((action) =>
+                    action.href ? (
+                      <Link
+                        key={action.id}
+                        href={action.href}
+                        className={[
+                          button.button,
+                          button[action.primary ? 'primary' : 'secondary'],
+                          button.sm,
+                          styles.detailsLink,
+                        ].join(' ')}
+                        onClick={() => controller.close()}
+                      >
+                        {action.icon}
+                        {action.label}
+                      </Link>
+                    ) : (
+                      <Button
+                        key={action.id}
+                        type="button"
+                        size="sm"
+                        variant={action.primary ? 'primary' : 'secondary'}
+                        onPointerEnter={action.preload}
+                        onFocus={action.preload}
+                        onPointerDown={action.preload}
+                        onClick={() => onAction(action, payload)}
+                      >
+                        {action.icon}
+                        {action.label}
+                      </Button>
+                    ),
+                  )}
                 </div>
               ) : null}
             </>

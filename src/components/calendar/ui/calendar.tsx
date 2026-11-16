@@ -3,6 +3,7 @@
 import { Collapsible, CollapsiblePanel } from '@ui-sdk/react/collapsible'
 import { createMenuController } from '@ui-sdk/react/menu'
 import { createPopoverController } from '@ui-sdk/react/popover'
+import { Toggle, ToggleGroup } from '@ui-sdk/react/toggle'
 import { useEffect, useMemo, useRef, useState, type ReactNode } from 'react'
 
 import SegmentedControl from '@/components/arc/segmented-control/segmented-control'
@@ -41,6 +42,7 @@ import {
 } from './calendar-time'
 import { daysOf, stepFrom, viewAt, viewsAt, type CalendarView } from './calendar-views'
 import styles from './calendar.module.css'
+import { pressStays } from './item-press'
 import { MonthGrid } from './month-grid'
 import { SaveBar } from './save-bar'
 import { UnscheduledTray } from './unscheduled-tray'
@@ -58,6 +60,11 @@ type Shared = {
   day?: string
   /** The view to open in, where the width has it. Without it: the week, and one day on a phone. */
   view?: CalendarView
+  /**
+   * The view and day after the person moves the calendar, for a host that
+   * keeps them, as in the URL. A new `view` or `day` from the host moves it too.
+   */
+  onNavigate?: (view: CalendarView, day: string) => void
   /** Ids of the items to mark as changed, in words and on their face. */
   marked?: ReadonlySet<string>
   /**
@@ -130,6 +137,7 @@ export function Calendar({
   locale,
   day,
   view: startView = 'week',
+  onNavigate,
   marked = NO_MARKS,
   onOpen,
   actionsOf,
@@ -160,6 +168,20 @@ export function Calendar({
   // The day the view is about: the Day view's day, the first of 3 days, a day in the week.
   const [anchor, setAnchor] = useState(() => day ?? cairoNow().date)
   const [wanted, setWanted] = useState<CalendarView>(startView)
+  // The host's view and day lead: Back in the browser, or a link, moves the calendar.
+  const [followed, setFollowed] = useState({ day, view: startView })
+  if (followed.day !== day || followed.view !== startView) {
+    setFollowed({ day, view: startView })
+    if (day) setAnchor(day)
+    setWanted(startView)
+  }
+  const go = (view: CalendarView, to: string) => {
+    setWanted(view)
+    setAnchor(to)
+    onNavigate?.(view, to)
+  }
+  // The kinds the legend turned off: their items leave the grid, the agenda and Up next.
+  const [hidden, setHidden] = useState<ReadonlySet<string>>(() => new Set())
   // The keyboard turned the month: the new month's grid takes focus on its anchor day, once.
   const [monthFocus, setMonthFocus] = useState(false)
   useEffect(() => {
@@ -199,7 +221,12 @@ export function Calendar({
     range,
   })
 
-  const visible = (block: EditBlock) => drafts?.get(block.itemId) !== null
+  const kindOf = useMemo(
+    () => new Map(edits.items.map((item) => [item.id, item.kind])),
+    [edits.items],
+  )
+  const visible = (block: EditBlock) =>
+    drafts?.get(block.itemId) !== null && !hidden.has(kindOf.get(block.itemId) ?? newItemKind ?? '')
   const session = {
     ...edits,
     items: [
@@ -320,7 +347,7 @@ export function Calendar({
     details.close()
     // The host's dialog gives focus back to what had it when it opened: the block.
     if (anchor.isConnected) anchor.focus()
-    action.run(itemId, blocks[0]?.blockId ?? null)
+    action.run?.(itemId, blocks[0]?.blockId ?? null)
   }
 
   const newTone = legend.find((entry) => entry.kind === newItemKind)?.tone ?? 'neutral'
@@ -328,7 +355,11 @@ export function Calendar({
     session.working.flatMap((block) => (block.deleted ? [] : [block.itemId])),
   )
   const unscheduled = session.items.filter(
-    (item) => item.blocks.length === 0 && !placedIds.has(item.id) && drafts?.get(item.id) !== null,
+    (item) =>
+      item.blocks.length === 0 &&
+      !placedIds.has(item.id) &&
+      drafts?.get(item.id) !== null &&
+      !hidden.has(item.kind),
   )
   const anyCancelled = session.items.some((item) => item.cancelled)
   const anyMarked = session.items.some((item) => marked.has(item.id))
@@ -349,16 +380,13 @@ export function Calendar({
           )
   const count = shown.span === 'twoWeeks' ? 2 : shown.span === 'month' ? 1 : days.length
   const monthWeeks = useMemo(() => monthWeeksOf(anchor), [anchor])
-  const openDay = (day: string) => {
-    setAnchor(day)
-    setWanted('day')
-  }
+  const openDay = (day: string) => go('day', day)
 
   const viewSwitch = (atNarrow: boolean) => (
     <SegmentedControl
       label={labels.view}
       value={viewAt(wanted, atNarrow).id}
-      onValueChange={(value) => setWanted(value as CalendarView)}
+      onValueChange={(value) => go(value as CalendarView, anchor)}
       options={viewsAt(atNarrow).map((row) => ({
         value: row.id,
         label: labels.viewName(row.id, daysOf(row.span, anchor).length),
@@ -469,7 +497,7 @@ export function Calendar({
       pressOpensDay={editable && Boolean(newItemKind)}
       onTurn={(day) => {
         setMonthFocus(true)
-        setAnchor(day)
+        go(wanted, day)
       }}
     />
   )
@@ -494,6 +522,7 @@ export function Calendar({
         label={nameOf}
         message={({ type, label }) => labels.announce(type, label)}
         onPress={(block, event) => {
+          if (!pressStays(event)) return
           if (block.deleted) return session.restore(block.id)
           const more = (event?.target as Element | null | undefined)?.closest('[data-block-menu]')
           if (more) return void menu.open({ payload: block.id, anchor: more })
@@ -524,14 +553,14 @@ export function Calendar({
               editable && newItemKind
                 ? () => {
                     // The agenda moves nothing, so a new item is drawn on its day's grid.
-                    if (!grid) setWanted('day')
+                    if (!grid) go('day', anchor)
                     session.drawOnDay(anchor)
                   }
                 : undefined
             }
-            onPrevious={() => setAnchor(stepFrom(shown.span, anchor, -1))}
-            onNext={() => setAnchor(stepFrom(shown.span, anchor, 1))}
-            onToday={() => setAnchor(cairoNow().date)}
+            onPrevious={() => go(wanted, stepFrom(shown.span, anchor, -1))}
+            onNext={() => go(wanted, stepFrom(shown.span, anchor, 1))}
+            onToday={() => go(wanted, cairoNow().date)}
           />
 
           <div className={styles.main}>
@@ -576,10 +605,12 @@ export function Calendar({
               />
             ) : shown.layout === 'month' ? (
               <>
-                <div className={styles.monthWide}>{monthGrid}</div>
+                <div className={styles.monthWide} data-width="wide">
+                  {monthGrid}
+                </div>
                 {narrow === null ? (
                   // The server cannot know the width: it sends the month and, for a phone, its agenda.
-                  <div className={styles.monthNarrow}>
+                  <div className={styles.monthNarrow} data-width="narrow">
                     <AgendaList
                       items={session.items}
                       blocks={session.working}
@@ -619,33 +650,46 @@ export function Calendar({
 
           <CollapsiblePanel className={styles.panel}>
             <CalendarPanel
-              items={session.items}
+              items={session.items.filter((item) => !hidden.has(item.kind))}
               labels={labels}
               locale={locale}
               now={now}
               onOpen={pressBlock}
             >
               {legend.length ? (
-                <ul className={styles.legend} aria-label={labels.legend}>
+                <ToggleGroup
+                  multiple
+                  orientation="vertical"
+                  className={styles.legend}
+                  aria-label={labels.legend}
+                  value={legend.map(({ kind }) => kind).filter((kind) => !hidden.has(kind))}
+                  onValueChange={(shownKinds) =>
+                    setHidden(
+                      new Set(
+                        legend.map(({ kind }) => kind).filter((kind) => !shownKinds.includes(kind)),
+                      ),
+                    )
+                  }
+                >
                   {legend.map(({ kind, tone }) => (
-                    <li key={kind} data-tone={tone}>
+                    <Toggle key={kind} value={kind} className={styles.legendKind} data-tone={tone}>
                       <span className={styles.swatch} aria-hidden />
                       {labels.kind(kind)}
-                    </li>
+                    </Toggle>
                   ))}
                   {anyCancelled ? (
-                    <li data-tone="neutral">
+                    <span className={styles.legendNote} data-tone="neutral">
                       <span className={styles.swatch} data-cancelled aria-hidden />
                       {labels.cancelled}
-                    </li>
+                    </span>
                   ) : null}
                   {anyMarked ? (
-                    <li data-tone="neutral">
+                    <span className={styles.legendNote} data-tone="neutral">
                       <span className={styles.swatch} data-marked aria-hidden />
                       {labels.changed}
-                    </li>
+                    </span>
                   ) : null}
-                </ul>
+                </ToggleGroup>
               ) : null}
 
               {!editable && unscheduled.length ? (

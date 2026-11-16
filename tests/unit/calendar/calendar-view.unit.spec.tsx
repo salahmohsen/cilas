@@ -191,19 +191,23 @@ describe('the week view', () => {
     })
     expect(within(film).getByText('Cancelled')).toBeInTheDocument()
     openPanel()
-    expect(screen.getByRole('list', { name: 'Colour key' })).toHaveTextContent('Cancelled')
+    expect(screen.getByRole('group', { name: 'Colour key' })).toHaveTextContent('Cancelled')
   })
 
   it('lists one legend entry per kind and the unscheduled items in the side panel', () => {
     view()
-    expect(screen.queryByRole('list', { name: 'Colour key' })).toBeNull()
+    expect(screen.queryByRole('group', { name: 'Colour key' })).toBeNull()
     openPanel()
-    const legend = screen.getByRole('list', { name: 'Colour key' })
+    const legend = screen.getByRole('group', { name: 'Colour key' })
     expect(
       within(legend)
-        .getAllByRole('listitem')
-        .map((entry) => entry.textContent),
-    ).toEqual(['Session', 'Event', 'Cancelled'])
+        .getAllByRole('button')
+        .map((entry) => [entry.textContent, entry.getAttribute('aria-pressed')]),
+    ).toEqual([
+      ['Session', 'true'],
+      ['Event', 'true'],
+    ])
+    expect(legend).toHaveTextContent('Cancelled')
     const tray = screen.getByRole('group', { name: 'Unscheduled' })
     expect(within(tray).getByRole('button', { name: 'Week 4' })).toBeInTheDocument()
   })
@@ -285,7 +289,7 @@ describe('the toolbar and the day headers', () => {
     expect(screen.getByText('Up next')).toBeInTheDocument()
     fireEvent.click(toggle)
     expect(toggle).toHaveAttribute('aria-expanded', 'false')
-    expect(screen.queryByRole('list', { name: 'Colour key' })).toBeNull()
+    expect(screen.queryByRole('group', { name: 'Colour key' })).toBeNull()
   })
 
   it('names the next meeting in Up next and opens it', () => {
