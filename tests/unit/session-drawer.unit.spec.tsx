@@ -91,19 +91,21 @@ const shown = (id: number, canEdit = false): SessionViewResult => ({
   canEdit,
 })
 
-const page = (locale: 'en' | 'ar' = 'en') =>
-  render(
-    <NextIntlClientProvider
-      locale={locale}
-      messages={locale === 'ar' ? ar : en}
-      timeZone="Africa/Cairo"
-    >
-      <SessionLink id="13" href="/en/spaces/course/probe?tab=syllabus&open=13">
-        {en.SpacePost.sessionOpen}
-      </SessionLink>
-      <SessionDrawerHost />
-    </NextIntlClientProvider>,
-  )
+const page = async (locale: 'en' | 'ar' = 'en') =>
+  act(async () => {
+    render(
+      <NextIntlClientProvider
+        locale={locale}
+        messages={locale === 'ar' ? ar : en}
+        timeZone="Africa/Cairo"
+      >
+        <SessionLink id="13" href="/en/spaces/course/probe?tab=syllabus&open=13">
+          {en.SpacePost.sessionOpen}
+        </SessionLink>
+        <SessionDrawerHost />
+      </NextIntlClientProvider>,
+    )
+  })
 
 beforeAll(async () => {
   // Load the drawer's chunk first, as a pointer over a trigger does: React does
@@ -153,17 +155,19 @@ afterEach(() => {
 })
 
 describe('the session drawer', () => {
-  it('is not in the page until a session is opened', () => {
-    page()
+  it('is not in the page until a session is opened', async () => {
+    await page()
     expect(screen.queryByRole('dialog')).toBeNull()
     expect(loadSessionView).not.toHaveBeenCalled()
   })
 
   it('opens on a click with the param, takes focus, closes on Escape, and gives focus back', async () => {
-    page()
+    await page()
     const link = screen.getByRole('link', { name: en.SpacePost.sessionOpen })
     link.focus()
-    fireEvent.click(link)
+    await act(async () => {
+      fireEvent.click(link)
+    })
     expect(window.location.search).toBe('?tab=syllabus&open=13')
 
     // The heading names the session; the view under it shows its number, not its title again.
@@ -196,7 +200,7 @@ describe('the session drawer', () => {
   it('opens from a link with the param and drops the param in place on close', async () => {
     window.history.replaceState(null, '', '/en/spaces/course/probe?open=14')
     const length = window.history.length
-    page()
+    await page()
     const dialog = await screen.findByRole('dialog', { name: 'Called off' })
     expect(within(dialog).getAllByText(en.Course.cancelled).length).toBeGreaterThan(0)
     fireEvent.click(within(dialog).getByRole('button', { name: en.SpacePost.sessionDrawerClose }))
@@ -207,14 +211,14 @@ describe('the session drawer', () => {
   it('says so when the session is gone or not the reader’s to read', async () => {
     vi.mocked(loadSessionView).mockResolvedValue({ ok: false, error: 'not-found' })
     window.history.replaceState(null, '', '/en/spaces/course/probe?open=99')
-    page()
+    await page()
     expect(await screen.findByText(en.SpacePost.sessionGone)).toBeInTheDocument()
   })
 
   it('slides from the left in Arabic, with Arabic labels', async () => {
     window.history.replaceState(null, '', '/ar/spaces/course/probe?open=13')
     vi.mocked(loadSessionView).mockImplementation(async (id) => shown(Number(id)))
-    page('ar')
+    await page('ar')
     const dialog = await screen.findByRole('dialog', { name: 'Reading the city' })
     expect(dialog).toHaveAttribute('data-side', 'left')
     expect(
@@ -225,7 +229,7 @@ describe('the session drawer', () => {
   it('is a bottom sheet on a phone', async () => {
     phone = true
     window.history.replaceState(null, '', '/en/spaces/course/probe?open=13')
-    page()
+    await page()
     const dialog = await screen.findByRole('dialog', { name: 'Reading the city' })
     expect(dialog).not.toHaveAttribute('data-side')
     expect(screen.getByRole('button', { name: /^(Expand|Collapse) sheet$/ })).toBeInTheDocument()
@@ -247,7 +251,7 @@ const openForm = async (values = editValues()) => {
   vi.mocked(loadSessionView).mockImplementation(async (id) => shown(Number(id), true))
   vi.mocked(loadSessionEdit).mockResolvedValue({ ok: true, values, version: 'v1' })
   window.history.replaceState(null, '', '/en/spaces/course/probe?open=13')
-  page()
+  await page()
   const dialog = await screen.findByRole('dialog', { name: 'Reading the city' })
   const edit = await within(dialog).findByRole('button', { name: en.SessionEdit.edit })
   // The form's chunk loads from the button's pointer, before the click.
@@ -273,7 +277,7 @@ describe('the session drawer’s Edit form', () => {
   it('offers Edit only to the people the session’s access lets edit', async () => {
     vi.mocked(loadSessionView).mockImplementation(async (id) => shown(Number(id), true))
     window.history.replaceState(null, '', '/en/spaces/course/probe?open=13')
-    page()
+    await page()
     const dialog = await screen.findByRole('dialog', { name: 'Reading the city' })
     expect(within(dialog).getByRole('button', { name: en.SessionEdit.edit })).toBeInTheDocument()
   })
@@ -283,8 +287,8 @@ describe('the session drawer’s Edit form', () => {
     vi.mocked(loadSessionEdit)
       .mockReset()
       .mockResolvedValue({ ok: true, values: editValues(), version: 'v1' })
-    page()
-    act(() => openSession('13', 'edit'))
+    await page()
+    await act(async () => openSession('13', 'edit'))
     const dialog = await screen.findByRole('dialog', { name: 'Reading the city' })
     await within(dialog).findByRole('textbox', { name: en.SessionEdit.title })
     fireEvent.click(within(dialog).getByRole('button', { name: en.SessionEdit.cancel }))
@@ -294,7 +298,7 @@ describe('the session drawer’s Edit form', () => {
     // Closed and opened again as a view: the view, not a flash of the form.
     fireEvent.keyDown(dialog, { key: 'Escape' })
     await waitFor(() => expect(screen.queryByRole('dialog')).toBeNull())
-    act(() => openSession('13'))
+    await act(async () => openSession('13'))
     const again = await screen.findByRole('dialog', { name: 'Reading the city' })
     expect(within(again).queryByRole('textbox', { name: en.SessionEdit.title })).toBeNull()
     expect(vi.mocked(loadSessionEdit)).toHaveBeenCalledTimes(1)
@@ -304,8 +308,8 @@ describe('the session drawer’s Edit form', () => {
 
     vi.mocked(loadSessionView).mockImplementation(async (id) => shown(Number(id), false))
     window.history.replaceState(null, '', '/en/spaces/course/probe?tab=calendar')
-    page()
-    act(() => openSession('13', 'edit'))
+    await page()
+    await act(async () => openSession('13', 'edit'))
     const view = await screen.findByRole('dialog', { name: 'Reading the city' })
     await waitFor(() =>
       expect(within(view).queryByText(en.SpacePost.sessionDrawerLoading)).toBeNull(),
@@ -369,7 +373,7 @@ describe('the session drawer’s Edit form', () => {
     expect(screen.queryByRole('dialog', { name: en.Spaces.calendarLeaveTitle })).toBeNull()
 
     // Opened again, it shows the session, not the form it was closed on.
-    act(() => window.history.pushState(null, '', '/en/spaces/course/probe?open=13'))
+    await act(async () => window.history.pushState(null, '', '/en/spaces/course/probe?open=13'))
     const again = await screen.findByRole('dialog', { name: 'Reading the city' })
     expect(await within(again).findByRole('button', { name: en.SessionEdit.edit })).toBeVisible()
     expect(within(again).queryByRole('textbox', { name: en.SessionEdit.title })).toBeNull()
@@ -420,7 +424,7 @@ describe('the session drawer’s Edit form', () => {
   it('offers a retry when the session does not load', async () => {
     vi.mocked(loadSessionView).mockResolvedValueOnce({ ok: false, error: 'failed' })
     window.history.replaceState(null, '', '/en/spaces/course/probe?open=13')
-    page()
+    await page()
     fireEvent.click(await screen.findByRole('button', { name: en.SpacePost.sessionDrawerRetry }))
     expect(await screen.findByRole('dialog', { name: 'Reading the city' })).toBeInTheDocument()
   })
