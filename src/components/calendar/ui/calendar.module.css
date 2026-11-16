@@ -116,6 +116,7 @@
   min-inline-size: 0;
 }
 .months {
+  white-space: nowrap;
   font-size: var(--text-lg);
   font-weight: 500;
   letter-spacing: var(--tracking-body);
@@ -123,6 +124,7 @@
 .week {
   color: var(--text-secondary);
   font-size: var(--text-sm);
+  white-space: nowrap;
 }
 .controls {
   display: flex;
@@ -905,7 +907,10 @@
   .frame {
     --narrow: 1;
     --hour-size: 3.25rem;
-    --gutter: 3.5rem;
+    --gutter: 3.75rem;
+  }
+  .nowPill {
+    padding-inline: 0.1875rem;
   }
   .grid[data-view='week'] :is(.dayRow, .allDayRow, .rows) {
     grid-template-columns: var(--gutter) minmax(0, 1fr);
@@ -918,7 +923,7 @@
   }
   .grid[data-view='week'] .pill {
     grid-column: 2;
-    grid-row: auto;
+    grid-row: var(--lane-narrow);
   }
   .grid[data-view='week'] .pill:not([data-covers]),
   .grid[data-view='week'] [data-day]:not([data-selected]) {
@@ -928,10 +933,13 @@
     padding: var(--space-3);
   }
   .heading {
-    flex: 1;
+    flex-basis: 100%;
   }
   .controls {
     display: contents;
+  }
+  .arrows {
+    margin-inline-end: auto;
   }
   .views[data-width='wide'] {
     display: none;
@@ -1077,6 +1085,8 @@
   min-inline-size: 0;
 }
 .agendaTitle {
+  /* As wide as its words, so a title in the other script (dir="auto") still starts at the bar. */
+  justify-self: start;
   font-weight: 500;
   overflow-wrap: anywhere;
 }

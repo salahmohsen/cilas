@@ -86,6 +86,8 @@ export function WeekGrid({
   const bars = allDayBars(allDay, days, (block) => !editable || Boolean(block.readOnly))
   const covers = (bar: AllDayBar) =>
     selectedIndex >= bar.from && selectedIndex < bar.from + bar.span
+  // A phone shows a week's selected day alone: the bars on it take lanes 1, 2, 3 there.
+  const narrowLane = new Map(bars.filter(covers).map((bar, index) => [bar, index + 1]))
   // Where the now line sits, as a share of the hours shown; null when today or now is not in view.
   const nowAt =
     now && todayIndex >= 0 && now.minutes >= range.min && now.minutes <= range.max
@@ -143,7 +145,7 @@ export function WeekGrid({
           style={
             {
               '--lanes': Math.max(1, ...bars.map((bar) => bar.lane + 1)),
-              '--lanes-narrow': Math.max(1, bars.filter(covers).length),
+              '--lanes-narrow': Math.max(1, narrowLane.size),
             } as CSSProperties
           }
         >
@@ -169,6 +171,7 @@ export function WeekGrid({
                 '--from': bar.from + 2,
                 '--to': bar.from + bar.span + 2,
                 '--lane': bar.lane + 1,
+                '--lane-narrow': narrowLane.get(bar),
               } as CSSProperties,
               'data-covers': covers(bar) ? '' : undefined,
               'data-allday-id': block.id,
