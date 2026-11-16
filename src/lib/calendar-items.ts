@@ -32,8 +32,12 @@ export type CalendarItem = {
   /** This item is visible in edit mode but cannot be changed there. */
   readOnly?: true
   cancelled: boolean
-  /** Where or how it meets, in words: "Online". */
+  /** Where or how it meets, in words: "Online", "In person · Darb 1718". */
   place?: string
+  /** A short line under the title, such as its number: "Session 3". */
+  caption?: string
+  /** The start of what it is about, in plain words, for a preview. */
+  summary?: string
   /** The item's `updatedAt` when it was loaded; a save from an older one fails. */
   version: string
   blocks: CalendarBlock[]

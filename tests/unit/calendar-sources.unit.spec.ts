@@ -3,6 +3,7 @@ import { describe, expect, it, vi } from 'vitest'
 import {
   CalendarSaveFailure,
   calendarSourceOf,
+  deliveryOf,
   meetingsAfter,
   sessionItems,
   spaceEventItems,
@@ -55,6 +56,7 @@ describe('sessionItems', () => {
       id: '1',
       kind: 'session',
       title: 'First',
+      caption: 'Session 1',
       tone: 'blue',
       cancelled: true,
       version: '2034-02-02T10:00:00.000Z',
@@ -249,5 +251,35 @@ describe('space source', () => {
       })
     }
     expect(create).not.toHaveBeenCalled()
+  })
+
+  it('gives a titled session its number as a caption, and the start of its description', () => {
+    const [titled, untitled] = sessionItems(
+      [doc({ id: 1, title: 'Maps', description: '  Read the atlas.  ' }), doc({ id: 2 })],
+      course,
+      words,
+    )
+    expect(titled).toMatchObject({
+      title: 'Maps',
+      caption: 'Session 1',
+      summary: 'Read the atlas.',
+    })
+    expect(untitled).not.toHaveProperty('caption')
+    expect(untitled).not.toHaveProperty('summary')
+  })
+})
+
+describe('deliveryOf', () => {
+  it('names the course’s place after In person, and never after Online', () => {
+    const at = { location: ['OFFLINE' as const], place: 'Darb 1718' }
+    expect(deliveryOf({}, at, words.delivery)).toBe('In person · Darb 1718')
+    expect(deliveryOf({ delivery: 'ONLINE' }, at, words.delivery)).toBe('Online')
+    expect(deliveryOf({ delivery: 'HYBRID' }, at, words.delivery)).toBe('Hybrid · Darb 1718')
+  })
+
+  it('says only how it meets when the course has no place', () => {
+    expect(deliveryOf({}, { location: ['OFFLINE'] }, words.delivery)).toBe('In person')
+    expect(deliveryOf({}, { location: ['OFFLINE'], place: null }, words.delivery)).toBe('In person')
+    expect(deliveryOf({}, { location: [] }, words.delivery)).toBeNull()
   })
 })

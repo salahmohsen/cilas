@@ -1,4 +1,6 @@
-import type { PayloadRequest } from 'payload'
+import type { Payload, PayloadRequest } from 'payload'
+
+import { localeOf } from '@/i18n/routing'
 
 import { createSession } from '@/collections/Sessions'
 import { meetingProblem } from '@/fields/meetings'
@@ -48,17 +50,50 @@ export type CalendarContext = {
 type Delivery = NonNullable<Session['delivery']>
 
 /**
- * How a session meets: its own delivery, else the course's location. A
- * course held both ways (more than one location) is hybrid.
+ * Where a session meets, in words: "Online", or "In person · Darb 1718" when
+ * the course has a place. The session's own delivery wins over the course's
+ * location; a course held more than one way is hybrid. Null when nothing says.
  */
 export const deliveryOf = (
   session: Pick<Session, 'delivery'>,
-  course: Pick<Course, 'location'>,
-): Delivery | null => {
-  if (session.delivery) return session.delivery
+  course: { location?: Course['location']; place?: string | null },
+  delivery: CalendarContext['delivery'],
+): string | null => {
   const location = course.location ?? []
-  return location.length > 1 ? 'HYBRID' : (location[0] ?? null)
+  const mode = session.delivery ?? (location.length > 1 ? 'HYBRID' : (location[0] ?? null))
+  if (!mode) return null
+  return mode !== 'ONLINE' && course.place ? `${delivery(mode)} · ${course.place}` : delivery(mode)
 }
+
+/**
+ * The name of the place a course meets at in person: its cycle's place, as
+ * `user` may read it. Null for a course with no cycle or place, or one the user may not read.
+ */
+export const coursePlaceName = async (
+  payload: Payload,
+  user: User | null,
+  course: Pick<Course, 'cycle'>,
+  locale?: 'en' | 'ar',
+): Promise<string | null> => {
+  const cycleId = relId(course.cycle)
+  if (cycleId == null) return null
+  const cycle = await payload
+    .findByID({
+      collection: 'cycles',
+      id: cycleId,
+      depth: 1,
+      select: { place: true },
+      populate: { places: { name: true } },
+      user: user ?? undefined,
+      overrideAccess: false,
+      ...(locale ? { locale } : {}),
+    })
+    .catch(() => null)
+  return cycle && typeof cycle.place === 'object' && cycle.place ? cycle.place.name : null
+}
+
+/** The start of a description, for a short preview: the popover clamps it to a few lines. */
+const SUMMARY_LENGTH = 280
 
 export type CalendarSource = {
   /** The items the parent holds now. */
@@ -152,18 +187,27 @@ export const sessionName = (
 export const sessionItems = (
   sessions: readonly CalendarSession[],
   // The admin reads the draft, and a draft may not have its type yet.
-  course: { course_type?: Course['course_type'] | null; location?: Course['location'] },
+  course: {
+    course_type?: Course['course_type'] | null
+    location?: Course['location']
+    /** The name of the place the course meets at in person (`coursePlaceName`). */
+    place?: string | null
+  },
   { untitled, delivery }: Pick<CalendarContext, 'untitled' | 'delivery'>,
 ): CalendarItem[] => {
   const tone = toneOf({ type: course.course_type?.toLowerCase() ?? '' })
   return numberedSessions(sessions).map(({ session, number }): CalendarItem => {
-    const meets = deliveryOf(session, { location: course.location })
+    const place = deliveryOf(session, course, delivery)
+    const summary = session.description?.trim().slice(0, SUMMARY_LENGTH)
     return {
       id: String(session.id),
       kind: 'session',
       title: session.title || untitled(number),
+      // An untitled session is already called "Session 3".
+      ...(session.title ? { caption: untitled(number) } : {}),
+      ...(summary ? { summary } : {}),
       tone,
-      ...(meets ? { place: delivery(meets) } : {}),
+      ...(place ? { place } : {}),
       cancelled: Boolean(session.cancelled),
       version: session.updatedAt,
       blocks: [...(session.meetings ?? [])].sort(byWhen).map((m): CalendarBlock => ({
@@ -178,7 +222,7 @@ export const sessionItems = (
 
 type CalendarSession = Pick<
   Session,
-  'id' | 'title' | 'cancelled' | 'meetings' | 'position' | 'updatedAt' | 'delivery'
+  'id' | 'title' | 'cancelled' | 'meetings' | 'position' | 'updatedAt' | 'delivery' | 'description'
 >
 
 const courseSessions = async (
@@ -198,6 +242,7 @@ const courseSessions = async (
         position: true,
         updatedAt: true,
         delivery: true,
+        description: true,
       },
       user,
       overrideAccess: false,
@@ -216,6 +261,7 @@ export type ShownCourse = Pick<
   | 'syllabus_tentative'
   | 'course_type'
   | 'location'
+  | 'cycle'
 >
 
 /**
@@ -242,6 +288,7 @@ export const shownCourse = async (
       syllabus_tentative: true,
       course_type: true,
       location: true,
+      cycle: true,
     },
     user,
     overrideAccess: false,
@@ -253,7 +300,11 @@ export const shownCourse = async (
 const sessionSource: CalendarSource = {
   async load(ctx, parentId) {
     const { course } = await shownCourse(ctx, parentId)
-    return sessionItems(await courseSessions(ctx, numericId(parentId)), course, ctx)
+    const [sessions, place] = await Promise.all([
+      courseSessions(ctx, numericId(parentId)),
+      coursePlaceName(ctx.req.payload, ctx.user, course, localeOf(ctx.req.locale)),
+    ])
+    return sessionItems(sessions, { ...course, place }, ctx)
   },
 
   async names(ctx, parentId) {

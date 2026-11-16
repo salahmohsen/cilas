@@ -23,6 +23,7 @@ import { cairoInstant } from '@/lib/cairo-day'
 import { expandSchedule } from '@/lib/schedule'
 import { sessionIdsIn } from '@/lib/session-refs'
 import { getCourseSessions } from '@/api/sessions.api'
+import { coursePlaceName } from '@/lib/calendar-sources'
 import type { Course, Programme, Session, Space, SpacePost, User } from '@/payload-types'
 
 /**
@@ -491,7 +492,11 @@ export type SessionCourse = Pick<
   | 'syllabus_tentative'
   | 'course_type'
   | 'location'
-> & { sessions: Session[] }
+> & {
+  sessions: Session[]
+  /** The name of the place it meets at in person (`coursePlaceName`). */
+  place?: string | null
+}
 
 /**
  * The course session a post points at, as the reader may see it: `shown`
@@ -537,13 +542,20 @@ const sessionRead = async (
       syllabus_tentative: true,
       course_type: true,
       location: true,
+      cycle: true,
     },
     where: { id: { equals: courseId } },
   })
   const course = docs[0]
   if (course) {
-    const sessions = await getCourseSessions(payload, [course.id], { locale, reader: user })
-    return { state: 'shown', course: { ...course, sessions: sessions.get(course.id) ?? [] } }
+    const [sessions, place] = await Promise.all([
+      getCourseSessions(payload, [course.id], { locale, reader: user }),
+      coursePlaceName(payload, user, course, locale),
+    ])
+    return {
+      state: 'shown',
+      course: { ...course, sessions: sessions.get(course.id) ?? [], place },
+    }
   }
   // Unread, the course is either deleted or not the reader's to read; only
   // the server's count tells the two apart.
