@@ -83,9 +83,10 @@ export function PublicCalendar({ items, range, today, kinds, months }: Props) {
 
   return (
     <div className="grid gap-4">
-      <div className="flex flex-wrap items-center justify-between gap-3">
-        <h1 className="text-2xl font-medium">{t('title')}</h1>
-        <div className="flex flex-wrap items-center gap-2">
+      {/* On a phone the feed is an icon beside the title, and the month and year take a row. */}
+      <div className="flex flex-wrap items-center gap-3">
+        <h1 className="me-auto text-2xl font-medium">{t('title')}</h1>
+        <div className="order-last w-full sm:order-none sm:w-auto">
           <CalendarJump
             day={day}
             years={[
@@ -93,6 +94,11 @@ export function PublicCalendar({ items, range, today, kinds, months }: Props) {
             ].toSorted()}
             onJump={(at) => load(view, at)}
           />
+        </div>
+        <div className="sm:hidden">
+          <CalendarFeed feedPath={`/${locale}/calendar.ics`} iconOnly />
+        </div>
+        <div className="hidden sm:block">
           <CalendarFeed feedPath={`/${locale}/calendar.ics`} />
         </div>
       </div>

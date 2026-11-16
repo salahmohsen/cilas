@@ -58,7 +58,15 @@ export function CalendarJump({
 }
 
 /** Taking the calendar away: subscribing to its feed in a calendar app, downloading it, or copying the feed's address. */
-export function CalendarFeed({ feedPath }: { /** `/en/calendar.ics`. */ feedPath: string }) {
+export function CalendarFeed({
+  feedPath,
+  iconOnly,
+}: {
+  /** `/en/calendar.ics`. */
+  feedPath: string
+  /** Only the icon shows; the label stays its name. */
+  iconOnly?: boolean
+}) {
   const t = useTranslations('Calendar')
   const [announce, setAnnounce] = useState('')
   const feedUrl = () => `${window.location.origin}${feedPath}`
@@ -100,6 +108,7 @@ export function CalendarFeed({ feedPath }: { /** `/en/calendar.ics`. */ feedPath
           },
         ]}
         label={t('feed')}
+        iconOnly={iconOnly}
       />
       <span aria-live="polite" className="sr-only">
         {announce}

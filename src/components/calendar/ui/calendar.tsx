@@ -198,7 +198,11 @@ export function Calendar({
   const selectedIndex = indexOfDay(days, anchor)
   const todayIndex = now ? days.indexOf(now.date) : -1
 
-  const loaded = useMemo(() => timedBlocks(blocksOf(items)), [items])
+  // The hours follow what shows: a kind turned off in the legend does not hold them open.
+  const loaded = useMemo(
+    () => timedBlocks(blocksOf(items.filter((item) => !hidden.has(item.kind)))),
+    [items, hidden],
+  )
   // Edit mode shows the same hours in every week, so a drag never moves the grid.
   const range = useMemo(
     () =>

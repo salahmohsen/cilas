@@ -226,6 +226,7 @@
   background: var(--surface-muted);
 }
 .legendKind .swatch {
+  background: var(--tone-solid);
   transition: background-color var(--duration-fast) var(--ease-standard);
 }
 .legendKind[aria-pressed='false'] {
