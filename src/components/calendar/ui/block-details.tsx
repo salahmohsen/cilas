@@ -6,7 +6,7 @@ import {
   type PopoverController,
 } from '@ui-sdk/react/popover'
 import { AlignLeft, Clock, MapPin, X } from 'lucide-react'
-import type { CSSProperties, ReactNode } from 'react'
+import { useEffect, type CSSProperties, type ReactNode } from 'react'
 
 import { Button } from '@/components/arc/button/button'
 import { timeDir } from '@/lib/digits'
@@ -67,6 +67,19 @@ export function BlockDetails({
   actionsOf,
   onAction,
 }: Props) {
+  // The details own their Escape. A dialog around the calendar (a post's) hears
+  // Escape on the document first; the window's capture comes before it.
+  useEffect(() => {
+    const escape = (event: KeyboardEvent) => {
+      if (event.key !== 'Escape' || !controller.isOpen()) return
+      if (!(event.target as Element | null)?.closest?.(`.${styles.details}`)) return
+      event.stopPropagation()
+      controller.close()
+    }
+    window.addEventListener('keydown', escape, true)
+    return () => window.removeEventListener('keydown', escape, true)
+  }, [controller])
+
   return (
     <Popover controller={controller} presentation={sheet ? 'sheet' : 'popover'}>
       <PopoverContent<DetailsTarget>

@@ -28,6 +28,8 @@
 .primary {
   position: relative;
   display: inline-grid;
+  /* A track that can shrink, so a long label is cut instead of widening the button past its row. */
+  grid-template-columns: minmax(0, auto);
   min-width: 0;
   min-height: var(--control-height-md);
   place-items: center;
