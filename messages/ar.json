@@ -482,23 +482,10 @@
     "metaTitle": "التقويم — سيلاس",
     "title": "التقويم",
     "intro": "مواعيد مقررات سيلاس ولقاءاتها.",
-    "navigation": "التنقل في التقويم",
-    "views": "العرض",
-    "view": {
-      "month": "شهر",
-      "week": "أسبوع",
-      "agenda": "جدول"
-    },
-    "previous": "السابق",
-    "next": "التالي",
-    "today": "اليوم",
-    "inView": "{count, plural, zero {لا مقررات ولا فعاليات} one {مقرر أو فعالية} two {مقرران أو فعاليتان} few {# مقررات وفعاليات} many {# مقررًا وفعالية} other {# مقرر وفعالية}}",
-    "legend": "دليل الألوان",
     "empty": "لا شيء في التقويم هنا.",
     "nextOn": "التالي: {date}",
     "lastOn": "الأحدث: {date}",
     "session": "الجلسة {n, number, digits}",
-    "more": "المزيد ({count, number, digits})",
     "cancelled": "أُلغيت",
     "eventTypes": {
       "talk": "محاضرة",
@@ -516,8 +503,6 @@
       "other": "لقاء",
       "event": "لقاء"
     },
-    "close": "إغلاق",
-    "openDay": "{date}: {count, plural, one {عنصر واحد} two {عنصران} few {{count, number, digits} عناصر} many {{count, number, digits} عنصرًا} other {{count, number, digits} عنصر}}",
     "month": "الشهر",
     "year": "السنة",
     "feed": "أضف إلى تقويمك",
@@ -526,7 +511,9 @@
     "copyFeed": "انسخ رابط التقويم",
     "copied": "نُسخ رابط التقويم",
     "copyFailed": "تعذّر نسخ الرابط",
-    "feedName": "سيلاس"
+    "feedName": "سيلاس",
+    "viewCourse": "عرض المقرر",
+    "viewEvent": "عرض الفعالية"
   },
   "CalendarUi": {
     "name": "التقويم",

@@ -6,7 +6,6 @@ import { useState } from 'react'
 
 import { DropdownMenu } from '@/components/arc/dropdown-menu/dropdown-menu'
 import { Select } from '@/components/select'
-import { useRouter } from '@/i18n/navigation'
 import { track } from '@/lib/analytics/track'
 import { localDigits } from '@/lib/digits'
 
@@ -14,33 +13,31 @@ const MONTHS = Array.from({ length: 12 }, (_, i) => i + 1)
 
 /** Going straight to any month: a month and a year, each a select that goes there when picked. */
 export function CalendarJump({
-  view,
-  date,
+  day,
   years,
+  onJump,
 }: {
-  view: 'month' | 'week' | 'agenda'
-  date: string
+  day: string
   /** The years the calendar has something in, oldest first. */
   years: number[]
+  /** Goes to the first day of the month picked. */
+  onJump: (day: string) => void
 }) {
   const t = useTranslations('Calendar')
   const locale = useLocale()
-  const router = useRouter()
-  const year = Number(date.slice(0, 4))
-  const month = Number(date.slice(5, 7))
+  const year = Number(day.slice(0, 4))
+  const month = Number(day.slice(5, 7))
   const monthName = (m: number) =>
     new Intl.DateTimeFormat(locale, { month: 'long', timeZone: 'UTC' }).format(
       new Date(Date.UTC(2000, m - 1, 1)),
     )
-  const go = (y: number, m: number) =>
-    router.push(`/calendar?view=${view}&date=${y}-${String(m).padStart(2, '0')}-01`)
+  const go = (y: number, m: number) => onJump(`${y}-${String(m).padStart(2, '0')}-01`)
 
-  const yearList = years.includes(year) ? years : [...years, year].sort()
+  const yearList = years.includes(year) ? years : [...years, year].toSorted()
 
   return (
-    <div className="cal-jump flex items-center gap-2">
+    <div className="flex items-center gap-2">
       <Select
-        className="cal-select"
         hideLabel
         items={MONTHS.map((m) => ({ value: String(m), label: monthName(m) }))}
         label={t('month')}
@@ -49,7 +46,6 @@ export function CalendarJump({
         value={String(month)}
       />
       <Select
-        className="cal-select"
         hideLabel
         items={yearList.map((y) => ({ value: String(y), label: localDigits(y, locale) }))}
         label={t('year')}
@@ -68,7 +64,7 @@ export function CalendarFeed({ feedPath }: { /** `/en/calendar.ics`. */ feedPath
   const feedUrl = () => `${window.location.origin}${feedPath}`
 
   return (
-    <div className="cal-feed">
+    <div>
       <DropdownMenu
         icon={<CalendarPlus aria-hidden size={16} />}
         items={[
@@ -105,7 +101,7 @@ export function CalendarFeed({ feedPath }: { /** `/en/calendar.ics`. */ feedPath
         ]}
         label={t('feed')}
       />
-      <span aria-live="polite" className="cal-feed-note">
+      <span aria-live="polite" className="sr-only">
         {announce}
       </span>
     </div>

@@ -1,4 +1,4 @@
-import { addDays, addMonths, monthOf, weekOf, weekStartOf } from './calendar-time'
+import { addDays, addMonths, monthOf, monthWeeksOf, weekOf, weekStartOf } from './calendar-time'
 
 /** How many days a view shows and how far previous and next move it. */
 export type ViewSpan = 'day' | 'threeDays' | 'week' | 'twoWeeks' | 'month'
@@ -69,3 +69,14 @@ export const daysOf = (span: ViewSpan, anchor: string): string[] =>
 /** The anchor after a step back (-1) or forward (1). */
 export const stepFrom = (span: ViewSpan, anchor: string, direction: 1 | -1): string =>
   span === 'month' ? addMonths(anchor, direction) : addDays(anchor, STEP[span] * direction)
+
+/** Every day a view draws from `day` at this width: a month grid holds the ends of its first and last weeks too. */
+export const daysShown = (wanted: CalendarView, day: string, narrow: boolean): string[] => {
+  const row = viewAt(wanted, narrow)
+  return row.layout === 'month' ? monthWeeksOf(day).flat() : daysOf(row.span, day)
+}
+
+/** Every view a calendar can show, at either width. */
+export const ALL_VIEWS: readonly CalendarView[] = [
+  ...new Set([...VIEWS.wide, ...VIEWS.narrow].map((row) => row.id)),
+]

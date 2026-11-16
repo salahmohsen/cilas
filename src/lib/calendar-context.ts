@@ -7,7 +7,10 @@ import { localeOf } from '@/i18n/routing'
 import type { CalendarContext } from '@/lib/calendar-sources'
 import type { User } from '@/payload-types'
 
-const wordsOf = async (locale: string): Promise<Pick<CalendarContext, 'untitled' | 'delivery'>> => {
+/** The words for untitled sessions and for how sessions meet, in `locale`. */
+export const calendarWords = async (
+  locale: string,
+): Promise<Pick<CalendarContext, 'untitled' | 'delivery'>> => {
   const lang = localeOf(locale)
   const { default: messages } = await import(`../../messages/${lang}.json`)
   const t = createTranslator({
@@ -30,5 +33,5 @@ const wordsOf = async (locale: string): Promise<Pick<CalendarContext, 'untitled'
 export const calendarContext = async (user: User, locale: string): Promise<CalendarContext> => {
   const payload = await getPayload({ config })
   const req = await createLocalReq({ user, locale: localeOf(locale) }, payload)
-  return { req, user, ...(await wordsOf(locale)) }
+  return { req, user, ...(await calendarWords(locale)) }
 }

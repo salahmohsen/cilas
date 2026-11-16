@@ -482,23 +482,10 @@
     "metaTitle": "Calendar — CILAS",
     "title": "Calendar",
     "intro": "When CILAS's courses meet, and its gatherings.",
-    "navigation": "Calendar navigation",
-    "views": "View",
-    "view": {
-      "month": "Month",
-      "week": "Week",
-      "agenda": "Agenda"
-    },
-    "previous": "Previous",
-    "next": "Next",
-    "today": "Today",
-    "inView": "{count, plural, one {# course or event} other {# courses and events}}",
-    "legend": "Colour key",
     "empty": "Nothing on the calendar here.",
     "nextOn": "Next: {date}",
     "lastOn": "Most recent: {date}",
     "session": "Session {n}",
-    "more": "{count, plural, one {# more} other {# more}}",
     "cancelled": "Cancelled",
     "eventTypes": {
       "talk": "Talk",
@@ -516,8 +503,6 @@
       "other": "Gathering",
       "event": "Gathering"
     },
-    "close": "Close",
-    "openDay": "{date}: {count, plural, one {# item} other {# items}}",
     "month": "Month",
     "year": "Year",
     "feed": "Add to calendar",
@@ -526,7 +511,9 @@
     "copyFeed": "Copy feed link",
     "copied": "Feed link copied",
     "copyFailed": "Couldn't copy the link",
-    "feedName": "CILAS"
+    "feedName": "CILAS",
+    "viewCourse": "View course",
+    "viewEvent": "View event"
   },
   "CalendarUi": {
     "name": "Calendar",
