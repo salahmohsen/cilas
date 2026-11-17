@@ -25,6 +25,7 @@ export interface SplitButtonProps {
   onPointerDown?: (event: PointerEvent<HTMLButtonElement>) => void
   /** Names the menu half. "<label> more actions" by default. */
   menuLabel?: string
+  menuClassName?: string
   disabled?: boolean
   icon?: ReactNode
   variant?: 'primary' | 'secondary'
@@ -187,6 +188,7 @@ export function SplitButton({
   onClick,
   onPointerDown,
   menuLabel,
+  menuClassName,
   disabled,
   icon,
   variant = 'primary',
@@ -252,7 +254,7 @@ export function SplitButton({
       </div>
       <DropdownPrimitive.Portal>
         <DropdownPrimitive.Content
-          className={styles.menu}
+          className={[styles.menu, menuClassName].filter(Boolean).join(' ')}
           sideOffset={4}
           align="end"
           collisionPadding={12}

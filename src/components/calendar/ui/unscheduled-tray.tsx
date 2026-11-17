@@ -104,6 +104,7 @@ export function UnscheduledTray({ items, days, editable, labels, locale, onOpen,
               label={item.title}
               icon={<span className={styles.trayMark} aria-hidden />}
               menuLabel={labels.placeOnDay}
+              menuClassName="arc-scope"
               onClick={(event) => onOpen(item.id, event.currentTarget)}
               onPointerDown={(event) => startDrag(item, event)}
               actions={
