@@ -54,7 +54,9 @@ const items: CalendarItem[] = [
     summary: 'What we owe each other.',
   }),
   item('tue-b', 'Evening seminar', [at('b', '2026-11-17', '18:00', '20:30')]),
-  item('thu', 'Thursday class', [at('t', '2026-11-19', '17:30', '19:00')]),
+  item('thu', 'Thursday class', [at('t', '2026-11-19', '17:30', '19:00')], {
+    image: { url: '/media/street.jpg', alt: 'A street', position: '20% 80%' },
+  }),
   ...['09:00', '11:00', '13:00', '15:00'].map((time, index) =>
     item(`busy-${index}`, `Busy ${index + 1}`, [
       at(`m${index}`, '2026-11-23', time, `${Number(time.slice(0, 2)) + 1}:00`),
@@ -118,9 +120,11 @@ const status = () => screen.getByRole('status')
 const key = (name: string, target: Element = document.activeElement!) =>
   fireEvent.keyDown(target, { key: name })
 
-beforeAll(() => {
+beforeAll(async () => {
   globalThis.__UI_SDK_STRICT__ = true
   stubPopupDom()
+  // The confirm's chunk, as a pointer over its action loads it.
+  await import('@/components/confirm-dialog')
 })
 beforeEach(() => {
   docked = true
@@ -359,6 +363,33 @@ describe('details in the panel', () => {
     expect(screen.getByRole('button', { name: 'Back to Up next' })).toBeInTheDocument()
   })
 
+  it('shows the cover above the title as the popover does, and no picture area without one', () => {
+    show()
+    fireEvent.click(day('2026-11-19').querySelector('[data-block-id]')!)
+    const covered = screen.getByRole('region', { name: 'Thursday class' })
+    const picture = within(covered).getByRole('img', { name: 'A street' })
+    expect(picture.closest('[class*="detailsImage"]')).not.toBeNull()
+    expect(
+      picture.compareDocumentPosition(within(covered).getByRole('heading')) &
+        Node.DOCUMENT_POSITION_FOLLOWING,
+    ).toBeTruthy()
+    fireEvent.click(screen.getByRole('button', { name: /^Back to/ }))
+    fireEvent.click(day('2026-11-17').querySelector('[data-block-id]')!)
+    const plain = screen.getByRole('region', { name: 'Tuesday talk' })
+    expect(within(plain).queryByRole('img')).toBeNull()
+    expect(plain.querySelector('[class*="detailsImage"]')).toBeNull()
+  })
+
+  it('hides the colour key while details show, and shows it again after Back', () => {
+    show()
+    const key = () => screen.queryByRole('group', { name: en.CalendarUi.legend })
+    expect(key()).not.toBeNull()
+    fireEvent.click(day('2026-11-17').querySelector('[data-block-id]')!)
+    expect(key()).toBeNull()
+    fireEvent.click(screen.getByRole('button', { name: /^Back to/ }))
+    expect(key()).not.toBeNull()
+  })
+
   it('keeps the popover where the panel is not open beside the grid', async () => {
     show({ view: 'week' })
     fireEvent.click(screen.getByRole('button', { name: /^Tuesday talk, Tuesday/ }))
@@ -450,6 +481,60 @@ describe('actions that ask first', () => {
     fireEvent.keyDown(dialog, { key: 'Escape' })
     await waitFor(() => expect(screen.queryByRole('dialog')).toBeNull())
     expect(run).not.toHaveBeenCalled()
+  })
+
+  describe('in the details popover', () => {
+    const popover = async () => {
+      show({
+        view: 'week',
+        actions: [{ id: 'open', label: 'View course', href: '/course', primary: true }, cancel],
+      })
+      const block = screen.getByRole('button', { name: /^Tuesday talk, Tuesday/ })
+      fireEvent.click(block)
+      return { block, dialog: await screen.findByRole('dialog', { name: 'Tuesday talk' }) }
+    }
+
+    it('stays open when "⋯" is pressed, and shows the menu inside it', async () => {
+      const { dialog } = await popover()
+      const more = within(dialog).getByRole('button', { name: 'More actions' })
+      fireEvent.keyDown(more, { key: 'Enter' })
+      const list = await screen.findByRole('menu')
+      expect(screen.getByRole('dialog', { name: 'Tuesday talk' })).toBeInTheDocument()
+      expect(dialog.contains(list)).toBe(true)
+      expect(within(list).getAllByRole('menuitem')).toHaveLength(1)
+    })
+
+    it('closes the menu on Escape and returns focus to "⋯"; a second Escape closes the popover', async () => {
+      const { block, dialog } = await popover()
+      const more = within(dialog).getByRole('button', { name: 'More actions' })
+      // A pointer press focuses the button, as the browser does.
+      more.focus()
+      fireEvent.keyDown(more, { key: 'Enter' })
+      const list = await screen.findByRole('menu')
+      key('Escape', list)
+      await waitFor(() => expect(screen.queryByRole('menu')).toBeNull())
+      expect(screen.getByRole('dialog', { name: 'Tuesday talk' })).toBeInTheDocument()
+      await waitFor(() => expect(screen.queryByRole('menu')).toBeNull())
+      await waitFor(() => expect(document.activeElement).toBe(more))
+      key('Escape', more)
+      await waitFor(() => expect(screen.queryByRole('dialog', { name: 'Tuesday talk' })).toBeNull())
+      await waitFor(() => expect(document.activeElement).toBe(block))
+    })
+
+    it('asks first when an item is chosen, with the popover closed and Keep focused', async () => {
+      const { dialog } = await popover()
+      fireEvent.keyDown(within(dialog).getByRole('button', { name: 'More actions' }), {
+        key: 'Enter',
+      })
+      fireEvent.click(await screen.findByRole('menuitem', { name: 'Cancel session' }))
+      const ask = await screen.findByRole('dialog', { name: 'Cancel this session?' })
+      expect(screen.queryByRole('dialog', { name: 'Tuesday talk' })).toBeNull()
+      await waitFor(() =>
+        expect(document.activeElement).toBe(
+          within(ask).getByRole('button', { name: 'Keep session' }),
+        ),
+      )
+    })
   })
 
   it('runs the action once on the dangerous answer', async () => {

@@ -8,6 +8,9 @@ import type { CalendarLabels } from './calendar-labels'
 import styles from './calendar.module.css'
 import { ItemDetails } from './item-details'
 
+/** The panel's width in px, for the picture's `sizes`: the panel is 17rem, and Payload's admin sets its own root font size. */
+const PANEL_IMAGE_WIDTH = 272
+
 /**
  * An item's details in the side panel, in place of the day or Up next, with a
  * Back button that names where it goes. Focus goes to the heading when the
@@ -54,6 +57,7 @@ export function PanelDetails({
         target={target}
         labels={labels}
         locale={locale}
+        imageWidth={PANEL_IMAGE_WIDTH}
         heading={
           <h2
             id={titleId}

@@ -79,7 +79,10 @@ export function BlockDetails({
   useEffect(() => {
     const escape = (event: KeyboardEvent) => {
       if (event.key !== 'Escape' || !controller.isOpen()) return
-      if (!(event.target as Element | null)?.closest?.(`.${styles.details}`)) return
+      const target = event.target as Element | null
+      if (!target?.closest?.(`.${styles.details}`)) return
+      // An open menu in the details takes this Escape first.
+      if (target.closest('[role="menu"]')) return
       event.stopPropagation()
       controller.close()
     }
@@ -88,7 +91,16 @@ export function BlockDetails({
   }, [controller])
 
   return (
-    <Popover controller={controller} presentation={sheet ? 'sheet' : 'popover'}>
+    <Popover
+      controller={controller}
+      presentation={sheet ? 'sheet' : 'popover'}
+      onOpenChange={(open, details) => {
+        // An Escape pressed in the actions' menu closes the menu, which handles it, and not the popover.
+        const target = (details.event as KeyboardEvent | undefined)?.target
+        if (!open && details.reason === 'escape-key' && target instanceof Element)
+          if (target.closest('[role="menu"]')) details.cancel()
+      }}
+    >
       <PopoverContent<DetailsTarget>
         className={styles.details}
         style={{ '--details-width': `${DETAILS_WIDTH}px` } as CSSProperties}
@@ -111,6 +123,7 @@ export function BlockDetails({
               labels={labels}
               locale={locale}
               imageWidth={DETAILS_WIDTH}
+              floating
               heading={
                 <PopoverTitle className={styles.detailsTitle} dir="auto">
                   {item.title}

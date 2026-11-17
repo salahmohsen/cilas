@@ -89,7 +89,8 @@ export function CalendarPanel({
             </button>
           </section>
         ) : null)}
-      {children}
+      {/* The colour key and the tray belong to the day and Up next; beside an item's details they would float. */}
+      {details ? null : children}
     </div>
   )
 }
