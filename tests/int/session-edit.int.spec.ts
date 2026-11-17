@@ -291,3 +291,78 @@ describe('saveSessionEdit', () => {
     expect((await read(id, 'en')).meetings![0]).toMatchObject({ start_time: '19:00' })
   })
 })
+
+describe('the order of materials and activities', () => {
+  const trio = ['a', 'b', 'c']
+
+  /** Three materials and three activities, each with its own text in both languages. */
+  const makeTrio = async () => {
+    const doc = await payload.create({
+      collection: 'sessions',
+      locale: 'en',
+      data: {
+        course,
+        title: 'Order probe',
+        meetings: [{ date: '2035-10-12', start_time: '19:00', end_time: '21:00' }],
+        bibliography: trio.map((n) => ({ type: 'reading', title: `en ${n}`, note: `note ${n}` })),
+        activities: trio.map((n) => ({ kind: 'discussion', description: `en ${n}` })),
+      },
+      overrideAccess: true,
+    })
+    await payload.update({
+      collection: 'sessions',
+      id: doc.id,
+      locale: 'ar',
+      data: {
+        bibliography: doc.bibliography!.map((m, i) => ({ ...m, title: `ar ${trio[i]}` })),
+        activities: doc.activities!.map((a, i) => ({ ...a, description: `ar ${trio[i]}` })),
+      },
+      overrideAccess: true,
+    })
+    return doc.id
+  }
+
+  const texts = async (id: number, locale: 'en' | 'ar') => {
+    const doc = await read(id, locale)
+    return {
+      materials: doc.bibliography!.map((m) => m.title),
+      activities: doc.activities!.map((a) => a.description),
+    }
+  }
+
+  it('keeps a changed order through save and reload, in both languages', async () => {
+    const id = await makeTrio()
+    signIn(fellow)
+
+    const fromEnglish = await edit(id, 'en', (v) => ({
+      ...v,
+      bibliography: [v.bibliography[2]!, v.bibliography[0]!, v.bibliography[1]!],
+      activities: [v.activities[1]!, v.activities[2]!, v.activities[0]!],
+    }))
+    expect(fromEnglish.ok).toBe(true)
+    // The order is shared: Arabic follows English, and each row keeps its own Arabic text.
+    expect(await texts(id, 'en')).toEqual({
+      materials: ['en c', 'en a', 'en b'],
+      activities: ['en b', 'en c', 'en a'],
+    })
+    expect(await texts(id, 'ar')).toEqual({
+      materials: ['ar c', 'ar a', 'ar b'],
+      activities: ['ar b', 'ar c', 'ar a'],
+    })
+
+    const fromArabic = await edit(id, 'ar', (v) => ({
+      ...v,
+      bibliography: [...v.bibliography].reverse(),
+      activities: [...v.activities].reverse(),
+    }))
+    expect(fromArabic.ok).toBe(true)
+    expect(await texts(id, 'ar')).toEqual({
+      materials: ['ar b', 'ar a', 'ar c'],
+      activities: ['ar a', 'ar c', 'ar b'],
+    })
+    expect(await texts(id, 'en')).toEqual({
+      materials: ['en b', 'en a', 'en c'],
+      activities: ['en a', 'en c', 'en b'],
+    })
+  })
+})
