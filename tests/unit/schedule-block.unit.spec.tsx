@@ -1,5 +1,5 @@
 // @vitest-environment jsdom
-import { cleanup, fireEvent, render, screen, within } from '@testing-library/react'
+import { cleanup, fireEvent, render, screen } from '@testing-library/react'
 import { NextIntlClientProvider } from 'next-intl'
 import { afterEach, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest'
 
@@ -133,14 +133,11 @@ describe('a schedule block in a post', () => {
     ).toBeInTheDocument()
   })
 
-  it('opens the session drawer from the details, in place, not the feed', async () => {
+  it('opens the session drawer from a press, in place, with no details popover', () => {
     window.history.replaceState(null, '', '/en/spaces/probe/posts/5')
     view(schedule(['12']))
     fireEvent.click(screen.getByRole('button', { name: /^Session 2, Tuesday/ }))
-    const details = await screen.findByRole('dialog', { name: 'Session 2' })
-    // A reader of a post gets no Edit here; the drawer offers it to editors.
-    expect(within(details).queryByRole('button', { name: en.Spaces.calendarEdit })).toBeNull()
-    fireEvent.click(within(details).getByRole('button', { name: en.CalendarUi.menuOpen }))
+    expect(screen.queryByRole('dialog')).toBeNull()
     expect(push).not.toHaveBeenCalled()
     expect(`${window.location.pathname}${window.location.search}`).toBe(
       '/en/spaces/probe/posts/5?open=12',

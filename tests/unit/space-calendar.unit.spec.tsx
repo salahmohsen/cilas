@@ -103,16 +103,13 @@ it('server renders the next week and both legend kinds in view mode, with Edit f
   expect(document.querySelector('[data-mode="edit"]')).toBeNull()
   window.history.replaceState(null, '', '/en/spaces/course/probe?tab=calendar')
   fireEvent.click(screen.getByRole('button', { name: /^next, Tuesday/ }))
-  const session = await screen.findByRole('dialog', { name: 'next' })
-  // An editor's session details offer Edit, beside Open.
-  expect(within(session).getByRole('button', { name: en.Spaces.calendarEdit })).toBeInTheDocument()
-  fireEvent.click(within(session).getByRole('button', { name: en.CalendarUi.menuOpen }))
+  // Decision 17: a press on a session opens the drawer at once, with no details popover.
+  expect(screen.queryByRole('dialog')).toBeNull()
   expect(push).not.toHaveBeenCalled()
   expect(window.location.search).toBe('?tab=calendar&open=next')
+  // A space event opens its post.
   fireEvent.click(screen.getByRole('button', { name: /^Gathering, Wednesday/ }))
-  const event = await screen.findByRole('dialog', { name: 'Gathering' })
-  expect(within(event).queryByRole('button', { name: en.Spaces.calendarEdit })).toBeNull()
-  fireEvent.click(within(event).getByRole('button', { name: en.Spaces.calendarOpenPost }))
+  expect(screen.queryByRole('dialog')).toBeNull()
   expect(push).toHaveBeenLastCalledWith('/en/spaces/course/probe/posts/42')
 })
 
@@ -125,12 +122,11 @@ it('opens the last meeting week after the course ends and ignores later space ev
   })
   render(wrap(await SpaceCalendar({ id: 7, courseId: 3, locale: 'en', spaceHref: '/probe' })))
   expect(screen.getByText('Nov 21 to Nov 27, 2026')).toBeInTheDocument()
-  // A reader (canEdit false) gets no Edit, in the toolbar or in a session's details.
+  // A reader (canEdit false) gets no Edit in the toolbar; a press opens the drawer, not a popover.
   expect(screen.queryByRole('button', { name: 'Edit' })).toBeNull()
   fireEvent.click(screen.getByRole('button', { name: /^last, Tuesday/ }))
-  const details = await screen.findByRole('dialog', { name: 'last' })
-  expect(within(details).queryByRole('button', { name: en.Spaces.calendarEdit })).toBeNull()
-  expect(within(details).getByRole('button', { name: en.CalendarUi.menuOpen })).toBeInTheDocument()
+  expect(screen.queryByRole('dialog')).toBeNull()
+  expect(window.location.search).toContain('open=last')
 })
 
 it('renders Arabic calendar controls and both legend names in RTL', async () => {

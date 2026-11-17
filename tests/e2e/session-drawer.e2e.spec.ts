@@ -29,12 +29,8 @@ let account: number
 let modeBefore: 'off' | 'trial' | 'on' = 'off'
 let unlock: (() => Promise<void>) | undefined
 
-// The drawer's heading names the session by its title; so does a block's details popover.
-const details = () => page.locator('[data-slot="popover-content"][role="dialog"]')
-const drawer = () =>
-  page
-    .getByRole('dialog', { name: TITLE, exact: true })
-    .and(page.locator(':not([data-slot="popover-content"])'))
+// The drawer's heading names the session by its title.
+const drawer = () => page.getByRole('dialog', { name: TITLE, exact: true })
 /** The one session view inside the drawer, named in full. */
 const sessionView = () => drawer().getByRole('region', { name: `Session 1: ${TITLE}` })
 const param = () => new URL(page.url()).searchParams.get('open')
@@ -45,24 +41,16 @@ const block = () => page.locator(`[data-span-id][aria-label^="${TITLE}"]`).first
 
 /**
  * Opens the drawer from `trigger`, checks it, and returns what the drawer
- * shows. A calendar block opens its details first, and their Open the drawer.
+ * shows. A press on a calendar block opens the drawer at once (decision 17).
  */
 const openFrom = async (
   trigger: ReturnType<Page['locator']>,
   by: 'pointer' | 'keyboard' = 'pointer',
 ) => {
-  // Read first: an open drawer hides the page from the accessibility tree.
-  const isBlock = (await trigger.getAttribute('data-span-id')) !== null
   if (by === 'keyboard') {
     await trigger.focus()
     await page.keyboard.press('Enter')
   } else await trigger.click()
-  if (isBlock) {
-    await expect(details()).toBeVisible()
-    await expect(details()).toHaveAccessibleName(TITLE)
-    await details().getByRole('button', { name: 'Open', exact: true }).click()
-    await expect(details()).toHaveCount(0)
-  }
   await expect(sessionView()).toBeVisible({ timeout: 60_000 })
   expect(param()).toBe(String(session))
   await expect.poll(focusInDrawer).toBe(true)
@@ -220,12 +208,11 @@ test.describe('session drawer', () => {
 
   test('the Calendar tab, the Syllabus tab and a schedule block open the same drawer', async () => {
     await page.goto(`${spacePath}?tab=calendar`)
-    // The details close on Escape, with focus back on the block, and open nothing.
+    // A press opens the drawer at once; Escape closes it and focus goes back to the block.
     await block().click()
-    await expect(details()).toBeVisible()
-    await expect(details().getByRole('button', { name: 'Close' })).toBeVisible()
+    await expect(drawer()).toBeVisible()
     await page.keyboard.press('Escape')
-    await expect(details()).toHaveCount(0)
+    await expect(drawer()).toHaveCount(0)
     await expect(block()).toBeFocused()
     expect(param()).toBeNull()
 
