@@ -5,9 +5,6 @@ import { getPayload } from 'payload'
 import { currentReader } from '@/lib/reader'
 import { mode, spacesSettings } from '@/lib/spaces'
 import type { Metadata } from 'next'
-import { Suspense } from 'react'
-
-import { SessionDrawerHost } from '@/components/space/session-drawer-host'
 
 export const metadata: Metadata = { robots: { index: false } }
 
@@ -29,10 +26,6 @@ export default async function SpacesLayout({ children, dialog, params }: Props) 
     <div className="mx-auto w-full max-w-300" data-page="spaces">
       {children}
       {dialog}
-      {/* One session drawer for every space surface: the Calendar and Syllabus tabs, schedule blocks, posts. */}
-      <Suspense fallback={null}>
-        <SessionDrawerHost />
-      </Suspense>
     </div>
   )
 }

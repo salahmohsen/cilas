@@ -52,7 +52,7 @@ import { sessionDrawerHref } from '@/lib/session-drawer-url'
 
 import { SpaceViews } from './space-views'
 import { SpaceCalendar } from './space-calendar'
-import { SessionLink } from './session-drawer-host'
+import { SessionDrawerHost, SessionLink } from './session-drawer-host'
 import { sessionPostsHref } from './session-chip'
 import { AboutClamp } from './about-clamp'
 import { Composer } from './composer'
@@ -720,6 +720,7 @@ export async function SpacePage({
   return (
     <RichTextScope data={course} locale={locale} user={user}>
       {content}
+      <SessionDrawerHost />
     </RichTextScope>
   )
 }

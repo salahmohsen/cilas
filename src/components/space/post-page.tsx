@@ -10,6 +10,7 @@ import type { User } from '@/payload-types'
 
 import { loadPost, PostArticle } from './post-article'
 import styles from './space.module.css'
+import { SessionDrawerHost } from './session-drawer-host'
 
 /**
  * Spec §4: one post and its whole thread. Both post routes render it. A
@@ -72,6 +73,7 @@ export async function PostPage({
         <PostArticle user={user} view={view} context={context} href={href} />
         {why && <Alert tone="info" title={why} />}
       </main>
+      <SessionDrawerHost />
     </div>
   )
 }
