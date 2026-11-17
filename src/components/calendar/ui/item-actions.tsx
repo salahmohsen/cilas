@@ -53,6 +53,7 @@ export function ItemActions({
       <ButtonGroup
         label={label}
         size="sm"
+        className={styles.actionGroup}
         items={segments.map((action) => ({
           id: action.id,
           label: action.label,
