@@ -8,6 +8,35 @@
   line-height: var(--leading-body);
 }
 
+.moveDialog {
+  box-sizing: border-box;
+  inline-size: min(28rem, calc(100% - 2rem));
+  max-block-size: calc(100% - 2rem);
+  overflow-y: auto;
+  margin: auto;
+  padding: var(--space-6);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-surface);
+  background: var(--surface-raised);
+  color: var(--foreground);
+  font-family: var(--font-body);
+  overscroll-behavior: contain;
+}
+.moveDialog::backdrop {
+  background: color-mix(in oklab, var(--foreground) 25%, transparent);
+  overflow: hidden;
+  overscroll-behavior: contain;
+}
+.moveForm {
+  display: grid;
+  gap: var(--space-4);
+  margin-block-start: var(--space-4);
+}
+.moveActions {
+  display: flex;
+  gap: var(--space-2);
+}
+
 /* A tone is a set of calendar tokens from foundation.css; a tone without tokens is neutral. */
 .root [data-tone] {
   --tone-solid: var(--calendar-neutral);

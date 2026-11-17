@@ -7,6 +7,7 @@ export type CalendarMenuLabels = {
   /** The menu's name: "Actions for Week 3". */
   name: (title: string) => string
   open: string
+  moveTo: string
   /** Adds a block to the same item, at the same time on the next day. */
   addNextDay: string
   /** Makes a new item with all the blocks of this one, a week later. */
@@ -81,6 +82,19 @@ export type CalendarLabels = {
   addBlock: (day: string) => string
   /** The menu that puts an unscheduled item on a day, the keyboard's way to place it. */
   placeOnDay: string
+  move: {
+    title: string
+    day: string
+    start: string
+    end: string
+    cancel: string
+    apply: string
+    clear: string
+    selected: (date: string) => string
+    dayError: string
+    orderError: string
+    rangeError: (from: string, to: string) => string
+  }
   /** The block menu: right-click, the "⋯" on a block, Shift+F10 or the Menu key. */
   menu?: CalendarMenuLabels
   /** What screen readers hear after an edit. */
@@ -148,10 +162,24 @@ export const calendarLabelsFrom = (
   dismiss: t('dismiss'),
   addBlock: (day) => t('addBlock', { day }),
   placeOnDay: t('placeOnDay'),
+  move: {
+    title: t('moveTo'),
+    day: t('moveDay'),
+    start: t('moveStart'),
+    end: t('moveEnd'),
+    cancel: t('moveCancel'),
+    apply: t('moveApply'),
+    clear: t('moveClear'),
+    selected: (date) => t('moveSelected', { date }),
+    dayError: t('moveDayError'),
+    orderError: t('moveOrderError'),
+    rangeError: (from, to) => t('moveRangeError', { from, to }),
+  },
   menu: menu && {
     ...menu,
     name: (title) => t('menuName', { title }),
     open: t('menuOpen'),
+    moveTo: t('moveTo'),
   },
   announce: (type, label) => t('announce', { type, label }),
 })

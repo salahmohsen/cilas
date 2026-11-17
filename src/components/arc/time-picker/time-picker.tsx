@@ -9,6 +9,7 @@ import styles from './time-picker.module.css'
 
 export interface TimePickerProps {
   label: string
+  optionsLabel?: string
   value?: string
   defaultValue?: string
   onChange?: (value: string) => void
@@ -65,6 +66,7 @@ const valueFade: Variants = {
 
 export function TimePicker({
   label,
+  optionsLabel = `${label} options`,
   value,
   defaultValue = '09:00',
   onChange,
@@ -217,7 +219,7 @@ export function TimePicker({
               id={`${id}-listbox`}
               className={styles.menu}
               role="listbox"
-              aria-label={`${label} options`}
+              aria-label={optionsLabel}
               initial={reduce ? { opacity: 0 } : { opacity: 0, y: -6, scale: 0.97 }}
               animate={{
                 opacity: 1,

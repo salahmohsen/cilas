@@ -9,6 +9,7 @@ import { useEffect, useMemo, useRef, useState, type ReactNode } from 'react'
 import SegmentedControl from '@/components/arc/segmented-control/segmented-control'
 import { useNarrow as usePhone } from '@/lib/use-narrow'
 import type { CalendarChange, CalendarItem } from '@/lib/calendar-items'
+import { preloadable } from '@/lib/preloadable'
 
 import {
   BlockDetails,
@@ -51,6 +52,8 @@ import { useNarrow } from './use-narrow'
 import { useNow } from './use-now'
 import { WeekGrid } from './week-grid'
 import { WeekSpans } from './week-spans'
+
+const MoveDialog = preloadable(() => import('./move-dialog').then((m) => m.MoveDialog))
 
 type Shared = {
   items: CalendarItem[]
@@ -164,6 +167,7 @@ export function Calendar({
   const [details] = useState(() => createPopoverController<DetailsTarget>())
   const [detailsSide, setDetailsSide] = useState<'end' | 'bottom'>('end')
   const [told, setTold] = useState('')
+  const [moveTarget, setMoveTarget] = useState<EditBlock | null>(null)
   const menuTarget = useRef<string | null>(null)
 
   // The day the view is about: the Day view's day, the first of 3 days, a day in the week.
@@ -434,6 +438,7 @@ export function Calendar({
       { action: 'open', disabled: !editable && !itemIds.has(block.itemId) },
     ]
     if (editable && !block.readOnly) {
+      entries.push({ action: 'move-to' })
       entries.push({ action: 'add-next-day' })
       if (newItemKind) entries.push({ action: 'copy-next-week' })
       entries.push({ action: 'delete' })
@@ -447,6 +452,9 @@ export function Calendar({
     menuTarget.current = blockId
     setTold('')
     switch (action) {
+      case 'move-to':
+        setMoveTarget(block)
+        break
       case 'open':
         // The host puts focus back on the block when its dialog closes, so the block has it now.
         session.focusable({ id: blockId, track: block.track })?.focus()
@@ -510,6 +518,21 @@ export function Calendar({
 
   return (
     <div className={styles.root} role="group" aria-label={labels.name}>
+      {moveTarget && (
+        <MoveDialog
+          block={moveTarget}
+          labels={labels}
+          locale={locale}
+          range={range}
+          onCancel={() => setMoveTarget(null)}
+          finalFocus={() => session.focusable({ id: moveTarget.id, track: moveTarget.track })}
+          onApply={(track, start, end) => {
+            session.move(moveTarget.id, track, start, end)
+            setTold(labels.announce('move', nameOf({ ...moveTarget, track, start, end })))
+            setMoveTarget(null)
+          }}
+        />
+      )}
       <WeekSpans.Root
         ref={frame}
         className={styles.frame}
@@ -727,6 +750,7 @@ export function Calendar({
 
         {blockMenu ? (
           <BlockMenu
+            preloadMove={MoveDialog.preload}
             controller={menu}
             labels={blockMenu}
             titleOf={(blockId) => {

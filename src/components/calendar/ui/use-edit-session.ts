@@ -149,6 +149,16 @@ export function useEditSession({ items, newItemKind, onSave, scope, range }: Opt
       ])
     },
 
+    move(id: string, track: string, start: number, end: number) {
+      const block = changeable(id)
+      if (!block || block.deleted) return
+      if (!block.allDay && (start < range.min || end > range.max || end <= start)) return
+      focusTarget.current = { id, track }
+      setWorking((blocks) =>
+        blocks.map((one) => (one.id === id ? { ...one, track, start, end } : one)),
+      )
+    },
+
     /** A press on an empty stretch of day draws a block of a new item, if the host allows new items. */
     draw: newItemKind
       ? (span: { track: string; start: number; end: number }) =>

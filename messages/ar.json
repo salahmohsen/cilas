@@ -557,6 +557,17 @@
     "placeOnDay": "ضع في يوم",
     "menuName": "إجراءات {title}",
     "menuOpen": "فتح",
+    "moveTo": "نقل إلى…",
+    "moveDay": "اليوم",
+    "moveStart": "البداية",
+    "moveEnd": "النهاية",
+    "moveCancel": "إلغاء",
+    "moveApply": "تطبيق",
+    "moveClear": "مسح التاريخ",
+    "moveSelected": "المحدد: {date}",
+    "moveDayError": "اختر يومًا.",
+    "moveOrderError": "يجب أن تكون النهاية بعد البداية.",
+    "moveRangeError": "اختر وقتًا بين {from} و{to}.",
     "announce": "{type, select, draw {أُضيفت} move {نُقلت} resize {غُيّر طول} delete {حُذفت} cancel {أُلغي التغيير في} other {}} {label}"
   },
   "CalendarAdmin": {

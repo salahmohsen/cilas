@@ -459,6 +459,7 @@ function Fields({
                         {(field) => (
                           <TimePicker
                             label={t('starts')}
+                            optionsLabel={t('starts')}
                             placeholder={t('timePlaceholder')}
                             value={field.state.value}
                             onChange={(time) => pick(field, time)}
@@ -472,6 +473,7 @@ function Fields({
                         {(field) => (
                           <TimePicker
                             label={t('ends')}
+                            optionsLabel={t('ends')}
                             placeholder={t('timePlaceholder')}
                             value={field.state.value}
                             onChange={(time) => pick(field, time)}

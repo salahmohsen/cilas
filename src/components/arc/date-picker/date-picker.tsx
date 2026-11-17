@@ -24,6 +24,7 @@ export interface DatePickerProps extends Omit<
   maxDate?: Date
   disabledDates?: CalendarDateMatcher
   locale?: string
+  weekStartsOn?: number
   format?: Intl.DateTimeFormatOptions
   /** Adds a Today button to the calendar header. */
   showToday?: boolean
@@ -92,6 +93,7 @@ export function DatePicker({
   locale = 'en-US',
   format = { month: 'short', day: 'numeric', year: 'numeric' },
   showToday,
+  weekStartsOn,
   labels,
   id,
   className,
@@ -302,6 +304,7 @@ export function DatePicker({
                 disabledDates={disabledDates}
                 locale={locale}
                 showToday={showToday}
+                weekStartsOn={weekStartsOn}
                 labels={labels}
               />
               <div className={styles.footer}>

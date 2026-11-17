@@ -202,6 +202,7 @@ describe('a readOnly item in edit mode', () => {
     expect(await menuNames(fair())).toEqual(['Open'])
     expect(await menuNames(week3())).toEqual([
       'Open',
+      'Move to…',
       'Add meeting',
       'New session next week',
       'Delete meeting',

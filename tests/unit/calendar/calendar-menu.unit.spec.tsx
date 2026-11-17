@@ -1,4 +1,4 @@
-import { cleanup, fireEvent, render, screen, waitFor, within } from '@testing-library/react'
+import { act, cleanup, fireEvent, render, screen, waitFor, within } from '@testing-library/react'
 import { NextIntlClientProvider } from 'next-intl'
 import { afterEach, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest'
 
@@ -7,6 +7,7 @@ import { useCalendarLabels } from '@/components/calendar/ui/use-calendar-labels'
 import type { CalendarChange, CalendarItem } from '@/lib/calendar-items'
 
 import en from '../../../messages/en.json'
+import ar from '../../../messages/ar.json'
 import { stubPopupDom } from '../../helpers/popup-dom'
 
 declare global {
@@ -47,15 +48,30 @@ const menuWords = {
 const host = { kind: () => 'Session', newItem: 'New session' }
 
 type Props = {
+  locale?: 'en' | 'ar'
+  readOnly?: boolean
   mode?: 'edit' | 'view'
   menu?: boolean
   onSave?: (changes: CalendarChange[]) => void
   onOpen?: (itemId: string, blockId: string | null) => void
 }
 
-function Host({ mode = 'edit', menu = true, onSave = vi.fn(), onOpen = vi.fn() }: Props) {
+function Host({
+  mode = 'edit',
+  menu = true,
+  onSave = vi.fn(),
+  onOpen = vi.fn(),
+  locale = 'en',
+  readOnly = false,
+}: Props) {
   const labels = useCalendarLabels(menu ? { ...host, menu: menuWords } : host)
-  const shared = { items, labels, locale: 'en', day: '2026-11-17', onOpen }
+  const shared = {
+    items: readOnly ? items.map((item) => ({ ...item, readOnly: true as const })) : items,
+    labels,
+    locale,
+    day: '2026-11-17',
+    onOpen,
+  }
   return mode === 'edit' ? (
     <Calendar {...shared} mode="edit" newItemKind="session" onSave={onSave} />
   ) : (
@@ -65,7 +81,11 @@ function Host({ mode = 'edit', menu = true, onSave = vi.fn(), onOpen = vi.fn() }
 
 const show = (props: Props = {}) =>
   render(
-    <NextIntlClientProvider locale="en" messages={en} timeZone="Africa/Cairo">
+    <NextIntlClientProvider
+      locale={props.locale ?? 'en'}
+      messages={props.locale === 'ar' ? ar : en}
+      timeZone="Africa/Cairo"
+    >
       <Host {...props} />
     </NextIntlClientProvider>,
   )
@@ -108,10 +128,16 @@ const status = () =>
     .join(' ')
 
 describe('opening the menu', () => {
-  it('opens on right-click with the four actions of edit mode', async () => {
+  it('opens on right-click with the five actions of edit mode', async () => {
     show()
     await open()
-    expect(names()).toEqual(['Open', 'Add meeting', 'New session next week', 'Delete meeting'])
+    expect(names()).toEqual([
+      'Open',
+      'Move to…',
+      'Add meeting',
+      'New session next week',
+      'Delete meeting',
+    ])
     expect(within(menu()!).getByRole('group')).toHaveAccessibleName('Actions for Week 3')
   })
 
@@ -131,7 +157,7 @@ describe('opening the menu', () => {
     const more = tuesday().querySelector<HTMLElement>('[data-block-menu]')!
     fireEvent.click(more)
     await waitFor(() => expect(menu()).not.toBeNull())
-    expect(names()).toHaveLength(4)
+    expect(names()).toHaveLength(5)
   })
 
   it('opens on a long press with touch', async () => {
@@ -171,7 +197,7 @@ describe('using the menu', () => {
     expect(document.activeElement).toHaveTextContent('Open')
 
     fireEvent.keyDown(document.activeElement!, { key: 'ArrowDown' })
-    expect(document.activeElement).toHaveTextContent('Add meeting')
+    expect(document.activeElement).toHaveTextContent('Move to…')
     fireEvent.keyDown(document.activeElement!, { key: 'ArrowUp' })
     fireEvent.keyDown(document.activeElement!, { key: 'ArrowUp' })
     expect(document.activeElement).toHaveTextContent('Delete meeting')
@@ -211,6 +237,120 @@ describe('using the menu', () => {
         expect.objectContaining({ id: 'week-3' }),
       ),
     )
+  })
+})
+
+describe('Move to', () => {
+  const moveDialog = async () => {
+    await act(async () => {
+      await pick('Move to…')
+    })
+    return screen.findByRole('dialog', { name: en.CalendarUi.moveTo })
+  }
+
+  it('does not offer Move to on a read-only block', async () => {
+    show({ readOnly: true })
+    await open()
+    expect(names()).toEqual(['Open'])
+  })
+
+  it('applies one staged move, announces it, marks it, and returns focus', async () => {
+    const onSave = vi.fn()
+    show({ onSave })
+    const dialog = await moveDialog()
+    fireEvent.click(within(dialog).getByRole('button', { name: /^Starts/ }))
+    fireEvent.click(within(dialog).getByRole('option', { name: '8 PM' }))
+    fireEvent.click(within(dialog).getByRole('button', { name: 'Apply' }))
+    await waitFor(() => expect(screen.queryByRole('dialog')).toBeNull())
+    expect(onSave).not.toHaveBeenCalled()
+    expect(tuesday()).toHaveAccessibleName(/8 PM.*Unsaved/)
+    expect(tuesday()).toHaveFocus()
+    expect(status()).toContain('1 unsaved change')
+    fireEvent.click(saved())
+    await waitFor(() => expect(onSave).toHaveBeenCalledTimes(1))
+    expect(onSave.mock.calls[0]![0]).toEqual([
+      expect.objectContaining({
+        op: 'move-block',
+        itemId: 'week-3',
+        blockId: 'tue',
+        start_time: '20:00',
+        end_time: '21:00',
+      }),
+    ])
+  })
+
+  it('shows an end-before-start error and stages nothing', async () => {
+    show()
+    const dialog = await moveDialog()
+    fireEvent.click(within(dialog).getByRole('button', { name: /^Starts/ }))
+    fireEvent.click(within(dialog).getByRole('option', { name: '10 PM' }))
+    fireEvent.click(within(dialog).getByRole('button', { name: 'Apply' }))
+    expect(within(dialog).getByRole('alert')).toHaveTextContent(en.CalendarUi.moveOrderError)
+    fireEvent.click(within(dialog).getByRole('button', { name: 'Cancel' }))
+    await waitFor(() => expect(screen.queryByRole('dialog')).toBeNull())
+    expect(screen.queryByRole('button', { name: 'Save' })).toBeNull()
+  })
+
+  it('shows a field error for a time outside the grid hours', async () => {
+    show()
+    const dialog = await moveDialog()
+    fireEvent.click(within(dialog).getByRole('button', { name: /^Starts/ }))
+    fireEvent.click(within(dialog).getByRole('option', { name: '5 AM' }))
+    fireEvent.click(within(dialog).getByRole('button', { name: 'Apply' }))
+    expect(within(dialog).getByRole('alert')).toHaveTextContent('Choose a time between')
+  })
+
+  it('offers only a day for an all-day block, starts weeks on Saturday, and stages its new day', async () => {
+    const onSave = vi.fn()
+    show({ onSave })
+    fireEvent.contextMenu(screen.getByRole('button', { name: /^Archive week, Wednesday/ }))
+    await waitFor(() => expect(menu()).not.toBeNull())
+    await act(async () => {
+      fireEvent.click(item('Move to…'))
+    })
+    const dialog = await screen.findByRole('dialog', { name: en.CalendarUi.moveTo })
+    expect(within(dialog).queryByRole('button', { name: /^Starts/ })).toBeNull()
+    fireEvent.click(within(dialog).getByRole('button', { name: /^Day/ }))
+    const grid = within(dialog).getByRole('grid')
+    expect(
+      grid.querySelector('[data-present] [data-date]') ?? grid.querySelector('[data-date]'),
+    ).toHaveAttribute('data-date', '2026-10-31')
+    fireEvent.click(within(dialog).getByRole('gridcell', { name: /Thursday, November 19, 2026/ }))
+    fireEvent.click(within(dialog).getByRole('button', { name: 'Apply' }))
+    expect(onSave).not.toHaveBeenCalled()
+    fireEvent.click(saved())
+    await waitFor(() => expect(onSave).toHaveBeenCalledTimes(1))
+    expect(onSave.mock.calls[0]![0]).toEqual([
+      expect.objectContaining({
+        op: 'move-block',
+        date: '2026-11-19',
+        start_time: null,
+        end_time: null,
+      }),
+    ])
+  })
+
+  it('uses Arabic labels and RTL, and Escape leaves no change', async () => {
+    show({ locale: 'ar' })
+    const block = document.querySelector<HTMLElement>('[data-span-id="week-3/tue"]')!
+    block.focus()
+    fireEvent.contextMenu(block)
+    const action = await screen.findByRole('menuitem', { name: ar.CalendarUi.moveTo })
+    await act(async () => {
+      fireEvent.click(action)
+    })
+    const dialog = await screen.findByRole('dialog', { name: ar.CalendarUi.moveTo })
+    expect(dialog).toHaveAttribute('dir', 'rtl')
+    expect(
+      within(dialog).getByRole('button', { name: new RegExp(`^${ar.CalendarUi.moveStart}`) }),
+    ).toBeInTheDocument()
+    expect(
+      within(dialog).getByRole('button', { name: ar.CalendarUi.moveApply }),
+    ).toBeInTheDocument()
+    fireEvent.keyDown(document.activeElement!, { key: 'Escape' })
+    await waitFor(() => expect(screen.queryByRole('dialog')).toBeNull())
+    expect(screen.queryByRole('button', { name: ar.CalendarUi.save })).toBeNull()
+    expect(block).toHaveFocus()
   })
 })
 
@@ -390,11 +530,17 @@ describe('an all-day meeting', () => {
     await waitFor(() => expect(menu()).toBeNull())
   }
 
-  it('has the same four actions in edit mode, and Open alone in view mode', async () => {
+  it('has the same five actions in edit mode, and Open alone in view mode', async () => {
     show()
     fireEvent.contextMenu(allDay())
     await waitFor(() => expect(menu()).not.toBeNull())
-    expect(names()).toEqual(['Open', 'Add meeting', 'New session next week', 'Delete meeting'])
+    expect(names()).toEqual([
+      'Open',
+      'Move to…',
+      'Add meeting',
+      'New session next week',
+      'Delete meeting',
+    ])
     cleanup()
     show({ mode: 'view' })
     fireEvent.contextMenu(allDay())

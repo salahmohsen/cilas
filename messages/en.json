@@ -557,6 +557,17 @@
     "placeOnDay": "Place on day",
     "menuName": "Actions for {title}",
     "menuOpen": "Open",
+    "moveTo": "Move to…",
+    "moveDay": "Day",
+    "moveStart": "Starts",
+    "moveEnd": "Ends",
+    "moveCancel": "Cancel",
+    "moveApply": "Apply",
+    "moveClear": "Clear date",
+    "moveSelected": "Selected: {date}",
+    "moveDayError": "Choose a day.",
+    "moveOrderError": "The end must be after the start.",
+    "moveRangeError": "Choose a time between {from} and {to}.",
     "announce": "{type, select, draw {Added} move {Moved} resize {Resized} delete {Deleted} cancel {Cancelled the change to} other {}} {label}"
   },
   "CalendarAdmin": {
