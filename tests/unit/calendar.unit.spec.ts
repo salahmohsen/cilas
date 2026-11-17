@@ -136,4 +136,36 @@ describe('courseItems', () => {
       [],
     )
   })
+  it('carries the session title and the counts of materials and activities, and leaves out zero', () => {
+    const items = courseItems(base, [
+      {
+        id: 1,
+        updatedAt: '2026-11-17T10:00:00Z',
+        title: '  What is intelligence?  ',
+        bibliography: [{}, {}, {}, {}],
+        activities: [],
+        meetings: [{ id: 'r1', date: '2026-03-03' }],
+      },
+      {
+        id: 2,
+        updatedAt: '2026-11-17T10:00:00Z',
+        title: '   ',
+        bibliography: [],
+        meetings: [{ id: 'r2', date: '2026-03-10' }],
+      },
+      {
+        id: 3,
+        updatedAt: '2026-11-17T10:00:00Z',
+        bibliography: null,
+        activities: [{}],
+        meetings: [{ id: 'r3', date: '2026-03-17' }],
+      },
+    ])
+    expect(items[0]).toMatchObject({ sessionTitle: 'What is intelligence?', materials: 4 })
+    expect(items[0]).not.toHaveProperty('activities')
+    expect(items[1]).not.toHaveProperty('sessionTitle')
+    expect(items[1]).not.toHaveProperty('materials')
+    expect(items[2]).toMatchObject({ activities: 1 })
+    expect(items[2]).not.toHaveProperty('materials')
+  })
 })

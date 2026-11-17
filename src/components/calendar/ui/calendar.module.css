@@ -1608,6 +1608,24 @@
   padding-inline-start: calc(0.75rem + var(--space-3));
   color: var(--text-secondary);
 }
+/* A long session title keeps the details short: two lines, the full text stays in the page. */
+.detailsCaptionText {
+  display: -webkit-box;
+  min-inline-size: 0;
+  overflow: hidden;
+  overflow-wrap: anywhere;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+}
+.detailsMore {
+  color: var(--text-secondary);
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+}
+.detailsMore:hover {
+  color: var(--foreground);
+}
 .detailsCancelled {
   padding: 0 var(--space-2);
   border: 1px solid color-mix(in oklch, var(--danger) 45%, transparent);

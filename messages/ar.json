@@ -489,6 +489,8 @@
     "nextOn": "التالي: {date}",
     "lastOn": "الأحدث: {date}",
     "session": "الجلسة {n, number, digits}",
+    "sessionMaterials": "{count, plural, zero {لا مواد} one {مادة واحدة} two {مادتان} few {{count, number, digits} مواد} many {{count, number, digits} مادة} other {{count, number, digits} مادة}}",
+    "sessionActivities": "{count, plural, zero {لا أنشطة} one {نشاط واحد} two {نشاطان} few {{count, number, digits} أنشطة} many {{count, number, digits} نشاطًا} other {{count, number, digits} نشاط}}",
     "cancelled": "أُلغيت",
     "eventTypes": {
       "talk": "محاضرة",

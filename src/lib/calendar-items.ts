@@ -40,6 +40,8 @@ export type CalendarItem = {
   caption?: string
   /** The start of what it is about, in plain words, for a preview. */
   summary?: string
+  /** A line after the details' rows that links to more about the item: "3 materials · 1 activity". */
+  more?: { label: string; href: string }
   /** The item's own page. Its blocks are links to it, so the page's HTML holds them. */
   href?: string
   /** A picture of the item, for its details. `position` is a CSS `object-position`. */

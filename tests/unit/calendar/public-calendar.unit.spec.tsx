@@ -8,7 +8,7 @@ import {
   waitFor,
   within,
 } from '@testing-library/react'
-import { NextIntlClientProvider } from 'next-intl'
+import { createTranslator, NextIntlClientProvider } from 'next-intl'
 import { renderToString } from 'react-dom/server'
 import { afterEach, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest'
 
@@ -24,6 +24,7 @@ import { publicCalendarLinks } from '@/actions/public-calendar-access'
 import { loadSessionEdit } from '@/actions/session-edit'
 import { saveScheduleEdits } from '@/actions/save-schedule-edits'
 import { scheduleOffers } from '@/actions/schedule-offers'
+import { formatsOf } from '@/i18n/formats'
 import { PublicCalendar } from '@/components/calendar/public-calendar'
 import { publicItems } from '@/components/calendar/public-items'
 import type { CalendarMeeting } from '@/lib/calendar'
@@ -139,6 +140,22 @@ const meeting = (over: Partial<CalendarMeeting>): CalendarMeeting => ({
   ...over,
 })
 
+/** The host's wording for one language, as the calendar page passes it. */
+const words = (locale: 'en' | 'ar') => {
+  const t = createTranslator({
+    locale,
+    messages: locale === 'ar' ? ar : en,
+    formats: formatsOf(locale),
+    namespace: 'Calendar',
+  })
+  return {
+    locale,
+    session: (n: number) => t('session', { n }),
+    materials: (count: number) => t('sessionMaterials', { count }),
+    activities: (count: number) => t('sessionActivities', { count }),
+  }
+}
+
 const meetings: CalendarMeeting[] = [
   meeting({
     cover: { url: '/media/city.jpg', alt: 'A street', focalX: 20, focalY: 80 },
@@ -150,6 +167,7 @@ const meetings: CalendarMeeting[] = [
     item: 'e4',
     kind: 'event',
     courseId: undefined,
+    sessionId: undefined,
     title: 'Film night',
     href: '/events/film-night',
     date: '2026-11-18',
@@ -172,7 +190,7 @@ const meetings: CalendarMeeting[] = [
 ]
 
 describe('publicItems', () => {
-  const items = publicItems(meetings, { locale: 'en', session: (n) => `Session ${n}` })
+  const items = publicItems(meetings, words('en'))
 
   it('makes a session one item with its meetings as blocks, its cancelled ones apart', () => {
     const held = items.find((item) => item.id === 's1')!
@@ -185,7 +203,7 @@ describe('publicItems', () => {
       tone: 'blue',
       cancelled: false,
       readOnly: true,
-      href: '/en/study/reading-the-city',
+      href: '/en/study/reading-the-city#session-501',
       image: { url: '/media/city.jpg', alt: 'A street', position: '20% 80%' },
     })
     expect(items.find((item) => item.id === 's1-cancelled')).toMatchObject({
@@ -202,9 +220,49 @@ describe('publicItems', () => {
         meeting({ cancelled: true }),
         meeting({ key: 's1-2026-11-19-1900', date: '2026-11-19', cancelled: true }),
       ],
-      { locale: 'en', session: (n) => `Session ${n}` },
+      words('en'),
     )
     expect(all.map((item) => [item.id, item.cancelled])).toEqual([['s1', true]])
+  })
+
+  it('writes the caption as the session number and its title, and the number alone without one', () => {
+    const items = publicItems(
+      [
+        meeting({ sessionTitle: 'What is intelligence?' }),
+        meeting({ key: 's2-x', item: 's2', sessionId: '502', session: 4 }),
+      ],
+      words('en'),
+    )
+    expect(items.find((item) => item.id === 's1')!.caption).toBe(
+      'Session 3 · \u2068What is intelligence?\u2069',
+    )
+    expect(items.find((item) => item.id === 's2')!.caption).toBe('Session 4')
+  })
+
+  it('links the counts to the session row in the course page, in English and Arabic', () => {
+    const counted = meeting({ materials: 3, activities: 1 })
+    expect(publicItems([counted], words('en'))[0]!.more).toEqual({
+      label: '3 materials · 1 activity',
+      href: '/en/study/reading-the-city#session-501',
+    })
+    const [arabic] = publicItems([counted], words('ar'))
+    expect(arabic!.more?.href).toBe('/ar/study/reading-the-city#session-501')
+    expect(arabic!.more?.label).toBe('٣ مواد · نشاط واحد')
+  })
+
+  it.each([
+    [{ materials: 2 }, '2 materials'],
+    [{ activities: 2 }, '2 activities'],
+    [{ materials: 1, activities: 1 }, '1 material · 1 activity'],
+  ])('says only the counts there are: %j', (counts, label) => {
+    expect(publicItems([meeting(counts)], words('en'))[0]!.more?.label).toBe(label)
+  })
+
+  it('has no counts row when the session has no materials and no activities, nor for an event', () => {
+    expect(publicItems([meeting({})], words('en'))[0]).not.toHaveProperty('more')
+    const event = meeting({ kind: 'event', sessionId: undefined, session: undefined })
+    expect(publicItems([event], words('en'))[0]).not.toHaveProperty('more')
+    expect(publicItems([event], words('en'))[0]!.href).toBe('/en/study/reading-the-city')
   })
 
   it('lists courses before events, each by type', () => {
@@ -228,7 +286,11 @@ const kinds = (locale: 'en' | 'ar') => {
   }
 }
 
-const page = (locale: 'en' | 'ar' = 'en', query = '?view=week&date=2026-11-17') => {
+const page = (
+  locale: 'en' | 'ar' = 'en',
+  query = '?view=week&date=2026-11-17',
+  source: readonly CalendarMeeting[] = meetings,
+) => {
   navigation.params = new URLSearchParams(query)
   window.history.replaceState(null, '', `/${locale}/calendar${query}`)
   const tree = () => (
@@ -238,7 +300,7 @@ const page = (locale: 'en' | 'ar' = 'en', query = '?view=week&date=2026-11-17') 
       timeZone="Africa/Cairo"
     >
       <PublicCalendar
-        items={publicItems(meetings, { locale, session: (n) => `Session ${n}` })}
+        items={publicItems(source, words(locale))}
         range={loadedRange(new URLSearchParams(query).get('date')!)}
         today="2026-11-17"
         kinds={kinds(locale)}
@@ -279,7 +341,7 @@ describe('the public calendar', () => {
     const html = renderToString(
       <NextIntlClientProvider locale="en" messages={en} timeZone="Africa/Cairo">
         <PublicCalendar
-          items={publicItems(meetings, { locale: 'en', session: (n) => `Session ${n}` })}
+          items={publicItems(meetings, words('en'))}
           range={loadedRange('2026-11-17')}
           today="2026-11-17"
           kinds={kinds('en')}
@@ -288,14 +350,14 @@ describe('the public calendar', () => {
       </NextIntlClientProvider>,
     )
     expect(html).toContain('Reading the city')
-    expect(html).toContain('href="/en/study/reading-the-city"')
+    expect(html).toContain('href="/en/study/reading-the-city#session-501"')
     expect(html).toContain('href="/en/events/film-night"')
   })
 
   it('opens the details on a plain press of a block, with a link to the course', async () => {
     page()
     const block = screen.getByRole('link', { name: /^Reading the city, Tuesday/ })
-    expect(block).toHaveAttribute('href', '/en/study/reading-the-city')
+    expect(block).toHaveAttribute('href', '/en/study/reading-the-city#session-501')
     const click = new MouseEvent('click', { bubbles: true, cancelable: true, button: 0 })
     block.dispatchEvent(click)
     expect(click.defaultPrevented).toBe(true)
@@ -305,9 +367,31 @@ describe('the public calendar', () => {
     expect(within(details).getByRole('img', { name: 'A street' })).toBeInTheDocument()
     expect(within(details).getByRole('link', { name: 'View course' })).toHaveAttribute(
       'href',
-      '/en/study/reading-the-city',
+      '/en/study/reading-the-city#session-501',
     )
     expect(within(details).queryByRole('button', { name: /Edit/ })).toBeNull()
+  })
+
+  it('shows the session title in the caption and the counts as a link to the session in the course page', async () => {
+    const titled = [meeting({ sessionTitle: 'What is intelligence?', materials: 3, activities: 1 })]
+    page('en', '?view=week&date=2026-11-17', titled)
+    fireEvent.click(screen.getByRole('link', { name: /^Reading the city, Tuesday/ }))
+    const details = await screen.findByRole('dialog', { name: 'Reading the city' })
+    expect(details).toHaveTextContent('Session 3 · \u2068What is intelligence?\u2069')
+    const counts = within(details).getByRole('link', { name: '3 materials · 1 activity' })
+    expect(counts).toHaveAttribute('href', '/en/study/reading-the-city#session-501')
+    expect(within(details).getByRole('link', { name: 'View course' })).toHaveAttribute(
+      'href',
+      counts.getAttribute('href')!,
+    )
+  })
+
+  it('shows no counts row for a session without materials and activities', async () => {
+    page()
+    fireEvent.click(screen.getByRole('link', { name: /^Reading the city, Tuesday/ }))
+    const details = await screen.findByRole('dialog', { name: 'Reading the city' })
+    expect(within(details).queryByRole('link', { name: /material|activit/ })).toBeNull()
+    expect(within(details).getAllByRole('link')).toHaveLength(1)
   })
 
   it('opens the details from the keyboard on a linked block, with Enter or Space', async () => {
@@ -438,7 +522,7 @@ describe('public calendar access after hydration', () => {
     })
     const { container } = page()
     await act(async () => {})
-    fireEvent.click(container.querySelector('a[href="/en/study/reading-the-city"]')!)
+    fireEvent.click(container.querySelector('a[href="/en/study/reading-the-city#session-501"]')!)
     const dialog = await screen.findByRole('dialog')
     expect(within(dialog).getByRole('link', { name: 'View course' })).toBeInTheDocument()
     if (allowed) {
@@ -555,7 +639,7 @@ describe('the month panel on the public calendar, by role', () => {
       within(details)
         .getAllByRole('link')
         .map((link) => link.getAttribute('href')),
-    ).toEqual(['/en/study/reading-the-city', '/en/spaces/course/city'])
+    ).toEqual(['/en/study/reading-the-city#session-501', '/en/spaces/course/city'])
     expect(within(details).queryByRole('button', { name: 'More actions' })).toBeNull()
   })
 

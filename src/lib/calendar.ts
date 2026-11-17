@@ -24,6 +24,11 @@ export type CalendarMeeting = {
   end?: string
   /** "Session 3", for a course meeting. */
   session?: number
+  /** The session's own title, when it has one (the other language's when this one is empty). */
+  sessionTitle?: string
+  /** How many materials and activities the session lists; left out when none. */
+  materials?: number
+  activities?: number
   /** Course type (`thematic`…) or event type, for its label. */
   type: string
   /** How and where it meets, in words: "In person · Darb 1718". */
@@ -35,7 +40,18 @@ export type CalendarMeeting = {
 /** What every meeting of one course or event shares. */
 export type CalendarBase = Omit<
   CalendarMeeting,
-  'feed' | 'key' | 'item' | 'date' | 'start' | 'end' | 'session' | 'cancelled' | 'place'
+  | 'feed'
+  | 'key'
+  | 'item'
+  | 'date'
+  | 'start'
+  | 'end'
+  | 'session'
+  | 'sessionTitle'
+  | 'materials'
+  | 'activities'
+  | 'cancelled'
+  | 'place'
 >
 
 /** A course's meetings with separate display keys and stored feed identities. */
@@ -45,6 +61,9 @@ export const courseItems = (
     id: number | string
     updatedAt: string
     place?: string | null
+    title?: string | null
+    bibliography?: readonly unknown[] | null
+    activities?: readonly unknown[] | null
   })[],
 ): CalendarMeeting[] =>
   numberedSessions(sessions).flatMap(({ session, number, meetings }) =>
@@ -61,6 +80,9 @@ export const courseItems = (
         ...(m.end_time ? { end: m.end_time } : {}),
         session: number,
         ...(session.place ? { place: session.place } : {}),
+        ...(session.title?.trim() ? { sessionTitle: session.title.trim() } : {}),
+        ...(session.bibliography?.length ? { materials: session.bibliography.length } : {}),
+        ...(session.activities?.length ? { activities: session.activities.length } : {}),
         ...(m.cancelled ? { cancelled: true } : {}),
       }
     }),

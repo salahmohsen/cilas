@@ -489,6 +489,8 @@
     "nextOn": "Next: {date}",
     "lastOn": "Most recent: {date}",
     "session": "Session {n}",
+    "sessionMaterials": "{count, plural, one {# material} other {# materials}}",
+    "sessionActivities": "{count, plural, one {# activity} other {# activities}}",
     "cancelled": "Cancelled",
     "eventTypes": {
       "talk": "Talk",

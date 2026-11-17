@@ -1,4 +1,4 @@
-import { AlignLeft, Clock, MapPin } from 'lucide-react'
+import { AlignLeft, Clock, Library, MapPin } from 'lucide-react'
 import Image from 'next/image'
 import type { ReactNode } from 'react'
 
@@ -72,7 +72,11 @@ export function ItemDetails({
 
       {item.caption || item.cancelled ? (
         <p className={styles.detailsCaption}>
-          {item.caption ? <span dir="auto">{item.caption}</span> : null}
+          {item.caption ? (
+            <span className={styles.detailsCaptionText} dir="auto">
+              {item.caption}
+            </span>
+          ) : null}
           {item.cancelled ? (
             <span className={styles.detailsCancelled}>{labels.cancelled}</span>
           ) : null}
@@ -112,6 +116,14 @@ export function ItemDetails({
           <li>
             <MapPin aria-hidden size={16} strokeWidth={1.75} />
             <span dir="auto">{item.place}</span>
+          </li>
+        ) : null}
+        {item.more ? (
+          <li>
+            <Library aria-hidden size={16} strokeWidth={1.75} />
+            <a className={styles.detailsMore} href={item.more.href} onClick={onLink}>
+              {item.more.label}
+            </a>
           </li>
         ) : null}
         {item.summary ? (

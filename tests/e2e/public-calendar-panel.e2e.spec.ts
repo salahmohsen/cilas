@@ -329,7 +329,7 @@ test.describe('the public calendar side panel', () => {
     await chip(student.page, '2035-10-04', 'Panel course A').click()
     const links = student.page.getByRole('region', { name: 'Panel course A' }).getByRole('link')
     await expect(links.nth(1)).toHaveAttribute('href', spaceHref)
-    await expect(links.first()).toHaveAttribute('href', /\/study\/panel-.*course-a/)
+    await expect(links.first()).toHaveAttribute('href', /\/study\/panel-.*course-a#session-\d+$/)
     await expect(student.page.getByRole('button', { name: 'More actions' })).toHaveCount(0)
     await shot(student.page, 'details-student')
     await student.context.close()

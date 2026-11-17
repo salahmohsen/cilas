@@ -1,6 +1,7 @@
 import { TYPE_ORDER, toneOf, type CalendarMeeting } from '@/lib/calendar'
 import type { CalendarItem } from '@/lib/calendar-items'
 import { focalPointStyle } from '@/lib/media-image'
+import { sessionAnchor, sessionCaption } from '@/lib/session-label'
 
 /** What the legend toggles: one kind per course type and per event type. */
 export const kindOf = (meeting: Pick<CalendarMeeting, 'kind' | 'type'>) =>
@@ -18,11 +19,22 @@ const rank = ({ kind, type }: Pick<CalendarMeeting, 'kind' | 'type'>) => {
  * are two items, since a whole item is cancelled or not; an item with no held
  * meeting keeps its own id. Paths gain the
  * locale. Items come in legend order, courses first, so the legend keeps one
- * order from month to month. View only.
+ * order from month to month. A session's links go to its row in the course's
+ * syllabus. View only.
  */
 export const publicItems = (
   meetings: readonly CalendarMeeting[],
-  { locale, session }: { locale: string; session: (number: number) => string },
+  {
+    locale,
+    session,
+    materials,
+    activities,
+  }: {
+    locale: string
+    session: (number: number) => string
+    materials: (count: number) => string
+    activities: (count: number) => string
+  },
 ): CalendarItem[] => {
   const items = new Map<string, CalendarItem>()
   const order = new Map<string, number>()
@@ -43,6 +55,13 @@ export const publicItems = (
       continue
     }
     order.set(id, rank(meeting))
+    const href = meeting.href
+      ? `/${locale}${meeting.href}${meeting.sessionId ? `#${sessionAnchor(meeting.sessionId)}` : ''}`
+      : undefined
+    const content = [
+      meeting.materials ? materials(meeting.materials) : '',
+      meeting.activities ? activities(meeting.activities) : '',
+    ].filter(Boolean)
     items.set(id, {
       id,
       ...(meeting.sessionId ? { sessionId: meeting.sessionId } : {}),
@@ -53,9 +72,12 @@ export const publicItems = (
       cancelled: Boolean(meeting.cancelled),
       readOnly: true,
       version: '',
-      ...(meeting.session ? { caption: session(meeting.session) } : {}),
+      ...(meeting.session
+        ? { caption: sessionCaption(session(meeting.session), meeting.sessionTitle) }
+        : {}),
       ...(meeting.place ? { place: meeting.place } : {}),
-      ...(meeting.href ? { href: `/${locale}${meeting.href}` } : {}),
+      ...(href ? { href } : {}),
+      ...(href && content.length ? { more: { label: content.join(' · '), href } } : {}),
       ...(meeting.cover
         ? {
             image: {

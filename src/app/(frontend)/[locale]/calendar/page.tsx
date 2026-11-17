@@ -71,7 +71,12 @@ export default async function CalendarPage({ params, searchParams }: Props) {
         access={access}
         items={publicItems(
           access.mode === 'edit' ? meetings.filter((m) => m.kind === 'event') : meetings,
-          { locale: lang, session: (n) => t('session', { n }) },
+          {
+            locale: lang,
+            session: (n) => t('session', { n }),
+            materials: (count) => t('sessionMaterials', { count }),
+            activities: (count) => t('sessionActivities', { count }),
+          },
         )}
         range={range}
         today={today}
