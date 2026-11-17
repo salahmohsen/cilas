@@ -1695,7 +1695,9 @@
     "activityTitleEdit": "Edit activity",
     "done": "Done",
     "holdDelete": "Hold to delete session",
+    "deleteTitle": "Delete session?",
+    "delete": "Delete",
     "deleted": "Deleted",
-    "holdHint": "Press and hold for {seconds} seconds to confirm. With a keyboard, hold Space or Enter."
+    "holdHint": "Press and hold for {seconds} seconds to confirm. With a keyboard, hold Space, or press Enter to open confirmation."
   }
 }

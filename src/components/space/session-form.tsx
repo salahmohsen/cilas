@@ -19,6 +19,7 @@ import { formatTime } from '@/components/calendar/ui/calendar-time'
 import { RichField } from '@/components/rich-field'
 import { meetingIssue, type MeetingIssue } from '@/fields/meetings'
 import type { CalendarSaveError } from '@/lib/calendar-sources'
+import { preloadable } from '@/lib/preloadable'
 
 import { CardList } from './card-list'
 import { dayOf } from './event-fields'
@@ -26,6 +27,10 @@ import { useLeaveQuestion } from './leave-question'
 import type { ScheduleSaveText } from './schedule-save-text'
 import { activityKind, materialKind } from './session-cards'
 import styles from './session-form.module.css'
+
+const SessionDeleteDialog = preloadable(() =>
+  import('./session-delete-dialog').then((m) => m.SessionDeleteDialog),
+)
 
 type Keyed<T> = T & { key: string }
 type MeetingRow = Keyed<SessionEdit['meetings'][number]> & { allDay: boolean }
@@ -245,6 +250,7 @@ function Fields({
   const root = useRef<HTMLFormElement>(null)
   /** Held to the end: the hold button shows it is done until a refused delete resets it. */
   const [deleted, setDeleted] = useState(false)
+  const [confirmingDelete, setConfirmingDelete] = useState(false)
   const [refused, setRefused] = useState<CalendarSaveError | null>(null)
   // The editor's own rendering of the stored text, found on first edit (it needs the browser).
   const baseline = useRef<string | null>(null)
@@ -555,6 +561,11 @@ function Fields({
       </form.Field>
 
       <HoldToConfirm
+        data-delete-session=""
+        onPointerEnter={SessionDeleteDialog.preload}
+        onFocus={SessionDeleteDialog.preload}
+        onPointerDown={SessionDeleteDialog.preload}
+        onActivate={() => setConfirmingDelete(true)}
         tone="danger"
         className={styles.hold}
         label={t('holdDelete')}
@@ -564,6 +575,19 @@ function Fields({
         disabled={submitting}
         onConfirm={() => void removeSession()}
       />
+
+      {confirmingDelete && (
+        <SessionDeleteDialog
+          onCancel={() => setConfirmingDelete(false)}
+          onDelete={() => {
+            setConfirmingDelete(false)
+            void removeSession()
+          }}
+          returnFocus={() =>
+            root.current?.querySelector<HTMLButtonElement>('[data-delete-session]')?.focus()
+          }
+        />
+      )}
 
       <div className={styles.foot}>
         {refused ? (

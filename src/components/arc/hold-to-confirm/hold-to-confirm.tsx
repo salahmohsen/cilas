@@ -41,6 +41,8 @@ export interface HoldToConfirmProps extends Omit<
   confirmedLabel?: string
   /** Called once when the hold completes. */
   onConfirm: () => void
+  /** Opens an untimed confirmation on Enter or activation without a pointer hold. */
+  onActivate?: () => void
   /** Hold length in milliseconds. */
   duration?: number
   icon?: ReactNode
@@ -201,6 +203,7 @@ export function HoldToConfirm({
   label,
   confirmedLabel = 'Done',
   onConfirm,
+  onActivate,
   duration = 1200,
   icon = <Trash2 strokeWidth={1.75} />,
   tone = 'accent',
@@ -228,6 +231,7 @@ export function HoldToConfirm({
   })
   const [width, measure] = useLabelWidth(reduced)
   const source = useRef<'pointer' | 'key' | null>(null)
+  const pointerHeld = useRef(false)
   const pointerType = useRef('mouse')
   const fill = useRef<AnimationPlaybackControls | null>(null)
   const press = useRef<AnimationPlaybackControls | null>(null)
@@ -310,7 +314,10 @@ export function HoldToConfirm({
   )
 
   function onPointerDown(event: ReactPointerEvent<HTMLButtonElement>) {
+    props.onPointerDown?.(event)
+    if (event.defaultPrevented) return
     if (!event.isPrimary || event.button !== 0) return
+    pointerHeld.current = true
     pointerType.current = event.pointerType
     event.currentTarget.setPointerCapture(event.pointerId)
     begin('pointer')
@@ -331,6 +338,10 @@ export function HoldToConfirm({
   function onKeyDown(event: ReactKeyboardEvent<HTMLButtonElement>) {
     if (event.key !== ' ' && event.key !== 'Enter') return
     event.preventDefault()
+    if (event.key === 'Enter' && onActivate) {
+      if (!event.repeat && !disabled && !done && !source.current) onActivate()
+      return
+    }
     if (!event.repeat) begin('key')
   }
   function onKeyUp(event: ReactKeyboardEvent<HTMLButtonElement>) {
@@ -354,6 +365,11 @@ export function HoldToConfirm({
         aria-describedby={done ? undefined : hintId}
         style={{ scale }}
         onPointerDown={onPointerDown}
+        onClick={(event) => {
+          const held = pointerHeld.current
+          pointerHeld.current = false
+          if (!disabled && !done && !source.current && (event.detail === 0 || !held)) onActivate?.()
+        }}
         onPointerMove={onPointerMove}
         onPointerUp={release}
         onPointerCancel={release}

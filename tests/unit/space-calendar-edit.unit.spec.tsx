@@ -1,5 +1,5 @@
 // @vitest-environment jsdom
-import { cleanup, fireEvent, render, screen, waitFor, within } from '@testing-library/react'
+import { act, cleanup, fireEvent, render, screen, waitFor, within } from '@testing-library/react'
 import { NextIntlClientProvider } from 'next-intl'
 import { afterEach, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest'
 
@@ -443,6 +443,24 @@ describe('details staged with the calendar', () => {
       details: [{ values: { title: 'Moved and renamed' } }],
     })
     expect(scheduleOffers).toHaveBeenCalledTimes(1)
+  })
+
+  it('Enter and Delete stage removal without saving', async () => {
+    show()
+    await startEditing()
+    const dialog = await openStagedForm()
+    const hold = within(dialog).getByRole('button', { name: en.SessionEdit.holdDelete })
+    await act(async () => {
+      hold.focus()
+      fireEvent.keyDown(hold, { key: 'Enter' })
+    })
+    const confirm = await screen.findByRole('dialog', { name: en.SessionEdit.deleteTitle })
+    fireEvent.click(within(confirm).getByRole('button', { name: en.SessionEdit.delete }))
+    await waitFor(() =>
+      expect(screen.queryByRole('button', { name: /^Week 3, Tuesday/ })).toBeNull(),
+    )
+    expect(saveScheduleEdits).not.toHaveBeenCalled()
+    expect(screen.getAllByText('1 unsaved change').length).toBeGreaterThan(0)
   })
 
   it('shows Apply in the footer, and a full hold stages the removal until Save', async () => {

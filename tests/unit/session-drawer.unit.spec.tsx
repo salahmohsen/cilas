@@ -643,6 +643,65 @@ describe('the session drawer’s Edit form', () => {
     ).toBeInTheDocument()
   })
 
+  it.each(['Cancel', 'Escape'])(
+    'Enter opens confirmation with Cancel focused; %s changes nothing',
+    async (action) => {
+      const dialog = await openForm()
+      const hold = within(dialog).getByRole('button', { name: en.SessionEdit.holdDelete })
+      await act(async () => {
+        hold.focus()
+        fireEvent.keyDown(hold, { key: 'Enter' })
+      })
+      const confirm = await screen.findByRole('dialog', { name: en.SessionEdit.deleteTitle })
+      const cancel = within(confirm).getByRole('button', {
+        name: en.SessionEdit.cancel,
+      })
+      expect(cancel).toHaveFocus()
+      if (action === 'Cancel') fireEvent.click(cancel)
+      else fireEvent.keyDown(cancel, { key: 'Escape' })
+      await waitFor(() =>
+        expect(screen.queryByRole('dialog', { name: en.SessionEdit.deleteTitle })).toBeNull(),
+      )
+      expect(saveScheduleEdits).not.toHaveBeenCalled()
+      expect(hold).toHaveFocus()
+    },
+  )
+
+  it.each([0, 1])(
+    'a click without a hold (detail %s) opens confirmation; Delete calls the path once',
+    async (detail) => {
+      const dialog = await openForm()
+      vi.mocked(saveScheduleEdits).mockResolvedValue({ ok: false, error: { code: 'failed' } })
+      const hold = within(dialog).getByRole('button', { name: en.SessionEdit.holdDelete })
+      await act(async () => {
+        hold.focus()
+        fireEvent.click(hold, { detail })
+      })
+      const confirm = await screen.findByRole('dialog', { name: en.SessionEdit.deleteTitle })
+      await act(async () => {
+        fireEvent.click(within(confirm).getByRole('button', { name: en.SessionEdit.delete }))
+      })
+      await waitFor(() => expect(saveScheduleEdits).toHaveBeenCalledTimes(1))
+      expect(saveScheduleEdits).toHaveBeenCalledWith(
+        { details: [{ op: 'delete', id: '13', version: 'v1' }] },
+        'en',
+      )
+      expect(await within(dialog).findByRole('alert')).toBeInTheDocument()
+    },
+  )
+
+  it('a pointer hold deletes without opening confirmation', async () => {
+    const dialog = await openForm()
+    const hold = within(dialog).getByRole('button', { name: en.SessionEdit.holdDelete })
+    hold.setPointerCapture = vi.fn()
+    vi.mocked(saveScheduleEdits).mockResolvedValue({ ok: false, error: { code: 'failed' } })
+    fireEvent.pointerDown(hold, { isPrimary: true, button: 0, pointerId: 1, pointerType: 'mouse' })
+    await waitFor(() => expect(saveScheduleEdits).toHaveBeenCalledTimes(1), { timeout: 4000 })
+    fireEvent.pointerUp(hold)
+    fireEvent.click(hold, { detail: 1 })
+    expect(screen.queryByRole('dialog', { name: en.SessionEdit.deleteTitle })).toBeNull()
+  })
+
   it('shows Save changes, Cancel and a hold to delete; a full hold deletes at once', async () => {
     const dialog = await openForm()
     expect(within(dialog).getByRole('button', { name: en.SessionEdit.save })).toBeInTheDocument()
