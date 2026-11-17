@@ -35,12 +35,7 @@ const sessionRow = () =>
 /** A session's block in the calendar, by the title in its spoken name. */
 const block = (page: Page, title: string) =>
   page.locator(`[data-span-id][aria-label^="${title}"]`).first()
-/** The drawer; a block's details popover has the same name. */
-const drawer = (page: Page, title: string) =>
-  page
-    .getByRole('dialog', { name: title, exact: true })
-    .and(page.locator(':not([data-slot="popover-content"])'))
-const details = (page: Page) => page.locator('[data-slot="popover-content"][role="dialog"]')
+const drawer = (page: Page, title: string) => page.getByRole('dialog', { name: title, exact: true })
 const offer = (page: Page) => page.getByRole('dialog', { name: 'Announce this change?' })
 
 const signIn = async (browser: Browser) => {
@@ -58,19 +53,14 @@ const signIn = async (browser: Browser) => {
 }
 
 /**
- * Opens the session's Edit form: from its block, whose details' Edit opens
- * the drawer on the form, or by its link and the drawer's Edit session.
+ * Opens the session's Edit form: its block opens the drawer at once
+ * (decision 17), or its link does; then the drawer's Edit session.
  */
 const openForm = async (title: string, by: 'block' | 'link' = 'block') => {
   const panel = drawer(fellow, title)
-  if (by === 'block') {
-    await block(fellow, title).click()
-    await expect(details(fellow)).toHaveAccessibleName(title)
-    await details(fellow).getByRole('button', { name: 'Edit', exact: true }).click()
-  } else {
-    await fellow.goto(`${spacePath}?tab=calendar&open=${session}`)
-    await panel.getByRole('button', { name: 'Edit session', exact: true }).click()
-  }
+  if (by === 'block') await block(fellow, title).click()
+  else await fellow.goto(`${spacePath}?tab=calendar&open=${session}`)
+  await panel.getByRole('button', { name: 'Edit session', exact: true }).click()
   await expect(panel.getByRole('textbox', { name: 'Title', exact: true })).toBeVisible({
     timeout: 60_000,
   })
