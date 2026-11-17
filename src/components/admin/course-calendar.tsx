@@ -206,9 +206,7 @@ function CourseCalendarInner({ courseId, language, messages }: Props) {
             : {
                 mode: 'view' as const,
                 // Readers who may not edit get the details first; Open shows Payload's session.
-                actionsOf: () => [
-                  { id: 'open', label: labels.menu!.open, primary: true, run: open },
-                ],
+                actionsOf: () => [{ id: 'open', label: labels.menu!.open, run: open }],
               })}
         />
       )}

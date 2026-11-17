@@ -1702,7 +1702,6 @@
     "cancelSessionTitle": "إلغاء هذه الجلسة؟",
     "keepSession": "إبقاء الجلسة",
     "cancelSessionClose": "إغلاق",
-    "moreActions": "مزيد من الإجراءات",
     "leaveBody": "لم تُحفظ تغييراتك على هذه الجلسة. إذا غادرت الآن فستفقدها.",
     "leaveClose": "إغلاق",
     "errors": {

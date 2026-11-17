@@ -72,6 +72,7 @@ export function SessionDrawer({
 }) {
   const t = useTranslations('SpacePost')
   const te = useTranslations('SessionEdit')
+  const tc = useTranslations('CalendarUi')
   const { unitOf, nameOf } = useSessionName()
   const locale = useLocale()
   const language = locale === 'ar' ? 'ar' : 'en'
@@ -192,7 +193,6 @@ export function SessionDrawer({
                   label: t('sessionDrawerViewPosts'),
                   icon: <MessagesSquare aria-hidden size={16} />,
                   href: sessionPostsHref(result.spaceHref, String(result.session.session.id)),
-                  primary: true,
                 },
               ]
             : []),
@@ -283,9 +283,8 @@ export function SessionDrawer({
         <footer ref={actions} className={styles.sessionDrawerActions}>
           <ItemActions
             label={heading}
-            menuLabel={te('moreActions')}
+            menuLabel={tc('moreActions')}
             actions={viewActions}
-            className={styles.sessionDrawerGroup}
             onRun={(action) => action.run?.(String(result.session.session.id), null)}
           />
         </footer>

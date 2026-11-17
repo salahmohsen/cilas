@@ -244,7 +244,7 @@ export function PublicCalendar({ items, range, today, kinds, months, access }: P
             if (!href || !open) return []
             const mayCancel = Boolean(sessionId && parentId && viewer.editable.includes(parentId))
             return [
-              { id: 'open', label: open, href, primary: true },
+              { id: 'open', label: open, href },
               ...(parentId && viewer.spaces[parentId]
                 ? [{ id: 'space', label: t('goToSpace'), href: viewer.spaces[parentId]! }]
                 : []),

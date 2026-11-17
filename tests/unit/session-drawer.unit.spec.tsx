@@ -198,7 +198,7 @@ describe('the session drawer', () => {
       ).toEqual([
         edit,
         posts,
-        within(dialog).getByRole('button', { name: en.SessionEdit.moreActions }),
+        within(dialog).getByRole('button', { name: en.CalendarUi.moreActions }),
       ])
     },
   )
@@ -328,7 +328,7 @@ describe('the session drawer’s Cancel session menu and course row', () => {
     return screen.findByRole('dialog')
   }
   const choose = async (dialog: HTMLElement, name: string) => {
-    const more = await within(dialog).findByRole('button', { name: en.SessionEdit.moreActions })
+    const more = await within(dialog).findByRole('button', { name: en.CalendarUi.moreActions })
     fireEvent.keyDown(more, { key: 'Enter' })
     fireEvent.click(await screen.findByRole('menuitem', { name }))
   }
@@ -344,7 +344,7 @@ describe('the session drawer’s Cancel session menu and course row', () => {
   it('gives a reader no More actions menu', async () => {
     const dialog = await openView(13, false)
     await within(dialog).findByRole('link', { name: en.SpacePost.sessionDrawerViewPosts })
-    expect(within(dialog).queryByRole('button', { name: en.SessionEdit.moreActions })).toBeNull()
+    expect(within(dialog).queryByRole('button', { name: en.CalendarUi.moreActions })).toBeNull()
   })
 
   it('asks first, with Keep session focused, and saves nothing on Keep', async () => {

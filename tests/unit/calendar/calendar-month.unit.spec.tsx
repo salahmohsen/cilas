@@ -344,7 +344,7 @@ describe('the month view', () => {
 
   it('opens the same details as the week from a chip', async () => {
     const run = vi.fn()
-    show({ actions: [{ id: 'open', label: 'Open', primary: true, run }] })
+    show({ actions: [{ id: 'open', label: 'Open', run }] })
     fireEvent.click(within(day('2026-11-17')).getByRole('button', { name: /^Week 3/ }))
     const panel = await screen.findByRole('dialog', { name: 'Week 3' })
     fireEvent.click(within(panel).getByRole('button', { name: 'Open' }))

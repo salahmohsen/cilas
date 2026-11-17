@@ -1559,9 +1559,6 @@
 .detailsImage img {
   object-fit: cover;
 }
-.detailsLink {
-  text-decoration: none;
-}
 .detailsHead {
   display: grid;
   grid-template-columns: auto minmax(0, 1fr) auto;

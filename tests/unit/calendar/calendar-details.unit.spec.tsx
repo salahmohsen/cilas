@@ -85,7 +85,7 @@ const show = (props: Partial<Parameters<typeof Host>[0]> = {}) => {
   const onOpen = vi.fn()
   const actions: CalendarAction[] = props.actions ?? [
     { id: 'edit', label: 'Edit', run: edit },
-    { id: 'open', label: 'Open', primary: true, run: open },
+    { id: 'open', label: 'Open', run: open },
   ]
   render(
     <NextIntlClientProvider locale="en" messages={en} timeZone="Africa/Cairo">
@@ -166,7 +166,7 @@ describe('a block’s details in view mode', () => {
   })
 
   it('show only the actions the host gives, such as no Edit for a reader', async () => {
-    show({ actions: [{ id: 'open', label: 'Open', primary: true, run: vi.fn() }] })
+    show({ actions: [{ id: 'open', label: 'Open', run: vi.fn() }] })
     fireEvent.click(maps())
     const panel = await screen.findByRole('dialog', { name: 'Maps' })
     expect(within(panel).queryByRole('button', { name: 'Edit' })).toBeNull()

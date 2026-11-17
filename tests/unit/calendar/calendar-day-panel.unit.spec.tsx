@@ -71,7 +71,7 @@ const onOpen = vi.fn()
 function Host({
   view = 'month',
   locale = 'en',
-  actions = [{ id: 'open', label: 'View course', href: '/course', primary: true }],
+  actions = [{ id: 'open', label: 'View course', href: '/course' }],
   panelOpenInMonth = true,
   mode = 'view',
 }: {
@@ -434,7 +434,7 @@ describe('actions that ask first', () => {
   const restore: CalendarAction = { id: 'restore', label: 'Restore session', menu: true, run }
   const open = (actions: CalendarAction[]) => {
     show({
-      actions: [{ id: 'open', label: 'View course', href: '/course', primary: true }, ...actions],
+      actions: [{ id: 'open', label: 'View course', href: '/course' }, ...actions],
     })
     fireEvent.click(day('2026-11-17').querySelector('[data-block-id]')!)
   }
@@ -487,7 +487,7 @@ describe('actions that ask first', () => {
     const popover = async () => {
       show({
         view: 'week',
-        actions: [{ id: 'open', label: 'View course', href: '/course', primary: true }, cancel],
+        actions: [{ id: 'open', label: 'View course', href: '/course' }, cancel],
       })
       const block = screen.getByRole('button', { name: /^Tuesday talk, Tuesday/ })
       fireEvent.click(block)

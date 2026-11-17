@@ -20,8 +20,6 @@ export type CalendarAction = {
   id: string
   label: string
   icon?: ReactNode
-  /** The main action, drawn filled. One at most. */
-  primary?: boolean
   /** Loads what the action opens, from the pointer or focus reaching it. */
   preload?: () => void
 } & (

@@ -1702,7 +1702,6 @@
     "cancelSessionTitle": "Cancel this session?",
     "keepSession": "Keep session",
     "cancelSessionClose": "Close",
-    "moreActions": "More actions",
     "leaveBody": "Your changes to this session are not saved. If you leave now, you lose them.",
     "leaveClose": "Close",
     "errors": {
