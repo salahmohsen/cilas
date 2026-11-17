@@ -1354,7 +1354,7 @@
     "sessionDrawerRetry": "حاول مرة أخرى",
     "sessionDrawerClose": "إغلاق الجلسة",
     "sessionDrawerTimes": "المواعيد بتوقيت القاهرة",
-    "sessionDrawerPosts": "منشورات عن هذه الجلسة",
+    "sessionDrawerViewPosts": "عرض المنشورات",
     "sessionOpen": "فتح الجلسة"
   },
   "SpaceComment": {

@@ -1354,7 +1354,7 @@
     "sessionDrawerRetry": "Try again",
     "sessionDrawerClose": "Close session",
     "sessionDrawerTimes": "Times are Cairo time",
-    "sessionDrawerPosts": "Posts about this session",
+    "sessionDrawerViewPosts": "View posts",
     "sessionOpen": "Open session"
   },
   "SpaceComment": {

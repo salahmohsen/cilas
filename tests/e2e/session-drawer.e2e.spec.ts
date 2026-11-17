@@ -236,7 +236,7 @@ test.describe('session drawer', () => {
     expect(fromCalendar).toContain('Session 1')
     expect(fromCalendar).toContain('19:00–21:00')
     await expect(drawer().locator('strong')).toHaveText('closely')
-    await expect(drawer().getByRole('link', { name: 'Posts about this session' })).toHaveAttribute(
+    await expect(drawer().getByRole('link', { name: 'View posts' })).toHaveAttribute(
       'href',
       `${spacePath}?session=${session}`,
     )

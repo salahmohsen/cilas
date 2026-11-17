@@ -590,11 +590,17 @@ function Sheet({
   }
 
   const expanded = detent === top
+  const contentOffset = useTransform(
+    [y, height],
+    ([position = 0, full = 0]: number[]) =>
+      `${clamp(position, 0, full * (1 - stops[0]! / stops[top]!))}px`,
+  )
   const style = {
     y,
     opacity: presence,
     '--sheet-max': stops[top],
     '--sheet-extension': `${EXTENSION}px`,
+    '--sheet-content-offset': contentOffset,
   } as unknown as CSSProperties
 
   return (

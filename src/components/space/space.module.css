@@ -3249,23 +3249,47 @@ button.rsvpCell {
 
 /* The session drawer: the session as the syllabus shows it, then its links. */
 .sessionDrawer {
-  display: grid;
+  display: flex;
+  flex: 1 0 auto;
+  flex-direction: column;
   gap: var(--space-4);
 }
 
-.sessionDrawerActions {
+:has(> .sessionDrawer) {
   display: flex;
-  flex-wrap: wrap;
-  align-items: center;
+  flex: 1;
+  flex-direction: column;
+  scroll-padding-block-end: 6rem;
+}
+
+.sessionDrawerActions {
+  position: sticky;
+  z-index: 1;
+  inset-block-end: 0;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: var(--space-3);
+  margin-block-start: auto;
+  padding-block: var(--space-4);
+  border-block-start: 1px solid var(--border-subtle);
+  background: var(--surface-raised);
+  box-shadow: 0 var(--space-6) 0 0 var(--surface-raised);
+}
+
+.sessionDrawerActions > * {
+  min-inline-size: 0;
+}
+
+.sessionDrawerActions > :only-child {
+  grid-column: 1 / -1;
 }
 
 .sessionDrawerRetry {
   margin-block-start: var(--space-2);
 }
 
-.sessionDrawerActions .sessionPosts {
-  margin-block-start: 0;
+.sessionDrawerPosts {
+  text-decoration: none;
 }
 
 /* In a syllabus row the links follow the session's text, as the posts link did. */

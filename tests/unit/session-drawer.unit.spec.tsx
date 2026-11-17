@@ -156,6 +156,27 @@ afterEach(() => {
 })
 
 describe('the session drawer', () => {
+  it.each([false, true])(
+    'ends view mode with Edit session then the posts link (phone=%s)',
+    async (onPhone) => {
+      phone = onPhone
+      vi.mocked(loadSessionView).mockImplementation(async (id) => shown(Number(id), true))
+      window.history.replaceState(null, '', '/en/spaces/course/probe?open=13')
+      await page()
+      const dialog = await screen.findByRole('dialog', { name: 'Reading the city' })
+      const edit = await within(dialog).findByRole('button', { name: en.SessionEdit.edit })
+      const posts = within(dialog).getByRole('link', { name: en.SpacePost.sessionDrawerViewPosts })
+      expect(posts).toHaveAttribute('href', '/en/spaces/course/probe?session=13')
+      expect(
+        [
+          ...dialog.querySelectorAll(
+            'button:not([disabled]), a[href], input, select, textarea, [tabindex="0"]',
+          ),
+        ].slice(-2),
+      ).toEqual([edit, posts])
+    },
+  )
+
   it('is not in the page until a session is opened', async () => {
     await page()
     expect(screen.queryByRole('dialog')).toBeNull()
@@ -187,7 +208,7 @@ describe('the session drawer', () => {
     expect(within(dialog).getByText('Invisible Cities')).toBeInTheDocument()
     expect(within(dialog).getByText('In pairs')).toBeInTheDocument()
     expect(
-      within(dialog).getByRole('link', { name: en.SpacePost.sessionDrawerPosts }),
+      within(dialog).getByRole('link', { name: en.SpacePost.sessionDrawerViewPosts }),
     ).toHaveAttribute('href', '/en/spaces/course/probe?session=13')
     // Only the people who may edit the session see Edit.
     expect(within(dialog).queryByRole('button', { name: en.SessionEdit.edit })).toBeNull()

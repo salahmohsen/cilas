@@ -1,4 +1,4 @@
-import { Pencil } from 'lucide-react'
+import { MessagesSquare, Pencil } from 'lucide-react'
 import { useLocale, useMessages, useTranslations } from 'next-intl'
 import { useRouter } from 'next/navigation'
 import {
@@ -15,6 +15,7 @@ import { loadSessionView, type SessionViewResult } from '@/actions/load-session-
 import { Alert } from '@/components/arc/alert/alert'
 import { BottomSheet } from '@/components/arc/bottom-sheet/bottom-sheet'
 import { Button } from '@/components/arc/button/button'
+import button from '@/components/arc/button/button.module.css'
 import { Drawer, DrawerContent, useDrawerItem } from '@/components/arc/drawer/drawer'
 import { TextShimmer } from '@/components/arc/text-shimmer/text-shimmer'
 import { CourseSession, syllabusSessionOf } from '@/components/course/course-syllabus'
@@ -186,42 +187,48 @@ export function SessionDrawer({
     />
   ) : (
     <div className={styles.sessionDrawer}>
-      <CourseSession
-        course={result.course}
-        sessions={[syllabusSessionOf(result.session)]}
-        session={String(result.session.session.id)}
-        label={name}
-        plain
-      />
-      {offering.failed ? <Alert tone="danger" title={text.offerFailed} /> : null}
-      <div className={styles.sessionDrawerActions}>
-        {result.canEdit && (
-          <Button
-            ref={edit}
-            type="button"
-            variant="secondary"
-            size="sm"
-            onPointerEnter={SessionForm.preload}
-            onFocus={SessionForm.preload}
-            onPointerDown={() => {
-              SessionForm.preload()
-              offering.preload()
-            }}
-            onClick={() => setEditing(shown ?? null)}
-          >
-            <Pencil aria-hidden size={14} />
-            {te('edit')}
-          </Button>
-        )}
-        {result.spaceHref && (
-          <a
-            className={styles.sessionPosts}
-            href={sessionPostsHref(result.spaceHref, String(result.session.session.id))}
-          >
-            {t('sessionDrawerPosts')}
-          </a>
-        )}
+      <div>
+        <CourseSession
+          course={result.course}
+          sessions={[syllabusSessionOf(result.session)]}
+          session={String(result.session.session.id)}
+          label={name}
+          plain
+        />
+        {offering.failed ? <Alert tone="danger" title={text.offerFailed} /> : null}
       </div>
+      {(result.canEdit || result.spaceHref) && (
+        <footer className={styles.sessionDrawerActions}>
+          {result.canEdit && (
+            <Button
+              ref={edit}
+              type="button"
+              variant="secondary"
+              onPointerEnter={SessionForm.preload}
+              onFocus={SessionForm.preload}
+              onPointerDown={() => {
+                SessionForm.preload()
+                offering.preload()
+              }}
+              onClick={() => setEditing(shown ?? null)}
+            >
+              <Pencil aria-hidden size={16} />
+              {te('edit')}
+            </Button>
+          )}
+          {result.spaceHref && (
+            <a
+              className={[button.button, button.primary, button.md, styles.sessionDrawerPosts].join(
+                ' ',
+              )}
+              href={sessionPostsHref(result.spaceHref, String(result.session.session.id))}
+            >
+              <MessagesSquare aria-hidden size={16} />
+              {t('sessionDrawerViewPosts')}
+            </a>
+          )}
+        </footer>
+      )}
     </div>
   )
 
