@@ -15,7 +15,6 @@ import { cleanupTestUser, seedTestUser, testUser } from '../helpers/seedUser'
  * URL. It works on a course, space and post made for the run and removes
  * them after. The meeting is in 2034, so the calendar opens on its week.
  */
-const BASE = 'http://localhost:3000'
 const MEETING = '2034-10-05'
 const TITLE = 'E2E drawer session'
 
@@ -183,7 +182,7 @@ test.describe('session drawer', () => {
         overrideAccess: true,
       }),
     ).id
-    page = await (await browser.newContext()).newPage()
+    page = await (await browser.newContext({ baseURL: test.info().project.use.baseURL })).newPage()
     await login({ page, user: testUser })
   })
 
@@ -220,7 +219,7 @@ test.describe('session drawer', () => {
   })
 
   test('the Calendar tab, the Syllabus tab and a schedule block open the same drawer', async () => {
-    await page.goto(`${BASE}${spacePath}?tab=calendar`)
+    await page.goto(`${spacePath}?tab=calendar`)
     // The details close on Escape, with focus back on the block, and open nothing.
     await block().click()
     await expect(details()).toBeVisible()
@@ -253,13 +252,13 @@ test.describe('session drawer', () => {
     expect(new URL(page.url()).search).toBe('?tab=calendar')
 
     // A link with the param opens it.
-    await page.goto(`${BASE}${spacePath}?tab=calendar&open=${session}`)
+    await page.goto(`${spacePath}?tab=calendar&open=${session}`)
     await expect(sessionView()).toBeVisible({ timeout: 60_000 })
     await drawer().getByRole('button', { name: 'Close session' }).click()
     await expect(drawer()).toHaveCount(0)
     expect(param()).toBeNull()
 
-    await page.goto(`${BASE}${spacePath}?tab=syllabus`)
+    await page.goto(`${spacePath}?tab=syllabus`)
     const opener = page.getByRole('link', { name: 'Open session' }).first()
     const fromSyllabus = await openFrom(opener)
     expect(page.url()).toContain('tab=syllabus')
@@ -267,7 +266,7 @@ test.describe('session drawer', () => {
     await expect(drawer()).toHaveCount(0)
     await expect(opener).toBeFocused()
 
-    await page.goto(`${BASE}${spacePath}/posts/${post}`)
+    await page.goto(`${spacePath}/posts/${post}`)
     const fromSchedule = await openFrom(block())
     expect(new URL(page.url()).pathname).toBe(`${spacePath}/posts/${post}`)
     await page.keyboard.press('Escape')

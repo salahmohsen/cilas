@@ -20,6 +20,9 @@ if (!['localhost', '127.0.0.1', '[::1]'].includes(databaseHost)) {
   throw new Error(`The e2e specs write to the database, and "${databaseHost}" is not a local host.`)
 }
 
+const baseURL =
+  process.env.PLAYWRIGHT_BASE_URL ?? process.env.E2E_BASE_URL ?? 'http://localhost:3000'
+
 export default defineConfig({
   testDir: './tests/e2e',
   testIgnore: 'production.e2e.spec.ts',
@@ -35,6 +38,7 @@ export default defineConfig({
   reporter: 'html',
 
   use: {
+    baseURL,
     trace: 'on-first-retry',
   },
   projects: [
@@ -67,6 +71,6 @@ export default defineConfig({
       R2_ACCESS_KEY_ID: 'e2e',
       R2_SECRET_ACCESS_KEY: 'e2e',
     },
-    url: process.env.E2E_BASE_URL ?? 'http://localhost:3000',
+    url: baseURL,
   },
 })

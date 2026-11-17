@@ -18,7 +18,6 @@ import { cleanupTestUser, seedTestUser, testUser } from '../helpers/seedUser'
  * It changes the subtitle and publishes, then saves a draft, and puts the
  * subtitle back each time.
  */
-const BASE = 'http://localhost:3000'
 const MARK = ' (e2e save check)'
 const SUBTITLE = 'Teaching as a case'
 
@@ -31,7 +30,7 @@ let page: Page
 let course: Course
 
 const api = async <T>(path: string): Promise<T> => {
-  const response = await page.request.get(`${BASE}/api/${path}`)
+  const response = await page.request.get(`/api/${path}`)
   expect(response.status(), path).toBe(200)
   return (await response.json()) as T
 }
@@ -55,7 +54,7 @@ const kept = (doc: Pick<Course, 'schedule' | 'sessions' | 'first_day' | 'last_da
 })
 
 const save = async (subtitle: string, button: 'Publish changes' | 'Save Draft') => {
-  await page.goto(`${BASE}/admin/collections/courses/${course.id}`)
+  await page.goto(`/admin/collections/courses/${course.id}`)
   await page.locator('#field-subtitle').fill(subtitle)
   const response = page.waitForResponse(
     (r) => r.url().includes(`/api/courses/${course.id}`) && r.request().method() === 'PATCH',
@@ -135,7 +134,7 @@ test.describe('course admin save', () => {
         overrideAccess: true,
       })
     }
-    page = await (await browser.newContext()).newPage()
+    page = await (await browser.newContext({ baseURL: test.info().project.use.baseURL })).newPage()
     await login({ page, user: testUser })
 
     before = { published: await read(false), sessions: await sessionsOf() }

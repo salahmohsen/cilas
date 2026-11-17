@@ -1,6 +1,5 @@
 import { expect, test } from '@playwright/test'
 
-const BASE = 'http://localhost:3000'
 const CLEAR = 'rgba(0, 0, 0, 0)'
 
 const scrollTo = (top: number) => window.scrollTo({ top, behavior: 'instant' })
@@ -10,7 +9,7 @@ const scrollTo = (top: number) => window.scrollTo({ top, behavior: 'instant' })
 for (const path of ['/en', '/ar', '/en/articles']) {
   test(`the header turns solid after a small scroll (${path})`, async ({ page }) => {
     test.setTimeout(120_000)
-    await page.goto(`${BASE}${path}`, { timeout: 90_000 })
+    await page.goto(`${path}`, { timeout: 90_000 })
     const header = page.locator('.site-header')
     await page.evaluate(scrollTo, 250)
     await expect(header).not.toHaveCSS('background-color', CLEAR)
@@ -28,7 +27,7 @@ for (const size of [
     test.setTimeout(120_000)
     await page.setViewportSize(size)
     await page.emulateMedia({ reducedMotion: 'reduce' })
-    await page.goto(`${BASE}/en`, { timeout: 90_000 })
+    await page.goto(`/en`, { timeout: 90_000 })
     const hero = page.locator('.home-hero')
     await expect(hero.getByRole('heading', { level: 1 })).toBeVisible()
     await expect(hero.locator('.home-numbers')).toBeVisible()
@@ -54,7 +53,7 @@ for (const locale of ['en', 'ar']) {
     page,
   }) => {
     test.setTimeout(120_000)
-    await page.goto(`${BASE}/${locale}`, { timeout: 90_000 })
+    await page.goto(`/${locale}`, { timeout: 90_000 })
     const brand = page.locator('.site-header [data-brand]')
     await expect(brand).toHaveCSS('opacity', '0')
     // Hidden, the brand link is out of the tab order too.
@@ -71,6 +70,6 @@ for (const locale of ['en', 'ar']) {
 
 test('elsewhere the header shows its brand from the start', async ({ page }) => {
   test.setTimeout(120_000)
-  await page.goto(`${BASE}/en/articles`, { timeout: 90_000 })
+  await page.goto(`/en/articles`, { timeout: 90_000 })
   await expect(page.locator('.site-header [data-brand]')).toHaveCSS('opacity', '1')
 })

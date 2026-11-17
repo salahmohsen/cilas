@@ -13,7 +13,6 @@ import { cleanupTestUser, seedTestUser, testUser } from '../helpers/seedUser'
  * on their week whatever day the test runs. Each test starts from the same
  * one session.
  */
-const BASE = 'http://localhost:3000'
 const FIRST = '2034-10-05'
 const SECOND = '2034-10-12'
 const SAVE = 'Save schedule'
@@ -42,7 +41,7 @@ const meetingsOf = async () =>
   )
 
 const openSessionsTab = async () => {
-  await page.goto(`${BASE}/admin/collections/courses/${course}`)
+  await page.goto(`/admin/collections/courses/${course}`)
   await page.getByRole('button', { name: 'Sessions', exact: true }).click()
   await expect(page.getByRole('group', { name: 'Calendar' })).toBeVisible({ timeout: 60_000 })
 }
@@ -112,7 +111,7 @@ test.describe('course calendar', () => {
         overrideAccess: true,
       }),
     ).id
-    page = await (await browser.newContext()).newPage()
+    page = await (await browser.newContext({ baseURL: test.info().project.use.baseURL })).newPage()
     await login({ page, user: testUser })
   })
 

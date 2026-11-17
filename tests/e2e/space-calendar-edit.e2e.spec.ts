@@ -14,7 +14,6 @@ import { createTracker, lockSpacesMode, uniq, uniqEmail } from '../int/fixtures'
  * for the run and removes them after. The meeting is in 2034, so the
  * calendar opens on its week.
  */
-const BASE = 'http://localhost:3000'
 const MEETING = '2034-10-05'
 const TITLE = 'E2E space edit session'
 
@@ -41,9 +40,11 @@ const block = (page: Page) => page.locator(`[data-span-id][aria-label^="${TITLE}
 const saveButton = (page: Page) => page.getByRole('button', { name: 'Save', exact: true })
 
 const signIn = async (browser: Browser, who: 'fellow' | 'student') => {
-  const page = await (await browser.newContext()).newPage()
+  const page = await (
+    await browser.newContext({ baseURL: test.info().project.use.baseURL })
+  ).newPage()
   const path = `${spacePath}?tab=calendar`
-  await page.goto(`${BASE}/en/login?next=${encodeURIComponent(path)}`)
+  await page.goto(`/en/login?next=${encodeURIComponent(path)}`)
   await page.getByRole('textbox', { name: 'Email', exact: true }).fill(accounts[who].email)
   await page.getByLabel('Password', { exact: true }).fill(accounts[who].password)
   await page.getByRole('button', { name: 'Sign in', exact: true }).click()

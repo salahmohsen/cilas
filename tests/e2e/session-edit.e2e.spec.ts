@@ -15,7 +15,6 @@ import { createTracker, lockSpacesMode, uniq, uniqEmail } from '../int/fixtures'
  * fellow made for the run and removes them after. The meeting is in 2034, so
  * the calendar opens on its week.
  */
-const BASE = 'http://localhost:3000'
 const MEETING = '2034-10-05'
 const TITLE = 'E2E drawer session'
 
@@ -45,9 +44,11 @@ const details = (page: Page) => page.locator('[data-slot="popover-content"][role
 const offer = (page: Page) => page.getByRole('dialog', { name: 'Announce this change?' })
 
 const signIn = async (browser: Browser) => {
-  const page = await (await browser.newContext()).newPage()
+  const page = await (
+    await browser.newContext({ baseURL: test.info().project.use.baseURL })
+  ).newPage()
   const path = `${spacePath}?tab=calendar`
-  await page.goto(`${BASE}/en/login?next=${encodeURIComponent(path)}`)
+  await page.goto(`/en/login?next=${encodeURIComponent(path)}`)
   await page.getByRole('textbox', { name: 'Email', exact: true }).fill(account.email)
   await page.getByLabel('Password', { exact: true }).fill(account.password)
   await page.getByRole('button', { name: 'Sign in', exact: true }).click()
@@ -67,7 +68,7 @@ const openForm = async (title: string, by: 'block' | 'link' = 'block') => {
     await expect(details(fellow)).toHaveAccessibleName(title)
     await details(fellow).getByRole('button', { name: 'Edit', exact: true }).click()
   } else {
-    await fellow.goto(`${BASE}${spacePath}?tab=calendar&open=${session}`)
+    await fellow.goto(`${spacePath}?tab=calendar&open=${session}`)
     await panel.getByRole('button', { name: 'Edit session', exact: true }).click()
   }
   await expect(panel.getByRole('textbox', { name: 'Title', exact: true })).toBeVisible({
