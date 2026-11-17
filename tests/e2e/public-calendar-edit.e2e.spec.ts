@@ -4,6 +4,7 @@ import { getPayload, type Payload } from 'payload'
 import config from '../../src/payload.config'
 import { createTracker, uniq, uniqEmail } from '../int/fixtures'
 
+// Its own day: the panel spec shows 2035-10-04, and a second spec's sessions on it fold into "2 more".
 const { track, cleanup } = createTracker()
 let payload: Payload
 const email = uniqEmail('public-calendar-admin')
@@ -65,7 +66,7 @@ test.describe('the public calendar editor', () => {
         data: {
           course: course.id,
           title: `${name} session`,
-          meetings: [{ date: '2035-10-04', start_time: '10:00', end_time: '12:00' }],
+          meetings: [{ date: '2037-04-09', start_time: '10:00', end_time: '12:00' }],
         },
       })
       sessions.push(session.id)
@@ -77,7 +78,7 @@ test.describe('the public calendar editor', () => {
   })
 
   test('an anonymous edit URL contains no editable items', async ({ page }) => {
-    await page.goto('/en/calendar?view=week&date=2035-10-04&edit=1')
+    await page.goto('/en/calendar?view=week&date=2037-04-09&edit=1')
     await expect(page.getByRole('button', { name: 'Edit', exact: true })).toHaveCount(0)
     await expect(page.locator('[data-mode="edit"]')).toHaveCount(0)
   })
@@ -85,7 +86,7 @@ test.describe('the public calendar editor', () => {
   test('an admin saves two courses and gets one dialog for both spaces', async ({ page }) => {
     const login = await page.request.post('/api/users/login', { data: { email, password } })
     expect(login.ok()).toBe(true)
-    await page.goto('/en/calendar?view=week&date=2035-10-04')
+    await page.goto('/en/calendar?view=week&date=2037-04-09')
     await page.getByRole('button', { name: 'Edit', exact: true }).click()
     await expect(page.locator('[data-mode="edit"]')).toHaveCount(1)
     for (const title of ['City session', 'Maps session']) {
@@ -102,10 +103,10 @@ test.describe('the public calendar editor', () => {
     await expect(dialog).toBeVisible()
     await dialog.getByRole('button', { name: 'Skip', exact: true }).click()
     await page.getByRole('button', { name: 'Done', exact: true }).click()
-    await expect(page).toHaveURL(/view=week&date=2035-10-04$/)
+    await expect(page).toHaveURL(/view=week&date=2037-04-09$/)
     for (const id of sessions) {
       const session = await payload.findByID({ collection: 'sessions', id, depth: 0 })
-      expect(session.meetings![0]!.date).toBe('2035-10-05')
+      expect(session.meetings![0]!.date).toBe('2037-04-10')
     }
   })
 })
