@@ -62,7 +62,7 @@ export const syncFellowRoleOnLink: CollectionBeforeChangeHook<User> = async ({
   const after = personOf(data)
   if (before === after) return data
 
-  const isTeaching = after !== null && (await teaches(req.payload, after))
+  const isTeaching = after !== null && (await teaches(req, after))
   const current = (data.roles ?? originalDoc?.roles ?? ['member']) as Role[]
   if (current.includes('fellow') === isTeaching) return data
   // A first link only adds the role: a new fellow, given a person, has not

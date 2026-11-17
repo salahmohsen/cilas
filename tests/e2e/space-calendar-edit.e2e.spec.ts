@@ -186,10 +186,23 @@ test.describe('space calendar edit mode', () => {
   })
 
   test.afterAll(async () => {
-    // The cleanup ran past 120 s on a loaded machine and left its rows.
+    // The cleanup ran past 300 s once on a loaded machine and left its rows. Each
+    // step names itself when it is slow or stuck, so the next time says which one.
     test.setTimeout(300_000)
+    const step = async <T>(label: string, run: () => Promise<T>): Promise<T> => {
+      const start = Date.now()
+      const stuck = new Promise<never>((_, reject) =>
+        setTimeout(() => reject(new Error(`afterAll step "${label}" was stuck for 90 s`)), 90_000),
+      )
+      try {
+        return await Promise.race([run(), stuck])
+      } finally {
+        const ms = Date.now() - start
+        if (ms > 10_000) console.warn(`afterAll step "${label}" took ${ms} ms`)
+      }
+    }
     try {
-      await fellow?.context().close()
+      await step('close the fellow page', async () => void (await fellow?.context().close()))
       if (space && payload) {
         for (const [collection, where] of [
           ['space-posts', { space: { equals: space } }],
@@ -199,29 +212,28 @@ test.describe('space calendar edit mode', () => {
             { account: { in: [accounts.fellow?.id, accounts.student?.id].filter(Boolean) } },
           ],
         ] as const) {
-          const rows = await payload.find({
-            collection,
-            where,
-            pagination: false,
-            overrideAccess: true,
-          })
+          const rows = await step(`find ${collection}`, () =>
+            payload.find({ collection, where, pagination: false, overrideAccess: true }),
+          )
           for (const row of rows.docs) track(collection, row.id)
         }
       }
       if (session && payload)
-        await payload.delete({ collection: 'sessions', id: session, overrideAccess: true })
-      if (payload) {
-        if (modeBefore)
-          await payload.updateGlobal({
+        await step('delete the session', () =>
+          payload.delete({ collection: 'sessions', id: session, overrideAccess: true }),
+        )
+      if (payload && modeBefore)
+        await step('restore the spaces mode', () =>
+          payload.updateGlobal({
             slug: 'site-settings',
             data: { spaces_mode: modeBefore },
             overrideAccess: true,
-          })
-      }
+          }),
+        )
     } finally {
       try {
         if (payload) {
-          await cleanup(payload)
+          await step('delete the tracked rows', () => cleanup(payload))
           if (courseId) {
             const remaining = await payload.count({
               collection: 'courses',

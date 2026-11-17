@@ -69,12 +69,12 @@ export const propagateFellowRole: CollectionAfterChangeHook<Course> = async ({
   if (doc._status === 'published') {
     const justPublished = previousDoc?._status !== 'published'
     for (const id of justPublished ? after : after.filter((id) => !before.includes(id))) {
-      await grantFellow(req.payload, id)
+      await grantFellow(req, id)
     }
   }
 
   for (const id of before.filter((id) => !after.includes(id))) {
-    await revokeIfUnteaching(req.payload, id, doc.id)
+    await revokeIfUnteaching(req, id, doc.id)
   }
 
   return doc
@@ -100,7 +100,7 @@ export const revokeDeletedCourseFellows: CollectionAfterDeleteHook<Course> = asy
   req,
 }) => {
   for (const id of toPersonIds(doc.fellows)) {
-    await revokeIfUnteaching(req.payload, id, doc.id)
+    await revokeIfUnteaching(req, id, doc.id)
   }
 
   return doc
