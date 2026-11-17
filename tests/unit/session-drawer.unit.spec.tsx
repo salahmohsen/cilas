@@ -603,7 +603,14 @@ describe('the session drawer’s Edit form', () => {
     const dialog = await openForm()
     expect(within(dialog).getByRole('button', { name: en.SessionEdit.save })).toBeInTheDocument()
     expect(within(dialog).queryByRole('button', { name: en.SessionEdit.apply })).toBeNull()
+    // The footer row reads and tabs Cancel, then the primary action; the hold comes before it.
     const hold = within(dialog).getByRole('button', { name: en.SessionEdit.holdDelete })
+    const button = (name: string) => within(dialog).getByRole('button', { name })
+    expect(within(dialog).getAllByRole('button').slice(-3)).toEqual([
+      hold,
+      button(en.SessionEdit.cancel),
+      button(en.SessionEdit.save),
+    ])
     expect(hold).toHaveAccessibleDescription(en.SessionEdit.holdHint.replace('{seconds}', '1.2'))
     // An early release deletes nothing.
     fireEvent.keyDown(hold, { key: ' ' })

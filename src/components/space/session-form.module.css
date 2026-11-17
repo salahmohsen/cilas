@@ -73,12 +73,14 @@
   margin-block-start: var(--space-2);
 }
 
-/* Fixed at the bottom of the drawer's scroll area; the fields scroll under it. */
+/* Fixed at the bottom of the drawer's scroll area; the fields scroll under it.
+   Two equal columns in DOM order: Cancel at the inline start, the primary action at the end. */
 .foot {
   position: sticky;
   z-index: 1;
   inset-block-end: 0;
   display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: var(--space-3);
   padding-block: var(--space-4);
   border-block-start: 1px solid var(--border-subtle);
@@ -89,10 +91,8 @@
 .foot > * {
   min-width: 0;
 }
-.footRule {
-  margin: var(--space-1) 0;
-  border: 0;
-  border-block-start: 1px solid var(--border-subtle);
+.footWide {
+  grid-column: 1 / -1;
 }
 .hold {
   inline-size: 100%;

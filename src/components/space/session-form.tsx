@@ -1,5 +1,5 @@
 import { useForm, useSelector, type AnyFieldApi } from '@tanstack/react-form'
-import { Plus, X } from 'lucide-react'
+import { Check, Plus, X } from 'lucide-react'
 import { useLocale, useTranslations } from 'next-intl'
 import { useCallback, useEffect, useId, useMemo, useRef, useState } from 'react'
 
@@ -554,9 +554,20 @@ function Fields({
         )}
       </form.Field>
 
+      <HoldToConfirm
+        tone="danger"
+        className={styles.hold}
+        label={t('holdDelete')}
+        confirmedLabel={t('deleted')}
+        hint={(seconds) => t('holdHint', { seconds })}
+        confirmed={deleted}
+        disabled={submitting}
+        onConfirm={() => void removeSession()}
+      />
+
       <div className={styles.foot}>
         {refused ? (
-          <Alert tone="danger" title={errorText(refused)}>
+          <Alert tone="danger" title={errorText(refused)} className={styles.footWide}>
             {refused.code === 'stale' ? (
               <div className={styles.alertActions}>
                 <Button type="button" variant="secondary" size="sm" onClick={onReload}>
@@ -566,23 +577,14 @@ function Fields({
             ) : null}
           </Alert>
         ) : null}
-        <Button type="submit" loading={submitting} disabled={deleted}>
-          {t(stage ? 'apply' : 'save')}
-        </Button>
         <Button type="button" variant="secondary" onClick={onCancel}>
+          <X aria-hidden size={16} strokeWidth={1.75} />
           {t('cancel')}
         </Button>
-        <hr className={styles.footRule} />
-        <HoldToConfirm
-          tone="danger"
-          className={styles.hold}
-          label={t('holdDelete')}
-          confirmedLabel={t('deleted')}
-          hint={(seconds) => t('holdHint', { seconds })}
-          confirmed={deleted}
-          disabled={submitting}
-          onConfirm={() => void removeSession()}
-        />
+        <Button type="submit" loading={submitting} disabled={deleted}>
+          <Check aria-hidden size={16} strokeWidth={1.75} />
+          {t(stage ? 'apply' : 'save')}
+        </Button>
       </div>
       {leaving.dialog}
     </form>
