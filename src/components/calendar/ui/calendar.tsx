@@ -404,19 +404,16 @@ export function Calendar({
     />
   )
   // The server cannot know the width: it sends both switches, and the stylesheet shows one.
-  const views =
-    narrow === null ? (
-      <>
-        <div className={styles.views} data-width="wide">
-          {viewSwitch(false)}
-        </div>
-        <div className={styles.views} data-width="narrow">
-          {viewSwitch(true)}
-        </div>
-      </>
-    ) : (
-      <div className={styles.views}>{viewSwitch(narrow)}</div>
-    )
+  const views = (
+    <>
+      <div className={styles.views} data-width="wide">
+        {narrow !== true && viewSwitch(false)}
+      </div>
+      <div className={styles.views} data-width="narrow">
+        {narrow !== false && viewSwitch(true)}
+      </div>
+    </>
+  )
 
   const nameOf = useMemo(
     () =>

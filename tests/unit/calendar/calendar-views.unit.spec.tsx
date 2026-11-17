@@ -103,6 +103,20 @@ beforeEach(() => {
 afterEach(() => vi.useRealTimers())
 
 describe('the view switch', () => {
+  it.each([false, true])(
+    'keeps the server switch and its IDs when width becomes %s',
+    (measured) => {
+      narrow = null
+      const page = show()
+      const selector = `[data-width="${measured ? 'narrow' : 'wide'}"] button`
+      const button = page.container.querySelector(selector)
+      const id = button?.id
+      narrow = measured
+      page.rerender(tree())
+      expect(page.container.querySelector(selector)).toBe(button)
+      expect(page.container.querySelector(selector)?.id).toBe(id)
+    },
+  )
   it('offers Month, Week, Day and Agenda on a wide calendar, the week selected', () => {
     show()
     expect(options()).toEqual([
