@@ -1,4 +1,4 @@
-import { expect, test, type Page } from '@playwright/test'
+import { expect, test, type Locator, type Page } from '@playwright/test'
 import { getPayload, type Payload } from 'payload'
 
 import config from '../../src/payload.config'
@@ -25,6 +25,8 @@ const accounts: Record<'admin' | 'host' | 'student' | 'outsider', string> = {
 let courseA: number
 let courseB: number
 let spaceHref: string
+/** The study-page slug of each course. */
+const slugs = { a: '', b: '' }
 const sessions: Record<'a1' | 'a2' | 'b1', number> = { a1: 0, a2: 0, b1: 0 }
 const MONTH = '/en/calendar?view=month&date=2035-10-04'
 const day = (page: Page, date: string) => page.locator(`[role="gridcell"][data-day="${date}"]`)
@@ -35,6 +37,19 @@ const chip = (page: Page, date: string, title: string) =>
 const panel = (page: Page) => page.locator('[class*="panelBody"]')
 const shot = async (page: Page, name: string) => {
   if (process.env.D22_SHOTS) await page.screenshot({ path: `${process.env.D22_SHOTS}/${name}.png` })
+}
+
+/**
+ * Opens the "⋯" menu. Right after a dialog closes, the page still ignores a
+ * press for a frame or two (the modal's pointer lock), so a first press can
+ * land on nothing; the press repeats until the menu shows.
+ */
+const openMore = async (scope: Page | Locator) => {
+  const more = scope.getByRole('button', { name: 'More actions' })
+  await expect(async () => {
+    if ((await more.getAttribute('aria-expanded')) !== 'true') await more.click({ timeout: 2_000 })
+    await expect(more).toHaveAttribute('aria-expanded', 'true', { timeout: 1_000 })
+  }).toPass({ timeout: 15_000 })
 }
 
 const as = async (browser: import('@playwright/test').Browser, who: keyof typeof accounts) => {
@@ -131,6 +146,8 @@ test.describe('the public calendar side panel', () => {
     const b = await course('Panel course B', [])
     courseA = a.id
     courseB = b.id
+    slugs.a = a.slug
+    slugs.b = b.slug
     spaceHref = `/en/spaces/course/${a.slug}`
     track(
       'enrollments',
@@ -343,6 +360,62 @@ test.describe('the public calendar side panel', () => {
     await student.context.close()
   })
 
+  for (const locale of ['en', 'ar'] as const) {
+    test(`View course lands on its session in the syllabus, open and focused (${locale})`, async ({
+      page,
+    }) => {
+      await page.setViewportSize({ width: 1440, height: 900 })
+      await page.goto(`/${locale}/calendar?view=month&date=2035-10-04`)
+      await day(page, '2035-10-04').locator('[data-block-id]').first().click()
+      const link = page.getByRole('region', { name: 'Panel course A' }).getByRole('link').first()
+      await link.click()
+      await expect(page).toHaveURL(
+        new RegExp(`/${locale}/study/${slugs.a}#session-${sessions.a1}$`),
+      )
+      const toggle = page.locator(`#session-${sessions.a1} button[aria-expanded="true"]`).first()
+      await expect(toggle).toBeVisible()
+      await expect(toggle).toBeFocused()
+    })
+  }
+
+  test('Back from the course page returns to the calendar on the same date', async ({ page }) => {
+    await page.setViewportSize({ width: 1440, height: 900 })
+    await page.goto(MONTH)
+    await day(page, '2035-10-06').click({ position: { x: 20, y: 70 } })
+    await expect(page).toHaveURL(/date=2035-10-06$/)
+    await chip(page, '2035-10-06', 'Panel course B').click()
+    await page.getByRole('region', { name: 'Panel course B' }).getByRole('link').first().click()
+    await expect(page).toHaveURL(new RegExp(`/en/study/${slugs.b}#session-${sessions.b1}$`))
+    await page.goBack()
+    await expect(page).toHaveURL(/\/en\/calendar\?view=month&date=2035-10-06$/)
+    await expect(day(page, '2035-10-06')).toHaveAttribute('aria-selected', 'true')
+  })
+
+  test('View course is one link in the accessibility tree, in the panel and in the popover', async ({
+    page,
+  }) => {
+    const named = async () => {
+      const tree = await page.getByRole('region', { name: 'Panel course A' }).ariaSnapshot()
+      return tree.match(/View course/g)?.length ?? 0
+    }
+    await page.setViewportSize({ width: 1440, height: 900 })
+    await page.goto(MONTH)
+    await chip(page, '2035-10-04', 'Panel course A').click()
+    await expect(
+      page
+        .getByRole('region', { name: 'Panel course A' })
+        .getByRole('link', { name: 'View course' }),
+    ).toHaveCount(1)
+    expect(await named()).toBe(1)
+
+    await page.setViewportSize({ width: 900, height: 900 })
+    await page.goto(MONTH)
+    await chip(page, '2035-10-04', 'Panel course A').click()
+    const popover = page.getByRole('dialog', { name: 'Panel course A' })
+    await expect(popover.getByRole('link', { name: 'View course' })).toHaveCount(1)
+    expect((await popover.ariaSnapshot()).match(/View course/g)?.length ?? 0).toBe(1)
+  })
+
   test('"⋯" opens its menu inside the popover, which stays open, and Escape closes one layer at a time', async ({
     browser,
   }) => {
@@ -401,7 +474,7 @@ test.describe('the public calendar side panel', () => {
     await page.getByRole('button', { name: /^Back to/ }).click()
 
     await chip(page, '2035-10-04', 'Panel course A').click()
-    await page.getByRole('button', { name: 'More actions' }).click()
+    await openMore(page)
     await expect(page.getByRole('menuitem')).toHaveCount(1)
     await page.getByRole('menuitem', { name: 'Cancel session' }).click()
     const ask = page.getByRole('dialog', { name: 'Cancel this session?' })
@@ -413,7 +486,7 @@ test.describe('the public calendar side panel', () => {
       (await payload.findByID({ collection: 'sessions', id: sessions.a1 })).cancelled,
     ).toBeFalsy()
 
-    await page.getByRole('button', { name: 'More actions' }).click()
+    await openMore(page)
     await page.getByRole('menuitem', { name: 'Cancel session' }).click()
     await ask.getByRole('button', { name: 'Keep session' }).click()
     await expect(ask).toHaveCount(0)
@@ -421,7 +494,7 @@ test.describe('the public calendar side panel', () => {
       (await payload.findByID({ collection: 'sessions', id: sessions.a1 })).cancelled,
     ).toBeFalsy()
 
-    await page.getByRole('button', { name: 'More actions' }).click()
+    await openMore(page)
     await page.getByRole('menuitem', { name: 'Cancel session' }).click()
     await ask.getByRole('button', { name: 'Cancel session' }).click()
     await expect(ask).toHaveCount(0)
@@ -453,7 +526,7 @@ test.describe('the public calendar side panel', () => {
     await shot(page, 'details-admin')
     const offer = page.getByRole('dialog', { name: 'Announce this change?' })
 
-    await details.getByRole('button', { name: 'More actions' }).click()
+    await openMore(details)
     await expect(page.getByRole('menuitem')).toHaveCount(1)
     await page.getByRole('menuitem', { name: 'Cancel session' }).click()
     await page
@@ -467,7 +540,7 @@ test.describe('the public calendar side panel', () => {
     await expect(offer).toHaveCount(0)
 
     await expect(details).toContainText('Cancelled')
-    await details.getByRole('button', { name: 'More actions' }).click()
+    await openMore(details)
     await page.getByRole('menuitem', { name: 'Restore session' }).click()
     await expect(page.getByRole('dialog', { name: 'Cancel this session?' })).toHaveCount(0)
     await expect.poll(cancelled).toBe(false)
