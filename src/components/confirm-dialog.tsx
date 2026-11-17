@@ -1,37 +1,49 @@
 'use client'
 
 import { useRef } from 'react'
-import { useTranslations } from 'next-intl'
+
 import { Button } from '@/components/arc/button/button'
 import { Dialog, DialogContent } from '@/components/arc/dialog/dialog'
 
-export function SessionDeleteDialog({
-  onCancel,
-  onDelete,
+/**
+ * A question with a safe answer and a dangerous one. The safe button has
+ * focus when it opens, and Escape, the close button and the safe button all
+ * answer "no". The dangerous button answers once.
+ */
+export function ConfirmDialog({
+  title,
+  safe,
+  danger,
+  closeLabel,
+  onSafe,
+  onDanger,
   returnFocus,
 }: {
-  onCancel: () => void
-  onDelete: () => void
+  title: string
+  safe: string
+  danger: string
+  closeLabel: string
+  onSafe: () => void
+  onDanger: () => void
   returnFocus: () => void
 }) {
-  const t = useTranslations('SessionEdit')
-  const cancel = useRef<HTMLButtonElement>(null)
-  const deleting = useRef(false)
+  const keep = useRef<HTMLButtonElement>(null)
+  const answered = useRef(false)
   return (
     <Dialog
       open
       onOpenChange={(open) => {
-        if (!open) onCancel()
+        if (!open) onSafe()
       }}
     >
       <DialogContent
-        title={t('deleteTitle')}
-        closeLabel={t('leaveClose')}
+        title={title}
+        closeLabel={closeLabel}
         className="arc-scope"
         aria-describedby={undefined}
         onOpenAutoFocus={(event) => {
           event.preventDefault()
-          cancel.current?.focus()
+          keep.current?.focus()
         }}
         onCloseAutoFocus={(event) => {
           event.preventDefault()
@@ -39,19 +51,19 @@ export function SessionDeleteDialog({
         }}
       >
         <div className="flex gap-2">
-          <Button ref={cancel} type="button" variant="secondary" onClick={onCancel}>
-            {t('cancel')}
+          <Button ref={keep} type="button" variant="secondary" onClick={onSafe}>
+            {safe}
           </Button>
           <Button
             type="button"
             variant="danger"
             onClick={() => {
-              if (deleting.current) return
-              deleting.current = true
-              onDelete()
+              if (answered.current) return
+              answered.current = true
+              onDanger()
             }}
           >
-            {t('delete')}
+            {danger}
           </Button>
         </div>
       </DialogContent>

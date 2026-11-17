@@ -28,8 +28,8 @@ import type { ScheduleSaveText } from './schedule-save-text'
 import { activityKind, materialKind } from './session-cards'
 import styles from './session-form.module.css'
 
-const SessionDeleteDialog = preloadable(() =>
-  import('./session-delete-dialog').then((m) => m.SessionDeleteDialog),
+const ConfirmDialog = preloadable(() =>
+  import('@/components/confirm-dialog').then((m) => m.ConfirmDialog),
 )
 
 type Keyed<T> = T & { key: string }
@@ -564,9 +564,9 @@ function Fields({
 
       <HoldToConfirm
         data-delete-session=""
-        onPointerEnter={SessionDeleteDialog.preload}
-        onFocus={SessionDeleteDialog.preload}
-        onPointerDown={SessionDeleteDialog.preload}
+        onPointerEnter={ConfirmDialog.preload}
+        onFocus={ConfirmDialog.preload}
+        onPointerDown={ConfirmDialog.preload}
         onActivate={() => setConfirmingDelete(true)}
         tone="danger"
         className={styles.hold}
@@ -579,9 +579,13 @@ function Fields({
       />
 
       {confirmingDelete && (
-        <SessionDeleteDialog
-          onCancel={() => setConfirmingDelete(false)}
-          onDelete={() => {
+        <ConfirmDialog
+          title={t('deleteTitle')}
+          safe={t('cancel')}
+          danger={t('delete')}
+          closeLabel={t('leaveClose')}
+          onSafe={() => setConfirmingDelete(false)}
+          onDanger={() => {
             setConfirmingDelete(false)
             void removeSession()
           }}
