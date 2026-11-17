@@ -512,6 +512,7 @@
     "subscribe": "Subscribe in your calendar app",
     "download": "Download (.ics)",
     "copyFeed": "Copy feed link",
+    "feedUrl": "Feed link",
     "copied": "Feed link copied",
     "copyFailed": "Couldn't copy the link",
     "feedName": "CILAS",
