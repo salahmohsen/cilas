@@ -1353,6 +1353,11 @@
     "sessionDrawerFailed": "Couldn't load the session.",
     "sessionDrawerRetry": "Try again",
     "sessionDrawerClose": "Close session",
+    "sheetExpand": "Expand sheet",
+    "sheetCollapse": "Collapse sheet",
+    "sheetExpanded": "Sheet expanded",
+    "sheetCollapsed": "Sheet collapsed",
+    "sheetHeight": "Sheet at {percent} percent height",
     "sessionDrawerTimes": "Times are Cairo time",
     "sessionDrawerViewPosts": "View posts",
     "sessionOpen": "Open session"

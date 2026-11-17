@@ -156,6 +156,28 @@ afterEach(() => {
 })
 
 describe('the session drawer', () => {
+  it.each(['en', 'ar'] as const)('names the sheet controls in %s', async (locale) => {
+    phone = true
+    await page(locale)
+    await act(async () => {
+      fireEvent.click(screen.getByRole('link', { name: en.SpacePost.sessionOpen }))
+    })
+    const dialog = await screen.findByRole('dialog', { name: 'Reading the city' })
+    const words = locale === 'ar' ? ar.SpacePost : en.SpacePost
+    const expand = within(dialog).getByRole('button', { name: words.sheetExpand })
+    fireEvent.click(expand)
+    expect(within(dialog).getByRole('button', { name: words.sheetCollapse })).toHaveAttribute(
+      'aria-expanded',
+      'true',
+    )
+    expect(within(dialog).getByRole('status')).toHaveTextContent(words.sheetExpanded)
+    fireEvent.click(within(dialog).getByRole('button', { name: words.sheetCollapse }))
+    expect(within(dialog).getByRole('button', { name: words.sheetExpand })).toHaveAttribute(
+      'aria-expanded',
+      'false',
+    )
+    expect(within(dialog).getByRole('status')).toHaveTextContent(words.sheetCollapsed)
+  })
   it.each([false, true])(
     'ends view mode with Edit session then the posts link (phone=%s)',
     async (onPhone) => {

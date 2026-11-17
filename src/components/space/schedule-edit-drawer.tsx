@@ -133,6 +133,13 @@ export function ScheduleEditDrawer({
         onOpenChange={onOpenChange}
         title={item.title}
         closeLabel={tp('sessionDrawerClose')}
+        labels={{
+          expand: tp('sheetExpand'),
+          collapse: tp('sheetCollapse'),
+          expanded: tp('sheetExpanded'),
+          collapsed: tp('sheetCollapsed'),
+          height: (percent) => tp('sheetHeight', { percent }),
+        }}
         onCloseAutoFocus={onCloseAutoFocus}
         detents={[0.92]}
         className="arc-scope"

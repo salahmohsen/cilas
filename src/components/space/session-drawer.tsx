@@ -260,6 +260,13 @@ export function SessionDrawer({
         title={heading}
         description={t('sessionDrawerTimes')}
         closeLabel={t('sessionDrawerClose')}
+        labels={{
+          expand: t('sheetExpand'),
+          collapse: t('sheetCollapse'),
+          expanded: t('sheetExpanded'),
+          collapsed: t('sheetCollapsed'),
+          height: (percent) => t('sheetHeight', { percent }),
+        }}
         onCloseAutoFocus={onCloseAutoFocus}
         // The form's footer needs the full height; the view opens lower.
         detents={isEditing ? [0.92] : [0.6, 0.92]}

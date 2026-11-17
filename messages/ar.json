@@ -1353,6 +1353,11 @@
     "sessionDrawerFailed": "تعذّر تحميل الجلسة.",
     "sessionDrawerRetry": "حاول مرة أخرى",
     "sessionDrawerClose": "إغلاق الجلسة",
+    "sheetExpand": "توسيع اللوحة",
+    "sheetCollapse": "طي اللوحة",
+    "sheetExpanded": "تم توسيع اللوحة",
+    "sheetCollapsed": "تم طي اللوحة",
+    "sheetHeight": "ارتفاع اللوحة {percent} بالمئة",
     "sessionDrawerTimes": "المواعيد بتوقيت القاهرة",
     "sessionDrawerViewPosts": "عرض المنشورات",
     "sessionOpen": "فتح الجلسة"
