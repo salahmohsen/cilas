@@ -208,12 +208,19 @@ test.describe('the public calendar side panel', () => {
     })
     expect(touched.ok).toBe(true)
     // The app clears the list stale-while-revalidate: a read serves the old list once, then the new one.
-    await expect
-      .poll(
-        async () => (await (await fetch(`${base}${MONTH}`)).text()).includes('Panel course B'),
-        { timeout: 60_000 },
-      )
-      .toBe(true)
+    // Each language keeps its own list, and the title alone matches a list of an earlier run, so
+    // the wait is for this run's course page link.
+    for (const locale of ['en', 'ar']) {
+      await expect
+        .poll(
+          async () =>
+            (await (await fetch(`${base}/${locale}${MONTH.slice(3)}`)).text()).includes(
+              `/study/${slugs.b}`,
+            ),
+          { timeout: 60_000 },
+        )
+        .toBe(true)
+    }
   })
 
   test.afterAll(async () => {

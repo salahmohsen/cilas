@@ -37,6 +37,10 @@ export default defineConfig({
 
   reporter: 'html',
 
+  // The default 5 s is shorter than a save through the server under five parallel
+  // workers (a dialog that waits for it timed out once at 5 s, then opened in under 10 s).
+  expect: { timeout: 30_000 },
+
   use: {
     baseURL,
     trace: 'on-first-retry',
