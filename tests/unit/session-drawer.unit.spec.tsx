@@ -311,6 +311,108 @@ const save = (dialog: HTMLElement) =>
     fireEvent.click(within(dialog).getByRole('button', { name: en.SessionEdit.save }))
   })
 
+describe('the session drawer’s Cancel session menu and course row', () => {
+  beforeEach(() => {
+    vi.mocked(saveScheduleEdits).mockReset()
+    vi.mocked(scheduleOffers).mockReset().mockResolvedValue([])
+    refresh.mockReset()
+  })
+  const openView = async (id: number, canEdit: boolean) => {
+    vi.mocked(loadSessionView).mockImplementation(async () => shown(id, canEdit))
+    window.history.replaceState(null, '', `/en/spaces/course/probe?open=${id}`)
+    await page()
+    return screen.findByRole('dialog')
+  }
+  const choose = async (dialog: HTMLElement, name: string) => {
+    const more = await within(dialog).findByRole('button', { name: en.SessionEdit.moreActions })
+    fireEvent.keyDown(more, { key: 'Enter' })
+    fireEvent.click(await screen.findByRole('menuitem', { name }))
+  }
+
+  it('links the course, by its name', async () => {
+    const dialog = await openView(13, false)
+    expect(await within(dialog).findByRole('link', { name: 'Probe course' })).toHaveAttribute(
+      'href',
+      '/en/study/probe',
+    )
+  })
+
+  it('gives a reader no More actions menu', async () => {
+    const dialog = await openView(13, false)
+    await within(dialog).findByRole('link', { name: en.SpacePost.sessionDrawerViewPosts })
+    expect(within(dialog).queryByRole('button', { name: en.SessionEdit.moreActions })).toBeNull()
+  })
+
+  it('asks first, with Keep session focused, and saves nothing on Keep', async () => {
+    const dialog = await openView(13, true)
+    await choose(dialog, en.SessionEdit.cancelSession)
+    const ask = await screen.findByRole('dialog', { name: en.SessionEdit.cancelSessionTitle })
+    const keep = within(ask).getByRole('button', { name: en.SessionEdit.keepSession })
+    await waitFor(() => expect(document.activeElement).toBe(keep))
+    fireEvent.click(keep)
+    await waitFor(() =>
+      expect(screen.queryByRole('dialog', { name: en.SessionEdit.cancelSessionTitle })).toBeNull(),
+    )
+    expect(saveScheduleEdits).not.toHaveBeenCalled()
+  })
+
+  it('cancels through the one save path, offers the announcement, and reads the view again', async () => {
+    vi.mocked(loadSessionEdit).mockResolvedValue({ ok: true, values: editValues(), version: 'v1' })
+    vi.mocked(saveScheduleEdits).mockResolvedValue({ ok: true, items: [], before: [], after: [] })
+    const dialog = await openView(13, true)
+    await choose(dialog, en.SessionEdit.cancelSession)
+    const ask = await screen.findByRole('dialog', { name: en.SessionEdit.cancelSessionTitle })
+    await act(async () => {
+      fireEvent.click(within(ask).getByRole('button', { name: en.SessionEdit.cancelSession }))
+    })
+    expect(saveScheduleEdits).toHaveBeenCalledTimes(1)
+    const [{ details }] = vi.mocked(saveScheduleEdits).mock.calls[0]!
+    expect(details).toEqual([
+      expect.objectContaining({
+        op: 'edit',
+        id: '13',
+        values: expect.objectContaining({ cancelled: true }),
+      }),
+    ])
+    expect(scheduleOffers).toHaveBeenCalledWith(expect.objectContaining({ courseId: '1' }), 'en')
+    expect(refresh).toHaveBeenCalled()
+  })
+
+  it('offers Restore session for a cancelled session, with no question', async () => {
+    vi.mocked(loadSessionEdit).mockResolvedValue({
+      ok: true,
+      values: editValues({ cancelled: true }),
+      version: 'v1',
+    })
+    vi.mocked(saveScheduleEdits).mockResolvedValue({ ok: true, items: [], before: [], after: [] })
+    const dialog = await openView(14, true)
+    await act(async () => {
+      await choose(dialog, en.SessionEdit.restoreSession)
+    })
+    expect(screen.queryByRole('dialog', { name: en.SessionEdit.cancelSessionTitle })).toBeNull()
+    await waitFor(() => expect(saveScheduleEdits).toHaveBeenCalledTimes(1))
+    expect(vi.mocked(saveScheduleEdits).mock.calls[0]![0].details).toEqual([
+      expect.objectContaining({ values: expect.objectContaining({ cancelled: false }) }),
+    ])
+  })
+
+  it('shows a refused save in the drawer', async () => {
+    vi.mocked(loadSessionEdit).mockResolvedValue({ ok: true, values: editValues(), version: 'v1' })
+    vi.mocked(saveScheduleEdits).mockResolvedValue({
+      ok: false,
+      error: { code: 'forbidden' },
+    })
+    const dialog = await openView(13, true)
+    await choose(dialog, en.SessionEdit.cancelSession)
+    const ask = await screen.findByRole('dialog', { name: en.SessionEdit.cancelSessionTitle })
+    await act(async () => {
+      fireEvent.click(within(ask).getByRole('button', { name: en.SessionEdit.cancelSession }))
+    })
+    expect(await within(dialog).findByText(en.CalendarAdmin.errors.forbidden)).toBeInTheDocument()
+    expect(scheduleOffers).not.toHaveBeenCalled()
+  })
+})
+
 describe('the session drawer’s Edit form', () => {
   beforeEach(() => {
     vi.mocked(saveScheduleEdits).mockReset()

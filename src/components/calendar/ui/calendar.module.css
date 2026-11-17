@@ -248,6 +248,8 @@
 }
 .dayTitle {
   margin: 0;
+  font-family: inherit;
+  text-align: start;
   font-size: var(--text-base);
   font-weight: 500;
   line-height: 1.4;
@@ -255,8 +257,8 @@
 .todayMark {
   padding: 0 var(--space-2);
   border-radius: 999px;
-  background: var(--accent);
-  color: var(--accent-foreground);
+  background: var(--foreground);
+  color: var(--background);
   font-size: var(--text-xs);
   line-height: 1.6;
 }
@@ -1109,6 +1111,17 @@
 .monthDay[data-opens] {
   cursor: pointer;
 }
+/* The day the side panel shows. */
+.monthDay[aria-selected='true'] {
+  background: var(--surface-muted);
+  box-shadow: inset 0 0 0 1px var(--border-strong);
+}
+@media (forced-colors: active) {
+  .monthDay[aria-selected='true'] {
+    outline: 2px solid Highlight;
+    outline-offset: -2px;
+  }
+}
 /* The date, and under it the room the week's bars take in every day of the row. */
 .monthDate {
   display: grid;
@@ -1558,6 +1571,8 @@
 }
 .detailsTitle {
   margin: 0;
+  font-family: inherit;
+  text-align: start;
   font-size: var(--text-base);
   font-weight: 500;
   line-height: 1.4;

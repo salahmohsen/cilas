@@ -143,7 +143,9 @@ function DaySection({
         </h2>
         {day.isToday ? <span className={styles.todayMark}>{labels.today}</span> : null}
       </div>
-      <p className={styles.dayCount}>{labels.dayCount(day.blocks.length)}</p>
+      {day.blocks.length ? (
+        <p className={styles.dayCount}>{labels.dayCount(day.blocks.length)}</p>
+      ) : null}
       {day.blocks.length ? (
         <ul className={styles.dayRows}>
           {day.blocks.map((block) =>
