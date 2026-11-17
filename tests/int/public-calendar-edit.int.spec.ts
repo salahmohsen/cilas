@@ -268,6 +268,13 @@ describe('cancel and restore a session', () => {
     if (!result.ok) throw Error(result.error.code)
     expect(result.before.find((item) => item.id === id)?.cancelled).toBe(false)
     expect(result.after.find((item) => item.id === id)?.cancelled).toBe(true)
+    const offers = await scheduleOffers({
+      courseId: String(courses[0]),
+      before: result.before,
+      after: result.after,
+    })
+    expect(offers.length).toBeGreaterThan(0)
+    expect(offers[0]!.text).toContain('cancelled')
   })
 })
 

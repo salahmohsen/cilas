@@ -194,8 +194,12 @@ describe('the session drawer', () => {
           ...dialog.querySelectorAll(
             'button:not([disabled]), a[href], input, select, textarea, [tabindex="0"]',
           ),
-        ].slice(-2),
-      ).toEqual([edit, posts])
+        ].slice(-3),
+      ).toEqual([
+        edit,
+        posts,
+        within(dialog).getByRole('button', { name: en.SessionEdit.moreActions }),
+      ])
     },
   )
 

@@ -3262,11 +3262,6 @@ button.rsvpCell {
   scroll-padding-block-end: 6rem;
 }
 
-.sessionDrawerMore {
-  display: flex;
-  justify-content: flex-end;
-}
-
 .sessionDrawerCourse {
   display: flex;
   flex-wrap: wrap;
@@ -3308,8 +3303,9 @@ button.rsvpCell {
   margin-block-start: var(--space-2);
 }
 
-.sessionDrawerPosts {
-  text-decoration: none;
+.sessionDrawerGroup {
+  display: flex;
+  justify-content: stretch;
 }
 
 /* In a syllabus row the links follow the session's text, as the posts link did. */

@@ -123,11 +123,13 @@ describe('a block’s details in view mode', () => {
     expect(panel).toHaveTextContent('In person · Darb 1718')
     expect(panel).toHaveTextContent('We read the atlas together.')
     expect(panel).not.toHaveTextContent(en.CalendarUi.cancelled)
-    expect(
-      within(panel)
-        .getAllByRole('button')
-        .map((button) => button.textContent || button.getAttribute('aria-label')),
-    ).toEqual([en.CalendarUi.close, 'Edit', 'Open'])
+    const buttons = within(panel).getAllByRole('button')
+    expect(buttons).toHaveLength(3)
+    expect(buttons[0]).toHaveAccessibleName(en.CalendarUi.close)
+    expect(buttons[1]).toHaveAccessibleName('Edit')
+    expect(buttons[2]).toHaveAccessibleName('Open')
+    // One group of segments, named by the item.
+    expect(within(panel).getByRole('group', { name: 'Maps' })).toBeInTheDocument()
   })
 
   it('open from a native button, so Enter and Space open them, and Escape closes them with focus back on the block', async () => {

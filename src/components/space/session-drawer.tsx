@@ -1,4 +1,4 @@
-import { Ellipsis, MessagesSquare, Pencil } from 'lucide-react'
+import { MessagesSquare, Pencil } from 'lucide-react'
 import { useLocale, useMessages, useTranslations } from 'next-intl'
 import { useRouter } from 'next/navigation'
 import {
@@ -15,8 +15,8 @@ import { loadSessionView, type SessionViewResult } from '@/actions/load-session-
 import { Alert } from '@/components/arc/alert/alert'
 import { BottomSheet } from '@/components/arc/bottom-sheet/bottom-sheet'
 import { Button } from '@/components/arc/button/button'
-import button from '@/components/arc/button/button.module.css'
-import DropdownMenu from '@/components/arc/dropdown-menu/dropdown-menu'
+import type { CalendarAction } from '@/components/calendar/ui/block-details'
+import { ItemActions } from '@/components/calendar/ui/item-actions'
 import { Drawer, DrawerContent, useDrawerItem } from '@/components/arc/drawer/drawer'
 import { TextShimmer } from '@/components/arc/text-shimmer/text-shimmer'
 import { CourseSession, syllabusSessionOf } from '@/components/course/course-syllabus'
@@ -107,7 +107,9 @@ export function SessionDrawer({
     (ask: ((go: () => void) => void) | null) => setUnsaved(ask ? { ask } : null),
     [],
   )
-  const edit = useRef<HTMLButtonElement>(null)
+  const actions = useRef<HTMLElement>(null)
+  /** The Edit segment, where focus goes back from the form. */
+  const edit = () => actions.current?.querySelector<HTMLElement>('[data-key="edit"]') ?? null
   const labels = useScheduleLabels()
   const text = useMemo(
     // The site's provider holds every message, these among them.
@@ -129,14 +131,16 @@ export function SessionDrawer({
     if (!result?.ok) return
     const saved = await cancellation.run(
       { id: String(result.session.session.id), courseId: String(result.course.id), cancelled },
-      () => more.current?.querySelector('button') ?? null,
+      () => more(),
     )
     if (saved) {
       router.refresh()
       setRound((n) => n + 1)
     }
   }
-  const more = useRef<HTMLDivElement>(null)
+  /** The overflow segment, where focus goes back from the menu's question. */
+  const more = () =>
+    actions.current?.querySelector<HTMLElement>('[data-key="button-group-menu"]') ?? null
   const open = id != null
   const isEditing = result?.ok === true && result.canEdit && editing === shown
   const name =
@@ -160,8 +164,59 @@ export function SessionDrawer({
     setEditing(null)
     setUnsaved(null)
     setRound((n) => n + 1)
-    requestAnimationFrame(() => edit.current?.focus())
+    requestAnimationFrame(() => edit()?.focus())
   }
+
+  /** The view's actions in one group: Edit, View posts, and the overflow menu for Cancel or Restore. */
+  const viewActions: CalendarAction[] =
+    result?.ok === true
+      ? [
+          ...(result.canEdit
+            ? [
+                {
+                  id: 'edit',
+                  label: te('edit'),
+                  icon: <Pencil aria-hidden size={16} />,
+                  preload: () => {
+                    SessionForm.preload()
+                    offering.preload()
+                  },
+                  run: () => setEditing(shown ?? null),
+                },
+              ]
+            : []),
+          ...(result.spaceHref
+            ? [
+                {
+                  id: 'posts',
+                  label: t('sessionDrawerViewPosts'),
+                  icon: <MessagesSquare aria-hidden size={16} />,
+                  href: sessionPostsHref(result.spaceHref, String(result.session.session.id)),
+                  primary: true,
+                },
+              ]
+            : []),
+          ...(result.canEdit
+            ? [
+                result.session.session.cancelled
+                  ? {
+                      id: 'restore',
+                      label: te('restoreSession'),
+                      menu: true as const,
+                      run: () => void cancelSession(false),
+                    }
+                  : {
+                      id: 'cancel',
+                      label: te('cancelSession'),
+                      menu: true as const,
+                      danger: true,
+                      preload: ConfirmDialog.preload,
+                      run: () => setAsking(true),
+                    },
+              ]
+            : []),
+        ]
+      : []
 
   const body: ReactNode = !result ? (
     <div role="status">
@@ -200,31 +255,12 @@ export function SessionDrawer({
         stopEditing()
         // An open Calendar tab and the page's other server parts read it again.
         router.refresh()
-        offering.offer(before, after, () => edit.current)
+        offering.offer(before, after, edit)
       }}
     />
   ) : (
     <div className={styles.sessionDrawer}>
       <div>
-        {result.canEdit ? (
-          <div ref={more} className={styles.sessionDrawerMore}>
-            <DropdownMenu
-              label={te('moreActions')}
-              iconOnly
-              icon={<Ellipsis aria-hidden size={16} />}
-              items={[
-                result.session.session.cancelled
-                  ? { label: te('restoreSession'), onSelect: () => void cancelSession(false) }
-                  : {
-                      label: te('cancelSession'),
-                      destructive: true,
-                      onPreload: ConfirmDialog.preload,
-                      onSelect: () => setAsking(true),
-                    },
-              ]}
-            />
-          </div>
-        ) : null}
         <CourseSession
           course={result.course}
           sessions={[syllabusSessionOf(result.session)]}
@@ -243,38 +279,17 @@ export function SessionDrawer({
         {offering.failed ? <Alert tone="danger" title={text.offerFailed} /> : null}
         {cancellation.error ? <Alert tone="danger" title={cancellation.error} /> : null}
       </div>
-      {(result.canEdit || result.spaceHref) && (
-        <footer className={styles.sessionDrawerActions}>
-          {result.canEdit && (
-            <Button
-              ref={edit}
-              type="button"
-              variant="secondary"
-              onPointerEnter={SessionForm.preload}
-              onFocus={SessionForm.preload}
-              onPointerDown={() => {
-                SessionForm.preload()
-                offering.preload()
-              }}
-              onClick={() => setEditing(shown ?? null)}
-            >
-              <Pencil aria-hidden size={16} />
-              {te('edit')}
-            </Button>
-          )}
-          {result.spaceHref && (
-            <a
-              className={[button.button, button.primary, button.md, styles.sessionDrawerPosts].join(
-                ' ',
-              )}
-              href={sessionPostsHref(result.spaceHref, String(result.session.session.id))}
-            >
-              <MessagesSquare aria-hidden size={16} />
-              {t('sessionDrawerViewPosts')}
-            </a>
-          )}
+      {viewActions.length ? (
+        <footer ref={actions} className={styles.sessionDrawerActions}>
+          <ItemActions
+            label={heading}
+            menuLabel={te('moreActions')}
+            actions={viewActions}
+            className={styles.sessionDrawerGroup}
+            onRun={(action) => action.run?.(String(result.session.session.id), null)}
+          />
         </footer>
-      )}
+      ) : null}
     </div>
   )
 
@@ -293,7 +308,7 @@ export function SessionDrawer({
             setAsking(false)
             void cancelSession(true)
           }}
-          returnFocus={() => more.current?.querySelector('button')?.focus()}
+          returnFocus={() => more()?.focus()}
         />
       ) : null}
       {offering.dialog}
