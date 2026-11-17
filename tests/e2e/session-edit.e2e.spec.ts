@@ -81,7 +81,7 @@ const pickTime = async (panel: Locator, field: string, time: string) => {
   await panel.getByRole('button', { name: new RegExp(`^${field}`) }).click()
   // The list just closed may still be leaving; pick in this field's own list.
   await panel
-    .getByRole('listbox', { name: `${field} options` })
+    .getByRole('listbox', { name: field, exact: true })
     .getByRole('option', { name: time, exact: true })
     .click()
 }
@@ -265,7 +265,11 @@ test.describe('session drawer Edit form', () => {
     await dialog.getByRole('textbox', { name: 'Material title', exact: true }).fill('E2E reading')
     await dialog.getByRole('textbox', { name: 'Link', exact: true }).fill('not a link')
     await dialog.getByRole('button', { name: 'Done', exact: true }).click()
-    await expect(dialog.getByText('Enter a full link that starts with https://')).toBeVisible()
+    await expect(
+      dialog
+        .getByText('Enter a full link that starts with https://')
+        .and(dialog.locator('[aria-hidden="true"]')),
+    ).toBeVisible()
     await dialog.getByRole('textbox', { name: 'Link', exact: true }).fill('https://example.org/e2e')
     await dialog.getByRole('button', { name: 'Done', exact: true }).click()
     await expect(dialog).toBeHidden()
