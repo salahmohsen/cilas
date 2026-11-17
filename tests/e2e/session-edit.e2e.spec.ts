@@ -250,7 +250,7 @@ test.describe('session drawer Edit form', () => {
     // The drawer reads the session again, and the Calendar tab behind it follows the refresh.
     const renamed = drawer(fellow, 'E2E drawer renamed')
     await expect(renamed).toBeVisible()
-    await expect(renamed.getByText('20:00–22:00')).toBeVisible()
+    await expect(renamed.getByText('8 – 10 PM')).toBeVisible()
     await closeDrawer(renamed)
     await expect(block(fellow, 'E2E drawer renamed')).toHaveAccessibleName(
       /^E2E drawer renamed, Thursday, October 5, 8 PM to 10 PM/,

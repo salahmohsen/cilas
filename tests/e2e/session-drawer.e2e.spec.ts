@@ -234,7 +234,7 @@ test.describe('session drawer', () => {
     // The title is the drawer's heading (`drawer()` finds it by it); the view under it has the number and times.
     expect(fromCalendar).not.toContain(TITLE)
     expect(fromCalendar).toContain('Session 1')
-    expect(fromCalendar).toContain('19:00–21:00')
+    expect(fromCalendar).toContain('7 – 9 PM')
     await expect(drawer().locator('strong')).toHaveText('closely')
     await expect(drawer().getByRole('link', { name: 'View posts' })).toHaveAttribute(
       'href',

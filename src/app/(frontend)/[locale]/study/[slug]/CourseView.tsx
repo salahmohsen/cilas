@@ -18,6 +18,7 @@ import {
 import { useFormatter, useLocale, useTranslations } from 'next-intl'
 import React from 'react'
 
+import { formatTime, formatTimeRange, toMinutes } from '@/components/calendar/ui/calendar-time'
 import { AIInstructions } from '@/components/ai-instructions'
 import { InViewTitle } from '@/components/arc/in-view-title/in-view-title'
 import {
@@ -152,7 +153,9 @@ export const CourseView: React.FC<{
       ? when.times.map((time) => ({
           day: weekdayName(time.weekday, locale),
           time: time.start_time
-            ? localDigits([time.start_time, time.end_time].filter(Boolean).join('–'), locale)
+            ? time.end_time
+              ? formatTimeRange(toMinutes(time.start_time), toMinutes(time.end_time), locale)
+              : formatTime(toMinutes(time.start_time), locale)
             : null,
         }))
       : []

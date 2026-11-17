@@ -21,6 +21,7 @@ import {
   type SyllabusEntry,
   type SyllabusGroup,
 } from '@/components/arc/blocks/syllabus-feed/syllabus-feed'
+import { formatTime, formatTimeRange, toMinutes } from '@/components/calendar/ui/calendar-time'
 import { SessionMarkdown } from '@/components/course/session-markdown'
 import { courseLanguage, directionOf } from '@/lib/course-language'
 import { localDigits, numberingSystemOf } from '@/lib/digits'
@@ -143,8 +144,12 @@ function useSyllabusEntries(
       meta: {
         unit: session.title ? unitLabel : undefined,
         meetings: meetings.map((m) => {
-          const hours = [m.start_time, m.end_time].filter(Boolean).join('–')
-          return { date: dayLabel(m.date), ...(hours ? { time: localDigits(hours, locale) } : {}) }
+          const hours = m.start_time
+            ? m.end_time
+              ? formatTimeRange(toMinutes(m.start_time), toMinutes(m.end_time), locale)
+              : formatTime(toMinutes(m.start_time), locale)
+            : ''
+          return { date: dayLabel(m.date), ...(hours ? { time: hours } : {}) }
         }),
         extra:
           session.delivery || materials.length

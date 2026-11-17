@@ -3,7 +3,7 @@ import { createTranslator } from 'next-intl'
 import { addDays } from '@/lib/cairo-day'
 import { weekStart } from '@/lib/calendar'
 import type { CalendarBlock, CalendarItem } from '@/lib/calendar-items'
-import { localDigits } from '@/lib/digits'
+import { formatTime, toMinutes } from '@/components/calendar/ui/calendar-time'
 import { dayLabel } from '@/lib/meeting-text'
 import { byWhen } from '@/lib/meetings'
 import { scheduleToken } from '@/lib/session-refs'
@@ -160,7 +160,7 @@ export const scheduleChangeText = (
   const list = new Intl.ListFormat(locale, { type: 'conjunction' })
   const when = (b: CalendarBlock): string => {
     const day = dayLabel(b.date, locale)
-    return b.start_time ? t('at', { day, time: localDigits(b.start_time, locale) }) : day
+    return b.start_time ? t('at', { day, time: formatTime(toMinutes(b.start_time), locale) }) : day
   }
   const line = (c: ScheduleChange): string => {
     const session = names.get(c.itemId) ?? c.title

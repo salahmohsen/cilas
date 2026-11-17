@@ -81,7 +81,7 @@ describe('what the course page says about time', () => {
   it('reads the start, the weekly times and the length from the sessions', () => {
     expect(facts(course(), weekly).rows).toEqual([
       'Starts: Tuesday, Mar 3',
-      'Meets: Tuesday, 19:00–21:00',
+      'Meets: Tuesday, 7 – 9 PM',
       'Length: 3 sessions',
     ])
   })
@@ -89,7 +89,7 @@ describe('what the course page says about time', () => {
   it('writes them in Arabic with Arabic digits and weekday', () => {
     const rows = facts(course(), weekly, 'ar').rows
     expect(rows[1]).toContain('الثلاثاء')
-    expect(rows[1]).toContain('١٩:٠٠–٢١:٠٠')
+    expect(rows[1]).toContain('٧ – ٩ م')
   })
 
   it('says no weekly times for a course that does not meet every week alike', () => {

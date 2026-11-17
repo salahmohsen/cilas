@@ -167,6 +167,7 @@ describe('the session drawer', () => {
       const edit = await within(dialog).findByRole('button', { name: en.SessionEdit.edit })
       const posts = within(dialog).getByRole('link', { name: en.SpacePost.sessionDrawerViewPosts })
       expect(posts).toHaveAttribute('href', '/en/spaces/course/probe?session=13')
+      expect(within(dialog).getByText('7 – 9 PM')).toBeInTheDocument()
       expect(
         [
           ...dialog.querySelectorAll(
@@ -202,7 +203,7 @@ describe('the session drawer', () => {
     const view = within(dialog).getByRole('region', { name: 'Session 3: Reading the city' })
     expect(view).toHaveTextContent('Session 3')
     expect(view).not.toHaveTextContent('Reading the city')
-    expect(within(dialog).getByText('19:00–21:00')).toBeInTheDocument()
+    expect(within(dialog).getByText('7 – 9 PM')).toBeInTheDocument()
     expect(within(dialog).getAllByText(en.Course.delivery.ONLINE).length).toBeGreaterThan(0)
     expect(dialog.querySelector('strong')?.textContent).toBe('slowly')
     expect(within(dialog).getByText('Invisible Cities')).toBeInTheDocument()

@@ -247,8 +247,8 @@ describe('scheduleChangeText', () => {
     )
     expect(scheduleChangeText(changes, 'en', names)).toBe(
       [
-        '- Session 3: Reading Fanon moves from Thu 19 Nov 19:00 to Sat 21 Nov 20:00',
-        '- The meeting of Session 3: Reading Fanon on Thu 26 Nov 19:00 is removed',
+        '- Session 3: Reading Fanon moves from Thu 19 Nov 7 PM to Sat 21 Nov 8 PM',
+        '- The meeting of Session 3: Reading Fanon on Thu 26 Nov 7 PM is removed',
         '- Session 5 is cancelled',
       ].join('\n'),
     )
@@ -266,9 +266,9 @@ describe('scheduleChangeText', () => {
       names,
     ).split('\n')
     expect(text).toEqual([
-      '- Session 3: Reading Fanon has a new meeting on Sat 21 Nov 20:00',
-      '- Session 9: Field notes is added. It meets on Thu 19 Nov 19:00 and Sat 21 Nov 20:00',
-      '- Old title is removed. It was to meet on Thu 19 Nov 19:00',
+      '- Session 3: Reading Fanon has a new meeting on Sat 21 Nov 8 PM',
+      '- Session 9: Field notes is added. It meets on Thu 19 Nov 7 PM and Sat 21 Nov 8 PM',
+      '- Old title is removed. It was to meet on Thu 19 Nov 7 PM',
       '- Session 5 is no longer cancelled',
     ])
   })
@@ -312,7 +312,7 @@ describe('scheduleChangeText', () => {
       ar,
     ).split('\n')
     expect(text).toEqual([
-      '- تُنقل الجلسة ٣: قراءة فانون من الخميس، ١٩ نوفمبر، الساعة ١٩:٠٠ إلى السبت، ٢١ نوفمبر، الساعة ٢٠:٠٠',
+      '- تُنقل الجلسة ٣: قراءة فانون من الخميس، ١٩ نوفمبر، الساعة ٧ م إلى السبت، ٢١ نوفمبر، الساعة ٨ م',
       '- أُلغيت الجلسة ٥',
       '- عادت الجلسة ٦ إلى الجدول',
       '- أُلغي اللقاء المقرر في الخميس، ٢٦ نوفمبر من الجلسة ٣: قراءة فانون',
