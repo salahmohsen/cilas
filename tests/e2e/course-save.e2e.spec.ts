@@ -73,8 +73,8 @@ test.describe('course admin save', () => {
   test.beforeAll(async ({ browser }) => {
     // Full-suite setup exceeded 30 s; the isolated spec took 23.1 s in total.
     test.setTimeout(300_000)
-    await seedTestUser()
-    payload = await getPayload({ config })
+    payload = await getPayload({ config, key: uniq('course-save') })
+    await seedTestUser(payload)
     const place = track(
       'places',
       await payload.create({
@@ -149,7 +149,7 @@ test.describe('course admin save', () => {
     test.setTimeout(300_000)
     await page?.context().close()
     await cleanup(payload)
-    await cleanupTestUser()
+    await cleanupTestUser(payload)
     await payload.destroy()
   })
 

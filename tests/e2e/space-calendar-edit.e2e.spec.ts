@@ -19,6 +19,7 @@ const TITLE = 'E2E space edit session'
 
 const { track, cleanup } = createTracker()
 let payload: Payload
+let courseId: number
 let session: number
 let space: number
 let spacePath: string
@@ -136,6 +137,7 @@ test.describe('space calendar edit mode', () => {
         overrideAccess: true,
       }),
     ).id
+    courseId = course
     spacePath = `/en/spaces/course/${slug}`
     modeBefore =
       (await payload.findGlobal({ slug: 'site-settings', overrideAccess: true })).spaces_mode ??
@@ -186,38 +188,57 @@ test.describe('space calendar edit mode', () => {
   test.afterAll(async () => {
     // The cleanup ran past 120 s on a loaded machine and left its rows.
     test.setTimeout(300_000)
-    await fellow?.context().close()
-    if (space && payload) {
-      for (const [collection, where] of [
-        ['space-posts', { space: { equals: space } }],
-        ['space-visits', { space: { equals: space } }],
-        [
-          'space-consents',
-          { account: { in: [accounts.fellow?.id, accounts.student?.id].filter(Boolean) } },
-        ],
-      ] as const) {
-        const rows = await payload.find({
-          collection,
-          where,
-          pagination: false,
-          overrideAccess: true,
-        })
-        for (const row of rows.docs) track(collection, row.id)
+    try {
+      await fellow?.context().close()
+      if (space && payload) {
+        for (const [collection, where] of [
+          ['space-posts', { space: { equals: space } }],
+          ['space-visits', { space: { equals: space } }],
+          [
+            'space-consents',
+            { account: { in: [accounts.fellow?.id, accounts.student?.id].filter(Boolean) } },
+          ],
+        ] as const) {
+          const rows = await payload.find({
+            collection,
+            where,
+            pagination: false,
+            overrideAccess: true,
+          })
+          for (const row of rows.docs) track(collection, row.id)
+        }
+      }
+      if (session && payload)
+        await payload.delete({ collection: 'sessions', id: session, overrideAccess: true })
+      if (payload) {
+        if (modeBefore)
+          await payload.updateGlobal({
+            slug: 'site-settings',
+            data: { spaces_mode: modeBefore },
+            overrideAccess: true,
+          })
+      }
+    } finally {
+      try {
+        if (payload) {
+          await cleanup(payload)
+          if (courseId) {
+            const remaining = await payload.count({
+              collection: 'courses',
+              where: { id: { equals: courseId } },
+              overrideAccess: true,
+            })
+            expect(remaining.totalDocs, 'fixture course removed').toBe(0)
+          }
+        }
+      } finally {
+        try {
+          await payload?.destroy()
+        } finally {
+          await unlock?.()
+        }
       }
     }
-    if (session && payload)
-      await payload.delete({ collection: 'sessions', id: session, overrideAccess: true })
-    if (payload) {
-      if (modeBefore)
-        await payload.updateGlobal({
-          slug: 'site-settings',
-          data: { spaces_mode: modeBefore },
-          overrideAccess: true,
-        })
-      await cleanup(payload)
-      await payload.destroy()
-    }
-    await unlock?.()
   })
 
   test('a student sees the calendar and no Edit', async ({ browser }) => {

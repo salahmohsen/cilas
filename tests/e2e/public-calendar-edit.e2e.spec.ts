@@ -14,7 +14,7 @@ const sessions: number[] = []
 test.describe('the public calendar editor', () => {
   test.describe.configure({ mode: 'serial', timeout: 300_000 })
   test.beforeAll(async () => {
-    payload = await getPayload({ config })
+    payload = await getPayload({ config, key: uniq('public-calendar-edit') })
     const person = track(
       'people',
       await payload.create({
