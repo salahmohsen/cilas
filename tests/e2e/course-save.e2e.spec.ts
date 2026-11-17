@@ -71,6 +71,8 @@ test.describe('course admin save', () => {
   let subtitle: string
 
   test.beforeAll(async ({ browser }) => {
+    // Full-suite setup exceeded 30 s; the isolated spec took 23.1 s in total.
+    test.setTimeout(300_000)
     await seedTestUser()
     payload = await getPayload({ config })
     const place = track(
@@ -143,6 +145,8 @@ test.describe('course admin save', () => {
   })
 
   test.afterAll(async () => {
+    // Full-suite cleanup also exceeded its separate 30 s hook limit.
+    test.setTimeout(300_000)
     await page?.context().close()
     await cleanup(payload)
     await cleanupTestUser()
