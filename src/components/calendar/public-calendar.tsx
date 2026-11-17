@@ -1,15 +1,19 @@
 'use client'
 
 import { Pencil } from 'lucide-react'
-import { useLocale, useTranslations } from 'next-intl'
+import { useLocale, useMessages, useTranslations } from 'next-intl'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { useCallback, useEffect, useMemo, useSyncExternalStore, useTransition } from 'react'
 
+import { Alert } from '@/components/arc/alert/alert'
 import { Button } from '@/components/arc/button/button'
 import { leave } from '@/lib/leave-guard'
 import { Calendar } from '@/components/calendar/ui/calendar'
 import type { CalendarView } from '@/components/calendar/ui/calendar-views'
 import { useCalendarLabels } from '@/components/calendar/ui/use-calendar-labels'
+import { scheduleSaveText, type ScheduleSaveMessages } from '@/components/space/schedule-save-text'
+import { useScheduleOffer } from '@/components/space/use-schedule-save'
+import { useSessionCancellation } from '@/components/space/use-session-cancellation'
 import { Link } from '@/i18n/navigation'
 import type { CalendarItem } from '@/lib/calendar-items'
 
@@ -57,6 +61,8 @@ const onHistory = (change: () => void) => {
 export function PublicCalendar({ items, range, today, kinds, months, access }: Props) {
   const t = useTranslations('Calendar')
   const ta = useTranslations('CalendarAdmin')
+  const te = useTranslations('SessionEdit')
+  const messages = useMessages()
   const editing = access?.mode === 'edit'
   const locale = useLocale()
   const viewer = usePublicCalendarAccess(
@@ -93,6 +99,16 @@ export function PublicCalendar({ items, range, today, kinds, months, access }: P
     [editing, ta],
   )
   const labels = useCalendarLabels({ kind, newItem: '', menu })
+  const text = useMemo(
+    () => scheduleSaveText(locale, messages as ScheduleSaveMessages, labels),
+    [locale, messages, labels],
+  )
+  const offering = useScheduleOffer({
+    locale,
+    language: locale === 'ar' ? 'ar' : 'en',
+    text,
+  })
+  const cancellation = useSessionCancellation({ locale, text, offer: offering.offer })
 
   const load = useCallback(
     (to: CalendarView, at: string, replace = false) =>
@@ -114,7 +130,13 @@ export function PublicCalendar({ items, range, today, kinds, months, access }: P
 
   const navigate = (to: CalendarView, at: string) => {
     if (!holds(range, to, at)) return leave(() => load(to, at))
-    window.history.pushState(null, '', `${calendarQuery(to, at)}${editing ? '&edit=1' : ''}`)
+    // A day chosen in the month is not a new place: Back leaves the month, not each day.
+    const sameMonth = to === 'month' && view === 'month' && monthOfDay(at) === monthOfDay(day)
+    window.history[sameMonth ? 'replaceState' : 'pushState'](
+      null,
+      '',
+      `${calendarQuery(to, at)}${editing ? '&edit=1' : ''}`,
+    )
     window.dispatchEvent(new Event(PUSHED))
   }
 
@@ -154,6 +176,9 @@ export function PublicCalendar({ items, range, today, kinds, months, access }: P
           <CalendarFeed feedPath={`/${locale}/calendar.ics`} />
         </div>
       </div>
+
+      {cancellation.error ? <Alert tone="danger" title={cancellation.error} /> : null}
+      {offering.failed ? <Alert tone="danger" title={text.offerFailed} /> : null}
 
       {nearest && !editing ? (
         <p className="text-sm text-[var(--text-secondary)]">
@@ -207,24 +232,48 @@ export function PublicCalendar({ items, range, today, kinds, months, access }: P
           locale={locale}
           view={view}
           day={day}
+          today={today}
+          panelOpenInMonth
           onNavigate={navigate}
           onOpen={(id) => {
             const href = items.find((item) => item.id === id)?.href
             if (href) router.push(href)
           }}
-          actionsOf={({ href, kind, parentId }) => {
+          actionsOf={({ href, kind, parentId, sessionId, cancelled }) => {
             const open = kinds[kind]?.open
-            return href && open
-              ? [
-                  { id: 'open', label: open, href, primary: true },
-                  ...(parentId && viewer.spaces[parentId]
-                    ? [{ id: 'space', label: t('goToSpace'), href: viewer.spaces[parentId]! }]
-                    : []),
-                ]
-              : []
+            if (!href || !open) return []
+            const mayCancel = Boolean(sessionId && parentId && viewer.editable.includes(parentId))
+            return [
+              { id: 'open', label: open, href, primary: true },
+              ...(parentId && viewer.spaces[parentId]
+                ? [{ id: 'space', label: t('goToSpace'), href: viewer.spaces[parentId]! }]
+                : []),
+              ...(mayCancel
+                ? [
+                    {
+                      id: 'cancel',
+                      label: cancelled ? te('restoreSession') : te('cancelSession'),
+                      menu: true as const,
+                      danger: !cancelled,
+                      ...(cancelled
+                        ? {}
+                        : {
+                            confirm: { title: te('cancelSessionTitle'), keep: te('keepSession') },
+                          }),
+                      run: () =>
+                        void cancellation
+                          .run({ id: sessionId!, courseId: parentId!, cancelled: !cancelled }, () =>
+                            document.querySelector<HTMLElement>('[data-panel-heading]'),
+                          )
+                          .then((done) => done && router.refresh()),
+                    },
+                  ]
+                : []),
+            ]
           }}
         />
       )}
+      {offering.dialog}
     </div>
   )
 }

@@ -29,8 +29,14 @@ vi.mock('@/actions/public-calendar-access', () => ({ publicCalendarLinks: vi.fn(
 vi.mock('@/actions/save-schedule-edits', () => ({ saveScheduleEdits: vi.fn() }))
 vi.mock('@/actions/schedule-offers', () => ({ scheduleOffers: vi.fn() }))
 vi.mock('@/actions/load-calendar-items', () => ({ loadCalendarItems: vi.fn() }))
+vi.mock('@/actions/session-edit', () => ({ loadSessionEdit: vi.fn() }))
 
-vi.mock('@/components/calendar/ui/use-narrow', () => ({ useNarrow: () => false }))
+// Whether the side panel sits beside the grid.
+const docked: boolean | null = false
+vi.mock('@/components/calendar/ui/use-narrow', () => ({
+  useNarrow: () => false,
+  useDocked: () => docked,
+}))
 vi.mock('@/lib/use-narrow', () => ({ useNarrow: () => false }))
 
 const navigation = vi.hoisted(() => {
@@ -321,7 +327,7 @@ describe('the public calendar', () => {
     expect(navigation.push).not.toHaveBeenCalled()
     fireEvent.click(screen.getByRole('button', { name: 'Month' }))
     fireEvent.click(screen.getByRole('button', { name: 'Next month' }))
-    expect(navigation.push).toHaveBeenCalledWith('/en/calendar?view=month&date=2026-12-17', {
+    expect(navigation.push).toHaveBeenCalledWith('/en/calendar?view=month&date=2026-12-01', {
       scroll: false,
     })
     push.mockRestore()

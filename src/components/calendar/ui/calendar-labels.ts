@@ -41,6 +41,20 @@ export type CalendarLabels = {
   more: (count: number) => string
   /** Its spoken name: "3 more on Thursday 12 November". */
   moreName: (count: number, day: string) => string
+  /** "2 meetings": how many a day holds. */
+  dayCount: (count: number) => string
+  /** A day cell's spoken name: "Friday, November 13, 2 meetings". */
+  dayName: (day: string, count: number) => string
+  /** Said when a day is selected: "Friday, November 13: 2 meetings". */
+  dayTold: (day: string, count: number) => string
+  /** The side panel's line for a day with nothing: "Nothing on Friday, November 13". */
+  nothingOn: (day: string) => string
+  /** The details' Back button: "Back to Tuesday, November 17", or to Up next. */
+  backTo: (where: string) => string
+  /** Said when an item's details open in the side panel. */
+  detailsShown: (title: string) => string
+  /** The name of the "⋯" button of an item's less common actions. */
+  moreActions: string
   legend: string
   /** The toggle of the side panel: Up next, the colour key, Unscheduled. */
   panel: string
@@ -135,6 +149,13 @@ export const calendarLabelsFrom = (
   allDay: t('allDay'),
   more: (count) => t('more', { count }),
   moreName: (count, day) => t('moreName', { count, day }),
+  dayCount: (count) => t('dayCount', { count }),
+  dayName: (day, count) => t('dayName', { day, items: t('dayCount', { count }) }),
+  dayTold: (day, count) => t('dayTold', { day, items: t('dayCount', { count }) }),
+  nothingOn: (day) => t('nothingOn', { day }),
+  backTo: (where) => t('backTo', { where }),
+  detailsShown: (title) => t('detailsShown', { title }),
+  moreActions: t('moreActions'),
   legend: t('legend'),
   panel: t('panel'),
   upNext: t('upNext'),

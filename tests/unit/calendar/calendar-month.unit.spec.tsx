@@ -21,7 +21,12 @@ declare global {
 
 // The calendar's measured width: null before it is measured, as on the server.
 let narrow: boolean | null = false
-vi.mock('@/components/calendar/ui/use-narrow', () => ({ useNarrow: () => narrow }))
+// Whether the side panel sits beside the grid.
+const docked: boolean | null = false
+vi.mock('@/components/calendar/ui/use-narrow', () => ({
+  useNarrow: () => narrow,
+  useDocked: () => docked,
+}))
 vi.mock('@/lib/use-narrow', () => ({ useNarrow: () => false }))
 
 const item = (

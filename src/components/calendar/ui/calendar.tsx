@@ -4,7 +4,7 @@ import { Collapsible, CollapsiblePanel } from '@ui-sdk/react/collapsible'
 import { createMenuController } from '@ui-sdk/react/menu'
 import { createPopoverController } from '@ui-sdk/react/popover'
 import { Toggle, ToggleGroup } from '@ui-sdk/react/toggle'
-import { useEffect, useMemo, useRef, useState, type ReactNode } from 'react'
+import { useEffect, useMemo, useRef, useState, type KeyboardEvent, type ReactNode } from 'react'
 
 import SegmentedControl from '@/components/arc/segmented-control/segmented-control'
 import { useNarrow as usePhone } from '@/lib/use-narrow'
@@ -30,7 +30,9 @@ import {
 } from './calendar-model'
 import type { CalendarLabels } from './calendar-labels'
 import { CalendarToolbar } from './calendar-toolbar'
-import { CalendarPanel } from './calendar-panel'
+import { CalendarPanel, type PanelDay } from './calendar-panel'
+import { dayBlocksOf, monthDefaultDay, nextBlockAfter } from './day-selection'
+import { PanelDetails } from './panel-details'
 import { AgendaList } from './agenda-list'
 import {
   cairoNow,
@@ -48,12 +50,15 @@ import { MonthGrid } from './month-grid'
 import { SaveBar } from './save-bar'
 import { UnscheduledTray } from './unscheduled-tray'
 import { useEditSession } from './use-edit-session'
-import { useNarrow } from './use-narrow'
+import { useDocked, useNarrow } from './use-narrow'
 import { useNow } from './use-now'
 import { WeekGrid } from './week-grid'
 import { WeekSpans } from './week-spans'
 
 const MoveDialog = preloadable(() => import('./move-dialog').then((m) => m.MoveDialog))
+const ConfirmDialog = preloadable(() =>
+  import('@/components/confirm-dialog').then((m) => m.ConfirmDialog),
+)
 
 type Shared = {
   items: CalendarItem[]
@@ -61,6 +66,16 @@ type Shared = {
   locale: string
   /** The Cairo day to open on: its week, and that day where one day shows at a time. Today by default. */
   day?: string
+  /**
+   * Today in Cairo, as the host knows it, so the server's render and the
+   * browser's first one agree on which day is today.
+   */
+  today?: string
+  /**
+   * The side panel is open from the start where it sits beside the grid, in
+   * the Month view. Other views, and a calendar too narrow for it, start closed.
+   */
+  panelOpenInMonth?: boolean
   /** The view to open in, where the width has it. Without it: the week, and one day on a phone. */
   view?: CalendarView
   /**
@@ -140,6 +155,8 @@ export function Calendar({
   labels,
   locale,
   day,
+  today: todayProp,
+  panelOpenInMonth = false,
   view: startView = 'week',
   onNavigate,
   marked = NO_MARKS,
@@ -161,8 +178,12 @@ export function Calendar({
   // The details are a sheet on a phone screen, as the site's dialogs are, whatever the calendar's width.
   const phone = usePhone()
   const now = useNow()
-  const [panelOpen, setPanelOpen] = useState(false)
+  const docked = useDocked(frame)
+  // Null until the person opens or closes the panel: the host's default decides.
+  const [panelChoice, setPanelChoice] = useState<boolean | null>(null)
   const [selectedId, setSelectedId] = useState<string | null>(null)
+  const [panelTarget, setPanelTarget] = useState<DetailsTarget | null>(null)
+  const [ask, setAsk] = useState<{ action: CalendarAction; target: DetailsTarget } | null>(null)
   const [menu] = useState(() => createMenuController<string>())
   const [details] = useState(() => createPopoverController<DetailsTarget>())
   const [detailsSide, setDetailsSide] = useState<'end' | 'bottom'>('end')
@@ -182,6 +203,7 @@ export function Calendar({
     setWanted(startView)
   }
   const go = (view: CalendarView, to: string) => {
+    setPanelTarget(null)
     setWanted(view)
     setAnchor(to)
     onNavigate?.(view, to)
@@ -203,6 +225,15 @@ export function Calendar({
   const week = useMemo(() => weekOf(weekStartOf(anchor)), [anchor])
   const selectedIndex = indexOfDay(days, anchor)
   const todayIndex = now ? days.indexOf(now.date) : -1
+  const anchorDay = anchor
+  const todayDate = todayProp ?? now?.date ?? null
+  const isMonth = shown.layout === 'month'
+  // The panel opens by default only where it sits beside a month; docked is unknown for the server's render, which assumes it does.
+  const panelOpen = panelChoice ?? (panelOpenInMonth && isMonth && docked !== false)
+  const beside = panelOpen && docked === true
+  // The month's selected day is its anchor, shown in the panel; the host's URL carries it.
+  const selectsDays = !editable && beside && isMonth
+  const detailsInPanel = !editable && beside && Boolean(actionsOf)
 
   // The hours follow what shows: a kind turned off in the legend does not hold them open.
   const loaded = useMemo(
@@ -344,6 +375,14 @@ export function Calendar({
   const press = (itemId: string, blocks: EditBlock[], anchor: HTMLElement) => {
     if (!editable && !itemIds.has(itemId)) return
     if (editable || !actionsOf) return openItem(itemId, blocks[0]?.blockId ?? null)
+    if (detailsInPanel) {
+      const track = blocks[0]?.track
+      if (selectsDays && track && track !== anchorDay) go(wanted, track)
+      const title = session.items.find((item) => item.id === itemId)?.title ?? ''
+      setTold(labels.detailsShown(title))
+      setPanelTarget({ itemId, blocks, anchor })
+      return
+    }
     setDetailsSide(besideFits(anchor) ? 'end' : 'bottom')
     void details.open({ payload: { itemId, blocks, anchor }, anchor })
   }
@@ -353,12 +392,101 @@ export function Calendar({
       session.working.filter((block) => block.itemId === itemId && block.blockId === blockId),
       anchor,
     )
-  const runAction = (action: CalendarAction, { itemId, blocks, anchor }: DetailsTarget) => {
+  const runAction = (action: CalendarAction, target: DetailsTarget) => {
     details.close()
+    if (action.confirm) return setAsk({ action, target })
     // The host's dialog gives focus back to what had it when it opened: the block.
-    if (anchor.isConnected) anchor.focus()
-    action.run?.(itemId, blocks[0]?.blockId ?? null)
+    if (target.anchor.isConnected && !panelTarget) target.anchor.focus()
+    action.run?.(target.itemId, target.blocks[0]?.blockId ?? null)
   }
+  // An action that asks first loads its dialog as the pointer or focus reaches it.
+  const withConfirm = (actions: CalendarAction[]) =>
+    actions.map((action) =>
+      action.confirm
+        ? {
+            ...action,
+            preload: () => {
+              action.preload?.()
+              ConfirmDialog.preload()
+            },
+          }
+        : action,
+    )
+
+  /** Closes the details in the panel and puts focus back on what opened them, or on its day. */
+  const closePanelDetails = (target: DetailsTarget) => {
+    setPanelTarget(null)
+    const first = target.blocks[0]
+    requestAnimationFrame(() => {
+      const root = frame.current
+      const back =
+        (target.anchor.isConnected ? target.anchor : null) ??
+        (first
+          ? root?.querySelector<HTMLElement>(`[data-row-id="${CSS.escape(first.id)}"]`)
+          : null) ??
+        (first ? root?.querySelector<HTMLElement>(`[data-day="${first.track}"]`) : null)
+      back?.focus()
+    })
+  }
+  const onPanelKeyDown = (event: KeyboardEvent<HTMLElement>) => {
+    if (event.key !== 'Escape' || !panelTarget || ask) return
+    event.preventDefault()
+    event.stopPropagation()
+    closePanelDetails(panelTarget)
+  }
+
+  const itemOf = (id: string) => session.items.find((item) => item.id === id)
+  /** Selects a day of the month: the panel shows it, and the host's URL follows. */
+  const selectDay = (to: string) => {
+    setTold(labels.dayTold(longDay(to, locale), dayBlocksOf(session.working, to).length))
+    if (to !== anchor) go(wanted, to)
+    else setPanelTarget(null)
+  }
+  const panelDay: PanelDay | null = isMonth
+    ? {
+        day: anchor,
+        isToday: anchor === todayDate,
+        blocks: dayBlocksOf(session.working, anchor),
+        next: nextBlockAfter(session.working, anchor),
+        itemOf,
+        onPress: press,
+        onSelectDay: selectDay,
+      }
+    : null
+  /** A step by the view's span; a month opens on its default day, as the first month does. */
+  const step = (direction: 1 | -1) => {
+    const to = stepFrom(shown.span, anchor, direction)
+    go(wanted, isMonth ? monthDefaultDay(daysOf('month', to), todayDate, session.working) : to)
+  }
+  const panelItem = panelTarget ? itemOf(panelTarget.itemId) : undefined
+  useEffect(() => {
+    if (panelTarget && !(detailsInPanel && panelItem)) setPanelTarget(null)
+  }, [panelTarget, detailsInPanel, panelItem])
+  const panelDetails =
+    detailsInPanel && panelTarget && panelItem && actionsOf ? (
+      <PanelDetails
+        key={`${panelTarget.itemId}/${panelTarget.blocks[0]?.id ?? ''}`}
+        item={panelItem}
+        target={panelTarget}
+        labels={labels}
+        locale={locale}
+        where={
+          isMonth
+            ? {
+                text: formatDay(anchor, locale, {
+                  weekday: 'short',
+                  day: 'numeric',
+                  month: 'short',
+                }),
+                name: longDay(anchor, locale),
+              }
+            : { text: labels.upNext, name: labels.upNext }
+        }
+        actions={withConfirm(actionsOf(panelItem))}
+        onBack={() => closePanelDetails(panelTarget)}
+        onRun={(action) => runAction(action, panelTarget)}
+      />
+    ) : null
 
   const newTone = legend.find((entry) => entry.kind === newItemKind)?.tone ?? 'neutral'
   const placedIds = new Set(
@@ -495,7 +623,7 @@ export function Calendar({
       name={monthName}
       items={session.items}
       blocks={session.working}
-      today={now?.date ?? null}
+      today={todayDate}
       labels={labels}
       locale={locale}
       unsaved={session.unsaved}
@@ -505,6 +633,8 @@ export function Calendar({
       onPress={press}
       onRestore={(blocks) => blocks.forEach((block) => session.restore(block.id))}
       onOpenDay={openDay}
+      selectedDay={selectsDays ? anchor : null}
+      onSelectDay={selectDay}
       pressOpensDay={editable && Boolean(newItemKind)}
       onTurn={(day) => {
         setMonthFocus(true)
@@ -569,8 +699,8 @@ export function Calendar({
         <Collapsible
           className={styles.layout}
           open={panelOpen}
-          onOpenChange={setPanelOpen}
-          data-panel={panelOpen ? '' : undefined}
+          onOpenChange={setPanelChoice}
+          data-panel={panelOpen ? (panelChoice === null ? 'auto' : 'open') : undefined}
         >
           <CalendarToolbar
             labels={labels}
@@ -590,8 +720,8 @@ export function Calendar({
                   }
                 : undefined
             }
-            onPrevious={() => go(wanted, stepFrom(shown.span, anchor, -1))}
-            onNext={() => go(wanted, stepFrom(shown.span, anchor, 1))}
+            onPrevious={() => step(-1)}
+            onNext={() => step(1)}
             onToday={() => go(wanted, cairoNow().date)}
           />
 
@@ -680,12 +810,14 @@ export function Calendar({
             )}
           </div>
 
-          <CollapsiblePanel className={styles.panel}>
+          <CollapsiblePanel className={styles.panel} onKeyDown={onPanelKeyDown}>
             <CalendarPanel
               items={session.items.filter((item) => !hidden.has(item.kind))}
               labels={labels}
               locale={locale}
               now={now}
+              day={panelDay}
+              details={panelDetails}
               onOpen={pressBlock}
             >
               {legend.length ? (
@@ -770,8 +902,31 @@ export function Calendar({
             locale={locale}
             sheet={phone}
             side={detailsSide}
-            actionsOf={actionsOf}
+            actionsOf={(item) => withConfirm(actionsOf(item))}
             onAction={runAction}
+          />
+        ) : null}
+
+        {ask ? (
+          <ConfirmDialog
+            title={ask.action.confirm!.title}
+            safe={ask.action.confirm!.keep}
+            danger={ask.action.label}
+            closeLabel={labels.close}
+            onSafe={() => setAsk(null)}
+            onDanger={() => {
+              setAsk(null)
+              ask.action.run?.(ask.target.itemId, ask.target.blocks[0]?.blockId ?? null)
+            }}
+            returnFocus={() => {
+              const root = frame.current
+              const back = panelTarget
+                ? root?.querySelector<HTMLElement>(`.${styles.panelDetails} h2`)
+                : ask.target.anchor.isConnected
+                  ? ask.target.anchor
+                  : null
+              back?.focus()
+            }}
           />
         ) : null}
 

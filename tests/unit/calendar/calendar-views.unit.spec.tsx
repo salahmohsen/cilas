@@ -13,7 +13,12 @@ import en from '../../../messages/en.json'
 
 // The width the calendar measures: null before it is measured, as on the server.
 let narrow: boolean | null = false
-vi.mock('@/components/calendar/ui/use-narrow', () => ({ useNarrow: () => narrow }))
+// Whether the side panel sits beside the grid.
+const docked: boolean | null = false
+vi.mock('@/components/calendar/ui/use-narrow', () => ({
+  useNarrow: () => narrow,
+  useDocked: () => docked,
+}))
 
 const item = (
   id: string,

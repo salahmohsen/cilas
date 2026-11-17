@@ -79,6 +79,7 @@
 
 .frame {
   --narrow: 0;
+  --docked: 0;
   display: grid;
   grid-template-columns: minmax(0, 1fr);
   gap: var(--space-3);
@@ -108,12 +109,22 @@
   min-inline-size: 0;
   border-block-start: 1px solid var(--border);
 }
+/* The panel open by default (`auto`) shows only where it sits beside the grid. */
+.layout[data-panel='auto'] .panel {
+  display: none;
+}
 @container week (inline-size > 56rem) {
+  .frame {
+    --docked: 1;
+  }
   .layout[data-panel] {
     grid-template-columns: minmax(0, 1fr) 17rem;
     grid-template-areas:
       'toolbar toolbar'
       'main panel';
+  }
+  .layout[data-panel='auto'] .panel {
+    display: block;
   }
   .panel {
     border-block-start: 0;
@@ -227,6 +238,70 @@
   color: var(--text-secondary);
   font-size: var(--text-xs);
   font-variant-numeric: tabular-nums;
+}
+
+.dayHead {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2);
+}
+.dayTitle {
+  margin: 0;
+  font-size: var(--text-base);
+  font-weight: 500;
+  line-height: 1.4;
+}
+.todayMark {
+  padding: 0 var(--space-2);
+  border-radius: 999px;
+  background: var(--accent);
+  color: var(--accent-foreground);
+  font-size: var(--text-xs);
+  line-height: 1.6;
+}
+.dayCount,
+.dayEmpty {
+  margin: 0;
+  color: var(--text-secondary);
+  font-size: var(--text-sm);
+}
+.dayRows {
+  display: grid;
+  gap: var(--space-2);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.dayRows > li > .next {
+  inline-size: 100%;
+}
+.dayRows .next[data-cancelled] .nextTitle {
+  text-decoration: line-through;
+}
+.panelDetails {
+  display: grid;
+  gap: var(--space-3);
+}
+.back {
+  display: inline-flex;
+  align-items: center;
+  justify-self: start;
+  gap: var(--space-1);
+  min-block-size: var(--control-height-sm);
+  margin-inline-start: calc(var(--space-2) * -1);
+  padding-inline: var(--space-2);
+  border: 0;
+  border-radius: var(--radius-control);
+  background: transparent;
+  color: var(--text-secondary);
+  font: inherit;
+  font-size: var(--text-sm);
+  cursor: pointer;
+}
+.back:hover {
+  background: var(--surface-muted);
+  color: var(--foreground);
 }
 
 .legend {

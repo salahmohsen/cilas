@@ -40,6 +40,13 @@ type Props = {
   /** Shows one day in the Day view: "N more", and a press on an empty day when one can be added. */
   onOpenDay: (day: string) => void
   /**
+   * The day the side panel shows, when it sits beside the grid. A press on a
+   * day, Enter or Space, and "N more" select it and stay in the month; F2
+   * goes into its chips. Null when no panel shows a day.
+   */
+  selectedDay: string | null
+  onSelectDay: (day: string) => void
+  /**
    * Whether a press on a day's free space opens it in the Day view, where a new item can be
    * drawn; Enter does on a day with nothing in it, and enters the chips of one that has some.
    */
@@ -83,6 +90,8 @@ export function MonthGrid({
   onPress,
   onRestore,
   onOpenDay,
+  selectedDay,
+  onSelectDay,
   pressOpensDay,
   onTurn,
 }: Props) {
@@ -191,6 +200,7 @@ export function MonthGrid({
         <MonthFocus.Row key={week[0]} value={week[0]!} className={styles.monthRow}>
           {cells.map(({ day, col, lanes, chips, more, bars }) => {
             const long = longDay(day, locale)
+            const count = blocks.filter((block) => block.track === day && !block.deleted).length
             return (
               <MonthFocus.Cell
                 key={day}
@@ -201,15 +211,23 @@ export function MonthGrid({
                 data-day={day}
                 data-outside={month.has(day) ? undefined : ''}
                 data-today={day === today ? '' : undefined}
-                data-opens={pressOpensDay ? '' : undefined}
+                data-opens={pressOpensDay || selectedDay !== null ? '' : undefined}
                 data-weekend={isWeekend(day) ? '' : undefined}
                 aria-current={day === today ? 'date' : undefined}
+                aria-selected={selectedDay === null ? undefined : day === selectedDay}
                 style={{ '--lanes': lanes } as CSSProperties}
                 onClick={(event) => {
-                  if (pressOpensDay && !(event.target as Element).closest(PRESSABLE)) onOpenDay(day)
+                  if ((event.target as Element).closest(PRESSABLE)) return
+                  if (selectedDay !== null) onSelectDay(day)
+                  else if (pressOpensDay) onOpenDay(day)
                 }}
                 onKeyDown={(event) => {
                   const own = event.target === event.currentTarget
+                  if (own && selectedDay !== null && (event.key === 'Enter' || event.key === ' ')) {
+                    event.preventDefault()
+                    onSelectDay(day)
+                    return
+                  }
                   if (own && (event.key === 'Enter' || event.key === ' ' || event.key === 'F2')) {
                     const first = event.currentTarget.querySelector<HTMLElement>(PRESSABLE)
                     event.preventDefault()
@@ -223,7 +241,7 @@ export function MonthGrid({
                 <span className={styles.monthDate} aria-hidden>
                   {formatDay(day, locale, { day: 'numeric' })}
                 </span>
-                <span className={styles.srOnly}>{long}</span>
+                <span className={styles.srOnly}>{labels.dayName(long, count)}</span>
                 {bars.map((bar) => {
                   const block = bar.blocks[0]
                   const item = itemById.get(block.itemId)
@@ -269,7 +287,7 @@ export function MonthGrid({
                     tabIndex={-1}
                     className={styles.monthMore}
                     aria-label={labels.moreName(more, long)}
-                    onClick={() => onOpenDay(day)}
+                    onClick={() => (selectedDay !== null ? onSelectDay(day) : onOpenDay(day))}
                     onKeyDown={inDay}
                   >
                     {labels.more(more)}
