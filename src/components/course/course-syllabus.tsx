@@ -27,6 +27,7 @@ import { courseLanguage, directionOf } from '@/lib/course-language'
 import { localDigits, numberingSystemOf } from '@/lib/digits'
 import { editableIn, type Editable } from '@/lib/editable'
 import { numberedSessions, type NumberedSession } from '@/lib/meetings'
+import { sessionAnchor, sessionTitleOf } from '@/lib/session-label'
 import type { Course, Session } from '@/payload-types'
 
 export type Material = NonNullable<Course['bibliography']>[number]
@@ -140,7 +141,8 @@ function useSyllabusEntries(
       month: day ? day.slice(0, 7) : '',
       no: localDigits(String(number), locale),
       ...(day ? { date: { label: dayLabel(day), iso: day } } : {}),
-      title: session.title || unitLabel,
+      title: sessionTitleOf(session.title, unitLabel),
+      anchor: sessionAnchor(session.id),
       meta: {
         unit: session.title ? unitLabel : undefined,
         meetings: meetings.map((m) => {

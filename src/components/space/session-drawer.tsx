@@ -26,6 +26,7 @@ import { preloadable } from '@/lib/preloadable'
 import { useScheduleLabels } from './schedule-calendar'
 import { scheduleSaveText, type ScheduleSaveMessages } from './schedule-save-text'
 import { sessionPostsHref, useSessionName } from './session-chip'
+import { sessionTitleOf } from '@/lib/session-label'
 import styles from './space.module.css'
 import { useScheduleOffer } from './use-schedule-save'
 import { useSessionCancellation } from './use-session-cancellation'
@@ -151,7 +152,7 @@ export function SessionDrawer({
   // The drawer's heading names the session; the view under it leaves the title out.
   const heading =
     result?.ok === true
-      ? result.session.session.title || unitOf({ n: result.session.number })
+      ? sessionTitleOf(result.session.session.title, unitOf({ n: result.session.number }))
       : name
 
   // Another session, or a close by any way: the drawer opens next time in view mode.

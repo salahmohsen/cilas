@@ -296,6 +296,8 @@
 }
 .entry {
   position: relative;
+  /* A link to the row lands it below the sticky header. */
+  scroll-margin-block-start: calc(var(--site-header-height, 4rem) + 1.5rem);
   border-bottom: 1px solid var(--border-subtle);
   background: var(--surface);
 }

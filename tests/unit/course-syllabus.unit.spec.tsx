@@ -1,4 +1,4 @@
-import { render } from '@testing-library/react'
+import { act, render, waitFor } from '@testing-library/react'
 import { NextIntlClientProvider } from 'next-intl'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 
@@ -87,5 +87,54 @@ describe('the course syllabus from the sessions collection', () => {
 
   it('renders nothing for a course with no session', () => {
     expect(view([]).container.innerHTML).toBe('')
+  })
+
+  describe('a link to one session', () => {
+    const sessions = () => [
+      session(7, { title: 'First', meetings: [{ date: '2026-03-03' }] }),
+      session(9, {
+        title: 'Second',
+        description: 'Text',
+        meetings: [{ date: '2026-03-10' }],
+      }),
+    ]
+    const rowOf = (container: HTMLElement, id: string) =>
+      container.querySelector<HTMLElement>(`li[id="session-${id}"] button[aria-expanded]`)!
+    afterEach(() => window.history.replaceState(null, '', '/'))
+
+    it.each(['en', 'ar'] as const)('gives each row a stable anchor in %s', (locale) => {
+      const { container } = view(sessions(), locale)
+      expect([...container.querySelectorAll('li[id^="session-"]')].map((li) => li.id)).toEqual([
+        'session-7',
+        'session-9',
+      ])
+    })
+
+    it('opens the row, focuses it and scrolls to it when the page arrives with its hash', async () => {
+      window.history.replaceState(null, '', '/en/study/a#session-9')
+      const { container } = view(sessions())
+      await waitFor(() => expect(rowOf(container, '9')).toHaveFocus())
+      expect(rowOf(container, '9')).toHaveAttribute('aria-expanded', 'true')
+      expect(Element.prototype.scrollIntoView).toHaveBeenCalledWith(
+        expect.objectContaining({ block: 'start' }),
+      )
+    })
+
+    it('follows a later change of the hash', async () => {
+      const { container } = view(sessions())
+      expect(rowOf(container, '7')).not.toHaveFocus()
+      act(() => {
+        window.history.replaceState(null, '', '/en/study/a#session-7')
+        window.dispatchEvent(new HashChangeEvent('hashchange'))
+      })
+      await waitFor(() => expect(rowOf(container, '7')).toHaveFocus())
+      expect(rowOf(container, '7')).toHaveAttribute('aria-expanded', 'true')
+    })
+
+    it('ignores a hash that is not a session of the course', () => {
+      window.history.replaceState(null, '', '/en/study/a#session-404')
+      const { container } = view(sessions())
+      expect(container.contains(document.activeElement)).toBe(false)
+    })
   })
 })
