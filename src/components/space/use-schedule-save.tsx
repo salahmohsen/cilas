@@ -49,10 +49,21 @@ export function useScheduleOffer({
   )
   const [failed, setFailed] = useState(false)
 
-  /** Offers an announcement when `before` and `after` differ in what counts; nothing when they do not. */
-  const offer = (before: CalendarItem[], after: CalendarItem[], returnTo: ReturnTo) => {
+  /**
+   * Offers an announcement when `before` and `after` differ in what counts; nothing when they do not.
+   * `course` is the course of the items, for a host that holds many.
+   */
+  const offer = (
+    before: CalendarItem[],
+    after: CalendarItem[],
+    returnTo: ReturnTo,
+    course = courseId,
+  ) => {
     setFailed(false)
-    scheduleOffers({ courseId, before: changeable(before), after: changeable(after) }, locale).then(
+    scheduleOffers(
+      { courseId: course, before: changeable(before), after: changeable(after) },
+      locale,
+    ).then(
       (offers) => setOffered(offers.length ? { offers, returnTo } : null),
       (error: unknown) => {
         console.error('schedule offer failed', error)

@@ -8,6 +8,7 @@ import { publicCalendarAccess } from '@/api/public-calendar.api'
 import { scheduleOffers } from '@/actions/schedule-offers'
 import { saveScheduleEdits } from '@/actions/save-schedule-edits'
 import { loadCalendarItems } from '@/actions/load-calendar-items'
+import { setSessionCancelled } from '@/components/space/cancel-session'
 import { currentReader } from '@/lib/reader'
 import { PUBLIC_LISTS_TAG } from '@/lib/paths'
 import config from '@/payload.config'
@@ -25,6 +26,8 @@ const { track, cleanup } = createTracker()
 let payload: Payload
 let admin: User
 let member: User
+let host: User
+let otherFellow: User
 let courses: number[]
 const range = { from: '2035-10-01', to: '2035-10-31' }
 const signIn = (user: User | null) => vi.mocked(currentReader).mockResolvedValue(user)
@@ -56,13 +59,13 @@ const moves = (items: Awaited<ReturnType<typeof pair>>) =>
 
 beforeAll(async () => {
   payload = await getPayload({ config })
-  const account = async (role: 'admin' | 'member') =>
+  const account = async (role: 'admin' | 'member' | 'fellow', label: string = role) =>
     track(
       'users',
       await payload.create({
         collection: 'users',
         data: {
-          email: uniqEmail(`public-calendar-${role}`),
+          email: uniqEmail(`public-calendar-${label}`),
           password: crypto.randomUUID(),
           roles: [role],
         },
@@ -141,10 +144,131 @@ beforeAll(async () => {
       },
     }),
   )
+  const fellow = async (name: string, label: string) => {
+    const person = track(
+      'people',
+      await payload.create({
+        collection: 'people',
+        data: { name, slug: uniq(`public-calendar-${label}`) },
+      }),
+    )
+    const user = await account('fellow', label)
+    return {
+      person,
+      user: await payload.update({
+        collection: 'users',
+        id: user.id,
+        data: { person: person.id },
+      }),
+    }
+  }
+  const hostFellow = await fellow('Public calendar host', 'host')
+  host = hostFellow.user
+  otherFellow = (await fellow('Public calendar other fellow', 'other')).user
+  await payload.update({
+    collection: 'courses',
+    id: courses[0]!,
+    data: { fellows: [hostFellow.person.id] },
+  })
+  // Naming the fellow on the course gives their account the fellow role.
+  host = await payload.findByID({ collection: 'users', id: host.id, depth: 0 })
 })
 afterAll(async () => {
   await cleanup(payload)
   await payload.destroy()
+})
+
+describe('public calendar links for each role', () => {
+  const ids = () => courses.map(String)
+  it.each([
+    ['visitor', () => null, () => []],
+    ['member', () => member, () => []],
+    ['fellow of another course', () => otherFellow, () => []],
+    ['host of the first course', () => host, () => [String(courses[0])]],
+    ['admin', () => admin, () => ids()],
+  ])('lists the courses a %s may change', async (_role, user, expected) => {
+    signIn(user())
+    const access = await publicCalendarLinks(ids())
+    expect(access.editable.toSorted()).toEqual(expected().toSorted())
+    expect(access.canEdit).toBe(_role === 'admin')
+  })
+})
+
+describe('cancel and restore a session', () => {
+  const make = async () => {
+    const doc = await payload.create({
+      collection: 'sessions',
+      locale: 'en',
+      data: {
+        course: courses[0]!,
+        title: 'Cancel probe',
+        description: 'English text',
+        meetings: [{ date: '2035-10-05', start_time: '10:00', end_time: '12:00' }],
+        bibliography: [{ type: 'reading', title: 'English book', href: 'https://example.com/a' }],
+        activities: [{ kind: 'discussion', description: 'Talk' }],
+      },
+    })
+    await payload.update({
+      collection: 'sessions',
+      id: doc.id,
+      locale: 'ar',
+      data: { title: 'عنوان', description: 'نص عربي' },
+    })
+    return String(doc.id)
+  }
+  const fields = async (id: string, locale: 'en' | 'ar') => {
+    const doc = await payload.findByID({
+      collection: 'sessions',
+      id: Number(id),
+      locale,
+      fallbackLocale: false,
+      depth: 0,
+    })
+    return {
+      title: doc.title,
+      description: doc.description,
+      materials: doc.bibliography?.map((row) => [row.type, row.href]),
+      activities: doc.activities?.map((row) => row.kind),
+      meetings: doc.meetings?.map((row) => [row.date, row.start_time, row.end_time]),
+    }
+  }
+  it.each(['en', 'ar'] as const)(
+    'flips only the flag in %s and keeps the text in both languages',
+    async (locale) => {
+      const id = await make()
+      const before = { en: await fields(id, 'en'), ar: await fields(id, 'ar') }
+      signIn(host)
+      const cancelled = await setSessionCancelled(id, true, locale)
+      expect(cancelled.ok).toBe(true)
+      expect((await read(id)).cancelled).toBe(true)
+      expect({ en: await fields(id, 'en'), ar: await fields(id, 'ar') }).toEqual(before)
+      const restored = await setSessionCancelled(id, false, locale)
+      expect(restored.ok).toBe(true)
+      expect((await read(id)).cancelled).toBe(false)
+      expect({ en: await fields(id, 'en'), ar: await fields(id, 'ar') }).toEqual(before)
+    },
+  )
+  it('refuses a member and a fellow of another course, and changes nothing', async () => {
+    const id = await make()
+    for (const user of [member, otherFellow]) {
+      signIn(user)
+      expect((await setSessionCancelled(id, true, 'en')).ok).toBe(false)
+    }
+    signIn(null)
+    expect(await setSessionCancelled(id, true, 'en')).toMatchObject({
+      ok: false,
+      error: { code: 'unauthenticated' },
+    })
+    expect((await read(id)).cancelled).toBeFalsy()
+  })
+  it('lets an admin cancel and reports the before and after items for the offer', async () => {
+    const id = await make()
+    signIn(admin)
+    const result = await setSessionCancelled(id, true, 'en')
+    if (!result.ok) throw Error(result.error.code)
+    expect(result.before.find((item) => item.id === id)?.cancelled).toBe(false)
+    expect(result.after.find((item) => item.id === id)?.cancelled).toBe(true)
+  })
 })
 
 describe('public calendar edit requests', () => {
@@ -305,7 +429,11 @@ it('returns only the spaces that each reader may read', async () => {
     courses.map(String).sort(),
   )
   signIn(null)
-  expect(await publicCalendarLinks(courses.map(String))).toEqual({ canEdit: false, spaces: {} })
+  expect(await publicCalendarLinks(courses.map(String))).toEqual({
+    canEdit: false,
+    editable: [],
+    spaces: {},
+  })
   const outsider = track(
     'users',
     await payload.create({
@@ -318,7 +446,11 @@ it('returns only the spaces that each reader may read', async () => {
     }),
   ) as User
   signIn(outsider)
-  expect(await publicCalendarLinks(courses.map(String))).toEqual({ canEdit: false, spaces: {} })
+  expect(await publicCalendarLinks(courses.map(String))).toEqual({
+    canEdit: false,
+    editable: [],
+    spaces: {},
+  })
 })
 
 it('allows the super admin role to load the public editor', async () => {

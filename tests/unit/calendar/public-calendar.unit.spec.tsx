@@ -375,6 +375,7 @@ describe('public calendar access after hydration', () => {
     vi.mocked(useSession).mockReturnValue({ id: 8, email: 'admin@cilas.test' })
     vi.mocked(publicCalendarLinks).mockResolvedValue({
       canEdit: true,
+      editable: [],
       spaces: { '22': '/en/spaces/course/city' },
     })
     page()
@@ -390,6 +391,7 @@ describe('public calendar access after hydration', () => {
     vi.mocked(useSession).mockReturnValue({ id: 8, email: 'reader@cilas.test' })
     vi.mocked(publicCalendarLinks).mockResolvedValue({
       canEdit: false,
+      editable: [],
       spaces: allowed ? { '22': '/en/spaces/course/city' } : {},
     })
     const { container } = page()
@@ -411,6 +413,7 @@ it('keeps one event action when the viewer can read a course space', async () =>
   vi.mocked(useSession).mockReturnValue({ id: 8, email: 'reader@cilas.test' })
   vi.mocked(publicCalendarLinks).mockResolvedValue({
     canEdit: false,
+    editable: [],
     spaces: { '22': '/en/spaces/course/city' },
   })
   page()
@@ -426,6 +429,7 @@ it('waits for the new language before it shows a space path', async () => {
   vi.mocked(useSession).mockReturnValue({ id: 8, email: 'reader@cilas.test' })
   vi.mocked(publicCalendarLinks).mockResolvedValueOnce({
     canEdit: false,
+    editable: [],
     spaces: { '22': '/en/spaces/course/city' },
   })
   let finish!: (value: Awaited<ReturnType<typeof publicCalendarLinks>>) => void
@@ -442,7 +446,9 @@ it('waits for the new language before it shows a space path', async () => {
   expect(result.current.spaces['22']).toBe('/en/spaces/course/city')
   rerender({ locale: 'ar' })
   expect(result.current.spaces).toEqual({})
-  await act(async () => finish({ canEdit: false, spaces: { '22': '/ar/spaces/course/city' } }))
+  await act(async () =>
+    finish({ canEdit: false, editable: [], spaces: { '22': '/ar/spaces/course/city' } }),
+  )
   expect(result.current.spaces['22']).toBe('/ar/spaces/course/city')
   expect(publicCalendarLinks).toHaveBeenCalledTimes(2)
 })

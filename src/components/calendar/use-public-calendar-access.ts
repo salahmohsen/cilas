@@ -12,6 +12,7 @@ export function usePublicCalendarAccess(courseIds: string[], locale: string) {
     locale: string
     key: string
     canEdit: boolean
+    editable: string[]
     spaces: Record<string, string>
   } | null>(null)
   useEffect(() => {
@@ -31,5 +32,5 @@ export function usePublicCalendarAccess(courseIds: string[], locale: string) {
   }, [userId, key, locale])
   return userId && result?.user === userId && result.key === key && result.locale === locale
     ? result
-    : { canEdit: false, spaces: {} as Record<string, string> }
+    : { canEdit: false, editable: [] as string[], spaces: {} as Record<string, string> }
 }
