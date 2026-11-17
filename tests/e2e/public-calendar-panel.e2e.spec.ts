@@ -304,7 +304,12 @@ test.describe('the public calendar side panel', () => {
   }) => {
     await page.setViewportSize({ width: 900, height: 900 })
     await page.goto(MONTH)
-    await expect(page.locator('[class*="layout"]')).toHaveAttribute('data-panel', 'auto')
+    // The server's render assumes a docked panel (`data-panel="auto"`); the layout settles
+    // closed once the browser has measured the narrow frame.
+    await expect(page.locator('[data-slot="collapsible"][class*="layout"]')).toHaveAttribute(
+      'data-closed',
+      '',
+    )
     await expect(panel(page)).toBeHidden()
     await chip(page, '2035-10-04', 'Panel course A').click()
     await expect(page.getByRole('dialog', { name: 'Panel course A' })).toBeVisible()
@@ -329,7 +334,10 @@ test.describe('the public calendar side panel', () => {
     await chip(student.page, '2035-10-04', 'Panel course A').click()
     const links = student.page.getByRole('region', { name: 'Panel course A' }).getByRole('link')
     await expect(links.nth(1)).toHaveAttribute('href', spaceHref)
-    await expect(links.first()).toHaveAttribute('href', /\/study\/panel-.*course-a#session-\d+$/)
+    await expect(links.first()).toHaveAttribute(
+      'href',
+      /\/study\/panel-panel-course-a-[0-9a-f]{8}#session-\d+$/,
+    )
     await expect(student.page.getByRole('button', { name: 'More actions' })).toHaveCount(0)
     await shot(student.page, 'details-student')
     await student.context.close()
