@@ -3262,6 +3262,26 @@ button.rsvpCell {
   scroll-padding-block-end: 6rem;
 }
 
+.sessionDrawerMore {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.sessionDrawerCourse {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  margin: var(--space-3) 0 0;
+  color: var(--text-secondary);
+  font-size: var(--text-sm);
+}
+
+.sessionDrawerCourse a {
+  color: var(--foreground);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
 .sessionDrawerActions {
   position: sticky;
   z-index: 1;

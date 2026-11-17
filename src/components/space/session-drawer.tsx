@@ -1,4 +1,4 @@
-import { MessagesSquare, Pencil } from 'lucide-react'
+import { Ellipsis, MessagesSquare, Pencil } from 'lucide-react'
 import { useLocale, useMessages, useTranslations } from 'next-intl'
 import { useRouter } from 'next/navigation'
 import {
@@ -16,9 +16,11 @@ import { Alert } from '@/components/arc/alert/alert'
 import { BottomSheet } from '@/components/arc/bottom-sheet/bottom-sheet'
 import { Button } from '@/components/arc/button/button'
 import button from '@/components/arc/button/button.module.css'
+import DropdownMenu from '@/components/arc/dropdown-menu/dropdown-menu'
 import { Drawer, DrawerContent, useDrawerItem } from '@/components/arc/drawer/drawer'
 import { TextShimmer } from '@/components/arc/text-shimmer/text-shimmer'
 import { CourseSession, syllabusSessionOf } from '@/components/course/course-syllabus'
+import { detailPath } from '@/lib/paths'
 import { preloadable } from '@/lib/preloadable'
 
 import { useScheduleLabels } from './schedule-calendar'
@@ -26,10 +28,15 @@ import { scheduleSaveText, type ScheduleSaveMessages } from './schedule-save-tex
 import { sessionPostsHref, useSessionName } from './session-chip'
 import styles from './space.module.css'
 import { useScheduleOffer } from './use-schedule-save'
+import { useSessionCancellation } from './use-session-cancellation'
 
 const SessionForm = preloadable(() => import('./session-form').then((m) => m.SessionForm), {
   name: 'SessionForm',
 })
+
+const ConfirmDialog = preloadable(() =>
+  import('@/components/confirm-dialog').then((m) => m.ConfirmDialog),
+)
 
 /** Phones get a bottom sheet; wider screens a side drawer. Arc's drawer goes near full width below 40rem. */
 const PHONE = '(max-width: 39.999rem)'
@@ -115,6 +122,21 @@ export function SessionDrawer({
     language,
     text,
   })
+  const cancellation = useSessionCancellation({ locale, text, offer: offering.offer })
+  /** Asking whether to cancel the open session. */
+  const [asking, setAsking] = useState(false)
+  const cancelSession = async (cancelled: boolean) => {
+    if (!result?.ok) return
+    const saved = await cancellation.run(
+      { id: String(result.session.session.id), courseId: String(result.course.id), cancelled },
+      () => more.current?.querySelector('button') ?? null,
+    )
+    if (saved) {
+      router.refresh()
+      setRound((n) => n + 1)
+    }
+  }
+  const more = useRef<HTMLDivElement>(null)
   const open = id != null
   const isEditing = result?.ok === true && result.canEdit && editing === shown
   const name =
@@ -184,6 +206,25 @@ export function SessionDrawer({
   ) : (
     <div className={styles.sessionDrawer}>
       <div>
+        {result.canEdit ? (
+          <div ref={more} className={styles.sessionDrawerMore}>
+            <DropdownMenu
+              label={te('moreActions')}
+              iconOnly
+              icon={<Ellipsis aria-hidden size={16} />}
+              items={[
+                result.session.session.cancelled
+                  ? { label: te('restoreSession'), onSelect: () => void cancelSession(false) }
+                  : {
+                      label: te('cancelSession'),
+                      destructive: true,
+                      onPreload: ConfirmDialog.preload,
+                      onSelect: () => setAsking(true),
+                    },
+              ]}
+            />
+          </div>
+        ) : null}
         <CourseSession
           course={result.course}
           sessions={[syllabusSessionOf(result.session)]}
@@ -191,7 +232,16 @@ export function SessionDrawer({
           label={name}
           plain
         />
+        {result.course.slug ? (
+          <p className={styles.sessionDrawerCourse}>
+            <span>{t('sessionDrawerCourse')}</span>
+            <a href={detailPath('courses', String(result.course.slug), locale)}>
+              {result.course.title}
+            </a>
+          </p>
+        ) : null}
         {offering.failed ? <Alert tone="danger" title={text.offerFailed} /> : null}
+        {cancellation.error ? <Alert tone="danger" title={cancellation.error} /> : null}
       </div>
       {(result.canEdit || result.spaceHref) && (
         <footer className={styles.sessionDrawerActions}>
@@ -232,6 +282,20 @@ export function SessionDrawer({
   const content = (
     <>
       {body}
+      {asking ? (
+        <ConfirmDialog
+          title={te('cancelSessionTitle')}
+          safe={te('keepSession')}
+          danger={te('cancelSession')}
+          closeLabel={te('cancelSessionClose')}
+          onSafe={() => setAsking(false)}
+          onDanger={() => {
+            setAsking(false)
+            void cancelSession(true)
+          }}
+          returnFocus={() => more.current?.querySelector('button')?.focus()}
+        />
+      ) : null}
       {offering.dialog}
     </>
   )
