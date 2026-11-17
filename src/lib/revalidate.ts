@@ -1,4 +1,4 @@
-import { revalidatePath, revalidateTag } from 'next/cache'
+import { revalidatePath, revalidateTag, updateTag } from 'next/cache'
 import type { CollectionAfterChangeHook, CollectionAfterDeleteHook } from 'payload'
 
 import { routing } from '@/i18n/routing'
@@ -33,3 +33,16 @@ export const revalidateAfterDelete =
     revalidateDocument(collection, doc)
     return doc
   }
+
+/**
+ * After a save in a server action: the public lists expire at once, so the
+ * person who saved reads the new list on their next request (a refresh),
+ * where the document hooks' stale-while-revalidate would serve the old one first.
+ */
+export const expirePublicLists = () => {
+  try {
+    updateTag(PUBLIC_LISTS_TAG)
+  } catch {
+    // Outside a server action (tests, scripts) there is no request to read it.
+  }
+}

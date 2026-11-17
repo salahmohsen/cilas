@@ -196,6 +196,17 @@ describe('publicItems', () => {
     })
   })
 
+  it('keeps the id of a session whose every meeting is cancelled', () => {
+    const all = publicItems(
+      [
+        meeting({ cancelled: true }),
+        meeting({ key: 's1-2026-11-19-1900', date: '2026-11-19', cancelled: true }),
+      ],
+      { locale: 'en', session: (n) => `Session ${n}` },
+    )
+    expect(all.map((item) => [item.id, item.cancelled])).toEqual([['s1', true]])
+  })
+
   it('lists courses before events, each by type', () => {
     expect(items.map((item) => item.kind)).toEqual([
       'course:core',

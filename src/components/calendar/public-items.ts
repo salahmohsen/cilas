@@ -15,7 +15,8 @@ const rank = ({ kind, type }: Pick<CalendarMeeting, 'kind' | 'type'>) => {
 /**
  * The public calendar's meetings as the calendar's items: a session or an
  * event is one item, its meetings its blocks. Its held and cancelled meetings
- * are two items, since a whole item is cancelled or not. Paths gain the
+ * are two items, since a whole item is cancelled or not; an item with no held
+ * meeting keeps its own id. Paths gain the
  * locale. Items come in legend order, courses first, so the legend keeps one
  * order from month to month. View only.
  */
@@ -25,8 +26,11 @@ export const publicItems = (
 ): CalendarItem[] => {
   const items = new Map<string, CalendarItem>()
   const order = new Map<string, number>()
+  // A whole cancelled session keeps its id, so its details stay open when it is cancelled or restored.
+  const held = new Set(meetings.filter((m) => !m.cancelled).map((m) => m.item))
   for (const meeting of meetings) {
-    const id = meeting.cancelled ? `${meeting.item}-cancelled` : meeting.item
+    const id =
+      meeting.cancelled && held.has(meeting.item) ? `${meeting.item}-cancelled` : meeting.item
     const block = {
       id: meeting.key,
       date: meeting.date,
