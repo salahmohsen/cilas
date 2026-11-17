@@ -72,6 +72,18 @@ Key screenshots are saved in [the audit folder](/Users/salah/Backups/cilas/scree
 
 ## Executive assessment
 
+### Job 3b implementation coverage (2026-11-17)
+
+F1, F2, F5, F7 and F9 are fixed in the commits named below. The final code passes typecheck, lint, full format and the full local unit suite: 215 files, 1,922 passed tests and one expected failure. F8 is unchanged. No owner decision changed.
+
+Evidence: `~/Backups/cilas/screenshots/step5/job3b/REVIEW.md` and 83 PNG files. The checks cover English and Arabic, light and dark, 1440x900 and 390x844. Newly reached states include a saved material card dialog in all eight combinations, staged Move to in all eight combinations, the existing Unscheduled split-button menu in admin course 292, and recorded Tab paths through toolbar/grid, public popover and drawer. The final pass has ten passing checks and no browser errors. It verifies centered Move to dialogs, the tray menu and absence of the stale paragraph in the actual Sessions tab.
+
+The first pass contains failed capture attempts and a public Arabic popover timeout; those remain recorded and are not counted as passes. The corrected pass waits for edit-mode data. Course 404 has no unscheduled item, so that state uses existing sessions in course 292. No fixture was created. No Save, Save schedule, Publish or completed delete was used. No build, e2e or snapshot compare ran. No e2e spec needed a change.
+
+Two space hydration causes were fixed: changing the responsive switch wrapper tree changed generated IDs (`a7088e7d`); the layout's early drawer could hide unfinished streamed page markup, so the drawer host now belongs to resolved space and post pages (`73d13e49`). No warning suppression was added. All eight corrected direct session-link loads had no space hydration warning. A separate warning in Payload's own session edit fields remains outside this fix.
+
+New observation from the formerly unreachable tray: its menu text shows over the underlying admin content without a visible surface. See `unscheduled-split-menu-final.png`. This existing portal styling issue is recorded for follow-up; the requested tray coverage did not include a redesign or repair. Screen reader speech and touch hardware remain untested.
+
 The active count is **0 Critical, 2 High, 4 Medium, and 0 Low**. The live calendar shows Saturday first, Cairo time, and 12-hour times. Arabic uses RTL. The signed-out popover has one course link. The signed-in popover has the required link pair. One drag updated the unsaved count. The new footer has equal Cancel and Save buttons. Escape closed the material dialog and returned focus to its + tile.
 
 Active findings: **0 Critical, 1 High, 5 Medium, 0 Low**. Four earlier findings have live evidence (F1, F2, F5, F7). Two new findings concern admin overflow and stale admin instructions. F3, F4, and F6 are not accepted as confirmed live findings; their code risks remain below. The server error stopped completion of the matrix. No full WCAG pass is claimed.
@@ -89,7 +101,9 @@ Active findings: **0 Critical, 1 High, 5 Medium, 0 Low**. Four earlier findings 
 
 ## Detailed analysis
 
-### F1 — Needs owner decision: decisions 14 and 16
+### F1 — Fixed under owner decision 19
+
+**Fixed in d9110544.** Decision 19 adds untimed confirmation. Pointer and Space holds stay. Unit tests cover Cancel focus, Cancel, Escape, one delete call, refusal, pointer hold and staged removal.
 
 1. **Problem title.** Delete needs a timed key hold.
 2. **Severity.** Medium (corrected by the orchestrator from High: the function has a single-pointer path outside edit mode, so this is a risk confined to edit mode and the admin, not a product-wide failure). Frequency: unknown. Impact: a brief keyboard or switch activation cannot delete. Persistence: each such activation.
@@ -102,6 +116,8 @@ Active findings: **0 Critical, 1 High, 5 Medium, 0 Low**. Four earlier findings 
 9. **Confidence.** High for the timed activation requirement. Pointer completion, reversal, and actual assistive-input speech remain untested.
 
 ### F2 — Owner decision 20 (approved 2026-11-17)
+
+**Fixed in 75e9834d.** Move to is available for editable blocks in edit mode. Its day and 12-hour times stage through the calendar edit state. Tests cover validation, all-day blocks, Arabic and RTL.
 
 1. **Problem title.** Staged Edit has no date or time fields.
 2. **Severity.** High. Frequency: unknown. Impact: people who cannot drag have no demonstrated simple pointer path to change an existing meeting time in the combined edit task. Persistence: each move or resize.
@@ -116,6 +132,8 @@ Active findings: **0 Critical, 1 High, 5 Medium, 0 Low**. Four earlier findings 
 
 ### F5 — Fix within decisions 1–16
 
+**Fixed in 5c9dad97.** Copy has a visible result and polite status. A failed or absent Clipboard API shows a selectable read-only URL.
+
 1. **Problem title.** Copy feed has no visible result.
 2. **Severity.** Medium. Frequency: unknown. Impact: the person cannot confirm the clipboard result by sight. Persistence: each attempt.
 3. **Exact location.** `http://localhost:3001/en/calendar`, signed-in, light, desktop, Add to calendar > Copy feed link. [calendar-tools.tsx:103](/Users/salah/Developer/cilas/src/components/calendar/calendar-tools.tsx:103).
@@ -127,6 +145,8 @@ Active findings: **0 Critical, 1 High, 5 Medium, 0 Low**. Four earlier findings 
 9. **Confidence.** Medium. No visible result was observed, and source confirms hidden-only feedback. Permission rejection, absent API, and delayed feedback need controlled tests.
 
 ### F7 — Fix within decisions 1–16
+
+**Fixed in 5aa67651.** Sheet control names and status messages come from English and Arabic messages. Time list names also use translated labels in 75e9834d.
 
 1. **Problem title.** Arabic sheet controls have English names.
 2. **Severity.** Medium. Frequency: observed at the Arabic sheet opening. Impact: Arabic readers must interpret an English control name. Persistence: each opening.
@@ -152,6 +172,8 @@ Active findings: **0 Critical, 1 High, 5 Medium, 0 Low**. Four earlier findings 
 10. **Reviewer note (orchestrator).** The plan's unit 3 row traced this overflow to Payload's own admin parts (`aside.nav.pt-nav`, `pt-nav__backdrop`, `progress-bar`, `doc-controls__meta`), not to the calendar host; units 1 to 7 recorded it as pre-existing. A fix must change Payload admin styles, not the calendar.
 
 ### F9 — Fix within decisions 1–16
+
+**Fixed in 3dfb3276.** The join-field paragraph and its generated type comment are removed. No replacement text was added.
 
 1. **Problem title.** Admin helper text gives the wrong save rule for calendar edits.
 2. **Severity.** Medium. Frequency: observed in the Sessions tab. Impact: editors can mistake a staged calendar change for a published change. Persistence: each reading of the text.
@@ -282,7 +304,7 @@ Every N cell above; full Tab order through toolbar/grid/popover/form/footer; Ent
 
 ## Needs owner decision
 
-- **F1, decisions 14/16:** add an untimed confirmation path beside the required hold behavior. Keep Delete at the end of the form body. Extra confirmation complexity is the trade-off for untimed access.
+- **F1, decisions 14/16:** resolved by decision 19 and d9110544. Delete stays at the end of the form body, with untimed confirmation beside the hold path.
 - **F2 (approved as decision 20):** "Move to…" in the edit-mode block menu, a dialog with day and 12-hour times; Apply stages, Save sends.
 - **F1 (approved as decision 19):** keep the pointer and Space hold; a single Enter press (or an assistive-technology click with no hold) opens a confirm dialog, Cancel focused, then Delete (danger). Test with VoiceOver.
 - **Placement B or C, decision 16:** do not adopt without new task evidence.
