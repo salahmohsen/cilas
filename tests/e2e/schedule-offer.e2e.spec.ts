@@ -267,12 +267,11 @@ test.describe('course schedule announcements', () => {
   test('Cancelled in the session drawer offers an announcement after save', async () => {
     await openSessionsTab()
     await thursday().click()
-    const drawer = page.locator('.doc-drawer')
+    const drawer = page.getByRole('dialog', { name: 'E2E first session', exact: true })
     await drawer.getByLabel('Cancelled', { exact: true }).check()
-    await drawer.getByRole('button', { name: 'Save', exact: true }).first().click()
-    await expect(page.getByText(/Updated successfully/).first()).toBeVisible()
-    await page.keyboard.press('Escape')
+    await drawer.getByRole('button', { name: 'Apply', exact: true }).click()
     await expect(drawer).toBeHidden()
+    await saveButton().click()
     await expect(dialog()).toBeVisible()
     await expect(dialog().getByRole('textbox', { name: 'Announcement' })).toContainText(
       'is cancelled',
