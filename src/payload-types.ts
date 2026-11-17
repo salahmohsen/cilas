@@ -1202,9 +1202,6 @@ export interface Course {
    * Only when languages mix, e.g. “Readings in Arabic, discussion in either.”
    */
   language_note?: string | null;
-  /**
-   * What is taught, and when. Open a session to edit its title, meetings and materials; Create new adds one to this course. Sessions save on their own: a change is public at once on a published course.
-   */
   syllabus?: {
     docs?: (number | Session)[];
     hasNextPage?: boolean;
