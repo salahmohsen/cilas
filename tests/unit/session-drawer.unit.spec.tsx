@@ -488,9 +488,9 @@ describe('the session drawer’s Edit form', () => {
       'Add material',
       'Add activity',
     ])
-    // The + tile is the list's last item, after the cards.
-    const list = material.closest('ul')!
-    expect(within(list).getAllByRole('button').at(-1)).toBe(tiles[0])
+    // The + row follows the list of cards, in the same block.
+    const block = material.closest('ul')!.parentElement!
+    expect(within(block).getAllByRole('button').at(-1)).toBe(tiles[0])
   })
 
   it('edits a material in its dialog; Done keeps it and Save sends it', async () => {
@@ -592,6 +592,125 @@ describe('the session drawer’s Edit form', () => {
       name: 'Edit material: soundcloud.com',
     })
     await waitFor(() => expect(document.activeElement).toBe(card))
+  })
+
+  describe('the order of materials', () => {
+    const two = () =>
+      editValues({
+        bibliography: [
+          { id: 'b1', type: 'reading', title: 'First', href: '', note: '' },
+          { id: 'b2', type: 'watch', title: 'Second', href: '', note: '' },
+          { id: 'b3', type: 'listen', title: 'Third', href: '', note: '' },
+        ],
+      })
+    const openCard = async (dialog: HTMLElement, title: string) => {
+      fireEvent.click(within(dialog).getByRole('button', { name: `Edit material: ${title}` }))
+      return screen.findByRole('dialog', { name: en.SessionEdit.materialTitleEdit })
+    }
+    const titles = (dialog: HTMLElement) =>
+      within(dialog)
+        .getAllByRole('button', { name: /^Edit material/, hidden: true })
+        .map((card) => card.getAttribute('aria-label'))
+
+    it('has no Move up on the first item and no Move down on the last', async () => {
+      const dialog = await openForm(two())
+      let edit = await openCard(dialog, 'First')
+      expect(within(edit).queryByRole('button', { name: en.SessionEdit.moveUp })).toBeNull()
+      expect(
+        within(edit).getByRole('button', { name: en.SessionEdit.moveDown }),
+      ).toBeInTheDocument()
+      fireEvent.click(within(edit).getByRole('button', { name: en.SessionEdit.cancel }))
+      await waitFor(() =>
+        expect(screen.queryByRole('dialog', { name: en.SessionEdit.materialTitleEdit })).toBeNull(),
+      )
+      edit = await openCard(dialog, 'Third')
+      expect(within(edit).getByRole('button', { name: en.SessionEdit.moveUp })).toBeInTheDocument()
+      expect(within(edit).queryByRole('button', { name: en.SessionEdit.moveDown })).toBeNull()
+    })
+
+    it('shows neither button for a single item', async () => {
+      const dialog = await openForm()
+      const edit = await openCard(dialog, 'Invisible Cities')
+      expect(within(edit).queryByRole('button', { name: en.SessionEdit.moveUp })).toBeNull()
+      expect(within(edit).queryByRole('button', { name: en.SessionEdit.moveDown })).toBeNull()
+    })
+
+    it('moves the draft, announces the place, and Done applies it', async () => {
+      const dialog = await openForm(two())
+      const edit = await openCard(dialog, 'First')
+      fireEvent.click(within(edit).getByRole('button', { name: en.SessionEdit.moveDown }))
+      expect(await within(edit).findByText('Position 2 of 3')).toHaveAttribute(
+        'aria-live',
+        'polite',
+      )
+      // Both buttons now, then the end of the list takes Move down away and focus moves on.
+      fireEvent.click(within(edit).getByRole('button', { name: en.SessionEdit.moveDown }))
+      expect(await within(edit).findByText('Position 3 of 3')).toBeInTheDocument()
+      expect(within(edit).queryByRole('button', { name: en.SessionEdit.moveDown })).toBeNull()
+      await waitFor(() =>
+        expect(document.activeElement).toBe(
+          within(edit).getByRole('button', { name: en.SessionEdit.moveUp }),
+        ),
+      )
+      // The list itself does not change until Done.
+      expect(titles(dialog)).toEqual([
+        'Edit material: First',
+        'Edit material: Second',
+        'Edit material: Third',
+      ])
+      fireEvent.click(within(edit).getByRole('button', { name: en.SessionEdit.done }))
+      await waitFor(() =>
+        expect(screen.queryByRole('dialog', { name: en.SessionEdit.materialTitleEdit })).toBeNull(),
+      )
+      await waitFor(() =>
+        expect(titles(dialog)).toEqual([
+          'Edit material: Second',
+          'Edit material: Third',
+          'Edit material: First',
+        ]),
+      )
+      vi.mocked(saveScheduleEdits).mockResolvedValue({ ok: true, items: [], before: [], after: [] })
+      await save(dialog)
+      const sent = vi.mocked(saveScheduleEdits).mock.calls[0]![0].details![0]
+      expect(sent).toMatchObject({
+        values: { bibliography: [{ id: 'b2' }, { id: 'b3' }, { id: 'b1' }] },
+      })
+    })
+
+    it('drops a moved position on Cancel', async () => {
+      const dialog = await openForm(two())
+      const edit = await openCard(dialog, 'Second')
+      fireEvent.click(within(edit).getByRole('button', { name: en.SessionEdit.moveUp }))
+      fireEvent.click(within(edit).getByRole('button', { name: en.SessionEdit.cancel }))
+      await waitFor(() =>
+        expect(screen.queryByRole('dialog', { name: en.SessionEdit.materialTitleEdit })).toBeNull(),
+      )
+      expect(titles(dialog)[0]).toBe('Edit material: First')
+    })
+
+    it('starts a new item last and lets it move up', async () => {
+      const dialog = await openForm(two())
+      fireEvent.click(within(dialog).getByRole('button', { name: en.SessionEdit.addMaterial }))
+      const edit = await screen.findByRole('dialog', { name: en.SessionEdit.addMaterial })
+      expect(within(edit).queryByRole('button', { name: en.SessionEdit.moveDown })).toBeNull()
+      fireEvent.click(within(edit).getByRole('button', { name: en.SessionEdit.moveUp }))
+      expect(await within(edit).findByText('Position 3 of 4')).toBeInTheDocument()
+      fireEvent.change(within(edit).getByRole('textbox', { name: en.SessionEdit.materialTitle }), {
+        target: { value: 'New' },
+      })
+      fireEvent.click(within(edit).getByRole('button', { name: en.SessionEdit.done }))
+      await waitFor(() =>
+        expect(screen.queryByRole('dialog', { name: en.SessionEdit.addMaterial })).toBeNull(),
+      )
+      await waitFor(() =>
+        expect(titles(dialog)).toEqual([
+          'Edit material: First',
+          'Edit material: Second',
+          'Edit material: New',
+          'Edit material: Third',
+        ]),
+      )
+    })
   })
 
   it('removes a card from its dialog and gives focus to the next one or the + tile', async () => {

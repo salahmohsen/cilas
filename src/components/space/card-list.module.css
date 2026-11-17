@@ -1,21 +1,28 @@
+.list {
+  display: grid;
+  gap: var(--space-2);
+}
 .cards {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(10rem, 1fr));
-  gap: var(--space-3);
+  gap: var(--space-2);
   margin: 0;
   padding: 0;
   list-style: none;
 }
-.cards > li {
+.item {
+  position: relative;
   display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: stretch;
   min-width: 0;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-control);
+  background: var(--surface);
 }
 
 .card,
 .add {
   --focus-outline-offset: 2px;
-  min-block-size: 5.5rem;
-  border-radius: var(--radius-control);
   font: inherit;
   cursor: pointer;
   transition:
@@ -24,49 +31,74 @@
 }
 
 .card {
-  display: grid;
-  grid-template-rows: auto auto 1fr;
-  align-content: start;
-  gap: var(--space-1);
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
   min-width: 0;
+  min-block-size: 3.5rem;
   padding: var(--space-3);
-  border: 1px solid var(--border);
-  background: var(--surface);
+  border: 0;
+  border-radius: inherit;
+  background: none;
   color: var(--foreground);
   text-align: start;
 }
 .icon {
-  margin-block-end: var(--space-1);
+  flex: none;
   color: var(--text-secondary);
+}
+.copy {
+  display: grid;
+  min-width: 0;
 }
 .title,
 .line {
   min-width: 0;
   overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  overflow-wrap: anywhere;
 }
 .title {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
   font-size: var(--text-sm);
   font-weight: 500;
   line-height: var(--leading-body);
 }
 .line {
+  text-overflow: ellipsis;
+  white-space: nowrap;
   color: var(--text-secondary);
   font-size: var(--text-xs);
   line-height: var(--leading-body);
 }
 
+.grip {
+  display: grid;
+  place-items: center;
+  inline-size: 2.25rem;
+  color: var(--text-secondary);
+  cursor: grab;
+  touch-action: none;
+}
+.grip:active {
+  cursor: grabbing;
+}
+
 .add {
   display: grid;
   place-items: center;
+  inline-size: 100%;
+  min-block-size: 3rem;
   border: 1px dashed var(--border-strong);
+  border-radius: var(--radius-control);
   background: none;
   color: var(--text-secondary);
 }
 
 @media (hover: hover) {
-  .card:hover {
+  .item:hover {
     border-color: var(--border-strong);
     background: var(--surface-muted);
   }
@@ -76,10 +108,35 @@
   }
 }
 @media (forced-colors: active) {
-  .card,
+  .item,
   .add {
     border-color: ButtonText;
   }
+}
+
+.move {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+.moveButton.moveButton {
+  min-block-size: 1.75rem;
+  padding-block: 0;
+}
+@media (pointer: coarse) {
+  .moveButton.moveButton {
+    min-block-size: 2.75rem;
+  }
+}
+.srOnly {
+  position: absolute;
+  inline-size: 1px;
+  block-size: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
 }
 
 .dialog {

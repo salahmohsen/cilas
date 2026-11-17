@@ -81,6 +81,9 @@ const editWords = ({ t }: Words, of: 'material' | 'activity') => ({
   cancel: t('cancel'),
   done: t('done'),
   close: t('leaveClose'),
+  moveUp: t('moveUp'),
+  moveDown: t('moveDown'),
+  position: (n: number, total: number) => t('position', { n, total }),
 })
 
 export const materialKind = (words: Words): CardKind<Material> => {
