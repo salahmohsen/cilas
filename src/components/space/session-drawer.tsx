@@ -56,13 +56,10 @@ const usePhone = () =>
  */
 export function SessionDrawer({
   id,
-  startEditing = false,
   onClose,
   onCloseFocus,
 }: {
   id: string | null
-  /** Open on the Edit form, for the people who may edit; others get the view. */
-  startEditing?: boolean
   onClose: () => void
   onCloseFocus: () => void
 }) {
@@ -130,12 +127,11 @@ export function SessionDrawer({
       ? result.session.session.title || unitOf({ n: result.session.number })
       : name
 
-  // Another session, or a close by any way: the drawer opens next time in view mode, or as asked.
-  const startOn = startEditing ? id : null
+  // Another session, or a close by any way: the drawer opens next time in view mode.
   useEffect(() => {
-    setEditing(startOn)
+    setEditing(null)
     setUnsaved(null)
-  }, [id, startOn])
+  }, [id])
 
   /** Back to the view, read again: it may be older than what the form showed. */
   const stopEditing = () => {

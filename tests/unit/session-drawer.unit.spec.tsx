@@ -11,7 +11,6 @@ import { loadSessionEdit, type SessionEdit } from '@/actions/session-edit'
 import {
   SessionDrawerHost,
   SessionLink,
-  openSession,
   sessionTriggerProps,
 } from '@/components/space/session-drawer-host'
 import { numberedSessions } from '@/lib/meetings'
@@ -325,44 +324,6 @@ describe('the session drawer’s Edit form', () => {
     await page()
     const dialog = await screen.findByRole('dialog', { name: 'Reading the city' })
     expect(within(dialog).getByRole('button', { name: en.SessionEdit.edit })).toBeInTheDocument()
-  })
-
-  it('opens on the Edit form when asked, for an editor, and on the view for a reader', async () => {
-    vi.mocked(loadSessionView).mockImplementation(async (id) => shown(Number(id), true))
-    vi.mocked(loadSessionEdit)
-      .mockReset()
-      .mockResolvedValue({ ok: true, values: editValues(), version: 'v1' })
-    await page()
-    await act(async () => openSession('13', 'edit'))
-    const dialog = await screen.findByRole('dialog', { name: 'Reading the city' })
-    await within(dialog).findByRole('textbox', { name: en.SessionEdit.title })
-    fireEvent.click(within(dialog).getByRole('button', { name: en.SessionEdit.cancel }))
-    expect(
-      await within(dialog).findByRole('button', { name: en.SessionEdit.edit }),
-    ).toBeInTheDocument()
-    // Closed and opened again as a view: the view, not a flash of the form.
-    fireEvent.keyDown(dialog, { key: 'Escape' })
-    await waitFor(() => expect(screen.queryByRole('dialog')).toBeNull())
-    await act(async () => openSession('13'))
-    const again = await screen.findByRole('dialog', { name: 'Reading the city' })
-    expect(within(again).queryByRole('textbox', { name: en.SessionEdit.title })).toBeNull()
-    expect(vi.mocked(loadSessionEdit)).toHaveBeenCalledTimes(1)
-    fireEvent.keyDown(again, { key: 'Escape' })
-    await waitFor(() => expect(screen.queryByRole('dialog')).toBeNull())
-    cleanup()
-
-    vi.mocked(loadSessionView).mockImplementation(async (id) => shown(Number(id), false))
-    window.history.replaceState(null, '', '/en/spaces/course/probe?tab=calendar')
-    await page()
-    await act(async () => openSession('13', 'edit'))
-    const view = await screen.findByRole('dialog', { name: 'Reading the city' })
-    await waitFor(() =>
-      expect(within(view).queryByText(en.SpacePost.sessionDrawerLoading)).toBeNull(),
-    )
-    expect(within(view).queryByRole('textbox', { name: en.SessionEdit.title })).toBeNull()
-    // Closed, so the next test starts with no history entry of this one.
-    fireEvent.keyDown(view, { key: 'Escape' })
-    await waitFor(() => expect(window.location.search).toBe('?tab=calendar'))
   })
 
   it('shows the meeting rule’s error by the end time, focuses it, and saves nothing', async () => {

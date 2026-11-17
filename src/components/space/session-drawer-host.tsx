@@ -28,8 +28,6 @@ const SessionDrawer = preloadable(() => import('./session-drawer').then((m) => m
 let opener: HTMLElement | null = null
 /** True when this page added the history entry the drawer is open on, so a close goes Back. */
 let pushed = false
-/** The session to open on its Edit form, not its view: the drawer reads it when it opens on that session. */
-let editing: string | null = null
 
 const remember = (target: EventTarget | null) => {
   const control = target instanceof Element ? target.closest<HTMLElement>('button, a') : null
@@ -52,15 +50,8 @@ export const sessionTriggerProps = {
   },
 }
 
-/** Loads the drawer and its Edit form before a press that opens the form. */
-export const preloadSessionEdit = () => {
-  SessionDrawer.preload()
-  void import('./session-form')
-}
-
-/** Opens the drawer on a session, as a new history entry: its view, or its Edit form for `edit`. */
-export function openSession(id: string, mode: 'view' | 'edit' = 'view') {
-  editing = mode === 'edit' ? id : null
+/** Opens the drawer on a session's view, as a new history entry. */
+export function openSession(id: string) {
   if (!opener?.isConnected && document.activeElement instanceof HTMLElement)
     opener = document.activeElement
   window.history.pushState(null, '', sessionDrawerHref(window.location.href, id))
@@ -123,26 +114,11 @@ function returnFocus() {
 export function SessionDrawerHost() {
   const id = useSearchParams().get(SESSION_PARAM)
   const [mounted, setMounted] = useState(false)
-  const [editOn, setEditOn] = useState<string | null>(null)
   useEffect(() => {
-    if (id) {
-      setMounted(true)
-      // Asked once: Back and Forward to this session open its view.
-      setEditOn(editing === id ? id : null)
-      editing = null
-    } else {
-      // Closed by Back: the entry this page pushed is gone.
-      pushed = false
-      setEditOn(null)
-    }
+    if (id) setMounted(true)
+    // Closed by Back: the entry this page pushed is gone.
+    else pushed = false
   }, [id])
   if (!mounted) return null
-  return (
-    <SessionDrawer
-      id={id}
-      startEditing={id !== null && id === editOn}
-      onClose={closeSession}
-      onCloseFocus={returnFocus}
-    />
-  )
+  return <SessionDrawer id={id} onClose={closeSession} onCloseFocus={returnFocus} />
 }

@@ -1115,7 +1115,6 @@
     "calendarFailed": "Could not load the calendar. Reload the page to try again.",
     "calendarEdit": "Edit",
     "calendarDone": "Done",
-    "calendarOpenPost": "Open post",
     "calendarLeaveTitle": "Leave without saving?",
     "calendarLeaveBody": "Your changes to the calendar are not saved. If you leave now, you lose them.",
     "calendarLeaveStay": "Stay",
