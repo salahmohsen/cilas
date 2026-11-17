@@ -9,7 +9,10 @@
 }
 
 .moveDialog {
+  position: fixed;
+  inset: 0;
   box-sizing: border-box;
+  block-size: fit-content;
   inline-size: min(28rem, calc(100% - 2rem));
   max-block-size: calc(100% - 2rem);
   overflow-y: auto;
