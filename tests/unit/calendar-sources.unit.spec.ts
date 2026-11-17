@@ -54,6 +54,7 @@ describe('sessionItems', () => {
     expect(items.map((i) => i.id)).toEqual(['1', '2'])
     expect(items[0]).toEqual({
       id: '1',
+      sessionId: '1',
       kind: 'session',
       title: 'First',
       caption: 'Session 1',

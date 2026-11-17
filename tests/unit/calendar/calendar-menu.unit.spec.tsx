@@ -128,6 +128,17 @@ const status = () =>
     .join(' ')
 
 describe('opening the menu', () => {
+  it('moves a timed block once with arrows while its context menu is available', async () => {
+    show()
+    const block = tuesday()
+    block.focus()
+    fireEvent.keyDown(block, { key: 'ArrowRight' })
+    await waitFor(() =>
+      expect(screen.getByRole('button', { name: /^Week 3, Wednesday.*Unsaved/ })).toBeTruthy(),
+    )
+    expect(menu()).toBeNull()
+  })
+
   it('opens on right-click with the five actions of edit mode', async () => {
     show()
     await open()

@@ -26,6 +26,7 @@ export type CalendarBlock = {
 
 export type CalendarItem = {
   id: string
+  sessionId?: string
   parentId?: string
   kind: string
   title: string

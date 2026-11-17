@@ -13,6 +13,8 @@ import { useCalendarLabels } from '@/components/calendar/ui/use-calendar-labels'
 import { Link } from '@/i18n/navigation'
 import type { CalendarItem } from '@/lib/calendar-items'
 
+import { mergePublicEditItems } from './public-items'
+
 import { usePublicCalendarAccess } from './use-public-calendar-access'
 import { PublicCalendarEditor } from './public-calendar-editor'
 import { CalendarFeed, CalendarJump } from './calendar-tools'
@@ -169,7 +171,7 @@ export function PublicCalendar({ items, range, today, kinds, months, access }: P
       {access?.mode === 'edit' ? (
         <PublicCalendarEditor
           key={`${range.from}/${range.to}`}
-          items={[...access.items, ...items]}
+          items={mergePublicEditItems(access.items, items)}
           parent={access.parent}
           labels={labels}
           day={day}

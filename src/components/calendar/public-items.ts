@@ -41,6 +41,7 @@ export const publicItems = (
     order.set(id, rank(meeting))
     items.set(id, {
       id,
+      ...(meeting.sessionId ? { sessionId: meeting.sessionId } : {}),
       ...(meeting.courseId ? { parentId: String(meeting.courseId) } : {}),
       kind: kindOf(meeting),
       title: meeting.title,
@@ -64,4 +65,15 @@ export const publicItems = (
     })
   }
   return [...items.values()].toSorted((a, b) => order.get(a.id)! - order.get(b.id)!)
+}
+
+export const mergePublicEditItems = (
+  editable: CalendarItem[],
+  feed: CalendarItem[],
+): CalendarItem[] => {
+  const sessions = new Set(editable.flatMap((item) => item.sessionId ?? []))
+  return [
+    ...editable,
+    ...feed.filter((item) => item.cancelled || !item.sessionId || !sessions.has(item.sessionId)),
+  ]
 }

@@ -65,7 +65,7 @@ test.describe('the public calendar editor', () => {
         data: {
           course: course.id,
           title: `${name} session`,
-          meetings: [{ date: '2035-10-05', start_time: '10:00', end_time: '12:00' }],
+          meetings: [{ date: '2035-10-04', start_time: '10:00', end_time: '12:00' }],
         },
       })
       sessions.push(session.id)
@@ -77,7 +77,7 @@ test.describe('the public calendar editor', () => {
   })
 
   test('an anonymous edit URL contains no editable items', async ({ page }) => {
-    await page.goto('/en/calendar?view=week&date=2035-10-05&edit=1')
+    await page.goto('/en/calendar?view=week&date=2035-10-04&edit=1')
     await expect(page.getByRole('button', { name: 'Edit', exact: true })).toHaveCount(0)
     await expect(page.locator('[data-mode="edit"]')).toHaveCount(0)
   })
@@ -85,12 +85,14 @@ test.describe('the public calendar editor', () => {
   test('an admin saves two courses and gets one dialog for both spaces', async ({ page }) => {
     const login = await page.request.post('/api/users/login', { data: { email, password } })
     expect(login.ok()).toBe(true)
-    await page.goto('/en/calendar?view=week&date=2035-10-05')
+    await page.goto('/en/calendar?view=week&date=2035-10-04')
     await page.getByRole('button', { name: 'Edit', exact: true }).click()
+    await expect(page.locator('[data-mode="edit"]')).toHaveCount(1)
     for (const title of ['City session', 'Maps session']) {
       const block = page.locator(`[data-span-id][aria-label*="${title}"]`).first()
       await block.focus()
       await page.keyboard.press('ArrowRight')
+      await expect(block).toHaveAccessibleName(/Unsaved/)
     }
     await page.getByRole('button', { name: 'Save', exact: true }).click()
     const dialog = page.getByRole('dialog', { name: 'Announce this change?' })
@@ -100,10 +102,10 @@ test.describe('the public calendar editor', () => {
     await expect(dialog).toBeVisible()
     await dialog.getByRole('button', { name: 'Skip', exact: true }).click()
     await page.getByRole('button', { name: 'Done', exact: true }).click()
-    await expect(page).toHaveURL(/view=week&date=2035-10-05$/)
+    await expect(page).toHaveURL(/view=week&date=2035-10-04$/)
     for (const id of sessions) {
       const session = await payload.findByID({ collection: 'sessions', id, depth: 0 })
-      expect(session.meetings![0]!.date).toBe('2035-10-06')
+      expect(session.meetings![0]!.date).toBe('2035-10-05')
     }
   })
 })

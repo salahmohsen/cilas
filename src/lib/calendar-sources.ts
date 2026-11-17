@@ -209,6 +209,7 @@ export const sessionItems = (
     const summary = session.description?.trim().slice(0, SUMMARY_LENGTH)
     return {
       id: String(session.id),
+      sessionId: String(session.id),
       kind: 'session',
       title: session.title || untitled(number),
       // An untitled session is already called "Session 3".

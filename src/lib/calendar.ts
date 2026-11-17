@@ -14,6 +14,7 @@ export type CalendarMeeting = {
   feed?: { uid: string; updatedAt: string }
   /** The session or event it belongs to: meetings with the same `item` are one thing on the calendar. */
   item: string
+  sessionId?: string
   courseId?: number
   kind: 'course' | 'event'
   title: string
@@ -54,6 +55,7 @@ export const courseItems = (
         key: `s${meetingKey(session.id, m)}`,
         feed: { uid: `session-meeting-${m.id}@cilas.org`, updatedAt: session.updatedAt },
         item: `s${session.id}`,
+        sessionId: String(session.id),
         date: m.date,
         ...(m.start_time ? { start: m.start_time } : {}),
         ...(m.end_time ? { end: m.end_time } : {}),
