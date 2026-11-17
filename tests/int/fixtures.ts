@@ -6,6 +6,8 @@
 import pg from 'pg'
 import type { Payload } from 'payload'
 
+import type { User } from '../../src/payload-types'
+
 export const RUN = crypto.randomUUID().slice(0, 8)
 
 export const uniq = (base: string): string => `${base}-${RUN}`
@@ -43,6 +45,16 @@ const DELETE_ORDER = [
   'people',
 ]
 
+/** The collections whose rows name the account that made them. */
+const ACCOUNT_ROWS = [
+  'space-rsvps',
+  'space-votes',
+  'space-reactions',
+  'space-preferences',
+  'space-visits',
+  'space-consents',
+] as const
+
 /**
  * Records the rows a spec creates and deletes them in `afterAll`.
  * `track` returns what it was given, so it wraps a create call in place.
@@ -54,17 +66,46 @@ export const createTracker = () => {
     const list = tracked.get(collection) ?? []
     list.push(id)
     tracked.set(collection, list)
+    // An account made without a person gets a hidden one from the users hook,
+    // under a slug the spec never sees, and a later link to another person
+    // leaves it behind. Track it from the created account, which names it.
+    const person = collection === 'users' && typeof row === 'object' ? (row as User).person : null
+    if (person != null) track('people', typeof person === 'object' ? person.id : person)
     return row
   }
   const cleanup = async (payload: Payload) => {
     const rest = [...tracked.keys()].filter((c) => !DELETE_ORDER.includes(c)).reverse()
+    const failed: string[] = []
+    const refused: { collection: string; id: number; message: string }[] = []
+    // What the app wrote for an account (a visit, a consent, a preference)
+    // holds a restricting key to it, so the account cannot go while one is left.
+    const accounts = tracked.get('users') ?? []
+    if (accounts.length)
+      for (const collection of ACCOUNT_ROWS)
+        await payload
+          .delete({
+            collection,
+            where: { account: { in: accounts } },
+            overrideAccess: true,
+          })
+          .catch((error: Error) => void failed.push(`${collection}: ${error.message}`))
     for (const collection of [...DELETE_ORDER, ...rest]) {
       for (const id of [...(tracked.get(collection) ?? [])].reverse()) {
         await payload
           .delete({ collection: collection as never, id, overrideAccess: true })
-          .catch(() => undefined)
+          .catch((error: Error) => void refused.push({ collection, id, message: error.message }))
       }
     }
+    // A row refused while its parent stood may have gone with the parent since.
+    for (const { collection, id, message } of refused) {
+      const { totalDocs } = await payload.count({
+        collection: collection as never,
+        where: { id: { equals: id } },
+        overrideAccess: true,
+      })
+      if (totalDocs) failed.push(`${collection} ${id}: ${message}`)
+    }
+    if (failed.length) throw new Error(`Cleanup left rows behind:\n${failed.join('\n')}`)
   }
   return { track, cleanup }
 }

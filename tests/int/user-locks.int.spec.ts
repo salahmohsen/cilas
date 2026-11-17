@@ -3,10 +3,11 @@ import { getPayload, type Payload } from 'payload'
 import { afterAll, beforeAll, describe, expect, it } from 'vitest'
 
 import config from '../../src/payload.config'
+import { createTracker } from './fixtures'
 
 let payload: Payload
 let course: number
-const emails: string[] = []
+const { track, cleanup } = createTracker()
 
 beforeAll(async () => {
   payload = await getPayload({ config })
@@ -15,21 +16,19 @@ beforeAll(async () => {
 })
 
 afterAll(async () => {
-  await payload.delete({
-    collection: 'users',
-    where: { email: { in: emails } },
-    overrideAccess: true,
-  })
+  await cleanup(payload)
 })
 
 const user = async (name: string) => {
   const email = `lock-${name}-${crypto.randomUUID()}@cilas.test`
-  emails.push(email)
-  return payload.create({
-    collection: 'users',
-    data: { email, password: 'test', roles: ['member'] },
-    overrideAccess: true,
-  })
+  return track(
+    'users',
+    await payload.create({
+      collection: 'users',
+      data: { email, password: 'test', roles: ['member'] },
+      overrideAccess: true,
+    }),
+  )
 }
 
 const lockOf = (id: number) =>
