@@ -1,3 +1,4 @@
+import { http, HttpResponse, passthrough } from 'msw'
 import { getPayload, type Payload } from 'payload'
 import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest'
 
@@ -5,7 +6,14 @@ import { getReviewQueue } from '@/lib/review-queue'
 import config from '@/payload.config'
 import type { User } from '@/payload-types'
 
+import { mockNetwork } from '../../testing/msw-node.test-utils'
 import { createTracker, uniq, uniqEmail } from '../../testing/payload.fixture'
+
+mockNetwork(
+  http.post('https://telemetry.payloadcms.com/events', () => HttpResponse.json({})),
+  http.post('https://api.resend.com/emails', () => HttpResponse.json({ id: 'review-email' })),
+  http.all('http://localhost:8108/*', () => passthrough()),
+)
 
 let payload: Payload
 const { track, cleanup } = createTracker()
@@ -13,7 +21,6 @@ const { track, cleanup } = createTracker()
 describe('publishing', () => {
   let personId: number
   let author: User
-  // Real accounts: a save stamps its editor on the document (a foreign key).
   let admin: User
 
   beforeAll(async () => {
@@ -95,7 +102,7 @@ describe('publishing', () => {
     })
 
     it('lets the author submit, emails admins, then locks the article to them', async () => {
-      const send = vi.spyOn(payload, 'sendEmail').mockResolvedValue(undefined)
+      const send = vi.spyOn(payload, 'sendEmail')
       await payload.update({
         collection: 'articles',
         id: articleId,
@@ -218,11 +225,9 @@ describe('publishing', () => {
     let liveId: number
     const live = () =>
       payload.findByID({ collection: 'articles', id: liveId, draft: false, overrideAccess: true })
-    // `author` is set in beforeAll, after this describe is collected.
     const as = (user: User) => ({ user, overrideAccess: false }) as const
 
     beforeAll(async () => {
-      vi.spyOn(payload, 'sendEmail').mockResolvedValue(undefined)
       liveId = track(
         'articles',
         await payload.create({
