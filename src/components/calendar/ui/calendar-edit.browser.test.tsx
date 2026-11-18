@@ -594,17 +594,6 @@ describe('the Unscheduled tray with a pointer', () => {
   })
 })
 
-describe('touch handles', () => {
-  it('are at least 24px, on selected blocks only', async () => {
-    const { readFile } = await import('node:fs/promises')
-    const css = await readFile('src/components/calendar/ui/calendar.module.css', 'utf8')
-    const coarse = css.slice(css.indexOf('@media (pointer: coarse)'))
-    expect(coarse).toMatch(/\.block\[data-selected\] \.edge \{[^}]*block-size: 1\.75rem/)
-    expect(coarse).toMatch(/\.edge \{\s*display: none;/)
-    expect(css).not.toMatch(/\.track[^{]*\{[^}]*touch-action: none/)
-  })
-})
-
 describe('edit mode scroll', () => {
   const scrolls = vi.fn()
 

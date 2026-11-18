@@ -10,7 +10,7 @@ import { SpaceViews } from '@/components/space/space-views'
 import { openingDay, type CalendarItem } from '@/lib/calendar-items'
 import en from '../../../messages/en.json'
 import ar from '../../../messages/ar.json'
-import { stubPopupDom } from '../../../testing/popup-dom.test-utils'
+import { stubMatchMedia, stubPopupDom } from '../../../testing/popup-dom.test-utils'
 
 const push = vi.fn()
 vi.mock('next/navigation', () => ({
@@ -52,6 +52,7 @@ const wrap = (children: React.ReactNode, locale = 'en') => (
     {children}
   </NextIntlClientProvider>
 )
+beforeAll(stubMatchMedia)
 beforeAll(stubPopupDom)
 beforeEach(() => {
   // Each test, not once: under --no-isolate another file's environment can drop it between tests.

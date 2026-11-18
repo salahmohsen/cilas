@@ -2,7 +2,8 @@ import { act, fireEvent, render, screen, within } from '@testing-library/react'
 import { NextIntlClientProvider } from 'next-intl'
 import { hydrateRoot } from 'react-dom/client'
 import { renderToString } from 'react-dom/server'
-import { afterEach, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest'
+import { afterEach, beforeEach, describe, expect, it, onTestFinished, vi } from 'vitest'
+import { page } from 'vitest/browser'
 
 import { Calendar } from '@/components/calendar/ui/calendar'
 import type { CalendarView } from '@/components/calendar/ui/calendar-views'
@@ -11,33 +12,27 @@ import type { CalendarItem } from '@/lib/calendar-items'
 
 import en from '../../../../messages/en.json'
 
-// The width the calendar measures: null before it is measured, as on the server.
-let narrow: boolean | null = false
-// Whether the side panel sits beside the grid.
-const docked: boolean | null = false
-vi.mock('@/components/calendar/ui/use-narrow', () => ({
-  useNarrow: () => narrow,
-  useDocked: () => docked,
-}))
+const phone = () => page.viewport(390, 844)
+const tablet = () => page.viewport(800, 900)
 
 const item = (
   id: string,
   title: string,
   blocks: CalendarItem['blocks'],
   extra: Partial<CalendarItem> = {},
-): CalendarItem => ({
-  id,
-  kind: 'session',
-  title,
-  tone: 'yellow',
-  cancelled: false,
-  version: `v-${id}`,
-  blocks,
-  ...extra,
-})
+) =>
+  ({
+    id,
+    kind: 'session',
+    title,
+    tone: 'yellow',
+    cancelled: false,
+    version: `v-${id}`,
+    blocks,
+    ...extra,
+  }) satisfies CalendarItem
 
-// The week of Saturday 14 November 2026; today is Tuesday 17.
-const items: CalendarItem[] = [
+const items = [
   item('week-3', 'Week 3', [
     { id: 'tue', date: '2026-11-17', start_time: '19:00', end_time: '21:00' },
   ]),
@@ -89,37 +84,45 @@ const options = () =>
     .map((button) => [button.textContent, button.getAttribute('aria-pressed')])
 const pick = (name: string) => fireEvent.click(within(viewSwitch()).getByRole('button', { name }))
 const press = (name: string) => fireEvent.click(screen.getByRole('button', { name }))
-/** The days the grid shows, by their names. */
 const shownDays = () =>
   [...document.querySelectorAll('[data-track]')].map((track) => track.getAttribute('aria-label'))
 
-beforeAll(() => {
-  Element.prototype.getAnimations ??= () => []
-  globalThis.ResizeObserver = class {
-    observe() {}
-    unobserve() {}
-    disconnect() {}
-  }
-})
-beforeEach(() => {
-  narrow = false
+const hydrate = async () => {
+  const host = document.createElement('div')
+  host.innerHTML = renderToString(tree())
+  document.body.append(host)
+  const switches = [...host.querySelectorAll('[data-width] button')]
+  const ids = switches.map((button) => button.id)
+  const root = await act(async () => hydrateRoot(host, tree()))
+  onTestFinished(() => {
+    act(() => root.unmount())
+    host.remove()
+  })
+  return { host, switches, ids }
+}
+
+beforeEach(async () => {
+  await tablet()
   vi.useFakeTimers({ now: new Date('2026-11-17T10:00:00Z'), toFake: ['Date'] })
 })
 afterEach(() => vi.useRealTimers())
 
 describe('the view switch', () => {
-  it.each([false, true])(
-    'keeps the server switch and its IDs when width becomes %s',
-    (measured) => {
-      narrow = null
-      const page = show()
-      const selector = `[data-width="${measured ? 'narrow' : 'wide'}"] button`
-      const button = page.container.querySelector(selector)
-      const id = button?.id
-      narrow = measured
-      page.rerender(tree())
-      expect(page.container.querySelector(selector)).toBe(button)
-      expect(page.container.querySelector(selector)?.id).toBe(id)
+  it.each([
+    ['narrow', phone],
+    ['wide', tablet],
+  ] as const)(
+    'keeps the server switch and its IDs once the width reads %s',
+    async (width, size) => {
+      await size()
+      const { host, switches, ids } = await hydrate()
+      expect(viewSwitch().closest('[data-width]')).toHaveAttribute('data-width', width)
+      const shown = [...host.querySelectorAll(`[data-width="${width}"] button`)]
+      expect(shown).not.toHaveLength(0)
+      expect(shown.every((button) => switches.includes(button))).toBe(true)
+      expect(shown.map((button) => button.id)).toEqual(
+        shown.map((button) => ids[switches.indexOf(button)]),
+      )
     },
   )
   it('offers Month, Week, Day and Agenda on a wide calendar, the week selected', () => {
@@ -147,8 +150,8 @@ describe('the view switch', () => {
     expect(screen.getByRole('list', { name: 'Tuesday Nov 17' })).toBeInTheDocument()
   })
 
-  it('offers 3 days, Day and Agenda on a phone, and opens on the Day', () => {
-    narrow = true
+  it('offers 3 days, Day and Agenda on a phone, and opens on the Day', async () => {
+    await phone()
     show()
     expect(options()).toEqual([
       ['3 days', 'false'],
@@ -179,8 +182,8 @@ describe('the day and 3 days views', () => {
     expect(screen.getByText('Tuesday, Nov 17, 2026')).toBeInTheDocument()
   })
 
-  it('shows three days from the day on a phone and moves three days at a time', () => {
-    narrow = true
+  it('shows three days from the day on a phone and moves three days at a time', async () => {
+    await phone()
     show()
     pick('3 days')
     expect(shownDays()).toEqual([
@@ -197,13 +200,12 @@ describe('the day and 3 days views', () => {
     expect(screen.getByRole('button', { name: /^Film night, Friday/ })).toBeInTheDocument()
   })
 
-  it('takes the week back on a wide calendar after 3 days on a phone', () => {
-    narrow = true
-    const { rerender } = show()
+  it('takes the week back on a wide calendar after 3 days on a phone', async () => {
+    await phone()
+    show()
     pick('3 days')
-    narrow = false
-    rerender(tree())
-    expect(options()[1]).toEqual(['Week', 'true'])
+    await tablet()
+    expect(await screen.findByRole('button', { name: 'Week', pressed: true })).toBeVisible()
     expect(shownDays()).toHaveLength(7)
   })
 })
@@ -251,8 +253,8 @@ describe('the agenda', () => {
     expect(screen.queryAllByRole('listitem')).toHaveLength(0)
   })
 
-  it('runs two weeks from the day on a phone', () => {
-    narrow = true
+  it('runs two weeks from the day on a phone', async () => {
+    await phone()
     show()
     pick('Agenda')
     expect(screen.getByText('Week 5')).toBeInTheDocument()
@@ -280,7 +282,6 @@ describe('the agenda', () => {
 
 describe('the first render', () => {
   it('sends both switches from the server, the week for wide and the Day for a phone', () => {
-    narrow = null
     const html = renderToString(tree())
     const doc = new DOMParser().parseFromString(html, 'text/html')
     const pressed = [...doc.querySelectorAll('[data-width]')].map((switcher) => [
@@ -299,16 +300,8 @@ describe('the first render', () => {
   })
 
   it('hydrates the server markup with no mismatch', async () => {
-    narrow = null
-    const errors = vi.spyOn(console, 'error').mockImplementation(() => {})
-    const host = document.createElement('div')
-    host.innerHTML = renderToString(tree())
-    document.body.append(host)
-    await act(async () => {
-      hydrateRoot(host, tree())
-    })
+    const errors = vi.spyOn(console, 'error')
+    await hydrate()
     expect(errors).not.toHaveBeenCalled()
-    errors.mockRestore()
-    host.remove()
   })
 })

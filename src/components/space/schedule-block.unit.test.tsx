@@ -9,7 +9,7 @@ import type { SessionCourse, SessionRead } from '@/lib/spaces-data'
 import type { Session } from '@/payload-types'
 
 import en from '../../../messages/en.json'
-import { stubPopupDom } from '../../../testing/popup-dom.test-utils'
+import { stubMatchMedia, stubPopupDom } from '../../../testing/popup-dom.test-utils'
 
 const push = vi.fn()
 vi.mock('next/navigation', () => ({ useRouter: () => ({ push }) }))
@@ -66,6 +66,7 @@ const view = (body: string, read: SessionRead | null = shown) =>
     </NextIntlClientProvider>,
   )
 
+beforeAll(stubMatchMedia)
 beforeAll(stubPopupDom)
 beforeEach(() => {
   // Each test sets it: another file's vi.unstubAllGlobals() can remove it when files share a worker.

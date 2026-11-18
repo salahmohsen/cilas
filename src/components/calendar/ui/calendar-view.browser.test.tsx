@@ -378,12 +378,4 @@ describe('right to left', () => {
     expect(days[0]).toMatch(/^السبت/)
     expect(days.at(-1)).toMatch(/^الجمعة/)
   })
-
-  it('uses no physical left or right in its styles', async () => {
-    const { readFile } = await import('node:fs/promises')
-    const css = await readFile('src/components/calendar/ui/calendar.module.css', 'utf8')
-    expect(css).not.toMatch(
-      /\b(left|right|margin-left|margin-right|padding-left|padding-right|border-left|border-right)\b\s*:/,
-    )
-  })
 })

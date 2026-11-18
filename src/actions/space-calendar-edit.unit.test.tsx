@@ -14,6 +14,7 @@ import type { ScheduleOffer } from '@/lib/schedule-offer'
 
 import ar from '../../messages/ar.json'
 import en from '../../messages/en.json'
+import { stubMatchMedia } from '../../testing/popup-dom.test-utils'
 
 const push = vi.fn()
 const refresh = vi.fn()
@@ -109,6 +110,7 @@ const move = () => {
 }
 const leaveDialog = () => screen.queryByRole('dialog', { name: 'Leave without saving?' })
 
+beforeAll(stubMatchMedia)
 beforeAll(() => {
   globalThis.IntersectionObserver = class {
     observe() {}

@@ -14,20 +14,6 @@ if (!isolatedSearchDB && !process.env.DATABASE_URL?.includes('@localhost:5433/')
   )
 }
 
-if (typeof window !== 'undefined' && !window.matchMedia) {
-  window.matchMedia = (query: string) =>
-    ({
-      matches: false,
-      media: query,
-      onchange: null,
-      addEventListener: () => {},
-      removeEventListener: () => {},
-      addListener: () => {},
-      removeListener: () => {},
-      dispatchEvent: () => false,
-    }) as MediaQueryList
-}
-
 afterEach(() => {
   cleanup()
   vi.resetModules()
