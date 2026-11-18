@@ -1,4 +1,3 @@
-import { http, HttpResponse, passthrough } from 'msw'
 import { getPayload, type Payload } from 'payload'
 import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest'
 
@@ -6,14 +5,12 @@ import { getReviewQueue } from '@/lib/review-queue'
 import config from '@/payload.config'
 import type { User } from '@/payload-types'
 
+import { localServices } from '../../testing/local-services.test-utils'
 import { mockNetwork } from '../../testing/msw-node.test-utils'
 import { createTracker, uniq, uniqEmail } from '../../testing/payload.fixture'
+import { resendInbox } from '../../testing/resend.test-utils'
 
-mockNetwork(
-  http.post('https://telemetry.payloadcms.com/events', () => HttpResponse.json({})),
-  http.post('https://api.resend.com/emails', () => HttpResponse.json({ id: 'review-email' })),
-  http.all('http://localhost:8108/*', () => passthrough()),
-)
+mockNetwork(resendInbox().handler, ...localServices)
 
 let payload: Payload
 const { track, cleanup } = createTracker()

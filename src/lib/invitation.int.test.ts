@@ -16,7 +16,7 @@ import {
 import config from '@/payload.config'
 import type { User } from '@/payload-types'
 
-import { localServiceHandlers } from '../../testing/fan4-local-services.test-utils'
+import { localServices } from '../../testing/local-services.test-utils'
 import { mockNetwork } from '../../testing/msw-node.test-utils'
 import { createTracker, uniq, uniqEmail } from '../../testing/payload.fixture'
 
@@ -30,7 +30,7 @@ const refused = () =>
     { status: 429 },
   )
 
-const network = mockNetwork(...localServiceHandlers)
+const network = mockNetwork(...localServices)
 
 let payload: Payload
 const { track, cleanup } = createTracker()

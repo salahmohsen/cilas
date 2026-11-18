@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest'
 
 import { publicItems } from '@/components/calendar/public-items'
 
-import { meeting, meetings, words } from '../../../testing/fan0-public-calendar.fixture'
+import { meeting, meetings, words } from '../../../testing/public-calendar.fixture'
 
 describe('publicItems', () => {
   const items = publicItems(meetings, words('en'))

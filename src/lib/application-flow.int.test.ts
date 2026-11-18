@@ -1,6 +1,3 @@
-import '../../testing/fan1-resend.test-utils'
-
-import { http, HttpResponse, passthrough } from 'msw'
 import { createLocalReq, getPayload, type Payload } from 'payload'
 import { randomBytes } from 'node:crypto'
 import { afterAll, beforeAll, describe, expect, it } from 'vitest'
@@ -9,15 +6,12 @@ import config from '@/payload.config'
 import { TURNSTILE_VERIFIED } from '@/lib/turnstile'
 import type { Course, Form, FormSubmission, Person, User } from '@/payload-types'
 
-import { resendInbox } from '../../testing/fan1-resend.test-utils'
+import { localServices } from '../../testing/local-services.test-utils'
 import { mockNetwork } from '../../testing/msw-node.test-utils'
+import { resendInbox } from '../../testing/resend.test-utils'
 
 const mail = resendInbox()
-const network = mockNetwork(
-  http.post('https://telemetry.payloadcms.com/events', () => HttpResponse.json({})),
-  http.all('http://localhost:8108/*', () => passthrough()),
-  mail.handler,
-)
+mockNetwork(mail.handler, ...localServices)
 
 type Tracked =
   | 'forms'
@@ -606,7 +600,7 @@ describe('the application flow, from the questions to the enrollment', () => {
       'form-submissions',
       await submit(address, [{ field: 'track', value: 'Film' }]),
     )
-    network.use(mail.failure('smtp down'))
+    mail.failFor = address
     const first = await decide('reject', submission.id, course.id)
     expect(await first.json()).toMatchObject({ ok: true, emailed: false })
     const read = async () =>
@@ -619,6 +613,7 @@ describe('the application flow, from the questions to the enrollment', () => {
       ).choices?.[0]
     expect(await read()).toMatchObject({ decision: 'rejected', email_failed: true })
 
+    mail.failFor = null
     mail.sent.length = 0
     const again = await decide('resend', submission.id, course.id)
     expect(await again.json()).toMatchObject({ ok: true, emailed: true })

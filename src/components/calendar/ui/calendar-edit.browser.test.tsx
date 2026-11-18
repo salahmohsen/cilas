@@ -8,7 +8,7 @@ import type { CalendarChange, CalendarItem } from '@/lib/calendar-items'
 
 import ar from '../../../../messages/ar.json'
 import en from '../../../../messages/en.json'
-import { mouse, centerOf, visibleCenterOf } from '../../../../testing/fan0-pointer.test-utils'
+import { mouse, centerOf, visibleCenterOf } from '../../../../testing/pointer.test-utils'
 import { emulateMedia } from '../../../../testing/media.test-utils'
 
 const item = (

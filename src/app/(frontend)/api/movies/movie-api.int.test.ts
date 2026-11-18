@@ -5,7 +5,7 @@ import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from 'vites
 import config from '@/payload.config'
 import type { User } from '@/payload-types'
 
-import { payloadServices } from '../../../../../testing/fan2-payload-services.test-utils'
+import { localServices } from '../../../../../testing/local-services.test-utils'
 import { mockNetwork } from '../../../../../testing/msw-node.test-utils'
 import { movie } from '../../../../../testing/movie.fixture'
 import { createTracker, uniqEmail } from '../../../../../testing/payload.fixture'
@@ -39,7 +39,7 @@ const upstreamMovie = {
 
 const tmdbRequests: URL[] = []
 mockNetwork(
-  ...payloadServices,
+  ...localServices,
   http.get('https://api.themoviedb.org/3/search/movie', ({ request }) => {
     tmdbRequests.push(new URL(request.url))
     return HttpResponse.json({ results: [] })

@@ -9,9 +9,9 @@ import config from '@/payload.config'
 import type { User } from '@/payload-types'
 
 import { mockNetwork } from '../../../testing/msw-node.test-utils'
-import { payloadServices } from '../../../testing/fan2-payload-services.test-utils'
+import { localServices } from '../../../testing/local-services.test-utils'
 import { createTracker, uniq, uniqEmail } from '../../../testing/payload.fixture'
-import { pushDevice } from '../../../testing/fan2-web-push.test-utils'
+import { pushDevice } from '../../../testing/web-push.test-utils'
 
 const vapid = webpush.generateVAPIDKeys()
 const pushConfig = {
@@ -32,7 +32,7 @@ const phone = pushDevice()
 const answers = new Map<string, number>()
 const received = new Map<string, ArrayBuffer>()
 mockNetwork(
-  ...payloadServices,
+  ...localServices,
   http.post('https://fcm.googleapis.com/fcm/send/:id', async ({ request, params }) => {
     const id = String(params.id)
     received.set(id, await request.arrayBuffer())

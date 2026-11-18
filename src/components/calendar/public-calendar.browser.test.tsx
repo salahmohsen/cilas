@@ -11,7 +11,7 @@ import { usePublicCalendarAccess } from '@/components/calendar/use-public-calend
 import { ScheduleActionsProvider, type ScheduleActions } from '@/components/space/schedule-actions'
 import type { CalendarMeeting } from '@/lib/calendar'
 
-import { meeting, meetings, words } from '../../../testing/fan0-public-calendar.fixture'
+import { meeting, meetings, words } from '../../../testing/public-calendar.fixture'
 import { IntlProvider, messagesOf } from '../../../testing/intl.test-utils'
 import { mockNetwork, nextImages } from '../../../testing/msw-browser.test-utils'
 import {

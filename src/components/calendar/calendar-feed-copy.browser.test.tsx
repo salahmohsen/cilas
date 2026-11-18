@@ -3,7 +3,7 @@ import { afterEach, describe, expect, it, vi } from 'vitest'
 import { page, userEvent } from 'vitest/browser'
 
 import { CalendarFeed } from '@/components/calendar/calendar-tools'
-import { setClipboardAccess } from '../../../testing/fan0-clipboard.test-utils'
+import { setClipboardAccess } from '../../../testing/clipboard.test-utils'
 import { messagesOf, renderWithIntl } from '../../../testing/intl.test-utils'
 
 afterEach(async () => {

@@ -48,10 +48,11 @@ export const requireLocalStorage = (env: Record<string, string | undefined>) => 
  * The environment every Vitest worker starts with. Storage comes as one set:
  * the shell's R2_* when it exports R2_ENDPOINT (CI, the search test), otherwise
  * the R2_* lines of .env.development.local. `.env` never supplies storage, as
- * it holds the production bucket.
+ * it holds the production bucket. Mail always gets a test Resend key: Payload
+ * builds its real Resend adapter, MSW answers it, and no test holds the real key.
  */
 export const testEnv = () => {
-  const env = pick(storageSource(), storageKeys)
+  const env = { ...pick(storageSource(), storageKeys), RESEND_API_KEY: 're_test_key' }
   requireLocalStorage(env)
   return env
 }

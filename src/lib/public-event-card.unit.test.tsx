@@ -7,7 +7,7 @@ import { PublicEventCardBody } from '@/components/events/public-event-card'
 import { EVENT_POSTER_COLORS } from '@/lib/event-poster-colors'
 import type { Event } from '@/payload-types'
 
-import { serverFormatter, serverTranslator } from '../../testing/fan4-server-intl.test-utils'
+import { serverFormatter, serverTranslator } from '../../testing/server-intl.test-utils'
 import { mockNetwork } from '../../testing/msw-node.test-utils'
 
 mockNetwork()

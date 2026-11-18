@@ -17,7 +17,7 @@ import ar from '../../messages/ar.json'
 import en from '../../messages/en.json'
 import { IntlProvider } from '../../testing/intl.test-utils'
 import { scheduleActionsHost } from '../../testing/schedule-actions.test-utils'
-import { renderWithBrowserNavigation } from '../../testing/fan1-browser-navigation.test-utils'
+import { renderWithBrowserNavigation } from '../../testing/browser-navigation.test-utils'
 
 type Saved = Awaited<ReturnType<ScheduleActions['saveScheduleEdits']>>
 type Loaded = Awaited<ReturnType<ScheduleActions['loadSessionEdit']>>

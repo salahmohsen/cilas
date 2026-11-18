@@ -1,4 +1,4 @@
-import { http, HttpResponse, passthrough } from 'msw'
+import { http, HttpResponse } from 'msw'
 import { createPayloadRequest, getPayload, type Payload } from 'payload'
 import { afterAll, beforeAll, describe, expect, it } from 'vitest'
 
@@ -7,16 +7,15 @@ import { TURNSTILE_HEADER } from '@/lib/turnstile'
 import config from '@/payload.config'
 import type { Course, Cycle, Form } from '@/payload-types'
 
+import { localServices } from '../../testing/local-services.test-utils'
 import { mockNetwork } from '../../testing/msw-node.test-utils'
 import { createTracker, RUN, uniq } from '../../testing/payload.fixture'
 
 mockNetwork(
-  http.post('https://telemetry.payloadcms.com/events', () => HttpResponse.json({})),
   http.post('https://challenges.cloudflare.com/turnstile/v0/siteverify', () =>
     HttpResponse.json({ success: true }),
   ),
-  http.all('http://127.0.0.1:19002/*', () => passthrough()),
-  http.all('http://localhost:8108/*', () => passthrough()),
+  ...localServices,
 )
 
 const { track, cleanup } = createTracker()

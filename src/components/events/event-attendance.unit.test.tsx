@@ -6,7 +6,7 @@ import { EventAttendanceBody } from '@/components/events/event-attendance'
 import { detailPath } from '@/lib/paths'
 import type { Event } from '@/payload-types'
 
-import { serverFormatter, serverTranslator } from '../../../testing/fan4-server-intl.test-utils'
+import { serverFormatter, serverTranslator } from '../../../testing/server-intl.test-utils'
 import { IntlProvider } from '../../../testing/intl.test-utils'
 
 const event: Event = {

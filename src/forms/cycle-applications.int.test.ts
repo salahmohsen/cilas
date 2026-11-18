@@ -1,4 +1,4 @@
-import { http, HttpResponse, passthrough } from 'msw'
+import { http, HttpResponse } from 'msw'
 import { createLocalReq, getPayload, type Payload } from 'payload'
 import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest'
 
@@ -8,19 +8,17 @@ import { relId } from '@/lib/relation'
 import { TURNSTILE_HEADER, TURNSTILE_VERIFIED } from '@/lib/turnstile'
 import config from '@/payload.config'
 import type { Course, Cycle, Form, FormSubmission, User } from '@/payload-types'
+import { localServices } from '../../testing/local-services.test-utils'
 import { mockNetwork } from '../../testing/msw-node.test-utils'
 import { createTracker, uniq, uniqEmail } from '../../testing/payload.fixture'
+import { resendInbox } from '../../testing/resend.test-utils'
 
 mockNetwork(
-  http.all('http://localhost:8108/*', () => passthrough()),
   http.post('https://challenges.cloudflare.com/turnstile/v0/siteverify', () =>
     HttpResponse.json({ success: true }),
   ),
-  http.post('https://api.resend.com/emails', () => HttpResponse.json({ id: 'e_probe' })),
-  http.post(
-    'https://telemetry.payloadcms.com/events',
-    () => new HttpResponse(null, { status: 204 }),
-  ),
+  resendInbox().handler,
+  ...localServices,
 )
 
 const { track, cleanup } = createTracker()

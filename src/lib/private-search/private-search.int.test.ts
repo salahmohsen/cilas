@@ -15,14 +15,14 @@ import { POST } from '@/app/(frontend)/api/spaces-search/route'
 import { activeGeneration, RecoveryRequired } from '@/lib/private-search/generation'
 import { rateAllowed } from '@/lib/private-search/rate'
 
+import { localServices } from '../../../testing/local-services.test-utils'
 import { mockNetwork } from '../../../testing/msw-node.test-utils'
 
 const engine = 'http://127.0.0.1:18109'
 const importUrl = (collection: string) => `${engine}/collections/${collection}/documents/import`
 const network = mockNetwork(
-  http.post('https://telemetry.payloadcms.com/events', () => HttpResponse.json({})),
   http.all(`${engine}/*`, () => passthrough()),
-  http.all('http://127.0.0.1:19000/*', () => passthrough()),
+  ...localServices,
 )
 
 const disposable =

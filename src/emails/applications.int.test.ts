@@ -7,7 +7,9 @@ import { TURNSTILE_VERIFIED } from '@/lib/turnstile'
 import config from '@/payload.config'
 import type { Form, FormSubmission, Programme, User } from '@/payload-types'
 
-import { captureResendMail, requireResendAdapter } from '../../testing/fan2-resend.test-utils'
+import { localServices } from '../../testing/local-services.test-utils'
+import { mockNetwork } from '../../testing/msw-node.test-utils'
+import { resendInbox } from '../../testing/resend.test-utils'
 import { uniq, uniqEmail } from '../../testing/payload.fixture'
 
 let payload: Payload
@@ -103,12 +105,12 @@ const cleanup = async () => {
   }
 }
 
-const { mail: outbox } = captureResendMail()
+const outbox = resendInbox()
+mockNetwork(outbox.handler, ...localServices)
 
 describe('accepting an application', () => {
   beforeAll(async () => {
     payload = await getPayload({ config: await config })
-    requireResendAdapter(payload)
     await cleanup()
     admin = await payload.create({
       collection: 'users',

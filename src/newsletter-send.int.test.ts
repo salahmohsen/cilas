@@ -2,12 +2,13 @@ import { createLocalReq, getPayload, type Payload } from 'payload'
 import { http, HttpResponse } from 'msw'
 import { afterAll, beforeAll, describe, expect, it } from 'vitest'
 
-import { env } from '@/env'
 import config from '@/payload.config'
 import type { Newsletter, User } from '@/payload-types'
 
+import { localServices } from '../testing/local-services.test-utils'
 import { mockNetwork } from '../testing/msw-node.test-utils'
 import { uniq, uniqEmail } from '../testing/payload.fixture'
+import { resendInbox } from '../testing/resend.test-utils'
 
 let payload: Payload
 let admin: User
@@ -26,17 +27,11 @@ const call = async (action: 'test' | 'send', user: User | null = admin) => {
 }
 
 let contacts = 0
-const emails: { to: string; subject: string }[] = []
+const inbox = resendInbox()
 const broadcasts: { html: string }[] = []
 mockNetwork(
-  http.post(
-    'https://telemetry.payloadcms.com/events',
-    () => new HttpResponse(null, { status: 204 }),
-  ),
-  http.post('https://api.resend.com/emails', async ({ request }) => {
-    emails.push((await request.json()) as { to: string; subject: string })
-    return HttpResponse.json({ id: 'e_probe' })
-  }),
+  ...localServices,
+  inbox.handler,
   http.post('https://api.resend.com/broadcasts', async ({ request }) => {
     broadcasts.push((await request.json()) as { html: string })
     return HttpResponse.json({ id: 'b_probe' })
@@ -89,14 +84,16 @@ describe('sending a newsletter issue', () => {
   it('sends a test only to the admin', async () => {
     const res = await call('test')
     expect(res.status).toBe(200)
-    expect(emails).toEqual([expect.objectContaining({ to: ADMIN, subject: '[Test] Probe issue' })])
+    expect(inbox.sent).toEqual([
+      expect.objectContaining({ to: ADMIN, subject: '[Test] Probe issue' }),
+    ])
   })
 
   it('refuses people who are not admins', async () => {
     expect((await call('send', null)).status).toBe(403)
   })
 
-  it.runIf(Boolean(env.RESEND_API_KEY))('stops above the free plan’s contact limit', async () => {
+  it('stops above the free plan’s contact limit', async () => {
     contacts = 1200
     const res = await call('send')
     expect(res.status).toBe(409)
@@ -104,7 +101,7 @@ describe('sending a newsletter issue', () => {
     expect(broadcasts).toEqual([])
   })
 
-  it.runIf(Boolean(env.RESEND_API_KEY))('sends once, then publishes the issue', async () => {
+  it('sends once, then publishes the issue', async () => {
     contacts = 640
     expect((await call('send')).status).toBe(200)
     expect(broadcasts).toHaveLength(1)

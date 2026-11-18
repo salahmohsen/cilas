@@ -42,7 +42,7 @@ import {
   spaceRoster,
 } from '@/lib/spaces-data'
 
-import { localServiceHandlers, storageUrl } from '../../testing/fan4-local-services.test-utils'
+import { localServices, storageUrl } from '../../testing/local-services.test-utils'
 import { mockNetwork } from '../../testing/msw-node.test-utils'
 import { RUN, createTracker, lockSpacesMode, uniq, uniqEmail } from '../../testing/payload.fixture'
 
@@ -87,7 +87,7 @@ let cohortSpace: Space
 
 const ROOM_URL = 'https://93.184.216.34/room'
 const network = mockNetwork(
-  ...localServiceHandlers,
+  ...localServices,
   http.get(ROOM_URL, () =>
     HttpResponse.html('<head><title>Example room</title></head>', { status: 200 }),
   ),

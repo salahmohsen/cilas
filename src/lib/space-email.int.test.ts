@@ -10,7 +10,9 @@ import { sendAnnouncementEmails } from '@/lib/space-email'
 import { prefsOf, setSpaceEmail } from '@/lib/space-email-prefs'
 import { unsubscribeUrl, verifyUnsubscribeToken } from '@/lib/space-email-token'
 
-import { captureResendMail, requireResendAdapter } from '../../testing/fan2-resend.test-utils'
+import { localServices } from '../../testing/local-services.test-utils'
+import { mockNetwork } from '../../testing/msw-node.test-utils'
+import { resendInbox } from '../../testing/resend.test-utils'
 import { RUN, createTracker, lockSpacesMode, uniq, uniqEmail } from '../../testing/payload.fixture'
 
 const SUNDAY = new Date('2026-11-08T14:05:00Z')
@@ -20,7 +22,8 @@ const at = (offsetHours: number) => new Date(SUNDAY.getTime() + offsetHours * 3_
 let payload: Payload
 let unlock: () => Promise<void>
 let modeBefore: 'off' | 'trial' | 'on' = 'off'
-const { mail: outbox } = captureResendMail()
+const outbox = resendInbox()
+mockNetwork(outbox.handler, ...localServices)
 
 const { track, cleanup } = createTracker()
 
@@ -30,7 +33,7 @@ let course: { id: number }
 let space: Space
 let intro: number
 
-const mailsTo = (user: User) => outbox.sent.filter((m) => m.to === user.email)
+const mailsTo = (user: User) => outbox.to(user.email)
 
 const mkUser = async (key: string, roles: ('member' | 'admin')[] = ['member']) => {
   const p = await payload.create({
@@ -95,7 +98,6 @@ describe('space email', () => {
   beforeAll(async () => {
     unlock = await lockSpacesMode()
     payload = await getPayload({ config: await (config as never as Promise<typeof config>) })
-    requireResendAdapter(payload)
     modeBefore =
       (
         (await payload.findGlobal({ slug: 'site-settings', overrideAccess: true })) as {
