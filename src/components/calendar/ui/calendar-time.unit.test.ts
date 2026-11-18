@@ -1,3 +1,5 @@
+import { execFile } from 'node:child_process'
+import { promisify } from 'node:util'
 import { afterEach, describe, expect, it, vi } from 'vitest'
 
 import {
@@ -15,17 +17,19 @@ import {
 } from '@/components/calendar/ui/calendar-time'
 import { Temporal } from '@/components/calendar/ui/temporal'
 
+const run = promisify(execFile)
+
 afterEach(() => vi.useRealTimers())
 
 describe('weeks start on Saturday', () => {
   it.each([
-    ['2026-11-14', '2026-11-14'], // Saturday
-    ['2026-11-15', '2026-11-14'], // Sunday
-    ['2026-11-17', '2026-11-14'], // Tuesday
-    ['2026-11-20', '2026-11-14'], // Friday, the last day
-    ['2026-11-21', '2026-11-21'], // next Saturday
-    ['2027-01-01', '2026-12-26'], // across a year
-  ])('%s belongs to the week of %s', (day, start) => {
+    ['2026-11-14', '2026-11-14', 'a Saturday'],
+    ['2026-11-15', '2026-11-14', 'a Sunday'],
+    ['2026-11-17', '2026-11-14', 'a Tuesday'],
+    ['2026-11-20', '2026-11-14', 'a Friday, the last day'],
+    ['2026-11-21', '2026-11-21', 'the next Saturday'],
+    ['2027-01-01', '2026-12-26', 'a day across a year'],
+  ])('%s belongs to the week of %s, %s', (day, start) => {
     expect(weekStartOf(day)).toBe(start)
   })
 
@@ -65,8 +69,7 @@ describe('times', () => {
 })
 
 describe('now in Cairo', () => {
-  it('reads the Cairo day and minute, not the machine zone', () => {
-    // 22:30 UTC on 14 Nov is 00:30 on 15 Nov in Cairo (UTC+2 in winter).
+  it('reads the Cairo day and minute at UTC+2 in winter, not the machine zone', () => {
     vi.useFakeTimers({ now: new Date('2026-11-14T22:30:00Z') })
     expect(cairoNow()).toEqual({ date: '2026-11-15', minutes: 30 })
   })
@@ -83,8 +86,7 @@ describe('now in Cairo', () => {
     })
   })
 
-  it('jumps over the hour the clock skips', () => {
-    // Egypt goes from 23:59 on 23 April to 01:00 on 24 April 2026, at 22:00 UTC.
+  it('jumps over the hour the clock skips, from 23:59 to 01:00 at 22:00 UTC on 23 April 2026', () => {
     expect(cairoNow(Temporal.Instant.from('2026-04-23T21:59:00Z'))).toEqual({
       date: '2026-04-23',
       minutes: 23 * 60 + 59,
@@ -95,8 +97,7 @@ describe('now in Cairo', () => {
     })
   })
 
-  it('shows the same minutes twice in the hour the clock repeats', () => {
-    // Egypt repeats 23:00 to 24:00 on 29 October 2026: UTC+3 until 21:00 UTC, then UTC+2.
+  it('shows the same minutes twice in the hour the clock repeats, UTC+3 until 21:00 UTC then UTC+2', () => {
     const first = cairoNow(Temporal.Instant.from('2026-10-29T20:30:00Z'))
     const second = cairoNow(Temporal.Instant.from('2026-10-29T21:30:00Z'))
     expect(first).toEqual({ date: '2026-10-29', minutes: 23 * 60 + 30 })
@@ -145,11 +146,20 @@ describe('formatting', () => {
 
 describe('without a native Temporal', () => {
   it('loads the polyfill and gives the same answers', async () => {
-    vi.stubGlobal('Temporal', undefined)
-    vi.resetModules()
-    const time = await import('@/components/calendar/ui/calendar-time')
-    expect(time.weekStartOf('2026-11-17')).toBe('2026-11-14')
-    expect(time.toTime(1155)).toBe('19:15')
-    expect(time.formatTime(1155, 'ar')).toBe('٧:١٥ م')
+    const script = `
+      const time = await import('./src/components/calendar/ui/calendar-time.ts')
+      console.log(JSON.stringify([
+        typeof Temporal,
+        time.weekStartOf('2026-11-17'),
+        time.toTime(1155),
+        time.formatTime(1155, 'ar'),
+      ]))
+    `
+    const { stdout } = await run(
+      process.execPath,
+      ['--no-harmony-temporal', '--import', 'tsx', '--input-type=module', '-e', script],
+      { cwd: process.cwd() },
+    )
+    expect(JSON.parse(stdout)).toEqual(['undefined', '2026-11-14', '19:15', '٧:١٥ م'])
   })
 })
