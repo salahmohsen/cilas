@@ -1,4 +1,3 @@
-// @vitest-environment node
 import { describe, expect, it } from 'vitest'
 
 import { PEOPLE_PROMPT_VERSION, PeoplePage, peoplePrompt } from './people-schema'

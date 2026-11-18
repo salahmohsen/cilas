@@ -1,4 +1,3 @@
-// @vitest-environment node
 import { sql } from '@payloadcms/db-postgres'
 import { getPayload, type Payload } from 'payload'
 

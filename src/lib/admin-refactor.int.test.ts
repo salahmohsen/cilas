@@ -1,4 +1,3 @@
-// @vitest-environment node
 import { createLocalReq, getPayload, type Payload } from 'payload'
 import type { PostgresAdapter } from '@payloadcms/db-postgres'
 import { down as removeEventDrafts } from '@/migrations/20261029_075239_event_drafts'

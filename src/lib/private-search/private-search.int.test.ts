@@ -1,4 +1,3 @@
-// @vitest-environment node
 import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest'
 import { getPayload, type Payload, type PayloadRequest } from 'payload'
 import { SignJWT, decodeJwt, decodeProtectedHeader } from 'jose'

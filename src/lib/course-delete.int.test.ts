@@ -1,4 +1,3 @@
-// @vitest-environment node
 import { createLocalReq } from 'payload'
 import { afterAll, beforeAll, describe, expect, it } from 'vitest'
 

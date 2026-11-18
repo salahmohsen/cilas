@@ -1,4 +1,3 @@
-// @vitest-environment node
 import { createLocalReq, getPayload, type Payload } from 'payload'
 import { randomBytes } from 'node:crypto'
 import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest'

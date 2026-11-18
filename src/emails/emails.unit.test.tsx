@@ -1,5 +1,3 @@
-// @vitest-environment node
-// React Email renders with react-dom/server, which needs Node's streams.
 import { afterEach, describe, expect, it, vi } from 'vitest'
 
 vi.hoisted(() => {

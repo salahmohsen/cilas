@@ -1,4 +1,3 @@
-// @vitest-environment node
 import { copyFileSync, mkdtempSync, rmSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import path from 'node:path'

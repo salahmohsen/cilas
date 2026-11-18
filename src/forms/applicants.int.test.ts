@@ -1,4 +1,3 @@
-// @vitest-environment node
 import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest'
 vi.mock('server-only', () => ({}))
 import { applicantsFor, applicantViewer } from '@/forms/applicants'

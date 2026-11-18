@@ -1,4 +1,3 @@
-// @vitest-environment node
 import { getPayload, createLocalReq, initTransaction, killTransaction, type Payload } from 'payload'
 import { afterAll, beforeAll, describe, expect, it } from 'vitest'
 import config from '@/payload.config'

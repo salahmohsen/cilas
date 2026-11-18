@@ -1,4 +1,3 @@
-// @vitest-environment node
 import { HeadObjectCommand, S3Client } from '@aws-sdk/client-s3'
 import pg from 'pg'
 import { getPayload, type Payload } from 'payload'

@@ -41,7 +41,7 @@ Why: these pages show posts, comments, names, emails and tokens. No page view or
 
 One gate (`src/lib/analytics/policy.ts`, PostHog's `before_send`) checks every event, whatever raised it, and drops it if the page is excluded. On the events it keeps, it cleans every property that holds an address, found by its name (ending in `url`, `pathname` or `referrer`, in any letter case), not only `$current_url`. It also looks inside nested objects, as the `$web_vitals_*_event` objects of a web vital. PostHog adds its own: the page a visit started on (`$session_entry_url`, `$session_entry_referrer`) and the page before (`$prev_pageview_pathname`). An address on this site is dropped when its page is excluded, and otherwise loses its query, its hash and a person's name. An address on another site keeps only its origin and path. A search engine keyword (`$session_entry_ph_keyword`) is dropped. A browser error message is cleaned of emails and secrets, as a server error message is.
 
-`src/lib/analytics/analytics-sdk.unit.test.ts` runs the real posthog-js with the site's settings and checks what leaves after the gate. Run it after each posthog-js upgrade: a new SDK can add properties.
+`src/lib/analytics/analytics-sdk.dom.test.ts` runs the real posthog-js with the site's settings and checks what leaves after the gate. Run it after each posthog-js upgrade: a new SDK can add properties.
 
 The two exceptions are `login` and `push_enabled`. They happen on pages that are otherwise excluded (the login and settings pages). They are sent with no address (`/[private]`), no referrer and no other property.
 
@@ -136,7 +136,7 @@ To check usage: the "PostHog free plan" widget on the dashboard, or PostHog's Bi
 
 1. Add it to `AnalyticsEvents` in `src/lib/analytics/events.ts` with its properties (labels only).
 2. Call `track('name', { ... })` where it happens. It does nothing when PostHog is off or the page is excluded.
-3. Add a test next to the ones in `src/components/events/analytics-events.unit.test.tsx`, and a row to the table above.
+3. Add a test next to the ones in `src/components/events/analytics-events.dom.test.tsx`, and a row to the table above.
 4. To show it on the dashboard, add its key to `GOALS` in `src/lib/analytics/stats.ts` and to the `goals` query.
 
 If the event must fire on an excluded page, add it to `ANYWHERE_EVENTS` in `events.ts`. Do this only for an event with no page context, as `login` and `push_enabled`.

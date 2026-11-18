@@ -9,7 +9,7 @@ curl --fail --silent --retry 15 --retry-connrefused --retry-delay 1 http://127.0
 curl --fail --silent --retry 15 --retry-connrefused --retry-delay 1 http://127.0.0.1:19000/minio/health/live >/dev/null
 pnpm exec tsx scripts/bootstrap-search-test.ts
 node scripts/verify-search-maintenance.mjs
-pnpm exec vitest run src/lib/private-search/private-search.unit.test.ts src/components/private-search-panel.unit.test.tsx src/components/private-space-search.unit.test.tsx src/lib/private-search/private-search.int.test.ts --reporter=verbose
+pnpm exec vitest run src/lib/private-search/private-search.unit.test.ts src/components/private-search-panel.dom.test.tsx src/components/private-space-search.dom.test.tsx src/lib/private-search/private-search.int.test.ts --reporter=verbose
 
 compose exec -T postgres psql -U search_test -d cilas_search_test -c 'DROP SCHEMA public CASCADE; CREATE SCHEMA public;' >/dev/null 2>&1
 pnpm exec tsx scripts/bootstrap-search-test.ts

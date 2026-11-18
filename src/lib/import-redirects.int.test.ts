@@ -1,4 +1,3 @@
-// @vitest-environment node
 import { getPayload, type CollectionSlug, type Payload } from 'payload'
 import { afterAll, beforeAll, describe, expect, it } from 'vitest'
 

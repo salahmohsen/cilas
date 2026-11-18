@@ -1,5 +1,3 @@
-// @vitest-environment node
-// React Email renders with react-dom/server, which needs Node's streams.
 import type { PayloadRequest } from 'payload'
 import { ValidationError } from 'payload'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'

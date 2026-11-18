@@ -1,4 +1,3 @@
-// @vitest-environment node
 import { readFile } from 'node:fs/promises'
 import { getPayload, type Payload } from 'payload'
 import { afterAll, beforeAll, describe, expect, it } from 'vitest'

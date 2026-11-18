@@ -1,4 +1,3 @@
-// @vitest-environment node
 import { afterAll, beforeAll, describe, expect, it } from 'vitest'
 import { Client } from 'typesense'
 

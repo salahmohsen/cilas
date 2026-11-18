@@ -1,4 +1,3 @@
-// @vitest-environment node
 import { SignJWT } from 'jose'
 import { getFieldsToSign, getPayload, type Payload } from 'payload'
 import { addPayloadSessionToUser } from 'payload-oauth2/dist/auth-sessions'

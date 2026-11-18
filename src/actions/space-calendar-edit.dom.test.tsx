@@ -1,4 +1,3 @@
-// @vitest-environment jsdom
 import { act, cleanup, fireEvent, render, screen, waitFor, within } from '@testing-library/react'
 import { NextIntlClientProvider } from 'next-intl'
 import { afterEach, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest'

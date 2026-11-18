@@ -1,4 +1,3 @@
-// @vitest-environment node
 import { createLocalReq, type Payload } from 'payload'
 import type { PostgresAdapter } from '@payloadcms/db-postgres'
 import { afterAll, beforeAll, describe, expect, it } from 'vitest'

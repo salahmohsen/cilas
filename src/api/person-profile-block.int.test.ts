@@ -1,4 +1,3 @@
-// @vitest-environment node
 import { randomUUID } from 'node:crypto'
 import { getPayload, type Payload } from 'payload'
 import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest'

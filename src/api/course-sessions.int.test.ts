@@ -1,4 +1,3 @@
-// @vitest-environment node
 import { revalidatePath, revalidateTag } from 'next/cache'
 import { getPayload, type Payload } from 'payload'
 import { Client } from 'typesense'

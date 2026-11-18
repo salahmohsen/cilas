@@ -1,4 +1,3 @@
-// @vitest-environment node
 import { describe, expect, it } from 'vitest'
 import config from '@/payload.config'
 import { uncoveredFields } from '@/plugins/mcp/field-coverage'

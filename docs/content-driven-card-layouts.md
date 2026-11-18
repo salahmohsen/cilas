@@ -326,7 +326,7 @@ node --test src/components/arc/poster-layout.test.mjs
 
 It covers the three poster placements at 288, 358, 528, and 960 CSS pixels, in English and Arabic, with wrapped and missing fellows. Stacked cards: image growth and stable text heights. Wide cards: title growth in the side panel. The pink card's countdown is checked from 240 to 960 pixels in both directions, with larger text and a stale inline animation size. It does not cover production fonts, real images, live countdowns, carousel animation, or a deployed page; check those visually when you change them. CI runs this test in the production-smoke job.
 
-`src/components/person-profile-block.unit.test.tsx` checks that profile columns become an Arc carousel on mobile in English and Arabic, with manual navigation and no rotation control.
+`src/components/person-profile-block.browser.test.tsx` checks that profile columns become an Arc carousel on mobile in English and Arabic, with manual navigation and no rotation control.
 
 ## 9. Lessons from past bugs
 

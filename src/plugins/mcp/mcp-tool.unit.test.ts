@@ -1,4 +1,3 @@
-// @vitest-environment node
 import { describe, expect, it, vi } from 'vitest'
 import type { PayloadRequest } from 'payload'
 import { z } from 'zod/v3'
