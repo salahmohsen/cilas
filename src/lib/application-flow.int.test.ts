@@ -1,10 +1,23 @@
+import '../../testing/fan1-resend.test-utils'
+
+import { http, HttpResponse, passthrough } from 'msw'
 import { createLocalReq, getPayload, type Payload } from 'payload'
 import { randomBytes } from 'node:crypto'
-import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest'
+import { afterAll, beforeAll, describe, expect, it } from 'vitest'
 
 import config from '@/payload.config'
 import { TURNSTILE_VERIFIED } from '@/lib/turnstile'
 import type { Course, Form, FormSubmission, Person, User } from '@/payload-types'
+
+import { resendInbox } from '../../testing/fan1-resend.test-utils'
+import { mockNetwork } from '../../testing/msw-node.test-utils'
+
+const mail = resendInbox()
+const network = mockNetwork(
+  http.post('https://telemetry.payloadcms.com/events', () => HttpResponse.json({})),
+  http.all('http://localhost:8108/*', () => passthrough()),
+  mail.handler,
+)
 
 type Tracked =
   | 'forms'
@@ -17,7 +30,7 @@ type Tracked =
   | 'enrollments'
   | 'memberships'
 const created: Array<{ collection: Tracked; id: number }> = []
-const track = <T extends { id: number }>(collection: Tracked, doc: T): T => {
+const track = <T extends { id: number }>(collection: Tracked, doc: T) => {
   created.push({ collection, id: doc.id })
   return doc
 }
@@ -88,13 +101,10 @@ const submit = (email: string, data: { field: string; value: string }[]) =>
     },
   })
 
-/** Creates as the site's REST API would, so boundary hooks cannot skip it.
- * The Turnstile context marks it the way the files endpoint marks its own
- * submission: the spam check already ran where the request came from. */
 const restCreate = async (
   email: string,
   data: { field: string; value: string }[] = [{ field: 'track', value: 'Film' }],
-): Promise<FormSubmission> => {
+) => {
   const req = await createLocalReq({ user: undefined }, payload)
   ;(req as { payloadAPI?: string }).payloadAPI = 'REST'
   return payload.create({
@@ -118,7 +128,6 @@ const restCreate = async (
   } as never) as unknown as FormSubmission
 }
 
-/** One course's decision when `courseId` is given, the whole submission's (programmes) otherwise. */
 const decide = async (
   action: 'accept' | 'reject' | 'reopen' | 'resend',
   id: number,
@@ -147,7 +156,7 @@ const cleanup = async () => {
       if (person) await payload.delete({ collection: 'people', id: person }).catch(() => undefined)
       continue
     }
-    if (collection === 'people') continue // deleted with their account
+    if (collection === 'people') continue
     await payload.delete({ collection, id }).catch(() => undefined)
   }
 }
@@ -155,7 +164,6 @@ const cleanup = async () => {
 describe('the application flow, from the questions to the enrollment', () => {
   beforeAll(async () => {
     payload = await getPayload({ config: await config })
-    vi.spyOn(payload, 'sendEmail').mockResolvedValue(undefined)
     await payload
       .delete({
         collection: 'users',
@@ -166,7 +174,6 @@ describe('the application flow, from the questions to the enrollment', () => {
       collection: 'users',
       data: { email: ADMIN_EMAIL, password: 'probe-password-1', roles: ['admin'] },
     })
-    // A fellow account with its person: teaching is own-owned through it.
     fellow = await payload.create({
       collection: 'users',
       data: { email: FELLOW_EMAIL, password: 'probe-password-1', roles: ['fellow'] },
@@ -203,7 +210,6 @@ describe('the application flow, from the questions to the enrollment', () => {
   })
 
   afterAll(async () => {
-    vi.restoreAllMocks()
     await cleanup()
     await payload.destroy()
   })
@@ -285,7 +291,6 @@ describe('the application flow, from the questions to the enrollment', () => {
     await payload.update({
       collection: 'courses',
       id: course.id,
-      // Applications go only to a course that is on the site.
       data: { registration: { mode: 'own', method: 'form', form: form.id }, _status: 'published' },
       overrideAccess: true,
     })
@@ -293,7 +298,7 @@ describe('the application flow, from the questions to the enrollment', () => {
 
   it('an anonymous applicant applies; the acceptance makes the account and enrolls', async () => {
     const submission = await submit(APPLICANT_EMAIL, [
-      { field: 'track', value: 'Anthropology' }, // the label selects it on site
+      { field: 'track', value: 'Anthropology' },
       { field: 'years', value: '3' },
     ])
     track('form-submissions', submission)
@@ -351,7 +356,7 @@ describe('the application flow, from the questions to the enrollment', () => {
         expect.objectContaining({ enrollment: enrollments.docs[0].id, created: true }),
       ],
     })
-    expect(payload.sendEmail).toHaveBeenCalledWith(expect.objectContaining({ to: APPLICANT_EMAIL }))
+    expect(mail.to(APPLICANT_EMAIL)).not.toHaveLength(0)
   })
 
   it('a signed-in member keeps their account, gains no second role, and gets the enrollment', async () => {
@@ -396,7 +401,7 @@ describe('the application flow, from the questions to the enrollment', () => {
     const address = `rejected-${RUN}@cilas.test`
     const submission = await submit(address, [{ field: 'track', value: 'Film' }])
     track('form-submissions', submission)
-    vi.mocked(payload.sendEmail).mockClear()
+    mail.sent.length = 0
     const res = await decide('reject', submission.id, course.id)
     expect(res.status).toBe(200)
     expect(await res.json()).toMatchObject({ ok: true, emailed: true })
@@ -408,9 +413,7 @@ describe('the application flow, from the questions to the enrollment', () => {
     expect(rejected.status).toBe('rejected')
     expect(rejected.decided_at).toBeTruthy()
     expect(rejected.choices?.[0]).toMatchObject({ decision: 'rejected' })
-    expect(payload.sendEmail).toHaveBeenCalledWith(
-      expect.objectContaining({ to: address, subject: 'Your application to Flow Course' }),
-    )
+    expect(mail.to(address).map((m) => m.subject)).toContain('Your application to Flow Course')
     const users = await payload.find({ collection: 'users', where: { email: { equals: address } } })
     expect(users.totalDocs).toBe(0)
 
@@ -463,9 +466,8 @@ describe('the application flow, from the questions to the enrollment', () => {
     )
     const read = () =>
       payload.findByID({ collection: 'form-submissions', id: submission.id, overrideAccess: true })
-    vi.mocked(payload.sendEmail).mockClear()
+    mail.sent.length = 0
 
-    // A course application is not decided as a whole.
     expect((await decide('accept', submission.id)).status).toBe(400)
 
     expect((await decide('accept', submission.id, course.id)).status).toBe(200)
@@ -473,9 +475,7 @@ describe('the application flow, from the questions to the enrollment', () => {
     expect(now.status).toBe('new')
     expect(now.decided_at).toBeNull()
     expect(now.choices?.map((c) => c.decision)).toEqual(['accepted', 'pending'])
-    expect(payload.sendEmail).toHaveBeenLastCalledWith(
-      expect.objectContaining({ to: address, subject: 'You are accepted to Flow Course' }),
-    )
+    expect(mail.to(address).at(-1)?.subject).toBe('You are accepted to Flow Course')
     const user = (
       await payload.find({ collection: 'users', where: { email: { equals: address } }, depth: 0 })
     ).docs[0]!
@@ -496,10 +496,7 @@ describe('the application flow, from the questions to the enrollment', () => {
     expect(now.status).toBe('accepted')
     expect(now.choices?.map((c) => c.decision)).toEqual(['accepted', 'rejected'])
     expect(now.decided_at).toBe(now.choices?.[1]?.decided_at)
-    expect(payload.sendEmail).toHaveBeenLastCalledWith(
-      expect.objectContaining({ to: address, subject: 'Your application to Second Flow Course' }),
-    )
-    // The rejection enrolls no one, and the result keeps the first acceptance.
+    expect(mail.to(address).at(-1)?.subject).toBe('Your application to Second Flow Course')
     expect((await enrolled()).docs.map((e) => e.course)).toEqual([course.id])
     expect(now.result?.enrollments).toHaveLength(1)
     expect((await decide('accept', submission.id, other.id)).status).toBe(400)
@@ -566,7 +563,6 @@ describe('the application flow, from the questions to the enrollment', () => {
     now = await choice()
     expect(now.status).toBe('accepted')
 
-    // Paid enrollments are never moved by an undo.
     await payload.update({
       collection: 'enrollments',
       id: waiting.id,
@@ -583,13 +579,13 @@ describe('the application flow, from the questions to the enrollment', () => {
       'form-submissions',
       await submit(address, [{ field: 'track', value: 'Film' }]),
     )
-    vi.mocked(payload.sendEmail).mockClear()
+    mail.sent.length = 0
     const answers = await Promise.all([
       decide('accept', submission.id, course.id),
       decide('accept', submission.id, course.id),
     ])
     expect(answers.map((r) => r.status).sort()).toEqual([200, 400])
-    expect(payload.sendEmail).toHaveBeenCalledTimes(1)
+    expect(mail.sent).toHaveLength(1)
     const user = (
       await payload.find({ collection: 'users', where: { email: { equals: address } }, depth: 0 })
     ).docs[0]!
@@ -610,7 +606,7 @@ describe('the application flow, from the questions to the enrollment', () => {
       'form-submissions',
       await submit(address, [{ field: 'track', value: 'Film' }]),
     )
-    vi.mocked(payload.sendEmail).mockRejectedValueOnce(new Error('smtp down'))
+    network.use(mail.failure('smtp down'))
     const first = await decide('reject', submission.id, course.id)
     expect(await first.json()).toMatchObject({ ok: true, emailed: false })
     const read = async () =>
@@ -623,14 +619,11 @@ describe('the application flow, from the questions to the enrollment', () => {
       ).choices?.[0]
     expect(await read()).toMatchObject({ decision: 'rejected', email_failed: true })
 
-    vi.mocked(payload.sendEmail).mockClear()
+    mail.sent.length = 0
     const again = await decide('resend', submission.id, course.id)
     expect(await again.json()).toMatchObject({ ok: true, emailed: true })
-    expect(payload.sendEmail).toHaveBeenCalledWith(
-      expect.objectContaining({ to: address, subject: 'Your application to Flow Course' }),
-    )
+    expect(mail.to(address).map((m) => m.subject)).toContain('Your application to Flow Course')
     expect((await read())?.email_failed).toBe(false)
-    // Nothing to send for a course that waits.
     const waiting = track(
       'form-submissions',
       await submit(`wait-${RUN}@cilas.test`, [{ field: 'track', value: 'Film' }]),
@@ -650,7 +643,6 @@ describe('the application flow, from the questions to the enrollment', () => {
 
     await expect(restCreate(APPLICANT_EMAIL)).rejects.toThrow(/not open/)
 
-    // A local caller (a seed, a backfill) may still add a historic one.
     const backfilled = await submit('backfill@cilas.test', [{ field: 'track', value: 'Film' }])
     track('form-submissions', backfilled)
     expect(backfilled.status).toBe('new')
