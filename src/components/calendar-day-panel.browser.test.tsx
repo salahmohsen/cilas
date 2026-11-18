@@ -2,6 +2,7 @@ import { cleanup, fireEvent, render, screen, waitFor, within } from '@testing-li
 import { NextIntlClientProvider } from 'next-intl'
 import { renderToString } from 'react-dom/server'
 import { afterEach, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest'
+import { page } from 'vitest/browser'
 
 import type { CalendarAction } from '@/components/calendar/ui/block-details'
 import { Calendar } from '@/components/calendar/ui/calendar'
@@ -11,34 +12,27 @@ import type { CalendarItem } from '@/lib/calendar-items'
 
 import ar from '../../messages/ar.json'
 import en from '../../messages/en.json'
-import { stubPopupDom } from '../../testing/popup-dom.test-utils'
 
 declare global {
   var __UI_SDK_STRICT__: boolean | undefined
 }
-
-let docked: boolean | null = true
-vi.mock('@/components/calendar/ui/use-narrow', () => ({
-  useNarrow: () => false,
-  useDocked: () => docked,
-}))
-vi.mock('@/lib/use-narrow', () => ({ useNarrow: () => false }))
 
 const item = (
   id: string,
   title: string,
   blocks: CalendarItem['blocks'],
   extra: Partial<CalendarItem> = {},
-): CalendarItem => ({
-  id,
-  kind: 'session',
-  title,
-  tone: 'yellow',
-  cancelled: false,
-  version: `v-${id}`,
-  blocks,
-  ...extra,
-})
+) =>
+  ({
+    id,
+    kind: 'session',
+    title,
+    tone: 'yellow',
+    cancelled: false,
+    version: `v-${id}`,
+    blocks,
+    ...extra,
+  }) satisfies CalendarItem
 const at = (id: string, date: string, start: string, end: string) => ({
   id,
   date,
@@ -46,7 +40,6 @@ const at = (id: string, date: string, start: string, end: string) => ({
   end_time: end,
 })
 
-// Today is Tuesday 17 November 2026. Tuesday has two meetings, Wednesday none, Monday 23 four.
 const items: CalendarItem[] = [
   item('tue-a', 'Tuesday talk', [at('a', '2026-11-17', '15:15', '18:00')], {
     caption: 'Session 1',
@@ -113,7 +106,6 @@ const show = (props: Parameters<typeof Host>[0] = {}) => render(tree(props))
 
 const day = (date: string) =>
   screen.getByRole('grid').querySelector<HTMLElement>(`[data-day="${date}"]`)!
-// The surface that holds the toolbar, the grid and the panel; it carries how the panel opened.
 const layout = () => document.querySelector<HTMLElement>('[class*="layout"]')!
 const panel = () => document.querySelector<HTMLElement>('[class*="panelBody"]')!
 const status = () => screen.getByRole('status')
@@ -122,12 +114,9 @@ const key = (name: string, target: Element = document.activeElement!) =>
 
 beforeAll(async () => {
   globalThis.__UI_SDK_STRICT__ = true
-  stubPopupDom()
-  // The confirm's chunk, as a pointer over its action loads it.
   await import('@/components/confirm-dialog')
 })
 beforeEach(() => {
-  docked = true
   vi.useFakeTimers({ now: new Date('2026-11-17T10:00:00Z'), toFake: ['Date'] })
   run.mockReset()
   navigate.mockReset()
@@ -187,8 +176,8 @@ describe('the side panel in the Month view', () => {
     expect(layout().getAttribute('data-panel')).toBeNull()
   })
 
-  it('does not open beside a grid that is too narrow, and a person can still open it', () => {
-    docked = false
+  it('does not open beside a grid that is too narrow, and a person can still open it', async () => {
+    await page.viewport(800, 900)
     show()
     expect(layout().getAttribute('data-panel')).toBeNull()
     fireEvent.click(screen.getByRole('button', { name: en.CalendarUi.panel }))
@@ -259,8 +248,8 @@ describe('selecting a day', () => {
     expect(navigate).toHaveBeenLastCalledWith('month', '2026-11-23')
   })
 
-  it('keeps "N more" opening the Day view where the panel is not beside the grid', () => {
-    docked = false
+  it('keeps "N more" opening the Day view where the panel is not beside the grid', async () => {
+    await page.viewport(800, 900)
     show()
     fireEvent.click(screen.getByRole('button', { name: /more on Monday, November 23/ }))
     expect(navigate).toHaveBeenLastCalledWith('day', '2026-11-23')
@@ -282,8 +271,8 @@ describe('selecting a day', () => {
     expect(navigate).toHaveBeenLastCalledWith('month', '2026-11-17')
   })
 
-  it('keeps a press on an empty day in edit mode as it was: it opens the Day view', () => {
-    docked = false
+  it('keeps a press on an empty day in edit mode as it was: it opens the Day view', async () => {
+    await page.viewport(800, 900)
     show({ mode: 'edit' })
     fireEvent.click(day('2026-11-18'))
     expect(navigate).toHaveBeenLastCalledWith('day', '2026-11-18')
@@ -398,7 +387,7 @@ describe('details in the panel', () => {
   })
 
   it('keeps the popover at 56rem or less', async () => {
-    docked = false
+    await page.viewport(800, 900)
     show()
     fireEvent.click(screen.getByRole('button', { name: en.CalendarUi.panel }))
     fireEvent.click(day('2026-11-17').querySelector('[data-block-id]')!)
@@ -507,7 +496,6 @@ describe('actions that ask first', () => {
     it('closes the menu on Escape and returns focus to "⋯"; a second Escape closes the popover', async () => {
       const { block, dialog } = await popover()
       const more = within(dialog).getByRole('button', { name: 'More actions' })
-      // A pointer press focuses the button, as the browser does.
       more.focus()
       fireEvent.keyDown(more, { key: 'Enter' })
       const list = await screen.findByRole('menu')
