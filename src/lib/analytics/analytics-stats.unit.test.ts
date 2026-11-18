@@ -1,4 +1,5 @@
-import { describe, expect, it, vi } from 'vitest'
+import { http, HttpResponse } from 'msw'
+import { describe, expect, it } from 'vitest'
 
 import { queryConfig, runQuery, QUERY_TIMEOUT_MS } from '@/lib/analytics/posthog-query'
 import { QUERIES } from '@/lib/analytics/queries'
@@ -23,7 +24,10 @@ import {
   webVitalsFrom,
 } from '@/lib/analytics/stats'
 
-// Noon in Cairo on 2026-07-31: the last day on the charts.
+import { mockNetwork } from '../../../testing/msw-node.test-utils'
+
+const network = mockNetwork()
+
 const NOW = new Date('2026-07-31T09:00:00Z')
 const day = (offset: number) => {
   const d = new Date(Date.UTC(2026, 6, 31 + offset))
@@ -42,12 +46,11 @@ describe('reading a Query API answer', () => {
 describe('traffic', () => {
   it('totals the last 30 days, compares with the 30 before, and fills quiet days with zeros', () => {
     const rows = [
-      // 30 days before: 10 views a day on 2 days = 20; this period: 15 + 25 = 40
       [day(-50), 10, 4],
       [day(-40), 10, 6],
       [day(-10), 15, 5],
       [day(0), 25, 9],
-      [day(-200), 999, 999], // a year-old day is outside both periods
+      [day(-200), 999, 999],
     ]
     const t = trafficFrom(rows, NOW)
     expect(t.views).toHaveLength(30)
@@ -79,7 +82,6 @@ describe('traffic', () => {
 })
 
 describe('pages', () => {
-  // [path, views now, views before]
   const rows = [
     ['/en/about', 30, 10],
     ['/ar/about', 20, 5],
@@ -308,38 +310,46 @@ describe('asking PostHog', () => {
     ).toEqual({ apiHost: 'https://eu.posthog.com', projectId: '1', apiKey: 'k' })
   })
 
+  const api = 'https://eu.posthog.com/api/projects/329899/query/'
+
   it('posts a HogQL query with the key as a bearer token and a time limit', async () => {
-    const fetchMock = vi
-      .fn()
-      .mockResolvedValue({ ok: true, json: async () => ({ results: [[1]] }) })
-    const rows = await runQuery(config, 'SELECT   1\n FROM events', fetchMock as typeof fetch)
-    expect(rows).toEqual([[1]])
-    const [url, init] = fetchMock.mock.calls[0]!
-    expect(url).toBe('https://eu.posthog.com/api/projects/329899/query/')
-    expect(init.method).toBe('POST')
-    expect(init.headers.Authorization).toBe('Bearer phx_secret')
-    expect(JSON.parse(init.body)).toEqual({
-      name: 'cilas-dashboard',
-      query: { kind: 'HogQLQuery', query: 'SELECT 1 FROM events' },
-    })
-    expect(init.signal).toBeInstanceOf(AbortSignal)
+    const seen: { method: string; authorization: string | null; body: unknown }[] = []
+    network.use(
+      http.post(api, async ({ request }) => {
+        seen.push({
+          method: request.method,
+          authorization: request.headers.get('Authorization'),
+          body: await request.json(),
+        })
+        return HttpResponse.json({ results: [[1]] })
+      }),
+    )
+    expect(await runQuery(config, 'SELECT   1\n FROM events')).toEqual([[1]])
+    expect(seen).toEqual([
+      {
+        method: 'POST',
+        authorization: 'Bearer phx_secret',
+        body: {
+          name: 'cilas-dashboard',
+          query: { kind: 'HogQLQuery', query: 'SELECT 1 FROM events' },
+        },
+      },
+    ])
     expect(QUERY_TIMEOUT_MS).toBeLessThanOrEqual(5000)
   })
 
   it('fails without leaking the key or the body', async () => {
-    const fetchMock = vi.fn().mockResolvedValue({
-      ok: false,
-      status: 401,
-      json: async () => ({ detail: 'bad key phx_secret' }),
-    })
-    const error = await runQuery(config, 'q', fetchMock as typeof fetch).catch((e: Error) => e)
+    network.use(
+      http.post(api, () => HttpResponse.json({ detail: 'bad key phx_secret' }, { status: 401 })),
+    )
+    const error = await runQuery(config, 'q').catch((e: Error) => e)
     expect(error).toBeInstanceOf(Error)
     expect((error as Error).message).toBe('PostHog query failed with status 401')
     expect((error as Error).message).not.toContain('phx_secret')
   })
 
   it('fails on a wrongly shaped answer', async () => {
-    const fetchMock = vi.fn().mockResolvedValue({ ok: true, json: async () => ({ nope: 1 }) })
-    await expect(runQuery(config, 'q', fetchMock as typeof fetch)).rejects.toThrow('unexpected')
+    network.use(http.post(api, () => HttpResponse.json({ nope: 1 })))
+    await expect(runQuery(config, 'q')).rejects.toThrow('unexpected')
   })
 })
