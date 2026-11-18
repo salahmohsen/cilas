@@ -1,5 +1,5 @@
 import { getPayload, type Payload } from 'payload'
-import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest'
+import { afterAll, beforeAll, describe, expect, it } from 'vitest'
 
 import { GET, POST } from '@/app/(frontend)/api/space-email/unsubscribe/route'
 import { personOf } from '@/access'
@@ -10,17 +10,9 @@ import { sendAnnouncementEmails } from '@/lib/space-email'
 import { prefsOf, setSpaceEmail } from '@/lib/space-email-prefs'
 import { unsubscribeUrl, verifyUnsubscribeToken } from '@/lib/space-email-token'
 
+import { captureResendMail, requireResendAdapter } from '../../testing/fan2-resend.test-utils'
 import { RUN, createTracker, lockSpacesMode, uniq, uniqEmail } from '../../testing/payload.fixture'
 
-type Mail = {
-  to: string
-  subject: string
-  html: string
-  text: string
-  headers?: Record<string, string>
-}
-
-// Winter: Cairo is UTC+2, so Sunday 14:05Z is Sunday 16:05 in Cairo.
 const SUNDAY = new Date('2026-11-08T14:05:00Z')
 const MONDAY = new Date('2026-11-09T14:05:00Z')
 const at = (offsetHours: number) => new Date(SUNDAY.getTime() + offsetHours * 3_600_000)
@@ -28,8 +20,7 @@ const at = (offsetHours: number) => new Date(SUNDAY.getTime() + offsetHours * 3_
 let payload: Payload
 let unlock: () => Promise<void>
 let modeBefore: 'off' | 'trial' | 'on' = 'off'
-let sent: Mail[]
-let failFor: string | null = null
+const { mail: outbox } = captureResendMail()
 
 const { track, cleanup } = createTracker()
 
@@ -39,7 +30,7 @@ let course: { id: number }
 let space: Space
 let intro: number
 
-const mailsTo = (user: User) => sent.filter((m) => m.to === user.email)
+const mailsTo = (user: User) => outbox.sent.filter((m) => m.to === user.email)
 
 const mkUser = async (key: string, roles: ('member' | 'admin')[] = ['member']) => {
   const p = await payload.create({
@@ -104,6 +95,7 @@ describe('space email', () => {
   beforeAll(async () => {
     unlock = await lockSpacesMode()
     payload = await getPayload({ config: await (config as never as Promise<typeof config>) })
+    requireResendAdapter(payload)
     modeBefore =
       (
         (await payload.findGlobal({ slug: 'site-settings', overrideAccess: true })) as {
@@ -170,7 +162,6 @@ describe('space email', () => {
     intro = typeof introRef === 'object' ? introRef.id : introRef
     track('space-posts', intro)
 
-    // Everyone but d has introduced themselves, so the introduction gate is open for them.
     for (const key of ['a', 'b', 'c', 'e']) {
       const row = await payload.create({
         collection: 'space-comments',
@@ -181,14 +172,12 @@ describe('space email', () => {
       await stamp('space_comments', row.id, at(-24 * 40))
     }
 
-    // Choices: a has none (weekly), b daily, c stopped, d off, e Arabic.
     await setSpaceEmail(payload, users.b!.id, { digest: 'daily' })
     await setSpaceEmail(payload, users.c!.id, { stopped: true, digest: 'weekly' })
     await setSpaceEmail(payload, users.d!.id, { digest: 'off' })
     await setSpaceEmail(payload, users.e!.id, { digest: 'weekly', locale: 'ar' })
     await setMode('trial')
 
-    // The story, in time before SUNDAY.
     await post('fellow', 'Old news from the fellow', at(-24 * 10))
     const own = await post('a', 'Own post by A', at(-23))
     await post('fellow', 'Fellow plain news', at(-20))
@@ -216,30 +205,20 @@ describe('space email', () => {
     await unlock()
   })
 
-  beforeEach(() => {
-    sent = []
-    failFor = null
-    vi.spyOn(payload, 'sendEmail').mockImplementation((async (m: Mail) => {
-      if (failFor && m.to === failFor) throw Object.assign(new Error('boom'), { status: 422 })
-      sent.push(m)
-      return {}
-    }) as never)
-  })
-
   describe('digest', () => {
     it('sends nothing outside the Cairo digest hour', async () => {
       const early = await runDigests(payload, new Date('2026-11-08T13:55:00Z'), { pause: 0 })
       const late = await runDigests(payload, new Date('2026-11-08T15:05:00Z'), { pause: 0 })
       expect(early.skipped).toBe('hour')
       expect(late.skipped).toBe('hour')
-      expect(sent).toHaveLength(0)
+      expect(outbox.sent).toHaveLength(0)
     })
 
     it('sends nothing at all when there is nothing new, and records nothing', async () => {
       const quiet = new Date(SUNDAY.getTime() + 21 * 24 * 3_600_000)
       const run = await runDigests(payload, quiet, { pause: 0 })
       expect(run.sent).toBe(0)
-      expect(sent).toHaveLength(0)
+      expect(outbox.sent).toHaveLength(0)
       const { rows } = await payload.db.pool.query(
         `SELECT 1 FROM space_preferences WHERE digest_sent_at IS NOT NULL AND account_id = ANY($1)`,
         [Object.values(users).map((u) => u.id)],
@@ -254,16 +233,14 @@ describe('space email', () => {
       expect(mail).toHaveLength(1)
       const html = mail[0]!.html
       expect(html).toContain('Fellow plain news')
-      expect(html).toContain('look here') // the post that mentions A
+      expect(html).toContain('look here')
       expect(html).toContain('B replies to A')
       expect(html).not.toContain('Own post by A')
       expect(html).not.toContain('Deleted post text')
       expect(html).not.toContain('Announced already')
       expect(html).not.toContain('Old news from the fellow')
-      // Sections, in order: mentions, replies, new posts.
       expect(html.indexOf('Mentions of you')).toBeLessThan(html.indexOf('Replies to you'))
       expect(html.indexOf('Replies to you')).toBeLessThan(html.indexOf('New posts'))
-      // The mention is not repeated among the new posts.
       expect(html.match(/look here/g)).toHaveLength(1)
       expect(mail[0]!.text).toContain('Fellow plain news')
     })
@@ -284,8 +261,8 @@ describe('space email', () => {
       await clearClaims()
       await runDigests(payload, SUNDAY, { pause: 0 })
       const html = mailsTo(users.b!)[0]!.html
-      expect(html).toContain('Own post by A') // another member's post: new to B
-      expect(html).not.toContain('B replies to A') // B wrote it
+      expect(html).toContain('Own post by A')
+      expect(html).not.toContain('B replies to A')
       expect(html).not.toContain('Old news from the fellow')
     })
 
@@ -303,7 +280,6 @@ describe('space email', () => {
       await clearClaims()
       await runDigests(payload, SUNDAY, { pause: 0 })
       for (const key of ['c', 'd', 'f', 'admin']) expect(mailsTo(users[key]!)).toHaveLength(0)
-      // A withdrawn member would still have been mailed had the access rule not stopped it.
       const { rows } = await payload.db.pool.query(
         `SELECT 1 FROM space_preferences WHERE account_id = $1`,
         [users.f!.id],
@@ -338,13 +314,13 @@ describe('space email', () => {
     it('looks back from the last digest, so a later run lists only what is new since', async () => {
       await clearClaims()
       await runDigests(payload, SUNDAY, { pause: 0 })
-      sent = []
+      outbox.sent = []
       const late = await post('fellow', 'Posted after the digest', at(2))
       await runDigests(payload, MONDAY, { pause: 0 })
-      const html = mailsTo(users.b!)[0]!.html // b is daily
+      const html = mailsTo(users.b!)[0]!.html
       expect(html).toContain('Posted after the digest')
       expect(html).not.toContain('Fellow plain news')
-      expect(mailsTo(users.a!)).toHaveLength(0) // weekly: not on Monday
+      expect(mailsTo(users.a!)).toHaveLength(0)
       await payload.delete({ collection: 'space-posts', id: late, overrideAccess: true })
     })
 
@@ -357,13 +333,13 @@ describe('space email', () => {
 
     it('lets one failure pass, and gives the claim back so a retry sends it', async () => {
       await clearClaims()
-      failFor = users.a!.email
+      outbox.failFor = users.a!.email
       const first = await runDigests(payload, SUNDAY, { pause: 0 })
       expect(first.failed).toBe(1)
       expect(mailsTo(users.a!)).toHaveLength(0)
       expect(mailsTo(users.b!)).toHaveLength(1)
       expect(mailsTo(users.e!)).toHaveLength(1)
-      failFor = null
+      outbox.failFor = null
       await runDigests(payload, new Date(SUNDAY.getTime() + 5 * 60_000), { pause: 0 })
       expect(mailsTo(users.a!)).toHaveLength(1)
       expect(mailsTo(users.b!)).toHaveLength(1)
@@ -403,7 +379,7 @@ describe('space email', () => {
         overrideAccess: true,
       })
       expect((await runDigests(payload, SUNDAY, { pause: 0 })).sent).toBe(0)
-      expect(sent).toHaveLength(0)
+      expect(outbox.sent).toHaveLength(0)
       await setMode('trial')
     })
 
@@ -426,22 +402,22 @@ describe('space email', () => {
       const id = await announce('Room change for next week')
       const result = await sendAnnouncementEmails(payload, id)
       expect(result.claimed).toBe(true)
-      const to = new Set(sent.map((m) => m.to))
+      const to = new Set(outbox.sent.map((m) => m.to))
       expect(to).toEqual(
         new Set([users.a!.email, users.b!.email, users.e!.email, users.admin!.email]),
       )
-      // c stopped all email, d has not introduced themselves (cannot read it),
-      // f withdrew, and the author wrote it.
       for (const key of ['c', 'd', 'f', 'fellow']) expect(mailsTo(users[key]!)).toHaveLength(0)
-      expect(sent[0]!.headers!['List-Unsubscribe']).toContain('/api/space-email/unsubscribe?t=')
+      expect(outbox.sent[0]!.headers!['List-Unsubscribe']).toContain(
+        '/api/space-email/unsubscribe?t=',
+      )
       expect(mailsTo(users.e!)[0]!.html).toContain('dir="rtl"')
       const row = await payload.findByID({ collection: 'space-posts', id, overrideAccess: true })
       expect((row as { announcement_email_sent?: boolean }).announcement_email_sent).toBe(true)
 
-      sent = []
+      outbox.sent = []
       const again = await sendAnnouncementEmails(payload, id)
       expect(again.claimed).toBe(false)
-      expect(sent).toHaveLength(0)
+      expect(outbox.sent).toHaveLength(0)
     })
 
     it('does not mail twice when two sends overlap', async () => {
@@ -456,7 +432,7 @@ describe('space email', () => {
       const result = await sendAnnouncementEmails(payload, id)
       await setMode('trial')
       expect(result.claimed).toBe(false)
-      expect(sent).toHaveLength(0)
+      expect(outbox.sent).toHaveLength(0)
       const row = await payload.findByID({ collection: 'space-posts', id, overrideAccess: true })
       expect((row as { announcement_email_sent?: boolean }).announcement_email_sent).toBe(false)
     })
@@ -464,12 +440,12 @@ describe('space email', () => {
     it('ignores posts that are not announcements', async () => {
       const id = await post('fellow', 'Just a chat', new Date())
       expect((await sendAnnouncementEmails(payload, id)).claimed).toBe(false)
-      expect(sent).toHaveLength(0)
+      expect(outbox.sent).toHaveLength(0)
     })
 
     it('lets one failed address pass', async () => {
       const id = await announce('Exhibition opens')
-      failFor = users.a!.email
+      outbox.failFor = users.a!.email
       const result = await sendAnnouncementEmails(payload, id)
       expect(result.failed).toBe(1)
       expect(mailsTo(users.b!)).toHaveLength(1)
