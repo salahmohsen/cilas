@@ -31,6 +31,7 @@ const accountFor = async (roles: Role[], withAccount = true) => {
     },
   })
   users.push(user.id)
+  expect(await rolesOf(user.id)).toEqual(roles)
   return { person: person.id, user: user.id }
 }
 
