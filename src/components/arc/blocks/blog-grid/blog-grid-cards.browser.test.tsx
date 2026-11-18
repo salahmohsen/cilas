@@ -1,12 +1,7 @@
 import { render, screen, waitFor, fireEvent } from '@testing-library/react'
 import { useState } from 'react'
-import { describe, expect, it, vi } from 'vitest'
+import { describe, expect, it } from 'vitest'
 import { BlogGrid, type BlogPost } from '@/components/arc/blocks/blog-grid/blog-grid'
-
-vi.mock('motion/react', async (original) => ({
-  ...(await original<typeof import('motion/react')>()),
-  useReducedMotion: () => true,
-}))
 
 const posts: BlogPost[] = Array.from({ length: 13 }, (_, index) => ({
   id: String(index + 1),
@@ -46,29 +41,13 @@ function Archive() {
 
 describe('Blog Grid with server-rendered event cards', () => {
   it('filters custom cards and resets a controlled page without restoring the old type', async () => {
-    vi.stubGlobal(
-      'ResizeObserver',
-      class {
-        observe() {}
-        disconnect() {}
-      },
-    )
-    const scrollIntoView = Element.prototype.scrollIntoView
-    Element.prototype.scrollIntoView = vi.fn()
-    try {
-      render(<Archive />)
-      expect(screen.getByRole('link', { name: 'Event 4' })).toBeInTheDocument()
-      fireEvent.click(screen.getByRole('button', { name: 'Screening' }))
-      await waitFor(() => expect(screen.getByRole('link', { name: 'Event 9' })).toBeInTheDocument())
-      expect(screen.queryByRole('link', { name: 'Event 4' })).not.toBeInTheDocument()
-      fireEvent.click(screen.getByRole('button', { name: 'Next page' }))
-      await waitFor(() =>
-        expect(screen.getByRole('link', { name: 'Event 12' })).toBeInTheDocument(),
-      )
-      expect(screen.queryByRole('link', { name: 'Event 9' })).not.toBeInTheDocument()
-    } finally {
-      Element.prototype.scrollIntoView = scrollIntoView
-      vi.unstubAllGlobals()
-    }
+    render(<Archive />)
+    expect(screen.getByRole('link', { name: 'Event 4' })).toBeInTheDocument()
+    fireEvent.click(screen.getByRole('button', { name: 'Screening' }))
+    await waitFor(() => expect(screen.getByRole('link', { name: 'Event 9' })).toBeInTheDocument())
+    expect(screen.queryByRole('link', { name: 'Event 4' })).not.toBeInTheDocument()
+    fireEvent.click(screen.getByRole('button', { name: 'Next page' }))
+    await waitFor(() => expect(screen.getByRole('link', { name: 'Event 12' })).toBeInTheDocument())
+    expect(screen.queryByRole('link', { name: 'Event 9' })).not.toBeInTheDocument()
   })
 })
