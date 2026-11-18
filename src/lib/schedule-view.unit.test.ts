@@ -3,7 +3,7 @@ import { describe, expect, it } from 'vitest'
 
 import { formatsOf } from '@/i18n/formats'
 import type { CalendarItem } from '@/lib/calendar-items'
-import { sessionName } from '@/lib/calendar-sources'
+import { sessionName } from '@/lib/session-items'
 import { scheduleLineRef, scheduleToken, scheduleView, withSchedule } from '@/lib/session-refs'
 
 import ar from '../../messages/ar.json'

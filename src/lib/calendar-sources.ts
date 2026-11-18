@@ -7,22 +7,18 @@ import { localeOf } from '@/i18n/routing'
 
 import { createSession } from '@/collections/Sessions'
 import {
-  deliveryOf,
   sessionItems,
   sessionName,
   type CalendarSession,
   type SessionLabels,
 } from '@/lib/session-items'
-
-export { deliveryOf, sessionItems, sessionName }
 import { meetingProblem } from '@/fields/meetings'
-import type { CalendarBlock, CalendarChange, CalendarItem } from '@/lib/calendar-items'
+import type { CalendarChange, CalendarItem } from '@/lib/calendar-items'
 import { cairoDay, cairoTime } from '@/lib/cairo-day'
 import { relId } from '@/lib/relation'
 import { eventParts } from '@/lib/space-event'
-import { toneOf } from '@/lib/calendar'
-import { byWhen, numberedSessions, type Meeting } from '@/lib/meetings'
-import type { Course, Session, SpacePost, User } from '@/payload-types'
+import { numberedSessions, type Meeting } from '@/lib/meetings'
+import type { Course, SpacePost, User } from '@/payload-types'
 
 /**
  * One adapter per kind of calendar parent (ADR 0011): how its documents

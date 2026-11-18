@@ -4,12 +4,11 @@ import { afterAll, beforeAll, describe, expect, it } from 'vitest'
 import {
   CalendarSaveFailure,
   calendarSourceOf,
-  deliveryOf,
   meetingsAfter,
-  sessionItems,
   spaceEventItems,
   type CalendarContext,
 } from '@/lib/calendar-sources'
+import { deliveryOf, sessionItems } from '@/lib/session-items'
 import config from '@/payload.config'
 import type { Session, User } from '@/payload-types'
 
