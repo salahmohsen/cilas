@@ -7,22 +7,11 @@ import { RichTextField } from '@/components/RichTextField'
 import { RichTextReferencesProvider } from '@/components/rich-text-references'
 import type { RichTextReferences } from '@/lib/rich-text-references'
 
-vi.mock('motion/react', async (original) => ({
-  ...(await original<typeof import('motion/react')>()),
-  useReducedMotion: () => true,
-}))
-beforeEach(() => {
-  vi.stubGlobal(
-    'ResizeObserver',
-    class {
-      observe() {}
-      disconnect() {}
-    },
-  )
-})
+const stayOnPage = (event: Event) => event.preventDefault()
+beforeEach(() => document.addEventListener('click', stayOnPage))
 afterEach(() => {
+  document.removeEventListener('click', stayOnPage)
   cleanup()
-  vi.unstubAllGlobals()
 })
 
 describe('crawlable pagination', () => {
