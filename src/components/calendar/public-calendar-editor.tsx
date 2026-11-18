@@ -5,12 +5,12 @@ import { Check } from 'lucide-react'
 import { useLocale, useMessages, useTranslations } from 'next-intl'
 import { useMemo, useRef, useState } from 'react'
 
-import { loadCalendarItems } from '@/actions/load-calendar-items'
 import { Alert } from '@/components/arc/alert/alert'
 import { ButtonGroup } from '@/components/arc/button-group/button-group'
 import { Button } from '@/components/arc/button/button'
 import { useLeaveQuestion } from '@/components/space/leave-question'
 import { scheduleSaveText, type ScheduleSaveMessages } from '@/components/space/schedule-save-text'
+import { useScheduleActions } from '@/components/space/schedule-actions'
 import { useScheduleDrafts } from '@/components/space/use-schedule-drafts'
 import { useScheduleSave } from '@/components/space/use-schedule-save'
 import type { CalendarItem } from '@/lib/calendar-items'
@@ -39,6 +39,7 @@ export function PublicCalendarEditor({
   onNavigate: (view: CalendarView, day: string) => void
   onDone: () => void
 }) {
+  const { loadCalendarItems } = useScheduleActions()
   const router = useRouter()
   const locale = useLocale()
   const messages = useMessages()

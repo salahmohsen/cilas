@@ -3,7 +3,6 @@ import { useLocale, useMessages, useTranslations } from 'next-intl'
 import { useRouter } from 'next/navigation'
 import { useMemo, useRef, useState } from 'react'
 
-import { loadCalendarItems } from '@/actions/load-calendar-items'
 import { Alert } from '@/components/arc/alert/alert'
 import { Button } from '@/components/arc/button/button'
 import { Calendar } from '@/components/calendar/ui/calendar'
@@ -11,6 +10,7 @@ import type { CalendarChange, CalendarItem } from '@/lib/calendar-items'
 import { leave } from '@/lib/leave-guard'
 
 import { useLeaveQuestion } from './leave-question'
+import { useScheduleActions } from './schedule-actions'
 import { useCourseWeek, useOpenScheduleItem, useScheduleLabels } from './schedule-calendar'
 import { scheduleSaveText, type ScheduleSaveMessages } from './schedule-save-text'
 import { useScheduleDrafts } from './use-schedule-drafts'
@@ -43,6 +43,7 @@ export function SpaceCalendarEditor({
   /** Back to view mode, with nothing left to save. */
   onDone: () => void
 }) {
+  const { loadCalendarItems } = useScheduleActions()
   const locale = useLocale()
   const language = locale === 'ar' ? 'ar' : 'en'
   const messages = useMessages()

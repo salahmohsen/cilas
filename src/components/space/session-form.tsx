@@ -3,8 +3,8 @@ import { Check, Plus, X } from 'lucide-react'
 import { useLocale, useTranslations } from 'next-intl'
 import { useCallback, useEffect, useId, useMemo, useRef, useState } from 'react'
 
-import { loadSessionEdit, type SessionEdit } from '@/actions/session-edit'
-import { saveScheduleEdits, type ScheduleEditsResult } from '@/actions/save-schedule-edits'
+import type { SessionEdit } from '@/actions/session-edit'
+import type { ScheduleEditsResult } from '@/actions/save-schedule-edits'
 import { Alert } from '@/components/arc/alert/alert'
 import { Button } from '@/components/arc/button/button'
 import { Checkbox } from '@/components/arc/checkbox/checkbox'
@@ -24,6 +24,7 @@ import { preloadable } from '@/lib/preloadable'
 import { CardList } from './card-list'
 import { dayOf } from './event-fields'
 import { useLeaveQuestion } from './leave-question'
+import { useScheduleActions } from './schedule-actions'
 import type { ScheduleSaveText } from './schedule-save-text'
 import { activityKind, materialKind } from './session-cards'
 import styles from './session-form.module.css'
@@ -129,6 +130,7 @@ export function SessionForm({
   /** While the form holds changes, the way to ask before the host closes it; null when it holds none. */
   onUnsaved: (ask: ((go: () => void) => void) | null) => void
 }) {
+  const { loadSessionEdit, saveScheduleEdits } = useScheduleActions()
   const language = useLocale()
   const locale = contentLocale ?? language
   const t = useTranslations('SessionEdit')
@@ -162,7 +164,7 @@ export function SessionForm({
         ),
       () => setLoaded({ status: 'failed' }),
     )
-  }, [id, locale, stage])
+  }, [id, locale, stage, loadSessionEdit])
   useEffect(load, [load])
 
   if (loaded.status === 'loading')
@@ -246,6 +248,7 @@ function Fields({
   onUnsaved: (ask: ((go: () => void) => void) | null) => void
   words: Words
 }) {
+  const { saveScheduleEdits } = useScheduleActions()
   const locale = contentLocale
   const root = useRef<HTMLFormElement>(null)
   /** Held to the end: the hold button shows it is done until a refused delete resets it. */

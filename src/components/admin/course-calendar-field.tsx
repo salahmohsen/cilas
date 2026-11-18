@@ -1,5 +1,7 @@
 import type { FieldServerComponent } from 'payload'
 
+import { ConnectedScheduleActions } from '@/components/space/connected-schedule-actions'
+
 import { calendarAdminProps } from './calendar-admin-props'
 import { CourseCalendar } from './course-calendar'
 
@@ -15,7 +17,9 @@ export const CourseCalendarField: FieldServerComponent = ({ data, req }) => {
       dir={props.language === 'ar' ? 'rtl' : 'ltr'}
       lang={props.language}
     >
-      <CourseCalendar courseId={data.id ? String(data.id) : null} {...props} />
+      <ConnectedScheduleActions>
+        <CourseCalendar courseId={data.id ? String(data.id) : null} {...props} />
+      </ConnectedScheduleActions>
     </div>
   )
 }

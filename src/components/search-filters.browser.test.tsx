@@ -105,7 +105,7 @@ const searchAnswers = (value: unknown, options: { once?: boolean } = {}) =>
   http.post(
     '/api/spaces-search',
     async ({ request }) => {
-      sent.push(await request.json())
+      sent.push((await request.json()) as (typeof sent)[number])
       return HttpResponse.json(value as never)
     },
     options,
