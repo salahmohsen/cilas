@@ -9,6 +9,7 @@ import { publicCalendarAccess } from '@/api/public-calendar.api'
 import { getCalendarItems, getCachedCalendarItems } from '@/api/calendar.api'
 import { loadedRange, readCalendarUrl } from '@/components/calendar/calendar-url'
 import { PublicCalendar } from '@/components/calendar/public-calendar'
+import { ConnectedScheduleActions } from '@/components/space/connected-schedule-actions'
 import { kindOf, publicItems } from '@/components/calendar/public-items'
 import { cairoDay } from '@/lib/cairo-day'
 
@@ -67,22 +68,24 @@ export default async function CalendarPage({ params, searchParams }: Props) {
 
   return (
     <div className="page-frame py-10 sm:py-14">
-      <PublicCalendar
-        access={access}
-        items={publicItems(
-          access.mode === 'edit' ? meetings.filter((m) => m.kind === 'event') : meetings,
-          {
-            locale: lang,
-            session: (n) => t('session', { n }),
-            materials: (count) => t('sessionMaterials', { count }),
-            activities: (count) => t('sessionActivities', { count }),
-          },
-        )}
-        range={range}
-        today={today}
-        kinds={kinds}
-        months={[...new Set(all.map((m) => m.date.slice(0, 7)))]}
-      />
+      <ConnectedScheduleActions>
+        <PublicCalendar
+          access={access}
+          items={publicItems(
+            access.mode === 'edit' ? meetings.filter((m) => m.kind === 'event') : meetings,
+            {
+              locale: lang,
+              session: (n) => t('session', { n }),
+              materials: (count) => t('sessionMaterials', { count }),
+              activities: (count) => t('sessionActivities', { count }),
+            },
+          )}
+          range={range}
+          today={today}
+          kinds={kinds}
+          months={[...new Set(all.map((m) => m.date.slice(0, 7)))]}
+        />
+      </ConnectedScheduleActions>
     </div>
   )
 }

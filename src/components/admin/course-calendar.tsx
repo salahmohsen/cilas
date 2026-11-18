@@ -5,9 +5,9 @@ import { useScheduleDrafts } from '@/components/space/use-schedule-drafts'
 import { useLocale } from '@payloadcms/ui'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 
-import { loadCalendarItems } from '@/actions/load-calendar-items'
 import Button from '@/components/arc/button/button'
 import { Calendar } from '@/components/calendar/ui/calendar'
+import { useScheduleActions } from '@/components/space/schedule-actions'
 import { useScheduleSave } from '@/components/space/use-schedule-save'
 import {
   courseWeekOf,
@@ -52,6 +52,7 @@ export function CourseCalendar(props: Props) {
 }
 
 function CourseCalendarInner({ courseId, language, messages }: Props) {
+  const { loadCalendarItems } = useScheduleActions()
   const { code: locale } = useLocale()
   const {
     t,
@@ -86,7 +87,7 @@ function CourseCalendarInner({ courseId, language, messages }: Props) {
         : { status: 'failed', error: result.error },
     )
     return result.ok ? result.items : null
-  }, [courseId, locale])
+  }, [courseId, locale, loadCalendarItems])
 
   useEffect(() => {
     void load()

@@ -1,0 +1,133 @@
+import { getPayload, type CollectionSlug, type Payload } from 'payload'
+import { afterAll, beforeAll, describe, expect, it } from 'vitest'
+
+import config from '@/payload.config'
+import { findRedirect } from '@/lib/redirects'
+import { importRedirects, redirectTargets, type DocRef } from '../../migration/lib/import-redirects'
+import { RUN, uniq } from '../../testing/payload.fixture'
+
+let payload: Payload
+
+const P = `/proberedirects-${RUN}-`
+const L = { course: `${P}course.html`, cycle: `${P}cycle.html`, info: `${P}about.html` }
+const UPLOAD_DIR = `uploads/proberedirects-${RUN}`
+const UPLOAD = `${UPLOAD_DIR}/x.jpg`
+const UPLOAD_URL = `https://example.org/media/proberedirects-${RUN}-x.jpg`
+const PLACE_SLUG = uniq('probe-redirects-place')
+const COURSE_SLUG = uniq('probe-redirects-course')
+
+const cleanup = async () => {
+  const del = (collection: CollectionSlug, where: object) =>
+    payload
+      .delete({ collection, where, overrideAccess: true } as Parameters<Payload['delete']>[0])
+      .catch(() => undefined)
+  await del('redirects', { from: { like: P } })
+  await del('redirects', { from: { like: `/${UPLOAD_DIR}/` } })
+  await del('courses', { legacy_url: { like: P } })
+  await del('cycles', { legacy_url: { like: P } })
+  await del('places', { slug: { equals: PLACE_SLUG } })
+}
+
+describe('importRedirects', () => {
+  let docs: DocRef[]
+  let courseId: number
+  const pages = [
+    { legacy_url: L.course, kind: 'course', title: 'Probe course' },
+    { legacy_url: L.cycle, kind: 'cycle', title: 'Probe cycle' },
+    { legacy_url: L.info, kind: 'info', title: 'Probe about' },
+  ]
+
+  beforeAll(async () => {
+    payload = await getPayload({ config: await config })
+    const place = await payload.create({
+      collection: 'places',
+      data: { name: 'Probe Redirects Place', slug: PLACE_SLUG, city: `Probeville ${RUN}` },
+      overrideAccess: true,
+    })
+    const cycle = await payload.create({
+      collection: 'cycles',
+      data: { season: 'fall', start_year: 2088, place: place.id, legacy_url: L.cycle },
+      overrideAccess: true,
+    })
+    const course = await payload.create({
+      collection: 'courses',
+      data: {
+        title: 'Probe Redirects Course',
+        slug: COURSE_SLUG,
+        course_type: 'CORE',
+        legacy_url: L.course,
+        _status: 'draft',
+      },
+      draft: true,
+      overrideAccess: true,
+    })
+    courseId = course.id as number
+    docs = [
+      { collection: 'courses', id: courseId, legacy_url: L.course },
+      { collection: 'cycles', id: cycle.id as number, legacy_url: L.cycle },
+    ]
+  }, 300_000)
+
+  afterAll(async () => {
+    await cleanup()
+  }, 300_000)
+
+  const fromRow = async (from: string) =>
+    (
+      await payload.find({
+        collection: 'redirects',
+        where: { from: { equals: from } },
+        depth: 0,
+        overrideAccess: true,
+      })
+    ).docs
+
+  it('creates one redirect per page with a target, and none on a re-run', async () => {
+    const plans = redirectTargets(pages, docs)
+    const uploads = [{ legacy_url: UPLOAD, url: UPLOAD_URL }]
+    expect(await importRedirects(payload, plans, uploads)).toEqual({
+      created: 3,
+      unchanged: 0,
+      kept: 0,
+    })
+    expect(await importRedirects(payload, plans, uploads)).toEqual({
+      created: 0,
+      unchanged: 3,
+      kept: 0,
+    })
+    expect(await fromRow(L.info)).toHaveLength(0)
+
+    const [row] = await fromRow(L.course)
+    expect(row.type).toBe('301')
+    expect(row.to?.reference).toEqual({ relationTo: 'courses', value: courseId })
+    const [up] = await fromRow(`/${UPLOAD}`)
+    expect(up.to).toMatchObject({ type: 'custom', url: UPLOAD_URL })
+  })
+
+  it('resolves the legacy path without .html to the course page', async () => {
+    expect(await findRedirect(payload, `${P}course`)).toEqual({
+      url: `/study/${COURSE_SLUG}`,
+      permanent: true,
+    })
+    expect(await findRedirect(payload, `/${UPLOAD}`)).toEqual({ url: UPLOAD_URL, permanent: true })
+  })
+
+  it('keeps a redirect an admin edited', async () => {
+    const [row] = await fromRow(L.course)
+    await payload.update({
+      collection: 'redirects',
+      id: row.id,
+      data: { to: { type: 'custom', url: '/somewhere-else' } },
+      overrideAccess: true,
+    })
+    expect(await importRedirects(payload, redirectTargets(pages, docs), [])).toEqual({
+      created: 0,
+      unchanged: 1,
+      kept: 1,
+    })
+    expect((await fromRow(L.course))[0].to).toMatchObject({
+      type: 'custom',
+      url: '/somewhere-else',
+    })
+  })
+})

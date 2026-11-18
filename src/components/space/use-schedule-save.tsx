@@ -1,13 +1,12 @@
 import { useState, type ReactNode } from 'react'
 
-import { saveScheduleEdits } from '@/actions/save-schedule-edits'
-import { scheduleOffers } from '@/actions/schedule-offers'
 import { CalendarSaveRefusal } from '@/components/calendar/ui/save-refusal'
 import type { SessionDetailChange } from '@/lib/session-edit'
 import type { CalendarChange, CalendarItem } from '@/lib/calendar-items'
 import { preloadable } from '@/lib/preloadable'
 import type { ScheduleOffer } from '@/lib/schedule-offer'
 
+import { useScheduleActions } from './schedule-actions'
 import type { ScheduleSaveText } from './schedule-save-text'
 
 const ScheduleOfferDialog = preloadable(
@@ -44,6 +43,7 @@ export function useScheduleOffer({
   language: 'en' | 'ar'
   text: ScheduleSaveText
 }) {
+  const { scheduleOffers, publishOffer } = useScheduleActions()
   const [offered, setOffered] = useState<{ offers: ScheduleOffer[]; returnTo: ReturnTo } | null>(
     null,
   )
@@ -80,6 +80,7 @@ export function useScheduleOffer({
       dir={language === 'ar' ? 'rtl' : 'ltr'}
       onClose={() => setOffered(null)}
       returnFocus={offered.returnTo}
+      publish={publishOffer}
     />
   ) : null
 
@@ -113,6 +114,7 @@ export function useScheduleSave({
   text: ScheduleSaveText
   reload: () => void
 }) {
+  const { saveScheduleEdits } = useScheduleActions()
   const offering = useScheduleOffer(offerOptions)
   const { locale, text } = offerOptions
 

@@ -25,7 +25,7 @@ import { PostFoot } from './post-foot'
 import { PostSession } from './post-session'
 import { spacePeopleCards } from '@/lib/space-people'
 import styles from './space.module.css'
-import { VotePoll } from './vote-poll'
+import { ConnectedVotePoll } from './connected-vote-poll'
 
 /** In the post dialog: how many comments show first, and how many each "Show more" adds. */
 const DIALOG_COMMENTS = { limit: 6, step: 10 }
@@ -155,7 +155,7 @@ export async function PostArticle({
         <PostSession session={row.session} kind={post.kind} postHref={href} />
       )}
       {!deleted && row.vote && (
-        <VotePoll
+        <ConnectedVotePoll
           post={post.id}
           vote={row.vote}
           viewer={context.viewer}

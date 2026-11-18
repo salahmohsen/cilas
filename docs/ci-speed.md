@@ -64,11 +64,11 @@ fixtures 14s, containers 12s, browser 11s, install and setup about 25s.
    collection types, `tsc` and `tsgo` printed identical errors. Next's own `next build`
    still runs `tsc`, so the production build keeps a second type check. `pnpm typecheck:tsc`
    remains for a manual comparison.
-2. **Vitest `--no-isolate` for `tests/unit`** (adopted, unit tests only). The first try
+2. **Vitest `--no-isolate` for unit tests (`*.unit.test.ts`)** (adopted, unit tests only). The first try
    failed once in four runs: `public-event-card` got a mocked child component left by
    another file. `vitest.setup.ts` now calls `vi.resetModules()` and RTL `cleanup()`.
    After that: 6 runs with the default scheduler and 3 runs with one worker and shuffled
-   file order all passed (886 tests). `tests/int` still uses isolation (`pnpm test:int` is unchanged).
+   file order all passed (886 tests). integration tests (`*.int.test.ts`) still uses isolation (`pnpm test:int` is unchanged).
 3. **Caches** (adopted): `.next/cache` (restored everywhere, saved only by pushes to `main`) and
    `~/.cache/ms-playwright` (keyed by Playwright version). The pnpm store cache from
    `actions/setup-node` already existed and is keyed on the lockfile; `main` saves it first.
@@ -88,7 +88,7 @@ fixtures 14s, containers 12s, browser 11s, install and setup about 25s.
 - **Turning off the type check inside `next build`** (rejected). It would save about 33s of the
   `production-smoke` build, but it removes the second, independent compiler check of the production
   build. Say so if you want it.
-- **`isolate: false` for `tests/int`** (not done). They share a database and need their own measurement.
+- **`isolate: false` for integration tests** (not done). They share a database and need their own measurement.
 - **`concurrency` with `cancel-in-progress`**: already present.
 - **Paid runners, larger runners, hosted caches**: out of scope (free changes only).
 

@@ -15,7 +15,7 @@ import { RadioGroup } from '@/components/arc/radio-group/radio-group'
 import { Textarea } from '@/components/arc/textarea/textarea'
 import { ABOUT_MAX } from '@/lib/space-rules'
 import { RULES_MAX } from '@/lib/space-consent'
-import { spaceSettingsSetAction } from '@/lib/space-actions'
+import type { SpacesWriteState } from '@/lib/space-actions'
 import { useNarrow } from '@/lib/use-narrow'
 
 import { saveErrorKey } from '@/lib/space-rules'
@@ -34,6 +34,7 @@ export function SpaceSettings({
   open,
   onOpenChange,
   anchor,
+  save,
 }: {
   space: number
   posting: string
@@ -49,6 +50,8 @@ export function SpaceSettings({
   onOpenChange: (open: boolean) => void
   /** The space head's button group: its Settings segment opens this, but a segment is not a Radix trigger. */
   anchor: ReactNode
+  /** Saves the settings, as the space settings action does */
+  save: (form: FormData) => Promise<SpacesWriteState>
 }) {
   const t = useTranslations('Spaces')
   const tp = useTranslations('SpacePost')
@@ -144,7 +147,7 @@ export function SpaceSettings({
           form.set('rules', ruleText)
           form.set('locale', locale)
           if (archived && reopen) form.set('reopen', 'true')
-          const result = await spaceSettingsSetAction({ status: 'ok' }, form)
+          const result = await save(form)
           if (result.status === 'error') {
             setError(tp(saveErrorKey(result.error)))
             throw new Error(result.error)

@@ -62,3 +62,7 @@ typesense-data
 
 # Snapshots of reader output (scripts/snapshot-course-readers.ts)
 /.snapshots/
+
+# Vitest browser-mode failure screenshots
+__screenshots__/
+.vitest-attachments/

@@ -52,6 +52,7 @@ import { sessionDrawerHref } from '@/lib/session-drawer-url'
 
 import { SpaceViews } from './space-views'
 import { SpaceCalendar } from './space-calendar'
+import { ConnectedScheduleActions } from './connected-schedule-actions'
 import { SessionDrawerHost, SessionLink } from './session-drawer-host'
 import { sessionPostsHref } from './session-chip'
 import { AboutClamp } from './about-clamp'
@@ -70,7 +71,7 @@ import { NextSession } from './next-session'
 import { sessionContextOf } from './session-block'
 import { CHECKLIST_COOKIE, OnboardingChecklist } from './onboarding-checklist'
 import { POSTER_COLORS } from '@/components/arc/lib/poster-colors'
-import { SpaceHeadActions } from './space-head-actions'
+import { ConnectedSpaceHeadActions } from './connected-space-head-actions'
 import { spacePeopleCards } from '@/lib/space-people'
 import { SpaceRail } from './space-rail'
 import { StickyRail } from './sticky-rail'
@@ -444,7 +445,7 @@ export async function SpacePage({
   )
 
   const actions = (
-    <SpaceHeadActions
+    <ConnectedSpaceHeadActions
       cell={!course}
       coursePage={course ? detailPath('courses', String(course.slug), locale) : null}
       rail={rail}
@@ -719,8 +720,10 @@ export async function SpacePage({
   )
   return (
     <RichTextScope data={course} locale={locale} user={user}>
-      {content}
-      <SessionDrawerHost />
+      <ConnectedScheduleActions>
+        {content}
+        <SessionDrawerHost />
+      </ConnectedScheduleActions>
     </RichTextScope>
   )
 }

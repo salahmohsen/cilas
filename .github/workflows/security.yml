@@ -93,6 +93,15 @@ jobs:
           pnpm typecheck
       - name: Lint
         run: pnpm lint
+      - name: Read Playwright version
+        id: playwright
+        run: echo "version=$(pnpm exec playwright --version | awk '{print $2}')" >> "$GITHUB_OUTPUT"
+      # The unit tests include Vitest's browser project, which runs in Chromium.
+      - uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830 # v4
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-${{ runner.os }}-${{ steps.playwright.outputs.version }}
+      - run: pnpm exec playwright install --with-deps chromium
       - name: Unit tests
         run: |
           . ./scripts/search-test-env.sh
@@ -138,7 +147,7 @@ jobs:
           key: playwright-${{ runner.os }}-${{ steps.playwright.outputs.version }}
       - run: pnpm exec playwright install --with-deps chromium
       - name: Check registration card layout in Chromium
-        run: node --test tests/poster-layout.test.mjs
+        run: node --test src/components/arc/poster-layout.test.mjs
       - name: Initialize disposable current-schema fixtures
         run: |
           . ./scripts/smoke-test-env.sh

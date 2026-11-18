@@ -15,7 +15,7 @@ import { AvatarGroup } from '@/components/arc/avatar-group/avatar-group'
 import { ResponsiveDialog } from '@/components/responsive-dialog'
 import { motionTokens } from '@/components/arc/lib/motion-tokens'
 import { numberingSystemOf } from '@/lib/digits'
-import { voteSetAction } from '@/lib/space-actions'
+import type { SpacesWriteState } from '@/lib/space-actions'
 import type { VoteView, Voter } from '@/lib/spaces-data'
 
 import { saveErrorKey } from '@/lib/space-rules'
@@ -59,13 +59,7 @@ const FACES = 6
  * who chose each option, all of them one tap away; an anonymous one never
  * receives them. A vote past its closing time shows results only.
  */
-export function VotePoll({
-  post,
-  vote,
-  disabled,
-  people,
-  viewer,
-}: {
+export type VotePollProps = {
   post: number
   vote: VoteView
   /** The space's people, so a voter's face opens the same card as everywhere else */
@@ -73,7 +67,11 @@ export function VotePoll({
   viewer: ThreadViewer
   /** Archived or locked: results only */
   disabled: boolean
-}) {
+  /** Records the member's whole choice, as the post's vote action does */
+  save: (form: FormData) => Promise<SpacesWriteState>
+}
+
+export function VotePoll({ post, vote, disabled, people, viewer, save }: VotePollProps) {
   const t = useTranslations('SpacePost')
   const format = useFormatter()
   const locale = useLocale()
@@ -103,7 +101,7 @@ export function VotePoll({
             ? { personId: viewer.personId, ...viewer.me }
             : null,
       })
-      const result = await voteSetAction({ status: 'ok' }, form)
+      const result = await save(form)
       if (result.status === 'ok') {
         setStatus(t(options.length ? 'voteSaved' : 'voteWithdrawn'))
         router.refresh()

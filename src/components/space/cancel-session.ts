@@ -1,5 +1,6 @@
-import { saveScheduleEdits, type ScheduleEditsResult } from '@/actions/save-schedule-edits'
-import { loadSessionEdit } from '@/actions/session-edit'
+import type { ScheduleEditsResult } from '@/actions/save-schedule-edits'
+
+import type { ScheduleActions } from './schedule-actions'
 
 /**
  * Cancels a session, or restores it, through the one save path (decision 11):
@@ -11,6 +12,10 @@ export async function setSessionCancelled(
   id: string,
   cancelled: boolean,
   locale: string,
+  {
+    loadSessionEdit,
+    saveScheduleEdits,
+  }: Pick<ScheduleActions, 'loadSessionEdit' | 'saveScheduleEdits'>,
 ): Promise<ScheduleEditsResult> {
   const loaded = await loadSessionEdit(id, locale)
   if (!loaded.ok)

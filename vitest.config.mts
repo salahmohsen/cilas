@@ -1,32 +1,81 @@
+import { config as readDotenv } from 'dotenv'
 import { defineConfig } from 'vitest/config'
 import react from '@vitejs/plugin-react'
 import tsconfigPaths from 'vite-tsconfig-paths'
+import { playwright } from '@vitest/browser-playwright'
+
+import { testEnv } from './testing/local-env'
+
+const ignored = ['**/node_modules/**', '.next/**']
+const browserTests = ['**/*.browser.test.{ts,tsx}']
+const dotenv: Record<string, string> = {}
+readDotenv({ processEnv: dotenv })
+const browserEnv = {
+  ...Object.fromEntries(
+    Object.entries({ ...dotenv, ...process.env }).filter(([name]) =>
+      name.startsWith('NEXT_PUBLIC_'),
+    ),
+  ),
+  NEXT_PUBLIC_TURNSTILE_SITE_KEY: '1x00000000000000000000AA',
+  NEXT_PUBLIC_TYPESENSE_API_KEY: 'browser-test-search-only-key',
+}
 
 export default defineConfig({
   plugins: [tsconfigPaths(), react()],
   test: {
-    environment: 'jsdom',
-    setupFiles: ['./vitest.setup.ts'],
-    // getPayload boots the whole config and opens a Postgres pool, which
-    // comfortably exceeds vitest's 10s default on a remote database.
     hookTimeout: 120_000,
     testTimeout: 120_000,
-    // Unit tests share one process (--no-isolate), so a stubbed global such as
-    // fetch would otherwise reach the files that run after it. Stub in beforeEach.
     unstubGlobals: true,
-    include: [
-      'tests/unit/**/*.unit.spec.ts',
-      'tests/unit/**/*.unit.spec.tsx',
-      'tests/int/**/*.int.spec.ts',
-    ],
+    unstubEnvs: true,
+    env: testEnv(),
+    execArgv: ['--no-experimental-webstorage'],
     server: {
       deps: {
-        // payload-theme and payload-oauth2 ship extensionless relative imports
-        // (`from './theme'`).
-        // Next's bundler resolves those; vitest's native ESM loader does not, so
-        // without inlining it every int test fails to import payload.config.
         inline: ['payload-theme', 'payload-oauth2', 'next-intl'],
       },
     },
+    projects: [
+      {
+        extends: true,
+        resolve: {
+          alias: { 'server-only': 'next/dist/compiled/server-only/empty.js' },
+        },
+        test: {
+          name: 'node',
+          setupFiles: ['./vitest.setup.ts'],
+          environment: 'node',
+          include: ['**/*.{int,unit}.test.{ts,tsx}'],
+          exclude: ignored,
+        },
+      },
+      {
+        extends: true,
+        test: {
+          name: 'dom',
+          setupFiles: ['./vitest.setup.ts'],
+          environment: 'jsdom',
+          include: ['**/*.dom.test.{ts,tsx}'],
+          exclude: ignored,
+        },
+      },
+      {
+        extends: true,
+        define: { 'process.env': JSON.stringify({ ...browserEnv, NODE_ENV: 'test' }) },
+        optimizeDeps: { entries: browserTests, force: true },
+        publicDir: 'node_modules/msw/lib',
+        test: {
+          name: 'browser',
+          include: browserTests,
+          exclude: ignored,
+          setupFiles: ['./vitest.browser.setup.ts'],
+          browser: {
+            enabled: true,
+            headless: true,
+            provider: playwright(),
+            instances: [{ browser: 'chromium', viewport: { width: 1280, height: 800 } }],
+          },
+        },
+      },
+    ],
   },
 })

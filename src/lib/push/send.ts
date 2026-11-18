@@ -44,13 +44,11 @@ export type PushSubscriptionRow = {
   locale?: string | null
 }
 
-export type PushSender = (
+const send = (
   subscription: { endpoint: string; keys: { p256dh: string; auth: string } },
   body: string,
   config: PushConfig,
-) => Promise<unknown>
-
-const send: PushSender = (subscription, body, config) =>
+) =>
   webpush.sendNotification(subscription, body, {
     TTL: 60 * 60 * 24,
     urgency: 'normal',
@@ -93,7 +91,7 @@ export const pushBody = (note: PushNote, locale: string | null | undefined): str
   return json
 }
 
-type Deps = { config?: PushConfig | null; sender?: PushSender }
+type Deps = { config?: PushConfig | null }
 
 /** The status a push service answered with, if it answered. */
 const statusOf = (error: unknown): number | undefined =>
@@ -131,11 +129,10 @@ export const sendPushForNotification = async (
       pagination: false,
       overrideAccess: true,
     })
-    const sender = deps.sender ?? send
     await Promise.all(
       (docs as unknown as PushSubscriptionRow[]).map(async (row) => {
         try {
-          await sender(
+          await send(
             { endpoint: row.endpoint, keys: { p256dh: row.p256dh, auth: row.auth } },
             pushBody(note, row.locale),
             config,
