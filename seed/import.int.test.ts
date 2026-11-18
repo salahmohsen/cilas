@@ -39,7 +39,6 @@ describe('archive import foundations', () => {
   })
 
   it('refuses to reset a database that holds courses, unless asked to wipe', async () => {
-    // Whatever else the database holds, this course makes it non-empty.
     const place = track(
       'places',
       await payload.create({

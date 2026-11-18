@@ -25,21 +25,22 @@ const cycles: ArchiveCycle[] = [
     legacy_url: CYCLE_URL,
   },
 ]
-const course = (over: Partial<ArchiveCourse> = {}): ArchiveCourse => ({
-  legacy_url: COURSE_URL,
-  cycle: 'fall-2031-probe',
-  title: `Probe Import Course ${RUN}`,
-  title_ar: null,
-  subtitle: null,
-  course_type: 'SHORT',
-  fellows: [{ name: FELLOW, email: null, bio: 'A fellow.' }],
-  location: ['ONLINE'],
-  schedule: { start_precision: 'day', slots: [], note: 'Tuesdays' },
-  description: 'First paragraph.\n\nSecond paragraph.',
-  flow_uploads: [],
-  register_url: 'https://forms.gle/probe',
-  ...over,
-})
+const course = (over: Partial<ArchiveCourse> = {}) =>
+  ({
+    legacy_url: COURSE_URL,
+    cycle: 'fall-2031-probe',
+    title: `Probe Import Course ${RUN}`,
+    title_ar: null,
+    subtitle: null,
+    course_type: 'SHORT',
+    fellows: [{ name: FELLOW, email: null, bio: 'A fellow.' }],
+    location: ['ONLINE'],
+    schedule: { start_precision: 'day', slots: [], note: 'Tuesdays' },
+    description: 'First paragraph.\n\nSecond paragraph.',
+    flow_uploads: [],
+    register_url: 'https://forms.gle/probe',
+    ...over,
+  }) satisfies ArchiveCourse
 
 const cleanup = async () => {
   for (const [collection, where] of [
@@ -123,7 +124,6 @@ describe('archive course import', () => {
     })
     expect(ar.title).toBe('توأم')
 
-    // A re-run updates both in place and keeps their slugs.
     await importCourses(payload, { cycles, courses: [twin(1), twin(2)] })
     const again = await payload.find({
       collection: 'courses',

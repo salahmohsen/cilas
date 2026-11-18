@@ -7,8 +7,6 @@ import { up, down } from '@/migrations/20261110_180434_application_enrollment_re
 import { scratchPayload } from '../../../testing/scratch-database.test-utils'
 
 it('copies old single-course and JSON results into relationships and typed outcomes without duplicate links', async () => {
-  // The migration changes the schema of the tables other files write to, so it
-  // runs in a database of its own.
   const scratch = await scratchPayload()
   const { applicationFixture } = await import('../../../testing/application.fixture')
   const f = await applicationFixture()

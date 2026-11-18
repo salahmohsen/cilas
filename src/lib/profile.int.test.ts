@@ -111,8 +111,6 @@ describe('profile', () => {
   })
 
   it('edits only the member’s own person', async () => {
-    // saveProfile always writes personOf(user); the collection rule is what
-    // keeps a member off everyone else's person.
     await expect(
       payload.update({
         collection: 'people',
@@ -129,7 +127,6 @@ describe('profile', () => {
     })
     expect(other.name).toBe('Profile Other')
 
-    // An account with no person gets nothing.
     const nobody = {
       id: -4,
       roles: ['member'],
@@ -147,7 +144,7 @@ describe('profile', () => {
     ).toEqual({ ok: false, error: 'no-person' })
   })
 
-  const base = (over: Partial<ProfileInput> = {}): ProfileInput => ({
+  const base = (over: Partial<ProfileInput> = {}) => ({
     name: { en: 'Nour Probe', ar: 'نور' },
     bio: { en: '', ar: '' },
     website: '',
@@ -284,8 +281,6 @@ describe('profile', () => {
     ).toEqual({ ok: false, error: 'bio' })
   })
 
-  // Earlier tests leave a read-only bio (underlined text) on the person; the
-  // tests that write a bio start from an empty one.
   const clearBio = async () => {
     for (const locale of ['en', 'ar'] as const) {
       await payload.update({

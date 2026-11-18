@@ -24,144 +24,145 @@ const L = {
 const PRESS_URL = `https://example.org/probecontent-${RUN}-press`
 const SEEDED_TITLE = `Probe Content Seeded Title ${RUN}`
 
-const content = (reviewedBody = 'Imported over a reviewed article'): ArchiveContent => ({
-  articles: [
-    {
-      legacy_url: L.pair,
-      kind: 'essay',
-      title_en: `Probe Content Pair ${RUN}`,
-      title_ar: 'زوج الاختبار',
-      match_titles_en: [],
-      blocks_en: [
-        { type: 'heading', level: 2, text: 'English heading' },
-        {
-          type: 'paragraph',
-          level: null,
-          text: 'English first paragraph with a [link](https://example.org/x).',
-        },
-        { type: 'quote', level: null, text: 'An English quote' },
-      ],
-      blocks_ar: [
-        { type: 'heading', level: 2, text: 'عنوان عربي' },
-        { type: 'paragraph', level: null, text: 'الفقرة العربية الأولى' },
-        { type: 'quote', level: null, text: 'اقتباس عربي' },
-      ],
-      authors: [`Probe Content Author ${RUN}`],
-      credits: [
-        {
-          role: 'translator',
-          label: { en: 'Translation', ar: 'ترجمة' },
-          people: [`Probe Content Translator ${RUN}`],
-        },
-      ],
-      translation: null,
-      publication: L.publication,
-      published_date: null,
-    },
-    {
-      legacy_url: L.booklet,
-      kind: 'essay',
-      title_en: `Probe Content Booklet ${RUN}`,
-      title_ar: 'كتيب الاختبار',
-      match_titles_en: [],
-      blocks_en: null,
-      blocks_ar: [{ type: 'paragraph', level: null, text: 'نص عربي فقط' }],
-      authors: [`Probe Content Author ${RUN}`],
-      credits: [],
-      translation: {
-        original_language: 'en',
-        original_title: 'Original',
-        original_authors: [`Probe Content Original ${RUN}`],
-        original_source: 'A journal, 2016',
+const content = (reviewedBody = 'Imported over a reviewed article') =>
+  ({
+    articles: [
+      {
+        legacy_url: L.pair,
+        kind: 'essay',
+        title_en: `Probe Content Pair ${RUN}`,
+        title_ar: 'زوج الاختبار',
+        match_titles_en: [],
+        blocks_en: [
+          { type: 'heading', level: 2, text: 'English heading' },
+          {
+            type: 'paragraph',
+            level: null,
+            text: 'English first paragraph with a [link](https://example.org/x).',
+          },
+          { type: 'quote', level: null, text: 'An English quote' },
+        ],
+        blocks_ar: [
+          { type: 'heading', level: 2, text: 'عنوان عربي' },
+          { type: 'paragraph', level: null, text: 'الفقرة العربية الأولى' },
+          { type: 'quote', level: null, text: 'اقتباس عربي' },
+        ],
+        authors: [`Probe Content Author ${RUN}`],
+        credits: [
+          {
+            role: 'translator',
+            label: { en: 'Translation', ar: 'ترجمة' },
+            people: [`Probe Content Translator ${RUN}`],
+          },
+        ],
+        translation: null,
+        publication: L.publication,
+        published_date: null,
       },
-      publication: null,
-      published_date: null,
-    },
-    {
-      legacy_url: L.seeded,
-      kind: 'essay',
-      title_en: `Probe Content Seeded Replacement ${RUN}`,
-      title_ar: null,
-      match_titles_en: [SEEDED_TITLE],
-      blocks_en: [{ type: 'paragraph', level: null, text: 'The full text replaces the digest.' }],
-      blocks_ar: null,
-      authors: [`Probe Content Author ${RUN}`],
-      credits: [],
-      translation: null,
-      publication: null,
-      published_date: null,
-    },
-    {
-      legacy_url: L.reviewed,
-      kind: 'blog',
-      title_en: `Probe Content Reviewed ${RUN}`,
-      title_ar: null,
-      match_titles_en: [],
-      blocks_en: [{ type: 'paragraph', level: null, text: reviewedBody }],
-      blocks_ar: null,
-      authors: [`Probe Content Author ${RUN}`],
-      credits: [],
-      translation: null,
-      publication: null,
-      published_date: '2015-02-24',
-    },
-  ],
-  publications: [
-    {
-      legacy_url: L.publication,
-      kind: 'essay_collection',
-      title_en: `Probe Content Collection ${RUN}`,
-      title_ar: 'مجموعة الاختبار',
-      subtitle_en: null,
-      subtitle_ar: null,
-      match_titles_en: [],
-      year_from: 2018,
-      year_to: 2018,
-      intro_en: [{ type: 'paragraph', level: null, text: 'Intro.' }],
-      intro_ar: null,
-      foreword: L.pair,
-      articles: [L.pair, L.seeded],
-      credits: [{ role: 'editor', people: [`Probe Content Author ${RUN}`] }],
-      funders: [`Probe Content Funder ${RUN}`],
-      license: 'cc_by_nc_sa',
-      produced_by: [],
-      print_edition_url: `https://example.org/probecontent-${RUN}.pdf`,
-    },
-  ],
-  press: [
-    {
-      legacy_url: L.press,
-      kind: 'coverage',
-      title: `Probe Content Press ${RUN}`,
-      language: 'en',
-      outlet: `Probe Content Outlet ${RUN}`,
-      authors: [`Probe Content Author ${RUN}`, 'A Free Name'],
-      published_date: '2019-09-18',
-      date_precision: 'day',
-      links: [{ language: 'en', url: PRESS_URL }],
-      excerpt: null,
-    },
-  ],
-  events: [
-    {
-      legacy_url: L.event,
-      title_en: `Probe Content Talk ${RUN}`,
-      event_type: 'talk',
-      tier: 'public',
-      schedule: { start_date: '2014-01-06', start_precision: 'day', weeks: 1, slots: [] },
-      speakers: [`Probe Content Author ${RUN}`],
-      description_en: [{ type: 'paragraph', level: null, text: 'A talk.' }],
-    },
-  ],
-  newsletters: [
-    {
-      legacy_url: L.newsletter,
-      title_en: `Probe Content Issue ${RUN}`,
-      issue_date: '2013-06-01',
-      blocks_en: [{ type: 'paragraph', level: null, text: 'Dear friends.' }],
-    },
-  ],
-})
+      {
+        legacy_url: L.booklet,
+        kind: 'essay',
+        title_en: `Probe Content Booklet ${RUN}`,
+        title_ar: 'كتيب الاختبار',
+        match_titles_en: [],
+        blocks_en: null,
+        blocks_ar: [{ type: 'paragraph', level: null, text: 'نص عربي فقط' }],
+        authors: [`Probe Content Author ${RUN}`],
+        credits: [],
+        translation: {
+          original_language: 'en',
+          original_title: 'Original',
+          original_authors: [`Probe Content Original ${RUN}`],
+          original_source: 'A journal, 2016',
+        },
+        publication: null,
+        published_date: null,
+      },
+      {
+        legacy_url: L.seeded,
+        kind: 'essay',
+        title_en: `Probe Content Seeded Replacement ${RUN}`,
+        title_ar: null,
+        match_titles_en: [SEEDED_TITLE],
+        blocks_en: [{ type: 'paragraph', level: null, text: 'The full text replaces the digest.' }],
+        blocks_ar: null,
+        authors: [`Probe Content Author ${RUN}`],
+        credits: [],
+        translation: null,
+        publication: null,
+        published_date: null,
+      },
+      {
+        legacy_url: L.reviewed,
+        kind: 'blog',
+        title_en: `Probe Content Reviewed ${RUN}`,
+        title_ar: null,
+        match_titles_en: [],
+        blocks_en: [{ type: 'paragraph', level: null, text: reviewedBody }],
+        blocks_ar: null,
+        authors: [`Probe Content Author ${RUN}`],
+        credits: [],
+        translation: null,
+        publication: null,
+        published_date: '2015-02-24',
+      },
+    ],
+    publications: [
+      {
+        legacy_url: L.publication,
+        kind: 'essay_collection',
+        title_en: `Probe Content Collection ${RUN}`,
+        title_ar: 'مجموعة الاختبار',
+        subtitle_en: null,
+        subtitle_ar: null,
+        match_titles_en: [],
+        year_from: 2018,
+        year_to: 2018,
+        intro_en: [{ type: 'paragraph', level: null, text: 'Intro.' }],
+        intro_ar: null,
+        foreword: L.pair,
+        articles: [L.pair, L.seeded],
+        credits: [{ role: 'editor', people: [`Probe Content Author ${RUN}`] }],
+        funders: [`Probe Content Funder ${RUN}`],
+        license: 'cc_by_nc_sa',
+        produced_by: [],
+        print_edition_url: `https://example.org/probecontent-${RUN}.pdf`,
+      },
+    ],
+    press: [
+      {
+        legacy_url: L.press,
+        kind: 'coverage',
+        title: `Probe Content Press ${RUN}`,
+        language: 'en',
+        outlet: `Probe Content Outlet ${RUN}`,
+        authors: [`Probe Content Author ${RUN}`, 'A Free Name'],
+        published_date: '2019-09-18',
+        date_precision: 'day',
+        links: [{ language: 'en', url: PRESS_URL }],
+        excerpt: null,
+      },
+    ],
+    events: [
+      {
+        legacy_url: L.event,
+        title_en: `Probe Content Talk ${RUN}`,
+        event_type: 'talk',
+        tier: 'public',
+        schedule: { start_date: '2014-01-06', start_precision: 'day', weeks: 1, slots: [] },
+        speakers: [`Probe Content Author ${RUN}`],
+        description_en: [{ type: 'paragraph', level: null, text: 'A talk.' }],
+      },
+    ],
+    newsletters: [
+      {
+        legacy_url: L.newsletter,
+        title_en: `Probe Content Issue ${RUN}`,
+        issue_date: '2013-06-01',
+        blocks_en: [{ type: 'paragraph', level: null, text: 'Dear friends.' }],
+      },
+    ],
+  }) satisfies ArchiveContent
 
 const cleanup = async () => {
   const like = { legacy_url: { like: P } }
@@ -178,7 +179,7 @@ const cleanup = async () => {
   }
 }
 
-const article = async (legacy: string, locale: 'en' | 'ar' = 'en'): Promise<Article> =>
+const article = async (legacy: string, locale: 'en' | 'ar' = 'en') =>
   (
     await payload.find({
       collection: 'articles',
@@ -191,7 +192,7 @@ const article = async (legacy: string, locale: 'en' | 'ar' = 'en'): Promise<Arti
     })
   ).docs[0]
 const plain = (doc: unknown) => JSON.stringify(doc ?? null)
-const nodeTypes = (a: Article): string[] =>
+const nodeTypes = (a: Article) =>
   ((a.body?.root.children ?? []) as Array<{ type: string }>).map((c) => c.type)
 
 describe('publishing content import', () => {
@@ -202,8 +203,6 @@ describe('publishing content import', () => {
       data: { name: `Probe Content Author ${RUN}`, slug: uniq('probe-content-author') },
       overrideAccess: true,
     })
-    // An article the old dev seed would have made: a digest, a community tier,
-    // no legacy URL.
     await payload.create({
       collection: 'articles',
       data: {
@@ -217,7 +216,6 @@ describe('publishing content import', () => {
       },
       overrideAccess: true,
     })
-    // A booklet article that already carries an English stand-in body.
     await payload.create({
       collection: 'articles',
       data: {
@@ -246,7 +244,6 @@ describe('publishing content import', () => {
     expect(nodeTypes(en)).toEqual(['heading', 'paragraph', 'quote'])
     expect(plain(en.body)).toContain('English first paragraph')
     expect(plain(en.body)).toContain('"direction":"ltr"')
-    // Archive works are published, approved and public.
     expect(en.review?.status).toBe('approved')
     expect(en._status).toBe('published')
     expect(en.tier).toBe('public')
@@ -264,7 +261,6 @@ describe('publishing content import', () => {
   it('writes a booklet article in Arabic only, clearing an English stand-in, with its translation group', async () => {
     const en = await article(L.booklet, 'en')
     expect(en.title).toBe(`Probe Content Booklet ${RUN}`)
-    // No English text: no English body, so the site shows the Arabic one.
     expect(en.body ?? null).toBeNull()
     const ar = await article(L.booklet, 'ar')
     expect(plain(ar.body)).toContain('نص عربي فقط')
@@ -295,7 +291,6 @@ describe('publishing content import', () => {
       })
     ).docs[0]
     const pair = await article(L.pair)
-    // The foreword leads the collection's list (it opens with a Card stack block).
     expect(pub.articles?.[0]).toBe(pair.id)
     expect(pub.articles).toHaveLength(2)
     expect(pub.license).toBe('cc_by_nc_sa')

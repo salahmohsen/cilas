@@ -21,10 +21,8 @@ const K = {
   other: `${UPLOAD_DIR}/other.png`,
   pdf: `${UPLOAD_DIR}/tiny.pdf`,
 }
-// Media filenames are unique, so each run uploads its own copy of a fixture
-// under a name no earlier (or interrupted) run used.
 const TMP = mkdtempSync(path.join(tmpdir(), 'probemedia-'))
-const copyOf = (fixture: string, as: string): string => {
+const copyOf = (fixture: string, as: string) => {
   const ext = path.extname(fixture)
   const to = path.join(TMP, `${as}-${RUN}${ext}`)
   copyFileSync(path.join(import.meta.dirname, '..', '..', 'testing', 'files', fixture), to)
@@ -107,7 +105,6 @@ const cleanup = async () => {
     await del(collection, { [field]: { like: `${P}` } })
   }
   await del('press', { title: { equals: PRESS } })
-  // Deleting a media doc deletes its R2 object.
   await del('media', { legacy_url: { like: `${UPLOAD_DIR}/` } })
 }
 
@@ -123,7 +120,6 @@ describe('importMedia', () => {
         overrideAccess: true,
         ...(collection === 'courses' || collection === 'newsletters' ? { draft: true } : {}),
       } as Parameters<Payload['create']>[0])
-    // A photo an editor chose, from a file the importer never plans.
     const chosen = await payload.create({
       collection: 'media',
       data: { alt: 'Editor choice', legacy_url: K.other },
@@ -284,7 +280,7 @@ describe('importMedia', () => {
         })
       ).totalDocs,
     ).toBe(1)
-  }, 300_000)
+  })
 
   it('stores a PDF as a PDF and points the print edition and the newsletter link at it', async () => {
     const { docs } = await payload.find({
@@ -314,5 +310,5 @@ describe('importMedia', () => {
 
     const head = await fetch(docs[0].url as string, { method: 'HEAD' })
     expect(head.status).toBe(200)
-  }, 120_000)
+  })
 })

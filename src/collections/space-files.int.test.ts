@@ -7,11 +7,6 @@ import { SpaceFiles } from '@/collections/SpaceFiles'
 import config from '@/payload.config'
 import { FILE_LIMITS, IMAGE_EDGE, SPACE_FILE_LIMIT } from '@/lib/space-file-limits'
 
-/**
- * The space-files collection is the authority on what a space may store
- * (docs/spaces-media-budget.md). These run against the local object store,
- * like the rest of tests/int, and delete what they create.
- */
 let payload: Payload
 const made: { collection: 'space-files' | 'space-posts' | 'spaces'; id: number }[] = []
 let spaceId: number

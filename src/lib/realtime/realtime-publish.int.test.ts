@@ -41,8 +41,6 @@ describe('live notification publishing', () => {
     ).id
     listener = new pg.Client({ connectionString: process.env.DATABASE_URL })
     await listener.connect()
-    // The channel is shared by every spec running against this database;
-    // only this test's own recipient counts.
     listener.on('notification', (msg) => {
       const event = JSON.parse(msg.payload!) as NotificationEvent
       if (event.recipient === recipient) heard.push(event)

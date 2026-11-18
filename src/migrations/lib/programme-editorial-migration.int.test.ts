@@ -41,8 +41,6 @@ const normalize = (value: unknown) =>
   JSON.parse(JSON.stringify(value, (_, v) => (v === undefined ? null : v)))
 
 describe('programme editorial data migration', () => {
-  // The migration locks and rewrites every programme, so it runs in a
-  // database of its own.
   let payload: Payload
   let destroy: () => Promise<void>
   beforeAll(async () => {

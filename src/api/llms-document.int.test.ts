@@ -5,7 +5,7 @@ import { afterAll, beforeAll, describe, expect, it } from 'vitest'
 import config from '@/payload.config'
 import { courseDocument, articleDocument, documentToMarkdown } from '@/api/llms-document'
 import { getCourseSessions } from '@/api/sessions.api'
-import type { Course, Cycle, Person, Session } from '@/payload-types'
+import type { Article, Course, Cycle, Person, Session } from '@/payload-types'
 
 import { RUN, createTracker, uniq } from '../../testing/payload.fixture'
 
@@ -135,7 +135,7 @@ describe('llms-document', () => {
   })
 
   it('article doc contains body text, footnote endnote, mention as link', async () => {
-    const article: any = {
+    const article = {
       id: 1,
       title: 'Test Article',
       slug: uniq('test-article-llms'),
@@ -168,7 +168,7 @@ describe('llms-document', () => {
           ],
         },
       },
-    }
+    } as unknown as Article
     const doc = await articleDocument(payload, article, article.body, 'en')
     const md = documentToMarkdown(doc)
     expect(md).toContain('Body text here')

@@ -165,8 +165,6 @@ describe('course registration and fellow fields', () => {
           collection: 'courses',
           id: courseId,
           data: { cycle: cycleId, registration, _status: 'published' },
-          // No default template: an empty form must be refused, not filled
-          // from the template the database names in Registration defaults.
           context: { [REGISTRATION_DEFAULTS]: {} },
         }),
       ).rejects.toThrow()

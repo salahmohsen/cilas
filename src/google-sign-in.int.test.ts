@@ -12,7 +12,6 @@ import { uniqEmail } from '../testing/payload.fixture'
 let payload: Payload
 let user: User
 
-/** The cookie the Google callback sets, made the way payload-oauth2 makes it. */
 const googleCookie = async (account: User) => {
   const collectionConfig = payload.collections.users.config
   const req = { payload, context: {} } as never

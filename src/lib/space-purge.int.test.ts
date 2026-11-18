@@ -181,7 +181,7 @@ describe('space purge', () => {
     expect(await has('space-posts', old)).toBe(false)
     expect(await has('space-posts', edge)).toBe(true)
     expect(await has('space-posts', live)).toBe(true)
-    expect(await exists(oldFile)).toBe(false) // the stored object went too
+    expect(await exists(oldFile)).toBe(false)
     expect(await exists(edgeFile)).toBe(true)
     const left = await payload.find({
       collection: 'space-files',
@@ -215,7 +215,7 @@ describe('space purge', () => {
     const plain = await bell(link)
     const withLocale = await bell(`/en${link}`)
     const otherPost = await bell(`/spaces/community/${spaceId}/posts/${liveOther}`)
-    const prefix = await bell(`/spaces/community/${spaceId}/posts/${old}9`) // another post's id
+    const prefix = await bell(`/spaces/community/${spaceId}/posts/${old}9`)
 
     await purgeDeleted(payload, NOW)
     const gone = async (collection: string, id: number) =>
@@ -254,15 +254,14 @@ describe('space purge', () => {
 
   it('keeps a placeholder that still has live replies, and the replies intact', async () => {
     const thread = await post('placeholder thread', null)
-    const top = await comment(thread, ' ', 50) // deleted long ago, kept for its reply
+    const top = await comment(thread, ' ', 50)
     const reply = await comment(thread, 'a live reply', null, top)
     const topReaction = await reaction({ comment: top })
-    const tomb = await post(' ', 60) // a deleted post that kept its answers
+    const tomb = await post(' ', 60)
     const liveAnswer = await comment(tomb, 'answer on the deleted post', null)
     const tombFile = await file({ post: tomb })
 
     await purgeDeleted(payload, NOW)
-    // The rows stay so the live replies keep their place ...
     expect(await has('space-comments', top)).toBe(true)
     expect(await has('space-comments', reply)).toBe(true)
     expect(await has('space-posts', tomb)).toBe(true)
@@ -274,7 +273,6 @@ describe('space purge', () => {
     })
     expect(kept.body).toBe('a live reply')
     expect(typeof kept.parent === 'object' ? kept.parent?.id : kept.parent).toBe(top)
-    // ... but what hung on them is gone.
     expect(await exists(tombFile)).toBe(false)
     const rx = await payload.find({
       collection: 'space-reactions',
@@ -283,7 +281,6 @@ describe('space purge', () => {
     })
     expect(rx.docs).toHaveLength(0)
 
-    // Once the reply is gone, a later run takes the placeholder too.
     await payload.delete({ collection: 'space-comments', id: reply, overrideAccess: true })
     await payload.delete({ collection: 'space-comments', id: liveAnswer, overrideAccess: true })
     await purgeDeleted(payload, NOW)
@@ -340,11 +337,9 @@ describe('space purge', () => {
         await other.query('SELECT pg_advisory_unlock($1)', [CRON_LOCK])
         await other.end()
       }
-      // 14:05Z is 16:05 Cairo: digests are due, the purge is not.
       const afternoon = await runSpacesCron(payload, NOW, { pause: 0 })
       expect(afternoon).toMatchObject({ purge: 'skipped' })
       expect(await has('space-posts', old)).toBe(true)
-      // 01:05Z is 03:05 Cairo.
       const night = await runSpacesCron(payload, new Date('2026-11-09T01:05:00Z'), { pause: 0 })
       expect(night).toMatchObject({ digests: { skipped: 'hour' } })
       expect(typeof (night as { purge: unknown }).purge).toBe('object')

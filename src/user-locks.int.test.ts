@@ -52,8 +52,6 @@ const locksOn = async (id: number) =>
   ).totalDocs
 
 describe('locks of a deleted user', () => {
-  // A lock left with no user makes the admin page of its document render
-  // empty until the lock expires (Payload's getIsLocked reads `user.value`).
   it('go with the user, and the locks of others stay', async () => {
     const leaver = await user('leaver')
     const stayer = await user('stayer')

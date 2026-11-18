@@ -14,11 +14,6 @@ import type { User } from '@/payload-types'
 
 import { RUN, createTracker, lockSpacesMode, uniq, uniqEmail } from '../../testing/payload.fixture'
 
-/**
- * The offer after a schedule save (ADR 0011, step 3): what `scheduleOffers`
- * gives for a course with a space, and that publishing it through the post
- * write path makes a pinned announcement that notifies the space's members.
- */
 const TODAY = '2031-03-01'
 const { track, cleanup } = createTracker()
 
@@ -31,7 +26,7 @@ let space: number
 let session: number
 let intro: number | null = null
 
-const items = async (): Promise<CalendarItem[]> =>
+const items = async () =>
   calendarSourceOf('course')!.load(await calendarContext(fellow, 'en'), String(course))
 
 describe('schedule offer', () => {
@@ -151,7 +146,6 @@ describe('schedule offer', () => {
       })
       for (const row of rows) track('space-consents', row.id)
     }
-    // The student is past the space's introduction gate, so a refusal is about the announcement.
     const said = await commentCreate({ payload, user: student, post: intro!, body: 'Hello' })
     expect(said.ok).toBe(true)
     if (said.ok) track('space-comments', said.data.id)
@@ -189,8 +183,7 @@ describe('schedule offer', () => {
     await unlockSpacesMode()
   })
 
-  /** The items with the session's one meeting moved two days on. */
-  const moved = (before: CalendarItem[]): CalendarItem[] =>
+  const moved = (before: CalendarItem[]) =>
     before.map((item) =>
       item.id === String(session)
         ? { ...item, blocks: item.blocks.map((b) => ({ ...b, date: '2031-03-08' })) }
@@ -221,7 +214,6 @@ describe('schedule offer', () => {
       ids: [String(session)],
     })
     expect(offer!.preview?.marked).toEqual([String(session)])
-    // The preview reads the data as saved now: the meeting is still on the 6th.
     expect(offer!.preview?.day).toBe('2031-03-06')
   })
 
@@ -229,7 +221,6 @@ describe('schedule offer', () => {
     const before = await items()
     const base = { payload, courseId: course, before, today: TODAY, locale: 'en' }
     expect(await scheduleOffers({ ...base, user: fellow, after: before })).toEqual([])
-    // Every touched meeting is in the past.
     expect(
       await scheduleOffers({ ...base, user: fellow, after: moved(before), today: '2031-04-01' }),
     ).toEqual([])

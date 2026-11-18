@@ -7,21 +7,13 @@ export default defineConfig({
   test: {
     environment: 'jsdom',
     setupFiles: ['./vitest.setup.ts'],
-    // getPayload boots the whole config and opens a Postgres pool, which
-    // comfortably exceeds vitest's 10s default on a remote database.
     hookTimeout: 120_000,
     testTimeout: 120_000,
-    // Unit tests share one process (--no-isolate), so a stubbed global such as
-    // fetch would otherwise reach the files that run after it. Stub in beforeEach.
     unstubGlobals: true,
     include: ['**/*.unit.test.{ts,tsx}', '**/*.int.test.ts'],
     exclude: ['**/node_modules/**', '.next/**'],
     server: {
       deps: {
-        // payload-theme and payload-oauth2 ship extensionless relative imports
-        // (`from './theme'`).
-        // Next's bundler resolves those; vitest's native ESM loader does not, so
-        // without inlining it every int test fails to import payload.config.
         inline: ['payload-theme', 'payload-oauth2', 'next-intl'],
       },
     },

@@ -72,9 +72,6 @@ test('carousel clipping preserves all four poster border corners on mobile', asy
 })
 
 test('a poster never grows wider than its carousel slide, even with rigid content', async () => {
-  // Real devices can give a cell more min-content width than the slide has: other
-  // font metrics, a countdown wheel, an image. The card must still match its slide,
-  // or its right border is clipped and it runs into the next slide.
   const rigid = {
     word: (html) => html.replace('Antiphilosophy', 'Antiphilosophyantiphilosophyantiphilosophy'),
     block: (html) =>

@@ -12,10 +12,7 @@ let payload: Payload
 const P = `/probepeople-${RUN}`
 const CYCLE_URL = `${P}-spring-2032.html`
 const PROGRAMME = `Probe People Bridge ${RUN} 2031–2032`
-// The importer ties a programme to the cycles of fixed place names, so this
-// spec uses the real place; it deletes only the cycle it makes.
 const PLACE = 'al-Manshiya'
-// Every probe person carries the run suffix in the name.
 const PROBE = { name: { like: RUN } }
 const named = (name: string) => `Probe People ${name} ${RUN}`
 const STUDENT = named('Student')
@@ -74,7 +71,7 @@ const data: ArchivePeopleData = {
   ],
 }
 
-const probeIds = async (): Promise<number[]> =>
+const probeIds = async () =>
   (
     await payload.find({
       collection: 'people',
@@ -103,7 +100,6 @@ const cleanup = async () => {
 describe('archive people import', () => {
   beforeAll(async () => {
     payload = await getPayload({ config: await config })
-    // The cycle the probe programme should link to: academic year 2031–2032.
     await importCourses(payload, {
       cycles: [
         {
@@ -122,9 +118,6 @@ describe('archive people import', () => {
     await payload.destroy()
   })
 
-  // importPeople reports counts of whole collections, which other spec files
-  // running against the same database change too, so these count this run's
-  // own rows instead.
   const mine = async () => {
     const ids = await probeIds()
     const count = async (collection: 'memberships' | 'governance' | 'programmes', where: object) =>

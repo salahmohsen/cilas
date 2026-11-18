@@ -7,12 +7,6 @@ import config from '@/payload.config'
 import { lexical } from './seed.utils'
 import { uniq } from '../testing/payload.fixture'
 
-/**
- * Regression cover for the seeder's localized profile fields: a person is
- * created in English, then gets an Arabic pass. Both locales must survive.
- *
- * Needs a reachable DATABASE_URL.
- */
 let payload: Payload
 let personId: number
 
@@ -21,13 +15,13 @@ type LocalizedPerson = {
   bio: { en: unknown; ar: { root: { direction: string } } }
 }
 
-const bioText = (bio: unknown): string => {
+const bioText = (bio: unknown) => {
   const root = (bio as { root?: { children?: Array<{ children?: Array<{ text?: string }> }> } })
     ?.root
   return root?.children?.[0]?.children?.[0]?.text ?? ''
 }
 
-const read = async (): Promise<LocalizedPerson> =>
+const read = async () =>
   (await payload.findByID({
     collection: 'people',
     id: personId,

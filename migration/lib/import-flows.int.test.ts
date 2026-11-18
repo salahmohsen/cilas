@@ -11,11 +11,8 @@ import { RUN } from '../../testing/payload.fixture'
 
 let payload: Payload
 
-// Fixtures use the "/probeflows-" prefix and a 2033 cycle, apart from the
-// other import specs, so they can run side by side.
 const P = `/probeflows-${RUN}`
 const CYCLE_URL = `${P}-fall-2033.html`
-// The place is matched by name, so a unique one keeps old runs' cycles out.
 const PLACE = `Probe Flows Space ${RUN}`
 const url = (name: string) => `${CYCLE_URL}#${name}`
 const cycles: ArchiveCycle[] = [
@@ -27,20 +24,21 @@ const cycles: ArchiveCycle[] = [
     legacy_url: CYCLE_URL,
   },
 ]
-const course = (name: string): ArchiveCourse => ({
-  legacy_url: url(name),
-  cycle: 'fall-2033-probe',
-  title: `Probe Flows ${name} ${RUN}`,
-  title_ar: null,
-  subtitle: null,
-  course_type: 'SHORT',
-  fellows: [],
-  location: ['ONLINE'],
-  schedule: { start_precision: 'day', slots: [] },
-  description: 'The course.',
-  flow_uploads: [],
-  register_url: null,
-})
+const course = (name: string) =>
+  ({
+    legacy_url: url(name),
+    cycle: 'fall-2033-probe',
+    title: `Probe Flows ${name} ${RUN}`,
+    title_ar: null,
+    subtitle: null,
+    course_type: 'SHORT',
+    fellows: [],
+    location: ['ONLINE'],
+    schedule: { start_precision: 'day', slots: [] },
+    description: 'The course.',
+    flow_uploads: [],
+    register_url: null,
+  }) satisfies ArchiveCourse
 const archived = ['english', 'arabic'].map(course)
 
 const english: Syllabus = {
@@ -118,7 +116,7 @@ const syllabi = new Map([
 ])
 const run = () => importFlows(payload, { flows, syllabi, courses: archived })
 
-const find = async (name: string, locale: 'en' | 'ar' = 'en'): Promise<Course> => {
+const find = async (name: string, locale: 'en' | 'ar' = 'en') => {
   const { docs } = await payload.find({
     collection: 'courses',
     where: { legacy_url: { equals: url(name) } },
@@ -130,9 +128,8 @@ const find = async (name: string, locale: 'en' | 'ar' = 'en'): Promise<Course> =
   })
   return docs[0]
 }
-const plain = (doc: unknown): string => JSON.stringify(doc ?? null)
-// Either heading counts: Arabic flows get the Arabic one.
-const headings = (c: Course): number => {
+const plain = (doc: unknown) => JSON.stringify(doc ?? null)
+const headings = (c: Course) => {
   const text = plain(c.description)
   return text.split(NOTES_HEADING).length - 1 + text.split(NOTES_HEADING_AR).length - 1
 }
@@ -182,7 +179,6 @@ describe('course flow import', () => {
       { type: 'reading', title: 'General reading', href: 'https://example.org/general' },
     ])
     expect(plain(c.description)).toContain('The course.')
-    // The flow's notes are the fellow's note, not part of the description.
     expect(c.facilitator_note).toBe('Assessment by essay.')
     expect(headings(c)).toBe(0)
   })
@@ -209,7 +205,6 @@ describe('course flow import', () => {
     const en = await find('arabic', 'en')
     expect(en.sessions).toHaveLength(2)
     expect(en.sessions?.map((s) => s.id)).toEqual(ar.sessions?.map((s) => s.id))
-    // The English side is not given the Arabic notes.
     expect(plain(en.description)).toContain('The course.')
     expect(en.facilitator_note ?? null).toBeNull()
   })

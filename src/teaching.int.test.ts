@@ -9,7 +9,6 @@ import { RUN, createTracker, uniq } from '../testing/payload.fixture'
 
 let payload: Payload
 const { track, cleanup } = createTracker()
-// The cycle slug comes from the city, so a unique city keeps the cycle unique.
 const CITY = `Probeville ${RUN}`
 
 describe('time, place and teaching', () => {

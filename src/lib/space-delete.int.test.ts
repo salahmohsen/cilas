@@ -29,7 +29,6 @@ const community = async () => {
   return space.id
 }
 
-/** A post with a comment, a reply, a reaction, a visit and a bell. */
 const fill = async (space: number) => {
   const post = await payload.create({
     collection: 'space-posts',
@@ -155,7 +154,6 @@ describe('space delete', () => {
     expect(spaceDeleteBlock({ id: 1, kind: 'cohort', programme: 7 })).toMatch(
       /Delete the programme/,
     )
-    // A space whose course is already gone has no owner left to delete it.
     expect(spaceDeleteBlock({ id: 1, kind: 'course', course: null })).toBeNull()
   })
 

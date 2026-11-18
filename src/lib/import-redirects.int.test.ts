@@ -103,7 +103,7 @@ describe('importRedirects', () => {
     expect(row.to?.reference).toEqual({ relationTo: 'courses', value: courseId })
     const [up] = await fromRow(`/${UPLOAD}`)
     expect(up.to).toMatchObject({ type: 'custom', url: UPLOAD_URL })
-  }, 300_000)
+  })
 
   it('resolves the legacy path without .html to the course page', async () => {
     expect(await findRedirect(payload, `${P}course`)).toEqual({
@@ -111,7 +111,7 @@ describe('importRedirects', () => {
       permanent: true,
     })
     expect(await findRedirect(payload, `/${UPLOAD}`)).toEqual({ url: UPLOAD_URL, permanent: true })
-  }, 120_000)
+  })
 
   it('keeps a redirect an admin edited', async () => {
     const [row] = await fromRow(L.course)
@@ -130,5 +130,5 @@ describe('importRedirects', () => {
       type: 'custom',
       url: '/somewhere-else',
     })
-  }, 300_000)
+  })
 })
