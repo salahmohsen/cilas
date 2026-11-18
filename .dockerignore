@@ -16,3 +16,6 @@ blob-report
 
 # Legacy site archive: seed-time only, never shipped
 migration/raw
+
+# The Remotion demo film: built on its own, never shipped
+video
