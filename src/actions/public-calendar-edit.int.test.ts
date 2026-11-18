@@ -7,12 +7,15 @@ import { scheduleOffers as readScheduleOffers } from '@/actions/schedule-offers'
 import { saveScheduleEdits as writeScheduleEdits } from '@/actions/save-schedule-edits'
 import { loadCalendarItems as readCalendarItems } from '@/actions/load-calendar-items'
 import { setSessionCancelled as writeSessionCancelled } from '@/components/space/cancel-session'
+import { currentReader } from '@/lib/reader'
 import { PUBLIC_LISTS_TAG } from '@/lib/paths'
 import config from '@/payload.config'
 import type { User } from '@/payload-types'
 import { runInRequest } from '../../testing/next-request.test-utils'
 import { createTracker, lockSpacesMode, uniq, uniqEmail } from '../../testing/payload.fixture'
 import { signedInHeaders } from '../../testing/reader.test-utils'
+
+vi.mock('@/lib/reader', { spy: true })
 
 const { track, cleanup } = createTracker()
 let payload: Payload
@@ -455,10 +458,12 @@ describe('public calendar edit requests', () => {
 })
 
 it('keeps view loading independent of the user request', async () => {
+  vi.mocked(currentReader).mockClear()
   expect(await readPublicCalendarAccess(false, 'en', range)).toEqual({
     mode: 'view',
     canEdit: false,
   })
+  expect(currentReader).not.toHaveBeenCalled()
 })
 
 it('returns only the spaces that each reader may read', async () => {

@@ -1,5 +1,5 @@
 import { http, HttpResponse } from 'msw'
-import { describe, expect, it } from 'vitest'
+import { describe, expect, it, vi } from 'vitest'
 
 import { queryConfig, runQuery, QUERY_TIMEOUT_MS } from '@/lib/analytics/posthog-query'
 import { QUERIES } from '@/lib/analytics/queries'
@@ -324,7 +324,10 @@ describe('asking PostHog', () => {
         return HttpResponse.json({ results: [[1]] })
       }),
     )
+    const fetched = vi.spyOn(globalThis, 'fetch')
     expect(await runQuery(config, 'SELECT   1\n FROM events')).toEqual([[1]])
+    expect(fetched.mock.calls[0]?.[1]?.signal).toBeInstanceOf(AbortSignal)
+    fetched.mockRestore()
     expect(seen).toEqual([
       {
         method: 'POST',
