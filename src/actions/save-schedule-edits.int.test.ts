@@ -1,31 +1,16 @@
-// @vitest-environment node
 import { getPayload, type Payload } from 'payload'
-import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest'
+import { afterAll, beforeAll, describe, expect, it } from 'vitest'
 
 import { loadSessionEdit } from '@/actions/session-edit'
-import { currentReader } from '@/lib/reader'
 import config from '@/payload.config'
 import type { User } from '@/payload-types'
 
 import { changesOf, keepDeleted } from '@/components/calendar/ui/calendar-edits'
 import { newBlock, newItemId } from '@/components/calendar/ui/calendar-model'
 import { saveScheduleEdits } from '@/actions/save-schedule-edits'
+import { runInRequest } from '../../testing/next-request.test-utils'
 import { createTracker, uniq, uniqEmail } from '../../testing/payload.fixture'
-
-// Outside Next, these throw and the hooks swallow it; mocked, the test sees them.
-vi.mock('next/cache', async (original) => ({
-  ...(await original<typeof import('next/cache')>()),
-  revalidatePath: vi.fn(),
-  revalidateTag: vi.fn(),
-}))
-// The action reads the signed-in user from the request's cookie; the test names one.
-vi.mock('@/lib/reader', () => ({ currentReader: vi.fn() }))
-
-/**
- * The session drawer's Edit form against the database: the sessions
- * collection's access decides, a stale version saves nothing, and the text
- * lands in the page's language alone.
- */
+import { signedInHeaders } from '../../testing/reader.test-utils'
 
 let payload: Payload
 const { track, cleanup } = createTracker()
@@ -37,7 +22,13 @@ let otherCourse: number
 let student: User
 let course: number
 
-const signIn = (user: User | null) => vi.mocked(currentReader).mockResolvedValue(user)
+const passwords = new Map<number, string>()
+let reader: HeadersInit = {}
+const signIn = async (user: User) => {
+  reader = await signedInHeaders(payload, { email: user.email, password: passwords.get(user.id)! })
+}
+const asReader = async <Result>(work: () => Promise<Result>) =>
+  (await runInRequest(work, { headers: reader })).result
 
 const account = async (name: string, roles: User['roles']) => {
   const person = track(
@@ -48,19 +39,21 @@ const account = async (name: string, roles: User['roles']) => {
       overrideAccess: true,
     }),
   ).id
+  const password = crypto.randomUUID()
   const user = track(
     'users',
     (await payload.create({
       collection: 'users',
       data: {
         email: uniqEmail(name.toLowerCase().replace(/\W+/g, '-')),
-        password: crypto.randomUUID(),
+        password,
         roles,
         person,
       },
       overrideAccess: true,
     })) as unknown as User,
   )
+  passwords.set(user.id, password)
   return { person, user }
 }
 
@@ -83,7 +76,6 @@ const makeCourse = async (fellows: number[], cycle: number) =>
     }),
   ).id
 
-/** A session with English text, one material and one activity, and Arabic for the material. */
 const makeSession = async () => {
   const doc = await payload.create({
     collection: 'sessions',
@@ -158,7 +150,7 @@ afterAll(async () => {
 
 const parent = () => ({ kind: 'course', id: String(course) })
 const detail = async (id: number, title = 'Applied title') => {
-  const loaded = await loadSessionEdit(String(id), 'en')
+  const loaded = await asReader(() => loadSessionEdit(String(id), 'en'))
   if (!loaded.ok) throw new Error(loaded.error)
   const { meetings: _, ...values } = loaded.values
   return {
@@ -175,26 +167,28 @@ describe('saveScheduleEdits', () => {
     ['admin', () => admin],
   ])('allows the %s to save details and a move together', async (_, who) => {
     const id = await makeSession()
-    signIn(who())
+    await signIn(who())
     const change = await detail(id)
     const before = await read(id, 'en')
-    const result = await saveScheduleEdits({
-      calendar: {
-        parent: parent(),
-        changes: [
-          {
-            op: 'move-block',
-            itemId: String(id),
-            version: change.version,
-            blockId: before.meetings![0]!.id!,
-            date: '2035-10-08',
-            start_time: '18:00',
-            end_time: '20:00',
-          },
-        ],
-      },
-      details: [change],
-    })
+    const result = await asReader(() =>
+      saveScheduleEdits({
+        calendar: {
+          parent: parent(),
+          changes: [
+            {
+              op: 'move-block',
+              itemId: String(id),
+              version: change.version,
+              blockId: before.meetings![0]!.id!,
+              date: '2035-10-08',
+              start_time: '18:00',
+              end_time: '20:00',
+            },
+          ],
+        },
+        details: [change],
+      }),
+    )
     expect(result.ok).toBe(true)
     expect(await read(id, 'en')).toMatchObject({
       title: 'Applied title',
@@ -208,14 +202,16 @@ describe('saveScheduleEdits', () => {
     ['other fellow', () => otherFellow],
   ])('refuses the %s and writes nothing', async (_, who) => {
     const id = await makeSession()
-    signIn(fellow)
+    await signIn(fellow)
     const change = await detail(id)
     const count = await versions(id)
-    signIn(who())
-    const result = await saveScheduleEdits({
-      calendar: { parent: parent(), changes: [] },
-      details: [change],
-    })
+    await signIn(who())
+    const result = await asReader(() =>
+      saveScheduleEdits({
+        calendar: { parent: parent(), changes: [] },
+        details: [change],
+      }),
+    )
     expect(result).toEqual({ ok: false, error: { code: 'forbidden' } })
     expect((await read(id, 'en')).title).toBe('English title')
     expect(await versions(id)).toBe(count)
@@ -224,7 +220,7 @@ describe('saveScheduleEdits', () => {
   it('keeps every item when one version is stale', async () => {
     const a = await makeSession(),
       b = await makeSession()
-    signIn(fellow)
+    await signIn(fellow)
     const edits = [await detail(a), await detail(b)]
     await payload.update({
       collection: 'sessions',
@@ -233,10 +229,12 @@ describe('saveScheduleEdits', () => {
       overrideAccess: true,
     })
     const count = await versions(a)
-    const result = await saveScheduleEdits({
-      calendar: { parent: parent(), changes: [] },
-      details: edits,
-    })
+    const result = await asReader(() =>
+      saveScheduleEdits({
+        calendar: { parent: parent(), changes: [] },
+        details: edits,
+      }),
+    )
     expect(result).toMatchObject({
       ok: false,
       error: { code: 'stale', itemId: String(b), name: expect.stringContaining('Elsewhere') },
@@ -252,13 +250,15 @@ describe('saveScheduleEdits', () => {
       data: { course: otherCourse, title: 'Other' },
       overrideAccess: true,
     })
-    signIn(admin)
+    await signIn(admin)
     const edits = [await detail(a), await detail(b.id)]
-    signIn(fellow)
-    const result = await saveScheduleEdits({
-      calendar: { parent: parent(), changes: [] },
-      details: edits,
-    })
+    await signIn(fellow)
+    const result = await asReader(() =>
+      saveScheduleEdits({
+        calendar: { parent: parent(), changes: [] },
+        details: edits,
+      }),
+    )
     expect(result).toMatchObject({ ok: false, error: { code: 'not-found', itemId: String(b.id) } })
     expect((await read(a, 'en')).title).toBe('English title')
     expect((await read(b.id, 'en')).title).toBe('Other')
@@ -267,58 +267,62 @@ describe('saveScheduleEdits', () => {
   it('rolls back the first write when a later meeting fails validation', async () => {
     const a = await makeSession(),
       b = await makeSession()
-    signIn(fellow)
+    await signIn(fellow)
     const first = await detail(a),
       second = await detail(b)
     const count = await versions(a)
-    const result = await saveScheduleEdits({
-      calendar: { parent: parent(), changes: [] },
-      details: [
-        first,
-        { ...second, meetings: [{ date: '2035-10-08', start_time: '20:00', end_time: '18:00' }] },
-      ],
-    })
+    const result = await asReader(() =>
+      saveScheduleEdits({
+        calendar: { parent: parent(), changes: [] },
+        details: [
+          first,
+          { ...second, meetings: [{ date: '2035-10-08', start_time: '20:00', end_time: '18:00' }] },
+        ],
+      }),
+    )
     expect(result).toMatchObject({ ok: false, error: { code: 'invalid' } })
     expect((await read(a, 'en')).title).toBe('English title')
     expect(await versions(a)).toBe(count)
   })
 
   it('creates a session with its details and meeting in the same save', async () => {
-    signIn(fellow)
-    const result = await saveScheduleEdits({
-      calendar: {
-        parent: parent(),
-        changes: [
+    await signIn(fellow)
+    const result = await asReader(() =>
+      saveScheduleEdits({
+        calendar: {
+          parent: parent(),
+          changes: [
+            {
+              op: 'create-item',
+              itemId: 'new-test',
+              kind: 'session',
+              blocks: [
+                {
+                  blockId: 'new-meeting',
+                  date: '2035-10-08',
+                  start_time: '18:00',
+                  end_time: '20:00',
+                },
+              ],
+            },
+          ],
+        },
+        details: [
           {
-            op: 'create-item',
-            itemId: 'new-test',
-            kind: 'session',
-            blocks: [
-              {
-                blockId: 'new-meeting',
-                date: '2035-10-08',
-                start_time: '18:00',
-                end_time: '20:00',
-              },
-            ],
+            op: 'edit',
+            id: 'new-test',
+            version: '',
+            values: {
+              title: 'New detailed session',
+              description: 'Read **this**',
+              cancelled: true,
+              bibliography: [{ type: 'reading', title: 'Book', href: '', note: '' }],
+              activities: [{ kind: 'discussion', description: 'Discuss' }],
+            },
           },
         ],
-      },
-      details: [
-        {
-          op: 'edit',
-          id: 'new-test',
-          version: '',
-          values: {
-            title: 'New detailed session',
-            description: 'Read **this**',
-            cancelled: true,
-            bibliography: [{ type: 'reading', title: 'Book', href: '', note: '' }],
-            activities: [{ kind: 'discussion', description: 'Discuss' }],
-          },
-        },
-      ],
-    })
+      }),
+    )
     expect(result.ok).toBe(true)
     if (!result.ok) throw new Error(result.error.code)
     const item = result.items.find((item) => item.title === 'New detailed session')!
@@ -332,9 +336,11 @@ describe('saveScheduleEdits', () => {
 
   it('deletes a session as the fellow', async () => {
     const id = await makeSession()
-    signIn(fellow)
+    await signIn(fellow)
     const { version } = await detail(id)
-    const result = await saveScheduleEdits({ details: [{ op: 'delete', id: String(id), version }] })
+    const result = await asReader(() =>
+      saveScheduleEdits({ details: [{ op: 'delete', id: String(id), version }] }),
+    )
     expect(result.ok).toBe(true)
     expect(
       await payload.count({ collection: 'sessions', where: { id: { equals: id } } }),
@@ -342,7 +348,7 @@ describe('saveScheduleEdits', () => {
   })
 
   it('never creates a drawn session removed before Save', async () => {
-    signIn(fellow)
+    await signIn(fellow)
     const before = await payload.count({
       collection: 'sessions',
       where: { course: { equals: course } },
@@ -355,7 +361,9 @@ describe('saveScheduleEdits', () => {
       newItemKind: 'session',
     })
     expect(changes).toEqual([])
-    const result = await saveScheduleEdits({ calendar: { parent: parent(), changes }, details: [] })
+    const result = await asReader(() =>
+      saveScheduleEdits({ calendar: { parent: parent(), changes }, details: [] }),
+    )
     expect(result.ok).toBe(true)
     expect(
       await payload.count({ collection: 'sessions', where: { course: { equals: course } } }),
@@ -364,22 +372,24 @@ describe('saveScheduleEdits', () => {
 
   it('keeps a real session that loses its only meeting', async () => {
     const id = await makeSession()
-    signIn(fellow)
+    await signIn(fellow)
     const session = await read(id, 'en')
-    const result = await saveScheduleEdits({
-      calendar: {
-        parent: parent(),
-        changes: [
-          {
-            op: 'delete-block',
-            itemId: String(id),
-            version: session.updatedAt,
-            blockId: session.meetings![0]!.id!,
-          },
-        ],
-      },
-      details: [],
-    })
+    const result = await asReader(() =>
+      saveScheduleEdits({
+        calendar: {
+          parent: parent(),
+          changes: [
+            {
+              op: 'delete-block',
+              itemId: String(id),
+              version: session.updatedAt,
+              blockId: session.meetings![0]!.id!,
+            },
+          ],
+        },
+        details: [],
+      }),
+    )
     expect(result.ok).toBe(true)
     if (result.ok) expect(result.items.find((item) => item.id === String(id))!.blocks).toEqual([])
     expect((await read(id, 'en')).title).toBe('English title')
