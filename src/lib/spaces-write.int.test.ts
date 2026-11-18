@@ -2,7 +2,8 @@ import { sql } from '@payloadcms/db-postgres'
 import { getPayload, type Payload } from 'payload'
 
 import { FILE_LIMITS } from '@/lib/space-file-limits'
-import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest'
+import { http, HttpResponse, passthrough } from 'msw'
+import { afterAll, beforeAll, describe, expect, it } from 'vitest'
 
 import sharp from 'sharp'
 import { readFileSync } from 'node:fs'
@@ -41,6 +42,8 @@ import {
   spaceRoster,
 } from '@/lib/spaces-data'
 
+import { localServiceHandlers, storageUrl } from '../../testing/fan4-local-services.test-utils'
+import { mockNetwork } from '../../testing/msw-node.test-utils'
 import { RUN, createTracker, lockSpacesMode, uniq, uniqEmail } from '../../testing/payload.fixture'
 
 const appendPhoto = async ({
@@ -82,13 +85,17 @@ let community: Space
 let courseSpace: Space
 let cohortSpace: Space
 
-// Saving an event reads its place name from the web; the tests stay offline.
-vi.mock('@/lib/link-preview', async (original) => ({
-  ...(await original<typeof import('@/lib/link-preview')>()),
-  placeName: vi.fn(async (url: string) =>
-    new URL(url).hostname === 'example.org' ? 'Example room' : null,
+const ROOM_URL = 'https://93.184.216.34/room'
+const network = mockNetwork(
+  ...localServiceHandlers,
+  http.get(ROOM_URL, () =>
+    HttpResponse.html('<head><title>Example room</title></head>', { status: 200 }),
   ),
-}))
+)
+const refuseStorage = (filename: RegExp) =>
+  http.put(storageUrl, ({ request }) =>
+    filename.test(request.url) ? new HttpResponse(null, { status: 403 }) : passthrough(),
+  )
 
 const introOf = (space: Space) => {
   const v = (space as unknown as { introduction_post?: number | { id: number } | null })
@@ -102,12 +109,10 @@ const relSpace = (v: number | { id: number }) => (typeof v === 'object' ? v.id :
 const { track, cleanup } = createTracker()
 const COURSE_SLUG = uniq('probe-space-course')
 const BRIDGE_SLUG = uniq('probe-bridge')
-// The cycle slug comes from the city, so a unique city keeps the cycle unique.
 const CITY = `Probeville ${RUN}`
 
 describe('spaces write', () => {
   let unlockSpacesMode: () => Promise<void>
-  // Waits for any other spaces spec to finish with the shared spaces mode.
   beforeAll(async () => {
     unlockSpacesMode = await lockSpacesMode()
   }, 600_000)
@@ -143,7 +148,6 @@ describe('spaces write', () => {
     }
     fellow = (await mk('Probe Fellow'))!
     student = (await mk('Probe Student'))!
-    // A real admin account: the announcement voice, and a consent holder.
     {
       const p = await payload.create({
         collection: 'people',
@@ -274,9 +278,6 @@ describe('spaces write', () => {
       overrideAccess: true,
     })
 
-    // The fixture's members have accepted the current notice (spec §9);
-    // posting tests here go beyond consent, and one test takes a fresh
-    // account through refusal to acceptance.
     for (const u of [student, fellow, admin]) {
       const consent = await consentAccept({ payload, user: u })
       expect(consent.ok).toBe(true)
@@ -287,8 +288,6 @@ describe('spaces write', () => {
       })
       for (const r of rows) track('space-consents', r.id)
     }
-    // The student has introduced themselves in both spaces, so the tests below
-    // meet the whole feed; the introduction gate has its own test.
     for (const space of [courseSpace, cohortSpace]) {
       const intro = introOf(space)
       const said = await commentCreate({ payload, user: student, post: intro, body: 'Probe hello' })
@@ -498,7 +497,6 @@ describe('spaces write', () => {
     expect(forB).toHaveLength(1)
     expect(forB[0]!.link).toBe(`/spaces/course/${COURSE_SLUG}/posts/${post.data.id}`)
 
-    // An edit tells only the people it adds.
     const edited = await commentEdit({
       payload,
       user: student,
@@ -511,7 +509,6 @@ describe('spaces write', () => {
     expect(await notesOf(a.account)).toHaveLength(1)
     expect(await notesOf(b.account)).toHaveLength(1)
 
-    // Naming yourself rings nobody.
     const self = await commentCreate({
       payload,
       user: student,
@@ -524,7 +521,6 @@ describe('spaces write', () => {
     await self.notify?.()
     expect(await notesOf(student)).toHaveLength(0)
 
-    // Replied to and mentioned at once is one note, the reply.
     const fellowMentions = (await notesOf(fellow)).length
     const top = await commentCreate({
       payload,
@@ -651,7 +647,6 @@ describe('spaces write', () => {
     expect(note?.link).toContain(`/posts/${post.data.id}`)
     for (const n of rows) track('notifications', n.id)
 
-    // Off and on again: the unread note stands, no second one.
     await reactionToggle({
       payload,
       user: fellow,
@@ -669,7 +664,6 @@ describe('spaces write', () => {
     if (again.ok) await again.notify?.()
     expect((await unread()).length).toBe(before + 1)
 
-    // The author reacting to their own post tells no one.
     const own = await reactionToggle({
       payload,
       user: student,
@@ -692,9 +686,6 @@ describe('spaces write', () => {
     expect(post.ok).toBe(true)
     if (!post.ok) return
     track('space-posts', post.data.id)
-    // Seed the four-row cap at the table: going through appendPhoto would move
-    // bytes to the real bucket, which no test may do. The refusal itself is
-    // the product behavior (the gate fires before any storage work).
     await (
       payload.db as unknown as { drizzle: { execute: (q: unknown) => Promise<unknown> } }
     ).drizzle.execute(
@@ -925,7 +916,6 @@ describe('spaces write', () => {
   })
 
   it('REST delete on space-files refused for non-admin', async () => {
-    // Just verify the collection's delete access returns false for non-admin
     const access = (await import('@/collections/SpaceFiles')).SpaceFiles.access?.delete
     if (access) {
       const result = await (access as (args: { req: { user: User } }) => boolean | object)({
@@ -1055,31 +1045,17 @@ describe('spaces write', () => {
     expect(added.ok).toBe(true)
     if (!added.ok) return
     track('space-files', added.data.id)
-    const real = payload.create.bind(payload)
-    let uploaded = false
-    const spy = vi.spyOn(payload, 'create').mockImplementation((async (args: {
-      collection: string
-    }) => {
-      if (args.collection === 'space-files') {
-        if (uploaded) throw new Error('storage refused the edit')
-        uploaded = true
-      }
-      return real(args as never)
-    }) as never)
-    try {
-      expect(
-        await postEdit({
-          payload,
-          user: student,
-          id,
-          body: 'Unsaved text',
-          files: [editFile('edit-staged.png'), editFile('edit-failed.png')],
-          removeFiles: [added.data.id],
-        }),
-      ).toEqual({ ok: false, error: 'upload' })
-    } finally {
-      spy.mockRestore()
-    }
+    network.use(refuseStorage(/edit-failed/))
+    expect(
+      await postEdit({
+        payload,
+        user: student,
+        id,
+        body: 'Unsaved text',
+        files: [editFile('edit-staged.png'), editFile('edit-failed.png')],
+        removeFiles: [added.data.id],
+      }),
+    ).toEqual({ ok: false, error: 'upload' })
     expect((await payload.findByID({ collection: 'space-posts', id })).body).toBe(
       'Keep the original',
     )
@@ -1138,27 +1114,17 @@ describe('spaces write', () => {
   )
 
   it('a file that storage refuses gives the upload error and leaves no post or file behind', async () => {
-    const real = payload.create.bind(payload)
-    const spy = vi.spyOn(payload, 'create').mockImplementation((async (args: {
-      collection: string
-    }) => {
-      if (args.collection === 'space-files') throw new Error('storage refused the file')
-      return real(args as never)
-    }) as never)
-    try {
-      const post = await postCreate({
-        payload,
-        user: student,
-        space: community.id,
-        kind: 'discussion',
-        body: 'QA post whose file is refused',
-        files: [photoFile('probe-f1.png')],
-      })
-      expect(post.ok).toBe(false)
-      if (!post.ok) expect(post.error).toBe('upload')
-    } finally {
-      spy.mockRestore()
-    }
+    network.use(refuseStorage(/probe-f1/))
+    const post = await postCreate({
+      payload,
+      user: student,
+      space: community.id,
+      kind: 'discussion',
+      body: 'QA post whose file is refused',
+      files: [editFile('probe-f1.png')],
+    })
+    expect(post.ok).toBe(false)
+    if (!post.ok) expect(post.error).toBe('upload')
     const posts = await payload.find({
       collection: 'space-posts',
       where: { body: { equals: 'QA post whose file is refused' } },
@@ -1302,34 +1268,27 @@ describe('spaces write', () => {
       if (!notPhoto.ok) expect(notPhoto.error).toBe('file-type')
     }
 
-    // Storage would write to the real bucket, so the space-files create is
-    // intercepted; the row it would get is what is under test.
-    const real = payload.create.bind(payload)
-    const spy = vi
-      .spyOn(payload, 'create')
-      .mockImplementation((async (args: { collection: string }) =>
-        args.collection === 'space-files' ? { id: -1 } : real(args as never)) as never)
-    try {
-      const withFiles = await postCreate({
-        payload,
-        user: student,
-        space: community.id,
-        kind: 'discussion',
-        body: 'Has four photos',
-        files: Array.from({ length: 4 }, (_, n) => photoFile(`probe-f${n}.png`)),
-      })
-      expect(withFiles.ok).toBe(true)
-      if (!withFiles.ok) return
-      track('space-posts', withFiles.data.id)
-      const fileCalls = spy.mock.calls
-        .map(([a]) => a as unknown as { collection: string; data: Record<string, unknown> })
-        .filter((a) => a.collection === 'space-files')
-      expect(fileCalls.map((a) => [a.data.post, a.data.comment])).toEqual(
-        Array.from({ length: 4 }, () => [withFiles.data.id, undefined]),
-      )
-    } finally {
-      spy.mockRestore()
-    }
+    const withFiles = await postCreate({
+      payload,
+      user: student,
+      space: community.id,
+      kind: 'discussion',
+      body: 'Has four photos',
+      files: Array.from({ length: 4 }, (_, n) => editFile(`probe-f${n}.png`)),
+    })
+    expect(withFiles.ok).toBe(true)
+    if (!withFiles.ok) return
+    track('space-posts', withFiles.data.id)
+    const stored = await payload.find({
+      collection: 'space-files',
+      where: { space: { equals: community.id }, post: { equals: withFiles.data.id } },
+      overrideAccess: true,
+      depth: 0,
+    })
+    for (const file of stored.docs) track('space-files', file.id)
+    expect(stored.docs.map((f) => [f.post, f.comment ?? undefined])).toEqual(
+      Array.from({ length: 4 }, () => [withFiles.data.id, undefined]),
+    )
   })
 
   it('commentCreate refuses a foreign or missing parent and a tombstoned post', async () => {
@@ -1360,7 +1319,6 @@ describe('spaces write', () => {
     expect(missing.ok).toBe(false)
     if (!missing.ok) expect(missing.error).toBe('not-found')
 
-    // Post A has a reply, so removing it leaves a tombstone.
     expect((await postRemove({ payload, user: student, id: a })).ok).toBe(true)
     const onTomb = await commentCreate({ payload, user: student, post: a, body: 'Late' })
     expect(onTomb.ok).toBe(false)
@@ -1414,7 +1372,6 @@ describe('spaces write', () => {
     expect(c.ok).toBe(true)
     if (!c.ok) return
     track('space-comments', c.data.id)
-    // Rows straight into the table: storage would write to the real bucket.
     await (
       payload.db as unknown as { drizzle: { execute: (q: unknown) => Promise<unknown> } }
     ).drizzle.execute(
@@ -1547,7 +1504,6 @@ describe('spaces write', () => {
     expect(row.event_location).toBe('Room 2')
     expect(new Date(row.event_starts_at!).toISOString()).toBe(soon)
 
-    // Moderators only: the member is refused, the course's fellow is not.
     expect(
       (
         await spaceSettingsSet({
@@ -1593,7 +1549,7 @@ describe('spaces write', () => {
       error: 'event',
     })
     const made = await make({
-      location: 'https://example.org/room',
+      location: ROOM_URL,
       startsAt: starts,
       endsAt: ends,
     })
@@ -1602,7 +1558,7 @@ describe('spaces write', () => {
     track('space-posts', made.data.id)
     const post = made.data.id
     const stored = await payload.findByID({ collection: 'space-posts', id: post })
-    expect(stored.event_location).toBe('https://example.org/room')
+    expect(stored.event_location).toBe(ROOM_URL)
     expect(new Date(stored.event_ends_at!).toISOString()).toBe(ends)
 
     const answer = async (user: User, status: 'going' | 'maybe' | 'not_going' | null) => {
@@ -1617,7 +1573,6 @@ describe('spaces write', () => {
       return { result, docs }
     }
     expect((await answer(student, 'going')).docs).toHaveLength(1)
-    // Changing the answer keeps one row; a second member adds another.
     const changed = await answer(student, 'maybe')
     expect(changed.docs).toHaveLength(1)
     expect(changed.docs[0]?.status).toBe('maybe')
@@ -1633,7 +1588,6 @@ describe('spaces write', () => {
       error: 'rsvp',
     })
 
-    // One query through the reader's access: counts, who is going and the reader's own answer.
     await answer(student, 'going')
     const { upcoming } = await spaceEvents(payload, student, courseSpace.id)
     const item = upcoming.find((e) => e.type === 'post' && e.post.id === post)
@@ -1646,7 +1600,6 @@ describe('spaces write', () => {
     const outsider = await spaceEvents(payload, stranger, courseSpace.id)
     expect(outsider.upcoming.concat(outsider.past)).toHaveLength(0)
 
-    // Time passes: after the end, an answer is refused and the event moves to Past events.
     const later = new Date(Date.now() + 2 * day)
     expect((await rsvpSet({ payload, user: student, post, status: 'maybe' }, later)).ok).toBe(false)
     expect(await rsvpSet({ payload, user: student, post, status: 'maybe' }, later)).toMatchObject({
@@ -1706,7 +1659,6 @@ describe('spaces write', () => {
     for (const r of rows) track('space-rsvps', r.id)
 
     const next = new Date(Date.now() + 2 * day).toISOString()
-    // A member who is neither the author nor a moderator is refused; an end before the start is refused.
     expect(
       await eventEdit({ payload, user: watcher, id: post, location: 'Room 3', startsAt: next }),
     ).toMatchObject({ ok: false, error: 'not-yours' })
@@ -1721,7 +1673,6 @@ describe('spaces write', () => {
       }),
     ).toMatchObject({ ok: false, error: 'event' })
 
-    // No change, no notification.
     const same = await eventEdit({
       payload,
       user: student,
@@ -1754,7 +1705,6 @@ describe('spaces write', () => {
     const recipients = mine.map((n) =>
       typeof n.recipient === 'object' ? n.recipient.id : n.recipient,
     )
-    // Going and maybe are told; the one who said no is not.
     expect(recipients.sort()).toEqual([fellow.id, watcher.id].sort())
     const stored = await payload.findByID({ collection: 'space-posts', id: post })
     expect(stored.event_location).toBe('Room 3')
@@ -1798,7 +1748,6 @@ describe('spaces write', () => {
         },
         now,
       )
-    // New words tell nobody and mark the post edited; a moderator may not reword it.
     const reworded = await edit(student, { title: 'Probe circle', body: 'Probe bring the text' })
     expect(reworded).toMatchObject({ ok: true })
     expect(reworded.ok && reworded.notify).toBeFalsy()
@@ -1811,7 +1760,6 @@ describe('spaces write', () => {
     })
     expect(await edit(admin, { location: 'Room 4' })).toMatchObject({ ok: true })
 
-    // Once it is over, the words may still be fixed, the place may not move.
     const later = new Date(Date.now() + 2 * day)
     expect(
       await edit(student, { location: 'Room 4', title: 'Probe circle, notes' }, later),
@@ -1845,7 +1793,7 @@ describe('spaces write', () => {
         space: community.id,
         kind: 'event',
         body: 'Probe cover event',
-        event: { location: 'https://example.org/room', startsAt: starts },
+        event: { location: ROOM_URL, startsAt: starts },
         cover,
       })
     expect(await make(pdf)).toMatchObject({ ok: false, error: 'file-type' })
@@ -1868,19 +1816,17 @@ describe('spaces write', () => {
     expect(file.mimeType).toBe('image/webp')
     expect(file.width).toBeLessThanOrEqual(1600)
 
-    // A member reads the cover through the post; it is not one of the post's files.
     const { rows } = await spaceFeed(payload, student, community.id)
     const row = rows.find((r) => r.post.id === post)!
     expect(row.files).toEqual([])
     expect(row.post.event_cover).toMatchObject({ id: first.id, url: expect.any(String) })
 
-    // A new photo replaces the old file and tells nobody; null takes it away.
     const edit = (extra: { cover?: Awaited<ReturnType<typeof photo>> | null }) =>
       eventEdit({
         payload,
         user: student,
         id: post,
-        location: 'https://example.org/room',
+        location: ROOM_URL,
         startsAt: starts,
         ...extra,
       })
@@ -1902,7 +1848,6 @@ describe('spaces write', () => {
         .totalDocs,
     ).toBe(0)
 
-    // Removing the post removes its cover.
     expect(await edit({ cover: await photo('#202020') })).toMatchObject({ ok: true })
     const third = (await cover()).id!
     track('space-files', third)
@@ -1925,7 +1870,6 @@ describe('spaces write', () => {
     )
     for (const s of made2) track('sessions', s.id)
     const [one, two] = made2.map((s) => String(s.id))
-    // A session of another course is foreign here.
     const [otherCourse] = (
       await payload.find({
         collection: 'courses',
@@ -1951,14 +1895,12 @@ describe('spaces write', () => {
       return made
     }
 
-    // A member (not only a fellow) names one session inline and places another as a block.
     const body = `QA probe ${mention(one!, '1 Probe one')} today\n\n${block(two!)}\n\nmore`
     const made = await write(student, body)
     expect(made.ok).toBe(true)
     if (!made.ok) return
     expect(await stored('space-posts', made.data.id)).toBe(body)
 
-    // An unknown or foreign session turns into plain text; a block of one goes.
     const foreign = await write(
       student,
       `QA probe ${mention('not-a-session', '9 Gone')}\n\n${block('not-a-session')}\n\nend`,
@@ -1966,18 +1908,15 @@ describe('spaces write', () => {
     expect(foreign.ok).toBe(true)
     if (foreign.ok)
       expect(await stored('space-posts', foreign.data.id)).toBe('QA probe #9 Gone\n\nend')
-    // Outside a course space no session is known.
     const elsewhere = await write(admin, `QA probe ${mention(one!, '1 Probe one')}`, community.id)
     expect(elsewhere.ok).toBe(true)
     if (elsewhere.ok)
       expect(await stored('space-posts', elsewhere.data.id)).toBe('QA probe #1 Probe one')
-    // A post of nothing but unknown sessions has nothing left to post.
     expect(await write(student, block('not-a-session'))).toMatchObject({
       ok: false,
       error: 'session',
     })
 
-    // A schedule block keeps only this course's sessions, one a post, none in a comment.
     const schedule = (...ids: string[]) => `::schedule[2026-11-14+2:${ids.join(',')}]`
     const mixed = await write(
       fellow,
@@ -1994,7 +1933,6 @@ describe('spaces write', () => {
       error: 'session',
     })
 
-    // At most 10 mentions and 3 blocks; the rest turn into plain text.
     const many = await write(
       fellow,
       [
@@ -2056,7 +1994,6 @@ describe('spaces write', () => {
     ).docs.at(-1)?.body
     expect(foreignBody).toBe('QA probe #1 Elsewhere')
 
-    // A post linked to a session reads and counts.
     const old = await payload.create({
       collection: 'space-posts',
       data: {
@@ -2071,19 +2008,17 @@ describe('spaces write', () => {
     })
     track('space-posts', old.id)
 
-    // Counts: a post is about a session once, whether its body, its thread or its link names it.
     const feed = await spaceFeed(payload, fellow, courseSpace.id)
     const { counts, named } = sessionCounts(feed.rows)
     expect([...named.get(made.data.id)!].sort()).toEqual([one, two].sort())
     const before = { one: counts.get(one!) ?? 0, two: counts.get(two!) ?? 0 }
-    expect(before.one).toBeGreaterThanOrEqual(2) // made (body and comment) and many
+    expect(before.one).toBeGreaterThanOrEqual(2)
     expect(named.get(old.id)).toEqual(new Set([two]))
     expect(feed.rows.find((r) => r.post.id === old.id)?.session).toMatchObject({
       state: 'shown',
       session: two,
     })
 
-    // The course is read through the reader's access: owner-only, the student may not read it.
     expect(feed.sessions?.state).toBe('shown')
     expect((await spaceFeed(payload, student, courseSpace.id)).sessions).toEqual({
       state: 'hidden',
@@ -2143,7 +2078,6 @@ describe('spaces write', () => {
     expect(row.startsAt).toMatch(/^2031-06-07T1[56]:00:00/)
     expect(row.endsAt).toMatch(/^2031-06-07T1[67]:30:00/)
 
-    // After its day it moves to the past group; the community space has none of them.
     const later = await spaceEvents(payload, student, courseSpace, 'en', new Date('2031-07-01'))
     expect(later.past.some((e) => e.type === 'public')).toBe(true)
     const none = await spaceEvents(payload, student, community, 'en', new Date('2031-01-01'))
@@ -2231,7 +2165,6 @@ describe('spaces write', () => {
         })
       ).docs.map((d) => d.option)
 
-    // One choice at a time; a second call moves the vote; a repeat changes nothing.
     expect(
       await voteSet({ payload, user: student, post: single.data.id, options: [tue!, thu!] }),
     ).toMatchObject({ ok: false, error: 'vote' })
@@ -2251,7 +2184,6 @@ describe('spaces write', () => {
     expect(
       await voteSet({ payload, user: stranger, post: single.data.id, options: [tue!] }),
     ).toMatchObject({ ok: false, error: 'not-member' })
-    // An empty choice withdraws the vote.
     expect((await voteSet({ payload, user: student, post: single.data.id, options: [] })).ok).toBe(
       true,
     )
@@ -2287,7 +2219,6 @@ describe('spaces write', () => {
     })
     for (const r of rows.docs) track('space-votes', r.id)
     expect(rows.docs.map((r) => r.option).sort()).toEqual([ids[0], ids[2]].sort())
-    // The page reads counts and distinct voters; only the reader's own choice is named.
     await voteSet({ payload, user: student, post: multiple.data.id, options: [ids[0]!] })
     for (const r of (
       await payload.find({
@@ -2324,7 +2255,6 @@ describe('spaces write', () => {
     })
     expect(seen?.row.vote?.options[0]?.voters).toHaveLength(2)
 
-    // An anonymous vote keeps its counts and the reader's own choice, never a voter.
     const secret = await vote(['Yes', 'No'], false, true)
     expect(secret.ok).toBe(true)
     if (secret.ok) {
@@ -2362,7 +2292,6 @@ describe('spaces write', () => {
         voters: 2,
         mine: [yes[1]],
       })
-      // The API read hides other people's rows too; each voter still sees their own.
       const asStudent = await payload.find({
         collection: 'space-votes',
         user: student,
@@ -2372,7 +2301,6 @@ describe('spaces write', () => {
       expect(asStudent.docs.map((r) => r.option)).toEqual([yes[1]])
     }
 
-    // A locked vote takes no more choices; a discussion is not a vote.
     await postModify({ payload, user: fellow, id: multiple.data.id, locked: true })
     expect(
       await voteSet({ payload, user: fellow, post: multiple.data.id, options: [ids[1]!] }),
@@ -2416,7 +2344,6 @@ describe('spaces write', () => {
       return r
     }
 
-    // Writing follows membership: fellows and admins in, a plain student out.
     expect(note(await post(fellow, fellows)).ok).toBe(true)
     expect(note(await post(admin, fellows)).ok).toBe(true)
     expect(await post(student, fellows)).toMatchObject({ ok: false, error: 'not-member' })
@@ -2425,7 +2352,6 @@ describe('spaces write', () => {
     expect(await post(fellow, admins)).toMatchObject({ ok: false, error: 'not-member' })
     expect(note(await post(student, everyone)).ok).toBe(true)
 
-    // Reading follows it too: the space row is hidden from outsiders.
     const readable = async (user: User) =>
       (
         await payload.find({
@@ -2445,7 +2371,6 @@ describe('spaces write', () => {
       expect.arrayContaining([fellows.id, admins.id, everyone.id]),
     )
 
-    // My spaces lists only the spaces the reader may open, with the admin's name.
     const mine = await mySpaces(payload, student, 'en')
     expect(mine.communities.map((c) => c.title)).toContain('Probe tech community')
     expect(mine.communities.map((c) => c.title)).not.toContain('Probe fellows hall')
@@ -2454,7 +2379,6 @@ describe('spaces write', () => {
       `/en/spaces/community/${fellows.id}`,
     )
 
-    // Mentions and notification recipients draw on the same audience.
     const fellowSet = await mentionSafelist(payload, fellows.id)
     expect(fellowSet.has(fellowPerson)).toBe(true)
     expect(fellowSet.has(studentPerson)).toBe(false)
@@ -2463,7 +2387,6 @@ describe('spaces write', () => {
     expect(adminSet.has(fellowPerson)).toBe(false)
     expect((await mentionSafelist(payload, everyone.id)).has(studentPerson)).toBe(true)
 
-    // A course space takes no custom name or audience.
     const renamed = await payload.update({
       collection: 'spaces',
       id: courseSpace.id,
@@ -2518,7 +2441,6 @@ describe('spaces write', () => {
     expect(reply.ok).toBe(true)
     if (reply.ok) track('space-comments', reply.data.id)
 
-    // The feed, the post page, the dialog and the API show only the intro post.
     const ids = async (u: User) =>
       (await spaceFeed(payload, u, courseSpace)).rows.map((r) => r.post.id)
     expect(await ids(newcomer)).toEqual([intro])
@@ -2532,16 +2454,13 @@ describe('spaces write', () => {
       where: { post: { equals: made.data.id } },
     })
     expect(api.totalDocs).toBe(0)
-    // Counts leave the hidden post and its reply out.
     const before = (await mySpaces(payload, newcomer, 'en')).courses.find(
       (c) => c.space.id === courseSpace.id,
     )
     expect(before).toBeDefined()
-    // The student who introduced themselves and the fellow read everything.
     expect(await ids(student)).toContain(made.data.id)
     expect(await ids(fellow)).toContain(made.data.id)
 
-    // Behind the gate, only the intro post takes writes.
     const post = await postCreate({
       payload,
       user: newcomer,
@@ -2569,7 +2488,6 @@ describe('spaces write', () => {
     expect(react.ok).toBe(false)
     if (!react.ok) expect(react.error).toBe('intro')
 
-    // Moderators cannot shut the door: no lock, no delete of the intro post.
     const lock = await postModify({ payload, user: fellow, id: intro, locked: true })
     expect(lock.ok).toBe(false)
     if (!lock.ok) expect(lock.error).toBe('intro-post')
@@ -2577,7 +2495,6 @@ describe('spaces write', () => {
     expect(gone.ok).toBe(false)
     if (!gone.ok) expect(gone.error).toBe('intro-post')
 
-    // Even when only fellows write, the newcomer answers the intro post, and the space opens.
     await payload.update({
       collection: 'spaces',
       id: courseSpace.id,
@@ -2601,7 +2518,6 @@ describe('spaces write', () => {
     expect(await ids(newcomer)).toContain(made.data.id)
     expect(await postView(payload, newcomer, courseSpace, made.data.id)).not.toBeNull()
 
-    // Deleting the introduction closes the space again.
     if (hello.ok) {
       expect((await commentRemove({ payload, user: newcomer, id: hello.data.id })).ok).toBe(true)
       expect(await ids(newcomer)).toEqual([intro])

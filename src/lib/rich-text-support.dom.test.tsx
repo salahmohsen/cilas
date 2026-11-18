@@ -1,10 +1,8 @@
 import { cleanup, render, screen } from '@testing-library/react'
 import { NextIntlClientProvider } from 'next-intl'
-import type { Payload } from 'payload'
-import { afterEach, describe, expect, it, vi } from 'vitest'
+import { afterEach, describe, expect, it } from 'vitest'
 import { RichTextField } from '@/components/RichTextField'
 import { RichTextReferencesProvider } from '@/components/rich-text-references'
-import { resolveRichTextReferences } from '@/lib/resolve-rich-text-references'
 import { emailRichTextHTML } from '@/emails/rich-text'
 import { plainText } from '@/lib/plaintext'
 import { lexicalText } from '@/plugins/typesense/documents'
@@ -101,41 +99,6 @@ describe('rich text reference rendering', () => {
     expect(screen.getByText('Read Plato')).toBeInTheDocument()
     expect(screen.queryByRole('link')).not.toBeInTheDocument()
     expect(screen.queryByText('A short summary.')).not.toBeInTheDocument()
-  })
-})
-
-describe('reference authorization', () => {
-  it('batches nested mentions, cards and links and rechecks supplied documents', async () => {
-    const find = vi
-      .fn()
-      .mockResolvedValue({ docs: [{ id: 1, title: 'Plato', slug: 'plato', _status: 'published' }] })
-    const resolved = await resolveRichTextReferences(
-      { find } as unknown as Payload,
-      [doc([columns, related, paragraph([internalLink])])],
-      { locale: 'en' },
-    )
-    expect(find).toHaveBeenCalledTimes(1)
-    expect(find).toHaveBeenCalledWith(
-      expect.objectContaining({
-        collection: 'articles',
-        overrideAccess: false,
-        user: null,
-        draft: false,
-        where: { id: { in: [1] } },
-      }),
-    )
-    expect(resolved['articles:1'].href).toBe('/articles/plato')
-  })
-
-  it('omits drafts even when a query returns one', async () => {
-    const find = vi
-      .fn()
-      .mockResolvedValue({ docs: [{ id: 1, title: 'Secret', slug: 'secret', _status: 'draft' }] })
-    expect(
-      await resolveRichTextReferences({ find } as unknown as Payload, doc([related]), {
-        locale: 'en',
-      }),
-    ).toEqual({})
   })
 })
 

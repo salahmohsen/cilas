@@ -1,4 +1,5 @@
-import { describe, expect, it, vi } from 'vitest'
+import { createLocalReq, getPayload, type Payload } from 'payload'
+import { afterAll, beforeAll, describe, expect, it } from 'vitest'
 
 import {
   CalendarSaveFailure,
@@ -9,7 +10,10 @@ import {
   spaceEventItems,
   type CalendarContext,
 } from '@/lib/calendar-sources'
-import type { Session } from '@/payload-types'
+import config from '@/payload.config'
+import type { Session, User } from '@/payload-types'
+
+import { createTracker, uniq } from '../../testing/payload.fixture'
 
 const words = {
   untitled: (n: number) => `Session ${n}`,
@@ -18,15 +22,28 @@ const words = {
 }
 
 type Doc = Parameters<typeof sessionItems>[0][number]
-const doc = (over: Partial<Doc> & { id: number }): Doc => ({
-  title: null,
-  cancelled: false,
-  meetings: [],
-  position: null,
-  updatedAt: '2034-01-01T00:00:00.000Z',
-  ...over,
-})
+const doc = (over: Partial<Doc> & { id: number }) =>
+  ({
+    title: null,
+    cancelled: false,
+    meetings: [],
+    position: null,
+    updatedAt: '2034-01-01T00:00:00.000Z',
+    ...over,
+  }) satisfies Doc
 const course = { course_type: 'THEMATIC' } as const
+
+let payload: Payload
+const { track, cleanup } = createTracker()
+
+beforeAll(async () => {
+  payload = await getPayload({ config: await config })
+})
+
+afterAll(async () => {
+  await cleanup(payload)
+  await payload.destroy()
+})
 
 describe('sessionItems', () => {
   it('turns a session into an item and each meeting into a block, by the course’s order', () => {
@@ -210,16 +227,51 @@ describe('space source', () => {
     })
   })
   it('refuses every operation on an event before writing any session', async () => {
-    const create = vi.fn()
-    const ctx = {
-      req: {
-        payload: {
-          findByID: vi.fn().mockResolvedValue({ kind: 'course', course: 1 }),
-          create,
+    const place = track(
+      'places',
+      await payload.create({
+        collection: 'places',
+        data: { name: 'Calendar place', slug: uniq('calendar-place'), city: uniq('Probe') },
+        overrideAccess: true,
+      }),
+    ).id
+    const cycle = track(
+      'cycles',
+      await payload.create({
+        collection: 'cycles',
+        data: { season: 'fall', start_year: 2036, place, start_date: '2036-10-04' },
+        overrideAccess: true,
+      }),
+    ).id
+    const courseId = track(
+      'courses',
+      await payload.create({
+        collection: 'courses',
+        data: {
+          title: 'Calendar probe',
+          slug: uniq('calendar-probe'),
+          course_type: 'THEMATIC',
+          tier: 'public',
+          cycle,
+          registration: { mode: 'closed' },
+          _status: 'published',
         },
-      },
-      user: { id: 1 },
-    } as unknown as CalendarContext
+        overrideAccess: true,
+      }),
+    ).id
+    const { docs: spaces } = await payload.find({
+      collection: 'spaces',
+      where: { course: { equals: courseId } },
+      overrideAccess: true,
+      depth: 0,
+    })
+    const admin = { id: -1, roles: ['admin'], collection: 'users' } as unknown as User
+    const ctx = {
+      req: await createLocalReq({ user: admin }, payload),
+      user: admin,
+      untitled: words.untitled,
+      delivery: words.delivery,
+    } satisfies CalendarContext
     const source = calendarSourceOf('space')!
     for (const change of [
       { op: 'delete-block', itemId: 'space-event:12', blockId: '12', version: 'v' },
@@ -247,11 +299,18 @@ describe('space source', () => {
         blocks: [{ blockId: 'new', date: '2026-01-15', start_time: '20:00', end_time: null }],
       },
     ] as const) {
-      await expect(source.apply(ctx, '1', [change as never])).rejects.toMatchObject({
+      await expect(
+        source.apply(ctx, String(spaces[0]!.id), [change as never]),
+      ).rejects.toMatchObject({
         error: { code: 'invalid', change: 0 },
       })
     }
-    expect(create).not.toHaveBeenCalled()
+    const written = await payload.count({
+      collection: 'sessions',
+      where: { course: { equals: courseId } },
+      overrideAccess: true,
+    })
+    expect(written.totalDocs).toBe(0)
   })
 
   it('gives a titled session its number as a caption, and the start of its description', () => {

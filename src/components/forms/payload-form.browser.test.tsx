@@ -1,26 +1,19 @@
-import { act, cleanup, fireEvent, render, screen, waitFor } from '@testing-library/react'
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
+import { cleanup, fireEvent, screen, waitFor } from '@testing-library/react'
+import { act } from 'react'
+import { http, HttpResponse } from 'msw'
+import { afterEach, beforeEach, describe, expect, it } from 'vitest'
 
 import { PayloadForm } from '@/components/forms/payload-form'
 import type { Form } from '@/payload-types'
 
-vi.mock('@/env.client', async (importOriginal) => {
-  const actual = await importOriginal<typeof import('@/env.client')>()
-  // No Turnstile in the sandbox: the widget never answers, so a send waiting
-  // on its token would hang.
-  return { clientEnv: { ...actual.clientEnv, NEXT_PUBLIC_TURNSTILE_SITE_KEY: '' } }
-})
-vi.mock('next-intl', () => ({
-  useTranslations: () => (key: string) => key,
-  useLocale: () => 'en',
-}))
-vi.mock('@/i18n/navigation', () => ({
-  Link: (props: { href: string; children?: React.ReactNode }) => (
-    <a href={props.href}>{props.children}</a>
-  ),
-}))
+import { renderWithIntl } from '../../../testing/intl.test-utils'
+import { mockNetwork } from '../../../testing/msw-browser.test-utils'
 
-const formOf = (fields: NonNullable<Form['fields']>): Form =>
+const mona = { email: 'mona@example.com', person: { name: 'Mona Adel' } }
+const network = mockNetwork(http.get('/api/users/me', () => HttpResponse.json({ user: mona })))
+const nobody = () => http.get('/api/users/me', () => HttpResponse.json({ user: null }))
+
+const formOf = (fields: NonNullable<Form['fields']>) =>
   ({
     id: 7,
     title: 'Application probe',
@@ -44,58 +37,46 @@ const selectBlock = {
 }
 
 describe('the payload form', () => {
-  let sent: { url: string; body: unknown; method: string }[] = []
-
-  beforeEach(() => {
-    vi.stubGlobal(
-      'ResizeObserver',
-      class {
-        observe() {}
-        unobserve() {}
-        disconnect() {}
-      },
-    )
-    localStorage.clear()
-    sent = []
-    // jsdom draws nothing to scroll; Radix's list scrolls to the chosen item.
-    Element.prototype.scrollIntoView = () => {}
-    const me = { email: 'mona@example.com', person: { name: 'Mona Adel' } }
-    vi.stubGlobal(
-      'fetch',
-      vi.fn(async (input: RequestInfo | URL, init?: RequestInit) => {
-        const url = String(input)
-        sent.push({ url, body: init?.body ?? null, method: init?.method ?? 'GET' })
-        if (url.startsWith('/api/users/me')) return new Response(JSON.stringify({ user: me }))
-        return new Response('{}', { status: 201 })
+  let posts: unknown[] = []
+  const accept = () =>
+    network.use(
+      http.post('/api/form-submissions', async ({ request }) => {
+        posts.push(await request.json())
+        return HttpResponse.json({}, { status: 201 })
       }),
     )
+
+  beforeEach(() => {
+    localStorage.clear()
+    posts = []
   })
 
-  afterEach(() => {
-    vi.unstubAllGlobals()
-    cleanup()
-  })
+  afterEach(cleanup)
 
   it('never posts from preview, including a programmatic form submit', async () => {
-    const { container } = render(<PayloadForm confirmation={null} form={formOf([])} preview />)
+    accept()
+    const { container } = renderWithIntl(
+      <PayloadForm confirmation={null} form={formOf([])} preview />,
+    )
     const name = await screen.findByRole('textbox', { name: /Name/ })
     await waitFor(() => expect(name).toHaveValue('Mona Adel'))
-    expect(screen.getByRole('button', { name: /submit/i })).toBeDisabled()
-    expect(screen.getByText('preview')).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: 'Send' })).toBeDisabled()
+    expect(screen.getByText('Preview: submitting is turned off')).toBeInTheDocument()
     await act(async () => {
       fireEvent.submit(container.querySelector('form')!)
     })
-    expect(sent.filter((request) => request.method === 'POST')).toEqual([])
+    expect(posts).toEqual([])
   })
 
   it('renders a select question as a dropdown, not a text input', async () => {
-    render(<PayloadForm confirmation={null} form={formOf([selectBlock as never])} />)
+    renderWithIntl(<PayloadForm confirmation={null} form={formOf([selectBlock as never])} />)
     await screen.findByRole('combobox', { name: /Track/ })
     expect(screen.queryByRole('textbox', { name: /Track/ })).toBeNull()
   })
 
   it('saves the chosen option as its value', async () => {
-    render(<PayloadForm confirmation={null} form={formOf([selectBlock as never])} />)
+    accept()
+    renderWithIntl(<PayloadForm confirmation={null} form={formOf([selectBlock as never])} />)
     const trigger = await screen.findByRole('combobox', { name: /Track/ })
     fireEvent.keyDown(trigger, { key: 'Enter' })
     const options = await screen.findAllByRole('option')
@@ -107,15 +88,10 @@ describe('the payload form', () => {
     fireEvent.change(screen.getByRole('textbox', { name: /Email/ }), {
       target: { value: 'mona@example.com' },
     })
-    fireEvent.click(screen.getByRole('button', { name: /submit/i }))
+    fireEvent.click(screen.getByRole('button', { name: 'Send' }))
 
-    await waitFor(() =>
-      expect(sent.filter((s) => s.url.includes('form-submissions'))).toHaveLength(1),
-    )
-    const create = sent.find((s) => s.url.endsWith('/api/form-submissions'))!
-    const body = JSON.parse(String(create.body)) as {
-      submissionData: { field: string; value: string }[]
-    }
+    await waitFor(() => expect(posts).toHaveLength(1))
+    const body = posts[0] as { submissionData: { field: string; value: string }[] }
     expect(body.submissionData.find((a) => a.field === 'track')).toEqual({
       field: 'track',
       value: 'film',
@@ -123,7 +99,7 @@ describe('the payload form', () => {
   })
 
   it('fills name and email from the signed-in account and locks them', async () => {
-    render(<PayloadForm confirmation={null} form={formOf([selectBlock as never])} />)
+    renderWithIntl(<PayloadForm confirmation={null} form={formOf([selectBlock as never])} />)
     const name = await screen.findByRole('textbox', { name: /Name/ })
     const email = screen.getByRole('textbox', { name: /Email/ })
     await waitFor(() => {
@@ -135,7 +111,8 @@ describe('the payload form', () => {
   })
 
   it('serializes the existing course page as a cycle choice', async () => {
-    render(
+    accept()
+    renderWithIntl(
       <PayloadForm
         confirmation={null}
         form={formOf([])}
@@ -160,9 +137,9 @@ describe('the payload form', () => {
     fireEvent.change(screen.getByRole('textbox', { name: /Why this course/ }), {
       target: { value: 'To learn' },
     })
-    fireEvent.click(screen.getByRole('button', { name: /submit/i }))
-    await waitFor(() => expect(sent.some((s) => s.method === 'POST')).toBe(true))
-    const body = JSON.parse(String(sent.find((s) => s.method === 'POST')!.body))
+    fireEvent.click(screen.getByRole('button', { name: 'Send' }))
+    await waitFor(() => expect(posts).toHaveLength(1))
+    const body = posts[0] as { choices: unknown; submissionData: unknown[] }
     expect(body).toMatchObject({
       target: { relationTo: 'cycles', value: 10 },
       choices: [{ course: 11, amount: 100, answers: [{ name: 'reason', value: 'To learn' }] }],
@@ -175,7 +152,8 @@ describe('the payload form', () => {
   })
 
   it('drops required course answers on untick and starts again empty', async () => {
-    render(
+    accept()
+    renderWithIntl(
       <PayloadForm
         confirmation={null}
         form={formOf([])}
@@ -200,14 +178,14 @@ describe('the payload form', () => {
     await waitFor(() =>
       expect(screen.getByRole('textbox', { name: /Name/ })).toHaveValue('Mona Adel'),
     )
-    fireEvent.click(screen.getByRole('button', { name: /submit/i }))
+    fireEvent.click(screen.getByRole('button', { name: 'Send' }))
     await waitFor(() =>
       expect(screen.getByRole('textbox', { name: 'Why film?' })).toHaveAttribute(
         'aria-invalid',
         'true',
       ),
     )
-    expect(sent.some((s) => s.method === 'POST')).toBe(false)
+    expect(posts).toEqual([])
     fireEvent.change(screen.getByRole('textbox', { name: 'Why film?' }), {
       target: { value: 'Discard me' },
     })
@@ -219,15 +197,16 @@ describe('the payload form', () => {
     await waitFor(() =>
       expect(screen.getByRole('textbox', { name: /Name/ })).toHaveValue('Mona Adel'),
     )
-    fireEvent.click(screen.getByRole('button', { name: /submit/i }))
-    await waitFor(() => expect(sent.some((s) => s.method === 'POST')).toBe(true))
-    expect(JSON.parse(String(sent.find((s) => s.method === 'POST')!.body)).choices).toEqual([
+    fireEvent.click(screen.getByRole('button', { name: 'Send' }))
+    await waitFor(() => expect(posts).toHaveLength(1))
+    expect((posts[0] as { choices: unknown }).choices).toEqual([
       { course: 11, need_reduction: false, answers: [] },
     ])
   })
 
   it('starts at the admin default and snaps uneven contribution amounts with keys', async () => {
-    render(
+    accept()
+    renderWithIntl(
       <PayloadForm
         confirmation={null}
         form={formOf([])}
@@ -255,11 +234,9 @@ describe('the payload form', () => {
     await waitFor(() =>
       expect(screen.getByRole('textbox', { name: /Name/ })).toHaveValue('Mona Adel'),
     )
-    fireEvent.click(screen.getByRole('button', { name: /submit/i }))
-    await waitFor(() => expect(sent.some((s) => s.method === 'POST')).toBe(true))
-    expect(JSON.parse(String(sent.find((s) => s.method === 'POST')!.body)).choices[0].amount).toBe(
-      900,
-    )
+    fireEvent.click(screen.getByRole('button', { name: 'Send' }))
+    await waitFor(() => expect(posts).toHaveLength(1))
+    expect((posts[0] as { choices: { amount: number }[] }).choices[0]!.amount).toBe(900)
   })
 
   it('restores course selection, answers and contributions from the device draft', async () => {
@@ -279,7 +256,7 @@ describe('the payload form', () => {
         },
       ],
     }
-    const view = render(
+    const view = renderWithIntl(
       <PayloadForm confirmation={null} form={formOf([])} application={application} />,
     )
     fireEvent.click(screen.getByRole('checkbox', { name: 'Film' }))
@@ -287,18 +264,18 @@ describe('the payload form', () => {
       target: { value: 'Keep my answer' },
     })
     fireEvent.keyDown(screen.getByRole('slider'), { key: 'End' })
-    fireEvent.click(screen.getByRole('checkbox', { name: 'needReduction' }))
+    fireEvent.click(screen.getByRole('checkbox', { name: 'I need a lower contribution' }))
     await waitFor(() => expect(localStorage.getItem('cilas-form-7')).toContain('Keep my answer'))
     view.unmount()
-    render(<PayloadForm confirmation={null} form={formOf([])} application={application} />)
+    renderWithIntl(<PayloadForm confirmation={null} form={formOf([])} application={application} />)
     expect(screen.getByRole('checkbox', { name: 'Film' })).toBeChecked()
     expect(screen.getByRole('textbox', { name: /Why film/ })).toHaveValue('Keep my answer')
     expect(screen.getByRole('slider')).toHaveAttribute('aria-valuenow', '1')
-    expect(screen.getByRole('checkbox', { name: 'needReduction' })).toBeChecked()
+    expect(screen.getByRole('checkbox', { name: 'I need a lower contribution' })).toBeChecked()
   })
 
   it.each([100, 0])('shows a single contribution of %s without a slider', (amount) => {
-    render(
+    renderWithIntl(
       <PayloadForm
         confirmation={null}
         form={formOf([])}
@@ -317,29 +294,20 @@ describe('the payload form', () => {
       />,
     )
     expect(screen.queryByRole('slider')).toBeNull()
-    expect(screen.getByText(amount === 0 ? /free/ : /100 EGP/)).toBeVisible()
+    expect(screen.getByText(amount === 0 ? /Free/ : /100 EGP/)).toBeVisible()
     expect(screen.queryByRole('checkbox', { name: 'Writing' })).toBeNull()
   })
 
   it('shows an actionable server error and keeps the answers for correction', async () => {
-    vi.stubGlobal(
-      'fetch',
-      vi.fn(async (input: RequestInfo | URL) =>
-        String(input).startsWith('/api/users/me')
-          ? new Response(
-              JSON.stringify({
-                user: { email: 'mona@example.com', person: { name: 'Mona Adel' } },
-              }),
-            )
-          : new Response(
-              JSON.stringify({
-                errors: [{ message: 'Writing is no longer open for applications.' }],
-              }),
-              { status: 400 },
-            ),
+    network.use(
+      http.post('/api/form-submissions', () =>
+        HttpResponse.json(
+          { errors: [{ message: 'Writing is no longer open for applications.' }] },
+          { status: 400 },
+        ),
       ),
     )
-    render(
+    renderWithIntl(
       <PayloadForm
         confirmation={null}
         form={formOf([{ blockType: 'text', name: 'reason', label: 'Your reason' }])}
@@ -351,44 +319,33 @@ describe('the payload form', () => {
     fireEvent.change(screen.getByRole('textbox', { name: /Your reason/ }), {
       target: { value: 'Keep this answer' },
     })
-    fireEvent.click(screen.getByRole('button', { name: /submit/i }))
+    fireEvent.click(screen.getByRole('button', { name: 'Send' }))
     expect(
       await screen.findByText('Writing is no longer open for applications.'),
     ).toBeInTheDocument()
     expect(screen.getByRole('textbox', { name: /Your reason/ })).toHaveValue('Keep this answer')
-    expect(screen.getByRole('button', { name: /submit/i })).toBeEnabled()
+    expect(screen.getByRole('button', { name: 'Send' })).toBeEnabled()
   })
 
   it('says the server failed when it refuses without a reason', async () => {
-    vi.stubGlobal(
-      'fetch',
-      vi.fn(async (input: RequestInfo | URL) =>
-        String(input).startsWith('/api/users/me')
-          ? new Response(JSON.stringify({ user: null }))
-          : new Response('Bad gateway', { status: 502 }),
-      ),
+    network.use(
+      nobody(),
+      http.post('/api/form-submissions', () => new HttpResponse('Bad gateway', { status: 502 })),
     )
-    render(<PayloadForm confirmation={null} form={formOf([])} />)
+    renderWithIntl(<PayloadForm confirmation={null} form={formOf([])} />)
     fireEvent.change(screen.getByRole('textbox', { name: /Name/ }), {
       target: { value: 'Mona Adel' },
     })
     fireEvent.change(screen.getByRole('textbox', { name: /Email/ }), {
       target: { value: 'mona@example.com' },
     })
-    fireEvent.click(screen.getByRole('button', { name: /submit/i }))
-    expect(await screen.findByText('serverFailed')).toBeInTheDocument()
+    fireEvent.click(screen.getByRole('button', { name: 'Send' }))
+    expect(await screen.findByText(/Our server couldn’t save your answers/)).toBeInTheDocument()
   })
 
   it('asks the questions open to write in when nobody is signed in', async () => {
-    vi.stubGlobal(
-      'fetch',
-      vi.fn(async (input: RequestInfo | URL) =>
-        String(input).startsWith('/api/users/me')
-          ? new Response(JSON.stringify({ user: null }))
-          : new Response('{}', { status: 201 }),
-      ),
-    )
-    render(<PayloadForm confirmation={null} form={formOf([selectBlock as never])} />)
+    network.use(nobody())
+    renderWithIntl(<PayloadForm confirmation={null} form={formOf([selectBlock as never])} />)
     const name = await screen.findByRole('textbox', { name: /Name/ })
     await waitFor(() => expect(name).not.toBeDisabled())
     expect(screen.getByRole('textbox', { name: /Email/ })).toHaveValue('')

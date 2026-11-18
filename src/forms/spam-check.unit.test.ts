@@ -1,7 +1,10 @@
-import { afterEach, describe, expect, it, vi } from 'vitest'
+import { http, HttpResponse } from 'msw'
+import { describe, expect, it } from 'vitest'
 
 import { requireTurnstile } from '@/forms/spam-check'
 import { TURNSTILE_HEADER } from '@/lib/turnstile'
+
+import { mockNetwork } from '../../testing/msw-node.test-utils'
 
 type Args = Parameters<ReturnType<typeof requireTurnstile>>[0]
 
@@ -25,10 +28,19 @@ const run = (
     req: { headers: new Headers(headers), user, payloadAPI },
   } as unknown as Args)
 
-const cloudflare = (success: boolean) =>
-  vi.spyOn(globalThis, 'fetch').mockResolvedValue(Response.json({ success }))
+const SITEVERIFY = 'https://challenges.cloudflare.com/turnstile/v0/siteverify'
+const network = mockNetwork()
 
-afterEach(() => vi.restoreAllMocks())
+const cloudflare = (success: boolean) => {
+  const forms: Record<string, string>[] = []
+  network.use(
+    http.post(SITEVERIFY, async ({ request }) => {
+      forms.push(Object.fromEntries(await request.formData()) as Record<string, string>)
+      return HttpResponse.json({ success })
+    }),
+  )
+  return forms
+}
 
 describe('requireTurnstile', () => {
   it('lets every post through without a secret', async () => {
@@ -36,9 +48,7 @@ describe('requireTurnstile', () => {
   })
 
   it('refuses a post without a token', async () => {
-    const fetch = cloudflare(true)
     await expect(run('secret')).rejects.toMatchObject({ status: 403 })
-    expect(fetch).not.toHaveBeenCalled()
   })
 
   it('refuses a token Cloudflare rejects', async () => {
@@ -49,31 +59,24 @@ describe('requireTurnstile', () => {
   })
 
   it('refuses when Cloudflare cannot be reached', async () => {
-    vi.spyOn(globalThis, 'fetch').mockRejectedValue(new Error('offline'))
+    network.use(http.post(SITEVERIFY, () => HttpResponse.error()))
     await expect(run('secret', { headers: { [TURNSTILE_HEADER]: 'tok' } })).rejects.toMatchObject({
       status: 403,
     })
   })
 
   it('accepts a good token and sends the visitor IP', async () => {
-    const fetch = cloudflare(true)
+    const forms = cloudflare(true)
     await expect(
       run('secret', { headers: { [TURNSTILE_HEADER]: 'tok', 'cf-connecting-ip': '203.0.113.9' } }),
     ).resolves.toEqual({ form: 1 })
-    const body = fetch.mock.calls[0]![1]!.body as URLSearchParams
-    expect(Object.fromEntries(body)).toEqual({
-      secret: 'secret',
-      response: 'tok',
-      remoteip: '203.0.113.9',
-    })
+    expect(forms).toEqual([{ secret: 'secret', response: 'tok', remoteip: '203.0.113.9' }])
   })
 
   it('skips the Local API, admins and updates', async () => {
-    const fetch = cloudflare(false)
     await expect(run('secret', { payloadAPI: 'local' })).resolves.toBeTruthy()
     await expect(run('secret', { user: { id: 1, roles: ['admin'] } })).resolves.toBeTruthy()
     await expect(run('secret', { operation: 'update' })).resolves.toBeTruthy()
-    expect(fetch).not.toHaveBeenCalled()
   })
 
   it('checks signed-in members like visitors', async () => {

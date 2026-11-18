@@ -1,11 +1,5 @@
-import { NextRequest, NextResponse } from 'next/server'
-import { describe, expect, it, vi } from 'vitest'
-
-// next-intl's middleware does not load under vitest; a request that reaches it
-// is marked, so the tests can tell it from one the OAuth step took.
-vi.mock('next-intl/middleware', () => ({
-  default: () => () => NextResponse.next({ headers: { 'x-reached-intl': '1' } }),
-}))
+import { NextRequest } from 'next/server'
+import { describe, expect, it } from 'vitest'
 
 import proxy, { config } from '@/proxy'
 
@@ -31,18 +25,25 @@ describe('proxy: assistant discovery', () => {
   })
 
   it('does not take other well-known paths or a bare-host POST', () => {
-    expect(proxy(request('/.well-known/security.txt')).headers.get('x-reached-intl')).toBe('1')
+    const security = proxy(request('/.well-known/security.txt'))
+    expect(security.status).toBe(307)
+    expect(security.headers.get('location')).toBe(
+      'http://localhost:3000/en/.well-known/security.txt',
+    )
     const post = proxy(
       request('/', {
         method: 'POST',
         headers: { 'content-type': 'application/json', accept: 'text/event-stream' },
       }),
     )
-    expect(post.headers.get('x-reached-intl')).toBe('1')
+    expect(post.status).toBe(307)
+    expect(post.headers.get('location')).toBe('http://localhost:3000/en')
   })
 
   it('keeps the language, legacy and sign-in behaviour', () => {
-    expect(proxy(request('/en/about')).headers.get('x-reached-intl')).toBe('1')
+    const about = proxy(request('/en/about'))
+    expect(about.headers.get('x-middleware-next')).toBe('1')
+    expect(about.headers.get('x-middleware-request-x-next-intl-locale')).toBe('en')
     expect(proxy(request('/old-page.html')).headers.get('x-middleware-rewrite')).toBe(
       'http://localhost:3000/en/old-page.html',
     )

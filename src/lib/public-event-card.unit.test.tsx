@@ -1,31 +1,16 @@
 import { within } from '@testing-library/react'
+import { JSDOM } from 'jsdom'
 import { renderToStaticMarkup } from 'react-dom/server'
-import { beforeEach, describe, expect, it, vi } from 'vitest'
+import { describe, expect, it } from 'vitest'
 
-import { PublicEventCard } from '@/components/events/public-event-card'
+import { PublicEventCardBody } from '@/components/events/public-event-card'
 import { EVENT_POSTER_COLORS } from '@/lib/event-poster-colors'
-import { publicEventCoverTone } from '@/lib/public-event-cover'
 import type { Event } from '@/payload-types'
 
-vi.mock('next-intl/server', async () => {
-  const { createFormatter } = await import('next-intl')
-  const { default: messages } = await import('../../messages/en.json')
-  return {
-    getLocale: async () => 'en',
-    getFormatter: async () => createFormatter({ locale: 'en', timeZone: 'Africa/Cairo' }),
-    getTranslations: async (namespace: string) => {
-      const values: Record<string, string> =
-        namespace === 'Events' ? messages.Events : messages.Calendar.eventTypes
-      return (key: string) => values[key] ?? key
-    },
-  }
-})
-vi.mock('@/lib/public-event-cover', () => ({ publicEventCoverTone: vi.fn() }))
-vi.mock('@/components/space/event-details', () => ({
-  EventFace: () => null,
-  EventPlace: () => null,
-  EventWhen: () => null,
-}))
+import { serverFormatter, serverTranslator } from '../../testing/fan4-server-intl.test-utils'
+import { mockNetwork } from '../../testing/msw-node.test-utils'
+
+mockNetwork()
 
 const now = new Date('2026-10-28T12:00:00Z')
 const event: Event = {
@@ -44,15 +29,20 @@ const event: Event = {
 }
 
 const markup = (html: string) => {
-  const root = window.document.createElement('div')
+  const root = new JSDOM('<div></div>').window.document.body.firstElementChild!
   root.innerHTML = html
-  return root
+  return root as HTMLElement
+}
+
+const words = {
+  t: serverTranslator('Events'),
+  types: serverTranslator('Calendar.eventTypes'),
+  format: serverFormatter(),
+  locale: 'en',
 }
 
 const card = async (data: Event) =>
-  markup(renderToStaticMarkup(await PublicEventCard({ event: data, now })))
-
-beforeEach(() => vi.clearAllMocks())
+  markup(renderToStaticMarkup(PublicEventCardBody({ event: data, now, ...words })))
 
 describe('public event posters', () => {
   it('shows the same time for a single screening without an agenda as for a legacy timed event', async () => {
@@ -84,7 +74,6 @@ describe('public event posters', () => {
         '/en/events/public-gathering',
       )
     }
-    expect(publicEventCoverTone).not.toHaveBeenCalled()
   })
 
   it('keeps Cairo dates, time ranges, venue links, and online links', async () => {
@@ -142,7 +131,9 @@ describe('public event posters', () => {
   })
 
   it('uses the article reader title and leaves the cover out of the event page', async () => {
-    const result = await PublicEventCard({
+    const result = PublicEventCardBody({
+      ...words,
+      showFacts: false,
       event: {
         ...event,
         cover_image: {
@@ -160,6 +151,5 @@ describe('public event posters', () => {
     const document = markup(renderToStaticMarkup(result))
     expect(within(document).getByRole('heading', { level: 1 }).textContent).toBe(event.title)
     expect(document.querySelector('img')).toBeNull()
-    expect(publicEventCoverTone).not.toHaveBeenCalled()
   })
 })

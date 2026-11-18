@@ -1,21 +1,13 @@
+import { JSDOM } from 'jsdom'
 import { renderToStaticMarkup } from 'react-dom/server'
-import { describe, expect, it, vi } from 'vitest'
-import type { Event } from '@/payload-types'
-import { EventAttendance } from '@/components/events/event-attendance'
+import { describe, expect, it } from 'vitest'
 
-vi.mock('next-intl/server', async () => {
-  const { createFormatter, createTranslator } = await import('next-intl')
-  const { default: messages } = await import('../../../messages/en.json')
-  return {
-    getFormatter: async () => createFormatter({ locale: 'en', timeZone: 'Africa/Cairo' }),
-    getTranslations: async (namespace: 'Events' | 'Spaces') =>
-      createTranslator({ locale: 'en', messages: messages[namespace] }),
-  }
-})
-vi.mock('@/components/space/event-details', () => ({ EventWhen: () => null }))
-vi.mock('@/components/space/event-calendar', () => ({
-  EventCalendar: ({ ics }: { ics: string }) => <span data-calendar={ics} />,
-}))
+import { EventAttendanceBody } from '@/components/events/event-attendance'
+import { detailPath } from '@/lib/paths'
+import type { Event } from '@/payload-types'
+
+import { serverFormatter, serverTranslator } from '../../../testing/fan4-server-intl.test-utils'
+import { IntlProvider } from '../../../testing/intl.test-utils'
 
 const event: Event = {
   id: 1,
@@ -29,16 +21,25 @@ const event: Event = {
 }
 const now = new Date('2026-10-28T12:00:00Z')
 const render = async (value: Event = event, at = now) =>
-  new DOMParser().parseFromString(
-    renderToStaticMarkup(await EventAttendance({ event: value, now: at, locale: 'en' })),
-    'text/html',
-  )
+  new JSDOM(
+    renderToStaticMarkup(
+      <IntlProvider>
+        {await EventAttendanceBody({
+          event: value,
+          now: at,
+          locale: 'en',
+          t: serverTranslator('Events'),
+          spaces: serverTranslator('Spaces'),
+          format: serverFormatter(),
+        })}
+      </IntlProvider>,
+    ),
+  ).window.document
 
 describe('event attendance details', () => {
   it('keeps an unknown time explicit, and shows no attendance line for an open public event', async () => {
     const page = await render()
     expect(page.body.textContent).toContain('Time to be announced')
-    // No attendance setting means public: nothing to announce.
     expect(page.body.textContent).not.toContain('Attendance')
     expect(page.querySelector('a.side-card-action')).toBeNull()
   })
@@ -85,9 +86,12 @@ describe('event attendance details', () => {
 describe('event attendance calendar', () => {
   it('offers the event to a calendar only while it is upcoming', async () => {
     const page = await render()
-    expect(page.querySelector('[data-calendar="/en/events/screening/event.ics"]')).not.toBeNull()
+    expect(page.body.textContent).toContain('Add to calendar')
+    expect(detailPath('events', 'screening', 'en', 'event.ics')).toBe(
+      '/en/events/screening/event.ics',
+    )
     const ended = await render(event, new Date('2026-11-02T12:00:00Z'))
-    expect(ended.querySelector('[data-calendar]')).toBeNull()
+    expect(ended.body.textContent).not.toContain('Add to calendar')
   })
 })
 
