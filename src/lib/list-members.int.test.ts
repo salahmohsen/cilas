@@ -91,7 +91,7 @@ beforeAll(async () => {
       'enrollments',
       await payload.create({
         collection: 'enrollments',
-        data: { person: who.person!, course, status },
+        data: { person: who.person!, course, status, source: 'admin' },
         overrideAccess: true,
       }),
     )

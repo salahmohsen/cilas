@@ -48,7 +48,10 @@ describe('keeping the indexes correct', () => {
     )
     const upserts = new Map<string, string[]>()
     const removes = new Map<string, string[]>()
-    const written = Promise.withResolvers<void>()
+    let finish!: () => void
+    const written = new Promise<void>((resolve) => {
+      finish = resolve
+    })
     const writes = {
       upsert: async (index: string, documents: Array<{ id: string }>) => {
         upserts.set(
@@ -58,13 +61,13 @@ describe('keeping the indexes correct', () => {
       },
       remove: async (index: string, ids: readonly string[]) => {
         removes.set(index, [...ids])
-        if (removes.size === 2) written.resolve()
+        if (removes.size === 2) finish()
       },
     }
     const req = await createLocalReq({}, payload)
     const hook = createHooks(writes as unknown as Indexer).afterChange('articles')
     await hook({ doc: article, previousDoc: {}, req } as never)
-    await written.promise
+    await written
     return { upserts, removes, id: String(article.id) }
   }
 
