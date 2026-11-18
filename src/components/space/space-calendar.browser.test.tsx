@@ -2,10 +2,7 @@ import { cleanup, fireEvent, screen, within } from '@testing-library/react'
 import { renderToString } from 'react-dom/server'
 import { afterEach, beforeEach, expect, it, vi } from 'vitest'
 
-import {
-  SpaceCalendarTab,
-  type SpaceCalendarEditorView,
-} from '@/components/space/space-calendar-tab'
+import { SpaceCalendarTab } from '@/components/space/space-calendar-tab'
 import { SpaceViews } from '@/components/space/space-views'
 import { cairoDay } from '@/lib/cairo-day'
 import { openingDay, type CalendarItem } from '@/lib/calendar-items'
@@ -44,8 +41,6 @@ const items = [
   }),
 ]
 
-const Editor = Object.assign(() => null, { preload: () => {} }) satisfies SpaceCalendarEditorView
-
 const tab = (
   tabItems: CalendarItem[],
   { canEdit, spaceHref = '/en/spaces/course/probe' }: { canEdit: boolean; spaceHref?: string },
@@ -60,7 +55,6 @@ const tab = (
       cairoDay(new Date())!,
     )}
     spaceHref={spaceHref}
-    Editor={Editor}
   />
 )
 

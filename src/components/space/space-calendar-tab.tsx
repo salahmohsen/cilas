@@ -2,24 +2,24 @@
 
 import { Pencil } from 'lucide-react'
 import { useTranslations } from 'next-intl'
-import { useRef, useState, type ComponentProps, type ComponentType } from 'react'
+import { useRef, useState } from 'react'
 
 import { Button } from '@/components/arc/button/button'
 import type { CalendarItem } from '@/lib/calendar-items'
+import { preloadable } from '@/lib/preloadable'
+
 import { ScheduleCalendar } from './schedule-calendar'
-import type { SpaceCalendarEditor } from './space-calendar-editor'
 import styles from './space-calendar-tab.module.css'
 
-export type SpaceCalendarEditorView = ComponentType<ComponentProps<typeof SpaceCalendarEditor>> & {
-  preload: () => void
-}
+const SpaceCalendarEditor = preloadable(
+  () => import('./space-calendar-editor').then((m) => m.SpaceCalendarEditor),
+  { name: 'SpaceCalendarEditor' },
+)
 
 /**
  * The Calendar tab: view mode for everyone, in the server HTML; Edit, for
  * the people who may edit the sessions, swaps in the edit-mode calendar,
  * whose code loads only then. Done brings back view mode with what was saved.
- * The editor arrives as `Editor`: `connected-space-calendar-tab.tsx` binds
- * the lazy one, so this module holds no server action.
  */
 export function SpaceCalendarTab({
   spaceId,
@@ -28,7 +28,6 @@ export function SpaceCalendarTab({
   canEdit,
   day,
   spaceHref,
-  Editor,
 }: {
   spaceId: string
   courseId: string
@@ -36,7 +35,6 @@ export function SpaceCalendarTab({
   canEdit: boolean
   day?: string
   spaceHref: string
-  Editor: SpaceCalendarEditorView
 }) {
   const t = useTranslations('Spaces')
   const [items, setItems] = useState(loaded)
@@ -51,7 +49,7 @@ export function SpaceCalendarTab({
 
   if (editing)
     return (
-      <Editor
+      <SpaceCalendarEditor
         spaceId={spaceId}
         courseId={courseId}
         items={items}
@@ -78,9 +76,9 @@ export function SpaceCalendarTab({
               type="button"
               variant="secondary"
               size="sm"
-              onPointerEnter={Editor.preload}
-              onFocus={Editor.preload}
-              onPointerDown={Editor.preload}
+              onPointerEnter={SpaceCalendarEditor.preload}
+              onFocus={SpaceCalendarEditor.preload}
+              onPointerDown={SpaceCalendarEditor.preload}
               onClick={() => setEditing(true)}
             >
               <Pencil aria-hidden size={14} />

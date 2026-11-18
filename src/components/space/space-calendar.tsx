@@ -6,7 +6,7 @@ import { openingDay } from '@/lib/calendar-items'
 import { cairoDay } from '@/lib/cairo-day'
 
 import { ConnectedScheduleActions } from './connected-schedule-actions'
-import { ConnectedSpaceCalendarTab } from './connected-space-calendar-tab'
+import { SpaceCalendarTab } from './space-calendar-tab'
 
 /**
  * The Calendar tab of a course space: read on the server for everyone, with
@@ -30,7 +30,7 @@ export async function SpaceCalendar({
   }
   return (
     <ConnectedScheduleActions>
-      <ConnectedSpaceCalendarTab
+      <SpaceCalendarTab
         spaceId={String(id)}
         courseId={String(courseId)}
         items={result.items}
