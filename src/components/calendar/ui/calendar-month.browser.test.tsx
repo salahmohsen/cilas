@@ -3,6 +3,7 @@ import { NextIntlClientProvider } from 'next-intl'
 import { hydrateRoot } from 'react-dom/client'
 import { renderToString } from 'react-dom/server'
 import { afterEach, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest'
+import { page } from 'vitest/browser'
 
 import type { CalendarAction } from '@/components/calendar/ui/block-details'
 import { Calendar } from '@/components/calendar/ui/calendar'
@@ -13,37 +14,27 @@ import type { CalendarItem } from '@/lib/calendar-items'
 
 import ar from '../../../../messages/ar.json'
 import en from '../../../../messages/en.json'
-import { stubPopupDom } from '../../../../testing/popup-dom.test-utils'
 
 declare global {
   var __UI_SDK_STRICT__: boolean | undefined
 }
-
-// The calendar's measured width: null before it is measured, as on the server.
-let narrow: boolean | null = false
-// Whether the side panel sits beside the grid.
-const docked: boolean | null = false
-vi.mock('@/components/calendar/ui/use-narrow', () => ({
-  useNarrow: () => narrow,
-  useDocked: () => docked,
-}))
-vi.mock('@/lib/use-narrow', () => ({ useNarrow: () => false }))
 
 const item = (
   id: string,
   title: string,
   blocks: CalendarItem['blocks'],
   extra: Partial<CalendarItem> = {},
-): CalendarItem => ({
-  id,
-  kind: 'session',
-  title,
-  tone: 'yellow',
-  cancelled: false,
-  version: `v-${id}`,
-  blocks,
-  ...extra,
-})
+) =>
+  ({
+    id,
+    kind: 'session',
+    title,
+    tone: 'yellow',
+    cancelled: false,
+    version: `v-${id}`,
+    blocks,
+    ...extra,
+  }) satisfies CalendarItem
 const at = (id: string, date: string, start: string, end: string) => ({
   id,
   date,
@@ -52,11 +43,9 @@ const at = (id: string, date: string, start: string, end: string) => ({
 })
 const allDay = (id: string, date: string) => ({ id, date, start_time: null, end_time: null })
 
-// November 2026: Sunday 1 to Monday 30, five weeks from Saturday 31 October. Today is Tuesday 17.
 const items: CalendarItem[] = [
   item('week-3', 'Week 3', [at('tue', '2026-11-17', '19:00', '21:00')]),
   item('lab', 'Studio lab', [at('sat', '2026-11-14', '10:30', '13:00')], { tone: 'green' }),
-  // Wednesday 18 to Saturday 21: one bar to Friday, a second in the next week's row.
   item(
     'fair',
     'Book fair',
@@ -64,7 +53,6 @@ const items: CalendarItem[] = [
     { kind: 'event', tone: 'pink' },
   ),
   item('film', 'Film night', [at('fri', '2026-11-20', '17:00', '18:30')], { cancelled: true }),
-  // Four meetings on Monday 23: two fit, then "2 more".
   ...['09:00', '11:00', '13:00', '15:00'].map((time, index) =>
     item(`busy-${index}`, `Busy ${index + 1}`, [
       at(`m${index}`, '2026-11-23', time, `${Number(time.slice(0, 2)) + 1}:00`),
@@ -133,10 +121,8 @@ const pressKey = (key: string) => fireEvent.keyDown(document.activeElement!, { k
 
 beforeAll(() => {
   globalThis.__UI_SDK_STRICT__ = true
-  stubPopupDom()
 })
 beforeEach(() => {
-  narrow = false
   vi.useFakeTimers({ now: new Date('2026-11-17T10:00:00Z'), toFake: ['Date'] })
 })
 afterEach(() => {
@@ -145,18 +131,18 @@ afterEach(() => {
 })
 
 describe('the month view', () => {
-  it('comes first in the wide switch and is not offered on a phone', () => {
+  it('comes first in the wide switch and is not offered on a phone', async () => {
     show()
     expect(choices()).toEqual(['Month', 'Week', 'Day', 'Agenda'])
     expect(chosen()).toBe('Month')
     cleanup()
-    narrow = true
+    await page.viewport(390, 844)
     show()
     expect(choices()).toEqual(['3 days', 'Day', 'Agenda'])
   })
 
-  it('shows a month a phone opens in as the agenda of that month', () => {
-    narrow = true
+  it('shows a month a phone opens in as the agenda of that month', async () => {
+    await page.viewport(390, 844)
     show()
     expect(screen.queryByRole('grid')).toBeNull()
     expect(chosen()).toBe('Agenda')
@@ -370,14 +356,13 @@ describe('the month view', () => {
   })
 
   it('sends the month from the server, and a phone’s agenda of it, and hydrates with no mismatch', async () => {
-    narrow = null
     const html = renderToString(tree())
     expect(html).toContain('role="grid"')
     expect(html).toContain('aria-label="November 2026"')
     const container = document.createElement('div')
     container.innerHTML = html
     document.body.append(container)
-    const errors = vi.spyOn(console, 'error').mockImplementation(() => {})
+    const errors = vi.spyOn(console, 'error')
     await act(async () => {
       hydrateRoot(container, tree())
     })
