@@ -8,9 +8,14 @@ const ignored = ['**/node_modules/**', '.next/**']
 const browserTests = ['**/*.browser.test.{ts,tsx}']
 const dotenv: Record<string, string> = {}
 readDotenv({ processEnv: dotenv })
-const browserEnv = Object.fromEntries(
-  Object.entries({ ...dotenv, ...process.env }).filter(([name]) => name.startsWith('NEXT_PUBLIC_')),
-)
+const browserEnv = {
+  ...Object.fromEntries(
+    Object.entries({ ...dotenv, ...process.env }).filter(([name]) =>
+      name.startsWith('NEXT_PUBLIC_'),
+    ),
+  ),
+  NEXT_PUBLIC_TURNSTILE_SITE_KEY: '',
+}
 
 export default defineConfig({
   plugins: [tsconfigPaths(), react()],
