@@ -27,8 +27,8 @@ test.describe('calendar feed', () => {
       const rawLines = feed.split('\r\n')
       expect(feed.endsWith('\r\n')).toBe(true)
       expect(feed.replace(/\r\n/g, '')).not.toContain('\n')
-      for (const line of rawLines)
-        expect(new TextEncoder().encode(line).length).toBeLessThanOrEqual(75)
+      const encoder = new TextEncoder()
+      expect(rawLines.filter((line) => encoder.encode(line).length > 75)).toEqual([])
 
       const lines = unfold(feed).split('\r\n').filter(Boolean)
       expect(lines[0]).toBe('BEGIN:VCALENDAR')
@@ -40,17 +40,20 @@ test.describe('calendar feed', () => {
       const events = blocks(lines, 'VEVENT')
       expect(events.length).toBe(lines.filter((line) => line === 'BEGIN:VEVENT').length)
       expect(events.length).toBeGreaterThan(0)
-      const uids = new Set<string>()
-      for (const event of events) {
-        const value = (name: string) =>
-          event.find((line) => line.startsWith(`${name}:`) || line.startsWith(`${name};`))
-        expect(value('UID')).toBeDefined()
-        expect(value('DTSTAMP')).toMatch(/:\d{8}T\d{6}Z$/)
-        expect(value('DTSTART')).toMatch(/:\d{8}(T\d{6}Z)?$/)
-        expect(value('SUMMARY')).toBeDefined()
-        uids.add(value('UID')!)
-      }
-      expect(uids.size).toBe(events.length)
+      const has = (event: string[], name: string, shape = /./) =>
+        event.some(
+          (line) => /^[A-Z-]+[:;]/.test(line) && line.split(/[:;]/)[0] === name && shape.test(line),
+        )
+      const broken = events.filter(
+        (event) =>
+          !has(event, 'UID') ||
+          !has(event, 'DTSTAMP', /:\d{8}T\d{6}Z$/) ||
+          !has(event, 'DTSTART', /:\d{8}(T\d{6}Z)?$/) ||
+          !has(event, 'SUMMARY'),
+      )
+      expect(broken).toEqual([])
+      const uids = events.map((event) => event.find((line) => line.startsWith('UID:')))
+      expect(new Set(uids).size).toBe(events.length)
     })
   }
 
