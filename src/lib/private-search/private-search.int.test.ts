@@ -112,6 +112,7 @@ describe.skipIf(!disposable)('private search with real Postgres and Typesense 30
           course_type: 'THEMATIC',
           tier: 'owner',
           cycle: cycle.id,
+          registration: { mode: 'closed' },
           _status: 'published',
         } as never,
       })
