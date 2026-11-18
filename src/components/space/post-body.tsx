@@ -8,6 +8,7 @@ import type { SessionRead } from '@/lib/spaces-data'
 import { TitledLink } from './titled-link'
 import { PersonHover } from './person-hover'
 import type { PersonCard } from '@/lib/space-members'
+import { ScheduleBlock } from './schedule-block'
 import { SessionBlock } from './session-block'
 import { SessionChip, type SessionLinks } from './session-chip'
 import styles from './space.module.css'
@@ -18,7 +19,8 @@ import styles from './space.module.css'
  * mention links with the person's current name and card; other links open
  * in a new tab; raw HTML never renders (react-markdown default). Every block
  * sits with dir="auto". A session mention reads as a chip in its sentence; a
- * session block, alone in its paragraph, as the whole session card.
+ * session block, alone in its paragraph, as the whole session card; a
+ * schedule block as the calendar of its weeks.
  */
 
 export type PostBodyProps = {
@@ -96,6 +98,13 @@ export const PostBody = ({ body, people, titles, sessions }: PostBodyProps) => {
       {splitBlocks(body).map((part, i) =>
         part.type === 'block' ? (
           <SessionBlock key={i} id={part.id} read={sessions?.read} />
+        ) : part.type === 'schedule' ? (
+          <ScheduleBlock
+            key={i}
+            schedule={part.schedule}
+            read={sessions?.read}
+            links={sessions?.links}
+          />
         ) : (
           markdown(inlineBlocks(part.markdown), i)
         ),

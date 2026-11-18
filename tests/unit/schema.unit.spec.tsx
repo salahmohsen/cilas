@@ -125,7 +125,7 @@ describe('course structured data', () => {
   const course = {
     title: 'Reading Plato',
     slug: 'reading-plato',
-    summary: 'A reading seminar.',
+    subtitle: 'A reading seminar.',
     location: ['ONLINE'],
     schedule: { slots: [{ weekday: 'thu', start_time: '19:00', end_time: '21:00' }] },
   } as Course

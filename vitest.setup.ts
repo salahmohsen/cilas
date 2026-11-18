@@ -7,12 +7,8 @@ import '@testing-library/jest-dom/vitest'
 import { cleanup } from '@testing-library/react'
 import { afterEach, vi } from 'vitest'
 
-// CI runs unit tests with `--no-isolate`: workers keep one jsdom and Node's
-// native module cache across files, so a file must not see another file's
-// leftovers. Source modules are re-evaluated for every file (a mocked child
-// component from one file cannot leak into the next), and rendered DOM is
-// unmounted after every test (see the afterEach below). Without both the
-// suite is flaky.
+// Each unit file has its own module state. Tests within a file also reset
+// modules and unmount their DOM, so a later test starts with no rendered form.
 vi.resetModules()
 
 // Integration specs need the migrated local schema. dotenv reads .env only,
@@ -33,6 +29,22 @@ if (!isolatedSearchDB && !process.env.DATABASE_URL?.includes('@localhost:5433/')
 const jsdomStorage = (globalThis as { jsdom?: { window: Window } }).jsdom?.window.localStorage
 if (jsdomStorage && globalThis.localStorage === undefined) {
   Object.defineProperty(globalThis, 'localStorage', { value: jsdomStorage, configurable: true })
+}
+
+// jsdom has no matchMedia. By default no media query matches (a wide screen);
+// a test that needs a phone stubs its own.
+if (typeof window !== 'undefined' && !window.matchMedia) {
+  window.matchMedia = (query: string) =>
+    ({
+      matches: false,
+      media: query,
+      onchange: null,
+      addEventListener: () => {},
+      removeEventListener: () => {},
+      addListener: () => {},
+      removeListener: () => {},
+      dispatchEvent: () => false,
+    }) as MediaQueryList
 }
 
 // Radix FocusScope schedules `setTimeout(0)` on unmount to dispatch an

@@ -383,7 +383,6 @@ describe('registration templates', () => {
           title: uniq('Invalid publication'),
           slug: uniq('invalid-publication'),
           tier: 'public',
-          session_unit: 'session',
           course_type: 'CORE',
           _status: 'published',
           registration: { mode: 'own', method: 'form' },

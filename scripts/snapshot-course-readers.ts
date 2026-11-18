@@ -3,15 +3,22 @@
  * every reader of a course's time gives, for every course, so the move can
  * be checked by a diff (docs/plans/2026-11-13-sessions-readers.md).
  *
- *   pnpm tsx scripts/snapshot-course-readers.ts --label baseline [--url http://localhost:3000]
+ *   pnpm tsx scripts/snapshot-course-readers.ts --label baseline [--url http://localhost:3100]
  *   pnpm tsx scripts/snapshot-course-readers.ts --compare baseline head
  *
  * Writes `.snapshots/course-readers/<label>.json`. `--compare` prints the
  * differences by reader and course, each EXPECTED (the plan's "Expected
- * changes") or UNEXPECTED, and exits non-zero on any UNEXPECTED one.
+ * changes", or a reviewed entry in `course-reader-accepted.json` for that
+ * base) or UNEXPECTED, and exits non-zero on any UNEXPECTED one.
  *
- * Reads only. Needs `DATABASE_URL` set to the local dev database and a dev
- * server on `--url` over the same database. The calendar items are cached
+ * Step 5 unit 8 accepts the first addition of session row UIDs and update metadata
+ * only when all meeting content stays equal. The compare lists each change.
+ * Later UID changes are unexpected. See `onlySessionFeedIdentity`.
+ *
+ * Reads only. Needs `DATABASE_URL` set to the local dev database and a
+ * server on `--url` (default http://localhost:3000) over the same database:
+ * a production build (`pnpm build`, then `pnpm start -p 3100`) takes about
+ * 90 seconds a run; the dev server builds each page on demand (~25 minutes). The calendar items are cached
  * (`unstable_cache` in `api/calendar.api.ts`): after a change to how they are
  * built, change the cache key or clear `.next/cache` before a run.
  *
@@ -31,13 +38,15 @@ import { getPayload } from 'payload'
 
 import { CAIRO } from '../src/lib/cairo-day'
 import { getStudyCourses } from '../src/api/courses.api'
+import { getCourseSessions } from '../src/api/sessions.api'
 import { getFellows } from '../src/api/people.api'
 import { getBridgeYear, listBridgeYears } from '../src/api/programmes.api'
 import { otherLocale, routing, type Locale } from '../src/i18n/routing'
 import { formatsOf } from '../src/i18n/formats'
 import { toCourseCard } from '../src/lib/article-cards'
-import { nextSession } from '../src/lib/schedule'
+import { numberedSessions, upcomingSession } from '../src/lib/meetings'
 import { sessionFacts } from '../src/lib/session-refs'
+import { expandSchedule } from '../src/lib/schedule'
 import { courseLastMeeting } from '../src/lib/space-lifecycle'
 import config from '../src/payload.config'
 import { syllabusText } from '../src/plugins/typesense/documents'
@@ -45,15 +54,19 @@ import type { Course } from '../src/payload-types'
 import { decideStartDate, type ResearchEntry } from './archive-start-dates'
 import {
   compareSnapshots,
-  courseSlugOf,
+  type Accepted,
   formatDifferences,
   icsByCourse,
   llmsTimes,
+  monthList,
+  type MonthWords,
   type CourseMeta,
   type Snapshot,
 } from './course-reader-snapshot'
 
 const DIR = '.snapshots/course-readers'
+/** Reviewed differences no rule covers, per base snapshot (see `Accepted`). */
+const ACCEPTED = 'scripts/course-reader-accepted.json'
 /** The day every reader that takes one is given, so two runs agree. */
 const TODAY = '2026-11-13'
 const CONCURRENCY = 4
@@ -73,7 +86,8 @@ if (baseLabel) {
   if (!headLabel) throw new Error('Usage: --compare <base> <head>')
   const read = (label: string): Snapshot => JSON.parse(readFileSync(fileOf(label), 'utf8'))
   const base = read(baseLabel)
-  const diffs = compareSnapshots(base, read(headLabel))
+  const accepted: Accepted[] = JSON.parse(readFileSync(ACCEPTED, 'utf8'))
+  const diffs = compareSnapshots(base, read(headLabel), accepted)
   console.log(formatDifferences(diffs, base))
   process.exit(diffs.some((d) => d.verdict === 'UNEXPECTED') ? 1 : 0)
 }
@@ -156,17 +170,31 @@ const archiveDated = new Set(research.filter(dated).map((e) => e.id))
 const undated = new Set(research.filter((e) => !dated(e)).map((e) => e.id))
 
 const sessionCount = new Map<number, number>()
+const meetingCount = new Map<number, number>()
 for (const s of (
   await payload.find({
     collection: 'sessions',
     depth: 0,
     pagination: false,
-    select: { course: true },
+    select: { course: true, meetings: true },
     overrideAccess: true,
   })
 ).docs) {
   const course = typeof s.course === 'object' ? s.course.id : s.course
   sessionCount.set(course, (sessionCount.get(course) ?? 0) + 1)
+  meetingCount.set(course, (meetingCount.get(course) ?? 0) + (s.meetings?.length ?? 0))
+}
+
+/**
+ * What the timing removal did to a course (`CourseMeta.archive`): the old
+ * pattern gave it no meeting, and now it has some (dates from the CILAS
+ * backup, ADR 0011), or it had only a typed length, which is gone.
+ */
+const archiveOf = (c: Course): CourseMeta['archive'] => {
+  if (expandSchedule(c.schedule, c.sessions).length) return undefined
+  if ((meetingCount.get(c.id) ?? 0) > 0) return 'meetings'
+  const { weeks, start_date, slots } = c.schedule ?? {}
+  return weeks && !start_date && !slots?.length ? 'weeks-lost' : undefined
 }
 
 const meta: Record<string, CourseMeta> = Object.fromEntries(
@@ -178,6 +206,7 @@ const meta: Record<string, CourseMeta> = Object.fromEntries(
       undatedWords: undated.has(c.id),
       // The old rows each became one session; the rest are new and untitled.
       newSessions: Math.max(0, (sessionCount.get(c.id) ?? 0) - (c.sessions?.length ?? 0)),
+      archive: archiveOf(c),
     },
   ]),
 )
@@ -207,9 +236,12 @@ const pageTimes = (html: string) => {
       [...document.querySelectorAll('p.side-card-muted')].map((p) => squash(p.textContent)),
     ),
   ]
-  const syllabus = [
-    ...document.querySelectorAll('[class*="syllabus-feed-module"][class*="__row"]'),
-  ].map((row) => squash(row.textContent))
+  // A session's row is its toggle button. CSS module classes read
+  // `syllabus-feed-module__<hash>__row` in dev and `<hash>_row` in a
+  // production build, so only the `_row` ending is matched.
+  const syllabus = [...document.querySelectorAll('button[aria-controls]')]
+    .filter((b) => [...b.classList].some((c) => c.endsWith('_row')))
+    .map((row) => squash(row.textContent))
   const jsonld = [...document.querySelectorAll('script[type="application/ld+json"]')]
     .flatMap(
       (s) => (JSON.parse(s.textContent ?? '{}')['@graph'] ?? []) as Record<string, unknown>[],
@@ -268,6 +300,31 @@ for (const { c, results } of pages) {
   )
 }
 
+const messages = Object.fromEntries(
+  LOCALES.map((l) => [l, JSON.parse(readFileSync(`messages/${l}.json`, 'utf8'))]),
+) as Record<Locale, Record<string, unknown>>
+// What `i18n/request.ts` gives a page, without the request.
+const intlOf = (locale: Locale) => ({
+  locale,
+  timeZone: CAIRO,
+  formats: formatsOf(locale),
+  messages: messages[locale],
+})
+const formatterOf = (locale: Locale) => createFormatter(intlOf(locale))
+const translatorOf = (locale: Locale, namespace: string) =>
+  createTranslator({ ...intlOf(locale), namespace } as Parameters<typeof createTranslator>[0])
+
+/** The old month page's words, which the month list writes its lines in. */
+const monthWords = (locale: Locale): MonthWords => {
+  const format = formatterOf(locale)
+  return {
+    locale,
+    number: (value, options) => format.number(value, options),
+    dateTime: (value, options) => format.dateTime(value, options),
+    cancelled: translatorOf(locale, 'Calendar')('cancelled'),
+  }
+}
+
 console.error('Calendar feed and month lists…')
 const months = new Set<string>()
 for (const l of LOCALES) {
@@ -285,35 +342,13 @@ for (const l of LOCALES) {
   }
 }
 
-/** A month's list (the phone layout of the month view): each course's day, time and note. */
-const monthList = (html: string): Array<[string, string]> => {
-  const { document } = new JSDOM(html).window
-  const out: Array<[string, string]> = []
-  for (const day of document.querySelectorAll(
-    'div.md\\:hidden ol.cal-agenda > li.cal-agenda-day',
-  )) {
-    const date = squash(day.querySelector('.cal-agenda-date')?.textContent)
-    for (const slot of day.querySelectorAll('li.cal-slot')) {
-      const slug = courseSlugOf(slot.querySelector('a')?.getAttribute('href'))
-      if (!slug) continue
-      const parts = [
-        date,
-        squash(slot.querySelector('.cal-item-when')?.textContent),
-        squash(slot.querySelector('.cal-slot-note')?.textContent),
-        slot.hasAttribute('data-cancelled') ? 'cancelled' : '',
-      ]
-      out.push([slug, parts.join(' | ')])
-    }
-  }
-  return out
-}
 const monthPaths = [...months]
   .sort()
   .flatMap((m) => LOCALES.map((l) => ({ l, path: `/${l}/calendar?view=month&date=${m}-01` })))
 const monthPages = await pool(monthPaths, async ({ l, path }) => {
   const res = await get(path)
   if (res.status !== 200) throw new Error(`${path} answered ${res.status}`)
-  return { l, items: monthList(res.body) }
+  return { l, items: monthList(new JSDOM(res.body).window.document, monthWords(l)) }
 })
 const month: Record<string, Record<string, string[]>> = {}
 for (const { l, items } of monthPages)
@@ -331,19 +366,13 @@ for (const [id, value] of Object.entries(month))
 
 /* ------------------------------------- entry points: no URL of their own */
 
-const messages = Object.fromEntries(
-  LOCALES.map((l) => [l, JSON.parse(readFileSync(`messages/${l}.json`, 'utf8'))]),
-) as Record<Locale, Record<string, unknown>>
-// What `i18n/request.ts` gives a page, without the request.
-const intlOf = (locale: Locale) => ({
-  locale,
-  timeZone: CAIRO,
-  formats: formatsOf(locale),
-  messages: messages[locale],
-})
-const formatterOf = (locale: Locale) => createFormatter(intlOf(locale))
-const translatorOf = (locale: Locale, namespace: string) =>
-  createTranslator({ ...intlOf(locale), namespace } as Parameters<typeof createTranslator>[0])
+/** Every course's sessions, as a course space reads them (`spaceLanding`). */
+const sessionsOf = (locale: Locale) =>
+  getCourseSessions(
+    payload,
+    courses.map((c) => c.id),
+    { locale, reader: 'all' },
+  )
 
 /**
  * One line each: the reader, the entry point it calls, and what it keeps.
@@ -404,23 +433,30 @@ const ENTRY_POINTS: Record<string, (locale: Locale) => Promise<Record<string, un
   // (`archiveOf` also reads Date.now(), which no caller can fix: only the last meeting is kept.)
   'space.lastMeeting': async (l) =>
     Object.fromEntries(docs[l].map((c) => [String(c.id), courseLastMeeting(c)])),
-  // components/space/space-page.tsx: the space's "next session", from TODAY.
-  'space.nextSession': async (l) =>
-    Object.fromEntries(
+  // components/space/space-page.tsx: the space's "next session", from TODAY, over the
+  // sessions `spaceLanding` loads.
+  'space.nextSession': async (l) => {
+    const sessions = await sessionsOf(l)
+    return Object.fromEntries(
       docs[l].map((c) => {
-        const next = nextSession(c.schedule, c.sessions, TODAY)
-        return [
-          String(c.id),
-          next && { n: next.index + 1, title: next.session.session_title ?? null },
-        ]
+        const next = upcomingSession(numberedSessions(sessions.get(c.id) ?? []), TODAY)
+        return [String(c.id), next && { n: next.number, title: next.session.title ?? null }]
       }),
-    ),
+    )
+  },
   // lib/session-refs.ts sessionFacts: how a space post names and dates a session (keys are
   // session IDs, which the move changes, so the facts are kept in session order).
-  'space.sessionFacts': async (l) =>
-    Object.fromEntries(
-      docs[l].map((c) => [String(c.id), Object.values(sessionFacts(c)).sort((a, b) => a.n - b.n)]),
-    ),
+  'space.sessionFacts': async (l) => {
+    const sessions = await sessionsOf(l)
+    return Object.fromEntries(
+      docs[l].map((c) => [
+        String(c.id),
+        Object.values(sessionFacts({ sessions: sessions.get(c.id) ?? [] })).sort(
+          (a, b) => a.n - b.n,
+        ),
+      ]),
+    )
+  },
 }
 // Not recorded: `emails/cards.ts` and `lib/mentions.ts` show no course time today
 // (their dates are events'); `space/session-options.ts` formats `sessionFacts` through

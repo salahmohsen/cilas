@@ -11,6 +11,7 @@ import type { Field } from 'payload'
 import acceptedFields from './accepted-fields.json'
 import { Courses } from '@/collections/Courses'
 import { Articles } from '@/collections/Articles'
+import { Sessions } from '@/collections/Sessions'
 
 const SYSTEM_FIELDS = {
   id: 'System identity',
@@ -36,8 +37,15 @@ export const FIELD_REGISTRY = {
       effective_settings: 'Admin UI',
       applicants: 'Admin UI',
       fullFormPreview: 'Admin UI',
+      calendar: 'Admin UI: the sessions calendar',
       enrollments: 'Join',
-      'schedule.end_date': 'Computed by the shared schedule expansion',
+      sessions: 'The old sessions array, read-only until it is removed (ADR 0011): write syllabus',
+      schedule:
+        'The old weekly pattern, read-only until it is removed (ADR 0011): write syllabus[].meetings',
+      first_day: 'Computed from the sessions’ meetings',
+      last_day: 'Computed from the sessions’ meetings',
+      'syllabus.course': 'The course being written',
+      'syllabus.position': 'Computed from the order of syllabus',
       'meta.overview': 'Admin UI',
       'meta.preview': 'Admin UI',
     },
@@ -62,6 +70,19 @@ export const FIELD_REGISTRY = {
   },
 } as const
 export type DraftCollection = keyof typeof FIELD_REGISTRY
+
+/**
+ * The documents a join lists, written with their owner as rows of the join:
+ * a course's sessions are its `syllabus` (ADR 0011). A join not named here
+ * (enrollments) is not written by the tools.
+ */
+const JOINED: Partial<Record<string, Field[]>> = { sessions: Sessions.fields }
+
+/** The fields of the documents a join writes, or null for any other field. */
+export const joinedFields = (field: Field): Field[] | null =>
+  field.type === 'join' && typeof field.collection === 'string'
+    ? (JOINED[field.collection] ?? null)
+    : null
 
 export const flattenFields = (fields: Field[]): Field[] =>
   fields.flatMap((field) => {
@@ -96,7 +117,17 @@ const inputRequired = (field: Field) =>
 const leafSchema = (field: Field, collection: DraftCollection, path: string): z.ZodTypeAny => {
   const required = inputRequired(field)
   let schema: z.ZodTypeAny
-  if ('fields' in field) schema = z.object(shapeFor(field.fields, collection, path)).strict()
+  const joined = joinedFields(field)
+  if (joined)
+    schema = z.array(
+      z
+        .object({
+          ...shapeFor(joined, collection, path),
+          id: z.number().int().positive().optional(),
+        })
+        .strict(),
+    )
+  else if ('fields' in field) schema = z.object(shapeFor(field.fields, collection, path)).strict()
   else if (field.type === 'blocks') {
     const blocks = field.blocks
       .filter((b) => typeof b !== 'string')

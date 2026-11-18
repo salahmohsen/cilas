@@ -41,6 +41,8 @@ export interface HoldToConfirmProps extends Omit<
   confirmedLabel?: string
   /** Called once when the hold completes. */
   onConfirm: () => void
+  /** Opens an untimed confirmation on Enter or activation without a pointer hold. */
+  onActivate?: () => void
   /** Hold length in milliseconds. */
   duration?: number
   icon?: ReactNode
@@ -50,6 +52,8 @@ export interface HoldToConfirmProps extends Omit<
   confirmed?: boolean
   /** Reports when a hold starts and ends, for surrounding hints such as “Keep holding”. */
   onHoldChange?: (holding: boolean) => void
+  /** The hidden hint for assistive tech, for a translated interface; it gets the hold length in seconds. */
+  hint?: (seconds: string) => string
 }
 
 const enter = [...motionTokens.ease.enter] as [number, number, number, number]
@@ -199,11 +203,14 @@ export function HoldToConfirm({
   label,
   confirmedLabel = 'Done',
   onConfirm,
+  onActivate,
   duration = 1200,
   icon = <Trash2 strokeWidth={1.75} />,
   tone = 'accent',
   confirmed,
   onHoldChange,
+  hint = (seconds) =>
+    `Press and hold for ${seconds} seconds to confirm. With a keyboard, hold Space or Enter.`,
   className,
   disabled,
   ...props
@@ -216,12 +223,15 @@ export function HoldToConfirm({
   const [holding, setHolding] = useState(false)
   const progress = useMotionValue(0)
   const scale = useMotionValue(1)
-  const clipPath = useTransform(
-    progress,
-    (value) => `inset(0 ${((1 - Math.min(1, Math.max(0, value))) * 100).toFixed(3)}% 0 0)`,
-  )
+  // The fill grows from the inline start: from the right in a right-to-left page.
+  const rtl = useMotionValue(0)
+  const clipPath = useTransform([progress, rtl], ([value, end]: number[]) => {
+    const rest = `${((1 - Math.min(1, Math.max(0, value ?? 0))) * 100).toFixed(3)}%`
+    return end ? `inset(0 0 0 ${rest})` : `inset(0 ${rest} 0 0)`
+  })
   const [width, measure] = useLabelWidth(reduced)
   const source = useRef<'pointer' | 'key' | null>(null)
+  const pointerHeld = useRef(false)
   const pointerType = useRef('mouse')
   const fill = useRef<AnimationPlaybackControls | null>(null)
   const press = useRef<AnimationPlaybackControls | null>(null)
@@ -264,6 +274,7 @@ export function HoldToConfirm({
   /** Starts or resumes the fill from wherever it is, so a quick re-press after letting go carries on instead of starting over. */
   function begin(from: 'pointer' | 'key') {
     if (done || disabled || source.current) return
+    if (button.current) rtl.jump(getComputedStyle(button.current).direction === 'rtl' ? 1 : 0)
     source.current = from
     setHolding(true)
     onHoldChange?.(true)
@@ -303,7 +314,10 @@ export function HoldToConfirm({
   )
 
   function onPointerDown(event: ReactPointerEvent<HTMLButtonElement>) {
+    props.onPointerDown?.(event)
+    if (event.defaultPrevented) return
     if (!event.isPrimary || event.button !== 0) return
+    pointerHeld.current = true
     pointerType.current = event.pointerType
     event.currentTarget.setPointerCapture(event.pointerId)
     begin('pointer')
@@ -324,6 +338,10 @@ export function HoldToConfirm({
   function onKeyDown(event: ReactKeyboardEvent<HTMLButtonElement>) {
     if (event.key !== ' ' && event.key !== 'Enter') return
     event.preventDefault()
+    if (event.key === 'Enter' && onActivate) {
+      if (!event.repeat && !disabled && !done && !source.current) onActivate()
+      return
+    }
     if (!event.repeat) begin('key')
   }
   function onKeyUp(event: ReactKeyboardEvent<HTMLButtonElement>) {
@@ -347,6 +365,11 @@ export function HoldToConfirm({
         aria-describedby={done ? undefined : hintId}
         style={{ scale }}
         onPointerDown={onPointerDown}
+        onClick={(event) => {
+          const held = pointerHeld.current
+          pointerHeld.current = false
+          if (!disabled && !done && !source.current && (event.detail === 0 || !held)) onActivate?.()
+        }}
         onPointerMove={onPointerMove}
         onPointerUp={release}
         onPointerCancel={release}
@@ -368,10 +391,9 @@ export function HoldToConfirm({
           <Face icon={icon} text={text} done={done} width={width} reduced={reduced} />
         </motion.span>
       </motion.button>
-      <span
-        id={hintId}
-        className={styles.srOnly}
-      >{`Press and hold for ${seconds} seconds to confirm. With a keyboard, hold Space or Enter.`}</span>
+      <span id={hintId} className={styles.srOnly}>
+        {hint(seconds)}
+      </span>
       <span className={styles.srOnly} role="status">
         {done ? confirmedLabel : ''}
       </span>

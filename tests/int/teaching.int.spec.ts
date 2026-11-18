@@ -3,7 +3,6 @@ import { getPayload, type Payload } from 'payload'
 import { afterAll, beforeAll, describe, expect, it } from 'vitest'
 
 import config from '@/payload.config'
-import { cairoDay } from '@/lib/cairo-day'
 import type { User } from '@/payload-types'
 
 import { RUN, createTracker, uniq } from './fixtures'
@@ -52,16 +51,8 @@ describe('time, place and teaching', () => {
           title: 'Probe Course',
           slug: uniq('probe-course'),
           course_type: 'THEMATIC',
-          session_unit: 'session',
           tier: 'owner',
           cycle: cycleId,
-          // 4 March 2031 is a Tuesday.
-          schedule: {
-            start_date: '2031-03-04',
-            weeks: 3,
-            slots: [{ weekday: 'tue', start_time: '18:00', end_time: '20:00' }],
-          },
-          sessions: [{ order: 1 }, { order: 2 }, { order: 3 }],
         },
         overrideAccess: true,
       }),
@@ -91,36 +82,6 @@ describe('time, place and teaching', () => {
       overrideAccess: true,
     })
     expect(cycle.courses?.docs?.map((c) => (typeof c === 'object' ? c.id : c))).toContain(courseId)
-  })
-
-  it('computes the end date and keeps it through a partial update', async () => {
-    const read = () =>
-      payload.findByID({ collection: 'courses', id: courseId, overrideAccess: true, draft: true })
-    expect(cairoDay((await read()).schedule?.end_date ?? '')).toBe('2031-03-18')
-
-    await payload.update({
-      collection: 'courses',
-      id: courseId,
-      data: { title: 'Probe Course, renamed' },
-      overrideAccess: true,
-    })
-    expect(cairoDay((await read()).schedule?.end_date ?? '')).toBe('2031-03-18')
-  })
-
-  it('ends earlier when the last session is cancelled', async () => {
-    await payload.update({
-      collection: 'courses',
-      id: courseId,
-      data: { sessions: [{ order: 1 }, { order: 2 }, { order: 3, cancelled: true }] },
-      overrideAccess: true,
-    })
-    const course = await payload.findByID({
-      collection: 'courses',
-      id: courseId,
-      overrideAccess: true,
-      draft: true,
-    })
-    expect(cairoDay(course.schedule?.end_date ?? '')).toBe('2031-03-11')
   })
 
   it('refuses a second enrollment for the same person and course', async () => {

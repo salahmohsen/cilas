@@ -94,15 +94,10 @@ export async function up({ db, payload, req }: Args): Promise<void> {
   )
   const people = Object.fromEntries(visible.docs.map((person) => [person.id, person.name]))
   const documents = (await db.execute(sql`SELECT id FROM programmes ORDER BY id`)).rows
-  const versions = await payload.db.findVersions<Row>({
-    collection: 'programmes',
-    locale: 'all',
-    pagination: false,
-    req,
-  })
+  const versions = (await db.execute(sql`SELECT id FROM _programmes_v ORDER BY id`)).rows
   for (const [kind, entries] of [
     ['document', documents],
-    ['version', versions.docs],
+    ['version', versions],
   ] as const) {
     for (const entry of entries) {
       const id = Number(entry.id)

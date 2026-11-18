@@ -2,7 +2,8 @@ import { getPayload } from 'payload'
 import type { Payload } from 'payload'
 
 import { slugify } from '@/lib/slugify'
-import { getOrCreateId, lexical } from './seed.utils'
+import type { SessionSeed } from './seed.type'
+import { getOrCreateId, lexical, replaceSessions } from './seed.utils'
 
 process.loadEnvFile('.env')
 const { default: config } = await import('../src/payload.config')
@@ -128,46 +129,40 @@ const seedImages = async (dir: string): Promise<Record<string, number>> => {
 /* ==================================================================== course */
 
 const day = (
-  order: number,
   title: string,
+  title_ar: string,
   description: string,
-  dates: Array<{ date: string; start_time: string; end_time: string }>,
-) => ({
-  order,
-  session_title: title,
-  meetings: 1,
-  description: lexical(description),
-  dates,
-})
+  meetings: Array<{ date: string; start_time: string; end_time: string }>,
+): SessionSeed => ({ title, title_ar, description, meetings })
 
 const sessions = [
   day(
-    1,
     'The Vision & the Archive (I)',
+    'الرؤية والأرشيف (١)',
     'We begin by exploring the history of printmaking and the work of master cyanotype artists. This session is designed to expand your visual vocabulary.',
     [{ date: '2026-08-22', start_time: '18:00', end_time: '22:00' }],
   ),
   day(
-    2,
     'The Vision & the Archive (II)',
+    'الرؤية والأرشيف (٢)',
     'We will conduct a dedicated “potential check” for your submitted photographs to ensure they are optimized for the best possible print results.',
     [{ date: '2026-08-24', start_time: '18:00', end_time: '22:00' }],
   ),
   day(
-    3,
     'The Practical Alchemy (I)',
+    'الكيمياء / العملي (١)',
     'The hands-on process begins. Using your photographs (printed as digital negatives) and your curated collection of botanical greens, we will harness the sun: you will brush your papers, sensitize them, and expose your compositions. You can manipulate the size or the shape of the artwork as your vision develops, and choose four botanical works, four photography-based works, or a mix of both.',
     [{ date: '2026-08-27', start_time: '15:00', end_time: '19:00' }],
   ),
   day(
-    4,
     'The Practical Alchemy (II)',
+    'الكيمياء / العملي (٢)',
     'The exposures continue, and once the printing process is complete and the works have dried, we explore two strategies — deconstruction and reconstruction, and juxtaposition — for building and reimagining the artwork. An additional 45 minutes are set aside for brainstorming and proposing ideas on how to present the works on the fifth day.',
     [{ date: '2026-08-28', start_time: '17:00', end_time: '21:00' }],
   ),
   day(
-    5,
     'Reflection & the Pop-Up Exhibition',
+    'التأمل ومعرض ختامي (صغنطوط)',
     'After your prints have settled, we return for a day of reflection and refinement, adding final touches (within the scope of the workshop) and preparing the artworks for display. Those interested may write a text, poem, or reflection inspired by the printing experience or the story depicted in the artwork. The final hours transition into a celebratory Pop-Up Exhibition: your four works are displayed in the gallery space, to share your results and impressions with the community in a welcoming setting.',
     [{ date: '2026-08-29', start_time: '18:00', end_time: '22:00' }],
   ),
@@ -218,8 +213,7 @@ const seedCourse = async (cycleId: number, personId: number, coverId: number) =>
   }
 
   // Irregular five-day meeting pattern: every session carries its own date
-  // and hour range. The weekly pattern (start date + Saturdays) only anchors
-  // the schedule; the visible dates come from the sessions.
+  // and hour range (ADR 0011).
   const doc = await payload.create({
     collection: 'courses',
     data: {
@@ -231,15 +225,6 @@ const seedCourse = async (cycleId: number, personId: number, coverId: number) =>
       slug: SLUG,
       subtitle: 'Cyanotype / Blue Printing Workshop',
       description: lexical(DESCRIPTION_EN),
-      schedule: {
-        start_date: '2026-08-22',
-        start_precision: 'day',
-        weeks: 2,
-        slots: [{ weekday: 'sat', start_time: '18:00', end_time: '22:00' }],
-        note: 'Five days over two weeks, with varying hours; see each session for its date and time.',
-      },
-      sessions,
-      session_unit: 'session',
       registration: {
         mode: 'own',
         method: 'external',
@@ -270,24 +255,16 @@ const seedCourse = async (cycleId: number, personId: number, coverId: number) =>
       title: TITLE_AR,
       subtitle: 'ورشة عمل السيانوتايب / الطباعة الزرقاء',
       description: lexical(DESCRIPTION_AR, 'rtl'),
-      schedule: {
-        note: 'خمسة أيام على مدى أسبوعين بساعات متفاوتة؛ التاريخ والوقت لكل جلسة مذكور عندها.',
-      },
       facilitator_note: REQUIREMENTS_AR.join('\n\n'),
       pricing_override: {
         note: 'تسعيرة متدرجة — يرجى اختيار الفئة التي تناسب ميزانيتك الحالية: ٢٥٠٠ / ٢٧٥٠ / ٣٠٠٠ جنيه مصري. تشمل جميع الفئات نفس المستوى من التعليم، وطباعة الصور على الورق الشفاف، والمحاليل الكيميائية، والأوراق-الأعمال، وتنظيم المعرض؛ وكل شيء تستخدمه ملك لك ويمكن الاحتفاظ به لاستخدامات أخرى في مساحتك الخاصة.',
       },
-      sessions: [
-        { ...sessions[0], session_title: 'الرؤية والأرشيف (١)' },
-        { ...sessions[1], session_title: 'الرؤية والأرشيف (٢)' },
-        { ...sessions[2], session_title: 'الكيمياء / العملي (١)' },
-        { ...sessions[3], session_title: 'الكيمياء / العملي (٢)' },
-        { ...sessions[4], session_title: 'التأمل ومعرض ختامي (صغنطوط)' },
-      ],
     },
     locale: 'ar',
     overrideAccess: true,
   })
+
+  await replaceSessions(payload, Number(doc.id), sessions)
 
   console.log('course created:', doc.id, TITLE_EN)
   return Number(doc.id)
@@ -309,15 +286,16 @@ const personId = await seedPerson()
 const imageIds = await seedImages(IMAGES_DIR)
 const courseId = await seedCourse(cycleId, personId, imageIds[COVER_FILE])
 
-// Sanity: expanded meetings must be the five announced days.
-const course = await payload.findByID({
-  collection: 'courses',
-  id: courseId,
+// Sanity: the meetings must be the five announced days.
+const { docs } = await payload.find({
+  collection: 'sessions',
+  where: { course: { equals: courseId } },
   depth: 0,
+  pagination: false,
   overrideAccess: true,
 })
-const { expandSchedule } = await import('@/lib/schedule')
-const meetings = expandSchedule(course.schedule, course.sessions).filter((m) => !m.cancelled)
+const { meetingsOf } = await import('@/lib/meetings')
+const meetings = meetingsOf(docs).filter((m) => !m.cancelled)
 console.log(
   'meetings:',
   meetings.map((m) => `${m.date} ${m.start_time}-${m.end_time} (session ${m.session})`).join(' | '),

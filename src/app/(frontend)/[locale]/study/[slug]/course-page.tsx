@@ -25,7 +25,7 @@ import { CourseLivePreview } from './CourseLivePreview'
 import { CourseView, type RelatedCourse } from './CourseView'
 
 /**
- * Meta fields win; the course's own title, summary and cover fill any gaps.
+ * Meta fields win; the course's own title, subtitle and cover fill any gaps.
  * Shared by the cached page and the signed-in one.
  */
 export async function courseMetadata(

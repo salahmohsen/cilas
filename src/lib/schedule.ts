@@ -2,8 +2,10 @@ import { timeOfDay } from '@/fields/validators'
 import { addDays, cairoDay, weekdayOf, WEEKDAYS, type Weekday } from '@/lib/cairo-day'
 
 /**
- * The one place dates come from (ADR 0002). Every date shown anywhere, from
- * the course page to the calendar, goes through `expandSchedule()`.
+ * An event's dates come from its pattern through `expandSchedule()` (ADR 0002)
+ * until events move to sessions (ADR 0011). Courses read `lib/meetings.ts`;
+ * the course sessions fill and verify scripts still read the old course
+ * pattern and array with `expandSchedule(schedule, sessions)`.
  */
 
 export type Slot = {
@@ -127,36 +129,9 @@ export const expandSchedule = (
   return meetings.sort(byWhen)
 }
 
-export const scheduleEndDate = (
-  schedule: Schedule | null | undefined,
-  sessions?: SessionDates[] | null,
-): string | null =>
-  expandSchedule(schedule, sessions)
-    .filter((m) => !m.cancelled)
-    .at(-1)?.date ?? null
-
 /** Only schedules whose start day is known go on the calendar (ADR 0002). */
 export const isOnCalendar = (schedule: Schedule | null | undefined): boolean =>
   !!schedule && hasDayPrecision(schedule) && expandSchedule(schedule).length > 0
-
-/**
- * The session the course meets for next: the one with the earliest meeting on
- * or after `today` (a Cairo day), skipping cancelled sessions. Null after the
- * last session. `index` is the session's place in `sessionsInOrder`.
- */
-export const nextSession = <T extends SessionDates>(
-  schedule: Schedule | null | undefined,
-  sessions: T[] | null | undefined,
-  today: string,
-): { session: T; index: number } | null => {
-  if (!sessions?.length) return null
-  const upcoming = expandSchedule(schedule, sessions).find(
-    (m) => m.session !== undefined && !m.cancelled && m.date >= today,
-  )
-  if (!upcoming?.session) return null
-  const index = upcoming.session - 1
-  return { session: sessionsInOrder(sessions)[index]!, index }
-}
 
 export const hasDayPrecision = (schedule: Schedule | null | undefined): boolean =>
   schedule?.start_precision !== 'week'

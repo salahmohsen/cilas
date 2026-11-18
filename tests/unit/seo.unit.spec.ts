@@ -84,12 +84,11 @@ describe('seoDefaults', () => {
     ])
   })
 
-  it('takes a course title, summary and cover', () => {
+  it('takes a course title, subtitle and cover', () => {
     expect(
       seoDefaults('courses', {
         title: 'Writing the Self',
-        summary: 'Diaries, letters, confessions.',
-        subtitle: 'Ignored',
+        subtitle: 'Diaries, letters, confessions.',
         cover_image: 12,
       }),
     ).toEqual({

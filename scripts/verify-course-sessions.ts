@@ -7,12 +7,10 @@
  * - Meetings: the new `meetingsOf` equals today's `expandSchedule`, meeting
  *   by meeting (day, times, cancelled), and each meeting sits in the session
  *   made from the old row that held it, or in a new untitled one when no row
- *   held it. A course with a start date and no meeting expects one all-day
- *   meeting on that day.
+ *   held it. A course the pattern gives no meeting gets none here.
  * - Content: each old row's session has the same title, delivery, cancelled,
  *   materials and activities, and its description as Markdown.
- * - The course's timing note (on the course and its latest version), first
- *   day and last day.
+ * - The course's first day and last day.
  *
  * It reads each course as the fill did (`loadCourseSources`): a published
  * course with a newer pending draft is checked against the draft.
@@ -107,7 +105,7 @@ const untitled: Array<{ course: number; session: number; meetings: string[] }> =
 
 const courses = await loadCourseSources(payload)
 
-for (const { course, source, latest } of courses) {
+for (const { course, source } of courses) {
   const fail = (message: string) => differences.push(`Course ${course.id}: ${message}`)
   const rows: OldRow[] = rowsInOrder(source.sessions ?? [])
   const plan = planCourseSessions(source, toMarkdown)
@@ -127,23 +125,13 @@ for (const { course, source, latest } of courses) {
     row ? (map[row.id] ?? -1) : 'untitled'
 
   // Meetings.
-  const expected: Entry[] = plan.startDay
-    ? [
-        {
-          date: plan.startDay,
-          start_time: null,
-          end_time: null,
-          cancelled: false,
-          owner: ownerOfRow(rows[0]),
-        },
-      ]
-    : expandSchedule(source.schedule, source.sessions).map((m) => ({
-        date: m.date,
-        start_time: m.start_time,
-        end_time: m.end_time,
-        cancelled: !!m.cancelled,
-        owner: m.session === undefined ? 'untitled' : ownerOfRow(rows[m.session - 1]),
-      }))
+  const expected: Entry[] = expandSchedule(source.schedule, source.sessions).map((m) => ({
+    date: m.date,
+    start_time: m.start_time,
+    end_time: m.end_time,
+    cancelled: !!m.cancelled,
+    owner: m.session === undefined ? 'untitled' : ownerOfRow(rows[m.session - 1]),
+  }))
   const ordered = sessionsInOrder(sessions)
   const actual: Entry[] = meetingsOf(sessions).map((m) => {
     const id = ordered[m.session - 1]!.id
@@ -202,15 +190,9 @@ for (const { course, source, latest } of courses) {
   }
 
   // The course's own fields.
-  if (!same(both(plan.timingNote), both(course.timing_note)))
-    fail('timing note differs from the plan')
-  if (latest && !same(both(plan.timingNote), both(latest.timing_note)))
-    fail(`timing note of the latest version (${latest.id}) differs from the plan`)
-  const held = expected.filter((m) => !m.cancelled)
-  if ((course.first_day ?? null) !== firstDay(held) || (course.last_day ?? null) !== lastDay(held))
-    fail(
-      `first/last day ${course.first_day}–${course.last_day}, expected ${firstDay(held)}–${lastDay(held)}`,
-    )
+  const [first, last] = [firstDay(expected), lastDay(expected)]
+  if ((course.first_day ?? null) !== first || (course.last_day ?? null) !== last)
+    fail(`first/last day ${course.first_day}–${course.last_day}, expected ${first}–${last}`)
 }
 
 console.log(

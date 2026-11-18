@@ -5,10 +5,12 @@ import { getPayload } from 'payload'
 
 import { Alert } from '@/components/arc/alert/alert'
 import { Breadcrumb } from '@/components/arc/breadcrumb/breadcrumb'
-import type { Course, Programme, Space, User } from '@/payload-types'
+import type { SpaceLanding } from '@/lib/spaces-data'
+import type { User } from '@/payload-types'
 
 import { loadPost, PostArticle } from './post-article'
 import styles from './space.module.css'
+import { SessionDrawerHost } from './session-drawer-host'
 
 /**
  * Spec §4: one post and its whole thread. Both post routes render it. A
@@ -23,7 +25,7 @@ export async function PostPage({
 }: {
   locale: string
   user: User
-  landing: { space: Space; course?: Course; programme?: Programme }
+  landing: SpaceLanding
   postId: number
   /** The space page's route; the post's own route is under it */
   spacePath: string
@@ -71,6 +73,7 @@ export async function PostPage({
         <PostArticle user={user} view={view} context={context} href={href} />
         {why && <Alert tone="info" title={why} />}
       </main>
+      <SessionDrawerHost />
     </div>
   )
 }

@@ -1,61 +1,44 @@
 import { MigrateUpArgs, MigrateDownArgs, sql } from '@payloadcms/db-postgres'
 
-export async function up({ db, payload, req }: MigrateUpArgs): Promise<void> {
+export async function up({ db }: MigrateUpArgs): Promise<void> {
   await db.execute(sql`
    DROP TABLE "about" CASCADE;
   DROP TABLE "about_locales" CASCADE;`)
 
-  // The Payload calls below read Site settings with today's fields. On a
-  // fresh database, columns added by later migrations do not exist yet, so
-  // they are made here first (the later migration skips them).
-  await db.execute(sql`
-  ALTER TABLE "site_settings" ADD COLUMN IF NOT EXISTS "navigation_thematic" boolean DEFAULT true;
-  ALTER TABLE "site_settings" ADD COLUMN IF NOT EXISTS "navigation_labs" boolean DEFAULT true;
-  ALTER TABLE "site_settings" ADD COLUMN IF NOT EXISTS "navigation_workshops" boolean DEFAULT true;
-  ALTER TABLE "site_settings" ADD COLUMN IF NOT EXISTS "navigation_short" boolean DEFAULT true;
-  ALTER TABLE "site_settings" ADD COLUMN IF NOT EXISTS "navigation_bridge" boolean DEFAULT true;
-  ALTER TABLE "site_settings" ADD COLUMN IF NOT EXISTS "navigation_fellows" boolean DEFAULT true;
-  ALTER TABLE "site_settings" ADD COLUMN IF NOT EXISTS "navigation_cilasians" boolean DEFAULT true;
-  ALTER TABLE "site_settings" ADD COLUMN IF NOT EXISTS "navigation_governance" boolean DEFAULT true;
-  ALTER TABLE "site_settings" ADD COLUMN IF NOT EXISTS "navigation_articles" boolean DEFAULT true;
-  ALTER TABLE "site_settings" ADD COLUMN IF NOT EXISTS "navigation_calendar" boolean DEFAULT true;`)
-
   // What only the About page said moves to the home page's questions
   // (Site settings → FAQ), once: existing questions keep their text.
-  const en = await payload.findGlobal({ slug: 'site-settings', locale: 'en', depth: 0, req, overrideAccess: true })
-  const old = en.faq ?? []
-  if (old.some((f) => f.question === FAQ[0]!.en.question)) return
-  const saved = await payload.updateGlobal({
-    slug: 'site-settings',
-    locale: 'en',
-    data: { faq: [...old, ...FAQ.map((f) => f.en)] },
-    req,
-    overrideAccess: true,
-  })
-  const ar = await payload.findGlobal({
-    slug: 'site-settings',
-    locale: 'ar',
-    fallbackLocale: false,
-    depth: 0,
-    req,
-    overrideAccess: true,
-  })
-  const arById = new Map((ar.faq ?? []).map((f) => [f.id, f]))
-  await payload.updateGlobal({
-    slug: 'site-settings',
-    locale: 'ar',
-    data: {
-      faq: (saved.faq ?? []).map((row, i) => {
-        const added = FAQ[i - old.length]
-        const kept = arById.get(row.id)
-        return added
-          ? { id: row.id, ...added.ar }
-          : { id: row.id, question: kept?.question ?? row.question, answer: kept?.answer ?? row.answer }
-      }),
-    },
-    req,
-    overrideAccess: true,
-  })
+  // Plain SQL on the tables as they are at this point in the history:
+  // Payload's own calls read today's schema, which a fresh database has not
+  // reached yet.
+  const found = await db.execute(sql`
+    SELECT 1 FROM "site_settings_faq_locales"
+    WHERE "_locale" = 'en' AND "question" = ${FAQ[0]!.en.question}`)
+  if (found.rows.length > 0) return
+
+  await db.execute(sql`
+    INSERT INTO "site_settings" ("created_at", "updated_at")
+    SELECT now(), now() WHERE NOT EXISTS (SELECT 1 FROM "site_settings")`)
+  for (const f of FAQ) {
+    await db.execute(sql`
+      WITH parent AS (
+        SELECT "id" FROM "site_settings" ORDER BY "created_at" DESC LIMIT 1
+      ), row AS (
+        INSERT INTO "site_settings_faq" ("_order", "_parent_id", "id")
+        SELECT
+          COALESCE((SELECT max("_order") FROM "site_settings_faq" WHERE "_parent_id" = parent."id"), 0) + 1,
+          parent."id",
+          replace(gen_random_uuid()::text, '-', '')
+        FROM parent
+        RETURNING "id"
+      )
+      INSERT INTO "site_settings_faq_locales" ("_locale", "_parent_id", "question", "answer")
+      SELECT copy.locale::"_locales", row."id", copy.question, copy.answer
+      FROM row
+      CROSS JOIN (VALUES
+        ('en', ${f.en.question}, ${f.en.answer}),
+        ('ar', ${f.ar.question}, ${f.ar.answer})
+      ) AS copy(locale, question, answer)`)
+  }
 }
 
 const FAQ = [

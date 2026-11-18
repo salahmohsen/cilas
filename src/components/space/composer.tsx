@@ -18,7 +18,7 @@ import type { SessionSuggestion } from '@/components/arc/rich-text-editor/rich-t
 import SegmentedControl from '@/components/arc/segmented-control/segmented-control'
 import { postCreateAction, type SpacesWriteState } from '@/lib/space-actions'
 import { FILE_LIMITS, SPACE_FILE_ACCEPT, UPLOAD_TOTAL_MAX } from '@/lib/space-file-limits'
-import { EVENT_TITLE_MAX, type ComposerKind } from '@/lib/space-rules'
+import { EVENT_TITLE_MAX, saveErrorKey, type ComposerKind } from '@/lib/space-rules'
 
 import { readDraft, useDraft } from '@/components/use-draft'
 import { AttachmentTray } from './attachment-tray'
@@ -27,9 +27,6 @@ import { useAttachments } from './use-attachments'
 import { ConsentSheet } from './consent-sheet'
 import styles from './space.module.css'
 import { EMPTY_VOTE, VoteFields, voteFormData, voteReady, type VoteValue } from './vote-fields'
-
-/** `not-member` → `saveError_not_member`: a renamed code fails as a missing key, never as silence. */
-export const saveErrorKey = (code: string) => `saveError_${code.replace(/-/g, '_')}`
 
 /** The checklist's "Introduce yourself" opens the composer through this event. */
 export const COMPOSE_EVENT = 'space:compose'

@@ -96,7 +96,6 @@ describe('spaces core', () => {
         title: 'Probe Course',
         slug: COURSE_SLUG,
         course_type: 'THEMATIC',
-        session_unit: 'session',
         tier: 'owner',
         cycle: cycle.id,
         fellows: [personOf(fellow) as number],
@@ -643,11 +642,11 @@ describe('spaces core', () => {
   it('a course space archives after its last meeting and reopens on demand', async () => {
     // The course's last meeting 30 days back — well past the 14-day window.
     const ago = new Date(Date.now() - 30 * 86_400_000).toISOString().slice(0, 10)
-    await payload.update({
-      collection: 'courses',
-      id: course.id,
+    const last = await payload.create({
+      collection: 'sessions',
       data: {
-        sessions: [{ order: 1, dates: [{ date: ago, start_time: '18:00', end_time: '20:00' }] }],
+        course: course.id,
+        meetings: [{ date: ago, start_time: '18:00', end_time: '20:00' }],
       },
       overrideAccess: true,
     })
@@ -664,6 +663,7 @@ describe('spaces core', () => {
     })
     const reopened = await spaceFeed(payload, student, courseSpace)
     expect(reopened.archived).toBe(false)
+    await payload.delete({ collection: 'sessions', id: last.id, overrideAccess: true })
   })
 
   it('visitRecord upserts idempotently on account+space', async () => {

@@ -9,6 +9,7 @@ import { addDays, CAIRO } from '@/lib/cairo-day'
 
 export type IcsEntry = {
   uid: string
+  updatedAt?: string
   title: string
   date: string
   start?: string
@@ -82,7 +83,13 @@ export const buildIcs = (
     `X-WR-TIMEZONE:${CAIRO}`,
   ]
   for (const e of entries) {
-    lines.push('BEGIN:VEVENT', `UID:${e.uid}`, `DTSTAMP:${stamp(now)}`)
+    const modified = e.updatedAt ? new Date(e.updatedAt) : now
+    lines.push('BEGIN:VEVENT', `UID:${e.uid}`, `DTSTAMP:${stamp(modified)}`)
+    if (e.updatedAt) {
+      // Unix seconds fit the ICS integer range and follow the stored session version.
+      lines.push(`SEQUENCE:${Math.floor(modified.getTime() / 1000)}`)
+      lines.push(`LAST-MODIFIED:${stamp(modified)}`)
+    }
     if (e.start) {
       lines.push(`DTSTART:${stamp(cairoToUtc(e.date, e.start))}`)
       if (e.end) lines.push(`DTEND:${stamp(cairoToUtc(e.date, e.end))}`)

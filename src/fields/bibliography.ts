@@ -1,6 +1,7 @@
 import type { ArrayField } from 'payload'
 
-const MATERIAL_TYPES = ['reading', 'watch', 'listen', 'prompt', 'other'] as const
+/** What a material can be: the field's options, and the session form's. */
+export const MATERIAL_TYPES = ['reading', 'watch', 'listen', 'prompt', 'other'] as const
 
 /** Materials a session or course asks people to engage with (CONTEXT.md). */
 export const bibliographyField = (label?: string): ArrayField => ({

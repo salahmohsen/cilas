@@ -173,45 +173,49 @@ describe('importMedia', () => {
       slug: uniq('probe-media-issue'),
       issue_date: '2013-06-01',
       legacy_url: L.newsletter,
-      body: {
-        root: {
-          type: 'root',
-          format: '',
-          indent: 0,
-          version: 1,
-          direction: 'ltr',
-          children: [
-            {
-              type: 'paragraph',
+      sections: [
+        {
+          body: {
+            root: {
+              type: 'root',
               format: '',
               indent: 0,
               version: 1,
               direction: 'ltr',
               children: [
                 {
-                  type: 'link',
+                  type: 'paragraph',
                   format: '',
                   indent: 0,
-                  version: 3,
+                  version: 1,
                   direction: 'ltr',
-                  fields: { linkType: 'custom', url: OLD_PDF, newTab: false },
                   children: [
                     {
-                      type: 'text',
-                      version: 1,
-                      text: 'Original PDF',
-                      format: 0,
-                      detail: 0,
-                      mode: 'normal',
-                      style: '',
+                      type: 'link',
+                      format: '',
+                      indent: 0,
+                      version: 3,
+                      direction: 'ltr',
+                      fields: { linkType: 'custom', url: OLD_PDF, newTab: false },
+                      children: [
+                        {
+                          type: 'text',
+                          version: 1,
+                          text: 'Original PDF',
+                          format: 0,
+                          detail: 0,
+                          mode: 'normal',
+                          style: '',
+                        },
+                      ],
                     },
                   ],
                 },
               ],
             },
-          ],
+          },
         },
-      },
+      ],
       _status: 'draft',
     })
   }, 300_000)

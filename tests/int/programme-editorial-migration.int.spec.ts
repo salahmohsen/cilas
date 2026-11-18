@@ -1,11 +1,12 @@
 // @vitest-environment node
-import { createLocalReq, getPayload, type Payload } from 'payload'
+import { createLocalReq, type Payload } from 'payload'
 import type { PostgresAdapter } from '@payloadcms/db-postgres'
 import { afterAll, beforeAll, describe, expect, it } from 'vitest'
-import config from '@/payload.config'
 import { up, down } from '@/migrations/20261029_081500_programme_editorial'
 import { programmeEditorial, type ProgrammeEditorial } from '@/migrations/lib/programme-editorial'
 import type { Programme } from '@/payload-types'
+
+import { scratchPayload } from '../helpers/scratchDatabase'
 
 const body: NonNullable<Programme['overview']> = {
   root: {
@@ -40,12 +41,15 @@ const normalize = (value: unknown) =>
   JSON.parse(JSON.stringify(value, (_, v) => (v === undefined ? null : v)))
 
 describe('programme editorial data migration', () => {
+  // The migration locks and rewrites every programme, so it runs in a
+  // database of its own.
   let payload: Payload
+  let destroy: () => Promise<void>
   beforeAll(async () => {
-    payload = await getPayload({ config })
+    ;({ payload, destroy } = await scratchPayload())
   })
   afterAll(async () => {
-    await payload.destroy()
+    await destroy?.()
   })
 
   it('migrates EN/AR documents and draft history, retries safely, and restores original rows on rollback', async () => {

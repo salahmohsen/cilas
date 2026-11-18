@@ -9,13 +9,18 @@ import styles from './time-picker.module.css'
 
 export interface TimePickerProps {
   label: string
+  optionsLabel?: string
   value?: string
   defaultValue?: string
   onChange?: (value: string) => void
   description?: string
+  /** Error copy under the field. Marks the trigger with data-invalid and announces through role="alert". */
+  error?: string
   placeholder?: string
   minuteStep?: 1 | 5 | 10 | 15 | 30
   format?: '12h' | '24h'
+  /** Shows a time ("14:30") in the page's own words, in place of `format`. */
+  formatValue?: (value: string) => string
   disabled?: boolean
   className?: string
 }
@@ -61,13 +66,16 @@ const valueFade: Variants = {
 
 export function TimePicker({
   label,
+  optionsLabel = `${label} options`,
   value,
   defaultValue = '09:00',
   onChange,
   description,
+  error,
   placeholder = 'Select a time',
   minuteStep = 15,
   format = '12h',
+  formatValue,
   disabled = false,
   className,
 }: TimePickerProps) {
@@ -95,6 +103,7 @@ export function TimePicker({
     return `${pad(hour)}:${pad(minute)}`
   })
   const display = (raw: string) => {
+    if (formatValue) return formatValue(raw)
     const minutes = toMinutes(raw)
     const hour = Math.floor(minutes / 60)
     const minute = minutes % 60
@@ -170,6 +179,13 @@ export function TimePicker({
           className={styles.trigger}
           disabled={disabled}
           aria-labelledby={`${labelId} ${valueId}`}
+          aria-describedby={
+            [description && `${id}-description`, error && `${id}-error`]
+              .filter(Boolean)
+              .join(' ') || undefined
+          }
+          // A button takes no aria-invalid; the error is read through aria-describedby.
+          data-invalid={error ? '' : undefined}
           aria-haspopup="listbox"
           aria-expanded={open}
           aria-controls={`${id}-listbox`}
@@ -203,7 +219,7 @@ export function TimePicker({
               id={`${id}-listbox`}
               className={styles.menu}
               role="listbox"
-              aria-label={`${label} options`}
+              aria-label={optionsLabel}
               initial={reduce ? { opacity: 0 } : { opacity: 0, y: -6, scale: 0.97 }}
               animate={{
                 opacity: 1,
@@ -247,7 +263,16 @@ export function TimePicker({
           )}
         </AnimatePresence>
       </div>
-      {description && <span className={styles.description}>{description}</span>}
+      {description && (
+        <span id={`${id}-description`} className={styles.description}>
+          {description}
+        </span>
+      )}
+      {error && (
+        <span id={`${id}-error`} className={styles.error} role="alert">
+          {error}
+        </span>
+      )}
     </div>
   )
 }

@@ -20,7 +20,8 @@ export async function GET(request: Request, { params }: { params: Promise<{ loca
   const origin = env.NEXT_PUBLIC_SERVER_URL || new URL(request.url).origin
   const ics = buildIcs(
     items.map((item) => ({
-      uid: `${item.key}@cilas`,
+      uid: item.feed ? item.feed.uid : `${item.key}@cilas`,
+      updatedAt: item.feed?.updatedAt,
       title: item.title,
       date: item.date,
       start: item.start,

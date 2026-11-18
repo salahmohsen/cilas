@@ -18,8 +18,8 @@ export type SpaceParent = {
   id?: number
   title?: string | null
   slug?: string | null
-  schedule?: unknown
-  sessions?: { id?: string | null }[] | null
+  /** The course's last meeting (`lib/space-lifecycle.ts`). */
+  last_day?: string | null
   fellows?: Rel[] | null
 }
 

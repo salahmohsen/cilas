@@ -28,7 +28,6 @@ const course = (data: Partial<Course> = {}): Course => ({
   title: 'Writing',
   slug: 'writing',
   course_type: 'CORE',
-  session_unit: 'week',
   tier: 'public',
   cycle: cycle.id,
   registration: { mode: 'follow_cycle' },

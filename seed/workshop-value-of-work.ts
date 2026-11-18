@@ -2,8 +2,8 @@ import { getPayload } from 'payload'
 import type { Payload } from 'payload'
 
 import { slugify } from '@/lib/slugify'
-import type { MaterialSeed } from './seed.type'
-import { bib, getOrCreateId, lexical } from './seed.utils'
+import type { MaterialSeed, SessionSeed } from './seed.type'
+import { getOrCreateId, lexical, replaceSessions } from './seed.utils'
 
 process.loadEnvFile('.env')
 const { default: config } = await import('../src/payload.config')
@@ -121,12 +121,19 @@ const seedCover = async (): Promise<number | null> => {
   return Number(doc.id)
 }
 
-const day = (order: number, title: string, description: string, readings: MaterialSeed[]) => ({
-  order,
-  session_title: title,
-  meetings: 1,
-  description: lexical(description),
-  bibliography: readings.map(bib),
+// Thursday and Saturday, 5–9 pm, over two weeks: 1, 3, 8 and 10 October 2026 in Cairo.
+const DAYS = ['2026-10-01', '2026-10-03', '2026-10-08', '2026-10-10']
+
+const day = (
+  order: number,
+  title: string,
+  description: string,
+  readings: MaterialSeed[],
+): SessionSeed => ({
+  title,
+  description,
+  meetings: [{ date: DAYS[order - 1]!, start_time: '17:00', end_time: '21:00' }],
+  bibliography: readings,
 })
 
 const sessions = [
@@ -238,8 +245,6 @@ const seedCourse = async (cycleId: number, personId: number, coverId: number | n
     return Number(existing.docs[0].id)
   }
 
-  // Schedule: Thursday and Saturday, 5–9 pm, over two weeks — 1, 3, 8 and 10
-  // October 2026 in Cairo. Four sessions of one meeting each.
   const doc = await payload.create({
     collection: 'courses',
     data: {
@@ -251,17 +256,6 @@ const seedCourse = async (cycleId: number, personId: number, coverId: number | n
       slug: SLUG,
       subtitle: 'Teaching as a Case',
       description: lexical(DESCRIPTION_EN),
-      schedule: {
-        start_date: '2026-10-01',
-        start_precision: 'day',
-        weeks: 2,
-        slots: [
-          { weekday: 'thu', start_time: '17:00', end_time: '21:00' },
-          { weekday: 'sat', start_time: '17:00', end_time: '21:00' },
-        ],
-      },
-      sessions,
-      session_unit: 'session',
       registration: {
         mode: 'own',
         method: 'external',
@@ -289,6 +283,8 @@ const seedCourse = async (cycleId: number, personId: number, coverId: number | n
     overrideAccess: true,
   })
 
+  await replaceSessions(payload, Number(doc.id), sessions)
+
   console.log('course created:', doc.id, TITLE_EN)
   return Number(doc.id)
 }
@@ -298,14 +294,15 @@ const cycleId = await seedCycle()
 const coverId = await seedCover()
 const courseId = await seedCourse(cycleId, personId, coverId)
 
-const course = await payload.findByID({
-  collection: 'courses',
-  id: courseId,
+const { docs } = await payload.find({
+  collection: 'sessions',
+  where: { course: { equals: courseId } },
   depth: 0,
+  pagination: false,
   overrideAccess: true,
 })
-const { expandSchedule } = await import('@/lib/schedule')
-const meetings = expandSchedule(course.schedule, course.sessions).filter((m) => !m.cancelled)
+const { meetingsOf } = await import('@/lib/meetings')
+const meetings = meetingsOf(docs).filter((m) => !m.cancelled)
 console.log(
   'meetings:',
   meetings.map((m) => `${m.date} ${m.start_time}-${m.end_time} (session ${m.session})`).join(' | '),

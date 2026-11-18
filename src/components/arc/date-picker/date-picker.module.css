@@ -182,6 +182,14 @@
   line-height: var(--leading-body);
   transition: opacity var(--duration-fast) var(--ease-standard);
 }
+.error {
+  color: var(--danger);
+  font-size: var(--text-xs);
+  line-height: var(--leading-body);
+}
+.trigger[data-invalid] {
+  border-color: var(--danger);
+}
 /* The open calendar covers the hint; fading it keeps its first letters from peeking past the popover's rounded corner. */
 .anchor:has(.popover) + .description {
   opacity: 0;

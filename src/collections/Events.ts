@@ -117,7 +117,7 @@ export const Events: CollectionConfig = {
         {
           label: 'When and where',
           fields: [
-            scheduleField({ event: true }),
+            scheduleField(),
             {
               label: 'Where',
               type: 'collapsible',

@@ -44,6 +44,8 @@ export type SyllabusMeeting = { date: string; time?: string }
 
 export type SyllabusEntry = {
   id: string
+  /** The row's DOM id, so a link can point at it: the feed opens and focuses it on arrival. */
+  anchor?: string
   /** The session's month, one of `groups`' keys. */
   month: string
   /** The session number as written, e.g. "٣" or "3". */
@@ -203,7 +205,16 @@ function Chip({
 
 /** A session's number and first date, then its kind, title and one line of meetings and counts. */
 /** `alone`: a session shown outside its list drops the number and date column; the summary line already names both. */
-function EntryHead({ entry, alone = false }: { entry: SyllabusEntry; alone?: boolean }) {
+function EntryHead({
+  entry,
+  alone = false,
+  titled = true,
+}: {
+  entry: SyllabusEntry
+  alone?: boolean
+  /** False where the surface around it already shows the title (a drawer's heading). */
+  titled?: boolean
+}) {
   const t = useTranslations('Course')
   return (
     <>
@@ -239,9 +250,11 @@ function EntryHead({ entry, alone = false }: { entry: SyllabusEntry; alone?: boo
             )}
           </span>
         )}
-        <span className={styles.title} {...entry.attrs?.title} dir="auto">
-          {entry.title}
-        </span>
+        {titled ? (
+          <span className={styles.title} {...entry.attrs?.title} dir="auto">
+            {entry.title}
+          </span>
+        ) : null}
         {entry.meta ? (
           <span className={styles.summary} {...entry.attrs?.meta} dir="auto">
             {(() => {
@@ -306,6 +319,7 @@ function EntryRow({
     <motion.li
       layout="position"
       className={styles.entry}
+      id={entry.anchor}
       data-open={open || undefined}
       {...entry.attrs?.row}
       initial={reduce ? { opacity: 0 } : { opacity: 0, filter: blurSubtle }}
@@ -389,20 +403,25 @@ function EntryRow({
 export function SyllabusSession({
   entry,
   label,
+  plain = false,
   className,
 }: {
   entry: SyllabusEntry
   /** What the region is named for assistive tech */
   label: string
+  /** No frame and no title, inside a surface that has both (a drawer). */
+  plain?: boolean
   className?: string
 }) {
   return (
     <section
-      className={[styles.feed, styles.single, className].filter(Boolean).join(' ')}
+      className={[styles.feed, styles.single, plain && styles.plain, className]
+        .filter(Boolean)
+        .join(' ')}
       aria-label={label}
     >
       <div className={styles.singleRow}>
-        <EntryHead entry={entry} alone />
+        <EntryHead entry={entry} alone titled={!plain} />
       </div>
       {entry.body && <div className={styles.singleBody}>{entry.body}</div>}
     </section>
@@ -589,6 +608,25 @@ export function SyllabusFeed({
       scroller.getBoundingClientRect().top
     scroller.scrollTo({ top: Math.max(0, top - 1), behavior: reduce ? 'auto' : 'smooth' })
   }
+
+  // A link to a row (`#session-12`) opens it, shows it and moves focus to it, on arrival and on a later hash change.
+  useEffect(() => {
+    const arrive = () => {
+      const anchor = decodeURIComponent(window.location.hash.slice(1))
+      const entry = anchor ? entries_.find((candidate) => candidate.anchor === anchor) : undefined
+      if (!entry) return
+      setFilters({ activity: [], material: [] })
+      setOpen((ids) => (ids.includes(entry.id) ? ids : [...ids, entry.id]))
+      requestAnimationFrame(() => {
+        const row = rowRefs.current.get(entry.id)
+        row?.focus({ preventScroll: true })
+        row?.closest('li')?.scrollIntoView({ block: 'start', behavior: reduce ? 'auto' : 'smooth' })
+      })
+    }
+    arrive()
+    window.addEventListener('hashchange', arrive)
+    return () => window.removeEventListener('hashchange', arrive)
+  }, [entries_, reduce])
 
   const total = entries_.length
   const shownCount = visible.length

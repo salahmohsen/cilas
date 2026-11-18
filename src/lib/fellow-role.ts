@@ -1,5 +1,5 @@
 import { relId } from '@/lib/relation'
-import type { Payload } from 'payload'
+import type { PayloadRequest } from 'payload'
 
 import type { Role } from '@/access'
 import type { User } from '@/payload-types'
@@ -22,8 +22,15 @@ export const toPersonIds = (fellows: Array<number | { id: number }> | null | und
     .map((fellow) => relId(fellow))
     .filter((id): id is number => typeof id === 'number')
 
-export const accountOf = async (payload: Payload, person: number): Promise<User | null> => {
-  const res = await payload.find({
+/**
+ * The helpers below take the request, not the Payload instance: a call made
+ * without it runs outside the transaction of the save or delete that fired the
+ * hook, and can wait on a lock that transaction holds while the transaction
+ * waits for it.
+ */
+export const accountOf = async (req: PayloadRequest, person: number): Promise<User | null> => {
+  const res = await req.payload.find({
+    req,
     collection: 'users',
     where: { person: { equals: person } },
     limit: 1,
@@ -34,11 +41,12 @@ export const accountOf = async (payload: Payload, person: number): Promise<User 
 }
 
 export const teaches = async (
-  payload: Payload,
+  req: PayloadRequest,
   person: number,
   exceptCourseId?: number,
 ): Promise<boolean> => {
-  const res = await payload.find({
+  const res = await req.payload.find({
+    req,
     collection: 'courses',
     where: {
       and: [
@@ -54,11 +62,12 @@ export const teaches = async (
   return res.totalDocs > 0
 }
 
-export const grantFellow = async (payload: Payload, person: number): Promise<void> => {
-  const account = await accountOf(payload, person)
+export const grantFellow = async (req: PayloadRequest, person: number): Promise<void> => {
+  const account = await accountOf(req, person)
   if (!account || account.roles.includes('fellow')) return
 
-  await payload.update({
+  await req.payload.update({
+    req,
     collection: 'users',
     id: account.id,
     data: { roles: withFellowRole(account.roles, true) },
@@ -69,16 +78,17 @@ export const grantFellow = async (payload: Payload, person: number): Promise<voi
 
 /** The course being saved or deleted is excluded so it cannot vouch for itself. */
 export const revokeIfUnteaching = async (
-  payload: Payload,
+  req: PayloadRequest,
   person: number,
   exceptCourseId: number,
 ): Promise<void> => {
-  if (await teaches(payload, person, exceptCourseId)) return
+  if (await teaches(req, person, exceptCourseId)) return
 
-  const account = await accountOf(payload, person)
+  const account = await accountOf(req, person)
   if (!account || !account.roles.includes('fellow')) return
 
-  await payload.update({
+  await req.payload.update({
+    req,
     collection: 'users',
     id: account.id,
     data: { roles: withFellowRole(account.roles, false) },

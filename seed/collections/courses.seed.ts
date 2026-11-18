@@ -1,7 +1,7 @@
 import type { Payload } from 'payload'
 import { slugify } from '@/lib/slugify'
 import type { CourseSeed, SeedContext } from '../seed.type'
-import { getOrCreateId, lexical, requireIds } from '../seed.utils'
+import { findId, getOrCreateId, lexical, replaceSessions, requireIds } from '../seed.utils'
 
 export const coursesData: CourseSeed[] = [
   /* === bridge programme semester one — core curriculum (enrolled CILASians) === */
@@ -36,8 +36,8 @@ export const coursesData: CourseSeed[] = [
 
 export const seedCourses = async (payload: Payload, ctx: SeedContext): Promise<void> => {
   for (const course of coursesData) {
-    const { title_ar, description, sessions, schedule, session_unit, fellows, cycle, ...rest } =
-      course
+    const { title_ar, description, sessions, fellows, cycle, ...rest } = course
+    const existed = await findId(payload, 'courses', { title: { equals: course.title } })
 
     const id = await getOrCreateId(payload, 'courses', { title: { equals: course.title } }, () =>
       payload.create({
@@ -49,18 +49,13 @@ export const seedCourses = async (payload: Payload, ctx: SeedContext): Promise<v
           description: description ? lexical(description) : null,
           fellows: requireIds(ctx.people, fellows),
           cycle: requireIds(ctx.cycles, [cycle])[0],
-          schedule,
-          session_unit: session_unit ?? 'session',
           _status: 'published',
-          sessions: (sessions ?? []).map(({ description, bibliography, ...s }) => ({
-            ...s,
-            description: description ? lexical(description) : null,
-            bibliography: bibliography ?? [],
-          })),
         },
         overrideAccess: true,
       }),
     )
+
+    if (!existed && sessions) await replaceSessions(payload, id, sessions)
 
     if (title_ar) {
       await payload.update({

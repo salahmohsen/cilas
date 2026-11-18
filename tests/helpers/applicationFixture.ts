@@ -49,7 +49,6 @@ export async function applicationFixture() {
         title,
         slug: `choice-${title.toLowerCase()}-${suffix}`,
         course_type: 'CORE',
-        session_unit: 'week',
         cycle: cycle.id,
         tier: 'public',
         _status: 'published',

@@ -28,7 +28,10 @@
   height: calc(var(--sheet-max) * var(--sheet-viewport, 100dvh) + var(--sheet-extension));
   margin-inline: auto;
   overflow: hidden;
-  padding-bottom: calc(var(--sheet-extension) + env(safe-area-inset-bottom, 0px));
+  /* Keep the content and sticky footers inside the visible part at every detent. */
+  padding-block-end: calc(
+    var(--sheet-extension) + var(--sheet-content-offset, 0px) + env(safe-area-inset-bottom, 0px)
+  );
   border: 1px solid var(--border);
   border-bottom: 0;
   border-radius: var(--radius-surface) var(--radius-surface) 0 0;

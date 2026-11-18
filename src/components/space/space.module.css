@@ -797,10 +797,32 @@
   .wideOnly {
     display: flex;
   }
+
+  .layout[data-wide] {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .layout[data-wide] > .rail {
+    display: none;
+  }
+}
+
+/* A wide tab: the calendar takes the row; the rest keeps the reading width. */
+.layout[data-wide] > .feed {
+  max-width: none;
+}
+
+.layout[data-wide] > .feed > :not(.wideSlot) {
+  max-width: 680px;
+}
+
+.wideSlot {
+  min-width: 0;
 }
 
 .feed {
   display: grid;
+  grid-template-columns: minmax(0, 1fr);
   gap: var(--space-4);
   max-width: 680px;
   min-width: 0;
@@ -3223,4 +3245,73 @@ button.rsvpCell {
     border-inline-end: 0;
     border-bottom: 1px solid var(--poster-ink);
   }
+}
+
+/* The session drawer: the session as the syllabus shows it, then its links. */
+.sessionDrawer {
+  display: flex;
+  flex: 1 0 auto;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+:has(> .sessionDrawer) {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  scroll-padding-block-end: 6rem;
+}
+
+.sessionDrawerCourse {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  margin: var(--space-3) 0 0;
+  color: var(--text-secondary);
+  font-size: var(--text-sm);
+}
+
+.sessionDrawerCourse a {
+  color: var(--foreground);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.sessionDrawerActions {
+  position: sticky;
+  z-index: 1;
+  inset-block-end: 0;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-3);
+  margin-block-start: auto;
+  padding-block: var(--space-4);
+  border-block-start: 1px solid var(--border-subtle);
+  background: var(--surface-raised);
+  box-shadow: 0 var(--space-6) 0 0 var(--surface-raised);
+}
+
+.sessionDrawerActions > * {
+  min-inline-size: 0;
+}
+
+.sessionDrawerActions > :only-child {
+  grid-column: 1 / -1;
+}
+
+.sessionDrawerRetry {
+  margin-block-start: var(--space-2);
+}
+
+/* In a syllabus row the links follow the session's text, as the posts link did. */
+.sessionRowActions {
+  margin-block-start: var(--space-3);
+}
+
+/* The leave question's two buttons, Stay first. */
+.leaveActions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: var(--space-3);
 }

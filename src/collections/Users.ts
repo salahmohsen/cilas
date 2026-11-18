@@ -1,5 +1,10 @@
 import { adminOnlyField, ROLE_OPTIONS, isAdmin, isAdminUser, personOf, type Role } from '@/access'
-import type { CollectionBeforeChangeHook, CollectionConfig, PayloadRequest } from 'payload'
+import type {
+  CollectionBeforeChangeHook,
+  CollectionBeforeDeleteHook,
+  CollectionConfig,
+  PayloadRequest,
+} from 'payload'
 
 import { getEmailSettings, withDefaults } from '@/emails/settings'
 import { resetMail } from '@/emails/transactional'
@@ -57,7 +62,7 @@ export const syncFellowRoleOnLink: CollectionBeforeChangeHook<User> = async ({
   const after = personOf(data)
   if (before === after) return data
 
-  const isTeaching = after !== null && (await teaches(req.payload, after))
+  const isTeaching = after !== null && (await teaches(req, after))
   const current = (data.roles ?? originalDoc?.roles ?? ['member']) as Role[]
   if (current.includes('fellow') === isTeaching) return data
   // A first link only adds the role: a new fellow, given a person, has not
@@ -65,6 +70,20 @@ export const syncFellowRoleOnLink: CollectionBeforeChangeHook<User> = async ({
   if (before === null && !isTeaching) return data
 
   return { ...data, roles: withFellowRole(current, isTeaching) }
+}
+
+/**
+ * A lock left with no user makes the admin page of its document render empty
+ * until the lock expires (Payload's `getIsLocked` reads `user.value`), and
+ * deleting a user does not remove the locks it holds.
+ */
+const deleteOwnersLocks: CollectionBeforeDeleteHook = async ({ id, req }) => {
+  await req.payload.delete({
+    collection: 'payload-locked-documents',
+    where: { 'user.value': { equals: id } },
+    overrideAccess: true,
+    req,
+  })
 }
 
 const settingsFor = async (req?: PayloadRequest) =>
@@ -135,7 +154,7 @@ export const Users: CollectionConfig = {
   hooks: {
     beforeChange: [ensurePerson, syncFellowRoleOnLink],
     afterChange: [announceAcceptance],
-    beforeDelete: [deleteOwnersAiKeys],
+    beforeDelete: [deleteOwnersAiKeys, deleteOwnersLocks],
     afterOperation: [markActivated],
   },
   fields: [

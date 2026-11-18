@@ -22,7 +22,7 @@ const courses = [
     slug: 'plato',
     course_type: 'CORE',
     fellows: [{ name: 'Mona' }],
-    summary: 'Book by book.',
+    subtitle: 'Book by book.',
     cycle: { title: 'Fall 2026, Cairo', season: 'fall' },
   },
   {

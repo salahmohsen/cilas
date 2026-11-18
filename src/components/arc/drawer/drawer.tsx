@@ -74,6 +74,8 @@ export interface DrawerContentProps extends ComponentPropsWithoutRef<
   description?: string
   children: ReactNode
   side?: 'left' | 'right' | 'top' | 'bottom'
+  /** aria-label of the close button, in the page's language. */
+  closeLabel?: string
   /** Renders the drawer inside this element instead of the page body, anchored to its edges. The element needs position: relative and overflow: hidden. */
   container?: HTMLElement | null
 }
@@ -135,6 +137,7 @@ export function DrawerContent({
   description,
   children,
   side = 'right',
+  closeLabel = 'Close drawer',
   container,
   className,
   onInteractOutside,
@@ -196,7 +199,7 @@ export function DrawerContent({
             </DialogPrimitive.Description>
           ) : null}
         </div>
-        <DialogPrimitive.Close className={styles.close} aria-label="Close drawer">
+        <DialogPrimitive.Close className={styles.close} aria-label={closeLabel}>
           <X size={16} strokeWidth={1.75} aria-hidden="true" />
         </DialogPrimitive.Close>
       </motion.div>

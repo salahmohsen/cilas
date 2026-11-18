@@ -11,6 +11,7 @@ import {
   type FilterField,
 } from '@/components/arc/filter-toolbar/filter-toolbar'
 import SegmentedControl from '@/components/arc/segmented-control/segmented-control'
+import { leave } from '@/lib/leave-guard'
 
 /** All posts or announcements only: two views of one feed, kept in the URL. */
 export function FeedFilter({
@@ -31,7 +32,7 @@ export function FeedFilter({
       value={value}
       options={options}
       onValueChange={(next) =>
-        router.push(next === 'all' ? path : `${path}?tab=${next}`, { scroll: false })
+        leave(() => router.push(next === 'all' ? path : `${path}?tab=${next}`, { scroll: false }))
       }
     />
   )

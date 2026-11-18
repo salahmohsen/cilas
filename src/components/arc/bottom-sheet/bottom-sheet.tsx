@@ -42,6 +42,13 @@ export interface BottomSheetProps {
   initialDetent?: number
   onDetentChange?: (index: number) => void
   closeLabel?: string
+  labels?: {
+    expand: string
+    collapse: string
+    expanded: string
+    collapsed: string
+    height: (percent: number) => string
+  }
   className?: string
   /** For content with its own title and close control: the sheet shows only the grabber above it. The title stays for screen readers. */
   bare?: boolean
@@ -150,6 +157,13 @@ function Sheet({
   initialDetent = 0,
   onDetentChange,
   closeLabel = 'Close',
+  labels = {
+    expand: 'Expand sheet',
+    collapse: 'Collapse sheet',
+    expanded: 'Sheet expanded',
+    collapsed: 'Sheet collapsed',
+    height: (percent) => `Sheet at ${percent} percent height`,
+  },
   className,
   bare = false,
   fit = false,
@@ -248,10 +262,10 @@ function Sheet({
         onDetentChange?.(stop)
         setAnnouncement(
           stop === top
-            ? 'Sheet expanded'
+            ? labels.expanded
             : stop === 0
-              ? 'Sheet collapsed'
-              : `Sheet at ${Math.round(stops[stop]! * 100)} percent height`,
+              ? labels.collapsed
+              : labels.height(Math.round(stops[stop]! * 100)),
         )
       }
       // Collapsing takes the content back to its start, so the peek always shows the top of it.
@@ -260,7 +274,7 @@ function Sheet({
         body.scrollTo({ top: 0, behavior: reduced ? 'auto' : 'smooth' })
       go(stop, velocity)
     },
-    [go, onDetentChange, reduced, stops, top],
+    [go, labels, onDetentChange, reduced, stops, top],
   )
 
   // Enter, leave, and a reopen caught mid-exit all retarget the same motion value from wherever it is.
@@ -294,6 +308,17 @@ function Sheet({
     if (aim.current === 'closed' && y.isAnimating()) arrive.current = safeToRemove
     else go('closed', undefined, safeToRemove)
   }, [go, height, isPresent, offset, presence, reduced, safeToRemove, y])
+
+  // New detents from the host (a form that needs the full height) move the sheet to its stop among them.
+  const shownStops = useRef(stops)
+  useEffect(() => {
+    if (shownStops.current === stops) return
+    shownStops.current = stops
+    const stop = clamp(detentRef.current, 0, top)
+    detentRef.current = stop
+    setDetent(stop)
+    if (aim.current !== 'closed' && !drag.current) go(stop)
+  }, [go, stops, top])
 
   // A viewport change (rotation, the mobile toolbar) moves every detent. Keep the sheet on its detent, retargeting any flight.
   useEffect(() => {
@@ -579,11 +604,17 @@ function Sheet({
   }
 
   const expanded = detent === top
+  const contentOffset = useTransform(
+    [y, height],
+    ([position = 0, full = 0]: number[]) =>
+      `${clamp(position, 0, full * (1 - stops[0]! / stops[top]!))}px`,
+  )
   const style = {
     y,
     opacity: presence,
     '--sheet-max': stops[top],
     '--sheet-extension': `${EXTENSION}px`,
+    '--sheet-content-offset': contentOffset,
   } as unknown as CSSProperties
 
   return (
@@ -626,7 +657,7 @@ function Sheet({
               type="button"
               className={styles.grabber}
               data-grabber=""
-              aria-label={expanded ? 'Collapse sheet' : 'Expand sheet'}
+              aria-label={expanded ? labels.collapse : labels.expand}
               aria-expanded={expanded}
               onClick={grabberClick}
               onKeyDown={grabberKey}

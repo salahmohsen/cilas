@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest'
 
 import {
   byWhen,
+  courseWeek,
   firstDay,
   isAllDay,
   lastDay,
@@ -10,7 +11,7 @@ import {
   nextMeeting,
   numberedSessions,
   sessionsInOrder,
-  sessionUnitOf,
+  storedWeeks,
   summary,
   upcomingSession,
   weeks,
@@ -173,11 +174,17 @@ describe('weeks', () => {
     expect(weeks(tuesdays(8))).toBe(8)
   })
 
-  it('counts calendar weeks that start on Saturday', () => {
-    // Friday 6 March and Saturday 7 March are in two different weeks.
-    expect(weeks([at('2026-03-06'), at('2026-03-07')])).toBe(2)
-    // Saturday 28 February to Friday 6 March is one week.
-    expect(weeks([at('2026-02-28'), at('2026-03-06')])).toBe(1)
+  it('counts 7-day weeks from the first meeting, not Saturday weeks', () => {
+    // Friday 6 March and Saturday 7 March fall in one week from the Friday.
+    expect(weeks([at('2026-03-06'), at('2026-03-07')])).toBe(1)
+    // Thursday 5 March to Wednesday 11 March is one week; Thursday 12 March starts the second.
+    expect(weeks([at('2026-03-05'), at('2026-03-11')])).toBe(1)
+    expect(weeks([at('2026-03-05'), at('2026-03-12')])).toBe(2)
+  })
+
+  it('counts a Thursday and Saturday course from a Thursday as one week a pair (course 296)', () => {
+    const list = [at('2026-03-05'), at('2026-03-07'), at('2026-03-12'), at('2026-03-14')]
+    expect(weeks(list)).toBe(2)
   })
 
   it('counts weeks with no meeting inside the span', () => {
@@ -191,6 +198,37 @@ describe('weeks', () => {
 
   it('crosses a year end', () => {
     expect(weeks([at('2026-12-29'), at('2027-01-05')])).toBe(2)
+  })
+})
+
+describe('courseWeek', () => {
+  // Tuesday and Thursday from Tuesday 3 November 2026, four weeks.
+  const course = [
+    '2026-11-03',
+    '2026-11-05',
+    '2026-11-10',
+    '2026-11-12',
+    '2026-11-17',
+    '2026-11-24',
+  ].map((date) => ({ date }))
+  const saturdayWeek = (start: number) =>
+    Array.from({ length: 7 }, (_, i) => `2026-11-${String(start + i).padStart(2, '0')}`)
+
+  it('names a Saturday week by the course week of its first meeting', () => {
+    expect(courseWeek(course, saturdayWeek(7))).toEqual({ week: 2, weeks: 4 })
+    expect(courseWeek(course, ['2026-11-03'])).toEqual({ week: 1, weeks: 4 })
+    expect(courseWeek(course, saturdayWeek(21))).toEqual({ week: 4, weeks: 4 })
+  })
+
+  it('names no week for days with no held meeting', () => {
+    expect(courseWeek(course, ['2026-11-04'])).toBeNull()
+    expect(courseWeek([{ date: '2026-11-10', cancelled: true }], ['2026-11-10'])).toBeNull()
+    expect(courseWeek([], saturdayWeek(7))).toBeNull()
+  })
+
+  it('counts weeks from the first held meeting, not a cancelled one before it', () => {
+    const moved = [{ date: '2026-10-27', cancelled: true }, ...course]
+    expect(courseWeek(moved, ['2026-11-10'])).toEqual({ week: 2, weeks: 4 })
   })
 })
 
@@ -243,10 +281,51 @@ describe('summary', () => {
     })
   })
 
-  it('starts the week on Saturday, so Saturday and Monday meetings are one week', () => {
+  it('counts weeks from the first meeting, so Saturday and Monday meetings are one week', () => {
     // Sat 28 Feb + Mon 2 Mar, then Sat 7 Mar + Mon 9 Mar.
     const list = [at('2026-02-28'), at('2026-03-02'), at('2026-03-07'), at('2026-03-09')]
     expect(summary(list)).toMatchObject({ kind: 'weekly', weeks: 2 })
+  })
+
+  it('reads Thursday and Saturday from a Thursday as weekly, not split by Saturday (course 296)', () => {
+    const list = [
+      at('2026-03-05', '17:00', '21:00'),
+      at('2026-03-07', '17:00', '21:00'),
+      at('2026-03-12', '17:00', '21:00'),
+      at('2026-03-14', '17:00', '21:00'),
+    ]
+    expect(summary(list)).toEqual({
+      kind: 'weekly',
+      times: [
+        { weekday: 'thu', start_time: '17:00', end_time: '21:00' },
+        { weekday: 'sat', start_time: '17:00', end_time: '21:00' },
+      ],
+      weeks: 2,
+    })
+  })
+
+  it('reads a last week that ends early as weekly', () => {
+    // Tuesdays and Thursdays for two weeks, then one last Tuesday.
+    const list = [at('2026-03-03'), at('2026-03-05'), at('2026-03-10'), at('2026-03-12')]
+    expect(summary([...list, at('2026-03-17')])).toMatchObject({ kind: 'weekly', weeks: 3 })
+  })
+
+  it('reads one full week and a short one as dates, not weekly (course 295)', () => {
+    // Sat 22, Mon 24, Thu 27, Fri 28 August, then Sat 29: a five-day workshop.
+    const list = [
+      at('2026-08-22', '18:00', '22:00'),
+      at('2026-08-24', '18:00', '22:00'),
+      at('2026-08-27', '15:00', '19:00'),
+      at('2026-08-28', '17:00', '21:00'),
+      at('2026-08-29', '18:00', '22:00'),
+    ]
+    expect(summary(list)).toMatchObject({ kind: 'dates', first: '2026-08-22', last: '2026-08-29' })
+  })
+
+  it('reads a last week that skips its first day as dates', () => {
+    // Tuesdays and Thursdays for two weeks, then a Thursday only.
+    const list = [at('2026-03-03'), at('2026-03-05'), at('2026-03-10'), at('2026-03-12')]
+    expect(summary([...list, at('2026-03-19')])).toMatchObject({ kind: 'dates' })
   })
 
   it('reads all-day weekly meetings as weekly with no times', () => {
@@ -305,11 +384,22 @@ describe('summary', () => {
   })
 })
 
-describe('sessionUnitOf', () => {
-  it('calls a session a week only when the course says so', () => {
-    expect(sessionUnitOf('week')).toBe('week')
-    expect(sessionUnitOf('session')).toBe('session')
-    expect(sessionUnitOf(null)).toBe('session')
+describe('storedWeeks', () => {
+  it('reads the weeks from the stored first and last day', () => {
+    expect(storedWeeks({ first_day: '2026-03-05', last_day: '2026-03-14' })).toBe(2)
+    expect(storedWeeks({ first_day: '2026-03-03', last_day: '2026-04-21' })).toBe(8)
+  })
+
+  it('agrees with weeks over the meetings', () => {
+    const meetings = tuesdays(8)
+    expect(storedWeeks({ first_day: firstDay(meetings), last_day: lastDay(meetings) })).toBe(
+      weeks(meetings),
+    )
+  })
+
+  it('is zero without a first and a last day', () => {
+    expect(storedWeeks({})).toBe(0)
+    expect(storedWeeks({ first_day: '2026-03-03', last_day: null })).toBe(0)
   })
 })
 
@@ -322,7 +412,7 @@ describe('numberedSessions', () => {
   ]
 
   it('numbers sessions in time order from 1, a cancelled one keeping its number', () => {
-    expect(numberedSessions(list, 'session').map((s) => [s.session.id, s.number])).toEqual([
+    expect(numberedSessions(list).map((s) => [s.session.id, s.number])).toEqual([
       ['first', 1],
       ['second', 2],
       ['third', 3],
@@ -330,37 +420,30 @@ describe('numberedSessions', () => {
     ])
   })
 
-  it('gives each session its own meetings in time order, and the unit of the course', () => {
-    const [first, second, , unplaced] = numberedSessions(list, 'week')
+  it('gives each session its own meetings in time order', () => {
+    const [first, second, , unplaced] = numberedSessions(list)
     expect(first!.meetings.map((m) => m.date)).toEqual(['2026-03-03', '2026-03-05'])
     expect(first!.meetings.every((m) => m.session === 1)).toBe(true)
     expect(second!.meetings).toEqual([{ ...at('2026-03-10'), session: 2, cancelled: true }])
     expect(unplaced!.meetings).toEqual([])
-    expect(first!.unit).toBe('week')
   })
 
   it('dates a session by its first meeting not cancelled, else its first, else none', () => {
-    const days = numberedSessions(
-      [
-        { id: 'a', meetings: [at('2026-03-03')] },
-        { id: 'b', cancelled: true, meetings: [at('2026-03-10')] },
-        { id: 'c' },
-      ],
-      null,
-    ).map((s) => s.day)
+    const days = numberedSessions([
+      { id: 'a', meetings: [at('2026-03-03')] },
+      { id: 'b', cancelled: true, meetings: [at('2026-03-10')] },
+      { id: 'c' },
+    ]).map((s) => s.day)
     expect(days).toEqual(['2026-03-03', '2026-03-10', null])
   })
 })
 
 describe('upcomingSession', () => {
-  const sessions = numberedSessions(
-    [
-      { id: 'one', meetings: [at('2026-03-03')] },
-      { id: 'two', cancelled: true, meetings: [at('2026-03-10')] },
-      { id: 'three', meetings: [at('2026-03-17'), at('2026-03-19')] },
-    ],
-    'session',
-  )
+  const sessions = numberedSessions([
+    { id: 'one', meetings: [at('2026-03-03')] },
+    { id: 'two', cancelled: true, meetings: [at('2026-03-10')] },
+    { id: 'three', meetings: [at('2026-03-17'), at('2026-03-19')] },
+  ])
 
   it('is the session of the first meeting on or after the day, skipping cancelled ones', () => {
     expect(upcomingSession(sessions, '2026-03-03')?.session.id).toBe('one')
@@ -381,8 +464,8 @@ describe('meetingKey', () => {
   })
 
   it('stays the same when other meetings of the session move', () => {
-    const before = numberedSessions([{ meetings: [at('2026-03-03'), at('2026-03-10')] }], null)
-    const after = numberedSessions([{ meetings: [at('2026-03-01'), at('2026-03-10')] }], null)
+    const before = numberedSessions([{ meetings: [at('2026-03-03'), at('2026-03-10')] }])
+    const after = numberedSessions([{ meetings: [at('2026-03-01'), at('2026-03-10')] }])
     const key = (s: typeof before) => meetingKey(7, s[0]!.meetings.at(-1)!)
     expect(key(after)).toBe(key(before))
   })

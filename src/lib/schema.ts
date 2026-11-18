@@ -166,8 +166,7 @@ export const courseSchema = ({
   instructors: Person[]
 }) => {
   const description =
-    (course.meta?.description || course.summary || course.subtitle || '').trim() ||
-    plainOf(course.description)
+    (course.meta?.description || course.subtitle || '').trim() || plainOf(course.description)
   if (!description) return null
 
   const uses = course.location ?? []

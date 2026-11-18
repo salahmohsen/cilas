@@ -8,7 +8,7 @@ import styles from './space.module.css'
 export function SessionBlock({ id, read }: { id: string; read: SessionRead | null | undefined }) {
   const view =
     read?.state === 'shown'
-      ? (read.course.sessions ?? []).some((s) => s.id === id)
+      ? read.course.sessions.some((s) => String(s.id) === id)
         ? ({ state: 'shown', course: read.course, session: id } as const)
         : ({ state: 'gone' } as const)
       : (read ?? ({ state: 'gone' } as const))

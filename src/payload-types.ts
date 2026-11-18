@@ -1163,10 +1163,6 @@ export interface Course {
    */
   subtitle?: string | null;
   /**
-   * One line for cards and search results, e.g. “Reading Plato’s Republic in Cairo, book by book.” Leave empty to use the description’s start.
-   */
-  summary?: string | null;
-  /**
    * A short quote or question shown before the description, e.g. “What does a city remember?”
    */
   epigraph?: string | null;
@@ -1206,6 +1202,40 @@ export interface Course {
    * Only when languages mix, e.g. “Readings in Arabic, discussion in either.”
    */
   language_note?: string | null;
+  syllabus?: {
+    docs?: (number | Session)[];
+    hasNextPage?: boolean;
+    totalDocs?: number;
+  };
+  bibliography?:
+    | {
+        type: 'reading' | 'watch' | 'listen' | 'prompt' | 'other';
+        title?: string | null;
+        /**
+         * A link to the text, video or recording, if it is online.
+         */
+        href?: string | null;
+        /**
+         * Author, year or pages, e.g. “Arendt, 1958, ch. 2”.
+         */
+        note?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  /**
+   * The fellow’s practical notes to participants: what to bring, how work is assessed, e.g. “Bring an apron; all chemicals are provided.”
+   */
+  facilitator_note?: string | null;
+  /**
+   * Sensitive material participants should know about beforehand, e.g. “Discusses sexual violence.”
+   */
+  content_warning?: string | null;
+  /**
+   * Tick when the fellow may still change the sessions; the page says the syllabus may change.
+   */
+  syllabus_tentative?: boolean | null;
+  first_day?: string | null;
+  last_day?: string | null;
   sessions?:
     | {
         /**
@@ -1276,50 +1306,10 @@ export interface Course {
         id?: string | null;
       }[]
     | null;
-  bibliography?:
-    | {
-        type: 'reading' | 'watch' | 'listen' | 'prompt' | 'other';
-        title?: string | null;
-        /**
-         * A link to the text, video or recording, if it is online.
-         */
-        href?: string | null;
-        /**
-         * Author, year or pages, e.g. “Arendt, 1958, ch. 2”.
-         */
-        note?: string | null;
-        id?: string | null;
-      }[]
-    | null;
-  /**
-   * The fellow’s practical notes to participants: what to bring, how work is assessed, e.g. “Bring an apron; all chemicals are provided.”
-   */
-  facilitator_note?: string | null;
-  /**
-   * Sensitive material participants should know about beforehand, e.g. “Discusses sexual violence.”
-   */
-  content_warning?: string | null;
-  /**
-   * Tick when the fellow may still change the sessions; the page says the syllabus may change.
-   */
-  syllabus_tentative?: boolean | null;
-  /**
-   * How sessions are numbered on the page: “Week 3” or “Session 3”.
-   */
-  session_unit: 'session' | 'week';
   schedule?: {
     start_date?: string | null;
-    /**
-     * Week only keeps it off the calendar.
-     */
     start_precision?: ('day' | 'week') | null;
-    /**
-     * How long it runs, e.g. 8. With the start date it sets the end date.
-     */
     weeks?: number | null;
-    /**
-     * Weekly meeting times, in Cairo time.
-     */
     slots?:
       | {
           weekday: 'sat' | 'sun' | 'mon' | 'tue' | 'wed' | 'thu' | 'fri';
@@ -1328,26 +1318,9 @@ export interface Course {
           id?: string | null;
         }[]
       | null;
-    /**
-     * Worked out from the schedule.
-     */
     end_date?: string | null;
-    /**
-     * One-off exceptions, e.g. "hybrid for the first 6 weeks, then online".
-     */
     note?: string | null;
   };
-  syllabus?: {
-    docs?: (number | Session)[];
-    hasNextPage?: boolean;
-    totalDocs?: number;
-  };
-  /**
-   * What the dates cannot say, e.g. "hybrid for the first 6 weeks, then online".
-   */
-  timing_note?: string | null;
-  first_day?: string | null;
-  last_day?: string | null;
   registration?: {
     mode: 'follow_cycle' | 'own' | 'closed';
     /**
@@ -1914,13 +1887,16 @@ export interface Place {
 export interface Session {
   id: number;
   course: number | Course;
-  title?: string | null;
   /**
    * The session will not take place: marked as cancelled on the page and left off the calendar.
    */
   cancelled?: boolean | null;
   /**
-   * Cairo time. Leave both times empty for an all-day meeting.
+   * Leave empty to show it as “Session 3”.
+   */
+  title?: string | null;
+  /**
+   * When it meets, in Cairo time: one row a meeting. Leave both times empty for an all-day meeting.
    */
   meetings?:
     | {
@@ -1934,6 +1910,9 @@ export interface Session {
    * How this session meets. Leave empty to follow the course location.
    */
   delivery?: ('OFFLINE' | 'ONLINE' | 'HYBRID') | null;
+  /**
+   * What the session covers. Markdown: **bold**, *italic*, lists, links.
+   */
   description?: string | null;
   bibliography?:
     | {
@@ -2497,7 +2476,7 @@ export interface SpacePost {
   vote_multiple?: boolean | null;
   vote_closes_at?: string | null;
   vote_anonymous?: boolean | null;
-  course_session?: string | null;
+  course_session?: (number | null) | Session;
   pinned?: boolean | null;
   pinned_full?: boolean | null;
   locked?: boolean | null;
@@ -2984,7 +2963,7 @@ export interface PayloadMcpApiKey {
      */
     lookup?: boolean | null;
     /**
-     * Create a course draft with structured schedule and course flow. Never publishes. Read cilas://guides/course first.
+     * Create a course draft with its sessions (syllabus) and their meetings. Never publishes. Read cilas://guides/course first.
      */
     createCourseDraft?: boolean | null;
     /**
@@ -3778,7 +3757,6 @@ export interface CoursesSelect<T extends boolean = true> {
   slug?: T;
   legacy_url?: T;
   subtitle?: T;
-  summary?: T;
   epigraph?: T;
   description?: T;
   fellows?: T;
@@ -3787,6 +3765,21 @@ export interface CoursesSelect<T extends boolean = true> {
   location?: T;
   teaching_languages?: T;
   language_note?: T;
+  syllabus?: T;
+  bibliography?:
+    | T
+    | {
+        type?: T;
+        title?: T;
+        href?: T;
+        note?: T;
+        id?: T;
+      };
+  facilitator_note?: T;
+  content_warning?: T;
+  syllabus_tentative?: T;
+  first_day?: T;
+  last_day?: T;
   sessions?:
     | T
     | {
@@ -3822,19 +3815,6 @@ export interface CoursesSelect<T extends boolean = true> {
             };
         id?: T;
       };
-  bibliography?:
-    | T
-    | {
-        type?: T;
-        title?: T;
-        href?: T;
-        note?: T;
-        id?: T;
-      };
-  facilitator_note?: T;
-  content_warning?: T;
-  syllabus_tentative?: T;
-  session_unit?: T;
   schedule?:
     | T
     | {
@@ -3852,10 +3832,6 @@ export interface CoursesSelect<T extends boolean = true> {
         end_date?: T;
         note?: T;
       };
-  syllabus?: T;
-  timing_note?: T;
-  first_day?: T;
-  last_day?: T;
   registration?:
     | T
     | {
@@ -4690,8 +4666,8 @@ export interface RedirectsSelect<T extends boolean = true> {
  */
 export interface SessionsSelect<T extends boolean = true> {
   course?: T;
-  title?: T;
   cancelled?: T;
+  title?: T;
   meetings?:
     | T
     | {

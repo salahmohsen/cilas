@@ -1,0 +1,103 @@
+.form {
+  display: grid;
+  gap: var(--space-6);
+}
+.form > * {
+  min-width: 0;
+}
+
+.note {
+  margin: 0;
+  color: var(--text-secondary);
+  font-size: var(--text-sm);
+  line-height: var(--leading-body);
+}
+
+.group {
+  display: grid;
+  gap: var(--space-6);
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+/* One step above the field labels (text-sm). */
+.legend {
+  margin-block-end: var(--space-3);
+  padding: 0;
+  font-size: var(--text-base);
+  font-weight: 500;
+}
+
+/* A meeting: its name and the remove button on one line, then the fields at full width. */
+.meeting {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: var(--space-3);
+}
+.meeting > * {
+  min-width: 0;
+}
+.meetingHead,
+.wide {
+  grid-column: 1 / -1;
+}
+.meetingHead {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+  min-block-size: var(--control-height-sm);
+}
+.meetingName {
+  color: var(--text-secondary);
+  font-size: var(--text-sm);
+  font-weight: 500;
+}
+
+.remove {
+  color: var(--text-secondary);
+}
+
+@media (pointer: coarse) {
+  .remove {
+    min-block-size: 44px;
+    min-inline-size: 44px;
+  }
+}
+
+.alertActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  margin-block-start: var(--space-2);
+}
+
+/* Fixed at the bottom of the drawer's scroll area; the fields scroll under it.
+   Two equal columns in DOM order: Cancel at the inline start, the primary action at the end. */
+.foot {
+  position: sticky;
+  z-index: 1;
+  inset-block-end: 0;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-3);
+  padding-block: var(--space-4);
+  border-block-start: 1px solid var(--border-subtle);
+  background: var(--surface-raised);
+  /* Sticky stops at the panel's bottom padding; this covers the fields that scroll through it. */
+  box-shadow: 0 var(--space-6) 0 0 var(--surface-raised);
+}
+.foot > * {
+  min-width: 0;
+}
+.footWide {
+  grid-column: 1 / -1;
+}
+.hold {
+  inline-size: 100%;
+}
+/* The panel that scrolls the form keeps a focused field clear of the footer. */
+:has(> .form) {
+  scroll-padding-block-end: 16rem;
+}

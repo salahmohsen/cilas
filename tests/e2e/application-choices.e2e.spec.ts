@@ -15,9 +15,7 @@ test('applies to two cycle courses with separate answers and contributions', asy
 }, testInfo) => {
   test.setTimeout(90_000)
   const [writing, film] = fixture.courses
-  await page.goto(
-    `${process.env.E2E_BASE_URL ?? 'http://localhost:3000'}/en/study/${writing.slug}/apply`,
-  )
+  await page.goto(`/en/study/${writing.slug}/apply`)
   await expect(page.getByRole('checkbox', { name: 'Writing', exact: true })).toBeChecked()
   await expect(page.getByRole('textbox', { name: 'Why film?' })).toHaveCount(0)
   await page.getByRole('textbox', { name: 'Name', exact: true }).fill('Choice applicant')

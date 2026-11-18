@@ -1,5 +1,6 @@
 .group {
   display: inline-flex;
+  max-width: 100%;
   align-items: stretch;
   border: 1px solid var(--foreground);
   border-radius: var(--radius-control);
@@ -27,10 +28,14 @@
 .primary {
   position: relative;
   display: inline-grid;
+  /* A track that can shrink, so a long label is cut instead of widening the button past its row. */
+  grid-template-columns: minmax(0, auto);
+  min-width: 0;
   min-height: var(--control-height-md);
   place-items: center;
   padding: 0 var(--space-4);
-  border-radius: calc(var(--radius-control) - 1px) 0 0 calc(var(--radius-control) - 1px);
+  border-start-start-radius: calc(var(--radius-control) - 1px);
+  border-end-start-radius: calc(var(--radius-control) - 1px);
   font-size: var(--text-sm);
   font-weight: 500;
 }
@@ -38,6 +43,9 @@
 .primarySlot {
   display: inline-flex;
   min-width: 0;
+  max-width: 100%;
+  /* Never wider than the button, even while letters morph; the letters may still rise and fall. */
+  overflow-x: clip;
   align-items: center;
 }
 .primarySlot[data-morphing] {
@@ -46,6 +54,7 @@
 .primaryContent {
   display: inline-flex;
   flex: none;
+  max-width: 100%;
   align-items: center;
   gap: var(--space-2);
   white-space: nowrap;
@@ -70,13 +79,21 @@
 .glyph {
   display: inline-block;
 }
+/* A label that has not changed: whole text, cut with an ellipsis when the button is narrow. */
+.label {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
 .trigger {
   display: grid;
   width: 38px;
   min-height: var(--control-height-md);
   place-items: center;
-  border-left: 1px solid color-mix(in oklab, var(--background) 18%, var(--foreground));
-  border-radius: 0 calc(var(--radius-control) - 1px) calc(var(--radius-control) - 1px) 0;
+  border-inline-start: 1px solid color-mix(in oklab, var(--background) 18%, var(--foreground));
+  border-start-end-radius: calc(var(--radius-control) - 1px);
+  border-end-end-radius: calc(var(--radius-control) - 1px);
 }
 .chevron {
   transition: transform var(--duration-spring) var(--ease-spring);
@@ -117,14 +134,16 @@
 }
 .secondary .primary {
   min-width: 142px;
-  border-radius: var(--radius-pill) 0 0 var(--radius-pill);
+  border-start-start-radius: var(--radius-pill);
+  border-end-start-radius: var(--radius-pill);
   padding-inline: var(--space-3);
   font-size: var(--text-xs);
 }
 .secondary .trigger {
   width: 32px;
-  border-left-color: var(--border-subtle);
-  border-radius: 0 var(--radius-pill) var(--radius-pill) 0;
+  border-inline-start-color: var(--border-subtle);
+  border-start-end-radius: var(--radius-pill);
+  border-end-end-radius: var(--radius-pill);
 }
 .secondary .primary:active:not(:disabled),
 .secondary .trigger:active:not(:disabled),
@@ -133,6 +152,13 @@
 }
 .icon {
   display: inline-flex;
+}
+/* Without a menu, the main action is the whole button. */
+.primary:only-child {
+  border-radius: calc(var(--radius-control) - 1px);
+}
+.secondary .primary:only-child {
+  border-radius: var(--radius-pill);
 }
 .srOnly {
   position: absolute;

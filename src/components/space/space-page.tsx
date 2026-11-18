@@ -14,7 +14,7 @@ import type { FilterChip, FilterField } from '@/components/arc/filter-toolbar/fi
 import { localDigits } from '@/lib/digits'
 import { EmptyState } from '@/components/arc/empty-state/empty-state'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/arc/tabs/tabs'
-import type { Course, Programme, Space, User } from '@/payload-types'
+import type { User } from '@/payload-types'
 import { linkTitles } from '@/lib/link-preview'
 import { pageAddresses, threadTexts } from '@/lib/link-title'
 import { introGates, membership } from '@/lib/spaces'
@@ -25,7 +25,8 @@ import {
   postingAllows,
   type ComposerKind,
 } from '@/lib/space-rules'
-import { CourseSyllabus, directionOf, textOf } from '@/components/course/course-syllabus'
+import { CourseSyllabus, syllabusOf } from '@/components/course/course-syllabus'
+import { directionOf, textOf } from '@/lib/course-language'
 import { RichTextField } from '@/components/RichTextField'
 import { RichTextScope } from '@/components/rich-text-scope'
 import { profileMessages } from '@/components/profile/load-messages'
@@ -33,7 +34,7 @@ import { readProfile } from '@/lib/profile'
 import { StudyWithAI } from '@/components/study-with-ai'
 import { AIInstructions } from '@/components/ai-instructions'
 import { cairoDay } from '@/lib/cairo-day'
-import { nextSession } from '@/lib/schedule'
+import { numberedSessions, upcomingSession } from '@/lib/meetings'
 import {
   COMMUNITY_COVER,
   coverOf,
@@ -44,15 +45,20 @@ import {
   spaceFeed,
   sessionCounts,
   spaceNotice,
+  type SpaceLanding,
 } from '@/lib/spaces-data'
 import { visitRecord } from '@/lib/spaces-write'
+import { sessionDrawerHref } from '@/lib/session-drawer-url'
 
+import { SpaceViews } from './space-views'
+import { SpaceCalendar } from './space-calendar'
+import { SessionDrawerHost, SessionLink } from './session-drawer-host'
+import { sessionPostsHref } from './session-chip'
 import { AboutClamp } from './about-clamp'
 import { Composer } from './composer'
-import { oldSyllabus } from './old-syllabus'
 import { sessionOptions } from './session-options'
 import { EventList } from './event-list'
-import { FeedFilter, FeedFilterMenu, SpaceFeedFilters } from './feed-filter'
+import { FeedFilterMenu, SpaceFeedFilters } from './feed-filter'
 import { StableOrder } from './stable-order'
 import { FeedRow, type FeedContext } from './feed-row'
 import { FreshPosts } from './fresh-posts'
@@ -70,7 +76,7 @@ import { SpaceRail } from './space-rail'
 import { StickyRail } from './sticky-rail'
 import styles from './space.module.css'
 
-export type SpaceTab = 'all' | 'announcements' | 'syllabus' | 'events'
+export type SpaceTab = 'all' | 'announcements' | 'syllabus' | 'calendar' | 'events'
 
 /** NN/g: "Load more" in batches, never an endless feed. */
 const BATCH = 20
@@ -78,7 +84,7 @@ const BATCH = 20
 type SpacePageProps = {
   locale: string
   user: User
-  landing: { space: Space; course?: Course; programme?: Programme }
+  landing: SpaceLanding
   tab: SpaceTab
   /** How many posts the reader has loaded so far. */
   shown: number
@@ -172,7 +178,7 @@ export async function SpacePage({
   const descriptionText = textOf(description).replace(/\s+/g, ' ').trim()
   const defaultAbout =
     descriptionText ||
-    landing.course?.summary ||
+    landing.course?.subtitle ||
     landing.programme?.tagline ||
     (space.kind === 'community'
       ? t(
@@ -246,7 +252,7 @@ export async function SpacePage({
   const course = landing.course
   const cover = coverOf(course ?? landing.programme)
   const announcements = feed.rows.filter((r) => r.post.kind === 'announcement')
-  const view = tab === 'syllabus' && !course ? 'all' : tab
+  const view = (tab === 'syllabus' || tab === 'calendar') && !course ? 'all' : tab
   // How many posts are about each session (linked, or named in the post or
   // its thread), from the rows the feed already read.
   const { named, counts: linked } = sessionCounts(feed.rows)
@@ -414,9 +420,9 @@ export async function SpacePage({
   )
   // After the last session there is none to show.
   const next = course
-    ? nextSession(course.schedule, course.sessions, cairoDay(new Date()) ?? '')
+    ? upcomingSession(numberedSessions(course.sessions), cairoDay(new Date()) ?? '')
     : null
-  const nextId = next?.session.id
+  const nextId = next ? String(next.session.id) : null
   const nextCard = (titled: boolean) =>
     course && nextId ? (
       <NextSession
@@ -522,7 +528,8 @@ export async function SpacePage({
           )}
         </article>
       </header>
-      <div className={styles.layout}>
+      {/* The Calendar tab takes the full width: its side panel's Up next stands in for the rail. */}
+      <div className={styles.layout} data-wide={view === 'calendar' ? '' : undefined}>
         <main className={styles.feed} aria-label={title}>
           {course && nextId && <div className={styles.phoneBlock}>{nextCard(true)}</div>}
           <OnboardingChecklist
@@ -558,44 +565,49 @@ export async function SpacePage({
             />
           )}
           <div className={styles.feedBar}>
-            <FeedFilter
-              path={path}
-              value={view}
-              label={t('filterLabel')}
-              options={[
-                { value: 'all', label: t('all') },
-                { value: 'announcements', label: t('announcements') },
-                ...(course ? [{ value: 'syllabus', label: t('syllabus') }] : []),
-                { value: 'events', label: t('events') },
-              ]}
-            />
+            <SpaceViews path={path} value={view} hasCourse={Boolean(course)} />
             {feedFilters && <FeedFilterMenu fields={filterFields} filters={filterChips} />}
           </div>
           {/* The filters set have a row of their own under the view switch, the feed's width. */}
           {feedFilters && <SpaceFeedFilters filters={filterChips} />}
           {view === 'syllabus' && course ? (
-            course.sessions?.length ? (
+            course.sessions.length ? (
               <CourseSyllabus
                 course={course}
-                sessions={oldSyllabus(course)}
+                sessions={syllabusOf(course.sessions)}
                 decorate={(entry) => {
                   const count = linked.get(entry.id) ?? 0
-                  if (!count) return entry
                   return {
                     ...entry,
-                    meta: {
-                      ...entry.meta,
-                      extra: [...(entry.meta?.extra ?? []), t('sessionPostCount', { count })],
-                    },
+                    meta: count
+                      ? {
+                          ...entry.meta,
+                          extra: [...(entry.meta?.extra ?? []), t('sessionPostCount', { count })],
+                        }
+                      : entry.meta,
+                    // Every row opens, so a session with no text still reaches its drawer.
                     body: (
                       <>
                         {entry.body}
-                        <a
-                          className={styles.sessionPosts}
-                          href={`${path}?${new URLSearchParams({ session: entry.id })}`}
+                        <div
+                          className={`${styles.sessionDrawerActions} ${styles.sessionRowActions}`}
                         >
-                          {t('sessionPostsSee', { count })}
-                        </a>
+                          <SessionLink
+                            id={entry.id}
+                            href={sessionDrawerHref(`${path}?tab=syllabus`, entry.id)}
+                            className={styles.sessionPosts}
+                          >
+                            {tp('sessionOpen')}
+                          </SessionLink>
+                          {count > 0 && (
+                            <a
+                              className={styles.sessionPosts}
+                              href={sessionPostsHref(path, entry.id)}
+                            >
+                              {t('sessionPostsSee', { count })}
+                            </a>
+                          )}
+                        </div>
                       </>
                     ),
                   }
@@ -604,6 +616,10 @@ export async function SpacePage({
             ) : (
               <EmptyState title={t('noSyllabus')} description={t('noSyllabusHint')} />
             )
+          ) : view === 'calendar' && course ? (
+            <div className={styles.wideSlot}>
+              <SpaceCalendar id={space.id} courseId={course.id} locale={locale} spaceHref={path} />
+            </div>
           ) : view === 'events' ? (
             <EventList
               upcoming={events.upcoming}
@@ -704,6 +720,7 @@ export async function SpacePage({
   return (
     <RichTextScope data={course} locale={locale} user={user}>
       {content}
+      <SessionDrawerHost />
     </RichTextScope>
   )
 }

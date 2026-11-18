@@ -166,7 +166,6 @@ describe('course flow import', () => {
     expect(result).toEqual({ courses: 2, sessions: 4, skipped: [] })
 
     const c = await find('english')
-    expect(c.session_unit).toBe('week')
     expect(c.sessions?.map((s) => [s.order, s.session_title, s.meetings ?? null])).toEqual([
       [1, 'Walking the city', null],
       [2, 'Mapping', 2],
@@ -212,7 +211,6 @@ describe('course flow import', () => {
     expect(headings(ar)).toBe(0)
 
     const en = await find('arabic', 'en')
-    expect(en.session_unit).toBe('session')
     expect(en.sessions).toHaveLength(2)
     expect(en.sessions?.map((s) => s.id)).toEqual(ar.sessions?.map((s) => s.id))
     // The English side is not given the Arabic notes.

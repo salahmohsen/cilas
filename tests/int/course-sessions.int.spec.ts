@@ -1,6 +1,8 @@
 // @vitest-environment node
+import { revalidatePath, revalidateTag } from 'next/cache'
 import { getPayload, type Payload } from 'payload'
-import { afterAll, beforeAll, describe, expect, it } from 'vitest'
+import { Client } from 'typesense'
+import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest'
 
 import { getCourseSessions } from '@/api/sessions.api'
 import config from '@/payload.config'
@@ -8,11 +10,19 @@ import type { User } from '@/payload-types'
 
 import { createTracker, uniq, uniqEmail } from './fixtures'
 
+// Outside Next, these throw and the hooks swallow it; mocked, the test sees them.
+vi.mock('next/cache', async (original) => ({
+  ...(await original<typeof import('next/cache')>()),
+  revalidatePath: vi.fn(),
+  revalidateTag: vi.fn(),
+}))
+
 /**
  * The sessions collection against the database (ADR 0011): read access
  * follows the course, fellows edit their own course's sessions, a session
- * save keeps the course's days without publishing its pending draft, and
- * deleting a course deletes its sessions.
+ * save keeps the course's days without publishing its pending draft, drops
+ * the course from the cache and re-indexes it in search, and deleting a
+ * course deletes its sessions.
  */
 
 let payload: Payload
@@ -34,7 +44,6 @@ const course = async (fellows: number[], status: 'draft' | 'published', cycle: n
         title: `Sessions probe ${status}`,
         slug: uniq(`sessions-probe-${status}`),
         course_type: 'THEMATIC',
-        session_unit: 'session',
         tier: 'public',
         cycle,
         fellows,
@@ -209,4 +218,76 @@ describe('sessions', () => {
     })
     expect(totalDocs).toBe(0)
   })
+})
+
+describe('a session save refreshes its course', () => {
+  const search = new Client({
+    apiKey: process.env.TYPESENSE_API_KEY ?? '',
+    nodes: [
+      {
+        host: process.env.TYPESENSE_HOST ?? 'localhost',
+        port: Number(process.env.TYPESENSE_PORT ?? 8108),
+        protocol: process.env.TYPESENSE_PROTOCOL ?? 'http',
+      },
+    ],
+  })
+  /** The course's search document, once `ready` holds for it (index writes run after the save). */
+  const indexed = async (id: number, ready: (document: string) => boolean) => {
+    for (let tries = 0; tries < 50; tries++) {
+      const document = JSON.stringify(
+        await search.collections('courses').documents(String(id)).retrieve(),
+      )
+      if (ready(document)) return document
+      await new Promise((resolve) => setTimeout(resolve, 100))
+    }
+    throw new Error(`courses/${id} never reached the expected search document`)
+  }
+  const days = async (id: number) => {
+    const { first_day, last_day } = await payload.findByID({
+      collection: 'courses',
+      id,
+      depth: 0,
+      overrideAccess: true,
+    })
+    return { first_day, last_day }
+  }
+
+  it.skipIf(!process.env.TYPESENSE_API_KEY)(
+    'keeps the days, the cache and the search index of a published course current',
+    async () => {
+      const cycle = (
+        await payload.find({ collection: 'cycles', limit: 1, depth: 0, overrideAccess: true })
+      ).docs[0]!.id
+      const id = await course([], 'published', cycle)
+      const { slug } = await payload.findByID({ collection: 'courses', id, depth: 0 })
+      const title = uniq('Indexed session')
+      expect(await days(id)).toEqual({ first_day: null, last_day: null })
+
+      const made = await payload.create({
+        collection: 'sessions',
+        data: { course: id, title, meetings: [{ date: '2035-03-03' }] },
+        overrideAccess: true,
+      })
+      expect(await days(id)).toEqual({ first_day: '2035-03-03', last_day: '2035-03-03' })
+      await indexed(id, (document) => document.includes(title))
+
+      vi.mocked(revalidateTag).mockClear()
+      vi.mocked(revalidatePath).mockClear()
+      await payload.update({
+        collection: 'sessions',
+        id: made.id,
+        data: { meetings: [{ date: '2035-03-10', start_time: '19:00', end_time: '21:00' }] },
+        overrideAccess: true,
+      })
+      expect(await days(id)).toEqual({ first_day: '2035-03-10', last_day: '2035-03-10' })
+      // The tag of the cached lists, the calendar among them (`getCachedCalendarItems`).
+      expect(revalidateTag).toHaveBeenCalledWith('courses', { expire: 0 })
+      expect(revalidatePath).toHaveBeenCalledWith(`/en/study/${slug}`)
+      expect(revalidatePath).toHaveBeenCalledWith(`/ar/study/${slug}`)
+
+      await payload.delete({ collection: 'sessions', id: made.id, overrideAccess: true })
+      expect(await days(id)).toEqual({ first_day: null, last_day: null })
+      await indexed(id, (document) => !document.includes(title))
+    },
+  )
 })

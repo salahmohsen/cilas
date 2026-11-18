@@ -1,13 +1,6 @@
 import { describe, expect, it } from 'vitest'
 
-import {
-  expandSchedule,
-  isOnCalendar,
-  nextSession,
-  scheduleEndDate,
-  type Schedule,
-  type SessionDates,
-} from '@/lib/schedule'
+import { expandSchedule, isOnCalendar, type Schedule, type SessionDates } from '@/lib/schedule'
 
 // 3 March 2026 is a Tuesday.
 const tueThu: Schedule = {
@@ -33,7 +26,6 @@ describe('single event schedules', () => {
     expect(expandSchedule(screening)).toEqual([
       { date: '2026-10-29', start_time: '19:00', end_time: '21:00' },
     ])
-    expect(scheduleEndDate(screening)).toBe('2026-10-29')
     expect(isOnCalendar(screening)).toBe(true)
   })
 
@@ -243,33 +235,6 @@ describe('expandSchedule edge cases', () => {
       ]),
     ).toEqual([{ date: '2026-03-21', start_time: '10:00', end_time: '12:00', session: 1 }])
   })
-
-  it('has no end date when every meeting is cancelled', () => {
-    expect(scheduleEndDate(tueThu, [{ cancelled: true }, { cancelled: true }])).toBeNull()
-  })
-})
-
-describe('scheduleEndDate', () => {
-  it('is the last meeting day', () => {
-    expect(scheduleEndDate(tueThu)).toBe('2026-03-12')
-  })
-
-  it('ignores cancelled meetings', () => {
-    expect(scheduleEndDate(tueThu, [{}, { cancelled: true }])).toBe('2026-03-05')
-  })
-
-  it('follows moved session dates', () => {
-    expect(
-      scheduleEndDate(tueThu, [
-        {},
-        { dates: [{ date: '2026-03-28', start_time: '10:00', end_time: '12:00' }] },
-      ]),
-    ).toBe('2026-03-28')
-  })
-
-  it('is null with no meetings', () => {
-    expect(scheduleEndDate({ ...tueThu, slots: [] })).toBeNull()
-  })
 })
 
 describe('isOnCalendar', () => {
@@ -285,29 +250,5 @@ describe('isOnCalendar', () => {
   it('keeps empty schedules off the calendar', () => {
     expect(isOnCalendar({ ...tueThu, start_date: null })).toBe(false)
     expect(isOnCalendar(null)).toBe(false)
-  })
-})
-
-describe('nextSession', () => {
-  const schedule: Schedule = {
-    start_date: '2026-03-02',
-    start_precision: 'day',
-    weeks: 3,
-    slots: [{ weekday: 'mon', start_time: '18:00', end_time: '20:00' }],
-  }
-  const sessions = [{ order: 1 }, { order: 2, cancelled: true }, { order: 3 }]
-
-  it('is the first session on or after today', () => {
-    expect(nextSession(schedule, sessions, '2026-03-01')?.index).toBe(0)
-    expect(nextSession(schedule, sessions, '2026-03-02')?.index).toBe(0)
-  })
-
-  it('skips a cancelled session', () => {
-    expect(nextSession(schedule, sessions, '2026-03-03')?.index).toBe(2)
-  })
-
-  it('is null after the last meeting, or without sessions', () => {
-    expect(nextSession(schedule, sessions, '2026-03-17')).toBeNull()
-    expect(nextSession(schedule, [], '2026-03-01')).toBeNull()
   })
 })

@@ -1,4 +1,6 @@
 import { PREVIEW_COLLECTIONS } from '@/lib/preview-url'
+import { en } from '@payloadcms/translations/languages/en'
+import { ar } from '@payloadcms/translations/languages/ar'
 import { postgresAdapter } from '@payloadcms/db-postgres'
 import { lexicalEditor } from '@payloadcms/richtext-lexical'
 import { BUCKET_PREFIXES } from '@/lib/storage-usage'
@@ -61,6 +63,7 @@ import { syncStatus } from './forms/application-status'
 import { requireTurnstile } from './forms/spam-check'
 import { redirectsPlugin } from '@payloadcms/plugin-redirects'
 import { seoPlugin } from '@payloadcms/plugin-seo'
+import { seoTabFor } from '@/lib/seo-tab'
 import type {
   GenerateDescription,
   GenerateImage,
@@ -265,6 +268,7 @@ export default buildConfig({
   },
   // The few admin strings that still name Payload.
   i18n: {
+    supportedLanguages: { en, ar },
     translations: {
       en: {
         general: { payloadSettings: 'Admin settings' },
@@ -391,6 +395,8 @@ export default buildConfig({
       generateImage,
       generateURL,
     }),
+    // The course form keeps its SEO settings in a tab of their own.
+    seoTabFor(['courses']),
     redirectsPlugin({
       collections: [
         'courses',

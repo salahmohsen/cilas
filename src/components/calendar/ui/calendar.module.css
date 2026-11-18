@@ -1,0 +1,1683 @@
+.root {
+  container: week / inline-size;
+  --hour-size: 3.5rem;
+  --gutter: 4rem;
+  color: var(--foreground);
+  font-family: var(--font-body);
+  font-size: var(--text-sm);
+  line-height: var(--leading-body);
+}
+
+.moveDialog {
+  position: fixed;
+  inset: 0;
+  box-sizing: border-box;
+  block-size: fit-content;
+  inline-size: min(28rem, calc(100% - 2rem));
+  max-block-size: calc(100% - 2rem);
+  overflow-y: auto;
+  margin: auto;
+  padding: var(--space-6);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-surface);
+  background: var(--surface-raised);
+  color: var(--foreground);
+  font-family: var(--font-body);
+  overscroll-behavior: contain;
+}
+.moveDialog::backdrop {
+  background: color-mix(in oklab, var(--foreground) 25%, transparent);
+  overflow: hidden;
+  overscroll-behavior: contain;
+}
+.moveForm {
+  display: grid;
+  gap: var(--space-4);
+  margin-block-start: var(--space-4);
+}
+.moveActions {
+  display: flex;
+  gap: var(--space-2);
+}
+
+/* A tone is a set of calendar tokens from foundation.css; a tone without tokens is neutral. */
+.root [data-tone] {
+  --tone-solid: var(--calendar-neutral);
+  --tone-fill: var(--calendar-neutral-fill);
+  --tone-line: var(--calendar-neutral-line);
+  --tone-hatch: var(--calendar-neutral-hatch);
+}
+.root [data-tone='yellow'] {
+  --tone-solid: var(--calendar-yellow);
+  --tone-fill: var(--calendar-yellow-fill);
+  --tone-line: var(--calendar-yellow-line);
+  --tone-hatch: var(--calendar-yellow-hatch);
+}
+.root [data-tone='blue'] {
+  --tone-solid: var(--calendar-blue);
+  --tone-fill: var(--calendar-blue-fill);
+  --tone-line: var(--calendar-blue-line);
+  --tone-hatch: var(--calendar-blue-hatch);
+}
+.root [data-tone='pink'] {
+  --tone-solid: var(--calendar-pink);
+  --tone-fill: var(--calendar-pink-fill);
+  --tone-line: var(--calendar-pink-line);
+  --tone-hatch: var(--calendar-pink-hatch);
+}
+.root [data-tone='green'] {
+  --tone-solid: var(--calendar-green);
+  --tone-fill: var(--calendar-green-fill);
+  --tone-line: var(--calendar-green-line);
+  --tone-hatch: var(--calendar-green-hatch);
+}
+
+/* Titles in the tone, mixed toward the text colour so they keep their contrast on the tint. */
+.root [data-tone] {
+  --tone-ink: color-mix(in oklab, var(--tone-line) 80%, var(--foreground));
+}
+
+.frame {
+  --narrow: 0;
+  --docked: 0;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--space-3);
+}
+
+/* The calendar's surface: the toolbar over the grid, and the side panel beside it when open. */
+.layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-areas:
+    'toolbar'
+    'main'
+    'panel';
+  border: 1px solid var(--border);
+  border-radius: var(--radius-surface);
+  background: var(--surface);
+  overflow: clip;
+}
+.main {
+  grid-area: main;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  min-inline-size: 0;
+}
+.panel {
+  grid-area: panel;
+  min-inline-size: 0;
+  border-block-start: 1px solid var(--border);
+}
+/* The panel open by default (`auto`) shows only where it sits beside the grid. */
+.layout[data-panel='auto'] .panel {
+  display: none;
+}
+@container week (inline-size > 56rem) {
+  .frame {
+    --docked: 1;
+  }
+  .layout[data-panel] {
+    grid-template-columns: minmax(0, 1fr) 17rem;
+    grid-template-areas:
+      'toolbar toolbar'
+      'main panel';
+  }
+  .layout[data-panel='auto'] .panel {
+    display: block;
+  }
+  .panel {
+    border-block-start: 0;
+    border-inline-start: 1px solid var(--border);
+  }
+}
+
+.views {
+  display: flex;
+  min-inline-size: 0;
+}
+.views[data-width='narrow'] {
+  display: none;
+}
+
+.header {
+  grid-area: toolbar;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: var(--space-2) var(--space-3);
+  padding: var(--space-3) var(--space-4);
+  border-block-end: 1px solid var(--border);
+}
+.heading {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0 var(--space-2);
+  margin: 0;
+  min-inline-size: 0;
+}
+.months {
+  white-space: nowrap;
+  font-size: var(--text-lg);
+  font-weight: 500;
+  letter-spacing: var(--tracking-body);
+}
+.week {
+  color: var(--text-secondary);
+  font-size: var(--text-sm);
+  white-space: nowrap;
+}
+.controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2);
+}
+.arrows {
+  display: flex;
+  align-items: center;
+}
+.panelToggle {
+  display: inline-grid;
+  place-items: center;
+  inline-size: var(--control-height-sm);
+  block-size: var(--control-height-sm);
+  padding: 0;
+  border: 1px solid transparent;
+  border-radius: var(--radius-control);
+  background: transparent;
+  color: var(--text-secondary);
+  cursor: pointer;
+}
+.panelToggle:hover {
+  background: var(--surface-muted);
+  color: var(--foreground);
+}
+.panelToggle[aria-expanded='true'] {
+  border-color: var(--border-strong);
+  background: var(--surface-muted);
+  color: var(--foreground);
+}
+
+.panelBody {
+  display: grid;
+  align-content: start;
+  gap: var(--space-6);
+  padding: var(--space-4);
+}
+.panelSection {
+  display: grid;
+  gap: var(--space-2);
+}
+.panelTitle,
+.trayTitle {
+  margin: 0;
+  color: var(--text-secondary);
+  font-size: var(--text-sm);
+  font-weight: 500;
+}
+.next {
+  display: grid;
+  gap: 0.125rem;
+  padding: var(--space-3);
+  border: 0;
+  border-radius: calc(var(--radius-surface) - var(--space-3));
+  background: var(--tone-fill);
+  color: var(--foreground);
+  font: inherit;
+  text-align: start;
+  cursor: pointer;
+}
+.nextTitle {
+  color: var(--tone-ink);
+  font-weight: 500;
+}
+.nextWhen {
+  color: var(--text-secondary);
+  font-size: var(--text-xs);
+  font-variant-numeric: tabular-nums;
+}
+
+.dayHead {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2);
+}
+.dayTitle {
+  margin: 0;
+  font-family: inherit;
+  text-align: start;
+  font-size: var(--text-base);
+  font-weight: 500;
+  line-height: 1.4;
+}
+.todayMark {
+  padding: 0 var(--space-2);
+  border-radius: 999px;
+  background: var(--foreground);
+  color: var(--background);
+  font-size: var(--text-xs);
+  line-height: 1.6;
+}
+.dayCount,
+.dayEmpty {
+  margin: 0;
+  color: var(--text-secondary);
+  font-size: var(--text-sm);
+}
+.dayRows {
+  display: grid;
+  gap: var(--space-2);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.dayRows > li > .next {
+  inline-size: 100%;
+}
+.dayRows .next[data-cancelled] .nextTitle {
+  text-decoration: line-through;
+}
+.panelDetails {
+  display: grid;
+  gap: var(--space-3);
+}
+/* In the panel the picture sits inside its padding, with its own corners. */
+.panelDetails .detailsImage {
+  margin: 0;
+  border-radius: calc(var(--radius-surface) - var(--space-3));
+  border-end-start-radius: 0;
+  border-end-end-radius: 0;
+}
+.back {
+  display: inline-flex;
+  align-items: center;
+  justify-self: start;
+  gap: var(--space-1);
+  min-block-size: var(--control-height-sm);
+  margin-inline-start: calc(var(--space-2) * -1);
+  padding-inline: var(--space-2);
+  border: 0;
+  border-radius: var(--radius-control);
+  background: transparent;
+  color: var(--text-secondary);
+  font: inherit;
+  font-size: var(--text-sm);
+  cursor: pointer;
+}
+.back:hover {
+  background: var(--surface-muted);
+  color: var(--foreground);
+}
+
+.legend {
+  display: grid;
+  gap: 2px;
+  margin-inline: calc(var(--space-2) * -1);
+  color: var(--foreground);
+}
+.legendNote,
+.legendKind {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  min-block-size: 2rem;
+  padding-inline: var(--space-2);
+}
+/* A kind is a toggle: pressed shows its items. Off, its swatch empties and its name dims. */
+.legendKind {
+  border: 0;
+  border-radius: var(--radius-control);
+  background: transparent;
+  color: var(--foreground);
+  font: inherit;
+  text-align: start;
+  cursor: pointer;
+  transition: color var(--duration-fast) var(--ease-standard);
+}
+.legendKind:hover {
+  background: var(--surface-muted);
+}
+.legendKind .swatch {
+  background: var(--tone-solid);
+  transition: background-color var(--duration-fast) var(--ease-standard);
+}
+.legendKind[aria-pressed='false'] {
+  color: var(--text-secondary);
+}
+.legendKind[aria-pressed='false'] .swatch {
+  background: transparent;
+}
+
+.swatch {
+  inline-size: 0.75rem;
+  block-size: 0.75rem;
+  border: 1px solid var(--tone-line);
+  border-radius: 0.2rem;
+  background: var(--tone-fill);
+}
+.swatch[data-cancelled] {
+  background: repeating-linear-gradient(135deg, transparent 0 2px, var(--tone-hatch) 2px 3px);
+}
+.swatch[data-marked] {
+  box-shadow: 0 0 0 2px var(--foreground);
+}
+
+/* The hours of an edit grid scroll in an area of fixed height, so 18 hours do
+   not make the page tall. The units are dvh, so a phone's toolbars do not hide the bottom. */
+.grid[data-scroll] {
+  block-size: clamp(22rem, 70dvh, 48rem);
+  overflow-y: auto;
+}
+.dayRow,
+.allDayRow,
+.rows {
+  display: grid;
+  grid-template-columns: var(--gutter) repeat(var(--days, 7), minmax(0, 1fr));
+}
+.grid[data-scroll] .head {
+  position: sticky;
+  inset-block-start: 0;
+  z-index: 4;
+  background: var(--surface);
+}
+
+.corner,
+.allDayLabel,
+.hour {
+  color: var(--text-muted);
+  font-size: var(--text-xs);
+  line-height: 1;
+}
+.corner {
+  align-self: end;
+  padding: var(--space-2);
+  line-height: var(--leading-body);
+}
+
+.dayHead {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.125rem;
+  padding: var(--space-2) var(--space-1);
+}
+.dayName {
+  color: var(--text-secondary);
+  font-size: var(--text-xs);
+}
+.dayNumber {
+  display: grid;
+  place-items: center;
+  min-inline-size: 2.25rem;
+  block-size: 2.25rem;
+  padding-inline: var(--space-1);
+  border-radius: var(--radius-pill);
+  font-size: var(--text-xl);
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+}
+.dayHead[data-today] .dayNumber {
+  background: var(--foreground);
+  color: var(--background);
+}
+
+/* All-day bars: each takes its days' columns and the first free lane (`allDayBars`). */
+.allDayRow {
+  grid-template-rows: repeat(var(--lanes), auto);
+  border-block-start: 1px solid var(--border);
+}
+.allDayLabel {
+  grid-column: 1;
+  grid-row: 1 / -1;
+  padding: var(--space-2);
+  line-height: var(--leading-body);
+}
+.allDay {
+  grid-column: var(--column);
+  grid-row: 1 / -1;
+  min-block-size: 2rem;
+  border-inline-start: 1px solid var(--border-subtle);
+}
+.pill {
+  z-index: 1;
+  grid-column: var(--from) / var(--to);
+  grid-row: var(--lane);
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  min-inline-size: 0;
+  margin: 2px 3px;
+  padding: 0.125rem var(--space-2);
+  border: 1px solid transparent;
+  border-radius: 0.375rem;
+  background: var(--tone-fill);
+  background-clip: padding-box;
+  color: var(--tone-ink);
+  font: inherit;
+  font-weight: 500;
+  text-align: start;
+  cursor: pointer;
+}
+.pillTitle {
+  flex: 1;
+  min-inline-size: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.pill[data-unsaved] {
+  border-style: dashed;
+  border-color: var(--tone-line);
+}
+.pill[data-deleted] {
+  border-style: dashed;
+  border-color: var(--border-strong);
+  background: var(--surface);
+  opacity: 0.75;
+}
+.pillState {
+  display: inline-flex;
+  align-items: center;
+  flex: none;
+  gap: 0.25rem;
+  color: var(--foreground);
+}
+/* The "⋯" is a pointer's way to the block menu, as on a timed block; the keyboard has Shift+F10.
+   Sizes are in px: Payload's admin sets its own root font size, so rem would shrink them. */
+.pillMore {
+  display: none;
+  flex: none;
+  place-items: center;
+  inline-size: 18px;
+  block-size: 18px;
+  border-radius: var(--radius-pill);
+  background: var(--surface);
+  color: var(--foreground);
+}
+.pill:focus .pillMore {
+  display: grid;
+}
+@media (hover: hover) {
+  .pill:hover .pillMore {
+    display: grid;
+  }
+}
+@media (pointer: coarse) {
+  .pillMore {
+    display: grid;
+    inline-size: 28px;
+    block-size: 28px;
+  }
+}
+.pill[data-cancelled],
+.monthBar[data-cancelled] {
+  background:
+    repeating-linear-gradient(
+      135deg,
+      transparent 0 0.3rem,
+      var(--tone-hatch) 0.3rem calc(0.3rem + 1px)
+    ),
+    var(--tone-fill);
+  background-clip: padding-box;
+}
+
+/* Friday, the weekend day, is shaded. */
+[data-weekend]:is(.dayHead, .allDay, .track, .monthWeekday, .monthDay) {
+  background-color: color-mix(in oklab, var(--surface-muted) 55%, transparent);
+}
+
+.rows {
+  position: relative;
+}
+.hours {
+  border-block-start: 1px solid var(--border-subtle);
+}
+.hour {
+  display: block;
+  block-size: var(--hour-size);
+  padding-inline: var(--space-2);
+  text-align: end;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+  transform: translateY(-0.5em);
+}
+.hour:first-child {
+  transform: translateY(0.25em);
+}
+
+.track {
+  position: relative;
+  isolation: isolate;
+  block-size: calc(var(--hours) * var(--hour-size));
+  border-block-start: 1px solid var(--border-subtle);
+  border-inline-start: 1px solid var(--border-subtle);
+  background-image: repeating-linear-gradient(
+    to bottom,
+    var(--border-subtle) 0 1px,
+    transparent 1px var(--hour-size)
+  );
+}
+
+.block {
+  position: absolute;
+  box-sizing: border-box;
+  container-type: size;
+  display: flex;
+  flex-direction: column;
+  gap: 0.125rem;
+  min-inline-size: 0;
+  padding: 0;
+  border: 1px solid transparent;
+  border-radius: 0.375rem;
+  background: var(--tone-fill);
+  background-clip: padding-box;
+  color: var(--foreground);
+  font: inherit;
+  text-align: start;
+  cursor: pointer;
+  user-select: none;
+  -webkit-user-select: none;
+  /* One ring on a focused block, over its edge, never a second shape around a dashed one. */
+  --focus-outline-offset: -1px;
+}
+/* The padding is the body's: a block is its own size container, and a
+   container query styles only what is inside the container. */
+.body {
+  display: flex;
+  flex-direction: column;
+  gap: 0.125rem;
+  min-inline-size: 0;
+  min-block-size: 0;
+  overflow: hidden;
+  padding: 0.25rem var(--space-2);
+}
+.block[data-cancelled] {
+  background:
+    repeating-linear-gradient(
+      135deg,
+      transparent 0 0.5rem,
+      var(--tone-hatch) 0.5rem calc(0.5rem + 1px)
+    ),
+    var(--surface);
+  background-clip: padding-box;
+}
+/* An unsaved change in edit mode: a dashed edge in the tone. Forced colours keep it as a system colour. */
+.block[data-unsaved] {
+  border-style: dashed;
+  border-color: var(--tone-line);
+}
+
+.block[data-marked],
+.pill[data-marked] {
+  box-shadow: 0 0 0 2px var(--foreground);
+}
+@media (forced-colors: active) {
+  .block,
+  .pill {
+    border-color: CanvasText;
+  }
+  .block[data-marked],
+  .pill[data-marked],
+  .swatch[data-marked] {
+    outline: 2px solid CanvasText;
+    outline-offset: 1px;
+  }
+}
+
+.title {
+  display: block;
+  max-inline-size: calc(100% - var(--more-room, 0px));
+  color: var(--tone-ink);
+  font-weight: 500;
+  line-height: 1.25;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.time,
+.place {
+  color: var(--text-secondary);
+  font-size: var(--text-xs);
+  font-variant-numeric: tabular-nums;
+  line-height: 1.25;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+.place {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+.place svg {
+  flex: none;
+}
+.state {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  color: var(--foreground);
+  font-size: var(--text-xs);
+  font-weight: 500;
+  line-height: 1.2;
+}
+@container (max-inline-size: 8.5rem) {
+  .body {
+    padding-inline: var(--space-1);
+  }
+}
+/* A narrow block wraps its title only when it is tall enough to keep its time too. */
+@container (max-inline-size: 8.5rem) and (min-block-size: 5.5rem) {
+  .title {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+    white-space: normal;
+  }
+}
+@container (max-inline-size: 6rem) {
+  .time,
+  .place,
+  .state {
+    display: none;
+  }
+}
+@container (max-block-size: 2.75rem) {
+  .time,
+  .place,
+  .state {
+    display: none;
+  }
+}
+@container (max-block-size: 3.75rem) {
+  .place {
+    display: none;
+  }
+}
+/* Too narrow for two letters of the title: the start time, cut and never an ellipsis.
+   The block's name still gives the whole title. */
+.short {
+  display: none;
+}
+@container (max-inline-size: 2.25rem) {
+  .body {
+    padding-inline: 0.1875rem;
+  }
+  .title,
+  .time,
+  .place,
+  .state {
+    display: none;
+  }
+  .short {
+    display: block;
+    overflow: hidden;
+    color: var(--tone-ink);
+    font-size: var(--text-xs);
+    font-variant-numeric: tabular-nums;
+    font-weight: 500;
+    line-height: 1.25;
+    white-space: nowrap;
+  }
+}
+
+/* Now: a thin line across the week with the time at its start, and a dot and a strong line on today. */
+.nowLine {
+  position: absolute;
+  inset-inline: var(--gutter) 0;
+  inset-block-start: calc(var(--now) * 100%);
+  z-index: 3;
+  block-size: 0;
+  border-block-start: 1px solid color-mix(in oklab, var(--foreground) 35%, transparent);
+  pointer-events: none;
+}
+.nowPill {
+  position: absolute;
+  inset-inline-end: calc(100% + 2px);
+  inset-block-start: 0;
+  translate: 0 -50%;
+  padding: 0.0625rem 0.3125rem;
+  border-radius: var(--radius-pill);
+  background: var(--foreground);
+  color: var(--background);
+  font-size: var(--text-xs);
+  font-variant-numeric: tabular-nums;
+  line-height: 1.3;
+  white-space: nowrap;
+}
+.now {
+  position: absolute;
+  inset-inline: 0;
+  inset-block-start: calc(var(--now) * 100%);
+  z-index: -1;
+  block-size: 0;
+  border-block-start: 2px solid var(--foreground);
+  pointer-events: none;
+}
+.now::before {
+  content: '';
+  position: absolute;
+  inset-inline-start: -0.3125rem;
+  inset-block-start: -0.375rem;
+  inline-size: 0.625rem;
+  block-size: 0.625rem;
+  border-radius: var(--radius-pill);
+  background: var(--foreground);
+}
+
+.tray {
+  display: grid;
+  gap: var(--space-2);
+}
+.trayList {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.srOnly {
+  position: absolute;
+  inline-size: 1px;
+  block-size: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+.editTray {
+  padding: var(--space-3) var(--space-4);
+  border-block-end: 1px solid var(--border-subtle);
+}
+
+.add {
+  position: absolute;
+  inset-block-start: var(--space-1);
+  inset-inline-end: var(--space-1);
+  display: inline-grid;
+  place-items: center;
+  min-inline-size: 1.5rem;
+  min-block-size: 1.5rem;
+  padding: 0;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-pill);
+  background: var(--surface);
+  color: var(--text-secondary);
+  cursor: pointer;
+}
+.add:hover {
+  border-color: var(--border-strong);
+  color: var(--foreground);
+}
+
+[data-mode='edit'] .block {
+  cursor: grab;
+}
+[data-mode='edit'] .track {
+  cursor: crosshair;
+}
+.track[data-over] {
+  background-color: var(--surface-muted);
+}
+.block[data-dragging],
+.block[data-resizing],
+.block[data-drawing] {
+  z-index: 2;
+  box-shadow: var(--shadow-raised);
+  cursor: grabbing;
+}
+.block[data-drawing] {
+  border-style: dashed;
+  border-color: var(--tone-line);
+}
+
+.block[data-deleted] {
+  border-style: dashed;
+  border-color: var(--border-strong);
+  background: var(--surface);
+  opacity: 0.75;
+  cursor: pointer;
+}
+
+.edge {
+  position: absolute;
+  inset-inline: 0;
+  block-size: 0.625rem;
+  cursor: ns-resize;
+}
+.edge[data-span-edge='start'] {
+  inset-block-start: 0;
+}
+.edge[data-span-edge='end'] {
+  inset-block-end: 0;
+}
+.edge::after {
+  content: '';
+  position: absolute;
+  inset-inline: calc(50% - 0.5rem);
+  block-size: 2px;
+  border-radius: var(--radius-pill);
+  background: var(--text-secondary);
+  opacity: 0;
+}
+.edge[data-span-edge='start']::after {
+  inset-block-start: 2px;
+}
+.edge[data-span-edge='end']::after {
+  inset-block-end: 2px;
+}
+.block:hover .edge::after,
+.block:focus-visible .edge::after,
+.block[data-resizing] .edge::after {
+  opacity: 0.45;
+}
+
+/* Touch: the grid scrolls. A tap selects a block, and only a selected block
+   takes a drag and shows handles, each at least 24px tall. */
+@media (pointer: coarse) {
+  .edge {
+    display: none;
+  }
+  .block[data-selected] {
+    z-index: 3;
+    touch-action: none;
+    box-shadow: var(--shadow-raised);
+  }
+  .block[data-selected] .edge {
+    display: block;
+    block-size: 1.75rem;
+    inset-inline: 0;
+  }
+  .block[data-selected] .edge[data-span-edge='start'] {
+    inset-block-start: -0.875rem;
+  }
+  .block[data-selected] .edge[data-span-edge='end'] {
+    inset-block-end: -0.875rem;
+  }
+  .block[data-selected] .edge::after {
+    inset-block: calc(50% - 0.25rem);
+    inset-inline: calc(50% - 1.25rem);
+    block-size: 0.5rem;
+    border: 1px solid var(--tone-line);
+    background: var(--surface);
+    opacity: 1;
+  }
+}
+
+.trayEntry {
+  display: flex;
+  min-inline-size: 0;
+  max-inline-size: 100%;
+}
+/* The item's tone, as a dot: a square would read as a checkbox in a button. */
+.trayMark {
+  inline-size: 0.5rem;
+  block-size: 0.5rem;
+  border-radius: 999px;
+  background: var(--tone-solid);
+}
+/* The main part is the drag handle onto a day. */
+.trayEntry[data-draggable] button:first-of-type {
+  cursor: grab;
+  touch-action: none;
+}
+
+.error {
+  margin: 0;
+  color: var(--danger);
+}
+
+.bar {
+  position: sticky;
+  inset-block-end: var(--space-4);
+  z-index: 5;
+  display: grid;
+  gap: var(--space-2);
+  padding-block: var(--space-2);
+  padding-inline: var(--space-4) var(--space-3);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-control);
+  background: var(--surface-raised);
+  box-shadow: var(--shadow-raised);
+}
+.barRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+}
+.barNote {
+  margin: 0;
+  color: var(--text-secondary);
+  font-size: var(--text-sm);
+}
+.barCount {
+  margin: 0;
+  font-weight: 500;
+}
+.barActions {
+  display: flex;
+  gap: var(--space-2);
+}
+
+/* The "⋯" is a pointer's way to the block menu; the keyboard has Shift+F10 and the Menu key.
+   Sizes are in px: Payload's admin sets its own root font size, so rem would shrink them. */
+.more {
+  position: absolute;
+  inset-block-start: 2px;
+  inset-inline-end: 2px;
+  z-index: 1;
+  display: none;
+  place-items: center;
+  inline-size: 22px;
+  block-size: 22px;
+  border: 1px solid var(--tone-line);
+  border-radius: var(--radius-pill);
+  background: var(--surface);
+  color: var(--foreground);
+}
+.block:focus .more,
+.block[data-selected] .more {
+  display: grid;
+}
+/* Titles use dir="auto", so their own inline end can be either side. The
+   room for the menu button comes from a narrower title box instead: a block
+   child starts at the block's inline start, so the gap is always at the
+   block's inline end, where the button sits. */
+.block:has(.more):is(:focus, [data-selected]) {
+  --more-room: 24px;
+}
+@media (hover: hover) {
+  .block:hover .more {
+    display: grid;
+  }
+  .block:has(.more):hover {
+    --more-room: 24px;
+  }
+}
+@media (pointer: coarse) {
+  .more {
+    inline-size: 32px;
+    block-size: 32px;
+  }
+  .block:has(.more):is(:focus, [data-selected]) {
+    --more-room: 34px;
+  }
+}
+
+/* A popover at the pointer or the block. Rows are 48px on touch. */
+.menu {
+  box-sizing: border-box;
+  min-inline-size: 200px;
+  max-inline-size: calc(100vw - 24px);
+  margin: 0;
+  padding: 4px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-panel);
+  background: var(--surface-raised);
+  color: var(--foreground);
+  box-shadow: var(--shadow-floating);
+}
+.menuItem {
+  display: flex;
+  align-items: center;
+  min-block-size: 36px;
+  padding-inline: var(--space-3);
+  border-radius: calc(var(--radius-panel) - 4px);
+  font-size: var(--text-sm);
+  cursor: pointer;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}
+/* The fill marks the item; the global keyboard ring would clip against the popover edge. */
+.menuItem:focus-visible {
+  outline: none;
+}
+.menuItem[data-highlighted] {
+  background: var(--surface-muted);
+}
+.menuItem[data-disabled] {
+  opacity: 0.45;
+  cursor: default;
+}
+.menuItem[data-danger] {
+  color: var(--danger);
+}
+.menuSeparator {
+  margin-block: 4px;
+  border: 0;
+  border-block-start: 1px solid var(--border);
+}
+@media (pointer: coarse) {
+  .menuItem {
+    min-block-size: 48px;
+    font-size: var(--text-base, 1rem);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .block {
+    transition: box-shadow var(--duration-fast) var(--ease-standard);
+  }
+  .edge::after {
+    transition: opacity var(--duration-fast) var(--ease-standard);
+  }
+}
+
+/* Month: weeks from Saturday. A day has its date, the bars that start on it
+   (they run across the days after it in their row), its chips and "N more". */
+.monthWide {
+  display: contents;
+}
+.monthNarrow {
+  display: none;
+}
+.month {
+  --line: 1.375rem;
+  --date-size: 1.75rem;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+}
+.monthHead,
+.monthRow {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+}
+.monthWeekday {
+  padding: var(--space-2) var(--space-2) var(--space-1);
+  border-inline-start: 1px solid var(--border-subtle);
+  color: var(--text-secondary);
+  font-size: var(--text-xs);
+}
+.monthRow {
+  border-block-start: 1px solid var(--border);
+}
+.monthWeekday:first-child,
+.monthDay:first-child {
+  border-inline-start: 0;
+}
+.monthDay {
+  --focus-outline-offset: -2px;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  min-inline-size: 0;
+  block-size: calc(var(--date-size) + var(--lines) * var(--line) + var(--space-1) + var(--space-2));
+  padding: var(--space-1) 0.25rem var(--space-2);
+  border-inline-start: 1px solid var(--border-subtle);
+}
+.monthDay[data-opens] {
+  cursor: pointer;
+}
+/* The day the side panel shows. */
+.monthDay[aria-selected='true'] {
+  background: var(--surface-muted);
+  box-shadow: inset 0 0 0 1px var(--border-strong);
+}
+@media (forced-colors: active) {
+  .monthDay[aria-selected='true'] {
+    outline: 2px solid Highlight;
+    outline-offset: -2px;
+  }
+}
+/* The date, and under it the room the week's bars take in every day of the row. */
+.monthDate {
+  display: grid;
+  place-items: center;
+  flex: none;
+  align-self: start;
+  min-inline-size: var(--date-size);
+  block-size: var(--date-size);
+  margin-block-end: calc(var(--lanes) * var(--line));
+  padding-inline: 0.25rem;
+  border-radius: var(--radius-pill);
+  font-size: var(--text-sm);
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+}
+.monthDay[data-outside] .monthDate {
+  color: var(--text-muted);
+}
+.monthDay[data-today] .monthDate {
+  background: var(--foreground);
+  color: var(--background);
+}
+.monthBar,
+.chip,
+.monthMore {
+  --focus-outline-offset: -1px;
+  display: flex;
+  align-items: center;
+  gap: 0.3125rem;
+  min-inline-size: 0;
+  block-size: calc(var(--line) - 2px);
+  margin-block-end: 2px;
+  padding-inline: 0.375rem;
+  border: 1px solid transparent;
+  border-radius: 0.375rem;
+  background: none;
+  color: var(--foreground);
+  font: inherit;
+  font-size: var(--text-sm);
+  line-height: 1;
+  text-align: start;
+  cursor: pointer;
+}
+.monthBar {
+  position: absolute;
+  z-index: 1;
+  inset-block-start: calc(var(--space-1) + var(--date-size) + var(--lane) * var(--line));
+  inset-inline-start: 0.25rem;
+  inline-size: calc(var(--span) * 100% + (var(--span) - 1) * 1px - 0.5rem);
+  background: var(--tone-fill);
+  background-clip: padding-box;
+  color: var(--tone-ink);
+  font-weight: 500;
+}
+/* A chip is the tone's fill with a solid dot, so the kind shows at a glance in light and dark. */
+.chip {
+  background: var(--tone-fill);
+}
+.chip::before {
+  content: '';
+  flex: none;
+  inline-size: 0.375rem;
+  block-size: 0.375rem;
+  border-radius: 50%;
+  background: var(--tone-solid);
+}
+.chipTime {
+  flex: none;
+  color: var(--tone-ink);
+  font-variant-numeric: tabular-nums;
+}
+.monthTitle {
+  flex: 1;
+  min-inline-size: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.chip[data-cancelled] :is(.chipTime, .monthTitle) {
+  text-decoration: line-through;
+  text-decoration-color: var(--text-muted);
+}
+.chip[data-cancelled] .monthTitle {
+  color: var(--text-secondary);
+}
+.monthMore {
+  color: var(--text-secondary);
+}
+.monthBar[data-unsaved],
+.chip[data-unsaved] {
+  border-style: dashed;
+  border-color: var(--tone-line);
+}
+.monthBar[data-deleted],
+.chip[data-deleted] {
+  border-style: dashed;
+  border-color: var(--border-strong);
+  background: var(--surface);
+  opacity: 0.75;
+}
+.monthBar[data-marked],
+.chip[data-marked] {
+  box-shadow: inset 0 0 0 2px var(--foreground);
+}
+@media (hover: hover) {
+  .monthMore:hover {
+    background: var(--surface-muted);
+  }
+  .chip:hover,
+  .monthBar:hover {
+    border-color: var(--tone-line);
+  }
+}
+@media (forced-colors: active) {
+  .monthBar,
+  .chip,
+  .chip[data-unsaved],
+  .chip[data-deleted] {
+    border-color: CanvasText;
+  }
+  .monthBar[data-marked],
+  .chip[data-marked] {
+    outline: 2px solid CanvasText;
+  }
+  .chip::before {
+    background: CanvasText;
+  }
+}
+
+/* Phones: the view switch on a row of its own, an icon-only add button, no side panel.
+   A week (the server's first render) shows its selected day alone, as the Day view does. */
+@container week (max-inline-size: 40rem) {
+  .frame {
+    --narrow: 1;
+    --hour-size: 3.25rem;
+    --gutter: 3.75rem;
+  }
+  .nowPill {
+    padding-inline: 0.1875rem;
+  }
+  .grid[data-view='week'] :is(.dayRow, .allDayRow, .rows) {
+    grid-template-columns: var(--gutter) minmax(0, 1fr);
+  }
+  .grid[data-view='week'] .allDayRow {
+    grid-template-rows: repeat(var(--lanes-narrow), auto);
+  }
+  .grid[data-view='week'] .allDay {
+    grid-column: 2;
+  }
+  .grid[data-view='week'] .pill {
+    grid-column: 2;
+    grid-row: var(--lane-narrow);
+  }
+  .grid[data-view='week'] .pill:not([data-covers]),
+  .grid[data-view='week'] [data-day]:not([data-selected]) {
+    display: none;
+  }
+  .header {
+    padding: var(--space-3);
+  }
+  .heading {
+    flex-basis: 100%;
+  }
+  .controls {
+    display: contents;
+  }
+  .arrows {
+    margin-inline-end: auto;
+  }
+  .views[data-width='wide'],
+  .monthWide {
+    display: none;
+  }
+  .monthNarrow {
+    display: contents;
+  }
+  .views,
+  .views[data-width='narrow'] {
+    display: flex;
+    order: 1;
+    flex-basis: 100%;
+  }
+  .views [role='group'],
+  .views [role='group'] > * {
+    flex: 1;
+  }
+  .views button {
+    flex: 1 1 0;
+  }
+  .createText {
+    position: absolute;
+    inline-size: 1px;
+    block-size: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+  .agenda {
+    padding-inline: var(--space-3);
+  }
+  .panelToggle,
+  .panel {
+    display: none;
+  }
+}
+
+/* The agenda: a day's number and name over its rows; each row its times, a bar in the tone, its title and place. */
+.agenda {
+  display: grid;
+  gap: var(--space-5);
+  margin: 0;
+  padding: var(--space-4) var(--space-4) var(--space-5);
+  list-style: none;
+}
+.agendaDay {
+  display: grid;
+  gap: var(--space-2);
+}
+.agendaHead {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-2);
+  margin: 0;
+}
+.agendaDate {
+  display: inline-grid;
+  place-items: center;
+  min-inline-size: 2.25rem;
+  block-size: 2.25rem;
+  margin-inline-end: var(--space-2);
+  border-radius: var(--radius-pill);
+  font-size: var(--text-xl);
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+}
+.agendaDay[data-today] .agendaDate {
+  background: var(--foreground);
+  color: var(--background);
+}
+.agendaWeekday {
+  font-weight: 500;
+}
+.agendaMonthDay {
+  color: var(--text-secondary);
+}
+.agendaRows {
+  display: grid;
+  gap: var(--space-1);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.agendaRow {
+  display: grid;
+  grid-template-columns: 4.75rem 3px minmax(0, 1fr);
+  align-items: stretch;
+  gap: var(--space-3);
+  inline-size: 100%;
+  padding: var(--space-2);
+  border: 0;
+  border-radius: var(--radius-control);
+  background: transparent;
+  color: var(--foreground);
+  font: inherit;
+  text-align: start;
+  cursor: pointer;
+}
+.agendaRow:hover {
+  background: var(--surface-muted);
+}
+/* An item with a page is a link: blocks, chips and rows keep their own look. */
+:is(.agendaRow, .chip, .monthBar, .block):is(a) {
+  box-sizing: border-box;
+  text-decoration: none;
+}
+.agendaCaption {
+  color: var(--text-secondary);
+  font-size: var(--text-xs);
+}
+.agendaRow[aria-disabled='true'] {
+  cursor: default;
+}
+.agendaTime {
+  display: grid;
+  align-content: center;
+  justify-items: end;
+  font-variant-numeric: tabular-nums;
+  line-height: 1.35;
+  white-space: nowrap;
+}
+.agendaEnd {
+  color: var(--text-secondary);
+}
+.agendaBar {
+  border-radius: var(--radius-pill);
+  background: var(--tone-line);
+}
+.agendaRow[data-unsaved] .agendaBar,
+.agendaRow[data-deleted] .agendaBar {
+  background: repeating-linear-gradient(
+    to bottom,
+    var(--tone-line) 0 0.25rem,
+    transparent 0.25rem 0.45rem
+  );
+}
+.agendaRow[data-cancelled] .agendaBar {
+  background: repeating-linear-gradient(to bottom, var(--tone-line) 0 2px, transparent 2px 4px);
+  opacity: 0.6;
+}
+.agendaRow[data-cancelled] .agendaTitle {
+  text-decoration: line-through;
+  text-decoration-color: var(--text-secondary);
+}
+.agendaRow[data-deleted] {
+  opacity: 0.75;
+}
+.agendaRow[data-marked] {
+  box-shadow: inset 0 0 0 2px var(--foreground);
+}
+.agendaText {
+  display: grid;
+  align-content: center;
+  gap: 0.125rem;
+  min-inline-size: 0;
+}
+.agendaTitle {
+  /* As wide as its words, so a title in the other script (dir="auto") still starts at the bar. */
+  justify-self: start;
+  font-weight: 500;
+  overflow-wrap: anywhere;
+}
+.agendaPlace {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  color: var(--text-secondary);
+  font-size: var(--text-xs);
+}
+.agendaPlace svg {
+  flex: none;
+}
+.agendaEmpty {
+  margin: 0;
+  padding: var(--space-8) var(--space-4);
+  color: var(--text-secondary);
+  text-align: center;
+}
+@media (forced-colors: active) {
+  .agendaBar {
+    background: CanvasText;
+  }
+  .agendaRow[data-marked] {
+    outline: 2px solid CanvasText;
+  }
+}
+
+.flip:dir(rtl) {
+  transform: scaleX(-1);
+}
+
+/* A block's details: a floating panel beside the block, or a sheet from the bottom on a narrow calendar. */
+.details {
+  box-sizing: border-box;
+  display: grid;
+  gap: var(--space-3);
+  inline-size: min(var(--details-width), calc(100vw - 24px));
+  margin: 0;
+  padding: var(--space-4);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-surface);
+  background: var(--surface-raised);
+  color: var(--foreground);
+  box-shadow: var(--shadow-floating);
+  font-size: var(--text-sm);
+  transform-origin: var(--transform-origin);
+  transition:
+    opacity var(--duration-fast) var(--ease-standard),
+    transform var(--duration-spring) var(--ease-spring);
+}
+.details[data-starting-style],
+.details[data-ending-style] {
+  opacity: 0;
+  transform: scale(0.97);
+}
+.details[data-presentation='sheet'] {
+  inline-size: min(100%, 36rem);
+  padding-block-end: calc(var(--space-5) + env(safe-area-inset-bottom, 0px));
+  border-block-end: 0;
+  border-radius: var(--radius-surface) var(--radius-surface) 0 0;
+  transition: opacity var(--duration-fast) var(--ease-standard);
+  --sheet-backdrop: oklch(16% 0 0 / 0.34);
+}
+:global(:root[data-theme='dark']) .details[data-presentation='sheet'] {
+  --sheet-backdrop: oklch(0% 0 0 / 0.52);
+}
+.details[data-presentation='sheet'][data-starting-style],
+.details[data-presentation='sheet'][data-ending-style] {
+  transform: none;
+}
+.details[data-presentation='sheet']::before {
+  content: '';
+  justify-self: center;
+  inline-size: 2.25rem;
+  block-size: 4px;
+  margin-block-end: var(--space-1);
+  border-radius: 999px;
+  background: var(--border-strong);
+}
+@media (prefers-reduced-motion: reduce) {
+  .details {
+    transition: opacity var(--duration-fast) var(--ease-standard);
+  }
+  .details[data-starting-style],
+  .details[data-ending-style] {
+    transform: none;
+  }
+}
+/* The picture runs to the panel's edges, under its rounded top corners. */
+.detailsImage {
+  position: relative;
+  aspect-ratio: 16 / 9;
+  margin: calc(var(--space-4) * -1) calc(var(--space-4) * -1) 0;
+  overflow: hidden;
+  border-start-start-radius: inherit;
+  border-start-end-radius: inherit;
+  background: var(--surface);
+}
+.detailsImage img {
+  object-fit: cover;
+}
+.detailsHead {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: start;
+  gap: var(--space-3);
+}
+.detailsMark {
+  inline-size: 0.75rem;
+  block-size: 0.75rem;
+  margin-block-start: 0.35rem;
+  border: 1px solid var(--tone-line);
+  border-radius: 0.2rem;
+  background: var(--tone-solid);
+}
+.detailsTitle {
+  margin: 0;
+  font-family: inherit;
+  text-align: start;
+  font-size: var(--text-base);
+  font-weight: 500;
+  line-height: 1.4;
+  overflow-wrap: anywhere;
+}
+.detailsClose {
+  display: inline-grid;
+  place-items: center;
+  inline-size: 2rem;
+  block-size: 2rem;
+  margin: -0.35rem;
+  padding: 0;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  color: var(--text-secondary);
+  cursor: pointer;
+}
+.detailsClose:hover {
+  background: var(--surface-muted);
+  color: var(--foreground);
+}
+.detailsCaption {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2);
+  margin: calc(-1 * var(--space-2)) 0 0;
+  padding-inline-start: calc(0.75rem + var(--space-3));
+  color: var(--text-secondary);
+}
+/* A long session title keeps the details short: two lines, the full text stays in the page. */
+.detailsCaptionText {
+  display: -webkit-box;
+  min-inline-size: 0;
+  overflow: hidden;
+  overflow-wrap: anywhere;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+}
+.detailsMore {
+  color: var(--text-secondary);
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+}
+.detailsMore:hover {
+  color: var(--foreground);
+}
+.detailsCancelled {
+  padding: 0 var(--space-2);
+  border: 1px solid color-mix(in oklch, var(--danger) 45%, transparent);
+  border-radius: 999px;
+  color: var(--danger);
+  font-size: var(--text-xs);
+  line-height: 1.6;
+}
+.detailsRows {
+  display: grid;
+  gap: var(--space-3);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.detailsRows > li {
+  display: grid;
+  grid-template-columns: 1rem minmax(0, 1fr);
+  align-items: start;
+  gap: var(--space-3);
+  line-height: 1.45;
+}
+.detailsRows > li > svg {
+  margin-block-start: 0.1rem;
+  color: var(--text-secondary);
+}
+.detailsWhen {
+  display: grid;
+}
+.detailsMuted {
+  color: var(--text-secondary);
+}
+.detailsSummary {
+  display: -webkit-box;
+  overflow: hidden;
+  color: var(--text-secondary);
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+  line-clamp: 3;
+}
+.detailsActions {
+  padding-block-start: var(--space-1);
+}
+
+/* The action group fills its host (popover, panel, drawer footer). The labelled segments share the width equally
+   but never go below their content, so a row that is too narrow overflows and Arc's own label collapse keeps
+   the icons. The "more" segment keeps its square icon width. */
+.actionGroup.actionGroup {
+  display: flex;
+  inline-size: 100%;
+}
+.actionGroup > [data-key]:not([data-key='button-group-menu']) {
+  flex: 1 1 0;
+  min-inline-size: min-content;
+}

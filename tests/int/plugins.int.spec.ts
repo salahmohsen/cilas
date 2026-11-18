@@ -51,7 +51,6 @@ describe('redirects and SEO', () => {
           title: 'Writing the Self',
           slug: uniq('writing-the-self'),
           course_type: 'THEMATIC',
-          session_unit: 'session',
           tier: 'public',
           cycle: cycle.id,
           _status: 'published',

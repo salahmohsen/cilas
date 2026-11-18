@@ -262,7 +262,6 @@ export const importCourses = async (
         course_type: c.course_type,
         cycle,
         tier: 'public',
-        session_unit: 'session',
         location: c.location,
         fellows,
         schedule: c.schedule,

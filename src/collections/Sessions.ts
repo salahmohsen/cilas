@@ -3,6 +3,7 @@ import type {
   CollectionAfterChangeHook,
   CollectionAfterDeleteHook,
   CollectionConfig,
+  PayloadRequest,
 } from 'payload'
 
 import {
@@ -21,6 +22,7 @@ import { LOCATION_OPTIONS } from '@/fields/course-options'
 import { meetingsField } from '@/fields/meetings'
 import { storeCourseDays } from '@/lib/course-days'
 import { relId } from '@/lib/relation'
+import { revalidateDocument } from '@/lib/revalidate'
 import type { Session } from '@/payload-types'
 
 /** Admins, and the fellows of the session's course. */
@@ -31,7 +33,7 @@ const editsCourse = isAdminOrOwn(ownsViaFellows, { allow: ['fellow'] })
  * session is checked here. With no data, Payload is asking whether to show
  * the create button: a fellow may make sessions for the courses they teach.
  */
-const createSession: Access = async (args) => {
+export const createSession: Access = async (args) => {
   const { req, data } = args
   if (isAdminUser(req.user)) return true
   if (!isFellowUser(req.user)) return false
@@ -53,16 +55,36 @@ const courseIdOf = (session: Partial<Session> | null | undefined): number | null
   return typeof id === 'number' ? id : null
 }
 
-/** Keeps `first_day` and `last_day` of the course (and of a course it left) current. */
-const syncCourseDays: CollectionAfterChangeHook<Session> = async ({ doc, previousDoc, req }) => {
+/**
+ * A session is part of its course on the public site: after a session
+ * changes, the course's `first_day` and `last_day` follow its meetings and the
+ * course's pages, lists and calendar drop from the cache, as on a course save.
+ * Search re-indexes the course from its own plugin (`plugins/typesense`).
+ */
+const refreshCourse = async (req: PayloadRequest, course: number) => {
+  await storeCourseDays(req, course)
+  const { slug } = await req.payload.findByID({
+    collection: 'courses',
+    id: course,
+    depth: 0,
+    draft: false,
+    overrideAccess: true,
+    req,
+    select: { slug: true },
+  })
+  revalidateDocument('courses', { slug })
+}
+
+/** The course a session is in, and the one it left. */
+const refreshCourses: CollectionAfterChangeHook<Session> = async ({ doc, previousDoc, req }) => {
   const courses = new Set([courseIdOf(doc), courseIdOf(previousDoc)])
-  for (const course of courses) if (course !== null) await storeCourseDays(req, course)
+  for (const course of courses) if (course !== null) await refreshCourse(req, course)
   return doc
 }
 
-const syncCourseDaysAfterDelete: CollectionAfterDeleteHook<Session> = async ({ doc, req }) => {
+const refreshCourseAfterDelete: CollectionAfterDeleteHook<Session> = async ({ doc, req }) => {
   const course = courseIdOf(doc)
-  if (course !== null) await storeCourseDays(req, course)
+  if (course !== null) await refreshCourse(req, course)
   return doc
 }
 
@@ -99,13 +121,21 @@ export const Sessions: CollectionConfig = {
       access: { update: adminOnlyField },
       admin: { position: 'sidebar' },
     },
-    { name: 'title', type: 'text', localized: true },
     {
       name: 'cancelled',
       type: 'checkbox',
       admin: {
+        position: 'sidebar',
         description:
           'The session will not take place: marked as cancelled on the page and left off the calendar.',
+      },
+    },
+    {
+      name: 'title',
+      type: 'text',
+      localized: true,
+      admin: {
+        description: 'Leave empty to show it as “Session 3”.',
       },
     },
     meetingsField(),
@@ -122,6 +152,10 @@ export const Sessions: CollectionConfig = {
       name: 'description',
       type: 'textarea',
       localized: true,
+      admin: {
+        description: 'What the session covers. Markdown: **bold**, *italic*, lists, links.',
+        rows: 6,
+      },
     },
     bibliographyField(),
     activitiesField(),
@@ -133,7 +167,7 @@ export const Sessions: CollectionConfig = {
     },
   ],
   hooks: {
-    afterChange: [syncCourseDays],
-    afterDelete: [syncCourseDaysAfterDelete],
+    afterChange: [refreshCourses],
+    afterDelete: [refreshCourseAfterDelete],
   },
 }

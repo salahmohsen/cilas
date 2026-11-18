@@ -10,9 +10,3 @@ export const TEACHING_LANGUAGE_OPTIONS = [
   { label: 'Arabic', value: 'ar' },
   { label: 'English', value: 'en' },
 ] as const satisfies ReadonlyArray<{ label: string; value: string }>
-
-/** How a course numbers its sessions on the page. */
-export const SESSION_UNIT_OPTIONS = [
-  { label: 'Session', value: 'session' },
-  { label: 'Week', value: 'week' },
-] as const satisfies ReadonlyArray<{ label: string; value: string }>

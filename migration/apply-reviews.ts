@@ -60,7 +60,6 @@ const allFiles = new Set([...zipFiles, ...listFiles(path.join(mirror, 'uploads')
 type Locale = 'en' | 'ar'
 const LOCALIZED = [
   'subtitle',
-  'summary',
   'epigraph',
   'facilitator_note',
   'content_warning',
@@ -365,7 +364,6 @@ const createNewCourses = async (payload: Payload, log: string[]): Promise<Course
         course_type: c.set.course_type,
         cycle,
         tier: 'public',
-        session_unit: c.syllabus?.session_unit ?? 'session',
         fellows,
         legacy_url: c.legacy_url,
         _status: 'draft',

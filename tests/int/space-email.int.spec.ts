@@ -139,7 +139,6 @@ describe('space email', () => {
         title: 'Mail Course',
         slug: uniq('mail-course'),
         course_type: 'THEMATIC',
-        session_unit: 'session',
         tier: 'owner',
         cycle: cycle.id,
         fellows: [people.fellow],

@@ -291,7 +291,7 @@ describe('admin-only MCP server', () => {
     it('makes a draft in both languages with valid rich text', async () => {
       const { json, isError, text } = await call('create_course_draft', admin, {
         title: { en: uniq('Mcp Course'), ar: 'دورة الاختبار' },
-        summary: { en: 'One line', ar: 'سطر واحد' },
+        subtitle: { en: 'One line', ar: 'سطر واحد' },
         description: {
           en: '# Heading\n\nA **bold** idea and a [link](https://example.org).\n\n- one\n- two',
           ar: 'فقرة عربية\n\n> اقتباس',
@@ -344,7 +344,7 @@ describe('admin-only MCP server', () => {
           overrideAccess: true,
         })) as Course
         expect(doc.title).toBeTruthy()
-        expect(doc.summary).toBeTruthy()
+        expect(doc.subtitle).toBeTruthy()
         const root = (
           doc.description as { root: { type: string; children: Array<{ type: string }> } }
         ).root

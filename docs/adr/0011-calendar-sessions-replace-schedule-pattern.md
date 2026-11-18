@@ -2,7 +2,7 @@
 
 Accepted, 2026-11-13. Supersedes [0002](0002-schedule-pattern-drives-session-dates.md) for courses and events.
 
-This ADR is a working draft. It covers courses, events, the course space calendar and the public calendar. The open questions are near the end.
+It covers courses, events, the course space calendar and the public calendar. The design is accepted; the Decision log records each later change, newest first.
 
 ## Context
 
@@ -52,9 +52,9 @@ sessions                     new collection: what is taught, and when
 
 course
   syllabus                   join field (course → sessions), shown in the Sessions tab
-  timing_note                localized free text, from today's schedule note
   first_day, last_day        read-only, kept up to date from its sessions' meetings
-  session_unit, syllabus_tentative, course bibliography, notes   unchanged
+  syllabus_tentative, course bibliography, notes   unchanged
+  (removed: timing_note, announced, session_unit, summary; see "Fix: the timing fields are removed")
 ```
 
 - **Why a collection.** Each session saves on its own, so two people who edit different sessions, or the course and a session, do not overwrite each other. Sessions get their own access rules, so fellows can later edit the sessions of their running course without the course review. Payload gives a built-in document drawer for a related document, so a click on a block opens the full session form with no custom form code. The public calendar and the space calendar become one indexed query on `sessions.meetings.date`. Space posts point to a session by a real relationship.
@@ -72,17 +72,26 @@ course
 
 ### Summary text and weeks (worked out, never typed)
 
-- **Regular** (every week has the same weekdays and times): "Tuesdays, 7–9pm", "Tuesdays and Thursdays, 7–9pm", plus "8 weeks".
+- **Regular** (every week has the same weekdays and times; the last week may end early): "Tuesdays, 7–9pm", "Tuesdays and Thursdays, 7–9pm", plus "8 weeks".
 - **Not regular**: the first and last day and the count, for example "12 sessions, 3 March – 28 April". The syllabus lists each session with its own dates.
-- **Weeks** = the calendar weeks from the first to the last meeting. Not stored, not typed.
-- `timing_note` stays for words the dates cannot say ("hybrid for the first 6 weeks").
+- **Weeks** = the 7-day periods from the first meeting to the last. Not stored, not typed. Only the calendar view lays out Saturday-to-Friday weeks.
+- **No announced timing and no timing note.** A course states its time with meetings alone. A course with no meeting held has no start day, no weeks and no summary of times. Words the dates cannot say ("hybrid for the first 6 weeks") go in the description or in a session's own text.
+- **Numbering.** Every untitled session is "Session N". There is no "Week N" and no setting to choose it. A session that is a week of a twice-a-week course is still one session with two meetings.
+- **No card summary.** A card, the search index, `llms` and a mention use the subtitle, then the start of the description.
 
 ### The admin
 
 - One tab, **Sessions**, replaces "Course flow" and "Schedule".
 - On top: a **calendar field**, week view with hours, in the shape of the agreed design: weekdays across, hours down, blocks with title and time, a legend, a 24h/12h switch.
 - Draw on an empty slot to make a new session with one meeting. Drag a block to move it. Drag its edge to change its length. The keyboard does the same.
-- **"Repeat weekly"** in the session drawer makes the next N meetings for that session, or N new sessions, one a week. This replaces the pattern as a _tool_, not as stored data.
+- **A menu on each block** replaces "Repeat weekly". It has four actions, and it opens by right-click, by the "⋯" on a selected or focused block, by Shift+F10 or the Menu key on a focused block, and by a long press on touch. The arrow keys move in it; Escape closes it and puts focus back on the block.
+  - **Open** opens the session drawer, as a click does.
+  - **Add meeting** adds a meeting to the same session at the same time on the next day. It is an unsaved change; the person then drags it. If the next day is outside the week in view, the block shows when they go there, and the save bar says where it went.
+  - **New session next week** makes a new, untitled session with all the meetings of this one moved 7 days later. It copies times only: no title, description, materials or activities, because the next week is a new topic.
+  - **Delete meeting** removes only this meeting, as a ghost with Restore until Save. The session and its content stay; a session with no meeting left shows in Unscheduled. There is no "delete session" on the calendar: a whole session is deleted in its drawer.
+  - In view mode only Open shows.
+- **The calendar is always in edit mode** in the admin, for a person who may edit the course's sessions. There is no View and Edit switch and no "Done editing". A person who may not edit sees view mode.
+- **A separate "Save schedule" bar** shows only while calendar changes wait, with Cancel. Payload's own Save button saves the course and nothing else. The two saves are not tied together; while schedule changes wait, the bar says that the course's Save does not save them. Sessions are not drafts, and they are not tied to the course's Save. While changes wait, leaving the page warns: the browser's prompt on a reload or a closed tab, and Payload's own confirmation on a link inside the admin. Payload's warning reads only the course form's modified state, and marking that modified would start the course's autosave, so the calendar tells the host how many changes wait (`onUnsavedChange`) and the host warns itself.
 - Click a block (or a tray item) to open the **session drawer**: Payload's document drawer with the full session form.
 - Under the calendar: the course-wide fields that stay.
 - **The calendar field is generic.** It takes "items, each with blocks" and knows nothing about courses. Events and the course space use it later.
@@ -97,20 +106,20 @@ The field uses [ui-sdk](https://ui-sdk.dev) (`@ui-sdk/react`, `@ui-sdk/core`): `
 
 ### Change notices
 
-When a session moves, is cancelled or is restored, the **course space members** get a notice. Accepting an applicant creates an accepted enrollment, and space membership comes from enrollments (`lib/spaces.ts`), so accepted applicants with an account are already members. The person who made the change gets none. How the notice is made: see "Saving and telling people".
+When a session moves, is cancelled or is restored, the person who saved is offered a **prefilled announcement** for the course space. They edit it and publish it, or skip it. Accepting an applicant creates an accepted enrollment, and space membership comes from enrollments (`lib/spaces.ts`), so accepted applicants with an account are already members, and an announcement notifies them. How the offer is made: see "Saving and telling people".
 
 ## What changes
 
 | Area                | Files                                                                                                                                                                                                                    | Change                                                                                                   |
 | ------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | -------------------------------------------------------------------------------------------------------- |
-| Schema              | new `collections/Sessions.ts`; `collections/Courses.ts`; `fields/schedule.ts` (courses stop using it)                                                                                                                    | Sessions collection; Sessions tab with join and calendar; `timing_note`, `first_day`, `last_day`         |
+| Schema              | new `collections/Sessions.ts`; `collections/Courses.ts`; `fields/schedule.ts` (courses stop using it)                                                                                                                    | Sessions collection; Sessions tab with join and calendar; `first_day`, `last_day`                        |
 | Time module         | `lib/schedule.ts` → `lib/meetings.ts`                                                                                                                                                                                    | One reader for courses; the pattern code stays only for events until their phase                         |
 | Public course       | `study/[slug]/CourseView.tsx`, `course/course-syllabus.tsx`, `lib/schema.ts` (JSON-LD)                                                                                                                                   | Read `sessionsOf` / `meetingsOf`                                                                         |
 | Calendar and feeds  | `api/calendar.api.ts`, `lib/event-calendar.ts` (ICS), `lib/calendar.ts`                                                                                                                                                  | Query sessions by meeting date; ICS gets a stable ID for each meeting                                    |
 | Lists by start date | `api/courses.api.ts`, `api/programmes.api.ts`, `api/people.api.ts`, `lib/article-cards.ts`, `emails/cards.ts`, `lib/mentions.ts`                                                                                         | Read `first_day`; weeks and summary from `lib/meetings.ts`                                               |
 | Machine readers     | `api/llms-document.ts`, `plugins/typesense/documents.ts`                                                                                                                                                                 | Read `sessionsOf`                                                                                        |
 | Spaces              | `lib/space-lifecycle.ts`, `space/next-session.tsx`, `space/space-page.tsx`, `space/session-options.ts`, `lib/session-refs.ts`, `lib/spaces-data.ts`, `space/post-*.tsx`, `space/session-block.tsx`, `space/feed-row.tsx` | Read sessions; `course_session` becomes a relationship to `sessions`; body tokens use the new session ID |
-| Change notices      | `lib/schedule-notice.ts` → `lib/schedule-changes.ts`                                                                                                                                                                     | An outbox from the collection hooks; one "Schedule changed" post and notification per space and save     |
+| Change notices      | `lib/schedule-notice.ts` → `lib/schedule-changes.ts`                                                                                                                                                                     | After a save, a prefilled announcement with a schedule block; the person publishes or skips it           |
 | AI assistants (MCP) | `plugins/mcp/course-validation.ts`, `draft-write.ts`, `guides.ts`, `instructions.ts`, `field-registry.ts`, `accepted-fields.json`, `tools/course.ts`                                                                     | Assistants write sessions with meetings; guides explain it; validation checks times and overlaps         |
 | Seeds and scripts   | `seed/*`, `seed/data/live/*`, `scripts/verify-event-*.ts`                                                                                                                                                                | New shape; a new verify script for this migration                                                        |
 | Tests               | about 28 unit files                                                                                                                                                                                                      | Follow the new shape                                                                                     |
@@ -119,21 +128,22 @@ When a session moves, is cancelled or is restored, the **course space members** 
 
 Every course moves to the new model, published and draft. We test on the local copy of production until it is polished, then go live once.
 
-1. **Add** the `sessions` collection, the join, `timing_note`, `first_day`, `last_day`. The old fields stay.
+1. **Add** the `sessions` collection, the join, `first_day`, `last_day`. The old fields stay. (The first run also added `timing_note`; item 7 removes it.)
 2. **Fill** with a script that runs today's `expandSchedule` for every course:
    - each session row becomes a session document with the same content and the meetings it has today; its description is converted to Markdown;
-   - **courses with weekly times but no sessions (41)** and **pattern meetings after the last session (18)**: the pattern still makes those meetings, but no session holds them. The script makes new sessions for them by today's default rule, one session for each week of slots (with one slot a week, one session per meeting). Their title is empty, so the page shows "Session N" or "Week N";
+   - **courses with weekly times but no sessions (41)** and **pattern meetings after the last session (18)**: the pattern still makes those meetings, but no session holds them. The script makes new sessions for them by today's default rule, one session for each week of slots (with one slot a week, one session per meeting). Their title is empty, so the page shows "Session N";
    - sessions with no meeting (7 courses) stay unscheduled, in their old order;
-   - courses with a start date but no meeting at all get one all-day meeting on that day, on their first session (a new one if none). That is the 63 with no slots plus 12 with slots but no `weeks` (75);
-   - the schedule note moves to `timing_note`;
-   - **courses with weekly times the pattern cannot place** (no start date or no `weeks`, 55 courses): first, 37 of them get the start date and length found on the old site, written into the old `schedule` group (`scripts/apply-archive-start-dates.ts`, see `docs/research/2026-11-course-start-dates.md`), so their times become real meetings. The other 18 get no meeting for their times. A language with no note gets the times as words in `timing_note` ("Tuesday, 19:00–21:00", "الثلاثاء، ١٩:٠٠–٢١:٠٠"); a written note stays unchanged;
+   - **courses the pattern gives no meeting** (101 courses with a start date or `weeks`) got no meeting from the fill. They first kept their start date and `weeks` as an `announced` timing; that field is removed (see "Fix: the timing fields are removed"). They have no meeting now; their dates come later from the CILAS backup (item 7);
+   - the schedule note moved to `timing_note` first; that field is removed too, and its text goes with it;
+   - **courses with weekly times the pattern cannot place** (no start date or no `weeks`, 55 courses): first, 37 of them get the start date and length found on the old site, written into the old `schedule` group (`scripts/apply-archive-start-dates.ts`, see `docs/research/2026-11-course-start-dates.md`), so their times become real meetings. The other 18 got no meeting from the fill. They first got their times as words in `timing_note`; that field is removed. They have no meeting now; their dates come later from the CILAS backup (item 7);
    - **a published course with a pending draft** (295, 406 and 409 today) is filled from the draft: its sessions and schedule go live, because sessions have no drafts. The draft's other fields stay pending;
    - a map from old row ID to new session ID updates the 8 space posts.
 3. **Verify** with a script: for every course, the new `meetingsOf` equals the old `expandSchedule`, meeting by meeting; every session's content is the same; every space post points to a session of its own course. The run must show zero differences, except the new sessions, which it lists.
 4. **Move the readers** one area at a time to `lib/meetings.ts`. The site works after each step.
 5. **Admin**: the Sessions tab with the calendar field.
 6. **MCP**: tools and guides write sessions.
-7. **Keep the old fields** (schedule, the sessions array) read-only and hidden until everything is polished. Then a last migration removes them. Old course versions lose their schedule and sessions array at that point; the sessions themselves are kept.
+7. **Drop the timing fields; archive dates come later, as data.** Migration `20261114_072207_drop_course_timing_fields` drops `session_unit`, `announced_*`, `timing_note` and `summary` (and the `session_unit` enum types) from courses and their versions. A script gave the courses with no meeting invented meetings on 2026-11-14. On 2026-11-15 those meetings were removed from the local copy and the script was deleted, so the go-live makes none (see "Archive dates are a data task, not code"). Later, a data agent fills the real dates from the CILAS backup. A course stays with no meeting where the backup has no date.
+8. **Keep the old fields** (schedule, the sessions array) read-only and hidden until everything is polished. Then a last migration removes them. Old course versions lose their schedule and sessions array at that point; the sessions themselves are kept.
 
 ## Considered options
 
@@ -146,8 +156,8 @@ Every course moves to the new model, published and draft. We test on the local c
 10 events today: 5 on one date, 5 repeating. They use the same `schedule` field as courses.
 
 - **An event has meetings directly.** No sessions: an event is one thing, and its `agenda` (the programme inside a day) stays as it is. `meetings[]` comes from one shared field, `fields/meetings.ts`, which sessions use too, so the shape and its validation are written once.
-- **The "When" tab** uses the same calendar component with one item, the event. "Repeat weekly" makes the meetings of a repeating event.
-- **`first_day`, `last_day` and `timing_note`** on the event, as on courses. The summary and "next meeting" come from `lib/meetings.ts`.
+- **The "When" tab** uses the same calendar component with one item, the event. A block's "Add meeting" makes the next meeting of a repeating event.
+- **`first_day` and `last_day`** on the event, as on courses. No timing note: an event states its time with meetings alone, as a course does. The summary and "next meeting" come from `lib/meetings.ts`.
 - **Readers:** `components/events/event-page.tsx`, `event-attendance.tsx`, `lib/events.ts`, `api/events.api.ts`, `lib/mentions.ts`, `emails/cards.ts`, `api/calendar.api.ts`, `lib/event-calendar.ts`.
 - **Migration:** the same expand-and-verify script for the 10 events.
 - **After events move,** `fields/schedule.ts` and `lib/schedule.ts` are deleted. Nothing uses the pattern any more.
@@ -168,12 +178,13 @@ The calendar is one generic component in `components/calendar/ui/`. It knows not
 items: { id, kind, title, tone, cancelled?, blocks: { id, date, start_time?, end_time? }[] }[]
 mode: 'view' | 'edit'                 'edit' only where the viewer may edit
 onOpen(itemId, blockId)
-onSave(changes)                       edit mode: one call with every change, or nothing on Cancel
+onSave(changes)                       edit mode: one call with every change, or nothing on Cancel; returns the saved items
+onUnsavedChange(count)                edit mode: how many changes wait, so the host can warn before leaving
 views: week (hours down, days across), day, month, agenda
 labels and direction from the host
 ```
 
-- **View and edit modes.** In edit mode a viewer draws, drags and resizes. The changes stay on the page, marked as unsaved, until **Save** sends them all at once. **Cancel** drops them. So there is no save on every drag, and no Undo toast: Cancel undoes before saving, and session versions undo after.
+- **View and edit modes.** In edit mode a viewer draws, drags and resizes, and a block has a menu when the host gives words for it (the labels hold them, so a host with none has no menu). The changes stay on the page, marked as unsaved, until **Save** sends them all at once. **Cancel** drops them. So there is no save on every drag, and no Undo toast: Cancel undoes before saving, and session versions undo after.
 - **Look:** the agreed design, in Arc tokens, light and dark. Thin grid lines, hour labels in a mono face, outlined blocks with title and time, a 24h/12h switch, a legend. Tone comes from the course or event type (`toneOf`). A cancelled meeting is hatched.
 - **Week view:** weeks start on Saturday. The hours shown run from the earliest to the latest meeting of the week. Meetings with no time go in an all-day row. Overlaps share the day's width (`stackSpans`). A line marks "now".
 - **Narrow screens (phones), in every place, the admin too:** one day at a time with a day switcher. The component decides this from its own width, so no host repeats it.
@@ -181,26 +192,34 @@ labels and direction from the host
 - **Times:** Cairo wall-clock, labelled "Cairo time".
 - **Server rendered:** the grid renders on the server; keyboard and drag connect in the browser.
 
-| Place                          | Shows                                              | Edit mode for              | A click opens                                                         |
-| ------------------------------ | -------------------------------------------------- | -------------------------- | --------------------------------------------------------------------- |
-| Admin: course, Sessions tab    | the course's sessions, plus the Unscheduled tray   | admins, the course fellows | Payload's document drawer with the session form                       |
-| Admin: event, When tab         | the event's meetings                               | admins                     | the meeting's times in place                                          |
-| Course space: Calendar tab     | the course's sessions and the space's events       | the course fellows, admins | the space's session drawer: details, and Edit for fellows and admins  |
-| Space post: "Schedule changed" | the changed sessions and events, around the change | nobody                     | the same drawer as the Calendar tab                                   |
-| Public `/calendar`             | every public session and event in the range        | admins                     | a popover (bottom sheet on phones) with a link to the course or event |
+| Place                       | Shows                                              | Edit mode for              | A click opens                                                         |
+| --------------------------- | -------------------------------------------------- | -------------------------- | --------------------------------------------------------------------- |
+| Admin: course, Sessions tab | the course's sessions, plus the Unscheduled tray   | admins, the course fellows | Payload's document drawer with the session form                       |
+| Admin: event, When tab      | the event's meetings                               | admins                     | the meeting's times in place                                          |
+| Course space: Calendar tab  | the course's sessions and the space's events       | the course fellows, admins | the space's session drawer: details, and Edit for fellows and admins  |
+| Space post: schedule block  | the changed sessions and events, around the change | nobody                     | the same drawer as the Calendar tab                                   |
+| Public `/calendar`          | every public session and event in the range        | admins                     | a popover (bottom sheet on phones) with a link to the course or event |
 
 ## Saving and telling people
 
-There is **one write path** and **one notice path** for every place, the admin form and the AI assistants included.
+There is **one write path** for every place. Telling people is the saver's choice, offered by one rule.
 
-1. **Save.** The calendar's `onSave` calls one server action, `saveCalendarChanges(changes)`. It runs Payload with the signed-in user (`overrideAccess: false`) in **one transaction**, so the collections' access rules decide, and either all changes save or none do. Each change carries the `updatedAt` it started from; a stale one fails the whole save, and the calendar reloads.
-2. **Record.** Each collection's afterChange hook (sessions, events, space posts with a time) writes a **schedule change** row to an outbox, inside the same transaction: what changed (meetings before and after, cancelled or restored), who changed it, which space, and the save's batch ID. A save from the admin form or an AI assistant has its own batch. This is the pattern the private search already uses (`lib/private-search/outbox.ts`).
-3. **Announce.** The worker drains the outbox, groups the rows by space and batch, and for each group:
-   - posts **one "Schedule changed" post** in the course space. The post renders the calendar component, read-only, on the weeks around the change, with the changed blocks marked. It reads the current data, so it stays up to date if the schedule changes again;
-   - sends **one notification** to every space member (students and fellows), except the person who saved;
-   - refreshes the public calendar's cache tags.
+1. **Save.** The calendar's `onSave` calls one server action, `saveScheduleEdits({ calendar, details })`. It runs Payload with the signed-in user (`overrideAccess: false`) in **one transaction**, so the collections' access rules decide, and either all changes save or none do. Each change carries the `updatedAt` it started from; a stale one fails the whole save. The unsaved changes stay on the screen, the message names the session that another person changed, and one button, "Reload and lose my changes", loads the current schedule. There is no merge and no retry. A failed save opens no announcement. The collection hooks refresh the public cache in the same save (`revalidateDocument('courses')` drops the `courses` tag the public calendar reads).
+2. **Offer.** After a save that changes the schedule, the host compares the items before and after with one pure rule (`scheduleChanges` in `lib/schedule-changes.ts`): meetings moved, added or removed, sessions cancelled or restored. A change counts only when a meeting it touches, before or after, is today or later; archive corrections offer nothing. When something counts and the course has a space, a dialog opens with a **prefilled announcement**: a short text of the changes ("Session 3 moves from Tue 18 Nov 19:00 to Thu 20 Nov 19:00", "Session 5 is cancelled") and one **schedule block**. The person edits it and clicks **Publish to space**, or **Skip**.
+3. **Publish.** Publish makes a normal space announcement as that person, through the existing post path: it is pinned and notifies every space member. Only space moderators may post an announcement, and moderators are the admins and the course's fellows, the same people who may edit the course's sessions.
 
-So no write path has to remember to notify: the collections do it. And ten drags make one post and one notification, not ten.
+The **schedule block** (a token in the post body, like `::session[id]`) renders the calendar component, read-only, on the weeks of the change, with the changed blocks marked. It reads the current data, so it stays correct if the schedule changes again.
+
+As built in step 3:
+
+- **The token** is `::schedule[<first Saturday>+<weeks>:<session id>,…]`, alone in its paragraph, at most one in a post, never in a comment. It names weeks and sessions, never dates. The post write path checks it with the session blocks (`sessionSafeBody`): a session of another course drops out, and a block with none left goes.
+- **The language** of the text is the course's language (`courseLanguage`, the course page's own rule), and the session names load in that language. A session is named "Session 3: Title", or "Session 3" with no title.
+- **Cancel** counts by the session's meetings after the save: a cancel that also removes the session's only future meeting offers nothing. A cancelled session shows only its cancel line.
+- **Added or removed sessions** list only their meetings from today on.
+
+Where the offer opens: after **Save schedule** in the admin calendar; after a save in the session drawer that changes the meetings or the cancelled flag; later in the space calendar (step 4) and the public calendar (step 5). Scripts, seeds and saves with no person offer nothing, and a course with no space offers nothing.
+
+**Saves that publish nothing, by decision.** A skipped offer, a save by an AI assistant (MCP) and a save on the session's own admin page (not the drawer) publish no announcement. The admin or fellow writes one by hand in that case. Skip asks for no confirmation.
 
 ## Course space calendar
 
@@ -208,15 +227,26 @@ So no write path has to remember to notify: the collections do it. And ten drags
 - **Sessions** in the course tone; **space events** (posts with a time, 9 today) in their own tone. Space events store instants; the component shows them in Cairo time.
 - **A click on a session opens a drawer** with its title, number, times, delivery, description, materials and activities. The drawer and the syllabus use the same session view.
 - **Edit mode** (course fellows and admins): draw a new session, move or resize sessions **and space events**, then Save. The drawer's Edit opens a form for the title, description (Arc editor), materials, activities, meetings and "cancelled". The Syllabus tab has the same Edit.
-- **After Save:** the "Schedule changed" post and the notification (see above). Open calendars update through the space's realtime channel (`lib/realtime/publish.ts`).
+- **After Save:** the prefilled announcement (see above). Open calendars update through the space's realtime channel (`lib/realtime/publish.ts`).
 - **Language:** a fellow edits the text in the space's current language.
+
+As built in step 4:
+
+- The `space` calendar source loads course sessions and space events. Events have `readOnly: true`. They open their post and cannot move in the calendar.
+- `shownCourse` reads a draft only when the person can edit sessions. Other readers get the published course.
+- `?open=<id>` opens one shared session drawer. It uses the Arc drawer on desktop and the Arc bottom sheet on phones.
+- `SpaceCalendarTab` opens `SpaceCalendarEditor` for edit mode. `useScheduleSave` saves, then `useScheduleOffer` offers the announcement. The drawer uses the same offer.
+- `lib/leave-guard.ts` is the one leave guard. It checks links, page close and navigation through `leave`. This Next version cannot ask on Back and Forward.
+- The drawer's Edit form uses TanStack Form. `saveScheduleEdits` checks `updatedAt` before it saves. A stale drawer save keeps the fields and offers Reload.
+- An outside drawer save can drop that session's pending calendar changes. The notice names the session.
+- Decision 11 is built in unit 3b. Apply stages details in both hosts. `saveScheduleEdits` saves them with meetings in one transaction.
 
 ## Public calendar redesign
 
 - **Views stay** (month, week, agenda) and so do the URLs (`?view=week&date=…`). Week becomes the hours view.
 - **The legend filters:** each type in the legend turns its blocks on and off.
 - **A click on a block** opens a popover (bottom sheet on phones) with the title, session number, time, place, cover and a link to the course or event.
-- **Admin edit mode.** A signed-in admin sees an Edit button. Edit mode renders the page fresh, not from the cache, and checks the admin role on the server. Admins move, resize and cancel any session or event, then Save through the same server action. Every affected course space gets its "Schedule changed" post.
+- **Admin edit mode.** A signed-in admin sees an Edit button. Edit mode renders the page fresh, not from the cache, and checks the admin role on the server. Admins move, resize and cancel any session or event, then Save through the same server action. One save here can change courses in many spaces, so the admin gets **one dialog** with a list of the affected spaces, each with its prefilled announcement and its own Publish or Skip, not one dialog for each space. It is the step 3 dialog, given a list.
 - **Data:** one cached query for meetings in the range: sessions of published courses, and published events.
 - **Feeds:** the ICS feed gives each meeting a stable ID, so a moved meeting updates in people's calendars and does not make a copy.
 
@@ -226,26 +256,28 @@ The [untangle rules](../../AGENTS.md) apply to every step. The aim: a typical ch
 
 ### Modules, from most stable to most volatile
 
-| Module                                                 | Holds                                                                                                                   | May import                            |
-| ------------------------------------------------------ | ----------------------------------------------------------------------------------------------------------------------- | ------------------------------------- |
-| `lib/meetings.ts`                                      | the `Meeting` type and pure rules: order, first and last day, weeks, next meeting, summary text, Cairo time             | `lib/cairo-day.ts`                    |
-| `fields/meetings.ts`                                   | the Payload field for `meetings[]` and its validation                                                                   | `lib/meetings.ts`                     |
-| `collections/Sessions.ts`                              | the collection: fields, access that follows the course, hooks                                                           | fields, `lib/*`                       |
-| `lib/schedule-changes.ts`                              | the outbox: the afterChange hook that records a change, and the drain that posts and notifies                           | `lib/meetings.ts`, notify, posts      |
-| `lib/calendar-sources.ts`                              | one adapter per kind (session, event, space event): how a document becomes calendar items, and how a change writes back | `lib/meetings.ts`, collections' types |
-| `actions/save-calendar-changes.ts`                     | the one server action: auth, transaction, call the adapters                                                             | `lib/calendar-sources.ts`             |
-| `components/calendar/`                                 | the generic component; the only code that imports ui-sdk                                                                | ui-sdk, Arc                           |
-| hosts: admin field, space tab, space post, `/calendar` | data loading and labels for one place                                                                                   | everything above                      |
+| Module                                                 | Holds                                                                                                                     | May import                            |
+| ------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------- | ------------------------------------- |
+| `lib/meetings.ts`                                      | the `Meeting` type and pure rules: order, first and last day, weeks, next meeting, summary text, Cairo time               | `lib/cairo-day.ts`                    |
+| `fields/meetings.ts`                                   | the Payload field for `meetings[]` and its validation                                                                     | `lib/meetings.ts`                     |
+| `collections/Sessions.ts`                              | the collection: fields, access that follows the course, hooks                                                             | fields, `lib/*`                       |
+| `lib/schedule-changes.ts`                              | the pure rule: items before and after → the changes that count, and the announcement's prefilled text and block           | `lib/meetings.ts`, calendar items     |
+| `lib/schedule-offer.ts`, `actions/schedule-offers.ts`  | the offer: for each space, permission (`mayAnnounce`), language (`courseLanguage`), session names, the text and the block | `lib/schedule-changes.ts`, spaces     |
+| `components/space/schedule-offer-dialog.tsx`           | the one announcement dialog, for a list of spaces; Publish goes through `postCreate`                                      | the offer, the calendar component     |
+| `lib/calendar-sources.ts`                              | one adapter per kind (session, event, space event): how a document becomes calendar items, and how a change writes back   | `lib/meetings.ts`, collections' types |
+| `actions/save-schedule-edits.ts`                       | the one server action: auth, transaction, call the adapters                                                               | `lib/calendar-sources.ts`             |
+| `components/calendar/`                                 | the generic component; the only code that imports ui-sdk                                                                  | ui-sdk, Arc                           |
+| hosts: admin field, space tab, space post, `/calendar` | data loading and labels for one place                                                                                     | everything above                      |
 
 ### Rules for this feature
 
 - **One source of each rule.** Every date rule lives in `lib/meetings.ts`; every shape of `meetings[]` in `fields/meetings.ts`; every "who may edit" in the collections' access. No copy in a component or an action.
 - **The component knows no domain.** It takes items and gives changes. Courses, events and posts enter only through `lib/calendar-sources.ts`. A new kind (a cycle deadline, later) is one new adapter.
 - **One feature, one folder where it can.** The generic calendar in `components/calendar/ui/`, the public page's parts beside it in `components/calendar/`; the space's calendar tab and post next to the other space components.
-- **No order the callers must know.** Notices come from the collection hooks, not from each write path. Grouping comes from the batch ID, not from call order.
+- **No order the callers must know.** Every host that saves schedule changes calls the same `scheduleChanges` rule and opens the same announcement dialog; no host writes its own notice text.
 - **No pass-through wrappers, no options nothing uses.** The calendar component has only the props the five places need.
-- **No special cases.** No `if (kind === 'event')` outside the adapters. No swallowed errors: a failed save shows the error and keeps the unsaved changes.
-- **Tests at the seams:** `lib/meetings.ts` (pure, many cases), each adapter (document → items → change → document), the action (access and transaction), the outbox (grouping), the component (keyboard and ARIA from ui-sdk's testing kit).
+- **No special cases.** No `if (kind === 'event')` outside the adapters. No swallowed errors: a failed save shows the error and keeps the unsaved changes; a stale save also offers "Reload and lose my changes" (see "Saving and telling people").
+- **Tests at the seams:** `lib/meetings.ts` (pure, many cases), each adapter (document → items → change → document), the action (access and transaction), `scheduleChanges` (what counts, the text), the component (keyboard and ARIA from ui-sdk's testing kit).
 
 ## Browser agents (WebMCP), a later phase
 
@@ -253,7 +285,7 @@ The [untangle rules](../../AGENTS.md) apply to every step. The aim: a typical ch
 
 - **What it needs:** an `agent` key on the calendar primitive that lists its actions, one `createAgent()` bridge, and `registerTools()`. In a browser without WebMCP, `registerTools` does nothing.
 - **Agents change only unsaved edits.** The calendar's agent actions are `createBlock`, `moveBlock`, `resizeBlock` and `cancelBlock`, in edit mode only. They change the page, not the database. **Save** carries `data-agent-confirm`, so only the person saves. No delete action is offered to agents.
-- **Same path as people.** The agent drives the component, the component calls `saveCalendarChanges`, and the collections' access rules decide. Nothing new on the server.
+- **Same path as people.** The agent drives the component, the component calls `saveScheduleEdits`, and the collections' access rules decide. Nothing new on the server.
 - **Untrusted text.** Session titles and descriptions are written by fellows and can contain text that tries to steer the admin's agent. The bridge's `allow` refuses every action outside the calendar, and the person's Save is the last check.
 - **Where:** the admin and the course space, in edit mode. Not for visitors of the public calendar.
 - **How it relates to our MCP server:** the MCP plugin lets assistants write courses on the server, without a page, through drafts and review. WebMCP is help on the page the person is looking at. Both end in the same collections and rules.
@@ -263,7 +295,7 @@ The [untangle rules](../../AGENTS.md) apply to every step. The aim: a typical ch
 
 1. **Courses:** sessions collection with Markdown descriptions, migration, verify, readers.
 2. **The calendar component** and the admin Sessions tab, then the AI assistant tools (MCP).
-3. **Saving and telling people:** the action, the outbox, the "Schedule changed" post.
+3. **Saving and telling people:** the action (done in step 2), the prefilled announcement and its schedule block.
 4. **Course space** Calendar tab with edit mode.
 5. **Public calendar** redesign with admin edit mode.
 6. **Events.**
@@ -277,6 +309,74 @@ Each step ships to the dev copy on its own, and the site works after it.
 None now.
 
 ## Decision log
+
+Fix: stage drawer details with calendar changes, then save both in one transaction (owner approved, 2026-11-15; step 5 decision 11).
+
+- **Two save paths can discard pending work.** In step 4, saving the drawer drops that session's unsaved calendar edits. In calendar edit mode, clicking a saved or new session will instead open our drawer's Edit form directly, in both the space and admin. Apply stages the details; Cancel discards only the current form changes. The Save bar and leave guard include staged details.
+- **One Save sends one request.** `saveScheduleEdits({ calendar, details })` applies meeting changes, details, and new sessions in one Payload transaction. A stale existing session version stops all writes. The announcement offer opens once. The generic calendar keeps meeting changes only; the host joins its detail changes at Save. Outside calendar edit mode, the form uses the same action for an immediate single-session save.
+- **Build after the details popover, before month view.** See step 5 unit 3b in `docs/plans/2026-11-15-calendar-redesign.md`. Built in unit 3b. The owner reviews the complete result after the overnight run.
+
+Fix: owner's decisions of 2026-11-15, at the close of step 4.
+
+- **A drawer save drops the calendar's unsaved changes to that session only, with a notice that names it.** The changes to other sessions stay. The admin calendar does the same since step 2 (unit 5c). The changes were made from the old version of the session and could not save; a stale save of the whole calendar would drop more.
+- **One new look for the calendar component, in all five places** (admin, space, schedule block, public calendar), after Arc's week and month calendar screens, without their left sidebar: soft tinted blocks with title, time range and place; tinted all-day bars that span days; the short day name above a large date, today in a filled circle; small muted hour labels; a now line with a time pill; a toolbar with month and week number, Today, arrows, a Week / Work week / Day switch. A block click opens a popover editor in place (title, date, start and end times with the length, place, description, type chips, Delete, Done), as the owner's reference images show (see the step 5 plan). This replaces "outlined blocks, mono hour labels" in "One calendar component, five places". Arc's screens are Pro blocks: only the look is followed; no source is copied.
+
+Fix: in the course space, only sessions move on the calendar; space events show but do not drag (owner, 2026-11-15, step 4). This narrows "move or resize sessions and space events" in "Course space calendar".
+
+- **Events store an instant and carry RSVP and replies.** A drag would need a second write-back path and checks for both. There are 9 space events, none in the future.
+- **They stay editable from their post.** Drag can come later if fellows ask.
+- **Also decided for step 4:** the drawer has the full Edit form in the space (not the Payload admin); open calendars do not update live yet (the stale-save message protects); the Events tab stays; cohort spaces get no Calendar tab for now. See `docs/plans/2026-11-15-course-space-calendar.md`.
+
+Fix: the owner's review of 2026-11-15 (goal: more solid, and simpler for admins, fellows and students).
+
+- **A stale save had two descriptions.** One place said the calendar reloads, another that the changes stay. Now one behavior: the changes stay, the message names the session another person changed, and one button reloads and drops them. A silent reload loses work without a word; a merge is complexity nobody asked for.
+- **Saves that publish nothing are a decision, not a gap:** Skip, an AI assistant's save, and the session's own admin page. The person writes an announcement by hand.
+- **Two Save buttons.** They stay separate (sessions are not drafts). The Save schedule bar says that the course's Save does not save the schedule.
+- **Archive dates are a data task, not code** (owner, 2026-11-15; this replaces an `approximate` flag that was built and reverted in `eb95f17c`). 80 archive courses had meetings that a script invented from the old timing (2026-11-14). Nobody held them exactly. So they are removed, and the script is deleted. On the local copy: 594 meetings removed (52 courses with a start day and weeks: 516; 17 with weekly times: 67; 11 with a start day only: 11), 0 left because a person changed them; the 197 empty sessions the script made are deleted; 397 sessions stay with no meeting and show in Unscheduled; the 80 courses have no `first_day` or `last_day`. No flag, note or reader rule. Later, an agent fills the real dates from the CILAS backup, and leaves a course with no meeting where the backup has no date.
+- **The public calendar's announcements are one dialog** with a list of spaces (step 5), so the step 3 dialog takes a list.
+- **Old text fixed:** events have no `timing_note`; the migration no longer names `timing_note` or "Week N" as current; the header no longer says "working draft".
+
+Fix: a schedule change offers a prefilled announcement; there is no automatic post, outbox or worker (owner's decision, 2026-11-15). This replaces "collection hooks write schedule changes to an outbox" at the end of this log.
+
+- **A person decides what the space reads.** An automatic post cannot know that a move is a typo fix, or add "bring your laptop". The saver edits the prefilled text, or skips it.
+- **The calendar already groups edits.** Nothing saves until Save schedule, so one save is one offer. The outbox's wait (join several saves into one post) was needed only for paths that save one session at a time, and those paths now offer their own announcement.
+- **The parts exist.** A space announcement is pinned and notifies every member (`lib/spaces-write.ts`); posts already hold session blocks (`lib/session-refs.ts`). An outbox would add a table, a worker, a cron route and a production schedule: private search's `processOutbox` has no production caller, so there was no running worker to reuse.
+- **The cache is already fresh.** The session hooks drop the public calendar's `courses` tag inside the save, so a worker refresh would do nothing new.
+- **What this costs.** "No write path has to remember to notify" is no longer true: each host that saves schedule changes must open the offer, and a skipped offer means no notice. A session is cancelled in its drawer, not on the calendar, so the drawer's save must open the offer too.
+- **What counts.** Only changes that touch today or later; archive corrections offer nothing. Scripts and seeds offer nothing; a course with no space offers nothing.
+
+Fix: the timing fields are removed (`timing_note`, `announced`, `session_unit`, the course `summary`). Archive dates were approximate meetings from 2026-11-14 (the owner's call, which reversed the earlier decision against invented all-day meetings). On 2026-11-15 the owner reversed that again: the invented meetings are removed and the script is deleted (see "Archive dates are a data task, not code"). The bullets on approximate meetings below are history.
+
+- **New content must not use them.** Three of the four were stopgaps for old data: `announced` held a start and a length with no meeting, `timing_note` held words the dates could not say, and `session_unit` chose "Week N". A course states its time with meetings alone, an untitled session is always "Session N", and a card falls back to the subtitle, then the start of the description (the 12 summaries are replaced this way).
+- **Archive courses got approximate meetings (history; removed 2026-11-15).** `scripts/archive-meetings-plan.ts` and `make-archive-meetings.ts` (both deleted) gave a course with no meeting:
+  - **a start day and weeks, no weekly times (52 courses):** one all-day meeting a week on the weekday of the start day, for that many weeks, starting on the start day;
+  - **a start day only (11):** one all-day meeting on that day;
+  - **weekly times (17):** weekly meetings at the real times, each slot on its own weekday, from the first one on or after the start day, for `weeks` weeks; with no length, the first meeting only. The start day is the one in the old `schedule`, else the research file's term start, else the cycle's start date (the cycle's date is the semester start and is wrong for the six spring 2022 courses, so the research file comes first). A session holds one week, so a twice-a-week course is one session with two meetings;
+  - **a length only (24), or nothing (66):** no meeting; the length goes. **Weekly times and no start day anywhere (course 7):** no meeting; the times go.
+- **Where the meetings go.** On the course's existing sessions in their order, one group for each session (a meeting, or a week of meetings); extra groups become new untitled sessions; extra sessions stay unscheduled.
+- **The archive dates were approximate.** The week was right where the old site gave one; the weekday of a start day was trusted as written. The block menu works on all-day meetings (Open, Add meeting, New session next week, Delete meeting), because these meetings are all day.
+- **The fill and the importers stop writing the removed fields.** The fill makes sessions only. `check-old-course-paths.ts` fails on any name of a removed field in `src/`, and on the course collection defining one.
+- **The course form's SEO fields are a tab.** A plugin listed after the SEO plugin moves its `meta` group into a last tab named SEO. The field stays `meta`: no schema change.
+
+Fix: "Repeat weekly" in the session form goes; each block has a menu instead, the admin calendar is always in edit mode, and it saves with its own "Save schedule" bar.
+
+- **Repeat weekly's two modes did not fit.** A session can hold several meetings in one week: 177 sessions in 17 courses meet twice on the same day (groups), and twice-a-week weeks are common. "The next N weeks of the last meeting" and "N new sessions with one meeting" copy neither shape.
+- **One action per week shows its result at once.** "New session next week" copies all the meetings of a session 7 days on, as one new session, so the person sees the result on the calendar and repeats it for the next week. "Add meeting" adds one meeting on the next day, which the person then drags. Neither needs a count or a mode.
+- **A new item has several blocks.** `create-item` now takes `blocks` (at least one), so a copy of a two-meeting session is one new session with two meetings, not two sessions.
+- **Sessions are not tied to the course save.** Fellows edit running courses without review, and every reader of sessions would need a draft filter if sessions were drafts of the course. So the calendar saves through its own "Save schedule" bar and Payload's Save saves the course only.
+- **The leave warning is the calendar's own.** Payload's warning takes no state besides its form, and marking the form modified would start the course's autosave. The calendar reports the count of waiting changes, and the admin warns with the same words and the same confirmation as Payload.
+
+Fix: a course with no meeting keeps its old start date and weeks as an announced timing (`course.announced`), read by one rule (`courseTiming`): meetings when one is held, else the announced start and weeks, and no last day. (Superseded by the fix at the top: the field and the rule are gone.)
+
+- The fill gave the 69 courses with a start date but no meeting one all-day meeting on that day, on their first session or on a new one (30). The site then showed a meeting nobody held: "Session 1" on the calendar and in the feed, a dated first syllabus row, `Meetings: 1` in `llms`, a "Starts" fact on the page and "1 week" on cards.
+- 101 courses have a start date or a typed `weeks` and no meeting. The old cards showed the typed weeks ("10 weeks"); the fill dropped them.
+- A course page still shows "Starts" only from a meeting, as before: the announced start is a list and calendar fact.
+- No last day from a start and a length: a length in weeks says how long a course runs, not on which day it ends, and the old site showed no end for these courses.
+
+Fix: weeks are 7-day periods counted from the first meeting; a course is regular when every period has the same weekdays and times, the last one perhaps ending early.
+
+- Saturday-to-Friday weeks split a course that meets Thursday and Saturday from a Thursday (296): each pair fell in two weeks, so the page lost "Meets" and the card said 3 weeks for 2.
+- The calendar view still lays out Saturday weeks: that is how Egypt reads a week, not how long a course runs.
 
 Fix: start dates and lengths from the old site go into the old `schedule` group first, by one rule (`scripts/archive-start-dates.ts`); the fill then reads them like any other date.
 
@@ -293,13 +393,13 @@ Fix: the fill takes `--refill <ids|file>`: it deletes those courses' sessions an
 - A deleted session's ID dies. A space post that names it (`course_session`, or `session:<id>` and `::session[<id>]` in its body, by old row ID or new ID) would point at nothing. None did.
 - The map from old row ID to session ID drops the deleted IDs and takes the new ones.
 
-Fix: weekly times become words only where the pattern places none of them and the language has no note; a written note is kept as it is.
+Fix: weekly times become words only where the pattern places none of them and the language has no note; a written note is kept as it is. (Superseded by the fix at the top: `timing_note` is gone.)
 
 - The first rule wrote the words before every note. 8 of the 18 undated courses have a note, and it already says the times in a person's words ("Mondays 10-12pm, offline, except for the first class will be online."). The words doubled them.
 - A course with a start but no `weeks` (30, 78, 195, 216, 224 and 152) also gets no meeting for its times, only an all-day one on its start. The first rule tested the start date alone, so their times were lost. The rule now asks the pattern itself (`expandSchedule`), so both cases follow from one test.
 - A course that gets real dates must lose the words again: its note returns to the schedule note. The note is planned from the schedule each run, so this needs no special case.
 
-Fix: weekly times with no start date become words at the start of `timing_note`, written by `lib/meeting-text.ts`.
+Fix: weekly times with no start date become words at the start of `timing_note`, written by `lib/meeting-text.ts`. (Superseded by the fix at the top: `timing_note` is gone, and `lib/meeting-text.ts` keeps only the weekday names for the course page.)
 
 - 43 courses have weekly slots but no start date. The pattern makes no meeting for them, so the times live only in the old `schedule` group and go when it is removed.
 - The words must read as the course page writes weekdays and times in each language (the weekday's full name, the page's digits), and the summary will need the same words: one formatter, not a copy per caller.
@@ -403,7 +503,7 @@ Fix: browser agents get only unsaved calendar edits; the person saves.
 - WebMCP agents act as the signed-in person.
 - Fellows' text on the page can try to steer the agent.
 
-Fix: collection hooks write schedule changes to an outbox; the worker posts and notifies per space and batch.
+Fix: collection hooks write schedule changes to an outbox; the worker posts and notifies per space and batch. (Superseded by the prefilled announcement at the top.)
 
 - Every write path (calendar, admin form, AI assistants) must notify, without each one remembering to.
 - Ten drags must make one post and one notification.

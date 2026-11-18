@@ -11,11 +11,13 @@
  * A published course with a newer pending draft is filled from the draft
  * (`fillSource`). Safe to run twice: a course that already has sessions is
  * skipped, the map (old row ID → new session ID, for the space posts step) is
- * read back and only added to, and the timing notes are set, not appended.
-`--refill` deletes the named courses' sessions and fills them again, after
-their old schedule changed (`apply-archive-start-dates.ts`); it stops before
-any write when a space post names one of those sessions, by its old row ID
-or its new ID.
+ * read back and only added to.
+ * `--refill` deletes the named courses' sessions and fills them again, after
+ * their old schedule changed (`apply-archive-start-dates.ts`); it stops before
+ * any write when a space post names one of those sessions, by its old row ID
+ * or its new ID.
+ * A course the pattern gives no meeting gets none here; its dates come later
+ * from the CILAS backup, as data (ADR 0011).
  * Each course is written in one transaction. Then
  * `scripts/verify-course-sessions.ts` checks the result.
  */
@@ -23,9 +25,10 @@ import { existsSync, readFileSync, renameSync, writeFileSync } from 'node:fs'
 import { resolve } from 'node:path'
 import { createLocalReq, getPayload } from 'payload'
 
+import { storeCourseDays } from '../src/lib/course-days'
 import { sessionIdsIn } from '../src/lib/session-refs'
 import config from '../src/payload.config'
-import { inTransaction } from '../src/plugins/mcp/transaction'
+import { inTransaction } from '../src/lib/in-transaction'
 import {
   planCourseSessions,
   type Locale,
@@ -91,36 +94,9 @@ const counts = {
   deleted: 0,
   sessions: 0,
   untitled: 0,
-  startDays: 0,
-  timesInNote: 0,
   fromDrafts: [] as number[],
 }
 const problems: string[] = []
-
-/**
- * The timing note on the course row and on its latest version, so a later
- * publish of a pending draft keeps it. A language with a note gets a row if
- * it has none; an empty note makes no row.
- */
-const storeTimingNote = async (course: number, version: number | null, note: Localized<string>) => {
-  const targets = [
-    { table: 'courses_locales', column: 'timing_note', parent: course },
-    ...(version === null
-      ? []
-      : [{ table: '_courses_v_locales', column: 'version_timing_note', parent: version }]),
-  ]
-  for (const locale of ['en', 'ar'] as const)
-    for (const { table, column, parent } of targets) {
-      const text = note?.[locale] ?? null
-      await payload.db.pool.query(
-        text === null
-          ? `UPDATE ${table} SET ${column} = $3 WHERE _locale = $1 AND _parent_id = $2`
-          : `INSERT INTO ${table} (_locale, _parent_id, ${column}) VALUES ($1, $2, $3)
-               ON CONFLICT (_locale, _parent_id) DO UPDATE SET ${column} = EXCLUDED.${column}`,
-        [locale, parent, text],
-      )
-    }
-}
 
 /**
  * The refilled courses' sessions, by course. Stops when a space post names
@@ -167,26 +143,17 @@ const toRefill = async (): Promise<Map<number, number[]>> => {
 }
 const refilling = await toRefill()
 
-// Each older version's timing note is its own schedule note, so restoring it
-// keeps its words. The latest version and the course row follow the plan.
-if (apply)
-  await payload.db.pool.query(
-    `UPDATE _courses_v_locales SET version_timing_note = version_schedule_note
-       WHERE version_timing_note IS DISTINCT FROM version_schedule_note`,
-  )
-
-for (const { course, source, latest, fromDraft } of await loadCourseSources(payload)) {
+for (const { course, source, fromDraft } of await loadCourseSources(payload)) {
   const plan = planCourseSessions(source, toMarkdown)
   if (fromDraft) counts.fromDrafts.push(course.id)
-  if (JSON.stringify(plan.timingNote) !== JSON.stringify(source.schedule?.note ?? null))
-    counts.timesInNote++
-  if (apply) await storeTimingNote(course.id, latest?.id ?? null, plan.timingNote)
   const { totalDocs: existing } = await payload.count({
     collection: 'sessions',
     where: { course: { equals: course.id } },
     overrideAccess: true,
   })
   const replaced = refilling.get(course.id) ?? []
+  // The first and last day follow the meetings.
+  if (apply) await storeCourseDays(await createLocalReq({}, payload), course.id)
   if (existing > 0 && !replaced.length) {
     counts.skipped++
     const unmapped = plan.sessions.filter((s) => s.from && !(s.from in map))
@@ -202,7 +169,6 @@ for (const { course, source, latest, fromDraft } of await loadCourseSources(payl
   counts.deleted += replaced.length
   counts.sessions += plan.sessions.length
   counts.untitled += plan.sessions.filter((s) => !s.from).length
-  if (plan.startDay) counts.startDays++
   if (!apply || (!plan.sessions.length && !replaced.length)) continue
 
   const req = await createLocalReq({}, payload)

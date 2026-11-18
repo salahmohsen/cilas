@@ -4,7 +4,6 @@ import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest'
 import config from '@/payload.config'
 import { env } from '@/env'
 import { MCP_TOOLS } from '@/plugins/mcp'
-import { expandSchedule } from '@/lib/schedule'
 import { footnotesOf } from '@/lib/footnotes'
 import { createTracker, uniq, uniqEmail } from './fixtures'
 
@@ -23,24 +22,21 @@ async function call(name: string, data: Record<string, unknown>) {
   const text = result.content[0]!.text as string
   return { ...result, text, json: result.isError ? null : JSON.parse(text) }
 }
-const schedule = {
-  start_date: '2024-09-22',
-  start_precision: 'day',
-  weeks: 8,
-  slots: [{ weekday: 'sun', start_time: '17:30', end_time: '20:00' }],
-  note: { en: 'First 4 online, last 4 offline', ar: 'أول أربع جلسات عبر الإنترنت وآخر أربع حضوريًا' },
-}
+// Sundays 17:30–20:00 from 22 September 2024, one session a week.
+const SUNDAYS = Array.from({ length: 8 }, (_, i) => `2024-09-${22 + 7 * i}`).map((day) => {
+  const [y, m, d] = day.split('-').map(Number)
+  return new Date(Date.UTC(y!, m! - 1, d!)).toISOString().slice(0, 10)
+})
 const courseInput = () => ({
-  title: { en: uniq('MCP schedule'), ar: 'دورة تجريبية' },
+  title: { en: uniq('MCP sessions'), ar: 'دورة تجريبية' },
   cycle,
   course_type: 'THEMATIC',
   location: ['HYBRID'],
-  schedule,
-  sessions: Array.from({ length: 8 }, (_, i) => ({
-    order: i + 1,
+  syllabus: SUNDAYS.map((date, i) => ({
     delivery: i < 4 ? 'ONLINE' : 'OFFLINE',
-    session_title: { en: `Session ${i + 1}`, ar: `جلسة ${i + 1}` },
+    title: { en: `Session ${i + 1}`, ar: `جلسة ${i + 1}` },
     description: { en: 'Reading and discussion', ar: 'قراءة ومناقشة' },
+    meetings: [{ date, start_time: '17:30', end_time: '20:00' }],
   })),
 })
 
@@ -86,19 +82,47 @@ describe('complete MCP draft writes', () => {
     await payload.destroy()
   })
 
-  it('refuses Saturday/Sunday conflict before creating anything; saves corrected schedule and bilingual nested flow', async () => {
+  /** The course's sessions as anyone reading the course sees them, in list order. */
+  const sessionsOf = async (course: number, locale: 'en' | 'ar', user?: typeof admin) =>
+    (
+      await payload.find({
+        collection: 'sessions',
+        where: { course: { equals: course } },
+        sort: 'position',
+        locale,
+        fallbackLocale: false,
+        depth: 0,
+        pagination: false,
+        overrideAccess: false,
+        ...(user ? { user } : {}),
+      })
+    ).docs
+  /** The course row, where lists read `first_day` and `last_day`. */
+  const daysOf = async (id: number) => {
+    const { first_day, last_day } = await payload.findByID({
+      collection: 'courses',
+      id,
+      draft: false,
+      depth: 0,
+    })
+    return { first_day, last_day }
+  }
+
+  it('refuses a bad meeting before creating anything; writes a draft course with its sessions and meetings', async () => {
     const input = courseInput()
     const before = await payload.count({ collection: 'courses' })
     const refused = await call('create_course_draft', {
       ...input,
-      schedule: { ...schedule, start_date: '2024-09-21' },
+      syllabus: [{ meetings: [{ date: '2024-09-22', start_time: '20:00', end_time: '17:30' }] }],
     })
     expect(refused.isError).toBe(true)
-    expect(refused.text).toMatch(/2024-09-21.*Saturday.*Sunday/)
+    expect(refused.text).toContain('syllabus[0].meetings[0].end_time')
     expect((await payload.count({ collection: 'courses' })).totalDocs).toBe(before.totalDocs)
+
     const result = await call('create_course_draft', input)
     expect(result.isError, result.text).toBeFalsy()
     const id = track('courses', result.json).id
+    expect(result.json.syllabus_ids).toHaveLength(8)
     for (const locale of ['en', 'ar'] as const) {
       const course = await payload.findByID({
         collection: 'courses',
@@ -108,48 +132,70 @@ describe('complete MCP draft writes', () => {
         depth: 0,
         fallbackLocale: false,
       })
-      expect(course.sessions).toHaveLength(8)
-      expect(course.sessions!.map((session) => session.delivery)).toEqual([
-        'ONLINE',
-        'ONLINE',
-        'ONLINE',
-        'ONLINE',
-        'OFFLINE',
-        'OFFLINE',
-        'OFFLINE',
-        'OFFLINE',
-      ])
       expect(course.location).toEqual(['HYBRID'])
-      expect(course.schedule?.note).toBe(schedule.note[locale])
-      expect(course.sessions![0]!.session_title).toBe(input.sessions[0]!.session_title[locale])
-      const meetings = expandSchedule(course.schedule, course.sessions)
-      expect(meetings).toHaveLength(8)
-      expect(meetings.map((m) => m.date)).toEqual([
-        '2024-09-22',
-        '2024-09-29',
-        '2024-10-06',
-        '2024-10-13',
-        '2024-10-20',
-        '2024-10-27',
-        '2024-11-03',
-        '2024-11-10',
+      const sessions = await sessionsOf(id, locale, admin)
+      expect(sessions.map((s) => s.id)).toEqual(result.json.syllabus_ids)
+      expect(sessions.map((s) => s.title)).toEqual(input.syllabus.map((s) => s.title[locale]))
+      expect(sessions.map((s) => s.description)).toEqual(
+        input.syllabus.map((s) => s.description[locale]),
+      )
+      expect(sessions.map((s) => s.delivery)).toEqual([
+        ...Array(4).fill('ONLINE'),
+        ...Array(4).fill('OFFLINE'),
       ])
-      expect(meetings.every((m) => m.start_time === '17:30' && m.end_time === '20:00')).toBe(true)
+      expect(sessions.map((s) => s.meetings?.map(({ id: _, ...m }) => m))).toEqual(
+        SUNDAYS.map((date) => [{ date, start_time: '17:30', end_time: '20:00' }]),
+      )
     }
+    expect(await daysOf(id)).toEqual({ first_day: '2024-09-22', last_day: '2024-11-10' })
+    // A draft course's sessions are not public.
+    expect(await sessionsOf(id, 'en')).toEqual([])
   })
 
-  it('preserves explicit session dates; validates pricing, times and conditional applicant questions', async () => {
-    const input = courseInput()
-    const dates = [{ date: '2024-09-25', start_time: '18:00', end_time: '21:00' }]
-    const result = await call('create_course_draft', { ...input, sessions: [{ order: 1, dates }] })
+  it('replaces the sessions on update: keeps those named by id, makes new ones, deletes the rest', async () => {
+    const result = await call('create_course_draft', courseInput())
     expect(result.isError, result.text).toBeFalsy()
     const id = track('courses', result.json).id
-    const course = await payload.findByID({ collection: 'courses', id, draft: true })
-    expect(expandSchedule(course.schedule, course.sessions)[0]).toMatchObject({
-      date: '2024-09-25',
-      start_time: '18:00',
-      end_time: '21:00',
+    const [first, second] = result.json.syllabus_ids as number[]
+    const update = await call('update_course_draft', {
+      id,
+      syllabus: [
+        { id: second, meetings: [{ date: '2024-10-01' }] },
+        { id: first, title: { en: 'Renamed' } },
+        {
+          title: { en: 'New', ar: 'جديدة' },
+          meetings: [{ date: '2024-12-03', start_time: '09:00', end_time: '11:00' }],
+        },
+      ],
     })
+    expect(update.isError, update.text).toBeFalsy()
+    const [kept, renamed, made] = update.json.syllabus_ids as number[]
+    expect([kept, renamed]).toEqual([second, first])
+    const sessions = await sessionsOf(id, 'ar', admin)
+    expect(sessions.map((s) => s.id)).toEqual([second, first, made])
+    // The Arabic of a kept session stays; the new one has its own.
+    expect(sessions.map((s) => s.title)).toEqual(['جلسة 2', 'جلسة 1', 'جديدة'])
+    // A field a row leaves out stays as it was.
+    expect(sessions.map((s) => s.meetings?.map((m) => m.date))).toEqual([
+      ['2024-10-01'],
+      ['2024-09-22'],
+      ['2024-12-03'],
+    ])
+    expect(await daysOf(id)).toEqual({ first_day: '2024-09-22', last_day: '2024-12-03' })
+
+    const foreign = await call('update_course_draft', { id, syllabus: [{ id: 2147483000 }] })
+    expect(foreign.isError).toBe(true)
+    expect(foreign.text).toContain('is not one of this course')
+    const cleared = await call('update_course_draft', { id, syllabus: null })
+    expect(cleared.isError, cleared.text).toBeFalsy()
+    expect(await sessionsOf(id, 'en', admin)).toEqual([])
+    expect(await daysOf(id)).toEqual({ first_day: null, last_day: null })
+  })
+
+  it('validates pricing, meeting times and conditional applicant questions', async () => {
+    const result = await call('create_course_draft', courseInput())
+    expect(result.isError, result.text).toBeFalsy()
+    const id = track('courses', result.json).id
     for (const changes of [
       { pricing_override: { options: [{ amount: 10, default: false }] } },
       { pricing_override: { options: [{ amount: -1, default: true }] } },
@@ -162,11 +208,9 @@ describe('complete MCP draft writes', () => {
         },
       },
       {
-        schedule: {
-          ...schedule,
-          slots: [{ weekday: 'sun', start_time: '25:00', end_time: '20:00' }],
-        },
+        syllabus: [{ meetings: [{ date: '2024-09-22', start_time: '25:00', end_time: '20:00' }] }],
       },
+      { syllabus: [{ meetings: [{ date: '2024-09-22', start_time: '19:00' }] }] },
     ])
       expect((await call('update_course_draft', { id, ...changes })).isError).toBe(true)
     const external = await call('update_course_draft', {
@@ -199,15 +243,15 @@ describe('complete MCP draft writes', () => {
     expect(footnotesOf(article.body)).toHaveLength(0)
   })
 
-  it('rejects rolled-over timestamps without creating a course', async () => {
+  it('rejects rolled-over meeting days without creating a course', async () => {
     const before = await payload.count({ collection: 'courses' })
-    for (const start_date of ['2026-02-30T12:00:00Z', '2026-04-31T10:00:00+02:00']) {
+    for (const date of ['2026-02-30', '2026-04-31']) {
       const result = await call('create_course_draft', {
         ...courseInput(),
-        schedule: { ...schedule, start_date },
+        syllabus: [{ meetings: [{ date }] }],
       })
       expect(result.isError, result.text).toBe(true)
-      expect(result.text).toContain('valid calendar day')
+      expect(result.text).toContain('Use a real day')
     }
     expect((await payload.count({ collection: 'courses' })).totalDocs).toBe(before.totalDocs)
   })
@@ -332,19 +376,31 @@ describe('complete MCP draft writes', () => {
       expect(update.isError, update.text).toBeFalsy()
       expect(await read()).toEqual(before)
       expect((await payload.findByID({ collection, id, draft: true })).title).toBe('Changed draft')
+      if (collection !== 'courses') return
+      // Sessions have no drafts: a published course's would change at once.
+      const sessions = await sessionsOf(id, 'en')
+      const refused = await call('update_course_draft', {
+        id,
+        title: { en: 'Not saved' },
+        syllabus: [{ title: { en: 'Live at once' } }],
+      })
+      expect(refused.isError).toBe(true)
+      expect(refused.text).toContain('published')
+      expect(await sessionsOf(id, 'en')).toEqual(sessions)
+      expect((await payload.findByID({ collection, id, draft: true })).title).toBe('Changed draft')
     },
   )
 
   it('keeps omitted fields, clears explicitly and reports unmapped source facts as incomplete', async () => {
     const result = await call('create_course_draft', {
       ...courseInput(),
-      summary: { en: 'Keep this', ar: 'احتفظ' },
+      subtitle: { en: 'Keep this', ar: 'احتفظ' },
     })
     expect(result.isError, result.text).toBeFalsy()
     const id = track('courses', result.json).id
     const update = await call('update_course_draft', {
       id,
-      summary: { en: null },
+      subtitle: { en: null },
       source_unmapped: [{ field: 'source_extra', reason: 'No destination' }],
     })
     expect(update.isError, update.text).toBeFalsy()
@@ -361,7 +417,7 @@ describe('complete MCP draft writes', () => {
           locale: 'en',
           fallbackLocale: false,
         })
-      ).summary,
+      ).subtitle,
     ).toBeNull()
     expect(
       (
@@ -372,7 +428,7 @@ describe('complete MCP draft writes', () => {
           locale: 'ar',
           fallbackLocale: false,
         })
-      ).summary,
+      ).subtitle,
     ).toBe('احتفظ')
   })
 

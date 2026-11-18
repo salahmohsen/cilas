@@ -9,16 +9,17 @@ export const optionalHttpUrl = (value: unknown): true | string => (value ? httpU
 
 const TIME = /^([01]\d|2[0-3]):[0-5]\d$/
 
+export const TIME_OF_DAY = 'Use 24-hour HH:MM in Cairo time, e.g. 19:00'
+export const END_AFTER_START = 'End time must be after the start time.'
+
 export const timeOfDay = (value: unknown): true | string =>
-  typeof value === 'string' && TIME.test(value)
-    ? true
-    : 'Use 24-hour HH:MM in Cairo time, e.g. 19:00'
+  typeof value === 'string' && TIME.test(value) ? true : TIME_OF_DAY
 
 // Zero-padded HH:MM strings sort the same way as the times they name.
 export const endAfterStart = (end: unknown, start: unknown): true | string =>
   typeof end !== 'string' || typeof start !== 'string' || !TIME.test(start) || end > start
     ? true
-    : 'End time must be after the start time.'
+    : END_AFTER_START
 
 export const notBelow = (value: unknown, floor: unknown, name: string): true | string =>
   typeof value !== 'number' || typeof floor !== 'number' || value >= floor

@@ -1,12 +1,13 @@
 'use client'
 
-import { CalendarPlus, Copy, Download, Rss } from 'lucide-react'
+import { CalendarPlus, Check, Copy, Download, Rss } from 'lucide-react'
 import { useLocale, useTranslations } from 'next-intl'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
 import { DropdownMenu } from '@/components/arc/dropdown-menu/dropdown-menu'
+import { Input } from '@/components/arc/input/input'
+import { useCopyFeedback } from '@/components/arc/lib/use-copy-feedback'
 import { Select } from '@/components/select'
-import { useRouter } from '@/i18n/navigation'
 import { track } from '@/lib/analytics/track'
 import { localDigits } from '@/lib/digits'
 
@@ -14,33 +15,31 @@ const MONTHS = Array.from({ length: 12 }, (_, i) => i + 1)
 
 /** Going straight to any month: a month and a year, each a select that goes there when picked. */
 export function CalendarJump({
-  view,
-  date,
+  day,
   years,
+  onJump,
 }: {
-  view: 'month' | 'week' | 'agenda'
-  date: string
+  day: string
   /** The years the calendar has something in, oldest first. */
   years: number[]
+  /** Goes to the first day of the month picked. */
+  onJump: (day: string) => void
 }) {
   const t = useTranslations('Calendar')
   const locale = useLocale()
-  const router = useRouter()
-  const year = Number(date.slice(0, 4))
-  const month = Number(date.slice(5, 7))
+  const year = Number(day.slice(0, 4))
+  const month = Number(day.slice(5, 7))
   const monthName = (m: number) =>
     new Intl.DateTimeFormat(locale, { month: 'long', timeZone: 'UTC' }).format(
       new Date(Date.UTC(2000, m - 1, 1)),
     )
-  const go = (y: number, m: number) =>
-    router.push(`/calendar?view=${view}&date=${y}-${String(m).padStart(2, '0')}-01`)
+  const go = (y: number, m: number) => onJump(`${y}-${String(m).padStart(2, '0')}-01`)
 
-  const yearList = years.includes(year) ? years : [...years, year].sort()
+  const yearList = years.includes(year) ? years : [...years, year].toSorted()
 
   return (
-    <div className="cal-jump flex items-center gap-2">
+    <div className="flex items-center gap-2">
       <Select
-        className="cal-select"
         hideLabel
         items={MONTHS.map((m) => ({ value: String(m), label: monthName(m) }))}
         label={t('month')}
@@ -49,7 +48,6 @@ export function CalendarJump({
         value={String(month)}
       />
       <Select
-        className="cal-select"
         hideLabel
         items={yearList.map((y) => ({ value: String(y), label: localDigits(y, locale) }))}
         label={t('year')}
@@ -62,15 +60,34 @@ export function CalendarJump({
 }
 
 /** Taking the calendar away: subscribing to its feed in a calendar app, downloading it, or copying the feed's address. */
-export function CalendarFeed({ feedPath }: { /** `/en/calendar.ics`. */ feedPath: string }) {
+export function CalendarFeed({
+  feedPath,
+  iconOnly,
+}: {
+  /** `/en/calendar.ics`. */
+  feedPath: string
+  /** Only the icon shows; the label stays its name. */
+  iconOnly?: boolean
+}) {
   const t = useTranslations('Calendar')
   const [announce, setAnnounce] = useState('')
+  const [manualUrl, setManualUrl] = useState('')
+  const { state, copy } = useCopyFeedback(2500)
+  useEffect(() => {
+    if (state === 'idle') setAnnounce('')
+  }, [state])
   const feedUrl = () => `${window.location.origin}${feedPath}`
 
   return (
-    <div className="cal-feed">
+    <div>
       <DropdownMenu
-        icon={<CalendarPlus aria-hidden size={16} />}
+        icon={
+          state === 'copied' ? (
+            <Check aria-hidden size={16} />
+          ) : (
+            <CalendarPlus aria-hidden size={16} />
+          )
+        }
         items={[
           {
             label: t('subscribe'),
@@ -93,21 +110,33 @@ export function CalendarFeed({ feedPath }: { /** `/en/calendar.ics`. */ feedPath
             },
           },
           {
-            label: t('copyFeed'),
+            label: state === 'copied' ? t('copied') : t('copyFeed'),
             icon: <Copy aria-hidden size={16} />,
-            onSelect: () => {
-              navigator.clipboard
-                .writeText(feedUrl())
-                .then(() => setAnnounce(t('copied')))
-                .catch(() => setAnnounce(t('copyFailed')))
+            onSelect: async () => {
+              const url = feedUrl()
+              const ok = await copy(url)
+              setManualUrl(ok ? '' : url)
+              const message = t(ok ? 'copied' : 'copyFailed')
+              setAnnounce((previous) => (previous === message ? `${message}\u00a0` : message))
             },
           },
         ]}
-        label={t('feed')}
+        label={state === 'copied' ? t('copied') : t('feed')}
+        iconOnly={iconOnly}
       />
-      <span aria-live="polite" className="cal-feed-note">
+      <span role="status" aria-live="polite" className="block text-sm">
         {announce}
       </span>
+      {manualUrl && (
+        <Input
+          label={t('feedUrl')}
+          value={manualUrl}
+          readOnly
+          dir="ltr"
+          onFocus={(event) => event.currentTarget.select()}
+          onClick={(event) => event.currentTarget.select()}
+        />
+      )}
     </div>
   )
 }

@@ -23,20 +23,31 @@ export function preloadable<P extends object>(
   load: () => Promise<ComponentType<P>>,
   { fallback = null, name = 'Lazy' }: { fallback?: ReactNode; name?: string } = {},
 ) {
-  let loaded: ComponentType<P> | undefined
-  let pending: Promise<ComponentType<P>> | undefined
+  type LoadedPromise = Promise<ComponentType<P>> & {
+    status?: 'fulfilled'
+    value?: ComponentType<P>
+  }
+  let pending: LoadedPromise | undefined
 
-  const start = () =>
-    (pending ??= load().then(
-      (component) => (loaded = component),
+  const start = (): Promise<ComponentType<P>> => {
+    if (pending) return pending
+    const promise: LoadedPromise = load().then(
+      (component) => {
+        promise.status = 'fulfilled'
+        promise.value = component
+        return component
+      },
       (error: unknown) => {
         pending = undefined
         throw error
       },
-    ))
+    )
+    pending = promise
+    return promise
+  }
 
   function Inner(props: P) {
-    const Loaded = loaded ?? use(start())
+    const Loaded = use(start())
     return <Loaded {...props} />
   }
 

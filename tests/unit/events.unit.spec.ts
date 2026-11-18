@@ -153,12 +153,14 @@ describe('eventItems', () => {
         start_time: '18:00',
         end_time: '20:00',
       }),
-    ).toEqual([{ ...base, key: 'e3-0', date: '2026-03-03', start: '18:00', end: '20:00' }])
+    ).toEqual([
+      { ...base, key: 'e3-0', item: 'e3', date: '2026-03-03', start: '18:00', end: '20:00' },
+    ])
   })
 
   it('places an event with no times on its day, and an event with no known day nowhere', () => {
     expect(eventItems(3, base, { start_date: '2026-03-03T00:00:00.000Z' })).toEqual([
-      { ...base, key: 'e3-day', date: '2026-03-03' },
+      { ...base, key: 'e3-day', item: 'e3', date: '2026-03-03' },
     ])
     expect(
       eventItems(3, base, { start_date: '2026-03-03T00:00:00.000Z', start_precision: 'week' }),

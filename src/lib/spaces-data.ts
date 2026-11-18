@@ -22,7 +22,9 @@ import {
 import { cairoInstant } from '@/lib/cairo-day'
 import { expandSchedule } from '@/lib/schedule'
 import { sessionIdsIn } from '@/lib/session-refs'
-import type { Course, Programme, Space, SpacePost, User } from '@/payload-types'
+import { getCourseSessions } from '@/api/sessions.api'
+import { coursePlaceName } from '@/lib/calendar-sources'
+import type { Course, Programme, Session, Space, SpacePost, User } from '@/payload-types'
 
 /**
  * The reads behind the spaces pages (spec §2, §7, §11, §13). Two gates, on
@@ -142,8 +144,6 @@ export const mySpaces = async (
     id: number
     title: string
     slug: string
-    schedule?: unknown
-    sessions?: unknown
     cover_image?: number | { url?: string | null } | null
     cover?: number | { url?: string | null } | null
   }
@@ -157,16 +157,30 @@ export const mySpaces = async (
           overrideAccess: true,
           select:
             collection === 'courses'
-              ? { title: true, slug: true, schedule: true, sessions: true, cover_image: true }
+              ? { title: true, slug: true, cover_image: true }
               : { title: true, slug: true, cover: true },
           where: { id: { in: ready } },
         }) as Promise<{ docs: Label[] }>)
       : Promise.resolve({ docs: [] as Label[] })
-  const [{ docs: courseDocs }, { docs: programmeDocs }] = await Promise.all([
+  // The last meeting from the course rows, not the drafts the labels read:
+  // only the row follows its sessions (lib/space-lifecycle.ts).
+  const lastDays = courseIds.length
+    ? payload.find({
+        collection: 'courses',
+        depth: 0,
+        pagination: false,
+        overrideAccess: true,
+        select: { last_day: true },
+        where: { id: { in: courseIds } },
+      })
+    : Promise.resolve({ docs: [] as Pick<Course, 'id' | 'last_day'>[] })
+  const [{ docs: courseDocs }, { docs: programmeDocs }, { docs: courseRows }] = await Promise.all([
     labels('courses', courseIds),
     labels('programmes', programmeIds),
+    lastDays,
   ])
   const courseOf = new Map(courseDocs.map((c) => [c.id, c]))
+  const courseRowOf = new Map(courseRows.map((c) => [c.id, c]))
   const programmeOf = new Map(programmeDocs.map((p) => [p.id, p]))
 
   const { docs: visits } = await payload.find({
@@ -245,7 +259,7 @@ export const mySpaces = async (
       href: spaceHref(s, parent, { locale: lang }),
       unread,
       lastActivity,
-      archived: archivedNow(s, parent),
+      archived: archivedNow(s, ref?.collection === 'courses' ? courseRowOf.get(ref.id) : null),
       cover: coverOf(parent),
     }
     if (s.kind === 'community') communities.push(summary)
@@ -257,9 +271,10 @@ export const mySpaces = async (
 
 /**
  * A space's archive state (spec §11), from the rows as they stand now: a
- * passed-in space row can carry a stale snapshot (reopened or the schedule
+ * passed-in space row can carry a stale snapshot (reopened or the sessions
  * may have changed since), so both are read fresh, through the membership
- * layer's own override (the same one `factsFor` holds).
+ * layer's own override (the same one `factsFor` holds). The course row, not
+ * its latest draft: only the row follows its sessions.
  */
 const archiveState = async (payload: Payload, space: number | Space) => {
   const row = (await payload.findByID({
@@ -268,7 +283,8 @@ const archiveState = async (payload: Payload, space: number | Space) => {
     depth: 0,
     overrideAccess: true,
   })) as Space
-  const course = row.kind === 'course' ? await parentOf(payload, row, { draft: true }) : null
+  const course =
+    row.kind === 'course' ? await parentOf(payload, row, { select: { last_day: true } }) : null
   return { row, ...archiveOf(row, course) }
 }
 
@@ -465,10 +481,22 @@ const rsvpViews = async (
   return out
 }
 
+/** A course with its sessions in order (`getCourseSessions`), as a course space shows them. */
 export type SessionCourse = Pick<
   Course,
-  'id' | 'slug' | 'title' | 'subtitle' | 'description' | 'sessions' | 'schedule' | 'session_unit'
->
+  | 'id'
+  | 'slug'
+  | 'title'
+  | 'subtitle'
+  | 'description'
+  | 'syllabus_tentative'
+  | 'course_type'
+  | 'location'
+> & {
+  sessions: Session[]
+  /** The name of the place it meets at in person (`coursePlaceName`). */
+  place?: string | null
+}
 
 /**
  * The course session a post points at, as the reader may see it: `shown`
@@ -511,14 +539,24 @@ const sessionRead = async (
       title: true,
       subtitle: true,
       description: true,
-      sessions: true,
-      schedule: true,
-      session_unit: true,
+      syllabus_tentative: true,
+      course_type: true,
+      location: true,
+      cycle: true,
     },
     where: { id: { equals: courseId } },
   })
-  const course = docs[0] as SessionCourse | undefined
-  if (course) return { state: 'shown', course }
+  const course = docs[0]
+  if (course) {
+    const [sessions, place] = await Promise.all([
+      getCourseSessions(payload, [course.id], { locale, reader: user }),
+      coursePlaceName(payload, user, course, locale),
+    ])
+    return {
+      state: 'shown',
+      course: { ...course, sessions: sessions.get(course.id) ?? [], place },
+    }
+  }
   // Unread, the course is either deleted or not the reader's to read; only
   // the server's count tells the two apart.
   const exists =
@@ -535,15 +573,16 @@ const sessionRead = async (
 const sessionViews = (posts: SpacePost[], read: SessionRead | null): Map<number, SessionView> => {
   const out = new Map<number, SessionView>()
   for (const p of posts) {
-    const session = p.course_session
-    if (!session || p.deleted_at) continue
+    const linked = relId(p.course_session)
+    if (linked == null || p.deleted_at) continue
+    const session = String(linked)
     out.set(
       p.id,
       !read
         ? { state: 'gone' }
         : read.state !== 'shown'
           ? read
-          : (read.course.sessions ?? []).some((s) => s.id === session)
+          : read.course.sessions.some((s) => String(s.id) === session)
             ? { state: 'shown', course: read.course, session }
             : { state: 'gone' },
     )
@@ -567,7 +606,7 @@ export const sessionCounts = (
       ...r.comments.flatMap((c) => [c.body, ...c.replies.map((reply) => reply.body)]),
     ]
     const ids = new Set([
-      ...(r.post.course_session ? [r.post.course_session] : []),
+      ...(r.post.course_session ? [String(relId(r.post.course_session))] : []),
       ...texts.flatMap((text) => (text ? sessionIdsIn(text) : [])),
     ])
     named.set(r.post.id, ids)
@@ -905,6 +944,13 @@ export const postView = async (
   }
 }
 
+/** A space page's space, and the course (with its sessions) or programme it belongs to. */
+export type SpaceLanding = {
+  space: Space
+  course?: Omit<Course, 'sessions'> & { sessions: Session[] }
+  programme?: Programme
+}
+
 /**
  * The space a page opens: by kind and document slug (the space row carries
  * none of its own), gated by both the member's access rule and the switch —
@@ -917,12 +963,12 @@ export const spaceLanding = async (
   kind: Space['kind'],
   slug: string,
   locale: string = 'en',
-): Promise<{ space: Space; course?: Course; programme?: Programme } | null> => {
+): Promise<SpaceLanding | null> => {
   const settings = await spacesSettings(payload)
   if (mode(settings) === 'off') return null
 
   let space: Space | null = null
-  let extra: { course?: Course; programme?: Programme } = {}
+  let extra: Omit<SpaceLanding, 'space'> = {}
   if (kind === 'community') {
     // No slug: the first community space this reader may open (the old
     // address). A number: that one space.
@@ -970,8 +1016,15 @@ export const spaceLanding = async (
             : { programme: { equals: relIdValue } },
       })
       space = docs[0] ?? null
-      if (space)
-        extra = kind === 'course' ? { course: rel as Course } : { programme: rel as Programme }
+      if (space && kind === 'course') {
+        // Its sessions as the course itself is read here: the space's
+        // membership already let the reader in.
+        const sessions = await getCourseSessions(payload, [rel!.id], {
+          locale: localeOf(locale),
+          reader: 'all',
+        })
+        extra = { course: { ...(rel as Course), sessions: sessions.get(rel!.id) ?? [] } }
+      } else if (space) extra = { programme: rel as Programme }
     }
   }
   if (!space) return null
@@ -1338,7 +1391,7 @@ export type CoursePlace = {
 export const coursePlace = async (
   payload: Payload,
   user: null | User,
-  course: Course,
+  course: Pick<Course, 'cycle' | 'location'>,
   locale: 'en' | 'ar' = 'en',
 ): Promise<CoursePlace | null> => {
   const modes = course.location ?? []

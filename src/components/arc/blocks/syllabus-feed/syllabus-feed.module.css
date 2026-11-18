@@ -296,6 +296,8 @@
 }
 .entry {
   position: relative;
+  /* A link to the row lands it below the sticky header. */
+  scroll-margin-block-start: calc(var(--site-header-height, 4rem) + 1.5rem);
   border-bottom: 1px solid var(--border-subtle);
   background: var(--surface);
 }
@@ -503,6 +505,17 @@
   .singleBody {
     padding: 8px 16px 16px;
   }
+}
+.plain {
+  border: 0;
+  border-radius: 0;
+  background: none;
+}
+.plain .singleRow {
+  padding: 0;
+}
+.plain .singleBody {
+  padding: var(--space-3) 0 0;
 }
 .singleRow .body {
   grid-area: body;

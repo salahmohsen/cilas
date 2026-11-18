@@ -3,6 +3,7 @@ import { tierField } from '@/fields/tier'
 import { previewUrl } from '@/lib/preview-url'
 import { courseDeleteSummary, deleteCourseDependents } from '@/lib/course-delete'
 import { courseDays } from '@/lib/course-days'
+import { WEEKDAYS } from '@/lib/cairo-day'
 import { blockedUnless, deleteEndpoints } from '@/forms/delete-endpoints'
 import { addSelfAs } from '@/lib/review-ownership'
 import {
@@ -20,21 +21,16 @@ import {
 import { activitiesField } from '@/fields/activities'
 import { bibliographyField } from '@/fields/bibliography'
 import { COURSE_TYPE_OPTIONS } from '@/fields/course-type'
-import {
-  LOCATION_OPTIONS,
-  SESSION_UNIT_OPTIONS,
-  TEACHING_LANGUAGE_OPTIONS,
-} from '@/fields/course-options'
+import { LOCATION_OPTIONS, TEACHING_LANGUAGE_OPTIONS } from '@/fields/course-options'
 import { contributionField } from '@/fields/pricing'
 import { validateCourseDestination, registrationDestinationFields } from '@/fields/registration'
 import { isPublishing } from '@/lib/course-registration'
 import { courseQuestionBlocks, nameNewQuestions } from '@/forms/form-fields'
-import { scheduleField, timeRangeFields } from '@/fields/schedule'
+import { timeRangeFields } from '@/fields/schedule'
 import { reviewFields } from '@/fields/review'
 import { slugField } from '@/fields/slug'
 import { grantFellow, revokeIfUnteaching, toPersonIds } from '@/lib/fellow-role'
 import { reviewHooks } from '@/lib/review-hooks'
-import { announceScheduleChanges } from '@/lib/schedule-notice'
 import { ensureSpaceFor } from '@/lib/space-hooks'
 import type {
   CollectionAfterChangeHook,
@@ -73,12 +69,12 @@ export const propagateFellowRole: CollectionAfterChangeHook<Course> = async ({
   if (doc._status === 'published') {
     const justPublished = previousDoc?._status !== 'published'
     for (const id of justPublished ? after : after.filter((id) => !before.includes(id))) {
-      await grantFellow(req.payload, id)
+      await grantFellow(req, id)
     }
   }
 
   for (const id of before.filter((id) => !after.includes(id))) {
-    await revokeIfUnteaching(req.payload, id, doc.id)
+    await revokeIfUnteaching(req, id, doc.id)
   }
 
   return doc
@@ -104,7 +100,7 @@ export const revokeDeletedCourseFellows: CollectionAfterDeleteHook<Course> = asy
   req,
 }) => {
   for (const id of toPersonIds(doc.fellows)) {
-    await revokeIfUnteaching(req.payload, id, doc.id)
+    await revokeIfUnteaching(req, id, doc.id)
   }
 
   return doc
@@ -211,15 +207,6 @@ export const Courses: CollectionConfig = {
                   },
                 },
                 {
-                  name: 'summary',
-                  type: 'text',
-                  localized: true,
-                  admin: {
-                    description:
-                      'One line for cards and search results, e.g. “Reading Plato’s Republic in Cairo, book by book.” Leave empty to use the description’s start.',
-                  },
-                },
-                {
                   name: 'epigraph',
                   type: 'text',
                   localized: true,
@@ -294,91 +281,34 @@ export const Courses: CollectionConfig = {
           ],
         },
         {
-          label: 'Course flow',
+          // ADR 0011: one tab for what is taught and when.
+          label: 'Sessions',
           fields: [
             {
-              // Unnamed: `sessions` must stay top-level, because the schedule's
-              // end-date hook reads `data.sessions` (plan 2).
-              label: 'Syllabus',
-              type: 'collapsible',
-              fields: [
-                {
-                  name: 'sessions',
-                  type: 'array',
-                  labels: { singular: 'Session', plural: 'Sessions' },
-                  fields: [
-                    {
-                      type: 'row',
-                      fields: [
-                        {
-                          name: 'order',
-                          type: 'number',
-                          admin: { description: 'Its number in the flow: 1, 2, 3…', width: '15%' },
-                        },
-                        {
-                          name: 'session_title',
-                          label: 'Session title',
-                          type: 'text',
-                          localized: true,
-                          admin: { width: '55%' },
-                        },
-                        {
-                          name: 'meetings',
-                          type: 'number',
-                          min: 0,
-                          admin: { width: '15%', description: 'Default: one week of slots.' },
-                        },
-                        {
-                          name: 'cancelled',
-                          type: 'checkbox',
-                          admin: {
-                            description:
-                              'The session will not take place: marked as cancelled on the page and left off the calendar.',
-                            width: '15%',
-                          },
-                        },
-                      ],
-                    },
-                    {
-                      name: 'delivery',
-                      type: 'select',
-                      options: [...LOCATION_OPTIONS],
-                      admin: {
-                        description:
-                          'How this session meets. Leave empty to follow the course location.',
-                      },
-                    },
-                    { name: 'description', type: 'richText', localized: true },
-                    {
-                      name: 'dates',
-                      type: 'array',
-                      admin: {
-                        initCollapsed: true,
-                        description:
-                          'Only for a session off the weekly schedule, e.g. a 5-day workshop at changing hours. These dates replace the schedule’s for this session.',
-                      },
-                      fields: [
-                        {
-                          type: 'row',
-                          fields: [
-                            {
-                              name: 'date',
-                              type: 'date',
-                              required: true,
-                              admin: { width: '40%', date: { pickerAppearance: 'dayOnly' } },
-                            },
-                            ...timeRangeFields('30%'),
-                          ],
-                        },
-                      ],
-                    },
-                    bibliographyField(),
-                    activitiesField(),
-                  ],
+              name: 'calendar',
+              type: 'ui',
+              admin: {
+                components: {
+                  Field: '/components/admin/course-calendar-field#CourseCalendarField',
                 },
-                bibliographyField('Course bibliography (all sessions)'),
-              ],
+              },
             },
+            {
+              // Not `sessions`: the old array still holds that name until it is removed.
+              name: 'syllabus',
+              type: 'join',
+              collection: 'sessions',
+              on: 'course',
+              defaultLimit: 0,
+              // The order they were planned in; the page orders them by their meetings.
+              defaultSort: 'position',
+              label: 'Sessions',
+              admin: {
+                allowCreate: true,
+                defaultColumns: ['title', 'cancelled', 'updatedAt'],
+              },
+            },
+            bibliographyField('Course bibliography (all sessions)'),
             {
               label: 'Notes',
               type: 'collapsible',
@@ -413,41 +343,6 @@ export const Courses: CollectionConfig = {
                   'Tick when the fellow may still change the sessions; the page says the syllabus may change.',
               },
             },
-            {
-              name: 'session_unit',
-              type: 'select',
-              required: true,
-              defaultValue: 'session',
-              options: [...SESSION_UNIT_OPTIONS],
-              admin: {
-                description: 'How sessions are numbered on the page: “Week 3” or “Session 3”.',
-              },
-            },
-          ],
-        },
-        { label: 'Schedule', fields: [scheduleField()] },
-        {
-          // ADR 0011. Replaces "Course flow" and "Schedule" once readers move off them.
-          label: 'Sessions',
-          fields: [
-            {
-              // Not `sessions`: the old array still holds that name until it is removed.
-              name: 'syllabus',
-              type: 'join',
-              collection: 'sessions',
-              on: 'course',
-              defaultLimit: 0,
-              admin: { allowCreate: true, defaultColumns: ['title', 'cancelled'] },
-            },
-            {
-              name: 'timing_note',
-              type: 'textarea',
-              localized: true,
-              admin: {
-                description:
-                  'What the dates cannot say, e.g. "hybrid for the first 6 weeks, then online".',
-              },
-            },
             ...(['first_day', 'last_day'] as const).map((name): Field => ({
               name,
               type: 'text',
@@ -455,6 +350,110 @@ export const Courses: CollectionConfig = {
               // Kept from the sessions' meetings (lib/course-days.ts).
               admin: { readOnly: true, hidden: true },
             })),
+            {
+              // The old sessions array (ADR 0011). Readers and writers use the
+              // sessions collection; the column stays until the last migration.
+              name: 'sessions',
+              type: 'array',
+              labels: { singular: 'Session', plural: 'Sessions' },
+              admin: { hidden: true, readOnly: true },
+              fields: [
+                {
+                  type: 'row',
+                  fields: [
+                    {
+                      name: 'order',
+                      type: 'number',
+                      admin: { description: 'Its number in the flow: 1, 2, 3…', width: '15%' },
+                    },
+                    {
+                      name: 'session_title',
+                      label: 'Session title',
+                      type: 'text',
+                      localized: true,
+                      admin: { width: '55%' },
+                    },
+                    {
+                      name: 'meetings',
+                      type: 'number',
+                      min: 0,
+                      admin: { width: '15%', description: 'Default: one week of slots.' },
+                    },
+                    {
+                      name: 'cancelled',
+                      type: 'checkbox',
+                      admin: {
+                        description:
+                          'The session will not take place: marked as cancelled on the page and left off the calendar.',
+                        width: '15%',
+                      },
+                    },
+                  ],
+                },
+                {
+                  name: 'delivery',
+                  type: 'select',
+                  options: [...LOCATION_OPTIONS],
+                  admin: {
+                    description:
+                      'How this session meets. Leave empty to follow the course location.',
+                  },
+                },
+                { name: 'description', type: 'richText', localized: true },
+                {
+                  name: 'dates',
+                  type: 'array',
+                  admin: {
+                    initCollapsed: true,
+                    description:
+                      'Only for a session off the weekly schedule, e.g. a 5-day workshop at changing hours. These dates replace the schedule’s for this session.',
+                  },
+                  fields: [
+                    {
+                      type: 'row',
+                      fields: [
+                        {
+                          name: 'date',
+                          type: 'date',
+                          required: true,
+                          admin: { width: '40%', date: { pickerAppearance: 'dayOnly' } },
+                        },
+                        ...timeRangeFields('30%'),
+                      ],
+                    },
+                  ],
+                },
+                bibliographyField(),
+                activitiesField(),
+              ],
+            },
+            {
+              // The old pattern (ADR 0011). Hidden like the old array above, and
+              // frozen: no hook works out its end date any more.
+              name: 'schedule',
+              type: 'group',
+              admin: { hidden: true, readOnly: true },
+              fields: [
+                { name: 'start_date', type: 'date' },
+                {
+                  name: 'start_precision',
+                  type: 'select',
+                  defaultValue: 'day',
+                  options: ['day', 'week'],
+                },
+                { name: 'weeks', type: 'number' },
+                {
+                  name: 'slots',
+                  type: 'array',
+                  fields: [
+                    { name: 'weekday', type: 'select', required: true, options: [...WEEKDAYS] },
+                    ...timeRangeFields(),
+                  ],
+                },
+                { name: 'end_date', type: 'date' },
+                { name: 'note', type: 'textarea', localized: true },
+              ],
+            },
           ],
         },
         {
@@ -588,15 +587,16 @@ export const Courses: CollectionConfig = {
         return data
       },
       stampLastEditor,
-      async ({ data, originalDoc, req }) =>
-        originalDoc?.id ? { ...data, ...(await courseDays(req, originalDoc.id)) } : data,
+      async ({ data, originalDoc, req }) => ({
+        ...data,
+        ...(await courseDays(req, originalDoc?.id ?? null)),
+      }),
     ],
     afterChange: [
       ...courseReview.afterChange,
       propagateFellowRole,
       revalidateAfterChange('courses'),
       ensureSpaceFor('course'),
-      announceScheduleChanges,
     ],
     beforeDelete: [deleteOwnedSpaces('course'), deleteCourseDependents],
     afterDelete: [revokeDeletedCourseFellows, revalidateAfterDelete('courses')],

@@ -64,7 +64,6 @@ describe('archive import foundations', () => {
           title: 'Reset probe course',
           slug: uniq('reset-probe-course'),
           course_type: 'THEMATIC',
-          session_unit: 'session',
           tier: 'owner',
           cycle: cycle.id,
         },

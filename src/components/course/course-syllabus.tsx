@@ -1,4 +1,3 @@
-import { isRelation as isObject } from '@/lib/relation'
 import {
   BookOpen,
   Clapperboard,
@@ -22,10 +21,13 @@ import {
   type SyllabusEntry,
   type SyllabusGroup,
 } from '@/components/arc/blocks/syllabus-feed/syllabus-feed'
+import { formatTime, formatTimeRange, toMinutes } from '@/components/calendar/ui/calendar-time'
 import { SessionMarkdown } from '@/components/course/session-markdown'
+import { courseLanguage, directionOf } from '@/lib/course-language'
 import { localDigits, numberingSystemOf } from '@/lib/digits'
 import { editableIn, type Editable } from '@/lib/editable'
 import { numberedSessions, type NumberedSession } from '@/lib/meetings'
+import { sessionAnchor, sessionTitleOf } from '@/lib/session-label'
 import type { Course, Session } from '@/payload-types'
 
 export type Material = NonNullable<Course['bibliography']>[number]
@@ -54,34 +56,13 @@ const ACTIVITY_ICONS: Record<ActivityKind, LucideIcon> = {
   other: Shapes,
 }
 
-/** Every text in a rich-text tree, joined. */
-export const textOf = (node: unknown): string => {
-  if (!isObject<{ text?: unknown; children?: unknown[]; root?: unknown }>(node)) return ''
-  if (node.root) return textOf(node.root)
-  return [
-    typeof node.text === 'string' ? node.text : '',
-    ...(node.children ?? []).map(textOf),
-  ].join(' ')
-}
-
-/** The direction a course's own text reads in: it may be in the other language than the page. */
-export const directionOf = (text: string): 'rtl' | 'ltr' => {
-  const arabic = (text.match(/[\u0600-\u06ff]/g) ?? []).length
-  const latin = (text.match(/[A-Za-z]/g) ?? []).length
-  return arabic >= latin ? 'rtl' : 'ltr'
-}
-
 /** The parts of a course its syllabus reads, besides its sessions. */
 export type SyllabusCourse = Pick<
   Course,
   'title' | 'subtitle' | 'description' | 'syllabus_tentative'
 >
 
-/**
- * One session as the syllabus shows it, whichever store holds it: the
- * course page reads the sessions collection, a course space still the old
- * array (plan "Move course readers to sessions", unit 4).
- */
+/** One session as the syllabus shows it, its text already rendered (`syllabusOf`). */
 export type SyllabusSession = {
   id: string
   title?: string | null
@@ -93,28 +74,34 @@ export type SyllabusSession = {
   activities?: Activity[] | null
 }
 
+/**
+ * One numbered session as the syllabus reads it, its text rendered. The
+ * number comes from the whole course (`numberedSessions`), so a caller with
+ * one session (the session drawer) numbers it where all of them are read.
+ */
+export const syllabusSessionOf = (
+  n: NumberedSession<Session>,
+): NumberedSession<SyllabusSession> => ({
+  ...n,
+  session: {
+    id: String(n.session.id),
+    title: n.session.title,
+    cancelled: n.session.cancelled,
+    delivery: n.session.delivery,
+    description: n.session.description ? (
+      <SessionMarkdown
+        className="article-prose article-prose--notes"
+        text={n.session.description}
+      />
+    ) : null,
+    bibliography: n.session.bibliography,
+    activities: n.session.activities,
+  },
+})
+
 /** A course's sessions from the collection, numbered and dated, as its syllabus reads them. */
-export const syllabusOf = (
-  sessions: readonly Session[],
-  unit: Course['session_unit'],
-): NumberedSession<SyllabusSession>[] =>
-  numberedSessions(sessions, unit).map((n) => ({
-    ...n,
-    session: {
-      id: String(n.session.id),
-      title: n.session.title,
-      cancelled: n.session.cancelled,
-      delivery: n.session.delivery,
-      description: n.session.description ? (
-        <SessionMarkdown
-          className="article-prose article-prose--notes"
-          text={n.session.description}
-        />
-      ) : null,
-      bibliography: n.session.bibliography,
-      activities: n.session.activities,
-    },
-  }))
+export const syllabusOf = (sessions: readonly Session[]): NumberedSession<SyllabusSession>[] =>
+  numberedSessions(sessions).map(syllabusSessionOf)
 
 /**
  * Each session as a syllabus entry: its first meeting, its month, its facet
@@ -130,8 +117,8 @@ function useSyllabusEntries(
   const format = useFormatter()
   const locale = useLocale()
 
-  const dir = directionOf(`${course.title} ${course.subtitle ?? ''} ${textOf(course.description)}`)
-  const lang = dir === 'rtl' ? 'ar' : 'en'
+  const lang = courseLanguage(course)
+  const dir = lang === 'ar' ? 'rtl' : 'ltr'
 
   /** "Tue 3 Mar". Days are Cairo calendar days, so format them in UTC. */
   const dayLabel = (day: string): string =>
@@ -143,8 +130,8 @@ function useSyllabusEntries(
       numberingSystem: numberingSystemOf(locale),
     })
 
-  return sessions.map(({ session, number, unit, meetings, day }, i) => {
-    const unitLabel = t(unit, { number })
+  return sessions.map(({ session, number, meetings, day }, i) => {
+    const unitLabel = t('session', { number })
     const materials = session.bibliography ?? []
     const activities = session.activities ?? []
     const hasBody = Boolean(session.description || materials.length || activities.length)
@@ -154,12 +141,17 @@ function useSyllabusEntries(
       month: day ? day.slice(0, 7) : '',
       no: localDigits(String(number), locale),
       ...(day ? { date: { label: dayLabel(day), iso: day } } : {}),
-      title: session.title || unitLabel,
+      title: sessionTitleOf(session.title, unitLabel),
+      anchor: sessionAnchor(session.id),
       meta: {
         unit: session.title ? unitLabel : undefined,
         meetings: meetings.map((m) => {
-          const hours = [m.start_time, m.end_time].filter(Boolean).join('–')
-          return { date: dayLabel(m.date), ...(hours ? { time: localDigits(hours, locale) } : {}) }
+          const hours = m.start_time
+            ? m.end_time
+              ? formatTimeRange(toMinutes(m.start_time), toMinutes(m.end_time), locale)
+              : formatTime(toMinutes(m.start_time), locale)
+            : ''
+          return { date: dayLabel(m.date), ...(hours ? { time: hours } : {}) }
         }),
         extra:
           session.delivery || materials.length
@@ -239,15 +231,18 @@ export function CourseSyllabus({
 }
 
 /**
- * One session of a course as its syllabus shows it, open: a post that points
- * at the session renders it from the course's live data. Null when the
- * course no longer has that session.
+ * One session of a course as its syllabus shows it, open: the one session
+ * view, for a post that points at the session and for the session drawer,
+ * from the course's live data. It shares its head and body with the
+ * syllabus's rows (`useSyllabusEntries`). Null when the course no longer has
+ * that session.
  */
 export function CourseSession({
   course,
   sessions,
   session,
   label,
+  plain,
   footer,
 }: {
   course: SyllabusCourse
@@ -256,6 +251,8 @@ export function CourseSession({
   session: string
   /** What the card is named for assistive tech */
   label: string
+  /** No frame and no title, inside a drawer that shows the title */
+  plain?: boolean
   /** Closes the card's details, after the materials and activities */
   footer?: ReactNode
 }) {
@@ -270,7 +267,7 @@ export function CourseSession({
     ) : (
       entry.body
     )
-  return <SyllabusSession entry={{ ...entry, body }} label={label} />
+  return <SyllabusSession entry={{ ...entry, body }} label={label} plain={plain} />
 }
 
 /** One session's own text, materials and activities: the syllabus feed opens it. */

@@ -47,7 +47,6 @@ const SELECT = {
     cover_image: true,
     fellows: true,
     subtitle: true,
-    summary: true,
     epigraph: true,
     description: true,
     syllabus: true,
@@ -83,6 +82,15 @@ const worksOf = (personId: string): Partial<Record<SearchCollection, Where>> => 
     ],
   },
 })
+
+/**
+ * Collections whose documents are part of a searchable one: a course's
+ * sessions are its syllabus (`syllabusText`), so a session save re-indexes
+ * its course, and the course it left.
+ */
+const PARTS: Record<string, { of: SearchCollection; via: string }> = {
+  sessions: { of: 'courses', via: 'course' },
+}
 
 type Reader = { payload: Payload; req?: PayloadRequest }
 
@@ -175,9 +183,14 @@ const indexesOf = (collection: SearchCollection): SearchIndex[] =>
 
 export const createHooks = (indexer: Indexer) => {
   /** Index writes run after the save returns: a slow or absent Typesense
-   * never holds up the editor. */
-  const write = (payload: Payload, task: Promise<unknown>) => {
-    task.catch((error) => payload.logger.error({ err: error }, '[typesense] index write failed'))
+   * never holds up the editor. They run one after another, in the order the
+   * saves made them, so a course deleted with its sessions is removed after
+   * the sessions' deletes re-index it, not before. */
+  let writes: Promise<unknown> = Promise.resolve()
+  const write = (payload: Payload, task: () => Promise<unknown>) => {
+    writes = writes
+      .then(task)
+      .catch((error) => payload.logger.error({ err: error }, '[typesense] index write failed'))
   }
 
   /** Re-reads these documents for each index and upserts those it holds; ids
@@ -187,8 +200,7 @@ export const createHooks = (indexer: Indexer) => {
       const documents = await collect(documentsOf(reader, index, { id: { in: ids } }))
       const found = new Set(documents.map((document) => document.id))
       const gone = ids.filter((id) => !found.has(id))
-      write(
-        reader.payload,
+      write(reader.payload, () =>
         Promise.all([indexer.upsert(index, documents), indexer.remove(index, gone)]),
       )
     }
@@ -201,7 +213,7 @@ export const createHooks = (indexer: Indexer) => {
     ][]) {
       for (const index of indexesOf(collection)) {
         const documents = await collect(documentsOf(reader, index, where))
-        write(reader.payload, indexer.upsert(index, documents))
+        write(reader.payload, () => indexer.upsert(index, documents))
       }
     }
   }
@@ -229,7 +241,7 @@ export const createHooks = (indexer: Indexer) => {
     (collection: SearchCollection): CollectionAfterDeleteHook =>
     async ({ id, req }) => {
       for (const index of indexesOf(collection)) {
-        write(req.payload, indexer.remove(index, [String(id)]))
+        write(req.payload, () => indexer.remove(index, [String(id)]))
       }
       if (collection !== 'people') return
       try {
@@ -242,7 +254,35 @@ export const createHooks = (indexer: Indexer) => {
       }
     }
 
-  return { afterChange, afterDelete }
+  const wholesOf = (via: string, ...docs: (Doc | undefined)[]) => [
+    ...new Set(docs.flatMap((doc) => (doc?.[via] == null ? [] : [String(relId(doc[via]))]))),
+  ]
+
+  const refreshWhole = async (
+    req: PayloadRequest,
+    { of, via }: (typeof PARTS)[string],
+    ...docs: (Doc | undefined)[]
+  ) => {
+    const ids = wholesOf(via, ...docs)
+    if (!ids.length) return
+    try {
+      await refresh({ payload: req.payload, req }, of, ids)
+    } catch (error) {
+      req.payload.logger.error({ err: error }, `[typesense] failed to refresh ${of}/${ids}`)
+    }
+  }
+
+  const afterPartChange =
+    (part: (typeof PARTS)[string]): CollectionAfterChangeHook =>
+    ({ doc, previousDoc, req }) =>
+      refreshWhole(req, part, doc, previousDoc)
+
+  const afterPartDelete =
+    (part: (typeof PARTS)[string]): CollectionAfterDeleteHook =>
+    ({ doc, req }) =>
+      refreshWhole(req, part, doc)
+
+  return { afterChange, afterDelete, afterPartChange, afterPartDelete }
 }
 
 /** Rebuilds every search collection, one at a time, logging each. */
@@ -292,6 +332,16 @@ export const typesenseSearch =
 
     const collections = incoming.collections?.map((collection): CollectionConfig => {
       const { slug } = collection
+      const part = PARTS[slug]
+      if (part)
+        return {
+          ...collection,
+          hooks: {
+            ...collection.hooks,
+            afterChange: [...(collection.hooks?.afterChange ?? []), hooks.afterPartChange(part)],
+            afterDelete: [...(collection.hooks?.afterDelete ?? []), hooks.afterPartDelete(part)],
+          },
+        }
       if (!isSearchCollection(slug)) return collection
       return {
         ...collection,

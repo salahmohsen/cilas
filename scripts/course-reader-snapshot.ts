@@ -1,3 +1,5 @@
+import { localDigits, numberingSystemOf } from '../src/lib/digits'
+
 /**
  * The pure half of `snapshot-course-readers.ts`: the snapshot's shape, how
  * two snapshots differ, and which differences the plan expects
@@ -14,6 +16,13 @@ export type CourseMeta = {
   undatedWords: boolean
   /** Sessions the fill made that no old row held: untitled, shown as "Session N" or "Week N". */
   newSessions: number
+  /**
+   * What the timing removal did to the course, from the head snapshot (the base
+   * cannot know): `meetings` when the old pattern gave it no meeting and it
+   * has meetings now; `weeks-lost` when it
+   * had only a typed length, which no meeting replaces.
+   */
+  archive?: 'meetings' | 'weeks-lost'
 }
 
 /** One run: for each reader, what it gives for each course (by course ID). */
@@ -99,11 +108,152 @@ export const onlyAdds = (before: unknown, after: unknown): boolean => {
 }
 
 /**
+ * A session's name as a reader shows it ("Session 3", "Week 3", "الجلسة ٣",
+ * "الأسبوع ٣"), with the " · " the feed puts before it.
+ */
+const SESSION_LABEL = /(?: · )?(?:Session|Week|الجلسة|الأسبوع) [0-9٠-٩]+/g
+
+/** A count of sessions or weeks, as the course page's length says it in either language. */
+const SESSION_COUNT =
+  /[0-9٠-٩]+ (?:sessions?|weeks?|جلسات|جلسة|أسابيع|أسبوعًا|أسبوع)|جلسة واحدة|جلستان|أسبوع واحد|أسبوعان/g
+
+/** Whether `after` is `before` with a session's name added, or its session count changed. */
+const labelOrCount = (before: string, after: string): boolean => {
+  if (after.replace(SESSION_LABEL, '') === before) return true
+  const counted = before.replace(SESSION_COUNT, '#')
+  return counted !== before && counted === after.replace(SESSION_COUNT, '#')
+}
+
+/**
+ * Whether `after` has the lines of `before`, each unchanged or changed only
+ * by `labelOrCount`, and no other line. A meeting the pattern made after the
+ * last old session showed with no session; it now belongs to a new session
+ * and shows its name, and the page counts the new sessions. The feed sorts
+ * its lines, so a line is matched wherever it went.
+ */
+export const onlyLabels = (before: unknown, after: unknown): boolean => {
+  const was = linesOf(before)
+  const now = linesOf(after)
+  if (was.length !== now.length) return false
+  const left = [...now]
+  for (const line of was) {
+    const at = left.findIndex((n) => n === line || labelOrCount(line, n))
+    if (at === -1) return false
+    left.splice(at, 1)
+  }
+  return true
+}
+
+/** Hand-typed list markers at the start of a line ("- ", "2. "), which became Markdown lists. */
+const LIST_MARKER = /^(?:- |\d+\. )/gm
+
+/**
+ * Whether the search text `after` is `before` with its hand-typed list
+ * markers gone, the same words in the same order. A description converted to
+ * Markdown turned them into list items; the index keeps the words, not the
+ * syntax. The index lists each line once, so a line that matches an earlier
+ * one once its marker is gone is listed once.
+ */
+export const onlyListMarkers = (before: unknown, after: unknown): boolean => {
+  if (typeof before !== 'string' || typeof after !== 'string' || before === after) return false
+  const lines = before.replace(LIST_MARKER, '').split('\n')
+  return lines.filter((line, i) => lines.indexOf(line) === i).join('\n') === after
+}
+
+/** A session's label and a count of sessions or weeks, with the unit word replaced, numbers kept. */
+const unitFree = (value: unknown): string =>
+  (JSON.stringify(value) ?? '')
+    .replace(/(?:Week|Session) ([0-9]+)/g, '# $1')
+    .replace(/(?:الأسبوع|الجلسة) ([0-9٠-٩]+)/g, '# $1')
+    .replace(
+      /([0-9٠-٩]+) (?:weeks?|sessions?|أسابيع|أسبوعًا|أسبوع|جلسات|جلسة)(?![\u0621-\u064A])/g,
+      '$1 #',
+    )
+    .replace(/(?:جلسة|أسبوع) واحد(?:ة)?/g, '1 #')
+    .replace(/جلستان|أسبوعان/g, '2 #')
+
+/**
+ * Whether `after` is `before` with "Week N" and "N weeks" turned into "Session N" and "N sessions":
+ * every number the same. The numbering setting is gone, so every untitled session is "Session N".
+ */
+export const onlyUnits = (before: unknown, after: unknown): boolean =>
+  !same(before, after) && unitFree(before) === unitFree(after)
+
+/** A value with every property named `key` removed, at any depth. */
+const withoutKey = (value: unknown, key: string): unknown => {
+  if (Array.isArray(value)) return value.map((v) => withoutKey(v, key))
+  if (isRecord(value))
+    return Object.fromEntries(
+      Object.entries(value)
+        .filter(([k]) => k !== key)
+        .map(([k, v]) => [k, withoutKey(v, key)]),
+    )
+  return value
+}
+
+/** Whether `after` has the lines of `before` less some, the rest unchanged and in order. */
+export const onlyRemovals = (before: unknown, after: unknown): boolean => {
+  const was = linesOf(before)
+  const now = linesOf(after)
+  let at = 0
+  for (const line of was) if (at < now.length && line === now[at]) at++
+  return at === now.length && now.length < was.length
+}
+
+/** Whether a card's length ("10 weeks") is gone and its date is the same. */
+export const onlyLengthGone = (before: unknown, after: unknown): boolean =>
+  isRecord(before) &&
+  isRecord(after) &&
+  !!before.length &&
+  !after.length &&
+  same({ ...before, length: '' }, { ...after, length: '' })
+
+/** Accept the first session UID metadata only. Keep all meeting content equal. */
+const onlySessionFeedIdentity = (before: unknown, after: unknown): boolean => {
+  if (
+    !Array.isArray(before) ||
+    !Array.isArray(after) ||
+    before.length !== after.length ||
+    !before.length
+  )
+    return false
+  if (
+    !before.every(
+      (line) => typeof line === 'string' && !/(?:^| \| )(UID|SEQUENCE|LAST-MODIFIED):/.test(line),
+    )
+  )
+    return false
+  const uids = new Set<string>()
+  const content: string[] = []
+  for (const line of after) {
+    if (typeof line !== 'string') return false
+    const fields = line.split(' | ')
+    const uid = fields.find((field) => /^UID:session-meeting-[^\s@]+@cilas\.org$/.test(field))
+    if (
+      !uid ||
+      uids.has(uid) ||
+      !fields.some((field) => /^SEQUENCE:\d+$/.test(field)) ||
+      !fields.some((field) => /^LAST-MODIFIED:\d{8}T\d{6}Z$/.test(field))
+    )
+      return false
+    uids.add(uid)
+    content.push(
+      fields
+        .filter((field) => field !== uid && !/^(SEQUENCE|LAST-MODIFIED):/.test(field))
+        .join(' | '),
+    )
+  }
+  return same([...before].sort(), content.sort())
+}
+
+/**
  * Whether the plan expects `reader` to change from `before` to `after` for
  * this course. Course by course, reader by reader: an archive-dated course
  * may change anywhere; a course with new untitled sessions may gain lines
- * where sessions are listed or counted, and change no line it had; an
- * undated course's note may change only where the note shows.
+ * where sessions are listed or counted, or name or count those sessions in
+ * lines it had, and change nothing else; the search text may lose
+ * hand-typed list markers; an undated course's note may change only where
+ * the note shows.
  */
 export const classify = (
   reader: string,
@@ -112,12 +262,38 @@ export const classify = (
   after: unknown,
 ): { verdict: Verdict; reason: string } => {
   if (!meta) return { verdict: 'UNEXPECTED', reason: 'course not in the base snapshot' }
+  if (reader === 'calendar.ics' && onlySessionFeedIdentity(before, after))
+    return { verdict: 'EXPECTED', reason: 'session meeting row UID and update metadata added' }
+  if (onlyUnits(before, after))
+    return { verdict: 'EXPECTED', reason: 'Week N became Session N (no numbering setting)' }
+  if (reader === 'space.sessionFacts' && same(withoutKey(before, 'week'), after))
+    return { verdict: 'EXPECTED', reason: 'the week flag is gone with the numbering setting' }
+  if (reader === 'page.note' && onlyRemovals(before, after))
+    return { verdict: 'EXPECTED', reason: 'the timing note is removed' }
+  if (
+    reader === 'list.articleCards' &&
+    meta.archive === 'weeks-lost' &&
+    onlyLengthGone(before, after)
+  )
+    return { verdict: 'EXPECTED', reason: 'a typed length with no meeting to replace it is gone' }
+  if (meta.archive === 'meetings')
+    return {
+      verdict: 'EXPECTED',
+      reason: 'archive meetings: approximate dates replace the old timing',
+    }
   if (meta.archiveDated) return { verdict: 'EXPECTED', reason: 'archive start date (37)' }
   if (meta.newSessions > 0 && SESSION_READERS.has(reader) && onlyAdds(before, after))
     return {
       verdict: 'EXPECTED',
       reason: `${meta.newSessions} new untitled session(s) (389), lines added only`,
     }
+  if (meta.newSessions > 0 && SESSION_READERS.has(reader) && onlyLabels(before, after))
+    return {
+      verdict: 'EXPECTED',
+      reason: `${meta.newSessions} new untitled session(s): pattern meetings now named or counted`,
+    }
+  if (reader === 'search.syllabus' && onlyListMarkers(before, after))
+    return { verdict: 'EXPECTED', reason: 'hand-typed list markers became Markdown lists (3)' }
   if (meta.undatedWords && NOTE_READERS.has(reader))
     return { verdict: 'EXPECTED', reason: 'weekly times as words in the timing note (18)' }
   return { verdict: 'UNEXPECTED', reason: 'not in the plan' }
@@ -134,8 +310,69 @@ const parts = (before: unknown, after: unknown): Array<[string, unknown, unknown
   return [...new Set([...Object.keys(b), ...Object.keys(a)])].map((k) => [k, b[k], a[k]])
 }
 
-/** Every difference between two snapshots, judged against the base's course facts. */
-export const compareSnapshots = (base: Snapshot, head: Snapshot): Difference[] => {
+/**
+ * A difference a person reviewed and found correct, though no rule of the
+ * plan covers it (`scripts/course-reader-accepted.json`). It holds only
+ * against the base snapshot it was reviewed on: a new baseline starts with
+ * none.
+ */
+export type Accepted = {
+  /** The label of the base snapshot the difference was found against. */
+  base: string
+  course: string
+  reader: string
+  /** The locale (`en`, `ar`), or `` for a value with no locales. */
+  part: string
+  /** Why the new output is right, in one sentence. */
+  reason: string
+}
+
+const matches = (entry: Accepted, d: Difference) =>
+  entry.course === d.course && entry.reader === d.reader && entry.part === d.part
+
+/**
+ * The differences with the accepted entries for this base applied: an
+ * UNEXPECTED difference an entry names becomes EXPECTED with its reason. An
+ * entry that names no UNEXPECTED difference is itself UNEXPECTED, so a stale
+ * entry cannot hide a later change.
+ */
+const applyAccepted = (diffs: Difference[], base: string, accepted: Accepted[]): Difference[] => {
+  const entries = accepted.filter((e) => e.base === base)
+  const judged = diffs.map((d) => {
+    const entry = d.verdict === 'UNEXPECTED' && entries.find((e) => matches(e, d))
+    return entry ? { ...d, verdict: 'EXPECTED' as const, reason: `accepted: ${entry.reason}` } : d
+  })
+  const stale = entries
+    .filter((e) => !diffs.some((d) => d.verdict === 'UNEXPECTED' && matches(e, d)))
+    .map((e): Difference => ({
+      reader: e.reader,
+      course: e.course,
+      part: e.part,
+      before: 'accepted difference',
+      after: 'no such unexpected difference',
+      verdict: 'UNEXPECTED',
+      reason: `stale accepted entry: ${e.reason}`,
+    }))
+  return [...judged, ...stale]
+}
+
+/**
+ * Every difference between two snapshots, judged against the base's course
+ * facts and the reviewed `accepted` differences for that base.
+ */
+export const compareSnapshots = (
+  base: Snapshot,
+  head: Snapshot,
+  accepted: Accepted[] = [],
+): Difference[] => applyAccepted(rawDifferences(base, head), base.label, accepted)
+
+/** The base's facts about a course, with what the head snapshot knows that the base cannot. */
+const metaOf = (base: Snapshot, head: Snapshot, course: string): CourseMeta | undefined => {
+  const meta = base.courses[course]
+  return meta && { ...meta, archive: head.courses[course]?.archive }
+}
+
+const rawDifferences = (base: Snapshot, head: Snapshot): Difference[] => {
   const out: Difference[] = []
   const readers = [...new Set([...Object.keys(base.readers), ...Object.keys(head.readers)])].sort()
   for (const reader of readers) {
@@ -163,7 +400,7 @@ export const compareSnapshots = (base: Snapshot, head: Snapshot): Difference[] =
         const days = DAY_READERS.has(reader) ? toDays(before) : before
         const { verdict, reason } = same(days, after)
           ? { verdict: 'EXPECTED' as const, reason: 'raw timestamp to the same day' }
-          : classify(reader, base.courses[course], days, after)
+          : classify(reader, metaOf(base, head, course), days, after)
         out.push({ reader, course, part, before, after, verdict, reason })
       }
     }
@@ -236,18 +473,13 @@ export const parseIcs = (ics: string): IcsEvent[] => {
 export const courseSlugOf = (url: string | null | undefined): string | null =>
   /\/study\/([^/?#]+)\/?(?:[?#]|$)/.exec(url ?? '')?.[1] ?? null
 
-/**
- * A course's entries in the feed, without what changes on every run or
- * names an entry by its place in a list: `DTSTAMP` (the time of the
- * request) and `UID` (`c<id>-<index>` today; ADR 0011 gives each meeting
- * its own). Sorted, so the order of courses in the feed does not count.
- */
+/** Course entries without request timestamps or URLs. Keep identity and version metadata for compare. */
 export const icsByCourse = (ics: string): Record<string, string[]> => {
   const out: Record<string, string[]> = {}
   for (const event of parseIcs(ics)) {
     const slug = courseSlugOf(event.URL)
     if (!slug) continue
-    const { DTSTAMP: _stamp, UID: _uid, URL: _url, ...rest } = event
+    const { DTSTAMP: _stamp, URL: _url, ...rest } = event
     ;(out[slug] ??= []).push(
       Object.entries(rest)
         .sort(([a], [b]) => a.localeCompare(b))
@@ -284,3 +516,67 @@ export const llmsTimes = (markdown: string): { facts: string[]; syllabus: string
   facts: section(markdown, LLMS_FACTS).filter((l) => LLMS_TIME_FACTS.test(l)),
   syllabus: section(markdown, LLMS_SYLLABUS).filter((l) => LLMS_SESSION_LINE.test(l)),
 })
+
+/** What the month list needs to write a line as the old month page did. */
+export type MonthWords = {
+  locale: string
+  number: (value: number, options: { numberingSystem: 'arab' | 'latn' }) => string
+  dateTime: (
+    value: Date,
+    options: {
+      weekday?: 'long'
+      month?: 'long'
+      year?: 'numeric'
+      timeZone: 'UTC'
+      numberingSystem?: 'arab' | 'latn'
+    },
+  ) => string
+  cancelled: string
+}
+
+const squashText = (text: string | null | undefined) => (text ?? '').replace(/\s+/g, ' ').trim()
+
+/**
+ * A month's list (the phone layout of the month view, which the server
+ * sends with the month): each course meeting's slug and line, `date | time
+ * | note | cancelled`. The page shows 12-hour times and its own date line, so
+ * the line is written from the markup's data (`data-day`, `<time>`) in the
+ * old page's words, and the readings stay comparable with older snapshots.
+ */
+export const monthList = (document: Document, words: MonthWords): Array<[string, string]> => {
+  const nu = numberingSystemOf(words.locale)
+  const utc = (day: string) => new Date(`${day}T00:00:00Z`)
+  const dateLine = (day: string) =>
+    words.number(Number(day.slice(8)), { numberingSystem: nu }) +
+    words.dateTime(utc(day), { weekday: 'long', timeZone: 'UTC' }) +
+    words.dateTime(utc(day), {
+      month: 'long',
+      year: 'numeric',
+      timeZone: 'UTC',
+      numberingSystem: nu,
+    })
+  const out: Array<[string, string]> = []
+  for (const day of document.querySelectorAll('[data-width="narrow"] li[data-day]')) {
+    const date = dateLine(day.getAttribute('data-day')!)
+    for (const row of day.querySelectorAll('a[href]')) {
+      const slug = courseSlugOf(row.getAttribute('href'))
+      if (!slug) continue
+      const times = [...row.querySelectorAll('time')].map((t) => t.getAttribute('datetime'))
+      const cancelled = row.hasAttribute('data-cancelled')
+      const note = [
+        squashText(row.querySelector('[data-caption]')?.textContent),
+        cancelled ? words.cancelled : '',
+      ]
+      out.push([
+        slug,
+        [
+          date,
+          localDigits(times.join('–'), words.locale),
+          note.filter(Boolean).join(' · '),
+          cancelled ? 'cancelled' : '',
+        ].join(' | '),
+      ])
+    }
+  }
+  return out
+}

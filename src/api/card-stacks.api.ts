@@ -80,7 +80,7 @@ const courseItem = (c: Course): OrbitStackItem => {
   return {
     name: c.title,
     role: names(c.fellows),
-    description: c.summary || c.subtitle || '',
+    description: c.subtitle || '',
     href: pathOf('courses', c) ?? '#',
     ...coverOf(c.cover_image),
     ...(cycle ? { stat: cycle } : {}),
@@ -99,7 +99,7 @@ const coursePost = (
     id: c.slug ?? String(c.id),
     href: pathOf('courses', c, locale) ?? '#',
     title: c.title,
-    excerpt: c.summary || c.subtitle || '',
+    excerpt: c.subtitle || '',
     category: type,
     label: type,
     date: '',

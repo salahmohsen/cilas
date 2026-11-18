@@ -6,11 +6,18 @@ import { PUBLIC_LISTS_TAG, revalidationOf } from '@/lib/paths'
 
 type Slugged = { slug?: string | null }
 
-const drop = (collection: string, doc: Slugged, previousDoc?: Slugged) => {
+/**
+ * Drops what a document shows on the public site from the cache: its page
+ * (under the current and the previous slug), its lists and their tag. The
+ * lists expire at once (`expire: 0`), so whoever saved reads the new list on
+ * their next request, from the admin or a server action alike; a hook cannot
+ * call `updateTag`, which only a server action may.
+ */
+export const revalidateDocument = (collection: string, doc: Slugged, previousDoc?: Slugged) => {
   const { paths, tag } = revalidationOf(collection, routing.locales, doc, previousDoc)
   try {
     for (const path of paths) revalidatePath(path)
-    if (tag) revalidateTag(PUBLIC_LISTS_TAG, 'max')
+    if (tag) revalidateTag(PUBLIC_LISTS_TAG, { expire: 0 })
   } catch {
     // Seed and import scripts have no Next cache, and these calls throw there.
   }
@@ -19,13 +26,13 @@ const drop = (collection: string, doc: Slugged, previousDoc?: Slugged) => {
 export const revalidateAfterChange =
   (collection: string): CollectionAfterChangeHook =>
   ({ doc, previousDoc }) => {
-    drop(collection, doc, previousDoc)
+    revalidateDocument(collection, doc, previousDoc)
     return doc
   }
 
 export const revalidateAfterDelete =
   (collection: string): CollectionAfterDeleteHook =>
   ({ doc }) => {
-    drop(collection, doc)
+    revalidateDocument(collection, doc)
     return doc
   }

@@ -53,7 +53,6 @@ beforeAll(async () => {
         title: 'Llms Course',
         slug: uniq('llms-course'),
         course_type: 'THEMATIC',
-        session_unit: 'session',
         tier: 'public',
         cycle: cycle.id,
         registration: { mode: 'closed' },

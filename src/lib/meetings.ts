@@ -1,4 +1,4 @@
-import { addDays, WEEKDAYS, weekdayOf, type Weekday } from '@/lib/cairo-day'
+import { weekdayOf, type Weekday } from '@/lib/cairo-day'
 
 /**
  * The one place course times are read (ADR 0011, replacing ADR 0002's
@@ -14,6 +14,7 @@ import { addDays, WEEKDAYS, weekdayOf, type Weekday } from '@/lib/cairo-day'
  * never moves a meeting.
  */
 export type Meeting = {
+  id?: string | null
   date: string
   start_time?: string | null
   end_time?: string | null
@@ -59,6 +60,7 @@ export const meetingsOf = (sessions: readonly SessionTimes[]): CourseMeeting[] =
   sessionsInOrder(sessions)
     .flatMap((s, index) =>
       (s.meetings ?? []).map((m): CourseMeeting => ({
+        ...(m.id ? { id: m.id } : {}),
         date: m.date,
         start_time: m.start_time || null,
         end_time: m.end_time || null,
@@ -81,20 +83,41 @@ export const firstDay = (meetings: readonly MaybeCancelled[]): string | null =>
 export const lastDay = (meetings: readonly MaybeCancelled[]): string | null =>
   held(meetings).at(-1)?.date ?? null
 
-/** The Saturday that starts the Egyptian week a day falls in. */
-const weekStart = (day: string): string => addDays(day, -WEEKDAYS.indexOf(weekdayOf(day)))
-
 const daysBetween = (from: string, to: string): number =>
   Math.round((Date.parse(`${to}T00:00:00Z`) - Date.parse(`${from}T00:00:00Z`)) / 86_400_000)
 
 /**
- * How many calendar weeks (Saturday to Friday) the meetings span, from the
- * first to the last one not cancelled. Zero with no meeting.
+ * The 7-day period a day falls in, counted from `first`: 0 for `first` and
+ * the six days after it. A course's weeks run from its first meeting, not
+ * from Saturday: a course that meets Thursday and Saturday from a Thursday
+ * meets once a week on each day, while a Saturday-to-Friday week would split
+ * each pair. Only the calendar view lays out Saturday weeks (`lib/calendar.ts`).
+ */
+const periodOf = (first: string, day: string): number => Math.floor(daysBetween(first, day) / 7)
+
+/**
+ * How many weeks the meetings span: 7-day periods from the first meeting not
+ * cancelled to the last one. Zero with no meeting.
  */
 export const weeks = (meetings: readonly MaybeCancelled[]): number => {
   const first = firstDay(meetings)
   const last = lastDay(meetings)
-  return first && last ? Math.floor(daysBetween(weekStart(first), last) / 7) + 1 : 0
+  return first && last ? periodOf(first, last) + 1 : 0
+}
+
+/**
+ * The course week a run of days shows, as "week of weeks": the period of
+ * the first held meeting on those days. A Saturday-to-Friday calendar week
+ * can hold the end of one course week and the start of the next; its first
+ * meeting names it. Null when none of the days has a held meeting.
+ */
+export const courseWeek = (
+  meetings: readonly MaybeCancelled[],
+  days: readonly string[],
+): { week: number; weeks: number } | null => {
+  const first = firstDay(meetings)
+  const shown = held(meetings).find((m) => days.includes(m.date))
+  return first && shown ? { week: periodOf(first, shown.date) + 1, weeks: weeks(meetings) } : null
 }
 
 /** The first meeting not cancelled on or after `today` (a Cairo day), or null. */
@@ -112,7 +135,8 @@ export type WeeklyTime = {
 
 /**
  * What a course page says about when a course meets. `weekly` when every
- * week from the first to the last meeting has the same weekdays and times
+ * week (`weeks`: 7 days from the first meeting) has the same weekdays and
+ * times, the last week perhaps ending early
  * ("Tuesdays and Thursdays, 7–9pm, 8 weeks"); else `dates`, the count of
  * sessions and the first and last day ("12 sessions, 3 March – 28 April").
  * Data, not words: the page formats it in its own language.
@@ -137,15 +161,20 @@ export const summary = (
   if (!first || !last) return null
 
   const span = weeks(list)
-  const byWeek = new Map<string, string[]>()
-  for (const m of list) {
-    const week = weekStart(m.date)
-    byWeek.set(week, [...(byWeek.get(week) ?? []), weeklyKey(m)])
-  }
-  const shapes = new Set([...byWeek.values()].map((keys) => keys.join('|')))
+  const periods: string[][] = Array.from({ length: span }, () => [])
+  for (const m of list) periods[periodOf(first.date, m.date)]!.push(weeklyKey(m))
+  const [shape, ...rest] = periods
+  // Every week the same weekdays and times; the last may end early, part way
+  // through. At least two full weeks, so one week and a short one is no pattern.
+  const full = (keys: string[]) => keys.join('|') === shape!.join('|')
+  const ending = rest.at(-1) ?? []
+  const regular =
+    rest.slice(0, -1).every(full) &&
+    ending.every((key, i) => key === shape![i]) &&
+    periods.filter(full).length >= 2
 
-  if (span > 1 && byWeek.size === span && shapes.size === 1) {
-    const firstWeek = list.filter((m) => weekStart(m.date) === weekStart(first.date))
+  if (regular) {
+    const firstWeek = list.filter((m) => periodOf(first.date, m.date) === 0)
     return {
       kind: 'weekly',
       times: firstWeek.map((m) => ({
@@ -161,11 +190,18 @@ export const summary = (
   return { kind: 'dates', sessions, first: first.date, last: last.date }
 }
 
-/** What a course calls one session: "Session 3" or "Week 3" (`course.session_unit`). */
-export type SessionUnit = 'session' | 'week'
-
-export const sessionUnitOf = (value: string | null | undefined): SessionUnit =>
-  value === 'week' ? 'week' : 'session'
+/**
+ * A course's length in weeks from its stored `first_day` and `last_day`
+ * (kept by `lib/course-days.ts` from its meetings), for lists that do not
+ * read sessions. Zero when it has no meeting held.
+ */
+export const storedWeeks = (course: {
+  first_day?: string | null
+  last_day?: string | null
+}): number =>
+  course.first_day && course.last_day
+    ? weeks([{ date: course.first_day }, { date: course.last_day }])
+    : 0
 
 /**
  * A session in its course's order. `number` counts from 1 and counts
@@ -176,15 +212,13 @@ export const sessionUnitOf = (value: string | null | undefined): SessionUnit =>
 export type NumberedSession<T> = {
   session: T
   number: number
-  unit: SessionUnit
   meetings: CourseMeeting[]
   day: string | null
 }
 
-/** The course's sessions in order, each with its number, unit, meetings and day. */
+/** The course's sessions in order, each with its number, meetings and day. */
 export const numberedSessions = <T extends SessionTimes>(
   sessions: readonly T[],
-  unit: string | null | undefined,
 ): NumberedSession<T>[] => {
   const meetings = meetingsOf(sessions)
   return sessionsInOrder(sessions).map((session, index) => {
@@ -192,7 +226,6 @@ export const numberedSessions = <T extends SessionTimes>(
     return {
       session,
       number: index + 1,
-      unit: sessionUnitOf(unit),
       meetings: own,
       day: (own.find((m) => !m.cancelled) ?? own[0])?.date ?? null,
     }
@@ -215,9 +248,8 @@ export const upcomingSession = <T>(
 }
 
 /**
- * A meeting's stable name within what it belongs to (`owner`, e.g. a
- * session ID): its day and start time. It stays the same when other meetings
- * are added or moved, so a calendar app updates the entry, not a copy.
+ * A meeting's display key within its owner. A move changes this key.
+ * The feed uses the stored meeting row ID instead.
  */
 export const meetingKey = (owner: string | number, m: Meeting): string =>
   `${owner}-${m.date}-${m.start_time ? m.start_time.replace(':', '') : 'day'}`

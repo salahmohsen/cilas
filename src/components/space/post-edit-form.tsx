@@ -13,7 +13,7 @@ import { FILE_LIMITS, SPACE_FILE_ACCEPT, UPLOAD_TOTAL_MAX } from '@/lib/space-fi
 import { readDraft, useDraft } from '@/components/use-draft'
 import { AttachmentTray } from './attachment-tray'
 import { ComposerField, type ComposerSuggestions } from './composer-field'
-import { saveErrorKey } from './composer'
+import { saveErrorKey } from '@/lib/space-rules'
 import { useAttachments } from './use-attachments'
 import styles from './space.module.css'
 

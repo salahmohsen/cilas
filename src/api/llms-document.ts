@@ -182,10 +182,8 @@ const SECTION_LABELS = {
     readings: 'Readings',
     cancelled: 'cancelled',
     meetings: 'Meetings',
-    week: 'Week',
     session: 'Session',
     subtitle: 'Subtitle',
-    summary: 'Summary',
     syllabusMayChange: 'The syllabus may still change.',
     registerDeadline: 'Application deadline',
     registrationOpen: 'Registration open',
@@ -211,10 +209,8 @@ const SECTION_LABELS = {
     readings: 'القراءات',
     cancelled: 'أُلغيت',
     meetings: 'اللقاءات',
-    week: 'الأسبوع',
     session: 'الجلسة',
     subtitle: 'العنوان الفرعي',
-    summary: 'مختصر',
     syllabusMayChange: 'قد يتغيّر المقرّر.',
     registerDeadline: 'آخر موعد للتقديم',
     registrationOpen: 'التسجيل مفتوح',
@@ -373,7 +369,7 @@ export const courseDocument = async (
   const l = contextOf(locale)
   const t = labelsOf(locale)
   const cycle = typeof course.cycle === 'object' ? course.cycle : null
-  const syllabus = numberedSessions(sessions, course.session_unit)
+  const syllabus = numberedSessions(sessions)
   const meetings = syllabus.flatMap((s) => s.meetings)
   const when = summary(meetings)
   const hours = (m: { start_time?: string | null; end_time?: string | null }) =>
@@ -399,7 +395,6 @@ export const courseDocument = async (
     [locale === 'ar' ? 'تبدأ' : 'Starts', firstDay(meetings)],
     [locale === 'ar' ? 'تنتهي' : 'Ends', lastDay(meetings)],
     [locale === 'ar' ? 'اللقاءات' : 'Meets', meetingsLine],
-    [locale === 'ar' ? 'ملاحظة المواعيد' : 'Timing note', course.timing_note || null],
     [
       locale === 'ar' ? 'المكان' : 'Location',
       (course.location ?? [])
@@ -432,7 +427,6 @@ export const courseDocument = async (
 
   const overview = [
     course.subtitle ? `${t.subtitle}: ${course.subtitle}` : null,
-    course.summary ? `${t.summary}: ${course.summary}` : null,
     course.epigraph ? `> ${course.epigraph}` : null,
   ]
     .filter(Boolean)
@@ -453,8 +447,8 @@ export const courseDocument = async (
     }),
   )
 
-  const sessionBlocks = syllabus.map(({ session, number, unit, meetings: own }) => {
-    const title = session.title || `${unit === 'week' ? t.week : t.session} ${number}`
+  const sessionBlocks = syllabus.map(({ session, number, meetings: own }) => {
+    const title = session.title || `${t.session} ${number}`
     const heading = `### ${title.replaceAll('#', '').trim()}${session.cancelled ? ` (${t.cancelled})` : ''}`
     const count = own.filter((m) => !m.cancelled).length
     const dates =
@@ -488,7 +482,6 @@ export const courseDocument = async (
 
   return {
     title: course.title,
-    summary: course.summary || null,
     pageUrl: linkTo(l, pathOf('courses', course)) ?? '',
     sections: [
       { heading: t.facts, body: facts },

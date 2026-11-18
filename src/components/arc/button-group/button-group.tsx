@@ -47,12 +47,19 @@ export interface ButtonGroupMenuItem {
   disabled?: boolean
   /** Colors the item as a destructive action. */
   destructive?: boolean
+  /** Called as the pointer or focus reaches or presses the item, to fetch what it opens. */
+  onPreload?: () => void
 }
 
 export interface ButtonGroupMenu {
   /** Accessible name and tooltip of the chevron segment, such as "More actions". */
   label: string
   items: ButtonGroupMenuItem[]
+  /**
+   * Renders the menu inside this element, not in the page body. Inside a popover or dialog of another library, whose
+   * outside-press and focus-out checks look at the DOM, the menu then counts as part of it.
+   */
+  container?: HTMLElement | null
 }
 
 export interface ButtonGroupProps {
@@ -539,7 +546,7 @@ export function ButtonGroup({
   return (
     <DropdownPrimitive.Root open={menuOpen} onOpenChange={setMenuOpen} modal={false}>
       {group}
-      <DropdownPrimitive.Portal>
+      <DropdownPrimitive.Portal container={menu.container}>
         <DropdownPrimitive.Content
           className={styles.menu}
           side="bottom"
@@ -570,6 +577,9 @@ export function ButtonGroup({
                 style={{ '--i': index } as CSSProperties}
                 disabled={action.disabled}
                 onSelect={action.onSelect}
+                onFocus={action.onPreload}
+                onPointerEnter={action.onPreload}
+                onPointerDown={action.onPreload}
                 asChild
               >
                 <a href={action.href}>{body}</a>
@@ -581,6 +591,9 @@ export function ButtonGroup({
                 style={{ '--i': index } as CSSProperties}
                 disabled={action.disabled}
                 onSelect={action.onSelect}
+                onFocus={action.onPreload}
+                onPointerEnter={action.onPreload}
+                onPointerDown={action.onPreload}
               >
                 {body}
               </DropdownPrimitive.Item>

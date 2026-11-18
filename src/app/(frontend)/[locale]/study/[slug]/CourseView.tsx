@@ -18,6 +18,7 @@ import {
 import { useFormatter, useLocale, useTranslations } from 'next-intl'
 import React from 'react'
 
+import { formatTime, formatTimeRange, toMinutes } from '@/components/calendar/ui/calendar-time'
 import { AIInstructions } from '@/components/ai-instructions'
 import { InViewTitle } from '@/components/arc/in-view-title/in-view-title'
 import {
@@ -25,10 +26,9 @@ import {
   MATERIAL_ICONS,
   MATERIAL_ORDER,
   MaterialList,
-  directionOf,
   syllabusOf,
-  textOf,
 } from '@/components/course/course-syllabus'
+import { courseLanguage, textOf } from '@/lib/course-language'
 import { EditorFields, labelOf } from '@/components/editor-fields'
 import { AvatarFallback } from '@/components/arc/lib/avatar-fallback'
 import { ContributorRows, photoOf } from '@/components/person/contributors'
@@ -109,10 +109,10 @@ export const CourseView: React.FC<{
     : null
   const typeLabel = tf(`types.${course.course_type.toLowerCase()}`)
   const fellows = (course.fellows ?? []).filter(isObject<Person>)
-  const dir = directionOf(`${course.title} ${course.subtitle ?? ''} ${textOf(course.description)}`)
+  const dir = courseLanguage(course) === 'ar' ? 'rtl' : 'ltr'
   const lang = dir === 'rtl' ? 'ar' : 'en'
 
-  const syllabus = syllabusOf(sessions, course.session_unit)
+  const syllabus = syllabusOf(sessions)
   const meetings = syllabus.flatMap((s) => s.meetings)
   const starts = firstDay(meetings)
   const when = summary(meetings)
@@ -153,7 +153,9 @@ export const CourseView: React.FC<{
       ? when.times.map((time) => ({
           day: weekdayName(time.weekday, locale),
           time: time.start_time
-            ? localDigits([time.start_time, time.end_time].filter(Boolean).join('–'), locale)
+            ? time.end_time
+              ? formatTimeRange(toMinutes(time.start_time), toMinutes(time.end_time), locale)
+              : formatTime(toMinutes(time.start_time), locale)
             : null,
         }))
       : []
@@ -201,11 +203,8 @@ export const CourseView: React.FC<{
           {
             icon: ListOrdered,
             label: t('length'),
-            path: 'session_unit',
-            value:
-              course.session_unit === 'week'
-                ? t('weeks', { count: sessions.length })
-                : t('sessions', { count: sessions.length }),
+            path: 'syllabus',
+            value: t('sessions', { count: sessions.length }),
           },
         ]
       : []),
@@ -396,11 +395,6 @@ export const CourseView: React.FC<{
           </dl>
         ) : null}
       </SideCardSection>
-      {course.timing_note ? (
-        <p className="side-card-muted whitespace-pre-line" {...pe('timing_note')}>
-          {course.timing_note}
-        </p>
-      ) : null}
       {wide && fellows.length ? (
         <div {...pe('fellows')}>
           <SideCardSection label={t('taughtBy')}>
@@ -467,7 +461,6 @@ export const CourseView: React.FC<{
             <EditorFields
               pe={pe}
               fields={[
-                { label: 'Card summary', path: 'summary', value: course.summary },
                 { label: 'Visibility', path: 'tier', value: course.tier },
                 { label: 'Slug', path: 'slug', value: course.slug },
                 {
@@ -480,7 +473,6 @@ export const CourseView: React.FC<{
                   path: 'registration.deadline',
                   value: course.registration?.deadline?.slice(0, 10),
                 },
-                { label: 'Session unit', path: 'session_unit', value: course.session_unit },
                 {
                   label: 'Syllabus tentative',
                   path: 'syllabus_tentative',

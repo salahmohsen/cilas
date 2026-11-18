@@ -13,6 +13,9 @@ import {
   cleanSessionRefs,
   inlineBlocks,
   mentionToken,
+  renameSessionRefs,
+  scheduleLineRef,
+  scheduleToken,
   sessionFacts,
   sessionIdsIn,
   splitBlocks,
@@ -70,27 +73,29 @@ describe('session tokens in a body', () => {
     expect(cleanSessionRefs(`x ${blockToken('zz')}`, new Set([A]), { blocks: false })).toBe('x')
   })
 
+  it('renames the sessions mentions and blocks name, outside code fences, labels kept', () => {
+    const body = `See [#2 Intro](session:${A}) and\n\n${blockToken(B)}\n\n\`\`\`\n${blockToken(A)}\n\`\`\``
+    const renamed = renameSessionRefs(body, (id) => (id === A ? '11' : '12'))
+    expect(renamed).toBe(
+      `See [#2 Intro](session:11) and\n\n${blockToken('12')}\n\n\`\`\`\n${blockToken(A)}\n\`\`\``,
+    )
+    expect(renameSessionRefs(renamed, (id) => id)).toBe(renamed)
+  })
+
   it('facts number and date sessions as the syllabus does, cancelled marked', () => {
     const facts = sessionFacts({
-      schedule: {
-        start_date: '2031-03-03',
-        start_precision: 'day',
-        weeks: 2,
-        slots: [{ weekday: 'mon', start_time: '18:00', end_time: '20:00' }],
-      } as never,
       sessions: [
-        { id: B, session_title: 'Two', order: 2, cancelled: true },
-        { id: A, session_title: 'One', order: 1 },
+        { id: 12, title: 'Two', cancelled: true, meetings: [{ date: '2031-03-10' }] },
+        { id: 11, title: 'One', meetings: [{ date: '2031-03-03', start_time: '18:00' }] },
       ],
     })
-    expect(facts[A]).toEqual({
+    expect(facts['11']).toEqual({
       n: 1,
       title: 'One',
-      week: false,
       date: '2031-03-03',
       cancelled: false,
     })
-    expect(facts[B]).toMatchObject({ n: 2, cancelled: true })
+    expect(facts['12']).toMatchObject({ n: 2, date: '2031-03-10', cancelled: true })
   })
 })
 
@@ -107,6 +112,65 @@ const caretIn = (block: HTMLElement, index: number) => {
   selection.removeAllRanges()
   selection.addRange(range)
 }
+
+describe('the schedule block token', () => {
+  const schedule = scheduleToken({ from: '2026-11-18', weeks: 2, ids: [A, B] })
+
+  it('writes the Saturday that starts the first week, the weeks and the ids, and reads them back', () => {
+    expect(schedule).toBe(`::schedule[2026-11-14+2:${A},${B}]`)
+    expect(scheduleLineRef(`  ${schedule} `)).toEqual({ from: '2026-11-14', weeks: 2, ids: [A, B] })
+  })
+
+  it('refuses a day that is not real, and a week count out of range', () => {
+    expect(scheduleLineRef(`::schedule[2026-02-30+1:${A}]`)).toBeNull()
+    expect(scheduleLineRef(`::schedule[2026-11-14+0:${A}]`)).toBeNull()
+    expect(scheduleLineRef(`::schedule[2026-11-14+27:${A}]`)).toBeNull()
+    expect(scheduleLineRef(`::schedule[2026-11-14+2:]`)).toBeNull()
+    expect(scheduleToken({ from: '2026-11-14', weeks: 40, ids: [A] })).toBe(
+      `::schedule[2026-11-14+26:${A}]`,
+    )
+  })
+
+  it('is a paragraph of its own, and its sessions count as named', () => {
+    const body = `Changes:\n\n${schedule}\n\n${blockToken(A)}`
+    expect(splitBlocks(body)).toEqual([
+      { type: 'text', markdown: 'Changes:' },
+      { type: 'schedule', schedule: { from: '2026-11-14', weeks: 2, ids: [A, B] } },
+      { type: 'block', id: A },
+    ])
+    expect(sessionIdsIn(body)).toEqual([A, B])
+  })
+
+  it('inside a sentence or a code fence it is no block; in a sentence it reads as nothing', () => {
+    const inline = `See ${schedule} now`
+    expect(splitBlocks(inline)).toEqual([{ type: 'text', markdown: inline }])
+    expect(inlineBlocks(inline)).toBe('See  now')
+    const fenced = '```\n' + schedule + '\n```'
+    expect(sessionIdsIn(fenced)).toEqual([])
+    expect(splitBlocks(fenced)).toEqual([{ type: 'text', markdown: fenced }])
+  })
+
+  it('keeps only the known sessions, and goes when none is left', () => {
+    expect(cleanSessionRefs(`a\n\n${schedule}\n\nb`, new Set([B]))).toBe(
+      `a\n\n::schedule[2026-11-14+2:${B}]\n\nb`,
+    )
+    expect(cleanSessionRefs(`a\n\n${schedule}\n\nb`, new Set())).toBe('a\n\nb')
+  })
+
+  it('keeps one schedule block a post, none in a comment, none inside a sentence', () => {
+    const known = new Set([A, B])
+    const two = cleanSessionRefs(`${schedule}\n\n${schedule}`, known)
+    expect(two.match(/::schedule\[/g)).toHaveLength(SESSION_REF_MAX.schedules)
+    expect(cleanSessionRefs(schedule, known, { blocks: false })).toBe('')
+    expect(cleanSessionRefs(`x ${schedule}`, known)).toBe('x')
+  })
+
+  it('renames its sessions with the others', () => {
+    expect(renameSessionRefs(schedule, (id) => (id === A ? '11' : '12'))).toBe(
+      '::schedule[2026-11-14+2:11,12]',
+    )
+  })
+})
 
 describe('the # and / session triggers', () => {
   it('# at a word start lists the sessions and inserts [#1 Intro](session:id)', () => {
