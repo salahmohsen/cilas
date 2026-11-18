@@ -2366,7 +2366,7 @@ describe('slug follows the title until the first publish', () => {
 
 Articles have autosave drafts, publications have drafts without autosave, so the block covers both paths. The publish tests use an article: a publication publish needs its introduction fields (Payload refused a probe with "The following field is invalid: Introduction > Kind"). The two Arabic titles carry `RUN`, so a second run does not meet the slug of the first. The uniqueness test makes the article that holds the slug with a create, not a retitle: a create writes the main table, which is the table of the unique index and the table the hook counts; a draft retitle writes only the versions table. The last test uses that same fact the other way round: two drafts are created with different titles (a create writes the main table, so the creates do not clash), then both are retitled to one title (a draft retitle writes only the versions table, so both drafts now hold the slug `shared-…` and the hook finds no other main-table row that holds it). The first publish writes the main table and passes. The second publish meets the unique index. Payload turns that violation into a `ValidationError` whose `data.errors` has `path: 'slug'` (message "Value must be unique"), and the test asserts that error, not a message of this hook. If the run shows that the error does not resolve to path `slug`, restore the hook count: in the wrapper of Step 3, when `data._status === 'published'` and `otherRowHolds(finalSlug, args)` is true, throw a `ValidationError` on `slug` with the message "Another document uses this slug. An admin can set a different slug.", assert that message in the test, and say so in the PR body. The fallback code, in `src/fields/slug.ts`: add `ValidationError` back to the `payload` import, and wrap the returned hook so it reads `const decide = async (args: SlugHookArgs) => { …the body above… }`, then:
 
-```ts
+````ts
   return async (args) => {
     const keepFollowing = await decide(args)
     const { collection, data, originalDoc } = args
@@ -2493,7 +2493,7 @@ export const slugField: typeof payloadSlugField = (args = {}) =>
     overrides: (row) =>
       lock(args.overrides?.(row) ?? row, args.fieldToUse ?? args.useAsSlug ?? 'title'),
   })
-```
+````
 
 How it works, step by step:
 

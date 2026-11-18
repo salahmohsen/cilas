@@ -55,24 +55,24 @@ Three roles use the portal.
 
 Each row is one handoff. "Told" means a notification row in the bell, its push when the reader allows push, and the email the code already sends, unless the row says otherwise. The section named in the last column holds the rule. This table does not restate rules.
 
-| # | Transition | Who acts, where | Who is told | What each role sees next | Rule in |
-|---|---|---|---|---|---|
-| 1 | Owner submits an article or a course | Owner, editor, **Submit for review** | Admins: `submitted` | Owner: Submitted, form locked, **Withdraw**. Admin: one task, in To review and in Needs you | [Status model](#status-model-statusof), [Review and history](#review-and-history) |
-| 2 | Owner withdraws a submission (D3) | Owner, editor, **Withdraw** | Admins: `withdrawn`, in the bell only. No email | Owner: Draft, form open. Admin: the task leaves To review and Needs you | [Review and history](#review-and-history) |
-| 3 | Admin asks for changes | Admin, review pane, note required | Owner: `changes_requested`, after the undo window | Owner: Changes requested, the note in the banner, a Needs you row. Admin: the row leaves To review | [Review and history](#review-and-history) |
-| 4 | Owner submits again | Owner, editor | Admins: `submitted` | Admin: the row returns with "Round n", the history and the diff (D9) | [Review and history](#review-and-history) |
-| 5 | Admin approves and publishes an article | Admin, review pane, **Publish as** (D6) | Owner: `approved`, naming the tier, after the undo window | Owner: Published, **View on the site** | [Review and history](#review-and-history) |
-| 6 | Admin approves and publishes a course | Admin, review pane, **Cycle** and **Tier** (D10) | Owner: `approved`, after the undo window | Owner: Published. The course is on the site at the chosen tier. Each listed fellow gets the fellow role | [Review and history](#review-and-history) |
-| 7 | Admin declines | Admin, review pane, note required | Owner: `rejected`, after the undo window | Owner: Declined and the note, in the bell and in the list's Closed group. No Needs you row, because a decline asks for no work | [Tasks and the bell](#tasks-needsuser-and-the-bell) |
-| 8 | Owner asks to remove a published item | Owner, editor menu, **Request removal** | Admins: `submitted` (removal note) | Owner: Published plus Removal requested. Admin: one task, in To review and in Needs you | [Status model](#status-model-statusof) |
-| 9 | Admin removes, or keeps with a note | Admin, review pane | Owner: `removed`, or `rejected` with the keep note, after the undo window | Owner: the item leaves the site, or Published plus Kept on the site | [Status model](#status-model-statusof) |
-| 10 | Fellow edits a published course | Fellow, course form | Nobody until they submit | Fellow: Published plus Unsent edits. The site keeps the live version | [Course form](#course-form-and-the-sessions-calendar) |
-| 11 | Fellow changes sessions of a published course | Fellow, course form or space Calendar tab | Nobody automatically. The optional prefilled announcement tells the space (D1) | Members: the calendar and the syllabus show the change | [Course form](#course-form-and-the-sessions-calendar) |
-| 12 | Applicant applies | Applicant, public form | Admins and the fellows of the chosen courses: `application` | Admin: a card in Waiting, a Needs you row. Fellow: a card in Waiting, view only | [Applicants board](#applicants-board) |
-| 13 | Admin decides an applicant | Admin, applicants board | Applicant: email after the undo window | Admin: the ring, then Email sent. Fellow: the card in its new lane on the next load. Other admins: nothing until the commit (D15) | [Applicants board](#applicants-board) |
-| 14 | Admin reopens a decided applicant | Admin, applicants board, **Move to** Waiting | Nobody. No email | Admin and fellow: the card in Waiting | [Applicants board](#applicants-board) |
-| 15 | Accepted student signs in for the first time | Student, set-password link from the email, then the portal | Admins: `joined`, as today | Student: Home with the first-run checklist | [Onboarding](#onboarding) |
-| 16 | Fellow writes an assessment | Fellow, Participants page (D18) | Nobody | Fellow and admins: the assessment on the enrollment. The student never sees it | [Participants](#participants-and-assessments-d18) |
+| #   | Transition                                    | Who acts, where                                            | Who is told                                                                    | What each role sees next                                                                                                          | Rule in                                                                           |
+| --- | --------------------------------------------- | ---------------------------------------------------------- | ------------------------------------------------------------------------------ | --------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------- |
+| 1   | Owner submits an article or a course          | Owner, editor, **Submit for review**                       | Admins: `submitted`                                                            | Owner: Submitted, form locked, **Withdraw**. Admin: one task, in To review and in Needs you                                       | [Status model](#status-model-statusof), [Review and history](#review-and-history) |
+| 2   | Owner withdraws a submission (D3)             | Owner, editor, **Withdraw**                                | Admins: `withdrawn`, in the bell only. No email                                | Owner: Draft, form open. Admin: the task leaves To review and Needs you                                                           | [Review and history](#review-and-history)                                         |
+| 3   | Admin asks for changes                        | Admin, review pane, note required                          | Owner: `changes_requested`, after the undo window                              | Owner: Changes requested, the note in the banner, a Needs you row. Admin: the row leaves To review                                | [Review and history](#review-and-history)                                         |
+| 4   | Owner submits again                           | Owner, editor                                              | Admins: `submitted`                                                            | Admin: the row returns with "Round n", the history and the diff (D9)                                                              | [Review and history](#review-and-history)                                         |
+| 5   | Admin approves and publishes an article       | Admin, review pane, **Publish as** (D6)                    | Owner: `approved`, naming the tier, after the undo window                      | Owner: Published, **View on the site**                                                                                            | [Review and history](#review-and-history)                                         |
+| 6   | Admin approves and publishes a course         | Admin, review pane, **Cycle** and **Tier** (D10)           | Owner: `approved`, after the undo window                                       | Owner: Published. The course is on the site at the chosen tier. Each listed fellow gets the fellow role                           | [Review and history](#review-and-history)                                         |
+| 7   | Admin declines                                | Admin, review pane, note required                          | Owner: `rejected`, after the undo window                                       | Owner: Declined and the note, in the bell and in the list's Closed group. No Needs you row, because a decline asks for no work    | [Tasks and the bell](#tasks-needsuser-and-the-bell)                               |
+| 8   | Owner asks to remove a published item         | Owner, editor menu, **Request removal**                    | Admins: `submitted` (removal note)                                             | Owner: Published plus Removal requested. Admin: one task, in To review and in Needs you                                           | [Status model](#status-model-statusof)                                            |
+| 9   | Admin removes, or keeps with a note           | Admin, review pane                                         | Owner: `removed`, or `rejected` with the keep note, after the undo window      | Owner: the item leaves the site, or Published plus Kept on the site                                                               | [Status model](#status-model-statusof)                                            |
+| 10  | Fellow edits a published course               | Fellow, course form                                        | Nobody until they submit                                                       | Fellow: Published plus Unsent edits. The site keeps the live version                                                              | [Course form](#course-form-and-the-sessions-calendar)                             |
+| 11  | Fellow changes sessions of a published course | Fellow, course form or space Calendar tab                  | Nobody automatically. The optional prefilled announcement tells the space (D1) | Members: the calendar and the syllabus show the change                                                                            | [Course form](#course-form-and-the-sessions-calendar)                             |
+| 12  | Applicant applies                             | Applicant, public form                                     | Admins and the fellows of the chosen courses: `application`                    | Admin: a card in Waiting, a Needs you row. Fellow: a card in Waiting, view only                                                   | [Applicants board](#applicants-board)                                             |
+| 13  | Admin decides an applicant                    | Admin, applicants board                                    | Applicant: email after the undo window                                         | Admin: the ring, then Email sent. Fellow: the card in its new lane on the next load. Other admins: nothing until the commit (D15) | [Applicants board](#applicants-board)                                             |
+| 14  | Admin reopens a decided applicant             | Admin, applicants board, **Move to** Waiting               | Nobody. No email                                                               | Admin and fellow: the card in Waiting                                                                                             | [Applicants board](#applicants-board)                                             |
+| 15  | Accepted student signs in for the first time  | Student, set-password link from the email, then the portal | Admins: `joined`, as today                                                     | Student: Home with the first-run checklist                                                                                        | [Onboarding](#onboarding)                                                         |
+| 16  | Fellow writes an assessment                   | Fellow, Participants page (D18)                            | Nobody                                                                         | Fellow and admins: the assessment on the enrollment. The student never sees it                                                    | [Participants](#participants-and-assessments-d18)                                 |
 
 Two handoffs have no notice, by decision:
 
@@ -99,15 +99,15 @@ The prototype, [CILAS portal prototype](https://claude.ai/artifact/EAKLx74CwTcbJ
 - **Success moments.** One component, `SuccessCheck`, draws a check once. It shows on "Email sent" and on "Decided". Under reduced motion it shows the text only. The owner's action area keeps its width across **Submit**, Submitted and **Withdraw**, so nothing shifts.
 - **Motion.** 120 to 200 ms, `--ease-standard`, no scale on panels. The palette is the one exception: it fades in and out in 80 to 150 ms, with no movement. Every animation has a reduced-motion branch with no movement:
 
-  | Animation | Normal | Reduced motion |
-  |---|---|---|
-  | Pending ring | drains over the window | no arc. The remaining whole seconds as text, updated each second, `aria-hidden` |
-  | Card move between lanes | height and fade | the card appears in place |
-  | New card in a lane | height and fade | appears in place |
-  | Sheet, drawer, More sheet | slide in and out | open and close at once |
-  | Toast | rises in | appears in place |
-  | Palette | fades in and out, 80 to 150 ms, no movement | appears in place |
-  | Success check | draws once | text only |
+  | Animation                 | Normal                                      | Reduced motion                                                                  |
+  | ------------------------- | ------------------------------------------- | ------------------------------------------------------------------------------- |
+  | Pending ring              | drains over the window                      | no arc. The remaining whole seconds as text, updated each second, `aria-hidden` |
+  | Card move between lanes   | height and fade                             | the card appears in place                                                       |
+  | New card in a lane        | height and fade                             | appears in place                                                                |
+  | Sheet, drawer, More sheet | slide in and out                            | open and close at once                                                          |
+  | Toast                     | rises in                                    | appears in place                                                                |
+  | Palette                   | fades in and out, 80 to 150 ms, no movement | appears in place                                                                |
+  | Success check             | draws once                                  | text only                                                                       |
 
 - **Language.** Every portal string is in `messages/en.json` and `messages/ar.json` under the `Portal` namespace. Plurals use ICU plural forms in next-intl, never string joins. CSS uses logical properties only. Keys and shortcuts sit in `<bdi dir="ltr">`.
 - **RTL and language.** Directional icons (arrows, chevrons, the back link) mirror in Arabic. Each localized field carries `lang` and `dir` for its writing language (WCAG 3.1.2). User text, such as applicant answers and names, gets `dir="auto"`. A name inside running text sits in `<bdi>`, so a Latin name or a number does not break an Arabic line. Choose images per language where a picture holds text or a cultural cue. Do not mirror photos. Source: [portal-research.md](2026-11-18-portal-research.md), Arabic and English (RTL). The writing-language switch has an accessible name with its state, for example "Write in Arabic, 2 not translated". A locked form hides the switch.
@@ -135,30 +135,30 @@ Tests: axe runs on every portal route, as each role, in English and Arabic, with
 
 Each skill is loaded only when the task matches what it does. Every task in the implementation plan has a "Skills:" line that names only the skills it needs. Delegated implementers load the listed skills before they edit. Do not load every skill for every task.
 
-| When the task... | Load | What it gives |
-|---|---|---|
-| Writes any HTML, CSS or client JS (always first for web UI) | modern-web-guidance | Current platform patterns: dialog, popover, anchor positioning, container queries, forms, view transitions |
-| Uses or adds an Arc component or block | arc (with the arc MCP `get_component`) | The right component, documented props, Arc tokens and copy rules, the Pro boundary |
-| Lays out a page or component: grouping, spacing, reading order, breakpoints, RTL direction | better-layout | Structure, progressive disclosure, logical properties |
-| Sets type: scale, weights, truncation, tabular numbers, Arabic and Latin pairing | better-typography | Type scale and text rules |
-| Picks or changes colors, status colors, dark mode, contrast | better-colors | OKLCH tokens, contrast checks, the meaning of color |
-| Polishes visual details: borders, shadows, radii, icons, hover and press states | better-ui | Design-engineering details |
-| Builds an interaction detail that no narrower skill covers (popover origin, press feel, drag details) | emil-design-eng | Interaction polish rules |
-| Builds keyboard paths, focus, ARIA, live regions, form errors, touch targets | better-accessibility | WCAG 2.2 AA implementation rules |
-| Finishes a screen with real data, before its PR | break-ui | Worst-case data: long Arabic names, zero and huge counts, missing fields |
-| Writes or edits user-facing copy (English or Arabic) | better-writing, then humanizer | Labels, empty states, errors, with AI-sounding text removed |
-| Adds a new animation or transition | animate, then transitions-dev | Whether it should animate, its purpose, curve and interruption, and drop-in snippets |
-| Tunes motion that already exists | transitions-polish | The token scale for duration, easing, stagger, open and close asymmetry |
-| Looks for places that should animate | find-animation-opportunities | A read-only list with exact values |
-| Needs the name of a motion effect | animation-vocabulary | The exact term |
-| Builds gesture, drag, sheet, spring or material-depth behavior (kanban drag, bottom sheet, countdown ring) | apple-design | Fluid, interruptible, physical motion, and reduced motion |
-| Has two or more real shapes for a component or module API | design-an-interface | Parallel, very different designs to compare |
-| Reviews a whole screen or flow at the end of a phase | better-interface (full), ux-auditor | A cross-discipline review, and a heuristic and WCAG audit with severities |
-| Is not sure which skill fits | ask-emil | A router over the skills |
-| Changes a Payload collection, field, access rule, hook or endpoint | payload (`.agents/skills/payload/SKILL.md`) | Payload's config, access and hook rules |
-| Changes `src/components/calendar/ui/` or the board in `src/components/board/ui/` | ui-sdk (`.agents/skills/ui-sdk/SKILL.md`) | The installed ui-sdk API. `AGENTS.md` requires it before a calendar change |
-| Writes any code (every task) | tdd | Test first, then the code |
-| Reviews a phase with no screen | code-review, then security-review | A diff review, and a review of access and write paths |
+| When the task...                                                                                           | Load                                        | What it gives                                                                                              |
+| ---------------------------------------------------------------------------------------------------------- | ------------------------------------------- | ---------------------------------------------------------------------------------------------------------- |
+| Writes any HTML, CSS or client JS (always first for web UI)                                                | modern-web-guidance                         | Current platform patterns: dialog, popover, anchor positioning, container queries, forms, view transitions |
+| Uses or adds an Arc component or block                                                                     | arc (with the arc MCP `get_component`)      | The right component, documented props, Arc tokens and copy rules, the Pro boundary                         |
+| Lays out a page or component: grouping, spacing, reading order, breakpoints, RTL direction                 | better-layout                               | Structure, progressive disclosure, logical properties                                                      |
+| Sets type: scale, weights, truncation, tabular numbers, Arabic and Latin pairing                           | better-typography                           | Type scale and text rules                                                                                  |
+| Picks or changes colors, status colors, dark mode, contrast                                                | better-colors                               | OKLCH tokens, contrast checks, the meaning of color                                                        |
+| Polishes visual details: borders, shadows, radii, icons, hover and press states                            | better-ui                                   | Design-engineering details                                                                                 |
+| Builds an interaction detail that no narrower skill covers (popover origin, press feel, drag details)      | emil-design-eng                             | Interaction polish rules                                                                                   |
+| Builds keyboard paths, focus, ARIA, live regions, form errors, touch targets                               | better-accessibility                        | WCAG 2.2 AA implementation rules                                                                           |
+| Finishes a screen with real data, before its PR                                                            | break-ui                                    | Worst-case data: long Arabic names, zero and huge counts, missing fields                                   |
+| Writes or edits user-facing copy (English or Arabic)                                                       | better-writing, then humanizer              | Labels, empty states, errors, with AI-sounding text removed                                                |
+| Adds a new animation or transition                                                                         | animate, then transitions-dev               | Whether it should animate, its purpose, curve and interruption, and drop-in snippets                       |
+| Tunes motion that already exists                                                                           | transitions-polish                          | The token scale for duration, easing, stagger, open and close asymmetry                                    |
+| Looks for places that should animate                                                                       | find-animation-opportunities                | A read-only list with exact values                                                                         |
+| Needs the name of a motion effect                                                                          | animation-vocabulary                        | The exact term                                                                                             |
+| Builds gesture, drag, sheet, spring or material-depth behavior (kanban drag, bottom sheet, countdown ring) | apple-design                                | Fluid, interruptible, physical motion, and reduced motion                                                  |
+| Has two or more real shapes for a component or module API                                                  | design-an-interface                         | Parallel, very different designs to compare                                                                |
+| Reviews a whole screen or flow at the end of a phase                                                       | better-interface (full), ux-auditor         | A cross-discipline review, and a heuristic and WCAG audit with severities                                  |
+| Is not sure which skill fits                                                                               | ask-emil                                    | A router over the skills                                                                                   |
+| Changes a Payload collection, field, access rule, hook or endpoint                                         | payload (`.agents/skills/payload/SKILL.md`) | Payload's config, access and hook rules                                                                    |
+| Changes `src/components/calendar/ui/` or the board in `src/components/board/ui/`                           | ui-sdk (`.agents/skills/ui-sdk/SKILL.md`)   | The installed ui-sdk API. `AGENTS.md` requires it before a calendar change                                 |
+| Writes any code (every task)                                                                               | tdd                                         | Test first, then the code                                                                                  |
+| Reviews a phase with no screen                                                                             | code-review, then security-review           | A diff review, and a review of access and write paths                                                      |
 
 The last task of each phase is its review task, and each phase block names it in its Review line. A phase that ships a screen runs ux-auditor and better-interface on its screens, then break-ui, before the PR. A phase with no screen (phase 0, the spike, 4b, 4c and 4d) runs code-review, then security-review.
 
@@ -195,20 +195,20 @@ The portal layout requires a signed-in reader. With no reader it redirects to `/
 
 All under `src/app/(frontend)/[locale]/(portal)/spaces/`. Moving `spaces/` under a group keeps the `@dialog` intercepts working, because groups and slots are not route segments (`intercepting-routes.md:54`).
 
-| Path | Page | Roles |
-|---|---|---|
-| `/spaces` | Home | all |
-| `/spaces/inbox` | Inbox: Needs you, then Latest | all |
-| `/spaces/calendar` | Calendar tab | all |
-| `/spaces/articles` | Articles list | all |
-| `/spaces/articles/new`, `/spaces/articles/[id]` | Article editor | all |
-| `/spaces/courses` | Courses list | fellow, admin |
-| `/spaces/courses/new`, `/spaces/courses/[id]` | Course form | fellow, admin |
-| `/spaces/courses/[id]/participants` | Participants and assessments (D18) | the course's fellows, admin |
-| `/spaces/applicants` | Applicants board | fellow, admin |
-| `/spaces/review`, `/spaces/review/[collection]/[id]` | To review list and pane | admin |
-| `/spaces/account` | Profile and settings (D5) | all |
-| `/spaces/[kind]/[slug]`, `/spaces/community/…` | Spaces, unchanged, under `(rooms)` | members of the space |
+| Path                                                 | Page                               | Roles                       |
+| ---------------------------------------------------- | ---------------------------------- | --------------------------- |
+| `/spaces`                                            | Home                               | all                         |
+| `/spaces/inbox`                                      | Inbox: Needs you, then Latest      | all                         |
+| `/spaces/calendar`                                   | Calendar tab                       | all                         |
+| `/spaces/articles`                                   | Articles list                      | all                         |
+| `/spaces/articles/new`, `/spaces/articles/[id]`      | Article editor                     | all                         |
+| `/spaces/courses`                                    | Courses list                       | fellow, admin               |
+| `/spaces/courses/new`, `/spaces/courses/[id]`        | Course form                        | fellow, admin               |
+| `/spaces/courses/[id]/participants`                  | Participants and assessments (D18) | the course's fellows, admin |
+| `/spaces/applicants`                                 | Applicants board                   | fellow, admin               |
+| `/spaces/review`, `/spaces/review/[collection]/[id]` | To review list and pane            | admin                       |
+| `/spaces/account`                                    | Profile and settings (D5)          | all                         |
+| `/spaces/[kind]/[slug]`, `/spaces/community/…`       | Spaces, unchanged, under `(rooms)` | members of the space        |
 
 Static segments win over `[kind]`, and `[kind]/[slug]/page.tsx` already refuses any kind other than `course` and `cohort` (line 31).
 
@@ -218,23 +218,23 @@ Static segments win over `[kind]`, and `[kind]/[slug]/page.tsx` already refuses 
 
 Portal code lives in `src/portal/<feature>/`. Each folder holds its server reads, its server actions and its client parts. The route files under `(portal)/spaces/` only compose them.
 
-| Folder | Holds |
-|---|---|
-| `src/portal/nav/` | `portalNav(user)`, the shell, the bottom bar |
-| `src/portal/feedback/` | the live region and `announce()`, the empty-state component, `SuccessCheck` |
-| `src/portal/pending/` | the pending-decisions provider and its state machine |
-| `src/portal/needs/` | `needs(user)`, `needsCounts(user)` |
-| `src/portal/home/` | Home cards |
-| `src/portal/lists/` | the shared row, the Articles and Courses lists |
-| `src/portal/review/` | To review list, review pane, history, diff |
-| `src/portal/applicants/` | the board, cards, sheet |
-| `src/portal/course-form/` | `saveCourse`, the form, the section rail |
-| `src/portal/participants/` | `participantsFor`, the Participants page and the assessment sheet |
-| `src/portal/rich-text/` | the portal Lexical editor core and the locked node, shared by the course form, the assessment sheet and the article editor |
-| `src/portal/article-editor/` | the article nodes, toolbar, save action |
-| `src/portal/palette/` | the command registry, the palette and `searchMyWork` |
-| `src/portal/onboarding/` | the checklist |
-| `src/portal/account/` | the account page groups |
+| Folder                       | Holds                                                                                                                      |
+| ---------------------------- | -------------------------------------------------------------------------------------------------------------------------- |
+| `src/portal/nav/`            | `portalNav(user)`, the shell, the bottom bar                                                                               |
+| `src/portal/feedback/`       | the live region and `announce()`, the empty-state component, `SuccessCheck`                                                |
+| `src/portal/pending/`        | the pending-decisions provider and its state machine                                                                       |
+| `src/portal/needs/`          | `needs(user)`, `needsCounts(user)`                                                                                         |
+| `src/portal/home/`           | Home cards                                                                                                                 |
+| `src/portal/lists/`          | the shared row, the Articles and Courses lists                                                                             |
+| `src/portal/review/`         | To review list, review pane, history, diff                                                                                 |
+| `src/portal/applicants/`     | the board, cards, sheet                                                                                                    |
+| `src/portal/course-form/`    | `saveCourse`, the form, the section rail                                                                                   |
+| `src/portal/participants/`   | `participantsFor`, the Participants page and the assessment sheet                                                          |
+| `src/portal/rich-text/`      | the portal Lexical editor core and the locked node, shared by the course form, the assessment sheet and the article editor |
+| `src/portal/article-editor/` | the article nodes, toolbar, save action                                                                                    |
+| `src/portal/palette/`        | the command registry, the palette and `searchMyWork`                                                                       |
+| `src/portal/onboarding/`     | the checklist                                                                                                              |
+| `src/portal/account/`        | the account page groups                                                                                                    |
 
 Rules that the admin and the portal both need stay in `src/lib/` and the portal imports them: `review.ts`, the new `review-status.ts`, `reviewed-fields.ts`, `review-history.ts`, `document-href.ts`, `course-submit-gate.ts` and `rich-text-guard.ts`, and `meetings.ts`. The calendar stays in `src/components/calendar/`. The generic board goes in `src/components/board/ui/` (D13). Neither knows about the portal.
 
@@ -265,16 +265,16 @@ One function owns each rule: status words, next actions, `needs()`, nav items, d
 
 **Behavior.** One function, `portalNav(user)` in `src/portal/nav/`, returns the nav items as `PortalNavItem { key, labelKey, group, href, icon, count }`, where `labelKey` is a key under `Portal.nav`, and `count` is a number, or `null` for an item that shows no number. The sidebar, the bottom bar, the More sheet and the palette "Go to" group render it.
 
-| Item | Student | Fellow | Admin | Count |
-|---|---|---|---|---|
-| Home | top | top | top | none |
-| Inbox | top | top | top | total of `needs(user)` |
-| Calendar | top | top | top | none |
-| Articles | My work | My work | Admin | own items in Needs you (admin: none) |
-| Courses | | My work | Admin | own items in Needs you (admin: none) |
-| Applicants | | Teaching | Admin | admin: applicants waiting. Fellow: none, because a fellow cannot act |
-| To review | | | Admin | review rows |
-| Open dashboard | | | Admin | none. Links to `/admin` |
+| Item           | Student | Fellow   | Admin | Count                                                                |
+| -------------- | ------- | -------- | ----- | -------------------------------------------------------------------- |
+| Home           | top     | top      | top   | none                                                                 |
+| Inbox          | top     | top      | top   | total of `needs(user)`                                               |
+| Calendar       | top     | top      | top   | none                                                                 |
+| Articles       | My work | My work  | Admin | own items in Needs you (admin: none)                                 |
+| Courses        |         | My work  | Admin | own items in Needs you (admin: none)                                 |
+| Applicants     |         | Teaching | Admin | admin: applicants waiting. Fellow: none, because a fellow cannot act |
+| To review      |         |          | Admin | review rows                                                          |
+| Open dashboard |         |          | Admin | none. Links to `/admin`                                              |
 
 Below the groups come the reader's spaces, each with its red unread count. The account menu holds: Profile and settings (`/spaces/account`), Language, Theme, Sign out. Its keys follow the WAI-ARIA menu pattern. On a phone, the same four rows close the More sheet. From phase 2, **Sign out** first sends and awaits every pending decision (see [Pending decisions](#pending-decisions-and-the-undo-window)), then signs out.
 
@@ -307,19 +307,19 @@ waitsOn(key: StatusKey): 'owner' | 'admin' | null
 neverPublished(doc: ReviewedDoc): boolean
 ```
 
-| Key | When | Badges (tone, icon) | Owner's next action | Admin's next action |
-|---|---|---|---|---|
-| `draft` | not live, `review.status` draft | Draft (neutral, `pencil-line`) | Continue writing, then submit | none (admins do not see other people's drafts) |
-| `submitted` | not live, submitted | Submitted (`--info`, `clock`) | With an admin. **Withdraw** returns it to Draft | Approve and publish, ask for changes, or decline |
-| `changes_requested` | not live, changes requested | Changes requested (`--warning`, `message-square-warning`) | Read the note, edit, submit again | Waiting on the author |
-| `rejected` | not live, rejected | Declined (`--danger`, `circle-x`) | Read the note. Duplicate as a new draft, or delete | none |
-| `published` | live, and no draft copy, or a draft copy at `approved` or `draft` that equals the live row | Published (`--success`, `globe`) | View on the site. Edits wait for review | none |
-| `published_unsent` | live, and a draft copy that differs from the live row (`hasUnsentEdits`), at `approved` or `draft`, or at `rejected` with `request: removal` | Published, plus Unsent edits (neutral, `file-pen`) | Submit changes for review, or discard them | none |
-| `published_edits` | live, draft copy submitted with `request: changes` | Published, plus Edits in review (`--info`, `file-clock`) | With an admin. The live version does not change. **Withdraw changes** | Review the changes |
-| `published_removal` | live, draft copy submitted with `request: removal` | Published, plus Removal requested (neutral, `archive-x`) | With an admin. **Withdraw** keeps it on the site | Remove, or keep with a note |
-| `published_edits_returned` | live, draft copy changes requested | Published, plus Changes requested (`--warning`) | Read the note, edit, submit again | Waiting on the author |
-| `published_edits_declined` | live, draft copy rejected, `request: changes`, or `request: null` on a row declined before phase 1b | Published, plus Edits declined (`--danger`) | Read the note. Discard the edits, or edit and submit again | none |
-| `published_removal_kept` | live, draft copy rejected, `request: removal`, and the copy equals the live row | Published, plus Kept on the site (neutral) | Read the note | none |
+| Key                        | When                                                                                                                                         | Badges (tone, icon)                                       | Owner's next action                                                   | Admin's next action                              |
+| -------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------- | --------------------------------------------------------------------- | ------------------------------------------------ |
+| `draft`                    | not live, `review.status` draft                                                                                                              | Draft (neutral, `pencil-line`)                            | Continue writing, then submit                                         | none (admins do not see other people's drafts)   |
+| `submitted`                | not live, submitted                                                                                                                          | Submitted (`--info`, `clock`)                             | With an admin. **Withdraw** returns it to Draft                       | Approve and publish, ask for changes, or decline |
+| `changes_requested`        | not live, changes requested                                                                                                                  | Changes requested (`--warning`, `message-square-warning`) | Read the note, edit, submit again                                     | Waiting on the author                            |
+| `rejected`                 | not live, rejected                                                                                                                           | Declined (`--danger`, `circle-x`)                         | Read the note. Duplicate as a new draft, or delete                    | none                                             |
+| `published`                | live, and no draft copy, or a draft copy at `approved` or `draft` that equals the live row                                                   | Published (`--success`, `globe`)                          | View on the site. Edits wait for review                               | none                                             |
+| `published_unsent`         | live, and a draft copy that differs from the live row (`hasUnsentEdits`), at `approved` or `draft`, or at `rejected` with `request: removal` | Published, plus Unsent edits (neutral, `file-pen`)        | Submit changes for review, or discard them                            | none                                             |
+| `published_edits`          | live, draft copy submitted with `request: changes`                                                                                           | Published, plus Edits in review (`--info`, `file-clock`)  | With an admin. The live version does not change. **Withdraw changes** | Review the changes                               |
+| `published_removal`        | live, draft copy submitted with `request: removal`                                                                                           | Published, plus Removal requested (neutral, `archive-x`)  | With an admin. **Withdraw** keeps it on the site                      | Remove, or keep with a note                      |
+| `published_edits_returned` | live, draft copy changes requested                                                                                                           | Published, plus Changes requested (`--warning`)           | Read the note, edit, submit again                                     | Waiting on the author                            |
+| `published_edits_declined` | live, draft copy rejected, `request: changes`, or `request: null` on a row declined before phase 1b                                          | Published, plus Edits declined (`--danger`)               | Read the note. Discard the edits, or edit and submit again            | none                                             |
+| `published_removal_kept`   | live, draft copy rejected, `request: removal`, and the copy equals the live row                                                              | Published, plus Kept on the site (neutral)                | Read the note                                                         | none                                             |
 
 Labels exist in English and Arabic in `messages/*.json` under `Portal.status`. `statusBadge(key)` renders the badges. `nextAction(key, viewer)` renders the next-action line.
 
@@ -339,11 +339,11 @@ Approval publishes at once, and the admin picks the cycle and the tier in the sa
 
 Applicants have their own statuses, on one choice of one application:
 
-| Key | Badge | Admin's next action | Fellow sees |
-|---|---|---|---|
-| `pending` | Waiting (`--info`, `clock`) | Accept or decline | Waiting for an admin |
+| Key        | Badge                                  | Admin's next action                                 | Fellow sees                        |
+| ---------- | -------------------------------------- | --------------------------------------------------- | ---------------------------------- |
+| `pending`  | Waiting (`--info`, `clock`)            | Accept or decline                                   | Waiting for an admin               |
 | `accepted` | Accepted (`--success`, `circle-check`) | none. **Move to** Waiting reopens it, with no email | Accepted, with a link to the space |
-| `rejected` | Declined (`--danger`, `circle-x`) | none. **Move to** Waiting reopens it, with no email | Declined |
+| `rejected` | Declined (`--danger`, `circle-x`)      | none. **Move to** Waiting reopens it, with no email | Declined                           |
 
 A decision inside the undo window is not a status. It exists only in the deciding admin's browser and shows as the ring (see [Pending decisions](#pending-decisions-and-the-undo-window)).
 
@@ -363,18 +363,26 @@ A decision inside the undo window is not a status. It exists only in the decidin
 
 ```ts
 type NeedKind = 'review' | 'edit_review' | 'removal_review' | 'applicants' | 'changes_requested'
-type NeedRow = { kind: NeedKind; verbKey: string; href: string; label: string; count: number; owner: { id: number; name: string } | null }
+type NeedRow = {
+  kind: NeedKind
+  verbKey: string
+  href: string
+  label: string
+  count: number
+  owner: { id: number; name: string } | null
+}
 ```
 
-| `kind` | For | Verb (`Portal.needs.*`) | `href` |
-|---|---|---|---|
-| `review` | admin, a submitted new item | Review | `documentHref` |
-| `edit_review` | admin, `published_edits` | Review the changes | `documentHref` |
-| `removal_review` | admin, `published_removal` | Decide on the removal | `documentHref` |
-| `applicants` | admin, one row with `count` n | Decide on {n} applicants | `/spaces/applicants` (`/admin/applicants` before phase 3) |
-| `changes_requested` | owner, `changes_requested` or `published_edits_returned` | Read the note and edit | `documentHref` |
+| `kind`              | For                                                      | Verb (`Portal.needs.*`)  | `href`                                                    |
+| ------------------- | -------------------------------------------------------- | ------------------------ | --------------------------------------------------------- |
+| `review`            | admin, a submitted new item                              | Review                   | `documentHref`                                            |
+| `edit_review`       | admin, `published_edits`                                 | Review the changes       | `documentHref`                                            |
+| `removal_review`    | admin, `published_removal`                               | Decide on the removal    | `documentHref`                                            |
+| `applicants`        | admin, one row with `count` n                            | Decide on {n} applicants | `/spaces/applicants` (`/admin/applicants` before phase 3) |
+| `changes_requested` | owner, `changes_requested` or `published_edits_returned` | Read the note and edit   | `documentHref`                                            |
 
 `owner` names the item's owner on an admin row, and is `null` on the reader's own rows. `label` is the document title in the reader's locale, or the title in the other locale when it has none. On the `applicants` row it is the verb text.
+
 - **Latest** is information. It is the bell: the rows of the `notifications` collection, pushed live through the Postgres `LISTEN` hub (`src/lib/realtime/hub.ts`). A notification can be read while the work still waits, so no count of work comes from notifications.
 
 Rows in `needs(user)`:
@@ -392,15 +400,15 @@ Rows in `needs(user)`:
 
 Where the two lists show:
 
-| Place | Shows |
-|---|---|
-| Home, Needs you card | `needs(user)`. With more than 5 rows, one row per kind with the sum of `count`. A grouped row links to the list of its kind: `review`, `edit_review` and `removal_review` to To review (`/admin/reviews` before phase 2), `changes_requested` to the Articles list filtered to Needs you when the group holds an article, and to the Courses list otherwise. `applicants` stays its own row. A grouped row's verb is its kind's verb with the number. The card count is the total |
-| Inbox page | Needs you (every row), then Latest: the 30 newest notification rows (a default the owner may change), with **Show more** |
-| Sidebar Inbox | the total |
-| Sidebar To review, Applicants (admin) | the review rows, the waiting applicants |
-| Sidebar Articles, Courses | the owner's rows of that kind |
-| Bell | Latest, with its unread count |
-| Space rows and avatars | unread posts, red |
+| Place                                 | Shows                                                                                                                                                                                                                                                                                                                                                                                                                                                                             |
+| ------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Home, Needs you card                  | `needs(user)`. With more than 5 rows, one row per kind with the sum of `count`. A grouped row links to the list of its kind: `review`, `edit_review` and `removal_review` to To review (`/admin/reviews` before phase 2), `changes_requested` to the Articles list filtered to Needs you when the group holds an article, and to the Courses list otherwise. `applicants` stays its own row. A grouped row's verb is its kind's verb with the number. The card count is the total |
+| Inbox page                            | Needs you (every row), then Latest: the 30 newest notification rows (a default the owner may change), with **Show more**                                                                                                                                                                                                                                                                                                                                                          |
+| Sidebar Inbox                         | the total                                                                                                                                                                                                                                                                                                                                                                                                                                                                         |
+| Sidebar To review, Applicants (admin) | the review rows, the waiting applicants                                                                                                                                                                                                                                                                                                                                                                                                                                           |
+| Sidebar Articles, Courses             | the owner's rows of that kind                                                                                                                                                                                                                                                                                                                                                                                                                                                     |
+| Bell                                  | Latest, with its unread count                                                                                                                                                                                                                                                                                                                                                                                                                                                     |
+| Space rows and avatars                | unread posts, red                                                                                                                                                                                                                                                                                                                                                                                                                                                                 |
 
 Each committed admin outcome sends the owner one notification through the existing kinds (`approved`, `changes_requested`, `rejected`, `removed`). It shows in Latest. Latest never adds to a sidebar number.
 
@@ -503,22 +511,22 @@ The provider reads the response. A 2xx is `ok`. A 409 or a 400 is `refused`, and
 
 **State machine.** Each item has one state. Only these events are legal:
 
-| From | Event | To |
-|---|---|---|
-| idle (no item) | `decide` | pending |
-| pending | `pause` (a cause joins the set: `focus` on the item or its toast, `overlay` while a **Move to** menu or any modal surface of the portal is open, `tap` on the ring on a touch screen) | paused |
-| paused | `pause` (another cause joins the set) | paused |
-| paused | `resume` (a cause leaves, and the cause set becomes empty) | pending |
-| pending, paused | `undo` (**Undo**, the second tap on the ring, Esc on the focused item, **Undo all**) | undone |
-| pending | `expire` (the timer ends) | committing |
-| pending, paused | `flush` (`pagehide`, `visibilitychange` to `hidden`, provider unmount, **Sign out**) | committing |
-| committing | `ok` | sent |
-| committing | `refused` (409 or 400) | undone |
-| committing | `error` | failed |
-| failed | `retry` (**Try again**) | committing |
-| failed | `undo` (**Undo**) | undone |
-| failed | `flush` | committing |
-| sent, undone | `dismiss` (after its line or toast shows) | idle (the item leaves) |
+| From            | Event                                                                                                                                                                                 | To                     |
+| --------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------- |
+| idle (no item)  | `decide`                                                                                                                                                                              | pending                |
+| pending         | `pause` (a cause joins the set: `focus` on the item or its toast, `overlay` while a **Move to** menu or any modal surface of the portal is open, `tap` on the ring on a touch screen) | paused                 |
+| paused          | `pause` (another cause joins the set)                                                                                                                                                 | paused                 |
+| paused          | `resume` (a cause leaves, and the cause set becomes empty)                                                                                                                            | pending                |
+| pending, paused | `undo` (**Undo**, the second tap on the ring, Esc on the focused item, **Undo all**)                                                                                                  | undone                 |
+| pending         | `expire` (the timer ends)                                                                                                                                                             | committing             |
+| pending, paused | `flush` (`pagehide`, `visibilitychange` to `hidden`, provider unmount, **Sign out**)                                                                                                  | committing             |
+| committing      | `ok`                                                                                                                                                                                  | sent                   |
+| committing      | `refused` (409 or 400)                                                                                                                                                                | undone                 |
+| committing      | `error`                                                                                                                                                                               | failed                 |
+| failed          | `retry` (**Try again**)                                                                                                                                                               | committing             |
+| failed          | `undo` (**Undo**)                                                                                                                                                                     | undone                 |
+| failed          | `flush`                                                                                                                                                                               | committing             |
+| sent, undone    | `dismiss` (after its line or toast shows)                                                                                                                                             | idle (the item leaves) |
 
 The timer runs only while the cause set is empty. On resume it goes on with the time that was left. It does not restart. Time is read from `performance.now()`.
 
@@ -567,17 +575,16 @@ The pane shows, in order:
 3. On a resubmission or a published edit: **What changed**, a field-level diff (D9).
 4. The body, at most 320px high, with **Show more**. A quiet link "Read the full article" or "Open the full course" opens the read-only view. Its back link returns to the same row.
 
-**Read-only views.** The pane body, the read-only view and the read-only pages `/spaces/articles/[id]` and `/spaces/courses/[id]` of phase 2 render through the site's rich text converter (`src/components/RichTextField.tsx`) and the public course page component `CourseView`, which renders a course it gets as a prop (`src/app/(frontend)/[locale]/study/[slug]/CourseView.tsx` today, under `(site)/` from phase 1a). They read the submitted or draft version through the version access, so only the owner and admins read a draft (`readVersions`, `Articles.ts:50`, `Courses.ts:124`). The editors of phases 4e and 5 replace the owner's read-only page. The admin's view stays read-only.
-5. The actions.
+**Read-only views.** The pane body, the read-only view and the read-only pages `/spaces/articles/[id]` and `/spaces/courses/[id]` of phase 2 render through the site's rich text converter (`src/components/RichTextField.tsx`) and the public course page component `CourseView`, which renders a course it gets as a prop (`src/app/(frontend)/[locale]/study/[slug]/CourseView.tsx` today, under `(site)/` from phase 1a). They read the submitted or draft version through the version access, so only the owner and admins read a draft (`readVersions`, `Articles.ts:50`, `Courses.ts:124`). The editors of phases 4e and 5 replace the owner's read-only page. The admin's view stays read-only. 5. The actions.
 
 Actions by item:
 
-| Item | Primary | Other actions |
-|---|---|---|
-| Article, new or edit | **Approve and publish**, with the select **Publish as** (Community, Public). It starts at the requested tier (D6) | **Ask for changes** (note required), **Decline** (note required) |
-| Course, new or edit | **Approve and publish**, with **Cycle** (required) and **Tier** (Community, Public, starts at Public) (D10). On an edit of a live course, both start at the course's current values. The button label names the fellows when the approval makes someone a fellow: "Approve and publish. Makes {names} fellows." | **Ask for changes**, **Decline**, as above |
-| Publication | **Approve and publish** | **Ask for changes**, **Decline** |
-| Removal request | **Remove from the site** | **Keep it published** (note required) |
+| Item                 | Primary                                                                                                                                                                                                                                                                                                         | Other actions                                                    |
+| -------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------- |
+| Article, new or edit | **Approve and publish**, with the select **Publish as** (Community, Public). It starts at the requested tier (D6)                                                                                                                                                                                               | **Ask for changes** (note required), **Decline** (note required) |
+| Course, new or edit  | **Approve and publish**, with **Cycle** (required) and **Tier** (Community, Public, starts at Public) (D10). On an edit of a live course, both start at the course's current values. The button label names the fellows when the approval makes someone a fellow: "Approve and publish. Makes {names} fellows." | **Ask for changes**, **Decline**, as above                       |
+| Publication          | **Approve and publish**                                                                                                                                                                                                                                                                                         | **Ask for changes**, **Decline**                                 |
+| Removal request      | **Remove from the site**                                                                                                                                                                                                                                                                                        | **Keep it published** (note required)                            |
 
 Courses get an `onApprove`, like `approveArticle` (`src/collections/Articles.ts:29-43`). It returns the tier the pane sends, or `public` when the incoming tier is `owner`. Then an approval from `/admin` also leaves no course at `owner`. Approval grants the fellow role to everyone in `fellows` (`propagateFellowRole`, `Courses.ts:58-81`), and those people then see the money fields of the course's applicants (D12). That is why the pane and the diff show the fellows.
 
@@ -591,12 +598,12 @@ Every review decision (approve, ask for changes, decline, remove, keep) is a pen
 
 `applyReview` lets an admin make any move (`canMove`, `src/lib/review.ts`), so the endpoint allows only the moves of a decision. It reads only the keys above, and it sends `tier` and `cycle` only on an approval. `tier` must be `community` or `public`, never `owner`, and `cycle` must be the id of an existing cycle. Any other move, a missing required note, or another `tier` or `cycle` gets 400 with the field error. The page `/spaces/review/[collection]/[id]` accepts only `articles`, `courses` and `publications` as `collection`, and returns not found otherwise.
 
-| Item waits with | Legal `to` | Note |
-|---|---|---|
-| `request: changes`, or no request | `approved` | optional |
+| Item waits with                   | Legal `to`                      | Note     |
+| --------------------------------- | ------------------------------- | -------- |
+| `request: changes`, or no request | `approved`                      | optional |
 | `request: changes`, or no request | `changes_requested`, `rejected` | required |
-| `request: removal` | `draft` (remove from the site) | optional |
-| `request: removal` | `rejected` (keep it published) | required |
+| `request: removal`                | `draft` (remove from the site)  | optional |
+| `request: removal`                | `rejected` (keep it published)  | required |
 
 The endpoint sets `review.review_note` to `note`, or to `null` when there is none, on every move, as the admin button does (`src/components/admin/submit-for-review.tsx:177`).
 
@@ -689,11 +696,11 @@ Fellows have no Move to, no grip and no sheet buttons. Their intro line says "On
 
 **Legal moves.** The **Move to** menu lists only the lanes that the card may move to. The card's own lane is not offered.
 
-| From | To | How | Email |
-|---|---|---|---|
-| Waiting | Accepted, Declined | pending item, then `POST /api/form-submissions/{id}/courses/{course}/accept` or `/reject` | after the undo window |
-| Accepted, Declined | Waiting (Reopen) | at once, `POST /api/form-submissions/{id}/courses/{course}/reopen` (`application-decision.ts:369-388`) | none |
-| Accepted | Declined, and the reverse | refused | none |
+| From               | To                        | How                                                                                                    | Email                 |
+| ------------------ | ------------------------- | ------------------------------------------------------------------------------------------------------ | --------------------- |
+| Waiting            | Accepted, Declined        | pending item, then `POST /api/form-submissions/{id}/courses/{course}/accept` or `/reject`              | after the undo window |
+| Accepted, Declined | Waiting (Reopen)          | at once, `POST /api/form-submissions/{id}/courses/{course}/reopen` (`application-decision.ts:369-388`) | none                  |
+| Accepted           | Declined, and the reverse | refused                                                                                                | none                  |
 
 Reopen commits at once with no ring. A toast says "Reopened. No email sent." A drop on the other verdict's lane is refused with "Reopen it first." A card whose email went says "Email already sent" in its menu.
 
@@ -759,16 +766,16 @@ The gate is one function, `courseSubmitGaps` in `src/lib/course-submit-gate.ts`.
 
 **States of the form**, from `statusOf`:
 
-| Key | Course fields | Sessions | Buttons |
-|---|---|---|---|
-| `draft`, `changes_requested` | open | open | **Submit course for review** |
-| `submitted` (never published) | locked | locked (D2) | **Withdraw** |
-| `rejected` (never published) | locked | locked (D2) | **Duplicate as a new draft**, **Delete** |
-| `published` | open | live | none. **Request removal** in the header menu |
-| `published_unsent` | open | live | **Submit changes for review**. **Discard my changes** in the header menu |
-| `published_edits`, `published_removal` | locked | live | **Withdraw changes** or **Withdraw** |
-| `published_edits_returned`, `published_edits_declined` | open | live | **Submit changes for review**. **Discard my changes** in the header menu |
-| `published_removal_kept` | open | live | none. **Request removal** in the header menu |
+| Key                                                    | Course fields | Sessions    | Buttons                                                                  |
+| ------------------------------------------------------ | ------------- | ----------- | ------------------------------------------------------------------------ |
+| `draft`, `changes_requested`                           | open          | open        | **Submit course for review**                                             |
+| `submitted` (never published)                          | locked        | locked (D2) | **Withdraw**                                                             |
+| `rejected` (never published)                           | locked        | locked (D2) | **Duplicate as a new draft**, **Delete**                                 |
+| `published`                                            | open          | live        | none. **Request removal** in the header menu                             |
+| `published_unsent`                                     | open          | live        | **Submit changes for review**. **Discard my changes** in the header menu |
+| `published_edits`, `published_removal`                 | locked        | live        | **Withdraw changes** or **Withdraw**                                     |
+| `published_edits_returned`, `published_edits_declined` | open          | live        | **Submit changes for review**. **Discard my changes** in the header menu |
+| `published_removal_kept`                               | open          | live        | none. **Request removal** in the header menu                             |
 
 On a live course, one line with the `globe` icon sits next to the Save schedule bar: "Session changes go live when you save. They do not need review." On a course that is not live, the line does not show.
 
@@ -889,9 +896,7 @@ The vendored Arc component filters every item by substring (`src/components/arc/
 2. Go to (`portalNav`).
 3. My work: one server action, `searchMyWork(query)` in `src/portal/palette/`. It returns at most 5 rows per kind: the reader's own articles and courses (gated read), the review queue for an admin (after the admin check), and applicant names from `searchApplicants(query)` in `src/forms/applicants.ts`. The applicant name is not a field. It is a row of the `submissionData` array, `{ field: 'name', value }` (`applicants.ts:142-154`). So `searchApplicants` runs one `where` with `submissionData.field` equal to `name` and `submissionData.value` like the query, plus `choices.course` in the reader's course ids for a fellow. If Payload cannot hold the two array conditions to one array row, it reads `submissionData` and `choices.course` with `select` for the reader's courses and matches `answer('name')` in memory. The int test decides which of the two ships. It takes at most 5 and returns `{ id, name, course }` only, for an admin or a fellow of that course.
 
-`searchMyWork` checks a rate limit through `rateAllowed` in `src/lib/private-search/rate.ts`. The helper gets a `scope` argument that prefixes each key (`palette:`, `spaces-search:`), so the palette and `/api/spaces-search` keep separate counters. Today the network key of `/api/spaces-search` hashes the constant `'untrusted-proxy'` (`src/app/(frontend)/api/spaces-search/route.ts:35`), so it is one counter for the whole site with a smaller limit (180) than `global` (600). Both scopes drop the network key while the proxy gives no client address. The budgets per minute are defaults: `palette` 60 per user and 1,200 global, and `spaces-search` 45 per user and 600 global. So the site-wide limit of `/api/spaces-search` rises from 180 to 600. The palette's Space posts group still calls `/api/spaces-search` and counts against its scope.
-4. Space posts (`/api/spaces-search`).
-5. Site: Typesense, through the site-search adapter. Courses, people and events use the public key. Articles use the community key, which covers the community articles index only (`src/lib/community-search.ts`). Typesense holds only public and community content. Applicant data never enters Typesense.
+`searchMyWork` checks a rate limit through `rateAllowed` in `src/lib/private-search/rate.ts`. The helper gets a `scope` argument that prefixes each key (`palette:`, `spaces-search:`), so the palette and `/api/spaces-search` keep separate counters. Today the network key of `/api/spaces-search` hashes the constant `'untrusted-proxy'` (`src/app/(frontend)/api/spaces-search/route.ts:35`), so it is one counter for the whole site with a smaller limit (180) than `global` (600). Both scopes drop the network key while the proxy gives no client address. The budgets per minute are defaults: `palette` 60 per user and 1,200 global, and `spaces-search` 45 per user and 600 global. So the site-wide limit of `/api/spaces-search` rises from 180 to 600. The palette's Space posts group still calls `/api/spaces-search` and counts against its scope. 4. Space posts (`/api/spaces-search`). 5. Site: Typesense, through the site-search adapter. Courses, people and events use the public key. Articles use the community key, which covers the community articles index only (`src/lib/community-search.ts`). Typesense holds only public and community content. Applicant data never enters Typesense.
 
 Typing also filters Create and Spaces, as local groups.
 
@@ -993,17 +998,17 @@ Hiding a field in the portal guards nothing. A fellow with `curl` can set any fi
 
 Tests: `tests/int/portal-access.int.spec.ts`, through the Local API with `overrideAccess: false` and `user`. "Dropped" means the write succeeds and the stored value does not change. "Throws" means the call throws and nothing is stored. As anonymous, every write throws. Collection access that returns `false` throws `Forbidden`. Only field access drops a value. The Start column says whether a row fails before phase 0 (new) or passes today and must keep passing (guard), so the plan knows which red tests to write.
 
-| Collection | Field or call | Role | Expected | Start |
-|---|---|---|---|---|
-| articles, own | `tier`, `published_date`, `featured`, `review.review_note`, `legacy_url`, `slug` | fellow, member | dropped. The slug follows the title | new: `legacy_url`, `slug`. Guard: the rest |
-| publications, own | `review.review_note`, `legacy_url`, `slug` | fellow, member | dropped. The slug follows the title | new: `legacy_url`, `slug`. Guard: `review.review_note` |
-| enrollments of a taught course | `person`, `course`, `status`, `slot`, `source` | fellow | dropped | guard |
-| enrollments, own | `assessment` | member | the write throws, and a read returns no `assessment` | guard |
-| courses, own | `tier`, `cycle`, `registration`, `pricing_override`, `review.review_note`, `legacy_url`, `slug` | fellow | dropped. The slug follows the title | new: `legacy_url`, `slug`. Guard: the rest |
-| space-preferences, own row | `digest_sent_at` | fellow, member | dropped | new |
-| articles, own, and courses, own | `_status: 'published'` | fellow (both), member (articles) | throws `Forbidden` (`adminPublishes`, `src/access.ts:178-184`). Nothing is stored, and the document stays a draft | guard |
-| media | create with a type outside `PHOTO_TYPES`, or larger than `PHOTO_MAX_BYTES` | fellow, member | throws | new |
-| form-submissions | `find` | fellow, member, anonymous | throws `Forbidden` | guard |
+| Collection                      | Field or call                                                                                   | Role                             | Expected                                                                                                          | Start                                                  |
+| ------------------------------- | ----------------------------------------------------------------------------------------------- | -------------------------------- | ----------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------ |
+| articles, own                   | `tier`, `published_date`, `featured`, `review.review_note`, `legacy_url`, `slug`                | fellow, member                   | dropped. The slug follows the title                                                                               | new: `legacy_url`, `slug`. Guard: the rest             |
+| publications, own               | `review.review_note`, `legacy_url`, `slug`                                                      | fellow, member                   | dropped. The slug follows the title                                                                               | new: `legacy_url`, `slug`. Guard: `review.review_note` |
+| enrollments of a taught course  | `person`, `course`, `status`, `slot`, `source`                                                  | fellow                           | dropped                                                                                                           | guard                                                  |
+| enrollments, own                | `assessment`                                                                                    | member                           | the write throws, and a read returns no `assessment`                                                              | guard                                                  |
+| courses, own                    | `tier`, `cycle`, `registration`, `pricing_override`, `review.review_note`, `legacy_url`, `slug` | fellow                           | dropped. The slug follows the title                                                                               | new: `legacy_url`, `slug`. Guard: the rest             |
+| space-preferences, own row      | `digest_sent_at`                                                                                | fellow, member                   | dropped                                                                                                           | new                                                    |
+| articles, own, and courses, own | `_status: 'published'`                                                                          | fellow (both), member (articles) | throws `Forbidden` (`adminPublishes`, `src/access.ts:178-184`). Nothing is stored, and the document stays a draft | guard                                                  |
+| media                           | create with a type outside `PHOTO_TYPES`, or larger than `PHOTO_MAX_BYTES`                      | fellow, member                   | throws                                                                                                            | new                                                    |
+| form-submissions                | `find`                                                                                          | fellow, member, anonymous        | throws `Forbidden`                                                                                                | guard                                                  |
 
 The audit snapshot matches.
 
@@ -1011,11 +1016,11 @@ The audit snapshot matches.
 
 The owner creates each migration with `migrate:create` and reviews it before it runs. The Dockerfile applies migrations on deploy.
 
-| Id | Change | Phase |
-|---|---|---|
-| M1 | New `review-events` collection: `doc` and `version` as integers, an index on `(collection, doc)`, `actor` nullable with `ON DELETE SET NULL`, and the `payload_locked_documents_rels` column that `migrate:create` adds | 2 |
-| M2 | `space-preferences.checklist_hidden_at`, and the drop of the four unused step columns of `space-visits` | 6 |
-| M3 | Notification kind enum adds `withdrawn` | 2 |
+| Id  | Change                                                                                                                                                                                                                  | Phase |
+| --- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----- |
+| M1  | New `review-events` collection: `doc` and `version` as integers, an index on `(collection, doc)`, `actor` nullable with `ON DELETE SET NULL`, and the `payload_locked_documents_rels` column that `migrate:create` adds | 2     |
+| M2  | `space-preferences.checklist_hidden_at`, and the drop of the four unused step columns of `space-visits`                                                                                                                 | 6     |
+| M3  | Notification kind enum adds `withdrawn`                                                                                                                                                                                 | 2     |
 
 No migration: the phase 0 access fixes, `users.access.admin`, the course `onApprove`, the route groups, the session lock (D2), the fellow projection (D12), the `withdraw` move (D3), the `request` and Discard changes, and the Participants page (D18).
 
@@ -1023,32 +1028,32 @@ No migration: the phase 0 access fixes, `users.access.admin`, the course `onAppr
 
 Each phase ends when its tests pass. New specs:
 
-| Spec | Kind | Covers | Phase |
-|---|---|---|---|
-| `portal-access` | int | phase 0 refusals, audit snapshot | 0 |
-| `portal-shell` | e2e and unit | skip link, landmarks, nav per role, every nav item opens a page, the `(site)` smoke routes, axe, keyboard walk, `announce()`, toast over a modal, `SuccessCheck` reduced motion, folded state and its accessible names, toast and focus at 390px | 1a |
-| `portal-spaces-off` | e2e | portal pages load, `/spaces` lists no space, space pages and every dialog route are not found, a dialog closes on navigation | 1a |
-| `review-status` | unit and int | `statusOf`, `waitsOn`, `neverPublished`, `hasUnsentEdits`, the `request` hook table | 1b |
-| `document-href` | unit | links per collection, viewer, `waiting` value and locale | 1b |
-| `portal-lists` | e2e and int | rows, groups, paging, empty states (e2e). The owner delete of a declined item (int) | 1b |
-| `needs` | int and e2e | `needs(user)` rows, `needsCounts(user)` totals, the applicant count per choice, live refresh | 1c |
-| `portal-home` | e2e | Home and Inbox per role | 1c |
-| `portal-calendar` | e2e | preset legend, own Community-tier sessions, Arabic week | 1d |
-| `portal-account` | e2e | redirects, profile save | 1d |
-| `pending` | unit | the state machine, the cause set, one commit per item | 2 |
-| `review-events` | int | append-only history, `reviewHistoryFor` on a published item, withdraw, Discard and **Restore them**, stale 409, repeat 200, the move table and its 400 cases, the lock with an owner's withdraw, `Origin`, one email per recipient in their locale | 2 |
-| `portal-review` | e2e | approve with cycle and tier, undo, notes, history | 2 |
-| `application-commit` | int | one email per decision under retry, reopen | 3 |
-| `applicants` (extended) | int | fellow money keys on own courses, no other courses | 3 |
-| `portal-applicants` | e2e | menu, drag, ring, undo, commit, reopen, fellow view, worst case | 3 |
-| `course-proposal` | int | title-only draft, submit gate, session lock, duplicate | 4b (lock), 4c (gate), 4e (title-only draft, duplicate) |
-| `rich-text-guard` | int | admin-only nodes refused from non-admins in every owner-writable rich text field, nested blocks, unreadable mention targets, both locales | 4d, 5 |
-| `portal-course-form` | e2e | propose, calendar, Add session placed through the drawer, submit, live sessions | 4e |
-| `portal-article-editor` | e2e | write, footnote, image, both locales, reload | 5 |
-| `portal-participants` | e2e and int | the list with a hidden person's name, the fellow-of-course gate, an assessment write, refusals | 5b |
-| `portal-palette` | e2e, unit and int | rows per role and route, editor Cmd+K, Site group and its error row, applicant search by role, keyboard, focus, phone, counts agree. Unit: `when(ctx)`, stable order | 6 |
-| `onboarding` | int and e2e | hide flag per account, steps from data, spaces off | 6 |
-| `portal-admin-lock` | e2e | each role's old admin tasks in the portal, including a fellow's assessment, and `/admin` closed | 7 |
+| Spec                    | Kind              | Covers                                                                                                                                                                                                                                             | Phase                                                  |
+| ----------------------- | ----------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------ |
+| `portal-access`         | int               | phase 0 refusals, audit snapshot                                                                                                                                                                                                                   | 0                                                      |
+| `portal-shell`          | e2e and unit      | skip link, landmarks, nav per role, every nav item opens a page, the `(site)` smoke routes, axe, keyboard walk, `announce()`, toast over a modal, `SuccessCheck` reduced motion, folded state and its accessible names, toast and focus at 390px   | 1a                                                     |
+| `portal-spaces-off`     | e2e               | portal pages load, `/spaces` lists no space, space pages and every dialog route are not found, a dialog closes on navigation                                                                                                                       | 1a                                                     |
+| `review-status`         | unit and int      | `statusOf`, `waitsOn`, `neverPublished`, `hasUnsentEdits`, the `request` hook table                                                                                                                                                                | 1b                                                     |
+| `document-href`         | unit              | links per collection, viewer, `waiting` value and locale                                                                                                                                                                                           | 1b                                                     |
+| `portal-lists`          | e2e and int       | rows, groups, paging, empty states (e2e). The owner delete of a declined item (int)                                                                                                                                                                | 1b                                                     |
+| `needs`                 | int and e2e       | `needs(user)` rows, `needsCounts(user)` totals, the applicant count per choice, live refresh                                                                                                                                                       | 1c                                                     |
+| `portal-home`           | e2e               | Home and Inbox per role                                                                                                                                                                                                                            | 1c                                                     |
+| `portal-calendar`       | e2e               | preset legend, own Community-tier sessions, Arabic week                                                                                                                                                                                            | 1d                                                     |
+| `portal-account`        | e2e               | redirects, profile save                                                                                                                                                                                                                            | 1d                                                     |
+| `pending`               | unit              | the state machine, the cause set, one commit per item                                                                                                                                                                                              | 2                                                      |
+| `review-events`         | int               | append-only history, `reviewHistoryFor` on a published item, withdraw, Discard and **Restore them**, stale 409, repeat 200, the move table and its 400 cases, the lock with an owner's withdraw, `Origin`, one email per recipient in their locale | 2                                                      |
+| `portal-review`         | e2e               | approve with cycle and tier, undo, notes, history                                                                                                                                                                                                  | 2                                                      |
+| `application-commit`    | int               | one email per decision under retry, reopen                                                                                                                                                                                                         | 3                                                      |
+| `applicants` (extended) | int               | fellow money keys on own courses, no other courses                                                                                                                                                                                                 | 3                                                      |
+| `portal-applicants`     | e2e               | menu, drag, ring, undo, commit, reopen, fellow view, worst case                                                                                                                                                                                    | 3                                                      |
+| `course-proposal`       | int               | title-only draft, submit gate, session lock, duplicate                                                                                                                                                                                             | 4b (lock), 4c (gate), 4e (title-only draft, duplicate) |
+| `rich-text-guard`       | int               | admin-only nodes refused from non-admins in every owner-writable rich text field, nested blocks, unreadable mention targets, both locales                                                                                                          | 4d, 5                                                  |
+| `portal-course-form`    | e2e               | propose, calendar, Add session placed through the drawer, submit, live sessions                                                                                                                                                                    | 4e                                                     |
+| `portal-article-editor` | e2e               | write, footnote, image, both locales, reload                                                                                                                                                                                                       | 5                                                      |
+| `portal-participants`   | e2e and int       | the list with a hidden person's name, the fellow-of-course gate, an assessment write, refusals                                                                                                                                                     | 5b                                                     |
+| `portal-palette`        | e2e, unit and int | rows per role and route, editor Cmd+K, Site group and its error row, applicant search by role, keyboard, focus, phone, counts agree. Unit: `when(ctx)`, stable order                                                                               | 6                                                      |
+| `onboarding`            | int and e2e       | hide flag per account, steps from data, spaces off                                                                                                                                                                                                 | 6                                                      |
+| `portal-admin-lock`     | e2e               | each role's old admin tasks in the portal, including a fellow's assessment, and `/admin` closed                                                                                                                                                    | 7                                                      |
 
 Every e2e spec runs as admin, fellow and student, in English and Arabic, at 1440px and 390px. In Arabic at 390px there is no horizontal scroll, the lanes mirror, directional icons mirror, and the calendar starts on Saturday on the right. Arabic runs test whole forms as journeys: direction, validation text, dates and numbers. break-ui checks use long Arabic strings, because Arabic text is often 20 to 30 percent wider than English. The shell, Home, the board and both editors also run at 320px and at 200% zoom. axe runs on every route. The undo window comes from an env value that only test builds read, so e2e waits 1.5 s, not 5 s.
 
@@ -1058,20 +1063,20 @@ Each phase ships alone and keeps the site working. Every phase ships its pages c
 
 A nav item, a button or a link that opens a portal page ships in the phase that ships that page. Before that phase it is not shown, or it opens the admin page that does the task today. No flag holds this: each phase's PR adds its own items and changes its own links.
 
-| Target | Before its phase | Phase |
-|---|---|---|
-| Home (`/spaces`) | today's page, inside the new shell, with its shortcuts into `/admin` | 1c |
-| Articles, Courses | not shown | 1b |
-| Inbox | not shown | 1c |
-| Calendar | not shown | 1d |
-| Home's **Open the calendar** (admin, no session) | not shown | 1d |
-| Profile and settings in the account menu | `/settings` | 1d |
-| To review, and an admin's `documentHref` for a waiting document | `/admin/reviews` and the document's admin URL | 2 |
-| An owner's `documentHref` | the document's admin URL | 2 |
-| Applicants, "{n} applicants wait. View list", the `application` links | `/admin/applicants` | 3 |
-| **Propose a course**, course **Edit** | the admin create and edit pages | 4e |
-| **New article**, article **Edit** | the admin create and edit pages | 5 |
-| "Participants" | not shown | 5b |
+| Target                                                                | Before its phase                                                     | Phase |
+| --------------------------------------------------------------------- | -------------------------------------------------------------------- | ----- |
+| Home (`/spaces`)                                                      | today's page, inside the new shell, with its shortcuts into `/admin` | 1c    |
+| Articles, Courses                                                     | not shown                                                            | 1b    |
+| Inbox                                                                 | not shown                                                            | 1c    |
+| Calendar                                                              | not shown                                                            | 1d    |
+| Home's **Open the calendar** (admin, no session)                      | not shown                                                            | 1d    |
+| Profile and settings in the account menu                              | `/settings`                                                          | 1d    |
+| To review, and an admin's `documentHref` for a waiting document       | `/admin/reviews` and the document's admin URL                        | 2     |
+| An owner's `documentHref`                                             | the document's admin URL                                             | 2     |
+| Applicants, "{n} applicants wait. View list", the `application` links | `/admin/applicants`                                                  | 3     |
+| **Propose a course**, course **Edit**                                 | the admin create and edit pages                                      | 4e    |
+| **New article**, article **Edit**                                     | the admin create and edit pages                                      | 5     |
+| "Participants"                                                        | not shown                                                            | 5b    |
 
 **Phase 0. Security baseline.**
 Scope: the [Security baseline](#security-baseline-phase-0). No visible change.

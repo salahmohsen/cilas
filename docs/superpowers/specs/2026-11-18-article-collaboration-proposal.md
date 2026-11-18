@@ -30,13 +30,13 @@ Labels used below. **Fact** means read in the repo or in a source listed at the 
 
 ### Users and roles
 
-| Role | Who in CILAS | What "collaborate" means for them |
-|---|---|---|
-| Student author | `member` or `non_degree_seeking` in a course space | Start the piece, write, invite classmates, answer comments, submit |
-| Co-author | Another member of the same space | Write a section, fix language, reply to comments. Gets a byline |
-| Translator | A co-author who owns the other language | Writes the Arabic (or English) body while the first author writes the original. Credited as translator |
-| Course fellow | Moderator of the course space (`membershipOf`, `src/lib/spaces.ts`) | Reads drafts from their course, comments as a teacher. Does not publish |
-| Admin reviewer | `admin`, `super_admin` | Reads the submission, asks for changes with a note, approves at a tier |
+| Role           | Who in CILAS                                                        | What "collaborate" means for them                                                                      |
+| -------------- | ------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------ |
+| Student author | `member` or `non_degree_seeking` in a course space                  | Start the piece, write, invite classmates, answer comments, submit                                     |
+| Co-author      | Another member of the same space                                    | Write a section, fix language, reply to comments. Gets a byline                                        |
+| Translator     | A co-author who owns the other language                             | Writes the Arabic (or English) body while the first author writes the original. Credited as translator |
+| Course fellow  | Moderator of the course space (`membershipOf`, `src/lib/spaces.ts`) | Reads drafts from their course, comments as a teacher. Does not publish                                |
+| Admin reviewer | `admin`, `super_admin`                                              | Reads the submission, asks for changes with a note, approves at a tier                                 |
 
 ### The translation case
 
@@ -146,7 +146,7 @@ Effort is for one developer who knows the repo. Every effort figure is a guess.
 #### A1. Authors list, invites, a lock per locale, presence
 
 - **UX.**
-  - **Invite.** In the editor side panel, "Authors" lists people. **Invite** opens a picker of the space's members (or anyone the author may read, outside a space). The invitee gets a notification and an email: "Lina invited you to write *Title* with her." **Accept** adds them to `authors`. **Decline** ends it. Substack has a similar confirmation step for guest bylines, per search snippets only. The Substack page I read confirms multiple authors per byline but does not describe the confirmation.
+  - **Invite.** In the editor side panel, "Authors" lists people. **Invite** opens a picker of the space's members (or anyone the author may read, outside a space). The invitee gets a notification and an email: "Lina invited you to write _Title_ with her." **Accept** adds them to `authors`. **Decline** ends it. Substack has a similar confirmation step for guest bylines, per search snippets only. The Substack page I read confirms multiple authors per byline but does not describe the confirmation.
   - **The write path on Accept.** The invitee is not an author yet, so `ownsViaAuthors` refuses their write. Accept is a server action that checks the pending invite, then calls `payload.update` with `overrideAccess: true` and a request context flag such as `INVITE_ACCEPT`, writing only `authors` (and `credits`). On a published article an owner's write saves a draft beside the live row (`src/lib/review-hooks.ts`). Whether a trusted server write with no user also takes that path, and whether adding an author to a live article should need review, is untested. Add an int test: accept an invite on a draft and on a published article, then check the live row, the draft and `review.status`.
   - **Role.** The invite picks a role: co-author (byline), translator, editor. Accept adds the person to `authors` (so they can edit) and, for translator or editor, a `credits` row with that role.
   - **Leave and remove.** An author may leave. Any author may remove a co-author before submit. The last author cannot leave.
@@ -221,16 +221,16 @@ Effort is for one developer who knows the repo. Every effort figure is a guess.
 
 ### Options at a glance
 
-| Option | New server | Body JSON changes | Works while submitted | Phase fit | Effort (guess) |
-|---|---|---|---|---|---|
-| C1 document threads | No | No | Yes | Phase 2 | 4 to 6 days |
-| C2 anchored, outside body | No | No | Yes | Read-only: phase 2b. Editor: phase 5 | 5 to 8 days |
-| C3 MarkNode | No | Yes | No for authors | Phase 5 | 8 to 12 days |
-| C4 suggestions | No | Yes | No | Later | 4 to 8 weeks |
-| A1 invites, per-locale lock, presence | No | No | n/a (locked) | Phase 5 | 7 to 10 days |
-| A2 sections | No | Maybe | n/a | Not recommended | 2 to 3 weeks |
-| A3 Yjs + Hocuspocus | Yes | No, but write-back | n/a | After phase 7 at earliest | 5 to 8 weeks |
-| A4 Liveblocks | Vendor | No, but write-back | n/a | Ruled out by ADR 0009 | 2 to 3 weeks |
+| Option                                | New server | Body JSON changes  | Works while submitted | Phase fit                            | Effort (guess) |
+| ------------------------------------- | ---------- | ------------------ | --------------------- | ------------------------------------ | -------------- |
+| C1 document threads                   | No         | No                 | Yes                   | Phase 2                              | 4 to 6 days    |
+| C2 anchored, outside body             | No         | No                 | Yes                   | Read-only: phase 2b. Editor: phase 5 | 5 to 8 days    |
+| C3 MarkNode                           | No         | Yes                | No for authors        | Phase 5                              | 8 to 12 days   |
+| C4 suggestions                        | No         | Yes                | No                    | Later                                | 4 to 8 weeks   |
+| A1 invites, per-locale lock, presence | No         | No                 | n/a (locked)          | Phase 5                              | 7 to 10 days   |
+| A2 sections                           | No         | Maybe              | n/a                   | Not recommended                      | 2 to 3 weeks   |
+| A3 Yjs + Hocuspocus                   | Yes        | No, but write-back | n/a                   | After phase 7 at earliest            | 5 to 8 weeks   |
+| A4 Liveblocks                         | Vendor     | No, but write-back | n/a                   | Ruled out by ADR 0009                | 2 to 3 weeks   |
 
 ## 4. Recommendation and phases
 
