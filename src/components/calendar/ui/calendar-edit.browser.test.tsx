@@ -1,6 +1,6 @@
 import { act, fireEvent, render, screen, waitFor, within } from '@testing-library/react'
 import { NextIntlClientProvider } from 'next-intl'
-import { afterEach, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest'
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 
 import { Calendar } from '@/components/calendar/ui/calendar'
 import { useCalendarLabels } from '@/components/calendar/ui/use-calendar-labels'
@@ -8,24 +8,26 @@ import type { CalendarChange, CalendarItem } from '@/lib/calendar-items'
 
 import ar from '../../../../messages/ar.json'
 import en from '../../../../messages/en.json'
+import { mouse, centerOf, visibleCenterOf } from '../../../../testing/fan0-pointer.test-utils'
+import { emulateMedia } from '../../../../testing/media.test-utils'
 
 const item = (
   id: string,
   title: string,
   blocks: CalendarItem['blocks'],
   extra: Partial<CalendarItem> = {},
-): CalendarItem => ({
-  id,
-  kind: 'session',
-  title,
-  tone: 'yellow',
-  cancelled: false,
-  version: `v-${id}`,
-  blocks,
-  ...extra,
-})
+) =>
+  ({
+    id,
+    kind: 'session',
+    title,
+    tone: 'yellow',
+    cancelled: false,
+    version: `v-${id}`,
+    blocks,
+    ...extra,
+  }) satisfies CalendarItem
 
-// The week of Saturday 14 November 2026. Meetings run 10 AM to 9 PM.
 const items: CalendarItem[] = [
   item('week-3', 'Week 3', [
     { id: 'tue', date: '2026-11-17', start_time: '19:00', end_time: '21:00' },
@@ -36,7 +38,7 @@ const items: CalendarItem[] = [
   item('week-4', 'Week 4', []),
 ]
 
-type Save = (changes: CalendarChange[]) => void | Promise<void>
+type Save = (changes: CalendarChange[]) => void | CalendarItem[] | Promise<void | CalendarItem[]>
 
 function Host({
   onSave,
@@ -90,15 +92,6 @@ const status = () =>
     .join(' ')
 const save = () => screen.getByRole('button', { name: 'Save' })
 
-beforeAll(() => {
-  // jsdom has no Web Animations; the side panel waits on none.
-  Element.prototype.getAnimations ??= () => []
-  globalThis.ResizeObserver = class {
-    observe() {}
-    unobserve() {}
-    disconnect() {}
-  }
-})
 beforeEach(() => {
   localStorage.clear()
   vi.useFakeTimers({ now: new Date('2026-11-17T10:00:00Z'), toFake: ['Date'] })
@@ -255,10 +248,11 @@ describe('edit mode', () => {
   })
 
   it('keeps the changes and shows the error when the save fails, then saves them again', async () => {
-    const onSave = vi
-      .fn()
-      .mockRejectedValueOnce(new Error('Someone else changed Week 3.'))
-      .mockResolvedValue(undefined)
+    const saves: CalendarChange[][] = []
+    const onSave = async (changes: CalendarChange[]) => {
+      saves.push(changes)
+      if (saves.length === 1) throw new Error('Someone else changed Week 3.')
+    }
     edit({ onSave })
     week3().focus()
     fireEvent.keyDown(week3(), { key: 'ArrowDown' })
@@ -271,8 +265,8 @@ describe('edit mode', () => {
     expect(status()).toContain('1 unsaved change')
 
     fireEvent.click(save())
-    await waitFor(() => expect(onSave).toHaveBeenCalledTimes(2))
-    expect(onSave.mock.calls[1]![0]).toEqual(onSave.mock.calls[0]![0])
+    await waitFor(() => expect(saves).toHaveLength(2))
+    expect(saves[1]).toEqual(saves[0])
     await waitFor(() => expect(screen.queryByRole('alert')).toBeNull())
   })
 
@@ -286,7 +280,11 @@ describe('edit mode', () => {
           }
         : entry,
     )
-    const onSave = vi.fn().mockResolvedValueOnce(saved).mockResolvedValue(undefined)
+    const saves: CalendarChange[][] = []
+    const onSave = async (changes: CalendarChange[]) => {
+      saves.push(changes)
+      return saves.length === 1 ? saved : undefined
+    }
     edit({ onSave })
     week3().focus()
     fireEvent.keyDown(week3(), { key: 'ArrowDown' })
@@ -296,8 +294,8 @@ describe('edit mode', () => {
 
     fireEvent.keyDown(week3(), { key: 'ArrowDown' })
     fireEvent.click(save())
-    await waitFor(() => expect(onSave).toHaveBeenCalledTimes(2))
-    expect(onSave.mock.calls[1]![0]).toEqual([
+    await waitFor(() => expect(saves).toHaveLength(2))
+    expect(saves[1]).toEqual([
       expect.objectContaining({ op: 'move-block', version: 'v-week-3-saved', start_time: '19:30' }),
     ])
   })
@@ -462,65 +460,23 @@ describe('edit mode', () => {
 })
 
 describe('dragging a block to another day', () => {
-  // jsdom has no layout: seven days 100px wide, 1px a minute over the grid's hours.
-  const layout = () =>
-    vi.spyOn(HTMLElement.prototype, 'getBoundingClientRect').mockImplementation(function (
-      this: HTMLElement,
-    ) {
-      const track = this.closest<HTMLElement>('[data-track]')
-      const days = [...document.querySelectorAll<HTMLElement>('[data-track]')].map(
-        (el) => el.dataset.track,
-      )
-      const index = Math.max(0, days.indexOf(track?.dataset.track))
-      if (this === track) return new DOMRect(index * 100, 0, 100, 780)
-      const style = this.getAttribute('style') ?? ''
-      const percent = (name: string) =>
-        Number(new RegExp(`${name}:\\s*([\\d.]+)%`).exec(style)?.[1] ?? 0)
-      return new DOMRect(
-        index * 100,
-        (percent('top') * 780) / 100,
-        100,
-        (percent('height') * 780) / 100,
-      )
-    })
-
   it('draws the block in the day under the pointer while it moves, not only on drop', async () => {
-    layout()
-    const dayAt = (x: number) =>
-      document.querySelectorAll<HTMLElement>('[data-track]')[Math.floor(x / 100)] ?? null
-    document.elementFromPoint = (x) => dayAt(x)
-    document.elementsFromPoint = (x) => [dayAt(x)].filter((el): el is HTMLElement => el !== null)
     edit({ onSave: vi.fn() })
     const block = () => screen.getByRole('button', { name: /^Studio lab/ })
     const dayOf = () => block().closest('[data-track]')!.getAttribute('data-track')
     expect(dayOf()).toBe('2026-11-14')
-
-    const pointer = (type: string, x: number, y: number, buttons = 1) =>
-      fireEvent(
-        type === 'pointerdown' ? block() : document,
-        new PointerEvent(type, {
-          bubbles: true,
-          pointerId: 1,
-          pointerType: 'mouse',
-          isPrimary: true,
-          button: 0,
-          buttons,
-          clientX: x,
-          clientY: y,
-        }),
-      )
-    const frame = () =>
-      act(() => new Promise<void>((resolve) => requestAnimationFrame(() => resolve())))
-    pointer('pointerdown', 20, 60)
-    pointer('pointermove', 120, 80)
-    await frame()
-    pointer('pointermove', 320, 80)
-    await frame()
-    expect(block()).toHaveAttribute('data-dragging')
-    expect(dayOf()).toBe('2026-11-17')
-    pointer('pointerup', 320, 80, 0)
-    await frame()
-    expect(block()).toHaveAccessibleName(/^Studio lab, Tuesday, November 17.*Unsaved$/)
+    const target = document.querySelector<HTMLElement>('[data-track="2026-11-17"]')!
+    const from = centerOf(block())
+    const to = { x: centerOf(target).x, y: from.y }
+    await mouse.down(from)
+    await mouse.move({ x: from.x + 20, y: from.y })
+    await mouse.move(to)
+    await waitFor(() => expect(block()).toHaveAttribute('data-dragging'))
+    await waitFor(() => expect(dayOf()).toBe('2026-11-17'))
+    await mouse.up(to)
+    await waitFor(() =>
+      expect(block()).toHaveAccessibleName(/^Studio lab, Tuesday, November 17.*Unsaved$/),
+    )
   })
 })
 
@@ -541,70 +497,30 @@ describe('the Unscheduled tray with a pointer', () => {
   })
 
   it('places an item where it is dropped on a day', async () => {
-    // jsdom has no layout: seven days 100px wide and 780px tall.
-    vi.spyOn(HTMLElement.prototype, 'getBoundingClientRect').mockImplementation(function (
-      this: HTMLElement,
-    ) {
-      const track = this.closest<HTMLElement>('[data-track]')
-      const days = [...document.querySelectorAll<HTMLElement>('[data-track]')].map(
-        (el) => el.dataset.track,
-      )
-      const index = Math.max(0, days.indexOf(track?.dataset.track))
-      return track ? new DOMRect(index * 100, 0, 100, 780) : new DOMRect(0, -100, 80, 30)
-    })
-    const dayAt = (x: number, y: number) =>
-      y < 0
-        ? null
-        : (document.querySelectorAll<HTMLElement>('[data-track]')[Math.floor(x / 100)] ?? null)
-    document.elementFromPoint = (x, y) => dayAt(x, y)
-    document.elementsFromPoint = (x, y) =>
-      [dayAt(x, y)].filter((el): el is HTMLElement => el !== null)
     edit({ onSave: vi.fn() })
     const chip = within(screen.getByRole('group', { name: 'Unscheduled' })).getByRole('button', {
       name: 'Week 4',
     })
-    const pointer = (type: string, x: number, y: number, buttons = 1) =>
-      fireEvent(
-        type === 'pointerdown' ? chip : document,
-        new PointerEvent(type, {
-          bubbles: true,
-          pointerId: 1,
-          pointerType: 'mouse',
-          isPrimary: true,
-          button: 0,
-          buttons,
-          clientX: x,
-          clientY: y,
-        }),
-      )
-    const frame = () =>
-      act(() => new Promise<void>((resolve) => requestAnimationFrame(() => resolve())))
-    pointer('pointerdown', 10, -90)
-    pointer('pointermove', 300, 100)
-    await frame()
-    pointer('pointermove', 520, 390)
-    await frame()
-    expect(document.querySelector('[data-track="2026-11-19"]')).toHaveAttribute('data-over')
-    pointer('pointerup', 520, 390, 0)
-    await frame()
-    expect(
-      screen.getByRole('button', { name: /^Week 4, Thursday, November 19/ }),
-    ).toHaveAccessibleName(/Unsaved$/)
+    const thursday = document.querySelector<HTMLElement>('[data-track="2026-11-19"]')!
+    const from = centerOf(chip)
+    const to = visibleCenterOf(thursday)
+    await mouse.down(from)
+    await mouse.move({ x: from.x + 20, y: from.y + 20 })
+    await mouse.move(to)
+    await waitFor(() => expect(thursday).toHaveAttribute('data-over'))
+    await mouse.up(to)
+    await waitFor(() =>
+      expect(
+        screen.getByRole('button', { name: /^Week 4, Thursday, November 19/ }),
+      ).toHaveAccessibleName(/Unsaved$/),
+    )
     expect(screen.queryByRole('group', { name: 'Unscheduled' })).toBeNull()
   })
 })
 
 describe('edit mode scroll', () => {
-  const scrolls = vi.fn()
-
-  beforeEach(() => {
-    scrolls.mockClear()
-    Element.prototype.scrollTo = scrolls as unknown as typeof Element.prototype.scrollTo
-  })
-
   it('shows the hours in a grid that scrolls, not in view mode', () => {
     edit({ onSave: vi.fn() })
-    // Only the day headers and the all-day row stay on top; the hours scroll under them.
     const [head, rows] = document.querySelector('[data-scroll]')!.children
     expect(head!.querySelector('[data-day]')).not.toBeNull()
     expect(head!.querySelector('[data-track]')).toBeNull()
@@ -612,28 +528,22 @@ describe('edit mode scroll', () => {
   })
 
   it('scrolls on open, instantly, and on a week change smoothly', () => {
+    const scrolls = vi.spyOn(Element.prototype, 'scrollTo')
     edit({ onSave: vi.fn() })
     expect(scrolls).toHaveBeenCalledTimes(1)
     expect(scrolls).toHaveBeenLastCalledWith(expect.objectContaining({ behavior: 'instant' }))
     fireEvent.click(screen.getByRole('button', { name: 'Next week' }))
     expect(scrolls).toHaveBeenCalledTimes(2)
     expect(scrolls).toHaveBeenLastCalledWith(expect.objectContaining({ behavior: 'smooth' }))
+    scrolls.mockRestore()
   })
 
-  it('does not scroll smoothly when the viewer asks for less motion', () => {
-    const matchMedia = window.matchMedia
-    window.matchMedia = ((query: string) => ({
-      matches: query.includes('reduce'),
-      media: query,
-      addEventListener() {},
-      removeEventListener() {},
-    })) as unknown as typeof window.matchMedia
-    try {
-      edit({ onSave: vi.fn() })
-      fireEvent.click(screen.getByRole('button', { name: 'Next week' }))
-      expect(scrolls).toHaveBeenLastCalledWith(expect.objectContaining({ behavior: 'instant' }))
-    } finally {
-      window.matchMedia = matchMedia
-    }
+  it('does not scroll smoothly when the viewer asks for less motion', async () => {
+    await emulateMedia({ 'prefers-reduced-motion': 'reduce' })
+    const scrolls = vi.spyOn(Element.prototype, 'scrollTo')
+    edit({ onSave: vi.fn() })
+    fireEvent.click(screen.getByRole('button', { name: 'Next week' }))
+    expect(scrolls).toHaveBeenLastCalledWith(expect.objectContaining({ behavior: 'instant' }))
+    scrolls.mockRestore()
   })
 })
