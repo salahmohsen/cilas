@@ -64,7 +64,7 @@ Exemplars: `src/components/space/connected-vote-poll.tsx`, `src/components/space
 
 **The calendar and schedule screens: one context.** Their actions (load, save, offer, publish, session view and edit, public calendar access) are called several components below the screen's root: the drawer's form, the edit drawer, the save and cancel hooks. Threading seven props through each layer ties every layer to every action, so the screens read them from one `ScheduleActions` value (`src/components/space/schedule-actions.tsx`) with `useScheduleActions()`.
 
-1. The app mounts `ConnectedScheduleActions` (`connected-schedule-actions.tsx`, the real actions) at the root of each surface: the space page's drawer host, the space Calendar tab, the post page, the public calendar page and the admin course calendar field. A screen rendered without it throws "Schedule actions are missing".
+1. The app mounts `ConnectedScheduleActions` (`connected-schedule-actions.tsx`, the real actions) at the root of each surface: the space page (its tabs and its drawer host), the post page, the public calendar page and the admin course calendar field. A screen rendered without it throws "Schedule actions are missing".
 2. A test wraps the screen in `ScheduleActionsProvider` with `scheduleActionsHost()` from `schedule-actions.test-utils`. It records each call in `calls`, answers from `answers` (a test may replace one), and `reset()` puts both back. An action a test does not answer reports a refusal.
 3. A plain function that takes some of the actions, such as `setSessionCancelled`, takes them as an argument. Its int test passes the real ones inside `runInRequest`.
 
