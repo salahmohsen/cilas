@@ -31,6 +31,8 @@ Apply these to every change, not only to refactors. Before you write code, ask o
 
 **Special cases.** An `if` for one value, a parameter for one caller, a swallowed exception, a retry or sleep, or a disabled test. Each one is a requirement the design does not cover. Change the design so the case follows from it. Do not patch cases one by one.
 
+**Access rules.** Every access function has a name that says what it allows (`isAdmin`, `nobody`, `adminOrOwnAccountRows`), never an inline arrow. A rule that two or more collections use lives in `src/access.ts`; a rule one collection owns is a named const beside it. A factory lives in `src/access.ts` and names its rule with `named()`. A field only an admin sets uses `adminWritesOnly`.
+
 Keep a decision log for structural work. List the problems first, then write each fix above the problems it solves. Done means a typical change lands in one place, and no module imports anything more volatile than itself.
 
 <!-- BEGIN:nextjs-agent-rules -->
