@@ -8,7 +8,6 @@ import type { CalendarChange, CalendarItem } from '@/lib/calendar-items'
 
 import en from '../../../../messages/en.json'
 import ar from '../../../../messages/ar.json'
-import { stubPopupDom } from '../../../../testing/popup-dom.test-utils'
 
 declare global {
   var __UI_SDK_STRICT__: boolean | undefined
@@ -100,7 +99,6 @@ const saved = () => screen.getByRole('button', { name: 'Save' })
 
 beforeAll(() => {
   globalThis.__UI_SDK_STRICT__ = true
-  stubPopupDom()
 })
 beforeEach(() => {
   localStorage.clear()
