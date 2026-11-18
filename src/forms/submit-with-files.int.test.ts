@@ -152,7 +152,13 @@ beforeAll(async () => {
         cycle: cycle.id,
         registration: { mode: 'follow_cycle' },
         applicant_questions: [
-          { blockType: 'fileUpload', name: 'portfolio', label: 'Portfolio', required: true },
+          {
+            blockType: 'fileUpload',
+            name: 'portfolio',
+            label: 'Portfolio',
+            required: true,
+            accept: ['pdf'],
+          },
         ],
         _status: 'published',
       },

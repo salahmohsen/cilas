@@ -3,7 +3,7 @@ import { getTranslations } from 'next-intl/server'
 
 import { getCachedCalendarItems } from '@/api/calendar.api'
 import { env } from '@/env'
-import { buildIcs } from '@/lib/ics'
+import { calendarFeed } from '@/lib/calendar-feed'
 
 /**
  * The calendar as an iCalendar feed, in the site language: `/en/calendar.ics`
@@ -17,34 +17,11 @@ export async function GET(request: Request, { params }: { params: Promise<{ loca
     getTranslations({ locale: lang, namespace: 'Study.filters' }),
   ])
   const items = await getCachedCalendarItems(lang)
-  const origin = env.NEXT_PUBLIC_SERVER_URL || new URL(request.url).origin
-  const ics = buildIcs(
-    items.map((item) => ({
-      uid: item.feed ? item.feed.uid : `${item.key}@cilas`,
-      updatedAt: item.feed?.updatedAt,
-      title: item.title,
-      date: item.date,
-      start: item.start,
-      end: item.end,
-      ...(item.href ? { url: `${origin}/${lang}${item.href}` } : {}),
-      description: [
-        item.kind === 'course' ? tf(`types.${item.type}`) : t(`eventTypes.${item.type}`),
-        item.session ? t('session', { n: item.session }) : null,
-      ]
-        .filter(Boolean)
-        .join(' · '),
-      cancelled: item.cancelled,
-    })),
-    { name: t('feedName') },
-  )
-  const download = new URL(request.url).searchParams.has('download')
-  return new Response(ics, {
-    headers: {
-      'content-type': 'text/calendar; charset=utf-8',
-      'cache-control': 'public, max-age=3600',
-      ...(download
-        ? { 'content-disposition': `attachment; filename="cilas-calendar-${lang}.ics"` }
-        : {}),
-    },
+  return calendarFeed(items, {
+    request,
+    lang,
+    origin: env.NEXT_PUBLIC_SERVER_URL || new URL(request.url).origin,
+    t: (key, values) => t(key as never, values as never),
+    tf: (key) => tf(key as never),
   })
 }
