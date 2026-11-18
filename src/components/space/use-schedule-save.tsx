@@ -11,7 +11,7 @@ import type { ScheduleOffer } from '@/lib/schedule-offer'
 import type { ScheduleSaveText } from './schedule-save-text'
 
 const ScheduleOfferDialog = preloadable(
-  () => import('./schedule-offer-dialog').then((m) => m.ScheduleOfferDialog),
+  () => import('./connected-schedule-offer-dialog').then((m) => m.ConnectedScheduleOfferDialog),
   { name: 'ScheduleOfferDialog' },
 )
 

@@ -9,7 +9,7 @@ import { Dialog, DialogContent } from '@/components/arc/dialog/dialog'
 import { Calendar } from '@/components/calendar/ui/calendar'
 import type { CalendarLabels } from '@/components/calendar/ui/calendar-labels'
 import { RichField } from '@/components/rich-field'
-import { postCreateAction } from '@/lib/space-actions'
+import type { SpacesWriteState } from '@/lib/space-actions'
 import type { ScheduleOffer } from '@/lib/schedule-offer'
 import { withSchedule } from '@/lib/session-refs'
 
@@ -34,7 +34,7 @@ export type ScheduleOfferLabels = {
   calendar: CalendarLabels
 }
 
-type Props = {
+export type ScheduleOfferDialogProps = {
   offers: ScheduleOffer[]
   labels: ScheduleOfferLabels
   /** The host's language and direction, for the dialog and the preview's dates. */
@@ -44,6 +44,8 @@ type Props = {
   onClose: () => void
   /** Where focus goes when the dialog closes. */
   returnFocus: () => HTMLElement | null
+  /** Writes one announcement through the post write path, as the signed-in person. */
+  publish: (form: FormData) => Promise<SpacesWriteState>
 }
 
 const NO_OPEN = () => {}
@@ -55,6 +57,7 @@ function Entry({
   many,
   first,
   onDone,
+  publish,
 }: {
   offer: ScheduleOffer
   labels: ScheduleOfferLabels
@@ -62,6 +65,7 @@ function Entry({
   many: boolean
   first: boolean
   onDone: () => void
+  publish: ScheduleOfferDialogProps['publish']
 }) {
   const id = useId()
   const [text, setText] = useState({ markdown: offer.text, empty: !offer.text.trim() })
@@ -71,14 +75,14 @@ function Entry({
   const block = include ? offer.block : null
   const dir = offer.language === 'ar' ? 'rtl' : 'ltr'
 
-  const publish = async () => {
+  const send = async () => {
     setBusy(true)
     setError('')
     const form = new FormData()
     form.set('space', String(offer.space.id))
     form.set('kind', 'announcement')
     form.set('body', withSchedule(text.markdown, block))
-    const result = await postCreateAction({ status: 'ok' }, form).catch(() => ({
+    const result = await publish(form).catch(() => ({
       status: 'error' as const,
       error: 'failed' as const,
     }))
@@ -139,7 +143,7 @@ function Entry({
           type="button"
           loading={busy}
           disabled={text.empty && !block}
-          onClick={() => void publish()}
+          onClick={() => void send()}
         >
           {busy ? labels.publishing : labels.publish}
         </Button>
@@ -156,7 +160,15 @@ function Entry({
  * person. With one space it is one plain dialog; with several, one entry
  * each. It closes when every entry is published or skipped.
  */
-export function ScheduleOfferDialog({ offers, labels, locale, dir, onClose, returnFocus }: Props) {
+export function ScheduleOfferDialog({
+  offers,
+  labels,
+  locale,
+  dir,
+  onClose,
+  returnFocus,
+  publish,
+}: ScheduleOfferDialogProps) {
   const [done, setDone] = useState<ReadonlySet<number>>(new Set())
   const open = offers.filter((offer) => !done.has(offer.space.id))
   const many = offers.length > 1
@@ -195,6 +207,7 @@ export function ScheduleOfferDialog({ offers, labels, locale, dir, onClose, retu
               many={many}
               first={index === 0}
               onDone={() => finish(offer.space.id)}
+              publish={publish}
             />
           ))}
         </div>
