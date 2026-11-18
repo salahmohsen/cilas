@@ -41,6 +41,9 @@ Call `mockNetwork(...handlers)` once at the top of the file or the `describe`. A
 
 Both start MSW with `onUnhandledRequest: 'error'`, and both fail the test in `afterEach` for each request that no handler answered, even when the code caught the error. So a test proves that a request did not happen by having no handler for it. Requests for scripts, styles and other assets (MSW's `isCommonAssetRequest`) are not counted. Answer with `HttpResponse.json`, `HttpResponse.html`, `new HttpResponse(null, { status: 302, headers })`, or `HttpResponse.error()` for a network failure.
 
+- In jsdom, a relative URL such as `fetch('/api/x')` resolves against `http://localhost:3000/`, and a handler for `/api/x` answers it (checked with a scratch `.dom.test.tsx`).
+- An int test that also calls a local service the test owns (Typesense, RustFS) lets those requests through by origin: `http.all('http://localhost:8108/*', () => passthrough())` (checked against the local Typesense). Do not pass through a whole public origin.
+
 Exemplar: `src/lib/event-place.unit.test.ts`.
 
 ## Components that call server actions or Payload
