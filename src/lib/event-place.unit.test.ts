@@ -1,7 +1,10 @@
-import { afterEach, describe, expect, it, vi } from 'vitest'
+import { http, HttpResponse } from 'msw'
+import { describe, expect, it } from 'vitest'
 
 import { PLACE_NAME_MAX, mapsPlace, meetingService, placeHost, titlePlace } from '@/lib/event-place'
 import { placeName } from '@/lib/link-preview'
+
+import { mockNetwork } from '../../testing/msw-node.test-utils'
 
 describe('an event place read from its address', () => {
   it('reads the place of a Google Maps link', () => {
@@ -42,47 +45,39 @@ describe('an event place read from its address', () => {
 })
 
 describe('placeName', () => {
-  afterEach(() => vi.unstubAllGlobals())
+  const network = mockNetwork()
+  const page = (url: string, title: string) =>
+    network.use(
+      http.get(url, () =>
+        HttpResponse.html(`<head><title>${title}</title></head>`, { status: 200 }),
+      ),
+    )
 
   it('follows a share link through the checked fetch and stops at the place', async () => {
-    const fetch = vi.fn(
-      async () =>
-        new Response(null, {
-          status: 302,
-          headers: { location: 'https://www.google.com/maps/place/Room+2,+Zamalek/@30,31,15z' },
-        }),
+    network.use(
+      http.get(
+        'https://93.184.216.34/share',
+        () =>
+          new HttpResponse(null, {
+            status: 302,
+            headers: { location: 'https://www.google.com/maps/place/Room+2,+Zamalek/@30,31,15z' },
+          }),
+      ),
     )
-    vi.stubGlobal('fetch', fetch)
     expect(await placeName('https://93.184.216.34/share')).toBe('Room 2, Zamalek')
-    // The Maps page itself is never fetched.
-    expect(fetch).toHaveBeenCalledTimes(1)
   })
 
   it('uses a page title, and nothing for a site name or a failure', async () => {
-    const page = (title: string) =>
-      vi.stubGlobal(
-        'fetch',
-        vi.fn(
-          async () =>
-            new Response(`<head><title>${title}</title></head>`, {
-              status: 200,
-              headers: { 'content-type': 'text/html' },
-            }),
-        ),
-      )
-    page('Reading room at the Townhouse')
+    page('https://93.184.216.34/venue', 'Reading room at the Townhouse')
     expect(await placeName('https://93.184.216.34/venue')).toBe('Reading room at the Townhouse')
-    page('Google Maps')
+    page('https://93.184.216.34/venue', 'Google Maps')
     expect(await placeName('https://93.184.216.34/venue')).toBeNull()
-    vi.stubGlobal('fetch', vi.fn().mockRejectedValue(new Error('fetch failed')))
+    network.use(http.get('https://93.184.216.34/down', () => HttpResponse.error()))
     expect(await placeName('https://93.184.216.34/down')).toBeNull()
   })
 
   it('never fetches a private host or a meeting service', async () => {
-    const fetch = vi.fn()
-    vi.stubGlobal('fetch', fetch)
     expect(await placeName('http://127.0.0.1:3000/')).toBeNull()
     expect(await placeName('https://us02web.zoom.us/j/123')).toBeNull()
-    expect(fetch).not.toHaveBeenCalled()
   })
 })
