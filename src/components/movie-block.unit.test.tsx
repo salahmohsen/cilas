@@ -1,13 +1,11 @@
 import { cleanup, fireEvent, render, screen } from '@testing-library/react'
 import { NextIntlClientProvider } from 'next-intl'
-import { afterEach, describe, expect, it, vi } from 'vitest'
+import { afterEach, describe, expect, it } from 'vitest'
 
 import { RichTextField } from '@/components/RichTextField'
 import { moviePosterUrl } from '@/lib/movie'
 import { movie } from '../../testing/movie.fixture'
 import messages from '../../messages/en.json'
-
-vi.mock('@/lib/use-narrow', () => ({ useNarrow: () => false }))
 
 afterEach(cleanup)
 const data = (value: unknown, subtitleLanguages?: string[]) => ({
@@ -52,7 +50,6 @@ describe('movie editor blocks', () => {
     expect(poster.pathname).toBe('/_next/image')
     expect(poster.searchParams.get('url')).toBe('https://image.tmdb.org/t/p/w500/poster.jpg')
     expect(screen.getByText(movie.overview)).toBeInTheDocument()
-    // Runtime, sources and attribution wait in the dialog.
     expect(screen.queryByText('130 minutes')).toBeNull()
     expect(screen.queryByRole('link', { name: 'TMDB' })).toBeNull()
     fireEvent.click(screen.getByRole('button', { name: 'All movie details' }))
