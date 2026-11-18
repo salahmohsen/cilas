@@ -64,7 +64,7 @@ export const writePlannedSessions = async (
         overrideAccess: true,
         req,
       })
-    ids.push([s.from, doc.id])
+    ids.push([s.from, Number(doc.id)])
   }
   return ids
 }

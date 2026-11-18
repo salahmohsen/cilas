@@ -197,7 +197,7 @@ const { docs: slugs } = await payload.find({
   overrideAccess: true,
   select: { slug: true },
 })
-const slugOf = new Map(slugs.map((c) => [c.id, c.slug ?? '']))
+const slugOf = new Map(slugs.map((c) => [Number(c.id), String(c.slug ?? '')]))
 const { rows: present } = await payload.db.pool.query<{ course: number; n: string }>(
   'SELECT course_id AS course, count(*) AS n FROM sessions GROUP BY course_id',
 )
