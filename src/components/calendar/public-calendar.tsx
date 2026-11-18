@@ -3,7 +3,7 @@
 import { Pencil } from 'lucide-react'
 import { useLocale, useMessages, useTranslations } from 'next-intl'
 import { useRouter, useSearchParams } from 'next/navigation'
-import { useCallback, useEffect, useMemo, useSyncExternalStore, useTransition } from 'react'
+import { useCallback, useEffect, useMemo, useState, useTransition } from 'react'
 
 import { Alert } from '@/components/arc/alert/alert'
 import { Button } from '@/components/arc/button/button'
@@ -74,14 +74,19 @@ export function PublicCalendar({ items, range, today, kinds, months, access }: P
   const router = useRouter()
   const params = useSearchParams()
   const [, startTransition] = useTransition()
-  // The URL is read from the window: on a quick Back after a push, Next has not
-  // yet given `useSearchParams` the pushed URL, and the calendar would not move.
-  const search = useSyncExternalStore(
-    onHistory,
-    () => window.location.search,
-    () => `?${params.toString()}`,
-  )
-  const query = new URLSearchParams(search)
+  // Next's URL comes with the page it loaded, so it always matches `range`.
+  // A write of the page's own or a quick Back moves the window first: the
+  // window leads until Next has the URL too. The window never leads a page
+  // Next loads, as Next writes the window only after that page shows.
+  const committed = `?${params.toString()}`
+  const [moved, setMoved] = useState<string | null>(null)
+  const [seen, setSeen] = useState(committed)
+  if (seen !== committed) {
+    setSeen(committed)
+    setMoved(null)
+  }
+  useEffect(() => onHistory(() => setMoved(window.location.search)), [])
+  const query = new URLSearchParams(moved ?? committed)
   const { view, day } = readCalendarUrl({ view: query.get('view'), date: query.get('date') }, today)
 
   const kind = useCallback((value: string) => kinds[value]?.name ?? value, [kinds])

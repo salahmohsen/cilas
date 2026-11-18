@@ -476,6 +476,27 @@ describe('the public calendar', () => {
     expect(screen.getByRole('button', { name: 'Week' })).toHaveAttribute('aria-pressed', 'true')
   })
 
+  it('settles on the month the router loaded, before the router writes its URL', () => {
+    const at = (query: string) => (
+      <NextIntlClientProvider locale="en" messages={en} timeZone="Africa/Cairo">
+        <PublicCalendar
+          items={publicItems(meetings, words('en'))}
+          range={loadedRange(new URLSearchParams(query).get('date')!)}
+          today="2026-11-17"
+          kinds={kinds('en')}
+          months={['2025-03', '2026-11']}
+        />
+      </NextIntlClientProvider>
+    )
+    navigation.params = new URLSearchParams('?view=month&date=2026-11-07')
+    window.history.replaceState(null, '', '/en/calendar?view=month&date=2026-11-07')
+    const { rerender } = render(at('?view=month&date=2026-11-07'))
+    navigation.params = new URLSearchParams('?view=month&date=2026-10-07')
+    rerender(at('?view=month&date=2026-10-07'))
+    expect(navigation.replace).not.toHaveBeenCalled()
+    expect(screen.queryByText('November 2026')).toBeNull()
+  })
+
   it('points an empty month to the nearest month with something', () => {
     page('en', '?view=month&date=2026-12-10')
     expect(screen.getByRole('link', { name: 'Most recent: November 2026' })).toBeInTheDocument()
