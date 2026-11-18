@@ -29,12 +29,8 @@ import { storeCourseDays } from '../src/lib/course-days'
 import { sessionIdsIn } from '../src/lib/session-refs'
 import config from '../src/payload.config'
 import { inTransaction } from '../src/lib/in-transaction'
-import {
-  planCourseSessions,
-  type Locale,
-  type Localized,
-  type PlannedSession,
-} from './course-sessions-plan'
+import { planCourseSessions } from './course-sessions-plan'
+import { writePlannedSessions } from './course-sessions-write'
 import { lexicalToMarkdown } from './course-sessions-markdown'
 import { loadCourseSources } from './course-sessions-source'
 
@@ -55,29 +51,6 @@ if ([...refill].some((id) => !Number.isInteger(id))) throw new Error(`--refill: 
 
 const payload = await getPayload({ config })
 const toMarkdown = await lexicalToMarkdown(payload)
-
-type Row = Record<string, unknown> & { id?: string }
-
-const pick = <T>(value: Localized<T>, locale: Locale): T | null => value?.[locale] ?? null
-
-/** A planned session's data in one language, array rows keeping their IDs. */
-const inLocale = (s: PlannedSession, locale: Locale) => ({
-  title: pick(s.title, locale),
-  description: pick(s.description, locale),
-  bibliography: (s.bibliography as Row[]).map((r) => ({
-    ...r,
-    title: pick(r.title as Localized<string>, locale),
-    note: pick(r.note as Localized<string>, locale),
-  })),
-  activities: (s.activities as Row[]).map((r) => ({
-    ...r,
-    description: pick(r.description as Localized<string>, locale),
-  })),
-})
-
-const hasArabic = (s: PlannedSession) =>
-  JSON.stringify(inLocale(s, 'ar')) !==
-  JSON.stringify({ title: null, description: null, bibliography: [], activities: [] })
 
 const map: Record<string, number> = existsSync(mapPath)
   ? JSON.parse(readFileSync(mapPath, 'utf8'))
@@ -180,34 +153,7 @@ for (const { course, source, fromDraft } of await loadCourseSources(payload)) {
         overrideAccess: true,
         req,
       })
-    const ids: Array<[string | null, number]> = []
-    for (const s of plan.sessions) {
-      const common = {
-        course: course.id,
-        delivery: s.delivery,
-        cancelled: s.cancelled,
-        meetings: s.meetings,
-        position: s.position,
-      }
-      const doc = await payload.create({
-        collection: 'sessions',
-        locale: 'en',
-        data: { ...common, ...inLocale(s, 'en') } as never,
-        overrideAccess: true,
-        req,
-      })
-      if (hasArabic(s))
-        await payload.update({
-          collection: 'sessions',
-          id: doc.id,
-          locale: 'ar',
-          data: inLocale(s, 'ar') as never,
-          overrideAccess: true,
-          req,
-        })
-      ids.push([s.from, doc.id])
-    }
-    return ids
+    return writePlannedSessions(payload, req, course.id, plan.sessions)
   })
   const gone = new Set(replaced)
   for (const [from, id] of Object.entries(map)) if (gone.has(id)) delete map[from]
