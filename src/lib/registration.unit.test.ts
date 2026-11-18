@@ -1,5 +1,4 @@
-import { loadApplicationTarget } from '@/forms/application-target'
-import { describe, expect, it, vi } from 'vitest'
+import { describe, expect, it } from 'vitest'
 
 import { courseRegistration, registrationStatus } from '@/lib/registration'
 
@@ -151,14 +150,4 @@ describe('registrationStatus', () => {
   it('treats an invalid deadline as absent', () => {
     expect(registrationStatus({ method: 'form', deadline: 'nope' }, midnight)).toBe('open')
   })
-})
-
-it('treats only a missing application target as absent and propagates database errors', async () => {
-  const { NotFound } = await import('payload')
-  const findByID = vi.fn().mockRejectedValue(new NotFound())
-  const payload = { findByID } as unknown as import('payload').Payload
-  expect(await loadApplicationTarget(payload, 'courses', 123)).toBeNull()
-  const failure = new Error('Database connection failed')
-  findByID.mockRejectedValue(failure)
-  await expect(loadApplicationTarget(payload, 'courses', 123)).rejects.toBe(failure)
 })

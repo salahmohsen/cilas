@@ -1,5 +1,5 @@
 import { createLocalReq, getPayload, type Payload } from 'payload'
-import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest'
+import { afterAll, beforeAll, describe, expect, it } from 'vitest'
 
 import { EMAILS } from '@/emails/catalog'
 import { fill } from '@/emails/settings'
@@ -7,6 +7,7 @@ import { TURNSTILE_VERIFIED } from '@/lib/turnstile'
 import config from '@/payload.config'
 import type { Form, FormSubmission, Programme, User } from '@/payload-types'
 
+import { captureResendMail, requireResendAdapter } from '../../testing/fan2-resend.test-utils'
 import { uniq, uniqEmail } from '../../testing/payload.fixture'
 
 let payload: Payload
@@ -15,10 +16,8 @@ let form: Form
 let programme: Programme
 const EMAIL = uniqEmail('applicant-probe')
 const ADMIN_EMAIL = uniqEmail('decision-admin-probe')
-// The person is found by name, so a unique name keeps old runs out of the count.
 const APPLICANT = uniq('Applicant Probe')
 
-/** The form builder requires a confirmation message. */
 const thanks = {
   root: {
     type: 'root',
@@ -104,10 +103,12 @@ const cleanup = async () => {
   }
 }
 
+const { mail: outbox } = captureResendMail()
+
 describe('accepting an application', () => {
   beforeAll(async () => {
     payload = await getPayload({ config: await config })
-    vi.spyOn(payload, 'sendEmail').mockResolvedValue(undefined)
+    requireResendAdapter(payload)
     await cleanup()
     admin = await payload.create({
       collection: 'users',
@@ -141,7 +142,6 @@ describe('accepting an application', () => {
   })
 
   afterAll(async () => {
-    vi.restoreAllMocks()
     await cleanup()
     await payload.delete({ collection: 'form-submissions', where: { form: { equals: form.id } } })
     await payload.delete({ collection: 'programmes', id: programme.id }).catch(() => undefined)
@@ -173,7 +173,7 @@ describe('accepting an application', () => {
     const res = await decide('accept', submission.id)
     expect(res.status).toBe(200)
     expect(await res.json()).toMatchObject({ ok: true, emailed: true })
-    expect(payload.sendEmail).toHaveBeenCalledWith(expect.objectContaining({ to: EMAIL }))
+    expect(outbox.sent).toContainEqual(expect.objectContaining({ to: EMAIL }))
 
     const { docs } = await payload.find({
       collection: 'users',
@@ -202,7 +202,6 @@ describe('accepting an application', () => {
       result: { user: docs[0].id, person: person.id },
     })
 
-    // A second application from the same email reuses everything.
     const again = await submit({ relationTo: 'programmes', value: programme.id })
     expect((await decide('accept', again.id)).status).toBe(200)
     expect(
@@ -226,9 +225,9 @@ describe('accepting an application', () => {
   it('rejects without making anything, and only admins decide', async () => {
     const submission = await submit({ relationTo: 'programmes', value: programme.id })
     expect((await decide('accept', submission.id, null)).status).toBe(403)
-    vi.mocked(payload.sendEmail).mockClear()
+    outbox.sent = []
     expect((await decide('reject', submission.id)).status).toBe(200)
-    expect(payload.sendEmail).toHaveBeenCalledWith(
+    expect(outbox.sent).toContainEqual(
       expect.objectContaining({
         to: EMAIL,
         subject: expect.stringContaining('Your application to'),
@@ -241,7 +240,6 @@ describe('accepting an application', () => {
     })
     expect(after.status).toBe('rejected')
     expect(after.result?.user).toBeFalsy()
-    // A rejected programme application can be reopened; an accepted one cannot.
     expect((await decide('reopen', submission.id)).status).toBe(200)
     expect(
       (await payload.findByID({ collection: 'form-submissions', id: submission.id, depth: 0 }))
@@ -269,11 +267,7 @@ describe('accepting an application', () => {
       data: { texts: { acceptance: { subject: arSubject }, rejection: { subject: '' } } },
     })
     try {
-      const sent = () =>
-        vi.mocked(payload.sendEmail).mock.calls.at(-1)![0] as {
-          subject: string
-          html: string
-        }
+      const sent = () => outbox.sent.at(-1)!
 
       const accepted = await submit(
         { relationTo: 'programmes', value: programme.id },
@@ -281,37 +275,33 @@ describe('accepting an application', () => {
         'ar',
       )
       expect(accepted.locale).toBe('ar')
-      vi.mocked(payload.sendEmail).mockClear()
+      outbox.sent = []
       expect((await decide('accept', accepted.id)).status).toBe(200)
       expect(sent().subject).toContain('مرحبا بك في')
       expect(sent().subject).toContain(arTitle)
       expect(sent().html).toContain('lang="ar"')
       expect(sent().html).toContain('dir="rtl"')
-      // A new account gets the link that sets its password (043e60e0), not the login page.
       expect(sent().html).toContain('/ar/welcome/')
 
-      // The same email again, in Arabic too.
-      vi.mocked(payload.sendEmail).mockClear()
+      outbox.sent = []
       expect((await decide('resend', accepted.id)).status).toBe(200)
       expect(sent().subject).toContain('مرحبا بك في')
 
-      // No saved Arabic rejection text: the catalog's Arabic default is sent (b11d1b1a), with the Arabic title.
       const rejected = await submit(
         { relationTo: 'programmes', value: programme.id },
         form.id,
         'ar',
       )
-      vi.mocked(payload.sendEmail).mockClear()
+      outbox.sent = []
       expect((await decide('reject', rejected.id)).status).toBe(200)
       expect(sent().subject).toBe(
         fill(EMAILS.rejection.texts.ar.subject, { title: `\u2068${arTitle}\u2069` }),
       )
       expect(sent().html).toContain('dir="rtl"')
 
-      // An application in English, or from before the language was kept, stays English.
       const english = await submit({ relationTo: 'programmes', value: programme.id })
       expect(english.locale).toBe('en')
-      vi.mocked(payload.sendEmail).mockClear()
+      outbox.sent = []
       expect((await decide('accept', english.id)).status).toBe(200)
       expect(sent().subject).toContain('Probe residency')
       expect(sent().subject).not.toContain('مرحبا')

@@ -1,28 +1,13 @@
-import { revalidatePath, revalidateTag } from 'next/cache'
 import { getPayload, type Payload } from 'payload'
 import { Client } from 'typesense'
-import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest'
+import { afterAll, beforeAll, describe, expect, it } from 'vitest'
 
 import { getCourseSessions } from '@/api/sessions.api'
 import config from '@/payload.config'
 import type { User } from '@/payload-types'
 
+import { runInRequest } from '../../testing/next-request.test-utils'
 import { createTracker, uniq, uniqEmail } from '../../testing/payload.fixture'
-
-// Outside Next, these throw and the hooks swallow it; mocked, the test sees them.
-vi.mock('next/cache', async (original) => ({
-  ...(await original<typeof import('next/cache')>()),
-  revalidatePath: vi.fn(),
-  revalidateTag: vi.fn(),
-}))
-
-/**
- * The sessions collection against the database (ADR 0011): read access
- * follows the course, fellows edit their own course's sessions, a session
- * save keeps the course's days without publishing its pending draft, drops
- * the course from the cache and re-indexes it in search, and deleting a
- * course deletes its sessions.
- */
 
 let payload: Payload
 const { track, cleanup } = createTracker()
@@ -230,7 +215,6 @@ describe('a session save refreshes its course', () => {
       },
     ],
   })
-  /** The course's search document, once `ready` holds for it (index writes run after the save). */
   const indexed = async (id: number, ready: (document: string) => boolean) => {
     for (let tries = 0; tries < 50; tries++) {
       const document = JSON.stringify(
@@ -270,19 +254,18 @@ describe('a session save refreshes its course', () => {
       expect(await days(id)).toEqual({ first_day: '2035-03-03', last_day: '2035-03-03' })
       await indexed(id, (document) => document.includes(title))
 
-      vi.mocked(revalidateTag).mockClear()
-      vi.mocked(revalidatePath).mockClear()
-      await payload.update({
-        collection: 'sessions',
-        id: made.id,
-        data: { meetings: [{ date: '2035-03-10', start_time: '19:00', end_time: '21:00' }] },
-        overrideAccess: true,
-      })
+      const { revalidated } = await runInRequest(() =>
+        payload.update({
+          collection: 'sessions',
+          id: made.id,
+          data: { meetings: [{ date: '2035-03-10', start_time: '19:00', end_time: '21:00' }] },
+          overrideAccess: true,
+        }),
+      )
       expect(await days(id)).toEqual({ first_day: '2035-03-10', last_day: '2035-03-10' })
-      // The tag of the cached lists, the calendar among them (`getCachedCalendarItems`).
-      expect(revalidateTag).toHaveBeenCalledWith('courses', { expire: 0 })
-      expect(revalidatePath).toHaveBeenCalledWith(`/en/study/${slug}`)
-      expect(revalidatePath).toHaveBeenCalledWith(`/ar/study/${slug}`)
+      expect(revalidated).toContain('courses')
+      expect(revalidated).toContain(`_N_T_/en/study/${slug}`)
+      expect(revalidated).toContain(`_N_T_/ar/study/${slug}`)
 
       await payload.delete({ collection: 'sessions', id: made.id, overrideAccess: true })
       expect(await days(id)).toEqual({ first_day: null, last_day: null })

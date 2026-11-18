@@ -1,5 +1,5 @@
 import { createLocalReq, getPayload, type Payload } from 'payload'
-import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest'
+import { afterAll, beforeAll, describe, expect, it } from 'vitest'
 import config from '@/payload.config'
 import { env } from '@/env'
 import { MCP_TOOLS } from '@/plugins/mcp'
@@ -21,7 +21,6 @@ async function call(name: string, data: Record<string, unknown>) {
   const text = result.content[0]!.text as string
   return { ...result, text, json: result.isError ? null : JSON.parse(text) }
 }
-// Sundays 17:30–20:00 from 22 September 2024, one session a week.
 const SUNDAYS = Array.from({ length: 8 }, (_, i) => `2024-09-${22 + 7 * i}`).map((day) => {
   const [y, m, d] = day.split('-').map(Number)
   return new Date(Date.UTC(y!, m! - 1, d!)).toISOString().slice(0, 10)
@@ -76,12 +75,10 @@ describe('complete MCP draft writes', () => {
     ).id
   })
   afterAll(async () => {
-    vi.restoreAllMocks()
     await cleanup(payload)
     await payload.destroy()
   })
 
-  /** The course's sessions as anyone reading the course sees them, in list order. */
   const sessionsOf = async (course: number, locale: 'en' | 'ar', user?: typeof admin) =>
     (
       await payload.find({
@@ -96,7 +93,6 @@ describe('complete MCP draft writes', () => {
         ...(user ? { user } : {}),
       })
     ).docs
-  /** The course row, where lists read `first_day` and `last_day`. */
   const daysOf = async (id: number) => {
     const { first_day, last_day } = await payload.findByID({
       collection: 'courses',
@@ -147,7 +143,6 @@ describe('complete MCP draft writes', () => {
       )
     }
     expect(await daysOf(id)).toEqual({ first_day: '2024-09-22', last_day: '2024-11-10' })
-    // A draft course's sessions are not public.
     expect(await sessionsOf(id, 'en')).toEqual([])
   })
 
@@ -172,9 +167,7 @@ describe('complete MCP draft writes', () => {
     expect([kept, renamed]).toEqual([second, first])
     const sessions = await sessionsOf(id, 'ar', admin)
     expect(sessions.map((s) => s.id)).toEqual([second, first, made])
-    // The Arabic of a kept session stays; the new one has its own.
     expect(sessions.map((s) => s.title)).toEqual(['جلسة 2', 'جلسة 1', 'جديدة'])
-    // A field a row leaves out stays as it was.
     expect(sessions.map((s) => s.meetings?.map((m) => m.date))).toEqual([
       ['2024-10-01'],
       ['2024-09-22'],
@@ -376,7 +369,6 @@ describe('complete MCP draft writes', () => {
       expect(await read()).toEqual(before)
       expect((await payload.findByID({ collection, id, draft: true })).title).toBe('Changed draft')
       if (collection !== 'courses') return
-      // Sessions have no drafts: a published course's would change at once.
       const sessions = await sessionsOf(id, 'en')
       const refused = await call('update_course_draft', {
         id,
@@ -544,14 +536,10 @@ describe('complete MCP draft writes', () => {
 
   it('rolls back both locale writes when the second write fails', async () => {
     const count = (await payload.count({ collection: 'articles' })).totalDocs
-    const update = vi
-      .spyOn(payload, 'update')
-      .mockRejectedValueOnce(new Error('Arabic write failed'))
     const result = await call('create_article_draft', {
-      title: { en: uniq('atomic'), ar: 'ذري' },
+      title: { en: uniq('atomic'), ar: 'ذري\u0000' },
       authors: [person],
     })
-    update.mockRestore()
     expect(result.isError).toBe(true)
     expect((await payload.count({ collection: 'articles' })).totalDocs).toBe(count)
   })
