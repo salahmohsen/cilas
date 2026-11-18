@@ -1,9 +1,5 @@
-import { NextRequest, NextResponse } from 'next/server'
-import { describe, expect, it, vi } from 'vitest'
-
-// next-intl's middleware does not load under vitest; the language step is
-// not what these tests check.
-vi.mock('next-intl/middleware', () => ({ default: () => () => NextResponse.next() }))
+import { NextRequest } from 'next/server'
+import { describe, expect, it } from 'vitest'
 
 import { safeNext } from '@/lib/safe-next'
 import proxy from '@/proxy'
