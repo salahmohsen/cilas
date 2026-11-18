@@ -213,7 +213,7 @@ describe('schedule offer', () => {
     expect(offer!.space).toEqual({ id: space, name: 'Offer Course' })
     expect(offer!.language).toBe('en')
     expect(offer!.text).toBe(
-      '- Session 1: Reading Fanon moves from Thu 6 Mar 19:00 to Sat 8 Mar 19:00',
+      '- Session 1: Reading Fanon moves from Thu 6 Mar 7 PM to Sat 8 Mar 7 PM',
     )
     expect(scheduleLineRef(offer!.block!)).toEqual({
       from: '2031-03-01',
