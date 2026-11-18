@@ -1,17 +1,16 @@
-import { cleanup, fireEvent, render, screen } from '@testing-library/react'
-import { NextIntlClientProvider } from 'next-intl'
-import { afterEach, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest'
+import { cleanup, fireEvent, screen } from '@testing-library/react'
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 
 import { PostBody } from '@/components/space/post-body'
 import { scheduleToken } from '@/lib/session-refs'
 import type { SessionCourse, SessionRead } from '@/lib/spaces-data'
 import type { Session } from '@/payload-types'
 
-import en from '../../../messages/en.json'
-import { stubMatchMedia, stubPopupDom } from '../../../testing/popup-dom.test-utils'
+import messages from '../../../messages/en.json'
+import { IntlProvider } from '../../../testing/intl.test-utils'
+import { renderWithNavigation, type MemoryRouter } from '../../../testing/navigation.test-utils'
 
-const push = vi.fn()
-vi.mock('next/navigation', () => ({ useRouter: () => ({ push }) }))
+let memory: MemoryRouter
 
 const session = (
   id: number,
@@ -36,7 +35,6 @@ const session = (
     ...extra,
   }) as Session
 
-// Sessions 1 to 4 meet on Tuesdays; session 4 is three weeks after the block's two.
 const course: SessionCourse = {
   id: 1,
   slug: 'probe',
@@ -58,24 +56,19 @@ const links = { spaceHref: '/en/spaces/probe', facts: {}, known: true }
 const schedule = (ids: string[]) =>
   `Changes:\n\n${scheduleToken({ from: '2026-11-17', weeks: 2, ids })}`
 
-const view = (body: string, read: SessionRead | null = shown) =>
-  render(
-    <NextIntlClientProvider locale="en" messages={en} timeZone="Africa/Cairo">
+const view = (body: string, read: SessionRead | null = shown) => {
+  const rendered = renderWithNavigation(
+    <IntlProvider>
       <PostBody body={body} sessions={{ links: read ? links : null, read }} />
-    </NextIntlClientProvider>,
+    </IntlProvider>,
   )
+  memory = rendered.memory
+  return rendered
+}
 
-beforeAll(stubMatchMedia)
-beforeAll(stubPopupDom)
 beforeEach(() => {
-  // Each test sets it: another file's vi.unstubAllGlobals() can remove it when files share a worker.
-  globalThis.ResizeObserver = class {
-    observe() {}
-    unobserve() {}
-    disconnect() {}
-  }
   localStorage.clear()
-  push.mockReset()
+  window.history.replaceState(null, '', window.location.pathname)
   vi.useFakeTimers({ now: new Date('2026-11-12T10:00:00Z'), toFake: ['Date'] })
 })
 afterEach(() => {
@@ -93,7 +86,6 @@ describe('a schedule block in a post', () => {
         name: 'Session 2, Tuesday, November 17, 7 PM to 9 PM, Changed',
       }),
     ).toHaveAttribute('data-marked')
-    // The course's type gives the tone, as on its page.
     expect(screen.getByRole('button', { name: /^Session 2,/ })).toHaveAttribute(
       'data-tone',
       'green',
@@ -134,23 +126,20 @@ describe('a schedule block in a post', () => {
   })
 
   it('opens the session drawer from a press, in place, with no details popover', () => {
-    window.history.replaceState(null, '', '/en/spaces/probe/posts/5')
     view(schedule(['12']))
     fireEvent.click(screen.getByRole('button', { name: /^Session 2, Tuesday/ }))
     expect(screen.queryByRole('dialog')).toBeNull()
-    expect(push).not.toHaveBeenCalled()
-    expect(`${window.location.pathname}${window.location.search}`).toBe(
-      '/en/spaces/probe/posts/5?open=12',
-    )
+    expect(memory.visits).toEqual([])
+    expect(window.location.search).toBe('?open=12')
   })
 
   it('says so in a short line when its sessions are gone or the course is not readable', () => {
     view(schedule(['99']))
-    expect(screen.getByText(en.SpacePost.scheduleGone)).toBeInTheDocument()
+    expect(screen.getByText(messages.SpacePost.scheduleGone)).toBeInTheDocument()
     expect(screen.queryByRole('group', { name: 'Calendar' })).toBeNull()
     cleanup()
     view(schedule(['12']), { state: 'hidden' })
-    expect(screen.getByText(en.SpacePost.sessionHidden)).toBeInTheDocument()
+    expect(screen.getByText(messages.SpacePost.sessionHidden)).toBeInTheDocument()
     expect(screen.queryByRole('group', { name: 'Calendar' })).toBeNull()
     cleanup()
     view(schedule(['12']), null)
@@ -166,7 +155,7 @@ describe('a schedule block in a post', () => {
       ],
     }
     view(schedule(['12']), { state: 'shown', course: away })
-    expect(screen.getByText(en.SpacePost.scheduleGone)).toBeInTheDocument()
+    expect(screen.getByText(messages.SpacePost.scheduleGone)).toBeInTheDocument()
     expect(screen.queryByRole('group', { name: 'Calendar' })).toBeNull()
   })
 
