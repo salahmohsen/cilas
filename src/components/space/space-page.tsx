@@ -70,7 +70,7 @@ import { NextSession } from './next-session'
 import { sessionContextOf } from './session-block'
 import { CHECKLIST_COOKIE, OnboardingChecklist } from './onboarding-checklist'
 import { POSTER_COLORS } from '@/components/arc/lib/poster-colors'
-import { SpaceHeadActions } from './space-head-actions'
+import { ConnectedSpaceHeadActions } from './connected-space-head-actions'
 import { spacePeopleCards } from '@/lib/space-people'
 import { SpaceRail } from './space-rail'
 import { StickyRail } from './sticky-rail'
@@ -444,7 +444,7 @@ export async function SpacePage({
   )
 
   const actions = (
-    <SpaceHeadActions
+    <ConnectedSpaceHeadActions
       cell={!course}
       coursePage={course ? detailPath('courses', String(course.slug), locale) : null}
       rail={rail}

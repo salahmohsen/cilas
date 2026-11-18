@@ -18,7 +18,10 @@ import { SpaceSettings } from './space-settings'
 import styles from './space.module.css'
 
 type Panel = 'about' | 'participation' | 'settings'
-type SettingsProps = Omit<ComponentProps<typeof SpaceSettings>, 'open' | 'onOpenChange' | 'anchor'>
+export type SettingsProps = Omit<
+  ComponentProps<typeof SpaceSettings>,
+  'open' | 'onOpenChange' | 'anchor'
+>
 
 /**
  * The space head's actions: the course page on its own, then one group with About
