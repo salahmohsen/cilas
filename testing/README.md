@@ -32,6 +32,10 @@ A browser test must not import server code, even through a component. If one fil
 
 Exemplars: `src/components/course/course-syllabus.browser.test.tsx` (`ResizeObserver`), `src/app/(frontend)/[locale]/study/[slug]/course-view-time.browser.test.tsx` (`IntersectionObserver`), `src/components/person-profile-block.browser.test.tsx` (`matchMedia`, a phone), `src/components/calendar/ui/calendar-views.browser.test.tsx` (container queries, server markup and hydration), `src/components/calendar/ui/use-narrow.browser.test.tsx` (the calendar's width flags).
 
+## Storage
+
+Vitest never reads storage from `.env`, which holds the production R2 bucket. `vitest.config.mts` takes the `R2_*` settings as one set from `testing/local-env.ts`: the shell's when it exports `R2_ENDPOINT` (CI and the search test do), otherwise the lines of `.env.development.local` (the local RustFS). The config refuses to start, and `vitest.setup.ts` refuses to run, when `R2_ENDPOINT` or `R2_PUBLIC_URL` is not a local host.
+
 ## The network: MSW
 
 Call `mockNetwork(...handlers)` once at the top of the file or the `describe`. Add per-test handlers with `network.use(...)`. They reset after each test.
@@ -43,7 +47,7 @@ Both start MSW with `onUnhandledRequest: 'error'`, and both fail the test in `af
 
 - In jsdom, a relative URL such as `fetch('/api/x')` resolves against `http://localhost:3000/`, and a handler for `/api/x` answers it (checked with a scratch `.dom.test.tsx`).
 - An int test that also calls a local service the test owns (Typesense, RustFS) lets those requests through by origin: `http.all('http://localhost:8108/*', () => passthrough())` (checked against the local Typesense). Do not pass through a whole public origin.
-  The handlers exist as `payloadServices` (`fan2-payload-services.test-utils`: Typesense, and a 204 for Payload's telemetry) and `localServiceHandlers` (`fan4-local-services.test-utils`: the storage bucket, Typesense and telemetry). The storage handler lets uploads through to `R2_ENDPOINT`, so export the local RustFS settings first (see Not solved).
+  The handlers exist as `payloadServices` (`fan2-payload-services.test-utils`: Typesense, and a 204 for Payload's telemetry) and `localServiceHandlers` (`fan4-local-services.test-utils`: the storage bucket, Typesense and telemetry). The storage handler lets uploads through to `R2_ENDPOINT`, which the runner keeps local (see Storage).
 - In the browser, `next/image` asks Next's image optimizer, which a test has no server for. Add `nextImages()` from `msw-browser.test-utils`: every image is one pixel.
 - Email: Payload builds its real Resend adapter when `RESEND_API_KEY` is set, and an MSW handler for `https://api.resend.com/emails` records each send. `captureResendMail` (`fan2-resend.test-utils`) and `resendInbox` (`fan1-resend.test-utils`) both do this.
 - Web push: `pushDevice()` (`fan2-web-push.test-utils`) makes a real P-256 subscription and decrypts what the server sent to it. Exemplar: `src/lib/push/push-send.int.test.ts`.
@@ -117,7 +121,6 @@ A route handler or server component that reads `@/env`, Payload or `next-intl/se
 
 ## Not solved yet
 
-- **Int tests and storage.** `.env` points storage at the production R2 bucket, and Vitest does not read `.env.development.local`. Before an int run, export the six `R2_*` lines of `.env.development.local` (`R2_ENDPOINT=http://127.0.0.1:19002`, `R2_BUCKET=cilas-local`, and the keys). Export only those lines: the file also sets `RESEND_API_KEY` to empty for local development, and four email int files then fail with "Set RESEND_API_KEY in .env". The tests should read local storage by themselves.
 - **Turnstile in the browser project.** `vitest.config.mts` sets `NEXT_PUBLIC_TURNSTILE_SITE_KEY` to an empty string for the browser project, as `playwright.config.ts` does, so forms there run with the honeypot alone: the real widget needs Cloudflare and waits for a token. Cloudflare's test site keys would keep the widget in the test.
 - **Shared database.** All int tests share one local Postgres. A file that passes alone can fail in the full run when another file changes the same rows.
 - **Duplicate helpers.** `payloadServices`, `localServiceHandlers` and inline handlers in six int tests answer the same services, and `captureResendMail` and `resendInbox` capture the same mail. Each pair should become one helper.
