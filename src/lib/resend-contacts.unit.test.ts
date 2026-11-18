@@ -1,4 +1,5 @@
-import { afterEach, describe, expect, it, vi } from 'vitest'
+import { http, HttpResponse } from 'msw'
+import { describe, expect, it, vi } from 'vitest'
 
 vi.hoisted(() => {
   process.env.RESEND_API_KEY = 'key'
@@ -6,15 +7,18 @@ vi.hoisted(() => {
 
 import { contactsCsv, listContacts, subscribe, type Contact } from '@/lib/resend-contacts'
 
-const contact = (over: Partial<Contact>): Contact => ({
-  id: 'c1',
-  email: 'mona@example.com',
-  first_name: 'Mona',
-  last_name: 'Adel',
-  created_at: '2026-10-06 23:47:56.678+00',
-  unsubscribed: false,
-  ...over,
-})
+import { mockNetwork } from '../../testing/msw-node.test-utils'
+
+const contact = (over: Partial<Contact>) =>
+  ({
+    id: 'c1',
+    email: 'mona@example.com',
+    first_name: 'Mona',
+    last_name: 'Adel',
+    created_at: '2026-10-06 23:47:56.678+00',
+    unsubscribed: false,
+    ...over,
+  }) satisfies Contact
 
 describe('contactsCsv', () => {
   it('writes Mailchimp’s columns for subscribed contacts only', () => {
@@ -45,28 +49,44 @@ describe('contactsCsv', () => {
 })
 
 describe('Resend calls', () => {
-  afterEach(() => vi.restoreAllMocks())
+  const network = mockNetwork()
 
   it('creates a new contact in the segment', async () => {
-    const fetch = vi.spyOn(globalThis, 'fetch').mockResolvedValue(Response.json({ id: 'c1' }))
+    const bodies: unknown[] = []
+    network.use(
+      http.post('https://api.resend.com/contacts', async ({ request }) => {
+        bodies.push(await request.json())
+        return HttpResponse.json({ id: 'c1' })
+      }),
+    )
     expect(await subscribe('seg', 'mona@example.com')).toBe(true)
-    const [url, init] = fetch.mock.calls[0]!
-    expect(url).toBe('https://api.resend.com/contacts')
-    expect(JSON.parse(init!.body as string)).toEqual({
-      email: 'mona@example.com',
-      unsubscribed: false,
-      segments: [{ id: 'seg' }],
-    })
+    expect(bodies).toEqual([
+      { email: 'mona@example.com', unsubscribed: false, segments: [{ id: 'seg' }] },
+    ])
   })
 
   it('adds an existing contact to the segment and subscribes it again', async () => {
-    const fetch = vi
-      .spyOn(globalThis, 'fetch')
-      .mockResolvedValueOnce(Response.json({ message: 'exists' }, { status: 409 }))
-      .mockResolvedValueOnce(Response.json({ id: 'seg' }))
-      .mockResolvedValueOnce(Response.json({ id: 'c1' }))
+    const calls: string[][] = []
+    const seen = (request: Request) => calls.push([request.method, request.url])
+    network.use(
+      http.post('https://api.resend.com/contacts', ({ request }) => {
+        seen(request)
+        return HttpResponse.json({ message: 'exists' }, { status: 409 })
+      }),
+      http.post(
+        'https://api.resend.com/contacts/mona%40example.com/segments/seg',
+        ({ request }) => {
+          seen(request)
+          return HttpResponse.json({ id: 'seg' })
+        },
+      ),
+      http.patch('https://api.resend.com/contacts/mona%40example.com', ({ request }) => {
+        seen(request)
+        return HttpResponse.json({ id: 'c1' })
+      }),
+    )
     expect(await subscribe('seg', 'mona@example.com')).toBe(true)
-    expect(fetch.mock.calls.map(([url, init]) => [init?.method, url])).toEqual([
+    expect(calls).toEqual([
       ['POST', 'https://api.resend.com/contacts'],
       ['POST', 'https://api.resend.com/contacts/mona%40example.com/segments/seg'],
       ['PATCH', 'https://api.resend.com/contacts/mona%40example.com'],
@@ -74,11 +94,17 @@ describe('Resend calls', () => {
   })
 
   it('reads every page of the segment', async () => {
-    const fetch = vi
-      .spyOn(globalThis, 'fetch')
-      .mockResolvedValueOnce(Response.json({ has_more: true, data: [contact({ id: 'a' })] }))
-      .mockResolvedValueOnce(Response.json({ has_more: false, data: [contact({ id: 'b' })] }))
+    const afters: (string | null)[] = []
+    network.use(
+      http.get('https://api.resend.com/segments/seg/contacts', ({ request }) => {
+        const after = new URL(request.url).searchParams.get('after')
+        afters.push(after)
+        return after
+          ? HttpResponse.json({ has_more: false, data: [contact({ id: 'b' })] })
+          : HttpResponse.json({ has_more: true, data: [contact({ id: 'a' })] })
+      }),
+    )
     expect((await listContacts('seg')).map((c) => c.id)).toEqual(['a', 'b'])
-    expect(String(fetch.mock.calls[1]![0])).toContain('after=a')
+    expect(afters).toEqual([null, 'a'])
   })
 })
