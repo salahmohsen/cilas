@@ -17,20 +17,29 @@ import { EventCalendar } from '@/components/space/event-calendar'
 import { absoluteUrl } from '@/lib/schema'
 import styles from './events.module.css'
 
-export async function EventAttendance({
-  event,
-  now,
-  locale,
-}: {
-  event: Event
-  now: Date
-  locale: string
-}) {
+type Props = { event: Event; now: Date; locale: string }
+
+export async function EventAttendance(props: Props) {
   const [t, spaces, format] = await Promise.all([
     getTranslations('Events'),
     getTranslations('Spaces'),
     getFormatter(),
   ])
+  return EventAttendanceBody({ ...props, t, spaces, format })
+}
+
+export async function EventAttendanceBody({
+  event,
+  now,
+  locale,
+  t,
+  spaces,
+  format,
+}: Props & {
+  t: Awaited<ReturnType<typeof getTranslations<'Events'>>>
+  spaces: Awaited<ReturnType<typeof getTranslations<'Spaces'>>>
+  format: Awaited<ReturnType<typeof getFormatter>>
+}) {
   const timing = eventTiming(event, now)
   const place = typeof event.place === 'object' ? event.place : null
   const venue = event.external_venue?.name ? event.external_venue : place
