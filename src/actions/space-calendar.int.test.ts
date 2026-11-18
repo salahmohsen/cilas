@@ -1,22 +1,15 @@
 import { getPayload, type Payload } from 'payload'
-import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest'
+import { afterAll, beforeAll, describe, expect, it } from 'vitest'
 
 import { loadCalendarItems } from '@/actions/load-calendar-items'
 import { loadSessionView } from '@/actions/load-session-view'
 import { saveScheduleEdits } from '@/actions/save-schedule-edits'
 import type { CalendarSave } from '@/lib/calendar-items'
-const saveCalendarChanges = (calendar: CalendarSave) => saveScheduleEdits({ calendar, details: [] })
-import { currentReader } from '@/lib/reader'
 import config from '@/payload.config'
 import type { User } from '@/payload-types'
+import { runInRequest } from '../../testing/next-request.test-utils'
 import { createTracker, lockSpacesMode, uniq, uniqEmail } from '../../testing/payload.fixture'
-
-vi.mock('next/cache', async (original) => ({
-  ...(await original<typeof import('next/cache')>()),
-  revalidatePath: vi.fn(),
-  revalidateTag: vi.fn(),
-}))
-vi.mock('@/lib/reader', () => ({ currentReader: vi.fn() }))
+import { signedInHeaders } from '../../testing/reader.test-utils'
 
 let payload: Payload
 const { track, cleanup } = createTracker()
@@ -24,8 +17,19 @@ let admin: User, student: User, fellow: User, otherFellow: User
 let course: number, space: number, cohort: number, session: number, event: number
 let beforeMode: 'off' | 'trial' | 'on' | null | undefined
 let unlock: (() => Promise<void>) | undefined
-const signIn = (user: User | null) => vi.mocked(currentReader).mockResolvedValue(user)
-const load = (id = space) => loadCalendarItems({ kind: 'space', id: String(id) })
+const passwords = new Map<number, string>()
+let reader: HeadersInit = {}
+const signIn = async (user: User | null) => {
+  reader = user
+    ? await signedInHeaders(payload, { email: user.email, password: passwords.get(user.id)! })
+    : {}
+}
+const asReader = async <Result>(work: () => Promise<Result>) =>
+  (await runInRequest(work, { headers: reader })).result
+const load = (id = space) => asReader(() => loadCalendarItems({ kind: 'space', id: String(id) }))
+const view = (id: string) => asReader(() => loadSessionView(id))
+const saveCalendarChanges = (calendar: CalendarSave) =>
+  asReader(() => saveScheduleEdits({ calendar, details: [] }))
 const account = async (name: string, roles: User['roles']) => {
   const person = track(
     'people',
@@ -35,19 +39,21 @@ const account = async (name: string, roles: User['roles']) => {
       overrideAccess: true,
     }),
   ).id
+  const password = crypto.randomUUID()
   const user = track(
     'users',
     await payload.create({
       collection: 'users',
       data: {
         email: uniqEmail(name),
-        password: crypto.randomUUID(),
+        password,
         roles,
         person,
       },
       overrideAccess: true,
     }),
   ) as unknown as User
+  passwords.set(user.id, password)
   return { person, user }
 }
 
@@ -111,7 +117,6 @@ beforeAll(async () => {
         overrideAccess: true,
       }),
     ).id
-    // Publishing creates a space and its introduction. Track hook-created data too.
     const spaces = await payload.find({
       collection: 'spaces',
       where: { course: { equals: id } },
@@ -132,7 +137,6 @@ beforeAll(async () => {
       space = spaces.docs[0]!.id
     }
   }
-  // Both are enrolled readers here, but only the course's own fellow may edit.
   for (const person of [b.person, c.person])
     track(
       'enrollments',
@@ -183,7 +187,6 @@ beforeAll(async () => {
       overrideAccess: true,
     }),
   ).id
-  // Other spaces specs hold this lock for their full run.
 }, 600_000)
 
 afterAll(async () => {
@@ -204,7 +207,7 @@ describe('space calendar read side', () => {
     'loads sessions and read-only events for %s with collection-owned Edit',
     async (role) => {
       const readers = { student, fellow, 'other fellow': otherFellow, admin }
-      signIn(readers[role])
+      await signIn(readers[role])
       const result = await load()
       expect(result).toMatchObject({ ok: true, canEdit: role === 'fellow' || role === 'admin' })
       if (!result.ok) return
@@ -237,11 +240,11 @@ describe('space calendar read side', () => {
       overrideAccess: true,
     })
     try {
-      signIn(student)
+      await signIn(student)
       const result = await load()
       expect(result).toMatchObject({ ok: true, canEdit: false })
       if (result.ok) expect(result.items.map((item) => item.id)).toEqual([String(session)])
-      signIn(fellow)
+      await signIn(fellow)
       const moderator = await load()
       expect(moderator.ok).toBe(true)
       if (moderator.ok) expect(moderator.items).toHaveLength(2)
@@ -269,8 +272,6 @@ describe('space calendar read side', () => {
       [fellow, 'yellow'],
       [admin, 'yellow'],
     ] as const) {
-      // The old unconditional draft read hides the published course from
-      // non-editors (404), while editors receive the pending draft.
       const rawDraft = payload.findByID({
         collection: 'courses',
         id: course,
@@ -285,8 +286,8 @@ describe('space calendar read side', () => {
           title: 'Pending calendar',
           course_type: 'CORE',
         })
-      signIn(reader)
-      const direct = await loadCalendarItems({ kind: 'course', id: String(course) })
+      await signIn(reader)
+      const direct = await asReader(() => loadCalendarItems({ kind: 'course', id: String(course) }))
       expect(direct.ok).toBe(true)
       if (direct.ok)
         expect(direct.items.find((item) => item.id === String(session))?.tone).toBe(tone)
@@ -294,9 +295,8 @@ describe('space calendar read side', () => {
       expect(result.ok).toBe(true)
       if (result.ok)
         expect(result.items.find((item) => item.id === String(session))?.tone).toBe(tone)
-      // The session drawer follows the same rule: the draft reaches editors only.
-      const view = await loadSessionView(String(session))
-      expect(view).toMatchObject({
+      const drawer = await view(String(session))
+      expect(drawer).toMatchObject({
         ok: true,
         canEdit: tone === 'yellow',
         course: {
@@ -310,7 +310,7 @@ describe('space calendar read side', () => {
   })
 
   it('delegates session changes to the course source and reloads the combined items', async () => {
-    signIn(fellow)
+    await signIn(fellow)
     const before = await payload.findByID({ collection: 'sessions', id: session, depth: 0 })
     const result = await saveCalendarChanges({
       parent: { kind: 'space', id: String(space) },
@@ -360,12 +360,12 @@ describe('space calendar read side', () => {
       data: { course: draft.id, title: 'Private session' },
       overrideAccess: true,
     })
-    signIn(student)
-    const result = await loadCalendarItems({ kind: 'course', id: String(draft.id) })
+    await signIn(student)
+    const result = await asReader(() => loadCalendarItems({ kind: 'course', id: String(draft.id) }))
     expect(result.ok).toBe(false)
-    expect(await loadSessionView(String(hidden.id))).toEqual({ ok: false, error: 'not-found' })
-    signIn(admin)
-    expect(await loadSessionView(String(hidden.id))).toMatchObject({
+    expect(await view(String(hidden.id))).toEqual({ ok: false, error: 'not-found' })
+    await signIn(admin)
+    expect(await view(String(hidden.id))).toMatchObject({
       ok: true,
       canEdit: true,
       course: { title: 'Unpublished calendar' },
@@ -373,7 +373,7 @@ describe('space calendar read side', () => {
   })
 
   it('refuses an event change in a mixed batch and saves nothing', async () => {
-    signIn(admin)
+    await signIn(admin)
     const before = await payload.findByID({ collection: 'sessions', id: session, depth: 0 })
     const eventBefore = await payload.findByID({ collection: 'space-posts', id: event, depth: 0 })
     const result = await saveCalendarChanges({
@@ -405,7 +405,7 @@ describe('space calendar read side', () => {
   })
 
   it('returns invalid for a cohort', async () => {
-    signIn(admin)
+    await signIn(admin)
     expect(await load(cohort)).toMatchObject({
       ok: false,
       error: { code: 'invalid' },
@@ -413,21 +413,19 @@ describe('space calendar read side', () => {
   })
 
   it('requires a signed-in reader and refuses a space the reader cannot read', async () => {
-    signIn(null)
+    await signIn(null)
     expect(await load()).toEqual({ ok: false, error: { code: 'unauthenticated' } })
-    expect(await loadSessionView(String(session))).toEqual({
+    expect(await view(String(session))).toEqual({
       ok: false,
       error: 'unauthenticated',
     })
-    // A fresh account is not enrolled in the course.
-    signIn((await account('space-calendar-outsider', ['member'])).user)
+    await signIn((await account('space-calendar-outsider', ['member'])).user)
     expect(await load()).toMatchObject({ ok: false })
-    // The published course's page shows its sessions to anyone; its space stays closed.
-    expect(await loadSessionView(String(session))).toMatchObject({
+    expect(await view(String(session))).toMatchObject({
       ok: true,
       canEdit: false,
       spaceHref: null,
     })
-    expect(await loadSessionView('not-a-number')).toEqual({ ok: false, error: 'not-found' })
+    expect(await view('not-a-number')).toEqual({ ok: false, error: 'not-found' })
   })
 })
