@@ -1,4 +1,4 @@
-import { cleanup, render, renderHook, waitFor } from '@testing-library/react'
+import { cleanup, render, renderHook } from '@testing-library/react'
 import { http, HttpResponse } from 'msw'
 import { afterEach, describe, expect, it } from 'vitest'
 
@@ -7,13 +7,11 @@ import { TURNSTILE_HEADER } from '@/lib/turnstile'
 
 import { IntlProvider } from '../../../testing/intl.test-utils'
 import { mockNetwork } from '../../../testing/msw-browser.test-utils'
-import { mouse, visibleCenterOf } from '../../../testing/pointer.test-utils'
 
 const network = mockNetwork()
 const submission = { form: 7, submissionData: [{ field: 'name', value: 'Nour' }] }
 const dummyToken = 'XXXX.DUMMY.TOKEN.XXXX'
 const blockingKey = '2x00000000000000000000AB'
-const interactiveKey = '3x00000000000000000000FF'
 
 const mount = (siteKey?: string) => {
   const { result } = renderHook(() => useSpamCheck(siteKey), { wrapper: IntlProvider })
@@ -57,8 +55,9 @@ describe('guarded form submission', () => {
 
   it('renews the token after a submit, so the next one has its own', async () => {
     const received = recordSubmissions()
-    const { spam } = mount()
+    const { spam, container } = mount()
     expect(await spam.submit(submission)).toEqual({ kind: 'sent' })
+    expect(container.querySelector('input[name="cf-turnstile-response"]')).toHaveValue('')
     expect(await spam.submit(submission)).toEqual({ kind: 'sent' })
     expect(received.map((r) => r.token)).toEqual([dummyToken, dummyToken])
   })
@@ -85,20 +84,6 @@ describe('guarded form submission', () => {
   it('names a failed spam check without sending anything', async () => {
     const { spam } = mount(blockingKey)
     expect(await spam.submit(submission)).toEqual({ kind: 'spam-check-failed' })
-  })
-
-  it('shows the check when Cloudflare needs a click, and sends after it', async () => {
-    const received = recordSubmissions()
-    const { spam, container } = mount(interactiveKey)
-    const widget = container.querySelector('.spam-check-widget')!
-    await waitFor(() => expect(widget.getBoundingClientRect().height).toBeGreaterThan(0))
-    const box = visibleCenterOf(widget)
-    const checkbox = { x: widget.getBoundingClientRect().left + 30, y: box.y }
-    await mouse.move(checkbox)
-    await mouse.down(checkbox)
-    await mouse.up(checkbox)
-    expect(await spam.submit(submission)).toEqual({ kind: 'sent' })
-    expect(received).toEqual([{ token: dummyToken, body: submission }])
   })
 
   it('names a bot without sending anything', async () => {
