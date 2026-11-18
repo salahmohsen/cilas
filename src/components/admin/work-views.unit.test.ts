@@ -1,9 +1,5 @@
-// @vitest-environment node
-
 import type { TypedUser } from 'payload'
-import { describe, expect, it, vi } from 'vitest'
-
-vi.mock('server-only', () => ({}))
+import { describe, expect, it } from 'vitest'
 
 import { workViewsFor } from '@/components/admin/work-views'
 
