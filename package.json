@@ -142,6 +142,11 @@
     "pnpm": "^9 || ^10 || ^11"
   },
   "pnpm": {
+    "auditConfig": {
+      "ignoreGhsas": [
+        "GHSA-fc5q-39xc-vjpf"
+      ]
+    },
     "overrides": {
       "@payloadcms/plugin-mcp>@modelcontextprotocol/sdk": "1.32.2",
       "@payloadcms/plugin-mcp>zod": "4.6.6",
