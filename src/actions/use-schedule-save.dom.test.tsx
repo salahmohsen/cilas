@@ -1,15 +1,17 @@
 import { act, renderHook, waitFor } from '@testing-library/react'
 import { describe, expect, it, vi } from 'vitest'
 
-import type { saveScheduleEdits } from '@/actions/save-schedule-edits'
-import type { scheduleOffers } from '@/actions/schedule-offers'
+import type { ReactNode } from 'react'
+
 import { calendarAdminText } from '@/components/admin/calendar-admin-text'
 import { CalendarSaveRefusal } from '@/components/calendar/ui/save-refusal'
-import { useScheduleSaveWith } from '@/components/space/use-schedule-save-with'
+import { ScheduleActionsProvider, type ScheduleActions } from '@/components/space/schedule-actions'
+import { useScheduleSave } from '@/components/space/use-schedule-save'
 import type { CalendarChange, CalendarItem } from '@/lib/calendar-items'
 import type { ScheduleOffer } from '@/lib/schedule-offer'
 
 import en from '../../messages/en.json'
+import { scheduleActionsHost } from '../../testing/schedule-actions.test-utils'
 
 const { save: text } = calendarAdminText('en', en)
 
@@ -50,38 +52,30 @@ const offer: ScheduleOffer = {
   preview: null,
 }
 
-type Saved = Awaited<ReturnType<typeof saveScheduleEdits>>
+type Saved = Awaited<ReturnType<ScheduleActions['saveScheduleEdits']>>
 
 const host = (
   parent: { kind: string; id: string },
   saved: Saved,
   answer: ScheduleOffer[] | Error = [offer],
 ) => {
-  const saves: Parameters<typeof saveScheduleEdits>[] = []
-  const asked: Parameters<typeof scheduleOffers>[] = []
+  const { actions, calls } = scheduleActionsHost({
+    saveScheduleEdits: async () => saved,
+    scheduleOffers: async () => {
+      if (answer instanceof Error) throw answer
+      return answer
+    },
+  })
   const reload = vi.fn()
-  const save: typeof saveScheduleEdits = async (...args) => {
-    saves.push(args)
-    return saved
-  }
-  const offers: typeof scheduleOffers = async (...args) => {
-    asked.push(args)
-    if (answer instanceof Error) throw answer
-    return answer
-  }
-  const { result } = renderHook(() =>
-    useScheduleSaveWith({
-      parent,
-      courseId: '5',
-      locale: 'en',
-      language: 'en',
-      text,
-      reload,
-      save,
-      offers,
-    }),
+  const { result } = renderHook(
+    () => useScheduleSave({ parent, courseId: '5', locale: 'en', language: 'en', text, reload }),
+    {
+      wrapper: ({ children }: { children: ReactNode }) => (
+        <ScheduleActionsProvider actions={actions}>{children}</ScheduleActionsProvider>
+      ),
+    },
   )
-  return { result, saves, asked, reload }
+  return { result, saves: calls.saveScheduleEdits, asked: calls.scheduleOffers, reload }
 }
 
 describe('useScheduleSave, the one save-then-offer of every host', () => {
