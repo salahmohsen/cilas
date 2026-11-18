@@ -11,7 +11,6 @@ import {
 import { inTransaction } from '@/lib/in-transaction'
 import { currentReader } from '@/lib/reader'
 import { relId } from '@/lib/relation'
-import { expirePublicLists } from '@/lib/revalidate'
 import { scheduleEditsSchema, type ScheduleEdits } from '@/lib/schedule-edits'
 
 export type ScheduleEditsResult =
@@ -31,7 +30,7 @@ export async function saveScheduleEdits(
   const ctx = await calendarContext(user, locale)
   let parent = calendar?.parent
   try {
-    const result = await inTransaction(ctx.req, async () => {
+    return await inTransaction(ctx.req, async () => {
       if (!parent) {
         if (details.length !== 1 || !/^\d{1,12}$/.test(details[0]!.id))
           return {
@@ -60,8 +59,6 @@ export async function saveScheduleEdits(
       const items = await source.load(ctx, parent.id)
       return { ok: true as const, items, before, after: items }
     })
-    if (result.ok) expirePublicLists()
-    return result
   } catch (error) {
     const source = parent && calendarSourceOf(parent.kind)
     return {

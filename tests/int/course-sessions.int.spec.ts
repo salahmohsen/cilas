@@ -281,7 +281,7 @@ describe('a session save refreshes its course', () => {
       })
       expect(await days(id)).toEqual({ first_day: '2035-03-10', last_day: '2035-03-10' })
       // The tag of the cached lists, the calendar among them (`getCachedCalendarItems`).
-      expect(revalidateTag).toHaveBeenCalledWith('courses', 'max')
+      expect(revalidateTag).toHaveBeenCalledWith('courses', { expire: 0 })
       expect(revalidatePath).toHaveBeenCalledWith(`/en/study/${slug}`)
       expect(revalidatePath).toHaveBeenCalledWith(`/ar/study/${slug}`)
 

@@ -1,4 +1,4 @@
-import { revalidatePath, revalidateTag, updateTag } from 'next/cache'
+import { revalidatePath, revalidateTag } from 'next/cache'
 import type { CollectionAfterChangeHook, CollectionAfterDeleteHook } from 'payload'
 
 import { routing } from '@/i18n/routing'
@@ -8,13 +8,16 @@ type Slugged = { slug?: string | null }
 
 /**
  * Drops what a document shows on the public site from the cache: its page
- * (under the current and the previous slug), its lists and their tag.
+ * (under the current and the previous slug), its lists and their tag. The
+ * lists expire at once (`expire: 0`), so whoever saved reads the new list on
+ * their next request, from the admin or a server action alike; a hook cannot
+ * call `updateTag`, which only a server action may.
  */
 export const revalidateDocument = (collection: string, doc: Slugged, previousDoc?: Slugged) => {
   const { paths, tag } = revalidationOf(collection, routing.locales, doc, previousDoc)
   try {
     for (const path of paths) revalidatePath(path)
-    if (tag) revalidateTag(PUBLIC_LISTS_TAG, 'max')
+    if (tag) revalidateTag(PUBLIC_LISTS_TAG, { expire: 0 })
   } catch {
     // Seed and import scripts have no Next cache, and these calls throw there.
   }
@@ -33,16 +36,3 @@ export const revalidateAfterDelete =
     revalidateDocument(collection, doc)
     return doc
   }
-
-/**
- * After a save in a server action: the public lists expire at once, so the
- * person who saved reads the new list on their next request (a refresh),
- * where the document hooks' stale-while-revalidate would serve the old one first.
- */
-export const expirePublicLists = () => {
-  try {
-    updateTag(PUBLIC_LISTS_TAG)
-  } catch {
-    // Outside a server action (tests, scripts) there is no request to read it.
-  }
-}

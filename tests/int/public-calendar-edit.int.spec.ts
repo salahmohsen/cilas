@@ -340,7 +340,7 @@ describe('public calendar edit requests', () => {
     expect(revalidatePath).toHaveBeenCalledWith(
       expect.stringContaining('/en/study/public-calendar-'),
     )
-    expect(revalidateTag).toHaveBeenCalledWith(PUBLIC_LISTS_TAG, 'max')
+    expect(revalidateTag).toHaveBeenCalledWith(PUBLIC_LISTS_TAG, { expire: 0 })
     const offers = await scheduleOffers({ before: result.before, after: result.after })
     expect(offers).toHaveLength(2)
     expect(new Set(offers.map((offer) => offer.space.name))).toEqual(new Set(['City', 'Maps']))
