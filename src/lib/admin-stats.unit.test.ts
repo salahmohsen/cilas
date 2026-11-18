@@ -10,7 +10,6 @@ import {
   totalOf,
 } from '@/lib/admin-stats'
 
-// Wednesday 14 October 2026, midday in Cairo.
 const NOW = new Date('2026-10-14T10:00:00Z')
 
 describe('bucketByDay', () => {
@@ -24,11 +23,7 @@ describe('bucketByDay', () => {
 
   it('counts timestamps on their Cairo day', () => {
     const points = bucketByDay(
-      [
-        '2026-10-13T21:30:00Z', // 00:30 on the 14th in Cairo
-        '2026-10-14T08:00:00Z',
-        '2026-10-12T09:00:00Z',
-      ],
+      ['2026-10-13T21:30:00Z', '2026-10-14T08:00:00Z', '2026-10-12T09:00:00Z'],
       3,
       NOW,
     )
@@ -58,7 +53,6 @@ describe('bucketByDay', () => {
 describe('bucketByWeek', () => {
   it('starts each week on Saturday and ends with the current week', () => {
     const points = bucketByWeek(['2026-10-10T09:00:00Z', '2026-10-14T09:00:00Z'], 2, NOW)
-    // 10 October 2026 is a Saturday.
     expect(points.map((p) => [p.key, p.value])).toEqual([
       ['2026-10-03', 0],
       ['2026-10-10', 2],
@@ -92,7 +86,6 @@ describe('periodChange', () => {
       '2026-10-12T09:00:00Z',
       '2026-10-10T09:00:00Z',
     ]
-    // Last 3 days: 3. The 3 days before: 1.
     expect(periodChange(dates, 3, NOW)).toBe('+200%')
   })
 

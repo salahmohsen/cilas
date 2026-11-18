@@ -29,7 +29,7 @@ const plain: CourseMeta = {
 const snapshot = (
   readers: Snapshot['readers'],
   courses: Record<string, CourseMeta> = { '1': plain },
-): Snapshot => ({ label: 'x', today: '2026-11-13', courses, readers })
+) => ({ label: 'x', today: '2026-11-13', courses, readers })
 
 describe('classify', () => {
   const was = { en: ['Session 1: A'] }
@@ -347,7 +347,6 @@ describe('the timing removal rules', () => {
     ).toBe(true)
     expect(onlyUnits(['Length: 11 weeks'], ['Length: 11 sessions'])).toBe(true)
     expect(onlyUnits(['### Week 3', 'Meetings: 1'], ['### Session 3', 'Meetings: 1'])).toBe(true)
-    // Arabic: the label and the plural forms, in either kind of digit.
     expect(onlyUnits(['### الأسبوع 3'], ['### الجلسة 3'])).toBe(true)
     expect(onlyUnits(['الأسبوع ٣'], ['الجلسة ٣'])).toBe(true)
     expect(onlyUnits(['المدة: ١١ أسبوعًا'], ['المدة: ١١ جلسة'])).toBe(true)

@@ -3,26 +3,32 @@ import { describe, expect, it } from 'vitest'
 import { missingLinks, sessionMismatch, unitMarkers } from './verify-flows'
 import type { Syllabus } from './syllabus-schema'
 
-const syllabus = (hrefs: string[], bibHrefs: string[] = []): Syllabus => ({
-  session_unit: 'week',
-  sessions: [
-    {
-      order: 1,
-      title: null,
-      description: '',
-      meetings: null,
-      materials: hrefs.map((href) => ({ type: 'reading' as const, title: 't', note: null, href })),
-      activities: [],
-    },
-  ],
-  bibliography: bibHrefs.map((href) => ({
-    type: 'reading' as const,
-    title: 't',
-    note: null,
-    href,
-  })),
-  notes: null,
-})
+const syllabus = (hrefs: string[], bibHrefs: string[] = []) =>
+  ({
+    session_unit: 'week',
+    sessions: [
+      {
+        order: 1,
+        title: null,
+        description: '',
+        meetings: null,
+        materials: hrefs.map((href) => ({
+          type: 'reading' as const,
+          title: 't',
+          note: null,
+          href,
+        })),
+        activities: [],
+      },
+    ],
+    bibliography: bibHrefs.map((href) => ({
+      type: 'reading' as const,
+      title: 't',
+      note: null,
+      href,
+    })),
+    notes: null,
+  }) satisfies Syllabus
 
 describe('missingLinks', () => {
   it('ignores trailing slashes and http/https', () => {

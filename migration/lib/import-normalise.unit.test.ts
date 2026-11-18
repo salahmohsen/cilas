@@ -11,25 +11,26 @@ import {
 } from './normalise-courses'
 import type { ExtractedCourse } from './extraction-schema'
 
-const course = (over: Partial<ExtractedCourse> = {}): ExtractedCourse => ({
-  title: 'Story as participative enquiry',
-  title_ar: null,
-  subtitle: null,
-  course_type: 'SHORT',
-  fellows: [],
-  schedule_text: 'Sundays, 5:30-8 pm',
-  weekdays: ['sun'],
-  start_time: '17:30',
-  end_time: '20:00',
-  weeks: 8,
-  start_date: '2024-09-21',
-  location: ['HYBRID'],
-  description: '',
-  flow_links: [],
-  register_url: null,
-  own_page: null,
-  ...over,
-})
+const course = (over: Partial<ExtractedCourse> = {}) =>
+  ({
+    title: 'Story as participative enquiry',
+    title_ar: null,
+    subtitle: null,
+    course_type: 'SHORT',
+    fellows: [],
+    schedule_text: 'Sundays, 5:30-8 pm',
+    weekdays: ['sun'],
+    start_time: '17:30',
+    end_time: '20:00',
+    weeks: 8,
+    start_date: '2024-09-21',
+    location: ['HYBRID'],
+    description: '',
+    flow_links: [],
+    register_url: null,
+    own_page: null,
+    ...over,
+  }) satisfies ExtractedCourse
 
 describe('cycleFromFile', () => {
   it.each([

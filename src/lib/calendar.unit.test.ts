@@ -4,7 +4,7 @@ import { courseItems, toneOf, weekStart } from '@/lib/calendar'
 
 describe('calendar dates', () => {
   it('starts weeks on Saturday', () => {
-    expect(weekStart('2026-03-11')).toBe('2026-03-07') // a Wednesday
+    expect(weekStart('2026-03-11')).toBe('2026-03-07')
     expect(weekStart('2026-03-07')).toBe('2026-03-07')
   })
 })

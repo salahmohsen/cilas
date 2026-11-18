@@ -41,7 +41,7 @@ describe('pairEssays', () => {
     )
     expect(pairs).toHaveLength(3)
     expect(pairs[2]).toMatchObject({ order: 3, ar: null })
-    expect(problems).toHaveLength(2) // the count, and the order without a partner
+    expect(problems).toHaveLength(2)
   })
 })
 
@@ -116,7 +116,7 @@ describe('arabicNameMap', () => {
       [{ names: ['Sara Alaa', 'Iman Maarek'] }, { names: ['Amir Zaki'] }],
     )
     expect(map.get(foldArabic('سارة علاء'))).toBe('Sara Alaa')
-    expect(map.get(foldArabic('ايمان معارك'))).toBe('Iman Maarek') // folded: hamza and diacritics ignored
+    expect(map.get(foldArabic('ايمان معارك'))).toBe('Iman Maarek')
     expect(map.get(foldArabic('امير زكي'))).toBe('Amir Zaki')
   })
 

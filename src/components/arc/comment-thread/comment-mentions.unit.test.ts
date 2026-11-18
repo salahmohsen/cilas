@@ -1,8 +1,8 @@
 import { describe, expect, it } from 'vitest'
 
-import { matchMentions, type CommentAuthor } from '@/components/arc/comment-thread/comment-thread'
+import { matchMentions } from '@/components/arc/comment-thread/comment-thread'
 
-const person = (id: string, name: string): CommentAuthor => ({ id, name })
+const person = (id: string, name: string) => ({ id, name })
 
 describe('comment mentions', () => {
   const first = person('1', 'Mona Farid')

@@ -4,8 +4,8 @@ import { buildIcs, cairoToUtc } from '@/lib/ics'
 
 describe('cairoToUtc', () => {
   it('follows Cairo’s winter and summer offsets', () => {
-    expect(cairoToUtc('2025-01-22', '18:00').toISOString()).toBe('2025-01-22T16:00:00.000Z') // UTC+2
-    expect(cairoToUtc('2025-07-19', '19:00').toISOString()).toBe('2025-07-19T16:00:00.000Z') // UTC+3
+    expect(cairoToUtc('2025-01-22', '18:00').toISOString()).toBe('2025-01-22T16:00:00.000Z')
+    expect(cairoToUtc('2025-07-19', '19:00').toISOString()).toBe('2025-07-19T16:00:00.000Z')
   })
 })
 

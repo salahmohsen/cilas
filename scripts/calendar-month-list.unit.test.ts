@@ -6,8 +6,6 @@ import { monthList, type MonthWords } from './course-reader-snapshot'
 import { formatsOf } from '@/i18n/formats'
 import { CAIRO } from '@/lib/cairo-day'
 
-// Samples of the new month page (November 2026, from `pnpm dev`), and the lines
-// the old month page's reader gave for the same data before the page changed.
 const sample = (locale: 'en' | 'ar') =>
   new DOMParser().parseFromString(
     readFileSync(`testing/files/calendar-month/${locale}-2026-11.html`, 'utf8'),
@@ -17,7 +15,7 @@ const expected = JSON.parse(
   readFileSync('testing/files/calendar-month/expected.json', 'utf8'),
 ) as Record<'en' | 'ar', Array<[string, string]>>
 
-const wordsOf = (locale: 'en' | 'ar'): MonthWords => {
+const wordsOf = (locale: 'en' | 'ar') => {
   const intl = {
     locale,
     timeZone: CAIRO,
@@ -30,7 +28,7 @@ const wordsOf = (locale: 'en' | 'ar'): MonthWords => {
     number: (value, options) => format.number(value, options),
     dateTime: (value, options) => format.dateTime(value, options),
     cancelled: createTranslator({ ...intl, namespace: 'Calendar' })('cancelled'),
-  }
+  } satisfies MonthWords
 }
 
 describe('monthList', () => {

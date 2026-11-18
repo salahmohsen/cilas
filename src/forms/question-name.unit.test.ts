@@ -63,7 +63,7 @@ describe('nameQuestions', () => {
 })
 
 describe('the name field', () => {
-  const nameFieldOf = (fields: Field[]): Field | undefined =>
+  const nameFieldOf = (fields: Field[]) =>
     fields
       .flatMap((f) => (f.type === 'row' ? f.fields : [f]))
       .find((f) => 'name' in f && f.name === 'name')

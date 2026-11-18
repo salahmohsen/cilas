@@ -1,5 +1,4 @@
 // @vitest-environment node
-
 import { afterEach, describe, expect, it, vi } from 'vitest'
 
 import { dashboardWidgets, defaultLayout } from '@/components/admin/dashboard/native-widgets'

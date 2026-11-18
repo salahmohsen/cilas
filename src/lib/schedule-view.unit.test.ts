@@ -9,22 +9,22 @@ import { scheduleLineRef, scheduleToken, scheduleView, withSchedule } from '@/li
 import ar from '../../messages/ar.json'
 import en from '../../messages/en.json'
 
-const item = (id: string, dates: string[]): CalendarItem => ({
-  id,
-  kind: 'session',
-  title: `Session ${id}`,
-  tone: 'green',
-  cancelled: false,
-  version: 'v',
-  blocks: dates.map((date, i) => ({
-    id: `${id}-${i}`,
-    date,
-    start_time: '19:00',
-    end_time: '21:00',
-  })),
-})
+const item = (id: string, dates: string[]) =>
+  ({
+    id,
+    kind: 'session',
+    title: `Session ${id}`,
+    tone: 'green',
+    cancelled: false,
+    version: 'v',
+    blocks: dates.map((date, i) => ({
+      id: `${id}-${i}`,
+      date,
+      start_time: '19:00',
+      end_time: '21:00',
+    })),
+  }) satisfies CalendarItem
 
-// Two Saturday weeks from 14 November 2026: up to 27 November.
 const ref = { from: '2026-11-14', weeks: 2, ids: ['3'] }
 
 describe('scheduleView', () => {

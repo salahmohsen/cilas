@@ -29,7 +29,7 @@ describe('ensureNameEmail', () => {
       'email',
       'track',
       'why',
-      undefined, // the text block has no name.
+      undefined,
     ])
   })
 

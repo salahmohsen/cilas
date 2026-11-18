@@ -6,7 +6,6 @@ import { RichTextEditor } from '@/components/arc/rich-text-editor/rich-text-edit
 
 afterEach(cleanup)
 
-/** Places the caret `index` code units into the first text node of `block` (a `p`, heading, or `code`). */
 const caretIn = (block: HTMLElement, index: number) => {
   const node = block.firstChild
   expect(node, 'a text node to hold the caret').toBeTruthy()
@@ -68,11 +67,8 @@ describe('the editing triggers', () => {
   })
 
   it('/ inside a code block stays an ordinary character', () => {
-    // defaultValue for HTML ingest: the editor's own markdownToHtml currently
-    // drops fenced-code bodies (measured 2026-10-23, recorded as a finding).
     render(<RichTextEditor defaultValue="<pre><code>/ hi</code></pre><p>another</p>" />)
     const editor = screen.getByRole('textbox')
-    // sanitizeHtml keeps the <pre> but strips a bare ingested <code>; the caret lands in its text.
     caretIn(editor.querySelector('pre')!, 1)
     fireEvent.input(editor, { data: '/', inputType: 'insertText' })
     expect(screen.queryAllByRole('option')).toHaveLength(0)

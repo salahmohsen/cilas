@@ -2,7 +2,6 @@ import { describe, expect, it } from 'vitest'
 
 import { expandSchedule, isOnCalendar, type Schedule, type SessionDates } from '@/lib/schedule'
 
-// 3 March 2026 is a Tuesday.
 const tueThu: Schedule = {
   start_date: '2026-03-03',
   weeks: 2,
@@ -64,7 +63,6 @@ describe('expandSchedule (pattern only)', () => {
   })
 
   it('starts each slot on its first weekday on or after the start date', () => {
-    // A Wednesday start: Thursday first, then the next Tuesday.
     expect(days({ ...tueThu, start_date: '2026-03-04', weeks: 1 })).toEqual([
       '2026-03-05',
       '2026-03-10',
@@ -104,7 +102,6 @@ describe('expandSchedule (pattern only)', () => {
 })
 
 describe('expandSchedule with sessions', () => {
-  // Tuesdays and Thursdays for 3 weeks: 6 meetings, 2 per session.
   const threeWeeks: Schedule = { ...tueThu, weeks: 3 }
   const pick = (sessions: SessionDates[]) =>
     expandSchedule(threeWeeks, sessions).map(({ date, session, cancelled }) => ({
@@ -130,7 +127,6 @@ describe('expandSchedule with sessions', () => {
       { date: '2026-03-05', session: 2 },
       { date: '2026-03-10', session: 2 },
       { date: '2026-03-12', session: 2 },
-      // Left over after the last session.
       { date: '2026-03-17', session: undefined },
       { date: '2026-03-19', session: undefined },
     ])
@@ -214,7 +210,6 @@ describe('expandSchedule edge cases', () => {
       { order: 0, meetings: 1 },
     ])
     expect(out.slice(0, 3).map((m) => m.date)).toEqual(['2026-03-03', '2026-03-05', '2026-03-10'])
-    // order 0 takes the first meeting and is session 1, order 1 is 2, unset is 3.
     expect(out.slice(0, 3).map((m) => m.session)).toEqual([1, 2, 3])
   })
 

@@ -23,7 +23,7 @@ import {
 } from '@/access'
 import type { User } from '@/payload-types'
 
-const user = (roles: User['roles'], extra: Record<string, unknown> = {}): User =>
+const user = (roles: User['roles'], extra: Record<string, unknown> = {}) =>
   ({ id: 7, email: 'probe@cilas.test', roles, ...extra }) as unknown as User
 
 const run = (access: Access, u: User | null) => access({ req: { user: u } } as never)
@@ -144,7 +144,10 @@ describe('isAdminOrOwnVersions', () => {
   })
 
   it('prefixes inside and/or and maps id to parent', () => {
-    const owned = (): Where => ({ and: [{ id: { equals: 3 } }, { tier: { equals: 'owner' } }] })
+    const owned = () => {
+      const where: Where = { and: [{ id: { equals: 3 } }, { tier: { equals: 'owner' } }] }
+      return where
+    }
     expect(run(isAdminOrOwn(owned, { versions: true }), user(['member'], { person: 7 }))).toEqual({
       and: [{ parent: { equals: 3 } }, { 'version.tier': { equals: 'owner' } }],
     })

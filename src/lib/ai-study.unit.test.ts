@@ -42,7 +42,6 @@ describe('study prompts', () => {
     expect(aiLink('grok', [long])).toBe(`https://grok.com/?q=${long}`)
   })
 
-  // A real course title, session and readings, the longest kind of slot.
   const values = {
     ...studyFiles(origin, '/ar/study/abstract-systems-concrete-lives'),
     course:
@@ -63,7 +62,6 @@ describe('study prompts', () => {
       }
     })
 
-    // Arabic grows sixfold when encoded, so only English is held to this.
     if (lang === 'en')
       it("fits the compact English prompts in Gemini's link", () => {
         for (const kind of ['course', 'article', 'session'] as const) {

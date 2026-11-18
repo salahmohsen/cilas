@@ -78,7 +78,7 @@ const item = (id: string, blocks: CalendarItem['blocks'], extra: Partial<Calenda
 const allDay = (id: string, date: string) => ({ id, date, start_time: null, end_time: null })
 
 describe('allDayBars', () => {
-  const week = weekOf('2026-11-28') // Saturday 28 November to Friday 4 December, across the month end.
+  const week = weekOf('2026-11-28')
   const fair = item('fair', [
     allDay('a', '2026-11-29'),
     allDay('b', '2026-11-30'),

@@ -5,7 +5,6 @@ import { SPACE_FILE_LIMIT } from '@/lib/space-file-limits'
 import { COVER_EDGE, coverField, hexToOklch } from '@/lib/event-cover'
 import { coverIssue, prepareCover } from '@/lib/event-cover-image'
 
-/** WCAG relative luminance of an OKLCH lightness with no chroma. */
 const luminance = (l: number) => l ** 3
 
 describe('the field under a cover', () => {

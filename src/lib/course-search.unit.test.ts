@@ -10,7 +10,7 @@ import {
   type StudyCourse,
 } from '@/lib/course-search'
 
-const course = (id: number, facets: StudyCourse['facets'], texts: string[]): StudyCourse => ({
+const course = (id: number, facets: StudyCourse['facets'], texts: string[]) => ({
   id,
   href: `/en/study/${id}`,
   title: texts[0],

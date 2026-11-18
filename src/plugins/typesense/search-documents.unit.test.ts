@@ -116,7 +116,6 @@ describe('toSearchDocument', () => {
       owner_ar: 'إيمان مرسال',
       sortTitle_en: 'reading plato',
       sortTitle_ar: 'قراءة أفلاطون',
-      // Unlocalized text lives in the English field only.
       syllabus_en: 'Shared title',
       syllabus_ar: '',
     })

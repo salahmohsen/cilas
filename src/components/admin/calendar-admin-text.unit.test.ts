@@ -63,10 +63,13 @@ describe('calendarAdminText', () => {
   })
 
   it('has the same CalendarAdmin keys in English and Arabic', () => {
-    const keys = (value: object, prefix = ''): string[] =>
-      Object.entries(value).flatMap(([key, child]) =>
-        typeof child === 'object' ? keys(child, `${prefix}${key}.`) : [`${prefix}${key}`],
-      )
+    const keys = (value: object, prefix = '', found: string[] = []) => {
+      for (const [key, child] of Object.entries(value)) {
+        if (typeof child === 'object') keys(child, `${prefix}${key}.`, found)
+        else found.push(`${prefix}${key}`)
+      }
+      return found
+    }
     expect(keys(ar.CalendarAdmin).sort()).toEqual(keys(en.CalendarAdmin).sort())
   })
 })

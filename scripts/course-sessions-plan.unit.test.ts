@@ -2,14 +2,12 @@ import { describe, expect, it } from 'vitest'
 
 import { fillSource, planCourseSessions, type OldCourse, type OldRow } from './course-sessions-plan'
 
-// A stand-in for convertLexicalToMarkdown: the fixture's "Lexical" is { md }.
 const toMarkdown = (lexical: unknown) => (lexical as { md: string }).md
 
-// 2026-03-03 is a Tuesday.
 const tuesdays = { weekday: 'tue' as const, start_time: '19:00', end_time: '21:00' }
 const thursdays = { weekday: 'thu' as const, start_time: '18:00', end_time: '20:00' }
 
-const row = (id: string, extra: Partial<OldRow> = {}): OldRow => ({
+const row = (id: string, extra: Partial<OldRow> = {}) => ({
   id,
   session_title: { en: `Title ${id}`, ar: `عنوان ${id}` },
   ...extra,
@@ -114,7 +112,6 @@ describe('planCourseSessions', () => {
         row('b'),
       ],
     })
-    // 22:00 UTC on 7 March is 8 March in Cairo. Its share (3 March) is not used.
     expect(sessions.map((s) => s.meetings)).toEqual([
       [at('2026-03-08', '10:00', '16:00')],
       [at('2026-03-10')],

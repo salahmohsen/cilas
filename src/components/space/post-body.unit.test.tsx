@@ -14,7 +14,6 @@ describe('post body rendering (spec §5)', () => {
     expect(container.querySelector('script')).toBeNull()
     expect(container.textContent).toContain('bold')
     expect(container.querySelector('a[href="https://cilas.org"]')).toBeTruthy()
-    // Posts have no Heading 1: an older one reads as a Heading 2.
     expect(container.querySelector('h1')).toBeNull()
     expect(container.querySelector('h2')?.textContent).toBe('Title')
   })

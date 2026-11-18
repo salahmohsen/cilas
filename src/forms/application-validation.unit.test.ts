@@ -23,28 +23,30 @@ const cycle: Cycle = {
   createdAt: '',
   updatedAt: '',
 }
-const course = (data: Partial<Course> = {}): Course => ({
-  id: 1,
-  title: 'Writing',
-  slug: 'writing',
-  course_type: 'CORE',
-  tier: 'public',
-  cycle: cycle.id,
-  registration: { mode: 'follow_cycle' },
-  _status: 'published',
-  applicant_questions: [
-    { blockType: 'text', name: 'reason', label: 'Why writing?', required: true },
-  ],
-  createdAt: '',
-  updatedAt: '',
-  ...data,
-})
-const choice = (data: Partial<ApplicationChoice> = {}): ApplicationChoice => ({
-  course: 1,
-  amount: 100,
-  answers: [{ name: 'reason', label: 'Client label', value: 'To write' }],
-  ...data,
-})
+const course = (data: Partial<Course> = {}) =>
+  ({
+    id: 1,
+    title: 'Writing',
+    slug: 'writing',
+    course_type: 'CORE',
+    tier: 'public',
+    cycle: cycle.id,
+    registration: { mode: 'follow_cycle' },
+    _status: 'published',
+    applicant_questions: [
+      { blockType: 'text', name: 'reason', label: 'Why writing?', required: true },
+    ],
+    createdAt: '',
+    updatedAt: '',
+    ...data,
+  }) satisfies Course
+const choice = (data: Partial<ApplicationChoice> = {}) =>
+  ({
+    course: 1,
+    amount: 100,
+    answers: [{ name: 'reason', label: 'Client label', value: 'To write' }],
+    ...data,
+  }) satisfies ApplicationChoice
 const check = (courses = [course()], choices = [choice()], reader: Reader = null) =>
   checkApplication(
     { form: 20, target: { relationTo: 'cycles', value: 10 }, choices },

@@ -13,11 +13,11 @@ import {
 const marked = (value: string) => ({ value: `<mark>${value}</mark>`, matchLevel: 'full' })
 const plain = (value: string) => ({ value, matchLevel: 'none' })
 
-const hit = (id: string, fields: Partial<SearchHit> = {}): SearchHit => ({
+const hit = (id: string, fields: Partial<SearchHit> = {}) => ({
   objectID: id,
   ...fields,
 })
-const row = (collection: SearchRow['collection'], value: SearchHit): SearchRow => ({
+const row = (collection: SearchRow['collection'], value: SearchHit) => ({
   id: `${collection}:${value.objectID}`,
   collection,
   hit: value,
@@ -150,7 +150,6 @@ describe('mergeRows', () => {
   it('merges by date and holds back rows past a shortened list', () => {
     const rows = mergeRows({
       results: {
-        // Two more courses wait on the server, all older than 30.
         courses: { hits: [hit('c1', { updatedAt: 50 }), hit('c2', { updatedAt: 30 })], found: 4 },
         articles: { hits: [hit('a1', { updatedAt: 40 }), hit('a2', { updatedAt: 10 })], found: 2 },
       },

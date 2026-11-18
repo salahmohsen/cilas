@@ -234,12 +234,12 @@ describe('the change list of a Save', () => {
 })
 
 describe('carrying edits to newly loaded items', () => {
-  const moved = (block: EditBlock): EditBlock => ({
+  const moved = (block: EditBlock) => ({
     ...block,
     start: block.start + 60,
     end: block.end + 60,
   })
-  const bump = (item: CalendarItem, blocks = item.blocks): CalendarItem => ({
+  const bump = (item: CalendarItem, blocks = item.blocks) => ({
     ...item,
     version: `${item.version}-b`,
     blocks,

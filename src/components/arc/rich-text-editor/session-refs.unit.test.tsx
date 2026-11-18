@@ -41,7 +41,6 @@ describe('session tokens in a body', () => {
     const body = `See ${blockToken(B)} today`
     expect(splitBlocks(body)).toEqual([{ type: 'text', markdown: body }])
     expect(inlineBlocks(body)).toBe(`See [](session:${B}) today`)
-    // Touching a paragraph line is not alone either.
     expect(splitBlocks(`Line one\n${blockToken(B)}`)).toHaveLength(1)
   })
 
@@ -205,7 +204,6 @@ describe('the # and / session triggers', () => {
     caretIn(p, 2)
     fireEvent.input(editor, { data: ' ', inputType: 'insertText' })
     expect(editor.querySelector('h1')).toBeNull()
-    // Closed: the rows may linger for their exit animation, but the field no longer points at them.
     expect(editor.getAttribute('aria-controls')).toBeNull()
     ;(p.firstChild as Text).data = '## '
     caretIn(p, 3)

@@ -15,19 +15,17 @@ import {
   summary,
   upcomingSession,
   weeks,
-  type Meeting,
   type SessionTimes,
 } from '@/lib/meetings'
 
-const at = (date: string, start_time = '19:00', end_time = '21:00'): Meeting => ({
+const at = (date: string, start_time = '19:00', end_time = '21:00') => ({
   date,
   start_time,
   end_time,
 })
-const allDay = (date: string): Meeting => ({ date, start_time: null, end_time: null })
+const allDay = (date: string) => ({ date, start_time: null, end_time: null })
 
-// 2026-03-03 is a Tuesday; 2026-03-05 a Thursday; 2026-02-28 a Saturday.
-const tuesdays = (n: number, from = '2026-03-03'): Meeting[] =>
+const tuesdays = (n: number, from = '2026-03-03') =>
   Array.from({ length: n }, (_, i) => {
     const d = new Date(`${from}T00:00:00Z`)
     d.setUTCDate(d.getUTCDate() + 7 * i)
@@ -45,7 +43,6 @@ describe('byWhen', () => {
   })
 
   it('compares wall-clock strings, so a daylight-saving change cannot reorder them', () => {
-    // Egypt moves its clocks on the last Friday of April; the strings do not move.
     const list = [at('2026-05-01', '09:00'), at('2026-04-24', '23:30')]
     expect([...list].sort(byWhen).map((m) => m.date)).toEqual(['2026-04-24', '2026-05-01'])
   })
@@ -175,9 +172,7 @@ describe('weeks', () => {
   })
 
   it('counts 7-day weeks from the first meeting, not Saturday weeks', () => {
-    // Friday 6 March and Saturday 7 March fall in one week from the Friday.
     expect(weeks([at('2026-03-06'), at('2026-03-07')])).toBe(1)
-    // Thursday 5 March to Wednesday 11 March is one week; Thursday 12 March starts the second.
     expect(weeks([at('2026-03-05'), at('2026-03-11')])).toBe(1)
     expect(weeks([at('2026-03-05'), at('2026-03-12')])).toBe(2)
   })
@@ -202,7 +197,6 @@ describe('weeks', () => {
 })
 
 describe('courseWeek', () => {
-  // Tuesday and Thursday from Tuesday 3 November 2026, four weeks.
   const course = [
     '2026-11-03',
     '2026-11-05',
@@ -282,7 +276,6 @@ describe('summary', () => {
   })
 
   it('counts weeks from the first meeting, so Saturday and Monday meetings are one week', () => {
-    // Sat 28 Feb + Mon 2 Mar, then Sat 7 Mar + Mon 9 Mar.
     const list = [at('2026-02-28'), at('2026-03-02'), at('2026-03-07'), at('2026-03-09')]
     expect(summary(list)).toMatchObject({ kind: 'weekly', weeks: 2 })
   })
@@ -305,13 +298,11 @@ describe('summary', () => {
   })
 
   it('reads a last week that ends early as weekly', () => {
-    // Tuesdays and Thursdays for two weeks, then one last Tuesday.
     const list = [at('2026-03-03'), at('2026-03-05'), at('2026-03-10'), at('2026-03-12')]
     expect(summary([...list, at('2026-03-17')])).toMatchObject({ kind: 'weekly', weeks: 3 })
   })
 
   it('reads one full week and a short one as dates, not weekly (course 295)', () => {
-    // Sat 22, Mon 24, Thu 27, Fri 28 August, then Sat 29: a five-day workshop.
     const list = [
       at('2026-08-22', '18:00', '22:00'),
       at('2026-08-24', '18:00', '22:00'),
@@ -323,7 +314,6 @@ describe('summary', () => {
   })
 
   it('reads a last week that skips its first day as dates', () => {
-    // Tuesdays and Thursdays for two weeks, then a Thursday only.
     const list = [at('2026-03-03'), at('2026-03-05'), at('2026-03-10'), at('2026-03-12')]
     expect(summary([...list, at('2026-03-19')])).toMatchObject({ kind: 'dates' })
   })

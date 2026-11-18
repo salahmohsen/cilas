@@ -1,4 +1,4 @@
-import type { CollectionConfig, Config, Field } from 'payload'
+import type { Config, Field } from 'payload'
 import { describe, expect, it } from 'vitest'
 
 import { seoTabFor, withSeoTab } from '@/lib/seo-tab'
@@ -13,7 +13,7 @@ const tabs: Field = {
   type: 'tabs',
   tabs: [{ label: 'Overview', fields: [{ name: 'subtitle', type: 'text' }] }],
 }
-const courses = (fields: Field[]): CollectionConfig => ({ slug: 'courses', fields })
+const courses = (fields: Field[]) => ({ slug: 'courses', fields })
 
 describe('withSeoTab', () => {
   it('moves the meta group into a last tab named SEO, keeping the field name', () => {

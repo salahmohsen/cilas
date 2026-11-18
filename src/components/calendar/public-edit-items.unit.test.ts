@@ -2,16 +2,17 @@ import { describe, expect, it } from 'vitest'
 import { mergePublicEditItems } from './public-items'
 import type { CalendarItem } from '../../lib/calendar-items'
 
-const item = (id: string, sessionId?: string, cancelled = false): CalendarItem => ({
-  id,
-  sessionId,
-  cancelled,
-  kind: 'session',
-  title: id,
-  tone: 'blue',
-  version: '',
-  blocks: [],
-})
+const item = (id: string, sessionId?: string, cancelled = false) =>
+  ({
+    id,
+    sessionId,
+    cancelled,
+    kind: 'session',
+    title: id,
+    tone: 'blue',
+    version: '',
+    blocks: [],
+  }) satisfies CalendarItem
 
 describe('public edit items', () => {
   it('drops a feed twin', () => {

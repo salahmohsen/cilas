@@ -24,7 +24,6 @@ const wide = { width: 320, height: 180 }
 describe('image crop maths', () => {
   it('covers the frame at zoom 1, on the short side', () => {
     expect(coverScale(landscape, circle)).toBeCloseTo(0.184)
-    // a tall photo in a 16:9 frame covers it by width
     expect(coverScale({ width: 1000, height: 2000 }, wide)).toBeCloseTo(0.32)
   })
 
@@ -62,7 +61,6 @@ describe('image crop maths', () => {
     const next = zoomAt({ x: 0, y: 0 }, landscape, circle, 1, 2, point)
     const before = cropRect(landscape, circle, 1, { x: 0, y: 0 })
     const after = cropRect(landscape, circle, 2, next)
-    // the photo pixel under the pointer, from the crop's top left
     const pixel = (rect: typeof before, zoom: number) => {
       const scale = coverScale(landscape, circle) * zoom
       return {
@@ -70,7 +68,6 @@ describe('image crop maths', () => {
         y: rect.y + (point.y + circle.height / 2) / scale,
       }
     }
-    // y is clamped at zoom 1 (no room), so only x is free at both zooms
     expect(pixel(after, 2).x).toBeCloseTo(pixel(before, 1).x)
   })
 
@@ -84,7 +81,6 @@ describe('image crop maths', () => {
     expect(rubberBand(46, 46)).toBeCloseTo(23)
     expect(rubberBand(10_000, 46)).toBeLessThan(46)
     expect(rubberBand(-46, 46)).toBeCloseTo(-23)
-    // inside the limit a drag is one to one
     expect(dragAxis(0.1, 0.25, 368, 46)).toBe(0.1)
     const past = dragAxis(0.5, 0.25, 368, 46)
     expect(past).toBeGreaterThan(0.25)

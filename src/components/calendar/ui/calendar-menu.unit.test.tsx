@@ -375,7 +375,6 @@ describe('Add meeting', () => {
     expect(added).toHaveAccessibleName('Week 3, Wednesday, November 18, 7 PM to 9 PM, Unsaved')
     expect(status()).toContain('1 unsaved change')
     expect(status()).toContain('Added a meeting on Wednesday, November 18')
-    // Shown too, since the block can be on a day or week that is not in view.
     expect(screen.getByText('Added a meeting on Wednesday, November 18')).toBeVisible()
 
     fireEvent.click(saved())
@@ -397,14 +396,12 @@ describe('Add meeting', () => {
     const onSave = vi.fn()
     show({ onSave })
     fireEvent.click(screen.getByRole('button', { name: 'Next week' }))
-    // Nothing on that week yet; go back and use the Thursday block 19 Nov, then Friday via the keyboard.
     fireEvent.click(screen.getByRole('button', { name: 'Previous week' }))
     const thursday = screen.getByRole('button', { name: /^Week 3, Thursday/ })
     fireEvent.contextMenu(thursday)
     await waitFor(() => expect(menu()).not.toBeNull())
     fireEvent.click(item('Add meeting'))
     await waitFor(() => expect(menu()).toBeNull())
-    // Friday 20 is the last day of the week (Saturday to Friday), so add again from it.
     const friday = screen.getByRole('button', { name: /^Week 3, Friday, November 20/ })
     fireEvent.contextMenu(friday)
     await waitFor(() => expect(menu()).not.toBeNull())

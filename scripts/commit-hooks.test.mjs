@@ -140,7 +140,6 @@ function remote(cwd, root) {
   ok(cwd, 'git', ['push', 'origin', 'main'], { LEFTHOOK: '0' })
 }
 
-// The type check needs the real tsconfig; the fixture has none, and CI runs it anyway.
 const push = (cwd, ...args) => run(cwd, 'git', ['push', ...args], { LEFTHOOK_EXCLUDE: 'typecheck' })
 
 for (const [name, content, diagnostic] of [
@@ -177,7 +176,7 @@ test('pre-push ignores files that were not pushed, and LEFTHOOK=0 skips it', (t)
   const { cwd, root } = fixture(t)
   install(cwd)
   remote(cwd, root)
-  write(cwd, 'src/local-only.ts', 'export const broken = ;\n') // untracked, not pushed
+  write(cwd, 'src/local-only.ts', 'export const broken = ;\n')
   write(cwd, 'docs/note.md', '# Note\n')
   ok(cwd, 'git', ['add', 'docs/note.md'])
   ok(cwd, 'git', ['commit', '-m', 'docs'], { LEFTHOOK: '0' })
@@ -257,14 +256,12 @@ test('linked worktree gets isolated hooks and partial staging; older branch skip
   )
   partial(linked)
   assert.equal(read(linked, `${dispatcherPath}/pre-commit`), dispatcher)
-  // Create an old branch without the config, while retaining its installed hook.
   ok(linked, 'git', ['checkout', '-b', 'legacy'])
   ok(linked, 'git', ['rm', 'lefthook.yml'])
   ok(linked, 'git', ['commit', '-m', 'older branch'], { LEFTHOOK: '0' })
   write(linked, 'src/legacy.ts', 'invalid syntax accepted by old branch\n')
   ok(linked, 'git', ['add', 'src/legacy.ts'])
   assert.equal(commit(linked).status, 0)
-  // A sibling still using the stale path remains unaffected.
   write(cwd, 'sibling.txt', 'sibling\n')
   ok(cwd, 'git', ['add', 'sibling.txt'])
   assert.equal(commit(cwd).status, 0)
@@ -278,7 +275,7 @@ for (const configured of [true, false]) {
     const hook = '#!/bin/sh\necho preserved\n'
     write(cwd, `${directory}/pre-push`, hook)
     const config = read(cwd, '.git/config')
-    assert.match(install(cwd), /^$/) // Warning goes to stderr, not stdout.
+    assert.match(install(cwd), /^$/)
     assert.equal(read(cwd, '.git/config'), config)
     assert.equal(read(cwd, `${directory}/pre-push`), hook)
     assert.ok(!existsSync(resolve(cwd, '.git/cilas-hooks')))

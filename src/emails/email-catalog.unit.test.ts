@@ -1,5 +1,4 @@
 // @vitest-environment node
-// React Email renders with react-dom/server, which needs Node's streams.
 import type { Payload } from 'payload'
 import { describe, expect, it } from 'vitest'
 
@@ -7,7 +6,6 @@ import { EMAIL_IDS, EMAILS, type EmailId, type VersionOf } from '@/emails/catalo
 import { sampleMail } from '@/emails/samples'
 import { withDefaults } from '@/emails/settings'
 
-/** No newsletter issues: the newsletter sample then has nothing to show. */
 const payload = { find: async () => ({ docs: [] }) } as unknown as Payload
 
 describe('the email catalog', () => {

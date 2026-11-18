@@ -93,7 +93,6 @@ describe('image gallery', () => {
     show()
     const trigger = screen.getByRole('link', { name: 'Open image: Classroom' })
     trigger.focus()
-    // The lightbox is its own chunk, fetched on the first click: await the act so the suspended mount resumes.
     await act(async () => {
       fireEvent.click(trigger)
     })

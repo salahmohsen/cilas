@@ -8,7 +8,6 @@ describe('cairoDay', () => {
   })
 
   it('reads a timestamp as the Cairo calendar day', () => {
-    // 22:00 UTC on 2 March is midnight on 3 March in Cairo (UTC+2).
     expect(cairoDay('2026-03-02T22:00:00.000Z')).toBe('2026-03-03')
     expect(cairoDay('2026-03-02T21:59:00.000Z')).toBe('2026-03-02')
   })

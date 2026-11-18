@@ -2,7 +2,6 @@ import { describe, expect, it } from 'vitest'
 
 import { markdownBaseline, markdownToSend } from '@/components/markdown-edit'
 
-// What the editor reports on mount for a stored bio is its own rendering of it.
 const mounted = (original: string) => markdownBaseline(original)
 
 describe('markdownToSend', () => {

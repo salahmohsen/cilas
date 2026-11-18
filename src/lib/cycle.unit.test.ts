@@ -35,7 +35,6 @@ describe('academicYear', () => {
   })
 
   it('reads a stored timestamp as its Cairo day', () => {
-    // 22:00 UTC on 31 August 2025 is 1 September in Cairo (UTC+3).
     expect(
       academicYear({ season: 'fall', start_year: 2025, start_date: '2025-08-31T22:00:00.000Z' }),
     ).toBe('2025–2026')

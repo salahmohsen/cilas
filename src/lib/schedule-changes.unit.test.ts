@@ -4,35 +4,32 @@ import type { CalendarBlock, CalendarItem } from '@/lib/calendar-items'
 import { scheduleBlock, scheduleChangeText, scheduleChanges } from '@/lib/schedule-changes'
 import { scheduleLineRef } from '@/lib/session-refs'
 
-// 2026-11-18 is a Wednesday, 2026-11-20 a Friday.
 const TODAY = '2026-11-18'
 
-const block = (id: string, date: string, start = '19:00', end = '21:00'): CalendarBlock => ({
-  id,
-  date,
-  start_time: start,
-  end_time: end,
-})
-const allDay = (id: string, date: string): CalendarBlock => ({
-  id,
-  date,
-  start_time: null,
-  end_time: null,
-})
-const item = (
-  id: string,
-  title: string,
-  blocks: CalendarBlock[],
-  cancelled = false,
-): CalendarItem => ({
-  id,
-  kind: 'session',
-  title,
-  tone: 'neutral',
-  cancelled,
-  version: '2026-11-01T00:00:00.000Z',
-  blocks,
-})
+const block = (id: string, date: string, start = '19:00', end = '21:00') =>
+  ({
+    id,
+    date,
+    start_time: start,
+    end_time: end,
+  }) satisfies CalendarBlock
+const allDay = (id: string, date: string) =>
+  ({
+    id,
+    date,
+    start_time: null,
+    end_time: null,
+  }) satisfies CalendarBlock
+const item = (id: string, title: string, blocks: CalendarBlock[], cancelled = false) =>
+  ({
+    id,
+    kind: 'session',
+    title,
+    tone: 'neutral',
+    cancelled,
+    version: '2026-11-01T00:00:00.000Z',
+    blocks,
+  }) satisfies CalendarItem
 
 const s3 = (blocks: CalendarBlock[], cancelled = false) => item('3', 'Session 3', blocks, cancelled)
 
@@ -185,7 +182,6 @@ describe('scheduleChanges', () => {
 
 describe('scheduleBlock', () => {
   it('shows the weeks from the first touched meeting to the last, with the changed sessions', () => {
-    // Wed 18 Nov is in the week of Sat 14 Nov; Tue 1 Dec in the week of Sat 28 Nov.
     const changes = scheduleChanges(
       [s3([block('a', '2026-11-18')]), item('5', 'Session 5', [block('c', '2026-11-26')])],
       [s3([block('a', '2026-12-01')]), item('5', 'Session 5', [block('c', '2026-11-26')], true)],

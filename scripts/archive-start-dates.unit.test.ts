@@ -4,16 +4,17 @@ import { describe, expect, it } from 'vitest'
 import { decideStartDate, type CurrentSchedule, type ResearchEntry } from './archive-start-dates'
 
 const slot = { weekday: 'tue', start: '18:00', end: '20:00' }
-const entry = (extra: Partial<ResearchEntry> = {}): ResearchEntry => ({
-  id: 1,
-  cycle: 'spring-2018-cairo',
-  confidence: 'medium',
-  start_date: '2018-04-03',
-  weekday_matches_slot: true,
-  slots: [slot],
-  length: { weeks: 10 },
-  ...extra,
-})
+const entry = (extra: Partial<ResearchEntry> = {}) =>
+  ({
+    id: 1,
+    cycle: 'spring-2018-cairo',
+    confidence: 'medium',
+    start_date: '2018-04-03',
+    weekday_matches_slot: true,
+    slots: [slot],
+    length: { weeks: 10 },
+    ...extra,
+  }) satisfies ResearchEntry
 const empty: CurrentSchedule = { start_date: null, weeks: null }
 
 describe('decideStartDate', () => {

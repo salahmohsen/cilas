@@ -3,9 +3,6 @@ import { describe, expect, it } from 'vitest'
 
 import { escapeRegExp } from '@/lib/regexp'
 
-// Every side-card and apply-card class a component uses must have a rule in
-// styles.css. A wide replace in that file once deleted the registration card's
-// and the course facts' rules, and the side card rendered unstyled.
 const css = readFileSync('src/app/(frontend)/styles.css', 'utf8')
 const components = [
   'src/components/side-card.tsx',
