@@ -2,11 +2,11 @@ import { http, HttpResponse, passthrough } from 'msw'
 
 import { env } from '@/env'
 
-const storageOrigin = new URL(env.R2_ENDPOINT).origin
+const storageUrl = `${new URL(env.R2_ENDPOINT).origin}/${env.R2_BUCKET}/*`
 const searchOrigin = `${env.TYPESENSE_PROTOCOL}://${env.TYPESENSE_HOST}:${env.TYPESENSE_PORT}`
 
 export const localServiceHandlers = [
-  http.all(`${storageOrigin}/*`, () => passthrough()),
+  http.all(storageUrl, () => passthrough()),
   http.all(`${searchOrigin}/*`, () => passthrough()),
   http.post(
     'https://telemetry.payloadcms.com/events',
@@ -14,4 +14,4 @@ export const localServiceHandlers = [
   ),
 ]
 
-export const storageUrl = `${storageOrigin}/*`
+export { storageUrl }

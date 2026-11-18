@@ -1,10 +1,11 @@
 import { http, HttpResponse } from 'msw'
-import { createLocalReq, getPayload, type Payload } from 'payload'
+import { createLocalReq, getPayload, ValidationError, type Payload } from 'payload'
 import { afterAll, afterEach, beforeAll, describe, expect, it, vi } from 'vitest'
 
 import {
   announceAcceptance,
   BULK_INVITES_PER_DAY,
+  createAccount,
   hasSignedIn,
   INVITATION_DAYS,
   invitationEndpoints,
@@ -160,6 +161,21 @@ describe('inviting someone', () => {
       overrideAccess: true,
     })
     expect(people.totalDocs).toBe(1)
+  })
+
+  it('removes the new person again when the account cannot be made', async () => {
+    const taken = (await account('Invitation taken')).user
+    const name = `Rolled back ${uniq('person')}`
+    const req = await requestOf({}, admin)
+    await expect(
+      createAccount(req, { email: taken.email, name, roles: ['member'] }),
+    ).rejects.toBeInstanceOf(ValidationError)
+    const left = await payload.count({
+      collection: 'people',
+      where: { name: { equals: name } },
+      overrideAccess: true,
+    })
+    expect(left.totalDocs).toBe(0)
   })
 
   it('makes the account, sends a seven-day link in the chosen language and logs it', async () => {

@@ -2,14 +2,10 @@ import { cleanup, render, renderHook } from '@testing-library/react'
 import { http, HttpResponse } from 'msw'
 import { afterEach, describe, expect, it } from 'vitest'
 
-import { IntlProvider } from '../../../testing/intl.test-utils'
-import { importWithEnv } from '../../../testing/env.test-utils'
-import { mockNetwork } from '../../../testing/msw-node.test-utils'
+import { failureMessage, useSpamCheck } from '@/components/forms/spam-check'
 
-const { failureMessage, useSpamCheck } = await importWithEnv(
-  { NEXT_PUBLIC_TURNSTILE_SITE_KEY: '' },
-  () => import('@/components/forms/spam-check'),
-)
+import { IntlProvider } from '../../../testing/intl.test-utils'
+import { mockNetwork } from '../../../testing/msw-browser.test-utils'
 
 const network = mockNetwork()
 const submission = { form: 7, submissionData: [{ field: 'name', value: 'Nour' }] }
@@ -34,6 +30,24 @@ describe('guarded form submission', () => {
     const { spam } = mount()
     expect(await spam.submit(submission)).toEqual({ kind: 'sent' })
     expect(received).toEqual([{ type: 'application/json', body: submission }])
+  })
+
+  it('sends answers and files together in one request', async () => {
+    const received: { payload: unknown; file: string | null }[] = []
+    network.use(
+      http.post('/api/form-submissions/with-files', async ({ request }) => {
+        const body = await request.formData()
+        received.push({
+          payload: JSON.parse(String(body.get('payload'))),
+          file: (body.get('file:attachment') as File).name,
+        })
+        return new HttpResponse(null, { status: 201 })
+      }),
+    )
+    const { spam } = mount()
+    const file = new File(['hello'], 'note.txt', { type: 'text/plain' })
+    expect(await spam.submit(submission, [['attachment', file]])).toEqual({ kind: 'sent' })
+    expect(received).toEqual([{ payload: submission, file: 'note.txt' }])
   })
 
   it('names a bot without sending anything', async () => {

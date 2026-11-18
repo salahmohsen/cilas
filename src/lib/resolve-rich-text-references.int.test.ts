@@ -3,6 +3,7 @@ import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest'
 
 import { resolveRichTextReferences } from '@/lib/resolve-rich-text-references'
 import config from '@/payload.config'
+import type { User } from '@/payload-types'
 
 import { createTracker, uniq } from '../../testing/payload.fixture'
 
@@ -131,9 +132,22 @@ describe('reference authorization', () => {
     find.mockRestore()
   })
 
-  it('omits a draft that was never published', async () => {
+  it('omits a draft even when the query returns it', async () => {
+    const admin = { id: -1, roles: ['admin'], collection: 'users' } as unknown as User
+    const found = await payload.find({
+      collection: 'articles',
+      where: { id: { equals: draft.id } },
+      draft: false,
+      user: admin,
+      overrideAccess: false,
+      depth: 0,
+    })
+    expect(found.docs.map((article) => article.id)).toEqual([draft.id])
     expect(
-      await resolveRichTextReferences(payload, doc([related(draft.id)]), { locale: 'en' }),
+      await resolveRichTextReferences(payload, doc([related(draft.id)]), {
+        locale: 'en',
+        user: admin,
+      }),
     ).toEqual({})
   })
 })

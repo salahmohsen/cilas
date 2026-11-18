@@ -70,8 +70,9 @@ describe('notification feed lifecycle', () => {
       ({ account }) => useNotificationFeed({ load: vi.fn(), onEvent: vi.fn(), account }),
       { initialProps: { account: 1 } },
     )
-    view.rerender({ account: 2 })
     await connected(1)
+    view.rerender({ account: 2 })
+    await connected(2)
     view.unmount()
   })
 

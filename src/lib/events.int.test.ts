@@ -37,6 +37,7 @@ let publishedId: number
 let draftId: number
 let publicSlug: string
 let ownerSlug: string
+let draftSlug: string
 let coverId: number
 
 const makeEvent = async (title: string, over: Record<string, unknown> = {}) => {
@@ -138,6 +139,7 @@ beforeAll(async () => {
   ).id
   publicSlug = (await makeEvent('Public listed event', { cover_image: coverId })).slug
   ownerSlug = (await makeEvent('Owner only event', { tier: 'owner' })).slug
+  draftSlug = (await makeEvent('Public draft listing', { _status: 'draft' })).slug
 })
 
 afterAll(async () => {
@@ -238,6 +240,7 @@ describe('public event timing', () => {
     const listed = await getPublicEvents(payload, 'en')
     expect(listed.map((event) => event.slug)).toContain(publicSlug)
     expect(listed.map((event) => event.slug)).not.toContain(ownerSlug)
+    expect(listed.map((event) => event.slug)).not.toContain(draftSlug)
     expect(await getPublicEvent(payload, 'ar', ownerSlug)).toBeUndefined()
     const found = await getPublicEvent(payload, 'ar', publicSlug)
     expect(found?.title).toBe('Public listed event')
