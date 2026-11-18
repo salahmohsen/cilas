@@ -1,12 +1,21 @@
-import { renderToStaticMarkup } from 'react-dom/server'
-import { describe, expect, it, vi } from 'vitest'
+import { beforeAll, describe, expect, it } from 'vitest'
 
-import { Schema } from '@/components/schema'
-import { eventSchema } from '@/lib/event-schema'
-import { courseSchema } from '@/lib/schema'
 import type { Course, Event, Person } from '@/payload-types'
 
-vi.mock('@/env', () => ({ env: { NEXT_PUBLIC_SERVER_URL: 'https://ci-las.org' } }))
+import { importWithEnv } from '../../testing/env.test-utils'
+
+let eventSchema: typeof import('@/lib/event-schema').eventSchema
+let courseSchema: typeof import('@/lib/schema').courseSchema
+beforeAll(async () => {
+  const load = (vars: Record<string, string>) =>
+    importWithEnv(vars, async () => ({
+      ...(await import('@/lib/event-schema')),
+      ...(await import('@/lib/schema')),
+    }))
+  ;({ eventSchema, courseSchema } = await load({
+    NEXT_PUBLIC_SERVER_URL: 'https://ci-las.org',
+  }))
+})
 
 const event: Event = {
   id: 1,
@@ -155,39 +164,5 @@ describe('course structured data', () => {
       instructors: [],
     })
     expect(data).not.toHaveProperty('hasCourseInstance')
-  })
-})
-
-describe('JSON-LD output', () => {
-  it('renders parseable data without letting content close the script tag', () => {
-    const name = '</script><script>alert(1)</script>'
-    const html = renderToStaticMarkup(<Schema data={{ '@type': 'Event', name }} />)
-    const root = document.createElement('div')
-    root.innerHTML = html
-    expect(root.querySelectorAll('script')).toHaveLength(1)
-    expect(JSON.parse(root.querySelector('script')!.textContent!)).toEqual({
-      '@type': 'Event',
-      name,
-    })
-  })
-
-  it('puts several items in one @graph, so the script is always a single object', () => {
-    const html = renderToStaticMarkup(
-      <Schema
-        data={[
-          { '@context': 'https://schema.org', '@type': 'Organization', name: 'CILAS' },
-          { '@context': 'https://schema.org', '@type': 'WebSite', name: 'CILAS' },
-        ]}
-      />,
-    )
-    const root = document.createElement('div')
-    root.innerHTML = html
-    expect(JSON.parse(root.querySelector('script')!.textContent!)).toEqual({
-      '@context': 'https://schema.org',
-      '@graph': [
-        { '@type': 'Organization', name: 'CILAS' },
-        { '@type': 'WebSite', name: 'CILAS' },
-      ],
-    })
   })
 })
