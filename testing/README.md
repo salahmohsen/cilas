@@ -20,7 +20,7 @@ The file name alone picks the runner. Do not add `// @vitest-environment` commen
 ## Move a test from jsdom to the browser
 
 1. `git mv x.dom.test.tsx x.browser.test.tsx`.
-2. Delete the stand-ins for what Chromium has: `ResizeObserver`, `IntersectionObserver`, `matchMedia`, `scrollIntoView`, `getAnimations`, `animate`, `showPopover`, and calls to `stubPopupDom` or `stubMatchMedia`. In Chromium a plain assignment such as `globalThis.ResizeObserver = class {}` replaces the real one, so a leftover stub silently turns the browser off.
+2. Delete the stand-ins for what Chromium has: `ResizeObserver`, `IntersectionObserver`, `matchMedia`, `scrollIntoView`, `getAnimations`, `animate`, `showPopover` and `hidePopover`. In Chromium a plain assignment such as `globalThis.ResizeObserver = class {}` replaces the real one, so a leftover stub silently turns the browser off.
 3. For a phone layout, call `await page.viewport(390, 844)` (`import { page } from 'vitest/browser'`). For a reduced-motion branch, call `await emulateMedia({ 'prefers-reduced-motion': 'reduce' })` from `media.test-utils` (checked with a scratch test, no exemplar yet). The setup puts the 1280 × 800 viewport and the media back after each test.
 4. Delete mocks of `@/lib/use-narrow` and `@/components/calendar/ui/use-narrow`. The real hooks read the real viewport and the real container queries. Real CSS also hides things: a `getByRole` that found an element in jsdom can miss it in Chromium when the stylesheet hides it at that width. Size the viewport to the layout you test.
 5. To watch a call, use `vi.spyOn(object, 'method')` with no implementation. It calls through.
@@ -117,7 +117,7 @@ A route handler or server component that reads `@/env`, Payload or `next-intl/se
 
 ## Not solved yet
 
-- **Int tests and storage.** `.env` points storage at the production R2 bucket, and Vitest does not read `.env.development.local`. Before an int run, export the local RustFS settings from `.env.development.local` (`R2_ENDPOINT=http://127.0.0.1:19002`, `R2_BUCKET=cilas-local`). The tests should read local storage by themselves.
+- **Int tests and storage.** `.env` points storage at the production R2 bucket, and Vitest does not read `.env.development.local`. Before an int run, export the six `R2_*` lines of `.env.development.local` (`R2_ENDPOINT=http://127.0.0.1:19002`, `R2_BUCKET=cilas-local`, and the keys). Export only those lines: the file also sets `RESEND_API_KEY` to empty for local development, and four email int files then fail with "Set RESEND_API_KEY in .env". The tests should read local storage by themselves.
 - **Turnstile in the browser project.** `vitest.config.mts` sets `NEXT_PUBLIC_TURNSTILE_SITE_KEY` to an empty string for the browser project, as `playwright.config.ts` does, so forms there run with the honeypot alone: the real widget needs Cloudflare and waits for a token. Cloudflare's test site keys would keep the widget in the test.
 - **Shared database.** All int tests share one local Postgres. A file that passes alone can fail in the full run when another file changes the same rows.
 - **Duplicate helpers.** `payloadServices`, `localServiceHandlers` and inline handlers in six int tests answer the same services, and `captureResendMail` and `resendInbox` capture the same mail. Each pair should become one helper.
