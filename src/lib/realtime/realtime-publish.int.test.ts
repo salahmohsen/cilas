@@ -13,7 +13,19 @@ let recipient: number
 const heard: NotificationEvent[] = []
 const { track, cleanup } = createTracker()
 
-const settle = () => new Promise((resolve) => setTimeout(resolve, 400))
+const delivered = async () => {
+  const barrier = JSON.stringify({ barrier: crypto.randomUUID() })
+  const reached = new Promise<void>((resolve) => {
+    const onMessage = (msg: pg.Notification) => {
+      if (msg.payload !== barrier) return
+      listener.off('notification', onMessage)
+      resolve()
+    }
+    listener.on('notification', onMessage)
+  })
+  await listener.query('select pg_notify($1, $2)', [NOTIFICATION_CHANNEL, barrier])
+  await reached
+}
 
 const create = (data: { title: string; description?: string }, req?: unknown) =>
   payload.create({
@@ -58,14 +70,14 @@ describe('live notification publishing', () => {
     const req = await createLocalReq({}, payload)
     req.transactionID = transactionID
     await create({ title: 'rolled back' }, req)
-    await settle()
+    await delivered()
     expect(heard).toHaveLength(0)
     await payload.db.rollbackTransaction(transactionID)
-    await settle()
+    await delivered()
     expect(heard).toHaveLength(0)
 
     const committed = await create({ title: 'committed' })
-    await settle()
+    await delivered()
     expect(heard).toHaveLength(1)
     expect(heard[0]).toMatchObject({
       op: 'created',
@@ -78,7 +90,7 @@ describe('live notification publishing', () => {
   it('sends a change of read_at, not other updates', async () => {
     heard.length = 0
     const row = await create({ title: 'to read' })
-    await settle()
+    await delivered()
     heard.length = 0
     const readAt = new Date().toISOString()
     await payload.update({
@@ -93,7 +105,7 @@ describe('live notification publishing', () => {
       data: { read_at: readAt },
       overrideAccess: true,
     })
-    await settle()
+    await delivered()
     expect(heard).toHaveLength(1)
     expect(heard[0]).toMatchObject({ op: 'updated', id: row.id, recipient })
   })
@@ -101,7 +113,7 @@ describe('live notification publishing', () => {
   it('leaves the row out of an event that would pass the NOTIFY limit', async () => {
     heard.length = 0
     const big = await create({ title: 'big', description: 'x'.repeat(9_000) })
-    await settle()
+    await delivered()
     expect(heard).toHaveLength(1)
     expect(heard[0].doc).toBeUndefined()
     expect(heard[0]).toMatchObject({ op: 'created', id: big.id, recipient })
@@ -110,10 +122,10 @@ describe('live notification publishing', () => {
   it('sends a delete without a row', async () => {
     heard.length = 0
     const row = await create({ title: 'to delete' })
-    await settle()
+    await delivered()
     heard.length = 0
     await payload.delete({ collection: 'notifications', id: row.id, overrideAccess: true })
-    await settle()
+    await delivered()
     expect(heard).toEqual([{ op: 'deleted', id: row.id, recipient }])
   })
 })
