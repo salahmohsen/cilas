@@ -13,7 +13,7 @@ import { currentReader } from '@/lib/reader'
 import { PUBLIC_LISTS_TAG } from '@/lib/paths'
 import config from '@/payload.config'
 import type { User } from '@/payload-types'
-import { createTracker, uniq, uniqEmail } from './fixtures'
+import { createTracker, lockSpacesMode, uniq, uniqEmail } from './fixtures'
 
 vi.mock('@/lib/reader', () => ({ currentReader: vi.fn() }))
 vi.mock('next/cache', async (original) => ({
@@ -24,6 +24,8 @@ vi.mock('next/cache', async (original) => ({
 
 const { track, cleanup } = createTracker()
 let payload: Payload
+let unlockSpacesMode: (() => Promise<void>) | undefined
+let modeBefore: 'off' | 'trial' | 'on' = 'off'
 let admin: User
 let member: User
 let host: User
@@ -57,8 +59,17 @@ const moves = (items: Awaited<ReturnType<typeof pair>>) =>
     end_time: '13:00',
   }))
 
+// The links and offers read course spaces, which exist only while spaces are on.
 beforeAll(async () => {
+  unlockSpacesMode = await lockSpacesMode()
   payload = await getPayload({ config })
+  modeBefore =
+    (await payload.findGlobal({ slug: 'site-settings', overrideAccess: true })).spaces_mode ?? 'off'
+  await payload.updateGlobal({
+    slug: 'site-settings',
+    data: { spaces_mode: 'on' },
+    overrideAccess: true,
+  })
   const account = async (role: 'admin' | 'member' | 'fellow', label: string = role) =>
     track(
       'users',
@@ -172,10 +183,16 @@ beforeAll(async () => {
   })
   // Naming the fellow on the course gives their account the fellow role.
   host = await payload.findByID({ collection: 'users', id: host.id, depth: 0 })
-})
+}, 600_000)
 afterAll(async () => {
+  await payload.updateGlobal({
+    slug: 'site-settings',
+    data: { spaces_mode: modeBefore },
+    overrideAccess: true,
+  })
   await cleanup(payload)
   await payload.destroy()
+  await unlockSpacesMode?.()
 })
 
 describe('public calendar links for each role', () => {
