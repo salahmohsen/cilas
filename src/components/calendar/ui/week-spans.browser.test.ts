@@ -1,5 +1,5 @@
 import { checkServer, mount } from '@ui-sdk/core/testing'
-import { afterEach, beforeAll, describe, expect, it, vi } from 'vitest'
+import { beforeAll, describe, expect, it, vi } from 'vitest'
 
 import type { EditBlock } from '@/components/calendar/ui/calendar-model'
 import { weekSpans } from '@/components/calendar/ui/week-spans'
@@ -8,14 +8,15 @@ declare global {
   var __UI_SDK_STRICT__: boolean | undefined
 }
 
-const block = (id: string, track: string, start: number, end: number): EditBlock => ({
-  id,
-  track,
-  start,
-  end,
-  itemId: id,
-  blockId: id,
-})
+const block = (id: string, track: string, start: number, end: number) =>
+  ({
+    id,
+    track,
+    start,
+    end,
+    itemId: id,
+    blockId: id,
+  }) satisfies EditBlock
 
 const MARKUP = `<root>
   <track value="mon"><span value="a">A</span></track>
@@ -39,7 +40,6 @@ const options = (overrides: Record<string, unknown> = {}) => ({
 beforeAll(() => {
   globalThis.__UI_SDK_STRICT__ = true
 })
-afterEach(() => vi.restoreAllMocks())
 
 describe('keyboard on a block', () => {
   it('moves it by a quarter hour with the arrows along the day', async () => {
@@ -161,16 +161,12 @@ describe('keyboard on a block', () => {
 })
 
 describe('structure', () => {
-  // spanStyle reads `min` and `max` inside a part's attrs, which checkServer
-  // rejects. The server does get the same options, and the view test renders
-  // the grid with renderToString; this marks the report so a fix shows up.
-  it.fails('passes checkServer', () => {
+  it.fails("passes checkServer: spanStyle reads min and max inside a part's attrs", () => {
     checkServer(weekSpans, options(), MARKUP)
   })
 
   it('swaps the arrows across days in right to left', async () => {
-    // jsdom computes `direction` only on the element that has `dir`, not below it.
-    const rtl = MARKUP.replaceAll('<span value', '<span dir="rtl" value')
+    const rtl = MARKUP.replace('<root>', '<root dir="rtl">')
     const changes: EditBlock[][] = []
     const view = mount(
       weekSpans,
@@ -202,26 +198,12 @@ describe('structure', () => {
 })
 
 describe('pointer', () => {
-  // jsdom has no layout: each day is 100px wide, 1px per minute over 0 to 1440.
-  const layout = () => {
-    vi.spyOn(HTMLElement.prototype, 'getBoundingClientRect').mockImplementation(function (
-      this: HTMLElement,
-    ) {
-      const day = this.closest('[data-slot="week-spans-track"]') ?? this
-      const index = ['mon', 'tue', 'wed'].indexOf(day.getAttribute('data-track') ?? '')
-      const inDay = this !== day
-      const style = this.getAttribute('style') ?? ''
-      const top = inDay ? Number(/top:\s*([\d.]+)%/.exec(style)?.[1] ?? 0) * 14.4 : 0
-      const height = inDay ? Number(/height:\s*([\d.]+)%/.exec(style)?.[1] ?? 0) * 14.4 : 1440
-      return new DOMRect(Math.max(index, 0) * 100, top, 100, height)
-    })
-  }
-
   it('draws a block on an empty stretch of a day', async () => {
-    layout()
-    const create = vi.fn((span: { track: string; start: number; end: number }) =>
-      block('new', span.track, span.start, span.end),
-    )
+    const created: { track: string; start: number; end: number }[] = []
+    const create = (span: { track: string; start: number; end: number }) => {
+      created.push(span)
+      return block('new', span.track, span.start, span.end)
+    }
     const changes: { value: EditBlock[]; action: string }[] = []
     const view = mount(
       weekSpans,
@@ -230,13 +212,12 @@ describe('pointer', () => {
         onSpansChange: (value: EditBlock[], details: { action: string }) =>
           changes.push({ value, action: details.action }),
       }),
-      MARKUP.replace('<track value="wed"></track>', '<track value="wed" data-track="wed"></track>'),
+      MARKUP,
     )
     try {
       const wed = view.part('track', 'wed')!
-      wed.setAttribute('data-track', 'wed')
       await view.drag(wed, { by: { x: 0, y: 120 } })
-      expect(create).toHaveBeenCalled()
+      expect(created).toHaveLength(1)
       expect(changes.at(-1)!.action).toBe('draw')
       expect(changes.at(-1)!.value.find((span) => span.id === 'new')?.track).toBe('wed')
     } finally {
