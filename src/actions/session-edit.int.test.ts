@@ -1,37 +1,15 @@
 import { getPayload, type Payload } from 'payload'
-import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest'
+import { afterAll, beforeAll, describe, expect, it } from 'vitest'
 
 import { loadSessionEdit, type SessionEdit } from '@/actions/session-edit'
-import { currentReader } from '@/lib/reader'
 import config from '@/payload.config'
 import type { User } from '@/payload-types'
 
 import { saveScheduleEdits } from '@/actions/save-schedule-edits'
-const saveSessionEdit = (
-  {
-    id,
-    version,
-    values: { meetings, ...values },
-  }: { id: string; version: string; values: SessionEdit },
-  locale = 'en',
-) => saveScheduleEdits({ details: [{ op: 'edit', id, version, values, meetings }] }, locale)
 
+import { runInRequest } from '../../testing/next-request.test-utils'
 import { createTracker, uniq, uniqEmail } from '../../testing/payload.fixture'
-
-// Outside Next, these throw and the hooks swallow it; mocked, the test sees them.
-vi.mock('next/cache', async (original) => ({
-  ...(await original<typeof import('next/cache')>()),
-  revalidatePath: vi.fn(),
-  revalidateTag: vi.fn(),
-}))
-// The action reads the signed-in user from the request's cookie; the test names one.
-vi.mock('@/lib/reader', () => ({ currentReader: vi.fn() }))
-
-/**
- * The session drawer's Edit form against the database: the sessions
- * collection's access decides, a stale version saves nothing, and the text
- * lands in the page's language alone.
- */
+import { signedInHeaders } from '../../testing/reader.test-utils'
 
 let payload: Payload
 const { track, cleanup } = createTracker()
@@ -41,7 +19,28 @@ let otherFellow: User
 let student: User
 let course: number
 
-const signIn = (user: User | null) => vi.mocked(currentReader).mockResolvedValue(user)
+const passwords = new Map<number, string>()
+let reader: HeadersInit = {}
+const signIn = async (user: User) => {
+  reader = await signedInHeaders(payload, { email: user.email, password: passwords.get(user.id)! })
+}
+const asReader = async <Result>(work: () => Promise<Result>) =>
+  (await runInRequest(work, { headers: reader })).result
+
+const saveSessionEdit = (
+  {
+    id,
+    version,
+    values: { meetings, ...values },
+  }: { id: string; version: string; values: SessionEdit },
+  locale = 'en',
+) =>
+  asReader(() =>
+    saveScheduleEdits({ details: [{ op: 'edit', id, version, values, meetings }] }, locale),
+  )
+
+const loadAsReader = (id: number, locale: 'en' | 'ar') =>
+  asReader(() => loadSessionEdit(String(id), locale))
 
 const account = async (name: string, roles: User['roles']) => {
   const person = track(
@@ -52,19 +51,21 @@ const account = async (name: string, roles: User['roles']) => {
       overrideAccess: true,
     }),
   ).id
+  const password = crypto.randomUUID()
   const user = track(
     'users',
     (await payload.create({
       collection: 'users',
       data: {
         email: uniqEmail(name.toLowerCase().replace(/\W+/g, '-')),
-        password: crypto.randomUUID(),
+        password,
         roles,
         person,
       },
       overrideAccess: true,
     })) as unknown as User,
   )
+  passwords.set(user.id, password)
   return { person, user }
 }
 
@@ -87,7 +88,6 @@ const makeCourse = async (fellows: number[], cycle: number) =>
     }),
   ).id
 
-/** A session with English text, one material and one activity, and Arabic for the material. */
 const makeSession = async () => {
   const doc = await payload.create({
     collection: 'sessions',
@@ -127,13 +127,12 @@ const versions = async (id: number) =>
   (await payload.countVersions({ collection: 'sessions', where: { parent: { equals: id } } }))
     .totalDocs
 
-/** Loads the form as the fellow would, then saves `change` on it. */
 const edit = async (
   id: number,
   locale: 'en' | 'ar',
   change: (values: SessionEdit) => SessionEdit,
 ) => {
-  const loaded = await loadSessionEdit(String(id), locale)
+  const loaded = await loadAsReader(id, locale)
   if (!loaded.ok) throw new Error(loaded.error)
   return saveSessionEdit(
     { id: String(id), version: loaded.version, values: change(loaded.values) },
@@ -176,7 +175,7 @@ afterAll(async () => {
 describe('saveSessionEdit', () => {
   it('lets a fellow of the course save, keeping the meeting’s row', async () => {
     const id = await makeSession()
-    signIn(fellow)
+    await signIn(fellow)
     const result = await edit(id, 'en', (v) => ({
       ...v,
       title: 'New title',
@@ -188,7 +187,6 @@ describe('saveSessionEdit', () => {
     expect(doc.meetings).toHaveLength(1)
     expect(doc.meetings![0]).toMatchObject({ date: '2035-10-07', start_time: '18:00' })
     if (result.ok) {
-      // The course's items before and after, for the offer: the same block id, moved.
       const before = result.before.find((i) => i.id === String(id))!
       const after = result.after.find((i) => i.id === String(id))!
       expect(after.blocks[0]!.id).toBe(before.blocks[0]!.id)
@@ -202,11 +200,11 @@ describe('saveSessionEdit', () => {
     ['a student', () => student],
   ])('refuses %s and writes nothing', async (_, who) => {
     const id = await makeSession()
-    signIn(fellow)
-    const loaded = await loadSessionEdit(String(id), 'en')
+    await signIn(fellow)
+    const loaded = await loadAsReader(id, 'en')
     if (!loaded.ok) throw new Error(loaded.error)
     const count = await versions(id)
-    signIn(who())
+    await signIn(who())
     const result = await saveSessionEdit(
       { id: String(id), version: loaded.version, values: { ...loaded.values, title: 'Taken' } },
       'en',
@@ -218,10 +216,9 @@ describe('saveSessionEdit', () => {
 
   it('fails a stale save, names the session, and saves nothing', async () => {
     const id = await makeSession()
-    signIn(fellow)
-    const loaded = await loadSessionEdit(String(id), 'en')
+    await signIn(fellow)
+    const loaded = await loadAsReader(id, 'en')
     if (!loaded.ok) throw new Error(loaded.error)
-    // Someone else saves after the form loaded.
     await payload.update({
       collection: 'sessions',
       id,
@@ -241,10 +238,9 @@ describe('saveSessionEdit', () => {
 
   it('loads and writes the page’s language alone, and keeps the other', async () => {
     const id = await makeSession()
-    signIn(fellow)
-    const loaded = await loadSessionEdit(String(id), 'ar')
+    await signIn(fellow)
+    const loaded = await loadAsReader(id, 'ar')
     if (!loaded.ok) throw new Error(loaded.error)
-    // No fallback: the Arabic form starts empty, never with the English text.
     expect(loaded.values.title).toBe('')
     expect(loaded.values.description).toBe('')
     expect(loaded.values.bibliography[0]!.title).toBe('قراءة عربية')
@@ -280,7 +276,7 @@ describe('saveSessionEdit', () => {
 
   it('refuses a meeting that ends before it starts, by the collection’s own check', async () => {
     const id = await makeSession()
-    signIn(fellow)
+    await signIn(fellow)
     const result = await edit(id, 'en', (v) => ({
       ...v,
       meetings: [{ ...v.meetings[0]!, start_time: '21:00', end_time: '19:00' }],
@@ -294,7 +290,6 @@ describe('saveSessionEdit', () => {
 describe('the order of materials and activities', () => {
   const trio = ['a', 'b', 'c']
 
-  /** Three materials and three activities, each with its own text in both languages. */
   const makeTrio = async () => {
     const doc = await payload.create({
       collection: 'sessions',
@@ -331,7 +326,7 @@ describe('the order of materials and activities', () => {
 
   it('keeps a changed order through save and reload, in both languages', async () => {
     const id = await makeTrio()
-    signIn(fellow)
+    await signIn(fellow)
 
     const fromEnglish = await edit(id, 'en', (v) => ({
       ...v,
@@ -339,7 +334,6 @@ describe('the order of materials and activities', () => {
       activities: [v.activities[1]!, v.activities[2]!, v.activities[0]!],
     }))
     expect(fromEnglish.ok).toBe(true)
-    // The order is shared: Arabic follows English, and each row keeps its own Arabic text.
     expect(await texts(id, 'en')).toEqual({
       materials: ['en c', 'en a', 'en b'],
       activities: ['en b', 'en c', 'en a'],
