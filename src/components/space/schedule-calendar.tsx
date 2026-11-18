@@ -10,7 +10,7 @@ import { useCalendarLabels } from '@/components/calendar/ui/use-calendar-labels'
 import { courseWeekOf, type CalendarItem } from '@/lib/calendar-items'
 import { leave } from '@/lib/leave-guard'
 
-import { openSession, sessionTriggerProps } from './session-drawer-host'
+import { openSession, sessionTriggerProps } from './session-drawer-opener'
 
 /**
  * A course space calendar's words; `menu` gives edit mode its block menu

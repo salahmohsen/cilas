@@ -1,13 +1,12 @@
-/**
- * The gate against the real posthog-js, not against hand-made events: the SDK
- * adds properties of its own (where a visit started, the page before), and
- * each new version can add more. This runs the site's own PostHog settings
- * and reads what the gate would let leave the browser.
- */
 import posthog from 'posthog-js'
-import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest'
+import { http, HttpResponse } from 'msw'
+import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest'
 
 import { posthogConfig } from '@/lib/analytics/client'
+
+import { mockNetwork } from '../../../testing/msw-node.test-utils'
+
+mockNetwork(http.all('https://ci-las.test/relay-k3/*', () => HttpResponse.json({})))
 
 type Capture = { event: string; properties: Record<string, unknown> }
 
@@ -17,21 +16,11 @@ describe('what the real PostHog sends after the gate', () => {
   const seen: Capture[] = []
   const sent: Capture[] = []
 
-  // Each test: the config unstubs globals after every test.
-  const stubNetwork = () => {
-    vi.stubGlobal('fetch', vi.fn().mockResolvedValue(new Response('{}')))
-    vi.stubGlobal('navigator', { ...navigator, sendBeacon: vi.fn(() => true) })
-  }
-  beforeEach(stubNetwork)
-
   beforeAll(() => {
-    stubNetwork()
-    vi.spyOn(console, 'log').mockImplementation(() => {})
     Object.defineProperty(document, 'referrer', {
       configurable: true,
       get: () => 'https://www.google.com/search?q=private+query',
     })
-    // A visit that starts on a private page with a token in its address.
     window.history.replaceState({}, '', '/en/reset?token=SECRET123')
 
     const config = posthogConfig()
@@ -53,14 +42,11 @@ describe('what the real PostHog sends after the gate', () => {
   })
 
   afterAll(() => {
-    vi.unstubAllGlobals()
-    vi.restoreAllMocks()
     Reflect.deleteProperty(document, 'referrer')
     window.history.replaceState({}, '', '/')
   })
 
   it('sends nothing from where a visit started, the page before, or a search', async () => {
-    // The first page view, on the private page, is raised and dropped.
     await vi.waitFor(() => expect(seen.some((c) => c.event === '$pageview')).toBe(true))
     expect(sent).toEqual([])
 

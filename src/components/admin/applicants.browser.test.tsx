@@ -1,41 +1,26 @@
-import { render, screen, fireEvent, waitFor, within } from '@testing-library/react'
-import { NextIntlClientProvider } from 'next-intl'
+import { cleanup, fireEvent, screen, waitFor, within } from '@testing-library/react'
+import { http, HttpResponse } from 'msw'
 import type { ReactNode } from 'react'
-import messages from '../../../messages/en.json'
-import { beforeEach, describe, expect, it, vi } from 'vitest'
+import { afterEach, beforeEach, describe, expect, it } from 'vitest'
+
 import { ApplicantsGrid } from '@/components/admin/applicants-grid'
 import type { ApplicantsData } from '@/forms/applicants'
 
-const navigation = vi.hoisted(() => ({ search: '', push: vi.fn(), refresh: vi.fn() }))
-vi.mock('next/navigation', () => ({
-  useSearchParams: () => new URLSearchParams(navigation.search),
-  usePathname: () => '/admin/applicants',
-  useRouter: () => navigation,
-}))
-vi.mock('@/i18n/navigation', () => ({ Link: 'a' }))
-vi.mock('@/components/RichTextField', () => ({ RichTextField: () => null }))
+import { IntlProvider } from '../../../testing/intl.test-utils'
+import { mockNetwork } from '../../../testing/msw-browser.test-utils'
+import { renderWithNavigation, type MemoryRouter } from '../../../testing/navigation.test-utils'
 
+const network = mockNetwork(http.get('/api/users/me', () => HttpResponse.json({ user: null })))
+let search = ''
+let memory: MemoryRouter
+let calls: { path: string; method: string }[] = []
 beforeEach(() => {
-  vi.stubGlobal(
-    'ResizeObserver',
-    class {
-      observe() {}
-      unobserve() {}
-      disconnect() {}
-    },
-  )
-  window.matchMedia = vi.fn().mockImplementation(() => ({
-    matches: false,
-    addListener() {},
-    removeListener() {},
-    addEventListener() {},
-    removeEventListener() {},
-  }))
+  search = ''
+  calls = []
 })
-beforeEach(() => {
-  navigation.search = ''
-  vi.clearAllMocks()
-})
+afterEach(cleanup)
+
+const pushed = (href: string) => ({ method: 'push', href, options: { scroll: false } })
 
 const choice = (
   course: number,
@@ -56,20 +41,21 @@ const choice = (
   amount: 100,
   ...extra,
 })
-const application = (choices: ReturnType<typeof choice>[]): ApplicantsData['applications'][0] => ({
-  id: 10,
-  name: 'Applicant',
-  email: 'a@example.test',
-  submitted: '2026-11-01T12:00:00Z',
-  status: 'new',
-  decided: null,
-  target: 'courses',
-  programme: null,
-  formId: 1,
-  fields: [],
-  answers: [],
-  choices,
-})
+const application = (choices: ReturnType<typeof choice>[]) =>
+  ({
+    id: 10,
+    name: 'Applicant',
+    email: 'a@example.test',
+    submitted: '2026-11-01T12:00:00Z',
+    status: 'new',
+    decided: null,
+    target: 'courses',
+    programme: null,
+    formId: 1,
+    fields: [],
+    answers: [],
+    choices,
+  }) satisfies ApplicantsData['applications'][0]
 const courses = [
   { id: 1, title: 'Writing', count: 1 },
   { id: 2, title: 'History', count: 1 },
@@ -80,20 +66,23 @@ const data: ApplicantsData = {
 }
 const single: ApplicantsData = { courses, applications: [application([choice(1, 'Writing')])] }
 
-const view = (ui: ReactNode) =>
-  render(ui, {
-    wrapper: ({ children }) => (
-      <NextIntlClientProvider locale="en" messages={{ Forms: messages.Forms }}>
-        {children}
-      </NextIntlClientProvider>
-    ),
+const view = (ui: ReactNode) => {
+  const rendered = renderWithNavigation(<IntlProvider>{ui}</IntlProvider>, {
+    url: `/admin/applicants${search ? `?${search}` : ''}`,
   })
+  memory = rendered.memory
+  return rendered
+}
 const slow = { timeout: 3000 }
 const respond = (body: object, ok = true) =>
-  vi.stubGlobal('fetch', vi.fn().mockResolvedValue({ ok, json: async () => body }))
+  network.use(
+    http.post('/api/form-submissions/*', ({ request }) => {
+      calls.push({ path: new URL(request.url).pathname, method: request.method })
+      return HttpResponse.json(body, { status: ok ? 200 : 400 })
+    }),
+  )
 const done = { ok: true, emailed: true, decided: '2026-11-11T10:00:00Z' }
 const open = () => fireEvent.click(screen.getByRole('button', { name: 'Review' }))
-/** A decision asks first: open the dialog, read what follows, confirm. */
 async function accept(label: string) {
   fireEvent.click(screen.getByRole('button', { name: label }))
   const dialog = screen.getByRole('dialog')
@@ -103,7 +92,7 @@ async function accept(label: string) {
 
 describe('applicant review', () => {
   it('matches course, cycle and reduction on the same choice', () => {
-    navigation.search = 'course=1&reduction=yes'
+    search = 'course=1&reduction=yes'
     view(<ApplicantsGrid data={data} ar={false} admin />)
     expect(screen.getByText('No matching applications')).toBeTruthy()
     fireEvent.click(
@@ -111,22 +100,22 @@ describe('applicant review', () => {
         name: 'Clear filters',
       }),
     )
-    expect(navigation.push).toHaveBeenCalledWith('/admin/applicants?', { scroll: false })
+    expect(memory.visits).toEqual([pushed('/admin/applicants?')])
   })
 
   it('keeps unrelated URL parameters when clearing filters', () => {
-    navigation.search = 'status=rejected&locale=ar'
+    search = 'status=rejected&locale=ar'
     view(<ApplicantsGrid data={data} ar={false} admin />)
     fireEvent.click(
       within(screen.getByRole('group', { name: 'Applicants' })).getByRole('button', {
         name: 'Clear filters',
       }),
     )
-    expect(navigation.push).toHaveBeenCalledWith('/admin/applicants?locale=ar', { scroll: false })
+    expect(memory.visits).toEqual([pushed('/admin/applicants?locale=ar')])
   })
 
   it('shows one status per course on the card and one Review button, no decision buttons', () => {
-    navigation.search = 'status=all'
+    search = 'status=all'
     view(<ApplicantsGrid data={data} ar={false} admin />)
     expect(screen.getByRole('heading', { level: 2, name: 'Applications' })).toBeTruthy()
     expect(screen.getAllByText('Pending')).toHaveLength(2)
@@ -138,7 +127,7 @@ describe('applicant review', () => {
   })
 
   it('shows each course’s decision and date on its tile', () => {
-    navigation.search = 'status=all'
+    search = 'status=all'
     const decided = application([
       choice(1, 'Writing', { decision: 'accepted', decided: '2026-11-11T10:00:00Z' }),
       choice(2, 'History', { decision: 'rejected', decided: '2026-11-10T10:00:00Z' }),
@@ -180,16 +169,16 @@ describe('applicant review', () => {
     view(<ApplicantsGrid data={data} ar={false} admin />)
     open()
     fireEvent.click(screen.getByRole('button', { name: 'Reject: History' }))
-    expect(fetch).not.toHaveBeenCalledWith(expect.stringContaining('/courses/'), expect.anything())
+    expect(calls).toEqual([])
     const dialog = screen.getByRole('dialog')
     expect(within(dialog).getByText('What happens next')).toBeTruthy()
     expect(within(dialog).getByText(/A kind email goes to a@example.test/)).toBeTruthy()
     fireEvent.click(within(dialog).getByRole('button', { name: 'Reject' }))
     await waitFor(() =>
-      expect(fetch).toHaveBeenCalledWith(
-        '/api/form-submissions/10/courses/2/reject',
-        expect.objectContaining({ method: 'POST' }),
-      ),
+      expect(calls).toContainEqual({
+        path: '/api/form-submissions/10/courses/2/reject',
+        method: 'POST',
+      }),
     )
     expect(await within(dialog).findByText('Decision unavailable. Retry.')).toBeTruthy()
     expect(screen.getByRole('dialog')).toBeTruthy()
@@ -205,21 +194,21 @@ describe('applicant review', () => {
   })
 
   it('shows one accepted course while the other waits, and the application stays pending', async () => {
-    navigation.search = 'status=new'
+    search = 'status=new'
     respond(done)
     view(<ApplicantsGrid data={data} ar={false} admin />)
     open()
     await accept('Accept: Writing')
     expect(await screen.findAllByText('Accepted · 11/11/2026', {}, slow)).not.toHaveLength(0)
-    expect(fetch).toHaveBeenCalledWith(
-      '/api/form-submissions/10/courses/1/accept',
-      expect.objectContaining({ method: 'POST' }),
-    )
+    expect(calls).toContainEqual({
+      path: '/api/form-submissions/10/courses/1/accept',
+      method: 'POST',
+    })
     expect(screen.queryByText('No matching applications')).toBeNull()
   })
 
   it('updates a pending filter once the last course is decided', async () => {
-    navigation.search = 'status=new'
+    search = 'status=new'
     respond(done)
     view(<ApplicantsGrid data={single} ar={false} admin />)
     open()
@@ -228,7 +217,7 @@ describe('applicant review', () => {
   })
 
   it('keeps email delivery warnings visible after a status filter removes the card', async () => {
-    navigation.search = 'status=new'
+    search = 'status=new'
     respond({ ...done, emailed: false })
     view(<ApplicantsGrid data={single} ar={false} admin />)
     open()
@@ -255,10 +244,10 @@ describe('applicant review', () => {
     open()
     fireEvent.click(screen.getByRole('button', { name: 'Send email again: Writing' }))
     await waitFor(() =>
-      expect(fetch).toHaveBeenCalledWith(
-        '/api/form-submissions/10/courses/1/resend',
-        expect.objectContaining({ method: 'POST' }),
-      ),
+      expect(calls).toContainEqual({
+        path: '/api/form-submissions/10/courses/1/resend',
+        method: 'POST',
+      }),
     )
     await waitFor(() => expect(screen.queryAllByText('Email not sent')).toHaveLength(0))
   })
@@ -275,10 +264,10 @@ describe('applicant review', () => {
     expect(within(dialog).getByText(/No email goes out/)).toBeTruthy()
     fireEvent.click(within(dialog).getByRole('button', { name: 'Reopen' }))
     await waitFor(() =>
-      expect(fetch).toHaveBeenCalledWith(
-        '/api/form-submissions/10/courses/1/reopen',
-        expect.objectContaining({ method: 'POST' }),
-      ),
+      expect(calls).toContainEqual({
+        path: '/api/form-submissions/10/courses/1/reopen',
+        method: 'POST',
+      }),
     )
     expect(await screen.findByRole('button', { name: 'Accept: Writing' }, slow)).toBeTruthy()
   })
@@ -305,15 +294,12 @@ describe('applicant review', () => {
     expect(within(dialog).getByText(/A membership in Bridge programme/)).toBeTruthy()
     fireEvent.click(within(dialog).getByRole('button', { name: 'Accept' }))
     await waitFor(() =>
-      expect(fetch).toHaveBeenCalledWith(
-        '/api/form-submissions/10/accept',
-        expect.objectContaining({ method: 'POST' }),
-      ),
+      expect(calls).toContainEqual({ path: '/api/form-submissions/10/accept', method: 'POST' }),
     )
   })
 
   it('filters by the chosen course’s decision, not the whole application’s', () => {
-    navigation.search = 'status=new&course=1'
+    search = 'status=new&course=1'
     const mixed = application([
       choice(1, 'Writing', { decision: 'accepted', decided: '2026-11-11T10:00:00Z' }),
       choice(2, 'History'),
@@ -346,7 +332,7 @@ describe('applicant review', () => {
     })
 
     it('shows every application for status=all', () => {
-      navigation.search = 'status=all'
+      search = 'status=all'
       view(<ApplicantsGrid data={mixedList} ar={false} admin />)
       expect(screen.getAllByRole('button', { name: 'Review' })).toHaveLength(2)
     })
@@ -357,7 +343,7 @@ describe('applicant review', () => {
     })
 
     it('uses the course’s decision for the default when a course is chosen', () => {
-      navigation.search = 'course=1'
+      search = 'course=1'
       const mixed = application([
         choice(1, 'Writing', { decision: 'accepted', decided: '2026-11-11T10:00:00Z' }),
         choice(2, 'History'),
@@ -369,22 +355,18 @@ describe('applicant review', () => {
     it('removing the Pending chip shows all; removing All goes back to Pending', () => {
       view(<ApplicantsGrid data={mixedList} ar={false} admin />)
       fireEvent.click(screen.getByRole('button', { name: /^Remove/ }))
-      expect(navigation.push).toHaveBeenCalledWith('/admin/applicants?status=all', {
-        scroll: false,
-      })
+      expect(memory.visits).toEqual([pushed('/admin/applicants?status=all')])
     })
 
     it('says nothing is pending and offers all applications', () => {
       view(<ApplicantsGrid data={{ courses, applications: [decidedApp()] }} ar={false} admin />)
       expect(screen.getByText('Nothing to review')).toBeTruthy()
       fireEvent.click(screen.getByRole('button', { name: 'Show all applications' }))
-      expect(navigation.push).toHaveBeenCalledWith('/admin/applicants?status=all', {
-        scroll: false,
-      })
+      expect(memory.visits).toEqual([pushed('/admin/applicants?status=all')])
     })
 
     it('opens a decided application named by ?application= although the default hides it', () => {
-      navigation.search = 'application=11'
+      search = 'application=11'
       view(<ApplicantsGrid data={mixedList} ar={false} admin />)
       expect(screen.getByText('Showing 2 of 2 applications')).toBeTruthy()
       expect(screen.getByRole('dialog', { name: /Decided person/ })).toBeTruthy()

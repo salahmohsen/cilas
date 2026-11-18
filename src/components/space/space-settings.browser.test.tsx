@@ -1,25 +1,17 @@
-import { cleanup, fireEvent, render, screen } from '@testing-library/react'
-import { NextIntlClientProvider } from 'next-intl'
-import { afterEach, describe, expect, it, vi } from 'vitest'
-
-import messages from '../../../messages/en.json'
-
-vi.mock('next/navigation', () => ({ useRouter: () => ({ refresh: vi.fn() }) }))
-vi.mock('@/lib/space-actions', () => ({
-  spaceSettingsSetAction: vi.fn(async () => ({ status: 'ok' })),
-}))
+import { cleanup, fireEvent, screen } from '@testing-library/react'
+import { afterEach, describe, expect, it } from 'vitest'
+import { page } from 'vitest/browser'
 
 import { SpaceSettings } from '@/components/space/space-settings'
 
-const mount = (narrow: boolean, onOpenChange = vi.fn()) => {
-  window.matchMedia = ((query: string) => ({
-    matches: narrow,
-    media: query,
-    addEventListener: () => {},
-    removeEventListener: () => {},
-  })) as unknown as typeof window.matchMedia
-  render(
-    <NextIntlClientProvider locale="en" messages={messages}>
+import messages from '../../../messages/en.json'
+import { IntlProvider } from '../../../testing/intl.test-utils'
+import { renderWithNavigation } from '../../../testing/navigation.test-utils'
+
+const mount = () => {
+  const changes: boolean[] = []
+  renderWithNavigation(
+    <IntlProvider>
       <SpaceSettings
         space={1}
         posting="open"
@@ -30,19 +22,20 @@ const mount = (narrow: boolean, onOpenChange = vi.fn()) => {
         rules=""
         rulesDefault="Default rules"
         open
-        onOpenChange={onOpenChange}
+        onOpenChange={(next) => changes.push(next)}
         anchor={<span>anchor</span>}
+        save={async () => ({ status: 'ok' })}
       />
-    </NextIntlClientProvider>,
+    </IntlProvider>,
   )
-  return onOpenChange
+  return changes
 }
 
 afterEach(cleanup)
 
 describe('SpaceSettings', () => {
   it('opens as a dialog on wide screens, with every field, a save button and a close button', () => {
-    const onOpenChange = mount(false)
+    const changes = mount()
     expect(screen.getByRole('dialog')).toBeTruthy()
     expect(screen.getByText(messages.Spaces.posting)).toBeTruthy()
     expect(screen.getByText(messages.Spaces.eventsSetting)).toBeTruthy()
@@ -50,11 +43,12 @@ describe('SpaceSettings', () => {
     expect(screen.getByText(messages.Spaces.rulesField)).toBeTruthy()
     expect(screen.getByText(messages.Spaces.saveSettings)).toBeTruthy()
     fireEvent.click(screen.getByRole('button', { name: messages.Spaces.closeSettings }))
-    expect(onOpenChange).toHaveBeenCalledWith(false)
+    expect(changes).toEqual([false])
   })
 
-  it('opens as a bottom sheet on phones with the same fields', () => {
-    mount(true)
+  it('opens as a bottom sheet on phones with the same fields', async () => {
+    await page.viewport(390, 844)
+    mount()
     expect(screen.getByText(messages.Spaces.posting)).toBeTruthy()
     expect(screen.getByText(messages.Spaces.saveSettings)).toBeTruthy()
   })

@@ -1,7 +1,7 @@
 import { useTranslations } from 'next-intl'
 
 import { Alert } from '@/components/arc/alert/alert'
-import { sessionItems } from '@/lib/calendar-sources'
+import { sessionItems } from '@/lib/session-items'
 import { scheduleView, type ScheduleRef } from '@/lib/session-refs'
 import type { SessionRead } from '@/lib/spaces-data'
 

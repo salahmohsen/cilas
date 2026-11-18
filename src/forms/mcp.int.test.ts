@@ -1,4 +1,4 @@
-import { createLocalReq, getPayload, type Payload, type PayloadRequest } from 'payload'
+import { createLocalReq, getPayload, type Payload } from 'payload'
 import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest'
 
 import { REGISTRATION_DEFAULTS } from '@/forms/templates'
@@ -17,13 +17,11 @@ type ToolOutput = { content: Array<{ type: string; text: string }>; isError?: bo
 
 const tool = (name: string) => MCP_TOOLS.find((t) => t.name === name)!
 
-/** A request signed in as the key's owner, as the plugin hands it to a tool. */
-const requestFor = (user: User): Promise<PayloadRequest> =>
+const requestFor = (user: User) =>
   createLocalReq({ user: { ...user, collection: 'users' } as never }, payload)
 
 const NO_TEMPLATES = { cycle_template: null, bridge_template: null, workshop_template: null }
 
-/** Calls a tool as `user`. Registration defaults come from `defaults`, never the shared global. */
 const call = async (
   name: string,
   user: User,
@@ -74,7 +72,6 @@ describe('admin-only MCP server', () => {
         overrideAccess: true,
       }),
     ).id
-    // A cycle needs a place; any one will do and it is not changed.
     const place = (
       await payload.find({ collection: 'places', limit: 1, depth: 0, overrideAccess: true })
     ).docs[0]!
@@ -378,17 +375,33 @@ describe('admin-only MCP server', () => {
 
     it('leaves nothing behind when the Arabic step fails', async () => {
       const title = uniq('Atomic course')
-      const real = payload.update.bind(payload)
-      const spy = vi.spyOn(payload, 'update').mockImplementation((async (args: never) => {
-        if ((args as { collection: string }).collection === 'courses') throw new Error('boom')
-        return real(args)
-      }) as never)
+      const arabic = uniq('عنوان')
+      const guard = uniq('fail_ar').replaceAll('-', '_')
+      const { pool } = payload.db as unknown as {
+        pool: { query: (text: string) => Promise<unknown> }
+      }
+      await pool.query(`
+        create function ${guard}() returns trigger language plpgsql as $$
+        begin
+          if NEW._locale = 'ar'
+            and coalesce(to_jsonb(NEW)->>'title', to_jsonb(NEW)->>'version_title') = '${arabic}'
+          then raise exception 'boom'; end if;
+          return NEW;
+        end $$;
+        create trigger ${guard} before insert or update on courses_locales
+          for each row execute function ${guard}();
+        create trigger ${guard} before insert or update on _courses_v_locales
+          for each row execute function ${guard}()`)
       const result = await call('create_course_draft', admin, {
-        title: { en: title, ar: 'عنوان' },
+        title: { en: title, ar: arabic },
         course_type: 'CORE',
         cycle: cycleId,
-      })
-      spy.mockRestore()
+      }).finally(() =>
+        pool.query(`
+          drop trigger ${guard} on courses_locales;
+          drop trigger ${guard} on _courses_v_locales;
+          drop function ${guard}()`),
+      )
       expect(result.isError).toBe(true)
       const found = await payload.count({
         collection: 'courses',

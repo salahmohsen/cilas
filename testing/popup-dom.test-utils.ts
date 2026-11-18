@@ -12,7 +12,6 @@ export const stubPopupDom = () => {
   HTMLElement.prototype.showPopover = function () {}
   HTMLElement.prototype.hidePopover = function () {}
   Element.prototype.getAnimations = () => []
-  // A sheet holds its backdrop's dim in a paused animation.
   Element.prototype.animate = () =>
     ({
       currentTime: 0,
@@ -29,18 +28,4 @@ export const stubPopupDom = () => {
       textContent: '[popover] { display: block !important }',
     }),
   )
-}
-
-export const stubMatchMedia = () => {
-  window.matchMedia = (query: string) =>
-    ({
-      matches: false,
-      media: query,
-      onchange: null,
-      addEventListener: () => {},
-      removeEventListener: () => {},
-      addListener: () => {},
-      removeListener: () => {},
-      dispatchEvent: () => false,
-    }) as MediaQueryList
 }

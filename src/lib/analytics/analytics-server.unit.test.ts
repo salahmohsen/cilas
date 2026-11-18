@@ -1,13 +1,14 @@
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
+import { gunzipSync } from 'node:zlib'
+
+import { delay, http, HttpResponse } from 'msw'
+import { describe, expect, it } from 'vitest'
 
 import { buildServerError, ErrorLimiter } from '@/lib/analytics/server-error'
 
-const capture = vi.fn()
-vi.mock('posthog-node', () => ({
-  PostHog: class {
-    captureExceptionImmediate = capture
-  },
-}))
+import { importWithEnv } from '../../../testing/env.test-utils'
+import { mockNetwork } from '../../../testing/msw-node.test-utils'
+
+const network = mockNetwork()
 
 const failure = (message: string) => {
   const error = new Error(message)
@@ -91,44 +92,57 @@ describe('the error limiter', () => {
 })
 
 describe('reporting to PostHog', () => {
-  beforeEach(() => {
-    vi.resetModules()
-    capture.mockReset().mockResolvedValue(undefined)
-  })
-  afterEach(() => vi.unstubAllEnvs())
-
-  const report = async (message: string, path = '/en/about') => {
-    const { reportServerError } = await import('@/lib/analytics/server')
+  const report = async (message: string, key = 'phc_test', path = '/en/about') => {
+    const { reportServerError } = await importWithEnv(
+      { NEXT_PUBLIC_POSTHOG_KEY: key, NEXT_PUBLIC_POSTHOG_HOST: 'https://posthog.test' },
+      () => import('@/lib/analytics/server'),
+    )
     await reportServerError(failure(message), { path, method: 'GET' }, { routePath: '/p' })
   }
+  const sent: Request[] = []
+  const answer = (response: () => Response | Promise<Response>) =>
+    network.use(
+      http.post('https://posthog.test/*', ({ request }) => {
+        sent.push(request)
+        return response()
+      }),
+    )
 
   it('sends nothing without a key', async () => {
-    vi.stubEnv('NEXT_PUBLIC_POSTHOG_KEY', '')
-    await report('boom')
-    expect(capture).not.toHaveBeenCalled()
+    sent.length = 0
+    await report('boom', '')
+    expect(sent).toEqual([])
   })
 
   it('sends one report with a key, and not the same fault again', async () => {
-    vi.stubEnv('NEXT_PUBLIC_POSTHOG_KEY', 'phc_test')
-    await report('boom')
-    await report('boom')
-    expect(capture).toHaveBeenCalledTimes(1)
-    expect(capture.mock.calls[0]?.[1]).toBe('cilas-server')
+    sent.length = 0
+    answer(() => HttpResponse.json({ status: 1 }))
+    const { reportServerError } = await importWithEnv(
+      { NEXT_PUBLIC_POSTHOG_KEY: 'phc_test', NEXT_PUBLIC_POSTHOG_HOST: 'https://posthog.test' },
+      () => import('@/lib/analytics/server'),
+    )
+    const again = () =>
+      reportServerError(failure('boom'), { path: '/en/about', method: 'GET' }, { routePath: '/p' })
+    await again()
+    await again()
+    expect(sent).toHaveLength(1)
+    const body = gunzipSync(Buffer.from(await sent[0]!.clone().arrayBuffer())).toString()
+    expect(body).toContain('cilas-server')
   })
 
   it('never throws when PostHog fails', async () => {
-    vi.stubEnv('NEXT_PUBLIC_POSTHOG_KEY', 'phc_test')
-    capture.mockRejectedValue(new Error('network down'))
+    sent.length = 0
+    answer(() => HttpResponse.error())
     await expect(report('another')).resolves.toBeUndefined()
   })
 
   it('gives up on a slow PostHog', async () => {
-    vi.useFakeTimers()
-    vi.stubEnv('NEXT_PUBLIC_POSTHOG_KEY', 'phc_test')
-    capture.mockReturnValue(new Promise(() => {}))
-    const done = report('slow one')
-    await vi.advanceTimersByTimeAsync(3000)
-    await expect(done).resolves.toBeUndefined()
-    vi.useRealTimers()
+    sent.length = 0
+    answer(async () => {
+      await delay('infinite')
+      return HttpResponse.json({})
+    })
+    await expect(report('slow one')).resolves.toBeUndefined()
+    expect(sent).toHaveLength(1)
   })
 })

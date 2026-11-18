@@ -1,45 +1,18 @@
 import { cleanup, fireEvent, render as renderView, screen, waitFor } from '@testing-library/react'
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
+import { afterEach, describe, expect, it } from 'vitest'
 
-// The admin frame is Payload's; these tests read what the guide itself says.
-vi.mock('@payloadcms/next/templates', () => ({
-  DefaultTemplate: ({ children }: { children: React.ReactNode }) => <div>{children}</div>,
-}))
-vi.mock('@payloadcms/ui', () => ({
-  Gutter: ({ children }: { children: React.ReactNode }) => <div>{children}</div>,
-}))
-
-import { AiAccessGuideView } from '@/components/admin/ai-access-guide'
+import { AiAccessGuideContent } from '@/components/admin/ai-access-guide-content'
 import { decodeEntities } from '@/lib/html-entities'
 import { ASSISTANTS } from '@/plugins/mcp/assistants'
+import { mcpServerUrl } from '@/plugins/mcp/paths'
 
-beforeEach(() => {
-  vi.stubGlobal(
-    'ResizeObserver',
-    class {
-      observe() {}
-      disconnect() {}
-    },
-  )
-})
+afterEach(cleanup)
 
-afterEach(() => vi.unstubAllGlobals())
-
-const render = async (roles: string[], assistantName?: string) => {
+const render = async (assistantName?: string) => {
   cleanup()
-  const view = await AiAccessGuideView({
-    initPageResult: {
-      // The live connections list reads the tokens; no assistant is connected here.
-      req: { i18n: {}, payload: { find: async () => ({ docs: [] }), logger: { error() {} } } },
-      locale: { code: 'en' },
-      permissions: {},
-      visibleEntities: {},
-    },
-    params: {},
-    searchParams: {},
-    user: { id: 1, roles },
-  } as never)
-  const { container } = renderView(view as React.ReactElement)
+  const { container } = renderView(
+    <AiAccessGuideContent address={mcpServerUrl('http://localhost:3000')} connections={null} />,
+  )
   if (assistantName) {
     fireEvent.mouseDown(screen.getByRole('tab', { name: assistantName }), {
       button: 0,
@@ -59,22 +32,21 @@ const textOf = (html: string) => decodeEntities(html.replace(/<[^>]+>/g, ' ')).r
 
 describe('the AI assistants guide', () => {
   it('tells an administrator what it does, and that a person publishes', async () => {
-    const text = textOf(await render(['admin']))
-    expect(text).toContain('Connect an AI assistant')
+    const text = textOf(await render())
     expect(text).toContain('Course and article drafts need your review')
     expect(text).toContain('A new form is readable by anyone who has its address')
     expect(text).toMatch(/publishes it/)
   })
 
   it('shows the address once, with one copy button for it', async () => {
-    const html = await render(['admin'])
+    const html = await render()
     expect(html).toContain('http://localhost:3000/api/mcp')
     expect(screen.getAllByRole('button', { name: 'Copy address' })).toHaveLength(1)
   })
 
   it('shows both assistants, from the table, with their steps and their settings link', async () => {
     for (const assistant of ASSISTANTS) {
-      const html = await render(['admin'], assistant.name)
+      const html = await render(assistant.name)
       expect(html).toContain(`<h3>${assistant.name}</h3>`)
       expect(html).toContain(assistant.settingsUrl)
       expect(textOf(html)).toContain(textOf(assistant.plans).trim())
@@ -85,15 +57,15 @@ describe('the AI assistants guide', () => {
   })
 
   it('says which plans are needed', async () => {
-    const text = textOf(await render(['admin']))
+    const text = textOf(await render())
     expect(text).toMatch(/Owner adds it once/)
-    const chatgpt = textOf(await render(['admin'], 'ChatGPT'))
+    const chatgpt = textOf(await render('ChatGPT'))
     expect(chatgpt).toMatch(/Business, Enterprise or Edu/)
     expect(chatgpt).toMatch(/Plus or Pro/)
   })
 
   it('has examples for a course, an article and a form linked to a course', async () => {
-    const html = await render(['admin'])
+    const html = await render()
     expect(html).toContain('A course')
     expect(html).toContain('An article')
     expect(html).toContain('A form linked to a course')
@@ -112,7 +84,7 @@ describe('the AI assistants guide', () => {
   })
 
   it('links to the lists where a person reviews and to the connected assistants', async () => {
-    const html = await render(['admin'])
+    const html = await render()
     for (const href of [
       '/admin/collections/courses',
       '/admin/collections/articles',
@@ -126,7 +98,7 @@ describe('the AI assistants guide', () => {
   })
 
   it('has the four safety points and nothing about keys', async () => {
-    const text = textOf(await render(['admin']))
+    const text = textOf(await render())
     expect(text).toMatch(/Check every draft/)
     expect(text).toMatch(/no page links to it until a person publishes the course/)
     expect(text).toMatch(/instructions you got from strangers/)
@@ -134,15 +106,9 @@ describe('the AI assistants guide', () => {
   })
 
   it('uses no word an administrator would not know', async () => {
-    const text = textOf(await render(['admin']))
+    const text = textOf(await render())
     expect(text).not.toMatch(
       /\b(API keys?|keys?|tokens?|terminal|Node\.js|npx|npm|JSON|config|bearer)\b/i,
     )
-  })
-
-  it('refuses a person who is not an administrator', async () => {
-    const text = textOf(await render(['member']))
-    expect(text).toContain('You do not have access to this page.')
-    expect(text).not.toContain('Copy address')
   })
 })

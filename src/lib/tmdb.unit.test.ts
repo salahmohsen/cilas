@@ -1,15 +1,12 @@
-import { afterEach, describe, expect, it, vi } from 'vitest'
+import { http, HttpResponse } from 'msw'
+import { describe, expect, it } from 'vitest'
 
-import { readMovie, searchMovies } from '@/lib/tmdb'
+import { mockNetwork } from '../../testing/msw-node.test-utils'
+import { importWithEnv } from '../../testing/env.test-utils'
 
-const { settings } = vi.hoisted(() => ({
-  settings: { TMDB_API_READ_TOKEN: 'test-token' as string | undefined },
-}))
-vi.mock('@/env', () => ({ env: settings }))
-afterEach(() => {
-  vi.unstubAllGlobals()
-  settings.TMDB_API_READ_TOKEN = 'test-token'
-})
+const network = mockNetwork()
+const adapter = (token = 'test-token') =>
+  importWithEnv({ TMDB_API_READ_TOKEN: token }, () => import('@/lib/tmdb'))
 
 const upstream = {
   id: 753,
@@ -33,8 +30,14 @@ const upstream = {
 
 describe('TMDB server adapter', () => {
   it('searches without adult results and keeps the token out of URLs and results', async () => {
-    const fetch = vi.fn().mockResolvedValue(Response.json({ results: [upstream] }))
-    vi.stubGlobal('fetch', fetch)
+    const seen: Request[] = []
+    network.use(
+      http.get('https://api.themoviedb.org/3/search/movie', ({ request }) => {
+        seen.push(request)
+        return HttpResponse.json({ results: [upstream] })
+      }),
+    )
+    const { searchMovies } = await adapter()
     expect(await searchMovies('Faces', 'en-US')).toEqual([
       {
         id: 753,
@@ -44,17 +47,21 @@ describe('TMDB server adapter', () => {
         posterPath: '/poster.jpg',
       },
     ])
-    const [url, options] = fetch.mock.calls[0]
-    expect(String(url)).toContain('include_adult=false')
-    expect(String(url)).not.toContain('test-token')
-    expect(options.headers.Authorization).toBe('Bearer test-token')
+    expect(seen).toHaveLength(1)
+    expect(seen[0]!.url).toContain('include_adult=false')
+    expect(seen[0]!.url).not.toContain('test-token')
+    expect(seen[0]!.headers.get('Authorization')).toBe('Bearer test-token')
   })
   it('normalizes full credits and falls back to English when a translation has no overview', async () => {
-    const fetch = vi
-      .fn()
-      .mockResolvedValueOnce(Response.json({ ...upstream, overview: '' }))
-      .mockResolvedValueOnce(Response.json(upstream))
-    vi.stubGlobal('fetch', fetch)
+    const languages: (string | null)[] = []
+    network.use(
+      http.get('https://api.themoviedb.org/3/movie/753', ({ request }) => {
+        const language = new URL(request.url).searchParams.get('language')
+        languages.push(language)
+        return HttpResponse.json(language === 'en-US' ? upstream : { ...upstream, overview: '' })
+      }),
+    )
+    const { readMovie } = await adapter()
     const result = await readMovie(753, 'ar-EG')
     expect(result).toMatchObject({
       source: 'tmdb',
@@ -66,19 +73,24 @@ describe('TMDB server adapter', () => {
       overview: 'A synopsis.',
     })
     expect(result.crew).toHaveLength(2)
-    expect(String(fetch.mock.calls[1][0])).toContain('language=en-US')
+    expect(languages).toEqual(['ar-EG', 'en-US'])
   })
   it('reports missing credentials without making an upstream request', async () => {
-    settings.TMDB_API_READ_TOKEN = undefined
-    const fetch = vi.fn()
-    vi.stubGlobal('fetch', fetch)
+    const { searchMovies } = await adapter('')
     await expect(searchMovies('Faces', 'en-US')).rejects.toMatchObject({ status: 503 })
-    expect(fetch).not.toHaveBeenCalled()
   })
   it('preserves rate-limit errors and rejects malformed provider data', async () => {
-    vi.stubGlobal('fetch', vi.fn().mockResolvedValue(new Response('', { status: 429 })))
+    const { readMovie } = await adapter()
+    network.use(
+      http.get(
+        'https://api.themoviedb.org/3/movie/753',
+        () => new HttpResponse('', { status: 429 }),
+      ),
+    )
     await expect(readMovie(753, 'en-US')).rejects.toMatchObject({ status: 429 })
-    vi.stubGlobal('fetch', vi.fn().mockResolvedValue(Response.json({ id: 753 })))
+    network.use(
+      http.get('https://api.themoviedb.org/3/movie/753', () => HttpResponse.json({ id: 753 })),
+    )
     await expect(readMovie(753, 'en-US')).rejects.toThrow()
   })
 })

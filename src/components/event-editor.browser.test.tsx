@@ -1,21 +1,15 @@
-import type { ComponentProps } from 'react'
-import { cleanup, render, screen } from '@testing-library/react'
-import { NextIntlClientProvider } from 'next-intl'
-import { afterEach, describe, expect, it, vi } from 'vitest'
-import { EventDescription } from '@/components/events/event-description'
+import { cleanup, screen } from '@testing-library/react'
+import { afterEach, describe, expect, it } from 'vitest'
+
 import { RichTextField } from '@/components/RichTextField'
 import { RichTextReferencesProvider } from '@/components/rich-text-references'
+import { eventDescriptionField } from '@/components/events/event-description-field'
 import type { Event } from '@/payload-types'
 import type { RichTextReferences } from '@/lib/rich-text-references'
-import messages from '../../messages/en.json'
+
+import { renderWithIntl } from '../../testing/intl.test-utils'
 import { movie } from '../../testing/movie.fixture'
 
-vi.mock('@/lib/use-narrow', () => ({ useNarrow: () => false }))
-vi.mock('@/components/resolved-rich-text-field', () => ({
-  ResolvedRichTextField: (props: ComponentProps<typeof RichTextField>) => (
-    <RichTextField {...props} />
-  ),
-}))
 afterEach(cleanup)
 
 const text = (value: string, format = 0) => ({
@@ -64,12 +58,10 @@ const references: RichTextReferences = {
 }
 
 const show = (children: unknown[], refs = references) =>
-  render(
-    <NextIntlClientProvider locale="en" messages={messages}>
-      <RichTextReferencesProvider references={refs}>
-        <EventDescription data={documentOf(children)} />
-      </RichTextReferencesProvider>
-    </NextIntlClientProvider>,
+  renderWithIntl(
+    <RichTextReferencesProvider references={refs}>
+      <RichTextField {...eventDescriptionField(documentOf(children))} />
+    </RichTextReferencesProvider>,
   )
 
 describe('event editor feature rendering', () => {
