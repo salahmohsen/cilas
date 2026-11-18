@@ -11,10 +11,12 @@ const requiredServerEnv = {
 }
 
 /**
- * Sets environment variables, then loads a module fresh, so the real `@/env`
- * or `@/env.client` reads them. Supplies the variables `@/env` requires; a
- * value in `vars` wins, and `''` unsets an optional one. Call `load` with a
- * dynamic `import()`: a static import runs before the variables are set.
+ * Sets environment variables, clears the module cache, then runs `load`, so
+ * the real `@/env` or `@/env.client` reads them. Supplies the variables
+ * `@/env` requires with test values; a value in `vars` wins, and `''` unsets
+ * an optional one. Call `load` with a dynamic `import()`: a static import
+ * runs before the variables are set. For unit tests: the test values replace
+ * PAYLOAD_SECRET and the R2 settings that a live Payload needs.
  */
 export const importWithEnv = async <Module>(
   vars: Record<string, string>,
@@ -23,5 +25,6 @@ export const importWithEnv = async <Module>(
   for (const [name, value] of Object.entries({ ...requiredServerEnv, ...vars })) {
     vi.stubEnv(name, value)
   }
+  vi.resetModules()
   return load()
 }
