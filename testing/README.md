@@ -15,6 +15,8 @@ The file name alone picks the runner. Do not add `// @vitest-environment` commen
 | `*.dom.test.ts(x)`     | `dom`     | jsdom                                               | Components that need no layout, no observers and no media queries                                                              |
 | `*.browser.test.ts(x)` | `browser` | Headless Chromium (Vitest browser mode, Playwright) | Components that need layout, `ResizeObserver`, `IntersectionObserver`, `matchMedia`, container queries, popovers or animations |
 
+`e2e/*.e2e.test.ts` are Playwright specs against the built app: `pnpm test:e2e` builds it, starts it on port 3000 (or reuses a server already there) and refuses a non-local `DATABASE_URL`. The app server gets an unreachable R2 endpoint, because `src/env.ts` accepts only Cloudflare R2 storage in a production build; a spec that needs an upload cannot run there yet.
+
 `pnpm exec vitest run` runs all three projects. `pnpm test:unit` runs everything except `*.int.test.ts`. Run one project with `--project browser`. The browser project uses the Chromium that Playwright caches (`pnpm exec playwright install chromium` if it is missing).
 
 ## Move a test from jsdom to the browser
@@ -32,9 +34,13 @@ A browser test must not import server code, even through a component. If one fil
 
 Exemplars: `src/components/course/course-syllabus.browser.test.tsx` (`ResizeObserver`), `src/app/(frontend)/[locale]/study/[slug]/course-view-time.browser.test.tsx` (`IntersectionObserver`), `src/components/person-profile-block.browser.test.tsx` (`matchMedia`, a phone), `src/components/calendar/ui/calendar-views.browser.test.tsx` (container queries, server markup and hydration), `src/components/calendar/ui/use-narrow.browser.test.tsx` (the calendar's width flags).
 
-## Storage
+## Environment
 
-Vitest never reads storage from `.env`, which holds the production R2 bucket. `vitest.config.mts` takes the `R2_*` settings as one set from `testing/local-env.ts`: the shell's when it exports `R2_ENDPOINT` (CI and the search test do), otherwise the lines of `.env.development.local` (the local RustFS). The config refuses to start, and `vitest.setup.ts` refuses to run, when `R2_ENDPOINT` or `R2_PUBLIC_URL` is not a local host.
+`testing/local-env.ts` builds every worker's environment. Nothing to export by hand except `DATABASE_URL`.
+
+- **Storage.** Never from `.env`, which holds the production R2 bucket. The `R2_*` settings come as one set: the shell's when it exports `R2_ENDPOINT` (CI and the search test do), otherwise the lines of `.env.development.local` (the local RustFS). The config refuses to start, and `vitest.setup.ts` refuses to run, when `R2_ENDPOINT` or `R2_PUBLIC_URL` is not a local host. `vitest.setup.ts` refuses a non-local `DATABASE_URL` too.
+- **Mail.** `RESEND_API_KEY` is always a test key, so Payload builds its real Resend adapter and no test holds the real key. A test that sends mail answers Resend with `resendInbox()` (below).
+- **Turnstile.** The browser project uses Cloudflare's always-pass test site key `1x00000000000000000000AA`, so forms run the real widget, which answers with the token `XXXX.DUMMY.TOKEN.XXXX` in about two seconds. `useSpamCheck(siteKey)` takes another key: `2x00000000000000000000AB` always fails, `3x00000000000000000000FF` needs a click (Cloudflare's [test keys](https://developers.cloudflare.com/turnstile/troubleshooting/testing/)). Await the request a form sends (a promise resolved in its MSW handler) rather than `waitFor`, whose one second is shorter than the widget. Exemplar: `src/components/forms/spam-check.browser.test.tsx`.
 
 ## The network: MSW
 
@@ -46,10 +52,9 @@ Call `mockNetwork(...handlers)` once at the top of the file or the `describe`. A
 Both start MSW with `onUnhandledRequest: 'error'`, and both fail the test in `afterEach` for each request that no handler answered, even when the code caught the error. So a test proves that a request did not happen by having no handler for it. Requests for scripts, styles and other assets (MSW's `isCommonAssetRequest`) are not counted. Answer with `HttpResponse.json`, `HttpResponse.html`, `new HttpResponse(null, { status: 302, headers })`, or `HttpResponse.error()` for a network failure.
 
 - In jsdom, a relative URL such as `fetch('/api/x')` resolves against `http://localhost:3000/`, and a handler for `/api/x` answers it (checked with a scratch `.dom.test.tsx`).
-- An int test that also calls a local service the test owns (Typesense, RustFS) lets those requests through by origin: `http.all('http://localhost:8108/*', () => passthrough())` (checked against the local Typesense). Do not pass through a whole public origin.
-  The handlers exist as `payloadServices` (`local-services.test-utils`: Typesense, and a 204 for Payload's telemetry) and `localServiceHandlers` (`local-services.test-utils`: the storage bucket, Typesense and telemetry). The storage handler lets uploads through to `R2_ENDPOINT`, which the runner keeps local (see Storage).
+- An int test that runs Payload adds `...localServices` (`local-services.test-utils`): it passes requests through to the storage and Typesense origins read from env, and answers Payload's telemetry. It throws at import when either origin is not a local host. Do not pass through a public origin.
 - In the browser, `next/image` asks Next's image optimizer, which a test has no server for. Add `nextImages()` from `msw-browser.test-utils`: every image is one pixel.
-- Email: Payload builds its real Resend adapter when `RESEND_API_KEY` is set, and an MSW handler for `https://api.resend.com/emails` records each send. `captureResendMail` (`resend.test-utils`) and `resendInbox` (`resend.test-utils`) both do this.
+- Email: `const inbox = resendInbox()` (`resend.test-utils`), then `mockNetwork(inbox.handler, ...localServices)`. `inbox.sent` holds each send, `inbox.to(address)` filters it, and `inbox.failFor = address` makes Resend refuse that recipient. Both reset before each test.
 - Web push: `pushDevice()` (`web-push.test-utils`) makes a real P-256 subscription and decrypts what the server sent to it. Exemplar: `src/lib/push/push-send.int.test.ts`.
 
 Exemplar: `src/lib/event-place.unit.test.ts`.
@@ -119,10 +124,16 @@ A route handler or server component that reads `@/env`, Payload or `next-intl/se
 - **Animations under load.** Chromium runs the real enter animations, and a busy machine slows them. Assert visibility with `await waitFor(() => expect(x).toBeVisible())`, not right after the event that opened it.
 - **Node 26 `localStorage`.** The config starts workers with `--no-experimental-webstorage`, so jsdom's real storage is the global. Do not redefine it.
 
-## Not solved yet
+## Int tests share one database
 
-- **Shared database.** All int tests share one local Postgres. A file that passes alone can fail in the full run when another file changes the same rows.
-- **Duplicate helpers.** `payloadServices`, `localServiceHandlers` and inline handlers in six int tests answer the same services, and `captureResendMail` and `resendInbox` capture the same mail. Each pair should become one helper.
+All int files run at once against one local Postgres. A file owns its rows:
+
+- Create every row the test uses: place, cycle, course, media, accounts. Never take an existing row (`find` with `limit: 1`), because its owner may change or delete it mid-run.
+- Wrap each create in `track(...)` from `createTracker()` (`payload.fixture`) and call `cleanup(payload)` in `afterAll`. It deletes in dependency order, also deletes the rows that belong to tracked accounts (notifications, invitation log, MCP keys, space rows) and the person a hook gave an account, and throws when a row stays behind. Track rows a flow created for you too (find them by this run's suffix).
+- A change to the schema (a test trigger) runs one table per statement, so it never holds two table locks at once.
+- A value that is one for the whole database gets an advisory lock in `payload.fixture`: `lockSpacesMode()` for the site's spaces mode, `holdInvitationBudget('shared' | 'alone')` for the day's invitation count (files that send invitations hold it shared, a test that fills the count to its cap holds it alone).
+
+Still shared: a submission notifies every admin in the database, and the search outbox grows with each write.
 
 ## Rejected
 
