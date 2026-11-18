@@ -1,14 +1,13 @@
 import { JSDOM } from 'jsdom'
-import { createFormatter, createTranslator } from 'next-intl'
 import { renderToStaticMarkup } from 'react-dom/server'
 import { describe, expect, it } from 'vitest'
 
 import { EventAttendanceBody } from '@/components/events/event-attendance'
-import { CAIRO } from '@/lib/cairo-day'
 import { detailPath } from '@/lib/paths'
 import type { Event } from '@/payload-types'
 
-import { IntlProvider, messagesOf } from '../../../testing/intl.test-utils'
+import { serverFormatter, serverTranslator } from '../../../testing/fan4-server-intl.test-utils'
+import { IntlProvider } from '../../../testing/intl.test-utils'
 
 const event: Event = {
   id: 1,
@@ -29,9 +28,9 @@ const render = async (value: Event = event, at = now) =>
           event: value,
           now: at,
           locale: 'en',
-          t: createTranslator({ locale: 'en', messages: messagesOf.en, namespace: 'Events' }),
-          spaces: createTranslator({ locale: 'en', messages: messagesOf.en, namespace: 'Spaces' }),
-          format: createFormatter({ locale: 'en', timeZone: CAIRO }),
+          t: serverTranslator('Events'),
+          spaces: serverTranslator('Spaces'),
+          format: serverFormatter(),
         })}
       </IntlProvider>,
     ),

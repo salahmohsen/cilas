@@ -7,11 +7,11 @@ import type { ClientNotificationEvent } from '@/lib/realtime/events'
 
 import { mockNetwork } from '../../testing/msw-browser.test-utils'
 
-type Client = { send: (message: { event?: string; data: string }) => void }
-const open: Client[] = []
+type StreamMessage = { event: 'notification' | 'resync'; data: string }
+const open: { send: (message: StreamMessage) => void }[] = []
 mockNetwork(
-  sse('/api/notifications/stream', ({ client }) => {
-    open.push(client)
+  sse<{ notification: string; resync: string }>('/api/notifications/stream', ({ client }) => {
+    open.push({ send: (message) => client.send(message) })
   }),
 )
 
@@ -22,7 +22,7 @@ afterEach(() => {
 
 const connected = (count: number) => waitFor(() => expect(open).toHaveLength(count))
 const notification = (event: ClientNotificationEvent) => ({
-  event: 'notification',
+  event: 'notification' as const,
   data: JSON.stringify(event),
 })
 
@@ -41,7 +41,7 @@ describe('notification feed lifecycle', () => {
     act(() => open[0]!.send(notification(event)))
     await waitFor(() => expect(next).toHaveBeenCalledWith(event))
     expect(first).not.toHaveBeenCalled()
-    act(() => open[0]!.send({ event: 'resync', data: '' }))
+    act(() => open[0]!.send({ event: 'resync' as const, data: '' }))
     await waitFor(() => expect(load).toHaveBeenCalledTimes(2))
     expect(open).toHaveLength(1)
     view.unmount()

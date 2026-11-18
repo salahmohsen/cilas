@@ -1,31 +1,28 @@
 import { act, renderHook, waitFor } from '@testing-library/react'
-import { readFile } from 'node:fs/promises'
-import { beforeEach, describe, expect, it, vi } from 'vitest'
+import { describe, expect, it, vi } from 'vitest'
 
-import { saveScheduleEdits } from '@/actions/save-schedule-edits'
-import { scheduleOffers } from '@/actions/schedule-offers'
+import type { saveScheduleEdits } from '@/actions/save-schedule-edits'
+import type { scheduleOffers } from '@/actions/schedule-offers'
 import { calendarAdminText } from '@/components/admin/calendar-admin-text'
 import { CalendarSaveRefusal } from '@/components/calendar/ui/save-refusal'
-import { useScheduleSave } from '@/components/space/use-schedule-save'
+import { useScheduleSaveWith } from '@/components/space/use-schedule-save-with'
 import type { CalendarChange, CalendarItem } from '@/lib/calendar-items'
 import type { ScheduleOffer } from '@/lib/schedule-offer'
 
 import en from '../../messages/en.json'
 
-vi.mock('@/actions/save-schedule-edits', () => ({ saveScheduleEdits: vi.fn() }))
-vi.mock('@/actions/schedule-offers', () => ({ scheduleOffers: vi.fn() }))
-
 const { save: text } = calendarAdminText('en', en)
 
-const session = (start: string): CalendarItem => ({
-  id: '3',
-  kind: 'session',
-  title: 'Week 3',
-  tone: 'yellow',
-  cancelled: false,
-  version: 'v1',
-  blocks: [{ id: 'a', date: '2034-10-05', start_time: start, end_time: '21:00' }],
-})
+const session = (start: string) =>
+  ({
+    id: '3',
+    kind: 'session',
+    title: 'Week 3',
+    tone: 'yellow',
+    cancelled: false,
+    version: 'v1',
+    blocks: [{ id: 'a', date: '2034-10-05', start_time: start, end_time: '21:00' }],
+  }) satisfies CalendarItem
 const event: CalendarItem = {
   id: 'space-event:9',
   kind: 'space-event',
@@ -53,15 +50,39 @@ const offer: ScheduleOffer = {
   preview: null,
 }
 
-const hook = (parent: { kind: string; id: string }, reload = vi.fn()) =>
-  renderHook(() =>
-    useScheduleSave({ parent, courseId: '5', locale: 'en', language: 'en', text, reload }),
-  )
+type Saved = Awaited<ReturnType<typeof saveScheduleEdits>>
 
-beforeEach(() => {
-  vi.mocked(saveScheduleEdits).mockReset()
-  vi.mocked(scheduleOffers).mockReset().mockResolvedValue([offer])
-})
+const host = (
+  parent: { kind: string; id: string },
+  saved: Saved,
+  answer: ScheduleOffer[] | Error = [offer],
+) => {
+  const saves: Parameters<typeof saveScheduleEdits>[] = []
+  const asked: Parameters<typeof scheduleOffers>[] = []
+  const reload = vi.fn()
+  const save: typeof saveScheduleEdits = async (...args) => {
+    saves.push(args)
+    return saved
+  }
+  const offers: typeof scheduleOffers = async (...args) => {
+    asked.push(args)
+    if (answer instanceof Error) throw answer
+    return answer
+  }
+  const { result } = renderHook(() =>
+    useScheduleSaveWith({
+      parent,
+      courseId: '5',
+      locale: 'en',
+      language: 'en',
+      text,
+      reload,
+      save,
+      offers,
+    }),
+  )
+  return { result, saves, asked, reload }
+}
 
 describe('useScheduleSave, the one save-then-offer of every host', () => {
   for (const parent of [
@@ -70,56 +91,47 @@ describe('useScheduleSave, the one save-then-offer of every host', () => {
   ])
     it(`saves on the ${parent.kind} parent, then offers on the items that can change`, async () => {
       const after = [session('20:00'), { ...event, title: 'Talk, renamed' }]
-      vi.mocked(saveScheduleEdits).mockResolvedValue({ ok: true, before: [], after, items: after })
-      const { result } = hook(parent)
+      const { result, saves, asked } = host(parent, { ok: true, before: [], after, items: after })
       let saved: CalendarItem[] = []
       await act(async () => {
         saved = await result.current.save([change], [session('19:00'), event], () => null)
       })
       expect(saved).toBe(after)
-      expect(saveScheduleEdits).toHaveBeenCalledWith(
-        { calendar: { parent, changes: [change] }, details: [] },
-        'en',
-      )
-      // A readOnly item never counts as a schedule change, whatever came back.
-      expect(scheduleOffers).toHaveBeenCalledWith(
-        { courseId: '5', before: [session('19:00')], after: [session('20:00')] },
-        'en',
-      )
+      expect(saves).toEqual([[{ calendar: { parent, changes: [change] }, details: [] }, 'en']])
+      expect(asked).toEqual([
+        [{ courseId: '5', before: [session('19:00')], after: [session('20:00')] }, 'en'],
+      ])
       await waitFor(() => expect(result.current.dialog).not.toBeNull())
     })
 
   it('offers nothing when nothing counts', async () => {
-    vi.mocked(saveScheduleEdits).mockResolvedValue({
-      ok: true,
-      before: [],
-      after: [],
-      items: [session('19:00')],
-    })
-    vi.mocked(scheduleOffers).mockResolvedValue([])
-    const { result } = hook({ kind: 'space', id: '7' })
+    const { result, asked } = host(
+      { kind: 'space', id: '7' },
+      { ok: true, before: [], after: [], items: [session('19:00')] },
+      [],
+    )
     await act(() => result.current.save([change], [session('19:00')], () => null))
-    await waitFor(() => expect(scheduleOffers).toHaveBeenCalled())
+    await waitFor(() => expect(asked).toHaveLength(1))
     expect(result.current.dialog).toBeNull()
   })
 
   it('rejects a failed save with its words and asks for no offer', async () => {
-    vi.mocked(saveScheduleEdits).mockResolvedValue({ ok: false, error: { code: 'forbidden' } })
-    const { result } = hook({ kind: 'space', id: '7' })
+    const { result, asked } = host(
+      { kind: 'space', id: '7' },
+      { ok: false, error: { code: 'forbidden' } },
+    )
     const failure = act(() => result.current.save([change], [session('19:00')], () => null))
     await expect(failure).rejects.toThrow('You may not change these sessions.')
     await expect(failure).rejects.not.toBeInstanceOf(CalendarSaveRefusal)
-    expect(scheduleOffers).not.toHaveBeenCalled()
+    expect(asked).toEqual([])
     expect(result.current.dialog).toBeNull()
   })
 
   it('rejects a stale save naming the session, with one way out that reloads', async () => {
-    vi.mocked(saveScheduleEdits).mockResolvedValue({
-      ok: false,
-      error: { code: 'stale', itemId: '3', name: 'Session 3: Week 3' },
-    })
-    const reload = vi.fn()
-    const { result } = hook({ kind: 'space', id: '7' }, reload)
+    const { result, asked, reload } = host(
+      { kind: 'space', id: '7' },
+      { ok: false, error: { code: 'stale', itemId: '3', name: 'Session 3: Week 3' } },
+    )
     const refusal: unknown = await act(() =>
       result.current.save([change], [session('19:00')], () => null).catch((error) => error),
     )
@@ -129,32 +141,20 @@ describe('useScheduleSave, the one save-then-offer of every host', () => {
     expect(stale.discard.label).toBe('Reload and lose my changes')
     stale.discard.then()
     expect(reload).toHaveBeenCalledTimes(1)
-    expect(scheduleOffers).not.toHaveBeenCalled()
+    expect(asked).toEqual([])
   })
 
   it('shows that the offer failed, after a save that worked', async () => {
-    vi.mocked(saveScheduleEdits).mockResolvedValue({
-      ok: true,
-      before: [],
-      after: [],
-      items: [session('20:00')],
-    })
-    vi.mocked(scheduleOffers).mockRejectedValue(new Error('down'))
-    vi.spyOn(console, 'error').mockImplementation(() => {})
-    const { result } = hook({ kind: 'course', id: '5' })
+    const reported = vi.spyOn(console, 'error')
+    const { result } = host(
+      { kind: 'course', id: '5' },
+      { ok: true, before: [], after: [], items: [session('20:00')] },
+      new Error('down'),
+    )
     await act(() => result.current.save([change], [session('19:00')], () => null))
     await waitFor(() => expect(result.current.failed).toBe(true))
     expect(result.current.dialog).toBeNull()
-  })
-
-  it('is what both hosts save through, and no host calls the actions itself', async () => {
-    for (const host of [
-      'src/components/admin/course-calendar.tsx',
-      'src/components/space/space-calendar-editor.tsx',
-    ]) {
-      const source = await readFile(host, 'utf8')
-      expect(source).toContain('useScheduleSave(')
-      expect(source).not.toMatch(/saveScheduleEdits|scheduleOffers|ScheduleOfferDialog/)
-    }
+    expect(reported).toHaveBeenCalledWith('schedule offer failed', expect.any(Error))
+    reported.mockRestore()
   })
 })

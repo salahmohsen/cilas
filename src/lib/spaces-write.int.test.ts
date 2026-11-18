@@ -2,7 +2,7 @@ import { sql } from '@payloadcms/db-postgres'
 import { getPayload, type Payload } from 'payload'
 
 import { FILE_LIMITS } from '@/lib/space-file-limits'
-import { http, HttpResponse } from 'msw'
+import { http, HttpResponse, passthrough } from 'msw'
 import { afterAll, beforeAll, describe, expect, it } from 'vitest'
 
 import sharp from 'sharp'

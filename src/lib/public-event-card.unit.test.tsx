@@ -1,15 +1,13 @@
 import { within } from '@testing-library/react'
 import { JSDOM } from 'jsdom'
-import { createFormatter, createTranslator } from 'next-intl'
 import { renderToStaticMarkup } from 'react-dom/server'
 import { describe, expect, it } from 'vitest'
 
 import { PublicEventCardBody } from '@/components/events/public-event-card'
-import { CAIRO } from '@/lib/cairo-day'
 import { EVENT_POSTER_COLORS } from '@/lib/event-poster-colors'
 import type { Event } from '@/payload-types'
 
-import { messagesOf } from '../../testing/intl.test-utils'
+import { serverFormatter, serverTranslator } from '../../testing/fan4-server-intl.test-utils'
 import { mockNetwork } from '../../testing/msw-node.test-utils'
 
 mockNetwork()
@@ -37,13 +35,9 @@ const markup = (html: string) => {
 }
 
 const words = {
-  t: createTranslator({ locale: 'en', messages: messagesOf.en, namespace: 'Events' }),
-  types: createTranslator({
-    locale: 'en',
-    messages: messagesOf.en,
-    namespace: 'Calendar.eventTypes',
-  }),
-  format: createFormatter({ locale: 'en', timeZone: CAIRO }),
+  t: serverTranslator('Events'),
+  types: serverTranslator('Calendar.eventTypes'),
+  format: serverFormatter(),
   locale: 'en',
 }
 
