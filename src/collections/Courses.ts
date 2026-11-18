@@ -8,7 +8,7 @@ import { blockedUnless, deleteEndpoints } from '@/forms/delete-endpoints'
 import { addSelfAs } from '@/lib/review-ownership'
 import {
   adminPublishes,
-  adminOnlyField,
+  adminWritesOnly,
   isAdminUser,
   canTeach,
   isAdminOrOwn,
@@ -86,7 +86,7 @@ const courseNoun = 'course' as const
 const courseReview = reviewHooks(courseNoun)
 
 const adminSettings = {
-  access: { create: adminOnlyField, update: adminOnlyField },
+  access: adminWritesOnly,
   admin: {
     condition: ((_, __, { user }) => isAdminUser(user)) satisfies Condition,
   },
@@ -248,7 +248,7 @@ export const Courses: CollectionConfig = {
               label: 'Cycle',
               type: 'relationship',
               relationTo: 'cycles',
-              access: { create: adminOnlyField, update: adminOnlyField },
+              access: adminWritesOnly,
             },
             {
               name: 'location',

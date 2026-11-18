@@ -1,4 +1,4 @@
-import { adminOnlyField } from '@/access'
+import { adminOnlyField, adminWritesOnly } from '@/access'
 import type { Field } from 'payload'
 import { CHOICE_DECISIONS } from './application-status'
 import { submissionChoices } from './submission-view'
@@ -59,14 +59,14 @@ export const applicationFields: Field[] = [
           value,
           label: value[0]!.toUpperCase() + value.slice(1),
         })),
-        access: { create: adminOnlyField, update: adminOnlyField },
+        access: adminWritesOnly,
         admin: { readOnly: true },
       },
       {
         name: 'decided_at',
         label: 'Decided at',
         type: 'date',
-        access: { create: adminOnlyField, update: adminOnlyField },
+        access: adminWritesOnly,
         admin: { readOnly: true, date: { pickerAppearance: 'dayAndTime' } },
       },
       {
@@ -74,7 +74,7 @@ export const applicationFields: Field[] = [
         label: 'Decision email failed',
         type: 'checkbox',
         defaultValue: false,
-        access: { create: adminOnlyField, update: adminOnlyField },
+        access: adminWritesOnly,
         admin: { readOnly: true },
       },
     ],
@@ -107,7 +107,7 @@ export const applicationFields: Field[] = [
       { label: 'Accepted', value: 'accepted' },
       { label: 'Rejected', value: 'rejected' },
     ],
-    access: { create: adminOnlyField, update: adminOnlyField },
+    access: adminWritesOnly,
     admin: { position: 'sidebar', readOnly: true },
   },
   {
@@ -122,7 +122,7 @@ export const applicationFields: Field[] = [
     name: 'decided_at',
     label: 'Decided at',
     type: 'date',
-    access: { create: adminOnlyField, update: adminOnlyField },
+    access: adminWritesOnly,
     admin: { position: 'sidebar', readOnly: true, date: { pickerAppearance: 'dayAndTime' } },
   },
   {
@@ -130,13 +130,13 @@ export const applicationFields: Field[] = [
     label: 'Decision email failed',
     type: 'checkbox',
     defaultValue: false,
-    access: { create: adminOnlyField, update: adminOnlyField },
+    access: adminWritesOnly,
     admin: { position: 'sidebar', readOnly: true, description: 'Programme decisions only.' },
   },
   {
     name: 'result',
     type: 'group',
-    access: { read: adminOnlyField, create: adminOnlyField, update: adminOnlyField },
+    access: { read: adminOnlyField, ...adminWritesOnly },
     admin: { position: 'sidebar', readOnly: true },
     fields: [
       { name: 'user', type: 'relationship', relationTo: 'users' },

@@ -1,5 +1,5 @@
 import type { SelectField } from 'payload'
-import { adminOnlyField } from '@/access'
+import { adminWritesOnly } from '@/access'
 
 /** Tier controls visibility; Payload's `_status` controls publication. */
 export const tierField = (
@@ -14,7 +14,7 @@ export const tierField = (
     { label: 'Community', value: 'community' },
     { label: 'Public', value: 'public' },
   ],
-  access: { create: adminOnlyField, update: adminOnlyField },
+  access: adminWritesOnly,
   ...(options.sidebar
     ? {
         admin: {
