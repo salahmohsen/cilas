@@ -1,26 +1,41 @@
-import type { SanitizedConfig } from 'payload'
+import type { CollectionConfig, SanitizedConfig } from 'payload'
 import { describe, expect, it } from 'vitest'
 
-import config from '@/payload.config'
+import config, { sourceConfig } from '@/payload.config'
+import { overrideApiKeyCollection } from '@/plugins/mcp/api-keys'
 
-import { auditAccess, UPSTREAM } from './access-audit'
+import { auditAccess, srcOverlapsUpstream, UPSTREAM } from './access-audit'
+
+const audited = Promise.resolve(config).then(auditAccess)
 
 const namedAs = <Rule extends (...args: never[]) => unknown>(name: string, rule: Rule) =>
   Object.defineProperty(rule, 'name', { value: name })
 
-const probe = (...fields: { name: string; access: Record<string, unknown> }[]) =>
+const probeAudit = (
+  collection: Record<string, unknown>,
+  ...fields: { name: string; access?: Record<string, unknown> }[]
+) =>
   auditAccess({
     collections: [
-      { slug: 'probe', access: {}, fields: fields.map((field) => ({ type: 'text', ...field })) },
+      {
+        slug: 'probe',
+        access: {},
+        ...collection,
+        fields: fields.map((field) => ({ type: 'text', ...field })),
+      },
     ],
     globals: [],
-  } as unknown as SanitizedConfig).problems.filter((problem) =>
-    problem.startsWith('collection:probe'),
-  )
+  } as unknown as SanitizedConfig)
+
+const probe = (...fields: { name: string; access: Record<string, unknown> }[]) =>
+  probeAudit({}, ...fields).problems.filter((problem) => problem.startsWith('collection:probe'))
+
+const entityRules = (collection: Record<string, unknown>) =>
+  probeAudit(collection).rows.find((row) => row.field === '*')?.rules
 
 describe('access audit', () => {
   it('names every rule of the config and finds no problem', async () => {
-    const { rows, problems } = auditAccess(await config)
+    const { rows, problems } = await audited
     const rules = (entity: string, field: string) =>
       rows.find((row) => row.entity === entity && row.field === field)?.rules
 
@@ -63,6 +78,13 @@ describe('access audit', () => {
       read: 'open',
       update: 'payload:auth',
     })
+    expect(rules('collection:users', '*')).toMatchObject({
+      admin: 'payload:loggedIn',
+      unlock: 'payload:defaultUnlock',
+    })
+    expect(rules('collection:oauth-auth-codes', '*')).toMatchObject({
+      read: 'plugin:mcp-oauth:denyPublic',
+    })
     expect(rules('global:site-settings', '*')).toMatchObject({ read: 'isAdmin', update: 'isAdmin' })
     expect(
       rows.some((row) => row.entity === 'collection:courses' && row.field === 'applicants'),
@@ -70,7 +92,8 @@ describe('access audit', () => {
   })
 
   it('matches the committed snapshot', async () => {
-    const { rows } = auditAccess(await config)
+    const { rows, problems } = await audited
+    expect(problems).toEqual([])
     await expect(`${JSON.stringify(rows, null, 2)}\n`).toMatchFileSnapshot(
       './access-audit.snapshot.json',
     )
@@ -120,5 +143,71 @@ describe('access audit', () => {
     expect(problems).toContain(
       'collection:users salt create: no such rule; remove it from UPSTREAM',
     )
+  })
+
+  it('prints the operations that Payload resolves with no rule', () => {
+    expect(entityRules({ auth: {}, versions: { drafts: true } })).toEqual({
+      admin: 'payload:loggedIn',
+      readVersions: 'payload:loggedIn',
+    })
+    expect(entityRules({ auth: false, versions: false })).toEqual({})
+    expect(
+      entityRules({
+        versions: { drafts: true },
+        access: { readVersions: namedAs('own', () => true) },
+      }),
+    ).toEqual({ readVersions: 'own' })
+  })
+
+  it('does not print readDrafts, which Payload has no rule for', () => {
+    expect(Object.keys(entityRules({ versions: { drafts: true } }) ?? {})).not.toContain(
+      'readDrafts',
+    )
+  })
+
+  it('reads the access of a named tab', () => {
+    const tab = {
+      name: 'review',
+      fields: [{ name: 'note', type: 'text' }],
+      access: { read: namedAs('adminOnlyField', () => true) },
+    }
+    const { rows, problems } = auditAccess({
+      collections: [{ slug: 'probe', access: {}, fields: [{ type: 'tabs', tabs: [tab] }] }],
+      globals: [],
+    } as unknown as SanitizedConfig)
+    expect(problems.filter((problem) => problem.startsWith('collection:probe'))).toEqual([])
+    expect(rows.find((row) => row.field === 'review')?.rules.read).toBe('adminOnlyField')
+    expect(rows.find((row) => row.field === 'review.note')?.rules.read).toBe('open')
+  })
+
+  it('fails on a rule named after another operation', () => {
+    expect(probe({ name: 'value', access: { update: namedAs('read', () => true) } })).toEqual([
+      'collection:probe value update: unnamed rule',
+    ])
+    expect(probe({ name: 'value', access: { read: namedAs('readVersions', () => true) } })).toEqual(
+      ['collection:probe value read: unnamed rule'],
+    )
+  })
+
+  it('lists the plugin rules of the OAuth collections', () => {
+    const labels = UPSTREAM.filter((entry) => entry.entity.startsWith('collection:oauth-')).map(
+      (entry) => entry.label,
+    )
+    expect(new Set(labels)).toEqual(new Set(['plugin:mcp-oauth:denyPublic']))
+    expect(labels).toHaveLength(10)
+  })
+
+  it('src sets no rule that Payload or a plugin adds later', () => {
+    expect(sourceConfig.collections?.length).toBeGreaterThan(30)
+    expect(srcOverlapsUpstream(sourceConfig)).toEqual([])
+  })
+
+  it('the API key override sets no rule on a field that UPSTREAM lists', () => {
+    const fields = ['user', 'apiKey', 'apiKeyIndex'].map((name) => ({ name, type: 'text' }))
+    const overridden = overrideApiKeyCollection({
+      slug: 'payload-mcp-api-keys',
+      fields,
+    } as unknown as CollectionConfig)
+    expect(srcOverlapsUpstream({ collections: [overridden] })).toEqual([])
   })
 })

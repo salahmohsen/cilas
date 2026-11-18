@@ -1,4 +1,4 @@
-import type { Block, Field, SanitizedConfig } from 'payload'
+import type { Block, Field } from 'payload'
 import { fieldAffectsData, tabHasName } from 'payload/shared'
 
 /**
@@ -10,39 +10,61 @@ import { fieldAffectsData, tabHasName } from 'payload/shared'
  * A field with no rule for an operation prints `open`: the rule of its
  * collection decides. A rule on a group or array covers its subtree in
  * Payload; each row shows only the field's own rule, and the parent row
- * comes first.
+ * comes first. A collection or global operation is never `open`: a missing
+ * rule means Payload's logged-in default (`payload:loggedIn`).
  *
  * Regenerate the committed snapshot with `pnpm audit:access`.
  */
 
 const FIELD_OPERATIONS = ['create', 'read', 'update'] as const
-const ENTITY_OPERATIONS = [
-  'admin',
-  'create',
-  'read',
-  'readDrafts',
-  'readVersions',
-  'update',
-  'delete',
-  'unlock',
-]
+const ENTITY_OPERATIONS = ['admin', 'create', 'read', 'readVersions', 'update', 'delete', 'unlock']
 
 type Rule = (...args: never[]) => unknown
 type Rules = Record<string, unknown> | undefined
 type Entry = { path: string; access: Rules }
-type Upstream = { entity: string; field: string; operation: string; label: string; source: string }
+type Upstream = {
+  entity: string
+  field: string
+  operation: string
+  label: string
+  source: string
+  /** The name a plugin's bundler gave the rule. Without it, the rule has no name. */
+  name?: RegExp
+}
+type EntityConfig = {
+  slug: string
+  access?: Rules
+  fields: Field[]
+  auth?: unknown
+  versions?: unknown
+}
+type Entities = { collections?: EntityConfig[]; globals?: EntityConfig[]; blocks?: Block[] }
 
 export type AccessRow = { entity: string; field: string; rules: Record<string, string> }
 
 const CLOSED = '()=>false'
 
-const closed = (entity: string, field: string, operations: string[], label: string): Upstream[] =>
-  operations.map((operation) => ({ entity, field, operation, label, source: CLOSED }))
+const closed = (
+  entity: string,
+  field: string,
+  operations: string[],
+  label: string,
+  name?: RegExp,
+): Upstream[] =>
+  operations.map((operation) => ({ entity, field, operation, label, source: CLOSED, name }))
+
+const OAUTH_LABEL = 'plugin:mcp-oauth:denyPublic'
+const OAUTH_NAME = /^denyPublicAccess\d*$/
+const oauthClosed = (slug: string, operations: string[]) =>
+  closed(`collection:oauth-${slug}`, '*', operations, OAUTH_LABEL, OAUTH_NAME)
+const ALL_OPERATIONS = ['create', 'read', 'update', 'delete']
 
 /**
  * Rules that Payload or a plugin adds while it sanitizes the config, after
  * src/ has run, so src/ cannot name them. Each entry holds the rule's source
- * without whitespace: an upgrade that changes the rule fails the audit.
+ * without whitespace: an upgrade that changes the rule fails the audit. A rule
+ * has no name, unless the entry gives the pattern of the name that a plugin's
+ * bundler chose.
  */
 export const UPSTREAM: Upstream[] = [
   ...[
@@ -77,67 +99,103 @@ export const UPSTREAM: Upstream[] = [
     ['create', 'read', 'update', 'delete'],
     'payload:internal',
   ),
+  ...oauthClosed('auth-codes', ALL_OPERATIONS),
+  ...oauthClosed('csrf-nonces', ALL_OPERATIONS),
+  ...oauthClosed('clients', ['create']),
+  ...oauthClosed('tokens', ['create']),
+]
+
+/**
+ * The rules that Payload puts on a collection or global that has none. Payload
+ * does not export them, so each entry holds the source without whitespace.
+ */
+const PAYLOAD_DEFAULTS = [
+  {
+    label: 'payload:loggedIn',
+    name: 'defaultAccess',
+    source: '({req:{user}})=>Boolean(user)',
+  },
+  {
+    label: 'payload:defaultUnlock',
+    name: 'defaultUnlockAccess',
+    source:
+      '({req:{payload,user}})=>{if(!user){returnfalse;}returnuser.collection===payload.config.admin.user;}',
+  },
 ]
 
 const sourceOf = (rule: Rule) => rule.toString().replace(/\s+/g, '')
 
-const isNamed = (rule: Rule, operation: string) =>
-  rule.name !== '' && rule.name !== operation && !/\banonymous\b/.test(rule.name)
+const isNamed = (rule: Rule) =>
+  rule.name !== '' && !ENTITY_OPERATIONS.includes(rule.name) && !/\banonymous\b/.test(rule.name)
 
-const blocksOf = (references: (Block | string)[], config: SanitizedConfig) =>
+type BlockOf = (slug: string) => Block | undefined
+
+const blocksOf = (references: (Block | string)[], blockOf: BlockOf) =>
   references.flatMap((reference) => {
-    if (typeof reference !== 'string') return [reference]
-    const block = config.blocks?.find(({ slug }) => slug === reference)
+    const block = typeof reference === 'string' ? blockOf(reference) : reference
     return block ? [block] : []
   })
 
-const entries = (fields: Field[], prefix: string, config: SanitizedConfig): Entry[] =>
+const entries = (fields: Field[], prefix: string, blockOf: BlockOf): Entry[] =>
   fields.flatMap((field): Entry[] => {
     if (field.type === 'tabs')
       return field.tabs.flatMap((tab) =>
         tabHasName(tab)
           ? [
-              { path: `${prefix}${tab.name}`, access: (tab as { access?: Rules }).access },
-              ...entries(tab.fields, `${prefix}${tab.name}.`, config),
+              { path: `${prefix}${tab.name}`, access: tab.access },
+              ...entries(tab.fields, `${prefix}${tab.name}.`, blockOf),
             ]
-          : entries(tab.fields, prefix, config),
+          : entries(tab.fields, prefix, blockOf),
       )
     if (field.type === 'row' || field.type === 'collapsible')
-      return entries(field.fields, prefix, config)
+      return entries(field.fields, prefix, blockOf)
     if (field.type === 'group' && !('name' in field && field.name))
-      return entries(field.fields, prefix, config)
+      return entries(field.fields, prefix, blockOf)
     if (!fieldAffectsData(field)) return []
     const self: Entry = { path: `${prefix}${field.name}`, access: field.access as Rules }
     if (field.type === 'group' || field.type === 'array')
-      return [self, ...entries(field.fields, `${self.path}.`, config)]
+      return [self, ...entries(field.fields, `${self.path}.`, blockOf)]
     if (field.type === 'blocks')
       return [
         self,
-        ...blocksOf(field.blockReferences ?? field.blocks, config).flatMap((block) =>
-          entries(block.fields, `${self.path}.${block.slug}.`, config),
+        ...blocksOf(field.blockReferences ?? field.blocks, blockOf).flatMap((block) =>
+          entries(block.fields, `${self.path}.${block.slug}.`, blockOf),
         ),
       ]
     return [self]
   })
 
-/**
- * The paths of the fields in `fields` whose own access holds a function. The
- * test of UPSTREAM runs it on what src/ defines, so that a rule from src/ does
- * not pass as a rule that Payload added.
- */
-export const sourceSetsAccess = (fields: Field[]) =>
-  entries(fields, '', { blocks: [] } as unknown as SanitizedConfig)
-    .filter(({ access }) => Object.values(access ?? {}).some((rule) => typeof rule === 'function'))
-    .map(({ path }) => path)
+const NO_BLOCKS: BlockOf = () => undefined
 
-export const auditAccess = (config: SanitizedConfig) => {
+const entitiesOf = ({ collections = [], globals = [] }: Entities) => [
+  ...collections.map((entity) => ({ ...entity, id: `collection:${entity.slug}` })),
+  ...globals.map((entity) => ({ ...entity, id: `global:${entity.slug}` })),
+]
+
+/**
+ * The UPSTREAM rules that `config` (as src/ writes it, before any plugin or
+ * Payload sanitizes it) already sets itself. A rule from src/ must not pass as
+ * a rule that Payload added, so the audit test requires that this is empty.
+ */
+export const srcOverlapsUpstream = (config: Entities) =>
+  entitiesOf(config).flatMap(({ id, access, fields }) => {
+    const own = new Map(entries(fields, '', NO_BLOCKS).map((entry) => [entry.path, entry.access]))
+    return UPSTREAM.filter(
+      (rule) =>
+        rule.entity === id &&
+        typeof (rule.field === '*' ? access : own.get(rule.field))?.[rule.operation] === 'function',
+    ).map((rule) => `${id} ${rule.field} ${rule.operation}`)
+  })
+
+export const auditAccess = (config: Entities) => {
   const rows: AccessRow[] = []
   const problems: string[] = []
   const upstream = new Map(
-    UPSTREAM.map((entry) => [`${entry.entity} ${entry.field} ${entry.operation}`, entry]),
+    UPSTREAM.map((rule) => [`${rule.entity} ${rule.field} ${rule.operation}`, rule]),
   )
   const met = new Set<string>()
   const names = new Map<string, { source: string; where: string; rules: Set<Rule> }>()
+  const blockOf: BlockOf = (slug) => config.blocks?.find((block) => block.slug === slug)
 
   const label = (entity: string, field: string, operation: string, value: unknown) => {
     if (typeof value !== 'function') return 'open'
@@ -146,11 +204,15 @@ export const auditAccess = (config: SanitizedConfig) => {
     const known = upstream.get(where)
     if (known) {
       met.add(where)
-      if (known.source !== sourceOf(rule) || isNamed(rule, operation))
+      if (known.source !== sourceOf(rule) || !(known.name?.test(rule.name) ?? !isNamed(rule)))
         problems.push(`${where}: the rule no longer matches UPSTREAM`)
       return known.label
     }
-    if (!isNamed(rule, operation)) {
+    const payloadDefault = PAYLOAD_DEFAULTS.find(
+      ({ name, source }) => rule.name === name && source === sourceOf(rule),
+    )
+    if (payloadDefault) return payloadDefault.label
+    if (!isNamed(rule)) {
       problems.push(`${where}: unnamed rule`)
       return 'unnamed'
     }
@@ -166,40 +228,42 @@ export const auditAccess = (config: SanitizedConfig) => {
     return rule.name
   }
 
-  const audit = (entity: string, access: Rules, fields: Field[]) => {
+  const audit = ({ id, access, fields, auth, versions }: ReturnType<typeof entitiesOf>[number]) => {
+    const resolvedWithoutRule = (operation: string) =>
+      (operation === 'admin' && Boolean(auth)) ||
+      (operation === 'readVersions' && Boolean(versions))
     const operations = [
       ...ENTITY_OPERATIONS,
       ...Object.keys(access ?? {})
         .filter((operation) => !ENTITY_OPERATIONS.includes(operation))
         .sort(),
-    ].filter((operation) => typeof access?.[operation] === 'function')
+    ].filter(
+      (operation) => typeof access?.[operation] === 'function' || resolvedWithoutRule(operation),
+    )
     rows.push({
-      entity,
+      entity: id,
       field: '*',
       rules: Object.fromEntries(
         operations.map((operation) => [
           operation,
-          label(entity, '*', operation, access?.[operation]),
+          access?.[operation] ? label(id, '*', operation, access[operation]) : 'payload:loggedIn',
         ]),
       ),
     })
-    for (const { path, access: own } of entries(fields, '', config))
+    for (const { path, access: own } of entries(fields, '', blockOf))
       rows.push({
-        entity,
+        entity: id,
         field: path,
         rules: Object.fromEntries(
           FIELD_OPERATIONS.map((operation) => [
             operation,
-            label(entity, path, operation, own?.[operation]),
+            label(id, path, operation, own?.[operation]),
           ]),
         ),
       })
   }
 
-  for (const collection of config.collections)
-    audit(`collection:${collection.slug}`, collection.access as Rules, collection.fields)
-  for (const global of config.globals)
-    audit(`global:${global.slug}`, global.access as Rules, global.fields)
+  entitiesOf(config).forEach(audit)
   for (const where of upstream.keys())
     if (!met.has(where)) problems.push(`${where}: no such rule; remove it from UPSTREAM`)
 

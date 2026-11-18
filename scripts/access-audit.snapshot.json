@@ -7,7 +7,7 @@
       "read": "adminOrNonTemplateForms",
       "update": "isAdmin",
       "delete": "isAdmin",
-      "unlock": "defaultUnlockAccess"
+      "unlock": "payload:defaultUnlock"
     }
   },
   {
@@ -1188,7 +1188,7 @@
       "read": "isAdmin",
       "update": "isAdmin",
       "delete": "isAdmin",
-      "unlock": "defaultUnlockAccess"
+      "unlock": "payload:defaultUnlock"
     }
   },
   {
@@ -1514,7 +1514,7 @@
       "read": "readEnrollments",
       "update": "adminOrTeachingFellow",
       "delete": "isAdmin",
-      "unlock": "defaultUnlockAccess"
+      "unlock": "payload:defaultUnlock"
     }
   },
   {
@@ -1597,7 +1597,7 @@
       "read": "anyone",
       "update": "isAdmin",
       "delete": "isAdmin",
-      "unlock": "defaultUnlockAccess"
+      "unlock": "payload:defaultUnlock"
     }
   },
   {
@@ -1672,7 +1672,7 @@
       "readVersions": "isAdminOrOwn(ownsVia(fellows),versions)",
       "update": "adminPublishes(isAdminOrOwn(ownsVia(fellows),allow=fellow,while={\"_status\":{\"in\":[\"draft\",\"published\"]}}))",
       "delete": "nobody",
-      "unlock": "defaultUnlockAccess"
+      "unlock": "payload:defaultUnlock"
     }
   },
   {
@@ -3268,7 +3268,7 @@
       "readVersions": "isAdmin",
       "update": "isAdmin",
       "delete": "isAdmin",
-      "unlock": "defaultUnlockAccess"
+      "unlock": "payload:defaultUnlock"
     }
   },
   {
@@ -3756,7 +3756,7 @@
       "read": "anyone",
       "update": "isAdmin",
       "delete": "isAdmin",
-      "unlock": "defaultUnlockAccess"
+      "unlock": "payload:defaultUnlock"
     }
   },
   {
@@ -4046,7 +4046,7 @@
       "read": "anyone",
       "update": "isAdmin",
       "delete": "isAdmin",
-      "unlock": "defaultUnlockAccess"
+      "unlock": "payload:defaultUnlock"
     }
   },
   {
@@ -4202,7 +4202,7 @@
       "readVersions": "isAdminOrOwn(ownsVia(authors),versions)",
       "update": "adminPublishes(isAdminOrOwn(ownsVia(authors),while={\"_status\":{\"in\":[\"draft\",\"published\"]}}))",
       "delete": "isAdminOrOwn(ownsVia(authors),draft,while={\"review.status\":{\"in\":[\"draft\",\"changes_requested\"]}})",
-      "unlock": "defaultUnlockAccess"
+      "unlock": "payload:defaultUnlock"
     }
   },
   {
@@ -4574,7 +4574,7 @@
       "readVersions": "isAdminOrOwn(ownsVia(editors),versions)",
       "update": "adminPublishes(isAdminOrOwn(ownsVia(editors),allow=member|non_degree_seeking|fellow,while={\"_status\":{\"in\":[\"draft\",\"published\"]}}))",
       "delete": "isAdminOrOwn(ownsVia(editors),allow=member|non_degree_seeking|fellow,draft,while={\"review.status\":{\"in\":[\"draft\",\"changes_requested\"]}})",
-      "unlock": "defaultUnlockAccess"
+      "unlock": "payload:defaultUnlock"
     }
   },
   {
@@ -4856,7 +4856,7 @@
       "readVersions": "isAdmin",
       "update": "isAdmin",
       "delete": "isAdmin",
-      "unlock": "defaultUnlockAccess"
+      "unlock": "payload:defaultUnlock"
     }
   },
   {
@@ -5416,7 +5416,7 @@
       "read": "anyone",
       "update": "isAdmin",
       "delete": "isAdmin",
-      "unlock": "defaultUnlockAccess"
+      "unlock": "payload:defaultUnlock"
     }
   },
   {
@@ -5616,7 +5616,7 @@
       "read": "readSpaces",
       "update": "isAdmin",
       "delete": "nobody",
-      "unlock": "defaultUnlockAccess"
+      "unlock": "payload:defaultUnlock"
     }
   },
   {
@@ -5751,9 +5751,10 @@
     "rules": {
       "create": "isAdmin",
       "read": "readablePosts",
+      "readVersions": "payload:loggedIn",
       "update": "isAdmin",
       "delete": "isAdmin",
-      "unlock": "defaultUnlockAccess"
+      "unlock": "payload:defaultUnlock"
     }
   },
   {
@@ -6005,9 +6006,10 @@
     "rules": {
       "create": "isAdmin",
       "read": "commentsOnReadablePosts",
+      "readVersions": "payload:loggedIn",
       "update": "isAdmin",
       "delete": "isAdmin",
-      "unlock": "defaultUnlockAccess"
+      "unlock": "payload:defaultUnlock"
     }
   },
   {
@@ -6100,7 +6102,7 @@
       "readVersions": "isAdmin",
       "update": "isAdmin",
       "delete": "isAdmin",
-      "unlock": "defaultUnlockAccess"
+      "unlock": "payload:defaultUnlock"
     }
   },
   {
@@ -6273,7 +6275,7 @@
       "read": "isAdmin",
       "update": "isAdmin",
       "delete": "isAdmin",
-      "unlock": "defaultUnlockAccess"
+      "unlock": "payload:defaultUnlock"
     }
   },
   {
@@ -6428,7 +6430,7 @@
       "read": "readPeople",
       "update": "adminOrOwnPerson",
       "delete": "isAdmin",
-      "unlock": "defaultUnlockAccess"
+      "unlock": "payload:defaultUnlock"
     }
   },
   {
@@ -6597,11 +6599,12 @@
     "entity": "collection:users",
     "field": "*",
     "rules": {
+      "admin": "payload:loggedIn",
       "create": "isAdmin",
       "read": "adminOrSelf",
       "update": "isAdmin",
       "delete": "isAdmin",
-      "unlock": "defaultUnlockAccess"
+      "unlock": "payload:defaultUnlock"
     }
   },
   {
@@ -6792,7 +6795,7 @@
       "read": "anyone",
       "update": "isAdmin",
       "delete": "isAdmin",
-      "unlock": "defaultUnlockAccess"
+      "unlock": "payload:defaultUnlock"
     }
   },
   {
@@ -6902,7 +6905,7 @@
       "read": "anyone",
       "update": "isAdmin",
       "delete": "isAdmin",
-      "unlock": "defaultUnlockAccess"
+      "unlock": "payload:defaultUnlock"
     }
   },
   {
@@ -7183,7 +7186,7 @@
       "read": "anyone",
       "update": "isAdmin",
       "delete": "isAdmin",
-      "unlock": "defaultUnlockAccess"
+      "unlock": "payload:defaultUnlock"
     }
   },
   {
@@ -7267,7 +7270,7 @@
       "readVersions": "isAdmin",
       "update": "throughRelation(course,isAdminOrOwn(ownsVia(fellows),allow=fellow))",
       "delete": "throughRelation(course,isAdminOrOwn(ownsVia(fellows),allow=fellow))",
-      "unlock": "defaultUnlockAccess"
+      "unlock": "payload:defaultUnlock"
     }
   },
   {
@@ -7485,7 +7488,7 @@
       "read": "isAdmin",
       "update": "nobody",
       "delete": "isAdmin",
-      "unlock": "defaultUnlockAccess"
+      "unlock": "payload:defaultUnlock"
     }
   },
   {
@@ -7622,7 +7625,7 @@
       "read": "ownNotifications",
       "update": "ownNotifications",
       "delete": "ownNotifications",
-      "unlock": "defaultUnlockAccess"
+      "unlock": "payload:defaultUnlock"
     }
   },
   {
@@ -7723,7 +7726,7 @@
       "read": "nobody",
       "update": "nobody",
       "delete": "nobody",
-      "unlock": "defaultUnlockAccess"
+      "unlock": "payload:defaultUnlock"
     }
   },
   {
@@ -7806,7 +7809,7 @@
       "read": "filesOnReadablePosts",
       "update": "nobody",
       "delete": "isAdmin",
-      "unlock": "defaultUnlockAccess"
+      "unlock": "payload:defaultUnlock"
     }
   },
   {
@@ -7961,7 +7964,7 @@
       "read": "reactionsOnReadablePosts",
       "update": "nobody",
       "delete": "adminOrOwnAccountRows",
-      "unlock": "defaultUnlockAccess"
+      "unlock": "payload:defaultUnlock"
     }
   },
   {
@@ -8035,7 +8038,7 @@
       "read": "adminOrOwnAccountRows",
       "update": "nobody",
       "delete": "isAdmin",
-      "unlock": "defaultUnlockAccess"
+      "unlock": "payload:defaultUnlock"
     }
   },
   {
@@ -8091,7 +8094,7 @@
       "read": "ownAccountRows",
       "update": "signedInOwnAccountRows",
       "delete": "nobody",
-      "unlock": "defaultUnlockAccess"
+      "unlock": "payload:defaultUnlock"
     }
   },
   {
@@ -8192,7 +8195,7 @@
       "read": "ownAccountRows",
       "update": "signedInOwnAccountRows",
       "delete": "nobody",
-      "unlock": "defaultUnlockAccess"
+      "unlock": "payload:defaultUnlock"
     }
   },
   {
@@ -8266,7 +8269,7 @@
       "read": "votesOnReadablePostsHidingAnonymous",
       "update": "nobody",
       "delete": "adminOrOwnAccountRows",
-      "unlock": "defaultUnlockAccess"
+      "unlock": "payload:defaultUnlock"
     }
   },
   {
@@ -8331,7 +8334,7 @@
       "read": "rsvpsOnReadablePosts",
       "update": "nobody",
       "delete": "adminOrOwnAccountRows",
-      "unlock": "defaultUnlockAccess"
+      "unlock": "payload:defaultUnlock"
     }
   },
   {
@@ -8396,7 +8399,7 @@
       "read": "isAdmin",
       "update": "nobody",
       "delete": "nobody",
-      "unlock": "defaultUnlockAccess"
+      "unlock": "payload:defaultUnlock"
     }
   },
   {
@@ -8434,7 +8437,7 @@
       "read": "isAdmin",
       "update": "nobody",
       "delete": "isAdmin",
-      "unlock": "defaultUnlockAccess"
+      "unlock": "payload:defaultUnlock"
     }
   },
   {
@@ -8652,7 +8655,7 @@
       "read": "isAdmin",
       "update": "nobody",
       "delete": "isAdmin",
-      "unlock": "defaultUnlockAccess"
+      "unlock": "payload:defaultUnlock"
     }
   },
   {
@@ -8848,6 +8851,7 @@
     "entity": "collection:payload-mcp-api-keys",
     "field": "*",
     "rules": {
+      "admin": "payload:loggedIn",
       "create": "superAdminOnly",
       "read": "isAdmin",
       "update": "ownKeyAsSuperAdmin",
@@ -9075,11 +9079,11 @@
     "entity": "collection:oauth-clients",
     "field": "*",
     "rules": {
-      "create": "denyPublicAccess2",
+      "create": "plugin:mcp-oauth:denyPublic",
       "read": "isAdmin",
       "update": "isAdmin",
       "delete": "isAdmin",
-      "unlock": "defaultUnlockAccess"
+      "unlock": "payload:defaultUnlock"
     }
   },
   {
@@ -9212,11 +9216,11 @@
     "entity": "collection:oauth-auth-codes",
     "field": "*",
     "rules": {
-      "create": "denyPublicAccess",
-      "read": "denyPublicAccess",
-      "update": "denyPublicAccess",
-      "delete": "denyPublicAccess",
-      "unlock": "defaultUnlockAccess"
+      "create": "plugin:mcp-oauth:denyPublic",
+      "read": "plugin:mcp-oauth:denyPublic",
+      "update": "plugin:mcp-oauth:denyPublic",
+      "delete": "plugin:mcp-oauth:denyPublic",
+      "unlock": "payload:defaultUnlock"
     }
   },
   {
@@ -9304,11 +9308,11 @@
     "entity": "collection:oauth-tokens",
     "field": "*",
     "rules": {
-      "create": "denyPublicAccess4",
+      "create": "plugin:mcp-oauth:denyPublic",
       "read": "isAdmin",
       "update": "isAdmin",
       "delete": "isAdmin",
-      "unlock": "defaultUnlockAccess"
+      "unlock": "payload:defaultUnlock"
     }
   },
   {
@@ -9423,11 +9427,11 @@
     "entity": "collection:oauth-csrf-nonces",
     "field": "*",
     "rules": {
-      "create": "denyPublicAccess3",
-      "read": "denyPublicAccess3",
-      "update": "denyPublicAccess3",
-      "delete": "denyPublicAccess3",
-      "unlock": "defaultUnlockAccess"
+      "create": "plugin:mcp-oauth:denyPublic",
+      "read": "plugin:mcp-oauth:denyPublic",
+      "update": "plugin:mcp-oauth:denyPublic",
+      "delete": "plugin:mcp-oauth:denyPublic",
+      "unlock": "payload:defaultUnlock"
     }
   },
   {
@@ -9492,7 +9496,7 @@
       "read": "payload:internal",
       "update": "payload:internal",
       "delete": "payload:internal",
-      "unlock": "defaultUnlockAccess"
+      "unlock": "payload:defaultUnlock"
     }
   },
   {
@@ -9521,7 +9525,7 @@
       "read": "payload:internal",
       "update": "payload:internal",
       "delete": "payload:internal",
-      "unlock": "defaultUnlockAccess"
+      "unlock": "payload:defaultUnlock"
     }
   },
   {
@@ -9726,11 +9730,11 @@
     "entity": "collection:payload-locked-documents",
     "field": "*",
     "rules": {
-      "create": "defaultAccess",
-      "read": "defaultAccess",
-      "update": "defaultAccess",
-      "delete": "defaultAccess",
-      "unlock": "defaultUnlockAccess"
+      "create": "payload:loggedIn",
+      "read": "payload:loggedIn",
+      "update": "payload:loggedIn",
+      "delete": "payload:loggedIn",
+      "unlock": "payload:defaultUnlock"
     }
   },
   {
@@ -9782,11 +9786,11 @@
     "entity": "collection:payload-preferences",
     "field": "*",
     "rules": {
-      "create": "defaultAccess",
+      "create": "payload:loggedIn",
       "read": "preferenceAccess",
       "update": "preferenceAccess",
       "delete": "preferenceAccess",
-      "unlock": "defaultUnlockAccess"
+      "unlock": "payload:defaultUnlock"
     }
   },
   {
@@ -9838,11 +9842,11 @@
     "entity": "collection:payload-migrations",
     "field": "*",
     "rules": {
-      "create": "defaultAccess",
-      "read": "defaultAccess",
-      "update": "defaultAccess",
-      "delete": "defaultAccess",
-      "unlock": "defaultUnlockAccess"
+      "create": "payload:loggedIn",
+      "read": "payload:loggedIn",
+      "update": "payload:loggedIn",
+      "delete": "payload:loggedIn",
+      "unlock": "payload:defaultUnlock"
     }
   },
   {

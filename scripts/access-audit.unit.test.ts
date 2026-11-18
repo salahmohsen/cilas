@@ -1,38 +1,33 @@
-import type { CollectionConfig } from 'payload'
 import { describe, expect, it } from 'vitest'
 
-import { Users } from '@/collections/Users'
-import { overrideApiKeyCollection } from '@/plugins/mcp/api-keys'
+import { srcOverlapsUpstream } from './access-audit'
 
-import { sourceSetsAccess, UPSTREAM } from './access-audit'
+const field = (name: string, access?: Record<string, unknown>) => ({ name, type: 'text', access })
 
-const listed = (entity: string) =>
-  new Set(UPSTREAM.filter((entry) => entry.entity === entity).map((entry) => entry.field))
-
-describe('UPSTREAM lists only rules that Payload adds', () => {
-  it('finds a rule that src puts on a field', () => {
+describe('srcOverlapsUpstream', () => {
+  it('finds a rule that src puts on a field that UPSTREAM lists', () => {
     expect(
-      sourceSetsAccess([{ name: 'salt', type: 'text', access: { create: () => false } }]),
-    ).toEqual(['salt'])
-    expect(sourceSetsAccess([{ name: 'salt', type: 'text', access: {} }])).toEqual([])
+      srcOverlapsUpstream({
+        collections: [
+          { slug: 'users', fields: [field('salt', { create: () => false }), field('name')] },
+        ],
+      } as never),
+    ).toEqual(['collection:users salt create'])
   })
 
-  it('src sets no rule on a field of users that UPSTREAM lists', () => {
+  it('ignores an operation that UPSTREAM does not list for the field', () => {
     expect(
-      sourceSetsAccess(Users.fields).filter((path) => listed('collection:users').has(path)),
+      srcOverlapsUpstream({
+        collections: [{ slug: 'users', fields: [field('salt', { read: () => false })] }],
+      } as never),
     ).toEqual([])
   })
 
-  it('the API key override sets no rule on a field that UPSTREAM lists', () => {
-    const fields = ['user', 'apiKey', 'apiKeyIndex'].map((name) => ({ name, type: 'text' }))
-    const overridden = overrideApiKeyCollection({
-      slug: 'payload-mcp-api-keys',
-      fields,
-    } as unknown as CollectionConfig)
+  it('finds a rule that src puts on a whole entity that UPSTREAM lists', () => {
     expect(
-      sourceSetsAccess(overridden.fields).filter((path) =>
-        listed('collection:payload-mcp-api-keys').has(path),
-      ),
-    ).toEqual([])
+      srcOverlapsUpstream({
+        collections: [{ slug: 'payload-kv', access: { read: () => false }, fields: [] }],
+      } as never),
+    ).toEqual(['collection:payload-kv * read'])
   })
 })
