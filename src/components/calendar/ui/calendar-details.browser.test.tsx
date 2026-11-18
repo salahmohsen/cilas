@@ -1,6 +1,7 @@
 import { cleanup, fireEvent, render, screen, waitFor, within } from '@testing-library/react'
 import { NextIntlClientProvider } from 'next-intl'
 import { afterEach, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest'
+import { page, userEvent } from 'vitest/browser'
 
 import type { CalendarAction } from '@/components/calendar/ui/block-details'
 import { Calendar } from '@/components/calendar/ui/calendar'
@@ -9,27 +10,23 @@ import { useCalendarLabels } from '@/components/calendar/ui/use-calendar-labels'
 import type { CalendarItem } from '@/lib/calendar-items'
 
 import en from '../../../../messages/en.json'
-import { stubPopupDom } from '../../../../testing/popup-dom.test-utils'
 
 declare global {
   var __UI_SDK_STRICT__: boolean | undefined
 }
 
-let phone = false
-vi.mock('@/lib/use-narrow', () => ({ useNarrow: () => phone }))
+const item = (id: string, title: string, extra: Partial<CalendarItem>) =>
+  ({
+    id,
+    kind: 'session',
+    title,
+    tone: 'blue',
+    cancelled: false,
+    version: `v-${id}`,
+    blocks: [],
+    ...extra,
+  }) satisfies CalendarItem
 
-const item = (id: string, title: string, extra: Partial<CalendarItem>): CalendarItem => ({
-  id,
-  kind: 'session',
-  title,
-  tone: 'blue',
-  cancelled: false,
-  version: `v-${id}`,
-  blocks: [],
-  ...extra,
-})
-
-// The week of Saturday 14 November 2026.
 const items: CalendarItem[] = [
   item('maps', 'Maps', {
     caption: 'Session 3',
@@ -100,10 +97,8 @@ const details = () => screen.queryByRole('dialog')
 
 beforeAll(() => {
   globalThis.__UI_SDK_STRICT__ = true
-  stubPopupDom()
 })
 beforeEach(() => {
-  phone = false
   vi.useFakeTimers({ now: new Date('2026-11-17T10:00:00Z'), toFake: ['Date'] })
 })
 afterEach(() => {
@@ -128,7 +123,6 @@ describe('a block’s details in view mode', () => {
     expect(buttons[0]).toHaveAccessibleName(en.CalendarUi.close)
     expect(buttons[1]).toHaveAccessibleName('Edit')
     expect(buttons[2]).toHaveAccessibleName('Open')
-    // One group of segments, named by the item.
     expect(within(panel).getByRole('group', { name: 'Maps' })).toBeInTheDocument()
   })
 
@@ -136,8 +130,7 @@ describe('a block’s details in view mode', () => {
     show()
     expect(maps().tagName).toBe('BUTTON')
     maps().focus()
-    // jsdom does not turn Enter into a click as browsers do; the e2e presses the real key.
-    fireEvent.click(maps())
+    await userEvent.keyboard('{Enter}')
     const panel = await screen.findByRole('dialog', { name: 'Maps' })
     fireEvent.keyDown(panel, { key: 'Escape' })
     await waitFor(() => expect(details()).toBeNull())
@@ -193,15 +186,17 @@ describe('a block’s details in view mode', () => {
     expect(await screen.findByRole('dialog', { name: 'Maps' })).toHaveTextContent('5 hr 35 min')
   })
 
-  it('open from an unscheduled item, which has no day', async () => {
+  it('open from an unscheduled item, which has no day, in the side panel beside the grid', async () => {
     show()
-    fireEvent.click(screen.getByRole('button', { name: en.CalendarUi.panel }))
+    await userEvent.click(page.getByRole('button', { name: en.CalendarUi.panel }))
     const entry = screen.getByRole('group', { name: 'Final review' })
-    // A split button with its main part only: nothing to place in view mode.
     expect(within(entry).getAllByRole('button')).toHaveLength(1)
-    fireEvent.click(within(entry).getByRole('button', { name: 'Final review' }))
-    const panel = await screen.findByRole('dialog', { name: 'Final review' })
+    await userEvent.click(
+      page.elementLocator(within(entry).getByRole('button', { name: 'Final review' })),
+    )
+    const panel = await screen.findByRole('region', { name: 'Final review' })
     expect(panel).toHaveTextContent(en.CalendarUi.unscheduled)
+    expect(details()).toBeNull()
   })
 
   it('show as a sheet from the bottom on a phone, and as a panel on a wider screen', async () => {
@@ -212,7 +207,7 @@ describe('a block’s details in view mode', () => {
       'popover',
     )
     cleanup()
-    phone = true
+    await page.viewport(390, 844)
     show()
     fireEvent.click(screen.getByRole('button', { name: /^Maps, Tuesday/ }))
     expect(await screen.findByRole('dialog', { name: 'Maps' })).toHaveAttribute(

@@ -1,36 +1,30 @@
 import { act, cleanup, fireEvent, render, screen, waitFor, within } from '@testing-library/react'
 import { NextIntlClientProvider } from 'next-intl'
 import { afterEach, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest'
+import { page, userEvent } from 'vitest/browser'
 
 import { Calendar } from '@/components/calendar/ui/calendar'
 import { useCalendarLabels } from '@/components/calendar/ui/use-calendar-labels'
 import type { CalendarItem } from '@/lib/calendar-items'
 
 import en from '../../../../messages/en.json'
-import { stubPopupDom } from '../../../../testing/popup-dom.test-utils'
 
 declare global {
   var __UI_SDK_STRICT__: boolean | undefined
 }
 
-/**
- * An item marked `readOnly` (a space's event in the course space) shows in
- * edit mode and opens, and nothing on the page changes it: no drag, no
- * resize, no key, no menu action, no place from the tray. The component
- * reads only the flag, never the item's kind.
- */
-const item = (id: string, title: string, extra: Partial<CalendarItem>): CalendarItem => ({
-  id,
-  kind: 'thing',
-  title,
-  tone: 'neutral',
-  cancelled: false,
-  version: `v-${id}`,
-  blocks: [],
-  ...extra,
-})
+const item = (id: string, title: string, extra: Partial<CalendarItem>) =>
+  ({
+    id,
+    kind: 'thing',
+    title,
+    tone: 'neutral',
+    cancelled: false,
+    version: `v-${id}`,
+    blocks: [],
+    ...extra,
+  }) satisfies CalendarItem
 
-// The week of Saturday 14 November 2026.
 const items: CalendarItem[] = [
   item('week-3', 'Week 3', {
     tone: 'yellow',
@@ -111,7 +105,6 @@ const menuNames = async (block: HTMLElement) => {
 
 beforeAll(() => {
   globalThis.__UI_SDK_STRICT__ = true
-  stubPopupDom()
 })
 beforeEach(() => {
   localStorage.clear()
@@ -119,7 +112,6 @@ beforeEach(() => {
 })
 afterEach(() => {
   cleanup()
-  vi.restoreAllMocks()
   vi.useRealTimers()
 })
 
@@ -151,49 +143,15 @@ describe('a readOnly item in edit mode', () => {
   })
 
   it('refuses a pointer drag', async () => {
-    // jsdom has no layout: seven days 100px wide, 1px a minute over the grid's hours.
-    vi.spyOn(HTMLElement.prototype, 'getBoundingClientRect').mockImplementation(function (
-      this: HTMLElement,
-    ) {
-      const track = this.closest<HTMLElement>('[data-track]')
-      const days = [...document.querySelectorAll<HTMLElement>('[data-track]')].map(
-        (el) => el.dataset.track,
-      )
-      const index = Math.max(0, days.indexOf(track?.dataset.track))
-      return new DOMRect(index * 100, 0, 100, 780)
-    })
-    const dayAt = (x: number) =>
-      document.querySelectorAll<HTMLElement>('[data-track]')[Math.floor(x / 100)] ?? null
-    document.elementFromPoint = (x) => dayAt(x)
-    document.elementsFromPoint = (x) => [dayAt(x)].filter((el): el is HTMLElement => el !== null)
     const { onUnsavedChange } = show()
-    const pointer = (type: string, x: number, y: number, buttons = 1) =>
-      fireEvent(
-        type === 'pointerdown' ? talk() : document,
-        new PointerEvent(type, {
-          bubbles: true,
-          pointerId: 1,
-          pointerType: 'mouse',
-          isPrimary: true,
-          button: 0,
-          buttons,
-          clientX: x,
-          clientY: y,
-        }),
-      )
-    const frame = () =>
-      act(() => new Promise<void>((resolve) => requestAnimationFrame(() => resolve())))
-    pointer('pointerdown', 20, 60)
-    pointer('pointermove', 120, 160)
-    await frame()
-    pointer('pointermove', 320, 260)
-    await frame()
+    const days = document.querySelectorAll<HTMLElement>('[data-track]')
+    await userEvent.dragAndDrop(page.elementLocator(talk()), page.elementLocator(days[3]!))
     expect(talk()).not.toHaveAttribute('data-dragging')
-    pointer('pointerup', 320, 260, 0)
-    await frame()
     expect(talk().closest('[data-track]')).toHaveAttribute('data-track', '2026-11-14')
     expect(talk()).toHaveAccessibleName('Open talk, Saturday, November 14, 10 AM to 12 PM')
     noChanges(onUnsavedChange)
+    await userEvent.dragAndDrop(page.elementLocator(week3()), page.elementLocator(days[4]!))
+    expect(onUnsavedChange).toHaveBeenLastCalledWith(1)
   })
 
   it('has a menu with Open alone, while a session keeps its changing actions', async () => {
@@ -213,7 +171,6 @@ describe('a readOnly item in edit mode', () => {
     const { onOpen } = show()
     fireEvent.click(talk())
     expect(onOpen).toHaveBeenLastCalledWith('talk', 'sat')
-    // Enter on a button is the browser's click; jsdom does not make it, so the e2e presses it.
     expect(talk().tagName).toBe('BUTTON')
     expect(talk()).not.toBeDisabled()
     onOpen.mockClear()

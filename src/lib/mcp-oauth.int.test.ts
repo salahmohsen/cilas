@@ -1,11 +1,12 @@
 import { createHash, randomBytes } from 'node:crypto'
 
 import { createLocalReq, getPayload, type Payload, type PayloadRequest } from 'payload'
-import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest'
+import { afterAll, beforeAll, describe, expect, it } from 'vitest'
 
 import { decodeEntities } from '@/lib/html-entities'
 import config from '@/payload.config'
 import type { User } from '@/payload-types'
+import { withAssistantLock } from '@/plugins/mcp/lock'
 import { mcpServerUrl } from '@/plugins/mcp/paths'
 import { AI_GROUP } from '@/plugins/role-nav'
 
@@ -20,7 +21,6 @@ let payload: Payload
 const { track, cleanup } = createTracker()
 const clients: string[] = []
 
-/** Calls one of the plugin's endpoints the way Payload's router does. */
 const call = async (
   path: string,
   method: 'get' | 'post',
@@ -35,7 +35,7 @@ const call = async (
     data?: Record<string, unknown>
     authorization?: string
   } = {},
-): Promise<Response> => {
+) => {
   const endpoint = payload.config.endpoints.find((e) => e.path === path && e.method === method)
   if (!endpoint) throw new Error(`No endpoint ${method} ${path}`)
   const req = await createLocalReq(
@@ -51,8 +51,6 @@ const call = async (
     data,
     headers: new Headers({
       'content-type': 'application/json',
-      // A fresh address each call, so the plugin's per-address speed limits
-      // (which these tests are not about) never refuse a test.
       'x-forwarded-for': `10.${randomBytes(1)[0]}.${randomBytes(1)[0]}.${randomBytes(1)[0]}`,
       ...(authorization ? { authorization } : {}),
     }),
@@ -83,7 +81,7 @@ const mcp = async (token: string, method: string, params: Record<string, unknown
   }
 }
 
-const names = (list: unknown, key: string): string[] =>
+const names = (list: unknown, key: string) =>
   ((list as Record<string, Array<{ name: string }>> | undefined)?.[key] ?? []).map((i) => i.name)
 
 const register = async (callback: string, name = 'Whatever') => {
@@ -121,7 +119,7 @@ const authorize = async (
     },
   })
 
-const hidden = (html: string): Record<string, string> =>
+const hidden = (html: string) =>
   Object.fromEntries(
     [...html.matchAll(/<input type="hidden" name="([^"]+)" value="([^"]*)">/g)].map((m) => [
       m[1]!,
@@ -134,7 +132,6 @@ const codes = async () =>
 
 type Pair = { access_token: string; refresh_token: string; expires_in: number }
 
-/** Register, authorize, allow and exchange: a connected assistant. */
 const connect = async (user: User, callback = CLAUDE, existingClientId?: string) => {
   const body = existingClientId ? { client_id: existingClientId } : (await register(callback)).body
   const { verifier, challenge } = pkce()
@@ -564,7 +561,7 @@ describe('assistants connect with OAuth', () => {
       expect((await mcp(next.access_token, 'tools/list')).status).toBe(401)
     })
 
-    it('rolls back disconnect during refresh, then disconnects the replacement pair', async () => {
+    it('rolls back disconnect while the client is locked, then disconnects the replacement pair', async () => {
       const { pair, clientId } = await connect(admin)
       const other = await connect(admin, CLAUDE, clientId)
       const rows = await payload.find({
@@ -572,32 +569,23 @@ describe('assistants connect with OAuth', () => {
         where: { and: [{ clientId: { equals: clientId } }, { tokenType: { equals: 'refresh' } }] },
         overrideAccess: true,
       })
-      let announce!: () => void
-      let resume!: () => void
+      let enter!: () => void
+      let release!: () => void
       const entered = new Promise<void>((resolve) => {
-        announce = resolve
+        enter = resolve
       })
-      const paused = new Promise<void>((resolve) => {
-        resume = resolve
+      const released = new Promise<void>((resolve) => {
+        release = resolve
       })
-      const create = payload.create.bind(payload)
-      const spy = vi.spyOn(payload, 'create').mockImplementation(async (options) => {
-        if (
-          options.collection === 'oauth-tokens' &&
-          (options.data as { tokenType?: string }).tokenType === 'access'
-        ) {
-          announce()
-          await paused
-        }
-        return create(options)
-      })
-      const rotation = call('/oauth/token', 'post', {
-        data: {
-          grant_type: 'refresh_token',
-          refresh_token: pair.refresh_token,
-          client_id: clientId,
+      const holding = withAssistantLock(
+        payload,
+        `oauth-client:${clientId}`,
+        () => undefined,
+        async () => {
+          enter()
+          await released
         },
-      })
+      )
       try {
         await entered
         const contended = await call('/oauth/token', 'post', {
@@ -627,10 +615,16 @@ describe('assistants connect with OAuth', () => {
           ).id,
         ).toBe(rows.docs[0]!.id)
       } finally {
-        resume()
-        spy.mockRestore()
+        release()
+        await holding
       }
-      const response = await rotation
+      const response = await call('/oauth/token', 'post', {
+        data: {
+          grant_type: 'refresh_token',
+          refresh_token: pair.refresh_token,
+          client_id: clientId,
+        },
+      })
       expect(response.status).toBe(200)
       const next = (await response.json()) as Pair
       expect((await mcp(next.access_token, 'tools/list')).status).toBe(200)
