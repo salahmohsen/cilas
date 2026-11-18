@@ -1,11 +1,10 @@
-import { cleanup, fireEvent, render, screen } from '@testing-library/react'
-import { NextIntlClientProvider } from 'next-intl'
+import { cleanup, fireEvent, screen } from '@testing-library/react'
 import { afterEach, describe, expect, it } from 'vitest'
 
 import { RichTextField } from '@/components/RichTextField'
 import { moviePosterUrl } from '@/lib/movie'
 import { movie } from '../../testing/movie.fixture'
-import messages from '../../messages/en.json'
+import { renderWithIntl } from '../../testing/intl.test-utils'
 
 afterEach(cleanup)
 const data = (value: unknown, subtitleLanguages?: string[]) => ({
@@ -25,11 +24,7 @@ const data = (value: unknown, subtitleLanguages?: string[]) => ({
   },
 })
 const renderMovie = (value: unknown, plain = false, subtitleLanguages?: string[]) =>
-  render(
-    <NextIntlClientProvider locale="en" messages={messages}>
-      <RichTextField data={data(value, subtitleLanguages)} plain={plain} />
-    </NextIntlClientProvider>,
-  )
+  renderWithIntl(<RichTextField data={data(value, subtitleLanguages)} plain={plain} />)
 
 describe('movie editor blocks', () => {
   it('shows every selected screening subtitle language separately from the film’s spoken languages', () => {
