@@ -1,6 +1,6 @@
 import type { Access, CollectionConfig } from 'payload'
 
-import { adminOrOwnAccountRows, isAdminUser, nobody, isAdmin } from '@/access'
+import { adminOrOwnAccountRows, isAdminUser, nobody, isAdmin, ownAccountWhere } from '@/access'
 import { contentWhere } from '@/lib/spaces'
 
 /**
@@ -11,7 +11,7 @@ const votesOnReadablePostsHidingAnonymous: Access = async ({ req }) => {
   const where = await contentWhere(req.payload, req.user, ['post'])
   if (where === true && isAdminUser(req.user)) return true
   if (!where) return false
-  const own = { account: { equals: (req.user as { id?: number })?.id ?? null } }
+  const own = ownAccountWhere(req.user)
   return {
     and: [
       ...(where === true ? [] : [where]),

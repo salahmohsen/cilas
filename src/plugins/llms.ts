@@ -52,7 +52,8 @@ export const llmsTxt = (): Plugin => (config) => {
     ...next,
     globals: next.globals?.map((g) =>
       g.slug === DEFAULT_SETTINGS_GLOBAL_SLUG
-        ? { ...g, label: 'AI site summary', access: { ...g.access, read: anyone, update: isAdmin } }
+        ? // `read: anyone` restates the plugin default so the rule has a name.
+          { ...g, label: 'AI site summary', access: { ...g.access, read: anyone, update: isAdmin } }
         : g,
     ),
   }

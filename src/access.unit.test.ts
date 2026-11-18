@@ -2,13 +2,19 @@ import type { Access, Where } from 'payload'
 import { describe, expect, it } from 'vitest'
 
 import {
+  adminOrOwnAccountRows,
   adminPublishes,
+  adminOnlyField,
+  adminWritesOnly,
   adminViewOf,
   canAuthor,
   canProposePublication,
   canTeach,
   isAdminOrOwn,
+  nobody,
   OWNER_EDITS,
+  ownAccountRows,
+  ownAccountWhere,
   ownList,
   ownsViaAuthors,
   ownsViaEditors,
@@ -18,6 +24,7 @@ import {
   publishedOrOwn,
   readEnrollments,
   readTiers,
+  signedInOwnAccountRows,
   throughRelation,
   WITH_OWNER,
 } from '@/access'
@@ -422,5 +429,52 @@ describe('rule names', () => {
 
   it('prints an unnamed argument as anonymous, which the access audit refuses', () => {
     expect(adminPublishes(() => true).name).toBe('adminPublishes(anonymous)')
+  })
+})
+
+describe('rule names', () => {
+  it('give the same name for options in any order', () => {
+    const a = isAdminOrOwn(ownsViaFellows, { draft: true, while: WITH_OWNER })
+    const b = isAdminOrOwn(ownsViaFellows, { while: WITH_OWNER, draft: true })
+    expect(a.name).toBe(b.name)
+  })
+})
+
+describe('nobody', () => {
+  it('refuses everyone', () => {
+    expect(nobody()).toBe(false)
+  })
+})
+
+describe('adminWritesOnly', () => {
+  it('shares one rule for create and update, and is frozen', () => {
+    expect(adminWritesOnly.create).toBe(adminOnlyField)
+    expect(adminWritesOnly.update).toBe(adminOnlyField)
+    expect(Object.isFrozen(adminWritesOnly)).toBe(true)
+  })
+})
+
+describe('own account rows', () => {
+  const own = { account: { equals: 7 } }
+
+  it('ownAccountWhere matches the account, or none without a user', () => {
+    expect(ownAccountWhere(user(['member']))).toEqual(own)
+    expect(ownAccountWhere(null)).toEqual({ account: { equals: null } })
+  })
+
+  it('ownAccountRows gives an anonymous reader no rows', () => {
+    expect(run(ownAccountRows, null)).toEqual({ account: { equals: null } })
+    expect(run(ownAccountRows, user(['member']))).toEqual(own)
+  })
+
+  it('signedInOwnAccountRows refuses an anonymous caller', () => {
+    expect(run(signedInOwnAccountRows, null)).toBe(false)
+    expect(run(signedInOwnAccountRows, user(['member']))).toEqual(own)
+  })
+
+  it('adminOrOwnAccountRows gives an admin every row and a member their own', () => {
+    expect(run(adminOrOwnAccountRows, user(['admin']))).toBe(true)
+    expect(run(adminOrOwnAccountRows, user(['member']))).toEqual(own)
+    expect(run(adminOrOwnAccountRows, null)).toEqual({ account: { equals: null } })
   })
 })

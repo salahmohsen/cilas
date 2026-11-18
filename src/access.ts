@@ -71,24 +71,25 @@ export const personOf = (user: unknown): number | null => {
  * function argument prints its own name, a Where its JSON, and an option set
  * to `true` its key alone.
  */
-const describe = (value: unknown): string => {
+const nameOf = (value: unknown): string => {
   if (typeof value === 'function') return value.name || 'anonymous'
-  if (Array.isArray(value)) return value.map(describe).join('|')
+  if (Array.isArray(value)) return value.map(nameOf).join('|')
   if (typeof value === 'object' && value !== null) return JSON.stringify(value)
   return String(value)
 }
 
 const optionsOf = (options: Record<string, unknown>): string[] =>
   Object.entries(options)
+    .sort(([a], [b]) => (a < b ? -1 : a > b ? 1 : 0))
     .filter(([, value]) => value !== undefined && value !== false)
-    .map(([key, value]) => (value === true ? key : `${key}=${describe(value)}`))
+    .map(([key, value]) => (value === true ? key : `${key}=${nameOf(value)}`))
 
 const named = <Rule extends (...args: never[]) => unknown>(
   rule: Rule,
   factory: string,
   args: unknown[],
 ): Rule =>
-  Object.defineProperty(rule, 'name', { value: `${factory}(${args.map(describe).join(',')})` })
+  Object.defineProperty(rule, 'name', { value: `${factory}(${args.map(nameOf).join(',')})` })
 
 /* ============================================================= constraints */
 
@@ -134,18 +135,21 @@ export const readPeople: Access = ({ req }) => {
   return own === null ? visible : { or: [visible, { id: { equals: own } }] }
 }
 
-/** The rows of the signed-in account. An anonymous reader matches none. */
-export const ownAccountRows: Access = ({ req }) => ({
-  account: { equals: (req.user as { id?: number })?.id ?? null },
+/** The rows of one account. No user matches none: no row has a null account. */
+export const ownAccountWhere = (user: { id?: number } | null | undefined): Where => ({
+  account: { equals: user?.id ?? null },
 })
+
+/** The rows of the signed-in account. An anonymous reader matches none. */
+export const ownAccountRows: Access = ({ req }) => ownAccountWhere(req.user)
 
 /** The rows of the signed-in account. An anonymous caller is refused. */
 export const signedInOwnAccountRows: Access = ({ req }) =>
-  req.user ? { account: { equals: (req.user as { id: number }).id } } : false
+  req.user ? ownAccountWhere(req.user) : false
 
 /** Admins: every row. Others: the rows of their own account. */
 export const adminOrOwnAccountRows: Access = ({ req }) =>
-  isAdminUser(req.user) || { account: { equals: (req.user as { id?: number })?.id ?? null } }
+  isAdminUser(req.user) || ownAccountWhere(req.user)
 
 /** admin + super_admin. Gates write on the editorial collections. */
 export const isAdmin: Access = ({ req }) => isAdminUser(req.user)

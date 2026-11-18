@@ -386,6 +386,7 @@ export default buildConfig({
       overrideExportCollection: ({ collection }) => ({
         ...collection,
         access: {
+          // Restates the plugin default so the rule has a name.
           ...collection.access,
           read: isAdmin,
           create: isAdmin,
@@ -396,6 +397,7 @@ export default buildConfig({
       overrideImportCollection: ({ collection }) => ({
         ...collection,
         access: {
+          // Restates the plugin default so the rule has a name.
           ...collection.access,
           read: isAdmin,
           create: isAdmin,
