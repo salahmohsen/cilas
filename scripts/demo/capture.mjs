@@ -177,8 +177,28 @@ const record = async ({ id, role, theme, url, steps }) => {
     await sleep(400)
     ab(role, ['record', 'stop'])
   }
-  return { seconds: now(), camera }
+  return { camera }
 }
+
+// A clip's length is the file's, so the film never plays past the end of a recording.
+const probe = (id) =>
+  Number(
+    execFileSync(
+      'ffprobe',
+      [
+        '-v',
+        'error',
+        '-show_entries',
+        'format=duration',
+        '-of',
+        'csv=p=0',
+        path.join(CLIPS, `${id}.mp4`),
+      ],
+      {
+        encoding: 'utf8',
+      },
+    ),
+  )
 
 mkdirSync(CLIPS, { recursive: true })
 const manifest = existsSync(MANIFEST) ? JSON.parse(readFileSync(MANIFEST, 'utf8')) : {}
@@ -187,6 +207,7 @@ for (const shot of shots) {
   if (ONLY && !ONLY.includes(shot.id)) continue
   try {
     manifest[shot.id] = await record(shot)
+    manifest[shot.id].seconds = probe(shot.id)
     writeFileSync(MANIFEST, JSON.stringify(manifest, null, 1) + '\n')
     console.log(`ok ${shot.id} ${manifest[shot.id].seconds}s`)
   } catch (error) {

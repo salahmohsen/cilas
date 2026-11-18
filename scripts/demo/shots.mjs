@@ -68,11 +68,11 @@ export const shots = [
   shot('event', 'visitor', 'light', '/en/events/faces-1968-screening', async (p) => {
     await p.wait(1600)
     await p.click(
-      { text: 'Add to calendar', loose: true, css: 'button' },
-      { zoom: 1.5, hold: true, settle: 2000 },
+      { text: 'Add to calendar', css: 'button' },
+      { zoom: 1.6, hold: true, settle: 2200 },
     )
     p.press('Escape')
-    await p.focus({ text: 'Register', loose: true, css: 'a' }, 1.5, 1400)
+    await p.focus({ text: 'Register for this event', loose: true, css: 'a' }, 1.6, 1400)
     await p.scroll(600, 1200)
   }),
 
@@ -94,6 +94,15 @@ export const shots = [
     await p.scroll(1400, 1000)
     await p.scroll(1400, 1000)
     await p.focus({ text: 'Send my application', loose: true, css: 'button' }, 1.5, 1600)
+  }),
+
+  shot('login', 'login', 'light', '/en/login', async (p) => {
+    await p.wait(1000)
+    await p.click({ css: 'input[type=email]' }, { zoom: 1.5, hold: true, settle: 300 })
+    await p.type('user33@demo.invalid')
+    await p.click({ css: 'input[type=password]' }, { zoom: 1.5, hold: true, settle: 300 })
+    await p.type('demo-member-pass')
+    await p.click({ text: 'Sign in', css: 'button' }, { zoom: 1.5, settle: 5000 })
   }),
 
   shot('spaces', 'member', 'light', '/en/spaces', async (p) => {
@@ -139,14 +148,31 @@ export const shots = [
 
   shot('admin-applicants', 'admin', 'dark', '/admin/applicants', async (p) => {
     await p.wait(2200)
-    await p.click({ text: 'Review' }, { zoom: 1.35, settle: 3500 })
-    await p.scroll(500, 1600)
+    await p.click({ text: 'Review' }, { zoom: 1.35, settle: 2600 })
+    await p.click(
+      { text: 'Accept:', loose: true, css: 'button' },
+      { zoom: 1.5, hold: true, settle: 1400 },
+    )
+    await p.click(
+      { text: 'Accept', loose: true, css: 'button', maxX: 1000 },
+      { zoom: 1.5, hold: true, settle: 2600 },
+    )
   }),
 
   shot('admin-course', 'admin', 'dark', '/admin/collections/courses/404', async (p) => {
     await p.wait(2500)
-    await p.click({ text: 'Sessions', css: '[role=tab], button' }, { zoom: 1.35, settle: 3000 })
-    await p.scroll(500, 2200)
+    await p.click({ text: 'Sessions', css: '[role=tab], button' }, { zoom: 1, settle: 3500 })
+    await p.drag({ text: 'What is intelligence?', loose: true, css: '[data-span-id]' }, 91, 0, 1.4)
+    await p.click({ text: 'Save schedule', css: 'button' }, { zoom: 1.4, hold: true, settle: 3000 })
+    await p.focus(
+      { text: 'Announce this change?', loose: true, css: 'h2, [role=dialog] *' },
+      1.3,
+      1800,
+    )
+    await p.click(
+      { text: 'Publish to space', css: 'button' },
+      { zoom: 1.5, hold: true, settle: 2600 },
+    )
   }),
 
   shot('ar-home', 'visitor', 'dark', '/ar', async (p) => {

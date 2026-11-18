@@ -30,8 +30,8 @@ CILAS brings the institute’s public website, content management, applications,
 > [!NOTE]
 > In the demo copy, account emails are replaced, and registration deadlines, event dates and one course's sessions move relative to the recording day. A test course is removed. To record and render it again:
 >
-> 1. `DEMO_SOURCE_URL=postgres://… DEMO_ENV_DIR=<checkout with .env> scripts/demo/serve-demo.sh` starts the app on port 3100.
-> 2. `node scripts/demo/capture.mjs` records every shot in [`scripts/demo/shots.mjs`](scripts/demo/shots.mjs) with [agent-browser](https://github.com/vercel-labs/agent-browser).
+> 1. `DEMO_SOURCE_URL=postgres://cilas:dev@host.docker.internal:5433/cilas_dev DEMO_ENV_DIR=<checkout with .env> scripts/demo/serve-demo.sh` starts the app on port 3100. `pg_dump` runs in a container, so a local source is `host.docker.internal`, not `localhost`.
+> 2. `node scripts/demo/capture.mjs` records every shot in [`scripts/demo/shots.mjs`](scripts/demo/shots.mjs) with [agent-browser](https://agent-browser.dev). Some shots change the copy (a moved session, an accepted applicant), so restart `serve-demo.sh` before a second full capture.
 > 3. `cd video && npm install && npm run render` renders the film. `npm run dev` opens it in Remotion Studio.
 
 ## Features

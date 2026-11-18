@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 # Starts an isolated demo server on port 3100, on a sanitized copy of a source database.
-# Usage: DEMO_SOURCE_URL=postgres://... DEMO_ENV_DIR=/path/to/main/checkout scripts/demo/serve-demo.sh
+# Usage: DEMO_SOURCE_URL=postgres://cilas:dev@host.docker.internal:5433/cilas_dev \
+#   DEMO_ENV_DIR=/path/to/main/checkout scripts/demo/serve-demo.sh
+# pg_dump runs in the container, so a database on this machine is host.docker.internal.
 # The source is only read by pg_dump. DEMO_ENV_DIR gives .env and .env.development.local
 # (payload secret, media storage). No email, captcha or Google sign-in is configured,
 # account emails become *.invalid, and search runs on a throwaway Typesense.

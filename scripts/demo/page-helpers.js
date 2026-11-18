@@ -37,7 +37,7 @@
       const el = this.find(spec)
       if (!el) return false
       const r = el.getBoundingClientRect()
-      if (r.top < 90 || r.bottom > innerHeight - 40)
+      if (r.top < 70 || r.bottom > innerHeight - 40)
         el.scrollIntoView({ block: 'center', behavior: 'smooth' })
       return true
     },

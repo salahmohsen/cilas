@@ -87,6 +87,14 @@ export const film: Shot[] = [
     playbackRate: 1.8,
   },
   {
+    clip: 'login',
+    chapter: 'Belong',
+    caption: 'Students sign in to reach their spaces',
+    theme: 'light',
+    trim: 0.5,
+    playbackRate: 1.7,
+  },
+  {
     clip: 'spaces',
     chapter: 'Belong',
     caption: 'Each course gets a private space for its students',
@@ -129,18 +137,18 @@ export const film: Shot[] = [
   {
     clip: 'admin-applicants',
     chapter: 'Run',
-    caption: 'Review each applicant, course by course',
+    caption: 'Accept each applicant, course by course',
     theme: 'dark',
     trim: 0.6,
-    playbackRate: 1.4,
+    playbackRate: 1.5,
   },
   {
     clip: 'admin-course',
     chapter: 'Run',
-    caption: 'Plan the sessions of a course on a calendar',
+    caption: 'Move a session, then announce the change to the course space',
     theme: 'dark',
     trim: 0.8,
-    playbackRate: 1.4,
+    playbackRate: 1.7,
   },
   {
     clip: 'ar-home',
