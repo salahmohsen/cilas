@@ -3,9 +3,12 @@ import { defineConfig, devices } from '@playwright/test'
 import { config as loadEnv } from 'dotenv'
 import { register } from 'tsx/esm/api'
 
+import { requireLocalStorage } from './testing/local-env'
+
 register()
 
 loadEnv({ path: ['.env.development.local', '.env.local', '.env'] })
+requireLocalStorage(process.env)
 
 const { hostname: databaseHost } = new URL(process.env.DATABASE_URL ?? 'postgres://unset')
 if (!['localhost', '127.0.0.1', '[::1]'].includes(databaseHost)) {
