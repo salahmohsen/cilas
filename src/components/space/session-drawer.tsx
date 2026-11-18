@@ -11,7 +11,7 @@ import {
   type ReactNode,
 } from 'react'
 
-import { loadSessionView, type SessionViewResult } from '@/actions/load-session-view'
+import type { SessionViewResult } from '@/actions/load-session-view'
 import { Alert } from '@/components/arc/alert/alert'
 import { BottomSheet } from '@/components/arc/bottom-sheet/bottom-sheet'
 import { Button } from '@/components/arc/button/button'
@@ -28,6 +28,7 @@ import { scheduleSaveText, type ScheduleSaveMessages } from './schedule-save-tex
 import { sessionPostsHref, useSessionName } from './session-chip'
 import { sessionTitleOf } from '@/lib/session-label'
 import styles from './space.module.css'
+import { useScheduleActions } from './schedule-actions'
 import { useScheduleOffer } from './use-schedule-save'
 import { useSessionCancellation } from './use-session-cancellation'
 
@@ -71,6 +72,7 @@ export function SessionDrawer({
   onClose: () => void
   onCloseFocus: () => void
 }) {
+  const { loadSessionView } = useScheduleActions()
   const t = useTranslations('SpacePost')
   const te = useTranslations('SessionEdit')
   const tc = useTranslations('CalendarUi')
@@ -99,7 +101,7 @@ export function SessionDrawer({
     return () => {
       live = false
     }
-  }, [id, locale, round])
+  }, [id, locale, round, loadSessionView])
 
   /** The session whose form is open; another session opens in view mode. */
   const [editing, setEditing] = useState<string | null>(null)

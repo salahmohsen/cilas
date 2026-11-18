@@ -4,6 +4,7 @@ import type { ScheduleEditsResult } from '@/actions/save-schedule-edits'
 import type { CalendarItem } from '@/lib/calendar-items'
 
 import { setSessionCancelled } from './cancel-session'
+import { useScheduleActions } from './schedule-actions'
 import type { ScheduleSaveText } from './schedule-save-text'
 
 /**
@@ -25,13 +26,14 @@ export function useSessionCancellation({
     courseId?: string,
   ) => void
 }) {
+  const actions = useScheduleActions()
   const [error, setError] = useState<string | null>(null)
   const run = async (
     session: { id: string; courseId: string; cancelled: boolean },
     returnTo: () => HTMLElement | null,
   ) => {
     setError(null)
-    const result = await setSessionCancelled(session.id, session.cancelled, locale).catch(
+    const result = await setSessionCancelled(session.id, session.cancelled, locale, actions).catch(
       (): ScheduleEditsResult => ({ ok: false, error: { code: 'failed' } }),
     )
     if (!result.ok) {

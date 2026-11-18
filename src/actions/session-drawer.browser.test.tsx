@@ -1,52 +1,27 @@
-import { act, cleanup, fireEvent, render, screen, waitFor, within } from '@testing-library/react'
-import { NextIntlClientProvider } from 'next-intl'
-import { useSyncExternalStore } from 'react'
-import { afterEach, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest'
+import { act, cleanup, fireEvent, screen, waitFor, within } from '@testing-library/react'
+import { afterEach, beforeAll, beforeEach, describe, expect, it } from 'vitest'
+import { page as browser, userEvent } from 'vitest/browser'
 
-import { loadSessionView, type SessionViewResult } from '@/actions/load-session-view'
-import { scheduleOffers } from '@/actions/schedule-offers'
-import { saveScheduleEdits } from '@/actions/save-schedule-edits'
-import { loadSessionEdit, type SessionEdit } from '@/actions/session-edit'
+import type { SessionViewResult } from '@/actions/load-session-view'
+import { ScheduleActionsProvider, type ScheduleActions } from '@/components/space/schedule-actions'
 import {
   SessionDrawerHost,
   SessionLink,
   sessionTriggerProps,
 } from '@/components/space/session-drawer-host'
 import { numberedSessions } from '@/lib/meetings'
+import type { SessionEdit } from '@/lib/session-edit'
 import type { Session } from '@/payload-types'
-import en from '../../messages/en.json'
+
 import ar from '../../messages/ar.json'
+import en from '../../messages/en.json'
+import { IntlProvider } from '../../testing/intl.test-utils'
+import { renderWithBrowserNavigation } from '../../testing/fan1-browser-navigation.test-utils'
 
-vi.mock('@/actions/load-session-view', () => ({ loadSessionView: vi.fn() }))
-vi.mock('@/actions/session-edit', () => ({ loadSessionEdit: vi.fn() }))
-vi.mock('@/actions/schedule-offers', () => ({ scheduleOffers: vi.fn() }))
-vi.mock('@/actions/save-schedule-edits', () => ({ saveScheduleEdits: vi.fn() }))
-const refresh = vi.fn()
+type Saved = Awaited<ReturnType<ScheduleActions['saveScheduleEdits']>>
+type Loaded = Awaited<ReturnType<ScheduleActions['loadSessionEdit']>>
 
-// Next folds pushState and replaceState into its router; this stands in for that.
-const URL_EVENT = 'test:url'
-const subscribe = (change: () => void) => {
-  window.addEventListener('popstate', change)
-  window.addEventListener(URL_EVENT, change)
-  return () => {
-    window.removeEventListener('popstate', change)
-    window.removeEventListener(URL_EVENT, change)
-  }
-}
-vi.mock('next/navigation', () => ({
-  useRouter: () => ({ push: vi.fn(), refresh }),
-  useSearchParams: () =>
-    new URLSearchParams(
-      useSyncExternalStore(
-        subscribe,
-        () => window.location.search,
-        () => '',
-      ),
-    ),
-}))
-
-let phone = false
-const session = (id: number, position: number, extra: Partial<Session> = {}): Session =>
+const session = (id: number, position: number, extra: Partial<Session> = {}) =>
   ({
     id,
     course: 1,
@@ -82,80 +57,103 @@ const course = {
   syllabus_tentative: null,
   course_type: 'LAB',
 } as const
-const shown = (id: number, canEdit = false): SessionViewResult => ({
-  ok: true,
-  course: course as never,
-  session: numberedSessions(sessions).find((n) => n.session.id === id)!,
-  spaceHref: '/en/spaces/course/probe',
-  canEdit,
-})
+const shown = (id: number, canEdit = false) =>
+  ({
+    ok: true,
+    course: course as never,
+    session: numberedSessions(sessions).find((n) => n.session.id === id)!,
+    spaceHref: '/en/spaces/course/probe',
+    canEdit,
+  }) satisfies SessionViewResult
+
+const deferred = () => {
+  let resolve!: () => void
+  const promise = new Promise<void>((done) => {
+    resolve = done
+  })
+  return { promise, resolve }
+}
+
+const defaults: {
+  view: (id: string) => Promise<SessionViewResult>
+  save: () => Promise<Saved>
+  edit: () => Promise<Loaded>
+} = {
+  view: async (id) => shown(Number(id)),
+  save: async () => ({ ok: true, items: [], before: [], after: [] }),
+  edit: async () => ({ ok: false, error: 'failed' }),
+}
+
+const host = {
+  saved: deferred(),
+  views: [] as Array<Parameters<ScheduleActions['loadSessionView']>>,
+  saves: [] as Array<Parameters<ScheduleActions['saveScheduleEdits']>>,
+  offers: [] as Array<Parameters<ScheduleActions['scheduleOffers']>>,
+  edits: [] as Array<Parameters<ScheduleActions['loadSessionEdit']>>,
+  ...defaults,
+}
+
+const actions = {
+  loadSessionView: async (...args) => {
+    host.views.push(args)
+    return host.view(args[0])
+  },
+  saveScheduleEdits: async (...args) => {
+    host.saves.push(args)
+    host.saved.resolve()
+    return host.save()
+  },
+  scheduleOffers: async (...args) => {
+    host.offers.push(args)
+    return []
+  },
+  loadSessionEdit: async (...args) => {
+    host.edits.push(args)
+    return host.edit()
+  },
+  loadCalendarItems: async () => ({ ok: false, error: { code: 'failed' } }),
+  publishOffer: async () => ({ status: 'ok' }),
+} satisfies ScheduleActions
+
+let router: ReturnType<typeof renderWithBrowserNavigation>['browser']
 
 const page = async (locale: 'en' | 'ar' = 'en') =>
   act(async () => {
-    render(
-      <NextIntlClientProvider
-        locale={locale}
-        messages={locale === 'ar' ? ar : en}
-        timeZone="Africa/Cairo"
-      >
-        <SessionLink id="13" href="/en/spaces/course/probe?tab=syllabus&open=13">
-          {en.SpacePost.sessionOpen}
-        </SessionLink>
-        <SessionDrawerHost />
-      </NextIntlClientProvider>,
-    )
+    router = renderWithBrowserNavigation(
+      <IntlProvider locale={locale}>
+        <ScheduleActionsProvider actions={actions}>
+          <SessionLink id="13" href="/en/spaces/course/probe?tab=syllabus&open=13">
+            {en.SpacePost.sessionOpen}
+          </SessionLink>
+          <SessionDrawerHost />
+        </ScheduleActionsProvider>
+      </IntlProvider>,
+    ).browser
   })
 
+const phone = () => browser.viewport(390, 844)
+
 beforeAll(async () => {
-  // Load the drawer's chunk first, as a pointer over a trigger does: React does
-  // not retry a suspended render outside act() in this environment.
   sessionTriggerProps.onPointerEnter()
   await import('@/components/space/session-drawer')
-  // The Edit form's chunk too, as a pointer over Edit loads it.
   await import('@/components/space/session-form')
-  await new Promise((resolve) => setTimeout(resolve, 0))
-  for (const method of ['pushState', 'replaceState'] as const) {
-    const original = window.history[method].bind(window.history)
-    window.history[method] = (...args: Parameters<History['pushState']>) => {
-      original(...args)
-      window.dispatchEvent(new Event(URL_EVENT))
-    }
-  }
-  globalThis.ResizeObserver = class {
-    observe() {}
-    unobserve() {}
-    disconnect() {}
-  }
-  globalThis.IntersectionObserver = class {
-    observe() {}
-    unobserve() {}
-    disconnect() {}
-    takeRecords() {
-      return []
-    }
-  } as unknown as typeof IntersectionObserver
-  Element.prototype.scrollIntoView = vi.fn()
 })
 beforeEach(() => {
-  phone = false
-  vi.stubGlobal('matchMedia', (query: string) => ({
-    matches: phone,
-    media: query,
-    addEventListener: () => {},
-    removeEventListener: () => {},
-  }))
-  window.history.replaceState(null, '', '/en/spaces/course/probe?tab=syllabus')
-  vi.mocked(loadSessionView).mockImplementation(async (id) => shown(Number(id)))
+  Object.assign(host, defaults)
+  host.saved = deferred()
+  host.views.length = 0
+  host.saves.length = 0
+  host.offers.length = 0
+  host.edits.length = 0
+  window.history.replaceState(null, '', '?tab=syllabus')
 })
 afterEach(() => {
   cleanup()
-  vi.unstubAllGlobals()
-  vi.mocked(loadSessionView).mockReset()
 })
 
 describe('the session drawer', () => {
   it.each(['en', 'ar'] as const)('names the sheet controls in %s', async (locale) => {
-    phone = true
+    await phone()
     await page(locale)
     await act(async () => {
       fireEvent.click(screen.getByRole('link', { name: en.SpacePost.sessionOpen }))
@@ -179,9 +177,9 @@ describe('the session drawer', () => {
   it.each([false, true])(
     'ends view mode with Edit session then the posts link (phone=%s)',
     async (onPhone) => {
-      phone = onPhone
-      vi.mocked(loadSessionView).mockImplementation(async (id) => shown(Number(id), true))
-      window.history.replaceState(null, '', '/en/spaces/course/probe?open=13')
+      if (onPhone) await phone()
+      host.view = async (id) => shown(Number(id), true)
+      window.history.replaceState(null, '', '?open=13')
       await page()
       const dialog = await screen.findByRole('dialog', { name: 'Reading the city' })
       const edit = await within(dialog).findByRole('button', { name: en.SessionEdit.edit })
@@ -205,7 +203,7 @@ describe('the session drawer', () => {
   it('is not in the page until a session is opened', async () => {
     await page()
     expect(screen.queryByRole('dialog')).toBeNull()
-    expect(loadSessionView).not.toHaveBeenCalled()
+    expect(host.views).toHaveLength(0)
   })
 
   it('opens on a click with the param, takes focus, closes on Escape, and gives focus back', async () => {
@@ -217,13 +215,11 @@ describe('the session drawer', () => {
     })
     expect(window.location.search).toBe('?tab=syllabus&open=13')
 
-    // The heading names the session; the view under it shows its number, not its title again.
     const dialog = await screen.findByRole('dialog', { name: 'Reading the city' })
-    expect(loadSessionView).toHaveBeenCalledWith('13', 'en')
+    expect(host.views).toContainEqual(['13', 'en'])
     await waitFor(() => expect(dialog.contains(document.activeElement)).toBe(true))
     expect(within(dialog).getByText(en.SpacePost.sessionDrawerTimes)).toBeInTheDocument()
 
-    // The one session view: number, title, times, delivery, Markdown, materials, activities.
     const view = within(dialog).getByRole('region', { name: 'Session 3: Reading the city' })
     expect(view).toHaveTextContent('Session 3')
     expect(view).not.toHaveTextContent('Reading the city')
@@ -235,7 +231,6 @@ describe('the session drawer', () => {
     expect(
       within(dialog).getByRole('link', { name: en.SpacePost.sessionDrawerViewPosts }),
     ).toHaveAttribute('href', '/en/spaces/course/probe?session=13')
-    // Only the people who may edit the session see Edit.
     expect(within(dialog).queryByRole('button', { name: en.SessionEdit.edit })).toBeNull()
 
     fireEvent.keyDown(document.activeElement!, { key: 'Escape' })
@@ -245,7 +240,7 @@ describe('the session drawer', () => {
   })
 
   it('opens from a link with the param and drops the param in place on close', async () => {
-    window.history.replaceState(null, '', '/en/spaces/course/probe?open=14')
+    window.history.replaceState(null, '', '?open=14')
     const length = window.history.length
     await page()
     const dialog = await screen.findByRole('dialog', { name: 'Called off' })
@@ -256,15 +251,15 @@ describe('the session drawer', () => {
   })
 
   it('says so when the session is gone or not the reader’s to read', async () => {
-    vi.mocked(loadSessionView).mockResolvedValue({ ok: false, error: 'not-found' })
-    window.history.replaceState(null, '', '/en/spaces/course/probe?open=99')
+    host.view = async () => ({ ok: false, error: 'not-found' })
+    window.history.replaceState(null, '', '?open=99')
     await page()
     expect(await screen.findByText(en.SpacePost.sessionGone)).toBeInTheDocument()
   })
 
   it('slides from the left in Arabic, with Arabic labels', async () => {
-    window.history.replaceState(null, '', '/ar/spaces/course/probe?open=13')
-    vi.mocked(loadSessionView).mockImplementation(async (id) => shown(Number(id)))
+    window.history.replaceState(null, '', '?open=13')
+    host.view = async (id) => shown(Number(id))
     await page('ar')
     const dialog = await screen.findByRole('dialog', { name: 'Reading the city' })
     expect(dialog).toHaveAttribute('data-side', 'left')
@@ -274,8 +269,8 @@ describe('the session drawer', () => {
   })
 
   it('is a bottom sheet on a phone', async () => {
-    phone = true
-    window.history.replaceState(null, '', '/en/spaces/course/probe?open=13')
+    await phone()
+    window.history.replaceState(null, '', '?open=13')
     await page()
     const dialog = await screen.findByRole('dialog', { name: 'Reading the city' })
     expect(dialog).not.toHaveAttribute('data-side')
@@ -284,24 +279,24 @@ describe('the session drawer', () => {
   })
 })
 
-const editValues = (extra: Partial<SessionEdit> = {}): SessionEdit => ({
-  title: 'Reading the city',
-  description: 'Walk **slowly**.',
-  cancelled: false,
-  meetings: [{ id: 'm13', date: '2026-11-13', start_time: '19:00', end_time: '21:00' }],
-  bibliography: [{ id: 'b1', type: 'reading', title: 'Invisible Cities', href: '', note: '' }],
-  activities: [{ id: 'a1', kind: 'discussion', description: 'In pairs' }],
-  ...extra,
-})
+const editValues = (extra: Partial<SessionEdit> = {}) =>
+  ({
+    title: 'Reading the city',
+    description: 'Walk **slowly**.',
+    cancelled: false,
+    meetings: [{ id: 'm13', date: '2026-11-13', start_time: '19:00', end_time: '21:00' }],
+    bibliography: [{ id: 'b1', type: 'reading', title: 'Invisible Cities', href: '', note: '' }],
+    activities: [{ id: 'a1', kind: 'discussion', description: 'In pairs' }],
+    ...extra,
+  }) satisfies SessionEdit
 
 const openForm = async (values = editValues()) => {
-  vi.mocked(loadSessionView).mockImplementation(async (id) => shown(Number(id), true))
-  vi.mocked(loadSessionEdit).mockResolvedValue({ ok: true, values, version: 'v1' })
-  window.history.replaceState(null, '', '/en/spaces/course/probe?open=13')
+  host.view = async (id) => shown(Number(id), true)
+  host.edit = async () => ({ ok: true, values, version: 'v1' })
+  window.history.replaceState(null, '', '?open=13')
   await page()
   const dialog = await screen.findByRole('dialog', { name: 'Reading the city' })
   const edit = await within(dialog).findByRole('button', { name: en.SessionEdit.edit })
-  // The form's chunk loads from the button's pointer, before the click.
   fireEvent.pointerEnter(edit)
   await act(async () => {})
   fireEvent.click(edit)
@@ -315,14 +310,9 @@ const save = (dialog: HTMLElement) =>
   })
 
 describe('the session drawer’s Cancel session menu and course row', () => {
-  beforeEach(() => {
-    vi.mocked(saveScheduleEdits).mockReset()
-    vi.mocked(scheduleOffers).mockReset().mockResolvedValue([])
-    refresh.mockReset()
-  })
   const openView = async (id: number, canEdit: boolean) => {
-    vi.mocked(loadSessionView).mockImplementation(async () => shown(id, canEdit))
-    window.history.replaceState(null, '', `/en/spaces/course/probe?open=${id}`)
+    host.view = async () => shown(id, canEdit)
+    window.history.replaceState(null, '', `?open=${id}`)
     await page()
     return screen.findByRole('dialog')
   }
@@ -356,20 +346,20 @@ describe('the session drawer’s Cancel session menu and course row', () => {
     await waitFor(() =>
       expect(screen.queryByRole('dialog', { name: en.SessionEdit.cancelSessionTitle })).toBeNull(),
     )
-    expect(saveScheduleEdits).not.toHaveBeenCalled()
+    expect(host.saves).toHaveLength(0)
   })
 
   it('cancels through the one save path, offers the announcement, and reads the view again', async () => {
-    vi.mocked(loadSessionEdit).mockResolvedValue({ ok: true, values: editValues(), version: 'v1' })
-    vi.mocked(saveScheduleEdits).mockResolvedValue({ ok: true, items: [], before: [], after: [] })
+    host.edit = async () => ({ ok: true, values: editValues(), version: 'v1' })
+    host.save = async () => ({ ok: true, items: [], before: [], after: [] })
     const dialog = await openView(13, true)
     await choose(dialog, en.SessionEdit.cancelSession)
     const ask = await screen.findByRole('dialog', { name: en.SessionEdit.cancelSessionTitle })
     await act(async () => {
       fireEvent.click(within(ask).getByRole('button', { name: en.SessionEdit.cancelSession }))
     })
-    expect(saveScheduleEdits).toHaveBeenCalledTimes(1)
-    const [{ details }] = vi.mocked(saveScheduleEdits).mock.calls[0]!
+    expect(host.saves).toHaveLength(1)
+    const [{ details }] = host.saves[0]!
     expect(details).toEqual([
       expect.objectContaining({
         op: 'edit',
@@ -377,31 +367,31 @@ describe('the session drawer’s Cancel session menu and course row', () => {
         values: expect.objectContaining({ cancelled: true }),
       }),
     ])
-    expect(scheduleOffers).toHaveBeenCalledWith(expect.objectContaining({ courseId: '1' }), 'en')
-    expect(refresh).toHaveBeenCalled()
+    expect(host.offers).toEqual([[expect.objectContaining({ courseId: '1' }), 'en']])
+    expect(router.refreshes).toBeGreaterThan(0)
   })
 
   it('offers Restore session for a cancelled session, with no question', async () => {
-    vi.mocked(loadSessionEdit).mockResolvedValue({
+    host.edit = async () => ({
       ok: true,
       values: editValues({ cancelled: true }),
       version: 'v1',
     })
-    vi.mocked(saveScheduleEdits).mockResolvedValue({ ok: true, items: [], before: [], after: [] })
+    host.save = async () => ({ ok: true, items: [], before: [], after: [] })
     const dialog = await openView(14, true)
     await act(async () => {
       await choose(dialog, en.SessionEdit.restoreSession)
     })
     expect(screen.queryByRole('dialog', { name: en.SessionEdit.cancelSessionTitle })).toBeNull()
-    await waitFor(() => expect(saveScheduleEdits).toHaveBeenCalledTimes(1))
-    expect(vi.mocked(saveScheduleEdits).mock.calls[0]![0].details).toEqual([
+    await host.saved.promise
+    expect(host.saves[0]![0].details).toEqual([
       expect.objectContaining({ values: expect.objectContaining({ cancelled: false }) }),
     ])
   })
 
   it('shows a refused save in the drawer', async () => {
-    vi.mocked(loadSessionEdit).mockResolvedValue({ ok: true, values: editValues(), version: 'v1' })
-    vi.mocked(saveScheduleEdits).mockResolvedValue({
+    host.edit = async () => ({ ok: true, values: editValues(), version: 'v1' })
+    host.save = async () => ({
       ok: false,
       error: { code: 'forbidden' },
     })
@@ -412,20 +402,14 @@ describe('the session drawer’s Cancel session menu and course row', () => {
       fireEvent.click(within(ask).getByRole('button', { name: en.SessionEdit.cancelSession }))
     })
     expect(await within(dialog).findByText(en.CalendarAdmin.errors.forbidden)).toBeInTheDocument()
-    expect(scheduleOffers).not.toHaveBeenCalled()
+    expect(host.offers).toHaveLength(0)
   })
 })
 
 describe('the session drawer’s Edit form', () => {
-  beforeEach(() => {
-    vi.mocked(saveScheduleEdits).mockReset()
-    vi.mocked(scheduleOffers).mockReset().mockResolvedValue([])
-    refresh.mockReset()
-  })
-
   it('offers Edit only to the people the session’s access lets edit', async () => {
-    vi.mocked(loadSessionView).mockImplementation(async (id) => shown(Number(id), true))
-    window.history.replaceState(null, '', '/en/spaces/course/probe?open=13')
+    host.view = async (id) => shown(Number(id), true)
+    window.history.replaceState(null, '', '?open=13')
     await page()
     const dialog = await screen.findByRole('dialog', { name: 'Reading the city' })
     expect(within(dialog).getByRole('button', { name: en.SessionEdit.edit })).toBeInTheDocument()
@@ -443,7 +427,7 @@ describe('the session drawer’s Edit form', () => {
     expect(ends).toHaveAttribute('data-invalid')
     expect(ends.getAttribute('aria-describedby')).toContain(error.id)
     await waitFor(() => expect(document.activeElement).toBe(ends))
-    expect(saveScheduleEdits).not.toHaveBeenCalled()
+    expect(host.saves).toHaveLength(0)
   })
 
   it('adds a meeting, asks for its day, and removes it again', async () => {
@@ -452,25 +436,27 @@ describe('the session drawer’s Edit form', () => {
     expect(within(dialog).getAllByText(en.SessionEdit.day)).toHaveLength(2)
     await save(dialog)
     expect(await within(dialog).findByText(en.SessionEdit.errors.day)).toBeInTheDocument()
-    expect(saveScheduleEdits).not.toHaveBeenCalled()
+    expect(host.saves).toHaveLength(0)
 
     fireEvent.click(within(dialog).getByRole('button', { name: 'Remove meeting 2' }))
-    vi.mocked(saveScheduleEdits).mockResolvedValue({ ok: true, items: [], before: [], after: [] })
+    host.save = async () => ({ ok: true, items: [], before: [], after: [] })
     await save(dialog)
-    expect(saveScheduleEdits).toHaveBeenCalledWith(
-      {
-        details: [
-          {
-            op: 'edit',
-            id: '13',
-            version: 'v1',
-            values: (({ meetings: _, ...values }) => values)(editValues()),
-            meetings: editValues().meetings,
-          },
-        ],
-      },
-      'en',
-    )
+    expect(host.saves).toEqual([
+      [
+        {
+          details: [
+            {
+              op: 'edit',
+              id: '13',
+              version: 'v1',
+              values: (({ meetings: _, ...values }) => values)(editValues()),
+              meetings: editValues().meetings,
+            },
+          ],
+        },
+        'en',
+      ],
+    ])
   })
 
   it('asks before a close loses changes, and closes at once with none', async () => {
@@ -493,8 +479,7 @@ describe('the session drawer’s Edit form', () => {
     await waitFor(() => expect(window.location.search).toBe(''))
     expect(screen.queryByRole('dialog', { name: en.Spaces.calendarLeaveTitle })).toBeNull()
 
-    // Opened again, it shows the session, not the form it was closed on.
-    await act(async () => window.history.pushState(null, '', '/en/spaces/course/probe?open=13'))
+    await act(async () => window.history.pushState(null, '', '?open=13'))
     const again = await screen.findByRole('dialog', { name: 'Reading the city' })
     expect(await within(again).findByRole('button', { name: en.SessionEdit.edit })).toBeVisible()
     expect(within(again).queryByRole('textbox', { name: en.SessionEdit.title })).toBeNull()
@@ -513,21 +498,18 @@ describe('the session drawer’s Edit form', () => {
       },
     ]
     const after = [{ ...before[0]!, cancelled: true, version: 'v2' }]
-    vi.mocked(saveScheduleEdits).mockResolvedValue({ ok: true, items: after, before, after })
+    host.save = async () => ({ ok: true, items: after, before, after })
     const dialog = await openForm()
     fireEvent.click(within(dialog).getByRole('checkbox', { name: en.SessionEdit.cancelled }))
     await save(dialog)
-    await waitFor(() =>
-      expect(scheduleOffers).toHaveBeenCalledWith({ courseId: '1', before, after }, 'en'),
-    )
-    expect(refresh).toHaveBeenCalled()
-    // Back in view mode, read again.
+    await waitFor(() => expect(host.offers).toEqual([[{ courseId: '1', before, after }, 'en']]))
+    expect(router.refreshes).toBeGreaterThan(0)
     expect(await within(dialog).findByRole('button', { name: en.SessionEdit.edit })).toBeVisible()
-    expect(loadSessionView).toHaveBeenCalledTimes(2)
+    expect(host.views).toHaveLength(2)
   })
 
   it('keeps the changes on a stale save and offers to reload', async () => {
-    vi.mocked(saveScheduleEdits).mockResolvedValue({
+    host.save = async () => ({
       ok: false,
       error: { code: 'stale', itemId: '13', name: 'Session 3: Reading the city' },
     })
@@ -539,7 +521,7 @@ describe('the session drawer’s Edit form', () => {
       await within(dialog).findByRole('button', { name: en.CalendarAdmin.reloadAndLose }),
     ).toBeInTheDocument()
     expect(title).toHaveValue('Mine')
-    expect(scheduleOffers).not.toHaveBeenCalled()
+    expect(host.offers).toHaveLength(0)
   })
 
   it('shows materials and activities as cards named for assistive tech, ending with a + tile', async () => {
@@ -554,7 +536,6 @@ describe('the session drawer’s Edit form', () => {
       'Add material',
       'Add activity',
     ])
-    // The + row follows the list of cards, in the same block.
     const block = material.closest('ul')!.parentElement!
     expect(within(block).getAllByRole('button').at(-1)).toBe(tiles[0])
   })
@@ -563,7 +544,6 @@ describe('the session drawer’s Edit form', () => {
     const dialog = await openForm()
     fireEvent.click(within(dialog).getByRole('button', { name: 'Edit material: Invisible Cities' }))
     const edit = await screen.findByRole('dialog', { name: en.SessionEdit.materialTitleEdit })
-    // The first field takes focus, not the close button.
     await waitFor(() =>
       expect(document.activeElement).toBe(
         within(edit).getByRole('combobox', { name: en.SessionEdit.materialType }),
@@ -584,10 +564,10 @@ describe('the session drawer’s Edit form', () => {
     })
     expect(card).toHaveTextContent('example.org')
     await waitFor(() => expect(document.activeElement).toBe(card))
-    expect(saveScheduleEdits).not.toHaveBeenCalled()
-    vi.mocked(saveScheduleEdits).mockResolvedValue({ ok: true, items: [], before: [], after: [] })
+    expect(host.saves).toHaveLength(0)
+    host.save = async () => ({ ok: true, items: [], before: [], after: [] })
     await save(dialog)
-    expect(vi.mocked(saveScheduleEdits).mock.calls[0]![0].details![0]).toMatchObject({
+    expect(host.saves[0]![0].details![0]).toMatchObject({
       values: {
         bibliography: [
           {
@@ -616,12 +596,10 @@ describe('the session drawer’s Edit form', () => {
     const link = within(edit).getByRole('textbox', { name: en.SessionEdit.materialLink })
     fireEvent.change(link, { target: { value: 'not a link' } })
     expect(await within(edit).findByText(en.SessionEdit.errors.link)).toBeInTheDocument()
-    // Enter in a field is Done: it checks the dialog and never submits the session form.
     fireEvent.submit(link)
     expect(screen.getByRole('dialog', { name: en.SessionEdit.materialTitleEdit })).toBeVisible()
-    expect(saveScheduleEdits).not.toHaveBeenCalled()
+    expect(host.saves).toHaveLength(0)
 
-    // Cancel keeps the material as it was.
     fireEvent.click(within(edit).getByRole('button', { name: en.SessionEdit.cancel }))
     await waitFor(() =>
       expect(screen.queryByRole('dialog', { name: en.SessionEdit.materialTitleEdit })).toBeNull(),
@@ -653,7 +631,6 @@ describe('the session drawer’s Edit form', () => {
       target: { value: 'https://soundcloud.com/cilas/walk' },
     })
     fireEvent.click(within(fresh).getByRole('button', { name: en.SessionEdit.done }))
-    // A link alone is enough; the card shows its host.
     const card = await within(dialog).findByRole('button', {
       name: 'Edit material: soundcloud.com',
     })
@@ -709,7 +686,6 @@ describe('the session drawer’s Edit form', () => {
         'aria-live',
         'polite',
       )
-      // Both buttons now, then the end of the list takes Move down away and focus moves on.
       fireEvent.click(within(edit).getByRole('button', { name: en.SessionEdit.moveDown }))
       expect(await within(edit).findByText('Position 3 of 3')).toBeInTheDocument()
       expect(within(edit).queryByRole('button', { name: en.SessionEdit.moveDown })).toBeNull()
@@ -718,7 +694,6 @@ describe('the session drawer’s Edit form', () => {
           within(edit).getByRole('button', { name: en.SessionEdit.moveUp }),
         ),
       )
-      // The list itself does not change until Done.
       expect(titles(dialog)).toEqual([
         'Edit material: First',
         'Edit material: Second',
@@ -735,9 +710,9 @@ describe('the session drawer’s Edit form', () => {
           'Edit material: First',
         ]),
       )
-      vi.mocked(saveScheduleEdits).mockResolvedValue({ ok: true, items: [], before: [], after: [] })
+      host.save = async () => ({ ok: true, items: [], before: [], after: [] })
       await save(dialog)
-      const sent = vi.mocked(saveScheduleEdits).mock.calls[0]![0].details![0]
+      const sent = host.saves[0]![0].details![0]
       expect(sent).toMatchObject({
         values: { bibliography: [{ id: 'b2' }, { id: 'b3' }, { id: 'b1' }] },
       })
@@ -847,7 +822,7 @@ describe('the session drawer’s Edit form', () => {
       await waitFor(() =>
         expect(screen.queryByRole('dialog', { name: en.SessionEdit.deleteTitle })).toBeNull(),
       )
-      expect(saveScheduleEdits).not.toHaveBeenCalled()
+      expect(host.saves).toHaveLength(0)
       expect(hold).toHaveFocus()
     },
   )
@@ -856,7 +831,7 @@ describe('the session drawer’s Edit form', () => {
     'a click without a hold (detail %s) opens confirmation; Delete calls the path once',
     async (detail) => {
       const dialog = await openForm()
-      vi.mocked(saveScheduleEdits).mockResolvedValue({ ok: false, error: { code: 'failed' } })
+      host.save = async () => ({ ok: false, error: { code: 'failed' } })
       const hold = within(dialog).getByRole('button', { name: en.SessionEdit.holdDelete })
       await act(async () => {
         hold.focus()
@@ -866,24 +841,18 @@ describe('the session drawer’s Edit form', () => {
       await act(async () => {
         fireEvent.click(within(confirm).getByRole('button', { name: en.SessionEdit.delete }))
       })
-      await waitFor(() => expect(saveScheduleEdits).toHaveBeenCalledTimes(1))
-      expect(saveScheduleEdits).toHaveBeenCalledWith(
-        { details: [{ op: 'delete', id: '13', version: 'v1' }] },
-        'en',
-      )
+      await host.saved.promise
+      expect(host.saves).toEqual([[{ details: [{ op: 'delete', id: '13', version: 'v1' }] }, 'en']])
       expect(await within(dialog).findByRole('alert')).toBeInTheDocument()
     },
   )
 
   it('a pointer hold deletes without opening confirmation', async () => {
     const dialog = await openForm()
+    host.save = async () => ({ ok: false, error: { code: 'failed' } })
     const hold = within(dialog).getByRole('button', { name: en.SessionEdit.holdDelete })
-    hold.setPointerCapture = vi.fn()
-    vi.mocked(saveScheduleEdits).mockResolvedValue({ ok: false, error: { code: 'failed' } })
-    fireEvent.pointerDown(hold, { isPrimary: true, button: 0, pointerId: 1, pointerType: 'mouse' })
-    await waitFor(() => expect(saveScheduleEdits).toHaveBeenCalledTimes(1), { timeout: 4000 })
-    fireEvent.pointerUp(hold)
-    fireEvent.click(hold, { detail: 1 })
+    await userEvent.click(hold, { delay: 1500 })
+    expect(host.saves).toHaveLength(1)
     expect(screen.queryByRole('dialog', { name: en.SessionEdit.deleteTitle })).toBeNull()
   })
 
@@ -891,7 +860,6 @@ describe('the session drawer’s Edit form', () => {
     const dialog = await openForm()
     expect(within(dialog).getByRole('button', { name: en.SessionEdit.save })).toBeInTheDocument()
     expect(within(dialog).queryByRole('button', { name: en.SessionEdit.apply })).toBeNull()
-    // The footer row reads and tabs Cancel, then the primary action; the hold comes before it.
     const hold = within(dialog).getByRole('button', { name: en.SessionEdit.holdDelete })
     const button = (name: string) => within(dialog).getByRole('button', { name })
     expect(within(dialog).getAllByRole('button').slice(-3)).toEqual([
@@ -900,37 +868,36 @@ describe('the session drawer’s Edit form', () => {
       button(en.SessionEdit.save),
     ])
     expect(hold).toHaveAccessibleDescription(en.SessionEdit.holdHint.replace('{seconds}', '1.2'))
-    // An early release deletes nothing.
     fireEvent.keyDown(hold, { key: ' ' })
+    await waitFor(() => expect(hold).toHaveAttribute('data-state', 'holding'))
     fireEvent.keyUp(hold, { key: ' ' })
-    await new Promise((resolve) => setTimeout(resolve, 1500))
-    expect(saveScheduleEdits).not.toHaveBeenCalled()
+    await waitFor(() => expect(hold).toHaveAttribute('data-state', 'idle'))
+    expect(host.saves).toHaveLength(0)
 
-    vi.mocked(saveScheduleEdits).mockResolvedValue({ ok: true, items: [], before: [], after: [] })
-    vi.mocked(loadSessionView).mockResolvedValue({ ok: false, error: 'not-found' })
+    host.save = async () => ({ ok: true, items: [], before: [], after: [] })
+    host.view = async () => ({ ok: false, error: 'not-found' })
     fireEvent.keyDown(hold, { key: ' ' })
-    await waitFor(() => expect(saveScheduleEdits).toHaveBeenCalledTimes(1), { timeout: 4000 })
-    expect(saveScheduleEdits).toHaveBeenCalledWith(
-      { details: [{ op: 'delete', id: '13', version: 'v1' }] },
-      'en',
-    )
-    // Back in the view, read again: the session is gone.
+    await host.saved.promise
+    expect(host.saves).toEqual([[{ details: [{ op: 'delete', id: '13', version: 'v1' }] }, 'en']])
     expect(await within(dialog).findByText(en.SpacePost.sessionGone)).toBeInTheDocument()
   })
 
   it('rewinds the hold and shows why when a delete is refused', async () => {
-    vi.mocked(saveScheduleEdits).mockResolvedValue({ ok: false, error: { code: 'failed' } })
+    host.save = async () => ({ ok: false, error: { code: 'failed' } })
     const dialog = await openForm()
     const hold = within(dialog).getByRole('button', { name: en.SessionEdit.holdDelete })
     fireEvent.keyDown(hold, { key: ' ' })
-    await waitFor(() => expect(saveScheduleEdits).toHaveBeenCalledTimes(1), { timeout: 4000 })
+    await host.saved.promise
     expect(await within(dialog).findByRole('alert')).toBeInTheDocument()
     expect(within(dialog).getByRole('button', { name: en.SessionEdit.holdDelete })).toBeEnabled()
   })
 
   it('offers a retry when the session does not load', async () => {
-    vi.mocked(loadSessionView).mockResolvedValueOnce({ ok: false, error: 'failed' })
-    window.history.replaceState(null, '', '/en/spaces/course/probe?open=13')
+    host.view = async () => {
+      host.view = defaults.view
+      return { ok: false, error: 'failed' }
+    }
+    window.history.replaceState(null, '', '?open=13')
     await page()
     fireEvent.click(await screen.findByRole('button', { name: en.SpacePost.sessionDrawerRetry }))
     expect(await screen.findByRole('dialog', { name: 'Reading the city' })).toBeInTheDocument()

@@ -57,7 +57,7 @@ A browser test cannot load a server action or Payload, and a jsdom test can only
 
 Why a prop, though AGENTS.md calls a parameter with one caller surplus: the action is the component's one effect on the world, and the prop is the only way the component can load in a browser at all. Moving every assertion to an int test or e2e instead loses the component's own states (busy, failed, retried), which only a rendered test can see.
 
-Exemplar: `src/components/space/schedule-offer-dialog.tsx`, `connected-schedule-offer-dialog.tsx`, and `src/components/admin/schedule-offer-dialog.browser.test.tsx`.
+Exemplar: `src/components/space/schedule-offer-dialog.tsx` and `src/components/admin/schedule-offer-dialog.browser.test.tsx`. The schedule screens take all their actions from one `ScheduleActions` value (`src/components/space/schedule-actions.tsx`): the app wraps a host in `ConnectedScheduleActions`, and a test wraps it in `ScheduleActionsProvider` with plain functions.
 
 ## Replacements
 

@@ -1,13 +1,16 @@
-import React, { useState } from 'react'
-import { act, cleanup, fireEvent, render, screen, within, waitFor } from '@testing-library/react'
+import { act, cleanup, fireEvent, screen, within, waitFor } from '@testing-library/react'
+import { http, HttpResponse } from 'msw'
+import { useState } from 'react'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
+import { page as browser } from 'vitest/browser'
 import { SearchResults } from '@/components/search-results'
 import { useSearchFilters } from '@/components/search-filters'
 import { PrivateSpaceSearch, type PrivateSearchSummary } from '@/components/private-space-search'
 import type { SearchSort } from '@/lib/search-config'
 
-vi.mock('next-intl', () => ({ useLocale: () => 'en', useTranslations: () => (key: string) => key }))
-vi.mock('react-instantsearch', () => ({ Highlight: () => null, Snippet: () => null }))
+import { renderWithIntl } from '../../testing/intl.test-utils'
+import { mockNetwork } from '../../testing/msw-browser.test-utils'
+
 const onOpen = vi.fn()
 const onClose = vi.fn()
 const choices = [
@@ -97,33 +100,35 @@ const page = {
     },
   ],
 }
-const response = (value = page) => ({ ok: true, json: async () => value }) as Response
+const sent: Array<{ spaces: number[]; sort: SearchSort }> = []
+const searchAnswers = (value: unknown, options: { once?: boolean } = {}) =>
+  http.post(
+    '/api/spaces-search',
+    async ({ request }) => {
+      sent.push((await request.json()) as (typeof sent)[number])
+      return HttpResponse.json(value as never)
+    },
+    options,
+  )
+const network = mockNetwork(searchAnswers(page))
 const settle = async () =>
   act(async () => {
     await new Promise((resolve) => setTimeout(resolve, 280))
   })
 beforeEach(() => {
-  vi.stubGlobal(
-    'ResizeObserver',
-    class {
-      observe() {}
-      disconnect() {}
-    },
-  )
-  vi.stubGlobal('fetch', vi.fn().mockResolvedValue(response()))
+  sent.length = 0
   onOpen.mockClear()
   onClose.mockClear()
 })
 afterEach(() => {
   cleanup()
-  vi.unstubAllGlobals()
 })
 
 describe('shared search filters', () => {
   it.each([true, false])(
     'supports independent selections, none and clear with the same state in private=%s',
     async (privateScope) => {
-      const { container } = render(<Harness privateScope={privateScope} />)
+      const { container } = renderWithIntl(<Harness privateScope={privateScope} />)
       expect(container.querySelector('select')).toBeNull()
       const lane = within(screen.getByRole('complementary'))
       const first = lane.getByRole('checkbox', { name: choices[0].label })
@@ -136,29 +141,23 @@ describe('shared search filters', () => {
       fireEvent.click(second)
       expect(second).not.toBeChecked()
       await settle()
-      if (privateScope)
-        expect(JSON.parse(vi.mocked(fetch).mock.calls.at(-1)![1]!.body as string).spaces).toEqual(
-          [],
-        )
-      fireEvent.click(lane.getByRole('button', { name: 'clearAll' }))
+      if (privateScope) expect(sent.at(-1)!.spaces).toEqual([])
+      fireEvent.click(lane.getByRole('button', { name: 'Clear all' }))
       expect(first).toBeChecked()
       expect(second).toBeChecked()
-      expect(lane.queryByRole('button', { name: 'clearAll' })).toBeNull()
+      expect(lane.queryByRole('button', { name: 'Clear all' })).toBeNull()
       await settle()
-      if (privateScope)
-        expect(JSON.parse(vi.mocked(fetch).mock.calls.at(-1)![1]!.body as string).spaces).toEqual([
-          7, 8,
-        ])
+      if (privateScope) expect(sent.at(-1)!.spaces).toEqual([7, 8])
     },
   )
 
   it('disables checked zero-match spaces but keeps unchecked zero-match spaces enabled', async () => {
-    render(<Harness />)
+    renderWithIntl(<Harness />)
     const lane = within(screen.getByRole('complementary'))
     const second = lane.getByRole('checkbox', { name: choices[1].label })
     fireEvent.click(second)
-    vi.mocked(fetch).mockResolvedValue(
-      response({
+    network.use(
+      searchAnswers({
         ...page,
         aggregates: {
           total: 1,
@@ -180,36 +179,37 @@ describe('shared search filters', () => {
   })
 
   it('leaves unknown counts enabled and never presents a fabricated zero', async () => {
-    vi.mocked(fetch).mockResolvedValue(
-      response({ ...page, aggregates: null, incomplete: true } as never),
-    )
-    render(<Harness />)
+    network.use(searchAnswers({ ...page, aggregates: null, incomplete: true }))
+    renderWithIntl(<Harness />)
     await settle()
     const lane = within(screen.getByRole('complementary'))
     expect(lane.getByRole('checkbox', { name: choices[1].label })).toBeEnabled()
     expect(lane.queryByText('0')).toBeNull()
-    expect(screen.getAllByText('privateIncomplete').length).toBeGreaterThan(0)
+    expect(
+      screen.getAllByText('Search is incomplete. Try a more specific phrase.').length,
+    ).toBeGreaterThan(0)
   })
 
   it('uses counted choices and the same Show results action in the mobile sheet, restoring focus on close', async () => {
-    render(<Harness />)
+    await browser.viewport(390, 844)
+    renderWithIntl(<Harness />)
     await settle()
-    const trigger = screen.getByRole('button', { name: 'filters' })
+    const trigger = screen.getByRole('button', { name: 'Filters' })
     fireEvent.click(trigger)
-    const sheet = within(screen.getByRole('dialog', { name: 'filters' }))
+    const sheet = within(screen.getByRole('dialog', { name: 'Filters' }))
     fireEvent.click(sheet.getByRole('checkbox', { name: choices[1].label }))
     await settle()
-    fireEvent.click(sheet.getByRole('button', { name: 'showResults' }))
+    fireEvent.click(sheet.getByRole('button', { name: /Show results/ }))
     await act(async () => {
       await new Promise((resolve) => setTimeout(resolve, 450))
     })
-    await waitFor(() => expect(screen.queryByRole('dialog', { name: 'filters' })).toBeNull(), {
+    await waitFor(() => expect(screen.queryByRole('dialog', { name: 'Filters' })).toBeNull(), {
       timeout: 4000,
     })
     expect(screen.getByRole('searchbox')).toHaveValue('needle')
     await waitFor(() => expect(trigger).toHaveFocus())
     fireEvent.click(trigger)
-    fireEvent.keyDown(screen.getByRole('dialog', { name: 'filters' }), { key: 'Escape' })
+    fireEvent.keyDown(screen.getByRole('dialog', { name: 'Filters' }), { key: 'Escape' })
     await act(async () => {
       await new Promise((resolve) => setTimeout(resolve, 450))
     })
@@ -218,25 +218,19 @@ describe('shared search filters', () => {
   })
 
   it('shares sort keys, result navigation, safe text, and image/icon presentation', async () => {
-    vi.mocked(fetch).mockResolvedValue(
-      response({
+    network.use(
+      searchAnswers({
         ...page,
         results: [{ ...page.results[0], image: '/api/space-files/file/safe.png' }],
-      } as never),
+      }),
     )
-    const { container } = render(<Harness />)
-    fireEvent.keyDown(screen.getByRole('button', { name: 'sortRelevance' }), { key: 'ArrowRight' })
-    expect(screen.getByRole('button', { name: 'sortNewest' })).toHaveAttribute(
-      'aria-pressed',
-      'true',
-    )
-    fireEvent.keyDown(screen.getByRole('button', { name: 'sortNewest' }), { key: 'ArrowRight' })
-    expect(screen.getByRole('button', { name: 'sortAlpha' })).toHaveAttribute(
-      'aria-pressed',
-      'true',
-    )
+    const { container } = renderWithIntl(<Harness />)
+    fireEvent.keyDown(screen.getByRole('button', { name: 'Best match' }), { key: 'ArrowRight' })
+    expect(screen.getByRole('button', { name: 'Newest' })).toHaveAttribute('aria-pressed', 'true')
+    fireEvent.keyDown(screen.getByRole('button', { name: 'Newest' }), { key: 'ArrowRight' })
+    expect(screen.getByRole('button', { name: 'A to Z' })).toHaveAttribute('aria-pressed', 'true')
     await settle()
-    expect(JSON.parse(vi.mocked(fetch).mock.calls.at(-1)![1]!.body as string).sort).toBe('alpha')
+    expect(sent.at(-1)!.sort).toBe('alpha')
     const query = screen.getByRole('searchbox')
     query.focus()
     fireEvent.keyDown(query, { key: 'ArrowDown' })
@@ -257,29 +251,32 @@ describe('shared search filters', () => {
   })
 
   it('shows the authoritative total in the shared animated header and shown-of-total footer', async () => {
-    vi.mocked(fetch)
-      .mockResolvedValueOnce(
-        response({
+    network.use(
+      searchAnswers(
+        {
           ...page,
           hasMore: true,
           cursor: 'next',
           aggregates: { ...page.aggregates, total: 42 },
-        } as never),
-      )
-      .mockResolvedValueOnce(
-        response({
+        },
+        { once: true },
+      ),
+      searchAnswers(
+        {
           ...page,
           aggregates: { ...page.aggregates, total: 42 },
           results: [{ ...page.results[0], id: 'post:2', title: 'Second result' }],
-        }),
-      )
-    const { container } = render(<Harness />)
+        },
+        { once: true },
+      ),
+    )
+    const { container } = renderWithIntl(<Harness />)
     await settle()
     const header = container.querySelector('strong[aria-hidden="true"]') as HTMLElement
     expect(within(header).getAllByText('42').length).toBeGreaterThan(0)
-    expect(within(header).getByText('resultsOnly')).toBeInTheDocument()
-    expect(screen.getAllByText('showing').length).toBeGreaterThan(0)
-    fireEvent.click(screen.getByRole('button', { name: 'showMore' }))
+    expect(within(header).getByText('results')).toBeInTheDocument()
+    expect(screen.getAllByText(/^Showing \d+ of 42$/).length).toBeGreaterThan(0)
+    fireEvent.click(screen.getByRole('button', { name: 'Show more results' }))
     await settle()
     expect(screen.getByText('Current result')).toBeInTheDocument()
     expect(screen.getByText('Second result')).toBeInTheDocument()

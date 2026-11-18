@@ -5,6 +5,7 @@ import { Alert } from '@/components/arc/alert/alert'
 import { openingDay } from '@/lib/calendar-items'
 import { cairoDay } from '@/lib/cairo-day'
 
+import { ConnectedScheduleActions } from './connected-schedule-actions'
 import { ConnectedSpaceCalendarTab } from './connected-space-calendar-tab'
 
 /**
@@ -28,16 +29,18 @@ export async function SpaceCalendar({
     return <Alert tone="danger" title={t('calendarFailed')} />
   }
   return (
-    <ConnectedSpaceCalendarTab
-      spaceId={String(id)}
-      courseId={String(courseId)}
-      items={result.items}
-      canEdit={result.canEdit}
-      day={openingDay(
-        result.items.filter((item) => item.kind === 'session'),
-        cairoDay(new Date())!,
-      )}
-      spaceHref={spaceHref}
-    />
+    <ConnectedScheduleActions>
+      <ConnectedSpaceCalendarTab
+        spaceId={String(id)}
+        courseId={String(courseId)}
+        items={result.items}
+        canEdit={result.canEdit}
+        day={openingDay(
+          result.items.filter((item) => item.kind === 'session'),
+          cairoDay(new Date())!,
+        )}
+        spaceHref={spaceHref}
+      />
+    </ConnectedScheduleActions>
   )
 }

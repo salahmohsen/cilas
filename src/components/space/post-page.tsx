@@ -10,6 +10,7 @@ import type { User } from '@/payload-types'
 
 import { loadPost, PostArticle } from './post-article'
 import styles from './space.module.css'
+import { ConnectedScheduleActions } from './connected-schedule-actions'
 import { SessionDrawerHost } from './session-drawer-host'
 
 /**
@@ -73,7 +74,9 @@ export async function PostPage({
         <PostArticle user={user} view={view} context={context} href={href} />
         {why && <Alert tone="info" title={why} />}
       </main>
-      <SessionDrawerHost />
+      <ConnectedScheduleActions>
+        <SessionDrawerHost />
+      </ConnectedScheduleActions>
     </div>
   )
 }

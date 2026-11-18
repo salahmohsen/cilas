@@ -1,7 +1,6 @@
 import { useCallback, useEffect, useRef, useState, type ReactNode } from 'react'
 import { useLocale, useTranslations } from 'next-intl'
 
-import { loadSessionEdit } from '@/actions/session-edit'
 import { Alert } from '@/components/arc/alert/alert'
 import { Button } from '@/components/arc/button/button'
 import { Drawer, DrawerContent } from '@/components/arc/drawer/drawer'
@@ -10,6 +9,7 @@ import type { CalendarItem } from '@/lib/calendar-items'
 import type { SessionDetailChange, SessionEdit } from '@/lib/session-edit'
 import { useNarrow } from '@/lib/use-narrow'
 
+import { useScheduleActions } from './schedule-actions'
 import { SessionForm, type SessionFormStage } from './session-form'
 import type { ScheduleSaveText } from './schedule-save-text'
 
@@ -39,6 +39,7 @@ export function ScheduleEditDrawer({
   const opener = useRef(
     typeof document === 'undefined' ? null : (document.activeElement as HTMLElement | null),
   )
+  const { loadSessionEdit } = useScheduleActions()
   const [loaded, setLoaded] = useState<SessionEdit | null>(null)
   const [failed, setFailed] = useState(false)
   const [round, setRound] = useState(0)
@@ -70,7 +71,7 @@ export function ScheduleEditDrawer({
     return () => {
       live = false
     }
-  }, [item.id, item.version, contentLocale, round])
+  }, [item.id, item.version, contentLocale, round, loadSessionEdit])
   const onUnsaved = useCallback(
     (ask: ((go: () => void) => void) | null) => setUnsaved(ask ? { ask } : null),
     [],

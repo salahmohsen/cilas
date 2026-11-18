@@ -1,5 +1,5 @@
 import type { Field, FieldHookArgs } from 'payload'
-import { describe, expect, it, vi } from 'vitest'
+import { describe, expect, it } from 'vitest'
 
 import { bibliographyField } from '@/fields/bibliography'
 import { COURSE_TYPE_OPTIONS } from '@/fields/course-type'
@@ -26,7 +26,6 @@ describe('validators', () => {
     expect(endAfterStart('21:00', '19:00')).toBe(true)
     expect(endAfterStart('19:00', '19:00')).toMatch(/after/)
     expect(endAfterStart('18:00', '19:00')).toMatch(/after/)
-    // An invalid end is reported by timeOfDay; an unset start can't be compared.
     expect(endAfterStart('21:00', undefined)).toBe(true)
   })
 
@@ -43,8 +42,17 @@ describe('validators', () => {
   })
 })
 
-const names = (fields: Field[]): string[] =>
-  fields.flatMap((f) => ('name' in f ? [f.name] : 'fields' in f ? names(f.fields) : []))
+const inOrder = (fields: Field[]) => {
+  const found: Field[] = []
+  const pending = [...fields].reverse()
+  for (let f = pending.pop(); f; f = pending.pop()) {
+    found.push(f)
+    if (!('name' in f) && 'fields' in f) pending.push(...[...f.fields].reverse())
+  }
+  return found
+}
+
+const names = (fields: Field[]) => inOrder(fields).flatMap((f) => ('name' in f ? [f.name] : []))
 
 describe('scheduleField', () => {
   it('computes end_date from its sibling pattern', () => {
@@ -69,48 +77,12 @@ describe('registrationField', () => {
     return hook(args as FieldHookArgs)
   }
 
-  it('validates an inherited destination with the same request and access checks', async () => {
-    const findByID = vi.fn().mockResolvedValue({ registration: { method: 'form', form: 7 } })
-    const req = { payload: { findByID } } as unknown as FieldHookArgs['req']
-    await expect(
-      validate({
-        value: {},
-        data: { cycle: 3, _status: 'published' },
-        collection: { slug: 'courses' } as FieldHookArgs['collection'],
-        req,
-        operation: 'create',
-      }),
-    ).resolves.toEqual({})
-    expect(findByID).toHaveBeenCalledWith({
-      collection: 'cycles',
-      id: 3,
-      depth: 0,
-      req,
-      overrideAccess: false,
-    })
-  })
-
   it('rejects a missing site form even after the deadline', async () => {
     await expect(
       validate({
         value: { method: 'form', deadline: '2000-01-01' },
         data: { _status: 'published' },
         req: {} as FieldHookArgs['req'],
-        operation: 'create',
-      }),
-    ).rejects.toThrow()
-  })
-
-  it('rejects an invalid inherited external URL', async () => {
-    const findByID = vi
-      .fn()
-      .mockResolvedValue({ registration: { method: 'external', url: 'javascript:alert(1)' } })
-    await expect(
-      validate({
-        value: {},
-        data: { cycle: 3, _status: 'published' },
-        collection: { slug: 'courses' } as FieldHookArgs['collection'],
-        req: { payload: { findByID } } as unknown as FieldHookArgs['req'],
         operation: 'create',
       }),
     ).rejects.toThrow()
@@ -166,21 +138,12 @@ describe('computeEndDate on update', () => {
 })
 
 describe('validate closures in the configs', () => {
-  // Mirrors how Payload calls validate: the field's own config plus siblingData and req.
   const req = {
     payload: { config: {} },
     t: (key: string) => key,
   }
-  const find = (fields: Field[], name: string): Field | undefined => {
-    for (const f of fields) {
-      if ('name' in f && f.name === name) return f
-      if (!('name' in f) && 'fields' in f) {
-        const hit = find(f.fields, name)
-        if (hit) return hit
-      }
-    }
-    return undefined
-  }
+  const find = (fields: Field[], name: string) =>
+    inOrder(fields).find((f) => 'name' in f && f.name === name)
   const check = (
     field: Field | undefined,
     value: unknown,

@@ -1,3 +1,4 @@
+import { bypass, http, HttpResponse, passthrough } from 'msw'
 import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest'
 import { getPayload, type Payload, type PayloadRequest } from 'payload'
 import { SignJWT, decodeJwt, decodeProtectedHeader } from 'jose'
@@ -13,6 +14,16 @@ import { processOutbox, rebuild, pruneGenerations, WRITER_LOCK } from '@/lib/pri
 import { POST } from '@/app/(frontend)/api/spaces-search/route'
 import { activeGeneration, RecoveryRequired } from '@/lib/private-search/generation'
 import { rateAllowed } from '@/lib/private-search/rate'
+
+import { mockNetwork } from '../../../testing/msw-node.test-utils'
+
+const engine = 'http://127.0.0.1:18109'
+const importUrl = (collection: string) => `${engine}/collections/${collection}/documents/import`
+const network = mockNetwork(
+  http.post('https://telemetry.payloadcms.com/events', () => HttpResponse.json({})),
+  http.all(`${engine}/*`, () => passthrough()),
+  http.all('http://127.0.0.1:19000/*', () => passthrough()),
+)
 
 const disposable =
   process.env.DATABASE_URL === 'postgres://search_test:disposable@localhost:55439/cilas_search_test'
@@ -112,6 +123,7 @@ describe.skipIf(!disposable)('private search with real Postgres and Typesense 30
           course_type: 'THEMATIC',
           tier: 'owner',
           cycle: cycle.id,
+          registration: { mode: 'closed' },
           _status: 'published',
         } as never,
       })
@@ -206,7 +218,7 @@ describe.skipIf(!disposable)('private search with real Postgres and Typesense 30
       await connection.query('SELECT pg_advisory_unlock_all()')
       connection.release()
     }
-  }, 60000)
+  })
 
   it('uses current intro gating for posts and comments, then recloses after deleting the introduction', async () => {
     const gated = await search(alice, 'needle')
@@ -541,8 +553,6 @@ describe.skipIf(!disposable)('private search with real Postgres and Typesense 30
   })
   it('retries partial imports without exposing engine errors and serializes delayed/duplicate/reordered jobs', async () => {
     const target = await post(a, 'orderingprobe original')
-    const importing = vi.spyOn(client.collections(ALIAS).documents(), 'import')
-    // A real partial failure proves SDK behavior, not a mock of the engine.
     const partialError = await client
       .collections(ALIAS)
       .documents()
@@ -552,7 +562,7 @@ describe.skipIf(!disposable)('private search with real Postgres and Typesense 30
       })
       .catch((error: unknown) => error)
     expect(partialError).toBeInstanceOf(Error)
-    importing.mockRestore()
+    network.use(http.all('http://127.0.0.1:19998/*', () => HttpResponse.error()))
     const dead = new Client({
       apiKey: 'disposable-search-test-key',
       nodes: [{ host: '127.0.0.1', port: 19998, protocol: 'http' }],
@@ -566,9 +576,24 @@ describe.skipIf(!disposable)('private search with real Postgres and Typesense 30
     await rebuild(payload, client)
     await updatePost(target.id, { body: 'orderingprobe original' })
     const generation = (await client.aliases(ALIAS).retrieve()).collection_name
-    const collection = client.collections(generation)
-    const documents = collection.documents()
-    vi.spyOn(documents, 'import').mockRejectedValueOnce(partialError)
+    network.use(
+      http.post(
+        importUrl(generation),
+        async ({ request }) => {
+          const lines = `${await request.text()}\n${JSON.stringify({ id: 'bad', body: 'PRIVATE_SENTINEL' })}`
+          const headers = new Headers(request.headers)
+          headers.delete('content-length')
+          const answer = await fetch(
+            bypass(new Request(request.url, { method: 'POST', headers, body: lines })),
+          )
+          return new HttpResponse(await answer.text(), {
+            status: answer.status,
+            headers: { 'content-type': answer.headers.get('content-type') ?? 'text/plain' },
+          })
+        },
+        { once: true },
+      ),
+    )
     const failed = await processOutbox(payload, client)
     expect(failed?.failed).toBeGreaterThan(0)
     expect(JSON.stringify(failed)).not.toContain('PRIVATE_SENTINEL')
@@ -580,9 +605,7 @@ describe.skipIf(!disposable)('private search with real Postgres and Typesense 30
         )
       ).rows.some((r: { attempts: number }) => r.attempts > 0),
     ).toBe(true)
-    vi.restoreAllMocks()
     await payload.db.pool.query('UPDATE spaces_search_outbox SET available_at = now()')
-    const originalImport = documents.import.bind(documents)
     let release!: () => void
     let entered!: () => void
     const ready = new Promise<void>((r) => {
@@ -591,18 +614,23 @@ describe.skipIf(!disposable)('private search with real Postgres and Typesense 30
     const blocked = new Promise<void>((r) => {
       release = r
     })
-    const hook = vi.spyOn(documents, 'import').mockImplementationOnce(async (...args) => {
-      entered()
-      await blocked
-      return originalImport(...args)
-    })
+    network.use(
+      http.post(
+        importUrl(generation),
+        async () => {
+          entered()
+          await blocked
+          return passthrough()
+        },
+        { once: true },
+      ),
+    )
     const old = processOutbox(payload, client)
     await ready
     expect(await processOutbox(payload, client)).toBeNull()
     await updatePost(target.id, { body: 'orderingprobe latest' })
     release()
     await old
-    hook.mockRestore()
     await payload.db.pool.query(
       "INSERT INTO spaces_search_outbox (kind, source_id) VALUES ('post', $1), ('post', $1)",
       [target.id],
@@ -616,8 +644,6 @@ describe.skipIf(!disposable)('private search with real Postgres and Typesense 30
   it('fences a delayed write after a real Postgres writer connection loss into the old generation', async () => {
     const target = await post(a, 'fencingprobe obsolete')
     const oldGeneration = await activeGeneration(payload)
-    const documents = client.collections(oldGeneration).documents()
-    const importing = documents.import.bind(documents)
     let release!: () => void
     let entered!: () => void
     const ready = new Promise<void>((r) => {
@@ -626,11 +652,17 @@ describe.skipIf(!disposable)('private search with real Postgres and Typesense 30
     const blocked = new Promise<void>((r) => {
       release = r
     })
-    const hook = vi.spyOn(documents, 'import').mockImplementationOnce(async (...args) => {
-      entered()
-      await blocked
-      return importing(...args)
-    })
+    network.use(
+      http.post(
+        importUrl(oldGeneration),
+        async () => {
+          entered()
+          await blocked
+          return passthrough()
+        },
+        { once: true },
+      ),
+    )
     const old = processOutbox(payload, client).catch((error: unknown) => error)
     await ready
     await payload.db.pool.query(
@@ -643,21 +675,23 @@ describe.skipIf(!disposable)('private search with real Postgres and Typesense 30
     expect(recovered).not.toBe(oldGeneration)
     release()
     expect(await old).toBeInstanceOf(RecoveryRequired)
-    hook.mockRestore()
     expect(await activeGeneration(payload)).toBe(recovered)
     expect((await search(alice, 'fencingprobe')).results[0].snippet).toBe('fencingprobe latest')
   })
   it('keeps the serving generation and backlog when a rebuild alias acknowledgement is lost', async () => {
     const serving = await activeGeneration(payload)
     await post(a, 'acknowledgementprobe')
-    const aliases = client.aliases()
-    const upsert = aliases.upsert.bind(aliases)
-    const hook = vi.spyOn(aliases, 'upsert').mockImplementationOnce(async (...args) => {
-      await upsert(...args)
-      throw new Error('Simulated lost acknowledgement')
-    })
+    network.use(
+      http.put(
+        `${engine}/aliases/${ALIAS}`,
+        async ({ request }) => {
+          await fetch(bypass(request))
+          return HttpResponse.json({ message: 'Simulated lost acknowledgement' }, { status: 500 })
+        },
+        { once: true },
+      ),
+    )
     await expect(rebuild(payload, client)).rejects.toThrow('Simulated')
-    hook.mockRestore()
     expect(await activeGeneration(payload)).toBe(serving)
     expect(
       Number(
@@ -672,23 +706,20 @@ describe.skipIf(!disposable)('private search with real Postgres and Typesense 30
     const target = await post(a, 'rebuildprobe obsolete')
     await drain()
     let edited = false
-    const find = payload.find.bind(payload)
-    const during = vi
-      .spyOn(payload, 'find')
-      .mockImplementation(async (options: Parameters<Payload['find']>[0]) => {
-        const result = await find(options)
-        if (!edited && options.collection === 'space-posts' && options.sort === 'id') {
+    network.use(
+      http.post(`${engine}/collections/:collection/documents/import`, async ({ request }) => {
+        if (!edited && (await request.clone().text()).includes(`"post:${target.id}"`)) {
           edited = true
           await updatePost(target.id, { body: 'rebuildprobe latest' })
           await payload.delete({ collection: 'space-comments', id: helloId })
         }
-        return result
-      })
+        return passthrough()
+      }),
+    )
     const old = (await client.aliases(ALIAS).retrieve()).collection_name
     await rebuild(payload, client)
-    during.mockRestore()
+    expect(edited).toBe(true)
     expect((await client.aliases(ALIAS).retrieve()).collection_name).not.toBe(old)
-    // Deleting the intro re-closes the gate, independent of the freshly built index.
     expect((await search(alice, 'latest', { space: a.id })).results).toEqual([])
     const hello = await payload.create({
       collection: 'space-comments',
@@ -787,19 +818,13 @@ describe.skipIf(!disposable)('private search with real Postgres and Typesense 30
   })
   it('records a reproducible sequential synthetic workload without logging queries or bodies', async () => {
     const samples: number[] = []
-    let queries = 0
-    const find = payload.find.bind(payload)
-    const spy = vi
-      .spyOn(payload, 'find')
-      .mockImplementation(async (options: Parameters<Payload['find']>[0]) => {
-        queries++
-        return find(options)
-      })
+    const spy = vi.spyOn(payload, 'find')
     for (let i = 0; i < 25; i++) {
       const start = performance.now()
       await search(alice, 'needle')
       samples.push(performance.now() - start)
     }
+    const queries = spy.mock.calls.length
     spy.mockRestore()
     samples.sort((a, b) => a - b)
     const indexed = (await client.collections(await activeGeneration(payload)).retrieve())
@@ -815,6 +840,128 @@ describe.skipIf(!disposable)('private search with real Postgres and Typesense 30
       }),
     )
     expect(samples).toHaveLength(25)
+  })
+  describe('validated aggregates and selections', () => {
+    const communitySpace = (name: string) =>
+      payload.create({
+        collection: 'spaces',
+        data: { kind: 'community', name: `Aggregates ${name} ${run}` },
+        depth: 0,
+      })
+    const countsIn = (page: Awaited<ReturnType<typeof search>>, spaces: Space[]) =>
+      (page.aggregates?.facets ?? [])
+        .filter((facet) => spaces.some((space) => space.id === facet.id))
+        .sort((x, y) => x.id - y.id)
+        .map(({ id, found }) => ({ id, found }))
+
+    it('counts across readable spaces independently of selection, supports none, and rejects forged IDs', async () => {
+      const token = `aggcount${run}`
+      const one = await communitySpace('count one')
+      const two = await communitySpace('count two')
+      await post(one, `${token} Zulu`)
+      await post(two, `${token} Alpha`)
+      await drain()
+      const both = [
+        { id: one.id, found: 1 },
+        { id: two.id, found: 1 },
+      ].sort((x, y) => x.id - y.id)
+      const selected = await search(alice, token, { spaces: [one.id] })
+      expect(selected.results).toHaveLength(1)
+      expect(selected.aggregates?.total).toBe(1)
+      expect(countsIn(selected, [one, two])).toEqual(both)
+      const none = await search(alice, token, { spaces: [] })
+      expect(none.results).toEqual([])
+      expect(none.aggregates?.total).toBe(0)
+      expect(countsIn(none, [one, two])).toEqual(both)
+      await expect(search(alice, token, { spaces: [one.id, 999999999] })).rejects.toBeInstanceOf(
+        SelectionDenied,
+      )
+      expect(
+        (await search(alice, token, { spaces: [two.id, one.id, one.id] })).results,
+      ).toHaveLength(2)
+    })
+
+    it('excludes stale revisions, unreadable candidates and deleted threads from exact counts', async () => {
+      const token = `aggstale${run}`
+      const one = await communitySpace('stale one')
+      const two = await communitySpace('stale two')
+      const stale = await post(one, `${token} Zulu`)
+      const live = await post(two, `${token} Alpha`)
+      await post(b, `${token} secret`)
+      await drain()
+      await updatePost(stale.id, { body: 'edited without indexing' })
+      const page = await search(alice, token)
+      expect(page.results.map((row) => row.id)).toEqual([`post:${live.id}`])
+      expect(page.aggregates?.total).toBe(1)
+      expect(countsIn(page, [one, two])).toEqual(
+        [
+          { id: one.id, found: 0 },
+          { id: two.id, found: 1 },
+        ].sort((x, y) => x.id - y.id),
+      )
+      await updatePost(live.id, { deleted_at: new Date().toISOString() })
+      expect((await search(alice, token)).aggregates?.total).toBe(0)
+    })
+
+    it('browses for an empty query and sorts validated titles A to Z across the whole selection', async () => {
+      const solo = await communitySpace('alpha')
+      const zulu = await post(solo, `Zulu aggalpha${run}`)
+      const alpha = await post(solo, `Alpha aggalpha${run}`)
+      await drain()
+      const documents = readClient.collections(await activeGeneration(payload)).documents()
+      const watched = vi.spyOn(documents, 'search')
+      const page = await search(alice, '', { sort: 'alpha', spaces: [solo.id] })
+      expect(watched.mock.calls[0]![0]).toMatchObject({ q: '*' })
+      watched.mockRestore()
+      expect(page.results.map((row) => row.id)).toEqual([`post:${alpha.id}`, `post:${zulu.id}`])
+    })
+
+    it('keeps exact totals larger than one page, binds selection into cursors, and pages without duplicates', async () => {
+      const token = `aggpage${run}`
+      const big = await communitySpace('page big')
+      const other = await communitySpace('page other')
+      for (let i = 0; i < 25; i++) await post(big, `${token} ${i}`)
+      await drain()
+      const first = await search(alice, token, { spaces: [big.id, other.id] })
+      expect(first.results).toHaveLength(20)
+      expect(first.aggregates?.total).toBe(25)
+      const next = await search(alice, token, { spaces: [other.id, big.id], cursor: first.cursor })
+      expect(next.results).toHaveLength(5)
+      expect(next.results.every((row) => !first.results.some((prior) => prior.id === row.id))).toBe(
+        true,
+      )
+      await expect(
+        search(alice, token, { spaces: [big.id], cursor: first.cursor }),
+      ).rejects.toBeInstanceOf(CursorReset)
+    })
+
+    it('returns only authorized result-owned image routes, never raw storage URLs', async () => {
+      const token = `aggimage${run}`
+      const solo = await communitySpace('image')
+      const withPhoto = await post(solo, `${token} photo`)
+      const data = await readFile(new URL('../../../testing/files/pixel.png', import.meta.url))
+      const file = await payload.create({
+        collection: 'space-files',
+        data: { space: solo.id, post: withPhoto.id } as never,
+        file: { name: `pixel-${run}.png`, mimetype: 'image/png', data, size: data.length },
+        overrideAccess: true,
+      })
+      await drain()
+      const documents = readClient.collections(await activeGeneration(payload)).documents()
+      const searched = vi.spyOn(documents, 'search')
+      const finds = vi.spyOn(payload, 'find')
+      const page = await search(alice, token, { spaces: [solo.id] })
+      const mediaRead = finds.mock.calls.find(([args]) => args.collection === 'space-files')![0]
+      const engineRequest = searched.mock.calls[0]![0]
+      searched.mockRestore()
+      finds.mockRestore()
+      expect(page.results[0]!.image).toBe(
+        `/api/space-files/file/${encodeURIComponent(file.filename!)}`,
+      )
+      expect(JSON.stringify(page)).not.toContain('127.0.0.1:19000')
+      expect(mediaRead).toMatchObject({ overrideAccess: false, user: alice })
+      expect(engineRequest).not.toHaveProperty('facet_by')
+    })
   })
   it('denies public keys on private generations/alias, JOIN, export and key APIs and rejects curation bypass', async () => {
     const key = await client.keys().create({
@@ -887,7 +1034,6 @@ describe.skipIf(!disposable)('private search with real Postgres and Typesense 30
       `post:${hidden.id}`,
     )
     expect((await search(alice, 'curationprobe')).results).toEqual([])
-    // Server-owned request ignores even a pinned document and returns no stored highlights.
     const engine = await client
       .collections(generation)
       .documents()

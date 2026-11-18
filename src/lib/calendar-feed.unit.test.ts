@@ -1,14 +1,18 @@
-import { describe, expect, it, vi } from 'vitest'
+import { createTranslator } from 'next-intl'
+import { describe, expect, it } from 'vitest'
+
+import { calendarFeed } from '@/lib/calendar-feed'
 import { courseItems } from '@/lib/calendar'
 import { eventItems } from '@/lib/events'
-import { GET } from '@/app/(frontend)/[locale]/calendar.ics/route'
 
-const { load } = vi.hoisted(() => ({ load: vi.fn() }))
-vi.mock('@/api/calendar.api', () => ({ getCachedCalendarItems: load }))
-vi.mock('@/env', () => ({ env: { NEXT_PUBLIC_SERVER_URL: 'https://ci-las.org' } }))
-vi.mock('next-intl/server', () => ({ getTranslations: async () => (key: string) => key }))
+import { messagesOf } from '../../testing/intl.test-utils'
 
-describe('calendar feed route', () => {
+const words = {
+  t: createTranslator({ locale: 'en', messages: messagesOf.en, namespace: 'Calendar' }),
+  tf: createTranslator({ locale: 'en', messages: messagesOf.en, namespace: 'Study.filters' }),
+}
+
+describe('calendar feed', () => {
   it('publishes stable session updates and keeps event UIDs', async () => {
     const base = { kind: 'course' as const, title: 'Course', href: '/study/course', type: 'lab' }
     const session = {
@@ -21,13 +25,16 @@ describe('calendar feed route', () => {
       { ...base, kind: 'event' },
       { start_date: '2026-11-17', start_precision: 'day' },
     )
-    const request = () =>
-      GET(new Request('https://ci-las.org/en/calendar.ics'), {
-        params: Promise.resolve({ locale: 'en' }),
+    const request = (items: Parameters<typeof calendarFeed>[0]) =>
+      calendarFeed(items, {
+        request: new Request('https://ci-las.org/en/calendar.ics'),
+        lang: 'en',
+        origin: 'https://ci-las.org',
+        t: (key, values) => words.t(key as never, values as never),
+        tf: (key) => words.tf(key as never),
       })
-    load.mockResolvedValue([...courseItems(base, [session]), ...events])
-    const before = await (await request()).text()
-    load.mockResolvedValue([
+    const before = await request([...courseItems(base, [session]), ...events]).text()
+    const response = request([
       ...courseItems(base, [
         {
           ...session,
@@ -38,7 +45,6 @@ describe('calendar feed route', () => {
       ]),
       ...events,
     ])
-    const response = await request()
     const after = await response.text()
     expect(response.headers.get('content-type')).toBe('text/calendar; charset=utf-8')
     expect(before).toContain('UID:session-meeting-row8@cilas.org\r\n')
@@ -50,5 +56,6 @@ describe('calendar feed route', () => {
     expect(Number(/SEQUENCE:(\d+)/.exec(after)![1])).toBeGreaterThan(
       Number(/SEQUENCE:(\d+)/.exec(before)![1]),
     )
+    expect(before).toContain('URL:https://ci-las.org/en/study/course')
   })
 })
