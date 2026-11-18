@@ -2,13 +2,12 @@ import { sql } from '@payloadcms/db-postgres'
 import { getPayload, type Payload } from 'payload'
 
 import { FILE_LIMITS } from '@/lib/space-file-limits'
-import { http, HttpResponse, passthrough } from 'msw'
+import { http, HttpResponse } from 'msw'
 import { afterAll, beforeAll, describe, expect, it } from 'vitest'
 
 import sharp from 'sharp'
 import { readFileSync } from 'node:fs'
 
-import { env } from '@/env'
 import config from '@/payload.config'
 import type { Space, User } from '@/payload-types'
 import {
@@ -43,6 +42,7 @@ import {
   spaceRoster,
 } from '@/lib/spaces-data'
 
+import { localServiceHandlers, storageUrl } from '../../testing/fan4-local-services.test-utils'
 import { mockNetwork } from '../../testing/msw-node.test-utils'
 import { RUN, createTracker, lockSpacesMode, uniq, uniqEmail } from '../../testing/payload.fixture'
 
@@ -85,22 +85,15 @@ let community: Space
 let courseSpace: Space
 let cohortSpace: Space
 
-const storageOrigin = new URL(env.R2_ENDPOINT).origin
-const searchOrigin = `${env.TYPESENSE_PROTOCOL}://${env.TYPESENSE_HOST}:${env.TYPESENSE_PORT}`
 const ROOM_URL = 'https://93.184.216.34/room'
 const network = mockNetwork(
-  http.all(`${storageOrigin}/*`, () => passthrough()),
-  http.all(`${searchOrigin}/*`, () => passthrough()),
-  http.post(
-    'https://telemetry.payloadcms.com/events',
-    () => new HttpResponse(null, { status: 204 }),
-  ),
+  ...localServiceHandlers,
   http.get(ROOM_URL, () =>
     HttpResponse.html('<head><title>Example room</title></head>', { status: 200 }),
   ),
 )
 const refuseStorage = (filename: RegExp) =>
-  http.put(`${storageOrigin}/*`, ({ request }) =>
+  http.put(storageUrl, ({ request }) =>
     filename.test(request.url) ? new HttpResponse(null, { status: 403 }) : passthrough(),
   )
 
