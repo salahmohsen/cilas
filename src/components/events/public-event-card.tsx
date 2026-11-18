@@ -46,23 +46,38 @@ const TYPE_ICONS: Record<Event['event_type'], LucideIcon> = {
   other: CalendarDays,
 }
 
-export async function PublicEventCard({
-  event,
-  now,
-  detail = false,
-  showFacts = true,
-}: {
+type Props = {
   event: Event
   now: Date
   detail?: boolean
   showFacts?: boolean
-}) {
+}
+
+export async function PublicEventCard(props: Props) {
   const [t, types, format, locale] = await Promise.all([
     getTranslations('Events'),
     getTranslations('Calendar.eventTypes'),
     getFormatter(),
     getLocale(),
   ])
+  return PublicEventCardBody({ ...props, t, types, format, locale })
+}
+
+export function PublicEventCardBody({
+  event,
+  now,
+  detail = false,
+  showFacts = true,
+  t,
+  types,
+  format,
+  locale,
+}: Props & {
+  t: Awaited<ReturnType<typeof getTranslations<'Events'>>>
+  types: Awaited<ReturnType<typeof getTranslations<'Calendar.eventTypes'>>>
+  format: Awaited<ReturnType<typeof getFormatter>>
+  locale: string
+}) {
   const timing = eventTiming(event, now)
   const cover = typeof event.cover_image === 'object' ? event.cover_image : null
   const place = typeof event.place === 'object' ? event.place : null
