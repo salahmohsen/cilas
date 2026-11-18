@@ -1,4 +1,4 @@
-import 'dotenv/config'
+import { config as readDotenv } from 'dotenv'
 import { defineConfig } from 'vitest/config'
 import react from '@vitejs/plugin-react'
 import tsconfigPaths from 'vite-tsconfig-paths'
@@ -6,8 +6,10 @@ import { playwright } from '@vitest/browser-playwright'
 
 const ignored = ['**/node_modules/**', '.next/**']
 const browserTests = ['**/*.browser.test.{ts,tsx}']
+const dotenv: Record<string, string> = {}
+readDotenv({ processEnv: dotenv })
 const browserEnv = Object.fromEntries(
-  Object.entries(process.env).filter(([name]) => name.startsWith('NEXT_PUBLIC_')),
+  Object.entries({ ...dotenv, ...process.env }).filter(([name]) => name.startsWith('NEXT_PUBLIC_')),
 )
 
 export default defineConfig({
