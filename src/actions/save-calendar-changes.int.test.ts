@@ -1,31 +1,16 @@
 import { getPayload, type Payload } from 'payload'
-import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest'
+import { afterAll, beforeAll, beforeEach, describe, expect, it } from 'vitest'
 
 import { loadCalendarItems } from '@/actions/load-calendar-items'
 import { saveScheduleEdits } from '@/actions/save-schedule-edits'
 import type { CalendarSave } from '@/lib/calendar-items'
-const saveCalendarChanges = (calendar: CalendarSave) => saveScheduleEdits({ calendar, details: [] })
 import type { CalendarChange } from '@/lib/calendar-items'
-import { currentReader } from '@/lib/reader'
 import config from '@/payload.config'
 import type { User } from '@/payload-types'
 
+import { runInRequest } from '../../testing/next-request.test-utils'
 import { createTracker, uniq, uniqEmail } from '../../testing/payload.fixture'
-
-// Outside Next, these throw and the hooks swallow it; mocked, the test sees them.
-vi.mock('next/cache', async (original) => ({
-  ...(await original<typeof import('next/cache')>()),
-  revalidatePath: vi.fn(),
-  revalidateTag: vi.fn(),
-}))
-// The action reads the signed-in user from the request's cookie; the test names one.
-vi.mock('@/lib/reader', () => ({ currentReader: vi.fn() }))
-
-/**
- * `saveCalendarChanges` against the database (ADR 0011, "Saving and telling
- * people"): the collections' access decides, every change lands or none does,
- * and a change made from an old version fails the save.
- */
+import { signedInHeaders } from '../../testing/reader.test-utils'
 
 let payload: Payload
 const { track, cleanup } = createTracker()
@@ -36,7 +21,17 @@ let otherFellow: User
 let course: number
 let otherCourse: number
 
-const signIn = (user: User | null) => vi.mocked(currentReader).mockResolvedValue(user)
+const passwords = new Map<number, string>()
+let reader: HeadersInit = {}
+const signIn = async (user: User | null) => {
+  reader = user
+    ? await signedInHeaders(payload, { email: user.email, password: passwords.get(user.id)! })
+    : {}
+}
+const asReader = async <Result>(work: () => Promise<Result>) =>
+  (await runInRequest(work, { headers: reader })).result
+const saveCalendarChanges = (calendar: CalendarSave) =>
+  asReader(() => saveScheduleEdits({ calendar, details: [] }))
 
 const account = async (name: string, roles: User['roles']) => {
   const person = track(
@@ -47,19 +42,21 @@ const account = async (name: string, roles: User['roles']) => {
       overrideAccess: true,
     }),
   ).id
+  const password = crypto.randomUUID()
   const user = track(
     'users',
     (await payload.create({
       collection: 'users',
       data: {
         email: uniqEmail(name.toLowerCase().replace(/\W+/g, '-')),
-        password: crypto.randomUUID(),
+        password,
         roles,
         person,
       },
       overrideAccess: true,
     })) as unknown as User,
   )
+  passwords.set(user.id, password)
   return { person, user }
 }
 
@@ -87,8 +84,6 @@ const makeCourse = async (fellows: number[], cycle: number) =>
 type Times = { date: string; start_time: string | null; end_time: string | null }
 const at = (date: string, start_time: string | null = '19:00', end_time: string | null = '21:00') =>
   ({ date, start_time, end_time }) satisfies Times
-
-/** A new session with these meetings, as the page sends one. */
 const newSession = (...meetings: Times[]) =>
   ({
     op: 'create-item',
@@ -104,8 +99,6 @@ const makeSession = async (parent: number, ...meetings: Times[]) =>
       overrideAccess: true,
     })
   ).id
-
-/** The session as stored: the version a page would hold, and its meetings. */
 const stored = async (id: number) => {
   const doc = await payload.findByID({
     collection: 'sessions',
@@ -167,7 +160,7 @@ beforeAll(async () => {
   otherCourse = await makeCourse([b.person], cycle)
 })
 
-beforeEach(() => signIn(admin))
+beforeEach(async () => signIn(admin))
 
 afterAll(async () => {
   await cleanup(payload)
@@ -228,7 +221,6 @@ describe('saveCalendarChanges', () => {
     const placed = (await stored(unscheduled)).meetings
     expect(placed).toHaveLength(1)
     expect(placed[0]).toMatchObject(at('2035-12-08'))
-    // The page's temporary id is not stored: the row has its own.
     expect(placed[0]!.id).not.toBe('tmp-placed')
     expect((await courseDays(course)).last_day).toBe('2035-12-08')
   })
@@ -236,8 +228,6 @@ describe('saveCalendarChanges', () => {
   it('makes one session with all the meetings of a create-item with several blocks', async () => {
     const source = await makeSession(course, at('2035-12-02'), at('2035-12-04', '10:00', '12:00'))
     const known = await sessionIds(course)
-
-    // The two meetings of the session above, moved a week later.
     const result = await save([newSession(at('2035-12-09'), at('2035-12-11', '10:00', '12:00'))])
 
     expect(result.ok).toBe(true)
@@ -316,7 +306,7 @@ describe('saveCalendarChanges', () => {
   })
 
   it('lets a fellow edit their own course’s sessions', async () => {
-    signIn(fellow)
+    await signIn(fellow)
     const id = await makeSession(course, at('2035-11-24'))
     const before = await stored(id)
 
@@ -336,7 +326,7 @@ describe('saveCalendarChanges', () => {
   })
 
   it('refuses a fellow of another course, and changes nothing', async () => {
-    signIn(otherFellow)
+    await signIn(otherFellow)
     const id = await makeSession(course, at('2035-12-02'))
     const before = await stored(id)
     const known = await sessionIds(course)
@@ -359,7 +349,7 @@ describe('saveCalendarChanges', () => {
   })
 
   it('refuses a signed-out user, and changes nothing', async () => {
-    signIn(null)
+    await signIn(null)
     const id = await makeSession(course, at('2035-12-09'))
     const before = await stored(id)
 
@@ -436,7 +426,6 @@ describe('saveCalendarChanges', () => {
     const fresh = await makeSession(course, at('2036-02-03'))
     const old = await makeSession(course, at('2036-02-10'))
     const [freshBefore, oldBefore] = [await stored(fresh), await stored(old)]
-    // Someone else saves the second session after the page loaded it.
     await payload.update({
       collection: 'sessions',
       id: old,
@@ -462,8 +451,6 @@ describe('saveCalendarChanges', () => {
         ...at('2036-02-11'),
       },
     ])
-
-    // The message names the session as it is called now, number and title.
     expect(result).toEqual({
       ok: false,
       error: {
@@ -529,7 +516,8 @@ describe('saveCalendarChanges', () => {
 })
 
 describe('loadCalendarItems', () => {
-  const load = (parent = course) => loadCalendarItems({ kind: 'course', id: String(parent) })
+  const load = (parent = course) =>
+    asReader(() => loadCalendarItems({ kind: 'course', id: String(parent) }))
 
   it('gives an admin the course’s sessions as items, and Edit', async () => {
     const id = await makeSession(course, at('2036-05-05'))
@@ -545,18 +533,18 @@ describe('loadCalendarItems', () => {
   })
 
   it('offers Edit to the fellow of the course and not to another course’s fellow', async () => {
-    signIn(fellow)
+    await signIn(fellow)
     expect(await load(course)).toMatchObject({ ok: true, canEdit: true })
     expect(await load(otherCourse)).toMatchObject({ ok: true, canEdit: false })
   })
 
   it('refuses a visitor', async () => {
-    signIn(null)
+    await signIn(null)
     expect(await load()).toEqual({ ok: false, error: { code: 'unauthenticated' } })
   })
 
   it('names a parent kind it has no adapter for', async () => {
-    const result = await loadCalendarItems({ kind: 'event', id: '1' })
+    const result = await asReader(() => loadCalendarItems({ kind: 'event', id: '1' }))
     expect(result).toMatchObject({ ok: false, error: { code: 'invalid' } })
   })
 })
