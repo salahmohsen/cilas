@@ -15,10 +15,7 @@ import { PeopleWheel } from '@/components/person/people-wheel'
 import { personAvatarSeed } from '@/lib/avatar'
 import { POSTER_COLORS } from '@/components/arc/lib/poster-colors'
 
-vi.mock('@/i18n/navigation', () => ({ Link: 'a' }))
-
 const seed = personAvatarSeed(42)
-// React assigns unique mask IDs to each SVG; the portrait geometry stays the same.
 const portrait = (svg: Element | null) =>
   svg?.innerHTML.replace(/id="[^"]+"/g, 'id="mask"').replace(/url\(#[^)]+\)/g, 'url(#mask)')
 const fallback = () => {
@@ -53,7 +50,6 @@ describe('local Beam fallback', () => {
     expect(svg).toBe(renderToString(<AvatarFallback seed={seed} />))
     expect(svg).not.toBe(renderToString(<AvatarFallback seed={personAvatarSeed(43)} />))
     expect(svg).toContain('<svg')
-    // Beam's face uses a 36 × 36 canvas, with paths for its mouth and eyes.
     expect(svg).toContain('viewBox="0 0 36 36"')
     expect(svg).toContain('<path')
     expect(svg).not.toContain('person:42')
