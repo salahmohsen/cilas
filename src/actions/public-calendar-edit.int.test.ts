@@ -1,37 +1,51 @@
 import { getPayload, type Payload } from 'payload'
 import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest'
-import { revalidatePath, revalidateTag } from 'next/cache'
 
-import { publicCalendarLinks } from '@/actions/public-calendar-access'
-import { publicCalendarAccess } from '@/api/public-calendar.api'
-import { scheduleOffers } from '@/actions/schedule-offers'
-import { saveScheduleEdits } from '@/actions/save-schedule-edits'
-import { loadCalendarItems } from '@/actions/load-calendar-items'
-import { setSessionCancelled } from '@/components/space/cancel-session'
-import { currentReader } from '@/lib/reader'
+import { publicCalendarLinks as readPublicCalendarLinks } from '@/actions/public-calendar-access'
+import { publicCalendarAccess as readPublicCalendarAccess } from '@/api/public-calendar.api'
+import { scheduleOffers as readScheduleOffers } from '@/actions/schedule-offers'
+import { saveScheduleEdits as writeScheduleEdits } from '@/actions/save-schedule-edits'
+import { loadCalendarItems as readCalendarItems } from '@/actions/load-calendar-items'
+import { setSessionCancelled as writeSessionCancelled } from '@/components/space/cancel-session'
 import { PUBLIC_LISTS_TAG } from '@/lib/paths'
 import config from '@/payload.config'
 import type { User } from '@/payload-types'
+import { runInRequest } from '../../testing/next-request.test-utils'
 import { createTracker, lockSpacesMode, uniq, uniqEmail } from '../../testing/payload.fixture'
-
-vi.mock('@/lib/reader', () => ({ currentReader: vi.fn() }))
-vi.mock('next/cache', async (original) => ({
-  ...(await original<typeof import('next/cache')>()),
-  revalidatePath: vi.fn(),
-  revalidateTag: vi.fn(),
-}))
+import { signedInHeaders } from '../../testing/reader.test-utils'
 
 const { track, cleanup } = createTracker()
 let payload: Payload
 let unlockSpacesMode: (() => Promise<void>) | undefined
 let modeBefore: 'off' | 'trial' | 'on' = 'off'
 let admin: User
+let superAdmin: User
 let member: User
 let host: User
 let otherFellow: User
 let courses: number[]
 const range = { from: '2035-10-01', to: '2035-10-31' }
-const signIn = (user: User | null) => vi.mocked(currentReader).mockResolvedValue(user)
+const passwords = new Map<number, string>()
+let reader: HeadersInit = {}
+const signIn = async (user: User | null) => {
+  reader = user
+    ? await signedInHeaders(payload, { email: user.email, password: passwords.get(user.id)! })
+    : {}
+}
+const asReader = async <Result>(work: () => Promise<Result>) =>
+  (await runInRequest(work, { headers: reader })).result
+const publicCalendarLinks = (...args: Parameters<typeof readPublicCalendarLinks>) =>
+  asReader(() => readPublicCalendarLinks(...args))
+const publicCalendarAccess = (...args: Parameters<typeof readPublicCalendarAccess>) =>
+  asReader(() => readPublicCalendarAccess(...args))
+const scheduleOffers = (...args: Parameters<typeof readScheduleOffers>) =>
+  asReader(() => readScheduleOffers(...args))
+const saveScheduleEdits = (...args: Parameters<typeof writeScheduleEdits>) =>
+  asReader(() => writeScheduleEdits(...args))
+const loadCalendarItems = (...args: Parameters<typeof readCalendarItems>) =>
+  asReader(() => readCalendarItems(...args))
+const setSessionCancelled = (...args: Parameters<typeof writeSessionCancelled>) =>
+  asReader(() => writeSessionCancelled(...args))
 const parent = () => ({ kind: 'public', id: courses.join(',') })
 const read = (id: string) => payload.findByID({ collection: 'sessions', id: Number(id), depth: 0 })
 const pair = async () =>
@@ -57,8 +71,6 @@ const moves = (items: Awaited<ReturnType<typeof pair>>) =>
     start_time: '11:00',
     end_time: '13:00',
   }))
-
-// The links and offers read course spaces, which exist only while spaces are on.
 beforeAll(async () => {
   unlockSpacesMode = await lockSpacesMode()
   payload = await getPayload({ config })
@@ -69,18 +81,26 @@ beforeAll(async () => {
     data: { spaces_mode: 'on' },
     overrideAccess: true,
   })
-  const account = async (role: 'admin' | 'member' | 'fellow', label: string = role) =>
-    track(
+  const account = async (
+    role: 'admin' | 'super_admin' | 'member' | 'fellow',
+    label: string = role,
+  ) => {
+    const password = crypto.randomUUID()
+    const user = track(
       'users',
       await payload.create({
         collection: 'users',
         data: {
           email: uniqEmail(`public-calendar-${label}`),
-          password: crypto.randomUUID(),
+          password,
           roles: [role],
         },
       }),
     ) as User
+    passwords.set(user.id, password)
+    return user
+  }
+  superAdmin = await account('super_admin')
   admin = await account('admin')
   member = await account('member')
   const person = track(
@@ -180,7 +200,6 @@ beforeAll(async () => {
     id: courses[0]!,
     data: { fellows: [hostFellow.person.id] },
   })
-  // Naming the fellow on the course gives their account the fellow role.
   host = await payload.findByID({ collection: 'users', id: host.id, depth: 0 })
 }, 600_000)
 afterAll(async () => {
@@ -203,7 +222,7 @@ describe('public calendar links for each role', () => {
     ['host of the first course', () => host, () => [String(courses[0])]],
     ['admin', () => admin, () => ids()],
   ])('lists the courses a %s may change', async (_role, user, expected) => {
-    signIn(user())
+    await signIn(user())
     const access = await publicCalendarLinks(ids())
     expect(access.editable.toSorted()).toEqual(expected().toSorted())
     expect(access.canEdit).toBe(_role === 'admin')
@@ -253,7 +272,7 @@ describe('cancel and restore a session', () => {
     async (locale) => {
       const id = await make()
       const before = { en: await fields(id, 'en'), ar: await fields(id, 'ar') }
-      signIn(host)
+      await signIn(host)
       const cancelled = await setSessionCancelled(id, true, locale)
       expect(cancelled.ok).toBe(true)
       expect((await read(id)).cancelled).toBe(true)
@@ -267,10 +286,10 @@ describe('cancel and restore a session', () => {
   it('refuses a member and a fellow of another course, and changes nothing', async () => {
     const id = await make()
     for (const user of [member, otherFellow]) {
-      signIn(user)
+      await signIn(user)
       expect((await setSessionCancelled(id, true, 'en')).ok).toBe(false)
     }
-    signIn(null)
+    await signIn(null)
     expect(await setSessionCancelled(id, true, 'en')).toMatchObject({
       ok: false,
       error: { code: 'unauthenticated' },
@@ -279,7 +298,7 @@ describe('cancel and restore a session', () => {
   })
   it('lets an admin cancel and reports the before and after items for the offer', async () => {
     const id = await make()
-    signIn(admin)
+    await signIn(admin)
     const result = await setSessionCancelled(id, true, 'en')
     if (!result.ok) throw Error(result.error.code)
     expect(result.before.find((item) => item.id === id)?.cancelled).toBe(false)
@@ -298,7 +317,7 @@ describe('public calendar edit requests', () => {
   it.each(['visitor', 'member'] as const)(
     'gives the %s view mode with no edit data',
     async (role) => {
-      signIn(role === 'visitor' ? null : member)
+      await signIn(role === 'visitor' ? null : member)
       expect(await publicCalendarAccess(true, 'en', range)).toEqual({
         mode: 'view',
         canEdit: false,
@@ -307,7 +326,7 @@ describe('public calendar edit requests', () => {
   )
   it('loads fresh versions for an admin and keeps each course', async () => {
     const items = await pair()
-    signIn(admin)
+    await signIn(admin)
     const result = await publicCalendarAccess(true, 'en', range)
     expect(result.mode).toBe('edit')
     if (result.mode !== 'edit') throw Error('Edit expected')
@@ -328,7 +347,7 @@ describe('public calendar edit requests', () => {
   })
   it('refuses a non-admin load and save even with a valid public parent', async () => {
     const items = await pair()
-    signIn(member)
+    await signIn(member)
     expect(await loadCalendarItems(parent())).toMatchObject({
       ok: false,
       error: { code: 'forbidden' },
@@ -343,20 +362,20 @@ describe('public calendar edit requests', () => {
   })
   it('saves two courses and offers both spaces in one list', async () => {
     const items = await pair()
-    signIn(admin)
-    vi.mocked(revalidatePath).mockClear()
-    vi.mocked(revalidateTag).mockClear()
-    const result = await saveScheduleEdits({
-      calendar: { parent: parent(), changes: moves(items) },
-      details: [],
-    })
+    await signIn(admin)
+    const { result, revalidated } = await runInRequest(
+      () =>
+        writeScheduleEdits({
+          calendar: { parent: parent(), changes: moves(items) },
+          details: [],
+        }),
+      { headers: reader },
+    )
     expect(result.ok).toBe(true)
     if (!result.ok) throw Error(result.error.code)
     for (const item of items) expect((await read(item.id)).meetings![0]!.date).toBe('2035-10-08')
-    expect(revalidatePath).toHaveBeenCalledWith(
-      expect.stringContaining('/en/study/public-calendar-'),
-    )
-    expect(revalidateTag).toHaveBeenCalledWith(PUBLIC_LISTS_TAG, { expire: 0 })
+    expect(revalidated).toContain(PUBLIC_LISTS_TAG)
+    expect(revalidated.some((tag) => tag.startsWith('_N_T_/en/study/public-calendar-'))).toBe(true)
     const offers = await scheduleOffers({ before: result.before, after: result.after })
     expect(offers).toHaveLength(2)
     expect(new Set(offers.map((offer) => offer.space.name))).toEqual(new Set(['City', 'Maps']))
@@ -368,7 +387,7 @@ describe('public calendar edit requests', () => {
   })
   it('rolls back the first course when the second course has a stale version', async () => {
     const items = await pair()
-    signIn(admin)
+    await signIn(admin)
     await payload.update({
       collection: 'sessions',
       id: Number(items[1]!.id),
@@ -399,7 +418,7 @@ describe('public calendar edit requests', () => {
   })
   it('returns a session moved out of the range, so its offer is a move', async () => {
     const items = await pair()
-    signIn(admin)
+    await signIn(admin)
     const result = await saveScheduleEdits({
       calendar: {
         parent: parent(),
@@ -417,7 +436,7 @@ describe('public calendar edit requests', () => {
     ).toContain('moves')
   })
   it('rejects events and session creation in the public write path', async () => {
-    signIn(admin)
+    await signIn(admin)
     for (const change of [
       { op: 'delete-block', itemId: 'e4', version: '', blockId: 'e4-0' },
       {
@@ -436,39 +455,42 @@ describe('public calendar edit requests', () => {
 })
 
 it('keeps view loading independent of the user request', async () => {
-  vi.mocked(currentReader).mockClear()
-  expect(await publicCalendarAccess(false, 'en', range)).toEqual({ mode: 'view', canEdit: false })
-  expect(currentReader).not.toHaveBeenCalled()
+  expect(await readPublicCalendarAccess(false, 'en', range)).toEqual({
+    mode: 'view',
+    canEdit: false,
+  })
 })
 
 it('returns only the spaces that each reader may read', async () => {
-  signIn(member)
+  await signIn(member)
   const enrolled = await publicCalendarLinks(courses.map(String), 'en')
   expect(enrolled.canEdit).toBe(false)
   expect(Object.keys(enrolled.spaces)).toEqual([String(courses[0])])
   expect(enrolled.spaces[String(courses[0])]).toContain('/en/spaces/course/public-calendar-city-')
-  signIn(admin)
+  await signIn(admin)
   expect(Object.keys((await publicCalendarLinks(courses.map(String), 'ar')).spaces).sort()).toEqual(
     courses.map(String).sort(),
   )
-  signIn(null)
+  await signIn(null)
   expect(await publicCalendarLinks(courses.map(String))).toEqual({
     canEdit: false,
     editable: [],
     spaces: {},
   })
+  const outsiderPassword = crypto.randomUUID()
   const outsider = track(
     'users',
     await payload.create({
       collection: 'users',
       data: {
         email: uniqEmail('public-calendar-outsider'),
-        password: crypto.randomUUID(),
+        password: outsiderPassword,
         roles: ['member'],
       },
     }),
   ) as User
-  signIn(outsider)
+  passwords.set(outsider.id, outsiderPassword)
+  await signIn(outsider)
   expect(await publicCalendarLinks(courses.map(String))).toEqual({
     canEdit: false,
     editable: [],
@@ -477,13 +499,13 @@ it('returns only the spaces that each reader may read', async () => {
 })
 
 it('allows the super admin role to load the public editor', async () => {
-  signIn({ ...admin, roles: ['super_admin'] })
+  await signIn(superAdmin)
   expect((await publicCalendarAccess(true, 'en', range)).mode).toBe('edit')
 })
 
 it('saves a cancellation and a deletion in different courses together', async () => {
   const items = await pair()
-  signIn(admin)
+  await signIn(admin)
   const result = await saveScheduleEdits({
     calendar: { parent: parent(), changes: [] },
     details: [
