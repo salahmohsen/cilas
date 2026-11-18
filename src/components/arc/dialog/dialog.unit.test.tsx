@@ -5,12 +5,10 @@ import * as DialogPrimitive from '@radix-ui/react-dialog'
 import { Dialog, DialogContent, DialogTrigger } from '@/components/arc/dialog/dialog'
 import styles from '@/components/arc/dialog/dialog.module.css'
 
-vi.mock('motion/react', async (importOriginal) => ({
-  ...(await importOriginal<typeof import('motion/react')>()),
-  useReducedMotion: () => true,
-}))
-
-afterEach(cleanup)
+afterEach(() => {
+  vi.useRealTimers()
+  cleanup()
+})
 
 function Example({ chrome = true, bare = false }: { chrome?: boolean; bare?: boolean }) {
   const [open, setOpen] = useState(false)
@@ -68,7 +66,6 @@ describe('DialogContent chrome opt-in', () => {
     expect(screen.getByRole('region', { name: 'Composer' }).parentElement).toBe(dialog)
     expect(document.querySelector('[data-state="open"].' + styles.overlay)).toBeInTheDocument()
     expect(screen.getByRole('textbox', { name: 'Post body' })).toHaveFocus()
-    // Radix wraps keyboard focus at the edges of the modal.
     screen.getByRole('button', { name: 'Cancel' }).focus()
     fireEvent.keyDown(document.activeElement!, { key: 'Tab' })
     expect(screen.getByRole('textbox', { name: 'Post body' })).toHaveFocus()
@@ -87,9 +84,11 @@ describe('DialogContent chrome opt-in', () => {
 
   it('retains outside pointer dismissal and returns focus', async () => {
     render(<Example chrome={false} />)
-    await open()
-    // Radix installs its document pointer listener on the next task.
-    await new Promise((resolve) => setTimeout(resolve, 0))
+    vi.useFakeTimers({ toFake: ['setTimeout'] })
+    fireEvent.click(screen.getByRole('button', { name: 'Edit' }))
+    expect(screen.getByRole('dialog', { name: 'Edit post' })).toBeInTheDocument()
+    vi.runOnlyPendingTimers()
+    vi.useRealTimers()
     fireEvent(document.body, new MouseEvent('pointerdown', { bubbles: true, button: 0 }))
     fireEvent.click(document.body)
     await expectClosed()
