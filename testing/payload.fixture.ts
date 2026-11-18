@@ -112,15 +112,24 @@ export const createTracker = () => {
   return { track, cleanup }
 }
 
-const SPACES_MODE_LOCK = 7_300_001
-
-/** Waits for the spaces-mode lock; the returned function releases it. */
-export const lockSpacesMode = async () => {
+const holdLock = async (key: number, mode: 'shared' | 'alone') => {
+  const shared = mode === 'shared' ? '_shared' : ''
   const client = new pg.Client({ connectionString: process.env.DATABASE_URL })
   await client.connect()
-  await client.query('select pg_advisory_lock($1)', [SPACES_MODE_LOCK])
+  await client.query(`select pg_advisory_lock${shared}($1)`, [key])
   return async () => {
-    await client.query('select pg_advisory_unlock($1)', [SPACES_MODE_LOCK])
+    await client.query(`select pg_advisory_unlock${shared}($1)`, [key])
     await client.end()
   }
 }
+
+/** Waits for the spaces-mode lock; the returned function releases it. */
+export const lockSpacesMode = () => holdLock(7_300_001, 'alone')
+
+/**
+ * The day's invitation count is one number for the whole database, and bulk
+ * invitations stop at its cap. A file that sends invitations holds this
+ * shared while it runs; a test that fills the count to the cap holds it alone.
+ * The returned function releases it.
+ */
+export const holdInvitationBudget = (mode: 'shared' | 'alone') => holdLock(7_300_002, mode)

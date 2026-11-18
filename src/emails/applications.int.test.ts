@@ -10,7 +10,7 @@ import type { Form, FormSubmission, Programme, User } from '@/payload-types'
 import { localServices } from '../../testing/local-services.test-utils'
 import { mockNetwork } from '../../testing/msw-node.test-utils'
 import { resendInbox } from '../../testing/resend.test-utils'
-import { uniq, uniqEmail } from '../../testing/payload.fixture'
+import { createTracker, holdInvitationBudget, uniq, uniqEmail } from '../../testing/payload.fixture'
 
 let payload: Payload
 let admin: User
@@ -89,29 +89,40 @@ const decide = async (
   return endpoint!.handler(req as never)
 }
 
-const cleanup = async () => {
-  const users = await payload.find({
+const { track, cleanup } = createTracker()
+
+const trackApplicant = async () => {
+  const { docs } = await payload.find({
     collection: 'users',
     where: { email: { equals: EMAIL } },
     depth: 0,
+    pagination: false,
+    overrideAccess: true,
   })
-  for (const u of users.docs) {
-    const person = typeof u.person === 'object' ? u.person?.id : u.person
-    await payload.delete({ collection: 'users', id: u.id })
-    if (person) {
-      await payload.delete({ collection: 'memberships', where: { person: { equals: person } } })
-      await payload.delete({ collection: 'people', id: person }).catch(() => undefined)
-    }
+  for (const user of docs) {
+    track('users', user)
+    const person = typeof user.person === 'object' ? user.person?.id : user.person
+    if (person == null) continue
+    const memberships = await payload.find({
+      collection: 'memberships',
+      where: { person: { equals: person } },
+      depth: 0,
+      pagination: false,
+      overrideAccess: true,
+    })
+    for (const membership of memberships.docs) track('memberships', membership.id)
   }
 }
 
 const outbox = resendInbox()
 mockNetwork(outbox.handler, ...localServices)
 
+let releaseBudget: (() => Promise<void>) | undefined
+
 describe('accepting an application', () => {
   beforeAll(async () => {
+    releaseBudget = await holdInvitationBudget('shared')
     payload = await getPayload({ config: await config })
-    await cleanup()
     admin = await payload.create({
       collection: 'users',
       data: {
@@ -144,12 +155,14 @@ describe('accepting an application', () => {
   })
 
   afterAll(async () => {
-    await cleanup()
+    await trackApplicant()
     await payload.delete({ collection: 'form-submissions', where: { form: { equals: form.id } } })
-    await payload.delete({ collection: 'programmes', id: programme.id }).catch(() => undefined)
-    await payload.delete({ collection: 'forms', id: form.id }).catch(() => undefined)
-    await payload.delete({ collection: 'users', id: admin.id }).catch(() => undefined)
+    track('users', admin)
+    track('programmes', programme)
+    track('forms', form)
+    await cleanup(payload)
     await payload.destroy()
+    await releaseBudget?.()
   })
 
   it('refuses a target that does not register through the form', async () => {

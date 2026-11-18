@@ -18,7 +18,7 @@ import type { User } from '@/payload-types'
 
 import { localServices } from '../../testing/local-services.test-utils'
 import { mockNetwork } from '../../testing/msw-node.test-utils'
-import { createTracker, uniq, uniqEmail } from '../../testing/payload.fixture'
+import { createTracker, holdInvitationBudget, uniq, uniqEmail } from '../../testing/payload.fixture'
 
 const [create, many, resend] = invitationEndpoints
 
@@ -266,7 +266,12 @@ describe('inviting someone', () => {
 })
 
 describe('inviting many accounts', () => {
+  let releaseBudget: () => Promise<void>
+  beforeAll(async () => {
+    releaseBudget = await holdInvitationBudget('alone')
+  })
   afterEach(clearLog)
+  afterAll(() => releaseBudget())
 
   it('refuses more than one part at a time', async () => {
     const ids = Array.from({ length: 11 }, (_, i) => i + 1)

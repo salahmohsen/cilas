@@ -10,7 +10,7 @@ import config from '@/payload.config'
 import type { Course, Cycle, Form, FormSubmission, User } from '@/payload-types'
 import { localServices } from '../../testing/local-services.test-utils'
 import { mockNetwork } from '../../testing/msw-node.test-utils'
-import { createTracker, uniq, uniqEmail } from '../../testing/payload.fixture'
+import { createTracker, holdInvitationBudget, uniq, uniqEmail } from '../../testing/payload.fixture'
 import { resendInbox } from '../../testing/resend.test-utils'
 
 mockNetwork(
@@ -95,8 +95,11 @@ const trackApplicant = async (submission: FormSubmission) => {
   return { decided, person, enrollments: enrollments.docs }
 }
 
+let releaseBudget: (() => Promise<void>) | undefined
+
 describe('cycle applications and approval', () => {
   beforeAll(async () => {
+    releaseBudget = await holdInvitationBudget('shared')
     payload = await getPayload({ config })
     vi.spyOn(payload, 'sendEmail')
     admin = track(
@@ -181,6 +184,7 @@ describe('cycle applications and approval', () => {
     await payload.delete({ collection: 'form-submissions', where: { form: { equals: form.id } } })
     await cleanup(payload)
     await payload.destroy()
+    await releaseBudget?.()
   })
 
   it('lists only eligible courses for the reader, including community for signed-in people', async () => {

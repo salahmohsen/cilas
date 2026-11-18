@@ -6,10 +6,11 @@ import { afterAll, beforeAll, describe, expect, it } from 'vitest'
 import config from '@/payload.config'
 import type { User } from '@/payload-types'
 
-import { uniqEmail } from '../testing/payload.fixture'
+import { createTracker, uniqEmail } from '../testing/payload.fixture'
 
 let payload: Payload
 let user: User
+const { track, cleanup } = createTracker()
 
 const googleCookie = async (account: User) => {
   const collectionConfig = payload.collections.users.config
@@ -33,17 +34,18 @@ const googleCookie = async (account: User) => {
 describe('Google sign-in', () => {
   beforeAll(async () => {
     payload = await getPayload({ config: await config })
-    user = await payload.create({
-      collection: 'users',
-      data: { email: uniqEmail('google-probe'), password: 'probe-password-1', roles: ['member'] },
-      overrideAccess: true,
-    })
+    user = track(
+      'users',
+      await payload.create({
+        collection: 'users',
+        data: { email: uniqEmail('google-probe'), password: 'probe-password-1', roles: ['member'] },
+        overrideAccess: true,
+      }),
+    )
   })
 
   afterAll(async () => {
-    await payload
-      .delete({ collection: 'users', id: user.id, overrideAccess: true })
-      .catch(() => undefined)
+    await cleanup(payload)
     await payload.destroy()
   })
 

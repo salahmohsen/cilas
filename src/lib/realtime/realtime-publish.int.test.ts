@@ -5,14 +5,13 @@ import { afterAll, beforeAll, describe, expect, it } from 'vitest'
 import config from '@/payload.config'
 import { NOTIFICATION_CHANNEL, type NotificationEvent } from '@/lib/realtime/events'
 
-import { uniqEmail } from '../../../testing/payload.fixture'
+import { createTracker, uniqEmail } from '../../../testing/payload.fixture'
 
 let payload: Payload
 let listener: pg.Client
 let recipient: number
 const heard: NotificationEvent[] = []
-const made: number[] = []
-let account: number
+const { track, cleanup } = createTracker()
 
 const settle = () => new Promise((resolve) => setTimeout(resolve, 400))
 
@@ -27,7 +26,8 @@ const create = (data: { title: string; description?: string }, req?: unknown) =>
 describe('live notification publishing', () => {
   beforeAll(async () => {
     payload = await getPayload({ config: await config })
-    recipient = account = (
+    recipient = track(
+      'users',
       await payload.create({
         collection: 'users',
         data: {
@@ -36,7 +36,7 @@ describe('live notification publishing', () => {
           roles: ['member'],
         },
         overrideAccess: true,
-      })
+      }),
     ).id
     listener = new pg.Client({ connectionString: process.env.DATABASE_URL })
     await listener.connect()
@@ -48,13 +48,8 @@ describe('live notification publishing', () => {
   })
 
   afterAll(async () => {
-    for (const id of made) {
-      await payload
-        .delete({ collection: 'notifications', id, overrideAccess: true })
-        .catch(() => {})
-    }
-    await payload.delete({ collection: 'users', id: account, overrideAccess: true }).catch(() => {})
     await listener?.end()
+    await cleanup(payload)
   })
 
   it('sends nothing when the save rolls back, and the event on commit', async () => {
@@ -70,7 +65,6 @@ describe('live notification publishing', () => {
     expect(heard).toHaveLength(0)
 
     const committed = await create({ title: 'committed' })
-    made.push(committed.id)
     await settle()
     expect(heard).toHaveLength(1)
     expect(heard[0]).toMatchObject({
@@ -84,7 +78,6 @@ describe('live notification publishing', () => {
   it('sends a change of read_at, not other updates', async () => {
     heard.length = 0
     const row = await create({ title: 'to read' })
-    made.push(row.id)
     await settle()
     heard.length = 0
     const readAt = new Date().toISOString()
@@ -108,7 +101,6 @@ describe('live notification publishing', () => {
   it('leaves the row out of an event that would pass the NOTIFY limit', async () => {
     heard.length = 0
     const big = await create({ title: 'big', description: 'x'.repeat(9_000) })
-    made.push(big.id)
     await settle()
     expect(heard).toHaveLength(1)
     expect(heard[0].doc).toBeUndefined()

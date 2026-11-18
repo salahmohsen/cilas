@@ -8,7 +8,7 @@ import type { Course, Form, FormSubmission, Person, User } from '@/payload-types
 
 import { localServices } from '../../testing/local-services.test-utils'
 import { mockNetwork } from '../../testing/msw-node.test-utils'
-import { createTracker } from '../../testing/payload.fixture'
+import { createTracker, holdInvitationBudget } from '../../testing/payload.fixture'
 import { resendInbox } from '../../testing/resend.test-utils'
 
 const mail = resendInbox()
@@ -138,8 +138,11 @@ const flowAccounts = async () =>
     })
   ).docs
 
+let releaseBudget: (() => Promise<void>) | undefined
+
 describe('the application flow, from the questions to the enrollment', () => {
   beforeAll(async () => {
+    releaseBudget = await holdInvitationBudget('shared')
     payload = await getPayload({ config: await config })
     admin = await payload.create({
       collection: 'users',
@@ -190,6 +193,7 @@ describe('the application flow, from the questions to the enrollment', () => {
     for (const account of await flowAccounts()) track('users', account)
     await cleanup(payload)
     await payload.destroy()
+    await releaseBudget?.()
   })
 
   it('the fellow builds the course with application questions, one a dropdown', async () => {
