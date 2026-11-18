@@ -63,6 +63,34 @@ export const personOf = (user: unknown): number | null => {
   return typeof id === 'number' ? id : null
 }
 
+/* ============================================================== rule names */
+
+/**
+ * A factory's rule is named after the factory and its arguments, so the
+ * access audit (scripts/access-audit.ts) tells two such rules apart. A
+ * function argument prints its own name, a Where its JSON, and an option set
+ * to `true` its key alone.
+ */
+const nameOf = (value: unknown): string => {
+  if (typeof value === 'function') return value.name || 'anonymous'
+  if (Array.isArray(value)) return value.map(nameOf).join('|')
+  if (typeof value === 'object' && value !== null) return JSON.stringify(value)
+  return String(value)
+}
+
+const optionsOf = (options: Record<string, unknown>): string[] =>
+  Object.entries(options)
+    .sort(([a], [b]) => (a < b ? -1 : a > b ? 1 : 0))
+    .filter(([, value]) => value !== undefined && value !== false)
+    .map(([key, value]) => (value === true ? key : `${key}=${nameOf(value)}`))
+
+const named = <Rule extends (...args: never[]) => unknown>(
+  rule: Rule,
+  factory: string,
+  args: unknown[],
+): Rule =>
+  Object.defineProperty(rule, 'name', { value: `${factory}(${args.map(nameOf).join(',')})` })
+
 /* ============================================================= constraints */
 
 /**
@@ -73,14 +101,15 @@ export const personOf = (user: unknown): number | null => {
  */
 export type Ownership = (user: User) => Where | false
 
-export const ownsVia =
-  (field: 'fellows' | 'authors' | 'editors' | 'person'): Ownership =>
-  (user) => {
+export const ownsVia = (field: 'fellows' | 'authors' | 'editors' | 'person'): Ownership => {
+  const owns: Ownership = (user) => {
     const person = personOf(user)
     return person === null
       ? false
       : { [field]: { [field === 'person' ? 'equals' : 'contains']: person } }
   }
+  return named(owns, 'ownsVia', [field])
+}
 export const ownsViaFellows = ownsVia('fellows')
 export const ownsViaAuthors = ownsVia('authors')
 export const ownsViaEditors = ownsVia('editors')
@@ -89,6 +118,9 @@ export const ownsViaPerson = ownsVia('person')
 /* =========================================================== access rules */
 
 export const anyone: Access = () => true
+
+/** No one through the API. Server code writes with overrideAccess. */
+export const nobody = () => false
 
 export const isAuthenticated: Access = ({ req }) => Boolean(req.user)
 
@@ -102,6 +134,22 @@ export const readPeople: Access = ({ req }) => {
   const own = personOf(req.user)
   return own === null ? visible : { or: [visible, { id: { equals: own } }] }
 }
+
+/** The rows of one account. No user matches none: no row has a null account. */
+export const ownAccountWhere = (user: { id?: number } | null | undefined): Where => ({
+  account: { equals: user?.id ?? null },
+})
+
+/** The rows of the signed-in account. An anonymous reader matches none. */
+export const ownAccountRows: Access = ({ req }) => ownAccountWhere(req.user)
+
+/** The rows of the signed-in account. An anonymous caller is refused. */
+export const signedInOwnAccountRows: Access = ({ req }) =>
+  req.user ? ownAccountWhere(req.user) : false
+
+/** Admins: every row. Others: the rows of their own account. */
+export const adminOrOwnAccountRows: Access = ({ req }) =>
+  isAdminUser(req.user) || ownAccountWhere(req.user)
 
 /** admin + super_admin. Gates write on the editorial collections. */
 export const isAdmin: Access = ({ req }) => isAdminUser(req.user)
@@ -138,17 +186,12 @@ export const WITH_OWNER: Where = { 'review.status': { in: ['draft', 'changes_req
 export const OWNER_EDITS: Where = { _status: { in: ['draft', 'published'] } }
 
 /** Admins see every row; owners must satisfy the selected constraints. */
-export const isAdminOrOwn =
-  (
-    owned: Ownership,
-    {
-      allow,
-      while: constraint,
-      draft = false,
-      versions = false,
-    }: { allow?: Role[]; while?: Where; draft?: boolean; versions?: boolean } = {},
-  ): Access =>
-  ({ req }) => {
+export const isAdminOrOwn = (
+  owned: Ownership,
+  options: { allow?: Role[]; while?: Where; draft?: boolean; versions?: boolean } = {},
+): Access => {
+  const { allow, while: constraint, draft = false, versions = false } = options
+  const rule: Access = ({ req }) => {
     if (isAdminUser(req.user)) return true
     if (!req.user || (allow && !hasRole(req.user, ...allow))) return false
     const owns = owned(req.user)
@@ -158,6 +201,8 @@ export const isAdminOrOwn =
       return { and: [owns, { _status: { equals: 'draft' } }, ...(constraint ? [constraint] : [])] }
     return constraint ? { and: [owns, constraint] } : owns
   }
+  return named(rule, 'isAdminOrOwn', [owned, ...optionsOf(options)])
+}
 
 /**
  * Who may write articles: community members, fellows, visiting students and
@@ -175,13 +220,14 @@ export const canAuthor: Access = ({ req }) => {
  * Publish button, so a non-admin gets "Save draft" only, and the API refuses
  * a publish from them as well.
  */
-export const adminPublishes =
-  (access: Access): Access =>
-  (args) => {
+export const adminPublishes = (access: Access): Access => {
+  const rule: Access = (args) => {
     const data = args.data as { _status?: unknown } | undefined
     if (data?._status === 'published' && !isAdminUser(args.req.user)) return false
     return access(args)
   }
+  return named(rule, 'adminPublishes', [access])
+}
 
 /**
  * Who may propose a publication: students (`member`, `non_degree_seeking`),
@@ -223,14 +269,15 @@ export const publishedOrAdmin: Access = ({ req }) =>
  * For drafts-enabled collections with an owner but no tier: the public reads
  * what is published, an owner also their own drafts.
  */
-export const publishedOrOwn =
-  (owned: Ownership): Access =>
-  ({ req }) => {
+export const publishedOrOwn = (owned: Ownership): Access => {
+  const rule: Access = ({ req }) => {
     if (isAdminUser(req.user)) return true
     const published: Where = { _status: { equals: 'published' } }
     const owns = req.user ? owned(req.user) : false
     return owns ? { or: [published, owns] } : published
   }
+  return named(rule, 'publishedOrOwn', [owned])
+}
 
 /**
  * Read rule for a tiered document, keyed on the `tier` field:
@@ -259,9 +306,11 @@ export const publishedOrOwn =
  * That gate only exists on collections with `versions.drafts`, so it is opt-in
  * — collections without drafts must not be filtered on a `_status` column.
  */
-export const readTiers =
-  (owned?: Ownership, { drafts = false }: { drafts?: boolean } = {}): Access =>
-  ({ req }): Where | boolean => {
+export const readTiers = (
+  owned?: Ownership,
+  { drafts = false }: { drafts?: boolean } = {},
+): Access => {
+  const rule: Access = ({ req }): Where | boolean => {
     const published: Where = drafts ? { _status: { equals: 'published' } } : {}
 
     // Whoever may edit the document must be able to read it back for live preview.
@@ -282,6 +331,8 @@ export const readTiers =
     if (owns) visible.push(owns)
     return { or: visible }
   }
+  return named(rule, 'readTiers', [...(owned ? [owned] : []), ...optionsOf({ drafts })])
+}
 
 /** A tier the site lists. `owner` work shows only in the admin and its preview. */
 export type SiteTier = 'public' | 'community'
@@ -301,6 +352,9 @@ export const siteTiers = (reader: unknown): SiteTier[] =>
  */
 export const adminOnlyField: FieldAccess = ({ req }) => isAdminUser(req.user)
 
+/** The pair of write rules for a field that only an admin sets. Frozen: many fields share this one object. */
+export const adminWritesOnly = Object.freeze({ create: adminOnlyField, update: adminOnlyField })
+
 /* ======================================================== through a relation */
 
 const prefixWhere = (where: Where, field: string): Where =>
@@ -318,9 +372,10 @@ const prefixWhere = (where: Where, field: string): Where =>
  * read or edit `course`. The constraints the rule returns are moved under
  * `field`. Not for `create`, which Payload asks with no document to query.
  */
-export const throughRelation =
-  (field: string, access: Access): Access =>
-  async (args) => {
+export const throughRelation = (field: string, access: Access): Access => {
+  const rule: Access = async (args) => {
     const result = await access(args)
     return typeof result === 'boolean' ? result : prefixWhere(result, field)
   }
+  return named(rule, 'throughRelation', [field, access])
+}

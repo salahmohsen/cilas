@@ -3,7 +3,7 @@ import type { Plugin } from 'payload'
 import { DEFAULT_SETTINGS_GLOBAL_SLUG, llmsTxtPlugin } from 'payload-plugin-llms-txt'
 import type { LlmsTxtPluginOptions } from 'payload-plugin-llms-txt'
 
-import { isAdmin } from '@/access'
+import { anyone, isAdmin } from '@/access'
 import { env } from '@/env'
 
 /**
@@ -52,7 +52,8 @@ export const llmsTxt = (): Plugin => (config) => {
     ...next,
     globals: next.globals?.map((g) =>
       g.slug === DEFAULT_SETTINGS_GLOBAL_SLUG
-        ? { ...g, label: 'AI site summary', access: { ...g.access, update: isAdmin } }
+        ? // `read: anyone` restates the plugin default so the rule has a name.
+          { ...g, label: 'AI site summary', access: { ...g.access, read: anyone, update: isAdmin } }
         : g,
     ),
   }

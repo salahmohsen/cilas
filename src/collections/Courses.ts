@@ -8,7 +8,7 @@ import { blockedUnless, deleteEndpoints } from '@/forms/delete-endpoints'
 import { addSelfAs } from '@/lib/review-ownership'
 import {
   adminPublishes,
-  adminOnlyField,
+  adminWritesOnly,
   isAdminUser,
   canTeach,
   isAdminOrOwn,
@@ -17,6 +17,7 @@ import {
   ownsViaFellows,
   readTiers,
   WITH_OWNER,
+  nobody,
 } from '@/access'
 import { activitiesField } from '@/fields/activities'
 import { bibliographyField } from '@/fields/bibliography'
@@ -85,7 +86,7 @@ const courseNoun = 'course' as const
 const courseReview = reviewHooks(courseNoun)
 
 const adminSettings = {
-  access: { create: adminOnlyField, update: adminOnlyField },
+  access: adminWritesOnly,
   admin: {
     condition: ((_, __, { user }) => isAdminUser(user)) satisfies Condition,
   },
@@ -130,7 +131,7 @@ export const Courses: CollectionConfig = {
     // Closed so the panel's stock delete never shows: a course is deleted
     // through the delete dialog, which lists what goes with it first
     // (src/forms/delete-endpoints.ts).
-    delete: () => false,
+    delete: nobody,
   },
   endpoints: deleteEndpoints('courses', {
     summarize: courseDeleteSummary,
@@ -247,7 +248,7 @@ export const Courses: CollectionConfig = {
               label: 'Cycle',
               type: 'relationship',
               relationTo: 'cycles',
-              access: { create: adminOnlyField, update: adminOnlyField },
+              access: adminWritesOnly,
             },
             {
               name: 'location',

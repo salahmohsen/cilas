@@ -1,9 +1,13 @@
-import type { CollectionConfig } from 'payload'
+import type { Access, CollectionConfig } from 'payload'
 
-import { isAdminUser } from '@/access'
+import { nobody, isAdmin } from '@/access'
 import { POST_KINDS } from '@/lib/space-rules'
 import { contentWhere } from '@/lib/spaces'
 import { searchChanged, searchDeleted } from '@/lib/private-search/outbox'
+
+/** The posts of the spaces the reader may see (contentWhere, src/lib/spaces.ts). */
+const readablePosts: Access = async ({ req }) =>
+  contentWhere(req.payload, req.user, ['id'], req.context)
 
 /**
  * Discussion, announcement, event and vote posts (spec §3). `question` sits
@@ -19,14 +23,14 @@ export const SpacePosts: CollectionConfig = {
   slug: 'space-posts',
   labels: { singular: 'Post', plural: 'Posts' },
   access: {
-    read: async ({ req }) => contentWhere(req.payload, req.user, ['id'], req.context),
-    create: ({ req }) => isAdminUser(req.user),
-    update: ({ req }) => isAdminUser(req.user),
+    read: readablePosts,
+    create: isAdmin,
+    update: isAdmin,
     // Deletes (authors included) go through the actions' postRemove, which
     // leaves the placeholder when replies exist (spec §3) and removes the
     // row's files. A REST hard-delete would orphan replies, reactions and
     // files — the rules above already refuse create/update from REST.
-    delete: ({ req }) => isAdminUser(req.user),
+    delete: isAdmin,
   },
   versions: { drafts: false },
   admin: {
@@ -40,14 +44,14 @@ export const SpacePosts: CollectionConfig = {
       relationTo: 'spaces',
       required: true,
       index: true,
-      access: { update: () => false },
+      access: { update: nobody },
     },
     {
       name: 'author',
       type: 'relationship',
       relationTo: 'people',
       index: true,
-      access: { update: () => false },
+      access: { update: nobody },
     },
     {
       name: 'kind',
@@ -55,7 +59,7 @@ export const SpacePosts: CollectionConfig = {
       required: true,
       defaultValue: 'discussion',
       options: [...POST_KINDS],
-      access: { update: () => false },
+      access: { update: nobody },
     },
     { name: 'body', type: 'textarea', required: true },
     {
@@ -117,7 +121,7 @@ export const SpacePosts: CollectionConfig = {
     {
       name: 'vote_options',
       type: 'array',
-      access: { update: () => false },
+      access: { update: nobody },
       admin: { condition: (data) => (data as { kind?: string }).kind === 'vote' },
       fields: [{ name: 'label', type: 'text', required: true }],
     },
@@ -126,7 +130,7 @@ export const SpacePosts: CollectionConfig = {
       label: 'Members may choose more than one option',
       type: 'checkbox',
       defaultValue: false,
-      access: { update: () => false },
+      access: { update: nobody },
       admin: { condition: (data) => (data as { kind?: string }).kind === 'vote' },
     },
     {
@@ -143,7 +147,7 @@ export const SpacePosts: CollectionConfig = {
       label: 'Nobody sees who chose what',
       type: 'checkbox',
       defaultValue: false,
-      access: { update: () => false },
+      access: { update: nobody },
       admin: { condition: (data) => (data as { kind?: string }).kind === 'vote' },
     },
     {
@@ -153,7 +157,7 @@ export const SpacePosts: CollectionConfig = {
       label: 'Course session',
       type: 'relationship',
       relationTo: 'sessions',
-      access: { update: () => false },
+      access: { update: nobody },
       admin: {
         condition: (data) => Boolean((data as { course_session?: unknown }).course_session),
       },

@@ -1,5 +1,7 @@
 import type { Access, CollectionConfig, PayloadHandler } from 'payload'
 
+import { nobody } from '@/access'
+
 import { NOTIFICATION_KIND_NAMES } from '@/lib/notification-kinds'
 import { publishChange, publishDelete } from '@/lib/realtime/publish'
 
@@ -7,7 +9,9 @@ import { publishChange, publishDelete } from '@/lib/realtime/publish'
 const KIND_VALUES: string[] = [...NOTIFICATION_KIND_NAMES]
 KIND_VALUES.splice(KIND_VALUES.indexOf('event_changed'), 0, 'question')
 
-const own: Access = ({ req }) => (req.user ? { recipient: { equals: req.user.id } } : false)
+/** The notifications addressed to the signed-in account. An anonymous caller is refused. */
+const ownNotifications: Access = ({ req }) =>
+  req.user ? { recipient: { equals: req.user.id } } : false
 
 const readAll: PayloadHandler = async (req) => {
   if (!req.user) return Response.json({ error: 'Sign in first.' }, { status: 401 })
@@ -31,7 +35,12 @@ const readAll: PayloadHandler = async (req) => {
 export const Notifications: CollectionConfig = {
   slug: 'notifications',
   admin: { hidden: true, useAsTitle: 'title' },
-  access: { read: own, update: own, delete: own, create: () => false },
+  access: {
+    read: ownNotifications,
+    update: ownNotifications,
+    delete: ownNotifications,
+    create: nobody,
+  },
   defaultSort: '-createdAt',
   endpoints: [{ path: '/read-all', method: 'post', handler: readAll }],
   hooks: { afterChange: [publishChange], afterDelete: [publishDelete] },
@@ -45,7 +54,7 @@ export const Notifications: CollectionConfig = {
       // Deleting the account clears its bell (the cascade the migration
       // 20261023_083500 sets: the adapter's default SET NULL cannot apply to
       // a required recipient).
-      access: { update: () => false },
+      access: { update: nobody },
     },
     {
       name: 'kind',
@@ -55,14 +64,14 @@ export const Notifications: CollectionConfig = {
         value,
         label: value.replace('_', ' '),
       })),
-      access: { update: () => false },
+      access: { update: nobody },
     },
-    { name: 'title', type: 'text', required: true, access: { update: () => false } },
-    { name: 'description', type: 'text', access: { update: () => false } },
+    { name: 'title', type: 'text', required: true, access: { update: nobody } },
+    { name: 'description', type: 'text', access: { update: nobody } },
     // The actor as a snapshot (src/lib/notify.ts actorOf), so reading needs no join.
-    { name: 'actor_name', type: 'text', access: { update: () => false } },
-    { name: 'actor_photo', type: 'text', access: { update: () => false } },
-    { name: 'link', type: 'text', access: { update: () => false } },
+    { name: 'actor_name', type: 'text', access: { update: nobody } },
+    { name: 'actor_photo', type: 'text', access: { update: nobody } },
+    { name: 'link', type: 'text', access: { update: nobody } },
     { name: 'read_at', type: 'date', index: true },
   ],
 }

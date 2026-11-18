@@ -2,7 +2,7 @@ import { randomBytes } from 'node:crypto'
 
 import type { CollectionConfig } from 'payload'
 
-import { isAdmin } from '@/access'
+import { isAdmin, nobody } from '@/access'
 import { FILE_KINDS } from '@/lib/form-files'
 
 /**
@@ -14,7 +14,7 @@ import { FILE_KINDS } from '@/lib/form-files'
 export const SubmissionFiles: CollectionConfig = {
   slug: 'submission-files',
   labels: { singular: 'Submission file', plural: 'Submission files' },
-  access: { read: isAdmin, create: () => false, update: () => false, delete: isAdmin },
+  access: { read: isAdmin, create: nobody, update: nobody, delete: isAdmin },
   admin: { hidden: true },
   upload: {
     mimeTypes: Object.values(FILE_KINDS).flatMap((k) => [...k.mime]),

@@ -1,5 +1,7 @@
 import type { CollectionConfig } from 'payload'
 
+import { nobody } from '@/access'
+
 /**
  * One browser or Home Screen app that agreed to push for an account. The
  * settings page writes it through a server action (src/lib/push/subscriptions.ts)
@@ -10,7 +12,7 @@ import type { CollectionConfig } from 'payload'
 export const PushSubscriptions: CollectionConfig = {
   slug: 'push-subscriptions',
   admin: { hidden: true, useAsTitle: 'endpoint' },
-  access: { read: () => false, create: () => false, update: () => false, delete: () => false },
+  access: { read: nobody, create: nobody, update: nobody, delete: nobody },
   fields: [
     {
       name: 'user',

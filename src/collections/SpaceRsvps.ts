@@ -1,8 +1,11 @@
-import type { CollectionConfig, Where } from 'payload'
+import type { Access, CollectionConfig } from 'payload'
 
-import { isAdminUser } from '@/access'
+import { adminOrOwnAccountRows, nobody, isAdmin } from '@/access'
 import { contentWhere } from '@/lib/spaces'
 import { RSVP_STATUSES } from '@/lib/space-event'
+
+/** Answers to the event posts the reader may see. */
+const rsvpsOnReadablePosts: Access = ({ req }) => contentWhere(req.payload, req.user, ['post'])
 
 /**
  * One row per account and event post: the member's answer (going, maybe or
@@ -14,14 +17,10 @@ export const SpaceRsvps: CollectionConfig = {
   slug: 'space-rsvps',
   labels: { singular: 'Event answer', plural: 'Event answers' },
   access: {
-    read: ({ req }) => contentWhere(req.payload, req.user, ['post']),
-    create: ({ req }) => isAdminUser(req.user),
-    update: () => false,
-    delete: ({ req }) => {
-      if (isAdminUser(req.user)) return true
-      const own: Where = { account: { equals: (req.user as { id?: number })?.id ?? null } }
-      return own
-    },
+    read: rsvpsOnReadablePosts,
+    create: isAdmin,
+    update: nobody,
+    delete: adminOrOwnAccountRows,
   },
   admin: { hidden: true },
   fields: [
@@ -32,7 +31,7 @@ export const SpaceRsvps: CollectionConfig = {
       relationTo: 'users',
       required: true,
       index: true,
-      access: { update: () => false },
+      access: { update: nobody },
     },
     {
       name: 'post',

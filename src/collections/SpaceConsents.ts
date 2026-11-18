@@ -1,6 +1,6 @@
 import type { CollectionConfig } from 'payload'
 
-import { isAdminUser } from '@/access'
+import { adminOrOwnAccountRows, nobody, isAdmin } from '@/access'
 
 /**
  * One row per account per notice version (spec §9): before a member's first
@@ -11,13 +11,10 @@ export const SpaceConsents: CollectionConfig = {
   slug: 'space-consents',
   labels: { singular: 'Consent', plural: 'Consents' },
   access: {
-    read: ({ req }) =>
-      isAdminUser(req.user)
-        ? true
-        : { account: { equals: (req.user as { id?: number })?.id ?? null } },
-    create: () => false, // the action writes it with overrideAccess
-    update: () => false,
-    delete: ({ req }) => isAdminUser(req.user),
+    read: adminOrOwnAccountRows,
+    create: nobody, // the action writes it with overrideAccess
+    update: nobody,
+    delete: isAdmin,
   },
   admin: { hidden: true },
   fields: [
@@ -27,7 +24,7 @@ export const SpaceConsents: CollectionConfig = {
       relationTo: 'users',
       required: true,
       index: true,
-      access: { update: () => false },
+      access: { update: nobody },
     },
     { name: 'version', type: 'number', required: true },
     { name: 'accepted_at', type: 'date', required: true },

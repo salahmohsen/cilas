@@ -1,8 +1,12 @@
-import type { CollectionConfig, Where } from 'payload'
+import type { Access, CollectionConfig } from 'payload'
 
-import { isAdminUser, personOf } from '@/access'
+import { adminOrOwnAccountRows, nobody, isAdmin } from '@/access'
 import { REACTION_KINDS, REACTION_LABELS } from '@/lib/space-reactions'
 import { contentWhere } from '@/lib/spaces'
+
+/** Reactions on the posts, and on the comments of the posts, the reader may see. */
+const reactionsOnReadablePosts: Access = ({ req }) =>
+  contentWhere(req.payload, req.user, ['post', 'comment.post'])
 
 /**
  * One row per account, target and reaction, unique on all three (spec §4).
@@ -16,17 +20,12 @@ export const SpaceReactions: CollectionConfig = {
   slug: 'space-reactions',
   labels: { singular: 'Reaction', plural: 'Reactions' },
   access: {
-    read: ({ req }) => contentWhere(req.payload, req.user, ['post', 'comment.post']),
+    read: reactionsOnReadablePosts,
     // Actions-only writes (REST refusal, as posts and comments).
-    create: ({ req }) => isAdminUser(req.user),
-    update: () => false,
+    create: isAdmin,
+    update: nobody,
     // Only the account un-reacts; moderation powers come in step 3.
-    delete: ({ req }) => {
-      if (isAdminUser(req.user)) return true
-      const own: Where = { account: { equals: (req.user as { id?: number })?.id ?? null } }
-      void personOf // not used here: the reaction belongs to the account
-      return own
-    },
+    delete: adminOrOwnAccountRows,
   },
   admin: { hidden: true },
   fields: [
@@ -37,7 +36,7 @@ export const SpaceReactions: CollectionConfig = {
       relationTo: 'users',
       required: true,
       index: true,
-      access: { update: () => false },
+      access: { update: nobody },
     },
     { name: 'post', type: 'relationship', relationTo: 'space-posts', index: true },
     { name: 'comment', type: 'relationship', relationTo: 'space-comments', index: true },
