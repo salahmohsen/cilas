@@ -1,12 +1,10 @@
 import { randomUUID } from 'node:crypto'
 import { getPayload, type Payload } from 'payload'
-import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest'
+import { afterAll, beforeAll, describe, expect, it } from 'vitest'
 
 import config from '@/payload.config'
 import { getPublicEvent } from '@/api/events.api'
 import type { ColumnsBlock, PersonProfileBlock } from '@/payload-types'
-
-vi.mock('@/plugins/typesense', () => ({ typesenseSearch: () => (incoming: unknown) => incoming }))
 
 const documentOf = (children: unknown[]) => ({
   root: { type: 'root', version: 1, children, direction: null, format: '', indent: 0 },
