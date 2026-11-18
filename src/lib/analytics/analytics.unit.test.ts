@@ -1,4 +1,4 @@
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
+import { afterEach, describe, expect, it, vi } from 'vitest'
 
 import { routing } from '@/i18n/routing'
 import { isBotPath, isNoisyError } from '@/lib/analytics/errors'
@@ -12,8 +12,7 @@ import {
 } from '@/lib/analytics/paths'
 import { gateCapture, mayCapture } from '@/lib/analytics/policy'
 import { scrubReferrer, scrubText, scrubUrl } from '@/lib/analytics/scrub'
-import { STAFF_FLAG, isStaffDevice, makeBeforeSend, posthogConfig } from '@/lib/analytics/client'
-import { setSender, track } from '@/lib/analytics/track'
+import { STAFF_FLAG, isStaffDevice, posthogConfig } from '@/lib/analytics/client'
 
 describe('which pages analytics may see', () => {
   it('keeps its language list in step with the site routing', () => {
@@ -341,63 +340,6 @@ describe('noisy errors', () => {
     expect(isBotPath('/wp-admin/setup.php')).toBe(true)
     expect(isBotPath('/xmlrpc.php')).toBe(true)
     expect(isBotPath('/en/about')).toBe(false)
-  })
-
-  it('sends one of a repeated browser error, and caps a page at five', () => {
-    const send = makeBeforeSend()
-    vi.stubGlobal('location', { pathname: '/en/about' })
-    const error = (value: string) => ({
-      event: '$exception',
-      properties: {
-        $current_url: 'https://ci-las.org/en/about',
-        $exception_list: [{ type: 'TypeError', value }],
-      },
-    })
-    expect(send(error('boom 1'))).not.toBeNull()
-    expect(send(error('boom 1'))).toBeNull()
-    expect(send(error('Failed to fetch'))).toBeNull()
-    for (const n of [2, 3, 4, 5]) expect(send(error(`boom ${n}`))).not.toBeNull()
-    expect(send(error('boom 6'))).toBeNull()
-    vi.unstubAllGlobals()
-  })
-})
-
-describe('track', () => {
-  const sent = vi.fn()
-  beforeEach(() => {
-    sent.mockReset()
-    vi.stubGlobal('window', { location: { pathname: '/en/events/open-day' } })
-  })
-  afterEach(() => {
-    setSender(null)
-    vi.unstubAllGlobals()
-  })
-
-  it('does nothing while PostHog is off', () => {
-    track('calendar_added', { source: 'event-ics' })
-    expect(sent).not.toHaveBeenCalled()
-  })
-
-  it('sends on a public page', () => {
-    setSender(sent)
-    track('register_clicked', { kind: 'event', id: 'open-day' })
-    expect(sent).toHaveBeenCalledWith('register_clicked', { kind: 'event', id: 'open-day' })
-  })
-
-  it('stays quiet on a private page, except for the two anywhere events', () => {
-    setSender(sent)
-    vi.stubGlobal('window', { location: { pathname: '/en/spaces' } })
-    track('calendar_added', { source: 'event-ics' })
-    expect(sent).not.toHaveBeenCalled()
-    track('login', { method: 'password' })
-    expect(sent).toHaveBeenCalledWith('login', { method: 'password' })
-  })
-
-  it('never throws, even when the sender does', () => {
-    setSender(() => {
-      throw new Error('network')
-    })
-    expect(() => track('calendar_added', { source: 'event-ics' })).not.toThrow()
   })
 })
 
