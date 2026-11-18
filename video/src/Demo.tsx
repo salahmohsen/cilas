@@ -24,8 +24,8 @@ export const Demo = () => {
       <TransitionSeries.Sequence name="Opening" durationInFrames={Math.round(TITLE_SECONDS * fps)}>
         <Opening />
       </TransitionSeries.Sequence>
-      {film.map((shot) => (
-        <Fragment key={shot.clip}>
+      {film.map((shot, i) => (
+        <Fragment key={i}>
           {cut}
           <TransitionSeries.Sequence name={shot.clip} durationInFrames={shotFrames(shot)}>
             <Shot shot={shot} />

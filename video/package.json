@@ -28,7 +28,6 @@
   "scripts": {
     "dev": "remotion studio",
     "render": "remotion render CilasDemo ../docs/demo/cilas-demo.mp4 --codec=h264 --crf=20 --concurrency=50%",
-    "gif": "ffmpeg -y -ss 4 -t 26 -i ../docs/demo/cilas-demo.mp4 -vf \"fps=10,scale=800:-1:flags=lanczos,split[a][b];[a]palettegen=max_colors=96[p];[b][p]paletteuse=dither=bayer:bayer_scale=4\" ../docs/demo/cilas-demo.gif",
     "lint": "eslint src && tsc"
   },
   "allowScripts": {

@@ -10,32 +10,34 @@ export type Shot = {
   caption: string
   captionAr?: string
   theme: Theme
-  /** Seconds cut from the start of the recording. */
-  trim: number
+  /** The part of the recording to show, in seconds: [from, to]. */
+  span: [number, number]
   playbackRate: number
+  /** Replaces recorded camera keys that frame empty space, by their time. */
+  reframe?: Record<number, Omit<CameraKey, 't'>>
 }
 
 export const FPS = 30
-export const TITLE_SECONDS = 4.5
-export const OUTRO_SECONDS = 5
+export const TITLE_SECONDS = 2.5
+export const OUTRO_SECONDS = 4
 export const TRANSITION_FRAMES = 14
 
-// The film, in order. A shot's length follows from its recording, its trim and its speed.
+// The film, in order. A shot's length follows from its span and its speed.
 export const film: Shot[] = [
   {
     clip: 'home',
     chapter: 'Discover',
     caption: 'A bilingual home for open study',
     theme: 'light',
-    trim: 1,
-    playbackRate: 1.3,
+    span: [0.5, 9.5],
+    playbackRate: 1.4,
   },
   {
     clip: 'study',
     chapter: 'Discover',
     caption: 'Every course, as a list or a grid, with filters',
     theme: 'light',
-    trim: 0.6,
+    span: [0.6, 10],
     playbackRate: 1.6,
   },
   {
@@ -43,7 +45,7 @@ export const film: Shot[] = [
     chapter: 'Discover',
     caption: 'Each course lists its sessions, readings and dates',
     theme: 'light',
-    trim: 0.6,
+    span: [0.6, 12],
     playbackRate: 1.6,
   },
   {
@@ -51,23 +53,15 @@ export const film: Shot[] = [
     chapter: 'Discover',
     caption: 'Course meetings and events in one calendar, in Cairo time',
     theme: 'light',
-    trim: 0.6,
+    span: [0.6, 26],
     playbackRate: 1.7,
-  },
-  {
-    clip: 'events',
-    chapter: 'Discover',
-    caption: 'Talks, screenings and workshops',
-    theme: 'light',
-    trim: 0.8,
-    playbackRate: 1.5,
   },
   {
     clip: 'event',
     chapter: 'Discover',
-    caption: 'Add an event to your calendar, then register',
+    caption: 'Talks and screenings, one click from your calendar',
     theme: 'light',
-    trim: 0.5,
+    span: [0.5, 12],
     playbackRate: 1.5,
   },
   {
@@ -75,7 +69,7 @@ export const film: Shot[] = [
     chapter: 'Discover',
     caption: 'Search courses, articles and people',
     theme: 'light',
-    trim: 0.4,
+    span: [0.4, 7.5],
     playbackRate: 1.3,
   },
   {
@@ -83,15 +77,15 @@ export const film: Shot[] = [
     chapter: 'Apply',
     caption: 'Apply with a form that the team builds in the CMS',
     theme: 'light',
-    trim: 0.5,
-    playbackRate: 1.8,
+    span: [0.5, 7],
+    playbackRate: 1.5,
   },
   {
     clip: 'login',
     chapter: 'Belong',
     caption: 'Students sign in to reach their spaces',
     theme: 'light',
-    trim: 0.5,
+    span: [4.2, 13.5],
     playbackRate: 1.7,
   },
   {
@@ -99,7 +93,7 @@ export const film: Shot[] = [
     chapter: 'Belong',
     caption: 'Each course gets a private space for its students',
     theme: 'light',
-    trim: 0.3,
+    span: [0.3, 5.2],
     playbackRate: 1.1,
   },
   {
@@ -107,7 +101,7 @@ export const film: Shot[] = [
     chapter: 'Belong',
     caption: 'Posts, readings and the next session in one place',
     theme: 'light',
-    trim: 0.5,
+    span: [0.5, 16.5],
     playbackRate: 1.6,
   },
   {
@@ -115,23 +109,27 @@ export const film: Shot[] = [
     chapter: 'Belong',
     caption: 'Open a session to see its materials',
     theme: 'light',
-    trim: 0.5,
-    playbackRate: 1.6,
+    span: [7, 17.5],
+    playbackRate: 1.5,
   },
   {
     clip: 'fellow-schedule',
     chapter: 'Teach',
     caption: 'Fellows move a session, then save the schedule',
     theme: 'light',
-    trim: 0.5,
-    playbackRate: 1.7,
+    span: [5.6, 22.5],
+    playbackRate: 1.6,
+    reframe: {
+      16.83: { z: 1.3, x: 0.62, y: 0.6 },
+      19.61: { z: 1.3, x: 0.62, y: 0.6 },
+    },
   },
   {
     clip: 'admin-dashboard',
     chapter: 'Run',
     caption: 'The dashboard shows what waits for review',
     theme: 'dark',
-    trim: 0.8,
+    span: [0.8, 9.5],
     playbackRate: 1.4,
   },
   {
@@ -139,16 +137,17 @@ export const film: Shot[] = [
     chapter: 'Run',
     caption: 'Accept each applicant, course by course',
     theme: 'dark',
-    trim: 0.6,
-    playbackRate: 1.5,
+    span: [0.6, 18],
+    playbackRate: 1.6,
   },
   {
     clip: 'admin-course',
     chapter: 'Run',
     caption: 'Move a session, then announce the change to the course space',
     theme: 'dark',
-    trim: 0.8,
-    playbackRate: 1.7,
+    span: [8.6, 28.4],
+    playbackRate: 1.6,
+    reframe: { 24.87: { z: 1.3, x: 0.6, y: 0.72 } },
   },
   {
     clip: 'ar-home',
@@ -156,7 +155,7 @@ export const film: Shot[] = [
     caption: 'The full site in Arabic, right to left',
     captionAr: 'الموقع كله بالعربية، من اليمين إلى اليسار',
     theme: 'dark',
-    trim: 0.3,
+    span: [0.3, 5.7],
     playbackRate: 1.1,
   },
   {
@@ -165,8 +164,8 @@ export const film: Shot[] = [
     caption: 'The calendar too',
     captionAr: 'والتقويم أيضًا',
     theme: 'dark',
-    trim: 0.4,
-    playbackRate: 1.2,
+    span: [0.4, 7.7],
+    playbackRate: 1.3,
   },
   {
     clip: 'ar-course',
@@ -174,15 +173,18 @@ export const film: Shot[] = [
     caption: 'And every course page',
     captionAr: 'وكل صفحة مقرر',
     theme: 'dark',
-    trim: 0.3,
-    playbackRate: 1.1,
+    span: [0.3, 6.2],
+    playbackRate: 1.2,
   },
 ]
 
-export const cameraOf = (shot: Shot): CameraKey[] => clips[shot.clip].camera
+export const cameraOf = (shot: Shot): CameraKey[] =>
+  clips[shot.clip].camera.map((key) => ({ ...key, ...shot.reframe?.[key.t] }))
 
 export const shotFrames = (shot: Shot) =>
-  Math.round(((clips[shot.clip].seconds - shot.trim) / shot.playbackRate) * FPS)
+  Math.round(
+    ((Math.min(shot.span[1], clips[shot.clip].seconds) - shot.span[0]) / shot.playbackRate) * FPS,
+  )
 
 export const filmFrames =
   Math.round((TITLE_SECONDS + OUTRO_SECONDS) * FPS) +

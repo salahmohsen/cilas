@@ -14,7 +14,7 @@ CILAS brings the institute’s public website, content management, applications,
 
 ## Demo
 
-[![CILAS demo: the home page, the course catalogue, a course page and the calendar](docs/demo/cilas-demo.gif)](docs/demo/cilas-demo.mp4)
+[![CILAS home page hero: the tagline cycles above an animated crowd of people. Select it to watch the full demo.](docs/demo/cilas-demo.gif)](docs/demo/cilas-demo.mp4)
 
 **[Watch the full tour](docs/demo/cilas-demo.mp4)** (1920 × 1080). It records the real app on a sanitized copy of the catalogue, and [Remotion](https://www.remotion.dev) composes the film.
 
@@ -33,6 +33,7 @@ CILAS brings the institute’s public website, content management, applications,
 > 1. `DEMO_SOURCE_URL=postgres://cilas:dev@host.docker.internal:5433/cilas_dev DEMO_ENV_DIR=<checkout with .env> scripts/demo/serve-demo.sh` starts the app on port 3100. `pg_dump` runs in a container, so a local source is `host.docker.internal`, not `localhost`.
 > 2. `node scripts/demo/capture.mjs` records every shot in [`scripts/demo/shots.mjs`](scripts/demo/shots.mjs) with [agent-browser](https://agent-browser.dev). Some shots change the copy (a moved session, an accepted applicant), so restart `serve-demo.sh` before a second full capture.
 > 3. `cd video && npm install && npm run render` renders the film. `npm run dev` opens it in Remotion Studio.
+> 4. `scripts/demo/hero.sh [base-url]` records the home page hero alone and makes the README GIF from it.
 
 ## Features
 
