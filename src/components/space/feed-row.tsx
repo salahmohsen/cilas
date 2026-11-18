@@ -15,7 +15,7 @@ import { eventOver, eventParts } from '@/lib/space-event'
 
 import { EventCard, eventDescription } from './event-card'
 import { Folded } from './folded'
-import { VotePoll } from './vote-poll'
+import { ConnectedVotePoll } from './connected-vote-poll'
 import { LinkPreviews } from './link-card'
 import { PersonHover } from './person-hover'
 import type { PersonCard } from '@/lib/space-members'
@@ -316,7 +316,7 @@ export async function FeedRow({
         )}
         {row.session && <PostSession session={row.session} kind={post.kind} postHref={postHref} />}
         {row.vote && (
-          <VotePoll
+          <ConnectedVotePoll
             post={post.id}
             vote={row.vote}
             viewer={context.viewer}

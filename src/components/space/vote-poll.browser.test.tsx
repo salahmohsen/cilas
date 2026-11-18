@@ -1,39 +1,24 @@
-import type { ReactElement, ReactNode } from 'react'
-import { act, cleanup, fireEvent, render, screen, waitFor, within } from '@testing-library/react'
-import { NextIntlClientProvider } from 'next-intl'
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
+import { act, cleanup, fireEvent, screen, waitFor, within } from '@testing-library/react'
+import { afterEach, beforeEach, describe, expect, it } from 'vitest'
 
-import messages from '../../../messages/en.json'
 import { VotePoll } from '@/components/space/vote-poll'
 import type { VoteView, Voter } from '@/lib/spaces-data'
 import type { SpacesWriteState } from '@/lib/space-actions'
 
-const { save, refresh } = vi.hoisted(() => ({ save: vi.fn(), refresh: vi.fn() }))
-vi.mock('@/lib/space-actions', () => ({ voteSetAction: save }))
-vi.mock('next/navigation', () => ({ useRouter: () => ({ refresh }) }))
-vi.mock('motion/react', async (importOriginal) => ({
-  ...(await importOriginal<typeof import('motion/react')>()),
-  AnimatePresence: ({ children }: { children: ReactNode }) => children,
-}))
-vi.mock('@/lib/use-narrow', () => ({ useNarrow: () => false }))
-vi.mock('@/components/space/composer', () => ({ saveErrorKey: () => 'saveError_failed' }))
-vi.mock('@/components/space/person-hover', () => ({
-  PersonHover: ({ children }: { children: ReactElement }) => children,
-}))
+import { IntlProvider } from '../../../testing/intl.test-utils'
+import { renderWithNavigation } from '../../../testing/navigation.test-utils'
 
 const me: Voter = { personId: 7, name: 'Mona', photo: '/mona.webp' }
 const other: Voter = { personId: 8, name: 'Nadim', photo: null }
 const viewer = { personId: me.personId, moderator: false, me: { name: me.name, photo: me.photo } }
 let finish: (result: SpacesWriteState) => void
 
+const save = () =>
+  new Promise<SpacesWriteState>((resolve) => {
+    finish = resolve
+  })
 beforeEach(() => {
-  save.mockReset()
-  refresh.mockClear()
-  save.mockReturnValue(
-    new Promise<SpacesWriteState>((resolve) => {
-      finish = resolve
-    }),
-  )
+  finish = () => {}
 })
 afterEach(cleanup)
 
@@ -52,10 +37,10 @@ function poll(overrides: Partial<VoteView> = {}) {
     severalHeld: false,
     ...overrides,
   }
-  render(
-    <NextIntlClientProvider locale="en" messages={messages}>
-      <VotePoll post={1} vote={vote} viewer={viewer} disabled={false} />
-    </NextIntlClientProvider>,
+  renderWithNavigation(
+    <IntlProvider>
+      <VotePoll post={1} vote={vote} viewer={viewer} disabled={false} save={save} />
+    </IntlProvider>,
   )
 }
 
