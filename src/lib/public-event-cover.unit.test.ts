@@ -1,12 +1,14 @@
+import { http, HttpResponse } from 'msw'
 import sharp from 'sharp'
-import { afterEach, describe, expect, it, vi } from 'vitest'
-
-vi.mock('next/cache', () => ({ unstable_cache: (fn: unknown) => fn }))
+import { describe, expect, it } from 'vitest'
 
 import { prepareCover } from '@/lib/event-cover-image'
 import { publicEventCoverTone, readCoverTone } from '@/lib/public-event-cover'
 
-afterEach(() => vi.unstubAllGlobals())
+import { mockNetwork } from '../../testing/msw-node.test-utils'
+import { runInRequest } from '../../testing/next-request.test-utils'
+
+const network = mockNetwork()
 
 describe('public event cover colors', () => {
   it('extracts exactly the same photo tone as a Spaces cover', async () => {
@@ -26,32 +28,34 @@ describe('public event cover colors', () => {
       ])
       .png()
       .toBuffer()
-    vi.stubGlobal(
-      'fetch',
-      vi
-        .fn()
-        .mockResolvedValue(
-          new Response(new Uint8Array(photo), { headers: { 'content-type': 'image/png' } }),
-        ),
+    network.use(
+      http.get(
+        'https://images.test/cover.png',
+        () => new HttpResponse(new Uint8Array(photo), { headers: { 'content-type': 'image/png' } }),
+      ),
     )
     expect(await readCoverTone('https://images.test/cover.png')).toBe(
       (await prepareCover(photo, 'cover'))?.tone,
     )
   })
   it('falls back when a photo is unavailable', async () => {
-    vi.stubGlobal('fetch', vi.fn().mockRejectedValue(new Error('offline')))
-    expect(await publicEventCoverTone('https://images.test/offline.png')).toBeNull()
+    network.use(http.get('https://images.test/offline.png', () => HttpResponse.error()))
+    const { result } = await runInRequest(() =>
+      publicEventCoverTone('https://images.test/offline.png'),
+    )
+    expect(result).toBeNull()
   })
   it('rejects non-images and oversized responses', async () => {
-    const fetch = vi
-      .fn()
-      .mockResolvedValueOnce(new Response('<html>', { headers: { 'content-type': 'text/html' } }))
-      .mockResolvedValueOnce(
-        new Response('image', {
-          headers: { 'content-type': 'image/png', 'content-length': String(9 * 1024 * 1024) },
-        }),
-      )
-    vi.stubGlobal('fetch', fetch)
+    network.use(
+      http.get('https://images.test/page', () => HttpResponse.html('<html>')),
+      http.get(
+        'https://images.test/huge.png',
+        () =>
+          new HttpResponse('image', {
+            headers: { 'content-type': 'image/png', 'content-length': String(9 * 1024 * 1024) },
+          }),
+      ),
+    )
     await expect(readCoverTone('https://images.test/page')).rejects.toThrow('unavailable')
     await expect(readCoverTone('https://images.test/huge.png')).rejects.toThrow('image limit')
   })
