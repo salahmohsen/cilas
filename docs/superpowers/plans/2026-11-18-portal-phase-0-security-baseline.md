@@ -16,7 +16,7 @@
 - PR B: `scripts/access-audit.int.test.ts` 7 passed, with `problems` empty on the real config. The snapshot has 1209 rows for 53 entities, and `oxfmt --check` keeps it as written.
 - Task 12, first version of the hook: a probe test (not committed) passed 7 of 8 cases. The failed case was a publish of a publication, refused by Payload validation (`Introduction > Kind`), not by the slug rule. The plan publishes an article instead. A second probe showed that an Arabic retitle moved the slug to `anwan-arby`; the hook now follows the default locale only, and the same probe then kept `english-…` through an Arabic retitle and an Arabic publish.
 
-PR C Tasks 10, 11 and 13 and all of PR D were not run. These changes of review rounds 2 and 3 were not run either (round 3: the publish check of the slug hook and its test, Task 12): the `ownNotifications` rename (Task 3), the frozen `adminWritesOnly` (Tasks 2 and 4), the `sourceSetsAccess` helper and `scripts/access-audit.unit.test.ts` (Task 7), and the guards and three new tests of the slug hook (Task 12: no assignment without an English title, and the uniqueness check). Each "Expected" line for them is a prediction. When a run differs, find out why before you change the plan's code.
+PR C Tasks 10, 11 and 13 and all of PR D were not run. These changes of review rounds 2 and 3 were not run either (round 3: the publish check of the slug hook and its test, Task 12; round 4: the publish check now rests on the unique index, and the step order of Task 12): the `ownNotifications` rename (Task 3), the frozen `adminWritesOnly` (Tasks 2 and 4), the `sourceSetsAccess` helper and `scripts/access-audit.unit.test.ts` (Task 7), and the guards and three new tests of the slug hook (Task 12: no assignment without an English title, and the uniqueness check). Each "Expected" line for them is a prediction. When a run differs, find out why before you change the plan's code.
 
 ---
 
@@ -127,7 +127,7 @@ Problems first, then each fix above the problems it solves.
 - **D6. The media check is a `beforeOperation` hook on create.** Solves P5, P6. `beforeOperation` runs before `generateFileData`, so `req.file` is still the upload as sent. A non-admin create with no `req.file` throws, which closes the remote URL path. The hook returns early for `overrideAccess: true`, for admins and for anonymous callers; the collection `create` access then throws `Forbidden` for anonymous callers.
 - **D7. Shared rules in `src/access.ts`, local rules beside their collection, factories name their output.** Solves P7, P8. `nobody`, `ownAccountRows`, `signedInOwnAccountRows`, `adminOrOwnAccountRows` and `adminWritesOnly` join `src/access.ts`. A codemod replaces the three repeated arrows (`() => false`, `() => true`, `({ req }) => isAdminUser(req.user)`) with `nobody`, `anyone` and `isAdmin`. Rules one collection owns become module-local named constants. `named()` gives each factory's rule the name `factory(args)`. `ownsVia` is named too, so `isAdminOrOwn(ownsVia(fellows),versions)` shows the owner field. The `while` option is a `Where`, so it prints as JSON: exact, and with no table of constant names to keep in step.
 - **D8. Red tests are not a commit.** The access test file of PR C is red for the new rows until Task 13. Task 10 writes the file and runs it red, but does not commit it. Task 13, the last fix, commits it when the whole file passes.
-- **D9. The slug follows the title while the document has never been published (Task 12). The owner confirmed this on 2026-11-18.** Solves P9. A `beforeChange` hook on the `generateSlug` checkbox replaces Payload's. On create, and on an update in the default locale while the checkbox is `true`, it sets the slug from the English title. It sets nothing when the document has no English title (an update in another locale leaves the slug as it is), and on an update it keeps the current slug when another row already holds the computed slug (the slug is `unique`). It returns `false` (fixed) at the first publish, when an admin writes a different slug, and on any create in a collection without drafts. An admin can set the slug at any time; a non-admin can never hand-write it. The checkbox is the stored state, so no column and no version count are needed. Caveat: Payload stored `generate_slug = false` on every create that had a title, so a draft made before PR C keeps its slug until an admin changes it. A data fix would be a separate script after phase 0, with the owner's approval. The uniqueness count reads the main table, the table of the unique index. Payload skips the main table on a draft save (`collections/operations/utilities/update.js`, `if (!isSavingDraft)`), so two drafts can hold the same slug until one of them is published. The hook closes that gap at the publish: it counts the final slug against the other rows of the main table, and when one holds it, it throws a `ValidationError` on `slug` ("Another published document uses this slug. An admin can set a different slug.") before the unique index can throw. The publish signal is `data._status === 'published'`, which Payload sets before field hooks run (`update.js` line 40 to 43, and the review hook that approves). Recovery: an admin opens the document, writes a different slug in the `slug` field, and publishes again; a non-admin cannot write the slug, so the error reaches the admin who approves. Limit: the count reads the main-table slug of the other row. For a draft that was never published, that is its create-time slug, so a stale slug can block a retitle: the retitled draft keeps its own slug on that save. The next title change counts again, so this heals itself; the publish check stays the last guard.
+- **D9. The slug follows the title while the document has never been published (Task 12). The owner confirmed this on 2026-11-18.** Solves P9. A `beforeChange` hook on the `generateSlug` checkbox replaces Payload's. On create, and on an update in the default locale while the checkbox is `true`, it sets the slug from the English title. It sets nothing when the document has no English title (an update in another locale leaves the slug as it is), and on an update it keeps the current slug when another row already holds the computed slug (the slug is `unique`). It returns `false` (fixed) at the first publish, when an admin writes a different slug, and on any create in a collection without drafts. An admin can set the slug at any time; a non-admin can never hand-write it. The checkbox is the stored state, so no column and no version count are needed. Caveat: Payload stored `generate_slug = false` on every create that had a title, so a draft made before PR C keeps its slug until an admin changes it. A data fix would be a separate script after phase 0, with the owner's approval. The uniqueness count reads the main table, the table of the unique index. Payload skips the main table on a draft save (`collections/operations/utilities/update.js`, `if (!isSavingDraft)`), so two drafts can hold the same slug until one of them is published. The hook does not copy that rule: at the publish, the unique index refuses the second publish, and Payload turns the violation (code 23505) into a `ValidationError` that names the field `slug` ("Value must be unique", `@payloadcms/drizzle` `upsertRow/handleUpsertError.js`). A count in the hook would be a second copy of the index rule, so the hook has none. The publish signal is the `_status` the caller sends (an admin publish, or the review hook that approves); the hook uses it only to fix the slug. Recovery: an admin opens the document, writes a different slug in the `slug` field, and publishes again; a non-admin cannot write the slug, so the error reaches the admin who approves. Limit: the count reads the main-table slug of the other row. For a draft that was never published, that is its create-time slug, so a stale slug can block a retitle: the retitled draft keeps its own slug on that save. The next title change counts again, so this heals itself; the unique index stays the last guard.
 
 ---
 
@@ -181,7 +181,7 @@ git cherry-pick fa9d9c0a $(git rev-list --reverse fa9d9c0a..orchestrate/portal-p
 git log --oneline origin/main..HEAD
 ```
 
-Expected: six commits, newest first as `git log` prints them: `docs(portal): apply review round 2 to phase 0 plan`, two `docs(portal): phase 0 plan adds the access-rule naming PR`, `docs(portal): apply review round 1 to phase 0 plan`, `docs(portal): phase 0 security baseline plan`, and the spec commit `docs(portal): design spec, research and deferred collaboration proposal`. The picks touch only `docs/`, so a conflict can come only from a change of `origin/main` under `docs/superpowers`. Resolve it by keeping the newest plan text: `git checkout --theirs docs/superpowers/plans/2026-11-18-portal-phase-0-security-baseline.md`, then `git add` it and `git cherry-pick --continue`. (During a cherry-pick, `--theirs` is the commit being applied.) If a pick comes out empty, `git cherry-pick --skip` it.
+Expected: eight commits, newest first as `git log` prints them: `docs(portal): apply review round 4 to phase 0 plan`, `docs(portal): apply review round 3 to phase 0 plan`, `docs(portal): apply review round 2 to phase 0 plan`, two `docs(portal): phase 0 plan adds the access-rule naming PR`, `docs(portal): apply review round 1 to phase 0 plan`, `docs(portal): phase 0 security baseline plan`, and the spec commit `docs(portal): design spec, research and deferred collaboration proposal`. The picks touch only `docs/`, so a conflict can come only from a change of `origin/main` under `docs/superpowers`. Resolve it by keeping the newest plan text: `git checkout --theirs docs/superpowers/plans/2026-11-18-portal-phase-0-security-baseline.md`, then `git add` it and `git cherry-pick --continue`. (During a cherry-pick, `--theirs` is the commit being applied.) If a pick comes out empty, `git cherry-pick --skip` it.
 
 **Inventory (measured with the counter of Task 5, Step 1, at HEAD 5199dfd7).** `src/` has 245 access slots in `access: { ... }` literals: 170 collection or global rules, 75 field rules. 138 already hold a named function. 107 do not: 89 inline arrows, 17 factory calls (`isAdminOrOwn`, `adminPublishes`, `readTiers`, `publishedOrOwn`, `throughRelation`), and 1 const made by a factory (`readCourse`). A runtime walk of the sanitized config finds 141 unnamed rules: the 107 (109 rows, because `lockFields` in `src/plugins/mcp/oauth.ts` puts one arrow on 3 fields), 4 plugin defaults that `src/` can override, and the 28 rules of Open question 2. After PR A, all 107 slots are named, the 4 plugin defaults are named, and 28 remain for `UPSTREAM`.
 
@@ -2353,15 +2353,7 @@ describe('slug follows the title until the first publish', () => {
     await publish(first.id)
     expect((await stored('articles', first.id)).slug).toBe(`shared-${RUN}`)
     await expect(publish(second.id)).rejects.toMatchObject({
-      data: {
-        errors: [
-          {
-            path: 'slug',
-            message:
-              'Another published document uses this slug. An admin can set a different slug.',
-          },
-        ],
-      },
+      data: { errors: [{ path: 'slug' }] },
     })
     const chosen = fresh('after-clash')
     await retitle('articles', second.id, accounts.admin, { slug: chosen })
@@ -2372,7 +2364,24 @@ describe('slug follows the title until the first publish', () => {
 })
 ```
 
-Articles have autosave drafts, publications have drafts without autosave, so the block covers both paths. The publish tests use an article: a publication publish needs its introduction fields (Payload refused a probe with "The following field is invalid: Introduction > Kind"). The two Arabic titles carry `RUN`, so a second run does not meet the slug of the first. The uniqueness test makes the article that holds the slug with a create, not a retitle: a create writes the main table, which is the table of the unique index and the table the hook counts; a draft retitle writes only the versions table. The last test uses that same fact the other way round: two drafts are created with different titles (a create writes the main table, so the creates do not clash), then both are retitled to one title (a draft retitle writes only the versions table, so both drafts now hold the slug `shared-…` and the hook finds no other main-table row that holds it). The first publish writes the main table and passes. The second publish meets the unique index, so the hook must refuse it first with a `ValidationError` on `slug`. An admin then writes another slug on the second draft, and its publish passes.
+Articles have autosave drafts, publications have drafts without autosave, so the block covers both paths. The publish tests use an article: a publication publish needs its introduction fields (Payload refused a probe with "The following field is invalid: Introduction > Kind"). The two Arabic titles carry `RUN`, so a second run does not meet the slug of the first. The uniqueness test makes the article that holds the slug with a create, not a retitle: a create writes the main table, which is the table of the unique index and the table the hook counts; a draft retitle writes only the versions table. The last test uses that same fact the other way round: two drafts are created with different titles (a create writes the main table, so the creates do not clash), then both are retitled to one title (a draft retitle writes only the versions table, so both drafts now hold the slug `shared-…` and the hook finds no other main-table row that holds it). The first publish writes the main table and passes. The second publish meets the unique index. Payload turns that violation into a `ValidationError` whose `data.errors` has `path: 'slug'` (message "Value must be unique"), and the test asserts that error, not a message of this hook. If the run shows that the error does not resolve to path `slug`, restore the hook count: in the wrapper of Step 3, when `data._status === 'published'` and `otherRowHolds(finalSlug, args)` is true, throw a `ValidationError` on `slug` with the message "Another document uses this slug. An admin can set a different slug.", assert that message in the test, and say so in the PR body. The fallback code, in `src/fields/slug.ts`: add `ValidationError` back to the `payload` import, and wrap the returned hook so it reads `const decide = async (args: SlugHookArgs) => { …the body above… }`, then:
+
+```ts
+  return async (args) => {
+    const keepFollowing = await decide(args)
+    const { collection, data, originalDoc } = args
+    if (data?._status !== 'published') return keepFollowing
+    const finalSlug: unknown = data.slug || originalDoc?.slug
+    if (typeof finalSlug === 'string' && (await otherRowHolds(finalSlug, args)))
+      throw new ValidationError({
+        collection: collection?.slug,
+        errors: [
+          { path: 'slug', message: 'Another document uses this slug. An admin can set a different slug.' },
+        ],
+        req: args.req,
+      })
+    return keepFollowing
+  } An admin then writes another slug on the second draft, and its publish passes.
 
 - [ ] **Step 2: Run the slug tests and see them fail**
 
@@ -2382,7 +2391,7 @@ Expected: FAIL on 8 of 12 cases.
 - `a draft slug follows each title change` (2) and `after the first publish, a title change keeps the slug` (1) fail because Payload's hook stored `generateSlug = false` at create, so the slug stays the slug of the first title (`before-…`).
 - `a hand-written slug on update is dropped` (2) fails because the slug is not locked yet.
 - `an update in English with no English title` (1) and `a title that gives a slug another article holds` (1) fail on their last lines. Payload's stored `false` never lets a later English title move the slug.
-- `a publish that repeats a published slug is refused` (1) fails because the draft retitles do not move the slug (both drafts keep their create-time slug), so the second publish passes and `rejects` sees no error.
+- `a publish that repeats a published slug is refused` (1) fails because the draft retitles do not move the slug (both drafts keep their create-time slug), so the second publish passes and `rejects` sees no error. (The hook has no publish check of its own; the index is what refuses the second publish once the slugs match.)
 
 The admin-set cases (2), the Arabic retitle case (1) and the Arabic-only create case (1) pass now. The Arabic-only create case and the "keeps the slug" lines of the last two cases guard the branches of the new hook. The code of Step 3 without its guards fails them: assigning a `null` slug wipes the Arabic slug, and a retitle to a taken title moves the slug to `taken-…` in the draft (a draft save does not reach the unique index, so only a later publish would fail).
 
@@ -2392,7 +2401,7 @@ Replace the content of `src/fields/slug.ts` with:
 
 ```ts
 import type { CollectionSlug, Field, FieldHook, RowField } from 'payload'
-import { slugField as payloadSlugField, ValidationError } from 'payload'
+import { slugField as payloadSlugField } from 'payload'
 
 import { adminWritesOnly } from '@/access'
 import { slugify } from '@/lib/slugify'
@@ -2423,14 +2432,15 @@ const otherRowHolds = async (slug: string, { collection, originalDoc, req }: Slu
  * created. The slug follows the title of the default locale only: an edit
  * in another locale leaves it as it is. A document with no title in the
  * default locale gets no new slug, and an update that would take a slug that
- * another row holds keeps the current one (the slug is unique). At a publish,
- * the final slug must be free in the main table: a draft save skips that
- * table, so two drafts can hold one slug, and the unique index would refuse
- * the second publish with an error the admin cannot read. This replaces
- * Payload's own hook, which stops following the title after two versions.
+ * another row holds keeps the current one (the slug is unique). The hook has
+ * no publish check: a draft save skips the main table, so two drafts can hold
+ * one slug, and the unique index refuses the second publish with a field error
+ * on `slug` (Payload turns the violation into a ValidationError). An admin
+ * recovers by setting a different slug. This replaces Payload's own hook,
+ * which stops following the title after two versions.
  */
-const followTitleUntilPublished = (useAsSlug: string): FieldHook => {
-  const decide = async (args: SlugHookArgs) => {
+const followTitleUntilPublished = (useAsSlug: string): FieldHook =>
+  async (args) => {
     const { collection, data, operation, originalDoc, req, value } = args
     if (!data) return value
     const given: unknown = data.slug
@@ -2447,27 +2457,6 @@ const followTitleUntilPublished = (useAsSlug: string): FieldHook => {
     }
     return Boolean(collection?.versions?.drafts) && !publishing
   }
-
-  return async (args) => {
-    const keepFollowing = await decide(args)
-    const { collection, data, originalDoc } = args
-    if (data?._status !== 'published') return keepFollowing
-    const finalSlug: unknown = data.slug || originalDoc?.slug
-    if (typeof finalSlug === 'string' && (await otherRowHolds(finalSlug, args)))
-      throw new ValidationError({
-        collection: collection?.slug,
-        errors: [
-          {
-            path: 'slug',
-            message:
-              'Another published document uses this slug. An admin can set a different slug.',
-          },
-        ],
-        req: args.req,
-      })
-    return keepFollowing
-  }
-}
 
 const lock = (row: RowField, useAsSlug: string): RowField => ({
   ...row,
@@ -2517,7 +2506,7 @@ How it works, step by step:
 - The slug is `unique`, and it now follows each retitle during autosave (every 2000 ms, `src/collections/Articles.ts:60`). On an update, when the computed slug differs from the stored one, the hook counts the other rows that hold it (`overrideAccess: true`, so an owner's own access filter does not hide them, and `req`, so the count joins the transaction). When one exists, the hook sets `data.slug` back to the stored slug. That also covers an admin form that sends the title's slug while another row holds it. The count runs only when the slug would change.
 - A create has no stored slug to keep and no id to exclude. It does not count, so a title that another row already holds is refused by the unique index as it is today (prediction, not run).
 - The count reads the main table, the table of the unique index. Payload skips the main table on a draft save, so two drafts can hold the same slug until one is published (Decision D9). The first article of the uniqueness test is made with a create for that reason. Because the count reads the main table, the main-table slug of a never-published draft is its create-time slug. A stale create-time slug can therefore block a retitle of another draft: that draft keeps its own slug on that save, and the next title change counts again.
-- At a publish (`data._status === 'published'`, the signal Payload itself sets in `update.js` before field hooks run, and that the review hook sets on approval), the wrapper runs after the follow logic and counts the final slug (`data.slug`, or the stored slug when `data` has none) against the other rows of the main table. It also runs for a publish from another locale, and for a create that is born published. When one row holds the slug, it throws a `ValidationError` on `slug`, so the admin reads "Another published document uses this slug. An admin can set a different slug." and not a unique-index error. Recovery: the admin writes another slug in the `slug` field and publishes again (the last slug test). A non-admin cannot write the slug, so the error reaches the admin who approves.
+- The hook has no publish check. The `_status` the caller sends (an admin publish, or the review hook on approval) only fixes the slug: `publishing` makes the hook return `false`. When two drafts hold one slug, the second publish meets the unique index, and Payload turns the violation (code 23505) into a `ValidationError` that names the field `slug` ("Value must be unique"; `@payloadcms/drizzle` `upsertRow/handleUpsertError.js`). A count in the hook would copy the index rule, so the plan leaves it to the index. Recovery: the admin writes another slug in the `slug` field and publishes again (the last slug test). A non-admin cannot write the slug, so the error reaches the admin who approves. If the run shows that the error does not resolve to path `slug`, restore the hook count as Step 1 says.
 - `useAsSlug` comes from the caller: people and places pass `useAsSlug: 'name'`.
 - The `generate_slug` column exists already. No migration.
 
@@ -2528,15 +2517,12 @@ How it works, step by step:
 Run: `pnpm test:int src/portal-access.int.test.ts`
 Expected: the slug block passes, the 5 slug create cases and the `people` case pass. Only the 2 `space-preferences` cases fail.
 
-- [ ] **Step 5: Run the other tests that make slugs, then the whole suite**
+- [ ] **Step 5: Run the other tests that make slugs**
 
 Run: `pnpm test:int src/teaching.int.test.ts src/mcp-drafts.int.test.ts src/people.int.test.ts src/lib/profile.int.test.ts`
 Expected: all pass. These create documents as admins or with `overrideAccess`, or never write `slug`. A test that asserts an admin draft keeps its first slug after a title change would now fail: such a test pins the old behavior. Report it to the owner before you change it.
 
-Then run the whole suite. The hook runs on every save of 8 collections, so a file this task did not name can fail:
-
-Run: `pnpm test:int`
-Expected: every file passes, except the 2 `space-preferences` cases of `src/portal-access.int.test.ts`, which Task 13 closes. A failure in any other file is a regression of this task: find the cause before you commit. (This run is the proof that the commit of Step 10 does not break a collection the slug tests do not name.)
+The whole suite runs in Step 10, after the snapshot is regenerated.
 
 - [ ] **Step 6: Typecheck and lint**
 
@@ -2578,7 +2564,14 @@ Expected: `16` (`slug` and `generateSlug` in 8 collections: people, courses, pro
 Run: `CI=1 pnpm test:int scripts/access-audit.int.test.ts`
 Expected: PASS, `Tests  7 passed (7)`.
 
-- [ ] **Step 10: Commit**
+- [ ] **Step 10: Run the whole suite**
+
+The hook runs on every save of 8 collections, so a file this task did not name can fail. Step 3 changed 16 snapshot rows and Step 8 regenerated them, so the audit snapshot test passes now.
+
+Run: `pnpm test:int`
+Expected: every file passes, except the 2 `space-preferences` cases of `src/portal-access.int.test.ts`, which Task 13 closes. The run covers the Step 3 code plus the untracked red file, which vitest runs because it is on disk. The commit does not contain that file, so the committed tree has no red test. A failure in any other file is a regression of this task: find the cause before you commit.
+
+- [ ] **Step 11: Commit**
 
 ```bash
 git add src/fields/slug.ts scripts/access-audit.snapshot.json
@@ -2591,9 +2584,9 @@ title on every save while the document has never been published, and fixes
 the slug at the first publish or when an admin sets it. The generateSlug
 column holds that state, so no migration. The hook sets nothing when the
 document has no title in the default locale, and keeps the current slug when
-another row holds the computed one. At a publish it counts the final slug in
-the main table and throws a ValidationError on slug when another row holds
-it, so the admin can set a different slug.
+another row holds the computed one. At a publish, a slug that another row
+holds is refused by the unique index with a field error on slug, and an
+admin sets a different slug.
 
 The wrapper serves 8 collections. Only people has a non-admin writer (the
 own person row), which had the same hole. The audit snapshot shows 16 rows
@@ -2724,7 +2717,7 @@ Expected: every commit of PR C passes the snapshot test, and the rebase ends wit
 **Skills:** code-review, then security-review.
 
 - [ ] **Step 1: Code review.** Run the `code-review` skill on `git diff portal/phase-0-audit...HEAD`. Fix each real finding. Re-run Task 13, Step 5 and Task 14, Step 2 after a fix.
-- [ ] **Step 2: Security review.** Run the `security-review` skill on the same diff. The questions for this PR: can a non-admin still set `slug` through `generateSlug`, through a duplicate, or through the admin form? Can a non-admin move a published document's slug by unpublishing or by an edit that the review hook holds as a draft? Can a non-admin set `legacy_url` on any of the 13 collections? Does any non-admin code path write these fields with `overrideAccess: false`? (`rg "overrideAccess: false" src` and read each hit that writes a collection with these fields.) A non-admin duplicate keeps the title, so its slug collides with the source's unique slug; record what the admin form shows in that case. Also check the publish path of Decision D9: make two drafts with different titles, retitle both to one title (two autosaves), publish the first, then publish the second as an admin. Expected: the second publish shows "Another published document uses this slug. An admin can set a different slug." on the `slug` field, and no unique-index error. The recovery: the admin unlocks the slug field, writes another slug, and publishes again; the publish passes. Delete both probe documents after.
+- [ ] **Step 2: Security review.** Run the `security-review` skill on the same diff. The questions for this PR: can a non-admin still set `slug` through `generateSlug`, through a duplicate, or through the admin form? Can a non-admin move a published document's slug by unpublishing or by an edit that the review hook holds as a draft? Can a non-admin set `legacy_url` on any of the 13 collections? Does any non-admin code path write these fields with `overrideAccess: false`? (`rg "overrideAccess: false" src` and read each hit that writes a collection with these fields.) A non-admin duplicate keeps the title, so its slug collides with the source's unique slug; record what the admin form shows in that case. Also check the publish path of Decision D9: make two drafts with different titles, retitle both to one title (two autosaves), publish the first, then publish the second as an admin. Expected: the unique index refuses the second publish with a field error on `slug` ("Value must be unique"). The recovery: the admin unlocks the slug field, writes another slug, and publishes again; the publish passes. Delete both probe documents after.
 - [ ] **Step 3: Full checks.** Run: `pnpm lint && pnpm typecheck && pnpm test:int`. Expected: no lint errors, typecheck exit code 0, every test file passes. PR C changes field access and a hook that every collection with a slug runs, so it runs the whole suite, as Task 5, Step 3 and Task 18, Step 4 do.
 - [ ] **Commit the review fixes.** Commit each fix on its own, with the trailer:
 
@@ -2737,7 +2730,7 @@ Co-Authored-By: Claude Sonnet 5.5 <noreply@anthropic.com>"
 
 If the reviews find nothing, write "Code review and security review: no findings" in the PR body. Make no empty commit.
 
-- [ ] **Step 4: Open the PR.** `git push -u origin portal/phase-0-field-access`, then `gh pr create --base portal/phase-0-audit --title "Portal phase 0: close legacy_url, slug and digest_sent_at" --body-file <file>`. The body lists the 30 snapshot rows, the People broadening (Deviation 3), and the slug behavior (Decision D9), including the caveat that existing drafts keep their slug and the gap of the uniqueness check. End the body with `🤖 Generated with [Claude Code](https://claude.com/claude-code)`.
+- [ ] **Step 4: Open the PR.** `git push -u origin portal/phase-0-field-access`, then `gh pr create --base portal/phase-0-audit --title "Portal phase 0: close legacy_url, slug and digest_sent_at" --body-file <file>`. The body lists the 30 snapshot rows, the People broadening (Deviation 3), and the slug behavior (Decision D9), including the caveat that existing drafts keep their slug and the publish rule: the unique index refuses a repeat slug at the publish, with a field error on `slug`, and an admin sets a different slug. End the body with `🤖 Generated with [Claude Code](https://claude.com/claude-code)`.
 
 ---
 
