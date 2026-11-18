@@ -1,5 +1,5 @@
 import { getFormatter, getTranslations } from 'next-intl/server'
-import { sessionName } from '@/lib/calendar-sources'
+import { sessionName } from '@/lib/session-items'
 import { numberingSystemOf } from '@/lib/digits'
 import { numberedSessions } from '@/lib/meetings'
 import type { SessionCourse } from '@/lib/spaces-data'

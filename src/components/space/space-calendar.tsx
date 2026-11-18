@@ -5,7 +5,7 @@ import { Alert } from '@/components/arc/alert/alert'
 import { openingDay } from '@/lib/calendar-items'
 import { cairoDay } from '@/lib/cairo-day'
 
-import { SpaceCalendarTab } from './space-calendar-tab'
+import { ConnectedSpaceCalendarTab } from './connected-space-calendar-tab'
 
 /**
  * The Calendar tab of a course space: read on the server for everyone, with
@@ -28,7 +28,7 @@ export async function SpaceCalendar({
     return <Alert tone="danger" title={t('calendarFailed')} />
   }
   return (
-    <SpaceCalendarTab
+    <ConnectedSpaceCalendarTab
       spaceId={String(id)}
       courseId={String(courseId)}
       items={result.items}
