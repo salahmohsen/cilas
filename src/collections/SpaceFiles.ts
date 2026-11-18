@@ -1,7 +1,7 @@
 import { relId } from '@/lib/relation'
 import { randomBytes } from 'node:crypto'
 
-import { APIError, type CollectionConfig } from 'payload'
+import { APIError, type Access, type CollectionConfig } from 'payload'
 
 import { isAdmin, nobody } from '@/access'
 import { contentWhere } from '@/lib/spaces'
@@ -12,6 +12,10 @@ import {
   SPACE_FILE_LIMIT,
   SPACE_FILE_MIME,
 } from '@/lib/space-file-limits'
+
+/** Files on the posts, and on the comments of the posts, the reader may see. */
+const filesOnReadablePosts: Access = ({ req }) =>
+  contentWhere(req.payload, req.user, ['post', 'comment.post'], req.context)
 
 /**
  * ADR 0008: files in spaces are private, not media. Random names, no public
@@ -31,7 +35,7 @@ export const SpaceFiles: CollectionConfig = {
   labels: { singular: 'Space file', plural: 'Space files' },
   access: {
     // Equal to the read access of the post it sits on (spec §6).
-    read: ({ req }) => contentWhere(req.payload, req.user, ['post', 'comment.post'], req.context),
+    read: filesOnReadablePosts,
     // Writes run only in the server actions (counts and limits live in one
     // place); a file otherwise goes away with its post or comment. REST
     // deletes would let any member of a space hard-delete anyone's files.

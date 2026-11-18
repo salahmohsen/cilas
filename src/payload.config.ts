@@ -7,7 +7,7 @@ import { BUCKET_PREFIXES } from '@/lib/storage-usage'
 import { emailEditorFeatures } from '@/lexical/email-features'
 import { formEmailRichText } from '@/forms/email-rich-text'
 import path from 'path'
-import { buildConfig } from 'payload'
+import { buildConfig, type Access } from 'payload'
 import { fileURLToPath } from 'url'
 import sharp from 'sharp'
 
@@ -73,7 +73,7 @@ import type {
 import { s3Storage } from '@payloadcms/storage-s3'
 import { payloadTheme } from 'payload-theme'
 
-import { adminOnlyField, anyone, isAdmin } from './access'
+import { adminOnlyField, anyone, isAdmin, nobody } from './access'
 import { env } from './env'
 import { defaultEditorFeatures } from './lexical/default-features'
 import { pathOf } from './lib/paths'
@@ -127,6 +127,10 @@ const generateImage: GenerateImage = ({ collectionConfig, doc }) =>
   seoFor(collectionConfig?.slug, doc).image ?? ''
 const generateURL: GenerateURL = ({ collectionConfig, doc, locale }) =>
   `${env.NEXT_PUBLIC_SERVER_URL}${pathOf(collectionConfig?.slug ?? '', doc ?? {}, locale ?? 'en') ?? ''}`
+
+/** Admins: every form. Others: the forms that are not templates. */
+const adminOrNonTemplateForms: Access = (args) =>
+  isAdmin(args) || { template: { not_equals: true } }
 
 export default buildConfig({
   // System email only. Newsletter subscribers live in Resend Audiences (ADR 0005).
@@ -345,7 +349,7 @@ export default buildConfig({
           ),
         ],
         access: {
-          read: (args) => isAdmin(args) || { template: { not_equals: true } },
+          read: adminOrNonTemplateForms,
           create: isAdmin,
           update: isAdmin,
           delete: isAdmin,
@@ -354,7 +358,8 @@ export default buildConfig({
       },
       formSubmissionOverrides: {
         labels: { singular: 'Form submission', plural: 'Form submissions' },
-        access: { read: isAdmin, update: isAdmin, delete: isAdmin },
+        // A visitor submits a form: the plugin's own create rule, named.
+        access: { create: anyone, read: isAdmin, update: isAdmin, delete: isAdmin },
         admin: { defaultColumns: ['form', 'courses', 'target', 'status', 'createdAt'] },
         fields: ({ defaultFields }) => [...defaultFields, ...applicationFields],
         endpoints: [
@@ -380,11 +385,23 @@ export default buildConfig({
       ],
       overrideExportCollection: ({ collection }) => ({
         ...collection,
-        access: { ...collection.access, read: isAdmin, create: isAdmin, delete: isAdmin },
+        access: {
+          ...collection.access,
+          read: isAdmin,
+          create: isAdmin,
+          update: nobody,
+          delete: isAdmin,
+        },
       }),
       overrideImportCollection: ({ collection }) => ({
         ...collection,
-        access: { ...collection.access, read: isAdmin, create: isAdmin, delete: isAdmin },
+        access: {
+          ...collection.access,
+          read: isAdmin,
+          create: isAdmin,
+          update: nobody,
+          delete: isAdmin,
+        },
       }),
     }),
     seoPlugin({

@@ -1,7 +1,24 @@
-import type { CollectionConfig, Where } from 'payload'
+import type { Access, CollectionConfig } from 'payload'
 
-import { isAdminUser, nobody, isAdmin } from '@/access'
+import { adminOrOwnAccountRows, isAdminUser, nobody, isAdmin } from '@/access'
 import { contentWhere } from '@/lib/spaces'
+
+/**
+ * Votes on the posts the reader may see. On an anonymous vote, only the
+ * voter's own rows.
+ */
+const votesOnReadablePostsHidingAnonymous: Access = async ({ req }) => {
+  const where = await contentWhere(req.payload, req.user, ['post'])
+  if (where === true && isAdminUser(req.user)) return true
+  if (!where) return false
+  const own = { account: { equals: (req.user as { id?: number })?.id ?? null } }
+  return {
+    and: [
+      ...(where === true ? [] : [where]),
+      { or: [{ 'post.vote_anonymous': { not_equals: true } }, own] },
+    ],
+  }
+}
 
 /**
  * One row per account, vote post and chosen option, unique on all three.
@@ -16,25 +33,10 @@ export const SpaceVotes: CollectionConfig = {
     // An anonymous vote's rows stay hidden from everyone but their owner, so no
     // read through the API names who chose what. The poll's tally reads them
     // with the server's access (voteViews).
-    read: async ({ req }) => {
-      const where = await contentWhere(req.payload, req.user, ['post'])
-      if (where === true && isAdminUser(req.user)) return true
-      if (!where) return false
-      const own = { account: { equals: (req.user as { id?: number })?.id ?? null } }
-      return {
-        and: [
-          ...(where === true ? [] : [where]),
-          { or: [{ 'post.vote_anonymous': { not_equals: true } }, own] },
-        ],
-      }
-    },
+    read: votesOnReadablePostsHidingAnonymous,
     create: isAdmin,
     update: nobody,
-    delete: ({ req }) => {
-      if (isAdminUser(req.user)) return true
-      const own: Where = { account: { equals: (req.user as { id?: number })?.id ?? null } }
-      return own
-    },
+    delete: adminOrOwnAccountRows,
   },
   admin: { hidden: true },
   fields: [

@@ -1,8 +1,12 @@
-import type { CollectionConfig } from 'payload'
+import type { Access, CollectionConfig } from 'payload'
 
 import { nobody, isAdmin } from '@/access'
 import { contentWhere } from '@/lib/spaces'
 import { searchChanged, searchDeleted, searchDeletingComment } from '@/lib/private-search/outbox'
+
+/** Comments on the posts the reader may see. */
+const commentsOnReadablePosts: Access = ({ req }) =>
+  contentWhere(req.payload, req.user, ['post'], req.context)
 
 /**
  * Comments on a post (spec §4). Plain text with `/people/{id}` mention
@@ -15,7 +19,7 @@ export const SpaceComments: CollectionConfig = {
   slug: 'space-comments',
   labels: { singular: 'Comment', plural: 'Comments' },
   access: {
-    read: ({ req }) => contentWhere(req.payload, req.user, ['post'], req.context),
+    read: commentsOnReadablePosts,
     // Actions-only writes, as with posts (REST refusal).
     create: isAdmin,
     update: isAdmin,

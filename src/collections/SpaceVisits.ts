@@ -1,6 +1,6 @@
 import type { CollectionConfig } from 'payload'
 
-import { nobody } from '@/access'
+import { nobody, ownAccountRows, signedInOwnAccountRows } from '@/access'
 
 /**
  * Per account and space (spec §2 first steps, spec's "new posts since the
@@ -13,12 +13,11 @@ export const SpaceVisits: CollectionConfig = {
   // Anyone signed-in may read and write only their own rows; the collection
   // never leaves members' hands, so a flat id-own rule is enough.
   access: {
-    read: ({ req }) => ({ account: { equals: (req.user as { id?: number })?.id ?? null } }),
+    read: ownAccountRows,
     // A Where is ignored on create, so REST could write rows for any account;
     // spaces-write creates them with overrideAccess.
     create: nobody,
-    update: ({ req }) =>
-      req.user ? { account: { equals: (req.user as { id: number }).id } } : false,
+    update: signedInOwnAccountRows,
     delete: nobody, // rows hold a timestamp and checklist marks, no content: the 30-day purge leaves them
   },
   admin: { hidden: true },

@@ -1,6 +1,6 @@
 import type { CollectionConfig } from 'payload'
 
-import { nobody } from '@/access'
+import { nobody, ownAccountRows, signedInOwnAccountRows } from '@/access'
 
 /**
  * One row per account (spec §8): the digest choice, weekly by default (an
@@ -12,12 +12,11 @@ export const SpacePreferences: CollectionConfig = {
   slug: 'space-preferences',
   labels: { singular: 'Preference', plural: 'Preferences' },
   access: {
-    read: ({ req }) => ({ account: { equals: (req.user as { id?: number })?.id ?? null } }),
+    read: ownAccountRows,
     // A Where is ignored on create, so REST could write rows for any account;
     // spaces-write creates them with overrideAccess.
     create: nobody,
-    update: ({ req }) =>
-      req.user ? { account: { equals: (req.user as { id: number }).id } } : false,
+    update: signedInOwnAccountRows,
     delete: nobody,
   },
   admin: { hidden: true },

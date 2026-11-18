@@ -1,9 +1,13 @@
-import type { CollectionConfig } from 'payload'
+import type { Access, CollectionConfig } from 'payload'
 
 import { nobody, isAdmin } from '@/access'
 import { POST_KINDS } from '@/lib/space-rules'
 import { contentWhere } from '@/lib/spaces'
 import { searchChanged, searchDeleted } from '@/lib/private-search/outbox'
+
+/** The posts of the spaces the reader may see (contentWhere, src/lib/spaces.ts). */
+const readablePosts: Access = async ({ req }) =>
+  contentWhere(req.payload, req.user, ['id'], req.context)
 
 /**
  * Discussion, announcement, event and vote posts (spec §3). `question` sits
@@ -19,7 +23,7 @@ export const SpacePosts: CollectionConfig = {
   slug: 'space-posts',
   labels: { singular: 'Post', plural: 'Posts' },
   access: {
-    read: async ({ req }) => contentWhere(req.payload, req.user, ['id'], req.context),
+    read: readablePosts,
     create: isAdmin,
     update: isAdmin,
     // Deletes (authors included) go through the actions' postRemove, which

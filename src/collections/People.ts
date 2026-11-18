@@ -1,10 +1,17 @@
 import { adminOnlyField, isAdmin, isAdminUser, personOf, readPeople } from '@/access'
-import type { CollectionConfig } from 'payload'
+import type { Access, CollectionConfig } from 'payload'
 
 import { slugField } from '@/fields/slug'
 import { socialFields } from '@/fields/social'
 import { importFields } from '@/fields/import'
 import { revalidateAfterChange, revalidateAfterDelete } from '@/lib/revalidate'
+
+/** Admins: every person. A signed-in account: the person it is linked to. */
+const adminOrOwnPerson: Access = ({ req }) => {
+  if (isAdminUser(req.user)) return true
+  const person = personOf(req.user)
+  return person === null ? false : { id: { equals: person } }
+}
 
 /**
  * Everyone who appears on the site: fellows, CILASians, authors, advisors,
@@ -25,11 +32,7 @@ export const People: CollectionConfig = {
     read: readPeople,
     create: isAdmin,
     // A signed-in person may keep their own profile current.
-    update: ({ req }) => {
-      if (isAdminUser(req.user)) return true
-      const person = personOf(req.user)
-      return person === null ? false : { id: { equals: person } }
-    },
+    update: adminOrOwnPerson,
     delete: isAdmin,
   },
   hooks: {

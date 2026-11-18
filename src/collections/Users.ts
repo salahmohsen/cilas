@@ -8,6 +8,7 @@ import {
   nobody,
 } from '@/access'
 import type {
+  Access,
   CollectionBeforeChangeHook,
   CollectionBeforeDeleteHook,
   CollectionConfig,
@@ -29,6 +30,10 @@ import {
 import { deleteOwnersAiKeys } from '@/plugins/mcp/api-keys'
 
 import type { User } from '@/payload-types'
+
+/** Admins: every account. A signed-in account: itself. */
+const adminOrSelf: Access = ({ req }) =>
+  isAdminUser(req.user) ? true : req.user ? { id: { equals: req.user.id } } : false
 
 /**
  * Keeps `fellow` true to the linked person when the link itself changes. The
@@ -153,8 +158,7 @@ export const Users: CollectionConfig = {
   // would let a student read everyone's email, make a super admin or delete
   // accounts. Admins manage accounts; everyone else reads only their own.
   access: {
-    read: ({ req }) =>
-      isAdminUser(req.user) ? true : req.user ? { id: { equals: req.user.id } } : false,
+    read: adminOrSelf,
     create: isAdmin,
     update: isAdmin,
     delete: isAdmin,

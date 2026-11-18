@@ -9,7 +9,9 @@ import { publishChange, publishDelete } from '@/lib/realtime/publish'
 const KIND_VALUES: string[] = [...NOTIFICATION_KIND_NAMES]
 KIND_VALUES.splice(KIND_VALUES.indexOf('event_changed'), 0, 'question')
 
-const own: Access = ({ req }) => (req.user ? { recipient: { equals: req.user.id } } : false)
+/** The notifications addressed to the signed-in account. An anonymous caller is refused. */
+const ownNotifications: Access = ({ req }) =>
+  req.user ? { recipient: { equals: req.user.id } } : false
 
 const readAll: PayloadHandler = async (req) => {
   if (!req.user) return Response.json({ error: 'Sign in first.' }, { status: 401 })
@@ -33,7 +35,12 @@ const readAll: PayloadHandler = async (req) => {
 export const Notifications: CollectionConfig = {
   slug: 'notifications',
   admin: { hidden: true, useAsTitle: 'title' },
-  access: { read: own, update: own, delete: own, create: nobody },
+  access: {
+    read: ownNotifications,
+    update: ownNotifications,
+    delete: ownNotifications,
+    create: nobody,
+  },
   defaultSort: '-createdAt',
   endpoints: [{ path: '/read-all', method: 'post', handler: readAll }],
   hooks: { afterChange: [publishChange], afterDelete: [publishDelete] },
