@@ -1,18 +1,27 @@
-import { createLocalReq, getPayload, type Payload, type PayloadRequest } from 'payload'
+import { http, HttpResponse, passthrough } from 'msw'
+import { createLocalReq, getPayload, type Payload } from 'payload'
 import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest'
-
-vi.mock('@/lib/turnstile', async (original) => ({
-  ...(await original<typeof import('@/lib/turnstile')>()),
-  checkTurnstile: vi.fn(async () => true),
-}))
 
 import { submitWithFiles } from '@/forms/submit-with-files'
 import { openCoursesInCycle } from '@/forms/open-courses'
 import { relId } from '@/lib/relation'
-import { TURNSTILE_VERIFIED } from '@/lib/turnstile'
+import { TURNSTILE_HEADER, TURNSTILE_VERIFIED } from '@/lib/turnstile'
 import config from '@/payload.config'
 import type { Course, Cycle, Form, FormSubmission, User } from '@/payload-types'
+import { mockNetwork } from '../../testing/msw-node.test-utils'
 import { createTracker, uniq, uniqEmail } from '../../testing/payload.fixture'
+
+mockNetwork(
+  http.all('http://localhost:8108/*', () => passthrough()),
+  http.post('https://challenges.cloudflare.com/turnstile/v0/siteverify', () =>
+    HttpResponse.json({ success: true }),
+  ),
+  http.post('https://api.resend.com/emails', () => HttpResponse.json({ id: 'e_probe' })),
+  http.post(
+    'https://telemetry.payloadcms.com/events',
+    () => new HttpResponse(null, { status: 204 }),
+  ),
+)
 
 const { track, cleanup } = createTracker()
 let payload: Payload
@@ -28,19 +37,21 @@ const identity = (address = email) => [
   { field: 'name', value: 'Cycle Applicant' },
   { field: 'email', value: address },
 ]
-const choices = (): NonNullable<FormSubmission['choices']> => [
-  {
-    course: writing.id,
-    amount: 100,
-    decision: 'accepted',
-    answers: [{ name: 'reason', label: 'Untrusted', value: 'To write' }],
-  },
-  { course: film.id, amount: 100, answers: [] },
-]
-const request = async (user?: User): Promise<PayloadRequest> => {
+const choices = () =>
+  [
+    {
+      course: writing.id,
+      amount: 100,
+      decision: 'accepted',
+      answers: [{ name: 'reason', label: 'Untrusted', value: 'To write' }],
+    },
+    { course: film.id, amount: 100, answers: [] },
+  ] satisfies NonNullable<FormSubmission['choices']>
+const request = async (user?: User) => {
   const req = await createLocalReq({ user }, payload)
   req.payloadAPI = 'REST'
   req.context[TURNSTILE_VERIFIED] = true
+  req.headers.set(TURNSTILE_HEADER, 'probe-token')
   return req
 }
 const submit = async (data: Partial<FormSubmission> = {}) =>
@@ -89,7 +100,7 @@ const trackApplicant = async (submission: FormSubmission) => {
 describe('cycle applications and approval', () => {
   beforeAll(async () => {
     payload = await getPayload({ config })
-    vi.spyOn(payload, 'sendEmail').mockResolvedValue(undefined)
+    vi.spyOn(payload, 'sendEmail')
     admin = track(
       'users',
       await payload.create({
@@ -243,7 +254,6 @@ describe('cycle applications and approval', () => {
     const mail = vi.mocked(payload.sendEmail).mock.calls.at(-1)![0]
     expect(mail.text).toContain(writing.title)
     expect(mail.text).not.toContain(film.title)
-    // Film still waits, and the same course is not decided twice.
     expect((await accept(submission.id, writing.id))?.status).toBe(400)
     expect(
       (
@@ -274,7 +284,6 @@ describe('cycle applications and approval', () => {
       ]),
     )
     const bothMail = vi.mocked(payload.sendEmail).mock.calls.at(-1)![0]
-    // One email per course, each naming its course.
     expect(bothMail.text).toContain(film.title)
   })
 
