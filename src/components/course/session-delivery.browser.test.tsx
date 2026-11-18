@@ -1,17 +1,13 @@
 import { render } from '@testing-library/react'
 import { NextIntlClientProvider } from 'next-intl'
-import { beforeEach, afterEach, describe, expect, it, vi } from 'vitest'
+import { describe, expect, it } from 'vitest'
 import { CourseSyllabus, syllabusOf } from '@/components/course/course-syllabus'
 import type { Course, Session } from '@/payload-types'
 import en from '../../../messages/en.json'
 import ar from '../../../messages/ar.json'
 
 const course = { title: 'Course' } as Course
-const session = (
-  id: number,
-  title: string,
-  delivery?: 'ONLINE' | 'OFFLINE' | 'HYBRID' | null,
-): Session =>
+const session = (id: number, title: string, delivery?: 'ONLINE' | 'OFFLINE' | 'HYBRID' | null) =>
   ({
     id,
     course: 1,
@@ -31,18 +27,8 @@ const view = (sessions: Session[], locale = 'en', editable = false) =>
       <CourseSyllabus course={course} sessions={syllabusOf(sessions)} editable={editable} />
     </NextIntlClientProvider>,
   )
+const withoutIds = (html: string) => html.replace(/«[^»]+»/g, 'ID').replace(/_r_[^" ]+/g, 'ID')
 describe('optional session delivery', () => {
-  beforeEach(() => {
-    vi.stubGlobal(
-      'ResizeObserver',
-      class {
-        observe() {}
-        disconnect() {}
-      },
-    )
-    Element.prototype.scrollIntoView = vi.fn()
-  })
-  afterEach(() => vi.unstubAllGlobals())
   it.each([
     ['en', 'Online', 'In person'],
     ['ar', 'عبر الإنترنت', 'حضوري'],
@@ -59,10 +45,7 @@ describe('optional session delivery', () => {
     const absent = first.container.innerHTML
     first.unmount()
     const empty = view([session(1, 'First', null)])
-    // React-generated accordion ids differ between mounts.
-    expect(empty.container.innerHTML.replace(/«[^»]+»/g, 'ID').replace(/_r_[^" ]+/g, 'ID')).toBe(
-      absent.replace(/«[^»]+»/g, 'ID').replace(/_r_[^" ]+/g, 'ID'),
-    )
+    expect(withoutIds(empty.container.innerHTML)).toBe(withoutIds(absent))
     expect(empty.queryByText('Online')).not.toBeInTheDocument()
   })
   it('shows the delivery saved in the session, with no editor mark: sessions are edited in their own documents', () => {
