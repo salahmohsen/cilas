@@ -130,7 +130,7 @@ export function SessionForm({
   /** While the form holds changes, the way to ask before the host closes it; null when it holds none. */
   onUnsaved: (ask: ((go: () => void) => void) | null) => void
 }) {
-  const { loadSessionEdit, saveScheduleEdits } = useScheduleActions()
+  const { loadSessionEdit } = useScheduleActions()
   const language = useLocale()
   const locale = contentLocale ?? language
   const t = useTranslations('SessionEdit')

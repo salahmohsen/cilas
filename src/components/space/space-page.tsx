@@ -720,8 +720,8 @@ export async function SpacePage({
   )
   return (
     <RichTextScope data={course} locale={locale} user={user}>
-      {content}
       <ConnectedScheduleActions>
+        {content}
         <SessionDrawerHost />
       </ConnectedScheduleActions>
     </RichTextScope>
