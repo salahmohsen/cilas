@@ -36,15 +36,23 @@ const selectBlock = {
   ],
 }
 
+const answerSubmissions = (response: () => Response) =>
+  new Promise<unknown>((received) =>
+    network.use(
+      http.post('/api/form-submissions', async ({ request }) => {
+        received(await request.json())
+        return response()
+      }),
+    ),
+  )
+
 describe('the payload form', () => {
   let posts: unknown[] = []
   const accept = () =>
-    network.use(
-      http.post('/api/form-submissions', async ({ request }) => {
-        posts.push(await request.json())
-        return HttpResponse.json({}, { status: 201 })
-      }),
-    )
+    answerSubmissions(() => HttpResponse.json({}, { status: 201 })).then((body) => {
+      posts.push(body)
+      return body
+    })
 
   beforeEach(() => {
     localStorage.clear()
@@ -75,7 +83,7 @@ describe('the payload form', () => {
   })
 
   it('saves the chosen option as its value', async () => {
-    accept()
+    const posted = accept()
     renderWithIntl(<PayloadForm confirmation={null} form={formOf([selectBlock as never])} />)
     const trigger = await screen.findByRole('combobox', { name: /Track/ })
     fireEvent.keyDown(trigger, { key: 'Enter' })
@@ -90,7 +98,7 @@ describe('the payload form', () => {
     })
     fireEvent.click(screen.getByRole('button', { name: 'Send' }))
 
-    await waitFor(() => expect(posts).toHaveLength(1))
+    await posted
     const body = posts[0] as { submissionData: { field: string; value: string }[] }
     expect(body.submissionData.find((a) => a.field === 'track')).toEqual({
       field: 'track',
@@ -111,7 +119,7 @@ describe('the payload form', () => {
   })
 
   it('serializes the existing course page as a cycle choice', async () => {
-    accept()
+    const posted = accept()
     renderWithIntl(
       <PayloadForm
         confirmation={null}
@@ -138,7 +146,7 @@ describe('the payload form', () => {
       target: { value: 'To learn' },
     })
     fireEvent.click(screen.getByRole('button', { name: 'Send' }))
-    await waitFor(() => expect(posts).toHaveLength(1))
+    await posted
     const body = posts[0] as { choices: unknown; submissionData: unknown[] }
     expect(body).toMatchObject({
       target: { relationTo: 'cycles', value: 10 },
@@ -152,7 +160,7 @@ describe('the payload form', () => {
   })
 
   it('drops required course answers on untick and starts again empty', async () => {
-    accept()
+    const posted = accept()
     renderWithIntl(
       <PayloadForm
         confirmation={null}
@@ -198,14 +206,14 @@ describe('the payload form', () => {
       expect(screen.getByRole('textbox', { name: /Name/ })).toHaveValue('Mona Adel'),
     )
     fireEvent.click(screen.getByRole('button', { name: 'Send' }))
-    await waitFor(() => expect(posts).toHaveLength(1))
+    await posted
     expect((posts[0] as { choices: unknown }).choices).toEqual([
       { course: 11, need_reduction: false, answers: [] },
     ])
   })
 
   it('starts at the admin default and snaps uneven contribution amounts with keys', async () => {
-    accept()
+    const posted = accept()
     renderWithIntl(
       <PayloadForm
         confirmation={null}
@@ -235,7 +243,7 @@ describe('the payload form', () => {
       expect(screen.getByRole('textbox', { name: /Name/ })).toHaveValue('Mona Adel'),
     )
     fireEvent.click(screen.getByRole('button', { name: 'Send' }))
-    await waitFor(() => expect(posts).toHaveLength(1))
+    await posted
     expect((posts[0] as { choices: { amount: number }[] }).choices[0]!.amount).toBe(900)
   })
 
@@ -299,12 +307,10 @@ describe('the payload form', () => {
   })
 
   it('shows an actionable server error and keeps the answers for correction', async () => {
-    network.use(
-      http.post('/api/form-submissions', () =>
-        HttpResponse.json(
-          { errors: [{ message: 'Writing is no longer open for applications.' }] },
-          { status: 400 },
-        ),
+    const refused = answerSubmissions(() =>
+      HttpResponse.json(
+        { errors: [{ message: 'Writing is no longer open for applications.' }] },
+        { status: 400 },
       ),
     )
     renderWithIntl(
@@ -320,6 +326,7 @@ describe('the payload form', () => {
       target: { value: 'Keep this answer' },
     })
     fireEvent.click(screen.getByRole('button', { name: 'Send' }))
+    await refused
     expect(
       await screen.findByText('Writing is no longer open for applications.'),
     ).toBeInTheDocument()
@@ -328,10 +335,8 @@ describe('the payload form', () => {
   })
 
   it('says the server failed when it refuses without a reason', async () => {
-    network.use(
-      nobody(),
-      http.post('/api/form-submissions', () => new HttpResponse('Bad gateway', { status: 502 })),
-    )
+    network.use(nobody())
+    const refused = answerSubmissions(() => new HttpResponse('Bad gateway', { status: 502 }))
     renderWithIntl(<PayloadForm confirmation={null} form={formOf([])} />)
     fireEvent.change(screen.getByRole('textbox', { name: /Name/ }), {
       target: { value: 'Mona Adel' },
@@ -340,6 +345,7 @@ describe('the payload form', () => {
       target: { value: 'mona@example.com' },
     })
     fireEvent.click(screen.getByRole('button', { name: 'Send' }))
+    await refused
     expect(await screen.findByText(/Our server couldn’t save your answers/)).toBeInTheDocument()
   })
 

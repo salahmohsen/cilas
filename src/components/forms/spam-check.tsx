@@ -7,15 +7,13 @@ import { useRef } from 'react'
 import { clientEnv as env } from '@/env.client'
 import { TURNSTILE_HEADER } from '@/lib/turnstile'
 
-const siteKey = env.NEXT_PUBLIC_TURNSTILE_SITE_KEY
-
 /**
  * The site's forms' guard against bots: a Cloudflare Turnstile check, shown
  * only when Cloudflare needs the visitor to click, and a honeypot field that
- * people never see. Without NEXT_PUBLIC_TURNSTILE_SITE_KEY only the honeypot
- * is on. Put `fields` inside the form.
+ * people never see. Without a site key (NEXT_PUBLIC_TURNSTILE_SITE_KEY) only
+ * the honeypot is on. Put `fields` inside the form.
  */
-export function useSpamCheck() {
+export function useSpamCheck(siteKey = env.NEXT_PUBLIC_TURNSTILE_SITE_KEY) {
   const locale = useLocale()
   const widget = useRef<TurnstileInstance | null>(null)
   const honeypot = useRef<HTMLInputElement>(null)
