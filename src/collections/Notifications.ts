@@ -1,5 +1,7 @@
 import type { Access, CollectionConfig, PayloadHandler } from 'payload'
 
+import { nobody } from '@/access'
+
 import { NOTIFICATION_KIND_NAMES } from '@/lib/notification-kinds'
 import { publishChange, publishDelete } from '@/lib/realtime/publish'
 
@@ -31,7 +33,7 @@ const readAll: PayloadHandler = async (req) => {
 export const Notifications: CollectionConfig = {
   slug: 'notifications',
   admin: { hidden: true, useAsTitle: 'title' },
-  access: { read: own, update: own, delete: own, create: () => false },
+  access: { read: own, update: own, delete: own, create: nobody },
   defaultSort: '-createdAt',
   endpoints: [{ path: '/read-all', method: 'post', handler: readAll }],
   hooks: { afterChange: [publishChange], afterDelete: [publishDelete] },
@@ -45,7 +47,7 @@ export const Notifications: CollectionConfig = {
       // Deleting the account clears its bell (the cascade the migration
       // 20261023_083500 sets: the adapter's default SET NULL cannot apply to
       // a required recipient).
-      access: { update: () => false },
+      access: { update: nobody },
     },
     {
       name: 'kind',
@@ -55,14 +57,14 @@ export const Notifications: CollectionConfig = {
         value,
         label: value.replace('_', ' '),
       })),
-      access: { update: () => false },
+      access: { update: nobody },
     },
-    { name: 'title', type: 'text', required: true, access: { update: () => false } },
-    { name: 'description', type: 'text', access: { update: () => false } },
+    { name: 'title', type: 'text', required: true, access: { update: nobody } },
+    { name: 'description', type: 'text', access: { update: nobody } },
     // The actor as a snapshot (src/lib/notify.ts actorOf), so reading needs no join.
-    { name: 'actor_name', type: 'text', access: { update: () => false } },
-    { name: 'actor_photo', type: 'text', access: { update: () => false } },
-    { name: 'link', type: 'text', access: { update: () => false } },
+    { name: 'actor_name', type: 'text', access: { update: nobody } },
+    { name: 'actor_photo', type: 'text', access: { update: nobody } },
+    { name: 'link', type: 'text', access: { update: nobody } },
     { name: 'read_at', type: 'date', index: true },
   ],
 }

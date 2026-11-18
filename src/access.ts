@@ -118,6 +118,9 @@ export const ownsViaPerson = ownsVia('person')
 
 export const anyone: Access = () => true
 
+/** No one through the API. Server code writes with overrideAccess. */
+export const nobody = () => false
+
 export const isAuthenticated: Access = ({ req }) => Boolean(req.user)
 
 /**
@@ -130,6 +133,19 @@ export const readPeople: Access = ({ req }) => {
   const own = personOf(req.user)
   return own === null ? visible : { or: [visible, { id: { equals: own } }] }
 }
+
+/** The rows of the signed-in account. An anonymous reader matches none. */
+export const ownAccountRows: Access = ({ req }) => ({
+  account: { equals: (req.user as { id?: number })?.id ?? null },
+})
+
+/** The rows of the signed-in account. An anonymous caller is refused. */
+export const signedInOwnAccountRows: Access = ({ req }) =>
+  req.user ? { account: { equals: (req.user as { id: number }).id } } : false
+
+/** Admins: every row. Others: the rows of their own account. */
+export const adminOrOwnAccountRows: Access = ({ req }) =>
+  isAdminUser(req.user) || { account: { equals: (req.user as { id?: number })?.id ?? null } }
 
 /** admin + super_admin. Gates write on the editorial collections. */
 export const isAdmin: Access = ({ req }) => isAdminUser(req.user)
@@ -331,6 +347,9 @@ export const siteTiers = (reader: unknown): SiteTier[] =>
  * never be published by them. Publishing stays an admin action.
  */
 export const adminOnlyField: FieldAccess = ({ req }) => isAdminUser(req.user)
+
+/** The pair of write rules for a field that only an admin sets. Frozen: many fields share this one object. */
+export const adminWritesOnly = Object.freeze({ create: adminOnlyField, update: adminOnlyField })
 
 /* ======================================================== through a relation */
 

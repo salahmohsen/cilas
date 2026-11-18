@@ -1,6 +1,6 @@
 import type { CollectionConfig } from 'payload'
 
-import { isAdminUser } from '@/access'
+import { nobody, isAdmin } from '@/access'
 import { readSpaces } from '@/lib/spaces'
 import { spaceDeleteEndpoints } from '@/forms/space-delete'
 import { deleteSpaceBells, deleteSpaceContent } from '@/lib/space-delete'
@@ -22,12 +22,12 @@ export const Spaces: CollectionConfig = {
   labels: { singular: 'Space', plural: 'Spaces' },
   access: {
     read: readSpaces,
-    create: ({ req }) => isAdminUser(req.user),
-    update: ({ req }) => isAdminUser(req.user),
+    create: isAdmin,
+    update: isAdmin,
     // Closed so the panel's stock delete never shows: admins delete through
     // the "Delete space" dialog (src/forms/space-delete.ts), which shows what
     // goes with the space first.
-    delete: () => false,
+    delete: nobody,
   },
   endpoints: spaceDeleteEndpoints,
   admin: {
@@ -54,7 +54,7 @@ export const Spaces: CollectionConfig = {
         { label: 'Cohort', value: 'cohort' },
         { label: 'Course', value: 'course' },
       ] satisfies { label: string; value: SpaceKind }[],
-      access: { update: () => false }, // the kind never changes after the row exists
+      access: { update: nobody }, // the kind never changes after the row exists
     },
     {
       name: 'name',
@@ -150,7 +150,7 @@ export const Spaces: CollectionConfig = {
       name: 'introduction_post',
       type: 'relationship',
       relationTo: 'space-posts',
-      access: { create: () => false, update: () => false },
+      access: { create: nobody, update: nobody },
       admin: {
         readOnly: true,
         condition: (data) => Boolean(data?.introduction_post),

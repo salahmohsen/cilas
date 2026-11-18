@@ -1,6 +1,6 @@
 import type { CollectionConfig, Where } from 'payload'
 
-import { isAdminUser } from '@/access'
+import { isAdminUser, nobody, isAdmin } from '@/access'
 import { contentWhere } from '@/lib/spaces'
 
 /**
@@ -28,8 +28,8 @@ export const SpaceVotes: CollectionConfig = {
         ],
       }
     },
-    create: ({ req }) => isAdminUser(req.user),
-    update: () => false,
+    create: isAdmin,
+    update: nobody,
     delete: ({ req }) => {
       if (isAdminUser(req.user)) return true
       const own: Where = { account: { equals: (req.user as { id?: number })?.id ?? null } }
@@ -45,7 +45,7 @@ export const SpaceVotes: CollectionConfig = {
       relationTo: 'users',
       required: true,
       index: true,
-      access: { update: () => false },
+      access: { update: nobody },
     },
     {
       name: 'post',

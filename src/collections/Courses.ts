@@ -17,6 +17,7 @@ import {
   ownsViaFellows,
   readTiers,
   WITH_OWNER,
+  nobody,
 } from '@/access'
 import { activitiesField } from '@/fields/activities'
 import { bibliographyField } from '@/fields/bibliography'
@@ -130,7 +131,7 @@ export const Courses: CollectionConfig = {
     // Closed so the panel's stock delete never shows: a course is deleted
     // through the delete dialog, which lists what goes with it first
     // (src/forms/delete-endpoints.ts).
-    delete: () => false,
+    delete: nobody,
   },
   endpoints: deleteEndpoints('courses', {
     summarize: courseDeleteSummary,

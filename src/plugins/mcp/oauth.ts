@@ -18,7 +18,7 @@ import type {
   Where,
 } from 'payload'
 
-import { isAdmin, isAdminUser } from '@/access'
+import { isAdmin, isAdminUser, nobody } from '@/access'
 
 import { assistantForCallback, assistantForCallbacks } from './assistants'
 import { AI_ACCESS_LINK, mcpServerUrl } from './paths'
@@ -324,7 +324,7 @@ const lockFields = (fields: Field[], names: string[]): Field[] =>
     'name' in field && names.includes(field.name)
       ? ({
           ...field,
-          access: { ...('access' in field ? field.access : {}), update: () => false },
+          access: { ...('access' in field ? field.access : {}), update: nobody },
           admin: { ...field.admin, readOnly: true },
         } as Field)
       : field,

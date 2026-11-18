@@ -1,6 +1,6 @@
 import type { CollectionConfig } from 'payload'
 
-import { isAdmin, isAuthenticated } from '@/access'
+import { isAdmin, isAuthenticated, anyone } from '@/access'
 
 import { importFields } from '@/fields/import'
 import { revalidateAfterChange, revalidateAfterDelete } from '@/lib/revalidate'
@@ -13,7 +13,7 @@ export const Media: CollectionConfig = {
   },
 
   access: {
-    read: () => true,
+    read: anyone,
     // Anyone signed in uploads (an author's cover image); only admins change
     // or remove what is there, as one image can serve many pages.
     create: isAuthenticated,

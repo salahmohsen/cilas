@@ -1,6 +1,6 @@
 import type { CollectionConfig, Where } from 'payload'
 
-import { isAdminUser } from '@/access'
+import { isAdminUser, nobody, isAdmin } from '@/access'
 import { contentWhere } from '@/lib/spaces'
 import { RSVP_STATUSES } from '@/lib/space-event'
 
@@ -15,8 +15,8 @@ export const SpaceRsvps: CollectionConfig = {
   labels: { singular: 'Event answer', plural: 'Event answers' },
   access: {
     read: ({ req }) => contentWhere(req.payload, req.user, ['post']),
-    create: ({ req }) => isAdminUser(req.user),
-    update: () => false,
+    create: isAdmin,
+    update: nobody,
     delete: ({ req }) => {
       if (isAdminUser(req.user)) return true
       const own: Where = { account: { equals: (req.user as { id?: number })?.id ?? null } }
@@ -32,7 +32,7 @@ export const SpaceRsvps: CollectionConfig = {
       relationTo: 'users',
       required: true,
       index: true,
-      access: { update: () => false },
+      access: { update: nobody },
     },
     {
       name: 'post',

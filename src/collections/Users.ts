@@ -1,4 +1,12 @@
-import { adminOnlyField, ROLE_OPTIONS, isAdmin, isAdminUser, personOf, type Role } from '@/access'
+import {
+  adminOnlyField,
+  ROLE_OPTIONS,
+  isAdmin,
+  isAdminUser,
+  personOf,
+  type Role,
+  nobody,
+} from '@/access'
 import type {
   CollectionBeforeChangeHook,
   CollectionBeforeDeleteHook,
@@ -165,7 +173,7 @@ export const Users: CollectionConfig = {
       name: 'sub',
       type: 'text',
       index: true,
-      access: { read: adminOnlyField, create: () => false, update: () => false },
+      access: { read: adminOnlyField, create: nobody, update: nobody },
       admin: { readOnly: true, position: 'sidebar', description: 'Set by Google sign-in.' },
     },
     {
@@ -174,7 +182,7 @@ export const Users: CollectionConfig = {
       name: 'activated_at',
       label: 'First signed in',
       type: 'date',
-      access: { create: () => false, update: () => false },
+      access: { create: nobody, update: nobody },
       admin: {
         position: 'sidebar',
         readOnly: true,
@@ -188,7 +196,7 @@ export const Users: CollectionConfig = {
       name: 'invited_at',
       label: 'Invited on',
       type: 'date',
-      access: { create: () => false, update: () => false },
+      access: { create: nobody, update: nobody },
       admin: {
         position: 'sidebar',
         readOnly: true,
@@ -225,7 +233,7 @@ export const Users: CollectionConfig = {
       // page writes it with a server action; the senders read it.
       name: 'notification_preferences',
       type: 'json',
-      access: { create: () => false, update: adminOnlyField },
+      access: { create: nobody, update: adminOnlyField },
       admin: { hidden: true },
     },
     {

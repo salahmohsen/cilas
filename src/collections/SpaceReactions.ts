@@ -1,6 +1,6 @@
 import type { CollectionConfig, Where } from 'payload'
 
-import { isAdminUser, personOf } from '@/access'
+import { isAdminUser, personOf, nobody, isAdmin } from '@/access'
 import { REACTION_KINDS, REACTION_LABELS } from '@/lib/space-reactions'
 import { contentWhere } from '@/lib/spaces'
 
@@ -18,8 +18,8 @@ export const SpaceReactions: CollectionConfig = {
   access: {
     read: ({ req }) => contentWhere(req.payload, req.user, ['post', 'comment.post']),
     // Actions-only writes (REST refusal, as posts and comments).
-    create: ({ req }) => isAdminUser(req.user),
-    update: () => false,
+    create: isAdmin,
+    update: nobody,
     // Only the account un-reacts; moderation powers come in step 3.
     delete: ({ req }) => {
       if (isAdminUser(req.user)) return true
@@ -37,7 +37,7 @@ export const SpaceReactions: CollectionConfig = {
       relationTo: 'users',
       required: true,
       index: true,
-      access: { update: () => false },
+      access: { update: nobody },
     },
     { name: 'post', type: 'relationship', relationTo: 'space-posts', index: true },
     { name: 'comment', type: 'relationship', relationTo: 'space-comments', index: true },

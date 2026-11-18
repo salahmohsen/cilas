@@ -1,6 +1,6 @@
 import type { CollectionConfig } from 'payload'
 
-import { isAdminUser } from '@/access'
+import { nobody, isAdmin } from '@/access'
 import { contentWhere } from '@/lib/spaces'
 import { searchChanged, searchDeleted, searchDeletingComment } from '@/lib/private-search/outbox'
 
@@ -17,12 +17,12 @@ export const SpaceComments: CollectionConfig = {
   access: {
     read: ({ req }) => contentWhere(req.payload, req.user, ['post'], req.context),
     // Actions-only writes, as with posts (REST refusal).
-    create: ({ req }) => isAdminUser(req.user),
-    update: ({ req }) => isAdminUser(req.user),
+    create: isAdmin,
+    update: isAdmin,
     // Deletes (authors included) go through the actions' commentRemove,
     // which leaves the placeholder when replies exist (spec §3). REST
     // hard-deletes orphan child rows — the rules refuse them.
-    delete: ({ req }) => isAdminUser(req.user),
+    delete: isAdmin,
   },
   hooks: {
     beforeDelete: [searchDeletingComment],
@@ -38,7 +38,7 @@ export const SpaceComments: CollectionConfig = {
       relationTo: 'spaces',
       required: true,
       index: true,
-      access: { update: () => false },
+      access: { update: nobody },
     },
     {
       name: 'post',
@@ -46,7 +46,7 @@ export const SpaceComments: CollectionConfig = {
       relationTo: 'space-posts',
       required: true,
       index: true,
-      access: { update: () => false },
+      access: { update: nobody },
     },
     { name: 'parent', type: 'relationship', relationTo: 'space-comments' },
     {
@@ -54,7 +54,7 @@ export const SpaceComments: CollectionConfig = {
       type: 'relationship',
       relationTo: 'people',
       index: true,
-      access: { update: () => false },
+      access: { update: nobody },
     },
     { name: 'body', type: 'textarea', required: true },
     { name: 'edited_at', type: 'date' },

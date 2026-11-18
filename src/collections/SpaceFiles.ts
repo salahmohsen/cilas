@@ -3,7 +3,7 @@ import { randomBytes } from 'node:crypto'
 
 import { APIError, type CollectionConfig } from 'payload'
 
-import { isAdminUser } from '@/access'
+import { isAdmin, nobody } from '@/access'
 import { contentWhere } from '@/lib/spaces'
 import {
   FILE_LIMITS,
@@ -35,9 +35,9 @@ export const SpaceFiles: CollectionConfig = {
     // Writes run only in the server actions (counts and limits live in one
     // place); a file otherwise goes away with its post or comment. REST
     // deletes would let any member of a space hard-delete anyone's files.
-    create: () => false, // the actions write with overrideAccess
-    update: () => false,
-    delete: ({ req }) => isAdminUser(req.user),
+    create: nobody, // the actions write with overrideAccess
+    update: nobody,
+    delete: isAdmin,
   },
   admin: { hidden: true },
   upload: {

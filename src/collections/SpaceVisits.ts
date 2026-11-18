@@ -1,5 +1,7 @@
 import type { CollectionConfig } from 'payload'
 
+import { nobody } from '@/access'
+
 /**
  * Per account and space (spec §2 first steps, spec's "new posts since the
  * last visit"): what the member has done here and when they last looked.
@@ -14,10 +16,10 @@ export const SpaceVisits: CollectionConfig = {
     read: ({ req }) => ({ account: { equals: (req.user as { id?: number })?.id ?? null } }),
     // A Where is ignored on create, so REST could write rows for any account;
     // spaces-write creates them with overrideAccess.
-    create: () => false,
+    create: nobody,
     update: ({ req }) =>
       req.user ? { account: { equals: (req.user as { id: number }).id } } : false,
-    delete: () => false, // rows hold a timestamp and checklist marks, no content: the 30-day purge leaves them
+    delete: nobody, // rows hold a timestamp and checklist marks, no content: the 30-day purge leaves them
   },
   admin: { hidden: true },
   fields: [
@@ -27,7 +29,7 @@ export const SpaceVisits: CollectionConfig = {
       relationTo: 'users',
       required: true,
       index: true,
-      access: { update: () => false },
+      access: { update: nobody },
     },
     {
       name: 'space',
@@ -35,7 +37,7 @@ export const SpaceVisits: CollectionConfig = {
       relationTo: 'spaces',
       required: true,
       index: true,
-      access: { update: () => false },
+      access: { update: nobody },
     },
     { name: 'last_visited_at', type: 'date', required: true },
     { name: 'saw_privacy', type: 'checkbox', defaultValue: false },
