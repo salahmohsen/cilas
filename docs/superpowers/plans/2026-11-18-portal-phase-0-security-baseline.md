@@ -2,44 +2,90 @@
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task by task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
-**Goal:** Make the Payload access rules match what the portal will show, before any portal page ships. A non-admin cannot write `legacy_url`, `slug`, `space-preferences.digest_sent_at`, or a media file that is not a photo. A committed audit of every field rule shows each new field in review.
+**Goal:** Make the Payload access rules match what the portal will show, before any portal page ships. Every access rule has a name that says what it allows. A committed audit prints those names and fails on a rule with no name. A non-admin cannot write `legacy_url`, `slug`, `space-preferences.digest_sent_at`, or a media file that is not a photo.
 
-**Architecture:** A pure walk of the sanitized Payload config prints the field rule names. A Vitest file snapshot keeps them. The fixes are field access (`adminOnlyField`) on `legacy_url`, `slug` and `generateSlug`, and `update: () => false` on `digest_sent_at`. Media gets one `beforeOperation` hook that checks the uploaded bytes for non-admins. One int test file proves each refusal through the Local API with `overrideAccess: false`.
+**Architecture:** PR A names every access function in `src/` (a codemod for three repeated arrows, named rules for the rest, and factories that name what they return). PR B walks the sanitized Payload config, prints one row per collection, global and data field with the name of each rule, and fails on a rule with no name. A Vitest file snapshot keeps the rows. PR C closes the field holes with field access and a slug hook. PR D adds one `beforeOperation` hook on media that checks the uploaded bytes for non-admins.
 
-**Tech stack:** Payload 3.91.0 (Postgres adapter), Vitest (`node` project, `*.int.test.ts`), sharp 0.35.5, pnpm.
+**Tech stack:** Payload 3.91.0 (Postgres adapter), Vitest (`node` project, `*.int.test.ts` and `*.unit.test.ts`), TypeScript 5.7.3 (the codemod uses its parser), sharp 0.35.5, pnpm.
 
-**Source of truth:** `docs/superpowers/specs/2026-11-18-portal-design.md`, sections "Security baseline (phase 0)", "Migrations", "Tests" and the phase 0 block in "Phases". The spec wins over the research file.
+**Source of truth:** `docs/superpowers/specs/2026-11-18-portal-design.md`, sections "Security baseline (phase 0)", "Migrations", "Tests" and the phase 0 block in "Phases". The spec wins over the research file. The owner decisions of 2026-11-18 (access-rule naming PR, slug proposal, PDF question) change the plan as this file says.
 
-**Status of the code in this plan:** nobody ran it. The plan was written from the source of Payload 3.91.0 and of this repo. Each "Expected" line is a prediction. When a run differs, find out why before you change the plan's code.
+**Status of the code in this plan.** The code of PR A (Tasks 1 to 4), the audit of PR B (Tasks 6 and 7) and the slug hook of Task 11 (variant A) were applied to a scratch copy of HEAD 5199dfd7 and run against the local database:
+
+- PR A: `tsgo --noEmit` exit 0, `oxlint` clean, `src/access.unit.test.ts` and `src/collections/space-access.unit.test.ts` 71 passed. The codemod printed `replaced 72`. The completeness check printed `slots 223, unnamed 0`.
+- PR B: `scripts/access-audit.int.test.ts` 7 passed, with `problems` empty on the real config. The snapshot has 1209 rows for 53 entities, and `oxfmt --check` keeps it as written.
+- Task 11, variant A: a probe test (not committed) passed 7 of 8 cases. The failed case was a publish of a publication, refused by Payload validation (`Introduction > Kind`), not by the slug rule. The plan publishes an article instead.
+
+PR C Tasks 9, 10 and 12 and all of PR D were not run. Each "Expected" line there is a prediction. When a run differs, find out why before you change the plan's code.
 
 ---
 
+## Open questions for the owner
+
+1. **PDF uploads to `media` from non-admins (blocks PR D only).** Today any signed-in account can store any file type in `media`, except the active types that Payload refuses (`src/collections/Media.ts` sets no `upload.mimeTypes`). The non-admin code paths that create media:
+
+   | Path                        | Where                                                                                                                                                                                                                                                                                                                                        | File types today                                                       |
+   | --------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------- |
+   | Profile form, server action | `src/lib/profile.ts:203` (`saveProfile`, called from `src/lib/profile-actions.ts`)                                                                                                                                                                                                                                                           | JPEG, PNG, WebP up to 5 MB, by claimed type (`src/lib/profile.ts:174`) |
+   | Avatar upload route         | `src/lib/profile.ts:282` (`saveProfilePhoto`, called from `src/app/(frontend)/api/profile-photo/route.ts`)                                                                                                                                                                                                                                   | JPEG, PNG, WebP up to 5 MB, by claimed type (`src/lib/profile.ts:266`) |
+   | `/admin` upload fields      | Articles `cover_image` (`src/collections/Articles.ts:81`), Publications `cover_image` (`src/collections/Publications.ts:65`), Courses cover (`src/collections/Courses.ts:181`), People photo (`src/collections/People.ts:59`, own person)                                                                                                    | any type                                                               |
+   | `/admin` rich text          | The Lexical default features hold `UploadFeature` (`@payloadcms/richtext-lexical`, `dist/lexical/config/server/default.js`), and `src/lexical/default-features.ts:10` keeps them: Articles body (`Articles.ts:125`), Courses descriptions (`Courses.ts:223`, `:402`), Publications intro (`Publications.ts:76`), People bio (`People.ts:72`) | any type, PDF included                                                 |
+   | `/admin` SEO meta image     | `seoPlugin({ uploadsCollection: 'media' })` (`src/payload.config.ts:392`) on courses, publications and articles (`src/lib/seo.ts:17`)                                                                                                                                                                                                        | any type                                                               |
+   | REST and GraphQL            | `POST /api/media`, `createMedia`: `create: isAuthenticated` (`src/collections/Media.ts:19`)                                                                                                                                                                                                                                                  | any type                                                               |
+
+   Not media: space post files and event covers go to `space-files` (`src/lib/spaces-write.ts:193`), and application files to `submission-files` (`src/forms/submit-with-files.ts:120`). The MCP tools are admin only. `src/emails/issue.ts:67` and `src/forms/application-context.ts:19` only read media.
+
+   So yes: a non-admin flow can send a PDF to `media` today (the `/admin` rich text, upload fields, SEO image, and REST). `src/security-media.int.test.ts` asserts that a member uploads `tiny.pdf` (since commit fbca97df). Data from the local clone of production: 785 media rows, 780 `image/webp` and 5 `application/pdf`. Four PDFs have a `legacy_url` (the archive import). One (id 358, `مقال_فريدة_مقار.pdf`, 2026-10-13) has none. Media has no creator column, so who uploaded it is not known. The site's `RichTextField` renders an `upload` node as nothing (`src/components/RichTextField.tsx:235`); other renderers were not checked.
+
+   The owner chooses:
+   - (a) **Photos only for non-admins (recommended).** PR D as written. A non-admin who needs a PDF on a page asks an admin. `space-files` belongs to space posts, so sending article or course PDFs there is a new feature with its own access rules, not phase 0. If the owner wants it, it is a later task.
+   - (b) **Keep PDFs allowed for non-admins.** PR D then accepts a photo, or a PDF that the bytes prove (`%PDF-` header) up to a size limit the owner sets. Task 15 changes `isPhotoUpload` into a rule with two branches and adds a PDF row to the tests.
+
+   PR D does not start until the owner answers. PR A, B and C do not depend on it.
+
+2. **Slug follows the title until first publish (proposed, pending owner confirmation).** Task 11 holds two variants. Variant A is the proposal and the plan's choice: while a document has never been published, the slug follows the title on every save; at the first publish it becomes fixed; an admin can set it at any time; a non-admin can never hand-write it. It needs no new column. The `generateSlug` checkbox, already a column (`generate_slug`), holds the state "still follows the title". Payload's own hook stops following after two versions, so Task 11 replaces that hook. Variant B is the fallback: today's behavior (the slug is set from the first title), pinned by tests. Caveat for variant A: Payload stored `generate_slug = false` on every create that had a title. Existing drafts made before PR C keep their slug until an admin changes it. A data fix would be a separate script after phase 0, with the owner's approval.
+
+3. **Rules that `src/` cannot name.** The owner asked the audit to fail on every unnamed rule. 28 rules come from Payload or a plugin while Payload sanitizes the config, after `src/` has run: the auth fields of `users` (16), the key fields of `payload-mcp-api-keys` (4), and the internal `payload-kv` and `payload-jobs` collections (8). `src/` cannot rename them. The audit lists them by place in an `UPSTREAM` table with their source text and prints a label such as `payload:auth`. It fails when such a rule changes, gets a name, or goes away. That is a deviation from "fail on every unnamed rule"; the owner confirms it.
+
 ## PR split
 
-Phase 0 ships as three stacked PRs. Each PR has one mechanism, so its reviewer reads one kind of change.
+Phase 0 ships as four stacked PRs. Each PR has one mechanism, so its reviewer reads one kind of change.
 
-| PR                    | Branch                        | Base                          | Tasks      | What it proves                                                                                                                 |
-| --------------------- | ----------------------------- | ----------------------------- | ---------- | ------------------------------------------------------------------------------------------------------------------------------ |
-| A. Field access audit | `portal/phase-0-audit`        | `main`                        | 1, 2, 3    | The audit names every field rule. The snapshot is the baseline of today.                                                       |
-| B. Field access fixes | `portal/phase-0-field-access` | `portal/phase-0-audit`        | 4 to 9     | `legacy_url`, `slug`, `generateSlug` and `digest_sent_at` refuse non-admin writes. The snapshot diff shows exactly those rows. |
-| C. Media photos only  | `portal/phase-0-media`        | `portal/phase-0-field-access` | 10, 11, 12 | A non-admin stores only a photo. Admin uploads and the profile photo path work as today.                                       |
+| PR                        | Branch                        | Base                          | Tasks      | What it proves                                                                                                                 |
+| ------------------------- | ----------------------------- | ----------------------------- | ---------- | ------------------------------------------------------------------------------------------------------------------------------ |
+| A. Name every access rule | `portal/phase-0-access-names` | `main`                        | 1 to 5     | Every access function in `src/` has an intent name. No behavior changes: the int suite stays green.                            |
+| B. Access audit           | `portal/phase-0-audit`        | `portal/phase-0-access-names` | 6, 7, 8    | The audit prints every rule by name and fails on a rule with no name. The snapshot is the baseline of today.                   |
+| C. Field access fixes     | `portal/phase-0-field-access` | `portal/phase-0-audit`        | 9 to 14    | `legacy_url`, `slug`, `generateSlug` and `digest_sent_at` refuse non-admin writes. The snapshot diff shows exactly those rows. |
+| D. Media photos only      | `portal/phase-0-media`        | `portal/phase-0-field-access` | 15, 16, 17 | A non-admin stores only a photo. Admin uploads and the profile photo path work as today. Waits for Open question 1.            |
 
-Order: A, then B, then C. Merge in that order.
+Order: A, then B, then C, then D. Merge in that order.
 
-**Why three PRs, not the suggested two.** The suggested PR B held two mechanisms. Field access shows in the audit snapshot. The media check is a collection hook, and the snapshot cannot show it. The media change also touches `src/lib/profile.ts` and `src/security-media.int.test.ts`. Apart, each PR has one diff that its tests explain. (Principle: Sequence Work into Verifiable Units. Each PR ends in a state its own tests check.)
+**Why A comes first.** The audit of B fails on an unnamed rule, so B cannot merge while 107 rules have no name. A is a refactor with no behavior change, so its review is "same behavior, better names". (Principle: Sequence Work into Verifiable Units. Each PR ends in a state its own checks prove.)
 
-**How PR B updates the snapshot of PR A.** PR B branches from the head of PR A. Every fix commit (Tasks 5, 6 and 7) runs `pnpm audit:field-access` and commits the rewritten `scripts/field-access-audit.snapshot.json` with the fix, so the snapshot test passes in every commit of the PR. Task 8 is the final check: a script compares the snapshot with the one of PR A and must print exactly the 30 changed rows listed there. The access test file `src/portal-access.int.test.ts` is red until the last fix, so Task 4 does not commit it; Task 7 commits it with the last fix (Decision D8). When PR A merges, rebase PR B onto `main`, run `pnpm audit:field-access` again, check that the snapshot does not change, and set the base of the PR to `main`:
+**How a later PR follows an earlier one.** Each PR branches from the head of the PR before it. PR C commits the regenerated `scripts/access-audit.snapshot.json` with each fix, so the snapshot test passes in every commit (Tasks 10, 11 and 12). When the PR below merges, rebase onto `main`, run the audit again, check that the snapshot does not change, and set the base to `main`. For PR B after PR A merges:
 
 ```bash
 git fetch origin
-git rebase --onto origin/main portal/phase-0-audit   # the local branch still points at the last commit of PR A
-pnpm audit:field-access
-git status --short scripts/field-access-audit.snapshot.json   # expect no output
-gh pr edit portal/phase-0-field-access --base main
+git rebase --onto origin/main portal/phase-0-access-names   # the local branch still points at the last commit of PR A
+pnpm audit:access
+git status --short scripts/access-audit.snapshot.json   # expect no output
+gh pr edit portal/phase-0-audit --base main
 git push --force-with-lease
 ```
 
-PR C does the same after PR B merges. PR C does not change the snapshot (Task 10, Step 6 proves it).
+PR C does the same after PR B merges (replace `portal/phase-0-access-names` with `portal/phase-0-audit` and the PR branch with `portal/phase-0-field-access`). PR D does the same after PR C merges. PR A has no snapshot; it rebases with `git rebase origin/main` if `main` moves.
+
+## Access rule naming guide
+
+Every PR of this phase, and every later change, follows these rules. Task 5 puts their short form in `AGENTS.md`.
+
+1. **No inline arrow in an `access` block.** Every value is a named function or a factory call.
+2. **The name says what it allows.** It names who passes or which rows match: `isAdmin`, `anyone`, `nobody`, `adminOrSelf`, `ownAccountRows`, `adminOrOwnAccountRows`, `filesOnReadablePosts`. Not `rule1`, not `check`, not `own`-alone when another `own` could exist.
+3. **One name, one rule.** Two functions never share a name. Reuse the shared rule instead of a copy with the same body.
+4. **Placement follows the untangle rules.** A rule that two or more collections use lives in `src/access.ts`. A rule one collection owns is a module-local `const` typed `Access` or `FieldAccess` in that collection's file, after the imports.
+5. **Factories name what they return.** A factory lives in `src/access.ts` and wraps its result in `named(rule, '<factory>', [args])`. The name prints as `factory(arg,arg)`: a function argument prints its own name, a `Where` its JSON, an option set to `true` its key alone, an array its items joined by `|`. Example: `adminPublishes(isAdminOrOwn(ownsVia(authors),while={"_status":{"in":["draft","published"]}}))`.
+6. **The admin-only write pair is `adminWritesOnly`.** A field that only an admin sets has `access: adminWritesOnly`, or `{ read: ..., ...adminWritesOnly }`.
+7. **Rules from Payload or a plugin.** When the config can override a plugin rule (a `...collection.access` spread, an override option), set it to a named rule in `src/`. Only a rule that Payload adds while it sanitizes the config goes into `UPSTREAM` in `scripts/access-audit.ts`.
 
 ## Deviations from the spec, and why
 
@@ -49,19 +95,13 @@ PR C does the same after PR B merges. PR C does not change the snapshot (Task 10
    - The lint rule `landmines-structure/colocated-tests` requires a test beside the module it tests.
    - No `tests/` folder exists. Int tests live beside their subject, for example `src/security-media.int.test.ts`.
 
-   So the plan uses `src/portal-access.int.test.ts` (it imports `@/payload.config`, like `src/security-media.int.test.ts`), and `scripts/field-access-audit.int.test.ts` with `scripts/field-access-audit.snapshot.json` beside `scripts/field-access-audit.ts` (like `scripts/course-reader-snapshot.ts` and its test). The spec name `portal-access` stays.
+   So the plan uses `src/portal-access.int.test.ts` (it imports `@/payload.config`, like `src/security-media.int.test.ts`), and `scripts/access-audit.int.test.ts` with `scripts/access-audit.snapshot.json` beside `scripts/access-audit.ts` (like `scripts/course-reader-snapshot.ts` and its test). The spec name `portal-access` stays.
 
-2. **Slug scope.** The spec names `slug` on articles, courses and publications. The plan locks `slug` in the shared wrapper `src/fields/slug.ts`, so the lock covers all 8 collections that use it: articles, courses, publications, people, places, programmes, newsletters, events. Places, programmes, newsletters and events take `create` and `update` from `isAdmin` (checked in each collection file), so the lock changes nothing for them. People is the exception: a signed-in person may update their own person row (`src/collections/People.ts:28-32`), so today a member can change their own person slug and take another URL. That is the same hole. Task 4 adds a People row to the tests. No non-admin code writes a slug: every MCP tool that writes is an `adminTool` (`src/plugins/mcp/tools/course.ts`, `article.ts`, `form.ts`), `src/lib/profile.ts` does not write `slug`, and the other files in `src` that pass `overrideAccess: false` only read `slug`.
-3. **"The slug follows the title".** See Open question 1. The plan keeps the behavior of Payload's `slugField` and pins it in a test.
-4. **The audit script prints nothing by itself.** `scripts/field-access-audit.ts` exports the walk. `pnpm audit:field-access` runs the snapshot test with `--update`, and the snapshot file is the printout. So the config loads only through the test environment (Decision D2).
+2. **The audit covers collections and globals, not only fields.** Of the 245 access slots in `src/`, 170 are collection or global rules. A field-only audit could not enforce PR A. So the audit is named `access-audit`, prints one row per collection and global (`field: "*"`) and one per data field, and runs as `pnpm audit:access`.
 
-## Open questions for the owner
+3. **Slug scope.** The spec names `slug` on articles, courses and publications. The plan locks `slug` in the shared wrapper `src/fields/slug.ts`, so the lock covers all 8 collections that use it: articles, courses, publications, people, places, programmes, newsletters, events. Places, programmes, newsletters and events take `create` and `update` from `isAdmin`, so the lock changes nothing for them. People is the exception: a signed-in person may update their own person row (`src/collections/People.ts:28-32`), so today a member can change their own person slug and take another URL. That is the same hole. Task 9 adds a People row to the tests. No non-admin code writes a slug: every MCP tool that writes is an `adminTool` (`src/plugins/mcp/tools/course.ts`, `article.ts`, `form.ts`), `src/lib/profile.ts` does not write `slug`, and the other files in `src` that pass `overrideAccess: false` only read `slug`.
 
-1. **The slug is set from the title on create and does not follow later title changes.** Payload's `generateSlug` hook (`node_modules/payload/dist/fields/baseFields/slug/generateSlug.js`) sets the slug from the title on create, and stores the `generateSlug` checkbox as `false` when the create had a slug. On an update it changes nothing while the checkbox is `false`. A draft that autosave creates with no title has no slug, so its checkbox stays `true`: the slug follows the title through the autosaves, until the document has more than 2 versions or is published, or until someone edits the slug by hand. After that the slug is fixed. So after phase 0, an owner gets "the slug is set from the first title" (plus the short autosave window). An owner cannot fix a stale slug; an admin can. The plan keeps this behavior and pins it with a test in Task 4. It adds no column and no migration (the spec says phase 0 has none). The owner chooses:
-   - (a) Keep today's behavior. This is the plan's choice.
-   - (b) Add a `beforeChange` hook that regenerates the slug on a title change when the stored slug equals `slugify(previous title)`, which means that no admin set it. It needs no new column. The cost: the URL of a published document changes when its title changes, so old links break. Phase 0 does not implement (b). If the owner wants it, it is a later task with its own tests and its own redirect decision.
-2. **A member can no longer upload a PDF to `media`.** Today `src/security-media.int.test.ts` asserts that a member uploads `tiny.pdf`. The spec flips this: non-admin files that are not photos go to `space-files`. Task 10 changes that test so the PDF upload runs as an admin. A fellow who pastes a PDF or a GIF into rich text in `/admin` gets an error after PR C. Confirm that this is the intended effect.
-3. **The audit reports inline rules as `inline`.** See "Decisions", D3. If the owner wants every field rule named, that is a sweep of about 40 inline rules in 15 collections, in its own PR.
+4. **The audit script prints nothing by itself.** `scripts/access-audit.ts` exports the walk. `pnpm audit:access` runs the audit test with `--update`, and the snapshot file is the printout. The config loads only through the test environment (Decision D2). When the audit finds a problem, the test fails and the command exits non-zero.
 
 ## Decisions
 
@@ -70,22 +110,26 @@ Problems first, then each fix above the problems it solves.
 **Problems.**
 
 - P1. A field with no access function accepts any value from any caller that collection access lets in (`legacy_url`, `slug`, `digest_sent_at`).
-- P2. A new field with no rule does not show in review.
+- P2. A new rule, or a new field with no rule, does not show in review.
 - P3. Payload's `slugField` has a second write path, the `generateSlug` checkbox: when it is `true` on an update, the slug follows the title again.
 - P4. The photo rule (`PHOTO_TYPES`, `PHOTO_MAX_BYTES`) is written twice in `src/lib/profile.ts` (lines 174 and 266). A media check would be a third copy.
-- P5. Payload trusts the claimed type of an upload until it reads the bytes. `generateFileData` stores PDF bytes claimed as `image/png` as a PDF. After the WebP conversion (`formatOptions` in `src/collections/Media.ts`), `mimeType` and `filesize` describe the converted file, not the upload.
-- P6. A non-admin can create media from a remote URL with no `req.file` (`getExternalUploadSource` in `node_modules/payload/dist/collections/operations/create.js`). When `req.file` exists, Payload uses it and ignores a URL (`node_modules/payload/dist/uploads/generateFileData.js:51,65`), so a check of `req.file` cannot be bypassed by also sending a URL.
+- P5. Payload trusts the claimed type of an upload until it reads the bytes. After the WebP conversion (`formatOptions` in `src/collections/Media.ts`), `mimeType` and `filesize` describe the converted file, not the upload.
+- P6. A non-admin can create media from a remote URL with no `req.file` (`getExternalUploadSource` in `node_modules/payload/dist/collections/operations/create.js`). When `req.file` exists, Payload uses it and ignores a URL (`node_modules/payload/dist/uploads/generateFileData.js:51,65`).
+- P7. 107 of the 245 access slots in `src/` have no usable name: 89 inline arrows (an arrow in an object literal takes its key as its name, so `update: () => false` is named `update`), 17 factory calls and 1 const made by a factory (`readCourse`), whose functions have an empty name. A reader of the audit cannot tell what such a rule allows.
+- P8. The same rule is written many times: `() => false` 58 times, `({ req }) => isAdminUser(req.user)` 13 times (the body of `isAdmin`), the own-account Where 7 times, and the pair `{ create: adminOnlyField, update: adminOnlyField }` 12 times plus once with `read`.
+- P9. Payload's own `generateSlug` hook stops following the title after the document has more than 2 versions, and stores `false` on any create that had a title, so a draft slug does not follow later title changes.
 
 **Fixes.**
 
-- **D1. Field access, not hooks, for `legacy_url`, `slug`, `generateSlug`, `digest_sent_at`.** Solves P1, P3. Payload applies field write access in `beforeValidate` (`node_modules/payload/dist/fields/hooks/beforeValidate/promise.js:218-231`). It deletes the non-admin value and fills the stored value back. The `generateSlug` hook runs later, in `beforeChange` (`.../fields/hooks/beforeChange/promise.js:59`), and writes `data.slug` from the title. So field access drops a hand-written slug and keeps generation. A hook that drops the value would be a second mechanism for the same rule, and the audit could not show it. `generateSlug` gets the same `adminOnlyField`, so a non-admin cannot switch generation back on.
-- **D2. One audit walk, one snapshot, one regenerate command.** Solves P2. `scripts/field-access-audit.ts` is a pure function of the sanitized config. The test compares its output with `toMatchFileSnapshot`. `pnpm audit:field-access` runs that same test with `--update`. The regenerate command uses the test environment, so no second way to load the config exists.
-- **D3. Inline rules print `inline:<hash>`.** Solves P2 without a sweep. JavaScript names an arrow in an object literal after its key: `({ update: () => false }).update.name` is `"update"` (checked with `node -e`). So the audit treats a function whose name is empty or equals its operation key as unnamed. It prints `inline:` and the first 8 hex digits of the SHA-256 of `fn.toString()` with all whitespace removed. A change in the body of an inline rule then changes the row, so a loosened rule shows in review. The hash holds only the source text of the function: no path, no time. Rows keep the order of the config, so two runs give the same file. Failing the audit on an unnamed rule would force a rename of about 40 inline rules in 15 collections before phase 0, and the spec itself prescribes `update: () => false`. Limits, stated plainly: (1) a named rule prints its name only. Its body lives at one place (for example `src/access.ts`), and a change there shows in that file's diff, not in the snapshot. (2) Rules made by a factory share one inner function name and one source text, and the closure values are not visible, so two such rules cannot be told apart. The role write tests, not the snapshot, prove what each rule allows. Task 1 has a test that a body change changes the row.
-- **D4. Each field reports its own rule.** A rule on a group covers its whole subtree in Payload. The audit prints each field's own rule, so a child of `courses.registration` prints `open` under a parent that prints `adminOnlyField`. The rows keep the parent above its children, so a reader sees both.
+- **D1. Field access, not hooks, for `legacy_url`, `slug`, `generateSlug`, `digest_sent_at`.** Solves P1, P3. Payload applies field write access in `beforeValidate` only (`node_modules/payload/dist/fields/hooks/beforeValidate/promise.js:218-231`; `beforeChange/promise.js` has no access check). It deletes the non-admin value, and the `beforeChange` hook then gets the stored value as `value`. Collection `beforeChange` hooks (such as the review hook that sets `_status: 'published'` on approval, `src/lib/review-hooks.ts:175-180`) run before the field `beforeChange` hooks (`node_modules/payload/dist/collections/operations/utilities/update.js`, "beforeChange - Fields"). So the slug hook sees the final `_status`, and field access drops a hand-written slug while generation keeps running.
+- **D2. One audit walk, one snapshot, one regenerate command.** Solves P2. `scripts/access-audit.ts` is a pure function of the sanitized config. The test compares its output with `toMatchFileSnapshot` and asserts `problems` is empty. `pnpm audit:access` runs that same test with `--update`.
+- **D3. The audit fails on an unnamed rule.** Solves P2, P7. A rule is unnamed when its name is empty, equals its operation key, or holds the word `anonymous` (what `named()` prints for an unnamed argument). It also fails when one name holds two rules with different source text, and when a name with no `(` holds two different function objects (a factory that forgot `named()`). Rules that Payload adds while it sanitizes the config are listed in `UPSTREAM` by place and source text (Open question 3). A changed, newly named or missing entry fails too.
+- **D4. Each field reports its own rule.** A rule on a group covers its whole subtree in Payload. The audit prints each field's own rule, so a child of `courses.registration` prints `open` under a parent that prints `adminOnlyField`. The rows keep the parent above its children.
 - **D5. One server predicate `isPhotoUpload` reads the bytes.** Solves P4, P5. `src/lib/photo-upload.ts` checks the size of the bytes and reads the format with `sharp(data).metadata()`. `src/lib/profile.ts` and the media hook both call it. It is not in `src/lib/profile-limits.ts`, because the browser form imports that file and sharp is Node only.
-- **D6. The media check is a `beforeOperation` hook on create.** Solves P5, P6. `beforeOperation` runs before `generateFileData`, so `req.file` is still the upload as sent. A non-admin create with no `req.file` throws, which closes the remote URL path. A create with no bytes (a temp-file upload, `tempFilePath` with empty `data`) throws a clear error. The hook returns early for `overrideAccess: true` (seeds, the importer), for admins, and for anonymous callers. Anonymous callers then meet the collection `create` access, which throws `Forbidden` (`beforeOperation` runs before the access check). So every admin upload works as today.
-- **D7. One `adminWritesOnly` for the two admin-only write rules.** Solves a hidden link: the pair `{ create: adminOnlyField, update: adminOnlyField }` is written as a literal in 13 places already (`rg "create: adminOnlyField" src`: `src/forms/application-fields.ts`, `src/fields/review.ts`, `src/fields/tier.ts`, `src/collections/Courses.ts`, `src/collections/Articles.ts`), and the plan would add two more. `src/access.ts` exports `adminWritesOnly` next to `adminOnlyField`. The new `legacy_url` and slug code uses it. The 13 existing literals stay as they are in this phase: they are in files that phase 0 does not touch, and a sweep would widen the diff of PR B. A later same-purpose PR can replace them. The audit prints the function name, so the snapshot shows no change for such a sweep.
-- **D8. Red tests are not a commit.** Solves a commit that fails its own checks. The access test file is red for the new rows until Task 7. A red commit in the middle of PR B would fail CI if someone made it the head of a PR. So Task 4 writes the file and runs it red, but does not commit it. Task 7, the last fix, commits it together with that fix, when the whole file passes. Tasks 5 and 6 commit their fix with the regenerated snapshot, and both commits are green.
+- **D6. The media check is a `beforeOperation` hook on create.** Solves P5, P6. `beforeOperation` runs before `generateFileData`, so `req.file` is still the upload as sent. A non-admin create with no `req.file` throws, which closes the remote URL path. The hook returns early for `overrideAccess: true`, for admins and for anonymous callers; the collection `create` access then throws `Forbidden` for anonymous callers.
+- **D7. Shared rules in `src/access.ts`, local rules beside their collection, factories name their output.** Solves P7, P8. `nobody`, `ownAccountRows`, `signedInOwnAccountRows`, `adminOrOwnAccountRows` and `adminWritesOnly` join `src/access.ts`. A codemod replaces the three repeated arrows (`() => false`, `() => true`, `({ req }) => isAdminUser(req.user)`) with `nobody`, `anyone` and `isAdmin`. Rules one collection owns become module-local named constants. `named()` gives each factory's rule the name `factory(args)`. `ownsVia` is named too, so `isAdminOrOwn(ownsVia(fellows),versions)` shows the owner field. The `while` option is a `Where`, so it prints as JSON: exact, and with no table of constant names to keep in step.
+- **D8. Red tests are not a commit.** The access test file of PR C is red for the new rows until Task 12. Task 9 writes the file and runs it red, but does not commit it. Task 12, the last fix, commits it when the whole file passes.
+- **D9. The slug follows the title while the document has never been published (Task 11, variant A).** Solves P9. A `beforeChange` hook on the `generateSlug` checkbox replaces Payload's: on create, and on an update while the checkbox is `true`, it sets the slug from the title; it returns `false` (fixed) at the first publish, when an admin writes a different slug, and on any create in a collection without drafts. The checkbox is the stored state, so no column and no version count are needed.
 
 ---
 
@@ -97,165 +141,1073 @@ Problems first, then each fix above the problems it solves.
 - [ ] Put the local `R2_*` values in `.env.development.local` (see `testing/README.md`, "Environment"). `testing/local-env.ts` refuses a storage host that is not local.
 - [ ] Check that the local database has no pending migration: `pnpm payload migrate:status`. Do not run a migration. Phase 0 has none. If a step seems to need one, stop and tell the owner.
 - [ ] Test code rules (`testing/README.md`, `.oxlintrc.json`): no comments in test files, no annotated return types, no `vi.mock` or other test doubles, no fixed sleeps or retries. Lint each file you touch: `pnpm exec oxlint <files>`. It prints nothing when the file is clean.
+- [ ] Your shell may alias `cp` and `rm` to their `-i` forms. Use `command cp` and `command rm` in scripts, so no step waits for a prompt.
 - [ ] Commit trailer for every commit: the implementer writes the trailer of the model that did the work, for example `Co-Authored-By: Claude Sonnet 5.5 <noreply@anthropic.com>`. The commit author is the git user. The trailer lines in the commit commands below use that example; replace the model name when another model does the work.
 
 ## File map
 
-| File                                       | PR   | Change                  | Responsibility                                                       |
-| ------------------------------------------ | ---- | ----------------------- | -------------------------------------------------------------------- |
-| `scripts/field-access-audit.ts`            | A    | Create                  | Walk the sanitized config, return one row per field. Pure.           |
-| `scripts/field-access-audit.int.test.ts`   | A    | Create                  | Anchor checks of the walk, and the file snapshot.                    |
-| `scripts/field-access-audit.snapshot.json` | A, B | Create, then regenerate | The committed audit.                                                 |
-| `package.json`                             | A    | Modify                  | Script `audit:field-access`.                                         |
-| `src/portal-access.int.test.ts`            | B, C | Create, then extend     | The spec's phase 0 table through the Local API.                      |
-| `src/access.ts`                            | B    | Modify                  | Export `adminWritesOnly`, next to `adminOnlyField`.                  |
-| `src/fields/import.ts`                     | B    | Modify                  | `legacy_url` gets `adminWritesOnly`.                                 |
-| `src/fields/slug.ts`                       | B    | Modify                  | `slug` and `generateSlug` get `adminWritesOnly`.                     |
-| `src/collections/SpacePreferences.ts`      | B    | Modify                  | `digest_sent_at` gets `update: () => false`.                         |
-| `src/lib/photo-upload.ts`                  | C    | Create                  | `isPhotoUpload`: the one photo rule, read from the bytes.            |
-| `src/collections/Media.ts`                 | C    | Modify                  | `beforeOperation` hook: non-admins create photos only.               |
-| `src/lib/profile.ts`                       | C    | Modify                  | Both photo checks call `isPhotoUpload`.                              |
-| `src/lib/profile.int.test.ts`              | C    | Modify                  | A member saves a real PNG through the media rule.                    |
-| `src/security-media.int.test.ts`           | C    | Modify                  | Active content and the PDF run as an admin.                          |
+| File                                                                                                                                                                                                    | PR   | Change                  | Responsibility                                                                                          |
+| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---- | ----------------------- | ------------------------------------------------------------------------------------------------------- |
+| `src/access.ts`                                                                                                                                                                                         | A    | Modify                  | `named()`, factories that name their rules, `nobody`, the own-account rules, `adminWritesOnly`.         |
+| `src/access.unit.test.ts`                                                                                                                                                                               | A    | Modify                  | The names that the factories give.                                                                      |
+| 18 files in `src/collections`, `src/plugins/mcp/oauth.ts`                                                                                                                                               | A    | Modify (codemod)        | `() => false`, `() => true`, `({ req }) => isAdminUser(req.user)` become `nobody`, `anyone`, `isAdmin`. |
+| `src/collections/{People,Users,SpacePosts,SpaceComments,SpaceFiles,SpaceReactions,SpaceRsvps,SpaceVotes,SpaceConsents,SpacePreferences,SpaceVisits}.ts`, `src/payload.config.ts`, `src/plugins/llms.ts` | A    | Modify                  | Named rules for the remaining inline arrows and plugin defaults.                                        |
+| `src/collections/{Articles,Courses}.ts`, `src/forms/application-fields.ts`, `src/fields/{review,tier}.ts`                                                                                               | A    | Modify                  | The 13 literal admin-only pairs become `adminWritesOnly`.                                               |
+| `AGENTS.md`                                                                                                                                                                                             | A, B | Modify                  | One line of the naming guide under the untangle rules; B adds the audit command.                        |
+| `scripts/access-audit.ts`                                                                                                                                                                               | B    | Create                  | Walk the sanitized config, return rows and problems. Pure.                                              |
+| `scripts/access-audit.int.test.ts`                                                                                                                                                                      | B    | Create                  | Anchor checks, the failure cases, and the file snapshot.                                                |
+| `scripts/access-audit.snapshot.json`                                                                                                                                                                    | B, C | Create, then regenerate | The committed audit.                                                                                    |
+| `package.json`                                                                                                                                                                                          | B    | Modify                  | Script `audit:access`.                                                                                  |
+| `src/portal-access.int.test.ts`                                                                                                                                                                         | C, D | Create, then extend     | The spec's phase 0 table through the Local API.                                                         |
+| `src/fields/import.ts`                                                                                                                                                                                  | C    | Modify                  | `legacy_url` gets `adminWritesOnly`.                                                                    |
+| `src/fields/slug.ts`                                                                                                                                                                                    | C    | Modify                  | `slug` and `generateSlug` get `adminWritesOnly`; variant A adds the follow-the-title hook.              |
+| `src/collections/SpacePreferences.ts`                                                                                                                                                                   | C    | Modify                  | `digest_sent_at` gets `update: nobody`.                                                                 |
+| `src/lib/photo-upload.ts`                                                                                                                                                                               | D    | Create                  | `isPhotoUpload`: the one photo rule, read from the bytes.                                               |
+| `src/collections/Media.ts`                                                                                                                                                                              | D    | Modify                  | `beforeOperation` hook: non-admins create photos only.                                                  |
+| `src/lib/profile.ts`                                                                                                                                                                                    | D    | Modify                  | Both photo checks call `isPhotoUpload`.                                                                 |
+| `src/lib/profile.int.test.ts`                                                                                                                                                                           | D    | Modify                  | A member saves a real PNG through the media rule.                                                       |
+| `src/security-media.int.test.ts`                                                                                                                                                                        | D    | Modify                  | Active content and the PDF run as an admin.                                                             |
 
 ---
 
-# PR A. Field access audit
+# PR A. Name every access rule
 
-Branch: `git switch -c portal/phase-0-audit origin/main`.
+Branch: `git switch -c portal/phase-0-access-names origin/main`.
 
-### Task 1: The audit walk names known rules
+**Inventory (measured with the counter of Task 5, Step 1, at HEAD 5199dfd7).** `src/` has 245 access slots in `access: { ... }` literals: 170 collection or global rules, 75 field rules. 138 already hold a named function. 107 do not: 89 inline arrows, 17 factory calls (`isAdminOrOwn`, `adminPublishes`, `readTiers`, `publishedOrOwn`, `throughRelation`), and 1 const made by a factory (`readCourse`). A runtime walk of the sanitized config finds 141 unnamed rules: the 107 (109 rows, because `lockFields` in `src/plugins/mcp/oauth.ts` puts one arrow on 3 fields), 4 plugin defaults that `src/` can override, and the 28 rules of Open question 3. After PR A, all 107 slots are named, the 4 plugin defaults are named, and 28 remain for `UPSTREAM`.
+
+### Task 1: Factories name the rules they return
+
+**Skills:** tdd, payload (`.agents/skills/payload/SKILL.md`, then `reference/ACCESS-CONTROL.md`).
+
+**Files:**
+
+- Modify: `src/access.ts`
+- Modify: `src/access.unit.test.ts`
+
+- [ ] **Step 1: Write the failing tests**
+
+Add this block at the end of `src/access.unit.test.ts`. Every name it imports is already in the file's import list:
+
+```ts
+describe('rule names', () => {
+  it('names a factory rule after the factory and its arguments', () => {
+    expect(ownsViaAuthors.name).toBe('ownsVia(authors)')
+    expect(isAdminOrOwn(ownsViaFellows, { versions: true }).name).toBe(
+      'isAdminOrOwn(ownsVia(fellows),versions)',
+    )
+    expect(
+      isAdminOrOwn(ownsViaEditors, { allow: ['member', 'fellow'], draft: true, while: WITH_OWNER })
+        .name,
+    ).toBe(
+      'isAdminOrOwn(ownsVia(editors),allow=member|fellow,draft,while={"review.status":{"in":["draft","changes_requested"]}})',
+    )
+    expect(adminPublishes(canAuthor).name).toBe('adminPublishes(canAuthor)')
+    expect(publishedOrOwn(ownsViaEditors).name).toBe('publishedOrOwn(ownsVia(editors))')
+    expect(readTiers(undefined, { drafts: true }).name).toBe('readTiers(drafts)')
+    expect(readTiers(ownsViaAuthors).name).toBe('readTiers(ownsVia(authors))')
+    expect(throughRelation('course', readTiers(ownsViaFellows, { drafts: true })).name).toBe(
+      'throughRelation(course,readTiers(ownsVia(fellows),drafts))',
+    )
+  })
+
+  it('gives rules from different arguments different names', () => {
+    expect(isAdminOrOwn(ownsViaAuthors, { while: OWNER_EDITS }).name).not.toBe(
+      isAdminOrOwn(ownsViaAuthors, { while: WITH_OWNER }).name,
+    )
+    expect(isAdminOrOwn(ownsViaAuthors).name).not.toBe(isAdminOrOwn(ownsViaEditors).name)
+  })
+
+  it('prints an unnamed argument as anonymous, which the access audit refuses', () => {
+    expect(adminPublishes(() => true).name).toBe('adminPublishes(anonymous)')
+  })
+})
+```
+
+- [ ] **Step 2: Run the tests and see them fail**
+
+Run: `pnpm test:int src/access.unit.test.ts`
+Expected: FAIL, 3 failed. The first fails on `expect(ownsViaAuthors.name).toBe('ownsVia(authors)')` with a received value of `""`. The other 67 tests pass.
+
+- [ ] **Step 3: Add `named()` and use it in each factory**
+
+In `src/access.ts`, add this section directly above the `/* ===...=== constraints */` comment line:
+
+```ts
+/* ============================================================== rule names */
+
+/**
+ * A factory's rule is named after the factory and its arguments, so the
+ * access audit (scripts/access-audit.ts) tells two such rules apart. A
+ * function argument prints its own name, a Where its JSON, and an option set
+ * to `true` its key alone.
+ */
+const describe = (value: unknown): string => {
+  if (typeof value === 'function') return value.name || 'anonymous'
+  if (Array.isArray(value)) return value.map(describe).join('|')
+  if (typeof value === 'object' && value !== null) return JSON.stringify(value)
+  return String(value)
+}
+
+const optionsOf = (options: Record<string, unknown>): string[] =>
+  Object.entries(options)
+    .filter(([, value]) => value !== undefined && value !== false)
+    .map(([key, value]) => (value === true ? key : `${key}=${describe(value)}`))
+
+const named = <Rule extends (...args: never[]) => unknown>(
+  rule: Rule,
+  factory: string,
+  args: unknown[],
+): Rule =>
+  Object.defineProperty(rule, 'name', { value: `${factory}(${args.map(describe).join(',')})` })
+```
+
+Replace `ownsVia` with:
+
+```ts
+export const ownsVia = (field: 'fellows' | 'authors' | 'editors' | 'person'): Ownership => {
+  const owns: Ownership = (user) => {
+    const person = personOf(user)
+    return person === null
+      ? false
+      : { [field]: { [field === 'person' ? 'equals' : 'contains']: person } }
+  }
+  return named(owns, 'ownsVia', [field])
+}
+```
+
+Replace `isAdminOrOwn` (keep its doc comment) with:
+
+```ts
+export const isAdminOrOwn = (
+  owned: Ownership,
+  options: { allow?: Role[]; while?: Where; draft?: boolean; versions?: boolean } = {},
+): Access => {
+  const { allow, while: constraint, draft = false, versions = false } = options
+  const rule: Access = ({ req }) => {
+    if (isAdminUser(req.user)) return true
+    if (!req.user || (allow && !hasRole(req.user, ...allow))) return false
+    const owns = owned(req.user)
+    if (!owns) return false
+    if (versions) return appendVersionToQueryKey(owns)
+    if (draft)
+      return { and: [owns, { _status: { equals: 'draft' } }, ...(constraint ? [constraint] : [])] }
+    return constraint ? { and: [owns, constraint] } : owns
+  }
+  return named(rule, 'isAdminOrOwn', [owned, ...optionsOf(options)])
+}
+```
+
+Replace `adminPublishes` (keep its doc comment) with:
+
+```ts
+export const adminPublishes = (access: Access): Access => {
+  const rule: Access = (args) => {
+    const data = args.data as { _status?: unknown } | undefined
+    if (data?._status === 'published' && !isAdminUser(args.req.user)) return false
+    return access(args)
+  }
+  return named(rule, 'adminPublishes', [access])
+}
+```
+
+Replace `publishedOrOwn` (keep its doc comment) with:
+
+```ts
+export const publishedOrOwn = (owned: Ownership): Access => {
+  const rule: Access = ({ req }) => {
+    if (isAdminUser(req.user)) return true
+    const published: Where = { _status: { equals: 'published' } }
+    const owns = req.user ? owned(req.user) : false
+    return owns ? { or: [published, owns] } : published
+  }
+  return named(rule, 'publishedOrOwn', [owned])
+}
+```
+
+Replace `readTiers` (keep its doc comment) with:
+
+```ts
+export const readTiers = (
+  owned?: Ownership,
+  { drafts = false }: { drafts?: boolean } = {},
+): Access => {
+  const rule: Access = ({ req }): Where | boolean => {
+    const published: Where = drafts ? { _status: { equals: 'published' } } : {}
+
+    // Whoever may edit the document must be able to read it back for live preview.
+    if (req.user && isAdminUser(req.user)) return true
+
+    if (!req.user) {
+      return drafts
+        ? { and: [{ tier: { equals: 'public' } }, published] }
+        : { tier: { equals: 'public' } }
+    }
+
+    const visible: Where[] = [
+      drafts
+        ? { and: [{ tier: { in: ['community', 'public'] } }, published] }
+        : { tier: { in: ['community', 'public'] } },
+    ]
+    const owns = owned?.(req.user)
+    if (owns) visible.push(owns)
+    return { or: visible }
+  }
+  return named(rule, 'readTiers', [...(owned ? [owned] : []), ...optionsOf({ drafts })])
+}
+```
+
+Replace `throughRelation` (keep its doc comment) with:
+
+```ts
+export const throughRelation = (field: string, access: Access): Access => {
+  const rule: Access = async (args) => {
+    const result = await access(args)
+    return typeof result === 'boolean' ? result : prefixWhere(result, field)
+  }
+  return named(rule, 'throughRelation', [field, access])
+}
+```
+
+The bodies are the old bodies, unchanged. Only the return is wrapped. `ownList` is a list filter (`BaseFilter`), not an access rule, so it stays as it is.
+
+- [ ] **Step 4: Run the tests and see them pass**
+
+Run: `pnpm exec oxfmt src/access.ts && pnpm test:int src/access.unit.test.ts`
+Expected: PASS, `Tests  70 passed (70)`.
+
+- [ ] **Step 5: Lint and typecheck**
+
+Run: `pnpm exec oxlint src/access.ts src/access.unit.test.ts && pnpm typecheck`
+Expected: no lint output, typecheck exit code 0.
+
+- [ ] **Step 6: Commit**
+
+```bash
+git add src/access.ts src/access.unit.test.ts
+git commit -m "refactor(access): factories name the rules they return
+
+A rule from isAdminOrOwn, adminPublishes, publishedOrOwn, readTiers,
+throughRelation or ownsVia now has a name such as
+isAdminOrOwn(ownsVia(fellows),versions), so the access audit can show what
+it allows. The bodies do not change.
+
+Co-Authored-By: Claude Sonnet 5.5 <noreply@anthropic.com>"
+```
+
+### Task 2: Shared rules and the codemod for repeated arrows
+
+**Skills:** payload (`reference/ACCESS-CONTROL.md`). Principle: Build the Lever. The codemod is the artifact a reviewer reruns.
+
+**Files:**
+
+- Modify: `src/access.ts`
+- Modify (codemod): `src/collections/{Courses,InvitationLog,Media,Notifications,PushSubscriptions,SpaceComments,SpaceConsents,SpaceFiles,SpacePosts,SpacePreferences,SpaceReactions,SpaceRsvps,SpaceVisits,SpaceVotes,Spaces,SubmissionFiles,Users}.ts`, `src/plugins/mcp/oauth.ts`
+
+- [ ] **Step 1: Add the shared rules to `src/access.ts`**
+
+After `export const anyone: Access = () => true`, add:
+
+```ts
+/** No one through the API. Server code writes with overrideAccess. */
+export const nobody = () => false
+```
+
+Directly above the line `/** admin + super_admin. Gates write on the editorial collections. */`, add:
+
+```ts
+/** The rows of the signed-in account. An anonymous reader matches none. */
+export const ownAccountRows: Access = ({ req }) => ({
+  account: { equals: (req.user as { id?: number })?.id ?? null },
+})
+
+/** The rows of the signed-in account. An anonymous caller is refused. */
+export const signedInOwnAccountRows: Access = ({ req }) =>
+  req.user ? { account: { equals: (req.user as { id: number }).id } } : false
+
+/** Admins: every row. Others: the rows of their own account. */
+export const adminOrOwnAccountRows: Access = ({ req }) =>
+  isAdminUser(req.user) || { account: { equals: (req.user as { id?: number })?.id ?? null } }
+```
+
+After `export const adminOnlyField: FieldAccess = ({ req }) => isAdminUser(req.user)`, add:
+
+```ts
+/** The pair of write rules for a field that only an admin sets. */
+export const adminWritesOnly = { create: adminOnlyField, update: adminOnlyField }
+```
+
+`nobody` has no type annotation on purpose: `() => false` is assignable to both `Access` and `FieldAccess`, and the codemod puts it in both kinds of block. The two own-account rules keep the exact bodies of the arrows they replace: `ownAccountRows` gives an anonymous reader a Where that matches nothing, `signedInOwnAccountRows` refuses them. These are two behaviors, so they are two names.
+
+- [ ] **Step 2: Write the codemod to a temporary file**
+
+```bash
+codemod="$(mktemp -d)/name-access-rules.mjs"
+cat > "$codemod" <<'EOF'
+import { execFileSync } from 'node:child_process'
+import { readFileSync, writeFileSync } from 'node:fs'
+import { createRequire } from 'node:module'
+import { join } from 'node:path'
+
+const ts = createRequire(join(process.cwd(), 'package.json'))('typescript')
+
+const RULES = new Map([
+  ['()=>false', 'nobody'],
+  ['()=>true', 'anyone'],
+  ['({req})=>isAdminUser(req.user)', 'isAdmin'],
+])
+const ACCESS_IMPORT = /import \{([^}]*)\} from '@\/access'\n/
+
+const withImports = (text, used) => {
+  const match = text.match(ACCESS_IMPORT)
+  const names = match ? match[1].split(',').map((name) => name.trim()).filter(Boolean) : []
+  for (const name of used) if (!names.includes(name)) names.push(name)
+  const rest = match ? text.replace(ACCESS_IMPORT, '') : text
+  const kept = /\bisAdminUser\b/.test(rest) ? names : names.filter((name) => name !== 'isAdminUser')
+  const line = `import { ${kept.join(', ')} } from '@/access'\n`
+  if (match) return text.replace(ACCESS_IMPORT, line)
+  const payloadImport = text.match(/^import [^\n]* from 'payload'\n/m)
+  if (!payloadImport) return line + text
+  const at = payloadImport.index + payloadImport[0].length
+  return `${text.slice(0, at)}\n${line}${text.slice(at)}`
+}
+
+const files = execFileSync(
+  'rg',
+  ['--files', 'src', '-g', '*.ts', '-g', '!*.test.ts', '-g', '!payload-types.ts', '-g', '!src/migrations/**'],
+  { encoding: 'utf8' },
+)
+  .trim()
+  .split('\n')
+
+let total = 0
+for (const file of files.sort()) {
+  const text = readFileSync(file, 'utf8')
+  const source = ts.createSourceFile(file, text, ts.ScriptTarget.Latest, true)
+  const edits = []
+  const visit = (node) => {
+    if (
+      ts.isPropertyAssignment(node) &&
+      node.name.getText(source) === 'access' &&
+      ts.isObjectLiteralExpression(node.initializer)
+    ) {
+      for (const property of node.initializer.properties) {
+        if (!ts.isPropertyAssignment(property) || !ts.isArrowFunction(property.initializer)) continue
+        const name = RULES.get(property.initializer.getText(source).replace(/\s+/g, ''))
+        if (name) edits.push({ start: property.initializer.getStart(source), end: property.initializer.getEnd(), name })
+      }
+    }
+    ts.forEachChild(node, visit)
+  }
+  visit(source)
+  if (!edits.length) continue
+  let next = text
+  for (const { start, end, name } of edits.sort((a, b) => b.start - a.start)) {
+    next = next.slice(0, start) + name + next.slice(end)
+  }
+  writeFileSync(file, withImports(next, new Set(edits.map(({ name }) => name))))
+  total += edits.length
+  console.log(`${file} ${edits.length}`)
+}
+console.log(`replaced ${total}`)
+EOF
+```
+
+The codemod touches only arrows that are the value of a key in an `access: { ... }` literal, and only the three exact bodies. A trailing comment on the same line stays. It adds the new names to the file's `@/access` import (or adds the import after the `payload` import), and drops `isAdminUser` from that import when no other use is left.
+
+- [ ] **Step 3: Run the codemod**
+
+Run: `node "$codemod"`
+Expected output, exactly:
+
+```
+src/collections/Courses.ts 1
+src/collections/InvitationLog.ts 3
+src/collections/Media.ts 1
+src/collections/Notifications.ts 8
+src/collections/PushSubscriptions.ts 4
+src/collections/SpaceComments.ts 6
+src/collections/SpaceConsents.ts 4
+src/collections/SpaceFiles.ts 3
+src/collections/SpacePosts.ts 10
+src/collections/SpacePreferences.ts 3
+src/collections/SpaceReactions.ts 3
+src/collections/SpaceRsvps.ts 3
+src/collections/SpaceVisits.ts 4
+src/collections/SpaceVotes.ts 3
+src/collections/Spaces.ts 6
+src/collections/SubmissionFiles.ts 2
+src/collections/Users.ts 7
+src/plugins/mcp/oauth.ts 1
+replaced 72
+```
+
+That is 58 `nobody`, 1 `anyone` (media read) and 13 `isAdmin`. If a count differs, `git diff` the file and find the arrow the codemod missed or added before you go on.
+
+- [ ] **Step 4: Format, lint, typecheck**
+
+Run: `pnpm exec oxfmt $(git diff --name-only) && pnpm exec oxlint $(git diff --name-only) && pnpm typecheck`
+Expected: no lint output, typecheck exit code 0. oxfmt splits the long one-line import of `src/collections/Courses.ts` back into lines.
+
+- [ ] **Step 5: Run the access tests**
+
+Run: `pnpm test:int src/access.unit.test.ts src/collections/space-access.unit.test.ts src/collections/space-files.int.test.ts src/collections/user-link.int.test.ts src/security-media.int.test.ts`
+Expected: every file passes. `nobody`, `anyone` and `isAdmin` return what the arrows returned.
+
+- [ ] **Step 6: Commit**
+
+```bash
+git add src/access.ts src/collections src/plugins/mcp/oauth.ts
+git commit -m "refactor(access): name the repeated inline rules
+
+A codemod replaces 72 inline arrows in access blocks: () => false becomes
+nobody (58), () => true becomes anyone (1), and the body of isAdmin becomes
+isAdmin (13). src/access.ts adds nobody, ownAccountRows,
+signedInOwnAccountRows, adminOrOwnAccountRows and adminWritesOnly. No rule
+changes what it returns.
+
+Co-Authored-By: Claude Sonnet 5.5 <noreply@anthropic.com>"
+```
+
+### Task 3: Named rules for the remaining arrows and the plugin defaults
+
+**Skills:** payload (`reference/ACCESS-CONTROL.md`, `reference/PLUGIN-DEVELOPMENT.md`).
+
+**Files:**
+
+- Modify: `src/collections/{SpacePosts,SpaceComments,SpaceFiles,SpaceReactions,SpaceRsvps,SpaceVotes,SpaceConsents,SpacePreferences,SpaceVisits,People,Users}.ts`
+- Modify: `src/payload.config.ts`, `src/plugins/llms.ts`
+
+Each step below gives the exact text after Task 2. "After the imports" means directly after the last top-level `import` statement of the file, with one blank line before the new code.
+
+- [ ] **Step 1: The space content reads**
+
+`src/collections/SpacePosts.ts`. Replace `import type { CollectionConfig } from 'payload'` with `import type { Access, CollectionConfig } from 'payload'`. Replace `    read: async ({ req }) => contentWhere(req.payload, req.user, ['id'], req.context),` with `    read: readablePosts,`. After the imports, add:
+
+```ts
+/** The posts of the spaces the reader may see (contentWhere, src/lib/spaces.ts). */
+const readablePosts: Access = async ({ req }) =>
+  contentWhere(req.payload, req.user, ['id'], req.context)
+```
+
+`src/collections/SpaceComments.ts`. Replace `import type { CollectionConfig } from 'payload'` with `import type { Access, CollectionConfig } from 'payload'`. Replace `    read: ({ req }) => contentWhere(req.payload, req.user, ['post'], req.context),` with `    read: commentsOnReadablePosts,`. After the imports, add:
+
+```ts
+/** Comments on the posts the reader may see. */
+const commentsOnReadablePosts: Access = ({ req }) =>
+  contentWhere(req.payload, req.user, ['post'], req.context)
+```
+
+`src/collections/SpaceFiles.ts`. Replace `import { APIError, type CollectionConfig } from 'payload'` with `import { APIError, type Access, type CollectionConfig } from 'payload'`. Replace `    read: ({ req }) => contentWhere(req.payload, req.user, ['post', 'comment.post'], req.context),` with `    read: filesOnReadablePosts,`. After the imports, add:
+
+```ts
+/** Files on the posts, and on the comments of the posts, the reader may see. */
+const filesOnReadablePosts: Access = ({ req }) =>
+  contentWhere(req.payload, req.user, ['post', 'comment.post'], req.context)
+```
+
+- [ ] **Step 2: Reactions, answers and votes**
+
+`src/collections/SpaceReactions.ts`. Replace `import type { CollectionConfig, Where } from 'payload'` with `import type { Access, CollectionConfig } from 'payload'`. Replace `import { isAdminUser, personOf, nobody, isAdmin } from '@/access'` with `import { adminOrOwnAccountRows, nobody, isAdmin } from '@/access'`. Replace `    read: ({ req }) => contentWhere(req.payload, req.user, ['post', 'comment.post']),` with `    read: reactionsOnReadablePosts,`. Replace:
+
+```ts
+    delete: ({ req }) => {
+      if (isAdminUser(req.user)) return true
+      const own: Where = { account: { equals: (req.user as { id?: number })?.id ?? null } }
+      void personOf // not used here: the reaction belongs to the account
+      return own
+    },
+```
+
+with `    delete: adminOrOwnAccountRows,`. After the imports, add:
+
+```ts
+/** Reactions on the posts, and on the comments of the posts, the reader may see. */
+const reactionsOnReadablePosts: Access = ({ req }) =>
+  contentWhere(req.payload, req.user, ['post', 'comment.post'])
+```
+
+`src/collections/SpaceRsvps.ts`. Replace `import type { CollectionConfig, Where } from 'payload'` with `import type { Access, CollectionConfig } from 'payload'`. Replace `import { isAdminUser, nobody, isAdmin } from '@/access'` with `import { adminOrOwnAccountRows, nobody, isAdmin } from '@/access'`. Replace `    read: ({ req }) => contentWhere(req.payload, req.user, ['post']),` with `    read: rsvpsOnReadablePosts,`. Replace:
+
+```ts
+    delete: ({ req }) => {
+      if (isAdminUser(req.user)) return true
+      const own: Where = { account: { equals: (req.user as { id?: number })?.id ?? null } }
+      return own
+    },
+```
+
+with `    delete: adminOrOwnAccountRows,`. After the imports, add:
+
+```ts
+/** Answers to the event posts the reader may see. */
+const rsvpsOnReadablePosts: Access = ({ req }) => contentWhere(req.payload, req.user, ['post'])
+```
+
+`src/collections/SpaceVotes.ts`. Replace `import type { CollectionConfig, Where } from 'payload'` with `import type { Access, CollectionConfig } from 'payload'`. Replace `import { isAdminUser, nobody, isAdmin } from '@/access'` with `import { adminOrOwnAccountRows, isAdminUser, nobody, isAdmin } from '@/access'`. Replace the whole `read: async ({ req }) => { ... },` entry (its 12 lines, from `    read: async ({ req }) => {` to the `    },` before `    create: isAdmin,`) with `    read: votesOnReadablePostsHidingAnonymous,`. Keep the three comment lines above it. Replace the `delete` entry, the same 5 lines as in `SpaceRsvps.ts`, with `    delete: adminOrOwnAccountRows,`. After the imports, add:
+
+```ts
+/**
+ * Votes on the posts the reader may see. On an anonymous vote, only the
+ * voter's own rows.
+ */
+const votesOnReadablePostsHidingAnonymous: Access = async ({ req }) => {
+  const where = await contentWhere(req.payload, req.user, ['post'])
+  if (where === true && isAdminUser(req.user)) return true
+  if (!where) return false
+  const own = { account: { equals: (req.user as { id?: number })?.id ?? null } }
+  return {
+    and: [
+      ...(where === true ? [] : [where]),
+      { or: [{ 'post.vote_anonymous': { not_equals: true } }, own] },
+    ],
+  }
+}
+```
+
+The `delete` rules of reactions, answers and votes had the same body (the `void personOf` line did nothing), so all three now use `adminOrOwnAccountRows`.
+
+- [ ] **Step 3: Consents, preferences and visits**
+
+`src/collections/SpaceConsents.ts`. Replace `import { isAdminUser, nobody, isAdmin } from '@/access'` with `import { adminOrOwnAccountRows, nobody, isAdmin } from '@/access'`. Replace:
+
+```ts
+    read: ({ req }) =>
+      isAdminUser(req.user)
+        ? true
+        : { account: { equals: (req.user as { id?: number })?.id ?? null } },
+```
+
+with `    read: adminOrOwnAccountRows,`.
+
+`src/collections/SpacePreferences.ts` and `src/collections/SpaceVisits.ts`, in each file: replace `import { nobody } from '@/access'` with `import { nobody, ownAccountRows, signedInOwnAccountRows } from '@/access'`. Replace `    read: ({ req }) => ({ account: { equals: (req.user as { id?: number })?.id ?? null } }),` with `    read: ownAccountRows,`. Replace:
+
+```ts
+    update: ({ req }) =>
+      req.user ? { account: { equals: (req.user as { id: number }).id } } : false,
+```
+
+with `    update: signedInOwnAccountRows,`.
+
+- [ ] **Step 4: People and users**
+
+`src/collections/People.ts`. Replace `import type { CollectionConfig } from 'payload'` with `import type { Access, CollectionConfig } from 'payload'`. Replace:
+
+```ts
+    update: ({ req }) => {
+      if (isAdminUser(req.user)) return true
+      const person = personOf(req.user)
+      return person === null ? false : { id: { equals: person } }
+    },
+```
+
+with `    update: adminOrOwnPerson,`. After the imports, add:
+
+```ts
+/** Admins: every person. A signed-in account: the person it is linked to. */
+const adminOrOwnPerson: Access = ({ req }) => {
+  if (isAdminUser(req.user)) return true
+  const person = personOf(req.user)
+  return person === null ? false : { id: { equals: person } }
+}
+```
+
+`src/collections/Users.ts`. In the `import type { ... } from 'payload'` block, add `  Access,` as the first name. Replace:
+
+```ts
+    read: ({ req }) =>
+      isAdminUser(req.user) ? true : req.user ? { id: { equals: req.user.id } } : false,
+```
+
+with `    read: adminOrSelf,`. After the imports, add:
+
+```ts
+/** Admins: every account. A signed-in account: itself. */
+const adminOrSelf: Access = ({ req }) =>
+  isAdminUser(req.user) ? true : req.user ? { id: { equals: req.user.id } } : false
+```
+
+- [ ] **Step 5: Forms, and the plugin defaults that the config can name**
+
+The runtime walk found four plugin rules with no name that the config can set itself: the form submissions `create` (the form builder's `() => true`), the `update` of the import and export collections (the plugin's `() => false`), and the `read` of the llms.txt settings global (`() => true`). Setting them to the named rule with the same result changes no behavior.
+
+In `src/payload.config.ts`:
+
+Replace `import { buildConfig } from 'payload'` with `import { buildConfig, type Access } from 'payload'`.
+Replace `import { adminOnlyField, anyone, isAdmin } from './access'` with `import { adminOnlyField, anyone, isAdmin, nobody } from './access'`.
+Replace `          read: (args) => isAdmin(args) || { template: { not_equals: true } },` with `          read: adminOrNonTemplateForms,`.
+
+Replace:
+
+```ts
+        access: { read: isAdmin, update: isAdmin, delete: isAdmin },
+        admin: { defaultColumns: ['form', 'courses', 'target', 'status', 'createdAt'] },
+```
+
+with:
+
+```ts
+        // A visitor submits a form: the plugin's own create rule, named.
+        access: { create: anyone, read: isAdmin, update: isAdmin, delete: isAdmin },
+        admin: { defaultColumns: ['form', 'courses', 'target', 'status', 'createdAt'] },
+```
+
+In both `overrideExportCollection` and `overrideImportCollection`, replace:
+
+```ts
+        access: { ...collection.access, read: isAdmin, create: isAdmin, delete: isAdmin },
+```
+
+with:
+
+```ts
+        access: {
+          ...collection.access,
+          read: isAdmin,
+          create: isAdmin,
+          update: nobody,
+          delete: isAdmin,
+        },
+```
+
+Directly above `export default buildConfig({`, add:
+
+```ts
+/** Admins: every form. Others: the forms that are not templates. */
+const adminOrNonTemplateForms: Access = (args) =>
+  isAdmin(args) || { template: { not_equals: true } }
+```
+
+In `src/plugins/llms.ts`: replace `import { isAdmin } from '@/access'` with `import { anyone, isAdmin } from '@/access'`, and replace `{ ...g, label: 'AI site summary', access: { ...g.access, update: isAdmin } }` with `{ ...g, label: 'AI site summary', access: { ...g.access, read: anyone, update: isAdmin } }`.
+
+- [ ] **Step 6: Format, lint, typecheck**
+
+Run: `pnpm exec oxfmt $(git diff --name-only) && pnpm exec oxlint $(git diff --name-only) && pnpm typecheck`
+Expected: no lint output, typecheck exit code 0.
+
+- [ ] **Step 7: Run the tests of the touched collections**
+
+Run: `pnpm test:int src/collections src/people.int.test.ts src/form-emails.int.test.ts src/user-locks.int.test.ts src/lib/space-email.int.test.ts`
+Expected: every file passes.
+
+- [ ] **Step 8: Commit**
+
+```bash
+git add src/collections src/payload.config.ts src/plugins/llms.ts
+git commit -m "refactor(access): name every remaining access rule
+
+Each rule that one collection owns becomes a named const beside it
+(readablePosts, commentsOnReadablePosts, filesOnReadablePosts,
+reactionsOnReadablePosts, rsvpsOnReadablePosts,
+votesOnReadablePostsHidingAnonymous, adminOrOwnPerson, adminOrSelf,
+adminOrNonTemplateForms). The own-account rules of the space collections
+use the shared ones. Four plugin defaults (form submission create, import
+and export update, llms.txt settings read) are set to the named rule with
+the same result.
+
+Co-Authored-By: Claude Sonnet 5.5 <noreply@anthropic.com>"
+```
+
+### Task 4: The literal admin-only pairs become `adminWritesOnly`
+
+**Skills:** payload.
+
+**Files:**
+
+- Modify: `src/collections/Articles.ts`, `src/collections/Courses.ts`, `src/forms/application-fields.ts`, `src/fields/review.ts`, `src/fields/tier.ts`
+
+`rg -c "create: adminOnlyField, update: adminOnlyField" src` finds 13 lines: 12 exact pairs and one triple with `read` (`src/forms/application-fields.ts:139`).
+
+- [ ] **Step 1: Replace the pairs and fix the imports**
+
+```bash
+files="src/collections/Articles.ts src/collections/Courses.ts src/forms/application-fields.ts src/fields/review.ts src/fields/tier.ts"
+sed -i '' \
+  -e 's/access: { create: adminOnlyField, update: adminOnlyField }/access: adminWritesOnly/' \
+  -e 's/access: { read: adminOnlyField, create: adminOnlyField, update: adminOnlyField }/access: { read: adminOnlyField, ...adminWritesOnly }/' \
+  $files
+sed -i '' 's/^  adminOnlyField,$/  adminWritesOnly,/' src/collections/Articles.ts src/collections/Courses.ts
+sed -i '' "s/^import { adminOnlyField } from '@\/access'$/import { adminWritesOnly } from '@\/access'/" src/fields/review.ts src/fields/tier.ts
+sed -i '' "s/^import { adminOnlyField } from '@\/access'$/import { adminOnlyField, adminWritesOnly } from '@\/access'/" src/forms/application-fields.ts
+```
+
+`sed -i ''` is the macOS form. On Linux, write `sed -i` with no empty argument. Articles and Courses use `adminOnlyField` only in these pairs, so it leaves their import. `application-fields.ts` still uses it alone (`{ update: adminOnlyField }`, `{ read: adminOnlyField }`), so it keeps it.
+
+- [ ] **Step 2: Check the sweep**
+
+Run: `rg -n "create: adminOnlyField" src`
+Expected: one line only, the definition `src/access.ts: export const adminWritesOnly = { create: adminOnlyField, update: adminOnlyField }`.
+
+- [ ] **Step 3: Format, lint, typecheck, test**
+
+Run: `pnpm exec oxfmt $files && pnpm exec oxlint $files && pnpm typecheck && pnpm test:int src/teaching.int.test.ts src/collections/fellow-role.int.test.ts src/applications.unit.test.ts`
+Expected: no lint output, typecheck exit code 0, every file passes.
+
+- [ ] **Step 4: Commit**
+
+```bash
+git add $files
+git commit -m "refactor(access): one adminWritesOnly for the admin-only field pair
+
+Thirteen fields wrote { create: adminOnlyField, update: adminOnlyField } by
+hand. They now share adminWritesOnly from src/access.ts. The rule functions
+are the same, so no field changes what it allows.
+
+Co-Authored-By: Claude Sonnet 5.5 <noreply@anthropic.com>"
+```
+
+### Task 5: Prove that every rule has a name, record the guide, open PR A
+
+**Skills:** code-review, then security-review.
+
+**Files:**
+
+- Modify: `AGENTS.md`
+
+- [ ] **Step 1: Run the completeness check**
+
+The audit of PR B does not exist yet, so this one-off counter checks the source. Write it to a temporary file and run it:
+
+```bash
+check="$(mktemp -d)/check-access-names.mjs"
+cat > "$check" <<'EOF'
+import { execFileSync } from 'node:child_process'
+import { readFileSync } from 'node:fs'
+import { createRequire } from 'node:module'
+import { join } from 'node:path'
+
+const ts = createRequire(join(process.cwd(), 'package.json'))('typescript')
+
+const NAMING_FACTORIES = new Set(['adminPublishes', 'isAdminOrOwn', 'publishedOrOwn', 'readTiers', 'throughRelation'])
+
+const files = execFileSync(
+  'rg',
+  ['--files', 'src', '-g', '*.ts', '-g', '!*.test.ts', '-g', '!payload-types.ts', '-g', '!src/migrations/**'],
+  { encoding: 'utf8' },
+)
+  .trim()
+  .split('\n')
+
+let slots = 0
+const problems = []
+for (const file of files.sort()) {
+  const source = ts.createSourceFile(file, readFileSync(file, 'utf8'), ts.ScriptTarget.Latest, true)
+  const consts = new Map()
+  const collect = (node) => {
+    if (ts.isVariableDeclaration(node) && ts.isIdentifier(node.name) && node.initializer) {
+      consts.set(node.name.text, node.initializer)
+    }
+    ts.forEachChild(node, collect)
+  }
+  collect(source)
+  const where = (node) => `${file}:${source.getLineAndCharacterOfPosition(node.getStart(source)).line + 1}`
+  const check = (node, property) => {
+    if (ts.isArrowFunction(node) || ts.isFunctionExpression(node)) {
+      problems.push(`${where(property)} inline rule`)
+    } else if (ts.isCallExpression(node)) {
+      const factory = node.expression.getText(source)
+      if (!NAMING_FACTORIES.has(factory)) problems.push(`${where(property)} rule from ${factory}()`)
+    } else if (ts.isIdentifier(node) && consts.has(node.text) && ts.isCallExpression(consts.get(node.text))) {
+      check(consts.get(node.text), property)
+    }
+  }
+  const visit = (node) => {
+    if (
+      ts.isPropertyAssignment(node) &&
+      node.name.getText(source) === 'access' &&
+      ts.isObjectLiteralExpression(node.initializer)
+    ) {
+      for (const property of node.initializer.properties) {
+        if (!ts.isPropertyAssignment(property)) continue
+        slots += 1
+        check(property.initializer, property)
+      }
+    }
+    ts.forEachChild(node, visit)
+  }
+  visit(source)
+}
+for (const problem of problems) console.log(problem)
+console.log(`slots ${slots}, unnamed ${problems.length}`)
+EOF
+node "$check"
+```
+
+Expected: one line, `slots 223, unnamed 0`. There were 245 slots: the sweep of Task 4 folded 13 literal objects into `adminWritesOnly` (26 slots fewer), and Task 3 added 4 plugin slots. Every factory call left is one of the five naming factories, which Task 1 tests. Any other line names a file and line to fix.
+
+- [ ] **Step 2: Record the naming rule in `AGENTS.md`**
+
+In `AGENTS.md`, directly after the paragraph that starts with `**Special cases.**`, add this paragraph (one blank line before and after):
+
+```markdown
+**Access rules.** Every access function has a name that says what it allows (`isAdmin`, `nobody`, `adminOrOwnAccountRows`), never an inline arrow. A rule that two or more collections use lives in `src/access.ts`; a rule one collection owns is a named const beside it. A factory lives in `src/access.ts` and names its rule with `named()`. A field only an admin sets uses `adminWritesOnly`.
+```
+
+- [ ] **Step 3: Run the whole int suite**
+
+Run: `pnpm test:int`
+Expected: every file passes. PR A changes no behavior, so a failure is a regression of this PR until shown otherwise.
+
+- [ ] **Step 4: Code review.** Run the `code-review` skill on `git diff origin/main...HEAD`. The question for this PR: does each named rule return exactly what the arrow it replaced returned? Fix each finding that is real. Re-run Step 1 and Step 3 after a fix.
+- [ ] **Step 5: Security review.** Run the `security-review` skill on the same diff. The questions: did any rule widen (an `isAdmin` that was `isAdminUser` of another value, an own-account rule that now matches more rows)? Did the plugin overrides keep the plugin's result (`create: anyone` on form submissions, `update: nobody` on import and export, `read: anyone` on the llms.txt settings)?
+- [ ] **Commit the review fixes.** Commit each fix on its own, with the trailer:
+
+```bash
+git add <the files of the fix>
+git commit -m "fix(<area>): <the finding, in one line>
+
+Co-Authored-By: Claude Sonnet 5.5 <noreply@anthropic.com>"
+```
+
+If the reviews find nothing, write "Code review and security review: no findings" in the PR body. Make no empty commit.
+
+- [ ] **Step 6: Commit the guide.**
+
+```bash
+git add AGENTS.md
+git commit -m "docs(agents): access rules have intent names
+
+Co-Authored-By: Claude Sonnet 5.5 <noreply@anthropic.com>"
+```
+
+- [ ] **Step 7: Open the PR.** `git push -u origin portal/phase-0-access-names`, then `gh pr create --base main --title "Portal phase 0: name every access rule" --body-file <file>`. The body gives the inventory (245 slots, 107 unnamed: 89 inline, 17 factory calls, 1 factory const), the codemod and its output (`replaced 72`), the named local rules, the 4 plugin overrides, the result of Step 1 (`slots 223, unnamed 0`), and says that no behavior changes and the int suite passes. End the body with `🤖 Generated with [Claude Code](https://claude.com/claude-code)`.
+
+---
+
+# PR B. Access audit
+
+Branch: `git switch -c portal/phase-0-audit portal/phase-0-access-names`.
+
+### Task 6: The audit walk names every rule and reports problems
 
 **Skills:** tdd, payload (`.agents/skills/payload/SKILL.md`, then `reference/FIELD-TYPE-GUARDS.md` and `reference/ACCESS-CONTROL.md`, "Field Access Control").
 
 **Files:**
 
-- Create: `scripts/field-access-audit.int.test.ts`
-- Create: `scripts/field-access-audit.ts`
+- Create: `scripts/access-audit.int.test.ts`
+- Create: `scripts/access-audit.ts`
 
 - [ ] **Step 1: Write the failing test**
 
-Create `scripts/field-access-audit.int.test.ts`:
+Create `scripts/access-audit.int.test.ts`:
 
 ```ts
-import type { FieldAccess, SanitizedConfig } from 'payload'
+import type { SanitizedConfig } from 'payload'
 import { describe, expect, it } from 'vitest'
 
 import config from '@/payload.config'
 
-import { fieldAccessRows } from './field-access-audit'
+import { auditAccess, UPSTREAM } from './access-audit'
 
-const INLINE = /^inline:[0-9a-f]{8}$/
+const namedAs = <Rule extends (...args: never[]) => unknown>(name: string, rule: Rule) =>
+  Object.defineProperty(rule, 'name', { value: name })
 
-const updateLabelOf = (access: { update: FieldAccess }) =>
-  fieldAccessRows({
+const probe = (...fields: { name: string; access: Record<string, unknown> }[]) =>
+  auditAccess({
     collections: [
-      { slug: 'probe', fields: [{ type: 'text', name: 'value', access }] },
+      { slug: 'probe', access: {}, fields: fields.map((field) => ({ type: 'text', ...field })) },
     ],
-  } as unknown as SanitizedConfig)[0].update
+    globals: [],
+  } as unknown as SanitizedConfig).problems.filter((problem) =>
+    problem.startsWith('collection:probe'),
+  )
 
-describe('field access audit', () => {
-  it('names the rule of fields whose rules are known', async () => {
-    const rows = fieldAccessRows(await config)
-    const row = (collection: string, field: string) =>
-      rows.find((r) => r.collection === collection && r.field === field)
+describe('access audit', () => {
+  it('names every rule of the config and finds no problem', async () => {
+    const { rows, problems } = auditAccess(await config)
+    const rules = (entity: string, field: string) =>
+      rows.find((row) => row.entity === entity && row.field === field)?.rules
 
-    expect(row('articles', 'tier')).toEqual({
-      collection: 'articles',
-      field: 'tier',
+    expect(problems).toEqual([])
+    expect(rules('collection:articles', 'tier')).toEqual({
       create: 'adminOnlyField',
-      update: 'adminOnlyField',
       read: 'open',
+      update: 'adminOnlyField',
     })
-    expect(row('articles', 'review.review_note')).toMatchObject({
+    expect(rules('collection:articles', 'review.review_note')).toMatchObject({
       create: 'adminOnlyField',
       update: 'adminOnlyField',
     })
-    expect(row('articles', 'title')).toMatchObject({ create: 'open', update: 'open', read: 'open' })
-    expect(row('enrollments', 'assessment')).toMatchObject({
+    expect(rules('collection:articles', 'title')).toEqual({
       create: 'open',
-      update: 'assessor',
+      read: 'open',
+      update: 'open',
+    })
+    expect(rules('collection:enrollments', 'assessment')).toEqual({
+      create: 'open',
       read: 'assessor',
+      update: 'assessor',
     })
-    expect(row('space-preferences', 'account')).toMatchObject({
-      create: 'open',
-      update: expect.stringMatching(INLINE),
-    })
-    expect(row('courses', 'registration')).toMatchObject({
+    expect(rules('collection:space-preferences', 'account')).toMatchObject({ update: 'nobody' })
+    expect(rules('collection:courses', 'registration')).toMatchObject({
       create: 'adminOnlyField',
       update: 'adminOnlyField',
     })
-    expect(row('courses', 'registration.mode')).toMatchObject({ create: 'open', update: 'open' })
-    expect(rows.some((r) => r.collection === 'courses' && r.field === 'applicants')).toBe(false)
+    expect(rules('collection:courses', 'registration.mode')).toMatchObject({
+      create: 'open',
+      update: 'open',
+    })
+    expect(rules('collection:articles', '*')).toMatchObject({
+      read: 'readTiers(ownsVia(authors),drafts)',
+      update:
+        'adminPublishes(isAdminOrOwn(ownsVia(authors),while={"_status":{"in":["draft","published"]}}))',
+    })
+    expect(rules('collection:users', 'salt')).toEqual({
+      create: 'payload:auth',
+      read: 'open',
+      update: 'payload:auth',
+    })
+    expect(rules('global:site-settings', '*')).toMatchObject({ read: 'isAdmin', update: 'isAdmin' })
+    expect(
+      rows.some((row) => row.entity === 'collection:courses' && row.field === 'applicants'),
+    ).toBe(false)
   })
 
-  it('prints a hash of the body of an inline rule, so a changed body changes the row', () => {
-    const open = updateLabelOf({ update: () => true })
-    const closed = updateLabelOf({ update: () => false })
-    expect(open).toMatch(INLINE)
-    expect(closed).toMatch(INLINE)
-    expect(closed).not.toBe(open)
-    expect(updateLabelOf({ update: () => false })).toBe(closed)
+  it('fails on a rule with no name', () => {
+    expect(probe({ name: 'value', access: { update: () => false } })).toEqual([
+      'collection:probe value update: unnamed rule',
+    ])
+  })
+
+  it('fails on a factory rule built from an unnamed rule', () => {
+    expect(
+      probe({
+        name: 'value',
+        access: { update: namedAs('adminPublishes(anonymous)', () => true) },
+      }),
+    ).toEqual(['collection:probe value update: unnamed rule'])
+  })
+
+  it('fails when one name holds two different rules', () => {
+    expect(
+      probe(
+        { name: 'one', access: { update: namedAs('ownRows', () => true) } },
+        { name: 'two', access: { update: namedAs('ownRows', () => false) } },
+      ),
+    ).toEqual([
+      'collection:probe two update: ownRows also names a different rule at collection:probe one update',
+    ])
+  })
+
+  it('fails when a factory leaves its inner name on two rules', () => {
+    const factory = () => namedAs('inner', () => true)
+    expect(
+      probe(
+        { name: 'one', access: { update: factory() } },
+        { name: 'two', access: { update: factory() } },
+      ),
+    ).toEqual([
+      'collection:probe two update: inner names two functions; a factory must name its rules',
+    ])
+  })
+
+  it('fails on an UPSTREAM entry the config no longer has', () => {
+    const { problems } = auditAccess({ collections: [], globals: [] } as unknown as SanitizedConfig)
+    expect(problems).toHaveLength(UPSTREAM.length)
+    expect(problems).toContain(
+      'collection:users salt create: no such rule; remove it from UPSTREAM',
+    )
   })
 })
 ```
 
-The anchors cover a top-level field, a field in an unnamed collapsible (`tier`), a field in a named group (`review.review_note`), a named rule (`assessor`), an inline rule, a group rule and its child, and a `ui` field that holds no data (`courses.applicants`). The last test builds a one-field config by hand and proves that the label of an inline rule depends on its body and on nothing else: two arrows with the same body give the same label, and a different body gives a different one. It reads no path and no clock, so it is stable across runs. (A fixture, not a test double: no module is replaced.)
+The anchors cover a field in an unnamed collapsible (`tier`), a field in a named group (`review.review_note`), a field with no rule, a named field rule (`assessor`), a rule from Task 2 (`nobody`), a group rule and its child, two factory rules, an `UPSTREAM` rule, a global, and a `ui` field that holds no data (`courses.applicants`). The probe tests build a one-collection config by hand and prove each failure the owner asked for: an unnamed rule, an `anonymous` argument, one name on two rules, and a factory that forgot `named()`. The last test proves that a stale `UPSTREAM` entry fails. (A fixture, not a test double: no module is replaced.)
 
 - [ ] **Step 2: Run the test and see it fail**
 
-Run: `pnpm test:int scripts/field-access-audit.int.test.ts`
-Expected: FAIL. The error says that `./field-access-audit` cannot be resolved.
+Run: `pnpm test:int scripts/access-audit.int.test.ts`
+Expected: FAIL. The error says that `./access-audit` cannot be resolved.
 
 - [ ] **Step 3: Write the walk**
 
-Create `scripts/field-access-audit.ts`:
+Create `scripts/access-audit.ts`:
 
 ```ts
-import { createHash } from 'node:crypto'
-
-import {
-  fieldAffectsData,
-  tabHasName,
-  type Block,
-  type Field,
-  type FieldAccess,
-  type SanitizedConfig,
-} from 'payload'
+import type { Block, Field, SanitizedConfig } from 'payload'
+import { fieldAffectsData, tabHasName } from 'payload/shared'
 
 /**
- * Phase 0 field-access audit (docs/superpowers/specs/2026-11-18-portal-design.md,
- * "Security baseline"). One row per field of every collection, with the name
- * of the field's own access function for create, update and read. No access
- * function is called: many depend on the document.
+ * The access audit (docs/superpowers/specs/2026-11-18-portal-design.md,
+ * "Security baseline"). One row per collection, global and data field, with
+ * the name of each access rule. No rule is called: many depend on the
+ * document. The naming guide is in AGENTS.md.
  *
- * - `open`: the field has no function for that operation.
- * - `inline:<hash>`: an anonymous function. JavaScript names an arrow in an
- *   object literal after its key, so a name equal to the operation counts as
- *   none. The hash is the first 8 hex digits of the SHA-256 of the function
- *   source without whitespace, so a changed body changes the row.
- * - A named rule prints its name only. Its body is one definition that a
- *   reviewer sees in its own diff.
- * - A rule on a group or array covers its subtree in Payload; each row shows
- *   only the field's own rule, and the parent row comes first.
+ * A field with no rule for an operation prints `open`: the rule of its
+ * collection decides. A rule on a group or array covers its subtree in
+ * Payload; each row shows only the field's own rule, and the parent row
+ * comes first.
  *
- * Regenerate the committed snapshot with `pnpm audit:field-access`.
+ * Regenerate the committed snapshot with `pnpm audit:access`.
  */
 
-const OPERATIONS = ['create', 'update', 'read'] as const
-type Operation = (typeof OPERATIONS)[number]
-type FieldRules = Partial<Record<Operation, FieldAccess>>
-type Entry = { path: string; access?: FieldRules }
+const FIELD_OPERATIONS = ['create', 'read', 'update'] as const
+const ENTITY_OPERATIONS = [
+  'admin',
+  'create',
+  'read',
+  'readDrafts',
+  'readVersions',
+  'update',
+  'delete',
+  'unlock',
+]
 
-export type FieldAccessRow = { collection: string; field: string } & Record<Operation, string>
+type Rule = (...args: never[]) => unknown
+type Rules = Record<string, unknown> | undefined
+type Entry = { path: string; access: Rules }
+type Upstream = { entity: string; field: string; operation: string; label: string; source: string }
 
-const sourceHash = (rule: FieldAccess) =>
-  createHash('sha256').update(rule.toString().replace(/\s+/g, '')).digest('hex').slice(0, 8)
+export type AccessRow = { entity: string; field: string; rules: Record<string, string> }
 
-const ruleName = (rule: FieldAccess | undefined, operation: Operation) => {
-  if (!rule) return 'open'
-  return rule.name && rule.name !== operation ? rule.name : `inline:${sourceHash(rule)}`
-}
+const CLOSED = '()=>false'
+
+const closed = (entity: string, field: string, operations: string[], label: string): Upstream[] =>
+  operations.map((operation) => ({ entity, field, operation, label, source: CLOSED }))
+
+/**
+ * Rules that Payload or a plugin adds while it sanitizes the config, after
+ * src/ has run, so src/ cannot name them. Each entry holds the rule's source
+ * without whitespace: an upgrade that changes the rule fails the audit.
+ */
+export const UPSTREAM: Upstream[] = [
+  ...[
+    'resetPasswordToken',
+    'resetPasswordExpiration',
+    'salt',
+    'hash',
+    'resetPasswordRequestedAt',
+    'loginAttempts',
+    'lockUntil',
+  ].flatMap((field) => closed('collection:users', field, ['create', 'update'], 'payload:auth')),
+  ...closed('collection:users', 'sessions', ['update'], 'payload:auth'),
+  {
+    entity: 'collection:users',
+    field: 'sessions',
+    operation: 'read',
+    label: 'payload:ownSessions',
+    source: '({doc,req:{user}})=>{returnuser?.id===doc?.id;}',
+  },
+  ...closed('collection:payload-mcp-api-keys', 'user', ['create', 'update'], 'plugin-mcp:keyOwner'),
+  ...closed('collection:payload-mcp-api-keys', 'apiKey', ['read'], 'payload:apiKey'),
+  ...closed('collection:payload-mcp-api-keys', 'apiKeyIndex', ['read'], 'payload:apiKey'),
+  ...closed(
+    'collection:payload-kv',
+    '*',
+    ['create', 'read', 'update', 'delete'],
+    'payload:internal',
+  ),
+  ...closed(
+    'collection:payload-jobs',
+    '*',
+    ['create', 'read', 'update', 'delete'],
+    'payload:internal',
+  ),
+]
+
+const sourceOf = (rule: Rule) => rule.toString().replace(/\s+/g, '')
+
+const isNamed = (rule: Rule, operation: string) =>
+  rule.name !== '' && rule.name !== operation && !/\banonymous\b/.test(rule.name)
 
 const blocksOf = (references: (Block | string)[], config: SanitizedConfig) =>
   references.flatMap((reference) => {
@@ -270,7 +1222,7 @@ const entries = (fields: Field[], prefix: string, config: SanitizedConfig): Entr
       return field.tabs.flatMap((tab) =>
         tabHasName(tab)
           ? [
-              { path: `${prefix}${tab.name}`, access: (tab as { access?: FieldRules }).access },
+              { path: `${prefix}${tab.name}`, access: (tab as { access?: Rules }).access },
               ...entries(tab.fields, `${prefix}${tab.name}.`, config),
             ]
           : entries(tab.fields, prefix, config),
@@ -280,7 +1232,7 @@ const entries = (fields: Field[], prefix: string, config: SanitizedConfig): Entr
     if (field.type === 'group' && !('name' in field && field.name))
       return entries(field.fields, prefix, config)
     if (!fieldAffectsData(field)) return []
-    const self: Entry = { path: `${prefix}${field.name}`, access: field.access as FieldRules }
+    const self: Entry = { path: `${prefix}${field.name}`, access: field.access as Rules }
     if (field.type === 'group' || field.type === 'array')
       return [self, ...entries(field.fields, `${self.path}.`, config)]
     if (field.type === 'blocks')
@@ -293,64 +1245,132 @@ const entries = (fields: Field[], prefix: string, config: SanitizedConfig): Entr
     return [self]
   })
 
-export const fieldAccessRows = (config: SanitizedConfig): FieldAccessRow[] =>
-  config.collections.flatMap((collection) =>
-    entries(collection.fields, '', config).map(({ path, access }) => ({
-      collection: collection.slug,
-      field: path,
-      create: ruleName(access?.create, 'create'),
-      update: ruleName(access?.update, 'update'),
-      read: ruleName(access?.read, 'read'),
-    })),
+export const auditAccess = (config: SanitizedConfig) => {
+  const rows: AccessRow[] = []
+  const problems: string[] = []
+  const upstream = new Map(
+    UPSTREAM.map((entry) => [`${entry.entity} ${entry.field} ${entry.operation}`, entry]),
   )
+  const met = new Set<string>()
+  const names = new Map<string, { source: string; where: string; rules: Set<Rule> }>()
+
+  const label = (entity: string, field: string, operation: string, value: unknown) => {
+    if (typeof value !== 'function') return 'open'
+    const rule = value as Rule
+    const where = `${entity} ${field} ${operation}`
+    const known = upstream.get(where)
+    if (known) {
+      met.add(where)
+      if (known.source !== sourceOf(rule) || isNamed(rule, operation))
+        problems.push(`${where}: the rule no longer matches UPSTREAM`)
+      return known.label
+    }
+    if (!isNamed(rule, operation)) {
+      problems.push(`${where}: unnamed rule`)
+      return 'unnamed'
+    }
+    const seen = names.get(rule.name)
+    if (!seen) {
+      names.set(rule.name, { source: sourceOf(rule), where, rules: new Set([rule]) })
+    } else if (seen.source !== sourceOf(rule)) {
+      problems.push(`${where}: ${rule.name} also names a different rule at ${seen.where}`)
+    } else if (!rule.name.includes('(') && !seen.rules.has(rule)) {
+      problems.push(`${where}: ${rule.name} names two functions; a factory must name its rules`)
+    }
+    seen?.rules.add(rule)
+    return rule.name
+  }
+
+  const audit = (entity: string, access: Rules, fields: Field[]) => {
+    const operations = [
+      ...ENTITY_OPERATIONS,
+      ...Object.keys(access ?? {})
+        .filter((operation) => !ENTITY_OPERATIONS.includes(operation))
+        .sort(),
+    ].filter((operation) => typeof access?.[operation] === 'function')
+    rows.push({
+      entity,
+      field: '*',
+      rules: Object.fromEntries(
+        operations.map((operation) => [
+          operation,
+          label(entity, '*', operation, access?.[operation]),
+        ]),
+      ),
+    })
+    for (const { path, access: own } of entries(fields, '', config))
+      rows.push({
+        entity,
+        field: path,
+        rules: Object.fromEntries(
+          FIELD_OPERATIONS.map((operation) => [
+            operation,
+            label(entity, path, operation, own?.[operation]),
+          ]),
+        ),
+      })
+  }
+
+  for (const collection of config.collections)
+    audit(`collection:${collection.slug}`, collection.access as Rules, collection.fields)
+  for (const global of config.globals)
+    audit(`global:${global.slug}`, global.access as Rules, global.fields)
+  for (const where of upstream.keys())
+    if (!met.has(where)) problems.push(`${where}: no such rule; remove it from UPSTREAM`)
+
+  return { rows, problems }
+}
 ```
+
+`fieldAffectsData` and `tabHasName` come from `payload/shared`. The main `payload` entry does not export them (a run that imports them from `payload` fails with "does not provide an export named 'fieldAffectsData'").
 
 - [ ] **Step 4: Run the test and see it pass**
 
-Run: `pnpm test:int scripts/field-access-audit.int.test.ts`
-Expected: PASS, `Test Files  1 passed (1)`, `Tests  2 passed (2)`.
+Run: `pnpm test:int scripts/access-audit.int.test.ts`
+Expected: PASS, `Tests  6 passed (6)`.
 
-If an anchor fails, print the rows of that collection and read the field tree of the collection file. Fix the walk. Do not weaken an anchor. If `assessor` or `adminOnlyField` prints as `open`, the walk reads the wrong object: check `field.access` on the sanitized field with a one-off `console.log` in the test, then remove the log.
+If `problems` is not empty, it lists each rule by place. A rule from `src/` means PR A missed it: name it there (in a fix commit on PR A's branch if PR A is still open) and do not widen `UPSTREAM`. A row of `UPSTREAM` that "no longer matches" means the Payload version changed the rule: read the new source in `node_modules/payload/dist` and update the entry.
 
 - [ ] **Step 5: Lint and typecheck**
 
-Run: `pnpm exec oxlint scripts/field-access-audit.ts scripts/field-access-audit.int.test.ts && pnpm typecheck`
-Expected: no lint output, and the typecheck exits with code 0.
+Run: `pnpm exec oxfmt scripts/access-audit.ts scripts/access-audit.int.test.ts && pnpm exec oxlint scripts/access-audit.ts scripts/access-audit.int.test.ts && pnpm typecheck`
+Expected: no lint output, typecheck exit code 0.
 
 - [ ] **Step 6: Commit**
 
 ```bash
-git add scripts/field-access-audit.ts scripts/field-access-audit.int.test.ts
-git commit -m "feat(audit): name the access rule of every field
+git add scripts/access-audit.ts scripts/access-audit.int.test.ts
+git commit -m "feat(audit): name every access rule and fail on unnamed ones
 
-Walks the sanitized Payload config and reports, per collection and field,
-the name of the field's own create, update and read rule: open, a function
-name, or inline:<hash> for an anonymous arrow (an arrow in an object literal
-takes its key as its name, so that name counts as none; the hash of its body
-makes a changed body change the row). No rule is called.
+Walks the sanitized Payload config and reports, per collection, global and
+data field, the name of each access rule. It fails on a rule with no name,
+on one name for two rules, and on a factory that leaves its inner name.
+Rules that Payload adds during sanitize are listed in UPSTREAM by place and
+source, and a change to them fails too. No rule is called.
 
 Co-Authored-By: Claude Sonnet 5.5 <noreply@anthropic.com>"
 ```
 
-### Task 2: Commit the snapshot and the regenerate command
+### Task 7: Commit the snapshot and the regenerate command
 
 **Skills:** tdd, payload.
 
 **Files:**
 
-- Modify: `scripts/field-access-audit.int.test.ts`
-- Create: `scripts/field-access-audit.snapshot.json`
+- Modify: `scripts/access-audit.int.test.ts`
+- Create: `scripts/access-audit.snapshot.json`
 - Modify: `package.json` (the `scripts` block)
+- Modify: `AGENTS.md`
 
 - [ ] **Step 1: Add the snapshot test**
 
-Add this test inside the `describe` block of `scripts/field-access-audit.int.test.ts`, after the first test:
+Add this test inside the `describe` block of `scripts/access-audit.int.test.ts`, after the first test:
 
 ```ts
 it('matches the committed snapshot', async () => {
-  const rows = fieldAccessRows(await config)
+  const { rows } = auditAccess(await config)
   await expect(`${JSON.stringify(rows, null, 2)}\n`).toMatchFileSnapshot(
-    './field-access-audit.snapshot.json',
+    './access-audit.snapshot.json',
   )
 })
 ```
@@ -360,18 +1380,18 @@ it('matches the committed snapshot', async () => {
 In `package.json`, add this line in `scripts`, after `"test:int"`:
 
 ```json
-    "audit:field-access": "cross-env NODE_OPTIONS=--no-deprecation vitest run --config ./vitest.config.mts --project node scripts/field-access-audit.int.test.ts --update",
+    "audit:access": "cross-env NODE_OPTIONS=--no-deprecation vitest run --config ./vitest.config.mts --project node scripts/access-audit.int.test.ts --update",
 ```
 
 - [ ] **Step 3: Run the test in CI mode and see it fail**
 
-Run: `CI=1 pnpm test:int scripts/field-access-audit.int.test.ts`
-Expected: FAIL on `matches the committed snapshot`. Vitest does not write a new file snapshot when `CI` is set, so a missing snapshot fails. This shows that CI fails when someone forgets the snapshot.
+Run: `CI=1 pnpm test:int scripts/access-audit.int.test.ts`
+Expected: FAIL on `matches the committed snapshot`, `Tests  1 failed | 6 passed (7)`. Vitest does not write a new file snapshot when `CI` is set, so CI fails when someone forgets the snapshot.
 
 - [ ] **Step 4: Generate the snapshot**
 
-Run: `pnpm audit:field-access`
-Expected: PASS, and `scripts/field-access-audit.snapshot.json` exists.
+Run: `pnpm audit:access`
+Expected: PASS, `Tests  7 passed (7)`, and `scripts/access-audit.snapshot.json` exists.
 
 - [ ] **Step 5: Check the snapshot by hand**
 
@@ -379,49 +1399,66 @@ Run:
 
 ```bash
 node -e '
-const rows = require("./scripts/field-access-audit.snapshot.json");
-const by = (c, f) => rows.find((r) => r.collection === c && r.field === f);
-console.log(rows.length, new Set(rows.map((r) => r.collection)).size);
-for (const [c, f] of [["articles","legacy_url"],["articles","slug"],["articles","generateSlug"],["space-preferences","digest_sent_at"],["media","legacy_url"],["people","slug"]]) console.log(JSON.stringify(by(c, f)));
+const rows = require("./scripts/access-audit.snapshot.json");
+const by = (e, f) => rows.find((r) => r.entity === e && r.field === f).rules;
+console.log(rows.length, new Set(rows.map((r) => r.entity)).size);
+for (const [e, f] of [["collection:articles","legacy_url"],["collection:articles","slug"],["collection:articles","generateSlug"],["collection:space-preferences","digest_sent_at"],["collection:media","legacy_url"],["collection:people","slug"],["collection:media","*"]]) console.log(e, f, JSON.stringify(by(e, f)));
 '
 ```
 
-Expected: a row count, then `31` or more collections (31 in `src/payload.config.ts` plus plugin collections). Each of the six rows prints with `"create":"open","update":"open"`. These are the holes PR B closes. Every inline rule in the file reads `inline:` and 8 hex digits: `grep -c '"inline"' scripts/field-access-audit.snapshot.json` prints `0`.
+Expected (measured on the scratch copy):
+
+```
+1209 53
+collection:articles legacy_url {"create":"open","read":"open","update":"open"}
+collection:articles slug {"create":"open","read":"open","update":"open"}
+collection:articles generateSlug {"create":"open","read":"open","update":"open"}
+collection:space-preferences digest_sent_at {"create":"open","read":"open","update":"open"}
+collection:media legacy_url {"create":"open","read":"open","update":"open"}
+collection:people slug {"create":"open","read":"open","update":"open"}
+collection:media * {"create":"isAuthenticated","read":"anyone","update":"isAdmin","delete":"isAdmin","unlock":"defaultUnlockAccess"}
+```
+
+53 entities are 46 collections and 7 globals. The six field rows are the holes PR C closes. `grep -c '"unnamed"' scripts/access-audit.snapshot.json` prints `0`.
 
 - [ ] **Step 6: Check that the formatter keeps the file as it is**
 
-Run: `pnpm exec oxfmt --check scripts/field-access-audit.snapshot.json && pnpm test:int scripts/field-access-audit.int.test.ts`
-Expected: oxfmt reports no change, and the test passes.
+Run: `pnpm exec oxfmt --check scripts/access-audit.snapshot.json && pnpm test:int scripts/access-audit.int.test.ts`
+Expected: oxfmt reports "All matched files use the correct format", and the test passes.
 
-If oxfmt reports a change, the pre-commit hook would rewrite the file and break the snapshot. Then add `"scripts/field-access-audit.snapshot.json"` to `ignorePatterns` in `.oxfmtrc.json`, and run this step again.
+If oxfmt reports a change, the pre-commit hook would rewrite the file and break the snapshot. Then add `"scripts/access-audit.snapshot.json"` to `ignorePatterns` in `.oxfmtrc.json`, and run this step again.
 
 - [ ] **Step 7: Run the test in CI mode and see it pass**
 
-Run: `CI=1 pnpm test:int scripts/field-access-audit.int.test.ts`
-Expected: PASS, `Tests  3 passed (3)`.
+Run: `CI=1 pnpm test:int scripts/access-audit.int.test.ts`
+Expected: PASS, `Tests  7 passed (7)`.
 
-- [ ] **Step 8: Commit**
+- [ ] **Step 8: Add the audit command to the guide**
+
+In `AGENTS.md`, at the end of the `**Access rules.**` paragraph that Task 5 added, append this sentence: `` `pnpm audit:access` regenerates `scripts/access-audit.snapshot.json` and fails on a rule with no name. ``
+
+- [ ] **Step 9: Commit**
 
 ```bash
-git add scripts/field-access-audit.int.test.ts scripts/field-access-audit.snapshot.json package.json
-git commit -m "test(audit): commit the field access snapshot
+git add scripts/access-audit.int.test.ts scripts/access-audit.snapshot.json package.json AGENTS.md
+git commit -m "test(audit): commit the access snapshot
 
-A changed rule name, a changed inline body, a new open field or a new field
-changes the snapshot, so it shows in review. pnpm audit:field-access regenerates it through the
-same test, so it uses the test environment.
+A changed rule name, a new open field, a new field or a new collection
+changes the snapshot, so it shows in review. pnpm audit:access regenerates
+it through the same test, which also fails on an unnamed rule.
 
 Co-Authored-By: Claude Sonnet 5.5 <noreply@anthropic.com>"
 ```
 
 If Step 6 changed `.oxfmtrc.json`, add it to the same commit.
 
-### Task 3: Review PR A, then open it
+### Task 8: Review PR B, then open it
 
 **Skills:** code-review, then security-review.
 
-- [ ] **Step 1: Code review.** Run the `code-review` skill on `git diff origin/main...HEAD`. Fix each finding that is real. Re-run Task 2, Step 7 after a fix.
-- [ ] **Step 2: Security review.** Run the `security-review` skill on the same diff. The question for this PR: can the audit miss a field? Check the walk against each container type in `reference/FIELD-TYPE-GUARDS.md`: tabs (named and unnamed), row, collapsible, group (named and unnamed), array, blocks, and `blockReferences`.
-- [ ] **Step 3: Full checks.** Run: `pnpm lint && pnpm typecheck && pnpm test:int scripts/field-access-audit.int.test.ts`. Expected: no lint errors, typecheck exit code 0, `Tests  3 passed (3)`.
+- [ ] **Step 1: Code review.** Run the `code-review` skill on `git diff portal/phase-0-access-names...HEAD`. Fix each finding that is real. Re-run Task 7, Step 7 after a fix.
+- [ ] **Step 2: Security review.** Run the `security-review` skill on the same diff. The questions for this PR: can the audit miss a rule? Check the walk against each container type in `reference/FIELD-TYPE-GUARDS.md`: tabs (named and unnamed), row, collapsible, group (named and unnamed), array, blocks, and `blockReferences`. Can an entry of `UPSTREAM` hide a rule from `src/`? (Each entry names a field that only Payload adds.)
+- [ ] **Step 3: Full checks.** Run: `pnpm lint && pnpm typecheck && CI=1 pnpm test:int scripts/access-audit.int.test.ts`. Expected: no lint errors, typecheck exit code 0, `Tests  7 passed (7)`.
 - [ ] **Commit the review fixes.** Commit each fix on its own, with the trailer:
 
 ```bash
@@ -433,15 +1470,15 @@ Co-Authored-By: Claude Sonnet 5.5 <noreply@anthropic.com>"
 
 If the reviews find nothing, write "Code review and security review: no findings" in the PR body. Make no empty commit.
 
-- [ ] **Step 4: Open the PR.** `git push -u origin portal/phase-0-audit`, then `gh pr create --base main --title "Portal phase 0: field access audit" --body-file <file>`. The body says what the audit prints, how to regenerate it, the `inline:<hash>` rule (Decision D3), and the six open rows that PR B closes. It also says: "The audit walks collections only. It does not walk globals or the block fields inside Lexical `BlocksFeature`. The rich-text guard of phase 5 owns the Lexical block fields."  End the body with the attribution line `🤖 Generated with [Claude Code](https://claude.com/claude-code)`.
+- [ ] **Step 4: Open the PR.** `git push -u origin portal/phase-0-audit`, then `gh pr create --base portal/phase-0-access-names --title "Portal phase 0: access audit" --body-file <file>`. The body says what the audit prints, how to regenerate it, the four failure rules (Decision D3), the 28 `UPSTREAM` rules and why (Open question 3), and the six open field rows that PR C closes. It also says: "The audit does not walk the block fields inside Lexical `BlocksFeature`. The rich-text guard of phase 5 owns them." End the body with `🤖 Generated with [Claude Code](https://claude.com/claude-code)`.
 
 ---
 
-# PR B. Field access fixes
+# PR C. Field access fixes
 
 Branch: `git switch -c portal/phase-0-field-access portal/phase-0-audit`.
 
-### Task 4: Write the portal access tests (red for the new rows)
+### Task 9: Write the portal access tests (red for the new rows)
 
 **Skills:** tdd, payload (`reference/QUERIES.md`, "Access control in Local API"; `reference/ACCESS-CONTROL.md`, "Field Access Control").
 
@@ -455,6 +1492,7 @@ Rules the tests follow (from the spec):
 - "Throws": the call throws, and nothing is stored. Each throws row reads the store after the call.
 - A non-admin write to a drafts collection saves a draft. The test reads the stored document with `draft: true` and `overrideAccess: true`.
 - Collection access that returns `false` throws `Forbidden`. Only field access drops a value.
+- The slug is not a "dropped" row: with variant A of Task 11, a title change moves the slug, so the positive control would move it too. Task 11 adds the slug rows in their own block.
 
 - [ ] **Step 1: Write the test file**
 
@@ -584,12 +1622,6 @@ const DROPPED: { collection: Owned; roles: Role[]; field: string; value: () => u
     value: () => `/${fresh('claimed-article')}`,
   },
   {
-    collection: 'articles',
-    roles: ['fellow', 'member'],
-    field: 'slug',
-    value: () => fresh('claimed-article'),
-  },
-  {
     collection: 'publications',
     roles: ['fellow', 'member'],
     field: 'review.review_note',
@@ -600,12 +1632,6 @@ const DROPPED: { collection: Owned; roles: Role[]; field: string; value: () => u
     roles: ['fellow', 'member'],
     field: 'legacy_url',
     value: () => `/${fresh('claimed-publication')}`,
-  },
-  {
-    collection: 'publications',
-    roles: ['fellow', 'member'],
-    field: 'slug',
-    value: () => fresh('claimed-publication'),
   },
   { collection: 'courses', roles: ['fellow'], field: 'tier', value: () => 'public' },
   { collection: 'courses', roles: ['fellow'], field: 'cycle', value: () => cycleId },
@@ -633,7 +1659,6 @@ const DROPPED: { collection: Owned; roles: Role[]; field: string; value: () => u
     field: 'legacy_url',
     value: () => `/${fresh('claimed-course')}`,
   },
-  { collection: 'courses', roles: ['fellow'], field: 'slug', value: () => fresh('claimed-course') },
 ]
 
 const DROPPED_CASES = DROPPED.flatMap((row) => row.roles.map((role) => ({ ...row, role })))
@@ -705,7 +1730,7 @@ describe('portal access, phase 0', () => {
       },
     )
 
-    it.each(DROPPED_CASES.filter(({ field }) => field !== 'slug'))(
+    it.each(DROPPED_CASES)(
       '$collection as $role: $field given on create is dropped',
       async ({ collection, role, field, value }) => {
         const user = accounts[role]
@@ -727,26 +1752,6 @@ describe('portal access, phase 0', () => {
         })
         expect((await stored(collection, doc.id)).slug).toBe(
           `slug-probe-${collection}-${role}-${RUN}`,
-        )
-      },
-    )
-
-    it.each(OWNERS)(
-      '%s as %s: a later title change keeps the first slug',
-      async (collection, role) => {
-        const user = accounts[role]
-        const doc = await ownDraft(collection, user, {
-          title: `First Title ${collection} ${role} ${RUN}`,
-        })
-        await payload.update({
-          collection,
-          id: doc.id,
-          data: { title: fresh('Second Title') } as never,
-          draft: true,
-          ...actingAs(user),
-        })
-        expect((await stored(collection, doc.id)).slug).toBe(
-          `first-title-${collection}-${role}-${RUN}`,
         )
       },
     )
@@ -1005,20 +2010,20 @@ Notes for the implementer:
 - `accounts` is filled in `beforeAll`, so a test reads `accounts[role]` inside its body, never at module load.
 - The tracker deletes the `people` row of each tracked user, and `space-preferences` rows by account. The places, cycles, courses, enrollments and owned drafts are tracked directly.
 - If a create needs a field the plan does not set, read the collection and add the smallest value. Do not use `overrideAccess: true` on the call under test.
+- An admin publish or approval may log "Review email ... failed" when the local Resend key is not valid. That log is not a test failure.
 
 - [ ] **Step 2: Run the tests and see the new rows fail**
 
 Run: `pnpm test:int src/portal-access.int.test.ts`
-Expected: FAIL. Exactly 23 tests fail (the spec's "new" rows, and the People row from Deviation 2):
+Expected: FAIL. Exactly 18 tests fail (the spec's "new" rows, and the People row from Deviation 3):
 
 - `$collection as $role: a write to legacy_url is dropped`: 5 cases (articles fellow and member, publications fellow and member, courses fellow).
-- `$collection as $role: a write to slug is dropped`: the same 5 cases.
 - `$collection as $role: legacy_url given on create is dropped`: the same 5 cases.
 - `a create takes the slug from the title and drops a hand-written slug`: 5 cases.
 - `space-preferences`: 2 cases.
 - `people`: 1 case.
 
-Every other test passes now. These are the spec's "guard" rows, and the slug and admin tests that pin today's behavior. If a guard row fails, stop. The access rule differs from the spec. Read the rule in `src/access.ts` or the collection, and report the difference to the owner before you change code.
+Every other test passes now. These are the spec's "guard" rows, and the admin test that pins today's behavior. If a guard row fails, stop. The access rule differs from the spec. Read the rule in `src/access.ts` or the collection, and report the difference to the owner before you change code.
 
 - [ ] **Step 3: Lint and typecheck**
 
@@ -1027,26 +2032,18 @@ Expected: no lint output, and the typecheck exits with code 0. Vitest does not c
 
 - [ ] **Step 4: Do not commit the file yet**
 
-Leave `src/portal-access.int.test.ts` in the working tree, uncommitted (Decision D8). It is red for the new rows until Task 7, and a red commit in PR B could become a PR head. Task 7 commits it with the last fix, when every test passes. Do not use `git stash` for it; it stays as an untracked file while Tasks 5 and 6 run `git add` on their own files only. Before each commit in Tasks 5 and 6, run `git status --short` and check that the test file is still listed as untracked (`??`) and that nothing else is left over.
+Leave `src/portal-access.int.test.ts` in the working tree, uncommitted (Decision D8). It is red for the new rows until Task 12. Do not use `git stash` for it; it stays as an untracked file while Tasks 10 and 11 run `git add` on their own files only. Before each commit in Tasks 10 and 11, run `git status --short` and check that the test file is still listed as untracked (`??`) and that nothing else is left over.
 
-### Task 5: `legacy_url` is admin-only
+### Task 10: `legacy_url` is admin-only
 
 **Skills:** tdd, payload.
 
 **Files:**
 
-- Modify: `src/access.ts` (add `adminWritesOnly` after `adminOnlyField`, line 302)
 - Modify: `src/fields/import.ts`
-- Modify: `scripts/field-access-audit.snapshot.json` (regenerated)
+- Modify: `scripts/access-audit.snapshot.json` (regenerated)
 
-- [ ] **Step 1: Export `adminWritesOnly` and use it for `legacy_url`**
-
-In `src/access.ts`, add this after the `adminOnlyField` line (Decision D7):
-
-```ts
-/** The pair of write rules for a field that only an admin sets. */
-export const adminWritesOnly = { create: adminOnlyField, update: adminOnlyField }
-```
+- [ ] **Step 1: Use `adminWritesOnly` for `legacy_url`**
 
 Replace the content of `src/fields/import.ts` with:
 
@@ -1078,7 +2075,7 @@ export const importFields = (): Field[] => [
 - [ ] **Step 2: Run the tests**
 
 Run: `pnpm test:int src/portal-access.int.test.ts`
-Expected: the 10 `legacy_url` cases (update and create) pass. The 10 `slug` cases, the 2 `space-preferences` cases and the `people` case still fail.
+Expected: the 10 `legacy_url` cases (update and create) pass. The 5 slug create cases, the 2 `space-preferences` cases and the `people` case still fail.
 
 - [ ] **Step 3: Run the tests that read `legacy_url`**
 
@@ -1087,39 +2084,252 @@ Expected: all pass. The importer and the redirects write with `overrideAccess: t
 
 - [ ] **Step 4: Regenerate the audit snapshot**
 
-Run: `pnpm audit:field-access`
-Expected: PASS. Then run: `git diff --stat scripts/field-access-audit.snapshot.json`
-Expected: 13 rows changed (`legacy_url` in 13 collections, `open open` to `adminOnlyField adminOnlyField`), and no other row. Count with `git diff -U0 scripts/field-access-audit.snapshot.json | grep -c '^+.*"create": "adminOnlyField"'`, which prints `13`.
+Run: `pnpm audit:access`
+Expected: PASS. Then run: `git diff -U0 scripts/access-audit.snapshot.json | grep -c '^+.*"create": "adminOnlyField"'`
+Expected: `13` (`legacy_url` in 13 collections, `open` to `adminOnlyField` for create and update), and no other row changes.
 
 - [ ] **Step 5: Run the snapshot test in CI mode and the type check**
 
-Run: `CI=1 pnpm test:int scripts/field-access-audit.int.test.ts && pnpm typecheck`
-Expected: PASS, `Tests  3 passed (3)`, and exit code 0 from the typecheck.
+Run: `CI=1 pnpm test:int scripts/access-audit.int.test.ts && pnpm typecheck`
+Expected: PASS, `Tests  7 passed (7)`, and exit code 0 from the typecheck.
 
 - [ ] **Step 6: Commit**
 
 ```bash
-git add src/access.ts src/fields/import.ts scripts/field-access-audit.snapshot.json
+git add src/fields/import.ts scripts/access-audit.snapshot.json
 git commit -m "fix(access): only admins write legacy_url
 
 Redirects from the old site resolve through legacy_url, so an owner could
 claim an unused old URL on a draft. The importer writes with overrideAccess.
-adminWritesOnly joins adminOnlyField in src/access.ts. The audit snapshot
-shows 13 rows closed.
+The audit snapshot shows 13 rows closed.
 
 Co-Authored-By: Claude Sonnet 5.5 <noreply@anthropic.com>"
 ```
 
-### Task 6: Only admins write `slug` and `generateSlug`
+### Task 11: Only admins write `slug` and `generateSlug`
 
-**Skills:** tdd, payload (`reference/FIELDS.md`, "Slug field helper").
+**Skills:** tdd, payload (`reference/FIELDS.md`, "Slug field helper"; `reference/HOOKS.md`, "Field hooks").
 
 **Files:**
 
 - Modify: `src/fields/slug.ts`
-- Modify: `scripts/field-access-audit.snapshot.json` (regenerated)
+- Modify: `src/portal-access.int.test.ts` (still uncommitted)
+- Modify: `scripts/access-audit.snapshot.json` (regenerated)
 
-- [ ] **Step 1: Lock both fields of the slug row**
+The owner has not yet confirmed the slug behavior (Open question 2). Do variant A, the plan's choice, unless the owner chose variant B. Both variants lock the two fields with `adminWritesOnly`. Steps 1 to 3 differ; Steps 4 to 10 are the same.
+
+#### Slug follows title until first publish (pending owner confirmation): variant A
+
+- [ ] **Step 1 (A): Add the slug tests**
+
+In `src/portal-access.int.test.ts`, add this `describe` block inside `describe('portal access, phase 0', ...)`, after `describe('owned drafts', ...)`:
+
+```ts
+describe('slug follows the title until the first publish', () => {
+  const retitle = (collection: Owned, id: number, user: User, data: Record<string, unknown>) =>
+    payload.update({ collection, id, data: data as never, draft: true, ...actingAs(user) })
+
+  it.each(['articles', 'publications'] as const)(
+    '%s as member: a draft slug follows each title change',
+    async (collection) => {
+      const doc = await ownDraft(collection, accounts.member, {
+        title: `First ${collection} ${RUN}`,
+      })
+      expect((await stored(collection, doc.id)).slug).toBe(`first-${collection}-${RUN}`)
+      await retitle(collection, doc.id, accounts.member, { title: `Second ${collection} ${RUN}` })
+      expect((await stored(collection, doc.id)).slug).toBe(`second-${collection}-${RUN}`)
+    },
+  )
+
+  it.each(['articles', 'publications'] as const)(
+    '%s as member: a hand-written slug on update is dropped',
+    async (collection) => {
+      const doc = await ownDraft(collection, accounts.member, {
+        title: `Hand ${collection} ${RUN}`,
+      })
+      await retitle(collection, doc.id, accounts.member, { slug: fresh('claimed') })
+      expect((await stored(collection, doc.id)).slug).toBe(`hand-${collection}-${RUN}`)
+    },
+  )
+
+  it.each(['articles', 'publications'] as const)(
+    '%s: a slug an admin sets stays when the owner retitles',
+    async (collection) => {
+      const doc = await ownDraft(collection, accounts.member)
+      const chosen = fresh(`chosen-${collection}`)
+      await retitle(collection, doc.id, accounts.admin, { slug: chosen })
+      await retitle(collection, doc.id, accounts.member, { title: fresh('Owner title') })
+      expect((await stored(collection, doc.id)).slug).toBe(chosen)
+    },
+  )
+
+  it('articles: after the first publish, a title change keeps the slug', async () => {
+    const doc = await ownDraft('articles', accounts.member, { title: `Before ${RUN}` })
+    await retitle('articles', doc.id, accounts.member, { title: `Published ${RUN}` })
+    await payload.update({
+      collection: 'articles',
+      id: doc.id,
+      data: { _status: 'published' } as never,
+      ...actingAs(accounts.admin),
+    })
+    await retitle('articles', doc.id, accounts.member, { title: `After ${RUN}` })
+    const live = await payload.findByID({
+      collection: 'articles',
+      id: doc.id,
+      depth: 0,
+      overrideAccess: true,
+    })
+    expect(live.slug).toBe(`published-${RUN}`)
+    expect((await stored('articles', doc.id)).slug).toBe(`published-${RUN}`)
+  })
+})
+```
+
+Articles have autosave drafts, publications have drafts without autosave, so the block covers both paths. The publish test uses an article: a publication publish needs its introduction fields (Payload refused a probe with "The following field is invalid: Introduction > Kind").
+
+- [ ] **Step 2 (A): Run the slug tests and see them fail**
+
+Run: `pnpm test:int src/portal-access.int.test.ts -t "slug follows the title"`
+Expected: FAIL on 4 cases: `a draft slug follows each title change` (2: Payload's hook stored `generateSlug = false` at create) and `a hand-written slug on update is dropped` (2: the slug is not locked yet). The admin-set and publish cases pass now.
+
+- [ ] **Step 3 (A): Lock the fields and replace the follow hook**
+
+Replace the content of `src/fields/slug.ts` with:
+
+```ts
+import type { Field, FieldHook, RowField } from 'payload'
+import { slugField as payloadSlugField } from 'payload'
+
+import { adminWritesOnly } from '@/access'
+import { slugify } from '@/lib/slugify'
+
+const slugOf = (value: unknown) => slugify(typeof value === 'string' ? value : '') || null
+
+/**
+ * The slug follows the title while the document has never been published.
+ * The `generateSlug` checkbox holds that state: it stays true until the first
+ * publish, or until an admin writes a slug by hand. A collection without
+ * drafts has no publish step, so its slug is fixed when the document is
+ * created. This replaces Payload's own hook, which stops following the title
+ * after two versions.
+ */
+const followTitleUntilPublished =
+  (useAsSlug: string): FieldHook =>
+  ({ collection, data, operation, originalDoc, value }) => {
+    if (!data) return value
+    const fromTitle = slugOf(data[useAsSlug] ?? originalDoc?.[useAsSlug])
+    const given: unknown = data.slug
+    const handSet =
+      typeof given === 'string' &&
+      given !== '' &&
+      given !== originalDoc?.slug &&
+      given !== fromTitle
+    if (handSet || (operation === 'update' && !value)) return false
+    data.slug = fromTitle
+    return Boolean(collection?.versions?.drafts) && data._status !== 'published'
+  }
+
+const lock = (row: RowField, useAsSlug: string): RowField => ({
+  ...row,
+  fields: row.fields.map((field): Field => {
+    const locked = { ...field, access: adminWritesOnly } as Field
+    if (locked.type !== 'checkbox' || locked.name !== 'generateSlug') return locked
+    return {
+      ...locked,
+      hooks: { ...locked.hooks, beforeChange: [followTitleUntilPublished(useAsSlug)] },
+    }
+  }),
+})
+
+/**
+ * Payload's built-in slug field, bound to this project's slugify.
+ *
+ * The built-in gives the lock/unlock toggle in the admin, the `generateSlug`
+ * checkbox, a unique index and an index for lookups. This project adds a
+ * slugify that survives Arabic titles (the default keeps ASCII `\w` only),
+ * the rule of when the slug follows the title (followTitleUntilPublished),
+ * and field access: only an admin writes the slug or its checkbox, so an
+ * owner cannot claim a URL by hand.
+ *
+ * @see https://payloadcms.com/docs/fields/text#slug-field
+ */
+export const slugField: typeof payloadSlugField = (args = {}) =>
+  payloadSlugField({
+    // Payload calls this with `{ valueToSlugify, data, req }`; our helper is
+    // plain and synchronous, so unwrap the source value. Return undefined
+    // (not '') when there is nothing to slugify: two draft rows with slug ''
+    // would hit the unique index.
+    slugify: ({ valueToSlugify }) => slugify(valueToSlugify) || undefined,
+    ...args,
+    overrides: (row) =>
+      lock(args.overrides?.(row) ?? row, args.fieldToUse ?? args.useAsSlug ?? 'title'),
+  })
+```
+
+How it works, step by step:
+
+- Field access runs in `beforeValidate` (Decision D1). A non-admin's `slug` and `generateSlug` are dropped there, so in this hook `data.slug` is the stored slug or nothing, and `value` is the stored checkbox.
+- `handSet` is true only for a slug that differs from the stored one and from the title's slug. Only an admin's slug survives field access, and the admin form sends the title's slug while it follows the title, so that does not count as hand-set.
+- On create, and on an update while the checkbox is `true`, the hook sets the slug from the title. It returns `true` (keep following) only for a draft in a drafts collection. At a publish (the review hook sets `_status: 'published'` before field hooks run), in a collection without drafts (people, places), or on a hand-set slug, it returns `false`: fixed.
+- `useAsSlug` comes from the caller: people and places pass `useAsSlug: 'name'`.
+- The `generate_slug` column exists already. No migration.
+
+`overrides` comes after `...args`, and it runs the caller's `overrides` first and locks the result. No caller passes `overrides` today (`rg "slugField\(" src`).
+
+#### Fallback: the slug is set once from the first title (variant B)
+
+Use this variant only if the owner chose to keep today's behavior.
+
+- [ ] **Step 1 (B): Add the slug tests**
+
+In `src/portal-access.int.test.ts`, add this `describe` block inside `describe('portal access, phase 0', ...)`, after `describe('owned drafts', ...)`:
+
+```ts
+describe('slug is set once from the first title', () => {
+  const retitle = (collection: Owned, id: number, user: User, data: Record<string, unknown>) =>
+    payload.update({ collection, id, data: data as never, draft: true, ...actingAs(user) })
+
+  it.each(['articles', 'publications'] as const)(
+    '%s as member: a later title change keeps the first slug',
+    async (collection) => {
+      const doc = await ownDraft(collection, accounts.member, {
+        title: `First ${collection} ${RUN}`,
+      })
+      await retitle(collection, doc.id, accounts.member, { title: fresh('Second title') })
+      expect((await stored(collection, doc.id)).slug).toBe(`first-${collection}-${RUN}`)
+    },
+  )
+
+  it.each(['articles', 'publications'] as const)(
+    '%s as member: a hand-written slug on update is dropped',
+    async (collection) => {
+      const doc = await ownDraft(collection, accounts.member, {
+        title: `Hand ${collection} ${RUN}`,
+      })
+      await retitle(collection, doc.id, accounts.member, { slug: fresh('claimed') })
+      expect((await stored(collection, doc.id)).slug).toBe(`hand-${collection}-${RUN}`)
+    },
+  )
+
+  it.each(['articles', 'publications'] as const)(
+    '%s: a slug an admin sets stays when the owner retitles',
+    async (collection) => {
+      const doc = await ownDraft(collection, accounts.member)
+      const chosen = fresh(`chosen-${collection}`)
+      await retitle(collection, doc.id, accounts.admin, { slug: chosen })
+      await retitle(collection, doc.id, accounts.member, { title: fresh('Owner title') })
+      expect((await stored(collection, doc.id)).slug).toBe(chosen)
+    },
+  )
+})
+```
+
+- [ ] **Step 2 (B): Run the slug tests and see them fail**
+
+Run: `pnpm test:int src/portal-access.int.test.ts -t "slug is set once"`
+Expected: FAIL on 2 cases, `a hand-written slug on update is dropped`. The other 4 pass now: they pin today's behavior.
+
+- [ ] **Step 3 (B): Lock both fields of the slug row**
 
 Replace the content of `src/fields/slug.ts` with:
 
@@ -1138,52 +2348,47 @@ const lock = (row: RowField): RowField => ({
 /**
  * Payload's built-in slug field, bound to this project's slugify.
  *
- * The built-in already provides everything a slug needs: a lock/unlock toggle so
- * an editor can override the generated value, a `generateSlug` checkbox that
- * stops regeneration once a slug is hand-written, a unique index and an index
- * for lookups. The only thing it needs from us is a slugify that survives
- * Arabic titles, which the default (ASCII `\w` only) does not.
- *
- * Only an admin writes the slug or its `generateSlug` checkbox, so an owner
- * cannot claim a URL by hand. Payload applies field access in beforeValidate;
- * the checkbox's beforeChange hook then fills the slug from the title, so
- * generation still runs for everyone.
+ * The built-in gives the lock/unlock toggle in the admin, a `generateSlug`
+ * checkbox that stops regeneration once a slug exists, a unique index and an
+ * index for lookups. This project adds a slugify that survives Arabic titles
+ * (the default keeps ASCII `\w` only), and field access: only an admin
+ * writes the slug or its checkbox, so an owner cannot claim a URL by hand.
+ * Payload applies field access in beforeValidate; the checkbox's
+ * beforeChange hook then fills the slug from the title, so generation still
+ * runs for everyone.
  *
  * @see https://payloadcms.com/docs/fields/text#slug-field
  */
 export const slugField: typeof payloadSlugField = (args = {}) =>
   payloadSlugField({
     // Payload calls this with `{ valueToSlugify, data, req }`; our helper is
-    // plain and synchronous, so unwrap the source value.
-    slugify: ({ valueToSlugify }) => {
-      // Return null (not '') when there is nothing to slugify: autosaved
-      // drafts are created before any title exists, and two draft rows with
-      // slug '' would hit the unique index. Multiple NULLs are allowed.
-      return slugify(valueToSlugify) || undefined
-    },
+    // plain and synchronous, so unwrap the source value. Return undefined
+    // (not '') when there is nothing to slugify: two draft rows with slug ''
+    // would hit the unique index.
+    slugify: ({ valueToSlugify }) => slugify(valueToSlugify) || undefined,
     ...args,
     overrides: (row) => lock(args.overrides?.(row) ?? row),
   })
 ```
 
-`overrides` comes after `...args`, and it runs the caller's `overrides` first and locks the result. So a caller can still adjust the row, and cannot remove the lock by accident. No caller passes `overrides` today (`rg "slugField\(" src`). If `RowField` is not exported by `payload` at this version, take the type from the parameter: `type SlugOverrides = NonNullable<Parameters<typeof payloadSlugField>[0]>['overrides']`.
+#### Both variants
 
-- [ ] **Step 2: Run the tests**
+- [ ] **Step 4: Run the tests**
 
 Run: `pnpm test:int src/portal-access.int.test.ts`
-Expected: the 10 `slug` cases and the `people` case pass. Only the 2 `space-preferences` cases fail.
+Expected: the slug block passes, the 5 slug create cases and the `people` case pass. Only the 2 `space-preferences` cases fail.
 
-- [ ] **Step 3: Run the other tests that make slugs**
+- [ ] **Step 5: Run the other tests that make slugs**
 
 Run: `pnpm test:int src/teaching.int.test.ts src/mcp-drafts.int.test.ts src/people.int.test.ts src/lib/profile.int.test.ts`
-Expected: all pass. These create documents as admins or with `overrideAccess`, or never write `slug`.
+Expected: all pass. These create documents as admins or with `overrideAccess`, or never write `slug`. With variant A, a test that asserts an admin draft keeps its first slug after a title change would now fail: such a test pins the old behavior. Report it to the owner before you change it.
 
-- [ ] **Step 4: Typecheck**
+- [ ] **Step 6: Typecheck and lint**
 
-Run: `pnpm typecheck`
-Expected: exit code 0.
+Run: `pnpm typecheck && pnpm exec oxlint src/fields/slug.ts src/portal-access.int.test.ts`
+Expected: exit code 0, no lint output.
 
-- [ ] **Step 5: Check by hand that a fellow can still make and autosave a draft in `/admin`**
+- [ ] **Step 7: Check by hand that a fellow can still make and autosave a draft in `/admin`**
 
 The `slug` field is `required` and uses the custom `SlugField` component (`@payloadcms/next/client#SlugField`). After this task a fellow cannot write it, so the admin form must still work for them. The int tests use the Local API, which does not run the form, so this step is manual.
 
@@ -1194,36 +2399,40 @@ The `slug` field is `required` and uses the custom `SlugField` component (`@payl
    Expected: the `slug` field in the sidebar is read-only (no editable input, no lock toggle that works), and no error toast shows.
 5. Type the title `Fellow Draft Probe`. Wait for the autosave status in the header to read "Draft saved" (the first autosave creates the document, and the URL changes to `/admin/collections/articles/<id>`).
    Expected: no toast that says a field is invalid, and no `slug` required error.
-6. Type more into the title, wait for a second autosave, reload the page.
-   Expected: the document opens, the title is kept, the `slug` field shows `fellow-draft-probe`.
-7. Check the stored row: `psql "$DATABASE_URL" -c "select id, title, slug from articles where title like 'Fellow Draft Probe%'"`
-   Expected: one row, and the slug is `fellow-draft-probe` (non-empty, made from the title).
+6. Change the title to `Fellow Draft Probe Two`, wait for a second autosave, reload the page.
+   Expected with variant A: the `slug` field shows `fellow-draft-probe-two`. With variant B: it shows `fellow-draft-probe`.
+7. Check the stored row: `psql "$DATABASE_URL" -c "select id, title, slug, generate_slug from articles where title like 'Fellow Draft Probe%'"`
+   Expected: one row, and the slug of step 6. With variant A, `generate_slug` is `t`.
 8. Repeat steps 4 to 7 on `http://localhost:3000/admin/collections/courses/create` with the title `Fellow Course Probe`. Courses have the same slug field and a fellow can create them.
 9. Clean up as an admin: delete both probe documents in `/admin` (or `psql "$DATABASE_URL" -c "delete from articles where title like 'Fellow Draft Probe%'"` and the same for `courses`), and delete the test user. Stop `pnpm dev`.
 
 If step 4 or 5 fails (the form refuses to save, or the slug shows a required error), stop. Do not weaken the lock to make the form pass. Report the exact message to the owner: the `SlugField` component may need `admin.readOnly` handling, and that is a design change.
 
-- [ ] **Step 6: Regenerate the audit snapshot**
+- [ ] **Step 8: Regenerate the audit snapshot**
 
-Run: `pnpm audit:field-access`
-Expected: PASS. Then run: `git diff -U0 scripts/field-access-audit.snapshot.json | grep -c '^+.*"create": "adminOnlyField"'`
-Expected: `16` (`slug` and `generateSlug` in 8 collections: people, courses, programmes, articles, places, newsletters, publications, events). No other row changes in this commit.
+Run: `pnpm audit:access`
+Expected: PASS. Then run: `git diff -U0 scripts/access-audit.snapshot.json | grep -c '^+.*"create": "adminOnlyField"'`
+Expected: `16` (`slug` and `generateSlug` in 8 collections: people, courses, programmes, articles, places, newsletters, publications, events). No other row changes in this commit. The hook is not access, so variant A and B give the same snapshot.
 
-- [ ] **Step 7: Run the snapshot test in CI mode**
+- [ ] **Step 9: Run the snapshot test in CI mode**
 
-Run: `CI=1 pnpm test:int scripts/field-access-audit.int.test.ts`
-Expected: PASS, `Tests  3 passed (3)`.
+Run: `CI=1 pnpm test:int scripts/access-audit.int.test.ts`
+Expected: PASS, `Tests  7 passed (7)`.
 
-- [ ] **Step 8: Commit**
+- [ ] **Step 10: Commit**
+
+For variant A:
 
 ```bash
-git add src/fields/slug.ts scripts/field-access-audit.snapshot.json
-git commit -m "fix(access): only admins write slug and generateSlug
+git add src/fields/slug.ts scripts/access-audit.snapshot.json
+git commit -m "fix(access): only admins write the slug; it follows the title until published
 
-An owner could claim a future slug on a draft. Field access runs in
-beforeValidate and the generateSlug hook fills the slug in beforeChange, so
-the title still makes the slug for every caller. generateSlug is locked too:
-switched back on, it makes the slug follow the title again.
+An owner could claim a future slug on a draft. slug and generateSlug now
+take adminWritesOnly. Field access runs in beforeValidate, so a non-admin's
+slug is dropped before the generateSlug hook runs. That hook now follows the
+title on every save while the document has never been published, and fixes
+the slug at the first publish or when an admin sets it. The generateSlug
+column holds that state, so no migration.
 
 The wrapper serves 8 collections. Only people has a non-admin writer (the
 own person row), which had the same hole. The audit snapshot shows 16 rows
@@ -1232,15 +2441,17 @@ closed.
 Co-Authored-By: Claude Sonnet 5.5 <noreply@anthropic.com>"
 ```
 
-### Task 7: `digest_sent_at` is not writable through the API
+For variant B, use the subject `fix(access): only admins write slug and generateSlug` and drop the sentences about following the title.
+
+### Task 12: `digest_sent_at` is not writable through the API
 
 **Skills:** tdd, payload.
 
 **Files:**
 
-- Modify: `src/collections/SpacePreferences.ts` (the `digest_sent_at` field, lines 63-69)
-- Modify: `scripts/field-access-audit.snapshot.json` (regenerated)
-- Commit: `src/portal-access.int.test.ts` (written in Task 4, committed here, Decision D8)
+- Modify: `src/collections/SpacePreferences.ts` (the `digest_sent_at` field)
+- Modify: `scripts/access-audit.snapshot.json` (regenerated)
+- Commit: `src/portal-access.int.test.ts` (written in Tasks 9 and 11, committed here, Decision D8)
 
 - [ ] **Step 1: Add the field access**
 
@@ -1254,12 +2465,12 @@ In `src/collections/SpacePreferences.ts`, replace the `digest_sent_at` field wit
       // stays open for the other fields.
       name: 'digest_sent_at',
       type: 'date',
-      access: { update: () => false },
+      access: { update: nobody },
       admin: { readOnly: true },
     },
 ```
 
-Do not change the collection `access`. The owner's `update` stays open.
+`nobody` is in the file's `@/access` import since Task 3. Do not change the collection `access`. The owner's `update` stays open.
 
 - [ ] **Step 2: Run the tests**
 
@@ -1273,13 +2484,13 @@ Expected: PASS. `claimDigest` and `releaseDigest` write `digest_sent_at` with `p
 
 - [ ] **Step 4: Regenerate the audit snapshot**
 
-Run: `pnpm audit:field-access`
-Expected: PASS. Then run: `git diff -U0 scripts/field-access-audit.snapshot.json | grep '^[+-].*digest_sent_at' ; git diff -U0 scripts/field-access-audit.snapshot.json | grep -c '^+.*"update": "inline:'`
-Expected: the update of that row reads `inline:` and 8 hex digits, and the count is `1`. No other row changes in this commit.
+Run: `pnpm audit:access`
+Expected: PASS. Then run: `git diff -U0 scripts/access-audit.snapshot.json | grep -c '^+.*"update": "nobody"'`
+Expected: `1`. No other row changes in this commit.
 
 - [ ] **Step 5: Run the snapshot test in CI mode, the type check and the lint**
 
-Run: `CI=1 pnpm test:int scripts/field-access-audit.int.test.ts src/portal-access.int.test.ts && pnpm typecheck && pnpm exec oxlint src/portal-access.int.test.ts src/collections/SpacePreferences.ts`
+Run: `CI=1 pnpm test:int scripts/access-audit.int.test.ts src/portal-access.int.test.ts && pnpm typecheck && pnpm exec oxlint src/portal-access.int.test.ts src/collections/SpacePreferences.ts`
 Expected: PASS for both files, exit code 0, no lint output.
 
 - [ ] **Step 6: Commit the last fix with the access tests**
@@ -1287,7 +2498,7 @@ Expected: PASS for both files, exit code 0, no lint output.
 Every test of the file passes now, so the commit is green.
 
 ```bash
-git add src/collections/SpacePreferences.ts scripts/field-access-audit.snapshot.json src/portal-access.int.test.ts
+git add src/collections/SpacePreferences.ts scripts/access-audit.snapshot.json src/portal-access.int.test.ts
 git commit -m "fix(access): owners cannot write digest_sent_at
 
 The owner may update their preference row, so they could set the claim
@@ -1301,61 +2512,61 @@ here, after the three fixes it covers, so that no commit of the PR is red.
 Co-Authored-By: Claude Sonnet 5.5 <noreply@anthropic.com>"
 ```
 
-### Task 8: Check the whole snapshot diff against PR A
+### Task 13: Check the whole snapshot diff against PR B
 
 **Skills:** tdd, payload.
 
-**Files:** none. Tasks 5, 6 and 7 committed the snapshot with each fix. This task checks the sum.
+**Files:** none. Tasks 10, 11 and 12 committed the snapshot with each fix. This task checks the sum.
 
 - [ ] **Step 1: Check that the snapshot is current**
 
-Run: `CI=1 pnpm test:int scripts/field-access-audit.int.test.ts`
-Expected: PASS, `Tests  3 passed (3)`. If it fails, `pnpm audit:field-access` shows a drift that no commit carried; find out why before you commit the regenerated file.
+Run: `CI=1 pnpm test:int scripts/access-audit.int.test.ts`
+Expected: PASS, `Tests  7 passed (7)`. If it fails, `pnpm audit:access` shows a drift that no commit carried; find out why before you commit the regenerated file.
 
-- [ ] **Step 2: Check that exactly 30 rows changed against PR A**
+- [ ] **Step 2: Check that exactly 30 rows changed against PR B**
 
 Run:
 
 ```bash
 before=$(mktemp)
-git show portal/phase-0-audit:scripts/field-access-audit.snapshot.json > "$before"
+git show portal/phase-0-audit:scripts/access-audit.snapshot.json > "$before"
 BEFORE="$before" node -e '
 const fs = require("fs");
 const a = JSON.parse(fs.readFileSync(process.env.BEFORE, "utf8"));
-const b = JSON.parse(fs.readFileSync("scripts/field-access-audit.snapshot.json", "utf8"));
-const key = (r) => `${r.collection} ${r.field}`;
+const b = JSON.parse(fs.readFileSync("scripts/access-audit.snapshot.json", "utf8"));
+const key = (r) => `${r.entity} ${r.field}`;
 const old = new Map(a.map((r) => [key(r), r]));
 let changed = 0;
 for (const r of b) {
   const o = old.get(key(r));
   if (!o) console.log("NEW", key(r));
-  else if (JSON.stringify(o) !== JSON.stringify(r)) { changed++; console.log("CHANGED", key(r), o.create, o.update, "->", r.create, r.update); }
+  else if (JSON.stringify(o.rules) !== JSON.stringify(r.rules)) { changed++; console.log("CHANGED", key(r), JSON.stringify(o.rules), "->", JSON.stringify(r.rules)); }
 }
 console.log("rows", a.length, b.length, "changed", changed);
 '
-rm "$before"
+command rm "$before"
 ```
 
 Expected: no `NEW` line, the same row count before and after, and `changed 30`:
 
-- `legacy_url` in 13 collections (governance, memberships, people, press, programmes, courses, places, articles, publications, cycles, newsletters, events, media): `open open -> adminOnlyField adminOnlyField`.
-- `slug` and `generateSlug` in 8 collections (people, courses, programmes, articles, places, newsletters, publications, events): `open open -> adminOnlyField adminOnlyField`. That is 16 rows.
-- `space-preferences digest_sent_at`: `open open -> open inline:<8 hex digits>`.
+- `legacy_url` in 13 collections (governance, memberships, people, press, programmes, courses, places, articles, publications, cycles, newsletters, events, media): create and update `open -> adminOnlyField`.
+- `slug` and `generateSlug` in 8 collections (people, courses, programmes, articles, places, newsletters, publications, events): create and update `open -> adminOnlyField`. That is 16 rows.
+- `collection:space-preferences digest_sent_at`: update `open -> nobody`.
 
-Any other change is a bug. Find it before you go on. If a row differs only because `inline:<hash>` changed for a rule you did not touch, the hash is not stable: check that the rule source did not change between the two commits.
+Any other change is a bug. Find it before you go on.
 
 - [ ] **Step 3: Check that each fix commit is green**
 
-Run: `git rebase --exec 'CI=1 pnpm test:int scripts/field-access-audit.int.test.ts' portal/phase-0-audit`
-Expected: every commit of PR B passes the snapshot test, and the rebase ends with no stop. (The commits do not change, because the exec only runs a test.)
+Run: `git rebase --exec 'CI=1 pnpm test:int scripts/access-audit.int.test.ts' portal/phase-0-audit`
+Expected: every commit of PR C passes the snapshot test, and the rebase ends with no stop. (The commits do not change, because the exec only runs a test.)
 
-### Task 9: Review PR B, then open it
+### Task 14: Review PR C, then open it
 
 **Skills:** code-review, then security-review.
 
-- [ ] **Step 1: Code review.** Run the `code-review` skill on `git diff portal/phase-0-audit...HEAD`. Fix each real finding. Re-run Task 7, Step 5 and Task 8, Step 2 after a fix.
-- [ ] **Step 2: Security review.** Run the `security-review` skill on the same diff. The questions for this PR: can a non-admin still set `slug` through `generateSlug`, through a duplicate, or through the admin form? Can a non-admin set `legacy_url` on any of the 13 collections? Does any non-admin code path write these fields with `overrideAccess: false`? (`rg "overrideAccess: false" src` and read each hit that writes a collection with these fields.)
-- [ ] **Step 3: Full checks.** Run: `pnpm lint && pnpm typecheck && pnpm test:int src/portal-access.int.test.ts scripts/field-access-audit.int.test.ts src/lib/space-email.int.test.ts src/teaching.int.test.ts src/people.int.test.ts`. Expected: no lint errors, typecheck exit code 0, all test files pass.
+- [ ] **Step 1: Code review.** Run the `code-review` skill on `git diff portal/phase-0-audit...HEAD`. Fix each real finding. Re-run Task 12, Step 5 and Task 13, Step 2 after a fix.
+- [ ] **Step 2: Security review.** Run the `security-review` skill on the same diff. The questions for this PR: can a non-admin still set `slug` through `generateSlug`, through a duplicate, or through the admin form? With variant A, can a non-admin move a published document's slug by unpublishing or by an edit that the review hook holds as a draft? Can a non-admin set `legacy_url` on any of the 13 collections? Does any non-admin code path write these fields with `overrideAccess: false`? (`rg "overrideAccess: false" src` and read each hit that writes a collection with these fields.) A non-admin duplicate keeps the title, so its slug collides with the source's unique slug; record what the admin form shows in that case.
+- [ ] **Step 3: Full checks.** Run: `pnpm lint && pnpm typecheck && pnpm test:int src/portal-access.int.test.ts scripts/access-audit.int.test.ts src/lib/space-email.int.test.ts src/teaching.int.test.ts src/people.int.test.ts`. Expected: no lint errors, typecheck exit code 0, all test files pass.
 - [ ] **Commit the review fixes.** Commit each fix on its own, with the trailer:
 
 ```bash
@@ -1367,17 +2578,19 @@ Co-Authored-By: Claude Sonnet 5.5 <noreply@anthropic.com>"
 
 If the reviews find nothing, write "Code review and security review: no findings" in the PR body. Make no empty commit.
 
-- [ ] **Step 4: Open the PR.** `git push -u origin portal/phase-0-field-access`, then `gh pr create --base portal/phase-0-audit --title "Portal phase 0: close legacy_url, slug and digest_sent_at" --body-file <file>`. The body lists the 30 snapshot rows, the People broadening (Deviation 2), and Open question 1 (the slug is set once from the first title). End the body with `🤖 Generated with [Claude Code](https://claude.com/claude-code)`.
+- [ ] **Step 4: Open the PR.** `git push -u origin portal/phase-0-field-access`, then `gh pr create --base portal/phase-0-audit --title "Portal phase 0: close legacy_url, slug and digest_sent_at" --body-file <file>`. The body lists the 30 snapshot rows, the People broadening (Deviation 3), and the slug variant used with its behavior (Open question 2, including the caveat that existing drafts keep their slug). End the body with `🤖 Generated with [Claude Code](https://claude.com/claude-code)`.
 
 ---
 
-# PR C. Media photos only
+# PR D. Media photos only
 
 Branch: `git switch -c portal/phase-0-media portal/phase-0-field-access`.
 
-### Task 10: Non-admins store only photos in `media`
+**Gate.** Do not start PR D until the owner has answered Open question 1. The tasks below are option (a). If the owner chose (b), stop and ask for the PDF size limit before you change Task 15.
 
-**Skills:** tdd, payload (`reference/HOOKS.md`, "Collection hooks"; `reference/ADAPTERS.md`, "Storage adapters"). Task 10 changes the Media collection hooks, so it keeps `payload`.
+### Task 15: Non-admins store only photos in `media`
+
+**Skills:** tdd, payload (`reference/HOOKS.md`, "Collection hooks"; `reference/ADAPTERS.md`, "Storage adapters").
 
 **Files:**
 
@@ -1525,12 +2738,12 @@ sharp names the formats `jpeg`, `png` and `webp`, so `image/${format}` matches `
 
 In `src/collections/Media.ts`:
 
-Replace the imports at the top with:
+Replace the imports at the top (after PR A they are `import type { CollectionConfig } from 'payload'`, then `import { isAdmin, isAuthenticated, anyone } from '@/access'`, then the `importFields` and `revalidate` imports) with:
 
 ```ts
 import { APIError, type CollectionBeforeOperationHook, type CollectionConfig } from 'payload'
 
-import { isAdmin, isAdminUser, isAuthenticated } from '@/access'
+import { anyone, isAdmin, isAdminUser, isAuthenticated } from '@/access'
 
 import { importFields } from '@/fields/import'
 import { isPhotoUpload } from '@/lib/photo-upload'
@@ -1579,7 +2792,7 @@ In the `Media` config, replace `hooks` with:
   },
 ```
 
-Leave `access`, `fields` and `upload` as they are.
+Leave `access`, `fields` and `upload` as they are. `photosOnlyForNonAdmins` is a hook, not an access rule, so the access audit does not list it.
 
 - [ ] **Step 5: Run the media tests and see them pass**
 
@@ -1588,8 +2801,8 @@ Expected: PASS, every test.
 
 - [ ] **Step 6: Confirm that the audit snapshot does not change**
 
-Run: `pnpm test:int scripts/field-access-audit.int.test.ts`
-Expected: PASS. The hook is not field access, so no row changes.
+Run: `CI=1 pnpm test:int scripts/access-audit.int.test.ts`
+Expected: PASS, `Tests  7 passed (7)`. The hook is not access, so no row changes.
 
 - [ ] **Step 7: Update the existing media security test**
 
@@ -1681,7 +2894,7 @@ type restriction.
 Co-Authored-By: Claude Sonnet 5.5 <noreply@anthropic.com>"
 ```
 
-### Task 11: The profile photo uses the same rule
+### Task 16: The profile photo uses the same rule
 
 **Skills:** tdd.
 
@@ -1700,28 +2913,28 @@ Expected: PASS. This is the baseline. `refuses a photo of the wrong type or size
 In `src/lib/profile.int.test.ts`, add this test after `refuses a photo alone of the wrong type or size, and removes the photo`. It is the one test that a real photo passes the new media hook through `saveProfilePhoto`, which creates the media row as the member with `overrideAccess: false`:
 
 ```ts
-  it('saves a real PNG photo through the media rule', async () => {
-    const data = await readFile(new URL('../../testing/files/pixel.png', import.meta.url))
-    const result = await saveProfilePhoto(payload, me, {
-      data,
-      mimetype: 'image/png',
-      name: `photo-${RUN}.png`,
-      size: data.length,
-    })
-    const stored = await payload.find({
-      collection: 'media',
-      where: { filename: { contains: `photo-${RUN}` } },
-      overrideAccess: true,
-    })
-    stored.docs.forEach((media) => track('media', media))
-    expect(result.ok).toBe(true)
-    expect(stored.totalDocs).toBe(1)
-    expect((await readProfile(payload, me))?.photo).not.toBeNull()
+it('saves a real PNG photo through the media rule', async () => {
+  const data = await readFile(new URL('../../testing/files/pixel.png', import.meta.url))
+  const result = await saveProfilePhoto(payload, me, {
+    data,
+    mimetype: 'image/png',
+    name: `photo-${RUN}.png`,
+    size: data.length,
   })
+  const stored = await payload.find({
+    collection: 'media',
+    where: { filename: { contains: `photo-${RUN}` } },
+    overrideAccess: true,
+  })
+  stored.docs.forEach((media) => track('media', media))
+  expect(result.ok).toBe(true)
+  expect(stored.totalDocs).toBe(1)
+  expect((await readProfile(payload, me))?.photo).not.toBeNull()
+})
 ```
 
 Run: `pnpm test:int src/lib/profile.int.test.ts -t "saves a real PNG photo"`
-Expected: PASS now (the member's PNG passes the old check and the new media hook). It is a guard: it must still pass after Step 3. If it fails with `error: 'photo'` after Task 10, the media hook refuses a real photo: read `req.file` in the hook before you change anything else.
+Expected: PASS now (the member's PNG passes the old check and the new media hook). It is a guard: it must still pass after Step 3. If it fails with `error: 'photo'` after Task 15, the media hook refuses a real photo: read `req.file` in the hook before you change anything else.
 
 - [ ] **Step 3: Replace both checks**
 
@@ -1740,7 +2953,7 @@ import { isPhotoUpload } from '@/lib/photo-upload'
 import { HTTP_URL, LINKS_MAX, NAME_MAX } from '@/lib/profile-limits'
 ```
 
-Replace the check at line 173-176:
+Replace the check at lines 173-176:
 
 ```ts
 // The size comes from the bytes, not from what the client claims.
@@ -1797,16 +3010,17 @@ member saves a real PNG through the media hook.
 Co-Authored-By: Claude Sonnet 5.5 <noreply@anthropic.com>"
 ```
 
-### Task 12: Review PR C and the whole phase, then open PR C
+### Task 17: Review PR D and the whole phase, then open PR D
 
 **Skills:** code-review, then security-review.
 
-- [ ] **Step 1: Code review.** Run the `code-review` skill on `git diff portal/phase-0-field-access...HEAD`. Fix each real finding. Re-run Task 10, Step 5 and Task 11, Step 4 after a fix.
-- [ ] **Step 2: Security review of the phase.** Run the `security-review` skill on `git diff origin/main...HEAD` (all three PRs). The questions:
+- [ ] **Step 1: Code review.** Run the `code-review` skill on `git diff portal/phase-0-field-access...HEAD`. Fix each real finding. Re-run Task 15, Step 5 and Task 16, Step 4 after a fix.
+- [ ] **Step 2: Security review of the phase.** Run the `security-review` skill on `git diff origin/main...HEAD` (all four PRs). The questions:
   - Can a non-admin store a non-photo in `media` through REST multipart, GraphQL, a remote URL, or a duplicate? (`update` and `delete` on media stay admin-only.)
   - Does every row of the spec's phase 0 table have a passing test in `src/portal-access.int.test.ts`?
   - Did any admin path lose an ability it had? (Admin uploads, admin slugs, the importer, the digest job.)
-- [ ] **Step 3: Full checks.** Run: `pnpm lint && pnpm typecheck && pnpm test:int src/portal-access.int.test.ts scripts/field-access-audit.int.test.ts src/security-media.int.test.ts src/lib/profile.int.test.ts src/lib/space-email.int.test.ts`. Expected: no lint errors, typecheck exit code 0, every file passes.
+  - Does `pnpm audit:access` still report no problem?
+- [ ] **Step 3: Full checks.** Run: `pnpm lint && pnpm typecheck && pnpm test:int src/portal-access.int.test.ts scripts/access-audit.int.test.ts src/security-media.int.test.ts src/lib/profile.int.test.ts src/lib/space-email.int.test.ts`. Expected: no lint errors, typecheck exit code 0, every file passes.
 - [ ] **Step 4: Run the whole int suite once.** Run: `pnpm test:int`. Expected: every file passes. A failure in a file this phase did not touch is a regression of this phase until shown otherwise.
 - [ ] **Commit the review fixes.** Commit each fix on its own, with the trailer:
 
@@ -1819,27 +3033,30 @@ Co-Authored-By: Claude Sonnet 5.5 <noreply@anthropic.com>"
 
 If the reviews find nothing, write "Code review and security review: no findings" in the PR body. Make no empty commit.
 
-- [ ] **Step 5: Open the PR.** `git push -u origin portal/phase-0-media`, then `gh pr create --base portal/phase-0-field-access --title "Portal phase 0: non-admins upload photos only" --body-file <file>`. The body names the rule, the byte check, the remote URL and no-bytes refusals, the `security-media` change, and Open question 2 (a fellow's pasted PDF or GIF is refused). End the body with `🤖 Generated with [Claude Code](https://claude.com/claude-code)`.
+- [ ] **Step 5: Open the PR.** `git push -u origin portal/phase-0-media`, then `gh pr create --base portal/phase-0-field-access --title "Portal phase 0: non-admins upload photos only" --body-file <file>`. The body names the rule, the byte check, the remote URL and no-bytes refusals, the `security-media` change, and the owner's answer to Open question 1 with the non-admin paths it affects. End the body with `🤖 Generated with [Claude Code](https://claude.com/claude-code)`.
 
 ---
 
 ## Phase 0 ends when
 
-- `src/portal-access.int.test.ts` passes. It holds every row of the spec's table, plus the People slug row.
-- `scripts/field-access-audit.snapshot.json` is committed and `scripts/field-access-audit.int.test.ts` passes with `CI=1`.
+- `src/portal-access.int.test.ts` passes. It holds every row of the spec's table, plus the People slug row and the slug block of the chosen variant.
+- `scripts/access-audit.snapshot.json` is committed and `scripts/access-audit.int.test.ts` passes with `CI=1`, with no problem reported.
+- Every access function in `src/` has a name (Task 5, Step 1 prints `unnamed 0`).
 - No migration was created or applied.
 
 ## Spec coverage
 
-| Spec item                                                                                                                                | Task                                                   |
-| ---------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------ |
-| Field access audit script, snapshot, snapshot test                                                                                       | 1, 2                                                   |
-| `legacy_url` admin-only on create and update                                                                                             | 5                                                      |
-| `slug` cannot be set by a non-admin, generation still runs                                                                               | 6 (tests in 4)                                         |
-| `space-preferences.digest_sent_at` `update: () => false`, owner update stays open                                                        | 7 (tests in 4)                                         |
-| `courses.fellows` stays open                                                                                                             | No change. The audit row shows `open`.                 |
-| `media` create: photo types and size for non-admins                                                                                      | 10, 11                                                 |
-| Jobs, `/api/mcp`, `form-submissions`                                                                                                     | No change. `form-submissions` is a guard row in 4.     |
-| Test table rows (articles, publications, enrollments x2, courses, space-preferences, publish, media, form-submissions), anonymous writes | 4, 10                                                  |
-| No migration                                                                                                                             | Checked in "Before you start" and "Phase 0 ends when". |
-| Review: code-review, then security-review                                                                                                | 3, 9, 12                                               |
+| Spec item                                                                                                                                | Task                                                                                                       |
+| ---------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------- |
+| Field access audit script, snapshot, snapshot test                                                                                       | 6, 7 (extended to collection and global rules, Deviation 2)                                                |
+| Owner decision: name every access rule, fail on unnamed                                                                                  | 1 to 5, 6                                                                                                  |
+| `legacy_url` admin-only on create and update                                                                                             | 10                                                                                                         |
+| `slug` cannot be set by a non-admin, generation still runs                                                                               | 11 (tests in 9 and 11)                                                                                     |
+| Owner proposal: slug follows title until first publish                                                                                   | 11, variant A (pending confirmation)                                                                       |
+| `space-preferences.digest_sent_at` read-only through the API, owner update stays open                                                    | 12 (tests in 9)                                                                                            |
+| `courses.fellows` stays open                                                                                                             | No change. The audit row shows `open`.                                                                     |
+| `media` create: photo types and size for non-admins                                                                                      | 15, 16 (after Open question 1)                                                                             |
+| Jobs, `/api/mcp`, `form-submissions`                                                                                                     | No change. `form-submissions` is a guard row in 9; its plugin create rule gets a name in 3.                |
+| Test table rows (articles, publications, enrollments x2, courses, space-preferences, publish, media, form-submissions), anonymous writes | 9, 15                                                                                                      |
+| No migration                                                                                                                             | Checked in "Before you start" and "Phase 0 ends when". Variant A uses the existing `generate_slug` column. |
+| Review: code-review, then security-review                                                                                                | 5, 8, 14, 17                                                                                               |
