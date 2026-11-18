@@ -1,46 +1,17 @@
-import { cleanup, fireEvent, render, screen, waitFor, within } from '@testing-library/react'
-import { NextIntlClientProvider } from 'next-intl'
-import type { ComponentProps, ReactNode } from 'react'
-import { afterEach, describe, expect, it, vi } from 'vitest'
-import messages from '../../../messages/en.json'
+import { cleanup, fireEvent, screen, waitFor, within } from '@testing-library/react'
+import type { ComponentProps } from 'react'
+import { afterEach, beforeEach, describe, expect, it } from 'vitest'
+import { page } from 'vitest/browser'
+
 import { SpaceHeadActions } from '@/components/space/space-head-actions'
 
-const { push } = vi.hoisted(() => ({ push: vi.fn() }))
-vi.mock('next/navigation', () => ({ useRouter: () => ({ push }) }))
-
-type OverlayProps = { open: boolean; onOpenChange: (open: boolean) => void }
-function Panel({ open, onOpenChange, name }: OverlayProps & { name: string }) {
-  return open ? (
-    <div role="dialog" aria-label={name}>
-      <button
-        onClick={(event) => {
-          event.currentTarget.blur()
-          onOpenChange(false)
-        }}
-      >
-        Close
-      </button>
-    </div>
-  ) : null
-}
-vi.mock('@/components/arc/bottom-sheet/bottom-sheet', () => ({
-  BottomSheet: (props: OverlayProps) => <Panel {...props} name="About" />,
-}))
-vi.mock('@/components/space/participation-dialog', () => ({
-  ParticipationDialog: (props: OverlayProps) => <Panel {...props} name="Participation" />,
-}))
-vi.mock('@/components/space/space-settings', () => ({
-  SpaceSettings: ({ anchor, ...props }: OverlayProps & { anchor: ReactNode }) => (
-    <>
-      {anchor}
-      <Panel {...props} name="Settings" />
-    </>
-  ),
-}))
+import messages from '../../../messages/en.json'
+import { IntlProvider } from '../../../testing/intl.test-utils'
+import { renderWithNavigation } from '../../../testing/navigation.test-utils'
 
 const mount = (props: Partial<ComponentProps<typeof SpaceHeadActions>> = {}) =>
-  render(
-    <NextIntlClientProvider locale="en" messages={messages}>
+  renderWithNavigation(
+    <IntlProvider>
       <SpaceHeadActions
         coursePage={null}
         rail={<p>About this space</p>}
@@ -49,14 +20,11 @@ const mount = (props: Partial<ComponentProps<typeof SpaceHeadActions>> = {}) =>
         settings={null}
         {...props}
       />
-    </NextIntlClientProvider>,
+    </IntlProvider>,
   )
 
-afterEach(() => {
-  cleanup()
-  vi.restoreAllMocks()
-  push.mockClear()
-})
+beforeEach(() => page.viewport(390, 844))
+afterEach(cleanup)
 
 describe('space header actions', () => {
   it('keeps moderator controls and course navigation absent when unavailable', () => {
@@ -77,18 +45,17 @@ describe('space header actions', () => {
   })
 
   it('opens About and returns focus to its action on close', async () => {
-    vi.spyOn(HTMLElement.prototype, 'offsetParent', 'get').mockReturnValue(document.body)
     mount()
     const about = screen.getByRole('button', { name: messages.Spaces.about })
     fireEvent.click(about)
-    expect(screen.getByRole('dialog', { name: 'About' })).toBeInTheDocument()
+    expect(screen.getByRole('dialog', { name: messages.Spaces.about })).toBeInTheDocument()
     const close = screen.getByRole('button', { name: 'Close' })
     close.focus()
     fireEvent.click(close)
     await waitFor(() => expect(about).toHaveFocus())
   })
 
-  it('keeps moderator actions wired and keyboard reachable in RTL', () => {
+  it('keeps moderator actions wired and keyboard reachable in RTL', async () => {
     mount({
       participation: { rows: [], weeks: [] },
       settings: {
@@ -100,6 +67,7 @@ describe('space header actions', () => {
         aboutDefault: '',
         rules: '',
         rulesDefault: '',
+        save: async () => ({ status: 'ok' }),
       },
     })
     const toolbar = screen.getAllByRole('toolbar', { name: messages.Spaces.spaceActions })[0]!
@@ -113,12 +81,17 @@ describe('space header actions', () => {
     })
     about.focus()
     fireEvent.keyDown(about, { key: 'ArrowLeft' })
-    expect(participation).toHaveFocus()
+    await waitFor(() => expect(participation).toHaveFocus())
     fireEvent.click(participation)
-    expect(screen.getByRole('dialog', { name: 'Participation' })).toBeInTheDocument()
+    expect(screen.getByRole('dialog', { name: messages.Participation.title })).toBeInTheDocument()
+    fireEvent.keyDown(screen.getByRole('dialog'), { key: 'Escape' })
+    await waitFor(() => expect(screen.queryByRole('dialog')).toBeNull())
+    participation.focus()
     fireEvent.keyDown(participation, { key: 'End' })
-    expect(settings).toHaveFocus()
+    await waitFor(() => expect(settings).toHaveFocus())
     fireEvent.click(settings)
-    expect(screen.getByRole('dialog', { name: 'Settings' })).toBeInTheDocument()
+    expect(
+      screen.getByRole('dialog', { name: messages.Spaces.settingsForModerator }),
+    ).toBeInTheDocument()
   })
 })
