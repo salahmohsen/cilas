@@ -124,7 +124,6 @@ A route handler or server component that reads `@/env`, Payload or `next-intl/se
 - **Turnstile in the browser project.** `vitest.config.mts` sets `NEXT_PUBLIC_TURNSTILE_SITE_KEY` to an empty string for the browser project, as `playwright.config.ts` does, so forms there run with the honeypot alone: the real widget needs Cloudflare and waits for a token. Cloudflare's test site keys would keep the widget in the test.
 - **Shared database.** All int tests share one local Postgres. A file that passes alone can fail in the full run when another file changes the same rows.
 - **Duplicate helpers.** `payloadServices`, `localServiceHandlers` and inline handlers in six int tests answer the same services, and `captureResendMail` and `resendInbox` capture the same mail. Each pair should become one helper.
-- **`testing/files/tiny.pdf`** has no xref table.
 
 ## Rejected
 
