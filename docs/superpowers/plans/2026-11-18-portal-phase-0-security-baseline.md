@@ -14,7 +14,7 @@
 
 - PR A: `tsgo --noEmit` exit 0, `oxlint` clean, `src/access.unit.test.ts` and `src/collections/space-access.unit.test.ts` 71 passed. The codemod printed `replaced 72`. The completeness check printed `slots 223, unnamed 0`.
 - PR B: `scripts/access-audit.int.test.ts` 7 passed, with `problems` empty on the real config. The snapshot has 1209 rows for 53 entities, and `oxfmt --check` keeps it as written.
-- Task 11, variant A: a probe test (not committed) passed 7 of 8 cases. The failed case was a publish of a publication, refused by Payload validation (`Introduction > Kind`), not by the slug rule. The plan publishes an article instead.
+- Task 11, variant A: a probe test (not committed) passed 7 of 8 cases. The failed case was a publish of a publication, refused by Payload validation (`Introduction > Kind`), not by the slug rule. The plan publishes an article instead. A second probe showed that an Arabic retitle moved the slug to `anwan-arby`; the hook now follows the default locale only, and the same probe then kept `english-…` through an Arabic retitle and an Arabic publish.
 
 PR C Tasks 9, 10 and 12 and all of PR D were not run. Each "Expected" line there is a prediction. When a run differs, find out why before you change the plan's code.
 
@@ -43,7 +43,7 @@ PR C Tasks 9, 10 and 12 and all of PR D were not run. Each "Expected" line there
 
    PR D does not start until the owner answers. PR A, B and C do not depend on it.
 
-2. **Slug follows the title until first publish (proposed, pending owner confirmation).** Task 11 holds two variants. Variant A is the proposal and the plan's choice: while a document has never been published, the slug follows the title on every save; at the first publish it becomes fixed; an admin can set it at any time; a non-admin can never hand-write it. It needs no new column. The `generateSlug` checkbox, already a column (`generate_slug`), holds the state "still follows the title". Payload's own hook stops following after two versions, so Task 11 replaces that hook. Variant B is the fallback: today's behavior (the slug is set from the first title), pinned by tests. Caveat for variant A: Payload stored `generate_slug = false` on every create that had a title. Existing drafts made before PR C keep their slug until an admin changes it. A data fix would be a separate script after phase 0, with the owner's approval.
+2. **Slug follows the title until first publish (proposed, pending owner confirmation).** Task 11 holds two variants. Variant A is the proposal and the plan's choice: while a document has never been published, the slug follows the English (default locale) title on every save, and an Arabic edit leaves it as it is; at the first publish it becomes fixed; an admin can set it at any time; a non-admin can never hand-write it. It needs no new column. The `generateSlug` checkbox, already a column (`generate_slug`), holds the state "still follows the title". Payload's own hook stops following after two versions, so Task 11 replaces that hook. Variant B is the fallback: today's behavior (the slug is set from the first title), pinned by tests. Caveat for variant A: Payload stored `generate_slug = false` on every create that had a title. Existing drafts made before PR C keep their slug until an admin changes it. A data fix would be a separate script after phase 0, with the owner's approval.
 
 3. **Rules that `src/` cannot name.** The owner asked the audit to fail on every unnamed rule. 28 rules come from Payload or a plugin while Payload sanitizes the config, after `src/` has run: the auth fields of `users` (16), the key fields of `payload-mcp-api-keys` (4), and the internal `payload-kv` and `payload-jobs` collections (8). `src/` cannot rename them. The audit lists them by place in an `UPSTREAM` table with their source text and prints a label such as `payload:auth`. It fails when such a rule changes, gets a name, or goes away. That is a deviation from "fail on every unnamed rule"; the owner confirms it.
 
@@ -129,7 +129,7 @@ Problems first, then each fix above the problems it solves.
 - **D6. The media check is a `beforeOperation` hook on create.** Solves P5, P6. `beforeOperation` runs before `generateFileData`, so `req.file` is still the upload as sent. A non-admin create with no `req.file` throws, which closes the remote URL path. The hook returns early for `overrideAccess: true`, for admins and for anonymous callers; the collection `create` access then throws `Forbidden` for anonymous callers.
 - **D7. Shared rules in `src/access.ts`, local rules beside their collection, factories name their output.** Solves P7, P8. `nobody`, `ownAccountRows`, `signedInOwnAccountRows`, `adminOrOwnAccountRows` and `adminWritesOnly` join `src/access.ts`. A codemod replaces the three repeated arrows (`() => false`, `() => true`, `({ req }) => isAdminUser(req.user)`) with `nobody`, `anyone` and `isAdmin`. Rules one collection owns become module-local named constants. `named()` gives each factory's rule the name `factory(args)`. `ownsVia` is named too, so `isAdminOrOwn(ownsVia(fellows),versions)` shows the owner field. The `while` option is a `Where`, so it prints as JSON: exact, and with no table of constant names to keep in step.
 - **D8. Red tests are not a commit.** The access test file of PR C is red for the new rows until Task 12. Task 9 writes the file and runs it red, but does not commit it. Task 12, the last fix, commits it when the whole file passes.
-- **D9. The slug follows the title while the document has never been published (Task 11, variant A).** Solves P9. A `beforeChange` hook on the `generateSlug` checkbox replaces Payload's: on create, and on an update while the checkbox is `true`, it sets the slug from the title; it returns `false` (fixed) at the first publish, when an admin writes a different slug, and on any create in a collection without drafts. The checkbox is the stored state, so no column and no version count are needed.
+- **D9. The slug follows the title while the document has never been published (Task 11, variant A).** Solves P9. A `beforeChange` hook on the `generateSlug` checkbox replaces Payload's: on create, and on an update in the default locale while the checkbox is `true`, it sets the slug from the English title (an update in another locale leaves the slug); it returns `false` (fixed) at the first publish, when an admin writes a different slug, and on any create in a collection without drafts. The checkbox is the stored state, so no column and no version count are needed.
 
 ---
 
@@ -2182,15 +2182,37 @@ describe('slug follows the title until the first publish', () => {
     expect(live.slug).toBe(`published-${RUN}`)
     expect((await stored('articles', doc.id)).slug).toBe(`published-${RUN}`)
   })
+
+  it('articles: a title change in Arabic leaves the slug, and so does a publish from Arabic', async () => {
+    const doc = await ownDraft('articles', accounts.member, { title: `English ${RUN}` })
+    await payload.update({
+      collection: 'articles',
+      id: doc.id,
+      locale: 'ar',
+      data: { title: 'عنوان عربي' } as never,
+      draft: true,
+      ...actingAs(accounts.member),
+    })
+    expect((await stored('articles', doc.id)).slug).toBe(`english-${RUN}`)
+    await payload.update({
+      collection: 'articles',
+      id: doc.id,
+      locale: 'ar',
+      data: { _status: 'published' } as never,
+      ...actingAs(accounts.admin),
+    })
+    await retitle('articles', doc.id, accounts.member, { title: `Changed ${RUN}` })
+    expect((await stored('articles', doc.id)).slug).toBe(`english-${RUN}`)
+  })
 })
 ```
 
-Articles have autosave drafts, publications have drafts without autosave, so the block covers both paths. The publish test uses an article: a publication publish needs its introduction fields (Payload refused a probe with "The following field is invalid: Introduction > Kind").
+Articles have autosave drafts, publications have drafts without autosave, so the block covers both paths. The publish tests use an article: a publication publish needs its introduction fields (Payload refused a probe with "The following field is invalid: Introduction > Kind").
 
 - [ ] **Step 2 (A): Run the slug tests and see them fail**
 
 Run: `pnpm test:int src/portal-access.int.test.ts -t "slug follows the title"`
-Expected: FAIL on 4 cases: `a draft slug follows each title change` (2: Payload's hook stored `generateSlug = false` at create) and `a hand-written slug on update is dropped` (2: the slug is not locked yet). The admin-set and publish cases pass now.
+Expected: FAIL on 5 cases. `a draft slug follows each title change` (2) and `after the first publish, a title change keeps the slug` (1) fail because Payload's hook stored `generateSlug = false` at create, so the slug stays the slug of the first title (`before-…`). `a hand-written slug on update is dropped` (2) fails because the slug is not locked yet. The admin-set cases (2) and the Arabic case (1) pass now.
 
 - [ ] **Step 3 (A): Lock the fields and replace the follow hook**
 
@@ -2210,23 +2232,24 @@ const slugOf = (value: unknown) => slugify(typeof value === 'string' ? value : '
  * The `generateSlug` checkbox holds that state: it stays true until the first
  * publish, or until an admin writes a slug by hand. A collection without
  * drafts has no publish step, so its slug is fixed when the document is
- * created. This replaces Payload's own hook, which stops following the title
- * after two versions.
+ * created. The slug follows the title of the default locale only: an edit
+ * in another locale leaves it as it is. This replaces Payload's own hook,
+ * which stops following the title after two versions.
  */
 const followTitleUntilPublished =
   (useAsSlug: string): FieldHook =>
-  ({ collection, data, operation, originalDoc, value }) => {
+  ({ collection, data, operation, originalDoc, req, value }) => {
     if (!data) return value
-    const fromTitle = slugOf(data[useAsSlug] ?? originalDoc?.[useAsSlug])
     const given: unknown = data.slug
-    const handSet =
-      typeof given === 'string' &&
-      given !== '' &&
-      given !== originalDoc?.slug &&
-      given !== fromTitle
-    if (handSet || (operation === 'update' && !value)) return false
+    const changed = typeof given === 'string' && given !== '' && given !== originalDoc?.slug
+    const publishing = data._status === 'published'
+    const { localization } = req.payload.config
+    if (operation === 'update' && localization && req.locale !== localization.defaultLocale)
+      return changed || publishing ? false : value
+    const fromTitle = slugOf(data[useAsSlug] ?? originalDoc?.[useAsSlug])
+    if ((changed && given !== fromTitle) || (operation === 'update' && !value)) return false
     data.slug = fromTitle
-    return Boolean(collection?.versions?.drafts) && data._status !== 'published'
+    return Boolean(collection?.versions?.drafts) && !publishing
   }
 
 const lock = (row: RowField, useAsSlug: string): RowField => ({
@@ -2269,7 +2292,8 @@ export const slugField: typeof payloadSlugField = (args = {}) =>
 How it works, step by step:
 
 - Field access runs in `beforeValidate` (Decision D1). A non-admin's `slug` and `generateSlug` are dropped there, so in this hook `data.slug` is the stored slug or nothing, and `value` is the stored checkbox.
-- `handSet` is true only for a slug that differs from the stored one and from the title's slug. Only an admin's slug survives field access, and the admin form sends the title's slug while it follows the title, so that does not count as hand-set.
+- `changed` is true only for a slug that differs from the stored one. Only an admin's slug survives field access. In the default locale, a changed slug that equals the title's slug is not hand-set: the admin form sends the title's slug while it follows the title.
+- The title is localized (`src/collections/Articles.ts:79`) and the slug is not. An update in another locale (Arabic) leaves the slug as it is, and still fixes it at a publish or when an admin changes it. Without this check, a probe moved the slug of an English draft to `anwan-arby` after an Arabic retitle.
 - On create, and on an update while the checkbox is `true`, the hook sets the slug from the title. It returns `true` (keep following) only for a draft in a drafts collection. At a publish (the review hook sets `_status: 'published'` before field hooks run), in a collection without drafts (people, places), or on a hand-set slug, it returns `false`: fixed.
 - `useAsSlug` comes from the caller: people and places pass `useAsSlug: 'name'`.
 - The `generate_slug` column exists already. No migration.
@@ -2404,7 +2428,11 @@ The `slug` field is `required` and uses the custom `SlugField` component (`@payl
 7. Check the stored row: `psql "$DATABASE_URL" -c "select id, title, slug, generate_slug from articles where title like 'Fellow Draft Probe%'"`
    Expected: one row, and the slug of step 6. With variant A, `generate_slug` is `t`.
 8. Repeat steps 4 to 7 on `http://localhost:3000/admin/collections/courses/create` with the title `Fellow Course Probe`. Courses have the same slug field and a fellow can create them.
-9. Clean up as an admin: delete both probe documents in `/admin` (or `psql "$DATABASE_URL" -c "delete from articles where title like 'Fellow Draft Probe%'"` and the same for `courses`), and delete the test user. Stop `pnpm dev`.
+9. Variant A only, as an admin. Sign out, and sign in as an admin. Open the article of step 5. Change the title to `Admin Retitle Probe` and wait for the autosave.
+   Expected: the slug follows, `admin-retitle-probe`. (The admin form sends the slug; a slug equal to the title's slug is not hand-set.)
+10. Variant A only. Unlock the slug field, type `admin-chosen-probe`, save the draft. Then change the title to `Admin Second Probe` and wait for the autosave.
+    Expected: the slug stays `admin-chosen-probe`, and `generate_slug` in the row is `f`.
+11. Clean up as an admin: delete both probe documents in `/admin` (or `psql "$DATABASE_URL" -c "delete from articles where title like 'Fellow Draft Probe%' or title like 'Admin % Probe'"` and the same for `courses`), and delete the test user. Stop `pnpm dev`.
 
 If step 4 or 5 fails (the form refuses to save, or the slug shows a required error), stop. Do not weaken the lock to make the form pass. Report the exact message to the owner: the `SlugField` component may need `admin.readOnly` handling, and that is a design change.
 
