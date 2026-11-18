@@ -1,20 +1,17 @@
 import { render } from '@testing-library/react'
 import { NextIntlClientProvider } from 'next-intl'
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
+import { describe, expect, it } from 'vitest'
 
 import { CourseView } from '@/app/(frontend)/[locale]/study/[slug]/CourseView'
 import type { Course, Session } from '@/payload-types'
 import ar from '../../../../../../messages/ar.json'
 import en from '../../../../../../messages/en.json'
+import {
+  createMemoryRouter,
+  NavigationProvider,
+} from '../../../../../../testing/navigation.test-utils'
 
-vi.mock('next/navigation', async (importOriginal) => ({
-  ...(await importOriginal<typeof import('next/navigation')>()),
-  usePathname: () => '/en/study/a-course',
-  useRouter: () => ({ push: vi.fn(), replace: vi.fn(), refresh: vi.fn(), prefetch: vi.fn() }),
-  useSearchParams: () => new URLSearchParams(),
-}))
-
-const course = (over: Partial<Course> = {}): Course =>
+const course = (over: Partial<Course> = {}) =>
   ({
     id: 1,
     slug: 'a-course',
@@ -24,7 +21,7 @@ const course = (over: Partial<Course> = {}): Course =>
     updatedAt: '',
     ...over,
   }) as Course
-const session = (id: number, over: Partial<Session> = {}): Session =>
+const session = (id: number, over: Partial<Session> = {}) =>
   ({ id, course: 1, createdAt: '', updatedAt: '', ...over }) as Session
 const weekly = [1, 2, 3].map((n) =>
   session(n, {
@@ -45,7 +42,9 @@ const facts = (c: Course, sessions: Session[], locale: 'en' | 'ar' = 'en') => {
       messages={locale === 'ar' ? ar : en}
       timeZone="Africa/Cairo"
     >
-      <CourseView course={c} sessions={sessions} />
+      <NavigationProvider memory={createMemoryRouter('/en/study/a-course')}>
+        <CourseView course={c} sessions={sessions} />
+      </NavigationProvider>
     </NextIntlClientProvider>,
   )
   const dl = container.querySelector('dl.side-card-facts')
@@ -58,26 +57,6 @@ const facts = (c: Course, sessions: Session[], locale: 'en' | 'ar' = 'en') => {
 }
 
 describe('what the course page says about time', () => {
-  beforeEach(() => {
-    vi.stubGlobal(
-      'ResizeObserver',
-      class {
-        observe() {}
-        disconnect() {}
-      },
-    )
-    vi.stubGlobal(
-      'IntersectionObserver',
-      class {
-        observe() {}
-        disconnect() {}
-        unobserve() {}
-      },
-    )
-    Element.prototype.scrollIntoView = vi.fn()
-  })
-  afterEach(() => vi.unstubAllGlobals())
-
   it('reads the start, the weekly times and the length from the sessions', () => {
     expect(facts(course(), weekly).rows).toEqual([
       'Starts: Tuesday, Mar 3',

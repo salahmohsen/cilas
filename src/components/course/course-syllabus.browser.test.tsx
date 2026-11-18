@@ -1,6 +1,6 @@
 import { act, render, waitFor } from '@testing-library/react'
 import { NextIntlClientProvider } from 'next-intl'
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
+import { afterEach, describe, expect, it, vi } from 'vitest'
 
 import { CourseSyllabus, syllabusOf } from '@/components/course/course-syllabus'
 import type { Course, Session } from '@/payload-types'
@@ -8,7 +8,7 @@ import en from '../../../messages/en.json'
 import ar from '../../../messages/ar.json'
 
 const course = { title: 'Course' } as Course
-const session = (id: number, over: Partial<Session> = {}): Session =>
+const session = (id: number, over: Partial<Session> = {}) =>
   ({ id, course: 1, createdAt: '', updatedAt: '', ...over }) as Session
 const view = (sessions: Session[], locale: 'en' | 'ar' = 'en') =>
   render(
@@ -22,18 +22,6 @@ const view = (sessions: Session[], locale: 'en' | 'ar' = 'en') =>
   )
 
 describe('the course syllabus from the sessions collection', () => {
-  beforeEach(() => {
-    vi.stubGlobal(
-      'ResizeObserver',
-      class {
-        observe() {}
-        disconnect() {}
-      },
-    )
-    Element.prototype.scrollIntoView = vi.fn()
-  })
-  afterEach(() => vi.unstubAllGlobals())
-
   it('orders sessions by their first meeting and names an untitled one by its number', () => {
     const { container } = view([
       session(1, { title: 'Later', meetings: [{ date: '2026-03-10' }] }),
@@ -100,7 +88,7 @@ describe('the course syllabus from the sessions collection', () => {
     ]
     const rowOf = (container: HTMLElement, id: string) =>
       container.querySelector<HTMLElement>(`li[id="session-${id}"] button[aria-expanded]`)!
-    afterEach(() => window.history.replaceState(null, '', '/'))
+    afterEach(() => window.history.replaceState(null, '', window.location.pathname))
 
     it.each(['en', 'ar'] as const)('gives each row a stable anchor in %s', (locale) => {
       const { container } = view(sessions(), locale)
@@ -111,20 +99,19 @@ describe('the course syllabus from the sessions collection', () => {
     })
 
     it('opens the row, focuses it and scrolls to it when the page arrives with its hash', async () => {
-      window.history.replaceState(null, '', '/en/study/a#session-9')
+      const scroll = vi.spyOn(Element.prototype, 'scrollIntoView')
+      window.history.replaceState(null, '', '#session-9')
       const { container } = view(sessions())
       await waitFor(() => expect(rowOf(container, '9')).toHaveFocus())
       expect(rowOf(container, '9')).toHaveAttribute('aria-expanded', 'true')
-      expect(Element.prototype.scrollIntoView).toHaveBeenCalledWith(
-        expect.objectContaining({ block: 'start' }),
-      )
+      expect(scroll).toHaveBeenCalledWith(expect.objectContaining({ block: 'start' }))
     })
 
     it('follows a later change of the hash', async () => {
       const { container } = view(sessions())
       expect(rowOf(container, '7')).not.toHaveFocus()
       act(() => {
-        window.history.replaceState(null, '', '/en/study/a#session-7')
+        window.history.replaceState(null, '', '#session-7')
         window.dispatchEvent(new HashChangeEvent('hashchange'))
       })
       await waitFor(() => expect(rowOf(container, '7')).toHaveFocus())
@@ -132,7 +119,7 @@ describe('the course syllabus from the sessions collection', () => {
     })
 
     it('ignores a hash that is not a session of the course', () => {
-      window.history.replaceState(null, '', '/en/study/a#session-404')
+      window.history.replaceState(null, '', '#session-404')
       const { container } = view(sessions())
       expect(container.contains(document.activeElement)).toBe(false)
     })

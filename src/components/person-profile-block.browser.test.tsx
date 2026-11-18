@@ -1,15 +1,11 @@
 import { cleanup, fireEvent, render, screen } from '@testing-library/react'
 import { NextIntlClientProvider } from 'next-intl'
-import { afterEach, describe, expect, it, vi } from 'vitest'
+import { describe, expect, it } from 'vitest'
+import { page } from 'vitest/browser'
 
 import { RichTextField } from '@/components/RichTextField'
 import messages from '../../messages/en.json'
 import arabicMessages from '../../messages/ar.json'
-
-afterEach(() => {
-  cleanup()
-  vi.unstubAllGlobals()
-})
 
 const documentOf = (children: unknown[]) => ({
   root: { type: 'root', version: 1, children, direction: null, format: '', indent: 0 },
@@ -54,19 +50,8 @@ const renderBody = (children: unknown[], plain = false, locale = 'en') =>
 describe('person profile editor block', () => {
   it.each(['en', 'ar'])(
     'uses the Arc carousel on mobile in %s with manual navigation',
-    (locale) => {
-      vi.stubGlobal('matchMedia', () => ({
-        matches: true,
-        addEventListener() {},
-        removeEventListener() {},
-      }))
-      vi.stubGlobal(
-        'ResizeObserver',
-        class {
-          observe() {}
-          disconnect() {}
-        },
-      )
+    async (locale) => {
+      await page.viewport(390, 844)
       const { container } = renderBody(
         [
           {
