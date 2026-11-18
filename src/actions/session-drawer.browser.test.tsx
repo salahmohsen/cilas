@@ -597,7 +597,9 @@ describe('the session drawer’s Edit form', () => {
     fireEvent.change(link, { target: { value: 'not a link' } })
     expect(await within(edit).findByText(en.SessionEdit.errors.link)).toBeInTheDocument()
     fireEvent.submit(link)
-    expect(screen.getByRole('dialog', { name: en.SessionEdit.materialTitleEdit })).toBeVisible()
+    await waitFor(() =>
+      expect(screen.getByRole('dialog', { name: en.SessionEdit.materialTitleEdit })).toBeVisible(),
+    )
     expect(host.saves).toHaveLength(0)
 
     fireEvent.click(within(edit).getByRole('button', { name: en.SessionEdit.cancel }))
