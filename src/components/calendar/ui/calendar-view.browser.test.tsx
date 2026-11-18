@@ -1,7 +1,7 @@
 import { act, fireEvent, render, screen, within } from '@testing-library/react'
 import { NextIntlClientProvider } from 'next-intl'
 import { renderToString } from 'react-dom/server'
-import { afterEach, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest'
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 
 import { Calendar } from '@/components/calendar/ui/calendar'
 import { useCalendarLabels } from '@/components/calendar/ui/use-calendar-labels'
@@ -16,18 +16,18 @@ const item = (
   tone: CalendarItem['tone'],
   blocks: CalendarItem['blocks'],
   extra: Partial<CalendarItem> = {},
-): CalendarItem => ({
-  id,
-  kind: 'session',
-  title,
-  tone,
-  cancelled: false,
-  version: 'v1',
-  blocks,
-  ...extra,
-})
+) =>
+  ({
+    id,
+    kind: 'session',
+    title,
+    tone,
+    cancelled: false,
+    version: 'v1',
+    blocks,
+    ...extra,
+  }) satisfies CalendarItem
 
-// The week of Saturday 14 November 2026.
 const items: CalendarItem[] = [
   item('week-3', 'Week 3', 'yellow', [
     { id: 'tue', date: '2026-11-17', start_time: '19:00', end_time: '21:00' },
@@ -97,16 +97,6 @@ const view = (locale = 'en', onOpen = vi.fn()) =>
       <Host locale={locale} onOpen={onOpen} />
     </NextIntlClientProvider>,
   )
-
-beforeAll(() => {
-  // jsdom has no Web Animations; the panel waits on none.
-  Element.prototype.getAnimations ??= () => []
-  globalThis.ResizeObserver = class {
-    observe() {}
-    unobserve() {}
-    disconnect() {}
-  }
-})
 
 beforeEach(() => {
   localStorage.clear()
@@ -312,8 +302,7 @@ describe('the toolbar and the day headers', () => {
     expect(screen.queryByRole('group', { name: 'Colour key' })).toBeNull()
   })
 
-  it('names the next meeting in Up next and opens it', () => {
-    // 10:00 UTC is 12:00 in Cairo on Tuesday 17 November: Week 3 at 19:00 is next.
+  it('names the next meeting in Up next and opens it, at noon in Cairo on Tuesday 17 November', () => {
     const onOpen = vi.fn()
     view('en', onOpen)
     openPanel()
@@ -325,8 +314,8 @@ describe('the toolbar and the day headers', () => {
 })
 
 describe('the now line', () => {
-  it('draws it in the browser with the time at its start, and moves it each minute', () => {
-    vi.useFakeTimers({ now: new Date('2026-11-17T17:30:00Z') }) // 19:30 in Cairo
+  it('draws it in the browser at 19:30 in Cairo with the time at its start, and moves it each minute', () => {
+    vi.useFakeTimers({ now: new Date('2026-11-17T17:30:00Z') })
     const { container } = view()
     const tuesday = screen.getByRole('group', { name: 'Tuesday, November 17' })
     expect(tuesday.querySelector('[style*="--now"]')).not.toBeNull()
