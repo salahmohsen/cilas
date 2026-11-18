@@ -1,11 +1,15 @@
 import { cleanup, fireEvent, render, screen } from '@testing-library/react'
+import { http, HttpResponse } from 'msw'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 
 import { RegisterLink } from '@/components/events/register-link'
 import { setSender } from '@/lib/analytics/track'
 import { subscribeToNewsletter } from '@/lib/newsletter-subscribe'
 
+import { mockNetwork } from '../../../testing/msw-node.test-utils'
+
 const sent = vi.fn()
+const network = mockNetwork()
 
 beforeEach(() => {
   sent.mockReset()
@@ -15,21 +19,19 @@ beforeEach(() => {
 afterEach(() => {
   cleanup()
   setSender(null)
-  vi.unstubAllGlobals()
 })
 
 describe('newsletter_subscribed', () => {
   it('is sent after a good signup, with the place and never the address', async () => {
-    vi.stubGlobal('fetch', vi.fn().mockResolvedValue({ ok: true }))
+    network.use(http.post('/api/newsletter', () => HttpResponse.json({ ok: true })))
     await subscribeToNewsletter('reader@example.org', 'footer')
     expect(sent).toHaveBeenCalledExactlyOnceWith('newsletter_subscribed', { place: 'footer' })
     expect(JSON.stringify(sent.mock.calls)).not.toContain('reader@example.org')
   })
 
   it('is not sent when the signup fails', async () => {
-    vi.stubGlobal(
-      'fetch',
-      vi.fn().mockResolvedValue({ ok: false, json: async () => ({ error: 'No' }) }),
+    network.use(
+      http.post('/api/newsletter', () => HttpResponse.json({ error: 'No' }, { status: 400 })),
     )
     await expect(subscribeToNewsletter('reader@example.org')).rejects.toThrow('No')
     expect(sent).not.toHaveBeenCalled()

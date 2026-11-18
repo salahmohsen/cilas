@@ -28,7 +28,12 @@ describe('preloadable', () => {
   })
 
   it('loads once when the trigger preloads before the panel opens', async () => {
-    const load = vi.fn(async () => () => <p>Preloaded</p>)
+    let loads = 0
+    const Preloaded = () => <p>Preloaded</p>
+    const load = async () => {
+      loads++
+      return Preloaded
+    }
     const Panel = preloadable(load)
     await act(async () => {
       Panel.preload()
@@ -36,6 +41,6 @@ describe('preloadable', () => {
     })
     render(<Panel />)
     expect(screen.getByText('Preloaded')).toBeInTheDocument()
-    expect(load).toHaveBeenCalledTimes(1)
+    expect(loads).toBe(1)
   })
 })
