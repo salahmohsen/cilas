@@ -841,6 +841,128 @@ describe.skipIf(!disposable)('private search with real Postgres and Typesense 30
     )
     expect(samples).toHaveLength(25)
   })
+  describe('validated aggregates and selections', () => {
+    const communitySpace = (name: string) =>
+      payload.create({
+        collection: 'spaces',
+        data: { kind: 'community', name: `Aggregates ${name} ${run}` },
+        depth: 0,
+      })
+    const countsIn = (page: Awaited<ReturnType<typeof search>>, spaces: Space[]) =>
+      (page.aggregates?.facets ?? [])
+        .filter((facet) => spaces.some((space) => space.id === facet.id))
+        .sort((x, y) => x.id - y.id)
+        .map(({ id, found }) => ({ id, found }))
+
+    it('counts across readable spaces independently of selection, supports none, and rejects forged IDs', async () => {
+      const token = `aggcount${run}`
+      const one = await communitySpace('count one')
+      const two = await communitySpace('count two')
+      await post(one, `${token} Zulu`)
+      await post(two, `${token} Alpha`)
+      await drain()
+      const both = [
+        { id: one.id, found: 1 },
+        { id: two.id, found: 1 },
+      ].sort((x, y) => x.id - y.id)
+      const selected = await search(alice, token, { spaces: [one.id] })
+      expect(selected.results).toHaveLength(1)
+      expect(selected.aggregates?.total).toBe(1)
+      expect(countsIn(selected, [one, two])).toEqual(both)
+      const none = await search(alice, token, { spaces: [] })
+      expect(none.results).toEqual([])
+      expect(none.aggregates?.total).toBe(0)
+      expect(countsIn(none, [one, two])).toEqual(both)
+      await expect(search(alice, token, { spaces: [one.id, 999999999] })).rejects.toBeInstanceOf(
+        SelectionDenied,
+      )
+      expect(
+        (await search(alice, token, { spaces: [two.id, one.id, one.id] })).results,
+      ).toHaveLength(2)
+    })
+
+    it('excludes stale revisions, unreadable candidates and deleted threads from exact counts', async () => {
+      const token = `aggstale${run}`
+      const one = await communitySpace('stale one')
+      const two = await communitySpace('stale two')
+      const stale = await post(one, `${token} Zulu`)
+      const live = await post(two, `${token} Alpha`)
+      await post(b, `${token} secret`)
+      await drain()
+      await updatePost(stale.id, { body: 'edited without indexing' })
+      const page = await search(alice, token)
+      expect(page.results.map((row) => row.id)).toEqual([`post:${live.id}`])
+      expect(page.aggregates?.total).toBe(1)
+      expect(countsIn(page, [one, two])).toEqual(
+        [
+          { id: one.id, found: 0 },
+          { id: two.id, found: 1 },
+        ].sort((x, y) => x.id - y.id),
+      )
+      await updatePost(live.id, { deleted_at: new Date().toISOString() })
+      expect((await search(alice, token)).aggregates?.total).toBe(0)
+    })
+
+    it('browses for an empty query and sorts validated titles A to Z across the whole selection', async () => {
+      const solo = await communitySpace('alpha')
+      const zulu = await post(solo, `Zulu aggalpha${run}`)
+      const alpha = await post(solo, `Alpha aggalpha${run}`)
+      await drain()
+      const documents = readClient.collections(await activeGeneration(payload)).documents()
+      const watched = vi.spyOn(documents, 'search')
+      const page = await search(alice, '', { sort: 'alpha', spaces: [solo.id] })
+      expect(watched.mock.calls[0]![0]).toMatchObject({ q: '*' })
+      watched.mockRestore()
+      expect(page.results.map((row) => row.id)).toEqual([`post:${alpha.id}`, `post:${zulu.id}`])
+    })
+
+    it('keeps exact totals larger than one page, binds selection into cursors, and pages without duplicates', async () => {
+      const token = `aggpage${run}`
+      const big = await communitySpace('page big')
+      const other = await communitySpace('page other')
+      for (let i = 0; i < 25; i++) await post(big, `${token} ${i}`)
+      await drain()
+      const first = await search(alice, token, { spaces: [big.id, other.id] })
+      expect(first.results).toHaveLength(20)
+      expect(first.aggregates?.total).toBe(25)
+      const next = await search(alice, token, { spaces: [other.id, big.id], cursor: first.cursor })
+      expect(next.results).toHaveLength(5)
+      expect(next.results.every((row) => !first.results.some((prior) => prior.id === row.id))).toBe(
+        true,
+      )
+      await expect(
+        search(alice, token, { spaces: [big.id], cursor: first.cursor }),
+      ).rejects.toBeInstanceOf(CursorReset)
+    })
+
+    it('returns only authorized result-owned image routes, never raw storage URLs', async () => {
+      const token = `aggimage${run}`
+      const solo = await communitySpace('image')
+      const withPhoto = await post(solo, `${token} photo`)
+      const data = await readFile(new URL('../../../testing/files/pixel.png', import.meta.url))
+      const file = await payload.create({
+        collection: 'space-files',
+        data: { space: solo.id, post: withPhoto.id },
+        file: { name: `pixel-${run}.png`, mimetype: 'image/png', data, size: data.length },
+        overrideAccess: true,
+      })
+      await drain()
+      const documents = readClient.collections(await activeGeneration(payload)).documents()
+      const searched = vi.spyOn(documents, 'search')
+      const finds = vi.spyOn(payload, 'find')
+      const page = await search(alice, token, { spaces: [solo.id] })
+      const mediaRead = finds.mock.calls.find(([args]) => args.collection === 'space-files')![0]
+      const engineRequest = searched.mock.calls[0]![0]
+      searched.mockRestore()
+      finds.mockRestore()
+      expect(page.results[0]!.image).toBe(
+        `/api/space-files/file/${encodeURIComponent(file.filename!)}`,
+      )
+      expect(JSON.stringify(page)).not.toContain('127.0.0.1:19000')
+      expect(mediaRead).toMatchObject({ overrideAccess: false, user: alice })
+      expect(engineRequest).not.toHaveProperty('facet_by')
+    })
+  })
   it('denies public keys on private generations/alias, JOIN, export and key APIs and rejects curation bypass', async () => {
     const key = await client.keys().create({
       description: 'Disposable public search test',
