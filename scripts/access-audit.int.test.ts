@@ -69,6 +69,13 @@ describe('access audit', () => {
     ).toBe(false)
   })
 
+  it('matches the committed snapshot', async () => {
+    const { rows } = auditAccess(await config)
+    await expect(`${JSON.stringify(rows, null, 2)}\n`).toMatchFileSnapshot(
+      './access-audit.snapshot.json',
+    )
+  })
+
   it('fails on a rule with no name', () => {
     expect(probe({ name: 'value', access: { update: () => false } })).toEqual([
       'collection:probe value update: unnamed rule',
