@@ -14,20 +14,25 @@ CILAS brings the institute’s public website, content management, applications,
 
 ## Demo
 
-[![CILAS demo: home page, open registration, and upcoming events](docs/demo/cilas-demo.gif)](docs/demo/cilas-demo.mp4)
+[![CILAS demo: the home page, the course catalogue, a course page and the calendar](docs/demo/cilas-demo.gif)](docs/demo/cilas-demo.mp4)
 
-**[Watch the full walkthrough](docs/demo/cilas-demo.mp4).** It runs the real app on a sanitized copy of the production catalogue.
+**[Watch the full tour](docs/demo/cilas-demo.mp4)** (1920 × 1080). It records the real app on a sanitized copy of the catalogue, and [Remotion](https://www.remotion.dev) composes the film.
 
-| Chapter     | What it shows                                                                                                                                                 |
-| ----------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Public site | Home page, open registration, events, course archive, course pages, Bridge Programme, calendar, search, people, articles, AI study prompts, dark mode, Arabic |
-| Applying    | A Bridge application filled in and submitted through a CMS-built form                                                                                         |
-| Spaces      | Course feed, reactions, comments, a new post, event RSVP, notifications, settings                                                                             |
-| Moderation  | A fellow's pin, lock, and remove actions                                                                                                                      |
-| CMS         | Dashboard, review queue, accepting the application, courses, events, newsletters, people, Spaces, site settings                                               |
+| Chapter  | What it shows                                                                                                             |
+| -------- | ------------------------------------------------------------------------------------------------------------------------- |
+| Discover | Home page and open registration, course catalogue, a course's sessions, the calendar with session details, events, search |
+| Apply    | The Bridge Programme application, a form built in the CMS                                                                 |
+| Belong   | A student's course space: posts, readings, the next session, the space calendar and its session drawer                    |
+| Teach    | A fellow moves a session in the space calendar and saves the schedule                                                     |
+| Run      | The CMS dashboard, applicant review, and a course's sessions on the admin calendar                                        |
+| Arabic   | The home page, the calendar and a course page, right to left                                                              |
 
 > [!NOTE]
-> In the demo copy, account emails are replaced, and registration deadlines and event dates are moved forward so that registration is open on recording day, and a test course is removed. See [`scripts/demo`](scripts/demo) to record it again.
+> In the demo copy, account emails are replaced, and registration deadlines, event dates and one course's sessions move relative to the recording day. A test course is removed. To record and render it again:
+>
+> 1. `DEMO_SOURCE_URL=postgres://… DEMO_ENV_DIR=<checkout with .env> scripts/demo/serve-demo.sh` starts the app on port 3100.
+> 2. `node scripts/demo/capture.mjs` records every shot in [`scripts/demo/shots.mjs`](scripts/demo/shots.mjs) with [agent-browser](https://github.com/vercel-labs/agent-browser).
+> 3. `cd video && npm install && npm run render` renders the film. `npm run dev` opens it in Remotion Studio.
 
 ## Features
 
