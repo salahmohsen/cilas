@@ -22,6 +22,7 @@ export default defineConfig({
     hookTimeout: 120_000,
     testTimeout: 120_000,
     unstubGlobals: true,
+    unstubEnvs: true,
     execArgv: ['--no-experimental-webstorage'],
     server: {
       deps: {
