@@ -95,7 +95,7 @@ const page = (
   { source = meetings, docked = false }: { source?: CalendarMeeting[]; docked?: boolean } = {},
 ) => {
   const url = `/${locale}/calendar${query}`
-  window.history.replaceState(null, '', url)
+  window.history.replaceState(null, '', query)
   return renderWithNavigation(framed(docked ? DOCKED : UNDOCKED, calendar(locale, query, source)), {
     url,
   })
@@ -237,8 +237,8 @@ describe('the public calendar', () => {
   })
 
   it('follows the URL when Back changes it', async () => {
-    window.history.replaceState(null, '', '/en/calendar?view=day&date=2026-11-18')
-    window.history.pushState(null, '', '/en/calendar?view=week&date=2026-11-17')
+    window.history.replaceState(null, '', '?view=day&date=2026-11-18')
+    window.history.pushState(null, '', '?view=week&date=2026-11-17')
     renderWithNavigation(framed(UNDOCKED, calendar('en', '?view=week&date=2026-11-17')), {
       url: '/en/calendar?view=week&date=2026-11-17',
     })
