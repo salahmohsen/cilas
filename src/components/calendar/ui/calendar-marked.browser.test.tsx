@@ -1,7 +1,7 @@
 import { fireEvent, render, screen, within } from '@testing-library/react'
 import { NextIntlClientProvider } from 'next-intl'
 import { renderToString } from 'react-dom/server'
-import { afterEach, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest'
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 
 import { Calendar } from '@/components/calendar/ui/calendar'
 import { useCalendarLabels } from '@/components/calendar/ui/use-calendar-labels'
@@ -15,18 +15,18 @@ const item = (
   title: string,
   blocks: CalendarItem['blocks'],
   extra: Partial<CalendarItem> = {},
-): CalendarItem => ({
-  id,
-  kind: 'session',
-  title,
-  tone: 'yellow',
-  cancelled: false,
-  version: 'v1',
-  blocks,
-  ...extra,
-})
+) =>
+  ({
+    id,
+    kind: 'session',
+    title,
+    tone: 'yellow',
+    cancelled: false,
+    version: 'v1',
+    blocks,
+    ...extra,
+  }) satisfies CalendarItem
 
-// The week of Saturday 14 November 2026.
 const items: CalendarItem[] = [
   item('s3', 'Session 3', [
     { id: 'tue', date: '2026-11-17', start_time: '19:00', end_time: '21:00' },
@@ -66,16 +66,6 @@ const provided = (node: React.ReactNode, locale = 'en') => (
 
 const view = (marked?: ReadonlySet<string>, locale = 'en') =>
   render(provided(<Host marked={marked} locale={locale} />, locale))
-
-beforeAll(() => {
-  // jsdom has no Web Animations; the side panel waits on none.
-  Element.prototype.getAnimations ??= () => []
-  globalThis.ResizeObserver = class {
-    observe() {}
-    unobserve() {}
-    disconnect() {}
-  }
-})
 
 beforeEach(() => {
   localStorage.clear()

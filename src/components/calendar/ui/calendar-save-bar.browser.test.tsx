@@ -1,7 +1,7 @@
 import { fireEvent, render, screen, waitFor } from '@testing-library/react'
 import { NextIntlClientProvider } from 'next-intl'
 import { useState } from 'react'
-import { afterEach, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest'
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 
 import { Calendar } from '@/components/calendar/ui/calendar'
 import { CalendarSaveRefusal } from '@/components/calendar/ui/save-refusal'
@@ -10,19 +10,19 @@ import type { CalendarChange, CalendarItem } from '@/lib/calendar-items'
 
 import en from '../../../../messages/en.json'
 
-const week3 = (version: string): CalendarItem => ({
-  id: 'week-3',
-  kind: 'session',
-  title: 'Week 3',
-  tone: 'yellow',
-  cancelled: false,
-  version,
-  blocks: [{ id: 'tue', date: '2026-11-17', start_time: '19:00', end_time: '21:00' }],
-})
+const week3 = (version: string) =>
+  ({
+    id: 'week-3',
+    kind: 'session',
+    title: 'Week 3',
+    tone: 'yellow',
+    cancelled: false,
+    version,
+    blocks: [{ id: 'tue', date: '2026-11-17', start_time: '19:00', end_time: '21:00' }],
+  }) satisfies CalendarItem
 
 type Save = (changes: CalendarChange[]) => void | Promise<void>
 
-/** A host that can reload: `reload` swaps in the item as another person saved it. */
 function Host({
   onSave,
   onSaveIntent,
@@ -59,13 +59,6 @@ const move = () => {
   fireEvent.keyDown(block(), { key: 'ArrowDown' })
 }
 
-beforeAll(() => {
-  globalThis.ResizeObserver = class {
-    observe() {}
-    unobserve() {}
-    disconnect() {}
-  }
-})
 beforeEach(() => {
   localStorage.clear()
   vi.useFakeTimers({ now: new Date('2026-11-17T10:00:00Z'), toFake: ['Date'] })
@@ -100,7 +93,6 @@ describe('the save bar', () => {
     move()
     fireEvent.click(screen.getByRole('button', { name: 'Save' }))
     expect(await screen.findByRole('alert')).toHaveTextContent('Someone else changed Week 3.')
-    // The changes stay on screen until the person chooses to lose them.
     expect(block()).toHaveAccessibleName(/7:15 PM to 9:15 PM, Unsaved$/)
 
     fireEvent.click(screen.getByRole('button', { name: 'Reload and lose my changes' }))
