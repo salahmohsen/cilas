@@ -1,6 +1,7 @@
 import { within } from '@testing-library/react'
 import { JSDOM } from 'jsdom'
 import { http, HttpResponse } from 'msw'
+import type { ReactNode } from 'react'
 import { renderToStaticMarkup } from 'react-dom/server'
 import { describe, expect, it, vi } from 'vitest'
 
@@ -37,7 +38,7 @@ const answer = (rows: Partial<Record<QueryName, unknown[][]>>) =>
     }),
   )
 
-const page = async (build: () => Promise<React.ReactElement>) => {
+const page = async (build: () => Promise<ReactNode>) => {
   const { result } = await runInRequest(build)
   const { window } = new JSDOM(renderToStaticMarkup(result))
   return within(window.document.body)
