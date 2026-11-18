@@ -17,6 +17,7 @@ const browserEnv = {
     ),
   ),
   NEXT_PUBLIC_TURNSTILE_SITE_KEY: '1x00000000000000000000AA',
+  NEXT_PUBLIC_TYPESENSE_API_KEY: 'browser-test-search-only-key',
 }
 
 export default defineConfig({
