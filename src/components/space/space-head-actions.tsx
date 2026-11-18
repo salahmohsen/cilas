@@ -52,15 +52,18 @@ export function SpaceHeadActions({
 
   // The segments are not Radix triggers, so focus comes back to the one that opened the panel,
   // unless the reader has already moved on to something else.
+  const focusSegment = (panel: Panel) => {
+    const segments = root.current?.querySelectorAll<HTMLElement>(`[data-id="${panel}"]`) ?? []
+    Array.from(segments)
+      .find((segment) => segment.offsetParent !== null)
+      ?.focus()
+  }
   const change = (panel: Panel, next: boolean) => {
     setOpen(next ? panel : null)
     if (next) return
     setTimeout(() => {
       if (document.activeElement && document.activeElement !== document.body) return
-      const segments = root.current?.querySelectorAll<HTMLElement>(`[data-id="${panel}"]`) ?? []
-      Array.from(segments)
-        .find((segment) => segment.offsetParent !== null)
-        ?.focus()
+      focusSegment(panel)
     })
   }
 
@@ -147,6 +150,10 @@ export function SpaceHeadActions({
         detents={[0.6, 0.92]}
         open={open === 'about'}
         onOpenChange={(next) => change('about', next)}
+        onCloseAutoFocus={(event) => {
+          event.preventDefault()
+          focusSegment('about')
+        }}
       >
         <div className={styles.column}>{rail}</div>
       </BottomSheet>
