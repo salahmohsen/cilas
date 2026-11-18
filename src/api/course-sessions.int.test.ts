@@ -18,6 +18,7 @@ let publishedSession: number
 let draftSession: number
 let fellow: User
 let otherFellow: User
+let cycle: number
 
 const course = async (fellows: number[], status: 'draft' | 'published', cycle: number) =>
   track(
@@ -87,7 +88,7 @@ beforeAll(async () => {
       overrideAccess: true,
     }),
   ).id
-  const cycle = track(
+  cycle = track(
     'cycles',
     await payload.create({
       collection: 'cycles',
@@ -238,9 +239,6 @@ describe('a session save refreshes its course', () => {
   it.skipIf(!process.env.TYPESENSE_API_KEY)(
     'keeps the days, the cache and the search index of a published course current',
     async () => {
-      const cycle = (
-        await payload.find({ collection: 'cycles', limit: 1, depth: 0, overrideAccess: true })
-      ).docs[0]!.id
       const id = await course([], 'published', cycle)
       const { slug } = await payload.findByID({ collection: 'courses', id, depth: 0 })
       const title = uniq('Indexed session')

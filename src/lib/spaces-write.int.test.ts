@@ -1870,18 +1870,22 @@ describe('spaces write', () => {
     )
     for (const s of made2) track('sessions', s.id)
     const [one, two] = made2.map((s) => String(s.id))
-    const [otherCourse] = (
-      await payload.find({
+    const otherCourse = track(
+      'courses',
+      await payload.create({
         collection: 'courses',
-        where: { id: { not_equals: course.id } },
-        limit: 1,
-        depth: 0,
+        data: {
+          title: 'Probe other course',
+          slug: `${COURSE_SLUG}-other`,
+          course_type: 'THEMATIC',
+        },
+        draft: true,
         overrideAccess: true,
-      })
-    ).docs
+      }),
+    )
     const foreignSession = await payload.create({
       collection: 'sessions',
-      data: { course: otherCourse!.id, title: 'Probe elsewhere' },
+      data: { course: otherCourse.id, title: 'Probe elsewhere' },
       overrideAccess: true,
     })
     track('sessions', foreignSession.id)

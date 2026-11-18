@@ -1,4 +1,5 @@
 import { createLocalReq, getPayload, type Payload } from 'payload'
+import { readFile } from 'node:fs/promises'
 import { afterAll, beforeAll, describe, expect, it } from 'vitest'
 import config from '@/payload.config'
 import { env } from '@/env'
@@ -424,8 +425,16 @@ describe('complete MCP draft writes', () => {
   })
 
   it('fills cover, bibliography, questions, pricing, registration and SEO with their real nested shapes', async () => {
-    const media = (await payload.find({ collection: 'media', limit: 1, depth: 0 })).docs[0]!
-    expect(media).toBeDefined()
+    const data = await readFile(new URL('../testing/files/pixel.png', import.meta.url))
+    const media = track(
+      'media',
+      await payload.create({
+        collection: 'media',
+        data: { alt: 'MCP cover' },
+        file: { name: `${uniq('mcp-cover')}.png`, mimetype: 'image/png', data, size: data.length },
+        overrideAccess: true,
+      }),
+    )
     const input = {
       ...courseInput(),
       cover_image: media.id,

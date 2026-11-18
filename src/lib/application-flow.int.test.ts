@@ -8,26 +8,13 @@ import type { Course, Form, FormSubmission, Person, User } from '@/payload-types
 
 import { localServices } from '../../testing/local-services.test-utils'
 import { mockNetwork } from '../../testing/msw-node.test-utils'
+import { createTracker } from '../../testing/payload.fixture'
 import { resendInbox } from '../../testing/resend.test-utils'
 
 const mail = resendInbox()
 mockNetwork(mail.handler, ...localServices)
 
-type Tracked =
-  | 'forms'
-  | 'form-submissions'
-  | 'courses'
-  | 'cycles'
-  | 'places'
-  | 'people'
-  | 'users'
-  | 'enrollments'
-  | 'memberships'
-const created: Array<{ collection: Tracked; id: number }> = []
-const track = <T extends { id: number }>(collection: Tracked, doc: T) => {
-  created.push({ collection, id: doc.id })
-  return doc
-}
+const { track, cleanup } = createTracker()
 
 let payload: Payload
 let admin: User
@@ -37,6 +24,7 @@ let member: User
 let memberPerson: Person
 let form: Form
 let course: Course
+let cycleId: number
 const RUN = randomBytes(3).toString('hex')
 const APPLICANT_EMAIL = `flow-applicant-${RUN}@cilas.test`
 const MEMBER_EMAIL = `flow-member-${RUN}@cilas.test`
@@ -139,31 +127,20 @@ const decide = async (
   return endpoint.handler(req as never)
 }
 
-const cleanup = async () => {
-  for (const { collection, id } of created.reverse()) {
-    if (collection === 'users') {
-      const person = await payload
-        .findByID({ collection: 'users', id, overrideAccess: true })
-        .then((u) => (typeof u.person === 'object' ? u.person?.id : u.person))
-        .catch(() => undefined)
-      await payload.delete({ collection, id }).catch(() => undefined)
-      if (person) await payload.delete({ collection: 'people', id: person }).catch(() => undefined)
-      continue
-    }
-    if (collection === 'people') continue
-    await payload.delete({ collection, id }).catch(() => undefined)
-  }
-}
+const flowAccounts = async () =>
+  (
+    await payload.find({
+      collection: 'users',
+      where: { email: { contains: `-${RUN}@cilas.test` } },
+      depth: 0,
+      pagination: false,
+      overrideAccess: true,
+    })
+  ).docs
 
 describe('the application flow, from the questions to the enrollment', () => {
   beforeAll(async () => {
     payload = await getPayload({ config: await config })
-    await payload
-      .delete({
-        collection: 'users',
-        where: { email: { in: [APPLICANT_EMAIL, MEMBER_EMAIL, ADMIN_EMAIL, FELLOW_EMAIL] } },
-      })
-      .catch(() => undefined)
     admin = await payload.create({
       collection: 'users',
       data: { email: ADMIN_EMAIL, password: 'probe-password-1', roles: ['admin'] },
@@ -173,20 +150,26 @@ describe('the application flow, from the questions to the enrollment', () => {
       data: { email: FELLOW_EMAIL, password: 'probe-password-1', roles: ['fellow'] },
     })
     track('users', fellow as unknown as { id: number })
-    fellowPerson = await payload.create({
-      collection: 'people',
-      data: { name: 'Fellow Probe', slug: personSlug('fellow-probe'), visible: false },
-    })
+    fellowPerson = track(
+      'people',
+      await payload.create({
+        collection: 'people',
+        data: { name: 'Fellow Probe', slug: personSlug('fellow-probe'), visible: false },
+      }),
+    )
     await payload.update({ collection: 'users', id: fellow.id, data: { person: fellowPerson.id } })
     member = await payload.create({
       collection: 'users',
       data: { email: MEMBER_EMAIL, password: 'probe-password-1', roles: ['member'] },
     })
     track('users', member as unknown as { id: number })
-    memberPerson = await payload.create({
-      collection: 'people',
-      data: { name: 'Member Probe', slug: personSlug('member-probe'), visible: false },
-    })
+    memberPerson = track(
+      'people',
+      await payload.create({
+        collection: 'people',
+        data: { name: 'Member Probe', slug: personSlug('member-probe'), visible: false },
+      }),
+    )
     await payload.update({ collection: 'users', id: member.id, data: { person: memberPerson.id } })
 
     const place = await payload.create({
@@ -200,11 +183,12 @@ describe('the application flow, from the questions to the enrollment', () => {
       overrideAccess: true,
     })
     track('places', place as unknown as { id: number })
-    track('cycles', cycle as unknown as { id: number })
+    cycleId = track('cycles', cycle as unknown as { id: number }).id
   })
 
   afterAll(async () => {
-    await cleanup()
+    for (const account of await flowAccounts()) track('users', account)
+    await cleanup(payload)
     await payload.destroy()
   })
 
@@ -217,7 +201,7 @@ describe('the application flow, from the questions to the enrollment', () => {
         slug: `flow-course-${RUN}`,
         course_type: 'THEMATIC',
         tier: 'owner',
-        cycle: cycleId(),
+        cycle: cycleId,
         applicant_questions: [
           {
             blockType: 'select',
@@ -426,7 +410,7 @@ describe('the application flow, from the questions to the enrollment', () => {
           slug: `flow-second-${RUN}`,
           course_type: 'THEMATIC',
           tier: 'owner',
-          cycle: cycleId(),
+          cycle: cycleId,
           schedule: { start_date: '2031-03-04', weeks: 1, slots: [] },
           sessions: [{ order: 1 }],
         } as never,
@@ -435,7 +419,7 @@ describe('the application flow, from the questions to the enrollment', () => {
     )
     await payload.update({
       collection: 'cycles',
-      id: cycleId(),
+      id: cycleId,
       data: { registration: { method: 'form', form: form.id } },
       overrideAccess: true,
     })
@@ -445,7 +429,7 @@ describe('the application flow, from the questions to the enrollment', () => {
         collection: 'form-submissions',
         data: {
           form: form.id,
-          target: { relationTo: 'cycles', value: cycleId() },
+          target: { relationTo: 'cycles', value: cycleId },
           choices: [
             { course: course.id, answers: [{ name: 'track', value: 'Film' }] },
             { course: other.id, answers: [] },
@@ -653,5 +637,3 @@ describe('the application flow, from the questions to the enrollment', () => {
     expect(after.status).toBe('new')
   })
 })
-
-const cycleId = () => created.find((t) => t.collection === 'cycles')!.id

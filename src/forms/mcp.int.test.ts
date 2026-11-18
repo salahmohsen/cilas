@@ -36,11 +36,14 @@ const call = async (
 }
 
 const mcpAccount = async (label: string, roles: User['roles']) =>
-  (await payload.create({
-    collection: 'users',
-    data: { email: uniqEmail(`mcp-${label}`), password: crypto.randomUUID(), roles },
-    overrideAccess: true,
-  })) as unknown as User
+  track(
+    'users',
+    (await payload.create({
+      collection: 'users',
+      data: { email: uniqEmail(`mcp-${label}`), password: crypto.randomUUID(), roles },
+      overrideAccess: true,
+    })) as unknown as User,
+  )
 
 describe('admin-only MCP server', () => {
   let admin: User
@@ -52,18 +55,9 @@ describe('admin-only MCP server', () => {
 
   beforeAll(async () => {
     payload = await getPayload({ config: await config })
-    const account = async (label: string, roles: User['roles']) =>
-      track(
-        'users',
-        (await payload.create({
-          collection: 'users',
-          data: { email: uniqEmail(`mcp-${label}`), password: crypto.randomUUID(), roles },
-          overrideAccess: true,
-        })) as unknown as User,
-      )
-    admin = await account('admin', ['admin'])
-    superAdmin = await account('super', ['super_admin'])
-    member = await account('member', ['member'])
+    admin = await mcpAccount('admin', ['admin'])
+    superAdmin = await mcpAccount('super', ['super_admin'])
+    member = await mcpAccount('member', ['member'])
     personId = track(
       'people',
       await payload.create({
@@ -72,14 +66,19 @@ describe('admin-only MCP server', () => {
         overrideAccess: true,
       }),
     ).id
-    const place = (
-      await payload.find({ collection: 'places', limit: 1, depth: 0, overrideAccess: true })
-    ).docs[0]!
+    const place = track(
+      'places',
+      await payload.create({
+        collection: 'places',
+        data: { name: 'Mcp probe place', slug: uniq('mcp-place'), city: uniq('Probe') },
+        overrideAccess: true,
+      }),
+    )
     cycleId = track(
       'cycles',
       await payload.create({
         collection: 'cycles',
-        data: { season: 'fall', start_year: 2090 + Math.floor(Math.random() * 9), place: place.id },
+        data: { season: 'fall', start_year: 2090, place: place.id },
         overrideAccess: true,
       }),
     ).id
@@ -380,6 +379,7 @@ describe('admin-only MCP server', () => {
       const { pool } = payload.db as unknown as {
         pool: { query: (text: string) => Promise<unknown> }
       }
+      const tables = ['courses_locales', '_courses_v_locales']
       await pool.query(`
         create function ${guard}() returns trigger language plpgsql as $$
         begin
@@ -387,21 +387,20 @@ describe('admin-only MCP server', () => {
             and coalesce(to_jsonb(NEW)->>'title', to_jsonb(NEW)->>'version_title') = '${arabic}'
           then raise exception 'boom'; end if;
           return NEW;
-        end $$;
-        create trigger ${guard} before insert or update on courses_locales
-          for each row execute function ${guard}();
-        create trigger ${guard} before insert or update on _courses_v_locales
-          for each row execute function ${guard}()`)
+        end $$`)
+      for (const table of tables) {
+        await pool.query(
+          `create trigger ${guard} before insert or update on ${table} for each row execute function ${guard}()`,
+        )
+      }
       const result = await call('create_course_draft', admin, {
         title: { en: title, ar: arabic },
         course_type: 'CORE',
         cycle: cycleId,
-      }).finally(() =>
-        pool.query(`
-          drop trigger ${guard} on courses_locales;
-          drop trigger ${guard} on _courses_v_locales;
-          drop function ${guard}()`),
-      )
+      }).finally(async () => {
+        for (const table of tables) await pool.query(`drop trigger ${guard} on ${table}`)
+        await pool.query(`drop function ${guard}()`)
+      })
       expect(result.isError).toBe(true)
       const found = await payload.count({
         collection: 'courses',

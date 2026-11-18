@@ -2,7 +2,7 @@ import { getPayload, type Payload } from 'payload'
 import { afterAll, beforeAll, describe, expect, it } from 'vitest'
 
 import config from './payload.config'
-import { createTracker } from '../testing/payload.fixture'
+import { createTracker, uniq } from '../testing/payload.fixture'
 
 let payload: Payload
 let course: number
@@ -10,8 +10,15 @@ const { track, cleanup } = createTracker()
 
 beforeAll(async () => {
   payload = await getPayload({ config })
-  course = (await payload.find({ collection: 'courses', limit: 1, depth: 0, overrideAccess: true }))
-    .docs[0].id
+  course = track(
+    'courses',
+    await payload.create({
+      collection: 'courses',
+      data: { title: 'Lock probe', slug: uniq('lock-probe'), course_type: 'THEMATIC' },
+      draft: true,
+      overrideAccess: true,
+    }),
+  ).id
 })
 
 afterAll(async () => {

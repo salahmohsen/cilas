@@ -14,6 +14,7 @@ export const uniqEmail = (base: string) => `${uniq(base)}@cilas.test`
 export const uniqPath = (base: string) => `/${uniq(base)}`
 
 const DELETE_ORDER = [
+  'form-submissions',
   'space-rsvps',
   'space-votes',
   'space-reactions',
@@ -25,6 +26,7 @@ const DELETE_ORDER = [
   'notifications',
   'space-posts',
   'spaces',
+  'sessions',
   'enrollments',
   'memberships',
   'courses',
@@ -39,12 +41,15 @@ const DELETE_ORDER = [
 ]
 
 const ACCOUNT_ROWS = [
-  'space-rsvps',
-  'space-votes',
-  'space-reactions',
-  'space-preferences',
-  'space-visits',
-  'space-consents',
+  ['space-rsvps', 'account'],
+  ['space-votes', 'account'],
+  ['space-reactions', 'account'],
+  ['space-preferences', 'account'],
+  ['space-visits', 'account'],
+  ['space-consents', 'account'],
+  ['notifications', 'recipient'],
+  ['invitation-log', 'user'],
+  ['payload-mcp-api-keys', 'user'],
 ] as const
 
 /**
@@ -67,12 +72,23 @@ export const createTracker = () => {
     const failed: string[] = []
     const refused: { collection: string; id: number; message: string }[] = []
     const accounts = tracked.get('users') ?? []
+    if (accounts.length) {
+      const { docs } = await payload.find({
+        collection: 'users',
+        where: { id: { in: accounts } },
+        depth: 0,
+        pagination: false,
+        overrideAccess: true,
+      })
+      for (const { person } of docs)
+        if (person != null) track('people', typeof person === 'object' ? person.id : person)
+    }
     if (accounts.length)
-      for (const collection of ACCOUNT_ROWS)
+      for (const [collection, field] of ACCOUNT_ROWS)
         await payload
           .delete({
             collection,
-            where: { account: { in: accounts } },
+            where: { [field]: { in: accounts } },
             overrideAccess: true,
           })
           .catch((error: Error) => void failed.push(`${collection}: ${error.message}`))
