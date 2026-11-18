@@ -24,8 +24,8 @@ const baseURL =
   process.env.PLAYWRIGHT_BASE_URL ?? process.env.E2E_BASE_URL ?? 'http://localhost:3000'
 
 export default defineConfig({
-  testDir: './tests/e2e',
-  testIgnore: 'production.e2e.spec.ts',
+  testDir: './e2e',
+  testIgnore: 'production.e2e.test.ts',
 
   // `CI` is not read through src/env.ts, which would require database and R2
   // credentials just to pick a retry count.

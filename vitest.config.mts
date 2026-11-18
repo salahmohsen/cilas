@@ -14,11 +14,8 @@ export default defineConfig({
     // Unit tests share one process (--no-isolate), so a stubbed global such as
     // fetch would otherwise reach the files that run after it. Stub in beforeEach.
     unstubGlobals: true,
-    include: [
-      'tests/unit/**/*.unit.spec.ts',
-      'tests/unit/**/*.unit.spec.tsx',
-      'tests/int/**/*.int.spec.ts',
-    ],
+    include: ['**/*.unit.test.{ts,tsx}', '**/*.int.test.ts'],
+    exclude: ['**/node_modules/**', '.next/**'],
     server: {
       deps: {
         // payload-theme and payload-oauth2 ship extensionless relative imports

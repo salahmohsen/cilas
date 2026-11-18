@@ -35,13 +35,13 @@ To rerun the focused suite:
 
 ```sh
 DATABASE_URL=postgres://cilas:dev@localhost:5433/cilas_dev pnpm exec vitest run \
-  tests/unit/schema.unit.spec.tsx tests/unit/seo.unit.spec.ts \
-  tests/unit/sitemap.unit.spec.ts tests/unit/events.unit.spec.ts \
-  tests/unit/ics.unit.spec.ts tests/unit/cairo-day.unit.spec.ts \
-  tests/unit/revalidation-paths.unit.spec.ts \
-  tests/unit/public-event-card.unit.spec.tsx tests/unit/public-event-cover.unit.spec.ts \
-  tests/unit/seo-links.unit.spec.tsx tests/unit/rich-text-columns.unit.spec.tsx \
-  tests/unit/person-profile-block.unit.spec.tsx tests/unit/blog-grid-cards.unit.spec.tsx
+  src/lib/schema.unit.test.tsx src/lib/seo.unit.test.ts \
+  src/lib/sitemap.unit.test.ts src/lib/events.unit.test.ts \
+  src/lib/ics.unit.test.ts src/lib/cairo-day.unit.test.ts \
+  src/lib/revalidation-paths.unit.test.ts \
+  src/lib/public-event-card.unit.test.tsx src/lib/public-event-cover.unit.test.ts \
+  src/components/seo-links.unit.test.tsx src/components/rich-text-columns.unit.test.tsx \
+  src/components/person-profile-block.unit.test.tsx src/components/arc/blocks/blog-grid/blog-grid-cards.unit.test.tsx
 ```
 
 ## Remaining findings and checks

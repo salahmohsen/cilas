@@ -138,7 +138,7 @@ jobs:
           key: playwright-${{ runner.os }}-${{ steps.playwright.outputs.version }}
       - run: pnpm exec playwright install --with-deps chromium
       - name: Check registration card layout in Chromium
-        run: node --test tests/poster-layout.test.mjs
+        run: node --test src/components/arc/poster-layout.test.mjs
       - name: Initialize disposable current-schema fixtures
         run: |
           . ./scripts/smoke-test-env.sh

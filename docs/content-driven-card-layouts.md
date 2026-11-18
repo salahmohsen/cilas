@@ -183,7 +183,7 @@ Centering the timer box is not enough if the countdown widget inside keeps a fix
 
 The Arc carousel (`src/components/arc/carousel/`) moves a flex track of fixed-width slides. Its contract with the cards inside:
 
-- **Slide width comes from `slideSize`**, a CSS length in `cqw` of the carousel root. The card must never be wider than its slide. Every grid between the slide and the card uses `grid-template-columns: minmax(0, 1fr)` and `min-width: 0`. An `auto` column grows to its content's min-content width, so one rigid cell (other font metrics on a phone, a countdown wheel, an image) makes the card wider than the slide. The viewport then clips its right border, and the card covers the next slide during a swipe. This was seen on iPhone and is covered by `tests/poster-layout.test.mjs`.
+- **Slide width comes from `slideSize`**, a CSS length in `cqw` of the carousel root. The card must never be wider than its slide. Every grid between the slide and the card uses `grid-template-columns: minmax(0, 1fr)` and `min-width: 0`. An `auto` column grows to its content's min-content width, so one rigid cell (other font metrics on a phone, a countdown wheel, an image) makes the card wider than the slide. The viewport then clips its right border, and the card covers the next slide during a swipe. This was seen on iPhone and is covered by `src/components/arc/poster-layout.test.mjs`.
 - **Shared height.** Slides stretch to the tallest slide. The spare-space owner (section 1) absorbs it. Make the slide a grid (`[aria-roledescription='slide'] { display: grid }`) so the card fills the slide height.
 - **Neighbors are scaled to 0.9 and dimmed.** Leave enough side padding and gap that a scaled neighbor does not cover the active card. Do not add shadows or outlines that extend past the card edge.
 - **Rounded corners.** The viewport clips the track horizontally and its default radius is `--radius-panel`, which is larger than the poster radius. Poster and profile carousels set `--carousel-viewport-radius: 0px` so each card draws its own rounded corners. Other carousels keep the default. Check all four card corners with rendered hit testing, not only the computed `border-radius`.
@@ -317,16 +317,16 @@ Test the full sizing chain, including a taller neighboring slide. An isolated ca
 
 For image-led cards, assert that a taller neighbor makes the image grow while the text panel keeps its height. For title-led cards, assert that the title region grows while an unchanged fellow cell keeps its height and no empty area appears below it. DOM-only unit tests cannot measure layout; use rendered geometry.
 
-`tests/poster-layout.test.mjs` loads the real poster stylesheet in Chromium with isolated markup that matches the sizing structure:
+`src/components/arc/poster-layout.test.mjs` loads the real poster stylesheet in Chromium with isolated markup that matches the sizing structure:
 
 ```sh
 pnpm exec playwright install chromium
-node --test tests/poster-layout.test.mjs
+node --test src/components/arc/poster-layout.test.mjs
 ```
 
 It covers the three poster placements at 288, 358, 528, and 960 CSS pixels, in English and Arabic, with wrapped and missing fellows. Stacked cards: image growth and stable text heights. Wide cards: title growth in the side panel. The pink card's countdown is checked from 240 to 960 pixels in both directions, with larger text and a stale inline animation size. It does not cover production fonts, real images, live countdowns, carousel animation, or a deployed page; check those visually when you change them. CI runs this test in the production-smoke job.
 
-`tests/unit/person-profile-block.unit.spec.tsx` checks that profile columns become an Arc carousel on mobile in English and Arabic, with manual navigation and no rotation control.
+`src/components/person-profile-block.unit.test.tsx` checks that profile columns become an Arc carousel on mobile in English and Arabic, with manual navigation and no rotation control.
 
 ## 9. Lessons from past bugs
 
@@ -339,7 +339,7 @@ It covers the three poster placements at 288, 358, 528, and 960 CSS pixels, in E
 1. Write the content hierarchy and choose the spare-space owner (section 1).
 2. Reuse `Poster` when its semantics fit. Otherwise follow section 3, and give it the poster look (section 7).
 3. If it goes in a carousel, follow section 5 and add it to the table.
-4. Add a rendered-geometry check or extend `tests/poster-layout.test.mjs`.
+4. Add a rendered-geometry check or extend `src/components/arc/poster-layout.test.mjs`.
 5. Add the new component to the file list below and record new rules in section 2.
 
 Build a shared sizing primitive only when a second real component needs the same contract.
@@ -354,7 +354,7 @@ Files:
 - `src/components/person/profile-columns.tsx`: mobile profile carousel and desktop columns.
 - `src/components/rich-text-columns.module.css`: profile carousel and column styles.
 - `src/components/arc/lib/poster-colors.ts`: shared palette.
-- `tests/poster-layout.test.mjs`: rendered geometry regression.
+- `src/components/arc/poster-layout.test.mjs`: rendered geometry regression.
 - `src/app/(frontend)/[locale]/study/[slug]/CourseView.tsx`: fellow cards in Who teaches it, in the poster look (section 7); content sizes all; the `fellow-card` container switches at `44rem`, later than posters, because a photo that fills a column beside a long bio needs that width to stay a portrait and not a strip.
 
 ## 11. Wide blocks in prose

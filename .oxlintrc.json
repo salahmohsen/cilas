@@ -10,14 +10,32 @@
     "node": true,
     "es2024": true
   },
-  "jsPlugins": ["./scripts/oxlint-plugin-cilas.mjs"],
+  "jsPlugins": [
+    "./scripts/oxlint-plugin-cilas.mjs",
+    {
+      "name": "landmines-testing",
+      "specifier": "@interfere/landmines/testing"
+    },
+    {
+      "name": "landmines-style",
+      "specifier": "@interfere/landmines/style"
+    },
+    {
+      "name": "landmines-structure",
+      "specifier": "@interfere/landmines/structure"
+    },
+    {
+      "name": "landmines-types",
+      "specifier": "@interfere/landmines/types"
+    }
+  ],
   "ignorePatterns": [
     ".next/**",
     ".maintenance/",
     "src/payload-types.ts",
     "public/assets/visual-editor/",
     "src/payload-generated-schema.ts",
-    "src/migrations/**/*.ts"
+    "src/migrations/*.ts"
   ],
   "rules": {
     "cilas/no-env-in-client-component": "error",
@@ -116,13 +134,44 @@
           }
         ]
       }
-    ]
+    ],
+    "landmines-testing/no-fixed-sleep": "error",
+    "landmines-testing/no-flake-masking": "error",
+    "landmines-testing/no-test-doubles": "error",
+    "landmines-testing/no-unsignaled-poll": "error",
+    "landmines-testing/strict-msw": "error",
+    "landmines-structure/colocated-tests": "error",
+    "landmines-structure/package-exports": "error",
+    "landmines-structure/test-file-names": "error"
   },
   "overrides": [
     {
       "files": ["src/components/calendar/ui/**", "tests/unit/calendar/**"],
       "rules": {
         "no-restricted-imports": "off"
+      }
+    },
+    {
+      "files": [
+        "**/*.test.{ts,tsx,mjs}",
+        "**/*.test-utils.ts",
+        "**/*.fixture.ts",
+        "e2e/**",
+        "testing/**",
+        "vitest.setup.ts",
+        "vitest.config.mts",
+        "playwright.config.ts",
+        "playwright.production.config.ts"
+      ],
+      "rules": {
+        "landmines-style/no-comments": "error",
+        "landmines-types/no-explicit-return-types": "error"
+      }
+    },
+    {
+      "files": ["src/migrations/lib/*.test.ts"],
+      "rules": {
+        "landmines-structure/colocated-tests": "off"
       }
     }
   ]
