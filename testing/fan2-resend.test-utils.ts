@@ -1,7 +1,8 @@
-import { http, HttpResponse, passthrough } from 'msw'
+import { http, HttpResponse } from 'msw'
 import type { Payload } from 'payload'
 import { beforeEach } from 'vitest'
 
+import { payloadServices } from './fan2-payload-services.test-utils'
 import { mockNetwork } from './msw-node.test-utils'
 
 export type SentMail = {
@@ -27,11 +28,7 @@ export const captureResendMail = () => {
       mail.sent.push(body)
       return HttpResponse.json({ id: `mail-${mail.sent.length}` })
     }),
-    http.all('http://localhost:8108/*', () => passthrough()),
-    http.post(
-      'https://telemetry.payloadcms.com/events',
-      () => new HttpResponse(null, { status: 204 }),
-    ),
+    ...payloadServices,
   )
   beforeEach(() => {
     mail.sent = []
