@@ -1,4 +1,5 @@
-import { afterEach, describe, expect, it, vi } from 'vitest'
+import { http, HttpResponse } from 'msw'
+import { describe, expect, it, vi } from 'vitest'
 
 vi.hoisted(() => {
   process.env.RESEND_API_KEY = 'key'
@@ -17,6 +18,8 @@ import {
   reviewMail,
 } from '@/emails/transactional'
 import { sendBroadcast } from '@/lib/broadcast'
+
+import { mockNetwork } from '../../testing/msw-node.test-utils'
 
 const bodyOf = (intro: { root: { children: unknown[] } }, ...blocks: Record<string, unknown>[]) => [
   {
@@ -158,7 +161,6 @@ describe('transactional mails', () => {
     expect(mail.html).toContain('dir="rtl"')
     expect(mail.html).toContain('href="https://ci-las.org/ar/login"')
     expect(mail.html).toContain('القبول')
-    // Names and titles are isolated, so they keep their own direction.
     expect(mail.subject).toBe('مرحبا \u2068Mona\u2069، قُبلت في \u2068جسر\u2069')
   })
 
@@ -223,7 +225,6 @@ describe('cardOf', () => {
       meta: 'Fall 2026',
       text: 'Book by book.',
       note: 'Starts 3 Nov',
-      // No crop on record: the grid falls back to the full image.
       image: {
         url: 'https://cdn.test/plato.jpg',
         alt: 'Plato',
@@ -351,7 +352,6 @@ describe('newsletterMail', () => {
     )
     expect(mail.subject).toBe('October at CILAS')
     expect(mail.html).toContain('<p dir="auto"')
-    // A visible fellow links to their profile; a hidden one is plain text.
     expect(mail.html).toMatch(/href="https:\/\/ci-las.org\/en\/people\/mona"[^>]*>Mona<\/a>/)
     expect(mail.html).not.toContain('/en/people/ali')
     expect(mail.html).toContain('Ali')
@@ -456,7 +456,7 @@ describe('cards for collections, cycles and events', () => {
 })
 
 describe('sendBroadcast', () => {
-  afterEach(() => vi.restoreAllMocks())
+  const network = mockNetwork()
   const args = {
     segmentId: 'seg',
     from: 'CILAS <news@ci-las.org>',
@@ -468,24 +468,32 @@ describe('sendBroadcast', () => {
   }
 
   it('creates and sends a Resend broadcast to the segment', async () => {
-    const fetch = vi.spyOn(globalThis, 'fetch').mockResolvedValue(Response.json({ id: 'b_1' }))
+    const bodies: unknown[] = []
+    network.use(
+      http.post('https://api.resend.com/broadcasts', async ({ request }) => {
+        bodies.push(await request.json())
+        return HttpResponse.json({ id: 'b_1' })
+      }),
+    )
     expect(await sendBroadcast(args)).toBe('b_1')
-    const [url, init] = fetch.mock.calls[0]!
-    expect(url).toBe('https://api.resend.com/broadcasts')
-    expect(JSON.parse(init!.body as string)).toEqual({
-      segment_id: 'seg',
-      from: 'CILAS <news@ci-las.org>',
-      subject: 'October',
-      html: '<p>x</p>',
-      text: 'x',
-      name: 'October at CILAS',
-      send: true,
-    })
+    expect(bodies).toEqual([
+      {
+        segment_id: 'seg',
+        from: 'CILAS <news@ci-las.org>',
+        subject: 'October',
+        html: '<p>x</p>',
+        text: 'x',
+        name: 'October at CILAS',
+        send: true,
+      },
+    ])
   })
 
   it('throws Resend’s message on failure', async () => {
-    vi.spyOn(globalThis, 'fetch').mockResolvedValue(
-      Response.json({ message: 'Segment not found' }, { status: 404 }),
+    network.use(
+      http.post('https://api.resend.com/broadcasts', () =>
+        HttpResponse.json({ message: 'Segment not found' }, { status: 404 }),
+      ),
     )
     await expect(sendBroadcast(args)).rejects.toThrow('Segment not found')
   })
