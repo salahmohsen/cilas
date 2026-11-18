@@ -6,6 +6,7 @@ import { publicCalendarAccess as readPublicCalendarAccess } from '@/api/public-c
 import { scheduleOffers as readScheduleOffers } from '@/actions/schedule-offers'
 import { saveScheduleEdits as writeScheduleEdits } from '@/actions/save-schedule-edits'
 import { loadCalendarItems as readCalendarItems } from '@/actions/load-calendar-items'
+import { loadSessionEdit } from '@/actions/session-edit'
 import { setSessionCancelled as writeSessionCancelled } from '@/components/space/cancel-session'
 import { currentReader } from '@/lib/reader'
 import { PUBLIC_LISTS_TAG } from '@/lib/paths'
@@ -47,8 +48,13 @@ const saveScheduleEdits = (...args: Parameters<typeof writeScheduleEdits>) =>
   asReader(() => writeScheduleEdits(...args))
 const loadCalendarItems = (...args: Parameters<typeof readCalendarItems>) =>
   asReader(() => readCalendarItems(...args))
-const setSessionCancelled = (...args: Parameters<typeof writeSessionCancelled>) =>
-  asReader(() => writeSessionCancelled(...args))
+const setSessionCancelled = (id: string, cancelled: boolean, locale: string) =>
+  asReader(() =>
+    writeSessionCancelled(id, cancelled, locale, {
+      loadSessionEdit,
+      saveScheduleEdits: writeScheduleEdits,
+    }),
+  )
 const parent = () => ({ kind: 'public', id: courses.join(',') })
 const read = (id: string) => payload.findByID({ collection: 'sessions', id: Number(id), depth: 0 })
 const pair = async () =>
