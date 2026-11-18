@@ -22,7 +22,7 @@ describe('calendar feed', () => {
     }
     const events = eventItems(
       4,
-      { ...base, kind: 'event' },
+      { ...base, kind: 'event', type: 'talk' },
       { start_date: '2026-11-17', start_precision: 'day' },
     )
     const request = (items: Parameters<typeof calendarFeed>[0]) =>
@@ -57,5 +57,6 @@ describe('calendar feed', () => {
       Number(/SEQUENCE:(\d+)/.exec(before)![1]),
     )
     expect(before).toContain('URL:https://ci-las.org/en/study/course')
+    expect(before).toContain('DESCRIPTION:Talk')
   })
 })
