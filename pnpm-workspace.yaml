@@ -4,6 +4,8 @@ allowBuilds:
   esbuild: true
   # The root prepare script installs hooks safely for each checkout.
   lefthook: false
+  # Tests serve the worker from node_modules; nothing copies it into public/.
+  msw: false
   sharp: true
   unrs-resolver: true
   workerd: true
