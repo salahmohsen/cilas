@@ -2,6 +2,7 @@ import { getPayload, type Payload } from 'payload'
 import { afterAll, beforeAll, describe, expect, it } from 'vitest'
 
 import { loadSessionEdit } from '@/actions/session-edit'
+import { PUBLIC_LISTS_TAG } from '@/lib/paths'
 import config from '@/payload.config'
 import type { User } from '@/payload-types'
 
@@ -170,26 +171,29 @@ describe('saveScheduleEdits', () => {
     await signIn(who())
     const change = await detail(id)
     const before = await read(id, 'en')
-    const result = await asReader(() =>
-      saveScheduleEdits({
-        calendar: {
-          parent: parent(),
-          changes: [
-            {
-              op: 'move-block',
-              itemId: String(id),
-              version: change.version,
-              blockId: before.meetings![0]!.id!,
-              date: '2035-10-08',
-              start_time: '18:00',
-              end_time: '20:00',
-            },
-          ],
-        },
-        details: [change],
-      }),
+    const { result, revalidated } = await runInRequest(
+      () =>
+        saveScheduleEdits({
+          calendar: {
+            parent: parent(),
+            changes: [
+              {
+                op: 'move-block',
+                itemId: String(id),
+                version: change.version,
+                blockId: before.meetings![0]!.id!,
+                date: '2035-10-08',
+                start_time: '18:00',
+                end_time: '20:00',
+              },
+            ],
+          },
+          details: [change],
+        }),
+      { headers: reader },
     )
     expect(result.ok).toBe(true)
+    expect(revalidated).toContain(PUBLIC_LISTS_TAG)
     expect(await read(id, 'en')).toMatchObject({
       title: 'Applied title',
       meetings: [{ date: '2035-10-08', start_time: '18:00' }],
