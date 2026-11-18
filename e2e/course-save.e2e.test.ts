@@ -7,17 +7,6 @@ import { createTracker, uniq } from '../testing/payload.fixture'
 import { login } from '../testing/login.test-utils'
 import { cleanupTestUser, seedTestUser, testUser } from '../testing/seed-user.test-utils'
 
-/**
- * Saving a course from the admin form keeps its data (ADR 0011, plan "Move
- * course readers to the sessions collection", unit 6). The old `schedule`
- * group and `sessions` array are hidden and read only; a save must leave
- * them, the course's sessions and its first and last day as they were.
- *
- * It works on a course made for the run, with the old pattern, old rows, two
- * sessions and a subtitle, and removes it after, so no real course changes.
- * It changes the subtitle and publishes, then saves a draft, and puts the
- * subtitle back each time.
- */
 const MARK = ' (e2e save check)'
 const SUBTITLE = 'Teaching as a case'
 
@@ -29,7 +18,7 @@ type Localized = Omit<Course, 'subtitle'> & { subtitle: Record<string, string | 
 let page: Page
 let course: Course
 
-const api = async <T>(path: string): Promise<T> => {
+const api = async <T>(path: string) => {
   const response = await page.request.get(`/api/${path}`)
   expect(response.status(), path).toBe(200)
   return (await response.json()) as T
@@ -45,7 +34,6 @@ const sessionsOf = async () =>
     )
   ).docs
 
-/** What a save must not change. */
 const kept = (doc: Pick<Course, 'schedule' | 'sessions' | 'first_day' | 'last_day'>) => ({
   schedule: doc.schedule,
   sessions: doc.sessions,
@@ -65,13 +53,11 @@ const save = async (subtitle: string, button: 'Publish changes' | 'Save Draft') 
 }
 
 test.describe('course admin save', () => {
-  // The first visit to the admin is slow on a cold server.
   test.describe.configure({ mode: 'serial', timeout: 300_000 })
   let before: { published: Localized; sessions: Session[] }
   let subtitle: string
 
   test.beforeAll(async ({ browser }) => {
-    // Full-suite setup exceeded 30 s; the isolated spec took 23.1 s in total.
     test.setTimeout(300_000)
     payload = await getPayload({ config, key: uniq('course-save') })
     await seedTestUser(payload)
@@ -103,7 +89,6 @@ test.describe('course admin save', () => {
           cycle,
           registration: { mode: 'closed' },
           subtitle: SUBTITLE,
-          // What a course migrated from before ADR 0011 still holds.
           schedule: {
             start_date: '2034-10-05T00:00:00.000Z',
             start_precision: 'day',
@@ -145,7 +130,6 @@ test.describe('course admin save', () => {
   })
 
   test.afterAll(async () => {
-    // Full-suite cleanup also exceeded its separate 30 s hook limit.
     test.setTimeout(300_000)
     await page?.context().close()
     await cleanup(payload)

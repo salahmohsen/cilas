@@ -5,12 +5,10 @@ import config from '../src/payload.config.js'
 export const testUser = {
   email: `e2e-${crypto.randomUUID()}@cilas.test`,
   password: 'test',
-  // `roles` is required. The admin tests create courses, and several
-  // collections are hidden from non-admins, so this user needs admin rights.
   roles: ['super_admin'] as User['roles'],
 }
 
-export async function seedTestUser(payload?: Payload): Promise<void> {
+export async function seedTestUser(payload?: Payload) {
   payload ??= await getPayload({ config })
 
   await payload.create({
@@ -19,7 +17,7 @@ export async function seedTestUser(payload?: Payload): Promise<void> {
   })
 }
 
-export async function cleanupTestUser(payload?: Payload): Promise<void> {
+export async function cleanupTestUser(payload?: Payload) {
   payload ??= await getPayload({ config })
 
   await payload.delete({

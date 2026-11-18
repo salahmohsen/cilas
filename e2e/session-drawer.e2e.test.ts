@@ -8,13 +8,6 @@ import { createTracker, uniq, lockSpacesMode } from '../testing/payload.fixture'
 import { login } from '../testing/login.test-utils'
 import { cleanupTestUser, seedTestUser, testUser } from '../testing/seed-user.test-utils'
 
-/**
- * The session drawer (ADR 0011 step 4, unit 3): a session's block in the
- * Calendar tab, its row in the Syllabus tab, and its block in a post's
- * schedule open the same drawer on the same session, with the session in the
- * URL. It works on a course, space and post made for the run and removes
- * them after. The meeting is in 2034, so the calendar opens on its week.
- */
 const MEETING = '2034-10-05'
 const TITLE = 'E2E drawer session'
 
@@ -29,20 +22,13 @@ let account: number
 let modeBefore: 'off' | 'trial' | 'on' = 'off'
 let unlock: (() => Promise<void>) | undefined
 
-// The drawer's heading names the session by its title.
 const drawer = () => page.getByRole('dialog', { name: TITLE, exact: true })
-/** The one session view inside the drawer, named in full. */
 const sessionView = () => drawer().getByRole('region', { name: `Session 1: ${TITLE}` })
 const param = () => new URL(page.url()).searchParams.get('open')
 const focusInDrawer = () =>
   page.evaluate(() => Boolean(document.activeElement?.closest('[role="dialog"]')))
-/** A session's block in a calendar, by the title in its spoken name. */
 const block = () => page.locator(`[data-span-id][aria-label^="${TITLE}"]`).first()
 
-/**
- * Opens the drawer from `trigger`, checks it, and returns what the drawer
- * shows. A press on a calendar block opens the drawer at once (decision 17).
- */
 const openFrom = async (
   trigger: ReturnType<Page['locator']>,
   by: 'pointer' | 'keyboard' = 'pointer',
@@ -58,11 +44,9 @@ const openFrom = async (
 }
 
 test.describe('session drawer', () => {
-  // A cold production server renders each page once before it is fast.
   test.describe.configure({ mode: 'serial', timeout: 300_000 })
 
   test.beforeAll(async ({ browser }) => {
-    // Playwright 1.58 starts all-hooks with the project timeout, not describe.timeout.
     test.setTimeout(300_000)
     unlock = await lockSpacesMode()
     payload = await getPayload({ config, key: uniq('session-drawer') })
@@ -117,7 +101,6 @@ test.describe('session drawer', () => {
     })
     expect(spaces.docs).toHaveLength(1)
     space = track('spaces', spaces.docs[0]!.id)
-    // No introduction gate: the run reads the feed and posts at once.
     await payload.update({
       collection: 'spaces',
       id: space,
@@ -177,7 +160,6 @@ test.describe('session drawer', () => {
   test.afterAll(async () => {
     test.setTimeout(120_000)
     await page?.context().close()
-    // Rows the run made through the app: the post's visits, and the test user's consent.
     if (space) {
       for (const [collection, where] of [
         ['space-posts', { space: { equals: space } }],
@@ -193,7 +175,6 @@ test.describe('session drawer', () => {
         for (const row of rows.docs) track(collection, row.id)
       }
     }
-    // Sessions first: the tracker deletes courses before collections it does not list.
     if (session) await payload.delete({ collection: 'sessions', id: session, overrideAccess: true })
     await payload.updateGlobal({
       slug: 'site-settings',
@@ -208,7 +189,6 @@ test.describe('session drawer', () => {
 
   test('the Calendar tab, the Syllabus tab and a schedule block open the same drawer', async () => {
     await page.goto(`${spacePath}?tab=calendar`)
-    // A press opens the drawer at once; Escape closes it and focus goes back to the block.
     await block().click()
     await expect(drawer()).toBeVisible()
     await page.keyboard.press('Escape')
@@ -217,7 +197,6 @@ test.describe('session drawer', () => {
     expect(param()).toBeNull()
 
     const fromCalendar = await openFrom(block(), 'keyboard')
-    // The title is the drawer's heading (`drawer()` finds it by it); the view under it has the number and times.
     expect(fromCalendar).not.toContain(TITLE)
     expect(fromCalendar).toContain('Session 1')
     expect(fromCalendar).toContain('7 – 9 PM')
@@ -226,19 +205,16 @@ test.describe('session drawer', () => {
       'href',
       `${spacePath}?session=${session}`,
     )
-    // Escape closes it, drops the param, and gives focus back to the block.
     await page.keyboard.press('Escape')
     await expect(drawer()).toHaveCount(0)
     expect(param()).toBeNull()
     await expect(block()).toBeFocused()
 
-    // Back closes it, and does not open it again.
     await openFrom(block())
     await page.goBack()
     await expect(drawer()).toHaveCount(0)
     expect(new URL(page.url()).search).toBe('?tab=calendar')
 
-    // A link with the param opens it.
     await page.goto(`${spacePath}?tab=calendar&open=${session}`)
     await expect(sessionView()).toBeVisible({ timeout: 60_000 })
     await drawer().getByRole('button', { name: 'Close session' }).click()

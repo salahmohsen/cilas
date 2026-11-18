@@ -4,13 +4,6 @@ import { getPayload, type Payload } from 'payload'
 import config from '../src/payload.config'
 import { createTracker, lockSpacesMode, uniq, uniqEmail } from '../testing/payload.fixture'
 
-/**
- * The public calendar's side panel (decisions 22 to 25): the Month view opens on
- * the selected day, a press on a day selects it and writes `date` with
- * replaceState, an item's details replace the day with Back and Escape and
- * focus return, and a host or admin cancels a session from the "⋯" menu after
- * a confirm. It works on courses made for the run, in 2035, and removes them.
- */
 const { track, cleanup } = createTracker()
 let payload: Payload
 let unlock: (() => Promise<void>) | undefined
@@ -25,7 +18,6 @@ const accounts: Record<'admin' | 'host' | 'student' | 'outsider', string> = {
 let courseA: number
 let courseB: number
 let spaceHref: string
-/** The study-page slug of each course. */
 const slugs = { a: '', b: '' }
 const sessions: Record<'a1' | 'a2' | 'b1', number> = { a1: 0, a2: 0, b1: 0 }
 const MONTH = '/en/calendar?view=month&date=2035-10-04'
@@ -39,11 +31,6 @@ const shot = async (page: Page, name: string) => {
   if (process.env.D22_SHOTS) await page.screenshot({ path: `${process.env.D22_SHOTS}/${name}.png` })
 }
 
-/**
- * Opens the "⋯" menu. Right after a dialog closes, the page still ignores a
- * press for a frame or two (the modal's pointer lock), so a first press can
- * land on nothing; the press repeats until the menu shows.
- */
 const openMore = async (scope: Page | Locator) => {
   const more = scope.getByRole('button', { name: 'More actions' })
   await expect(async () => {
@@ -192,8 +179,6 @@ test.describe('the public calendar side panel', () => {
     sessions.a1 = await session(courseA, 'Panel one', '2035-10-04', '10:00', '12:00')
     sessions.a2 = await session(courseA, 'Panel two', '2035-10-04', '18:00', '20:00')
     sessions.b1 = await session(courseB, 'Panel course B', '2035-10-06', '10:00', '12:00')
-    // The calendar list is cached for an hour and cleared by the app's own saves, not by this process.
-    // A save through the running app (the same title) clears it, so the visitor reads the new sessions.
     const base = test.info().project.use.baseURL!
     const login = await fetch(`${base}/api/users/login`, {
       method: 'POST',
@@ -207,9 +192,6 @@ test.describe('the public calendar side panel', () => {
       body: JSON.stringify({ title: 'Panel course B' }),
     })
     expect(touched.ok).toBe(true)
-    // The app clears the list stale-while-revalidate: a read serves the old list once, then the new one.
-    // Each language keeps its own list, and the title alone matches a list of an earlier run, so
-    // the wait is for this run's course page link.
     for (const locale of ['en', 'ar']) {
       await expect
         .poll(
@@ -280,14 +262,12 @@ test.describe('the public calendar side panel', () => {
     page,
   }) => {
     await page.goto(MONTH)
-    // Selected means hydrated: a focus before that would not reach the grid.
     await expect(day(page, '2035-10-04')).toHaveAttribute('aria-selected', 'true')
     const cell = day(page, '2035-10-05')
     await cell.focus()
     await page.keyboard.press('Enter')
     await expect(cell).toHaveAttribute('aria-selected', 'true')
     await expect(cell).toBeFocused()
-    // The grid takes its tab stop from the selected day once the day is written to the URL.
     await expect(page).toHaveURL(/date=2035-10-05$/)
     await page.keyboard.press('ArrowLeft')
     await expect(day(page, '2035-10-04')).toBeFocused()
@@ -328,8 +308,6 @@ test.describe('the public calendar side panel', () => {
   }) => {
     await page.setViewportSize({ width: 900, height: 900 })
     await page.goto(MONTH)
-    // The server's render assumes a docked panel (`data-panel="auto"`); the layout settles
-    // closed once the browser has measured the narrow frame.
     await expect(page.locator('[data-slot="collapsible"][class*="layout"]')).toHaveAttribute(
       'data-closed',
       '',

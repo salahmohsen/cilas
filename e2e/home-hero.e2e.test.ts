@@ -4,8 +4,6 @@ const CLEAR = 'rgba(0, 0, 0, 0)'
 
 const scrollTo = (top: number) => window.scrollTo({ top, behavior: 'instant' })
 
-// The hero starts under the header, so the header behaves on the home page as
-// it does everywhere: solid as soon as the page scrolls.
 for (const path of ['/en', '/ar', '/en/articles']) {
   test(`the header turns solid after a small scroll (${path})`, async ({ page }) => {
     test.setTimeout(120_000)
@@ -16,7 +14,6 @@ for (const path of ['/en', '/ar', '/en/articles']) {
   })
 }
 
-// CMS-managed copy may extend below the fold; it must stay inside the hero's clipping bounds.
 for (const size of [
   { width: 1280, height: 720 },
   { width: 1366, height: 660 },
@@ -56,7 +53,6 @@ for (const locale of ['en', 'ar']) {
     await page.goto(`/${locale}`, { timeout: 90_000 })
     const brand = page.locator('.site-header [data-brand]')
     await expect(brand).toHaveCSS('opacity', '0')
-    // Hidden, the brand link is out of the tab order too.
     await expect(brand.locator('a')).toBeHidden()
 
     await page.evaluate(scrollTo, 600)

@@ -9,7 +9,7 @@ export interface LoginOptions {
   }
 }
 
-export async function login({ page, serverURL = '', user }: LoginOptions): Promise<void> {
+export async function login({ page, serverURL = '', user }: LoginOptions) {
   await page.goto(`${serverURL}/en/login?next=%2Fadmin`)
 
   await page.getByRole('textbox', { name: 'Email', exact: true }).fill(user.email)

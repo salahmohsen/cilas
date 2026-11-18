@@ -7,13 +7,6 @@ import { createTracker, uniq, lockSpacesMode } from '../testing/payload.fixture'
 import { login } from '../testing/login.test-utils'
 import { cleanupTestUser, seedTestUser, testUser } from '../testing/seed-user.test-utils'
 
-/**
- * The calendar in a course's Sessions tab (ADR 0011, plan "The calendar
- * component"). It works on a course made for the run and removes it after, so
- * no real course changes. The two meetings are in 2034, so the calendar opens
- * on their week whatever day the test runs. Each test starts from the same
- * one session.
- */
 const FIRST = '2034-10-05'
 const SECOND = '2034-10-12'
 const SAVE = 'Save schedule'
@@ -47,27 +40,22 @@ const openSessionsTab = async () => {
 
 const calendar = () => page.getByRole('group', { name: 'Calendar' })
 
-/** The count of unsaved changes, as screen readers hear it. */
 const unsaved = (text: string | RegExp) => calendar().getByRole('status').filter({ hasText: text })
 
-/** A block of the grid, by the title in its spoken name. */
 const block = (title: string) =>
   calendar().locator(`[data-span-id][aria-label*="${title}"]`).first()
 
 const saveButton = () => calendar().getByRole('button', { name: SAVE, exact: true })
 
-/** The save bar is gone: the save came back. (While it saves, its button says "Saving".) */
 const barGone = () =>
   expect(calendar().getByRole('button', { name: 'Cancel', exact: true })).toHaveCount(0)
 
 const thursday = () => block('E2E first session, Thursday, October 5')
 
 test.describe('course schedule announcements', () => {
-  // A cold dev server compiles the admin on the first visit.
   test.describe.configure({ mode: 'serial', timeout: 300_000 })
 
   test.beforeAll(async ({ browser }) => {
-    // Playwright 1.58 starts all-hooks with the project timeout, not describe.timeout.
     test.setTimeout(300_000)
     unlock = await lockSpacesMode()
     payload = await getPayload({ config, key: uniq('schedule-offer') })

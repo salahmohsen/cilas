@@ -1,6 +1,6 @@
 import type { MigrateDownArgs, MigrateUpArgs } from '@payloadcms/db-postgres'
 import { Pool } from 'pg'
-import { getPayload, type Payload } from 'payload'
+import { getPayload } from 'payload'
 
 import { migrations } from '../src/migrations/index.js'
 
@@ -14,10 +14,7 @@ import { migrations } from '../src/migrations/index.js'
  * imported here, after the variable points at the new database. A spec using
  * this must import nothing that loads the config before it calls this.
  */
-export async function scratchPayload(): Promise<{
-  payload: Payload
-  destroy: () => Promise<void>
-}> {
+export async function scratchPayload() {
   const shared = process.env.DATABASE_URL
   if (!shared) throw new Error('scratchPayload needs DATABASE_URL')
   const name = `cilas_scratch_${crypto.randomUUID().replaceAll('-', '').slice(0, 12)}`
@@ -51,10 +48,6 @@ export async function scratchPayload(): Promise<{
       payload,
       destroy: async () => {
         await payload.destroy()
-        // Payload keeps one pool client checked out for good, so `pool.end()`
-        // never finishes. The drop closes the connections instead, and the
-        // pool reports each close as an admin shutdown (57P01); any other
-        // pool error still throws.
         payload.db.pool.on('error', (error: Error & { code?: string }) => {
           if (error.code !== '57P01') throw error
         })

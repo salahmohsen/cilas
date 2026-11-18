@@ -4,7 +4,6 @@ import { getPayload, type Payload } from 'payload'
 import config from '../src/payload.config'
 import { createTracker, uniq, uniqEmail } from '../testing/payload.fixture'
 
-// Its own day: the panel spec shows 2035-10-04, and a second spec's sessions on it fold into "2 more".
 const { track, cleanup } = createTracker()
 let payload: Payload
 const email = uniqEmail('public-calendar-admin')

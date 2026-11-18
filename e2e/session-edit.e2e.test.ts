@@ -6,15 +6,6 @@ import config from '../src/payload.config.js'
 import type { User } from '../src/payload-types.js'
 import { createTracker, lockSpacesMode, uniq, uniqEmail } from '../testing/payload.fixture'
 
-/**
- * The session drawer's Edit form (ADR 0011 step 4, unit 5). A fellow of the
- * course opens the drawer from the Calendar tab, edits the title and moves
- * the meeting, saves, and the announcement dialog opens; the drawer and the
- * tab show the saved session. Ticking Cancelled opens the dialog too; a
- * change to the text alone opens none. It works on a course, space and
- * fellow made for the run and removes them after. The meeting is in 2034, so
- * the calendar opens on its week.
- */
 const MEETING = '2034-10-05'
 const TITLE = 'E2E drawer session'
 
@@ -23,7 +14,6 @@ let payload: Payload
 let session: number
 let space: number
 let spacePath: string
-/** The site's spaces mode before the run; unset until it was read. */
 let modeBefore: 'off' | 'trial' | 'on' | undefined
 let unlock: (() => Promise<void>) | undefined
 let account: { email: string; password: string; id: number }
@@ -32,7 +22,6 @@ let fellow: Page
 const sessionRow = () =>
   payload.findByID({ collection: 'sessions', id: session, depth: 0, overrideAccess: true })
 
-/** A session's block in the calendar, by the title in its spoken name. */
 const block = (page: Page, title: string) =>
   page.locator(`[data-span-id][aria-label^="${title}"]`).first()
 const drawer = (page: Page, title: string) => page.getByRole('dialog', { name: title, exact: true })
@@ -52,10 +41,6 @@ const signIn = async (browser: Browser) => {
   return page
 }
 
-/**
- * Opens the session's Edit form: its block opens the drawer at once
- * (decision 17), or its link does; then the drawer's Edit session.
- */
 const openForm = async (title: string, by: 'block' | 'link' = 'block') => {
   const panel = drawer(fellow, title)
   if (by === 'block') await block(fellow, title).click()
@@ -69,7 +54,6 @@ const openForm = async (title: string, by: 'block' | 'link' = 'block') => {
 
 const pickTime = async (panel: Locator, field: string, time: string) => {
   await panel.getByRole('button', { name: new RegExp(`^${field}`) }).click()
-  // The list just closed may still be leaving; pick in this field's own list.
   await panel
     .getByRole('listbox', { name: field, exact: true })
     .getByRole('option', { name: time, exact: true })
@@ -85,7 +69,6 @@ test.describe('session drawer Edit form', () => {
   test.describe.configure({ mode: 'serial', timeout: 300_000 })
 
   test.beforeAll(async ({ browser }) => {
-    // Playwright 1.58 starts all-hooks with the project timeout, not describe.timeout.
     test.setTimeout(300_000)
     unlock = await lockSpacesMode()
     payload = await getPayload({ config, key: uniq('session-edit') })
@@ -238,7 +221,6 @@ test.describe('session drawer Edit form', () => {
     await dialog.getByRole('button', { name: 'Skip', exact: true }).click()
     await expect(dialog).toBeHidden()
 
-    // The drawer reads the session again, and the Calendar tab behind it follows the refresh.
     const renamed = drawer(fellow, 'E2E drawer renamed')
     await expect(renamed).toBeVisible()
     await expect(renamed.getByText('8 – 10 PM')).toBeVisible()
@@ -305,7 +287,6 @@ test.describe('session drawer Edit form', () => {
     expect((await sessionRow()).title).toBe('Saved elsewhere')
     await reload.click()
     await expect(title).toHaveValue('Saved elsewhere', { timeout: 60_000 })
-    // Restore the title for the next serial case, through the same form.
     await title.fill('E2E drawer renamed')
     await panel.getByRole('button', { name: 'Save changes', exact: true }).click()
     const saved = drawer(fellow, 'E2E drawer renamed')
@@ -317,7 +298,6 @@ test.describe('session drawer Edit form', () => {
 
   test('a change to the text alone opens no offer', async () => {
     const before = (await sessionRow()).updatedAt
-    // A cancelled session may be off the calendar; its link opens the drawer.
     const panel = await openForm('E2E drawer renamed', 'link')
     await panel.getByRole('textbox', { name: 'Title', exact: true }).fill('E2E drawer text only')
     await panel.getByRole('button', { name: 'Save changes', exact: true }).click()
@@ -326,7 +306,6 @@ test.describe('session drawer Edit form', () => {
       timeout: 60_000,
     })
     await expect.poll(async () => (await sessionRow()).updatedAt).not.toBe(before)
-    // The offer's check has had time to answer; nothing opens.
     await fellow.waitForTimeout(3_000)
     await expect(offer(fellow)).toHaveCount(0)
     await closeDrawer(saved)

@@ -6,14 +6,6 @@ import config from '../src/payload.config.js'
 import type { User } from '../src/payload-types.js'
 import { createTracker, lockSpacesMode, uniq, uniqEmail } from '../testing/payload.fixture'
 
-/**
- * Edit mode in a course space's Calendar tab (ADR 0011 step 4, unit 4). A
- * fellow of the course moves a session and saves, and the announcement
- * dialog opens; Cancel changes nothing; Done with a waiting change asks; a
- * student sees no Edit. It works on a course, space, fellow and student made
- * for the run and removes them after. The meeting is in 2034, so the
- * calendar opens on its week.
- */
 const MEETING = '2034-10-05'
 const TITLE = 'E2E space edit session'
 
@@ -23,7 +15,6 @@ let courseId: number
 let session: number
 let space: number
 let spacePath: string
-/** The site's spaces mode before the run; unset until it was read. */
 let modeBefore: 'off' | 'trial' | 'on' | undefined
 let unlock: (() => Promise<void>) | undefined
 const accounts: Record<'fellow' | 'student', { email: string; password: string; id: number }> =
@@ -36,7 +27,6 @@ const meetings = async () =>
 const sessionRow = async () =>
   payload.findByID({ collection: 'sessions', id: session, depth: 0, overrideAccess: true })
 
-/** A session's block in the calendar, by the title in its spoken name. */
 const block = (page: Page) => page.locator(`[data-span-id][aria-label^="${TITLE}"]`).first()
 const saveButton = (page: Page) => page.getByRole('button', { name: 'Save', exact: true })
 
@@ -62,7 +52,6 @@ const startEditing = async (page: Page) => {
   await expect(page.locator('[data-mode="edit"]')).toHaveCount(1)
 }
 
-/** One day later, from the keyboard. */
 const moveOneDay = async (page: Page) => {
   await block(page).focus()
   await page.keyboard.press('ArrowRight')
@@ -73,7 +62,6 @@ test.describe('space calendar edit mode', () => {
   test.describe.configure({ mode: 'serial', timeout: 300_000 })
 
   test.beforeAll(async ({ browser }) => {
-    // Playwright 1.58 starts all-hooks with the project timeout, not describe.timeout.
     test.setTimeout(300_000)
     unlock = await lockSpacesMode()
     payload = await getPayload({ config, key: uniq('space-calendar-edit') })
@@ -186,10 +174,8 @@ test.describe('space calendar edit mode', () => {
   })
 
   test.afterAll(async () => {
-    // The cleanup ran past 300 s once on a loaded machine and left its rows. Each
-    // step names itself when it is slow or stuck, so the next time says which one.
     test.setTimeout(300_000)
-    const step = async <T>(label: string, run: () => Promise<T>): Promise<T> => {
+    const step = async <T>(label: string, run: () => Promise<T>) => {
       const start = Date.now()
       const stuck = new Promise<never>((_, reject) =>
         setTimeout(() => reject(new Error(`afterAll step "${label}" was stuck for 90 s`)), 90_000),
@@ -282,7 +268,6 @@ test.describe('space calendar edit mode', () => {
     await ask.getByRole('button', { name: 'Stay', exact: true }).click()
     await expect(ask).toBeHidden()
     await expect(block(fellow)).toHaveAccessibleName(/Unsaved/)
-    // A tab switch asks too, and Stay keeps the tab.
     await fellow.getByRole('button', { name: 'Announcements', exact: true }).click()
     await expect(ask).toBeVisible()
     await expect(ask.getByRole('button', { name: 'Close', exact: true })).toHaveCount(1)
@@ -305,7 +290,6 @@ test.describe('space calendar edit mode', () => {
     await offer.getByRole('button', { name: 'Skip', exact: true }).click()
     await expect(offer).toBeHidden()
 
-    // Nothing waits now: Done goes back to view mode with the saved day.
     await fellow.getByRole('button', { name: 'Done', exact: true }).click()
     await expect(fellow.getByRole('button', { name: 'Edit', exact: true })).toBeVisible()
     await expect(block(fellow)).toHaveAccessibleName(/^E2E space edit session, Friday, October 6/)
