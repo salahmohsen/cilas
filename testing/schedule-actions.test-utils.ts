@@ -9,6 +9,7 @@ const unanswered = {
   saveScheduleEdits: async () => ({ ok: false, error: { code: 'unauthenticated' } }),
   scheduleOffers: async () => [],
   publishOffer: async () => ({ status: 'ok' }),
+  publicCalendarLinks: async () => ({ canEdit: false, editable: [], spaces: {} }),
 } satisfies ScheduleActions
 
 const names = Object.keys(unanswered) as (keyof ScheduleActions)[]

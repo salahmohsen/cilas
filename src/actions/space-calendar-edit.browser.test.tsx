@@ -12,6 +12,7 @@ import type { SessionEdit } from '@/lib/session-edit'
 import ar from '../../messages/ar.json'
 import en from '../../messages/en.json'
 import { IntlProvider } from '../../testing/intl.test-utils'
+import { scheduleActionsHost } from '../../testing/schedule-actions.test-utils'
 import { renderWithNavigation } from '../../testing/navigation.test-utils'
 
 type Saved = Awaited<ReturnType<ScheduleActions['saveScheduleEdits']>>
@@ -79,6 +80,7 @@ const host = {
 }
 
 const actions = {
+  ...scheduleActionsHost().actions,
   saveScheduleEdits: async (...args) => {
     host.saves.push(args)
     return host.save()
@@ -95,8 +97,6 @@ const actions = {
     host.edits.push(args)
     return host.edit()
   },
-  loadSessionView: async () => ({ ok: false, error: 'failed' }),
-  publishOffer: async () => ({ status: 'ok' }),
 } satisfies ScheduleActions
 
 const siteLink = () =>

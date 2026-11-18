@@ -7,20 +7,9 @@ import { MoviePickerForm } from '@/components/admin/movie-picker-form'
 import type { MovieSnapshot } from '@/lib/movie'
 
 import { movie } from '../../../testing/movie.fixture'
-import { mockNetwork } from '../../../testing/msw-browser.test-utils'
+import { mockNetwork, nextImages } from '../../../testing/msw-browser.test-utils'
 
-const pixel = Uint8Array.from(
-  atob(
-    'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR4nGP4z8DwHwAFAAH/iZk9HQAAAABJRU5ErkJggg==',
-  ),
-  (character) => character.charCodeAt(0),
-)
-const network = mockNetwork(
-  http.get(
-    '/_next/image',
-    () => new HttpResponse(pixel, { headers: { 'content-type': 'image/png' } }),
-  ),
-)
+const network = mockNetwork(nextImages())
 afterEach(cleanup)
 
 const saved: (MovieSnapshot | null)[] = []

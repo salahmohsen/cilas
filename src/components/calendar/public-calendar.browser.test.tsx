@@ -1,99 +1,76 @@
-import {
-  act,
-  cleanup,
-  fireEvent,
-  render,
-  renderHook,
-  screen,
-  waitFor,
-  within,
-} from '@testing-library/react'
-import { createTranslator, NextIntlClientProvider } from 'next-intl'
+import { act, fireEvent, renderHook, screen, waitFor, within } from '@testing-library/react'
+import { http, HttpResponse } from 'msw'
+import type { ReactNode } from 'react'
 import { renderToString } from 'react-dom/server'
 import { afterEach, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest'
 
-import {
-  calendarQuery,
-  holds,
-  loadedRange,
-  readCalendarUrl,
-} from '@/components/calendar/calendar-url'
-import { usePublicCalendarAccess } from '@/components/calendar/use-public-calendar-access'
-import { useSession } from '@/components/use-session'
-import { publicCalendarLinks } from '@/actions/public-calendar-access'
-import { loadSessionEdit } from '@/actions/session-edit'
-import { saveScheduleEdits } from '@/actions/save-schedule-edits'
-import { scheduleOffers } from '@/actions/schedule-offers'
-import { formatsOf } from '@/i18n/formats'
+import { loadedRange } from '@/components/calendar/calendar-url'
 import { PublicCalendar } from '@/components/calendar/public-calendar'
 import { publicItems } from '@/components/calendar/public-items'
+import { usePublicCalendarAccess } from '@/components/calendar/use-public-calendar-access'
+import { ScheduleActionsProvider, type ScheduleActions } from '@/components/space/schedule-actions'
 import type { CalendarMeeting } from '@/lib/calendar'
 
 import { meeting, meetings, words } from '../../../testing/fan0-public-calendar.fixture'
-import ar from '../../../messages/ar.json'
-import en from '../../../messages/en.json'
-import { stubPopupDom } from '../../../testing/popup-dom.test-utils'
+import { IntlProvider, messagesOf } from '../../../testing/intl.test-utils'
+import { mockNetwork, nextImages } from '../../../testing/msw-browser.test-utils'
+import {
+  NavigationProvider,
+  createMemoryRouter,
+  renderWithNavigation,
+} from '../../../testing/navigation.test-utils'
+import { scheduleActionsHost } from '../../../testing/schedule-actions.test-utils'
 
 declare global {
   var __UI_SDK_STRICT__: boolean | undefined
 }
 
-vi.mock('@/components/use-session', () => ({ useSession: vi.fn(() => null) }))
-vi.mock('@/actions/public-calendar-access', () => ({ publicCalendarLinks: vi.fn() }))
-vi.mock('@/actions/save-schedule-edits', () => ({ saveScheduleEdits: vi.fn() }))
-vi.mock('@/actions/schedule-offers', () => ({ scheduleOffers: vi.fn() }))
-vi.mock('@/actions/load-calendar-items', () => ({ loadCalendarItems: vi.fn() }))
-vi.mock('@/actions/session-edit', () => ({ loadSessionEdit: vi.fn() }))
+const en = messagesOf.en
+const ar = messagesOf.ar
 
-// Whether the side panel sits beside the grid.
-let docked: boolean | null = false
-vi.mock('@/components/calendar/ui/use-narrow', () => ({
-  useNarrow: () => false,
-  useDocked: () => docked,
-}))
-vi.mock('@/lib/use-narrow', () => ({ useNarrow: () => false }))
+type Access = Awaited<ReturnType<ScheduleActions['publicCalendarLinks']>>
 
-const navigation = vi.hoisted(() => {
-  const push = vi.fn()
-  const replace = vi.fn()
-  const refresh = vi.fn()
-  return {
-    params: new URLSearchParams(),
-    push,
-    replace,
-    refresh,
-    router: { push, replace, refresh },
-  }
-})
-vi.mock('next/navigation', async (original) => ({
-  ...(await original<typeof import('next/navigation')>()),
-  useSearchParams: () => navigation.params,
-  useRouter: () => navigation.router,
-  usePathname: () => '/en/calendar',
-}))
+const network = mockNetwork(
+  nextImages(),
+  http.get('/api/users/me', () => HttpResponse.json({ user: null })),
+)
+const signIn = (email: string) =>
+  network.use(http.get('/api/users/me', () => HttpResponse.json({ user: { id: 8, email } })))
+
+const host = scheduleActionsHost()
+const grant = (access: Partial<Access>) => {
+  host.answers.publicCalendarLinks = async () => ({
+    canEdit: false,
+    editable: [],
+    spaces: {},
+    ...access,
+  })
+}
+const asReader = (access: Partial<Access> = {}) => {
+  signIn('reader@cilas.test')
+  grant(access)
+}
+const accessRead = async () => {
+  await waitFor(() => expect(host.calls.publicCalendarLinks).toHaveLength(1))
+  await act(async () => {})
+}
 
 const kinds = (locale: 'en' | 'ar') => {
-  const words = (locale === 'ar' ? ar : en).Calendar
+  const calendar = messagesOf[locale].Calendar
   return {
-    'course:core': { name: 'Core course', open: words.viewCourse },
-    'course:thematic': { name: 'Thematic course', open: words.viewCourse },
-    'event:screening': { name: 'Screening', open: words.viewEvent },
+    'course:core': { name: 'Core course', open: calendar.viewCourse },
+    'course:thematic': { name: 'Thematic course', open: calendar.viewCourse },
+    'event:screening': { name: 'Screening', open: calendar.viewEvent },
   }
 }
 
-const page = (
-  locale: 'en' | 'ar' = 'en',
-  query = '?view=week&date=2026-11-17',
+const calendar = (
+  locale: 'en' | 'ar',
+  query: string,
   source: readonly CalendarMeeting[] = meetings,
-) => {
-  navigation.params = new URLSearchParams(query)
-  window.history.replaceState(null, '', `/${locale}/calendar${query}`)
-  const tree = () => (
-    <NextIntlClientProvider
-      locale={locale}
-      messages={locale === 'ar' ? ar : en}
-      timeZone="Africa/Cairo"
-    >
+) => (
+  <IntlProvider locale={locale}>
+    <ScheduleActionsProvider actions={host.actions}>
       <PublicCalendar
         items={publicItems(source, words(locale))}
         range={loadedRange(new URLSearchParams(query).get('date')!)}
@@ -101,48 +78,61 @@ const page = (
         kinds={kinds(locale)}
         months={['2025-03', '2026-11']}
       />
-    </NextIntlClientProvider>
+    </ScheduleActionsProvider>
+  </IntlProvider>
+)
+
+const DOCKED = '72rem'
+const UNDOCKED = '48rem'
+
+const framed = (width: string, children: ReactNode) => (
+  <div style={{ inlineSize: width }}>{children}</div>
+)
+
+const page = (
+  locale: 'en' | 'ar' = 'en',
+  query = '?view=week&date=2026-11-17',
+  { source = meetings, docked = false }: { source?: CalendarMeeting[]; docked?: boolean } = {},
+) => {
+  const url = `/${locale}/calendar${query}`
+  window.history.replaceState(null, '', url)
+  return renderWithNavigation(framed(docked ? DOCKED : UNDOCKED, calendar(locale, query, source)), {
+    url,
+  })
+}
+
+const pageTookOver = (target: Element, init: MouseEventInit = {}) => {
+  let taken = false
+  const look = (event: Event) => {
+    taken = event.defaultPrevented
+    event.preventDefault()
+  }
+  window.addEventListener('click', look, { once: true })
+  target.dispatchEvent(
+    new MouseEvent('click', { bubbles: true, cancelable: true, button: 0, ...init }),
   )
-  return { tree, ...render(tree()) }
+  return taken
 }
 
 beforeAll(() => {
   globalThis.__UI_SDK_STRICT__ = true
-  stubPopupDom()
 })
 
 beforeEach(() => {
-  docked = false
+  host.reset()
   vi.useFakeTimers({ now: new Date('2026-11-17T10:00:00Z'), toFake: ['Date'] })
-  vi.mocked(useSession).mockReturnValue(null)
-  vi.mocked(publicCalendarLinks).mockReset()
-  vi.mocked(loadSessionEdit).mockReset()
-  vi.mocked(saveScheduleEdits).mockReset()
-  vi.mocked(scheduleOffers).mockReset()
-  navigation.refresh.mockClear()
-  navigation.push.mockClear()
-  navigation.replace.mockClear()
-  window.history.replaceState(null, '', '/en/calendar?view=week&date=2026-11-17')
 })
 
 afterEach(() => {
-  cleanup()
   vi.useRealTimers()
 })
 
 describe('the public calendar', () => {
   it('server renders the week with each meeting as a link to its page', () => {
-    navigation.params = new URLSearchParams('?view=week&date=2026-11-17')
     const html = renderToString(
-      <NextIntlClientProvider locale="en" messages={en} timeZone="Africa/Cairo">
-        <PublicCalendar
-          items={publicItems(meetings, words('en'))}
-          range={loadedRange('2026-11-17')}
-          today="2026-11-17"
-          kinds={kinds('en')}
-          months={['2026-11']}
-        />
-      </NextIntlClientProvider>,
+      <NavigationProvider memory={createMemoryRouter('/en/calendar?view=week&date=2026-11-17')}>
+        {calendar('en', '?view=week&date=2026-11-17')}
+      </NavigationProvider>,
     )
     expect(html).toContain('Reading the city')
     expect(html).toContain('href="/en/study/reading-the-city#session-501"')
@@ -153,9 +143,7 @@ describe('the public calendar', () => {
     page()
     const block = screen.getByRole('link', { name: /^Reading the city, Tuesday/ })
     expect(block).toHaveAttribute('href', '/en/study/reading-the-city#session-501')
-    const click = new MouseEvent('click', { bubbles: true, cancelable: true, button: 0 })
-    block.dispatchEvent(click)
-    expect(click.defaultPrevented).toBe(true)
+    expect(pageTookOver(block)).toBe(true)
     const details = await screen.findByRole('dialog', { name: 'Reading the city' })
     expect(within(details).getByText('Session 3')).toBeInTheDocument()
     expect(within(details).getByText('Online')).toBeInTheDocument()
@@ -169,10 +157,10 @@ describe('the public calendar', () => {
 
   it('shows the session title in the caption and the counts as a link to the session in the course page', async () => {
     const titled = [meeting({ sessionTitle: 'What is intelligence?', materials: 3, activities: 1 })]
-    page('en', '?view=week&date=2026-11-17', titled)
+    page('en', '?view=week&date=2026-11-17', { source: titled })
     fireEvent.click(screen.getByRole('link', { name: /^Reading the city, Tuesday/ }))
     const details = await screen.findByRole('dialog', { name: 'Reading the city' })
-    expect(details).toHaveTextContent('Session 3 · \u2068What is intelligence?\u2069')
+    expect(details).toHaveTextContent('Session 3 · ⁨What is intelligence?⁩')
     const counts = within(details).getByRole('link', { name: '3 materials · 1 activity' })
     expect(counts).toHaveAttribute('href', '/en/study/reading-the-city#session-501')
     expect(within(details).getByRole('link', { name: 'View course' })).toHaveAttribute(
@@ -200,9 +188,7 @@ describe('the public calendar', () => {
   it('leaves a press with a modifier key to the browser', () => {
     page()
     const block = screen.getByRole('link', { name: /^Reading the city, Tuesday/ })
-    const click = new MouseEvent('click', { bubbles: true, cancelable: true, metaKey: true })
-    block.dispatchEvent(click)
-    expect(click.defaultPrevented).toBe(false)
+    expect(pageTookOver(block, { metaKey: true })).toBe(false)
   })
 
   it('offers View event for an event', async () => {
@@ -235,60 +221,54 @@ describe('the public calendar', () => {
   })
 
   it('writes a move inside the loaded days to the URL, and loads the days past them', () => {
-    page()
+    const { memory } = page()
     const push = vi.spyOn(window.history, 'pushState')
     fireEvent.click(screen.getByRole('button', { name: 'Day' }))
     expect(push).toHaveBeenLastCalledWith(null, '', '?view=day&date=2026-11-17')
-    expect(navigation.push).not.toHaveBeenCalled()
+    expect(memory.visits).toEqual([])
     fireEvent.click(screen.getByRole('button', { name: 'Month' }))
     fireEvent.click(screen.getByRole('button', { name: 'Next month' }))
-    expect(navigation.push).toHaveBeenCalledWith('/en/calendar?view=month&date=2026-12-01', {
-      scroll: false,
+    expect(memory.visits[0]).toEqual({
+      method: 'push',
+      href: '/en/calendar?view=month&date=2026-12-01',
+      options: { scroll: false },
     })
     push.mockRestore()
   })
 
-  it('follows the URL when Back changes it', () => {
-    page()
-    expect(screen.getByRole('button', { name: 'Week' })).toHaveAttribute('aria-pressed', 'true')
-    window.history.pushState(null, '', '/en/calendar?view=day&date=2026-11-18')
-    act(() => {
-      window.dispatchEvent(new PopStateEvent('popstate'))
+  it('follows the URL when Back changes it', async () => {
+    window.history.replaceState(null, '', '/en/calendar?view=day&date=2026-11-18')
+    window.history.pushState(null, '', '/en/calendar?view=week&date=2026-11-17')
+    renderWithNavigation(framed(UNDOCKED, calendar('en', '?view=week&date=2026-11-17')), {
+      url: '/en/calendar?view=week&date=2026-11-17',
     })
-    expect(screen.getByRole('button', { name: 'Day' })).toHaveAttribute('aria-pressed', 'true')
+    expect(screen.getByRole('button', { name: 'Week' })).toHaveAttribute('aria-pressed', 'true')
+    window.history.back()
+    await waitFor(() =>
+      expect(screen.getByRole('button', { name: 'Day' })).toHaveAttribute('aria-pressed', 'true'),
+    )
     expect(screen.getByRole('link', { name: /^Film night, Wednesday/ })).toBeInTheDocument()
     expect(screen.queryByRole('link', { name: /^Reading the city, Tuesday/ })).toBeNull()
   })
 
-  it('moves back on a quick Back after a switch, before the router has the new URL', () => {
-    page()
+  it('moves back on a quick Back after a switch, before the router has the new URL', async () => {
+    const { memory } = page()
     fireEvent.click(screen.getByRole('button', { name: 'Day' }))
     expect(screen.getByRole('button', { name: 'Day' })).toHaveAttribute('aria-pressed', 'true')
-    window.history.replaceState(null, '', '/en/calendar?view=week&date=2026-11-17')
-    act(() => {
-      window.dispatchEvent(new PopStateEvent('popstate'))
-    })
-    expect(screen.getByRole('button', { name: 'Week' })).toHaveAttribute('aria-pressed', 'true')
+    expect(memory.url.search).toBe('?view=week&date=2026-11-17')
+    window.history.back()
+    await waitFor(() =>
+      expect(screen.getByRole('button', { name: 'Week' })).toHaveAttribute('aria-pressed', 'true'),
+    )
   })
 
   it('settles on the month the router loaded, before the router writes its URL', () => {
-    const at = (query: string) => (
-      <NextIntlClientProvider locale="en" messages={en} timeZone="Africa/Cairo">
-        <PublicCalendar
-          items={publicItems(meetings, words('en'))}
-          range={loadedRange(new URLSearchParams(query).get('date')!)}
-          today="2026-11-17"
-          kinds={kinds('en')}
-          months={['2025-03', '2026-11']}
-        />
-      </NextIntlClientProvider>
-    )
-    navigation.params = new URLSearchParams('?view=month&date=2026-11-07')
-    window.history.replaceState(null, '', '/en/calendar?view=month&date=2026-11-07')
-    const { rerender } = render(at('?view=month&date=2026-11-07'))
-    navigation.params = new URLSearchParams('?view=month&date=2026-10-07')
-    rerender(at('?view=month&date=2026-10-07'))
-    expect(navigation.replace).not.toHaveBeenCalled()
+    const { memory, rerender } = page('en', '?view=month&date=2026-11-07')
+    act(() => {
+      memory.router.push('/en/calendar?view=month&date=2026-10-07', { scroll: false })
+      rerender(framed(UNDOCKED, calendar('en', '?view=month&date=2026-10-07')))
+    })
+    expect(memory.visits.filter((visit) => visit.method === 'replace')).toEqual([])
     expect(screen.queryByText('November 2026')).toBeNull()
   })
 
@@ -307,37 +287,39 @@ describe('the public calendar', () => {
 
 describe('public calendar access after hydration', () => {
   it('sends no access request for an anonymous viewer', async () => {
+    let asked = false
+    network.use(
+      http.get('/api/users/me', () => {
+        asked = true
+        return HttpResponse.json({ user: null })
+      }),
+    )
     page()
+    await waitFor(() => expect(asked).toBe(true))
     await act(async () => {})
-    expect(publicCalendarLinks).not.toHaveBeenCalled()
+    expect(host.calls.publicCalendarLinks).toEqual([])
     expect(screen.queryByRole('button', { name: 'Edit' })).toBeNull()
   })
 
   it('shows Edit after one admin access request and keeps the current date and view', async () => {
-    vi.mocked(useSession).mockReturnValue({ id: 8, email: 'admin@cilas.test' })
-    vi.mocked(publicCalendarLinks).mockResolvedValue({
-      canEdit: true,
-      editable: [],
-      spaces: { '22': '/en/spaces/course/city' },
-    })
-    page()
-    await act(async () => {})
-    expect(publicCalendarLinks).toHaveBeenCalledTimes(1)
-    fireEvent.click(screen.getByRole('button', { name: 'Edit' }))
-    expect(navigation.push).toHaveBeenCalledWith('/en/calendar?view=week&date=2026-11-17&edit=1', {
-      scroll: false,
-    })
+    signIn('admin@cilas.test')
+    grant({ canEdit: true, spaces: { '22': '/en/spaces/course/city' } })
+    const { memory } = page()
+    fireEvent.click(await screen.findByRole('button', { name: 'Edit' }))
+    expect(host.calls.publicCalendarLinks).toHaveLength(1)
+    expect(memory.visits).toEqual([
+      {
+        method: 'push',
+        href: '/en/calendar?view=week&date=2026-11-17&edit=1',
+        options: { scroll: false },
+      },
+    ])
   })
 
   it.each([true, false])('shows the course links with space access %s', async (allowed) => {
-    vi.mocked(useSession).mockReturnValue({ id: 8, email: 'reader@cilas.test' })
-    vi.mocked(publicCalendarLinks).mockResolvedValue({
-      canEdit: false,
-      editable: [],
-      spaces: allowed ? { '22': '/en/spaces/course/city' } : {},
-    })
+    asReader({ spaces: allowed ? { '22': '/en/spaces/course/city' } : {} })
     const { container } = page()
-    await act(async () => {})
+    await accessRead()
     fireEvent.click(container.querySelector('a[href="/en/study/reading-the-city#session-501"]')!)
     const dialog = await screen.findByRole('dialog')
     expect(within(dialog).getByRole('link', { name: 'View course' })).toBeInTheDocument()
@@ -352,14 +334,9 @@ describe('public calendar access after hydration', () => {
 })
 
 it('keeps one event action when the viewer can read a course space', async () => {
-  vi.mocked(useSession).mockReturnValue({ id: 8, email: 'reader@cilas.test' })
-  vi.mocked(publicCalendarLinks).mockResolvedValue({
-    canEdit: false,
-    editable: [],
-    spaces: { '22': '/en/spaces/course/city' },
-  })
+  asReader({ spaces: { '22': '/en/spaces/course/city' } })
   page()
-  await act(async () => {})
+  await accessRead()
   fireEvent.click(screen.getByRole('link', { name: /^Film night, Wednesday/ }))
   const details = await screen.findByRole('dialog', { name: 'Film night' })
   expect(within(details).getByRole('link', { name: 'View event' })).toBeInTheDocument()
@@ -368,72 +345,69 @@ it('keeps one event action when the viewer can read a course space', async () =>
 })
 
 it('waits for the new language before it shows a space path', async () => {
-  vi.mocked(useSession).mockReturnValue({ id: 8, email: 'reader@cilas.test' })
-  vi.mocked(publicCalendarLinks).mockResolvedValueOnce({
-    canEdit: false,
-    editable: [],
-    spaces: { '22': '/en/spaces/course/city' },
-  })
-  let finish!: (value: Awaited<ReturnType<typeof publicCalendarLinks>>) => void
-  vi.mocked(publicCalendarLinks).mockImplementationOnce(
-    () =>
+  signIn('reader@cilas.test')
+  let finish!: (value: Access) => void
+  host.answers.publicCalendarLinks = async () => {
+    host.answers.publicCalendarLinks = () =>
       new Promise((resolve) => {
         finish = resolve
-      }),
-  )
+      })
+    return { canEdit: false, editable: [], spaces: { '22': '/en/spaces/course/city' } }
+  }
   const { result, rerender } = renderHook(({ locale }) => usePublicCalendarAccess(['22'], locale), {
     initialProps: { locale: 'en' },
+    wrapper: ({ children }: { children: ReactNode }) => (
+      <ScheduleActionsProvider actions={host.actions}>{children}</ScheduleActionsProvider>
+    ),
   })
-  await act(async () => {})
-  expect(result.current.spaces['22']).toBe('/en/spaces/course/city')
+  await waitFor(() => expect(result.current.spaces['22']).toBe('/en/spaces/course/city'))
   rerender({ locale: 'ar' })
   expect(result.current.spaces).toEqual({})
   await act(async () =>
     finish({ canEdit: false, editable: [], spaces: { '22': '/ar/spaces/course/city' } }),
   )
   expect(result.current.spaces['22']).toBe('/ar/spaces/course/city')
-  expect(publicCalendarLinks).toHaveBeenCalledTimes(2)
+  expect(host.calls.publicCalendarLinks).toHaveLength(2)
 })
 
 describe('the month panel on the public calendar, by role', () => {
-  const asReader = (access: Partial<Awaited<ReturnType<typeof publicCalendarLinks>>> = {}) => {
-    vi.mocked(useSession).mockReturnValue({ id: 8, email: 'reader@cilas.test' })
-    vi.mocked(publicCalendarLinks).mockResolvedValue({
-      canEdit: false,
-      editable: [],
-      spaces: {},
-      ...access,
-    })
-  }
-  const monthPage = async () => {
-    docked = true
-    const shown = page('en', '?view=month&date=2026-11-17')
+  const monthPage = async (query = '?view=month&date=2026-11-17') => {
+    const shown = page('en', query, { docked: true })
     await act(async () => {})
     return shown
   }
-  const openTuesday = async () => {
-    const link = document.querySelector<HTMLElement>('[data-day="2026-11-17"] [data-block-id]')!
-    fireEvent.click(link)
+  const openDay = async (day = '2026-11-17') => {
+    fireEvent.click(document.querySelector<HTMLElement>(`[data-day="${day}"] [data-block-id]`)!)
     return screen.findByRole('region', { name: 'Reading the city' })
   }
   const menu = async () => {
-    fireEvent.keyDown(screen.getByRole('button', { name: 'More actions' }), { key: 'Enter' })
+    fireEvent.keyDown(await screen.findByRole('button', { name: 'More actions' }), {
+      key: 'Enter',
+    })
     return screen.findByRole('menu')
   }
+  const editValues = (cancelled: boolean) => ({
+    title: 'Reading the city',
+    description: 'Text',
+    cancelled,
+    meetings: [],
+    bibliography: [{ id: 'b1', type: 'reading' as const, title: 'A book', href: '', note: '' }],
+    activities: [],
+  })
 
   it('opens on today with the panel open, and no Edit session for anyone', async () => {
     asReader({ canEdit: true, editable: ['22'] })
     await monthPage()
+    await accessRead()
     expect(screen.getByRole('region', { name: 'Tuesday, November 17' })).toBeInTheDocument()
-    const details = await openTuesday()
+    const details = await openDay()
     expect(within(details).queryByRole('button', { name: /Edit/ })).toBeNull()
     expect(within(details).queryByRole('link', { name: /Edit/ })).toBeNull()
   })
 
   it('gives a visitor View course only, and no menu', async () => {
-    vi.mocked(useSession).mockReturnValue(null)
     await monthPage()
-    const details = await openTuesday()
+    const details = await openDay()
     expect(within(details).getByRole('link', { name: 'View course' })).toBeInTheDocument()
     expect(within(details).getAllByRole('link')).toHaveLength(1)
     expect(within(details).queryByRole('button', { name: 'More actions' })).toBeNull()
@@ -442,7 +416,8 @@ describe('the month panel on the public calendar, by role', () => {
   it('gives a student who may not read the space View course only', async () => {
     asReader()
     await monthPage()
-    const details = await openTuesday()
+    await accessRead()
+    const details = await openDay()
     expect(within(details).queryByRole('link', { name: 'Go to space' })).toBeNull()
     expect(within(details).queryByRole('button', { name: 'More actions' })).toBeNull()
   })
@@ -450,7 +425,8 @@ describe('the month panel on the public calendar, by role', () => {
   it('adds Go to space for an enrolled student, after View course', async () => {
     asReader({ spaces: { '22': '/en/spaces/course/city' } })
     await monthPage()
-    const details = await openTuesday()
+    await accessRead()
+    const details = await openDay()
     expect(
       within(details)
         .getAllByRole('link')
@@ -465,7 +441,7 @@ describe('the month panel on the public calendar, by role', () => {
   ])('gives %s a More actions menu that holds Cancel session only', async (_who, access) => {
     asReader(access)
     await monthPage()
-    await openTuesday()
+    await openDay()
     const entries = within(await menu()).getAllByRole('menuitem')
     expect(entries.map((entry) => entry.textContent)).toEqual(['Cancel session'])
   })
@@ -473,109 +449,89 @@ describe('the month panel on the public calendar, by role', () => {
   it('gives a fellow of another course no menu', async () => {
     asReader({ editable: ['99'] })
     await monthPage()
-    const details = await openTuesday()
+    await accessRead()
+    const details = await openDay()
     expect(within(details).queryByRole('button', { name: 'More actions' })).toBeNull()
   })
 
   it('cancels after the confirm: one detail change, the other fields kept, then the offer', async () => {
     asReader({ editable: ['22'] })
-    const values = {
-      title: 'Reading the city',
-      description: 'Text',
-      cancelled: false,
-      meetings: [],
-      bibliography: [{ id: 'b1', type: 'reading' as const, title: 'A book', href: '', note: '' }],
-      activities: [],
-    }
-    vi.mocked(loadSessionEdit).mockResolvedValue({ ok: true, values, version: 'v1' })
-    vi.mocked(saveScheduleEdits).mockResolvedValue({ ok: true, items: [], before: [], after: [] })
-    vi.mocked(scheduleOffers).mockResolvedValue([])
+    const values = editValues(false)
+    host.answers.loadSessionEdit = async () => ({ ok: true, values, version: 'v1' })
+    host.answers.saveScheduleEdits = async () => ({ ok: true, items: [], before: [], after: [] })
     await monthPage()
-    await openTuesday()
+    await openDay()
     fireEvent.click(within(await menu()).getByRole('menuitem', { name: 'Cancel session' }))
     const dialog = await screen.findByRole('dialog', { name: 'Cancel this session?' })
-    expect(saveScheduleEdits).not.toHaveBeenCalled()
+    expect(host.calls.saveScheduleEdits).toEqual([])
     fireEvent.click(within(dialog).getByRole('button', { name: 'Cancel session' }))
-    await waitFor(() => expect(saveScheduleEdits).toHaveBeenCalledTimes(1))
+    await waitFor(() => expect(host.calls.saveScheduleEdits).toHaveLength(1))
     const { meetings: _meetings, ...rest } = values
-    expect(saveScheduleEdits).toHaveBeenCalledWith(
-      { details: [{ op: 'edit', id: '501', version: 'v1', values: { ...rest, cancelled: true } }] },
-      'en',
-    )
-    await waitFor(() =>
-      expect(scheduleOffers).toHaveBeenCalledWith(
-        expect.objectContaining({ courseId: '22' }),
+    expect(host.calls.saveScheduleEdits).toEqual([
+      [
+        {
+          details: [{ op: 'edit', id: '501', version: 'v1', values: { ...rest, cancelled: true } }],
+        },
         'en',
-      ),
+      ],
+    ])
+    await waitFor(() =>
+      expect(host.calls.scheduleOffers).toEqual([
+        [expect.objectContaining({ courseId: '22' }), 'en'],
+      ]),
     )
   })
 
   it('shows a refused save in words and keeps the session as it was', async () => {
     asReader({ editable: ['22'] })
-    vi.mocked(loadSessionEdit).mockResolvedValue({
+    host.answers.loadSessionEdit = async () => ({
       ok: true,
-      values: {
-        title: 'x',
-        description: '',
-        cancelled: false,
-        meetings: [],
-        bibliography: [],
-        activities: [],
-      },
+      values: editValues(false),
       version: 'v1',
     })
-    vi.mocked(saveScheduleEdits).mockResolvedValue({
+    host.answers.saveScheduleEdits = async () => ({
       ok: false,
       error: { code: 'stale', itemId: '501' },
     })
     await monthPage()
-    await openTuesday()
+    await openDay()
     fireEvent.click(within(await menu()).getByRole('menuitem', { name: 'Cancel session' }))
     const dialog = await screen.findByRole('dialog', { name: 'Cancel this session?' })
     fireEvent.click(within(dialog).getByRole('button', { name: 'Cancel session' }))
     expect(await screen.findByText(/Someone else changed/)).toBeInTheDocument()
-    expect(scheduleOffers).not.toHaveBeenCalled()
+    expect(host.calls.scheduleOffers).toEqual([])
   })
 
   it('offers Restore session for a cancelled meeting, with no confirm', async () => {
     asReader({ editable: ['22'] })
-    vi.mocked(loadSessionEdit).mockResolvedValue({
+    host.answers.loadSessionEdit = async () => ({
       ok: true,
-      values: {
-        title: 'x',
-        description: '',
-        cancelled: true,
-        meetings: [],
-        bibliography: [],
-        activities: [],
-      },
+      values: editValues(true),
       version: 'v2',
     })
-    vi.mocked(saveScheduleEdits).mockResolvedValue({ ok: true, items: [], before: [], after: [] })
-    vi.mocked(scheduleOffers).mockResolvedValue([])
-    page('en', '?view=month&date=2026-11-21')
-    docked = true
-    await act(async () => {})
-    fireEvent.click(document.querySelector<HTMLElement>('[data-day="2026-11-21"] [data-block-id]')!)
+    host.answers.saveScheduleEdits = async () => ({ ok: true, items: [], before: [], after: [] })
+    await monthPage('?view=month&date=2026-11-21')
+    await openDay('2026-11-21')
     fireEvent.click(within(await menu()).getByRole('menuitem', { name: 'Restore session' }))
     expect(screen.queryByRole('dialog')).toBeNull()
     await waitFor(() =>
-      expect(saveScheduleEdits).toHaveBeenCalledWith(
-        expect.objectContaining({
-          details: [
-            expect.objectContaining({ values: expect.objectContaining({ cancelled: false }) }),
-          ],
-        }),
-        'en',
-      ),
+      expect(host.calls.saveScheduleEdits).toEqual([
+        [
+          expect.objectContaining({
+            details: [
+              expect.objectContaining({ values: expect.objectContaining({ cancelled: false }) }),
+            ],
+          }),
+          'en',
+        ],
+      ]),
     )
   })
 })
 
 describe('the selected day in the URL', () => {
-  it('writes a day chosen in the month with replaceState, so Back does not step through days', async () => {
-    docked = true
-    page('en', '?view=month&date=2026-11-17')
+  it('writes a day chosen in the month with replaceState, so Back does not step through days', () => {
+    page('en', '?view=month&date=2026-11-17', { docked: true })
     const push = vi.spyOn(window.history, 'pushState')
     const replace = vi.spyOn(window.history, 'replaceState')
     fireEvent.click(document.querySelector<HTMLElement>('[data-day="2026-11-19"]')!)
@@ -587,8 +543,7 @@ describe('the selected day in the URL', () => {
   })
 
   it('still pushes a new place: another month, or another view', () => {
-    docked = true
-    page('en', '?view=month&date=2026-11-17')
+    page('en', '?view=month&date=2026-11-17', { docked: true })
     const push = vi.spyOn(window.history, 'pushState')
     fireEvent.click(screen.getByRole('button', { name: 'Week' }))
     expect(push).toHaveBeenLastCalledWith(null, '', '?view=week&date=2026-11-17')
@@ -596,8 +551,7 @@ describe('the selected day in the URL', () => {
   })
 
   it('opens on the day in the URL, with that day selected', () => {
-    docked = true
-    page('en', '?view=month&date=2026-11-19')
+    page('en', '?view=month&date=2026-11-19', { docked: true })
     expect(document.querySelector('[data-day="2026-11-19"]')).toHaveAttribute(
       'aria-selected',
       'true',

@@ -2,6 +2,7 @@ import { createContext, useContext, type ReactNode } from 'react'
 
 import type { loadCalendarItems } from '@/actions/load-calendar-items'
 import type { loadSessionView } from '@/actions/load-session-view'
+import type { publicCalendarLinks } from '@/actions/public-calendar-access'
 import type { saveScheduleEdits } from '@/actions/save-schedule-edits'
 import type { scheduleOffers } from '@/actions/schedule-offers'
 import type { loadSessionEdit } from '@/actions/session-edit'
@@ -19,6 +20,7 @@ export type ScheduleActions = {
   saveScheduleEdits: typeof saveScheduleEdits
   scheduleOffers: typeof scheduleOffers
   publishOffer: (form: FormData) => Promise<SpacesWriteState>
+  publicCalendarLinks: typeof publicCalendarLinks
 }
 
 const ScheduleActionsContext = createContext<ScheduleActions | null>(null)

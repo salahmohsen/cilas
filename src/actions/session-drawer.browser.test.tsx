@@ -16,6 +16,7 @@ import type { Session } from '@/payload-types'
 import ar from '../../messages/ar.json'
 import en from '../../messages/en.json'
 import { IntlProvider } from '../../testing/intl.test-utils'
+import { scheduleActionsHost } from '../../testing/schedule-actions.test-utils'
 import { renderWithBrowserNavigation } from '../../testing/fan1-browser-navigation.test-utils'
 
 type Saved = Awaited<ReturnType<ScheduleActions['saveScheduleEdits']>>
@@ -94,6 +95,7 @@ const host = {
 }
 
 const actions = {
+  ...scheduleActionsHost().actions,
   loadSessionView: async (...args) => {
     host.views.push(args)
     return host.view(args[0])
@@ -111,8 +113,6 @@ const actions = {
     host.edits.push(args)
     return host.edit()
   },
-  loadCalendarItems: async () => ({ ok: false, error: { code: 'failed' } }),
-  publishOffer: async () => ({ status: 'ok' }),
 } satisfies ScheduleActions
 
 let router: ReturnType<typeof renderWithBrowserNavigation>['browser']
