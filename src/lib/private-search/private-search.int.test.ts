@@ -942,7 +942,7 @@ describe.skipIf(!disposable)('private search with real Postgres and Typesense 30
       const data = await readFile(new URL('../../../testing/files/pixel.png', import.meta.url))
       const file = await payload.create({
         collection: 'space-files',
-        data: { space: solo.id, post: withPhoto.id },
+        data: { space: solo.id, post: withPhoto.id } as never,
         file: { name: `pixel-${run}.png`, mimetype: 'image/png', data, size: data.length },
         overrideAccess: true,
       })

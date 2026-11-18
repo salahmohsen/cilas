@@ -1,44 +1,34 @@
-import { act, cleanup, fireEvent, render, screen, waitFor, within } from '@testing-library/react'
-import { NextIntlClientProvider } from 'next-intl'
-import { afterEach, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest'
+import { act, cleanup, fireEvent, screen, waitFor, within } from '@testing-library/react'
+import type { FormEvent } from 'react'
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 
-import { loadSessionEdit } from '@/actions/session-edit'
-import { loadCalendarItems } from '@/actions/load-calendar-items'
-import { saveScheduleEdits } from '@/actions/save-schedule-edits'
-import { scheduleOffers } from '@/actions/schedule-offers'
+import { ScheduleActionsProvider, type ScheduleActions } from '@/components/space/schedule-actions'
 import { SpaceCalendarTab } from '@/components/space/space-calendar-tab'
 import { SpaceViews } from '@/components/space/space-views'
 import type { CalendarItem } from '@/lib/calendar-items'
 import type { ScheduleOffer } from '@/lib/schedule-offer'
+import type { SessionEdit } from '@/lib/session-edit'
 
 import ar from '../../messages/ar.json'
 import en from '../../messages/en.json'
-import { stubMatchMedia } from '../../testing/popup-dom.test-utils'
+import { IntlProvider } from '../../testing/intl.test-utils'
+import { renderWithNavigation } from '../../testing/navigation.test-utils'
 
-const push = vi.fn()
-const refresh = vi.fn()
-vi.mock('next/navigation', () => ({ useRouter: () => ({ push, refresh }) }))
-vi.mock('@/actions/session-edit', () => ({ loadSessionEdit: vi.fn() }))
-vi.mock('@/actions/load-calendar-items', () => ({ loadCalendarItems: vi.fn() }))
-vi.mock('@/actions/save-schedule-edits', () => ({ saveScheduleEdits: vi.fn() }))
-vi.mock('@/actions/schedule-offers', () => ({ scheduleOffers: vi.fn() }))
-vi.mock('@/lib/space-actions', () => ({ postCreateAction: vi.fn() }))
+type Saved = Awaited<ReturnType<ScheduleActions['saveScheduleEdits']>>
+type Reloaded = Awaited<ReturnType<ScheduleActions['loadCalendarItems']>>
+type Loaded = Awaited<ReturnType<ScheduleActions['loadSessionEdit']>>
 
-/**
- * The Calendar tab's edit mode (ADR 0011 step 4, unit 4): Edit and Done, a
- * save through the space parent and the shared offer, the stale save, and
- * the leave guard. The server actions are mocked; the e2e runs them.
- */
-const session = (start: string, version = 'v1'): CalendarItem => ({
-  id: '3',
-  kind: 'session',
-  title: 'Week 3',
-  tone: 'yellow',
-  cancelled: false,
-  version,
-  blocks: [{ id: 'a', date: '2026-11-17', start_time: start, end_time: '21:00' }],
-})
-const event: CalendarItem = {
+const session = (start: string, version = 'v1') =>
+  ({
+    id: '3',
+    kind: 'session',
+    title: 'Week 3',
+    tone: 'yellow',
+    cancelled: false,
+    version,
+    blocks: [{ id: 'a', date: '2026-11-17', start_time: start, end_time: '21:00' }],
+  }) satisfies CalendarItem
+const event = {
   id: 'space-event:9',
   kind: 'space-event',
   title: 'Gathering',
@@ -47,46 +37,97 @@ const event: CalendarItem = {
   cancelled: false,
   version: 'v1',
   blocks: [{ id: '9', date: '2026-11-18', start_time: '17:00', end_time: '18:00' }],
-}
-const offer: ScheduleOffer = {
+} satisfies CalendarItem
+const offer = {
   space: { id: 7, name: 'Probe space' },
   language: 'en',
   text: '- Week 3 moves',
   block: null,
   preview: null,
+} satisfies ScheduleOffer
+
+const formValues = {
+  title: 'Week 3',
+  description: '',
+  cancelled: false,
+  bibliography: [],
+  activities: [],
+  meetings: [{ id: 'a', date: '2026-11-17', start_time: '19:00', end_time: '21:00' }],
+} satisfies SessionEdit
+
+const defaults: {
+  save: () => Promise<Saved>
+  reload: () => Promise<Reloaded>
+  edit: () => Promise<Loaded>
+} = {
+  save: async () => ({
+    ok: true,
+    before: [],
+    after: [],
+    items: [session('19:15', 'v2'), event],
+  }),
+  reload: async () => ({ ok: true, items: [session('20:00', 'v3'), event], canEdit: true }),
+  edit: async () => ({ ok: false, error: 'failed' }),
 }
 
-/** A link to another page of the site, as the site header holds. */
+const host = {
+  saves: [] as Array<Parameters<ScheduleActions['saveScheduleEdits']>>,
+  offers: [] as Array<Parameters<ScheduleActions['scheduleOffers']>>,
+  reloads: [] as Array<Parameters<ScheduleActions['loadCalendarItems']>>,
+  edits: [] as Array<Parameters<ScheduleActions['loadSessionEdit']>>,
+  ...defaults,
+}
+
+const actions = {
+  saveScheduleEdits: async (...args) => {
+    host.saves.push(args)
+    return host.save()
+  },
+  scheduleOffers: async (...args) => {
+    host.offers.push(args)
+    return [offer]
+  },
+  loadCalendarItems: async (...args) => {
+    host.reloads.push(args)
+    return host.reload()
+  },
+  loadSessionEdit: async (...args) => {
+    host.edits.push(args)
+    return host.edit()
+  },
+  loadSessionView: async () => ({ ok: false, error: 'failed' }),
+  publishOffer: async () => ({ status: 'ok' }),
+} satisfies ScheduleActions
+
 const siteLink = () =>
   document.body.appendChild(
     Object.assign(document.createElement('a'), { href: '/en/spaces', textContent: 'All spaces' }),
   )
 
-const view = (locale = 'en', items = [session('19:00'), event]) => (
-  <NextIntlClientProvider
-    locale={locale}
-    messages={locale === 'ar' ? ar : en}
-    timeZone="Africa/Cairo"
-  >
-    <SpaceViews path="/en/spaces/course/probe" value="calendar" hasCourse />
-    <SpaceCalendarTab
-      spaceId="7"
-      courseId="5"
-      items={items}
-      canEdit
-      day="2026-11-17"
-      spaceHref="/en/spaces/course/probe"
-    />
-  </NextIntlClientProvider>
+const view = (locale: 'en' | 'ar' = 'en', items = [session('19:00'), event]) => (
+  <IntlProvider locale={locale}>
+    <ScheduleActionsProvider actions={actions}>
+      <SpaceViews path="/en/spaces/course/probe" value="calendar" hasCourse />
+      <SpaceCalendarTab
+        spaceId="7"
+        courseId="5"
+        items={items}
+        canEdit
+        day="2026-11-17"
+        spaceHref="/en/spaces/course/probe"
+      />
+    </ScheduleActionsProvider>
+  </IntlProvider>
 )
 
-const show = (locale = 'en') => render(view(locale))
+let shown: ReturnType<typeof renderWithNavigation>
+const show = (locale: 'en' | 'ar' = 'en') => {
+  shown = renderWithNavigation(view(locale), { url: '/en/spaces/course/probe?tab=calendar' })
+  return shown
+}
+const memory = () => shown.memory
 
 const block = () => screen.getByRole('button', { name: /^Week 3, Tuesday/ })
-/**
- * The pointer over Edit loads the edit-mode chunk before the click, as in the
- * browser: React does not retry a suspended render outside act() here.
- */
 const startEditing = async () => {
   const edit = screen.getByRole('button', { name: 'Edit' })
   fireEvent.pointerEnter(edit)
@@ -95,7 +136,6 @@ const startEditing = async () => {
   fireEvent.click(edit)
   await screen.findByRole('button', { name: 'Done' })
 }
-/** Save, after the pointer over it loaded the announcement dialog's chunk. */
 const pressSave = async () => {
   const save = screen.getByRole('button', { name: 'Save' })
   fireEvent.pointerEnter(save)
@@ -109,36 +149,14 @@ const move = () => {
 }
 const leaveDialog = () => screen.queryByRole('dialog', { name: 'Leave without saving?' })
 
-beforeAll(stubMatchMedia)
-beforeAll(() => {
-  globalThis.IntersectionObserver = class {
-    observe() {}
-    unobserve() {}
-    disconnect() {}
-    takeRecords() {
-      return []
-    }
-  } as unknown as typeof IntersectionObserver
-  globalThis.ResizeObserver = class {
-    observe() {}
-    unobserve() {}
-    disconnect() {}
-  }
-  Element.prototype.scrollIntoView = function () {}
-  Element.prototype.getAnimations = () => []
-})
 beforeEach(() => {
   localStorage.clear()
-  push.mockReset()
-  refresh.mockReset()
+  host.saves.length = 0
+  host.offers.length = 0
+  host.reloads.length = 0
+  host.edits.length = 0
+  Object.assign(host, defaults)
   vi.useFakeTimers({ now: new Date('2026-11-15T10:00:00Z'), toFake: ['Date'] })
-  vi.mocked(saveScheduleEdits)
-    .mockReset()
-    .mockResolvedValue({ ok: true, before: [], after: [], items: [session('19:15', 'v2'), event] })
-  vi.mocked(scheduleOffers).mockReset().mockResolvedValue([offer])
-  vi.mocked(loadCalendarItems)
-    .mockReset()
-    .mockResolvedValue({ ok: true, items: [session('20:00', 'v3'), event], canEdit: true })
 })
 afterEach(() => {
   cleanup()
@@ -164,19 +182,18 @@ describe('the Calendar tab in edit mode', () => {
     await startEditing()
     move()
     await pressSave()
-    await waitFor(() => expect(saveScheduleEdits).toHaveBeenCalledTimes(1))
-    expect(vi.mocked(saveScheduleEdits).mock.calls[0]![0]).toEqual({
+    await waitFor(() => expect(host.saves).toHaveLength(1))
+    expect(host.saves[0]![0]).toEqual({
       calendar: {
         parent: { kind: 'space', id: '7' },
         changes: [expect.objectContaining({ op: 'move-block', itemId: '3', start_time: '19:15' })],
       },
       details: [],
     })
-    expect(scheduleOffers).toHaveBeenCalledWith(
-      { courseId: '5', before: [session('19:00')], after: [session('19:15', 'v2')] },
-      'en',
-    )
-    expect(refresh).toHaveBeenCalledTimes(1)
+    expect(host.offers).toEqual([
+      [{ courseId: '5', before: [session('19:00')], after: [session('19:15', 'v2')] }, 'en'],
+    ])
+    expect(memory().refreshes).toBe(1)
     const dialog = await screen.findByRole('dialog', { name: 'Announce this change?' })
     expect(within(dialog).getByText(/Probe space/)).toBeInTheDocument()
     fireEvent.click(within(dialog).getByRole('button', { name: 'Skip' }))
@@ -194,11 +211,10 @@ describe('the Calendar tab in edit mode', () => {
     move()
     expect(block()).toHaveAccessibleName(/7:15 PM to 9:15 PM, Unsaved/)
 
-    // A drawer save calls router.refresh(), which supplies these new server items.
     rendered.rerender(view('en', [session('20:00', 'v2'), event]))
     await waitFor(() => expect(block()).toHaveAccessibleName(/8 PM to 9 PM$/))
     expect(screen.queryByRole('button', { name: 'Save' })).toBeNull()
-    expect(saveScheduleEdits).not.toHaveBeenCalled()
+    expect(host.saves).toHaveLength(0)
     expect(
       screen
         .getAllByRole('status')
@@ -211,19 +227,19 @@ describe('the Calendar tab in edit mode', () => {
   })
 
   it('keeps the changes after a failed save and offers nothing', async () => {
-    vi.mocked(saveScheduleEdits).mockResolvedValue({ ok: false, error: { code: 'forbidden' } })
+    host.save = async () => ({ ok: false, error: { code: 'forbidden' } })
     show()
     await startEditing()
     move()
     await pressSave()
     expect(await screen.findByRole('alert')).toHaveTextContent('You may not change these sessions.')
     expect(block()).toHaveAccessibleName(/7:15 PM to 9:15 PM, Unsaved/)
-    expect(scheduleOffers).not.toHaveBeenCalled()
+    expect(host.offers).toHaveLength(0)
     expect(screen.queryByRole('dialog', { name: 'Announce this change?' })).toBeNull()
   })
 
   it('names the session in a stale save, keeps the changes, and reloads only on the one button', async () => {
-    vi.mocked(saveScheduleEdits).mockResolvedValue({
+    host.save = async () => ({
       ok: false,
       error: { code: 'stale', itemId: '3', name: 'Session 1: Week 3' },
     })
@@ -235,29 +251,24 @@ describe('the Calendar tab in edit mode', () => {
       'Someone else changed Session 1: Week 3 after the calendar loaded.',
     )
     expect(block()).toHaveAccessibleName(/Unsaved/)
-    expect(loadCalendarItems).not.toHaveBeenCalled()
+    expect(host.reloads).toHaveLength(0)
     fireEvent.click(screen.getByRole('button', { name: 'Reload and lose my changes' }))
-    await waitFor(() =>
-      expect(loadCalendarItems).toHaveBeenCalledWith({ kind: 'space', id: '7' }, 'en'),
-    )
+    await waitFor(() => expect(host.reloads).toEqual([[{ kind: 'space', id: '7' }, 'en']]))
     await waitFor(() => expect(block()).toHaveAccessibleName(/8 PM to 9 PM$/))
-    expect(scheduleOffers).not.toHaveBeenCalled()
+    expect(host.offers).toHaveLength(0)
     fireEvent.click(screen.getByRole('button', { name: 'Done' }))
     await screen.findByRole('button', { name: 'Edit' })
     expect(block()).toHaveAccessibleName(/8 PM to 9 PM$/)
   })
 
   it.each(['refused', 'rejected'])('shows a failed reload (%s)', async (failure) => {
-    vi.mocked(saveScheduleEdits).mockResolvedValue({
+    host.save = async () => ({
       ok: false,
       error: { code: 'stale', itemId: '3', name: 'Session 1: Week 3' },
     })
     if (failure === 'refused')
-      vi.mocked(loadCalendarItems).mockResolvedValue({
-        ok: false,
-        error: { code: 'unauthenticated' },
-      })
-    else vi.mocked(loadCalendarItems).mockRejectedValue(new Error('Connection lost'))
+      host.reload = async () => ({ ok: false, error: { code: 'unauthenticated' } })
+    else host.reload = async () => Promise.reject(new Error('Connection lost'))
     show()
     await startEditing()
     move()
@@ -286,7 +297,7 @@ describe('the Calendar tab in edit mode', () => {
     fireEvent.click(await screen.findByRole('button', { name: 'Leave anyway' }))
     await screen.findByRole('button', { name: 'Edit' })
     expect(block()).toHaveAccessibleName(/7 PM to 9 PM$/)
-    expect(saveScheduleEdits).not.toHaveBeenCalled()
+    expect(host.saves).toHaveLength(0)
   })
 
   it('asks before a tab switch and a link inside the site, and closing the page asks the browser', async () => {
@@ -303,19 +314,29 @@ describe('the Calendar tab in edit mode', () => {
 
     fireEvent.click(screen.getByRole('button', { name: 'Announcements' }))
     expect(await screen.findByRole('dialog', { name: 'Leave without saving?' })).toBeInTheDocument()
-    expect(push).not.toHaveBeenCalled()
+    expect(memory().visits).toHaveLength(0)
     fireEvent.click(screen.getByRole('button', { name: 'Leave anyway' }))
-    expect(push).toHaveBeenCalledWith('/en/spaces/course/probe?tab=announcements', {
-      scroll: false,
-    })
+    expect(memory().visits).toEqual([
+      {
+        method: 'push',
+        href: '/en/spaces/course/probe?tab=announcements',
+        options: { scroll: false },
+      },
+    ])
 
     await waitFor(() => expect(leaveDialog()).toBeNull())
-    push.mockReset()
+    const visited = memory().visits.length
     fireEvent.click(siteLink())
     expect(await screen.findByRole('dialog', { name: 'Leave without saving?' })).toBeInTheDocument()
-    expect(push).not.toHaveBeenCalled()
+    expect(memory().visits).toHaveLength(visited)
     fireEvent.click(screen.getByRole('button', { name: 'Leave anyway' }))
-    expect(push).toHaveBeenCalledWith('http://localhost:3000/en/spaces')
+    expect(memory().visits.slice(visited)).toEqual([
+      {
+        method: 'push',
+        href: new URL('/en/spaces', window.location.href).href,
+        options: undefined,
+      },
+    ])
   })
 
   it('lets a tab switch go at once when nothing waits', async () => {
@@ -323,7 +344,7 @@ describe('the Calendar tab in edit mode', () => {
     await startEditing()
     fireEvent.click(screen.getByRole('button', { name: 'Announcements' }))
     expect(leaveDialog()).toBeNull()
-    expect(push).toHaveBeenCalledTimes(1)
+    expect(memory().visits).toHaveLength(1)
   })
 
   it('words Edit, Done and the question in Arabic', async () => {
@@ -340,20 +361,10 @@ describe('the Calendar tab in edit mode', () => {
   })
 })
 
-const formValues = {
-  title: 'Week 3',
-  description: '',
-  cancelled: false,
-  bibliography: [],
-  activities: [],
-  meetings: [{ id: 'a', date: '2026-11-17', start_time: '19:00', end_time: '21:00' }],
-}
-/** Holds Space on the form's delete button until the hold completes. The hold's fill runs on real time. */
 const holdToDelete = async (dialog: HTMLElement) => {
   const hold = within(dialog).getByRole('button', { name: en.SessionEdit.holdDelete })
   vi.useRealTimers()
   fireEvent.keyDown(hold, { key: ' ' })
-  // Done stages the removal and closes the drawer, which may take the button away first.
   await waitFor(
     () => expect(!hold.isConnected || hold.getAttribute('data-state') === 'done').toBe(true),
     { timeout: 4000 },
@@ -372,7 +383,7 @@ const openStagedForm = async (target = block()) => {
 
 describe('details staged with the calendar', () => {
   beforeEach(() => {
-    vi.mocked(loadSessionEdit).mockResolvedValue({ ok: true, values: formValues, version: 'v1' })
+    host.edit = async () => ({ ok: true, values: formValues, version: 'v1' })
   })
 
   it('applies a title without saving, marks the block and guards leaving; Cancel keeps that stage', async () => {
@@ -390,7 +401,7 @@ describe('details staged with the calendar', () => {
     const changed = await screen.findByRole('button', { name: /^Applied title, Tuesday/ })
     expect(changed).toHaveAttribute('data-unsaved')
     expect(screen.getAllByText('1 unsaved change').length).toBeGreaterThan(0)
-    expect(saveScheduleEdits).not.toHaveBeenCalled()
+    expect(host.saves).toHaveLength(0)
     fireEvent.click(screen.getByRole('button', { name: 'Done' }))
     expect(leaveDialog()).not.toBeNull()
     fireEvent.click(
@@ -409,22 +420,24 @@ describe('details staged with the calendar', () => {
     ).toBeInTheDocument()
     expect(screen.queryByText(/unsaved changes to .* were dropped/)).toBeNull()
     await pressSave()
-    await waitFor(() => expect(saveScheduleEdits).toHaveBeenCalledTimes(1))
-    expect(saveScheduleEdits).toHaveBeenCalledWith(
-      {
-        calendar: { parent: { kind: 'space', id: '7' }, changes: [] },
-        details: [
-          expect.objectContaining({
-            op: 'edit',
-            id: '3',
-            version: 'v1',
-            values: expect.objectContaining({ title: 'Applied title' }),
-          }),
-        ],
-      },
-      'en',
-    )
-    expect(scheduleOffers).toHaveBeenCalledTimes(1)
+    await waitFor(() => expect(host.saves).toHaveLength(1))
+    expect(host.saves).toEqual([
+      [
+        {
+          calendar: { parent: { kind: 'space', id: '7' }, changes: [] },
+          details: [
+            expect.objectContaining({
+              op: 'edit',
+              id: '3',
+              version: 'v1',
+              values: expect.objectContaining({ title: 'Applied title' }),
+            }),
+          ],
+        },
+        'en',
+      ],
+    ])
+    expect(host.offers).toHaveLength(1)
   })
 
   it('keeps a move when a title is applied and sends them together', async () => {
@@ -438,12 +451,12 @@ describe('details staged with the calendar', () => {
     fireEvent.click(within(dialog).getByRole('button', { name: 'Apply' }))
     await waitFor(() => expect(screen.getAllByText('2 unsaved changes').length).toBeGreaterThan(0))
     await pressSave()
-    await waitFor(() => expect(saveScheduleEdits).toHaveBeenCalledTimes(1))
-    expect(vi.mocked(saveScheduleEdits).mock.calls[0]![0]).toMatchObject({
+    await waitFor(() => expect(host.saves).toHaveLength(1))
+    expect(host.saves[0]![0]).toMatchObject({
       calendar: { changes: [{ op: 'move-block', start_time: '19:15' }] },
       details: [{ values: { title: 'Moved and renamed' } }],
     })
-    expect(scheduleOffers).toHaveBeenCalledTimes(1)
+    expect(host.offers).toHaveLength(1)
   })
 
   it('Enter and Delete stage removal without saving', async () => {
@@ -460,7 +473,7 @@ describe('details staged with the calendar', () => {
     await waitFor(() =>
       expect(screen.queryByRole('button', { name: /^Week 3, Tuesday/ })).toBeNull(),
     )
-    expect(saveScheduleEdits).not.toHaveBeenCalled()
+    expect(host.saves).toHaveLength(0)
     expect(screen.getAllByText('1 unsaved change').length).toBeGreaterThan(0)
   })
 
@@ -475,12 +488,10 @@ describe('details staged with the calendar', () => {
     await waitFor(() =>
       expect(screen.queryByRole('button', { name: /^Week 3, Tuesday/ })).toBeNull(),
     )
-    expect(saveScheduleEdits).not.toHaveBeenCalled()
+    expect(host.saves).toHaveLength(0)
     await pressSave()
-    await waitFor(() => expect(saveScheduleEdits).toHaveBeenCalledTimes(1))
-    expect(vi.mocked(saveScheduleEdits).mock.calls[0]![0].details).toEqual([
-      { op: 'delete', id: '3', version: 'v1' },
-    ])
+    await waitFor(() => expect(host.saves).toHaveLength(1))
+    expect(host.saves[0]![0].details).toEqual([{ op: 'delete', id: '3', version: 'v1' }])
   })
 
   it('opens a new block on its form; deleting it excludes it from a later Save', async () => {
@@ -492,12 +503,12 @@ describe('details staged with the calendar', () => {
     expect(within(dialog).getByRole('textbox', { name: en.SessionEdit.title })).toHaveValue('')
     await holdToDelete(dialog)
     await waitFor(() => expect(screen.queryByRole('button', { name: 'Save' })).toBeNull())
-    expect(saveScheduleEdits).not.toHaveBeenCalled()
+    expect(host.saves).toHaveLength(0)
     await waitFor(() => expect(screen.queryByRole('dialog')).toBeNull())
     move()
     await pressSave()
-    await waitFor(() => expect(saveScheduleEdits).toHaveBeenCalledTimes(1))
-    expect(vi.mocked(saveScheduleEdits).mock.calls[0]![0]).toMatchObject({
+    await waitFor(() => expect(host.saves).toHaveLength(1))
+    expect(host.saves[0]![0]).toMatchObject({
       calendar: { changes: [{ op: 'move-block', itemId: '3' }] },
       details: [],
     })
@@ -506,34 +517,41 @@ describe('details staged with the calendar', () => {
 
 it('uses the selected content locale in an Arabic admin form and keeps Apply out of the course form', async () => {
   const { ScheduleEditDrawer } = await import('@/components/space/schedule-edit-drawer')
-  vi.mocked(loadSessionEdit).mockResolvedValue({ ok: true, values: formValues, version: 'v1' })
-  const apply = vi.fn(),
-    outerSubmit = vi.fn((event) => event.preventDefault())
-  render(
-    <NextIntlClientProvider locale="ar" messages={ar} timeZone="Africa/Cairo">
-      <form onSubmit={outerSubmit}>
-        <ScheduleEditDrawer
-          item={session('19:00')}
-          text={
-            (await import('@/components/admin/calendar-admin-text')).calendarAdminText('ar', ar)
-              .save
-          }
-          contentLocale="en"
-          onClose={vi.fn()}
-          onApply={apply}
-          onDelete={vi.fn()}
-        />
-      </form>
-    </NextIntlClientProvider>,
+  host.edit = async () => ({ ok: true, values: formValues, version: 'v1' })
+  const applied: SessionEdit[] = []
+  let outerSubmits = 0
+  renderWithNavigation(
+    <IntlProvider locale="ar">
+      <ScheduleActionsProvider actions={actions}>
+        <form
+          onSubmit={(submitted: FormEvent) => {
+            outerSubmits++
+            submitted.preventDefault()
+          }}
+        >
+          <ScheduleEditDrawer
+            item={session('19:00')}
+            text={
+              (await import('@/components/admin/calendar-admin-text')).calendarAdminText('ar', ar)
+                .save
+            }
+            contentLocale="en"
+            onClose={vi.fn()}
+            onApply={(values) => applied.push(values)}
+            onDelete={vi.fn()}
+          />
+        </form>
+      </ScheduleActionsProvider>
+    </IntlProvider>,
   )
   const title = await screen.findByRole('textbox', { name: ar.SessionEdit.title })
-  expect(loadSessionEdit).toHaveBeenCalledWith('3', 'en')
+  expect(host.edits).toEqual([['3', 'en']])
   expect(title).toHaveValue('Week 3')
   expect(title).toHaveAttribute('dir', 'ltr')
   fireEvent.change(title, { target: { value: 'English content' } })
   fireEvent.click(screen.getByRole('button', { name: ar.SessionEdit.apply }))
-  await waitFor(() => expect(apply).toHaveBeenCalledTimes(1))
-  expect(apply.mock.calls[0]![0].title).toBe('English content')
-  expect(outerSubmit).not.toHaveBeenCalled()
-  expect(saveScheduleEdits).not.toHaveBeenCalled()
+  await waitFor(() => expect(applied).toHaveLength(1))
+  expect(applied[0]!.title).toBe('English content')
+  expect(outerSubmits).toBe(0)
+  expect(host.saves).toHaveLength(0)
 })
