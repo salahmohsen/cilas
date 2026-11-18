@@ -391,3 +391,36 @@ describe('throughRelation', () => {
     })
   })
 })
+
+describe('rule names', () => {
+  it('names a factory rule after the factory and its arguments', () => {
+    expect(ownsViaAuthors.name).toBe('ownsVia(authors)')
+    expect(isAdminOrOwn(ownsViaFellows, { versions: true }).name).toBe(
+      'isAdminOrOwn(ownsVia(fellows),versions)',
+    )
+    expect(
+      isAdminOrOwn(ownsViaEditors, { allow: ['member', 'fellow'], draft: true, while: WITH_OWNER })
+        .name,
+    ).toBe(
+      'isAdminOrOwn(ownsVia(editors),allow=member|fellow,draft,while={"review.status":{"in":["draft","changes_requested"]}})',
+    )
+    expect(adminPublishes(canAuthor).name).toBe('adminPublishes(canAuthor)')
+    expect(publishedOrOwn(ownsViaEditors).name).toBe('publishedOrOwn(ownsVia(editors))')
+    expect(readTiers(undefined, { drafts: true }).name).toBe('readTiers(drafts)')
+    expect(readTiers(ownsViaAuthors).name).toBe('readTiers(ownsVia(authors))')
+    expect(throughRelation('course', readTiers(ownsViaFellows, { drafts: true })).name).toBe(
+      'throughRelation(course,readTiers(ownsVia(fellows),drafts))',
+    )
+  })
+
+  it('gives rules from different arguments different names', () => {
+    expect(isAdminOrOwn(ownsViaAuthors, { while: OWNER_EDITS }).name).not.toBe(
+      isAdminOrOwn(ownsViaAuthors, { while: WITH_OWNER }).name,
+    )
+    expect(isAdminOrOwn(ownsViaAuthors).name).not.toBe(isAdminOrOwn(ownsViaEditors).name)
+  })
+
+  it('prints an unnamed argument as anonymous, which the access audit refuses', () => {
+    expect(adminPublishes(() => true).name).toBe('adminPublishes(anonymous)')
+  })
+})
