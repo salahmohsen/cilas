@@ -10,8 +10,9 @@ import { RUN } from '../testing/payload.fixture'
 describe('public media uploads', () => {
   let payload: Payload
   const created: number[] = []
-  const user = { id: -1, collection: 'users', roles: ['member'] } as User
-  const upload = async (name: string, mimetype: string, data: Buffer) => {
+  const admin = { id: -1, collection: 'users', roles: ['admin'] } as User
+  const member = { id: -2, collection: 'users', roles: ['member'] } as User
+  const upload = async (user: User, name: string, mimetype: string, data: Buffer) => {
     const media = await payload.create({
       collection: 'media',
       data: { alt: 'Security upload probe' },
@@ -38,15 +39,16 @@ describe('public media uploads', () => {
       'image/svg+xml',
       '<svg xmlns="http://www.w3.org/2000/svg" onload="alert(document.domain)"/>',
     ],
-  ])('refuses active content in %s', async (name, mimetype, body) => {
-    await expect(upload(name, mimetype, Buffer.from(body))).rejects.toThrow()
+  ])('refuses active content in %s, even from an admin', async (name, mimetype, body) => {
+    await expect(upload(admin, name, mimetype, Buffer.from(body))).rejects.toThrow()
   })
 
   it.each([
-    ['pixel.png', 'image/png'],
-    ['tiny.pdf', 'application/pdf'],
-  ])('preserves supported uploads of %s', async (name, mimetype) => {
+    [admin, 'pixel.png', 'image/png'],
+    [admin, 'tiny.pdf', 'application/pdf'],
+    [member, 'pixel.png', 'image/png'],
+  ])('preserves supported uploads (%#: %s)', async (user, name, mimetype) => {
     const data = await readFile(new URL(`../testing/files/${name}`, import.meta.url))
-    expect((await upload(name, mimetype, data)).id).toBeGreaterThan(0)
+    expect((await upload(user, name, mimetype, data)).id).toBeGreaterThan(0)
   })
 })

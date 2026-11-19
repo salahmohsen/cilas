@@ -1,7 +1,10 @@
+import { readFile } from 'node:fs/promises'
+
 import { Forbidden, getPayload, type Payload } from 'payload'
 import { afterAll, beforeAll, describe, expect, it } from 'vitest'
 
 import config from '@/payload.config'
+import { PHOTO_MAX_BYTES } from '@/lib/profile-limits'
 import { slugify } from '@/lib/slugify'
 import type { User } from '@/payload-types'
 
@@ -841,6 +844,106 @@ describe('portal access, phase 0', () => {
         overrideAccess: true,
       })
       expect(totalDocs).toBe(0)
+    })
+  })
+
+  describe('media create', () => {
+    const GIF = Buffer.from('R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7', 'base64')
+
+    const file = (name: string) => readFile(new URL(`../testing/files/${name}`, import.meta.url))
+
+    const upload = (
+      who: User | undefined,
+      alt: string,
+      name: string,
+      mimetype: string,
+      data: Buffer,
+    ) =>
+      payload
+        .create({
+          collection: 'media',
+          data: { alt },
+          file: { name: `${RUN}-${name}`, mimetype, data, size: data.length },
+          ...actingAs(who),
+        })
+        .then((media) => track('media', media))
+
+    const storedWithAlt = async (alt: string) =>
+      (await payload.count({ collection: 'media', where: { alt: { equals: alt } } })).totalDocs
+
+    it.each(['fellow', 'member'] as Role[])(
+      '%s: a PDF throws, and nothing is stored',
+      async (role) => {
+        const alt = uniq(`Portal pdf ${role}`)
+        const pdf = await file('tiny.pdf')
+        await expect(
+          upload(accounts[role], alt, 'tiny.pdf', 'application/pdf', pdf),
+        ).rejects.toThrow()
+        expect(await storedWithAlt(alt)).toBe(0)
+      },
+    )
+
+    it.each(['fellow', 'member'] as Role[])(
+      '%s: PDF bytes that claim to be image/png throw, and nothing is stored',
+      async (role) => {
+        const alt = uniq(`Portal lie ${role}`)
+        const pdf = await file('tiny.pdf')
+        await expect(upload(accounts[role], alt, 'lie.png', 'image/png', pdf)).rejects.toThrow()
+        expect(await storedWithAlt(alt)).toBe(0)
+      },
+    )
+
+    it.each(['fellow', 'member'] as Role[])(
+      '%s: a PNG larger than PHOTO_MAX_BYTES throws, and nothing is stored',
+      async (role) => {
+        const alt = uniq(`Portal big ${role}`)
+        const big = Buffer.concat([await file('pixel.png'), Buffer.alloc(PHOTO_MAX_BYTES)])
+        await expect(upload(accounts[role], alt, 'big.png', 'image/png', big)).rejects.toThrow()
+        expect(await storedWithAlt(alt)).toBe(0)
+      },
+    )
+
+    it.each(['fellow', 'member'] as Role[])(
+      '%s: a GIF throws, and nothing is stored',
+      async (role) => {
+        const alt = uniq(`Portal gif ${role}`)
+        await expect(upload(accounts[role], alt, 'pixel.gif', 'image/gif', GIF)).rejects.toThrow()
+        expect(await storedWithAlt(alt)).toBe(0)
+      },
+    )
+
+    it.each(['fellow', 'member'] as Role[])(
+      '%s: a create with no file (a remote URL) throws the photo rule, and nothing is stored',
+      async (role) => {
+        const alt = uniq(`Portal remote ${role}`)
+        await expect(
+          payload.create({
+            collection: 'media',
+            data: { alt, filename: `${RUN}-remote.png`, url: 'http://127.0.0.1:9/remote.png' },
+            ...actingAs(accounts[role]),
+          }),
+        ).rejects.toThrow(/image of 5 MB or less/)
+        expect(await storedWithAlt(alt)).toBe(0)
+      },
+    )
+
+    it.each(['fellow', 'member'] as Role[])('%s: a small PNG is stored', async (role) => {
+      const alt = uniq(`Portal png ${role}`)
+      await upload(accounts[role], alt, 'pixel.png', 'image/png', await file('pixel.png'))
+      expect(await storedWithAlt(alt)).toBe(1)
+    })
+
+    it('admin: a PDF is stored', async () => {
+      const alt = uniq('Portal pdf admin')
+      await upload(accounts.admin, alt, 'tiny.pdf', 'application/pdf', await file('tiny.pdf'))
+      expect(await storedWithAlt(alt)).toBe(1)
+    })
+
+    it('anonymous: a PNG throws Forbidden, and nothing is stored', async () => {
+      const alt = uniq('Portal png anonymous')
+      const png = await file('pixel.png')
+      await expect(upload(undefined, alt, 'pixel.png', 'image/png', png)).rejects.toThrow(Forbidden)
+      expect(await storedWithAlt(alt)).toBe(0)
     })
   })
 })
