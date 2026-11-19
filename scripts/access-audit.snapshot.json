@@ -8240,7 +8240,7 @@
     "rules": {
       "create": "open",
       "read": "open",
-      "update": "open"
+      "update": "nobody#c75af6b3"
     }
   },
   {
