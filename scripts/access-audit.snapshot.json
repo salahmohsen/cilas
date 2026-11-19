@@ -1640,9 +1640,9 @@
     "entity": "collection:memberships",
     "field": "legacy_url",
     "rules": {
-      "create": "open",
+      "create": "adminOnlyField#b15b4fe4",
       "read": "open",
-      "update": "open"
+      "update": "adminOnlyField#b15b4fe4"
     }
   },
   {
@@ -1769,9 +1769,9 @@
     "entity": "collection:courses",
     "field": "legacy_url",
     "rules": {
-      "create": "open",
+      "create": "adminOnlyField#b15b4fe4",
       "read": "open",
-      "update": "open"
+      "update": "adminOnlyField#b15b4fe4"
     }
   },
   {
@@ -3311,9 +3311,9 @@
     "entity": "collection:programmes",
     "field": "legacy_url",
     "rules": {
-      "create": "open",
+      "create": "adminOnlyField#b15b4fe4",
       "read": "open",
-      "update": "open"
+      "update": "adminOnlyField#b15b4fe4"
     }
   },
   {
@@ -3979,9 +3979,9 @@
     "entity": "collection:cycles",
     "field": "legacy_url",
     "rules": {
-      "create": "open",
+      "create": "adminOnlyField#b15b4fe4",
       "read": "open",
-      "update": "open"
+      "update": "adminOnlyField#b15b4fe4"
     }
   },
   {
@@ -4170,9 +4170,9 @@
     "entity": "collection:places",
     "field": "legacy_url",
     "rules": {
-      "create": "open",
+      "create": "adminOnlyField#b15b4fe4",
       "read": "open",
-      "update": "open"
+      "update": "adminOnlyField#b15b4fe4"
     }
   },
   {
@@ -4326,9 +4326,9 @@
     "entity": "collection:articles",
     "field": "legacy_url",
     "rules": {
-      "create": "open",
+      "create": "adminOnlyField#b15b4fe4",
       "read": "open",
-      "update": "open"
+      "update": "adminOnlyField#b15b4fe4"
     }
   },
   {
@@ -4662,9 +4662,9 @@
     "entity": "collection:publications",
     "field": "legacy_url",
     "rules": {
-      "create": "open",
+      "create": "adminOnlyField#b15b4fe4",
       "read": "open",
-      "update": "open"
+      "update": "adminOnlyField#b15b4fe4"
     }
   },
   {
@@ -4917,9 +4917,9 @@
     "entity": "collection:events",
     "field": "legacy_url",
     "rules": {
-      "create": "open",
+      "create": "adminOnlyField#b15b4fe4",
       "read": "open",
-      "update": "open"
+      "update": "adminOnlyField#b15b4fe4"
     }
   },
   {
@@ -5585,9 +5585,9 @@
     "entity": "collection:press",
     "field": "legacy_url",
     "rules": {
-      "create": "open",
+      "create": "adminOnlyField#b15b4fe4",
       "read": "open",
-      "update": "open"
+      "update": "adminOnlyField#b15b4fe4"
     }
   },
   {
@@ -6163,9 +6163,9 @@
     "entity": "collection:newsletters",
     "field": "legacy_url",
     "rules": {
-      "create": "open",
+      "create": "adminOnlyField#b15b4fe4",
       "read": "open",
-      "update": "open"
+      "update": "adminOnlyField#b15b4fe4"
     }
   },
   {
@@ -6482,9 +6482,9 @@
     "entity": "collection:people",
     "field": "legacy_url",
     "rules": {
-      "create": "open",
+      "create": "adminOnlyField#b15b4fe4",
       "read": "open",
-      "update": "open"
+      "update": "adminOnlyField#b15b4fe4"
     }
   },
   {
@@ -6874,9 +6874,9 @@
     "entity": "collection:governance",
     "field": "legacy_url",
     "rules": {
-      "create": "open",
+      "create": "adminOnlyField#b15b4fe4",
       "read": "open",
-      "update": "open"
+      "update": "adminOnlyField#b15b4fe4"
     }
   },
   {
@@ -6921,9 +6921,9 @@
     "entity": "collection:media",
     "field": "legacy_url",
     "rules": {
-      "create": "open",
+      "create": "adminOnlyField#b15b4fe4",
       "read": "open",
-      "update": "open"
+      "update": "adminOnlyField#b15b4fe4"
     }
   },
   {
