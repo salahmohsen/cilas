@@ -37,6 +37,7 @@ describe('withLocalEnv', () => {
       `R2_BUCKET="old\nsecond line"\nPAYLOAD_SECRET=${production}\n`,
     ],
     ['duplicate, production last', `PAYLOAD_SECRET=${production}\nPAYLOAD_SECRET=${production}\n`],
+    ['its quoted value on the next line', `PAYLOAD_SECRET=\n"${production}"\nA=1\n`],
   ])('replaces a production secret written with %s', (_name, text) => {
     const out = withLocalEnv(text, overrides, production)
     expect(out).not.toContain(production)
@@ -92,6 +93,52 @@ describe('withLocalEnv', () => {
       production,
     )
     expect(out).toBe('R2_BUCKET="cilas-local"\nA=1\nPAYLOAD_SECRET=s\n')
+  })
+
+  describe('a key name inside the quoted value of another key', () => {
+    const foo = (eol: string, inner: string) => `FOO="a${eol}${inner}${eol}b"${eol}`
+    const fooOf = (text: string) => dotenv.parse(text).FOO
+
+    it.each(['\n', '\r\n'])('keeps a local secret and FOO (%j)', (eol) => {
+      const text = `${foo(eol, `PAYLOAD_SECRET=${production}`)}PAYLOAD_SECRET=local${eol}`
+      const out = withLocalEnv(text, overrides, production)
+      expect(out.startsWith(text)).toBe(true)
+      expect(fooOf(out)).toBe(fooOf(text))
+      expect(secretOf(out)).toBe('local')
+    })
+
+    it.each(['\n', '\r\n'])('replaces a production secret and keeps FOO (%j)', (eol) => {
+      const text = `${foo(eol, 'PAYLOAD_SECRET=other')}PAYLOAD_SECRET=${production}${eol}`
+      const out = withLocalEnv(text, overrides, production)
+      expect(out).not.toContain(production)
+      expect(out.startsWith(foo(eol, 'PAYLOAD_SECRET=other'))).toBe(true)
+      expect(fooOf(out)).toBe(fooOf(text))
+      expect(secretOf(out)).toMatch(generated)
+    })
+
+    it.each(['\n', '\r\n'])('adds an override and keeps FOO (%j)', (eol) => {
+      const text = foo(eol, 'R2_BUCKET=zzz')
+      const out = withLocalEnv(text, overrides, production)
+      expect(out.startsWith(text)).toBe(true)
+      expect(fooOf(out)).toBe(fooOf(text))
+      expect(dotenv.parse(out).R2_BUCKET).toBe('cilas-local')
+    })
+  })
+
+  it('keeps keys named like Object.prototype members', () => {
+    const text = 'toString=1\nconstructor=2\n'
+    expect(withLocalEnv(text, overrides, production).startsWith(text)).toBe(true)
+  })
+
+  it('removes a production secret after a U+2028 line break', () => {
+    const out = withLocalEnv(
+      `FOO="x"\u2028export PAYLOAD_SECRET=${production}\n`,
+      overrides,
+      production,
+    )
+    expect(out).not.toContain('export')
+    expect(out).not.toContain(production)
+    expect(dotenv.parse(out).FOO).toBe('x')
   })
 
   it('makes a secret when production has none', () => {

@@ -32,13 +32,6 @@ const { values } = parseArgs({
 if (!values['source-env']) throw new Error('Pass --source-env /path/to/production/.env')
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
 const source = dotenv.parse(await readFile(path.resolve(values['source-env']), 'utf8'))
-for (const key of ['R2_ENDPOINT', 'R2_BUCKET', 'R2_ACCESS_KEY_ID', 'R2_SECRET_ACCESS_KEY']) {
-  if (!source[key]) throw new Error(`Missing source ${key}`)
-}
-const sourceURL = new URL(source.R2_ENDPOINT)
-if (sourceURL.protocol !== 'https:' || !sourceURL.hostname.endsWith('.r2.cloudflarestorage.com')) {
-  throw new Error('Source must be a Cloudflare R2 HTTPS endpoint')
-}
 const endpoint = 'http://127.0.0.1:19002'
 const bucket = 'cilas-local'
 const credentialsPath = path.join(root, '.env.storage.local')
@@ -85,6 +78,15 @@ async function connectApps() {
 if (values['env-only']) {
   await connectApps()
   process.exit(0)
+}
+
+// The copy reads R2, so only it needs the source R2 keys.
+for (const key of ['R2_ENDPOINT', 'R2_BUCKET', 'R2_ACCESS_KEY_ID', 'R2_SECRET_ACCESS_KEY']) {
+  if (!source[key]) throw new Error(`Missing source ${key}`)
+}
+const sourceURL = new URL(source.R2_ENDPOINT)
+if (sourceURL.protocol !== 'https:' || !sourceURL.hostname.endsWith('.r2.cloudflarestorage.com')) {
+  throw new Error('Source must be a Cloudflare R2 HTTPS endpoint')
 }
 
 function run(args, env = process.env) {
