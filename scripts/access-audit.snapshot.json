@@ -1751,18 +1751,18 @@
     "entity": "collection:courses",
     "field": "generateSlug",
     "rules": {
-      "create": "open",
+      "create": "adminOnlyField#b15b4fe4",
       "read": "open",
-      "update": "open"
+      "update": "adminOnlyField#b15b4fe4"
     }
   },
   {
     "entity": "collection:courses",
     "field": "slug",
     "rules": {
-      "create": "open",
+      "create": "adminOnlyField#b15b4fe4",
       "read": "open",
-      "update": "open"
+      "update": "adminOnlyField#b15b4fe4"
     }
   },
   {
@@ -3293,18 +3293,18 @@
     "entity": "collection:programmes",
     "field": "generateSlug",
     "rules": {
-      "create": "open",
+      "create": "adminOnlyField#b15b4fe4",
       "read": "open",
-      "update": "open"
+      "update": "adminOnlyField#b15b4fe4"
     }
   },
   {
     "entity": "collection:programmes",
     "field": "slug",
     "rules": {
-      "create": "open",
+      "create": "adminOnlyField#b15b4fe4",
       "read": "open",
-      "update": "open"
+      "update": "adminOnlyField#b15b4fe4"
     }
   },
   {
@@ -4062,18 +4062,18 @@
     "entity": "collection:places",
     "field": "generateSlug",
     "rules": {
-      "create": "open",
+      "create": "adminOnlyField#b15b4fe4",
       "read": "open",
-      "update": "open"
+      "update": "adminOnlyField#b15b4fe4"
     }
   },
   {
     "entity": "collection:places",
     "field": "slug",
     "rules": {
-      "create": "open",
+      "create": "adminOnlyField#b15b4fe4",
       "read": "open",
-      "update": "open"
+      "update": "adminOnlyField#b15b4fe4"
     }
   },
   {
@@ -4227,18 +4227,18 @@
     "entity": "collection:articles",
     "field": "generateSlug",
     "rules": {
-      "create": "open",
+      "create": "adminOnlyField#b15b4fe4",
       "read": "open",
-      "update": "open"
+      "update": "adminOnlyField#b15b4fe4"
     }
   },
   {
     "entity": "collection:articles",
     "field": "slug",
     "rules": {
-      "create": "open",
+      "create": "adminOnlyField#b15b4fe4",
       "read": "open",
-      "update": "open"
+      "update": "adminOnlyField#b15b4fe4"
     }
   },
   {
@@ -4644,18 +4644,18 @@
     "entity": "collection:publications",
     "field": "generateSlug",
     "rules": {
-      "create": "open",
+      "create": "adminOnlyField#b15b4fe4",
       "read": "open",
-      "update": "open"
+      "update": "adminOnlyField#b15b4fe4"
     }
   },
   {
     "entity": "collection:publications",
     "field": "slug",
     "rules": {
-      "create": "open",
+      "create": "adminOnlyField#b15b4fe4",
       "read": "open",
-      "update": "open"
+      "update": "adminOnlyField#b15b4fe4"
     }
   },
   {
@@ -4890,18 +4890,18 @@
     "entity": "collection:events",
     "field": "generateSlug",
     "rules": {
-      "create": "open",
+      "create": "adminOnlyField#b15b4fe4",
       "read": "open",
-      "update": "open"
+      "update": "adminOnlyField#b15b4fe4"
     }
   },
   {
     "entity": "collection:events",
     "field": "slug",
     "rules": {
-      "create": "open",
+      "create": "adminOnlyField#b15b4fe4",
       "read": "open",
-      "update": "open"
+      "update": "adminOnlyField#b15b4fe4"
     }
   },
   {
@@ -6118,18 +6118,18 @@
     "entity": "collection:newsletters",
     "field": "generateSlug",
     "rules": {
-      "create": "open",
+      "create": "adminOnlyField#b15b4fe4",
       "read": "open",
-      "update": "open"
+      "update": "adminOnlyField#b15b4fe4"
     }
   },
   {
     "entity": "collection:newsletters",
     "field": "slug",
     "rules": {
-      "create": "open",
+      "create": "adminOnlyField#b15b4fe4",
       "read": "open",
-      "update": "open"
+      "update": "adminOnlyField#b15b4fe4"
     }
   },
   {
@@ -6446,18 +6446,18 @@
     "entity": "collection:people",
     "field": "generateSlug",
     "rules": {
-      "create": "open",
+      "create": "adminOnlyField#b15b4fe4",
       "read": "open",
-      "update": "open"
+      "update": "adminOnlyField#b15b4fe4"
     }
   },
   {
     "entity": "collection:people",
     "field": "slug",
     "rules": {
-      "create": "open",
+      "create": "adminOnlyField#b15b4fe4",
       "read": "open",
-      "update": "open"
+      "update": "adminOnlyField#b15b4fe4"
     }
   },
   {
