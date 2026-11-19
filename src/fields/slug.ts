@@ -1,7 +1,7 @@
 import type { CollectionSlug, Field, FieldHook, RowField } from 'payload'
 import { slugField as payloadSlugField } from 'payload'
 
-import { adminWritesOnly } from '@/access'
+import { adminWrites } from '@/access'
 import { slugify } from '@/lib/slugify'
 
 type SlugHookArgs = Parameters<FieldHook>[0]
@@ -43,7 +43,7 @@ const heldInLatestVersion = async (slug: string, args: SlugHookArgs) =>
 /**
  * The one collision rule. A document that has a slug keeps it when the new one
  * is taken. A document with none takes the first free `<slug>`, `<slug>-2`, ...
- * and past the limit falls back to the unique index, which refuses the save.
+ * and past the limit `<slug>-<random>`.
  */
 const claimSlug = async (wanted: string, args: SlugHookArgs) => {
   const current: unknown = args.operation === 'update' ? args.originalDoc?.slug : undefined
@@ -53,7 +53,7 @@ const claimSlug = async (wanted: string, args: SlugHookArgs) => {
     if (!(await heldInTable(candidate, args)) && !(await heldInLatestVersion(candidate, args)))
       return candidate
   }
-  return wanted
+  return `${wanted}-${crypto.randomUUID().slice(0, 8)}`
 }
 
 /**
@@ -71,6 +71,8 @@ const followTitleUntilPublished =
   async (args) => {
     const { collection, data, operation, originalDoc, req, siblingData, value } = args
     if (!data) return value
+    // A non-admin restoring a version: adminWrites keeps the stored slug, not one from the old title.
+    if (operation === 'update' && value === undefined) return value
     const given = typeof value === 'string' ? value : ''
     const current: unknown = originalDoc?.slug
     const follows: unknown = siblingData[checkbox]
@@ -97,17 +99,16 @@ const lock = (row: RowField, useAsSlug: string): RowField => {
   return {
     ...row,
     fields: row.fields.map((field): Field => {
-      const locked = { ...field, access: adminWritesOnly } as Field
-      if (locked.type === 'checkbox')
-        return { ...locked, hooks: { ...locked.hooks, beforeChange: [] } }
-      if (locked.type !== 'text') return locked
-      return {
-        ...locked,
+      if (field.type === 'checkbox')
+        return adminWrites({ ...field, hooks: { ...field.hooks, beforeChange: [] } })
+      if (field.type !== 'text') return field
+      return adminWrites({
+        ...field,
         hooks: {
-          ...locked.hooks,
+          ...field.hooks,
           beforeChange: [followTitleUntilPublished(useAsSlug, checkbox.name)],
         },
-      }
+      })
     }),
   }
 }

@@ -1,11 +1,12 @@
-import type { Access, Where } from 'payload'
+import type { Access, TextField, Where } from 'payload'
 import { describe, expect, it } from 'vitest'
 
 import {
   adminOrOwnAccountRows,
   adminPublishes,
   adminOnlyField,
-  adminWritesOnly,
+  adminUpdates,
+  adminWrites,
   adminViewOf,
   canAuthor,
   canProposePublication,
@@ -446,11 +447,44 @@ describe('nobody', () => {
   })
 })
 
-describe('adminWritesOnly', () => {
-  it('shares one rule for create and update, and is frozen', () => {
-    expect(adminWritesOnly.create).toBe(adminOnlyField)
-    expect(adminWritesOnly.update).toBe(adminOnlyField)
-    expect(Object.isFrozen(adminWritesOnly)).toBe(true)
+describe('adminWrites and adminUpdates', () => {
+  const own = () => 'own'
+  const field = adminWrites<TextField>({
+    name: 'legacy_url',
+    type: 'text',
+    access: { read: nobody },
+    hooks: { beforeChange: [own], beforeDuplicate: [own] },
+  })
+  const keep = field.hooks!.beforeChange!.at(-1)!
+  const run = (user: unknown, value: unknown, isRestoringVersion = true) =>
+    keep({
+      context: { isRestoringVersion },
+      operation: 'update',
+      previousValue: { stored: true },
+      req: { user },
+      value,
+    } as never)
+
+  it('lets only an admin write, and keeps the field rules and hooks it had', () => {
+    expect(field.access).toEqual({ read: nobody, create: adminOnlyField, update: adminOnlyField })
+    expect(field.hooks!.beforeChange![0]).toBe(own)
+    expect(field.hooks!.beforeDuplicate).toEqual([own])
+  })
+
+  it('adminUpdates leaves create to the collection', () => {
+    expect(adminUpdates<TextField>({ name: 'course', type: 'text' }).access).toEqual({
+      update: adminOnlyField,
+    })
+  })
+
+  it('a non-admin restore keeps a copy of the stored value', async () => {
+    expect(await run({ roles: ['fellow'] }, undefined)).toEqual({ stored: true })
+    expect(await run({ roles: ['fellow'] }, {})).toEqual({ stored: true })
+  })
+
+  it('an admin restore, or any other write, is left alone', async () => {
+    expect(await run({ roles: ['admin'] }, 'old')).toBeUndefined()
+    expect(await run({ roles: ['fellow'] }, 'given', false)).toBeUndefined()
   })
 })
 

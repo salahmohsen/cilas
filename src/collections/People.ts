@@ -1,4 +1,4 @@
-import { adminOnlyField, isAdmin, isAdminUser, personOf, readPeople } from '@/access'
+import { adminUpdates, isAdmin, isAdminUser, personOf, readPeople } from '@/access'
 import type { Access, CollectionConfig } from 'payload'
 
 import { slugField } from '@/fields/slug'
@@ -42,7 +42,7 @@ export const People: CollectionConfig = {
   fields: [
     { name: 'name', type: 'text', required: true, localized: true },
     slugField({ useAsSlug: 'name' }),
-    {
+    adminUpdates({
       // Off for new people, applicants accepted from a form among them.
       // Archive imports and the seed turn it on.
       name: 'visible',
@@ -50,12 +50,11 @@ export const People: CollectionConfig = {
       label: 'Show on the site',
       defaultValue: false,
       index: true,
-      access: { update: adminOnlyField },
       admin: {
         position: 'sidebar',
         description: 'Off: no profile page, and left out of lists and search.',
       },
-    },
+    }),
     {
       name: 'photo',
       type: 'upload',

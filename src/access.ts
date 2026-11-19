@@ -1,5 +1,15 @@
 import { relId } from '@/lib/relation'
-import type { Access, BaseFilter, FieldAccess, Where } from 'payload'
+import type {
+  Access,
+  BaseFilter,
+  FieldAccess,
+  FieldAffectingData,
+  FieldBase,
+  FieldHook,
+  JoinField,
+  TabAsField,
+  Where,
+} from 'payload'
 import { appendVersionToQueryKey } from 'payload'
 import type { User } from '@/payload-types'
 
@@ -352,8 +362,36 @@ export const siteTiers = (reader: unknown): SiteTier[] =>
  */
 export const adminOnlyField: FieldAccess = ({ req }) => isAdminUser(req.user)
 
-/** The pair of write rules for a field that only an admin sets. Frozen: many fields share this one object. */
-export const adminWritesOnly = Object.freeze({ create: adminOnlyField, update: adminOnlyField })
+/**
+ * A denied field keeps its stored value. On an update Payload puts the stored
+ * value back itself, but not when a non-admin restores a version: it saves the
+ * field empty (a group as `{}`), so a restored draft would lose its
+ * `legacy_url` or `tier`. The hook runs after the field's own hooks. Otherwise
+ * it returns undefined, which changes nothing: Payload runs sibling fields
+ * concurrently, and a value returned late would undo a sibling's hook, such
+ * as the slug hook setting `generateSlug`.
+ */
+const keepStoredValue: FieldHook = async ({ context, operation, previousValue, req }) =>
+  operation === 'update' && context.isRestoringVersion && !(await adminOnlyField({ req }))
+    ? structuredClone(previousValue)
+    : undefined
+
+/** A field that stores data and takes hooks: not a join, and not a tab. */
+type HookedField = Exclude<FieldAffectingData, JoinField | TabAsField>
+
+const adminSets = <F extends HookedField>(field: F, rules: FieldBase['access']): F => ({
+  ...field,
+  access: { ...field.access, ...rules },
+  hooks: { ...field.hooks, beforeChange: [...(field.hooks?.beforeChange ?? []), keepStoredValue] },
+})
+
+/** A field only an admin sets, on create and on update. */
+export const adminWrites = <F extends HookedField>(field: F): F =>
+  adminSets(field, { create: adminOnlyField, update: adminOnlyField })
+
+/** A field anyone who creates the document sets, and only an admin changes. */
+export const adminUpdates = <F extends HookedField>(field: F): F =>
+  adminSets(field, { update: adminOnlyField })
 
 /* ======================================================== through a relation */
 

@@ -1,6 +1,6 @@
 import type { Field } from 'payload'
 
-import { adminWritesOnly } from '@/access'
+import { adminWrites } from '@/access'
 
 /**
  * The review path's fields (src/lib/review-hooks.ts): the status, the
@@ -56,15 +56,14 @@ export const reviewFields = (
           description: `What the owner asks of the published ${noun}.`,
         },
       },
-      {
+      adminWrites({
         name: 'review_note',
         type: 'textarea',
-        access: adminWritesOnly,
         hooks: { beforeDuplicate: [() => null] },
         admin: {
           description: `The editor’s note to the owner when asking for changes or declining, e.g. “Shorten the second section.” It goes in the email.`,
         },
-      },
+      }),
     ],
   },
 ]

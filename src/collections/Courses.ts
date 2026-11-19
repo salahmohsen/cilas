@@ -8,7 +8,7 @@ import { blockedUnless, deleteEndpoints } from '@/forms/delete-endpoints'
 import { addSelfAs } from '@/lib/review-ownership'
 import {
   adminPublishes,
-  adminWritesOnly,
+  adminWrites,
   isAdminUser,
   canTeach,
   isAdminOrOwn,
@@ -85,12 +85,7 @@ export const propagateFellowRole: CollectionAfterChangeHook<Course> = async ({
 const courseNoun = 'course' as const
 const courseReview = reviewHooks(courseNoun)
 
-const adminSettings = {
-  access: adminWritesOnly,
-  admin: {
-    condition: ((_, __, { user }) => isAdminUser(user)) satisfies Condition,
-  },
-}
+const shownToAdmins = ((_, __, { user }) => isAdminUser(user)) satisfies Condition
 
 const showApplicantQuestions = (data: Partial<Course>) =>
   !(data.registration?.mode === 'own' && data.registration?.method === 'external')
@@ -243,13 +238,12 @@ export const Courses: CollectionConfig = {
                   'Core, Thematic and Lab courses count toward the Bridge; Workshop and Short courses do not.',
               },
             },
-            {
+            adminWrites({
               name: 'cycle',
               label: 'Cycle',
               type: 'relationship',
               relationTo: 'cycles',
-              access: adminWritesOnly,
-            },
+            }),
             {
               name: 'location',
               type: 'select',
@@ -467,14 +461,14 @@ export const Courses: CollectionConfig = {
               name: 'effective_settings',
               type: 'ui',
               admin: {
-                ...adminSettings.admin,
+                condition: shownToAdmins,
                 components: { Field: '/components/admin/course-settings#CourseSettings' },
               },
             },
-            {
+            adminWrites({
               name: 'registration',
               type: 'group',
-              ...adminSettings,
+              admin: { condition: shownToAdmins },
               hooks: { beforeChange: [validateCourseDestination(WORKSHOP_FORM_HELP)] },
               fields: [
                 {
@@ -499,7 +493,7 @@ export const Courses: CollectionConfig = {
                 },
                 ...registrationDestinationFields(WORKSHOP_FORM_HELP, true),
               ],
-            },
+            }),
             {
               name: 'applicant_questions',
               label: 'Questions for applicants',
@@ -513,19 +507,18 @@ export const Courses: CollectionConfig = {
                   'Extra questions for this course, asked after the website form’s own. They go live when an admin publishes the course. Not used when applications go to an external link, such as a Google Form.',
               },
             },
-            {
+            adminWrites({
               ...contributionField({
                 name: 'pricing_override',
                 label: 'Contribution override',
                 dbName: 'course_price',
               }),
-              ...adminSettings,
               admin: {
-                ...adminSettings.admin,
+                condition: shownToAdmins,
                 description:
                   'Leave options empty to use the contribution for this course type from its cycle.',
               },
-            },
+            }),
           ],
         },
         {

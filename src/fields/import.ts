@@ -1,6 +1,6 @@
 import type { Field } from 'payload'
 
-import { adminWritesOnly } from '@/access'
+import { adminWrites } from '@/access'
 
 /**
  * Provenance for archive imports (docs/schema.md, Archive import). The
@@ -11,12 +11,11 @@ import { adminWritesOnly } from '@/access'
  * with overrideAccess.
  */
 export const importFields = (): Field[] => [
-  {
+  adminWrites({
     name: 'legacy_url',
     type: 'text',
     unique: true,
     index: true,
-    access: adminWritesOnly,
     admin: { hidden: true },
-  },
+  }),
 ]

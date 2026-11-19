@@ -501,6 +501,109 @@ describe('portal access, phase 0', () => {
     })
   })
 
+  describe('version restore', () => {
+    const firstVersion = async (collection: Owned, id: number) =>
+      (
+        await payload.findVersions({
+          collection,
+          where: { parent: { equals: id } },
+          sort: 'createdAt',
+          limit: 1,
+          overrideAccess: true,
+        })
+      ).docs[0]!.id
+
+    const restore = (collection: Owned, id: string, user: User) =>
+      payload.restoreVersion({ collection, id, draft: true, depth: 0, ...actingAs(user) })
+
+    const ADMIN_SET = ['slug', 'generateSlug']
+
+    const REQUIRED_TO_RESTORE: Record<Owned, Record<string, unknown>> = {
+      articles: {},
+      courses: { course_type: 'THEMATIC' },
+      publications: { kind: 'research' },
+    }
+
+    const editedByAdmin = async (collection: Owned, role: Role) => {
+      const owner = accounts[role]
+      const doc = await ownDraft(collection, owner, REQUIRED_TO_RESTORE[collection])
+      const rows = DROPPED.filter((row) => row.collection === collection)
+      const data = Object.assign(
+        { slug: fresh(`kept-${collection}`), generateSlug: false },
+        ...rows.map((row) => nest(row.field, row.value())),
+      )
+      await payload.update({
+        collection,
+        id: doc.id,
+        data: data as never,
+        draft: true,
+        ...actingAs(accounts.admin),
+      })
+      await payload.update({
+        collection,
+        id: doc.id,
+        data: { title: fresh('Owner retitle') } as never,
+        draft: true,
+        ...actingAs(owner),
+      })
+      return {
+        id: doc.id,
+        title: doc.title,
+        fields: [...ADMIN_SET, ...rows.map((row) => row.field)],
+        version: await firstVersion(collection, doc.id),
+      }
+    }
+
+    it.each(OWNERS)(
+      '%s as %s: restoring an old version as a draft keeps every admin-only value',
+      async (collection, role) => {
+        const { id, title, fields, version } = await editedByAdmin(collection, role)
+        const before = await stored(collection, id)
+        await restore(collection, version, accounts[role])
+        const after = await stored(collection, id)
+        expect(after.title).toBe(title)
+        for (const field of fields)
+          expect([field, at(after, field)]).toEqual([field, at(before, field)])
+      },
+    )
+
+    it.each(['articles', 'courses', 'publications'] as const)(
+      'admin: %s restore brings back the old admin-only values',
+      async (collection) => {
+        const role: Role = collection === 'articles' ? 'member' : 'fellow'
+        const { id, version } = await editedByAdmin(collection, role)
+        const old = await payload.findVersionByID({
+          collection,
+          id: version,
+          depth: 0,
+          overrideAccess: true,
+        })
+        await restore(collection, version, accounts.admin)
+        const after = await stored(collection, id)
+        expect(after.slug).toBe(old.version.slug)
+        expect(after.legacy_url ?? null).toBe(old.version.legacy_url ?? null)
+        if ('tier' in old.version) expect(after).toMatchObject({ tier: old.version.tier })
+      },
+    )
+
+    it('articles: a restore by the owner keeps a slug that follows the title', async () => {
+      const doc = await ownDraft('articles', accounts.member, { title: `Restore A ${RUN}` })
+      await payload.update({
+        collection: 'articles',
+        id: doc.id,
+        data: { title: `Restore B ${RUN}` },
+        draft: true,
+        ...actingAs(accounts.member),
+      })
+      const before = await stored('articles', doc.id)
+      expect(before.slug).toBe(`restore-b-${RUN}`)
+      await restore('articles', await firstVersion('articles', doc.id), accounts.member)
+      const after = await stored('articles', doc.id)
+      expect(after.title).toBe(`Restore A ${RUN}`)
+      expect([after.slug, after.generateSlug]).toEqual([before.slug, true])
+    })
+  })
+
   describe('people, own person', () => {
     it('member: a write to their own slug is dropped', async () => {
       const before = await payload.findByID({

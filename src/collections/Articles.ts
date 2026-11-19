@@ -6,7 +6,7 @@ import type { CollectionConfig } from 'payload'
 import {
   adminPublishes,
   canAuthor,
-  adminWritesOnly,
+  adminWrites,
   isAdminOrOwn,
   isAdminUser,
   ownList,
@@ -96,21 +96,19 @@ export const Articles: CollectionConfig = {
           admin: { description: 'Who you would like to read it. An editor decides.' },
         },
         tierField({ duplicate: true }),
-        {
+        adminWrites({
           name: 'published_date',
           type: 'date',
-          access: adminWritesOnly,
           hooks: { beforeDuplicate: [() => null] },
-        },
-        {
+        }),
+        adminWrites({
           name: 'featured',
           type: 'checkbox',
           label: 'Feature on home page',
-          access: adminWritesOnly,
           // An editor's choice: authors do not see it.
           admin: { condition: (_, __, { user }) => isAdminUser(user) },
           hooks: { beforeDuplicate: [() => false] },
-        },
+        }),
       ],
     },
     ...importFields(),

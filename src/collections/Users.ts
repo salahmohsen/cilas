@@ -1,5 +1,6 @@
 import {
   adminOnlyField,
+  adminUpdates,
   ROLE_OPTIONS,
   isAdmin,
   isAdminUser,
@@ -231,15 +232,15 @@ export const Users: CollectionConfig = {
       unique: true,
       admin: { position: 'sidebar' },
     },
-    {
+    adminUpdates({
       // What the account wants to hear about, per kind and channel: only the
       // refusals are stored (src/lib/notification-preferences.ts). The settings
       // page writes it with a server action; the senders read it.
       name: 'notification_preferences',
       type: 'json',
-      access: { create: nobody, update: adminOnlyField },
+      access: { create: nobody },
       admin: { hidden: true },
-    },
+    }),
     {
       // Role plumbing lives in the sidebar: identity first, permissions to
       // the side.
