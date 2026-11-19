@@ -212,6 +212,25 @@ describe('profile', () => {
     })
   })
 
+  it('saves a real PNG photo through the media rule', async () => {
+    const data = await readFile(new URL('../../testing/files/pixel.png', import.meta.url))
+    const result = await saveProfilePhoto(payload, me, {
+      data,
+      mimetype: 'image/png',
+      name: `photo-${RUN}.png`,
+      size: data.length,
+    })
+    const stored = await payload.find({
+      collection: 'media',
+      where: { filename: { contains: `photo-${RUN}` } },
+      overrideAccess: true,
+    })
+    stored.docs.forEach((media) => track('media', media))
+    expect(result.ok).toBe(true)
+    expect(stored.totalDocs).toBe(1)
+    expect((await readProfile(payload, me))?.photo).not.toBeNull()
+  })
+
   it('round-trips a Markdown bio with a link, a list and a heading', async () => {
     const md = '# Title\n\nSee [site](https://x.example)\n\n- one\n- two'
     expect(await saveProfile(payload, me, base({ bio: { en: md, ar: '' } }))).toEqual({ ok: true })
