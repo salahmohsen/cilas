@@ -586,6 +586,33 @@ describe('portal access, phase 0', () => {
       },
     )
 
+    it.each([
+      ['no user', undefined],
+      ['a member', 'member'],
+    ] as const)(
+      'articles: a server restore with overrideAccess and %s brings back the old admin-only values',
+      async (_label, role) => {
+        const { id, version } = await editedByAdmin('articles', 'member')
+        const old = await payload.findVersionByID({
+          collection: 'articles',
+          id: version,
+          depth: 0,
+          overrideAccess: true,
+        })
+        await payload.restoreVersion({
+          collection: 'articles',
+          id: version,
+          draft: true,
+          depth: 0,
+          overrideAccess: true,
+          ...(role ? { user: accounts[role] } : {}),
+        })
+        const after = await stored('articles', id)
+        for (const field of ['slug', 'tier', 'featured', 'legacy_url'])
+          expect([field, at(after, field) ?? null]).toEqual([field, at(old.version, field) ?? null])
+      },
+    )
+
     it('articles: a restore by the owner keeps a slug that follows the title', async () => {
       const doc = await ownDraft('articles', accounts.member, { title: `Restore A ${RUN}` })
       await payload.update({

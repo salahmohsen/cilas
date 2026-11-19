@@ -456,14 +456,17 @@ describe('adminWrites and adminUpdates', () => {
     hooks: { beforeChange: [own], beforeDuplicate: [own] },
   })
   const keep = field.hooks!.beforeChange!.at(-1)!
-  const run = (user: unknown, value: unknown, isRestoringVersion = true) =>
-    keep({
-      context: { isRestoringVersion },
+  const restore = (user: unknown, { overrideAccess = false, restoring = true } = {}) => {
+    const req = { user, context: { isRestoringVersion: restoring } }
+    if (!overrideAccess) void field.access!.update!({ req } as never)
+    return keep({
+      context: req.context,
       operation: 'update',
       previousValue: { stored: true },
-      req: { user },
-      value,
+      req,
+      value: undefined,
     } as never)
+  }
 
   it('lets only an admin write, and keeps the field rules and hooks it had', () => {
     expect(field.access).toEqual({ read: nobody, create: adminOnlyField, update: adminOnlyField })
@@ -477,14 +480,15 @@ describe('adminWrites and adminUpdates', () => {
     })
   })
 
-  it('a non-admin restore keeps a copy of the stored value', async () => {
-    expect(await run({ roles: ['fellow'] }, undefined)).toEqual({ stored: true })
-    expect(await run({ roles: ['fellow'] }, {})).toEqual({ stored: true })
+  it('a restore that field access denied keeps a copy of the stored value', async () => {
+    expect(await restore({ roles: ['fellow'] })).toEqual({ stored: true })
   })
 
-  it('an admin restore, or any other write, is left alone', async () => {
-    expect(await run({ roles: ['admin'] }, 'old')).toBeUndefined()
-    expect(await run({ roles: ['fellow'] }, 'given', false)).toBeUndefined()
+  it('an admin restore, a restore with overrideAccess, or any other write, is left alone', async () => {
+    expect(await restore({ roles: ['admin'] })).toBeUndefined()
+    expect(await restore(undefined, { overrideAccess: true })).toBeUndefined()
+    expect(await restore({ roles: ['fellow'] }, { overrideAccess: true })).toBeUndefined()
+    expect(await restore({ roles: ['fellow'] }, { restoring: false })).toBeUndefined()
   })
 })
 

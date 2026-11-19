@@ -353,26 +353,39 @@ export const siteTiers = (reader: unknown): SiteTier[] =>
 
 /* =========================================================== field rules */
 
+const DENIED_IN_RESTORE = 'adminOnlyDeniedInRestore'
+
 /**
  * Only admins may set `tier`, on create *and* on update.
  *
  * Because the field is inaccessible to fellows, Payload keeps its
  * `defaultValue` — so a fellow-authored course starts as `owner` and can
  * never be published by them. Publishing stays an admin action.
+ *
+ * During a version restore a denial is also noted in `req.context`, for
+ * `keepStoredValue` below.
  */
-export const adminOnlyField: FieldAccess = ({ req }) => isAdminUser(req.user)
+export const adminOnlyField: FieldAccess = ({ req }) => {
+  const allowed = isAdminUser(req.user)
+  const context = req.context as Record<string, unknown> | undefined
+  if (!allowed && context?.isRestoringVersion) context[DENIED_IN_RESTORE] = true
+  return allowed
+}
 
 /**
  * A denied field keeps its stored value. On an update Payload puts the stored
  * value back itself, but not when a non-admin restores a version: it saves the
  * field empty (a group as `{}`), so a restored draft would lose its
- * `legacy_url` or `tier`. The hook runs after the field's own hooks. Otherwise
- * it returns undefined, which changes nothing: Payload runs sibling fields
- * concurrently, and a value returned late would undo a sibling's hook, such
- * as the slug hook setting `generateSlug`.
+ * `legacy_url` or `tier`. The hook acts only when `adminOnlyField` denied the
+ * field in this restore. Payload skips field access with `overrideAccess:
+ * true`, so a server-side restore then writes the old value, as it should.
+ * The hook runs after the field's own hooks. Otherwise it returns undefined,
+ * which changes nothing: Payload runs sibling fields concurrently, and a value
+ * returned late would undo a sibling's hook, such as the slug hook setting
+ * `generateSlug`.
  */
-const keepStoredValue: FieldHook = async ({ context, operation, previousValue, req }) =>
-  operation === 'update' && context.isRestoringVersion && !(await adminOnlyField({ req }))
+const keepStoredValue: FieldHook = ({ context, operation, previousValue }) =>
+  operation === 'update' && context.isRestoringVersion && context[DENIED_IN_RESTORE]
     ? structuredClone(previousValue)
     : undefined
 
