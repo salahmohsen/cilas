@@ -14,6 +14,7 @@ import {
   PutObjectCommand,
   S3Client,
 } from '@aws-sdk/client-s3'
+import { withLocalEnv } from './local-env.mjs'
 
 if (process.env.NODE_ENV === 'production') {
   throw new Error('The local storage clone script cannot run in production')
@@ -249,15 +250,7 @@ try {
     } catch (error) {
       if (error.code !== 'ENOENT') throw error
     }
-    const appOverrides = { ...overrides }
-    if (!parseEnv(text).PAYLOAD_SECRET && source.PAYLOAD_SECRET)
-      appOverrides.PAYLOAD_SECRET = source.PAYLOAD_SECRET
-    for (const [key, value] of Object.entries(appOverrides)) {
-      const line = `${key}=${JSON.stringify(value)}`
-      const pattern = new RegExp(`^${key}=.*$`, 'gm')
-      text = pattern.test(text) ? text.replace(pattern, () => line) : `${text.trimEnd()}\n${line}\n`
-    }
-    await writeFile(envPath, text, { mode: 0o600 })
+    await writeFile(envPath, withLocalEnv(text, overrides, source.PAYLOAD_SECRET), { mode: 0o600 })
     await chmod(envPath, 0o600)
     console.log(`Connected ${envPath} to local storage.`)
   }
