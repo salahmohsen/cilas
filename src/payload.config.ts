@@ -7,7 +7,7 @@ import { BUCKET_PREFIXES } from '@/lib/storage-usage'
 import { emailEditorFeatures } from '@/lexical/email-features'
 import { formEmailRichText } from '@/forms/email-rich-text'
 import path from 'path'
-import { buildConfig, type Access } from 'payload'
+import { buildConfig, type Access, type Config } from 'payload'
 import { fileURLToPath } from 'url'
 import sharp from 'sharp'
 
@@ -132,7 +132,8 @@ const generateURL: GenerateURL = ({ collectionConfig, doc, locale }) =>
 const adminOrNonTemplateForms: Access = (args) =>
   isAdmin(args) || { template: { not_equals: true } }
 
-export default buildConfig({
+/** The config as src/ writes it, before the plugins and Payload change it. The access audit reads it. */
+export const sourceConfig: Config = {
   // System email only. Newsletter subscribers live in Resend Audiences (ADR 0005).
   email: env.RESEND_API_KEY
     ? resendAdapter({
@@ -505,4 +506,6 @@ export default buildConfig({
     // What each role sees in the admin nav. Last, so it covers plugin collections.
     roleNav(),
   ],
-})
+}
+
+export default buildConfig(sourceConfig)
