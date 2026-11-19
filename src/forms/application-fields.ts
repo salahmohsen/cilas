@@ -1,10 +1,10 @@
-import { adminOnlyField, adminWritesOnly } from '@/access'
+import { adminOnlyField, adminUpdates, adminWrites } from '@/access'
 import type { Field } from 'payload'
 import { CHOICE_DECISIONS } from './application-status'
 import { submissionChoices } from './submission-view'
 
 export const applicationFields: Field[] = [
-  {
+  adminUpdates({
     name: 'locale',
     label: 'Language',
     type: 'select',
@@ -12,32 +12,29 @@ export const applicationFields: Field[] = [
       { label: 'English', value: 'en' },
       { label: 'Arabic', value: 'ar' },
     ],
-    access: { update: adminOnlyField },
     admin: {
       position: 'sidebar',
       readOnly: true,
       description:
         'The site language the applicant used. Decision emails go out in it. Empty: English.',
     },
-  },
-  {
+  }),
+  adminUpdates({
     name: 'target',
     type: 'relationship',
     relationTo: ['programmes', 'courses', 'cycles'],
     index: true,
-    access: { update: adminOnlyField },
     admin: { position: 'sidebar', readOnly: true, description: 'What the applicant applied to.' },
-  },
+  }),
   {
     name: 'answersView',
     type: 'ui',
     admin: { components: { Field: '/components/admin/submission-choices#SubmissionAnswers' } },
   },
-  {
+  adminUpdates({
     name: 'choices',
     type: 'array',
     admin: { components: { Field: '/components/admin/submission-choices#SubmissionChoices' } },
-    access: { update: adminOnlyField },
     fields: [
       { name: 'course', type: 'relationship', relationTo: 'courses', required: true },
       { name: 'amount', type: 'number' },
@@ -51,7 +48,7 @@ export const applicationFields: Field[] = [
           { name: 'value', type: 'textarea' },
         ],
       },
-      {
+      adminWrites({
         name: 'decision',
         type: 'select',
         defaultValue: 'pending',
@@ -59,26 +56,23 @@ export const applicationFields: Field[] = [
           value,
           label: value[0]!.toUpperCase() + value.slice(1),
         })),
-        access: adminWritesOnly,
         admin: { readOnly: true },
-      },
-      {
+      }),
+      adminWrites({
         name: 'decided_at',
         label: 'Decided at',
         type: 'date',
-        access: adminWritesOnly,
         admin: { readOnly: true, date: { pickerAppearance: 'dayAndTime' } },
-      },
-      {
+      }),
+      adminWrites({
         name: 'email_failed',
         label: 'Decision email failed',
         type: 'checkbox',
         defaultValue: false,
-        access: adminWritesOnly,
         admin: { readOnly: true },
-      },
+      }),
     ],
-  },
+  }),
   {
     name: 'courses',
     label: 'Courses',
@@ -97,7 +91,7 @@ export const applicationFields: Field[] = [
       ],
     },
   },
-  {
+  adminWrites({
     name: 'status',
     type: 'select',
     defaultValue: 'new',
@@ -107,9 +101,8 @@ export const applicationFields: Field[] = [
       { label: 'Accepted', value: 'accepted' },
       { label: 'Rejected', value: 'rejected' },
     ],
-    access: adminWritesOnly,
     admin: { position: 'sidebar', readOnly: true },
-  },
+  }),
   {
     name: 'decision',
     type: 'ui',
@@ -118,25 +111,23 @@ export const applicationFields: Field[] = [
       components: { Field: '/components/admin/submission-decision#SubmissionDecision' },
     },
   },
-  {
+  adminWrites({
     name: 'decided_at',
     label: 'Decided at',
     type: 'date',
-    access: adminWritesOnly,
     admin: { position: 'sidebar', readOnly: true, date: { pickerAppearance: 'dayAndTime' } },
-  },
-  {
+  }),
+  adminWrites({
     name: 'email_failed',
     label: 'Decision email failed',
     type: 'checkbox',
     defaultValue: false,
-    access: adminWritesOnly,
     admin: { position: 'sidebar', readOnly: true, description: 'Programme decisions only.' },
-  },
-  {
+  }),
+  adminWrites({
     name: 'result',
     type: 'group',
-    access: { read: adminOnlyField, ...adminWritesOnly },
+    access: { read: adminOnlyField },
     admin: { position: 'sidebar', readOnly: true },
     fields: [
       { name: 'user', type: 'relationship', relationTo: 'users' },
@@ -160,5 +151,5 @@ export const applicationFields: Field[] = [
         ],
       },
     ],
-  },
+  }),
 ]

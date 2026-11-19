@@ -7,7 +7,7 @@ import type {
 } from 'payload'
 
 import {
-  adminOnlyField,
+  adminUpdates,
   isAdmin,
   isAdminOrOwn,
   isAdminUser,
@@ -111,16 +111,15 @@ export const Sessions: CollectionConfig = {
     defaultColumns: ['title', 'course', 'cancelled'],
   },
   fields: [
-    {
+    adminUpdates({
       name: 'course',
       type: 'relationship',
       relationTo: 'courses',
       required: true,
       index: true,
       // Only an admin moves a session to another course.
-      access: { update: adminOnlyField },
       admin: { position: 'sidebar' },
-    },
+    }),
     {
       name: 'cancelled',
       type: 'checkbox',

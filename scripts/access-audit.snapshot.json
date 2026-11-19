@@ -1086,7 +1086,7 @@
     "field": "emails",
     "rules": {
       "create": "open",
-      "read": "adminOnlyField#b15b4fe4",
+      "read": "adminOnlyField#e1eb4a50",
       "update": "open"
     }
   },
@@ -1242,7 +1242,7 @@
     "rules": {
       "create": "open",
       "read": "open",
-      "update": "adminOnlyField#b15b4fe4"
+      "update": "adminOnlyField#e1eb4a50"
     }
   },
   {
@@ -1251,7 +1251,7 @@
     "rules": {
       "create": "open",
       "read": "open",
-      "update": "adminOnlyField#b15b4fe4"
+      "update": "adminOnlyField#e1eb4a50"
     }
   },
   {
@@ -1260,7 +1260,7 @@
     "rules": {
       "create": "open",
       "read": "open",
-      "update": "adminOnlyField#b15b4fe4"
+      "update": "adminOnlyField#e1eb4a50"
     }
   },
   {
@@ -1339,27 +1339,27 @@
     "entity": "collection:form-submissions",
     "field": "choices.decision",
     "rules": {
-      "create": "adminOnlyField#b15b4fe4",
+      "create": "adminOnlyField#e1eb4a50",
       "read": "open",
-      "update": "adminOnlyField#b15b4fe4"
+      "update": "adminOnlyField#e1eb4a50"
     }
   },
   {
     "entity": "collection:form-submissions",
     "field": "choices.decided_at",
     "rules": {
-      "create": "adminOnlyField#b15b4fe4",
+      "create": "adminOnlyField#e1eb4a50",
       "read": "open",
-      "update": "adminOnlyField#b15b4fe4"
+      "update": "adminOnlyField#e1eb4a50"
     }
   },
   {
     "entity": "collection:form-submissions",
     "field": "choices.email_failed",
     "rules": {
-      "create": "adminOnlyField#b15b4fe4",
+      "create": "adminOnlyField#e1eb4a50",
       "read": "open",
-      "update": "adminOnlyField#b15b4fe4"
+      "update": "adminOnlyField#e1eb4a50"
     }
   },
   {
@@ -1384,36 +1384,36 @@
     "entity": "collection:form-submissions",
     "field": "status",
     "rules": {
-      "create": "adminOnlyField#b15b4fe4",
+      "create": "adminOnlyField#e1eb4a50",
       "read": "open",
-      "update": "adminOnlyField#b15b4fe4"
+      "update": "adminOnlyField#e1eb4a50"
     }
   },
   {
     "entity": "collection:form-submissions",
     "field": "decided_at",
     "rules": {
-      "create": "adminOnlyField#b15b4fe4",
+      "create": "adminOnlyField#e1eb4a50",
       "read": "open",
-      "update": "adminOnlyField#b15b4fe4"
+      "update": "adminOnlyField#e1eb4a50"
     }
   },
   {
     "entity": "collection:form-submissions",
     "field": "email_failed",
     "rules": {
-      "create": "adminOnlyField#b15b4fe4",
+      "create": "adminOnlyField#e1eb4a50",
       "read": "open",
-      "update": "adminOnlyField#b15b4fe4"
+      "update": "adminOnlyField#e1eb4a50"
     }
   },
   {
     "entity": "collection:form-submissions",
     "field": "result",
     "rules": {
-      "create": "adminOnlyField#b15b4fe4",
-      "read": "adminOnlyField#b15b4fe4",
-      "update": "adminOnlyField#b15b4fe4"
+      "create": "adminOnlyField#e1eb4a50",
+      "read": "adminOnlyField#e1eb4a50",
+      "update": "adminOnlyField#e1eb4a50"
     }
   },
   {
@@ -1448,7 +1448,7 @@
     "field": "result.enrollments",
     "rules": {
       "create": "open",
-      "read": "adminOnlyField#b15b4fe4",
+      "read": "adminOnlyField#e1eb4a50",
       "update": "open"
     }
   },
@@ -1457,7 +1457,7 @@
     "field": "result.enrollment_outcomes",
     "rules": {
       "create": "open",
-      "read": "adminOnlyField#b15b4fe4",
+      "read": "adminOnlyField#e1eb4a50",
       "update": "open"
     }
   },
@@ -1523,7 +1523,7 @@
     "rules": {
       "create": "open",
       "read": "open",
-      "update": "adminOnlyField#b15b4fe4"
+      "update": "adminOnlyField#e1eb4a50"
     }
   },
   {
@@ -1532,7 +1532,7 @@
     "rules": {
       "create": "open",
       "read": "open",
-      "update": "adminOnlyField#b15b4fe4"
+      "update": "adminOnlyField#e1eb4a50"
     }
   },
   {
@@ -1541,7 +1541,7 @@
     "rules": {
       "create": "open",
       "read": "open",
-      "update": "adminOnlyField#b15b4fe4"
+      "update": "adminOnlyField#e1eb4a50"
     }
   },
   {
@@ -1550,7 +1550,7 @@
     "rules": {
       "create": "open",
       "read": "open",
-      "update": "adminOnlyField#b15b4fe4"
+      "update": "adminOnlyField#e1eb4a50"
     }
   },
   {
@@ -1568,7 +1568,7 @@
     "rules": {
       "create": "open",
       "read": "open",
-      "update": "adminOnlyField#b15b4fe4"
+      "update": "adminOnlyField#e1eb4a50"
     }
   },
   {
@@ -1640,9 +1640,9 @@
     "entity": "collection:memberships",
     "field": "legacy_url",
     "rules": {
-      "create": "open",
+      "create": "adminOnlyField#e1eb4a50",
       "read": "open",
-      "update": "open"
+      "update": "adminOnlyField#e1eb4a50"
     }
   },
   {
@@ -1715,18 +1715,18 @@
     "entity": "collection:courses",
     "field": "review.review_note",
     "rules": {
-      "create": "adminOnlyField#b15b4fe4",
+      "create": "adminOnlyField#e1eb4a50",
       "read": "open",
-      "update": "adminOnlyField#b15b4fe4"
+      "update": "adminOnlyField#e1eb4a50"
     }
   },
   {
     "entity": "collection:courses",
     "field": "tier",
     "rules": {
-      "create": "adminOnlyField#b15b4fe4",
+      "create": "adminOnlyField#e1eb4a50",
       "read": "open",
-      "update": "adminOnlyField#b15b4fe4"
+      "update": "adminOnlyField#e1eb4a50"
     }
   },
   {
@@ -1751,27 +1751,27 @@
     "entity": "collection:courses",
     "field": "generateSlug",
     "rules": {
-      "create": "open",
+      "create": "adminOnlyField#e1eb4a50",
       "read": "open",
-      "update": "open"
+      "update": "adminOnlyField#e1eb4a50"
     }
   },
   {
     "entity": "collection:courses",
     "field": "slug",
     "rules": {
-      "create": "open",
+      "create": "adminOnlyField#e1eb4a50",
       "read": "open",
-      "update": "open"
+      "update": "adminOnlyField#e1eb4a50"
     }
   },
   {
     "entity": "collection:courses",
     "field": "legacy_url",
     "rules": {
-      "create": "open",
+      "create": "adminOnlyField#e1eb4a50",
       "read": "open",
-      "update": "open"
+      "update": "adminOnlyField#e1eb4a50"
     }
   },
   {
@@ -1823,9 +1823,9 @@
     "entity": "collection:courses",
     "field": "cycle",
     "rules": {
-      "create": "adminOnlyField#b15b4fe4",
+      "create": "adminOnlyField#e1eb4a50",
       "read": "open",
-      "update": "adminOnlyField#b15b4fe4"
+      "update": "adminOnlyField#e1eb4a50"
     }
   },
   {
@@ -2273,9 +2273,9 @@
     "entity": "collection:courses",
     "field": "registration",
     "rules": {
-      "create": "adminOnlyField#b15b4fe4",
+      "create": "adminOnlyField#e1eb4a50",
       "read": "open",
-      "update": "adminOnlyField#b15b4fe4"
+      "update": "adminOnlyField#e1eb4a50"
     }
   },
   {
@@ -3128,9 +3128,9 @@
     "entity": "collection:courses",
     "field": "pricing_override",
     "rules": {
-      "create": "adminOnlyField#b15b4fe4",
+      "create": "adminOnlyField#e1eb4a50",
       "read": "open",
-      "update": "adminOnlyField#b15b4fe4"
+      "update": "adminOnlyField#e1eb4a50"
     }
   },
   {
@@ -3293,27 +3293,27 @@
     "entity": "collection:programmes",
     "field": "generateSlug",
     "rules": {
-      "create": "open",
+      "create": "adminOnlyField#e1eb4a50",
       "read": "open",
-      "update": "open"
+      "update": "adminOnlyField#e1eb4a50"
     }
   },
   {
     "entity": "collection:programmes",
     "field": "slug",
     "rules": {
-      "create": "open",
+      "create": "adminOnlyField#e1eb4a50",
       "read": "open",
-      "update": "open"
+      "update": "adminOnlyField#e1eb4a50"
     }
   },
   {
     "entity": "collection:programmes",
     "field": "legacy_url",
     "rules": {
-      "create": "open",
+      "create": "adminOnlyField#e1eb4a50",
       "read": "open",
-      "update": "open"
+      "update": "adminOnlyField#e1eb4a50"
     }
   },
   {
@@ -3979,9 +3979,9 @@
     "entity": "collection:cycles",
     "field": "legacy_url",
     "rules": {
-      "create": "open",
+      "create": "adminOnlyField#e1eb4a50",
       "read": "open",
-      "update": "open"
+      "update": "adminOnlyField#e1eb4a50"
     }
   },
   {
@@ -4062,18 +4062,18 @@
     "entity": "collection:places",
     "field": "generateSlug",
     "rules": {
-      "create": "open",
+      "create": "adminOnlyField#e1eb4a50",
       "read": "open",
-      "update": "open"
+      "update": "adminOnlyField#e1eb4a50"
     }
   },
   {
     "entity": "collection:places",
     "field": "slug",
     "rules": {
-      "create": "open",
+      "create": "adminOnlyField#e1eb4a50",
       "read": "open",
-      "update": "open"
+      "update": "adminOnlyField#e1eb4a50"
     }
   },
   {
@@ -4170,9 +4170,9 @@
     "entity": "collection:places",
     "field": "legacy_url",
     "rules": {
-      "create": "open",
+      "create": "adminOnlyField#e1eb4a50",
       "read": "open",
-      "update": "open"
+      "update": "adminOnlyField#e1eb4a50"
     }
   },
   {
@@ -4227,18 +4227,18 @@
     "entity": "collection:articles",
     "field": "generateSlug",
     "rules": {
-      "create": "open",
+      "create": "adminOnlyField#e1eb4a50",
       "read": "open",
-      "update": "open"
+      "update": "adminOnlyField#e1eb4a50"
     }
   },
   {
     "entity": "collection:articles",
     "field": "slug",
     "rules": {
-      "create": "open",
+      "create": "adminOnlyField#e1eb4a50",
       "read": "open",
-      "update": "open"
+      "update": "adminOnlyField#e1eb4a50"
     }
   },
   {
@@ -4281,9 +4281,9 @@
     "entity": "collection:articles",
     "field": "review.review_note",
     "rules": {
-      "create": "adminOnlyField#b15b4fe4",
+      "create": "adminOnlyField#e1eb4a50",
       "read": "open",
-      "update": "adminOnlyField#b15b4fe4"
+      "update": "adminOnlyField#e1eb4a50"
     }
   },
   {
@@ -4299,36 +4299,36 @@
     "entity": "collection:articles",
     "field": "tier",
     "rules": {
-      "create": "adminOnlyField#b15b4fe4",
+      "create": "adminOnlyField#e1eb4a50",
       "read": "open",
-      "update": "adminOnlyField#b15b4fe4"
+      "update": "adminOnlyField#e1eb4a50"
     }
   },
   {
     "entity": "collection:articles",
     "field": "published_date",
     "rules": {
-      "create": "adminOnlyField#b15b4fe4",
+      "create": "adminOnlyField#e1eb4a50",
       "read": "open",
-      "update": "adminOnlyField#b15b4fe4"
+      "update": "adminOnlyField#e1eb4a50"
     }
   },
   {
     "entity": "collection:articles",
     "field": "featured",
     "rules": {
-      "create": "adminOnlyField#b15b4fe4",
+      "create": "adminOnlyField#e1eb4a50",
       "read": "open",
-      "update": "adminOnlyField#b15b4fe4"
+      "update": "adminOnlyField#e1eb4a50"
     }
   },
   {
     "entity": "collection:articles",
     "field": "legacy_url",
     "rules": {
-      "create": "open",
+      "create": "adminOnlyField#e1eb4a50",
       "read": "open",
-      "update": "open"
+      "update": "adminOnlyField#e1eb4a50"
     }
   },
   {
@@ -4617,9 +4617,9 @@
     "entity": "collection:publications",
     "field": "review.review_note",
     "rules": {
-      "create": "adminOnlyField#b15b4fe4",
+      "create": "adminOnlyField#e1eb4a50",
       "read": "open",
-      "update": "adminOnlyField#b15b4fe4"
+      "update": "adminOnlyField#e1eb4a50"
     }
   },
   {
@@ -4644,27 +4644,27 @@
     "entity": "collection:publications",
     "field": "generateSlug",
     "rules": {
-      "create": "open",
+      "create": "adminOnlyField#e1eb4a50",
       "read": "open",
-      "update": "open"
+      "update": "adminOnlyField#e1eb4a50"
     }
   },
   {
     "entity": "collection:publications",
     "field": "slug",
     "rules": {
-      "create": "open",
+      "create": "adminOnlyField#e1eb4a50",
       "read": "open",
-      "update": "open"
+      "update": "adminOnlyField#e1eb4a50"
     }
   },
   {
     "entity": "collection:publications",
     "field": "legacy_url",
     "rules": {
-      "create": "open",
+      "create": "adminOnlyField#e1eb4a50",
       "read": "open",
-      "update": "open"
+      "update": "adminOnlyField#e1eb4a50"
     }
   },
   {
@@ -4872,9 +4872,9 @@
     "entity": "collection:events",
     "field": "tier",
     "rules": {
-      "create": "adminOnlyField#b15b4fe4",
+      "create": "adminOnlyField#e1eb4a50",
       "read": "open",
-      "update": "adminOnlyField#b15b4fe4"
+      "update": "adminOnlyField#e1eb4a50"
     }
   },
   {
@@ -4890,18 +4890,18 @@
     "entity": "collection:events",
     "field": "generateSlug",
     "rules": {
-      "create": "open",
+      "create": "adminOnlyField#e1eb4a50",
       "read": "open",
-      "update": "open"
+      "update": "adminOnlyField#e1eb4a50"
     }
   },
   {
     "entity": "collection:events",
     "field": "slug",
     "rules": {
-      "create": "open",
+      "create": "adminOnlyField#e1eb4a50",
       "read": "open",
-      "update": "open"
+      "update": "adminOnlyField#e1eb4a50"
     }
   },
   {
@@ -4917,9 +4917,9 @@
     "entity": "collection:events",
     "field": "legacy_url",
     "rules": {
-      "create": "open",
+      "create": "adminOnlyField#e1eb4a50",
       "read": "open",
-      "update": "open"
+      "update": "adminOnlyField#e1eb4a50"
     }
   },
   {
@@ -5585,9 +5585,9 @@
     "entity": "collection:press",
     "field": "legacy_url",
     "rules": {
-      "create": "open",
+      "create": "adminOnlyField#e1eb4a50",
       "read": "open",
-      "update": "open"
+      "update": "adminOnlyField#e1eb4a50"
     }
   },
   {
@@ -6118,18 +6118,18 @@
     "entity": "collection:newsletters",
     "field": "generateSlug",
     "rules": {
-      "create": "open",
+      "create": "adminOnlyField#e1eb4a50",
       "read": "open",
-      "update": "open"
+      "update": "adminOnlyField#e1eb4a50"
     }
   },
   {
     "entity": "collection:newsletters",
     "field": "slug",
     "rules": {
-      "create": "open",
+      "create": "adminOnlyField#e1eb4a50",
       "read": "open",
-      "update": "open"
+      "update": "adminOnlyField#e1eb4a50"
     }
   },
   {
@@ -6163,9 +6163,9 @@
     "entity": "collection:newsletters",
     "field": "legacy_url",
     "rules": {
-      "create": "open",
+      "create": "adminOnlyField#e1eb4a50",
       "read": "open",
-      "update": "open"
+      "update": "adminOnlyField#e1eb4a50"
     }
   },
   {
@@ -6446,18 +6446,18 @@
     "entity": "collection:people",
     "field": "generateSlug",
     "rules": {
-      "create": "open",
+      "create": "adminOnlyField#e1eb4a50",
       "read": "open",
-      "update": "open"
+      "update": "adminOnlyField#e1eb4a50"
     }
   },
   {
     "entity": "collection:people",
     "field": "slug",
     "rules": {
-      "create": "open",
+      "create": "adminOnlyField#e1eb4a50",
       "read": "open",
-      "update": "open"
+      "update": "adminOnlyField#e1eb4a50"
     }
   },
   {
@@ -6466,7 +6466,7 @@
     "rules": {
       "create": "open",
       "read": "open",
-      "update": "adminOnlyField#b15b4fe4"
+      "update": "adminOnlyField#e1eb4a50"
     }
   },
   {
@@ -6482,9 +6482,9 @@
     "entity": "collection:people",
     "field": "legacy_url",
     "rules": {
-      "create": "open",
+      "create": "adminOnlyField#e1eb4a50",
       "read": "open",
-      "update": "open"
+      "update": "adminOnlyField#e1eb4a50"
     }
   },
   {
@@ -6612,7 +6612,7 @@
     "field": "sub",
     "rules": {
       "create": "nobody#c75af6b3",
-      "read": "adminOnlyField#b15b4fe4",
+      "read": "adminOnlyField#e1eb4a50",
       "update": "nobody#c75af6b3"
     }
   },
@@ -6649,7 +6649,7 @@
     "rules": {
       "create": "nobody#c75af6b3",
       "read": "open",
-      "update": "adminOnlyField#b15b4fe4"
+      "update": "adminOnlyField#e1eb4a50"
     }
   },
   {
@@ -6874,9 +6874,9 @@
     "entity": "collection:governance",
     "field": "legacy_url",
     "rules": {
-      "create": "open",
+      "create": "adminOnlyField#e1eb4a50",
       "read": "open",
-      "update": "open"
+      "update": "adminOnlyField#e1eb4a50"
     }
   },
   {
@@ -6921,9 +6921,9 @@
     "entity": "collection:media",
     "field": "legacy_url",
     "rules": {
-      "create": "open",
+      "create": "adminOnlyField#e1eb4a50",
       "read": "open",
-      "update": "open"
+      "update": "adminOnlyField#e1eb4a50"
     }
   },
   {
@@ -7279,7 +7279,7 @@
     "rules": {
       "create": "open",
       "read": "open",
-      "update": "adminOnlyField#b15b4fe4"
+      "update": "adminOnlyField#e1eb4a50"
     }
   },
   {
@@ -8240,7 +8240,7 @@
     "rules": {
       "create": "open",
       "read": "open",
-      "update": "open"
+      "update": "nobody#c75af6b3"
     }
   },
   {

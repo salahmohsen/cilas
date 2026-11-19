@@ -1,5 +1,5 @@
 import {
-  adminOnlyField,
+  adminUpdates,
   isAdmin,
   isAdminUser,
   isFellowUser,
@@ -53,27 +53,24 @@ export const Enrollments: CollectionConfig = {
   },
   indexes: [{ fields: ['person', 'course'], unique: true }],
   fields: [
-    {
+    adminUpdates({
       name: 'person',
       type: 'relationship',
       relationTo: 'people',
       required: true,
       index: true,
-      access: { update: adminOnlyField },
-    },
-    {
+    }),
+    adminUpdates({
       name: 'course',
       type: 'relationship',
       relationTo: 'courses',
       required: true,
       index: true,
-      access: { update: adminOnlyField },
-    },
-    {
+    }),
+    adminUpdates({
       name: 'status',
       type: 'select',
       required: true,
-      access: { update: adminOnlyField },
       defaultValue: 'applied',
       options: [
         { label: 'Applied', value: 'applied' },
@@ -83,13 +80,12 @@ export const Enrollments: CollectionConfig = {
         { label: 'Withdrawn', value: 'withdrawn' },
         { label: 'Rejected', value: 'rejected' },
       ],
-    },
-    {
+    }),
+    adminUpdates({
       name: 'slot',
       type: 'text',
-      access: { update: adminOnlyField },
       admin: { description: 'Which group they attend, e.g. "evening".' },
-    },
+    }),
     {
       // Narratives in lieu of grades, written by the course's fellows.
       name: 'assessment',
@@ -97,17 +93,16 @@ export const Enrollments: CollectionConfig = {
       localized: true,
       access: { read: assessor, update: assessor },
     },
-    {
+    adminUpdates({
       name: 'source',
       type: 'select',
       required: true,
-      access: { update: adminOnlyField },
       defaultValue: 'admin',
       options: [
         { label: 'Registration form', value: 'registration_form' },
         { label: 'Added by an admin', value: 'admin' },
         { label: 'Archive backfill', value: 'backfill' },
       ],
-    },
+    }),
   ],
 }

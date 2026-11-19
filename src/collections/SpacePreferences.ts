@@ -60,9 +60,12 @@ export const SpacePreferences: CollectionConfig = {
     },
     {
       // Claimed before a digest is sent, so a retry or an overlapping run
-      // cannot send it twice (src/lib/space-digest.ts).
+      // cannot send it twice. The digest job writes it with SQL
+      // (src/lib/space-digest.ts), past field access; the owner's update
+      // stays open for the other fields.
       name: 'digest_sent_at',
       type: 'date',
+      access: { update: nobody },
       admin: { readOnly: true },
     },
   ],
