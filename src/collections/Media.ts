@@ -4,18 +4,18 @@ import { anyone, isAdmin, isAdminUser, isAuthenticated } from '@/access'
 
 import { importFields } from '@/fields/import'
 import { isPhotoUpload } from '@/lib/photo-upload'
-import { PHOTO_MAX_BYTES, PHOTO_TYPES } from '@/lib/profile-limits'
+import { PHOTO_FORMATS, PHOTO_MAX_BYTES, PHOTO_MAX_PIXELS } from '@/lib/profile-limits'
 import { revalidateAfterChange, revalidateAfterDelete } from '@/lib/revalidate'
 
-const PHOTO_RULE = `Upload a ${PHOTO_TYPES.map((type) => type.replace('image/', '').toUpperCase()).join(', ')} image of ${PHOTO_MAX_BYTES / 1024 / 1024} MB or less. Ask an admin to add other files.`
+const PHOTO_RULE = `Upload a ${PHOTO_FORMATS} image of ${PHOTO_MAX_BYTES / 1024 / 1024} MB or less and ${PHOTO_MAX_PIXELS / 1_000_000} megapixels or less. Ask an admin to add other files.`
 
 /**
  * A non-admin uploads photos only: covers, profile photos and pasted images.
  * The check reads `req.file` before Payload converts it to WebP, because after
  * that the stored type and size describe the converted file. A create with no
- * file (a remote URL) is refused too, and so is a file with no bytes in memory
- * (a temp-file upload). Admins, and seeds and the importer (overrideAccess),
- * upload anything Payload accepts. An anonymous caller returns here too:
+ * file (a remote URL) is refused too. Admins, and seeds and the importer
+ * (overrideAccess), upload anything Payload accepts; Payload's own pixel limit
+ * (constructorOptions) still applies to them. An anonymous caller returns here too:
  * beforeOperation runs before the collection access check, which throws
  * Forbidden for them.
  */
@@ -26,14 +26,6 @@ const photosOnlyForNonAdmins: CollectionBeforeOperationHook = async ({
 }) => {
   if (operation !== 'create' || overrideAccess || !req.user || isAdminUser(req.user)) return
   if (!req.file) throw new APIError(PHOTO_RULE, 400, undefined, true)
-  if (!req.file.data?.length) {
-    throw new APIError(
-      'The server could not read the uploaded file. Try a smaller photo.',
-      400,
-      undefined,
-      true,
-    )
-  }
   if (await isPhotoUpload(req.file)) return
   throw new APIError(PHOTO_RULE, 400, undefined, true)
 }
@@ -83,6 +75,7 @@ export const Media: CollectionConfig = {
         position: 'centre',
       },
     ],
+    constructorOptions: { limitInputPixels: PHOTO_MAX_PIXELS },
     formatOptions: {
       format: 'webp', // Convert uploads to WebP
       options: {
