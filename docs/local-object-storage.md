@@ -36,9 +36,26 @@ settings, write to R2, delete destination objects, or reset the database.
 Only after verification does it write `.env.development.local` in this checkout and each
 explicit `--app-dir`. These overrides select `localhost:5433/cilas_dev` and the
 local bucket, region, and credentials. Existing environment overrides are
-preserved. The file gets a `PAYLOAD_SECRET` of its own: a local value is kept,
-unless it equals the production one, which is replaced with a random value. A
-local server never signs tokens that the live site accepts. Restart an existing app process if it does not reload its environment.
+preserved.
+
+The file gets a `PAYLOAD_SECRET` of its own. A local value is kept as written,
+unless it equals the production one. Then every line that holds the production
+value is removed and a random value is written. A local server never signs
+tokens that the live site accepts.
+
+To fix a file that already holds the production secret, without a new copy of
+R2, run the script again with `--env-only`. It needs `--source-env` and an
+existing `.env.storage.local`. It rewrites only the env files and does not use
+Docker or R2:
+
+```sh
+node scripts/clone-r2-local.mjs \
+  --source-env /Users/salah/Developer/cilas/.env \
+  --env-only
+```
+
+Restart an existing app process if it does not reload its environment.
+
 The corresponding `src/env.ts`, `src/payload.config.ts`, and `next.config.ts`
 changes must also be present in an additional app checkout.
 
