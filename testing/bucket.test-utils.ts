@@ -1,4 +1,4 @@
-import { ListObjectsV2Command, S3Client } from '@aws-sdk/client-s3'
+import { GetObjectCommand, ListObjectsV2Command, S3Client } from '@aws-sdk/client-s3'
 
 const client = () =>
   new S3Client({
@@ -28,4 +28,12 @@ export const bucketKeys = async (prefix: string) => {
   } while (token)
   s3.destroy()
   return keys.sort()
+}
+
+export const bucketObject = async (key: string) => {
+  const s3 = client()
+  const object = await s3.send(new GetObjectCommand({ Bucket: process.env.R2_BUCKET, Key: key }))
+  const bytes = Buffer.from((await object.Body?.transformToByteArray()) ?? [])
+  s3.destroy()
+  return bytes
 }

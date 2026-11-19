@@ -4,7 +4,12 @@ import { anyone, isAdmin, isAdminUser, isAuthenticated } from '@/access'
 
 import { importFields } from '@/fields/import'
 import { isPhotoUpload } from '@/lib/photo-upload'
-import { PHOTO_FORMATS, PHOTO_MAX_BYTES, PHOTO_MAX_PIXELS } from '@/lib/profile-limits'
+import {
+  IMAGE_DECODE_MAX_PIXELS,
+  PHOTO_FORMATS,
+  PHOTO_MAX_BYTES,
+  PHOTO_MAX_PIXELS,
+} from '@/lib/profile-limits'
 import { revalidateAfterChange, revalidateAfterDelete } from '@/lib/revalidate'
 
 const PHOTO_RULE = `Upload a ${PHOTO_FORMATS} image of ${PHOTO_MAX_BYTES / 1024 / 1024} MB or less and ${PHOTO_MAX_PIXELS / 1_000_000} megapixels or less. Ask an admin to add other files.`
@@ -14,7 +19,7 @@ const PHOTO_RULE = `Upload a ${PHOTO_FORMATS} image of ${PHOTO_MAX_BYTES / 1024 
  * The check reads `req.file` before Payload converts it to WebP, because after
  * that the stored type and size describe the converted file. A create with no
  * file (a remote URL) is refused too. Admins, and seeds and the importer
- * (overrideAccess), upload anything Payload accepts; Payload's own pixel limit
+ * (overrideAccess), upload anything Payload accepts; the decode limit
  * (constructorOptions) still applies to them. An anonymous caller returns here too:
  * beforeOperation runs before the collection access check, which throws
  * Forbidden for them.
@@ -75,7 +80,15 @@ export const Media: CollectionConfig = {
         position: 'centre',
       },
     ],
-    constructorOptions: { limitInputPixels: PHOTO_MAX_PIXELS },
+    constructorOptions: { limitInputPixels: IMAGE_DECODE_MAX_PIXELS },
+    // Payload serves these files on /api/media/file/*. A browser must not guess
+    // a type for them, and only an image may show inline: anything else downloads.
+    modifyResponseHeaders: ({ headers }) => {
+      headers.set('X-Content-Type-Options', 'nosniff')
+      if (!headers.get('Content-Type')?.startsWith('image/'))
+        headers.set('Content-Disposition', 'attachment')
+      return headers
+    },
     formatOptions: {
       format: 'webp', // Convert uploads to WebP
       options: {

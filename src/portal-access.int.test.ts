@@ -1,17 +1,18 @@
 import { readFile } from 'node:fs/promises'
 
 import { Forbidden, getPayload, type Payload } from 'payload'
-import sharp from 'sharp'
 import { afterAll, beforeAll, describe, expect, it } from 'vitest'
 
 import config from '@/payload.config'
-import { PHOTO_MAX_BYTES } from '@/lib/profile-limits'
+import { PHOTO_MAX_BYTES, PHOTO_MAX_PIXELS } from '@/lib/profile-limits'
 import { slugify } from '@/lib/slugify'
 import type { User } from '@/payload-types'
 
-import { bucketKeys } from '../testing/bucket.test-utils'
+import { animatedImage } from '../testing/animated-image.test-utils'
+import { bucketKeys, bucketObject } from '../testing/bucket.test-utils'
 import { hugePng } from '../testing/huge-image.test-utils'
 import { RUN, createTracker, uniq, uniqEmail, uniqPath } from '../testing/payload.fixture'
+import { rest } from '../testing/payload-rest.test-utils'
 
 type Role = 'fellow' | 'member'
 type Owned = 'articles' | 'courses' | 'publications'
@@ -947,15 +948,40 @@ describe('portal access, phase 0', () => {
     it('admin: an animated WebP within the pixel limit is stored with its frame height', async () => {
       const alt = uniq('Portal animated admin')
       const frame = { width: 64, height: 48 }
-      const frames = 3
-      const animated = await sharp(Buffer.alloc(frame.width * frame.height * 3 * frames, 128), {
-        raw: { ...frame, height: frame.height * frames, channels: 3, pageHeight: frame.height },
-      })
-        .webp({ loop: 0, delay: [100, 100, 100] })
-        .toBuffer()
+      const animated = await animatedImage('webp', { ...frame, frames: 3 })
       const media = await upload(accounts.admin, alt, 'animated.webp', 'image/webp', animated)
       expect(await storedWithAlt(alt)).toBe(1)
       expect([media.width, media.height]).toEqual([frame.width, frame.height])
+    })
+
+    it.each(['fellow', 'member'] as Role[])(
+      '%s: an animation over the pixel limit in all frames throws the photo rule, and nothing is stored',
+      async (role) => {
+        const alt = uniq(`Portal animated pixels ${role}`)
+        const frames = { width: 500, height: 500, frames: 210 }
+        expect(frames.width * frames.height).toBeLessThan(PHOTO_MAX_PIXELS)
+        expect(frames.width * frames.height * frames.frames).toBeGreaterThan(PHOTO_MAX_PIXELS)
+        const animated = await animatedImage('webp', frames)
+        await expectNothingStored(
+          alt,
+          () => upload(accounts[role], alt, 'animated.webp', 'image/webp', animated),
+          /megapixels or less/,
+        )
+      },
+    )
+
+    it('admin: a GIF over the photo pixel limit in all frames is stored as WebP', async () => {
+      const alt = uniq('Portal animated gif admin')
+      const frames = { width: 800, height: 600, frames: 105 }
+      expect(frames.width * frames.height * frames.frames).toBeGreaterThan(PHOTO_MAX_PIXELS)
+      const animated = await animatedImage('gif', frames)
+      const media = await upload(accounts.admin, alt, 'animated.gif', 'image/gif', animated)
+      expect(await storedWithAlt(alt)).toBe(1)
+      expect([media.mimeType, media.width, media.height]).toEqual([
+        'image/webp',
+        frames.width,
+        frames.height,
+      ])
     })
 
     it.each(['fellow', 'member'] as Role[])(
@@ -1005,6 +1031,92 @@ describe('portal access, phase 0', () => {
         () => upload(undefined, alt, 'pixel.png', 'image/png', png),
         Forbidden,
       )
+    })
+
+    describe('over REST', () => {
+      const password = crypto.randomUUID()
+      let token: string
+
+      beforeAll(async () => {
+        const email = uniqEmail('portal-rest-member')
+        track(
+          'users',
+          await payload.create({
+            collection: 'users',
+            data: { email, password, roles: ['member'] },
+          }),
+        )
+        token =
+          (await payload.login({ collection: 'users', data: { email, password } })).token ?? ''
+      })
+
+      const post = (alt: string, name: string, data: Buffer) => {
+        const body = new FormData()
+        body.set('_payload', JSON.stringify({ alt }))
+        body.set('file', new File([new Uint8Array(data)], `${RUN}-${name}`, { type: 'image/png' }))
+        return rest('POST', 'media', { token, body })
+      }
+
+      it('a PNG with a script after its last chunk is stored as WebP without the script', async () => {
+        const alt = uniq('Portal polyglot')
+        const polyglot = Buffer.concat([
+          await file('pixel.png'),
+          Buffer.from('<script>alert(document.domain)</script>'),
+        ])
+        const response = await post(alt, 'polyglot.png', polyglot)
+        expect(response.status).toBe(201)
+        const { doc } = (await response.json()) as { doc: { id: number; filename: string } }
+        track('media', doc.id)
+        const media = await payload.findByID({ collection: 'media', id: doc.id })
+        expect(media.mimeType).toBe('image/webp')
+        const object = await bucketObject(`media/${media.filename}`)
+        expect(object.subarray(0, 4).toString()).toBe('RIFF')
+        expect(object.toString('latin1')).not.toContain('<script')
+      })
+
+      it('PNG signature bytes followed by a script throw, and nothing is stored', async () => {
+        const alt = uniq('Portal polyglot head')
+        const head = Buffer.concat([
+          Buffer.from([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a]),
+          Buffer.from('<script>alert(document.domain)</script>'),
+        ])
+        const before = await runKeys()
+        expect((await post(alt, 'head.png', head)).status).toBe(400)
+        expect(await storedWithAlt(alt)).toBe(0)
+        expect(await runKeys()).toEqual(before)
+      })
+
+      it('serves a stored image with nosniff and inline', async () => {
+        const alt = uniq('Portal served png')
+        const media = await upload(
+          accounts.member,
+          alt,
+          'served.png',
+          'image/png',
+          await file('pixel.png'),
+        )
+        const response = await rest('GET', `media/file/${media.filename}`)
+        expect(response.status).toBe(200)
+        expect(response.headers.get('content-type')).toBe('image/webp')
+        expect(response.headers.get('x-content-type-options')).toBe('nosniff')
+        expect(response.headers.get('content-disposition')).toBeNull()
+      })
+
+      it('serves a stored PDF with nosniff and as an attachment', async () => {
+        const alt = uniq('Portal served pdf')
+        const media = await upload(
+          accounts.admin,
+          alt,
+          'served.pdf',
+          'application/pdf',
+          await file('tiny.pdf'),
+        )
+        const response = await rest('GET', `media/file/${media.filename}`)
+        expect(response.status).toBe(200)
+        expect(response.headers.get('content-type')).toBe('application/pdf')
+        expect(response.headers.get('x-content-type-options')).toBe('nosniff')
+        expect(response.headers.get('content-disposition')).toMatch(/^attachment/)
+      })
     })
   })
 })
