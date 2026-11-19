@@ -448,8 +448,7 @@ export const sourceConfig: Config = {
       },
       // 214px wide: it fits the sidebar.
       logoHeight: 36,
-      // The logo opens the public site, not the dashboard. `logoLink` comes
-      // from patches/payload-theme@0.10.0.patch until the theme ships it.
+      // The logo opens the public site, not the dashboard.
       logoLink: { href: '/', label: 'CILAS website' },
       icon: {
         light: '/assets/admin/cilas-mark-light.svg',

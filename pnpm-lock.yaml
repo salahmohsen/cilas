@@ -28,9 +28,6 @@ patchedDependencies:
   deepmerge@4.3.1:
     hash: eb7264023075546742f57e4c1d640e3010cead11985d2329735ed25f5eedfb09
     path: patches/deepmerge@4.3.1.patch
-  payload-theme@0.10.0:
-    hash: afda4ba793cb216f6c2f967ab51cc81e9a7ccbbd51f67fc5791563c592e0ce81
-    path: patches/payload-theme@0.10.0.patch
 
 importers:
 
@@ -178,8 +175,8 @@ importers:
         specifier: 0.2.0
         version: 0.2.0(dd22b3a2c77583f67f3672a14d755b57)
       payload-theme:
-        specifier: 0.10.0
-        version: 0.10.0(patch_hash=afda4ba793cb216f6c2f967ab51cc81e9a7ccbbd51f67fc5791563c592e0ce81)(e97d061c1d5484bc9f2641fc4aa787be)
+        specifier: 0.11.0
+        version: 0.11.0(e97d061c1d5484bc9f2641fc4aa787be)
       pg:
         specifier: 8.20.0
         version: 8.20.0
@@ -5707,8 +5704,8 @@ packages:
       next:
         optional: true
 
-  payload-theme@0.10.0:
-    resolution: {integrity: sha512-k0vz0hH04PCE29gSJF4PJ1FOWeBCJAu1eT1KPojb2jhJOkzHktkOG8qLgL+nQgsKRIc10iqXmyLfdbQgtT8v6w==}
+  payload-theme@0.11.0:
+    resolution: {integrity: sha512-0npQXM1cwVBftwofvaNpcaDHCEKiUFu+FD4+6d/OVADopv/MbDDLchczqg9MTCuddjDHWHM1zWgl8pIf338sOA==}
     engines: {node: ^18.20.2 || >=20.9.0}
     peerDependencies:
       '@payloadcms/next': ^3.0.0
@@ -12568,7 +12565,7 @@ snapshots:
     optionalDependencies:
       next: 16.4.6(@babel/core@7.29.7)(@playwright/test@1.58.2)(@types/node@22.19.9)(babel-plugin-macros@3.1.0)(react-dom@19.2.6(react@19.2.6))(react@19.2.6)(sass@1.105.1)
 
-  payload-theme@0.10.0(patch_hash=afda4ba793cb216f6c2f967ab51cc81e9a7ccbbd51f67fc5791563c592e0ce81)(e97d061c1d5484bc9f2641fc4aa787be):
+  payload-theme@0.11.0(e97d061c1d5484bc9f2641fc4aa787be):
     dependencies:
       '@payloadcms/next': 3.91.0(@types/react@19.2.14)(graphql@16.14.2)(monaco-editor@0.57.0)(next@16.4.6(@babel/core@7.29.7)(@playwright/test@1.58.2)(@types/node@22.19.9)(babel-plugin-macros@3.1.0)(react-dom@19.2.6(react@19.2.6))(react@19.2.6)(sass@1.105.1))(payload@3.91.0(graphql@16.14.2)(typescript@5.7.3))(react-dom@19.2.6(react@19.2.6))(react@19.2.6)(typescript@5.7.3)
       '@payloadcms/translations': 3.91.0
