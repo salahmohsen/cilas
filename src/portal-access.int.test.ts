@@ -306,26 +306,50 @@ describe('portal access, phase 0', () => {
         }),
       )
 
-    it.each(['articles', 'publications'] as const)(
-      '%s as member: a draft slug follows each title change',
-      async (collection) => {
-        const doc = await ownDraft(collection, accounts.member, {
-          title: `First ${collection} ${RUN}`,
+    it.each(OWNERS)(
+      '%s as %s: a draft slug follows each title change',
+      async (collection, role) => {
+        const doc = await ownDraft(collection, accounts[role], {
+          title: `First ${collection} ${role} ${RUN}`,
         })
-        expect((await stored(collection, doc.id)).slug).toBe(`first-${collection}-${RUN}`)
-        await retitle(collection, doc.id, accounts.member, { title: `Second ${collection} ${RUN}` })
-        expect((await stored(collection, doc.id)).slug).toBe(`second-${collection}-${RUN}`)
+        expect((await stored(collection, doc.id)).slug).toBe(`first-${collection}-${role}-${RUN}`)
+        await retitle(collection, doc.id, accounts[role], {
+          title: `Second ${collection} ${role} ${RUN}`,
+        })
+        expect((await stored(collection, doc.id)).slug).toBe(`second-${collection}-${role}-${RUN}`)
       },
     )
 
-    it.each(['articles', 'publications'] as const)(
-      '%s as member: a hand-written slug on update is dropped',
-      async (collection) => {
-        const doc = await ownDraft(collection, accounts.member, {
-          title: `Hand ${collection} ${RUN}`,
+    it.each(OWNERS)(
+      '%s as %s: a hand-written slug on update is dropped',
+      async (collection, role) => {
+        const doc = await ownDraft(collection, accounts[role], {
+          title: `Hand ${collection} ${role} ${RUN}`,
         })
-        await retitle(collection, doc.id, accounts.member, { slug: fresh('claimed') })
-        expect((await stored(collection, doc.id)).slug).toBe(`hand-${collection}-${RUN}`)
+        await retitle(collection, doc.id, accounts[role], { slug: fresh('claimed') })
+        expect((await stored(collection, doc.id)).slug).toBe(`hand-${collection}-${role}-${RUN}`)
+      },
+    )
+
+    it.each(OWNERS)(
+      '%s as %s: a write to generateSlug is dropped, so the slug keeps following the title',
+      async (collection, role) => {
+        const doc = await ownDraft(collection, accounts[role])
+        await retitle(collection, doc.id, accounts[role], { generateSlug: false })
+        const title = fresh(`Still follows ${collection}`)
+        await retitle(collection, doc.id, accounts[role], { title })
+        expect((await stored(collection, doc.id)).slug).toBe(slugify(title))
+      },
+    )
+
+    it.each(OWNERS)(
+      '%s as %s: two drafts with one title both save, the second slug gets a suffix',
+      async (collection, role) => {
+        const title = `Twin ${collection} ${role} ${RUN}`
+        const first = await ownDraft(collection, accounts[role], { title })
+        const second = await ownDraft(collection, accounts[role], { title })
+        expect((await stored(collection, first.id)).slug).toBe(slugify(title))
+        expect((await stored(collection, second.id)).slug).toBe(`${slugify(title)}-2`)
       },
     )
 
@@ -339,6 +363,50 @@ describe('portal access, phase 0', () => {
         expect((await stored(collection, doc.id)).slug).toBe(chosen)
       },
     )
+
+    it('articles: a third draft with the same title gets the next free suffix', async () => {
+      const title = `Triplet ${RUN}`
+      const slugs = []
+      for (let n = 0; n < 3; n += 1) {
+        const doc = await ownDraft('articles', accounts.member, { title })
+        slugs.push((await stored('articles', doc.id)).slug)
+      }
+      expect(slugs).toEqual([`triplet-${RUN}`, `triplet-${RUN}-2`, `triplet-${RUN}-3`])
+    })
+
+    describe.each(['articles', 'publications'] as const)('%s: an admin', (collection) => {
+      it('unlocks the slug with a hand-written value that stays when the owner retitles', async () => {
+        const doc = await ownDraft(collection, accounts.member)
+        const chosen = fresh(`unlocked-${collection}`)
+        await retitle(collection, doc.id, accounts.admin, { slug: chosen })
+        await retitle(collection, doc.id, accounts.member, { title: fresh('Owner retitle') })
+        expect((await stored(collection, doc.id)).slug).toBe(chosen)
+      })
+
+      it('sets generateSlug back to true: the slug is rebuilt from the title and follows it again', async () => {
+        const title = `Relocked ${collection} ${RUN}`
+        const doc = await ownDraft(collection, accounts.member, { title })
+        await retitle(collection, doc.id, accounts.admin, { slug: fresh(`unlocked-${collection}`) })
+        await retitle(collection, doc.id, accounts.admin, { generateSlug: true })
+        expect((await stored(collection, doc.id)).slug).toBe(slugify(title))
+        const next = `Follows again ${collection} ${RUN}`
+        await retitle(collection, doc.id, accounts.member, { title: next })
+        expect((await stored(collection, doc.id)).slug).toBe(slugify(next))
+      })
+
+      it('saves an empty slug on a draft: the slug is rebuilt from the title', async () => {
+        const title = `Emptied ${collection} ${RUN}`
+        const doc = await ownDraft(collection, accounts.member, { title })
+        await retitle(collection, doc.id, accounts.admin, { slug: '' })
+        expect((await stored(collection, doc.id)).slug).toBe(slugify(title))
+      })
+    })
+
+    it('courses: a retitle before the first publish moves the slug', async () => {
+      const doc = await ownDraft('courses', accounts.fellow, { title: `Course one ${RUN}` })
+      await retitle('courses', doc.id, accounts.fellow, { title: `Course two ${RUN}` })
+      expect((await stored('courses', doc.id)).slug).toBe(`course-two-${RUN}`)
+    })
 
     it('articles: after the first publish, a title change keeps the slug', async () => {
       const doc = await ownDraft('articles', accounts.member, { title: `Before ${RUN}` })
