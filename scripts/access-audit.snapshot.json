@@ -3,10 +3,10 @@
     "entity": "collection:forms",
     "field": "*",
     "rules": {
-      "create": "isAdmin",
-      "read": "adminOrNonTemplateForms",
-      "update": "isAdmin",
-      "delete": "isAdmin",
+      "create": "isAdmin#b15b4fe4",
+      "read": "adminOrNonTemplateForms#28fb328e",
+      "update": "isAdmin#b15b4fe4",
+      "delete": "isAdmin#b15b4fe4",
       "unlock": "payload:defaultUnlock"
     }
   },
@@ -1086,7 +1086,7 @@
     "field": "emails",
     "rules": {
       "create": "open",
-      "read": "adminOnlyField",
+      "read": "adminOnlyField#b15b4fe4",
       "update": "open"
     }
   },
@@ -1184,10 +1184,10 @@
     "entity": "collection:form-submissions",
     "field": "*",
     "rules": {
-      "create": "anyone",
-      "read": "isAdmin",
-      "update": "isAdmin",
-      "delete": "isAdmin",
+      "create": "anyone#5964273a",
+      "read": "isAdmin#b15b4fe4",
+      "update": "isAdmin#b15b4fe4",
+      "delete": "isAdmin#b15b4fe4",
       "unlock": "payload:defaultUnlock"
     }
   },
@@ -1242,7 +1242,7 @@
     "rules": {
       "create": "open",
       "read": "open",
-      "update": "adminOnlyField"
+      "update": "adminOnlyField#b15b4fe4"
     }
   },
   {
@@ -1251,7 +1251,7 @@
     "rules": {
       "create": "open",
       "read": "open",
-      "update": "adminOnlyField"
+      "update": "adminOnlyField#b15b4fe4"
     }
   },
   {
@@ -1260,7 +1260,7 @@
     "rules": {
       "create": "open",
       "read": "open",
-      "update": "adminOnlyField"
+      "update": "adminOnlyField#b15b4fe4"
     }
   },
   {
@@ -1339,27 +1339,27 @@
     "entity": "collection:form-submissions",
     "field": "choices.decision",
     "rules": {
-      "create": "adminOnlyField",
+      "create": "adminOnlyField#b15b4fe4",
       "read": "open",
-      "update": "adminOnlyField"
+      "update": "adminOnlyField#b15b4fe4"
     }
   },
   {
     "entity": "collection:form-submissions",
     "field": "choices.decided_at",
     "rules": {
-      "create": "adminOnlyField",
+      "create": "adminOnlyField#b15b4fe4",
       "read": "open",
-      "update": "adminOnlyField"
+      "update": "adminOnlyField#b15b4fe4"
     }
   },
   {
     "entity": "collection:form-submissions",
     "field": "choices.email_failed",
     "rules": {
-      "create": "adminOnlyField",
+      "create": "adminOnlyField#b15b4fe4",
       "read": "open",
-      "update": "adminOnlyField"
+      "update": "adminOnlyField#b15b4fe4"
     }
   },
   {
@@ -1384,36 +1384,36 @@
     "entity": "collection:form-submissions",
     "field": "status",
     "rules": {
-      "create": "adminOnlyField",
+      "create": "adminOnlyField#b15b4fe4",
       "read": "open",
-      "update": "adminOnlyField"
+      "update": "adminOnlyField#b15b4fe4"
     }
   },
   {
     "entity": "collection:form-submissions",
     "field": "decided_at",
     "rules": {
-      "create": "adminOnlyField",
+      "create": "adminOnlyField#b15b4fe4",
       "read": "open",
-      "update": "adminOnlyField"
+      "update": "adminOnlyField#b15b4fe4"
     }
   },
   {
     "entity": "collection:form-submissions",
     "field": "email_failed",
     "rules": {
-      "create": "adminOnlyField",
+      "create": "adminOnlyField#b15b4fe4",
       "read": "open",
-      "update": "adminOnlyField"
+      "update": "adminOnlyField#b15b4fe4"
     }
   },
   {
     "entity": "collection:form-submissions",
     "field": "result",
     "rules": {
-      "create": "adminOnlyField",
-      "read": "adminOnlyField",
-      "update": "adminOnlyField"
+      "create": "adminOnlyField#b15b4fe4",
+      "read": "adminOnlyField#b15b4fe4",
+      "update": "adminOnlyField#b15b4fe4"
     }
   },
   {
@@ -1448,7 +1448,7 @@
     "field": "result.enrollments",
     "rules": {
       "create": "open",
-      "read": "adminOnlyField",
+      "read": "adminOnlyField#b15b4fe4",
       "update": "open"
     }
   },
@@ -1457,7 +1457,7 @@
     "field": "result.enrollment_outcomes",
     "rules": {
       "create": "open",
-      "read": "adminOnlyField",
+      "read": "adminOnlyField#b15b4fe4",
       "update": "open"
     }
   },
@@ -1510,10 +1510,10 @@
     "entity": "collection:enrollments",
     "field": "*",
     "rules": {
-      "create": "isAdmin",
-      "read": "readEnrollments",
-      "update": "adminOrTeachingFellow",
-      "delete": "isAdmin",
+      "create": "isAdmin#b15b4fe4",
+      "read": "readEnrollments#005b9fad",
+      "update": "adminOrTeachingFellow#fca6cab9",
+      "delete": "isAdmin#b15b4fe4",
       "unlock": "payload:defaultUnlock"
     }
   },
@@ -1523,7 +1523,7 @@
     "rules": {
       "create": "open",
       "read": "open",
-      "update": "adminOnlyField"
+      "update": "adminOnlyField#b15b4fe4"
     }
   },
   {
@@ -1532,7 +1532,7 @@
     "rules": {
       "create": "open",
       "read": "open",
-      "update": "adminOnlyField"
+      "update": "adminOnlyField#b15b4fe4"
     }
   },
   {
@@ -1541,7 +1541,7 @@
     "rules": {
       "create": "open",
       "read": "open",
-      "update": "adminOnlyField"
+      "update": "adminOnlyField#b15b4fe4"
     }
   },
   {
@@ -1550,7 +1550,7 @@
     "rules": {
       "create": "open",
       "read": "open",
-      "update": "adminOnlyField"
+      "update": "adminOnlyField#b15b4fe4"
     }
   },
   {
@@ -1558,8 +1558,8 @@
     "field": "assessment",
     "rules": {
       "create": "open",
-      "read": "assessor",
-      "update": "assessor"
+      "read": "assessor#6ff71b86",
+      "update": "assessor#6ff71b86"
     }
   },
   {
@@ -1568,7 +1568,7 @@
     "rules": {
       "create": "open",
       "read": "open",
-      "update": "adminOnlyField"
+      "update": "adminOnlyField#b15b4fe4"
     }
   },
   {
@@ -1593,10 +1593,10 @@
     "entity": "collection:memberships",
     "field": "*",
     "rules": {
-      "create": "isAdmin",
-      "read": "anyone",
-      "update": "isAdmin",
-      "delete": "isAdmin",
+      "create": "isAdmin#b15b4fe4",
+      "read": "anyone#5964273a",
+      "update": "isAdmin#b15b4fe4",
+      "delete": "isAdmin#b15b4fe4",
       "unlock": "payload:defaultUnlock"
     }
   },
@@ -1667,11 +1667,11 @@
     "entity": "collection:courses",
     "field": "*",
     "rules": {
-      "create": "adminPublishes(canTeach)",
-      "read": "readTiers(ownsVia(fellows),drafts)",
-      "readVersions": "isAdminOrOwn(ownsVia(fellows),versions)",
-      "update": "adminPublishes(isAdminOrOwn(ownsVia(fellows),allow=fellow,while={\"_status\":{\"in\":[\"draft\",\"published\"]}}))",
-      "delete": "nobody",
+      "create": "adminPublishes(canTeach)#8aca82e0",
+      "read": "readTiers(ownsVia(fellows),drafts)#d187dc79",
+      "readVersions": "isAdminOrOwn(ownsVia(fellows),versions)#0286aa49",
+      "update": "adminPublishes(isAdminOrOwn(ownsVia(fellows),allow=fellow,while={\"_status\":{\"in\":[\"draft\",\"published\"]}}))#8aca82e0",
+      "delete": "nobody#c75af6b3",
       "unlock": "payload:defaultUnlock"
     }
   },
@@ -1715,18 +1715,18 @@
     "entity": "collection:courses",
     "field": "review.review_note",
     "rules": {
-      "create": "adminOnlyField",
+      "create": "adminOnlyField#b15b4fe4",
       "read": "open",
-      "update": "adminOnlyField"
+      "update": "adminOnlyField#b15b4fe4"
     }
   },
   {
     "entity": "collection:courses",
     "field": "tier",
     "rules": {
-      "create": "adminOnlyField",
+      "create": "adminOnlyField#b15b4fe4",
       "read": "open",
-      "update": "adminOnlyField"
+      "update": "adminOnlyField#b15b4fe4"
     }
   },
   {
@@ -1823,9 +1823,9 @@
     "entity": "collection:courses",
     "field": "cycle",
     "rules": {
-      "create": "adminOnlyField",
+      "create": "adminOnlyField#b15b4fe4",
       "read": "open",
-      "update": "adminOnlyField"
+      "update": "adminOnlyField#b15b4fe4"
     }
   },
   {
@@ -2273,9 +2273,9 @@
     "entity": "collection:courses",
     "field": "registration",
     "rules": {
-      "create": "adminOnlyField",
+      "create": "adminOnlyField#b15b4fe4",
       "read": "open",
-      "update": "adminOnlyField"
+      "update": "adminOnlyField#b15b4fe4"
     }
   },
   {
@@ -3128,9 +3128,9 @@
     "entity": "collection:courses",
     "field": "pricing_override",
     "rules": {
-      "create": "adminOnlyField",
+      "create": "adminOnlyField#b15b4fe4",
       "read": "open",
-      "update": "adminOnlyField"
+      "update": "adminOnlyField#b15b4fe4"
     }
   },
   {
@@ -3263,11 +3263,11 @@
     "entity": "collection:programmes",
     "field": "*",
     "rules": {
-      "create": "isAdmin",
-      "read": "publishedOrAdmin",
-      "readVersions": "isAdmin",
-      "update": "isAdmin",
-      "delete": "isAdmin",
+      "create": "isAdmin#b15b4fe4",
+      "read": "publishedOrAdmin#4e3b442b",
+      "readVersions": "isAdmin#b15b4fe4",
+      "update": "isAdmin#b15b4fe4",
+      "delete": "isAdmin#b15b4fe4",
       "unlock": "payload:defaultUnlock"
     }
   },
@@ -3752,10 +3752,10 @@
     "entity": "collection:cycles",
     "field": "*",
     "rules": {
-      "create": "isAdmin",
-      "read": "anyone",
-      "update": "isAdmin",
-      "delete": "isAdmin",
+      "create": "isAdmin#b15b4fe4",
+      "read": "anyone#5964273a",
+      "update": "isAdmin#b15b4fe4",
+      "delete": "isAdmin#b15b4fe4",
       "unlock": "payload:defaultUnlock"
     }
   },
@@ -4042,10 +4042,10 @@
     "entity": "collection:places",
     "field": "*",
     "rules": {
-      "create": "isAdmin",
-      "read": "anyone",
-      "update": "isAdmin",
-      "delete": "isAdmin",
+      "create": "isAdmin#b15b4fe4",
+      "read": "anyone#5964273a",
+      "update": "isAdmin#b15b4fe4",
+      "delete": "isAdmin#b15b4fe4",
       "unlock": "payload:defaultUnlock"
     }
   },
@@ -4197,11 +4197,11 @@
     "entity": "collection:articles",
     "field": "*",
     "rules": {
-      "create": "adminPublishes(canAuthor)",
-      "read": "readTiers(ownsVia(authors),drafts)",
-      "readVersions": "isAdminOrOwn(ownsVia(authors),versions)",
-      "update": "adminPublishes(isAdminOrOwn(ownsVia(authors),while={\"_status\":{\"in\":[\"draft\",\"published\"]}}))",
-      "delete": "isAdminOrOwn(ownsVia(authors),draft,while={\"review.status\":{\"in\":[\"draft\",\"changes_requested\"]}})",
+      "create": "adminPublishes(canAuthor)#8aca82e0",
+      "read": "readTiers(ownsVia(authors),drafts)#d187dc79",
+      "readVersions": "isAdminOrOwn(ownsVia(authors),versions)#0286aa49",
+      "update": "adminPublishes(isAdminOrOwn(ownsVia(authors),while={\"_status\":{\"in\":[\"draft\",\"published\"]}}))#8aca82e0",
+      "delete": "isAdminOrOwn(ownsVia(authors),draft,while={\"review.status\":{\"in\":[\"draft\",\"changes_requested\"]}})#0286aa49",
       "unlock": "payload:defaultUnlock"
     }
   },
@@ -4281,9 +4281,9 @@
     "entity": "collection:articles",
     "field": "review.review_note",
     "rules": {
-      "create": "adminOnlyField",
+      "create": "adminOnlyField#b15b4fe4",
       "read": "open",
-      "update": "adminOnlyField"
+      "update": "adminOnlyField#b15b4fe4"
     }
   },
   {
@@ -4299,27 +4299,27 @@
     "entity": "collection:articles",
     "field": "tier",
     "rules": {
-      "create": "adminOnlyField",
+      "create": "adminOnlyField#b15b4fe4",
       "read": "open",
-      "update": "adminOnlyField"
+      "update": "adminOnlyField#b15b4fe4"
     }
   },
   {
     "entity": "collection:articles",
     "field": "published_date",
     "rules": {
-      "create": "adminOnlyField",
+      "create": "adminOnlyField#b15b4fe4",
       "read": "open",
-      "update": "adminOnlyField"
+      "update": "adminOnlyField#b15b4fe4"
     }
   },
   {
     "entity": "collection:articles",
     "field": "featured",
     "rules": {
-      "create": "adminOnlyField",
+      "create": "adminOnlyField#b15b4fe4",
       "read": "open",
-      "update": "adminOnlyField"
+      "update": "adminOnlyField#b15b4fe4"
     }
   },
   {
@@ -4569,11 +4569,11 @@
     "entity": "collection:publications",
     "field": "*",
     "rules": {
-      "create": "adminPublishes(canProposePublication)",
-      "read": "publishedOrOwn(ownsVia(editors))",
-      "readVersions": "isAdminOrOwn(ownsVia(editors),versions)",
-      "update": "adminPublishes(isAdminOrOwn(ownsVia(editors),allow=member|non_degree_seeking|fellow,while={\"_status\":{\"in\":[\"draft\",\"published\"]}}))",
-      "delete": "isAdminOrOwn(ownsVia(editors),allow=member|non_degree_seeking|fellow,draft,while={\"review.status\":{\"in\":[\"draft\",\"changes_requested\"]}})",
+      "create": "adminPublishes(canProposePublication)#8aca82e0",
+      "read": "publishedOrOwn(ownsVia(editors))#2852e61b",
+      "readVersions": "isAdminOrOwn(ownsVia(editors),versions)#0286aa49",
+      "update": "adminPublishes(isAdminOrOwn(ownsVia(editors),allow=member|non_degree_seeking|fellow,while={\"_status\":{\"in\":[\"draft\",\"published\"]}}))#8aca82e0",
+      "delete": "isAdminOrOwn(ownsVia(editors),allow=member|non_degree_seeking|fellow,draft,while={\"review.status\":{\"in\":[\"draft\",\"changes_requested\"]}})#0286aa49",
       "unlock": "payload:defaultUnlock"
     }
   },
@@ -4617,9 +4617,9 @@
     "entity": "collection:publications",
     "field": "review.review_note",
     "rules": {
-      "create": "adminOnlyField",
+      "create": "adminOnlyField#b15b4fe4",
       "read": "open",
-      "update": "adminOnlyField"
+      "update": "adminOnlyField#b15b4fe4"
     }
   },
   {
@@ -4851,11 +4851,11 @@
     "entity": "collection:events",
     "field": "*",
     "rules": {
-      "create": "isAdmin",
-      "read": "readTiers(drafts)",
-      "readVersions": "isAdmin",
-      "update": "isAdmin",
-      "delete": "isAdmin",
+      "create": "isAdmin#b15b4fe4",
+      "read": "readTiers(drafts)#d187dc79",
+      "readVersions": "isAdmin#b15b4fe4",
+      "update": "isAdmin#b15b4fe4",
+      "delete": "isAdmin#b15b4fe4",
       "unlock": "payload:defaultUnlock"
     }
   },
@@ -4872,9 +4872,9 @@
     "entity": "collection:events",
     "field": "tier",
     "rules": {
-      "create": "adminOnlyField",
+      "create": "adminOnlyField#b15b4fe4",
       "read": "open",
-      "update": "adminOnlyField"
+      "update": "adminOnlyField#b15b4fe4"
     }
   },
   {
@@ -5412,10 +5412,10 @@
     "entity": "collection:press",
     "field": "*",
     "rules": {
-      "create": "isAdmin",
-      "read": "anyone",
-      "update": "isAdmin",
-      "delete": "isAdmin",
+      "create": "isAdmin#b15b4fe4",
+      "read": "anyone#5964273a",
+      "update": "isAdmin#b15b4fe4",
+      "delete": "isAdmin#b15b4fe4",
       "unlock": "payload:defaultUnlock"
     }
   },
@@ -5612,10 +5612,10 @@
     "entity": "collection:spaces",
     "field": "*",
     "rules": {
-      "create": "isAdmin",
-      "read": "readSpaces",
-      "update": "isAdmin",
-      "delete": "nobody",
+      "create": "isAdmin#b15b4fe4",
+      "read": "readSpaces#dc324e3c",
+      "update": "isAdmin#b15b4fe4",
+      "delete": "nobody#c75af6b3",
       "unlock": "payload:defaultUnlock"
     }
   },
@@ -5625,7 +5625,7 @@
     "rules": {
       "create": "open",
       "read": "open",
-      "update": "nobody"
+      "update": "nobody#c75af6b3"
     }
   },
   {
@@ -5713,9 +5713,9 @@
     "entity": "collection:spaces",
     "field": "introduction_post",
     "rules": {
-      "create": "nobody",
+      "create": "nobody#c75af6b3",
       "read": "open",
-      "update": "nobody"
+      "update": "nobody#c75af6b3"
     }
   },
   {
@@ -5749,11 +5749,11 @@
     "entity": "collection:space-posts",
     "field": "*",
     "rules": {
-      "create": "isAdmin",
-      "read": "readablePosts",
+      "create": "isAdmin#b15b4fe4",
+      "read": "readablePosts#c8edbabd",
       "readVersions": "payload:loggedIn",
-      "update": "isAdmin",
-      "delete": "isAdmin",
+      "update": "isAdmin#b15b4fe4",
+      "delete": "isAdmin#b15b4fe4",
       "unlock": "payload:defaultUnlock"
     }
   },
@@ -5763,7 +5763,7 @@
     "rules": {
       "create": "open",
       "read": "open",
-      "update": "nobody"
+      "update": "nobody#c75af6b3"
     }
   },
   {
@@ -5772,7 +5772,7 @@
     "rules": {
       "create": "open",
       "read": "open",
-      "update": "nobody"
+      "update": "nobody#c75af6b3"
     }
   },
   {
@@ -5781,7 +5781,7 @@
     "rules": {
       "create": "open",
       "read": "open",
-      "update": "nobody"
+      "update": "nobody#c75af6b3"
     }
   },
   {
@@ -5862,7 +5862,7 @@
     "rules": {
       "create": "open",
       "read": "open",
-      "update": "nobody"
+      "update": "nobody#c75af6b3"
     }
   },
   {
@@ -5889,7 +5889,7 @@
     "rules": {
       "create": "open",
       "read": "open",
-      "update": "nobody"
+      "update": "nobody#c75af6b3"
     }
   },
   {
@@ -5907,7 +5907,7 @@
     "rules": {
       "create": "open",
       "read": "open",
-      "update": "nobody"
+      "update": "nobody#c75af6b3"
     }
   },
   {
@@ -5916,7 +5916,7 @@
     "rules": {
       "create": "open",
       "read": "open",
-      "update": "nobody"
+      "update": "nobody#c75af6b3"
     }
   },
   {
@@ -6004,11 +6004,11 @@
     "entity": "collection:space-comments",
     "field": "*",
     "rules": {
-      "create": "isAdmin",
-      "read": "commentsOnReadablePosts",
+      "create": "isAdmin#b15b4fe4",
+      "read": "commentsOnReadablePosts#f073c838",
       "readVersions": "payload:loggedIn",
-      "update": "isAdmin",
-      "delete": "isAdmin",
+      "update": "isAdmin#b15b4fe4",
+      "delete": "isAdmin#b15b4fe4",
       "unlock": "payload:defaultUnlock"
     }
   },
@@ -6018,7 +6018,7 @@
     "rules": {
       "create": "open",
       "read": "open",
-      "update": "nobody"
+      "update": "nobody#c75af6b3"
     }
   },
   {
@@ -6027,7 +6027,7 @@
     "rules": {
       "create": "open",
       "read": "open",
-      "update": "nobody"
+      "update": "nobody#c75af6b3"
     }
   },
   {
@@ -6045,7 +6045,7 @@
     "rules": {
       "create": "open",
       "read": "open",
-      "update": "nobody"
+      "update": "nobody#c75af6b3"
     }
   },
   {
@@ -6097,11 +6097,11 @@
     "entity": "collection:newsletters",
     "field": "*",
     "rules": {
-      "create": "isAdmin",
-      "read": "publishedOrAdmin",
-      "readVersions": "isAdmin",
-      "update": "isAdmin",
-      "delete": "isAdmin",
+      "create": "isAdmin#b15b4fe4",
+      "read": "publishedOrAdmin#4e3b442b",
+      "readVersions": "isAdmin#b15b4fe4",
+      "update": "isAdmin#b15b4fe4",
+      "delete": "isAdmin#b15b4fe4",
       "unlock": "payload:defaultUnlock"
     }
   },
@@ -6271,10 +6271,10 @@
     "entity": "collection:mailing-lists",
     "field": "*",
     "rules": {
-      "create": "isAdmin",
-      "read": "isAdmin",
-      "update": "isAdmin",
-      "delete": "isAdmin",
+      "create": "isAdmin#b15b4fe4",
+      "read": "isAdmin#b15b4fe4",
+      "update": "isAdmin#b15b4fe4",
+      "delete": "isAdmin#b15b4fe4",
       "unlock": "payload:defaultUnlock"
     }
   },
@@ -6426,10 +6426,10 @@
     "entity": "collection:people",
     "field": "*",
     "rules": {
-      "create": "isAdmin",
-      "read": "readPeople",
-      "update": "adminOrOwnPerson",
-      "delete": "isAdmin",
+      "create": "isAdmin#b15b4fe4",
+      "read": "readPeople#f2e84a84",
+      "update": "adminOrOwnPerson#bd09e575",
+      "delete": "isAdmin#b15b4fe4",
       "unlock": "payload:defaultUnlock"
     }
   },
@@ -6466,7 +6466,7 @@
     "rules": {
       "create": "open",
       "read": "open",
-      "update": "adminOnlyField"
+      "update": "adminOnlyField#b15b4fe4"
     }
   },
   {
@@ -6600,10 +6600,10 @@
     "field": "*",
     "rules": {
       "admin": "payload:loggedIn",
-      "create": "isAdmin",
-      "read": "adminOrSelf",
-      "update": "isAdmin",
-      "delete": "isAdmin",
+      "create": "isAdmin#b15b4fe4",
+      "read": "adminOrSelf#b5312fea",
+      "update": "isAdmin#b15b4fe4",
+      "delete": "isAdmin#b15b4fe4",
       "unlock": "payload:defaultUnlock"
     }
   },
@@ -6611,27 +6611,27 @@
     "entity": "collection:users",
     "field": "sub",
     "rules": {
-      "create": "nobody",
-      "read": "adminOnlyField",
-      "update": "nobody"
+      "create": "nobody#c75af6b3",
+      "read": "adminOnlyField#b15b4fe4",
+      "update": "nobody#c75af6b3"
     }
   },
   {
     "entity": "collection:users",
     "field": "activated_at",
     "rules": {
-      "create": "nobody",
+      "create": "nobody#c75af6b3",
       "read": "open",
-      "update": "nobody"
+      "update": "nobody#c75af6b3"
     }
   },
   {
     "entity": "collection:users",
     "field": "invited_at",
     "rules": {
-      "create": "nobody",
+      "create": "nobody#c75af6b3",
       "read": "open",
-      "update": "nobody"
+      "update": "nobody#c75af6b3"
     }
   },
   {
@@ -6647,9 +6647,9 @@
     "entity": "collection:users",
     "field": "notification_preferences",
     "rules": {
-      "create": "nobody",
+      "create": "nobody#c75af6b3",
       "read": "open",
-      "update": "adminOnlyField"
+      "update": "adminOnlyField#b15b4fe4"
     }
   },
   {
@@ -6692,63 +6692,63 @@
     "entity": "collection:users",
     "field": "resetPasswordToken",
     "rules": {
-      "create": "payload:auth",
+      "create": "payload:auth#c75af6b3",
       "read": "open",
-      "update": "payload:auth"
+      "update": "payload:auth#c75af6b3"
     }
   },
   {
     "entity": "collection:users",
     "field": "resetPasswordExpiration",
     "rules": {
-      "create": "payload:auth",
+      "create": "payload:auth#c75af6b3",
       "read": "open",
-      "update": "payload:auth"
+      "update": "payload:auth#c75af6b3"
     }
   },
   {
     "entity": "collection:users",
     "field": "salt",
     "rules": {
-      "create": "payload:auth",
+      "create": "payload:auth#c75af6b3",
       "read": "open",
-      "update": "payload:auth"
+      "update": "payload:auth#c75af6b3"
     }
   },
   {
     "entity": "collection:users",
     "field": "hash",
     "rules": {
-      "create": "payload:auth",
+      "create": "payload:auth#c75af6b3",
       "read": "open",
-      "update": "payload:auth"
+      "update": "payload:auth#c75af6b3"
     }
   },
   {
     "entity": "collection:users",
     "field": "resetPasswordRequestedAt",
     "rules": {
-      "create": "payload:auth",
+      "create": "payload:auth#c75af6b3",
       "read": "open",
-      "update": "payload:auth"
+      "update": "payload:auth#c75af6b3"
     }
   },
   {
     "entity": "collection:users",
     "field": "loginAttempts",
     "rules": {
-      "create": "payload:auth",
+      "create": "payload:auth#c75af6b3",
       "read": "open",
-      "update": "payload:auth"
+      "update": "payload:auth#c75af6b3"
     }
   },
   {
     "entity": "collection:users",
     "field": "lockUntil",
     "rules": {
-      "create": "payload:auth",
+      "create": "payload:auth#c75af6b3",
       "read": "open",
-      "update": "payload:auth"
+      "update": "payload:auth#c75af6b3"
     }
   },
   {
@@ -6756,8 +6756,8 @@
     "field": "sessions",
     "rules": {
       "create": "open",
-      "read": "payload:ownSessions",
-      "update": "payload:auth"
+      "read": "payload:ownSessions#86843ef5",
+      "update": "payload:auth#c75af6b3"
     }
   },
   {
@@ -6791,10 +6791,10 @@
     "entity": "collection:governance",
     "field": "*",
     "rules": {
-      "create": "isAdmin",
-      "read": "anyone",
-      "update": "isAdmin",
-      "delete": "isAdmin",
+      "create": "isAdmin#b15b4fe4",
+      "read": "anyone#5964273a",
+      "update": "isAdmin#b15b4fe4",
+      "delete": "isAdmin#b15b4fe4",
       "unlock": "payload:defaultUnlock"
     }
   },
@@ -6901,10 +6901,10 @@
     "entity": "collection:media",
     "field": "*",
     "rules": {
-      "create": "isAuthenticated",
-      "read": "anyone",
-      "update": "isAdmin",
-      "delete": "isAdmin",
+      "create": "isAuthenticated#d9ac4323",
+      "read": "anyone#5964273a",
+      "update": "isAdmin#b15b4fe4",
+      "delete": "isAdmin#b15b4fe4",
       "unlock": "payload:defaultUnlock"
     }
   },
@@ -7182,10 +7182,10 @@
     "entity": "collection:redirects",
     "field": "*",
     "rules": {
-      "create": "isAdmin",
-      "read": "anyone",
-      "update": "isAdmin",
-      "delete": "isAdmin",
+      "create": "isAdmin#b15b4fe4",
+      "read": "anyone#5964273a",
+      "update": "isAdmin#b15b4fe4",
+      "delete": "isAdmin#b15b4fe4",
       "unlock": "payload:defaultUnlock"
     }
   },
@@ -7265,11 +7265,11 @@
     "entity": "collection:sessions",
     "field": "*",
     "rules": {
-      "create": "createSession",
-      "read": "throughRelation(course,readTiers(ownsVia(fellows),drafts))",
-      "readVersions": "isAdmin",
-      "update": "throughRelation(course,isAdminOrOwn(ownsVia(fellows),allow=fellow))",
-      "delete": "throughRelation(course,isAdminOrOwn(ownsVia(fellows),allow=fellow))",
+      "create": "createSession#28b95dd8",
+      "read": "throughRelation(course,readTiers(ownsVia(fellows),drafts))#1af94745",
+      "readVersions": "isAdmin#b15b4fe4",
+      "update": "throughRelation(course,isAdminOrOwn(ownsVia(fellows),allow=fellow))#1af94745",
+      "delete": "throughRelation(course,isAdminOrOwn(ownsVia(fellows),allow=fellow))#1af94745",
       "unlock": "payload:defaultUnlock"
     }
   },
@@ -7279,7 +7279,7 @@
     "rules": {
       "create": "open",
       "read": "open",
-      "update": "adminOnlyField"
+      "update": "adminOnlyField#b15b4fe4"
     }
   },
   {
@@ -7484,10 +7484,10 @@
     "entity": "collection:submission-files",
     "field": "*",
     "rules": {
-      "create": "nobody",
-      "read": "isAdmin",
-      "update": "nobody",
-      "delete": "isAdmin",
+      "create": "nobody#c75af6b3",
+      "read": "isAdmin#b15b4fe4",
+      "update": "nobody#c75af6b3",
+      "delete": "isAdmin#b15b4fe4",
       "unlock": "payload:defaultUnlock"
     }
   },
@@ -7621,10 +7621,10 @@
     "entity": "collection:notifications",
     "field": "*",
     "rules": {
-      "create": "nobody",
-      "read": "ownNotifications",
-      "update": "ownNotifications",
-      "delete": "ownNotifications",
+      "create": "nobody#c75af6b3",
+      "read": "ownNotifications#a6504a43",
+      "update": "ownNotifications#a6504a43",
+      "delete": "ownNotifications#a6504a43",
       "unlock": "payload:defaultUnlock"
     }
   },
@@ -7634,7 +7634,7 @@
     "rules": {
       "create": "open",
       "read": "open",
-      "update": "nobody"
+      "update": "nobody#c75af6b3"
     }
   },
   {
@@ -7643,7 +7643,7 @@
     "rules": {
       "create": "open",
       "read": "open",
-      "update": "nobody"
+      "update": "nobody#c75af6b3"
     }
   },
   {
@@ -7652,7 +7652,7 @@
     "rules": {
       "create": "open",
       "read": "open",
-      "update": "nobody"
+      "update": "nobody#c75af6b3"
     }
   },
   {
@@ -7661,7 +7661,7 @@
     "rules": {
       "create": "open",
       "read": "open",
-      "update": "nobody"
+      "update": "nobody#c75af6b3"
     }
   },
   {
@@ -7670,7 +7670,7 @@
     "rules": {
       "create": "open",
       "read": "open",
-      "update": "nobody"
+      "update": "nobody#c75af6b3"
     }
   },
   {
@@ -7679,7 +7679,7 @@
     "rules": {
       "create": "open",
       "read": "open",
-      "update": "nobody"
+      "update": "nobody#c75af6b3"
     }
   },
   {
@@ -7688,7 +7688,7 @@
     "rules": {
       "create": "open",
       "read": "open",
-      "update": "nobody"
+      "update": "nobody#c75af6b3"
     }
   },
   {
@@ -7722,10 +7722,10 @@
     "entity": "collection:push-subscriptions",
     "field": "*",
     "rules": {
-      "create": "nobody",
-      "read": "nobody",
-      "update": "nobody",
-      "delete": "nobody",
+      "create": "nobody#c75af6b3",
+      "read": "nobody#c75af6b3",
+      "update": "nobody#c75af6b3",
+      "delete": "nobody#c75af6b3",
       "unlock": "payload:defaultUnlock"
     }
   },
@@ -7805,10 +7805,10 @@
     "entity": "collection:space-files",
     "field": "*",
     "rules": {
-      "create": "nobody",
-      "read": "filesOnReadablePosts",
-      "update": "nobody",
-      "delete": "isAdmin",
+      "create": "nobody#c75af6b3",
+      "read": "filesOnReadablePosts#277567b6",
+      "update": "nobody#c75af6b3",
+      "delete": "isAdmin#b15b4fe4",
       "unlock": "payload:defaultUnlock"
     }
   },
@@ -7960,10 +7960,10 @@
     "entity": "collection:space-reactions",
     "field": "*",
     "rules": {
-      "create": "isAdmin",
-      "read": "reactionsOnReadablePosts",
-      "update": "nobody",
-      "delete": "adminOrOwnAccountRows",
+      "create": "isAdmin#b15b4fe4",
+      "read": "reactionsOnReadablePosts#f782703e",
+      "update": "nobody#c75af6b3",
+      "delete": "adminOrOwnAccountRows#09348253",
       "unlock": "payload:defaultUnlock"
     }
   },
@@ -7982,7 +7982,7 @@
     "rules": {
       "create": "open",
       "read": "open",
-      "update": "nobody"
+      "update": "nobody#c75af6b3"
     }
   },
   {
@@ -8034,10 +8034,10 @@
     "entity": "collection:space-consents",
     "field": "*",
     "rules": {
-      "create": "nobody",
-      "read": "adminOrOwnAccountRows",
-      "update": "nobody",
-      "delete": "isAdmin",
+      "create": "nobody#c75af6b3",
+      "read": "adminOrOwnAccountRows#09348253",
+      "update": "nobody#c75af6b3",
+      "delete": "isAdmin#b15b4fe4",
       "unlock": "payload:defaultUnlock"
     }
   },
@@ -8047,7 +8047,7 @@
     "rules": {
       "create": "open",
       "read": "open",
-      "update": "nobody"
+      "update": "nobody#c75af6b3"
     }
   },
   {
@@ -8090,10 +8090,10 @@
     "entity": "collection:space-visits",
     "field": "*",
     "rules": {
-      "create": "nobody",
-      "read": "ownAccountRows",
-      "update": "signedInOwnAccountRows",
-      "delete": "nobody",
+      "create": "nobody#c75af6b3",
+      "read": "ownAccountRows#840c9ef0",
+      "update": "signedInOwnAccountRows#3c173546",
+      "delete": "nobody#c75af6b3",
       "unlock": "payload:defaultUnlock"
     }
   },
@@ -8103,7 +8103,7 @@
     "rules": {
       "create": "open",
       "read": "open",
-      "update": "nobody"
+      "update": "nobody#c75af6b3"
     }
   },
   {
@@ -8112,7 +8112,7 @@
     "rules": {
       "create": "open",
       "read": "open",
-      "update": "nobody"
+      "update": "nobody#c75af6b3"
     }
   },
   {
@@ -8191,10 +8191,10 @@
     "entity": "collection:space-preferences",
     "field": "*",
     "rules": {
-      "create": "nobody",
-      "read": "ownAccountRows",
-      "update": "signedInOwnAccountRows",
-      "delete": "nobody",
+      "create": "nobody#c75af6b3",
+      "read": "ownAccountRows#840c9ef0",
+      "update": "signedInOwnAccountRows#3c173546",
+      "delete": "nobody#c75af6b3",
       "unlock": "payload:defaultUnlock"
     }
   },
@@ -8204,7 +8204,7 @@
     "rules": {
       "create": "open",
       "read": "open",
-      "update": "nobody"
+      "update": "nobody#c75af6b3"
     }
   },
   {
@@ -8265,10 +8265,10 @@
     "entity": "collection:space-votes",
     "field": "*",
     "rules": {
-      "create": "isAdmin",
-      "read": "votesOnReadablePostsHidingAnonymous",
-      "update": "nobody",
-      "delete": "adminOrOwnAccountRows",
+      "create": "isAdmin#b15b4fe4",
+      "read": "votesOnReadablePostsHidingAnonymous#e76d06f4",
+      "update": "nobody#c75af6b3",
+      "delete": "adminOrOwnAccountRows#09348253",
       "unlock": "payload:defaultUnlock"
     }
   },
@@ -8287,7 +8287,7 @@
     "rules": {
       "create": "open",
       "read": "open",
-      "update": "nobody"
+      "update": "nobody#c75af6b3"
     }
   },
   {
@@ -8330,10 +8330,10 @@
     "entity": "collection:space-rsvps",
     "field": "*",
     "rules": {
-      "create": "isAdmin",
-      "read": "rsvpsOnReadablePosts",
-      "update": "nobody",
-      "delete": "adminOrOwnAccountRows",
+      "create": "isAdmin#b15b4fe4",
+      "read": "rsvpsOnReadablePosts#9549ece6",
+      "update": "nobody#c75af6b3",
+      "delete": "adminOrOwnAccountRows#09348253",
       "unlock": "payload:defaultUnlock"
     }
   },
@@ -8352,7 +8352,7 @@
     "rules": {
       "create": "open",
       "read": "open",
-      "update": "nobody"
+      "update": "nobody#c75af6b3"
     }
   },
   {
@@ -8395,10 +8395,10 @@
     "entity": "collection:invitation-log",
     "field": "*",
     "rules": {
-      "create": "nobody",
-      "read": "isAdmin",
-      "update": "nobody",
-      "delete": "nobody",
+      "create": "nobody#c75af6b3",
+      "read": "isAdmin#b15b4fe4",
+      "update": "nobody#c75af6b3",
+      "delete": "nobody#c75af6b3",
       "unlock": "payload:defaultUnlock"
     }
   },
@@ -8433,10 +8433,10 @@
     "entity": "collection:exports",
     "field": "*",
     "rules": {
-      "create": "isAdmin",
-      "read": "isAdmin",
-      "update": "nobody",
-      "delete": "isAdmin",
+      "create": "isAdmin#b15b4fe4",
+      "read": "isAdmin#b15b4fe4",
+      "update": "nobody#c75af6b3",
+      "delete": "isAdmin#b15b4fe4",
       "unlock": "payload:defaultUnlock"
     }
   },
@@ -8651,10 +8651,10 @@
     "entity": "collection:imports",
     "field": "*",
     "rules": {
-      "create": "isAdmin",
-      "read": "isAdmin",
-      "update": "nobody",
-      "delete": "isAdmin",
+      "create": "isAdmin#b15b4fe4",
+      "read": "isAdmin#b15b4fe4",
+      "update": "nobody#c75af6b3",
+      "delete": "isAdmin#b15b4fe4",
       "unlock": "payload:defaultUnlock"
     }
   },
@@ -8852,20 +8852,20 @@
     "field": "*",
     "rules": {
       "admin": "payload:loggedIn",
-      "create": "superAdminOnly",
-      "read": "isAdmin",
-      "update": "ownKeyAsSuperAdmin",
-      "delete": "isAdmin",
-      "unlock": "ownKeyAsSuperAdmin"
+      "create": "superAdminOnly#f2b722a1",
+      "read": "isAdmin#b15b4fe4",
+      "update": "ownKeyAsSuperAdmin#8d16918b",
+      "delete": "isAdmin#b15b4fe4",
+      "unlock": "ownKeyAsSuperAdmin#8d16918b"
     }
   },
   {
     "entity": "collection:payload-mcp-api-keys",
     "field": "user",
     "rules": {
-      "create": "plugin-mcp:keyOwner",
+      "create": "plugin-mcp:keyOwner#c75af6b3",
       "read": "open",
-      "update": "plugin-mcp:keyOwner"
+      "update": "plugin-mcp:keyOwner#c75af6b3"
     }
   },
   {
@@ -9043,27 +9043,27 @@
     "entity": "collection:payload-mcp-api-keys",
     "field": "enableAPIKey",
     "rules": {
-      "create": "canCreateOrUpdateAPIKey",
+      "create": "canCreateOrUpdateAPIKey#63bd3fbf",
       "read": "open",
-      "update": "canCreateOrUpdateAPIKey"
+      "update": "canCreateOrUpdateAPIKey#63bd3fbf"
     }
   },
   {
     "entity": "collection:payload-mcp-api-keys",
     "field": "apiKey",
     "rules": {
-      "create": "canCreateOrUpdateAPIKey",
-      "read": "payload:apiKey",
-      "update": "canCreateOrUpdateAPIKey"
+      "create": "canCreateOrUpdateAPIKey#63bd3fbf",
+      "read": "payload:apiKey#c75af6b3",
+      "update": "canCreateOrUpdateAPIKey#63bd3fbf"
     }
   },
   {
     "entity": "collection:payload-mcp-api-keys",
     "field": "apiKeyIndex",
     "rules": {
-      "create": "canCreateOrUpdateAPIKey",
-      "read": "payload:apiKey",
-      "update": "canCreateOrUpdateAPIKey"
+      "create": "canCreateOrUpdateAPIKey#63bd3fbf",
+      "read": "payload:apiKey#c75af6b3",
+      "update": "canCreateOrUpdateAPIKey#63bd3fbf"
     }
   },
   {
@@ -9071,7 +9071,7 @@
     "field": "hasAPIKey",
     "rules": {
       "create": "open",
-      "read": "canCreateOrUpdateAPIKey",
+      "read": "canCreateOrUpdateAPIKey#63bd3fbf",
       "update": "open"
     }
   },
@@ -9079,10 +9079,10 @@
     "entity": "collection:oauth-clients",
     "field": "*",
     "rules": {
-      "create": "plugin:mcp-oauth:denyPublic",
-      "read": "isAdmin",
-      "update": "isAdmin",
-      "delete": "isAdmin",
+      "create": "plugin:mcp-oauth:denyPublic#c75af6b3",
+      "read": "isAdmin#b15b4fe4",
+      "update": "isAdmin#b15b4fe4",
+      "delete": "isAdmin#b15b4fe4",
       "unlock": "payload:defaultUnlock"
     }
   },
@@ -9092,7 +9092,7 @@
     "rules": {
       "create": "open",
       "read": "open",
-      "update": "nobody"
+      "update": "nobody#c75af6b3"
     }
   },
   {
@@ -9101,7 +9101,7 @@
     "rules": {
       "create": "open",
       "read": "open",
-      "update": "nobody"
+      "update": "nobody#c75af6b3"
     }
   },
   {
@@ -9110,7 +9110,7 @@
     "rules": {
       "create": "open",
       "read": "open",
-      "update": "nobody"
+      "update": "nobody#c75af6b3"
     }
   },
   {
@@ -9216,10 +9216,10 @@
     "entity": "collection:oauth-auth-codes",
     "field": "*",
     "rules": {
-      "create": "plugin:mcp-oauth:denyPublic",
-      "read": "plugin:mcp-oauth:denyPublic",
-      "update": "plugin:mcp-oauth:denyPublic",
-      "delete": "plugin:mcp-oauth:denyPublic",
+      "create": "plugin:mcp-oauth:denyPublic#c75af6b3",
+      "read": "plugin:mcp-oauth:denyPublic#c75af6b3",
+      "update": "plugin:mcp-oauth:denyPublic#c75af6b3",
+      "delete": "plugin:mcp-oauth:denyPublic#c75af6b3",
       "unlock": "payload:defaultUnlock"
     }
   },
@@ -9308,10 +9308,10 @@
     "entity": "collection:oauth-tokens",
     "field": "*",
     "rules": {
-      "create": "plugin:mcp-oauth:denyPublic",
-      "read": "isAdmin",
-      "update": "isAdmin",
-      "delete": "isAdmin",
+      "create": "plugin:mcp-oauth:denyPublic#c75af6b3",
+      "read": "isAdmin#b15b4fe4",
+      "update": "isAdmin#b15b4fe4",
+      "delete": "isAdmin#b15b4fe4",
       "unlock": "payload:defaultUnlock"
     }
   },
@@ -9427,10 +9427,10 @@
     "entity": "collection:oauth-csrf-nonces",
     "field": "*",
     "rules": {
-      "create": "plugin:mcp-oauth:denyPublic",
-      "read": "plugin:mcp-oauth:denyPublic",
-      "update": "plugin:mcp-oauth:denyPublic",
-      "delete": "plugin:mcp-oauth:denyPublic",
+      "create": "plugin:mcp-oauth:denyPublic#c75af6b3",
+      "read": "plugin:mcp-oauth:denyPublic#c75af6b3",
+      "update": "plugin:mcp-oauth:denyPublic#c75af6b3",
+      "delete": "plugin:mcp-oauth:denyPublic#c75af6b3",
       "unlock": "payload:defaultUnlock"
     }
   },
@@ -9492,10 +9492,10 @@
     "entity": "collection:payload-kv",
     "field": "*",
     "rules": {
-      "create": "payload:internal",
-      "read": "payload:internal",
-      "update": "payload:internal",
-      "delete": "payload:internal",
+      "create": "payload:internal#c75af6b3",
+      "read": "payload:internal#c75af6b3",
+      "update": "payload:internal#c75af6b3",
+      "delete": "payload:internal#c75af6b3",
       "unlock": "payload:defaultUnlock"
     }
   },
@@ -9521,10 +9521,10 @@
     "entity": "collection:payload-jobs",
     "field": "*",
     "rules": {
-      "create": "payload:internal",
-      "read": "payload:internal",
-      "update": "payload:internal",
-      "delete": "payload:internal",
+      "create": "payload:internal#c75af6b3",
+      "read": "payload:internal#c75af6b3",
+      "update": "payload:internal#c75af6b3",
+      "delete": "payload:internal#c75af6b3",
       "unlock": "payload:defaultUnlock"
     }
   },
@@ -9787,9 +9787,9 @@
     "field": "*",
     "rules": {
       "create": "payload:loggedIn",
-      "read": "preferenceAccess",
-      "update": "preferenceAccess",
-      "delete": "preferenceAccess",
+      "read": "preferenceAccess#8b7737cf",
+      "update": "preferenceAccess#8b7737cf",
+      "delete": "preferenceAccess#8b7737cf",
       "unlock": "payload:defaultUnlock"
     }
   },
@@ -9889,8 +9889,8 @@
     "entity": "global:space-introduction",
     "field": "*",
     "rules": {
-      "read": "isAdmin",
-      "update": "isAdmin"
+      "read": "isAdmin#b15b4fe4",
+      "update": "isAdmin#b15b4fe4"
     }
   },
   {
@@ -9933,8 +9933,8 @@
     "entity": "global:space-rules",
     "field": "*",
     "rules": {
-      "read": "isAdmin",
-      "update": "isAdmin"
+      "read": "isAdmin#b15b4fe4",
+      "update": "isAdmin#b15b4fe4"
     }
   },
   {
@@ -9968,8 +9968,8 @@
     "entity": "global:site-settings",
     "field": "*",
     "rules": {
-      "read": "isAdmin",
-      "update": "isAdmin"
+      "read": "isAdmin#b15b4fe4",
+      "update": "isAdmin#b15b4fe4"
     }
   },
   {
@@ -10192,8 +10192,8 @@
     "entity": "global:email-settings",
     "field": "*",
     "rules": {
-      "read": "isAdmin",
-      "update": "isAdmin"
+      "read": "isAdmin#b15b4fe4",
+      "update": "isAdmin#b15b4fe4"
     }
   },
   {
@@ -10749,8 +10749,8 @@
     "entity": "global:registration-defaults",
     "field": "*",
     "rules": {
-      "read": "isAdmin",
-      "update": "isAdmin"
+      "read": "isAdmin#b15b4fe4",
+      "update": "isAdmin#b15b4fe4"
     }
   },
   {
@@ -10802,8 +10802,8 @@
     "entity": "global:llms-txt-settings",
     "field": "*",
     "rules": {
-      "read": "anyone",
-      "update": "isAdmin"
+      "read": "anyone#5964273a",
+      "update": "isAdmin#b15b4fe4"
     }
   },
   {
@@ -10846,8 +10846,8 @@
     "entity": "global:study-prompts",
     "field": "*",
     "rules": {
-      "read": "isAdmin",
-      "update": "isAdmin"
+      "read": "isAdmin#b15b4fe4",
+      "update": "isAdmin#b15b4fe4"
     }
   },
   {

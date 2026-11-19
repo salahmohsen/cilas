@@ -1,3 +1,5 @@
+import { createHash } from 'node:crypto'
+
 import type { Block, Field } from 'payload'
 import { fieldAffectsData, tabHasName } from 'payload/shared'
 
@@ -13,7 +15,20 @@ import { fieldAffectsData, tabHasName } from 'payload/shared'
  * comes first. A collection or global operation is never `open`: a missing
  * rule means Payload's logged-in default (`payload:loggedIn`).
  *
+ * A row names a rule as `name#hash`. The hash is the first 8 hex digits of the
+ * sha256 of the rule's source without whitespace, so a rule that keeps its name
+ * and changes its body changes its row. A factory's closure has the same source
+ * in every call; its name carries the arguments, so name and hash together
+ * identify the rule. The implicit `payload:loggedIn` and `payload:defaultUnlock`
+ * rules have no hash: the audit already pins their source.
+ *
  * Regenerate the committed snapshot with `pnpm audit:access`.
+ *
+ * The audit does not cover:
+ * - custom endpoints (they check access themselves, or do not);
+ * - reads with `overrideAccess: true` (they skip every rule listed here);
+ * - hooks that rewrite data after an access rule has run;
+ * - fields inside Lexical `BlocksFeature` blocks (they are not config fields).
  */
 
 const FIELD_OPERATIONS = ['create', 'read', 'update'] as const
@@ -125,6 +140,15 @@ const PAYLOAD_DEFAULTS = [
 
 const sourceOf = (rule: Rule) => rule.toString().replace(/\s+/g, '')
 
+const HASH_LENGTH = 8
+const hashOf = (rule: Rule) =>
+  createHash('sha256').update(sourceOf(rule)).digest('hex').slice(0, HASH_LENGTH)
+const hashed = (label: string, rule: Rule) => `${label}#${hashOf(rule)}`
+
+/** The readable label of a row value: the name without its `#hash`. */
+export const withoutHash = (label: string) =>
+  label.replace(new RegExp(`#[0-9a-f]{${HASH_LENGTH}}$`), '')
+
 const isNamed = (rule: Rule) =>
   rule.name !== '' && !ENTITY_OPERATIONS.includes(rule.name) && !/\banonymous\b/.test(rule.name)
 
@@ -206,7 +230,7 @@ export const auditAccess = (config: Entities) => {
       met.add(where)
       if (known.source !== sourceOf(rule) || !(known.name?.test(rule.name) ?? !isNamed(rule)))
         problems.push(`${where}: the rule no longer matches UPSTREAM`)
-      return known.label
+      return hashed(known.label, rule)
     }
     const payloadDefault = PAYLOAD_DEFAULTS.find(
       ({ name, source }) => rule.name === name && source === sourceOf(rule),
@@ -225,7 +249,7 @@ export const auditAccess = (config: Entities) => {
       problems.push(`${where}: ${rule.name} names two functions; a factory must name its rules`)
     }
     seen?.rules.add(rule)
-    return rule.name
+    return hashed(rule.name, rule)
   }
 
   const audit = ({ id, access, fields, auth, versions }: ReturnType<typeof entitiesOf>[number]) => {
