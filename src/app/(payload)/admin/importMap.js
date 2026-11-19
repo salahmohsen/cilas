@@ -82,6 +82,7 @@ import { NotificationBell as NotificationBell_30f6ed48d1f6793e07a5e73de280de4d }
 import { HeaderActions as HeaderActions_f436cf2a4719114d9e44505773a04007 } from 'payload-theme/client'
 import { LoginHero as LoginHero_37fe5310e1c82b2fade6b239ca4c79e5 } from 'payload-theme/rsc'
 import { ImportExportProvider as ImportExportProvider_cdf7e044479f899a31f804427d568b36 } from '@payloadcms/plugin-import-export/rsc'
+import { BootScript as BootScript_37fe5310e1c82b2fade6b239ca4c79e5 } from 'payload-theme/rsc'
 import { AvatarProvider as AvatarProvider_37fe5310e1c82b2fade6b239ca4c79e5 } from 'payload-theme/rsc'
 import { ThemeProvider as ThemeProvider_f436cf2a4719114d9e44505773a04007 } from 'payload-theme/client'
 import { ListRowActions as ListRowActions_90f75c5e95ced277ac99e83a22593bcf } from '../../../components/admin/list-row-actions'
@@ -182,6 +183,7 @@ export const importMap = {
   "payload-theme/client#HeaderActions": HeaderActions_f436cf2a4719114d9e44505773a04007,
   "payload-theme/rsc#LoginHero": LoginHero_37fe5310e1c82b2fade6b239ca4c79e5,
   "@payloadcms/plugin-import-export/rsc#ImportExportProvider": ImportExportProvider_cdf7e044479f899a31f804427d568b36,
+  "payload-theme/rsc#BootScript": BootScript_37fe5310e1c82b2fade6b239ca4c79e5,
   "payload-theme/rsc#AvatarProvider": AvatarProvider_37fe5310e1c82b2fade6b239ca4c79e5,
   "payload-theme/client#ThemeProvider": ThemeProvider_f436cf2a4719114d9e44505773a04007,
   "/components/admin/list-row-actions#ListRowActions": ListRowActions_90f75c5e95ced277ac99e83a22593bcf,
