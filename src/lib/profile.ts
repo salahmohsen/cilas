@@ -18,7 +18,8 @@ import { personOf } from '@/access'
 import { SOCIAL_PLATFORMS } from '@/fields/social'
 import type { User } from '@/payload-types'
 import { profileBioReadOnly, protectedBioText } from '@/lib/profile-rich-text'
-import { HTTP_URL, LINKS_MAX, NAME_MAX, PHOTO_MAX_BYTES, PHOTO_TYPES } from '@/lib/profile-limits'
+import { isPhotoUpload } from '@/lib/photo-upload'
+import { HTTP_URL, LINKS_MAX, NAME_MAX } from '@/lib/profile-limits'
 
 type SocialLink = { platform: (typeof SOCIAL_PLATFORMS)[number]; url: string }
 
@@ -170,10 +171,7 @@ export const saveProfile = async (
   }
   const { name, bio, website, socialLinks } = parsed.data
 
-  // The size comes from the bytes, not from what the client claims.
-  if (photo && (!PHOTO_TYPES.includes(photo.mimetype) || photo.data.length > PHOTO_MAX_BYTES)) {
-    return { ok: false, error: 'photo' }
-  }
+  if (photo && !(await isPhotoUpload(photo))) return { ok: false, error: 'photo' }
 
   const { person: stored, bio: storedBio, bioReadOnly } = await loadOwn(payload, user, id)
 
@@ -263,9 +261,7 @@ export const saveProfilePhoto = async (
 ): Promise<{ ok: true; url: string | null } | { ok: false; error: ProfileError }> => {
   const id = personOf(user)
   if (id === null) return { ok: false, error: 'no-person' }
-  if (photo && (!PHOTO_TYPES.includes(photo.mimetype) || photo.data.length > PHOTO_MAX_BYTES)) {
-    return { ok: false, error: 'photo' }
-  }
+  if (photo && !(await isPhotoUpload(photo))) return { ok: false, error: 'photo' }
   const asMember = { collection: 'people', id, user, overrideAccess: false } as const
   if (!photo) {
     await payload.update({ ...asMember, locale: 'en', data: { photo: null } })
