@@ -4,7 +4,8 @@ import { chmod, mkdtemp, readFile, rm, writeFile } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
-import { parseArgs, parseEnv } from 'node:util'
+import { parseArgs } from 'node:util'
+import dotenv from 'dotenv'
 import {
   CreateBucketCommand,
   GetObjectCommand,
@@ -14,6 +15,7 @@ import {
   PutObjectCommand,
   S3Client,
 } from '@aws-sdk/client-s3'
+import { writeLocalEnvFiles } from './local-env.mjs'
 
 if (process.env.NODE_ENV === 'production') {
   throw new Error('The local storage clone script cannot run in production')
@@ -24,11 +26,12 @@ const { values } = parseArgs({
   options: {
     'source-env': { type: 'string' },
     'app-dir': { type: 'string', multiple: true },
+    'env-only': { type: 'boolean' },
   },
 })
 if (!values['source-env']) throw new Error('Pass --source-env /path/to/production/.env')
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
-const source = parseEnv(await readFile(path.resolve(values['source-env']), 'utf8'))
+const source = dotenv.parse(await readFile(path.resolve(values['source-env']), 'utf8'))
 for (const key of ['R2_ENDPOINT', 'R2_BUCKET', 'R2_ACCESS_KEY_ID', 'R2_SECRET_ACCESS_KEY']) {
   if (!source[key]) throw new Error(`Missing source ${key}`)
 }
@@ -41,9 +44,10 @@ const bucket = 'cilas-local'
 const credentialsPath = path.join(root, '.env.storage.local')
 let credentials
 try {
-  credentials = parseEnv(await readFile(credentialsPath, 'utf8'))
+  credentials = dotenv.parse(await readFile(credentialsPath, 'utf8'))
 } catch (error) {
   if (error.code !== 'ENOENT') throw error
+  if (values['env-only']) throw new Error('Missing .env.storage.local; run the full clone first')
   credentials = {
     RUSTFS_ACCESS_KEY: `cilas-${randomBytes(10).toString('hex')}`,
     RUSTFS_SECRET_KEY: randomBytes(32).toString('hex'),
@@ -60,6 +64,28 @@ if (!credentials.RUSTFS_ACCESS_KEY || !credentials.RUSTFS_SECRET_KEY) {
   throw new Error('Incomplete .env.storage.local; refusing to change storage credentials')
 }
 await chmod(credentialsPath, 0o600)
+
+const localOverrides = {
+  DATABASE_URL: 'postgres://cilas:dev@localhost:5433/cilas_dev',
+  R2_BUCKET: bucket,
+  R2_ENDPOINT: endpoint,
+  R2_PUBLIC_URL: `${endpoint}/${bucket}`,
+  R2_ACCESS_KEY_ID: credentials.RUSTFS_ACCESS_KEY,
+  R2_SECRET_ACCESS_KEY: credentials.RUSTFS_SECRET_KEY,
+  R2_REGION: 'us-east-1',
+}
+async function connectApps() {
+  const appDirs = new Set([root, ...(values['app-dir'] ?? []).map((p) => path.resolve(p))])
+  for (const envPath of await writeLocalEnvFiles(appDirs, localOverrides, source.PAYLOAD_SECRET)) {
+    console.log(`Connected ${envPath} to local storage.`)
+  }
+}
+// --env-only rewrites the env files without touching Docker or R2, so a file that
+// holds the production PAYLOAD_SECRET is fixed without a new multi-GB copy.
+if (values['env-only']) {
+  await connectApps()
+  process.exit(0)
+}
 
 function run(args, env = process.env) {
   return new Promise((resolve, reject) => {
@@ -232,35 +258,7 @@ try {
   )
 
   // Switch the app only once the copy and byte comparison have succeeded.
-  const overrides = {
-    DATABASE_URL: 'postgres://cilas:dev@localhost:5433/cilas_dev',
-    R2_BUCKET: bucket,
-    R2_ENDPOINT: endpoint,
-    R2_PUBLIC_URL: `${endpoint}/${bucket}`,
-    R2_ACCESS_KEY_ID: credentials.RUSTFS_ACCESS_KEY,
-    R2_SECRET_ACCESS_KEY: credentials.RUSTFS_SECRET_KEY,
-    R2_REGION: 'us-east-1',
-  }
-  for (const appDir of new Set([root, ...(values['app-dir'] ?? []).map((p) => path.resolve(p))])) {
-    const envPath = path.join(appDir, '.env.development.local')
-    let text = ''
-    try {
-      text = await readFile(envPath, 'utf8')
-    } catch (error) {
-      if (error.code !== 'ENOENT') throw error
-    }
-    const appOverrides = { ...overrides }
-    if (!parseEnv(text).PAYLOAD_SECRET && source.PAYLOAD_SECRET)
-      appOverrides.PAYLOAD_SECRET = source.PAYLOAD_SECRET
-    for (const [key, value] of Object.entries(appOverrides)) {
-      const line = `${key}=${JSON.stringify(value)}`
-      const pattern = new RegExp(`^${key}=.*$`, 'gm')
-      text = pattern.test(text) ? text.replace(pattern, () => line) : `${text.trimEnd()}\n${line}\n`
-    }
-    await writeFile(envPath, text, { mode: 0o600 })
-    await chmod(envPath, 0o600)
-    console.log(`Connected ${envPath} to local storage.`)
-  }
+  await connectApps()
 } finally {
   sourceStorage.destroy()
   storage.destroy()
