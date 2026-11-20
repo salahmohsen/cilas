@@ -1,0 +1,17 @@
+/* Tokens only space pages use. The scope is the one styles.css uses for the spaces accents, so sheets portalled to <body> get it too.
+   Space pages take the spec radii, 8, 12, 16 and 24px, on Arc's own radius tokens; Arc, the public site and the admin keep theirs. */
+:root:has([data-page='spaces']) {
+  --radius-inner: 8px;
+  --radius-control: 12px;
+  --radius-panel: 16px;
+  --radius-surface: 24px;
+  --portal-unread: oklch(55% 0.2 27);
+  --portal-unread-foreground: oklch(100% 0 0);
+  --portal-duration: var(--duration-fast);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root:has([data-page='spaces']) {
+    --portal-duration: 0ms;
+  }
+}

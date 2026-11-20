@@ -175,7 +175,7 @@
   padding: 0;
   overflow: hidden;
   border: 0;
-  border-radius: 6px;
+  border-radius: var(--radius-inner);
   background: var(--surface-muted);
   opacity: 0.5;
   cursor: pointer;
