@@ -31,13 +31,13 @@ const states = {} as Record<PortalRole, State>
 
 const inContext = async (
   browser: Browser,
-  options: { viewport: Viewport; role: PortalRole },
+  options: { viewport: Viewport; role: PortalRole | null },
   run: (page: Page) => Promise<void>,
 ) => {
   const context = await browser.newContext({
     baseURL,
     viewport: options.viewport,
-    storageState: states[options.role],
+    storageState: options.role ? states[options.role] : undefined,
   })
   try {
     await run(await context.newPage())
@@ -167,6 +167,106 @@ test.describe('portal spaces', () => {
             })
           })
         }
+  })
+
+  test.describe('spaces off', () => {
+    test.beforeAll(async () => {
+      await spaces.set('off')
+    })
+
+    test.afterAll(async () => {
+      await spaces.set('on')
+    })
+
+    for (const role of ROLES)
+      for (const locale of LOCALES) {
+        for (const viewport of PHONE_FIRST) {
+          const at = `(${role}, ${locale} ${viewport.width})`
+
+          test(`spaces off: /spaces loads with no space ${at}`, async ({ browser }) => {
+            await inContext(browser, { viewport, role }, async (page) => {
+              const response = await page.goto(localePath('/en/spaces', locale))
+              expect(response!.status()).toBe(200)
+              await expect(page.getByRole('heading', { level: 1 })).toHaveCount(1)
+              await expect(
+                page.locator('section[aria-labelledby="spaces-shortcuts"]'),
+              ).toBeVisible()
+              await expect(page.locator('section[aria-labelledby^="spaces-"]')).toHaveCount(1)
+              await expect(page.locator('a[href*="/spaces/course/"]')).toHaveCount(0)
+              await expect(page.getByText(MESSAGES[locale].Spaces.empty)).toHaveCount(0)
+            })
+          })
+
+          test(`a post opened by a soft navigation after spaces go off is not found ${at}`, async ({
+            browser,
+          }) => {
+            await inContext(browser, { viewport, role }, async (page) => {
+              try {
+                await spaces.set('on')
+                await page.goto(localePath(world.course.path, locale))
+                await expect(spaceHeading(page, world.course, locale)).toBeVisible()
+                await spaces.set('off')
+                await page
+                  .locator(`a[href="${localePath(world.course.postPath, locale)}"]`)
+                  .first()
+                  .click()
+                await expect(page).toHaveURL(localePath(world.course.postPath, locale))
+                await expect(
+                  page.getByRole('heading', { level: 1, name: MESSAGES[locale].NotFound.title }),
+                ).toBeVisible()
+                await expect(page.getByRole('dialog')).toHaveCount(0)
+              } finally {
+                await spaces.set('off')
+              }
+            })
+          })
+
+          test(`an open dialog closes on Back after spaces go off ${at}`, async ({ browser }) => {
+            await inContext(browser, { viewport, role }, async (page) => {
+              try {
+                await spaces.set('on')
+                await openPostDialog(page, world.community, locale)
+                await spaces.set('off')
+                await page.goBack()
+                await expect(page).toHaveURL(localePath(world.community.path, locale))
+                await expect(page.getByRole('dialog')).toHaveCount(0)
+              } finally {
+                await spaces.set('off')
+              }
+            })
+          })
+        }
+
+        test(`spaces off: every space page and dialog route is not found (${role}, ${locale})`, async ({
+          browser,
+        }) => {
+          await inContext(browser, { viewport: WIDTHS.desktop, role }, async (page) => {
+            const paths = [
+              world.course.path,
+              world.course.postPath,
+              world.community.path,
+              world.community.postPath,
+              '/en/spaces/community',
+            ].map((path) => localePath(path, locale))
+            const statuses = []
+            for (const path of paths)
+              statuses.push({ path, status: (await page.request.get(path)).status() })
+            expect(statuses).toEqual(paths.map((path) => ({ path, status: 404 })))
+          })
+        })
+      }
+
+    for (const locale of LOCALES)
+      test(`a signed-out reader is sent to login from /spaces and from a space page (${locale})`, async ({
+        browser,
+      }) => {
+        await inContext(browser, { viewport: WIDTHS.desktop, role: null }, async (page) => {
+          for (const path of ['/en/spaces', world.course.path]) {
+            await page.goto(localePath(path, locale))
+            await expect(page).toHaveURL(new RegExp(`/${locale}/login\\?next=`))
+          }
+        })
+      })
   })
 
   test.describe('dev server only', () => {

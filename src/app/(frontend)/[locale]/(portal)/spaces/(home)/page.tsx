@@ -25,6 +25,7 @@ import { Breadcrumb } from '@/components/arc/breadcrumb/breadcrumb'
 import { EmptyState } from '@/components/arc/empty-state/empty-state'
 import styles from '@/components/space/space.module.css'
 import { currentReader } from '@/lib/reader'
+import { mode, spacesSettings } from '@/lib/spaces'
 import { COMMUNITY_COVER, mySpaces } from '@/lib/spaces-data'
 import type { User } from '@/payload-types'
 
@@ -91,21 +92,26 @@ export default async function MySpacesPage({ params }: Props) {
   const user = await currentReader()
   if (!user) redirect(`/${locale}/login?next=${encodeURIComponent(`/${locale}/spaces`)}`)
 
-  const [t, ts, format, { communities, cohorts, courses }] = await Promise.all([
+  const payload = await getPayload({ config })
+  // Off: no space exists for anyone, so only the shortcuts show (Deviation 17).
+  const off = mode(await spacesSettings(payload)) === 'off'
+  const [t, ts, format, spaces] = await Promise.all([
     getTranslations('Spaces'),
     getTranslations('SpaceShortcuts'),
     getFormatter(),
-    mySpaces(await getPayload({ config }), user, locale),
+    off ? null : mySpaces(payload, user, locale),
   ])
-  const sections = [
-    { id: 'community', label: t('community'), rows: communities },
-    { id: 'cohorts', label: t('cohortSpaces'), rows: cohorts },
-    {
-      id: 'courses',
-      label: t('courseSpaces'),
-      rows: [...courses].sort((a, b) => Number(a.archived) - Number(b.archived)),
-    },
-  ].filter((s) => s.rows.length > 0)
+  const sections = spaces
+    ? [
+        { id: 'community', label: t('community'), rows: spaces.communities },
+        { id: 'cohorts', label: t('cohortSpaces'), rows: spaces.cohorts },
+        {
+          id: 'courses',
+          label: t('courseSpaces'),
+          rows: [...spaces.courses].sort((a, b) => Number(a.archived) - Number(b.archived)),
+        },
+      ].filter((s) => s.rows.length > 0)
+    : []
 
   return (
     <div className={styles.page}>
@@ -113,7 +119,7 @@ export default async function MySpacesPage({ params }: Props) {
         <Breadcrumb items={[{ label: t('home'), href: `/${locale}` }, { label: t('title') }]} />
         <h1 className={styles.spaceTitle}>{t('title')}</h1>
       </header>
-      {sections.length === 0 ? (
+      {spaces && sections.length === 0 ? (
         <EmptyState title={t('title')} description={t('empty')} />
       ) : (
         sections.map((s) => (
