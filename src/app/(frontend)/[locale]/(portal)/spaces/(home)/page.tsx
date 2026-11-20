@@ -25,7 +25,7 @@ import { Breadcrumb } from '@/components/arc/breadcrumb/breadcrumb'
 import { EmptyState } from '@/components/arc/empty-state/empty-state'
 import styles from '@/components/space/space.module.css'
 import { currentReader } from '@/lib/reader'
-import { mode, spacesSettings } from '@/lib/spaces'
+import { spacesOff } from '@/lib/spaces'
 import { COMMUNITY_COVER, mySpaces } from '@/lib/spaces-data'
 import type { User } from '@/payload-types'
 
@@ -94,7 +94,7 @@ export default async function MySpacesPage({ params }: Props) {
 
   const payload = await getPayload({ config })
   // Off: no space exists for anyone, so only the shortcuts show (Deviation 17).
-  const off = mode(await spacesSettings(payload)) === 'off'
+  const off = await spacesOff(payload)
   const [t, ts, format, spaces] = await Promise.all([
     getTranslations('Spaces'),
     getTranslations('SpaceShortcuts'),

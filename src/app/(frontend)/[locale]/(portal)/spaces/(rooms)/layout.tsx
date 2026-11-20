@@ -2,7 +2,7 @@ import config from '@payload-config'
 import { notFound } from 'next/navigation'
 import { getPayload } from 'payload'
 
-import { mode, spacesSettings } from '@/lib/spaces'
+import { spacesOff } from '@/lib/spaces'
 
 type Props = { children: React.ReactNode; dialog: React.ReactNode }
 
@@ -12,7 +12,7 @@ type Props = { children: React.ReactNode; dialog: React.ReactNode }
  * not-found answers 404 rather than a streamed 200.
  */
 export default async function RoomsLayout({ children, dialog }: Props) {
-  if (mode(await spacesSettings(await getPayload({ config }))) === 'off') notFound()
+  if (await spacesOff(await getPayload({ config }))) notFound()
   return (
     <>
       {children}
