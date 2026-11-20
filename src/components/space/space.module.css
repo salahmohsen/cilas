@@ -2863,7 +2863,7 @@
   --shadow-resting: none;
   color-scheme: light;
   border: 1px solid var(--poster-ink);
-  border-radius: var(--radius-panel);
+  border-radius: 1rem;
   background: var(--poster-paper);
   color: var(--poster-ink);
 }

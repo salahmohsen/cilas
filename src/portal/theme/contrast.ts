@@ -113,7 +113,7 @@ export const tokenResolver = (sheets: string[], context: Context) => {
     return new Color(text)
   }
 
-  return (token: string) => evaluate(`var(${token})`, 0)
+  return (value: string) => evaluate(value.startsWith('--') ? `var(${value})` : value, 0)
 }
 
 export const clip = (color: Color): Color => color.to('srgb').toGamut({ method: 'clip' })

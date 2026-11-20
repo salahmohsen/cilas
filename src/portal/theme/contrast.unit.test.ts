@@ -16,6 +16,20 @@ const sheets = [
   read('../../app/(frontend)/styles.css'),
 ]
 
+const ringRule = postcss
+  .parse(sheets[0] ?? '')
+  .nodes.find((node) => node.type === 'rule' && node.selector.startsWith(':focus-visible:not('))
+const ring =
+  ringRule?.type === 'rule'
+    ? ringRule.nodes.find((node) => node.type === 'decl' && node.prop === 'outline')
+    : undefined
+const RING = ring?.type === 'decl' ? ring.value.split(' solid ')[1] : undefined
+
+const ringColour = () => {
+  if (!RING) throw new Error('No focus ring rule in foundation.css')
+  return RING
+}
+
 const SURFACES = ['--background', '--surface', '--surface-raised', '--surface-muted']
 const TONES = ['neutral', 'success', 'info', 'warning', 'danger']
 
@@ -29,7 +43,7 @@ const pairs = (context: Context) => [
   ...['--foreground', '--text-secondary', '--text-muted'].flatMap((fg) =>
     SURFACES.map((bg) => ({ context, fg, bg, min: 4.5 })),
   ),
-  ...['--border-strong', '--focus-outline', '--danger'].flatMap((fg) =>
+  ...['--border-strong', 'ring', '--danger'].flatMap((fg) =>
     SURFACES.map((bg) => ({ context, fg, bg, min: 3 })),
   ),
   ...(context.page === 'spaces'
@@ -55,7 +69,9 @@ describe('portal contrast table', () => {
     '$context.page $context.theme $context.contrast: $fg on $bg is at least $min:1',
     ({ context, fg, bg, min }) => {
       const resolve = tokenResolver(sheets, context)
-      expect(ratio(resolve(fg), resolve(bg))).toBeGreaterThanOrEqual(min)
+      expect(ratio(resolve(fg === 'ring' ? ringColour() : fg), resolve(bg))).toBeGreaterThanOrEqual(
+        min,
+      )
     },
   )
 
@@ -94,6 +110,16 @@ describe('portal contrast table', () => {
       '--radius-panel': '16px',
       '--radius-surface': '24px',
     })
+  })
+
+  it('gives --radius-inner a default outside space pages', () => {
+    const defaults = new Set<string>()
+    postcss.parse(sheets[0] ?? '').walkRules(':root', (rule) => {
+      rule.walkDecls('--radius-inner', (decl) => {
+        defaults.add(decl.value)
+      })
+    })
+    expect([...defaults]).toEqual(['0.375rem'])
   })
 
   it('parses unitless and percent oklch with alpha', () => {

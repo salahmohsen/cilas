@@ -41,7 +41,6 @@
   --control-fill: var(--control-on);
 
   --focus-ring: transparent;
-  --focus-outline: var(--accent-strong);
   --success: oklch(49% 0.19 150);
   --warning: oklch(50% 0.12 75);
   --danger: oklch(54% 0.21 25);
@@ -95,6 +94,7 @@
   --radius-control: 1.125rem;
   --radius-panel: 1.625rem;
   --radius-surface: 2.125rem;
+  --radius-inner: 0.375rem;
   --radius-pill: 9999px;
   --control-height-sm: 2.25rem;
   --control-height-md: 2.75rem;
