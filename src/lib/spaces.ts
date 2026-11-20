@@ -66,6 +66,10 @@ export const spacesSettings = cache(async (payload: Payload): Promise<SpacesSett
 
 export const mode = (settings: SpacesSettings | null | undefined) => settings?.spaces_mode ?? 'off'
 
+/** The switch is off: no space exists for anyone, admins included (spec §10). One read per render. */
+export const spacesOff = async (payload: Payload): Promise<boolean> =>
+  mode(await spacesSettings(payload)) === 'off'
+
 export const spaceOpenOn = (space: SpaceLike, settings: SpacesSettings): boolean => {
   if (mode(settings) === 'on') return true
   if (mode(settings) === 'trial') {
