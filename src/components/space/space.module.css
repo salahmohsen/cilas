@@ -2024,16 +2024,13 @@
 .event[data-cover] {
   --foreground: oklch(100% 0 0);
   --text-secondary: oklch(100% 0 0 / 0.84);
-  --text-muted: oklch(100% 0 0 / 0.76);
   --surface: oklch(100% 0 0 / 0.2);
   --surface-muted: oklch(100% 0 0 / 0.12);
   --surface-raised: oklch(100% 0 0 / 0.2);
   --border: oklch(100% 0 0 / 0.16);
   --border-subtle: oklch(100% 0 0 / 0.1);
-  --border-strong: oklch(100% 0 0 / 0.3);
   --accent: oklch(100% 0 0);
   --accent-strong: oklch(100% 0 0);
-  --focus-outline: oklch(100% 0 0 / 0.9);
   --shadow-resting: none;
   color-scheme: dark;
   background: var(--event-field);
@@ -2850,13 +2847,13 @@
   --event-pad: clamp(0.875rem, 4cqi, 1.5rem);
   --foreground: oklch(15% 0 0);
   --text-secondary: oklch(40% 0 0);
-  --text-muted: oklch(46% 0 0);
+  --text-muted: var(--paper-text-muted);
   --surface: oklch(100% 0 0);
   --surface-muted: oklch(97.8% 0 0);
   --surface-raised: oklch(100% 0 0);
   --border: oklch(88% 0 0);
   --border-subtle: oklch(93.5% 0 0);
-  --border-strong: oklch(82% 0 0);
+  --border-strong: var(--paper-border-strong);
   --accent: oklch(33% 0 0);
   --accent-strong: oklch(24% 0 0);
   --focus-outline: var(--poster-ink);

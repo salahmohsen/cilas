@@ -20,6 +20,8 @@ const SCOPES: Record<string, Scope> = {
   },
 }
 
+export const isRootScope = (selector: string) => selector.replaceAll('"', "'") in SCOPES
+
 type Declaration = { value: string; specificity: number; order: number }
 
 const MAX_DEPTH = 32

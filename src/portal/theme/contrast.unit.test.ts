@@ -31,6 +31,7 @@ const ringColour = () => {
 }
 
 const SURFACES = ['--background', '--surface', '--surface-raised', '--surface-muted']
+const PAPER_SURFACES = ['oklch(100% 0 0)', 'oklch(97.8% 0 0)']
 const TONES = ['neutral', 'success', 'info', 'warning', 'danger']
 
 const contexts: Context[] = (['site', 'spaces'] as const).flatMap((page) =>
@@ -46,6 +47,10 @@ const pairs = (context: Context) => [
   ...['--border-strong', 'ring', '--danger'].flatMap((fg) =>
     SURFACES.map((bg) => ({ context, fg, bg, min: 3 })),
   ),
+  ...PAPER_SURFACES.flatMap((bg) => [
+    { context, fg: '--paper-text-muted', bg, min: 4.5 },
+    { context, fg: '--paper-border-strong', bg, min: 3 },
+  ]),
   ...(context.page === 'spaces'
     ? [{ context, fg: '--portal-unread-foreground', bg: '--portal-unread', min: 4.5 }]
     : []),

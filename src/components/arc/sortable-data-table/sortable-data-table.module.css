@@ -226,8 +226,7 @@
 }
 /* The native checkbox is hidden, so its keyboard focus outline is drawn on the visible box. */
 .selectInput:focus-visible + .selectBox {
-  outline: var(--focus-outline-width, 2px) solid
-    var(--focus-outline, color-mix(in oklab, var(--accent-strong) 72%, transparent));
+  outline: var(--focus-outline-width, 2px) solid var(--focus-outline, var(--accent-strong));
   outline-offset: 2px;
 }
 .selectInput:active + .selectBox {

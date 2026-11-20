@@ -224,6 +224,13 @@
   --arc-gradient-line: linear-gradient(100deg, oklch(48% 0.06 300), oklch(52% 0.055 65));
   --arc-gradient-ink: linear-gradient(100deg, oklch(82% 0.07 300), oklch(86% 0.065 70));
 }
+@media (prefers-contrast: more) {
+  .arc-scope,
+  [data-theme='dark'] .arc-scope {
+    --text-muted: var(--text-secondary);
+    --border-strong: var(--text-secondary);
+  }
+}
 .arc-scope {
   --series-1: #1f7dcf;
   --series-2: #7128a5;

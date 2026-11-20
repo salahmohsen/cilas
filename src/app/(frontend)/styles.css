@@ -630,6 +630,18 @@ h1.article-title {
   grid-template-columns: minmax(0, 1fr);
   min-width: 0;
 }
+/* Printed panels stay light in the dark theme, so they carry their own muted text and strong border. The contrast table checks both on white and on
+   --surface-muted. A panel points at these tokens and sets its ring to --poster-ink; contrast.unit.test.ts and token-overrides.unit.test.ts enforce it. */
+:root {
+  --paper-text-muted: oklch(46% 0 0);
+  --paper-border-strong: oklch(62% 0 0);
+}
+@media (prefers-contrast: more) {
+  :root {
+    --paper-text-muted: oklch(40% 0 0);
+    --paper-border-strong: oklch(40% 0 0);
+  }
+}
 /* The poster look (docs/content-driven-card-layouts.md, section 7): ink rules,
    paper cells, one flat palette colour, printed, so it stays light in the dark
    theme. Policy: content sizes all; on wide cards the photo stretches to the
@@ -637,6 +649,7 @@ h1.article-title {
 .fellow-card {
   --poster-ink: #121212;
   --poster-paper: #ffffff;
+  --focus-outline: var(--poster-ink);
   --poster-color: #ffb71b;
   --poster-pad: clamp(0.875rem, 2.2cqi, 1.5rem);
   display: flex;
@@ -1346,9 +1359,12 @@ h1.article-title {
 /* On phones, the bottom sheet: printed paper like the card, which runs edge
    to edge. The articles scroll between the head and the strip. */
 .collection-sheet[role='dialog'] {
-  --border-strong: rgb(18 18 18 / 0.25);
-  background: #ffffff;
-  color: #121212;
+  --poster-ink: #121212;
+  --poster-paper: #ffffff;
+  --focus-outline: var(--poster-ink);
+  --border-strong: var(--paper-border-strong);
+  background: var(--poster-paper);
+  color: var(--poster-ink);
 }
 .collection-sheet .collection-card {
   border-inline: 0;
@@ -1404,6 +1420,7 @@ h1.article-title {
 .collection-card {
   --poster-ink: #121212;
   --poster-paper: #ffffff;
+  --focus-outline: var(--poster-ink);
   --poster-color: #ffb71b;
   --poster-pad: clamp(0.875rem, 2.2cqi, 1.5rem);
   display: flex;
@@ -1856,6 +1873,7 @@ h1.article-title {
 .study-card {
   --poster-ink: #121212;
   --poster-paper: #ffffff;
+  --focus-outline: var(--poster-ink);
   --poster-color: #ffb71b;
   --poster-pad: clamp(1rem, 2.6cqi, 2rem);
   --surface: oklch(100% 0 0);
@@ -1863,9 +1881,9 @@ h1.article-title {
   --surface-muted: oklch(97.8% 0 0);
   --foreground: oklch(15% 0 0);
   --text-secondary: oklch(46% 0 0);
-  --text-muted: oklch(59% 0 0);
+  --text-muted: var(--paper-text-muted);
   --border: oklch(93.5% 0 0);
-  --border-strong: oklch(82% 0 0);
+  --border-strong: var(--paper-border-strong);
   --accent: oklch(33% 0 0);
   --accent-strong: oklch(24% 0 0);
   --accent-subtle: oklch(33% 0 0 / 0.1);
@@ -2061,13 +2079,14 @@ h1.article-title {
 .side-card {
   --poster-ink: #121212;
   --poster-paper: #ffffff;
+  --focus-outline: var(--poster-ink);
   --poster-color: #ffb71b;
   --poster-pad: 1rem;
   --surface: oklch(100% 0 0);
   --surface-muted: oklch(97.8% 0 0);
   --foreground: oklch(15% 0 0);
   --text-secondary: oklch(40% 0 0);
-  --text-muted: oklch(46% 0 0);
+  --text-muted: var(--paper-text-muted);
   --border: oklch(88% 0 0);
   display: flex;
   flex-direction: column;
@@ -3019,6 +3038,7 @@ h3 {
 .poster {
   --poster-ink: #121212;
   --poster-paper: #ffffff;
+  --focus-outline: var(--poster-ink);
   --poster-color: #ffb71b;
   /* One inset for the panel and every strip cell, so their text shares edges. */
   --poster-pad: clamp(0.875rem, 2.2cqi, 1.5rem);
