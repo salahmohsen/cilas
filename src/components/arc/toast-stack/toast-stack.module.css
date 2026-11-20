@@ -7,7 +7,7 @@
 .viewport {
   position: fixed;
   z-index: 60;
-  bottom: var(--space-6);
+  bottom: calc(var(--toast-stack-offset, 0px) + var(--space-6));
   width: min(22.5rem, calc(100% - var(--space-8)));
   pointer-events: none;
 }
@@ -36,7 +36,7 @@
 @media (max-width: 30rem) {
   .viewport:not(.contained) {
     right: 0;
-    bottom: var(--space-4);
+    bottom: calc(var(--toast-stack-offset, 0px) + var(--space-4));
     left: 0;
     margin-inline: auto;
   }

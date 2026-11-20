@@ -71,6 +71,10 @@ export interface ToastStackProviderProps {
  * The viewport for a toast stack. Render it once inside a `ToastStackProvider` and call `useToastStack()` anywhere below.
  * Use it for short, non-blocking results of what someone just did: new toasts rise from the bottom edge, older ones tuck behind,
  * and hovering or focusing the stack fans it out into a list. Toasts pause while the stack is open or the tab is hidden, and swipe right to dismiss.
+ *
+ * Page placement: outside a modal and not `contained`, the stack sits above `--toast-stack-offset` on `<html>` (default 0px), for fixed UI such as a bottom bar.
+ * It writes its list height to `--toast-stack-height` on `<html>`: pixels while a toast shows, `0px` with none, inside a modal or when `contained`.
+ * A page can add it to `scroll-padding-block-end` so a focused row is not covered.
  */
 export interface ToastStackProps {
   /** Accessible name of the notification region. */
@@ -802,6 +806,16 @@ export function ToastStack({
   }, [tapped])
 
   const { targets, listHeight } = layoutStack(toasts, heights, expanded, visibleToasts)
+  const reported = layer || contained ? 0 : listHeight
+  useLayoutEffect(() => {
+    document.documentElement.style.setProperty('--toast-stack-height', `${reported}px`)
+  }, [reported])
+  useLayoutEffect(
+    () => () => {
+      document.documentElement.style.removeProperty('--toast-stack-height')
+    },
+    [],
+  )
 
   function onFocus(event: FocusEvent<HTMLElement>) {
     const from = event.relatedTarget

@@ -47,7 +47,7 @@ const surfaces = [
   {
     name: 'Dialog',
     scrolls: true,
-    view: (open: boolean, close: () => void, body: ReactNode, tall: boolean) => (
+    view: (open: boolean, close: () => void, body: ReactNode) => (
       <Dialog open={open} onOpenChange={(next) => !next && close()}>
         <DialogContent title="Surface" description="Details">
           {body}
@@ -58,7 +58,7 @@ const surfaces = [
   {
     name: 'Drawer',
     scrolls: true,
-    view: (open: boolean, close: () => void, body: ReactNode, tall: boolean) => (
+    view: (open: boolean, close: () => void, body: ReactNode) => (
       <Drawer open={open} onOpenChange={(next) => !next && close()}>
         <DrawerContent title="Surface" description="Details">
           {body}
@@ -83,7 +83,7 @@ const surfaces = [
   {
     name: 'native dialog',
     scrolls: false,
-    view: (open: boolean, close: () => void, body: ReactNode, tall: boolean) =>
+    view: (open: boolean, close: () => void, body: ReactNode) =>
       open ? <NativeModal onClose={close}>{body}</NativeModal> : null,
   },
 ] as const
@@ -323,5 +323,56 @@ describe('toast layer wiring', () => {
       </Dialog>,
     )
     await expect.element(page.getByRole('dialog')).toBeVisible()
+  })
+})
+
+describe('toast offset and height', () => {
+  const [copy] = locales
+  const root = document.documentElement
+
+  afterEach(() => {
+    root.style.removeProperty('--toast-stack-offset')
+  })
+
+  it('the stack sits above --toast-stack-offset and reports its height', async () => {
+    root.style.setProperty('--toast-stack-offset', '100px')
+    const into = mount(copy, surfaces[0])
+    expect(root.style.getPropertyValue('--toast-stack-height')).toBe('0px')
+    raise(into, copy)
+    await expect.element(page.getByText(copy.saved)).toBeVisible()
+    await expect
+      .poll(() => region(copy).getBoundingClientRect().bottom)
+      .toBeLessThanOrEqual(window.innerHeight - 100)
+    await expect
+      .poll(() => parseFloat(root.style.getPropertyValue('--toast-stack-height')))
+      .toBeGreaterThan(0)
+    act(() => into.current!.dismiss())
+    await expect.poll(() => root.style.getPropertyValue('--toast-stack-height')).toBe('0px')
+  })
+
+  it('the narrow layout sits above --toast-stack-offset too', async () => {
+    await page.viewport(390, 844)
+    root.style.setProperty('--toast-stack-offset', '100px')
+    const into = mount(copy, surfaces[0])
+    raise(into, copy)
+    await expect.element(page.getByText(copy.saved)).toBeVisible()
+    await expect
+      .poll(() => region(copy).getBoundingClientRect().bottom)
+      .toBeLessThanOrEqual(window.innerHeight - 100)
+  })
+
+  it('inside an open Dialog the stack ignores the offset', async () => {
+    const into = mount(copy, surfaces[0])
+    await open()
+    raise(into, copy)
+    await expect.element(page.getByText(copy.saved)).toBeVisible()
+    const edges = () => {
+      const { bottom, left, right } = region(copy).getBoundingClientRect()
+      return { bottom, left, right }
+    }
+    await expect.poll(() => root.style.getPropertyValue('--toast-stack-height')).toBe('0px')
+    const flat = edges()
+    root.style.setProperty('--toast-stack-offset', '100px')
+    await expect.poll(edges).toEqual(flat)
   })
 })
