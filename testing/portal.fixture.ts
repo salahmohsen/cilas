@@ -64,8 +64,16 @@ export type PortalWorld = {
   accounts: Record<PortalRole, PortalAccount>
   poster: PortalAccount
   course: RoomFixture
+  otherCourse: RoomFixture
   community: RoomFixture
+  /** Signed-in readers in no course: a fellow with a person, a student with no enrollment. */
+  loners: Record<'fellow' | 'student', PortalAccount>
+  /** Deletes the fixture accounts' visits, so every count is `EXPECTED_UNREAD` again. */
+  resetVisits: () => Promise<void>
 }
+
+/** What every role reads per room after `resetVisits()`: the poster's posts, no intro post. */
+export const EXPECTED_UNREAD = { course: 1, otherCourse: 12, community: 1 } as const
 
 type Track = ReturnType<typeof createTracker>['track']
 
@@ -81,8 +89,13 @@ export const ACCOUNT_ROLES = {
 const personId = (user: User) =>
   user.person == null ? null : typeof user.person === 'object' ? user.person.id : user.person
 
-const account = async (payload: Payload, track: Track, key: keyof typeof ACCOUNT_ROLES) => {
-  const email = uniqEmail(`portal-${key}`)
+const account = async (
+  payload: Payload,
+  track: Track,
+  key: keyof typeof ACCOUNT_ROLES,
+  name: string = key,
+) => {
+  const email = uniqEmail(`portal-${name}`)
   const user = track(
     'users',
     await payload.create({
@@ -160,18 +173,97 @@ const postIn = async (payload: Payload, track: Track, space: number, author: num
     }),
   ).id
 
+const ARABIC_LETTERS = 'ابتثجحخدذرزسشصضطظعغفقكلمنهوي'
+
+const longArabicTitle = () => {
+  const run = uniq('').slice(1)
+  const tail = [...run].map((c) => ARABIC_LETTERS[parseInt(c, 16)]).join('')
+  return ARABIC_LETTERS.repeat(3).slice(0, 60 - tail.length) + tail
+}
+
+const courseWith = async (
+  payload: Payload,
+  track: Track,
+  options: {
+    cycle: number
+    fellow: PortalAccount
+    members: PortalAccount[]
+    title: Record<Locale, string>
+  },
+) => {
+  const slug = uniq(`portal-e2e-${options.title.en.toLowerCase().replace(/\W+/g, '-')}`)
+  const course = track(
+    'courses',
+    await payload.create({
+      collection: 'courses',
+      data: {
+        title: options.title.en,
+        slug,
+        course_type: 'THEMATIC',
+        tier: 'public',
+        cycle: options.cycle,
+        fellows: [options.fellow.person!],
+        registration: { mode: 'closed' },
+        _status: 'published',
+      },
+      locale: 'en',
+      overrideAccess: true,
+    }),
+  ).id
+  await payload.update({
+    collection: 'courses',
+    id: course,
+    data: { title: options.title.ar },
+    locale: 'ar',
+    overrideAccess: true,
+  })
+  track(
+    'sessions',
+    await payload.create({
+      collection: 'sessions',
+      data: {
+        course,
+        title: 'Portal e2e session',
+        meetings: [{ date: '2034-10-05', start_time: '19:00', end_time: '21:00' }],
+      },
+      overrideAccess: true,
+    }),
+  )
+  for (const member of options.members)
+    track(
+      'enrollments',
+      await payload.create({
+        collection: 'enrollments',
+        data: { person: member.person!, course, status: 'accepted', source: 'admin' },
+        overrideAccess: true,
+      }),
+    )
+  return { space: await courseRoom(payload, track, course), path: `/en/spaces/course/${slug}` }
+}
+
+const room = async (payload: Payload, space: number, path: string, posts: number[]) =>
+  ({
+    space,
+    path,
+    postPath: `${path}/posts/${posts[0]}`,
+    post: posts[0]!,
+    label: await roomLabel(payload, space),
+  }) satisfies RoomFixture
+
 /**
- * Admin, fellow, student and a poster; a published course in 2034 (the fellow
- * teaches it, student and poster are enrolled) and its space; a community
- * space for all members. The poster writes one post in each room, so every
- * role has exactly one unread post per room.
+ * Admin, fellow, student and a poster; two published courses in 2034 (the
+ * fellow teaches both, student and poster are enrolled in both) and their
+ * spaces; a community space for all members; a fellow and a student in no
+ * course. The poster writes `EXPECTED_UNREAD` posts in each room.
  */
 export const portalWorld = async (payload: Payload, track: Track) => {
-  const [admin, fellow, student, poster] = [
+  const [admin, fellow, student, poster, lonerFellow, lonerStudent] = [
     await account(payload, track, 'admin'),
     await account(payload, track, 'fellow'),
     await account(payload, track, 'student'),
     await account(payload, track, 'poster'),
+    await account(payload, track, 'fellow', 'loner-fellow'),
+    await account(payload, track, 'student', 'loner-student'),
   ]
   const place = track(
     'places',
@@ -189,55 +281,19 @@ export const portalWorld = async (payload: Payload, track: Track) => {
       overrideAccess: true,
     }),
   ).id
-  const slug = uniq('portal-e2e-course')
-  const title = { en: uniq('Portal course'), ar: uniq('مساق البوابة') }
-  const course = track(
-    'courses',
-    await payload.create({
-      collection: 'courses',
-      data: {
-        title: title.en,
-        slug,
-        course_type: 'THEMATIC',
-        tier: 'public',
-        cycle,
-        fellows: [fellow.person!],
-        registration: { mode: 'closed' },
-        _status: 'published',
-      },
-      locale: 'en',
-      overrideAccess: true,
-    }),
-  ).id
-  await payload.update({
-    collection: 'courses',
-    id: course,
-    data: { title: title.ar },
-    locale: 'ar',
-    overrideAccess: true,
+  const members = [student, poster]
+  const course = await courseWith(payload, track, {
+    cycle,
+    fellow,
+    members,
+    title: { en: uniq('Portal course'), ar: uniq('مساق البوابة') },
   })
-  track(
-    'sessions',
-    await payload.create({
-      collection: 'sessions',
-      data: {
-        course,
-        title: 'Portal e2e session',
-        meetings: [{ date: '2034-10-05', start_time: '19:00', end_time: '21:00' }],
-      },
-      overrideAccess: true,
-    }),
-  )
-  for (const member of [student, poster])
-    track(
-      'enrollments',
-      await payload.create({
-        collection: 'enrollments',
-        data: { person: member.person!, course, status: 'accepted', source: 'admin' },
-        overrideAccess: true,
-      }),
-    )
-  const courseSpace = await courseRoom(payload, track, course)
+  const otherCourse = await courseWith(payload, track, {
+    cycle,
+    fellow,
+    members,
+    title: { en: uniq('Portal other course'), ar: longArabicTitle() },
+  })
   const name = { en: uniq('Portal community'), ar: uniq('مجتمع البوابة') }
   const communitySpace = track(
     'spaces',
@@ -255,26 +311,33 @@ export const portalWorld = async (payload: Payload, track: Track) => {
     locale: 'ar',
     overrideAccess: true,
   })
-  const coursePost = await postIn(payload, track, courseSpace, poster.person!)
-  const communityPost = await postIn(payload, track, communitySpace, poster.person!)
-  const coursePath = `/en/spaces/course/${slug}`
-  const communityPath = `/en/spaces/community/${communitySpace}`
+  const postsIn = async (space: number, count: number) => {
+    const ids: number[] = []
+    for (let i = 0; i < count; i++) ids.push(await postIn(payload, track, space, poster.person!))
+    return ids
+  }
+  const coursePosts = await postsIn(course.space, EXPECTED_UNREAD.course)
+  const otherCoursePosts = await postsIn(otherCourse.space, EXPECTED_UNREAD.otherCourse)
+  const communityPosts = await postsIn(communitySpace, EXPECTED_UNREAD.community)
+  const everyone = [admin, fellow, student, poster, lonerFellow, lonerStudent].map((a) => a.id)
   return {
     accounts: { admin, fellow, student },
     poster,
-    course: {
-      space: courseSpace,
-      path: coursePath,
-      postPath: `${coursePath}/posts/${coursePost}`,
-      post: coursePost,
-      label: await roomLabel(payload, courseSpace),
-    },
-    community: {
-      space: communitySpace,
-      path: communityPath,
-      postPath: `${communityPath}/posts/${communityPost}`,
-      post: communityPost,
-      label: await roomLabel(payload, communitySpace),
+    course: await room(payload, course.space, course.path, coursePosts),
+    otherCourse: await room(payload, otherCourse.space, otherCourse.path, otherCoursePosts),
+    community: await room(
+      payload,
+      communitySpace,
+      `/en/spaces/community/${communitySpace}`,
+      communityPosts,
+    ),
+    loners: { fellow: lonerFellow, student: lonerStudent },
+    resetVisits: async () => {
+      await payload.delete({
+        collection: 'space-visits',
+        where: { account: { in: everyone } },
+        overrideAccess: true,
+      })
     },
   } satisfies PortalWorld
 }

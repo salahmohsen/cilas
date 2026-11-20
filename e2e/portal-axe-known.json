@@ -1,0 +1,163 @@
+{
+  "/spaces": {
+    "admin en 1440": {
+      "label-content-name-mismatch": 1
+    },
+    "fellow en 1440": {
+      "label-content-name-mismatch": 1
+    },
+    "student en 1440": {
+      "label-content-name-mismatch": 1
+    }
+  },
+  "/spaces/course/*": {
+    "admin en 1440": {
+      "button-name": 1,
+      "label-content-name-mismatch": 1
+    },
+    "admin ar 1440": {
+      "button-name": 1
+    },
+    "fellow en 1440": {
+      "button-name": 1,
+      "label-content-name-mismatch": 1
+    },
+    "fellow ar 1440": {
+      "button-name": 1
+    },
+    "student en 1440": {
+      "button-name": 1,
+      "label-content-name-mismatch": 1
+    },
+    "student ar 1440": {
+      "button-name": 1
+    },
+    "admin en 390": {
+      "button-name": 1
+    },
+    "admin ar 390": {
+      "button-name": 1
+    },
+    "fellow en 390": {
+      "button-name": 1
+    },
+    "fellow ar 390": {
+      "button-name": 1
+    },
+    "student en 390": {
+      "button-name": 1
+    },
+    "student ar 390": {
+      "button-name": 1
+    }
+  },
+  "/spaces/community": {
+    "admin en 1440": {
+      "button-name": 1,
+      "label-content-name-mismatch": 1,
+      "target-size": 4
+    },
+    "admin ar 1440": {
+      "button-name": 1,
+      "target-size": 4
+    },
+    "fellow en 1440": {
+      "button-name": 1,
+      "label-content-name-mismatch": 1,
+      "target-size": 4
+    },
+    "fellow ar 1440": {
+      "button-name": 1,
+      "target-size": 4
+    },
+    "student en 1440": {
+      "button-name": 1,
+      "label-content-name-mismatch": 1,
+      "target-size": 4
+    },
+    "student ar 1440": {
+      "button-name": 1,
+      "target-size": 4
+    },
+    "admin en 390": {
+      "button-name": 1,
+      "target-size": 4
+    },
+    "admin ar 390": {
+      "button-name": 1,
+      "label-content-name-mismatch": 1,
+      "target-size": 4
+    },
+    "fellow en 390": {
+      "button-name": 1,
+      "target-size": 4
+    },
+    "fellow ar 390": {
+      "button-name": 1,
+      "label-content-name-mismatch": 1,
+      "target-size": 4
+    },
+    "student en 390": {
+      "button-name": 1,
+      "target-size": 4
+    },
+    "student ar 390": {
+      "button-name": 1,
+      "label-content-name-mismatch": 1,
+      "target-size": 4
+    }
+  },
+  "/spaces/community/*": {
+    "admin en 1440": {
+      "button-name": 1,
+      "label-content-name-mismatch": 1,
+      "target-size": 3
+    },
+    "admin ar 1440": {
+      "button-name": 1,
+      "target-size": 3
+    },
+    "fellow en 1440": {
+      "button-name": 1,
+      "label-content-name-mismatch": 1,
+      "target-size": 3
+    },
+    "fellow ar 1440": {
+      "button-name": 1,
+      "target-size": 3
+    },
+    "student en 1440": {
+      "button-name": 1,
+      "label-content-name-mismatch": 1,
+      "target-size": 3
+    },
+    "student ar 1440": {
+      "button-name": 1,
+      "target-size": 3
+    },
+    "admin en 390": {
+      "button-name": 1,
+      "target-size": 3
+    },
+    "admin ar 390": {
+      "button-name": 1,
+      "target-size": 3
+    },
+    "fellow en 390": {
+      "button-name": 1,
+      "target-size": 3
+    },
+    "fellow ar 390": {
+      "button-name": 1,
+      "target-size": 3
+    },
+    "student en 390": {
+      "button-name": 1,
+      "target-size": 3
+    },
+    "student ar 390": {
+      "button-name": 1,
+      "target-size": 3
+    }
+  }
+}

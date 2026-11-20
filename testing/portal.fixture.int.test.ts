@@ -6,7 +6,14 @@ import { mySpaces } from '@/lib/spaces-data'
 import config from '@/payload.config'
 
 import { createTracker, uniq } from './payload.fixture'
-import { holdSpacesMode, LOCALES, portalWorld, ROLES, type PortalWorld } from './portal.fixture'
+import {
+  EXPECTED_UNREAD,
+  holdSpacesMode,
+  LOCALES,
+  portalWorld,
+  ROLES,
+  type PortalWorld,
+} from './portal.fixture'
 
 const { track, cleanup } = createTracker()
 let payload: Payload
@@ -29,37 +36,73 @@ describe('portal world', () => {
     }
   }, 300_000)
 
-  it('every role reads both rooms', async () => {
-    for (const role of ROLES) {
-      const user = await payload.findByID({
-        collection: 'users',
-        id: world.accounts[role].id,
-        depth: 0,
-        overrideAccess: true,
-      })
-      const { communities, courses } = await mySpaces(payload, user, 'en')
-      const unread = (rows: typeof courses, space: number) =>
-        rows.find((row) => row.space.id === space)?.unread
-      expect({ role, course: unread(courses, world.course.space) }).toEqual({ role, course: 1 })
-      expect({ role, community: unread(communities, world.community.space) }).toEqual({
-        role,
-        community: 1,
-      })
+  const userOf = (id: number) =>
+    payload.findByID({ collection: 'users', id, depth: 0, overrideAccess: true })
+
+  const countsOf = async (id: number) => {
+    const { communities, courses } = await mySpaces(payload, await userOf(id), 'en')
+    const unread = (rows: typeof courses, space: number) =>
+      rows.find((row) => row.space.id === space)?.unread
+    return {
+      course: unread(courses, world.course.space),
+      otherCourse: unread(courses, world.otherCourse.space),
+      community: unread(communities, world.community.space),
     }
-    const student = await payload.findByID({
-      collection: 'users',
-      id: world.accounts.student.id,
-      depth: 0,
-      overrideAccess: true,
-    })
+  }
+
+  it('every role reads the three rooms with the expected counts', async () => {
+    await world.resetVisits()
+    for (const role of ROLES)
+      expect({ role, ...(await countsOf(world.accounts[role].id)) }).toEqual({
+        role,
+        ...EXPECTED_UNREAD,
+      })
+    const student = world.accounts.student
+    track(
+      'space-visits',
+      await payload.create({
+        collection: 'space-visits',
+        data: {
+          account: student.id,
+          space: world.course.space,
+          last_visited_at: new Date().toISOString(),
+        },
+        overrideAccess: true,
+      }),
+    )
+    expect((await countsOf(student.id)).course).toBe(0)
+    await world.resetVisits()
+    expect(await countsOf(student.id)).toEqual(EXPECTED_UNREAD)
     const post = await payload.findByID({
       collection: 'space-posts',
       id: world.course.post,
       depth: 0,
-      user: student,
+      user: await userOf(student.id),
       overrideAccess: false,
     })
     expect(post.id).toBe(world.course.post)
+  })
+
+  it('a loner reads no space while spaces are trial with the community closed', async () => {
+    try {
+      await mode.set('trial', { trialCommunity: false })
+      for (const loner of Object.values(world.loners)) {
+        const spaces = await mySpaces(payload, await userOf(loner.id), 'en')
+        expect({ email: loner.email, ...spaces }).toEqual({
+          email: loner.email,
+          communities: [],
+          cohorts: [],
+          courses: [],
+        })
+      }
+    } finally {
+      await mode.set('on')
+    }
+  })
+
+  it('the other course has a 60-character Arabic title with no space', () => {
+    expect(world.otherCourse.label.ar).toHaveLength(60)
+    expect(world.otherCourse.label.ar).toMatch(/^[\u0600-\u06ff]+$/)
   })
 
   it('room labels are the titles the space list shows, in each language', async () => {
