@@ -1,7 +1,13 @@
+/* Out of flow, so a flex or grid parent gives it no track or gap. The items inside take pointer events back. */
+.layer {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
 .viewport {
   position: fixed;
   z-index: 60;
-  bottom: var(--space-6);
+  bottom: calc(var(--toast-stack-offset, 0px) + var(--space-6));
   width: min(22.5rem, calc(100% - var(--space-8)));
   pointer-events: none;
 }
@@ -30,7 +36,7 @@
 @media (max-width: 30rem) {
   .viewport:not(.contained) {
     right: 0;
-    bottom: var(--space-4);
+    bottom: calc(var(--toast-stack-offset, 0px) + var(--space-4));
     left: 0;
     margin-inline: auto;
   }
@@ -139,20 +145,30 @@
   display: block;
   font-weight: 500;
 }
+/* A long toast keeps its size: the title stops at two lines and the description at three, so it never climbs over a phone sheet's header. Screen readers still read the whole text. */
 .line {
-  display: block;
+  display: -webkit-box;
+  overflow: hidden;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
 }
 .description {
-  display: block;
+  display: -webkit-box;
   margin-top: 2px;
+  overflow: hidden;
   color: var(--text-secondary);
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+  line-clamp: 3;
 }
 
-/* Clips only while its width folds, so the focus ring stays whole at rest. */
+/* Clips only while its width folds, so the focus ring stays whole at rest. A long label wraps inside the cap instead of pushing Dismiss off the toast. */
 .actionSlot {
   display: flex;
   flex: none;
   justify-content: flex-end;
+  max-inline-size: 45%;
   margin-top: -4px;
 }
 .actionSlot[data-moving='true'] {
@@ -172,15 +188,18 @@
     color var(--duration-fast) var(--ease-standard);
 }
 .action {
-  height: 28px;
-  padding: 0 var(--space-3);
+  min-width: 0;
+  min-height: 28px;
+  padding: 4px var(--space-3);
   border-color: var(--border);
   border-radius: var(--radius-pill);
   background: var(--surface);
   color: var(--foreground);
   font-size: var(--text-sm);
   font-weight: 500;
-  white-space: nowrap;
+  line-height: 18px;
+  overflow-wrap: anywhere;
+  text-align: start;
 }
 .close {
   display: grid;
@@ -217,6 +236,7 @@
   .actionSlot {
     order: 1;
     flex-basis: 100%;
+    max-inline-size: none;
     justify-content: flex-start;
     margin-top: 0;
     padding-left: calc(18px + var(--space-3));

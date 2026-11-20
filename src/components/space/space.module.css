@@ -2436,7 +2436,7 @@
   width: min(calc(100vw - var(--space-8)), 640px);
 }
 
-.postDialog.postDialog > div:last-child {
+.postDialogBody.postDialogBody {
   padding-block-start: var(--space-4);
 }
 
@@ -2470,7 +2470,7 @@
 }
 
 /* Arc's dialog body: the whole dialog under the floating close button. */
-.postDialogWide.postDialogWide > div:last-child {
+.postDialogWideBody.postDialogWideBody {
   flex: 1 1 auto;
   min-height: 0;
   padding: 0;
@@ -2535,11 +2535,11 @@
     border-radius: 0;
   }
 
-  .postDialog.postDialog > div:last-child {
+  .postDialogBody.postDialogBody {
     padding-block-start: calc(var(--space-4) + env(safe-area-inset-top, 0px));
   }
 
-  .postDialog.postDialog > div:last-child {
+  .postDialogBody.postDialogBody {
     height: 100%;
   }
 

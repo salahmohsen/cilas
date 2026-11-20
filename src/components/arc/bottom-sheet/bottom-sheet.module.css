@@ -44,6 +44,13 @@
   will-change: transform;
 }
 
+/* The layer ends where the padding does: above the extension below the fold and the push down to the lowest detent, so a toast rests on the visible edge at every detent. */
+.sheet > .toastLayer {
+  inset-block-end: calc(
+    var(--sheet-extension) + var(--sheet-content-offset, 0px) + env(safe-area-inset-bottom, 0px)
+  );
+}
+
 /* The whole header is the handle, so a drag can start anywhere above the content. */
 .header {
   position: relative;
@@ -155,12 +162,15 @@
   color: var(--foreground);
 }
 
-/* The content scrolls only at the tallest detent; below it, a drag or scroll opens the sheet first. */
+/* The content scrolls only at the tallest detent; below it, a drag or scroll opens the sheet first.
+   While a toast shows, the end padding grows to the toasts' room, so a sticky footer rests above them and a focused control scrolls clear of them. */
 .body {
   flex: 1 1 auto;
   min-height: 0;
   overflow-y: auto;
   padding: var(--space-1) var(--space-5) var(--space-6);
+  padding-block-end: max(var(--space-6), var(--toast-layer-height, 0px));
+  scroll-padding-block-end: var(--toast-layer-height, 0px);
   overscroll-behavior: contain;
   scrollbar-width: thin;
   touch-action: pan-y;
@@ -199,7 +209,7 @@
   padding: var(--space-2) 0 var(--space-1);
 }
 .sheet[data-bare] .body {
-  padding: 0;
+  padding: 0 0 var(--toast-layer-height, 0px);
 }
 
 @media (prefers-reduced-motion: reduce) {

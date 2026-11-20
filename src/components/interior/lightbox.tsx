@@ -5,6 +5,7 @@ import * as DialogPrimitive from '@radix-ui/react-dialog'
 import { ArrowLeft, ArrowRight } from 'lucide-react'
 import { useTranslations } from 'next-intl'
 import Image from 'next/image'
+import { ToastLayer, fromToast } from '@/components/arc/toast-stack/toast-stack'
 import styles from './lightbox.module.css'
 
 import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react'
@@ -510,7 +511,9 @@ function Stage({
           returnFocusRef?.current?.focus({ preventScroll: true })
         }}
         onEscapeKeyDown={(event) => {
-          if (scale.get() > NEAR_HOME) {
+          // Esc on a toast closes only the toast.
+          if (fromToast(event)) event.preventDefault()
+          else if (scale.get() > NEAR_HOME) {
             event.preventDefault()
             reset()
           }
@@ -674,6 +677,7 @@ function Stage({
           <p role="status" className="sr-only">
             {position}. {alt}. {t('zoomStatus', { zoom: settledZoom.toFixed(1) })}
           </p>
+          <ToastLayer />
         </div>
       </DialogPrimitive.Content>
     </>

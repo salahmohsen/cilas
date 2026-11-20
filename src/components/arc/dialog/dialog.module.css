@@ -22,6 +22,19 @@
   background: var(--surface-raised);
   color: var(--foreground);
   box-shadow: var(--shadow-floating);
+  /* Room for the toasts while one shows: a sticky footer rests above them, and a focused control scrolls clear of them. The room counts inside the max height. */
+  box-sizing: border-box;
+  padding-block-end: var(--toast-layer-height, 0px);
+  scroll-padding-block-end: var(--toast-layer-height, 0px);
+}
+/* The dialog itself scrolls, so an absolute layer would scroll away with the content. A zero-height sticky layer stays on the visible edge instead.
+   Sticky respects the padding, so it rests on top of the reserved room; the shift moves its toasts down into that room. */
+.content > .toastLayer {
+  position: sticky;
+  inset: auto;
+  inset-block-end: 0;
+  block-size: 0;
+  translate: 0 var(--toast-layer-height, 0px);
 }
 /* The child supplies the only visible surface and its own close action. Keep the modal's sizing and scrolling. */
 .content.chromeless {
