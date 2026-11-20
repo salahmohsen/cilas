@@ -68,7 +68,7 @@ This needs `{ "registries": { "@uiarc": "https://uiarc.dev/r/{name}.json" } }` i
 | Destructive action                           | `confirm-morph`, `hold-to-confirm` for irreversible | A modal for every delete                       |
 | Records to compare                           | `sortable-data-table`                               | Hand-built tables                              |
 | KPI row                                      | `metric-card`                                       | Hand-built cards                               |
-| Result of a save                             | The button or row confirms in place                 | `toast` (background work only)                 |
+| Result of a save                             | The button or row confirms in place                 | `toast-stack` (background work only)           |
 
 The full catalog by job, with free and Pro ids, is in components.md.
 
