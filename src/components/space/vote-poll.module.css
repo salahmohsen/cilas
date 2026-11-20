@@ -102,7 +102,7 @@ button.choice:focus-visible {
     transform var(--duration-spring) var(--ease-spring);
 }
 .mark[data-shape='box'] {
-  border-radius: 5px;
+  border-radius: var(--radius-inner);
 }
 .mark[data-on] {
   border-color: var(--control-on);

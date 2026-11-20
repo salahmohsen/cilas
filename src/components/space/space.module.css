@@ -1583,7 +1583,7 @@
   gap: 4px;
   padding: 0 6px;
   border: 1px solid var(--border);
-  border-radius: 6px;
+  border-radius: var(--radius-inner);
   background: var(--surface-muted);
   color: var(--foreground);
   font-size: var(--text-sm);
@@ -2863,7 +2863,7 @@
   --shadow-resting: none;
   color-scheme: light;
   border: 1px solid var(--poster-ink);
-  border-radius: 1rem;
+  border-radius: var(--radius-panel);
   background: var(--poster-paper);
   color: var(--poster-ink);
 }

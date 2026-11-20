@@ -19,10 +19,10 @@
   --surface-muted: var(--neutral-2);
   --foreground: var(--neutral-11);
   --text-secondary: var(--neutral-8);
-  --text-muted: var(--neutral-7);
+  --text-muted: oklch(52% 0 0);
   --border: oklch(93.5% 0 0);
   --border-subtle: oklch(96.5% 0 0);
-  --border-strong: oklch(82% 0 0);
+  --border-strong: oklch(62% 0 0);
   --accent: oklch(33% 0 0);
   --accent-strong: oklch(24% 0 0);
   --accent-subtle: oklch(33% 0 0 / 0.1);
@@ -41,8 +41,9 @@
   --control-fill: var(--control-on);
 
   --focus-ring: transparent;
+  --focus-outline: var(--accent-strong);
   --success: oklch(49% 0.19 150);
-  --warning: oklch(58% 0.18 75);
+  --warning: oklch(50% 0.12 75);
   --danger: oklch(54% 0.21 25);
 
   --calendar-yellow: #ffb71b;
@@ -175,7 +176,7 @@
   --text-muted: oklch(64% 0 0);
   --border: oklch(29% 0 0);
   --border-subtle: oklch(25% 0 0);
-  --border-strong: oklch(40% 0 0);
+  --border-strong: oklch(56% 0 0);
   --focus-ring: transparent;
   --accent: oklch(80% 0 0);
   --accent-strong: oklch(91% 0 0);
