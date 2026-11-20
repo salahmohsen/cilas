@@ -1,8 +1,7 @@
-import type { MigrateDownArgs, MigrateUpArgs } from '@payloadcms/db-postgres'
 import { Pool } from 'pg'
 import { getPayload } from 'payload'
 
-import { migrations } from '../src/migrations/index.js'
+import { migrateAll } from '../seed/migrate-all'
 
 /**
  * A Payload on its own, fully migrated database, for a test that changes or
@@ -37,13 +36,7 @@ export async function scratchPayload() {
   try {
     const { default: config } = await import('../src/payload.config.js')
     const payload = await getPayload({ config })
-    await payload.db.migrate({
-      migrations: migrations.map(({ name, up, down }) => ({
-        name,
-        up: (args: unknown) => up(args as MigrateUpArgs),
-        down: (args: unknown) => down(args as MigrateDownArgs),
-      })),
-    })
+    await migrateAll(payload)
     return {
       payload,
       destroy: async () => {
