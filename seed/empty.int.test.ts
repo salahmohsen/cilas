@@ -43,6 +43,11 @@ describe('seedEmpty', () => {
     expect(totalDocs).toBe(0)
   })
 
+  it('the student has a person', async () => {
+    const student = await payload.findByID({ collection: 'users', id: ids.student, depth: 0 })
+    expect(student.person).toEqual(expect.any(Number))
+  })
+
   it('the admin has no person', async () => {
     const admin = await payload.findByID({ collection: 'users', id: ids.admin, depth: 0 })
     expect(admin.person ?? null).toBeNull()

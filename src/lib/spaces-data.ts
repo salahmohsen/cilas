@@ -108,7 +108,11 @@ export const mySpaces = async (
   const settings = await spacesSettings(payload)
   if (mode(settings) === 'off') return { communities: [], cohorts: [], courses: [] }
   const ids = await readableSpaceIds(payload, user, settings)
-  if (!ids || !user) return { communities: [], cohorts: [], courses: [] }
+  // `[]` is a reader with no readable space: the content reads below would
+  // refuse it (`contentWhere` is false for no ids), so it ends here too.
+  if (!ids || !user || (ids !== true && !ids.length)) {
+    return { communities: [], cohorts: [], courses: [] }
+  }
 
   // Spaces read internals of the membership layer (the ids are exactly
   // readableSpaceIds — the same override `factsFor` uses; the collection rule

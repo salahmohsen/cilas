@@ -180,6 +180,9 @@ importers:
       pg:
         specifier: 8.20.0
         version: 8.20.0
+      pg-connection-string:
+        specifier: 2.14.0
+        version: 2.14.0
       posthog-js:
         specifier: ^1.444.0
         version: 1.444.0(@types/react@19.2.14)(react@19.2.6)
