@@ -1,6 +1,6 @@
 import type { Metadata } from 'next'
 
-import { articleMetadata } from '@/app/(frontend)/[locale]/articles/[slug]/metadata'
+import { articleMetadata } from '@/app/(frontend)/[locale]/(site)/articles/[slug]/metadata'
 import { ArticlePage } from '@/components/article/article-page'
 import { currentReader } from '@/lib/reader'
 import { withShareCard } from '@/lib/seo'

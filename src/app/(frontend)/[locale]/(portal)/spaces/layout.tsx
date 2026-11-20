@@ -2,6 +2,7 @@ import config from '@payload-config'
 import { notFound, redirect } from 'next/navigation'
 import { getPayload } from 'payload'
 
+import { SiteFrame } from '@/components/site-frame'
 import { currentReader } from '@/lib/reader'
 import { mode, spacesSettings } from '@/lib/spaces'
 import type { Metadata } from 'next'
@@ -21,11 +22,13 @@ export default async function SpacesLayout({ children, dialog, params }: Props) 
   if (!user) redirect(`/${locale}/login?next=${encodeURIComponent(`/${locale}/spaces`)}`)
   if (mode(await spacesSettings(await getPayload({ config }))) === 'off') notFound()
   return (
-    // Spaces keep the earlier, narrower frame (1200px): their side column
-    // grows too wide in the site's wide one.
-    <div className="mx-auto w-full max-w-300" data-page="spaces">
-      {children}
-      {dialog}
-    </div>
+    <SiteFrame>
+      {/* Spaces keep the earlier, narrower frame (1200px): their side column
+          grows too wide in the site's wide one. */}
+      <div className="mx-auto w-full max-w-300" data-page="spaces">
+        {children}
+        {dialog}
+      </div>
+    </SiteFrame>
   )
 }

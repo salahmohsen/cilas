@@ -1,4 +1,3 @@
-import { localeOf } from '@/i18n/routing'
 import type { Metadata, Viewport } from 'next'
 import { NextIntlClientProvider } from 'next-intl'
 import { getLocale, getTranslations } from 'next-intl/server'
@@ -6,27 +5,15 @@ import React from 'react'
 
 import '@/components/arc/foundation.css'
 import '../styles.css'
-import { SiteDeadlines } from '@/components/site-deadlines'
-import { getPeoplePages } from '@/api/people-pages.api'
-import { getSocialLinks } from '@/api/social.api'
-import { SiteFooter } from '@/components/site-footer'
 import { PushRegistrar } from '@/components/push/push-registrar'
 import { SiteArcProvider } from '@/components/site-arc-provider'
 import { SiteToasts } from '@/components/site-toasts'
-import config from '@payload-config'
-import { getPayload } from 'payload'
-
-import { getCurrentPlace } from '@/api/place.api'
-import { CILASSiteHeader } from '@/components/site-header'
-import { Schema } from '@/components/schema'
 import { ThemeProvider } from '@/components/theme-provider'
 import { DirectionProvider } from '@radix-ui/react-direction'
 import { isRtl, routing } from '@/i18n/routing'
 import { env } from '@/env'
 import { fontVariables } from '@/lib/fonts'
-import { newsletterList } from '@/lib/newsletter-list'
 import { pushConfig } from '@/lib/push/config'
-import { organizationSchema, websiteSchema } from '@/lib/schema'
 
 export function generateStaticParams() {
   return routing.locales.map((locale) => ({ locale }))
@@ -59,14 +46,6 @@ export async function generateMetadata(): Promise<Metadata> {
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
   const locale = await getLocale()
   const direction = isRtl(locale) ? 'rtl' : 'ltr'
-  const [t, socials, place, list, peoplePages] = await Promise.all([
-    getTranslations('Meta'),
-    getSocialLinks(),
-    getCurrentPlace(localeOf(locale)),
-    // The footer's signup shows only when there is a list to join.
-    getPayload({ config }).then((payload) => newsletterList(payload)),
-    getPeoplePages(),
-  ])
 
   return (
     // next-themes sets data-theme and the class before React hydrates.
@@ -79,38 +58,14 @@ export default async function RootLayout({ children }: { children: React.ReactNo
       suppressHydrationWarning
     >
       <body>
-        {/* Search engines read this, not people: the institute and the site. */}
-        <Schema
-          data={[
-            organizationSchema({
-              siteName: t('siteName'),
-              description: t('description'),
-              location: place ? { address: place.address, mapUrl: place.mapUrl } : undefined,
-              sameAs: socials.map((s) => s.url),
-            }),
-            websiteSchema({ siteName: t('siteName'), locale }),
-          ]}
-        />
         <ThemeProvider>
           <NextIntlClientProvider>
             <DirectionProvider dir={direction}>
               <SiteArcProvider>
                 <SiteToasts rtl={direction === 'rtl'}>
-                  {/* Open deadlines, across the whole width, above the header. */}
-                  <SiteDeadlines locale={locale as 'en' | 'ar'} />
-                  <CILASSiteHeader peoplePages={peoplePages} />
                   {/* Only when VAPID keys are set; the worker then registers after sign-in. */}
                   {pushConfig() && <PushRegistrar />}
-                  <main className="mx-auto min-h-[60vh] max-w-page">{children}</main>
-                  {/* The same width as the page content. */}
-                  <div className="mx-auto max-w-page">
-                    <SiteFooter
-                      peoplePages={peoplePages}
-                      newsletter={Boolean(list)}
-                      place={place}
-                      socials={socials}
-                    />
-                  </div>
+                  {children}
                 </SiteToasts>
               </SiteArcProvider>
             </DirectionProvider>

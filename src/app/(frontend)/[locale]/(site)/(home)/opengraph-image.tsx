@@ -6,7 +6,7 @@ import type { Locale } from '@/i18n/routing'
 import { ogCardRoute } from '@/lib/og-card'
 import config from '@/payload.config'
 
-import { siteCardWords } from '../site-card'
+import { siteCardWords } from '../../site-card'
 
 // Editors change the description in Site Settings; same pace as the page.
 export const revalidate = 300

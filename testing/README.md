@@ -32,7 +32,7 @@ The file name alone picks the runner. Do not add `// @vitest-environment` commen
 
 A browser test must not import server code, even through a component. If one file reaches `payload` or `@payload-config`, Vite's dependency scan fails and every browser test fails with it. See [Components that call server actions or Payload](#components-that-call-server-actions-or-payload).
 
-Exemplars: `src/components/course/course-syllabus.browser.test.tsx` (`ResizeObserver`), `src/app/(frontend)/[locale]/study/[slug]/course-view-time.browser.test.tsx` (`IntersectionObserver`), `src/components/person-profile-block.browser.test.tsx` (`matchMedia`, a phone), `src/components/calendar/ui/calendar-views.browser.test.tsx` (container queries, server markup and hydration), `src/components/calendar/ui/use-narrow.browser.test.tsx` (the calendar's width flags).
+Exemplars: `src/components/course/course-syllabus.browser.test.tsx` (`ResizeObserver`), `src/app/(frontend)/[locale]/(site)/study/[slug]/course-view-time.browser.test.tsx` (`IntersectionObserver`), `src/components/person-profile-block.browser.test.tsx` (`matchMedia`, a phone), `src/components/calendar/ui/calendar-views.browser.test.tsx` (container queries, server markup and hydration), `src/components/calendar/ui/use-narrow.browser.test.tsx` (the calendar's width flags).
 
 ## Environment
 

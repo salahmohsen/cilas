@@ -2,14 +2,14 @@ import { render } from '@testing-library/react'
 import { NextIntlClientProvider } from 'next-intl'
 import { describe, expect, it } from 'vitest'
 
-import { CourseView } from '@/app/(frontend)/[locale]/study/[slug]/CourseView'
+import { CourseView } from '@/app/(frontend)/[locale]/(site)/study/[slug]/CourseView'
 import type { Course, Session } from '@/payload-types'
-import ar from '../../../../../../messages/ar.json'
-import en from '../../../../../../messages/en.json'
+import ar from '../../../../../../../messages/ar.json'
+import en from '../../../../../../../messages/en.json'
 import {
   createMemoryRouter,
   NavigationProvider,
-} from '../../../../../../testing/navigation.test-utils'
+} from '../../../../../../../testing/navigation.test-utils'
 
 const course = (over: Partial<Course> = {}) =>
   ({

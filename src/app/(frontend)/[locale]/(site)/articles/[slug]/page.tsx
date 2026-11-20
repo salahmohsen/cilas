@@ -2,7 +2,7 @@ import config from '@payload-config'
 import type { Metadata } from 'next'
 import { getPayload } from 'payload'
 
-import { articleMetadata } from '@/app/(frontend)/[locale]/articles/[slug]/metadata'
+import { articleMetadata } from '@/app/(frontend)/[locale]/(site)/articles/[slug]/metadata'
 import { ArticlePage } from '@/components/article/article-page'
 import { routing } from '@/i18n/routing'
 import { withShareCard } from '@/lib/seo'

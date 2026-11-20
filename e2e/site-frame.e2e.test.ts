@@ -112,6 +112,11 @@ test.describe('site frame', () => {
           overrideAccess: true,
         }),
       )
+      expect({ role, roles: user.roles, person: user.person != null }).toEqual({
+        role,
+        roles: [...ACCOUNT_ROLES[role]],
+        person: role !== 'admin',
+      })
       expect((await consentAccept({ payload, user })).ok).toBe(true)
       const context = await browser.newContext({ baseURL })
       try {

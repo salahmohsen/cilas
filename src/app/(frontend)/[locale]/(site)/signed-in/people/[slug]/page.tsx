@@ -1,6 +1,6 @@
 import type { Metadata } from 'next'
 
-import { personMetadata } from '@/app/(frontend)/[locale]/people/[slug]/metadata'
+import { personMetadata } from '@/app/(frontend)/[locale]/(site)/people/[slug]/metadata'
 import { PersonPage } from '@/components/person/person-page'
 import { currentReader } from '@/lib/reader'
 import { withShareCard } from '@/lib/seo'
