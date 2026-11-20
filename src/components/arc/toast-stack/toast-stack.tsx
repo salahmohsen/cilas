@@ -10,6 +10,7 @@ import {
   useState,
   useSyncExternalStore,
 } from 'react'
+import { createPortal } from 'react-dom'
 import type {
   FocusEvent,
   KeyboardEvent,
@@ -98,6 +99,9 @@ type ToastStore = ToastStackApi & {
   subscribe: (listener: () => void) => () => void
   getSnapshot: () => ToastRecord[]
   runAction: (id: string) => void
+  registerLayer: (layer: HTMLElement) => () => void
+  subscribeLayer: (listener: () => void) => () => void
+  getLayer: () => HTMLElement | null
 }
 type Target = { y: number; scale: number; height: number; opacity: number; content: number }
 
@@ -229,6 +233,12 @@ function createToastStore(base: number, limit: number): ToastStore {
   let toasts: ToastRecord[] = []
   let seq = 0
   const listeners = new Set<() => void>()
+  let layers: HTMLElement[] = []
+  const layerListeners = new Set<() => void>()
+  const commitLayers = (next: HTMLElement[]) => {
+    layers = next
+    layerListeners.forEach((listener) => listener())
+  }
   const commit = (next: ToastRecord[]) => {
     toasts = next
     listeners.forEach((listener) => listener())
@@ -282,6 +292,17 @@ function createToastStore(base: number, limit: number): ToastStore {
     update,
     dismiss,
     runAction,
+    registerLayer: (layer) => {
+      commitLayers([...layers, layer])
+      return () => commitLayers(layers.filter((item) => item !== layer))
+    },
+    subscribeLayer: (listener) => {
+      layerListeners.add(listener)
+      return () => {
+        layerListeners.delete(listener)
+      }
+    },
+    getLayer: () => layers[layers.length - 1] ?? null,
     subscribe: (listener) => {
       listeners.add(listener)
       return () => {
@@ -319,6 +340,22 @@ export function useToastStack(): ToastStackApi & { count: number } {
     () => 0,
   )
   return { toast: store.toast, update: store.update, dismiss: store.dismiss, count }
+}
+
+/**
+ * A spot inside a modal where the toast region lives while the modal is open. A modal makes the rest of the page inert (Radix) or leaves it
+ * unreachable by pointer (native `showModal()`), so the stack moves into the newest layer and returns to the page when the layer unmounts.
+ * Render it as the last child of the modal's content. With no `ToastStackProvider` above, it renders nothing.
+ */
+export function ToastLayer({ className }: { className?: string }) {
+  const store = useContext(ToastStackContext)
+  const ref = useRef<HTMLDivElement>(null)
+  useLayoutEffect(() => {
+    const layer = ref.current
+    return layer && store ? store.registerLayer(layer) : undefined
+  }, [store])
+  if (!store) return null
+  return <div ref={ref} className={[styles.layer, className].filter(Boolean).join(' ')} />
 }
 
 /** Outgoing copies are hidden from assistive tech while they fade, so the live region reads only the current text. */
@@ -689,6 +726,7 @@ export function ToastStack({
 }: ToastStackProps) {
   const store = useStore()
   const toasts = useSyncExternalStore(store.subscribe, store.getSnapshot, getServerSnapshot)
+  const layer = useSyncExternalStore(store.subscribeLayer, store.getLayer, () => null)
   const reduce = !!useReducedMotion()
   const pageHidden = useSyncExternalStore(
     subscribeVisibility,
@@ -781,10 +819,15 @@ export function ToastStack({
       setFocused(false)
   }
 
-  return (
+  const region = (
     <section
       ref={regionRef}
-      className={[styles.viewport, styles[position], contained && styles.contained, className]
+      className={[
+        styles.viewport,
+        styles[position],
+        (contained || layer) && styles.contained,
+        className,
+      ]
         .filter(Boolean)
         .join(' ')}
       aria-label={hotkey ? `${label} (Alt+T)` : label}
@@ -831,6 +874,7 @@ export function ToastStack({
       </ol>
     </section>
   )
+  return layer ? createPortal(region, layer) : region
 }
 
 export default ToastStack

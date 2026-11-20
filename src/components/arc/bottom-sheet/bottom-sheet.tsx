@@ -21,6 +21,7 @@ import {
 } from 'motion/react'
 import { X } from 'lucide-react'
 import { motionTokens } from '../lib/motion-tokens'
+import { ToastLayer } from '../toast-stack/toast-stack'
 import styles from './bottom-sheet.module.css'
 
 /**
@@ -688,6 +689,7 @@ function Sheet({
           <span className={styles.srOnly} role="status" aria-live="polite">
             {announcement}
           </span>
+          <ToastLayer className={styles.toastLayer} />
         </motion.div>
       </DialogPrimitive.Content>
     </>

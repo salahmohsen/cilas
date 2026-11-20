@@ -23,6 +23,13 @@
   color: var(--foreground);
   box-shadow: var(--shadow-floating);
 }
+/* The dialog itself scrolls, so an absolute layer would scroll away with the content. A zero-height sticky layer stays on the visible bottom edge instead. */
+.content > .toastLayer {
+  position: sticky;
+  inset: auto;
+  inset-block-end: 0;
+  block-size: 0;
+}
 /* The child supplies the only visible surface and its own close action. Keep the modal's sizing and scrolling. */
 .content.chromeless {
   border: 0;

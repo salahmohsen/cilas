@@ -7,6 +7,7 @@ import { AnimatePresence, motion, useReducedMotion } from 'motion/react'
 import type { Transition } from 'motion/react'
 import { X } from 'lucide-react'
 import { motionTokens } from '../lib/motion-tokens'
+import { ToastLayer } from '../toast-stack/toast-stack'
 import styles from './dialog.module.css'
 
 /** Mirrors the open state so the content can stay mounted while it animates out, and retarget mid-flight if it is reopened or closed early. */
@@ -172,6 +173,7 @@ export function DialogContent({
           className={`${classes} ${styles.keyframes}`}
         >
           {inner}
+          <ToastLayer className={styles.toastLayer} />
         </DialogPrimitive.Content>
       </DialogPrimitive.Portal>
     )
@@ -221,6 +223,7 @@ export function DialogContent({
               }
             >
               {inner}
+              <ToastLayer className={styles.toastLayer} />
             </motion.div>
           </DialogPrimitive.Content>
         </DialogPrimitive.Portal>

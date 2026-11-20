@@ -7,6 +7,7 @@ import { AnimatePresence, animate, motion, useMotionValue, useReducedMotion } fr
 import type { PanInfo, Transition } from 'motion/react'
 import { X } from 'lucide-react'
 import { motionTokens } from '../lib/motion-tokens'
+import { ToastLayer } from '../toast-stack/toast-stack'
 import styles from './drawer.module.css'
 
 /**
@@ -223,6 +224,7 @@ export function DrawerContent({
           className={`${classes} ${styles.keyframes}`}
         >
           {inner}
+          <ToastLayer />
         </DialogPrimitive.Content>
       </DialogPrimitive.Portal>
     )
@@ -281,6 +283,7 @@ export function DrawerContent({
               transition={reduced ? fade : motionTokens.spring.smooth}
             >
               {inner}
+              <ToastLayer />
             </motion.div>
           </DialogPrimitive.Content>
         </DialogPrimitive.Portal>

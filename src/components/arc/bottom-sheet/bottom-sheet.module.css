@@ -44,6 +44,13 @@
   will-change: transform;
 }
 
+/* The layer ends where the padding does: above the extension below the fold and the push down to the lowest detent, so a toast rests on the visible edge at every detent. */
+.sheet > .toastLayer {
+  inset-block-end: calc(
+    var(--sheet-extension) + var(--sheet-content-offset, 0px) + env(safe-area-inset-bottom, 0px)
+  );
+}
+
 /* The whole header is the handle, so a drag can start anywhere above the content. */
 .header {
   position: relative;
