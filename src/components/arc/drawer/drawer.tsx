@@ -7,7 +7,7 @@ import { AnimatePresence, animate, motion, useMotionValue, useReducedMotion } fr
 import type { PanInfo, Transition } from 'motion/react'
 import { X } from 'lucide-react'
 import { motionTokens } from '../lib/motion-tokens'
-import { ToastLayer } from '../toast-stack/toast-stack'
+import { ToastLayer, fromToast } from '../toast-stack/toast-stack'
 import styles from './drawer.module.css'
 
 /**
@@ -142,6 +142,7 @@ export function DrawerContent({
   container,
   className,
   onInteractOutside,
+  onEscapeKeyDown,
   ...props
 }: DrawerContentProps) {
   const drawer = useContext(DrawerContext)
@@ -182,6 +183,11 @@ export function DrawerContent({
     else animate(offset, 0, motionTokens.spring.snappy)
   }
 
+  const escape: DrawerContentProps['onEscapeKeyDown'] = (event) => {
+    onEscapeKeyDown?.(event)
+    if (fromToast(event)) event.preventDefault()
+  }
+
   const inner = (
     <>
       <motion.div
@@ -219,6 +225,7 @@ export function DrawerContent({
         <DialogPrimitive.Content
           {...props}
           onInteractOutside={onInteractOutside}
+          onEscapeKeyDown={escape}
           data-side={side}
           data-contained={container ? '' : undefined}
           className={`${classes} ${styles.keyframes}`}
@@ -256,6 +263,7 @@ export function DrawerContent({
           </DialogPrimitive.Overlay>
           <DialogPrimitive.Content
             {...props}
+            onEscapeKeyDown={escape}
             asChild
             forceMount
             // Radix reads a click outside on click, so the press that reopens a closing drawer would dismiss it again.

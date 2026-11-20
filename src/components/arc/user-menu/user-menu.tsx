@@ -18,6 +18,7 @@ import type { PanInfo, Transition, Variants } from 'motion/react'
 import { ChevronDown, LoaderCircle, LogOut, Monitor, Moon, Sun, SunMoon } from 'lucide-react'
 import { motionTokens } from '../lib/motion-tokens'
 import { ArcImage } from '../lib/arc-provider'
+import { ToastLayer } from '../toast-stack/toast-stack'
 import styles from './user-menu.module.css'
 
 export type UserStatus = 'available' | 'busy' | 'away'
@@ -839,6 +840,8 @@ export function UserMenu({
           {content}
         </motion.div>
       )}
+      {/* The sheet is a menu, so the toasts sit beside it, above its scrim, rather than inside it among the items. */}
+      {open && sheet && <ToastLayer key="toasts" className={styles.toastLayer} />}
     </AnimatePresence>
   )
 

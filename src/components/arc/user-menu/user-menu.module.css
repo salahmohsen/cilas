@@ -484,8 +484,16 @@
   overflow-y: auto;
   overscroll-behavior: contain;
   padding: 8px var(--inset) calc(12px + env(safe-area-inset-bottom));
+  /* Room for the toasts beside the sheet while one shows, so Sign out and a focused row stay clear of them. */
+  padding-block-end: max(calc(12px + env(safe-area-inset-bottom)), var(--toast-layer-height, 0px));
+  scroll-padding-block-end: var(--toast-layer-height, 0px);
   border-bottom: 0;
   border-radius: var(--radius-panel) var(--radius-panel) 0 0;
+}
+/* Beside the sheet, over it and its scrim, so a toast stays visible and tappable while the menu is open. */
+.toastLayer {
+  position: fixed;
+  z-index: 72;
 }
 .handle {
   display: block;
