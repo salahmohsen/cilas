@@ -4,7 +4,8 @@
 // The admin and Arc define the same custom property names (--background,
 // --accent, --border). Importing foundation.css would repaint the admin and
 // replace its focus rings, so the dashboard takes only the token blocks, under
-// a wrapper class. Accent presets and global focus rules are dropped.
+// a wrapper class. Accent presets and global focus rules are dropped; the
+// prefers-contrast block is kept, so the admin honours it too.
 //
 // Run `node scripts/build-arc-scope.mjs` after updating Arc.
 import { readFileSync, writeFileSync } from 'node:fs'
@@ -35,11 +36,21 @@ export const topLevelRules = (css) => {
   return rules
 }
 
+// The prefers-contrast block lists both roots in one rule; each gets the wrapper.
+const scopeContrast = (rule) =>
+  rule.prelude === ":root,\n  :root[data-theme='dark']"
+    ? `.arc-scope, [data-theme='dark'] .arc-scope {${rule.body}}`
+    : null
+
 const scoped = (rule) => {
   const selector = rule.prelude
   if (selector === ':root') return `.arc-scope {${rule.body}}`
   if (selector === ":root[data-theme='dark']")
     return `[data-theme='dark'] .arc-scope {${rule.body}}`
+  if (selector === '@media (prefers-contrast: more)') {
+    const inner = topLevelRules(rule.body).map(scopeContrast).filter(Boolean)
+    return inner.length ? `${selector} {\n${inner.join('\n')}\n}` : null
+  }
   if (selector.startsWith('@supports')) {
     const inner = topLevelRules(rule.body).map(scoped).filter(Boolean)
     return inner.length ? `${selector} {\n${inner.join('\n')}\n}` : null

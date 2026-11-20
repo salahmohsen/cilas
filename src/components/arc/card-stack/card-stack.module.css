@@ -118,8 +118,7 @@
 }
 .stage:focus-visible .card[data-top],
 .stage:focus-visible .empty {
-  outline: 2px solid
-    var(--focus-outline, color-mix(in oklab, var(--accent-strong) 72%, transparent));
+  outline: 2px solid var(--focus-outline, var(--accent-strong));
   outline-offset: 3px;
 }
 
