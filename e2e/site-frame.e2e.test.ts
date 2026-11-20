@@ -1,43 +1,37 @@
-import { expect, test, type Browser, type BrowserContext, type Page } from '@playwright/test'
+import { expect, test, type Browser, type Page } from '@playwright/test'
 import { getPayload, type Payload } from 'payload'
 
 import { consentAccept } from '../src/lib/spaces-write'
 import config from '../src/payload.config.js'
 import { login } from '../testing/login.test-utils'
 import { createTracker, uniq, uniqEmail } from '../testing/payload.fixture'
+import {
+  ACCOUNT_ROLES,
+  inContext as inContextAt,
+  LOCALES,
+  PASSWORD,
+  ROLES,
+  WIDTHS,
+  type Locale,
+  type PortalRole,
+  type StorageState,
+} from '../testing/portal.fixture'
 
-const LOCALES = ['en', 'ar'] as const
-const WIDTHS = [1440, 390] as const
 const DIRECTIONS = { en: 'ltr', ar: 'rtl' } as const
-const ACCOUNT_ROLES = { admin: ['admin'], fellow: ['fellow'], student: ['member'] } as const
-const PASSWORD = 'e2e-site-frame'
-
-type Locale = (typeof LOCALES)[number]
-type Role = keyof typeof ACCOUNT_ROLES
-type State = Awaited<ReturnType<BrowserContext['storageState']>>
+type Viewport = (typeof WIDTHS)[keyof typeof WIDTHS]
+const DESKTOP = WIDTHS.desktop
 
 const { track, cleanup } = createTracker()
 let payload: Payload
 let baseURL: string | undefined
-const states = {} as Record<Role, State>
+const states = {} as Record<PortalRole, StorageState>
 const articles = {} as Record<Locale, string>
 
-const inContext = async (
+const inContext = (
   browser: Browser,
-  options: { width: number; state?: State },
+  options: { viewport: Viewport; state?: StorageState },
   run: (page: Page) => Promise<void>,
-) => {
-  const context = await browser.newContext({
-    baseURL,
-    viewport: { width: options.width, height: 900 },
-    storageState: options.state,
-  })
-  try {
-    await run(await context.newPage())
-  } finally {
-    await context.close()
-  }
-}
+) => inContextAt(browser, { baseURL, ...options }, run)
 
 const firstArticlePath = async (page: Page, locale: Locale) => {
   await page.goto(`/${locale}`)
@@ -99,10 +93,10 @@ test.describe('site frame', () => {
     baseURL = test.info().project.use.baseURL
     payload = await getPayload({ config, key: uniq('site-frame') })
     for (const locale of LOCALES)
-      await inContext(browser, { width: WIDTHS[0] }, async (page) => {
+      await inContext(browser, { viewport: DESKTOP }, async (page) => {
         articles[locale] = await firstArticlePath(page, locale)
       })
-    for (const role of Object.keys(ACCOUNT_ROLES) as Role[]) {
+    for (const role of ROLES) {
       const email = uniqEmail(`site-frame-${role}`)
       const user = track(
         'users',
@@ -139,26 +133,26 @@ test.describe('site frame', () => {
   })
 
   for (const locale of LOCALES)
-    for (const width of WIDTHS)
+    for (const viewport of Object.values(WIDTHS))
       for (const row of SIGNED_OUT)
-        test(`${row.name} keeps the site header, main and footer (${locale} ${width})`, async ({
+        test(`${row.name} keeps the site header, main and footer (${locale} ${viewport.width})`, async ({
           browser,
         }) => {
-          await inContext(browser, { width }, async (page) => {
+          await inContext(browser, { viewport }, async (page) => {
             const path = row.open === 'article' ? articles[locale] : row.open(locale)
             const response = await page.goto(path)
             await expectFrame(page, locale, row, response!.status())
           })
         })
 
-  for (const role of Object.keys(ACCOUNT_ROLES) as Role[])
+  for (const role of ROLES)
     for (const locale of LOCALES)
-      for (const width of WIDTHS)
+      for (const viewport of Object.values(WIDTHS))
         for (const row of SIGNED_IN)
-          test(`${row.name} keeps the site header, main and footer (signed in as ${role}, ${locale} ${width})`, async ({
+          test(`${row.name} keeps the site header, main and footer (signed in as ${role}, ${locale} ${viewport.width})`, async ({
             browser,
           }) => {
-            await inContext(browser, { width, state: states[role] }, async (page) => {
+            await inContext(browser, { viewport, state: states[role] }, async (page) => {
               const path = row.open === 'article' ? articles[locale] : row.open(locale)
               const response = await page.goto(path)
               await expectFrame(page, locale, { ...row, status: 200 }, response!.status())

@@ -1,7 +1,9 @@
+import type { Browser, BrowserContext, Page } from '@playwright/test'
 import type { Payload } from 'payload'
 
 import ar from '../messages/ar.json'
 import en from '../messages/en.json'
+import { parentOf, spaceTitle } from '../src/lib/space-ref'
 import { consentAccept } from '../src/lib/spaces-write'
 import type { User } from '../src/payload-types'
 import { type createTracker, lockSpacesMode, uniq, uniqEmail } from './payload.fixture'
@@ -23,9 +25,33 @@ export const WIDTHS = {
 export const localePath = (path: string, locale: Locale) =>
   path.replace(/^\/en(?=\/|$)/, `/${locale}`)
 
+export type StorageState = Awaited<ReturnType<BrowserContext['storageState']>>
+
+/** One browser context at `viewport`, signed in when `state` is given; always closed. */
+export const inContext = async (
+  browser: Browser,
+  options: {
+    baseURL: string | undefined
+    viewport: { width: number; height: number }
+    state?: StorageState
+  },
+  run: (page: Page) => Promise<void>,
+) => {
+  const context = await browser.newContext({
+    baseURL: options.baseURL,
+    viewport: options.viewport,
+    storageState: options.state,
+  })
+  try {
+    await run(await context.newPage())
+  } finally {
+    await context.close()
+  }
+}
+
 export type PortalAccount = { id: number; email: string; password: string; person: number | null }
 
-/** English paths; `label` is the space's name in each language. */
+/** English paths; `label` is `spaceTitle`'s answer in each language: the name the app gives the space. */
 export type RoomFixture = {
   space: number
   path: string
@@ -43,9 +69,9 @@ export type PortalWorld = {
 
 type Track = ReturnType<typeof createTracker>['track']
 
-const PASSWORD = 'e2e-portal-world'
+export const PASSWORD = 'e2e-portal-world'
 
-const ACCOUNT_ROLES = {
+export const ACCOUNT_ROLES = {
   admin: ['admin'],
   fellow: ['fellow'],
   student: ['member'],
@@ -99,6 +125,25 @@ export const courseRoom = async (payload: Payload, track: Track, course: number)
       overrideAccess: true,
     })
   return space
+}
+
+const roomLabel = async (payload: Payload, space: number) => {
+  const label = {} as Record<Locale, string>
+  for (const locale of LOCALES) {
+    const doc = await payload.findByID({
+      collection: 'spaces',
+      id: space,
+      locale,
+      depth: 0,
+      overrideAccess: true,
+    })
+    label[locale] = spaceTitle(
+      doc,
+      await parentOf(payload, doc, { select: { title: true }, locale }),
+      locale,
+    )
+  }
+  return label
 }
 
 /** The body of every post the poster writes. */
@@ -222,14 +267,14 @@ export const portalWorld = async (payload: Payload, track: Track) => {
       path: coursePath,
       postPath: `${coursePath}/posts/${coursePost}`,
       post: coursePost,
-      label: title,
+      label: await roomLabel(payload, courseSpace),
     },
     community: {
       space: communitySpace,
       path: communityPath,
       postPath: `${communityPath}/posts/${communityPost}`,
       post: communityPost,
-      label: name,
+      label: await roomLabel(payload, communitySpace),
     },
   } satisfies PortalWorld
 }

@@ -6,6 +6,7 @@ import { login } from '../testing/login.test-utils'
 import { createTracker, uniq } from '../testing/payload.fixture'
 import {
   holdSpacesMode,
+  inContext as inContextAt,
   LOCALES,
   localePath,
   MESSAGES,
@@ -29,22 +30,16 @@ let spaces: Awaited<ReturnType<typeof holdSpacesMode>>
 let baseURL: string | undefined
 const states = {} as Record<PortalRole, State>
 
-const inContext = async (
+const inContext = (
   browser: Browser,
   options: { viewport: Viewport; role: PortalRole | null },
   run: (page: Page) => Promise<void>,
-) => {
-  const context = await browser.newContext({
-    baseURL,
-    viewport: options.viewport,
-    storageState: options.role ? states[options.role] : undefined,
-  })
-  try {
-    await run(await context.newPage())
-  } finally {
-    await context.close()
-  }
-}
+) =>
+  inContextAt(
+    browser,
+    { baseURL, viewport: options.viewport, state: options.role ? states[options.role] : undefined },
+    run,
+  )
 
 const openPostDialog = async (page: Page, room: PortalWorld['course'], locale: Locale) => {
   await page.goto(localePath(room.path, locale))
