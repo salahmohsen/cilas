@@ -265,6 +265,14 @@ test.describe('portal spaces', () => {
   })
 
   test.describe('dev server only', () => {
+    test.beforeAll(async () => {
+      const dev = await fetch(new URL('/_next/static/development/_devPagesManifest.json', baseURL))
+      test.skip(
+        !dev.ok,
+        'needs `next dev`: the probe drives window.nd, which a build does not have',
+      )
+    })
+
     test('a soft navigation from Home to a post shows the dialog over an empty page', async ({
       browser,
     }) => {
