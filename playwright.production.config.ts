@@ -1,5 +1,8 @@
 import { defineConfig, devices } from '@playwright/test'
 
+if (!process.env.CI)
+  throw new Error('playwright.production.config.ts runs in CI only: port 3000 is production here.')
+
 export default defineConfig({
   testDir: './e2e',
   testMatch: 'production.e2e.test.ts',

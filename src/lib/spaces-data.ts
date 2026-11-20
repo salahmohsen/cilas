@@ -156,6 +156,7 @@ export const mySpaces = async (
       ? (payload.find({
           collection,
           depth: 1,
+          locale: lang,
           draft: true,
           pagination: false,
           overrideAccess: true,

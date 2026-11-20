@@ -7,7 +7,7 @@ import { getArticleForReading } from '@/api/articles.api'
 import { getBridgeYear } from '@/api/programmes.api'
 import type { User } from '@/payload-types'
 import { GET } from '@/app/(frontend)/api/preview/route'
-import FormPreviewPage from '@/app/(frontend)/[locale]/forms/preview/page'
+import FormPreviewPage from '@/app/(frontend)/[locale]/(site)/forms/preview/page'
 
 import { runInRequest } from '../../testing/next-request.test-utils'
 import { uniq, uniqEmail } from '../../testing/payload.fixture'

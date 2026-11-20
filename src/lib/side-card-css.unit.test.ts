@@ -9,7 +9,7 @@ const components = [
   'src/components/person/contributors.tsx',
   'src/components/article/reading-tools.tsx',
   'src/components/events/event-attendance.tsx',
-  'src/app/(frontend)/[locale]/study/[slug]/CourseView.tsx',
+  'src/app/(frontend)/[locale]/(site)/study/[slug]/CourseView.tsx',
   'src/components/course/RegisterBar.tsx',
 ]
 

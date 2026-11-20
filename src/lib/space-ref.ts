@@ -44,7 +44,7 @@ export const isGhostCourse = (space: SpaceRef): boolean =>
 export const parentOf = async (
   payload: Payload,
   space: SpaceRef,
-  options: { select?: Record<string, true>; draft?: boolean } = {},
+  options: { select?: Record<string, true>; draft?: boolean; locale?: Locale } = {},
 ): Promise<SpaceParent | null> => {
   const ref = parentRef(space)
   if (!ref) return null
