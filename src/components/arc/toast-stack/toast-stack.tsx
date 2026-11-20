@@ -10,6 +10,7 @@ import {
   useState,
   useSyncExternalStore,
 } from 'react'
+import { createPortal } from 'react-dom'
 import type {
   FocusEvent,
   KeyboardEvent,
@@ -70,6 +71,10 @@ export interface ToastStackProviderProps {
  * The viewport for a toast stack. Render it once inside a `ToastStackProvider` and call `useToastStack()` anywhere below.
  * Use it for short, non-blocking results of what someone just did: new toasts rise from the bottom edge, older ones tuck behind,
  * and hovering or focusing the stack fans it out into a list. Toasts pause while the stack is open or the tab is hidden, and swipe right to dismiss.
+ *
+ * Page placement: outside a modal and not `contained`, the stack sits above `--toast-stack-offset` on `<html>` (default 0px), for fixed UI such as a bottom bar.
+ * It writes its list height to `--toast-stack-height` on `<html>`: pixels while a toast shows, `0px` with none, inside a modal or when `contained`.
+ * A page can add it to `scroll-padding-block-end` so a focused row is not covered. Both properties live on `<html>`, so they assume one page stack.
  */
 export interface ToastStackProps {
   /** Accessible name of the notification region. */
@@ -98,6 +103,9 @@ type ToastStore = ToastStackApi & {
   subscribe: (listener: () => void) => () => void
   getSnapshot: () => ToastRecord[]
   runAction: (id: string) => void
+  registerLayer: (layer: HTMLElement) => () => void
+  subscribeLayer: (listener: () => void) => () => void
+  getLayer: () => HTMLElement | null
 }
 type Target = { y: number; scale: number; height: number; opacity: number; content: number }
 
@@ -229,6 +237,12 @@ function createToastStore(base: number, limit: number): ToastStore {
   let toasts: ToastRecord[] = []
   let seq = 0
   const listeners = new Set<() => void>()
+  let layers: HTMLElement[] = []
+  const layerListeners = new Set<() => void>()
+  const commitLayers = (next: HTMLElement[]) => {
+    layers = next
+    layerListeners.forEach((listener) => listener())
+  }
   const commit = (next: ToastRecord[]) => {
     toasts = next
     listeners.forEach((listener) => listener())
@@ -282,6 +296,17 @@ function createToastStore(base: number, limit: number): ToastStore {
     update,
     dismiss,
     runAction,
+    registerLayer: (layer) => {
+      commitLayers([...layers, layer])
+      return () => commitLayers(layers.filter((item) => item !== layer))
+    },
+    subscribeLayer: (listener) => {
+      layerListeners.add(listener)
+      return () => {
+        layerListeners.delete(listener)
+      }
+    },
+    getLayer: () => layers[layers.length - 1] ?? null,
     subscribe: (listener) => {
       listeners.add(listener)
       return () => {
@@ -319,6 +344,32 @@ export function useToastStack(): ToastStackApi & { count: number } {
     () => 0,
   )
   return { toast: store.toast, update: store.update, dismiss: store.dismiss, count }
+}
+
+/** True when a key or pointer event started inside a toast region. A modal that hosts a `ToastLayer` keeps itself open on such an Esc: Esc on a toast closes only the toast. */
+export const fromToast = (event: { target: EventTarget | null }) =>
+  event.target instanceof Element && event.target.closest('[data-toast-region]') !== null
+
+/**
+ * A spot inside a modal where the toast region lives while the modal is open. A modal makes the rest of the page inert (Radix) or leaves it
+ * unreachable by pointer (native `showModal()`), so the stack moves into the newest layer and returns to the page when the layer leaves.
+ * A layer inside an exiting `AnimatePresence` child lets go as the exit starts, so a toast raised during the close enters once, on the page.
+ * Render it as the last child of the modal's content. With no `ToastStackProvider` above, it renders nothing.
+ *
+ * Room: while a toast shows, the layer's parent gets `--toast-layer-height`, the room the resting stack takes at the layer's bottom edge,
+ * gaps included (`0px` with none). The modal reserves it with `padding-block-end` and `scroll-padding-block-end` on its scroller,
+ * so a sticky footer and a focused control stay clear of the toasts.
+ */
+export function ToastLayer({ className }: { className?: string }) {
+  const store = useContext(ToastStackContext)
+  const present = useIsPresent()
+  const ref = useRef<HTMLDivElement>(null)
+  useLayoutEffect(() => {
+    const layer = ref.current
+    return layer && store && present ? store.registerLayer(layer) : undefined
+  }, [store, present])
+  if (!store) return null
+  return <div ref={ref} className={[styles.layer, className].filter(Boolean).join(' ')} />
 }
 
 /** Outgoing copies are hidden from assistive tech while they fade, so the live region reads only the current text. */
@@ -689,6 +740,7 @@ export function ToastStack({
 }: ToastStackProps) {
   const store = useStore()
   const toasts = useSyncExternalStore(store.subscribe, store.getSnapshot, getServerSnapshot)
+  const layer = useSyncExternalStore(store.subscribeLayer, store.getLayer, () => null)
   const reduce = !!useReducedMotion()
   const pageHidden = useSyncExternalStore(
     subscribeVisibility,
@@ -764,6 +816,43 @@ export function ToastStack({
   }, [tapped])
 
   const { targets, listHeight } = layoutStack(toasts, heights, expanded, visibleToasts)
+  const reported = layer || contained ? 0 : listHeight
+  useLayoutEffect(() => {
+    document.documentElement.style.setProperty('--toast-stack-height', `${reported}px`)
+  }, [reported])
+  // The modal reserves the resting stack: an expanded stack only shows while someone is in it, and reserving it would resize the modal on hover.
+  const resting = layer ? layoutStack(toasts, heights, false, visibleToasts).listHeight : 0
+  const reserved = useRef<{ host: HTMLElement | null; height: number }>({ host: null, height: 0 })
+  useLayoutEffect(() => {
+    const host = layer?.parentElement
+    if (!host) return
+    host.style.setProperty(
+      '--toast-layer-height',
+      resting ? `calc(${resting}px + 2 * var(--space-4))` : '0px',
+    )
+    const grew = reserved.current.host !== host || resting > reserved.current.height
+    reserved.current = { host, height: resting }
+    // Room only helps a control the next scroll reaches, so a control focused before the toast came moves clear of it now.
+    const active = document.activeElement
+    if (
+      resting > 0 &&
+      grew &&
+      active instanceof HTMLElement &&
+      active !== host &&
+      host.contains(active) &&
+      !regionRef.current?.contains(active)
+    )
+      active.scrollIntoView({ block: 'nearest', inline: 'nearest' })
+    return () => {
+      host.style.removeProperty('--toast-layer-height')
+    }
+  }, [layer, resting])
+  useLayoutEffect(
+    () => () => {
+      document.documentElement.style.removeProperty('--toast-stack-height')
+    },
+    [],
+  )
 
   function onFocus(event: FocusEvent<HTMLElement>) {
     const from = event.relatedTarget
@@ -781,12 +870,18 @@ export function ToastStack({
       setFocused(false)
   }
 
-  return (
+  const region = (
     <section
       ref={regionRef}
-      className={[styles.viewport, styles[position], contained && styles.contained, className]
+      className={[
+        styles.viewport,
+        styles[position],
+        (contained || layer) && styles.contained,
+        className,
+      ]
         .filter(Boolean)
         .join(' ')}
+      data-toast-region=""
       aria-label={hotkey ? `${label} (Alt+T)` : label}
       aria-live="polite"
       aria-relevant="additions text"
@@ -831,6 +926,7 @@ export function ToastStack({
       </ol>
     </section>
   )
+  return layer ? createPortal(region, layer) : region
 }
 
 export default ToastStack

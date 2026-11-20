@@ -206,10 +206,14 @@
     color var(--duration-fast) var(--ease-standard),
     transform var(--duration-instant) var(--ease-standard);
 }
+/* While a toast shows, the end padding grows to the toasts' room, so a sticky footer rests above them and a focused control scrolls clear of them. */
 .body {
+  --drawer-body-padding: var(--space-6);
   min-height: 0;
   overflow: auto;
-  padding: var(--space-6);
+  padding: var(--drawer-body-padding);
+  padding-block-end: max(var(--drawer-body-padding), var(--toast-layer-height, 0px));
+  scroll-padding-block-end: var(--toast-layer-height, 0px);
   font-size: var(--text-sm);
   line-height: var(--leading-body);
   overscroll-behavior: contain;
@@ -232,9 +236,11 @@
   .content[data-side='bottom'] {
     border-radius: 18px 18px 0 0;
   }
-  .header,
-  .body {
+  .header {
     padding: var(--space-5);
+  }
+  .body {
+    --drawer-body-padding: var(--space-5);
   }
 }
 

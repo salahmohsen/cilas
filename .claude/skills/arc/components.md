@@ -88,10 +88,10 @@ Pick the item whose job matches, not the one that looks closest. Ids below are t
 
 | Job                                 | Pick                                                                                                                                | Instead of                       |
 | ----------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------- | -------------------------------- |
-| Confirm a foreground action         | In place: `button` `loading`, then its label                                                                                        | `toast`                          |
+| Confirm a foreground action         | In place: `button` `loading`, then its label                                                                                        | `toast-stack`                    |
 | Destructive action                  | `confirm-morph`; `hold-to-confirm` when an accidental tap must be nearly impossible; `dialog` when the consequence needs explaining | A modal for every delete         |
-| Result of background work           | `toast`, `toast-stack` for several                                                                                                  | Inline banners that shift layout |
-| A message that stays until resolved | `alert` with `tone`                                                                                                                 | `toast`                          |
+| Result of background work           | `toast-stack`                                                                                                                       | Inline banners that shift layout |
+| A message that stays until resolved | `alert` with `tone`                                                                                                                 | `toast-stack`                    |
 | Status label                        | `badge` with `tone`                                                                                                                 | Colored text alone               |
 | Known progress                      | `progress`, `stepper` for steps                                                                                                     | A spinner                        |
 | Loading                             | `skeleton` in the final layout                                                                                                      | A page spinner                   |

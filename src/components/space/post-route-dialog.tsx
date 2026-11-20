@@ -29,6 +29,7 @@ export function PostRouteDialog({ children }: { children: ReactNode }) {
         closeLabel={t('dialogClose')}
         bare
         className={photos ? styles.postDialogWide : styles.postDialog}
+        bodyClassName={photos ? styles.postDialogWideBody : styles.postDialogBody}
         onCloseAutoFocus={(event) => {
           event.preventDefault()
           // No Radix trigger: the opener is a feed link, kept mounted by the parallel route.

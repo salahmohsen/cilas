@@ -7,6 +7,7 @@ import { AnimatePresence, motion, useReducedMotion } from 'motion/react'
 import type { Transition } from 'motion/react'
 import { X } from 'lucide-react'
 import { motionTokens } from '../lib/motion-tokens'
+import { ToastLayer, fromToast } from '../toast-stack/toast-stack'
 import styles from './dialog.module.css'
 
 /** Mirrors the open state so the content can stay mounted while it animates out, and retarget mid-flight if it is reopened or closed early. */
@@ -48,6 +49,8 @@ export interface DialogContentProps extends ComponentPropsWithoutRef<
   chrome?: boolean
   /** The close button's accessible name, for a translated interface. */
   closeLabel?: string
+  /** Classes for the body around the children, for a dialog that lays out its own scrolling. Not used when `chrome` is false. */
+  bodyClassName?: string
   children: ReactNode
 }
 
@@ -99,9 +102,11 @@ export function DialogContent({
   bare = false,
   chrome = true,
   closeLabel = 'Close dialog',
+  bodyClassName,
   children,
   className,
   onPointerDownOutside,
+  onEscapeKeyDown,
   ...props
 }: DialogContentProps) {
   const open = useContext(OpenContext)
@@ -120,6 +125,11 @@ export function DialogContent({
     )
       event.preventDefault()
   }
+  const escape: DialogContentProps['onEscapeKeyDown'] = (event) => {
+    onEscapeKeyDown?.(event)
+    if (fromToast(event)) event.preventDefault()
+  }
+  const bodyClasses = [styles.body, bodyClassName].filter(Boolean).join(' ')
   const classes = [styles.content, !chrome && styles.chromeless, className]
     .filter(Boolean)
     .join(' ')
@@ -141,7 +151,7 @@ export function DialogContent({
             {description}
           </DialogPrimitive.Description>
         ) : null}
-        {chrome ? <div className={styles.body}>{children}</div> : children}
+        {chrome ? <div className={bodyClasses}>{children}</div> : children}
       </>
     ) : (
       <>
@@ -158,7 +168,7 @@ export function DialogContent({
           </div>
           {close}
         </div>
-        <div className={styles.body}>{children}</div>
+        <div className={bodyClasses}>{children}</div>
       </>
     )
   // Under a bare Radix root the open state is unknown here, so CSS keyframes keyed off data-state animate the layers instead.
@@ -169,9 +179,11 @@ export function DialogContent({
         <DialogPrimitive.Content
           {...props}
           onPointerDownOutside={pressOutside}
+          onEscapeKeyDown={escape}
           className={`${classes} ${styles.keyframes}`}
         >
           {inner}
+          <ToastLayer className={styles.toastLayer} />
         </DialogPrimitive.Content>
       </DialogPrimitive.Portal>
     )
@@ -196,6 +208,7 @@ export function DialogContent({
           <DialogPrimitive.Content
             {...props}
             onPointerDownOutside={pressOutside}
+            onEscapeKeyDown={escape}
             asChild
             forceMount
           >
@@ -221,6 +234,7 @@ export function DialogContent({
               }
             >
               {inner}
+              <ToastLayer className={styles.toastLayer} />
             </motion.div>
           </DialogPrimitive.Content>
         </DialogPrimitive.Portal>
