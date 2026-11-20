@@ -1,0 +1,197 @@
+import { expect, test, type Browser, type BrowserContext, type Page } from '@playwright/test'
+import { getPayload, type Payload } from 'payload'
+
+import config from '../src/payload.config.js'
+import { login } from '../testing/login.test-utils'
+import { createTracker, uniq } from '../testing/payload.fixture'
+import {
+  holdSpacesMode,
+  LOCALES,
+  localePath,
+  MESSAGES,
+  notifyOf,
+  portalWorld,
+  POST_BODY,
+  ROLES,
+  WIDTHS,
+  type Locale,
+  type PortalRole,
+  type PortalWorld,
+} from '../testing/portal.fixture'
+
+type State = Awaited<ReturnType<BrowserContext['storageState']>>
+type Viewport = (typeof WIDTHS)[keyof typeof WIDTHS]
+
+const { track, cleanup } = createTracker()
+let payload: Payload
+let world: PortalWorld
+let spaces: Awaited<ReturnType<typeof holdSpacesMode>>
+let baseURL: string | undefined
+const states = {} as Record<PortalRole, State>
+
+const inContext = async (
+  browser: Browser,
+  options: { viewport: Viewport; role: PortalRole },
+  run: (page: Page) => Promise<void>,
+) => {
+  const context = await browser.newContext({
+    baseURL,
+    viewport: options.viewport,
+    storageState: states[options.role],
+  })
+  try {
+    await run(await context.newPage())
+  } finally {
+    await context.close()
+  }
+}
+
+const openPostDialog = async (page: Page, room: PortalWorld['course'], locale: Locale) => {
+  await page.goto(localePath(room.path, locale))
+  await page
+    .locator(`a[href="${localePath(room.postPath, locale)}"]`)
+    .first()
+    .click()
+  await expect(page).toHaveURL(localePath(room.postPath, locale))
+  await expect(page.getByRole('dialog')).toHaveCount(1)
+  await expect(page.getByRole('dialog')).toContainText(POST_BODY)
+}
+
+type DevWindow = { nd?: { router: { push: (href: string) => void } } }
+
+const pushWithDevRouter = async (page: Page, path: string) => {
+  await expect.poll(() => page.evaluate(() => typeof (window as DevWindow).nd)).toBe('object')
+  await page.evaluate((href) => (window as DevWindow).nd!.router.push(href), path)
+}
+
+const spaceHeading = (page: Page, room: PortalWorld['course'], locale: Locale) =>
+  page.getByRole('heading', { level: 1, name: room.label[locale] })
+
+const PHONE_FIRST = [WIDTHS.phone, WIDTHS.desktop] as const
+
+test.describe('portal spaces', () => {
+  test.describe.configure({ mode: 'serial', timeout: 300_000 })
+
+  test.beforeAll(async ({ browser }) => {
+    test.setTimeout(300_000)
+    baseURL = test.info().project.use.baseURL
+    payload = await getPayload({ config, key: uniq('portal-spaces-off') })
+    spaces = await holdSpacesMode(payload)
+    await spaces.set('on')
+    world = await portalWorld(payload, track)
+    for (const role of ROLES) {
+      const context = await browser.newContext({ baseURL })
+      try {
+        await login({
+          page: await context.newPage(),
+          user: world.accounts[role],
+          next: '/en/spaces',
+        })
+        states[role] = await context.storageState()
+      } finally {
+        await context.close()
+      }
+    }
+  })
+
+  test.afterAll(async () => {
+    try {
+      await cleanup(payload)
+    } finally {
+      await spaces.release()
+    }
+  })
+
+  test.describe('dialog routes', () => {
+    for (const viewport of PHONE_FIRST)
+      for (const role of ROLES)
+        for (const locale of LOCALES) {
+          const at = `(${role}, ${locale} ${viewport.width})`
+
+          test(`a post link inside a space opens the dialog ${at}`, async ({ browser }) => {
+            await inContext(browser, { viewport, role }, async (page) => {
+              await openPostDialog(page, world.course, locale)
+            })
+          })
+
+          test(`Esc closes the dialog and leaves the space page ${at}`, async ({ browser }) => {
+            await inContext(browser, { viewport, role }, async (page) => {
+              await openPostDialog(page, world.course, locale)
+              await page.keyboard.press('Escape')
+              await expect(page).toHaveURL(localePath(world.course.path, locale))
+              await expect(page.getByRole('dialog')).toHaveCount(0)
+              await expect(spaceHeading(page, world.course, locale)).toBeVisible()
+            })
+          })
+
+          test(`Back closes the dialog; Forward opens it again ${at}`, async ({ browser }) => {
+            await inContext(browser, { viewport, role }, async (page) => {
+              await openPostDialog(page, world.course, locale)
+              await page.goBack()
+              await expect(page).toHaveURL(localePath(world.course.path, locale))
+              await expect(page.getByRole('dialog')).toHaveCount(0)
+              await page.goForward()
+              await expect(page).toHaveURL(localePath(world.course.postPath, locale))
+              await expect(page.getByRole('dialog')).toHaveCount(1)
+            })
+          })
+
+          test(`a hard load of a space page shows no dialog ${at}`, async ({ browser }) => {
+            await inContext(browser, { viewport, role }, async (page) => {
+              await page.goto(localePath(world.course.path, locale))
+              await expect(spaceHeading(page, world.course, locale)).toBeVisible()
+              await expect(page.getByRole('dialog')).toHaveCount(0)
+            })
+          })
+
+          test(`a bell row on Home opens the full post page ${at}`, async ({ browser }) => {
+            const account = world.accounts[role]
+            const text = MESSAGES[locale].Notifications
+            await payload.delete({
+              collection: 'notifications',
+              where: { recipient: { equals: account.id } },
+              overrideAccess: true,
+            })
+            await notifyOf(payload, account, localePath(world.course.postPath, locale))
+            await inContext(browser, { viewport, role }, async (page) => {
+              await page.goto(localePath('/en/spaces', locale))
+              await page.getByRole('button', { name: new RegExp(`^${text.label}(,|،|$)`) }).click()
+              const panel = page.getByRole('dialog', { name: text.label, exact: true })
+              await panel
+                .getByRole('button', { name: new RegExp(`^${text.kinds.comment}`) })
+                .click()
+              await panel.getByRole('link', { name: text.open }).click()
+              await expect(page).toHaveURL(localePath(world.course.postPath, locale))
+              await expect(page.getByRole('dialog')).toHaveCount(0)
+              await expect(page.locator('article').first()).toBeVisible()
+            })
+          })
+        }
+  })
+
+  test.describe('dev server only', () => {
+    test('a soft navigation from Home to a post shows the dialog over an empty page', async ({
+      browser,
+    }) => {
+      await inContext(browser, { viewport: WIDTHS.desktop, role: 'fellow' }, async (page) => {
+        await page.goto('/en/spaces')
+        await expect(page.getByRole('heading', { level: 1 })).toHaveCount(1)
+        await pushWithDevRouter(page, world.course.postPath)
+        await expect(page).toHaveURL(world.course.postPath)
+        await expect(page.getByRole('dialog')).toContainText(POST_BODY)
+        await expect(page.getByRole('heading', { level: 1 })).toHaveCount(0)
+        await expect(page.locator('main')).toHaveText('')
+      })
+    })
+
+    test('an open dialog closes on a navigation to another space page', async ({ browser }) => {
+      await inContext(browser, { viewport: WIDTHS.desktop, role: 'fellow' }, async (page) => {
+        await openPostDialog(page, world.course, 'en')
+        await pushWithDevRouter(page, world.community.path)
+        await expect(page).toHaveURL(world.community.path)
+        await expect(page.getByRole('dialog')).toHaveCount(0)
+        await expect(spaceHeading(page, world.community, 'en')).toBeVisible()
+      })
+    })
+  })
+})
