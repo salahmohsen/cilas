@@ -170,6 +170,19 @@ export const NOT_LIVE: Where = {
 }
 
 /**
+ * The main rows an admin list shows, whoever owns them: live rows, and a
+ * not-live row only at a state that waits on someone or was declined. Another
+ * owner's draft, and a row at approved that is not live, stay out. A caller
+ * adds the reader's own rows.
+ */
+export const ADMIN_VISIBLE: Where = {
+  or: [
+    { _status: { equals: 'published' } },
+    { 'review.status': { in: ['submitted', 'changes_requested', 'rejected'] } },
+  ],
+}
+
+/**
  * Version rows: the latest version of a live document is a draft copy. The
  * term `parent._status` is left out on purpose: Payload joins the parent and
  * adds the parent collection's read access to each branch of the version

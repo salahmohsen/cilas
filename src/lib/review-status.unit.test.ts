@@ -2,9 +2,10 @@ import { describe, expect, expectTypeOf, it } from 'vitest'
 
 import type { BadgeProps } from '@/components/arc/badge/badge'
 
-import type { ReviewRequest, ReviewState } from './review'
+import { REVIEW_STATES, type ReviewRequest, type ReviewState } from './review'
 import { REVIEWED_FIELDS } from './reviewed-fields'
 import {
+  ADMIN_VISIBLE,
   KEY_SELECT,
   KEY_WHERE,
   LIVE_COPY,
@@ -343,6 +344,27 @@ describe('KEY_WHERE', () => {
   it('has a row for draft that reads approved and a missing status as draft', () => {
     expect(JSON.stringify(KEY_WHERE.draft?.where)).toContain('approved')
     expect(JSON.stringify(KEY_WHERE.draft?.where)).toContain('exists')
+  })
+})
+
+describe('ADMIN_VISIBLE', () => {
+  const [published, states] = ADMIN_VISIBLE.or ?? []
+
+  it('shows every live row', () => {
+    expect(published).toEqual({ _status: { equals: 'published' } })
+  })
+
+  it('shows a not-live row only at a state that waits on someone or was declined', () => {
+    const shown = (states?.['review.status'] as { in: ReviewState[] }).in
+    expect([...shown].sort()).toEqual(
+      REVIEW_STATES.filter((state) => state !== 'draft' && state !== 'approved').sort(),
+    )
+  })
+
+  it('names no owner, so a caller adds the reader own rows', () => {
+    expect(ADMIN_VISIBLE.or).toHaveLength(2)
+    expect(JSON.stringify(ADMIN_VISIBLE)).not.toContain('authors')
+    expect(JSON.stringify(ADMIN_VISIBLE)).not.toContain('fellows')
   })
 })
 
