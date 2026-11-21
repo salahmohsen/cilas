@@ -564,7 +564,9 @@ test.describe('portal shell', () => {
 
             await page.goto(localePath('/en/spaces', locale))
             sheet = await openMore(page, locale)
-            await sheet.getByRole('link', { name: MESSAGES[locale].Language.switchToLabel }).click()
+            await sheet
+              .getByRole('link', { name: MESSAGES[locale].Language[other], exact: true })
+              .click()
             await page.waitForURL(`**/${other}/spaces`)
             await expect(page.locator('html')).toHaveAttribute('lang', other)
 
@@ -826,7 +828,13 @@ test.describe('portal shell', () => {
         }) => {
           await inContext(browser, { viewport: PHONE, role }, async (page) => {
             await page.goto(localePath('/en/spaces', locale))
-            await openMore(page, locale)
+            const sheet = await openMore(page, locale)
+            await expect(
+              sheet.getByRole('link', {
+                name: MESSAGES[locale].Language[OTHER[locale]],
+                exact: true,
+              }),
+            ).toBeVisible()
             await expectClean(page, 'More sheet')
           })
         })

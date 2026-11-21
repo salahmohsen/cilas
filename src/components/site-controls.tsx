@@ -24,7 +24,8 @@ export function LanguageSwitch({ full = false }: { full?: boolean }) {
 
   return (
     <Link
-      aria-label={t('switchToLabel')}
+      // In full, the visible name of the language is the link's name (WCAG 2.5.3, label in name).
+      aria-label={full ? undefined : t('switchToLabel')}
       className={full ? 'site-sheet-button' : 'site-control'}
       href={search ? `${pathname}?${search}` : pathname}
       hrefLang={other}
