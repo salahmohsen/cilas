@@ -131,7 +131,7 @@
         "patterns": [
           {
             "group": ["@ui-sdk/*", "@ui-sdk/**"],
-            "message": "Only src/components/calendar/ui/ imports ui-sdk (ADR 0011). Use the calendar component."
+            "message": "Only src/components/calendar/ui/ and src/components/sdk/ import ui-sdk (ADR 0011, ADR 0012). Import the wrapper from src/components/sdk/."
           }
         ]
       }
@@ -147,7 +147,7 @@
   },
   "overrides": [
     {
-      "files": ["src/components/calendar/ui/**", "tests/unit/calendar/**"],
+      "files": ["src/components/calendar/ui/**", "src/components/sdk/**", "tests/unit/calendar/**"],
       "rules": {
         "no-restricted-imports": "off"
       }
