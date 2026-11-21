@@ -5,6 +5,7 @@ import { mediaThumbnail } from '@/lib/media-image'
 import {
   ADMIN_VISIBLE,
   KEY_WHERE,
+  liveParentIds,
   statusInputOf,
   statusOf,
   STATUS_KEYS,
@@ -306,10 +307,12 @@ describe('list rows', () => {
         depth: 0,
         overrideAccess: true,
       })
-      const expected = [
-        ...mains.docs.map((doc) => doc.id),
-        ...copies.docs.map((doc) => doc.parent as number),
-      ].sort()
+      const live = await liveParentIds(payload, {
+        collection: 'articles',
+        ids: copies.docs.map((doc) => doc.parent as number),
+        user: null,
+      })
+      const expected = [...new Set([...mains.docs.map((doc) => doc.id), ...live])].sort()
       const { groups } = await studentList()
       const needsYou = groups.find((group) => group.id === 'needsYou')?.rows ?? []
       expect(
@@ -601,10 +604,15 @@ describe('list rows', () => {
             depth: 0,
             overrideAccess: true,
           })
-          out.push(...docs.map((doc) => doc.parent as number))
+          const live = await liveParentIds(payload, {
+            collection: 'articles',
+            ids: docs.map((doc) => doc.parent as number),
+            user: null,
+          })
+          out.push(...live)
         }
       }
-      return out.sort()
+      return [...new Set(out)].sort()
     }
 
     const idsIn = (groups: ListGroup[], id: string) =>
