@@ -111,6 +111,28 @@ const recordDraftSave: CollectionBeforeOperationHook = async ({
   return args
 }
 
+const nextRequest = ({
+  live,
+  from,
+  to,
+  data,
+  originalDoc,
+}: {
+  live: boolean
+  from: ReviewState
+  to: ReviewState
+  data: Doc
+  originalDoc?: Doc
+}): ReviewRequest | null => {
+  if (!live) return null
+  const stored = originalDoc?.review?.request
+  const sent = data.review?.request
+  if (to === 'submitted')
+    return from === 'submitted' ? (stored ?? sent ?? 'changes') : (sent ?? 'changes')
+  if (to === 'changes_requested' || to === 'rejected') return stored ?? null
+  return null
+}
+
 /**
  * The review rules (src/lib/review.ts) on every write: an owner may only
  * submit; only approval publishes. An admin's Publish counts as approval, so
@@ -166,11 +188,13 @@ const applyReview =
         403,
       )
     }
-    // What the owner asks of a published document holds only while it waits.
-    const request: ReviewRequest | null =
-      live && to === 'submitted'
-        ? (data.review?.request ?? originalDoc?.review?.request ?? 'changes')
-        : null
+    // What the owner asks of a published document. A move into `submitted`
+    // takes the write's `request`, else `changes`, never the stored one (a kept
+    // removal would pass `removal` to a later edit). A write that stays at
+    // `submitted` keeps the stored one. A decision that returns or declines the
+    // copy keeps only the stored one, so an owner save cannot change it. Approval
+    // and a move to draft clear it.
+    const request = nextRequest({ live, from, to, data, originalDoc })
     const review = { ...data.review, status: to, request }
     if (to !== 'approved') return { ...data, review, _status: 'draft' }
     if (from === 'approved') return { ...data, review }
@@ -210,7 +234,8 @@ const notifyReview =
     if (req.context?.[DRAFT_SAVE] && !req.context[LIVE]) return doc
     const state: ReviewState = doc.review?.status ?? 'draft'
     const before: ReviewState = previousDoc?.review?.status ?? 'draft'
-    const removal = (state === 'submitted' ? doc : previousDoc)?.review?.request === 'removal'
+    const asked = state === 'submitted' ? doc : before === 'submitted' ? previousDoc : null
+    const removal = asked?.review?.request === 'removal'
     // An approved removal takes the document down to a draft: tell its owners.
     const audience =
       removal && before === 'submitted' && state === 'draft' ? 'authors' : notifyOn(before, state)
