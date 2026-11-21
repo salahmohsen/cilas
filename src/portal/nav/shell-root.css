@@ -5,6 +5,7 @@
 }
 
 /* The phone bottom bar: toasts sit above it, and a focused row scrolls clear of the bar and the toasts. */
+/* 700px: keep in step with WIDE in breakpoint.ts */
 @media (width < 700px) {
   :root:has([data-portal-shell]) {
     --portal-bar-height: 4rem;

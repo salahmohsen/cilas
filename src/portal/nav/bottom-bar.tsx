@@ -9,15 +9,13 @@ import { Link } from '@/i18n/navigation'
 import { preloadable } from '@/lib/preloadable'
 import { useSignOut } from '@/lib/sign-out'
 
+import { WIDE } from './breakpoint'
 import { NAV_ICONS } from './nav-icons'
 import type { PortalNavItem } from './portal-nav'
 import styles from './shell.module.css'
 import { isCurrentItem, type SpaceLink } from './space-links'
 
 const MoreSheet = preloadable(() => import('./more-sheet').then((m) => m.MoreSheet))
-
-/** The width where the sidebar takes over from the bar (shell.module.css). */
-const WIDE = '(width >= 700px)'
 
 /**
  * Under 700px: the top nav items and More, fixed above the home indicator.

@@ -16,7 +16,7 @@ import type { PortalNavItem } from './portal-nav'
 import { PROFILE } from './profile'
 import { NavItemRow, SpaceRow } from './rows'
 import styles from './shell.module.css'
-import { foldButton } from './sidebar'
+import { foldButton } from './fold-button'
 import type { SpaceLink } from './space-links'
 
 const ProfileIcon = NAV_ICONS[PROFILE.icon]

@@ -81,9 +81,18 @@
   box-shadow: var(--shadow-resting);
 }
 
-/* The skip link's target: focus lands here, and the next Tab starts inside. */
-.main:focus {
+/* The skip link's target: focus lands below the header row, and the next Tab starts inside the page. */
+.content:focus {
   outline: none;
+}
+
+/* The page header row: the fold button at its inline start; a later phase puts the trail after it. */
+.crumbs {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  min-block-size: 44px;
+  margin-block-end: var(--space-2);
 }
 
 .sidebar {
@@ -93,12 +102,13 @@
   min-inline-size: 0;
 }
 
-.fold {
+.crumbs .fold {
   display: inline-grid;
   place-items: center;
-  align-self: flex-end;
   inline-size: 44px;
+  min-inline-size: 44px;
   block-size: 44px;
+  padding: 0;
   border: 0;
   border-radius: var(--radius-control);
   background: transparent;
@@ -106,7 +116,7 @@
   cursor: pointer;
 }
 
-.fold:hover {
+.crumbs .fold:hover {
   background: color-mix(in oklab, var(--foreground) 6%, transparent);
   color: var(--foreground);
 }
@@ -119,11 +129,7 @@
   scale: -1 1;
 }
 
-.sidebar[data-folded] .fold {
-  align-self: center;
-}
-
-.sidebar[data-folded] .chevron {
+.shell:has(.sidebar[data-folded]) .chevron {
   rotate: 180deg;
 }
 
@@ -368,6 +374,7 @@
   }
 }
 
+/* 700px: keep in step with WIDE in breakpoint.ts */
 @media (width >= 700px) {
   /* The rail's header stays in view while its nav scrolls. */
   .top {
@@ -385,6 +392,7 @@
   }
 }
 
+/* 700px: keep in step with WIDE in breakpoint.ts */
 @media (width < 700px) {
   .bar {
     position: fixed;
@@ -459,7 +467,8 @@
   }
 
   .rail .sidebar,
-  .account {
+  .account,
+  .crumbs {
     display: none;
   }
 
