@@ -161,8 +161,13 @@ export const statusSelect = (collection: ReviewedCollection) => ({
   ...Object.fromEntries(REVIEWED_FIELDS[collection].map((field) => [field, true as const])),
 })
 
-/** Main rows that are not live. */
-export const NOT_LIVE: Where = { _status: { equals: 'draft' } }
+/**
+ * Main rows that are not live: a draft, or no `_status` at all, as
+ * `statusInputOf` reads it. Not `not_equals`: SQL drops nulls from it.
+ */
+export const NOT_LIVE: Where = {
+  or: [{ _status: { equals: 'draft' } }, { _status: { exists: false } }],
+}
 
 /**
  * Version rows: the latest version of a live document is a draft copy. The

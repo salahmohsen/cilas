@@ -334,6 +334,12 @@ describe('KEY_WHERE', () => {
     )
   })
 
+  it('reads a missing _status as not live, because SQL drops nulls from not_equals', () => {
+    expect(NOT_LIVE).toEqual({
+      or: [{ _status: { equals: 'draft' } }, { _status: { exists: false } }],
+    })
+  })
+
   it('has a row for draft that reads approved and a missing status as draft', () => {
     expect(JSON.stringify(KEY_WHERE.draft?.where)).toContain('approved')
     expect(JSON.stringify(KEY_WHERE.draft?.where)).toContain('exists')

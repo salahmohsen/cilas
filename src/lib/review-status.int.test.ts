@@ -347,27 +347,43 @@ describe('review status over real writes', () => {
         overrideAccess: true,
       }),
     )
-    const course = track(
-      'courses',
-      await payload.create({
-        collection: 'courses',
-        data: {
-          title: 'Key No Status',
-          slug: uniq('key-no-status'),
-          course_type: 'THEMATIC',
-          tier: 'owner',
-          cycle: cycle.id,
-          fellows: [fellowPersonId],
-          _status: 'draft',
-        },
-        overrideAccess: true,
-      }),
-    )
+    const makeCourse = async (title: string) =>
+      track(
+        'courses',
+        await payload.create({
+          collection: 'courses',
+          data: {
+            title,
+            slug: uniq('key-no-status'),
+            course_type: 'THEMATIC',
+            tier: 'owner',
+            cycle: cycle.id,
+            fellows: [fellowPersonId],
+            _status: 'draft',
+          },
+          overrideAccess: true,
+        }),
+      )
+    const course = await makeCourse('Key No Status')
     await payload.db.updateOne({
       collection: 'courses',
       id: course.id,
       data: { review: { status: null } },
     })
+    const noFlag = await makeCourse('Key No Flag')
+    await payload.db.updateOne({
+      collection: 'courses',
+      id: noFlag.id,
+      data: { _status: null },
+    })
+    const unflagged = await payload.findByID({
+      collection: 'courses',
+      id: noFlag.id,
+      draft: false,
+      depth: 0,
+      overrideAccess: true,
+    })
+    expect(unflagged._status ?? null).toBeNull()
     const stored = await payload.findByID({
       collection: 'courses',
       id: course.id,
@@ -381,6 +397,7 @@ describe('review status over real writes', () => {
     for (const id of articles) keys.set(id, await keyOf('articles', id, admin))
     expect(Object.fromEntries(keys)).toEqual(Object.fromEntries(expected))
     expect(await keyOf('courses', course.id, admin)).toBe('draft')
+    expect(await keyOf('courses', noFlag.id, admin)).toBe('draft')
 
     const found = async (
       collection: 'articles' | 'courses',
@@ -437,7 +454,10 @@ describe('review status over real writes', () => {
     for (const key of keyed) {
       expect({ key, ids: await found('articles', articles, key, other) }).toEqual({ key, ids: [] })
     }
-    expect(await found('courses', [course.id], 'draft')).toEqual([course.id])
+    expect(await found('courses', [course.id, noFlag.id], 'draft')).toEqual(
+      [course.id, noFlag.id].sort(),
+    )
+    expect(await found('courses', [noFlag.id], 'submitted')).toEqual([])
     expect(await found('courses', [course.id], 'submitted')).toEqual([])
     expect(await found('courses', [course.id], 'draft', fellow)).toEqual([course.id])
     expect(await found('courses', [course.id], 'published_edits', fellow)).toEqual([])
