@@ -256,44 +256,63 @@ const coverUrls = async (ctx: Ctx, ids: number[]) => {
 }
 
 type CourseMeta = NonNullable<ListRow['course']>
+type Details = { owners: string[]; course: CourseMeta | null }
 
-const courseMeta = async (ctx: Ctx, ids: number[]) => {
-  const meta = new Map<number, CourseMeta>()
-  if (ctx.collection !== 'courses' || ids.length === 0) return meta
-  const [courses, sessions] = await Promise.all([
+const namesOf = (people: unknown) =>
+  ((people ?? []) as Array<{ name?: string | null } | number>).flatMap((person) =>
+    typeof person === 'object' && person.name ? [person.name] : [],
+  )
+
+/**
+ * What a row shows beyond its keys, in one gated read of the shown rows at
+ * depth 1: an admin sees the owners' names, a course has its type and cycle,
+ * and a course has its session counts from one more read.
+ */
+const detailsOf = async (ctx: Ctx, ids: number[]) => {
+  const details = new Map<number, Details>()
+  const isCourses = ctx.collection === 'courses'
+  if (ids.length === 0 || (!isCourses && ctx.kind !== 'admin')) return details
+  const [rows, sessions] = await Promise.all([
     ctx.payload.find({
-      collection: 'courses',
+      collection: ctx.collection,
       where: { and: [ctx.base, { id: { in: ids } }] },
-      select: { course_type: true, cycle: true },
-      populate: { cycles: { season: true, start_year: true } },
+      select: isCourses ? { course_type: true, cycle: true, fellows: true } : { authors: true },
+      populate: { people: { name: true }, cycles: { season: true, start_year: true } },
       draft: false,
       depth: 1,
       pagination: false,
       ...gate(ctx),
-    }),
-    ctx.payload.find({
-      collection: 'sessions',
-      where: { course: { in: ids } },
-      select: { course: true, meetings: true, cancelled: true },
-      depth: 0,
-      pagination: false,
-      ...gate(ctx),
-    }),
+    } as never) as unknown as Promise<{ docs: Array<Record<string, unknown> & { id: number }> }>,
+    isCourses
+      ? ctx.payload.find({
+          collection: 'sessions',
+          where: { course: { in: ids } },
+          select: { course: true, meetings: true, cancelled: true },
+          depth: 0,
+          pagination: false,
+          ...gate(ctx),
+        })
+      : null,
   ])
   const now = new Date()
-  for (const course of courses.docs) {
-    const cycle = typeof course.cycle === 'object' ? course.cycle : null
-    meta.set(course.id, {
-      type: course.course_type ?? null,
-      season: cycle?.season ?? null,
-      year: cycle?.start_year ?? null,
-      ...heldCount(
-        sessions.docs.filter((session) => relId(session.course) === course.id),
-        now,
-      ),
+  for (const doc of rows.docs) {
+    const cycle = typeof doc.cycle === 'object' ? (doc.cycle as Record<string, never>) : null
+    details.set(doc.id, {
+      owners: ctx.kind === 'admin' ? namesOf(isCourses ? doc.fellows : doc.authors) : [],
+      course: isCourses
+        ? {
+            type: (doc.course_type as CourseType | null | undefined) ?? null,
+            season: (cycle?.season as Season | undefined) ?? null,
+            year: (cycle?.start_year as number | undefined) ?? null,
+            ...heldCount(
+              (sessions?.docs ?? []).filter((session) => relId(session.course) === doc.id),
+              now,
+            ),
+          }
+        : null,
     })
   }
-  return meta
+  return details
 }
 
 type Shown = { entry: Entry; group: GroupId }
@@ -303,9 +322,9 @@ const buildRows = async (ctx: Ctx, shown: Shown[]): Promise<ListRow[]> => {
     const id = relId(sourceOf(ctx, entry).cover_image)
     return typeof id === 'number' ? [id] : []
   })
-  const [covers, courses] = await Promise.all([
+  const [covers, details] = await Promise.all([
     coverUrls(ctx, [...new Set(coverIds)]),
-    courseMeta(
+    detailsOf(
       ctx,
       shown.map(({ entry }) => entry.id),
     ),
@@ -323,9 +342,9 @@ const buildRows = async (ctx: Ctx, shown: Shown[]): Promise<ListRow[]> => {
       cover: typeof cover === 'number' ? (covers.get(cover) ?? null) : null,
       updatedAt: PAGED.has(group) ? main.updatedAt : (latest ?? main).updatedAt,
       waitingSince: waitsOn(key) === 'admin' && latest ? latest.updatedAt : null,
-      owners: [],
+      owners: details.get(entry.id)?.owners ?? [],
       tier: main.tier === 'public' || main.tier === 'community' ? main.tier : null,
-      course: courses.get(entry.id) ?? null,
+      course: details.get(entry.id)?.course ?? null,
     }
   })
 }

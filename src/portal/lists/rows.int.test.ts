@@ -531,4 +531,197 @@ describe('list rows', () => {
       }
     })
   })
+
+  describe('the admin list', () => {
+    const adminList = async (overrides: Partial<ListQuery> = {}) =>
+      loadList(
+        payload,
+        await userOf(lists.writer),
+        {
+          collection: 'articles',
+          kind: 'admin',
+          search: null,
+          only: null,
+          pages: { published: 20, closed: 20 },
+          ...overrides,
+        },
+        'en',
+      )
+
+    const fixtureIds = () => [
+      ...lists.bulk,
+      ...lists.manyDrafts,
+      ...Object.values(lists.articles),
+      lists.unpublished,
+      lists.shared,
+      lists.added,
+      lists.writerDraft,
+      lists.writerUnpublished,
+    ]
+
+    const asWriter = async () =>
+      ({ user: await userOf(lists.writer), overrideAccess: false }) as const
+
+    const found = async (keys: StatusKey[], ids: number[]) => {
+      const out: number[] = []
+      for (const key of keys) {
+        const row = KEY_WHERE[key]!
+        if (row.on === 'main') {
+          const { docs } = await payload.find({
+            collection: 'articles',
+            where: { and: [row.where, { id: { in: ids } }] },
+            draft: false,
+            pagination: false,
+            depth: 0,
+            ...(await asWriter()),
+          })
+          out.push(...docs.map((doc) => doc.id))
+        } else {
+          const { docs } = await payload.findVersions({
+            collection: 'articles',
+            where: { and: [row.where, { parent: { in: ids } }] },
+            pagination: false,
+            depth: 0,
+            ...(await asWriter()),
+          })
+          out.push(...docs.map((doc) => doc.parent as number))
+        }
+      }
+      return out.sort()
+    }
+
+    const idsIn = (groups: ListGroup[], id: string) =>
+      (groups.find((group) => group.id === id)?.rows ?? [])
+        .map((row) => row.id)
+        .filter((candidate) => fixtureIds().includes(candidate))
+        .sort()
+
+    it("an admin does not see another owner's draft", async () => {
+      const { groups } = await adminList()
+      const ids = rowsOf(groups).map((row) => row.id)
+      expect(ids).not.toContain(lists.articles.draft)
+      expect(ids).not.toContain(lists.unpublished)
+      expect(groupOfId(groups, lists.articles.submitted)).toEqual(['needsYou'])
+      expect(groupOfId(groups, lists.writerDraft)).toEqual(['inProgress'])
+      expect(groupOfId(groups, lists.writerUnpublished)).toEqual(['inProgress'])
+    })
+
+    it("the admin's Needs you and Waiting on the author hold the KEY_WHERE rows", async () => {
+      const { groups } = await adminList()
+      const ids = fixtureIds()
+      expect(idsIn(groups, 'needsYou')).toEqual(
+        await found(['submitted', 'published_edits', 'published_removal'], ids),
+      )
+      expect(idsIn(groups, 'waitingOnAuthor')).toEqual(
+        await found(['changes_requested', 'published_edits_returned'], ids),
+      )
+    })
+
+    it('every fixture row on the admin list sits in one group', async () => {
+      const { groups } = await adminList()
+      const admitted = await payload.find({
+        collection: 'articles',
+        where: {
+          and: [
+            { id: { in: fixtureIds() } },
+            {
+              or: [
+                { _status: { equals: 'published' } },
+                { 'review.status': { in: ['submitted', 'changes_requested', 'rejected'] } },
+                { authors: { contains: lists.writer.person } },
+              ],
+            },
+          ],
+        },
+        draft: false,
+        pagination: false,
+        depth: 0,
+        overrideAccess: true,
+      })
+      admitted.docs.forEach((doc) => expect(groupOfId(groups, doc.id)).toHaveLength(1))
+      expect(admitted.docs.length).toBeGreaterThan(60)
+    })
+
+    it('an admin row shows the live title unless it waits on the admin', async () => {
+      const { groups } = await adminList()
+      const rows = rowsOf(groups)
+      const unsent = rows.find((row) => row.id === lists.articles.published_unsent)
+      expect(unsent?.title).toBe(lists.titles.alpha)
+      const edits = rows.find((row) => row.id === lists.articles.published_edits)
+      const copy = await payload.findVersions({
+        collection: 'articles',
+        where: {
+          and: [
+            { parent: { equals: lists.articles.published_edits } },
+            { latest: { equals: true } },
+          ],
+        },
+        locale: 'en',
+        depth: 0,
+        overrideAccess: true,
+      })
+      expect(edits?.title).toBe((copy.docs[0]!.version as { title: string }).title)
+      expect(edits?.title).not.toBe(
+        (
+          await payload.findByID({
+            collection: 'articles',
+            id: lists.articles.published_edits,
+            draft: false,
+            locale: 'en',
+            depth: 0,
+            overrideAccess: true,
+          })
+        ).title,
+      )
+    })
+
+    it("an admin row's cover follows its title", async () => {
+      const media = await makeMedia(payload, track, 'list-admin-copy-cover')
+      await payload.update({
+        collection: 'articles',
+        id: lists.articles.published_edits,
+        data: { cover_image: media.id },
+        draft: true,
+        locale: 'en',
+        overrideAccess: true,
+      })
+      const { groups } = await adminList()
+      const rows = rowsOf(groups)
+      const unsent = rows.find((row) => row.id === lists.articles.published_unsent)
+      expect(unsent?.cover).toBeNull()
+      const edits = rows.find((row) => row.id === lists.articles.published_edits)
+      expect(edits?.cover).toBe(
+        mediaThumbnail(
+          (await payload.findByID({
+            collection: 'media',
+            id: media.id,
+            depth: 0,
+            overrideAccess: true,
+          })) as Media,
+        ),
+      )
+      expect(edits?.cover).toBeTruthy()
+    })
+
+    it('an admin row names its owners, an owner row does not', async () => {
+      const person = await payload.findByID({
+        collection: 'people',
+        id: world.accounts.student.person!,
+        depth: 0,
+        overrideAccess: true,
+      })
+      const { groups } = await adminList()
+      const row = rowsOf(groups).find(
+        (candidate) => candidate.id === lists.articles.published_edits,
+      )
+      expect(row?.owners).toEqual([person.name])
+      const mine = await loadList(
+        payload,
+        await userOf(world.accounts.student),
+        ownerArticles(),
+        'en',
+      )
+      rowsOf(mine.groups).forEach((candidate) => expect(candidate.owners).toEqual([]))
+    })
+  })
 })
