@@ -70,7 +70,7 @@ main ──┬── 1c-0 (independent; must finish before the 1c-2 perf box)
 - **1c-1:** `src/portal/needs/*` (new), `src/lib/review-candidates.ts` and `src/lib/review-candidates.int.test.ts` (new), `src/portal/lists/rows.ts` (N2 Step 1: its candidate and row reads move out; no behaviour change), `src/lib/review-queue.ts`, `src/lib/review-queue.int.test.ts` (new), `src/components/admin/dashboard/quick-actions.tsx` (the tile calls `countReviewQueue`, one line), `src/forms/applicants.ts`, `src/forms/applicants.int.test.ts` (add a describe), `testing/needs.fixture.ts` (new; it calls `testing/portal-lists.fixture.ts`, which it does not change), `scripts/needs-check.int.test.ts` (new).
 - **1c-2:** `src/portal/needs/` (view parts: `need-list.tsx`, `latest-list.tsx`, `latest.ts`, `mark-read.tsx`, `work-refresh.tsx`, their tests, CSS module), `src/portal/inbox/` (new), `src/app/(frontend)/[locale]/(portal)/spaces/inbox/page.tsx` (new), `src/app/(frontend)/[locale]/(portal)/spaces/layout.tsx`, `src/portal/nav/{portal-nav.ts,portal-nav.unit.test.ts,nav-counts.tsx (new),nav-counts.dom.test.tsx (new),nav-icons.ts,rows.tsx,portal-shell.tsx,sidebar.tsx,shell.module.css,sidebar.browser.test.tsx,more-sheet.tsx,bottom-bar.tsx}`, `src/lib/notification-glyphs.tsx` (new: the bell's glyph map, no `'use client'`), `src/components/site-notifications.tsx` (imports the glyph map from the new file; no behaviour change), `src/lib/notifications-client.ts` (`markRead` takes an optional `keepalive`; the bell's calls do not change), `messages/{en,ar}.json` (`Portal.nav`, `Portal.needs`, `Portal.inbox`, `Portal.latest`), `testing/portal-e2e.test-utils.ts`, `testing/portal.fixture.ts` (only `portalNeedsWorld`, see I1), `testing/portal-lists.fixture.ts` (export `makeAccount` only), `playwright.config.ts` (only if P23 fails), `e2e/portal-shell.e2e.test.ts`, `e2e/portal-home.e2e.test.ts`, `e2e/portal-home.empty.e2e.test.ts` (new).
 - **1c-3:** `src/portal/home/*` (new), `src/lib/reader-courses.ts` and its int test (new), `src/app/(frontend)/[locale]/(portal)/spaces/(home)/page.tsx`, `(home)/loading.tsx`, `messages/{en,ar}.json` (`Portal.home`; delete `SpaceShortcuts` and the `Spaces` keys only the old page used), `src/components/space/space.module.css` (delete the shortcut rules), `e2e/portal-home.e2e.test.ts`, `e2e/portal-home.empty.e2e.test.ts`, `e2e/portal-spaces-off.e2e.test.ts` (`:188`), `e2e/portal-shell.e2e.test.ts` (`:500`).
-- **1c-4:** `src/components/bridge/bridge-year.tsx`, `src/components/article/article-page.tsx`.
+- **1c-4:** `src/components/bridge/bridge-year.tsx`, `src/components/article/article-page.tsx`, and any other file whose course type key K1 Step 1 finds (`CourseView.tsx` at `57248c77`).
 
 ### Order with 1b-2b
 
@@ -190,7 +190,7 @@ Each premise names the file and symbol, the SHA read, who uses it, the exact che
 - **Perf gate (G).** One predicate for every PR that touches the portal layout or Home (1c-2, 1c-3). Probe: `scripts/ttfb-probe.mjs` (T1), production build, `cilas_ttfb`, the three accounts of T2 with fresh cookies, inside the lock (P17). Routes: `/en/spaces` (Home), plus each route the PR adds (1c-2: `/en/spaces/inbox`). Run order in one session: this PR's base, then this PR's head. Validity: the run counts only when the base's p75 for each role is within 10% of the baseline table's `main` p75 for that role; else the Mac is not in the baseline state: rerun later, at most twice, then report the PR as blocked on the Mac (not failed). **Pass**, for every role and every route: head TTFB p75 is at most the baseline table's `main` p75 for that role, and, when that number is under 800 ms, head p75 is under 800 ms. **Fail** otherwise. A fail is fixed in the PR that caused it (profile the layout reads, N7's per-source numbers); no cache without the operator's yes. Full-response p75 is recorded beside it; above 2x the base's full-response p75 it is a finding for the operator, not a fail.
 - **Review predicate.** A review step (ux-auditor, better-interface, break-ui, code-review, security-review) passes when no finding rated Critical or High stays open: each is fixed with a test, or the PR lists it with the operator's decision. Medium and Low findings are fixed or listed in the PR. Each report goes in a PR comment with the head SHA, linked from the PR body.
 - **UI parts order** (ADR 0012, operator rule): the Arc component in `src/components/arc` (never re-run `shadcn add` for an installed one), then the free Arc registry, then a ui-sdk wrapper in `src/components/sdk/`, then Radix already used, then our own code. No 1c part needs ui-sdk. Inner scroll regions use Arc `ScrollArea` (`src/components/arc/scroll-area`). Home and Inbox scroll with the document, so they add no inner scroller.
-- **Lazy loading.** Home and Inbox are first-render content and render on the server. No 1c UI shows only after an action, so no `preloadable` is new. The work-refresh listener is a small client part in the shell and loads eagerly.
+- **Lazy loading.** Home and Inbox are first-render content and render on the server. No 1c UI shows only after an action, so no `preloadable` is new. The work-refresh listener, `NavCountsProvider` and the count chips are small client parts in the shell and load eagerly.
 - **Copy** goes in `messages/{en,ar}.json` under `Portal`, ICU plurals, digits through `{count, number, digits}`, gender-neutral Arabic (D8). The strings are the spec's (Onboarding, Home, Tasks), except where a Deviation gives the 1c string.
 
 **Per-PR order** (the 1b plan's, unchanged). 1. Tasks, each with its targeted tests. 2. Reviews (each PR's last task). 3. Fixes with tests. 4. **[verify]** the full suite once (`verify.sh <branch> <sha>`); a failure the base also has is one line in the PR. 5. `pnpm exec tsgo --noEmit`, `pnpm audit:access`, and `git status --short scripts/access-audit.snapshot.json` prints nothing (no 1c task changes an access rule). 6. Open the PR per `worker.md`, title `type(scope): subject (portal phase 1c, PR <n>)`.
@@ -537,7 +537,7 @@ From `portal/phase-1a-shell` (PR C) with 1c-1 merged in. Checks P8 to P13, P19, 
 
 **Files:** Create `e2e/portal-home.e2e.test.ts`, `e2e/portal-home.empty.e2e.test.ts`. Modify `e2e/portal-shell.e2e.test.ts` (the 1c nav assertions read `NAV_BY_ROLE`), and `playwright.config.ts` only if P23 fails (its fallback).
 
-- [ ] **Step 1: Tests** (matrix: role, locale, width; phase 1a Deviation 19 exemptions), `describe('inbox')`. Every count assert waits for the settled name (`expect.poll`), because counts stream:
+- [ ] **Step 1: Tests** (matrix: role, locale, width 1440 and 390; phase 1a Deviation 19 exemptions; the spec asks 320px for the shell and Home, not Inbox, so Inbox runs at 1440 and 390 only, spec review L-5), `describe('inbox')`. Every count assert waits for the settled name (`expect.poll`), because counts stream:
   - "Inbox shows Needs you, then Latest" (the fixture's rows for the role, in order; each Needs you row link's `href` starts with `/admin/`; Latest holds the fixture's notification, and its `href` equals the stored `link`).
   - "the sidebar Inbox number equals the Needs you count on Inbox" (at 1440 the sidebar, at 390 the bottom bar item's name).
   - "Show more loads 30 more and moves focus" (the student's 35 notifications, I1).
@@ -592,7 +592,7 @@ From `portal/phase-1c-inbox`. Reviews: ux-auditor and better-interface on Home, 
 
 **Interfaces:**
 
-- Consumes: `needs`, `needsTotal` (N5); `NeedList`, `LatestList`, `latestRows` (I4); `nextSession` (H1); `mySpaces`, `COMMUNITY_COVER` (`src/lib/spaces-data.ts`); `spacesOff` (P14); `spaceLabel` (PR C); `unreadCount` (P10); `PortalEmptyState` (P12); `catchError` (P20); Arc `badge`, `card`, `skeleton`.
+- Consumes: `needs`, `needsTotal` (N5), called with the `user` of `currentReader()` (P28) so the cards share the layout's read; `NeedList`, `LatestList`, `latestRows` (I4); `nextSession` (H1); `mySpaces`, `COMMUNITY_COVER` (`src/lib/spaces-data.ts`); `spacesOff` (P14); `spaceLabel` (PR C); `unreadCount` (P10); `PortalEmptyState` (P12); `catchError` (P20); Arc `badge`, `card`, `skeleton`.
 - Produces, top to bottom (spec, Home; no checklist):
   1. `Greeting` (`<h1>`, Deviation 8).
   2. `NeedsCard`: `<h2>` "Needs you" with the total (`needsTotal`; no number when null); `NeedList` with `group: rows.length > 5`; empty: "Nothing needs you now." with no button; a failed source: "Some tasks could not load. Reload."
@@ -669,13 +669,13 @@ From `main` after 1b-2b merges (P16). No screen change. Review: code-review.
 
 **Files:** Modify `src/components/bridge/bridge-year.tsx:91`, `src/components/article/article-page.tsx:137` (line numbers at `57248c77`; find the copy with `rg -n "Study.filters.types|course_type" <file>`).
 
-- [ ] **Step 1:** Each file calls `courseTypeKey(type)` in place of its own key string. `rg -n "filters\.types\.\$\{" src --glob '!src/fields/course-type.ts'` prints nothing after. Run the files' existing tests (find them with `rg -l "bridge-year|article-page" src e2e`): PASS. Open `refactor(courses): one course type key (portal phase 1c, PR 4)`.
+- [ ] **Step 1:** Each file calls `courseTypeKey(type)` in place of its own key string. Before: `rg -n 'types\.\$\{' src/components/bridge/bridge-year.tsx src/components/article/article-page.tsx` prints the two copies (`` tf(`types.${c.type.toLowerCase()}`) ``, `bridge-year.tsx:91`, `article-page.tsx:137` at `57248c77`; code review L-3: the old pattern matched nothing). After: the same command prints nothing. `src/api/courses.api.ts:133` is moved by 1b-2b itself (1b plan L4 Step 1). `rg -n 'types\.\$\{' src --glob '!src/fields/course-type.ts'` lists the other hits on the base (at `57248c77`: `src/app/(frontend)/[locale]/(site)/study/[slug]/CourseView.tsx:110` and `:685`, `calendar/page.tsx:57` and `:65`, `src/lib/calendar-feed.ts:28`). Each hit whose input is a `CourseType` moves to `courseTypeKey` in this PR too (add its file to the PR's files and say so); a hit that reads another value (a calendar kind) stays, and the PR names it. Run the files' existing tests (find them with `rg -l "bridge-year|article-page" src e2e`): PASS. Open `refactor(courses): one course type key (portal phase 1c, PR 4)`.
 
 **Verification.**
 
 - [ ] unit: the existing tests of both components pass.
 - [ ] live: on the Mac dev server, an article page that names a course and a bridge-year page show the same course type words as on `main`, in English and Arabic. Pass predicate: equal text.
-- [ ] perf: no runtime change (a string helper). No perf box beyond "no new request".
+- [ ] perf: n/a, with a predicate: `git diff --stat <base>..HEAD` lists only the files of K1 Step 1, and no diff adds or changes a data read (no `payload.`, `fetch` or `find` line in the diff). A string helper has no runtime cost to measure.
 
 ---
 
@@ -687,6 +687,8 @@ The inputs the spec implies and no clause tests, most likely first.
 2. **An admin who is also an owner.** The spec gives admins only the queue and the applicants row. An admin's own article at `changes_requested` gets no Needs you row. N1 table test pins it; Q5 asks the operator.
 3. **A failed source.** The total shows no number, the other rows stay, the card says "Some tasks could not load". N5, I4, H2.
 4. **Two tabs.** A refresh in one tab does not reach the other; each tab has its own stream and debounce. The I6 second-session test covers another account, not another tab of the same account.
+4a. **Stale numbers that no event refreshes** (Deviation 18). A second admin's Inbox keeps a row another admin decided until a load. A soft navigation re-renders the page but not the layout, so the sidebar number can differ from a fresh Needs you list for a moment (code review L-8). The e2e "equal numbers" tests compare after a full load only, never right after a soft navigation that raced a change. I6 pins the bound (a reload gives the right number).
+4b. **A streamed count that settles late or fails.** The nav shows no number until it settles; a failed count shows none (I2, I3). A refresh keeps a shown number until the new one is ready (I3). break-ui runs a 3 s late count (I7).
 5. **Worst-case rows and counts:** a 120-character Arabic title, 120 tasks, a reader with no person, 40 spaces at 320px. I7, H6.
 6. **A soft navigation from Home to a post.** Every post link on Home is a plain `<a>` (H4).
 
@@ -726,8 +728,9 @@ Done means: a new kind of work adds one `KEY_WHERE` row (1b) and one `KIND_OF_KE
 
 Send these to the 1b builders. None blocks 1b.
 
-1. **1b-2a:** build the work-set candidates on `candidateIds` (`src/lib/review-candidates.ts`) if 1c-1 has landed. If 1b-2a lands first, 1c-1 N2 moves `rows.ts` onto it.
-2. **1b-2b, if it lands after 1c-2:** add `articles: (c) => c.by.ownArticles ?? null` and `courses: (c) => c.by.ownCourses ?? null` to `COUNT_OF` for owners in its L1 commit, and add `{ key: 'inbox', … }` after `home` when it rewrites `NAV_BY_ROLE`.
+1. **1b-2a:** 1c-1 N2 Step 1 moves `workCandidates`, `withoutParentStatus` and `readEntries` (with `readMains`, `readLatest`, `newestPerParent`) out of `rows.ts` into `src/lib/review-candidates.ts`, and exports `makeAccount` from `testing/portal-lists.fixture.ts`; `rows.ts` behaviour does not change. Please rebase 1b-2a on the 1b-1 head (P25), and tell the 1c orchestrator before a change to those functions' rules lands, so N2 moves the newest version. If 1b-2a prefers to do the move itself, it may; 1c-1 then uses it (P7 fallback).
+2. **1b-2b, if it lands after 1c-2:** add `articles: (c) => c.by.ownArticles ?? null` and `courses: (c) => c.by.ownCourses ?? null` to `COUNT_OF` in `src/portal/nav/nav-counts.tsx` for owners in its L1 commit, and add `{ key: 'inbox', … }` after `home` when it rewrites `NAV_BY_ROLE`. `portalNav(user)` keeps one argument (Deviation 14).
+3. **1b-2b, either order:** its L6 `testIgnore` rule for `*.empty.e2e.test.ts` (P23) is the one 1c-2 adds if it lands first; keep the same text so the merge has one side.
 
 ## Open questions (product calls)
 
@@ -739,6 +742,8 @@ Each has a default, so no build waits.
 - **Q4. Live space unread counts and live Latest rows.** Default: not in 1c (Deviation 7, 12). The layout refreshes on work kinds only. A later phase may refresh on post events.
 - **Q5. An admin's own returned work.** The spec gives admins no owner rows. Default: follow the spec; an admin's own `changes_requested` article shows in the Articles list's groups, not in Needs you.
 - **Q6. Inbox Latest page size.** The spec says 30 is "a default the owner may change". Default: 30, with a 300-row cap (Deviation 11).
+- **Q7. A second admin's stale numbers.** Polling, or a notification to every admin on each decision, would refresh admin B. Default: neither in 1c; a load gives the right number (Deviation 18). Polling needs the operator's yes.
+- **Q8. The shell's own TTFB cost.** If T3's PR C row already fails the perf gate (G) against the `main` row, 1c cannot pass without shell work. Default: the gate stays the `main` row, and the operator decides between shell work and accepting the PR C row as "today's page".
 
 ## Could not verify from this server
 
@@ -746,4 +751,8 @@ Each has a default, so no build waits.
 - Whether Payload sessions are on for `users` (T2 relies on the real login, so either way works).
 - Next 16.4.6 `catchError` at run time (P20): docs read, not run.
 - Every "Expected" line: no command ran.
+- The `verify.sh` lock file path, and whether `verify.sh` passes a caller's `DATABASE_URL` to the tests (P17): the Mac was not read. N6 gives a command that does not depend on either.
+- That React `cache` shares one entry between the layout and the page in Next 16.4.6: read in the docs (P28), not run. No unit test can count the reads (Global Constraints, one read).
+- That `router.refresh()` keeps a shown chip number until the new promise settles: React's transition rule, tested in I3, not run.
+- Whether the Mac's prod clone holds at least one submitted document and one pending course choice (N6 fails when not).
 - Formatting: `pnpm format:check` (oxfmt) did not run here (no `node_modules` on this server). The first Mac task runs `pnpm exec oxfmt docs/superpowers/plans/2026-11-21-portal-phase-1c-tasks-home-inbox.md` if the check flags this file.
