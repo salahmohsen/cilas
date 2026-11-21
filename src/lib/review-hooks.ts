@@ -21,6 +21,7 @@ import {
 const DRAFT_SAVE = 'reviewDraftSave'
 const AUTOSAVE = 'reviewAutosave'
 const LIVE = 'reviewLive'
+const SENT_REQUEST = 'reviewSentRequest'
 
 const HELD: ReviewState[] = ['submitted', 'changes_requested', 'rejected']
 
@@ -78,6 +79,10 @@ const recordDraftSave: CollectionBeforeOperationHook = async ({
     write.data = { ...write.data, _status: 'draft', review: { status: 'draft' } }
   }
   req.context[LIVE] = false
+  // Payload fills a field the write left out from the stored document before
+  // beforeChange runs, so `data.review.request` there cannot say whether the
+  // write sent it. The operation args can.
+  req.context[SENT_REQUEST] = write.data?.review?.request ?? null
 
   if (operation === 'restoreVersion') {
     if (!trusted) write.draft = true
@@ -115,18 +120,17 @@ const nextRequest = ({
   live,
   from,
   to,
-  data,
+  sent,
   originalDoc,
 }: {
   live: boolean
   from: ReviewState
   to: ReviewState
-  data: Doc
+  sent: ReviewRequest | null
   originalDoc?: Doc
 }): ReviewRequest | null => {
   if (!live) return null
   const stored = originalDoc?.review?.request
-  const sent = data.review?.request
   if (to === 'submitted')
     return from === 'submitted' ? (stored ?? sent ?? 'changes') : (sent ?? 'changes')
   if (to === 'changes_requested' || to === 'rejected') return stored ?? null
@@ -194,7 +198,8 @@ const applyReview =
     // `submitted` keeps the stored one. A decision that returns or declines the
     // copy keeps only the stored one, so an owner save cannot change it. Approval
     // and a move to draft clear it.
-    const request = nextRequest({ live, from, to, data, originalDoc })
+    const sent = (req.context?.[SENT_REQUEST] as ReviewRequest | null | undefined) ?? null
+    const request = nextRequest({ live, from, to, sent, originalDoc })
     const review = { ...data.review, status: to, request }
     if (to !== 'approved') return { ...data, review, _status: 'draft' }
     if (from === 'approved') return { ...data, review }
