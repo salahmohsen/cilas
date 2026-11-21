@@ -26,6 +26,24 @@ describe('PortalEmptyState', () => {
     expect(link.compareDocumentPosition(next) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy()
   })
 
+  it('an external action is a plain link with no locale prefix', () => {
+    renderWithIntl(
+      <PortalEmptyState
+        title="Your articles"
+        body="No articles yet."
+        action={{
+          label: 'New article',
+          href: '/admin/collections/articles/create',
+          external: true,
+        }}
+      />,
+    )
+    expect(screen.getByRole('link', { name: 'New article' })).toHaveAttribute(
+      'href',
+      '/admin/collections/articles/create',
+    )
+  })
+
   it('with no action it renders no link', () => {
     renderWithIntl(<PortalEmptyState title="Your spaces" body="No spaces yet." next="Later." />)
     expect(screen.queryByRole('link')).toBeNull()
