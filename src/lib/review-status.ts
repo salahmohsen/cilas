@@ -216,3 +216,95 @@ export const KEY_WHERE: {
     'version.review.status': { equals: 'changes_requested' },
   }),
 }
+
+export type StatusTone = 'neutral' | 'success' | 'info' | 'warning' | 'danger'
+
+export type StatusIcon =
+  | 'pencil-line'
+  | 'clock'
+  | 'message-square-warning'
+  | 'circle-x'
+  | 'globe'
+  | 'file-pen'
+  | 'file-clock'
+  | 'archive-x'
+  | 'archive-restore'
+
+export type StatusBadge = { tone: StatusTone; icon: StatusIcon; labelKey: `status.${string}` }
+
+const PUBLISHED_BADGE: StatusBadge = {
+  tone: 'success',
+  icon: 'globe',
+  labelKey: 'status.published',
+}
+
+const BADGES: Record<StatusKey, StatusBadge[]> = {
+  draft: [{ tone: 'neutral', icon: 'pencil-line', labelKey: 'status.draft' }],
+  submitted: [{ tone: 'info', icon: 'clock', labelKey: 'status.submitted' }],
+  changes_requested: [
+    { tone: 'warning', icon: 'message-square-warning', labelKey: 'status.changesRequested' },
+  ],
+  rejected: [{ tone: 'danger', icon: 'circle-x', labelKey: 'status.declined' }],
+  published: [PUBLISHED_BADGE],
+  published_unsent: [
+    PUBLISHED_BADGE,
+    { tone: 'neutral', icon: 'file-pen', labelKey: 'status.unsentEdits' },
+  ],
+  published_edits: [
+    PUBLISHED_BADGE,
+    { tone: 'info', icon: 'file-clock', labelKey: 'status.editsInReview' },
+  ],
+  published_removal: [
+    PUBLISHED_BADGE,
+    { tone: 'neutral', icon: 'archive-x', labelKey: 'status.removalRequested' },
+  ],
+  published_edits_returned: [
+    PUBLISHED_BADGE,
+    { tone: 'warning', icon: 'message-square-warning', labelKey: 'status.changesRequested' },
+  ],
+  published_edits_declined: [
+    PUBLISHED_BADGE,
+    { tone: 'danger', icon: 'circle-x', labelKey: 'status.editsDeclined' },
+  ],
+  published_removal_kept: [
+    PUBLISHED_BADGE,
+    { tone: 'neutral', icon: 'archive-restore', labelKey: 'status.keptOnSite' },
+  ],
+}
+
+/** One badge, or two on a live key (Published first). Keys sit under `Portal.`. */
+export const statusBadge = (key: StatusKey): StatusBadge[] => BADGES[key]
+
+type NextLine = { labelKey: `next.${string}` }
+
+const OWNER_LINES: Record<StatusKey, NextLine> = {
+  draft: { labelKey: 'next.owner.draft' },
+  submitted: { labelKey: 'next.owner.submitted' },
+  changes_requested: { labelKey: 'next.owner.changesRequested' },
+  rejected: { labelKey: 'next.owner.rejected' },
+  published: { labelKey: 'next.owner.published' },
+  published_unsent: { labelKey: 'next.owner.publishedUnsent' },
+  published_edits: { labelKey: 'next.owner.publishedEdits' },
+  published_removal: { labelKey: 'next.owner.publishedRemoval' },
+  published_edits_returned: { labelKey: 'next.owner.publishedEditsReturned' },
+  published_edits_declined: { labelKey: 'next.owner.publishedEditsDeclined' },
+  published_removal_kept: { labelKey: 'next.owner.publishedRemovalKept' },
+}
+
+const ADMIN_LINES: Record<StatusKey, NextLine | null> = {
+  draft: null,
+  submitted: { labelKey: 'next.admin.submitted' },
+  changes_requested: { labelKey: 'next.admin.changesRequested' },
+  rejected: null,
+  published: null,
+  published_unsent: null,
+  published_edits: { labelKey: 'next.admin.publishedEdits' },
+  published_removal: { labelKey: 'next.admin.publishedRemoval' },
+  published_edits_returned: { labelKey: 'next.admin.publishedEditsReturned' },
+  published_edits_declined: null,
+  published_removal_kept: null,
+}
+
+/** The next-action line for a viewer, or null when nothing waits on them. Keys sit under `Portal.`. */
+export const nextAction = (key: StatusKey, viewer: 'owner' | 'admin'): NextLine | null =>
+  viewer === 'owner' ? OWNER_LINES[key] : ADMIN_LINES[key]

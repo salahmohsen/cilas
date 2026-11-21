@@ -1,4 +1,6 @@
-import { describe, expect, it } from 'vitest'
+import { describe, expect, expectTypeOf, it } from 'vitest'
+
+import type { BadgeProps } from '@/components/arc/badge/badge'
 
 import type { ReviewRequest, ReviewState } from './review'
 import { REVIEWED_FIELDS } from './reviewed-fields'
@@ -11,6 +13,9 @@ import {
   type StatusKey,
   hasUnsentEdits,
   neverPublished,
+  nextAction,
+  type StatusTone,
+  statusBadge,
   statusInputOf,
   statusOf,
   statusSelect,
@@ -307,5 +312,100 @@ describe('KEY_WHERE', () => {
   it('has a row for draft that reads approved and a missing status as draft', () => {
     expect(JSON.stringify(KEY_WHERE.draft?.where)).toContain('approved')
     expect(JSON.stringify(KEY_WHERE.draft?.where)).toContain('exists')
+  })
+})
+
+const PUBLISHED = { tone: 'success', icon: 'globe', labelKey: 'status.published' } as const
+
+describe('statusBadge', () => {
+  it.each([
+    ['draft', [{ tone: 'neutral', icon: 'pencil-line', labelKey: 'status.draft' }]],
+    ['submitted', [{ tone: 'info', icon: 'clock', labelKey: 'status.submitted' }]],
+    [
+      'changes_requested',
+      [{ tone: 'warning', icon: 'message-square-warning', labelKey: 'status.changesRequested' }],
+    ],
+    ['rejected', [{ tone: 'danger', icon: 'circle-x', labelKey: 'status.declined' }]],
+    ['published', [PUBLISHED]],
+    [
+      'published_unsent',
+      [PUBLISHED, { tone: 'neutral', icon: 'file-pen', labelKey: 'status.unsentEdits' }],
+    ],
+    [
+      'published_edits',
+      [PUBLISHED, { tone: 'info', icon: 'file-clock', labelKey: 'status.editsInReview' }],
+    ],
+    [
+      'published_removal',
+      [PUBLISHED, { tone: 'neutral', icon: 'archive-x', labelKey: 'status.removalRequested' }],
+    ],
+    [
+      'published_edits_returned',
+      [
+        PUBLISHED,
+        { tone: 'warning', icon: 'message-square-warning', labelKey: 'status.changesRequested' },
+      ],
+    ],
+    [
+      'published_edits_declined',
+      [PUBLISHED, { tone: 'danger', icon: 'circle-x', labelKey: 'status.editsDeclined' }],
+    ],
+    [
+      'published_removal_kept',
+      [PUBLISHED, { tone: 'neutral', icon: 'archive-restore', labelKey: 'status.keptOnSite' }],
+    ],
+  ] as const)('statusBadge(%s) gives %j', (key, badges) => {
+    expect(statusBadge(key)).toEqual(badges)
+  })
+
+  it('every badge has an icon', () => {
+    STATUS_KEYS.forEach((key) =>
+      statusBadge(key).forEach((badge) => expect(badge.icon).toBeTruthy()),
+    )
+  })
+
+  it('only published keys use the success tone', () => {
+    STATUS_KEYS.forEach((key) => {
+      const successes = statusBadge(key).filter((badge) => badge.tone === 'success')
+      expect(successes).toHaveLength(key.startsWith('published') ? 1 : 0)
+    })
+  })
+
+  it('Arc Badge accepts every status tone', () => {
+    expectTypeOf<StatusTone>().toExtend<BadgeProps['tone']>()
+  })
+})
+
+describe('nextAction', () => {
+  it.each([
+    ['draft', 'next.owner.draft'],
+    ['submitted', 'next.owner.submitted'],
+    ['changes_requested', 'next.owner.changesRequested'],
+    ['rejected', 'next.owner.rejected'],
+    ['published', 'next.owner.published'],
+    ['published_unsent', 'next.owner.publishedUnsent'],
+    ['published_edits', 'next.owner.publishedEdits'],
+    ['published_removal', 'next.owner.publishedRemoval'],
+    ['published_edits_returned', 'next.owner.publishedEditsReturned'],
+    ['published_edits_declined', 'next.owner.publishedEditsDeclined'],
+    ['published_removal_kept', 'next.owner.publishedRemovalKept'],
+  ] as const)('nextAction(%s, owner) is %s', (key, labelKey) => {
+    expect(nextAction(key, 'owner')).toEqual({ labelKey })
+  })
+
+  it.each([
+    ['draft', null],
+    ['submitted', 'next.admin.submitted'],
+    ['changes_requested', 'next.admin.changesRequested'],
+    ['rejected', null],
+    ['published', null],
+    ['published_unsent', null],
+    ['published_edits', 'next.admin.publishedEdits'],
+    ['published_removal', 'next.admin.publishedRemoval'],
+    ['published_edits_returned', 'next.admin.publishedEditsReturned'],
+    ['published_edits_declined', null],
+    ['published_removal_kept', null],
+  ] as const)('nextAction(%s, admin) is %s', (key, labelKey) => {
+    expect(nextAction(key, 'admin')).toEqual(labelKey ? { labelKey } : null)
   })
 })
