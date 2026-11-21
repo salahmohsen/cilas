@@ -10,11 +10,12 @@ const lookup = (messages: object, key: string) =>
 
 describe('portalNav', () => {
   it.each([
-    [['member'], ['home']],
-    [['non_degree_seeking'], ['home']],
-    [['fellow'], ['home']],
-    [['admin'], ['home', 'openDashboard']],
-    [['super_admin'], ['home', 'openDashboard']],
+    [[], ['home']],
+    [['member'], ['home', 'articles']],
+    [['non_degree_seeking'], ['home', 'articles']],
+    [['fellow'], ['home', 'articles', 'courses']],
+    [['admin'], ['home', 'articles', 'courses', 'openDashboard']],
+    [['super_admin'], ['home', 'articles', 'courses', 'openDashboard']],
   ] as const)('roles %j see %j', (roles, keys) => {
     expect(portalNav({ roles: [...roles] }).map((item) => item.key)).toEqual(keys)
   })
@@ -29,6 +30,40 @@ describe('portalNav', () => {
       count: null,
       external: true,
     })
+  })
+
+  it.each([
+    [['member'], { articles: 'myWork' }],
+    [['fellow'], { articles: 'myWork', courses: 'myWork' }],
+    [['admin'], { articles: 'admin', courses: 'admin' }],
+  ] as const)('the list items of %j sit in %j', (roles, groups) => {
+    const items = portalNav({ roles: [...roles] }).filter(
+      (item) => item.key === 'articles' || item.key === 'courses',
+    )
+    expect(Object.fromEntries(items.map((item) => [item.key, item.group]))).toEqual(groups)
+  })
+
+  it('the list items are portal pages with no count', () => {
+    expect(portalNav({ roles: ['fellow'] }).filter((item) => item.key !== 'home')).toEqual([
+      {
+        key: 'articles',
+        labelKey: 'nav.articles',
+        group: 'myWork',
+        href: '/spaces/articles',
+        icon: 'articles',
+        count: null,
+        external: false,
+      },
+      {
+        key: 'courses',
+        labelKey: 'nav.courses',
+        group: 'myWork',
+        href: '/spaces/courses',
+        icon: 'courses',
+        count: null,
+        external: false,
+      },
+    ])
   })
 
   it('every label key exists in both languages', () => {
