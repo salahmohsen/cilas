@@ -16,8 +16,6 @@ export type DeleteSummary = {
   name: string
   /** What the dialog deletes, such as "course". */
   noun: string
-  /** Why this document may not be deleted, when it may not. */
-  blocked?: string
   /** What is deleted with the document. */
   deletes: DeleteGroup[]
   /** What stays, but loses its link to the document. */

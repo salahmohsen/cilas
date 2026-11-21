@@ -2,19 +2,24 @@ import type { Access, CollectionSlug, Endpoint, PayloadRequest } from 'payload'
 
 import type { DeleteSummary } from '@/lib/delete-summary'
 
-type Summarize = (req: PayloadRequest, id: number) => Promise<Omit<DeleteSummary, 'blocked'>>
+type Summarize = (req: PayloadRequest, id: number) => Promise<DeleteSummary>
 
 /**
  * The delete routes for a collection whose stock delete is closed, so that
  * the admin panel shows what goes with a document before it is deleted
  * (src/components/admin/delete-dialog.tsx):
  *
- * - `GET /:id/delete-summary`: the dialog's lists.
+ * - `GET /:id/delete-summary`: the dialog's lists. The lists come from reads
+ *   that skip access, so the delete rule gates them: an account that may not
+ *   delete the document gets the reason and nothing else, and the same 403 for
+ *   an id that does not exist.
  * - `POST /:id/delete`: the delete itself. The collection's beforeDelete
  *   hooks remove the dependents in the same transaction.
  *
  * `blocked` returns why the signed-in user may not delete this document, or
- * null when they may. It is the collection's delete rule; both routes check it.
+ * null when they may. It is the collection's delete rule; both routes check it,
+ * and it gives one answer for a document the user may not delete and one that
+ * does not exist.
  */
 export const deleteEndpoints = (
   collection: CollectionSlug,
@@ -42,9 +47,9 @@ export const deleteEndpoints = (
     }
 
   const summary = guarded(async (req, id) => {
-    const found = await summarize(req, id)
     const reason = await blocked(req, id)
-    return Response.json({ ...found, ...(reason ? { blocked: reason } : {}) })
+    if (reason) return Response.json({ error: reason }, { status: 403 })
+    return Response.json(await summarize(req, id))
   })
 
   const remove = guarded(async (req, id) => {
