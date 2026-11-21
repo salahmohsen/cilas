@@ -521,59 +521,59 @@ describe('own account rows', () => {
   })
 })
 
-const ROLE_CASES = [
-  ['admin', ['admin']],
-  ['super_admin', ['super_admin']],
-  ['fellow', ['fellow']],
-  ['member', ['member']],
-  ['non_degree_seeking', ['non_degree_seeking']],
-  ['no role', []],
-] as const
-
 describe('mayAuthor', () => {
-  it.each(
-    ROLE_CASES.flatMap(
-      ([name, roles]) =>
-        [
-          [name, roles, 7],
-          [name, roles, null],
-        ] as const,
-    ),
-  )(
-    'mayAuthor(%s, person %s) matches canAuthor and canProposePublication',
-    (_name, roles, person) => {
-      const holder = user([...roles], { person })
-      const expected = run(canAuthor, holder)
-      expect(mayAuthor(holder)).toBe(expected)
-      expect(run(canProposePublication, holder)).toBe(expected)
-    },
-  )
-
   it.each([
-    ['admin', ['admin'], false, true],
-    ['fellow', ['fellow'], true, true],
-    ['fellow', ['fellow'], false, false],
-    ['member', ['member'], true, true],
-    ['member', ['member'], false, false],
-    ['non_degree_seeking', ['non_degree_seeking'], true, true],
-    ['no role', [], true, false],
-  ] as const)('mayAuthor(%s, linked %s) is %s', (_name, roles, linked, result) => {
-    expect(mayAuthor(user([...roles], linked ? { person: 7 } : {}))).toBe(result)
+    ['admin', ['admin'], 7, true],
+    ['admin', ['admin'], null, true],
+    ['super_admin', ['super_admin'], null, true],
+    ['fellow', ['fellow'], 7, true],
+    ['fellow', ['fellow'], null, false],
+    ['member', ['member'], 7, true],
+    ['member', ['member'], null, false],
+    ['non_degree_seeking', ['non_degree_seeking'], 7, true],
+    ['non_degree_seeking', ['non_degree_seeking'], null, false],
+    ['no role', [], 7, false],
+    ['no role', [], null, false],
+  ] as const)('mayAuthor(%s, person %s) is %s', (_name, roles, person, result) => {
+    expect(mayAuthor(user([...roles], { person }))).toBe(result)
+  })
+
+  it('refuses anonymous visitors', () => {
+    expect(mayAuthor(null)).toBe(false)
+  })
+
+  it('is the rule of canAuthor and canProposePublication', () => {
+    const holder = user(['member'], { person: 7 })
+    expect(run(canAuthor, holder)).toBe(true)
+    expect(run(canProposePublication, holder)).toBe(true)
+    expect(run(canAuthor, user(['member']))).toBe(false)
+    expect(run(canProposePublication, user(['member']))).toBe(false)
   })
 })
 
 describe('mayTeach', () => {
-  it.each(
-    ROLE_CASES.flatMap(
-      ([name, roles]) =>
-        [
-          [name, roles, 7],
-          [name, roles, null],
-        ] as const,
-    ),
-  )('mayTeach(%s, person %s) matches canTeach', (_name, roles, person) => {
-    const holder = user([...roles], { person })
-    expect(mayTeach(holder)).toBe(run(canTeach, holder))
+  it.each([
+    ['admin', ['admin'], 7, true],
+    ['admin', ['admin'], null, true],
+    ['super_admin', ['super_admin'], null, true],
+    ['fellow', ['fellow'], 7, true],
+    ['fellow', ['fellow'], null, false],
+    ['member', ['member'], 7, false],
+    ['member', ['member'], null, false],
+    ['non_degree_seeking', ['non_degree_seeking'], 7, false],
+    ['no role', [], 7, false],
+    ['no role', [], null, false],
+  ] as const)('mayTeach(%s, person %s) is %s', (_name, roles, person, result) => {
+    expect(mayTeach(user([...roles], { person }))).toBe(result)
+  })
+
+  it('refuses anonymous visitors', () => {
+    expect(mayTeach(null)).toBe(false)
+  })
+
+  it('is the rule of canTeach', () => {
+    expect(run(canTeach, user(['fellow'], { person: 7 }))).toBe(true)
+    expect(run(canTeach, user(['fellow']))).toBe(false)
   })
 })
 
