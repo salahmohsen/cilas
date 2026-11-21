@@ -1,10 +1,12 @@
 import config from '@payload-config'
 import type { Metadata } from 'next'
 import { getTranslations } from 'next-intl/server'
+import { cookies } from 'next/headers'
 import { redirect } from 'next/navigation'
 import { getPayload } from 'payload'
 
 import { currentReader } from '@/lib/reader'
+import { foldCookie } from '@/portal/nav/fold'
 import { mySpaces } from '@/lib/spaces-data'
 import { portalNav } from '@/portal/nav/portal-nav'
 import { PortalShell } from '@/portal/nav/portal-shell'
@@ -22,8 +24,9 @@ export default async function SpacesLayout({ children, params }: Props) {
   const user = await currentReader()
   if (!user) redirect(`/${locale}/login?next=${encodeURIComponent(`/${locale}/spaces`)}`)
   const payload = await getPayload({ config })
-  const [t, spaces] = await Promise.all([
+  const [t, jar, spaces] = await Promise.all([
     getTranslations('Spaces'),
+    cookies(),
     // The nav still renders without its spaces (spec, Navigation, Errors).
     mySpaces(payload, user, locale).catch((err: unknown) => {
       payload.logger.error({ err }, 'portal nav: the spaces list did not load')
@@ -34,7 +37,7 @@ export default async function SpacesLayout({ children, params }: Props) {
     <PortalShell
       nav={portalNav(user)}
       spaces={spaceLinks(spaces, t('community'))}
-      folded={false}
+      folded={jar.has(foldCookie(user.id))}
       accountId={user.id}
     >
       {children}

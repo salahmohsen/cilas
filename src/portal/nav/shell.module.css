@@ -16,9 +16,8 @@
 }
 
 .shell {
-  --rail-width: 16rem;
   display: grid;
-  grid-template-columns: var(--rail-width) minmax(0, 1fr);
+  grid-template-columns: auto minmax(0, 1fr);
   min-block-size: 100dvh;
   background: var(--surface-muted);
 }
@@ -29,11 +28,24 @@
   display: flex;
   flex-direction: column;
   gap: var(--space-4);
+  inline-size: 16rem;
   block-size: 100dvh;
   min-inline-size: 0;
   padding: var(--space-3);
+  overflow-x: hidden;
   overflow-y: auto;
   overscroll-behavior: contain;
+  transition: inline-size var(--portal-duration) var(--ease-standard);
+}
+
+/* Folded: a column of icons and round covers; names stay as hidden text and tooltips. */
+.shell:has(.sidebar[data-folded]) .rail {
+  inline-size: 5rem;
+}
+
+.shell:has(.sidebar[data-folded]) .top,
+.shell:has(.sidebar[data-folded]) .tools {
+  flex-direction: column;
 }
 
 .top {
@@ -77,6 +89,83 @@
 /* The skip link's target: focus lands here, and the next Tab starts inside. */
 .main:focus {
   outline: none;
+}
+
+.sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  min-inline-size: 0;
+}
+
+.fold {
+  display: inline-grid;
+  place-items: center;
+  align-self: flex-end;
+  inline-size: 44px;
+  block-size: 44px;
+  border: 0;
+  border-radius: var(--radius-control);
+  background: transparent;
+  color: var(--text-secondary);
+  cursor: pointer;
+}
+
+.fold:hover {
+  background: color-mix(in oklab, var(--foreground) 6%, transparent);
+  color: var(--foreground);
+}
+
+.chevron {
+  transition: rotate var(--portal-duration) var(--ease-standard);
+}
+
+:global([dir='rtl']) .chevron {
+  scale: -1 1;
+}
+
+.sidebar[data-folded] .fold {
+  align-self: center;
+}
+
+.sidebar[data-folded] .chevron {
+  rotate: 180deg;
+}
+
+.sidebar[data-folded] .label,
+.sidebar[data-folded] .count,
+.sidebar[data-folded] .heading {
+  position: absolute;
+  inline-size: 1px;
+  block-size: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+.sidebar[data-folded] .cover {
+  overflow: visible;
+  border-radius: var(--radius-pill);
+}
+
+.sidebar[data-folded] .cover img {
+  border-radius: var(--radius-pill);
+}
+
+.dot {
+  display: none;
+}
+
+.sidebar[data-folded] .dot {
+  position: absolute;
+  inset-block-start: -2px;
+  inset-inline-end: -2px;
+  display: block;
+  inline-size: 12px;
+  block-size: 12px;
+  border-radius: var(--radius-pill);
+  background: var(--portal-unread);
+  box-shadow: 0 0 0 2px var(--surface-muted);
 }
 
 .nav {
@@ -188,7 +277,7 @@
     overflow: visible;
   }
 
-  .nav,
+  .rail .sidebar,
   .account {
     display: none;
   }

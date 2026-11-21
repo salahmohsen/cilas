@@ -287,4 +287,72 @@ test.describe('portal shell', () => {
         })
       }
   })
+
+  test.describe('fold (1440)', () => {
+    const PAIRS = [
+      ['admin', 'fellow'],
+      ['fellow', 'student'],
+      ['student', 'admin'],
+    ] as const
+
+    const foldButton = (page: Page, locale: Locale) =>
+      page.getByRole('button', { name: MESSAGES[locale].Portal.nav.fold })
+
+    const signOutHere = async (page: Page, locale: Locale) => {
+      await accountButton(page, locale).click()
+      await page.getByRole('menuitem', { name: MESSAGES[locale].Portal.account.signOut }).click()
+      await page.waitForURL(`**/${locale}/login**`)
+    }
+
+    for (const locale of LOCALES)
+      for (const [first, second] of PAIRS)
+        test(`the folded state belongs to the account (${first} then ${second}, ${locale})`, async ({
+          browser,
+        }) => {
+          const spacesPath = localePath('/en/spaces', locale)
+          await inContextAt(browser, { baseURL, viewport: DESKTOP }, async (page) => {
+            await login({ page, user: world.accounts[first], next: spacesPath })
+            await foldButton(page, locale).click()
+            await expect(foldButton(page, locale)).toHaveAttribute('aria-expanded', 'false')
+            await page.reload()
+            await expect(foldButton(page, locale)).toHaveAttribute('aria-expanded', 'false')
+            await signOutHere(page, locale)
+
+            await login({ page, user: world.accounts[second], next: spacesPath })
+            await expect(foldButton(page, locale)).toHaveAttribute('aria-expanded', 'true')
+            await signOutHere(page, locale)
+
+            await login({ page, user: world.accounts[first], next: spacesPath })
+            await expect(foldButton(page, locale)).toHaveAttribute('aria-expanded', 'false')
+          })
+        })
+
+    test('reduced motion: the fold does not animate (en, fellow)', async ({ browser }) => {
+      const context = await browser.newContext({
+        baseURL,
+        viewport: DESKTOP,
+        storageState: states.fellow,
+        reducedMotion: 'reduce',
+      })
+      try {
+        const page = await context.newPage()
+        await page.goto('/en/spaces')
+        await expect(foldButton(page, 'en')).toHaveAttribute('aria-expanded', 'true')
+        expect(
+          await page.evaluate(() =>
+            getComputedStyle(document.documentElement).getPropertyValue('--portal-duration'),
+          ),
+        ).toMatch(/^\s*0m?s\s*$/)
+        await foldButton(page, 'en').click()
+        await expect(foldButton(page, 'en')).toHaveAttribute('aria-expanded', 'false')
+        expect(
+          await page
+            .locator('[data-portal-rail]')
+            .evaluate((rail) => rail.getAnimations({ subtree: true }).length),
+        ).toBe(0)
+      } finally {
+        await context.close()
+      }
+    })
+  })
 })

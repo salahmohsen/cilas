@@ -37,12 +37,7 @@ export async function PortalShell({
         {t('shell.skip')}
       </a>
       <LiveRegion />
-      <div
-        className={styles.shell}
-        data-page="spaces"
-        data-portal-shell
-        data-folded={folded || undefined}
-      >
+      <div className={styles.shell} data-page="spaces" data-portal-shell>
         <div className={styles.rail} data-portal-rail>
           <div className={styles.top}>
             <Link href="/" className={styles.brand} aria-label={t('nav.brand')}>
