@@ -3,31 +3,17 @@ import type { Payload } from 'payload'
 import { addDays, cairoDay } from '../src/lib/cairo-day'
 import { STATUS_KEYS, type StatusKey } from '../src/lib/review-status'
 import { consentAccept } from '../src/lib/spaces-write'
-import type { User } from '../src/payload-types'
 import { makeMedia } from './media.fixture'
 import { type createTracker, uniq, uniqEmail } from './payload.fixture'
-import { courseRoom, PASSWORD, type PortalAccount, type PortalWorld } from './portal.fixture'
+import {
+  account,
+  courseRoom,
+  PASSWORD,
+  type PortalAccount,
+  type PortalWorld,
+} from './portal.fixture'
 
 type Track = ReturnType<typeof createTracker>['track']
-
-const personOf = (user: User) =>
-  user.person == null ? null : typeof user.person === 'object' ? user.person.id : user.person
-
-const makeAccount = async (payload: Payload, track: Track, base: string, roles: User['roles']) => {
-  const email = uniqEmail(base)
-  const user = track(
-    'users',
-    await payload.create({
-      collection: 'users',
-      data: { email, password: PASSWORD, roles },
-      depth: 0,
-      overrideAccess: true,
-    }),
-  )
-  const consent = await consentAccept({ payload, user })
-  if (!consent.ok) throw new Error(`consent refused for ${email}`)
-  return { id: user.id, email, password: PASSWORD, person: personOf(user) } satisfies PortalAccount
-}
 
 const makeWriter = async (payload: Payload, track: Track) => {
   const person = track(
@@ -215,7 +201,7 @@ export const listWorld = async (payload: Payload, track: Track, world: PortalWor
   const added = await publishedArticle(uniq('Added'))
   await edit('articles', added, { authors: [owner, poster], title: titles.addedCopy })
 
-  const teacher = await makeAccount(payload, track, 'list-teacher', ['fellow'])
+  const teacher = await account(payload, track, 'fellow', 'list-teacher')
   const writer = await makeWriter(payload, track)
 
   const writerDraft = await draftArticle(uniq('Writer draft'), [writer.person!])
