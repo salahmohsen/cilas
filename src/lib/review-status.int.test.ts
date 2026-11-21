@@ -7,6 +7,7 @@ import type { User } from '@/payload-types'
 import { localServices } from '../../testing/local-services.test-utils'
 import { mockNetwork } from '../../testing/msw-node.test-utils'
 import { createTracker, uniq, uniqEmail } from '../../testing/payload.fixture'
+import { rest } from '../../testing/payload-rest.test-utils'
 import { resendInbox } from '../../testing/resend.test-utils'
 
 import type { ReviewState } from './review'
@@ -532,6 +533,65 @@ describe('review status over real writes', () => {
       await edit(id, { review: { status: 'rejected' as ReviewState, request: 'removal' } })
       expect(await storedRequest(id)).toBeNull()
       expect(await keyOf('articles', id, admin)).toBe('published_edits_declined')
+    })
+
+    it('a trusted write with no review key keeps removal on a submitted copy', async () => {
+      const id = await published('Rule Eleven')
+      await submit(id, { request: 'removal' })
+      await payload.update({
+        collection: 'articles',
+        id,
+        data: { title: 'Rule Eleven, touched' },
+        draft: true,
+        ...as(admin),
+      })
+      expect(await storedRequest(id)).toBe('removal')
+      expect(await keyOf('articles', id, admin)).toBe('published_removal')
+    })
+
+    describe('a declined copy keeps its status and request', () => {
+      const declined = async (title: string) => {
+        const id = await published(title)
+        await edit(id, { title: `${title}, edited` })
+        await submit(id, { request: 'changes' })
+        await decide(id, 'rejected')
+        return id
+      }
+
+      it('over REST PATCH', async () => {
+        const id = await declined('Rule Twelve')
+        const password = crypto.randomUUID()
+        const owner = await makeUser('status-rest', ['member'], personId)
+        await payload.update({
+          collection: 'users',
+          id: owner.id,
+          data: { password },
+          overrideAccess: true,
+        })
+        const token = (
+          await payload.login({ collection: 'users', data: { email: owner.email, password } })
+        ).token!
+        const body = new FormData()
+        body.set('_payload', JSON.stringify({ title: 'Rule Twelve, patched' }))
+        const response = await rest('PATCH', `articles/${id}?draft=true`, { token, body })
+        expect(response.status).toBe(200)
+        expect(await storedRequest(id)).toBe('changes')
+        expect(await keyOf('articles', id, admin)).toBe('published_edits_declined')
+      })
+
+      it('over an autosave', async () => {
+        const id = await declined('Rule Thirteen')
+        await payload.update({
+          collection: 'articles',
+          id,
+          data: { title: 'Rule Thirteen, autosaved' },
+          draft: true,
+          autosave: true,
+          ...as(author),
+        })
+        expect(await storedRequest(id)).toBe('changes')
+        expect(await keyOf('articles', id, admin)).toBe('published_edits_declined')
+      })
     })
   })
 })

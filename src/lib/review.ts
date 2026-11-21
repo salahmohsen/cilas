@@ -46,7 +46,9 @@ export const canMove = (
   AUTHOR_MOVES[from].includes(to) ||
   (live && (LIVE_AUTHOR_MOVES[from] ?? []).includes(to))
 
-export type ReviewRequest = 'changes' | 'removal'
+/** What an owner asks of a published document. */
+export const REVIEW_REQUESTS = ['changes', 'removal'] as const
+export type ReviewRequest = (typeof REVIEW_REQUESTS)[number]
 
 /** Who hears about a move: admins review submissions, authors hear decisions. */
 export const notifyOn = (from: ReviewState, to: ReviewState): 'admins' | 'authors' | null => {

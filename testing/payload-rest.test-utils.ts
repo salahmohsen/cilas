@@ -1,8 +1,8 @@
-import { REST_GET, REST_POST } from '@payloadcms/next/routes'
+import { REST_GET, REST_PATCH, REST_POST } from '@payloadcms/next/routes'
 
 import config from '../src/payload.config'
 
-const handlers = { GET: REST_GET(config), POST: REST_POST(config) }
+const handlers = { GET: REST_GET(config), PATCH: REST_PATCH(config), POST: REST_POST(config) }
 
 /**
  * Calls Payload's REST handler in process, as the app's `/api/[...slug]` route
@@ -19,5 +19,5 @@ export const rest = (
       body,
       headers: token ? { Authorization: `JWT ${token}` } : {},
     }),
-    { params: Promise.resolve({ slug: path.split('/') }) },
+    { params: Promise.resolve({ slug: path.split('?')[0].split('/') }) },
   )
