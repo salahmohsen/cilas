@@ -561,15 +561,14 @@ describe('review status over real writes', () => {
       it('over REST PATCH', async () => {
         const id = await declined('Rule Twelve')
         const password = crypto.randomUUID()
-        const owner = await makeUser('status-rest', ['member'], personId)
         await payload.update({
           collection: 'users',
-          id: owner.id,
+          id: author.id,
           data: { password },
           overrideAccess: true,
         })
         const token = (
-          await payload.login({ collection: 'users', data: { email: owner.email, password } })
+          await payload.login({ collection: 'users', data: { email: author.email, password } })
         ).token!
         const body = new FormData()
         body.set('_payload', JSON.stringify({ title: 'Rule Twelve, patched' }))
