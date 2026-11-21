@@ -1,11 +1,11 @@
-import { isAdminUser } from '@/access'
+import { adminViewOf, type AdminView } from '@/access'
 
 export type PortalNavGroup = 'top' | 'myWork' | 'teaching' | 'admin'
-export type PortalNavIcon = 'home' | 'dashboard' | 'profile'
+export type PortalNavIcon = 'home' | 'dashboard' | 'profile' | 'articles' | 'courses'
 
 /** One entry of the portal nav. `href` has no locale; `external` is a full load (its own root layout). */
 export type PortalNavItem = {
-  key: 'home' | 'openDashboard'
+  key: 'home' | 'articles' | 'courses' | 'openDashboard'
   labelKey: `nav.${string}`
   group: PortalNavGroup
   href: string
@@ -34,8 +34,25 @@ const OPEN_DASHBOARD: PortalNavItem = {
   external: true,
 }
 
+const listItem = (key: 'articles' | 'courses', group: PortalNavGroup): PortalNavItem => ({
+  key,
+  labelKey: `nav.${key}`,
+  group,
+  href: `/spaces/${key}`,
+  icon: key,
+  count: null,
+  external: false,
+})
+
+/** The items after Home, per admin view (`adminViewOf`). An account with no view gets Home only. */
+const ITEMS_BY_VIEW: Record<AdminView, PortalNavItem[]> = {
+  student: [listItem('articles', 'myWork')],
+  fellow: [listItem('articles', 'myWork'), listItem('courses', 'myWork')],
+  admin: [listItem('articles', 'admin'), listItem('courses', 'admin'), OPEN_DASHBOARD],
+}
+
 /** What the account can open from the portal nav. Later phases add items here only. */
-export const portalNav = (user: Parameters<typeof isAdminUser>[0]): PortalNavItem[] => [
-  HOME,
-  ...(isAdminUser(user) ? [OPEN_DASHBOARD] : []),
-]
+export const portalNav = (user: Parameters<typeof adminViewOf>[0]): PortalNavItem[] => {
+  const view = adminViewOf(user)
+  return [HOME, ...(view ? ITEMS_BY_VIEW[view] : [])]
+}
