@@ -1,7 +1,9 @@
 import { getPayload, type Payload } from 'payload'
 import { afterAll, beforeAll, describe, expect, it } from 'vitest'
 
+import { mediaThumbnail } from '@/lib/media-image'
 import {
+  KEY_WHERE,
   statusInputOf,
   statusOf,
   STATUS_KEYS,
@@ -10,15 +12,16 @@ import {
 } from '@/lib/review-status'
 import type { ReviewedCollection } from '@/lib/reviewed-fields'
 import config from '@/payload.config'
-import type { User } from '@/payload-types'
+import type { Media, User } from '@/payload-types'
 
 import { localServices } from '../../../testing/local-services.test-utils'
 import { mockNetwork } from '../../../testing/msw-node.test-utils'
 import { createTracker, uniq } from '../../../testing/payload.fixture'
 import { resendInbox } from '../../../testing/resend.test-utils'
-import { listWorld, type ListWorld } from '../../../testing/portal-lists.fixture'
+import { listWorld, makeMedia, type ListWorld } from '../../../testing/portal-lists.fixture'
 import { portalWorld, type PortalAccount, type PortalWorld } from '../../../testing/portal.fixture'
 
+import { groupOf } from './groups'
 import { listKindOf, loadList, type ListGroup, type ListQuery } from './rows'
 
 mockNetwork(resendInbox().handler, ...localServices)
@@ -231,6 +234,155 @@ describe('list rows', () => {
       expect(listKindOf(student, 'courses')).toBeNull()
       expect(listKindOf(none, 'articles')).toBeNull()
       expect(listKindOf(none, 'courses')).toBeNull()
+    })
+  })
+
+  describe('the owner work set', () => {
+    const own = (user: User) => ({ user, overrideAccess: false }) as const
+
+    const thumbnailOf = async (media: Media) =>
+      mediaThumbnail(
+        (await payload.findByID({
+          collection: 'media',
+          id: media.id,
+          depth: 0,
+          overrideAccess: true,
+        })) as Media,
+      )
+
+    const studentList = async (overrides: Partial<ListQuery> = {}) =>
+      loadList(payload, await userOf(world.accounts.student), ownerArticles(overrides), 'en')
+
+    const workKeysOfStudent = [
+      'draft',
+      'submitted',
+      'changes_requested',
+      'published_unsent',
+      'published_edits',
+      'published_removal',
+      'published_edits_returned',
+      'published_edits_declined',
+    ] as const
+
+    it('an unpublished approved article reads draft in In progress', async () => {
+      const { groups } = await studentList()
+      const rows = rowsOf(groups).filter((row) => row.id === lists.unpublished)
+      expect(rows.map((row) => [row.key, row.group])).toEqual([['draft', 'inProgress']])
+    })
+
+    it('each article reads its key and sits in its group', async () => {
+      const { groups } = await studentList()
+      const rows = rowsOf(groups)
+      for (const key of workKeysOfStudent) {
+        const row = rows.find((candidate) => candidate.id === lists.articles[key])
+        expect({ key, found: row?.key, group: row?.group }).toEqual({
+          key,
+          found: key,
+          group: groupOf(key, 'ownerArticles', { hasSpace: false }),
+        })
+      }
+    })
+
+    it('Needs you holds the KEY_WHERE rows of the owner keys', async () => {
+      const student = await userOf(world.accounts.student)
+      const ids = [
+        ...lists.bulk,
+        ...lists.manyDrafts,
+        ...Object.values(lists.articles),
+        lists.unpublished,
+        lists.shared,
+        lists.added,
+      ]
+      const returned = KEY_WHERE.changes_requested!.where
+      const edits = KEY_WHERE.published_edits_returned!.where
+      const mains = await payload.find({
+        collection: 'articles',
+        where: { and: [returned, { id: { in: ids } }] },
+        draft: false,
+        pagination: false,
+        depth: 0,
+        ...own(student),
+      })
+      const copies = await payload.findVersions({
+        collection: 'articles',
+        where: { and: [edits, { parent: { in: ids } }] },
+        pagination: false,
+        depth: 0,
+        ...own(student),
+      })
+      const expected = [
+        ...mains.docs.map((doc) => doc.id),
+        ...copies.docs.map((doc) => doc.parent as number),
+      ].sort()
+      const { groups } = await studentList()
+      const needsYou = groups.find((group) => group.id === 'needsYou')?.rows ?? []
+      expect(
+        needsYou
+          .map((row) => row.id)
+          .filter((id) => ids.includes(id))
+          .sort(),
+      ).toEqual(expected)
+      expect(expected).toHaveLength(2)
+    })
+
+    it('the row shows the newest title and cover', async () => {
+      const student = await userOf(world.accounts.student)
+      const media = await makeMedia(payload, track, 'list-newest')
+      await payload.update({
+        collection: 'articles',
+        id: lists.articles.draft,
+        data: { title: 'Autosaved title', cover_image: media.id },
+        draft: true,
+        autosave: true,
+        locale: 'en',
+        ...own(student),
+      })
+      const { groups } = await studentList()
+      const row = rowsOf(groups).find((candidate) => candidate.id === lists.articles.draft)
+      expect(row?.title).toBe('Autosaved title')
+      expect(row?.cover).toBe(await thumbnailOf(media))
+      expect(row?.cover).toBeTruthy()
+    })
+
+    it("a live article's copy changes its cover on the owner's row", async () => {
+      const student = await userOf(world.accounts.student)
+      const media = await makeMedia(payload, track, 'list-copy-cover')
+      const id = lists.articles.published_unsent
+      await payload.update({
+        collection: 'articles',
+        id,
+        data: { cover_image: media.id },
+        draft: true,
+        autosave: true,
+        locale: 'en',
+        ...own(student),
+      })
+      const { groups } = await studentList()
+      const row = rowsOf(groups).find((candidate) => candidate.id === id)
+      expect(row?.title).toBe(lists.titles.beta)
+      expect(row?.cover).toBe(await thumbnailOf(media))
+    })
+
+    it('finds the draft copy of a live article', async () => {
+      const { groups } = await studentList()
+      expect(groupOfId(groups, lists.articles.published_unsent)).toEqual(['inProgress'])
+      expect(groupOfId(groups, lists.articles.published_edits)).toEqual(['withEditors'])
+    })
+
+    it('work rows are newest first', async () => {
+      const { groups } = await studentList()
+      for (const group of groups) {
+        const times = group.rows.map((row) => Date.parse(row.updatedAt))
+        expect(times).toEqual([...times].sort((a, b) => b - a))
+      }
+    })
+
+    it('a reader with more than 10 work rows sees every one', async () => {
+      const { groups } = await studentList()
+      const inProgress = groups.find((group) => group.id === 'inProgress')!
+      const ids = inProgress.rows.map((row) => row.id)
+      lists.manyDrafts.forEach((id) => expect(ids).toContain(id))
+      expect(inProgress.total).toBe(inProgress.rows.length)
     })
   })
 })

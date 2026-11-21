@@ -4,6 +4,7 @@ import { adminViewOf, ownsViaAuthors, ownsViaFellows } from '@/access'
 import type { CourseType } from '@/fields/course-type'
 import type { Locale } from '@/i18n/routing'
 import type { Season } from '@/lib/cycle'
+import { mediaPopulate, mediaThumbnail } from '@/lib/media-image'
 import { relId } from '@/lib/relation'
 import {
   KEY_SELECT,
@@ -16,7 +17,7 @@ import {
   type ReviewedDoc,
   type StatusKey,
 } from '@/lib/review-status'
-import type { User } from '@/payload-types'
+import type { Media, User } from '@/payload-types'
 
 import {
   GROUPS,
@@ -228,24 +229,54 @@ const titleOf = (value: unknown, locale: Locale) => {
   return titles[locale] || titles[locale === 'en' ? 'ar' : 'en'] || null
 }
 
-const rowOf = (ctx: Ctx, entry: Entry, group: GroupId): ListRow => {
-  const { main, latest, key } = entry
-  const shows = ctx.kind !== 'admin' || waitsOn(key) === 'admin'
-  const source = shows ? (latest ?? main) : main
-  const tier = main.tier
-  return {
-    id: entry.id,
-    collection: ctx.collection,
-    key,
-    group,
-    title: titleOf(source.title, ctx.locale),
-    cover: null,
-    updatedAt: PAGED.has(group) ? main.updatedAt : (latest ?? main).updatedAt,
-    waitingSince: waitsOn(key) === 'admin' && latest ? latest.updatedAt : null,
-    owners: [],
-    tier: tier === 'public' || tier === 'community' ? tier : null,
-    course: null,
-  }
+/**
+ * The row a list shows: the latest version where the row shows the owner's
+ * newest writing, else the main row. The cover comes from the same row as the
+ * title. On an admin list that is the latest version only where the row waits
+ * on the admin: otherwise the admin sees what was approved or sent back.
+ */
+const sourceOf = ({ kind }: Ctx, { main, latest, key }: Entry) =>
+  kind !== 'admin' || waitsOn(key) === 'admin' ? (latest ?? main) : main
+
+const coverUrls = async (ctx: Ctx, ids: number[]) => {
+  if (ids.length === 0) return new Map<number, string | null>()
+  const { docs } = await ctx.payload.find({
+    collection: 'media',
+    where: { id: { in: ids } },
+    select: { ...mediaPopulate, sizes: true },
+    depth: 0,
+    pagination: false,
+    ...gate(ctx),
+  })
+  return new Map(docs.map((media) => [media.id, mediaThumbnail(media as Media) ?? null]))
+}
+
+type Shown = { entry: Entry; group: GroupId }
+
+const buildRows = async (ctx: Ctx, shown: Shown[]): Promise<ListRow[]> => {
+  const coverIds = shown.flatMap(({ entry }) => {
+    const id = relId(sourceOf(ctx, entry).cover_image)
+    return typeof id === 'number' ? [id] : []
+  })
+  const covers = await coverUrls(ctx, [...new Set(coverIds)])
+  return shown.map(({ entry, group }) => {
+    const { main, latest, key } = entry
+    const source = sourceOf(ctx, entry)
+    const cover = relId(source.cover_image)
+    return {
+      id: entry.id,
+      collection: ctx.collection,
+      key,
+      group,
+      title: titleOf(source.title, ctx.locale),
+      cover: typeof cover === 'number' ? (covers.get(cover) ?? null) : null,
+      updatedAt: PAGED.has(group) ? main.updatedAt : (latest ?? main).updatedAt,
+      waitingSince: waitsOn(key) === 'admin' && latest ? latest.updatedAt : null,
+      owners: [],
+      tier: main.tier === 'public' || main.tier === 'community' ? main.tier : null,
+      course: null,
+    }
+  })
 }
 
 /**
@@ -268,18 +299,17 @@ export const loadList = async (
   ])
   const entries = await readEntries(ctx, candidates)
   const work = [...entries.values()]
-    .map((entry) => ({ entry, group: groupOf(entry.key, ctx.kind, { hasSpace: false }) }))
+    .map((entry): Shown => ({ entry, group: groupOf(entry.key, ctx.kind, { hasSpace: false }) }))
     .filter(({ group }) => !PAGED.has(group))
     .sort((a, b) =>
       (b.entry.latest ?? b.entry.main).updatedAt.localeCompare(
         (a.entry.latest ?? a.entry.main).updatedAt,
       ),
     )
+  const rows = await buildRows(ctx, work)
   const groups = GROUPS[ctx.kind].flatMap((id): ListGroup[] => {
-    const rows = work
-      .filter(({ group }) => group === id)
-      .map(({ entry, group }) => rowOf(ctx, entry, group))
-    return rows.length ? [{ id, rows, total: rows.length, hasMore: false }] : []
+    const inGroup = rows.filter((row) => row.group === id)
+    return inGroup.length ? [{ id, rows: inGroup, total: inGroup.length, hasMore: false }] : []
   })
   return { groups, total }
 }
