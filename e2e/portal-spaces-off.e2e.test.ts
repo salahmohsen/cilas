@@ -11,7 +11,6 @@ import {
   localePath,
   MESSAGES,
   notifyOf,
-  openMore,
   portalWorld,
   POST_BODY,
   ROLES,
@@ -20,6 +19,7 @@ import {
   type PortalRole,
   type PortalWorld,
 } from '../testing/portal.fixture'
+import { openMore } from '../testing/portal-e2e.test-utils'
 
 type State = Awaited<ReturnType<BrowserContext['storageState']>>
 type Viewport = (typeof WIDTHS)[keyof typeof WIDTHS]

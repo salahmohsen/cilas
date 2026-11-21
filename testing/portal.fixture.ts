@@ -1,4 +1,4 @@
-import { expect, type Browser, type BrowserContext, type Page } from '@playwright/test'
+import type { Browser, BrowserContext, Page } from '@playwright/test'
 import type { Payload } from 'payload'
 
 import ar from '../messages/ar.json'
@@ -378,16 +378,4 @@ export const notifyOf = async (payload: Payload, account: PortalAccount, link: s
     data: { recipient: account.id, kind: 'comment', title: 'E2E comment', link },
     overrideAccess: true,
   })
-}
-
-/** Opens the phone More sheet from the bottom bar; returns the open sheet. */
-export const openMore = async (page: Page, locale: Locale) => {
-  const portal = MESSAGES[locale].Portal
-  await page
-    .getByRole('navigation', { name: portal.nav.label, exact: true })
-    .getByRole('button', { name: portal.nav.more, exact: true })
-    .click()
-  const sheet = page.getByRole('dialog', { name: portal.nav.more, exact: true })
-  await expect(sheet).toBeVisible()
-  return sheet
 }

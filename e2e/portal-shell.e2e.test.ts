@@ -1,6 +1,6 @@
-import AxeBuilder from '@axe-core/playwright'
 import { expect, test, type Browser, type Page } from '@playwright/test'
 import { createTranslator } from 'next-intl'
+import AxeBuilder from '@axe-core/playwright'
 import { getPayload, type Payload } from 'payload'
 
 import config from '../src/payload.config.js'
@@ -14,7 +14,6 @@ import {
   localePath,
   MESSAGES,
   notifyOf,
-  openMore,
   portalWorld,
   ROLES,
   WIDTHS,
@@ -24,43 +23,19 @@ import {
   type RoomFixture,
   type StorageState,
 } from '../testing/portal.fixture'
-import KNOWN from './portal-axe-known.json'
+import {
+  axeOver,
+  known,
+  navHref,
+  NAV_BY_ROLE,
+  openMore,
+  PHONE,
+  portalRoutes,
+  ROUTE_SHAPES,
+} from '../testing/portal-e2e.test-utils'
+import { unreadCount } from '../src/lib/unread-count'
 
 type Viewport = (typeof WIDTHS)[keyof typeof WIDTHS]
-
-const AXE_TAGS = ['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa', 'wcag22aa']
-
-const ROUTE_SHAPES = [
-  ['/spaces', /^\/[a-z]{2}\/spaces$/],
-  ['/spaces/course/*', /^\/[a-z]{2}\/spaces\/course\/[^/]+$/],
-  ['/spaces/community', /^\/[a-z]{2}\/spaces\/community$/],
-  ['/spaces/community/*', /^\/[a-z]{2}\/spaces\/community\/[^/]+$/],
-] as const
-
-type RouteShape = (typeof ROUTE_SHAPES)[number][0]
-type Known = Partial<Record<RouteShape, Record<string, Record<string, number>>>>
-
-const shapeOf = (route: string) => {
-  const shape = ROUTE_SHAPES.find(([, pattern]) => pattern.test(route))
-  if (!shape) throw new Error(`no route shape for ${route}`)
-  return shape[0]
-}
-
-const known = (route: string, role: PortalRole, locale: Locale, width: number) =>
-  (KNOWN as Known)[shapeOf(route)]?.[`${role} ${locale} ${width}`] ?? {}
-
-const portalRoutes = (world: PortalWorld, locale: Locale) =>
-  ['/en/spaces', world.course.path, '/en/spaces/community', world.community.path].map((path) =>
-    localePath(path, locale),
-  )
-
-const axeViolations = async (page: Page) => {
-  const { violations } = await new AxeBuilder({ page })
-    .withTags(AXE_TAGS)
-    .exclude('nextjs-portal')
-    .analyze()
-  return violations
-}
 
 const OTHER = { en: 'ar', ar: 'en' } as const
 const DESKTOP = WIDTHS.desktop
@@ -69,8 +44,14 @@ const escape = (text: string) => text.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
 
 const spaceName = (room: RoomFixture, locale: Locale, unread: number) => {
   const t = createTranslator({ locale, messages: MESSAGES[locale], namespace: 'Portal.nav' })
-  const count = unread === 0 ? '' : unread > 9 ? t('unreadMany') : t('unread', { count: unread })
-  return new RegExp(`^${escape(room.label[locale])}\\s?${escape(count)}$`)
+  const count =
+    unread === 0
+      ? ''
+      : unreadCount(unread, locale, {
+          some: (values) => t('unread', values),
+          many: (values) => t('unreadMany', values),
+        }).spoken
+  return new RegExp(`^${escape(room.label[locale])}${escape(count)}$`)
 }
 
 const portalNavOf = (page: Page, locale: Locale) =>
@@ -80,8 +61,6 @@ const accountButton = (page: Page, locale: Locale) =>
   page
     .locator('[data-portal-rail]')
     .getByRole('button', { name: new RegExp(`^${MESSAGES[locale].Portal.account.label}, `) })
-
-const PHONE = WIDTHS.phone
 
 const gotoLive = async (page: Page, path: string) => {
   const stream = page.waitForResponse((response) =>
@@ -151,14 +130,10 @@ test.describe('portal shell', () => {
                 await world.resetVisits()
                 await page.goto(route)
                 await expect(page.getByRole('heading', { level: 1 })).toHaveCount(1)
-                const violations = await axeViolations(page)
-                const allowed = known(route, role, locale, viewport.width)
-                const over = Object.fromEntries(
-                  violations
-                    .filter((v) => v.nodes.length > (allowed[v.id] ?? 0))
-                    .map((v) => [v.id, v.nodes.map((node) => node.target.join(' '))]),
-                )
-                expect(over, shape).toEqual({})
+                expect(
+                  await axeOver(page, known(route, role, locale, viewport.width)),
+                  shape,
+                ).toEqual({})
               })
             }),
           )
@@ -225,10 +200,25 @@ test.describe('portal shell', () => {
               await expect(
                 portalNavOf(page, locale).getByRole('link', { name: portal.nav.home, exact: true }),
               ).toHaveAttribute('aria-current', 'page')
+              const expected = NAV_BY_ROLE[role].map((item) => ({
+                href: navHref(item, locale),
+                group: item.group,
+              }))
+              const itemsOf = (scope: ReturnType<Page['locator']>) =>
+                scope.locator('[data-portal-item]').evaluateAll((links) =>
+                  links.map((link) => ({
+                    href: link.getAttribute('href'),
+                    group: link.getAttribute('data-group'),
+                  })),
+                )
+              expect(await itemsOf(portalNavOf(page, locale))).toEqual(
+                phone ? expected.filter((item) => item.group === 'top') : expected,
+              )
               const links = await spaceLinksOf(page)
-              await expect(
-                links.getByRole('link', { name: portal.nav.openDashboard, exact: true }),
-              ).toHaveCount(role === 'admin' ? 1 : 0)
+              if (phone)
+                expect(await itemsOf(links)).toEqual(
+                  expected.filter((item) => item.group !== 'top'),
+                )
               for (const room of ['course', 'otherCourse'] as const)
                 await expect(
                   links.getByRole('link', {
@@ -256,11 +246,11 @@ test.describe('portal shell', () => {
                 })
               let row = await shownRow()
               await expect(row).toBeVisible()
-              await expect(row).not.toContainText('9+')
+              await expect(row.locator('[dir="ltr"]')).toHaveCount(0)
               await page.reload()
               row = await shownRow()
               await expect(row).toBeVisible()
-              await expect(row).not.toContainText('9+')
+              await expect(row.locator('[dir="ltr"]')).toHaveCount(0)
             })
           })
 
@@ -322,9 +312,7 @@ test.describe('portal shell', () => {
             const hrefs = await items.evaluateAll((links) =>
               links.map((link) => link.getAttribute('href')!),
             )
-            expect(hrefs).toEqual(
-              role === 'admin' ? [`/${locale}/spaces`, '/admin'] : [`/${locale}/spaces`],
-            )
+            expect(hrefs).toEqual(NAV_BY_ROLE[role].map((item) => navHref(item, locale)))
             for (const href of hrefs) expect((await page.request.get(href)).status()).toBe(200)
 
             const account = accountButton(page, locale)
@@ -367,7 +355,7 @@ test.describe('portal shell', () => {
     ] as const
 
     const foldButton = (page: Page, locale: Locale) =>
-      page.getByRole('button', { name: MESSAGES[locale].Portal.nav.fold })
+      page.getByRole('button', { name: MESSAGES[locale].Portal.nav.sidebar })
 
     const signOutHere = async (page: Page, locale: Locale) => {
       await accountButton(page, locale).click()
@@ -677,7 +665,9 @@ test.describe('portal shell', () => {
                   }
                   const nav = portalNavOf(page, locale)
                   await expect(nav.locator(other)).toBeVisible()
-                  const fold = page.getByRole('button', { name: MESSAGES[locale].Portal.nav.fold })
+                  const fold = page.getByRole('button', {
+                    name: MESSAGES[locale].Portal.nav.sidebar,
+                  })
                   await fold.click()
                   await expect(fold).toHaveAttribute('aria-expanded', 'false')
                   await expect(nav.locator(other)).toBeVisible()
@@ -698,7 +688,7 @@ test.describe('portal shell', () => {
           const main = (await page.locator('main').boundingBox())!
           expect(rail.x > main.x, locale).toBe(locale === 'ar')
           chevron[locale] = await page
-            .getByRole('button', { name: MESSAGES[locale].Portal.nav.fold })
+            .getByRole('button', { name: MESSAGES[locale].Portal.nav.sidebar })
             .locator('svg')
             .evaluate((svg) => `${getComputedStyle(svg).transform} ${getComputedStyle(svg).scale}`)
         })
@@ -718,8 +708,9 @@ test.describe('portal shell', () => {
         const sheet = await openMore(page, 'ar')
         const row = sheet.locator(`a[href="${localePath(world.otherCourse.path, 'ar')}"]`)
         const cover = (await row.locator('span').first().boundingBox())!
-        const label = (await row.locator('bdi').boundingBox())!
+        const label = (await row.locator('bdi').last().boundingBox())!
         expect(cover.x).toBeGreaterThan(label.x)
+        expect(cover.x - (label.x + label.width)).toBeLessThan(16)
       })
     })
 
@@ -748,16 +739,33 @@ test.describe('portal shell', () => {
             const page = await context.newPage()
             await page.goto(localePath('/en/spaces', locale))
             expect(await page.evaluate(() => matchMedia('(pointer: coarse)').matches)).toBe(true)
+            if (viewport === DESKTOP) await expect(accountButton(page, locale)).toBeVisible()
             const nav = portalNavOf(page, locale)
             const targets =
               viewport === PHONE
                 ? nav.locator('a, button')
                 : page.locator(
-                    `[data-portal-rail] nav a, [data-portal-rail] button[aria-label="${portal.nav.fold}"]`,
+                    `[data-portal-rail] nav a, [data-portal-rail] button[aria-label="${portal.nav.sidebar}"]`,
                   )
             const found = await sizes(page, targets)
             expect(found.length).toBeGreaterThan(viewport === PHONE ? 1 : 2)
             expect(atLeast(found, 44)).toEqual([])
+            const header = page.locator('[data-portal-rail] header').locator('a, button')
+            await expect(header.first()).toBeVisible()
+            const shown = await header.evaluateAll((els) =>
+              els
+                .filter((el) => el.getClientRects().length > 0)
+                .map((el) => {
+                  const box = el.getBoundingClientRect()
+                  return { w: box.width, h: box.height }
+                }),
+            )
+            expect(shown.length).toBeGreaterThan(viewport === PHONE ? 1 : 2)
+            expect(atLeast(shown, 44)).toEqual([])
+            await page.keyboard.press('Tab')
+            const skip = page.getByRole('link', { name: portal.shell.skip })
+            await expect(skip).toBeFocused()
+            expect(atLeast(await sizes(page, skip), 44)).toEqual([])
           } finally {
             await context.close()
           }
@@ -774,13 +782,145 @@ test.describe('portal shell', () => {
       })
   })
 
+  test.describe('header, landmarks and sign-out', () => {
+    const PHONES = [PHONE, { width: 320, height: 640 }]
+
+    for (const locale of LOCALES)
+      for (const viewport of PHONES)
+        for (const folded of [false, true])
+          test(`the phone header spans the width (${locale} ${viewport.width}${folded ? ', fold cookie' : ''})`, async ({
+            browser,
+          }) => {
+            const context = await browser.newContext({
+              baseURL,
+              viewport,
+              storageState: states.fellow,
+            })
+            try {
+              if (folded)
+                await context.addCookies([
+                  {
+                    name: `portal-folded-${world.accounts.fellow.id}`,
+                    value: '1',
+                    url: baseURL!,
+                  },
+                ])
+              const page = await context.newPage()
+              await page.goto(localePath('/en/spaces', locale))
+              const header = page.locator('[data-portal-rail] header')
+              const box = (await header.boundingBox())!
+              const bell = (await header
+                .getByRole('button', {
+                  name: new RegExp(`^${MESSAGES[locale].Notifications.label}(,|،|$)`),
+                })
+                .boundingBox())!
+              expect(box.height).toBeLessThanOrEqual(64)
+              expect(box.width).toBeGreaterThan(viewport.width - 40)
+              if (locale === 'en') expect(bell.x + bell.width).toBeGreaterThan(viewport.width - 40)
+              else expect(bell.x).toBeLessThan(40)
+            } finally {
+              await context.close()
+            }
+          })
+
+    for (const locale of LOCALES)
+      test(`the More sheet closes when the window widens, and focus goes to the fold button (${locale})`, async ({
+        browser,
+      }) => {
+        await inContext(browser, { viewport: PHONE, role: 'fellow' }, async (page) => {
+          await page.goto(localePath('/en/spaces', locale))
+          const sheet = await openMore(page, locale)
+          await page.setViewportSize({ width: 1000, height: 800 })
+          await expect(sheet).toHaveCount(0)
+          await expect(
+            page.getByRole('button', { name: MESSAGES[locale].Portal.nav.sidebar }),
+          ).toBeFocused()
+        })
+      })
+
+    for (const viewport of Object.values(WIDTHS))
+      for (const locale of LOCALES)
+        test(`every shell control is in a landmark, and headings keep their order (${locale} ${viewport.width})`, async ({
+          browser,
+        }) => {
+          await inContext(browser, { viewport, role: 'fellow' }, async (page) => {
+            for (const path of ['/en/spaces', world.course.path]) {
+              await page.goto(localePath(path, locale))
+              await expect(page.getByRole('heading', { level: 1 })).toHaveCount(1)
+              const { violations } = await new AxeBuilder({ page })
+                .withRules(path === '/en/spaces' ? ['region', 'heading-order'] : ['region'])
+                .exclude('nextjs-portal')
+                .analyze()
+              expect(
+                Object.fromEntries(
+                  violations.map((v) => [v.id, v.nodes.map((n) => n.target.join(' '))]),
+                ),
+                path,
+              ).toEqual({})
+            }
+          })
+        })
+
+    for (const locale of LOCALES)
+      for (const viewport of Object.values(WIDTHS))
+        test(`a refused sign-out keeps the page and says so (${locale} ${viewport.width})`, async ({
+          browser,
+        }) => {
+          await inContext(browser, { viewport, role: 'fellow' }, async (page) => {
+            await page.route('**/api/users/logout', (route) => route.fulfill({ status: 500 }))
+            await page.goto(localePath('/en/spaces', locale))
+            const portal = MESSAGES[locale].Portal
+            if (viewport.width < 700) {
+              const sheet = await openMore(page, locale)
+              await sheet.getByRole('button', { name: portal.account.signOut }).click()
+            } else {
+              await accountButton(page, locale).click()
+              await page.getByRole('menuitem', { name: portal.account.signOut }).click()
+            }
+            await expect(
+              toastRegion(page, locale).getByText(MESSAGES[locale].Session.signOutFailed),
+            ).toBeVisible()
+            expect(new URL(page.url()).pathname).toBe(localePath('/en/spaces', locale))
+          })
+        })
+
+    test('the current row keeps a cue in forced colours and more contrast (en 1440)', async ({
+      browser,
+    }) => {
+      for (const options of [{ forcedColors: 'active' }, { contrast: 'more' }] as const) {
+        const context = await browser.newContext({
+          baseURL,
+          viewport: DESKTOP,
+          storageState: states.fellow,
+          ...options,
+        })
+        try {
+          const page = await context.newPage()
+          await page.goto('/en/spaces')
+          const home = portalNavOf(page, 'en').getByRole('link', { name: 'Home', exact: true })
+          await expect(home).toHaveAttribute('aria-current', 'page')
+          const cue = await home.evaluate((el) => {
+            const style = getComputedStyle(el)
+            const bar = getComputedStyle(el, '::before')
+            return {
+              outline: style.outlineStyle,
+              weight: style.fontWeight,
+              bar: parseFloat(bar.borderInlineStartWidth),
+            }
+          })
+          expect(cue.weight).toBe('500')
+          if ('forcedColors' in options) expect(cue.outline).toBe('solid')
+          else expect(cue.bar).toBeGreaterThanOrEqual(4)
+        } finally {
+          await context.close()
+        }
+      }
+    })
+  })
+
   test.describe('axe on /spaces states', () => {
     const expectClean = async (page: Page, label: string) => {
-      const violations = await axeViolations(page)
-      expect(
-        Object.fromEntries(violations.map((v) => [v.id, v.nodes.map((n) => n.target.join(' '))])),
-        label,
-      ).toEqual({})
+      expect(await axeOver(page, {}), label).toEqual({})
     }
 
     for (const role of ROLES)
