@@ -347,14 +347,14 @@ describe('review status over real writes', () => {
         overrideAccess: true,
       }),
     )
-    const makeCourse = async (title: string) =>
+    const makeCourse = async (title: string, slug: string) =>
       track(
         'courses',
         await payload.create({
           collection: 'courses',
           data: {
             title,
-            slug: uniq('key-no-status'),
+            slug: uniq(slug),
             course_type: 'THEMATIC',
             tier: 'owner',
             cycle: cycle.id,
@@ -364,13 +364,13 @@ describe('review status over real writes', () => {
           overrideAccess: true,
         }),
       )
-    const course = await makeCourse('Key No Status')
+    const course = await makeCourse('Key No Status', 'key-no-status')
     await payload.db.updateOne({
       collection: 'courses',
       id: course.id,
       data: { review: { status: null } },
     })
-    const noFlag = await makeCourse('Key No Flag')
+    const noFlag = await makeCourse('Key No Flag', 'key-no-flag')
     await payload.db.updateOne({
       collection: 'courses',
       id: noFlag.id,
