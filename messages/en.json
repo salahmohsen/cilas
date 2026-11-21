@@ -1762,6 +1762,10 @@
       "expanded": "Sheet expanded",
       "collapsed": "Sheet collapsed",
       "height": "Sheet at {percent} percent height"
+    },
+    "empty": {
+      "spacesTitle": "Your spaces",
+      "spacesNext": "A space opens when a course or a cohort you joined starts."
     }
   }
 }

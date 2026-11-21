@@ -562,4 +562,31 @@ test.describe('portal shell', () => {
         })
       }
   })
+
+  test.describe('empty state', () => {
+    for (const role of ['fellow', 'student'] as const)
+      for (const locale of LOCALES)
+        for (const viewport of Object.values(WIDTHS))
+          test(`a reader with no space sees the empty state (${role} ${locale} ${viewport.width})`, async ({
+            browser,
+          }) => {
+            const empty = MESSAGES[locale].Portal.empty
+            await spaces.set('trial', { trialCommunity: false })
+            try {
+              await inContextAt(browser, { baseURL, viewport }, async (page) => {
+                await login({
+                  page,
+                  user: world.loners[role],
+                  next: localePath('/en/spaces', locale),
+                })
+                await expect(
+                  page.getByRole('heading', { level: 2, name: empty.spacesTitle }),
+                ).toBeVisible()
+                await expect(page.getByText(empty.spacesNext)).toBeVisible()
+              })
+            } finally {
+              await spaces.set('on')
+            }
+          })
+  })
 })
