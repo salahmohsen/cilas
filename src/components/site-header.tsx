@@ -1,7 +1,6 @@
 'use client'
 
 import { BRIDGE_PATH } from '@/lib/paths'
-import { personAvatarSeed } from '@/lib/avatar'
 
 import {
   BookOpen,
@@ -18,11 +17,11 @@ import { Suspense, useEffect, useMemo, useRef, useState } from 'react'
 
 import { SiteHeader } from '@/components/arc/blocks/site-header/site-header'
 import { CilasLogo } from '@/components/cilas-logo'
-import { UserMenu, type UserMenuUser } from '@/components/arc/user-menu/user-menu'
+import { UserMenu } from '@/components/arc/user-menu/user-menu'
+import { menuUser } from '@/components/menu-user'
 import { LanguageSwitch, ThemeToggle } from '@/components/site-controls'
 import { SiteNotifications } from '@/components/site-notifications'
-import { announceAuthChange } from '@/lib/auth-events'
-import { forgetThisDevice } from '@/lib/push/forget'
+import { signOut } from '@/lib/sign-out'
 import { SiteSearch } from '@/components/site-search'
 import { useSession } from '@/components/use-session'
 import { useRouter } from '@/i18n/navigation'
@@ -52,21 +51,7 @@ export function CILASSiteHeader({ peoplePages = ALL_ON }: { peoplePages?: People
   // signed-in account gets its account menu instead of "Sign in". The linked
   // person's name and photo are used; an account with no person shows its email.
   const session = useSession()
-  const account: UserMenuUser | null = useMemo(() => {
-    if (!session) return null
-    const person = typeof session.person === 'object' ? session.person : null
-    const photo = typeof person?.photo === 'object' ? person.photo : null
-    return {
-      name: person?.name || session.email,
-      email: session.email,
-      fallbackSeed: person
-        ? personAvatarSeed(person.id)
-        : typeof session.person === 'number'
-          ? personAvatarSeed(session.person)
-          : `account:${session.id}`,
-      avatarSrc: photo?.sizes?.thumbnail?.url || photo?.url || undefined,
-    }
-  }, [session])
+  const account = useMemo(() => (session ? menuUser(session) : null), [session])
   // Spaces shows only to an account that can read one (see /api/spaces-nav).
   const [spaces, setSpaces] = useState(false)
   useEffect(() => {
@@ -232,16 +217,7 @@ export function CILASSiteHeader({ peoplePages = ALL_ON }: { peoplePages?: People
                   onSelect: () => window.location.assign('/admin'),
                 },
               ]}
-              // Reload so nothing of the account stays on the page.
-              onSignOut={() => {
-                announceAuthChange()
-                // This device stops getting the account's alerts (needs the session, so first).
-                return forgetThisDevice()
-                  .then(() =>
-                    fetch('/api/users/logout', { method: 'POST', credentials: 'include' }),
-                  )
-                  .then(() => window.location.reload())
-              }}
+              onSignOut={signOut}
               labels={{ account: t('account'), signOut: t('signOut'), signingOut: t('signingOut') }}
             />
           )}

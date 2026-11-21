@@ -89,7 +89,13 @@ export interface UserMenuProps {
   ref?: Ref<HTMLButtonElement>
   className?: string
   /** Text in the site's language. `account` names the trigger, before the person's name. */
-  labels?: { account?: string; signOut?: string; signingOut?: string }
+  labels?: {
+    account?: string
+    signOut?: string
+    signingOut?: string
+    theme?: string
+    themes?: Partial<Record<ThemePreference, string>>
+  }
 }
 
 type Highlight = { top: number; height: number; tone?: string; glide: boolean }
@@ -357,6 +363,8 @@ export function UserMenu({
     account = 'Account menu',
     signOut: signOutLabel = 'Sign out',
     signingOut: signingOutLabel = 'Signing out',
+    theme: themeLabel = 'Theme',
+    themes: themeLabels = {},
   } = {},
 }: UserMenuProps) {
   const id = useId()
@@ -744,11 +752,14 @@ export function UserMenu({
             )}
             {showTheme && (
               <Segmented
-                label="Theme"
+                label={themeLabel}
                 icon={<SunMoon size={16} strokeWidth={1.75} />}
                 value={theme}
                 onChange={changeTheme}
-                options={themes}
+                options={themes.map((option) => ({
+                  ...option,
+                  label: themeLabels[option.value] ?? option.label,
+                }))}
                 variants={row}
               />
             )}

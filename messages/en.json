@@ -1747,7 +1747,13 @@
       "label": "Account",
       "profile": "Profile and settings",
       "theme": "Theme",
-      "signOut": "Sign out"
+      "signOut": "Sign out",
+      "signingOut": "Signing out",
+      "themes": {
+        "light": "Light",
+        "dark": "Dark",
+        "system": "System"
+      }
     }
   }
 }

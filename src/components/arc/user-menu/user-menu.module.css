@@ -180,7 +180,7 @@
   --presence-surface: var(--surface-raised);
   --row: 32px;
   --inset: 4px;
-  --menu-radius: 10px;
+  --menu-radius: var(--user-menu-radius, 10px);
   --menu-line: color-mix(in oklab, var(--foreground) 9%, transparent);
   position: fixed;
   top: 0;

@@ -5,6 +5,8 @@
   --radius-control: 12px;
   --radius-panel: 16px;
   --radius-surface: 24px;
+  /* Arc's account menu panel is 10px, off the spec scale. */
+  --user-menu-radius: var(--radius-control);
   --portal-unread: oklch(55% 0.2 27);
   --portal-unread-foreground: oklch(100% 0 0);
   --portal-duration: var(--duration-fast);
