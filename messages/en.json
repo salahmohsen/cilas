@@ -1741,7 +1741,8 @@
       "unreadMany": ", more than {cap} unread posts",
       "sidebar": "Sidebar",
       "more": "More",
-      "brand": "CILAS home"
+      "brand": "CILAS home",
+      "scroll": "Pages and spaces"
     },
     "shell": {
       "skip": "Skip to content"

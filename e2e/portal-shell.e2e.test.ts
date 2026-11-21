@@ -24,6 +24,7 @@ import {
   type StorageState,
 } from '../testing/portal.fixture'
 import {
+  AXE_TAGS,
   axeOver,
   known,
   navHref,
@@ -599,6 +600,297 @@ test.describe('portal shell', () => {
         })
       })
     }
+  })
+
+  test.describe('rail scroll', () => {
+    const SHORT = { ...DESKTOP, height: 320 }
+    const inShort = (browser: Browser, role: PortalRole, run: (page: Page) => Promise<void>) =>
+      inContextAt(browser, { baseURL, viewport: SHORT, state: states[role] }, run)
+    const region = (page: Page, locale: Locale) =>
+      page.getByRole('region', { name: MESSAGES[locale].Portal.nav.scroll, exact: true })
+    const track = (page: Page) => page.locator('[data-portal-rail] [data-axis="y"]')
+    const metrics = (page: Page, locale: Locale) =>
+      region(page, locale).evaluate((el) => ({
+        scrollTop: el.scrollTop,
+        scrollHeight: el.scrollHeight,
+        clientHeight: el.clientHeight,
+      }))
+    const boxOf = async (locator: ReturnType<Page['locator']>) => {
+      const box = await locator.boundingBox()
+      return box && { x: Math.round(box.x), y: Math.round(box.y), w: Math.round(box.width) }
+    }
+    const inside = (
+      inner: { x: number; y: number; width: number; height: number },
+      outer: { x: number; y: number; width: number; height: number },
+    ) =>
+      inner.x >= outer.x - 1 &&
+      inner.y >= outer.y - 1 &&
+      inner.x + inner.width <= outer.x + outer.width + 1 &&
+      inner.y + inner.height <= outer.y + outer.height + 1
+    const foldIn = (page: Page, locale: Locale) =>
+      page
+        .locator('[data-portal-crumbs]')
+        .getByRole('button', { name: MESSAGES[locale].Portal.nav.sidebar, exact: true })
+    const bell = (page: Page, locale: Locale) =>
+      page.getByRole('button', {
+        name: new RegExp(`^${MESSAGES[locale].Notifications.label}(,|،|$)`),
+      })
+
+    for (const locale of LOCALES) {
+      test(`the spaces scroll inside the rail (${locale})`, async ({ browser }) => {
+        await inShort(browser, 'fellow', async (page) => {
+          await page.goto(localePath('/en/spaces', locale))
+          for (const folded of [false, true]) {
+            if (folded) {
+              await foldIn(page, locale).click()
+              await expect(foldIn(page, locale)).toHaveAttribute('aria-expanded', 'false')
+              await region(page, locale).evaluate((el) => el.scrollTo({ top: 0 }))
+            }
+            const before = await metrics(page, locale)
+            expect(before.scrollHeight).toBeGreaterThan(before.clientHeight)
+            expect(
+              await page
+                .locator('[data-portal-rail]')
+                .evaluate((rail) => rail.scrollHeight === rail.clientHeight),
+            ).toBe(true)
+            const fixed = [
+              page.locator('[data-portal-rail] header a').first(),
+              bell(page, locale),
+              accountButton(page, locale),
+            ]
+            const boxes = await Promise.all(fixed.map(boxOf))
+            const scrollY = await page.evaluate(() => window.scrollY)
+            await region(page, locale).hover()
+            await page.mouse.wheel(0, 2000)
+            await expect
+              .poll(async () => (await metrics(page, locale)).scrollTop)
+              .toBeGreaterThan(0)
+            expect(await Promise.all(fixed.map(boxOf))).toEqual(boxes)
+            expect(await page.evaluate(() => window.scrollY)).toBe(scrollY)
+            await expect
+              .poll(async () => {
+                const rows = region(page, locale).getByRole('link')
+                const last = (await rows.last().boundingBox())!
+                return inside(last, (await region(page, locale).boundingBox())!)
+              })
+              .toBe(true)
+          }
+        })
+      })
+
+      test(`keyboard (${locale})`, async ({ browser }) => {
+        await inShort(browser, 'fellow', async (page) => {
+          await page.goto(localePath('/en/spaces', locale))
+          await accountButton(page, locale).focus()
+          await page.keyboard.press('Tab')
+          await expect(region(page, locale)).toBeFocused()
+          await page.keyboard.press('ArrowDown')
+          await expect.poll(async () => (await metrics(page, locale)).scrollTop).toBeGreaterThan(0)
+          const afterArrow = (await metrics(page, locale)).scrollTop
+          await page.keyboard.press('PageDown')
+          await expect
+            .poll(async () => (await metrics(page, locale)).scrollTop)
+            .toBeGreaterThan(afterArrow)
+          await page.keyboard.press('Tab')
+          const rows = region(page, locale).getByRole('link')
+          await expect(rows.first()).toBeFocused()
+          const count = await rows.count()
+          for (let i = 1; i < count; i++) await page.keyboard.press('Tab')
+          await expect(rows.last()).toBeFocused()
+          const view = (await region(page, locale).boundingBox())!
+          const last = (await rows.last().boundingBox())!
+          expect(inside(last, view)).toBe(true)
+          expect(
+            await region(page, locale).evaluate((el) => getComputedStyle(el).outlineOffset),
+          ).toBe('-2px')
+          const room = await region(page, locale).evaluate((el) =>
+            parseFloat(getComputedStyle(el).paddingBlockEnd),
+          )
+          expect(room).toBeGreaterThan(0)
+          expect(view.y + view.height - (last.y + last.height)).toBeGreaterThanOrEqual(room - 1)
+          for (let i = 1; i < count; i++) await page.keyboard.press('Shift+Tab')
+          await expect(rows.first()).toBeFocused()
+          const first = (await rows.first().boundingBox())!
+          const top = (await region(page, locale).boundingBox())!
+          expect(first.y - top.y).toBeGreaterThanOrEqual(room - 1)
+        })
+      })
+
+      test(`scroll padding stays (${locale})`, async ({ browser }) => {
+        await inContextAt(
+          browser,
+          { baseURL, viewport: PHONE, state: states.fellow },
+          async (page) => {
+            await page.goto(localePath('/en/spaces', locale))
+            await expect(page.getByRole('heading', { level: 1 })).toHaveCount(1)
+            expect(
+              await page.evaluate(() =>
+                parseFloat(getComputedStyle(document.documentElement).scrollPaddingBottom),
+              ),
+            ).toBeGreaterThanOrEqual(64)
+            await expect(region(page, locale)).toBeHidden()
+          },
+        )
+        await inShort(browser, 'fellow', async (page) => {
+          await page.goto(localePath('/en/spaces', locale))
+          await page.evaluate(() =>
+            document.documentElement.style.setProperty('--toast-stack-height', '120px'),
+          )
+          expect(
+            await region(page, locale).evaluate((el) => getComputedStyle(el).scrollPaddingBottom),
+          ).toBe('120px')
+        })
+      })
+
+      test(`the bar sits at the inline end (${locale})`, async ({ browser }) => {
+        await inShort(browser, 'fellow', async (page) => {
+          await page.goto(localePath('/en/spaces', locale))
+          for (const folded of [false, true]) {
+            if (folded) await foldIn(page, locale).click()
+            await expect(track(page)).toBeVisible()
+            await expect
+              .poll(async () => {
+                const bar = (await track(page).boundingBox())!
+                const view = (await region(page, locale).boundingBox())!
+                const rail = (await page.locator('[data-portal-rail]').boundingBox())!
+                const right = bar.x + bar.width / 2 > view.x + view.width / 2
+                return { atEnd: locale === 'en' ? right : !right, inRail: inside(bar, rail) }
+              })
+              .toEqual({ atEnd: true, inRail: true })
+          }
+        })
+      })
+    }
+
+    test('reduced motion (en)', async ({ browser }) => {
+      await inShort(browser, 'fellow', async (page) => {
+        await page.emulateMedia({ reducedMotion: 'reduce' })
+        await page.goto('/en/spaces')
+        expect(await track(page).evaluate((el) => getComputedStyle(el).transitionDuration)).toBe(
+          '0s',
+        )
+        expect(await region(page, 'en').evaluate((el) => getComputedStyle(el).scrollBehavior)).toBe(
+          'auto',
+        )
+        const bar = (await track(page).boundingBox())!
+        await page.mouse.click(bar.x + bar.width / 2, bar.y + bar.height - 4)
+        const start = Date.now()
+        await expect
+          .poll(async () => (await metrics(page, 'en')).scrollTop, {
+            timeout: 1000,
+            intervals: [20],
+          })
+          .toBeGreaterThan(0)
+        expect(Date.now() - start).toBeLessThan(100)
+      })
+    })
+
+    test('forced colours and more contrast (en)', async ({ browser }) => {
+      await inShort(browser, 'fellow', async (page) => {
+        await page.goto('/en/spaces')
+        const thumbColour = () =>
+          track(page)
+            .locator('> *')
+            .evaluate((thumb) => getComputedStyle(thumb, '::after').backgroundColor)
+        const shellColour = await page
+          .locator('[data-portal-shell]')
+          .evaluate((el) => getComputedStyle(el).backgroundColor)
+        const opaque = (colour: string) => !/rgba\(.*,\s*0?\.\d+\)$|\/\s*0?\.\d+\)$/.test(colour)
+
+        await page.emulateMedia({ forcedColors: 'active' })
+        await region(page, 'en').hover()
+        const forced = await thumbColour()
+        expect(forced).not.toBe(shellColour)
+        expect(opaque(forced)).toBe(true)
+        await track(page).locator('> *').hover()
+        expect(await thumbColour()).toBe(forced)
+
+        await page.emulateMedia({ forcedColors: 'none', contrast: 'more' })
+        const foreground = await page.evaluate(() => {
+          const probe = document.createElement('span')
+          probe.style.color = 'var(--foreground)'
+          document.body.append(probe)
+          const colour = getComputedStyle(probe).color
+          probe.remove()
+          return colour
+        })
+        await region(page, 'en').hover()
+        expect(await thumbColour()).toBe(foreground)
+        await track(page).locator('> *').hover()
+        expect(await thumbColour()).toBe(foreground)
+      })
+    })
+
+    test('touch momentum, by structure (en)', async ({ browser }) => {
+      await inShort(browser, 'fellow', async (page) => {
+        await page.goto('/en/spaces')
+        expect(
+          await region(page, 'en').evaluate((el) => {
+            const style = getComputedStyle(el)
+            const content = el.firstElementChild
+            return {
+              overflowY: style.overflowY,
+              touchAction: style.touchAction,
+              transform: content ? getComputedStyle(content).transform : 'none',
+            }
+          }),
+        ).toEqual({ overflowY: 'auto', touchAction: 'auto', transform: 'none' })
+      })
+    })
+
+    for (const where of ['portal', 'site'] as const)
+      test(`the bell list scrolls inside its panel (${where}, en)`, async ({ browser }) => {
+        const student = world.accounts.student
+        const made: number[] = []
+        try {
+          for (let i = 0; i < 12; i++) {
+            const doc = await payload.create({
+              collection: 'notifications',
+              data: {
+                recipient: student.id,
+                kind: 'comment',
+                title: `E2E scroll ${i}`,
+                link: '/en',
+              },
+              overrideAccess: true,
+            })
+            made.push(doc.id)
+          }
+          await inShort(browser, 'student', async (page) => {
+            await gotoLive(page, where === 'portal' ? '/en/spaces' : '/en')
+            await bell(page, 'en').first().click()
+            const list = page.getByRole('region', {
+              name: MESSAGES.en.Notifications.allNotifications,
+              exact: true,
+            })
+            await expect(list).toBeVisible()
+            const header = page.getByRole('button', {
+              name: MESSAGES.en.Notifications.close,
+              exact: true,
+            })
+            const headerBox = await boxOf(header)
+            const size = await list.evaluate((el) => [el.scrollHeight, el.clientHeight])
+            expect(size[0]).toBeGreaterThan(size[1]!)
+            await list.hover()
+            await page.mouse.wheel(0, 1000)
+            await expect.poll(() => list.evaluate((el) => el.scrollTop)).toBeGreaterThan(0)
+            expect(await boxOf(header)).toEqual(headerBox)
+            if (where === 'site') {
+              const { violations } = await new AxeBuilder({ page })
+                .withTags(AXE_TAGS)
+                .include('[role="dialog"]')
+                .analyze()
+              expect(violations.map((v) => v.id)).toEqual([])
+            }
+          })
+        } finally {
+          await payload.delete({
+            collection: 'notifications',
+            where: { id: { in: made } },
+            overrideAccess: true,
+          })
+        }
+      })
   })
 
   test.describe('bottom bar and More sheet (390)', () => {

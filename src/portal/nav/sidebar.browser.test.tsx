@@ -50,13 +50,21 @@ const renderSidebar = ({
   folded = false,
   locale = 'en',
   spaces = [spaceRow({ label: 'Other course', unread: 12 })],
-}: { folded?: boolean; locale?: 'en' | 'ar'; spaces?: SpaceLink[] } = {}) =>
+  box,
+}: {
+  folded?: boolean
+  locale?: 'en' | 'ar'
+  spaces?: SpaceLink[]
+  box?: { width: number; height: number }
+} = {}) =>
   renderWithBrowserNavigation(
     <IntlProvider locale={locale}>
       <FoldProvider folded={folded} accountId={7}>
         <div data-page="spaces">
           <FoldButton />
-          <Sidebar items={[HOME]} spaces={spaces} />
+          <div style={box && { display: 'flex', inlineSize: box.width, blockSize: box.height }}>
+            <Sidebar items={[HOME]} spaces={spaces} />
+          </div>
         </div>
       </FoldProvider>
     </IntlProvider>,
@@ -112,9 +120,10 @@ describe('Sidebar', () => {
               unread: i === 0 ? 120 : i % 3,
             }),
           )
-          renderSidebar({ folded, locale, spaces })
-          const nav = screen.getByRole('navigation')
-          expect(nav.scrollWidth).toBeLessThanOrEqual(nav.clientWidth)
+          renderSidebar({ folded, locale, spaces, box: { width, height: 600 } })
+          const list = screen.getByRole('region', { name: 'Pages and spaces' })
+          expect(list.scrollHeight).toBeGreaterThan(list.clientHeight)
+          expect(list.scrollWidth).toBeLessThanOrEqual(list.clientWidth)
           const { shown, spoken } = countOf(120, locale)
           const first = screen.getAllByRole('link')[1]!
           expect(first).toHaveTextContent(shown)
