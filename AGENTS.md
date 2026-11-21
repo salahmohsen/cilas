@@ -3,7 +3,9 @@
 This project uses the Payload CMS skill at `.agents/skills/payload/`.
 Start with `.agents/skills/payload/SKILL.md` for a quick reference, then see `.agents/skills/payload/reference/` for detailed docs.
 
-The calendar uses ui-sdk (ADR 0011). Before you change `src/components/calendar/ui/`, read the ui-sdk skill at `.agents/skills/ui-sdk/SKILL.md`. It links to the copy inside `@ui-sdk/core`, so it matches the installed version. Only `src/components/calendar/ui/` may import `@ui-sdk/*`; the lint rule `no-restricted-imports` enforces it.
+The calendar uses ui-sdk (ADR 0011), and so do the wrappers for parts that free Arc lacks (ADR 0012). Before you change `src/components/calendar/ui/` or `src/components/sdk/`, read the ui-sdk skill at `.agents/skills/ui-sdk/SKILL.md`. It links to the copy inside `@ui-sdk/core`, so it matches the installed version. Only those two folders may import `@ui-sdk/*`; the lint rule `no-restricted-imports` enforces it. App code imports a wrapper from `src/components/sdk/`, never `@ui-sdk/*`.
+
+Order of choice for a UI part: the Arc component already in `src/components/arc`, the free Arc registry, a ui-sdk wrapper in `src/components/sdk/` (Arc style: tokens, radii, focus ring, motion, reduced motion), a Radix primitive the repo already uses, then your own code. Never use two primitive families for one job. ui-sdk is a beta with an exact pin: each wrapper has a browser test (keyboard, focus, RTL, reduced motion), and a ui-sdk upgrade is its own PR. See `src/components/sdk/README.md`.
 
 ## Code structure (untangle rules)
 
