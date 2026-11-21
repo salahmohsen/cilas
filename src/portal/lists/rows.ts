@@ -205,6 +205,23 @@ const readEntries = async (ctx: Ctx, ids: number[]) => {
   return entries
 }
 
+/**
+ * `parent._status` makes Payload join the parent and add the parent's read
+ * access to each branch of the reader's version access. For an owner that is
+ * 1368 joins in one query, and it took the database down in a test. So a
+ * version query leaves the term out, and each parent it finds then passes a
+ * main read under the base `where`, which knows whether the parent is live.
+ */
+const withoutParentStatus = (where: Where): Where => {
+  const { and, or, ...fields } = where
+  const kept = Object.fromEntries(
+    Object.entries(fields).filter(([key]) => key !== 'parent._status'),
+  )
+  const nested = (list: Where[]) =>
+    list.map(withoutParentStatus).filter((term) => Object.keys(term).length > 0)
+  return { ...kept, ...(and ? { and: nested(and) } : {}), ...(or ? { or: nested(or) } : {}) }
+}
+
 /** The ids of every row that may hold work: the ones the `KEY_WHERE` rows find, and the live ones with a copy. */
 const workCandidates = async (ctx: Ctx) => {
   const keys = workKeys(ctx.kind)
@@ -217,7 +234,7 @@ const workCandidates = async (ctx: Ctx) => {
     : LIVE_COPY
   const [mains, copies] = await Promise.all([
     findMain(ctx, { where: { and: [ctx.base, { or: onMain }] }, select: { id: true } }),
-    findCopies(ctx, { where: copyWhere, select: { parent: true } }),
+    findCopies(ctx, { where: withoutParentStatus(copyWhere), select: { parent: true } }),
   ])
   return [
     ...new Set([

@@ -282,7 +282,6 @@ describe('list rows', () => {
     })
 
     it('Needs you holds the KEY_WHERE rows of the owner keys', async () => {
-      const student = await userOf(world.accounts.student)
       const ids = [
         ...lists.bulk,
         ...lists.manyDrafts,
@@ -299,14 +298,14 @@ describe('list rows', () => {
         draft: false,
         pagination: false,
         depth: 0,
-        ...own(student),
+        overrideAccess: true,
       })
       const copies = await payload.findVersions({
         collection: 'articles',
         where: { and: [edits, { parent: { in: ids } }] },
         pagination: false,
         depth: 0,
-        ...own(student),
+        overrideAccess: true,
       })
       const expected = [
         ...mains.docs.map((doc) => doc.id),
@@ -559,9 +558,6 @@ describe('list rows', () => {
       lists.writerUnpublished,
     ]
 
-    const asWriter = async () =>
-      ({ user: await userOf(lists.writer), overrideAccess: false }) as const
-
     const found = async (keys: StatusKey[], ids: number[]) => {
       const out: number[] = []
       for (const key of keys) {
@@ -573,7 +569,7 @@ describe('list rows', () => {
             draft: false,
             pagination: false,
             depth: 0,
-            ...(await asWriter()),
+            overrideAccess: true,
           })
           out.push(...docs.map((doc) => doc.id))
         } else {
@@ -582,7 +578,7 @@ describe('list rows', () => {
             where: { and: [row.where, { parent: { in: ids } }] },
             pagination: false,
             depth: 0,
-            ...(await asWriter()),
+            overrideAccess: true,
           })
           out.push(...docs.map((doc) => doc.parent as number))
         }
