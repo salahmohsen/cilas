@@ -72,6 +72,9 @@ describe('review status over real writes', () => {
     await payload.destroy()
   })
 
+  let slugs = 0
+  const nextSlug = (base: string) => uniq(`${base}-${++slugs}`)
+
   const as = (user: User) => ({ user, overrideAccess: false }) as const
 
   const parentOf = (parent: unknown) =>
@@ -126,7 +129,7 @@ describe('review status over real writes', () => {
         collection: 'articles',
         data: {
           title,
-          slug: uniq('status-probe'),
+          slug: nextSlug('status-probe'),
           authors: [personId],
           tier: 'public',
           review: { status: 'approved' },
@@ -143,7 +146,7 @@ describe('review status over real writes', () => {
         collection: 'articles',
         data: {
           title,
-          slug: uniq('status-draft'),
+          slug: nextSlug('status-draft'),
           authors: [],
           tier: 'owner',
           review: { status: 'draft' },
@@ -242,6 +245,7 @@ describe('review status over real writes', () => {
           tier: 'public',
           cycle: cycle.id,
           fellows: [fellowPersonId],
+          registration: { mode: 'closed' },
           review: { status: 'approved' },
           _status: 'published',
         },
