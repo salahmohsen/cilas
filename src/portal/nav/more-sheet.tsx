@@ -58,7 +58,13 @@ export function MoreSheet({
         returnFocus.current?.focus()
       }}
     >
-      <div className={styles.more}>
+      {/* Every link in the sheet leaves for another page: the sheet closes with it. */}
+      <div
+        className={styles.more}
+        onClick={(event) => {
+          if (event.target instanceof Element && event.target.closest('a')) onOpenChange(false)
+        }}
+      >
         {items.length > 0 && (
           <ul className={styles.list}>
             {items.map((item) => {

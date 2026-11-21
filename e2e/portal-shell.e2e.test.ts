@@ -14,6 +14,7 @@ import {
   localePath,
   MESSAGES,
   notifyOf,
+  openMore,
   portalWorld,
   ROLES,
   WIDTHS,
@@ -81,17 +82,6 @@ const accountButton = (page: Page, locale: Locale) =>
     .getByRole('button', { name: new RegExp(`^${MESSAGES[locale].Portal.account.label}, `) })
 
 const PHONE = WIDTHS.phone
-
-const openMore = async (page: Page, locale: Locale) => {
-  const portal = MESSAGES[locale].Portal
-  await page
-    .getByRole('navigation', { name: portal.nav.label, exact: true })
-    .getByRole('button', { name: portal.nav.more, exact: true })
-    .click()
-  const sheet = page.getByRole('dialog', { name: portal.nav.more, exact: true })
-  await expect(sheet).toBeVisible()
-  return sheet
-}
 
 const toastRegion = (scope: Page | ReturnType<Page['getByRole']>, locale: Locale) =>
   scope.getByRole('region', { name: new RegExp(`^${MESSAGES[locale].Notifications.label}`) })
@@ -180,41 +170,137 @@ test.describe('portal shell', () => {
         })
       })
 
-  test.describe('shell (1440)', () => {
+  test.describe('shell', () => {
     for (const role of ROLES)
       for (const locale of LOCALES) {
         const portal = MESSAGES[locale].Portal
 
-        test(`landmarks, skip link and live region (${role} ${locale})`, async ({ browser }) => {
-          await world.resetVisits()
-          await inContext(browser, { viewport: DESKTOP, role }, async (page) => {
-            for (const path of ['/en/spaces', world.course.path]) {
-              await page.goto(localePath(path, locale))
+        for (const viewport of Object.values(WIDTHS)) {
+          const phone = viewport.width < 700
+          const at = `${role} ${locale} ${viewport.width}`
+          const spaceLinksOf = async (page: Page) =>
+            phone ? await openMore(page, locale) : portalNavOf(page, locale)
+
+          test(`landmarks, skip link and live region (${at})`, async ({ browser }) => {
+            await world.resetVisits()
+            await inContext(browser, { viewport, role }, async (page) => {
+              for (const path of ['/en/spaces', world.course.path]) {
+                await page.goto(localePath(path, locale))
+                await expect(page.getByRole('heading', { level: 1 })).toHaveCount(1)
+                await page.keyboard.press('Tab')
+                await expect(page.getByRole('link', { name: portal.shell.skip })).toBeFocused()
+                await page.keyboard.press('Enter')
+                await expect(page.locator('main#main')).toBeFocused()
+                await expect(page.getByRole('main')).toHaveCount(1)
+                await expect(portalNavOf(page, locale)).toHaveCount(1)
+                await expect(page.locator('header.site-header')).toHaveCount(0)
+                await expect(
+                  page.locator('[data-portal-rail]').getByRole('button', {
+                    name: new RegExp(`^${MESSAGES[locale].Notifications.label}(,|،|$)`),
+                  }),
+                ).toHaveCount(1)
+                await expect(page.locator('[data-portal-live][role="status"]')).toHaveCount(1)
+              }
+              await page.goto(localePath('/en/spaces', locale))
+              await expect(
+                portalNavOf(page, locale).getByRole('link', { name: portal.nav.home, exact: true }),
+              ).toHaveAttribute('aria-current', 'page')
+              await expect(page.locator('[data-portal-live]')).toHaveText('')
+              expect(known(`/${locale}/spaces`, role, locale, viewport.width)).toEqual({})
+            })
+          })
+
+          test(`nav per role (${at})`, async ({ browser }) => {
+            await world.resetVisits()
+            await inContext(browser, { viewport, role }, async (page) => {
+              await page.goto(localePath('/en/spaces', locale))
+              await expect(
+                portalNavOf(page, locale).getByRole('link', { name: portal.nav.home, exact: true }),
+              ).toHaveAttribute('aria-current', 'page')
+              const links = await spaceLinksOf(page)
+              await expect(
+                links.getByRole('link', { name: portal.nav.openDashboard, exact: true }),
+              ).toHaveCount(role === 'admin' ? 1 : 0)
+              for (const room of ['course', 'otherCourse'] as const)
+                await expect(
+                  links.getByRole('link', {
+                    name: spaceName(world[room], locale, EXPECTED_UNREAD[room]),
+                  }),
+                ).toBeVisible()
+            })
+          })
+
+          test(`opening a space drops its count in this tab (${at})`, async ({ browser }) => {
+            await world.resetVisits()
+            await inContext(browser, { viewport, role }, async (page) => {
+              await page.goto(localePath('/en/spaces', locale))
+              await (
+                await spaceLinksOf(page)
+              )
+                .getByRole('link', {
+                  name: spaceName(world.otherCourse, locale, EXPECTED_UNREAD.otherCourse),
+                })
+                .click()
+              await page.waitForURL(`**${localePath(world.otherCourse.path, locale)}`)
+              const shownRow = async () =>
+                (await spaceLinksOf(page)).getByRole('link', {
+                  name: spaceName(world.otherCourse, locale, 0),
+                })
+              let row = await shownRow()
+              await expect(row).toBeVisible()
+              await expect(row).not.toContainText('9+')
+              await page.reload()
+              row = await shownRow()
+              await expect(row).toBeVisible()
+              await expect(row).not.toContainText('9+')
+            })
+          })
+
+          test(`keyboard walk (${at})`, async ({ browser }) => {
+            await inContext(browser, { viewport, role }, async (page) => {
+              await page.goto(localePath('/en/spaces', locale))
+              await expect(page.getByRole('heading', { level: 1 })).toHaveCount(1)
+              const stops: { tag: string; outline: string }[] = []
+              for (let i = 0; i < 25; i++) {
+                await page.keyboard.press('Tab')
+                stops.push(
+                  await page.evaluate(() => {
+                    const el = document.activeElement!
+                    return {
+                      tag: el.tagName,
+                      outline: getComputedStyle(el).outlineStyle,
+                    }
+                  }),
+                )
+              }
+              const shown = stops.filter((stop) => !['NEXTJS-PORTAL', 'BODY'].includes(stop.tag))
+              expect(shown.filter((stop) => stop.outline === 'none')).toEqual([])
+              await page.goto(localePath('/en/spaces', locale))
               await expect(page.getByRole('heading', { level: 1 })).toHaveCount(1)
               await page.keyboard.press('Tab')
-              await expect(page.getByRole('link', { name: portal.shell.skip })).toBeFocused()
               await page.keyboard.press('Enter')
-              await expect(page.locator('main#main')).toBeFocused()
-              await expect(page.getByRole('main')).toHaveCount(1)
-              await expect(portalNavOf(page, locale)).toHaveCount(1)
-              await expect(page.locator('header.site-header')).toHaveCount(0)
-              await expect(
-                page.locator('[data-portal-rail]').getByRole('button', {
-                  name: new RegExp(`^${MESSAGES[locale].Notifications.label}(,|،|$)`),
+              await page.keyboard.press('Tab')
+              expect(
+                await page.evaluate(() => {
+                  const el = document.activeElement!
+                  return {
+                    inMain: el.closest('main') !== null,
+                    outline: getComputedStyle(el).outlineStyle,
+                  }
                 }),
-              ).toHaveCount(1)
-              await expect(page.locator('[data-portal-live][role="status"]')).toHaveCount(1)
-            }
-            await page.goto(localePath('/en/spaces', locale))
-            await expect(
-              portalNavOf(page, locale).getByRole('link', { name: portal.nav.home, exact: true }),
-            ).toHaveAttribute('aria-current', 'page')
-            await expect(page.locator('[data-portal-live]')).toHaveText('')
-            expect(known(`/${locale}/spaces`, role, locale, DESKTOP.width)).toEqual({})
+              ).toEqual({ inMain: true, outline: expect.not.stringMatching(/^none$/) })
+              const home = portalNavOf(page, locale).getByRole('link', {
+                name: portal.nav.home,
+                exact: true,
+              })
+              await home.click()
+              await expect(home).toBeFocused()
+              expect(await home.evaluate((el) => getComputedStyle(el).outlineStyle)).toBe('none')
+            })
           })
-        })
+        }
 
-        test(`every nav item and account row opens a page (${role} ${locale})`, async ({
+        test(`every nav item and account row opens a page (${role} ${locale} 1440)`, async ({
           browser,
         }) => {
           const other = OTHER[locale]
@@ -260,46 +346,6 @@ test.describe('portal shell', () => {
               .getByRole('menuitem', { name: MESSAGES[other].Portal.account.signOut })
               .click()
             await page.waitForURL(`**/${other}/login**`)
-          })
-        })
-
-        test(`the nav shows each space with its unread count (${role} ${locale})`, async ({
-          browser,
-        }) => {
-          await world.resetVisits()
-          await inContext(browser, { viewport: DESKTOP, role }, async (page) => {
-            await page.goto(localePath('/en/spaces', locale))
-            const nav = portalNavOf(page, locale)
-            for (const room of ['course', 'otherCourse'] as const)
-              await expect(
-                nav.getByRole('link', {
-                  name: spaceName(world[room], locale, EXPECTED_UNREAD[room]),
-                }),
-              ).toBeVisible()
-          })
-        })
-
-        test(`opening a space drops its count in this tab (${role} ${locale})`, async ({
-          browser,
-        }) => {
-          await world.resetVisits()
-          await inContext(browser, { viewport: DESKTOP, role }, async (page) => {
-            await page.goto(localePath('/en/spaces', locale))
-            const nav = portalNavOf(page, locale)
-            await nav
-              .getByRole('link', {
-                name: spaceName(world.otherCourse, locale, EXPECTED_UNREAD.otherCourse),
-              })
-              .click()
-            await page.waitForURL(`**${localePath(world.otherCourse.path, locale)}`)
-            const row = nav.getByRole('link', {
-              name: spaceName(world.otherCourse, locale, 0),
-            })
-            await expect(row).toBeVisible()
-            await expect(row).not.toContainText('9+')
-            await page.reload()
-            await expect(row).toBeVisible()
-            await expect(row).not.toContainText('9+')
           })
         })
       }
@@ -588,5 +634,194 @@ test.describe('portal shell', () => {
               await spaces.set('on')
             }
           })
+  })
+
+  test.describe('reflow, mirror and targets', () => {
+    const noSideScroll = (page: Page) =>
+      page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)
+
+    for (const role of ROLES)
+      for (const locale of LOCALES)
+        test(`reflow (${role} ${locale})`, async ({ browser }) => {
+          const widths = locale === 'ar' ? [320, 390, 720] : [320, 720]
+          for (const width of widths)
+            await inContextAt(
+              browser,
+              { baseURL, viewport: { width, height: 800 }, state: states[role] },
+              async (page) => {
+                for (const path of ['/en/spaces', world.course.path]) {
+                  await page.goto(localePath(path, locale))
+                  await expect(page.getByRole('heading', { level: 1 })).toHaveCount(1)
+                  expect(await noSideScroll(page), `${path} at ${width}`).toBe(true)
+                  const other = page.locator(
+                    `a[href="${localePath(world.otherCourse.path, locale)}"]`,
+                  )
+                  if (width < 700) {
+                    const sheet = await openMore(page, locale)
+                    await expect(sheet.locator(other)).toBeVisible()
+                    await page.keyboard.press('Escape')
+                    continue
+                  }
+                  const nav = portalNavOf(page, locale)
+                  await expect(nav.locator(other)).toBeVisible()
+                  const fold = page.getByRole('button', { name: MESSAGES[locale].Portal.nav.fold })
+                  await fold.click()
+                  await expect(fold).toHaveAttribute('aria-expanded', 'false')
+                  await expect(nav.locator(other)).toBeVisible()
+                  expect(await noSideScroll(page), `${path} at ${width}, folded`).toBe(true)
+                  await fold.click()
+                  await expect(fold).toHaveAttribute('aria-expanded', 'true')
+                }
+              },
+            )
+        })
+
+    test('Arabic mirrors the shell (fellow)', async ({ browser }) => {
+      const chevron = {} as Record<Locale, string>
+      for (const locale of LOCALES)
+        await inContext(browser, { viewport: DESKTOP, role: 'fellow' }, async (page) => {
+          await page.goto(localePath('/en/spaces', locale))
+          const rail = (await page.locator('[data-portal-rail]').boundingBox())!
+          const main = (await page.locator('main').boundingBox())!
+          expect(rail.x > main.x, locale).toBe(locale === 'ar')
+          chevron[locale] = await page
+            .getByRole('button', { name: MESSAGES[locale].Portal.nav.fold })
+            .locator('svg')
+            .evaluate((svg) => `${getComputedStyle(svg).transform} ${getComputedStyle(svg).scale}`)
+        })
+      expect(chevron.ar).not.toBe(chevron.en)
+
+      await inContext(browser, { viewport: PHONE, role: 'fellow' }, async (page) => {
+        const portal = MESSAGES.ar.Portal
+        await page.goto('/ar/spaces')
+        const bar = portalNavOf(page, 'ar')
+        const home = (await bar
+          .getByRole('link', { name: portal.nav.home, exact: true })
+          .boundingBox())!
+        const more = (await bar
+          .getByRole('button', { name: portal.nav.more, exact: true })
+          .boundingBox())!
+        expect(home.x).toBeGreaterThan(more.x)
+        const sheet = await openMore(page, 'ar')
+        const row = sheet.locator(`a[href="${localePath(world.otherCourse.path, 'ar')}"]`)
+        const cover = (await row.locator('span').first().boundingBox())!
+        const label = (await row.locator('bdi').boundingBox())!
+        expect(cover.x).toBeGreaterThan(label.x)
+      })
+    })
+
+    for (const locale of LOCALES)
+      test(`targets (${locale})`, async ({ browser }) => {
+        const portal = MESSAGES[locale].Portal
+        const sizes = async (page: Page, selector: ReturnType<Page['locator']>) =>
+          selector.evaluateAll((els) =>
+            els.map((el) => {
+              const box = el.getBoundingClientRect()
+              return { w: box.width, h: box.height }
+            }),
+          )
+        const atLeast = (list: { w: number; h: number }[], min: number) =>
+          list.filter((box) => box.w < min || box.h < min)
+
+        for (const viewport of [PHONE, DESKTOP]) {
+          const context = await browser.newContext({
+            baseURL,
+            viewport,
+            storageState: states.fellow,
+            hasTouch: true,
+            isMobile: true,
+          })
+          try {
+            const page = await context.newPage()
+            await page.goto(localePath('/en/spaces', locale))
+            expect(await page.evaluate(() => matchMedia('(pointer: coarse)').matches)).toBe(true)
+            const nav = portalNavOf(page, locale)
+            const targets =
+              viewport === PHONE
+                ? nav.locator('a, button')
+                : page.locator(
+                    `[data-portal-rail] nav a, [data-portal-rail] button[aria-label="${portal.nav.fold}"]`,
+                  )
+            const found = await sizes(page, targets)
+            expect(found.length).toBeGreaterThan(viewport === PHONE ? 1 : 2)
+            expect(atLeast(found, 44)).toEqual([])
+          } finally {
+            await context.close()
+          }
+        }
+
+        await inContext(browser, { viewport: DESKTOP, role: 'fellow' }, async (page) => {
+          await page.goto(localePath('/en/spaces', locale))
+          const found = await sizes(
+            page,
+            page.locator('[data-portal-rail] a, [data-portal-rail] button'),
+          )
+          expect(atLeast(found, 24)).toEqual([])
+        })
+      })
+  })
+
+  test.describe('axe on /spaces states', () => {
+    const expectClean = async (page: Page, label: string) => {
+      const violations = await axeViolations(page)
+      expect(
+        Object.fromEntries(violations.map((v) => [v.id, v.nodes.map((n) => n.target.join(' '))])),
+        label,
+      ).toEqual({})
+    }
+
+    for (const role of ROLES)
+      for (const locale of LOCALES) {
+        for (const viewport of Object.values(WIDTHS))
+          test(`axe dark theme (/spaces ${role} ${locale} ${viewport.width})`, async ({
+            browser,
+          }) => {
+            const context = await browser.newContext({
+              baseURL,
+              viewport,
+              storageState: states[role],
+              colorScheme: 'dark',
+            })
+            try {
+              await notifyOf(
+                payload,
+                world.accounts[role],
+                localePath(world.course.postPath, locale),
+              )
+              const page = await context.newPage()
+              await page.goto(localePath('/en/spaces', locale))
+              await expect(page.locator('html')).toHaveAttribute('data-theme', 'dark')
+              await expect(
+                page.locator('[data-portal-rail]').getByRole('button', {
+                  name: new RegExp(`^${MESSAGES[locale].Notifications.label}(,|،)`),
+                }),
+              ).toHaveCount(1)
+              await expectClean(page, 'dark')
+            } finally {
+              await context.close()
+            }
+          })
+
+        test(`axe with the account menu open (/spaces ${role} ${locale} 1440)`, async ({
+          browser,
+        }) => {
+          await inContext(browser, { viewport: DESKTOP, role }, async (page) => {
+            await page.goto(localePath('/en/spaces', locale))
+            await accountButton(page, locale).click()
+            await expect(page.getByRole('menu')).toBeVisible()
+            await expectClean(page, 'account menu')
+          })
+        })
+
+        test(`axe with the More sheet open (/spaces ${role} ${locale} 390)`, async ({
+          browser,
+        }) => {
+          await inContext(browser, { viewport: PHONE, role }, async (page) => {
+            await page.goto(localePath('/en/spaces', locale))
+            await openMore(page, locale)
+            await expectClean(page, 'More sheet')
+          })
+        })
+      }
   })
 })

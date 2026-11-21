@@ -1033,6 +1033,7 @@
     "read": "read",
     "clearRead": "Clear read",
     "triggerUnread": "{count, plural, one {, {shown} unread} other {, {shown} unread}}",
+    "triggerUnreadMany": ", more than 9 unread",
     "kinds": {
       "submitted": "Review requested",
       "approved": "Approved",

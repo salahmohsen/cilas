@@ -1032,7 +1032,8 @@
     "viewAll": "عرض كل التحديثات",
     "read": "مقروءة",
     "clearRead": "إزالة المقروءة",
-    "triggerUnread": "{count, plural, =1 {، واحد غير مقروء} other {، {shown} غير مقروءة}}",
+    "triggerUnread": "{count, plural, =1 {، {shown} غير مقروء} other {، {shown} غير مقروءة}}",
+    "triggerUnreadMany": "، أكثر من ٩ غير مقروءة",
     "kinds": {
       "submitted": "طلب مراجعة",
       "approved": "تم الاعتماد",

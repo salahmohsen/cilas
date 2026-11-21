@@ -192,7 +192,11 @@ export function SiteNotifications() {
         viewAll: t('viewAll'),
         read: t('read'),
         clearRead: t('clearRead'),
-        triggerUnread: (n) => t('triggerUnread', { count: n, shown: localDigits(n, locale) }),
+        triggerUnread: (n) =>
+          n > 9
+            ? t('triggerUnreadMany')
+            : t('triggerUnread', { count: n, shown: localDigits(n, locale) }),
+        badge: (n) => localDigits(n > 9 ? '9+' : n, locale),
       }}
     />
   )

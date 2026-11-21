@@ -81,6 +81,8 @@ export interface NotificationText {
   read: string
   clearRead: string
   triggerUnread: (unread: number) => string
+  /** The trigger badge's text; keep it inside triggerUnread's words, so the visible count is part of the name. */
+  badge: (unread: number) => string
 }
 
 const DEFAULT_TEXT: NotificationText = {
@@ -109,6 +111,7 @@ const DEFAULT_TEXT: NotificationText = {
   read: 'read',
   clearRead: 'Clear read',
   triggerUnread: (n) => `, ${n} unread`,
+  badge: (n) => (n > 9 ? '9+' : String(n)),
 }
 
 export interface NotificationCenterProps {
@@ -432,7 +435,7 @@ export function NotificationCenter({
               >
                 <RollingCount
                   value={unreadCount}
-                  display={unreadCount > 9 ? '9+' : String(unreadCount)}
+                  display={text.badge(unreadCount)}
                   reduce={reduce}
                 />
               </motion.span>

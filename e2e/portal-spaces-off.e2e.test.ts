@@ -11,6 +11,7 @@ import {
   localePath,
   MESSAGES,
   notifyOf,
+  openMore,
   portalWorld,
   POST_BODY,
   ROLES,
@@ -189,6 +190,51 @@ test.describe('portal spaces', () => {
               await expect(page.locator('section[aria-labelledby^="spaces-"]')).toHaveCount(1)
               await expect(page.locator('a[href*="/spaces/course/"]')).toHaveCount(0)
               await expect(page.getByText(MESSAGES[locale].Spaces.empty)).toHaveCount(0)
+            })
+          })
+
+          test(`spaces off: no spaces in the nav ${at}`, async ({ browser }) => {
+            const portal = MESSAGES[locale].Portal
+            await inContext(browser, { viewport, role }, async (page) => {
+              await page.goto(localePath('/en/spaces', locale))
+              await expect(page.getByRole('heading', { level: 1 })).toHaveCount(1)
+              const links =
+                viewport.width < 700
+                  ? await openMore(page, locale)
+                  : page.getByRole('navigation', { name: portal.nav.label, exact: true })
+              await expect(links.getByRole('heading', { name: portal.nav.spaces })).toHaveCount(0)
+              await expect(
+                links.locator('a[href*="/spaces/course/"], a[href*="/spaces/community/"]'),
+              ).toHaveCount(0)
+              await expect(page.getByText(MESSAGES[locale].Spaces.empty)).toHaveCount(0)
+            })
+          })
+
+          test(`spaces switched off while a reader is on a space page ${at}`, async ({
+            browser,
+          }) => {
+            await inContext(browser, { viewport, role }, async (page) => {
+              try {
+                await spaces.set('on')
+                await page.goto(localePath(world.course.path, locale))
+                await expect(spaceHeading(page, world.course, locale)).toBeVisible()
+                await spaces.set('off')
+                const links =
+                  viewport.width < 700
+                    ? await openMore(page, locale)
+                    : page.getByRole('navigation', {
+                        name: MESSAGES[locale].Portal.nav.label,
+                        exact: true,
+                      })
+                await links
+                  .locator(`a[href="${localePath(world.otherCourse.path, locale)}"]`)
+                  .click()
+                await expect(
+                  page.getByRole('heading', { level: 1, name: MESSAGES[locale].NotFound.title }),
+                ).toBeVisible()
+              } finally {
+                await spaces.set('off')
+              }
             })
           })
 
