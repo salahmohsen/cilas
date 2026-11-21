@@ -1727,5 +1727,27 @@
     "delete": "Delete",
     "deleted": "Deleted",
     "holdHint": "Press and hold for {seconds} seconds to confirm. With a keyboard, hold Space, or press Enter to open confirmation."
+  },
+  "Portal": {
+    "nav": {
+      "label": "Main",
+      "home": "Home",
+      "openDashboard": "Open dashboard",
+      "spaces": "Spaces",
+      "unread": "{count, plural, one {, # unread post} other {, # unread posts}}",
+      "unreadMany": ", more than 9 unread posts",
+      "fold": "Fold the sidebar",
+      "more": "More",
+      "brand": "CILAS home"
+    },
+    "shell": {
+      "skip": "Skip to content"
+    },
+    "account": {
+      "label": "Account",
+      "profile": "Profile and settings",
+      "theme": "Theme",
+      "signOut": "Sign out"
+    }
   }
 }
