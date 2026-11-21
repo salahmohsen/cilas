@@ -1,0 +1,545 @@
+# Portal phase 1d: calendar and account. Implementation plan
+
+> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task by task. Steps use checkbox (`- [ ]`) syntax for tracking.
+
+**Goal:** Give every signed-in reader a Calendar tab in the portal that starts on their own courses and the public events, and one account page in the portal for their profile, sign-in and notifications. The old `/settings` and `/profile` addresses keep working as redirects.
+
+**Architecture:** Three PRs. PR 1d-1 moves the account page into the portal shell at `/spaces/account`, turns `/settings` and `/profile` into redirects, points the account menu row at the new page, and adds the Sign-in group. PR 1d-2 adds the data of the Calendar tab with no screen: `readerCourseIds`, one gated read of the reader's own course meetings beside the cached public query (one shared builder, two sources), and the pure merge that gives the portal its legend kinds. PR 1d-3 adds the screen: one preset prop on the generic calendar, a path prop and a read-only prop on `PublicCalendar`, the `/spaces/calendar` page, the Calendar nav item, and the `portal-calendar` e2e.
+
+**Tech stack:** Next.js 16.4.6 App Router, React 19.2.6, next-intl 4, Payload 3.91.0 (Postgres), Arc UI (`src/components/arc`), ui-sdk `0.1.0-beta.1` (only in `src/components/calendar/ui/`), Vitest 4, Playwright 1.58.2, `@axe-core/playwright`.
+
+**Spec:** `docs/superpowers/specs/2026-11-18-portal-design.md`: Phases (Phase 1d, and the target table rows Calendar, Home's **Open the calendar**, Profile and settings in the account menu), Calendar, Profile and settings (D5), Navigation, Architecture (Routes, Feature folders, Data access rule, Lazy loading rule), Accessibility baseline, UI skills, Tests. ADR 0011 ("Public calendar redesign", "Code structure"), ADR 0012. The spec wins where they differ, except for the Deviations below.
+
+**Sources read for this plan** (by reading only; no command ran on this server except `git` and `grep`):
+
+| Source                     | Ref                                                                                                                                                   | SHA                                                             |
+| -------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------- |
+| `main`                     | `origin/main`                                                                                                                                         | `c2f84e8c` (phase 1a, 1b-1 #55, ADR 0012 #54, hooks #56 merged) |
+| Phase 1b plan (merged)     | `docs/superpowers/plans/2026-11-20-portal-phase-1b-status-and-lists.md` on `main`                                                                     | `c2f84e8c`                                                      |
+| Phase 1c plan (not merged) | `origin/docs/portal-phase-1c-plan`, `docs/superpowers/plans/2026-11-21-portal-phase-1c-tasks-home-inbox.md`                                           | `780cd9c5`                                                      |
+| ui-sdk skill               | `/home/salah/cilas/node_modules/@ui-sdk/core/skills/ui-sdk/SKILL.md` (`.agents/skills/ui-sdk` links to it), `@ui-sdk/react/docs/components/toggle.md` | `0.1.0-beta.1`                                                  |
+| Next.js docs               | `/home/salah/cilas/node_modules/next/dist/docs/` (16.4.6): `04-functions/redirect.md`, `04-functions/unstable_cache.md`                               | n/a                                                             |
+
+**Status.** Nothing is built. Every "Expected" line is a prediction. The section "Premises to re-check before build" lists each assumption about code that is not on `main` or that can move.
+
+**Who decided.** "Plan call" marks a call of this plan writer. The operator may veto each one. "Operator rule" marks a rule in the ledger (`/home/salah/cilas-portal-run/LEDGER.md`, "Rules for the run").
+
+---
+
+## What each reader sees
+
+| Reader                                     | `/spaces/calendar` at first                                                                                                   | `/spaces/account`                                                |
+| ------------------------------------------ | ----------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------- |
+| Student in a public and a Community course | Both courses (Your courses) and public events. Other courses off. The Community course shows, the public page never shows it. | Profile, Sign-in, Notifications (space email when spaces are on) |
+| Fellow with an unpublished own course      | The unpublished course and the published ones they teach, and public events. Other courses off.                               | Same three groups                                                |
+| Admin with no course (most admins)         | Every public course (Other courses on, Open question Q1) and public events                                                    | Same three groups. No person: the "no person" text in Profile    |
+
+## PRs
+
+| PR                  | Branch                          | Base                                                                                                                                    | Tasks    | Screen | Ends when                                                                                                                           |
+| ------------------- | ------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------- | -------- | ------ | ----------------------------------------------------------------------------------------------------------------------------------- |
+| 1d-1. Account page  | `portal/phase-1d-account`       | `origin/main`                                                                                                                           | A1 to A6 | yes    | `portal-account` e2e (`e2e/portal-account.e2e.test.ts`), the 1d account-row assertions in `portal-shell`                            |
+| 1d-2. Calendar data | `portal/phase-1d-calendar-data` | `origin/main`                                                                                                                           | C1 to C4 | none   | `src/api/reader-calendar.int.test.ts` (the reader table), `src/portal/calendar/portal-items.unit.test.ts`                           |
+| 1d-3. Calendar tab  | `portal/phase-1d-calendar`      | `origin/main` after 1d-2 merges. Until then it branches from `portal/phase-1d-calendar-data`, and the PR targets `main` once 1d-2 is in | T1 to T6 | yes    | `portal-calendar` e2e (`e2e/portal-calendar.e2e.test.ts`), the 1d Calendar assertions in `portal-shell`, the calendar browser tests |
+
+**Dependency graph.**
+
+```
+main ──┬── 1d-1 (independent)
+       └── 1d-2 ── 1d-3
+1c-3 (Home) ┄┄ 1d-3 (soft: Home's "Open the calendar"; see Shared files)
+1c-2 (Inbox) ┄┄ 1d-1, 1d-3 (soft: nav order and shared nav files; see Shared files)
+```
+
+- 1d-1 and 1d-2 need nothing of each other. Each branches from `origin/main`.
+- 1d-3 needs 1d-2 (`getReaderCalendarItems`, `readerCourseIds`, `portalItems`, `mergeMeetings`).
+- 1d-1 and 1d-3 each change a screen and an interaction, so each waits for the operator's review before merge (playbook rule). 1d-2 has no screen.
+- **Landing order:** 1d-1 and 1d-2 in any order, then 1d-3. Rebase each PR on `origin/main` before it opens and again before it merges (Shared files).
+
+**Files each PR may touch.** A builder who needs a file outside its list stops and reports.
+
+- **1d-1:** `src/portal/account/*` (new: `account-page.tsx`, `sign-in-section.tsx`, their tests), `src/lib/account-path.ts` and its unit test (new), `src/app/(frontend)/[locale]/(portal)/spaces/account/page.tsx` (new), `src/app/(frontend)/[locale]/(site)/settings/page.tsx` (becomes a redirect), `src/app/(frontend)/[locale]/(site)/profile/page.tsx` (new target), `src/app/(frontend)/[locale]/(site)/forgot/page.tsx` (one line), `src/portal/nav/profile.ts` (one href), `src/components/site-header.tsx` (one line), `src/components/space/space-page.tsx` (one line), `src/lib/analytics/analytics.unit.test.ts` (one row), `src/components/use-session.ts` (export `refreshSession`), `src/components/profile/profile-form.tsx` (call `refreshSession`, three lines), `src/components/settings/settings-shell.module.css` (the save bar clears the bottom bar), `messages/{en,ar}.json` (`Portal.account.*`), `testing/portal-e2e.test-utils.ts` (route shape row), `e2e/portal-account.e2e.test.ts` (new), `e2e/portal-shell.e2e.test.ts` (three `waitForURL` lines and the account-row target).
+- **1d-2:** `src/lib/reader-courses.ts` and `src/lib/reader-courses.int.test.ts` (new, only when P1 says 1c-3 has not landed), `src/api/calendar.api.ts`, `src/api/reader-calendar.int.test.ts` (new), `src/portal/calendar/portal-items.ts` and `portal-items.unit.test.ts` (new), `testing/portal-calendar.fixture.ts` (new).
+- **1d-3:** `src/components/calendar/ui/calendar.tsx` (one prop), `src/components/calendar/ui/calendar-legend-preset.browser.test.tsx` (new), `src/components/calendar/public-calendar.tsx` (two props), `src/components/calendar/public-calendar.browser.test.tsx` (new cases), `src/components/calendar/public-items.ts` (`publicKinds`), `src/components/calendar/public-items.unit.test.ts`, `src/app/(frontend)/[locale]/(site)/calendar/page.tsx` (calls `publicKinds` and passes `path`), `src/portal/calendar/calendar-page.tsx` (new), `src/app/(frontend)/[locale]/(portal)/spaces/calendar/page.tsx` (new), `src/portal/nav/portal-nav.ts`, `portal-nav.unit.test.ts`, `nav-icons.ts`, `messages/{en,ar}.json` (`Portal.nav.calendar`, `Portal.calendar.*`), `testing/portal-e2e.test-utils.ts` (`NAV_BY_ROLE` row, route shape row), `e2e/portal-calendar.e2e.test.ts` (new), `e2e/portal-shell.e2e.test.ts` (Calendar assertions), and, only when P6 says 1c-3 merged, `src/portal/home/next-session-card.tsx` and its dom test (one action).
+
+## Shared files
+
+Phases 1b (1b-2a list data, 1b-2b list screens with L0 ScrollArea and L0b fold trigger) and 1c (1c-2 Inbox and counts, 1c-3 Home) run in other threads now. They change the same shell files. 1d keeps each edit to the smallest change.
+
+| File                                                                                 | Who else changes it        | What 1d changes                                                                                                                                                                                                                                                  |
+| ------------------------------------------------------------------------------------ | -------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `src/portal/nav/portal-nav.ts`                                                       | 1b-2b (L1), 1c-2 (I2)      | 1d-3: one `CALENDAR` item and one key in the `key` union. It goes right after Home, or right after Inbox when Inbox is there (P3). No `count` field when 1c-2 deleted it (P2).                                                                                   |
+| `src/portal/nav/portal-nav.unit.test.ts`                                             | 1b-2b, 1c-2                | 1d-3: `'calendar'` in each role's row of "roles %j see %j"; one test for its group and href.                                                                                                                                                                     |
+| `src/portal/nav/nav-icons.ts`                                                        | 1b-2b, 1c-2                | 1d-3: one icon key `calendar` (lucide `CalendarDays`).                                                                                                                                                                                                           |
+| `src/portal/nav/profile.ts`                                                          | none planned               | 1d-1: `href: '/settings'` becomes `href: '/spaces/account'`. The account menu and the More sheet read it, so neither file changes.                                                                                                                               |
+| `src/portal/nav/account-menu.tsx`, `more-sheet.tsx`, `sidebar.tsx`, `bottom-bar.tsx` | 1b-2b (L0, L0b), 1c-2 (I3) | No change. The bottom bar renders every `top` item, so Calendar shows there with no edit (`bottom-bar.tsx:49`).                                                                                                                                                  |
+| `messages/{en,ar}.json`                                                              | 1b-2b, 1c-2, 1c-3          | New keys only: `Portal.nav.calendar`, `Portal.calendar.*`, `Portal.account.*`. No key is renamed or deleted.                                                                                                                                                     |
+| `testing/portal-e2e.test-utils.ts`                                                   | 1b-2b, 1c-2                | 1d-1: one route shape row (`/spaces/account`). 1d-3: one row (`/spaces/calendar`) and one `NAV_BY_ROLE` row per role. Rows go into the table that holds the non-shell routes (P4).                                                                               |
+| `e2e/portal-shell.e2e.test.ts`                                                       | 1b-2b, 1c-2, 1c-3          | 1d-1: the three `waitForURL('**/${locale}/settings')` lines (`:323`, `:551`, `:580` at `c2f84e8c`) wait for `/spaces/account`. 1d-3: the Calendar item lands on its page at 1440 and 390. The nav-per-role tests read `NAV_BY_ROLE`, so they need no other edit. |
+| `src/app/(frontend)/[locale]/(portal)/spaces/(home)/page.tsx`                        | 1c-3 rewrites it           | No change. Its `editProfile` shortcut (`:53`) keeps `/settings`, which now redirects. 1c-3 deletes the shortcuts.                                                                                                                                                |
+| `src/lib/reader-courses.ts`                                                          | 1c-3 (H1) creates it       | 1d-2 creates it only when 1c-3 has not landed (P1), with 1c-3's signature and rule. Then 1c-3 imports it and drops its own create step.                                                                                                                          |
+| `src/portal/home/next-session-card.tsx`                                              | 1c-3 (H2) creates it       | 1d-3 adds the admin's **Open the calendar** action only when 1c-3 merged first (P6). Else 1c-3 adds it (carry-over below).                                                                                                                                       |
+
+**Conflict rule.** Before each PR opens and before it merges: `git fetch origin && git rebase origin/main`. On a conflict in a shared file, keep both sides: the other phase's rows stay, and 1d adds its own row in nav order (Home, Inbox, Calendar, then the rest). Run the premise checks P1 to P6 again after each rebase, because the answer can change.
+
+**Home's Open the calendar** (spec target table, phase 1d). Two orders:
+
+- **1c-3 merged before 1d-3 opens.** 1d-3 Task T5 adds the action to 1c-3's `NextSessionCard`: for an admin with no session, one link **Open the calendar** to `/{locale}/spaces/calendar`, with the Arc button classes, as 1c-3's other actions.
+- **1d-3 merged first** (likely: 1c-3 waits on 1b-1, 1b-2a, 1c-1 and 1c-2). Today's `/spaces` page has no Next session tile, so 1d-3 adds nothing to Home. The orchestrator sends the carry-over below to the 1c orchestrator, and 1c-3 H2 gives the admin's empty tile the **Open the calendar** action, because `/spaces/calendar` then exists.
+
+## Premises to re-check before build
+
+Each premise names what the plan assumes, the ref where it was read, the check the builder runs first, and the fallback. Run each check at the PR's base after `git fetch origin`.
+
+- **P1. `readerCourseIds` location.** 1c-3 H1 (plan at `780cd9c5`) creates `readerCourseIds(payload, user): Promise<number[]>` in `src/lib/reader-courses.ts`: a gated `find` of `courses` (`fellows contains <person>`, `select: { id: true }`, `depth: 0`, `pagination: false`) and a gated `find` of `enrollments` (`person equals <person>`, `status equals 'accepted'`, `select: { course: true }`, `depth: 0`, `pagination: false`), the union; no person gives `[]`. Not on `main` at `c2f84e8c`. Used by 1d-2.
+  - Check: `git grep -n "export const readerCourseIds" origin/main -- src/lib/reader-courses.ts`. Prints a line: import it, and C1 only adds the 1d rows to its int test. Prints nothing: C1 creates the file as above.
+- **P2. `PortalNavItem.count`.** On `main` at `c2f84e8c` the item type has `count: number | null` (`src/portal/nav/portal-nav.ts:12`). 1c-2 I2 deletes it (1c Deviation 14). Used by 1d-3 T4.
+  - Check: `git grep -n "count: number | null" origin/main -- src/portal/nav/portal-nav.ts`. Prints a line: `CALENDAR` has `count: null`. Prints nothing: `CALENDAR` has no `count`.
+- **P3. Nav order and keys.** On `main` the `key` union is `'home' | 'openDashboard'` and `portalNav` returns `[HOME, ...admin ? [OPEN_DASHBOARD] : []]` (`portal-nav.ts:8`, `:39-42`). 1b-2b adds `articles`, `courses`; 1c-2 adds `inbox` as the second top item. Used by 1d-3 T4.
+  - Check: `git grep -nE "key: '(inbox|articles|courses)'" origin/main -- src/portal/nav/portal-nav.ts`. Insert `CALENDAR` after `INBOX` when `inbox` prints, else after `HOME`.
+- **P4. Route shape tables.** On `main`, `shapeOf` searches `ROUTE_SHAPES` then `LIST_SHAPES` and throws for any other route (`testing/portal-e2e.test-utils.ts:17-38`). The shell's axe loop pairs `ROUTE_SHAPES` with `portalRoutes` by index, so a new row there breaks it. Used by 1d-1 A5, 1d-3 T6.
+  - Check: `git grep -nE "^export const [A-Z_]+_SHAPES" origin/main -- testing/portal-e2e.test-utils.ts`. If only `ROUTE_SHAPES` and `LIST_SHAPES` print, add a third table `PAGE_SHAPES` (1d-1 creates it with `/spaces/account`; 1d-3 adds `/spaces/calendar`), add it to `shapeOf` and `RouteShape`. If 1c-2 already added a table for its Inbox route, add the 1d rows to that table instead.
+- **P5. `NAV_BY_ROLE`.** On `main` it holds `home` for every role and `openDashboard` for admin (`testing/portal-e2e.test-utils.ts:82-93`), and the shell tests read it (`e2e/portal-shell.e2e.test.ts:203`, `:313`). Used by 1d-3 T6.
+  - Check: `git grep -n "NAV_BY_ROLE" origin/main -- e2e/portal-shell.e2e.test.ts testing/portal-e2e.test-utils.ts`. Fallback when a later phase replaced it: add the Calendar row to whatever one table the shell nav tests read.
+- **P6. Home's next session card.** 1c-3 H2 creates `src/portal/home/next-session-card.tsx` with "admin no button (until 1d)". Not on `main`. Used by 1d-3 T5.
+  - Check: `git ls-tree origin/main src/portal/home/next-session-card.tsx`. Prints a line: T5 adds the action. Prints nothing: T5 skips, and the carry-over goes to phase 1c.
+- **P7. Avatar refresh in the shell.** The portal account menu reads the session from `useSession()`, which fetches `/api/users/me?depth=2` again only on `AUTH_CHANGED` (`src/components/use-session.ts:28-46`). `ProfileForm` calls only `router.refresh()` after a save or a photo change (`profile-form.tsx:150`, `:229`). So the plan predicts that the spec check "a photo change shows in the account menu avatar" fails today inside the shell. `AUTH_CHANGED` also closes the site search and refreshes the private space search (`site-search.tsx:56-61`, `private-space-search.tsx:40`), so 1d does not reuse it. Used by 1d-1 A3.
+  - Check: A3 Step 1 writes the e2e first and expects FAIL. If it passes with no code change, drop A3 Step 2 and say so in the commit.
+- **P8. Redirect status and fragment.** `redirect()` in a Server Component serves a 307, or a client-side redirect inside a streaming response (`node_modules/next/dist/docs/01-app/03-api-reference/04-functions/redirect.md:12`). The docs say nothing on fragments. A 307 whose `Location` holds `#profile` lands on that fragment, and a 307 with no fragment keeps the fragment of the old URL (RFC 9110, 10.2.2). No `loading.tsx` sits in `(site)` or above `/settings` and `/profile` (`ls src/app/(frontend)/[locale]/(site)` at `c2f84e8c`). Used by 1d-1 A2.
+  - Check (Mac, A2 Step 3): `curl -s -o /dev/null -w '%{http_code} %{redirect_url}\n' -b <student cookie> http://localhost:<port>/en/profile` prints `307 http://localhost:<port>/en/spaces/account#profile`. Fallback: the two redirects move to `redirects()` in `next.config.ts` (`/:locale(en|ar)/profile` to `/:locale/spaces/account#profile`, `/:locale(en|ar)/settings` to `/:locale/spaces/account`, `permanent: false`), Deviation 6 says so, and the two page files are deleted.
+- **P9. Fixture courses show on the cached calendar.** The public calendar e2e creates courses from the Playwright process and then sees them at `/calendar` (`e2e/public-calendar-panel.e2e.test.ts:60-90`, `:225`). The 1d-3 e2e uses the same pattern for public courses. Used by 1d-3 T6.
+  - Check: `verify.sh --e2e-only <branch> <sha> e2e/public-calendar-panel.e2e.test.ts` passes at the 1d-3 base. If it fails on the base, the 1d-3 e2e asserts only what the gated read adds (own courses) and the events, and the PR names the base failure in one line.
+- **P10. Calendar component legend.** The legend is a controlled `ToggleGroup multiple` over item kinds, from internal state `hidden` that starts empty (`src/components/calendar/ui/calendar.tsx:212`, `:823-837`). Kinds are `${kind}:${type}` (`src/components/calendar/public-items.ts:7-8`), so the public legend has one toggle per course type and per event type. `legendOf` keeps one tone per kind, the last item's (`calendar-model.ts:108-110`). Used by 1d-3 T1, C3.
+  - Check: `git grep -n "useState<ReadonlySet<string>>(() => new Set())" origin/main -- src/components/calendar/ui/calendar.tsx` prints one line.
+- **P11. Draft course fields.** `getCalendarItems` calls `c.course_type.toLowerCase()` and `String(c.slug)` (`src/api/calendar.api.ts:119-120`). The 1b plan names "a course with no cycle and no type" as a real row (1b Review Focus 6). A fellow's draft may lack both. Used by 1d-2 C2.
+  - Check: `grep -n "required" src/collections/Courses.ts | head` and read the `course_type` and `slug` fields. Either way C2 reads them as optional (C2 Interfaces), and the int table has a row for the draft with neither.
+- **P12. Probe script.** 1c-0 ships `scripts/ttfb-probe.mjs` (1c plan, T1). Used by the 1d-1 and 1d-3 perf boxes.
+  - Check: `git ls-tree origin/main scripts/ttfb-probe.mjs`. Fallback: the curl loop in the perf boxes.
+
+## Global Constraints
+
+**Run location (from the 1b plan, still in force).** Read the 1b plan's Global Constraints, "Run location". Builders work on the user's Mac (environment `1a4d95da-5225-4111-8b47-95722338b848`, project `ccbd0b98-2d40-4378-9e39-049224e0f44a`), each in its own git worktree. Nothing in this plan runs on the server. Light commands (oxlint, `pnpm exec tsgo --noEmit`, one `*.unit.test.ts` or `*.dom.test.tsx` file through `pnpm exec vitest run --project node|dom <file>`, `pnpm audit:access`) run in the Mac worktree. Heavy jobs (any `*.int.test.ts`, `*.browser.test.tsx`, Playwright, `next build`, a server, the full suite) run only through the Mac runner, under its lock:
+
+```
+~/cilas-verify/verify.sh [--e2e-only] [--no-tests] [--tests-only] [--int-only] [--keep] <branch> <sha> [specs|-g pat]
+```
+
+It writes `~/cilas-verify/runs/<sha>/RESULT.md`. Push the branch first. **[verify]** marks a step that runs through it.
+
+**From the 1b plan, still in force** (read these there; they are not copied): "New in 1b": **Access rules**, **One role table**, **Data access** (every read names `depth`, `select`, `pagination: false` or a `limit`), **Not found for a role**, **English**, **Int test setup** (`mockNetwork(resendInbox().handler, ...localServices)`; read by your own ids, never by table counts), **Arabic digits**. From the phase 1a plan (by section name): Spec values; Code and tests (Libraries first, Tests, Matrix, Describes, Locators, `spaces_mode`, Copy, Components, Lazy UI); Commits and PRs; "No streaming boundary above the check". From the 1c plan: **Review predicate** (no Critical or High finding stays open).
+
+**New in 1d.**
+
+- **Formatting (operator rule).** Never commit or push with `LEFTHOOK=0` or `--no-verify`. The hooks format staged files. In a worktree with no `node_modules`, run `/home/salah/cilas/node_modules/.bin/oxfmt --write <changed files>` before each commit and `oxfmt --check <changed files>` before push.
+- **No schema change.** The spec says "No new fields" (Profile and settings) and the Migrations section lists nothing for 1d. No task runs `payload migrate:create`. A task that finds it needs a field stops and reports.
+- **Gated read only.** Every read that 1d adds is a gated read: the Local API with `user` and `overrideAccess: false` (spec, Data access rule). 1d adds no projection. The public cached query stays as it is: no `user`, `overrideAccess: false` (`src/api/calendar.api.ts:44`, `:79`, `:89`).
+- **No user data in the cache.** `getCachedCalendarItems` keeps one argument, `locale`, and its key `['calendar-items-v10']` (`calendar.api.ts:149-153`). Next forbids request data inside a cache scope and makes each argument part of the key (`04-functions/unstable_cache.md:32-37`). So the reader's read runs outside it, after it, and its result never goes into it. C2 enforces this in the type of the shared builder; C4 proves it with an int row. Bump the key to `v11` only when the shape or the meaning of `CalendarMeeting` changes. 1d changes neither.
+- **UI parts order (operator rule, ADR 0012).** Installed Arc (`src/components/arc`, never re-run `shadcn add` for an installed part), then the free Arc registry, then a ui-sdk wrapper in `src/components/sdk/`, then a Radix primitive the repo uses, then our own code. App code never imports `@ui-sdk/*`; only `src/components/calendar/ui/` and `src/components/sdk/` do (`.oxlintrc.json`). Inner scroll regions use Arc `ScrollArea`. 1d adds no inner scroller: both pages scroll with the document.
+- **ui-sdk skill first (spec, Phase 1d; AGENTS.md).** Before T1 changes `src/components/calendar/ui/calendar.tsx`, the builder reads the ui-sdk skill (`.agents/skills/ui-sdk/SKILL.md`, which links to `/home/salah/cilas/node_modules/@ui-sdk/core/skills/ui-sdk/SKILL.md`), then `@ui-sdk/react/docs/components/toggle.md` ("Controlled Group", "API Reference"). This plan read both at `0.1.0-beta.1` before it set the preset (see "Legend preset").
+- **Lazy loading (spec, Lazy loading rule).** Both pages are first-render content. They render on the server. 1d adds no `preloadable`: the calendar popover and the confirm dialogs already load as the public calendar loads them (`calendar.tsx:59-62`).
+- **Skills.** Every task has a **Skills** line. A task that writes HTML, CSS or client JS loads `modern-web-guidance` first. Load each UI skill only where the task needs it.
+- **Copy.** New strings go in `messages/{en,ar}.json` under `Portal`, ICU plurals, digits through `{count, number, digits}`, gender-neutral Arabic (D8). The page H1s reuse existing keys where the spec names no new text (`Calendar.title`, `Settings.title`).
+- **Per-PR order** (the 1b plan's). 1. Tasks, each with its targeted tests. 2. Reviews (each PR's last task). 3. Fixes with tests. 4. **[verify]** the full suite once (`verify.sh <branch> <sha>`); a failure the base also has is one line in the PR. 5. `pnpm exec tsgo --noEmit`, `pnpm audit:access`, and `git status --short scripts/access-audit.snapshot.json` prints nothing (1d changes no access rule). 6. Open the PR per `worker.md`, title `type(scope): subject (portal phase 1d, PR <n>)`, ready for review, never a draft.
+- **Verification boxes (playbook).** Each PR section ends with three boxes: **unit**, **live** (a scenario on the real surface, run on the Mac against `verify.sh --keep --no-tests <branch> <sha>`, driven headless with the `agent-browser` CLI, with a pass predicate; `agent-browser close` after), **perf** (metric, probe, `main` baseline measured first, the failing number). A PR is verified only when all three are checked.
+
+## Check open source first
+
+The user's rule: before a new module, compare what exists. 1d builds no new tool. Each part reuses an installed piece.
+
+| Module or part                 | Candidates                                                                                                                                | Verdict                   | Evidence                                                                                                                                                      |
+| ------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------- | ------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Calendar view, popover, legend | The repo's calendar (`src/components/calendar/`, ADR 0011, on ui-sdk); FullCalendar (MIT, not installed); Schedule-X (MIT, not installed) | adopt the repo's          | The spec says "renders the public calendar component". A second calendar breaks ADR 0011 ("One calendar component, five places").                             |
+| Legend preset                  | ui-sdk `ToggleGroup` `value`/`onValueChange` (installed, already used); a new legend component                                            | adopt ui-sdk, one prop    | The group stays controlled. Only the start value of `hidden` changes (T1).                                                                                    |
+| URL state (`?view=&date=`)     | `calendar-url.ts` (installed); `nuqs` (MIT, not installed)                                                                                | adopt `calendar-url.ts`   | It already parses, writes and holds ranges for the public page. `nuqs` would be a second URL model for one page.                                              |
+| Merge by session id            | `mergePublicEditItems` (`public-items.ts:96-105`); lodash `uniqBy` (not a direct dep)                                                     | build (8 lines, pure)     | `mergePublicEditItems` merges items in edit mode, after `publicItems`. 1d must merge meetings before `publicItems`, so a cancelled split stays one rule (C3). |
+| Redirects                      | `redirect()` in a page (spec: "stay in `(site)` as redirects"); `next.config` `redirects()`                                               | adopt `redirect()`        | The spec puts them in `(site)`. `next.config` is the fallback (P8).                                                                                           |
+| Account page layout            | `SettingsShell` (installed, `src/components/settings/settings-shell.tsx`); Arc `tabs` (installed)                                         | adopt `SettingsShell`     | The spec says move, not rewrite. `NotificationsSection` registers with the shell's save bar (`useSettingsSection`, `notifications-section.tsx:11`).           |
+| Change password                | `requestResetLink` (`src/lib/password-reset.ts`, posts `/api/users/forgot-password`); a new server action                                 | adopt `requestResetLink`  | It is the `/forgot` flow the spec names. No new endpoint.                                                                                                     |
+| Avatar refresh                 | `useSession`'s own `refresh` (`use-session.ts:28`); `announceAuthChange` (`auth-events.ts`)                                               | adopt `refresh`, exported | `AUTH_CHANGED` also closes search panels (P7). Exporting the existing refresh is one line.                                                                    |
+
+**UI parts by rank** (Global Constraints, order of choice). Rank 3 (ui-sdk) gives behaviour only. A part with no behaviour of its own has nothing to take from rank 3 or 4.
+
+| Part                                                 | Rank | Reason                                                                                                                                                    |
+| ---------------------------------------------------- | ---- | --------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Calendar, popover, legend toggles (1d-3)             | 3    | The existing ui-sdk calendar in `src/components/calendar/ui/` (ADR 0011). No new import of `@ui-sdk/*`. T1 adds one prop there.                           |
+| Calendar toolbar, Edit button (hidden on the portal) | 1    | Arc `Button`, `SegmentedControl`, as today (`calendar.tsx:9`, `public-calendar.tsx:8`).                                                                   |
+| Account sections nav and save bar (1d-1)             | 5    | `SettingsShell`, our code on Arc `Button` and `AnimatedCounter`, moved as it is (spec: no rewrite). Arc `tabs` (1) is Radix tabs with no shared save bar. |
+| Profile form, notifications (1d-1)                   | 1, 5 | Existing components, unchanged (`ProfileForm`, `NotificationsSection`).                                                                                   |
+| Sign-in group: email line, button (1d-1)             | 1    | Arc `Button` (`variant="secondary"`). The email is static text in a `<dl>`.                                                                               |
+| Sign-in result line (1d-1)                           | 1    | Arc `Alert` (`tone="success"` or `tone="danger"`), as the public calendar uses it (`public-calendar.tsx:7`).                                              |
+| Home **Open the calendar** (1d-3, T5)                | 1    | A link with the Arc button classes, as 1c-3's other card actions.                                                                                         |
+| Nav item (1d-3)                                      | 1    | The shell's existing row (phase 1a), one registry row; icon from `lucide-react`.                                                                          |
+
+## Legend preset
+
+The spec says: "The plan reads the ui-sdk skill before it sets the legend preset." This plan read `SKILL.md` ("Default or controlled": `defaultValue` to start, or `value` with `onValueChange(value, details)` to control) and `toggle.md` at `0.1.0-beta.1`.
+
+- The legend is `ToggleGroup` from `@ui-sdk/react/toggle` with `multiple`, `orientation="vertical"`, `aria-label={labels.legend}`, a controlled `value` (the kinds not in `hidden`) and `onValueChange(shownKinds)` that writes `hidden` (`calendar.tsx:823-837`). Each kind is a `Toggle` with `value={kind}`. A pressed toggle has `aria-pressed="true"` and `data-pressed` (`toggle.md`, "Data Attributes", "API Reference": `ToggleGroup.value?: T[]`, `defaultValue?: T[]`, `onValueChange?: (value: T[], details) => void`, `multiple?: boolean`).
+- The group stays controlled. ui-sdk's own `defaultValue` would not reach `hidden`, which also filters the grid, the agenda, Up next and the hours (`calendar.tsx:211`, `:240`, `:500`, `:815`). So T1 adds one prop to `Calendar`, named in ui-sdk's style: `defaultHiddenKinds?: readonly string[]`, read once as the start of `hidden` (`useState(() => new Set(defaultHiddenKinds))`). After mount the reader owns the legend. A change of the prop after mount does nothing (ui-sdk's "default" contract).
+- The public calendar passes nothing, so its legend starts with every kind on, as today.
+- The portal kinds: `course:mine` ("Your courses", tone `pink`), `course:other` ("Other courses", tone `neutral`), and the public event kinds unchanged (`event:<type>`, their type tones). `pink` is the one tone no event type uses (`src/lib/calendar.ts:98-115`), so "Your courses" never shares a swatch with an event. One tone per kind keeps the swatch true (P10).
+- The preset: `defaultHiddenKinds = ownCourseIds.length > 0 ? ['course:other'] : []` (Open question Q1 for the empty case).
+
+## Deviations from the spec
+
+The operator may veto any line.
+
+1. **The account components stay in `src/components/`.** Spec: "The page moves the existing components ... into `src/portal/account/`." `ProfileForm` has a second caller, the space checklist (`src/components/space/onboarding-checklist.tsx:9`), and `NotificationsSection` imports `useSettingsSection` from `SettingsShell` (`notifications-section.tsx:11`). A move would make `src/components` import `@/portal/`, which the 1b plan's check forbids (`rg -l "@/portal/" src/lib src/components src/i18n` prints nothing). Plan: the page's composition moves out of `settings/page.tsx` into `src/portal/account/account-page.tsx` (the section list, the reads of the profile, the push config and the space email choices), with the new Sign-in group in `src/portal/account/sign-in-section.tsx`. The three components stay where they are and are not rewritten.
+2. **The groups are the existing tabbed `SettingsShell`.** Spec: "one page ... with three groups". The shell that `/settings` uses today shows one section at a time, picks it from the address (`#notifications`), and holds a shared save bar (`settings-shell.tsx:124-133`). The spec says "does not rewrite them", so the page keeps the shell with three sections: Profile, Sign-in, Notifications. Each section's content sits in an element with the group's id (`profile`, `sign-in`, `notifications`), so `#profile` names a real element, as the spec test needs. Open question Q3 asks whether the operator wants stacked groups instead.
+3. **The admin with no course sees Other courses at first.** Spec preset: "the reader's courses on, public events on, other courses off." For a reader with no own course (most admins: an admin without a person owns nothing), that preset shows events only, and a month with only courses shows a blank grid with no hint, because the empty-month line reads all items, not the shown ones (`public-calendar.tsx:150-157`). Plan call: when `readerCourseIds` is empty, no kind starts off. Open question Q1.
+4. **The portal legend has two course kinds, not one per course type.** Spec: "other courses off", and the e2e turns "Other courses" on. The public legend has one toggle per course type (P10). Plan: on the portal page every course item takes `course:mine` or `course:other`; event kinds stay per type. Course types are then not toggles on the portal page; the public page keeps them.
+5. **Saturday on the right at 390 uses the three-day view.** Spec, Tests: "In Arabic at 390px ... the calendar starts on Saturday on the right." A narrow calendar has no week view; its month is the agenda (`calendar-views.ts`, `VIEWS.narrow`, `STAND_INS`). Plan: at 1440 the e2e opens `?view=week&date=<a Wednesday>` and the rightmost day column is Saturday; at 390 it opens `?view=3days&date=<a Saturday>` and the rightmost column is that Saturday.
+6. **Fallback only (P8).** If a page `redirect()` does not keep `#profile`, the two redirects move to `next.config.ts` `redirects()`, out of `(site)`. Not taken unless P8 fails.
+7. **A signed-out reader of `/spaces/account` returns to `/spaces` after login.** The portal layout sends every signed-out reader to `login?next=/{locale}/spaces` (`(portal)/spaces/layout.tsx:25`). A layout cannot read the path. Plan: the `/settings` and `/profile` redirect pages check the reader themselves and send a signed-out reader to `login?next=/{locale}/spaces/account`, so the email link of the space unsubscribe page (`api/space-email/unsubscribe/route.ts:45`, `/settings#notifications`) still ends on the account page after login. A direct visit to `/spaces/account` while signed out lands on `/spaces` after login, as every portal page does today. Carry-over below.
+
+## Ends when
+
+The spec's Phase 1d line, by clause.
+
+1. `portal-calendar` passes: T6 (`e2e/portal-calendar.e2e.test.ts`), with C4 (`src/api/reader-calendar.int.test.ts`) and T1, T2 (browser tests).
+2. `portal-account` passes: A5 (`e2e/portal-account.e2e.test.ts`).
+3. `portal-shell` holds the 1d assertions: the account row opens `/spaces/account` (A5) and the Calendar item shows and lands on its page, per role, at 1440 and 390 (T6).
+4. The audit snapshot does not change (no access rule changes).
+
+Scope check, from the spec's Phase 1d Scope line: the Calendar tab (T3), its nav item (T4), the gated read of the reader's own sessions (C1, C2), `/spaces/account` (A1, A4), the redirects (A2), the account menu row (A2), the ui-sdk skill read before the preset (Legend preset, T1), Home's **Open the calendar** (T5 or the carry-over).
+
+## Review Focus
+
+The inputs the spec implies and no clause tests, most likely first. Each has its test in the named task.
+
+1. **A Community-tier course in the cache.** The cached public list must never hold a Community-tier meeting, also after a signed-in reader loaded the portal page. C4 row 8.
+2. **An owner-tier course a student takes.** `readerCourseIds` holds it (accepted enrollment), but `readCourse` refuses the student, so the gated read returns none of its sessions (`src/collections/Courses.ts:106`, `src/access.ts:338-363`). The calendar follows the access rules; the spaces list may still show the course's name through its own layer (`spaces-data.ts:145-147`). C4 row 4.
+3. **A fellow's draft with no type and no slug.** It shows under Your courses, in the neutral type tone, with no **View course** link (`actionsOf` returns no action without `href`, `public-calendar.tsx:249`). C4 row 5, T6.
+4. **A session in both lists.** A public course the reader takes is in the cached list and the gated list. The merge keeps the gated copy once, also when one of its meetings is cancelled (the cancelled split keeps one rule, `public-items.ts:41-47`). C3, C4 row 2.
+5. **A fellow's published course with an unapproved draft.** The gated read reads main rows (no `draft: true`), so the calendar shows the approved title, as the public page. C2 Interfaces.
+6. **The phone legend.** The legend sits in the side panel, which opens by default only in a docked month (`calendar.tsx:232`). At 390 the e2e opens the panel with its toolbar button (`labels.panel`, `calendar-toolbar.tsx:83`) before it reads or turns a toggle. T6.
+7. **The sticky save bar over the bottom bar.** `SettingsShell`'s save bar is sticky at `inset-block-end: max(var(--space-4), env(safe-area-inset-bottom))` (`settings-shell.module.css:96-97`). Under 700px the portal bottom bar is fixed at the bottom (`--portal-bar-height`, `shell-root.css:10`), so the save bar would sit under it. A4 and A5.
+8. **Worst-case data:** a 120-character Arabic course title in the legend and the popover, a reader with 0 own courses, 1 own course, and 12 own courses in one week, a week with 40 blocks, a reader with no person. T6 Step 5, A6 break-ui.
+
+## Decision log (structural)
+
+Each problem, then its fix.
+
+- D1. The public calendar's course read is written once, inside `getCalendarItems`, with the public `where` and no user (`calendar.api.ts:56-146`). A second copy for the reader would be a hidden link: a fix to places, covers or session numbers would need two edits. Fix: one private builder `courseMeetings(payload, locale, source)` in `calendar.api.ts`. `source` is `PUBLIC_COURSES` (the public `where`, no user) or `{ reader: User, courseIds }` (gated). `getCalendarItems` and the new `getReaderCalendarItems` both call it (C2).
+- D2. A builder that takes an optional `user` could get one inside the cached function by mistake. Fix: the source is a closed union. The cached path passes the constant `PUBLIC_COURSES`, which has no user field, and `getCachedCalendarItems` keeps one argument (`locale`). A user can reach the builder only through `getReaderCalendarItems`, which is not cached (C2, C4 row 8).
+- D3. "The reader's courses" is needed by Home (1c-3) and the calendar (1d). Fix: one function, `readerCourseIds` in `src/lib/reader-courses.ts`, created by whichever PR lands first (P1).
+- D4. The legend's start state is internal to `Calendar`. Fix: one `default…` prop, read once (Legend preset). No host can fight the reader's choice after mount.
+- D5. `PublicCalendar` writes `/calendar` in four places (`public-calendar.tsx:122`, `:212`, `:225`, and the empty-month link `:193`). Fix: one `path` prop; every URL the component writes starts with `/${locale}${path}`.
+- D6. `PublicCalendar` shows **Edit** and **Cancel session** from the viewer's access. The spec says the portal page does not edit. Fix: one `readOnly` prop that removes both. **Go to space** stays, because it does not edit.
+- D7. The page's `kinds` map (legend names and link labels) is written in the public page (`calendar/page.tsx:53-60`). The portal needs the same names for events. Fix: `publicKinds(meetings, names)` in `public-items.ts`; both pages call it. The portal adds its two course kinds on top.
+- D8. The portal kinds and their tones could be written in the page. Fix: `portalItems` in `src/portal/calendar/portal-items.ts`, pure, with `MINE`, `OTHER`, their tones and their order (Your courses, Other courses, events) in one place, and `presetHidden(ownCourseIds)` beside them.
+- D9. The account menu avatar reads a client session store that only sign-in and sign-out refresh (P7). Fix: `use-session.ts` exports its own `refresh` as `refreshSession`; `ProfileForm` calls it after a save and after a photo change or removal. No new event.
+- D10. The account path would be written in six files (`profile.ts`, both redirect pages, the forgot page, the site header, the space page). Fix: `ACCOUNT_PATH = '/spaces/account'` and `ACCOUNT_GROUPS = ['profile', 'sign-in', 'notifications']` in `src/lib/account-path.ts`, a file with no imports. It sits in `src/lib/`, not in `src/portal/account/`, because two callers are in `src/components/` and `src/components` never imports `@/portal/` (1b plan check). Client and server code may both import it.
+
+Done means: a fix to how a course becomes calendar meetings lands in `courseMeetings` only; a new portal legend kind lands in `portal-items.ts` only; a change of the account path lands in `src/lib/account-path.ts` only. `rg -l "@/portal/" src/lib src/components src/i18n` prints nothing.
+
+## Carry-overs
+
+- **To phase 1c (1c-3 H2), when 1d-3 lands first:** the admin's empty Next session tile gets one action, **Open the calendar**, a link to `/{locale}/spaces/calendar` with the Arc button classes. Message key `Portal.home.openCalendar` (1c-3 adds it with its other `Portal.home` keys).
+- **To phase 1c (1c-3 H1), when 1d-2 lands first:** `src/lib/reader-courses.ts` exists. H1 imports `readerCourseIds` and keeps only `nextSession`; its int test file exists with the 1d rows, and H1 adds its own rows there.
+- **To a later phase:** a signed-out reader at any portal page returns to `/spaces` after login (Deviation 7). The fix belongs to the shell (the proxy can pass the path to the layout), not to 1d.
+
+## Open questions (product calls)
+
+None block the plan. Each has the default the builders use.
+
+- **Q1. Preset for a reader with no own course.** Default: no kind starts off, so the admin sees every public course and event (Deviation 3). Spec-literal option: Other courses off for everyone.
+- **Q2. The feed button on the portal page.** `PublicCalendar` shows **Subscribe** to the public feed (`/{locale}/calendar.ics`). The feed holds no Community-tier or draft session, so it differs from what the portal page shows. Default: keep it, with the same label, because it is the public component. Option: hide it on the portal page (`readOnly` would then also hide it).
+- **Q3. Tabs or stacked groups on the account page.** Default: the existing tabbed `SettingsShell` (Deviation 2, the spec's "do not rewrite"). Option: three stacked sections with one save bar, which is a rewrite of the shell.
+- **Q4. "Your courses" tone.** Default `pink` (the one tone no event type uses). The operator may pick another.
+
+---
+
+## PR 1d-1. Account page (`portal/phase-1d-account`)
+
+Base `origin/main`. Rebase before open and before merge (Shared files).
+
+### Task A1: The account path and the account page
+
+**Skills:** tdd, modern-web-guidance (first), arc, payload.
+
+**Files:** Create `src/lib/account-path.ts`, `src/lib/account-path.unit.test.ts`, `src/portal/account/account-page.tsx`, `src/app/(frontend)/[locale]/(portal)/spaces/account/page.tsx`. Modify `messages/{en,ar}.json` (`Portal.account.metaTitle`).
+
+**Interfaces:**
+
+- Produces: `ACCOUNT_PATH = '/spaces/account'` and `ACCOUNT_GROUPS = ['profile', 'sign-in', 'notifications'] as const`, with `type AccountGroup`. No imports.
+- `AccountPage({ user, locale })` (server component) does what `settings/page.tsx:31-102` does today, unchanged: `readProfile` (gated, as today), `profileMessages()`, `pushConfig()`, the space email choices only when `personOf(user) !== null` and spaces are not off (`loadPrefs`), then `SettingsShell` with sections in `ACCOUNT_GROUPS` order. Profile: `PanelHeader` and `ProfileForm` with `saveProfileAction` and `removeProfilePhotoAction`, or `Profile.noPerson`. Sign-in: A4. Notifications: `NotificationsSection`, as today. Each section's content is wrapped in `<div id={group}>`.
+- The route `page.tsx`: `currentReader()` (cached; the layout already redirects a signed-out reader), `generateMetadata` with `Settings.metaTitle` and `robots: { index: false }`, renders `AccountPage`. No `loading.tsx` and no `<Suspense>` above the Profile group, so `#profile` is in the first HTML (phase 1a, "No streaming boundary above the check").
+- [ ] **Step 1: Failing unit test.** `pnpm exec vitest run --project node src/lib/account-path.unit.test.ts`: "the account path is /spaces/account"; "the groups are profile, sign-in, notifications". FAIL. Implement. PASS. Commit.
+- [ ] **Step 2: The page.** Move the composition out of `settings/page.tsx` into `AccountPage` as it is (Deviation 1). Run `pnpm exec tsgo --noEmit`: no error. The page renders in A5. Commit.
+
+### Task A2: Redirects and links
+
+**Skills:** tdd.
+
+**Files:** Modify `src/app/(frontend)/[locale]/(site)/settings/page.tsx`, `src/app/(frontend)/[locale]/(site)/profile/page.tsx`, `src/app/(frontend)/[locale]/(site)/forgot/page.tsx` (`:21`), `src/portal/nav/profile.ts`, `src/components/site-header.tsx` (`:211`), `src/components/space/space-page.tsx` (`:552`), `src/lib/analytics/analytics.unit.test.ts`.
+
+**Interfaces:**
+
+- `/settings`: `const user = await currentReader()`, then `redirect(user ? `/${locale}${ACCOUNT_PATH}`:`/${locale}/login?next=${encodeURIComponent(`/${locale}${ACCOUNT_PATH}`)}`)` (Deviation 7). No `generateMetadata`, no other import.
+- `/profile`: the same, with `#profile` on the signed-in target.
+- The forgot page sends a signed-in reader to `/${locale}${ACCOUNT_PATH}`. `PROFILE.href` is `ACCOUNT_PATH`. The site header's account item pushes `ACCOUNT_PATH`. The space page's `profileHref` is `/${locale}${ACCOUNT_PATH}#profile`.
+- The space unsubscribe link (`/settings#notifications`) does not change: `/settings` keeps its fragment through the 307 and keeps the target through login (P8, Deviation 7).
+- [ ] **Step 1: Failing tests.** In `analytics.unit.test.ts`, add `/en/spaces/account` to "does not track %s", and `expect(mayCapture('push_enabled', '/en/spaces/account')).toBe(true)`. Run `pnpm exec vitest run --project node src/lib/analytics/analytics.unit.test.ts`. Expected: PASS already (the path is under `spaces`, `paths.ts:31`; `push_enabled` is allowed, `events.ts:27`); the rows guard the move. The redirect tests are e2e (A5).
+- [ ] **Step 2: Implement.** `rg -n "'/settings'|/settings\`|/profile\`" src --glob '!src/app/(frontend)/[locale]/(portal)/spaces/(home)/page.tsx'` prints only the two redirect pages and the unsubscribe route. Commit.
+- [ ] **Step 3: Status and fragment** **[verify]** (P8): with `verify.sh --keep --no-tests <branch> <sha>`, sign in as the fixture student, then `curl -s -o /dev/null -w '%{http_code} %{redirect_url}\n' -b <cookie> http://localhost:<port>/en/profile` prints `307 …/en/spaces/account#profile`, and `/en/settings` prints `307 …/en/spaces/account`. Signed out, `/en/settings` prints `307 …/en/login?next=%2Fen%2Fspaces%2Faccount`. Write the three lines in the commit. A fail takes the P8 fallback.
+
+### Task A3: The avatar follows a photo change
+
+**Skills:** tdd, modern-web-guidance (first).
+
+**Files:** Modify `src/components/use-session.ts`, `src/components/profile/profile-form.tsx`, `e2e/portal-account.e2e.test.ts` (created here).
+
+**Interfaces:**
+
+- `use-session.ts` exports `refreshSession = refresh` (the existing function, `:28-39`). Its JSDoc line names the second trigger: a change to the signed-in account's person.
+- `ProfileForm` calls `refreshSession()` after a successful save (`:150`), after a photo upload (`:229`) and after a photo removal, beside the existing `router.refresh()`.
+- [ ] **Step 1: Failing e2e** **[verify]** (P7). In `e2e/portal-account.e2e.test.ts` (`test.describe.configure({ mode: 'serial', timeout: 300_000 })`, `portalWorld`): "a photo change shows in the account menu avatar": as the student at 1440, open `/en/spaces/account`, upload `testing/files/<a small jpeg>` through the profile photo control, and expect the account button's avatar `img` `src` to change from the seed image, without a reload. `verify.sh --e2e-only <branch> <sha> e2e/portal-account.e2e.test.ts`. Expected: FAIL (the avatar keeps the old photo).
+- [ ] **Step 2: Implement.** Run Step 1: PASS. Commit.
+
+### Task A4: The Sign-in group, and the save bar on a phone
+
+**Skills:** tdd, modern-web-guidance (first), arc, better-accessibility, better-writing then humanizer.
+
+**Files:** Create `src/portal/account/sign-in-section.tsx`, `src/portal/account/sign-in-section.dom.test.tsx`. Modify `src/portal/account/account-page.tsx`, `src/components/settings/settings-shell.module.css`, `messages/{en,ar}.json`.
+
+**Interfaces:**
+
+- `SignInSection({ email })` (`'use client'`): a `<dl>` with `Portal.account.email` and the email (`dir="ltr"`, in `<bdi>`), and an Arc `Button variant="secondary"` **Change password**. A press calls `requestResetLink(email)` (`src/lib/password-reset.ts`). While it runs, the button keeps its width and says `Portal.account.sending`. The result shows under it in an Arc `Alert`: `'sent'` gives `Portal.account.resetSent` ("We sent a link to {email}. It works for one hour."; take the lifetime from the forgot email text, `Forgot.sentBody`, and copy its wording), else `Portal.account.resetFailed`. The result also goes to `announce()` (`src/portal/feedback/announce.tsx`), and to no toast (spec, Accessibility baseline: one channel). The button is never disabled (spec, Forms).
+- An account that signs in only with Google has no password yet. The reset link sets one. The section says nothing extra: the flow is the same (plan call).
+- The save bar: in `settings-shell.module.css`, the sticky bar's `inset-block-end` becomes `max(var(--space-4), env(safe-area-inset-bottom)) + var(--portal-bar-height, 0px)` inside `calc()`. `--portal-bar-height` is set only by the portal shell under 700px (`shell-root.css:10`), so the site page and wide screens do not change. Under 700px the portal root already sets `scroll-padding-block-end` to the bar height (`shell-root.css:12`), so a focused field is not hidden.
+- Messages under `Portal.account`: `metaTitle` is not needed (A1 reuses `Settings.metaTitle`); `signIn` "Sign-in", `email` "Email", `changePassword` "Change password", `sending` "Sending…", `resetSent`, `resetFailed` "The email could not be sent. Try again.", `signInIntro` "Your email is your sign-in name. To change it, write to us." (better-writing, then humanizer, in both languages).
+- [ ] **Step 1: Failing dom test.** `pnpm exec vitest run --project dom src/portal/account/sign-in-section.dom.test.tsx` (MSW, `http.post('/api/users/forgot-password')`): "the email shows read-only"; "Change password sends the reset email and says where"; "a failed send says so and keeps the button"; "the result goes to the live region once". FAIL. Implement. PASS. Commit.
+- [ ] **Step 2: Save bar** check in A5 Step 3 at 390.
+
+### Task A5: `portal-account` e2e and the shell's account row
+
+**Skills:** tdd, better-accessibility.
+
+**Files:** Modify `e2e/portal-account.e2e.test.ts` (A3 created it), `e2e/portal-shell.e2e.test.ts`, `testing/portal-e2e.test-utils.ts` (P4).
+
+**Interfaces:**
+
+- Consumes: `portalWorld`, `holdSpacesMode`, `inContext`, `localePath`, `ROLES`, `LOCALES`, `WIDTHS`, `MESSAGES` (`testing/portal.fixture.ts`); `login` (`testing/login.test-utils.ts`); `axeOver`, `known`, `openMore`, `PHONE` (`testing/portal-e2e.test-utils.ts`).
+- Matrix: role x locale x 1440/390 (phase 1a Matrix). Exemptions (phase 1a Deviation 19 pattern): the avatar check and the profile save run as the student only (one code path for every role); the redirect checks run at 1440 only (no layout in a redirect).
+- [ ] **Step 1: Shell e2e** **[verify]**. In `portal-shell.e2e.test.ts`, the three `waitForURL(`**/${locale}/settings`)` lines wait for `**/${locale}/spaces/account`. "a toast survives Profile and settings" opens `/en/spaces/account` first. Add the `/spaces/account` route shape (P4). Run `verify.sh --e2e-only <branch> <sha> e2e/portal-shell.e2e.test.ts`: PASS. Commit.
+- [ ] **Step 2: Redirects** **[verify]** in `portal-account.e2e.test.ts`:
+  - "/settings lands on /spaces/account" (role x locale): `page.goto('/{locale}/settings')`; final URL ends with `/{locale}/spaces/account`; the H1 is `Settings.title`.
+  - "/profile lands on /spaces/account#profile": final URL ends with `/spaces/account#profile`; `page.locator('#profile')` is in the viewport (`toBeInViewport()`); the Profile tab is selected.
+  - "/settings#notifications opens Notifications": the Notifications tab is selected and `#notifications` is in the document.
+  - "signed out, /settings returns to the account page after login": a fresh context, `/en/settings`, the login page, sign in, final URL ends with `/en/spaces/account`.
+  - "a signed-in reader on /forgot lands on /spaces/account".
+- [ ] **Step 3: The page** **[verify]**:
+  - "three groups in order": tabs `Settings.profile`, `Portal.account.signIn`, `Settings.notifications`.
+  - "a profile save works" (student): change the short bio, **Save** in the save bar, reload, the new bio is there.
+  - "the space email choices hide with spaces off": `holdSpacesMode`, `set('off')`, the Notifications group has no space email control; `set('on')` in `finally`.
+  - "a reader with no person sees the no-person text" (the fixture admin has no person).
+  - "Change password says where the link went" (student; the fake inbox gets one reset email for that address).
+  - "the save bar clears the bottom bar at 390": change a field; the save bar's bottom edge is at or above the bottom bar's top edge.
+  - "axe finds no violation on the account page": `axeOver(page, known(route, role, locale, width))` equals `{}`.
+  - "reflow at 320": `scrollWidth <= innerWidth`, English and Arabic.
+  - "a keyboard walk reaches the tabs, the profile fields, Change password and the save bar".
+- [ ] **Step 4:** Run `verify.sh --e2e-only <branch> <sha> e2e/portal-account.e2e.test.ts`: PASS. Commit.
+
+### Task A6: Reviews, full suite, open PR 1d-1
+
+**Skills:** ux-auditor, better-interface, then break-ui; code-review, then security-review.
+
+- [ ] **Step 1: Screen reviews** on the Mac against `verify.sh --keep --no-tests <branch> <sha>`: ux-auditor and better-interface on `/spaces/account` as each role, 1440 and 390, English and Arabic, light, dark. Reports in a PR comment.
+- [ ] **Step 2: break-ui** with `agent-browser` (headless): a 120-character Arabic name and bio, an email of 80 characters with no break, a reader with no person, no push key, spaces off, a failed reset send. `agent-browser close`.
+- [ ] **Step 3: code-review** (spec Profile and settings, Routes as the issue), then **security-review**: the page uses only the existing actions, which act on the signed-in account (`saveProfileAction`, `removeProfilePhotoAction`, `/api/users/forgot-password` for the reader's own email); the redirects build their target from `locale` and a constant, never from a query value (no open redirect); `rg -l "@/portal/" src/lib src/components src/i18n` prints nothing.
+- [ ] **Step 4:** Fix. **[verify]** the full suite. Per-PR step 5. Open `feat(portal): account page and settings redirects (portal phase 1d, PR 1)`.
+
+**Verification boxes (1d-1).**
+
+- [ ] **unit:** `account-path.unit.test.ts`, `sign-in-section.dom.test.tsx`, `analytics.unit.test.ts`; e2e `portal-account`, `portal-shell`.
+- [ ] **live:** Scenario: as the fixture student on the kept app, open the account menu from `/en/spaces`, choose **Profile and settings**, change the photo, then open `/en/profile` in a new tab and `/ar/settings#notifications` in another. Pass: the first lands on `/en/spaces/account` inside the portal shell (sidebar present), the avatar in the account menu shows the new photo with no reload, the second ends on `/en/spaces/account#profile` with the Profile group in view, the third on `/ar/spaces/account#notifications` with Notifications selected.
+- [ ] **perf:** Metric: TTFB p75 per role, 30 samples. Probe: `scripts/ttfb-probe.mjs` (P12), else `for i in $(seq 30); do curl -s -o /dev/null -b <cookie> -w '%{time_starttransfer}\n' http://localhost:<port><path>; done | sort -n | sed -n 23p`. Baseline first: a production build of `main` (`env NODE_ENV=production pnpm start -p <port>` after `pnpm build`, under the lock), `/en/settings` and `/en/spaces`, per role. Then the head, `/en/spaces/account`. Fail: head p75 above `1.2 x max(main /en/settings p75, main /en/spaces p75)` for any role, or above 800 ms when both baselines are under 800 ms.
+
+## PR 1d-2. Calendar data (`portal/phase-1d-calendar-data`)
+
+Base `origin/main`. No screen.
+
+### Task C1: `readerCourseIds`
+
+**Skills:** tdd, payload.
+
+**Files:** Create (only when P1 prints nothing) `src/lib/reader-courses.ts`, `src/lib/reader-courses.int.test.ts`. Create `testing/portal-calendar.fixture.ts`.
+
+**Interfaces:**
+
+- Produces (P1 says absent): `readerCourseIds(payload: Payload, user: User): Promise<number[]>`, exactly as 1c-3 H1 specifies (P1 text). `personOf(user)` (`src/access.ts:70`) gives the person; none gives `[]` with no query. Both reads are gated (`user`, `overrideAccess: false`).
+- Produces: `calendarWorld(payload, track)` in `testing/portal-calendar.fixture.ts`, on top of `portalWorld` (its student, fellow, admin and their two public courses in the week of 2034-10-05). It adds, in the week of Saturday 2034-10-07 (2034-10-07 to 2034-10-13), one session each, with a fixed title: a published Community-tier course `community` (student accepted); a published public course `other` (no link to any account; the "other course"); a never-published owner-tier draft `draft` that the fellow teaches, with no `course_type` and no `slug` when the schema allows it (P11); a published owner-tier course `owner` (student accepted); a published Community-tier course `stranger` (no link); a published Community-tier course `pending` (student enrolled with `status: 'pending'`); a published public event `event`. Names and dates through `uniq`, as `portalWorld` does. It returns the ids and the session titles.
+- [ ] **Step 1: Failing int tests** **[verify]** (`src/lib/reader-courses.int.test.ts`, the 1c-3 H1 cases plus): "a student's courses are their accepted enrollments"; "a fellow's courses are the ones they teach, the draft included"; "a pending enrollment gives no course"; "an account with no person gives no course". `verify.sh --int-only <branch> <sha> src/lib/reader-courses.int.test.ts`: FAIL. Implement. PASS. Commit.
+
+### Task C2: One meetings builder, two sources
+
+**Skills:** tdd, payload.
+
+**Files:** Modify `src/api/calendar.api.ts`.
+
+**Interfaces:**
+
+- Private: `type CourseSource = typeof PUBLIC_COURSES | { reader: User; courseIds: readonly number[] }`, with `const PUBLIC_COURSES = { where: visible } as const`. `courseMeetings(payload, locale, source): Promise<CalendarMeeting[]>` holds today's course part of `getCalendarItems` (`calendar.api.ts:62-80`, `:93-128`): the courses `find`, `getCourseSessions`, `placesOf`, `courseItems`. For `PUBLIC_COURSES`: `where: visible`, `overrideAccess: false`, no `user`, and `getCourseSessions(..., { reader: null })`, as today. For a reader: `where: { id: { in: [...courseIds] } }`, `user: source.reader`, `overrideAccess: false`, `getCourseSessions(..., { reader: source.reader })`, and `placesOf` with the same `user`. An empty `courseIds` returns `[]` with no query. No `draft: true` (main rows, Review Focus 5).
+- `course_type` and `slug` are read as optional: `type: c.course_type?.toLowerCase() ?? 'course'`, `href: c.slug ? detailPath('courses', String(c.slug)) : null` (P11). `CalendarMeeting.href` is already `string | null` (`src/lib/calendar.ts:20`).
+- `getCalendarItems(payload, locale)` keeps its signature and its output: `courseMeetings(payload, locale, PUBLIC_COURSES)` plus the events, sorted as today. `getCachedCalendarItems` and its key do not change.
+- New export: `getReaderCalendarItems(payload: Payload, locale: Locale, reader: User, courseIds: readonly number[]): Promise<CalendarMeeting[]>`: `courseMeetings` with the reader source, sorted as `getCalendarItems` sorts. Not cached. No events (the public list has them).
+- [ ] **Step 1: Refactor under the existing tests** **[verify]**: `verify.sh --tests-only <branch> <sha> src/components/calendar src/lib/calendar-feed` (the existing public calendar and feed tests) PASS before and after, with no test change. Commit.
+- [ ] **Step 2:** Add the reader source and `getReaderCalendarItems`. `pnpm exec tsgo --noEmit`: no error. C4 tests it. Commit.
+
+### Task C3: The portal merge and kinds (pure)
+
+**Skills:** tdd.
+
+**Files:** Create `src/portal/calendar/portal-items.ts`, `src/portal/calendar/portal-items.unit.test.ts`.
+
+**Interfaces:**
+
+- `mergeMeetings(publicList: readonly CalendarMeeting[], own: readonly CalendarMeeting[]): CalendarMeeting[]`: every `own` meeting, then each public meeting whose `sessionId` is absent or not in the `own` session ids; sorted by `date`, then `start`. One copy of each session, the gated one (it is fresh, the cached one can be up to an hour old).
+- `MINE = 'course:mine'`, `OTHER = 'course:other'`, `KIND_TONES = { [MINE]: 'pink', [OTHER]: 'neutral' }` (Legend preset).
+- `portalItems(items: readonly CalendarItem[], ownCourseIds: ReadonlySet<string>): CalendarItem[]`: an item with `parentId` gets `kind` `MINE` when `ownCourseIds` has it, else `OTHER`, and that kind's tone; an item with no `parentId` (an event) keeps its kind and tone. Order: `MINE` items, then `OTHER`, then events, each in their input order (stable), so the legend lists Your courses, Other courses, then event types.
+- `presetHidden(ownCourseIds: ReadonlySet<string>): string[]`: `[OTHER]` when the set is not empty, else `[]` (Q1).
+- [ ] **Step 1: Failing unit tests.** `pnpm exec vitest run --project node src/portal/calendar/portal-items.unit.test.ts`, with `meeting()` and `words()` from `testing/public-calendar.fixture.ts`: "a session in both lists shows once, the gated copy"; "a public meeting with no session id stays"; "a cancelled meeting of a merged session stays one item with publicItems"; "own courses are Your courses, others Other courses, events keep their kind"; "each portal kind has one tone"; "the legend order is Your courses, Other courses, events"; "the preset hides Other courses"; "a reader with no course hides nothing". FAIL. Implement. PASS. Commit.
+
+### Task C4: The reader table (int)
+
+**Skills:** tdd, payload.
+
+**Files:** Create `src/api/reader-calendar.int.test.ts`.
+
+**Interfaces:** Consumes `calendarWorld` (C1), `readerCourseIds` (C1), `getReaderCalendarItems`, `getCalendarItems` (C2), `mergeMeetings` (C3). Setup per the 1b Int test setup. Reads only the fixture's ids.
+
+| #   | Reader                    | Course ids passed                          | Gated read returns sessions of                                       | Never returns                                        |
+| --- | ------------------------- | ------------------------------------------ | -------------------------------------------------------------------- | ---------------------------------------------------- |
+| 1   | student                   | `readerCourseIds(student)`                 | `community`, the two `portalWorld` courses                           | `stranger`, `pending`, `draft`, `other`              |
+| 2   | student (merge)           | as row 1, merged with `getCalendarItems`   | each session of the two public courses once                          | duplicates                                           |
+| 3   | student                   | `readerCourseIds(student)`                 | not `pending` (the id is not in the list)                            | `pending`                                            |
+| 4   | student                   | `readerCourseIds(student)` (holds `owner`) | not `owner` (access refuses)                                         | `owner`                                              |
+| 5   | fellow                    | `readerCourseIds(fellow)`                  | `draft` (no link when it has no slug), the two `portalWorld` courses | `community`, `owner`                                 |
+| 6   | loner fellow              | `[draft]` passed by hand                   | nothing                                                              | `draft`                                              |
+| 7   | fixture admin (no person) | `readerCourseIds(admin)` is `[]`           | nothing, and no query runs                                           | everything                                           |
+| 8   | none (after rows 1 to 6)  | `getCalendarItems(payload, 'en')`          | `other`, the two `portalWorld` courses, `event`                      | `community`, `stranger`, `pending`, `draft`, `owner` |
+
+- [ ] **Step 1: Failing int tests** **[verify]**, one test per row, named by the row ("a student sees their Community-tier course", "a fellow sees their unpublished course", "a student does not see an owner-tier course they take", "another fellow's draft stays hidden when its id is passed", "the public list holds no Community-tier or draft session after reader reads"). Run `verify.sh --int-only <branch> <sha> src/api/reader-calendar.int.test.ts`. Expected: FAIL before C2 Step 2 (no export), PASS after. Commit.
+
+### Task C5: Review, full suite, open PR 1d-2
+
+**Skills:** code-review, then security-review.
+
+- [ ] **Step 1: code-review** (spec Calendar, Data access rule, ADR 0011 Code structure as the issue).
+- [ ] **Step 2: security-review** of the gated read. Write in the PR: every new read passes `user` and `overrideAccess: false`; `rg -n "overrideAccess: true" src/api/calendar.api.ts src/lib/reader-courses.ts src/portal/calendar` prints nothing; `getCachedCalendarItems` takes only `locale` (`rg -n -A4 "unstable_cache" src/api/calendar.api.ts`); `PUBLIC_COURSES` has no user field, so the type system refuses a user on the cached path; C4 rows 4, 6 and 8.
+- [ ] **Step 3:** Fix. **[verify]** the full suite. Per-PR step 5. Open `feat(calendar): gated read of the reader's own course meetings (portal phase 1d, PR 2)`.
+
+**Verification boxes (1d-2).**
+
+- [ ] **unit:** `portal-items.unit.test.ts`; int `reader-courses.int.test.ts`, `reader-calendar.int.test.ts`; the existing calendar and feed tests unchanged and green.
+- [ ] **live:** No screen in this PR. Scenario: on the kept app (`verify.sh --keep --no-tests`), with `calendarWorld` made by a scratch script (not committed), load `/en/calendar?view=week&date=2034-10-07` signed out and as the student. Pass: both show `other` and `event`, neither shows `community`, `stranger`, `pending` or `draft` (the public page is unchanged by the refactor, also for a signed-in reader).
+- [ ] **perf:** Metric: the cost of the gated read. Probe: in C4, time `readerCourseIds` plus `getReaderCalendarItems` for the student, 20 runs, p75. Baseline: `getCalendarItems` (uncached) in the same test, 20 runs. Fail: the reader read's p75 above the uncached public read's p75 (it reads a subset of the same tables). The route TTFB is measured in 1d-3.
+
+## PR 1d-3. Calendar tab (`portal/phase-1d-calendar`)
+
+Base `origin/main` after 1d-2 merges (see PRs).
+
+### Task T1: The legend preset prop
+
+**Skills:** ui-sdk (read first: Global Constraints), tdd, modern-web-guidance (first for the client code).
+
+**Files:** Modify `src/components/calendar/ui/calendar.tsx`. Create `src/components/calendar/ui/calendar-legend-preset.browser.test.tsx`.
+
+**Interfaces:** `CalendarProps` (`Shared`) gains `defaultHiddenKinds?: readonly string[]`, with a one-line doc: "Legend kinds that start off; read once." `hidden` starts as `new Set(defaultHiddenKinds)` (`calendar.tsx:212`). Nothing else changes. The `ToggleGroup` stays controlled (Legend preset).
+
+- [ ] **Step 1: Failing browser test** **[verify]**, with ui-sdk's testing kit as the existing calendar browser tests use it (`calendar-read-only.browser.test.tsx`; ui-sdk `references/testing.md`): "a kind in defaultHiddenKinds starts unpressed and its blocks are gone"; "pressing it shows its blocks"; "a new defaultHiddenKinds after mount changes nothing"; "the other kinds start pressed"; "in right to left the legend order and arrow keys follow the page" (`dir="rtl"`). `verify.sh --tests-only <branch> <sha> src/components/calendar/ui/calendar-legend-preset.browser.test.tsx`: FAIL. Implement. PASS. Commit.
+
+### Task T2: `PublicCalendar` gets a path and a read-only mode
+
+**Skills:** tdd, modern-web-guidance (first).
+
+**Files:** Modify `src/components/calendar/public-calendar.tsx`, `src/components/calendar/public-calendar.browser.test.tsx`, `src/components/calendar/public-items.ts`, `src/components/calendar/public-items.unit.test.ts`, `src/app/(frontend)/[locale]/(site)/calendar/page.tsx`.
+
+**Interfaces:**
+
+- `PublicCalendar` props gain `path: string` (the page path with no locale: `'/calendar'` or `'/spaces/calendar'`), `readOnly?: boolean`, and `defaultHiddenKinds?: readonly string[]` (passed to `Calendar`). Every URL it writes starts with `/${locale}${path}`: `load`, the Edit push, `onDone`, the empty-month `Link` (`href={`${path}${calendarQuery(...)}`}`). With `readOnly`: no `action` (no Edit button), and `actionsOf` gives no `cancel` entry. **View course** and **Go to space** stay.
+- `publicKinds(meetings, { course: (type) => string, event: (type) => string, viewCourse: string, viewEvent: string }): Record<string, { name: string; open: string }>`: the map the public page builds today (`calendar/page.tsx:53-60`), moved. The public page calls it and passes `path="/calendar"`. Its output does not change.
+- [ ] **Step 1: Failing tests.** `pnpm exec vitest run --project node src/components/calendar/public-items.unit.test.ts`: "publicKinds names course and event kinds as the public page did". Browser (`public-calendar.browser.test.tsx`) **[verify]**: "a move past the loaded days loads path, not /calendar"; "readOnly shows no Edit button and no Cancel session for an admin viewer"; "readOnly keeps View course and Go to space". FAIL. Implement. PASS. Run the whole existing `public-calendar.browser.test.tsx` and `e2e/public-calendar-*.e2e.test.ts` **[verify]**: PASS with no change to their assertions. Commit.
+
+### Task T3: The Calendar page
+
+**Skills:** tdd, modern-web-guidance (first), arc, better-layout, better-accessibility.
+
+**Files:** Create `src/portal/calendar/calendar-page.tsx`, `src/app/(frontend)/[locale]/(portal)/spaces/calendar/page.tsx`. Modify `messages/{en,ar}.json` (`Portal.calendar.yourCourses` "Your courses", `Portal.calendar.otherCourses` "Other courses").
+
+**Interfaces:**
+
+- The route: `params` and `searchParams` (`view`, `date`), `currentReader()` (the layout already redirects a signed-out reader), `generateMetadata` with `Calendar.metaTitle` and `robots: { index: false }`. No `loading.tsx`.
+- `PortalCalendarPage({ user, locale, query })` (server): `today = cairoDay(new Date())`, `{ day } = readCalendarUrl(query, today)`, `range = loadedRange(day)`. Then in parallel: `getCachedCalendarItems(lang)` and `readerCourseIds(payload, user)` followed by `getReaderCalendarItems(payload, lang, user, ids)`. `all = mergeMeetings(publicList, own)`; `meetings` = `all` in `range`. `items = portalItems(publicItems(meetings, words), new Set(ids.map(String)))`. `kinds = { ...publicKinds(meetings, ...), [MINE]: { name: t('yourCourses'), open: tc('viewCourse') }, [OTHER]: { name: t('otherCourses'), open: tc('viewCourse') } }`. Renders `<ConnectedScheduleActions><PublicCalendar path="/spaces/calendar" readOnly access={{ mode: 'view', canEdit: false }} items={items} range={range} today={today} kinds={kinds} months={…from all} defaultHiddenKinds={presetHidden(ownIds)} /></ConnectedScheduleActions>`.
+- The public page's own content and cache do not change. The portal page is dynamic (it reads the reader), and only its gated part is per reader.
+- Errors: as the public calendar (spec). A failed gated read is not caught: the page fails as any portal page does.
+- [ ] **Step 1:** Implement. `pnpm exec tsgo --noEmit`: no error. The page's behaviour is tested in T6 (e2e) and its parts in C3, T1 and T2. Commit.
+
+### Task T4: The Calendar nav item
+
+**Skills:** tdd, better-writing then humanizer.
+
+**Files:** Modify `src/portal/nav/portal-nav.ts`, `portal-nav.unit.test.ts`, `nav-icons.ts`, `messages/{en,ar}.json` (`Portal.nav.calendar` "Calendar"), `testing/portal-e2e.test-utils.ts` (`NAV_BY_ROLE`, P5).
+
+**Interfaces:** `PortalNavItem['key']` adds `'calendar'`; `PortalNavIcon` adds `'calendar'` (lucide `CalendarDays`). `CALENDAR = { key: 'calendar', labelKey: 'nav.calendar', group: 'top', href: '/spaces/calendar', icon: 'calendar', external: false }`, plus `count: null` only when P2 says the field exists. In `portalNav`, for every role, after Home, or after Inbox (P3). `NAV_BY_ROLE` gets the row `{ key: 'calendar', href: '/spaces/calendar', group: 'top', external: false }` in the same place for each role. On a phone the bottom bar renders every `top` item, so Calendar shows there (spec, Frame: Home, Inbox, Calendar and More).
+
+- [ ] **Step 1: Failing unit test.** `pnpm exec vitest run --project node src/portal/nav/portal-nav.unit.test.ts`: "roles %j see %j" with `calendar` in each row; "Calendar is a top item to /spaces/calendar for every role"; "every label key exists in both languages" (existing). FAIL. Implement. PASS. Commit.
+
+### Task T5: Home's Open the calendar (only when P6 holds)
+
+**Skills:** tdd, arc, better-writing then humanizer.
+
+**Files:** Modify `src/portal/home/next-session-card.tsx` and its dom test (1c-3 names), `messages/{en,ar}.json` (`Portal.home.openCalendar` "Open the calendar", when 1c-3 did not add it).
+
+- [ ] **Step 1:** P6 prints nothing: skip this task, and the orchestrator sends the carry-over to phase 1c. Write "T5 skipped, carry-over sent" in the PR.
+- [ ] **Step 2:** P6 prints a line: failing dom test "an admin with no session gets Open the calendar to /{locale}/spaces/calendar"; FAIL; implement in the card's role table; PASS. Commit.
+
+### Task T6: `portal-calendar` e2e and the shell's Calendar item
+
+**Skills:** tdd, better-accessibility.
+
+**Files:** Create `e2e/portal-calendar.e2e.test.ts`. Modify `e2e/portal-shell.e2e.test.ts`, `testing/portal-e2e.test-utils.ts` (route shape, P4).
+
+**Interfaces:**
+
+- Consumes: `calendarWorld` (C1), `portalWorld`, `inContext`, `localePath`, `ROLES`, `LOCALES`, `WIDTHS`, `MESSAGES`; `axeOver`, `known`, `openMore`, `PHONE`.
+- The week under test: `WEEK = '2034-10-07'` (a Saturday). At 1440 the page opens `?view=week&date=2034-10-11` (a Wednesday). At 390 it opens `?view=3days&date=2034-10-07`, and the scenario that needs more days moves with the toolbar arrows.
+- At 390 the legend is in the side panel. Each check that reads or turns a legend toggle first presses the panel button (`Calendar.panel`, `calendar-toolbar.tsx:83`) when the panel is closed.
+- A block is found by its accessible name, which starts with its title (as `chip()` in `public-calendar-panel.e2e.test.ts:25-28`).
+- Matrix: role x locale x 1440/390. Exemptions: the student-only checks run as the student (the preset is one rule for every role; C3 tests it); the fellow-only check runs as the fellow; the Saturday checks run in Arabic only (English has the same grid, mirrored).
+- [ ] **Step 1: Shell e2e** **[verify]**. With the `NAV_BY_ROLE` row (T4), "nav per role" and "every nav item and account row opens a page" expect the Calendar item and a 200 for its href with no other edit (P5). Add "the Calendar item lands on its page" (role x locale x 1440/390): at 1440 click the sidebar item, at 390 the bottom bar item; the H1 is `Calendar.title`; the item has `aria-current="page"`; Home has no `aria-current`. Add the `/spaces/calendar` route shape. Run `verify.sh --e2e-only <branch> <sha> e2e/portal-shell.e2e.test.ts`: PASS. Commit.
+- [ ] **Step 2: Preset and access** **[verify]** in `e2e/portal-calendar.e2e.test.ts` (`test.describe.configure({ mode: 'serial', timeout: 300_000 })`, `calendarWorld` in `beforeAll`):
+  - "as a student, only their courses and public events show at first": the `community` session and the `event` show; the `other` session does not; the legend toggle "Other courses" has `aria-pressed="false"`, "Your courses" `aria-pressed="true"`.
+  - "turning Other courses on adds blocks": press "Other courses"; the `other` session shows.
+  - "a student of a Community-tier course sees its sessions": the `community` block opens the same popover as the public calendar (title, session number, time, place, **View course**).
+  - "a student never sees a course they do not take at Community tier, or an owner-tier course": with every legend toggle on, `stranger`, `pending` and `owner` are absent.
+  - "a fellow sees their unpublished course": as the fellow, the `draft` session shows under Your courses, and its popover has no **View course** link when it has no slug.
+  - "the public calendar still hides the Community-tier course": as the student, `/{locale}/calendar` at the same week shows no `community` block.
+  - "an admin with no course sees every public course at first" (Q1 default): as the fixture admin, `other` shows and "Other courses" is pressed.
+  - "the portal page has no Edit button and no Cancel session" (admin).
+- [ ] **Step 3: URL and Arabic week** **[verify]**, same file:
+  - "the view and date stay in the URL": switch to Month, then Next; the URL holds `view=month` and the next month's `date`; **Back** returns to the week with the same blocks; the path stays `/{locale}/spaces/calendar`.
+  - "in Arabic the week starts on Saturday on the right" (1440): the day column headers in DOM order start with Saturday, and the Saturday header's bounding box is the rightmost (Deviation 5).
+  - "in Arabic at 390 the three days start on Saturday on the right": the rightmost column is Saturday 2034-10-07; no horizontal scroll.
+- [ ] **Step 4: Accessibility and layout** **[verify]**, same file:
+  - "axe finds no violation on the Calendar page": week and month, light and dark at 1440, the legend panel open at 390, `axeOver(page, known(route, role, locale, width))` equals `{}`.
+  - "a keyboard walk reaches the toolbar, the legend toggles, a block and its popover": arrow keys move inside the legend group (ui-sdk roving focus); Enter on a block opens the popover; Esc closes it and focus returns to the block.
+  - "reflow at 320": `scrollWidth <= innerWidth`, English and Arabic.
+  - "the page loads with spaces off": `set('off')`, the page loads with the `community` block; `set('on')` in `finally`.
+- [ ] **Step 5:** Run `verify.sh --e2e-only <branch> <sha> e2e/portal-calendar.e2e.test.ts`: PASS. Commit.
+
+### Task T7: Reviews, full suite, open PR 1d-3
+
+**Skills:** ux-auditor, better-interface, then break-ui; code-review, then security-review.
+
+- [ ] **Step 1: Screen reviews** on the Mac against `verify.sh --keep --no-tests <branch> <sha>`, with `calendarWorld` made by a scratch script: ux-auditor and better-interface on `/spaces/calendar` as each role, week, month, agenda, 1440 and 390, English and Arabic, light and dark. Reports in a PR comment.
+- [ ] **Step 2: break-ui** with `agent-browser` (headless): a 120-character Arabic course title in the legend and the popover, 0, 1 and 12 own courses, 40 blocks in one week, an empty month for a student (the empty-month line), a reader with no person. `agent-browser close`.
+- [ ] **Step 3: code-review** (spec Calendar, Navigation, ADR 0011 as the issue), then **security-review**: the page reads only through `getCachedCalendarItems` (public, cached by locale) and `getReaderCalendarItems` (gated); the URL params go through `readCalendarUrl` (fixed views, a Cairo day or today); `readOnly` removes the cancel action in the client, and the write behind it goes through `saveScheduleEdits` (`src/components/space/cancel-session.ts:30`, `src/actions/save-schedule-edits.ts:47-48`), which checks access as the user, so the client flag is not the gate.
+- [ ] **Step 4:** Fix. **[verify]** the full suite. Per-PR step 5. Open `feat(portal): Calendar tab with the reader's own courses (portal phase 1d, PR 3)`.
+
+**Verification boxes (1d-3).**
+
+- [ ] **unit:** `portal-nav.unit.test.ts`, `public-items.unit.test.ts`, `calendar-legend-preset.browser.test.tsx`, `public-calendar.browser.test.tsx`; e2e `portal-calendar`, `portal-shell`, the existing `public-calendar-*` e2e.
+- [ ] **live:** Scenario: on the kept app with `calendarWorld`, as the student, click Calendar in the sidebar, then open the legend and press "Other courses", then open the `community` block. Pass: the first view shows the `community` and `event` blocks and not `other`; after the press `other` shows; the popover shows the session title, number and time and a **View course** link; the URL path is `/en/spaces/calendar` with `view` and `date`. Repeat at 390 in Arabic: Calendar is in the bottom bar, and the first column on the right is Saturday.
+- [ ] **perf:** Metric: TTFB p75 per role, 30 samples, production build. Probe: as in 1d-1. Baseline first, on `main`: `/en/calendar?view=week&date=2034-10-11` and `/en/spaces`, each as the signed-in role. Head: `/en/spaces/calendar?view=week&date=2034-10-11`. Fail: head p75 above `max(main /en/calendar p75, main /en/spaces p75) + 150 ms` for any role, or above 800 ms when both baselines are under 800 ms.
