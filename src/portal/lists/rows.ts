@@ -19,6 +19,7 @@ import {
 } from '@/lib/review-status'
 import type { Media, User } from '@/payload-types'
 
+import { heldCount } from './course-meta'
 import {
   GROUPS,
   groupOf,
@@ -87,6 +88,7 @@ type Ctx = {
   kind: ListKind
   base: Where
   locale: Locale
+  spaces: ReadonlySet<number>
 }
 
 type Entry = { id: number; main: Doc; latest: Doc | null; key: StatusKey }
@@ -111,7 +113,7 @@ const baseWhere = (user: User, collection: ListCollection, kind: ListKind): Wher
   }
 }
 
-const gate = (ctx: Ctx) => ({ user: ctx.user, overrideAccess: false }) as const
+const gate = ({ user }: { user: User }) => ({ user, overrideAccess: false }) as const
 
 const findMain = (ctx: Ctx, args: Record<string, unknown>) =>
   ctx.payload.find({
@@ -253,6 +255,47 @@ const coverUrls = async (ctx: Ctx, ids: number[]) => {
   return new Map(docs.map((media) => [media.id, mediaThumbnail(media as Media) ?? null]))
 }
 
+type CourseMeta = NonNullable<ListRow['course']>
+
+const courseMeta = async (ctx: Ctx, ids: number[]) => {
+  const meta = new Map<number, CourseMeta>()
+  if (ctx.collection !== 'courses' || ids.length === 0) return meta
+  const [courses, sessions] = await Promise.all([
+    ctx.payload.find({
+      collection: 'courses',
+      where: { and: [ctx.base, { id: { in: ids } }] },
+      select: { course_type: true, cycle: true },
+      populate: { cycles: { season: true, start_year: true } },
+      draft: false,
+      depth: 1,
+      pagination: false,
+      ...gate(ctx),
+    }),
+    ctx.payload.find({
+      collection: 'sessions',
+      where: { course: { in: ids } },
+      select: { course: true, meetings: true, cancelled: true },
+      depth: 0,
+      pagination: false,
+      ...gate(ctx),
+    }),
+  ])
+  const now = new Date()
+  for (const course of courses.docs) {
+    const cycle = typeof course.cycle === 'object' ? course.cycle : null
+    meta.set(course.id, {
+      type: course.course_type ?? null,
+      season: cycle?.season ?? null,
+      year: cycle?.start_year ?? null,
+      ...heldCount(
+        sessions.docs.filter((session) => relId(session.course) === course.id),
+        now,
+      ),
+    })
+  }
+  return meta
+}
+
 type Shown = { entry: Entry; group: GroupId }
 
 const buildRows = async (ctx: Ctx, shown: Shown[]): Promise<ListRow[]> => {
@@ -260,7 +303,13 @@ const buildRows = async (ctx: Ctx, shown: Shown[]): Promise<ListRow[]> => {
     const id = relId(sourceOf(ctx, entry).cover_image)
     return typeof id === 'number' ? [id] : []
   })
-  const covers = await coverUrls(ctx, [...new Set(coverIds)])
+  const [covers, courses] = await Promise.all([
+    coverUrls(ctx, [...new Set(coverIds)]),
+    courseMeta(
+      ctx,
+      shown.map(({ entry }) => entry.id),
+    ),
+  ])
   return shown.map(({ entry, group }) => {
     const { main, latest, key } = entry
     const source = sourceOf(ctx, entry)
@@ -276,15 +325,21 @@ const buildRows = async (ctx: Ctx, shown: Shown[]): Promise<ListRow[]> => {
       waitingSince: waitsOn(key) === 'admin' && latest ? latest.updatedAt : null,
       owners: [],
       tier: main.tier === 'public' || main.tier === 'community' ? main.tier : null,
-      course: null,
+      course: courses.get(entry.id) ?? null,
     }
   })
 }
 
-const PAGED_TERMS: Record<PagedGroup, Where> = {
-  published: { _status: { equals: 'published' } },
-  teachingNow: { _status: { equals: 'published' } },
-  closed: KEY_WHERE.rejected!.where,
+const pagedTerm = (ctx: Ctx, group: PagedGroup): Where => {
+  const spaces = [...ctx.spaces]
+  if (group === 'published') return { _status: { equals: 'published' } }
+  if (group === 'teachingNow')
+    return spaces.length
+      ? { or: [{ _status: { equals: 'published' } }, { id: { in: spaces } }] }
+      : { _status: { equals: 'published' } }
+  return spaces.length
+    ? { and: [KEY_WHERE.rejected!.where, { id: { not_in: spaces } }] }
+    : KEY_WHERE.rejected!.where
 }
 
 /**
@@ -301,7 +356,7 @@ const pagedGroups = async (ctx: Ctx, query: ListQuery, workIds: number[]) => {
       where: {
         and: [
           ctx.base,
-          PAGED_TERMS[id as PagedGroup],
+          pagedTerm(ctx, id as PagedGroup),
           ...(workIds.length ? [{ id: { not_in: workIds } }] : []),
         ],
       },
@@ -330,6 +385,30 @@ const pagedGroups = async (ctx: Ctx, query: ListQuery, workIds: number[]) => {
 }
 
 /**
+ * The courses of a fellow's list that have a space. A fellow listed on a course
+ * reads its space also when the course is not live. A fellow who cannot read
+ * spaces (spaces mode off) gets none: `disableErrors` turns the refusal into
+ * an empty answer, so the list still loads.
+ */
+const coursesWithSpace = async (ctx: Omit<Ctx, 'spaces'>) => {
+  if (ctx.kind !== 'fellowCourses') return new Set<number>()
+  const { docs } = await ctx.payload.find({
+    collection: 'spaces',
+    where: { course: { exists: true } },
+    select: { course: true },
+    depth: 0,
+    pagination: false,
+    disableErrors: true,
+    ...gate(ctx),
+  })
+  return new Set(
+    docs.flatMap((space) =>
+      typeof relId(space.course) === 'number' ? [relId(space.course) as number] : [],
+    ),
+  )
+}
+
+/**
  * The list of one reader. Every read is gated. The ownership `where` is in the
  * base `where` of an owner list; a version read adds none, because version
  * access keeps an owner to the versions that name them.
@@ -342,14 +421,18 @@ export const loadList = async (
 ): Promise<ListResult> => {
   const base = baseWhere(user, query.collection, query.kind)
   if (base === false) return { groups: [], total: 0 }
-  const ctx: Ctx = { payload, user, collection: query.collection, kind: query.kind, base, locale }
+  const bare = { payload, user, collection: query.collection, kind: query.kind, base, locale }
+  const ctx: Ctx = { ...bare, spaces: await coursesWithSpace(bare) }
   const [{ totalDocs: total }, candidates] = await Promise.all([
     payload.count({ collection: ctx.collection, where: base, ...gate(ctx) }),
     workCandidates(ctx),
   ])
   const entries = await readEntries(ctx, candidates)
   const work = [...entries.values()]
-    .map((entry): Shown => ({ entry, group: groupOf(entry.key, ctx.kind, { hasSpace: false }) }))
+    .map((entry): Shown => ({
+      entry,
+      group: groupOf(entry.key, ctx.kind, { hasSpace: ctx.spaces.has(entry.id) }),
+    }))
     .filter(({ group }) => !PAGED.has(group))
     .sort((a, b) =>
       (b.entry.latest ?? b.entry.main).updatedAt.localeCompare(

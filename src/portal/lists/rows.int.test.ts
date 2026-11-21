@@ -19,7 +19,12 @@ import { mockNetwork } from '../../../testing/msw-node.test-utils'
 import { createTracker, uniq } from '../../../testing/payload.fixture'
 import { resendInbox } from '../../../testing/resend.test-utils'
 import { listWorld, makeMedia, type ListWorld } from '../../../testing/portal-lists.fixture'
-import { portalWorld, type PortalAccount, type PortalWorld } from '../../../testing/portal.fixture'
+import {
+  holdSpacesMode,
+  portalWorld,
+  type PortalAccount,
+  type PortalWorld,
+} from '../../../testing/portal.fixture'
 
 import { groupOf } from './groups'
 import { listKindOf, loadList, type ListGroup, type ListQuery } from './rows'
@@ -32,15 +37,19 @@ const { track, cleanup } = createTracker()
 describe('list rows', () => {
   let world: PortalWorld
   let lists: ListWorld
+  let spaces: Awaited<ReturnType<typeof holdSpacesMode>>
 
   beforeAll(async () => {
     payload = await getPayload({ config: await config })
+    spaces = await holdSpacesMode(payload)
+    await spaces.set('on')
     world = await portalWorld(payload, track)
     lists = await listWorld(payload, track, world)
   }, 300_000)
 
   afterAll(async () => {
     await cleanup(payload)
+    await spaces.release()
     await payload.destroy()
   })
 
@@ -449,6 +458,77 @@ describe('list rows', () => {
           .map((row) => row.id)
           .filter((id) => mine.has(id)),
       ).toEqual([lists.articles.rejected])
+    })
+  })
+
+  describe('course rows', () => {
+    const teacherList = async (overrides: Partial<ListQuery> = {}) =>
+      loadList(
+        payload,
+        await userOf(lists.teacher),
+        {
+          collection: 'courses',
+          kind: 'fellowCourses',
+          search: null,
+          only: null,
+          pages: {},
+          ...overrides,
+        },
+        'en',
+      )
+
+    const rowOfCourse = (groups: ListGroup[], id: number) =>
+      rowsOf(groups).find((row) => row.id === id)
+
+    it("the teacher's live course with edits waiting is teaching now and reads published_edits", async () => {
+      const { groups } = await teacherList()
+      const row = rowOfCourse(groups, lists.courses.published_edits)
+      expect([row?.key, row?.group]).toEqual(['published_edits', 'teachingNow'])
+    })
+
+    it('only teachingNow leaves out a live course that waits on the teacher', async () => {
+      const returned = lists.courses.published_edits_returned
+      const only = await teacherList({ only: 'teachingNow' })
+      expect(rowOfCourse(only.groups, returned)).toBeUndefined()
+      const all = await teacherList()
+      expect(groupOfId(all.groups, returned)).toEqual(['needsYou'])
+    })
+
+    it('a course row has its type, season, year and session counts', async () => {
+      const { groups } = await teacherList()
+      const row = rowOfCourse(groups, lists.courses.published_edits)
+      expect(row?.course).toEqual({
+        type: 'THEMATIC',
+        season: 'spring',
+        year: 2035,
+        held: 3,
+        total: 12,
+      })
+    })
+
+    it('a submitted course with a space is teaching now', async () => {
+      const { groups } = await teacherList()
+      const row = rowOfCourse(groups, lists.courses.submittedWithSpace)
+      expect([row?.key, row?.group]).toEqual(['submitted', 'teachingNow'])
+      expect(groupOfId(groups, lists.courses.submittedWithSpace)).toEqual(['teachingNow'])
+    })
+
+    it('a declined course with a space is teaching now, not closed', async () => {
+      const { groups } = await teacherList()
+      expect(groupOfId(groups, lists.courses.rejectedWithSpace)).toEqual(['teachingNow'])
+      expect(groupOfId(groups, lists.courses.rejected)).toEqual(['closed'])
+      expect(groupOfId(groups, lists.courses.draft)).toEqual(['proposals'])
+    })
+
+    it('a fellow who cannot read the space keeps the course in Proposals', async () => {
+      await spaces.set('off')
+      try {
+        const { groups } = await teacherList()
+        expect(groupOfId(groups, lists.courses.submittedWithSpace)).toEqual(['proposals'])
+        expect(groupOfId(groups, lists.courses.rejectedWithSpace)).toEqual(['closed'])
+      } finally {
+        await spaces.set('on')
+      }
     })
   })
 })
