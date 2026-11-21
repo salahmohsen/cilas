@@ -1756,7 +1756,9 @@
         "light": "Light",
         "dark": "Dark",
         "system": "System"
-      }
+      },
+      "shortcutOff": "Turn off the sidebar shortcut",
+      "shortcutOn": "Turn on the sidebar shortcut"
     },
     "sheet": {
       "close": "Close",
@@ -1769,6 +1771,12 @@
     "empty": {
       "spacesTitle": "Your spaces",
       "spacesNext": "A space opens when a course or a cohort you joined starts."
+    },
+    "fold": {
+      "folded": "Sidebar folded",
+      "unfolded": "Sidebar unfolded",
+      "shortcutIsOn": "Sidebar shortcut on",
+      "shortcutIsOff": "Sidebar shortcut off"
     }
   }
 }
