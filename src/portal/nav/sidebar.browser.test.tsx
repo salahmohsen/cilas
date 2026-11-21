@@ -107,6 +107,10 @@ describe('Sidebar', () => {
           const many = locale === 'ar' ? 'أكثر من 9' : 'more than 9'
           const first = screen.getAllByRole('link')[1]!
           expect(first).toHaveTextContent('9+')
+          const circle = [...first.querySelectorAll('[aria-hidden="true"]')].find(
+            (el) => el.textContent === '9+',
+          )!
+          expect(getComputedStyle(circle).direction).toBe('ltr')
           expect(first).toHaveAccessibleName(new RegExp(many))
         })
 })

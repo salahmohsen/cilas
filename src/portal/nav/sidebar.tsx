@@ -39,7 +39,7 @@ export function SpaceRow({
       <bdi className={styles.label}>{row.label}</bdi>
       {unread > 0 && (
         <>
-          <span className={styles.count} aria-hidden="true">
+          <span className={styles.count} aria-hidden="true" dir="ltr">
             {unread > 9 ? '9+' : unread}
           </span>
           <span className="sr-only">
