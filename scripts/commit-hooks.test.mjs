@@ -251,9 +251,7 @@ test('linked worktree gets isolated hooks and partial staging; older branch skip
   const dispatcher = read(linked, `${dispatcherPath}/pre-commit`)
   assert.equal(ok(cwd, 'git', ['config', '--get', 'core.hooksPath']), '.husky')
   assert.equal(ok(cwd, 'git', ['config', '--local', '--get', 'core.hooksPath']), '.husky')
-  assert.ok(
-    ok(linked, 'git', ['config', '--worktree', '--get', 'core.hooksPath']).includes('/worktrees/'),
-  )
+  assert.equal(dispatcherPath, resolve(cwd, '.git/cilas-hooks'))
   partial(linked)
   assert.equal(read(linked, `${dispatcherPath}/pre-commit`), dispatcher)
   ok(linked, 'git', ['checkout', '-b', 'legacy'])
@@ -356,4 +354,57 @@ test('CI checker rejects unformatted committed content without writing fixes', (
   assert.ok(result.output.includes('Format issues found'), result.output)
   assert.equal(read(cwd, path), content)
   assert.equal(ok(cwd, 'git', ['status', '--short']), '')
+})
+
+const unformatted = '#   Hello\n\n-   one\n'
+
+test('new worktree with no install and no node_modules formats staged files on commit', (t) => {
+  const { cwd, root } = fixture(t)
+  install(cwd)
+  const linked = resolve(root, 'agent worktree')
+  ok(cwd, 'git', ['worktree', 'add', '-b', 'agent', linked])
+  assert.ok(!existsSync(resolve(linked, 'node_modules')))
+  write(linked, 'docs/plan.md', unformatted)
+  ok(linked, 'git', ['add', 'docs/plan.md'])
+  const result = commit(linked)
+  assert.equal(result.status, 0, result.output)
+  assert.equal(ok(linked, 'git', ['show', 'HEAD:docs/plan.md']), '# Hello\n\n- one')
+  assert.equal(read(linked, 'docs/plan.md'), '# Hello\n\n- one\n')
+})
+
+test('installed worktree with no node_modules borrows the main install and formats TypeScript', (t) => {
+  const { cwd, root } = fixture(t)
+  const linked = resolve(root, 'agent worktree')
+  ok(cwd, 'git', ['worktree', 'add', '-b', 'agent', linked])
+  install(linked)
+  write(linked, 'src/agent.ts', 'let answer={value:42};\nexport {answer};\n')
+  ok(linked, 'git', ['add', 'src/agent.ts'])
+  const result = commit(linked)
+  assert.equal(result.status, 0, result.output)
+  assert.match(result.output, /formatting only/)
+  assert.equal(
+    ok(linked, 'git', ['show', 'HEAD:src/agent.ts']),
+    'let answer = { value: 42 }\nexport { answer }',
+  )
+})
+
+test('a v1 dispatcher is recognised and upgraded, not refused', (t) => {
+  const { cwd } = fixture(t)
+  install(cwd)
+  const path = resolve(cwd, '.git/cilas-hooks/pre-commit')
+  const v2 = read(cwd, '.git/cilas-hooks/pre-commit')
+  const v1 = `#!/bin/sh
+# CILAS per-worktree Lefthook dispatcher v1
+[ "$LEFTHOOK" = "0" ] && exit 0
+# Older branches/checkouts can lack this feature.
+[ -f lefthook.yml ] && [ -f scripts/install-commit-hooks.mjs ] || exit 0
+if [ ! -f node_modules/lefthook/bin/index.js ]; then
+  echo 'CILAS commit checks: run pnpm install (or LEFTHOOK=0 to skip once).' >&2
+  exit 1
+fi
+exec node node_modules/lefthook/bin/index.js run pre-commit "$@"
+`
+  writeFileSync(path, v1)
+  install(cwd)
+  assert.equal(read(cwd, '.git/cilas-hooks/pre-commit'), v2)
 })

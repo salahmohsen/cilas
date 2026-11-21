@@ -37,15 +37,28 @@ CI round trip. Skip it once with `LEFTHOOK=0 git push`. The installer writes the
 
 ## Git worktrees and existing hooks
 
-The installer enables Git's `extensions.worktreeConfig` and sets `core.hooksPath`
-only in this checkout's `config.worktree`. The dispatcher lives in this checkout's
-Git metadata directory, under `cilas-hooks/`. Git 2.20 or newer is required.
+The dispatcher lives once in the shared Git directory, `<git-common-dir>/cilas-hooks/`,
+so every worktree runs the same copy. The installer sets `core.hooksPath` to it in
+this checkout's `config.worktree` (it enables `extensions.worktreeConfig`). When the
+shared config has no `core.hooksPath`, it also sets it there. A worktree made later
+(`git worktree add`, the T3 app) then gets the hook with no install step. A custom
+shared value is never changed. Git 2.20 or newer is required.
+
+A worktree without `node_modules` (agent worktrees never run `pnpm install`) uses the
+main checkout's install: the dispatcher finds it from `git rev-parse --git-common-dir`
+and puts its `node_modules/.bin` on `PATH`. Staged files are still formatted. Lint and
+typecheck are skipped there (`LEFTHOOK_EXCLUDE=lint,typecheck`, with a note), because
+Oxlint JS plugins and `tsgo` resolve packages from the worktree. CI still runs them.
+If no install exists anywhere, the commit fails and asks for `pnpm install`.
+
+To upgrade an existing install, run `pnpm hooks:install` once in the main checkout. It
+rewrites the old v1 dispatcher in place; all worktrees pick it up.
 
 The existing shared `core.hooksPath=.husky` is retained. A missing `.husky` is
 bypassed only for the checkout being installed; sibling checkouts keep their
 existing configuration. No shared hooks are written or removed. The dispatcher
 skips older branches that lack `lefthook.yml` or the installer. A configured branch
-without dependencies instead asks you to install them and blocks the commit.
+with no install anywhere instead asks you to install and blocks the commit.
 
 Custom configured hook directories, existing default hooks (including hooks other
 than pre-commit), and modified dispatchers are preserved. The installer warns and
@@ -62,7 +75,7 @@ If you relocate the Git metadata, remove that checkout's old override and rerun
 
 ## Opt-out and CI
 
-Use `LEFTHOOK=0 git commit ...` to skip checks once, or `git commit --no-verify` to
+Do not skip checks with `LEFTHOOK=0` unless the user says so. To skip once, use `LEFTHOOK=0 git commit ...`, or `git commit --no-verify` to
 skip Git's pre-commit hook. `LEFTHOOK=0 pnpm install` skips hook installation. CI
 skips installation automatically. A source/Docker context without `.git` also
 skips it, without requiring a Git executable. Docker copies the prepare script

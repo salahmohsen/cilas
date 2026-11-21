@@ -37,6 +37,10 @@ Keep a decision log for structural work. List the problems first, then write eac
 
 <!-- BEGIN:nextjs-agent-rules -->
 
+## Commit hooks
+
+Never commit or push with `LEFTHOOK=0` (or `--no-verify`) unless the user says so. The hooks format staged files in every worktree, also ones with no `node_modules`; see `docs/commit-checks.md`.
+
 ## This is NOT the Next.js you know
 
 This version has breaking changes — APIs, conventions, and file structure may all differ from your training data. Read the relevant guide in `node_modules/next/dist/docs/` (resolved from this file's directory; in monorepos the `next` package may not be visible from the repo root) before writing any code. Heed deprecation notices.
