@@ -22,6 +22,8 @@ import type { Media, User } from '@/payload-types'
 import {
   GROUPS,
   groupOf,
+  MAX_PAGES,
+  PAGE_SIZE,
   PAGED,
   workKeys,
   type GroupId,
@@ -279,6 +281,54 @@ const buildRows = async (ctx: Ctx, shown: Shown[]): Promise<ListRow[]> => {
   })
 }
 
+const PAGED_TERMS: Record<PagedGroup, Where> = {
+  published: { _status: { equals: 'published' } },
+  teachingNow: { _status: { equals: 'published' } },
+  closed: KEY_WHERE.rejected!.where,
+}
+
+/**
+ * The paged groups, `PAGE_SIZE` rows a page. Each leaves out every work row,
+ * so a live document that waits on someone stays in its work group, and a
+ * document sits in one group.
+ */
+const pagedGroups = async (ctx: Ctx, query: ListQuery, workIds: number[]) => {
+  const groups: ListGroup[] = []
+  for (const id of GROUPS[ctx.kind]) {
+    if (!PAGED.has(id) || (query.only && query.only !== id)) continue
+    const pages = Math.min(query.pages[id as PagedGroup] ?? 1, MAX_PAGES)
+    const found = await findMain(ctx, {
+      where: {
+        and: [
+          ctx.base,
+          PAGED_TERMS[id as PagedGroup],
+          ...(workIds.length ? [{ id: { not_in: workIds } }] : []),
+        ],
+      },
+      select: { id: true },
+      pagination: true,
+      limit: PAGE_SIZE * pages,
+      page: 1,
+      sort: ['-updatedAt', '-id'],
+    })
+    const entries = await readEntries(
+      ctx,
+      found.docs.map((doc) => doc.id),
+    )
+    const shown = found.docs.flatMap((doc): Shown[] => {
+      const entry = entries.get(doc.id)
+      return entry ? [{ entry, group: id }] : []
+    })
+    groups.push({
+      id,
+      rows: await buildRows(ctx, shown),
+      total: found.totalDocs,
+      hasMore: found.hasNextPage,
+    })
+  }
+  return groups
+}
+
 /**
  * The list of one reader. Every read is gated. The ownership `where` is in the
  * base `where` of an owner list; a version read adds none, because version
@@ -306,10 +356,18 @@ export const loadList = async (
         (a.entry.latest ?? a.entry.main).updatedAt,
       ),
     )
-  const rows = await buildRows(ctx, work)
+  const worked = await buildRows(ctx, work)
+  const paged = await pagedGroups(
+    ctx,
+    query,
+    work.map(({ entry }) => entry.id),
+  )
   const groups = GROUPS[ctx.kind].flatMap((id): ListGroup[] => {
-    const inGroup = rows.filter((row) => row.group === id)
-    return inGroup.length ? [{ id, rows: inGroup, total: inGroup.length, hasMore: false }] : []
+    const inGroup = worked.filter((row) => row.group === id)
+    const group = inGroup.length
+      ? { id, rows: inGroup, total: inGroup.length, hasMore: false }
+      : paged.find((candidate) => candidate.id === id)
+    return group && group.rows.length && (!query.only || query.only === id) ? [group] : []
   })
   return { groups, total }
 }

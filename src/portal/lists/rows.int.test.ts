@@ -253,17 +253,6 @@ describe('list rows', () => {
     const studentList = async (overrides: Partial<ListQuery> = {}) =>
       loadList(payload, await userOf(world.accounts.student), ownerArticles(overrides), 'en')
 
-    const workKeysOfStudent = [
-      'draft',
-      'submitted',
-      'changes_requested',
-      'published_unsent',
-      'published_edits',
-      'published_removal',
-      'published_edits_returned',
-      'published_edits_declined',
-    ] as const
-
     it('an unpublished approved article reads draft in In progress', async () => {
       const { groups } = await studentList()
       const rows = rowsOf(groups).filter((row) => row.id === lists.unpublished)
@@ -271,9 +260,9 @@ describe('list rows', () => {
     })
 
     it('each article reads its key and sits in its group', async () => {
-      const { groups } = await studentList()
+      const { groups } = await studentList({ pages: { published: 2 } })
       const rows = rowsOf(groups)
-      for (const key of workKeysOfStudent) {
+      for (const key of STATUS_KEYS) {
         const row = rows.find((candidate) => candidate.id === lists.articles[key])
         expect({ key, found: row?.key, group: row?.group }).toEqual({
           key,
@@ -383,6 +372,54 @@ describe('list rows', () => {
       const ids = inProgress.rows.map((row) => row.id)
       lists.manyDrafts.forEach((id) => expect(ids).toContain(id))
       expect(inProgress.total).toBe(inProgress.rows.length)
+    })
+  })
+
+  describe('the paged groups', () => {
+    const studentList = async (overrides: Partial<ListQuery> = {}) =>
+      loadList(payload, await userOf(world.accounts.student), ownerArticles(overrides), 'en')
+
+    it('an equal draft copy sits in Published', async () => {
+      const { groups } = await studentList()
+      const row = rowsOf(groups).find(
+        (candidate) => candidate.id === lists.articles.published_removal_kept,
+      )
+      expect([row?.key, row?.group]).toEqual(['published_removal_kept', 'published'])
+      expect(row?.cover).toBeTruthy()
+      expect(groupOfId(groups, lists.articles.published_removal_kept)).toEqual(['published'])
+    })
+
+    it('Published shows 50 rows and has more', async () => {
+      const { groups } = await studentList()
+      const published = groups.find((group) => group.id === 'published')!
+      expect(published.rows).toHaveLength(50)
+      expect(published.total).toBeGreaterThanOrEqual(62)
+      expect(published.hasMore).toBe(true)
+      const ids = published.rows.map((row) => row.id)
+      expect(ids).toContain(lists.articles.published)
+      expect(ids).toContain(lists.articles.published_removal_kept)
+
+      const more = await studentList({ pages: { published: 2 } })
+      const all = more.groups.find((group) => group.id === 'published')!
+      lists.bulk.forEach((id) => expect(all.rows.map((row) => row.id)).toContain(id))
+      expect(all.hasMore).toBe(false)
+      const seen = rowsOf(more.groups).map((row) => row.id)
+      expect(new Set(seen).size).toBe(seen.length)
+    })
+
+    it('every paged row belongs to its group', async () => {
+      const { groups } = await studentList({ pages: { published: 2 } })
+      for (const group of groups)
+        for (const row of group.rows)
+          expect(groupOf(row.key, 'ownerArticles', { hasSpace: false })).toBe(group.id)
+    })
+
+    it('every counted row sits in one group', async () => {
+      const { groups, total } = await studentList({ pages: { published: 20, closed: 20 } })
+      expect(groups.reduce((sum, group) => sum + group.total, 0)).toBe(total)
+      const ids = rowsOf(groups).map((row) => row.id)
+      expect(new Set(ids).size).toBe(ids.length)
+      expect(ids).toHaveLength(total)
     })
   })
 })
