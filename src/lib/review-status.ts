@@ -1,22 +1,11 @@
-import type { Where } from 'payload'
+import type { Payload, Where } from 'payload'
+
+import type { User } from '@/payload-types'
 
 import type { ReviewRequest, ReviewState } from './review'
 import { REVIEWED_FIELDS, type ReviewedCollection } from './reviewed-fields'
 
-export type StatusKey =
-  | 'draft'
-  | 'submitted'
-  | 'changes_requested'
-  | 'rejected'
-  | 'published'
-  | 'published_unsent'
-  | 'published_edits'
-  | 'published_removal'
-  | 'published_edits_returned'
-  | 'published_edits_declined'
-  | 'published_removal_kept'
-
-export const STATUS_KEYS: readonly StatusKey[] = [
+export const STATUS_KEYS = [
   'draft',
   'submitted',
   'changes_requested',
@@ -28,7 +17,9 @@ export const STATUS_KEYS: readonly StatusKey[] = [
   'published_edits_returned',
   'published_edits_declined',
   'published_removal_kept',
-]
+] as const
+
+export type StatusKey = (typeof STATUS_KEYS)[number]
 
 export type ReviewedDoc = {
   id: number
@@ -41,6 +32,8 @@ const isPlainObject = (value: unknown): value is Record<string, unknown> =>
   typeof value === 'object' && value !== null && !Array.isArray(value)
 
 const canonical = (value: unknown): unknown => {
+  // A Date has no own keys, so it would read as an empty object.
+  if (value instanceof Date) return Number.isNaN(value.getTime()) ? null : value.toISOString()
   if (Array.isArray(value)) return value.map(canonical)
   if (!isPlainObject(value)) return value
   return Object.fromEntries(
@@ -75,8 +68,12 @@ export type StatusInput = {
   read: RowRead
 }
 
-/** A never-published document has a draft main row. Takes the main row only. */
-export const neverPublished = (main: ReviewedDoc): boolean => main._status === 'draft'
+/**
+ * A document that is not live has a main row that is not published: one never
+ * published, or one an admin took down. A row with no `_status` is not live
+ * either. Takes the main row only.
+ */
+export const neverPublished = (main: ReviewedDoc): boolean => main._status !== 'published'
 
 const WAITS_ON: Record<StatusKey, 'owner' | 'admin' | null> = {
   draft: null,
@@ -164,16 +161,38 @@ export const statusSelect = (collection: ReviewedCollection) => ({
   ...Object.fromEntries(REVIEWED_FIELDS[collection].map((field) => [field, true as const])),
 })
 
-/** Main rows that are not live. */
-export const NOT_LIVE: Where = { _status: { equals: 'draft' } }
+/**
+ * Main rows that are not live: a draft, or no `_status` at all, as
+ * `statusInputOf` reads it. Not `not_equals`: SQL drops nulls from it.
+ */
+export const NOT_LIVE: Where = {
+  or: [{ _status: { equals: 'draft' } }, { _status: { exists: false } }],
+}
 
-/** Version rows: the latest version of a live document is a draft copy. */
-export const LIVE_COPY: Where = {
-  and: [
-    { latest: { equals: true } },
-    { 'version._status': { equals: 'draft' } },
-    { 'parent._status': { equals: 'published' } },
+/**
+ * The main rows an admin list shows, whoever owns them: live rows, and a
+ * not-live row only at a state that waits on someone or was declined. Another
+ * owner's draft, and a row at approved that is not live, stay out. A caller
+ * adds the reader's own rows.
+ */
+export const ADMIN_VISIBLE: Where = {
+  or: [
+    { _status: { equals: 'published' } },
+    { 'review.status': { in: ['submitted', 'changes_requested', 'rejected'] } },
   ],
+}
+
+/**
+ * Version rows: the latest version of a live document is a draft copy. The
+ * term `parent._status` is left out on purpose: Payload joins the parent and
+ * adds the parent collection's read access to each branch of the version
+ * access, and for an owner reading with `overrideAccess: false` that was one
+ * query with 1368 joins, which put Postgres into recovery. So this `where`
+ * also matches the versions of a document that is not live. A caller keeps
+ * only the versions whose parent is live with `liveParentIds`, one main read.
+ */
+export const LIVE_COPY: Where = {
+  and: [{ latest: { equals: true } }, { 'version._status': { equals: 'draft' } }],
 }
 
 const onMain = (where: Where) => ({ on: 'main' as const, where: { and: [NOT_LIVE, where] } })
@@ -187,6 +206,11 @@ const mainStatus = (status: ReviewState) => onMain({ 'review.status': { equals: 
  * The rows a query reads to find each key without a field compare. The
  * `draft` row also holds a not-live `approved` row and a row with no status,
  * as `statusOf` reads them. A key that needs a field compare has no row.
+ *
+ * A `version` row holds no `parent.*` path (see `LIVE_COPY`). A version that
+ * a `version` row finds may belong to a document that is not live: keep only
+ * the versions whose parent is in `liveParentIds`, read under the caller's own
+ * gated `where`.
  */
 export const KEY_WHERE: {
   readonly [K in StatusKey]?: { on: 'main' | 'version'; where: Where }
@@ -215,6 +239,42 @@ export const KEY_WHERE: {
   published_edits_returned: onVersion({
     'version.review.status': { equals: 'changes_requested' },
   }),
+}
+
+/**
+ * The ids, out of `ids`, of the documents that are live: one main read with
+ * `_status: published`, `id in ids`, `select: { id: true }`, `depth: 0` and
+ * `pagination: false`. Use it to keep the versions a `KEY_WHERE` `version` row
+ * finds. `where` is the caller's own gated `where` for the main read, so the
+ * read stays inside what that reader may see; `user` is the reader, null for
+ * a server read that overrides access.
+ */
+export const liveParentIds = async (
+  payload: Payload,
+  {
+    collection,
+    ids,
+    user,
+    where,
+  }: { collection: ReviewedCollection; ids: readonly number[]; user: User | null; where?: Where },
+): Promise<Set<number>> => {
+  if (ids.length === 0) return new Set()
+  const { docs } = (await payload.find({
+    collection,
+    where: {
+      and: [
+        ...(where ? [where] : []),
+        { _status: { equals: 'published' } },
+        { id: { in: [...ids] } },
+      ],
+    },
+    draft: false,
+    select: { id: true },
+    depth: 0,
+    pagination: false,
+    ...(user ? { user, overrideAccess: false } : { overrideAccess: true }),
+  } as never)) as unknown as { docs: { id: number }[] }
+  return new Set(docs.map((doc) => doc.id))
 }
 
 export type StatusTone = 'neutral' | 'success' | 'info' | 'warning' | 'danger'

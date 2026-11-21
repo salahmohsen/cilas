@@ -2,9 +2,10 @@ import { describe, expect, expectTypeOf, it } from 'vitest'
 
 import type { BadgeProps } from '@/components/arc/badge/badge'
 
-import type { ReviewRequest, ReviewState } from './review'
+import { REVIEW_STATES, type ReviewRequest, type ReviewState } from './review'
 import { REVIEWED_FIELDS } from './reviewed-fields'
 import {
+  ADMIN_VISIBLE,
   KEY_SELECT,
   KEY_WHERE,
   LIVE_COPY,
@@ -75,6 +76,13 @@ describe('hasUnsentEdits', () => {
     const live = { authors: [3] }
     const copy = { authors: [3, 4] }
     expect(hasUnsentEdits(doc(copy), doc(live), fields)).toBe(true)
+  })
+
+  it('compares Date values by time', () => {
+    const at = (iso: string) => ({ published_date: new Date(iso) })
+    const fields = ['published_date']
+    expect(hasUnsentEdits(doc(at('2026-01-01')), doc(at('2026-02-01')), fields)).toBe(true)
+    expect(hasUnsentEdits(doc(at('2026-01-01')), doc(at('2026-01-01')), fields)).toBe(false)
   })
 
   it('is false for equal fields with different updatedAt', () => {
@@ -233,6 +241,10 @@ describe('neverPublished', () => {
   it('is false for a published main row', () => {
     expect(neverPublished(live())).toBe(false)
   })
+
+  it('is true for a main row with no _status, which is not live', () => {
+    expect(neverPublished(doc({ _status: null, review: { status: 'draft' } }))).toBe(true)
+  })
 })
 
 describe('statusSelect', () => {
@@ -248,6 +260,13 @@ describe('statusSelect', () => {
 })
 
 describe('statusInputOf', () => {
+  it('treats a main row with no _status as not live and takes the latest version', () => {
+    const main = doc({ _status: null, review: { status: 'draft' } })
+    const latest = { ...copy('submitted'), title: { en: 'Newest' } }
+    const input = statusInputOf({ collection: 'articles', main, latest, read: 'full' })
+    expect(input).toEqual({ collection: 'articles', doc: latest, draft: null, read: 'full' })
+  })
+
   it('takes the latest version for a document never published', () => {
     const main = notLive('draft')
     const latest = { ...copy('submitted'), title: { en: 'Newest' } }
@@ -309,9 +328,43 @@ describe('KEY_WHERE', () => {
     })
   })
 
+  it('holds no parent path, which joins the parent read access for an owner', () => {
+    expect(JSON.stringify(LIVE_COPY)).not.toContain('parent')
+    Object.values(KEY_WHERE).forEach((row) =>
+      expect(JSON.stringify(row.where)).not.toContain('parent'),
+    )
+  })
+
+  it('reads a missing _status as not live, because SQL drops nulls from not_equals', () => {
+    expect(NOT_LIVE).toEqual({
+      or: [{ _status: { equals: 'draft' } }, { _status: { exists: false } }],
+    })
+  })
+
   it('has a row for draft that reads approved and a missing status as draft', () => {
     expect(JSON.stringify(KEY_WHERE.draft?.where)).toContain('approved')
     expect(JSON.stringify(KEY_WHERE.draft?.where)).toContain('exists')
+  })
+})
+
+describe('ADMIN_VISIBLE', () => {
+  const [published, states] = ADMIN_VISIBLE.or ?? []
+
+  it('shows every live row', () => {
+    expect(published).toEqual({ _status: { equals: 'published' } })
+  })
+
+  it('shows a not-live row only at a state that waits on someone or was declined', () => {
+    const shown = (states?.['review.status'] as { in: ReviewState[] }).in
+    expect([...shown].sort()).toEqual(
+      REVIEW_STATES.filter((state) => state !== 'draft' && state !== 'approved').sort(),
+    )
+  })
+
+  it('names no owner, so a caller adds the reader own rows', () => {
+    expect(ADMIN_VISIBLE.or).toHaveLength(2)
+    expect(JSON.stringify(ADMIN_VISIBLE)).not.toContain('authors')
+    expect(JSON.stringify(ADMIN_VISIBLE)).not.toContain('fellows')
   })
 })
 

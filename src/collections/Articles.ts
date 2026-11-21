@@ -10,10 +10,10 @@ import {
   isAdminOrOwn,
   isAdminUser,
   ownList,
+  OWNER_DELETE,
   OWNER_EDITS,
   ownsViaAuthors,
   readTiers,
-  OWNER_DELETE,
 } from '@/access'
 import { lexicalEditor } from '@payloadcms/richtext-lexical'
 
