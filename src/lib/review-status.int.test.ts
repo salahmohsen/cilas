@@ -14,6 +14,7 @@ import type { ReviewState } from './review'
 import type { ReviewedCollection } from './reviewed-fields'
 import {
   KEY_WHERE,
+  liveParentIds,
   type ReviewedDoc,
   type StatusKey,
   statusInputOf,
@@ -381,8 +382,14 @@ describe('review status over real writes', () => {
     expect(Object.fromEntries(keys)).toEqual(Object.fromEntries(expected))
     expect(await keyOf('courses', course.id, admin)).toBe('draft')
 
-    const found = async (collection: 'articles' | 'courses', ids: number[], key: StatusKey) => {
+    const found = async (
+      collection: 'articles' | 'courses',
+      ids: number[],
+      key: StatusKey,
+      user: User | null = admin,
+    ) => {
       const row = KEY_WHERE[key]!
+      const access = user ? as(user) : ({ overrideAccess: true } as const)
       if (row.on === 'main') {
         const { docs } = await payload.find({
           collection,
@@ -390,7 +397,7 @@ describe('review status over real writes', () => {
           draft: false,
           pagination: false,
           depth: 0,
-          ...as(admin),
+          ...access,
         })
         return docs.map((doc) => doc.id).sort()
       }
@@ -399,21 +406,41 @@ describe('review status over real writes', () => {
         where: { and: [row.where, { parent: { in: ids } }] },
         pagination: false,
         depth: 0,
-        ...as(admin),
+        ...access,
       })
-      return docs.map((doc) => parentOf(doc.parent)).sort()
+      const live = await liveParentIds(payload, { collection, ids, user })
+      return docs
+        .map((doc) => parentOf(doc.parent))
+        .filter((id) => live.has(id))
+        .sort()
     }
 
     const keyed = Object.keys(KEY_WHERE) as StatusKey[]
-    for (const key of keyed) {
-      const want = [...keys]
+    const wanted = (key: StatusKey) =>
+      [...keys]
         .filter(([, k]) => k === key)
         .map(([id]) => id)
         .sort()
-      expect({ key, ids: await found('articles', articles, key) }).toEqual({ key, ids: want })
+    for (const [who, user] of [
+      ['admin', admin],
+      ['server', null],
+      ['author', author],
+    ] as const) {
+      for (const key of keyed) {
+        expect({ who, key, ids: await found('articles', articles, key, user) }).toEqual({
+          who,
+          key,
+          ids: wanted(key),
+        })
+      }
+    }
+    for (const key of keyed) {
+      expect({ key, ids: await found('articles', articles, key, other) }).toEqual({ key, ids: [] })
     }
     expect(await found('courses', [course.id], 'draft')).toEqual([course.id])
     expect(await found('courses', [course.id], 'submitted')).toEqual([])
+    expect(await found('courses', [course.id], 'draft', fellow)).toEqual([course.id])
+    expect(await found('courses', [course.id], 'published_edits', fellow)).toEqual([])
   })
 
   describe('the request rule', () => {

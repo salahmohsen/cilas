@@ -1,4 +1,6 @@
-import type { Where } from 'payload'
+import type { Payload, Where } from 'payload'
+
+import type { User } from '@/payload-types'
 
 import type { ReviewRequest, ReviewState } from './review'
 import { REVIEWED_FIELDS, type ReviewedCollection } from './reviewed-fields'
@@ -162,13 +164,17 @@ export const statusSelect = (collection: ReviewedCollection) => ({
 /** Main rows that are not live. */
 export const NOT_LIVE: Where = { _status: { equals: 'draft' } }
 
-/** Version rows: the latest version of a live document is a draft copy. */
+/**
+ * Version rows: the latest version of a live document is a draft copy. The
+ * term `parent._status` is left out on purpose: Payload joins the parent and
+ * adds the parent collection's read access to each branch of the version
+ * access, and for an owner reading with `overrideAccess: false` that was one
+ * query with 1368 joins, which put Postgres into recovery. So this `where`
+ * also matches the versions of a document that is not live. A caller keeps
+ * only the versions whose parent is live with `liveParentIds`, one main read.
+ */
 export const LIVE_COPY: Where = {
-  and: [
-    { latest: { equals: true } },
-    { 'version._status': { equals: 'draft' } },
-    { 'parent._status': { equals: 'published' } },
-  ],
+  and: [{ latest: { equals: true } }, { 'version._status': { equals: 'draft' } }],
 }
 
 const onMain = (where: Where) => ({ on: 'main' as const, where: { and: [NOT_LIVE, where] } })
@@ -182,6 +188,11 @@ const mainStatus = (status: ReviewState) => onMain({ 'review.status': { equals: 
  * The rows a query reads to find each key without a field compare. The
  * `draft` row also holds a not-live `approved` row and a row with no status,
  * as `statusOf` reads them. A key that needs a field compare has no row.
+ *
+ * A `version` row holds no `parent.*` path (see `LIVE_COPY`). A version that
+ * a `version` row finds may belong to a document that is not live: keep only
+ * the versions whose parent is in `liveParentIds`, read under the caller's own
+ * gated `where`.
  */
 export const KEY_WHERE: {
   readonly [K in StatusKey]?: { on: 'main' | 'version'; where: Where }
@@ -210,6 +221,42 @@ export const KEY_WHERE: {
   published_edits_returned: onVersion({
     'version.review.status': { equals: 'changes_requested' },
   }),
+}
+
+/**
+ * The ids, out of `ids`, of the documents that are live: one main read with
+ * `_status: published`, `id in ids`, `select: { id: true }`, `depth: 0` and
+ * `pagination: false`. Use it to keep the versions a `KEY_WHERE` `version` row
+ * finds. `where` is the caller's own gated `where` for the main read, so the
+ * read stays inside what that reader may see; `user` is the reader, null for
+ * a server read that overrides access.
+ */
+export const liveParentIds = async (
+  payload: Payload,
+  {
+    collection,
+    ids,
+    user,
+    where,
+  }: { collection: ReviewedCollection; ids: readonly number[]; user: User | null; where?: Where },
+): Promise<Set<number>> => {
+  if (ids.length === 0) return new Set()
+  const { docs } = (await payload.find({
+    collection,
+    where: {
+      and: [
+        ...(where ? [where] : []),
+        { _status: { equals: 'published' } },
+        { id: { in: [...ids] } },
+      ],
+    },
+    draft: false,
+    select: { id: true },
+    depth: 0,
+    pagination: false,
+    ...(user ? { user, overrideAccess: false } : { overrideAccess: true }),
+  } as never)) as unknown as { docs: { id: number }[] }
+  return new Set(docs.map((doc) => doc.id))
 }
 
 export type StatusTone = 'neutral' | 'success' | 'info' | 'warning' | 'danger'

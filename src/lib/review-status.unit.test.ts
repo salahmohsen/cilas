@@ -327,6 +327,13 @@ describe('KEY_WHERE', () => {
     })
   })
 
+  it('holds no parent path, which joins the parent read access for an owner', () => {
+    expect(JSON.stringify(LIVE_COPY)).not.toContain('parent')
+    Object.values(KEY_WHERE).forEach((row) =>
+      expect(JSON.stringify(row.where)).not.toContain('parent'),
+    )
+  })
+
   it('has a row for draft that reads approved and a missing status as draft', () => {
     expect(JSON.stringify(KEY_WHERE.draft?.where)).toContain('approved')
     expect(JSON.stringify(KEY_WHERE.draft?.where)).toContain('exists')
