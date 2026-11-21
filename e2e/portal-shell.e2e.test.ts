@@ -39,6 +39,7 @@ import { unreadCount } from '../src/lib/unread-count'
 type Viewport = (typeof WIDTHS)[keyof typeof WIDTHS]
 
 const OTHER = { en: 'ar', ar: 'en' } as const
+const LIST_HREFS = ['/spaces/articles', '/spaces/courses']
 const DESKTOP = WIDTHS.desktop
 
 const escape = (text: string) => text.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
@@ -314,7 +315,17 @@ test.describe('portal shell', () => {
               links.map((link) => link.getAttribute('href')!),
             )
             expect(hrefs).toEqual(NAV_BY_ROLE[role].map((item) => navHref(item, locale)))
-            for (const href of hrefs) expect((await page.request.get(href)).status()).toBe(200)
+            for (const href of hrefs.filter((h) => !LIST_HREFS.some((path) => h.endsWith(path))))
+              expect((await page.request.get(href)).status()).toBe(200)
+            const labels = NAV_BY_ROLE[role].map(
+              (item) => portal.nav[item.key as keyof typeof portal.nav],
+            )
+            await page.locator('[data-portal-crumbs] [data-portal-fold]').click()
+            for (const label of labels)
+              await expect(
+                portalNavOf(page, locale).getByRole('link', { name: label, exact: true }),
+              ).toHaveCount(1)
+            await page.locator('[data-portal-crumbs] [data-portal-fold]').click()
 
             const account = accountButton(page, locale)
             await expect(account).toHaveAttribute('aria-haspopup', 'menu')
