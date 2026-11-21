@@ -32,9 +32,8 @@
   block-size: 100dvh;
   min-inline-size: 0;
   padding: var(--space-3);
-  overflow-x: hidden;
-  overflow-y: auto;
-  overscroll-behavior: contain;
+  /* The rail does not scroll: its nav does (.navViewport), so the header keeps its place. */
+  overflow: hidden;
   transition: inline-size var(--portal-duration) var(--ease-standard);
 }
 
@@ -97,8 +96,10 @@
 
 .sidebar {
   display: flex;
+  flex: 1 1 auto;
   flex-direction: column;
   gap: var(--space-2);
+  min-block-size: 0;
   min-inline-size: 0;
 }
 
@@ -171,9 +172,30 @@
 
 .nav {
   display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  min-block-size: 0;
+  min-inline-size: 0;
+}
+
+/* The one scroller of the rail (Arc ScrollArea). It takes the rail's inline padding, so the bar sits in the gutter, never over a row. */
+.navScroll {
+  flex: 1 1 auto;
+  min-block-size: 0;
+  margin-inline: calc(-1 * var(--space-3));
+}
+
+/* The viewport's own focus ring sits inside it, because the rail clips; rows inherit the offset. A focused row scrolls clear of the edge and of a showing toast. */
+.navViewport {
+  display: flex;
   flex-direction: column;
   gap: var(--space-2);
-  min-inline-size: 0;
+  padding-block: var(--space-2);
+  padding-inline: var(--space-3);
+  overscroll-behavior-y: contain;
+  --focus-outline-offset: -2px;
+  scroll-padding-block: var(--space-2);
+  scroll-padding-block-end: max(var(--space-2), var(--toast-stack-height, 0px));
 }
 
 .list {
@@ -376,16 +398,6 @@
 
 /* 700px: keep in step with WIDE in breakpoint.ts */
 @media (width >= 700px) {
-  /* The rail's header stays in view while its nav scrolls. */
-  .top {
-    position: sticky;
-    inset-block-start: calc(-1 * var(--space-3));
-    z-index: 1;
-    margin-block: calc(-1 * var(--space-3)) 0;
-    padding-block: var(--space-3) 0;
-    background: var(--surface-muted);
-  }
-
   .shell:has(.sidebar[data-folded]) .top,
   .shell:has(.sidebar[data-folded]) .tools {
     flex-direction: column;

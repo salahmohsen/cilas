@@ -121,7 +121,7 @@ describe('Sidebar', () => {
             }),
           )
           renderSidebar({ folded, locale, spaces, box: { width, height: 600 } })
-          const list = screen.getByRole('region', { name: 'Pages and spaces' })
+          const list = screen.getByRole('region', { name: messagesOf[locale].Portal.nav.scroll })
           expect(list.scrollHeight).toBeGreaterThan(list.clientHeight)
           expect(list.scrollWidth).toBeLessThanOrEqual(list.clientWidth)
           const { shown, spoken } = countOf(120, locale)
