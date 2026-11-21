@@ -3,20 +3,7 @@ import type { Where } from 'payload'
 import type { ReviewRequest, ReviewState } from './review'
 import { REVIEWED_FIELDS, type ReviewedCollection } from './reviewed-fields'
 
-export type StatusKey =
-  | 'draft'
-  | 'submitted'
-  | 'changes_requested'
-  | 'rejected'
-  | 'published'
-  | 'published_unsent'
-  | 'published_edits'
-  | 'published_removal'
-  | 'published_edits_returned'
-  | 'published_edits_declined'
-  | 'published_removal_kept'
-
-export const STATUS_KEYS: readonly StatusKey[] = [
+export const STATUS_KEYS = [
   'draft',
   'submitted',
   'changes_requested',
@@ -28,7 +15,9 @@ export const STATUS_KEYS: readonly StatusKey[] = [
   'published_edits_returned',
   'published_edits_declined',
   'published_removal_kept',
-]
+] as const
+
+export type StatusKey = (typeof STATUS_KEYS)[number]
 
 export type ReviewedDoc = {
   id: number
@@ -41,6 +30,8 @@ const isPlainObject = (value: unknown): value is Record<string, unknown> =>
   typeof value === 'object' && value !== null && !Array.isArray(value)
 
 const canonical = (value: unknown): unknown => {
+  // A Date has no own keys, so it would read as an empty object.
+  if (value instanceof Date) return Number.isNaN(value.getTime()) ? null : value.toISOString()
   if (Array.isArray(value)) return value.map(canonical)
   if (!isPlainObject(value)) return value
   return Object.fromEntries(
@@ -75,8 +66,12 @@ export type StatusInput = {
   read: RowRead
 }
 
-/** A never-published document has a draft main row. Takes the main row only. */
-export const neverPublished = (main: ReviewedDoc): boolean => main._status === 'draft'
+/**
+ * A document that is not live has a main row that is not published: one never
+ * published, or one an admin took down. A row with no `_status` is not live
+ * either. Takes the main row only.
+ */
+export const neverPublished = (main: ReviewedDoc): boolean => main._status !== 'published'
 
 const WAITS_ON: Record<StatusKey, 'owner' | 'admin' | null> = {
   draft: null,

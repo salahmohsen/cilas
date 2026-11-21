@@ -77,6 +77,13 @@ describe('hasUnsentEdits', () => {
     expect(hasUnsentEdits(doc(copy), doc(live), fields)).toBe(true)
   })
 
+  it('compares Date values by time', () => {
+    const at = (iso: string) => ({ published_date: new Date(iso) })
+    const fields = ['published_date']
+    expect(hasUnsentEdits(doc(at('2026-01-01')), doc(at('2026-02-01')), fields)).toBe(true)
+    expect(hasUnsentEdits(doc(at('2026-01-01')), doc(at('2026-01-01')), fields)).toBe(false)
+  })
+
   it('is false for equal fields with different updatedAt', () => {
     const live = { title: { en: 'x' }, updatedAt: '2026-01-01T00:00:00.000Z' }
     const copy = { title: { en: 'x' }, updatedAt: '2026-01-02T00:00:00.000Z' }
@@ -233,6 +240,10 @@ describe('neverPublished', () => {
   it('is false for a published main row', () => {
     expect(neverPublished(live())).toBe(false)
   })
+
+  it('is true for a main row with no _status, which is not live', () => {
+    expect(neverPublished(doc({ _status: null, review: { status: 'draft' } }))).toBe(true)
+  })
 })
 
 describe('statusSelect', () => {
@@ -248,6 +259,13 @@ describe('statusSelect', () => {
 })
 
 describe('statusInputOf', () => {
+  it('treats a main row with no _status as not live and takes the latest version', () => {
+    const main = doc({ _status: null, review: { status: 'draft' } })
+    const latest = { ...copy('submitted'), title: { en: 'Newest' } }
+    const input = statusInputOf({ collection: 'articles', main, latest, read: 'full' })
+    expect(input).toEqual({ collection: 'articles', doc: latest, draft: null, read: 'full' })
+  })
+
   it('takes the latest version for a document never published', () => {
     const main = notLive('draft')
     const latest = { ...copy('submitted'), title: { en: 'Newest' } }
