@@ -415,6 +415,16 @@ describe('list rows', () => {
       expect(new Set(seen).size).toBe(seen.length)
     })
 
+    it('a co-author removed in the copy reads published', async () => {
+      const poster = await loadList(payload, await userOf(world.poster), ownerArticles(), 'en')
+      const theirs = rowsOf(poster.groups).find((row) => row.id === lists.shared)
+      expect([theirs?.key, theirs?.group]).toEqual(['published', 'published'])
+      const mine = await studentList()
+      const row = rowsOf(mine.groups).find((candidate) => candidate.id === lists.shared)
+      expect([row?.key, row?.group]).toEqual(['published_unsent', 'inProgress'])
+      expect(theirs?.title).not.toBeNull()
+    })
+
     it('every paged row belongs to its group', async () => {
       const { groups } = await studentList({ pages: { published: 2 } })
       for (const group of groups)
