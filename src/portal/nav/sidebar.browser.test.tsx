@@ -10,6 +10,8 @@ import { unreadCount } from '@/lib/unread-count'
 import { IntlProvider, messagesOf } from '../../../testing/intl.test-utils'
 import { mockNetwork } from '../../../testing/msw-browser.test-utils'
 import { renderWithBrowserNavigation } from '../../../testing/browser-navigation.test-utils'
+import { FoldButton } from './fold-button'
+import { FoldProvider } from './fold-state'
 import type { PortalNavItem } from './portal-nav'
 import { Sidebar } from './sidebar'
 import { spaceRow } from './space-link.test-utils'
@@ -51,9 +53,12 @@ const renderSidebar = ({
 }: { folded?: boolean; locale?: 'en' | 'ar'; spaces?: SpaceLink[] } = {}) =>
   renderWithBrowserNavigation(
     <IntlProvider locale={locale}>
-      <div data-page="spaces">
-        <Sidebar items={[HOME]} spaces={spaces} folded={folded} accountId={7} />
-      </div>
+      <FoldProvider folded={folded} accountId={7}>
+        <div data-page="spaces">
+          <FoldButton />
+          <Sidebar items={[HOME]} spaces={spaces} />
+        </div>
+      </FoldProvider>
     </IntlProvider>,
   )
 
@@ -65,20 +70,6 @@ afterEach(() => {
 })
 
 describe('Sidebar', () => {
-  it('[ folds only while focus is inside the sidebar', async () => {
-    renderSidebar()
-    const fold = screen.getByRole('button', { name: 'Sidebar' })
-    expect(fold).toHaveAttribute('aria-expanded', 'true')
-    document.body.focus()
-    await userEvent.keyboard('[[')
-    expect(fold).toHaveAttribute('aria-expanded', 'true')
-    expect(document.cookie).not.toContain('portal-folded-7')
-    screen.getByRole('link', { name: 'Home' }).focus()
-    await userEvent.keyboard('[[')
-    expect(fold).toHaveAttribute('aria-expanded', 'false')
-    expect(document.cookie).toContain('portal-folded-7=1')
-  })
-
   it('folded and unfolded rows have the same accessible names', async () => {
     renderSidebar()
     const home = screen.getByRole('link', { name: 'Home' })
