@@ -155,3 +155,91 @@
   line-height: 1.5;
   overflow-wrap: anywhere;
 }
+
+/* The chips and the search, above the list. */
+.controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  margin-block-end: var(--space-6);
+}
+
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+/* A chip is a link at least 24px each way (44px on touch); the current one is filled and weight 500, so colour is not the only cue. */
+.chip {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-block-size: 32px;
+  min-inline-size: 24px;
+  padding-inline: var(--space-3);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-pill);
+  color: var(--text-secondary);
+  font-size: 13px;
+  line-height: 1.2;
+  text-decoration: none;
+  transition:
+    background-color var(--portal-duration, 150ms) var(--ease-standard),
+    color var(--portal-duration, 150ms) var(--ease-standard);
+}
+
+.chip:hover {
+  background: color-mix(in oklab, var(--foreground) 6%, transparent);
+  color: var(--foreground);
+}
+
+.chip[aria-current='true'] {
+  border-color: var(--foreground);
+  background: var(--foreground);
+  color: var(--background);
+  font-weight: 500;
+}
+
+@media (forced-colors: active) {
+  .chip[aria-current='true'] {
+    border-color: Highlight;
+    outline: 2px solid Highlight;
+    outline-offset: -2px;
+  }
+}
+
+.search {
+  flex: 1 1 16rem;
+  max-inline-size: 22rem;
+}
+
+.more {
+  margin-block-start: var(--space-3);
+}
+
+.cap {
+  margin: var(--space-3) 0 0;
+  color: var(--text-muted);
+  font-size: 13px;
+  line-height: 1.45;
+  text-wrap: pretty;
+}
+
+@media (pointer: coarse) {
+  .chip,
+  .more,
+  .title {
+    min-block-size: 44px;
+  }
+
+  .chip {
+    min-inline-size: 44px;
+  }
+
+  .title {
+    line-height: 44px;
+  }
+}
