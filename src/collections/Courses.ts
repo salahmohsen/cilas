@@ -13,11 +13,11 @@ import {
   canTeach,
   isAdminOrOwn,
   ownList,
+  nobody,
+  OWNER_DELETE,
   OWNER_EDITS,
   ownsViaFellows,
   readTiers,
-  WITH_OWNER,
-  nobody,
 } from '@/access'
 import { activitiesField } from '@/fields/activities'
 import { bibliographyField } from '@/fields/bibliography'
@@ -105,11 +105,14 @@ export const revokeDeletedCourseFellows: CollectionAfterDeleteHook<Course> = asy
 /** Who reads a course; its sessions follow it (collections/Sessions.ts). */
 export const readCourse = readTiers(ownsViaFellows, { drafts: true })
 
-/** Who may delete a course: an admin, or a fellow their own draft. */
+/**
+ * Who may delete a course: an admin, or a fellow their own never-published
+ * course, while it is a draft, sent back for changes, or declined.
+ */
 const deleteCourse = isAdminOrOwn(ownsViaFellows, {
   allow: ['fellow'],
   draft: true,
-  while: WITH_OWNER,
+  while: OWNER_DELETE,
 })
 
 export const Courses: CollectionConfig = {
@@ -130,7 +133,11 @@ export const Courses: CollectionConfig = {
   },
   endpoints: deleteEndpoints('courses', {
     summarize: courseDeleteSummary,
-    blocked: blockedUnless('courses', deleteCourse, 'You can delete only your own draft courses.'),
+    blocked: blockedUnless(
+      'courses',
+      deleteCourse,
+      'You can delete only your own draft or declined courses.',
+    ),
   }),
   versions: {
     drafts: {

@@ -42,7 +42,8 @@ export const reviewFields = (
       },
       {
         // Set by the "Submit changes" and "Request removal" buttons on a
-        // published document; empty on a first submission.
+        // published document; empty on a first submission. It stays through a
+        // decline, so a declined edit and a kept removal differ.
         name: 'request',
         type: 'select',
         options: [
@@ -53,7 +54,7 @@ export const reviewFields = (
         admin: {
           readOnly: true,
           condition: (data) => Boolean(data?.review?.request),
-          description: `What the owner asks of the published ${noun}.`,
+          description: `What the owner asks, or last asked, of the published ${noun}.`,
         },
       },
       adminWrites({

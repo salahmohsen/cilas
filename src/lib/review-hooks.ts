@@ -3,12 +3,21 @@ import type {
   CollectionAfterChangeHook,
   CollectionBeforeChangeHook,
   CollectionBeforeOperationHook,
+  PayloadRequest,
 } from 'payload'
 
+import { routing } from '@/i18n/routing'
+import { documentHref } from '@/lib/document-href'
 import { REVIEWED } from '@/lib/reviewed-collections'
 import { toPersonIds } from '@/lib/fellow-role'
 import { isAdminUser, personOf } from '@/access'
-import { canMove, notifyOn, type ReviewRequest, type ReviewState } from '@/lib/review'
+import {
+  canMove,
+  notifyOn,
+  REVIEW_REQUESTS,
+  type ReviewRequest,
+  type ReviewState,
+} from '@/lib/review'
 import { actorOf, notify } from '@/lib/notify'
 import type { NotificationKind } from '@/lib/notification-kinds'
 import {
@@ -18,9 +27,32 @@ import {
   sendReviewEmail,
 } from '@/lib/review-mail'
 
-const DRAFT_SAVE = 'reviewDraftSave'
-const AUTOSAVE = 'reviewAutosave'
-const LIVE = 'reviewLive'
+/**
+ * What `recordDraftSave` learns from the operation args and `applyReview` and
+ * `notifyReview` read. It lives on `req.context` under one key, and each write
+ * resets it.
+ */
+type ReviewWrite = {
+  /** A draft write to a published document: the copy beside it, not the document. */
+  live: boolean
+  draftSave: boolean
+  autosave: boolean
+  /** The `review.request` the write sent, if it is an allowed value. */
+  sentRequest: ReviewRequest | null
+}
+
+const CONTEXT_KEY = 'reviewWrite'
+
+const reviewContext = (req: PayloadRequest): ReviewWrite =>
+  (req.context[CONTEXT_KEY] ??= {
+    live: false,
+    draftSave: false,
+    autosave: false,
+    sentRequest: null,
+  }) as ReviewWrite
+
+const allowedRequest = (value: unknown): ReviewRequest | null =>
+  REVIEW_REQUESTS.find((request) => request === value) ?? null
 
 const HELD: ReviewState[] = ['submitted', 'changes_requested', 'rejected']
 
@@ -77,12 +109,17 @@ const recordDraftSave: CollectionBeforeOperationHook = async ({
     write.draft = true
     write.data = { ...write.data, _status: 'draft', review: { status: 'draft' } }
   }
-  req.context[LIVE] = false
+  const context = reviewContext(req)
+  context.live = false
+  // Payload fills a field the write left out from the stored document before
+  // beforeChange runs, so `data.review.request` there cannot say whether the
+  // write sent it. The operation args can.
+  context.sentRequest = allowedRequest(write.data?.review?.request)
 
   if (operation === 'restoreVersion') {
     if (!trusted) write.draft = true
-    req.context[DRAFT_SAVE] = Boolean(write.draft)
-    req.context[AUTOSAVE] = false
+    context.draftSave = Boolean(write.draft)
+    context.autosave = false
     return args
   }
   if (operation === 'update' && write.id === undefined && !trusted) {
@@ -98,17 +135,41 @@ const recordDraftSave: CollectionBeforeOperationHook = async ({
       })
       if (live?._status === 'published') {
         write.draft = true
-        req.context[LIVE] = true
+        context.live = true
       }
     }
   }
 
-  req.context[DRAFT_SAVE] =
+  context.draftSave =
     operation === 'create'
       ? Boolean(write.draft)
       : Boolean(write.draft) && write.data?._status !== 'published'
-  req.context[AUTOSAVE] = Boolean(write.autosave)
+  context.autosave = Boolean(write.autosave)
   return args
+}
+
+const nextRequest = ({
+  live,
+  from,
+  to,
+  sent,
+  originalDoc,
+}: {
+  live: boolean
+  from: ReviewState
+  to: ReviewState
+  sent: ReviewRequest | null
+  originalDoc?: Doc
+}): ReviewRequest | null => {
+  const stored = originalDoc?.review?.request
+  // A write that is not a draft write to a live document keeps what is stored
+  // when it leaves the status alone, so a server write (admin, MCP, script)
+  // with no `review` key cannot wipe a submitted removal. Any move clears it.
+  if (!live) return from === to ? (stored ?? null) : null
+  if (to === 'submitted')
+    return from === 'submitted' ? (stored ?? sent ?? 'changes') : (sent ?? 'changes')
+  if (to === 'changes_requested' || to === 'rejected') return stored ?? null
+  return null
 }
 
 /**
@@ -121,7 +182,7 @@ const applyReview =
   ({ noun, onApprove }: ReviewOptions): CollectionBeforeChangeHook =>
   ({ data, operation, originalDoc, req }) => {
     const trusted = !req.user || isAdminUser(req.user)
-    const live = Boolean(req.context?.[LIVE])
+    const { live, draftSave, autosave, sentRequest } = reviewContext(req)
     // On create, `originalDoc` is a duplicate's source, not this document's
     // history. On a published document it is the latest draft, if there is one.
     const from: ReviewState =
@@ -132,8 +193,8 @@ const applyReview =
     // status: the status changes on a full save only. An autosave, which runs
     // while the editor picks it, keeps the old one. On a published document
     // every write is a draft save, so there the buttons may change it.
-    if (to !== from && req.context?.[DRAFT_SAVE]) {
-      if (req.context[AUTOSAVE]) {
+    if (to !== from && draftSave) {
+      if (autosave) {
         to = from
         data = { ...data, review: { ...data.review, status: from } }
       } else if (!live) {
@@ -166,11 +227,13 @@ const applyReview =
         403,
       )
     }
-    // What the owner asks of a published document holds only while it waits.
-    const request: ReviewRequest | null =
-      live && to === 'submitted'
-        ? (data.review?.request ?? originalDoc?.review?.request ?? 'changes')
-        : null
+    // What the owner asks of a published document. A move into `submitted`
+    // takes the write's `request`, else `changes`, never the stored one (a kept
+    // removal would pass `removal` to a later edit). A write that stays at
+    // `submitted` keeps the stored one. A decision that returns or declines the
+    // copy keeps only the stored one, so an owner save cannot change it. Approval
+    // and a move to draft clear it.
+    const request = nextRequest({ live, from, to, sent: sentRequest, originalDoc })
     const review = { ...data.review, status: to, request }
     if (to !== 'approved') return { ...data, review, _status: 'draft' }
     if (from === 'approved') return { ...data, review }
@@ -207,10 +270,12 @@ const notifyReview =
   ({ noun, collection, ownersOf }: ReviewOptions): CollectionAfterChangeHook =>
   async ({ doc, previousDoc, req }) => {
     if (!req.user) return doc
-    if (req.context?.[DRAFT_SAVE] && !req.context[LIVE]) return doc
+    const { draftSave, live } = reviewContext(req)
+    if (draftSave && !live) return doc
     const state: ReviewState = doc.review?.status ?? 'draft'
     const before: ReviewState = previousDoc?.review?.status ?? 'draft'
-    const removal = (state === 'submitted' ? doc : previousDoc)?.review?.request === 'removal'
+    const asked = state === 'submitted' ? doc : before === 'submitted' ? previousDoc : null
+    const removal = asked?.review?.request === 'removal'
     // An approved removal takes the document down to a draft: tell its owners.
     const audience =
       removal && before === 'submitted' && state === 'draft' ? 'authors' : notifyOn(before, state)
@@ -218,7 +283,13 @@ const notifyReview =
     const people =
       audience === 'admins' ? await adminRecipients(req) : await ownerRecipients(req, ownersOf(doc))
     const title = doc.title ?? `Untitled ${noun}`
-    const path = `/admin/collections/${collection}/${doc.id}`
+    const path = documentHref({
+      collection,
+      id: doc.id,
+      viewer: audience === 'admins' ? 'admin' : 'owner',
+      waiting: audience === 'admins',
+      locale: routing.defaultLocale,
+    })
     // The emails have a text per decision, and none says "taken down": an
     // approved removal is told under the bell only.
     if (!(removal && state === 'draft')) {

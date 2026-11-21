@@ -167,12 +167,23 @@ export const isAdmin: Access = ({ req }) => isAdminUser(req.user)
 export const isFellow: Access = ({ req }) => isFellowUser(req.user)
 
 /**
- * Who may propose a course: admins, and fellows with a linked person, since a
- * course is owned through its fellows and an unlinked account could never
- * open the draft it made.
+ * Whether an account may propose a course: admins, and fellows with a linked
+ * person, since a course is owned through its fellows and an unlinked account
+ * could never open the draft it made.
  */
-export const canTeach: Access = ({ req }) =>
-  isAdminUser(req.user) || (isFellowUser(req.user) && personOf(req.user) !== null)
+export const mayTeach = (user: RoleHolder): boolean => {
+  const view = adminViewOf(user)
+  return view === 'admin' || (view === 'fellow' && personOf(user) !== null)
+}
+
+export const canTeach: Access = ({ req }) => mayTeach(req.user)
+
+/**
+ * Whether the portal offers an account **Propose a course**. A new course adds
+ * its creator to `fellows`, which needs a person, so an admin with none cannot.
+ */
+export const canProposeCourse = (user: RoleHolder): boolean =>
+  mayTeach(user) && personOf(user) !== null
 
 /**
  * Review states in which a document is still with its owner: before it is
@@ -180,6 +191,15 @@ export const canTeach: Access = ({ req }) =>
  * admin unchanged, so what is approved is what was submitted.
  */
 export const WITH_OWNER: Where = { 'review.status': { in: ['draft', 'changes_requested'] } }
+
+/**
+ * When an owner may delete a document: while it is with them, or after a
+ * decline, never once submitted. Used with `draft: true`, so only a document
+ * that was never published (`neverPublished`), and never a live one.
+ */
+export const OWNER_DELETE: Where = {
+  'review.status': { in: ['draft', 'changes_requested', 'rejected'] },
+}
 
 /**
  * When an owner may edit a reviewed document: a draft, or a published one.
@@ -215,14 +235,17 @@ export const isAdminOrOwn = (
 }
 
 /**
- * Who may write articles: community members, fellows, visiting students and
- * admins. A non-admin also needs a linked person, since an article is owned
- * through its authors and an unlinked account could never reach it again.
+ * Whether an account may write articles: community members, fellows, visiting
+ * students and admins. A non-admin also needs a linked person, since an
+ * article is owned through its authors and an unlinked account could never
+ * reach it again.
  */
-export const canAuthor: Access = ({ req }) => {
-  if (isAdminUser(req.user)) return true
-  return hasRole(req.user, 'member', 'fellow', 'non_degree_seeking') && personOf(req.user) !== null
+export const mayAuthor = (user: RoleHolder): boolean => {
+  const view = adminViewOf(user)
+  return view === 'admin' || (view !== null && personOf(user) !== null)
 }
+
+export const canAuthor: Access = ({ req }) => mayAuthor(req.user)
 
 /**
  * Wraps an access rule so only admins may publish. Payload asks the update
@@ -244,11 +267,7 @@ export const adminPublishes = (access: Access): Access => {
  * fellows and admins. A non-admin needs a linked person, as with `canAuthor`.
  * Only an admin publishes it (`adminPublishes`).
  */
-export const canProposePublication: Access = ({ req }) => {
-  if (isAdminUser(req.user)) return true
-  const view = adminViewOf(req.user)
-  return (view === 'student' || view === 'fellow') && personOf(req.user) !== null
-}
+export const canProposePublication: Access = ({ req }) => mayAuthor(req.user)
 
 /** Enrollments a user may read: their own, and those in courses they teach. */
 export const readEnrollments: Access = ({ req }) => {

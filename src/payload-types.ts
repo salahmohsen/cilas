@@ -1138,7 +1138,7 @@ export interface Course {
      */
     status?: ('draft' | 'submitted' | 'changes_requested' | 'approved' | 'rejected') | null;
     /**
-     * What the owner asks of the published course.
+     * What the owner asks, or last asked, of the published course.
      */
     request?: ('changes' | 'removal') | null;
     /**
@@ -2039,7 +2039,7 @@ export interface Article {
      */
     status: 'draft' | 'submitted' | 'changes_requested' | 'approved' | 'rejected';
     /**
-     * What the owner asks of the published article.
+     * What the owner asks, or last asked, of the published article.
      */
     request?: ('changes' | 'removal') | null;
     /**
@@ -2139,7 +2139,7 @@ export interface Publication {
      */
     status?: ('draft' | 'submitted' | 'changes_requested' | 'approved' | 'rejected') | null;
     /**
-     * What the owner asks of the published publication.
+     * What the owner asks, or last asked, of the published publication.
      */
     request?: ('changes' | 'removal') | null;
     /**

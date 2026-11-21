@@ -94,7 +94,7 @@ export function useDeleteDialog(onDeleted: () => void) {
     onDeleted()
   }
 
-  const canDelete = Boolean(loaded && !loaded.blocked)
+  const canDelete = Boolean(loaded)
   const ready = canDelete && name !== '' && typed.trim() === name && !busy
   const inputId = `${MODAL_SLUG}-name`
 
@@ -107,8 +107,6 @@ export function useDeleteDialog(onDeleted: () => void) {
             <p>Finding what this delete removes…</p>
           ) : summary.error ? (
             <p>{summary.error}</p>
-          ) : loaded?.blocked ? (
-            <p>{loaded.blocked}</p>
           ) : loaded ? (
             <>
               {loaded.deletes.length ? (
