@@ -123,4 +123,18 @@ test.describe('portal shell', () => {
             }),
           )
   })
+  for (const locale of LOCALES)
+    for (const viewport of Object.values(WIDTHS))
+      test(`a space page and a full post page have one main (${locale} ${viewport.width})`, async ({
+        browser,
+      }) => {
+        await inContext(browser, { viewport, role: 'student' }, async (page) => {
+          await page.goto(localePath(world.course.path, locale))
+          await expect(page.getByRole('heading', { level: 1 })).toHaveCount(1)
+          await expect(page.getByRole('main')).toHaveCount(1)
+          await page.goto(localePath(world.course.postPath, locale))
+          await expect(page.getByRole('article').first()).toBeVisible()
+          await expect(page.getByRole('main')).toHaveCount(1)
+        })
+      })
 })
