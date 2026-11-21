@@ -724,4 +724,101 @@ describe('list rows', () => {
       rowsOf(mine.groups).forEach((candidate) => expect(candidate.owners).toEqual([]))
     })
   })
+
+  describe('search', () => {
+    const search = async (term: string, overrides: Partial<ListQuery> = {}) =>
+      loadList(
+        payload,
+        await userOf(world.accounts.student),
+        ownerArticles({ search: term, pages: { published: 20 }, ...overrides }),
+        'en',
+      )
+
+    const titleOf = async (id: number) =>
+      (
+        await payload.findByID({
+          collection: 'articles',
+          id,
+          draft: false,
+          locale: 'en',
+          depth: 0,
+          overrideAccess: true,
+        })
+      ).title
+
+    it('search finds a row by its draft title', async () => {
+      const oldTitle = await titleOf(lists.articles.draft)
+      const byNew = await search('Autosaved title')
+      expect(groupOfId(byNew.groups, lists.articles.draft)).toEqual(['inProgress'])
+      const byOld = await search(oldTitle)
+      expect(groupOfId(byOld.groups, lists.articles.draft)).toEqual(['inProgress'])
+    })
+
+    it('search finds a row by its title in the other language', async () => {
+      const id = (
+        await payload.create({
+          collection: 'articles',
+          data: {
+            title: uniq('Arabic probe'),
+            slug: uniq('arabic-probe'),
+            authors: [world.accounts.student.person!],
+            tier: 'public',
+            review: { status: 'approved' },
+            _status: 'published',
+          },
+          locale: 'en',
+          overrideAccess: true,
+        })
+      ).id
+      track('articles', id)
+      const arabic = `عنوان فريد ${uniq('ar')}`
+      await payload.update({
+        collection: 'articles',
+        id,
+        data: { title: arabic },
+        locale: 'ar',
+        overrideAccess: true,
+      })
+      const { groups } = await search(arabic)
+      expect(groupOfId(groups, id)).toEqual(['published'])
+      expect(rowsOf(groups).find((row) => row.id === id)?.title).toBe(uniq('Arabic probe'))
+    })
+
+    it('search by the live title of an article whose copy changes the title keeps it in In progress', async () => {
+      const id = lists.articles.published_unsent
+      const live = await search(lists.titles.alpha)
+      expect(groupOfId(live.groups, id)).toEqual(['inProgress'])
+      expect(rowsOf(live.groups).find((row) => row.id === id)?.key).toBe('published_unsent')
+      const copy = await search(lists.titles.beta)
+      expect(groupOfId(copy.groups, id)).toEqual(['inProgress'])
+    })
+
+    it('a search with more than 10 hits finds every hit', async () => {
+      const { groups } = await search(uniq('Bulk'))
+      const ids = groups.find((group) => group.id === 'published')!.rows.map((row) => row.id)
+      lists.bulk.forEach((id) => expect(ids).toContain(id))
+      expect(rowsOf(groups).every((row) => row.title === uniq('Bulk'))).toBe(true)
+    })
+  })
+
+  describe('filter and total', () => {
+    const studentList = async (overrides: Partial<ListQuery> = {}) =>
+      loadList(payload, await userOf(world.accounts.student), ownerArticles(overrides), 'en')
+
+    it('only loads one group, and total still counts every row', async () => {
+      const { groups, total } = await studentList({ only: 'needsYou' })
+      expect(groups).toHaveLength(1)
+      expect(groups[0]!.id).toBe('needsYou')
+      expect(groups[0]!.rows).toHaveLength(2)
+      expect(total).toBeGreaterThan(6)
+    })
+
+    it('a search keeps total', async () => {
+      const everything = await studentList()
+      const { groups, total } = await studentList({ search: lists.titles.alpha })
+      expect(rowsOf(groups)).toHaveLength(1)
+      expect(total).toBe(everything.total)
+      expect(total).toBeGreaterThan(6)
+    })
+  })
 })

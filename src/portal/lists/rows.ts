@@ -349,6 +349,42 @@ const buildRows = async (ctx: Ctx, shown: Shown[]): Promise<ListRow[]> => {
   })
 }
 
+const titleLike = (term: string) => [{ 'title.en': { like: term } }, { 'title.ar': { like: term } }]
+
+type Search = { term: string; parents: number[] }
+
+/**
+ * A row matches when the title of its main row or of its latest version
+ * matches, in either language: a row can show either title, and a draft that
+ * was never published has its newest title in its versions only. `like` keeps
+ * `%` and `_` as wildcards. They only widen a match over rows the reader may
+ * read.
+ */
+const searchOf = async (ctx: Ctx, term: string | null): Promise<Search | null> => {
+  const text = term?.trim()
+  if (!text) return null
+  const { docs } = await findCopies(ctx, {
+    where: {
+      and: [
+        { latest: { equals: true } },
+        { or: [{ 'version.title.en': { like: text } }, { 'version.title.ar': { like: text } }] },
+      ],
+    },
+    select: { parent: true },
+  })
+  return { term: text, parents: docs.map((version) => relId(version.parent) as number) }
+}
+
+const matchingWork = async (ctx: Ctx, search: Search, workIds: number[]) => {
+  const { docs } = workIds.length
+    ? await findMain(ctx, {
+        where: { and: [ctx.base, { id: { in: workIds } }, { or: titleLike(search.term) }] },
+        select: { id: true },
+      })
+    : { docs: [] }
+  return new Set([...search.parents, ...docs.map((doc) => doc.id)])
+}
+
 const pagedTerm = (ctx: Ctx, group: PagedGroup): Where => {
   const spaces = [...ctx.spaces]
   if (group === 'published') return { _status: { equals: 'published' } }
@@ -366,7 +402,12 @@ const pagedTerm = (ctx: Ctx, group: PagedGroup): Where => {
  * so a live document that waits on someone stays in its work group, and a
  * document sits in one group.
  */
-const pagedGroups = async (ctx: Ctx, query: ListQuery, workIds: number[]) => {
+const pagedGroups = async (
+  ctx: Ctx,
+  query: ListQuery,
+  workIds: number[],
+  search: Search | null,
+) => {
   const groups: ListGroup[] = []
   for (const id of GROUPS[ctx.kind]) {
     if (!PAGED.has(id) || (query.only && query.only !== id)) continue
@@ -377,6 +418,16 @@ const pagedGroups = async (ctx: Ctx, query: ListQuery, workIds: number[]) => {
           ctx.base,
           pagedTerm(ctx, id as PagedGroup),
           ...(workIds.length ? [{ id: { not_in: workIds } }] : []),
+          ...(search
+            ? [
+                {
+                  or: [
+                    ...titleLike(search.term),
+                    ...(search.parents.length ? [{ id: { in: search.parents } }] : []),
+                  ],
+                },
+              ]
+            : []),
         ],
       },
       select: { id: true },
@@ -458,12 +509,15 @@ export const loadList = async (
         (a.entry.latest ?? a.entry.main).updatedAt,
       ),
     )
-  const worked = await buildRows(ctx, work)
-  const paged = await pagedGroups(
-    ctx,
-    query,
-    work.map(({ entry }) => entry.id),
+  const workIds = work.map(({ entry }) => entry.id)
+  const search = await searchOf(ctx, query.search)
+  const matches = search ? await matchingWork(ctx, search, workIds) : null
+  const shown = work.filter(
+    ({ entry, group }) =>
+      (!matches || matches.has(entry.id)) && (!query.only || query.only === group),
   )
+  const worked = await buildRows(ctx, shown)
+  const paged = await pagedGroups(ctx, query, workIds, search)
   const groups = GROUPS[ctx.kind].flatMap((id): ListGroup[] => {
     const inGroup = worked.filter((row) => row.group === id)
     const group = inGroup.length
