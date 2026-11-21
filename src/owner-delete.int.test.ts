@@ -116,7 +116,7 @@ describe('an owner deletes a declined, never-published document', () => {
       'courses',
       await payload.create({
         collection: 'courses',
-        data: { title: fresh('Delete Course') },
+        data: { title: fresh('Delete Course'), course_type: 'THEMATIC' },
         draft: true,
         ...as(fellow),
       }),
