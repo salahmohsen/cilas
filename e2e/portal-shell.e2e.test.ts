@@ -961,7 +961,18 @@ test.describe('portal shell', () => {
           await inContext(browser, { viewport: DESKTOP, role }, async (page) => {
             await page.goto(localePath('/en/spaces', locale))
             await accountButton(page, locale).click()
-            await expect(page.getByRole('menu')).toBeVisible()
+            const menu = page.getByRole('menu')
+            await expect(menu).toBeVisible()
+            await expect
+              .poll(() =>
+                menu.getByText(world.accounts[role].email).evaluate((el) => {
+                  let opacity = 1
+                  for (let node: Element | null = el; node; node = node.parentElement)
+                    opacity *= Number(getComputedStyle(node).opacity)
+                  return opacity
+                }),
+              )
+              .toBe(1)
             await expectClean(page, 'account menu')
           })
         })
