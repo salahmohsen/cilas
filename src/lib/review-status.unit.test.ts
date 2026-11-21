@@ -1,7 +1,17 @@
 import { describe, expect, it } from 'vitest'
 
 import type { ReviewRequest, ReviewState } from './review'
-import { type StatusKey, hasUnsentEdits, neverPublished, statusOf, waitsOn } from './review-status'
+import { REVIEWED_FIELDS } from './reviewed-fields'
+import {
+  KEY_SELECT,
+  type StatusKey,
+  hasUnsentEdits,
+  neverPublished,
+  statusInputOf,
+  statusOf,
+  statusSelect,
+  waitsOn,
+} from './review-status'
 
 const doc = (overrides: Record<string, unknown> = {}) => ({
   id: 1,
@@ -213,5 +223,66 @@ describe('neverPublished', () => {
 
   it('is false for a published main row', () => {
     expect(neverPublished(live())).toBe(false)
+  })
+})
+
+describe('statusSelect', () => {
+  it.each(['articles', 'courses', 'publications'] as const)(
+    'statusSelect(%s) is KEY_SELECT plus each reviewed field',
+    (collection) => {
+      expect(statusSelect(collection)).toEqual({
+        ...KEY_SELECT,
+        ...Object.fromEntries(REVIEWED_FIELDS[collection].map((field) => [field, true])),
+      })
+    },
+  )
+})
+
+describe('statusInputOf', () => {
+  it('takes the latest version for a document never published', () => {
+    const main = notLive('draft')
+    const latest = { ...copy('submitted'), title: { en: 'Newest' } }
+    const input = statusInputOf({ collection: 'articles', main, latest, read: 'full' })
+    expect(input).toEqual({ collection: 'articles', doc: latest, draft: null, read: 'full' })
+  })
+
+  it('takes the main row for a never-published document with no version', () => {
+    const main = notLive('draft')
+    const input = statusInputOf({ collection: 'articles', main, latest: null, read: 'keys' })
+    expect(input).toEqual({ collection: 'articles', doc: main, draft: null, read: 'keys' })
+  })
+
+  it('takes the main row and the draft copy for a live document', () => {
+    const main = live()
+    const latest = copy('approved', null, 'New')
+    const input = statusInputOf({ collection: 'articles', main, latest, read: 'full' })
+    expect(input).toEqual({ collection: 'articles', doc: main, draft: latest, read: 'full' })
+  })
+
+  it('ignores a latest version that is the published one', () => {
+    const main = live()
+    const latest = doc({ title: { en: 'Live' } })
+    const input = statusInputOf({ collection: 'articles', main, latest, read: 'full' })
+    expect(input.draft).toBeNull()
+    expect(input.doc).toBe(main)
+  })
+})
+
+describe('statusOf on rows read with keys only', () => {
+  const keys = (row: ReturnType<typeof doc>, draft: ReturnType<typeof doc>) => () =>
+    statusOf({ collection: 'articles', doc: row, draft, read: 'keys' }, () => undefined)
+
+  it('throws on a draft copy at approved', () => {
+    expect(keys(live(), copy('approved', null, 'New'))).toThrow(
+      'statusOf compares fields only on full rows',
+    )
+  })
+
+  it('reads the same rows with full reads', () => {
+    expect(read(live(), copy('approved', null, 'New'))).toBe('published_unsent')
+  })
+
+  it('reads a copy at submitted with keys only, because it needs no compare', () => {
+    expect(keys(live(), copy('submitted', 'changes'))()).toBe('published_edits')
   })
 })

@@ -101,7 +101,7 @@ const NOT_LIVE_KEYS: Partial<Record<ReviewState, StatusKey>> = {
 }
 
 export const statusOf = (
-  { collection, doc, draft }: StatusInput,
+  { collection, doc, draft, read }: StatusInput,
   warn: (message: string) => void = console.warn,
 ): StatusKey => {
   if (doc._status !== 'published') {
@@ -114,7 +114,10 @@ export const statusOf = (
   }
   if (!draft) return 'published'
   const request = draft.review?.request
-  const unsent = () => hasUnsentEdits(draft, doc, REVIEWED_FIELDS[collection])
+  const unsent = () => {
+    if (read === 'keys') throw new Error('statusOf compares fields only on full rows')
+    return hasUnsentEdits(draft, doc, REVIEWED_FIELDS[collection])
+  }
   switch (draft.review?.status) {
     case 'submitted':
       return request === 'removal' ? 'published_removal' : 'published_edits'
@@ -127,3 +130,34 @@ export const statusOf = (
       return unsent() ? 'published_unsent' : 'published'
   }
 }
+
+/**
+ * Builds `StatusInput` from the two rows that hold a document's state. `main`
+ * is a `find` row with `draft: false`. `latest` is the `version` of the latest
+ * version with its `id` set to the parent id, or null. A draft save never writes
+ * the main row, so only the main row says whether the document is live and only
+ * the latest version holds the newest fields.
+ */
+export const statusInputOf = ({
+  collection,
+  main,
+  latest,
+  read,
+}: {
+  collection: ReviewedCollection
+  main: ReviewedDoc
+  latest: ReviewedDoc | null
+  read: RowRead
+}): StatusInput => {
+  if (neverPublished(main)) return { collection, doc: latest ?? main, draft: null, read }
+  return { collection, doc: main, draft: latest?._status === 'draft' ? latest : null, read }
+}
+
+/** The fields `statusInputOf` and `statusOf` read when no field compare is needed. */
+export const KEY_SELECT = { title: true, review: true, updatedAt: true, _status: true } as const
+
+/** `KEY_SELECT` plus each reviewed field: what a field compare also needs. A main row's select. */
+export const statusSelect = (collection: ReviewedCollection) => ({
+  ...KEY_SELECT,
+  ...Object.fromEntries(REVIEWED_FIELDS[collection].map((field) => [field, true as const])),
+})
