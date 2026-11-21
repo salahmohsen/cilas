@@ -605,9 +605,12 @@ test.describe('portal shell', () => {
             const page = await context.newPage()
             await page.goto(localePath('/en/spaces', locale))
             const more = page.getByRole('button', { name: portal.nav.more, exact: true })
-            await more.hover()
-            await more.click()
             const sheet = page.getByRole('dialog', { name: portal.nav.more, exact: true })
+            await more.click()
+            await expect(sheet).toBeVisible()
+            await page.keyboard.press('Escape')
+            await expect(sheet).toHaveCount(0)
+            await more.click()
             await expect(sheet).toBeVisible({ timeout: 100 })
             expect(
               await sheet.evaluate((dialog) => dialog.getAnimations({ subtree: true }).length),
