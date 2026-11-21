@@ -1,3 +1,5 @@
+import type { Where } from 'payload'
+
 import type { ReviewRequest, ReviewState } from './review'
 import { REVIEWED_FIELDS, type ReviewedCollection } from './reviewed-fields'
 
@@ -161,3 +163,56 @@ export const statusSelect = (collection: ReviewedCollection) => ({
   ...KEY_SELECT,
   ...Object.fromEntries(REVIEWED_FIELDS[collection].map((field) => [field, true as const])),
 })
+
+/** Main rows that are not live. */
+export const NOT_LIVE: Where = { _status: { equals: 'draft' } }
+
+/** Version rows: the latest version of a live document is a draft copy. */
+export const LIVE_COPY: Where = {
+  and: [
+    { latest: { equals: true } },
+    { 'version._status': { equals: 'draft' } },
+    { 'parent._status': { equals: 'published' } },
+  ],
+}
+
+const onMain = (where: Where) => ({ on: 'main' as const, where: { and: [NOT_LIVE, where] } })
+const onVersion = (where: Where) => ({
+  on: 'version' as const,
+  where: { and: [LIVE_COPY, where] },
+})
+const mainStatus = (status: ReviewState) => onMain({ 'review.status': { equals: status } })
+
+/**
+ * The rows a query reads to find each key without a field compare. The
+ * `draft` row also holds a not-live `approved` row and a row with no status,
+ * as `statusOf` reads them. A key that needs a field compare has no row.
+ */
+export const KEY_WHERE: {
+  readonly [K in StatusKey]?: { on: 'main' | 'version'; where: Where }
+} = {
+  draft: onMain({
+    or: [
+      { 'review.status': { in: ['draft', 'approved'] } },
+      { 'review.status': { exists: false } },
+    ],
+  }),
+  submitted: mainStatus('submitted'),
+  changes_requested: mainStatus('changes_requested'),
+  rejected: mainStatus('rejected'),
+  published_edits: onVersion({
+    and: [
+      { 'version.review.status': { equals: 'submitted' } },
+      { 'version.review.request': { not_equals: 'removal' } },
+    ],
+  }),
+  published_removal: onVersion({
+    and: [
+      { 'version.review.status': { equals: 'submitted' } },
+      { 'version.review.request': { equals: 'removal' } },
+    ],
+  }),
+  published_edits_returned: onVersion({
+    'version.review.status': { equals: 'changes_requested' },
+  }),
+}

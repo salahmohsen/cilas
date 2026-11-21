@@ -4,6 +4,10 @@ import type { ReviewRequest, ReviewState } from './review'
 import { REVIEWED_FIELDS } from './reviewed-fields'
 import {
   KEY_SELECT,
+  KEY_WHERE,
+  LIVE_COPY,
+  NOT_LIVE,
+  STATUS_KEYS,
   type StatusKey,
   hasUnsentEdits,
   neverPublished,
@@ -284,5 +288,24 @@ describe('statusOf on rows read with keys only', () => {
 
   it('reads a copy at submitted with keys only, because it needs no compare', () => {
     expect(keys(live(), copy('submitted', 'changes'))()).toBe('published_edits')
+  })
+})
+
+describe('KEY_WHERE', () => {
+  it('every key that waits on someone has a KEY_WHERE row', () => {
+    const waiting = STATUS_KEYS.filter((key) => waitsOn(key) !== null)
+    expect(waiting.filter((key) => !KEY_WHERE[key])).toEqual([])
+  })
+
+  it('every row is built from NOT_LIVE or LIVE_COPY', () => {
+    Object.values(KEY_WHERE).forEach((row) => {
+      const first = row.where.and?.[0]
+      expect(first).toBe(row.on === 'main' ? NOT_LIVE : LIVE_COPY)
+    })
+  })
+
+  it('has a row for draft that reads approved and a missing status as draft', () => {
+    expect(JSON.stringify(KEY_WHERE.draft?.where)).toContain('approved')
+    expect(JSON.stringify(KEY_WHERE.draft?.where)).toContain('exists')
   })
 })
