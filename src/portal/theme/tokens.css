@@ -5,9 +5,26 @@
   --radius-control: 12px;
   --radius-panel: 16px;
   --radius-surface: 24px;
+  /* Arc's account menu panel (10px) and its rows (4 to 7px) are off the spec scale. */
+  --user-menu-radius: var(--radius-control);
+  --user-menu-inner-radius: var(--radius-inner);
   --portal-unread: oklch(55% 0.2 27);
   --portal-unread-foreground: oklch(100% 0 0);
+  /* The bar that marks the current nav row, beside its weight (WCAG 1.4.1, 1.4.11). */
+  --portal-current-mark: var(--foreground);
   --portal-duration: var(--duration-fast);
+}
+
+/* On the dark rail the red is lighter, so the folded dot keeps 3:1, and the count's digits turn dark. */
+:root[data-theme='dark']:has([data-page='spaces']) {
+  --portal-unread: oklch(66% 0.19 27);
+  --portal-unread-foreground: oklch(19% 0 0);
+}
+
+@media (prefers-contrast: more) {
+  :root[data-theme='dark']:has([data-page='spaces']) {
+    --portal-unread: oklch(70% 0.19 27);
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {

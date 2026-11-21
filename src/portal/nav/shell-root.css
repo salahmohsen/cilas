@@ -1,0 +1,17 @@
+/* Page-wide rules while the portal shell is on the page. They sit on :root, which a module class cannot reach. */
+:root:has([data-portal-shell]) {
+  /* No site header above the content: in-page jumps need no room for one. */
+  --site-header-height: 0px;
+}
+
+/* The phone bottom bar: toasts sit above it, and a focused row scrolls clear of the bar and the toasts. */
+@media (width < 700px) {
+  :root:has([data-portal-shell]) {
+    --portal-bar-height: 4rem;
+    --toast-stack-offset: calc(var(--portal-bar-height) + env(safe-area-inset-bottom));
+    scroll-padding-block-end: calc(
+      var(--portal-bar-height) + env(safe-area-inset-bottom) + var(--toast-stack-height, 0px) +
+        var(--space-6)
+    );
+  }
+}

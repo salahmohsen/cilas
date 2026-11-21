@@ -70,10 +70,10 @@ export async function PostPage({
           ]}
         />
       </header>
-      <main className={styles.column} aria-labelledby={`post-${post.id}-author`}>
+      <div className={styles.column}>
         <PostArticle user={user} view={view} context={context} href={href} />
         {why && <Alert tone="info" title={why} />}
-      </main>
+      </div>
       <ConnectedScheduleActions>
         <SessionDrawerHost />
       </ConnectedScheduleActions>

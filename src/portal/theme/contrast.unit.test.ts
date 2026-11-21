@@ -52,7 +52,12 @@ const pairs = (context: Context) => [
     { context, fg: '--paper-border-strong', bg, min: 3 },
   ]),
   ...(context.page === 'spaces'
-    ? [{ context, fg: '--portal-unread-foreground', bg: '--portal-unread', min: 4.5 }]
+    ? [
+        { context, fg: '--portal-unread-foreground', bg: '--portal-unread', min: 4.5 },
+        { context, fg: '--portal-unread', bg: '--surface-muted', min: 3 },
+        { context, fg: '--portal-current-mark', bg: '--surface-muted', min: 3 },
+        { context, fg: '--portal-current-mark', bg: '--background', min: 3 },
+      ]
     : []),
 ]
 

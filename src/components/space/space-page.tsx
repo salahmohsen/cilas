@@ -531,7 +531,7 @@ export async function SpacePage({
       </header>
       {/* The Calendar tab takes the full width: its side panel's Up next stands in for the rail. */}
       <div className={styles.layout} data-wide={view === 'calendar' ? '' : undefined}>
-        <main className={styles.feed} aria-label={title}>
+        <div className={styles.feed}>
           {course && nextId && <div className={styles.phoneBlock}>{nextCard(true)}</div>}
           <OnboardingChecklist
             space={space.id}
@@ -695,7 +695,7 @@ export async function SpacePage({
               )}
             </>
           )}
-        </main>
+        </div>
         <StickyRail className={styles.rail} label={t('aboutSpace')}>
           {/* Two tabs keep the rail short enough to stay in view; without a next session there is only the space. */}
           {course && nextId ? (

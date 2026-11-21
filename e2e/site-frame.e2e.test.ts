@@ -9,6 +9,7 @@ import {
   ACCOUNT_ROLES,
   inContext as inContextAt,
   LOCALES,
+  MESSAGES,
   PASSWORD,
   ROLES,
   WIDTHS,
@@ -25,6 +26,7 @@ const { track, cleanup } = createTracker()
 let payload: Payload
 let baseURL: string | undefined
 const states = {} as Record<PortalRole, StorageState>
+const emails = {} as Record<PortalRole, string>
 const articles = {} as Record<Locale, string>
 
 const inContext = (
@@ -98,6 +100,7 @@ test.describe('site frame', () => {
       })
     for (const role of ROLES) {
       const email = uniqEmail(`site-frame-${role}`)
+      emails[role] = email
       const user = track(
         'users',
         await payload.create({
@@ -158,4 +161,34 @@ test.describe('site frame', () => {
               await expectFrame(page, locale, { ...row, status: 200 }, response!.status())
             })
           })
+
+  for (const locale of LOCALES)
+    for (const viewport of Object.values(WIDTHS))
+      test(`the site header menu signs out (${locale} ${viewport.width})`, async ({ browser }) => {
+        const header = MESSAGES[locale].Header
+        await inContext(browser, { viewport }, async (page) => {
+          await login({
+            page,
+            user: { email: emails.fellow, password: PASSWORD },
+            next: `/${locale}/contact`,
+          })
+          await page
+            .locator('header.site-header')
+            .getByRole('button', { name: new RegExp(`^${header.account}, `) })
+            .click()
+          await Promise.all([
+            page.waitForEvent('load'),
+            page.getByRole('menuitem', { name: header.signOut }).click(),
+          ])
+          await expect(
+            page.locator('header.site-header').getByRole('button', {
+              name: new RegExp(`^${header.account}, `),
+            }),
+          ).toHaveCount(0)
+          expect(new URL(page.url()).pathname).toBe(`/${locale}/contact`)
+          expect((await page.context().cookies()).some((c) => c.name === 'payload-token')).toBe(
+            false,
+          )
+        })
+      })
 })
