@@ -10,13 +10,16 @@ import {
 } from '@/lib/review-status'
 import type { ReviewedCollection } from '@/lib/reviewed-fields'
 import config from '@/payload.config'
+import type { User } from '@/payload-types'
 
 import { localServices } from '../../../testing/local-services.test-utils'
 import { mockNetwork } from '../../../testing/msw-node.test-utils'
-import { createTracker } from '../../../testing/payload.fixture'
+import { createTracker, uniq } from '../../../testing/payload.fixture'
 import { resendInbox } from '../../../testing/resend.test-utils'
 import { listWorld, type ListWorld } from '../../../testing/portal-lists.fixture'
-import { portalWorld, type PortalWorld } from '../../../testing/portal.fixture'
+import { portalWorld, type PortalAccount, type PortalWorld } from '../../../testing/portal.fixture'
+
+import { listKindOf, loadList, type ListGroup, type ListQuery } from './rows'
 
 mockNetwork(resendInbox().handler, ...localServices)
 
@@ -67,6 +70,29 @@ describe('list rows', () => {
       () => undefined,
     )
   }
+
+  const userOf = async (account: PortalAccount) =>
+    (await payload.findByID({
+      collection: 'users',
+      id: account.id,
+      depth: 0,
+      overrideAccess: true,
+    })) as unknown as User
+
+  const ownerArticles = (overrides: Partial<ListQuery> = {}) =>
+    ({
+      collection: 'articles',
+      kind: 'ownerArticles',
+      search: null,
+      only: null,
+      pages: {},
+      ...overrides,
+    }) satisfies ListQuery
+
+  const rowsOf = (groups: ListGroup[]) => groups.flatMap((group) => group.rows)
+
+  const groupOfId = (groups: ListGroup[], id: number) =>
+    groups.filter((group) => group.rows.some((row) => row.id === id)).map((group) => group.id)
 
   describe('the fixture', () => {
     it('listWorld makes each article key', async () => {
@@ -138,6 +164,73 @@ describe('list rows', () => {
       expect(sessions.totalDocs).toBe(12)
       expect(lists.teacher.person).not.toBeNull()
       expect(lists.writer.person).not.toBeNull()
+    })
+  })
+
+  describe('the base where', () => {
+    it('a student sees only their own articles', async () => {
+      const student = await userOf(world.accounts.student)
+      const other = (
+        await payload.create({
+          collection: 'articles',
+          data: {
+            title: 'Other author',
+            slug: uniq('other-author'),
+            authors: [world.poster.person!],
+            tier: 'public',
+            review: { status: 'approved' },
+            _status: 'published',
+          },
+          overrideAccess: true,
+        })
+      ).id
+      track('articles', other)
+      const { groups, total } = await loadList(payload, student, ownerArticles(), 'en')
+      const owned = await payload.find({
+        collection: 'articles',
+        where: { authors: { contains: world.accounts.student.person } },
+        draft: false,
+        pagination: false,
+        depth: 0,
+        overrideAccess: true,
+      })
+      const ids = new Set(owned.docs.map((doc) => doc.id))
+      rowsOf(groups).forEach((row) => expect(ids.has(row.id)).toBe(true))
+      expect(rowsOf(groups).some((row) => row.id === other)).toBe(false)
+      expect(total).toBe(ids.size)
+    })
+
+    it('a reader with no person owns no row', async () => {
+      const nobody = { id: -1, roles: ['member'], person: null } as unknown as User
+      expect(await loadList(payload, nobody, ownerArticles(), 'en')).toEqual({
+        groups: [],
+        total: 0,
+      })
+    })
+
+    it('a co-author added in the copy does not see the row', async () => {
+      const poster = await userOf(world.poster)
+      const student = await userOf(world.accounts.student)
+      const theirs = await loadList(payload, poster, ownerArticles(), 'en')
+      expect(groupOfId(theirs.groups, lists.added)).toEqual([])
+      const mine = await loadList(payload, student, ownerArticles(), 'en')
+      const row = rowsOf(mine.groups).find((candidate) => candidate.id === lists.added)
+      expect(row?.key).toBe('published_unsent')
+    })
+
+    it('listKindOf gives a kind only for the lists a reader may open', async () => {
+      const admin = await userOf(world.accounts.admin)
+      const fellow = await userOf(world.accounts.fellow)
+      const student = await userOf(world.accounts.student)
+      const none = { id: -2, roles: [], person: null } as unknown as User
+      expect(listKindOf(admin, 'articles')).toBe('admin')
+      expect(listKindOf(admin, 'courses')).toBe('admin')
+      expect(listKindOf(fellow, 'articles')).toBe('ownerArticles')
+      expect(listKindOf(fellow, 'courses')).toBe('fellowCourses')
+      expect(listKindOf(student, 'articles')).toBe('ownerArticles')
+      expect(listKindOf(student, 'courses')).toBeNull()
+      expect(listKindOf(none, 'articles')).toBeNull()
+      expect(listKindOf(none, 'courses')).toBeNull()
     })
   })
 })
