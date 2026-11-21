@@ -11,6 +11,7 @@ import type { User } from '@/payload-types'
 import { animatedImage } from '../testing/animated-image.test-utils'
 import { bucketKeys, bucketObject } from '../testing/bucket.test-utils'
 import { hugePng } from '../testing/huge-image.test-utils'
+import { GIF } from '../testing/media.fixture'
 import { RUN, createTracker, uniq, uniqEmail, uniqPath } from '../testing/payload.fixture'
 import { rest } from '../testing/payload-rest.test-utils'
 
@@ -852,8 +853,6 @@ describe('portal access, phase 0', () => {
   })
 
   describe('media create', () => {
-    const GIF = Buffer.from('R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7', 'base64')
-
     const file = (name: string) => readFile(new URL(`../testing/files/${name}`, import.meta.url))
 
     const upload = (

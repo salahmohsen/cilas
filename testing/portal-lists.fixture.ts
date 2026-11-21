@@ -3,24 +3,12 @@ import type { Payload } from 'payload'
 import { addDays, cairoDay } from '../src/lib/cairo-day'
 import { STATUS_KEYS, type StatusKey } from '../src/lib/review-status'
 import { consentAccept } from '../src/lib/spaces-write'
-import type { Media, User } from '../src/payload-types'
+import type { User } from '../src/payload-types'
+import { makeMedia } from './media.fixture'
 import { type createTracker, uniq, uniqEmail } from './payload.fixture'
 import { courseRoom, PASSWORD, type PortalAccount, type PortalWorld } from './portal.fixture'
 
 type Track = ReturnType<typeof createTracker>['track']
-
-const GIF = Buffer.from('R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7', 'base64')
-
-export const makeMedia = async (payload: Payload, track: Track, label: string) =>
-  track(
-    'media',
-    await payload.create({
-      collection: 'media',
-      data: { alt: label },
-      file: { name: `${uniq(label)}.gif`, mimetype: 'image/gif', data: GIF, size: GIF.length },
-      overrideAccess: true,
-    }),
-  ) as Media
 
 const personOf = (user: User) =>
   user.person == null ? null : typeof user.person === 'object' ? user.person.id : user.person
@@ -68,13 +56,7 @@ const makeWriter = async (payload: Payload, track: Track) => {
 let counter = 0
 const nextSlug = (base: string) => uniq(`${base}-${++counter}`)
 
-/**
- * Every write below has no user and `overrideAccess: true`: the hook's trusted
- * path, which sends no mail and makes no bell row. Each write has the `draft`
- * flag of the real move: a status change on a document that is not live is a
- * full save, and an edit to a live document is a draft save.
- */
-export const trustedWrites = (payload: Payload, track: Track) => {
+const trustedWrites = (payload: Payload, track: Track) => {
   const create = async (collection: 'articles' | 'courses', data: Record<string, unknown>) =>
     track(
       collection,
@@ -168,7 +150,12 @@ export const listWorld = async (payload: Payload, track: Track, world: PortalWor
   for (let i = 0; i < 60; i++) bulk.push(await publishedArticle(uniq('Bulk')))
 
   const cover = await makeMedia(payload, track, 'list-cover')
-  const titles = { alpha: uniq('Alpha'), beta: uniq('Beta') }
+  const titles = {
+    alpha: uniq('Alpha'),
+    beta: uniq('Beta'),
+    sharedCopy: uniq('Shared copy'),
+    addedCopy: uniq('Added copy'),
+  }
 
   const articles = {} as Record<StatusKey, number>
   articles.draft = await draftArticle(uniq('Key draft'))
@@ -223,15 +210,18 @@ export const listWorld = async (payload: Payload, track: Track, world: PortalWor
   await unpublish('articles', unpublished)
 
   const shared = await publishedArticle(uniq('Shared'), { authors: [owner, poster] })
-  await edit('articles', shared, { authors: [owner] })
+  await edit('articles', shared, { authors: [owner], title: titles.sharedCopy })
 
   const added = await publishedArticle(uniq('Added'))
-  await edit('articles', added, { authors: [owner, poster] })
+  await edit('articles', added, { authors: [owner, poster], title: titles.addedCopy })
 
   const teacher = await makeAccount(payload, track, 'list-teacher', ['fellow'])
   const writer = await makeWriter(payload, track)
 
   const writerDraft = await draftArticle(uniq('Writer draft'), [writer.person!])
+  const writerManyDrafts: number[] = []
+  for (let i = 0; i < 11; i++)
+    writerManyDrafts.push(await draftArticle(uniq('Writer many'), [writer.person!]))
   const writerUnpublished = await publishedArticle(uniq('Writer unpublished'), {
     authors: [writer.person!],
   })
@@ -265,14 +255,14 @@ export const listWorld = async (payload: Payload, track: Track, world: PortalWor
       review: { status: 'draft' },
     })
 
-  const publishedCourse = async (title: string) => {
+  const publishedCourse = async (title: string, fellows = [teacher.person!]) => {
     const id = await create('courses', {
       title,
       slug: nextSlug('list-course'),
       course_type: 'THEMATIC',
       tier: 'public',
       cycle,
-      fellows: [teacher.person!],
+      fellows,
       registration: { mode: 'closed' },
       review: { status: 'approved' },
       _status: 'published',
@@ -314,9 +304,12 @@ export const listWorld = async (payload: Payload, track: Track, world: PortalWor
     | 'draft'
     | 'rejected'
     | 'submittedWithSpace'
-    | 'rejectedWithSpace',
+    | 'rejectedWithSpace'
+    | 'othersPublished',
     number
   >
+
+  courses.othersPublished = await publishedCourse(uniq('Course of another fellow'), [poster])
 
   courses.published_edits = await publishedCourse(uniq('Course edits'))
   for (let i = 0; i < 12; i++)
@@ -363,6 +356,7 @@ export const listWorld = async (payload: Payload, track: Track, world: PortalWor
     teacher,
     writer,
     writerDraft,
+    writerManyDrafts,
     writerUnpublished,
   }
 }

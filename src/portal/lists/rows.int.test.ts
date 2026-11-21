@@ -3,6 +3,7 @@ import { afterAll, beforeAll, describe, expect, it } from 'vitest'
 
 import { mediaThumbnail } from '@/lib/media-image'
 import {
+  ADMIN_VISIBLE,
   KEY_WHERE,
   statusInputOf,
   statusOf,
@@ -18,7 +19,8 @@ import { localServices } from '../../../testing/local-services.test-utils'
 import { mockNetwork } from '../../../testing/msw-node.test-utils'
 import { createTracker, uniq } from '../../../testing/payload.fixture'
 import { resendInbox } from '../../../testing/resend.test-utils'
-import { listWorld, makeMedia, type ListWorld } from '../../../testing/portal-lists.fixture'
+import { makeMedia } from '../../../testing/media.fixture'
+import { listWorld, type ListWorld } from '../../../testing/portal-lists.fixture'
 import {
   holdSpacesMode,
   portalWorld,
@@ -27,7 +29,7 @@ import {
 } from '../../../testing/portal.fixture'
 
 import { groupOf } from './groups'
-import { listKindOf, loadList, type ListGroup, type ListQuery } from './rows'
+import { loadList, type ListGroup, type ListQuery } from './rows'
 
 mockNetwork(resendInbox().handler, ...localServices)
 
@@ -94,7 +96,6 @@ describe('list rows', () => {
   const ownerArticles = (overrides: Partial<ListQuery> = {}) =>
     ({
       collection: 'articles',
-      kind: 'ownerArticles',
       search: null,
       only: null,
       pages: {},
@@ -161,6 +162,7 @@ describe('list rows', () => {
       const spaced = spaces.docs.map((doc) => doc.course as number).sort()
       expect(spaced).toEqual(
         [
+          courses.othersPublished,
           courses.published_edits,
           courses.published_edits_returned,
           courses.submittedWithSpace,
@@ -230,19 +232,16 @@ describe('list rows', () => {
       expect(row?.key).toBe('published_unsent')
     })
 
-    it('listKindOf gives a kind only for the lists a reader may open', async () => {
-      const admin = await userOf(world.accounts.admin)
-      const fellow = await userOf(world.accounts.fellow)
+    it('a reader who may open no list of the collection gets nothing, before any read', async () => {
       const student = await userOf(world.accounts.student)
       const none = { id: -2, roles: [], person: null } as unknown as User
-      expect(listKindOf(admin, 'articles')).toBe('admin')
-      expect(listKindOf(admin, 'courses')).toBe('admin')
-      expect(listKindOf(fellow, 'articles')).toBe('ownerArticles')
-      expect(listKindOf(fellow, 'courses')).toBe('fellowCourses')
-      expect(listKindOf(student, 'articles')).toBe('ownerArticles')
-      expect(listKindOf(student, 'courses')).toBeNull()
-      expect(listKindOf(none, 'articles')).toBeNull()
-      expect(listKindOf(none, 'courses')).toBeNull()
+      const courses = { collection: 'courses', search: null, only: null, pages: {} } as const
+      expect(await loadList(payload, student, courses, 'en')).toEqual({ groups: [], total: 0 })
+      expect(await loadList(payload, none, courses, 'en')).toEqual({ groups: [], total: 0 })
+      expect(await loadList(payload, none, ownerArticles(), 'en')).toEqual({
+        groups: [],
+        total: 0,
+      })
     })
   })
 
@@ -477,7 +476,6 @@ describe('list rows', () => {
         await userOf(lists.teacher),
         {
           collection: 'courses',
-          kind: 'fellowCourses',
           search: null,
           only: null,
           pages: {},
@@ -529,6 +527,20 @@ describe('list rows', () => {
       expect(groupOfId(groups, lists.courses.draft)).toEqual(['proposals'])
     })
 
+    it("another fellow's published course is not on the teacher's list", async () => {
+      const { groups, total } = await teacherList()
+      expect(rowOfCourse(groups, lists.courses.othersPublished)).toBeUndefined()
+      const { othersPublished, ...theirs } = lists.courses
+      expect(othersPublished).toBeGreaterThan(0)
+      expect(total).toBe(Object.keys(theirs).length)
+      const listed = await payload.count({
+        collection: 'courses',
+        where: { fellows: { contains: lists.teacher.person } },
+        overrideAccess: true,
+      })
+      expect(total).toBe(listed.totalDocs)
+    })
+
     it('a fellow who cannot read the space keeps the course in Proposals', async () => {
       await spaces.set('off')
       try {
@@ -548,7 +560,6 @@ describe('list rows', () => {
         await userOf(lists.writer),
         {
           collection: 'articles',
-          kind: 'admin',
           search: null,
           only: null,
           pages: { published: 20, closed: 20 },
@@ -631,11 +642,7 @@ describe('list rows', () => {
           and: [
             { id: { in: fixtureIds() } },
             {
-              or: [
-                { _status: { equals: 'published' } },
-                { 'review.status': { in: ['submitted', 'changes_requested', 'rejected'] } },
-                { authors: { contains: lists.writer.person } },
-              ],
+              or: [ADMIN_VISIBLE, { authors: { contains: lists.writer.person } }],
             },
           ],
         },
@@ -709,6 +716,27 @@ describe('list rows', () => {
       expect(edits?.cover).toBeTruthy()
     })
 
+    it('an admin total counts the rows the admin list may hold', async () => {
+      const { total } = await adminList()
+      const visible = await payload.count({
+        collection: 'articles',
+        where: { or: [ADMIN_VISIBLE, { authors: { contains: lists.writer.person } }] },
+        overrideAccess: true,
+      })
+      const every = await payload.count({ collection: 'articles', overrideAccess: true })
+      expect(total).toBe(visible.totalDocs)
+      expect(total).toBeLessThan(every.totalDocs)
+    })
+
+    it('an admin with more than 10 work rows sees every one', async () => {
+      const { groups } = await adminList()
+      const inProgress = groups.find((group) => group.id === 'inProgress')!
+      const ids = inProgress.rows.map((row) => row.id)
+      lists.writerManyDrafts.forEach((id) => expect(ids).toContain(id))
+      expect(inProgress.rows.length).toBeGreaterThan(10)
+      expect(inProgress.total).toBe(inProgress.rows.length)
+    })
+
     it('an admin row names its owners, an owner row does not', async () => {
       const person = await payload.findByID({
         collection: 'people',
@@ -740,24 +768,45 @@ describe('list rows', () => {
         'en',
       )
 
-    const titleOf = async (id: number) =>
+    const makeArticle = async (title: string, extra: Record<string, unknown> = {}) =>
       (
-        await payload.findByID({
-          collection: 'articles',
-          id,
-          draft: false,
-          locale: 'en',
-          depth: 0,
-          overrideAccess: true,
-        })
-      ).title
+        track(
+          'articles',
+          await payload.create({
+            collection: 'articles',
+            data: {
+              title,
+              slug: uniq(`search-${title.slice(0, 20).toLowerCase().replace(/\W+/g, '-')}`),
+              authors: [world.accounts.student.person!],
+              tier: 'public',
+              review: { status: 'approved' },
+              ...extra,
+            },
+            locale: 'en',
+            overrideAccess: true,
+          }),
+        ) as { id: number }
+      ).id
 
     it('search finds a row by its draft title', async () => {
-      const oldTitle = await titleOf(lists.articles.draft)
-      const byNew = await search('Autosaved title')
-      expect(groupOfId(byNew.groups, lists.articles.draft)).toEqual(['inProgress'])
+      const student = await userOf(world.accounts.student)
+      const oldTitle = uniq('Search draft old')
+      const newTitle = uniq('Search draft new')
+      const id = await makeArticle(oldTitle, { review: { status: 'draft' } })
+      await payload.update({
+        collection: 'articles',
+        id,
+        data: { title: newTitle },
+        draft: true,
+        autosave: true,
+        locale: 'en',
+        user: student,
+        overrideAccess: false,
+      })
+      const byNew = await search(newTitle)
+      expect(groupOfId(byNew.groups, id)).toEqual(['inProgress'])
       const byOld = await search(oldTitle)
-      expect(groupOfId(byOld.groups, lists.articles.draft)).toEqual(['inProgress'])
+      expect(groupOfId(byOld.groups, id)).toEqual(['inProgress'])
     })
 
     it('search finds a row by its title in the other language', async () => {
@@ -805,6 +854,66 @@ describe('list rows', () => {
       lists.bulk.forEach((id) => expect(ids).toContain(id))
       expect(rowsOf(groups).every((row) => row.title === uniq('Bulk'))).toBe(true)
     })
+
+    describe('a search does not leak', () => {
+      const searchAs = async (account: PortalAccount, term: string) =>
+        loadList(
+          payload,
+          await userOf(account),
+          ownerArticles({ search: term, pages: { published: 20 } }),
+          'en',
+        )
+
+      it('a co-author removed in the copy finds nothing by the copy title', async () => {
+        const poster = await searchAs(world.poster, lists.titles.sharedCopy)
+        expect(rowsOf(poster.groups)).toEqual([])
+        const own = await searchAs(world.accounts.student, lists.titles.sharedCopy)
+        expect(groupOfId(own.groups, lists.shared)).toEqual(['inProgress'])
+      })
+
+      it('a co-author added in the copy finds nothing by the copy title', async () => {
+        const poster = await searchAs(world.poster, lists.titles.addedCopy)
+        expect(rowsOf(poster.groups)).toEqual([])
+        const own = await searchAs(world.accounts.student, lists.titles.addedCopy)
+        expect(groupOfId(own.groups, lists.added)).toEqual(['inProgress'])
+      })
+
+      it("an admin finds nothing by another owner's never-published draft title", async () => {
+        const title = uniq('Leak probe draft')
+        const id = await makeArticle(title, { review: { status: 'draft' } })
+        const admin = await userOf(lists.writer)
+        const query = { collection: 'articles', only: null, pages: { published: 20 } } as const
+        const quiet = await loadList(payload, admin, { ...query, search: null }, 'en')
+        const found = await loadList(payload, admin, { ...query, search: title }, 'en')
+        expect(rowsOf(found.groups)).toEqual([])
+        expect(found.total).toBe(quiet.total)
+        const owner = await search(title)
+        expect(groupOfId(owner.groups, id)).toEqual(['inProgress'])
+      })
+    })
+
+    describe('a search is capped', () => {
+      it('a term of one character is no search', async () => {
+        const everything = await search('')
+        const one = await search('a')
+        expect(one).toEqual(everything)
+        expect(rowsOf(one.groups).length).toBeGreaterThan(1)
+      })
+
+      it('a term reads as its first five words', async () => {
+        const title = `${uniq('Words')} two three four five`
+        const id = await makeArticle(title, { _status: 'published' })
+        const { groups } = await search(`${title} six seven eight`)
+        expect(groupOfId(groups, id)).toEqual(['published'])
+      })
+
+      it('a term reads as its first 100 characters', async () => {
+        const title = uniq('Long').padEnd(100, 'k')
+        const id = await makeArticle(title, { _status: 'published' })
+        const { groups } = await search(`${title}${'z'.repeat(150)}`)
+        expect(groupOfId(groups, id)).toEqual(['published'])
+      })
+    })
   })
 
   describe('filter and total', () => {
@@ -817,6 +926,37 @@ describe('list rows', () => {
       expect(groups[0]!.id).toBe('needsYou')
       expect(groups[0]!.rows).toHaveLength(2)
       expect(total).toBeGreaterThan(6)
+    })
+
+    it('only with a search loads one group of the hits', async () => {
+      const everything = await studentList()
+      const work = await studentList({ only: 'inProgress', search: lists.titles.alpha })
+      expect(work.groups.map((group) => group.id)).toEqual(['inProgress'])
+      expect(rowsOf(work.groups).map((row) => row.id)).toEqual([lists.articles.published_unsent])
+      expect(work.total).toBe(everything.total)
+      const paged = await studentList({
+        only: 'published',
+        search: uniq('Bulk'),
+        pages: { published: 20 },
+      })
+      expect(paged.groups.map((group) => group.id)).toEqual(['published'])
+      const ids = rowsOf(paged.groups).map((row) => row.id)
+      lists.bulk.forEach((id) => expect(ids).toContain(id))
+      expect(rowsOf(paged.groups).every((row) => row.title === uniq('Bulk'))).toBe(true)
+      expect(paged.total).toBe(everything.total)
+    })
+
+    it('a page that is not a whole number from 1 to 20 reads as a page that is', async () => {
+      const idsOf = async (published: number) =>
+        rowsOf((await studentList({ only: 'published', pages: { published } })).groups).map(
+          (row) => row.id,
+        )
+      const first = await idsOf(1)
+      const last = await idsOf(20)
+      expect(first).toHaveLength(50)
+      expect(last.length).toBeGreaterThan(first.length)
+      for (const page of [0, -1, Number.NaN, -0.5]) expect(await idsOf(page)).toEqual(first)
+      for (const page of [999, Number.POSITIVE_INFINITY]) expect(await idsOf(page)).toEqual(last)
     })
 
     it('a search keeps total', async () => {
