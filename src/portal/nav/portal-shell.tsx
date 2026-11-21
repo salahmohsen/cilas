@@ -6,6 +6,7 @@ import { Link } from '@/i18n/navigation'
 import { LiveRegion } from '@/portal/feedback/announce'
 
 import { AccountMenu } from './account-menu'
+import { BottomBar } from './bottom-bar'
 import type { PortalNavItem } from './portal-nav'
 import styles from './shell.module.css'
 import { Sidebar } from './sidebar'
@@ -55,6 +56,7 @@ export async function PortalShell({
         <main id="main" tabIndex={-1} className={styles.main}>
           <div className="mx-auto w-full max-w-300">{children}</div>
         </main>
+        <BottomBar items={nav} spaces={spaces} />
       </div>
     </>
   )

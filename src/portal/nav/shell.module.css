@@ -265,7 +265,81 @@
   font-weight: 500;
 }
 
+.bar {
+  display: none;
+}
+
+.more {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  min-inline-size: 0;
+  padding-block-end: var(--space-4);
+}
+
+.utilities {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+.more > .row {
+  border: 0;
+  background: transparent;
+  font: inherit;
+  font-size: 15px;
+  text-align: start;
+  cursor: pointer;
+}
+
 @media (width < 700px) {
+  .bar {
+    position: fixed;
+    inset-inline: 0;
+    inset-block-end: 0;
+    z-index: 40;
+    display: block;
+    padding-block-end: env(safe-area-inset-bottom);
+    border-block-start: 1px solid var(--border);
+    background: var(--background);
+  }
+
+  .barList {
+    display: flex;
+    block-size: var(--portal-bar-height);
+    margin: 0;
+    padding: 0 var(--space-2);
+    list-style: none;
+  }
+
+  .barList > li {
+    display: flex;
+    flex: 1;
+  }
+
+  .barItem {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 2px;
+    min-block-size: 44px;
+    border: 0;
+    border-radius: var(--radius-control);
+    background: transparent;
+    color: var(--text-secondary);
+    font: inherit;
+    font-size: 12px;
+    line-height: 1.2;
+    text-decoration: none;
+    cursor: pointer;
+  }
+
+  .barItem[aria-current='page'] {
+    color: var(--foreground);
+  }
+
   .shell {
     grid-template-columns: minmax(0, 1fr);
   }
@@ -285,6 +359,11 @@
   .main {
     margin: 0;
     padding: var(--space-4);
+    /* Room to scroll the last row clear of the bar and of a showing toast. */
+    padding-block-end: calc(
+      var(--portal-bar-height) + env(safe-area-inset-bottom) + var(--toast-stack-height, 0px) +
+        var(--space-6)
+    );
     border-end-start-radius: 0;
     border-end-end-radius: 0;
   }

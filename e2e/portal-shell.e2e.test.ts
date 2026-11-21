@@ -13,6 +13,7 @@ import {
   LOCALES,
   localePath,
   MESSAGES,
+  notifyOf,
   portalWorld,
   ROLES,
   WIDTHS,
@@ -78,6 +79,22 @@ const accountButton = (page: Page, locale: Locale) =>
   page
     .locator('[data-portal-rail]')
     .getByRole('button', { name: new RegExp(`^${MESSAGES[locale].Portal.account.label}, `) })
+
+const PHONE = WIDTHS.phone
+
+const openMore = async (page: Page, locale: Locale) => {
+  const portal = MESSAGES[locale].Portal
+  await page
+    .getByRole('navigation', { name: portal.nav.label, exact: true })
+    .getByRole('button', { name: portal.nav.more, exact: true })
+    .click()
+  const sheet = page.getByRole('dialog', { name: portal.nav.more, exact: true })
+  await expect(sheet).toBeVisible()
+  return sheet
+}
+
+const toastRegion = (scope: Page | ReturnType<Page['getByRole']>, locale: Locale) =>
+  scope.getByRole('region', { name: new RegExp(`^${MESSAGES[locale].Notifications.label}`) })
 
 const { track, cleanup } = createTracker()
 let payload: Payload
@@ -354,5 +371,195 @@ test.describe('portal shell', () => {
         await context.close()
       }
     })
+  })
+
+  test.describe('bottom bar and More sheet (390)', () => {
+    for (const role of ROLES)
+      for (const locale of LOCALES) {
+        const portal = MESSAGES[locale].Portal
+
+        test(`the More sheet is modal (${role} ${locale})`, async ({ browser }) => {
+          await inContext(browser, { viewport: PHONE, role }, async (page) => {
+            await page.goto(localePath('/en/spaces', locale))
+            const mainLink = page.locator('main a').first()
+            const point = await mainLink.boundingBox()
+            const sheet = await openMore(page, locale)
+            expect(
+              await page
+                .locator('main')
+                .evaluate((main) => main.closest('[inert], [aria-hidden="true"]') !== null),
+            ).toBe(true)
+            for (let i = 0; i < 20; i++) {
+              await page.keyboard.press('Tab')
+              expect(
+                await sheet.evaluate((dialog) => dialog.contains(document.activeElement)),
+              ).toBe(true)
+            }
+            expect(
+              await page.evaluate(
+                ({ x, y }) => document.elementFromPoint(x, y)?.closest('main') == null,
+                { x: point!.x + point!.width / 2, y: point!.y + point!.height / 2 },
+              ),
+            ).toBe(true)
+            await page.keyboard.press('Escape')
+            await expect(sheet).toHaveCount(0)
+            await expect(
+              page.getByRole('button', { name: portal.nav.more, exact: true }),
+            ).toBeFocused()
+          })
+        })
+
+        test(`a toast in the open More sheet is above it, read and reachable (${role} ${locale})`, async ({
+          browser,
+        }) => {
+          await inContext(browser, { viewport: PHONE, role }, async (page) => {
+            await page.goto(localePath('/en/spaces', locale))
+            const sheet = await openMore(page, locale)
+            await notifyOf(payload, world.accounts[role], localePath(world.course.postPath, locale))
+            const region = toastRegion(sheet, locale)
+            await expect(region.getByText('E2E comment')).toBeVisible()
+            const action = region.getByRole('button', { name: MESSAGES[locale].Notifications.open })
+            await expect
+              .poll(async () => {
+                const box = (await action.boundingBox())!
+                return box.y >= 0 && box.y + box.height <= PHONE.height
+              })
+              .toBe(true)
+            let reached = false
+            for (let i = 0; i < 30 && !reached; i++) {
+              await page.keyboard.press(i === 0 ? 'Tab' : 'Shift+Tab')
+              reached = await action.evaluate((button) => button === document.activeElement)
+            }
+            await expect(action).toBeFocused()
+          })
+        })
+
+        test(`a focused row stays above the toast and the bottom bar (${role} ${locale})`, async ({
+          browser,
+        }) => {
+          const short = { width: 390, height: 560 }
+          await inContextAt(
+            browser,
+            { baseURL, viewport: short, state: states[role] },
+            async (page) => {
+              await page.goto(localePath('/en/spaces', locale))
+              expect(
+                await page.evaluate(
+                  () => document.documentElement.scrollHeight > window.innerHeight,
+                ),
+              ).toBe(true)
+              await notifyOf(
+                payload,
+                world.accounts[role],
+                localePath(world.course.postPath, locale),
+              )
+              const toast = toastRegion(page, locale).getByText('E2E comment')
+              await expect(toast).toBeVisible()
+              const last = page.locator('section[aria-labelledby="spaces-shortcuts"] a').last()
+              let focused = false
+              for (let i = 0; i < 80 && !focused; i++) {
+                await page.keyboard.press('Tab')
+                focused = await last.evaluate((link) => link === document.activeElement)
+              }
+              await expect(last).toBeFocused()
+              const measure = () =>
+                page.evaluate(() => {
+                  const row = document.activeElement!.getBoundingClientRect()
+                  const toastBox = [...document.querySelectorAll('li')]
+                    .find((li) => li.textContent?.includes('E2E comment'))!
+                    .getBoundingClientRect()
+                  const bar = document
+                    .querySelector('nav [aria-haspopup="dialog"]')!
+                    .closest('nav')!
+                    .getBoundingClientRect()
+                  const root = getComputedStyle(document.documentElement)
+                  return {
+                    rowBottom: row.bottom,
+                    limit: Math.min(toastBox.top, bar.top),
+                    padding: parseFloat(root.scrollPaddingBlockEnd),
+                    needed:
+                      bar.height + parseFloat(root.getPropertyValue('--toast-stack-height') || '0'),
+                  }
+                })
+              await expect(toast).toBeVisible()
+              await expect
+                .poll(async () => {
+                  const { rowBottom, limit } = await measure()
+                  return rowBottom <= limit
+                })
+                .toBe(true)
+              const measured = await measure()
+              expect(measured.padding).toBeGreaterThanOrEqual(measured.needed)
+            },
+          )
+        })
+
+        test(`every account row in the More sheet opens a page (${role} ${locale})`, async ({
+          browser,
+        }) => {
+          const other = OTHER[locale]
+          await inContextAt(browser, { baseURL, viewport: PHONE }, async (page) => {
+            await login({
+              page,
+              user: world.accounts[role],
+              next: localePath('/en/spaces', locale),
+            })
+            let sheet = await openMore(page, locale)
+            await sheet.getByRole('link', { name: portal.account.profile }).click()
+            await page.waitForURL(`**/${locale}/settings`)
+
+            await page.goto(localePath('/en/spaces', locale))
+            sheet = await openMore(page, locale)
+            await sheet.getByRole('link', { name: MESSAGES[locale].Language.switchToLabel }).click()
+            await page.waitForURL(`**/${other}/spaces`)
+            await expect(page.locator('html')).toHaveAttribute('lang', other)
+
+            sheet = await openMore(page, other)
+            await sheet.getByRole('button', { name: MESSAGES[other].Theme.dark }).click()
+            await expect(page.locator('html')).toHaveAttribute('data-theme', 'dark')
+
+            await sheet
+              .getByRole('button', { name: MESSAGES[other].Portal.account.signOut })
+              .click()
+            await page.waitForURL(`**/${other}/login**`)
+          })
+        })
+
+        test(`a toast survives Profile and settings (${role} ${locale})`, async ({ browser }) => {
+          await inContext(browser, { viewport: PHONE, role }, async (page) => {
+            await page.goto(localePath('/en/settings', locale))
+            await page.goto(localePath('/en/spaces', locale))
+            const sheet = await openMore(page, locale)
+            await notifyOf(payload, world.accounts[role], localePath(world.course.postPath, locale))
+            await expect(toastRegion(sheet, locale).getByText('E2E comment')).toBeVisible()
+            await sheet.getByRole('link', { name: portal.account.profile }).click()
+            await page.waitForURL(`**/${locale}/settings`)
+            await expect(toastRegion(page, locale).getByText('E2E comment')).toBeVisible()
+          })
+        })
+
+        test(`reduced motion opens the sheet at once (${role} ${locale})`, async ({ browser }) => {
+          const context = await browser.newContext({
+            baseURL,
+            viewport: PHONE,
+            storageState: states[role],
+            reducedMotion: 'reduce',
+          })
+          try {
+            const page = await context.newPage()
+            await page.goto(localePath('/en/spaces', locale))
+            const more = page.getByRole('button', { name: portal.nav.more, exact: true })
+            await more.hover()
+            await more.click()
+            const sheet = page.getByRole('dialog', { name: portal.nav.more, exact: true })
+            await expect(sheet).toBeVisible({ timeout: 100 })
+            expect(
+              await sheet.evaluate((dialog) => dialog.getAnimations({ subtree: true }).length),
+            ).toBe(0)
+          } finally {
+            await context.close()
+          }
+        })
+      }
   })
 })

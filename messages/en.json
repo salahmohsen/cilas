@@ -1754,6 +1754,14 @@
         "dark": "Dark",
         "system": "System"
       }
+    },
+    "sheet": {
+      "close": "Close",
+      "expand": "Expand sheet",
+      "collapse": "Collapse sheet",
+      "expanded": "Sheet expanded",
+      "collapsed": "Sheet collapsed",
+      "height": "Sheet at {percent} percent height"
     }
   }
 }
