@@ -4,11 +4,17 @@ import { STATUS_KEYS, waitsOn, type StatusKey } from '@/lib/review-status'
 
 import {
   chipGroup,
+  clampPage,
   GROUPS,
   groupOf,
   MAX_PAGES,
+  MAX_SEARCH_CHARS,
+  MAX_SEARCH_PARENTS,
+  MAX_SEARCH_WORDS,
+  MIN_SEARCH_CHARS,
   PAGE_SIZE,
   PAGED,
+  searchTermOf,
   workKeys,
   type Chip,
   type GroupId,
@@ -184,5 +190,55 @@ describe('chipGroup', () => {
     expect(chipGroup.ownerArticles.published).toBe('published')
     expect(chipGroup.admin.published).toBe('published')
     expect(chipGroup.fellowCourses.published).toBe('teachingNow')
+  })
+})
+
+describe('clampPage', () => {
+  it.each([
+    [undefined, 1],
+    [1, 1],
+    [7, 7],
+    [0, 1],
+    [-1, 1],
+    [-0.5, 1],
+    [Number.NaN, 1],
+    [2.9, 2],
+    [MAX_PAGES, MAX_PAGES],
+    [999, MAX_PAGES],
+    [Number.POSITIVE_INFINITY, MAX_PAGES],
+    [Number.NEGATIVE_INFINITY, 1],
+  ])('page %s reads as %s', (page, expected) => {
+    expect(clampPage(page)).toBe(expected)
+  })
+})
+
+describe('searchTermOf', () => {
+  it('has the limits the plan names', () => {
+    expect([MAX_SEARCH_CHARS, MAX_SEARCH_WORDS, MIN_SEARCH_CHARS, MAX_SEARCH_PARENTS]).toEqual([
+      100, 5, 2, 500,
+    ])
+  })
+
+  it.each([null, '', '   ', 'a', ' a ', '\n\t'])('%j is no search', (term) => {
+    expect(searchTermOf(term)).toBeNull()
+  })
+
+  it('trims and joins the words with one space', () => {
+    expect(searchTermOf('  water \t  wheel ')).toBe('water wheel')
+    expect(searchTermOf('ab')).toBe('ab')
+  })
+
+  it('keeps five words and drops the rest', () => {
+    expect(searchTermOf('one two three four five six seven')).toBe('one two three four five')
+  })
+
+  it('keeps 100 characters and drops the rest', () => {
+    const term = searchTermOf('x'.repeat(250))
+    expect(term).toBe('x'.repeat(MAX_SEARCH_CHARS))
+  })
+
+  it('counts a word of another script as characters, not bytes', () => {
+    expect(searchTermOf('عنوان')).toBe('عنوان')
+    expect(searchTermOf('ع')).toBeNull()
   })
 })

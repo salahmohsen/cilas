@@ -20,6 +20,28 @@ export type PagedGroup = 'published' | 'teachingNow' | 'closed'
 export const PAGE_SIZE = 50
 export const MAX_PAGES = 20
 
+/** The page a query asks for, as a whole number from 1 to `MAX_PAGES`. A bad number reads as page 1. */
+export const clampPage = (page: number | undefined): number =>
+  Math.min(Math.max(1, Math.trunc(page ?? 1) || 1), MAX_PAGES)
+
+export const MIN_SEARCH_CHARS = 2
+export const MAX_SEARCH_CHARS = 100
+export const MAX_SEARCH_WORDS = 5
+
+/** The most parent ids a search keeps from the version reads. Newest first. */
+export const MAX_SEARCH_PARENTS = 500
+
+/**
+ * The text a search runs on: the first `MAX_SEARCH_WORDS` words, joined by one
+ * space, cut at `MAX_SEARCH_CHARS`. Null, which is no search, when fewer than
+ * `MIN_SEARCH_CHARS` characters are left: a one-letter `like` matches most rows.
+ */
+export const searchTermOf = (raw: string | null): string | null => {
+  const words = (raw ?? '').split(/\s+/).filter(Boolean).slice(0, MAX_SEARCH_WORDS)
+  const term = words.join(' ').slice(0, MAX_SEARCH_CHARS)
+  return term.length >= MIN_SEARCH_CHARS ? term : null
+}
+
 /** The groups of each list, in the order the page shows them. */
 export const GROUPS: Record<ListKind, readonly GroupId[]> = {
   ownerArticles: ['needsYou', 'inProgress', 'withEditors', 'published', 'closed'],
