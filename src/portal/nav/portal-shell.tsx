@@ -1,4 +1,5 @@
 import { getTranslations } from 'next-intl/server'
+import { Suspense } from 'react'
 
 import { CilasLogo } from '@/components/cilas-logo'
 import { SiteNotifications } from '@/components/site-notifications'
@@ -13,9 +14,9 @@ import { Sidebar } from './sidebar'
 import type { SpaceLink } from './space-links'
 
 /**
- * Every /spaces page: the skip link, the one live region, the rail (brand,
- * bell, account menu, nav) and the one main, which holds the 1200px frame.
- * The document scrolls, not the main. Under 700px the rail's top is the
+ * Every /spaces page: the skip link, the one live region, the rail (its
+ * header with the brand, bell and account menu, then the nav) and the one
+ * main, which holds the 1200px frame. The document scrolls, not the main. Under 700px the rail's top is the
  * phone header and the nav moves to the bottom bar.
  */
 export async function PortalShell({
@@ -40,17 +41,19 @@ export async function PortalShell({
       <LiveRegion />
       <div className={styles.shell} data-page="spaces" data-portal-shell>
         <div className={styles.rail} data-portal-rail>
-          <div className={styles.top}>
+          <header className={styles.top}>
             <Link href="/" className={styles.brand} aria-label={t('nav.brand')}>
               <CilasLogo className={styles.logo} />
             </Link>
             <div className={styles.tools}>
               <SiteNotifications />
               <div className={styles.account}>
-                <AccountMenu />
+                <Suspense fallback={null}>
+                  <AccountMenu />
+                </Suspense>
               </div>
             </div>
-          </div>
+          </header>
           <Sidebar items={nav} spaces={spaces} folded={folded} accountId={accountId} />
         </div>
         <main id="main" tabIndex={-1} className={styles.main}>

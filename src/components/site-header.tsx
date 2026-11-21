@@ -21,7 +21,7 @@ import { UserMenu } from '@/components/arc/user-menu/user-menu'
 import { menuUser } from '@/components/menu-user'
 import { LanguageSwitch, ThemeToggle } from '@/components/site-controls'
 import { SiteNotifications } from '@/components/site-notifications'
-import { signOut } from '@/lib/sign-out'
+import { useSignOut } from '@/lib/sign-out'
 import { SiteSearch } from '@/components/site-search'
 import { useSession } from '@/components/use-session'
 import { useRouter } from '@/i18n/navigation'
@@ -52,6 +52,7 @@ export function CILASSiteHeader({ peoplePages = ALL_ON }: { peoplePages?: People
   // person's name and photo are used; an account with no person shows its email.
   const session = useSession()
   const account = useMemo(() => (session ? menuUser(session) : null), [session])
+  const signOut = useSignOut()
   // Spaces shows only to an account that can read one (see /api/spaces-nav).
   const [spaces, setSpaces] = useState(false)
   useEffect(() => {

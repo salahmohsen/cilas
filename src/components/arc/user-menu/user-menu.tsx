@@ -43,13 +43,16 @@ const themes: { value: ThemePreference; label: string; icon: ReactNode }[] = [
 
 export interface UserMenuUser {
   name: string
-  email: string
+  /** Shown under the name; leave it out when the name already is the email. */
+  email?: string
   plan?: string
   fallbackSeed?: string
   avatarSrc?: string
 }
 export interface UserMenuItem {
   label: string
+  /** The label's language, when it is not the page's. */
+  lang?: string
   icon?: ReactNode
   keys?: string[]
   onSelect?: () => void
@@ -681,9 +684,7 @@ export function UserMenu({
             <span className={styles.name}>{user.name}</span>
             {user.plan && <span className={styles.plan}>{user.plan}</span>}
           </div>
-          <span className={styles.email} title={user.email}>
-            {user.email}
-          </span>
+          {user.email && <span className={styles.email}>{user.email}</span>}
         </div>
       </motion.div>
       <div
@@ -728,7 +729,9 @@ export function UserMenu({
                 <span className={styles.icon} aria-hidden="true">
                   {item.icon}
                 </span>
-                <span className={styles.itemLabel}>{item.label}</span>
+                <span className={styles.itemLabel} lang={item.lang}>
+                  {item.label}
+                </span>
                 {item.keys && <Keys keys={item.keys} />}
               </motion.button>
             ))}

@@ -1033,7 +1033,7 @@
     "read": "read",
     "clearRead": "Clear read",
     "triggerUnread": "{count, plural, one {, {shown} unread} other {, {shown} unread}}",
-    "triggerUnreadMany": ", more than 9 unread",
+    "triggerUnreadMany": ", more than {cap} unread",
     "kinds": {
       "submitted": "Review requested",
       "approved": "Approved",
@@ -1070,7 +1070,6 @@
     "posting": "Posting level",
     "reopen": "Reopen this archive",
     "all": "All",
-    "home": "Home",
     "empty": "No spaces yet. Your courses and cohorts appear here once you join them.",
     "membersLabel": "Members",
     "tabsLabel": "Space sections",
@@ -1729,15 +1728,18 @@
     "deleted": "Deleted",
     "holdHint": "Press and hold for {seconds} seconds to confirm. With a keyboard, hold Space, or press Enter to open confirmation."
   },
+  "Session": {
+    "signOutFailed": "You are still signed in. Try again."
+  },
   "Portal": {
     "nav": {
       "label": "Main",
       "home": "Home",
       "openDashboard": "Open dashboard",
       "spaces": "Spaces",
-      "unread": "{count, plural, one {, # unread post} other {, # unread posts}}",
-      "unreadMany": ", more than 9 unread posts",
-      "fold": "Fold the sidebar",
+      "unread": "{count, plural, one {, {shown} unread post} other {, {shown} unread posts}}",
+      "unreadMany": ", more than {cap} unread posts",
+      "sidebar": "Sidebar",
       "more": "More",
       "brand": "CILAS home"
     },

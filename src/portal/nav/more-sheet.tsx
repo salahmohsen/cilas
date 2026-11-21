@@ -1,24 +1,32 @@
 'use client'
 
-import { LogOut, UserRound } from 'lucide-react'
+import { LogOut } from 'lucide-react'
 import { usePathname } from 'next/navigation'
 import { useTranslations } from 'next-intl'
-import { Suspense, useId, type RefObject } from 'react'
+import { Suspense, useId, useMemo, useRef, useState, type RefObject } from 'react'
 
 import { BottomSheet } from '@/components/arc/bottom-sheet/bottom-sheet'
+import { menuUser } from '@/components/menu-user'
 import { LanguageSwitch, ThemeToggle } from '@/components/site-controls'
+import { useSession } from '@/components/use-session'
 import { Link } from '@/i18n/navigation'
 
 import { NAV_ICONS } from './nav-icons'
 import type { PortalNavItem } from './portal-nav'
+import { PROFILE } from './profile'
+import { NavItemRow, SpaceRow } from './rows'
 import styles from './shell.module.css'
-import { SpaceRow } from './sidebar'
+import { foldButton } from './sidebar'
 import type { SpaceLink } from './space-links'
 
+const ProfileIcon = NAV_ICONS[PROFILE.icon]
+
 /**
- * Under 700px: the nav items the bottom bar has no room for, the spaces, and
- * the account rows. Radix returns focus only to a Trigger, so closing sends
- * it back to More by hand.
+ * Under 700px: the account first (who is signed in, profile, language,
+ * theme, sign out), then the nav items the bottom bar has no room for, then
+ * the spaces. Radix returns focus only to a Trigger, so closing sends it
+ * back to More by hand, or to the fold button once the window is wide
+ * enough to hide More.
  */
 export function MoreSheet({
   open,
@@ -37,7 +45,21 @@ export function MoreSheet({
 }) {
   const t = useTranslations('Portal')
   const pathname = usePathname() ?? ''
+  const accountId = useId()
   const spacesId = useId()
+  const session = useSession()
+  const user = useMemo(() => (session ? menuUser(session) : null), [session])
+  const pending = useRef(false)
+  const [signingOut, setSigningOut] = useState(false)
+  const signOut = () => {
+    if (pending.current) return
+    pending.current = true
+    setSigningOut(true)
+    void onSignOut().finally(() => {
+      pending.current = false
+      setSigningOut(false)
+    })
+  }
   return (
     <BottomSheet
       open={open}
@@ -55,7 +77,8 @@ export function MoreSheet({
       }}
       onCloseAutoFocus={(event) => {
         event.preventDefault()
-        returnFocus.current?.focus()
+        const more = returnFocus.current
+        ;(more && more.getClientRects().length > 0 ? more : foldButton())?.focus()
       }}
     >
       {/* Every link in the sheet leaves for another page: the sheet closes with it. */}
@@ -65,32 +88,49 @@ export function MoreSheet({
           if (event.target instanceof Element && event.target.closest('a')) onOpenChange(false)
         }}
       >
+        <section aria-labelledby={accountId} className={styles.accountGroup}>
+          <h3 id={accountId} className="sr-only">
+            {t('account.label')}
+          </h3>
+          {user && (
+            <p className={styles.identity}>
+              <span className={styles.identityName}>{user.name}</span>
+              {user.email && <span className={styles.identityEmail}>{user.email}</span>}
+            </p>
+          )}
+          <Link href={PROFILE.href} className={styles.row}>
+            <span className={styles.icon} aria-hidden="true">
+              <ProfileIcon size={18} strokeWidth={1.75} />
+            </span>
+            <span className={styles.label}>{t(PROFILE.labelKey)}</span>
+          </Link>
+          <div className={styles.utilities}>
+            <Suspense fallback={null}>
+              <LanguageSwitch full />
+            </Suspense>
+            <ThemeToggle full />
+          </div>
+          <button
+            type="button"
+            className={styles.row}
+            aria-busy={signingOut || undefined}
+            onClick={signOut}
+          >
+            <span className={styles.icon} aria-hidden="true">
+              <LogOut size={18} strokeWidth={1.75} />
+            </span>
+            <span className={styles.label}>
+              {signingOut ? t('account.signingOut') : t('account.signOut')}
+            </span>
+          </button>
+        </section>
         {items.length > 0 && (
           <ul className={styles.list}>
-            {items.map((item) => {
-              const Icon = NAV_ICONS[item.icon]
-              const body = (
-                <>
-                  <span className={styles.icon} aria-hidden="true">
-                    <Icon size={18} strokeWidth={1.75} />
-                  </span>
-                  <span className={styles.label}>{t(item.labelKey)}</span>
-                </>
-              )
-              return (
-                <li key={item.key}>
-                  {item.external ? (
-                    <a href={item.href} className={styles.row}>
-                      {body}
-                    </a>
-                  ) : (
-                    <Link href={item.href} className={styles.row}>
-                      {body}
-                    </Link>
-                  )}
-                </li>
-              )
-            })}
+            {items.map((item) => (
+              <li key={item.key}>
+                <NavItemRow item={item} />
+              </li>
+            ))}
           </ul>
         )}
         {spaces.length > 0 && (
@@ -107,28 +147,6 @@ export function MoreSheet({
             </ul>
           </section>
         )}
-        <ul className={styles.list}>
-          <li>
-            <Link href="/settings" className={styles.row}>
-              <span className={styles.icon} aria-hidden="true">
-                <UserRound size={18} strokeWidth={1.75} />
-              </span>
-              <span className={styles.label}>{t('account.profile')}</span>
-            </Link>
-          </li>
-        </ul>
-        <div className={styles.utilities}>
-          <Suspense fallback={null}>
-            <LanguageSwitch full />
-          </Suspense>
-          <ThemeToggle full />
-        </div>
-        <button type="button" className={styles.row} onClick={() => void onSignOut()}>
-          <span className={styles.icon} aria-hidden="true">
-            <LogOut size={18} strokeWidth={1.75} />
-          </span>
-          <span className={styles.label}>{t('account.signOut')}</span>
-        </button>
       </div>
     </BottomSheet>
   )

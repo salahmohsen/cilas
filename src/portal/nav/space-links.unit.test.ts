@@ -2,7 +2,8 @@ import { describe, expect, it } from 'vitest'
 
 import type { SpaceSummary } from '@/lib/spaces-data'
 import type { Space } from '@/payload-types'
-import { isCurrentSpace, shownUnread, spaceLabel, spaceLinks } from './space-links'
+import { portalNav } from './portal-nav'
+import { isCurrentItem, isCurrentSpace, shownUnread, spaceLabel, spaceLinks } from './space-links'
 
 const row = (kind: Space['kind'], id: number, overrides: Partial<SpaceSummary> = {}) =>
   ({
@@ -58,5 +59,20 @@ describe('spaceLinks', () => {
     expect(isCurrentSpace('/en/spaces/community/12', community!.href)).toBe(false)
     expect(shownUnread(community!, '/en/spaces/community/12')).toBe(1)
     expect(shownUnread(community!, '/en/spaces')).toBe(1)
+  })
+})
+
+describe('isCurrentItem', () => {
+  const [home, dashboard] = portalNav({ roles: ['admin'] })
+
+  it('a nav item is current only on its own page, in the page language', () => {
+    expect(isCurrentItem('/en/spaces', 'en', home!)).toBe(true)
+    expect(isCurrentItem('/ar/spaces', 'ar', home!)).toBe(true)
+    expect(isCurrentItem('/ar/spaces', 'en', home!)).toBe(false)
+    expect(isCurrentItem('/en/spaces/community', 'en', home!)).toBe(false)
+  })
+
+  it('an item that leaves the portal is never current', () => {
+    expect(isCurrentItem('/admin', 'en', dashboard!)).toBe(false)
   })
 })

@@ -43,11 +43,6 @@
   inline-size: 5rem;
 }
 
-.shell:has(.sidebar[data-folded]) .top,
-.shell:has(.sidebar[data-folded]) .tools {
-  flex-direction: column;
-}
-
 .top {
   display: flex;
   align-items: center;
@@ -213,10 +208,41 @@
   color: var(--foreground);
 }
 
+/* The current row: a raised pill, weight 500 and a bar at its inline start, so colour is never the only cue (WCAG 1.4.1). */
 .row[aria-current='page'] {
+  position: relative;
   background: var(--background);
   color: var(--foreground);
+  font-weight: 500;
   box-shadow: var(--shadow-resting);
+}
+
+.row[aria-current='page']::before {
+  position: absolute;
+  inset-block: var(--space-2);
+  inset-inline-start: 0;
+  border-inline-start: 3px solid var(--portal-current-mark);
+  border-radius: var(--radius-pill);
+  content: '';
+}
+
+@media (prefers-contrast: more) {
+  .row[aria-current='page']::before {
+    inset-block: var(--space-1);
+    border-inline-start-width: 4px;
+  }
+}
+
+/* Forced colours drop the pill and its shadow: the bar takes the system highlight, and the row an outline. */
+@media (forced-colors: active) {
+  .row[aria-current='page'] {
+    outline: 2px solid Highlight;
+    outline-offset: -2px;
+  }
+
+  .row[aria-current='page']::before {
+    border-color: Highlight;
+  }
 }
 
 .icon {
@@ -242,12 +268,12 @@
   object-fit: cover;
 }
 
+/* Names wrap, so two spaces that share a long prefix never look the same. */
 .label {
   flex: 1;
   min-inline-size: 0;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  overflow-wrap: anywhere;
+  text-align: start;
 }
 
 .count {
@@ -283,13 +309,80 @@
   gap: var(--space-2);
 }
 
-.more > .row {
+.accountGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.identity {
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  padding: var(--space-1) var(--space-2) var(--space-2);
+  overflow-wrap: anywhere;
+}
+
+.identityName {
+  color: var(--foreground);
+  font-size: 15px;
+  font-weight: 500;
+  line-height: 1.3;
+}
+
+.identityEmail {
+  color: var(--text-muted);
+  font-size: 13px;
+  line-height: 1.4;
+}
+
+.accountGroup > button.row {
   border: 0;
   background: transparent;
   font: inherit;
   font-size: 15px;
   text-align: start;
   cursor: pointer;
+}
+
+/* Touch: the header's controls and the skip link get 44px hit areas (spec, Targets). */
+@media (pointer: coarse) {
+  .skip,
+  .brand {
+    min-block-size: 44px;
+    min-inline-size: 44px;
+  }
+
+  .skip {
+    display: inline-flex;
+    align-items: center;
+  }
+
+  .brand {
+    justify-content: center;
+  }
+
+  .tools button {
+    min-block-size: 44px;
+    min-inline-size: 44px;
+  }
+}
+
+@media (width >= 700px) {
+  /* The rail's header stays in view while its nav scrolls. */
+  .top {
+    position: sticky;
+    inset-block-start: calc(-1 * var(--space-3));
+    z-index: 1;
+    margin-block: calc(-1 * var(--space-3)) 0;
+    padding-block: var(--space-3) 0;
+    background: var(--surface-muted);
+  }
+
+  .shell:has(.sidebar[data-folded]) .top,
+  .shell:has(.sidebar[data-folded]) .tools {
+    flex-direction: column;
+  }
 }
 
 @media (width < 700px) {
@@ -300,6 +393,7 @@
     z-index: 40;
     display: block;
     padding-block-end: env(safe-area-inset-bottom);
+    padding-inline: max(env(safe-area-inset-left), env(safe-area-inset-right));
     border-block-start: 1px solid var(--border);
     background: var(--background);
   }
@@ -354,8 +448,11 @@
     grid-template-columns: minmax(0, 1fr);
   }
 
-  .rail {
+  /* The rail is only the phone header here: it takes the full width, folded or not. */
+  .rail,
+  .shell:has(.sidebar[data-folded]) .rail {
     position: static;
+    inline-size: auto;
     block-size: auto;
     padding: var(--space-2) var(--space-4);
     overflow: visible;

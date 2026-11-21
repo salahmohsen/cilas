@@ -1,59 +1,26 @@
 'use client'
 
 import { ChevronLeft } from 'lucide-react'
-import Image from 'next/image'
-import NextLink from 'next/link'
 import { usePathname } from 'next/navigation'
 import { useLocale, useTranslations } from 'next-intl'
-import { useId, useState, type ComponentProps, type KeyboardEvent, type ReactElement } from 'react'
+import { useId, useState, type KeyboardEvent, type ReactElement } from 'react'
 
 import { Tooltip } from '@/components/arc/tooltip/tooltip'
-import { Link } from '@/i18n/navigation'
 import { isRtl } from '@/i18n/routing'
 
 import { writeFold } from './fold'
-import { NAV_ICONS } from './nav-icons'
 import type { PortalNavItem } from './portal-nav'
+import { NavItemRow, SpaceRow } from './rows'
 import styles from './shell.module.css'
-import { isCurrentSpace, shownUnread, type SpaceLink } from './space-links'
-
-/** A space: its cover, its name on one line, and its unread count as a circle and as text. */
-export function SpaceRow({
-  row,
-  pathname,
-  ...rest
-}: { row: SpaceLink; pathname: string } & Omit<ComponentProps<typeof NextLink>, 'href'>) {
-  const t = useTranslations('Portal.nav')
-  const unread = shownUnread(row, pathname)
-  return (
-    <NextLink
-      {...rest}
-      href={row.href}
-      className={styles.row}
-      aria-current={isCurrentSpace(pathname, row.href) ? 'page' : undefined}
-    >
-      <span className={styles.cover} aria-hidden="true">
-        {row.cover && <Image src={row.cover} alt="" fill sizes="40px" />}
-        {unread > 0 && <span className={styles.dot} />}
-      </span>
-      <bdi className={styles.label}>{row.label}</bdi>
-      {unread > 0 && (
-        <>
-          <span className={styles.count} aria-hidden="true" dir="ltr">
-            {unread > 9 ? '9+' : unread}
-          </span>
-          <span className="sr-only">
-            {unread > 9 ? t('unreadMany') : t('unread', { count: unread })}
-          </span>
-        </>
-      )}
-    </NextLink>
-  )
-}
+import type { SpaceLink } from './space-links'
 
 const editable = (target: EventTarget) =>
   target instanceof HTMLElement &&
   (target.isContentEditable || /^(INPUT|TEXTAREA|SELECT)$/.test(target.tagName))
+
+/** The fold button, where focus goes when the More sheet closes because the window grew past the phone layout. */
+export const foldButton = (): HTMLElement | null =>
+  document.querySelector<HTMLElement>('[data-portal-fold]')
 
 /**
  * The portal nav beside the main: a fold button, the items, then the spaces
@@ -75,6 +42,7 @@ export function Sidebar({
   const locale = useLocale()
   const pathname = usePathname() ?? ''
   const navId = useId()
+  const spacesId = useId()
   const [folded, setFolded] = useState(foldedAtLoad)
   const toggle = () => {
     writeFold(accountId, !folded)
@@ -102,51 +70,25 @@ export function Sidebar({
         className={styles.fold}
         aria-expanded={!folded}
         aria-controls={navId}
-        aria-label={t('nav.fold')}
+        aria-label={t('nav.sidebar')}
+        data-portal-fold
         onClick={toggle}
       >
         <ChevronLeft size={18} strokeWidth={1.75} aria-hidden="true" className={styles.chevron} />
       </button>
       <nav id={navId} aria-label={t('nav.label')} className={styles.nav}>
         <ul className={styles.list}>
-          {items.map((item) => {
-            const Icon = NAV_ICONS[item.icon]
-            const label = t(item.labelKey)
-            const body = (
-              <>
-                <span className={styles.icon} aria-hidden="true">
-                  <Icon size={18} strokeWidth={1.75} />
-                </span>
-                <span className={styles.label}>{label}</span>
-              </>
-            )
-            return (
-              <li key={item.key}>
-                {tip(
-                  label,
-                  item.external ? (
-                    <a href={item.href} className={styles.row} data-portal-item>
-                      {body}
-                    </a>
-                  ) : (
-                    <Link
-                      href={item.href}
-                      className={styles.row}
-                      data-portal-item
-                      aria-current={pathname === `/${locale}${item.href}` ? 'page' : undefined}
-                    >
-                      {body}
-                    </Link>
-                  ),
-                )}
-              </li>
-            )
-          })}
+          {items.map((item) => (
+            <li key={item.key}>{tip(t(item.labelKey), <NavItemRow item={item} />)}</li>
+          ))}
         </ul>
         {spaces.length > 0 && (
           <>
-            <h2 className={styles.heading}>{t('nav.spaces')}</h2>
-            <ul className={styles.list}>
+            {/* A label, not a heading: the rail comes before the page's h1. */}
+            <span id={spacesId} className={styles.heading}>
+              {t('nav.spaces')}
+            </span>
+            <ul className={styles.list} aria-labelledby={spacesId}>
               {spaces.map((row) => (
                 <li key={row.id}>{tip(row.label, <SpaceRow row={row} pathname={pathname} />)}</li>
               ))}

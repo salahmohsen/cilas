@@ -11,23 +11,29 @@ import { ThemeSwitch } from '@/components/arc/theme-switch/theme-switch'
 import { Link, usePathname } from '@/i18n/navigation'
 import { routing, type Locale } from '@/i18n/routing'
 
+/** The other site language, and this page (with its query) to open in it (ADR 0006). */
+export function useOtherLanguage(): { other: Locale; href: string } {
+  const locale = useLocale() as Locale
+  const pathname = usePathname()
+  const search = useSearchParams().toString()
+  const other = routing.locales.find((l) => l !== locale) ?? routing.defaultLocale
+  return { other, href: search ? `${pathname}?${search}` : pathname }
+}
+
 /**
  * Switches the site language, staying on the same page (ADR 0006). The
  * choice is remembered by next-intl's locale cookie.
  */
 export function LanguageSwitch({ full = false }: { full?: boolean }) {
   const t = useTranslations('Language')
-  const locale = useLocale() as Locale
-  const pathname = usePathname()
-  const search = useSearchParams().toString()
-  const other = routing.locales.find((l) => l !== locale) ?? routing.defaultLocale
+  const { other, href } = useOtherLanguage()
 
   return (
     <Link
       // In full, the visible name of the language is the link's name (WCAG 2.5.3, label in name).
       aria-label={full ? undefined : t('switchToLabel')}
       className={full ? 'site-sheet-button' : 'site-control'}
-      href={search ? `${pathname}?${search}` : pathname}
+      href={href}
       hrefLang={other}
       lang={other}
       locale={other}

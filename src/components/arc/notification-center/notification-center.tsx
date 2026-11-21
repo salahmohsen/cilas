@@ -35,6 +35,9 @@ import {
   X,
 } from 'lucide-react'
 import * as PopoverPrimitive from '@radix-ui/react-popover'
+
+import { unreadCount as unreadText } from '@/lib/unread-count'
+
 import { Avatar } from '../avatar/avatar'
 import { motionTokens } from '../lib/motion-tokens'
 import styles from './notification-center.module.css'
@@ -80,9 +83,8 @@ export interface NotificationText {
   viewAll: string
   read: string
   clearRead: string
-  triggerUnread: (unread: number) => string
-  /** The trigger badge's text; keep it inside triggerUnread's words, so the visible count is part of the name. */
-  badge: (unread: number) => string
+  /** The trigger badge's text (`shown`) and the words after the trigger's name (`spoken`), which say the shown count. */
+  unreadCount: (unread: number) => { shown: string; spoken: string }
 }
 
 const DEFAULT_TEXT: NotificationText = {
@@ -110,8 +112,11 @@ const DEFAULT_TEXT: NotificationText = {
   viewAll: 'View all updates',
   read: 'read',
   clearRead: 'Clear read',
-  triggerUnread: (n) => `, ${n} unread`,
-  badge: (n) => (n > 9 ? '9+' : String(n)),
+  unreadCount: (n) =>
+    unreadText(n, 'en', {
+      some: ({ shown }) => `, ${shown} unread`,
+      many: ({ cap }) => `, more than ${cap} unread`,
+    }),
 }
 
 export interface NotificationCenterProps {
@@ -414,7 +419,7 @@ export function NotificationCenter({
         <button
           className={styles.trigger}
           type="button"
-          aria-label={`${label}${unreadCount ? text.triggerUnread(unreadCount) : ''}`}
+          aria-label={`${label}${unreadCount ? text.unreadCount(unreadCount).spoken : ''}`}
         >
           <motion.span
             animate={{ rotate: isOpen && !reduce ? -12 : 0 }}
@@ -428,6 +433,8 @@ export function NotificationCenter({
                 key="badge"
                 className={styles.badge}
                 aria-hidden="true"
+                // "9+" keeps its plus after the digit on a right-to-left page.
+                dir="ltr"
                 initial={reduce ? { opacity: 0 } : { opacity: 0, scale: 0.6 }}
                 animate={{ opacity: 1, scale: 1 }}
                 exit={reduce ? fadeOut : { opacity: 0, scale: 0.6, transition: exitFast }}
@@ -435,7 +442,7 @@ export function NotificationCenter({
               >
                 <RollingCount
                   value={unreadCount}
-                  display={text.badge(unreadCount)}
+                  display={text.unreadCount(unreadCount).shown}
                   reduce={reduce}
                 />
               </motion.span>

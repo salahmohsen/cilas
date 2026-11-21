@@ -1,4 +1,5 @@
 import type { SpaceSummary } from '@/lib/spaces-data'
+import type { PortalNavItem } from './portal-nav'
 
 /** One space row of the portal nav; `href` carries the locale. */
 export type SpaceLink = {
@@ -43,3 +44,7 @@ export const isCurrentSpace = (pathname: string, href: string): boolean =>
  */
 export const shownUnread = (row: SpaceLink, pathname: string): number =>
   isCurrentSpace(pathname, row.href) ? 0 : row.unread
+
+/** The nav item is the open page. An item that leaves the portal (`external`) never is. */
+export const isCurrentItem = (pathname: string, locale: string, item: PortalNavItem): boolean =>
+  !item.external && pathname === `/${locale}${item.href}`

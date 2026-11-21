@@ -1,7 +1,7 @@
 import { isAdminUser } from '@/access'
 
 export type PortalNavGroup = 'top' | 'myWork' | 'teaching' | 'admin'
-export type PortalNavIcon = 'home' | 'dashboard'
+export type PortalNavIcon = 'home' | 'dashboard' | 'profile'
 
 /** One entry of the portal nav. `href` has no locale; `external` is a full load (its own root layout). */
 export type PortalNavItem = {

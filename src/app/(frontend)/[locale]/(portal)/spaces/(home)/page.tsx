@@ -21,7 +21,6 @@ import {
 
 import { isAdminUser, isFellowUser } from '@/access'
 import { Badge } from '@/components/arc/badge/badge'
-import { Breadcrumb } from '@/components/arc/breadcrumb/breadcrumb'
 import styles from '@/components/space/space.module.css'
 import { currentReader } from '@/lib/reader'
 import { spacesOff } from '@/lib/spaces'
@@ -118,7 +117,6 @@ export default async function MySpacesPage({ params }: Props) {
   return (
     <div className={styles.page}>
       <header className={styles.plainHead}>
-        <Breadcrumb items={[{ label: t('home'), href: `/${locale}` }, { label: t('title') }]} />
         <h1 className={styles.spaceTitle}>{t('title')}</h1>
       </header>
       {spaces && sections.length === 0 ? (

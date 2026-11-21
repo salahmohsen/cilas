@@ -27,6 +27,7 @@ import {
 } from '@/components/arc/notification-center/notification-center'
 import { useToastStack } from '@/components/arc/toast-stack/toast-stack'
 import { localDigits } from '@/lib/digits'
+import { unreadCount } from '@/lib/unread-count'
 import {
   isNotificationKind,
   NOTIFICATION_KINDS,
@@ -192,11 +193,11 @@ export function SiteNotifications() {
         viewAll: t('viewAll'),
         read: t('read'),
         clearRead: t('clearRead'),
-        triggerUnread: (n) =>
-          n > 9
-            ? t('triggerUnreadMany')
-            : t('triggerUnread', { count: n, shown: localDigits(n, locale) }),
-        badge: (n) => localDigits(n > 9 ? '9+' : n, locale),
+        unreadCount: (n) =>
+          unreadCount(n, locale, {
+            some: (values) => t('triggerUnread', values),
+            many: (values) => t('triggerUnreadMany', values),
+          }),
       }}
     />
   )
