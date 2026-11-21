@@ -169,6 +169,9 @@ export const NOT_LIVE: Where = {
   or: [{ _status: { equals: 'draft' } }, { _status: { exists: false } }],
 }
 
+/** Main rows that are live. */
+export const LIVE_MAIN: Where = { _status: { equals: 'published' } }
+
 /**
  * The main rows an admin list shows, whoever owns them: live rows, and a
  * not-live row only at a state that waits on someone or was declined. Another
@@ -176,10 +179,7 @@ export const NOT_LIVE: Where = {
  * adds the reader's own rows.
  */
 export const ADMIN_VISIBLE: Where = {
-  or: [
-    { _status: { equals: 'published' } },
-    { 'review.status': { in: ['submitted', 'changes_requested', 'rejected'] } },
-  ],
+  or: [LIVE_MAIN, { 'review.status': { in: ['submitted', 'changes_requested', 'rejected'] } }],
 }
 
 /**
@@ -214,7 +214,7 @@ const mainStatus = (status: ReviewState) => onMain({ 'review.status': { equals: 
  */
 export const KEY_WHERE: {
   readonly [K in StatusKey]?: { on: 'main' | 'version'; where: Where }
-} = {
+} & { readonly rejected: { on: 'main'; where: Where } } = {
   draft: onMain({
     or: [
       { 'review.status': { in: ['draft', 'approved'] } },
@@ -262,11 +262,7 @@ export const liveParentIds = async (
   const { docs } = (await payload.find({
     collection,
     where: {
-      and: [
-        ...(where ? [where] : []),
-        { _status: { equals: 'published' } },
-        { id: { in: [...ids] } },
-      ],
+      and: [...(where ? [where] : []), LIVE_MAIN, { id: { in: [...ids] } }],
     },
     draft: false,
     select: { id: true },

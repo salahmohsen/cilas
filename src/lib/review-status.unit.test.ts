@@ -9,6 +9,7 @@ import {
   KEY_SELECT,
   KEY_WHERE,
   LIVE_COPY,
+  LIVE_MAIN,
   NOT_LIVE,
   STATUS_KEYS,
   type StatusKey,
@@ -351,7 +352,7 @@ describe('ADMIN_VISIBLE', () => {
   const [published, states] = ADMIN_VISIBLE.or ?? []
 
   it('shows every live row', () => {
-    expect(published).toEqual({ _status: { equals: 'published' } })
+    expect(published).toBe(LIVE_MAIN)
   })
 
   it('shows a not-live row only at a state that waits on someone or was declined', () => {
