@@ -83,6 +83,14 @@ const accountButton = (page: Page, locale: Locale) =>
 
 const PHONE = WIDTHS.phone
 
+const gotoLive = async (page: Page, path: string) => {
+  const stream = page.waitForResponse((response) =>
+    response.url().includes('/api/notifications/stream'),
+  )
+  await page.goto(path)
+  await stream
+}
+
 const toastRegion = (scope: Page | ReturnType<Page['getByRole']>, locale: Locale) =>
   scope.getByRole('region', { name: new RegExp(`^${MESSAGES[locale].Notifications.label}`) })
 
@@ -459,7 +467,7 @@ test.describe('portal shell', () => {
           browser,
         }) => {
           await inContext(browser, { viewport: PHONE, role }, async (page) => {
-            await page.goto(localePath('/en/spaces', locale))
+            await gotoLive(page, localePath('/en/spaces', locale))
             const sheet = await openMore(page, locale)
             await notifyOf(payload, world.accounts[role], localePath(world.course.postPath, locale))
             const region = toastRegion(sheet, locale)
@@ -488,7 +496,7 @@ test.describe('portal shell', () => {
             browser,
             { baseURL, viewport: short, state: states[role] },
             async (page) => {
-              await page.goto(localePath('/en/spaces', locale))
+              await gotoLive(page, localePath('/en/spaces', locale))
               expect(
                 await page.evaluate(
                   () => document.documentElement.scrollHeight > window.innerHeight,
@@ -574,7 +582,7 @@ test.describe('portal shell', () => {
         test(`a toast survives Profile and settings (${role} ${locale})`, async ({ browser }) => {
           await inContext(browser, { viewport: PHONE, role }, async (page) => {
             await page.goto(localePath('/en/settings', locale))
-            await page.goto(localePath('/en/spaces', locale))
+            await gotoLive(page, localePath('/en/spaces', locale))
             const sheet = await openMore(page, locale)
             await notifyOf(payload, world.accounts[role], localePath(world.course.postPath, locale))
             await expect(toastRegion(sheet, locale).getByText('E2E comment')).toBeVisible()
