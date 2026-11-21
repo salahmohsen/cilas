@@ -1,0 +1,5 @@
+/* Page-wide rules while the portal shell is on the page. They sit on :root, which a module class cannot reach. */
+:root:has([data-portal-shell]) {
+  /* No site header above the content: in-page jumps need no room for one. */
+  --site-header-height: 0px;
+}

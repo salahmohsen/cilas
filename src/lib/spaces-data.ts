@@ -1,6 +1,7 @@
 import { localeOf } from '@/i18n/routing'
 import { relId as unwrapId } from '@/lib/relation'
 import type { Payload, Where } from 'payload'
+import { cache } from 'react'
 
 import { personOf } from '@/access'
 import type { ReactionCounts, ReactionKind } from '@/lib/space-reactions'
@@ -95,7 +96,7 @@ export const coverOf = (label: { cover_image?: unknown; cover?: unknown } | null
     : null
 }
 
-export const mySpaces = async (
+const readMySpaces = async (
   payload: Payload,
   user: null | User,
   locale: string,
@@ -273,6 +274,9 @@ export const mySpaces = async (
   }
   return { communities, cohorts, courses }
 }
+
+/** Cached per request, so the portal nav and `/spaces` share one read. */
+export const mySpaces = cache(readMySpaces)
 
 /**
  * A space's archive state (spec §11), from the rows as they stand now: a

@@ -27,6 +27,7 @@ import styles from '@/components/space/space.module.css'
 import { currentReader } from '@/lib/reader'
 import { spacesOff } from '@/lib/spaces'
 import { COMMUNITY_COVER, mySpaces } from '@/lib/spaces-data'
+import { spaceLabel } from '@/portal/nav/space-links'
 import type { User } from '@/payload-types'
 
 type Props = { params: Promise<{ locale: string }> }
@@ -143,11 +144,7 @@ export default async function MySpacesPage({ params }: Props) {
                       className={styles.spaceCardImage}
                     />
                     <span className={styles.spaceCardTitle}>
-                      <bdi>
-                        {row.space.kind === 'community' && !row.space.name?.trim()
-                          ? t('community')
-                          : row.title}
-                      </bdi>
+                      <bdi>{spaceLabel(row, t('community'))}</bdi>
                     </span>
                     <span className={styles.spaceCardFoot}>
                       <span>

@@ -1,25 +1,43 @@
-import { redirect } from 'next/navigation'
-
-import { SiteFrame } from '@/components/site-frame'
-import { currentReader } from '@/lib/reader'
+import config from '@payload-config'
 import type { Metadata } from 'next'
+import { getTranslations } from 'next-intl/server'
+import { redirect } from 'next/navigation'
+import { getPayload } from 'payload'
+
+import { currentReader } from '@/lib/reader'
+import { mySpaces } from '@/lib/spaces-data'
+import { portalNav } from '@/portal/nav/portal-nav'
+import { PortalShell } from '@/portal/nav/portal-shell'
+import { spaceLinks } from '@/portal/nav/space-links'
 
 export const metadata: Metadata = { robots: { index: false } }
 
 type Props = { children: React.ReactNode; params: Promise<{ locale: string }> }
+
+const NO_SPACES = { communities: [], cohorts: [], courses: [] }
 
 /** Signed-in area: a signed-out reader goes to login, then back to the spaces. */
 export default async function SpacesLayout({ children, params }: Props) {
   const { locale } = await params
   const user = await currentReader()
   if (!user) redirect(`/${locale}/login?next=${encodeURIComponent(`/${locale}/spaces`)}`)
+  const payload = await getPayload({ config })
+  const [t, spaces] = await Promise.all([
+    getTranslations('Spaces'),
+    // The nav still renders without its spaces (spec, Navigation, Errors).
+    mySpaces(payload, user, locale).catch((err: unknown) => {
+      payload.logger.error({ err }, 'portal nav: the spaces list did not load')
+      return NO_SPACES
+    }),
+  ])
   return (
-    <SiteFrame>
-      {/* Spaces keep the earlier, narrower frame (1200px): their side column
-          grows too wide in the site's wide one. */}
-      <div className="mx-auto w-full max-w-300" data-page="spaces">
-        {children}
-      </div>
-    </SiteFrame>
+    <PortalShell
+      nav={portalNav(user)}
+      spaces={spaceLinks(spaces, t('community'))}
+      folded={false}
+      accountId={user.id}
+    >
+      {children}
+    </PortalShell>
   )
 }
