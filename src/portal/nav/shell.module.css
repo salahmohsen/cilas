@@ -1,0 +1,477 @@
+.skip {
+  position: absolute;
+  inset-block-start: var(--space-2);
+  inset-inline-start: var(--space-2);
+  z-index: 100;
+  padding: var(--space-2) var(--space-4);
+  border-radius: var(--radius-control);
+  background: var(--accent);
+  color: var(--accent-foreground);
+  font-size: 15px;
+  transform: translateY(calc(-100% - var(--space-4)));
+}
+
+.skip:focus-visible {
+  transform: none;
+}
+
+.shell {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  min-block-size: 100dvh;
+  background: var(--surface-muted);
+}
+
+.rail {
+  position: sticky;
+  inset-block-start: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  inline-size: 16rem;
+  block-size: 100dvh;
+  min-inline-size: 0;
+  padding: var(--space-3);
+  overflow-x: hidden;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  transition: inline-size var(--portal-duration) var(--ease-standard);
+}
+
+/* Folded: a column of icons and round covers; names stay as hidden text and tooltips. */
+.shell:has(.sidebar[data-folded]) .rail {
+  inline-size: 5rem;
+}
+
+.top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+  min-inline-size: 0;
+}
+
+.brand {
+  display: inline-flex;
+  align-items: center;
+  min-block-size: 44px;
+  padding-inline: var(--space-2);
+  border-radius: var(--radius-control);
+  color: var(--foreground);
+}
+
+.logo {
+  block-size: 1.5rem;
+  inline-size: auto;
+}
+
+.tools {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+}
+
+.main {
+  min-inline-size: 0;
+  margin: var(--space-2);
+  margin-inline-start: 0;
+  padding: var(--space-6);
+  border-radius: var(--radius-surface);
+  background: var(--background);
+  box-shadow: var(--shadow-resting);
+}
+
+/* The skip link's target: focus lands here, and the next Tab starts inside. */
+.main:focus {
+  outline: none;
+}
+
+.sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  min-inline-size: 0;
+}
+
+.fold {
+  display: inline-grid;
+  place-items: center;
+  align-self: flex-end;
+  inline-size: 44px;
+  block-size: 44px;
+  border: 0;
+  border-radius: var(--radius-control);
+  background: transparent;
+  color: var(--text-secondary);
+  cursor: pointer;
+}
+
+.fold:hover {
+  background: color-mix(in oklab, var(--foreground) 6%, transparent);
+  color: var(--foreground);
+}
+
+.chevron {
+  transition: rotate var(--portal-duration) var(--ease-standard);
+}
+
+:global([dir='rtl']) .chevron {
+  scale: -1 1;
+}
+
+.sidebar[data-folded] .fold {
+  align-self: center;
+}
+
+.sidebar[data-folded] .chevron {
+  rotate: 180deg;
+}
+
+.sidebar[data-folded] .label,
+.sidebar[data-folded] .count,
+.sidebar[data-folded] .heading {
+  position: absolute;
+  inline-size: 1px;
+  block-size: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+.sidebar[data-folded] .cover {
+  overflow: visible;
+  border-radius: var(--radius-pill);
+}
+
+.sidebar[data-folded] .cover img {
+  border-radius: var(--radius-pill);
+}
+
+.dot {
+  display: none;
+}
+
+.sidebar[data-folded] .dot {
+  position: absolute;
+  inset-block-start: -2px;
+  inset-inline-end: -2px;
+  display: block;
+  inline-size: 12px;
+  block-size: 12px;
+  border-radius: var(--radius-pill);
+  background: var(--portal-unread);
+  box-shadow: 0 0 0 2px var(--surface-muted);
+}
+
+.nav {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  min-inline-size: 0;
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.heading {
+  margin: var(--space-3) 0 var(--space-1);
+  padding-inline: var(--space-2);
+  color: var(--text-muted);
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 1.4;
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  min-block-size: 44px;
+  min-inline-size: 0;
+  padding: var(--space-1) var(--space-2);
+  border-radius: var(--radius-control);
+  color: var(--text-secondary);
+  font-size: 15px;
+  line-height: 1.3;
+  text-decoration: none;
+  transition: background-color var(--portal-duration) var(--ease-standard);
+}
+
+.row:hover {
+  background: color-mix(in oklab, var(--foreground) 6%, transparent);
+  color: var(--foreground);
+}
+
+/* The current row: a raised pill, weight 500 and a bar at its inline start, so colour is never the only cue (WCAG 1.4.1). */
+.row[aria-current='page'] {
+  position: relative;
+  background: var(--background);
+  color: var(--foreground);
+  font-weight: 500;
+  box-shadow: var(--shadow-resting);
+}
+
+.row[aria-current='page']::before {
+  position: absolute;
+  inset-block: var(--space-2);
+  inset-inline-start: 0;
+  border-inline-start: 3px solid var(--portal-current-mark);
+  border-radius: var(--radius-pill);
+  content: '';
+}
+
+@media (prefers-contrast: more) {
+  .row[aria-current='page']::before {
+    inset-block: var(--space-1);
+    border-inline-start-width: 4px;
+  }
+}
+
+/* Forced colours drop the pill and its shadow: the bar takes the system highlight, and the row an outline. */
+@media (forced-colors: active) {
+  .row[aria-current='page'] {
+    outline: 2px solid Highlight;
+    outline-offset: -2px;
+  }
+
+  .row[aria-current='page']::before {
+    border-color: Highlight;
+  }
+}
+
+.icon {
+  display: inline-grid;
+  flex: none;
+  place-items: center;
+  inline-size: 40px;
+  block-size: 32px;
+}
+
+.cover {
+  position: relative;
+  flex: none;
+  inline-size: 40px;
+  block-size: 40px;
+  overflow: hidden;
+  border-radius: var(--radius-inner);
+  background: var(--surface-muted);
+  box-shadow: inset 0 0 0 1px var(--border);
+}
+
+.cover img {
+  object-fit: cover;
+}
+
+/* Names wrap, so two spaces that share a long prefix never look the same. */
+.label {
+  flex: 1;
+  min-inline-size: 0;
+  overflow-wrap: anywhere;
+  text-align: start;
+}
+
+.count {
+  display: inline-grid;
+  flex: none;
+  place-items: center;
+  min-inline-size: 1.5rem;
+  block-size: 1.5rem;
+  padding-inline: 0.375rem;
+  border-radius: var(--radius-pill);
+  background: var(--portal-unread);
+  color: var(--portal-unread-foreground);
+  font-size: 12px;
+  font-variant-numeric: tabular-nums;
+  font-weight: 500;
+}
+
+.bar {
+  display: none;
+}
+
+.more {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  min-inline-size: 0;
+  padding-block-end: var(--space-4);
+}
+
+.utilities {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+.accountGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.identity {
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  padding: var(--space-1) var(--space-2) var(--space-2);
+  overflow-wrap: anywhere;
+}
+
+.identityName {
+  color: var(--foreground);
+  font-size: 15px;
+  font-weight: 500;
+  line-height: 1.3;
+}
+
+.identityEmail {
+  color: var(--text-muted);
+  font-size: 13px;
+  line-height: 1.4;
+}
+
+.accountGroup > button.row {
+  border: 0;
+  background: transparent;
+  font: inherit;
+  font-size: 15px;
+  text-align: start;
+  cursor: pointer;
+}
+
+/* Touch: the header's controls and the skip link get 44px hit areas (spec, Targets). */
+@media (pointer: coarse) {
+  .skip,
+  .brand {
+    min-block-size: 44px;
+    min-inline-size: 44px;
+  }
+
+  .skip {
+    display: inline-flex;
+    align-items: center;
+  }
+
+  .brand {
+    justify-content: center;
+  }
+
+  .tools button {
+    min-block-size: 44px;
+    min-inline-size: 44px;
+  }
+}
+
+@media (width >= 700px) {
+  /* The rail's header stays in view while its nav scrolls. */
+  .top {
+    position: sticky;
+    inset-block-start: calc(-1 * var(--space-3));
+    z-index: 1;
+    margin-block: calc(-1 * var(--space-3)) 0;
+    padding-block: var(--space-3) 0;
+    background: var(--surface-muted);
+  }
+
+  .shell:has(.sidebar[data-folded]) .top,
+  .shell:has(.sidebar[data-folded]) .tools {
+    flex-direction: column;
+  }
+}
+
+@media (width < 700px) {
+  .bar {
+    position: fixed;
+    inset-inline: 0;
+    inset-block-end: 0;
+    z-index: 40;
+    display: block;
+    padding-block-end: env(safe-area-inset-bottom);
+    padding-inline: max(env(safe-area-inset-left), env(safe-area-inset-right));
+    border-block-start: 1px solid var(--border);
+    background: var(--background);
+  }
+
+  .barList {
+    display: flex;
+    block-size: var(--portal-bar-height);
+    margin: 0;
+    padding: 0 var(--space-2);
+    list-style: none;
+  }
+
+  .barList > li {
+    display: flex;
+    flex: 1;
+  }
+
+  .barItem {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 2px;
+    min-block-size: 44px;
+    border: 0;
+    border-radius: var(--radius-control);
+    background: transparent;
+    color: var(--text-secondary);
+    font: inherit;
+    font-size: 12px;
+    line-height: 1.2;
+    text-decoration: none;
+    cursor: pointer;
+  }
+
+  /* The current page shows by weight and a pill behind its icon, not by colour alone (WCAG 1.4.1). */
+  .barItem[aria-current='page'] {
+    color: var(--foreground);
+    font-weight: 500;
+  }
+
+  .barItem[aria-current='page'] > svg {
+    box-sizing: content-box;
+    padding: 2px var(--space-3);
+    border-radius: var(--radius-pill);
+    background: var(--accent);
+    color: var(--accent-foreground);
+  }
+
+  .shell {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  /* The rail is only the phone header here: it takes the full width, folded or not. */
+  .rail,
+  .shell:has(.sidebar[data-folded]) .rail {
+    position: static;
+    inline-size: auto;
+    block-size: auto;
+    padding: var(--space-2) var(--space-4);
+    overflow: visible;
+  }
+
+  .rail .sidebar,
+  .account {
+    display: none;
+  }
+
+  .main {
+    margin: 0;
+    padding: var(--space-4);
+    /* Room to scroll the last row clear of the bar and of a showing toast. */
+    padding-block-end: calc(
+      var(--portal-bar-height) + env(safe-area-inset-bottom) + var(--toast-stack-height, 0px) +
+        var(--space-6)
+    );
+    border-end-start-radius: 0;
+    border-end-end-radius: 0;
+  }
+}

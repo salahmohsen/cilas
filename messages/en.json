@@ -1033,6 +1033,7 @@
     "read": "read",
     "clearRead": "Clear read",
     "triggerUnread": "{count, plural, one {, {shown} unread} other {, {shown} unread}}",
+    "triggerUnreadMany": ", more than {cap} unread",
     "kinds": {
       "submitted": "Review requested",
       "approved": "Approved",
@@ -1069,7 +1070,6 @@
     "posting": "Posting level",
     "reopen": "Reopen this archive",
     "all": "All",
-    "home": "Home",
     "empty": "No spaces yet. Your courses and cohorts appear here once you join them.",
     "membersLabel": "Members",
     "tabsLabel": "Space sections",
@@ -1727,5 +1727,48 @@
     "delete": "Delete",
     "deleted": "Deleted",
     "holdHint": "Press and hold for {seconds} seconds to confirm. With a keyboard, hold Space, or press Enter to open confirmation."
+  },
+  "Session": {
+    "signOutFailed": "You are still signed in. Try again."
+  },
+  "Portal": {
+    "nav": {
+      "label": "Main",
+      "home": "Home",
+      "openDashboard": "Open dashboard",
+      "spaces": "Spaces",
+      "unread": "{count, plural, one {, {shown} unread post} other {, {shown} unread posts}}",
+      "unreadMany": ", more than {cap} unread posts",
+      "sidebar": "Sidebar",
+      "more": "More",
+      "brand": "CILAS home"
+    },
+    "shell": {
+      "skip": "Skip to content"
+    },
+    "account": {
+      "label": "Account",
+      "profile": "Profile and settings",
+      "theme": "Theme",
+      "signOut": "Sign out",
+      "signingOut": "Signing out",
+      "themes": {
+        "light": "Light",
+        "dark": "Dark",
+        "system": "System"
+      }
+    },
+    "sheet": {
+      "close": "Close",
+      "expand": "Expand sheet",
+      "collapse": "Collapse sheet",
+      "expanded": "Sheet expanded",
+      "collapsed": "Sheet collapsed",
+      "height": "Sheet at {percent} percent height"
+    },
+    "empty": {
+      "spacesTitle": "Your spaces",
+      "spacesNext": "A space opens when a course or a cohort you joined starts."
+    }
   }
 }

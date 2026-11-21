@@ -43,13 +43,16 @@ const themes: { value: ThemePreference; label: string; icon: ReactNode }[] = [
 
 export interface UserMenuUser {
   name: string
-  email: string
+  /** Shown under the name; leave it out when the name already is the email. */
+  email?: string
   plan?: string
   fallbackSeed?: string
   avatarSrc?: string
 }
 export interface UserMenuItem {
   label: string
+  /** The label's language, when it is not the page's. */
+  lang?: string
   icon?: ReactNode
   keys?: string[]
   onSelect?: () => void
@@ -89,7 +92,13 @@ export interface UserMenuProps {
   ref?: Ref<HTMLButtonElement>
   className?: string
   /** Text in the site's language. `account` names the trigger, before the person's name. */
-  labels?: { account?: string; signOut?: string; signingOut?: string }
+  labels?: {
+    account?: string
+    signOut?: string
+    signingOut?: string
+    theme?: string
+    themes?: Partial<Record<ThemePreference, string>>
+  }
 }
 
 type Highlight = { top: number; height: number; tone?: string; glide: boolean }
@@ -357,6 +366,8 @@ export function UserMenu({
     account = 'Account menu',
     signOut: signOutLabel = 'Sign out',
     signingOut: signingOutLabel = 'Signing out',
+    theme: themeLabel = 'Theme',
+    themes: themeLabels = {},
   } = {},
 }: UserMenuProps) {
   const id = useId()
@@ -673,9 +684,7 @@ export function UserMenu({
             <span className={styles.name}>{user.name}</span>
             {user.plan && <span className={styles.plan}>{user.plan}</span>}
           </div>
-          <span className={styles.email} title={user.email}>
-            {user.email}
-          </span>
+          {user.email && <span className={styles.email}>{user.email}</span>}
         </div>
       </motion.div>
       <div
@@ -720,7 +729,9 @@ export function UserMenu({
                 <span className={styles.icon} aria-hidden="true">
                   {item.icon}
                 </span>
-                <span className={styles.itemLabel}>{item.label}</span>
+                <span className={styles.itemLabel} lang={item.lang}>
+                  {item.label}
+                </span>
                 {item.keys && <Keys keys={item.keys} />}
               </motion.button>
             ))}
@@ -744,11 +755,14 @@ export function UserMenu({
             )}
             {showTheme && (
               <Segmented
-                label="Theme"
+                label={themeLabel}
                 icon={<SunMoon size={16} strokeWidth={1.75} />}
                 value={theme}
                 onChange={changeTheme}
-                options={themes}
+                options={themes.map((option) => ({
+                  ...option,
+                  label: themeLabels[option.value] ?? option.label,
+                }))}
                 variants={row}
               />
             )}

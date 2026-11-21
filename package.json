@@ -111,6 +111,7 @@
   },
   "devDependencies": {
     "@anthropic-ai/sdk": "^0.132.1",
+    "@axe-core/playwright": "4.14.0",
     "@interfere/landmines": "0.1.0",
     "@playwright/test": "1.58.2",
     "@tailwindcss/postcss": "^4.3.3",

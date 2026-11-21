@@ -21,12 +21,12 @@ import {
 
 import { isAdminUser, isFellowUser } from '@/access'
 import { Badge } from '@/components/arc/badge/badge'
-import { Breadcrumb } from '@/components/arc/breadcrumb/breadcrumb'
-import { EmptyState } from '@/components/arc/empty-state/empty-state'
 import styles from '@/components/space/space.module.css'
 import { currentReader } from '@/lib/reader'
 import { spacesOff } from '@/lib/spaces'
 import { COMMUNITY_COVER, mySpaces } from '@/lib/spaces-data'
+import { PortalEmptyState } from '@/portal/feedback/empty-state'
+import { spaceLabel } from '@/portal/nav/space-links'
 import type { User } from '@/payload-types'
 
 type Props = { params: Promise<{ locale: string }> }
@@ -95,8 +95,9 @@ export default async function MySpacesPage({ params }: Props) {
   const payload = await getPayload({ config })
   // Off: no space exists for anyone, so only the shortcuts show (Deviation 17).
   const off = await spacesOff(payload)
-  const [t, ts, format, spaces] = await Promise.all([
+  const [t, tp, ts, format, spaces] = await Promise.all([
     getTranslations('Spaces'),
+    getTranslations('Portal'),
     getTranslations('SpaceShortcuts'),
     getFormatter(),
     off ? null : mySpaces(payload, user, locale),
@@ -116,11 +117,14 @@ export default async function MySpacesPage({ params }: Props) {
   return (
     <div className={styles.page}>
       <header className={styles.plainHead}>
-        <Breadcrumb items={[{ label: t('home'), href: `/${locale}` }, { label: t('title') }]} />
         <h1 className={styles.spaceTitle}>{t('title')}</h1>
       </header>
       {spaces && sections.length === 0 ? (
-        <EmptyState title={t('title')} description={t('empty')} />
+        <PortalEmptyState
+          title={tp('empty.spacesTitle')}
+          body={t('empty')}
+          next={tp('empty.spacesNext')}
+        />
       ) : (
         sections.map((s) => (
           <section key={s.id} aria-labelledby={`spaces-${s.id}`} className={styles.column}>
@@ -143,11 +147,7 @@ export default async function MySpacesPage({ params }: Props) {
                       className={styles.spaceCardImage}
                     />
                     <span className={styles.spaceCardTitle}>
-                      <bdi>
-                        {row.space.kind === 'community' && !row.space.name?.trim()
-                          ? t('community')
-                          : row.title}
-                      </bdi>
+                      <bdi>{spaceLabel(row, t('community'))}</bdi>
                     </span>
                     <span className={styles.spaceCardFoot}>
                       <span>

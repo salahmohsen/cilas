@@ -5,14 +5,16 @@ no_auto_install: true
 pre-commit:
   parallel: false
   commands:
-    lint-and-format:
+    # Command names `lint` and `typecheck` are excluded by the dispatcher in a
+    # worktree that has no node_modules; keep formatting in its own command.
+    lint:
+      priority: 1
       glob: '*.{js,jsx,mjs,cjs,ts,tsx,mts,cts}'
-      run: >-
-        pnpm exec oxlint --fix --no-error-on-unmatched-pattern -- {staged_files}
-        && pnpm exec oxfmt --write --no-error-on-unmatched-pattern -- {staged_files}
+      run: pnpm exec oxlint --fix --no-error-on-unmatched-pattern -- {staged_files}
       stage_fixed: true
     format:
-      glob: '*.{css,scss,less,json,jsonc,yaml,yml,md,mdx,html}'
+      priority: 2
+      glob: '*.{js,jsx,mjs,cjs,ts,tsx,mts,cts,css,scss,less,json,jsonc,yaml,yml,md,mdx,html}'
       run: pnpm exec oxfmt --write --no-error-on-unmatched-pattern -- {staged_files}
       stage_fixed: true
 
