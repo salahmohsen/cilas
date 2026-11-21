@@ -13,7 +13,7 @@ import {
   OWNER_EDITS,
   ownsViaAuthors,
   readTiers,
-  WITH_OWNER,
+  OWNER_DELETE,
 } from '@/access'
 import { lexicalEditor } from '@payloadcms/richtext-lexical'
 
@@ -55,7 +55,7 @@ export const Articles: CollectionConfig = {
     // and the review status alone a published one. Published, their edits are
     // a draft for review beside it.
     update: adminPublishes(isAdminOrOwn(ownsViaAuthors, { while: OWNER_EDITS })),
-    delete: isAdminOrOwn(ownsViaAuthors, { draft: true, while: WITH_OWNER }),
+    delete: isAdminOrOwn(ownsViaAuthors, { draft: true, while: OWNER_DELETE }),
   },
   versions: { drafts: { autosave: { interval: 2000, showSaveDraftButton: true } } },
   admin: {

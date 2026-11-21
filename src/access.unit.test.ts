@@ -9,10 +9,14 @@ import {
   adminWrites,
   adminViewOf,
   canAuthor,
+  canProposeCourse,
   canProposePublication,
   canTeach,
   isAdminOrOwn,
+  mayAuthor,
+  mayTeach,
   nobody,
+  OWNER_DELETE,
   OWNER_EDITS,
   ownAccountRows,
   ownAccountWhere,
@@ -514,5 +518,82 @@ describe('own account rows', () => {
     expect(run(adminOrOwnAccountRows, user(['admin']))).toBe(true)
     expect(run(adminOrOwnAccountRows, user(['member']))).toEqual(own)
     expect(run(adminOrOwnAccountRows, null)).toEqual({ account: { equals: null } })
+  })
+})
+
+const ROLE_CASES = [
+  ['admin', ['admin']],
+  ['super_admin', ['super_admin']],
+  ['fellow', ['fellow']],
+  ['member', ['member']],
+  ['non_degree_seeking', ['non_degree_seeking']],
+  ['no role', []],
+] as const
+
+describe('mayAuthor', () => {
+  it.each(
+    ROLE_CASES.flatMap(
+      ([name, roles]) =>
+        [
+          [name, roles, 7],
+          [name, roles, null],
+        ] as const,
+    ),
+  )(
+    'mayAuthor(%s, person %s) matches canAuthor and canProposePublication',
+    (_name, roles, person) => {
+      const holder = user([...roles], { person })
+      const expected = run(canAuthor, holder)
+      expect(mayAuthor(holder)).toBe(expected)
+      expect(run(canProposePublication, holder)).toBe(expected)
+    },
+  )
+
+  it.each([
+    ['admin', ['admin'], false, true],
+    ['fellow', ['fellow'], true, true],
+    ['fellow', ['fellow'], false, false],
+    ['member', ['member'], true, true],
+    ['member', ['member'], false, false],
+    ['non_degree_seeking', ['non_degree_seeking'], true, true],
+    ['no role', [], true, false],
+  ] as const)('mayAuthor(%s, linked %s) is %s', (_name, roles, linked, result) => {
+    expect(mayAuthor(user([...roles], linked ? { person: 7 } : {}))).toBe(result)
+  })
+})
+
+describe('mayTeach', () => {
+  it.each(
+    ROLE_CASES.flatMap(
+      ([name, roles]) =>
+        [
+          [name, roles, 7],
+          [name, roles, null],
+        ] as const,
+    ),
+  )('mayTeach(%s, person %s) matches canTeach', (_name, roles, person) => {
+    const holder = user([...roles], { person })
+    expect(mayTeach(holder)).toBe(run(canTeach, holder))
+  })
+})
+
+describe('canProposeCourse', () => {
+  it('lets an admin with a person and a linked fellow propose', () => {
+    expect(canProposeCourse(user(['admin'], { person: 7 }))).toBe(true)
+    expect(canProposeCourse(user(['fellow'], { person: 7 }))).toBe(true)
+  })
+
+  it('refuses an admin with no person, an unlinked fellow and a student', () => {
+    expect(canProposeCourse(user(['admin']))).toBe(false)
+    expect(canProposeCourse(user(['fellow']))).toBe(false)
+    expect(canProposeCourse(user(['member'], { person: 7 }))).toBe(false)
+  })
+})
+
+describe('OWNER_DELETE', () => {
+  it('lets an owner delete a document while it is with them or after a decline', () => {
+    expect(OWNER_DELETE).toEqual({
+      'review.status': { in: ['draft', 'changes_requested', 'rejected'] },
+    })
   })
 })

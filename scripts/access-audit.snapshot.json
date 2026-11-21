@@ -4201,7 +4201,7 @@
       "read": "readTiers(ownsVia(authors),drafts)#d187dc79",
       "readVersions": "isAdminOrOwn(ownsVia(authors),versions)#0286aa49",
       "update": "adminPublishes(isAdminOrOwn(ownsVia(authors),while={\"_status\":{\"in\":[\"draft\",\"published\"]}}))#8aca82e0",
-      "delete": "isAdminOrOwn(ownsVia(authors),draft,while={\"review.status\":{\"in\":[\"draft\",\"changes_requested\"]}})#0286aa49",
+      "delete": "isAdminOrOwn(ownsVia(authors),draft,while={\"review.status\":{\"in\":[\"draft\",\"changes_requested\",\"rejected\"]}})#0286aa49",
       "unlock": "payload:defaultUnlock"
     }
   },
