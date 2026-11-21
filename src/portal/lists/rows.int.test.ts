@@ -422,4 +422,33 @@ describe('list rows', () => {
       expect(ids).toHaveLength(total)
     })
   })
+
+  describe('only', () => {
+    const studentList = async (overrides: Partial<ListQuery> = {}) =>
+      loadList(payload, await userOf(world.accounts.student), ownerArticles(overrides), 'en')
+
+    it('only published leaves out the work rows', async () => {
+      const { groups } = await studentList({ only: 'published' })
+      expect(groups.map((group) => group.id)).toEqual(['published'])
+      const ids = rowsOf(groups).map((row) => row.id)
+      expect(ids).toContain(lists.articles.published)
+      expect(ids).toContain(lists.articles.published_removal_kept)
+      for (const key of [
+        'published_unsent',
+        'published_edits',
+        'published_edits_declined',
+      ] as const)
+        expect(ids).not.toContain(lists.articles[key])
+    })
+
+    it('only closed shows the declined row only', async () => {
+      const { groups } = await studentList({ only: 'closed' })
+      const mine = new Set([...lists.bulk, ...lists.manyDrafts, ...Object.values(lists.articles)])
+      expect(
+        rowsOf(groups)
+          .map((row) => row.id)
+          .filter((id) => mine.has(id)),
+      ).toEqual([lists.articles.rejected])
+    })
+  })
 })
