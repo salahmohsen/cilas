@@ -1,4 +1,32 @@
 import type { ReviewRequest, ReviewState } from './review'
+import { REVIEWED_FIELDS, type ReviewedCollection } from './reviewed-fields'
+
+export type StatusKey =
+  | 'draft'
+  | 'submitted'
+  | 'changes_requested'
+  | 'rejected'
+  | 'published'
+  | 'published_unsent'
+  | 'published_edits'
+  | 'published_removal'
+  | 'published_edits_returned'
+  | 'published_edits_declined'
+  | 'published_removal_kept'
+
+export const STATUS_KEYS: readonly StatusKey[] = [
+  'draft',
+  'submitted',
+  'changes_requested',
+  'rejected',
+  'published',
+  'published_unsent',
+  'published_edits',
+  'published_removal',
+  'published_edits_returned',
+  'published_edits_declined',
+  'published_removal_kept',
+]
 
 export type ReviewedDoc = {
   id: number
@@ -34,3 +62,68 @@ export const hasUnsentEdits = (
   doc: ReviewedDoc,
   fields: readonly string[],
 ): boolean => fields.some((field) => fingerprint(draft[field]) !== fingerprint(doc[field]))
+
+/** `keys`: read with `KEY_SELECT`, no reviewed field. `full`: every field of `statusSelect(collection)`. */
+export type RowRead = 'keys' | 'full'
+
+export type StatusInput = {
+  collection: ReviewedCollection
+  doc: ReviewedDoc
+  draft: ReviewedDoc | null
+  read: RowRead
+}
+
+/** A never-published document has a draft main row. Takes the main row only. */
+export const neverPublished = (main: ReviewedDoc): boolean => main._status === 'draft'
+
+const WAITS_ON: Record<StatusKey, 'owner' | 'admin' | null> = {
+  draft: null,
+  submitted: 'admin',
+  changes_requested: 'owner',
+  rejected: null,
+  published: null,
+  published_unsent: null,
+  published_edits: 'admin',
+  published_removal: 'admin',
+  published_edits_returned: 'owner',
+  published_edits_declined: null,
+  published_removal_kept: null,
+}
+
+/** The one Needs you predicate. */
+export const waitsOn = (key: StatusKey): 'owner' | 'admin' | null => WAITS_ON[key]
+
+const NOT_LIVE_KEYS: Partial<Record<ReviewState, StatusKey>> = {
+  draft: 'draft',
+  submitted: 'submitted',
+  changes_requested: 'changes_requested',
+  rejected: 'rejected',
+}
+
+export const statusOf = (
+  { collection, doc, draft }: StatusInput,
+  warn: (message: string) => void = console.warn,
+): StatusKey => {
+  if (doc._status !== 'published') {
+    const state = doc.review?.status
+    if (!state) return 'draft'
+    const key = NOT_LIVE_KEYS[state]
+    if (key) return key
+    warn(`Document ${doc.id} is not live with review.status ${state}; reading it as draft`)
+    return 'draft'
+  }
+  if (!draft) return 'published'
+  const request = draft.review?.request
+  const unsent = () => hasUnsentEdits(draft, doc, REVIEWED_FIELDS[collection])
+  switch (draft.review?.status) {
+    case 'submitted':
+      return request === 'removal' ? 'published_removal' : 'published_edits'
+    case 'changes_requested':
+      return 'published_edits_returned'
+    case 'rejected':
+      if (request !== 'removal') return 'published_edits_declined'
+      return unsent() ? 'published_unsent' : 'published_removal_kept'
+    default:
+      return unsent() ? 'published_unsent' : 'published'
+  }
+}
