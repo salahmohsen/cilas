@@ -19,6 +19,7 @@ import {
   type PortalWorld,
   type StorageState,
 } from '../testing/portal.fixture'
+import { axeOver, known } from '../testing/portal-e2e.test-utils'
 import { listWorld, type ListWorld } from '../testing/portal-lists.fixture'
 
 type Reader = 'student' | 'teacher' | 'writer' | 'admin'
@@ -425,5 +426,119 @@ test.describe('portal lists', () => {
           })
         })
     }
+  })
+
+  test.describe('accessibility and layout', () => {
+    const targets = (page: Page) =>
+      page
+        .locator(
+          'section[data-list-group] li a, main nav[aria-label] a, section[data-list-group] > a',
+        )
+        .evaluateAll((els) =>
+          els.map((el) => {
+            const box = el.getBoundingClientRect()
+            return { w: box.width, h: box.height, text: el.textContent }
+          }),
+        )
+    const small = (list: { w: number; h: number }[], min: number) =>
+      list.filter((box) => box.w < min || box.h < min)
+
+    test('the row link, each chip and Show more are at least 24x24 (en 1440)', async ({
+      browser,
+    }) => {
+      await inContext(browser, { viewport: DESKTOP, reader: 'student' }, async (page) => {
+        await page.goto(listPath(ARTICLES, 'en'))
+        await expect(showMoreIn(page, 'en', 'published')).toHaveCount(1)
+        const found = await targets(page)
+        expect(found.length).toBeGreaterThan(50)
+        expect(small(found, 24)).toEqual([])
+      })
+    })
+
+    test('the row link, each chip and Show more are 44x44 under a coarse pointer (en)', async ({
+      browser,
+    }) => {
+      const context = await browser.newContext({
+        baseURL,
+        viewport: WIDTHS.phone,
+        storageState: states.student,
+        hasTouch: true,
+        isMobile: true,
+      })
+      try {
+        const page = await context.newPage()
+        await page.goto(listPath(ARTICLES, 'en'))
+        expect(await page.evaluate(() => matchMedia('(pointer: coarse)').matches)).toBe(true)
+        await expect(showMoreIn(page, 'en', 'published')).toHaveCount(1)
+        expect(small(await targets(page), 44)).toEqual([])
+      } finally {
+        await context.close()
+      }
+    })
+
+    const ROLE_OF = { student: 'student', teacher: 'fellow', writer: 'admin' } as const
+    for (const locale of LOCALES)
+      for (const [reader, path] of [
+        ['student', ARTICLES],
+        ['teacher', ARTICLES],
+        ['teacher', COURSES],
+        ['writer', ARTICLES],
+        ['writer', COURSES],
+      ] as const)
+        test(`axe finds no violation on ${path} (${reader} ${locale} 1440, light, dark, search)`, async ({
+          browser,
+        }) => {
+          await inContext(browser, { viewport: DESKTOP, reader }, async (page) => {
+            const route = listPath(path, locale)
+            const allowed = known(route, ROLE_OF[reader], locale, DESKTOP.width)
+            await page.goto(route)
+            await expect(page.getByRole('heading', { level: 1 })).toHaveCount(1)
+            expect(await axeOver(page, allowed), 'light').toEqual({})
+            await page.evaluate(() => document.documentElement.setAttribute('data-theme', 'dark'))
+            expect(await axeOver(page, allowed), 'dark').toEqual({})
+            if (reader === 'student') {
+              await page.goto(`${route}?q=${encodeURIComponent(lists.titles.beta)}`)
+              await expect(page.locator('section[data-list-group] li')).toHaveCount(1)
+              await searchBox(page, locale).focus()
+              expect(await axeOver(page, allowed), 'search').toEqual({})
+            }
+          })
+        })
+
+    for (const locale of LOCALES)
+      test(`reflow at 320 and 720 (student ${locale})`, async ({ browser }) => {
+        for (const width of [320, 720])
+          await inContextAt(
+            browser,
+            { baseURL, viewport: { width, height: 800 }, state: states.student },
+            async (page) => {
+              await page.goto(listPath(ARTICLES, locale))
+              await expect(page.locator('section[data-list-group]').first()).toBeVisible()
+              expect(
+                await page.evaluate(
+                  () => document.documentElement.scrollWidth <= window.innerWidth,
+                ),
+                `${width}`,
+              ).toBe(true)
+            },
+          )
+      })
+
+    test('lists load with spaces off', async ({ browser }) => {
+      await spaces.set('off')
+      try {
+        for (const [reader, path] of [
+          ['student', ARTICLES],
+          ['teacher', COURSES],
+        ] as const)
+          await inContext(browser, { viewport: DESKTOP, reader }, async (page) => {
+            const response = await page.goto(listPath(path, 'en'))
+            expect(response?.status()).toBe(200)
+            await expect(page.locator('section[data-list-group]').first()).toBeVisible()
+          })
+      } finally {
+        await spaces.set('on')
+      }
+    })
   })
 })
