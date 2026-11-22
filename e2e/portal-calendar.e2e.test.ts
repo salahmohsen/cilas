@@ -80,7 +80,7 @@ const noSideScroll = (page: Page) =>
   page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)
 
 test.describe('portal calendar', () => {
-  test.describe.configure({ mode: 'serial', timeout: 300_000 })
+  test.describe.configure({ timeout: 300_000 })
 
   test.beforeAll(async ({ browser }) => {
     test.setTimeout(300_000)
@@ -151,7 +151,7 @@ test.describe('portal calendar', () => {
         const details = page.getByRole('dialog', { name: world.communityCourse.title })
         await expect(details).toBeVisible()
         await expect(details).toContainText(MESSAGES.en.Calendar.session.replace('{n}', '1'))
-        await expect(details).toContainText(/7:00|7 PM/)
+        await expect(details).toContainText(/7 – 9 PM/)
         await expect(
           details.getByRole('link', { name: MESSAGES.en.Calendar.viewCourse }),
         ).toBeVisible()
