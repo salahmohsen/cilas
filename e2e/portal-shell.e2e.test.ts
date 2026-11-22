@@ -1334,7 +1334,18 @@ test.describe('portal shell', () => {
                     '[data-portal-rail] nav a, [data-portal-crumbs] button[data-portal-fold]',
                   )
             const found = await sizes(page, targets)
-            expect(found.length).toBeGreaterThan(viewport === PHONE ? 1 : 2)
+            const navs = await page.evaluate(() =>
+              [...document.querySelectorAll('nav')].map((el) => ({
+                label: el.getAttribute('aria-label'),
+                shown: el.checkVisibility(),
+                controls: [...el.querySelectorAll('a, button')].map(
+                  (c) => `${c.tagName} ${c.textContent?.trim()} ${c.getClientRects().length}`,
+                ),
+              })),
+            )
+            expect(found.length, JSON.stringify({ width: viewport.width, navs })).toBeGreaterThan(
+              viewport === PHONE ? 1 : 2,
+            )
             expect(atLeast(found, 44)).toEqual([])
             const header = page.locator('[data-portal-rail] header').locator('a, button')
             await expect(header.first()).toBeVisible()
