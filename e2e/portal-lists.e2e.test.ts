@@ -45,8 +45,6 @@ const inContext = (
   inContextAt(browser, { baseURL, viewport: options.viewport, state: states[options.reader] }, run)
 
 const listPath = (path: string, locale: Locale, query = '') => `/${locale}${path}${query}`
-const rowLink = (page: Page, collection: 'articles' | 'courses', id: number) =>
-  page.locator(`main li a[href="/admin/collections/${collection}/${id}"]`)
 const sectionOf = (page: Page, group: GroupId) =>
   page.locator(`section[data-list-group="${group}"]`)
 const groupOrder = (page: Page) =>
@@ -202,7 +200,9 @@ test.describe('portal lists', () => {
           await inContext(browser, { viewport, reader: 'teacher' }, async (page) => {
             await page.goto(listPath(COURSES, locale))
             const row = page.locator('li', {
-              has: rowLink(page, 'courses', lists.courses.published_edits),
+              has: page.locator(
+                `a[href="/admin/collections/courses/${lists.courses.published_edits}"]`,
+              ),
             })
             await expect(row.locator('[data-status-badge]')).toHaveCount(2)
           })
