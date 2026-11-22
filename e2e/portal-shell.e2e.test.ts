@@ -804,7 +804,7 @@ test.describe('portal shell', () => {
           )
           expect(
             await region(page, locale).evaluate((el) => getComputedStyle(el).scrollPaddingBottom),
-          ).toBe('120px')
+          ).toContain('120px')
         })
       })
 

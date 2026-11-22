@@ -175,3 +175,30 @@ describe('Sidebar rows', () => {
     await waitFor(() => expect(row.querySelector('img')).toBeNull())
   })
 })
+
+describe('Sidebar scroll region', () => {
+  it.each([0, 200])(
+    'a focused row keeps clear of the region edge, at the end and back at the start (toast stack %ipx)',
+    async (toast) => {
+      await page.viewport(1440, 800)
+      document.documentElement.style.setProperty('--toast-stack-height', `${toast}px`)
+      const spaces = Array.from({ length: 12 }, (_, i) => spaceRow({ label: `Space ${i + 1}` }))
+      renderSidebar({ spaces, box: { width: 256, height: 180 } })
+      const region = screen.getByRole('region', { name: 'Pages and spaces' })
+      const rows = [...region.querySelectorAll('a')]
+      const gap = (edge: 'start' | 'end') => {
+        const row = document.activeElement!.getBoundingClientRect()
+        const box = region.getBoundingClientRect()
+        return edge === 'end' ? box.bottom - row.bottom : row.top - box.top
+      }
+      rows[0]!.focus()
+      for (let i = 1; i < rows.length; i++) await userEvent.keyboard('{Tab}')
+      expect(document.activeElement).toBe(rows.at(-1))
+      await waitFor(() => expect(gap('end')).toBeGreaterThanOrEqual(7))
+      for (let i = 1; i < rows.length; i++) await userEvent.keyboard('{Shift>}{Tab}{/Shift}')
+      expect(document.activeElement).toBe(rows[0])
+      await waitFor(() => expect(gap('start')).toBeGreaterThanOrEqual(7))
+      document.documentElement.style.removeProperty('--toast-stack-height')
+    },
+  )
+})

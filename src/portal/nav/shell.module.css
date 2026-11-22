@@ -195,7 +195,8 @@
   overscroll-behavior-y: contain;
   --focus-outline-offset: -2px;
   scroll-padding-block: var(--space-2);
-  scroll-padding-block-end: max(var(--space-2), var(--toast-stack-height, 0px));
+  /* Capped at half the scrollport: on a short screen a tall toast stack would leave a focused row no room. */
+  scroll-padding-block-end: clamp(var(--space-2), var(--toast-stack-height, 0px), 50%);
 }
 
 .list {
