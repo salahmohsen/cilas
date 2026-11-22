@@ -869,15 +869,15 @@ test.describe('portal shell', () => {
           .evaluate((el) => getComputedStyle(el).backgroundColor)
         const opaque = (colour: string) => !/rgba\(.*,\s*0?\.\d+\)$|\/\s*0?\.\d+\)$/.test(colour)
 
-        await page.emulateMedia({ forcedColors: 'active' })
+        await page.emulateMedia({ forcedColors: 'active', reducedMotion: 'reduce' })
         await region(page, 'en').hover()
+        await expect.poll(async () => opaque(await thumbColour())).toBe(true)
         const forced = await thumbColour()
         expect(forced).not.toBe(shellColour)
-        expect(opaque(forced)).toBe(true)
         await track(page).locator('> *').hover()
-        expect(await thumbColour()).toBe(forced)
+        await expect.poll(thumbColour).toBe(forced)
 
-        await page.emulateMedia({ forcedColors: 'none', contrast: 'more' })
+        await page.emulateMedia({ forcedColors: 'none', contrast: 'more', reducedMotion: 'reduce' })
         const foreground = await page.evaluate(() => {
           const probe = document.createElement('span')
           probe.style.color = 'var(--foreground)'
@@ -887,9 +887,9 @@ test.describe('portal shell', () => {
           return colour
         })
         await region(page, 'en').hover()
-        expect(await thumbColour()).toBe(foreground)
+        await expect.poll(thumbColour).toBe(foreground)
         await track(page).locator('> *').hover()
-        expect(await thumbColour()).toBe(foreground)
+        await expect.poll(thumbColour).toBe(foreground)
       })
     })
 
