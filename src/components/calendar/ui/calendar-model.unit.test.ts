@@ -4,6 +4,7 @@ import {
   allDayBars,
   blocksOf,
   hourRange,
+  legendOf,
   scrollTargetOf,
   upNext,
 } from '@/components/calendar/ui/calendar-model'
@@ -135,5 +136,33 @@ describe('upNext', () => {
   it('keeps a meeting going on now, and has none after the last', () => {
     expect(upNext(items, { date: '2026-11-17', minutes: 20 * 60 })?.id).toBe('n')
     expect(upNext(items, { date: '2026-11-17', minutes: 21 * 60 })).toBeNull()
+  })
+})
+
+describe('legendOf', () => {
+  const entry = (id: string, kind: string, extra: Partial<CalendarItem> = {}) =>
+    ({
+      id,
+      kind,
+      title: id,
+      tone: 'neutral',
+      cancelled: false,
+      version: 'v',
+      blocks: [],
+      ...extra,
+    }) satisfies CalendarItem
+
+  it("keeps each kind's edge beside its tone", () => {
+    expect(
+      legendOf([
+        entry('a', 'course:mine', { tone: 'pink', edge: 'solid' }),
+        entry('b', 'course:other', { edge: 'double' }),
+        entry('c', 'event:talk', { tone: 'blue' }),
+      ]),
+    ).toEqual([
+      { kind: 'course:mine', tone: 'pink', edge: 'solid' },
+      { kind: 'course:other', tone: 'neutral', edge: 'double' },
+      { kind: 'event:talk', tone: 'blue', edge: undefined },
+    ])
   })
 })

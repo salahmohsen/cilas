@@ -549,7 +549,7 @@
     "unscheduled": "Unscheduled",
     "range": "{from} to {to}",
     "timeRange": "{start} to {end}",
-    "blockName": "{title}, {day}, {time}{hasStatus, select, true {, {status}} other {}}",
+    "blockName": "{title}, {day}, {time}{hasKind, select, true {, {kind}} other {}}{hasStatus, select, true {, {status}} other {}}",
     "newItem": "New item",
     "unsaved": "Unsaved",
     "deleted": "Deleted",

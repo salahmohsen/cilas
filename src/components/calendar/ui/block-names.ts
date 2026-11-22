@@ -47,6 +47,7 @@ export function blockNamer({ items, labels, locale, unsaved, marked }: Context) 
       title,
       day,
       time,
+      kind: item?.edge ? labels.kind(item.kind) : '',
       status: states.format(status.filter((state): state is string => Boolean(state))),
     })
   }

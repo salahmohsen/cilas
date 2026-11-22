@@ -16,4 +16,16 @@ describe('the calendar stylesheet', () => {
     expect(coarse).toMatch(/\.edge \{\s*display: none;/)
     expect(css).not.toMatch(/\.track[^{]*\{[^}]*touch-action: none/)
   })
+
+  it('draws an edge on every view-mode element that carries a tone, in the start direction', () => {
+    const edged = ['block', 'pill', 'chip', 'monthBar', 'next', 'detailsMark', 'swatch'].filter(
+      (selector) =>
+        !css.includes(`.${selector}[data-edge] {`) && !css.includes(`.${selector}[data-edge],`),
+    )
+    expect(edged).toEqual([])
+    expect(css).toMatch(
+      /\[data-edge\][^{]*\{[^}]*border-inline-start: 3px solid var\(--tone-line\)/,
+    )
+    expect(css).toMatch(/\[data-edge='double'\][^{]*\{[^}]*border-inline-start-style: double/)
+  })
 })

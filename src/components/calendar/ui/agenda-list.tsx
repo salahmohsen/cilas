@@ -88,6 +88,7 @@ export function AgendaList({
                       href={item?.href}
                       className={styles.agendaRow}
                       data-tone={item?.tone ?? newTone}
+                      data-edge={item?.edge}
                       data-cancelled={item?.cancelled ? '' : undefined}
                       data-marked={marked.has(block.itemId) ? '' : undefined}
                       data-unsaved={unsaved.has(block.id) ? '' : undefined}

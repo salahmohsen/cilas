@@ -1681,3 +1681,31 @@
   flex: 1 1 0;
   min-inline-size: min-content;
 }
+
+/* A shape cue beside the tone: a bar on the start edge, so colour is not the only signal. */
+.block[data-edge],
+.pill[data-edge],
+.chip[data-edge],
+.monthBar[data-edge],
+.next[data-edge],
+.detailsMark[data-edge],
+.swatch[data-edge] {
+  border-inline-start: 3px solid var(--tone-line);
+}
+.block[data-edge='double'],
+.pill[data-edge='double'],
+.chip[data-edge='double'],
+.monthBar[data-edge='double'],
+.next[data-edge='double'],
+.detailsMark[data-edge='double'],
+.swatch[data-edge='double'] {
+  border-inline-start-style: double;
+}
+/* The agenda row already has a bar: the edge widens it, filled or hollow. The :not() keeps the dotted and dashed state bars. */
+.agendaRow[data-edge] {
+  grid-template-columns: 4.75rem 6px minmax(0, 1fr);
+}
+.agendaRow[data-edge='double']:not([data-cancelled], [data-unsaved], [data-deleted]) .agendaBar {
+  background: transparent;
+  border: 1px solid var(--tone-line);
+}

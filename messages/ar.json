@@ -549,7 +549,7 @@
     "unscheduled": "غير مجدولة",
     "range": "من {from} إلى {to}",
     "timeRange": "من {start} إلى {end}",
-    "blockName": "{title}، {day}، {time}{hasStatus, select, true {، {status}} other {}}",
+    "blockName": "{title}، {day}، {time}{hasKind, select, true {، {kind}} other {}}{hasStatus, select, true {، {status}} other {}}",
     "newItem": "عنصر جديد",
     "unsaved": "غير محفوظ",
     "deleted": "محذوفة",

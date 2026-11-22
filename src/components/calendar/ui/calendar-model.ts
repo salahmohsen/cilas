@@ -104,9 +104,11 @@ export const scrollTargetOf = (blocks: Span[], days: string[]) => {
   return starts.length ? Math.min(...starts) : DEFAULT_START_MINUTES
 }
 
-/** One legend entry per kind, in the tone of the first item of that kind. */
+/** One legend entry per kind, in the tone and edge of the last item of that kind. */
 export const legendOf = (items: CalendarItem[]) => [
-  ...new Map(items.map((item) => [item.kind, { kind: item.kind, tone: item.tone }])).values(),
+  ...new Map(
+    items.map((item) => [item.kind, { kind: item.kind, tone: item.tone, edge: item.edge }]),
+  ).values(),
 ]
 
 /** The first start, in half hours from `min`, where a block of `size` minutes overlaps nothing on `track`; `min` when the day is full. */

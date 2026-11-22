@@ -107,6 +107,8 @@ type Shared = {
   weekLabel?: (days: string[]) => string | null
   /** The host's own toolbar buttons, such as Edit. */
   action?: ReactNode
+  /** Legend kinds that start off; read once. */
+  defaultHiddenKinds?: readonly string[]
 }
 
 export type CalendarProps = Shared &
@@ -164,6 +166,7 @@ export function Calendar({
   actionsOf,
   weekLabel,
   action,
+  defaultHiddenKinds,
   drafts,
   onCancelEdits,
   mode,
@@ -209,7 +212,7 @@ export function Calendar({
     onNavigate?.(view, to)
   }
   // The kinds the legend turned off: their items leave the grid, the agenda and Up next.
-  const [hidden, setHidden] = useState<ReadonlySet<string>>(() => new Set())
+  const [hidden, setHidden] = useState<ReadonlySet<string>>(() => new Set(defaultHiddenKinds))
   // The keyboard turned the month: the new month's grid takes focus on its anchor day, once.
   const [monthFocus, setMonthFocus] = useState(false)
   useEffect(() => {
@@ -827,17 +830,20 @@ export function Calendar({
                   className={styles.legend}
                   aria-label={labels.legend}
                   value={legend.map(({ kind }) => kind).filter((kind) => !hidden.has(kind))}
-                  onValueChange={(shownKinds) =>
+                  onValueChange={(shownKinds) => {
+                    // A kind with no item in the loaded range is not in the legend, and stays as it was.
+                    const legendKinds = legend.map(({ kind }) => kind)
                     setHidden(
-                      new Set(
-                        legend.map(({ kind }) => kind).filter((kind) => !shownKinds.includes(kind)),
-                      ),
+                      new Set([
+                        ...[...hidden].filter((kind) => !legendKinds.includes(kind)),
+                        ...legendKinds.filter((kind) => !shownKinds.includes(kind)),
+                      ]),
                     )
-                  }
+                  }}
                 >
-                  {legend.map(({ kind, tone }) => (
+                  {legend.map(({ kind, tone, edge }) => (
                     <Toggle key={kind} value={kind} className={styles.legendKind} data-tone={tone}>
-                      <span className={styles.swatch} aria-hidden />
+                      <span className={styles.swatch} data-edge={edge} aria-hidden />
                       {labels.kind(kind)}
                     </Toggle>
                   ))}

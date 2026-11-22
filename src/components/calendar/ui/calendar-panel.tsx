@@ -62,6 +62,7 @@ export function CalendarPanel({
               type="button"
               className={styles.next}
               data-tone={next.item.tone}
+              data-edge={next.item.edge}
               data-row-id={`${next.item.id}/${next.id}`}
               onClick={(event) => onOpen(next.item.id, next.id, event.currentTarget)}
             >
@@ -118,6 +119,7 @@ function DaySection({
           type="button"
           className={styles.next}
           data-tone={item.tone}
+          data-edge={item.edge}
           data-cancelled={item.cancelled ? '' : undefined}
           data-row-id={block.id}
           onClick={(event) => onPress(event.currentTarget)}

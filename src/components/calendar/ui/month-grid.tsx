@@ -138,6 +138,7 @@ export function MonthGrid({
       href: item?.href,
       tabIndex: -1,
       'data-tone': item?.tone ?? newTone,
+      'data-edge': item?.edge,
       'data-cancelled': item?.cancelled ? '' : undefined,
       'data-marked': marked.has(block.itemId) ? '' : undefined,
       'data-unsaved': unsaved.has(block.id) ? '' : undefined,
