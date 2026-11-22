@@ -1,12 +1,13 @@
 import type { Payload } from 'payload'
 
 import { personOf } from '@/access'
+import { ENROLLED } from '@/lib/list-members'
 import { relId } from '@/lib/relation'
 import type { User } from '@/payload-types'
 
 /**
  * The ids of the courses a signed-in reader belongs to: the ones they teach
- * (a fellow, drafts included) and the ones they are accepted in. Both reads
+ * (a fellow, drafts included) and the ones they take (`ENROLLED`: accepted, confirmed or completed). Both reads
  * are gated, so a course the reader may not read never appears. An account
  * with no person has no course, and no query runs.
  */
@@ -25,7 +26,7 @@ export const readerCourseIds = async (payload: Payload, user: User): Promise<num
     }),
     payload.find({
       collection: 'enrollments',
-      where: { and: [{ person: { equals: person } }, { status: { equals: 'accepted' } }] },
+      where: { and: [{ person: { equals: person } }, { status: { in: [...ENROLLED] } }] },
       select: { course: true },
       depth: 0,
       pagination: false,
