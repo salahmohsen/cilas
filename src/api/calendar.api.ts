@@ -12,8 +12,7 @@ import { calendarWords } from '@/lib/calendar-context'
 import { deliveryOf } from '@/lib/session-items'
 import { eventItems } from '@/lib/events'
 import { PUBLIC_LISTS_TAG } from '@/lib/paths'
-import { relId } from '@/lib/relation'
-import type { Media, User } from '@/payload-types'
+import type { Course, Media, User } from '@/payload-types'
 
 const visible: Where = {
   and: [{ tier: { equals: 'public' } }, { _status: { equals: 'published' } }],
@@ -25,29 +24,10 @@ const coverOf = (value: unknown): CalendarMeeting['cover'] => {
   return mediaCover(m)
 }
 
-/** The names of the places the cycles meet at, by cycle id, as the public may read them. */
-const placesOf = async (
-  payload: Payload,
-  cycles: number[],
-  locale: Locale,
-): Promise<Map<number, string>> => {
-  if (!cycles.length) return new Map()
-  const { docs } = await payload.find({
-    collection: 'cycles',
-    where: { id: { in: cycles } },
-    depth: 1,
-    pagination: false,
-    select: { place: true },
-    populate: { places: { name: true } },
-    locale,
-    fallbackLocale: otherLocale(locale),
-    overrideAccess: false,
-  })
-  return new Map(
-    docs.flatMap((cycle) =>
-      typeof cycle.place === 'object' && cycle.place?.name ? [[cycle.id, cycle.place.name]] : [],
-    ),
-  )
+const placeOf = (course: Pick<Course, 'cycle'>): string | null => {
+  const { cycle } = course
+  const place = typeof cycle === 'object' && cycle ? cycle.place : null
+  return typeof place === 'object' && place?.name ? place.name : null
 }
 
 type CourseSource =
@@ -94,7 +74,7 @@ const courseMeetings = async (
     payload.find({
       collection: 'courses',
       ...gate.query,
-      depth: 1,
+      depth: 2,
       joins: false,
       pagination: false,
       select: {
@@ -107,32 +87,20 @@ const courseMeetings = async (
         tier: true,
         _status: true,
       },
-      populate: { media },
+      populate: { media, cycles: { place: true }, places: { name: true } },
       locale,
       fallbackLocale: otherLocale(locale),
       overrideAccess: false,
     }),
     calendarWords(locale),
   ])
-  const cycleOf = (course: (typeof courses.docs)[number]) => relId(course.cycle)
-  const [sessions, places] = await Promise.all([
-    getCourseSessions(
-      payload,
-      courses.docs.map((c) => c.id),
-      { locale, reader: gate.reader },
-    ),
-    placesOf(
-      payload,
-      [...new Set(courses.docs.flatMap((c) => cycleOf(c) ?? []))].map(Number),
-      locale,
-    ),
-  ])
+  const sessions = await getCourseSessions(
+    payload,
+    courses.docs.map((c) => c.id),
+    { locale, reader: gate.reader },
+  )
   return courses.docs.flatMap((c) => {
-    const cycle = cycleOf(c)
-    const course = {
-      location: c.location,
-      place: cycle == null ? null : (places.get(Number(cycle)) ?? null),
-    }
+    const course = { location: c.location, place: placeOf(c) }
     const opens = Boolean(c.slug) && courseOnSite(c, gate.reader)
     return courseItems(
       {
