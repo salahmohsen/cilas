@@ -19,6 +19,7 @@ import {
 import { resendInbox } from '../../../testing/resend.test-utils'
 import { groupOf } from '../lists/groups'
 import { loadList } from '../lists/rows'
+import { countsOf, needsTotal, rowsOf, workSetsOf, type NeedsResult } from './needs'
 import { ownRows, ownSet } from './owner-rows'
 
 mockNetwork(resendInbox().handler, ...localServices)
@@ -153,6 +154,160 @@ describe('needs', () => {
       expect((await ownSet(recording, nobody, 'courses')).size).toBe(0)
       expect(await ownRows(recording, nobody, 'articles', new Map(), 'en')).toEqual([])
       expect(calls.filter((call) => call.method === 'find')).toHaveLength(0)
+    })
+  })
+
+  describe('needs and needsCounts', () => {
+    const idOf = (href: string) => Number(href.split('/').pop())
+    const nobody = { id: -1, roles: ['member'], person: null } as unknown as User
+
+    const idsOf = (result: NeedsResult, collection: string, ids: number[]) =>
+      result.rows
+        .filter((row) => row.collection === collection && ids.includes(idOf(row.href)))
+        .map((row) => idOf(row.href))
+        .sort()
+
+    it('the rows of needs(admin) hold every fixture document that waits on the admin, plus one applicants row', async () => {
+      const admin = await userOf(portal.accounts.admin)
+      const result = await rowsOf(payload, admin, await workSetsOf(payload, admin), 'en')
+      const waiting = world.adminWaiting
+      const fixtureRows = [
+        ...(['articles', 'courses', 'publications'] as const).flatMap((collection) =>
+          result.rows.filter(
+            (row) =>
+              row.collection === collection && world.ids[collection].includes(idOf(row.href)),
+          ),
+        ),
+        ...result.rows.filter((row) => row.kind === 'applicants'),
+      ]
+      const adminWaitingCount =
+        waiting.articles.length + waiting.courses.length + waiting.publications.length
+      expect(fixtureRows).toHaveLength(adminWaitingCount + 1)
+      for (const collection of ['articles', 'courses', 'publications'] as const)
+        expect(idsOf(result, collection, world.ids[collection])).toEqual(
+          [...waiting[collection]].sort(),
+        )
+      const applicants = result.rows.filter((row) => row.kind === 'applicants')
+      expect(applicants).toHaveLength(1)
+      expect(applicants[0]).toMatchObject({ href: '/admin/applicants', collection: null })
+      expect(applicants[0]!.count).toBeGreaterThanOrEqual(2)
+    })
+
+    it('names the owner of an article whose person is hidden', async () => {
+      const admin = await userOf(portal.accounts.admin)
+      const result = await rowsOf(payload, admin, await workSetsOf(payload, admin), 'en')
+      const row = result.rows.find(
+        (candidate) =>
+          candidate.collection === 'articles' && idOf(candidate.href) === world.hiddenOwnerArticle,
+      )
+      const article = await payload.findByID({
+        collection: 'articles',
+        id: world.hiddenOwnerArticle,
+        depth: 1,
+        draft: true,
+        overrideAccess: true,
+      })
+      const names = (article.authors as Array<{ name?: string }>).map((person) => person.name)
+      expect(row?.owners).toEqual(names)
+    })
+
+    it.each(['admin', 'fellow', 'student'] as const)(
+      'countsOf and rowsOf of one WorkSets agree for the %s',
+      async (role) => {
+        const user = await userOf(portal.accounts[role])
+        const sets = await workSetsOf(payload, user)
+        const result = await rowsOf(payload, user, sets, 'en')
+        const counts = countsOf(sets)
+        expect(counts.total).toBe(needsTotal(result))
+        if (role !== 'admin') {
+          expect(counts.total).toBeGreaterThanOrEqual(1)
+          expect(counts.by.ownArticles).toBe(
+            result.rows.filter((row) => row.collection === 'articles').length,
+          )
+        }
+      },
+    )
+
+    it('a non-admin never reads the admin queue', async () => {
+      const adminIds = new Set(Object.values(world.adminWaiting).flat())
+      const users = [
+        await userOf(portal.accounts.student),
+        await userOf(portal.accounts.fellow),
+        nobody,
+        { id: -2, roles: ['Admin'], person: null } as unknown as User,
+      ]
+      for (const user of users) {
+        const { payload: recording, calls } = recordingPayload(payload)
+        const sets = await workSetsOf(recording, user)
+        const result = await rowsOf(recording, user, sets, 'en')
+        expect(sets.reviewQueue).toBeUndefined()
+        expect(sets.applicants).toBeUndefined()
+        for (const row of result.rows) expect(adminIds.has(idOf(row.href))).toBe(false)
+        for (const call of calls) expect(call.args.overrideAccess).not.toBe(true)
+      }
+    })
+
+    it('rowsOf reads no work set', async () => {
+      const empty = recordingPayload(payload)
+      await rowsOf(empty.payload, nobody, { failed: [] }, 'en')
+      expect(empty.calls).toHaveLength(0)
+      for (const account of [portal.accounts.admin, portal.accounts.student]) {
+        const user = await userOf(account)
+        const sets = await workSetsOf(payload, user)
+        const { payload: recording, calls } = recordingPayload(payload)
+        await rowsOf(recording, user, sets, 'en')
+        for (const call of calls) {
+          expect(call.args.select).not.toEqual({ id: true })
+          if (call.method === 'findVersions')
+            expect(call.args.where).toEqual({
+              and: [{ parent: { in: expect.any(Array) } }, { latest: { equals: true } }],
+            })
+        }
+      }
+    })
+
+    it('a source that fails leaves the others', async () => {
+      const admin = await userOf(portal.accounts.admin)
+      const { payload: refusing } = recordingPayload(
+        payload,
+        (call) => call.method === 'find' && call.args.collection === 'form-submissions',
+      )
+      const sets = await workSetsOf(refusing, admin)
+      const result = await rowsOf(refusing, admin, sets, 'en')
+      expect(sets.failed).toEqual(['applicants'])
+      expect(result.failed).toEqual(['applicants'])
+      expect(result.rows.length).toBeGreaterThan(0)
+      expect(result.rows.some((row) => row.kind === 'applicants')).toBe(false)
+      expect(needsTotal(result)).toBeNull()
+      expect(countsOf(sets).total).toBeNull()
+    })
+
+    it('a publication with changes requested is not in needs(owner)', async () => {
+      const student = portal.accounts.student.person!
+      const id = track(
+        'publications',
+        await payload.create({
+          collection: 'publications',
+          data: {
+            title: uniq('Needs returned publication'),
+            slug: uniq('needs-returned-publication'),
+            kind: 'other',
+            editors: [student],
+            review: { status: 'draft' },
+          },
+          overrideAccess: true,
+        }),
+      ).id
+      for (const status of ['submitted', 'changes_requested'] as const)
+        await payload.update({
+          collection: 'publications',
+          id,
+          data: { _status: 'draft', review: { status, review_note: 'A note' } } as never,
+          overrideAccess: true,
+        })
+      const user = await userOf(portal.accounts.student)
+      const result = await rowsOf(payload, user, await workSetsOf(payload, user), 'en')
+      expect(result.rows.every((row) => row.collection !== 'publications')).toBe(true)
     })
   })
 })
