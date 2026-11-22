@@ -39,6 +39,7 @@ import * as PopoverPrimitive from '@radix-ui/react-popover'
 import { unreadCount as unreadText } from '@/lib/unread-count'
 
 import { Avatar } from '../avatar/avatar'
+import { ScrollArea } from '../scroll-area/scroll-area'
 import { motionTokens } from '../lib/motion-tokens'
 import styles from './notification-center.module.css'
 
@@ -535,226 +536,237 @@ export function NotificationCenter({
           </div>
 
           {/* Rows collapse their own height on the way out, so the list and the panel close the gap together. */}
-          <div
-            className={styles.list}
-            role="list"
-            aria-label={view === 'all' ? text.allNotifications : text.unreadNotifications}
+          {/* Portal patch (phase 1b, L0): the list scrolls in an Arc ScrollArea, which names the region and shows the bar. */}
+          <ScrollArea
+            fade={0}
+            scrollbars="always"
+            label={view === 'all' ? text.allNotifications : text.unreadNotifications}
+            viewportClassName={styles.listViewport}
           >
-            <AnimatePresence initial={false} custom={bulk}>
-              {visible.map((item, index) => (
-                <motion.div
-                  key={item.id}
-                  role="listitem"
-                  className={styles.row}
-                  custom={bulk}
-                  variants={{
-                    exit: (isBulk: boolean) =>
+            <div className={styles.list} role="list">
+              <AnimatePresence initial={false} custom={bulk}>
+                {visible.map((item, index) => (
+                  <motion.div
+                    key={item.id}
+                    role="listitem"
+                    className={styles.row}
+                    custom={bulk}
+                    variants={{
+                      exit: (isBulk: boolean) =>
+                        reduce
+                          ? fadeOut
+                          : {
+                              height: 0,
+                              opacity: 0,
+                              transition: {
+                                height: {
+                                  ...motionTokens.spring.smooth,
+                                  delay: isBulk ? cascade(index) : 0,
+                                },
+                                opacity: { ...exitFast, delay: isBulk ? cascade(index) : 0 },
+                              },
+                            },
+                    }}
+                    initial={reduce ? { opacity: 0 } : { height: 0 }}
+                    animate={{ height: 'auto', opacity: 1 }}
+                    exit="exit"
+                    transition={height}
+                  >
+                    <article
+                      className={[
+                        styles.item,
+                        item.read ? styles.itemRead : '',
+                        expandedId === item.id ? styles.itemExpanded : '',
+                      ]
+                        .filter(Boolean)
+                        .join(' ')}
+                      style={{ '--index': Math.min(index, 7) } as CSSProperties}
+                    >
+                      <div className={styles.itemMain}>
+                        <NotificationVisual item={item} />
+                        <button
+                          ref={(node) => {
+                            if (node) itemRefs.current.set(item.id, node)
+                            else itemRefs.current.delete(item.id)
+                          }}
+                          type="button"
+                          className={styles.itemToggle}
+                          aria-expanded={expandedId === item.id}
+                          aria-label={`${item.title}${item.read ? '' : text.unreadSuffix}. ${expandedId === item.id ? text.hideDetails : text.showDetails}`}
+                          onClick={() =>
+                            setExpandedId((current) => (current === item.id ? null : item.id))
+                          }
+                        >
+                          <span className={styles.itemTitle}>
+                            <strong dir="auto">{item.title}</strong>
+                            <AnimatePresence initial={false} custom={bulk}>
+                              {!item.read && (
+                                <motion.span
+                                  key="dot"
+                                  className={styles.unreadDot}
+                                  aria-hidden="true"
+                                  custom={bulk}
+                                  variants={{
+                                    exit: (isBulk: boolean) =>
+                                      reduce
+                                        ? fadeOut
+                                        : {
+                                            opacity: 0,
+                                            scale: 0.3,
+                                            transition: {
+                                              ...exitFast,
+                                              delay: isBulk ? cascade(index) : 0,
+                                            },
+                                          },
+                                  }}
+                                  initial={reduce ? { opacity: 0 } : { opacity: 0, scale: 0.3 }}
+                                  animate={{ opacity: 1, scale: 1 }}
+                                  exit="exit"
+                                  transition={reduce ? instant : motionTokens.spring.snappy}
+                                />
+                              )}
+                            </AnimatePresence>
+                          </span>
+                          <span className={styles.itemPreview}>
+                            {item.description ?? (item.actor ? item.actor.name : text.showDetails)}
+                          </span>
+                        </button>
+                        <time className={styles.time}>{item.time}</time>
+                      </div>
+                      <AnimatePresence initial={false}>
+                        {expandedId === item.id && (
+                          <motion.div
+                            className={styles.details}
+                            initial={reduce ? { opacity: 0 } : { height: 0, opacity: 0 }}
+                            animate={{ height: 'auto', opacity: 1 }}
+                            exit={
+                              reduce
+                                ? fadeOut
+                                : {
+                                    height: 0,
+                                    opacity: 0,
+                                    transition: {
+                                      height: motionTokens.spring.smooth,
+                                      opacity: exitFast,
+                                    },
+                                  }
+                            }
+                            transition={height}
+                          >
+                            <p>{item.description ?? text.details}</p>
+                            <div className={styles.itemActions}>
+                              {item.href ? (
+                                <a href={item.href} onClick={() => onOpenItem?.(item)}>
+                                  <ArrowUpRight size={14} strokeWidth={1.75} aria-hidden="true" />
+                                  {text.open}
+                                </a>
+                              ) : null}
+                              <button type="button" onClick={() => toggleRead(item)}>
+                                <MorphWidth
+                                  reduce={reduce}
+                                  morphKey={item.read ? 'read' : 'unread'}
+                                >
+                                  <span className={styles.actionIcon}>
+                                    <AnimatePresence mode="popLayout" initial={false}>
+                                      <Swap
+                                        key={item.read ? 'unread' : 'read'}
+                                        className={styles.actionGlyph}
+                                        initial={reduce ? { opacity: 0 } : iconIn}
+                                        animate={shown}
+                                        exit={
+                                          reduce ? fadeOut : { ...iconIn, transition: exitFast }
+                                        }
+                                        transition={reduce ? instant : motionTokens.spring.snappy}
+                                      >
+                                        {item.read ? (
+                                          <CircleDot
+                                            size={14}
+                                            strokeWidth={1.75}
+                                            aria-hidden="true"
+                                          />
+                                        ) : (
+                                          <Check size={14} strokeWidth={1.75} aria-hidden="true" />
+                                        )}
+                                      </Swap>
+                                    </AnimatePresence>
+                                  </span>
+                                  <SwapText reduce={reduce}>
+                                    {item.read ? text.markUnread : text.markRead}
+                                  </SwapText>
+                                </MorphWidth>
+                              </button>
+                              <button type="button" onClick={() => dismiss(item)}>
+                                <X size={14} strokeWidth={1.75} aria-hidden="true" />
+                                {text.dismiss}
+                              </button>
+                            </div>
+                          </motion.div>
+                        )}
+                      </AnimatePresence>
+                    </article>
+                  </motion.div>
+                ))}
+                {/* The empty state opens its height on the same spring the rows close on, so the panel morphs between them instead of stacking both. After a bulk action it waits for the cascade to get going, so the panel never grows before it shrinks. */}
+                {visible.length === 0 && (
+                  <motion.div
+                    key="empty"
+                    className={styles.emptyFrame}
+                    initial={reduce ? { opacity: 0 } : { height: 0, opacity: 0 }}
+                    animate={{ height: 'auto', opacity: 1 }}
+                    exit={
                       reduce
                         ? fadeOut
                         : {
                             height: 0,
                             opacity: 0,
-                            transition: {
-                              height: {
-                                ...motionTokens.spring.smooth,
-                                delay: isBulk ? cascade(index) : 0,
-                              },
-                              opacity: { ...exitFast, delay: isBulk ? cascade(index) : 0 },
-                            },
-                          },
-                  }}
-                  initial={reduce ? { opacity: 0 } : { height: 0 }}
-                  animate={{ height: 'auto', opacity: 1 }}
-                  exit="exit"
-                  transition={height}
-                >
-                  <article
-                    className={[
-                      styles.item,
-                      item.read ? styles.itemRead : '',
-                      expandedId === item.id ? styles.itemExpanded : '',
-                    ]
-                      .filter(Boolean)
-                      .join(' ')}
-                    style={{ '--index': Math.min(index, 7) } as CSSProperties}
-                  >
-                    <div className={styles.itemMain}>
-                      <NotificationVisual item={item} />
-                      <button
-                        ref={(node) => {
-                          if (node) itemRefs.current.set(item.id, node)
-                          else itemRefs.current.delete(item.id)
-                        }}
-                        type="button"
-                        className={styles.itemToggle}
-                        aria-expanded={expandedId === item.id}
-                        aria-label={`${item.title}${item.read ? '' : text.unreadSuffix}. ${expandedId === item.id ? text.hideDetails : text.showDetails}`}
-                        onClick={() =>
-                          setExpandedId((current) => (current === item.id ? null : item.id))
-                        }
-                      >
-                        <span className={styles.itemTitle}>
-                          <strong>{item.title}</strong>
-                          <AnimatePresence initial={false} custom={bulk}>
-                            {!item.read && (
-                              <motion.span
-                                key="dot"
-                                className={styles.unreadDot}
-                                aria-hidden="true"
-                                custom={bulk}
-                                variants={{
-                                  exit: (isBulk: boolean) =>
-                                    reduce
-                                      ? fadeOut
-                                      : {
-                                          opacity: 0,
-                                          scale: 0.3,
-                                          transition: {
-                                            ...exitFast,
-                                            delay: isBulk ? cascade(index) : 0,
-                                          },
-                                        },
-                                }}
-                                initial={reduce ? { opacity: 0 } : { opacity: 0, scale: 0.3 }}
-                                animate={{ opacity: 1, scale: 1 }}
-                                exit="exit"
-                                transition={reduce ? instant : motionTokens.spring.snappy}
-                              />
-                            )}
-                          </AnimatePresence>
-                        </span>
-                        <span className={styles.itemPreview}>
-                          {item.description ?? (item.actor ? item.actor.name : text.showDetails)}
-                        </span>
-                      </button>
-                      <time className={styles.time}>{item.time}</time>
-                    </div>
-                    <AnimatePresence initial={false}>
-                      {expandedId === item.id && (
-                        <motion.div
-                          className={styles.details}
-                          initial={reduce ? { opacity: 0 } : { height: 0, opacity: 0 }}
-                          animate={{ height: 'auto', opacity: 1 }}
-                          exit={
-                            reduce
-                              ? fadeOut
-                              : {
-                                  height: 0,
-                                  opacity: 0,
-                                  transition: {
-                                    height: motionTokens.spring.smooth,
-                                    opacity: exitFast,
-                                  },
-                                }
+                            transition: { height: motionTokens.spring.smooth, opacity: exitFast },
                           }
-                          transition={height}
-                        >
-                          <p>{item.description ?? text.details}</p>
-                          <div className={styles.itemActions}>
-                            {item.href ? (
-                              <a href={item.href} onClick={() => onOpenItem?.(item)}>
-                                <ArrowUpRight size={14} strokeWidth={1.75} aria-hidden="true" />
-                                {text.open}
-                              </a>
-                            ) : null}
-                            <button type="button" onClick={() => toggleRead(item)}>
-                              <MorphWidth reduce={reduce} morphKey={item.read ? 'read' : 'unread'}>
-                                <span className={styles.actionIcon}>
-                                  <AnimatePresence mode="popLayout" initial={false}>
-                                    <Swap
-                                      key={item.read ? 'unread' : 'read'}
-                                      className={styles.actionGlyph}
-                                      initial={reduce ? { opacity: 0 } : iconIn}
-                                      animate={shown}
-                                      exit={reduce ? fadeOut : { ...iconIn, transition: exitFast }}
-                                      transition={reduce ? instant : motionTokens.spring.snappy}
-                                    >
-                                      {item.read ? (
-                                        <CircleDot
-                                          size={14}
-                                          strokeWidth={1.75}
-                                          aria-hidden="true"
-                                        />
-                                      ) : (
-                                        <Check size={14} strokeWidth={1.75} aria-hidden="true" />
-                                      )}
-                                    </Swap>
-                                  </AnimatePresence>
-                                </span>
-                                <SwapText reduce={reduce}>
-                                  {item.read ? text.markUnread : text.markRead}
-                                </SwapText>
-                              </MorphWidth>
-                            </button>
-                            <button type="button" onClick={() => dismiss(item)}>
-                              <X size={14} strokeWidth={1.75} aria-hidden="true" />
-                              {text.dismiss}
-                            </button>
-                          </div>
-                        </motion.div>
-                      )}
-                    </AnimatePresence>
-                  </article>
-                </motion.div>
-              ))}
-              {/* The empty state opens its height on the same spring the rows close on, so the panel morphs between them instead of stacking both. After a bulk action it waits for the cascade to get going, so the panel never grows before it shrinks. */}
-              {visible.length === 0 && (
-                <motion.div
-                  key="empty"
-                  className={styles.emptyFrame}
-                  initial={reduce ? { opacity: 0 } : { height: 0, opacity: 0 }}
-                  animate={{ height: 'auto', opacity: 1 }}
-                  exit={
-                    reduce
-                      ? fadeOut
-                      : {
-                          height: 0,
-                          opacity: 0,
-                          transition: { height: motionTokens.spring.smooth, opacity: exitFast },
-                        }
-                  }
-                  transition={
-                    reduce
-                      ? instant
-                      : {
-                          height: { ...motionTokens.spring.smooth, delay: bulk ? cascade(3) : 0 },
-                          opacity: { ...enter, delay: motionTokens.duration.fast },
-                        }
-                  }
-                >
-                  <motion.div
-                    className={styles.empty}
-                    initial={reduce ? false : { y: 6 }}
-                    animate={{ y: 0 }}
-                    transition={reduce ? instant : { ...enter, delay: motionTokens.duration.fast }}
+                    }
+                    transition={
+                      reduce
+                        ? instant
+                        : {
+                            height: { ...motionTokens.spring.smooth, delay: bulk ? cascade(3) : 0 },
+                            opacity: { ...enter, delay: motionTokens.duration.fast },
+                          }
+                    }
                   >
-                    <CircleCheck size={24} strokeWidth={1.5} aria-hidden="true" />
-                    <strong>
-                      <SwapText reduce={reduce}>
-                        {view === 'unread' ? text.nothingUnread : text.allClear}
-                      </SwapText>
-                    </strong>
-                    <p>
-                      <SwapText reduce={reduce}>
-                        {view === 'unread' ? text.seenEvery : text.newAppear}
-                      </SwapText>
-                    </p>
-                    {view === 'unread' && items.length > 0 && (
-                      <button
-                        type="button"
-                        onClick={() => {
-                          setBulk(false)
-                          setView('all')
-                        }}
-                      >
-                        {text.viewAll}
-                      </button>
-                    )}
+                    <motion.div
+                      className={styles.empty}
+                      initial={reduce ? false : { y: 6 }}
+                      animate={{ y: 0 }}
+                      transition={
+                        reduce ? instant : { ...enter, delay: motionTokens.duration.fast }
+                      }
+                    >
+                      <CircleCheck size={24} strokeWidth={1.5} aria-hidden="true" />
+                      <strong>
+                        <SwapText reduce={reduce}>
+                          {view === 'unread' ? text.nothingUnread : text.allClear}
+                        </SwapText>
+                      </strong>
+                      <p>
+                        <SwapText reduce={reduce}>
+                          {view === 'unread' ? text.seenEvery : text.newAppear}
+                        </SwapText>
+                      </p>
+                      {view === 'unread' && items.length > 0 && (
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setBulk(false)
+                            setView('all')
+                          }}
+                        >
+                          {text.viewAll}
+                        </button>
+                      )}
+                    </motion.div>
                   </motion.div>
-                </motion.div>
-              )}
-            </AnimatePresence>
-          </div>
+                )}
+              </AnimatePresence>
+            </div>
+          </ScrollArea>
 
           <AnimatePresence initial={false}>
             {readCount > 0 && (

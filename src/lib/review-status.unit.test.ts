@@ -2,6 +2,8 @@ import { describe, expect, expectTypeOf, it } from 'vitest'
 
 import type { BadgeProps } from '@/components/arc/badge/badge'
 
+import { messagesOf } from '../../testing/intl.test-utils'
+
 import { REVIEW_STATES, type ReviewRequest, type ReviewState } from './review'
 import { REVIEWED_FIELDS } from './reviewed-fields'
 import {
@@ -460,5 +462,25 @@ describe('nextAction', () => {
     ['published_removal_kept', null],
   ] as const)('nextAction(%s, admin) is %s', (key, labelKey) => {
     expect(nextAction(key, 'admin')).toEqual(labelKey ? { labelKey } : null)
+  })
+})
+
+describe('status messages', () => {
+  const lookup = (messages: object, key: string) =>
+    key
+      .split('.')
+      .reduce<unknown>(
+        (node, part) => (node as Record<string, unknown> | undefined)?.[part],
+        (messages as { Portal: unknown }).Portal,
+      )
+
+  it('every status and next-action key exists in both languages', () => {
+    const keys = STATUS_KEYS.flatMap((key) => [
+      ...statusBadge(key).map((badge) => badge.labelKey),
+      ...(['owner', 'admin'] as const).flatMap((viewer) => nextAction(key, viewer)?.labelKey ?? []),
+    ])
+    for (const [locale, messages] of Object.entries(messagesOf))
+      for (const key of keys)
+        expect(typeof lookup(messages, key), `${locale} ${key}`).toBe('string')
   })
 })

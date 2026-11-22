@@ -1,0 +1,254 @@
+/* The page header: the H1 and its subtitle at the start, one primary button at the end. */
+/* The row keeps the primary button's height with no button, so the H1 sits at the same place on every list. */
+.header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  min-block-size: var(--control-height-md);
+  justify-content: space-between;
+  gap: var(--space-3) var(--space-4);
+  margin-block-end: var(--space-6);
+}
+
+.heading {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  min-inline-size: 0;
+}
+
+.h1 {
+  margin: 0;
+  font-size: 28px;
+  font-weight: 500;
+  line-height: 1.2;
+  text-wrap: balance;
+}
+
+.subtitle {
+  margin: 0;
+  color: var(--text-secondary);
+  font-size: 15px;
+  line-height: 1.5;
+  text-wrap: pretty;
+}
+
+/* The spec's primary is a pill; the portal's control radius is 12px. */
+.primary {
+  border-radius: var(--radius-pill);
+}
+
+.groups {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-8);
+}
+
+.groupHeading {
+  margin: 0 0 var(--space-2);
+  color: var(--foreground);
+  font-size: 17px;
+  font-variant-numeric: tabular-nums;
+  font-weight: 500;
+  line-height: 1.35;
+}
+
+.rows {
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* One row: the slot, then the text column. Rows sit on hairlines, not cards. */
+.row {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-3);
+  min-inline-size: 0;
+  padding-block: var(--space-3);
+  border-block-end: 1px solid var(--border);
+}
+
+.row:last-child {
+  border-block-end: 0;
+}
+
+.slot {
+  position: relative;
+  flex: none;
+  inline-size: 40px;
+  block-size: 40px;
+  overflow: hidden;
+  border-radius: var(--radius-inner);
+  background: var(--surface-muted);
+  box-shadow: inset 0 0 0 1px var(--border);
+}
+
+.slot img {
+  object-fit: cover;
+}
+
+.body {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: var(--space-1);
+  min-inline-size: 0;
+}
+
+/* The row's one link, at least 24px tall to click (44px on touch). Its text takes two lines and is then cut with an ellipsis. */
+.title {
+  display: flex;
+  align-items: center;
+  min-block-size: 24px;
+  color: var(--foreground);
+  font-size: 15px;
+  font-weight: 500;
+  text-decoration: none;
+}
+
+.titleText {
+  flex: 1;
+  min-inline-size: 0;
+  overflow: hidden;
+  line-height: 24px;
+  overflow-wrap: anywhere;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+}
+
+.title:hover .titleText {
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+}
+
+.meta,
+.next {
+  margin: 0;
+  font-size: 13px;
+  line-height: 1.45;
+  overflow-wrap: anywhere;
+  text-wrap: pretty;
+}
+
+.meta {
+  color: var(--text-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.next {
+  color: var(--text-secondary);
+}
+
+.badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-1);
+  min-inline-size: 0;
+}
+
+/* The error, no-result and empty-filter lines: one sentence and one link. */
+.notice {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-3);
+  padding-block: var(--space-4);
+}
+
+.notice p {
+  margin: 0;
+  font-size: 15px;
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+}
+
+/* The chips and the search, above the list. */
+.controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  margin-block-end: var(--space-6);
+}
+
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+/* A chip is a link at least 24px each way (44px on touch); the current one is filled and weight 500, so colour is not the only cue. */
+.chip {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-block-size: 32px;
+  min-inline-size: 24px;
+  padding-inline: var(--space-3);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-pill);
+  color: var(--text-secondary);
+  font-size: 13px;
+  line-height: 1.2;
+  text-decoration: none;
+  transition:
+    background-color var(--portal-duration, 150ms) var(--ease-standard),
+    color var(--portal-duration, 150ms) var(--ease-standard);
+}
+
+@media (hover: hover) {
+  .chip:hover {
+    background: color-mix(in oklab, var(--foreground) 6%, transparent);
+    color: var(--foreground);
+  }
+}
+
+.chip[aria-current='true'] {
+  border-color: var(--foreground);
+  background: var(--foreground);
+  color: var(--background);
+  font-weight: 500;
+}
+
+@media (forced-colors: active) {
+  .chip[aria-current='true'] {
+    border-color: Highlight;
+    outline: 2px solid Highlight;
+    outline-offset: -2px;
+  }
+}
+
+.search {
+  flex: 1 1 16rem;
+  max-inline-size: 22rem;
+}
+
+.more {
+  margin-block-start: var(--space-3);
+}
+
+.cap {
+  margin: var(--space-3) 0 0;
+  color: var(--text-muted);
+  font-size: 13px;
+  line-height: 1.45;
+  text-wrap: pretty;
+}
+
+@media (pointer: coarse) {
+  .chip,
+  .more,
+  .title {
+    min-block-size: 44px;
+  }
+
+  .chip {
+    min-inline-size: 44px;
+  }
+}

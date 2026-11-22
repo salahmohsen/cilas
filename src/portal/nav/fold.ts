@@ -7,3 +7,6 @@ export const writeFold = (accountId: number, folded: boolean): void => {
   const life = folded ? 'Max-Age=31536000' : 'Max-Age=0'
   document.cookie = `${foldCookie(accountId)}=1; Path=/; ${life}; SameSite=Lax${secure}`
 }
+
+/** The id of the portal nav, which the fold button controls. A page has one shell. */
+export const PORTAL_NAV_ID = 'portal-nav'

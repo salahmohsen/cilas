@@ -293,11 +293,11 @@
         "language": "Teaching language"
       },
       "types": {
-        "core": "Core Course",
-        "thematic": "Thematic Course",
+        "core": "Core course",
+        "thematic": "Thematic course",
         "lab": "Lab",
         "workshop": "Workshop",
-        "short": "Short Course"
+        "short": "Short course"
       },
       "seasons": {
         "fall": "Fall",
@@ -1741,7 +1741,10 @@
       "unreadMany": ", more than {cap} unread posts",
       "sidebar": "Sidebar",
       "more": "More",
-      "brand": "CILAS home"
+      "brand": "CILAS home",
+      "scroll": "Pages and spaces",
+      "articles": "Articles",
+      "courses": "Courses"
     },
     "shell": {
       "skip": "Skip to content"
@@ -1763,7 +1766,9 @@
         "light": "Light",
         "dark": "Dark",
         "system": "System"
-      }
+      },
+      "shortcutOff": "Turn off the sidebar shortcut",
+      "shortcutOn": "Turn on the sidebar shortcut"
     },
     "sheet": {
       "close": "Close",
@@ -1776,6 +1781,118 @@
     "empty": {
       "spacesTitle": "Your spaces",
       "spacesNext": "A space opens when a course or a cohort you joined starts."
+    },
+    "fold": {
+      "folded": "Sidebar folded",
+      "unfolded": "Sidebar unfolded",
+      "shortcutIsOn": "Sidebar shortcut on",
+      "shortcutIsOff": "Sidebar shortcut off"
+    },
+    "status": {
+      "draft": "Draft",
+      "submitted": "Submitted",
+      "changesRequested": "Changes requested",
+      "declined": "Declined",
+      "published": "Published",
+      "unsentEdits": "Unsent edits",
+      "editsInReview": "Edits in review",
+      "removalRequested": "Removal requested",
+      "editsDeclined": "Edits declined",
+      "keptOnSite": "Kept on the site"
+    },
+    "next": {
+      "owner": {
+        "draft": "Continue writing, then submit.",
+        "submitted": "With an admin.",
+        "changesRequested": "Read the note, edit, submit again.",
+        "rejected": "Read the note.",
+        "published": "Edits you make wait for review.",
+        "publishedUnsent": "Submit changes for review.",
+        "publishedEdits": "With an admin. The live version does not change.",
+        "publishedRemoval": "With an admin.",
+        "publishedEditsReturned": "Read the note, edit, submit again.",
+        "publishedEditsDeclined": "Read the note. Edit and submit again.",
+        "publishedRemovalKept": "Read the note."
+      },
+      "admin": {
+        "submitted": "Approve and publish, ask for changes, or decline.",
+        "changesRequested": "Waiting on the author.",
+        "publishedEdits": "Review the changes.",
+        "publishedRemoval": "Remove, or keep with a note.",
+        "publishedEditsReturned": "Waiting on the author."
+      }
+    },
+    "lists": {
+      "myArticles": "My articles",
+      "allArticles": "All articles",
+      "myCourses": "My courses",
+      "allCourses": "All courses",
+      "metaTitle": "{name} — CILAS",
+      "newArticle": "New article",
+      "proposeCourse": "Propose a course",
+      "openDashboard": "Open dashboard",
+      "writeArticle": "Write an article",
+      "group": {
+        "needsYou": "Needs you",
+        "inProgress": "In progress",
+        "withEditors": "With editors",
+        "published": "Published",
+        "closed": "Closed",
+        "teachingNow": "Teaching now",
+        "proposals": "Proposals",
+        "waitingOnAuthor": "Waiting on the author"
+      },
+      "groupCount": "{name}, {count, plural, one {{count, number, digits} item} other {{count, number, digits} items}}",
+      "chips": {
+        "label": "Filter",
+        "all": "All",
+        "needsYou": "Needs you",
+        "drafts": "Drafts",
+        "published": "Published"
+      },
+      "search": "Search",
+      "noResults": "No results for \"<bdi>{query}</bdi>\".",
+      "clearSearch": "Clear search",
+      "noneInFilter": "Nothing here now.",
+      "showAll": "Show all",
+      "showMore": "Show more",
+      "showMoreIn": "Show more in {group}",
+      "pageCap": "Only the first {count, number, digits} rows show. Use the search to find the others.",
+      "pageCapSearch": "Only the first {count, number, digits} rows show. Narrow the search.",
+      "moreRows": "{count, plural, one {{count, number, digits} more row.} other {{count, number, digits} more rows.}}",
+      "loadError": "The list could not load.",
+      "retry": "Retry",
+      "untitledArticle": "Untitled article",
+      "untitledCourse": "Untitled course",
+      "meta": {
+        "updated": "Updated {when}",
+        "waiting": "Waiting {days, plural, one {{days, number, digits} day} other {{days, number, digits} days}}",
+        "waitingToday": "Waiting since today",
+        "held": "{held, number, digits} of {total, number, digits} held"
+      },
+      "tier": {
+        "public": "Public",
+        "community": "Community"
+      },
+      "empty": {
+        "ownerArticles": {
+          "title": "You have no articles yet",
+          "body": "An admin reads each article before it is public.",
+          "next": "Drafts save. Nothing is sent until you submit."
+        },
+        "adminArticles": {
+          "title": "No one has written an article yet",
+          "body": "Articles show here when a fellow or a student writes one."
+        },
+        "fellowCourses": {
+          "title": "You do not teach a course yet",
+          "body": "An admin reviews each proposal before it is public."
+        },
+        "adminCourses": {
+          "title": "No courses yet",
+          "body": "Courses show here when a fellow proposes one."
+        }
+      }
     }
   }
 }

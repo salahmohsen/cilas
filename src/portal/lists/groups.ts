@@ -15,7 +15,9 @@ export type GroupId =
   | 'published'
   | 'closed'
 
-export type PagedGroup = 'published' | 'teachingNow' | 'closed'
+/** The groups that load 50 rows at a time. The others hold work and load in full. */
+export const PAGED_GROUPS = ['published', 'teachingNow', 'closed'] as const
+export type PagedGroup = (typeof PAGED_GROUPS)[number]
 
 export const PAGE_SIZE = 50
 export const MAX_PAGES = 20
@@ -49,12 +51,10 @@ export const GROUPS: Record<ListKind, readonly GroupId[]> = {
   admin: ['needsYou', 'waitingOnAuthor', 'inProgress', 'published', 'closed'],
 }
 
-/** The groups that load 50 rows at a time. The others hold work and load in full. */
-export const PAGED: ReadonlySet<GroupId> = new Set<PagedGroup>([
-  'published',
-  'teachingNow',
-  'closed',
-])
+export const PAGED: ReadonlySet<GroupId> = new Set(PAGED_GROUPS)
+
+/** Whether a group loads a page at a time. */
+export const pagedOf = (id: GroupId): id is PagedGroup => PAGED.has(id)
 
 const OWNER_ARTICLE_GROUPS: Record<StatusKey, GroupId> = {
   draft: 'inProgress',
@@ -118,7 +118,9 @@ export const groupOf = (key: StatusKey, kind: ListKind, row: { hasSpace: boolean
 export const workKeys = (kind: ListKind): readonly StatusKey[] =>
   STATUS_KEYS.filter((key) => !PAGED.has(groupOf(key, kind, { hasSpace: false })))
 
-export type Chip = 'needsYou' | 'drafts' | 'published'
+/** The filter chips, in the order the page shows them after All. */
+export const CHIPS = ['needsYou', 'drafts', 'published'] as const
+export type Chip = (typeof CHIPS)[number]
 
 /** The group each filter chip shows (Deviation 6). */
 export const chipGroup: Record<ListKind, Record<Chip, GroupId>> = {

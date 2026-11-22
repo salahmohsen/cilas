@@ -206,15 +206,13 @@
 .markAll:active {
   transform: scale(0.97);
 }
-.list {
-  min-height: 0;
-  overflow-y: auto;
-  overscroll-behavior: contain;
-  padding: 9px 11px 10px;
-  scrollbar-width: none;
+/* Portal patch (phase 1b, L0): the Arc ScrollArea viewport scrolls; the list inside keeps the padding and the row cascade. */
+.listViewport {
+  overscroll-behavior-y: contain;
+  --focus-outline-offset: -2px;
 }
-.list::-webkit-scrollbar {
-  display: none;
+.list {
+  padding: 9px 11px 10px;
 }
 .row {
   overflow: hidden;

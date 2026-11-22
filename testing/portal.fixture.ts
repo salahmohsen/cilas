@@ -89,7 +89,8 @@ export const ACCOUNT_ROLES = {
 const personId = (user: User) =>
   user.person == null ? null : typeof user.person === 'object' ? user.person.id : user.person
 
-const account = async (
+/** A consented account with the fixture password and the roles of `key`; a person only when the user hook links one. */
+export const account = async (
   payload: Payload,
   track: Track,
   key: keyof typeof ACCOUNT_ROLES,

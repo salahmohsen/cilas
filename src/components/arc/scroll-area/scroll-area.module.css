@@ -114,7 +114,8 @@
 }
 .track[data-axis='y'] {
   top: 3px;
-  right: 1px;
+  /* Portal patch (phase 1b, L0): the vertical bar sits at the inline end, so it moves to the left in Arabic. */
+  inset-inline-end: 1px;
   bottom: 3px;
   width: 11px;
 }
@@ -158,7 +159,8 @@
 }
 .track[data-axis='y'] .thumb::after {
   top: 0;
-  right: 3px;
+  /* Portal patch (phase 1b, L0): inline end, as the track. */
+  inset-inline-end: 3px;
   bottom: 0;
   width: 5px;
 }
@@ -191,12 +193,35 @@
   .track[data-axis='y']:hover .thumb::after,
   .root[data-dragging='y'] .track[data-axis='y'] .thumb::after {
     width: 7px;
-    right: 2px;
+    /* Portal patch (phase 1b, L0): inline end, as the track. */
+    inset-inline-end: 2px;
   }
   .track[data-axis='x']:hover .thumb::after,
   .root[data-dragging='x'] .track[data-axis='x'] .thumb::after {
     height: 7px;
     bottom: 2px;
+  }
+}
+
+/* Portal patch (phase 1b, L0): with more contrast on, the thumb is the full foreground colour (3:1 or more). The base, hover and drag selectors repeat, so this wins over each of them. */
+@media (prefers-contrast: more) {
+  .thumb::after,
+  .track:hover .thumb::after,
+  .root[data-dragging] .thumb::after,
+  .track[data-axis='y']:hover .thumb::after,
+  .root[data-dragging='y'] .track[data-axis='y'] .thumb::after {
+    background: var(--foreground);
+  }
+}
+
+/* Portal patch (phase 1b, L0): in forced colours the browser drops the mixed colour; a system colour keeps the thumb. */
+@media (forced-colors: active) {
+  .thumb::after,
+  .track:hover .thumb::after,
+  .root[data-dragging] .thumb::after,
+  .track[data-axis='y']:hover .thumb::after,
+  .root[data-dragging='y'] .track[data-axis='y'] .thumb::after {
+    background: CanvasText;
   }
 }
 
