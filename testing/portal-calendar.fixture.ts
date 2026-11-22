@@ -12,6 +12,7 @@ type CourseOptions = {
   fellow: number
   status: 'published' | 'draft'
   day: string
+  online?: true
   enrolled?: { account: PortalAccount; status: 'accepted' | 'applied' }
 }
 
@@ -47,6 +48,7 @@ const course = async (payload: Payload, track: Track, options: CourseOptions) =>
     slug: uniq(options.title.toLowerCase().replace(/\W+/g, '-')),
     tier: options.tier,
     fellows: [options.fellow],
+    ...(options.online ? { location: ['ONLINE' as const] } : {}),
     registration: { mode: 'closed' as const },
   }
   const created =
@@ -114,7 +116,12 @@ export const calendarWorld = async (payload: Payload, track: Track) => {
     day: '2034-10-07',
     enrolled: { account: student, status: 'accepted' },
   })
-  const other = await make({ title: 'Calendar other', tier: 'public', day: '2034-10-07' })
+  const other = await make({
+    title: 'Calendar other',
+    tier: 'public',
+    day: '2034-10-07',
+    online: true,
+  })
   const draft = await make({
     title: 'Calendar draft',
     tier: 'owner',
