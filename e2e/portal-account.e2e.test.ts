@@ -192,7 +192,7 @@ test.describe('portal account', () => {
         const bio = uniq('Account bio')
         await page.goto(ACCOUNT)
         await editName(page, 'en', name)
-        const bioField = page.getByRole('textbox', { name: MESSAGES.en.Profile.bioEn })
+        const bioField = page.getByRole('textbox', { name: MESSAGES.en.Profile.bioEn, exact: true })
         await bioField.click()
         await page.keyboard.type(bio)
         await page.getByRole('button', { name: MESSAGES.en.Settings.save, exact: true }).click()
@@ -301,39 +301,41 @@ test.describe('portal account', () => {
       })
     })
 
-    for (const locale of LOCALES)
-      test(`at 390 the tab row stays put and no tab is cut off (${locale})`, async ({
-        browser,
-      }) => {
-        await inContext(browser, { viewport: PHONE, role: 'student' }, async (page) => {
-          await page.goto(localePath(ACCOUNT, locale))
-          const list = page.getByRole('tablist')
-          await expect(list).toBeVisible()
-          const rowY: number[] = []
-          const fits = async () => {
-            const box = (await list.boundingBox())!
-            for (const tabBox of await Promise.all(
-              (await page.getByRole('tab').all()).map((node) => node.boundingBox()),
-            )) {
-              expect(tabBox!.x).toBeGreaterThanOrEqual(box.x - 0.5)
-              expect(tabBox!.x + tabBox!.width).toBeLessThanOrEqual(box.x + box.width + 0.5)
+    for (const viewport of [PHONE, NARROW])
+      for (const locale of LOCALES)
+        test(`at ${viewport.width} the tab row stays put and no tab is cut off (${locale})`, async ({
+          browser,
+        }) => {
+          await inContext(browser, { viewport, role: 'student' }, async (page) => {
+            await page.goto(localePath(ACCOUNT, locale))
+            const list = page.getByRole('tablist')
+            await expect(list).toBeVisible()
+            const fits = async () => {
+              const box = (await list.boundingBox())!
+              for (const node of await page.getByRole('tab').all()) {
+                const tabBox = (await node.boundingBox())!
+                expect(tabBox.x).toBeGreaterThanOrEqual(box.x - 0.5)
+                expect(tabBox.x + tabBox.width).toBeLessThanOrEqual(box.x + box.width + 0.5)
+              }
+              expect(await list.evaluate((node) => node.scrollWidth <= node.clientWidth)).toBe(true)
             }
-            expect(await list.evaluate((node) => node.scrollWidth <= node.clientWidth)).toBe(true)
-          }
-          await fits()
-          await editName(page, locale, uniq('Phone name'))
-          await expect(
-            page.getByRole('button', { name: MESSAGES[locale].Settings.save, exact: true }),
-          ).toBeVisible()
-          await fits()
-          for (const group of ['profile', 'signIn', 'notifications'] as const) {
-            await tab(page, locale, group).click()
-            await expect(tab(page, locale, group)).toHaveAttribute('aria-selected', 'true')
-            rowY.push((await list.boundingBox())!.y)
-          }
-          expect(Math.max(...rowY) - Math.min(...rowY)).toBeLessThanOrEqual(1)
+            const rowY = async () =>
+              list.evaluate((node) => node.getBoundingClientRect().y + window.scrollY)
+
+            await editName(page, locale, uniq('Phone name'))
+            await expect(
+              page.getByRole('button', { name: MESSAGES[locale].Settings.save, exact: true }),
+            ).toBeVisible()
+            const rows: number[] = []
+            for (const group of ['profile', 'signIn', 'notifications', 'profile'] as const) {
+              await tab(page, locale, group).click()
+              await expect(tab(page, locale, group)).toHaveAttribute('aria-selected', 'true')
+              await fits()
+              rows.push(await rowY())
+            }
+            expect(Math.max(...rows) - Math.min(...rows)).toBeLessThanOrEqual(1)
+          })
         })
-      })
 
     test("the save bar on a wide screen sits 16 px above the viewport's bottom", async ({
       browser,

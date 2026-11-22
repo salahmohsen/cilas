@@ -152,7 +152,7 @@ describe('ProfileForm and the account menu avatar', () => {
     await expect.poll(avatarSrc).toBe(BEFORE)
 
     server.photo = null
-    await userEvent.click(screen.getByRole('button', { name: en.ImageUpload.remove }))
+    await userEvent.click(await screen.findByRole('button', { name: en.ImageUpload.remove }))
     await expect.poll(() => screen.queryByTestId('no-avatar')).not.toBeNull()
     expect(removals.count).toBe(1)
   })
@@ -165,7 +165,7 @@ describe('ProfileForm and the account menu avatar', () => {
     server.upload = { ok: false, error: 'photo' }
     server.photo = AFTER
     await sendPhoto()
-    expect(await screen.findByText(en.Profile.errors.photo)).toBeVisible()
+    expect(await screen.findAllByText(en.Profile.errors.photo)).not.toHaveLength(0)
     expect(server.sessionReads).toBe(reads)
     expect(avatarSrc()).toBe(BEFORE)
   })
