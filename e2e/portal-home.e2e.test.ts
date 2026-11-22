@@ -288,7 +288,7 @@ test.describe('portal home: Inbox', () => {
             const el = document.activeElement
             if (!el || el === document.body) return null
             return {
-              id: `${el.tagName}:${el.getAttribute('href') ?? ''}:${el.textContent?.slice(0, 40) ?? ''}`,
+              id: `${[...document.querySelectorAll('*')].indexOf(el)}:${el.tagName}:${el.getAttribute('href') ?? ''}`,
               outline: getComputedStyle(el).outlineStyle,
               label: el.getAttribute('aria-label') ?? el.textContent ?? '',
               inNeeds: Boolean(el.closest('[data-needs]')),
