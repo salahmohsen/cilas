@@ -688,6 +688,13 @@ test.describe('portal shell', () => {
             if (folded) {
               await foldIn(page, locale).click()
               await expect(foldIn(page, locale)).toHaveAttribute('aria-expanded', 'false')
+              await expect
+                .poll(() =>
+                  page
+                    .locator('[data-portal-rail]')
+                    .evaluate((rail) => rail.getAnimations({ subtree: true }).length),
+                )
+                .toBe(0)
               await region(page, locale).evaluate((el) => el.scrollTo({ top: 0 }))
             }
             const before = await metrics(page, locale)

@@ -393,7 +393,7 @@ test.describe('portal lists', () => {
           await inContext(browser, { viewport, reader }, async (page) => {
             await page.goto(listPath(path, 'en'))
             await expect(page.locator('section[data-list-group]').first()).toBeVisible()
-            const stops: { part: string; outline: string }[] = []
+            const stops: { part: string; outline: string; textField: boolean }[] = []
             for (let i = 0; i < 140; i++) {
               await page.keyboard.press('Tab')
               const stop = await page.evaluate(() => {
@@ -416,7 +416,11 @@ test.describe('portal lists', () => {
                               : el.closest('nav')
                                 ? 'bar'
                                 : 'other'
-                return { part, outline: getComputedStyle(el).outlineStyle }
+                return {
+                  part,
+                  outline: getComputedStyle(el).outlineStyle,
+                  textField: el.matches('input:not([type="checkbox"], [type="radio"])'),
+                }
               })
               if (stop) stops.push(stop)
             }
@@ -433,7 +437,16 @@ test.describe('portal lists', () => {
             let at = 0
             for (const part of parts) if (part === expected[at]) at++
             expect(at, `${expected.join(' > ')} in ${parts.join(' ')}`).toBe(expected.length)
-            expect(stops.filter((stop) => stop.outline === 'none')).toEqual([])
+            expect(stops.filter((stop) => !stop.textField && stop.outline === 'none')).toEqual([])
+            if (shownControls) {
+              const box = searchBox(page, 'en')
+              const border = () =>
+                box.evaluate((input) => getComputedStyle(input.parentElement!).borderColor)
+              await page.locator('main h1').click()
+              const rest = await border()
+              await box.focus()
+              expect(await border()).not.toBe(rest)
+            }
           })
         })
     }
