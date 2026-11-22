@@ -5,10 +5,10 @@
  *
  *   env "${OFF[@]}" "${R2_DEV[@]}" DATABASE_URL=postgres://…/cilas_ttfb \
  *     pnpm exec tsx scripts/ttfb-accounts.ts --out <file>
- *   … scripts/ttfb-accounts.ts --check-off     (runs only the mail, push and storage guard)
+ *   … scripts/ttfb-accounts.ts --check-off     (runs only the mail, push, search and storage guard)
  */
 import { randomBytes } from 'node:crypto'
-import { writeFileSync } from 'node:fs'
+import { chmodSync, writeFileSync } from 'node:fs'
 import { parseArgs } from 'node:util'
 import { getPayload } from 'payload'
 
@@ -21,7 +21,10 @@ import { isLocalUrl } from '../testing/local-env'
 const R2_OFF_ENDPOINT = 'https://00000000000000000000000000000000.r2.cloudflarestorage.com'
 
 const { values } = parseArgs({
-  options: { out: { type: 'string' }, 'check-off': { type: 'boolean' } },
+  options: {
+    out: { type: 'string' },
+    'check-off': { type: 'boolean' },
+  },
 })
 
 const fail = (message: string): never => {
@@ -29,38 +32,50 @@ const fail = (message: string): never => {
   process.exit(1)
 }
 
-if (!/\/cilas_ttfb(\?|$)/.test(env.DATABASE_URL)) {
-  fail('ttfb-accounts runs only on the throwaway copy cilas_ttfb')
+// The copy: a local host and the database cilas_ttfb, no query string (a query could hide the name).
+const isTtfbCopy = (url: string) => {
+  if (!isLocalUrl(url)) return false
+  const parsed = new URL(url)
+  return parsed.pathname === '/cilas_ttfb' && parsed.search === ''
 }
-if (!values['check-off'] && !values.out) fail('need --out <file> or --check-off')
 
-const payload = await getPayload({ config })
+if (!isTtfbCopy(env.DATABASE_URL)) {
+  fail('ttfb-accounts runs only on the throwaway copy cilas_ttfb on a local host')
+}
+const { out } = values
+if (!values['check-off'] && !out) fail('need --out <file> or --check-off')
 
-// Mail off (M): checked after getPayload and before the first write.
-if (payload.email.name !== 'console')
-  fail('mail check failed: the email adapter is not the console one')
+// Mail, push, search and storage off (M). The env-only checks run first, so a failed guard opens
+// no database connection; the adapter check follows getPayload and comes before the first write.
 if (pushConfig() !== null) fail('push check failed: VAPID keys are set')
+if (env.TYPESENSE_API_KEY || env.TYPESENSE_PRIVATE_WRITE_KEY || env.TYPESENSE_PRIVATE_SEARCH_KEY) {
+  fail('search check failed: a Typesense key is set')
+}
 const storageOff =
   isLocalUrl(env.R2_ENDPOINT) ||
   (env.R2_ENDPOINT === R2_OFF_ENDPOINT && env.R2_ACCESS_KEY_ID === 'off')
 if (!storageOff) fail('storage check failed: R2_ENDPOINT is neither local nor the off sentinel')
-console.log('mail, push and storage are off')
+
+const payload = await getPayload({ config })
+if (payload.email.name !== 'console')
+  fail('mail check failed: the email adapter is not the console one')
+console.log('mail, push, search and storage are off')
 
 if (values['check-off']) process.exit(0)
+if (!out) fail('need --out <file> or --check-off')
 
-type Pg = { query: (sql: string) => Promise<{ rows: Array<{ id: number; email: string }> }> }
-const pg = (payload.db as unknown as { pool: Pg }).pool
+const pg = payload.db.pool
 
 const one = async (what: string, sql: string) => {
-  const { rows } = await pg.query(sql)
+  const { rows } = await pg.query<{ id: number; email: string }>(sql)
   return rows[0] ?? fail(`no ${what} account found`)
 }
 
 const accounts = {
   admin: await one(
     'admin',
-    `select u.id, u.email from users u where u.activated_at is not null
-       and exists (select 1 from users_roles r where r.parent_id = u.id and r.value in ('admin', 'super_admin'))
+    `select u.id, u.email from users u
+     where exists (select 1 from users_roles r where r.parent_id = u.id and r.value in ('admin', 'super_admin'))
      order by u.id limit 1`,
   ),
   fellow: await one(
@@ -98,5 +113,6 @@ for (const [role, { id, email }] of Object.entries(accounts)) {
   cookies[role] = token as string
   console.log(`${role}: user id ${id}`)
 }
-writeFileSync(values.out!, JSON.stringify(cookies), { mode: 0o600 })
+writeFileSync(out, JSON.stringify(cookies), { mode: 0o600 })
+chmodSync(out, 0o600)
 process.exit(0)
