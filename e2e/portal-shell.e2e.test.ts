@@ -751,9 +751,9 @@ test.describe('portal shell', () => {
           const view = (await region(page, locale).boundingBox())!
           const last = (await rows.last().boundingBox())!
           expect(inside(last, view)).toBe(true)
-          expect(
-            await region(page, locale).evaluate((el) => getComputedStyle(el).outlineOffset),
-          ).toBe('-2px')
+          expect(await rows.last().evaluate((el) => getComputedStyle(el).outlineOffset)).toBe(
+            '-2px',
+          )
           const room = await region(page, locale).evaluate((el) =>
             parseFloat(getComputedStyle(el).paddingBlockEnd),
           )

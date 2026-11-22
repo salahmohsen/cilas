@@ -512,21 +512,31 @@ test.describe('portal lists', () => {
         test(`axe finds no violation on ${path} (${reader} ${locale} 1440, light, dark, search)`, async ({
           browser,
         }) => {
-          await inContext(browser, { viewport: DESKTOP, reader }, async (page) => {
-            const route = listPath(path, locale)
-            const allowed = known(route, ROLE_OF[reader], locale, DESKTOP.width)
-            await page.goto(route)
-            await expect(page.getByRole('heading', { level: 1 })).toHaveCount(1)
-            expect(await axeOver(page, allowed), 'light').toEqual({})
-            await page.evaluate(() => document.documentElement.setAttribute('data-theme', 'dark'))
-            expect(await axeOver(page, allowed), 'dark').toEqual({})
-            if (reader === 'student') {
-              await page.goto(`${route}?q=${encodeURIComponent(lists.titles.beta)}`)
-              await expect(page.locator('section[data-list-group] li')).toHaveCount(1)
-              await searchBox(page, locale).focus()
-              expect(await axeOver(page, allowed), 'search').toEqual({})
+          const route = listPath(path, locale)
+          const allowed = known(route, ROLE_OF[reader], locale, DESKTOP.width)
+          for (const colorScheme of ['light', 'dark'] as const) {
+            const context = await browser.newContext({
+              baseURL,
+              viewport: DESKTOP,
+              storageState: states[reader],
+              colorScheme,
+            })
+            try {
+              const page = await context.newPage()
+              await page.goto(route)
+              await expect(page.locator('html')).toHaveAttribute('data-theme', colorScheme)
+              await expect(page.getByRole('heading', { level: 1 })).toHaveCount(1)
+              expect(await axeOver(page, allowed), colorScheme).toEqual({})
+              if (reader === 'student') {
+                await page.goto(`${route}?q=${encodeURIComponent(lists.titles.beta)}`)
+                await expect(page.locator('section[data-list-group] li')).toHaveCount(1)
+                await searchBox(page, locale).focus()
+                expect(await axeOver(page, allowed), `${colorScheme} search`).toEqual({})
+              }
+            } finally {
+              await context.close()
             }
-          })
+          }
         })
 
     for (const locale of LOCALES)
