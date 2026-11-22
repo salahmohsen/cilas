@@ -1,0 +1,37 @@
+/* The portal's bottom bar sits fixed under 700px; the settings save bar clears it (--settings-bar-offset). */
+.page {
+  --settings-bar-offset: calc(var(--portal-bar-height, 0px) + env(safe-area-inset-bottom));
+
+  max-inline-size: 56rem;
+  margin-inline: auto;
+  padding-block: var(--space-12);
+  padding-inline: var(--space-4);
+}
+
+.signIn {
+  display: grid;
+  gap: var(--space-4);
+}
+
+.intro {
+  margin: 0;
+  color: var(--text-secondary);
+  font-size: var(--text-sm);
+}
+
+.details {
+  display: grid;
+  gap: var(--space-1);
+  margin: 0;
+  min-inline-size: 0;
+}
+
+.details dt {
+  color: var(--text-secondary);
+  font-size: var(--text-sm);
+}
+
+.details dd {
+  margin: 0;
+  overflow-wrap: anywhere;
+}

@@ -94,7 +94,9 @@
 /* Fixed to the bottom of the viewport while the page is in view. */
 .barWrap {
   position: sticky;
-  inset-block-end: max(var(--space-4), env(safe-area-inset-bottom));
+  inset-block-end: calc(
+    var(--settings-bar-offset, 0px) + max(var(--space-4), env(safe-area-inset-bottom))
+  );
   z-index: 20;
   display: flex;
   justify-content: center;
