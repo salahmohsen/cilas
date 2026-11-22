@@ -1327,6 +1327,10 @@ test.describe('portal shell', () => {
             expect(await page.evaluate(() => matchMedia('(pointer: coarse)').matches)).toBe(true)
             if (viewport === DESKTOP) await expect(accountButton(page, locale)).toBeVisible()
             const nav = portalNavOf(page, locale)
+            if (viewport === PHONE)
+              await expect(
+                nav.getByRole('button', { name: portal.nav.more, exact: true }),
+              ).toBeVisible()
             const targets =
               viewport === PHONE
                 ? nav.locator('a, button')
