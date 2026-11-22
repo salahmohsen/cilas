@@ -1,7 +1,9 @@
 import AxeBuilder from '@axe-core/playwright'
 import { expect, type Page } from '@playwright/test'
+import type { Payload } from 'payload'
 
 import KNOWN from '../e2e/portal-axe-known.json'
+import { pushConfig } from '../src/lib/push/config'
 import {
   localePath,
   MESSAGES,
@@ -117,3 +119,17 @@ export const NAV_BY_ROLE = {
 /** A nav item's link as the page writes it: in the page's language unless it leaves the portal. */
 export const navHref = (item: { href: string; external: boolean }, locale: Locale) =>
   item.external ? item.href : `/${locale}${item.href}`
+
+/** A nav link's name with or without its count: "Inbox" or "Inbox, 3 tasks". */
+export const navName = (label: string) =>
+  new RegExp(`^${label.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}(?:[,\u060C]|$)`)
+
+/**
+ * Stops a write run unless mail and push are off: a world write or a submit then runs its
+ * hooks against a database that holds real admin addresses. The runner and the server it
+ * talks to both start with the mail, push and search keys empty (`verify.sh`'s env has none).
+ */
+export const mailOff = (payload: Payload) => {
+  if (payload.email.name !== 'console') throw new Error('mail is on: refusing to write')
+  if (pushConfig() !== null) throw new Error('push is on: refusing to write')
+}

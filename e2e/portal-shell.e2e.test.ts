@@ -29,6 +29,7 @@ import {
   axeOver,
   known,
   navHref,
+  navName,
   NAV_BY_ROLE,
   openMore,
   PHONE,
@@ -325,7 +326,7 @@ test.describe('portal shell', () => {
             await expect(fold).toHaveAttribute('aria-expanded', 'false')
             for (const label of labels)
               await expect(
-                portalNavOf(page, locale).getByRole('link', { name: label, exact: true }),
+                portalNavOf(page, locale).getByRole('link', { name: navName(label) }),
               ).toHaveCount(1)
             await fold.click()
             await expect(fold).toHaveAttribute('aria-expanded', 'true')
@@ -383,7 +384,7 @@ test.describe('portal shell', () => {
                 await page.goto(localePath('/en/spaces', locale))
                 const scope =
                   viewport.width < 700 ? await openMore(page, locale) : portalNavOf(page, locale)
-                await scope.getByRole('link', { name: portal.nav[key], exact: true }).click()
+                await scope.getByRole('link', { name: navName(portal.nav[key]) }).click()
                 await page.waitForURL(`**/${locale}${item.href}`)
                 expect(h1).not.toBeNull()
                 await expect(page.getByRole('heading', { level: 1 })).toHaveText(portal.lists[h1!])

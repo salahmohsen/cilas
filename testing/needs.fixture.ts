@@ -394,7 +394,9 @@ export const STUDENT_NOTIFICATIONS = 35
  * The e2e admin sees a known review set on top of whatever the database holds,
  * and the fellow and the student have owner rows. It also writes the Latest
  * rows: one bell row for each role that links to a post of the community
- * space, and the student's others, each awaited in turn so `createdAt` grows.
+ * space, and the student's others, each awaited in turn so `createdAt` grows. The rows
+ * the world's own writes sent (submit and decide notify) are deleted first, so each role's
+ * Latest holds exactly the rows written here.
  * `secondAdmin` is for the test of a number that no event refreshes.
  */
 export const portalNeedsWorld = async (payload: Payload, track: Track) => {
@@ -402,6 +404,20 @@ export const portalNeedsWorld = async (payload: Payload, track: Track) => {
   const needs = await needsWorld(payload, track, world)
   const secondAdmin: PortalAccount = await account(payload, track, 'admin', 'admin2')
   const link = world.community.postPath
+  await payload.delete({
+    collection: 'notifications',
+    where: {
+      recipient: {
+        in: [
+          world.accounts.admin.id,
+          world.accounts.fellow.id,
+          world.accounts.student.id,
+          secondAdmin.id,
+        ],
+      },
+    },
+    overrideAccess: true,
+  })
   for (const role of ['admin', 'fellow', 'student'] as const)
     await notifyOf(payload, world.accounts[role], link)
   for (let i = 1; i < STUDENT_NOTIFICATIONS; i++)
