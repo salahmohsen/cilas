@@ -763,22 +763,37 @@ test.describe('portal shell', () => {
             parseFloat(getComputedStyle(el).paddingBlockEnd),
           )
           expect(room).toBeGreaterThan(0)
-          const gap = (edge: 'start' | 'end') =>
-            page.evaluate(
-              ([name, side]) => {
-                const viewport = [...document.querySelectorAll('[role="region"]')].find(
-                  (el) => el.getAttribute('aria-label') === name,
-                )!
-                const row = document.activeElement!.getBoundingClientRect()
-                const box = viewport.getBoundingClientRect()
-                return side === 'end' ? box.bottom - row.bottom : row.top - box.top
-              },
-              [MESSAGES[locale].Portal.nav.scroll, edge] as const,
-            )
-          await expect.poll(() => gap('end')).toBeGreaterThanOrEqual(room - 1)
+          const measure = () =>
+            page.evaluate((name) => {
+              const viewport = [...document.querySelectorAll('[role="region"]')].find(
+                (el) => el.getAttribute('aria-label') === name,
+              )!
+              const active = document.activeElement!
+              const row = active.getBoundingClientRect()
+              const box = viewport.getBoundingClientRect()
+              const style = getComputedStyle(viewport)
+              return {
+                start: row.top - box.top,
+                end: box.bottom - row.bottom,
+                active: active.textContent,
+                inside: viewport.contains(active),
+                scrollTop: viewport.scrollTop,
+                clientHeight: viewport.clientHeight,
+                scrollHeight: viewport.scrollHeight,
+                padding: [style.scrollPaddingTop, style.scrollPaddingBottom],
+                toast: getComputedStyle(document.documentElement).getPropertyValue(
+                  '--toast-stack-height',
+                ),
+              }
+            }, MESSAGES[locale].Portal.nav.scroll)
+          const roomAt = async (edge: 'start' | 'end') => {
+            const state = await measure()
+            return state[edge] >= room - 1 ? 'ok' : JSON.stringify(state)
+          }
+          await expect.poll(() => roomAt('end')).toBe('ok')
           for (let i = 1; i < count; i++) await page.keyboard.press('Shift+Tab')
           await expect(rows.first()).toBeFocused()
-          await expect.poll(() => gap('start')).toBeGreaterThanOrEqual(room - 1)
+          await expect.poll(() => roomAt('start')).toBe('ok')
         })
       })
 
