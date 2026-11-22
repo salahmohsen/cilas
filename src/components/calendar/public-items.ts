@@ -7,6 +7,25 @@ import { sessionAnchor, sessionCaption } from '@/lib/session-label'
 export const kindOf = (meeting: Pick<CalendarMeeting, 'kind' | 'type'>) =>
   `${meeting.kind}:${meeting.type}`
 
+/** The legend name and the link label of each kind the meetings hold. */
+export const publicKinds = (
+  meetings: readonly Pick<CalendarMeeting, 'kind' | 'type'>[],
+  words: {
+    course: (type: string) => string
+    event: (type: string) => string
+    viewCourse: string
+    viewEvent: string
+  },
+): Record<string, { name: string; open: string }> =>
+  Object.fromEntries(
+    meetings.map((m) => [
+      kindOf(m),
+      m.kind === 'course'
+        ? { name: words.course(m.type), open: words.viewCourse }
+        : { name: words.event(m.type), open: words.viewEvent },
+    ]),
+  )
+
 /** Courses, then events; each by `TYPE_ORDER`, an unknown type last. */
 const rank = ({ kind, type }: Pick<CalendarMeeting, 'kind' | 'type'>) => {
   const at = TYPE_ORDER.indexOf(type)

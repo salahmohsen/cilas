@@ -37,6 +37,12 @@ type Props = {
   kinds: Record<string, { name: string; open: string }>
   /** The months that have something, `YYYY-MM`, oldest first: the way out of an empty view. */
   months: string[]
+  /** The page's path without its locale, such as `/calendar`: every URL the calendar writes starts with it. */
+  path: string
+  /** No Edit button and no Cancel session: the calendar only shows. */
+  readOnly?: boolean
+  /** Legend kinds that start off; read once. */
+  defaultHiddenKinds?: readonly string[]
 }
 
 const monthOfDay = (day: string) => day.slice(0, 7)
@@ -58,7 +64,17 @@ const onHistory = (change: () => void) => {
  * the URL. A move within the days loaded only writes the URL; a move past them
  * asks the server for the days around the new place.
  */
-export function PublicCalendar({ items, range, today, kinds, months, access }: Props) {
+export function PublicCalendar({
+  items,
+  range,
+  today,
+  kinds,
+  months,
+  path,
+  readOnly,
+  defaultHiddenKinds,
+  access,
+}: Props) {
   const t = useTranslations('Calendar')
   const ta = useTranslations('CalendarAdmin')
   const te = useTranslations('SessionEdit')
@@ -119,13 +135,13 @@ export function PublicCalendar({ items, range, today, kinds, months, access }: P
     (to: CalendarView, at: string, replace = false) =>
       startTransition(() =>
         router[replace ? 'replace' : 'push'](
-          `/${locale}/calendar${calendarQuery(to, at)}${editing ? '&edit=1' : ''}`,
+          `/${locale}${path}${calendarQuery(to, at)}${editing ? '&edit=1' : ''}`,
           {
             scroll: false,
           },
         ),
       ),
-    [router, locale, editing],
+    [router, locale, path, editing],
   )
 
   // Back or forward to a place the page did not load (a rare history entry): load it.
@@ -190,7 +206,7 @@ export function PublicCalendar({ items, range, today, kinds, months, access }: P
           {t('empty')}{' '}
           <Link
             className="underline underline-offset-4"
-            href={`/calendar${calendarQuery('month', `${nearest}-01`)}`}
+            href={`${path}${calendarQuery('month', `${nearest}-01`)}`}
             scroll={false}
           >
             {t(next ? 'nextOn' : 'lastOn', { date: monthName(nearest) })}
@@ -209,20 +225,20 @@ export function PublicCalendar({ items, range, today, kinds, months, access }: P
           onNavigate={navigate}
           spaces={viewer.spaces}
           onDone={() =>
-            router.push(`/${locale}/calendar${calendarQuery(view, day)}`, { scroll: false })
+            router.push(`/${locale}${path}${calendarQuery(view, day)}`, { scroll: false })
           }
         />
       ) : (
         <Calendar
           mode="view"
           action={
-            viewer.canEdit ? (
+            viewer.canEdit && !readOnly ? (
               <Button
                 type="button"
                 size="sm"
                 aria-label={t('edit')}
                 onClick={() =>
-                  router.push(`/${locale}/calendar${calendarQuery(view, day)}&edit=1`, {
+                  router.push(`/${locale}${path}${calendarQuery(view, day)}&edit=1`, {
                     scroll: false,
                   })
                 }
@@ -239,6 +255,7 @@ export function PublicCalendar({ items, range, today, kinds, months, access }: P
           day={day}
           today={today}
           panelOpenInMonth
+          defaultHiddenKinds={defaultHiddenKinds}
           onNavigate={navigate}
           onOpen={(id) => {
             const href = items.find((item) => item.id === id)?.href
@@ -247,7 +264,8 @@ export function PublicCalendar({ items, range, today, kinds, months, access }: P
           actionsOf={({ href, kind, parentId, sessionId, cancelled }) => {
             const open = kinds[kind]?.open
             if (!href || !open) return []
-            const mayCancel = Boolean(sessionId && parentId && viewer.editable.includes(parentId))
+            const mayCancel =
+              !readOnly && Boolean(sessionId && parentId && viewer.editable.includes(parentId))
             return [
               { id: 'open', label: open, href },
               ...(parentId && viewer.spaces[parentId]
