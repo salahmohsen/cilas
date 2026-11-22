@@ -74,11 +74,33 @@ export const needsWorld = async (payload: Payload, track: Track, world: PortalWo
       overrideAccess: true,
     }),
   ).id
+  const form = track(
+    'forms',
+    await payload.create({
+      collection: 'forms',
+      data: {
+        title: uniq('Needs form'),
+        confirmationType: 'redirect',
+        redirect: { url: 'https://example.org/thanks' },
+        fields: [
+          { blockType: 'text', name: 'name', label: 'Name', required: true },
+          { blockType: 'email', name: 'email', label: 'Email', required: true },
+        ],
+      },
+      overrideAccess: true,
+    }),
+  ).id
   const cycle = track(
     'cycles',
     await payload.create({
       collection: 'cycles',
-      data: { season: 'fall', start_year: 2036, place, start_date: '2036-10-04' },
+      data: {
+        season: 'fall',
+        start_year: 2036,
+        place,
+        start_date: '2036-10-04',
+        registration: { method: 'form', form },
+      },
       overrideAccess: true,
     }),
   ).id
@@ -213,27 +235,16 @@ export const needsWorld = async (payload: Payload, track: Track, world: PortalWo
   await belowTheHooks(notLive.rejectedCopySubmitted, 'rejected')
   await belowTheHooks(notLive.takenDownCopySubmitted, 'approved')
 
-  const form = track(
-    'forms',
-    await payload.create({
-      collection: 'forms',
-      data: {
-        title: uniq('Needs form'),
-        confirmationType: 'redirect',
-        redirect: { url: 'https://example.org/thanks' },
-        fields: [
-          { blockType: 'text', name: 'name', label: 'Name', required: true },
-          { blockType: 'email', name: 'email', label: 'Email', required: true },
-        ],
-      },
-      overrideAccess: true,
-    }),
-  ).id
   const programme = track(
     'programmes',
     await payload.create({
       collection: 'programmes',
-      data: { title: uniq('Needs programme'), slug: slugOf('needs-programme'), kind: 'residency' },
+      data: {
+        title: uniq('Needs programme'),
+        slug: slugOf('needs-programme'),
+        kind: 'residency',
+        registration: { method: 'form', form },
+      },
       overrideAccess: true,
     }),
   ).id
@@ -241,15 +252,38 @@ export const needsWorld = async (payload: Payload, track: Track, world: PortalWo
     { field: 'name', value: 'Needs applicant' },
     { field: 'email', value: 'needs-applicant@cilas.test' },
   ]
-  const application = async (data: Record<string, unknown>) => {
-    const id = track(
+  const application = async (data: {
+    target: unknown
+    choices?: Array<{ course: number; decision: 'pending' | 'accepted' | null }>
+  }) => {
+    const { choices = [], ...rest } = data
+    const created = track(
       'form-submissions',
       await payload.create({
         collection: 'form-submissions',
-        data: { form, submissionData: identity, ...data } as never,
+        data: {
+          form,
+          submissionData: identity,
+          ...rest,
+          choices: choices.map(({ course }) => ({ course })),
+        } as never,
         overrideAccess: true,
       }),
-    ).id
+    )
+    const id = created.id
+    if (choices.some(({ decision }) => decision !== 'pending')) {
+      await payload.update({
+        collection: 'form-submissions',
+        id,
+        data: {
+          choices: (created.choices ?? []).map((choice, index) => ({
+            ...choice,
+            decision: choices[index]!.decision,
+          })),
+        } as never,
+        overrideAccess: true,
+      })
+    }
     await payload.delete({
       collection: 'notifications',
       where: { link: { equals: `/admin/applicants?application=${id}` } },

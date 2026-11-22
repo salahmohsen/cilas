@@ -247,21 +247,35 @@ describe('countWaitingApplicants', () => {
     await f.payload.delete({ collection: 'people', id: teacherPerson })
   })
 
-  const applyTo = async (choices: Array<{ course: number; decision?: string | null }>) =>
-    (
-      await f.payload.create({
-        collection: 'form-submissions',
-        data: {
-          form: f.form.id,
-          target: { relationTo: 'cycles', value: f.cycle.id },
-          submissionData: [
-            { field: 'name', value: 'Counted' },
-            { field: 'email', value: 'counted@cilas.test' },
-          ],
-          choices,
-        } as never,
-      })
-    ).id
+  const applyTo = async (choices: Array<{ course: number; decision?: string | null }>) => {
+    const created = await f.payload.create({
+      collection: 'form-submissions',
+      data: {
+        form: f.form.id,
+        target: { relationTo: 'cycles', value: f.cycle.id },
+        submissionData: [
+          { field: 'name', value: 'Counted' },
+          { field: 'email', value: 'counted@cilas.test' },
+        ],
+        choices: choices.map(({ course }) => ({
+          course,
+          amount: 900,
+          answers: [{ name: 'reason', value: 'Counted answer' }],
+        })),
+      } as never,
+    })
+    await f.payload.update({
+      collection: 'form-submissions',
+      id: created.id,
+      data: {
+        choices: (created.choices ?? []).map((choice, index) => ({
+          ...choice,
+          decision: choices[index]!.decision,
+        })),
+      } as never,
+    })
+    return created.id
+  }
 
   const waiting = async (user: TypedUser) => (await countWaitingApplicants(f.payload, user)).total
 
@@ -281,6 +295,7 @@ describe('countWaitingApplicants', () => {
         title: `Count programme ${f.suffix}`,
         slug: `count-programme-${f.suffix}`,
         kind: 'residency',
+        registration: { method: 'form', form: f.form.id },
       },
     })
     const before = await waiting(teacher)
