@@ -7,6 +7,7 @@ import { courseRoom, type PortalAccount, portalWorld } from './portal.fixture'
 type Track = ReturnType<typeof createTracker>['track']
 
 type CourseOptions = {
+  cycle: number
   title: string
   tier: 'public' | 'community' | 'owner'
   fellow: number
@@ -62,7 +63,7 @@ const course = async (payload: Payload, track: Track, options: CourseOptions) =>
         })
       : await payload.create({
           collection: 'courses',
-          data: { ...data, course_type: 'THEMATIC', _status: 'published' },
+          data: { ...data, course_type: 'THEMATIC', cycle: options.cycle, _status: 'published' },
           locale: 'en',
           overrideAccess: true,
         })
@@ -108,8 +109,29 @@ export const calendarWorld = async (payload: Payload, track: Track) => {
   const { student, fellow } = world.accounts
   const teacher2 = world.loners.fellow
   const teacher = teacher2.person!
-  const make = (options: Omit<CourseOptions, 'fellow' | 'status'> & Partial<CourseOptions>) =>
-    course(payload, track, { fellow: teacher, status: 'published', ...options })
+  const courseOf = async (space: number) =>
+    await payload.findByID({
+      collection: 'courses',
+      id: Number(
+        relId(
+          (
+            await payload.findByID({
+              collection: 'spaces',
+              id: space,
+              depth: 0,
+              overrideAccess: true,
+            })
+          ).course,
+        ),
+      ),
+      depth: 0,
+      overrideAccess: true,
+    })
+  const first = await courseOf(world.course.space)
+  const cycle = Number(relId(first.cycle))
+  const make = (
+    options: Omit<CourseOptions, 'fellow' | 'status' | 'cycle'> & Partial<CourseOptions>,
+  ) => course(payload, track, { fellow: teacher, status: 'published', cycle, ...options })
   const communityCourse = await make({
     title: 'Calendar community',
     tier: 'community',
@@ -142,23 +164,7 @@ export const calendarWorld = async (payload: Payload, track: Track) => {
     day: '2034-10-09',
     enrolled: { account: student, status: 'applied' },
   })
-  const courseOf = async (space: number) =>
-    Number(
-      relId(
-        (
-          await payload.findByID({
-            collection: 'spaces',
-            id: space,
-            depth: 0,
-            overrideAccess: true,
-          })
-        ).course,
-      ),
-    )
-  const portalCourses: [number, number] = [
-    await courseOf(world.course.space),
-    await courseOf(world.otherCourse.space),
-  ]
+  const portalCourses: [number, number] = [first.id, (await courseOf(world.otherCourse.space)).id]
   const title = uniq('Calendar event')
   const event = track(
     'events',
