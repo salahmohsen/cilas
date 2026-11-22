@@ -317,7 +317,7 @@ export const needsWorld = async (payload: Payload, track: Track, world: PortalWo
 
 export type NeedsWorld = Awaited<ReturnType<typeof needsWorld>>
 
-export type PayloadCall = { method: string; args: Record<string, unknown> }
+export type PayloadCall = { method: string; args: Record<string, unknown>; result?: unknown }
 
 export const recordingPayload = (
   payload: Payload,
@@ -329,10 +329,16 @@ export const recordingPayload = (
       const value = Reflect.get(target, prop, receiver)
       if (typeof value !== 'function' || typeof prop !== 'string') return value
       return (...args: unknown[]) => {
-        const call = { method: prop, args: (args[0] ?? {}) as Record<string, unknown> }
+        const call: PayloadCall = { method: prop, args: (args[0] ?? {}) as Record<string, unknown> }
         calls.push(call)
         if (refuse(call)) return Promise.reject(new Error(`${prop} refused by the fixture`))
-        return value.apply(target, args)
+        const result = value.apply(target, args)
+        return result instanceof Promise
+          ? result.then((found: unknown) => {
+              call.result = found
+              return found
+            })
+          : result
       }
     },
   })

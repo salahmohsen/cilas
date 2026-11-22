@@ -1,15 +1,16 @@
 import 'server-only'
-import type { Payload, TypedUser } from 'payload'
+import type { Payload, TypedUser, Where } from 'payload'
 import { isAdminUser, isFellowUser, personOf } from '@/access'
 import { relId } from '@/lib/relation'
 
 import { mediaImage, mediaPopulate } from '@/lib/media-image'
 import { courseRegistration } from '@/lib/registration'
+import type { User } from '@/payload-types'
 import { deriveStatus, type ChoiceDecision } from './application-status'
 
 export type ApplicantViewer = { kind: 'admin' } | { kind: 'fellow'; person: number }
 
-export function applicantViewer(user?: TypedUser | null): ApplicantViewer | null {
+export function applicantViewer(user?: TypedUser | User | null): ApplicantViewer | null {
   if (isAdminUser(user)) return { kind: 'admin' }
   const person = personOf(user)
   return isFellowUser(user) && person !== null ? { kind: 'fellow', person } : null
@@ -29,6 +30,10 @@ export const withRetired = <T extends { blockType: string }>(
     .map((a) => ({ blockType: 'textarea', name: a.name, label: a.label }) as unknown as T),
 ]
 
+/** The courses a viewer reviews applicants for: an admin all of them, a fellow the courses they teach. */
+const viewerCoursesWhere = (viewer: ApplicantViewer): Where | undefined =>
+  viewer.kind === 'fellow' ? { fellows: { contains: viewer.person } } : undefined
+
 export async function applicantsFor(
   payload: Payload,
   viewer: ApplicantViewer | null,
@@ -47,7 +52,7 @@ export async function applicantsFor(
       },
       pagination: false,
       locale,
-      ...(viewer.kind === 'fellow' ? { where: { fellows: { contains: viewer.person } } } : {}),
+      where: viewerCoursesWhere(viewer),
     })
   ).docs
   const ids = courses.map((c) => c.id)
@@ -190,6 +195,59 @@ export async function applicantsFor(
     })),
     applications,
   }
+}
+
+/**
+ * The course choices that wait for a decision, for the viewer's courses: one per
+ * choice with no decision or a `pending` one. A programme application counts 0.
+ * Reads with `overrideAccess: true`, as `applicantsFor` does, and returns a
+ * number only. The `where` narrows the read; the reduce below is the rule.
+ */
+export async function countWaitingApplicants(
+  payload: Payload,
+  user: TypedUser | User | null | undefined,
+): Promise<{ total: number }> {
+  const viewer = applicantViewer(user)
+  if (!viewer) return { total: 0 }
+  const { docs: courses } = await payload.find({
+    collection: 'courses',
+    where: viewerCoursesWhere(viewer),
+    select: { slug: true },
+    depth: 0,
+    pagination: false,
+    overrideAccess: true,
+  })
+  const ids = new Set(courses.map((course) => course.id))
+  if (ids.size === 0) return { total: 0 }
+  const { docs } = await payload.find({
+    collection: 'form-submissions',
+    where: {
+      and: [
+        { 'choices.course': { in: [...ids] } },
+        {
+          or: [
+            { 'choices.decision': { equals: 'pending' } },
+            { 'choices.decision': { exists: false } },
+          ],
+        },
+      ],
+    },
+    select: { choices: { course: true, decision: true } },
+    depth: 0,
+    pagination: false,
+    overrideAccess: true,
+  })
+  const total = docs.reduce(
+    (sum, submission) =>
+      sum +
+      (submission.choices ?? []).filter(
+        (choice) =>
+          ids.has(Number(relId(choice.course))) &&
+          (!choice.decision || choice.decision === 'pending'),
+      ).length,
+    0,
+  )
+  return { total }
 }
 
 export type ApplicantsData = Awaited<ReturnType<typeof applicantsFor>>
