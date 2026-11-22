@@ -277,3 +277,336 @@ Each has a default, so no build waits.
 2. **Migrations M3 and M1** (`src/migrations/<ts>_portal_withdrawn_kind.ts`, `<ts>_portal_review_events.ts`), made with `pnpm db:migrate:create` through `expect`, applied by agents only to throwaway copies (`cilas_migrated`, `cilas_ttfb`, scratch databases). This bends the "ask before applying" memory rule, as the ledger allows.
 3. **The one-off link script** `scripts/rewrite-notification-links.ts` (2-6). The owner runs it by hand on each database after 2-6 deploys: first with no flag (dry run, prints the count per old prefix and ten samples), then with `--apply`. Deploys never run it, and no agent runs it on production.
 4. **`verify.sh --db migrated`** is a change to the Mac runner (V0), outside the repo; a backup copy `verify.sh.pre-db-migrated` stays beside it.
+
+## PR 2-1. Review core (`portal/phase-2-review-core`)
+
+Base `origin/main`. No screen. Rebase before open and before merge (Shared files).
+
+### Task V0: The runner uses a migrated copy
+
+**Skills:** none (Mac shell script, outside the repo).
+
+**Files:** `~/cilas-verify/verify.sh` on the Mac (backup `~/cilas-verify/verify.sh.pre-db-migrated` first, then write a copy and rename it over, as memory mac-verify-runner says).
+
+- [ ] **Step 1: Premises.** Run the P8 and P18 checks on the Mac. Write the output in the PR body.
+- [ ] **Step 2: Add `--db migrated`.** After the run's worktree exists and before the build: `test "$DB_NAME" != cilas_dev || { echo 'refusing: cilas_dev'; exit 1; }` with `DB_NAME=cilas_migrated`; `docker exec cilas-db-1 dropdb -U cilas --if-exists cilas_migrated`; `docker exec cilas-db-1 createdb -U cilas cilas_migrated`; `docker exec cilas-db-1 pg_dump -U cilas cilas_dev | docker exec -i cilas-db-1 psql -U cilas -q -d cilas_migrated`; then in the run worktree `DATABASE_URL=postgres://cilas:dev@localhost:5433/cilas_migrated pnpm db:migrate`; then `export DATABASE_URL=postgres://cilas:dev@localhost:5433/cilas_migrated` for the build, the server, `vitest` and Playwright. The run folder is `runs/<sha>-migrated` (the `--db empty` pattern). When P8 found a port gap, also export `NEXT_PUBLIC_SERVER_URL="$PLAYWRIGHT_BASE_URL"` for the build and the server in every mode. RESULT.md starts with a line `db: cilas_migrated, migrations: <names from payload_migrations>`.
+- [ ] **Step 3: Prove it.** After C6 is pushed: `~/cilas-verify/verify.sh --db migrated --no-tests portal/phase-2-review-core <sha>`. Expected: RESULT.md's first line lists both phase 2 migrations; `docker exec cilas-db-1 psql -U cilas -d cilas_migrated -c '\d review_events'` prints the table; `docker exec cilas-db-1 psql -U cilas -d cilas_dev -c '\d review_events'` prints "Did not find any relation" (cilas_dev unchanged).
+
+### Task C1: `lockRow`, and the lock in the write path
+
+**Skills:** tdd, payload.
+
+**Files:** Create `src/lib/lock-row.ts`, `src/lib/lock-row.int.test.ts`, `testing/row-lock.test-utils.ts`. Modify `src/forms/application-decision.ts` (`load`), `src/lib/review-hooks.ts` (`recordDraftSave`).
+
+**Interfaces:**
+
+- `lockRow(req: PayloadRequest, collection: CollectionSlug, id: number): Promise<void>` (Deviation 2). Body: the session lookup of `load` (`application-decision.ts:59-70`, P5), the table from `req.payload.db.tableNameMap.get(toSnakeCase(collection))` (`@payloadcms/drizzle` `types.d.ts:340`), then ``db.execute(sql`select id from ${sql.identifier(table)} where id = ${id} for update`)``. No session: `throw new APIError('Could not lock the document. Try again.', 500)`. A second call in the same transaction returns at once (Postgres holds the lock already).
+- `load(req, id)` in `application-decision.ts` becomes `await lockRow(req, 'form-submissions', id)` then its `findByID`. No other change to that file.
+- `recordDraftSave`: in the branch `operation === 'update' && write.id !== undefined`, call `await lockRow(req, collection.slug, Number(write.id))` first, before the `held` check and its `findOne` (P4). Not for `create` (no row yet), not for a bulk update (refused for non-admins; an admin bulk write has no one row), not for `restoreVersion` (its `id` is a version id; an owner's restore is refused by `applyReview`, so only an admin restores, from `/admin`). Fix the text of Deviation 1 and Global Constraints to say "every `update` with an id" if a reviewer reads "and `restoreVersion`".
+- `testing/row-lock.test-utils.ts`: `holdRow(payload, collection, id): Promise<{ release(): Promise<void> }>` opens a client from `payload.db.pool`, runs `begin` and `select id from <table> where id = $1 for update`, and `release` runs `commit` and releases the client. `waitForLockWaiters(payload, count, timeoutMs = 5000): Promise<void>` polls `select count(*) from pg_stat_activity where datname = current_database() and wait_event_type = 'Lock'` every 25 ms until it reaches `count`, and throws on timeout. These two force the order of concurrent writes: Postgres queues waiters on one row in arrival order, so "hold, start A, wait for 1 waiter, start B, wait for 2 waiters, release" runs A, then B.
+
+- [ ] **Step 1: Failing int test.** `src/lib/lock-row.int.test.ts`, `describe('review-events: lockRow')`:
+  - "a draft save on a live article waits for the row lock": publish an article (fixture writer), `holdRow` it, start an owner's draft save (`payload.update` as the author, a new title, `draft: true`), `waitForLockWaiters(payload, 1)` resolves, `release()`, the save resolves. A live draft save writes only the versions table, so without `lockRow` it never waits, and `waitForLockWaiters` times out: the test fails when `lockRow` is a no-op.
+  - "lockRow refuses outside a transaction": `createLocalReq({}, payload)` with no transaction; `lockRow` rejects with status 500.
+  - **[verify]** `verify.sh --int-only` at the end of the C1 to C3 group (Int runs): FAIL on the first case.
+- [ ] **Step 2: Implement.** Extract, call it from `load` and `recordDraftSave`. **[verify]** at the group end: PASS, and every existing int test that calls the applicant decide endpoints still passes (`rg -l "courses/.*/(accept|reject)|/(accept|reject|reopen)'" src testing --glob '*.int.test.ts'`). Commit.
+
+### Task C2: The withdraw and discard moves
+
+**Skills:** tdd, payload.
+
+**Files:** Modify `src/lib/review.ts`, `src/lib/review.unit.test.ts`, `src/lib/review-hooks.ts` (`applyReview`).
+
+**Interfaces:**
+
+- `AUTHOR_MOVES.submitted = ['draft']` (spec, Withdraw).
+- `LIVE_AUTHOR_MOVES = { approved: ['submitted'], rejected: ['submitted', 'draft'], changes_requested: ['draft'] }` (spec, Discard my changes).
+- `applyReview`: the refusal of an owner's write from `submitted` becomes `if (!trusted && from === 'submitted' && to !== 'draft') throw …` (same message, same 403). Nothing else in the hook changes: a non-live withdraw is a full save (the draft-save rule still throws on a status change in a draft save of a document that is not live), and `nextRequest` already clears `request` on a move to `draft`.
+- [ ] **Step 1: Failing unit rows** in `review.unit.test.ts`: `canMove('submitted', 'draft', false)` is true; `canMove('submitted', 'approved', false)` is false; `canMove('changes_requested', 'draft', false, true)` is true; `canMove('changes_requested', 'draft', false, false)` is false; `canMove('rejected', 'draft', false, true)` is true. `pnpm exec vitest run --project node src/lib/review.unit.test.ts`. FAIL.
+- [ ] **Step 2: Implement.** PASS. The hook cases run in C8. Commit.
+
+### Task C3: The `withdrawn` kind and an actor-first `notifyReview`
+
+**Skills:** tdd, payload.
+
+**Files:** Modify `src/lib/notification-kinds.ts`, `src/lib/notification-preferences.ts`, `src/lib/notification-preferences.unit.test.ts`, `src/lib/notify.ts`, `src/lib/review-hooks.ts` (`notifyReview`), the glyph map (`src/components/site-notifications.tsx` on `main`, or `src/components/notification-glyphs.tsx` when 1c-2 has moved it; P22), `messages/{en,ar}.json` (P22), the live refresh kinds file (P3).
+
+**Interfaces:**
+
+- `NOTIFICATION_KINDS.withdrawn = { name: 'Withdrawn', tone: 'info', icon: 'undo-2', audience: 'admins' }`, appended last (the order is the order of stored values). Add the `undo-2` lucide glyph to the glyph map.
+- `PREFERENCE_ORDER`: `'withdrawn'` right after `'submitted'`. Not in `EMAIL_KINDS` (no email).
+- `notify(payload, recipients, note, req?: PayloadRequest)`: passes `req` to `payload.create` (P9). Other callers do not change.
+- `notifyReview`, after its two early returns: `const byAdmin = isAdminUser(req.user)`. When `!byAdmin && before === 'submitted' && state === 'draft'`: the audience is the admins, the kind is `withdrawn`, no email, the line is `WITHDRAWN_NOTES(noun, title, removal)` ("Submission withdrawn: “{title}”", or "Removal request withdrawn: “{title}”"), the link is `documentHref({ collection, id, viewer: 'admin', waiting: false, locale })` (2-2 drops `locale`), the actor is the owner's person; then return. The removal branch (`removal && before === 'submitted' && state === 'draft'`, kind `removed` to the owners) runs only when `byAdmin`. Every `notify` call passes `req`.
+- Live refresh: add `'withdrawn'` per P3.
+- [ ] **Step 1: Failing unit rows** in `notification-preferences.unit.test.ts`: "withdrawn is an admin preference after submitted" (`PREFERENCE_KINDS` index of `withdrawn` is the index of `submitted` plus 1, audience `admins`); "withdrawn sends no email" (`EMAIL_KINDS` does not hold it). FAIL. Implement. PASS. The hook cases run in C8. Commit.
+
+### Task C4: The `review-events` collection and its hook
+
+**Skills:** tdd, payload.
+
+**Files:** Create `src/collections/ReviewEvents.ts`. Modify `src/payload.config.ts` (add it to `collections`), `src/lib/review-hooks.ts` (one more `afterChange` hook), `src/payload-types.ts` (`pnpm payload generate:types`), `scripts/access-audit.snapshot.json` (`pnpm audit:access`).
+
+**Interfaces:**
+
+- `ReviewEvents: CollectionConfig`: `slug: 'review-events'`, `admin: { hidden: true }`, `timestamps: false`, `access: { read: isAdmin, create: nobody, update: nobody, delete: nobody }` (named rules from `src/access.ts`), `indexes: [{ fields: ['collection', 'doc'] }]`. Fields: `collection` (select: `articles`, `courses`, `publications`, required), `doc` (number, required, `index: true`), `version` (number), `from` and `to` (select over `REVIEW_STATES`, required), `request` (select: `changes`, `removal`), `note` (textarea), `actor` (relationship to `users`), `at` (date, required). Payload maps `number` to `numeric` (`@payloadcms/drizzle` `traverseFields.js:543-563`); see Deviation 12.
+- `recordReviewEvent(options): CollectionAfterChangeHook`, added to `reviewHooks(...).afterChange` after `notifyReview`. It returns early when `before === state` (`previousDoc?.review?.status ?? 'draft'` vs `doc.review?.status ?? 'draft'`) and on an autosave (`reviewContext(req).autosave`). It reads `version` with `req.payload.findVersions({ collection, where: { parent: { equals: doc.id } }, sort: '-updatedAt', limit: 1, depth: 0, req })` (P15). It writes `note` only when `isAdminUser(req.user)` and `notifyOn(before, state) === 'authors'` or the move is the removal outcome (`state === 'draft'` with `request: removal` from `submitted`), taken from the write's `data.review.review_note` (it reads the operation's incoming data through `req.context`, set by `recordDraftSave` as `context.sentNote = write.data?.review?.review_note ?? null`), else `null`. `request` is the stored request of the row that asked (`state === 'submitted' ? doc : previousDoc`), `actor` is `req.user?.id ?? null`, `at` is `new Date().toISOString()`. It writes with `req.payload.create({ collection: 'review-events', data, overrideAccess: true, req })`.
+- [ ] **Step 1: Implement and generate.** `pnpm payload generate:types`, `pnpm audit:access`. Expected: `git diff --stat scripts/access-audit.snapshot.json` shows added lines only, and each added row is `collection:review-events` with `read: isAdmin#…` and `create`, `update`, `delete`: `nobody#c75af6b3`. `pnpm exec tsgo --noEmit`: no error. The behaviour tests run in C8, after C6. Commit.
+
+### Task C5: `reviewHistoryFor`
+
+**Skills:** tdd, payload.
+
+**Files:** Create `src/lib/review-history.ts`.
+
+**Interfaces:**
+
+- `type ReviewHistoryRow = { at: string; from: ReviewState; to: ReviewState; request: ReviewRequest | null; note: string | null; actorName: string | null }`.
+- `reviewHistoryFor(payload: Payload, collection: ReviewedCollection, id: number, user: User): Promise<ReviewHistoryRow[]>` (spec, Data access rule): first `payload.findVersions({ collection, where: { parent: { equals: id } }, limit: 1, depth: 0, user, overrideAccess: false })`; no version found: `[]`. Else `payload.find({ collection: 'review-events', where: { and: [{ collection: { equals: collection } }, { doc: { equals: id } }] }, sort: 'at', depth: 0, pagination: false, overrideAccess: true })`, then one `people` read for the actors' names (`users.person` with `depth: 1`, `select: { person: true }`), mapped to rows with no user relation. Oldest first.
+- [ ] **Step 1:** Implement. Tests run in C8. Commit.
+
+### Task C6: Migrations M3 and M1
+
+**Skills:** payload.
+
+**Files:** `src/migrations/<ts>_portal_withdrawn_kind.{ts,json}`, `src/migrations/<ts>_portal_review_events.{ts,json}`, `src/migrations/index.ts`, `src/migrations/portal-phase-2.int.test.ts` (new).
+
+- [ ] **Step 1: Make M3.** On the Mac worktree after C3 (memory db-reset-creates-migration): `expect -c 'spawn pnpm db:migrate:create portal_withdrawn_kind; expect { -re {created or renamed} { send "\r"; exp_continue } eof }'`. Run P7 on the generated file. Expected: one `ALTER TYPE "public"."enum_notifications_kind" ADD VALUE 'withdrawn';` in `up`.
+- [ ] **Step 2: Make M1.** After C4, the same command with `portal_review_events`. Read the SQL. Expected: `CREATE TABLE "review_events"` with `"doc" numeric NOT NULL`, `"version" numeric`, enum types for `collection`, `from`, `to`, `request`, `"actor_id" integer` with a foreign key `ON DELETE set null`, an index on `("collection", "doc")` and one on `"doc"`, and `ALTER TABLE "payload_locked_documents_rels" ADD COLUMN "review_events_id" integer` with its foreign key and index (spec, M1). Every name the SQL uses exists in the new `.json` snapshot. `migrate:create` writes files only; it applies nothing.
+- [ ] **Step 3: In-suite proof.** `src/migrations/portal-phase-2.int.test.ts`, `describe('review-events: migrations')`, with `scratchPayload()` (which runs every migration on a new database): "the review_events table exists with its index and foreign key" (query `information_schema.columns` and `pg_indexes` for `review_events`, and `pg_constraint` for `confdeltype = 'n'` on `actor_id`); "withdrawn is a value of enum_notifications_kind" (`select unnest(enum_range(null::enum_notifications_kind))::text` holds it). Import nothing that loads the config before `scratchPayload()` (its header comment).
+- [ ] **Step 4: Apply to a throwaway copy.** `~/cilas-verify/verify.sh --db migrated --int-only portal/phase-2-review-core <sha>` (V0). Expected: RESULT.md line 1 lists both migrations; `portal-phase-2.int.test.ts` passes. Never run `pnpm db:migrate` against `cilas_dev`. Commit; add both files to "For the operator" in the PR body.
+
+### Task C7: Owner moves
+
+**Skills:** tdd, payload.
+
+**Files:** Create `src/lib/owner-moves.ts`.
+
+**Interfaces:**
+
+```ts
+type OwnerMove =
+  | { move: 'withdraw' } // submitted -> draft (new, edits, or removal request)
+  | { move: 'requestRemoval' } // live: copy -> submitted with request: removal
+  | { move: 'discard' } // live: copy takes the live row's reviewed fields
+  | { move: 'restore'; from: number } // live: copy takes the reviewed fields of version `from`
+type OwnerMoveResult =
+  | { ok: true; restoreFrom?: number } // `restoreFrom` on discard: the version id before the discard
+  | { ok: false; reason: 'decided' | 'refused' }
+ownerMove(payload: Payload, user: User, target: { collection: ReviewedCollection; id: number }, move: OwnerMove): Promise<OwnerMoveResult>
+```
+
+- Every write is `payload.update({ collection, id, user, overrideAccess: false, depth: 0, … })`, so `applyReview` and the lock (C1) apply. `withdraw`: `data: { review: { status: 'draft' } }`, `draft: false` on a document that is not live (spec: Submit and Withdraw are full saves), and a draft save on a live one (`recordDraftSave` forces it). `requestRemoval`: `data: { review: { status: 'submitted', request: 'removal' } }`. `discard`: read the main row and the latest version (`find` and `findVersions`, `locale: 'all'`, `depth: 0`, gated), keep `restoreFrom = latest version id`, then write the live row's `REVIEWED_FIELDS[collection]` with `locale: 'all'` (P11) and `review.status` of `draft` when the copy is at `changes_requested` or `rejected`, else the copy's own status. `restore`: read version `from` with `findVersionByID` (gated), write its reviewed fields with `locale: 'all'`, keep the copy's status.
+- An `APIError` with status 403 maps to `{ ok: false }`: `reason: 'decided'` when a fresh `statusOf` read of the document says `waitsOn(key) !== 'admin'` and the move was `withdraw` (the lock let an admin decide first; spec, Errors), else `'refused'`. Any other error rethrows.
+- [ ] **Step 1:** Implement. Tests run in C8. Commit.
+
+### Task C8: The `review-events` int cases, reviews, full suite, open PR 2-1
+
+**Skills:** tdd, payload; then code-review, then security-review.
+
+**Files:** Create `src/lib/review-events.int.test.ts`. Uses `testing/portal-lists.fixture.ts` writers and `resendInbox()` (Int test setup).
+
+- [ ] **Step 1: The int cases** (all in `describe('review-events: history and owner moves')`, each with its own ids; mail captured by `resendInbox()`):
+  1. "six moves give six rows in order": submit, ask for changes with note 1 (admin), submit, ask for changes with note 2, submit, approve. Six rows in order; notes 1 and 2 on rows 2 and 4 and on no other row; six distinct `version` ids, also for two moves in one second (the two admin moves run back to back).
+  2. "the owner reads the history; another member reads none": through `reviewHistoryFor`, the owner gets 6 rows; after the approval the item is published and another member gets `[]`.
+  3. "a REST read of review-events as a member returns nothing": `rest('GET', 'review-events', { token })` returns no docs (403 or an empty list).
+  4. "an autosave and a save that keeps the status write no row".
+  5. "withdraw a new submission": `ownerMove(withdraw)` on a never-published submitted article. Key `draft`; admins get one `withdrawn` notification each; no email (`resendInbox()` holds none for this test); `getReviewQueue(payload)` does not list it; one row `submitted -> draft` with `note: null`.
+  6. "withdraw changes on a live article": key becomes `published_unsent` (or `published` when the copy equals the live row), `request` null, admins get `withdrawn`, no email.
+  7. "withdraw a removal request": the owners get no `removed` notification and no email; the admins get `withdrawn`; the article stays live.
+  8. "discard from each copy state": for a live article with a copy at `approved`, `draft`, `changes_requested` and `rejected`: `ownerMove(discard)` succeeds, the public read is unchanged, no email, the key is `published`; the moves from `changes_requested` and `rejected` each write one row, the other two write none.
+  9. "discard, then restore them": the key returns to `published_unsent` with the same field values in both locales (P11), and no email.
+  10. "an owner's withdraw is refused once an admin decided": approve first (admin, `payload.update`), then `ownerMove(withdraw)` returns `{ ok: false, reason: 'decided' }`.
+  11. "submit tells the admins and writes one row with no note" (the owner's move has `note: null`).
+- [ ] **Step 2:** **[verify]** `verify.sh --db migrated --int-only portal/phase-2-review-core <sha>`. Pass predicate (Int runs): no test of `lock-row`, `review-events`, `portal-phase-2`, `review-status` or the applicant files is named as failed in RESULT.md.
+- [ ] **Step 3: Reviews.** code-review (spec Review and history, Status model Discard, Migrations as the issue), then security-review: `review-events` writes refused for every user through REST and GraphQL (`rest('POST', 'review-events', …)` as an admin returns 403); `reviewHistoryFor` returns `[]` to a non-owner member; the lock never runs outside a transaction; no `notify` call in `review-hooks.ts` lacks `req`.
+- [ ] **Step 4:** Fix. **[verify]** the full suite with `--db migrated`. Per-PR step 5. Open `feat(portal): review events, withdraw and one row lock (portal phase 2, PR 1)`. The PR body lists both migrations under "For the operator" and says that every Mac run of a branch with this PR needs `--db migrated` until `cilas_dev` is migrated.
+
+**Verification boxes (2-1).**
+
+- [ ] **unit:** `review.unit.test.ts`, `notification-preferences.unit.test.ts`; int `lock-row.int.test.ts`, `review-events.int.test.ts`, `portal-phase-2.int.test.ts` (all on `--db migrated`).
+- [ ] **live:** Scenario on the kept app (`verify.sh --db migrated --keep --no-tests`, Mail off (M) server guard first, a scratch world with one admin, one fellow and one submitted article): the fellow withdraws the article through REST (`curl -X PATCH -b <fellow cookie> -H 'Content-Type: application/json' -d '{"review":{"status":"draft"}}' http://localhost:<port>/api/articles/<id>`). Pass: HTTP 200; the admin's bell (`/en/spaces`, `agent-browser`) shows a "Withdrawn" row; `/admin/reviews` no longer lists the article; `docker exec cilas-db-1 psql -U cilas -d cilas_migrated -c "select \"from\", \"to\", note from review_events where doc = <id>"` prints `submitted | draft |` (null note). `agent-browser close`.
+- [ ] **perf:** no route. Metric: statements per review write. The C1 int case shows one added `select … for update` per update; case 4 shows no `review_events` row and no `findVersions` call on an autosave. Pass: both cases green. Recorded in the PR.
+
+## PR 2-2. Link plumbing (`portal/phase-2-links`)
+
+Base `origin/main` after 2-1 merges. No screen. No link target changes in this PR: every `documentHref` result stays an admin URL.
+
+### Task L1: `documentHref` shape and `localizedLink`
+
+**Skills:** tdd.
+
+**Files:** Modify `src/lib/document-href.ts`, `src/lib/document-href.unit.test.ts`, and the callers P19 prints.
+
+**Interfaces:**
+
+```ts
+type DocumentTarget = {
+  collection: ReviewedCollection | 'users'
+  id: number
+  viewer: 'owner' | 'admin' | 'fellow'
+  waiting: boolean // waitsOn(key) === 'admin'
+}
+documentHref(target: DocumentTarget): string // a locale-free path (Deviation 3)
+applicantsHref(target: { application: number } | { course: number }): string // Deviation 4
+localizedLink(path: string, locale: Locale): string // `/{locale}${path}` when path starts with `/spaces`, else path
+absoluteLink(path: string, locale: Locale): string // `${NEXT_PUBLIC_SERVER_URL without trailing /}${localizedLink(path, locale)}`
+```
+
+- In 2-2: every reviewed target gives `/admin/collections/{collection}/{id}`; `users` gives `/admin/collections/users/{id}`; `applicantsHref` gives today's two admin URLs.
+- [ ] **Step 1: Failing unit table** (`pnpm exec vitest run --project node src/lib/document-href.unit.test.ts`): one row per collection (articles, courses, publications, users) x viewer x `waiting`, all admin URLs; `applicantsHref` two rows; `localizedLink` keeps `/admin/...`, prefixes `/spaces/...` for `en` and `ar`; `absoluteLink` has no double slash. FAIL. Implement. Drop `locale` from each caller (P19). `pnpm exec tsgo --noEmit`: no error. PASS. Commit.
+
+### Task L2: Callers that still write their own link
+
+**Skills:** tdd.
+
+**Files:** `src/lib/invitation.ts` (`link:` at `:83`), `src/forms/notify-application.ts` (`:42`, `:64`), `src/lib/review-queue.ts` (`getReviewQueue` `href`, `:147`).
+
+- [ ] **Step 1:** `invitation.ts` uses `documentHref({ collection: 'users', id, viewer: 'admin', waiting: false })`; `notify-application.ts` uses `applicantsHref({ application: doc.id })` and `applicantsHref({ course: course.id })`; `getReviewQueue` uses `documentHref({ collection: row.collection, id: row.id, viewer: 'admin', waiting: true })`. `git grep -n "'/admin/" -- src/lib src/forms | grep -v test | grep -v document-href` prints no notification or email link. Existing tests that assert these links still pass (unit now, int at L5). Commit.
+
+### Task L3: One review email per recipient, in that recipient's locale
+
+**Skills:** tdd, payload.
+
+**Files:** `src/lib/review-mail.ts`, `src/lib/review-hooks.ts` (`notifyReview`).
+
+**Interfaces:**
+
+- `type Recipient = { id: number; email: string; locale: Locale }`. `adminRecipients` and `ownerRecipients` read each user's `space-preferences` row (`account in ids`, `select: { account: true, locale: true }`, `overrideAccess: true`, `req`; P21) and use `routing.defaultLocale` when there is no row or no locale.
+- `emailRecipients(req, people, kind)` keeps its filter and returns `Recipient[]` with the locale.
+- `reviewEmailUrl(recipient: Recipient, target: Omit<DocumentTarget, 'viewer'> & { viewer: DocumentTarget['viewer'] }): string` = `absoluteLink(documentHref(target), recipient.locale)`. The one builder of an email link (Deviation 10).
+- `sendReviewEmail(req, recipient, state, title, note, { noun, url })` sends one message `to: recipient.email`. `notifyReview` loops over `emailRecipients(...)`, one `sendReviewEmail` per recipient, each with `reviewEmailUrl(recipient, …)`. The stored `notifications.link` stays the locale-free `documentHref` path.
+- [ ] **Step 1:** Implement. The int case runs in L5. Commit.
+
+### Task L4: The bell adds the reader's locale
+
+**Skills:** tdd, modern-web-guidance (first).
+
+**Files:** `src/components/site-notifications.tsx` (`toItem`), its dom test (`src/components/site-notifications.dom.test.tsx`, create if missing).
+
+- [ ] **Step 1: Failing dom test:** a stored link `/spaces/review/articles/5` renders as `href="/ar/spaces/review/articles/5"` in the Arabic bell; `/admin/collections/users/3` renders unchanged. FAIL. Change `href: n.link ?? undefined` to `href: n.link ? localizedLink(n.link, locale) : undefined` (`locale` is in scope from `useLocale()`). PASS. Commit.
+
+### Task L5: Int case, review, full suite, open PR 2-2
+
+**Skills:** tdd, payload; then code-review.
+
+**Files:** Create `src/lib/review-mail.int.test.ts`.
+
+- [ ] **Step 1: Int cases** (`describe('review-events: one email per recipient')`): "a submit with one Arabic and one English admin sends two emails, each to one address, with a link in that admin's locale" (two admins, one `space-preferences` row with `locale: 'ar'`; `resendInbox()` holds two messages, each `to` has one address, and each body holds `reviewEmailUrl(thatAdmin, …)`; in 2-2 both are admin URLs, so the locale shows only once 2-6 switches the admin branch; the case asserts `reviewEmailUrl` equality, which keeps it true across 2-6); "an approval email holds reviewEmailUrl(owner)" (used by the end gate, Deviation 10).
+- [ ] **Step 2:** **[verify]** `verify.sh --db migrated --int-only`: no test of `review-mail`, `review-events`, `invitation`, `notify-application` or `review-queue` named as failed.
+- [ ] **Step 3:** code-review (spec Document links as the issue). Fix. **[verify]** the full suite. Per-PR step 5. Open `refactor(portal): one link builder and per-recipient review emails (portal phase 2, PR 2)`.
+
+**Verification boxes (2-2).**
+
+- [ ] **unit:** `document-href.unit.test.ts`, `site-notifications.dom.test.tsx`; int `review-mail.int.test.ts`.
+- [ ] **live:** Scenario on the kept app with mail captured, not sent: run the server with the console email adapter (Mail off (M) server env), submit an article as a fellow in a scratch world with two admins (one with `space-preferences.locale = 'ar'`). Pass: the server log shows two review messages, each with one `to` address; no message lists two addresses.
+- [ ] **perf:** no route. Metric: mail calls per submit = number of admin recipients (was 1). Pass: the int case counts match the recipients. Recorded in the PR.
+
+## PR 2-3. Pending provider (`portal/phase-2-pending`)
+
+Base `origin/main` after 1c-2 merges (P1). Shell only; no decision surface yet. Phase 3 reuses this provider with no change (spec `PendingApi`, plus `flush`).
+
+### Task P1: The state machine (pure)
+
+**Skills:** tdd.
+
+**Files:** Create `src/portal/pending/machine.ts`, `src/portal/pending/machine.unit.test.ts`.
+
+**Interfaces:**
+
+```ts
+export type PendingState = 'pending' | 'paused' | 'committing' | 'sent' | 'failed' | 'undone'
+export type PauseCause = 'focus' | 'tap' | 'overlay'
+export type PendingRequest = { url: string; body: unknown }
+export type PendingItem = {
+  key: string
+  label: string
+  request: PendingRequest
+  state: PendingState
+  causes: ReadonlySet<PauseCause>
+  remainingMs: number // time left when last paused, or at start
+  runningSince: number | null // performance.now() when the timer last started; null while paused or done
+  status?: number
+  result?: unknown
+}
+export type PendingEvent =
+  | { type: 'pause'; cause: PauseCause }
+  | { type: 'resume'; cause: PauseCause }
+  | { type: 'undo' }
+  | { type: 'expire' }
+  | { type: 'flush' }
+  | { type: 'ok'; status: number; result: unknown }
+  | { type: 'refused'; status: 400 | 409 }
+  | { type: 'error'; status?: number }
+  | { type: 'retry' }
+  | { type: 'dismiss' }
+export const startItem = (input: { key: string; label: string; request: PendingRequest }, now: number, undoMs: number, overlayOpen: boolean): PendingItem
+export const transition = (item: PendingItem, event: PendingEvent, now: number): PendingItem | 'illegal' | 'gone'
+export const remaining = (item: PendingItem, now: number): number
+export const sends = (before: PendingItem, after: PendingItem) => before.state !== 'committing' && after.state === 'committing'
+```
+
+- One table `TRANSITIONS: Record<PendingState, Partial<Record<PendingEvent['type'], …>>>` holds the spec's rows and nothing else. `pause` adds the cause and moves `pending` to `paused` (stores `remainingMs`); `resume` removes the cause and moves to `pending` only when the set is empty (sets `runningSince = now`); `dismiss` from `sent` or `undone` returns `'gone'`. Every other pair returns `'illegal'`. `startItem` starts `paused` with `causes: {overlay}` when `overlayOpen`. `decide` on a key that has an item is the provider's refusal (it never reaches `transition`).
+- [ ] **Step 1: Failing unit table** (`pnpm exec vitest run --project node src/portal/pending/machine.unit.test.ts`, `describe('pending: state machine')`): one row per legal row of the spec table (17 rows, with each `pause` cause); one refusal per illegal pair, among them `undo` from `committing` and from `sent`, `retry` from `pending`, `expire` from `paused`, `ok` from `pending`; "resume with one cause left stays paused"; "remaining after pause and resume is the time that was left, read from now" (start at 0, pause at 2000, resume at 9000, `remaining` at 10000 is `UNDO_MS - 3000`); "expire then flush sends once" (`sends` true only for the first). FAIL. Implement. PASS. Commit.
+
+### Task P2: The provider
+
+**Skills:** tdd, modern-web-guidance (first), better-accessibility.
+
+**Files:** Create `src/portal/pending/pending-provider.tsx`, `src/portal/pending/clock.ts`, `src/portal/pending/undo-ms.ts`, `undo-ms.unit.test.ts`, `pending-provider.dom.test.tsx`. Modify `src/env.ts`.
+
+**Interfaces:**
+
+- `PendingApi` as the spec writes it, plus `flush(): Promise<{ ok: boolean }>` (Deviation 5). `usePending(): PendingApi`, `usePendingItem(key): PendingView | null`, `useOverlay(open: boolean): void` (Deviation 6). With no provider, `usePending` throws (a portal-only hook) and `usePendingItem` returns `null`.
+- `type Clock = { now(): number; setTimeout(fn, ms): number; clearTimeout(id): void }`; `browserClock` uses `performance.now()`. `PendingProvider({ clock = browserClock, fetcher = fetch, undoMs = undoMsFromEnv(), children })`: tests inject a fake clock and fetcher.
+- `undoMsFromEnv()`: `NEXT_PUBLIC_PORTAL_UNDO_MS` parsed as an integer from 500 to 5000, else 5000. `src/env.ts` declares it optional in `client` and `runtimeEnv`. Only test builds set it (1500): `verify.sh` and the Playwright `webServer.env` (P8 note). Production never sets it, and `undo-ms.unit.test.ts` checks "unset gives 5000" and "6000 gives 5000".
+- State: a `Map<string, PendingItem>` in a reducer (`useReducer`), one timer per running item, set for `remaining(item, now)`. On a transition where `sends(before, after)`: `fetcher(request.url, { method: 'POST', keepalive: true, credentials: 'include', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(request.body) })`; the body is checked under 64 KB before `decide` accepts it (else `decide` throws, a caller bug). 2xx: `ok` with the parsed JSON (`null` when the body is not JSON); 400 or 409: `refused`; any other status or a network error: `error`.
+- `overlay(open)`: a counter. Above 0, every item gets `pause` with `overlay`; back to 0, `resume` with `overlay`.
+- Flush triggers: `pagehide`, `visibilitychange` to `hidden`, provider unmount (the cleanup waits one task with `setTimeout(…, 0)` and does nothing when a remount set a `mounted` ref again: React Strict Mode), and `flush()`.
+- `pageshow` with `event.persisted`: drop every item and call `router.refresh()` (`next/navigation`, `use-router.md`).
+- After `ok` or `refused`, the item shows its result line, then `dismiss` (the caller dismisses through the view; the provider dismisses `sent` after its toast shows, see P4). A refused item calls `router.refresh()` and is never retried.
+- [ ] **Step 1: Failing dom tests** (`pnpm exec vitest run --project dom src/portal/pending/pending-provider.dom.test.tsx`, `describe('pending: provider')`, fake clock and fetcher), the spec's unit list: "expire and flush together send one fetch"; "decide, focus, blur: the commit comes after the time that was left"; "a 409 ends in undone with no retry, and refreshes"; "a modal with two items pending: both pause, and both resume with their time left when it closes"; "a dialog over a sheet: items stay paused until the sheet closes" (`overlay(true)` twice, `overlay(false)` once, still paused); "on ok the view holds result"; "decide on a key with an item returns false"; "an item that starts while an overlay is open starts paused"; "Strict Mode remount does not flush" (render in `<StrictMode>`, no fetch); "pageshow persisted drops items and refreshes"; "flush resolves ok false when one commit fails". FAIL. Implement. PASS. Commit.
+
+### Task P3: Mount, Sign out flush, overlay on the More sheet
+
+**Skills:** tdd, modern-web-guidance (first), better-accessibility.
+
+**Files:** Create `src/portal/pending/sign-out.ts`. Modify `src/portal/nav/portal-shell.tsx`, `account-menu.tsx`, `bottom-bar.tsx`, `more-sheet.tsx`, `more-sheet.browser.test.tsx`.
+
+**Interfaces:**
+
+- `usePortalSignOut(): () => Promise<void>`: `const { ok } = await pending.flush()`; when `!ok`, it stops (no sign-out; the failed item shows its error with **Try again** and **Undo**, P4) and shows the toast `Portal.pending.signOutStopped` ("A decision was not saved. Sign out stopped."); else it runs the sign-out of `src/lib/sign-out.ts` (export the inner `signOut` for this; `useSignOut` keeps its behaviour for the site header).
+- `PortalShell` renders `<PendingProvider>{…}<UndoAllBar /></PendingProvider>` inside `FoldProvider` (Shared files). The provider renders on first render (spec, Lazy loading rule).
+- `MoreSheet` calls `useOverlay(open)`.
+- [ ] **Step 1: Failing browser test** in `more-sheet.browser.test.tsx`: "opening the More sheet pauses a pending item" (a provider with a fake clock and one item; open the sheet; the item's view state is `paused`; close; `pending`). FAIL. Implement. PASS. **[verify]** `verify.sh --tests-only portal/phase-2-pending <sha> src/portal/nav` (browser tests). Commit.
+
+### Task P4: Ring, Undo all bar, pending toast
+
+**Skills:** tdd, modern-web-guidance (first), arc, better-accessibility, apple-design (the ring), animate (the ring drain), better-writing then humanizer (copy).
+
+**Files:** Create `src/portal/pending/pending-ring.tsx`, `pending-ring.module.css`, `pending-ring.browser.test.tsx`, `undo-all-bar.tsx`, `undo-all-bar.dom.test.tsx`, `pending-toast.tsx`, `pending.module.css`. Modify `src/portal/nav/shell.module.css`, `messages/{en,ar}.json` (`Portal.pending.*`).
+
+**Interfaces:**
+
+- `PendingRing({ itemKey, label })`: a `<button>` (24x24 min, 44x44 under `(pointer: coarse)`) with an SVG arc whose `stroke-dashoffset` follows `remaining / undoMs` (read each animation frame from the view; no React state per frame). First tap on a touch screen: `pause(key, 'tap')`; second: `undo`. A tap elsewhere or Esc away from the item: `resume(key, 'tap')`. Esc on the ring: `undo`. Accessible name: "{label}. Undo. {n} seconds left." and, paused, ending "Timer paused." Under `prefers-reduced-motion: reduce`: no arc; the whole seconds as text, updated each second, `aria-hidden`.
+- `UndoAllBar`: renders only with 2 or more items in `pending` or `paused`. `<section aria-label={t('bar.label')}>` ("Pending decisions"), text "{n} emails wait" plus "Emails go when you leave this page or switch app.", **Undo all**. On first show, `announce(t('bar.announce', { n }))` once ("{n} emails wait. Undo all is available."). After **Undo all**, focus moves to the first item that came back (the caller registers each item's focus target through `PendingApi`; the bar calls the first). Its height sets `--pending-bar-block-size` on the shell (the `scroll-padding-block-end` sum).
+- `PendingToast` (`preloadable`): the toast content for an item: "{verb}. Email in {n} s" with **Undo**, `duration: Infinity`, id `pending:{key}`; the provider updates it on `sent` ("Email sent" with `SuccessCheck`, or "Decided"), `failed` ("Not saved." with **Try again** and **Undo**), `refused` (the caller's copy), then dismisses it after the portal's 8 s toast rule. The first pending toast of a session adds "Emails go when you leave this page or switch app." The toast never takes focus and never holds the only path to an action (the pending row and the bar hold them too).
+- [ ] **Step 1: Failing tests:** `pending-ring.browser.test.tsx`: "reduced motion shows seconds as text and no arc" (`page.emulateMedia({ reducedMotion: 'reduce' })` equivalent in Vitest browser mode); "Esc on the ring undoes"; "first tap pauses, second tap undoes" (touch pointer); "the name ends Timer paused while paused"; RTL: the ring sits at the inline end. `undo-all-bar.dom.test.tsx`: "hidden with one item"; "two items show the bar and announce once"; "Undo all undoes both and focuses the first". FAIL. Implement. PASS (**[verify]** for the browser file). Commit.
+
+### Task P5: Copy
+
+**Skills:** better-writing, then humanizer.
+
+- [ ] **Step 1:** `Portal.pending` keys in English and Arabic: the line per verb ("Approving. Email in {n} s", "Asking for changes. Email in {n} s", "Declining. Email in {n} s", "Removing. Email in {n} s", "Keeping it. Email in {n} s"), "Paused. Email waits.", "Not saved.", "Try again", "Undo", "Undo all", "{n, plural, one {# email waits} other {# emails wait}}", "Emails go when you leave this page or switch app.", the ring names, "Email sent", "Email failed", "Decided", the sign-out stop line. ICU plurals and gender-neutral Arabic (D8). Commit.
+
+### Task P6: Reviews, full suite, open PR 2-3
+
+**Skills:** code-review, then security-review; better-accessibility.
+
+- [ ] **Step 1:** code-review (spec Pending decisions as the issue: every state row, the cause set, flush triggers, bfcache, `UNDO_MS`). security-review: the provider sends only the `request` its caller gave, same origin, `credentials: 'include'`; no request body logs; the env value cannot exceed 5000 in a production build.
+- [ ] **Step 2:** Fix. **[verify]** the full suite (default database is enough: no migration in this PR, but use `--db migrated` once 2-1 is on `main`). Per-PR step 5. Open `feat(portal): pending decisions provider and sign-out flush (portal phase 2, PR 3)`.
+
+**Verification boxes (2-3).**
+
+- [ ] **unit:** `machine.unit.test.ts`, `undo-ms.unit.test.ts`, `pending-provider.dom.test.tsx`, `undo-all-bar.dom.test.tsx`; browser `pending-ring.browser.test.tsx`, `more-sheet.browser.test.tsx`; e2e `portal-shell` (unchanged rows still pass with the provider mounted).
+- [ ] **live:** Scenario on the kept app as the fixture student: open `/en/spaces`, open and close the More sheet at 390 px, then **Sign out** from the account menu at 1440 px. Pass: no console error; sign-out ends on the signed-out page within the time it took on `main` (no wait with zero items); `document` has listeners for `pagehide` and `visibilitychange` (`agent-browser eval "getEventListeners"` is not in agent-browser, so check with a `performance.mark` added only in a scratch build, or read the provider's dom test instead and say so).
+- [ ] **perf:** Metric 1: the client JavaScript the student's `/en/spaces` route loads, gzip, from `next build` output on the Mac (route table "First Load JS"), `main` at the base vs the head. Pass: head minus base at most 4 KB (the provider renders on every portal page; spec Lazy loading rule; the ring and the toast content load only where used). Metric 2: TTFB p75 per role on `/en/spaces` by Perf runs (1d Global Constraints), baseline `main` at the base. Pass: head p75 at most `L`. BLOCKING or REPORT-ONLY by the 1d P12 rule.
