@@ -28,7 +28,10 @@ export const LIST_SHAPES = [
 ] as const
 
 /** The other portal pages. Their own e2e files run their axe scans. */
-export const PAGE_SHAPES = [['/spaces/account', /^\/[a-z]{2}\/spaces\/account$/]] as const
+export const PAGE_SHAPES = [
+  ['/spaces/account', /^\/[a-z]{2}\/spaces\/account$/],
+  ['/spaces/calendar', /^\/[a-z]{2}\/spaces\/calendar$/],
+] as const
 
 export type RouteShape =
   | (typeof ROUTE_SHAPES)[number][0]
