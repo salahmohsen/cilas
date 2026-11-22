@@ -320,7 +320,7 @@ test.describe('portal shell', () => {
             await account.click()
             await expect(account).toHaveAttribute('aria-expanded', 'true')
             await page.getByRole('menuitem', { name: portal.account.profile }).click()
-            await page.waitForURL(`**/${locale}/settings`)
+            await page.waitForURL(`**/${locale}/spaces/account`)
 
             await page.goto(localePath('/en/spaces', locale))
             await accountButton(page, locale).click()
@@ -548,7 +548,7 @@ test.describe('portal shell', () => {
             })
             let sheet = await openMore(page, locale)
             await sheet.getByRole('link', { name: portal.account.profile }).click()
-            await page.waitForURL(`**/${locale}/settings`)
+            await page.waitForURL(`**/${locale}/spaces/account`)
 
             await page.goto(localePath('/en/spaces', locale))
             sheet = await openMore(page, locale)
@@ -571,13 +571,13 @@ test.describe('portal shell', () => {
 
         test(`a toast survives Profile and settings (${role} ${locale})`, async ({ browser }) => {
           await inContext(browser, { viewport: PHONE, role }, async (page) => {
-            await page.goto(localePath('/en/settings', locale))
+            await page.goto(localePath('/en/spaces/account', locale))
             await gotoLive(page, localePath('/en/spaces', locale))
             const sheet = await openMore(page, locale)
             await notifyOf(payload, world.accounts[role], localePath(world.course.postPath, locale))
             await expect(toastRegion(sheet, locale).getByText('E2E comment')).toBeVisible()
             await sheet.getByRole('link', { name: portal.account.profile }).click()
-            await page.waitForURL(`**/${locale}/settings`)
+            await page.waitForURL(`**/${locale}/spaces/account`)
             await expect(toastRegion(page, locale).getByText('E2E comment')).toBeVisible()
           })
         })
