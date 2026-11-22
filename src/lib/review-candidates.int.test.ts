@@ -17,7 +17,7 @@ import { localServices } from '../../testing/local-services.test-utils'
 import { mockNetwork } from '../../testing/msw-node.test-utils'
 import { needsWorld, type NeedsWorld } from '../../testing/needs.fixture'
 import { createTracker } from '../../testing/payload.fixture'
-import { holdSpacesMode, portalWorld } from '../../testing/portal.fixture'
+import { portalWorld } from '../../testing/portal.fixture'
 import { resendInbox } from '../../testing/resend.test-utils'
 
 mockNetwork(resendInbox().handler, ...localServices)
@@ -28,12 +28,9 @@ const { track, cleanup } = createTracker()
 describe('the candidate reader', () => {
   let world: NeedsWorld
   let student: User
-  let spaces: Awaited<ReturnType<typeof holdSpacesMode>>
 
   beforeAll(async () => {
     payload = await getPayload({ config: await config })
-    spaces = await holdSpacesMode(payload)
-    await spaces.set('on')
     const portal = await portalWorld(payload, track)
     world = await needsWorld(payload, track, portal)
     student = (await payload.findByID({
@@ -46,7 +43,6 @@ describe('the candidate reader', () => {
 
   afterAll(async () => {
     await cleanup(payload)
-    await spaces.release()
     await payload.destroy()
   })
 
@@ -56,7 +52,7 @@ describe('the candidate reader', () => {
     const ctx = { payload, user: null, collection: 'articles', base: LIVE_MAIN } as const
     const id = world.lists.articles.submitted
     expect((await keyedRows(ctx, [id], nothing)).has(id)).toBe(false)
-    const set = await waitingSet(ctx, { side: 'admin', keys: ['submitted'] })
+    const set = await waitingSet(ctx, { side: 'admin', keys: ['submitted', 'published_edits'] })
     expect(set.has(id)).toBe(false)
   })
 

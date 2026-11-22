@@ -10,7 +10,7 @@ import { localServices } from '../../../testing/local-services.test-utils'
 import { mockNetwork } from '../../../testing/msw-node.test-utils'
 import { needsWorld, type NeedsWorld } from '../../../testing/needs.fixture'
 import { createTracker } from '../../../testing/payload.fixture'
-import { holdSpacesMode, portalWorld } from '../../../testing/portal.fixture'
+import { portalWorld } from '../../../testing/portal.fixture'
 import { resendInbox } from '../../../testing/resend.test-utils'
 import { groupOf } from '../lists/groups'
 import { loadList } from '../lists/rows'
@@ -23,14 +23,11 @@ const { track, cleanup } = createTracker()
 describe('the admin set and the 1b admin list', () => {
   let world: NeedsWorld
   let admin: User
-  let spaces: Awaited<ReturnType<typeof holdSpacesMode>>
 
   const NEEDS_YOU = groupOf('submitted', 'admin', { hasSpace: false })
 
   beforeAll(async () => {
     payload = await getPayload({ config: await config })
-    spaces = await holdSpacesMode(payload)
-    await spaces.set('on')
     const portal = await portalWorld(payload, track)
     world = await needsWorld(payload, track, portal)
     admin = (await payload.findByID({
@@ -43,7 +40,6 @@ describe('the admin set and the 1b admin list', () => {
 
   afterAll(async () => {
     await cleanup(payload)
-    await spaces.release()
     await payload.destroy()
   })
 

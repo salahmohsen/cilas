@@ -10,12 +10,7 @@ import { mockNetwork } from '../../../testing/msw-node.test-utils'
 import { needsWorld, recordingPayload, type NeedsWorld } from '../../../testing/needs.fixture'
 import { createTracker, uniq } from '../../../testing/payload.fixture'
 import { trustedWrites, writePublishedArticle } from '../../../testing/portal-lists.fixture'
-import {
-  holdSpacesMode,
-  portalWorld,
-  type PortalAccount,
-  type PortalWorld,
-} from '../../../testing/portal.fixture'
+import { portalWorld, type PortalAccount, type PortalWorld } from '../../../testing/portal.fixture'
 import { resendInbox } from '../../../testing/resend.test-utils'
 import { groupOf } from '../lists/groups'
 import { loadList } from '../lists/rows'
@@ -30,19 +25,15 @@ const { track, cleanup } = createTracker()
 describe('needs', () => {
   let portal: PortalWorld
   let world: NeedsWorld
-  let spaces: Awaited<ReturnType<typeof holdSpacesMode>>
 
   beforeAll(async () => {
     payload = await getPayload({ config: await config })
-    spaces = await holdSpacesMode(payload)
-    await spaces.set('on')
     portal = await portalWorld(payload, track)
     world = await needsWorld(payload, track, portal)
   }, 300_000)
 
   afterAll(async () => {
     await cleanup(payload)
-    await spaces.release()
     await payload.destroy()
   })
 
@@ -229,7 +220,11 @@ describe('needs', () => {
     )
 
     it('a non-admin never reads the admin queue', async () => {
-      const adminIds = new Set(Object.values(world.adminWaiting).flat())
+      const adminKeys = new Set(
+        Object.entries(world.adminWaiting).flatMap(([collection, ids]) =>
+          ids.map((id) => `${collection}:${id}`),
+        ),
+      )
       const users = [
         await userOf(portal.accounts.student),
         await userOf(portal.accounts.fellow),
@@ -242,7 +237,8 @@ describe('needs', () => {
         const result = await rowsOf(recording, user, sets, 'en')
         expect(sets.reviewQueue).toBeUndefined()
         expect(sets.applicants).toBeUndefined()
-        for (const row of result.rows) expect(adminIds.has(idOf(row.href))).toBe(false)
+        for (const row of result.rows)
+          expect(adminKeys.has(`${row.collection}:${idOf(row.href)}`)).toBe(false)
         for (const call of calls) expect(call.args.overrideAccess).not.toBe(true)
       }
     })
@@ -298,13 +294,21 @@ describe('needs', () => {
           overrideAccess: true,
         }),
       ).id
-      for (const status of ['submitted', 'changes_requested'] as const)
-        await payload.update({
-          collection: 'publications',
-          id,
-          data: { _status: 'draft', review: { status, review_note: 'A note' } } as never,
-          overrideAccess: true,
-        })
+      await payload.update({
+        collection: 'publications',
+        id,
+        data: { _status: 'draft', review: { status: 'submitted' } } as never,
+        overrideAccess: true,
+      })
+      await payload.update({
+        collection: 'publications',
+        id,
+        data: {
+          _status: 'draft',
+          review: { status: 'changes_requested', review_note: 'A note' },
+        } as never,
+        overrideAccess: true,
+      })
       const user = await userOf(portal.accounts.student)
       const result = await rowsOf(payload, user, await workSetsOf(payload, user), 'en')
       expect(result.rows.every((row) => row.collection !== 'publications')).toBe(true)

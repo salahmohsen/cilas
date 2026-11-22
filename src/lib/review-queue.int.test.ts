@@ -10,7 +10,7 @@ import { localServices } from '../../testing/local-services.test-utils'
 import { mockNetwork } from '../../testing/msw-node.test-utils'
 import { needsWorld, type NeedsWorld } from '../../testing/needs.fixture'
 import { createTracker } from '../../testing/payload.fixture'
-import { holdSpacesMode, portalWorld } from '../../testing/portal.fixture'
+import { portalWorld } from '../../testing/portal.fixture'
 import { resendInbox } from '../../testing/resend.test-utils'
 
 mockNetwork(resendInbox().handler, ...localServices)
@@ -20,18 +20,14 @@ const { track, cleanup } = createTracker()
 
 describe('the review queue', () => {
   let world: NeedsWorld
-  let spaces: Awaited<ReturnType<typeof holdSpacesMode>>
 
   beforeAll(async () => {
     payload = await getPayload({ config: await config })
-    spaces = await holdSpacesMode(payload)
-    await spaces.set('on')
     world = await needsWorld(payload, track, await portalWorld(payload, track))
   }, 300_000)
 
   afterAll(async () => {
     await cleanup(payload)
-    await spaces.release()
     await payload.destroy()
   })
 
