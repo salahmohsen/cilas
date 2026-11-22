@@ -23,7 +23,7 @@
 
 **Status.** Nothing is built. Every "Expected" line is a prediction. The section "Premises to re-check before build" lists each assumption about code that is not on `main` or that can move.
 
-**Who decided.** "Plan call" marks a call of this plan writer. "Orchestrator decision" marks a call of the 1d orchestrator (2026-11-21, after plan review round 1). "Operator rule" marks a rule in the ledger (`/home/salah/cilas-portal-run/LEDGER.md`, "Rules for the run"). Each PR merges under the MERGE RULE when READY, so no call waits for an answer: the defaults ship, and the Open questions go under "For the morning" in the ledger for the operator to read after the merge.
+**Who decided.** "Plan call" marks a call of this plan writer. "Orchestrator decision" marks a call of the 1d orchestrator (2026-11-21, after plan review round 1, and 2026-11-22, after round 2). "Operator rule" marks a rule in the ledger (`/home/salah/cilas-portal-run/LEDGER.md`, "Rules for the run"). Each PR merges under the MERGE RULE when READY, so no call waits for an answer: the defaults ship, and the Open questions go under "For the morning" in the ledger for the operator to read after the merge.
 
 ---
 
