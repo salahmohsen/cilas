@@ -1851,7 +1851,7 @@
         "published": "المنشورة"
       },
       "search": "بحث",
-      "noResults": "لا نتائج لـ \"{query}\".",
+      "noResults": "لا نتائج لـ \"<bdi>{query}</bdi>\".",
       "clearSearch": "مسح البحث",
       "noneInFilter": "لا شيء هنا الآن.",
       "showAll": "عرض الكل",
@@ -1866,7 +1866,8 @@
       "untitledCourse": "مقرر بلا عنوان",
       "meta": {
         "updated": "حُدِّث {when}",
-        "waiting": "ينتظر منذ {days, plural, zero {أقل من يوم} one {يوم واحد} two {يومين} few {{days, number, digits} أيام} many {{days, number, digits} يومًا} other {{days, number, digits} يوم}}",
+        "waiting": "ينتظر منذ {days, plural, one {يوم واحد} two {يومين} few {{days, number, digits} أيام} many {{days, number, digits} يومًا} other {{days, number, digits} يوم}}",
+        "waitingToday": "ينتظر منذ اليوم",
         "held": "عُقدت {held, number, digits} من {total, number, digits}"
       },
       "tier": {

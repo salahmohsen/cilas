@@ -37,7 +37,7 @@ const articleMeta = (row: ListRow, viewer: 'owner' | 'admin', intl: RowIntl): st
     if (row.owners.length > 0) parts.push(format.list(row.owners))
     if (row.waitingSince) {
       const days = Math.floor((now.getTime() - new Date(row.waitingSince).getTime()) / DAY)
-      parts.push(t('lists.meta.waiting', { days: Math.max(0, days) }))
+      parts.push(days < 1 ? t('lists.meta.waitingToday') : t('lists.meta.waiting', { days }))
     }
   }
   return parts.filter((part): part is string => Boolean(part))
@@ -84,8 +84,10 @@ export function ListRowBody({
         {row.cover && <Image src={row.cover} alt="" fill sizes="40px" />}
       </span>
       <div className={styles.body}>
-        <a href={href} className={styles.title} dir="auto">
-          <bdi>{title}</bdi>
+        <a href={href} className={styles.title}>
+          <span className={styles.titleText}>
+            <bdi>{title}</bdi>
+          </span>
         </a>
         {meta.length > 0 && (
           <p className={styles.meta} data-meta>

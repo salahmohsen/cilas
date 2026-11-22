@@ -1,8 +1,10 @@
 /* The page header: the H1 and its subtitle at the start, one primary button at the end. */
+/* The row keeps the primary button's height with no button, so the H1 sits at the same place on every list. */
 .header {
   display: flex;
   flex-wrap: wrap;
   align-items: flex-end;
+  min-block-size: var(--control-height-md);
   justify-content: space-between;
   gap: var(--space-3) var(--space-4);
   margin-block-end: var(--space-6);
@@ -44,11 +46,11 @@
 
 .groupHeading {
   margin: 0 0 var(--space-2);
-  color: var(--text-secondary);
-  font-size: 13px;
+  color: var(--foreground);
+  font-size: 17px;
   font-variant-numeric: tabular-nums;
   font-weight: 500;
-  line-height: 1.4;
+  line-height: 1.35;
 }
 
 .rows {
@@ -96,21 +98,30 @@
   min-inline-size: 0;
 }
 
-/* The row's one link: one line, cut with an ellipsis; at least 24px tall to click. */
+/* The row's one link, at least 24px tall to click (44px on touch). Its text takes two lines and is then cut with an ellipsis. */
 .title {
-  display: block;
+  display: flex;
+  align-items: center;
   min-block-size: 24px;
-  overflow: hidden;
   color: var(--foreground);
   font-size: 15px;
   font-weight: 500;
-  line-height: 24px;
   text-decoration: none;
-  text-overflow: ellipsis;
-  white-space: nowrap;
 }
 
-.title:hover {
+.titleText {
+  flex: 1;
+  min-inline-size: 0;
+  overflow: hidden;
+  line-height: 24px;
+  overflow-wrap: anywhere;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+}
+
+.title:hover .titleText {
   text-decoration: underline;
   text-underline-offset: 0.2em;
 }
@@ -191,9 +202,11 @@
     color var(--portal-duration, 150ms) var(--ease-standard);
 }
 
-.chip:hover {
-  background: color-mix(in oklab, var(--foreground) 6%, transparent);
-  color: var(--foreground);
+@media (hover: hover) {
+  .chip:hover {
+    background: color-mix(in oklab, var(--foreground) 6%, transparent);
+    color: var(--foreground);
+  }
 }
 
 .chip[aria-current='true'] {
@@ -237,9 +250,5 @@
 
   .chip {
     min-inline-size: 44px;
-  }
-
-  .title {
-    line-height: 44px;
   }
 }

@@ -293,11 +293,11 @@
         "language": "Teaching language"
       },
       "types": {
-        "core": "Core Course",
-        "thematic": "Thematic Course",
+        "core": "Core course",
+        "thematic": "Thematic course",
         "lab": "Lab",
         "workshop": "Workshop",
-        "short": "Short Course"
+        "short": "Short course"
       },
       "seasons": {
         "fall": "Fall",
@@ -1851,7 +1851,7 @@
         "published": "Published"
       },
       "search": "Search",
-      "noResults": "No results for \"{query}\".",
+      "noResults": "No results for \"<bdi>{query}</bdi>\".",
       "clearSearch": "Clear search",
       "noneInFilter": "Nothing here now.",
       "showAll": "Show all",
@@ -1867,6 +1867,7 @@
       "meta": {
         "updated": "Updated {when}",
         "waiting": "Waiting {days, plural, one {{days, number, digits} day} other {{days, number, digits} days}}",
+        "waitingToday": "Waiting since today",
         "held": "{held, number, digits} of {total, number, digits} held"
       },
       "tier": {

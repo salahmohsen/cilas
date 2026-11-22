@@ -70,17 +70,48 @@ afterEach(() => {
 describe('ListRowBody layout', () => {
   for (const width of [390, 1440])
     for (const locale of ['ar', 'en'] as const)
-      it(`a 120-character Arabic title with no space stays on one line at ${width} (${locale})`, async () => {
+      it(`a 120-character Arabic title with no space takes at most two lines at ${width} (${locale})`, async () => {
         await page.viewport(width, 800)
         const row = renderRow(locale)
-        const title = row.querySelector('a')!
+        const title = row.querySelector<HTMLElement>('a > span')!
         expect(row.scrollWidth).toBeLessThanOrEqual(row.clientWidth)
-        if (width === 390) expect(title.scrollWidth).toBeGreaterThan(title.clientWidth)
-        expect(getComputedStyle(title).textOverflow).toBe('ellipsis')
-        expect(getComputedStyle(title).whiteSpace).toBe('nowrap')
-        const line = parseFloat(getComputedStyle(title).lineHeight)
-        expect(title.getBoundingClientRect().height).toBeLessThan(line * 1.5)
+        const style = getComputedStyle(title)
+        expect(style.webkitLineClamp).toBe('2')
+        const line = parseFloat(style.lineHeight)
+        expect(title.getBoundingClientRect().height).toBeLessThanOrEqual(line * 2 + 0.5)
+        if (width === 390) {
+          expect(title.scrollHeight).toBeGreaterThan(title.clientHeight)
+          expect(title.getBoundingClientRect().height).toBeGreaterThan(line * 1.5)
+        }
       })
+
+  for (const locale of ['ar', 'en'] as const)
+    it(`a long title of many words is cut at two lines, with no title attribute (${locale})`, async () => {
+      await page.viewport(390, 800)
+      const words = 'عنوان طويل جدا يمتد على عدة أسطر '.repeat(12).trim()
+      const row = renderRow(locale, { ...ROW, title: words })
+      const link = row.querySelector('a')!
+      expect(link.hasAttribute('title')).toBe(false)
+      const text = link.querySelector<HTMLElement>('span')!
+      const line = parseFloat(getComputedStyle(text).lineHeight)
+      expect(text.getBoundingClientRect().height).toBeCloseTo(line * 2, 0)
+    })
+
+  it('an Arabic row puts a Latin title at the inline start, on the right', async () => {
+    await page.viewport(390, 800)
+    const link = renderRow('ar', { ...ROW, title: 'Notes on method' }).querySelector('a')!
+    const box = link.querySelector('bdi')!.getBoundingClientRect()
+    const edge = link.getBoundingClientRect()
+    expect(edge.right - box.right).toBeLessThan(2)
+    expect(box.left - edge.left).toBeGreaterThan(edge.width / 2 - box.width)
+  })
+
+  it('an English row puts an Arabic title at the inline start, on the left', async () => {
+    await page.viewport(390, 800)
+    const link = renderRow('en', { ...ROW, title: 'ملاحظات عن المنهج' }).querySelector('a')!
+    const box = link.querySelector('bdi')!.getBoundingClientRect()
+    expect(box.left - link.getBoundingClientRect().left).toBeLessThan(2)
+  })
 
   for (const locale of ['ar', 'en'] as const)
     it(`two badges and the meta line fit at 320 (${locale})`, async () => {

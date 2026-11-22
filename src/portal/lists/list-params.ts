@@ -1,6 +1,14 @@
 import type { Locale } from '@/i18n/routing'
 
-import { clampPage, MAX_PAGES, MAX_SEARCH_CHARS, type Chip, type PagedGroup } from './groups'
+import {
+  CHIPS,
+  clampPage,
+  MAX_PAGES,
+  PAGED_GROUPS,
+  searchTermOf,
+  type Chip,
+  type PagedGroup,
+} from './groups'
 
 /** What a list URL holds: the search, the chip, the page count of each paged group, and the Show more focus. */
 export type ListParams = {
@@ -12,15 +20,12 @@ export type ListParams = {
 
 export const DEFAULT_PARAMS: ListParams = { q: null, show: null, pages: {}, focus: null }
 
-const CHIPS: readonly Chip[] = ['needsYou', 'drafts', 'published']
-
 /** The URL name of each paged group's page count, in the order a URL writes them. */
 const PAGE_PARAM: Record<PagedGroup, string> = {
   published: 'published',
   teachingNow: 'teaching',
   closed: 'closed',
 }
-const PAGED_GROUPS = Object.keys(PAGE_PARAM) as PagedGroup[]
 
 type SearchParams = Record<string, string | string[] | undefined>
 
@@ -37,9 +42,12 @@ const pageOfParam = (value: string | undefined) => {
   return page > 1 ? page : undefined
 }
 
-/** The list params of a request, each parsed to a fixed value set. */
+/** The search text of a request without control characters (a null byte stops a Postgres `like`); white space becomes one space. */
+const printable = (raw: string | undefined) =>
+  (raw ?? '').replace(/\s+/g, ' ').replace(/\p{Cc}/gu, '')
+
+/** The list params of a request, each parsed to a fixed value set. `q` is the term the search runs on (`searchTermOf`), so the field shows what was searched. */
 export const parseListParams = (searchParams: SearchParams): ListParams => {
-  const q = (first(searchParams.q) ?? '').trim().slice(0, MAX_SEARCH_CHARS)
   const show = first(searchParams.show)
   const pages: ListParams['pages'] = {}
   for (const group of PAGED_GROUPS) {
@@ -47,7 +55,7 @@ export const parseListParams = (searchParams: SearchParams): ListParams => {
     if (page) pages[group] = page
   }
   return {
-    q: q === '' ? null : q,
+    q: searchTermOf(printable(first(searchParams.q))),
     show: CHIPS.find((chip) => chip === show) ?? null,
     pages,
     focus: groupOfParam(first(searchParams.focus)),

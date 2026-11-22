@@ -59,6 +59,22 @@ describe('parseListParams', () => {
     expect(parseListParams({ q: ['first', 'second'] }).q).toBe('first')
   })
 
+  it('q is the searched term: two characters at least, the first five words, one space between', () => {
+    expect(parseListParams({ q: 'a' }).q).toBeNull()
+    expect(parseListParams({ q: ' a ' }).q).toBeNull()
+    expect(parseListParams({ q: 'ab' }).q).toBe('ab')
+    expect(parseListParams({ q: 'one  two\tthree four five six seven' }).q).toBe(
+      'one two three four five',
+    )
+  })
+
+  it('q drops control characters, a null byte among them', () => {
+    expect(parseListParams({ q: 'he\0llo' }).q).toBe('hello')
+    expect(parseListParams({ q: '\u0007\u001b[0m' }).q).toBe('[0m')
+    expect(parseListParams({ q: '\0\0' }).q).toBeNull()
+    expect(parseListParams({ q: 'a\u007fb\u0085c' }).q).toBe('abc')
+  })
+
   it.each([
     ['published', 'published'],
     ['teaching', 'teachingNow'],

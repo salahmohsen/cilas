@@ -5,23 +5,20 @@ import { notFound, redirect } from 'next/navigation'
 import { getFormatter, getTranslations } from 'next-intl/server'
 import { getPayload } from 'payload'
 
-import buttonStyles from '@/components/arc/button/button.module.css'
 import type { Locale } from '@/i18n/routing'
 import { currentReader } from '@/lib/reader'
 import type { User } from '@/payload-types'
 import { PortalEmptyState } from '@/portal/feedback/empty-state'
 
-import { createActionOf } from './create-action'
+import { createActionOf, headerCreateOf } from './create-action'
 import { emptyStateOf, titleKeyOf } from './empty-states'
 import {
   chipGroup,
   MAX_PAGES,
   PAGE_SIZE,
-  PAGED,
-  type GroupId,
+  pagedOf,
   type ListCollection,
   type ListKind,
-  type PagedGroup,
 } from './groups'
 import { ListChips } from './list-chips'
 import {
@@ -34,7 +31,7 @@ import {
   type ListParams,
 } from './list-params'
 import { ListSearch } from './list-search'
-import { ListViewBody, resultOrFailed } from './list-view'
+import { ListViewBody, resultOrFailed, secondaryButton } from './list-view'
 import styles from './lists.module.css'
 import { PortalPageHeader } from './page-header'
 import { listKindOf, loadList, type ListGroup, type ListResult } from './rows'
@@ -43,8 +40,6 @@ import { NewRowsFocus } from './show-more'
 type SearchParams = Record<string, string | string[] | undefined>
 
 const pathOf = (collection: ListCollection) => `/spaces/${collection}`
-
-const pagedOf = (id: GroupId): PagedGroup | null => (PAGED.has(id) ? (id as PagedGroup) : null)
 
 /** The document title of a list: its H1, then the site. Nothing when the reader may not open it. */
 export const listMetadata = async (collection: ListCollection): Promise<Metadata> => {
@@ -84,8 +79,8 @@ async function ListView({
     hrefOf(path, { ...params, focus: null, ...next }, locale)
   const empty = emptyStateOf(collection, kind, createActionOf(collection, user)?.href ?? null)
   const moreOf = (group: ListGroup) => {
-    const paged = pagedOf(group.id)
-    if (!paged) return null
+    if (!pagedOf(group.id)) return null
+    const paged = group.id
     const pages = params.pages[paged] ?? 1
     const next = nextPages(params, paged)
     const firstNewIndex = (pages - 1) * PAGE_SIZE
@@ -97,7 +92,7 @@ async function ListView({
             <Link
               href={href({ pages: { ...params.pages, [paged]: next }, focus: paged })}
               scroll={false}
-              className={`${buttonStyles.button} ${buttonStyles.secondary} ${buttonStyles.md} ${styles.more}`}
+              className={`${secondaryButton} ${styles.more}`}
               aria-label={t('lists.showMoreIn', { group: t(`lists.group.${group.id}`) })}
             >
               {t('lists.showMore')}
@@ -192,11 +187,18 @@ export async function ListPage({
     (error) => console.error('[portal-lists]', error),
   )
   const create = createActionOf(collection, user)
+  const headerCreate = headerCreateOf(
+    create,
+    emptyStateOf(collection, kind, create?.href ?? null),
+    result === 'failed' ? null : result.total,
+  )
   return (
     <>
       <PortalPageHeader
         title={t(titleKeyOf(collection, kind))}
-        primary={create ? { label: t(create.labelKey), href: create.href } : undefined}
+        primary={
+          headerCreate ? { label: t(headerCreate.labelKey), href: headerCreate.href } : undefined
+        }
       />
       {result !== 'failed' && controlsShown(result.total, params) && (
         <div className={styles.controls}>

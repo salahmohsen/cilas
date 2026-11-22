@@ -6,13 +6,14 @@ import { ListRowBody, type RowIntl } from './list-row'
 import styles from './lists.module.css'
 import type { ListGroup, ListResult } from './rows'
 
-const secondary = `${buttonStyles.button} ${buttonStyles.secondary} ${buttonStyles.md}`
+/** The class of a secondary button link, for every portal list link that looks like one. */
+export const secondaryButton = `${buttonStyles.button} ${buttonStyles.secondary} ${buttonStyles.md}`
 
-function Notice({ text, link }: { text: string; link: { label: string; href: string } }) {
+function Notice({ text, link }: { text: React.ReactNode; link: { label: string; href: string } }) {
   return (
     <div className={styles.notice}>
       <p>{text}</p>
-      <a href={link.href} className={secondary}>
+      <a href={link.href} className={secondaryButton}>
         {link.label}
       </a>
     </div>
@@ -51,7 +52,10 @@ export function ListViewBody({
     if (query.q !== null)
       return (
         <Notice
-          text={t('lists.noResults', { query: query.q })}
+          text={t.rich('lists.noResults', {
+            query: query.q,
+            bdi: (chunks) => <bdi>{chunks}</bdi>,
+          })}
           link={{ label: t('lists.clearSearch'), href: hrefs.clearSearch }}
         />
       )

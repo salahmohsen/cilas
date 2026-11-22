@@ -232,6 +232,12 @@ describe('ListRowBody', () => {
     expect(links[0]!.querySelector('bdi')).not.toBeNull()
   })
 
+  it('the title link sets no direction of its own: the title is isolated, the row keeps the page direction', () => {
+    const link = renderRow(listRow({ title: 'Latin title' }), { locale: 'ar' }).querySelector('a')!
+    expect(link.closest('[dir]')).toBeNull()
+    expect(link.querySelector('bdi')!.textContent).toBe('Latin title')
+  })
+
   it('an untitled row names itself', () => {
     expect(renderRow(listRow({ title: null })).querySelector('a')!.textContent).toBe(
       'Untitled article',
@@ -249,7 +255,7 @@ describe('ListRowBody', () => {
 
   it('a course row names its type, season, year and sessions', () => {
     const meta = renderRow(COURSE).querySelector('[data-meta]')!.textContent
-    expect(meta).toBe('Core Course · Spring 2026 · 5 of 12 held')
+    expect(meta).toBe('Core course · Spring 2026 · 5 of 12 held')
   })
 
   it('a course row names its type and season in Arabic', () => {
@@ -297,6 +303,28 @@ describe('ListRowBody', () => {
       expect(meta).toContain(serverTranslator('Portal', locale)('lists.meta.waiting', { days: 3 }))
     },
   )
+
+  it.each([
+    ['en', 'Waiting since today'],
+    ['ar', 'ينتظر منذ اليوم'],
+  ] as const)('an admin row that waits since today says so, not "0 days" (%s)', (locale, line) => {
+    for (const waitingSince of ['2026-11-22T11:00:00Z', '2026-11-22T12:00:00Z']) {
+      const meta = renderRow(listRow({ key: 'submitted', owners: [], waitingSince }), {
+        viewer: 'admin',
+        locale,
+      }).querySelector('[data-meta]')!.textContent!
+      expect(meta).toContain(line)
+      expect(meta).not.toMatch(/\b0\b|٠/)
+    }
+  })
+
+  it('an admin row that waits one day says one day', () => {
+    const meta = renderRow(
+      listRow({ key: 'submitted', owners: [], waitingSince: '2026-11-21T12:00:00Z' }),
+      { viewer: 'admin' },
+    ).querySelector('[data-meta]')!.textContent!
+    expect(meta).toContain('Waiting 1 day')
+  })
 
   it('an owner row names no owner and no wait', () => {
     const meta = renderRow(
@@ -355,6 +383,7 @@ describe('ListViewBody', () => {
   it('a search with no result offers Clear search', () => {
     const page = renderView({ total: 3, groups: [] }, { query: { q: 'zz', show: null } })
     expect(page.body.textContent).toContain('No results for "zz".')
+    expect(page.querySelector('bdi')!.textContent).toBe('zz')
     expect(page.querySelector('a')!.textContent).toBe('Clear search')
     expect(page.querySelector('a')!.getAttribute('href')).toBe(HREFS.clearSearch)
     expect(page.querySelector('[data-empty-slot]')).toBeNull()

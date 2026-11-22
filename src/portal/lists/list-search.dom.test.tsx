@@ -40,6 +40,15 @@ describe('ListSearch', () => {
     expect(screen.getByRole('search').querySelectorAll('input[type="hidden"]')).toHaveLength(0)
   })
 
+  it('a click on the field around the input, the icon or the padding, focuses the input', () => {
+    renderSearch()
+    const box = screen.getByRole('searchbox', { name: 'Search' })
+    const shell = box.parentElement!
+    expect(document.activeElement).not.toBe(box)
+    fireEvent.click(shell)
+    expect(document.activeElement).toBe(box)
+  })
+
   it('typing changes the value', () => {
     renderSearch()
     const box = screen.getByRole('searchbox', { name: 'Search' })
