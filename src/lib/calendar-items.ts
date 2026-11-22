@@ -31,6 +31,8 @@ export type CalendarItem = {
   kind: string
   title: string
   tone: CalendarTone
+  /** A bar on the start edge of the item's blocks and legend swatch, in its tone's line colour: a shape cue beside the colour. */
+  edge?: 'solid' | 'double'
   /** This item is visible in edit mode but cannot be changed there. */
   readOnly?: true
   cancelled: boolean

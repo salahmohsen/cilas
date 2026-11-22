@@ -5,14 +5,14 @@ import config from '@payload-config'
 import { unstable_cache } from 'next/cache'
 import { getPayload, type Payload, type Where } from 'payload'
 
+import { courseOnSite } from '@/api/courses.api'
 import { getCourseSessions } from '@/api/sessions.api'
-import { courseItems, type CalendarMeeting } from '@/lib/calendar'
+import { byTime, courseItems, type CalendarMeeting } from '@/lib/calendar'
 import { calendarWords } from '@/lib/calendar-context'
 import { deliveryOf } from '@/lib/session-items'
 import { eventItems } from '@/lib/events'
 import { PUBLIC_LISTS_TAG } from '@/lib/paths'
-import { relId } from '@/lib/relation'
-import type { Media } from '@/payload-types'
+import type { Course, Media, User } from '@/payload-types'
 
 const visible: Where = {
   and: [{ tier: { equals: 'public' } }, { _status: { equals: 'published' } }],
@@ -24,45 +24,57 @@ const coverOf = (value: unknown): CalendarMeeting['cover'] => {
   return mediaCover(m)
 }
 
-/** The names of the places the cycles meet at, by cycle id, as the public may read them. */
-const placesOf = async (
-  payload: Payload,
-  cycles: number[],
-  locale: Locale,
-): Promise<Map<number, string>> => {
-  if (!cycles.length) return new Map()
-  const { docs } = await payload.find({
-    collection: 'cycles',
-    where: { id: { in: cycles } },
-    depth: 1,
-    pagination: false,
-    select: { place: true },
-    populate: { places: { name: true } },
-    locale,
-    fallbackLocale: otherLocale(locale),
-    overrideAccess: false,
-  })
-  return new Map(
-    docs.flatMap((cycle) =>
-      typeof cycle.place === 'object' && cycle.place?.name ? [[cycle.id, cycle.place.name]] : [],
-    ),
-  )
+const placeOf = (course: Pick<Course, 'cycle'>): string | null => {
+  const { cycle } = course
+  const place = typeof cycle === 'object' && cycle ? cycle.place : null
+  return typeof place === 'object' && place?.name ? place.name : null
+}
+
+type CourseSource =
+  | { kind: 'public' }
+  | { kind: 'reader'; reader: User; courseIds: readonly number[] }
+
+const PUBLIC_SOURCE = { kind: 'public' } as const satisfies CourseSource
+
+const gateOf = (source: CourseSource) => {
+  switch (source.kind) {
+    case 'public':
+      return { query: { where: visible }, reader: null }
+    case 'reader':
+      return source.courseIds.length
+        ? {
+            query: {
+              where: { id: { in: [...source.courseIds] } } satisfies Where,
+              user: source.reader,
+            },
+            reader: source.reader,
+          }
+        : null
+    default: {
+      const never: never = source
+      return never
+    }
+  }
 }
 
 /**
- * Every meeting the calendar can show, in date order: every meeting of every
- * published course (from its sessions, ADR 0011) and every public event.
+ * The meetings of the courses a source names, from their sessions (ADR 0011).
+ * The public source reads every published public course with no user. The
+ * reader source reads the given courses as that reader, so access decides
+ * which of them and which sessions come back.
  */
-export const getCalendarItems = async (
+const courseMeetings = async (
   payload: Payload,
   locale: Locale,
+  source: CourseSource,
 ): Promise<CalendarMeeting[]> => {
-  const fallbackLocale = otherLocale(locale)
-  const [courses, events, words] = await Promise.all([
+  const gate = gateOf(source)
+  if (!gate) return []
+  const [courses, words] = await Promise.all([
     payload.find({
       collection: 'courses',
-      where: visible,
-      depth: 1,
+      ...gate.query,
+      depth: 2,
       joins: false,
       pagination: false,
       select: {
@@ -72,12 +84,51 @@ export const getCalendarItems = async (
         cover_image: true,
         location: true,
         cycle: true,
+        tier: true,
+        _status: true,
       },
-      populate: { media },
+      populate: { media, cycles: { place: true }, places: { name: true } },
       locale,
-      fallbackLocale,
+      fallbackLocale: otherLocale(locale),
       overrideAccess: false,
     }),
+    calendarWords(locale),
+  ])
+  const sessions = await getCourseSessions(
+    payload,
+    courses.docs.map((c) => c.id),
+    { locale, reader: gate.reader },
+  )
+  return courses.docs.flatMap((c) => {
+    const course = { location: c.location, place: placeOf(c) }
+    const opens = Boolean(c.slug) && courseOnSite(c, gate.reader)
+    return courseItems(
+      {
+        kind: 'course',
+        courseId: c.id,
+        title: c.title,
+        href: opens ? detailPath('courses', String(c.slug)) : null,
+        type: c.course_type?.toLowerCase() ?? 'course',
+        cover: coverOf(c.cover_image),
+      },
+      (sessions.get(c.id) ?? []).map((session) => ({
+        ...session,
+        place: deliveryOf(session, course, words.delivery),
+      })),
+    )
+  })
+}
+
+/**
+ * Every meeting the calendar can show, in date order: every meeting of every
+ * published course and every public event.
+ */
+export const getCalendarItems = async (
+  payload: Payload,
+  locale: Locale,
+): Promise<CalendarMeeting[]> => {
+  const [courses, events] = await Promise.all([
+    courseMeetings(payload, locale, PUBLIC_SOURCE),
     payload.find({
       collection: 'events',
       where: { tier: { equals: 'public' } },
@@ -85,47 +136,12 @@ export const getCalendarItems = async (
       pagination: false,
       select: { title: true, slug: true, event_type: true, schedule: true, cover_image: true },
       locale,
-      fallbackLocale,
+      fallbackLocale: otherLocale(locale),
       overrideAccess: false,
     }),
-    calendarWords(locale),
   ])
-  const cycleOf = (course: (typeof courses.docs)[number]) => relId(course.cycle)
-  const [sessions, places] = await Promise.all([
-    getCourseSessions(
-      payload,
-      courses.docs.map((c) => c.id),
-      { locale, reader: null },
-    ),
-    placesOf(
-      payload,
-      [...new Set(courses.docs.flatMap((c) => cycleOf(c) ?? []))].map(Number),
-      locale,
-    ),
-  ])
-
-  const items: CalendarMeeting[] = [
-    ...courses.docs.flatMap((c) => {
-      const cycle = cycleOf(c)
-      const course = {
-        location: c.location,
-        place: cycle == null ? null : (places.get(Number(cycle)) ?? null),
-      }
-      return courseItems(
-        {
-          kind: 'course',
-          courseId: c.id,
-          title: c.title,
-          href: detailPath('courses', String(c.slug)),
-          type: c.course_type.toLowerCase(),
-          cover: coverOf(c.cover_image),
-        },
-        (sessions.get(c.id) ?? []).map((session) => ({
-          ...session,
-          place: deliveryOf(session, course, words.delivery),
-        })),
-      )
-    }),
+  return [
+    ...courses,
     ...events.docs.flatMap((e) =>
       eventItems(
         e.id,
@@ -139,11 +155,20 @@ export const getCalendarItems = async (
         e.schedule,
       ),
     ),
-  ]
-  return items.sort(
-    (a, b) => a.date.localeCompare(b.date) || (a.start ?? '').localeCompare(b.start ?? ''),
-  )
+  ].sort(byTime)
 }
+
+/**
+ * The meetings of the courses `courseIds` that `reader` may read, in date
+ * order. Read for this reader on every call: it never enters the cache below.
+ */
+export const getReaderCalendarItems = async (
+  payload: Payload,
+  locale: Locale,
+  reader: User,
+  courseIds: readonly number[],
+): Promise<CalendarMeeting[]> =>
+  (await courseMeetings(payload, locale, { kind: 'reader', reader, courseIds })).sort(byTime)
 
 /** The meetings above, built once per language and kept until a course changes. */
 export const getCachedCalendarItems = unstable_cache(
