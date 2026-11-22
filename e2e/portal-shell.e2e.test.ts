@@ -735,13 +735,22 @@ test.describe('portal shell', () => {
           await accountButton(page, locale).focus()
           await page.keyboard.press('Tab')
           await expect(region(page, locale)).toBeFocused()
+          const scrolledPast = async (from: number) => {
+            let last = -1
+            await expect
+              .poll(async () => {
+                const now = (await metrics(page, locale)).scrollTop
+                const settled = now === last && now > from
+                last = now
+                return settled
+              })
+              .toBe(true)
+            return last
+          }
           await page.keyboard.press('ArrowDown')
-          await expect.poll(async () => (await metrics(page, locale)).scrollTop).toBeGreaterThan(0)
-          const afterArrow = (await metrics(page, locale)).scrollTop
+          const afterArrow = await scrolledPast(0)
           await page.keyboard.press('PageDown')
-          await expect
-            .poll(async () => (await metrics(page, locale)).scrollTop)
-            .toBeGreaterThan(afterArrow)
+          await scrolledPast(afterArrow)
           await page.keyboard.press('Tab')
           const rows = region(page, locale).getByRole('link')
           await expect(rows.first()).toBeFocused()

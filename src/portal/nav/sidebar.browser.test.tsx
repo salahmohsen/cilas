@@ -201,4 +201,26 @@ describe('Sidebar scroll region', () => {
       document.documentElement.style.removeProperty('--toast-stack-height')
     },
   )
+
+  it('after keyboard scrolling, Shift+Tab back to the first row scrolls it into view', async () => {
+    await page.viewport(1440, 800)
+    window.history.replaceState(null, '', '/en/spaces')
+    const spaces = Array.from({ length: 10 }, (_, i) =>
+      spaceRow({ label: `Space ${i + 1}`, cover: '/missing-cover.png', unread: i % 3 }),
+    )
+    renderSidebar({ spaces, box: { width: 256, height: 236 } })
+    const region = screen.getByRole('region', { name: 'Pages and spaces' })
+    const rows = [...region.querySelectorAll('a')]
+    region.focus()
+    await userEvent.keyboard('{ArrowDown}{PageDown}{Tab}')
+    expect(document.activeElement).toBe(rows[0])
+    for (let i = 1; i < rows.length; i++) await userEvent.keyboard('{Tab}')
+    for (let i = 1; i < rows.length; i++) await userEvent.keyboard('{Shift>}{Tab}{/Shift}')
+    expect(document.activeElement).toBe(rows[0])
+    await waitFor(() =>
+      expect(
+        rows[0]!.getBoundingClientRect().top - region.getBoundingClientRect().top,
+      ).toBeGreaterThanOrEqual(7),
+    )
+  })
 })
