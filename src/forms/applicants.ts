@@ -209,21 +209,25 @@ export async function countWaitingApplicants(
 ): Promise<{ total: number }> {
   const viewer = applicantViewer(user)
   if (!viewer) return { total: 0 }
-  const { docs: courses } = await payload.find({
-    collection: 'courses',
-    where: viewerCoursesWhere(viewer),
-    select: {}, // the id only
-    depth: 0,
-    pagination: false,
-    overrideAccess: true,
-  })
-  const ids = new Set(courses.map((course) => course.id))
-  if (ids.size === 0) return { total: 0 }
+  // A choice's foreign key already limits admins to courses that exist. Only fellows need an ID list.
+  let courseIds: Set<number> | null = null
+  if (viewer.kind === 'fellow') {
+    const { docs: courses } = await payload.find({
+      collection: 'courses',
+      where: viewerCoursesWhere(viewer),
+      select: {}, // the id only
+      depth: 0,
+      pagination: false,
+      overrideAccess: true,
+    })
+    courseIds = new Set(courses.map((course) => course.id))
+    if (courseIds.size === 0) return { total: 0 }
+  }
   const { docs } = await payload.find({
     collection: 'form-submissions',
     where: {
       and: [
-        { 'choices.course': { in: [...ids] } },
+        { 'choices.course': courseIds ? { in: [...courseIds] } : { exists: true } },
         {
           or: [
             { 'choices.decision': { equals: 'pending' } },
@@ -240,11 +244,14 @@ export async function countWaitingApplicants(
   const total = docs.reduce(
     (sum, submission) =>
       sum +
-      (submission.choices ?? []).filter(
-        (choice) =>
-          ids.has(Number(relId(choice.course))) &&
-          (!choice.decision || choice.decision === 'pending'),
-      ).length,
+      (submission.choices ?? []).filter((choice) => {
+        const id = relId(choice.course)
+        return (
+          id != null &&
+          (courseIds === null || courseIds.has(Number(id))) &&
+          (!choice.decision || choice.decision === 'pending')
+        )
+      }).length,
     0,
   )
   return { total }

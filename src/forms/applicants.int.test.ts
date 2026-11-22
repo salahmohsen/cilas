@@ -288,6 +288,25 @@ describe('countWaitingApplicants', () => {
     expect(await waiting(teacher)).toBe(before + 2)
   })
 
+  it('counts waiting choices across courses for admins without loading the courses', async () => {
+    const before = await waiting(admin)
+    const submissions: number[] = []
+    try {
+      submissions.push(
+        await applyTo([
+          { course: f.courses[0].id, decision: null },
+          { course: f.courses[1].id, decision: 'pending' },
+        ]),
+      )
+      submissions.push(await applyTo([{ course: f.courses[0].id, decision: 'accepted' }]))
+      const { payload, calls } = recordingPayload(f.payload)
+      expect(await countWaitingApplicants(payload, admin)).toEqual({ total: before + 2 })
+      expect(calls.map((call) => call.args.collection)).toEqual(['form-submissions'])
+    } finally {
+      for (const id of submissions) await f.payload.delete({ collection: 'form-submissions', id })
+    }
+  })
+
   it('counts 0 for a programme application', async () => {
     const programme = await f.payload.create({
       collection: 'programmes',
