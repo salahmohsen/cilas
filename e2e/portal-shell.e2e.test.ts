@@ -39,7 +39,6 @@ import { unreadCount } from '../src/lib/unread-count'
 type Viewport = (typeof WIDTHS)[keyof typeof WIDTHS]
 
 const OTHER = { en: 'ar', ar: 'en' } as const
-const LIST_HREFS = ['/spaces/articles', '/spaces/courses']
 const DESKTOP = WIDTHS.desktop
 
 const escape = (text: string) => text.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
@@ -315,8 +314,7 @@ test.describe('portal shell', () => {
               links.map((link) => link.getAttribute('href')!),
             )
             expect(hrefs).toEqual(NAV_BY_ROLE[role].map((item) => navHref(item, locale)))
-            for (const href of hrefs.filter((h) => !LIST_HREFS.some((path) => h.endsWith(path))))
-              expect((await page.request.get(href)).status()).toBe(200)
+            for (const href of hrefs) expect((await page.request.get(href)).status()).toBe(200)
             const labels = NAV_BY_ROLE[role].map(
               (item) => portal.nav[item.key as keyof typeof portal.nav],
             )
@@ -357,6 +355,37 @@ test.describe('portal shell', () => {
           })
         })
       }
+  })
+
+  test.describe('list nav landing', () => {
+    const H1 = {
+      articles: { admin: 'allArticles', fellow: 'myArticles', student: 'myArticles' },
+      courses: { admin: 'allCourses', fellow: 'myCourses', student: null },
+    } as const
+    for (const role of ROLES)
+      for (const locale of LOCALES)
+        for (const viewport of Object.values(WIDTHS)) {
+          const portal = MESSAGES[locale].Portal
+          for (const item of NAV_BY_ROLE[role].filter(
+            (row) => row.key === 'articles' || row.key === 'courses',
+          )) {
+            const key = item.key as 'articles' | 'courses'
+            const h1 = H1[key][role]
+            test(`the ${key} item lands on its page (${role} ${locale} ${viewport.width})`, async ({
+              browser,
+            }) => {
+              await inContext(browser, { viewport, role }, async (page) => {
+                await page.goto(localePath('/en/spaces', locale))
+                const scope =
+                  viewport.width < 700 ? await openMore(page, locale) : portalNavOf(page, locale)
+                await scope.getByRole('link', { name: portal.nav[key], exact: true }).click()
+                await page.waitForURL(`**/${locale}${item.href}`)
+                expect(h1).not.toBeNull()
+                await expect(page.getByRole('heading', { level: 1 })).toHaveText(portal.lists[h1!])
+              })
+            })
+          }
+        }
   })
 
   test.describe('fold (1440)', () => {
