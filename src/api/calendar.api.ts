@@ -12,7 +12,7 @@ import { deliveryOf } from '@/lib/session-items'
 import { eventItems } from '@/lib/events'
 import { PUBLIC_LISTS_TAG } from '@/lib/paths'
 import { relId } from '@/lib/relation'
-import type { Media } from '@/payload-types'
+import type { Media, User } from '@/payload-types'
 
 const visible: Where = {
   and: [{ tier: { equals: 'public' } }, { _status: { equals: 'published' } }],
@@ -49,19 +49,53 @@ const placesOf = async (
   )
 }
 
+type CourseSource =
+  | { kind: 'public' }
+  | { kind: 'reader'; reader: User; courseIds: readonly number[] }
+
+const PUBLIC_SOURCE = { kind: 'public' } as const satisfies CourseSource
+
+const gateOf = (source: CourseSource) => {
+  switch (source.kind) {
+    case 'public':
+      return { query: { where: visible }, reader: null }
+    case 'reader':
+      return source.courseIds.length
+        ? {
+            query: {
+              where: { id: { in: [...source.courseIds] } } satisfies Where,
+              user: source.reader,
+            },
+            reader: source.reader,
+          }
+        : null
+    default: {
+      const never: never = source
+      return never
+    }
+  }
+}
+
+const byTime = (a: CalendarMeeting, b: CalendarMeeting) =>
+  a.date.localeCompare(b.date) || (a.start ?? '').localeCompare(b.start ?? '')
+
 /**
- * Every meeting the calendar can show, in date order: every meeting of every
- * published course (from its sessions, ADR 0011) and every public event.
+ * The meetings of the courses a source names, from their sessions (ADR 0011).
+ * The public source reads every published public course with no user. The
+ * reader source reads the given courses as that reader, so access decides
+ * which of them and which sessions come back.
  */
-export const getCalendarItems = async (
+const courseMeetings = async (
   payload: Payload,
   locale: Locale,
+  source: CourseSource,
 ): Promise<CalendarMeeting[]> => {
-  const fallbackLocale = otherLocale(locale)
-  const [courses, events, words] = await Promise.all([
+  const gate = gateOf(source)
+  if (!gate) return []
+  const [courses, words] = await Promise.all([
     payload.find({
       collection: 'courses',
-      where: visible,
+      ...gate.query,
       depth: 1,
       joins: false,
       pagination: false,
@@ -72,20 +106,12 @@ export const getCalendarItems = async (
         cover_image: true,
         location: true,
         cycle: true,
+        tier: true,
+        _status: true,
       },
       populate: { media },
       locale,
-      fallbackLocale,
-      overrideAccess: false,
-    }),
-    payload.find({
-      collection: 'events',
-      where: { tier: { equals: 'public' } },
-      depth: 1,
-      pagination: false,
-      select: { title: true, slug: true, event_type: true, schedule: true, cover_image: true },
-      locale,
-      fallbackLocale,
+      fallbackLocale: otherLocale(locale),
       overrideAccess: false,
     }),
     calendarWords(locale),
@@ -95,7 +121,7 @@ export const getCalendarItems = async (
     getCourseSessions(
       payload,
       courses.docs.map((c) => c.id),
-      { locale, reader: null },
+      { locale, reader: gate.reader },
     ),
     placesOf(
       payload,
@@ -103,29 +129,53 @@ export const getCalendarItems = async (
       locale,
     ),
   ])
+  return courses.docs.flatMap((c) => {
+    const cycle = cycleOf(c)
+    const course = {
+      location: c.location,
+      place: cycle == null ? null : (places.get(Number(cycle)) ?? null),
+    }
+    const opens = Boolean(c.slug) && c._status === 'published' && c.tier !== 'owner'
+    return courseItems(
+      {
+        kind: 'course',
+        courseId: c.id,
+        title: c.title,
+        href: opens ? detailPath('courses', String(c.slug)) : null,
+        type: c.course_type?.toLowerCase() ?? 'course',
+        cover: coverOf(c.cover_image),
+      },
+      (sessions.get(c.id) ?? []).map((session) => ({
+        ...session,
+        place: deliveryOf(session, course, words.delivery),
+      })),
+    )
+  })
+}
 
-  const items: CalendarMeeting[] = [
-    ...courses.docs.flatMap((c) => {
-      const cycle = cycleOf(c)
-      const course = {
-        location: c.location,
-        place: cycle == null ? null : (places.get(Number(cycle)) ?? null),
-      }
-      return courseItems(
-        {
-          kind: 'course',
-          courseId: c.id,
-          title: c.title,
-          href: detailPath('courses', String(c.slug)),
-          type: c.course_type.toLowerCase(),
-          cover: coverOf(c.cover_image),
-        },
-        (sessions.get(c.id) ?? []).map((session) => ({
-          ...session,
-          place: deliveryOf(session, course, words.delivery),
-        })),
-      )
+/**
+ * Every meeting the calendar can show, in date order: every meeting of every
+ * published course and every public event.
+ */
+export const getCalendarItems = async (
+  payload: Payload,
+  locale: Locale,
+): Promise<CalendarMeeting[]> => {
+  const [courses, events] = await Promise.all([
+    courseMeetings(payload, locale, PUBLIC_SOURCE),
+    payload.find({
+      collection: 'events',
+      where: { tier: { equals: 'public' } },
+      depth: 1,
+      pagination: false,
+      select: { title: true, slug: true, event_type: true, schedule: true, cover_image: true },
+      locale,
+      fallbackLocale: otherLocale(locale),
+      overrideAccess: false,
     }),
+  ])
+  return [
+    ...courses,
     ...events.docs.flatMap((e) =>
       eventItems(
         e.id,
@@ -139,11 +189,20 @@ export const getCalendarItems = async (
         e.schedule,
       ),
     ),
-  ]
-  return items.sort(
-    (a, b) => a.date.localeCompare(b.date) || (a.start ?? '').localeCompare(b.start ?? ''),
-  )
+  ].sort(byTime)
 }
+
+/**
+ * The meetings of the courses `courseIds` that `reader` may read, in date
+ * order. Read for this reader on every call: it never enters the cache below.
+ */
+export const getReaderCalendarItems = async (
+  payload: Payload,
+  locale: Locale,
+  reader: User,
+  courseIds: readonly number[],
+): Promise<CalendarMeeting[]> =>
+  (await courseMeetings(payload, locale, { kind: 'reader', reader, courseIds })).sort(byTime)
 
 /** The meetings above, built once per language and kept until a course changes. */
 export const getCachedCalendarItems = unstable_cache(
