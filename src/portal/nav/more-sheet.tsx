@@ -11,12 +11,12 @@ import { LanguageSwitch, ThemeToggle } from '@/components/site-controls'
 import { useSession } from '@/components/use-session'
 import { Link } from '@/i18n/navigation'
 
+import { foldButton } from './fold-button'
 import { NAV_ICONS } from './nav-icons'
 import type { PortalNavItem } from './portal-nav'
 import { PROFILE } from './profile'
 import { NavItemRow, SpaceRow } from './rows'
 import styles from './shell.module.css'
-import { foldButton } from './fold-button'
 import type { SpaceLink } from './space-links'
 
 const ProfileIcon = NAV_ICONS[PROFILE.icon]

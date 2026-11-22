@@ -22,6 +22,13 @@ const TYPING = [
   '[role="searchbox"]',
   '[role="combobox"]',
   '[role="spinbutton"]',
+  '[role="listbox"]',
+  '[role="grid"]',
+  '[role="treegrid"]',
+  '[role="tree"]',
+  '[role="slider"]',
+  '[role="tablist"]',
+  'tr[tabindex]',
   '[role="menu"]',
   '[role="dialog"]',
   '[role="alertdialog"]',
@@ -29,7 +36,8 @@ const TYPING = [
 ].join(', ')
 
 /** An open dialog, sheet, popover panel or menu: the page under it takes no fold key. */
-const OVERLAY = 'dialog[open], [role="dialog"], [role="alertdialog"], [role="menu"]'
+const OVERLAY =
+  'dialog[open], [role="dialog"], [role="alertdialog"], [role="menu"], [role="listbox"]'
 
 /** Whether a dialog or a menu shows anywhere under `root`. */
 export const overlayOpen = (root: ParentNode): boolean =>
@@ -64,18 +72,23 @@ const byPosition = (event: FoldKeyEvent) =>
  * Whether a key press folds or unfolds the sidebar: `[` from anywhere on
  * a wide page, except while typing, while a dialog or menu is open, on a
  * repeat or IME composition, or when the reader turned the shortcut off
- * (WCAG 2.1.4).
+ * (WCAG 2.1.4). `overlayOpen` is a function, called last: a page search that
+ * a key which is not `[` never pays for.
  */
 export const isFoldKey = (
   event: FoldKeyEvent,
-  { overlayOpen, wide, shortcutOn }: { overlayOpen: boolean; wide: boolean; shortcutOn: boolean },
+  {
+    overlayOpen,
+    wide,
+    shortcutOn,
+  }: { overlayOpen: () => boolean; wide: boolean; shortcutOn: boolean },
 ): boolean =>
   shortcutOn &&
   wide &&
-  !overlayOpen &&
   !event.metaKey &&
   (byCharacter(event) || byPosition(event)) &&
   !event.repeat &&
   !event.isComposing &&
   !event.defaultPrevented &&
-  !typingTarget(event.target)
+  !typingTarget(event.target) &&
+  !overlayOpen()

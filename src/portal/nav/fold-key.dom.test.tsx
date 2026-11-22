@@ -2,7 +2,7 @@ import { afterEach, describe, expect, it } from 'vitest'
 
 import { isFoldKey, type FoldKeyEvent } from './fold-key'
 
-const ON = { overlayOpen: false, wide: true, shortcutOn: true }
+const ON = { overlayOpen: () => false, wide: true, shortcutOn: true }
 
 const mount = (html: string) => {
   const host = document.createElement('div')
@@ -81,7 +81,7 @@ describe('isFoldKey', () => {
   it.each([
     ['the shortcut is off', { shortcutOn: false }],
     ['the layout is the phone layout', { wide: false }],
-    ['a dialog or menu is open', { overlayOpen: true }],
+    ['a dialog or menu is open', { overlayOpen: () => true }],
   ])('the key does nothing when %s', (_name, context) => {
     expect(press(mount('<main></main>'), {}, context)).toBe(false)
   })
@@ -104,8 +104,53 @@ describe('isFoldKey', () => {
     ['a child of a menu', '<div role="menu"><button data-target>x</button></div>'],
     ['a child of a dialog role', '<div role="dialog"><button data-target>x</button></div>'],
     ['a child of a dialog element', '<dialog open><button data-target>x</button></dialog>'],
+    [
+      'a listbox option',
+      '<div role="listbox"><div role="option" tabindex="0" data-target>x</div></div>',
+    ],
+    [
+      'a grid cell',
+      '<div role="grid"><div role="row"><div role="gridcell" tabindex="0" data-target>x</div></div></div>',
+    ],
+    ['a tree item', '<ul role="tree"><li role="treeitem" tabindex="0" data-target>x</li></ul>'],
+    ['a slider', '<div role="slider" tabindex="0"></div>'],
+    ['a tab', '<div role="tablist"><button role="tab" data-target>x</button></div>'],
+    [
+      'a table row that takes focus',
+      '<table><tbody><tr tabindex="0" data-target><td>x</td></tr></tbody></table>',
+    ],
   ])('the key does nothing from %s', (_name, html) => {
     expect(press(mount(html))).toBe(false)
+  })
+
+  it.each([
+    ['another key', { key: 'b', code: 'KeyB' }],
+    ['a modifier', { key: 'Shift', code: 'ShiftLeft', shiftKey: true }],
+    ['Enter', { key: 'Enter', code: 'Enter' }],
+  ])('the page is not searched for an open dialog on %s', (_name, overrides) => {
+    let looked = 0
+    press(mount('<main></main>'), overrides, {
+      overlayOpen: () => {
+        looked++
+        return false
+      },
+    })
+    expect(looked).toBe(0)
+  })
+
+  it('the page is searched for an open dialog on the fold key', () => {
+    let looked = 0
+    press(
+      mount('<main></main>'),
+      {},
+      {
+        overlayOpen: () => {
+          looked++
+          return false
+        },
+      },
+    )
+    expect(looked).toBe(1)
   })
 
   it('a lone contenteditable="false" is not a typing target', () => {

@@ -64,7 +64,7 @@ export function FoldProvider({
   }
   const onKeyDown = useEffectEvent((event: KeyboardEvent) => {
     const context = {
-      overlayOpen: overlayOpen(document),
+      overlayOpen: () => overlayOpen(document),
       wide: matchMedia(WIDE).matches,
       shortcutOn,
     }

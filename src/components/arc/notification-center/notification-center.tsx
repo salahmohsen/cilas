@@ -598,7 +598,7 @@ export function NotificationCenter({
                           }
                         >
                           <span className={styles.itemTitle}>
-                            <strong>{item.title}</strong>
+                            <strong dir="auto">{item.title}</strong>
                             <AnimatePresence initial={false} custom={bulk}>
                               {!item.read && (
                                 <motion.span
