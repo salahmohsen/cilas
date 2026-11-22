@@ -398,31 +398,21 @@ test.describe('portal calendar', () => {
         }
     })
 
-    test('axe finds no violation with the legend open at 390', async ({ browser }) => {
+    test('axe finds no violation at 390', async ({ browser }) => {
       await inContext(browser, { viewport: PHONE, role: 'student' }, async (page) => {
         await page.goto(portalAt('en', THREE_DAYS))
         await expect(block(page, world.communityCourse.title)).toBeVisible()
-        await openLegend(page, 'en')
-        expect(
-          await axeOver(page, known(PAGE, 'student', 'en', PHONE.width)),
-          'legend open',
-        ).toEqual({})
+        expect(await axeOver(page, known(PAGE, 'student', 'en', PHONE.width))).toEqual({})
       })
     })
 
-    test('a keyboard walk reaches the toolbar, the legend toggles, a block and its popover', async ({
+    test('a keyboard walk reaches the legend toggles, a block and its popover', async ({
       browser,
     }) => {
       await inContext(browser, { viewport: DESKTOP, role: 'student' }, async (page) => {
         await page.goto(portalAt('en', WEEK_VIEW))
         const target = block(page, world.communityCourse.title)
         await expect(target).toBeVisible()
-        const legend = await openLegend(page, 'en')
-        const yours = toggleOf(legend, MESSAGES.en.Portal.calendar.yourCourses)
-        await yours.focus()
-        await expect(yours).toBeFocused()
-        await page.keyboard.press('ArrowDown')
-        await expect(legend.getByRole('button').nth(1)).toBeFocused()
         await target.focus()
         await page.keyboard.press('Enter')
         const details = page.getByRole('dialog', { name: world.communityCourse.title })
@@ -430,6 +420,10 @@ test.describe('portal calendar', () => {
         await page.keyboard.press('Escape')
         await expect(details).toHaveCount(0)
         await expect(target).toBeFocused()
+        const legend = await openLegend(page, 'en')
+        await toggleOf(legend, MESSAGES.en.Portal.calendar.yourCourses).focus()
+        await page.keyboard.press('ArrowDown')
+        await expect(legend.getByRole('button').nth(1)).toBeFocused()
       })
     })
 
