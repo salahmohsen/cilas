@@ -1366,15 +1366,19 @@ test.describe('portal shell', () => {
             expect(atLeast(found, 44)).toEqual([])
             const header = page.locator('[data-portal-rail] header').locator('a, button')
             await expect(header.first()).toBeVisible()
-            const shown = await header.evaluateAll((els) =>
-              els
-                .filter((el) => el.getClientRects().length > 0)
-                .map((el) => {
-                  const box = el.getBoundingClientRect()
-                  return { w: box.width, h: box.height }
-                }),
-            )
-            expect(shown.length).toBeGreaterThan(viewport === PHONE ? 1 : 2)
+            const shownIn = () =>
+              header.evaluateAll((els) =>
+                els
+                  .filter((el) => el.getClientRects().length > 0)
+                  .map((el) => {
+                    const box = el.getBoundingClientRect()
+                    return { w: box.width, h: box.height }
+                  }),
+              )
+            await expect
+              .poll(async () => (await shownIn()).length)
+              .toBeGreaterThan(viewport === PHONE ? 1 : 2)
+            const shown = await shownIn()
             expect(atLeast(shown, 44)).toEqual([])
             await page.keyboard.press('Tab')
             const skip = page.getByRole('link', { name: portal.shell.skip })

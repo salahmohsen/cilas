@@ -258,7 +258,10 @@ test.describe('portal home: Inbox', () => {
           )
           await latestSection(page).locator(`a[href="${fixture.link}"]`).click()
           await page.waitForURL(`**${fixture.link}`)
-          await expect(bell).toHaveAccessibleName(MESSAGES[locale].Notifications.label, {
+          const landed = page.getByRole('button', {
+            name: new RegExp(`^${MESSAGES.en.Notifications.label}`),
+          })
+          await expect(landed).toHaveAccessibleName(MESSAGES.en.Notifications.label, {
             timeout: 5_000,
           })
         })
