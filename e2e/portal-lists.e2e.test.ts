@@ -1,10 +1,12 @@
 import { expect, test, type Browser, type Page } from '@playwright/test'
+import Color from 'colorjs.io'
 import { createTranslator } from 'next-intl'
 import { getPayload, type Payload } from 'payload'
 
 import config from '../src/payload.config.js'
 import { formatsOf } from '../src/i18n/formats'
-import { GROUPS, type GroupId, type ListKind } from '../src/portal/lists/groups'
+import { ratio } from '../src/portal/theme/contrast'
+import type { GroupId } from '../src/portal/lists/groups'
 import { login } from '../testing/login.test-utils'
 import { createTracker, uniq } from '../testing/payload.fixture'
 import {
@@ -70,10 +72,24 @@ const showMoreIn = (page: Page, locale: Locale, group: GroupId) =>
     exact: true,
   })
 
-const expectInOrder = (shown: GroupId[], kind: ListKind) => {
-  const order = shown.map((group) => GROUPS[kind].indexOf(group))
-  expect(order.every((index) => index >= 0)).toBe(true)
-  expect(order).toEqual([...order].sort((a, b) => a - b))
+const noResultsText = (locale: Locale, query: string) =>
+  [translator(locale).rich('lists.noResults', { query, bdi: (chunks) => chunks })].flat().join('')
+
+const colourOf = (page: Page, value: string) =>
+  page.evaluate((css) => {
+    const probe = document.createElement('span')
+    probe.style.color = css
+    document.body.append(probe)
+    const colour = getComputedStyle(probe).color
+    probe.remove()
+    return colour
+  }, value)
+
+const GROUP_SEQUENCE: Record<string, GroupId[]> = {
+  [`student ${ARTICLES}`]: ['needsYou', 'inProgress', 'withEditors', 'published', 'closed'],
+  [`teacher ${COURSES}`]: ['needsYou', 'teachingNow', 'proposals', 'closed'],
+  [`writer ${ARTICLES}`]: ['needsYou', 'waitingOnAuthor', 'inProgress', 'published', 'closed'],
+  [`writer ${COURSES}`]: ['needsYou', 'waitingOnAuthor', 'published', 'closed'],
 }
 
 const rowParts = (page: Page) =>
@@ -146,6 +162,7 @@ test.describe('portal lists', () => {
           await inContext(browser, { viewport, reader: 'writer' }, async (page) => {
             await page.goto(listPath(ARTICLES, locale))
             const rows = await rowParts(page)
+            expect(rows.length).toBeGreaterThan(0)
             for (const row of rows) {
               expect(row).toMatchObject({ slot: true, links: 1 })
               expect(row.badges).toBeGreaterThan(0)
@@ -157,22 +174,22 @@ test.describe('portal lists', () => {
         })
 
         test(`the group order holds (${at})`, async ({ browser }) => {
-          for (const [reader, path, kind] of [
-            ['student', ARTICLES, 'ownerArticles'],
-            ['teacher', COURSES, 'fellowCourses'],
-            ['writer', ARTICLES, 'admin'],
-            ['writer', COURSES, 'admin'],
+          const shown: Record<string, GroupId[]> = {}
+          for (const [reader, path] of [
+            ['student', ARTICLES],
+            ['teacher', COURSES],
+            ['writer', ARTICLES],
+            ['writer', COURSES],
           ] as const)
             await inContext(browser, { viewport, reader }, async (page) => {
               await page.goto(listPath(path, locale))
-              const shown = await groupOrder(page)
-              expect(shown.length, `${reader} ${path}`).toBeGreaterThan(0)
-              expectInOrder(shown, kind)
+              shown[`${reader} ${path}`] = await groupOrder(page)
               const headings = await page
                 .locator('section[data-list-group] > h2')
                 .evaluateAll((hs) => hs.map((h) => h.textContent))
-              expect(headings).toHaveLength(shown.length)
+              expect(headings).toHaveLength(shown[`${reader} ${path}`]!.length)
             })
+          expect(shown).toEqual(GROUP_SEQUENCE)
         })
 
         test(`Needs you holds the rows that wait on the reader (${at})`, async ({ browser }) => {
@@ -232,14 +249,21 @@ test.describe('portal lists', () => {
           page.locator('main header').getByRole('link', { name: t.newArticle, exact: true })
         const propose = (page: Page) =>
           page.locator('main header').getByRole('link', { name: t.proposeCourse, exact: true })
-        for (const reader of ['student', 'teacher', 'writer', 'admin'] as const)
+        const create = '/admin/collections/articles/create'
+        for (const reader of ['student', 'writer', 'admin'] as const)
           await inContext(browser, { viewport: DESKTOP, reader }, async (page) => {
             await page.goto(listPath(ARTICLES, locale))
-            await expect(newArticle(page)).toHaveAttribute(
-              'href',
-              '/admin/collections/articles/create',
-            )
+            await expect(page.locator('section[data-list-group]').first()).toBeVisible()
+            await expect(newArticle(page)).toHaveAttribute('href', create)
           })
+        await inContext(browser, { viewport: DESKTOP, reader: 'teacher' }, async (page) => {
+          await page.goto(listPath(ARTICLES, locale))
+          await expect(page.locator('section[data-list-group]')).toHaveCount(0)
+          await expect(newArticle(page)).toHaveCount(0)
+          await expect(
+            page.locator('main').getByRole('link', { name: t.writeArticle, exact: true }),
+          ).toHaveAttribute('href', create)
+        })
         for (const reader of ['teacher', 'writer'] as const)
           await inContext(browser, { viewport: DESKTOP, reader }, async (page) => {
             await page.goto(listPath(COURSES, locale))
@@ -323,9 +347,8 @@ test.describe('portal lists', () => {
             await searchBox(page, locale).fill(none)
             await searchBox(page, locale).press('Enter')
             await page.waitForURL((url) => url.searchParams.get('q') === none)
-            await expect(
-              page.getByText(translator(locale)('lists.noResults', { query: none })),
-            ).toBeVisible()
+            await expect(page.getByText(noResultsText(locale, none))).toBeVisible()
+            await expect(page.locator('main bdi', { hasText: none })).toHaveCount(1)
             await page.getByRole('link', { name: t.clearSearch, exact: true }).click()
             await page.waitForURL((url) => !url.searchParams.has('q'))
             await expect(sectionOf(page, 'published')).toBeVisible()
@@ -355,6 +378,18 @@ test.describe('portal lists', () => {
             if (await more.evaluate((el) => el === document.activeElement)) break
           }
           await expect(more).toBeFocused()
+          const total = Number(
+            (await sectionOf(page, 'published').locator('h2').textContent())!.match(/\d+/)![0],
+          )
+          const added = Math.min(50, total - 50)
+          expect(added).toBeGreaterThan(0)
+          const announced = await page.locator('[data-portal-live]').evaluateHandle((live) => {
+            const texts: string[] = []
+            new MutationObserver(() => {
+              if (live.textContent) texts.push(live.textContent)
+            }).observe(live, { childList: true, characterData: true, subtree: true })
+            return texts
+          })
           let rscInFlight = 0
           const isRsc = (request: { headers: () => Record<string, string> }) =>
             request.headers().rsc === '1'
@@ -372,13 +407,14 @@ test.describe('portal lists', () => {
           await expect(rows.nth(50).locator('a')).toBeFocused()
           await expect.poll(() => new URL(page.url()).searchParams.has('focus')).toBe(false)
           await expect(more).toHaveCount(0)
-          const count = (await rows.count()) - 50
-          await expect(page.locator('[data-portal-live]')).toHaveText(
-            translator('en')('lists.moreRows', { count }),
-          )
+          expect(await rows.count()).toBe(50 + added)
+          const message = translator('en')('lists.moreRows', { count: added })
+          await expect(page.locator('[data-portal-live]')).toHaveText(message)
           await expect.poll(() => rscInFlight).toBe(0)
           await expect(rows.nth(50).locator('a')).toBeFocused()
           expect(new URL(page.url()).searchParams.has('focus')).toBe(false)
+          const texts = await announced.jsonValue()
+          expect(texts.filter((text) => text === message)).toHaveLength(1)
         })
       })
 
@@ -393,8 +429,18 @@ test.describe('portal lists', () => {
           await inContext(browser, { viewport, reader }, async (page) => {
             await page.goto(listPath(path, 'en'))
             await expect(page.locator('section[data-list-group]').first()).toBeVisible()
+            const shownControls = reader === 'student'
+            const inPageOrder = await page.evaluate(() => {
+              const parts: string[] = []
+              for (const section of document.querySelectorAll('section[data-list-group]')) {
+                if (section.querySelector('li a')) parts.push('row')
+                if (section.querySelector(':scope > a')) parts.push('more')
+              }
+              return parts
+            })
             const stops: { part: string; outline: string; textField: boolean }[] = []
-            for (let i = 0; i < 140; i++) {
+            let wrapped = false
+            for (let i = 0; i < 400 && !wrapped; i++) {
               await page.keyboard.press('Tab')
               const stop = await page.evaluate(() => {
                 const el = document.activeElement
@@ -403,49 +449,60 @@ test.describe('portal lists', () => {
                   ? 'skip'
                   : el.closest('[data-portal-rail] nav')
                     ? 'sidebar'
-                    : el.closest('nav[aria-label] [aria-current], main nav')
-                      ? 'chips'
-                      : el.closest('[role="search"]')
-                        ? 'search'
-                        : el.closest('section[data-list-group] li')
-                          ? 'row'
-                          : el.closest('section[data-list-group]')
-                            ? 'more'
-                            : el.closest('main')
-                              ? 'main'
-                              : el.closest('nav')
-                                ? 'bar'
-                                : 'other'
+                    : el.closest('[data-portal-rail]')
+                      ? 'header'
+                      : el.closest('[data-portal-crumbs]')
+                        ? 'fold'
+                        : el.closest('main header')
+                          ? 'primary'
+                          : el.closest('main nav')
+                            ? 'chips'
+                            : el.closest('[role="search"]')
+                              ? 'search'
+                              : el.closest('section[data-list-group] li')
+                                ? 'row'
+                                : el.closest('section[data-list-group]')
+                                  ? 'more'
+                                  : el.closest('nav')
+                                    ? 'bar'
+                                    : 'other'
                 return {
                   part,
                   outline: getComputedStyle(el).outlineStyle,
                   textField: el.matches('input:not([type="checkbox"], [type="radio"])'),
                 }
               })
-              if (stop) stops.push(stop)
+              if (!stop) continue
+              wrapped = stop.part === 'skip' && stops.length > 0
+              if (!wrapped) stops.push(stop)
             }
-            const shownControls = reader === 'student'
+            expect(wrapped, 'the walk came back to the skip link').toBe(true)
+            const runs = (parts: string[]) => parts.filter((part, i, all) => part !== all[i - 1])
             const expected = [
               'skip',
-              ...(phone ? [] : ['sidebar']),
+              'header',
+              ...(phone ? [] : ['sidebar', 'fold']),
+              'primary',
               ...(shownControls ? ['chips', 'search'] : []),
-              'row',
-              ...(shownControls ? ['more'] : []),
+              ...inPageOrder,
               ...(phone ? ['bar'] : []),
             ]
-            const parts = stops.map((stop) => stop.part)
-            let at = 0
-            for (const part of parts) if (part === expected[at]) at++
-            expect(at, `${expected.join(' > ')} in ${parts.join(' ')}`).toBe(expected.length)
+            expect(runs(stops.map((stop) => stop.part))).toEqual(runs(expected))
             expect(stops.filter((stop) => !stop.textField && stop.outline === 'none')).toEqual([])
             if (shownControls) {
               const box = searchBox(page, 'en')
               const border = () =>
                 box.evaluate((input) => getComputedStyle(input.parentElement!).borderColor)
+              const background = await page
+                .locator('main')
+                .evaluate((main) => getComputedStyle(main).backgroundColor)
               await page.locator('main h1').click()
               const rest = await border()
               await box.focus()
-              expect(await border()).not.toBe(rest)
+              await expect.poll(border).not.toBe(rest)
+              await expect
+                .poll(async () => ratio(new Color(await border()), new Color(background)))
+                .toBeGreaterThanOrEqual(3)
             }
           })
         })
@@ -557,6 +614,92 @@ test.describe('portal lists', () => {
             },
           )
       })
+
+    test('on a phone a one-row list sits right under the header, with no blank band (en)', async ({
+      browser,
+    }) => {
+      await inContext(browser, { viewport: WIDTHS.phone, reader: 'student' }, async (page) => {
+        await page.goto(listPath(ARTICLES, 'en', `?q=${encodeURIComponent(lists.titles.beta)}`))
+        await expect(page.locator('section[data-list-group] li')).toHaveCount(1)
+        const gap = await page.evaluate(
+          () =>
+            document.querySelector('main')!.getBoundingClientRect().top -
+            document.querySelector('[data-portal-rail]')!.getBoundingClientRect().bottom,
+        )
+        expect(gap).toBeLessThanOrEqual(1)
+      })
+    })
+
+    test('a group heading is 17px, in tabular figures (en)', async ({ browser }) => {
+      await inContext(browser, { viewport: DESKTOP, reader: 'student' }, async (page) => {
+        await page.goto(listPath(ARTICLES, 'en'))
+        const heading = await sectionOf(page, 'needsYou')
+          .locator('h2')
+          .evaluate((h) => {
+            const style = getComputedStyle(h)
+            return {
+              size: style.fontSize,
+              figures: style.fontVariantNumeric,
+              weight: style.fontWeight,
+            }
+          })
+        expect(heading).toEqual({ size: '17px', figures: 'tabular-nums', weight: '500' })
+      })
+    })
+
+    test('under more contrast the row hairlines, the cover slot and the badges take the strong border (en)', async ({
+      browser,
+    }) => {
+      await inContext(browser, { viewport: DESKTOP, reader: 'student' }, async (page) => {
+        await page.goto(listPath(ARTICLES, 'en'))
+        const edges = () =>
+          page.evaluate(() => {
+            const row = document.querySelector('section[data-list-group] li')!
+            return {
+              row: getComputedStyle(row).borderBlockEndColor,
+              slot: getComputedStyle(row.querySelector('[data-slot]')!).boxShadow,
+              badge: getComputedStyle(row.querySelector('[data-status-badge]')!)
+                .borderBlockEndColor,
+            }
+          })
+        const normal = await edges()
+        await page.emulateMedia({ contrast: 'more' })
+        const strong = await colourOf(page, 'var(--border-strong)')
+        await expect.poll(async () => (await edges()).row).toBe(strong)
+        const more = await edges()
+        expect(more.row).not.toBe(normal.row)
+        expect(more.slot).toContain(strong)
+        expect(more.slot).not.toBe(normal.slot)
+        expect(more.badge).not.toBe(normal.badge)
+      })
+    })
+
+    test('a click on the search field outside its input focuses the input (en)', async ({
+      browser,
+    }) => {
+      await inContext(browser, { viewport: DESKTOP, reader: 'student' }, async (page) => {
+        await page.goto(listPath(ARTICLES, 'en'))
+        const box = searchBox(page, 'en')
+        const shell = await box.evaluate((input) => {
+          const rect = input.parentElement!.getBoundingClientRect()
+          return { x: rect.x, y: rect.y, height: rect.height }
+        })
+        await page.mouse.click(shell.x + 3, shell.y + shell.height / 2)
+        await expect(box).toBeFocused()
+      })
+    })
+
+    test('a chip link keeps the search and drops the page counts (en)', async ({ browser }) => {
+      await inContext(browser, { viewport: DESKTOP, reader: 'student' }, async (page) => {
+        await page.goto(listPath(ARTICLES, 'en', '?published=2'))
+        await expect(sectionOf(page, 'published').locator('li').nth(50)).toBeVisible()
+        const hrefs = await chipsNav(page, 'en')
+          .getByRole('link')
+          .evaluateAll((links) => links.map((a) => a.getAttribute('href')!))
+        expect(hrefs).toHaveLength(4)
+        for (const href of hrefs) expect(href).not.toContain('published=')
+      })
+    })
 
     test('lists load with spaces off', async ({ browser }) => {
       await spaces.set('off')

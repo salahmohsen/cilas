@@ -73,6 +73,9 @@ test.describe('portal lists on the empty seed', () => {
               await expect(links).toHaveText(lists[action.label])
               await expect(links).toHaveAttribute('href', action.href)
             } else await expect(links).toHaveCount(0)
+            const headerLinks = page.locator('main header').getByRole('link')
+            if (action && action.label !== 'openDashboard') await expect(headerLinks).toHaveCount(0)
+            if (view === 'adminArticles') await expect(headerLinks).toHaveCount(1)
             await expect(page.locator('section[data-list-group]')).toHaveCount(0)
             await expect(
               page.getByRole('navigation', { name: lists.chips.label, exact: true }),

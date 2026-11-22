@@ -102,3 +102,13 @@ export const resultOrFailed = async (
     return 'failed'
   }
 }
+
+/** What a failed load may log: the name, message and code of the error, not its query, parameters or data. */
+export const failureOf = (error: unknown) => {
+  const code = error instanceof Error && 'code' in error ? error.code : null
+  return {
+    name: error instanceof Error ? error.name : typeof error,
+    message: error instanceof Error ? error.message : String(error),
+    code: typeof code === 'string' || typeof code === 'number' ? code : null,
+  }
+}

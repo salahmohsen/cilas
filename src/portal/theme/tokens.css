@@ -26,8 +26,9 @@
     --portal-unread: oklch(70% 0.19 27);
   }
 
-  /* Row hairlines, the cover slot and the badge outlines read --border: they take the strong border (the extra type selector wins over Arc's dark --border). */
-  html:root:has([data-page='spaces']) {
+  /* Row hairlines, the cover slot and the badge outlines read --border: they take the strong border. */
+  :root:has([data-page='spaces']),
+  :root[data-theme='dark']:has([data-page='spaces']) {
     --border: var(--border-strong);
   }
 }

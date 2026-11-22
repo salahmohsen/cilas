@@ -10,7 +10,7 @@ import { serverFormatter, serverTranslator } from '../../../testing/server-intl.
 import { emptyStateOf, titleKeyOf } from './empty-states'
 import type { ListCollection, ListKind } from './groups'
 import { ListRowBody } from './list-row'
-import { ListViewBody, resultOrFailed } from './list-view'
+import { failureOf, ListViewBody, resultOrFailed } from './list-view'
 import { PortalPageHeader } from './page-header'
 import type { ListGroup, ListResult, ListRow } from './rows'
 
@@ -416,6 +416,32 @@ describe('ListViewBody', () => {
     expect(page.querySelector('a')!.textContent).toBe('Retry')
     expect(page.querySelector('a')!.getAttribute('href')).toBe(HREFS.retry)
     expect(sections(page)).toHaveLength(0)
+  })
+})
+
+describe('failureOf', () => {
+  it('keeps the name, the message and the code of an error', () => {
+    const error = Object.assign(new Error('connection refused'), { code: 'ECONNREFUSED' })
+    expect(failureOf(error)).toEqual({
+      name: 'Error',
+      message: 'connection refused',
+      code: 'ECONNREFUSED',
+    })
+  })
+
+  it('leaves out the rest of the object: a query, its values, a stack', () => {
+    const error = Object.assign(new Error('boom'), {
+      query: 'select * from articles where title like $1',
+      parameters: ['secret search'],
+      data: { email: 'a@b.c' },
+    })
+    expect(Object.keys(failureOf(error)).sort()).toEqual(['code', 'message', 'name'])
+    expect(JSON.stringify(failureOf(error))).not.toMatch(/secret|select|a@b\.c/)
+  })
+
+  it('reads a thrown value that is not an error', () => {
+    expect(failureOf('text')).toEqual({ name: 'string', message: 'text', code: null })
+    expect(failureOf(null)).toEqual({ name: 'object', message: 'null', code: null })
   })
 })
 

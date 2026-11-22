@@ -1,6 +1,7 @@
 import { expect, test, type Browser, type Page } from '@playwright/test'
 import { createTranslator } from 'next-intl'
 import AxeBuilder from '@axe-core/playwright'
+import Color from 'colorjs.io'
 import { getPayload, type Payload } from 'payload'
 
 import config from '../src/payload.config.js'
@@ -40,7 +41,7 @@ type Viewport = (typeof WIDTHS)[keyof typeof WIDTHS]
 
 const OTHER = { en: 'ar', ar: 'en' } as const
 const DESKTOP = WIDTHS.desktop
-const BASE_BELL_PANEL_RULES = ['label-content-name-mismatch']
+const BASE_BELL_PANEL_RULES = { 'label-content-name-mismatch': 12 } as const
 
 const escape = (text: string) => text.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
 
@@ -319,12 +320,15 @@ test.describe('portal shell', () => {
             const labels = NAV_BY_ROLE[role].map(
               (item) => portal.nav[item.key as keyof typeof portal.nav],
             )
-            await page.locator('[data-portal-crumbs] [data-portal-fold]').click()
+            const fold = page.locator('[data-portal-crumbs] [data-portal-fold]')
+            await fold.click()
+            await expect(fold).toHaveAttribute('aria-expanded', 'false')
             for (const label of labels)
               await expect(
                 portalNavOf(page, locale).getByRole('link', { name: label, exact: true }),
               ).toHaveCount(1)
-            await page.locator('[data-portal-crumbs] [data-portal-fold]').click()
+            await fold.click()
+            await expect(fold).toHaveAttribute('aria-expanded', 'true')
 
             const account = accountButton(page, locale)
             await expect(account).toHaveAttribute('aria-haspopup', 'menu')
@@ -824,12 +828,23 @@ test.describe('portal shell', () => {
         )
         await inShort(browser, 'fellow', async (page) => {
           await page.goto(localePath('/en/spaces', locale))
-          await page.evaluate(() =>
-            document.documentElement.style.setProperty('--toast-stack-height', '120px'),
-          )
-          expect(
-            await region(page, locale).evaluate((el) => getComputedStyle(el).scrollPaddingBottom),
-          ).toContain('120px')
+          const usedPadding = () =>
+            region(page, locale).evaluate((el) => {
+              const probe = document.createElement('div')
+              probe.style.cssText = `position:absolute;visibility:hidden;inline-size:1px;block-size:${getComputedStyle(el).scrollPaddingBottom}`
+              el.parentElement!.append(probe)
+              const height = probe.getBoundingClientRect().height
+              probe.remove()
+              return { used: height, scrollport: el.clientHeight }
+            })
+          for (const toast of [120, 4000]) {
+            await page.evaluate(
+              (px) => document.documentElement.style.setProperty('--toast-stack-height', `${px}px`),
+              toast,
+            )
+            const { used, scrollport } = await usedPadding()
+            expect(used).toBeCloseTo(Math.min(Math.max(8, toast), scrollport / 2), 0)
+          }
         })
       })
 
@@ -870,15 +885,16 @@ test.describe('portal shell', () => {
           'auto',
         )
         const bar = (await track(page).boundingBox())!
+        const before = await metrics(page, 'en')
+        const target = Math.min(
+          before.scrollHeight - before.clientHeight,
+          before.scrollTop + before.clientHeight * 0.9,
+        )
+        expect(target).toBeGreaterThan(before.scrollTop)
         await page.mouse.click(bar.x + bar.width / 2, bar.y + bar.height - 4)
-        const start = Date.now()
-        await expect
-          .poll(async () => (await metrics(page, 'en')).scrollTop, {
-            timeout: 1000,
-            intervals: [20],
-          })
-          .toBeGreaterThan(0)
-        expect(Date.now() - start).toBeLessThan(100)
+        await page.evaluate(() => new Promise((done) => requestAnimationFrame(done)))
+        const after = await metrics(page, 'en')
+        expect(Math.abs(after.scrollTop - target)).toBeLessThanOrEqual(1)
       })
     })
 
@@ -892,7 +908,7 @@ test.describe('portal shell', () => {
         const shellColour = await page
           .locator('[data-portal-shell]')
           .evaluate((el) => getComputedStyle(el).backgroundColor)
-        const opaque = (colour: string) => !/rgba\(.*,\s*0?\.\d+\)$|\/\s*0?\.\d+\)$/.test(colour)
+        const opaque = (colour: string) => new Color(colour).alpha === 1
 
         await page.emulateMedia({ forcedColors: 'active', reducedMotion: 'reduce' })
         await region(page, 'en').hover()
@@ -986,9 +1002,14 @@ test.describe('portal shell', () => {
                 .withTags(AXE_TAGS)
                 .include('[role="dialog"]')
                 .analyze()
+              const allowed: Record<string, number> = BASE_BELL_PANEL_RULES
               expect(
-                violations.map((v) => v.id).filter((id) => !BASE_BELL_PANEL_RULES.includes(id)),
-              ).toEqual([])
+                Object.fromEntries(
+                  violations
+                    .filter((v) => v.nodes.length > (allowed[v.id] ?? 0))
+                    .map((v) => [v.id, v.nodes.map((node) => node.target.join(' '))]),
+                ),
+              ).toEqual({})
             }
           })
         } finally {
@@ -1337,19 +1358,10 @@ test.describe('portal shell', () => {
                 : page.locator(
                     '[data-portal-rail] nav a, [data-portal-crumbs] button[data-portal-fold]',
                   )
+            await expect
+              .poll(async () => (await sizes(page, targets)).length)
+              .toBeGreaterThan(viewport === PHONE ? 1 : 2)
             const found = await sizes(page, targets)
-            const navs = await page.evaluate(() =>
-              [...document.querySelectorAll('nav')].map((el) => ({
-                label: el.getAttribute('aria-label'),
-                shown: el.checkVisibility(),
-                controls: [...el.querySelectorAll('a, button')].map(
-                  (c) => `${c.tagName} ${c.textContent?.trim()} ${c.getClientRects().length}`,
-                ),
-              })),
-            )
-            expect(found.length, JSON.stringify({ width: viewport.width, navs })).toBeGreaterThan(
-              viewport === PHONE ? 1 : 2,
-            )
             expect(atLeast(found, 44)).toEqual([])
             const header = page.locator('[data-portal-rail] header').locator('a, button')
             await expect(header.first()).toBeVisible()

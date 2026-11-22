@@ -31,7 +31,7 @@ import {
   type ListParams,
 } from './list-params'
 import { ListSearch } from './list-search'
-import { ListViewBody, resultOrFailed, secondaryButton } from './list-view'
+import { failureOf, ListViewBody, resultOrFailed, secondaryButton } from './list-view'
 import styles from './lists.module.css'
 import { PortalPageHeader } from './page-header'
 import { listKindOf, loadList, type ListGroup, type ListResult } from './rows'
@@ -184,7 +184,7 @@ export async function ListPage({
         },
         locale,
       ),
-    (error) => console.error('[portal-lists]', error),
+    (error) => console.error('[portal-lists]', failureOf(error)),
   )
   const create = createActionOf(collection, user)
   const headerCreate = headerCreateOf(
