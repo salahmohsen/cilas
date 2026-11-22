@@ -1,6 +1,9 @@
+import 'server-only'
+
 import { relId } from '@/lib/relation'
 import { ADMIN_LIST_KEYS, gate, keyedRows, waitingSet } from '@/lib/review-candidates'
 import { ADMIN_VISIBLE, type StatusKey } from '@/lib/review-status'
+import { titleOf } from '@/lib/title-of'
 import type { ReviewedCollection } from '@/lib/reviewed-fields'
 import { REVIEWED } from '@/lib/reviewed-collections'
 import type { Payload } from 'payload'
@@ -35,6 +38,7 @@ export type AdminReviewRow = {
 const adminCtx = (payload: Payload, collection: ReviewedCollection) => ({
   payload,
   user: null,
+  server: 'admin' as const,
   collection,
   base: ADMIN_VISIBLE,
 })
@@ -136,7 +140,7 @@ export const getReviewQueue = async (payload: Payload): Promise<QueueItem[]> => 
   return rows.map((row): QueueItem => ({
     kind: row.kind,
     id: row.id,
-    title: row.title.en ?? row.title.ar,
+    title: titleOf(row.title, 'en'),
     removal: row.key === 'published_removal',
     by: row.owners.join(', '),
     since: row.since,

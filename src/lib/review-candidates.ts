@@ -1,15 +1,17 @@
+import 'server-only'
+
 import type { FindOptions, Payload, SelectType, Where } from 'payload'
 
 import { relId } from '@/lib/relation'
 import {
   KEY_SELECT,
   KEY_WHERE,
+  KEYS_READ_ERROR,
   LIVE_COPY,
   liveParentIds,
   statusInputOf,
   statusOf,
   statusSelect,
-  STATUS_KEYS,
   waitsOn,
   type ReviewedDoc,
   type StatusInput,
@@ -18,14 +20,17 @@ import {
 import type { ReviewedCollection } from '@/lib/reviewed-fields'
 import type { User } from '@/payload-types'
 
-/** The keys that wait on one side. Derived from `waitsOn`, so no list is written by hand. */
-export const waitingKeys = (side: 'owner' | 'admin'): StatusKey[] =>
-  STATUS_KEYS.filter((key) => waitsOn(key) === side)
-
 /**
  * The candidate keys the admin queue reads: the 1b admin list's `workKeys('admin')`
  * (`src/portal/lists/groups.ts`). `src/lib` cannot import `groups.ts`, so this is a
  * pinned copy, and `sources.unit.test.ts` fails when the two differ.
+ *
+ * Only `submitted`, `published_edits` and `published_removal` wait on an admin.
+ * The other three (`draft`, `changes_requested`, `published_edits_returned`) give
+ * an admin-waiting id only for a row whose main row and latest version are out of
+ * step, a state Payload cannot write (a save moves both together). They stay
+ * because the queue is that list's Needs you group (Deviation 21): the same
+ * candidates, so the same set. Each costs a read; drop one only with the list.
  */
 export const ADMIN_LIST_KEYS: readonly StatusKey[] = [
   'draft',
@@ -36,17 +41,24 @@ export const ADMIN_LIST_KEYS: readonly StatusKey[] = [
   'published_edits_returned',
 ]
 
-export type Doc = ReviewedDoc
+type Doc = ReviewedDoc
 type Version = {
   parent: number | { id: number }
   version: { updatedAt: string } & Record<string, unknown>
 }
 type Found = { docs: Doc[]; totalDocs: number; hasNextPage: boolean }
 
-/** What a read needs: the reader (null is a server read that overrides access), the collection, and the base `where`. */
-export type ReadCtx = {
+/**
+ * Who reads. A `User` reads with their own access. An admin server read has no
+ * user and says so with `server: 'admin'` (Deviation 17): it overrides access,
+ * and every caller checks `isAdminUser` first. A `null` user alone is not a
+ * reader, so it does not type-check.
+ */
+type Reader = { user: User } | { user: null; server: 'admin' }
+
+/** What a read needs: the reader, the collection, and the base `where`. */
+export type ReadCtx = Reader & {
   payload: Payload
-  user: User | null
   collection: ReviewedCollection
   base: Where
 }
@@ -54,14 +66,24 @@ export type ReadCtx = {
 export type Entry = { id: number; main: Doc; latest: Doc | null; key: StatusKey }
 type KeysEntry = Omit<Entry, 'key'> & { key: StatusKey | null }
 
-export type Selected = Record<string, true>
+type Selected = Record<string, true>
 type Gated = 'collection' | 'user' | 'overrideAccess'
 type MainArgs = Omit<FindOptions<ReviewedCollection, SelectType>, Gated | 'draft'>
 type CopyArgs = Omit<Parameters<Payload['findVersions']>[0], Gated>
 
-/** A reader gets a gated read. No reader is the admin projection (Deviation 17): `overrideAccess: true`. */
-export const gate = ({ user }: { user: User | null }) =>
-  user ? ({ user, overrideAccess: false } as const) : ({ overrideAccess: true } as const)
+/**
+ * The access of a read. A `User` gets a gated read; an admin server read gets
+ * `overrideAccess: true`. A `null` user with no `server` mark is a bug that the
+ * types refuse, and at run time it throws and never reads.
+ */
+export function gate(ctx: { user: User }): { user: User; overrideAccess: false }
+export function gate(ctx: { user: null; server: 'admin' }): { overrideAccess: true }
+export function gate(ctx: Reader): { user: User; overrideAccess: false } | { overrideAccess: true }
+export function gate({ user, server }: { user: User | null; server?: 'admin' }) {
+  if (user) return { user, overrideAccess: false } as const
+  if (server === 'admin') return { overrideAccess: true } as const
+  throw new Error('A read with no user must be an admin server read (server: "admin").')
+}
 
 export const findMain = async (ctx: ReadCtx, args: MainArgs) =>
   (await ctx.payload.find({
@@ -109,8 +131,6 @@ const readLatest = async (ctx: ReadCtx, ids: number[], version: Selected) => {
   })
   return newestPerParent(docs)
 }
-
-const KEYS_READ_ERROR = 'statusOf compares fields only on full rows'
 
 /**
  * The key of a keys-only row. `statusOf` throws `KEYS_READ_ERROR` only for a live
@@ -213,9 +233,13 @@ export const candidateIds = async (ctx: ReadCtx, keys: readonly StatusKey[]) => 
   const copyWhere = onCopy.every((row) => row !== undefined)
     ? { or: onCopy.map((row) => row.where) }
     : LIVE_COPY
+  // An empty `or` is no condition in Payload, so a side with no key is not read.
+  const none = { docs: [] }
   const [mains, copies] = await Promise.all([
-    findMain(ctx, { where: { and: [ctx.base, { or: onMain }] }, select: { id: true } }),
-    findCopies(ctx, { where: copyWhere, select: { parent: true } }),
+    onMain.length
+      ? findMain(ctx, { where: { and: [ctx.base, { or: onMain }] }, select: { id: true } })
+      : none,
+    onCopy.length ? findCopies(ctx, { where: copyWhere, select: { parent: true } }) : none,
   ])
   const live = await liveParentIds(ctx.payload, {
     collection: ctx.collection,

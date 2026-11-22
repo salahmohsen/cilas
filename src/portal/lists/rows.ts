@@ -1,3 +1,5 @@
+import 'server-only'
+
 import type { Payload, Where } from 'payload'
 
 import { adminViewOf, ownsViaAuthors, ownsViaFellows } from '@/access'
@@ -15,6 +17,7 @@ import {
   type Entry,
 } from '@/lib/review-candidates'
 import { ADMIN_VISIBLE, KEY_WHERE, LIVE_MAIN, waitsOn, type StatusKey } from '@/lib/review-status'
+import { titleOf } from '@/lib/title-of'
 import type { Media, User } from '@/payload-types'
 
 import { heldCount } from './course-meta'
@@ -106,12 +109,6 @@ const LIST_ROWS = {
   select: { main: { tier: true, cover_image: true }, version: { cover_image: true } },
   read: 'full',
 } as const
-
-export const titleOf = (value: unknown, locale: Locale) => {
-  if (typeof value === 'string') return value || null
-  const titles = (value ?? {}) as Record<string, string | null | undefined>
-  return titles[locale] || titles[locale === 'en' ? 'ar' : 'en'] || null
-}
 
 /**
  * The row a list shows: the latest version where the row shows the owner's

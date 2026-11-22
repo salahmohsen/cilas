@@ -212,7 +212,7 @@ export async function countWaitingApplicants(
   const { docs: courses } = await payload.find({
     collection: 'courses',
     where: viewerCoursesWhere(viewer),
-    select: { slug: true },
+    select: {}, // the id only
     depth: 0,
     pagination: false,
     overrideAccess: true,

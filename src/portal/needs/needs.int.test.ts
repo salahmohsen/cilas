@@ -14,7 +14,7 @@ import { portalWorld, type PortalAccount, type PortalWorld } from '../../../test
 import { resendInbox } from '../../../testing/resend.test-utils'
 import { groupOf } from '../lists/groups'
 import { loadList } from '../lists/rows'
-import { countsOf, needsTotal, rowsOf, workSetsOf, type NeedsResult } from './needs'
+import { countsOf, needsTotal, rowsOf, workIn, workSetsOf, type NeedsResult } from './needs'
 import { ownRows, ownSet } from './owner-rows'
 
 mockNetwork(resendInbox().handler, ...localServices)
@@ -157,6 +157,37 @@ describe('needs', () => {
         .filter((row) => row.collection === collection && ids.includes(idOf(row.href)))
         .map((row) => idOf(row.href))
         .sort()
+
+    it('two User objects of one account share one read of the work sets', async () => {
+      const admin = await userOf(portal.accounts.admin)
+      const student = await userOf(portal.accounts.student)
+      const store = new Map()
+      const first = workIn(store, payload, admin)
+      expect(workIn(store, payload, { ...admin })).toBe(first)
+      expect(workIn(store, payload, student)).not.toBe(first)
+      expect(store.size).toBe(2)
+    })
+
+    it('an owner with articles and courses gets one list, oldest first', async () => {
+      const fellow = await userOf(portal.accounts.fellow)
+      const { create, submit, decide } = trustedWrites(payload, track)
+      const article = await create('articles', {
+        title: uniq('Fellow article returned'),
+        slug: uniq('fellow-article'),
+        authors: [portal.accounts.fellow.person],
+        tier: 'owner',
+        review: { status: 'draft' },
+      })
+      await submit('articles', article)
+      await decide('articles', article, 'changes_requested')
+      const { rows } = await rowsOf(payload, fellow, await workSetsOf(payload, fellow), 'en')
+      const at = (collection: string, id: number) =>
+        rows.findIndex((row) => row.collection === collection && idOf(row.href) === id)
+      expect(at('courses', world.fellowCourses.changes_requested)).toBeGreaterThanOrEqual(0)
+      expect(at('articles', article)).toBeGreaterThan(
+        at('courses', world.fellowCourses.changes_requested),
+      )
+    })
 
     it('the rows of needs(admin) hold every fixture document that waits on the admin, plus one applicants row', async () => {
       const admin = await userOf(portal.accounts.admin)

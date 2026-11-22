@@ -1,13 +1,16 @@
+import 'server-only'
+
 import type { Payload } from 'payload'
 
 import type { Locale } from '@/i18n/routing'
 import { documentHref } from '@/lib/document-href'
 import { keyedRows, waitingSet, type ReadCtx } from '@/lib/review-candidates'
 import type { StatusKey } from '@/lib/review-status'
+import { titleOf } from '@/lib/title-of'
 import type { User } from '@/payload-types'
 
 import type { ListCollection } from '../lists/groups'
-import { baseWhere, listKindOf, titleOf } from '../lists/rows'
+import { baseWhere, listKindOf } from '../lists/rows'
 import { KIND_OF_KEY, OWNER_SET_KEYS, VERB_OF, type NeedRow } from './sources'
 
 /** The read of the reader's own 1b list, or null when they have none (no role, or no person). */
@@ -32,9 +35,9 @@ export const ownSet = async (payload: Payload, user: User, collection: ListColle
 }
 
 /**
- * One row per id of `set`, with the set's key. It reads the titles only and does
- * not filter, so the rows and the count of one set are equal. Oldest first, by
- * the latest version.
+ * One row per id of `set`, with the set's key and the time of its latest
+ * version (`since`), which the caller orders by. It reads the titles only and
+ * does not filter, so the rows and the count of one set are equal.
  */
 export const ownRows = async (
   payload: Payload,
@@ -42,31 +45,28 @@ export const ownRows = async (
   collection: ListCollection,
   set: Map<number, StatusKey>,
   locale: Locale,
-): Promise<NeedRow[]> => {
+): Promise<Array<{ since: string; row: NeedRow }>> => {
   const ctx = ownCtx(payload, user, collection)
   if (!ctx || set.size === 0) return []
   const entries = await keyedRows(ctx, [...set.keys()], {
     select: { main: {}, version: {} },
     read: 'keys',
   })
-  return [...set]
-    .map(([id, key]) => {
-      const entry = entries.get(id)
-      const source = entry ? (entry.latest ?? entry.main) : null
-      const kind = KIND_OF_KEY[key]!
-      return {
-        updatedAt: source?.updatedAt ?? '',
-        row: {
-          kind,
-          verbKey: VERB_OF[kind],
-          href: documentHref({ collection, id, viewer: 'owner', waiting: false, locale }),
-          label: source ? titleOf(source.title, locale) : null,
-          count: 1,
-          owners: [],
-          collection,
-        } satisfies NeedRow,
-      }
-    })
-    .sort((a, b) => a.updatedAt.localeCompare(b.updatedAt))
-    .map(({ row }) => row)
+  return [...set].map(([id, key]) => {
+    const entry = entries.get(id)
+    const source = entry ? (entry.latest ?? entry.main) : null
+    const kind = KIND_OF_KEY[key]!
+    return {
+      since: source?.updatedAt ?? '',
+      row: {
+        kind,
+        verbKey: VERB_OF[kind],
+        href: documentHref({ collection, id, viewer: 'owner', waiting: false, locale }),
+        label: source ? titleOf(source.title, locale) : null,
+        count: 1,
+        owners: [],
+        collection,
+      } satisfies NeedRow,
+    }
+  })
 }

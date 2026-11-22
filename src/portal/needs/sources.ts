@@ -53,6 +53,12 @@ export const VERB_OF: Record<NeedKind, `needs.${string}`> = {
  * The candidate keys of an owner's set: a subset of the owner list's `workKeys`,
  * the keys that can give an owner-waiting key. Each has a `KEY_WHERE` row, so the
  * all-copies read (`LIVE_COPY`) is never needed.
+ *
+ * `changes_requested` and `published_edits_returned` wait on the owner. `submitted`
+ * waits on an admin, so it gives an owner-waiting id only for a not-live row whose
+ * main row and latest version are out of step, a state Payload cannot write (a
+ * save moves both together). It stays because the set is the owner list's Needs you
+ * group, which reads it too: the same candidates, so the same set.
  */
 export const OWNER_SET_KEYS: readonly StatusKey[] = [
   'submitted',

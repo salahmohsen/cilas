@@ -49,7 +49,13 @@ describe('the candidate reader', () => {
   const nothing = { select: { main: {}, version: {} }, read: 'keys' } as const
 
   it('a main candidate outside base is out of scope', async () => {
-    const ctx = { payload, user: null, collection: 'articles', base: LIVE_MAIN } as const
+    const ctx = {
+      payload,
+      user: null,
+      server: 'admin',
+      collection: 'articles',
+      base: LIVE_MAIN,
+    } as const
     const id = world.lists.articles.submitted
     expect((await keyedRows(ctx, [id], nothing)).has(id)).toBe(false)
     const set = await waitingSet(ctx, { side: 'admin', keys: ['submitted', 'published_edits'] })
@@ -57,13 +63,64 @@ describe('the candidate reader', () => {
   })
 
   it('a not-live version parent is no candidate', async () => {
-    const ctx = { payload, user: null, collection: 'articles', base: ADMIN_VISIBLE } as const
+    const ctx = {
+      payload,
+      user: null,
+      server: 'admin',
+      collection: 'articles',
+      base: ADMIN_VISIBLE,
+    } as const
     const ids = await candidateIds(ctx, ADMIN_LIST_KEYS)
     const { notLive } = world
     expect(ids).toContain(notLive.takenDownResubmitted)
     expect(ids).toContain(notLive.changesRequestedCopySubmitted)
     expect(ids).not.toContain(notLive.rejectedCopySubmitted)
     expect(ids).not.toContain(notLive.takenDownCopySubmitted)
+  })
+
+  const spied = () => {
+    const calls: string[] = []
+    const spy = new Proxy(payload, {
+      get: (target, name) => {
+        const member = Reflect.get(target, name, target)
+        if (typeof member !== 'function') return member
+        return (...args: unknown[]) => {
+          calls.push(String(name))
+          return member.apply(target, args)
+        }
+      },
+    })
+    return { spy, calls }
+  }
+
+  it('keys with no main row read no main row: an empty `or` would read every row', async () => {
+    const { spy, calls } = spied()
+    const ctx = {
+      payload: spy,
+      user: null,
+      server: 'admin',
+      collection: 'articles',
+      base: ADMIN_VISIBLE,
+    } as const
+    const ids = await candidateIds(ctx, ['published_edits'])
+    expect(ids).toContain(world.lists.articles.published_edits)
+    expect(ids).not.toContain(world.lists.articles.submitted)
+    expect(calls).toEqual(['findVersions', 'find'])
+  })
+
+  it('keys with no copy row read no copy: an empty `or` would read every version', async () => {
+    const { spy, calls } = spied()
+    const ctx = {
+      payload: spy,
+      user: null,
+      server: 'admin',
+      collection: 'articles',
+      base: ADMIN_VISIBLE,
+    } as const
+    const ids = await candidateIds(ctx, ['submitted'])
+    expect(ids).toContain(world.lists.articles.submitted)
+    expect(ids).not.toContain(world.lists.articles.published)
+    expect(calls).toEqual(['find'])
   })
 
   it('a null key is out of the set', async () => {

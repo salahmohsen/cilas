@@ -1,12 +1,14 @@
 import { describe, expect, it } from 'vitest'
 
-import { ADMIN_LIST_KEYS, waitingKeys } from '@/lib/review-candidates'
+import { ADMIN_LIST_KEYS } from '@/lib/review-candidates'
 import { KEY_WHERE, STATUS_KEYS, waitsOn } from '@/lib/review-status'
 import type { User } from '@/payload-types'
 
 import { workKeys } from '../lists/groups'
 import { listKindOf } from '../lists/rows'
 import { KIND_OF_KEY, OWNER_SET_KEYS, SOURCES_OF, VERB_OF, type NeedSource } from './sources'
+
+const waitingKeys = (side: 'owner' | 'admin') => STATUS_KEYS.filter((key) => waitsOn(key) === side)
 
 const user = (roles: string[], person: number | null) =>
   ({ id: 1, roles, person }) as unknown as User

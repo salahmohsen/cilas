@@ -1,3 +1,5 @@
+import 'server-only'
+
 import config from '@payload-config'
 import { getPayload, type Payload } from 'payload'
 import { cache } from 'react'
@@ -8,9 +10,9 @@ import type { Locale } from '@/i18n/routing'
 import { documentHref } from '@/lib/document-href'
 import { adminQueue, adminReviewRows, type AdminSets } from '@/lib/review-queue'
 import type { StatusKey } from '@/lib/review-status'
+import { titleOf } from '@/lib/title-of'
 import type { User } from '@/payload-types'
 
-import { titleOf } from '../lists/rows'
 import { ownRows, ownSet } from './owner-rows'
 import { KIND_OF_KEY, SOURCES_OF, VERB_OF, type NeedRow, type NeedSource } from './sources'
 
@@ -94,7 +96,8 @@ export type NeedsResult = { rows: NeedRow[]; failed: NeedSource[] }
 /**
  * One row per id of the sets, in the reader's locale. It reads only the display
  * fields, never a work set. The admin's review rows come first, oldest first,
- * then the applicants row; an owner's rows are oldest first by their latest version.
+ * then the applicants row; an owner's article and course rows are merged and
+ * come oldest first, by their latest version.
  */
 export const rowsOf = async (
   payload: Payload,
@@ -103,7 +106,7 @@ export const rowsOf = async (
   locale: Locale,
 ): Promise<NeedsResult> => {
   const failed = [...sets.failed]
-  const part = async (source: NeedSource, read: () => Promise<NeedRow[]>) => {
+  const part = async <Row>(source: NeedSource, read: () => Promise<Row[]>) => {
     try {
       return await read()
     } catch (error) {
@@ -113,10 +116,10 @@ export const rowsOf = async (
     }
   }
   const { reviewQueue, applicants, ownArticles, ownCourses } = sets
-  const parts = await Promise.all([
+  const [review, articles, courses] = await Promise.all([
     reviewQueue && isAdminUser(user)
       ? part('reviewQueue', async () =>
-          (await adminReviewRows(payload, reviewQueue, locale)).map((row) => {
+          (await adminReviewRows(payload, reviewQueue, locale)).map((row): NeedRow => {
             const kind = KIND_OF_KEY[row.key]!
             return {
               kind,
@@ -136,19 +139,6 @@ export const rowsOf = async (
           }),
         )
       : [],
-    applicants
-      ? [
-          {
-            kind: 'applicants',
-            verbKey: VERB_OF.applicants,
-            href: '/admin/applicants',
-            label: null,
-            count: applicants,
-            owners: [],
-            collection: null,
-          } satisfies NeedRow,
-        ]
-      : [],
     ownArticles
       ? part('ownArticles', () => ownRows(payload, user, 'articles', ownArticles, locale))
       : [],
@@ -156,22 +146,55 @@ export const rowsOf = async (
       ? part('ownCourses', () => ownRows(payload, user, 'courses', ownCourses, locale))
       : [],
   ])
-  return { rows: parts.flat(), failed }
+  const applicantRows: NeedRow[] = applicants
+    ? [
+        {
+          kind: 'applicants',
+          verbKey: VERB_OF.applicants,
+          href: '/admin/applicants',
+          label: null,
+          count: applicants,
+          owners: [],
+          collection: null,
+        },
+      ]
+    : []
+  const own = [...articles, ...courses]
+    .sort((a, b) => a.since.localeCompare(b.since))
+    .map(({ row }) => row)
+  return { rows: [...review, ...applicantRows, ...own], failed }
 }
 
 /** The total of the rows, or `null` when a source failed. Home and the Inbox page read it. */
 export const needsTotal = ({ rows, failed }: NeedsResult) =>
   failed.length > 0 ? null : rows.reduce((sum, row) => sum + row.count, 0)
 
+const once = <Value>(store: Map<string, Value>, key: string, make: () => Value) => {
+  if (!store.has(key)) store.set(key, make())
+  return store.get(key)!
+}
+
 /**
- * One read of the work sets per request: React `cache`, keyed on the one `User`
- * object of the request. The layout calls `needsCounts`, the pages `needs`, and
- * both share this entry.
+ * The work sets of one account, read once per `store`. The key is the user's id,
+ * never the `User` object: the layout and a page can each load the user and hold
+ * two objects for one account.
  */
-export const workOf = cache(async (user: User) => workSetsOf(await getPayload({ config }), user))
+export const workIn = (store: Map<string, Promise<WorkSets>>, payload: Payload, user: User) =>
+  once(store, String(user.id), () => workSetsOf(payload, user))
 
-export const needsCounts = cache(async (user: User) => countsOf(await workOf(user)))
+/** React `cache` gives one `Map` per request. */
+const requestStore = <Value>() => cache(() => new Map<string, Value>())
+const workStore = requestStore<Promise<WorkSets>>()
+const rowsStore = requestStore<Promise<NeedsResult>>()
 
-export const needs = cache(async (user: User, locale: Locale) =>
-  rowsOf(await getPayload({ config }), user, await workOf(user), locale),
-)
+/** One read of the work sets per request and account. The layout calls `needsCounts`, the pages `needs`, and both share this entry. */
+export const workOf = async (user: User) => workIn(workStore(), await getPayload({ config }), user)
+
+export const needsCounts = async (user: User) => countsOf(await workOf(user))
+
+export const needs = async (user: User, locale: Locale) => {
+  const payload = await getPayload({ config })
+  return once(rowsStore(), `${user.id}:${locale}`, async () =>
+    rowsOf(payload, user, await workIn(workStore(), payload, user), locale),
+  )
+}
