@@ -1,4 +1,4 @@
-import type { FindOptions, Payload, SelectType, Where } from 'payload'
+import type { Payload, Where } from 'payload'
 
 import { adminViewOf, ownsViaAuthors, ownsViaFellows } from '@/access'
 import type { CourseType } from '@/fields/course-type'
@@ -7,19 +7,14 @@ import type { Season } from '@/lib/cycle'
 import { mediaPopulate, mediaThumbnail } from '@/lib/media-image'
 import { relId } from '@/lib/relation'
 import {
-  ADMIN_VISIBLE,
-  KEY_SELECT,
-  KEY_WHERE,
-  LIVE_COPY,
-  LIVE_MAIN,
-  liveParentIds,
-  statusInputOf,
-  statusOf,
-  statusSelect,
-  waitsOn,
-  type ReviewedDoc,
-  type StatusKey,
-} from '@/lib/review-status'
+  candidateIds,
+  findCopies,
+  findMain,
+  gate,
+  keyedRows,
+  type Entry,
+} from '@/lib/review-candidates'
+import { ADMIN_VISIBLE, KEY_WHERE, LIVE_MAIN, waitsOn, type StatusKey } from '@/lib/review-status'
 import type { Media, User } from '@/payload-types'
 
 import { heldCount } from './course-meta'
@@ -78,13 +73,6 @@ export const listKindOf = (user: User, collection: ListCollection): ListKind | n
   return null
 }
 
-type Doc = ReviewedDoc
-type Version = {
-  parent: number | { id: number }
-  version: { updatedAt: string } & Record<string, unknown>
-}
-type Found = { docs: Doc[]; totalDocs: number; hasNextPage: boolean }
-
 type Ctx = {
   payload: Payload
   user: User
@@ -95,13 +83,6 @@ type Ctx = {
   spaces: ReadonlySet<number>
 }
 
-type Entry = { id: number; main: Doc; latest: Doc | null; key: StatusKey }
-
-type Selected = Record<string, true>
-type Gated = 'collection' | 'user' | 'overrideAccess'
-type MainArgs = Omit<FindOptions<ListCollection, SelectType>, Gated | 'draft'>
-type CopyArgs = Omit<Parameters<Payload['findVersions']>[0], Gated>
-
 const ownershipOf = (collection: ListCollection) =>
   collection === 'articles' ? ownsViaAuthors : ownsViaFellows
 
@@ -110,133 +91,21 @@ const ownershipOf = (collection: ListCollection) =>
  * documents, never the public archive. An admin list holds what
  * `ADMIN_VISIBLE` names, and the admin's own rows.
  */
-const baseWhere = (user: User, collection: ListCollection, kind: ListKind): Where | false => {
+export const baseWhere = (
+  user: User,
+  collection: ListCollection,
+  kind: ListKind,
+): Where | false => {
   const owned = ownershipOf(collection)(user)
   if (kind !== 'admin') return owned
   return { or: [ADMIN_VISIBLE, ...(owned === false ? [] : [owned])] }
 }
 
-const gate = ({ user }: { user: User }) => ({ user, overrideAccess: false }) as const
-
-const findMain = async (ctx: Ctx, args: MainArgs) =>
-  (await ctx.payload.find({
-    collection: ctx.collection,
-    draft: false,
-    depth: 0,
-    pagination: false,
-    ...args,
-    ...gate(ctx),
-  })) as unknown as Found
-
-const findCopies = async (ctx: Ctx, args: CopyArgs) =>
-  (await ctx.payload.findVersions({
-    collection: ctx.collection,
-    depth: 0,
-    pagination: false,
-    ...args,
-    ...gate(ctx),
-  })) as unknown as { docs: Version[] }
-
-const newestPerParent = (versions: Version[]) => {
-  const latest = new Map<number, Doc>()
-  for (const { parent, version } of versions) {
-    const id = relId(parent) as number
-    const seen = latest.get(id)
-    if (!seen || version.updatedAt > seen.updatedAt) latest.set(id, { ...version, id } as Doc)
-  }
-  return latest
-}
-
-const readMains = async (ctx: Ctx, ids: number[], select: Selected) => {
-  const { docs } = await findMain(ctx, {
-    where: { and: [ctx.base, { id: { in: ids } }] },
-    select,
-    locale: 'all',
-  })
-  return new Map(docs.map((doc) => [doc.id, doc]))
-}
-
-const readLatest = async (ctx: Ctx, ids: number[], version: Selected) => {
-  const { docs } = await findCopies(ctx, {
-    where: { and: [{ parent: { in: ids } }, { latest: { equals: true } }] },
-    select: { parent: true, version },
-    locale: 'all',
-  })
-  return newestPerParent(docs)
-}
-
-/**
- * Reads the rows and their latest versions in two steps. Step one reads the
- * fields every row needs. Step two reads the reviewed fields, only for a live
- * row with a draft copy, because only those need a field compare.
- */
-const readEntries = async (ctx: Ctx, ids: number[]) => {
-  const entries = new Map<number, Entry>()
-  if (ids.length === 0) return entries
-  const mains = await readMains(ctx, ids, { ...KEY_SELECT, tier: true, cover_image: true })
-  const latests = await readLatest(ctx, ids, { ...KEY_SELECT, cover_image: true })
-  const keyed = ids.flatMap((id) => {
-    const main = mains.get(id)
-    return main ? [{ id, main, latest: latests.get(id) ?? null }] : []
-  })
-  const compare = keyed
-    .filter(
-      ({ main, latest }) =>
-        statusInputOf({ collection: ctx.collection, main, latest, read: 'keys' }).draft !== null,
-    )
-    .map(({ id }) => id)
-  const [fullMains, fullLatests] = compare.length
-    ? await Promise.all([
-        readMains(ctx, compare, statusSelect(ctx.collection)),
-        readLatest(ctx, compare, statusSelect(ctx.collection)),
-      ])
-    : [new Map<number, Doc>(), new Map<number, Doc>()]
-  for (const { id, main, latest } of keyed) {
-    const full = compare.includes(id)
-    const fullMain = fullMains.get(id)
-    if (full && !fullMain) continue
-    const key = statusOf(
-      fullMain
-        ? statusInputOf({
-            collection: ctx.collection,
-            main: fullMain,
-            latest: fullLatests.get(id) ?? null,
-            read: 'full',
-          })
-        : statusInputOf({ collection: ctx.collection, main, latest, read: 'keys' }),
-    )
-    entries.set(id, { id, main, latest, key })
-  }
-  return entries
-}
-
-/**
- * The ids of every row that may hold work: the ones the `KEY_WHERE` main rows
- * find, and the live ones with a copy. A version row finds the copy of a
- * document that is not live too (`LIVE_COPY` holds no `parent` path), so the
- * parents of the version hits pass a main read under the base `where`.
- */
-const workCandidates = async (ctx: Ctx) => {
-  const keys = workKeys(ctx.kind)
-  const onMain = keys.flatMap((key) =>
-    KEY_WHERE[key]?.on === 'main' ? [KEY_WHERE[key].where] : [],
-  )
-  const onCopy = keys.filter((key) => KEY_WHERE[key]?.on !== 'main').map((key) => KEY_WHERE[key])
-  const copyWhere = onCopy.every((row) => row !== undefined)
-    ? { or: onCopy.map((row) => row.where) }
-    : LIVE_COPY
-  const [mains, copies] = await Promise.all([
-    findMain(ctx, { where: { and: [ctx.base, { or: onMain }] }, select: { id: true } }),
-    findCopies(ctx, { where: copyWhere, select: { parent: true } }),
-  ])
-  const live = await liveParentIds(ctx.payload, {
-    collection: ctx.collection,
-    ids: [...new Set(copies.docs.map((v) => relId(v.parent) as number))],
-    user: ctx.user,
-    where: ctx.base,
-  })
-  return [...new Set([...mains.docs.map((doc) => doc.id), ...live])]
-}
+/** The fields a list row needs beyond its keys, and the full read: a list shows every key. */
+const LIST_ROWS = {
+  select: { main: { tier: true, cover_image: true }, version: { cover_image: true } },
+  read: 'full',
+} as const
 
 const titleOf = (value: unknown, locale: Locale) => {
   if (typeof value === 'string') return value || null
@@ -453,9 +322,10 @@ const pagedGroups = async (
       page: 1,
       sort: ['-updatedAt', '-id'],
     })
-    const entries = await readEntries(
+    const entries = await keyedRows(
       ctx,
       found.docs.map((doc) => doc.id),
+      LIST_ROWS,
     )
     const shown = found.docs.flatMap((doc): Shown[] => {
       const entry = entries.get(doc.id)
@@ -514,9 +384,9 @@ export const loadList = async (
   const ctx: Ctx = { ...bare, spaces: await coursesWithSpace(bare) }
   const [{ totalDocs: total }, candidates] = await Promise.all([
     payload.count({ collection: ctx.collection, where: base, ...gate(ctx) }),
-    workCandidates(ctx),
+    candidateIds(ctx, workKeys(ctx.kind)),
   ])
-  const entries = await readEntries(ctx, candidates)
+  const entries = await keyedRows(ctx, candidates, LIST_ROWS)
   const work = [...entries.values()]
     .map((entry): Shown => ({
       entry,
