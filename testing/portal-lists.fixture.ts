@@ -42,7 +42,7 @@ const makeWriter = async (payload: Payload, track: Track) => {
 let counter = 0
 const nextSlug = (base: string) => uniq(`${base}-${++counter}`)
 
-const trustedWrites = (payload: Payload, track: Track) => {
+export const trustedWrites = (payload: Payload, track: Track) => {
   const create = async (collection: 'articles' | 'courses', data: Record<string, unknown>) =>
     track(
       collection,
@@ -100,6 +100,22 @@ const trustedWrites = (payload: Payload, track: Track) => {
   return { create, edit, submit, decide, unpublish }
 }
 
+export const writePublishedArticle = (
+  create: ReturnType<typeof trustedWrites>['create'],
+  owner: number,
+  title: string,
+  extra: Record<string, unknown> = {},
+) =>
+  create('articles', {
+    title,
+    slug: nextSlug('list-article'),
+    authors: [owner],
+    tier: 'public',
+    review: { status: 'approved' },
+    _status: 'published',
+    ...extra,
+  })
+
 export type ListWorld = Awaited<ReturnType<typeof listWorld>>
 
 /**
@@ -107,7 +123,12 @@ export type ListWorld = Awaited<ReturnType<typeof listWorld>>
  * row is newer on the main row's `updatedAt`: the paged groups sort by it, and
  * the rows the tests look for sit on page 1.
  */
-export const listWorld = async (payload: Payload, track: Track, world: PortalWorld) => {
+export const listWorld = async (
+  payload: Payload,
+  track: Track,
+  world: PortalWorld,
+  { bulk: bulkCount = 60 }: { bulk?: number } = {},
+) => {
   const { create, edit, submit, decide, unpublish } = trustedWrites(payload, track)
   const owner = world.accounts.student.person!
   const poster = world.poster.person!
@@ -122,18 +143,10 @@ export const listWorld = async (payload: Payload, track: Track, world: PortalWor
     })
 
   const publishedArticle = (title: string, extra: Record<string, unknown> = {}) =>
-    create('articles', {
-      title,
-      slug: nextSlug('list-article'),
-      authors: [owner],
-      tier: 'public',
-      review: { status: 'approved' },
-      _status: 'published',
-      ...extra,
-    })
+    writePublishedArticle(create, owner, title, extra)
 
   const bulk: number[] = []
-  for (let i = 0; i < 60; i++) bulk.push(await publishedArticle(uniq('Bulk')))
+  for (let i = 0; i < bulkCount; i++) bulk.push(await publishedArticle(uniq('Bulk')))
 
   const cover = await makeMedia(payload, track, 'list-cover')
   const titles = {

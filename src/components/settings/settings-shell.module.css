@@ -94,7 +94,9 @@
 /* Fixed to the bottom of the viewport while the page is in view. */
 .barWrap {
   position: sticky;
-  inset-block-end: max(var(--space-4), env(safe-area-inset-bottom));
+  inset-block-end: calc(
+    var(--settings-bar-offset, 0px) + max(var(--space-4), env(safe-area-inset-bottom))
+  );
   z-index: 20;
   display: flex;
   justify-content: center;
@@ -169,9 +171,35 @@
     scrollbar-width: none;
   }
 
+  /* Three tabs share the row, so none is cut off; the row still scrolls if a language needs more. */
   .tab {
-    flex: 0 0 auto;
+    flex: 1 1 auto;
+    justify-content: center;
+    gap: var(--space-1);
+    padding-inline: var(--space-2);
     white-space: nowrap;
+  }
+
+  .tabCount {
+    margin-inline-start: 0;
+  }
+}
+
+/* On a phone the icons and the change count give way to the labels; the count is a dot, its words stay for screen readers. */
+@media (max-width: 479px) {
+  .tabIcon {
+    display: none;
+  }
+
+  .tabCount {
+    min-width: 0;
+    inline-size: 0.5rem;
+    block-size: 0.5rem;
+    padding: 0;
+  }
+
+  .tabCount > [aria-hidden='true'] {
+    display: none;
   }
 }
 

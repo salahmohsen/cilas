@@ -32,7 +32,7 @@ const refresh = () => {
     .then((body: { user?: SessionUser | null } | null) => body?.user ?? null)
     .catch(() => null)
     .then((next) => {
-      if (mine !== latest) return
+      if (mine !== latest || listeners.size === 0) return
       user = next
       listeners.forEach((listener) => listener())
     })
@@ -52,6 +52,13 @@ const subscribe = (listener: () => void) => {
     user = null
   }
 }
+
+/**
+ * Asks the server who is signed in, and tells every component that reads the
+ * session. Sign-in and sign-out do this through AUTH_CHANGED; the second
+ * trigger is a change to the signed-in account's person (name, photo).
+ */
+export const refreshSession = refresh
 
 /**
  * Who is signed in, or null. Pages are cached for everyone, so this asks the

@@ -415,13 +415,13 @@
     display: block;
     padding-block-end: env(safe-area-inset-bottom);
     padding-inline: max(env(safe-area-inset-left), env(safe-area-inset-right));
-    border-block-start: 1px solid var(--border);
+    border-block-start: var(--portal-bar-border) solid var(--border);
     background: var(--background);
   }
 
   .barList {
     display: flex;
-    block-size: var(--portal-bar-height);
+    block-size: calc(var(--portal-bar-height) - var(--portal-bar-border));
     margin: 0;
     padding: 0 var(--space-2);
     list-style: none;
@@ -465,8 +465,10 @@
     color: var(--accent-foreground);
   }
 
+  /* The phone header keeps its own height; the main card takes the rest, so short pages never push it down. */
   .shell {
     grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: auto minmax(0, 1fr);
   }
 
   /* The rail is only the phone header here: it takes the full width, folded or not. */

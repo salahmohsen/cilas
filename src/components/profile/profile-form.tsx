@@ -18,6 +18,7 @@ import { RichField } from '@/components/rich-field'
 import { markdownBaseline, markdownToSend } from '@/components/markdown-edit'
 import type { ProfileMessages } from '@/components/profile/messages'
 import { Select } from '@/components/select'
+import { refreshSession } from '@/components/use-session'
 import { useSettingsSection } from '@/components/settings/settings-shell'
 import { SOCIAL_PLATFORMS } from '@/fields/social'
 import type { ProfileError, ProfileView } from '@/lib/profile'
@@ -148,6 +149,7 @@ export function ProfileForm({ profile, messages: m, action, removePhotoAction, o
       outcome.current = { ok: true }
       setBase({ values: value, bioEn, bioAr })
       router.refresh()
+      refreshSession()
       onSaved?.()
     },
     // Every field at once, so Save names all that need fixing, and each rechecks as it changes.
@@ -227,11 +229,13 @@ export function ProfileForm({ profile, messages: m, action, removePhotoAction, o
           if (!sent.ok) throw new Error(m.errors[sent.error])
           // The header's avatar and the rest of the page read the new photo.
           router.refresh()
+          refreshSession()
           return sent.url ?? undefined
         }}
         onRemove={async () => {
           const removed = await removePhotoAction()
           if (!removed.ok) throw new Error(m.errors[removed.error])
+          refreshSession()
         }}
       />
 
