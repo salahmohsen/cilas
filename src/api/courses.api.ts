@@ -235,6 +235,10 @@ export const getStudyCourses = async (
  * A course the site shows `reader`: published, in a tier they may see. An
  * owner-only course shows only in the admin's preview.
  */
+export const courseOnSite = (course: Pick<Course, 'tier' | '_status'>, reader: Reader): boolean =>
+  course._status === 'published' && siteTiers(reader).some((tier) => tier === course.tier)
+
+/** The query form of `courseOnSite`: keep the two the same. */
 export const courseWhere = (reader: Reader, slug: string): Where => ({
   and: [
     { slug: { equals: slug } },

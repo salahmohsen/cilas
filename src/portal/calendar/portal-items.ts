@@ -1,4 +1,4 @@
-import type { CalendarMeeting } from '@/lib/calendar'
+import { byTime, type CalendarMeeting } from '@/lib/calendar'
 import type { CalendarItem } from '@/lib/calendar-items'
 
 export const MINE = 'course:mine'
@@ -9,9 +9,6 @@ export const KIND_LOOK = {
   [MINE]: { tone: 'pink', edge: 'solid' },
   [OTHER]: { tone: 'neutral', edge: 'double' },
 } as const satisfies Record<string, Pick<CalendarItem, 'tone' | 'edge'>>
-
-const byTime = (a: CalendarMeeting, b: CalendarMeeting) =>
-  a.date.localeCompare(b.date) || (a.start ?? '').localeCompare(b.start ?? '')
 
 /**
  * One copy of each session: the reader's own meetings, then the public ones

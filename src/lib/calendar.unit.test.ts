@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 
-import { courseItems, toneOf, weekStart } from '@/lib/calendar'
+import { byTime, courseItems, toneOf, weekStart, type CalendarMeeting } from '@/lib/calendar'
 
 describe('calendar dates', () => {
   it('starts weeks on Saturday', () => {
@@ -167,5 +167,24 @@ describe('courseItems', () => {
     expect(items[1]).not.toHaveProperty('materials')
     expect(items[2]).toMatchObject({ activities: 1 })
     expect(items[2]).not.toHaveProperty('materials')
+  })
+})
+
+describe('byTime', () => {
+  const at = (date: string, start?: string) => ({ date, start }) as CalendarMeeting
+
+  it('sorts by day, then start, and puts a meeting with no start first in its day', () => {
+    const list = [
+      at('2034-10-08', '09:00'),
+      at('2034-10-07', '19:00'),
+      at('2034-10-08'),
+      at('2034-10-07', '08:00'),
+    ]
+    expect(list.toSorted(byTime).map((m) => [m.date, m.start])).toEqual([
+      ['2034-10-07', '08:00'],
+      ['2034-10-07', '19:00'],
+      ['2034-10-08', undefined],
+      ['2034-10-08', '09:00'],
+    ])
   })
 })

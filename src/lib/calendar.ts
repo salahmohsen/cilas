@@ -37,6 +37,10 @@ export type CalendarMeeting = {
   cancelled?: boolean
 }
 
+/** Date order, then start time; a meeting with no start sorts first in its day. */
+export const byTime = (a: CalendarMeeting, b: CalendarMeeting) =>
+  a.date.localeCompare(b.date) || (a.start ?? '').localeCompare(b.start ?? '')
+
 /** What every meeting of one course or event shares. */
 export type CalendarBase = Omit<
   CalendarMeeting,

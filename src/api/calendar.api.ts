@@ -5,8 +5,9 @@ import config from '@payload-config'
 import { unstable_cache } from 'next/cache'
 import { getPayload, type Payload, type Where } from 'payload'
 
+import { courseOnSite } from '@/api/courses.api'
 import { getCourseSessions } from '@/api/sessions.api'
-import { courseItems, type CalendarMeeting } from '@/lib/calendar'
+import { byTime, courseItems, type CalendarMeeting } from '@/lib/calendar'
 import { calendarWords } from '@/lib/calendar-context'
 import { deliveryOf } from '@/lib/session-items'
 import { eventItems } from '@/lib/events'
@@ -76,9 +77,6 @@ const gateOf = (source: CourseSource) => {
   }
 }
 
-const byTime = (a: CalendarMeeting, b: CalendarMeeting) =>
-  a.date.localeCompare(b.date) || (a.start ?? '').localeCompare(b.start ?? '')
-
 /**
  * The meetings of the courses a source names, from their sessions (ADR 0011).
  * The public source reads every published public course with no user. The
@@ -135,7 +133,7 @@ const courseMeetings = async (
       location: c.location,
       place: cycle == null ? null : (places.get(Number(cycle)) ?? null),
     }
-    const opens = Boolean(c.slug) && c._status === 'published' && c.tier !== 'owner'
+    const opens = Boolean(c.slug) && courseOnSite(c, gate.reader)
     return courseItems(
       {
         kind: 'course',

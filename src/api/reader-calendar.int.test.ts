@@ -139,7 +139,7 @@ describe('the gated read', () => {
     expect(ours(list)).not.toContain(world.owner.id)
   })
 
-  it('shows a fellow their unpublished course, with no link to its page', async () => {
+  it('shows a fellow their unpublished course, with no link and the course type fallback', async () => {
     const fellow = await userOf(world.accounts.fellow.id)
     const list = await getReaderCalendarItems(
       payload,
@@ -148,7 +148,9 @@ describe('the gated read', () => {
       await readerCourseIds(payload, fellow),
     )
     expect(ours(list)).toEqual(sorted([...world.portalCourses, world.draft.id]))
-    expect(list.filter((m) => m.courseId === world.draft.id).map((m) => m.href)).toEqual([null])
+    const draft = list.filter((m) => m.courseId === world.draft.id)
+    expect(draft.map((m) => m.href)).toEqual([null])
+    expect(draft.map((m) => m.type)).toEqual(['course'])
   })
 
   it('hides another fellow’s draft when its id is passed', async () => {
@@ -169,7 +171,7 @@ describe('the gated read', () => {
     }
   })
 
-  it('makes the same reads for one course and for three', async () => {
+  it('makes one read of courses and one of sessions, for one course and for three', async () => {
     const student = await userOf(world.accounts.student.id)
     const reads = async (courses: number[]) => {
       const find = vi.spyOn(payload, 'find')
@@ -182,11 +184,16 @@ describe('the gated read', () => {
         find.mockRestore()
       }
     }
-    for (const counts of [
+    const [one, three] = [
       await reads([world.communityCourse.id]),
       await reads([world.communityCourse.id, ...world.portalCourses]),
-    ])
-      for (const count of counts) expect(count).toBeLessThanOrEqual(1)
+    ]
+    for (const [courses, sessions, cycles] of [one, three]) {
+      expect(courses).toBe(1)
+      expect(sessions).toBe(1)
+      expect(cycles).toBeLessThanOrEqual(1)
+    }
+    expect(three[0]).toBe(one[0])
   })
 })
 
