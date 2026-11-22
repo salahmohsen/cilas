@@ -6,6 +6,7 @@ import { SiteNotifications } from '@/components/site-notifications'
 import { Link } from '@/i18n/navigation'
 import { LiveRegion } from '@/portal/feedback/announce'
 import type { NeedsCounts } from '@/portal/needs/needs'
+import { WorkRefresh } from '@/portal/needs/work-refresh'
 
 import { AccountMenu } from './account-menu'
 import { BottomBar } from './bottom-bar'
@@ -44,6 +45,7 @@ export async function PortalShell({
   return (
     <FoldProvider folded={folded} accountId={accountId}>
       <NavCountsProvider counts={counts}>
+        <WorkRefresh />
         <a href="#main" className={styles.skip}>
           {t('shell.skip')}
         </a>
