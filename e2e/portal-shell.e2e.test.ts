@@ -829,21 +829,19 @@ test.describe('portal shell', () => {
         )
         await inShort(browser, 'fellow', async (page) => {
           await page.goto(localePath('/en/spaces', locale))
-          const usedPadding = () =>
-            region(page, locale).evaluate((el) => {
+          const rail = region(page, locale)
+          for (const toast of [120, 4000]) {
+            const { used, scrollport } = await rail.evaluate((el, px) => {
+              const viewport = el as HTMLElement
+              viewport.style.setProperty('--toast-stack-height', `${px}px`)
               const probe = document.createElement('div')
               probe.style.cssText = `position:absolute;visibility:hidden;inline-size:1px;block-size:${getComputedStyle(el).scrollPaddingBottom}`
               el.parentElement!.append(probe)
               const height = probe.getBoundingClientRect().height
               probe.remove()
+              viewport.style.removeProperty('--toast-stack-height')
               return { used: height, scrollport: el.clientHeight }
-            })
-          for (const toast of [120, 4000]) {
-            await page.evaluate(
-              (px) => document.documentElement.style.setProperty('--toast-stack-height', `${px}px`),
-              toast,
-            )
-            const { used, scrollport } = await usedPadding()
+            }, toast)
             expect(used).toBeCloseTo(Math.min(Math.max(8, toast), scrollport / 2), 0)
           }
         })
