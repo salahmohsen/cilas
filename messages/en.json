@@ -1896,6 +1896,41 @@
           "body": "Courses show here when a fellow proposes one."
         }
       }
+    },
+    "needs": {
+      "heading": "Needs you",
+      "review": "Review",
+      "editReview": "Review the changes",
+      "removalReview": "Decide on the removal",
+      "applicants": "{count, plural, one {Decide on {count, number, digits} applicant} other {Decide on {count, number, digits} applicants}}",
+      "changesRequested": "Read the note and edit",
+      "grouped": {
+        "review": "{count, plural, one {Review {count, number, digits} item} other {Review {count, number, digits} items}}",
+        "editReview": "{count, plural, one {Review {count, number, digits} set of changes} other {Review {count, number, digits} sets of changes}}",
+        "removalReview": "{count, plural, one {Decide on {count, number, digits} removal} other {Decide on {count, number, digits} removals}}",
+        "changesRequested": "{count, plural, one {Read {count, number, digits} note and edit} other {Read {count, number, digits} notes and edit}}"
+      },
+      "owners": "By {names}",
+      "untitledArticle": "Untitled article",
+      "untitledCourse": "Untitled course",
+      "untitledPublication": "Untitled publication",
+      "empty": "Nothing needs you now.",
+      "someFailed": "Some tasks could not load. Reload."
+    },
+    "latest": {
+      "heading": "Latest",
+      "empty": "Nothing new yet. Replies, reviews and decisions show here.",
+      "showMore": "Show more",
+      "cap": "Only the newest {count, number, digits} show.",
+      "moreRows": "{count, plural, one {{count, number, digits} more row.} other {{count, number, digits} more rows.}}",
+      "unread": "Unread"
+    },
+    "inbox": {
+      "title": "Inbox",
+      "metaTitle": "Inbox",
+      "loading": "Loading the inbox",
+      "failed": "This could not load.",
+      "retry": "Retry"
     }
   }
 }

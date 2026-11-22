@@ -1896,6 +1896,41 @@
           "body": "تظهر المقررات هنا حين يقترحها زميل."
         }
       }
+    },
+    "needs": {
+      "heading": "يحتاج إلى انتباهك",
+      "review": "مراجعة",
+      "editReview": "مراجعة التعديلات",
+      "removalReview": "البتّ في الحذف",
+      "applicants": "{count, plural, zero {لا طلبات للبتّ فيها} one {البتّ في طلب واحد} two {البتّ في طلبين} few {البتّ في {count, number, digits} طلبات} many {البتّ في {count, number, digits} طلبًا} other {البتّ في {count, number, digits} طلب}}",
+      "changesRequested": "اقرأ الملاحظة وعدّل",
+      "grouped": {
+        "review": "{count, plural, zero {لا عناصر للمراجعة} one {مراجعة عنصر واحد} two {مراجعة عنصرين} few {مراجعة {count, number, digits} عناصر} many {مراجعة {count, number, digits} عنصرًا} other {مراجعة {count, number, digits} عنصر}}",
+        "editReview": "{count, plural, zero {لا تعديلات للمراجعة} one {مراجعة تعديل واحد} two {مراجعة تعديلين} few {مراجعة {count, number, digits} تعديلات} many {مراجعة {count, number, digits} تعديلًا} other {مراجعة {count, number, digits} تعديل}}",
+        "removalReview": "{count, plural, zero {لا طلبات حذف} one {البتّ في طلب حذف واحد} two {البتّ في طلبَي حذف} few {البتّ في {count, number, digits} طلبات حذف} many {البتّ في {count, number, digits} طلب حذف} other {البتّ في {count, number, digits} طلب حذف}}",
+        "changesRequested": "{count, plural, zero {لا ملاحظات} one {قراءة ملاحظة واحدة والتعديل} two {قراءة ملاحظتين والتعديل} few {قراءة {count, number, digits} ملاحظات والتعديل} many {قراءة {count, number, digits} ملاحظة والتعديل} other {قراءة {count, number, digits} ملاحظة والتعديل}}"
+      },
+      "owners": "من {names}",
+      "untitledArticle": "مقال بلا عنوان",
+      "untitledCourse": "مقرر بلا عنوان",
+      "untitledPublication": "منشور بلا عنوان",
+      "empty": "لا شيء يحتاج إلى انتباهك الآن.",
+      "someFailed": "تعذّر تحميل بعض المهام. أعد تحميل الصفحة."
+    },
+    "latest": {
+      "heading": "الأحدث",
+      "empty": "لا جديد بعد. تظهر هنا الردود والمراجعات والقرارات.",
+      "showMore": "عرض المزيد",
+      "cap": "تظهر الأحدث فقط، وعددها {count, number, digits}.",
+      "moreRows": "{count, plural, zero {لا صفوف أخرى.} one {صف آخر واحد.} two {صفان آخران.} few {{count, number, digits} صفوف أخرى.} many {{count, number, digits} صفًّا آخر.} other {{count, number, digits} صف آخر.}}",
+      "unread": "غير مقروء"
+    },
+    "inbox": {
+      "title": "الوارد",
+      "metaTitle": "الوارد",
+      "loading": "جارٍ تحميل الوارد",
+      "failed": "تعذّر تحميل هذا القسم.",
+      "retry": "أعد المحاولة"
     }
   }
 }
