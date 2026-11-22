@@ -1,5 +1,5 @@
 import { getPayload, type Payload } from 'payload'
-import { describe, expect, it } from 'vitest'
+import { afterAll, beforeAll, describe, expect, it } from 'vitest'
 
 import { applicantsFor, countWaitingApplicants } from '@/forms/applicants'
 import { relId } from '@/lib/relation'
@@ -17,6 +17,16 @@ import { mockNetwork } from '../testing/msw-node.test-utils'
 const onNeedsCopy = /@localhost:5433\/cilas_(needs|ttfb)(\?|$)/.test(process.env.DATABASE_URL ?? '')
 
 mockNetwork(...localServices)
+
+let payload: Payload
+if (onNeedsCopy) {
+  beforeAll(async () => {
+    payload = await getPayload({ config: await config })
+  }, 300_000)
+  afterAll(async () => {
+    await payload.destroy()
+  })
+}
 
 type Pg = { query: (sql: string) => Promise<{ rows: Array<{ id: number }> }> }
 const pgOf = (payload: Payload) => (payload.db as unknown as { pool: Pg }).pool
@@ -211,67 +221,62 @@ const time = async (run: () => Promise<unknown>) => {
 
 describe.skipIf(!onNeedsCopy)('needs against the queue of trunk, on a prod clone', () => {
   it('differs from trunk only by the rules of Deviation 21', async () => {
-    const payload = await getPayload({ config: await config })
-    try {
-      const admin = await userOf(payload, (await accountIds(payload)).admin)
-      const oracle = await oracleQueue(payload)
-      const choices = await oracleChoices(payload)
-      const sets = await workSetsOf(payload, admin)
-      const result = await rowsOf(payload, admin, sets, 'en')
-      const total = needsTotal(result)
+    const admin = await userOf(payload, (await accountIds(payload)).admin)
+    const oracle = await oracleQueue(payload)
+    const choices = await oracleChoices(payload)
+    const sets = await workSetsOf(payload, admin)
+    const result = await rowsOf(payload, admin, sets, 'en')
+    const total = needsTotal(result)
 
-      const needsIds: Ids = Object.fromEntries(
-        REVIEWED.map(({ collection }) => [
-          collection,
-          new Set(sets.reviewQueue?.[collection]?.keys()),
-        ]),
-      ) as Ids
-      const reviewRows = result.rows.filter((row) => row.collection !== null).length
-      const onlyOracle = await Promise.all(
-        minus(oracle, needsIds).map(({ collection, id }) => detailOf(payload, collection, id)),
-      )
-      const onlyNeeds = await Promise.all(
-        minus(needsIds, oracle).map(({ collection, id }) => detailOf(payload, collection, id)),
-      )
+    const needsIds: Ids = Object.fromEntries(
+      REVIEWED.map(({ collection }) => [
+        collection,
+        new Set(sets.reviewQueue?.[collection]?.keys()),
+      ]),
+    ) as Ids
+    const reviewRows = result.rows.filter((row) => row.collection !== null).length
+    const onlyOracle = await Promise.all(
+      minus(oracle, needsIds).map(({ collection, id }) => detailOf(payload, collection, id)),
+    )
+    const onlyNeeds = await Promise.all(
+      minus(needsIds, oracle).map(({ collection, id }) => detailOf(payload, collection, id)),
+    )
 
-      const print = (label: string, details: Detail[]) =>
-        console.log(
-          `${label} (${details.length})\n${details.map((d) => JSON.stringify(d)).join('\n')}`,
-        )
-      console.log(`dump: ${process.env.NEEDS_DUMP ?? 'not given'}`)
+    const print = (label: string, details: Detail[]) =>
       console.log(
-        JSON.stringify({
-          oracleQueue: sizeOf(oracle),
-          oracleChoices: choices,
-          needsTotal: total,
-          countsTotal: countsOf(sets).total,
-          queueRows: reviewRows,
-          totalRows: result.rows.length,
-          failed: result.failed,
-        }),
+        `${label} (${details.length})\n${details.map((d) => JSON.stringify(d)).join('\n')}`,
       )
-      print(
-        'onlyOracle',
-        onlyOracle.filter((d) => d.rule !== 'R5'),
-      )
-      print(
-        'onlyOracle R5 (orphan versions)',
-        onlyOracle.filter((d) => d.rule === 'R5'),
-      )
-      print('onlyNeeds', onlyNeeds)
+    console.log(`dump: ${process.env.NEEDS_DUMP ?? 'not given'}`)
+    console.log(
+      JSON.stringify({
+        oracleQueue: sizeOf(oracle),
+        oracleChoices: choices,
+        needsTotal: total,
+        countsTotal: countsOf(sets).total,
+        queueRows: reviewRows,
+        totalRows: result.rows.length,
+        failed: result.failed,
+      }),
+    )
+    print(
+      'onlyOracle',
+      onlyOracle.filter((d) => d.rule !== 'R5'),
+    )
+    print(
+      'onlyOracle R5 (orphan versions)',
+      onlyOracle.filter((d) => d.rule === 'R5'),
+    )
+    print('onlyNeeds', onlyNeeds)
 
-      expect(sizeOf(oracle)).toBeGreaterThan(0)
-      expect(choices).toBeGreaterThan(0)
-      expect(result.failed).toEqual([])
-      expect(onlyNeeds).toEqual([])
-      expect(onlyOracle.filter((d) => d.rule === null)).toEqual([])
-      const queue = sizeOf(oracle) - onlyOracle.length
-      expect(total).toBe(queue + choices)
-      expect(result.rows.length).toBe(queue + 1)
-      expect(countsOf(sets).total).toBe(total)
-    } finally {
-      await payload.destroy()
-    }
+    expect(sizeOf(oracle)).toBeGreaterThan(0)
+    expect(choices).toBeGreaterThan(0)
+    expect(result.failed).toEqual([])
+    expect(onlyNeeds).toEqual([])
+    expect(onlyOracle.filter((d) => d.rule === null)).toEqual([])
+    const queue = sizeOf(oracle) - onlyOracle.length
+    expect(total).toBe(queue + choices)
+    expect(result.rows.length).toBe(queue + 1)
+    expect(countsOf(sets).total).toBe(total)
   }, 300_000)
 })
 
@@ -288,51 +293,41 @@ describe.skipIf(!onNeedsCopy || process.env.NEEDS_COST !== '1')(
     }
 
     it('admin', { timeout: 600_000 }, async () => {
-      const payload = await getPayload({ config: await config })
-      try {
-        const admin = await userOf(payload, (await accountIds(payload)).admin)
-        const sets = await workSetsOf(payload, admin)
-        const row = {
-          oracleQueue: await time(() => oracleQueue(payload)),
-          adminQueue: await time(() => adminQueue(payload)),
-          adminReviewRows: await time(() => adminReviewRows(payload, sets.reviewQueue!, 'en')),
-          countWaitingApplicants: await time(() => countWaitingApplicants(payload, admin)),
-          workSetsOf: await time(() => workSetsOf(payload, admin)),
-          rowsOf: await time(() => rowsOf(payload, admin, sets, 'en')),
-        }
-        report('admin', row)
-        expect(row.adminQueue.p75 + row.adminReviewRows.p75).toBeLessThanOrEqual(
-          1.5 * row.oracleQueue.p75,
-        )
-        expect(row.workSetsOf.p75).toBeLessThanOrEqual(150)
-      } finally {
-        await payload.destroy()
+      const admin = await userOf(payload, (await accountIds(payload)).admin)
+      const sets = await workSetsOf(payload, admin)
+      const row = {
+        oracleQueue: await time(() => oracleQueue(payload)),
+        adminQueue: await time(() => adminQueue(payload)),
+        adminReviewRows: await time(() => adminReviewRows(payload, sets.reviewQueue!, 'en')),
+        countWaitingApplicants: await time(() => countWaitingApplicants(payload, admin)),
+        workSetsOf: await time(() => workSetsOf(payload, admin)),
+        rowsOf: await time(() => rowsOf(payload, admin, sets, 'en')),
       }
+      report('admin', row)
+      expect(row.adminQueue.p75 + row.adminReviewRows.p75).toBeLessThanOrEqual(
+        1.5 * row.oracleQueue.p75,
+      )
+      expect(row.workSetsOf.p75).toBeLessThanOrEqual(150)
     })
 
     for (const role of ['fellow', 'student'] as const) {
       it(role, { timeout: 600_000 }, async () => {
-        const payload = await getPayload({ config: await config })
-        try {
-          const user = await userOf(payload, (await accountIds(payload))[role])
-          const sets = await workSetsOf(payload, user)
-          const row: Record<string, { p50: number; p75: number }> = {
-            ownSetArticles: await time(() => ownSet(payload, user, 'articles')),
-            ownSetCourses: await time(() => ownSet(payload, user, 'courses')),
-            ownRowsArticles: await time(() =>
-              ownRows(payload, user, 'articles', sets.ownArticles ?? new Map(), 'en'),
-            ),
-            ownRowsCourses: await time(() =>
-              ownRows(payload, user, 'courses', sets.ownCourses ?? new Map(), 'en'),
-            ),
-            workSetsOf: await time(() => workSetsOf(payload, user)),
-            rowsOf: await time(() => rowsOf(payload, user, sets, 'en')),
-          }
-          report(role, row)
-          expect(row.workSetsOf!.p75).toBeLessThanOrEqual(150)
-        } finally {
-          await payload.destroy()
+        const user = await userOf(payload, (await accountIds(payload))[role])
+        const sets = await workSetsOf(payload, user)
+        const row: Record<string, { p50: number; p75: number }> = {
+          ownSetArticles: await time(() => ownSet(payload, user, 'articles')),
+          ownSetCourses: await time(() => ownSet(payload, user, 'courses')),
+          ownRowsArticles: await time(() =>
+            ownRows(payload, user, 'articles', sets.ownArticles ?? new Map(), 'en'),
+          ),
+          ownRowsCourses: await time(() =>
+            ownRows(payload, user, 'courses', sets.ownCourses ?? new Map(), 'en'),
+          ),
+          workSetsOf: await time(() => workSetsOf(payload, user)),
+          rowsOf: await time(() => rowsOf(payload, user, sets, 'en')),
         }
+        report(role, row)
+        expect(row.workSetsOf!.p75).toBeLessThanOrEqual(150)
       })
     }
   },
