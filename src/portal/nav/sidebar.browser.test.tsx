@@ -1,4 +1,5 @@
-import { cleanup, screen, waitFor } from '@testing-library/react'
+import { act, cleanup, screen, waitFor } from '@testing-library/react'
+import { startTransition } from 'react'
 import { http, HttpResponse } from 'msw'
 import { createTranslator } from 'next-intl'
 import { afterEach, describe, expect, it } from 'vitest'
@@ -7,12 +8,14 @@ import { page, userEvent } from 'vitest/browser'
 import '../../components/arc/foundation.css'
 import '../theme/tokens.css'
 import { unreadCount } from '@/lib/unread-count'
+import type { NeedsCounts } from '@/portal/needs/needs'
 import { IntlProvider, messagesOf } from '../../../testing/intl.test-utils'
 import { mockNetwork } from '../../../testing/msw-browser.test-utils'
 import { renderWithBrowserNavigation } from '../../../testing/browser-navigation.test-utils'
 import { FoldButton } from './fold-button'
 import { FoldProvider } from './fold-state'
 import type { PortalNavItem } from './portal-nav'
+import { NavCountsProvider } from './nav-counts'
 import { Sidebar } from './sidebar'
 import { spaceRow } from './space-link.test-utils'
 import type { SpaceLink } from './space-links'
@@ -25,6 +28,17 @@ const HOME: PortalNavItem = {
   icon: 'home',
   external: false,
 }
+
+const INBOX: PortalNavItem = {
+  key: 'inbox',
+  labelKey: 'nav.inbox',
+  group: 'top',
+  href: '/spaces/inbox',
+  icon: 'inbox',
+  external: false,
+}
+
+const countsOf = (total: number | null) => ({ total, by: {} }) satisfies NeedsCounts
 
 const LONG_ARABIC = 'ابتثجحخدذرزسشصضطظعغفقكلمنهوي'.repeat(3).slice(0, 60)
 
@@ -50,24 +64,36 @@ const renderSidebar = ({
   locale = 'en',
   spaces = [spaceRow({ label: 'Other course', unread: 12 })],
   box,
+  items = [HOME],
+  counts,
 }: {
   folded?: boolean
   locale?: 'en' | 'ar'
   spaces?: SpaceLink[]
   box?: { width: number; height: number }
-} = {}) =>
-  renderWithBrowserNavigation(
-    <IntlProvider locale={locale}>
-      <FoldProvider folded={folded} accountId={7}>
-        <div data-page="spaces">
-          <FoldButton />
-          <div style={box && { display: 'flex', inlineSize: box.width, blockSize: box.height }}>
-            <Sidebar items={[HOME]} spaces={spaces} />
+  items?: PortalNavItem[]
+  counts?: Promise<NeedsCounts | null>
+} = {}) => {
+  const tree = (counts: Promise<NeedsCounts | null> | undefined) => {
+    const sidebar = <Sidebar items={items} spaces={spaces} />
+    return (
+      <IntlProvider locale={locale}>
+        <FoldProvider folded={folded} accountId={7}>
+          <div data-page="spaces">
+            <FoldButton />
+            <div style={box && { display: 'flex', inlineSize: box.width, blockSize: box.height }}>
+              {counts ? <NavCountsProvider counts={counts}>{sidebar}</NavCountsProvider> : sidebar}
+            </div>
           </div>
-        </div>
-      </FoldProvider>
-    </IntlProvider>,
-  )
+        </FoldProvider>
+      </IntlProvider>
+    )
+  }
+  const view = renderWithBrowserNavigation(tree(counts))
+  return Object.assign(view, {
+    refresh: (next: Promise<NeedsCounts | null>) => view.rerender(tree(next)),
+  })
+}
 
 afterEach(() => {
   cleanup()
@@ -221,5 +247,74 @@ describe('Sidebar scroll region', () => {
         rows[0]!.getBoundingClientRect().top - region.getBoundingClientRect().top,
       ).toBeGreaterThanOrEqual(7),
     )
+  })
+})
+
+describe('Sidebar counts', () => {
+  const tasksOf = (count: number, locale: 'en' | 'ar') => {
+    const t = createTranslator({ locale, messages: messagesOf[locale], namespace: 'Portal.nav' })
+    return unreadCount(count, locale, {
+      some: (values) => t('count', values),
+      many: (values) => t('countMany', values),
+    })
+  }
+  const settled = (total: number | null) => Promise.resolve(countsOf(total))
+  const named = (name: string | RegExp) => screen.findByRole('link', { name })
+  const show = async (options: Parameters<typeof renderSidebar>[0]) => {
+    let view!: ReturnType<typeof renderSidebar>
+    await act(async () => {
+      view = renderSidebar(options)
+    })
+    return view
+  }
+
+  it.each([false, true])(
+    'a nav item with 3 tasks is named Inbox, 3 tasks (folded %s)',
+    async (folded) => {
+      await show({ items: [HOME, INBOX], spaces: [], folded, counts: settled(3) })
+      expect(await named('Inbox, 3 tasks')).toBeTruthy()
+      expect(document.querySelector('[data-nav-count]')).toHaveTextContent('3')
+    },
+  )
+
+  it('12 shows 9+ and reads more than 9', async () => {
+    await show({ items: [INBOX], spaces: [], counts: settled(12) })
+    expect(await named('Inbox, more than 9 tasks')).toBeTruthy()
+    expect(document.querySelector('[data-nav-count]')).toHaveTextContent('9+')
+  })
+
+  it.each([0, null])('%s shows no chip', async (total) => {
+    await show({ items: [INBOX], spaces: [], counts: settled(total) })
+    expect(await named('Inbox')).toBeTruthy()
+    expect(document.querySelector('[data-nav-count]')).toBeNull()
+    expect(screen.getByRole('link', { name: 'Inbox' })).toBeTruthy()
+  })
+
+  it('Arabic digits in the chip and the name', async () => {
+    await show({ locale: 'ar', items: [INBOX], spaces: [], counts: settled(3) })
+    const name = `${messagesOf.ar.Portal.nav.inbox}${tasksOf(3, 'ar').spoken}`
+    expect(await named(name)).toBeTruthy()
+    expect(document.querySelector('[data-nav-count]')).toHaveTextContent('٣')
+  })
+
+  it('a pending count shows the item with no chip', async () => {
+    await show({
+      items: [INBOX],
+      spaces: [],
+      counts: new Promise<NeedsCounts | null>(() => {}),
+    })
+    expect(await named('Inbox')).toBeTruthy()
+    expect(document.querySelector('[data-nav-count]')).toBeNull()
+  })
+
+  it('a new counts promise in a transition keeps the old number until it settles', async () => {
+    const view = await show({ items: [INBOX], spaces: [], counts: settled(3) })
+    expect(await named('Inbox, 3 tasks')).toBeTruthy()
+    let settle!: (counts: NeedsCounts) => void
+    const next = new Promise<NeedsCounts | null>((resolve) => (settle = resolve))
+    await act(async () => startTransition(() => view.refresh(next)))
+    expect(screen.getByRole('link', { name: 'Inbox, 3 tasks' })).toBeTruthy()
+    await act(async () => settle(countsOf(4)))
+    expect(await named('Inbox, 4 tasks')).toBeTruthy()
   })
 })

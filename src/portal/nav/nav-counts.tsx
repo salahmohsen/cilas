@@ -1,10 +1,13 @@
 'use client'
 
-import { createContext, use, useContext, type ReactNode } from 'react'
+import { useLocale, useTranslations } from 'next-intl'
+import { createContext, Suspense, use, useContext, type ReactNode } from 'react'
 
+import { unreadCount } from '@/lib/unread-count'
 import type { NeedsCounts } from '@/portal/needs/needs'
 
 import type { PortalNavItem } from './portal-nav'
+import styles from './shell.module.css'
 
 /**
  * The number each nav item shows, from the reader's counts: the one table. An
@@ -36,4 +39,55 @@ export const useNavCount = (key: PortalNavItem['key']): number | null => {
   const promise = useContext(NavCountsContext)
   const counts = promise ? use(promise) : null
   return counts ? (COUNT_OF[key]?.(counts) ?? null) : null
+}
+
+/** The number as the nav writes it, in the page's digits; `null` for no number or 0. "9+" reads "more than 9" (`unreadCount`). */
+const useCountWords = (key: PortalNavItem['key']) => {
+  const t = useTranslations('Portal.nav')
+  const locale = useLocale()
+  const count = useNavCount(key)
+  return count && count > 0
+    ? unreadCount(count, locale, {
+        some: (values) => t('count', values),
+        many: (values) => t('countMany', values),
+      })
+    : null
+}
+
+function Spoken({ itemKey }: { itemKey: PortalNavItem['key'] }) {
+  const words = useCountWords(itemKey)
+  return words && <span className="sr-only">{words.spoken}</span>
+}
+
+function Chip({ itemKey }: { itemKey: PortalNavItem['key'] }) {
+  const words = useCountWords(itemKey)
+  return (
+    words && (
+      <span className={styles.navCount} data-nav-count aria-hidden="true" dir="ltr">
+        {words.shown}
+      </span>
+    )
+  )
+}
+
+/**
+ * The item's count in words, for its link's name: "Inbox, 3 tasks". It goes
+ * inside the label's element, so the name has no gap before the comma. Before the
+ * counts settle, and for no number or 0, it renders nothing: the name is "Inbox".
+ */
+export function NavCountSpoken({ itemKey }: { itemKey: PortalNavItem['key'] }) {
+  return (
+    <Suspense fallback={null}>
+      <Spoken itemKey={itemKey} />
+    </Suspense>
+  )
+}
+
+/** The muted chip beside the item. Hidden from assistive tech: `NavCountSpoken` carries the number. */
+export function NavCountChip({ itemKey }: { itemKey: PortalNavItem['key'] }) {
+  return (
+    <Suspense fallback={null}>
+      <Chip itemKey={itemKey} />
+    </Suspense>
+  )
 }

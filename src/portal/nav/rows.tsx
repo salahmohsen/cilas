@@ -10,6 +10,7 @@ import { Link } from '@/i18n/navigation'
 import { unreadCount } from '@/lib/unread-count'
 
 import { NAV_ICONS } from './nav-icons'
+import { NavCountChip, NavCountSpoken } from './nav-counts'
 import type { PortalNavItem } from './portal-nav'
 import styles from './shell.module.css'
 import { isCurrentItem, isCurrentSpace, shownUnread, type SpaceLink } from './space-links'
@@ -34,7 +35,11 @@ export function NavItemRow({
       <span className={styles.icon} aria-hidden="true">
         <Icon size={18} strokeWidth={1.75} />
       </span>
-      <span className={styles.label}>{t(item.labelKey)}</span>
+      <span className={styles.label}>
+        {t(item.labelKey)}
+        <NavCountSpoken itemKey={item.key} />
+      </span>
+      <NavCountChip itemKey={item.key} />
     </>
   )
   return item.external ? (
