@@ -8,6 +8,7 @@ import {
   ADMIN_VISIBLE,
   KEY_SELECT,
   KEY_WHERE,
+  KEYS_READ_ERROR,
   LIVE_COPY,
   LIVE_MAIN,
   NOT_LIVE,
@@ -302,9 +303,7 @@ describe('statusOf on rows read with keys only', () => {
     statusOf({ collection: 'articles', doc: row, draft, read: 'keys' }, () => undefined)
 
   it('throws on a draft copy at approved', () => {
-    expect(keys(live(), copy('approved', null, 'New'))).toThrow(
-      'statusOf compares fields only on full rows',
-    )
+    expect(keys(live(), copy('approved', null, 'New'))).toThrow(KEYS_READ_ERROR)
   })
 
   it('reads the same rows with full reads', () => {

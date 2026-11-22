@@ -1,6 +1,7 @@
 import { afterAll, beforeAll, describe, expect, it } from 'vitest'
-import { applicantsFor, applicantViewer } from '@/forms/applicants'
+import { applicantsFor, applicantViewer, countWaitingApplicants } from '@/forms/applicants'
 import { applicationFixture, removeApplicationFixture } from '../../testing/application.fixture'
+import { recordingPayload } from '../../testing/needs.fixture'
 import { handleEndpoints, type TypedUser } from 'payload'
 
 let f: Awaited<ReturnType<typeof applicationFixture>>
@@ -198,5 +199,160 @@ describe('fellow applicants projection', () => {
         overrideAccess: false,
       }),
     ).rejects.toThrow()
+  })
+})
+
+describe('countWaitingApplicants', () => {
+  let teacher: TypedUser
+  let teacherUser: number
+  let teacherPerson: number
+
+  beforeAll(async () => {
+    const created = await f.payload.create({
+      collection: 'people',
+      data: { name: 'Count teacher', slug: `count-teacher-${f.suffix}` },
+    })
+    teacherPerson = created.id
+    const user = await f.payload.create({
+      collection: 'users',
+      data: {
+        email: `count-teacher-${f.suffix}@cilas.test`,
+        password,
+        roles: ['fellow'],
+        person: teacherPerson,
+      },
+    })
+    teacherUser = user.id
+    teacher = { ...user, collection: 'users' as const }
+    await f.payload.update({
+      collection: 'courses',
+      id: f.courses[0].id,
+      data: { fellows: [person, teacherPerson] },
+    })
+    await f.payload.update({
+      collection: 'courses',
+      id: f.courses[1].id,
+      data: { fellows: [teacherPerson] },
+    })
+  })
+
+  afterAll(async () => {
+    await f.payload.update({
+      collection: 'courses',
+      id: f.courses[0].id,
+      data: { fellows: [person] },
+    })
+    await f.payload.update({ collection: 'courses', id: f.courses[1].id, data: { fellows: [] } })
+    await f.payload.delete({ collection: 'users', id: teacherUser })
+    await f.payload.delete({ collection: 'people', id: teacherPerson })
+  })
+
+  const applyTo = async (choices: Array<{ course: number; decision?: string | null }>) => {
+    const created = await f.payload.create({
+      collection: 'form-submissions',
+      data: {
+        form: f.form.id,
+        target: { relationTo: 'cycles', value: f.cycle.id },
+        submissionData: [
+          { field: 'name', value: 'Counted' },
+          { field: 'email', value: 'counted@cilas.test' },
+        ],
+        choices: choices.map(({ course }) => ({
+          course,
+          amount: 900,
+          answers: [{ name: 'reason', value: 'Counted answer' }],
+        })),
+      } as never,
+    })
+    await f.payload.update({
+      collection: 'form-submissions',
+      id: created.id,
+      data: {
+        choices: (created.choices ?? []).map((choice, index) => ({
+          ...choice,
+          decision: choices[index]!.decision,
+        })),
+      } as never,
+    })
+    return created.id
+  }
+
+  const waiting = async (user: TypedUser) => (await countWaitingApplicants(f.payload, user)).total
+
+  it('counts 2 for one applicant with two waiting course choices', async () => {
+    const before = await waiting(teacher)
+    await applyTo([
+      { course: f.courses[0].id, decision: 'pending' },
+      { course: f.courses[1].id, decision: 'pending' },
+    ])
+    expect(await waiting(teacher)).toBe(before + 2)
+  })
+
+  it('counts 0 for a programme application', async () => {
+    const programme = await f.payload.create({
+      collection: 'programmes',
+      data: {
+        title: `Count programme ${f.suffix}`,
+        slug: `count-programme-${f.suffix}`,
+        kind: 'residency',
+        registration: { method: 'form', form: f.form.id },
+      },
+    })
+    const before = await waiting(teacher)
+    const submission = await f.payload.create({
+      collection: 'form-submissions',
+      data: {
+        form: f.form.id,
+        target: { relationTo: 'programmes', value: programme.id },
+        submissionData: [
+          { field: 'name', value: 'Counted' },
+          { field: 'email', value: 'counted@cilas.test' },
+        ],
+      },
+    })
+    try {
+      expect(await waiting(teacher)).toBe(before)
+    } finally {
+      await f.payload.delete({ collection: 'form-submissions', id: submission.id })
+      await f.payload.delete({ collection: 'programmes', id: programme.id })
+    }
+  })
+
+  it('counts a null decision as waiting', async () => {
+    const before = await waiting(teacher)
+    await applyTo([{ course: f.courses[0].id, decision: null }])
+    expect(await waiting(teacher)).toBe(before + 1)
+  })
+
+  it('an accepted choice does not count', async () => {
+    const before = await waiting(teacher)
+    await applyTo([{ course: f.courses[0].id, decision: 'accepted' }])
+    expect(await waiting(teacher)).toBe(before)
+  })
+
+  it('a submission whose choices are all decided is not read', async () => {
+    const decided = await applyTo([
+      { course: f.courses[0].id, decision: 'accepted' },
+      { course: f.courses[1].id, decision: 'rejected' },
+    ])
+    const { payload, calls } = recordingPayload(f.payload)
+    await countWaitingApplicants(payload, teacher)
+    const read = calls.find((call) => call.args.collection === 'form-submissions')!
+    const docs = (read.result as { docs: Array<{ id: number }> }).docs
+    expect(docs.map((doc) => doc.id)).not.toContain(decided)
+  })
+
+  it('a fellow counts only the courses they teach', async () => {
+    const before = await waiting(fellow)
+    await applyTo([{ course: f.courses[1].id, decision: 'pending' }])
+    expect(await waiting(fellow)).toBe(before)
+    await applyTo([{ course: f.courses[0].id, decision: 'pending' }])
+    expect(await waiting(fellow)).toBe(before + 1)
+  })
+
+  it('a student counts 0 and runs no query', async () => {
+    const { payload, calls } = recordingPayload(f.payload)
+    expect(await countWaitingApplicants(payload, member)).toEqual({ total: 0 })
+    expect(calls).toHaveLength(0)
   })
 })
