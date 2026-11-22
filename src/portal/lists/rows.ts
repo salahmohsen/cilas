@@ -107,7 +107,7 @@ const LIST_ROWS = {
   read: 'full',
 } as const
 
-const titleOf = (value: unknown, locale: Locale) => {
+export const titleOf = (value: unknown, locale: Locale) => {
   if (typeof value === 'string') return value || null
   const titles = (value ?? {}) as Record<string, string | null | undefined>
   return titles[locale] || titles[locale === 'en' ? 'ar' : 'en'] || null
